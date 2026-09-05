@@ -121,3 +121,89 @@
   claim   = {Caching is OFF. A cache keyed on a tempfile path never hits and never expires: each staged edit gets a fresh random name, so entries accumulate without ever serving a read --- cost with no benefit, on a hook that runs at EVERY edit},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_ruff_does_not_cache}
 }
+
+% ---------------------------------------------------------------- cmdparse
+
+@misc{hooks-cmdparse-bare-command-names-its-program,
+  section = {cmdparse},
+  claim   = {The base case, without which every wrapper case is unanchored},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_bare_command_names_its_program}
+}
+
+@misc{hooks-cmdparse-wrapper-does-not-hide-the-program,
+  section = {cmdparse},
+  claim   = {A wrapper DELEGATES, so finding one means keep looking. EVERY ENTRY IN THIS FAMILY WAS A LIVE BYPASS SHAPE, not a hypothetical, and each is labelled so a failure reports which wrapper stopped being transparent rather than an opaque index},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_wrapper_does_not_hide_the_program}
+}
+
+@misc{hooks-cmdparse-arguments-belong-to-the-real-program,
+  section = {cmdparse},
+  claim   = {The arguments reported belong to the real program rather than to the wrapper. A FIRST DRAFT SKIPPED THE WRAPPER AND REPORTED 180 AS THE PROGRAM --- naming the right program is only half of it, because a verdict is rendered over the ARGUMENTS, so a caller handed the wrapper's operands examines the wrong words},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_the_arguments_belong_to_the_real_program}
+}
+
+@misc{hooks-cmdparse-every-command-in-a-chain-is-seen,
+  section = {cmdparse},
+  claim   = {Every command in a chain is seen, not just the first --- the question is whether a tool appears ANYWHERE in command position},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_every_command_in_a_chain_is_seen}
+}
+
+@misc{hooks-cmdparse-pipe-and-stderr-operator-is-one-token,
+  section = {cmdparse},
+  claim   = {The |& operator reads as ONE token rather than as a pipe followed by a background ampersand},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_the_pipe_and_stderr_operator_is_one_token}
+}
+
+@misc{hooks-cmdparse-pipe-and-stderr-does-not-hide-the-program,
+  section = {cmdparse},
+  claim   = {A command after a |& operator is still seen in command position},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_the_pipe_and_stderr_operator_does_not_hide_the_program}
+}
+
+@misc{hooks-cmdparse-pipe-and-stderr-delimits-exactly-once,
+  section = {cmdparse},
+  claim   = {The |& operator delimits exactly once, so neither an empty command nor a doubled split is produced},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_the_pipe_and_stderr_operator_delimits_exactly_once}
+}
+
+@misc{hooks-cmdparse-quoted-operator-is-data,
+  section = {cmdparse},
+  claim   = {A quoted operator is DATA and not a delimiter --- a shell metacharacter inside quotes does not split a command, and treating it as one would invent commands the user never wrote},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_quoted_operator_is_data_and_not_a_delimiter}
+}
+
+@misc{hooks-cmdparse-unparseable-yields-nothing,
+  section = {cmdparse},
+  claim   = {An unparseable command yields nothing rather than raising. A PreToolUse hook that raises on malformed shell fails the user's turn over a command they merely mistyped},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_an_unparseable_command_yields_nothing_rather_than_raising}
+}
+
+@misc{hooks-cmdparse-empty-command-yields-no-programs,
+  section = {cmdparse},
+  claim   = {An empty command yields no programs},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_an_empty_command_yields_no_programs}
+}
+
+@misc{hooks-cmdparse-only-a-wrapper-names-no-program,
+  section = {cmdparse},
+  claim   = {A command that is ONLY a wrapper names no program, rather than naming the wrapper itself},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_command_that_is_only_a_wrapper_names_no_program}
+}
+
+@misc{hooks-cmdparse-flag-argument-does-not-become-the-program,
+  section = {cmdparse},
+  claim   = {A wrapper flag's SEPARATE ARGUMENT is not read as the program. This was a LIVE BYPASS of the same class this module exists to close, one flag-shape deeper --- measured at four of eight shapes, where `env -u LD_PRELOAD grep` reported LD_PRELOAD, `sudo -u nobody grep` reported nobody, `timeout -s KILL 5 grep` reported KILL and `env -C /tmp grep` reported tmp, so a hook gating on programs() was OPEN for every one and the real command was never seen. `_is_operand` is deliberately NOT widened to cover them: a flag's argument can be ANY string, which is value-shaped and would defeat its conservative cannot-name-a-program test, reopening the wrapper bypass to buy this one. The arg-taking flags are ENUMERABLE per wrapper; the strings they carry are not. The non-numeric argument shapes in this family are deliberate --- with `nice -n 10` and `xargs -n 1` the parser passes ACCIDENTALLY because _is_operand eats a numeric token, so those cases would go green against a parser modelling no flag arguments at all, and a test encoding an accident as an assertion is worse than no test},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_wrapper_flag_argument_does_not_become_the_program}
+}
+
+@misc{hooks-cmdparse-attached-flag-value-not-consumed-twice,
+  section = {cmdparse},
+  claim   = {An ATTACHED flag value is not consumed twice. `-C/tmp` and `--chdir=/tmp` carry their value in the SAME token, so a parser consuming a following word for these too would swallow the real program --- turning a bypass into a blindness, which is the failure the separated-form fix could otherwise have introduced},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_an_attached_flag_value_is_not_consumed_twice}
+}
+
+@misc{hooks-cmdparse-flag-argument-at-the-end-does-not-overrun,
+  section = {cmdparse},
+  claim   = {A trailing arg-taking flag with nothing after it does not index past the words. `env -u` with no argument is malformed shell, but a parser assuming a following word exists raises IndexError inside a PreToolUse hook --- failing the turn on a command the user merely mistyped},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_flag_argument_at_the_end_does_not_overrun}
+}

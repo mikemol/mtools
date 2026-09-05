@@ -2,3 +2,4 @@
 # key <TAB> heading title
 payload	Payload: Untrusted Input, and the Arming Switch
 checkers	Checkers: That Config Reaches an In-Flight Edit
+cmdparse	Command Parsing: Which Program Is Actually Being Run

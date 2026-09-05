@@ -82,6 +82,50 @@ _DURATION_SUFFIXES = "smhd"
 # Wrappers whose first non-flag word is a SUBCOMMAND of the wrapper itself.
 _SUBCOMMAND_WRAPPERS: frozenset[str] = frozenset({"uv", "poetry", "pipenv", "hatch", "rye"})
 
+# ⚑⚑⚑ A WRAPPER FLAG THAT TAKES A SEPARATE ARGUMENT HIDES THE PROGRAM BEHIND IT, and that was a
+# LIVE BYPASS of the same class this module exists to close — one flag-shape deeper than the
+# `timeout 180 grep` case above. MEASURED against this module before the fix:
+#
+#     env -u LD_PRELOAD grep -n foo notes.md   -> programs() reported ('LD_PRELOAD', ...)
+#     sudo -u nobody    grep -n foo notes.md   -> ('nobody', ...)
+#     timeout -s KILL 5 grep -n foo notes.md   -> ('KILL', ...)
+#     env -C /tmp       grep -n foo notes.md   -> ('tmp', ...)
+#
+# Four of eight shapes. In every one the real program (`grep`) was never reported, so a hook
+# gating on `programs()` was OPEN for those shapes. The flag was skipped correctly; its ARGUMENT
+# was then read as the program. Found by a contributor auditing its own code against this repo's
+# bar, and reproduced here before the patch was taken.
+#
+# ⚑⚑ `_is_operand` IS DELIBERATELY NOT WIDENED TO COVER THESE. A flag's argument can be ANY string
+# — a signal name, a username, a path — which is value-shaped and would defeat that function's
+# conservative "cannot name a program" test, reopening the wrapper bypass to buy this one. The
+# arg-taking flags are ENUMERABLE per wrapper; the strings they may carry are not. Quantify over
+# the flags, never over their values.
+#
+# ⚑ ONLY THE SEPARATED FORM NEEDS CONSUMING. `-C/tmp` and `--chdir=/tmp` carry the value in the
+# same token, which `_debare` already reads as a flag — consuming a following word for those would
+# swallow the real program and turn a bypass into a blindness.
+_FLAGS_WITH_ARG: dict[str, frozenset[str]] = {
+    "timeout": frozenset({"-s", "--signal", "-k", "--kill-after"}),
+    "env": frozenset({"-C", "--chdir", "-u", "--unset", "-S", "--split-string"}),
+    "sudo": frozenset({"-u", "--user", "-g", "--group", "-C", "--close-from", "-h", "--host",
+                       "-p", "--prompt", "-r", "--role", "-t", "--type", "-U", "--other-user"}),
+    "doas": frozenset({"-u", "-C", "-a"}),
+    "nice": frozenset({"-n", "--adjustment"}),
+    "ionice": frozenset({"-c", "--class", "-n", "--classdata", "-p", "--pid"}),
+    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
+    "xargs": frozenset({"-a", "--arg-file", "-E", "-I", "-i", "--replace", "-L", "--max-lines",
+                        "-n", "--max-args", "-P", "--max-procs", "-s", "--max-chars", "-d",
+                        "--delimiter"}),
+    "watch": frozenset({"-n", "--interval", "-d", "--differences"}),
+    "script": frozenset({"-c", "--command", "-f", "--flush"}),
+}
+
+# ⚑ A bare short flag is exactly two characters: the dash and its letter (`-C`, `-n`). A token
+# LONGER than that whose two-character prefix is an arg-taking short flag carries its value GLUED
+# (`-C/tmp`), so its argument is not a separate following word.
+_SHORT_FLAG_LEN = 2
+
 
 def _debare(tok: str) -> str | None:
     r"""Reduce a token to the program it names, or None if it names none.
@@ -175,10 +219,21 @@ def programs(cmd: str) -> list[tuple[str, list[str]]]:
                 # number, a duration like `1.5s`, a bare subcommand word for uv/poetry) is skipped;
                 # the first token that could be a program ends the skip.
                 i += 1
+                takes_arg = _FLAGS_WITH_ARG.get(name, frozenset())
                 while i < len(words):
-                    nxt = _debare(words[i])
+                    raw = words[i]
+                    nxt = _debare(raw)
                     if nxt is None:                 # a flag: still the wrapper's
+                        # ⚑ IF THIS FLAG TAKES A SEPARATE ARGUMENT, CONSUME THAT TOO — else the
+                        # argument (`KILL`, `nobody`, `/tmp`) is read as the program and the real
+                        # program goes invisible. That is the measured bypass above.
+                        bare = raw.lstrip("\\")
+                        attached = "=" in bare or (
+                            len(bare) > _SHORT_FLAG_LEN and bare[:_SHORT_FLAG_LEN] in takes_arg
+                        )
                         i += 1
+                        if bare in takes_arg and not attached and i < len(words):
+                            i += 1                  # skip the flag's separate argument
                         continue
                     if _is_operand(nxt, name):
                         i += 1

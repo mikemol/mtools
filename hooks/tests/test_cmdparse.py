@@ -143,3 +143,70 @@ def test_a_command_that_is_only_a_wrapper_names_no_program() -> None:
     out of the wrapper's own operands.
     """
     assert cmdparse.programs("timeout 60") == []
+
+
+@pytest.mark.parametrize(
+    ("label", "cmd"),
+    [
+        # ⚑ MEASURED BYPASSES — each reported the FLAG'S ARGUMENT as the program before the fix.
+        ("env -u takes a var name", "env -u LD_PRELOAD grep -n foo x.py"),
+        ("sudo -u takes a user", "sudo -u nobody grep -n foo x.py"),
+        ("timeout -s takes a signal", "timeout -s KILL 5 grep -n foo x.py"),
+        ("env -C takes a directory", "env -C /tmp grep -n foo x.py"),
+        # ⚑⚑ NON-NUMERIC ARGS FOR nice/xargs ON PURPOSE. With `nice -n 10` and `xargs -n 1` the
+        # parser passes ACCIDENTALLY: `_is_operand` eats a numeric token, so the case would go
+        # green against a parser that models no flag arguments at all. A test that encodes an
+        # accident as an assertion is worse than no test — these use argument shapes that only
+        # the flag-argument model can consume.
+        ("xargs -d takes a delimiter", "xargs -d , grep foo x.py"),
+        ("xargs -I takes a replace-str", "xargs -I {} grep foo x.py"),
+        ("ionice -c takes a class", "ionice -c best-effort grep foo x.py"),
+        ("stdbuf -o takes a mode", "stdbuf -o L grep foo x.py"),
+        ("watch -d takes an option word", "watch -n cumulative grep foo x.py"),
+        # long form, separated
+        ("--signal separated", "timeout --signal KILL 5 grep foo x.py"),
+        ("--user separated", "sudo --user nobody grep foo x.py"),
+    ],
+)
+def test_a_wrapper_flag_argument_does_not_become_the_program(label: str, cmd: str) -> None:
+    """⚑ THE SAME CLASS AS THE WRAPPER BYPASS, ONE FLAG-SHAPE DEEPER.
+
+    A wrapper flag that takes a SEPARATE argument hid the program behind it: the flag was
+    skipped correctly and its argument was then read as a program, so `programs()` reported
+    `LD_PRELOAD` / `nobody` / `KILL` / `tmp` and the real command was never seen. A hook
+    gating on `programs()` was open for every one of these shapes.
+
+    `_is_operand` is deliberately NOT widened to cover them: a flag's argument can be any
+    string, which is value-shaped and would defeat its conservative "cannot name a program"
+    test, reopening the wrapper bypass to buy this one. The arg-taking flags are enumerable
+    per wrapper; the strings they carry are not.
+    """
+    assert _progs(cmd)[-1] == "grep", label
+
+
+@pytest.mark.parametrize(
+    ("label", "cmd"),
+    [
+        ("short glued", "env -C/tmp grep -n foo x.py"),
+        ("long attached", "env --chdir=/tmp grep -n foo x.py"),
+        ("glued signal", "timeout -sKILL 5 grep -n foo x.py"),
+    ],
+)
+def test_an_attached_flag_value_is_not_consumed_twice(label: str, cmd: str) -> None:
+    """⚑ THE OVER-CONSUMPTION HALF, which the separated-form fix would otherwise cause.
+
+    `-C/tmp` and `--chdir=/tmp` carry their value in the SAME token. If the parser consumed a
+    following word for these too it would swallow the real program — turning a bypass into a
+    blindness. Only the separated form may consume the next word, and these cases pin that.
+    """
+    assert _progs(cmd)[-1] == "grep", label
+
+
+def test_a_flag_argument_at_the_end_does_not_overrun() -> None:
+    """A trailing arg-taking flag with nothing after it must not index past the words.
+
+    `env -u` with no argument and no command is malformed shell, but a parser that assumes a
+    following word exists raises IndexError inside a PreToolUse hook — which fails the turn on
+    a command the user merely mistyped.
+    """
+    assert _progs("env -u") == []
