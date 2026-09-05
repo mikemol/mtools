@@ -13,3 +13,4 @@ roundtrip-fixpoint	Round-Trip: The Sequence, and the Converged Text
 roundtrip-stopping	Round-Trip: The Two Stopping Rules That Were Both Wrong
 output	Output: Nothing but the Answer Reaches a Caller's Streams
 verify	Verify: The Contract That Lint and Round-Trip Both Passed
+stub-authority	Stub Authority: The Claim a Stub Makes, and What Checks It

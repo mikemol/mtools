@@ -4,7 +4,8 @@
 #
 # ⚑ THE LIBRARY SHIPS NO `py.typed`, so every element read is untyped at the call site and poisons
 # the expression it lands in. A stub types the import independently of the distribution — the
-# mechanism already used for the paperkit engine — and `scripts/check_stub_authority.py` runs
+# mechanism already used for the paperkit engine — and `mypy.stubtest` (wired into
+# `.githooks/pre-commit`, with `stubs/panflute-allowlist.txt`) runs
 # `stubtest` against it, so a signature that drifts from the real library fails a gate rather than
 # rotting quietly.
 #
@@ -82,5 +83,5 @@ class Table(Block):
     foot: TableFoot
     caption: Caption
 
-def load(source: IO[str]) -> Doc: ...
-def stringify(element: Element) -> str: ...
+def load(input_stream: IO[str] | None = ...) -> Doc: ...
+def stringify(element: Element, newlines: bool = ...) -> str: ...

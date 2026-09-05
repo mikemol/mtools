@@ -60,6 +60,10 @@ py_library(
         deps = [
             ":mdstruct",
             dev_requirement("pytest"),
+            # ⚑ `stubtest` SHIPS INSIDE mypy, and the stub-authority witness runs it as a
+            # subprocess. Staged for every module rather than one, because a per-target dep list
+            # that differs by module is a place a future witness silently loses its tool.
+            dev_requirement("mypy"),
         ],
         imports = ["src"],
     )

@@ -13,12 +13,25 @@
 # passing on a host that happens to have it. That is the same
 # resolves-out-of-the-sandbox class MODULE.bazel already refuses for editable installs.
 # ⟡mtools-paperkit-devlock retires this when paperkit publishes.
+ast-serialize==0.9.0
+    # via mypy
 iniconfig==2.3.0
     # via pytest
+librt==0.15.0
+    # via mypy
+mypy==2.3.1
+    # via -r /tmp/md-dev-in.txt
+mypy-extensions==1.1.0
+    # via mypy
 packaging==26.3
     # via pytest
+pathspec==1.1.1
+    # via mypy
 pluggy==1.6.0
     # via pytest
 pygments==2.21.0
     # via pytest
 pytest==9.1.1
+    # via -r /tmp/md-dev-in.txt
+typing-extensions==4.16.0
+    # via mypy

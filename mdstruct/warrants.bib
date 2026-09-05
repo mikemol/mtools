@@ -476,3 +476,17 @@
   claim   = {A shape table asserting the OPPOSITE of the truth makes the selftest FAIL, in both directions --- a row claiming a swallowed shape is reachable trips the P-arm, and a row claiming a reachable shape is swallowed trips the F-arm. This is the contract's own F-arm: without it the selftest could be green because it is aimed at the wrong predicate, which is the class this repo paid for twice in one day. A configured-but-inert gate fires on nothing and is eventually noticed; an ACTIVE gate aimed at the wrong predicate produces findings, passes review, and its greens are indistinguishable from correct ones},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_the_selftest_fires_when_a_shape_row_claims_the_opposite}
 }
+
+% ---------------------------------------------------------------- stub-authority
+
+@misc{md-stub-matches-the-library,
+  section = {stub-authority},
+  claim   = {The hand-written panflute stub is checked against the library it describes, by `mypy.stubtest`. A STUB IS AN UNCHECKED CLAIM UNTIL SOMETHING CHECKS IT --- and this one's own evidence-prose cited a `scripts/check_stub_authority.py` that DID NOT EXIST, so the file asserted a verification nobody had built, which reads as covered to anyone who does not go look. On its first real run stubtest found two divergences in the two functions this package calls most: `load`'s parameter was named `source` where the runtime calls it `input_stream`, and `stringify` omitted `newlines` entirely},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_the_stub_matches_the_library_it_describes}
+}
+
+@misc{md-stub-allowlist-is-constructors-only,
+  section = {stub-authority},
+  claim   = {Every allowlist entry is a constructor, never a called function --- which is what keeps the allowlist from becoming a suppression list. mdstruct NEVER constructs a panflute element; it reads them via isinstance checks and attribute access from whatever `load` returns, so a constructor entry is surface the stub declines to model while a non-constructor entry is a real inconsistency in something this package calls. THE GENERATED ALLOWLIST WAS NOT USABLE AS GENERATED: `--generate-allowlist` produced 15 entries and two of them were `load` and `stringify`, both carrying real defects, so accepting the generated file would have frozen both as permanently allowed and made the gate vacuous at exactly the point it exists to check. A KNOWN BOUND, F-armed: stubtest compares SIGNATURES and not RETURN TYPES, so declaring `stringify` as returning int passes silently --- that case is caught by mypy against the CALL SITES instead},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_every_allowlist_entry_is_a_constructor}
+}

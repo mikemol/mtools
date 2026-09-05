@@ -1,0 +1,40 @@
+# stubtest allowlist for the panflute stub.
+#
+# ⚑⚑⚑ EVERY ENTRY IS A CONSTRUCTOR, AND THAT IS THE WHOLE ADMISSIBLE SHAPE. mdstruct NEVER
+# constructs a panflute element — it reads them, via isinstance checks and attribute access, from
+# whatever `load` returns. So each `__init__` here is surface the stub declines to model rather
+# than a divergence it is hiding, and an entry that is NOT a constructor is a real inconsistency
+# in something this package calls.
+#
+# ⚑⚑ THE GENERATED ALLOWLIST WAS NOT USABLE AS GENERATED, AND THAT IS THE MEASUREMENT. Running
+# `--generate-allowlist` produced 15 entries, and two of them were `panflute.load` and
+# `panflute.stringify` — the two functions mdstruct calls most. Both were REAL defects: the stub
+# named `load`'s parameter `source` when the runtime calls it `input_stream`, and omitted
+# `stringify`'s `newlines` entirely. Accepting the generated file would have frozen both as
+# permanently allowed and made the gate vacuous at exactly the point it exists to check. They are
+# fixed in the stub; this list carries what remains.
+#
+# ⚑⚑ A BOUND ON WHAT THIS GATE CAN SEE, MEASURED BY F-ARM: stubtest checks SIGNATURES, not
+# RETURN TYPES. Declaring `stringify` as returning `int` passes silently, because the runtime
+# function carries no annotation to disagree with. Two of three deliberate corruptions fire — a
+# wrong parameter list and a wrong parameter name — and the third does not. Return types are
+# covered by mypy against the CALL SITES instead, which is a different instrument answering a
+# different question, and saying so here is the difference between a gate with a known edge and
+# one believed to be total.
+#
+# ⚑ REGENERATE BY HAND, NEVER BY PIPE. `--generate-allowlist > this-file` silently launders a new
+# divergence into an allowance, which is the same laundering `--init-absent` refuses on a second
+# run. A new entry must be read and argued before it lands.
+panflute.Caption.__init__
+panflute.Doc.__init__
+panflute.Element.__new__
+panflute.Element.walk
+panflute.Header.__init__
+panflute.Para.__init__
+panflute.Plain.__init__
+panflute.Table.__init__
+panflute.TableBody.__init__
+panflute.TableCell.__init__
+panflute.TableFoot.__init__
+panflute.TableHead.__init__
+panflute.TableRow.__init__

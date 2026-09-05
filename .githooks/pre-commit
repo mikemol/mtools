@@ -86,6 +86,17 @@ if ! command -v bazel >/dev/null 2>&1; then
 fi
 bazel test //... --test_output=errors || fail=1
 
+# ⚑⚑ A STUB IS AN UNCHECKED CLAIM UNTIL SOMETHING CHECKS IT. mdstruct hand-writes a partial stub
+# for panflute, and the stub's own prose cited a `scripts/check_stub_authority.py` that DID NOT
+# EXIST — so the file claimed a verification nobody had built. stubtest is that verification, and
+# on its first run it found two real divergences in the two functions this package calls most:
+# `load`'s parameter was named `source` where the runtime calls it `input_stream`, and
+# `stringify` was missing `newlines` entirely.
+if [ -x mdstruct/.venv/bin/python3 ]; then
+  ( cd mdstruct && MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
+      --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise ) || fail=1
+fi
+
 # ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
 # 192 findings this bar does not yet enforce; collapsing them to `file:rule` keys gives 62. The
 # baseline is a SET, so paying one key down while another regresses is REFUSED even though the

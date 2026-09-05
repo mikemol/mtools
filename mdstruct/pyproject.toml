@@ -50,7 +50,10 @@ Homepage = "https://github.com/mikemol/mtools"
 # so every check reads unstaged sources and reports green — *"a sandbox escape that passes is worse
 # than one that fails"*. A published wheel is real files with a content hash and cannot do that.
 [dependency-groups]
-dev = ["pytest", "paperkit"]
+# ⚑ `mypy` IS A DEV DEPENDENCY BECAUSE `stubtest` IS PART OF IT, and the stub-authority witness
+# runs it as a subprocess. Without it declared, that witness passed on a host whose venv happened
+# to carry mypy and FAILED in the sandbox, which is the hermetic gate doing its job.
+dev = ["pytest", "mypy", "paperkit"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -255,6 +258,11 @@ fixture-parentheses = true
 # under `-O`; a test run is never invoked that way. Scoped to the test path rather than granted
 # as a blanket, because it would NOT be safe for library code.
 "tests/*" = ["S101"]
+
+# ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and this file's is stubtest. The
+# exemption is scoped to the file rather than to `tests/*`, so a future test that shells out
+# is a finding rather than an inheritance.
+"tests/test_stub_authority.py" = ["S404", "S603"]
 
 # ⚑ RUNNING PANDOC IS ONE MODULE'S ONE RESPONSIBILITY. The `S603` exemption a subprocess needs is
 # granted per FILE, so a module that also parsed or rendered would extend it over those concerns
