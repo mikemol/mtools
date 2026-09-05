@@ -27,6 +27,7 @@ silently, and this module raises rather than returning an empty string.
 
 from __future__ import annotations
 
+import os
 import subprocess
 
 from mikemol.mdstruct import frontmatter
@@ -54,7 +55,12 @@ def convert(src: str, to: str, frm: str = "markdown") -> str:
     """
     head, body = frontmatter.split(src)
     parts = (to or "markdown").split()
-    cmd = ["pandoc", "-f", frm, "-t", parts[0], *parts[1:]]
+    # ⚑⚑ A DECLARED BINARY WINS OVER PATH. Under bazel `PANDOC_BIN` names a hash-pinned input
+    # staged into the sandbox; unset, PATH answers as before. Reading PATH first would let a
+    # hermetic action quietly use a host binary nobody declared — the sandbox escape this repo
+    # already refuses for editable installs, one layer down.
+    binary = os.environ.get("PANDOC_BIN") or "pandoc"
+    cmd = [binary, "-f", frm, "-t", parts[0], *parts[1:]]
     proc = subprocess.run(cmd, input=body, capture_output=True, text=True, check=False)
     if proc.returncode:
         raise RuntimeError(proc.stderr.strip()[:_ERR_CHARS])

@@ -247,3 +247,23 @@ def test_the_mypy_path_pair_is_present_and_both_halves_are_set() -> None:
     text = (_DIST / "pyproject.toml").read_text(encoding="utf-8")
     assert 'mypy_path = "src"' in text
     assert "explicit_package_bases = true" in text
+
+
+def test_the_bazel_test_rule_runs_pytest_rather_than_the_module() -> None:
+    """Every py_test names the pytest entry point as `main`, not the test module.
+
+    ⚑⚑⚑ `main = <the test module>` RUNS THAT MODULE AS A SCRIPT. Import-time code executes,
+    pytest never collects, and the process exits 0 — so every target reported GREEN OVER ZERO
+    ASSERTIONS. Measured: a module whose only statement was `raise AssertionError` PASSED
+    under bazel, across all 23 targets, for the life of the rule.
+
+    ⚑⚑ IT IS ASSERTED HERE RATHER THAN LEFT TO THE SUITE BECAUSE THE SUITE CANNOT SEE IT. A
+    broken runner reports success, so no witness inside it can fail — the defect is invisible
+    from exactly the place one would look for it, and only a probe designed to fail could
+    reveal it. This reads the BUILD files instead.
+    """
+    root = _DIST.parent
+    for name in ("hooks", "mdstruct", "ratchet"):
+        build = (root / name / "BUILD.bazel").read_text(encoding="utf-8")
+        assert 'main = "//:pytest_main.py"' in build, name
+        assert "main = src," not in build, name

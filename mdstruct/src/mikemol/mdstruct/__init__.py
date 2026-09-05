@@ -41,4 +41,16 @@ import warnings
 # ⚑ SCOPED TO THE ONE CATEGORY AND THE ONE MODULE, never a blanket. A bare `ignore` would hide a
 # `SyntaxWarning` this package's OWN code earns — which is exactly the finding a warning exists
 # to deliver, and exactly what a wide suppression would cost.
+#
+# ⚑⚑⚑ AND `module=` DOES NOT MATCH A COMPILE-TIME WARNING, WHICH IS WHY THIS ALSO FILTERS ON THE
+# MESSAGE. A `SyntaxWarning` from a docstring is raised while the module is COMPILED, before it
+# is imported — so the `module` field carries the compiling file's name and the filter above
+# never fired for it. On a developer host that was invisible: `panflute` had a `__pycache__`, so
+# nothing recompiled and nothing warned. In a hermetic sandbox every import compiles fresh, and
+# the warning reached stderr on every single run.
+#
+# ⚑⚑ MEASURED BY A TEST WRITTEN FOR EXACTLY THIS, WHICH ONLY FIRED UNDER BAZEL. The host suite
+# was green for the whole life of this filter. Clearing panflute's bytecode reproduces it in one
+# command — which is the check to run before believing a warning filter works.
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="panflute.*")
+warnings.filterwarnings("ignore", category=SyntaxWarning, message="invalid escape sequence.*")

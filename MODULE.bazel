@@ -98,3 +98,34 @@ use_repo(
     "ratchet_deps",
     "ratchet_dev",
 )
+
+# ⚑⚑⚑ pandoc IS A DECLARED INPUT NOW, AND THE MEASUREMENT THAT FORCED IT: 54 OF 97 mdstruct CASES
+# WERE SILENTLY SKIPPING. They carry a `needs_pandoc` marker whose `conftest` skips when
+# `shutil.which("pandoc")` is None — correct on a host that lacks it, and a LIE inside a sandbox
+# that lacks it BY CONSTRUCTION. `bazel test //...` reported 23 of 23 targets passing while more
+# than half of one distribution's cases never executed, because a skipped case and a passing one
+# are indistinguishable in that summary line. That is this repository's own defect class, sitting
+# inside the hermetic suite meant to be the strongest thing here.
+#
+# ⚑⚑ FETCHED BY HASH FROM UPSTREAM, NOT VENDORED FROM THE HOST. The host binary is a statically
+# linked ELF and would have staged cleanly, which is exactly why taking it would have been the
+# wrong move: an input copied off the developing machine is a fact about that machine, and its
+# provenance stops being answerable the moment the machine changes. The sha256 below is over the
+# published release archive.
+#
+# ⚑ THE VERSION IS PINNED AND MATCHES WHAT THE HOST RUNS TODAY (3.8.3), so the hermetic result and
+# the host result are comparable. A drift between them is a real finding rather than a mystery.
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "pandoc",
+    build_file_content = """exports_files(["bin/pandoc"])
+filegroup(
+    name = "bin",
+    srcs = ["bin/pandoc"],
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "c224fab89f827d3623380ecb7c1078c163c769c849a14ac27e8d3bfbb914c9b4",
+    strip_prefix = "pandoc-3.8.3",
+    url = "https://github.com/jgm/pandoc/releases/download/3.8.3/pandoc-3.8.3-linux-amd64.tar.gz",
+)

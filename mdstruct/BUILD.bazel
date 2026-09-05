@@ -34,16 +34,25 @@ py_library(
 [
     py_test(
         name = src.removeprefix("tests/").removesuffix(".py"),
-        srcs = [src] + glob(["tests/conftest.py"], allow_empty = True),
-        main = src,
+        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "//:pytest_main.py",
         args = [
+            "$(location " + src + ")",
             "-q",
             "--strict-markers",
             "--strict-config",
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"],
+        # ⚑⚑ pandoc IS STAGED AS A DECLARED INPUT AND PUT ON PATH, so the 54 cases carrying
+        # `needs_pandoc` EXECUTE here instead of skipping. Without it the sandbox lacks the
+        # binary by construction, `conftest` skips honestly, and the suite reports green over
+        # cases that never ran — which is indistinguishable from a pass in bazel's summary.
+        data = [
+            "pyproject.toml",
+            "@pandoc//:bin",
+        ],
+        env = {"PANDOC_BIN": "$(location @pandoc//:bin)"},
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,
         # and bazel's default of `medium` reserves a timeout budget nothing uses. An honest
         # size is what lets a genuinely slow witness stand out later instead of blending in.
