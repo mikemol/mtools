@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑⚑⚑ THIS GATE REFUSES WHEN IT CANNOT RUN. Every tool it needs is checked for FIRST, and an
+# absent one is a refused commit rather than a skipped check. The failure this forbids is
+# measured, in a sibling repo: a declared gate whose dependency was missing printed "SKIPPED" and
+# exited 0 — "a declared gate that ALWAYS PASSED WITHOUT EXECUTING". A green row and a
+# non-executing gate are indistinguishable to every reader downstream, so silence here would be
+# the guard's-silence-reads-as-approval defect one layer up.
+#
+# ⚑⚑ IT GATES THE STAGED INDEX, NOT THE WORKING TREE. The two diverge exactly when `git add` is
+# partial, which is the normal case — so a gate reading the working tree blesses bytes that are
+# not the ones being committed.
+#
+# ⚑ NO FRAMEWORK. Plain executables under `core.hooksPath`, matching every peer repo in this
+# ecosystem. Arm with:  git config core.hooksPath .githooks
+set -euo pipefail
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+
+fail=0
+say() { printf 'pre-commit: %s\n' "$1" >&2; }
+
+# ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
+for dist in hooks mdstruct; do
+  for tool in ruff mypy python3; do
+    if [ ! -x "$dist/.venv/bin/$tool" ]; then
+      say "$dist/.venv/bin/$tool not found — cannot run the gate, commit refused"
+      say "  a skip here would report green over a check that never executed"
+      exit 1
+    fi
+  done
+done
+
+# ⚑ THE INDEX IS MATERIALISED SO THE CHECKS READ WHAT IS BEING COMMITTED, not what is on disk.
+staged="$(mktemp -d)"
+trap 'rm -rf "$staged"' EXIT
+git checkout-index --all --prefix="$staged/"
+
+for dist in hooks mdstruct; do
+  [ -d "$staged/$dist" ] || continue
+  say "checking $dist"
+  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/ruff" check --no-cache . ) || fail=1
+  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/mypy" ) || fail=1
+  # ⚑ TESTS RUN FROM THE REAL TREE: their venv holds absolute paths, and a witness that cannot
+  # find its own interpreter is an infrastructure failure reported as a red gate.
+  ( cd "$root/$dist" && .venv/bin/python3 -m pytest -q ) || fail=1
+done
+
+# ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership
+# failure this repo refuses: not a COUNT of unwarranted cases, but the SET — warranting one case
+# while adding another leaves a count unchanged and the membership churned.
+for dist in hooks mdstruct; do
+  [ -d "$staged/$dist" ] || continue
+  w=$(grep -c '@misc{' "$staged/$dist/warrants.bib")
+  # ⚑ `grep -h` then a line count, NOT `grep -c`: -c counts PER FILE and would emit one number
+  # per test module rather than the suite's total. shellcheck's SC2126 suggests the swap and is
+  # wrong here — the aggregate is the point.
+  t=$(cat "$staged/$dist"/tests/test_*.py | grep -c '^def test_')
+  if [ "$w" -ne "$t" ]; then
+    say "$dist: $w warrants against $t test functions — every test must arrive warranted"
+    fail=1
+  fi
+  if ! diff -q \
+      <(grep -o 'section = {[^}]*}' "$staged/$dist/warrants.bib" | sed 's/.*{\(.*\)}/\1/' | sort -u) \
+      <(grep -v '^#' "$staged/$dist/rubric.tsv" | cut -f1 | sort -u) >/dev/null; then
+    say "$dist: warrant sections and rubric sections disagree"
+    fail=1
+  fi
+done
+
+# ⚑⚑⚑ THE INSTRUMENT ASSERTS ITS OWN CONTRACT BEFORE ITS OUTPUT IS TRUSTED. mdstruct silently
+# dropped headings while `lint` and `roundtrip` both reported green on the corrupted file, so a
+# bounded write against the parent landed inside the missing child. Every committed markdown file
+# is checked with the tool's own verify mode — including this repo's own documents, which is where
+# the defect was found.
+if [ -x mdstruct/.venv/bin/python3 ]; then
+  while IFS= read -r md; do
+    [ -f "$staged/$md" ] || continue
+    ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli verify "$staged/$md" >/dev/null ) \
+      || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"; fail=1; }
+  done < <(git diff --cached --name-only --diff-filter=ACM -- '*.md')
+fi
+
+[ "$fail" -eq 0 ] || { say "REFUSED"; exit 1; }
+say "ok"
