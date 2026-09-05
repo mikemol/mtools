@@ -207,3 +207,219 @@
   claim   = {A trailing arg-taking flag with nothing after it does not index past the words. `env -u` with no argument is malformed shell, but a parser assuming a following word exists raises IndexError inside a PreToolUse hook --- failing the turn on a command the user merely mistyped},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_flag_argument_at_the_end_does_not_overrun}
 }
+
+% ---------------------------------------------------------------- adoption
+
+@misc{hooks-adoption-adopters-own-table-is-found,
+  section = {adoption},
+  claim   = {The installed package locates the ADOPTER's table, having none of its own},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_adoption.py -k test_the_adopting_repos_own_table_is_found}
+}
+
+@misc{hooks-adoption-table-actually-claims-artifacts,
+  section = {adoption},
+  claim   = {THE POSITIVE CONTROL FOR EVERY VERDICT IN THIS SECTION. An empty claims map refuses nothing while reporting itself installed and armed. Counting the rows FIRST is what separates "the gate allowed this command" from "the gate has nothing to allow it against"},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_adoption.py -k test_the_adopting_repos_table_actually_claims_artifacts}
+}
+
+@misc{hooks-adoption-table-claims-python,
+  section = {adoption},
+  claim   = {A .py file is owned by a structural editor in any repo that declares one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_adoption.py -k test_the_adopting_repos_table_claims_python}
+}
+
+@misc{hooks-adoption-textual-query-is-refused,
+  section = {adoption},
+  claim   = {END TO END --- installed package, the adopter's own table, and the live bypass shape. A `timeout` prefix is the ordinary invocation shape and it is exactly what the predecessor could not see, so this asserts the PACKAGED hook still sees it against a table nobody wrote for a test},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_adoption.py -k test_a_textual_query_in_the_adopting_repo_is_refused}
+}
+
+@misc{hooks-adoption-locating-a-file-is-allowed,
+  section = {adoption},
+  claim   = {THE REFUSAL ABOVE MEANS NOTHING WITHOUT THIS. Against the adopter's real table --- not a curated one --- the gate must still let a non-query through. A gate that refuses every command in a real repo is not adoptable at all},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_adoption.py -k test_locating_a_file_in_the_adopting_repo_is_allowed}
+}
+
+@misc{hooks-adoption-refusal-names-a-declared-tool,
+  section = {adoption},
+  claim   = {A ROUTE THE ADOPTER CANNOT TAKE IS A BLOCK WITHOUT A ROUTE. The message must name a tool from THAT repo's table, since the refusal text is the only thing a blocked author sees --- which is what a hardcoded owner list would fail},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_adoption.py -k test_the_refusal_names_a_tool_the_adopting_repo_actually_declares}
+}
+
+% ---------------------------------------------------------------- routing-table
+
+@misc{hooks-routing-project-dir-env-names-the-repo,
+  section = {routing-table},
+  claim   = {The harness's declaration of which repo this session is in wins},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_the_project_dir_env_names_the_repo}
+}
+
+@misc{hooks-routing-without-env-the-cwd-decides,
+  section = {routing-table},
+  claim   = {UNSET FALLS BACK TO THIS PROCESS'S DIRECTORY, which is what an in-repo run always got. This is the positive control for the case above --- without it, both would pass against a project_dir that returned the temp path by some other route},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_without_the_env_the_working_directory_decides}
+}
+
+@misc{hooks-routing-no-table-reports-none-not-empty,
+  section = {routing-table},
+  claim   = {ABSENT IS NOT EMPTY, and collapsing them makes an unconfigured repo look permissive},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_repo_with_no_table_reports_none_rather_than_empty}
+}
+
+@misc{hooks-routing-a-table-reports-its-path,
+  section = {routing-table},
+  claim   = {The found case, without which the absent case above proves nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_repo_with_a_table_reports_its_path}
+}
+
+@misc{hooks-routing-table-read-from-the-edited-repo,
+  section = {routing-table},
+  claim   = {THE PORT'S CENTRAL REPAIR, ASSERTED AGAINST A REPO THIS PACKAGE DOES NOT LIVE IN. An installed package has no .claude directory above its own files, so any __file__-derived lookup yields nothing there --- this passing means the lookup went to the repo under edit},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_the_table_is_read_from_the_edited_repo_not_the_package}
+}
+
+@misc{hooks-routing-every-declared-suffix-is-claimed,
+  section = {routing-table},
+  claim   = {A CELL MAY DECLARE SEVERAL suffixes, and stopping at the first silently unclaims the rest},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_every_declared_suffix_in_a_cell_is_claimed}
+}
+
+@misc{hooks-routing-unclaimed-suffix-is-absent,
+  section = {routing-table},
+  claim   = {THE POSITIVE CONTROL FOR THE CLAIMS READER. Every claim case would pass against a claims map that returned the same owner for any key asked of it --- only a suffix no row declares distinguishes a real table read from that},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_an_unclaimed_suffix_is_absent}
+}
+
+@misc{hooks-routing-header-and-separator-are-not-claims,
+  section = {routing-table},
+  claim   = {The word artifact and a --- rule are table FURNITURE, not routes},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_the_header_and_separator_rows_are_not_claims}
+}
+
+@misc{hooks-routing-short-row-is-skipped,
+  section = {routing-table},
+  claim   = {A RAGGED ROW MUST NOT RAISE --- a table is hand-maintained prose, not a schema. The fixture carries a one-cell row for exactly this, because a hook that dies reading its own routing table refuses nothing, which is worse than a table with a typo in it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_row_too_short_for_a_claims_column_is_skipped}
+}
+
+@misc{hooks-routing-short-row-still-routes,
+  section = {routing-table},
+  claim   = {`routes` needs two cells where `claims` needs four, so the two readers differ BY DESIGN},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_short_row_still_routes_when_it_has_a_tool}
+}
+
+@misc{hooks-routing-unreadable-table-yields-nothing,
+  section = {routing-table},
+  claim   = {A path that is not a readable file is reported as no rows, not as a traceback},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_an_unreadable_table_yields_nothing_rather_than_raising}
+}
+
+@misc{hooks-routing-no-table-means-no-claims,
+  section = {routing-table},
+  claim   = {With nothing declared the reader says so; the HOOK is what must not read that as OK},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_no_table_means_no_claims}
+}
+
+% ---------------------------------------------------------------- structural-query
+
+@misc{hooks-sq-refuses-a-textual-query-over-a-claimed-artifact,
+  section = {structural-query},
+  claim   = {EACH WRAPPER SHAPE IN THIS FAMILY RAN SUCCESSFULLY AGAINST THE PREDECESSOR. It tested only the first token, and a `timeout` prefix is the ordinary invocation shape --- so the gate was open for nearly every real command. The last case is the one that killed a location-based predicate: the claim is the ARTIFACT KIND, not the checkout it lives in},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_gate_refuses_a_textual_query_over_a_claimed_artifact}
+}
+
+@misc{hooks-sq-allows-what-it-must-not-refuse,
+  section = {structural-query},
+  claim   = {THE HALF THAT MAKES THE REFUSALS MEAN ANYTHING. Without these, every case in this module passes against a gate that refuses EVERY command --- and a gate that refuses everything is not a strict gate, it is a broken one that gets disabled within a day. `pkg.py/` is the case that forced matching the argument WORD rather than testing whether ".py" appears in a segment},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_gate_allows_what_it_must_not_refuse}
+}
+
+@misc{hooks-sq-unclaimed-suffix-becomes-claimed-by-the-table,
+  section = {structural-query},
+  claim   = {THE GATE IS TAUGHT BY THE TABLE, NOT BY AN EDIT HERE --- asserted rather than assumed. A `.log` passing could mean "logs are exempt" or "no row claims .log today"; only running the same command against a table that DOES claim it distinguishes a data-driven gate from a hardcoded exemption, and the whole design rests on it being the former},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_unclaimed_suffix_becomes_claimed_when_a_row_declares_it}
+}
+
+@misc{hooks-sq-no-claims-at-all-refuses-nothing,
+  section = {structural-query},
+  claim   = {AND THAT IS THE DANGEROUS STATE, PINNED SO IT IS VISIBLE RATHER THAN DISCOVERED. An adopting repo with no routing table gets a gate that allows everything. The behaviour is correct --- inventing claims for a repo that declared none applies a bar nobody chose --- but it means "the hook is installed" and "the hook is refusing" are INDEPENDENT FACTS},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_no_claims_at_all_refuses_nothing}
+}
+
+@misc{hooks-sq-reasons-name-the-argument-and-owner,
+  section = {structural-query},
+  claim   = {The verdict carries WHAT was hit, not merely THAT something was},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_reasons_name_the_argument_and_its_owner}
+}
+
+@misc{hooks-sq-refusal-names-the-owning-tool,
+  section = {structural-query},
+  claim   = {A refusal that only denies leaves the author with no next move},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_refusal_names_the_owning_tool}
+}
+
+@misc{hooks-sq-refusal-offers-read-when-the-tool-is-unavailable,
+  section = {structural-query},
+  claim   = {MEASURED IN A BORROWING CHECKOUT WHERE THE NAMED TOOL COULD NOT RUN. The message named the one route the reader could not take and stopped. The harness Read tool is the answer and needs SAYING --- it is not a shell command, so a reader thinking in Bash calls will not reach for it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_refusal_offers_read_when_the_owning_tool_is_unavailable}
+}
+
+@misc{hooks-sq-shell-append-still-fires,
+  section = {structural-query},
+  claim   = {THE VERDICT DOES NOT SOFTEN FOR A WRITE. Operator ruling, 2026-08-19: "don't support redirection, support editing" and "appendation causes files to grow out of control". An earlier fix exempted the append operator from the argument list; that was the WRONG REPAIR and the damage was measured --- a staging block appended to and never drained grew past the budget of the reader that loads it every session},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_shell_append_to_a_claimed_artifact_still_fires}
+}
+
+@misc{hooks-sq-write-branch-routes-to-the-owning-tool,
+  section = {structural-query},
+  claim   = {A blocked WRITER told to use a read tool gets useless advice, which reads as a bug in the gate},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_write_branch_routes_the_writer_to_the_owning_tool}
+}
+
+@misc{hooks-sq-plain-read-does-not-get-write-advice,
+  section = {structural-query},
+  claim   = {THE POSITIVE CONTROL FOR THE WRITE BRANCH. Without it the write cases pass against a refusal that appends the write paragraph unconditionally --- and a reader pointed at an editor is the same category error one direction over},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_plain_read_does_not_get_the_write_advice}
+}
+
+@misc{hooks-sq-deny-envelope-is-what-the-harness-reads,
+  section = {structural-query},
+  claim   = {AN EMPTY STDOUT IS READ AS ALLOW, so a malformed envelope is a silently-inert gate},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_deny_envelope_is_what_the_harness_reads}
+}
+
+@misc{hooks-sq-well-formed-payload-yields-its-command,
+  section = {structural-query},
+  claim   = {The hook reads the harness's shape, or renders a verdict about something that never ran},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_well_formed_payload_yields_its_command}
+}
+
+@misc{hooks-sq-malformed-payload-yields-no-command,
+  section = {structural-query},
+  claim   = {EVERY REJECTED SHAPE GETS A CASE --- the payload is untrusted JSON, not a contract},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_malformed_payload_yields_no_command}
+}
+
+@misc{hooks-sq-command-free-payload-lets-the-call-through,
+  section = {structural-query},
+  claim   = {THE HOOK NEVER BREAKS A SESSION ON INPUT IT CANNOT READ. `main` returns 0 for a payload carrying nothing to judge, which is the same exit as a clean verdict --- deliberately, because the alternative is a gate that fails the session over the harness changing a field name},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_command_free_payload_lets_the_call_through}
+}
+
+@misc{hooks-sq-unparseable-stdin-lets-the-call-through,
+  section = {structural-query},
+  claim   = {Malformed JSON is tolerated; a bug in the hook's own logic is NOT --- the excepts are named},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_unparseable_stdin_lets_the_call_through}
+}
+
+@misc{hooks-sq-armed-hook-writes-a-deny-envelope-to-stdout,
+  section = {structural-query},
+  claim   = {ARMED MEANS THE HARNESS SEES A DENY, NOT MERELY THAT A MESSAGE WAS PRINTED. An advisory hook writes to stderr, which the harness ignores; only the stdout envelope refuses the call. A hook that reports itself armed while writing to stderr detects every violation and refuses none},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_armed_hook_writes_a_deny_envelope_to_stdout}
+}
+
+@misc{hooks-sq-advisory-hook-writes-to-stderr-only,
+  section = {structural-query},
+  claim   = {THE POSITIVE CONTROL FOR ARMING, AT THE LEVEL THE HARNESS ACTUALLY READS. Without it the armed case passes against a hook that ALWAYS denies --- which is the failure mode the advisory default exists to avoid, since a guard whose first act is to break a working session trains people to disable it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_advisory_hook_writes_to_stderr_and_leaves_stdout_empty}
+}
