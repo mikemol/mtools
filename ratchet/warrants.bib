@@ -155,3 +155,9 @@
   claim   = {End to end through the CLI: a new key refuses, and the refusal NAMES it --- a refusal that only denies leaves the author with no next move},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_growth_is_refused_through_the_cli}
 }
+
+@misc{ratchet-census-synthesized-marker-is-not-censused,
+  section = {census},
+  claim   = {An EMPTY `__init__.py` is a build artifact and does not enter the census. rules_python writes one at every level of a runfiles tree so it is importable; none exist in the source tree, and `src/mikemol/__init__.py` is the file PEP 420 forbids here outright because it would make the first-installed distribution the exclusive owner of the `mikemol` prefix. MEASURED: the first honest run of the bazel ratchet gate REFUSED 8 keys, all from these --- the census was correct about what it saw, and what it saw was not the distribution. THE DISCRIMINATOR IS EMPTINESS, NOT THE NAME: a first cut excluded every `__init__.py` and over-excluded, because mdstruct's own package marker exists, carries content, and legitimately held a key, so dropping it PAID DOWN REAL DEBT by accident. That is the mirror defect --- a domain too NARROW, which serves a stale green rather than failing loudly},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_synthesized_package_marker_is_not_censused}
+}

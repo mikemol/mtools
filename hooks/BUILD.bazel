@@ -102,3 +102,25 @@ sh_test(
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "small",
 )
+
+# ⚑⚑ THE RATCHET IN THE GRAPH, WITH ITS BASELINE DECLARED. Outside it, the ratchet had no key.
+# Its domain is this distribution's sources and config, the ruff binary, AND `ratchet-preview.txt`
+# — the last being the one a careless declaration drops. A census keyed without the thing it is
+# compared against could be lowered with no gate noticing, which is the laundering `--init-absent`
+# refuses on a second run.
+sh_test(
+    name = "ratchet",
+    srcs = ["//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)

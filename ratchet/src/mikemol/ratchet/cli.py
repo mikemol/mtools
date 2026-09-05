@@ -63,3 +63,12 @@ def main(argv: list[str] | None = None) -> int:
     for line in lines:
         sys.stdout.write(f"{line}\n")
     return code
+
+
+# ⚑⚑ WITHOUT THIS GUARD THE MODULE DEFINES `main` AND NEVER CALLS IT. The console script installed
+# by `[project.scripts]` calls it by name, so the venv path worked and hid the gap — but a
+# `py_binary` naming this file as `main` RUNS IT AS A SCRIPT, and a script whose entry point is
+# never invoked exits 0 having done nothing. Measured: the bazel target reported PASS with an
+# empty transcript, which is why the caller now refuses on empty output.
+if __name__ == "__main__":
+    sys.exit(main())

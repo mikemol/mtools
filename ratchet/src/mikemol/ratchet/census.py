@@ -19,6 +19,7 @@ rule", which is the question paydown-only can actually enforce.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from typing import TYPE_CHECKING
@@ -38,7 +39,38 @@ _CONCISE = re.compile(
     r"^(?P<path>.+?):\d+:\d+:\s+(?P<code>[A-Za-z][A-Za-z0-9-]*):")
 
 
-def parse_concise(lines: Iterable[str]) -> frozenset[str]:
+# ⚑⚑⚑ FILES A BUILD SYSTEM SYNTHESIZES ARE NOT PART OF THE DISTRIBUTION'S CENSUS. rules_python
+# creates `__init__.py` at every level of a runfiles tree so it is importable; none of them exist
+# in the source tree, and `src/mikemol/__init__.py` is the file PEP 420 forbids here outright,
+# because it would make the first-installed distribution the exclusive owner of the `mikemol`
+# prefix. MEASURED: the first honest run of the bazel ratchet gate refused 8 keys, all from these.
+#
+# ⚑⚑ THE CENSUS WAS CORRECT ABOUT WHAT IT SAW; WHAT IT SAW WAS NOT THE DISTRIBUTION. An action
+# whose domain is a SUPERSET of the real one fails loudly rather than serving a stale green, which
+# is the better of the two ways to be mis-typed — but it is still mis-typed, and the repair is to
+# state the domain rather than to widen the baseline to swallow the noise.
+# ⚑ A FIRST CUT EXCLUDED EVERY `__init__.py` AND OVER-EXCLUDED. `mdstruct/src/mikemol/mdstruct/
+# __init__.py` EXISTS in source and legitimately carried a key; dropping it paid down real debt by
+# accident, which is the mirror of the defect being fixed — a domain too NARROW rather than too
+# wide, and that one serves a stale green. The synthesized files are exactly the empty ones, so
+# the discriminator is emptiness rather than the name.
+_SYNTHESIZED = "__init__.py"
+
+
+def _is_synthesized(path: str, root: Path) -> bool:
+    """Report whether `path` names a build-system-synthesized package marker.
+
+    ⚑ rules_python writes an EMPTY `__init__.py` at every level of a runfiles tree so it is
+    importable. A hand-written one has content. Checking the bytes rather than the name keeps a
+    real file's debt in the census while dropping an artifact the baseline never saw.
+    """
+    if not path.endswith(_SYNTHESIZED):
+        return False
+    candidate = root.joinpath(path)
+    return candidate.is_file() and not candidate.read_text(encoding="utf-8").strip()
+
+
+def parse_concise(lines: Iterable[str], root: Path | None = None) -> frozenset[str]:
     """Return `{file:rule}` keys from a checker's concise output.
 
     ⚑ A LINE THAT DOES NOT MATCH IS DROPPED SILENTLY, and that is safe ONLY because the
@@ -49,8 +81,13 @@ def parse_concise(lines: Iterable[str]) -> frozenset[str]:
     out: set[str] = set()
     for line in lines:
         found = _CONCISE.match(line.strip())
-        if found:
-            out.add(f"{found['path']}:{found['code']}")
+        if not found:
+            continue
+        # ⚑ THE `str()` IS THE NARROWING, NOT A FORMALITY — a regex group is typed `str | Any`, and
+        # an `Any` reaching the returned mapping is an unchecked shape crossing this boundary.
+        path = str(found["path"])
+        if root is None or not _is_synthesized(path, root):
+            out.add(f"{path}:{found['code']}")
     return frozenset(out)
 
 
@@ -62,7 +99,12 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     from a checker that did not run is an empty set that looks exactly like a clean tree.
     That is the fail-open shape this ecosystem keeps paying for, so it raises instead.
     """
-    argv = [str(dist / ".venv" / "bin" / "ruff"), "check", "--no-cache",
+    # ⚑⚑ THE DECLARED BINARY WINS OVER A VENV PATH. This read `.venv/bin/ruff` unconditionally,
+    # which is a developer venv no clone contains — the same escape the hooks suite already
+    # closed. Under bazel `RUFF_BIN` names a hash-pinned staged input; unset, the venv answers as
+    # before. An action reaching for an undeclared binary is invisible to its own key.
+    binary = os.environ.get("RUFF_BIN") or str(dist / ".venv" / "bin" / "ruff")
+    argv = [binary, "check", "--no-cache",
             "--output-format", "concise", "."]
     if preview:
         argv.insert(3, "--preview")
@@ -71,4 +113,4 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
         msg = (f"ruff exited {proc.returncode} in {dist} — the census is not trustworthy; "
                f"refusing rather than reporting an empty one\n{proc.stderr}")
         raise RuntimeError(msg)
-    return parse_concise(proc.stdout.splitlines())
+    return parse_concise(proc.stdout.splitlines(), dist)

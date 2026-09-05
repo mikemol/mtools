@@ -73,3 +73,25 @@ def test_an_unexpected_exit_refuses_rather_than_reporting_an_empty_census(
     (tmp_path / ".venv" / "bin" / "ruff").chmod(0o755)
     with pytest.raises(RuntimeError, match="not trustworthy"):
         run_ruff(tmp_path, preview=True)
+
+
+def test_a_synthesized_package_marker_is_not_censused(tmp_path: Path) -> None:
+    """An EMPTY `__init__.py` is a build artifact and does not enter the census.
+
+    ⚑⚑ rules_python writes one at every level of a runfiles tree so it is importable. None exist
+    in the source tree, and `src/mikemol/__init__.py` is the file PEP 420 forbids here outright.
+    Measured: the first honest run of the bazel ratchet gate REFUSED 8 keys, all from these.
+
+    ⚑ THE DISCRIMINATOR IS EMPTINESS, NOT THE NAME. A first cut excluded every `__init__.py` and
+    over-excluded — `mdstruct/src/mikemol/mdstruct/__init__.py` exists, carries content and
+    legitimately held a key, so dropping it PAID DOWN REAL DEBT by accident. That is the mirror
+    defect: a domain too NARROW, which serves a stale green rather than failing loudly.
+    """
+    (tmp_path / "pkg").mkdir()
+    (tmp_path / "pkg" / "__init__.py").write_text("", encoding="utf-8")
+    (tmp_path / "real").mkdir()
+    (tmp_path / "real" / "__init__.py").write_text('"""Real."""\n', encoding="utf-8")
+    keys = parse_concise(
+        ["pkg/__init__.py:1:1: some-rule: msg", "real/__init__.py:1:1: some-rule: msg"],
+        tmp_path)
+    assert keys == frozenset({"real/__init__.py:some-rule"})
