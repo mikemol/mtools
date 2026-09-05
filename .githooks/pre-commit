@@ -24,7 +24,7 @@ fail=0
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
 
 # ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
-for dist in hooks mdstruct; do
+for dist in hooks mdstruct ratchet; do
   for tool in ruff mypy python3; do
     if [ ! -x "$dist/.venv/bin/$tool" ]; then
       say "$dist/.venv/bin/$tool not found — cannot run the gate, commit refused"
@@ -39,7 +39,7 @@ staged="$(mktemp -d)"
 trap 'rm -rf "$staged"' EXIT
 git checkout-index --all --prefix="$staged/"
 
-for dist in hooks mdstruct; do
+for dist in hooks mdstruct ratchet; do
   [ -d "$staged/$dist" ] || continue
   say "checking $dist"
   ( cd "$staged/$dist" && "$root/$dist/.venv/bin/ruff" check --no-cache . ) || fail=1
@@ -52,7 +52,7 @@ done
 # ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership
 # failure this repo refuses: not a COUNT of unwarranted cases, but the SET — warranting one case
 # while adding another leaves a count unchanged and the membership churned.
-for dist in hooks mdstruct; do
+for dist in hooks mdstruct ratchet; do
   [ -d "$staged/$dist" ] || continue
   w=$(grep -c '@misc{' "$staged/$dist/warrants.bib")
   # ⚑ `grep -h` then a line count, NOT `grep -c`: -c counts PER FILE and would emit one number

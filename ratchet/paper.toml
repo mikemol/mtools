@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.ratchet: a paydown-only ratchet over a SET, and four states a boolean cannot carry"
+subtitle = "Both halves fail the same way --- a count that reports green while its membership churns, and a missing baseline that reads green while asserting nothing --- so the cases are written as substitution attacks and state-distinction assertions rather than as feature checks, because neither defect is visible in a passing run."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "RATCHET.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

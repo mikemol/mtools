@@ -1,0 +1,93 @@
+% warrants.bib — one claim PER TEST CASE in the ratchet suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: ratchet-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+% ---------------------------------------------------------------- membership
+
+@misc{ratchet-membership-substitution-at-constant-size-is-refused,
+  section = {membership},
+  claim   = {THE ARM THAT PROVES THIS IS A SET RATCHET AND NOT A COUNT WEARING THE NAME. Pay one key down and add another: the cardinality is unchanged, so a count-based ratchet reports green while the membership churned ENTIRELY. The origin measured this as "six-vs-six different sets". Under set membership the added key is refused},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_substitution_at_constant_size_is_refused}
+}
+
+@misc{ratchet-membership-growth-is-refused,
+  section = {membership},
+  claim   = {A key present now and absent from the baseline is refused},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_growth_is_refused}
+}
+
+@misc{ratchet-membership-unchanged-census-passes,
+  section = {membership},
+  claim   = {The P-arm. Without it every refusal above passes against a gate that refuses everything --- which is not a strict gate but a broken one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_unchanged_census_passes}
+}
+
+@misc{ratchet-membership-paydown-lowers-permanently,
+  section = {membership},
+  claim   = {PAYDOWN LOWERS THE BASELINE PERMANENTLY, so a repair cannot silently regress --- a paid-down key returning makes the gate refuse. That is what makes this a ratchet rather than a report},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_paydown_passes_and_lowers_the_baseline}
+}
+
+@misc{ratchet-membership-mixed-run-writes-nothing,
+  section = {membership},
+  claim   = {A run that both grows and pays down REFUSES and writes nothing. Lowering alongside growth would bank the paydown and lose the refusal in the same run},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_mixed_run_refuses_and_writes_nothing}
+}
+
+@misc{ratchet-membership-partition-separates-growth-from-paydown,
+  section = {membership},
+  claim   = {Growth and paydown are INDEPENDENT; a single run can do both, and each means something different to a reader},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_the_partition_separates_growth_from_paydown}
+}
+
+% ---------------------------------------------------------------- states
+
+@misc{ratchet-states-absent-is-refused-not-read-as-clean,
+  section = {states},
+  claim   = {ABSENT READS GREEN WHILE ASSERTING NOTHING, which is why it exits 1. A gate with no baseline has nothing to check against and is indistinguishable in a summary line from a gate that examined a clean tree. The birth move is EXPLICIT, because a baseline that creates itself on first run grandfathers whatever happened to be present at that moment and nobody chose that set},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_absent_baseline_is_refused_rather_than_read_as_clean}
+}
+
+@misc{ratchet-states-empty-refuses-every-key,
+  section = {states},
+  claim   = {EMPTY IS THE STRONGEST STATE, NOT A DEGRADED ONE --- every key reads as new and is refused},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_empty_baseline_refuses_every_key}
+}
+
+@misc{ratchet-states-absent-and-empty-are-different-facts,
+  section = {states},
+  claim   = {ABSENT and EMPTY both yield an empty key set and they are OPPOSITES: one asserts nothing, the other is zero tolerance. A reader keeping only the set cannot tell them apart},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_absent_and_empty_are_different_facts}
+}
+
+@misc{ratchet-states-unreadable-is-unread-not-empty,
+  section = {states},
+  claim   = {A decode failure is a fact about the READER, not a verdict about the gate. Reporting it as EMPTY would silently widen what the ratchet permits to everything},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_unreadable_baseline_is_unread_rather_than_empty}
+}
+
+@misc{ratchet-states-two-independent-properties,
+  section = {states},
+  claim   = {A 2-BIT SPACE A BOOLEAN CANNOT CARRY. `is_defect` says the GATE cannot be trusted; `deserves_mark` says a READER should look. UNREAD marks without being a defect; EMPTY is neither. Any `!= OK` flattens the space to one bit, ALWAYS in the direction that reads strictness as debt --- the origin measured three separate instances of exactly that in one repo, including a census that printed "8 with a DEGRADED baseline" two lines above a legend explaining the two collapsed states are opposites},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_each_state_declares_two_independent_properties}
+}
+
+% ---------------------------------------------------------------- write
+
+@misc{ratchet-write-false-is-a-no-op,
+  section = {write},
+  claim   = {`write` IS REQUIRED AND EXPLICIT --- no environment variable arms a mutation here. An ambient switch is the same shape as a hook reporting itself armed while refusing nothing, and under a build system a cached write is a SKIPPED write, so the mutation silently does not happen},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_write_false_is_a_no_op}
+}
+
+@misc{ratchet-write-confirms-what-landed,
+  section = {write},
+  claim   = {A write succeeding and a write LANDING are different claims. A baseline that did not land reads as ABSENT on the next run --- which reads green while asserting nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_write_confirms_what_landed}
+}

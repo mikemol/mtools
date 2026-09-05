@@ -326,10 +326,11 @@
     "@@rules_python+//python/extensions:pip.bzl%pip": {
       "general": {
         "bzlTransitiveDigest": "J8x4DXBGGbJQMTKu3BVCIopHfr/AfDibKrUCj/TXUvY=",
-        "usagesDigest": "j3YYhoyX7IpZ3yiTNdaIi14XgM0gUIsaxG21zyt0kpE=",
+        "usagesDigest": "Nj7itR7TYI+/ReRWEAQt44RdQpQJbvuradauPG1fmaE=",
         "recordedFileInputs": {
           "@@//hooks/requirements.txt": "ab91ea8c26cdc64b03b2fad8e552e590b4cc478e34a984a1ebd300de734d924b",
           "@@//mdstruct/requirements.txt": "6d62f82cc27746c5fe91dfcbd6fa68e1fe0c5ea65411c2c0cb9454bed2fa6ebb",
+          "@@//ratchet/requirements.txt": "07db352f9543e7bef2b8dd005e63c4c8f14c865ef75539178f9233d037399b46",
           "@@protobuf+//python/requirements.txt": "983be60d3cec4b319dcab6d48aeb3f5b2f7c3350f26b3a9e97486c37967c73c5",
           "@@rules_fuzzing+//fuzzing/requirements.txt": "ab04664be026b632a0d2a2446c4f65982b7654f5b6851d2f9d399a19b7242a5b",
           "@@rules_python+//tools/publish/requirements_darwin.txt": "2994136eab7e57b083c3de76faf46f70fad130bc8e7360a7fed2b288b69e79dc",
@@ -2977,6 +2978,16 @@
                 "numpy",
                 "setuptools"
               ],
+              "groups": {}
+            }
+          },
+          "ratchet_deps": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:hub_repository.bzl%hub_repository",
+            "attributes": {
+              "repo_name": "ratchet_deps",
+              "extra_hub_aliases": {},
+              "whl_map": {},
+              "packages": [],
               "groups": {}
             }
           },

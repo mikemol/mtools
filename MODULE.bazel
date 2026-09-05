@@ -61,4 +61,9 @@ pip.parse(
     python_version = "3.13",
     requirements_lock = "//hooks:requirements.txt",
 )
-use_repo(pip, "mdstruct_deps", "hooks_deps")
+pip.parse(
+    hub_name = "ratchet_deps",
+    python_version = "3.13",
+    requirements_lock = "//ratchet:requirements.txt",
+)
+use_repo(pip, "mdstruct_deps", "hooks_deps", "ratchet_deps")

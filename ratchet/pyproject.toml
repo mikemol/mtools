@@ -1,0 +1,199 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑⚑⚑ THESE HOOKS ARE ALREADY ADOPTED ACROSS REPOS BY SYMLINK, AND THAT IS THE DEFECT THIS
+# PACKAGE ENDS. A symlinked script derives its own root from `__file__` — and `abspath` does not
+# resolve symlinks, so the root becomes the CONSUMER's repo. Measured: a peer's adopted tool
+# failed on every invocation with `ModuleNotFoundError`, and the cause was neither their code nor
+# a refactor but a latent property of being reached through a link. An installed package cannot
+# have that defect: it knows where it lives, and it can DECLARE what it needs instead of hoping
+# the surrounding layout supplies it.
+name = "mikemol-ratchet"
+version = "0.1.0"
+description = "A paydown-only ratchet over a baseline SET, with four baseline states whose properties are declared rather than re-derived."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["ratchet", "baseline", "gate", "paydown", "technical-debt"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+
+# ⚑ THE CHECKERS ARE RUNTIME DEPENDENCIES, NOT DEV EXTRAS. This package's whole function is to
+# invoke them; a consumer installing it without ruff and mypy gets a hook that reports
+# `is not installed in the project venv` on every edit — armed and checking nothing, which is the
+# state these hooks exist to make impossible.
+#
+# ⚑⚑ AND `shellcheck` IS ABSENT FROM THIS LIST BECAUSE IT IS A SYSTEM BINARY, not a wheel. The
+# shell hook reports its absence rather than passing silently — the same discipline the markdown
+# package applies to pandoc.
+# ⚑ NO RUNTIME DEPENDENCIES. A ratchet reads a set of strings and a file; anything it
+# imported would become a dependency of every gate that adopts it.
+dependencies = []
+
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py` — PEP 420 implicit namespace, shared with the sibling
+# distribution in this repo. That absence is what lets `mikemol-ratchet` and `mikemol-mdstruct`
+# install side by side without either owning the prefix; an `__init__.py` would make the first
+# installed one the exclusive owner and shadow the second.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.ratchet" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+# ⚑ NO MARKERS. This distribution has no system dependency to skip for, so an empty
+# roster is the honest one; --strict-markers then refuses any marker a test invents.
+markers = []
+
+# ⚑⚑ THE BAR IS THE ONE THESE HOOKS ENFORCE, APPLIED TO THEMSELVES. A linting tool held to a
+# weaker standard than it imposes is the shape its own refusal message argues against — and this
+# package's `pycheck` hook is the thing that would be checking it.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+# ⚑⚑⚑ WITHOUT THIS, THE TESTS TYPE AS `Any` AND THE SUITE STILL PASSES. An editable install
+# lands as a `.pth` plus an import-hook FINDER, and mypy reads the filesystem rather than running
+# `sys.path` hooks — so `from mikemol.ratchet import payload` resolves at RUNTIME and not to the
+# type checker. Every expression through the package then degrades to `Any`, and under
+# `disallow_any_expr` that surfaces as dozens of errors; without that setting it would have been
+# SILENT, and a green suite would have stood in for a checked one.
+#
+# ⚑⚑ MEASURED ON THE SIBLING DISTRIBUTION, WHICH HAS THE DEFECT TODAY. `mikemol-mdstruct` sets
+# `mypy_path = "stubs"` alone: its 90 tests pass and `mypy tests/test_frontmatter.py` reports 14
+# errors, 13 of them `Any` from one unresolved import. **A passing test suite is a fact about the
+# tests, never about the standard applied to them** — and this was reported as "ruff+mypy clean"
+# on the strength of a `src`-only run.
+mypy_path = "src"
+# ⚑⚑ AND `mypy_path` ALONE MAKES THE SOURCE REACHABLE UNDER TWO NAMES. With `src` a search root,
+# `src/mikemol/hooks/payload.py` is both `mikemol.ratchet.payload` (from the project root) and
+# `hooks.payload` (from `src/mikemol`), which mypy refuses outright — correctly, since it cannot
+# know which one a consumer means. `explicit_package_bases` says the module name is derived from
+# the declared roots, so exactly one spelling survives.
+#
+# ⚑ THE PAIR IS ONE SETTING IN TWO KEYS. Adding either alone leaves a working-looking config:
+# without the path, the tests type as `Any`; without this, the whole run aborts before checking
+# anything. Only together do they mean "the package is at `src/mikemol` and is called
+# `mikemol.ratchet`".
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# ⚑⚑⚑ THE NAMESPACE IS DECLARED, NOT SUPPRESSED. `INP001` fires on a directory with no
+# `__init__.py` because that is usually an oversight — and here it is the design twice over:
+# `src/mikemol/` must stay empty of one so sibling distributions can share the prefix, and
+# `tests/` is a collection root pytest imports by path rather than a package anything imports.
+# The rule offers exactly this option for the deliberate case, so the answer is to TELL it.
+#
+# ⚑ AND THE DISTINCTION IS WORTH THE LINE: with this, a MISSING `__init__.py` anywhere else is
+# still a finding. An `ignore = ["INP001"]` would buy the same silence at the cost of never
+# hearing about a real oversight again.
+#
+# ⚑⚑ `tests` IS LISTED BECAUSE THE SIBLING DISTRIBUTION'S OMISSION WAS MEASURED, NOT ASSUMED.
+# mdstruct declares only `src/mikemol`, and its `tests/` carries three live ruff findings that
+# nothing had swept — the per-file hook only ever checked files as they were edited, and the
+# suite's own green told a reader nothing about the lint bar reaching it. A passing test suite
+# is a fact about the tests, never about the standard applied to them.
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D203", "D213", "COM812"]
+
+# ⚑⚑ `@pytest.fixture()` CALLED, NOT BARE — AND THE TWO CHECKERS DISAGREE ABOUT THIS, so the
+# disagreement has to be settled in config rather than re-argued per file. `pytest.fixture` is an
+# OVERLOADED decorator: applied bare it resolves to the overload returning `FixtureFunction`,
+# which under `disallow_any_decorated` degrades the decorated function's signature. Called, it
+# resolves to the concrete-returning overload. ruff's PT001 defaults to preferring the bare form,
+# which is the spelling mypy cannot type here — so the default is inverted rather than the rule
+# suppressed, and a fixture written the other way is still a finding.
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ THE PATTERN IS STRICTER THAN ITS PROSE, AND DELIBERATELY. "Carry the two-line header"
+# underspecifies it: this also fixes ORDER (SPDX first), ADJACENCY, the `#` prefix on the
+# copyright line, and a 4-digit year. A file with both lines in the wrong order fails while
+# looking correct to a reader — so the intake documentation must state the shape, not the gist.
+#
+# ⚑⚑ VERIFY THIS LINE WITH `ruff check --show-settings | grep notice_rgx`, NEVER BY READING IT.
+# Reading the line you just wrote shows INTENT; --show-settings shows EFFECT. The string must be
+# a TOML *literal* (single quotes): in a basic string `\.` is an invalid escape and `\\.` means
+# backslash-dot, so a double-quoted version resolves to a regex that CANNOT MATCH — a gate that
+# reads as adopted, passes every file, and is inert. Measured: written double-quoted here first,
+# caught by --show-settings before it was armed.
+#
+# ⚑ `[ \t]*` AND NOT `\s*`, because `\s` matches newlines. With `\s*` the gate silently ACCEPTED
+# a blank line between the two notices while REJECTING a `#` line between them — an inconsistency
+# no reader predicts from the regex or its description. Found by cassian-observability, which
+# tested its own migrating files against this pattern rather than accepting an assurance that
+# they passed; the probe surfaced a defect in THIS config, not in cassian's files.
+#
+# ⚑ A THIRD CASE, and no F-arm reaches it: A REPORTED CONVENTION WITH NO POPULATION. substrate
+# supplied this exact header form as its practice, cited from one file. Censused:
+# `pycodemod --literal 'SPDX-License-Identifier' substrate/` → 0 sites in 0 of 556 files. The
+# convention was inferred from a single witness and never censused; nothing fires because nothing
+# exists, and the report is the only artifact. The discriminating act is not an arm but a CENSUS,
+# and it costs one command. Consequence for intake: substrate-derived code arrives WITHOUT headers,
+# so under this gate the header is a precondition of admission rather than a follow-up.
+#
+# ⚑⚑ THE GATE IS MEASURED ON THE VERSION THE LOCK INSTALLS, NOT ONLY THE ONE IN THE VENV. The
+# `requirements.txt` beside this file pinned ruff 0.16.6 while the working venv ran 0.16.5 — so
+# every arm below had been measured on a version bazel would NOT install. Resolved by installing
+# the pinned version and re-running the whole matrix: identical results on both, corpus clean on
+# both, all 140 warrant checks passing on both. The drift was benign; that it was UNMEASURED was
+# not, and a rule set is a property of the resolver rather than of the config text.
+#
+# ⚑⚑⚑ F-ARMED PER PROPOSITION, NOT PER RULE. A configured-but-inert gate is the EASY case: it
+# fires on nothing and someone eventually notices. AN ACTIVE GATE AIMED AT THE WRONG PREDICATE is
+# the hard case — it produces findings, passes review, and its greens are indistinguishable from
+# correct ones. This repo and linux-sources were MIRROR IMAGES of that: this notice-rgx matched
+# SPDX only, its unset default matched `Copyright` only, so neither repo gated both lines and each
+# party ran the arm its own config would pass. The arms below must all be re-run on any edit:
+#
+#   P1 intact          passes      F1 no SPDX          FIRES     F4 blank line between  FIRES
+#   P2 shebang first   passes      F2 no copyright     FIRES     F5 `#` line between    FIRES
+#   P3 year 2031       passes      F3 reversed order   FIRES     F6 wrong holder        FIRES
+#
+# P2 keeps codemod_header.py working (a `#!` not on line 1 stops being a shebang, so the notice
+# follows it). P3 keeps the year `\d{4}` rather than literal 2026: a copyright year is the year of
+# AUTHORSHIP, so a later file carries a later year without a config change. And the P arms are not
+# decoration — without them, "every F arm fires" is indistinguishable from a gate refusing
+# everything.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+# ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
+# file rather than to the package. An entry naming a directory would grant it to every hook in
+# order to cover one call — the blast radius a per-responsibility override exists to avoid.
+"src/mikemol/hooks/verdict.py" = ["S603"]

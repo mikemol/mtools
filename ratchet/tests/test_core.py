@@ -1,0 +1,155 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""The ratchet's witnesses: set membership, the four states, and the required write."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+import pytest
+
+from mikemol.ratchet.core import Diff, partition, ratchet, read_baseline, write_baseline
+from mikemol.ratchet.state import BaselineState
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+
+def _base(tmp_path: Path, keys: set[str]) -> Path:
+    path = tmp_path / "baseline.txt"
+    write_baseline(path, keys, write=True)
+    return path
+
+
+def test_a_substitution_at_constant_size_is_refused(tmp_path: Path) -> None:
+    """⚑⚑⚑ THE ARM THAT PROVES THIS IS A SET RATCHET AND NOT A COUNT WEARING THE NAME.
+
+    Pay one key down and add another: the cardinality is unchanged, so a count-based ratchet
+    reports green while the membership churned entirely. The origin measured this as
+    "six-vs-six different sets". Under set membership the added key is refused.
+    """
+    path = _base(tmp_path, {"a", "b"})
+    code, lines = ratchet({"a", "z"}, path, write=False)
+    assert code == 1
+    assert any("+ z" in line for line in lines)
+
+
+def test_growth_is_refused(tmp_path: Path) -> None:
+    """A key present now and absent from the baseline is refused."""
+    assert ratchet({"a", "b", "c"}, _base(tmp_path, {"a", "b"}), write=False)[0] == 1
+
+
+def test_an_unchanged_census_passes(tmp_path: Path) -> None:
+    """The P-arm. Without it every refusal above passes against a gate that refuses all."""
+    assert ratchet({"a", "b"}, _base(tmp_path, {"a", "b"}), write=False)[0] == 0
+
+
+def test_paydown_passes_and_lowers_the_baseline(tmp_path: Path) -> None:
+    """⚑ PAYDOWN LOWERS PERMANENTLY, so a repair cannot silently regress."""
+    path = _base(tmp_path, {"a", "b"})
+    assert ratchet({"a"}, path, write=True)[0] == 0
+    assert read_baseline(path)[1] == frozenset({"a"})
+    assert ratchet({"a", "b"}, path, write=False)[0] == 1
+
+
+def test_a_mixed_run_refuses_and_writes_nothing(tmp_path: Path) -> None:
+    """⚑ Lowering alongside growth would bank the paydown and lose the refusal in one run."""
+    path = _base(tmp_path, {"a", "b"})
+    assert ratchet({"a", "c"}, path, write=True)[0] == 1
+    assert read_baseline(path)[1] == frozenset({"a", "b"})
+
+
+def test_an_absent_baseline_is_refused_rather_than_read_as_clean(tmp_path: Path) -> None:
+    """⚑⚑ ABSENT READS GREEN WHILE ASSERTING NOTHING, which is why it exits 1 here.
+
+    A gate with no baseline has nothing to check against and is indistinguishable in a
+    summary line from a gate that examined a clean tree.
+    """
+    code, lines = ratchet({"a"}, tmp_path / "nothing.txt", write=False)
+    assert code == 1
+    assert any("green over nothing" in line for line in lines)
+
+
+def test_an_empty_baseline_refuses_every_key(tmp_path: Path) -> None:
+    """⚑⚑ EMPTY IS THE STRONGEST STATE, NOT A DEGRADED ONE — every key reads as new."""
+    path = tmp_path / "empty.txt"
+    write_baseline(path, set(), write=True)
+    assert read_baseline(path)[0] is BaselineState.EMPTY
+    assert ratchet({"a"}, path, write=False)[0] == 1
+    assert ratchet(set(), path, write=False)[0] == 0
+
+
+def test_absent_and_empty_are_different_facts(tmp_path: Path) -> None:
+    """ABSENT and EMPTY are different facts.
+
+    ⚑⚑ Both yield an empty key set, and they are OPPOSITES: one asserts nothing, the other
+    is zero tolerance. A reader keeping only the set cannot tell them apart.
+    """
+    absent, absent_keys = read_baseline(tmp_path / "missing.txt")
+    path = tmp_path / "empty.txt"
+    write_baseline(path, set(), write=True)
+    empty, empty_keys = read_baseline(path)
+    assert absent_keys == empty_keys == frozenset()
+    assert absent is BaselineState.ABSENT
+    assert empty is BaselineState.EMPTY
+    assert absent.is_defect
+    assert not empty.is_defect
+
+
+def test_an_unreadable_baseline_is_unread_rather_than_empty(tmp_path: Path) -> None:
+    """⚑ A decode failure is a fact about the READER, not a verdict about the gate.
+
+    Reporting it as EMPTY would silently widen what the ratchet permits to everything.
+    """
+    path = tmp_path / "binary.txt"
+    path.write_bytes(b"\xff\xfe\x00 not utf-8")
+    state, keys = read_baseline(path)
+    assert state is BaselineState.UNREAD
+    assert keys == frozenset()
+    assert ratchet({"a"}, path, write=False)[0] == 1
+
+
+def test_write_false_is_a_no_op(tmp_path: Path) -> None:
+    """⚑⚑ `write` IS REQUIRED AND EXPLICIT — no environment variable arms a mutation here.
+
+    An ambient switch is the same shape as a hook reporting itself armed while refusing
+    nothing, and under a build system a cached write is a skipped write.
+    """
+    path = tmp_path / "unwritten.txt"
+    write_baseline(path, {"a"}, write=False)
+    assert not path.exists()
+
+
+def test_a_write_confirms_what_landed(tmp_path: Path) -> None:
+    """A write confirms what landed.
+
+    ⚑ A write succeeding and a write landing are different claims. A baseline that did not
+    land reads as ABSENT next run — which reads green while asserting nothing.
+    """
+    path = tmp_path / "written.txt"
+    write_baseline(path, {"b", "a"}, write=True)
+    assert path.read_text(encoding="utf-8") == "a\nb\n"
+
+
+def test_the_partition_separates_growth_from_paydown() -> None:
+    """Growth and paydown are independent; a run can do both."""
+    diff = partition({"a", "c"}, {"a", "b"})
+    assert diff == Diff(added=frozenset({"c"}), paid=frozenset({"b"}))
+    assert diff.grew
+
+
+@pytest.mark.parametrize(
+    ("state", "is_defect", "deserves_mark"),
+    [(BaselineState.OK, False, False),
+     (BaselineState.EMPTY, False, False),
+     (BaselineState.ABSENT, True, True),
+     (BaselineState.UNREAD, False, True)])
+def test_each_state_declares_two_independent_properties(
+        state: BaselineState, is_defect: bool, deserves_mark: bool) -> None:  # noqa: FBT001
+    """Each state declares two independent properties.
+
+    ⚑⚑ A 2-BIT SPACE A BOOLEAN CANNOT CARRY. UNREAD marks without being a defect; EMPTY is
+    neither. Any `!= OK` flattens it to one bit, always reading strictness as debt.
+    """
+    assert state.is_defect is is_defect
+    assert state.deserves_mark is deserves_mark
