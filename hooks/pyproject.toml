@@ -143,6 +143,48 @@ ignore = ["D203", "D213", "COM812"]
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
 
+# ⚑⚑ THE PATTERN IS STRICTER THAN ITS PROSE, AND DELIBERATELY. "Carry the two-line header"
+# underspecifies it: this also fixes ORDER (SPDX first), ADJACENCY, the `#` prefix on the
+# copyright line, and a 4-digit year. A file with both lines in the wrong order fails while
+# looking correct to a reader — so the intake documentation must state the shape, not the gist.
+#
+# ⚑⚑ VERIFY THIS LINE WITH `ruff check --show-settings | grep notice_rgx`, NEVER BY READING IT.
+# Reading the line you just wrote shows INTENT; --show-settings shows EFFECT. The string must be
+# a TOML *literal* (single quotes): in a basic string `\.` is an invalid escape and `\\.` means
+# backslash-dot, so a double-quoted version resolves to a regex that CANNOT MATCH — a gate that
+# reads as adopted, passes every file, and is inert. Measured: written double-quoted here first,
+# caught by --show-settings before it was armed.
+#
+# ⚑ `[ \t]*` AND NOT `\s*`, because `\s` matches newlines. With `\s*` the gate silently ACCEPTED
+# a blank line between the two notices while REJECTING a `#` line between them — an inconsistency
+# no reader predicts from the regex or its description. Found by cassian-observability, which
+# tested its own migrating files against this pattern rather than accepting an assurance that
+# they passed; the probe surfaced a defect in THIS config, not in cassian's files.
+#
+# ⚑ A THIRD CASE, and no F-arm reaches it: A REPORTED CONVENTION WITH NO POPULATION. substrate
+# supplied this exact header form as its practice, cited from one file. Censused:
+# `pycodemod --literal 'SPDX-License-Identifier' substrate/` → 0 sites in 0 of 556 files. The
+# convention was inferred from a single witness and never censused; nothing fires because nothing
+# exists, and the report is the only artifact. The discriminating act is not an arm but a CENSUS,
+# and it costs one command. Consequence for intake: substrate-derived code arrives WITHOUT headers,
+# so under this gate the header is a precondition of admission rather than a follow-up.
+#
+# ⚑⚑⚑ F-ARMED PER PROPOSITION, NOT PER RULE. A configured-but-inert gate is the EASY case: it
+# fires on nothing and someone eventually notices. AN ACTIVE GATE AIMED AT THE WRONG PREDICATE is
+# the hard case — it produces findings, passes review, and its greens are indistinguishable from
+# correct ones. This repo and linux-sources were MIRROR IMAGES of that: this notice-rgx matched
+# SPDX only, its unset default matched `Copyright` only, so neither repo gated both lines and each
+# party ran the arm its own config would pass. The arms below must all be re-run on any edit:
+#
+#   P1 intact          passes      F1 no SPDX          FIRES     F4 blank line between  FIRES
+#   P2 shebang first   passes      F2 no copyright     FIRES     F5 `#` line between    FIRES
+#   P3 year 2031       passes      F3 reversed order   FIRES     F6 wrong holder        FIRES
+#
+# P2 keeps codemod_header.py working (a `#!` not on line 1 stops being a shebang, so the notice
+# follows it). P3 keeps the year `\d{4}` rather than literal 2026: a copyright year is the year of
+# AUTHORSHIP, so a later file carries a later year without a config change. And the P arms are not
+# decoration — without them, "every F arm fires" is indistinguishable from a gate refusing
+# everything.
 [tool.ruff.lint.flake8-copyright]
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
