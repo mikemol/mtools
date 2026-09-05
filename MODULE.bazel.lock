@@ -326,10 +326,13 @@
     "@@rules_python+//python/extensions:pip.bzl%pip": {
       "general": {
         "bzlTransitiveDigest": "J8x4DXBGGbJQMTKu3BVCIopHfr/AfDibKrUCj/TXUvY=",
-        "usagesDigest": "Nj7itR7TYI+/ReRWEAQt44RdQpQJbvuradauPG1fmaE=",
+        "usagesDigest": "RWwHNklYwwrWqoM/O9VP/lCSoVJ5cPPQGCdEoaBZZMs=",
         "recordedFileInputs": {
+          "@@//hooks/requirements-dev.txt": "7a49d103a2ff9d7db5cc48b8bcf55ea4785e1b90d450fcb52621fa2e0e5f6495",
           "@@//hooks/requirements.txt": "ab91ea8c26cdc64b03b2fad8e552e590b4cc478e34a984a1ebd300de734d924b",
+          "@@//mdstruct/requirements-dev.txt": "9cbe2cbf0e311f55c56944fd7aa8feeded450593753cfbbf563b7562155acdc4",
           "@@//mdstruct/requirements.txt": "6d62f82cc27746c5fe91dfcbd6fa68e1fe0c5ea65411c2c0cb9454bed2fa6ebb",
+          "@@//ratchet/requirements-dev.txt": "8ca5d49e3e8db5ae5a428d2b5de2b1e4949a77ac0841853121eaff0cecff7b38",
           "@@//ratchet/requirements.txt": "07db352f9543e7bef2b8dd005e63c4c8f14c865ef75539178f9233d037399b46",
           "@@protobuf+//python/requirements.txt": "983be60d3cec4b319dcab6d48aeb3f5b2f7c3350f26b3a9e97486c37967c73c5",
           "@@rules_fuzzing+//fuzzing/requirements.txt": "ab04664be026b632a0d2a2446c4f65982b7654f5b6851d2f9d399a19b7242a5b",
@@ -406,6 +409,114 @@
               "requirement": "typing-extensions==4.16.0"
             }
           },
+          "hooks_dev_313_ast_serialize": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "ast-serialize==0.9.0"
+            }
+          },
+          "hooks_dev_313_iniconfig": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "iniconfig==2.3.0"
+            }
+          },
+          "hooks_dev_313_librt": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "librt==0.15.0"
+            }
+          },
+          "hooks_dev_313_mypy": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "mypy==2.3.1"
+            }
+          },
+          "hooks_dev_313_mypy_extensions": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "mypy-extensions==1.1.0"
+            }
+          },
+          "hooks_dev_313_packaging": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "packaging==26.3"
+            }
+          },
+          "hooks_dev_313_pathspec": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "pathspec==1.1.1"
+            }
+          },
+          "hooks_dev_313_pluggy": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "pluggy==1.6.0"
+            }
+          },
+          "hooks_dev_313_pygments": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "pygments==2.21.0"
+            }
+          },
+          "hooks_dev_313_pytest": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "pytest==9.1.1"
+            }
+          },
+          "hooks_dev_313_ruff": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "ruff==0.16.6"
+            }
+          },
+          "hooks_dev_313_typing_extensions": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@hooks_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "hooks_dev_313",
+              "requirement": "typing-extensions==4.16.0"
+            }
+          },
           "mdstruct_deps_313_click": {
             "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
             "attributes": {
@@ -431,6 +542,51 @@
               "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
               "repo": "mdstruct_deps_313",
               "requirement": "pyyaml==6.0.3"
+            }
+          },
+          "mdstruct_dev_313_iniconfig": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "iniconfig==2.3.0"
+            }
+          },
+          "mdstruct_dev_313_packaging": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "packaging==26.3"
+            }
+          },
+          "mdstruct_dev_313_pluggy": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "pluggy==1.6.0"
+            }
+          },
+          "mdstruct_dev_313_pygments": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "pygments==2.21.0"
+            }
+          },
+          "mdstruct_dev_313_pytest": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "pytest==9.1.1"
             }
           },
           "pip_deps_310_numpy": {
@@ -521,6 +677,51 @@
               "python_interpreter_target": "@@rules_python++python+python_3_9_host//:python",
               "repo": "pip_deps_39",
               "requirement": "setuptools<=70.3.0"
+            }
+          },
+          "ratchet_dev_313_iniconfig": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@ratchet_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "ratchet_dev_313",
+              "requirement": "iniconfig==2.3.0"
+            }
+          },
+          "ratchet_dev_313_packaging": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@ratchet_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "ratchet_dev_313",
+              "requirement": "packaging==26.3"
+            }
+          },
+          "ratchet_dev_313_pluggy": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@ratchet_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "ratchet_dev_313",
+              "requirement": "pluggy==1.6.0"
+            }
+          },
+          "ratchet_dev_313_pygments": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@ratchet_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "ratchet_dev_313",
+              "requirement": "pygments==2.21.0"
+            }
+          },
+          "ratchet_dev_313_pytest": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@ratchet_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "ratchet_dev_313",
+              "requirement": "pytest==9.1.1"
             }
           },
           "rules_fuzzing_py_deps_310_absl_py": {
@@ -2947,6 +3148,42 @@
               "groups": {}
             }
           },
+          "hooks_dev": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:hub_repository.bzl%hub_repository",
+            "attributes": {
+              "repo_name": "hooks_dev",
+              "extra_hub_aliases": {},
+              "whl_map": {
+                "ast_serialize": "{\"hooks_dev_313_ast_serialize\":[{\"version\":\"3.13\"}]}",
+                "iniconfig": "{\"hooks_dev_313_iniconfig\":[{\"version\":\"3.13\"}]}",
+                "librt": "{\"hooks_dev_313_librt\":[{\"version\":\"3.13\"}]}",
+                "mypy": "{\"hooks_dev_313_mypy\":[{\"version\":\"3.13\"}]}",
+                "mypy_extensions": "{\"hooks_dev_313_mypy_extensions\":[{\"version\":\"3.13\"}]}",
+                "packaging": "{\"hooks_dev_313_packaging\":[{\"version\":\"3.13\"}]}",
+                "pathspec": "{\"hooks_dev_313_pathspec\":[{\"version\":\"3.13\"}]}",
+                "pluggy": "{\"hooks_dev_313_pluggy\":[{\"version\":\"3.13\"}]}",
+                "pygments": "{\"hooks_dev_313_pygments\":[{\"version\":\"3.13\"}]}",
+                "pytest": "{\"hooks_dev_313_pytest\":[{\"version\":\"3.13\"}]}",
+                "ruff": "{\"hooks_dev_313_ruff\":[{\"version\":\"3.13\"}]}",
+                "typing_extensions": "{\"hooks_dev_313_typing_extensions\":[{\"version\":\"3.13\"}]}"
+              },
+              "packages": [
+                "ast_serialize",
+                "iniconfig",
+                "librt",
+                "mypy",
+                "mypy_extensions",
+                "packaging",
+                "pathspec",
+                "pluggy",
+                "pygments",
+                "pytest",
+                "ruff",
+                "typing_extensions"
+              ],
+              "groups": {}
+            }
+          },
           "mdstruct_deps": {
             "repoRuleId": "@@rules_python+//python/private/pypi:hub_repository.bzl%hub_repository",
             "attributes": {
@@ -2961,6 +3198,28 @@
                 "click",
                 "panflute",
                 "pyyaml"
+              ],
+              "groups": {}
+            }
+          },
+          "mdstruct_dev": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:hub_repository.bzl%hub_repository",
+            "attributes": {
+              "repo_name": "mdstruct_dev",
+              "extra_hub_aliases": {},
+              "whl_map": {
+                "iniconfig": "{\"mdstruct_dev_313_iniconfig\":[{\"version\":\"3.13\"}]}",
+                "packaging": "{\"mdstruct_dev_313_packaging\":[{\"version\":\"3.13\"}]}",
+                "pluggy": "{\"mdstruct_dev_313_pluggy\":[{\"version\":\"3.13\"}]}",
+                "pygments": "{\"mdstruct_dev_313_pygments\":[{\"version\":\"3.13\"}]}",
+                "pytest": "{\"mdstruct_dev_313_pytest\":[{\"version\":\"3.13\"}]}"
+              },
+              "packages": [
+                "iniconfig",
+                "packaging",
+                "pluggy",
+                "pygments",
+                "pytest"
               ],
               "groups": {}
             }
@@ -2988,6 +3247,28 @@
               "extra_hub_aliases": {},
               "whl_map": {},
               "packages": [],
+              "groups": {}
+            }
+          },
+          "ratchet_dev": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:hub_repository.bzl%hub_repository",
+            "attributes": {
+              "repo_name": "ratchet_dev",
+              "extra_hub_aliases": {},
+              "whl_map": {
+                "iniconfig": "{\"ratchet_dev_313_iniconfig\":[{\"version\":\"3.13\"}]}",
+                "packaging": "{\"ratchet_dev_313_packaging\":[{\"version\":\"3.13\"}]}",
+                "pluggy": "{\"ratchet_dev_313_pluggy\":[{\"version\":\"3.13\"}]}",
+                "pygments": "{\"ratchet_dev_313_pygments\":[{\"version\":\"3.13\"}]}",
+                "pytest": "{\"ratchet_dev_313_pytest\":[{\"version\":\"3.13\"}]}"
+              },
+              "packages": [
+                "iniconfig",
+                "packaging",
+                "pluggy",
+                "pygments",
+                "pytest"
+              ],
               "groups": {}
             }
           },

@@ -66,4 +66,35 @@ pip.parse(
     python_version = "3.13",
     requirements_lock = "//ratchet:requirements.txt",
 )
-use_repo(pip, "mdstruct_deps", "hooks_deps", "ratchet_deps")
+
+# ⚑⚑⚑ A SECOND LOCK PER DISTRIBUTION, FOR THE WITNESS ACTIONS ONLY. The shipping lock above
+# excludes the dev group, so it cannot supply pytest — and the thesis at the top of this file is
+# that A PYTEST CASE AND A PAPERKIT WITNESS ARE THE SAME OBJECT, which means the action staging a
+# witness MUST have the runner. Merging pytest into the shipping lock would answer that by
+# shipping a test runner to every consumer, which is the over-admission `pip.parse`'s one-hub-per-
+# distribution split exists to refuse. Two locks, two hubs: what a consumer installs and what a
+# witness runs under are different questions with different answers.
+pip.parse(
+    hub_name = "hooks_dev",
+    python_version = "3.13",
+    requirements_lock = "//hooks:requirements-dev.txt",
+)
+pip.parse(
+    hub_name = "mdstruct_dev",
+    python_version = "3.13",
+    requirements_lock = "//mdstruct:requirements-dev.txt",
+)
+pip.parse(
+    hub_name = "ratchet_dev",
+    python_version = "3.13",
+    requirements_lock = "//ratchet:requirements-dev.txt",
+)
+use_repo(
+    pip,
+    "hooks_deps",
+    "hooks_dev",
+    "mdstruct_deps",
+    "mdstruct_dev",
+    "ratchet_deps",
+    "ratchet_dev",
+)

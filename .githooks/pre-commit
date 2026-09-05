@@ -71,6 +71,21 @@ for dist in hooks mdstruct ratchet; do
   fi
 done
 
+# ⚑⚑⚑ THE HERMETIC SUITE IS THE ONE THAT PROVES THE DEPENDENCIES ARE DECLARED. The host runs
+# above use each distribution's own `.venv`, which can satisfy an import nobody declared — a
+# green suite there says nothing about whether a consumer installing the wheel gets a working
+# package. Under bazel the sandbox stages ONLY what the BUILD file names, and this caught exactly
+# that on its first run: five mdstruct witnesses failed on `No module named panflute` because the
+# py_library declared no deps. The host suite had been green throughout.
+#
+# ⚑ IT REFUSES WHEN BAZEL IS ABSENT, like every other tool here. A skip would report green over a
+# suite that never ran, which is the defect this file exists to refuse.
+if ! command -v bazel >/dev/null 2>&1; then
+  say "bazel not found — cannot run the hermetic suite, commit refused"
+  exit 1
+fi
+bazel test //... --test_output=errors || fail=1
+
 # ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
 # 192 findings this bar does not yet enforce; collapsing them to `file:rule` keys gives 62. The
 # baseline is a SET, so paying one key down while another regresses is REFUSED even though the

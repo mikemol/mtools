@@ -1,13 +1,58 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
 
-# ⚑ THE LOCK IS EXPORTED, NOT A TARGET. `pip.parse` in MODULE.bazel reads this file by LABEL at
+# ⚑ THE LOCK IS EXPORTED, NOT A TARGET. `pip.parse` in MODULE.bazel reads both locks by LABEL at
 # module-extension evaluation time, which is before any target in this package is built — so what
-# is needed here is visibility of the file, not a rule producing it.
-#
-# ⚑ py_library and py_test are DELIBERATELY ABSENT for now. Adding them raises the dev-group
-# question this repo has not settled: the shipping lock excludes the dev group, so the hub cannot
-# supply pytest, while MODULE.bazel's thesis is that "a pytest case and a paperkit witness are the
-# same object". A witness action needs pytest staged; a consumer-facing lock should not ship a
-# test runner. Wiring test targets before that is answered would bake one side in silently.
-exports_files(["requirements.txt"])
+# is needed is visibility of the files, not a rule producing them.
+load("@mdstruct_dev//:requirements.bzl", dev_requirement = "requirement")
+load("@mdstruct_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+
+exports_files([
+    "requirements.txt",
+    "requirements-dev.txt",
+])
+
+# ⚑⚑ `imports = ["src"]` IS THE PEP 420 LAYOUT MADE EXPLICIT TO BAZEL. The runfiles tree resolves
+# `mikemol.mdstruct` by LAYOUT rather than by an installed `.pth`, which is the mechanism that
+# retires the `mypy_path`/`explicit_package_bases` pair (⟡mtools-drop-mypypath): that pair exists
+# because mypy reads the filesystem and an editable install's import hook is invisible to it.
+py_library(
+    name = "mdstruct",
+    srcs = glob(["src/mikemol/mdstruct/**/*.py"]),
+    data = glob(["src/mikemol/mdstruct/py.typed"], allow_empty = True),
+    imports = ["src"],
+    deps = [
+        requirement("panflute"),
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. The thesis in MODULE.bazel is that a
+# pytest case and a paperkit witness are the same object; this is where that stops being prose. A
+# failing module names itself rather than collapsing into one red suite target.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src] + glob(["tests/conftest.py"], allow_empty = True),
+        main = src,
+        args = [
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"],
+        # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,
+        # and bazel's default of `medium` reserves a timeout budget nothing uses. An honest
+        # size is what lets a genuinely slow witness stand out later instead of blending in.
+        size = "small",
+        deps = [
+            ":mdstruct",
+            dev_requirement("pytest"),
+        ],
+        imports = ["src"],
+    )
+    for src in glob(["tests/test_*.py"])
+]
