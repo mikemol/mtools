@@ -193,10 +193,25 @@ commit in the span establishes one.
   release. **The row is not merely unexercised; it is unreachable by the test everyone wrote**, and
   the interface most likely to be used for the test destroys the evidence. *Treat as unconfirmed,
   and note that confirming it needs a purpose-built arrangement rather than another SIGKILL run.*
-- **The remote executor does not close the artifact class.** Corruptions across the 2026-08-30 k8s
-  cutover: **41 before, 50 after.** Corruption occurs at input-staging on the *local* tree regardless
-  of where actions run. ⚑ **Favourable consequence: LOTO guards the working tree only** — no
-  distributed consensus, no reaching into the executor.
+- ⚑⚑ **RETRACTED 2026-09-05: THIS BULLET READ "41 before, 50 after" AND BOTH THE FIGURE AND ITS
+  CONCLUSION WERE WRONG.** It asserted *"the remote executor does not close the artifact class"* on
+  the strength of corruptions not improving across the cutover. **Paperkit re-derived its own query
+  and retracted it: the count included its own commentary alongside tool output, so the figure grew
+  as it was discussed.** Real: **32 occurrences over 8 days, 21 before / 11 after** — corruptions
+  roughly **HALVED** post-cutover. ⚑ **The direction reverses, so this is not a precision correction
+  but the opposite finding**: the shared executor measurably reduced the class rather than leaving
+  it untouched.
+- **What survives the retraction, on the mechanism rather than the count:** corruption occurs at
+  input-staging on the *local* tree regardless of where actions run, so a residual local-tree class
+  remains and ⚑ **LOTO still guards the working tree only** — no distributed consensus, no reaching
+  into the executor. That bound was never load-bearing on the numbers.
+- ⚑ **AND THE META-FINDING IS CASSIAN'S AND IS SHARPER THAN THE CORRECTION:** *"four parties, three
+  orders, dozens of cross-checks, and the most-cited number in the corpus was never re-derived by
+  anyone — cross-vantage review checks REASONING, not INPUTS."* I quoted 41/50 into this file and
+  into two peer inboxes without re-deriving it, in a census whose own §9 says every defect it found
+  lived in a table, a summary, or a headline count. **A number is the least-reviewed and
+  most-transmitted object in a technical document**, and this is the corpus's own rule failing on
+  the corpus's own most-quoted figure.
 - **A scheduler and a lease are orthogonal.** A scheduler coordinates *actions contending for
   capacity*; lock-out/tag-out coordinates *agents contending for artifacts*. A shared BES closes the
   first and none of the second.

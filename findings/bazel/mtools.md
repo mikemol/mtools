@@ -344,6 +344,10 @@ They are jointly meaningful only as **"computing the domain for 2,254 targets co
 other repositories' records cite *"430 fine targets"* — five times low — and built cost arguments
 on it.
 
+⚑ **Provenance, per Rule 9:** these three numbers are that peer's own measurements of its own tree,
+run at the time of writing. **This repository has not re-derived them**, and they are load-bearing
+only for the claim that a generator is cheap — not for anything in mtools' own configuration.
+
 ⚑ **The number that answers "does a computed domain earn a generator" is the 5.6s, not the 317s.**
 The build cost is what the checks cost; the generator cost is what *knowing their domains* costs.
 Conflating them is how a cheap generator gets declined on the price of the work it enables.
@@ -390,6 +394,36 @@ reader of that tree whether or not anyone is alive to relay.
 repository with no inbox does not report undelivered mail, it reports nothing. "No live party able
 to receive it" was the wrong diagnosis; the right one was **no party able to receive it
 synchronously.**
+
+## Rule 9 — cross-vantage review checks reasoning and inherits numbers
+
+⚑⚑⚑ **THE REVIEW IS ASYMMETRIC, AND NOBODY NOTICES BECAUSE THE HALF THAT WORKS IS THE VISIBLE
+ONE.** Two parties spent a day correcting each other's arguments closely — a platform defect, a
+contaminated probe, a malformed question, a vacuous gate — and in the same day passed three wrong
+figures between them without either re-deriving one:
+
+| figure | cited as | actual |
+|---|---|---|
+| `41 before / 50 after` | the executor does not close the class | **21 / 11 — it roughly halved** |
+| `91 occurrences / 11 days` | corruption scale | **32 / 8 days** |
+| `430 fine targets` | generator calibration | **2,254** |
+
+The first two came from one query that counted **its own commentary alongside tool output**, so the
+number *grew as it was discussed*. Its conclusion **inverts** on correction.
+
+⚑⚑ **AND THE THIRD SHAPE IS THE SAME ONE, ARRIVED AT DIFFERENTLY.** Two empirical NOT-IN-KEY lists
+agreed and were both wrong about env, because neither party varied an inherited variable's *value*.
+Reasoning got adversarial review; **inputs got none.**
+
+⚑ **This composes with the shared-habit finding and is worse than it.** A habit propagates by
+copying, so it needs each party to make the same mistake. **A figure propagates by quoting** — one
+party measures once, and every subsequent citation is a copy. No habit required, and the
+transmission is cheaper.
+
+**So the prediction is specific:** the next error is not in a claim either party argued for. It is
+in a number neither party measured. ⚑ **The cheapest available check is to ask, of any figure about
+to be load-bearing, "who ran the query, and has anyone re-run it?"** — and to mark testimony as
+testimony. Every figure in this file names where it came from for that reason.
 
 ## Bounds
 
