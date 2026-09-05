@@ -124,22 +124,36 @@ real port, same conditions
   -> 3 of 3 tests pass
 ```
 
-## Rule 5 — remote instance name does not isolate, and here does not partition
+## Rule 5 — an instance-name probe needs a never-used name and a control arm
 
-Measured after `bazel clean`, disk cache off:
+⚑⚑ **AN EARLIER REVISION OF THIS RULE SAID THE INSTANCE NAME DOES NOT PARTITION. THAT WAS WRONG,
+AND IT WAS WRONG BY EXACTLY THE FAILURE RULE 4 DESCRIBES.** Two arms, no `bazel clean` between
+them, and the `OTHER` arm hit on entries it had populated itself in an earlier run of the same
+session. A peer challenged it with a control, and re-measured here it reverses.
+
+The honest form is four arms, `bazel clean` before **every** one, `--disk_cache=`, and a name that
+has **never been used**:
 
 ```
---config=remote                              -> 2 remote      (re-executed)
---config=remote --remote_instance_name=OTHER -> 1 REMOTE CACHE HIT
+1  default name,      clean first   -> 2 remote cache hit
+2  FRESH name,        clean first   -> 2 remote          (RE-EXECUTED)
+3  same fresh name,   clean first   -> 2 remote cache hit   <- CONTROL
 ```
 
-A result computed under one instance name was **served under another**. It is a label on a shared
-store, not a namespace.
+Arm 3 is what makes arms 1–2 evidence: it proves the probe **can** detect a hit, and it did not
+detect one across the namespace boundary. **`--remote_instance_name` partitions.**
 
-⚑ **Cross-repo sharing is intentional and this is the payoff, not a leak.** An action is
-identified by what it declares; two repositories declaring the same action have computed the same
-thing, and content addressing does not know what a repository is. Partitioning would discard the
-property the CAS exists to provide.
+⚑ **A reused "other" name measures nothing** — it hits on its own history. And an arm run without
+a clean can report `1 internal`, which is green and is not a measurement at all. Both parties
+produced one of these while writing this rule.
+
+⚑⚑ **AND THE SPLIT MAY BE REAL RATHER THAN AN ERROR ON ONE SIDE.** The action cache and the CAS
+are separate layers with separate keying. `2 remote` says the *action* re-ran; it does not say the
+CAS blobs were re-uploaded rather than deduplicated. If the action cache keys the instance name
+while the CAS does not, then **"partitioned" and "shared" are both true of different layers** —
+and the argument that content addressing does not know what a repository is applies to the CAS,
+not to the action cache. Neither party has tested that, and it is stated here as an open split
+rather than resolved by preference.
 
 **The exec platform *does* participate** — through toolchain resolution rather than as a string.
 It selects *which* toolchain, and the resolved toolchain's files are inputs.
@@ -164,6 +178,41 @@ A stock rule cannot express a *computed domain*: `py_test` takes a `srcs` list a
 and any that tries under-covers the moment an import is added. **The trigger for building a rule is
 a computed domain, not a target count** — a repository whose every check has a hand-writable domain
 is not one that needs no custom rule; it is one that has not yet met a computed one.
+
+⚑⚑ **THE CLOSURE MUST BE COMPUTED, NOT GLOBBED, AND THE FALSE-COMPLETE CASE IS THE DANGEROUS ONE.**
+A peer shipped and fixed exactly this: `from pkg import submodule` staged only `__init__.py`, so a
+per-file action was keyed on a closure that *looked* complete. It surfaced as
+`Module "linux_sources" has no attribute "corpus_census"` only once a sandbox tier arrived — the
+host-tier reader had the whole tree present and hid it for weeks. **A closure that is wrong in the
+direction of too-small is a stale green; the sandbox is what converts it into an error.**
+
+**Calibration, measured by that peer and worth stating because the circulating figure is wrong:**
+its generator runs `--check` in **5.60s / 40MB** over **2,254** `pk_cmd` targets. Two other
+repositories' records cite "430 fine targets" and built cost arguments on it — five times low. A
+generator is cheap at that scale, so *cost* is not the reason to defer one; the reason is whether a
+domain here is computed.
+
+## Rule 7 — an RBE arm is not a measurement until the output base is cleaned
+
+**Three independent instances in one day, by two parties:**
+
+- a peer's dead-port probe reported `12 action cache hit` — green, never contacted the executor
+- that peer's *own* instance-name arm reported `1 internal`, one message after sending the warning
+- this repository's first dead-port arm reported `3 action cache hit`, and its first instance-name
+  probe reported a hit that came from its own earlier run
+
+⚑ **That is a shared habit by the criterion in this file's own preamble**, which is what earns it a
+rule. The minimum honest form:
+
+```
+bazel clean                      # before EVERY arm, not once before the set
+--disk_cache=                    # the local disk cache answers instead of the executor
+--noremote_accept_cached         # when the question is whether the ACTION ran
+```
+
+⚑ **And a probe needs a control arm that must PASS.** "Both arms were green" is not a result unless
+one of them was designed to be. `1 internal`, `N action cache hit`, and a real remote landing are
+three different things that print as success.
 
 ## Bounds
 
