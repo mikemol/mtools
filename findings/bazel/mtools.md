@@ -147,34 +147,34 @@ detect one across the namespace boundary. **`--remote_instance_name` partitions.
 a clean can report `1 internal`, which is green and is not a measurement at all. Both parties
 produced one of these while writing this rule.
 
-⚑⚑ **THE SPLIT IS REAL, IT IS STILL OPEN, AND IT NOW HAS A NAMED REASON.** The action cache and
-the CAS are separate layers with separate keying. `2 remote` says the *action* re-ran; it does not
-say the CAS blobs were re-uploaded rather than deduplicated. If the action cache keys the instance
-name while the CAS does not, then **"partitioned" and "shared" are both true of different layers** —
-and the argument that content addressing does not know what a repository is applies to the CAS, not
-to the action cache.
+**Two layers, and only one of them was ever a question.**
 
-**A peer attempted it and reported the failure rather than the weak signal.** Two fresh instance
-names, clean between, execution logs captured:
+- **The action cache** maps `action key -> result`. That mapping is what `--remote_instance_name`
+  partitions, and the arms above measured it.
+- **The CAS is content-addressed, so sharing is DEFINITIONAL.** A blob lives at the hash of its own
+  content; a namespace cannot change what `sha256(x)` is. There is nothing there to partition.
 
-```
-probe-cas-alpha  -> 2 remote   10.087s   log 3,770,787 bytes
-probe-cas-beta   -> 2 remote    8.605s   log 3,770,814 bytes
-```
+⚑⚑⚑ **AN EARLIER REVISION CARRIED THIS AS AN OPEN "AC-vs-CAS SPLIT". IT WAS NOT OPEN — IT WAS
+MALFORMED, AND THE FAILED PROBE THAT TRIED TO SETTLE IT WAS THE EVIDENCE.** A peer ran two clean
+arms with fresh instance names, captured execution logs (10.087s vs 8.605s; a 27-byte delta that is
+invocation IDs), went looking for server-side CAS byte counters, hit a `404`, and reported the null
+as a bound on **access**. It was a bound on the **question**. "Re-uploaded" and "deduplicated" are
+not two states of a content-addressed store — the entry at `sha256:abc…` is the same bytes either
+way. Whether one client put those bytes on the wire again is a fact about **one connection's
+traffic**, not about the cache.
 
-⚑ **1.5s on a loopback executor is not a result**, and the 27-byte log delta is invocation IDs, not
-transfer accounting. Both arms re-executing confirms the *action cache* finding a third time and
-says nothing about the CAS.
+⚑⚑ **AND "BOTH TRUE OF DIFFERENT LAYERS" WAS TOO GENEROUS TO BOTH OF US.** It sounded like two
+findings meeting in the middle. It is one finding and one definition: the action-cache measurement
+was right, the content-addressing argument was right, and they were never in conflict.
 
-⚑⚑ **The measurement needed is the SERVER'S, not the client's.** Bazel reports what it decided to
-do; only the CAS knows whether a blob arrived or was found already present. `:31080/metrics`
-returns **404**, so those counters are not reachable from either party — a fact about access, not
-about the CAS. **The arm, for whoever gets at them:** two fresh instance names, clean between, and
-read whether the second run's CAS *write* counter moves.
+⚑ **THE TRANSFERABLE RULE: a null result from a well-run probe is evidence the QUESTION is wrong at
+least as often as it is evidence the ACCESS is short.** Rule 7 protects against a *contaminated*
+arm. It does nothing against measuring a distinction the substrate cannot express — those arms were
+clean, the control was sound, and the apparatus was pointed at a non-difference. **Ask what would
+DIFFER before building the arm.** If the answer is "the same bytes at the same address," there is
+no arm to build.
 
-**So Rule 5's scope is: partitioned at the action cache; the CAS layer untested.** Declining to
-close it on a 1.5-second gap is the right call — a soft answer would have shut a question both
-parties' files are correctly carrying.
+⚑ Neither party caught this; both were inside the question. It came from outside the pair.
 
 **The exec platform *does* participate** — through toolchain resolution rather than as a string.
 It selects *which* toolchain, and the resolved toolchain's files are inputs.
@@ -270,9 +270,23 @@ synchronously.**
 
 ## Bounds
 
+⚑ **THREE STATES ARE DISTINGUISHED HERE AND THEY ARE NOT INTERCHANGEABLE**, because this file
+briefly conflated the second and third and a peer had to separate them:
+
+- **Measured** — an arm was run, with a control, and the result is stated with its numbers.
+- **An open measurement** — a real proposition with a real answer that nobody has arrived at yet.
+- **Not a testable proposition** — a question the substrate cannot express a difference for. This
+  is not a gap to be filled later; it is a question to be withdrawn.
+
+The bounds:
+
 - Rules 2–5 are grounded in measurement, not in a read of Bazel's `ActionKeyComputer`. The
-  not-in-the-key list is empirical. That source read is the remaining step and nobody in this
-  ecosystem has done it.
-- Rule 6 states the defect; mtools has **not** repaired it. `mypy` here still runs outside the
-  graph, keyed on nothing. Whether per-file granularity earns a generator at 26 modules, or one
-  action per distribution declaring that distribution's closure suffices, is an open measurement.
+  not-in-the-key list is empirical. **That is an OPEN MEASUREMENT** — a real question about what
+  enters the key, with a real answer in the source, that nobody in this ecosystem has read. Two
+  empirical derivations agreeing is corroboration only where they *could* have disagreed, and on
+  `--remote_instance_name` they did.
+- Rule 6 states a defect mtools has **not** repaired. `mypy` here still runs outside the graph,
+  keyed on nothing. Whether per-file granularity earns a generator at 26 modules, or one action per
+  distribution declaring that distribution's closure suffices, is an **open measurement**.
+- Whether the CAS partitions by instance name is **not a testable proposition** and has been
+  withdrawn from Rule 5 rather than left open. Content addressing makes sharing definitional.
