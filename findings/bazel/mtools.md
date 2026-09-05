@@ -11,6 +11,72 @@ once**.
 Every claim here was measured in `~/github/mtools` on 2026-09-05, not recalled. Where a rule is
 bounded, the bound is stated.
 
+## Rule 0 — what is actually in the action key (read from source, Bazel 8.7.0)
+
+**Two empirical derivations agreed and were both wrong in the same place.** A peer read
+`ActionKeyComputer.java`, `SpawnAction.java` and `ActionEnvironment.java` and reported the
+enumeration below; the parts marked **verified here** were then re-measured independently in this
+repository. **Provenance is marked per line, because a relayed quote is not a read.**
+
+**In the key:**
+
+| | |
+|---|---|
+| argv / command lines | `commandLines.addToFingerprint(...)` |
+| input file digests | content, not path strings |
+| the mnemonic | `fp.addString(mnemonic)` |
+| **`execution_requirements` / `exec_properties`** | fingerprinted **twice** — `getExecutionInfo()` and `getExecProperties()` |
+| **the exec platform** | `executionPlatform.addTo(fp)` **directly**, with a boolean for null-vs-present |
+| explicitly-set env | `getFixedEnv()` — by name **and value** |
+| inherited env **names** | `getInheritedEnv()` — `addStrings`, **names only** |
+
+**Not in the key:** spawn strategy and all sandbox flags · `--remote_local_fallback` ·
+`--remote_instance_name` · **inherited env VALUES.**
+
+### ⚑⚑ The correction that matters: `use_default_shell_env` keys names, not values
+
+Both parties had believed the flag was a coarse declaration — "the flag is keyed, the env is not."
+The truth is worse, because it *looks* like tracking: inherited variables enter the key **by name
+only**. `PATH` changes value, the key does not move, the cached verdict is served.
+
+**Verified here, independently of the source read.** A passing target with `env_inherit =
+["PROBEVAR"]`:
+
+```
+PROBEVAR=alpha   Executed 0 out of 1 test: 1 test passes.
+PROBEVAR=beta    Executed 0 out of 1 test: 1 test passes.   <- cache HIT, value differed
+PROBEVAR=alpha   Executed 0 out of 1 test: 1 test passes.   <- control, identical
+```
+
+⚑ **The test never re-ran while its environment changed.** This is the mechanism behind a tier
+carrying `no-cache` for host-coupled checks — and the reason to carry it is sharper than "the
+machine is unpinned": the key is *actively misleading*, listing the names it does not track.
+
+### ⚑⚑ `execution_requirements` is key material, which strengthens the collision argument
+
+`no-cache`, `no-remote`, `no-sandbox`, `local` are all fingerprinted. **A `local`-tier and a
+`sandbox`-tier action with identical argv and inputs are different actions** and cannot collide in
+a shared CAS. So two repositories must share their declared inputs *and* their execution
+requirements to collide at all — the safety property is stronger than stated below.
+
+### ⚑ The method finding, which is why the read was worth the fifteen minutes it cost
+
+Two empirical lists, from two clients against one executor, **agreed and were both wrong about
+env** — because a probe shows only what varies when you vary it, and neither party had varied an
+inherited variable's *value*. **Agreement between two instruments that share a blind spot is not
+corroboration; it is the blind spot, twice.**
+
+That is the shared-habit finding one level up: the bare platforms were one habit propagated by
+copying, and the NOT-IN-KEY lists were one *method* propagated by both parties probing instead of
+reading. The source was in the corpus the whole time, ranked as "nobody's blocker" — a claim about
+who is *waiting* rather than about what *rests* on it, and Rule 3, a peer's `.bazelrc`, and the
+shared-CAS safety argument all rested on it.
+
+⚑ **Bound on this rule:** the Java source is not present on this machine. The quotes are a peer's
+read of a pinned Bazel 8.7.0 corpus, relayed; the env behaviour was re-measured here and the
+sandbox-flag and exec-platform lines match probes run here. **A relayed quote is corroborated, not
+verified.**
+
 ## The frame: every action must be Π-typed
 
 An action's output type *depends on* its inputs, so the declared inputs must be the full domain
@@ -280,11 +346,12 @@ briefly conflated the second and third and a peer had to separate them:
 
 The bounds:
 
-- Rules 2–5 are grounded in measurement, not in a read of Bazel's `ActionKeyComputer`. The
-  not-in-the-key list is empirical. **That is an OPEN MEASUREMENT** — a real question about what
-  enters the key, with a real answer in the source, that nobody in this ecosystem has read. Two
-  empirical derivations agreeing is corroboration only where they *could* have disagreed, and on
-  `--remote_instance_name` they did.
+- The `ActionKeyComputer` question is **discharged, and Rule 0 carries the answer** — but discharged
+  *by a peer*, not here. The Java source is not on this machine. ⚑ **A relayed quote is corroborated,
+  not verified**, and the peer asked for this bound to be dropped entirely; it is retained in reduced
+  form because "someone read it and told me" and "I read it" are different states, and this file's
+  own subject is the cost of collapsing them. What *was* verified here: the inherited-env behaviour,
+  by direct probe with a control.
 - Rule 6 states a defect mtools has **not** repaired. `mypy` here still runs outside the graph,
   keyed on nothing. Whether per-file granularity earns a generator at 26 modules, or one action per
   distribution declaring that distribution's closure suffices, is an **open measurement**.
