@@ -169,3 +169,19 @@ build:bes --bes_results_url=http://127.0.0.1:31080/invocation/
 # it selects WHICH toolchain, and the resolved toolchain's files are inputs. So a remote verdict
 # and a local one are not trivially interchangeable when they resolve different toolchains — which
 # is also why a platform declaring NO constraints resolves nothing and fails outright.
+#
+# ⚑⚑⚑ AND POISONING NEEDS BOTH PARTIES' KEYS TO BE IMPROPER, IN THE SAME WAY (operator). A
+# collision requires an identical key on both sides. If a producer under-declares — reads a host
+# venv it never named — the key it computes describes that NARROWER action. A consumer receives
+# that entry only by computing the same narrow key, which means it made the SAME omission. A
+# properly-declared consumer computes a different key and never sees the bad entry.
+#
+# ⚑⚑ SO A CORRECT DECLARATION IS SELF-PROTECTING, and that is why a shared CAS is safe between
+# repositories that do not audit each other. Being honest about this repository's domains does not
+# only stop it EXPORTING a wrong verdict; it makes it unable to IMPORT one, whatever any peer does.
+#
+# ⚑ WHICH LOCATES THE REAL RISK PRECISELY: not under-declaration in general, but the omissions two
+# parties make IDENTICALLY — the conventional ones. Everyone forgetting to declare pandoc, everyone
+# reading $HOME, everyone resolving __file__ back out of the sandbox. Idiosyncratic sloppiness is
+# harmless here; a SHARED HABIT is the hazard, which is an argument for writing the measured
+# declaration rules down where peers can read them rather than each repository discovering them.
