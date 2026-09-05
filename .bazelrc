@@ -14,3 +14,33 @@ test --test_output=errors --test_summary=terse
 # (veraPDF, lualatex, soffice). mtools has exactly one host-coupled dependency — pandoc — and until
 # the toolchain tier is wired the stamp would key a cache on a fingerprint nothing reads.
 # ⟡mtools-toolchain-tier is where that lands.
+
+# ⚑⚑⚑ THE REMOTE EXECUTOR IS A STRONGER SANDBOX THAN THE LOCAL ONE, AND THAT IS WHY IT IS HERE.
+# `linux-sandbox` shares this host's kernel, filesystem namespace and `$HOME` — which is how a
+# test in this repository came to read `/home/mikemol/github/mtools/hooks/.venv/bin/ruff` from
+# INSIDE a hermetic action, by calling `.resolve()` on a runfiles symlink and following it back
+# out to the source tree. The sandbox permitted the escape and only a deliberate probe caught it.
+# An executor has no `~/github/mtools` and no venvs at all: an undeclared input is not a stale
+# value there, it is a MISSING FILE, and every leak of that class fails on first run instead of
+# waiting to be probed for.
+#
+# ⚑⚑ SO THIS IS NOT A SPEED FEATURE AND SHOULD NOT BE ADOPTED AS ONE. It is the instrument that
+# PROVES the declarations are complete, where `bazel test //...` in a venv-less clone only
+# supplies evidence that no further leak was found. Those are different claims.
+#
+# ⚑ THE ENDPOINT IS MEASURED, NOT COPIED FROM A PEER. `kubectl get endpoints -n cassian
+# buildbuddy` routes :31985 to the buildbuddy-ENTERPRISE pod (Running, Ready); the original
+# `buildbuddy` deployment beside it is ContainerStatusUnknown with no pod IP and is NOT in the
+# endpoint list. A `buildbuddy-executor` pod is deployed alongside, which is what makes
+# `--remote_executor` available rather than cache-only. Copying the port without checking which
+# pod answers it would have been the stale-premise class this file already refuses twice above.
+build:cache --remote_cache=grpc://127.0.0.1:31985
+build:cache --remote_cache_async=true
+
+build:remote --remote_executor=grpc://127.0.0.1:31985
+
+# ⚑ BES IS SEPARATE FROM BOTH, and linux-sources records its own absence of it as OWED. The same
+# service exposes a `grpc-bes` port; a build invoked with `--config=bes` reports its result stream
+# where every repo's runs can be compared, rather than only in this terminal.
+build:bes --bes_backend=grpc://127.0.0.1:31985
+build:bes --bes_results_url=http://127.0.0.1:31080/invocation/
