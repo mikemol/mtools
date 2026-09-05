@@ -226,3 +226,24 @@ def test_a_declared_pytest_marker_collects_cleanly(tree: Path) -> None:
          "-c", str(_DIST / "pyproject.toml"), str(probe)],
         capture_output=True, text=True, check=False, cwd=_DIST)
     assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
+def test_the_mypy_path_pair_is_present_and_both_halves_are_set() -> None:
+    """Both `mypy_path` and `explicit_package_bases` are set, or neither is.
+
+    ⚑⚑ EITHER ONE ALONE LEAVES A WORKING-LOOKING CONFIG THAT CHECKS THE WRONG THING.
+    `mypy_path` alone makes the source reachable under two names, so a module can be checked
+    twice under different identities; `explicit_package_bases` alone does not make it
+    reachable at all. The sibling distribution once had `mypy_path` without `src` and
+    reported 14 errors, 13 of them `Any`, while its 90 tests passed — a green suite standing
+    in for a checked one.
+
+    ⚑ AND THE PAIR IS NOT TEMPORARY, WHICH ⟡mtools-drop-mypypath ASSERTED IT WAS. Measured
+    against a fresh NON-EDITABLE install with both lines deleted, mypy passes cleanly — so
+    the variable is the editable install, not bazel. Retiring it would mean a reinstall
+    before any checker saw an edit. The ticket is closed won't-fix and this arm is what stops
+    a future reader deleting the pair on the strength of the retired ticket's premise.
+    """
+    text = (_DIST / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'mypy_path = "src"' in text
+    assert "explicit_package_bases = true" in text

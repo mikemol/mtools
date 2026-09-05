@@ -17,3 +17,9 @@ __pycache__/
 
 # Editable-install residue; records the developing machine's paths.
 *.egg-info/
+
+# ⚑ setuptools' staging tree, left behind by a non-editable `pip install .`. It is a COPY of
+# `src/`, so anything censusing the tree counts every finding twice and a ratchet refuses the
+# duplicates as new debt — measured, four keys, from a probe install that was never meant to
+# persist.
+build/

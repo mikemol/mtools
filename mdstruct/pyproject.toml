@@ -129,6 +129,29 @@ files = ["src", "tests"]
 # and its errors were loud instead of silent.
 #
 # ⚑ `stubs` STAYS: it is the third-party surface, a different population from this package's own.
+#
+# ⚑⚑⚑ ⟡mtools-drop-mypypath, MEASURED — AND ITS TRIGGER WAS MIS-STATED. This pair was filed as
+# retiring "when bazel runfiles resolve imports by layout". It does not, and bazel is not the
+# variable. The variable is whether the install is EDITABLE, which is a property of the developer
+# venv rather than of the build system. Measured against a fresh non-editable install of each
+# distribution, with dev dependencies present and BOTH lines deleted:
+#
+#     hooks     Success: no issues found in 16 source files
+#     ratchet   Success: no issues found in 8 source files
+#     mdstruct  Success — but only with `mypy_path = "stubs"` retained
+#
+# ⚑⚑ SO TWO THIRDS OF THE PAIR IS RETIRABLE AND THE LAST THIRD IS NOT A WORKAROUND AT ALL.
+# `explicit_package_bases` and the `src` entry exist because an editable install lands as a `.pth`
+# plus an import-hook finder that mypy cannot see. A `stubs` entry exists because a stubs
+# directory is not a package and there is no install to be found through — that one is permanent,
+# and calling it temporary was a category error.
+#
+# ⚑⚑ THE PAIR STAYS, AND THAT IS A DECISION RATHER THAN AN OMISSION. Flipping the venvs to
+# non-editable would retire it and BREAK THE DEV LOOP: measured, an installed copy does not see a
+# source edit, so every change would need a reinstall before any checker saw it. Trading a
+# documented two-line config for a reinstall on every edit is a worse repository, and the ticket's
+# premise — that this is temporary scaffolding awaiting bazel — is now known to be false.
+# ⟡mtools-drop-mypypath is CLOSED as won't-fix, with the measurement above as its warrant.
 mypy_path = "src:stubs"
 # ⚑ AND THE PAIR IS ONE SETTING IN TWO KEYS. With `src` a search root, a module is reachable as
 # both `mikemol.mdstruct.x` and `mdstruct.x`, which mypy refuses; this says the name derives from

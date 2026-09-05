@@ -485,3 +485,9 @@
   claim   = {The P-arm for strictness: a marker the config DECLARES must not trip it. It uses THIS distribution's marker and pins -c to this distribution's pyproject --- the probe lives in a temp tree, so pytest would otherwise pick its rootdir from there and assert strictness against pytest's DEFAULTS rather than against the config under test},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_declared_pytest_marker_collects_cleanly}
 }
+
+@misc{hooks-bar-mypy-path-pair-is-present,
+  section = {bar-fires},
+  claim   = {Both `mypy_path` and `explicit_package_bases` are set, or neither is. EITHER ONE ALONE LEAVES A WORKING-LOOKING CONFIG THAT CHECKS THE WRONG THING --- `mypy_path` alone makes the source reachable under two names so a module can be checked twice under different identities, and `explicit_package_bases` alone does not make it reachable at all. The sibling distribution once had the wrong half and reported 14 errors, 13 of them Any, while its 90 tests passed. ⟡mtools-drop-mypypath asserted the pair was TEMPORARY, awaiting bazel runfiles; measured against a fresh NON-EDITABLE install with both lines deleted, mypy passes cleanly on hooks and ratchet and needs only the `stubs` half on mdstruct --- so the variable is the EDITABLE INSTALL rather than the build system, and retiring the pair would mean a reinstall before any checker saw an edit. The ticket is closed won't-fix, and this arm is what stops a future reader deleting the pair on the strength of its premise},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_mypy_path_pair_is_present_and_both_halves_are_set}
+}

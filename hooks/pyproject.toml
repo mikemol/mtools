@@ -96,6 +96,29 @@ files = ["src", "tests"]
 # errors, 13 of them `Any` from one unresolved import. **A passing test suite is a fact about the
 # tests, never about the standard applied to them** — and this was reported as "ruff+mypy clean"
 # on the strength of a `src`-only run.
+#
+# ⚑⚑⚑ ⟡mtools-drop-mypypath, MEASURED — AND ITS TRIGGER WAS MIS-STATED. This pair was filed as
+# retiring "when bazel runfiles resolve imports by layout". It does not, and bazel is not the
+# variable. The variable is whether the install is EDITABLE, which is a property of the developer
+# venv rather than of the build system. Measured against a fresh non-editable install of each
+# distribution, with dev dependencies present and BOTH lines deleted:
+#
+#     hooks     Success: no issues found in 16 source files
+#     ratchet   Success: no issues found in 8 source files
+#     mdstruct  Success — but only with `mypy_path = "stubs"` retained
+#
+# ⚑⚑ SO TWO THIRDS OF THE PAIR IS RETIRABLE AND THE LAST THIRD IS NOT A WORKAROUND AT ALL.
+# `explicit_package_bases` and the `src` entry exist because an editable install lands as a `.pth`
+# plus an import-hook finder that mypy cannot see. A `stubs` entry exists because a stubs
+# directory is not a package and there is no install to be found through — that one is permanent,
+# and calling it temporary was a category error.
+#
+# ⚑⚑ THE PAIR STAYS, AND THAT IS A DECISION RATHER THAN AN OMISSION. Flipping the venvs to
+# non-editable would retire it and BREAK THE DEV LOOP: measured, an installed copy does not see a
+# source edit, so every change would need a reinstall before any checker saw it. Trading a
+# documented two-line config for a reinstall on every edit is a worse repository, and the ticket's
+# premise — that this is temporary scaffolding awaiting bazel — is now known to be false.
+# ⟡mtools-drop-mypypath is CLOSED as won't-fix, with the measurement above as its warrant.
 mypy_path = "src"
 # ⚑⚑ AND `mypy_path` ALONE MAKES THE SOURCE REACHABLE UNDER TWO NAMES. With `src` a search root,
 # `src/mikemol/hooks/payload.py` is both `mikemol.hooks.payload` (from the project root) and
