@@ -1,0 +1,16 @@
+common --enable_bzlmod
+test --test_output=errors --test_summary=terse
+
+# ⚑⚑⚑ NO `--host_jvm_args=-Xmx…` RUNG HERE, AND ITS ABSENCE IS DELIBERATE. paperkit carries a
+# documented climb (4G → 8G → 12G → 16G), each rung EVIDENCED by a coordinator OOM with
+# `Build completed successfully` printed immediately above it. That ceiling tracks GRAPH SIZE, and
+# paperkit's graph is ~150,000 actions across a mutation sweep. mtools has two distributions and
+# ~120 checks. Copying a number derived from someone else's graph would be the stale-premise class
+# this ecosystem keeps paying for — a figure restated away from the measurement that produced it.
+# If the coordinator OOMs here, THAT is the measurement, and the rung starts one above it.
+
+# ⚑⚑ NO `--stamp` / `workspace_status_command` YET, FOR THE SAME REASON. paperkit stamps because it
+# has `toolchain`-tier checks whose verdicts are only valid against a pinned host toolchain
+# (veraPDF, lualatex, soffice). mtools has exactly one host-coupled dependency — pandoc — and until
+# the toolchain tier is wired the stamp would key a cache on a fingerprint nothing reads.
+# ⟡mtools-toolchain-tier is where that lands.

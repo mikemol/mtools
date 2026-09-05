@@ -1,0 +1,14 @@
+# rubric.tsv — the sections of the mdstruct warrant set, in document order.
+# key <TAB> heading title
+frontmatter	Frontmatter: What Is Metadata, and What Only Looks Like It
+pandoc	Pandoc: The Re-Attach Rule, In Both Directions
+spans	Spans: Nesting, Anchoring, and the Refusals
+sections	Sections: What a Rewrite Must Not Touch
+grep	Grep: The Span Is the Section's, Not the Line's
+tables	Tables: Including the Ones a Top-Level Scan Cannot See
+labels	Labels: One Case Per Family the Grammar Has Missed
+lint	Lint: Measuring a Rule Rather Than Disabling It
+roundtrip-drift	Round-Trip: One Round, and What It Reports
+roundtrip-fixpoint	Round-Trip: The Sequence, and the Converged Text
+roundtrip-stopping	Round-Trip: The Two Stopping Rules That Were Both Wrong
+output	Output: Nothing but the Answer Reaches a Caller's Streams

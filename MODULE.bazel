@@ -1,0 +1,64 @@
+"""mtools on Bazel — the warrants ARE the build graph, and a test IS a witness.
+
+Two distributions (`mikemol-mdstruct`, `mikemol-hooks`), each a paperkit PROJECT: its claims live in
+`warrants.bib`, each claim's `check` is a witness that exits 0, and its prose document is PROJECTED
+from those claims rather than written beside them. So the documentation and the gate are one graph —
+a paragraph that cites `[@key]` cannot survive its claim going red.
+
+⚑⚑⚑ A PYTEST CASE AND A PAPERKIT WITNESS ARE THE SAME OBJECT (operator). Both are a named assertion
+that exits 0/1 and carries prose saying what it establishes and why it must exist. mtools' 116 cases
+already carry that prose — every one has a `⚑` docstring arguing the defect it prevents — so they
+were witnesses written in the wrong frame, not tests needing a second layer wrapped round them.
+
+⚑⚑ PAPERKIT ARRIVES AS A PUBLISHED WHEEL, NOT AS A BAZEL MODULE OR A VENDORED TREE (operator:
+*"paperkit will be published as a package. Same as the mtools projects. Best to install paperkit
+into sandbox .venv in the same way."*). It is a real dependency in each distribution's
+`pyproject.toml`, resolved through `pip.parse` below, so Bazel stages the RESOLVED WHEEL as a
+declared input to every action that needs it.
+
+⚑⚑ AND THAT IS WHY THE WHEEL WORKS WHERE AN EDITABLE INSTALL DOES NOT. paperkit's own
+`tools/verb.bzl` records the defect it hit: *"`.venv` is a directory of POINTERS at host absolute
+paths … the editable install's finder carries `MAPPING = {'paperkit': '/home/…/paperkit'}`. Staged
+into a sandbox that would not dangle — it would RESOLVE, out of the sandbox, to the live working
+tree, and every check would read unstaged sources and report green. A sandbox escape that passes is
+worse than one that fails."* A PUBLISHED wheel carries no such pointer: it is real files under
+`site-packages`, content-addressed and relocatable. The distinction is not incidental — it is the
+whole reason the operator's answer is publish-and-install rather than consume-in-place.
+
+⚑ THIS REPO ALSO CARRIED THAT DEFECT IN MINIATURE. `mikemol-mdstruct` was installed editable, its
+`.pth` + import-hook finder invisible to mypy (which reads the filesystem, not `sys.path` hooks), so
+every test typed as `Any` while 90 of them passed. The repair was `mypy_path`/`explicit_package_bases`
+— a patch AROUND the mechanism. Under rules_python the runfiles tree resolves imports BY LAYOUT and
+that patch retires: ⟡mtools-drop-mypypath.
+"""
+
+module(name = "mtools", version = "0.1")
+
+# ⚑ A HERMETIC PYTHON — "which python" is Bazel's, not the host's. Same version the distributions
+# declare (`requires-python = ">=3.13"`), so the interpreter that runs a witness is the interpreter
+# the package claims to support rather than whatever the caller's shell resolved.
+bazel_dep(name = "rules_python", version = "1.0.0")
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(python_version = "3.13", is_default = True)
+
+# ⚑⚑ THE DEPENDENCY SET IS DECLARED, NOT INHERITED FROM A VENV. `pip.parse` resolves each
+# distribution's requirements into Bazel repos, so a wheel is a STAGED INPUT with a content hash —
+# not a directory the action happens to find on the host. This is what makes a `sandbox`-tier
+# verdict mean anything: the action cannot read a package nobody declared.
+#
+# ⚑ ONE HUB PER DISTRIBUTION, because they are separate distributions with separate dependency
+# sets. `mikemol-hooks` declares ruff+mypy as RUNTIME deps (its whole function is invoking them);
+# `mikemol-mdstruct` declares panflute. Merging them into one hub would let a hooks witness import
+# panflute because a sibling happened to need it — the same over-admission a shared venv gives.
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "mdstruct_deps",
+    python_version = "3.13",
+    requirements_lock = "//mdstruct:requirements.txt",
+)
+pip.parse(
+    hub_name = "hooks_deps",
+    python_version = "3.13",
+    requirements_lock = "//hooks:requirements.txt",
+)
+use_repo(pip, "mdstruct_deps", "hooks_deps")

@@ -1,0 +1,19 @@
+# Bazel's convenience symlinks: outputs, whose paths embed an absolute
+# output_base that is a fact about this checkout, not about the repo.
+/bazel-*
+
+# Per-distribution virtualenvs. `.venv` is a directory of POINTERS at host
+# absolute paths (see MODULE.bazel) — the property that makes it unfit as a
+# Bazel input makes it unfit to commit.
+.venv/
+
+# Checker caches: keyed by absolute path and mtime. A committed cache reports
+# another machine's verdict.
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Editable-install residue; records the developing machine's paths.
+*.egg-info/

@@ -1,0 +1,111 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""Each section's LINE SPAN — the bounds every read and write mode addresses by.
+
+⚑⚑⚑ A SPAN ENDS AT THE NEXT HEADER OF THE SAME-OR-SHALLOWER LEVEL, NEVER SIMPLY THE NEXT HEADER.
+A `###` containing a `####` does not end at the child. Getting that wrong reads as a
+correct-looking SHORT section — exactly the failure a line-regex produces and a reader cannot
+see, because the output looks like a section either way.
+
+⚑⚑ AND THE QUESTION WAS ONCE ANSWERED WITH `awk`. The reflex was a line-regex over a document
+whose whole point is that a `#` inside a fence is not a header — one fenced heading away from
+silently truncating a section.
+
+⚑⚑ PANDOC CARRIES NO SOURCE POSITIONS, so line numbers are RECOVERED by matching each rendered
+header against the raw lines IN ORDER — one forward scan, so a repeated heading text cannot
+rebind to an earlier occurrence. The comparison goes through `ast.anchor_key`, because a heading
+carrying inline markup renders without it and would never compare equal: that defect made a
+heading and EVERY SECTION AFTER IT vanish from this list.
+
+⚑ AMBIGUITY IS A REFUSAL, NOT A FIRST MATCH. `find_section` names both candidates rather than
+picking the earlier one — the target is a WRITE, and a rewrite that edits the wrong section is
+not recoverable by re-running.
+"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, NamedTuple
+
+from mikemol.mdstruct import ast
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+
+class Span(NamedTuple):
+    """One section: its level, heading text, and 1-indexed line bounds.
+
+    ⚑ `end` IS EXCLUSIVE, matching the slice it feeds. A reader wanting the last line of a
+    section takes `end - 1`; a writer splicing a body slices `[start:end]`.
+    """
+
+    level: int
+    text: str
+    start: int
+    end: int
+
+
+def _anchors(path: Path) -> list[tuple[int, str, int]]:
+    """Return `[(level, text, start_line)]` by matching rendered headers to raw lines.
+
+    ⚑ ONE FORWARD CURSOR, NEVER A SEARCH FROM THE TOP. A document may repeat a heading text, and
+    rebinding a later header to an earlier line would nest the spans wrongly — producing a
+    section that contains its own predecessor.
+    """
+    lines = path.read_text(encoding="utf-8").split("\n")
+    found: list[tuple[int, str, int]] = []
+    cursor = 0
+    for level, text in ast.headers(path):
+        want = ast.anchor_key(text)
+        for i in range(cursor, len(lines)):
+            stripped = lines[i].lstrip()
+            if stripped.startswith("#") and ast.anchor_key(stripped.lstrip("#")) == want:
+                found.append((level, text, i + 1))
+                cursor = i + 1
+                break
+    return found
+
+
+def spans(path: Path) -> list[Span]:
+    """Return every section's line span, 1-indexed with an exclusive end."""
+    lines = path.read_text(encoding="utf-8").split("\n")
+    anchors = _anchors(path)
+
+    out = []
+    for idx, (level, text, start) in enumerate(anchors):
+        end = len(lines) + 1
+        for level2, _text2, start2 in anchors[idx + 1:]:
+            if level2 <= level:          # same-or-shallower CLOSES the section
+                end = start2
+                break
+        out.append(Span(level=level, text=text, start=start, end=end))
+    return out
+
+
+def find_section(path: Path, needle: str) -> Span:
+    """Return the ONE section whose heading contains `needle`.
+
+    ⚑ RAISES ON AMBIGUITY, naming both candidates. A substring matching two headings cannot be
+    resolved by taking the earlier one — that is the silent-wrong-target class, and the caller
+    is usually about to write.
+    """
+    hits = [s for s in spans(path) if needle.casefold() in s.text.casefold()]
+    if not hits:
+        msg = (f"no section heading contains {needle!r} in {path}. "
+               "a fact about the QUERY — list the headers to see what is there.")
+        raise LookupError(msg)
+    if len(hits) > 1:
+        names = "; ".join(f"{'#' * h.level} {h.text!r}" for h in hits)
+        msg = (f"{needle!r} names {len(hits)} sections in {path}: {names}. "
+               "REFUSING rather than picking one — this is a write target.")
+        raise LookupError(msg)
+    return hits[0]
+
+
+def enclosing(sections: list[Span], line_no: int) -> list[Span]:
+    """Return every section containing `line_no`, outermost first.
+
+    ⚑ SECTIONS NEST, so a line has a CHAIN of containers rather than one. A caller wanting the
+    editable unit takes the last; one wanting a readable address joins the whole chain.
+    """
+    return [s for s in sections if s.start <= line_no < s.end]

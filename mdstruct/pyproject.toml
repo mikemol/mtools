@@ -1,0 +1,192 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑⚑⚑ A NAMESPACE DISTRIBUTION, FOR DEPENDENCY ISOLATION (operator, 2026-08-31). The generic
+# names are taken and would have been wrong anyway: `mdstruct` on PyPI is a markdown
+# header-splitter — adjacent enough that sharing the name would confuse both — and `mtools` is
+# MongoDB log tooling. Publishing under a personal namespace ends the race for generic words
+# permanently, and the ISOLATION is the reason to prefer several distributions over one:
+# a consumer wanting the markdown reader must not inherit `membudget`'s or `bibstruct`'s deps.
+name = "mikemol-mdstruct"
+version = "0.1.0"
+description = "Structural reading and writing of markdown: header spans, tables, cells, and section rewrites over pandoc's AST."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["markdown", "pandoc", "panflute", "structural", "ast", "sections"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Typing :: Typed",
+]
+
+# ⚑ THE PARSER IS THE ONLY RUNTIME DEPENDENCY. `pandoc` itself is a SYSTEM binary this package
+# invokes rather than a wheel it can require — declared in the README as a prerequisite, and
+# every suite that needs it reports a DECLARED SKIP when it is absent rather than a silent pass.
+dependencies = ["panflute"]
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+# ⚑⚑ PYTEST, NOT THE `--selftest` PATTERN THIS CODE CAME FROM (operator, 2026-08-31). The origin
+# repo runs suites through a roster that invokes each tool with `--selftest`, so every module
+# carried its own runner and reported its own counts — a design that follows from being INVOKED
+# rather than IMPORTED. A published library has no roster: a consumer running `pytest` expects
+# discovery, fixtures, parametrization and a standard report, and shipping a bespoke protocol
+# would make this package the only thing in their tree that does not answer to it.
+#
+# ⚑⚑⚑ AND `paperkit` IS A DEV DEPENDENCY, NOT A RUNTIME ONE. This package's WARRANTS are projected
+# by paperkit — the claims in `warrants.bib` become both this distribution's gated checks and its
+# prose document — but nothing a CONSUMER imports touches the engine. A consumer installing
+# `mikemol-mdstruct` to parse markdown must not also pull a document projector.
+#
+# ⚑⚑ DECLARED AS A PUBLISHED PACKAGE, NEVER A PATH (operator: *"paperkit will be published as a
+# package … Best to install paperkit into sandbox .venv in the same way"*). paperkit's own
+# `tools/verb.bzl` records why the alternative fails: an EDITABLE install is a finder pointing at
+# an absolute host path, and staged into a sandbox it resolves back OUT to the live working tree,
+# so every check reads unstaged sources and reports green — *"a sandbox escape that passes is worse
+# than one that fails"*. A published wheel is real files with a content hash and cannot do that.
+[dependency-groups]
+dev = ["pytest", "paperkit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# ⚑ `--strict-markers` MAKES A TYPO IN A MARKER AN ERROR rather than a silently unregistered
+# one — the same class as a lint rule nobody declared: a test that claims a property nothing
+# enforces reads as covered.
+addopts = "--strict-markers --strict-config"
+markers = [
+    "needs_pandoc: requires the pandoc binary, which is a SYSTEM dependency and not a wheel",
+]
+
+[project.scripts]
+# ⚑ THE CONSOLE SCRIPT IS THE ADOPTION PATH THAT REPLACES A SYMLINK. Peers previously adopted
+# this tool by symlinking one file out of another repo's working tree — which broke silently the
+# moment the tool derived its own root with `abspath(__file__)` (that does not resolve symlinks,
+# so the root became the CONSUMER's repo). A published entry point cannot have that defect: an
+# installed package knows where it lives.
+mdstruct = "mikemol.mdstruct.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py`, DELIBERATELY — PEP 420 implicit namespace. That absence is
+# what lets `mikemol-membudget` and `mikemol-bibstruct` install alongside this and share the
+# `mikemol.` prefix without either owning it. An `__init__.py` here would make the first
+# installed distribution the exclusive owner and the second one shadow it.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+# ⚑ `py.typed` SHIPS, so consumers get the annotations rather than `Any`. The tool this package
+# came from had to write a STUB for every untyped dependency it used; shipping the marker is how
+# this one avoids imposing that on its own consumers.
+"mikemol.mdstruct" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+# ⚑⚑⚑ THE BAR IS ADOPTED, NOT INVENTED. This ruleset is substrate's, which took it from
+# linux-sources' measured config. Copying a bar that two repos already run beats writing a third
+# one — and the reasoning below is kept because a bar without its argument is a bar that gets
+# relaxed by the first person who finds it inconvenient.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+# ⚑ `disallow_any_expr` IS THE FLAG THAT DOES THE WORK. It makes every untyped-boundary result
+# POISON every downstream expression, forcing narrowing AT THE EDGE rather than carrying `Any`
+# inward. Without it a corpus can be "typed on paper and Any in fact".
+disallow_any_expr = true
+python_version = "3.13"
+# ⚑ AN IGNORE MUST BE BOTH CODED AND STILL LOAD-BEARING. This turns a suppression on a line the
+# checker now types precisely into an ERROR, so the ignore set is exactly the flagged lines and
+# self-corrects when a dependency's stubs improve.
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+# ⚑⚑ NO `[[tool.mypy.overrides]]` SECTION, DELIBERATELY — that is where a bar like this rots.
+# One module gets exempted, the exemption outlives its reason, and the next reader cannot tell a
+# carve-out from an abandonment. If something cannot be typed, that is a FINDING ABOUT THE
+# DESIGN, not a category of code.
+#
+# ⚑ AND THE SCOPE IS THE WHOLE PACKAGE, WHICH IS THE POINT OF STARTING FRESH. Substrate scopes
+# its gate to a growing frontier because its legacy corpus is large and dirty; this repo has no
+# legacy, so the admitted set is everything from commit one.
+files = ["src", "tests"]
+# ⚑⚑⚑ `src` IS HERE BECAUSE ITS ABSENCE TYPED EVERY TEST AS `Any` WHILE THE SUITE PASSED. An
+# editable install lands as a `.pth` plus an import-hook FINDER, and mypy reads the filesystem
+# rather than running `sys.path` hooks — so `from mikemol.mdstruct import …` resolved at RUNTIME
+# and not to the type checker. MEASURED: 90 tests green, and `mypy tests/test_frontmatter.py`
+# reporting 14 errors, 13 of them `Any` from one unresolved import.
+#
+# ⚑⚑ AND IT WAS REPORTED AS "ruff+mypy clean" ON A `src`-ONLY RUN. **A passing test suite is a
+# fact about the tests, never about the standard applied to them** — the same shape as a green
+# census that measured nothing. Found only when the sibling distribution hit the identical wall
+# and its errors were loud instead of silent.
+#
+# ⚑ `stubs` STAYS: it is the third-party surface, a different population from this package's own.
+mypy_path = "src:stubs"
+# ⚑ AND THE PAIR IS ONE SETTING IN TWO KEYS. With `src` a search root, a module is reachable as
+# both `mikemol.mdstruct.x` and `mdstruct.x`, which mypy refuses; this says the name derives from
+# the declared roots. Either key alone leaves a working-LOOKING config that checks nothing or
+# aborts before it starts.
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# ⚑⚑⚑ THE NAMESPACE IS DECLARED, NOT SUPPRESSED. `INP001` fires on a directory without an
+# `__init__.py` because that is usually an oversight — and here it is the design: `src/mikemol/`
+# must stay empty of one so sibling distributions can share the prefix. The rule offers exactly
+# this option for the deliberate case, so the answer is to TELL it rather than to ignore the
+# rule and lose it everywhere else in the tree.
+#
+# ⚑ AND THE DISTINCTION IS WORTH THE LINE: with this, a MISSING `__init__.py` anywhere else is
+# still a finding. An `ignore = ["INP001"]` would have bought the same silence at the cost of
+# never hearing about a real oversight again.
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+# ⚑ EVERY RULE. A curated subset silently omits whole families and nothing says which — a reader
+# cannot distinguish "we considered this and declined" from "we never knew it existed". `ALL`
+# makes every omission an explicit entry below.
+select = ["ALL"]
+# ⚑ ruff's OWN MUTUALLY-EXCLUSIVE PAIRS. Each cannot both be satisfied, so ruff requires picking
+# one; these are not judgement calls.
+#
+# ⚑⚑ CPY001 IS ABSENT FROM THIS LIST, UNLIKE UPSTREAM — because this repo HAS a license
+# (Apache-2.0, declared above), so the copyright-header rule is a real gate here rather than a
+# licensing decision a linter would be making on the operator's behalf.
+ignore = ["D203", "D213", "COM812"]
+
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0\s*\n#\s*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑⚑ THE TWO CHECKERS DISAGREE HERE, AND THIS IS THE ARBITRATION. `PT001` prefers a bare
+# `@pytest.fixture`; mypy cannot pick an overload from the bare form, so the decorated function
+# collapses to `Any` and takes the fixture's return type with it — every consuming test then
+# reads an untyped value while looking perfectly annotated. **A silent `Any` outranks a style
+# preference**, so the called form wins and ruff is TOLD, not suppressed.
+#
+# ⚑ TOLD RATHER THAN IGNORED, for the same reason as `namespace-packages`: an
+# `ignore = ["PT001"]` buys the same silence while also accepting the INCONSISTENT spelling
+# everywhere. This keeps the rule enforcing, with the other setting.
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+[tool.ruff.lint.per-file-ignores]
+# ⚑ `assert` IS THE TEST IDIOM AND `-O` NEVER RUNS THESE. S101 bans `assert` because it vanishes
+# under `-O`; a test run is never invoked that way. Scoped to the test path rather than granted
+# as a blanket, because it would NOT be safe for library code.
+"tests/*" = ["S101"]
+
+# ⚑ RUNNING PANDOC IS ONE MODULE'S ONE RESPONSIBILITY. The `S603` exemption a subprocess needs is
+# granted per FILE, so a module that also parsed or rendered would extend it over those concerns
+# too — which is precisely why this package is one module per concern. The argv is `pandoc` plus
+# format names from a fixed vocabulary; the document travels on stdin as data and never becomes a
+# word in the command.
+"src/mikemol/mdstruct/pandoc.py" = ["S603"]

@@ -1,0 +1,123 @@
+% warrants.bib — one claim PER TEST CASE in the hooks suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: hooks-<module>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+%
+% Section keys are the source module: one section per tests/test_*.py.
+
+% ---------------------------------------------------------------- payload
+
+@misc{hooks-payload-mapping-rebuilt-with-string-keys,
+  section = {payload},
+  claim   = {A record's keys become strings and its values survive},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_mapping_is_rebuilt_with_string_keys}
+}
+
+@misc{hooks-payload-non-mapping-is-empty-record,
+  section = {payload},
+  claim   = {EVERY non-mapping shape reads as an empty record --- not just null, but text, integers, lists and tuples --- because the payload is UNTRUSTED JSON},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_non_mapping_is_an_empty_record}
+}
+
+@misc{hooks-payload-string-reads-as-itself,
+  section = {payload},
+  claim   = {Text passes through unchanged},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_string_reads_as_itself}
+}
+
+@misc{hooks-payload-non-string-reads-as-empty,
+  section = {payload},
+  claim   = {A non-string field yields EMPTY TEXT rather than a repr of the value},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_non_string_reads_as_empty}
+}
+
+@misc{hooks-payload-own-switch-arms,
+  section = {payload},
+  claim   = {The hook's own switch set to the exact arming value arms it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_own_switch_arms}
+}
+
+@misc{hooks-payload-own-switch-wins-over-shared,
+  section = {payload},
+  claim   = {An explicit zero on the hook's OWN switch DISARMS it even while the shared switch is on --- set-to-zero is a DECISION, not an absence. Otherwise a repo cannot opt one hook out of a fleet-wide arming, and the only way to quiet one is to disarm all of them},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_own_switch_wins_over_the_shared_one}
+}
+
+@misc{hooks-payload-shared-switch-arms-when-own-unset,
+  section = {payload},
+  claim   = {With no own switch set, the SHARED switch decides},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_shared_switch_arms_when_the_own_one_is_unset}
+}
+
+@misc{hooks-payload-neither-switch-is-disarmed,
+  section = {payload},
+  claim   = {With neither switch set the default is ADVISORY, asserted rather than assumed --- the positive control for the whole arming surface. Without this case every other arming case would pass against a function that returned armed UNCONDITIONALLY. That is the load-bearing shape of this whole module: a hook that reports itself armed while exiting zero detects every violation and refuses none, reading as armed in review and off in fact, which is strictly worse than being visibly disabled},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_neither_switch_is_disarmed}
+}
+
+@misc{hooks-payload-only-exact-value-arms,
+  section = {payload},
+  claim   = {ONLY the one exact spelling arms the hook: empty, zero, true, yes and two all leave it advisory. This is worth PINNING rather than discovering --- an operator who writes the block switch as true gets an ADVISORY hook. The behaviour is deliberate, one spelling and no truthiness table, and a test is the only place a reader learns it before an unrefused violation does},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_only_the_exact_value_arms}
+}
+
+% ---------------------------------------------------------------- checkers
+
+@misc{hooks-checkers-both-are-registered,
+  section = {checkers},
+  claim   = {The checker roster is EXACTLY ruff then mypy, asserted so a checker cannot silently drop out of the gate. A hook that ran one of two would report clean on a file the missing one refuses --- the same armed-and-checking-nothing shape the arming switch guards against, one layer in},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_both_checkers_are_registered}
+}
+
+@misc{hooks-checkers-ruff-told-authors-real-path,
+  section = {checkers},
+  claim   = {The stdin-filename flag and the author's REAL path travel together in ruff's argv. The defect this prevents is silent: the hook checks a TEMPFILE, so without the flag every path-keyed setting an adopting repo writes --- per-file-ignores, exclude --- resolves against a random temp name and matches nothing. The gate and a direct ruff run then disagree about the same file ALWAYS, silently, in the direction that manufactures findings the author cannot act on. Nothing about that is visible in a passing run},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_ruff_is_told_the_authors_real_path}
+}
+
+@misc{hooks-checkers-ruff-falls-back-to-tempfile,
+  section = {checkers},
+  claim   = {An unknown subject names the TEMPFILE rather than an empty string. An empty stdin-filename is not the same as no subject: ruff would resolve config against the empty pattern, which matches nothing and reads exactly like the path-keyed defect above},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_ruff_falls_back_to_the_tempfile_when_no_path_is_known}
+}
+
+@misc{hooks-checkers-ruff-reads-stdin-mypy-does-not,
+  section = {checkers},
+  claim   = {Each checker DECLARES how it takes the staged content, and the declaration is what keeps the caller from having to know which is which. Getting it backwards hands ruff an unread path, or hands mypy content it never receives},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_ruff_reads_stdin_and_mypy_does_not}
+}
+
+@misc{hooks-checkers-mypy-given-tempfile-as-subject,
+  section = {checkers},
+  claim   = {The staged copy is NAMED in mypy's argv, since mypy takes a real path rather than stdin},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_mypy_is_given_the_tempfile_as_its_subject}
+}
+
+@misc{hooks-checkers-mypy-renders-the-source-line,
+  section = {checkers},
+  claim   = {Mypy is asked to render the SOURCE LINE, and that is pinned for a measured reason rather than for taste. Without it mypy cites a line number in a file deleted microseconds later that never existed on disk --- a citation with no readable referent, guessed at six times on one file and wrong every time. It is the whole difference between an actionable finding and a bare number pointing into a file that no longer exists},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_mypy_renders_the_source_line}
+}
+
+@misc{hooks-checkers-both-pointed-at-projects-config,
+  section = {checkers},
+  claim   = {Each checker resolves rules from the EDITED FILE'S project, and each spells the config flag differently. The config follows the edited file: a hook naming its OWN project would apply one repo's bar to another's code --- invisible while a session edits one tree, wrong in BOTH DIRECTIONS the moment it edits two},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_both_checkers_are_pointed_at_the_projects_config}
+}
+
+@misc{hooks-checkers-both-run-under-projects-interpreter,
+  section = {checkers},
+  claim   = {Each argv invokes the PROJECT VENV'S python as a module, not whatever interpreter happens to be on PATH},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_both_checkers_run_under_the_projects_interpreter}
+}
+
+@misc{hooks-checkers-ruff-does-not-cache,
+  section = {checkers},
+  claim   = {Caching is OFF. A cache keyed on a tempfile path never hits and never expires: each staged edit gets a fresh random name, so entries accumulate without ever serving a read --- cost with no benefit, on a hook that runs at EVERY edit},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_ruff_does_not_cache}
+}

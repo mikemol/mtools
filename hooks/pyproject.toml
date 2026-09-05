@@ -1,0 +1,155 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑⚑⚑ THESE HOOKS ARE ALREADY ADOPTED ACROSS REPOS BY SYMLINK, AND THAT IS THE DEFECT THIS
+# PACKAGE ENDS. A symlinked script derives its own root from `__file__` — and `abspath` does not
+# resolve symlinks, so the root becomes the CONSUMER's repo. Measured: a peer's adopted tool
+# failed on every invocation with `ModuleNotFoundError`, and the cause was neither their code nor
+# a refactor but a latent property of being reached through a link. An installed package cannot
+# have that defect: it knows where it lives, and it can DECLARE what it needs instead of hoping
+# the surrounding layout supplies it.
+name = "mikemol-hooks"
+version = "0.1.0"
+description = "PreToolUse hooks that refuse textual queries over structured artifacts, unstated mutations, shell composition, and un-linted Python edits."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["hooks", "lint", "ruff", "mypy", "shellcheck", "pre-commit"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+
+# ⚑ THE CHECKERS ARE RUNTIME DEPENDENCIES, NOT DEV EXTRAS. This package's whole function is to
+# invoke them; a consumer installing it without ruff and mypy gets a hook that reports
+# `is not installed in the project venv` on every edit — armed and checking nothing, which is the
+# state these hooks exist to make impossible.
+#
+# ⚑⚑ AND `shellcheck` IS ABSENT FROM THIS LIST BECAUSE IT IS A SYSTEM BINARY, not a wheel. The
+# shell hook reports its absence rather than passing silently — the same discipline the markdown
+# package applies to pandoc.
+dependencies = ["ruff", "mypy"]
+
+# ⚑⚑ A CONSOLE SCRIPT IS WHAT MAKES ADOPTION *NOT* A SYMLINK. A settings.json hook line naming
+# `mikemol-hook-structural-query` resolves through the installed distribution, so the adopting
+# repo never points at a path in someone else's checkout — which is the arrangement whose latent
+# `__file__` defect this package exists to end. The name is spelled out rather than abbreviated
+# because it appears in a config file a human reads, not on a command line anyone types twice.
+[project.scripts]
+mikemol-hook-structural-query = "mikemol.hooks.structural_query:main"
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py` — PEP 420 implicit namespace, shared with the sibling
+# distribution in this repo. That absence is what lets `mikemol-hooks` and `mikemol-mdstruct`
+# install side by side without either owning the prefix; an `__init__.py` would make the first
+# installed one the exclusive owner and shadow the second.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.hooks" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+markers = [
+    "needs_shellcheck: requires the shellcheck binary, a SYSTEM dependency and not a wheel",
+]
+
+# ⚑⚑ THE BAR IS THE ONE THESE HOOKS ENFORCE, APPLIED TO THEMSELVES. A linting tool held to a
+# weaker standard than it imposes is the shape its own refusal message argues against — and this
+# package's `pycheck` hook is the thing that would be checking it.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+# ⚑⚑⚑ WITHOUT THIS, THE TESTS TYPE AS `Any` AND THE SUITE STILL PASSES. An editable install
+# lands as a `.pth` plus an import-hook FINDER, and mypy reads the filesystem rather than running
+# `sys.path` hooks — so `from mikemol.hooks import payload` resolves at RUNTIME and not to the
+# type checker. Every expression through the package then degrades to `Any`, and under
+# `disallow_any_expr` that surfaces as dozens of errors; without that setting it would have been
+# SILENT, and a green suite would have stood in for a checked one.
+#
+# ⚑⚑ MEASURED ON THE SIBLING DISTRIBUTION, WHICH HAS THE DEFECT TODAY. `mikemol-mdstruct` sets
+# `mypy_path = "stubs"` alone: its 90 tests pass and `mypy tests/test_frontmatter.py` reports 14
+# errors, 13 of them `Any` from one unresolved import. **A passing test suite is a fact about the
+# tests, never about the standard applied to them** — and this was reported as "ruff+mypy clean"
+# on the strength of a `src`-only run.
+mypy_path = "src"
+# ⚑⚑ AND `mypy_path` ALONE MAKES THE SOURCE REACHABLE UNDER TWO NAMES. With `src` a search root,
+# `src/mikemol/hooks/payload.py` is both `mikemol.hooks.payload` (from the project root) and
+# `hooks.payload` (from `src/mikemol`), which mypy refuses outright — correctly, since it cannot
+# know which one a consumer means. `explicit_package_bases` says the module name is derived from
+# the declared roots, so exactly one spelling survives.
+#
+# ⚑ THE PAIR IS ONE SETTING IN TWO KEYS. Adding either alone leaves a working-looking config:
+# without the path, the tests type as `Any`; without this, the whole run aborts before checking
+# anything. Only together do they mean "the package is at `src/mikemol` and is called
+# `mikemol.hooks`".
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# ⚑⚑⚑ THE NAMESPACE IS DECLARED, NOT SUPPRESSED. `INP001` fires on a directory with no
+# `__init__.py` because that is usually an oversight — and here it is the design twice over:
+# `src/mikemol/` must stay empty of one so sibling distributions can share the prefix, and
+# `tests/` is a collection root pytest imports by path rather than a package anything imports.
+# The rule offers exactly this option for the deliberate case, so the answer is to TELL it.
+#
+# ⚑ AND THE DISTINCTION IS WORTH THE LINE: with this, a MISSING `__init__.py` anywhere else is
+# still a finding. An `ignore = ["INP001"]` would buy the same silence at the cost of never
+# hearing about a real oversight again.
+#
+# ⚑⚑ `tests` IS LISTED BECAUSE THE SIBLING DISTRIBUTION'S OMISSION WAS MEASURED, NOT ASSUMED.
+# mdstruct declares only `src/mikemol`, and its `tests/` carries three live ruff findings that
+# nothing had swept — the per-file hook only ever checked files as they were edited, and the
+# suite's own green told a reader nothing about the lint bar reaching it. A passing test suite
+# is a fact about the tests, never about the standard applied to them.
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D203", "D213", "COM812"]
+
+# ⚑⚑ `@pytest.fixture()` CALLED, NOT BARE — AND THE TWO CHECKERS DISAGREE ABOUT THIS, so the
+# disagreement has to be settled in config rather than re-argued per file. `pytest.fixture` is an
+# OVERLOADED decorator: applied bare it resolves to the overload returning `FixtureFunction`,
+# which under `disallow_any_decorated` degrades the decorated function's signature. Called, it
+# resolves to the concrete-returning overload. ruff's PT001 defaults to preferring the bare form,
+# which is the spelling mypy cannot type here — so the default is inverted rather than the rule
+# suppressed, and a fixture written the other way is still a finding.
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0\s*\n#\s*Copyright \(c\) \d{4} Mike Mol'
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+# ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
+# file rather than to the package. An entry naming a directory would grant it to every hook in
+# order to cover one call — the blast radius a per-responsibility override exists to avoid.
+"src/mikemol/hooks/verdict.py" = ["S603"]

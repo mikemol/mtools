@@ -1,0 +1,416 @@
+% warrants.bib — one claim PER TEST CASE in mdstruct's suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  The prose was authored at the
+% moment the defect was measured; restating it here in other words would lose the
+% measurement.  Where a docstring is a bare one-liner the claim is correspondingly plain,
+% and that thinness is a fact about the case rather than something invented over.
+%
+% Keying convention: md-<module>-<test name minus its `test_` prefix, hyphenated, with
+% leading articles dropped>.  Each check runs that one test function.
+%
+% Section keys are the source module: one section per tests/test_*.py, which is the
+% grain at which these arguments were written (each module's own module-docstring
+% states the shared thesis its cases divide up).
+
+% ---------------------------------------------------------------- frontmatter
+
+@misc{md-frontmatter-split-exactly,
+  section = {frontmatter},
+  claim   = {The head and body of a document with frontmatter come back byte-for-byte. A conversion once dropped a document's name, type, originSessionId and modified fields while two gates reported success --- its identity and provenance, deleted by a prose writer that had no business reformatting metadata --- so the split exists to keep the frontmatter away from that writer, and this case keeps the bytes EXACT rather than merely present},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_frontmatter.py -k test_frontmatter_is_split_exactly}
+}
+
+@misc{md-frontmatter-document-without-is-untouched,
+  section = {frontmatter},
+  claim   = {A plain document with no frontmatter passes through whole, with an empty head},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_frontmatter.py -k test_a_document_without_frontmatter_is_untouched}
+}
+
+@misc{md-frontmatter-unterminated-fence-is-body,
+  section = {frontmatter},
+  claim   = {An opening fence with no close reads as BODY, not as metadata. A document may legitimately open with a horizontal rule; reading that as metadata would consume the whole file and leave nothing for the writer --- a silent truncation rather than an error},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_frontmatter.py -k test_an_unterminated_fence_is_not_frontmatter}
+}
+
+@misc{md-frontmatter-split-rejoins,
+  section = {frontmatter},
+  claim   = {Head plus body reconstructs the input exactly. The whole point of the split is RE-ATTACHMENT, so it must be lossless by construction --- a split that dropped a byte would restore a document subtly unlike the one it read},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_frontmatter.py -k test_the_split_rejoins}
+}
+
+@misc{md-frontmatter-rule-after-prose-is-not-frontmatter,
+  section = {frontmatter},
+  claim   = {A triple-dash rule that is not at the start of the document is left alone},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_frontmatter.py -k test_a_rule_after_prose_is_not_frontmatter}
+}
+
+% ---------------------------------------------------------------- pandoc
+
+@misc{md-pandoc-markdown-writer-keeps-frontmatter,
+  section = {pandoc},
+  claim   = {Every markdown dialect --- markdown, gfm, commonmark --- gets the frontmatter head back UNCHANGED. The assertion is equality against the original head, not a startswith test on the fence: a prefix check passes on a head that was re-attached and REFORMATTED, which is the defect itself, since pandoc's YAML round-trip is its own normalization, and the recorded loss was FIELDS, so the case must see fields. The writer predicate is a prefix test over writer names rather than an equality one, because an equality predicate would silently stop preserving the first time someone asked for a dialect, and the failure would present as a missing head rather than as an error --- three dialects is what makes that testable},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_pandoc.py -k test_a_markdown_writer_keeps_the_frontmatter_byte_for_byte}
+}
+
+@misc{md-pandoc-json-does-not-get-frontmatter,
+  section = {pandoc},
+  claim   = {A non-markdown writer's output is not prefixed with YAML, and the case asserts the output PARSES as the format asked for rather than merely lacking a fence. This is the more damaging of the two directions: a JSON document prefixed with a fence fails to parse at char 0, which took out every AST-backed mode on every frontmatter'd file --- and the two directions fail oppositely, so one case each way is what pins the predicate. Not re-attaching lost a document's identity through a markdown round-trip while two gates reported success; re-attaching UNCONDITIONALLY produced this one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_pandoc.py -k test_json_does_not_get_the_frontmatter}
+}
+
+% ---------------------------------------------------------------- spans
+
+@misc{md-spans-parent-contains-child,
+  section = {spans},
+  claim   = {A section ends at the next SAME-OR-SHALLOWER header, not at the next header of any level. This is the silent failure a line-regex produces: ending a parent at its own nested child would report a two-line section that looks entirely plausible, nothing in the output says it is short, and every consumer --- read, replace, append --- would act on the wrong range. A reader cannot see the defect, which is why it needs a case rather than review},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_parent_span_contains_its_child}
+}
+
+@misc{md-spans-naive-rule-would-differ,
+  section = {spans},
+  claim   = {A POSITIVE CONTROL: the naive rule gives a DIFFERENT answer on this fixture. A case that cannot fail is not a case --- if the fixture had no nested heading, the nesting case would pass under both the correct and the naive rule and the regression fence would be decorative. Asserting the child's own start lies strictly inside the parent's range is what makes the two rules genuinely disagree on this document},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_the_parent_span_would_be_shorter_under_the_naive_rule}
+}
+
+@misc{md-spans-every-heading-anchored,
+  section = {spans},
+  claim   = {No heading is dropped, including a heading carrying inline markup and everything after it. The forward cursor makes ONE MISS CASCADE: a heading that fails to anchor does not merely go missing, the scan never advances past it, so every later section is lost too. Measured on one governed document, 3 of 9 headings carried backticks, so a third of the file was unreachable while the header listing showed it fine},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_every_heading_is_anchored}
+}
+
+@misc{md-spans-backticked-heading-resolves,
+  section = {spans},
+  claim   = {The heading carrying inline markup is present BY NAME, not merely counted. A level list can match while the wrong heading occupies a slot; asserting the text is what ties this case to the recorded defect --- a heading with backticks renders without them, so raw-line anchoring never matched it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_backticked_heading_resolves}
+}
+
+@misc{md-spans-fenced-hash-opens-no-section,
+  section = {spans},
+  claim   = {A hash inside a code fence does not become a span boundary},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_fenced_hash_opens_no_section}
+}
+
+@misc{md-spans-ambiguous-needle-refuses-and-names-both,
+  section = {spans},
+  claim   = {A substring matching two headings raises, and the refusal NAMES the candidates. Ambiguity must refuse because the caller is usually about to write: picking the earlier of two matching sections is the silent-wrong-target class, and a rewrite is not recoverable by re-running. The message is part of the contract --- a refusal that does not say which sections collided leaves the caller to re-derive the ambiguity the tool already computed},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_an_ambiguous_needle_refuses_and_names_both}
+}
+
+@misc{md-spans-missing-needle-refuses,
+  section = {spans},
+  claim   = {A needle matching nothing raises rather than returning empty},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_missing_needle_refuses}
+}
+
+@misc{md-spans-unambiguous-needle-resolves,
+  section = {spans},
+  claim   = {A POSITIVE CONTROL for the two refusals: without it, a finder that refused EVERYTHING would pass both refusal cases. This is the arm that proves the refusals are discriminating rather than total},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_an_unambiguous_needle_resolves}
+}
+
+@misc{md-spans-enclosing-is-a-chain-outermost-first,
+  section = {spans},
+  claim   = {A line inside a subsection reports EVERY container, outermost first. The editable unit is the innermost and the readable address is the whole chain, so the caller must not have to guess which one the function meant},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_enclosing_is_a_chain_outermost_first}
+}
+
+% ---------------------------------------------------------------- sections
+
+@misc{md-sections-replace-keeps-heading,
+  section = {sections},
+  claim   = {The heading line survives a body replacement. The heading is THE ANCHOR every other reader resolves against --- spans, coherence, the label census, and the section finder itself --- so a rewrite that altered it would silently orphan every reference pointing at that section, and the failure would surface far away as a lookup that stopped matching},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_replace_keeps_the_heading}
+}
+
+@misc{md-sections-replace-leaves-neighbours-identical,
+  section = {sections},
+  claim   = {The sections either side of a replacement are untouched and the old body is gone. This is the argument for a SPLICE over an AST render, as a case rather than a comment: a render is admissible and rewrites the WHOLE document, so a five-line edit arrives as a whole-file diff, and a case that pins the untouched sections is what keeps a future just-re-render-it from passing review},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_replace_leaves_neighbours_byte_identical}
+}
+
+@misc{md-sections-append-lands-inside-named-section,
+  section = {sections},
+  claim   = {Appended text lands before the NEXT heading, not at end-of-file. This is the bounded form of a shell append, which puts content under whatever heading happens to be last --- which for a sectioned document is almost never where it belongs},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_an_append_lands_inside_the_named_section}
+}
+
+@misc{md-sections-fixture-orders-target-before-last,
+  section = {sections},
+  claim   = {A POSITIVE CONTROL for the bounded append: the fixture can discriminate at all. A shell append and a correct one AGREE when the target happens to be last, so a case targeting the final section would pass under the defect; asserting the target precedes the last section is what makes the append case able to fail. The case takes no document fixture, which is the correction --- it previously requested one and never touched it, since the assertion is about the SOURCE TEXT rather than any file written from it, and a test naming a subject it does not examine reads as covering that subject},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_the_fixture_orders_the_target_before_the_last_section}
+}
+
+@misc{md-sections-append-keeps-blank-line,
+  section = {sections},
+  claim   = {The blank line before the next heading survives an append. This looks cosmetic and is not: markdown block separation is load-bearing, so swallowing it produces a document that RENDERS differently from the one the author reviewed --- a silent formatting change riding along with a content edit},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_an_append_keeps_the_blank_line}
+}
+
+@misc{md-sections-write-returns-span-it-hit,
+  section = {sections},
+  claim   = {A write tells the caller WHICH section was targeted, by returning the span it hit. A write that says only done leaves a reader to re-derive what moved},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_write_returns_the_span_it_hit}
+}
+
+@misc{md-sections-ambiguous-target-refuses-before-writing,
+  section = {sections},
+  claim   = {A needle matching two headings raises rather than picking one, and it does so BEFORE writing. The target here is a write, so picking the earlier match is the silent-wrong-target class and a rewrite is not recoverable by re-running},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_an_ambiguous_target_refuses_before_writing}
+}
+
+% ---------------------------------------------------------------- grep
+
+@misc{md-grep-every-occurrence-is-found,
+  section = {grep},
+  claim   = {The sweep reports EACH match, which is what a staleness scan needs},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_every_occurrence_is_found}
+}
+
+@misc{md-grep-span-is-the-sections-not-the-line,
+  section = {grep},
+  claim   = {A hit carries the containing SECTION's range, not the match's own line. This is the whole feature: a line-oriented grep already gives a line number, and what it cannot give is the editable unit around it, which is why the pair was asked for. A version returning the match's own line as its range would pass a naive reading, would pass any test that only counted hits, and would deliver nothing over the tool a structural-query hook already refuses},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_the_span_is_the_sections_not_the_matching_line}
+}
+
+@misc{md-grep-container-is-innermost-with-whole-chain,
+  section = {grep},
+  claim   = {The container names the full path and ends at the DEEPEST section. The innermost container is the editable one: a line inside a third-level section is also inside its parent, and reporting the parent's range would hand back a span far larger than the reader asked about --- a section rewrite against it would take the sibling subsections too},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_the_container_is_the_innermost_with_the_whole_chain}
+}
+
+@misc{md-grep-preamble-match-is-named,
+  section = {grep},
+  claim   = {A match above the first heading reports a NAMED container rather than an empty one. An empty container reads as a missing measurement, where this-is-preamble is a fact},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_a_preamble_match_is_named}
+}
+
+@misc{md-grep-literal-pattern-is-not-a-regex,
+  section = {grep},
+  claim   = {The default search treats the pattern LITERALLY. Literal-by-default is a correctness property, not a convenience: prose contains dots, parens, brackets and stars, so a regex default would make a search for a phrase either error or match something else --- and a staleness sweep is a COMPLETENESS tool, so a regex default fails toward FALSE NEGATIVES, the wrong direction for did-I-catch-every-occurrence},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_a_literal_pattern_is_not_a_regex}
+}
+
+@misc{md-grep-regex-is-opt-in,
+  section = {grep},
+  claim   = {A POSITIVE CONTROL for the literal default: the opt-in flag genuinely enables regex matching, so the default is a choice rather than an inability},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_regex_is_opt_in}
+}
+
+@misc{md-grep-case-folding-is-opt-in,
+  section = {grep},
+  claim   = {The ignore-case flag WIDENS the search and the default does not --- asserted in both directions, so the flag is shown to do something and the default is shown not to do it already},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_case_folding_is_opt_in}
+}
+
+% ---------------------------------------------------------------- tables
+
+@misc{md-tables-nested-table-is-found,
+  section = {tables},
+  claim   = {A table inside a list item is counted. This is the false-zero case: a scan that walks only top-level blocks reports fewer tables than the document renders, and a SMALLER count reads as a cleaner document rather than a blinder reader. A false zero gets banked; a false finding gets argued with},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_nested_table_is_found}
+}
+
+@misc{md-tables-nested-table-is-identified,
+  section = {tables},
+  claim   = {A POSITIVE CONTROL over the count: the missing table is IDENTIFIABLE, not just counted. A count that matches is the worst case, since two populations of three can differ entirely --- naming the nested table's header is what ties the case to the specific blind spot},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_the_nested_table_is_the_one_a_top_level_scan_would_miss}
+}
+
+@misc{md-tables-header-is-read,
+  section = {tables},
+  claim   = {The header cells come back as text},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_header_is_read}
+}
+
+@misc{md-tables-rows-are-readable,
+  section = {tables},
+  claim   = {A table's data rows come back as cells --- the capability that was missing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_rows_are_readable}
+}
+
+@misc{md-tables-filtered-row-carries-its-table,
+  section = {tables},
+  claim   = {A filtered row says WHICH table it came from. A row without its origin needs a second query before a reader can act on it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_filtered_row_carries_its_table}
+}
+
+@misc{md-tables-filter-is-case-folded,
+  section = {tables},
+  claim   = {A lookup by name does not depend on the reader's casing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_the_filter_is_case_folded}
+}
+
+@misc{md-tables-position-filter-narrows-and-returns-something,
+  section = {tables},
+  claim   = {Asking for one table returns ITS rows and no other's --- asserted in BOTH halves, because a filter returning nothing would satisfy no-other-table's-rows vacuously},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_position_filter_narrows_and_returns_something}
+}
+
+@misc{md-tables-row-index-is-still-tuples-method,
+  section = {tables},
+  claim   = {A row's index remains tuple's METHOD, not a shadowing field. A NamedTuple field named index shadows the builtin, and a caller reaching for the method would get a field --- a defect that surfaces as a TypeError far from its cause. The method is CALLED rather than tested with callable, which is the stronger assertion: callable on a bound builtin reads as untyped under a strict bar, and it would pass on ANY callable field including a shadowing one holding a function, so invoking it and asserting the ANSWER pins behaviour rather than shape. And it searches the row's own FIELDS rather than the cells, since index on a NamedTuple ranges over fields --- the same confusion the shadowing defect causes, which is why the case pins the real method's real semantics},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_row_index_is_still_tuples_method}
+}
+
+% ---------------------------------------------------------------- labels
+
+@misc{md-labels-ascii-shape-matches,
+  section = {labels},
+  claim   = {The established short codes are found, IN ORDER},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_the_ascii_shape_matches}
+}
+
+@misc{md-labels-enclosed-alphanumerics-match,
+  section = {labels},
+  claim   = {Enclosed alphanumeric glyphs are read as labels. This is the FIRST recorded miss: a document organised around circled letters reported 41 labels and ZERO of them circled --- the document's own reader blind to the thing the document was structured by},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_enclosed_alphanumerics_match}
+}
+
+@misc{md-labels-enclosure-styles-narrow-range-missed,
+  section = {labels},
+  claim   = {Double-circled and parenthesised enclosure styles are read as labels. This is the THIRD miss: a range spelled as circled-letters-and-numbers EXCLUDES these, so a table using them reported every numbered row MISSING while the lowercase half resolved --- half a selector table unaddressable, and the pattern looked right},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_the_enclosure_styles_the_narrow_range_missed}
+}
+
+@misc{md-labels-dingbat-family-matches,
+  section = {labels},
+  claim   = {The dingbat numeral family is read as labels. This is the FOURTH miss, made AFTER reading the note about the third: a new selector used these and the reader reported zero labels for it while still resolving the RETIRED glyphs quoted in its own retirement note. Each of the four widenings was the same mistake --- a grammar written from the instances in front of the author --- and a single it-matches-labels case would have passed at every one of those four moments},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_the_dingbat_family_matches}
+}
+
+@misc{md-labels-math-and-shape-glyphs-excluded,
+  section = {labels},
+  claim   = {Glyphs a proof corpus writes as MATHEMATICS are not read as labels. This is the bound on widening, and it cuts the other way from the four misses: admitting the blocks the fourth family reached into would report proof prose as labels --- a cries-wolf failure at scale, which is WORSE than a miss because a census full of false rows teaches a reader to skim it. The exclusion cases are as load-bearing as the inclusion ones},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_math_and_shape_glyphs_are_not_labels}
+}
+
+@misc{md-labels-prose-lookalikes-excluded,
+  section = {labels},
+  claim   = {A capitalised word carrying digits, drawn from ordinary prose, is not a label},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_prose_lookalikes_are_excluded}
+}
+
+@misc{md-labels-excluded-token-does-not-fall-through,
+  section = {labels},
+  claim   = {A non-label match does not become a DIFFERENT group's hit. Once a group has fired the match is settled: falling through would let an excluded ASCII token be re-read as a glyph label --- a bogus row keyed on a group that matched nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_an_excluded_token_yields_nothing_and_does_not_fall_through}
+}
+
+@misc{md-labels-every-alternative-survives-the-read,
+  section = {labels},
+  claim   = {Each alternative in the pattern is reachable THROUGH THE READER, not merely present in the pattern. The pattern is not the reader: the third family matched in the regex and was dropped by a consumer taking groups positionally under a comment declaring how many there were --- so this asserts the READ rather than the match, and a fifth alternative cannot be added and silently ignored},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_every_alternative_survives_the_read}
+}
+
+@misc{md-labels-real-label-not-in-exclusion-set,
+  section = {labels},
+  claim   = {A POSITIVE CONTROL over the exclusion list ITSELF: the set must not swallow anything matching the live label shape. Two live labels were nearly added to it, and listing a real label as a non-label makes an audit silently stop reporting a genuine orphan --- strictly worse than the noise it removes},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_labels.py -k test_a_real_label_is_not_in_the_exclusion_set}
+}
+
+% ---------------------------------------------------------------- lint
+
+@misc{md-lint-code-spans-masked-before-html-scan,
+  section = {lint},
+  claim   = {Markup inside backticks is NOT reported as inline HTML: code spans are masked first, then looked at. This is the recorded false positive --- the inline-HTML check's first guard counted backticks AROUND the match and admitted text plainly INSIDE code, and the author nearly fixed a document to satisfy it. Printing the source line is what caught it; a count would have sent a reader editing prose that was already correct},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_code_spans_are_masked_before_the_html_scan}
+}
+
+@misc{md-lint-real-tag-is-still-reported,
+  section = {lint},
+  claim   = {A POSITIVE CONTROL for the masking: a genuine tag outside code IS still found. Without it, masking EVERYTHING would pass the masking case --- the two together say the predicate discriminates rather than suppresses},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_real_tag_is_still_reported}
+}
+
+@misc{md-lint-fenced-lines-not-measured-for-width,
+  section = {lint},
+  claim   = {A long line inside a code fence is not a width finding. Every rule here is about PROSE, and applying them inside a code block reports the code's own syntax as a document defect},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_fenced_lines_are_not_measured_for_width}
+}
+
+@misc{md-lint-long-prose-line-reported-at-narrow-width,
+  section = {lint},
+  claim   = {The width rule FIRES when the document genuinely exceeds the configured width},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_long_prose_line_is_reported_at_a_narrow_width}
+}
+
+@misc{md-lint-no-width-findings-at-measured-narrowest,
+  section = {lint},
+  claim   = {The width rule is SILENT at the width the document already satisfies --- the whole argument of this module, as a case. Four rules were about to be disabled without any being measured, and turning a rule off is the allow-list move: it rots, and it hides the population instead of retiring it. Most of these rules are SATISFIABLE, so measuring the narrowest admissible width turns a suppression into a CONFIGURATION: the rule was never incompatible with the document, it was misconfigured against it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_no_width_findings_at_the_measured_narrowest}
+}
+
+@misc{md-lint-frontmatter-excluded-and-lines-offset,
+  section = {lint},
+  claim   = {Findings are body lines, numbered against the FILE, and no finding names a metadata line. A finding a reader cannot locate is not actionable, so the offset must put the number back into the file's own numbering rather than the body's},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_frontmatter_is_excluded_and_lines_are_offset}
+}
+
+@misc{md-lint-narrowest-is-none-when-nothing-fits,
+  section = {lint},
+  claim   = {A document exceeding the search ceiling reports NO admissible width rather than the ceiling. Never a silent ceiling: returning the upper bound would claim a width the document does not satisfy},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_narrowest_is_none_when_nothing_in_range_fits}
+}
+
+% ---------------------------------------------------------------- roundtrip: drift
+
+@misc{md-drift-normalized-document-round-trips-identically,
+  section = {roundtrip-drift},
+  claim   = {A document already at its fixpoint reports NO drift --- the positive control for the whole reader. Without it, a drift detector that reported a difference unconditionally would satisfy every other case about one round},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_roundtrip_drift.py -k test_a_normalized_document_round_trips_identically}
+}
+
+@misc{md-drift-carries-its-sample-not-just-a-count,
+  section = {roundtrip-drift},
+  claim   = {A non-identical round-trip reports WHAT changed, not merely that something did. Pandoc normalizes by design, so identity is the UNUSUAL case --- which makes a bare pass/fail the wrong shape for this reader: the caller almost always gets not-identical and needs the SIZE and SHAPE of the difference to decide whether it matters. A bare count is a number they cannot act on without reading the two documents themselves},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_roundtrip_drift.py -k test_drift_carries_its_sample_not_just_a_count}
+}
+
+% ---------------------------------------------------------------- roundtrip: fixpoint
+
+@misc{md-fixpoint-reports-the-whole-sequence,
+  section = {roundtrip-fixpoint},
+  claim   = {The per-round deltas are returned, not only the verdict, and the last of them is zero. The reading IS the sequence: a descending sequence says approach, a repeating one says plateau, a growing one says divergence --- and a boolean discards the only thing that separates those three, which is precisely how BOTH historical stopping rules were adopted},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_roundtrip_fixpoint.py -k test_convergence_reports_the_whole_sequence}
+}
+
+@misc{md-fixpoint-converged-text-is-returned,
+  section = {roundtrip-fixpoint},
+  claim   = {The fixpoint's TEXT comes back, not only the fact that one exists. A function that ran a document all the way to its fixpoint and returned only deltas let a census report 48 rows going to 0 after one pass while NOTHING COULD WRITE THAT RESULT --- and a census with no apply trains a reader to dismiss it as pre-existing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_roundtrip_fixpoint.py -k test_the_converged_text_is_returned}
+}
+
+% ---------------------------------------------------------------- roundtrip: stopping
+
+@misc{md-stopping-plateau-is-not-a-stall,
+  section = {roundtrip-stopping},
+  claim   = {The flat budget ADMITS repeats --- a TERMINATION bound, not a capability one. This is the SECOND wrong stopping rule, pinned as a named constant: stop-unless-the-delta-strictly-decreases read a PLATEAU as a stall, when a real document converges in twelve rounds descending in plateaus because pandoc re-emits a block group at a time. A budget of one would reproduce the defect exactly by stopping on the first repeat, so the case asserts room for the measured worst plateau of three repeats, with margin},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_roundtrip_stopping.py -k test_a_plateau_is_not_treated_as_a_stall}
+}
+
+@misc{md-stopping-round-cap-is-not-the-default,
+  section = {roundtrip-stopping},
+  claim   = {A document needing several rounds converges when no round count is requested. This is the FIRST wrong stopping rule: a default cap turns a document needing one more round than the cap into a reported DIVERGENCE --- a capability bound dressed as a termination bound --- and it read a strictly DECREASING delta sequence as divergence when decrease is the signature of approach. It is asserted as BEHAVIOUR rather than by introspecting the signature: a parameter default is typed as unchecked by design, so every read of it carries an untyped value into the assertion at exactly the point it makes its claim, and the signature was never the property that mattered --- a null default with a cap applied inside the body satisfies that check and still has the defect. The two rules share a file because EACH FIX CAUSED THE NEXT DEFECT, and fixing either in isolation is what produced the other},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_roundtrip_stopping.py -k test_a_round_cap_is_not_the_default}
+}
+
+% ---------------------------------------------------------------- output
+
+@misc{md-output-fresh-import-emits-nothing-on-stderr,
+  section = {output},
+  claim   = {Running the CLI in a CLEAN interpreter produces no stderr output. A fresh subprocess is the only honest test, because import warnings fire ONCE per interpreter --- a check inside the running test process passes trivially, since the import already happened when the suite loaded and its warning went wherever it went. The specific leak: a dependency documents a signature containing an escape sequence in a non-raw docstring, which Python reports as a SyntaxWarning on every import, a defect in a dependency's source that nothing a consumer writes can fix},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_output_is_clean.py -k test_a_fresh_import_emits_nothing_on_stderr}
+}
+
+@misc{md-output-stdout-is-only-the-answer,
+  section = {output},
+  claim   = {Every stdout line belongs to the report, not to a dependency. This is a CORRECTNESS property rather than tidiness: this package's modes are READ BY PROGRAMS --- a structural grep's output is parsed, a span list feeds a section rewrite --- so a warning rides along with the answer, and a caller capturing both streams gets a third-party warning interleaved with the data},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_output_is_clean.py -k test_stdout_is_only_the_answer}
+}
+
+@misc{md-output-suppression-does-not-silence-own-warnings,
+  section = {output},
+  claim   = {A warning raised from this package's OWN code is still delivered --- a positive control on the SCOPE of the suppression. The suppression is narrow on purpose, scoped to one category and one module: a blanket ignore would pass both of the quiet-streams cases above while hiding a SyntaxWarning this package's own code earns, which is exactly the finding a warning exists to deliver},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_output_is_clean.py -k test_the_suppression_does_not_silence_this_packages_own_warnings}
+}

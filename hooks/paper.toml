@@ -1,0 +1,15 @@
+[paper]
+title = "mikemol.hooks: an armed gate, and the config that must reach an in-flight edit"
+subtitle = "One warrant per test case. Both surfaces here fail the same way --- a hook that reports itself armed while refusing nothing, and a checker that reports clean because the config never resolved against the author's file --- so the cases are written as positive controls and identity assertions rather than as feature checks, because nothing about either defect is visible in a passing run."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "HOOKS.md"
+numbered = false
+references = false
+
+# Each claim's check runs THAT ONE test function through this distribution's own venv.
+# `-k <name>` addresses a single case; for a parametrized case it addresses the whole
+# family, which is the right grain: the family shares one docstring and one argument,
+# so one claim per test FUNCTION is one claim per argument made.
+[checks.cmd]
+cmd = "{target}"

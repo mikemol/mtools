@@ -1,0 +1,15 @@
+[paper]
+title = "mdstruct: structural reads and bounded writes over Markdown"
+subtitle = "One warrant per test case, each carrying the defect its case prevents --- the failures in this package are overwhelmingly SILENT (a short section that looks plausible, a smaller table count that reads as a cleaner document, a warning riding along with parsed output), so the argument for each case is the only place a reader learns what the passing run is not showing them."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "MDSTRUCT.md"
+numbered = false
+references = false
+
+# Each claim's check runs THAT ONE test function through this distribution's own venv.
+# `-k <name>` addresses a single case; for a parametrized case it addresses the whole
+# family, which is the right grain: the family shares one docstring and one argument,
+# so one claim per test FUNCTION is one claim per argument made.
+[checks.cmd]
+cmd = "{target}"

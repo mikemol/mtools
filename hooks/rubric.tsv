@@ -1,0 +1,4 @@
+# rubric.tsv — the sections of the hooks warrant set, in document order.
+# key <TAB> heading title
+payload	Payload: Untrusted Input, and the Arming Switch
+checkers	Checkers: That Config Reaches an In-Flight Edit
