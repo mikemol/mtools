@@ -50,10 +50,51 @@ test --test_output=errors --test_summary=terse
 # and nothing that builds an interpreter or a venv. The Python toolchain and every wheel arrive
 # through repository rules as FETCHED ARCHIVES, entering the CAS as inputs once rather than as
 # build outputs. The `.venv` directories are host-side iteration only; no action reads them.
+# ⚑⚑ A CONTENT-ADDRESSED DISK CACHE, BECAUSE THE EXECROOT PATH IS A HIDDEN INPUT TO EVERY ACTION
+# KEY. Bazel derives its output base from a hash of the WORKSPACE PATH, so the same tree at two
+# paths is two caches that share nothing. MEASURED ON THIS HOST: 11 output bases totalling 6.4G.
+# A peer measured the sharper version of the same defect — two bases at 1.8G and 1.9G for ONE repo
+# at two paths, and a worktree build running 129,577 actions against 4,631 hits while an identical
+# tree sat fully built beside it.
+#
+# ⚑ IT IS UNCONDITIONAL, NOT A CONFIG, BECAUSE THE FRAGMENTATION IS UNCONDITIONAL. Every
+# clean-clone probe this session created another base; that is how eleven accumulate. Namespaced
+# per repository, matching both peers that carry one — a shared directory would be one cache
+# keyed across unrelated action graphs.
+build --disk_cache=~/.cache/bazel-disk/mtools
+
 build:cache --remote_cache=grpc://127.0.0.1:31985
 build:cache --remote_cache_async=true
 
 build:remote --remote_executor=grpc://127.0.0.1:31985
+build:remote --remote_instance_name=mtools-gate
+
+# ⚑ THE EXEC PLATFORM IS DECLARED RATHER THAN INFERRED. Twenty-five targets passed remotely
+# without it, which means bazel inferred one correctly — and a correct inference is still an
+# undeclared assumption. //rbe records what this repository believes about the executor, and why
+# its constraints are non-empty where both peers' are bare.
+build:remote --extra_execution_platforms=//rbe:mtools_gate_platform
+
+# ⚑⚑⚑ NO `--remote_local_fallback`, AND ITS ABSENCE IS A DECISION RATHER THAN AN OVERSIGHT — which
+# is the difference this file already insists on twice. Two operator rulings recorded next door,
+# both against it, and one repository still carries it as the outlier:
+#
+#   · "don't do that; it evades the scheduler and consumes resources against the very same machine
+#     the scheduler is protecting". THE EXECUTOR IS COLOCATED ON THIS BOX, so a fallback action does
+#     not run somewhere else instead — it runs on the IDENTICAL CORES, outside the executor's
+#     accounting, at precisely the moment the queue was full BECAUSE those cores were busy. A
+#     control that is present, plausible, and inert exactly under load is the shape of a hook that
+#     fails open when its linter is absent.
+#
+#   · a fallback "would silently re-open the escape whenever the executor is down" — and the escape
+#     is the whole reason this repository adopted remote execution. A local sandbox shares this
+#     kernel and this $HOME; that is how a test here read the author's own venv from inside a
+#     hermetic action. Degrading to it on failure discards the property being bought.
+#
+# ⚑ SO `--config=remote` IS FAIL-CLOSED: an action routed to the executor runs THERE or fails
+# loudly. The accepted cost is that it hard-depends on the executor being up, which is the honest
+# trade — a gate that quietly weakens when its instrument is unavailable is the class this
+# repository refuses everywhere else.
 
 # ⚑ BES IS SEPARATE FROM BOTH, and linux-sources records its own absence of it as OWED. The same
 # service exposes a `grpc-bes` port; a build invoked with `--config=bes` reports its result stream

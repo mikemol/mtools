@@ -38,6 +38,12 @@ module(name = "mtools", version = "0.1")
 # declare (`requires-python = ">=3.13"`), so the interpreter that runs a witness is the interpreter
 # the package claims to support rather than whatever the caller's shell resolved.
 bazel_dep(name = "rules_python", version = "1.0.0")
+
+# ⚑ `@platforms` IS DECLARED BECAUSE //rbe NAMES ITS CONSTRAINTS. It arrives transitively for many
+# graphs, but a transitive repository is not a VISIBLE one under bzlmod — measured, `@platforms//os`
+# resolved to "unknown repo requested from @@" until this line existed. A dependency a file
+# references by name is a dependency that file's module must declare.
+bazel_dep(name = "platforms", version = "0.0.10")
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(python_version = "3.13", is_default = True)
 
@@ -162,6 +168,25 @@ filegroup(
 # whose `find_ruff_bin()` looks for a binary that is not there — measured: `python -m ruff` inside
 # a hermetic action raised, listing the paths it had searched. A pip requirement that cannot be
 # EXECUTED is not a usable dependency for a test that runs the checker.
+#
+# ⚑⚑ AND THE GENERAL RULE, WHICH THIS REPOSITORY REACHED BY TRIAL AND A PEER REACHED BY KNOWING IT.
+# rules_python ships `@rules_python//python/entry_points:py_console_script_binary.bzl`, which
+# REGENERATES a console script from the wheel's own `entry_points.txt` — so a dropped `bin/` is not
+# a wall for any tool that declares one. The discriminator is a one-command measurement:
+#
+#     importlib.metadata.distribution(X).entry_points   -> console_scripts group
+#
+#   · non-empty  -> py_console_script_binary. mypy declares dmypy/mypy/mypyc/stubgen/STUBTEST;
+#     pytest declares pytest; panflute declares panfl/panflute.
+#   · EMPTY and bin/ is a compiled artifact -> http_archive is correct. MEASURED for ruff:
+#     `entry_points == []` and `file .venv/bin/ruff` reports an ELF executable. There is no
+#     entry point to regenerate, which is why the archive below is the right instrument rather
+#     than a workaround for not knowing the other one.
+#
+# ⚑ A PAIRED TRAP, RECORDED BEFORE IT IS HIT: a console-script binary must be consumed through
+# `ctx.actions.run_shell(tools = ...)`, never `inputs = ...`. Its launcher looks for a
+# `<bin>.runfiles/` tree beside the executable; `inputs` stages the flat files without that tree
+# and the launcher raises "Cannot find .runfiles directory".
 #
 # ⚑⚑ THE VERSION IS THE ONE THE LOCK PINS (0.16.6), and `test_bar_fires` asserts that equality.
 # Two sources for one tool is a place they can drift; the assertion is what makes a drift a

@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑⚑ AN EXPLICIT EXEC PLATFORM, BECAUSE AN INFERRED ONE IS AN UNDECLARED ASSUMPTION THAT HAPPENS
+# TO HOLD. `--config=remote` already passes 25 of 25 without this, which means bazel inferred a
+# platform and the inference was right — and an assumption that is right is still not a
+# declaration. Naming it makes the seam auditable and gives the repository somewhere to say what
+# it believes about the executor.
+#
+# ⚑⚑ `exec_properties` IS EMPTY AND `container-image` IS DELIBERATELY UNSET. The BuildBuddy
+# executor at :31985 runs actions with `none` isolation — in the executor's OWN container — so
+# there is no per-action image to name here. The consequence is that the arms' userspace must be
+# present in the EXECUTOR image rather than in an image this file could pick: measured, the whole
+# suite passes there, so python3 and the staged toolchains are reachable.
+#
+# ⚑⚑⚑ `constraint_values` IS REQUIRED HERE, AND A BARE PLATFORM FAILED — WHICH IS A DIFFERENCE
+# FROM BOTH PEERS WORTH RECORDING RATHER THAN COPYING PAST. Their platforms carry no constraints
+# and work; mine did not:
+#
+#     Error in fail: Unable to find a CC toolchain using toolchain resolution.
+#     Target: @@rules_cc+//cc:current_cc_toolchain, Platform: @@//rbe:mtools_gate_platform
+#
+# A platform declaring NOTHING satisfies no toolchain's constraints, so resolution finds none. The
+# peers escape it because their action graphs never reach a `cc_toolchain`; mtools' does, through
+# rules_python's interpreter. Copying their file verbatim would have produced a config that fails
+# on first use — the stale-premise class, arriving as an inherited answer to a different graph.
+#
+# ⚑ THE VALUES ARE THE MEASURED TRUTH, NOT AN ASPIRATION. The executor is a single colocated
+# loopback worker on THIS host, so its OS and CPU are this machine's. If it ever moves off this
+# box or gains `oci` isolation, this file is what changes — and it will change by being WRONG
+# loudly rather than by silently resolving to something else.
+platform(
+    name = "mtools_gate_platform",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
