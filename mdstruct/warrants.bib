@@ -423,16 +423,22 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_plain_heading_reaches_the_section_list}
 }
 
-@misc{md-verify-apostrophe-reported-swallowed,
+@misc{md-verify-apostrophe-reaches,
   section = {verify},
-  claim   = {A heading carrying an ASCII apostrophe is REPORTED as swallowed. pandoc smart-quotes it to U+2019 while the raw line keeps U+0027, so the anchor keys never compare equal and the heading is dropped from the section list while the PRECEDING section's span silently extends across it --- found by four repos writing possessive prose, and kept here as a standing witness rather than a fixed bug},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_an_apostrophe_heading_is_reported_swallowed}
+  claim   = {A heading carrying an ASCII apostrophe reaches the section list. pandoc smart-quotes it to U+2019 while the raw line keeps U+0027, so under the old hand-maintained markup model the anchor keys never compared equal --- the heading was dropped and the PRECEDING section's span silently extended across it. Found by four repos writing possessive prose},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_an_apostrophe_heading_reaches_the_section_list}
 }
 
-@misc{md-verify-link-reported-swallowed,
+@misc{md-verify-link-reaches,
   section = {verify},
-  claim   = {A heading carrying a link is REPORTED as swallowed, by the same anchor-key divergence --- pandoc renders [x](y) to x. This one was found by ENUMERATING the heading-shape space rather than by being bitten, and was unknown to every party until then, which is why the shape table is the standing weakness of this contract rather than its guarantee},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_link_heading_is_reported_swallowed}
+  claim   = {A heading carrying a link reaches the section list, having failed by the same anchor-key divergence --- pandoc renders [x](y) to x. This one was found by ENUMERATING the heading-shape space rather than by being bitten, and was unknown to every party until then, which is why the shape table remains the standing weakness of this contract rather than its guarantee},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_link_heading_reaches_the_section_list}
+}
+
+@misc{md-verify-non-heading-hash-does-not-shift-pairing,
+  section = {verify},
+  claim   = {A line beginning with # that is NOT a heading does not shift the source-to-render pairing. Rendering every candidate line in one batched pandoc call made the result POSITIONAL, and a line like #no-space is a paragraph while a # inside a fence is code --- so a bare batch returns fewer headings than it was given and every later pairing shifts by one, which is the same positional-assumption class as the defect the batching replaced. Caught by this contract's own after-fence arm rather than by review, and now guarded by a sentinel heading between every input plus a strict zip that raises rather than truncates},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_hash_line_that_is_not_a_heading_does_not_shift_the_pairing}
 }
 
 @misc{md-verify-fenced-hash-is-not-a-heading,
@@ -453,8 +459,20 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_the_selftest_holds_both_arms_over_the_shape_space}
 }
 
+@misc{md-verify-anchor-keys-are-rendered-not-modelled,
+  section = {verify},
+  claim   = {The anchor reconciliation RENDERS a source line through the same pipeline the document went through rather than modelling what that pipeline strips. The previous model was a three-character tuple whose own comment warned against growing it into a grammar the renderer does not share --- it did not grow, and that was the defect. Nothing here models pandoc, so the reconciliation cannot drift from it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_source_line_renders_to_exactly_what_its_document_header_renders_to}
+}
+
+@misc{md-verify-render-is-one-entry-per-input,
+  section = {verify},
+  claim   = {`render_headings` returns exactly one entry per input line, a non-heading holding its slot as the empty string. This is the positional contract the strict zip in spans.py asserts against, and it exists because the invariant failed silently once already},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_render_headings_returns_one_entry_per_input}
+}
+
 @misc{md-verify-selftest-fires-when-the-table-lies,
   section = {verify},
   claim   = {A shape table asserting the OPPOSITE of the truth makes the selftest FAIL, in both directions --- a row claiming a swallowed shape is reachable trips the P-arm, and a row claiming a reachable shape is swallowed trips the F-arm. This is the contract's own F-arm: without it the selftest could be green because it is aimed at the wrong predicate, which is the class this repo paid for twice in one day. A configured-but-inert gate fires on nothing and is eventually noticed; an ACTIVE gate aimed at the wrong predicate produces findings, passes review, and its greens are indistinguishable from correct ones},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_the_selftest_fires_when_the_shape_table_lies}
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_the_selftest_fires_when_a_shape_row_claims_the_opposite}
 }

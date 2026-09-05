@@ -53,13 +53,25 @@ def _anchors(path: Path) -> list[tuple[int, str, int]]:
     section that contains its own predecessor.
     """
     lines = path.read_text(encoding="utf-8").split("\n")
+
+    # ⚑ EVERY CANDIDATE LINE IS RENDERED THROUGH PANDOC, IN ONE BATCHED CALL, so a source line and
+    # a document header are compared as pandoc renders each of them rather than through a model of
+    # what pandoc does. A `#` inside a fenced block renders as code and yields no heading, so it
+    # drops out here without this function needing to know about fences.
+    candidates = [(i, line) for i, line in enumerate(lines) if line.lstrip().startswith("#")]
+    rendered = ast.render_headings([line for _i, line in candidates])
+    # ⚑ `strict=True` IS THE ASSERTION, not a lint fix. `render_headings` returns one entry per
+    # input BY CONTRACT, and the defect caught during this repair was exactly that invariant
+    # failing silently. A length mismatch must raise here rather than truncate.
+    keyed = [(i, ast.anchor_key(text))
+             for (i, _line), text in zip(candidates, rendered, strict=True)]
+
     found: list[tuple[int, str, int]] = []
     cursor = 0
     for level, text in ast.headers(path):
         want = ast.anchor_key(text)
-        for i in range(cursor, len(lines)):
-            stripped = lines[i].lstrip()
-            if stripped.startswith("#") and ast.anchor_key(stripped.lstrip("#")) == want:
+        for i, key in keyed:
+            if i >= cursor and key == want:
                 found.append((level, text, i + 1))
                 cursor = i + 1
                 break

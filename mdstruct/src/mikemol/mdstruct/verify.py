@@ -101,9 +101,22 @@ _SHAPES: tuple[tuple[str, str, bool], ...] = (
     ("bare brackets",    "B [x] leg",            True),
     ("smart quote",      "B \u2019s leg",   True),
     ("after fence",      "B leg",                True),
-    ("apostrophe",       "B's leg",              False),
-    ("link",             "B [x](y) leg",         False),
-    ("image",            "B ![x](y) leg",        False),
+    # ⚑ THESE THREE WERE `False` — KNOWN DEFECTS WITH STANDING WITNESSES — until the anchor
+    # reconciliation stopped modelling pandoc and started asking it. The contract REFUSED to let
+    # them resolve silently: it reported "expected UNREACHABLE and it was reached", which is what
+    # a fixed defect is supposed to look like from inside a two-armed test.
+    ("apostrophe",       "B's leg",              True),
+    ("link",             "B [x](y) leg",         True),
+    ("image",            "B ![x](y) leg",        True),
+    # ⚑⚑ ADDED BY THE REPAIR ITSELF. Batching the render made the result POSITIONAL, and a line
+    # beginning with `#` that is NOT a heading (`#no-space`, or a `#` inside a fence) returns no
+    # heading — so a bare batch shifts every later pairing by one. The after-fence arm caught it;
+    # these keep the class covered from both sides.
+    ("no space after hash", "B leg",             True),
+    ("trailing hashes",  "B leg ##",             True),
+    ("inline html",      "B <b>x</b> leg",       True),
+    ("footnote ref",     "B leg[^1]",            True),
+    ("entity",           "B &amp; leg",          True),
 )
 
 
