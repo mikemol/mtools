@@ -379,3 +379,25 @@ def test_no_witness_reads_a_developer_venv() -> None:
                 names = {n.id for n in pyast.walk(inner) if isinstance(n, pyast.Name)}
                 assert "__file__" not in names, (
                     f"{dist}/{module.name}:{node.lineno} resolves out of the runfiles tree")
+
+
+def test_the_hermetic_sandbox_is_a_default_not_a_config() -> None:
+    """The sandbox flags are unconditional `build` lines, never `build:<config>`.
+
+    ⚑⚑⚑ AN OPT-IN HERMETICITY FLAG IS NOT HERMETICITY. These flags are NOT in the action key —
+    measured: a target run without them caches a green verdict, and the same target run WITH
+    them reports `Executed 0 out of 1 test: 1 test passes`, the verdict crossing the boundary
+    unexecuted. So a `--config` would be a regime a cache hit silently bypasses, and a flag
+    that changes what an action can READ but not what it is KEYED on cannot be left to the
+    caller.
+
+    ⚑⚑ WHAT THEY BUY, MEASURED BY PROBE IN BOTH ARMS: without them a hermetic action reads
+    `/home/mikemol/github/mtools/hooks/.venv/bin/ruff` and the whole source tree; with them
+    neither exists. That is the escape the AST witness above catches BY PATTERN, closed here BY
+    CONSTRUCTION — and the two are not substitutes.
+    """
+    rc = (_DIST.parent / ".bazelrc").read_text(encoding="utf-8")
+    for flag in ("--experimental_use_hermetic_linux_sandbox",
+                 "--sandbox_add_mount_pair=/usr"):
+        assert f"build {flag}" in rc, f"{flag} is not an unconditional build flag"
+        assert f"build:hermetic {flag}" not in rc, f"{flag} was made opt-in"

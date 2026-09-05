@@ -38,6 +38,7 @@ sh_test(
 )
 
 exports_files([
+    ".bazelrc",
     ".githooks/pre-commit",
     "setup.sh",
 ])

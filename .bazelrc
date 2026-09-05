@@ -61,6 +61,38 @@ test --test_output=errors --test_summary=terse
 # clean-clone probe this session created another base; that is how eleven accumulate. Namespaced
 # per repository, matching both peers that carry one — a shared directory would be one cache
 # keyed across unrelated action graphs.
+# ⚑⚑⚑ THE HERMETIC SANDBOX IS ON BY DEFAULT, AND IT CANNOT BE A `--config`. Bazel's ordinary
+# linux-sandbox SYMLINKS first-party packages back to the working tree, so an action can read the
+# live checkout. MEASURED, one probe, both arms:
+#
+#     without these flags   live_venv=True  source_tree=True
+#     with these flags      live_venv=False source_tree=False
+#
+# `live_venv` is `/home/mikemol/github/mtools/hooks/.venv/bin/ruff` — a developer venv that no
+# clone contains, reachable from inside a "hermetic" action. Ⓟ closed that escape by DISCIPLINE
+# (an AST witness refusing `__file__).resolve()`); this closes it by CONSTRUCTION, and the two are
+# not substitutes: the witness catches the pattern it knows, the sandbox removes the reachability.
+#
+# ⚑⚑ AND THESE ARE `build`, NOT `build:hermetic`, BECAUSE THE FLAGS ARE NOT IN THE ACTION KEY.
+# MEASURED: a target run WITHOUT them caches a green verdict, and the same target run WITH them
+# reports `Executed 0 out of 1 test: 1 test passes` — the verdict crosses the boundary unexecuted.
+# So an opt-in hermeticity flag is not hermeticity; it is a regime a cache hit silently bypasses.
+# A flag that changes what an action can READ but not what it is KEYED on cannot be left to the
+# caller.
+#
+# ⚑ THE PREDICTED BREAKAGE WAS MEASURED AND DOES NOT OCCUR HERE. A peer measured this flag as
+# broken for its workload, and the discriminator is whether a check needs writable scratch at a
+# HOST path outside the execroot. Eight of these 25 modules touch temp paths — 90 references — but
+# through pytest's `tmp_path`, which lives INSIDE the sandbox. 25 of 25 pass. Adopting on the
+# peer's verdict rather than on this measurement would have been the stale-premise class; so would
+# declining on it.
+build --experimental_use_hermetic_linux_sandbox
+build --sandbox_add_mount_pair=/bin
+build --sandbox_add_mount_pair=/usr
+build --sandbox_add_mount_pair=/lib
+build --sandbox_add_mount_pair=/lib64
+build --sandbox_add_mount_pair=/etc
+
 build --disk_cache=~/.cache/bazel-disk/mtools
 
 build:cache --remote_cache=grpc://127.0.0.1:31985

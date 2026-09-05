@@ -55,6 +55,11 @@ py_library(
             # every py_test names the pytest entry point, and the one asserting the gate's own
             # shell is checked. They passed before only by resolving OUT of the sandbox into the
             # live tree; with that escape closed they must be staged, which is the honest form.
+            # ⚑ `.bazelrc` IS DATA because a witness asserts the hermetic-sandbox flags are
+            # unconditional. It reads the file rather than trusting the flags to be in effect,
+            # since they are NOT in the action key — an action cannot observe its own sandbox
+            # regime, so the config text is the only evidence available to it.
+            "//:.bazelrc",
             "//:BUILD.bazel",
             "//hooks:BUILD.bazel",
             "//mdstruct:BUILD.bazel",
