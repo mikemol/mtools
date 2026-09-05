@@ -178,6 +178,15 @@ filegroup(
 #
 #   · non-empty  -> py_console_script_binary. mypy declares dmypy/mypy/mypyc/stubgen/STUBTEST;
 #     pytest declares pytest; panflute declares panfl/panflute.
+#
+#     ⚑ AND STUBTEST WAS EVALUATED AGAINST THAT RULE AND DECLINED, WHICH IS THE RULE WORKING.
+#     The stub-authority witness invokes `python -m mypy.stubtest` and carries two workarounds: a
+#     `MYPYPATH`, and a writable cwd because stubtest opens a sqlite metastore in `.mypy_cache`
+#     relative to it. A launcher looked like it would retire them. MEASURED: running the console
+#     script DIRECTLY still writes `.mypy_cache` into cwd, so the workaround is unaffected — and
+#     `mypy` is already a declared dev dependency, so the module form resolves and the witness
+#     passes REMOTELY as it stands. The launcher is the right instrument when a tool cannot
+#     otherwise be executed; it is a refactor with no measured gain when the tool already runs.
 #   · EMPTY and bin/ is a compiled artifact -> http_archive is correct. MEASURED for ruff:
 #     `entry_points == []` and `file .venv/bin/ruff` reports an ELF executable. There is no
 #     entry point to regenerate, which is why the archive below is the right instrument rather
