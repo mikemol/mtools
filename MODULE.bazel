@@ -213,3 +213,70 @@ filegroup(
     strip_prefix = "ruff-x86_64-unknown-linux-gnu",
     url = "https://github.com/astral-sh/ruff/releases/download/0.16.6/ruff-x86_64-unknown-linux-gnu.tar.gz",
 )
+
+# ⚑⚑⚑ ⟡mtools-mypy-in-the-graph — MYPY IS NOT AN ACTION HERE, AND THE COST IS INVALIDATION, NOT
+# SPEED. `.githooks/pre-commit` runs `mypy` once per distribution over the whole tree, outside
+# bazel, so its verdict is keyed on NOTHING: it re-runs in full every commit and no result is ever
+# reused or invalidated. The two `dev_requirement("mypy")` lines in the BUILD files exist only so
+# the stub-authority witness can import it.
+#
+# ⚑⚑ AND THE REASON A PEER SPLITS IT PER FILE IS TRANSITIVE REVALIDATION, WHICH IS A CORRECTNESS
+# PROPERTY RATHER THAN A PERFORMANCE ONE (operator). mypy's verdict on a file depends on the TYPES
+# of everything it imports, so a per-file action keyed on only its own file serves a STALE GREEN
+# the moment a dependency's signature changes. MEASURED HERE, one edit:
+#
+#     spans.py alone                          Success: no issues found
+#     change a return type in ast.py, which spans.py imports:
+#       ast.py                                Found 1 error
+#       spans.py (NOT EDITED)                 Found 1 error
+#
+# The unchanged file's verdict flipped. A cache key that did not contain `ast.py` would have
+# served the earlier green — the same crossing-a-boundary-it-was-not-computed-under class this
+# repository already refuses for sandbox flags, arriving through the KEY instead of the sandbox.
+#
+# ⚑ SO THE ADOPTABLE PART IS THE CLOSURE, NOT THE FAN-OUT. linux-sources generates 262 per-file
+# targets, each declaring "the file PLUS its transitive first-party import closure — which only
+# `import_closure` can compute ... a hand-maintained data list silently under-covers the import
+# graph the moment an import is added", and its generator FAILS CLOSED, raising rather than
+# emitting a target whose closure is indeterminate. mtools has 26 first-party modules with real
+# intra-package imports (cli.py pulls seven; spans is imported by three), so the closure is not
+# trivial here either. What is NOT established is whether per-file granularity earns its generator
+# at this size, or whether one action per distribution — declaring that distribution's closure —
+# gets the invalidation without the machinery. That is a measurement, not a preference.
+#
+# ⚑⚑⚑ AND THE GENERAL FORM, WHICH NAMES EVERY DEFECT THIS REPOSITORY FOUND TODAY AS ONE THING:
+# EVERY ACTION MUST BE Π-TYPED (operator). An action's output type DEPENDS ON its inputs, so the
+# declared inputs must be the full domain the verdict ranges over. `mypy(spans.py)` is not a
+# function of `spans.py`; it is a function of `spans.py` and its import closure. Declaring only
+# the file types the action at the WRONG DOMAIN — and the cache is then perfectly correct about a
+# function nobody meant. A stale green is not a caching bug; it is a type error one level up.
+#
+# The four found this session are the same shape, differing only in what escaped the domain:
+#
+#     test_bar_fires   declared staged sources    · reached the host .venv via resolve()
+#     pandoc cases     declared the test module   · reached a host binary, or silently skipped
+#     mypy(file)       declared one file          · ranges over its transitive closure
+#     any action       declared its inputs        · reached the whole source tree, pre-hermetic
+#
+# ⚑⚑ WHICH IS WHY THE TWO REPAIRS ARE NOT ALTERNATIVES. Widening the declaration (stage pandoc,
+# stage the closure) makes the domain match the function. Narrowing what is REACHABLE (the
+# hermetic sandbox, the remote executor) makes the function unable to exceed its domain. The first
+# is a statement; the second is an enforcement, and an undeclared dependency that cannot be
+# reached is one that cannot be forgotten.
+#
+# ⚑⚑⚑ AND THIS IS WHY THE PEER REPOSITORIES CARRY SO MUCH CUSTOM BAZEL AND BAZEL-GENERATION CODE
+# (operator). It is not elaboration and it is not scale. A STOCK RULE CANNOT EXPRESS A COMPUTED
+# DOMAIN. `py_test` declares a `srcs`/`deps` list a human wrote; `mypy(f)` ranges over
+# `f + closure(f)`, which is derived FROM THE SOURCE, so no hand-written list can state it and any
+# that tries under-covers the instant an import is added. That gap is what `gen_gate_build.py`
+# fills — and why it RAISES on an indeterminate closure rather than emitting a target keyed on a
+# guess. paperkit's `pk_cmd` is the same problem for an arbitrary shell string, whose domain is
+# likewise not expressible as `srcs`.
+#
+# ⚑⚑ SO THE SURVEY QUESTION "WHAT WOULD THIS BUY AT 25 TARGETS" WAS THE WRONG QUESTION, and this
+# repository asked it twice. Twenty-five uniform `py_test`s are not evidence that mtools does not
+# need a custom rule; they are evidence that EVERY CHECK HERE IS ONE WHOSE DOMAIN A HUMAN COULD
+# WRITE DOWN. The first check whose domain is COMPUTED — a per-file type verdict, a witness over a
+# closure, a shell string — will be typed wrongly by a stock rule, and the wrongness will present
+# as a stale green rather than as an error. The trigger for building a rule is a computed domain,
+# not a target count.
