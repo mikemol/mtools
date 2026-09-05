@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ EMPTY BY DESIGN, AND NOT A PLACEHOLDER. Its only job is to make the repository root a Bazel
+# PACKAGE, so that `//hooks:requirements.txt` and `//mdstruct:requirements.txt` resolve as labels.
+# Without it `bazel mod deps` fails inside pip.parse's module extension — before any BUILD file is
+# consulted for targets — with "Unable to load package for //mdstruct:requirements.txt: BUILD file
+# not found". MEASURED: that failure names a file that EXISTS, so the missing package marker is
+# the blocker rather than the missing lock, which inverts the ordering assumed at first.
