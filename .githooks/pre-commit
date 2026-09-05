@@ -86,6 +86,13 @@ if ! command -v bazel >/dev/null 2>&1; then
 fi
 bazel test //... --test_output=errors || fail=1
 
+# ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
+# target existed, the shell that runs every other check in this repository was verified by nothing
+# — clean only because its author ran shellcheck by hand after each edit. A convention held in one
+# person's memory, guarding the file that guards everything else. The checker's own script is in
+# the same target's file list, because a gate that checks every shell file except itself leaves
+# exactly the one nobody would think to look at.
+
 # ⚑⚑ A STUB IS AN UNCHECKED CLAIM UNTIL SOMETHING CHECKS IT. mdstruct hand-writes a partial stub
 # for panflute, and the stub's own prose cited a `scripts/check_stub_authority.py` that DID NOT
 # EXIST — so the file claimed a verification nobody had built. stubtest is that verification, and

@@ -129,3 +129,30 @@ filegroup(
     strip_prefix = "pandoc-3.8.3",
     url = "https://github.com/jgm/pandoc/releases/download/3.8.3/pandoc-3.8.3-linux-amd64.tar.gz",
 )
+
+# ⚑⚑⚑ shellcheck IS DECLARED BECAUSE THE GATE'S OWN SHELL WAS UNGATED. `.githooks/pre-commit` is
+# the only shell file this repository owns, it is the thing that runs every other check, and
+# NOTHING CHECKED IT. It was clean only because its author ran shellcheck by hand after each edit
+# — a convention, held by one person's memory, guarding the file that guards everything else.
+#
+# ⚑⚑ EXCLUDE IS EMPTY AND STAYS EMPTY UNTIL A WAIVER IS MEASURED. Two peer repositories carry
+# three waived codes each; none transferred, because a false-positive population is measured in
+# the tree that has it rather than inherited from a tree that had it. The one finding this repo
+# has actually declined — SC2126, suggesting `grep -c` where the aggregate across files is the
+# point — is argued in the hook itself, at the line it concerns.
+#
+# ⚑ SAME VERSION THE HOST RUNS (0.11.0), so a hermetic verdict and a developer's verdict are
+# comparable, and a drift between them is a finding rather than a mystery.
+http_archive(
+    name = "shellcheck",
+    build_file_content = """exports_files(["shellcheck"])
+filegroup(
+    name = "bin",
+    srcs = ["shellcheck"],
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198",
+    strip_prefix = "shellcheck-v0.11.0",
+    url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz",
+)

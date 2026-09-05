@@ -267,3 +267,23 @@ def test_the_bazel_test_rule_runs_pytest_rather_than_the_module() -> None:
         build = (root / name / "BUILD.bazel").read_text(encoding="utf-8")
         assert 'main = "//:pytest_main.py"' in build, name
         assert "main = src," not in build, name
+
+
+def test_the_gates_own_shell_is_checked() -> None:
+    """`.githooks/pre-commit` and the checker script are both in a shellcheck target.
+
+    ⚑⚑⚑ THE SHELL THAT RUNS EVERY OTHER CHECK WAS ITSELF CHECKED BY NOTHING. It was clean
+    only because its author ran shellcheck by hand after each edit — a convention held in one
+    person's memory, guarding the file that guards everything else. Measured: `grep -n
+    shellcheck .githooks/pre-commit` returned only a comment.
+
+    ⚑⚑ AND THE CHECKER'S OWN SCRIPT IS IN THE SAME LIST. A gate that checks every shell file
+    except itself leaves exactly the one nobody would think to look at, for the same reason
+    nobody checked the hook. Both are asserted here rather than assumed from the BUILD file
+    being present, because a `data` entry that is not also an `args` entry stages a file the
+    checker never opens.
+    """
+    build = (_DIST.parent / "BUILD.bazel").read_text(encoding="utf-8")
+    for shell in (".githooks/pre-commit", "shellcheck_test.sh"):
+        assert f'"$(location //:{shell})"' in build, f"{shell} is not passed to the checker"
+        assert f'"//:{shell}"' in build, f"{shell} is not staged for the checker"

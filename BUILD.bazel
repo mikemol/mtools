@@ -9,3 +9,30 @@
 # the blocker rather than the missing lock, which inverts the ordering assumed at first.
 
 exports_files(["pytest_main.py"])
+
+# ⚑⚑⚑ THE GATE'S OWN SHELL IS A TEST TARGET, because it was previously checked by nothing. This
+# file's `.githooks/pre-commit` runs ruff, mypy, pytest, the warrant ledger, the hermetic suite,
+# the stub authority and the ratchet — and until now the only thing verifying IT was its author
+# remembering to run shellcheck after each edit. A convention held in one person's memory,
+# guarding the file that guards everything else.
+sh_test(
+    name = "shellcheck_githooks",
+    srcs = ["shellcheck_test.sh"],
+    # ⚑⚑ THE CHECKER'S OWN SCRIPT IS IN THE LIST. A gate that checks every shell file except
+    # itself is the shape this repository keeps finding: `shellcheck_test.sh` is shell, it runs
+    # in the gate, and excluding it would leave exactly one unchecked file — the one nobody
+    # would think to look at, for the same reason nobody checked the hook before this target.
+    args = [
+        "$(location @shellcheck//:bin)",
+        "$(location //:.githooks/pre-commit)",
+        "$(location //:shellcheck_test.sh)",
+    ],
+    data = [
+        "//:.githooks/pre-commit",
+        "//:shellcheck_test.sh",
+        "@shellcheck//:bin",
+    ],
+    size = "small",
+)
+
+exports_files([".githooks/pre-commit"])
