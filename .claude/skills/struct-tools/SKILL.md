@@ -23,7 +23,15 @@ structural editor wherever it sits.
 | artifact | tool | notes | claims |
 |----------|------|-------|--------|
 | markdown | `mdstruct` | headings, spans, tables, frontmatter — and `mdstruct verify` before any bounded write | `.md` |
-| bibtex warrants | `bibstruct` | one claim per test case; `--field claim` / `--field check` | `.bib` |
+
+⚑⚑ **`.bib` WAS CLAIMED FOR `bibstruct` AND THE CLAIM WAS WITHDRAWN, BY MEASUREMENT.** The gate
+refused a `grep` over `warrants.bib` and named `bibstruct` as the route — which is not on PATH, not
+in any of this repo's venvs, and not a dependency of any distribution here. It exists in paperkit's
+tree and in a sibling's `scratch/`, neither of which this repo can invoke. **That is a block without
+a route: the refusal text is the only thing a blocked author sees, and it named a tool they cannot
+run.** The adoption suite exists to prevent exactly this, and the table's own author walked into it
+one row after writing the rule down. `.bib` gets claimed when `bibstruct` is installed here, which
+is what `⟡mtools-bibstruct` tracks.
 
 ⚑ **`.py` IS DELIBERATELY NOT CLAIMED HERE, AND THAT IS A MEASUREMENT RATHER THAN AN OVERSIGHT.**
 A structural editor for Python is `pycodemod`, which this repo neither ships nor depends on.

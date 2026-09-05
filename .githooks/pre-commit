@@ -71,6 +71,18 @@ for dist in hooks mdstruct ratchet; do
   fi
 done
 
+# ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
+# 192 findings this bar does not yet enforce; collapsing them to `file:rule` keys gives 62. The
+# baseline is a SET, so paying one key down while another regresses is REFUSED even though the
+# count is unchanged — the substitution a count-based gate cannot see. It runs against the REAL
+# tree rather than the staged copy, because the census keys are paths and a staged copy's paths
+# are not the ones a reader would go fix.
+if [ -x ratchet/.venv/bin/mikemol-ratchet ]; then
+  for dist in hooks mdstruct ratchet; do
+    ratchet/.venv/bin/mikemol-ratchet "$root/$dist" || fail=1
+  done
+fi
+
 # ⚑⚑⚑ THE INSTRUMENT ASSERTS ITS OWN CONTRACT BEFORE ITS OUTPUT IS TRUSTED. mdstruct silently
 # dropped headings while `lint` and `roundtrip` both reported green on the corrupted file, so a
 # bounded write against the parent landed inside the missing child. Every committed markdown file

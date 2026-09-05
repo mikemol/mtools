@@ -91,3 +91,67 @@
   claim   = {A write succeeding and a write LANDING are different claims. A baseline that did not land reads as ABSENT on the next run --- which reads green while asserting nothing},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_write_confirms_what_landed}
 }
+
+% ---------------------------------------------------------------- census
+
+@misc{ratchet-census-key-is-file-and-rule-not-line,
+  section = {census},
+  claim   = {A LINE NUMBER CHANGES WHEN ANYTHING ABOVE IT MOVES, so a line-keyed baseline reports a whole file as new debt after an unrelated edit --- every key refused, none of it real. A gate that cries wolf gets disabled},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_the_key_is_file_and_rule_not_line}
+}
+
+@misc{ratchet-census-key-keeps-the-file,
+  section = {census},
+  claim   = {Collapsing the key to the rule alone loses WHERE the debt is, so paying one file down while another regresses reads as unchanged --- the same substitution blindness the set exists to defeat, one axis over},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_the_key_keeps_the_file_rather_than_collapsing_to_the_rule}
+}
+
+@misc{ratchet-census-path-with-colons-is-parsed,
+  section = {census},
+  claim   = {A path containing colons is parsed --- the path is matched non-greedily, because a greedy match swallows the colons into the rule field},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_path_containing_colons_is_parsed}
+}
+
+@misc{ratchet-census-non-finding-line-is-dropped,
+  section = {census},
+  claim   = {Summary lines and warnings are not findings},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_non_finding_line_is_dropped}
+}
+
+@misc{ratchet-census-unexpected-exit-refuses,
+  section = {census},
+  claim   = {A CENSUS FROM A CHECKER THAT DID NOT RUN IS AN EMPTY SET THAT LOOKS EXACTLY LIKE A CLEAN ONE. Exit 0 and 1 are both success --- a clean tree and findings --- and anything else means the checker failed, so reporting that as an empty census would pay the ENTIRE baseline down in one run. That is the fail-open shape this ecosystem keeps paying for, so it raises instead. The parser's own first cut matched rule CODES against a tool emitting rule NAMES and produced zero keys over a tree with 192 findings, which is why the exit code is checked separately from the parse},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_an_unexpected_exit_refuses_rather_than_reporting_an_empty_census}
+}
+
+% ---------------------------------------------------------------- cli
+
+@misc{ratchet-cli-bare-invocation-refuses-absent,
+  section = {cli},
+  claim   = {ABSENT EXITS 1 AND THE MESSAGE NAMES THE BIRTH MOVE. A gate with no baseline reports green over nothing, which is indistinguishable in a summary line from a gate that examined a clean tree},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_bare_invocation_refuses_an_absent_baseline}
+}
+
+@misc{ratchet-cli-bare-invocation-does-not-mutate,
+  section = {cli},
+  claim   = {THE CHEAP READ IS THE DEFAULT AND EXECUTION IS OPTED INTO. A sibling repo's `--list` did not list keys --- it EXECUTED every registered witness as a subprocess and blew a two-minute timeout, and its `--times` re-ran rather than reading recorded times. The tell is not in the name and the expensive reading was the default one, so the bare invocation here must leave the tree untouched},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_bare_invocation_does_not_mutate}
+}
+
+@misc{ratchet-cli-init-absent-mints,
+  section = {cli},
+  claim   = {The birth move records what is there, ONCE, because someone said so. A baseline that creates itself on first run grandfathers whatever happened to be present at that moment, and nobody chose that set},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_init_absent_mints_the_census}
+}
+
+@misc{ratchet-cli-second-init-absent-is-refused,
+  section = {cli},
+  claim   = {RE-MINTING WOULD LAUNDER GROWTH INTO A NEW FLOOR, which is the one thing a paydown-only ratchet must never permit},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_second_init_absent_is_refused}
+}
+
+@misc{ratchet-cli-growth-is-refused-end-to-end,
+  section = {cli},
+  claim   = {End to end through the CLI: a new key refuses, and the refusal NAMES it --- a refusal that only denies leaves the author with no next move},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_growth_is_refused_through_the_cli}
+}

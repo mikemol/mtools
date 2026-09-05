@@ -37,6 +37,9 @@ classifiers = [
 dependencies = []
 
 
+[project.scripts]
+mikemol-ratchet = "mikemol.ratchet.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
@@ -196,4 +199,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
 # file rather than to the package. An entry naming a directory would grant it to every hook in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.
-"src/mikemol/hooks/verdict.py" = ["S603"]
+"src/mikemol/ratchet/census.py" = ["S603"]

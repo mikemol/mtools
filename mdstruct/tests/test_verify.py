@@ -92,6 +92,7 @@ def test_the_selftest_fires_when_a_shape_row_claims_the_opposite(
     assert failures[0].startswith("F-arm")
 
     monkeypatch.setattr(verify, "_SHAPES", (("stubbed", "B leg", True),))
+
     def _always_missing(_path: Path) -> list[verify.Missing]:
         return [verify.Missing(line=3, level=2, text="B leg")]
 
