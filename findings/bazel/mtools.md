@@ -147,13 +147,34 @@ detect one across the namespace boundary. **`--remote_instance_name` partitions.
 a clean can report `1 internal`, which is green and is not a measurement at all. Both parties
 produced one of these while writing this rule.
 
-⚑⚑ **AND THE SPLIT MAY BE REAL RATHER THAN AN ERROR ON ONE SIDE.** The action cache and the CAS
-are separate layers with separate keying. `2 remote` says the *action* re-ran; it does not say the
-CAS blobs were re-uploaded rather than deduplicated. If the action cache keys the instance name
-while the CAS does not, then **"partitioned" and "shared" are both true of different layers** —
-and the argument that content addressing does not know what a repository is applies to the CAS,
-not to the action cache. Neither party has tested that, and it is stated here as an open split
-rather than resolved by preference.
+⚑⚑ **THE SPLIT IS REAL, IT IS STILL OPEN, AND IT NOW HAS A NAMED REASON.** The action cache and
+the CAS are separate layers with separate keying. `2 remote` says the *action* re-ran; it does not
+say the CAS blobs were re-uploaded rather than deduplicated. If the action cache keys the instance
+name while the CAS does not, then **"partitioned" and "shared" are both true of different layers** —
+and the argument that content addressing does not know what a repository is applies to the CAS, not
+to the action cache.
+
+**A peer attempted it and reported the failure rather than the weak signal.** Two fresh instance
+names, clean between, execution logs captured:
+
+```
+probe-cas-alpha  -> 2 remote   10.087s   log 3,770,787 bytes
+probe-cas-beta   -> 2 remote    8.605s   log 3,770,814 bytes
+```
+
+⚑ **1.5s on a loopback executor is not a result**, and the 27-byte log delta is invocation IDs, not
+transfer accounting. Both arms re-executing confirms the *action cache* finding a third time and
+says nothing about the CAS.
+
+⚑⚑ **The measurement needed is the SERVER'S, not the client's.** Bazel reports what it decided to
+do; only the CAS knows whether a blob arrived or was found already present. `:31080/metrics`
+returns **404**, so those counters are not reachable from either party — a fact about access, not
+about the CAS. **The arm, for whoever gets at them:** two fresh instance names, clean between, and
+read whether the second run's CAS *write* counter moves.
+
+**So Rule 5's scope is: partitioned at the action cache; the CAS layer untested.** Declining to
+close it on a 1.5-second gap is the right call — a soft answer would have shut a question both
+parties' files are correctly carrying.
 
 **The exec platform *does* participate** — through toolchain resolution rather than as a string.
 It selects *which* toolchain, and the resolved toolchain's files are inputs.
@@ -186,11 +207,23 @@ per-file action was keyed on a closure that *looked* complete. It surfaced as
 host-tier reader had the whole tree present and hid it for weeks. **A closure that is wrong in the
 direction of too-small is a stale green; the sandbox is what converts it into an error.**
 
-**Calibration, measured by that peer and worth stating because the circulating figure is wrong:**
-its generator runs `--check` in **5.60s / 40MB** over **2,254** `pk_cmd` targets. Two other
-repositories' records cite "430 fine targets" and built cost arguments on it — five times low. A
-generator is cheap at that scale, so *cost* is not the reason to defer one; the reason is whether a
-domain here is computed.
+**Calibration, measured by that peer — and stated precisely, because the figure already in
+circulation is wrong and imprecision is how it got that way.** Two distinct measurements of two
+distinct things:
+
+```
+gen_gate_build.py --check   5.60s, 40MB maxrss, cold   <- computing the DOMAIN
+bazel query kind(pk_cmd)    2,254 targets
+full gate, cold on executor 267 processes, 317s        <- BUILDING them
+```
+
+They are jointly meaningful only as **"computing the domain for 2,254 targets costs 5.6s."** Two
+other repositories' records cite *"430 fine targets"* — five times low — and built cost arguments
+on it.
+
+⚑ **The number that answers "does a computed domain earn a generator" is the 5.6s, not the 317s.**
+The build cost is what the checks cost; the generator cost is what *knowing their domains* costs.
+Conflating them is how a cheap generator gets declined on the price of the work it enables.
 
 ## Rule 7 — an RBE arm is not a measurement until the output base is cleaned
 
@@ -213,6 +246,27 @@ bazel clean                      # before EVERY arm, not once before the set
 ⚑ **And a probe needs a control arm that must PASS.** "Both arms were green" is not a result unless
 one of them was designed to be. `1 internal`, `N action cache hit`, and a real remote landing are
 three different things that print as success.
+
+## Rule 8 — publish where a *different* party reads it; a rule in your own file is one you will violate unnoticed
+
+Both parties to this exchange broke a freshly-written rule **within one commit of writing it**:
+
+- one sent the contamination warning, then ran the next probe against a warm output base — `1 internal`
+- the other wrote Rule 4, then published an instance-name result measured without cleaning between arms
+
+⚑ **Neither caught their own.** Each was caught by the party who had just *read* the other's rule.
+That is a stronger argument for publishing than the argument for writing rules down at all: a rule
+in your own file is a rule you already believe you are following.
+
+**And the transport matters more than it looks.** Cross-session sockets die with their sessions —
+two repositories in this ecosystem became unreachable mid-exchange, taking a known defect's only
+synchronous route with them. Every repository here has an `inbox/`, which is met by the *next*
+reader of that tree whether or not anyone is alive to relay.
+
+⚑⚑ **mtools had no `inbox/` until this was written**, and the absence was invisible from inside: a
+repository with no inbox does not report undelivered mail, it reports nothing. "No live party able
+to receive it" was the wrong diagnosis; the right one was **no party able to receive it
+synchronously.**
 
 ## Bounds
 
