@@ -414,3 +414,47 @@
   claim   = {A warning raised from this package's OWN code is still delivered --- a positive control on the SCOPE of the suppression. The suppression is narrow on purpose, scoped to one category and one module: a blanket ignore would pass both of the quiet-streams cases above while hiding a SyntaxWarning this package's own code earns, which is exactly the finding a warning exists to deliver},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_output_is_clean.py -k test_the_suppression_does_not_silence_this_packages_own_warnings}
 }
+
+% ---------------------------------------------------------------- verify
+
+@misc{md-verify-plain-heading-reaches,
+  section = {verify},
+  claim   = {A plain heading reaches the section list. This is the P-arm, and without it a contract that reported EVERY heading missing would pass as readily as a correct one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_plain_heading_reaches_the_section_list}
+}
+
+@misc{md-verify-apostrophe-reported-swallowed,
+  section = {verify},
+  claim   = {A heading carrying an ASCII apostrophe is REPORTED as swallowed. pandoc smart-quotes it to U+2019 while the raw line keeps U+0027, so the anchor keys never compare equal and the heading is dropped from the section list while the PRECEDING section's span silently extends across it --- found by four repos writing possessive prose, and kept here as a standing witness rather than a fixed bug},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_an_apostrophe_heading_is_reported_swallowed}
+}
+
+@misc{md-verify-link-reported-swallowed,
+  section = {verify},
+  claim   = {A heading carrying a link is REPORTED as swallowed, by the same anchor-key divergence --- pandoc renders [x](y) to x. This one was found by ENUMERATING the heading-shape space rather than by being bitten, and was unknown to every party until then, which is why the shape table is the standing weakness of this contract rather than its guarantee},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_link_heading_is_reported_swallowed}
+}
+
+@misc{md-verify-fenced-hash-is-not-a-heading,
+  section = {verify},
+  claim   = {A # inside a fenced block is not a heading. The independent witness borrows exactly ONE fact from the parser and this is it --- a fact about markdown rather than about this tool's section model},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_heading_inside_a_fence_is_not_a_heading}
+}
+
+@misc{md-verify-scan-does-not-use-the-parser,
+  section = {verify},
+  claim   = {The expected set is read by a PLAIN LINE SCAN over raw source, not by this tool's parser. A checker that shares the defect it checks for cannot detect it, and re-running a broken reader is not a second opinion --- so the scan is deliberately the awk reflex that spans exists to replace, used as an independent witness rather than as the answer},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_the_source_scan_does_not_use_this_tools_parser}
+}
+
+@misc{md-verify-selftest-holds-both-arms,
+  section = {verify},
+  claim   = {The selftest holds both arms across the whole shape space, as shipped},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_the_selftest_holds_both_arms_over_the_shape_space}
+}
+
+@misc{md-verify-selftest-fires-when-the-table-lies,
+  section = {verify},
+  claim   = {A shape table asserting the OPPOSITE of the truth makes the selftest FAIL, in both directions --- a row claiming a swallowed shape is reachable trips the P-arm, and a row claiming a reachable shape is swallowed trips the F-arm. This is the contract's own F-arm: without it the selftest could be green because it is aimed at the wrong predicate, which is the class this repo paid for twice in one day. A configured-but-inert gate fires on nothing and is eventually noticed; an ACTIVE gate aimed at the wrong predicate produces findings, passes review, and its greens are indistinguishable from correct ones},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_the_selftest_fires_when_the_shape_table_lies}
+}

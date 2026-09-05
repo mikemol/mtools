@@ -29,7 +29,7 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-from mikemol.mdstruct import grep, labels, lint, roundtrip, spans, tables
+from mikemol.mdstruct import grep, labels, lint, roundtrip, spans, tables, verify
 
 # ⚑ THE SIGNATURE EVERY MODE PRESENTS, even where it uses one of the three arguments. Dispatching
 # on arity instead would put the branching back, one layer down and less visible.
@@ -242,6 +242,26 @@ def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     return _lint(path, argv)
 
 
+def _verify_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+    """Assert this tool's own contract: every source heading reaches the section list.
+
+    ⚑ A TOOL OWES A SELF-ASSERTING CONTRACT. `lint` and `roundtrip` both report green on a
+    document this tool silently corrupts, so neither can stand in for this. Run it on a document
+    before trusting a bounded write into that document.
+    """
+    missing = verify.missing_headings(path)
+    if not missing:
+        sys.stdout.write(f"  {path}: every source heading reaches the section list\n")
+        return 0
+    for item in missing:
+        sys.stdout.write(
+            f"  L{item.line:>4}  {'#' * item.level} {item.text}  — SWALLOWED, not a section\n")
+    sys.stdout.write(
+        f"  {len(missing)} heading(s) in {path} are unreachable. A bounded write against the "
+        "PRECEDING section would land inside one of them.\n")
+    return 1
+
+
 def _narrowest_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
     """Adapt the narrowest-width report to the uniform mode signature."""
     return _narrowest(path)
@@ -261,6 +281,7 @@ _MODES: dict[str, _Mode] = {
     "roundtrip": _roundtrip_mode,
     "fixpoint": _fixpoint_mode,
     "lint": _lint_mode,
+    "verify": _verify_mode,
     "narrowest": _narrowest_mode,
 }
 
