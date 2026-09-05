@@ -164,7 +164,7 @@ select = ["ALL"]
 ignore = ["D203", "D213", "COM812"]
 
 [tool.ruff.lint.flake8-copyright]
-notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0\s*\n#\s*Copyright \(c\) \d{4} Mike Mol'
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
 # ⚑⚑⚑ THE TWO CHECKERS DISAGREE HERE, AND THIS IS THE ARBITRATION. `PT001` prefers a bare
 # `@pytest.fixture`; mypy cannot pick an overload from the bare form, so the decorated function
