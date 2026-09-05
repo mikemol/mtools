@@ -133,3 +133,39 @@ build:remote --extra_execution_platforms=//rbe:mtools_gate_platform
 # where every repo's runs can be compared, rather than only in this terminal.
 build:bes --bes_backend=grpc://127.0.0.1:31985
 build:bes --bes_results_url=http://127.0.0.1:31080/invocation/
+
+# ⚑⚑⚑ `--remote_instance_name` DOES NOT ISOLATE, AND ON THIS DEPLOYMENT IT DOES NOT PARTITION
+# EITHER. A peer derived that it is a CAS addressing parameter rather than part of the action key,
+# and warned that identical actions under different names are the same action with different
+# storage. MEASURED HERE, and it is weaker still — after `bazel clean`, with the disk cache off:
+#
+#     --config=remote                              2 remote      (re-executed)
+#     --config=remote --remote_instance_name=OTHER 1 REMOTE CACHE HIT
+#
+# A result computed under one instance name was SERVED under another. So `mtools-gate` is a label
+# on the same shared store rather than a namespace.
+#
+# ⚑⚑⚑ AND CROSS-REPO CACHE SHARING IS INTENTIONAL (operator) — this is the payoff, not a leak. An
+# action is identified by WHAT IT DECLARES, so two repositories that declare the same action have
+# computed the same thing and there is no reason for either to compute it twice. Content
+# addressing does not know what a repository is. An earlier revision of this comment wrote the
+# sharing up as a hazard to be tolerated, which had it backwards: partitioning would be discarding
+# the property the CAS exists to provide.
+#
+# ⚑⚑⚑ AND THE CACHE CANNOT BE IMPROPER IF THE CACHE KEYS ARE PROPER (operator). That is the whole
+# of it. A key is proper when the declared domain IS the real one — Π-typed — and a hit on a
+# proper key is correct BY CONSTRUCTION, across repositories, machines and years alike. There is
+# no residual caching hazard to hedge against, and two earlier revisions of this comment kept
+# hedging: first calling the sharing a hazard, then conceding it was intentional while still
+# warning about verdicts that "travel". A wrong verdict is not a cache that misbehaved. It is an
+# IMPROPER KEY — the cache faithfully served a function nobody meant.
+#
+# ⚑⚑ SO Π-TYPING IS WHERE ALL OF THE OBLIGATION SITS, and it is owed to repositories this one
+# never names. Every defect this session called a caching problem was an under-declared domain:
+# a test reaching the author's venv, a witness reaching a host binary, `mypy(f)` ranging over a
+# closure it did not declare. Fix the key and the cache needs no supervision at all.
+#
+# ⚑⚑ THE EXEC PLATFORM *DOES* PARTICIPATE, through toolchain resolution rather than as a string:
+# it selects WHICH toolchain, and the resolved toolchain's files are inputs. So a remote verdict
+# and a local one are not trivially interchangeable when they resolve different toolchains — which
+# is also why a platform declaring NO constraints resolves nothing and fails outright.
