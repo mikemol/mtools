@@ -156,3 +156,26 @@ filegroup(
     strip_prefix = "shellcheck-v0.11.0",
     url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz",
 )
+
+# ⚑⚑⚑ ruff IS AN http_archive AND NOT A pip DEPENDENCY, BECAUSE rules_python STAGES ONLY
+# `site-packages`. The wheel's `bin/ruff` is dropped, so the installed package is a Python shim
+# whose `find_ruff_bin()` looks for a binary that is not there — measured: `python -m ruff` inside
+# a hermetic action raised, listing the paths it had searched. A pip requirement that cannot be
+# EXECUTED is not a usable dependency for a test that runs the checker.
+#
+# ⚑⚑ THE VERSION IS THE ONE THE LOCK PINS (0.16.6), and `test_bar_fires` asserts that equality.
+# Two sources for one tool is a place they can drift; the assertion is what makes a drift a
+# finding rather than a silent divergence between what the gate runs and what a developer runs.
+http_archive(
+    name = "ruff",
+    build_file_content = """exports_files(["ruff"])
+filegroup(
+    name = "bin",
+    srcs = ["ruff"],
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "0696335ef16615d8c7445ad438750eb0f55b3da6f153df21265a7c6d5750254f",
+    strip_prefix = "ruff-x86_64-unknown-linux-gnu",
+    url = "https://github.com/astral-sh/ruff/releases/download/0.16.6/ruff-x86_64-unknown-linux-gnu.tar.gz",
+)

@@ -14,7 +14,13 @@ import subprocess
 import sys
 from pathlib import Path
 
-_DIST = Path(__file__).resolve().parent.parent
+# ⚑ `.parent`, NOT `.resolve().parent` — bazel stages runfiles as SYMLINKS into the source tree,
+# so resolving follows them OUT of the sandbox and reads the live working copy instead of the
+# staged one.
+# ⚑ ABSOLUTE WITHOUT RESOLVING. `Path.cwd() / relative` makes the path usable by a subprocess
+# with a different cwd, while `resolve()` would follow bazel's runfiles symlinks OUT of the
+# sandbox into the live working tree — which is the escape the hooks suite now refuses outright.
+_DIST = (Path.cwd() / Path(__file__).parent.parent).absolute()
 _ALLOWLIST = _DIST / "stubs" / "panflute-allowlist.txt"
 
 

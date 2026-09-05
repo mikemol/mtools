@@ -45,7 +45,24 @@ py_library(
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"],
+        # ⚑⚑ ruff IS STAGED AND NAMED, because `test_bar_fires` runs the checker to prove each
+        # rule fires. Reading `.venv/bin/ruff` made those arms pass only where a developer venv
+        # existed — measured from a fresh clone, that target was the one failure in 25.
+        data = [
+            "pyproject.toml",
+            "requirements.txt",
+            # ⚑ THE BUILD FILES ARE DATA BECAUSE TWO WITNESSES READ THEM — the one asserting
+            # every py_test names the pytest entry point, and the one asserting the gate's own
+            # shell is checked. They passed before only by resolving OUT of the sandbox into the
+            # live tree; with that escape closed they must be staged, which is the honest form.
+            "//:BUILD.bazel",
+            "//hooks:BUILD.bazel",
+            "//mdstruct:BUILD.bazel",
+            "//ratchet:BUILD.bazel",
+            "@ruff//:bin",
+        ],
+        env = {"RUFF_BIN": "$(location @ruff//:bin)"},
+
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,
         # and bazel's default of `medium` reserves a timeout budget nothing uses. An honest
         # size is what lets a genuinely slow witness stand out later instead of blending in.
@@ -53,6 +70,10 @@ py_library(
         deps = [
             ":hooks",
             dev_requirement("pytest"),
+            # ⚑ ruff IS A DEP SO `test_bar_fires` CAN RUN THE CHECKER IT ASSERTS ABOUT. It ships
+            # as a Python package with a bundled binary, so declaring it here puts that binary in
+            # the runfiles tree; the test resolves it rather than reading `.venv/bin/ruff`, which
+            # existed only on a developer machine.
         ],
         imports = ["src"],
     )

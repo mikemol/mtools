@@ -53,3 +53,5 @@ py_library(
     )
     for src in glob(["tests/test_*.py"])
 ]
+
+exports_files(["BUILD.bazel"])

@@ -50,8 +50,12 @@ py_library(
         # cases that never ran — which is indistinguishable from a pass in bazel's summary.
         data = [
             "pyproject.toml",
+            # ⚑ THE STUB AND ITS ALLOWLIST ARE STAGED because the stub-authority witness reads
+            # both. They passed before only by resolving out of the sandbox into the live tree.
             "@pandoc//:bin",
-        ],
+        ] + glob([
+            "stubs/**",
+        ]),
         env = {"PANDOC_BIN": "$(location @pandoc//:bin)"},
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,
         # and bazel's default of `medium` reserves a timeout budget nothing uses. An honest
@@ -69,3 +73,5 @@ py_library(
     )
     for src in glob(["tests/test_*.py"])
 ]
+
+exports_files(["BUILD.bazel"])

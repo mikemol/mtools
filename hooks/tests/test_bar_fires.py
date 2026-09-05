@@ -26,6 +26,9 @@ on a version the build would not install.
 
 from __future__ import annotations
 
+import ast as pyast
+import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -37,8 +40,62 @@ import pytest
 # move turns collection into a NameError. The rule was right about the common case and wrong
 # about this file — which is why the finding was answered by reading the use, not by obeying the
 # suggestion.
-_DIST = Path(__file__).resolve().parent.parent
-_RUFF = _DIST / ".venv" / "bin" / "ruff"
+# ⚑⚑⚑ `.parent`, NOT `.resolve().parent` — AND THAT IS A SANDBOX ESCAPE, MEASURED. bazel stages
+# runfiles as SYMLINKS back into the source tree, so `resolve()` follows them out of the sandbox
+# and every read below then hit the LIVE WORKING COPY rather than the staged one. The probe that
+# showed it: inside a hermetic action, `_DIST/.venv/bin/ruff` reported `is_file() == True` and
+# resolved to `/home/mikemol/github/mtools/hooks/.venv/bin/ruff` — a developer venv that is not
+# part of the repository at all, reached from a sandbox that is supposed to have staged inputs
+# only. That is precisely the escape MODULE.bazel refuses for editable installs, in a test.
+_DIST = Path(__file__).parent.parent
+
+
+def _ruff_argv() -> list[str]:
+    """Return the argv prefix that runs ruff, REFUSING when there is none.
+
+    ⚑⚑⚑ THIS FILE ONCE READ `.venv/bin/ruff` UNCONDITIONALLY, so it passed only where a
+    developer venv happened to exist. Measured from a fresh `git clone` with no venvs: 24 of 25
+    hermetic targets passed and this one failed — the suite that exists to catch a gate aimed at
+    the wrong thing, itself aimed at a path that is not part of the repository.
+
+    ⚑⚑ `RUFF_BIN` NAMES A HASH-PINNED http_archive, NOT A pip DEPENDENCY. rules_python stages
+    only `site-packages`, dropping the wheel's `bin/ruff`, so the installed package is a shim
+    whose `find_ruff_bin()` searches for a binary that was never staged — `python -m ruff` inside
+    a hermetic action raised and listed the paths it had tried. A pip requirement that cannot be
+    EXECUTED is not a usable dependency for a test that runs the checker.
+
+    ⚑ ABSENT EVERY SOURCE, THIS RAISES RATHER THAN SKIPPING. A skipped case and a passing one are
+    indistinguishable in a summary line, and every arm below would then report green over a
+    checker that was never run.
+
+    Returns:
+        The argv prefix to run ruff with.
+
+    Raises:
+        RuntimeError: when no ruff can be found by any route.
+
+    """
+    # ⚑⚑ `$(location ...)` YIELDS A PATH RELATIVE TO THE RUNFILES `_main` DIRECTORY, which is
+    # `../+_repo_rules+ruff/ruff` for an external archive — it escapes `_main` by design.
+    # MEASURED rather than guessed, after three cuts resolved it against the wrong base: this
+    # file is staged at `<runfiles>/_main/hooks/tests/`, so `_DIST.parent` IS `_main` and the
+    # declared path resolves against it. Passing the value raw produced a TypeError about
+    # path-like args from a subprocess that never started.
+    declared = os.environ.get("RUFF_BIN")
+    if declared:
+        candidate = (_DIST.parent / declared).resolve()
+        if candidate.is_file():
+            return [str(candidate)]
+    local = _DIST / ".venv" / "bin" / "ruff"
+    if local.is_file():
+        return [str(local)]
+    found = shutil.which("ruff")
+    if found:
+        return [found]
+    msg = "no ruff available — refusing rather than reporting green over a checker that never ran"
+    raise RuntimeError(msg)
+
+
 _GOOD_HEADER = "# SPDX-License-Identifier: Apache-2.0\n# Copyright (c) 2026 Mike Mol\n"
 
 
@@ -52,7 +109,7 @@ def _ruff(rel: str, body: str, tmp: Path) -> str:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(body, encoding="utf-8")
     proc = subprocess.run(  # noqa: S603 — the checker is the subject of these cases
-        [str(_RUFF), "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
+        [*_ruff_argv(), "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
          "--output-format", "concise", str(target)],
         capture_output=True, text=True, check=False, cwd=tmp)
     return proc.stdout + proc.stderr
@@ -171,7 +228,7 @@ def test_the_checker_that_runs_is_the_one_the_lock_pins() -> None:
     pinned = next(ln for ln in (_DIST / "requirements.txt").read_text(encoding="utf-8").splitlines()
                   if ln.startswith("ruff=="))
     proc = subprocess.run(  # noqa: S603 — the checker is the subject of this case
-        [str(_RUFF), "--version"], capture_output=True, text=True, check=True)
+        [*_ruff_argv(), "--version"], capture_output=True, text=True, check=True)
     assert proc.stdout.split()[1] == pinned.split("==")[1].strip()
 
 
@@ -284,6 +341,41 @@ def test_the_gates_own_shell_is_checked() -> None:
     checker never opens.
     """
     build = (_DIST.parent / "BUILD.bazel").read_text(encoding="utf-8")
-    for shell in (".githooks/pre-commit", "shellcheck_test.sh"):
+    for shell in (".githooks/pre-commit", "shellcheck_test.sh", "setup.sh"):
         assert f'"$(location //:{shell})"' in build, f"{shell} is not passed to the checker"
         assert f'"//:{shell}"' in build, f"{shell} is not staged for the checker"
+
+
+def test_no_witness_reads_a_developer_venv() -> None:
+    """No test resolves a path into `.venv`, which is not part of the repository.
+
+    ⚑⚑⚑ THIS FILE DID EXACTLY THAT, AND IT PASSED. It read `.venv/bin/ruff` and used
+    `Path(__file__).resolve()`, which follows bazel's runfiles symlinks OUT of the sandbox and
+    back into the live working tree — so a hermetic action was reading a developer venv that no
+    clone contains. Measured two ways: a probe inside the sandbox reported
+    `venv.is_file() == True` resolving to `/home/mikemol/github/mtools/hooks/.venv/bin/ruff`,
+    and a fresh `git clone` with no venvs failed this one target out of 25.
+
+    ⚑⚑ THAT IS THE EDITABLE-INSTALL ESCAPE MODULE.bazel REFUSES, REPRODUCED IN A TEST. A
+    sandbox that can reach the source tree is not a sandbox, and a suite that passes only where
+    its author's machine is set up a particular way says nothing about the repository.
+    """
+    # ⚑⚑ THE CHECK PARSES THE MODULE RATHER THAN GREPPING IT, and both weaker cuts are why. A
+    # `.venv` under `tmp_path` is a FIXTURE building a fake tree — legitimate, and a substring
+    # search flagged three of them. Stripping `#` comments then flagged this very docstring,
+    # which DESCRIBES the defect. Only an AST walk distinguishes an expression from prose about
+    # an expression, and a witness that cannot make that distinction cannot live in a file that
+    # documents what it forbids.
+    for dist in ("hooks", "mdstruct", "ratchet"):
+        for module in sorted((_DIST.parent / dist).glob("tests/test_*.py")):
+            tree = pyast.parse(module.read_text(encoding="utf-8"))
+            for node in pyast.walk(tree):
+                if not isinstance(node, pyast.Call):
+                    continue
+                func = node.func
+                if not isinstance(func, pyast.Attribute) or func.attr != "resolve":
+                    continue
+                inner = func.value
+                names = {n.id for n in pyast.walk(inner) if isinstance(n, pyast.Name)}
+                assert "__file__" not in names, (
+                    f"{dist}/{module.name}:{node.lineno} resolves out of the runfiles tree")

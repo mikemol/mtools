@@ -26,13 +26,20 @@ sh_test(
         "$(location @shellcheck//:bin)",
         "$(location //:.githooks/pre-commit)",
         "$(location //:shellcheck_test.sh)",
+        "$(location //:setup.sh)",
     ],
     data = [
         "//:.githooks/pre-commit",
+        "//:setup.sh",
         "//:shellcheck_test.sh",
         "@shellcheck//:bin",
     ],
     size = "small",
 )
 
-exports_files([".githooks/pre-commit"])
+exports_files([
+    ".githooks/pre-commit",
+    "setup.sh",
+])
+
+exports_files(["BUILD.bazel"])

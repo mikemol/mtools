@@ -1,5 +1,18 @@
 # The component skeleton
 
+## First, arm the clone
+
+    ./setup.sh
+
+⚑⚑ **A FRESH CLONE HAS NO GATES AND LOOKS EXACTLY LIKE ONE THAT PASSES THEM.** `core.hooksPath`
+is per-clone git config rather than a tracked file, so `.githooks/pre-commit` sits in the tree and
+never runs until this is done. Measured: `git config --get core.hooksPath` in a fresh clone
+returns nothing.
+
+⚑ **NOTHING ELSE NEEDS INSTALLING TO CHECK YOUR WORK.** `bazel test //...` passes 25 of 25 in a
+clone with no venvs at all — every tool it needs is a hash-pinned declared input. The venvs are a
+developer convenience for fast iteration, not a precondition.
+
 ⚑ **THIS IS A POINTER TO A WORKED EXAMPLE, NOT A SPECIFICATION.** `ratchet/` is the newest
 distribution here and was built to this shape from nothing; clone it rather than reading a list and
 reconstructing it. A specification is something a contributor must interpret, and every
