@@ -189,6 +189,13 @@ ignore = ["D203", "D213", "COM812"]
 # and it costs one command. Consequence for intake: substrate-derived code arrives WITHOUT headers,
 # so under this gate the header is a precondition of admission rather than a follow-up.
 #
+# ⚑⚑ THE GATE IS MEASURED ON THE VERSION THE LOCK INSTALLS, NOT ONLY THE ONE IN THE VENV. The
+# `requirements.txt` beside this file pinned ruff 0.16.6 while the working venv ran 0.16.5 — so
+# every arm below had been measured on a version bazel would NOT install. Resolved by installing
+# the pinned version and re-running the whole matrix: identical results on both, corpus clean on
+# both, all 140 warrant checks passing on both. The drift was benign; that it was UNMEASURED was
+# not, and a rule set is a property of the resolver rather than of the config text.
+#
 # ⚑⚑⚑ F-ARMED PER PROPOSITION, NOT PER RULE. A configured-but-inert gate is the EASY case: it
 # fires on nothing and someone eventually notices. AN ACTIVE GATE AIMED AT THE WRONG PREDICATE is
 # the hard case — it produces findings, passes review, and its greens are indistinguishable from
