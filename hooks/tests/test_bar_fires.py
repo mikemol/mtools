@@ -341,7 +341,8 @@ def test_the_gates_own_shell_is_checked() -> None:
     checker never opens.
     """
     build = (_DIST.parent / "BUILD.bazel").read_text(encoding="utf-8")
-    for shell in (".githooks/pre-commit", "shellcheck_test.sh", "setup.sh"):
+    for shell in (".githooks/pre-commit", "shellcheck_test.sh", "setup.sh",
+                  "ruff_check.sh"):
         assert f'"$(location //:{shell})"' in build, f"{shell} is not passed to the checker"
         assert f'"//:{shell}"' in build, f"{shell} is not staged for the checker"
 

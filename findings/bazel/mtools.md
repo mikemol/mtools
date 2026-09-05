@@ -77,6 +77,63 @@ read of a pinned Bazel 8.7.0 corpus, relayed; the env behaviour was re-measured 
 sandbox-flag and exec-platform lines match probes run here. **A relayed quote is corroborated, not
 verified.**
 
+## Rule 0b — audit your own actions against Rule 0, because publishing one is not following one
+
+Rule 8 says a rule in your own file is one you already believe you are following. So this
+repository was audited against Rule 0 immediately after publishing it. **Clean on the env axis,
+and not clean on a larger one.**
+
+**Env — clean, and by construction rather than by luck:**
+
+```
+env_inherit / use_default_shell_env   none    <- no action depends on an UNKEYED value
+env = {...}                           2       <- explicit: keyed by name AND value
+os.environ reads in src/ and tests/   PANDOC_BIN, RUFF_BIN — exactly the two declared
+```
+
+⚑ **And both of those name a binary that is itself declared `data`**, so the file's *content digest*
+is in the key, not merely its path. An env var naming an undeclared file would be the misleading
+case: a keyed name pointing at unkeyed bytes.
+
+**⚑⚑ NOT CLEAN: THREE CHECKS RUN OUTSIDE THE GRAPH ENTIRELY.** `.githooks/pre-commit` invokes
+`ruff`, `mypy` and the ratchet directly. Those are not actions, so they have no key, no
+invalidation and no cache — they re-run in full on every commit and reuse nothing.
+
+| check | in the graph? | keyed on |
+|---|---|---|
+| 25 pytest targets | yes | declared inputs |
+| stubtest | yes (inside a target) | declared inputs |
+| **ruff** | **no** | **nothing** |
+| **mypy** | **no** | **nothing** |
+| **ratchet** | **no** | **nothing** |
+
+⚑ **This is not the same defect as an under-declared action, and it is worth keeping distinct.** An
+under-declared action has a key that is *wrong*; a check outside the graph has **no key at all**.
+The first serves a stale green; the second can never serve anything, which is safe but is also why
+it costs full re-execution forever. The repair is the same — make it an action and declare its
+domain — but the failure it currently exhibits is cost, not incorrectness.
+
+### ⚑⚑ And the three do not have the same domain, which decides how each is repaired
+
+The same one-line experiment separates them. Break a return type in `ast.py`, which `spans.py`
+imports, and ask each checker about **`spans.py`**, the file that was not edited:
+
+```
+mypy   spans.py   Found 1 error       <- verdict CHANGED; domain is f + closure(f)
+ruff   spans.py   All checks passed   <- verdict UNCHANGED; domain is f alone
+```
+
+| check | domain | hand-writable? | repair |
+|---|---|---|---|
+| ruff | the file, its config, the binary | **yes** | an ordinary action per file or per distribution |
+| ratchet | the census output + its baseline | **yes** | an ordinary action |
+| **mypy** | **`f` + transitive import closure** | **no** | needs the closure computed — Rule 6 |
+
+⚑ **That is the discriminator, made concrete rather than argued.** Two checkers over the same
+tree, one whose domain a human can write down and one whose cannot — and the second is the one
+that needs a generator. A repository decides whether to build custom rules by running this
+experiment per checker, not by counting targets.
+
 ## The frame: every action must be Π-typed
 
 An action's output type *depends on* its inputs, so the declared inputs must be the full domain

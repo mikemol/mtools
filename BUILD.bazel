@@ -27,9 +27,11 @@ sh_test(
         "$(location //:.githooks/pre-commit)",
         "$(location //:shellcheck_test.sh)",
         "$(location //:setup.sh)",
+        "$(location //:ruff_check.sh)",
     ],
     data = [
         "//:.githooks/pre-commit",
+        "//:ruff_check.sh",
         "//:setup.sh",
         "//:shellcheck_test.sh",
         "@shellcheck//:bin",
@@ -39,6 +41,7 @@ sh_test(
 
 exports_files([
     ".bazelrc",
+    "ruff_check.sh",
     ".githooks/pre-commit",
     "setup.sh",
 ])

@@ -55,3 +55,21 @@ py_library(
 ]
 
 exports_files(["BUILD.bazel"])
+
+# ⚑⚑ ruff IN THE GRAPH. Outside it, ruff had no key at all — full re-execution every commit,
+# nothing reused. Its domain is the sources, the config and the binary, all declared below, and
+# all three are hand-writable because ruff does not follow imports (measured: breaking a type in
+# an imported module changes mypy's verdict on the importer and leaves ruff's unchanged).
+sh_test(
+    name = "ruff",
+    srcs = ["//:ruff_check.sh"],
+    args = [
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
