@@ -6,3 +6,4 @@ cmdparse	Command Parsing: Which Program Is Actually Being Run
 adoption	Adoption: The Packaged Hook Against a Repo That Is Not This One
 routing-table	The Routing Table: Read From the Edited Repo, and What Absent Means
 structural-query	The Gate Itself: What It Refuses, What It Must Not, and Whether It Is Armed
+bar-fires	The Bar Fires: Each Rule Asserted Against the Absence It Means

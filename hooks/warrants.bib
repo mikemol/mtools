@@ -423,3 +423,65 @@
   claim   = {THE POSITIVE CONTROL FOR ARMING, AT THE LEVEL THE HARNESS ACTUALLY READS. Without it the armed case passes against a hook that ALWAYS denies --- which is the failure mode the advisory default exists to avoid, since a guard whose first act is to break a working session trains people to disable it},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_advisory_hook_writes_to_stderr_and_leaves_stdout_empty}
 }
+
+% ---------------------------------------------------------------- bar-fires
+
+@misc{hooks-bar-header-gate-passes-a-correct-notice,
+  section = {bar-fires},
+  claim   = {The P-arm for the header gate. Without it every failure arm below passes against a rule that rejects ALL input --- and a gate refusing everything is not a strict gate but a broken one that gets disabled within a day},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_header_gate_passes_a_correct_notice}
+}
+
+@misc{hooks-bar-header-gate-fires-per-proposition,
+  section = {bar-fires},
+  claim   = {ONE ARM PER PROPOSITION, NOT PER RULE. `notice-rgx` asserts presence of both lines, their ORDER, their ADJACENCY and the HOLDER --- four claims in one regex --- so six arms exercise them separately. A CONFIGURED-BUT-INERT GATE IS THE EASY CASE: it fires on nothing and someone eventually notices. AN ACTIVE GATE AIMED AT THE WRONG PREDICATE IS THE HARD CASE, because it produces findings, passes review, and its greens are indistinguishable from correct ones. This repo and a peer were MIRROR IMAGES of exactly that --- one regex matched the SPDX line only, the other's default matched Copyright only, so neither gated both and each party ran the arm its own config would pass. VERIFIED BY MUTATION: reverting the regex to its SPDX-only form fails five of these arms},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_header_gate_fires_when_a_proposition_fails}
+}
+
+@misc{hooks-bar-header-gate-accepts-a-shebang,
+  section = {bar-fires},
+  claim   = {A shebang may precede the notice --- a #! not on line 1 stops being a shebang, so the notice follows it. codemod_header.py depends on this and would otherwise be unadoptable here},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_header_gate_accepts_a_shebang_before_the_notice}
+}
+
+@misc{hooks-bar-header-gate-accepts-a-later-year,
+  section = {bar-fires},
+  claim   = {A later year passes. The year is a four-digit pattern rather than a literal 2026, because a copyright year is the year of AUTHORSHIP --- pinning the literal would make every January a silent tree-wide false negative},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_header_gate_accepts_a_later_year}
+}
+
+@misc{hooks-bar-assert-is-refused-in-src,
+  section = {bar-fires},
+  claim   = {S101 is scoped to tests BY PATH, and a scope is only meaningful if it has an outside --- so `assert` in src must be refused. VERIFIED BY MUTATION: widening the exemption to all files fails this arm},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_assert_is_refused_in_src}
+}
+
+@misc{hooks-bar-assert-is-permitted-in-tests,
+  section = {bar-fires},
+  claim   = {The P-arm for that scope. `assert` is the test idiom and -O never runs these},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_assert_is_permitted_in_tests}
+}
+
+@misc{hooks-bar-ignore-list-is-exactly-three,
+  section = {bar-fires},
+  claim   = {THE BAR IS THE MAX, SO IGNORES DO NOT ACCUMULATE. Three entries, each a checker-versus-checker conflict rather than a finding declined --- D203 and D213 are mutually exclusive docstring-style rules and COM812 fights the formatter. A fourth entry appearing without this arm failing is how a bar erodes, one exemption at a time, each defensible alone. A peer carries a fourth (CPY001, deferred for want of a LICENSE); this repo HAS a LICENSE, which is that deferral's own stated exit condition, so it is not inherited},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_ignore_list_is_exactly_three_rules}
+}
+
+@misc{hooks-bar-checker-matches-the-lock,
+  section = {bar-fires},
+  claim   = {A RULE SET IS A PROPERTY OF THE RESOLVER, NOT OF THE CONFIG TEXT. This repo's lock pinned one ruff while its venv ran another, so every arm above had been measured against a version the build would not install --- the drift was benign and being UNMEASURED was not},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_checker_that_runs_is_the_one_the_lock_pins}
+}
+
+@misc{hooks-bar-unknown-marker-is-an-error,
+  section = {bar-fires},
+  claim   = {An unknown marker fails COLLECTION rather than skipping the case, because a skipped test and a passing one are indistinguishable in a summary line. TWO EARLIER VERSIONS OF THIS ARM WERE AIMED AT THE WRONG PREDICATE, in the file whose whole subject is that failure: the first passed `-m nonexistent`, which DESELECTS and says nothing about strictness; the second applied a marker but also passed --strict-markers ON THE COMMAND LINE, so it asserted that pytest's flag works --- which nobody doubted --- and stayed green when the flag was deleted from addopts. VERIFIED BY MUTATION rather than by reading},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_an_unknown_pytest_marker_is_an_error_rather_than_a_skip}
+}
+
+@misc{hooks-bar-declared-marker-collects-cleanly,
+  section = {bar-fires},
+  claim   = {The P-arm for strictness: a marker the config DECLARES must not trip it. It uses THIS distribution's marker and pins -c to this distribution's pyproject --- the probe lives in a temp tree, so pytest would otherwise pick its rootdir from there and assert strictness against pytest's DEFAULTS rather than against the config under test},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_declared_pytest_marker_collects_cleanly}
+}
