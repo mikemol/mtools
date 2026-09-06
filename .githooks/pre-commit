@@ -139,9 +139,30 @@ say() { printf 'pre-commit: %s\n' "$1" >&2; }
 # ⚑⚑ A REPAIR APPLIED TO ONE CALL SITE IS NOT A REPAIR TO THE CLASS. I wrote that sentence into
 # the ratchet's wiring and then left eight witnesses unwired in the same file. This is the fix
 # stated once so the next witness added inherits it.
+# ⚑ THE LOG DIRECTORY IS CREATED ONCE, HERE, AND NOTHING ELSE OWNS IT. It is deliberately NOT
+# `$staged`: see `witness()` below.
+_witness_logs="${TMPDIR:-/home/mikemol/.cache}/mtools-gate-logs"
+mkdir -p "$_witness_logs"
+
 witness() {  # label, then domain_witness.sh's own arguments
     _wlabel="$1"; shift
-    _wlog="$staged/.witness-$(printf '%s' "$_wlabel" | tr -c 'a-zA-Z0-9' '_').log"
+    # ⚑⚑⚑ THE LOGS LIVE OUTSIDE `$staged`, BECAUSE THAT DIRECTORY IS WIPED MID-RUN. `witness()` is
+    # defined at ~142 and `rm -rf "$staged"; mkdir -p "$staged"` runs at ~283, so any witness log
+    # written before the wipe is destroyed and any written after survives. ⚑ MEASURED by `gabion`
+    # across six refusals: the `cat` failure named a DIFFERENT witness each run — whichever landed
+    # on the wrong side — and `ls $staged/.witness-*` returned nothing at all, so it was never one
+    # missing log. Not correlated with tree state, content, the lock, or residue, which is why
+    # five separate mechanisms failed to predict it.
+    #
+    # ⚑⚑ AND IT IS THE TRAP-VERSUS-PRE-FLIGHT FINDING ONE FILE OVER, IN THE OPPOSITE DIRECTION.
+    # There a cleanup ran too late; here an initialisation does. *A directory that is both a
+    # scratch space and a log destination has two lifetimes and only one `rm -rf` line.*
+    #
+    # ⚑ SO THE LOGS GET THEIR OWN DIRECTORY RATHER THAN THE WIPE BEING MOVED — `gabion`'s
+    # preference as a consumer, and the better one: **a log that explains a refusal should outlive
+    # the scratch tree the refusal was about.** Moving the wipe would fix this ordering and leave
+    # the next reordering free to break it again.
+    _wlog="$_witness_logs/witness-$(printf '%s' "$_wlabel" | tr -c 'a-zA-Z0-9' '_').log"
     if ./domain_witness.sh "$@" >"$_wlog" 2>&1; then
         cat "$_wlog" >&2
     else
