@@ -182,6 +182,15 @@ say "figure freshness: is any superseded number still stated in the present tens
 say "orphan check: is every shell checker invoked, or declared as parked?"
 ./orphan_check.sh || fail=1
 
+# ⚑⚑ THE ROSTER IS THE ONE POPULATION IN THIS REPOSITORY THAT CANNOT BE ENUMERATED, measured
+# rather than assumed: PATH yields 2,843 executables and flagging all of it is useless; an
+# `apropos` search for "text" returns 86 hits and MISSES all six readers added by hand, because
+# `hexdump`'s own man page says "display file contents" and never "text". So the roster stays
+# hand-written and what gets checked is DRIFT — an entry naming a tool this host does not have is
+# a guess nobody can verify.
+say "roster drift: does the textual roster still match the tools present?"
+./roster_drift.sh || true
+
 # ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
 # target existed, the shell that runs every other check in this repository was verified by nothing
 # — clean only because its author ran shellcheck by hand after each edit. A convention held in one
