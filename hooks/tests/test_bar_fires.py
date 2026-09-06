@@ -1017,3 +1017,27 @@ def test_the_polls_fetchability_predicate_is_not_ls_files() -> None:
     fn = body[start:body.index("\n}", start)]
     assert "log --oneline" in fn, "fetchability needs branch history, not index membership"
     assert "staged only (NOT fetchable)" in fn, "the three-valued answer must be stated"
+
+
+def test_the_ratchet_check_captures_its_own_output() -> None:
+    """⚑⚑⚑ THE GATE NAMED THIS GAP ABOUT ITSELF BEFORE ANYONE ELSE DID.
+
+    Refusing a commit, it printed the offending keys and then *no check captured its own output —
+    the label above is all the account there is. That is a defect in the CHECK, not in your
+    commit.* ⚑ The gap-naming repair converting a SILENCE into a NAMED gap — and the check it named
+    is the one that has refused most often: two paydowns, a peer's fourth commit, three earlier
+    rounds. Six refusals, four parties.
+
+    ⚑⚑ The detail always existed: `mikemol-ratchet` lists every new key by `path:rule`. It went to
+    the terminal, hundreds of lines above the verdict, interleaved with a 35-target bazel run.
+    **A repair applied to one call site is not a repair to the class** — this is the second of
+    twenty sites wired.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    # ⚑ ANCHOR ON THE INVOCATION, NOT THE GUARD. The first `mikemol-ratchet` in the file is the
+    # `[ -x ... ]` presence check; slicing from there missed the call site by nine lines and the
+    # first cut of this test failed against a correct repair.
+    start = body.index("if ! ratchet/.venv/bin/mikemol-ratchet")
+    block = body[start:start + 400]
+    assert 'note_failure "$dist: ratchet' in block
+    assert '"$rlog"' in block, "the ratchet must capture its output for the verdict to replay"

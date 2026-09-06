@@ -463,8 +463,28 @@ fi
 # tree rather than the staged copy, because the census keys are paths and a staged copy's paths
 # are not the ones a reader would go fix.
 if [ -x ratchet/.venv/bin/mikemol-ratchet ]; then
+  # ⚑⚑⚑ THE RATCHET CAPTURES ITS OWN OUTPUT, AND THE GATE NAMED THIS GAP ABOUT ITSELF FIRST.
+  # Refusing a commit last tick, it printed the two offending keys and then:
+  #     ⚑ no check captured its own output — the label above is all the account there is.
+  #       That is a defect in the CHECK, not in your commit: scroll for its name.
+  # ⚑ That is the gap-naming repair working as designed — converting a SILENCE into a NAMED gap —
+  # and the check it named is the one that has refused most often today: two paydowns of mine, a
+  # peer's fourth commit, and three earlier rounds. Six refusals, four parties.
+  #
+  # ⚑⚑ THE DETAIL ALWAYS EXISTED. `mikemol-ratchet` prints `N new key(s) REFUSED` and lists them
+  # by `path:rule`. It went to the terminal, hundreds of lines above the verdict and interleaved
+  # with a 35-target bazel run — so a refused party had the keys and could not find them, which is
+  # the same *detail that exists somewhere is detail the reader does not have* that the shellcheck
+  # witness was wired for two commits earlier. **A repair applied to one call site is not a repair
+  # to the class**, and this is the second of the twenty sites to be wired.
   for dist in hooks mdstruct ratchet; do
-    ratchet/.venv/bin/mikemol-ratchet "$root/$dist" || { fail=1; note_failure "$dist: ratchet — paydown only, no new keys"; }
+    rlog="$staged/.ratchet-$dist.log"
+    if ! ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
+        cat "$rlog" >&2
+        fail=1; note_failure "$dist: ratchet — paydown only, no new keys" "$rlog"
+    else
+        cat "$rlog" >&2
+    fi
   done
 fi
 

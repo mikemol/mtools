@@ -1112,3 +1112,9 @@
   claim   = {ls-files REPORTS A STAGED FILE AS TRACKED, WHICH IS THE WRONG QUESTION FOR INTAKE},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_polls_fetchability_predicate_is_not_ls_files}
 }
+
+@misc{hooks-bar-fires-ratchet-check-captures-its-own-output,
+  section = {bar-fires},
+  claim   = {THE GATE NAMED THIS GAP ABOUT ITSELF BEFORE ANYONE ELSE DID},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_ratchet_check_captures_its_own_output}
+}
