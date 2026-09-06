@@ -150,6 +150,23 @@ them is the server's own counters — the ones three sessions believed unreachab
 the events rather than with a config. *The arm: run the gate and confirm a `Streaming build results
 to:` line appears whose invocation id resolves at `:31080`.*
 
+⚑⚑ **AND THE POINTER IS THE ONLY ROUTE — MEASURED, the API cannot substitute for it.** Probed
+`:31080/api/v1/GetInvocation` while the gate ran, to retrieve the in-flight record without the URL:
+
+```
+{"query":{…}}                  -> proto: unknown field "query"          (API is LIVE, schema wrong)
+{"lookup":{…}}                 -> proto: unknown field "lookup"
+{"selector":{"invocationId":…}} -> rpc error: Unauthenticated desc = Auth not implemented
+{}                              -> rpc error: Unauthenticated desc = Auth not implemented
+```
+
+`selector` is the correct field — the schema errors stop and an **auth** error begins. But **auth is
+not implemented on this deployment**, so the programmatic route is closed. ⚑ **The record is
+reachable only through the UI, which requires the invocation id that `--bes_results_url` would have
+printed.** So `Ζ·bes·url` is not cosmetic: with the URL scoped to an unused config, a complete
+invocation record is written for every gate run and there is **no route to it at all** — the id
+exists only in a line Bazel declines to print.
+
 ## 5c. ⚑⚑ A 404 IS A MEASUREMENT ABOUT ONE ADDRESS, NOT ABOUT THE WORLD
 
 Three sessions probed `:31080/metrics`, got **404**, and concluded the CAS counters were

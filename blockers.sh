@@ -41,9 +41,19 @@ tracked() {  # repo, path, label
 echo "=== control: a path known to be tracked must read TRACKED ==="
 tracked "$sub" .claude/agents/findings.py "substrate findings.py (control)"
 
+# ⚑⚑⚑ THE POPULATION IS ENUMERATED, NOT ASSERTED. A hand-written list of five module names is
+# `0 of 5` reported as `0 of the island` — it cannot see a sixth module, and a control proves only
+# that the QUERY works, never that the SEARCH SPACE was right. A peer stated the class after
+# reporting "the CAS counters are out of reach" from one endpoint without enumerating the service's
+# ports: that was `0 of 1` reported as `0 of the world`, and one `kubectl get svc` would have shown
+# three. So this counts what exists before reporting what is tracked.
 echo "=== substrate: the ratchet island ==="
-for f in ratchet_core baseline_io baseline_state ratchet_render withheld_verdict; do
-    tracked "$sub" "substrate/$f.py" "$f.py"
+island=$(find "$sub/substrate" -maxdepth 1 -name 'ratchet*.py' -o -maxdepth 1 -name 'baseline*.py' \
+         -o -maxdepth 1 -name 'withheld*.py' 2>/dev/null | wc -l)
+echo "  population: $island module(s) match the island's naming on disk"
+for f in $(find "$sub/substrate" -maxdepth 1 \( -name 'ratchet*.py' -o -name 'baseline*.py' \
+           -o -name 'withheld*.py' \) -printf '%f\n' 2>/dev/null | sort); do
+    tracked "$sub" "substrate/$f" "$f"
 done
 
 echo "=== substrate: the membudget ledger ==="

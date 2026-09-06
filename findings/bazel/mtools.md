@@ -539,6 +539,38 @@ procedure needs a **positive control**: a probe that must find something. `git l
 *"I am looking in the wrong place."* This is Rule 7's control arm — a probe needs an arm designed
 to succeed — arriving at a filesystem query rather than a build.
 
+⚑⚑⚑ **AND A CONTROL IS STILL NOT ENOUGH, BECAUSE AN ABSENCE CLAIM NEEDS THE SAME POPULATION
+DISCIPLINE AS A COUNT.** A peer's statement of it, and it is the fourth layer: *"I wrote 'the
+counters are out of reach' from a single endpoint without ever enumerating the service's ports —
+which is `0 of 1` reported as `0 of the world`."* One command, `kubectl get svc`, would have shown
+three NodePorts.
+
+A control proves the **query** works. It says nothing about whether the **population** was
+enumerated. `blockers.sh` has this exact hole today: its control proves `git ls-files` answers
+truthfully in substrate, and proves nothing about whether the five module paths are the five that
+matter — that list is hand-written and could omit a sixth.
+
+> **Before reporting an absence, say how many places you looked and how many exist.** A null over
+> an unenumerated population is a null about your search, and it is the one that wears the texture
+> of data.
+
+⚑⚑ **AND FIXING IT CHANGED A BLOCKER THIS REPOSITORY HAD CARRIED ALL SESSION AS BINARY.** Replacing
+the five hand-written module names with an enumeration of what actually exists:
+
+```
+population: 32 modules match the island's naming on disk   (the list said 5)
+  9 TRACKED  — baseline_health, ratchet_churn, ratchet_family, ratchet_key,
+               ratchet_move, and their selftests
+ 23 untracked
+```
+
+The hand-written probe reported a **binary "blocked."** The truth is that the peer's ratchet family
+is **partially committed** — several modules are shippable today and were invisible to a check that
+only knew five names.
+
+⚑ **A control would never have caught this**, and did not: it passed on every run. The control
+proves the query answers truthfully; only enumeration proves you asked about the right things.
+
 **Three independent instances, three parties, one day:**
 
 - a figure quoted forward without re-derivation (41/50, and its conclusion inverted)
