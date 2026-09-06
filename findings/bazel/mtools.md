@@ -694,3 +694,49 @@ The bounds:
   distribution declaring that distribution's closure suffices, is an **open measurement**.
 - Whether the CAS partitions by instance name is **not a testable proposition** and has been
   withdrawn from Rule 5 rather than left open. Content addressing makes sharing definitional.
+
+## Rule 11 — two independent derivations agreeing is evidence; the ONE axis they differ on is the finding
+
+**Measured across two repositories implementing the same component.** This tree derived its move
+detection from a peer's *docstring warning* without reading the peer's code, arriving at
+one-to-one pairing plus a path-plausibility predicate. The peer's `ratchet_churn.classify` was
+then run directly, on the same three shapes:
+
+```
+                                 mtools          peer (default)    peer (--strict)
+one retirement, two arrivals     REFUSED         churn x2          suspect x2
+2-old -> 2-new reorganisation    2 moves         churn x2          churn x2
+shared rule, unrelated path      REFUSED         genuinely new     genuinely new
+```
+
+⚑⚑ **Every CLASSIFICATION agrees. Two derivations from different starting material reaching the
+same partition is the strongest evidence available that the rule is right** — stronger than either
+tree's own test suite, because the suites share no author, no corpus and no key grammar (that tree
+keys `name::path` with a declared schema; this one keys `path:rule` positionally).
+
+⚑⚑⚑ **AND THE SINGLE AXIS OF DISAGREEMENT IS WHERE THE DEFECT LIVES.** The peer's fan-out defence
+is a `strict=` parameter — **opt-in at its CLI and defaulting off**, traced to `"--strict" in argv`
+through a production caller that threads it. So the shape both of us identified as *the* hazard is,
+in that tree, refused only when asked.
+
+**A DEFENCE THAT DEFAULTS OFF IS THE FALSE ABSOLUTION WITH A FLAG BESIDE IT.** The entire hazard is
+that the laundering is silent; a mode nobody passes cannot announce itself, and the operator who
+most needs the refusal is precisely the one who does not know to ask for it. This is the
+`--config`-never-entered defect (Rule 3) at the level of a function signature rather than a build
+config: *a configured capability the default path never reaches produces no signal at all.*
+
+⚑ **This tree refuses unconditionally, and now carries a test that refuses a future `strict=`
+parameter as much as it checks the behaviour** — because the flag is the regression, not the
+classification.
+
+### ⚑ What the peer has that this tree does not, recorded rather than quietly omitted
+
+Its `Verdict` carries **`suspect`** as a state distinct from both churn and genuinely-new: *"a
+fan-out means at most one of the N is the move."* This tree's ratchet is binary — it refuses, which
+is safe, but it reports the fan-out identically to ordinary growth and so cannot tell an operator
+*which* refusal was ambiguous.
+
+**That is the three-outcome discipline this file already holds** (a comparison that cannot be made
+reports INVALID, not FALSE) arriving at the ratchet and finding it two-valued. Owed here. ⚑ Naming
+it explicitly because a convergence story is exactly the shape that buries the one place the other
+implementation is ahead — the agreement is the comfortable finding and the gap is the useful one.

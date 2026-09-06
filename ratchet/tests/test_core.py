@@ -229,3 +229,24 @@ def test_two_findings_relocating_together_are_two_moves(tmp_path: Path) -> None:
     """
     path = _base(tmp_path, {"pkg/a.py:rule1", "pkg/b.py:rule2"})
     assert ratchet({"pkg/x.py:rule1", "pkg/y.py:rule2"}, path, write=True)[0] == 0
+
+
+def test_fan_out_refusal_is_unconditional_not_a_mode(tmp_path: Path) -> None:
+    """⚑⚑⚑ The divergence from the peer implementation, pinned as an assertion.
+
+    Both trees derived path-plausibility independently and AGREE on every classification.
+    They disagree on ONE thing: the peer's fan-out defence is a `strict=` parameter,
+    opt-in at its CLI and defaulting OFF — measured by running its own `classify` on this
+    exact shape, which returned two churn entries under the default and two SUSPECT
+    entries only when strict was passed. Its production caller threads the flag through
+    from an argv check.
+
+    ⚑ A DEFENCE THAT DEFAULTS OFF IS THE FALSE ABSOLUTION WITH A FLAG BESIDE IT. The whole
+    hazard is that the laundering is silent; a mode nobody passes cannot announce itself,
+    and the operator who most needs the refusal is the one who does not know to ask. Here
+    it is unconditional, so this test exists to refuse a future `strict=` parameter as much
+    as to check the behaviour.
+    """
+    path = _base(tmp_path, {"a.py:rule1"})
+    assert ratchet({"b.py:rule1", "z.py:rule1"}, path, write=True)[0] == 1
+    assert "moved" not in " ".join(ratchet({"b.py:rule1", "z.py:rule1"}, path, write=False)[1])

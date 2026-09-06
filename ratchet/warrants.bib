@@ -210,3 +210,15 @@
              identities pair independently, so both moves are recognised. This is the case
              that proves path plausibility is load-bearing rather than merely restrictive.}
 }
+
+@misc{ratchet-core-fan-out-refusal-is-unconditional-not-a-mode,
+  section = {membership},
+  title   = {The fan-out refusal is unconditional, never a mode},
+  note    = {The peer implementation this machinery was derived from agrees on every
+             classification and diverges on one axis: its fan-out defence is a strict=
+             parameter, opt-in at its CLI and defaulting off. Measured by running its own
+             classify on the fan-out shape -- two churn entries by default, two SUSPECT
+             only under strict. A defence that defaults off is the false absolution with a
+             flag beside it, because the hazard is that the laundering is silent. This
+             test refuses a future strict= parameter as much as it checks the behaviour.}
+}
