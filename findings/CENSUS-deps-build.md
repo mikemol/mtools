@@ -140,6 +140,44 @@ so the apex can distinguish *"filed late"* from *"had less notice"* — and so `
 disclosure can state the input asymmetry rather than the apex inferring it. **All six parties
 received the same bytes; only the clock differed.**
 
+| 3 | 2026-09-06 | ⚑ **ORIGIN IS NOT ATTRIBUTABLE FROM GIT LOG IN A CONSOLIDATION REPO.** See `§Y`. | apex phase 1; every leg's antecedent probe |
+
+⚑ **rev 3 adds `§Y` below. It is an instruction to the APEX, not a re-read for surveyors** — no leg's
+own survey changes. It is logged rather than messaged because a fact that reaches the apex only
+through one party's disclosure is testimony; in `§V` it is part of the run.
+
+## §Y ⚑ Origin attribution — a trap the antecedent probe walks into
+
+**Reported by `mtools` in its filing message, 2026-09-06, before the freeze. Class: testimony
+(unverified by this dispatcher at rev 3).**
+
+`mtools` is **8 hours old** — 123 files, 52 commits, first commit 13:40 today — and is a
+**consolidation point**. Its files are new *by construction* while their content is inherited from
+older trees. Its own report of the spread:
+
+> every artifact I cite originates *today*, while `substrate` (2026-05-15), `paperkit` (06-22),
+> `cassian` (07-20) and yours (08-17) are 3–16 weeks older.
+
+⚑ **So: `git log` in a consolidation repo dates the CONSOLIDATION, not the DESIGN.** An apex computing
+origin from commit dates will attribute four trees' designs to the repo that most recently copied
+them — over-gluing at its purest, with a machine-looking warrant.
+
+**Consequences, binding on phase 1:**
+
+- ⚑ **A commit date is not an origin witness** when the repo is a consolidation target. Per
+  `references/apex.md`, an identification needs byte-identity, matching timestamps in a plausible
+  pass, shared third-party prose, or an explicit cross-reference. **A `git log` date alone is none of
+  those.**
+- `mtools`' mitigation is **prose in evidence-comments naming the origin party** — its own assessment
+  is that this is *"not machine-readable and no gate checks it."* Read those comments; do not rely on
+  them being complete.
+- ⚑ **This generalizes past `mtools`.** Any leg that vendored, copied, or adopted machinery has the
+  same defect at smaller scale. **The antecedent probe (brief §6) must find an artifact's origin in
+  the tree that AUTHORED it, not the tree that currently holds it.**
+
+⚑ **The party most exposed to being credited flagged the risk against itself.** That is a
+disclosure, and it is the reason this section exists rather than being discovered at the apex.
+
 **Every filing cites the revision it was written against, in its first line.**
 
 ⚑ **An instruction that reaches you outside this file is not in force until it is appended here and

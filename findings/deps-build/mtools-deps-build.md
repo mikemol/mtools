@@ -19,9 +19,21 @@ check.
 1. My dispatch was **one line in a peer message**, not the run file. I read `§R`/`§Q` only after
    being pointed at them. No finding here came from that message.
 2. I have been in **active finding-traffic with `substrate` and `cassian-observability` all day**,
-   before this census existed. Their findings are in my tree, cited, and committed. Per brief §2 this
-   is pre-freeze cross-contamination that I cannot undo — it is disclosed per-item below and tagged
-   **testimony**.
+   before this census existed. Their findings are in my tree, cited, and committed. This is an
+   **input asymmetry** — brief §9's subject — disclosed per-item below and tagged **testimony**.
+
+   ⚑⚑ **An earlier revision of this line called it a brief §2 violation and cross-contamination.
+   WITHDRAWN, on the dispatcher's correction, and the withdrawal is worth more than the claim was.**
+   §2 forbids reading peers *during* the survey; this traffic **predates the census**, so there was
+   no independence to preserve and no rule in force over the conduct. ⚑ **A rule cannot be violated
+   by conduct that precedes it**, and grading a leg down against one is not rigor — it manufactures
+   a defect the apex must then carry and discount. Kept visible because self-criticism that reads as
+   discipline is the hardest kind to catch from inside, and because a leg that overstates its own
+   weakness corrupts the span exactly as much as one that overstates its strength.
+
+   **What the disclosure is actually for, and this part stands:** the items below are separated into
+   ones I **independently reproduced** and ones I am **relaying**. Corroboration between witnesses
+   that could not have disagreed is decoration; the apex needs to know which of mine are which.
 3. ⚑ **I hold a `§X` fact no leg can infer and one peer may not have:** the operator ruled today that
    *substrate's clean code moves to mtools*, so packages replace symlink/copy vendoring. That ruling
    post-dates most of my tree and is the reason several items below are "designed for, not built."
