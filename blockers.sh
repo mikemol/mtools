@@ -297,6 +297,31 @@ else
             printf '%s\n' "$unadmitted" | sed 's/^/      /'
             echo "    Whether these enter the accounting is the operator's, not the poll's."
         fi
+        # ⚑⚑⚑ THE UNADMITTED CHECK CANNOT SEE THE OTHER DIRECTION, AND ITS SILENCE READ AS
+        # AGREEMENT. It finds files with no §S row. It cannot find §S rows that no longer cover
+        # the directory — so when `gabion`'s leg went from untracked to COMMITTED, the only signal
+        # I had went quiet at the exact moment the disagreement became permanent. MEASURED that
+        # tick: `HEAD` held 8 constitution legs, `§S` held 7 rows, and this poll reported
+        # `7 of 7 — FROZEN`.
+        #
+        # ⚑⚑ THAT IS ABSENT-VERSUS-UNAVAILABLE IN THE DETECTOR FOR ABSENT-VERSUS-UNAVAILABLE. I
+        # built one direction of a two-sided comparison and read its silence as the two sides
+        # agreeing. Third distinct blindness in this poll in three ticks — a hardcoded path, then
+        # `tracked` as a cheap key, now a one-sided reconciliation — and each repair made the
+        # enumeration better while never asking whether the roster still described the directory.
+        #
+        # ⚑ NOT AN ERROR EITHER. A count that outgrew its freeze is a fact about an accounting an
+        # operator performed, and `§D` forbids amending an accounted roster. The poll's job is to
+        # make the divergence VISIBLE rather than to reconcile it.
+        n_head=$(cd "$mtools" && git ls-tree -r HEAD --name-only "${legs#"$mtools"/}" 2>/dev/null \
+            | grep -vc 'apex')
+        if [ -n "${tbl:-}" ] && [ "${tbl:-}" != "-1" ] && [ "${roster:-0}" -gt 0 ] \
+           && [ "${n_head:-0}" -ne "${roster:-0}" ]; then
+            echo "  ⚑ §S DESCRIBES $roster PARTIES AND HEAD HOLDS $n_head LEG(S)."
+            echo "    A row set that no longer covers the directory is not a dropped row and not"
+            echo "    a stray file — it is an accounting that an admission outgrew. §D forbids"
+            echo "    amending it; this line exists so the divergence is read rather than found."
+        fi
     fi
   done
 fi
