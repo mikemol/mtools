@@ -708,3 +708,317 @@
              implementation. F-armed by copying the working tree instead of the index, which
              carries the marker and fails the test.}
 }
+
+% ---------------------------------------------------------------- no_chaining
+
+@misc{hooks-no-chaining-pipe-fires,
+  section = {no_chaining},
+  claim   = {A pipe is refused: the tool should have the mode that produces this directly},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_pipe_fires}
+}
+
+@misc{hooks-no-chaining-and-and-fires,
+  section = {no_chaining},
+  claim   = {`&&` is refused: two questions that want one mode},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_and_and_fires}
+}
+
+@misc{hooks-no-chaining-semicolon-fires,
+  section = {no_chaining},
+  claim   = {`;` is refused: run the calls separately},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_semicolon_fires}
+}
+
+@misc{hooks-no-chaining-or-or-fires,
+  section = {no_chaining},
+  claim   = {`||` is refused: a shell fallback over an error string is judgement-in-turn},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_or_or_fires}
+}
+
+@misc{hooks-no-chaining-pipe-ampersand-fires,
+  section = {no_chaining},
+  claim   = {`|&` is refused --- the operator the origin's private copy LACKED},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_pipe_ampersand_fires}
+}
+
+@misc{hooks-no-chaining-background-ampersand-fires,
+  section = {no_chaining},
+  claim   = {`&` is refused: use run_in_background, not shell control flow},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_background_ampersand_fires}
+}
+
+@misc{hooks-no-chaining-operator-coverage-is-derived-not-restated,
+  section = {no_chaining},
+  claim   = {Every operator the shared tokenizer knows is covered here, BY CONSTRUCTION},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_operator_coverage_is_derived_not_restated}
+}
+
+@misc{hooks-no-chaining-for-loop-fires,
+  section = {no_chaining},
+  claim   = {`for` in command position is refused: the iteration belongs in a program},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_for_loop_fires}
+}
+
+@misc{hooks-no-chaining-case-dispatch-fires,
+  section = {no_chaining},
+  claim   = {`case` is refused: the classic judgement-not-in-code shape},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_case_dispatch_fires}
+}
+
+@misc{hooks-no-chaining-until-loop-fires,
+  section = {no_chaining},
+  claim   = {`until` is refused: same as `for`, the loop belongs to the tool},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_an_until_loop_fires}
+}
+
+@misc{hooks-no-chaining-bare-cd-fires-on-its-own,
+  section = {no_chaining},
+  claim   = {`cd` alone is refused: it mutates state every later command inherits},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_bare_cd_fires_on_its_own}
+}
+
+@misc{hooks-no-chaining-cd-message-names-env-dash-c,
+  section = {no_chaining},
+  claim   = {The refusal names `env -C` --- the one-call form that replaces it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_cd_message_names_env_dash_c}
+}
+
+@misc{hooks-no-chaining-cd-message-says-why,
+  section = {no_chaining},
+  claim   = {The refusal explains the mechanism: the directory is an INPUT, not ambient state},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_cd_message_says_why}
+}
+
+@misc{hooks-no-chaining-recommended-env-dash-c-form-passes,
+  section = {no_chaining},
+  claim   = {The replacement this hook recommends must itself pass},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_recommended_env_dash_c_form_passes}
+}
+
+@misc{hooks-no-chaining-python-dash-c-fires,
+  section = {no_chaining},
+  claim   = {`python3 -c` is refused: the program dies with the turn},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_python_dash_c_fires}
+}
+
+@misc{hooks-no-chaining-wrapper-does-not-hide-an-inline-script,
+  section = {no_chaining},
+  claim   = {`timeout 300 python3 -c` is refused: the interpreter is seen anywhere, not just first},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_wrapper_does_not_hide_an_inline_script}
+}
+
+@misc{hooks-no-chaining-env-prefix-does-not-hide-an-inline-script,
+  section = {no_chaining},
+  claim   = {`PYTHONPATH=x python3 -c` is refused: an env prefix is not command position},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_an_env_prefix_does_not_hide_an_inline_script}
+}
+
+@misc{hooks-no-chaining-stdin-script-fires,
+  section = {no_chaining},
+  claim   = {`python3 - < prog.py` is refused: the program arrives on stdin},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_stdin_script_fires}
+}
+
+@misc{hooks-no-chaining-heredoc-into-an-interpreter-fires,
+  section = {no_chaining},
+  claim   = {`python3 <<PY` is refused: the redirection is the only tell, and it is enough},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_heredoc_into_an_interpreter_fires}
+}
+
+@misc{hooks-no-chaining-perl-dash-e-fires,
+  section = {no_chaining},
+  claim   = {`perl -e` is refused: the rule is about inline programs, not about Python},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_perl_dash_e_fires}
+}
+
+@misc{hooks-no-chaining-quoted-pipe-in-a-regex-is-data,
+  section = {no_chaining},
+  claim   = {`grep -nE 'foo|bar'` passes: a `|` inside quotes is data, not an operator},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_quoted_pipe_in_a_regex_is_data}
+}
+
+@misc{hooks-no-chaining-semicolon-inside-an-awk-body-is-data,
+  section = {no_chaining},
+  claim   = {`awk '{print; n++}'` passes: the `;` belongs to awk's language, not to bash},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_semicolon_inside_an_awk_body_is_data}
+}
+
+@misc{hooks-no-chaining-for-inside-a-filename-is-not-a-keyword,
+  section = {no_chaining},
+  claim   = {`format_for_each.py` passes: `for` is a keyword only in command position},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_for_inside_a_filename_is_not_a_keyword}
+}
+
+@misc{hooks-no-chaining-for-as-an-argument-is-not-a-keyword,
+  section = {no_chaining},
+  claim   = {`grep -w for notes.md` passes: an argument is not command position},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_for_as_an_argument_is_not_a_keyword}
+}
+
+@misc{hooks-no-chaining-cd-as-an-argument-is-not-a-chdir,
+  section = {no_chaining},
+  claim   = {`grep -w cd notes.md` passes: the same command-position guard covers `cd`},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_cd_as_an_argument_is_not_a_chdir}
+}
+
+@misc{hooks-no-chaining-plain-single-call-passes,
+  section = {no_chaining},
+  claim   = {One tool call with flags is exactly the behaviour the rule WANTS},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_plain_single_call_passes}
+}
+
+@misc{hooks-no-chaining-running-a-real-script-passes,
+  section = {no_chaining},
+  claim   = {`python3 scripts/x.py` passes: invoking a COMMITTED tool is the point},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_running_a_real_script_passes}
+}
+
+@misc{hooks-no-chaining-python-dash-m-on-a-real-module-passes,
+  section = {no_chaining},
+  claim   = {`python3 -m json.tool` passes: `-m` names a committed module, unlike `-c`},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_python_dash_m_on_a_real_module_passes}
+}
+
+@misc{hooks-no-chaining-bare-repl-is-not-a-script,
+  section = {no_chaining},
+  claim   = {`python3` alone passes: with no args it is a REPL, not an inline program},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_bare_repl_is_not_a_script}
+}
+
+@misc{hooks-no-chaining-interpreter-named-as-an-argument-passes,
+  section = {no_chaining},
+  claim   = {`grep -rn python3 notes.md` passes: the word is data here},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_an_interpreter_named_as_an_argument_passes}
+}
+
+@misc{hooks-no-chaining-unparseable-command-is-allowed-through,
+  section = {no_chaining},
+  claim   = {An unbalanced quote is bash's verdict, not ours --- never break a session on a parse error},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_an_unparseable_command_is_allowed_through}
+}
+
+@misc{hooks-no-chaining-prose-in-a-heredoc-body-is-not-composition,
+  section = {no_chaining},
+  claim   = {A commit message DESCRIBING shell is not shell},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_prose_in_a_heredoc_body_is_not_composition}
+}
+
+@misc{hooks-no-chaining-quoted-heredoc-tag-is-handled,
+  section = {no_chaining},
+  claim   = {`<<'EOF'` is a heredoc too: the quoting of the tag does not change the body's status},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_quoted_heredoc_tag_is_handled}
+}
+
+@misc{hooks-no-chaining-operator-after-a-heredoc-still-fires,
+  section = {no_chaining},
+  claim   = {The strip must not overreach: shell AFTER the terminator is still shell},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_an_operator_after_a_heredoc_still_fires}
+}
+
+@misc{hooks-no-chaining-refusal-names-the-offending-token,
+  section = {no_chaining},
+  claim   = {The message names `|`, so the caller knows which token to remove},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_refusal_names_the_offending_token}
+}
+
+@misc{hooks-no-chaining-refusal-says-a-missing-mode-is-the-work,
+  section = {no_chaining},
+  claim   = {The message routes: no mode is WORK, not grounds for a composition},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_refusal_says_a_missing_mode_is_the_work}
+}
+
+@misc{hooks-no-chaining-refusal-names-the-discarded-exit-status,
+  section = {no_chaining},
+  claim   = {The message names the rc-swallowing mechanism, not only the judgement one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_refusal_names_the_discarded_exit_status}
+}
+
+@misc{hooks-no-chaining-deny-envelope-names-the-event,
+  section = {no_chaining},
+  claim   = {The envelope carries `PreToolUse` --- the harness reads an empty stdout as ALLOW},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_deny_envelope_names_the_event}
+}
+
+@misc{hooks-no-chaining-deny-envelope-carries-the-decision,
+  section = {no_chaining},
+  claim   = {The envelope carries `"deny"`, or the gate is silently inert},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_deny_envelope_carries_the_decision}
+}
+
+@misc{hooks-no-chaining-deny-envelope-carries-the-reason,
+  section = {no_chaining},
+  claim   = {The envelope carries the reason text, so the refusal reaches the caller},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_deny_envelope_carries_the_reason}
+}
+
+@misc{hooks-no-chaining-well-formed-payload-yields-its-command,
+  section = {no_chaining},
+  claim   = {The reader extracts the command from a well-formed PreToolUse payload},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_well_formed_payload_yields_its_command}
+}
+
+@misc{hooks-no-chaining-non-string-command-yields-no-command,
+  section = {no_chaining},
+  claim   = {A non-string `command` is rejected by a runtime check, not asserted away},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_non_string_command_yields_no_command}
+}
+
+@misc{hooks-no-chaining-non-mapping-payload-yields-no-command,
+  section = {no_chaining},
+  claim   = {A payload that is not a mapping yields nothing rather than raising},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_non_mapping_payload_yields_no_command}
+}
+
+@misc{hooks-no-chaining-payload-with-no-tool-input-yields-no-command,
+  section = {no_chaining},
+  claim   = {A payload missing `tool_input` yields nothing rather than raising},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_payload_with_no_tool_input_yields_no_command}
+}
+
+@misc{hooks-no-chaining-non-mapping-tool-input-yields-no-command,
+  section = {no_chaining},
+  claim   = {A `tool_input` that is not a mapping yields nothing rather than raising},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_non_mapping_tool_input_yields_no_command}
+}
+
+@misc{hooks-no-chaining-shared-switch-arms-the-hook,
+  section = {no_chaining},
+  claim   = {`STRUCT_HOOK_BLOCK=1` arms this hook along with its sibling},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_shared_switch_arms_the_hook}
+}
+
+@misc{hooks-no-chaining-explicit-off-beats-the-shared-on,
+  section = {no_chaining},
+  claim   = {`NOCHAIN_HOOK_BLOCK=0` stands this hook down while the shared switch is on},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_an_explicit_off_beats_the_shared_on}
+}
+
+@misc{hooks-no-chaining-unset-switches-leave-the-hook-unarmed,
+  section = {no_chaining},
+  claim   = {With neither switch set the hook advises rather than denies},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_unset_switches_leave_the_hook_unarmed}
+}
+
+@misc{hooks-no-chaining-end-to-end-armed-a-pipe-is-denied,
+  section = {no_chaining},
+  claim   = {ARMED: a piped command produces a deny decision on stdout},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_end_to_end_armed_a_pipe_is_denied}
+}
+
+@misc{hooks-no-chaining-end-to-end-armed-a-single-call-is-not-denied,
+  section = {no_chaining},
+  claim   = {ARMED: a single tool call produces NO decision --- the not-deny arm},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_end_to_end_armed_a_single_call_is_not_denied}
+}
+
+@misc{hooks-no-chaining-end-to-end-a-malformed-payload-exits-zero,
+  section = {no_chaining},
+  claim   = {Garbage on stdin exits 0: never break the session on a parse failure},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_end_to_end_a_malformed_payload_exits_zero}
+}
+
+@misc{hooks-no-chaining-end-to-end-a-malformed-payload-denies-nothing,
+  section = {no_chaining},
+  claim   = {Garbage on stdin denies nothing --- a separate claim from the exit code},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_end_to_end_a_malformed_payload_denies_nothing}
+}
