@@ -412,6 +412,43 @@ disposition and the one this rule exists to produce.
 one of them was designed to be. `1 internal`, `N action cache hit`, and a real remote landing are
 three different things that print as success.
 
+### ⚑⚑⚑ The amendment: `cquery` is not a cheaper clean, it is the RIGHT PHASE
+
+**Supplied by the peer this rule was written about, after it got the behaviour I had asked it for.**
+Toolchain and platform resolution happen in the **analysis** phase. `bazel build` reaches analysis
+only when it has execution to do; served entirely from the action cache it exits 0 having resolved
+nothing — which is why `bazel clean` was load-bearing above. **`cquery` runs analysis and stops
+there**, so it answers a platform question without an execution phase to be short-circuited.
+
+Measured in that peer's tree:
+
+```
+bazel build  --extra_execution_platforms=...   exit 0, pure action-cache hits, resolved NOTHING
+bazel cquery --extra_execution_platforms=...   14.9s of real analysis, completed successfully
+```
+
+**Reproduced here, both arms, on `//ratchet:test_core`:**
+
+```
+--extra_execution_platforms=@platforms//host        rc=0   0 total actions
+--extra_execution_platforms=//nonexistent:platform  rc=1
+```
+
+⚑ **F-ARMED, AND THE F-ARM IS THE POINT.** A one-armed cquery certifies a bare platform as fine —
+which is how a bare `platform()` survived in three repos. The arm is `cquery` **against a bogus
+platform**, and it must exit nonzero.
+
+⚑⚑ **AND MY OWN FIRST RUN OF THIS ARM WAS VOID, in this file's own defect class.** I piped bazel
+into `tail` and read `rc=$?` — **the exit status of `tail`**. Both arms printed `rc=0`, the F-arm
+among them, while its stderr said `Build did NOT complete successfully` two lines above the number
+I was reading. **A pipeline replaced the verdict with the exit status of the reporter**, and the
+F-arm that exists to catch a false green produced one. The figures above come from a re-run with
+bazel's own status read directly.
+
+⚑ **So Rule 7 keeps its clean requirement for EXECUTION questions and loses it for RESOLUTION
+questions.** "Did this action run remotely" needs a cold output base. "Does this platform resolve"
+needs the analysis phase, which cquery reaches for free.
+
 ## Rule 8 — publish where a *different* party reads it; a rule in your own file is one you will violate unnoticed
 
 Both parties to this exchange broke a freshly-written rule **within one commit of writing it**:
