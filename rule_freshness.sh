@@ -35,10 +35,20 @@ fi
 # ⚑ THE CLAIM IS READ FROM THE RULES FILE, NOT RETYPED HERE. A checker carrying its own copy of
 # the thing it verifies drifts from the document silently — which is the two-copies-of-one-list
 # defect this repository has now measured three times.
-if ! grep -q "31464" "$rules"; then
-    say "no rule cites the metrics port — nothing to re-check"
-    exit 0
-fi
+# ⚑⚑⚑ A READER THAT FAILS AND A CORPUS THAT LACKS THE TERM BOTH EXIT NONZERO FROM `grep`, AND
+# THE FIRST CUT TREATED THEM AS ONE. `grep -q` returns 1 for "no match" and 2 for "cannot read" —
+# so a missing binary, an unreadable file or a permission error all printed "no rule cites the
+# metrics port" and exited 0. ⚑ MEASURED: run with a degraded PATH, this script reported nothing
+# to re-check and returned success, having checked nothing. That is a green over a reader failure,
+# in the checker written to catch stale claims.
+grep -q "31464" "$rules"
+case "$?" in
+    0) ;;
+    1) say "no rule cites the metrics port — nothing to re-check"; exit 0 ;;
+    *) echo "rule_freshness: cannot read $rules — this is a fact about the reader," >&2
+       echo "  not a verdict about the rules; refusing rather than reporting nothing to do" >&2
+       exit 1 ;;
+esac
 
 # ⚑⚑ Rule 12 rests on ONE endpoint serving the port. Two ready pods behind that Service would
 # make every counter delta a sample from an unknown one of two populations, and the control arm

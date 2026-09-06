@@ -558,3 +558,48 @@ def test_a_srcs_entry_is_an_invocation(tmp_path: Path) -> None:
         {"wrapped.sh": "#!/usr/bin/env bash\n"},
         {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
     ) == 0
+
+
+def _freshness(tree: Path, rules: str, *, readable: bool) -> int:
+    """Run the freshness gate against a corpus fixture; return its exit code."""
+    doc = tree / "rules.md"
+    doc.write_text(rules, encoding="utf-8")
+    script = (_DIST.parent / "rule_freshness.sh").read_text(encoding="utf-8")
+    probe = tree / "probe.sh"
+    probe.write_text(
+        script.replace('rules="findings/bazel/mtools.md"', f'rules="{doc}"'),
+        encoding="utf-8")
+    probe.chmod(0o755)
+    doc.chmod(0o644 if readable else 0o000)
+    try:
+        return subprocess.run(  # noqa: S603
+            [str(probe)], capture_output=True, check=False,
+            cwd=str(_DIST.parent)).returncode
+    finally:
+        doc.chmod(0o644)
+
+
+def test_the_freshness_gate_passes_a_corpus_citing_no_environment_claim(tmp_path: Path) -> None:
+    """⚑ A corpus with no environment claim has nothing to re-check, and that is a PASS.
+
+    Most rules are claims about reasoning and do not decay. A gate that refused them would be
+    refusing the ordinary case.
+    """
+    assert _freshness(tmp_path, "## Rule 1 — a claim about reasoning\n", readable=True) == 0
+
+
+def test_the_freshness_gate_refuses_a_corpus_it_cannot_read(tmp_path: Path) -> None:
+    """Refuse a corpus the reader cannot open, rather than calling it empty.
+
+    ⚑⚑⚑ A READER FAILURE AND A GENUINE ABSENCE BOTH EXIT NONZERO FROM `grep`, and the first
+    cut treated them as one. `grep -q` returns 1 for *no match* and 2 for *cannot read* — so
+    a missing binary, an unreadable file or a permission error all printed "no rule cites the
+    metrics port" and exited 0.
+
+    ⚑ Measured with a degraded PATH: the script reported nothing to re-check and returned
+    success, having checked nothing. A green over a reader failure, inside the checker written
+    to catch stale claims.
+
+    ⚑ Same file, same content, only the permission bit differs — and the verdicts are opposite.
+    """
+    assert _freshness(tmp_path, "## Rule 1 — a claim\n", readable=False) == 1

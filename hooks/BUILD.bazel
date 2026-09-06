@@ -71,6 +71,12 @@ py_library(
             # It is pure shell over a filesystem the witness builds, with no reader to route
             # through — so there is no venv to reach for and no reason to skip.
             "//:orphan_check.sh",
+            # ⚑ THE FRESHNESS GATE IS STAGED AS A SOURCE THE WITNESS REWRITES, not run in place:
+            # its arms substitute a fixture corpus for the real one, so the sandbox never needs
+            # the 1,500-line rules document. `kubectl` and `curl` are absent there, which is
+            # exactly the UNVERIFIABLE path the gate declares — the arms exercise the corpus
+            # branch, which is the half that does not need a cluster.
+            "//:rule_freshness.sh",
             "//:.bazelrc",
             "//:BUILD.bazel",
             "//hooks:BUILD.bazel",

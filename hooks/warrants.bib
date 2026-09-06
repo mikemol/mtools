@@ -578,3 +578,21 @@
              form the pattern missed in files it never read. Doing both narrowings at once turned
              one false negative into four false positives in a single step.}
 }
+
+@misc{hooks-bar-fires-the-freshness-gate-passes-a-corpus-citing-no-environment-claim,
+  section = {bar-fires},
+  title   = {A corpus with no environment claim has nothing to re-check},
+  note    = {Most rules are claims about reasoning and do not decay. A gate that refused them
+             would be refusing the ordinary case, and would be bypassed within a day.}
+}
+
+@misc{hooks-bar-fires-the-freshness-gate-refuses-a-corpus-it-cannot-read,
+  section = {bar-fires},
+  title   = {A reader failure is not an absence},
+  note    = {grep -q returns 1 for no-match and 2 for cannot-read, and the first cut treated them
+             as one -- so a missing binary, an unreadable file or a permission error all printed
+             "no rule cites the metrics port" and exited 0. Measured with a degraded PATH: the
+             script reported nothing to re-check and returned success, having checked nothing. A
+             green over a reader failure, inside the checker written to catch stale claims. Same
+             file, same content, only the permission bit differs, and the verdicts are opposite.}
+}
