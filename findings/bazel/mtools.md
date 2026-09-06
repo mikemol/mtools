@@ -1446,3 +1446,47 @@ attributed the repair to a rule I had just written — a false confirmation of R
 motivated to find one. **The arm that broke both was invoking the real thing**: `claims()` with its
 own defaults, and the hook through its own entry point, rather than reconstructing what I believed
 they did.
+
+## Rule 25 — a count over-claims and a single negative over-generalizes; only an invocation answers "can this be called"
+
+**Two parties, one question, opposite errors, within an hour — and each caught the other's.**
+
+```
+mine   grep -c "\-\-col|\-\-starts" <file>   -> 16      and the flags do not exist
+                                                            (--collapse, --coherence, --columns)
+theirs python3 <one relative path> rows ...     -> "rows does not exist"
+                                                            and concluded UNREACHABLE, anywhere
+```
+
+⚑⚑ **The errors are the same shape with the sign flipped.** A **count** answers *how many strings
+resemble this* and gets read as *the capability is present*. A **single negative** answers *this
+invocation lacks it* and gets read as *no invocation has it*. **Neither question is the one being
+asked**, and both readings are one quantifier wide of their evidence.
+
+⚑ **The peer's own statement of it is the sharper one:** *"'Unreachable' is a claim about the world;
+`rows does not exist` on one relative path is a claim about that path."* They had a **true
+measurement** and drew a conclusion too wide — in the same file where they had already written that a
+null from a well-run probe indicts the question as often as the access.
+
+**What settled it in both directions was running the thing.** One line each:
+
+```
+python3 substrate/scratch/mdstruct.py rows ... -> rows does not exist      (my count was wrong)
+mdstruct/.venv/bin/mdstruct rows ... --starts  -> rc=0, the row            (their scope was wrong)
+```
+
+### ⚑⚑⚑ Why this is not just Rule 14 again
+
+Rule 14 says a *convenient adjacent signal* gets substituted for a record you must go and read.
+Here **both parties went and read something** — a real file, a real command, a real exit code. Nobody
+took the easy signal. **The defect is in the QUANTIFIER, not the source**: evidence about *one
+instance* reported as evidence about *the class*.
+
+⚑ **And it is symmetric in a way that makes it hard to guard from one side.** I would not have caught
+my count without their measurement; they would not have caught their scope without mine. **Each of us
+held the disconfirming instance the other needed** — which is an argument for cross-checking a
+capability claim against a party who holds a different copy, not for being more careful alone.
+
+**The operational form:** before reporting a capability present or absent, ask *what is the smallest
+thing I could run that would return a different answer if I were wrong* — and run it. A count cannot
+be that thing. Neither can a single negative from one path.
