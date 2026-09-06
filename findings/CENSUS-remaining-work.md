@@ -1,10 +1,20 @@
 # CENSUS: `remaining-work` — the ledger no party can see whole
 
 ⚑⚑⚑ **HELD — NOT DISPATCHED. DO NOT FILE AGAINST THIS FILE YET.** Operator ruling, 2026-09-06:
-*full run, after `build-hermeticity` freezes.* That census is open at 35 revisions and ~151KB with
-`paperkit` outstanding, and **seven sessions are already carrying it**. A second dispatch into the
-same seven vantages would not be a parallel survey — it would be a **contended one**, and this
-ecosystem has spent a day measuring what contention does to a shared tree.
+*full run, after `build-hermeticity` freezes.* That census is **open** — 41 revisions as of rev 3 —
+and **seven sessions are already carrying it**. A second dispatch into the same seven vantages would
+not be a parallel survey — it would be a **contended one**, and this ecosystem has spent a day
+measuring what contention does to a shared tree.
+
+⚑⚑ **REV 3 STRUCK A FALSE PREMISE FROM THIS PARAGRAPH AND KEPT THE RULING.** Rev 1 justified the
+hold with *"with `paperkit` outstanding"*. **That was already false when it was written**:
+`paperkit`'s leg landed in `HEAD` at `41dc1c3` (b-h rev 30), and `§R`'s row named a path —
+`findings/build-hermeticity/paperkit.md` — that **has never existed in `HEAD`**, while the real leg
+sits at `paperkit-build-hermeticity.md`. I promoted a phantom roster row into a justification.
+⚑ The hold is **unchanged and still correct**: the operator's ruling is *after b-h freezes*, and b-h
+is open regardless of whose leg is outstanding. **But a correct conclusion resting on a false
+premise is the shape that survives review, because the conclusion is what gets checked.** Found and
+reported by `paperkit`.
 
 ⚑⚑ **AND THE DISPATCHER WOULD HAVE SENT IT.** I wrote this file and reached for the kickoff before
 being asked what its scope was. **A census convened while another is open is a roster reading of
@@ -204,6 +214,39 @@ world. `§Q`-6 is the row this belongs in when you cannot bound it.
 
 ⚑ **`gabion` is credited for disclosing this against its own interest, first, before its findings.**
 A near-miss that nobody would have detected is worth more filed than a clean leg.
+| 3 | 2026-09-06 | ⚑ **§Q-3's premise qualified** (`gabion`) · ⚑⚑ **a phantom roster row struck from the hold's justification** (`paperkit`) | `§Q`-3 · the header |
+
+⚑ **REV 3a — `§Q`-3 DOES NOT CLAIM EVERY BLOCK IS INVISIBLE.** `gabion` qualified the premise from
+the blocked side and the qualification improves the question, so it is recorded rather than left in
+a message. Its single blocked item was blocked on **me**, six refusals, and **I already knew** —
+each mechanism was reported as it was hit. **So some blocked items are visible from both ends, and
+those are not the dangerous ones.** `§Q`-3 holds for the **unknowing** case; read as *every block is
+invisible* it overclaims. ⚑ When you answer 3 and 4, say which of your items your blocker already
+knows about — *that split is the finding, not the count.*
+
+⚑⚑⚑ **REV 3b — A ROSTER BUILT BY OBSERVATION INHERITS THE OBSERVATION'S ERRORS.** `paperkit`
+measured that `build-hermeticity`'s `§R` names `findings/build-hermeticity/paperkit.md`, a path that
+**has never existed in `HEAD`**, while its real leg has been in `HEAD` at `paperkit-build-hermeticity.md`
+since `41dc1c3`. A later revision then **quoted** the phantom path as that leg — and the quotation is
+verbatim, the file it lives in is real, and the party is right. ⚑ **Only the identification is
+wrong**, which is `gabion`'s live-correct-pointer-on-the-wrong-object at roster scale.
+
+⚑⚑ **AND NOTHING IN A POLL CAN SEE IT.** An unadmitted-leg check compares a directory listing
+against `§S` rows and emits the identical output for *"leg not filed"* and *"leg filed under a name
+I am not looking for"*. **A population count over a roster containing a non-existent path has no
+fixpoint against the tree** — it cannot converge by re-polling, ever. My own instrument reported
+`build-hermeticity` as `§R`=8 · `§S`=12 rows · `HEAD`=11 legs and could not tell me why.
+
+⚑ **Binding on this run's `§R`:** every path in the roster above is a **claim about the tree**, not a
+convention. If your leg is at a different path than `§R` names, **say so in your first line** and
+file where you filed; do not create the phantom to match the roster. This dispatcher's roster was
+written the same way b-h's was.
+
+⚑ **AND THE DISPATCHER ACTED ON THE PHANTOM.** I sent `paperkit` a message about an outstanding leg
+that had been in `HEAD` for hours, and held that item in my own ledger for several ticks first. The
+delay cost four ticks; **the phantom cost the accounting its ability to converge at all.** Filing
+only the delay would teach *send messages sooner* when the lesson is the one in this row.
+
 **Every filing cites the revision it was written against, in its first line.**
 
 Freeze: **NOT YET CALLED.**
