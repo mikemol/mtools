@@ -1,6 +1,13 @@
 # CENSUS: build-hermeticity — the dependency graph, work discovery, and work specificity
 
-⚑ **This file was `CENSUS-bazel.md` through rev 4 and is renamed at rev 6.** The subject is not
+> ⚑⚑⚑ **THE CURRENT REVISION IS THE LAST ROW OF `§V` AND NOWHERE ELSE. Do not take a revision
+> number from any sentence in this header.** `rosettapkg` filed citing *"rev 6"* after reading a
+> file that carried **ten** revisions, because the renaming note below sits where a reader looks
+> for a version stamp. **A provenance note is not a version stamp.** `§V` is the only instrument
+> that answers *what revision is this*, and a leg's citation must come from its last row.
+
+⚑ **This file was `CENSUS-bazel.md` through rev 4 and is renamed at rev 6** *(a renaming note, not
+a version stamp — see the block above)*. The subject is not
 bazel: **three of eight parties do not use it, and two of those hold substantial work-discovery
 tooling anyway.** A run file named after one party's mechanism would have told five parties they
 had nothing to report. *`§V` revs 2, 5 and 6 record the two scope corrections that produced this
@@ -307,6 +314,58 @@ measured this in the constitution run: *three different counts from one `grep` o
 within an hour, all honestly obtained*, because the tree was being edited while they measured.
 **A census over live trees dates its own findings.** A leg without stamps cannot be read later.
 
+### ⚑⚑⚑ A LEG FILED AGAINST AN EARLIER REVISION IS NOT STALE — THE QUESTION MOVED, NOT THE LEG
+
+**Two legs were filed before dispatch** (`rosettapkg` `cdcb407`, `gabion` — both verified in
+`HEAD`), because the run file was fetchable at `eb42b7a` and parties acted on it. **`rosettapkg`
+cited rev 6; `§Q`-3 was rephrased at rev 11.** ⚑ **So this run has pre-freeze QUESTION DRIFT, and
+`§D` does not cover it — `§D` governs amendment after the FREEZE, and this is the question moving
+under a leg that was already correct when written.**
+
+**The rule, and it binds the dispatcher rather than the filer:**
+
+- ⚑ **A leg is answerable to the revision it CITES.** It is not stale, not deficient, and **owes no
+  amendment**. `rosettapkg` declining to re-file is correct and is the behaviour this run wants.
+- ⚑⚑ **A re-check MESSAGE against the current revision is the honest instrument**, and it is
+  carried into the record here rather than edited into the leg. *The leg stays a fixed artifact
+  citing a fixed revision; the delta lives where deltas live.*
+- ⚑⚑⚑ **THE APEX MUST READ EVERY LEG AGAINST THE REVISION IT CITES, NOT AGAINST THE LATEST.**
+  Gluing a rev-6 leg to a rev-12 question silently attributes a gap to the party that belongs to
+  the dispatcher. **A leg answering a question that no longer exists is evidence about the census,
+  not about the repo.**
+
+⚑⚑⚑ **AND THE RULE HAS A HOLE THAT TWO PARTIES FOUND FROM OPPOSITE ENDS WITHIN THE HOUR — rev
+14.** *"Answerable to the revision it cites"* presupposes the citation is **present and correct**,
+and neither held:
+
+| party | the hole | resolution |
+|---|---|---|
+| `summit` | ⚑ **a DRAFT IN FLIGHT** — drafted against rev 11, rev 13 landed before filing. *"The rule protects a filer from drift AFTER filing; it says nothing about a draft in flight."* | **PRE-FILING, THE CURRENT REVISION BINDS; POST-FILING, THE CITED ONE DOES.** They re-read and filed against 13, which is the behaviour this run wants and is not what `§W` said. |
+| `gabion` | ⚑ **NO CITATION AT ALL** — pre-filed *"against no run file, refusable"*. Accurate when written and **useless as an anchor**: an apex told to read each leg against its cited revision finds nothing and must guess. | **The anchor is the state actually measured against** — here the operator's two `§Q` quotes plus the 7-question `§Q` at `eb42b7a`, before revs 5–13. **Record the target, not just the answers.** |
+| `rosettapkg` | ⚑⚑ **A WRONG CITATION** — leg says *"read at rev 6"*; the file they read carried **10 revisions** (`git show eb42b7a … grep -c '^| [0-9]* |'` → 10), and they confirmed rev 8's text was in front of them. | **The citation is the load-bearing field and theirs is wrong**; corrected by message, not by editing the leg. Reading it against 6 would **UNDER-scope it by three revisions.** |
+
+⚑ **`rosettapkg`'s CAUSE IS A CLASS THIS FLEET HAS A NAME FOR, AND IT IS MY HEADER SENTENCE THAT
+SUPPLIED IT.** They read *"This file was `CENSUS-bazel.md` through rev 4 and is renamed at rev 6"* —
+a **provenance note** — and used it as a version stamp. **A sentence about when a file was renamed
+is not a statement of what revision it is at**, and `§V` is the one instrument that answers that.
+*Same shape as probing `.git/hooks/` on a repo with `core.hooksPath`: a plausible declaration read
+instead of the thing that actually says.* ⚑⚑ **I wrote that sentence into the header where a reader
+looking for a version stamp would find it first.**
+
+⚑⚑⚑ **SO THE TWO DEFECTS ARE MIRRORS AND BOTH PRODUCE A LEG GLUED TO THE WRONG REVISION.** *I
+moved a question under a correct citation; they mis-stated a citation under a correct question.*
+**The rule survives both — the citation is simply the field it depends on**, and a run file that
+demands one owes a place to read it that cannot be confused with prose.
+
+⚑ **AND THE FIRST INSTANCE IS ALREADY MEASURED AND CUTS IN THE FILER'S FAVOUR, WHICH IS THE WORSE
+DIRECTION.** `rosettapkg`'s `RP-03` answered *"where does your work list come from"* with *"a
+hand-written dict of 5 entries; nothing derives it"* — which under rev 11's form is **the AUTHORED
+row, and a better answer than the leg claims for itself**. Their own re-check then found what rev
+11 would have surfaced at filing time: ***they have the RED-CLAIM GATE and not the WARRANT*** —
+nothing states why five entries is the correct population, and the gate only enforces agreement
+between two lists that could both be wrong together. **The question that would have exposed it was
+asked after they filed.**
+
 ## §X Context you would not otherwise have
 
 ⚑⚑⚑ **`findings/build-hermeticity/` ALREADY HOLDS TWO FILES AND THIS CENSUS DID NOT COMMISSION THEM.**
@@ -426,6 +485,26 @@ a target" and "have the harness invoke a built artifact" are two problems.*
 words: *"I would have filed 'name the console script' as the article, and mtools would have been
 compliant and still broken."*
 
+⚑⚑⚑ **A ONE-SIDED POPULATION CHECK CANNOT SEE THE THING IT WOULD NEED TO SEE IN ORDER TO BE
+WRONG** — measured twice today, in two trees, by two parties who found it independently.
+
+`rosettapkg`'s `cite-check` compared `on_disk - covered` (a file with no reader entry) and **not**
+`covered - on_disk` (a reader entry naming nothing). Since `7a8fd87` it computes both:
+
+    mv managers/nix.md /tmp && python3 lattice/cite-check.py
+      ⚑ POPULATION  READERS['nix'] has no managers/nix.md — a stale entry counting nothing
+      rc=1     (restored -> rc=0)
+
+⚑ **They found it because `mtools-2e` described the identical defect in its own poll** — an
+unadmitted-artifact check *that went quiet when admission removed its only signal.* **Two
+substrates, one shape, and neither party found their own.**
+
+⚑⚑ **THE GENERAL FORM, AND IT IS `§Q`-3's DRIFT-CHECK ROW UNDER A DIFFERENT NAME:** a check over a
+derived-or-declared population must compare **both differences**, or the half it omits is exactly
+the half that goes silent when the defect appears. *An entry counting nothing and a file counted
+by nobody are different failures, and a one-sided check reports the second while proving nothing
+about the first.*
+
 ⚑⚑⚑ **SEVEN LIVE SESSIONS IS A CEILING, NOT A COINCIDENCE — AND IT IS A HARD CONSTRAINT ON
 THIS CENSUS'S DESIGN.** Operator, 2026-09-06:
 
@@ -474,6 +553,8 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 14 | 2026-09-06 | ⚑⚑⚑ **rev 13's RULE HAS A HOLE AND THREE PARTIES FOUND IT FROM THREE DIRECTIONS WITHIN THE HOUR.** *"Answerable to the revision it cites"* presupposes the citation is **present and correct**, and it was neither. **`summit`: a DRAFT IN FLIGHT** — drafted at rev 11, rev 13 landed before filing; *"the rule protects a filer from drift AFTER filing; it says nothing about a draft in flight."* ⚑ **Ruling: pre-filing, the CURRENT revision binds; post-filing, the CITED one does.** **`gabion`: NO CITATION AT ALL** — pre-filed *"against no run file"*, accurate and useless as an anchor; **ruling: record the target actually measured against** (here the operator's two quotes plus the 7-question `§Q` at `eb42b7a`). **`rosettapkg`: a WRONG CITATION** — leg says rev 6, the file they read carried **ten** revisions. ⚑⚑ **AND THE CAUSE IS MY OWN HEADER SENTENCE**: they read *"renamed at rev 6"* — a **provenance note** — as a version stamp, *the same shape as probing `.git/hooks/` on a repo with `core.hooksPath`.* **A warning block now says `§V`'s last row is the only version stamp**, because a run file demanding a citation owes a place to read it that cannot be confused with prose. ⚑⚑⚑ **The two defects are mirrors — I moved a question under a correct citation; they mis-stated a citation under a correct question — and both glue a leg to the wrong revision.** | `§W`, header, apex method |
+| 13 | 2026-09-06 | ⚑⚑⚑ **PRE-FREEZE QUESTION DRIFT: TWO LEGS WERE FILED BEFORE DISPATCH AND `§Q`-3 MOVED UNDER THEM.** `rosettapkg` (`cdcb407`) and `gabion` filed against the run file at `eb42b7a`; `§Q`-3 was rephrased at rev 11. `§W` gains the rule and **it binds the dispatcher, not the filer**: ⚑ *a leg is answerable to the revision it CITES, owes no amendment, and `rosettapkg` declining to re-file is correct.* ⚑⚑ **The apex must read every leg against the revision it cites, not against the latest** — gluing a rev-6 leg to a rev-12 question attributes a gap to the party that belongs to the census. ⚑⚑⚑ **First instance already measured and it cuts in the FILER'S FAVOUR, which is the worse direction:** `RP-03`'s *"a hand-written dict of 5 entries; nothing derives it"* is **the AUTHORED row under rev 11 and a better answer than the leg claims for itself** — and their own re-check then found the thing rev 11 would have surfaced at filing time: **they hold the RED-CLAIM GATE and not the WARRANT.** Nothing states why five entries is the correct population; the gate enforces agreement between two lists that could both be wrong together. Carried as a re-check message against `RP-03`, **not** edited into their leg. | `§W`, apex method |
 | 12 | 2026-09-06 | ⚑ **rev 7 IS THE ONLY CORRECTION THAT CAUSED AN ERROR RATHER THAN FIXING ONE, AND `gabion-e5` ASKED FOR IT NOTED AS ITS OWN CLASS.** rev 6 said *"this is NOT a bazel question"*; rev 7 had to restore *"not UNIQUELY"*. ⚑⚑ ***A correction can overshoot, and the overshoot looks like compliance*** — rev 6 read as faithfully applying the operator's widening while actually excluding a legitimate instance. **The other corrections (revs 2, 5, 8, 9, 10) are the subject growing under measurement, not errors.** *Filed as a distinct shape from the rules-vs-instances classes this fleet has been collecting.* | `§V` self-reference |
 | 11 | 2026-09-06 | ⚑⚑⚑ **`§Q`-3 WOULD HAVE SCORED THREE PARTIES AS ZERO AND IS REPHRASED BEFORE DISPATCH.** `gabion-e5`, from inside the shape: asked as *"where does your work list COME FROM"*, an authored list answers *"nowhere"*, which **reads as absence of a mechanism rather than a different mechanism** — hitting `gabion`, `substrate` and `el-openglo`, every party holding the worklist shape. Rephrased to ***"is your work list DERIVED or AUTHORED, and what detects staleness in each case?"*** — derived answers with a generator plus a drift check; **authored answers with a warrant plus a red-claim gate.** ⚑ **This file's own `§Q`-3 table already said a census asking what GENERATES a work list cannot see that row, and the question was written that way anyway.** *A named trap is not an avoided one.* gabion's row added to the table as measured: `docs/workstreams/*.md`, typed YAML frontmatter registry, **nothing generates it**, and a `reason` + `reasoning.summary` are **required fields of the work packet** — the warrant is structural, not adjacent. | `§Q`-3 |
 | 10 | 2026-09-06 | ⚑⚑⚑ **SEVEN LIVE SESSIONS IS A CEILING AND THE MACHINE IS SHARED-FATE — `§X` gains a COST DISCIPLINE.** Operator: *"I'm not going to spin up vscode windows for everyone; I already have 7, and it's extremely likely the bash instance that owns vscode will get **oomkilled** … multiple vscode window child processes all parenting up through the same hierarchy."* ⚑ **So rev 9's subagent tier is the ONLY route for those twelve repos, not a fallback**, and dispatching them is work the seven existing sessions absorb. ⚑⚑ **And a load spike from any one party can take the whole hierarchy** — not N independent sessions degrading independently. **`§Q` now carries a cost rule: prefer the cheap interface; if a question needs a full build, state what it would cost and report it UNMEASURED rather than running it.** The dispatcher's own `1831s → 117s` gate run is recorded as both *the cache paid for once* (true) **and** *30 minutes of one shared machine while six sessions ran* (also true, and unrecorded at the time). | `§X`, `§Q` generally, `§R` |
