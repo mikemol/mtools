@@ -343,7 +343,7 @@ def test_the_gates_own_shell_is_checked() -> None:
     build = (_DIST.parent / "BUILD.bazel").read_text(encoding="utf-8")
     for shell in (".githooks/pre-commit", "shellcheck_test.sh", "setup.sh",
                   "ruff_check.sh", "ratchet_check.sh",
-                  "mypy_check.sh"):
+                  "mypy_check.sh", "blockers.sh"):
         assert f'"$(location //:{shell})"' in build, f"{shell} is not passed to the checker"
         assert f'"//:{shell}"' in build, f"{shell} is not staged for the checker"
 

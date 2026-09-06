@@ -30,9 +30,11 @@ sh_test(
         "$(location //:ruff_check.sh)",
         "$(location //:ratchet_check.sh)",
         "$(location //:mypy_check.sh)",
+        "$(location //:blockers.sh)",
     ],
     data = [
         "//:.githooks/pre-commit",
+        "//:blockers.sh",
         "//:mypy_check.sh",
         "//:ratchet_check.sh",
         "//:ruff_check.sh",
@@ -45,6 +47,7 @@ sh_test(
 
 exports_files([
     ".bazelrc",
+    "blockers.sh",
     "mypy_check.sh",
     "mypy_runner.py",
     "ratchet_check.sh",

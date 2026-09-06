@@ -370,6 +370,21 @@ bazel clean                      # before EVERY arm, not once before the set
 --noremote_accept_cached         # when the question is whether the ACTION ran
 ```
 
+⚑⚑ **`bazel clean` IS THE LOAD-BEARING ONE AND THE FLAGS ARE NOT SUFFICIENT.** The *action cache*
+lives in the output base, and `--disk_cache=` does not clear it. Measured here, same target, no
+clean between:
+
+```
+(warm)                    3 processes: 5 action cache hit, 1 disk cache hit, 1 linux-sandbox
+  -> Executed 1 out of 1 test: 1 test passes
+--disk_cache= only        -> Executed 0 out of 1 test: 1 test passes    <- nothing ran
+```
+
+A peer hit the same wall probing its own bare platform: `exit 0` twice, with every action served
+from the action cache, so **the green was a reading of the cache and not of the platform.** It
+reported *structure confirmed, behaviour unmeasured* rather than guessing — which is the correct
+disposition and the one this rule exists to produce.
+
 ⚑ **And a probe needs a control arm that must PASS.** "Both arms were green" is not a result unless
 one of them was designed to be. `1 internal`, `N action cache hit`, and a real remote landing are
 three different things that print as success.
@@ -404,12 +419,50 @@ figures between them without either re-deriving one:
 
 | figure | cited as | actual |
 |---|---|---|
-| `41 before / 50 after` | the executor does not close the class | **21 / 11 — it roughly halved** |
-| `91 occurrences / 11 days` | corruption scale | **32 / 8 days** |
+| `41 before / 50 after` | the executor does not close the class | **15 / 9 — it dropped by a third to a half** |
+| `91 occurrences / 11 days` | corruption scale | **24 / 6 days** |
 | `430 fine targets` | generator calibration | **2,254** |
 
 The first two came from one query that counted **its own commentary alongside tool output**, so the
 number *grew as it was discussed*. Its conclusion **inverts** on correction.
+
+### ⚑⚑⚑ The correction was itself wrong, and that is the sharper finding
+
+The corrected figure reached this file as **32 / 21 / 11**. Asked to confirm it rather than relay
+it, its author re-ran the query and found **the correction under-corrected**:
+
+```
+first re-run, published method (filter to `user` records):
+  assistant 53 · user 33 · queue-operation 5 · attachment 2
+  user-only:  total=33  pre=21  post=12        <- not 32/21/11
+  and `assistant` had grown 50 -> 53 SINCE THE LAST RUN
+
+splitting `user` by whether it carries tool output:
+  with toolUseResult:  24     <- real tool output
+  with neither:         9     <- PEER MESSAGES AND SYSTEM REMINDERS quoting the phrase
+```
+
+⚑ **`user` is not the tool-output predicate.** In that transcript format a `user` record is
+anything arriving at the model — genuine tool results, cross-session peer messages, *and* system
+reminders. Nine of thirty-three were **other sessions' messages about this very defect**, including
+this repository's. **The census's own correspondence was inflating the census.**
+
+**The standing figures, and cite the filter rather than the number:**
+
+```
+predicate: a `toolUseResult` key present on the record, AND the phrase present
+split:     the executor cutover at 2026-08-30T20:25:26Z
+result:    24 occurrences over 6 days — 15 pre, 9 post
+           last real occurrence 2026-09-01; every 2026-09-05 hit was commentary
+```
+
+⚑⚑ **THE TELL IS AVAILABLE WITHOUT KNOWING THE RIGHT ANSWER: a count over a corpus that contains
+the discussion of the count is a feedback loop, and it DRIFTS UNDER RE-QUERY.** Watched drift
+twice — 91 → 32 → 24 — with the second drift occurring *while the correction for the first was
+being written*. **A figure that moves when you re-run it is measuring the conversation.**
+
+⚑ The direction of the conclusion has held through both corrections: *"the remote executor does not
+close the artifact class"* stays **retracted**. Only the magnitude moved, twice.
 
 ⚑⚑ **AND THE THIRD SHAPE IS THE SAME ONE, ARRIVED AT DIFFERENTLY.** Two empirical NOT-IN-KEY lists
 agreed and were both wrong about env, because neither party varied an inherited variable's *value*.
@@ -424,6 +477,56 @@ transmission is cheaper.
 in a number neither party measured. ⚑ **The cheapest available check is to ask, of any figure about
 to be load-bearing, "who ran the query, and has anyone re-run it?"** — and to mark testimony as
 testimony. Every figure in this file names where it came from for that reason.
+
+### ⚑⚑⚑ The refinement: a number looks like a measurement, a predicate looks like a fact
+
+**The rule above is about numbers, and that is too narrow.** Within an hour of publishing it, this
+repository carried a false claim — *"substrate and cassian's sessions are gone; these will not
+self-clear"* — through several derivation cycles, **while dutifully re-measuring four filesystem
+blockers beside it every single time.** All three sessions had been live for forty minutes.
+
+The discriminator was not importance. Four claims had a command attached (`git ls-files`,
+`python -c import`, `ls`); one did not, so it was read once and quoted forward.
+
+⚑ **Cassian's statement of it is better than the original and is adopted here:** *a number looks
+like a measurement and a predicate looks like a fact.* Both are readings taken once; only one
+wears its provenance on its face. So the check generalizes:
+
+> **Any claim you are about to build on needs a re-derivation procedure, not just a
+> re-derivation.** A claim with no command attached will not be re-checked, however load-bearing —
+> because nothing about it announces that it *could* be.
+
+⚑⚑⚑ **AND A COMMAND IS NOT ENOUGH EITHER, WHICH IS THE THIRD LAYER.** One of the four
+dutifully-re-measured blockers here was probing a path that **does not exist**:
+
+```
+git ls-files --error-unmatch substrate/scripts/membudget-ledger   -> "untracked"
+                             ^^^^^^^^^^ there is no substrate/scripts/ directory
+real path: scripts/membudget-ledger                               -> untracked
+```
+
+The check reported the right answer **for the wrong reason**, every cycle, for the whole session.
+It agreed with the truth by luck, so nothing surfaced it — and had the ledger been committed at the
+real path, this repository would have read it as blocked indefinitely. Caught by the peer who owns
+the tree, not by the instrument.
+
+⚑ **A false negative that happens to be correct is invisible to its own re-run.** So the
+procedure needs a **positive control**: a probe that must find something. `git ls-files
+--error-unmatch <a path known to be tracked>` beside the real query distinguishes *"absent"* from
+*"I am looking in the wrong place."* This is Rule 7's control arm — a probe needs an arm designed
+to succeed — arriving at a filesystem query rather than a build.
+
+**Three independent instances, three parties, one day:**
+
+- a figure quoted forward without re-derivation (41/50, and its conclusion inverted)
+- a **predicate** quoted forward without re-derivation (peer availability, false for an hour)
+- ⚑ a **cached green** read as a fresh result — cassian probed its own bare platform twice, got
+  `exit 0` both times, and found every action served from the action cache in the output base,
+  which `--disk_cache=` does not clear. *The green was a reading of the cache, not of the
+  platform.*
+
+The third is the same class arriving from a third direction, and it is why Rule 7 requires
+`bazel clean` rather than only disabling caches.
 
 ## Bounds
 
