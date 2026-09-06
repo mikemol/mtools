@@ -24,11 +24,28 @@ set -uo pipefail
 sub=/home/mikemol/github/substrate
 mtools="$(cd "$(dirname "$0")" && pwd)"
 
+# ⚑⚑⚑ `ls-files` ANSWERS A DIFFERENT QUESTION THAN INTAKE ASKS, AND THIS SCRIPT ASKED THE WRONG
+# ONE FOR TEN TICKS. It reports a STAGED file as tracked — correctly, because the index IS the
+# tracking record — but *tracked in a peer's index* and *fetchable by me* are different
+# properties, and only the second decides whether code can move. Measured: every island module
+# this script called TRACKED has ZERO commits on the branch. Not one is fetchable. A blocker
+# reported as clearing, for ten ticks, that never cleared.
+#
+# ⚑⚑ AND `git log --all` IS WORSE, NOT BETTER. On the same file it shows 33 commits — every one
+# under `refs/edit-snapshots/`, an editor's snapshot guard, none on any branch, none carried by a
+# clone or fetch. A reader reaching for the more thorough instrument sees dense history and
+# concludes the file is fetchable. Three instruments, one file: `ls-files` says tracked,
+# `log --all` says 33 commits, `log` on the branch says nothing exists. ⚑ ONLY THE THIRD ANSWERS
+# THE QUESTION, and it is the one that looks least thorough.
+#
+# ⚑ Reported by the peer whose tree it is, then reproduced here before adopting.
 tracked() {  # repo, path, label
-    if git -C "$1" ls-files --error-unmatch "$2" >/dev/null 2>&1; then
-        printf '  %-34s TRACKED\n' "$3"
-    else
+    if ! git -C "$1" ls-files --error-unmatch "$2" >/dev/null 2>&1; then
         printf '  %-34s untracked\n' "$3"
+    elif [ "$(git -C "$1" log --oneline -- "$2" | wc -l)" -gt 0 ]; then
+        printf '  %-34s FETCHABLE\n' "$3"
+    else
+        printf '  %-34s staged only (NOT fetchable)\n' "$3"
     fi
 }
 
@@ -38,8 +55,19 @@ tracked() {  # repo, path, label
 # taken as a pass, every "untracked" below would have been unverified. `.claude/agents/findings.py`
 # is chosen because `git ls-files` lists it; substrate tracks 3,622 files, so its absence would
 # mean the query itself is broken.
-echo "=== control: a path known to be tracked must read TRACKED ==="
-tracked "$sub" .claude/agents/findings.py "substrate findings.py (control)"
+# ⚑⚑⚑ THE CONTROL WAS RE-CHOSEN WHEN THE PREDICATE CHANGED, AND THE OLD ONE WOULD HAVE PASSED
+# VACUOUSLY. `.claude/agents/findings.py` was picked to prove `ls-files` could see something; under
+# the fetchability predicate it reads "staged only" — so the control would have reported the same
+# thing as every subject it was meant to discriminate against. ⚑ A CONTROL VALIDATES ONE
+# PROPERTY, AND CHANGING THE PREDICATE SILENTLY ORPHANS IT: nothing about the old line announced
+# that it had stopped controlling for anything.
+#
+# ⚑ `applied_grammar.py` is chosen by MEASUREMENT, not by belief: it carries 2 commits on the
+# branch and is present in `HEAD`'s tree, which is exactly the property intake needs. Four
+# plausible guesses (`ratchet_core.py`, `corpus.py`, `README.md`, `agda_dag.py`) all failed that
+# test first — the control had to be taken FROM the tree rather than proposed to it.
+echo "=== control: a path known to be FETCHABLE must read FETCHABLE ==="
+tracked "$sub" applied_grammar.py "substrate applied_grammar.py (control)"
 
 # ⚑⚑⚑ THE POPULATION IS ENUMERATED, NOT ASSERTED. A hand-written list of five module names is
 # `0 of 5` reported as `0 of the island` — it cannot see a sixth module, and a control proves only

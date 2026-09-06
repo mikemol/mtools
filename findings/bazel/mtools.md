@@ -1590,3 +1590,66 @@ a **shelf life set by its subject, not by its author's confidence.** A claim abo
 semantics keeps until the function changes and the tests say so. A claim about a cluster, a port, a
 peer's tree or a counter's meaning keeps until something outside this repository moves — and nothing
 in the commit history will mark that day.
+
+## Rule 27 — `git ls-files` says TRACKED for a staged file, and `git log --all` is worse
+
+**Reported by the peer whose tree it is, reproduced here before adopting, and it invalidates ten
+ticks of my own blocker readings.**
+
+Three instruments, one file (`substrate/file_header.py`):
+
+```
+git ls-files --error-unmatch     -> TRACKED
+git status --short               -> "A " (staged, never committed)
+git log --all --oneline          -> 33 commits
+git log --oneline  (branch)      -> 0
+```
+
+⚑⚑ **`ls-files` IS CORRECT AND ANSWERS THE WRONG QUESTION.** The index *is* the tracking record, so
+a staged file is genuinely tracked. But **tracked-in-a-peer's-index and fetchable-by-me are
+different properties**, and only the second decides whether code can move between repositories. The
+word collapses them.
+
+⚑⚑⚑ **AND THE MORE THOROUGH INSTRUMENT IS THE MORE MISLEADING ONE.** `git log --all` shows 33
+commits — every one under `refs/edit-snapshots/`, an editor's snapshot guard, **none on any branch,
+none carried by a clone or fetch.** A reader who distrusts `ls-files` and reaches for `--all` sees
+dense history and concludes the file is fetchable. **The instrument that looks least thorough —
+plain `git log` on the branch — is the only one that answers the question.**
+
+### What it cost here
+
+`blockers.sh` used `ls-files` for its whole island census. Re-measured under the right predicate:
+
+```
+ratchet_move.py    ls-files=TRACKED   branch commits=0   ⚑ STAGED ONLY
+ratchet_churn.py   ls-files=TRACKED   branch commits=0   ⚑ STAGED ONLY
+ratchet_key.py     ls-files=TRACKED   branch commits=0   ⚑ STAGED ONLY
+```
+
+**Not one island module is fetchable.** The blocker I reported as *"10 of 32 tracked, and the move
+subgraph is landable today"* was never true — and it was the basis for calling Ⓜ unblocked. The
+comparison work it produced (Rule 11) stands, because that was done by reading files directly; the
+*availability* claim did not.
+
+### ⚑⚑ The control had silently stopped controlling for anything
+
+`.claude/agents/findings.py` was chosen to prove `ls-files` could see something. Under the new
+predicate it reads **"staged only"** — the same output as every subject it was meant to discriminate
+against. **A control validates ONE property, and changing the predicate orphans it in place**, with
+nothing in the line announcing that it had stopped doing its job.
+
+⚑ Re-chosen by measurement, not belief: four plausible candidates (`ratchet_core.py`, `corpus.py`,
+`README.md`, `agda_dag.py`) all failed the fetchability test before `applied_grammar.py` — 2 branch
+commits, present in `HEAD` — passed. **The control had to be taken FROM the tree rather than
+proposed to it**, which is the same discipline as enumerating a population before filtering it.
+
+### The consequence for intake, which is the point
+
+The operator ruling (*substrate's clean code moves to mtools, so consumers reference rather than
+copy*) is **not blocked on a decision** — the peer confirms it was given. It is blocked on that
+peer's own commit gate: nine gates would refuse, twenty-eight unmeasurable, zero measured-green.
+
+⚑ **So code can only arrive here by COPY, which is the exact anti-pattern the ruling exists to end.**
+Recording that plainly rather than working around it: the ruling cannot take effect until the source
+repository can commit, and a copy made in the meantime is the vendoring the ruling was meant to
+retire.
