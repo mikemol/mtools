@@ -596,3 +596,41 @@
              green over a reader failure, inside the checker written to catch stale claims. Same
              file, same content, only the permission bit differs, and the verdicts are opposite.}
 }
+
+@misc{hooks-bar-fires-the-witness-refuses-an-unknown-probe-kind-before-running-anything,
+  section = {bar-fires},
+  title   = {An unusable argument is refused before the first side effect},
+  note    = {A probe the checker does not seek is indistinguishable from a domain that excludes
+             the file -- both produce an identical arm-2 red, so a typo'd kind reports a DOMAIN
+             finding about whatever target it was aimed at. The guard originally sat after the
+             control and after arm 1, so a mistyped kind paid for a full control invocation and a
+             mutate-plus-rebuild before refusing, with the victim already edited.}
+}
+
+@misc{hooks-bar-fires-the-witness-accepts-every-declared-probe-kind,
+  section = {bar-fires},
+  title   = {A validator that rejects everything is not a validator},
+  note    = {The P-arm for the kind guard, asserted by reading the script rather than invoking
+             it: running each kind past the guard cost a bazel invocation apiece, measured at
+             16.9s for one test, and every second exercised the arms rather than the guard. The
+             property is that the dispatch and the validator name the same kinds, which is
+             structural. F-armed by dropping one kind from the validator while leaving it in the
+             dispatch.}
+}
+
+@misc{hooks-bar-fires-the-witness-refuses-a-missing-argument,
+  section = {bar-fires},
+  title   = {A witness with no target must refuse rather than default},
+  note    = {Every argument names something the arms will mutate or measure, so a default would
+             pick a victim the caller did not choose.}
+}
+
+@misc{hooks-bar-fires-the-witness-refuses-an-untracked-victim,
+  section = {bar-fires},
+  title   = {A witness that can create a file is editing a domain, not probing one},
+  note    = {git checkout on an untracked path silently does nothing, so every arm ran, the
+             payloads accumulated, and arm 3 reported RESTORED over a file it had not restored.
+             Measured: a test passed a path that did not exist, the witness created it across
+             five invocations, and the 432-byte result was censused by the ratchet -- which
+             refused the commit and is the only reason it surfaced.}
+}

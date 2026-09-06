@@ -77,6 +77,10 @@ py_library(
             # exactly the UNVERIFIABLE path the gate declares — the arms exercise the corpus
             # branch, which is the half that does not need a cluster.
             "//:rule_freshness.sh",
+            # ⚑ THE WITNESS IS STAGED FOR ITS PRE-BAZEL ARMS ONLY. Its later arms invoke bazel and
+            # cannot run here; what the sandbox exercises is argument validation and the probe-kind
+            # guard, both of which refuse before the first side effect and need only the script.
+            "//:domain_witness.sh",
             "//:.bazelrc",
             "//:BUILD.bazel",
             "//hooks:BUILD.bazel",

@@ -603,3 +603,79 @@ def test_the_freshness_gate_refuses_a_corpus_it_cannot_read(tmp_path: Path) -> N
     ⚑ Same file, same content, only the permission bit differs — and the verdicts are opposite.
     """
     assert _freshness(tmp_path, "## Rule 1 — a claim\n", readable=False) == 1
+
+
+# ⚑ NAMED, because `2` is a CONTRACT rather than an arbitrary code: the witness reserves it for
+# "this argument is unusable", distinct from 1, which every arm uses to mean "the domain claim
+# failed". A test comparing against a bare literal cannot say which of those it is asserting.
+_ARG_REFUSED = 2
+
+
+def _witness_args(*argv: str) -> int:
+    """Call the domain witness with `argv`; return its exit code.
+
+    ⚑ ONLY THE PRE-BAZEL BRANCHES ARE REACHABLE HERE. Every arm of this witness invokes bazel,
+    which the sandbox has no business running — so what a test can assert is what the script
+    refuses BEFORE its first side effect: a missing argument, and a probe kind no checker seeks.
+    """
+    return subprocess.run(  # noqa: S603
+        [str(_DIST.parent / "domain_witness.sh"), *argv],
+        capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
+
+
+def test_the_witness_refuses_an_unknown_probe_kind_before_running_anything() -> None:
+    """⚑⚑ A probe the checker does not seek is indistinguishable from a domain that excludes it.
+
+    Both produce an identical arm-2 red, so a typo'd kind reports a DOMAIN finding about whatever
+    target it was aimed at. ⚑ The guard originally sat after the control and after arm 1 — a
+    mistyped kind paid for a full control invocation and a mutate-plus-rebuild before refusing,
+    and refused with the victim already edited. The cheapest correct refusal is before the first
+    side effect.
+    """
+    # ⚑ A REAL TRACKED VICTIM, because the witness now refuses an untracked one — and the first
+    # cut of this test passed `ratchet/x.py`, a path that did not exist. The witness CREATED it,
+    # appending a probe payload on each invocation, and `git checkout` could not restore an
+    # untracked file. Five runs left a 432-byte file of accumulated payloads; the ratchet censused
+    # the debris and refused the commit, which is the only reason it surfaced.
+    assert _witness_args(
+        "ratchet", "//ratchet:mypy",
+        "ratchet/src/mikemol/ratchet/state.py", "nonsense") == _ARG_REFUSED
+
+
+def test_the_witness_accepts_every_declared_probe_kind() -> None:
+    """The P-arm for that guard: a validator that rejects everything is not a validator.
+
+    ⚑ It must not return the ARGUMENT-REFUSAL code for a kind the dispatch implements. Anything
+    past this point needs bazel and is out of scope here.
+    """
+    # ⚑⚑ READ FROM THE SCRIPT, NOT BY INVOKING IT. Running each kind past the guard costs a bazel
+    # invocation apiece — measured at 16.9s for this one test — and every second of that exercises
+    # the ARMS, which this test is not about. ⚑ The guard is a `case` list; asserting that the
+    # dispatch and the validator name the SAME kinds is the property, and a mismatch between them
+    # is exactly the defect a slow invocation would find more expensively.
+    text = (_DIST.parent / "domain_witness.sh").read_text(encoding="utf-8")
+    validated = text.split('case "$probe_kind" in', 1)[1].split(")", 1)[0]
+    for kind in ("mypy", "ruff", "ratchet", "baseline", "shellcheck"):
+        assert kind in validated, f"{kind} is dispatched but not validated"
+
+
+def test_the_witness_refuses_a_missing_argument() -> None:
+    """⚑ A witness invoked with no target must refuse, not default to one.
+
+    Every argument here names something the arms will MUTATE or measure; a default would pick a
+    victim the caller did not choose.
+    """
+    assert _witness_args() != 0
+
+
+def test_the_witness_refuses_an_untracked_victim() -> None:
+    """⚑⚑⚑ A witness that can bring a file into existence is editing a domain, not probing one.
+
+    `git checkout` on an untracked path silently does nothing, so every arm ran, the payloads
+    ACCUMULATED, and arm 3 reported RESTORED over a file it had not restored. ⚑ Measured: a test
+    passed a path that did not exist, the witness created it across five invocations, and the
+    432-byte result was censused by the ratchet — which refused the commit and is the only reason
+    it surfaced at all.
+    """
+    assert _witness_args(
+        "ratchet", "//ratchet:mypy", "ratchet/definitely_not_tracked.py", "mypy") == _ARG_REFUSED

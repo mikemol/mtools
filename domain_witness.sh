@@ -37,8 +37,41 @@ victim="${3:?the transitive module was not passed}"
 probe_kind="${4:-mypy}"
 
 cd "$(dirname "$0")" || exit 1
-restore() { git checkout "$victim" 2>/dev/null; }
+# ⚑⚑⚑ THE VICTIM MUST BE TRACKED, AND NOTHING CHECKED IT. `git checkout` on an untracked path
+# silently does nothing, so every arm ran, the payloads ACCUMULATED, and arm 3 reported RESTORED
+# over a file it had not restored. ⚑ MEASURED: a test passed `ratchet/x.py` — a path that did not
+# exist — and the witness CREATED it, appending five probe payloads across five invocations. The
+# ratchet then censused the debris and refused the commit, which is the only reason it surfaced.
+# A witness that can bring a file into existence is not probing a domain; it is editing one.
+if ! git ls-files --error-unmatch "$victim" >/dev/null 2>&1; then
+    echo "domain_witness: $victim is not tracked — refusing" >&2
+    echo "  every arm mutates this file and restores it with 'git checkout', which silently" >&2
+    echo "  does nothing for an untracked path: the probe would persist and arm 3 would" >&2
+    echo "  report RESTORED over a file it never touched" >&2
+    exit 2
+fi
+
+# ⚑⚑ THE RESTORE VERIFIES, because a restore that fails silently is the same defect one layer in.
+restore() {
+    git checkout "$victim" 2>/dev/null
+    if ! git diff --quiet -- "$victim" 2>/dev/null; then
+        echo "domain_witness: $victim did not restore — the tree is dirty" >&2
+    fi
+}
 trap restore EXIT
+
+# ⚑⚑⚑ THE PROBE KIND IS VALIDATED BEFORE ANY BAZEL RUNS, AND IT WAS NOT. The dispatch's `*)` arm
+# sits after the control and after arm 1 — so a typo'd kind paid for a full control invocation and
+# a mutate-plus-rebuild before refusing, and it refused with the victim already edited. ⚑ A guard
+# that fires late is still correct and still teaches the wrong thing: the cheapest possible
+# refusal for an unusable argument is before the first side effect.
+case "$probe_kind" in
+    mypy|ruff|ratchet|baseline|shellcheck) ;;
+    *) echo "domain_witness: unknown probe kind '$probe_kind' — a probe the checker does not" >&2
+       echo "  seek is indistinguishable from a domain that excludes the file, so this refuses" >&2
+       echo "  rather than planting bytes no checker will read" >&2
+       exit 2 ;;
+esac
 
 fail=0
 say() { printf '  %s\n' "$*"; }
