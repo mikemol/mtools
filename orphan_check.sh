@@ -41,7 +41,18 @@ declare -A WAIVED=(
     [setup.sh]="run once per clone by a human; arms core.hooksPath, so no gate can invoke it"
 )
 
-sites=(.githooks/pre-commit .githooks/commit-msg blockers.sh)
+# ⚑⚑⚑ THE SITES ARE ENUMERATED, NOT LISTED — the fourth hand-written population found in this
+# repository's own checkers, and the only one that had not yet gone wrong. It named two hooks and
+# `blockers.sh`, which is complete TODAY; a `pre-push` or `post-checkout` added later would not
+# count as an invocation site, so every script it called would report as an orphan. ⚑ A list that
+# is correct on the day it is written and wrong by growth is exactly the shape this repo has now
+# repaired three times (a shellcheck target at 7 of 11, an `exports_files` at 8 of 13, a figure
+# scan at 3 of 7).
+#
+# ⚑⚑ `blockers.sh` IS INCLUDED BY NAME BECAUSE IT IS NOT A HOOK. It is the derivation script, and
+# it invokes checkers — so the population is "every git hook, plus the one non-hook caller this
+# repository has". If a second non-hook caller appears, that is a real edit rather than a drift.
+mapfile -t sites < <(find .githooks -maxdepth 1 -type f 2>/dev/null; echo blockers.sh)
 fail=0
 
 for f in *.sh; do
