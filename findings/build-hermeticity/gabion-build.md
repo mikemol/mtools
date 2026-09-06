@@ -177,7 +177,34 @@ configs, and any ruff/mypy invocation nested inside a Python module rather than 
 searched shell lines and TOML section headers only. Also **not** searched: whether gabion's 26 locked
 entries are themselves hash-pinned upstream. All UNAVAILABLE to this leg, **not established absent.**
 
-⚑ **Positive control for every absence claim here:** the same reader
+⚑⚑ **CORRECTED per `§Q` rev 28-30 (*if your answer rests on a check, say what that check does
+NOT cover* — A PARTIAL CONTROL READS AS A CONTROL).** This section originally read *"positive control
+for **every** absence claim here"*, which is exactly the overclaim the new rule names — committed by
+the party who supplied the rule's first half (*a control validates the INSTRUMENT, not the CORPUS*).
+
+**What the control covers:** absence of `[tool.ruff]` / `[tool.mypy]` TOML section headers in
+`pyproject.toml`. **Nothing else.**
+
+**What it does NOT cover, and each is a separate absence claim in this leg:**
+
+- ⚑ **The invoked-executable absences (`jq`, `pandoc`, `bazel`, `shellcheck`).** Not TOML sections and
+  not importable packages. `command -v` established they are *on PATH*; **no control was run for the
+  claim that they appear in no manifest.** I searched `pyproject.toml` and `requirements.lock` only —
+  a `.pre-commit-config.yaml` or per-directory config naming them is UNAVAILABLE to this leg, not
+  established absent.
+- ⚑ **`substrate` absent from the lockfile.** Same reader and same two files, so the *instrument*
+  control transfers — but the population does not: I never searched whether a transitive dependency of
+  the 26 locked entries vendors it.
+- ⚑ **"No `uv.lock`", "no bazel files".** An `ls` on named paths. **A negative from an `ls` has no
+  control here at all** — it is a point sample of a filesystem, which is the class mtools retracted
+  today: *"I measured a file's absence and reported it as a fact about the world rather than about my
+  timestamp."*
+
+⚑⚑⚑ **So the honest scope is one control, one claim class, and four further absences resting on
+readers whose capability was never demonstrated.** The word *every* did precisely the work the rule
+warns about: a reader seeing a control satisfied concludes the section is clean.
+
+**The surviving control, stated narrowly:** the same reader
 (`grep -n '^\[tool\.\(ruff\|mypy\)'`) returns **4 hits** against `substrate/pyproject.toml`. So
 gabion's zero is a measurement rather than a silent reader.
 

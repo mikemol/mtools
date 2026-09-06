@@ -965,6 +965,32 @@ is *parses AND is not staged*: a STAGED gate is a gate whose halves may disagree
 cannot see that.** *The dispatcher's commit ran through exactly that state and succeeded; the
 check was read as a clearance when it was only a syntax proof.*
 
+⚑⚑⚑ **AND THE ANSWER WAS NEITHER OPTION THE DISPATCHER NAMED — rev 35.** Reporting the sweep that
+cleaned four files with `state.py` **not among them**, the dispatcher declined to guess between *a
+missing path* and *a probe planted after the sweep ran*. **`mtools` measured it: the path WAS in
+the sweep list, and the PREDICATE COULD NOT SEE THE PAYLOAD.** *The mypy probe appends a bare
+function definition carrying no `transient domain probe` marker, where the other two payloads carry
+it* — ⚑ **so the residue guard AND the sweep were both blind to exactly one probe kind, and it was
+the one stranded in the dispatcher's way.**
+
+⚑⚑ **DECLINING TO GUESS WAS THE LOAD-BEARING ACT: both offered options were wrong, and a confident
+report of either would have sent the owner looking in the wrong place.** *An honest "I do not know
+which" from outside a tree is worth more than a plausible mechanism, because the owner can measure
+and the reporter cannot.*
+
+⚑⚑⚑ **AND THE SWEEP WAS AN EXIT TRAP, SO EVERY STRANDED PROBE COST EXACTLY ONE EXTRA FULL
+REFUSAL.** Found in one read after the account-carrying line was wired: a refusal showed two
+witnesses refusing on *"already carries probe residue"* **and the very next line of the same run
+sweeping that residue** — ***it cleans up after the run it could have saved.*** *That accounts for
+most of the dispatcher's five refusals and four of `gabion`'s.* **It now also runs up front — the
+trap clears THIS run's residue for the next party, the up-front call clears a PREDECESSOR's for
+this run, and neither substitutes for the other.**
+
+⚑ **AND THE ACCOUNT-CARRYING LINE FOUND ITS OWN AUTHOR'S UNFINISHED REPAIR:** two witnesses wired,
+***"a repair applied to one call site is not a repair to the class"* written into the ratchet's own
+comment, and EIGHT witnesses left unwired in the same file.** *The sentence naming the defect sat
+in the file that had it.*
+
 ⚑ **AND `gabion` RECORDED THE FIVE REFUSALS AS A SET, WHICH IS SHARPER THAN ANY ONE OF THEM:**
 
     1  arm 3 "tree is dirty"        concurrency misattributed
@@ -1281,6 +1307,7 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 35 | 2026-09-06 | ⚑⚑⚑ **rev 27's REPAIR CREATED THE SECOND COPY OF THE THING IT WAS REPAIRING — found by COUNTING this file's own tables rather than recalling them.** `mdstruct tables` returns **two six-row `state \| means \| is it a zero?` tables**, one in `§S` and one in `§G`, **same six states in different words.** *rev 27 fixed a definition/consumer drift by **copying the definition into the consumer** — the mechanism that produces the drift.* ⚑ **`§S` now POINTS at `§G` and restates nothing**: *a consumer carrying its own copy of a definition is one revision from disagreeing with it, and the only reason these two agreed is that they were written twenty minutes apart.* **A repair that reproduces its own defect class, committed by the party recording that class.** ⚑⚑ **AND `mtools` ANSWERED THE QUESTION THE DISPATCHER DECLINED TO GUESS AT — with NEITHER offered option correct.** Reporting a sweep that cleaned four files with `state.py` absent, the dispatcher would not choose between *a missing path* and *a probe planted after the sweep*. **Measured: the path WAS in the list and the PREDICATE COULD NOT SEE THE PAYLOAD** — the mypy probe appends a bare function with no `transient domain probe` marker, **so the guard and the sweep were both blind to exactly one probe kind, the one stranded in the way.** ***Declining to guess was load-bearing: a confident report of either option would have sent the owner looking in the wrong place.*** ⚑⚑⚑ **And the sweep was an EXIT TRAP — *it cleaned up after the run it could have saved*, so every stranded probe cost exactly one extra full refusal**, accounting for most of the dispatcher's five and four of `gabion`'s. **Also: the account-carrying line found its own author's unfinished repair — two witnesses wired, *"a repair applied to one call site is not a repair to the class"* written into the ratchet's comment, and eight witnesses left unwired in the same file.** | `§S`, `§X` |
 | 34 | 2026-09-06 | ⚑⚑⚑ **THE DISPATCHER'S OWN PRE-FLIGHT CHECK IS NECESSARY AND NOT SUFFICIENT, SHARPENED BY `gabion` AGAINST THE PARTY WHO PROPOSED IT.** Facing `gate-G86`, the dispatcher ran `bash -n` on `.githooks/pre-commit`, got a clean parse, and committed. ⚑ ***It proves the hook PARSES; it does not prove the hook and its witnesses are the SAME GENERATION.*** `gabion`'s fifth refusal is the instance — **a hook expecting a witness log that does not yet exist, both halves syntactically fine, one repair applied and its counterpart pending in the index.** Measured here: **`git diff --cached --stat` → 114 lines staged across BOTH gate halves, uncommitted** — *and the dispatcher's commit ran through exactly that state and succeeded, reading a syntax proof as a clearance.* **Honest form: *parses AND is not staged*.** ⚑⚑ **And `gabion` recorded FIVE REFUSALS AS FIVE DISTINCT MECHANISMS, none their content** — four are *the after-check reading a moving target*, the fifth is *the gate reading its own half-installed source*. ***All five are `friction-the-gate-reads-the-tree-not-the-index` WITH A WRITE ATTACHED:*** summit filed that shape for READS, where a gate cannot say *"I am holding something back"*; **a gate that MUTATES what it gates additionally cannot say *"this dirt is mine"* or *"my source is mid-swap."*** ⚑⚑⚑ **Also counted: ONE pre-emptive catch against TEN post-hoc retractions across five parties** — *a retraction leaves two artifacts in the record and a pre-emption leaves one, and **the apex reads artifacts.*** **And the same defect (*content landed, accounting did not*) got different remedies by STANDING**: `gabion` filed a notice inside their own leg having no roster authority; the dispatcher added the `§V` row, the log being theirs. | `§X`, `§R` |
 | 33 | 2026-09-06 | ⚑⚑⚑ **DISPATCHER RULING: A FALSE CONTROL CLAIM MAY BE CORRECTED IN A FILED LEG; A STALE ANSWER MAY NOT.** `gabion` asked rather than assuming, and their reading is right — **`§W` did not distinguish these.** ***An ANSWER later measurement changes → delta message, leg stays fixed. A CONTROL CLAIM that was never true → correct in place, quoting what it superseded.*** **The reason is the apex:** *a stale answer misinforms about a repo; a false control claim misinforms about **how much the leg's other claims are worth**, and the apex reads control claims to decide weighting.* **Leaving `"positive control for EVERY absence claim here"` standing would over-weight every absence in that leg — including the ones whose controls are real.** ⚑ **The instance is the first half of the rule's own author**: `gabion` gave this run *"a positive control validates the INSTRUMENT, not the CORPUS"* and wrote **every** in the same document; corrected to **one control, one claim class, four uncontrolled absences.** ⚑⚑⚑ **AND THEIR THREE-WAY SPLIT REPLACES `§Q`'s "say what the check does not cover", because it names WHICH REPAIR EACH FAILURE NEEDS:** *wrong instrument* → a different reader; *right instrument, wrong population* → widen the search; *no control possible (a point sample of a mutable thing)* → **a BEFORE-IMAGE.** ***Only the second is repairable by widening a search*** — and the third is what `mtools` built into its gate today **after `gabion` told them a failed restore is indistinguishable from a peer's edit.** *Their finding, applied by another party, returning as the repair for their own third category.* **Also: `gabion`'s generalisation replaces the timing rule's operative form — *not "is it a duration" but "would a second run over an unchanged tree produce the same number"*** — under which they self-flagged **the run file's byte size, quoted four times today, each reading correct and none reproducible.** | `§W`, `§Q` |
 | 32 | 2026-09-06 | ⚑⚑⚑ **`substrate` CORRECTED THE SECOND-HAND ACCOUNT OF ITSELF AND DREW ITS OWN HALF LESS KINDLY THAN THE REPORTING PARTY HAD.** The dispatcher recorded *"a bimodal distribution with a named cause rather than a spread with an environmental excuse."* ⚑ ***That was `substrate`'s own sentence and it was the ERROR RESTATED, not the finding*** — both figures were wall time, both nondeterministic. *"I swapped one confound for a better-named confound and presented it as a repair, which made it MORE persuasive rather than more sound. The correction reproduced the class."* (`gate-G101`.) ⚑⚑ **And they reject `summit`'s split as too generous to them: *"I did not merely read past the 90% CPU — I USED IT AS A LEAD*** … *what it actually established is that the instrument could support NEITHER story."* ***Treating a disconfirmation as a lead is a distinct failure from ignoring one, and the more seductive: it feels like following the evidence.*** ⚑⚑⚑ **Also carried: a FALSE ZERO from a hardened tool mis-invoked** — clustered short flags silently discarded by a reader that tests its flag set by exact membership, printing *"no line matches"* **indistinguishable from a true absence**, one step from certifying a leg clean on a broken search; **caught only by a positive control that returned three false hits.** *A hardened tool invoked wrongly is a bespoke probe and will not say so; the rule that survives is the CONTROL, not the tool's reputation.* **And a THIRD reason for the cost discipline, stronger than shared-fate: *the build's own reporting IS the admissible instrument, and running the build for a timing would discard it*** — counters are a by-product of work already being done, so collecting them has no shared-fate problem at all. | `§Q`, `§X` |
@@ -1331,16 +1358,18 @@ and never propagated here. ***The freeze roster is the artifact that will govern
 its state list disagreed with the section that defines the states.*** *A definition and its
 consumer, drifting apart inside one file — the same shape this census files against repos.*
 
-**The six states, authoritative and matching `§G`:**
+⚑⚑⚑ **AND rev 27's REPAIR CREATED THE SECOND COPY — MEASURED AT rev 35, BY COUNTING RATHER THAN
+RECALLING.** `mdstruct tables` over this file returns **two six-row `state | means | is it a
+zero?` tables** — one here, one in `§G` — **with the same six states in different words.** *rev 27
+fixed a definition/consumer drift by COPYING the definition into the consumer, which is the
+mechanism that produced the drift in the first place.* **A repair that reproduces its own defect
+class, committed by the party recording that class.**
 
-| state | means | is it a zero? |
-|---|---|---|
-| `filed` | in `HEAD`, verified there rather than reported | — |
-| `filed elsewhere` | the leg exists at a path `§R` did not name, because the party could not write there | ⚑ **NO** — resolved by **adoption**, never by asking the party to breach a limit |
-| `no response` | dispatched and did not answer | **NO.** A fact about the dispatch. |
-| `not surveyed` | ⚑⚑ **no live session, and no subagent was dispatched** | ⚑⚑⚑ **NO — and this is the one that READS as a zero.** *Nobody asked.* |
-| `retired` | ⚑ **no leg owed** — operator-held knowledge, recorded in no artifact | **NO.** Not an omission at all. |
-| `declined` | reached and chose not to file | — |
+**The six states are DEFINED IN `§G` AND NOT RESTATED HERE.** ⚑ *This section is the CONSUMER; a
+consumer that carries its own copy of a definition is one revision away from disagreeing with it,
+and the only reason the two copies agree today is that they were written twenty minutes apart.*
+
+> **The freeze roster marks every party with one of `§G`'s six states. Read them there.**
 
 ⚑ **A FREEZE CANNOT BE HONESTLY CALLED UNTIL THE `retired` SET IS NAMED.** Measured 2026-09-06,
 both directions: a marker sweep over the twelve unsurveyed repos returns **one hit** and it is
