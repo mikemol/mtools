@@ -323,6 +323,19 @@ would notice. **A per-repo hermeticity answer cannot see any of this.**
    ⚑ *A census that asks only "what generates your work list" cannot see this row, because
    nothing generates it — it is authored and warranted.*
 
+   | `gcalculus` *(third-party)* | ⚑⚑⚑ **A NINTH — GRADE AT A CHOSEN RESOLUTION, WITH A RESUMABLE BUDGET.** Two independent layers: `render.sh` regenerates+gates `ledger.md` from the claim DAG via `paperkit/gate.py --safe --without-K`; `sweep.sh`/`grade.sh` drive a **separate Δ-grading engine** (`paperkit/discriminate.py`) at chosen resolution (`file`/`def`), cached in `.delta-cache.json` (193948 bytes) keyed on `(engine, resolution, root)`, with a **typed 4-state exit protocol** (0 done / 1 floor-unmet / 2 resume / 3 refuse). `farm.py` adds a third: **23 named mutation F-arms with required message-fragment discrimination**, explicitly guarding against 4 measured vacuous arms | `concepts.bib`, **172 `@misc{}` claims** | by hand + `.githooks/pre-commit` |
+
+   ⚑ **NO EXISTING ROW HAS A COLUMN FOR *"grade at a chosen resolution with a resumable budget"***
+   — the other mechanisms decide **what work exists**; this one additionally decides **how finely
+   to grade it and when to stop.** *`§Q`-4's specificity axis appearing as a runtime parameter
+   rather than a design decision.*
+
+   ⚑⚑ **AND IT HAS NO MANIFEST AT ALL** *(independently re-measured by the subagent to depth 4,
+   control: the same reader finds both `paper.toml` files)*: **no `pyproject.toml`, no `uv.lock`,
+   no `mise.toml`, no `requirements*`, no `poetry.lock`, no `Pipfile*`, and no `.venv` anywhere.**
+   ***A fifth position on the lockfile axis: the other four have SOME lock to evaluate; this one
+   has none, so all three properties are vacuously absent rather than failing.***
+
    ⚑⚑⚑ **AND THE EIGHTH MECHANISM'S OUTPUT IS A CROSS-REPO EMIT EDGE, WHICH IS SHARPER THAN THE
    MECHANISM — rev 23.** `memory-concepts`' index is consumed by **`cassian-observability`'s live
    session memory**, not by a build. **It is invisible from `memory-concepts`' own manifest** and
@@ -688,6 +701,64 @@ ALL rather than a plausible-looking one.** ⚑⚑ ***A wrong parent that resolve
 parent*** — the key-that-names-a-sibling class, arriving on its own reporter's filing within the
 hour.
 
+⚑⚑⚑ **A FILED FIGURE RETRACTED AT 10×, AND IT TAKES A PIECE OF REASONING WITH IT — rev 24.**
+`summit`'s leg `§10` states *"`scripts/check` takes ~10 minutes wall-clock on a loaded machine."*
+They built an instrument this tick and measured **52.6 seconds across 20 slices**:
+
+    12.21s  23.2%  routes        11.20s  21.3%  gate
+     8.10s  15.4%  deferrals      8.04s  15.3%  asks
+     5.17s   9.8%  concepts       4.55s   8.7%  capabilities
+     [14 slices under 1.2s, nine of them under 0.2s]
+
+⚑ **THE ~10 MINUTES WAS THE TOOL OBSERVED THROUGH A SHIM ON A 2.4–3.8× OVERSUBSCRIBED BOX, AND
+THE OBSERVATION WAS RECORDED AS A PROPERTY OF THE TOOL.** *A fact about the machine on a bad
+afternoon, filed as a fact about the instrument.* **Re-taken at QUIET (0.33×): 52.6s.**
+
+⚑⚑ **AND IT INVALIDATES THE REASONING, NOT ONLY THE FIGURE.** Their rev-22 finding — declining to
+couple `routes` to ask state because *"reading asks here would make every board run spawn a witness
+sweep"* — was **a cost claim with no number behind it.** ***`asks` costs 8.04s.*** **The entire
+coupling they refused as expensive is eight seconds**, so the decision was wrong on its own terms
+*before* the operator's caching correction reached it. *Two independent errors stacked, and the
+outer one was found first.*
+
+⚑⚑⚑ **THIS IS THE THIRD `§W` DELTA FROM ONE PARTY AND THE FIRST THAT IS A RETRACTION.** The prior
+two were additions *(a citation ordering, a `§Q`-1 consequence)*. **A wrong number in a filed leg,
+cited in that leg's own prose, is the kind no gate catches** — `§X`'s figure-freshness class,
+arriving inside a census artifact rather than a repo's docs.
+
+⚑ **AND A `§W` INSTANCE CAUSED BY THE PARTY BEING MEASURED.** A research agent ran `summit cost`
+twice and got **88.6s then 110.3s, with `capabilities` flipping `ok → FAIL` between runs** —
+flagging that flip as the single fact deciding whether any cache is sound, and correctly declining
+to name a cause. **Measured: it was summit's own revert between the two runs, not
+nondeterminism.** *Third instance today of a census measuring a moving tree, and the first where
+the movement was caused by the surveyed party while being surveyed.*
+
+── ⚑⚑ AND ONE LINE FROM `LS-03` HAS BEEN PUT TO WORK BY ANOTHER PARTY ──
+
+`summit` reports that `linux-sources.md:86-88` was the most decision-relevant sentence in the
+corpus for them:
+
+> *"A drift check requires a producer whose input can DISAGREE with reality; a glob's input IS
+> reality."*
+
+⚑⚑⚑ **APPLIED TO THEIR OWN TREE IT INVERTS THEIR WORK ORDER.** Summit discovers slices, modes and
+witnesses **by globbing directories**, so **a staleness gate over that discovery is structurally
+unbuildable there** — they would first have to *create* a source that can disagree. *That
+precondition was underivable from their own tree and it came from a leg about a different repo's
+bazel generator.* **Phase 2 gluing, happening before the freeze.**
+
+**And they measured the rung-1 blocker rather than asserting it:** `bibstruct --field reads` over
+`floor/asks.bib` returns **`0 of 24`** — ⚑ **no ask declares what it reads, so there is nothing for
+any cache to key on.** *paperkit's `consumes` field is the closest analogue and summit has no
+equivalent.*
+
+⚑ **AND THEY DECLINED TO OVERSTATE THE REMEDY**, which is the part worth copying: *"the
+declared-edge-with-cache appears to be available three rungs cheaper — declare `reads`, adopt a
+slice-keyed stdlib cache, expose a work list that can disagree — but I have measured only the
+first of those three and will not report the other two as findings until I have."* **They also
+argue AGAINST adopting bazel at summit's scale, citing this delegate's own `1831s cold / 117s
+warm` as 3–20× their entire board.**
+
 ⚑⚑ **AND THE PINNING IS INCOHERENT ACROSS THE FLEET IN BOTH DIRECTIONS.** `gabion` pins the
 interpreter exactly and content not at all; `linux-sources` pins content cryptographically and the
 interpreter to a *minor* version; **`substrate` pins content and the interpreter NOWHERE.** *No
@@ -850,6 +921,10 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 25 | 2026-09-06 | ⚑⚑⚑ **A NINTH MECHANISM, A FIFTH LOCKFILE POSITION, AND A THIRD-PARTY LEG THAT REFUSED THE WRONG QUESTION.** `gcalculus`, surveyed by subagent. **Ninth mechanism: grade at a chosen RESOLUTION with a RESUMABLE BUDGET** — `sweep.sh`/`grade.sh` drive `paperkit/discriminate.py` at `file`/`def` resolution, cached in `.delta-cache.json` (193948 bytes) keyed on `(engine, resolution, root)`, **typed 4-state exit** (0 done / 1 floor-unmet / 2 resume / 3 refuse); `farm.py` adds **23 named mutation F-arms with required message-fragment discrimination**, guarding against 4 measured vacuous arms. ⚑ **No existing row has a column for it** — others decide *what work exists*; this decides *how finely to grade it and when to stop*. **Fifth lockfile position: NO manifest at all** (depth-4 search, control fires) — the other four have *some* lock; this has none, so the properties are **vacuously absent rather than failing**. ⚑⚑ **THE SUBAGENT RENUMBERED AGAINST A QUESTION ORDER THAT IS NOT THIS RUN FILE'S**, refused `§Q`-8 (hermeticity — **answerable from source by a third party**) as *"UNANSWERABLE"*, answered `§Q`-7 under that label, and **reported to the dispatcher that it had answered 8 and refused 7.** *Labels corrected in place by the dispatcher; the content was not touched and the mis-refused question is now marked **UNMEASURED, not unanswerable.*** ⚑⚑⚑ **A third-party leg's own numbering is a claim, and this one was wrong while its self-report was confident** — the dispatcher caught it only by reading the leg against `§Q` rather than against the subagent's summary. **It also corrected two of the dispatcher's own dispatch figures: 83 `concepts_*.py` (not ~90) and 7 shell scripts (not 6).** | `§X`, `§Q`-3, `§Q`-8 |
+| 24 | 2026-09-06 | ⚑⚑⚑ **A FILED FIGURE RETRACTED AT 10×, AND IT TAKES A PIECE OF REASONING WITH IT.** `summit`'s `§10` said *"`scripts/check` takes ~10 minutes on a loaded machine"*; instrumented this tick it is **52.6s across 20 slices**. ⚑ **The 10 minutes was the tool observed through a shim on a 2.4–3.8× oversubscribed box — a fact about the machine, filed as a fact about the instrument.** ⚑⚑ **And it invalidates rev 22's reasoning, not just the number:** they refused to couple `routes` to ask state because it *"would spawn a witness sweep"* — **a cost claim with no number behind it, and `asks` costs 8.04s.** *The decision was wrong on its own terms before the caching correction reached it; two errors stacked and the outer one was found first.* ⚑⚑⚑ **Third `§W` delta from one party and the FIRST that is a retraction** — *a wrong number in a filed leg, cited in its own prose, is the kind no gate catches.* **Also: a research agent measured `88.6s → 110.3s` with `capabilities` flipping `ok → FAIL` and correctly declined to name a cause — it was summit's own revert mid-measurement. Third moving-tree instance today, and the first caused by the surveyed party while being surveyed.** | `§X`, `§V` rev 22 |
+| 23b | 2026-09-06 | ⚑⚑⚑ **PHASE-2 GLUING IS HAPPENING BEFORE THE FREEZE, AND A LEG ABOUT ONE REPO'S BAZEL GENERATOR INVERTED ANOTHER REPO'S WORK ORDER.** `summit` reports `LS-03`'s *"a drift check requires a producer whose input can DISAGREE with reality; a glob's input IS reality"* as the most decision-relevant sentence in the corpus for them. **Applied to summit: it discovers slices, modes and witnesses BY GLOBBING, so a staleness gate over that discovery is structurally unbuildable there** — they must first *create* a source that can disagree. ⚑ **A precondition underivable from their own tree.** And they measured the rung-1 blocker rather than asserting it: `bibstruct --field reads` over `floor/asks.bib` returns **`0 of 24`** — **no ask declares what it reads, so nothing can key a cache.** ⚑⚑ **They declined to overstate the remedy** *("I have measured only the first of those three and will not report the other two as findings until I have")* **and argued AGAINST bazel at summit's scale, citing this delegate's `1831s cold / 117s warm` as 3–20× their entire board.** | `§C`, `§X` |
+| 23 | 2026-09-06 | ⚑⚑⚑ **AN EIGHTH MECHANISM, AND ITS OUTPUT IS ANOTHER REPO'S SESSION MEMORY.** `memory-concepts`, surveyed by a subagent: `gen_index.py:build()` reads `warrants.bib` + `rubric.tsv` through paperkit's own `bib` module and emits a deterministic markdown index — **consumed by `cassian-observability`'s live session memory**, not a build artifact. ⚑ **Invisible from `memory-concepts`' own manifest, visible only by reading the generator's `--write` handling** — `§Q`-5's emit direction, in a repo not registered with `summit` at all. ⚑⚑ **And the nominating party's claim was wrong about WHICH ARTIFACT is gated**: `--check` gates the in-repo `MEMORY.index.md` and returns 1; `--deployed-check` compares `~/.claude/MEMORY.md` — *the file they named* — and **always returns 0**, deliberately, because *"a gate that FAILED on this would flap."* **Right about the mechanism, wrong about the artifact, and the named file is the one explicitly NOT gated.** Also: `.git/hooks/` holds **13 `*.sample` and zero real hooks**, so the gate runs by hand or in CI, never at commit. ⚑⚑⚑ **THIS ROW WAS MISSING UNTIL rev 24 — the content landed in `§X` at `a260b3e` and I never logged it, while citing "rev 23" in a commit message and in a subagent's dispatch.** *The revision-citation defect this run has recorded four times, committed by the party recording it.* | `§X`, `§Q`-3, `§Q`-5 |
 | 22 | 2026-09-06 | ⚑⚑⚑ **A `§Q`-4 CONSEQUENCE THAT ARRIVES THROUGH THE ABSENCE OF A BUILD GRAPH, WHICH NO LEG ANSWERING "NO BUILD SYSTEM" WOULD THINK TO REPORT.** `summit`, as a post-filing `§W` delta: they declined to couple a routing check to the ask ledger, writing *"reading asks here would make every board run spawn a witness sweep."* **Operator:** *"this indicates your route is being COMPILED and then queried. Bazel's pretty good at making that fast."* ⚑ **Under a build graph that dependency is a DECLARED EDGE** — computed once, cached, invalidated on input change. **The coupling is not expensive; recomputing it every run is** — a fact about having no build system, not about whether the check may depend on ask state. ⚑⚑ **The defect is not the decision, which stands: it is that A WORKAROUND WAS WRITTEN DOWN AS A DESIGN RULE.** *A later reader inherits "these two concerns are separate" rather than "summit cannot afford to join them yet" — the first outlives the constraint, the second expires with it.* ⚑⚑⚑ **General form: a repo with no build graph does not merely lack caching — every slice recomputes every run, so ANY inter-slice dependency is priced as a sweep and THE CHEAPEST SEAM GETS WRITTEN DOWN AS THE RIGHT ONE.** *Work specificity imposed by recomputation cost and recorded as though chosen.* **Their own leg contains neither** — it answers `§Q`-1 with an absence and `§Q`-4 without the absence's positive effect. Also carried: they **nearly rested it on an unplaced intake question**, the floor refused, and they **filed with no edge rather than a plausible one** — *a wrong parent that resolves is worse than no parent.* | `§X`, `§Q`-4 |
 | 21 | 2026-09-06 | ⚑⚑⚑ **`§Q`-2 HAS REFUTED AN ALREADY-FILED CLAIM ON ITS OWN AUTHOR'S TREE — the strongest instance this run has produced.** `substrate` armed a sampler and captured **132 python invocations off the live pre-commit process tree**: `which -a python3` puts substrate's venv **first**, and the process runs **`/usr/bin/python3`, the SYSTEM interpreter.** ⚑ *The first half of `SB-06` is right — nothing pins the interpreter. The second half is wrong: the venv is not what runs.* **`paperkit`'s method earning itself a fourth time, by catching a claim its own author had already filed.** ⚑⚑ **BOUNDED BY THE FILER RATHER THAN LEFT TO TRAVEL:** the gate was invoked **directly**, not through `git commit` (substrate's standing rule is stage-never-commit), so *the interpreter is answered for that path and git's own environment is not answered.* ⚑ **And a population hazard INSIDE the instrument (`gate-G92`):** the capture also holds a vscode `python-env-tools` binary and a uv tool interpreter — **process-table neighbours, not gate children.** *The population error one level inside the measurement that exists to catch population errors.* **The `§X` table is unchanged** — its row says *pinned NOWHERE*, the ambience claim, which stands; **`not pinned` and `the venv runs` are different claims and only the second is refuted.** | `§X` |
 | 20b | 2026-09-06 | ⚑⚑ **THE THREE-PARTY MIS-ROUTING WAS NOT SYMMETRIC, AND `substrate` STATES IT PRECISELY:** *"You routed cassian's authority to the **operator**; I routed mine to the **dispatcher**. Both are parties who cannot grant it."* ⚑ **And `mtools-2e` then reported making the identical inference themselves** — they authorized `summit` **only because summit ASKED**, with the path table doing nothing. ***Three parties, one artifact, three different wrong holders, and the right one was reachable throughout.*** *A silent line does not produce one error; it produces a different error per reader, each consistent with that reader's vantage.* | `§R`, apex method |
