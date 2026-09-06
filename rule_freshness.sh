@@ -45,6 +45,23 @@ fi
 # CANNOT detect it: a no-op build moves neither pod's counters, so the control passes identically
 # in both worlds. This is the premise the arms structurally cannot reach.
 if command -v kubectl >/dev/null 2>&1; then
+    # ⚑⚑⚑ A POSITIVE CONTROL, BECAUSE THIS CHECKER HAD NONE AND ITS WHOLE OUTPUT IS A NEGATIVE.
+    # "Exactly one endpoint" is the reading that keeps Rule 12 valid — and a reader that returned
+    # 1 for EVERYTHING would print FRESH forever. The arms this was built with were simulated
+    # (an edited copy asserting two IPs); nothing proved the LIVE query could produce any other
+    # number.
+    #
+    # ⚑⚑ AND NO IN-CORPUS CONTROL FOR "TWO" EXISTS: measured, all 13 Services in the namespace
+    # have exactly one endpoint. So the control tests the discriminating CAPABILITY instead —
+    # `pgbouncer` has ZERO, which proves the count varies with the subject rather than being a
+    # constant the query manufactures. That is the census brief's own fallback: when the shape is
+    # genuinely absent, exhibit the control on reader capability.
+    ctl=$(kubectl -n cassian get endpoints pgbouncer -o jsonpath='{.subsets[*].addresses[*].ip}' 2>/dev/null | wc -w)
+    if [ "$ctl" -ne 0 ]; then
+        say "⚑ CONTROL FAILED: pgbouncer should have 0 endpoints, read $ctl — this reader's"
+        say "  counts are not trustworthy, so the freshness verdict below is UNMEASURED"
+        exit 0
+    fi
     eps=$(kubectl -n cassian get endpoints buildbuddy -o jsonpath='{.subsets[*].addresses[*].ip}' 2>/dev/null)
     n=$(printf '%s' "$eps" | wc -w)
     case "$n" in
