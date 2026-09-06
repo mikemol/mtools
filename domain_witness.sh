@@ -150,6 +150,21 @@ case "$probe_kind" in
     # DIGEST moves. Without it this probe alternates between exactly two digests (shortened and
     # restored) and passes only because arm 3 rewrites the file — a Rule 16 defect that survives by
     # accident rather than by design. An accidental pass is one refactor away from a permanent red.
+    # ⚑⚑⚑ THE ONLY DESTRUCTIVE PROBE, AND IT MUST BE. Every other kind APPENDS, so a concurrent
+    # reader sees the file plus noise. This one DELETES a key — measured as necessary: a
+    # comment-only probe leaves the gate PASSING, because a baseline holding a key the census does
+    # not produce is paydown, and only a MISSING key is growth.
+    #
+    # ⚑⚑ SO A READER THAT SAMPLES THIS FILE MID-PROBE SEES THE BASELINE SHORT BY ONE KEY and
+    # reports that finding as NEW DEBT — a false refusal. Measured: deleting the last line alone
+    # reproduces exactly the refusal that blocked a commit earlier, `tests/test_core.py:
+    # noqa-comments` reported as new. ⚑ I had attributed that failure to the nonce being read as
+    # a key, which was a real defect and was fixed — but the DELETION was the operative half, and
+    # the fix worked for a reason I had wrong.
+    #
+    # ⚑ THE DIRECTION IS SAFE AND THE AMBIGUITY IS NOT: a false refusal never absolves debt, but
+    # it is indistinguishable from a genuine violation, so an operator meeting it debugs a finding
+    # that does not exist.
     baseline) head -n -1 "$victim" > "$victim.probe" \
                   && printf '# transient domain probe %s\n' "$(date +%s%N)" >> "$victim.probe" \
                   && mv "$victim.probe" "$victim" ;;
