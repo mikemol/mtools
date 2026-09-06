@@ -44,7 +44,10 @@ mikemol-ratchet = "mikemol.ratchet.cli:main"
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
-dev = ["pytest"]
+# ⚑ `mypy` IS A DEV DEPENDENCY BECAUSE THE BAZEL mypy ACTION STAGES IT AS A DECLARED INPUT. It was
+# absent here while the sibling distributions carried it, so the gate's own type check had no tool
+# to run in the sandbox — the check existed on the host and could not exist in the graph.
+dev = ["pytest", "mypy"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

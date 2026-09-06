@@ -35,5 +35,10 @@ fi
 # `ratchet/tests/...` and match nothing — measured, 47 findings that the host run does not report.
 # The scoped exemptions are part of the bar; a run that silently loses them is checking a
 # different standard while looking like the same one.
-cd "$dist"
+# ⚑ `|| exit` EXPLICITLY, THOUGH `set -e` ALREADY MAKES A FAILED cd FATAL HERE. The sibling
+# mypy_check.sh runs under `set -uo` without `-e` so that it can capture a nonzero rc, and there
+# SC2164 was raised against the same line there — a failed cd would run the checker in the wrong
+# directory and report the verdict as this distribution's. Stated the same way in both, so the
+# safety does not depend on remembering which script has `-e`.
+cd "$dist" || exit 1
 exec "$ruff" check --no-cache --config "$config" .

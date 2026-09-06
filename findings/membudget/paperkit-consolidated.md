@@ -244,6 +244,73 @@ identification** — it is not a preference any party is pushing.
 
 ---
 
+## 7b. ⚑⚑⚑ CONFIRMED IN PAPERKIT: three toolchain keys are version BANNERS, and the F-arm fires
+
+linux-sources reported *"stamp the bytes, not the label"* — apt overwrites a tarball in place, so a
+same-version security respin serves NEW bytes under an UNCHANGED label. **Run against paperkit, it
+reproduces.**
+
+`tools/toolchain_status.sh` fingerprints four tools. Three by a **version banner's first line**, one
+by content:
+
+```
+emit() { v=$("$@" 2>/dev/null | head -1 …); echo "STABLE_TOOLCHAIN_${name} ${v}"; }
+emit PANDOC pandoc --version · emit VERAPDF · emit LUALATEX · emit SOFFICE
+STABLE_TOOLCHAIN_VERAPDF_JAR $(sha256sum "$jar" | cut -d' ' -f1)      <- the only content hash
+```
+
+**⟨P, F, δ⟩ — MEASURED, with a shim whose banner is fixed and whose payload changes:**
+
+```
+before   STABLE_TOOLCHAIN_PANDOC pandoc 3.1.11.1     sha256 6dd4b433…
+after    STABLE_TOOLCHAIN_PANDOC pandoc 3.1.11.1     sha256 d7c283e5…
+                                 ^ IDENTICAL                 ^ TOTALLY DIFFERENT
+δ = the binary's entire payload
+```
+
+⚑ **A `toolchain`-tier check stays a cache hit across a total replacement of the tool that proved
+the claim.** The stamp is wired, the mechanism works, and it is measuring the wrong thing for three
+of four tools — `STABLE_TOOLCHAIN_VERAPDF_JAR` is the shape the other three want.
+
+⚑⚑ **And linux-sources' caveat on their own passing arm is what makes this findable.** Their
+stamping ⟨P,F,δ⟩ passed — perturbing `STABLE_CORPUS_ROSTER` re-executed the action (2.6s cache hit →
+57.7s local). But that key is a **content hash**. *"A green stamping arm on a content-hashed key
+tells you nothing about your banner-keyed tools. Run it per key, not per mechanism."* Paperkit would
+have run the veraPDF arm, seen green, and concluded the tier was sound.
+
+**This is [[instrument-vs-gate]] on a cache key**: the mechanism produces correct signal for the key
+it is tested on, and certifies nothing about the keys beside it.
+
+⚑⚑ **RECIPROCATED — the arm fires in linux-sources too, and they had written the caveat without
+running it on their own banner keys.** Their `tools/check_status.sh` emitted `STABLE_TOOL_RUFF` as a
+`--version` banner; δ = append bytes to the ruff binary:
+
+```
+before  STABLE_TOOL_RUFF ruff 0.16.5   sha256 024cdfbb…
+after   STABLE_TOOL_RUFF ruff 0.16.5   sha256 94fde127…       bazel build //:lint -> 1 CACHE HIT
+```
+
+**A lint verdict survived a changed linter binary.** Two trees, two tools, one mechanism — and the
+party who stated the class was blind to it at home. *An author's own statement of a defect class is
+not a check that they are outside it.*
+
+⚑⚑⚑ **AND THE CLASS IS SHARPER THAN EITHER TREE STATED IT.** "The label is not the bytes" understates
+the asymmetry. The operational form:
+
+> **A version key DETECTS AN UPGRADE and is BLIND TO A REPLACEMENT.**
+
+An upgrade moves the banner; a replacement need not — and **a replacement is what a pinned
+environment actually produces**: a distro respin, a local build, a shim, a patched wheel. So the
+banner key is *precisely inverted*: it catches the case the version already told you about, and
+misses the case where nothing else will.
+
+⚑ **The repair shape, with its own arm** (theirs, transferable): keep the banner **and** add
+`sha256sum $(readlink -f "$bin")` beside it — the hash gates, the banner explains a stale verdict to
+a reader. Use an `absent`/`unhashable` sentinel, so a box without the tool does not emit an EMPTY
+key that every such box would share. **And re-run the finding arm against the repaired stamp**:
+theirs went warm-hit → **LOCAL** under the same δ. *A repair unproven by the arm that found the
+defect is not a repair.*
+
 ## 8. What none of this fixes
 
 **Peer review does not reach a shared premise.** Four parties caught roughly nine errors in each
