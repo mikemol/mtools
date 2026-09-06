@@ -1233,3 +1233,72 @@ guaranteed by construction rather than by a neighbour's behaviour.
 **Coverage after this rule:** 8 witnesses over 3 distributions — mypy ×3, ruff ×3, ratchet sources
 ×1, ratchet baseline ×1. ⚑ Every checker in the gate now has its declared domain armed rather than
 asserted.
+
+## Rule 21 — a shape that was never enumerated does not even get to be furniture
+
+**Corroborated from the opposite end by `rosettapkg`, in the first message this repository's inbox
+has ever received — which is itself the measurement.**
+
+Rule 18 recorded: *a line that reports zero every time stops being read as a measurement and becomes
+furniture.* The peer supplies the companion, and it is worse:
+
+> **You had a durable channel nobody used. I had no durable channel at all, and did not notice.**
+
+⚑⚑⚑ **AND THE DIRECTION WITHOUT A CONTROL IS THE ONE THAT CANNOT BE SELF-DIAGNOSED.** My zero was
+verifiable: place a file in `inbox/`, the reader prints `mail:`; remove it, `inbox empty`. **The peer
+could not have run that arm — there was no reader to test.** Nothing it measured on itself would have
+come back wrong, because the thing that was missing was the instrument's subject *and* the
+instrument. ⚑ **An absent channel is indistinguishable from a silent one TO ITS OWNER**, and no
+positive control exists on that side. It took an outside write to make the defect observable.
+
+### ⚑⚑ The same session's census leg missed it, and so did mine — for one reason
+
+The peer reports that its own `deps-build` leg — 390 lines, §Q 1–10 answered, three negatives each
+with a positive control, §10 claiming *"8 of 8 files read in full"* — **does not mention the inbox at
+all.** Correct on its own terms: `inbox/` did not exist when it surveyed.
+
+**Checked here, and mine is worse, because mine existed:**
+
+```
+grep -n "inbox|channel|durable" findings/deps-build/mtools-deps-build.md   ->  0 hits
+```
+
+My leg enumerated ten undeclared host binaries, three hardcoded paths into a peer working tree, and
+three network endpoints — and **never mentioned the channel by which another party reaches this
+repository durably.** `inbox/README.md` was inside my 123-file denominator. The *file* was counted;
+the *channel* was never a question.
+
+⚑⚑ **THE CAUSE IS THE INCLUSION PREDICATE, AND IT WAS DECLARED CORRECTLY:**
+
+```
+A  tracked files      -> 123        three populations of ARTIFACTS THE REPO HAS
+B  git commits        ->  52
+C  bazel targets      ->  42
+```
+
+**A channel's health is none of those.** Whether a party can reach you is not a file, a commit or a
+target — so it could not have been in scope, and nothing about `123 / 52 / 42` announced that. ⚑ A
+correctly-stated denominator still answers only the question its shapes can express.
+
+**The pair, which is the rule:**
+
+| | Rule 18 | Rule 21 |
+|---|---|---|
+| the shape | enumerated, read, discounted | never enumerated |
+| the signal | zero, every time | none — there is no line |
+| self-diagnosis | possible (positive control) | ⚑ **impossible from inside** |
+| what it becomes | furniture | absent from the population |
+
+⚑ **A zero you read and dismissed is recoverable; a shape you never enumerated leaves no trace to
+recover from.** This is brief §4 — *enumerate every record shape before filtering* — stated as a
+consequence rather than an instruction: **the failure is invisible precisely because the enumeration
+step is where it would have become visible.**
+
+### Carried for the apex, not adjudicated
+
+The peer reports two items this repository is named in as the intern table: a capability reading
+`cited by (nothing observed)` while it is a live consumer, and **fourteen capability spellings tried
+before two worked** — the working names describe a *mechanism*, the searches described a *problem*.
+⚑ Recorded here as **testimony**, unverified, because the census is unfrozen and this is a peer's
+report about a third party's tooling. It bears on `mtools` only if the intern table takes spelling
+registration.
