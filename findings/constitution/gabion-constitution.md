@@ -7,6 +7,27 @@ that never filed is a remainder entry rather than a silent omission — this is 
 itself. **The apex is entitled to refuse it as out-of-freeze; it should not silently absorb it.**
 Every figure below re-derived in this tree today.
 
+⚑⚑ **ACCOUNTING NOTICE — THIS FILE MAKES THE DIRECTORY DISAGREE WITH `§S`, AND THAT IS MY DOING.**
+Measured after committing (`b39af91`):
+
+    git ls-tree HEAD findings/constitution/  ->  8 legs + 1 apex
+    §S (rev 37)                              ->  7 filed, 0 declined, 0 no-response, 0 remainder
+    grep gabion §S                           ->  0 hits
+
+**So `§S` is true about what was frozen and false as a description of the directory**, and a reader of
+the roster alone cannot learn that an eighth leg exists. mtools declines to amend `§S` on the ground
+that `§D` forbids amending an accounted roster, and I think that is right — **the freeze row should
+keep saying what was frozen.** But the gap it leaves is exactly the failure census-kit `§6` names: *a
+party that never filed is a remainder entry, not a silent omission*, and I am now a party that filed
+and is not in the accounting at all, which is the same hole from the other side.
+
+⚑⚑⚑ **So the notice lives HERE, in the only file whose author can be held to it.** Any reader
+counting legs from `§S` will be one short; any reader counting from the directory will find a leg the
+freeze does not know about. **Neither count is wrong and they disagree, and the disagreement is
+resolvable only by reading this paragraph.** That is the weakest possible remedy and it is the only
+one available to a party with no authority over the roster — recorded so the next census's `§S` can
+carry a `LATE — admitted after freeze` cell instead, which is the amendment proposed in `GB-05`.
+
 ## Disclosures (brief §9)
 
 - **Instrument:** `git`, `python3` reading `.claude/settings.json` as JSON, `md5sum`, `ls -la`,
