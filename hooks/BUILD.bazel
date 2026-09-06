@@ -67,6 +67,10 @@ py_library(
             # every arm depend on a file that changes every tick — an arm asserting "Rule 99 is
             # absent" would break the day someone writes Rule 99.
             "//:rule_citations.sh",
+            # ⚑ THE ORPHAN GATE IS STAGED AND ITS ARMS ARE HERMETIC, unlike the citation gate's.
+            # It is pure shell over a filesystem the witness builds, with no reader to route
+            # through — so there is no venv to reach for and no reason to skip.
+            "//:orphan_check.sh",
             "//:.bazelrc",
             "//:BUILD.bazel",
             "//hooks:BUILD.bazel",

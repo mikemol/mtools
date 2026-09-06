@@ -479,3 +479,82 @@ def test_the_citation_gate_is_silent_when_nothing_is_cited(tree: Path) -> None:
     property of the corpus.
     """
     assert _citations("an ordinary commit\n", "## Rule 25 — real\n", tree) == 0
+
+
+def _orphans(tree: Path, scripts: dict[str, str], sites: dict[str, str]) -> int:
+    """Build a fixture tree of shell files and call sites; return the orphan gate's exit code.
+
+    ⚑ THE CALL SITE IS WRITTEN OUTSIDE THE GLOB. `blockers.sh` is itself a `.sh`, so writing the
+    fixture's call site there makes it a subject of the very census it is meant to feed — the
+    first cut did exactly that and the P-arm failed because the SITE was an orphan, not because
+    the invoked script was. The gate reads `.githooks/pre-commit` as a site too, and that name is
+    not matched by `*.sh`.
+    """
+    (tree / ".githooks").mkdir(exist_ok=True)
+    for name, body in scripts.items():
+        (tree / name).write_text(body, encoding="utf-8")
+    for name, body in sites.items():
+        (tree / name).write_text(body, encoding="utf-8")
+    if not (tree / "BUILD.bazel").exists():
+        (tree / "BUILD.bazel").write_text("", encoding="utf-8")
+    gate = _DIST.parent / "orphan_check.sh"
+    return subprocess.run(  # noqa: S603
+        [str(gate), str(tree)],
+        capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
+
+
+def test_the_orphan_gate_passes_an_invoked_script(tmp_path: Path) -> None:
+    """The P-arm. Without it every arm below passes against a gate that refuses all input."""
+    assert _orphans(
+        tmp_path,
+        {"used.sh": "#!/usr/bin/env bash\n"},
+        {".githooks/pre-commit": "#!/usr/bin/env bash\n./used.sh\n"},
+    ) == 0
+
+
+def test_the_orphan_gate_fires_on_a_script_nothing_invokes(tmp_path: Path) -> None:
+    """⚑⚑ A checker nothing runs is a green over nothing, and had no check until now.
+
+    A `.sh` can be written, pass its linter, sit in the tree and never execute. ⚑ An INTENTIONAL
+    orphan is the same file on disk as a forgotten one, which is why the gate demands a
+    declaration rather than trusting anyone's memory.
+    """
+    assert _orphans(
+        tmp_path,
+        {"lonely.sh": "#!/usr/bin/env bash\n"},
+        {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
+    ) == 1
+
+
+def test_an_exports_files_entry_is_not_an_invocation(tmp_path: Path) -> None:
+    """⚑⚑⚑ Availability is not use, and conflating them SILENCED a real waiver.
+
+    An earlier cut matched any quoted mention of a filename in `BUILD.bazel`. The moment
+    `collect_check.sh` was added to `exports_files` — which only makes a source dependable, never
+    run — the gate reported it as invoked and stopped printing its declared-orphan line. ⚑ The
+    waiver did not fail loudly; it went QUIET, which is the failure direction that removes its own
+    detector.
+    """
+    (tmp_path / "BUILD.bazel").write_text('exports_files(["lonely.sh"])\n', encoding="utf-8")
+    assert _orphans(
+        tmp_path,
+        {"lonely.sh": "#!/usr/bin/env bash\n"},
+        {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
+    ) == 1
+
+
+def test_a_srcs_entry_is_an_invocation(tmp_path: Path) -> None:
+    """⚑ The other side of the same edit, because narrowing over-corrected.
+
+    Restricting the match to `srcs`/`$(location)` reported four action wrappers as orphans — they
+    are `srcs = ["//:mypy_check.sh"]` in the PER-DISTRIBUTION build files, a label form the first
+    pattern missed in files it never read. Narrowing a predicate and narrowing its POPULATION are
+    different edits; doing both at once turned one false negative into four false positives.
+    """
+    (tmp_path / "BUILD.bazel").write_text(
+        'sh_test(\n    name = "x",\n    srcs = ["//:wrapped.sh"],\n)\n', encoding="utf-8")
+    assert _orphans(
+        tmp_path,
+        {"wrapped.sh": "#!/usr/bin/env bash\n"},
+        {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
+    ) == 0

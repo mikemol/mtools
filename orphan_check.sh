@@ -22,12 +22,23 @@
 # is not a call.
 set -uo pipefail
 
-cd "$(dirname "$0")" || exit 1
+# ⚑⚑ THE ROOT IS AN ARGUMENT SO A WITNESS CAN POINT THIS AT A FIXTURE. Hardcoding `dirname $0`
+# made the checker untestable: every arm would have run against the live tree, so an arm asserting
+# "an undeclared orphan refuses" could only be written by CREATING an orphan in the repo and
+# deleting it afterwards — a test whose failure mode is leaving the tree dirty. The same coupling
+# `rule_citations.sh` had, and the same fix.
+cd "${1:-$(dirname "$0")}" || exit 1
 
 # ⚑ DECLARED ORPHANS, WITH THE REASON. Silence is not a waiver: a file listed here is one somebody
 # decided should not run yet, and the decision is written down where the next reader meets it.
 declare -A WAIVED=(
     [collect_check.sh]="parked: per-case bazel targets, unwired pending a census freeze"
+    # ⚑ NOT A DEFECT, AND THE CHECKER FOUND IT HONESTLY. `setup.sh` arms a fresh clone —
+    # `core.hooksPath` is per-clone git config, not a tracked file, so a clone has no gates and
+    # looks exactly like a repo that passes them. It is run ONCE BY A HUMAN, deliberately outside
+    # every gate: a gate that invoked it would be arming itself, which cannot work from inside a
+    # tree whose hooks are not yet installed.
+    [setup.sh]="run once per clone by a human; arms core.hooksPath, so no gate can invoke it"
 )
 
 sites=(.githooks/pre-commit .githooks/commit-msg blockers.sh)
@@ -40,7 +51,28 @@ for f in *.sh; do
         [ -f "$site" ] || continue
         grep -qE "(\./|\\\$repo/|\\\$mtools/)$f" "$site" && { inv="yes"; break; }
     done
-    [ -n "$inv" ] || grep -qE "\"$f\"|:$f\b" BUILD.bazel 2>/dev/null && inv="yes"
+    # ⚑⚑⚑ AN `exports_files` ENTRY IS NOT AN INVOCATION, AND TREATING IT AS ONE SILENCED A REAL
+    # WAIVER. The first cut matched any quoted mention of the filename in `BUILD.bazel`; the
+    # moment `collect_check.sh` was added to `exports_files` — which only makes a source
+    # DEPENDABLE, never run — this checker reported it as invoked and stopped printing its
+    # declared-orphan line. ⚑ The waiver did not fail loudly; it went QUIET, which is the failure
+    # direction that removes its own detector.
+    #
+    # ⚑⚑ So the match is an EXECUTION site: `srcs = [...]` names what a target runs, and a
+    # `$(location //:x.sh)` in `args` names what it invokes. `exports_files` and `data` are
+    # availability, not use.
+    # ⚑⚑ EVERY BUILD FILE, NOT JUST THE ROOT ONE, AND THE LABEL FORM AS WELL AS THE BARE NAME.
+    # The first narrowing read only `./BUILD.bazel` for a bare `"x.sh"`, and reported four action
+    # wrappers as orphans — they are `srcs = ["//:mypy_check.sh"]` in the PER-DISTRIBUTION build
+    # files. ⚑ Narrowing a predicate and narrowing its POPULATION are different edits, and doing
+    # both at once turned a false negative into four false positives in one step.
+    if [ -z "$inv" ]; then
+        for b in BUILD.bazel */BUILD.bazel; do
+            [ -f "$b" ] || continue
+            grep -qE "srcs = \[[^]]*(\"|//:)$f\"|location //:$f\)" "$b" 2>/dev/null \
+                && { inv="yes"; break; }
+        done
+    fi
 
     if [ -n "$inv" ]; then
         continue
@@ -55,9 +87,20 @@ done
 
 # ⚑⚑ A WAIVER FOR A FILE THAT NO LONGER EXISTS IS ITSELF ROT. The list decays the same way the
 # denylist in `blockers.sh` did, so it is checked against the tree rather than trusted.
-for f in "${!WAIVED[@]}"; do
-    [ -f "$f" ] || { printf '  ⚑ waiver names %s, which does not exist\n' "$f" >&2; fail=1; }
-done
+# ⚑⚑⚑ THE WAIVER AUDIT RUNS ONLY OVER THIS REPOSITORY, AND SKIPPING IT ELSEWHERE IS NOT A
+# LOOPHOLE. The waivers name files in THIS tree; run against a fixture they all report missing,
+# and every arm of a witness would fail for a reason that has nothing to do with the property
+# under test. ⚑ Measured: the P-arm failed with two waiver-rot errors and zero orphan findings —
+# a correct check answering a question the caller did not ask.
+#
+# ⚑⚑ THE ROT CHECK ITSELF STAYS, because a waiver naming a deleted file is exactly the decay this
+# repository found in its own denylist. It is scoped, not weakened: when a caller supplies a root,
+# the waivers are that caller's business and this script has no standing to audit them.
+if [ -z "${1:-}" ]; then
+    for f in "${!WAIVED[@]}"; do
+        [ -f "$f" ] || { printf '  ⚑ waiver names %s, which does not exist\n' "$f" >&2; fail=1; }
+    done
+fi
 
 [ "$fail" -eq 0 ] || { echo "orphan_check: an unclaimed checker is a green over nothing" >&2; exit 1; }
 echo "orphan_check: every shell checker is invoked or declared"

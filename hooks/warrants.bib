@@ -542,3 +542,39 @@
              and a bypassed gate is a disarmed one -- so this arm guards the gate's own survival
              rather than a property of the corpus.}
 }
+
+@misc{hooks-bar-fires-the-orphan-gate-passes-an-invoked-script,
+  section = {bar-fires},
+  title   = {The P-arm for the orphan gate},
+  note    = {Without it every arm below passes against a gate that refuses all input. The fixture
+             writes its call site to .githooks/pre-commit rather than blockers.sh, because a
+             call site that is itself a .sh becomes a subject of the census it feeds -- the first
+             cut did that and the P-arm failed because the SITE was an orphan.}
+}
+
+@misc{hooks-bar-fires-the-orphan-gate-fires-on-a-script-nothing-invokes,
+  section = {bar-fires},
+  title   = {A checker nothing invokes is a green over nothing},
+  note    = {A .sh can be written, pass its linter, sit in the tree and never execute. An
+             intentional orphan is the same file on disk as a forgotten one, which is why the
+             gate demands a declaration rather than trusting memory.}
+}
+
+@misc{hooks-bar-fires-an-exports-files-entry-is-not-an-invocation,
+  section = {bar-fires},
+  title   = {Availability is not use, and conflating them silenced a real waiver},
+  note    = {An earlier cut matched any quoted mention of a filename in BUILD.bazel. The moment
+             collect_check.sh was added to exports_files -- which only makes a source dependable,
+             never run -- the gate reported it invoked and stopped printing its declared-orphan
+             line. The waiver did not fail loudly, it went quiet, which is the failure direction
+             that removes its own detector.}
+}
+
+@misc{hooks-bar-fires-a-srcs-entry-is-an-invocation,
+  section = {bar-fires},
+  title   = {Narrowing a predicate and narrowing its population are different edits},
+  note    = {Restricting the match to srcs and location reported four action wrappers as orphans;
+             they are srcs = ["//:mypy_check.sh"] in the per-distribution build files, a label
+             form the pattern missed in files it never read. Doing both narrowings at once turned
+             one false negative into four false positives in a single step.}
+}
