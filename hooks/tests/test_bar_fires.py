@@ -794,6 +794,7 @@ def test_the_gate_reads_the_index_not_the_working_tree(tmp_path: Path) -> None:
 # the next edit can silently remove. Measured the same session: a `git checkout --` cleanup
 # reverted an uncommitted repair block, and only a re-measurement caught it.
 
+
 _GATE = _DIST.parent / ".githooks" / "pre-commit"
 
 
