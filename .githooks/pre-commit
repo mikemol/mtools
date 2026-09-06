@@ -171,6 +171,30 @@ witness() {  # label, then domain_witness.sh's own arguments
     fi
 }
 
+# ⚑⚑⚑ A REFUSAL THAT NAMES ONLY ITS CLAIM MAKES THE BLOCKED PARTY DO THE DIAGNOSIS. Measured this
+# afternoon: TWELVE peer refusals, six to `linux-sources` and six to `gabion`, and every single
+# mechanism was found by the party the gate blocked rather than by the gate. The checks below
+# stream to stderr, so a HUMAN at a terminal sees the detail — but `note_failure`'s summary is what
+# a peer reads out of a captured run, and it carried the claim with none of the evidence.
+#
+# ⚑⚑ SO THE CAPTURE IS THE SAME SHAPE `witness()` ALREADY USES, HOISTED RATHER THAN RE-TYPED: run
+# into a log, echo the log to stderr so the interactive path is unchanged, and hand the log to
+# `note_failure` so the refusal REPLAYS the finding. Three sites repeating a pattern is how the
+# ordering defect got in the first time; one helper is one place to get it right.
+#
+# ⚑ IT DOES NOT SUPPRESS OUTPUT AND THAT IS DELIBERATE. A gate that swallowed stderr to tidy its
+# summary would trade a legible refusal for a quiet one, which is the defect one layer over.
+run_checked() {  # label, then the command
+    _rlabel="$1"; shift
+    _rclog="$_witness_logs/check-$(printf '%s' "$_rlabel" | tr -c 'a-zA-Z0-9' '_').log"
+    if "$@" >"$_rclog" 2>&1; then
+        cat "$_rclog" >&2
+    else
+        cat "$_rclog" >&2
+        fail=1; note_failure "$_rlabel" "$_rclog"
+    fi
+}
+
 # ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
 for dist in hooks mdstruct ratchet; do
   for tool in ruff mypy python3; do
@@ -326,16 +350,16 @@ for dist in hooks mdstruct ratchet; do
   # they are different populations.* An editable install naming a root and a missing declared
   # input are two mechanisms of one failure — the thing under test reaching outside its declared
   # closure, and the reader unable to tell.
-  ( cd "$staged/$dist" \
-      && MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
-         PYTHONPATH="$staged/$dist/src" \
-         "$root/$dist/.venv/bin/ruff" check --no-cache . ) \
-    || { fail=1; note_failure "$dist: ruff — lint clean under select=[ALL]"; }
-  ( cd "$staged/$dist" \
-      && MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
-         PYTHONPATH="$staged/$dist/src" \
-         "$root/$dist/.venv/bin/mypy" ) \
-    || { fail=1; note_failure "$dist: mypy — types clean, strict"; }
+  run_checked "$dist: ruff — lint clean under select=[ALL]" \
+    env -C "$staged/$dist" \
+        MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
+        PYTHONPATH="$staged/$dist/src" \
+        "$root/$dist/.venv/bin/ruff" check --no-cache .
+  run_checked "$dist: mypy — types clean, strict" \
+    env -C "$staged/$dist" \
+        MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
+        PYTHONPATH="$staged/$dist/src" \
+        "$root/$dist/.venv/bin/mypy"
   # ⚑ TESTS RUN FROM THE REAL TREE: their venv holds absolute paths, and a witness that cannot
   # find its own interpreter is an infrastructure failure reported as a red gate.
   #
@@ -350,7 +374,8 @@ for dist in hooks mdstruct ratchet; do
   # one thing this run has that bazel does not: the developer venv, where a missing dependency
   # surfaces as an import error rather than as a sandbox that never had it. The honest statement
   # is that this line is a DEVELOPER-TREE smoke check and the hermetic verdict is bazel's.
-  ( cd "$root/$dist" && .venv/bin/python3 -m pytest -q ) || { fail=1; note_failure "$dist: pytest — every case passes"; }
+  run_checked "$dist: pytest — every case passes" \
+    env -C "$root/$dist" .venv/bin/python3 -m pytest -q
 done
 
 # ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership

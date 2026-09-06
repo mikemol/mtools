@@ -1151,3 +1151,32 @@ def test_every_probe_payload_carries_the_residue_marker() -> None:
     assert payloads, "the probe payloads must be findable to be checked"
     unmarked = [ln for ln in payloads if "transient domain probe" not in ln]
     assert not unmarked, f"payload(s) without the residue marker: {unmarked}"
+
+
+def test_the_gate_replays_detail_for_the_distribution_checks() -> None:
+    """⚑⚑⚑ A REFUSAL THAT NAMES ONLY ITS CLAIM MAKES THE BLOCKED PARTY DO THE DIAGNOSIS.
+
+    Measured in one afternoon: TWELVE peer refusals — six to `linux-sources`, six to `gabion` —
+    and **every mechanism was found by the party the gate blocked rather than by the gate.** The
+    checks stream to stderr, so a human at a terminal sees the detail; `note_failure`'s summary is
+    what a peer reads out of a captured run, and for `ruff`, `mypy` and `pytest` it carried the
+    claim with none of the evidence.
+
+    ⚑⚑ The capture is `witness()`'s existing shape HOISTED rather than re-typed: run into a log,
+    echo the log to stderr so the interactive path is unchanged, hand the log to `note_failure` so
+    the refusal REPLAYS the finding. ⚑ Three sites repeating a pattern is how the log-path ordering
+    defect got in the first time.
+
+    MEASURED, BOTH ARMS, on a fixture before the sites were converted: a passing check contributes
+    nothing to the summary; a failing one puts its own stderr into `failed_detail`. **A one-armed
+    test passes a broken-shut gate.**
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "run_checked()" in body, "the capture helper must exist"
+    for check in ("ruff — lint clean", "mypy — types clean", "pytest — every case passes"):
+        assert f'run_checked "$dist: {check}' in body, (
+            f"{check} must route through the capturing helper, not a bare note_failure"
+        )
+    assert 'fail=1; note_failure "$_rlabel" "$_rclog"' in body, (
+        "the helper must pass the LOG to note_failure; a label alone is the defect being repaired"
+    )
