@@ -1353,3 +1353,61 @@ restarts the table and every appended revision becomes a row again.
 correctly returned no match. Adopting it there would have shipped a freeze poll that reads *not
 called* forever. **The arm that saved it was asking a row that DOES exist — `FILE SPLIT`, rev 12 —
 and watching that come back empty too.**
+
+## Rule 24 — a routing rule that names a TOOL and not an INVOCATION resolves differently in every repo
+
+**A peer could not invoke a mode this repository had just built, and the reason was neither
+packaging nor the peer.**
+
+```
+python3 ../substrate/scratch/mdstruct.py rows FILE --col 1 --starts "in progress"
+  -> rows does not exist
+```
+
+**Two implementations of one tool exist**: `substrate/scratch/mdstruct.py` (143 KB, flag-style —
+`--headers --spans --tables --rows`) and `mtools/mdstruct/` (a package with a `rows` subcommand and
+the new `--col`/`--starts` anchor). ⚑ The peer's `SKILL.md` routes `.md` to substrate's copy **by
+relative path**; this repository's routes it to the bare name `mdstruct`. **Neither names the
+installed console script**, which is the only artifact that has the mode.
+
+⚑⚑⚑ **AND THE INSTALLED SCRIPT ALREADY WORKS FROM ANYWHERE — MEASURED:**
+
+```
+cd /tmp && /home/mikemol/github/mtools/mdstruct/.venv/bin/mdstruct rows <abs path> --col 2 --starts "FILE SPLIT"
+  -> table 2  12 | ... FILE SPLIT ...      rc=0
+```
+
+Absolute path, arbitrary cwd, no venv activation. **The reachability gap was never technical.** The
+routing table names a tool; the filesystem holds two of them; the name resolves per-repo to whatever
+copy that repo happens to have.
+
+⚑⚑ **THE REFUSAL MESSAGE IS WHERE THIS BITES, AND IT IS THIS REPOSITORY'S OWN.** The hook prints
+`the tool that owns it: mdstruct` — a bare name with no path. A reader obeying it reaches for
+whatever `mdstruct` means locally, and **the refusal cannot tell them they reached the wrong one**,
+because it never said which. ⚑ A routing rule strict enough to refuse `grep` is strict enough to owe
+an invocation.
+
+### Why "just package it" is the wrong reading
+
+The operator ruling that substrate's clean code moves to mtools **so consumers reference rather than
+copy** is the fix for the *general* case, and it is real work with a timeline. But it is not what
+blocked the peer today: the console script exists, is installed, and runs. ⚑ **What was missing is a
+line in a routing table.** Conflating a routing defect with a packaging defect defers a one-line fix
+behind a migration.
+
+### ⚑ The census caught itself in its own highest-value question
+
+The survey asks §Q-8: *what did you re-derive, and why*. **Two `mdstruct` implementations diverged
+while the survey ran**, with a fix landing in the author's copy and the sanctioned reader unable to
+see it. That is not an anecdote about tooling; it is the census's subject occurring to the census.
+
+### And my own check was the false positive I have been documenting
+
+```
+grep -c "\-\-col\|\-\-starts" substrate/scratch/mdstruct.py   ->  16
+```
+
+**Sixteen hits, and the flags do not exist.** The matches were `--collapse`, `--coherence`,
+`--columns` — a prefix substring, counted as a feature. I nearly told a peer their measurement was
+wrong on the strength of it. ⚑ Running the command (`rows does not exist`) took one line and settled
+it; **a count is not an invocation, and only the invocation answers "can you call this."**
