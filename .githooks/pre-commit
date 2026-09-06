@@ -114,6 +114,19 @@ say "domain witness: each mypy target's declared domain vs its real one"
 ./domain_witness.sh mdstruct //mdstruct:mypy mdstruct/src/mikemol/mdstruct/frontmatter.py || fail=1
 ./domain_witness.sh hooks    //hooks:mypy    hooks/src/mikemol/hooks/cmdparse.py          || fail=1
 
+# ⚑⚑ RUFF TOO, AND THE PROBE KIND IS EXPLICIT. Three ticks armed mypy's domain across three
+# distributions and left ruff's untested — "weaker claim" is not "tested claim". The 4th argument
+# names the defect class to plant, because arm 2 cannot distinguish A DOMAIN THAT EXCLUDES THE FILE
+# from A PROBE THIS CHECKER DOES NOT SEEK. Measured: the mypy probe against `//ratchet:ruff` fails
+# arm 2 and reads exactly like a short domain.
+#
+# ⚑ COST, MEASURED RATHER THAN PROJECTED: a mypy witness is ~13s and a ruff witness ~1s, because
+# mypy re-analyses its whole closure per action while ruff is per-file. Adding three ruff witnesses
+# costs ~3s, not the ~26s a linear projection from the mypy figure would have predicted.
+./domain_witness.sh ratchet  //ratchet:ruff  ratchet/src/mikemol/ratchet/state.py  ruff || fail=1
+./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff || fail=1
+./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff || fail=1
+
 # ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
 # target existed, the shell that runs every other check in this repository was verified by nothing
 # — clean only because its author ran shellcheck by hand after each edit. A convention held in one

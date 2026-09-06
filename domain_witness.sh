@@ -21,8 +21,20 @@
 set -uo pipefail
 
 dist="${1:?the distribution directory was not passed}"
-target="${2:?the mypy target was not passed}"
+target="${2:?the target was not passed}"
 victim="${3:?the transitive module was not passed}"
+
+# ⚑⚑⚑ THE ARM-2 PAYLOAD IS THE CHECKER'S OWN DEFECT CLASS, AND HARDCODING IT SILENTLY SCOPED THIS
+# WITNESS TO ONE CHECKER. The first cut planted a Python TYPE error — which mypy catches and ruff
+# and the ratchet do not. Pointed at `//ratchet:ruff`, that witness would have reported arm 2
+# FAILED and read as "ruff's domain is short" when the truth was "I planted a defect ruff does not
+# look for". ⚑ A PROBE THE CHECKER IGNORES IS INDISTINGUISHABLE FROM A DOMAIN THAT EXCLUDES IT.
+#
+# ⚑⚑ So the payload is a parameter and its DEFAULT is stated rather than assumed:
+#   mypy     a return type that does not match its annotation
+#   ruff     an unused import (F401)
+#   ratchet  a preview-rule violation, which grows the census by a key
+probe_kind="${4:-mypy}"
 
 cd "$(dirname "$0")" || exit 1
 restore() { git checkout "$victim" 2>/dev/null; }
@@ -68,17 +80,20 @@ restore
 
 # ⚑⚑ ARM 2 — VERDICT. Reachability alone only proves the bytes are keyed; this proves the checker
 # actually ranges over them.
-cat >> "$victim" <<'PROBE'
-
-
-def _transient_domain_probe() -> int:
-    return "not an int"
-PROBE
+case "$probe_kind" in
+    mypy)    printf '\n\ndef _transient_domain_probe() -> int:\n    return "not an int"\n' >> "$victim" ;;
+    ruff)    printf '\nimport os  # transient domain probe\n' >> "$victim" ;;
+    ratchet) printf '\n\ndef _transient_domain_probe():\n    """Probe."""\n    return 1\n' >> "$victim" ;;
+    *)       say "arm 2 FAILED: unknown probe kind $probe_kind"; exit 1 ;;
+esac
 out="$(bazel test "$target" 2>&1)"
 if printf '%s' "$out" | grep -q "FAILED"; then
-    say "arm 2 VERDICT: a type error in $victim fails $target"
+    say "arm 2 VERDICT: a $probe_kind defect in $victim fails $target"
 else
-    say "arm 2 FAILED: mypy did NOT catch a planted error in $victim — GREEN OVER A SHORT DOMAIN"
+    # ⚑ THE TWO EXPLANATIONS ARE NAMED, because this arm cannot tell them apart and a message that
+    # asserted only the first would send a reader to repair a declaration that is already correct.
+    say "arm 2 FAILED: $target did not refuse a planted $probe_kind defect in $victim"
+    say "  either the domain is SHORT, or the $probe_kind probe is not a defect THIS checker seeks"
     fail=1
 fi
 restore

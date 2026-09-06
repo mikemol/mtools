@@ -1134,3 +1134,56 @@ peer contact working. It was, and it was also the reason nobody wrote durably.
 **Disposition: `inbox/` is NOT retired.** The tick-1 item was "retire or wire it"; the measurement
 answers *wire it*, and the wiring is that peers must be told it exists — which is a message, not a
 code change.
+
+## Rule 19 — a probe the checker ignores is indistinguishable from a domain that excludes it
+
+**Ⓡ: the domain witness generalized from mypy to ruff, and the generalization exposed a scoping
+defect that had been invisible while only one checker was armed.**
+
+Arm 2 plants a defect and asserts the target refuses it. The first cut planted a Python **type
+error** — hardcoded, because mypy was the only checker being witnessed. Pointed at `//ratchet:ruff`:
+
+```
+./domain_witness.sh ratchet //ratchet:ruff <victim> mypy
+  arm 1 REACHABILITY: a transitive content change re-executes the action
+  arm 2 FAILED: ... did not refuse a planted mypy defect
+```
+
+⚑⚑⚑ **THAT FAILURE READS AS "RUFF'S DOMAIN IS SHORT" AND THE TRUTH IS "I PLANTED A DEFECT RUFF DOES
+NOT LOOK FOR."** Both produce an identical arm-2 red. A witness whose payload is fixed is silently
+scoped to the one checker whose defect class it plants — and it does not announce that scope; it
+announces a domain finding about whatever target it is aimed at.
+
+**Repair:** the probe kind is a parameter, and the defect class is named per checker rather than
+assumed.
+
+```
+mypy     a return value that does not match its annotation
+ruff     an unused import (F401)
+ratchet  a preview-rule violation, which grows the census by one key
+```
+
+⚑⚑ **AND THE FAILURE MESSAGE NAMES BOTH EXPLANATIONS, because the arm genuinely cannot tell them
+apart.** A message asserting only *"the domain is SHORT"* would send a reader to repair a
+declaration that is already correct — the same class as a green over nothing, inverted: a **red over
+nothing**, which costs an investigation rather than a defect.
+
+### ⚑ A linear cost projection from one checker was wrong by 6x, and measuring took one command
+
+Rule 17 recorded 77s for three mypy witnesses. The obvious projection for six witnesses was ~150s.
+Measured instead:
+
+```
+one mypy witness   13s     mypy re-analyses its whole closure per action
+one ruff witness    1s     ruff is per-file
+six witnesses     ~42s     not the ~150s the projection predicted
+```
+
+⚑ **The per-witness cost is a property of the CHECKER, not of the witness.** Extrapolating from the
+expensive one would have made the honest recording of Rule 17's tax into an argument against
+extending it — a measured figure from one instance, projected rather than re-measured, arguing
+against the very work it was recorded to protect.
+
+**Still unarmed after this rule:** the ratchet gate's own domain. Its baseline (`ratchet-preview.txt`)
+**is** correctly declared in `data` — the input `ratchet_check.sh`'s header warns would be dropped
+was not dropped — but declared is not armed, and the `ratchet` probe kind exists and is untested.
