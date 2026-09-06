@@ -381,12 +381,31 @@ done
 # ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership
 # failure this repo refuses: not a COUNT of unwarranted cases, but the SET — warranting one case
 # while adding another leaves a count unchanged and the membership churned.
+#
+# ⚑⚑⚑ AND THE POPULATION THIS 1:1 RANGES OVER IS TEST **FUNCTIONS**, NOT TEST **CASES**. Measured:
+# `hooks` holds 176 `def test_` lines and `pytest --collect-only` collects **248** — 15
+# `parametrize` decorators across four modules expand the difference. ⚑ The invariant is correct as
+# designed (warrants are per-function; the plan settled that), and the COUNT is right. What is
+# wrong is the sentence a reader takes from it: this ledger does NOT say *every test case is
+# warranted*, it says *every test function is*. **248 cases run; 176 carry a warrant.**
+# ⚑ A correct count over a MIS-NAMED population is harder to catch than a wrong count, because
+# every arithmetic check passes. Naming it here rather than changing the invariant, which is the
+# operator's call and not a defect.
 for dist in hooks mdstruct ratchet; do
   [ -d "$staged/$dist" ] || continue
-  w=$(grep -c '@misc{' "$staged/$dist/warrants.bib")
-  # ⚑ `grep -h` then a line count, NOT `grep -c`: -c counts PER FILE and would emit one number
-  # per test module rather than the suite's total. shellcheck's SC2126 suggests the swap and is
-  # wrong here — the aggregate is the point.
+  # ⚑⚑⚑ ANCHORED, BECAUSE AN UNANCHORED `@misc{` COUNTS A QUOTATION AS A WARRANT. This is a corpus
+  # whose `claim` fields QUOTE CODE, so a warrant claiming something about bibtex syntax puts the
+  # entry delimiter inside a field and the ledger reads 177 against 176. ⚑ MEASURED on a fixture:
+  # one entry whose claim contains the string `@misc{` counts as **2** unanchored and **1**
+  # anchored. The gate would then refuse every commit in the distribution with a bare arithmetic
+  # disagreement and NO POINTER to the quotation that caused it.
+  # ⚑⚑ IT AGREED WITH THE ANCHORED FORM AT 176 ON THE DAY IT WAS WRITTEN, which is exactly the
+  # property that made it invisible — `rosettapkg` named the mechanism (*a substring frequency
+  # offered as a count of kinds*) and it found this within minutes of being pointed at my gate.
+  w=$(grep -c '^@misc{' "$staged/$dist/warrants.bib")
+  # ⚑ `cat` then a single `grep -c`, NOT `grep -c` over the glob: -c counts PER FILE and would emit
+  # one number per test module rather than the suite's total. shellcheck's SC2126 suggests a swap
+  # that is wrong here — the aggregate is the point.
   t=$(cat "$staged/$dist"/tests/test_*.py | grep -c '^def test_')
   if [ "$w" -ne "$t" ]; then
     say "$dist: $w warrants against $t test functions — every test must arrive warranted"

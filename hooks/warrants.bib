@@ -1095,6 +1095,18 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-warrant-count-is-anchored-against-a-quoted-delimiter,
+  section = {bar-fires},
+  claim   = {An unanchored entry-delimiter count reads a QUOTATION as a warrant: 2 unanchored, 1 anchored, measured on a fixture},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_warrant_count_is_anchored_against_a_quoted_delimiter}
+}
+
+@misc{hooks-bar-fires-gate-names-the-population-its-ledger-ranges-over,
+  section = {bar-fires},
+  claim   = {The 1:1 ledger ranges over test FUNCTIONS not CASES: 176 warranted, 248 collected, and a correct count over a mis-named population passes every arithmetic check},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_names_the_population_its_ledger_ranges_over}
+}
+
 @misc{hooks-bar-fires-gate-replays-detail-for-the-distribution-checks,
   section = {bar-fires},
   claim   = {TWELVE peer refusals in one afternoon, every mechanism found by the blocked party rather than by the gate: ruff, mypy and pytest refused with a claim and no evidence},

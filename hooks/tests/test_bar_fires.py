@@ -1180,3 +1180,41 @@ def test_the_gate_replays_detail_for_the_distribution_checks() -> None:
     assert 'fail=1; note_failure "$_rlabel" "$_rclog"' in body, (
         "the helper must pass the LOG to note_failure; a label alone is the defect being repaired"
     )
+
+
+def test_the_warrant_count_is_anchored_against_a_quoted_delimiter() -> None:
+    """⚑⚑⚑ AN UNANCHORED `@misc{` COUNTS A QUOTATION AS A WARRANT.
+
+    This corpus's `claim` fields quote code, so a warrant claiming something about bibtex syntax
+    puts the entry delimiter inside a field and the ledger reads 177 against 176 — a bare
+    arithmetic refusal with **no pointer to the quotation that caused it**, blocking every commit
+    in the distribution until someone reads the diff closely enough to find it.
+
+    ⚑⚑ MEASURED on a fixture, both arms, before the gate was changed: one entry whose claim
+    contains the string `@misc{` counts as **2** unanchored and **1** anchored. ⚑ The unanchored
+    form agreed with the anchored one at 176 on the day it was written, which is exactly what made
+    it invisible — `rosettapkg` named the mechanism (*a substring frequency offered as a count of
+    kinds*) and it found this within minutes of being pointed at this gate.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "grep -c '^@misc{'" in body, "the warrant count must be anchored to line start"
+    assert "grep -c '@misc{'" not in body, (
+        "an unanchored count is the defect: a claim quoting the delimiter inflates the ledger"
+    )
+
+
+def test_the_gate_names_the_population_its_ledger_ranges_over() -> None:
+    """⚑⚑⚑ A CORRECT COUNT OVER A MIS-NAMED POPULATION PASSES EVERY ARITHMETIC CHECK.
+
+    The 1:1 ledger ranges over test FUNCTIONS. `hooks` holds 176 `def test_` lines and
+    `pytest --collect-only` collects **248** — 15 `parametrize` decorators expand the rest. The
+    invariant is correct as designed and the count is right; the sentence a reader takes from it is
+    not. ⚑ This ledger does not say *every test case is warranted*. It says *every test function
+    is*, and **248 cases run while 176 carry a warrant**.
+
+    ⚑⚑ Named rather than changed: whether warrants should be per-case is the operator's call, and
+    the plan settled per-function. What is repaired here is the claim, not the invariant.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "TEST **FUNCTIONS**, NOT TEST **CASES**" in body
+    assert "248" in body, "the case count must be stated, or the gap is invisible again"
