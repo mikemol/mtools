@@ -189,6 +189,38 @@ them is the server's own counters — the ones three sessions believed unreachab
 the events rather than with a config. *The arm: run the gate and confirm a `Streaming build results
 to:` line appears whose invocation id resolves at `:31080`.*
 
+⚑⚑⚑ **AND THE OBVIOUS FIX IS THE WRONG ONE — settled by reading, before editing.** The first
+instinct was *"move `--bes_results_url` to an unconditional `build` line"*, symmetrical with how the
+hermetic-sandbox flags were made unconditional. **That is wrong here, and the reason is this
+corpus's own stale-pointer class:**
+
+```
+.bazelrc:251            build:cas --bes_results_url=…:31080/invocation/    <- config-scoped
+.githooks/pre-commit:201 [ -n "${PAPERKIT_BES:-}" ] && PK_BES="--bes_backend=… --bes_upload_mode=…"
+```
+
+`--bes_results_url` only prints a URL **when a backend is actually streaming**. Unconditional, it
+would ride on every invocation *including ones with no BES configured* — emitting a pointer to a
+record that was never written. ⚑ **The mechanism that decides whether BES participates is line 201,
+and it is already the sole owner of that decision** (`PAPERKIT_BES` is its only gate). The URL
+belongs **with** that decision, not beside it.
+
+**So the fix is one line, at the owner:**
+
+```
+[ -n "${PAPERKIT_BES:-}" ] && PK_BES="--bes_backend=${PAPERKIT_BES} --bes_upload_mode=fully_async \
+                                      --bes_results_url=http://127.0.0.1:31080/invocation/"
+```
+
+⚑ **And it drags a comment with it.** Lines 222–223 justify an unquoted expansion by saying
+`$PK_BES` is *"EITHER empty OR two flags"*. Adding a third makes that comment false — the
+comment-that-outlived-its-code class, which this same file catalogues twice (§6, §7b). *A fix that
+leaves a now-false comment behind has traded one defect for another.*
+
+**Arm:** run the gate and confirm a `Streaming build results to:` line appears whose invocation id
+resolves at `:31080`; and run a build with `PAPERKIT_BES` unset and confirm **no** URL is printed —
+the F-arm for the unconditional variant that was rejected.
+
 ⚑⚑ **AND THE POINTER IS THE ONLY ROUTE — MEASURED, the API cannot substitute for it.** Probed
 `:31080/api/v1/GetInvocation` while the gate ran, to retrieve the in-flight record without the URL:
 
@@ -231,6 +263,39 @@ paperkit's own rule.)*
 ⚑ `duplicate_writes` is exactly the counter that would have settled the AC-vs-CAS question paperkit
 built two clean arms for and then withdrew as bounded by access. **The instrument existed the whole
 time.**
+
+## 5d. ⚑⚑ THE GRAPH SHRANK 17% AND THE COMMENT THAT ASKED TO BE RE-DERIVED WAS NOT
+
+`.bazelrc`'s JVM-heap ladder sizes the Bazel server's heap against the action-graph size, and its
+own rung-3 note (2026-08-31) ends by naming the defect it expects:
+
+> *"this is not '8G was wrong'; it is that the ceiling tracks GRAPH SIZE and **nobody re-derived it
+> when the graph moved**. The next arc that adds modules moves it again."*
+
+**MEASURED from a live `//:hook` (2026-09-05), which is the re-derivation that note asked for:**
+
+```
+rung 2, 2026-08-27   125,471 actions        (8G rung, measured by the author)
+rung 3, 2026-08-31   152,367 configured     (12G rung; +21%, "the grid grew")
+LIVE,   2026-09-05   126,657 configured     <- MEASURED HERE
+```
+
+⚑ **The graph SHRANK ~17% and the comment's prediction pointed the other way.** It anticipated
+monotone growth (*"the next arc that adds modules moves it again"*), so the heap ladder is now sized
+against a graph 25,710 actions larger than the one that exists. **A ratchet that only clicks upward
+records a high-water mark, not a size** — and the comment is honest about the mechanism while being
+wrong about the direction, which is why it survived: it reads as self-aware.
+
+⚑⚑ **And `docs/bazel-report.md` propagates it correctly-but-unverifiably.** Its line marks the pair
+*"(MEASURED-by-the-author, INFERRED-by-me from the comment)"* — an exemplary provenance tag, and
+still a citation rather than a measurement. **The tag was accurate and the number was stale**, which
+is the harder case: honest provenance does not make a figure current. *Cite the instrument, not the
+reading — the reading has a date.*
+
+**What this does not claim:** the shrink's cause is unmeasured. The `--local_resources=memory=6248`
+budget and the sandbox tier could partition the graph differently than the runs that produced the
+earlier figures. The measurement is the configured count on this invocation; attributing the delta
+to an arc would be the same inference this entry is correcting.
 
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
