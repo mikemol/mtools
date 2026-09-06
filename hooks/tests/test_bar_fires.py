@@ -784,3 +784,145 @@ def test_the_gate_reads_the_index_not_the_working_tree(tmp_path: Path) -> None:
             "the materialised tree carries a working-tree-only change: the gate is reading disk")
     finally:
         victim.write_text(committed, encoding="utf-8")
+
+# --- the five gate repairs of 2026-09-06, none of which had a test -----------------------------
+#
+# ⚑⚑⚑ EVERY ONE OF THESE WAS ARMED BY HAND, IN A SHELL, ONCE. Five repairs landed in
+# `.githooks/pre-commit` and `domain_witness.sh` in one session — import closure, refusal-account,
+# witness attribution, residue sweep, self-snapshot — each measured with both arms and none gated.
+# ⚑ That is exactly what this module exists to refuse: an arm that lives in a transcript is an arm
+# the next edit can silently remove. Measured the same session: a `git checkout --` cleanup
+# reverted an uncommitted repair block, and only a re-measurement caught it.
+
+_GATE = _DIST.parent / ".githooks" / "pre-commit"
+
+
+def test_the_gate_snapshots_itself_before_running() -> None:
+    """⚑⚑⚑ `core.hooksPath` points into the tree, so git executes this file LIVE.
+
+    Measured across two trees 61 seconds apart (substrate's `gate-G86`): a peer's commit died at
+    `.githooks/pre-commit:302`, *syntax error near `(`*, AFTER running 226+110+40 pytest and 35/35
+    bazel — and `bash -n` parsed the file clean a minute later. They read it mid-write.
+
+    ⚑ `git hash-object .githooks/pre-commit` equals its index entry, so the executed bytes ARE the
+    tree's bytes. The re-exec is the whole repair; without the guard it would loop.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "_GATE_SNAPSHOT" in body, "the gate must re-exec from a snapshot of itself"
+    assert 'exec bash "$_snap"' in body, "the snapshot must be the thing that runs"
+
+
+def test_the_snapshot_survives_a_mid_write_edit_to_the_live_file(tmp_path: Path) -> None:
+    """⚑⚑ THE ARM THAT REPRODUCES THE PEER'S FAILURE: a live edit must not reach a running gate.
+
+    A copy taken before the mutation parses clean while the mutated original does not — which is
+    substrate's failure and its repair in one measurement.
+    """
+    live = tmp_path / "gate.sh"
+    live.write_text("#!/usr/bin/env bash\necho ok\n", encoding="utf-8")
+    snap = tmp_path / "snap.sh"
+    snap.write_text(live.read_text(encoding="utf-8"), encoding="utf-8")
+    live.write_text(live.read_text(encoding="utf-8") + "\nsyntax error (\n", encoding="utf-8")
+
+    def parses(path: Path) -> bool:
+        return subprocess.run(  # noqa: S603
+            ["/usr/bin/env", "bash", "-n", str(path)],
+            capture_output=True, check=False).returncode == 0
+
+    assert not parses(live), "the mutated live file must fail to parse — else the arm is vacuous"
+    assert parses(snap), "the snapshot must be immune to the live edit"
+
+
+def test_the_gate_sweeps_its_own_probe_residue() -> None:
+    """⚑⚑⚑ A refusal was generating its own next refusal.
+
+    Each witness traps its own EXIT; the GATE had none. Any abandonment — an early refusal, or a
+    harness killing a backgrounded commit at its timeout — strands a witness mid-mutation, and the
+    probe survives into the next attempt, which then refuses on residue rather than content.
+
+    ⚑ Measured: clearing four stranded victims by hand produced three more on the retry. And
+    `gabion` falsified the concurrency story two parties had agreed on — a run on a
+    verified-clean tree with no peer active injected fresh residue anyway.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "sweep_witness_residue" in body
+    assert "trap sweep_witness_residue EXIT" in body, "the sweep must fire on ANY exit path"
+
+
+def test_the_sweep_matches_the_probe_marker_and_not_mere_dirtiness() -> None:
+    """⚑⚑ A BLANKET CHECKOUT WOULD DISCARD A PEER'S REAL WORK.
+
+    Seven sessions write this tree. The sweep's predicate must be the probe marker, never
+    `is this file modified` — which is the same discipline as `--only` on a commit, one layer down.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "transient domain probe" in body, "the sweep must key on the marker"
+
+
+def test_the_sweep_uses_no_subshell() -> None:
+    """⚑⚑⚑ THE FIRST CUT OF THE SWEEP DID NOTHING AND SAID NOTHING.
+
+    `printf | while read` puts the loop in a SUBSHELL, so `git checkout` could not report failure
+    to the caller. Measured: residue planted, sweep run, residue still present, no error printed.
+    ⚑ That is the pipeline-swallows-the-status defect — the class `hook_no_chaining` exists to
+    refuse — committed INSIDE the repair for a different silent failure, and the fifth instance of
+    it in this repository in one day.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    start = body.index("sweep_witness_residue() {")
+    fn = body[start:body.index("\n}", start)]
+    assert "| while" not in fn, "a piped loop runs in a subshell and cannot report failure"
+    assert "for v in" in fn, "the sweep must iterate without a pipeline"
+
+
+def test_the_witness_takes_a_before_image() -> None:
+    """⚑⚑⚑ THE WITNESS COULD NOT TELL ITS OWN SABOTAGE FROM A PEER'S WORK.
+
+    `restore` compared `git diff --quiet -- $victim`, a WHOLE-FILE predicate: it conflates *I
+    failed to restore my own edit* with *someone else's edit arrived while I ran*. Both print
+    `the tree is dirty`, and only the first is the witness's business.
+
+    ⚑ The repair is a content hash taken before any mutation. `gabion` offered a scratch-copy
+    alternative and withdrew it: a witness over a copy proves the COPY's domain, which is the whole
+    reason arm 2 mutates the tracked file.
+    """
+    body = (_DIST.parent / "domain_witness.sh").read_text(encoding="utf-8")
+    assert "before_image=" in body, "the witness must record what it found before mutating"
+    assert "git hash-object" in body, "attribution needs a content hash, not a dirtiness check"
+
+
+def test_the_gate_replays_a_failing_checks_own_output() -> None:
+    """⚑⚑ A REFUSAL THAT NAMES AN OUTCOME AND NOT A SUBJECT IS ONE NOBODY CAN CLEAR.
+
+    Measured: `linux-sources` was refused by `shellcheck domain reaches every shell file` and
+    reported that `grep shellcheck` over the ENTIRE run returned two lines — a passing bazel target
+    and the refusal summary. The witness DOES print three arms, to stderr, interleaved into a
+    35-target bazel run hundreds of lines earlier. ⚑ Detail that exists somewhere and is not
+    attached to the verdict is detail the reader does not have.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "failed_detail" in body, "a failing check must be able to carry its own account"
+    assert "the failing check(s) said:" in body, "the account must be replayed under the verdict"
+
+
+def test_the_gate_names_the_gap_when_no_check_captured_its_output() -> None:
+    """⚑ A READER WHO CANNOT FIND THE REASON SHOULD BE TOLD THE REASON IS MISSING.
+
+    Otherwise a bare label reads as an arbitrary gate, which is what gets bypassed.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "no check captured its own output" in body
+    assert "defect in the CHECK, not in your commit" in body
+
+
+def test_the_gate_points_the_checkers_at_the_staged_tree() -> None:
+    """⚑⚑⚑ `cd` RELOCATES A CWD, NOT AN IMPORT CLOSURE.
+
+    The venv is an EDITABLE install — a `.pth` plus an import-hook finder naming the live tree — so
+    `cd $staged/$dist` changed the working directory and left imports resolving to unstaged source.
+    ⚑ Measured: a type defect planted in the WORKING tree, absent from the staged copy, was still
+    imported by a run inside the staged copy, and mypy reported Success.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert 'MYPYPATH="$staged/' in body, "mypy must resolve inside the staged tree"
+    assert 'PYTHONPATH="$staged/' in body, "the import closure must be the staged one"

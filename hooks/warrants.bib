@@ -1022,3 +1022,57 @@
   claim   = {Garbage on stdin denies nothing --- a separate claim from the exit code},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_end_to_end_a_malformed_payload_denies_nothing}
 }
+
+@misc{hooks-bar-fires-gate-snapshots-itself-before-running,
+  section = {bar-fires},
+  claim   = {core.hooksPath points into the tree, so git executes this file LIVE},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_snapshots_itself_before_running}
+}
+
+@misc{hooks-bar-fires-snapshot-survives-a-mid-write-edit-to-the-live-file,
+  section = {bar-fires},
+  claim   = {THE ARM THAT REPRODUCES THE PEER'S FAILURE: a live edit must not reach a running gate},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_snapshot_survives_a_mid_write_edit_to_the_live_file}
+}
+
+@misc{hooks-bar-fires-gate-sweeps-its-own-probe-residue,
+  section = {bar-fires},
+  claim   = {A refusal was generating its own next refusal},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_sweeps_its_own_probe_residue}
+}
+
+@misc{hooks-bar-fires-sweep-matches-the-probe-marker-and-not-mere-dirtiness,
+  section = {bar-fires},
+  claim   = {A BLANKET CHECKOUT WOULD DISCARD A PEER'S REAL WORK},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_sweep_matches_the_probe_marker_and_not_mere_dirtiness}
+}
+
+@misc{hooks-bar-fires-sweep-uses-no-subshell,
+  section = {bar-fires},
+  claim   = {THE FIRST CUT OF THE SWEEP DID NOTHING AND SAID NOTHING},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_sweep_uses_no_subshell}
+}
+
+@misc{hooks-bar-fires-witness-takes-a-before-image,
+  section = {bar-fires},
+  claim   = {THE WITNESS COULD NOT TELL ITS OWN SABOTAGE FROM A PEER'S WORK},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_witness_takes_a_before_image}
+}
+
+@misc{hooks-bar-fires-gate-replays-a-failing-checks-own-output,
+  section = {bar-fires},
+  claim   = {A REFUSAL THAT NAMES AN OUTCOME AND NOT A SUBJECT IS ONE NOBODY CAN CLEAR},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_replays_a_failing_checks_own_output}
+}
+
+@misc{hooks-bar-fires-gate-names-the-gap-when-no-check-captured-its-output,
+  section = {bar-fires},
+  claim   = {A READER WHO CANNOT FIND THE REASON SHOULD BE TOLD THE REASON IS MISSING},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_names_the_gap_when_no_check_captured_its_output}
+}
+
+@misc{hooks-bar-fires-gate-points-the-checkers-at-the-staged-tree,
+  section = {bar-fires},
+  claim   = {cd RELOCATES A CWD, NOT AN IMPORT CLOSURE},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_points_the_checkers_at_the_staged_tree}
+}
