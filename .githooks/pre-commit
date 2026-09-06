@@ -17,6 +17,49 @@
 # ecosystem. Arm with:  git config core.hooksPath .githooks
 set -euo pipefail
 
+# ⚑⚑⚑ THE GATE RE-EXECS FROM AN IMMUTABLE SNAPSHOT OF ITSELF, BECAUSE `core.hooksPath` POINTS INTO
+# THE WORKING TREE AND GIT RUNS THIS FILE LIVE. Measured: `git hash-object .githooks/pre-commit`
+# equals its index entry, so the executed bytes ARE the tree's bytes — any edit to this file is
+# visible to every party's in-flight commit, mid-write, with no atomicity.
+#
+# ⚑⚑ MEASURED ACROSS TWO TREES, 61 SECONDS APART (`substrate`'s gate-G86, corroborated here from
+# the log). substrate's commit died at `.githooks/pre-commit:302`, *syntax error near `(`*, AFTER
+# running 226+110+40 pytest and 35/35 bazel — and `bash -n` parsed the file clean a minute later:
+#
+#     e2883f9  16:29:40  substrate's leg landed
+#     2a17b99  16:30:41  this file's residue-sweep repair committed
+#
+# **They read it mid-write.** ⚑ And it compounds: `2a17b99` IS the fix for a concurrency defect, so
+# the repair for one produced a second one in the same file inside the same minute.
+#
+# ⚑⚑⚑ NEITHER PARTY COULD SEE IT ALONE. substrate saw a parse error in a file it does not own; I
+# saw a normal edit. **Only the two commit timestamps together say what happened**, and it does not
+# reproduce afterward — so a later reader concludes the report was spurious. The general shape:
+# *a gate whose own source lives in the tree it guards can be read mid-write, and the failure is
+# attributed to whoever happened to be committing.*
+#
+# ⚑ ARMED BOTH WAYS: with the live file mutated to `this is a syntax error (`, the live file fails
+# `bash -n` at that line and the snapshot parses clean.
+if [ -z "${_GATE_SNAPSHOT:-}" ]; then
+    _snap="${TMPDIR:-/home/mikemol/.cache}/mtools-gate-$$.sh"
+    if cp "$0" "$_snap" 2>/dev/null; then
+        export _GATE_SNAPSHOT="$_snap"
+        # ⚑ NO `trap` HERE: it would fire when `exec` replaces this shell and delete the file
+        # mid-read. The snapshot removes itself below, in the process that actually runs it.
+        exec bash "$_snap" "$@"
+    fi
+    # ⚑ A FAILED COPY REPORTS AND CONTINUES. Refusing would turn a full tmpfs into a commit
+    # refusal, and this is a rare-hazard protection rather than a correctness one — but a SILENT
+    # fallback would hide that the protection is off, which is this repo's own defect class.
+    printf 'pre-commit: ⚑ could not snapshot self to %s — running LIVE from the tree.\n' "$_snap" >&2
+    printf '  an edit to this file mid-run may produce a syntax error blamed on your commit.\n' >&2
+else
+    # ⚑ SELF-DELETING, and deliberately not via a trap: this process IS the snapshot's image, so
+    # unlinking now means no abandoned-run path can skip the cleanup — the exact defect the
+    # residue sweep below exists to repair, one layer up.
+    rm -f "$_GATE_SNAPSHOT"
+fi
+
 root="$(git rev-parse --show-toplevel)"
 
 # ⚑⚑⚑ THIS GATE'S FAILURE SURFACE IS WIDER THAN YOUR COMMIT, AND IT SAYS SO BEFORE IT RUNS.
