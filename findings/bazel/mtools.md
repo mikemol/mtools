@@ -1073,7 +1073,18 @@ which requires changing one.
 
 **The honest disposition:** 77s is a real tax on every commit, it will grow linearly with each new
 distribution, and it buys the only check in the gate that asks whether the declared input set is the
-*right* set rather than whether it passes. ⚑ **Recorded now rather than discovered at the moment
+*right* set rather than whether it passes.
+
+⚑⚑⚑ **SUPERSEDED — AND THE SUPERSESSION IS THE POINT OF LEAVING IT.** That 77s was measured with
+three witnesses. **Rule 28 re-measured at 132s with nine**, and the projection in this very
+paragraph — *"it will grow linearly with each new distribution"* — was itself wrong, as Rule 19
+found: per-witness cost is a property of the **checker**, not the witness, so mypy's 16s and ruff's
+2s do not extrapolate from each other.
+
+⚑ **A FIGURE STATED IN THE PRESENT TENSE OUTLIVES ITS MEASUREMENT.** This paragraph read *"77s is a
+real tax"* for eleven ticks after it stopped being true, and nothing in the sentence marked it as a
+reading taken at one moment. **Every cost figure in this file is a measurement with a date**, and
+the ones written as bare present-tense assertions are the ones that decay unnoticed. ⚑ **Recorded now rather than discovered at the moment
 someone is in a hurry** — an unexplained slow gate gets bypassed, and a gate bypassed once is a gate
 whose greens no longer mean anything.
 

@@ -156,6 +156,15 @@ say "domain witness: each mypy target's declared domain vs its real one"
 say "rule freshness: are the environment claims this repo cites still true?"
 ./rule_freshness.sh || true
 
+# ⚑⚑ FIGURES DECAY DIFFERENTLY FROM ENDPOINTS, so this is a second checker rather than a mode of
+# the first. `rule_freshness.sh` re-measures the WORLD — a port answers or it does not. This
+# re-reads THIS FILE for an invariant between two of its own statements: when a later rule writes
+# "Rule N recorded <figure>", it has declared N's number historical, and N is then obliged to say
+# so. ⚑ No clock, no cluster, no re-measurement — which is why it can run every commit while the
+# thing it guards (a 132-second gate) cannot be re-timed inside itself.
+say "figure freshness: is any superseded number still stated in the present tense?"
+./figure_freshness.sh || true
+
 # ⚑⚑ AN UNCLAIMED CHECKER REFUSES, WHERE A STALE ENVIRONMENT CLAIM ONLY REPORTS. The difference is
 # ownership: freshness measures a shared cluster this repo does not control, so blocking on it
 # would block commits their author cannot fix. An orphaned script is entirely inside this tree —
