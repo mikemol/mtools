@@ -127,6 +127,20 @@ say "domain witness: each mypy target's declared domain vs its real one"
 ./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff || fail=1
 ./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff || fail=1
 
+# ⚑⚑⚑ THE RATCHET GATE, AND ITS BASELINE AS A SEPARATE VICTIM. `ratchet_check.sh`'s own header
+# warns that "a ratchet whose baseline sits outside its own key can be lowered with no gate
+# noticing" — the baseline IS correctly declared in that target's `data`, and until now nothing
+# proved it. These are two different domain claims about one target: the SOURCES it censuses, and
+# the BASELINE it compares against.
+#
+# ⚑⚑ THE BASELINE ARM REMOVES A KEY RATHER THAN ADDING ONE, AND THE DIRECTION IS THE FINDING.
+# Measured: appending a fabricated key re-executes and PASSES, correctly — a baseline holding a key
+# the census does not produce is paydown. Only a REMOVED key leaves a real finding unaccounted. An
+# arm built on the intuitive direction would have reported FAILED against a gate working exactly as
+# designed.
+./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/src/mikemol/ratchet/state.py ratchet || fail=1
+./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/ratchet-preview.txt          baseline || fail=1
+
 # ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
 # target existed, the shell that runs every other check in this repository was verified by nothing
 # — clean only because its author ran shellcheck by hand after each edit. A convention held in one

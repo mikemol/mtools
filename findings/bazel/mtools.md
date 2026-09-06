@@ -1187,3 +1187,49 @@ against the very work it was recorded to protect.
 **Still unarmed after this rule:** the ratchet gate's own domain. Its baseline (`ratchet-preview.txt`)
 **is** correctly declared in `data` — the input `ratchet_check.sh`'s header warns would be dropped
 was not dropped — but declared is not armed, and the `ratchet` probe kind exists and is untested.
+
+## Rule 20 — the intuitive direction of a probe can be the one the gate is right to ignore
+
+**Ⓥ: the ratchet gate armed, including its baseline — the input this repository's own
+`ratchet_check.sh` header names as the one a careless declaration drops.**
+
+> *"A ratchet whose baseline sits outside its own key can be lowered with no gate noticing."*
+
+**Measured: the baseline IS in the key.** Mutating `ratchet-preview.txt` re-executes the action. The
+warning was heeded when the target was written and nothing had ever proved it — *declared is not
+armed*, which is the whole of Ⓨ restated at a data input rather than a source file.
+
+### ⚑⚑⚑ The direction that must refuse is not the direction that suggests itself
+
+The obvious probe is *add a key to the baseline*. Measured, it **re-executes and PASSES**:
+
+```
+append a fabricated key   -> Executed 1 out of 1 test: 1 test passes
+remove an existing key    -> Executed 1 out of 1 test: 1 FAILS
+```
+
+⚑⚑ **And the pass is correct.** A baseline holding a key the census does not produce is **paydown** —
+fewer findings than budgeted. Only a *removed* key leaves a real finding unaccounted, which is
+growth. **An arm built on the intuitive direction would have reported `arm 2 FAILED` against a gate
+behaving exactly as designed** — a red over nothing, sending a reader to repair a correct
+declaration.
+
+⚑ **The general form: a probe encodes a hypothesis about what the checker is FOR, and the intuitive
+mutation often tests the direction the checker is deliberately silent about.** Before planting a
+defect, ask which direction the gate exists to refuse — not which direction is easier to produce.
+
+### ⚑⚑ A pass that survives by accident is one refactor from a permanent red
+
+The baseline probe (`head -n -1`) carries no nonce, so it alternates between exactly two digests —
+shortened and restored. It passed Rule 16's twice-in-a-row check **only because arm 3 rewrites the
+file between runs.**
+
+⚑ **That is a correct result resting on an unrelated mechanism.** Nothing in the probe says "arm 3
+guarantees my digest moves"; remove or reorder that restore and arm 1 goes permanently red with no
+edit to arm 1. **Repaired by making it deliberate:** the probe appends a nonce as a `#` comment —
+outside the census, so the verdict is unchanged, and inside the digest, so re-execution is
+guaranteed by construction rather than by a neighbour's behaviour.
+
+**Coverage after this rule:** 8 witnesses over 3 distributions — mypy ×3, ruff ×3, ratchet sources
+×1, ratchet baseline ×1. ⚑ Every checker in the gate now has its declared domain armed rather than
+asserted.

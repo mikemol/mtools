@@ -147,6 +147,91 @@ received the same bytes; only the clock differed.**
 | 7 | 2026-09-06 | ⚑ **`summit` independently corroborated by a second leg, different reason.** See `§N` end. | apex §A4 |
 | 8 | 2026-09-06 | ⚑ **TWO REPOS HOLD OPPOSITE FAIL-OPEN POLICIES ON ONE SHARED EXECUTOR.** See `§P`. | apex divergence register |
 | 9 | 2026-09-06 | ⚑⚑ **`§Q`-10 ANSWERS ARE TYPED, NOT RANKED — do not sum or average them.** See `§T`. | apex phase 2; `§Q`-10 handling |
+| 10 | 2026-09-06 | ⚑⚑ **THE FREEZE IS AN ARTIFACT IN `§V`, NOT A MESSAGE. Poll this table.** See `§G`. | every leg's embargo; the freeze |
+| 11 | 2026-09-06 | ⚑⚑ **`mdstruct --headers` SILENTLY DROPS SECTIONS — cross-check with `--budget`.** See `§M`. | apex phase 1; every leg read |
+
+---
+
+## §G ⚑⚑ THE FREEZE IS AN ARTIFACT, NOT A MESSAGE — poll `§V`
+
+**Raised by `substrate-b0`, 2026-09-06, and adopted verbatim as the mechanism.**
+
+The dispatch said *"do not read peers' filings until I call the freeze."* ⚑ **No leg can observe that
+call.** It arrives as a peer message that may not arrive, or may land mid-turn and be missed — so a
+leg holding the embargo cannot distinguish:
+
+> *"nobody has called the freeze"* from *"the call did not reach me"*
+
+⚑ **That is this brief's own absence-versus-unavailable class, applied to the survey's control
+flow** — and the dispatcher built it in without noticing. A leg could hold an embargo indefinitely
+against an event it has no instrument for.
+
+**THE RULE, effective now:**
+
+> ⚑ **THE FREEZE IS A ROW IN `§V`.** It is called when, and only when, a revision appears in the
+> table above reading **`FREEZE CALLED`** and `§S` below carries the roster accounting. **Poll this
+> file. Do not wait for a message.** A message may also be sent as a courtesy; it is not the event.
+
+⚑ **This is `I1` applied to the freeze itself** — *corrections land in the revision log, not in
+messages* — and substrate's reason for preferring it over a locally-evaluable condition is the one
+that decides it: **a condition like "all six files present" produces no accounting artifact**, while
+`§6` requires every party marked `filed` / `declined` / `no response` *before* the apex begins. The
+revision produces the artifact the brief already demands.
+
+⚑ **Until `FREEZE CALLED` appears in `§V`, the embargo holds and legs are not blocked on anything.**
+Answering substrate's direct question: **nothing is owed by a filed leg.** File once, then the
+obligation is discharged; the next event is the freeze, and it is now observable.
+
+## §S Freeze roster — ⚑ NOT YET CALLED
+
+| party | status | evidence |
+|---|---|---|
+| `paperkit` | **filed** | `paperkit-deps-build.md` |
+| `substrate` | **filed** | `substrate-deps-build.md`, `SB-01`–`SB-10`, against rev 1 |
+| `mtools` | **filed** | `mtools-deps-build.md`, `MT-01`–`MT-13`, against rev 1 |
+| `rosettapkg` | **filed** | `rosettapkg-deps-build.md` |
+| `linux-sources` | **filed** | `linux-sources-deps-build.md`, `LS-01`–`LS-30` |
+| `cassian-observability` | ⚑ **in progress — held** | leg complete at `cassian:docs/census-deps-build-leg.md`; blocked on **its operator's hold against writing to mtools**. Not a decline; the dispatch was usable. |
+
+⚑ **This table is provisional and is re-measured at freeze time, never carried forward** (`§F`).
+
+---
+
+## §M ⚑⚑ THE READER THE ROUTING HOOK MANDATES DROPS SECTIONS SILENTLY
+
+**Reported by `substrate-b0`; REPRODUCED by `linux-sources` on its own file within the hour.**
+
+    mdstruct --headers NEXT.md   ->  31 headings
+    mdstruct --budget  NEXT.md   ->  73 headings      ⚑ 42 sections invisible
+
+**Mechanism** (`testimony`, substrate): a heading containing an **apostrophe** reads as unmatched,
+the cursor does not advance, and **the preceding section's span extends over the missing one.**
+⚑ **No error, no gap — the predecessor just reads longer.** `--budget` does not use the anchoring
+path, which is why the two disagree.
+
+⚑⚑ **BINDING ON THE APEX, AND THIS IS THE SHARPEST OPERATIONAL ITEM IN THE RUN FILE.** Substrate
+reports the drop swallowed **`SB-08` — its `§Q`-8 re-derivation section**, which `§Q` names as *the
+highest-value item in the census*. It renamed the heading to work around it, **so its leg is safe and
+no other leg is known to be.**
+
+> **An apex reading legs with `--headers` will silently miss `§Q`-8 sections in any leg whose
+> heading contains an apostrophe, and will see no gap.**
+
+**Required of the apex:** cross-check every leg's heading count with `--budget`, and treat a
+mismatch as a **stop**, not a note. ⚑ A single reader cannot detect this class — **the disagreement
+between two readers is the only signal.**
+
+⚑ **Two correct guards compose into an unfixable defect.** `hook_structural_query` refuses
+`grep`/`sed`/`cat` on `.md` and names `mdstruct` as the owning tool, so the gate **compels** the
+defective reader and forbids the fallback that would expose it. A clean replacement exists
+(`substrate/md_hkey.py`, 18/18, folding all seven of pandoc's smart-typography rewrites) and is
+**unwired**, behind an all-or-nothing per-file gate that refuses every edit to `mdstruct`. **The
+per-file gate protects the tool; the routing hook mandates the tool; the fix sits outside both.**
+
+⚑ **It has already cost this dispatcher a symbol collision** — a ledger census taken with
+`--headers` missed an existing symbol and a new item was filed onto it. **A guard that routes every
+consumer to one instrument inherits that instrument's blind spot fleet-wide**, and the guard's own
+correctness is what makes it invisible.
 
 ---
 
@@ -318,6 +403,34 @@ this section asked the apex to perform, answered before the apex exists. `cassia
 ⚑ **Note the shape against `LS-10`** (*"agreement between two instruments that share a blind spot is
 the blind spot, twice"*). These two did **not** share an instrument or a reason — the agreement is on
 the *conclusion* from independent premises, which is the case where agreement carries information.
+
+### ⚑ THIRD NOMINATION OF `summit`, AND A SECOND OF `gcalculus` (rev 10)
+
+`substrate-b0`, from its filed leg. `citation` (its leg is filed; quoted from its report).
+
+**`summit` — a third leg, a third reason.** Substrate nominates it as *"the only party that can say
+whether a capability any leg reports as **re-derived** was already registered by someone else."*
+⚑ Three legs, three non-overlapping reasons: a **dependency** of a leg (linux-sources), the **index
+the central question presupposes** (cassian), and the **arbiter of whether a re-derivation was
+avoidable** (substrate). Substrate flags its own scope doubt, which is kept.
+
+**`gcalculus` — now nominated twice**, and substrate's reason is materially stronger than
+`linux-sources`':
+
+> it rebuilt a pristine copy of substrate's `agda/` tree, ran its own install, and died in
+> substrate's `Foundation` on a `ClashingDefinition` before reaching anything of its own.
+> **A party that builds another party's tree from scratch holds the coldest-start dependency
+> evidence in the ecosystem**, and no leg on the current roster can produce it.
+
+⚑ **`§Q`-3 asks what happens on a cold machine, and every leg on the roster answered it by
+reasoning about its own tree rather than by having a cold machine.** A party that actually performed
+a from-scratch build of someone else's tree — **and failed** — holds the one measurement the
+question was written for. That failure is the evidence, not a disqualification.
+
+⚑ **The nomination count now reads:** `summit` ×3 (three reasons), `gcalculus` ×2 (linux-sources'
+`participants` dependency; substrate's cold-build), and `earley`, `freecell`, `el-openglo`, `gabion`
+×1 each. **Still undispatched, for the reason stated above** — adding parties mid-run changes what
+the filed legs mean. **The count is the apex's input, not a trigger.**
 
 ---
 

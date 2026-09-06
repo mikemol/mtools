@@ -71,9 +71,10 @@ printf '\n# transient domain probe %s\n' "$(date +%s%N)" >> "$victim"
 # the subject's) reappearing inside the witness written to enforce the rule it belongs to.
 out="$(bazel test "$target" 2>&1)"
 if printf '%s' "$out" | grep -q "Executed 1 out of 1 test"; then
-    say "arm 1 REACHABILITY: a transitive content change re-executes the action"
+    say "arm 1 REACHABILITY: a content change in $victim re-executes the action"
 else
     say "arm 1 FAILED: editing $victim did NOT invalidate $target — it is outside the domain"
+    say "  (or the probe's bytes were already cached — arm 1 nonces to rule that out)"
     fail=1
 fi
 restore
@@ -81,6 +82,23 @@ restore
 # ⚑⚑ ARM 2 — VERDICT. Reachability alone only proves the bytes are keyed; this proves the checker
 # actually ranges over them.
 case "$probe_kind" in
+    # ⚑⚑⚑ THE BASELINE IS A DECLARED DATA INPUT, NOT A SOURCE FILE, AND IT IS THE ONE THIS
+    # REPOSITORY'S OWN `ratchet_check.sh` HEADER WARNS GETS DROPPED: "a ratchet whose baseline sits
+    # outside its own key can be lowered with no gate noticing." Every other probe here appends to
+    # a `.py` the checker reads; this one mutates the file the verdict is compared AGAINST.
+    #
+    # ⚑⚑ AND THE DIRECTION MATTERS, WHICH IS WHY ADDING A KEY IS THE WRONG ARM. Measured: appending
+    # a fabricated key re-executes the action and PASSES — correctly, because a baseline holding a
+    # key the census does not produce is paydown, not growth. Only REMOVING a key makes a real
+    # finding unaccounted, and that is the arm that must refuse. A witness that appended would have
+    # reported arm 2 FAILED against a gate behaving exactly as designed.
+    # ⚑ THE NONCE IS A COMMENT LINE, NOT A KEY, so the census is unaffected and only the file's
+    # DIGEST moves. Without it this probe alternates between exactly two digests (shortened and
+    # restored) and passes only because arm 3 rewrites the file — a Rule 16 defect that survives by
+    # accident rather than by design. An accidental pass is one refactor away from a permanent red.
+    baseline) head -n -1 "$victim" > "$victim.probe" \
+                  && printf '# transient domain probe %s\n' "$(date +%s%N)" >> "$victim.probe" \
+                  && mv "$victim.probe" "$victim" ;;
     mypy)    printf '\n\ndef _transient_domain_probe() -> int:\n    return "not an int"\n' >> "$victim" ;;
     ruff)    printf '\nimport os  # transient domain probe\n' >> "$victim" ;;
     ratchet) printf '\n\ndef _transient_domain_probe():\n    """Probe."""\n    return 1\n' >> "$victim" ;;
