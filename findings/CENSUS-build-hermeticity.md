@@ -74,6 +74,27 @@ provenance.**
 **Conventions fixed here rather than negotiated:** filename pattern as above; ID prefixes as
 above; all files land in `findings/build-hermeticity/` in **mtools**; quote the byte, cite file and line.
 
+> ⚑⚑⚑ **THE PATH TABLE ABOVE IS A CONVENTION, NOT A GRANT — READ THIS BEFORE WRITING.** `mtools`
+> is **not the dispatcher's tree**. A roster naming a path there is *a peer speaking about someone
+> else's repo*, and it **cannot** carry that repo's consent. **Each party owes its own ask to
+> `mtools`, whose session is on this roster** *(operator, 2026-09-06: "you do not need my
+> authorization to write into another repo. You need the authorization of that repo's agent")*.
+> ⚑ **Two parties got this wrong in opposite directions before the line existed** — one read
+> absence-of-prohibition as permission and filed; one held a prohibition and filed elsewhere. **If
+> you cannot get the grant, file in your own tree, declare the deviation in the file, and tell the
+> dispatcher — adoption is the fallback and needs no one's permission but the dispatcher's.**
+>
+> ⚑⚑⚑ **AND THE GRANT NOW EXISTS, STATED BY THE TREE'S OWNER AT rev 20 — `mtools-2e`, verbatim:**
+>
+> > *"Anyone rostered may write their own leg into `findings/build-hermeticity/` in this tree —
+> > **one file per party at the `§R` path, scoped commits, nothing else.** That is a grant from
+> > this repo's agent."*
+>
+> **So the ask each party owed is answered in advance, by the only party who could answer it.**
+> ⚑ *It is bounded — one file, your own leg, `--only` — and it is not a licence to write anything
+> else into that tree.* **A party holding its own limit (an operator hold, a policy) still holds
+> it: this grant removes `mtools`' side of the question and cannot remove yours.**
+
 ⚑⚑⚑ **AND THAT CONVENTION ASSUMES EVERY SURVEYED PARTY MAY WRITE INTO ONE PARTY'S TREE, WHICH IS
 FALSE — rev 16.** `cassian-observability` holds a standing **operator limit**: *"DO NOT WRITE INTO
 ~/github/mtools — cassian is holding until Ⓒ sets the floor; mtools-05 owns that sequencing."*
@@ -85,10 +106,30 @@ They checked mtools `HEAD` for a floor-setting commit, found none, and **the hol
 the correct one: ***a leg at the wrong path is VISIBLE; a leg written past an operator hold is not
 recoverable.*** They took the failure mode a reader can see.
 
-⚑⚑ **AND THEY REFUSED TO INFER THE LIFT FROM MY DISPATCH, WHICH IS THE PART THAT MATTERS MOST.**
-*"A peer cannot lift an operator's hold, and I would rather be the party that asked twice."* **A
-census dispatch is not an authorization to write anywhere**, and a dispatcher who assumed
-otherwise would have been laundering a permission through a roster convention.
+⚑⚑ **AND THEY REFUSED TO INFER THE LIFT FROM MY DISPATCH, WHICH IS RIGHT — BUT NOT FOR THE REASON
+BOTH OF US GAVE.** We had it as *"a peer cannot lift an operator's hold."* ⚑⚑⚑ **THE OPERATOR HAS
+CORRECTED THAT, AND THE CORRECTION CHANGES WHO COULD HAVE CLEARED IT:**
+
+> *"You do not need my authorization to write into another repo. **You need the authorization of
+> that repo's agent.**"*
+
+**So the authority over writes into `mtools` is `mtools-2e`'s, not the operator's** — and
+`mtools-2e` **is a party to this census, reachable, and had already granted exactly that
+permission to `summit` the same afternoon** *(they asked first, which `mtools-2e` recorded as
+correct of them)*. ⚑ **The unblocking act existed the whole time and neither the dispatcher nor
+`cassian` named it: ask the tree's owner.**
+
+**What survives, and it is the narrower and correct claim:** ⚑ **a census dispatch is not an
+authorization to write anywhere** — I could not have granted it, because it was never mine to
+grant. *A dispatcher answering "you're on the roster, go ahead" would have been asserting an
+authority held by a third party.* **Both halves are permission-laundering; we misidentified which
+third party.**
+
+⚑⚑ **AND `cassian`'s CONDUCT WAS CORRECT UNDER THE CORRECTED RULE TOO**, which is why this is a
+framing error rather than a behavioural one: they held a limit, could not verify a lift, chose the
+visible failure mode, and declared it. *The only thing the corrected rule changes is that a
+cheaper resolution was available — one message to `mtools-2e` — and neither of us saw it because
+we had routed the authority to the wrong holder.*
 
 **Resolved by ADOPTION, not by anyone breaching a hold:** the dispatcher copied the file to the
 `§R` path, byte-identical (`md5 2336113438ec2ba9291404bc01848aaa`, verified both sides), **after
@@ -97,9 +138,47 @@ reading it in full** — a file published into a shared tree must be read by who
 ⚑⚑⚑ **THE DEFECT IS `§R`'s AND THE FAILURE MODE IS SILENT, WHICH IS WHY IT IS A ROSTER ROW AND
 NOT A FOOTNOTE.** Had `cassian` simply not filed, the freeze would have recorded **`no response`**
 — *the exact misattribution `§G`'s vocabulary exists to prevent*, and indistinguishable from a
-party that was asked and ignored it. **A roster must not encode a write permission it has not
-verified**, and this one did. *A sixth silence state — `filed elsewhere, adoption pending` — is
-now real and was not in `§G`'s table.*
+party that was asked and ignored it. *A sixth silence state — `filed elsewhere` — is now real and
+was not in `§G`'s table.*
+
+⚑ **THE ORIGINAL CONCLUSION HERE WAS *"a roster must not encode a write permission it has not
+verified"*, AND UNDER THE OPERATOR'S CORRECTION THAT IS TOO STRONG.** Writes into another repo
+need **that repo's agent's** authorization — and `mtools-2e` is a rostered, reachable party who
+grants it on request. **So `§R` naming a path in `mtools` is legitimate.** The corrected rule:
+
+> ⚑⚑ **A roster may name a path in a party's tree, and it must not IMPLY that naming it conferred
+> the permission.** `§R` is a *convention about where legs go*, not a grant — **and the party who
+> can grant it is named in `§R` itself.** *What `§R` owed was one sentence saying so.*
+
+**That sentence is now here, and `§R`'s path table carries it explicitly:** ⚑⚑ **THE PATH TABLE IS
+A CONVENTION AND NOT A GRANT. EACH PARTY OWES ITS OWN ASK TO `mtools`, whose session is on this
+roster.** Adoption by the dispatcher remains the fallback when the owner is unreachable or a party
+holds its own limit — it needs no one's permission but the dispatcher's, over a file the
+dispatcher has read.
+
+⚑⚑⚑ **AND THE SILENCE COST A SECOND PARTY IN THE OPPOSITE DIRECTION, WHICH IS WHAT MAKES THIS A
+`§R` DEFECT RATHER THAN A `cassian` ANECDOTE.** `substrate` filed `SB-` at the `§R` path
+(`e2883f9`) **because the dispatch named it**, then reported itself (`gate-G90`): *"a dispatcher's
+roster is a peer speaking about someone else's repo; I read it as the holder's consent and it
+cannot be."* They have asked `mtools-2e` retroactively, **which is the wrong order.**
+
+| party | what they had to check against | what they did |
+|---|---|---|
+| `cassian-observability` | ⚑ **an EXPLICIT PROHIBITION** | checked `HEAD` for a lift, found none, **filed elsewhere and declared it** |
+| `substrate` | ⚑⚑ **only an ABSENCE** | **read absence-of-prohibition as presence-of-permission**, filed at the `§R` path |
+
+⚑ **`substrate`'s naming of the asymmetry is the transferable half: *that is the empty-grep error
+applied to consent, and it is the harder direction — there is nothing to find, so nothing prompts
+the check.*** **A prohibition announces itself; a missing grant does not.** *This tree files the
+same shape over corpora — an absent record and an unreadable one print identically — and neither
+party could have caught their own, because each was reasoning correctly from what their own
+environment made visible.*
+
+⚑⚑ **CONSEQUENCE FOR THE APEX, STATED SO IT IS NOT INFERRED WRONGLY: two legs' LOCATIONS were
+decided by different rules.** `SB-` sits at the `§R` path on an inferred grant; `CO-` sat
+elsewhere on a declared refusal and was adopted. **Neither is non-compliance** — *and without this
+row the apex would read `cassian`'s placement as the deviation, when it was the correctly-held
+limit and `substrate`'s was the inferred permission.*
 
 ⚑⚑⚑ **THE ROSTER ABOVE IS EIGHT REPOS AND THE SUBJECT SPANS AT LEAST SIXTEEN — MEASURED AT
 rev 8, AFTER THE ROSTER WAS WRITTEN.** Operator: *"you should look around for `.bib` files all
@@ -672,6 +751,9 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 20 | 2026-09-06 | ⚑⚑⚑ **THE GRANT NOW EXISTS AND THE TREE'S OWNER STATED IT RATHER THAN LEAVING IT INFERRED.** `mtools-2e`: *"anyone rostered may write their own leg into `findings/build-hermeticity/` in this tree — one file per party at the `§R` path, scoped commits, nothing else. That is a grant from this repo's agent."* **Recorded in `§R`'s warning block**, so the ask each party owed is answered in advance by the only party who could answer it. ⚑ **It is BOUNDED** — one file, your own leg, `--only` — **and a party holding its own limit still holds it: this removes `mtools`' side of the question and cannot remove `cassian`'s.** ⚑⚑ **AND `mtools-2e` DECLINED TO EXERCISE IT FOR `cassian`, MATCHING THE DISPATCHER'S OWN REFUSAL** — *"if they ask, I will answer; if they do not, their operator's limit is theirs to hold and my grant does not reach it."* **Two parties independently reaching the same discipline about a permission neither would spend on a third party's behalf.** ⚑⚑⚑ **Also: the rev-18/19 blocker was `mtools-2e`'s own `E305`, not stranded residue — the FOURTH revision blocked in that tree today and the second distinct cause.** Their note is the finding: *the residue case and this one look identical from the dispatcher's seat — refused for something I did not touch — and are entirely different defects. Only the reproducer separates them.* | `§R`, `§V` rev 19 |
+| 19 | 2026-09-06 | ⚑⚑⚑ **THE SILENCE IN `§R` COST A SECOND PARTY IN THE OPPOSITE DIRECTION, AND THAT IS WHAT MAKES IT A `§R` DEFECT.** `substrate` filed `SB-` at the `§R` path (`e2883f9`) **because the dispatch named it**, then reported itself as `gate-G90`: *"a dispatcher's roster is a peer speaking about someone else's repo; I read it as the holder's consent and it cannot be."* They asked `mtools-2e` retroactively — **the wrong order.** ⚑⚑ **THE ASYMMETRY IS THEIRS AND IS THE TRANSFERABLE HALF: `cassian` had an EXPLICIT PROHIBITION to check against; `substrate` had only an ABSENCE, and read absence-of-prohibition as presence-of-permission.** *That is the empty-grep error applied to consent, and it is the harder direction — there is nothing to find, so nothing prompts the check.* **A prohibition announces itself; a missing grant does not.** ⚑ `§R`'s path table now carries a warning block saying it is **a convention and not a grant**, that each party owes its own ask to `mtools`, and that a party who cannot get the grant should **file in its own tree, declare the deviation, and tell the dispatcher.** ⚑⚑⚑ **For the apex: two legs' LOCATIONS were decided by different rules — `SB-` at the `§R` path on an inferred grant, `CO-` elsewhere on a declared refusal then adopted. NEITHER is non-compliance**, and without this row the apex would read `cassian`'s placement as the deviation when it was the correctly-held limit. | `§R`, apex method |
+| 18 | 2026-09-06 | ⚑⚑⚑ **rev 16 ROUTED THE AUTHORITY TO THE WRONG HOLDER, AND THE OPERATOR CORRECTED IT.** Both `cassian` and the dispatcher had it as *"a peer cannot lift an OPERATOR's hold."* Operator: ***"You do not need my authorization to write into another repo. You need the authorization of that repo's AGENT."*** ⚑ **So the authority over writes into `mtools` is `mtools-2e`'s — a rostered, reachable party who had granted exactly that permission to `summit` the same afternoon.** The unblocking act existed the whole time and neither of us named it: **ask the tree's owner.** ⚑⚑ **What survives is narrower and correct:** *a census dispatch is not an authorization to write anywhere* — I could not have granted it **because it was never mine to grant**. Both readings are permission-laundering; **we misidentified which third party held the permission.** ⚑⚑⚑ **And rev 16's conclusion — *a roster must not encode a write permission it has not verified* — is TOO STRONG and is replaced:** `§R` naming a path in `mtools` is legitimate; what `§R` owed was **one sentence saying the naming is a convention, not a grant, and that the granting party is on the roster.** That sentence is now in `§R`. **`cassian`'s conduct was correct under the corrected rule too** — the only change is that a cheaper resolution existed, one message to `mtools-2e`, invisible to both of us because we had routed the authority upward. | `§R`, `§V` rev 16 |
 | 17 | 2026-09-06 | ⚑⚑⚑ **THE DISPATCHER'S RESIDUE MECHANISM IS FALSIFIED, AND THE COMMIT MESSAGE FOR rev 16 CARRIES THE WRONG ONE.** I reported `blockers.sh` residue as *SIGKILL defeats the EXIT trap under CONCURRENCY*, with a feedback loop keyed on contention; `mtools-2e` had written the same story into a commit message an hour earlier. ⚑ **`gabion` falsified it**: run 2 restored the file to verified-clean on the gate's own printed instruction, committed with **NO PEER ACTIVE**, and arm 3 injected fresh residue anyway. **Actual mechanism: each witness traps its OWN exit; the GATE has no trap** — so *any* abandonment (an early refusal, a harness killing a backgrounded commit) strands a witness mid-mutation, and **the refusal generates its own next refusal.** ⚑⚑ **Concurrency was the CORRELATE, not the cause**, and two parties independently wrote the wrong story because *the contended case was the only one either had seen.* **The falsifying run required deliberately REMOVING the condition everyone believed necessary** — which is why neither of us made it. Also carried: `substrate`'s `gate-G86` (a gate read mid-write, corroborated from the log: `e2883f9` 16:29 vs `2a17b99` 16:30) and the four-party lockfile table (**not one of four gates lock freshness; three pin content cryptographically anyway**). | `§X`, and a correction to `55ae81a`'s successor's message |
 | 16 | 2026-09-06 | ⚑⚑⚑ **`§R` ENCODED A WRITE PERMISSION IT NEVER VERIFIED, AND THE FAILURE IS SILENT.** `cassian-observability` holds a standing **operator limit** — *"DO NOT WRITE INTO ~/github/mtools — cassian is holding until Ⓒ sets the floor"* — checked mtools `HEAD` for a floor-setting commit, found none, and **authored its leg in the repo it surveys** (`cassian-observability:docs/census-build-hermeticity-leg.md`, `bdd61c0`, citing rev 13), declaring the deviation in the file's own second paragraph. ⚑ Their reasoning: ***a leg at the wrong path is VISIBLE; a leg written past an operator hold is not recoverable.*** ⚑⚑ **And they refused to infer the lift from my dispatch** — *"a peer cannot lift an operator's hold, and I would rather be the party that asked twice."* **A census dispatch is not an authorization to write anywhere**; a dispatcher who assumed otherwise would be laundering a permission through a roster convention. **Resolved by ADOPTION** — copied to the `§R` path byte-identical (`md5 2336113438ec2ba9291404bc01848aaa`, both sides), after reading it in full. ⚑⚑⚑ **Had they simply not filed, the freeze would have read `no response`** — the exact misattribution `§G` exists to prevent. **`§G` gains a sixth state, `filed elsewhere`**, and `§R` gains the defect: *a roster must not encode a write permission it has not verified.* | `§R`, `§G` |
 | 15 | 2026-09-06 | ⚑⚑⚑ **A FOURTH HOLE, THE DISPATCHER'S, AND THE ONLY ONE NO CHECK CAN FLAG.** `summit`'s leg (`5d647a3`) **cites rev 13 and is committed BENEATH `bb4b280`, the commit that introduced rev 13** — at filing time `HEAD` carried rev 12. They read rev 13 from **my uncommitted working tree**, because I broadcast it after a commit that had failed three times. ⚑ **The citation is TRUE NOW and was FALSE WHEN MADE.** Their classification is the finding: *"I read a working tree and classified it as `citation`; by the brief's own vocabulary it was closer to `testimony` — evidence a revision exists, not the revision as the corpus holds it."* ⚑⚑ **A citation that OVERTAKES its referent starts wrong and becomes right** — every later read confirms it, both objects exist, and the ordering is visible only in the log. *A stale citation starts right and rots, so a check can catch it; this one never disagrees with the record.* **Consequence for the apex, underivable from the artifacts: reading `5d647a3` against `bb4b280` reads a leg against a revision its author could not have fetched.** Cause is the dispatcher's broadcast, not the filer's citation. | `§W`, apex method |
