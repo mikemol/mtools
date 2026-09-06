@@ -212,8 +212,28 @@ ignore = ["D203", "D213", "COM812"]
 # `pycodemod --literal 'SPDX-License-Identifier' substrate/` → 0 sites in 0 of 556 files. The
 # convention was inferred from a single witness and never censused; nothing fires because nothing
 # exists, and the report is the only artifact. The discriminating act is not an arm but a CENSUS,
-# and it costs one command. Consequence for intake: substrate-derived code arrives WITHOUT headers,
-# so under this gate the header is a precondition of admission rather than a follow-up.
+# and it costs one command.
+#
+# ⚑⚑⚑ AND THAT CENSUS WAS ALSO VOID — RETRACTED BY ITS AUTHOR, AND THE RETRACTION IS WORTH MORE
+# THAN THE FIGURE. `pycodemod --literal` searches STRING CONSTANTS; a licence header is a COMMENT.
+# The reader could never have seen a header anywhere in that tree, in either direction. So the
+# zero was a fact about the READER, and so was the correction that followed it: the peer then
+# found a conforming header by eye and was about to report "zero under one subtree, not zero
+# repo-wide" — a second wrong number from the same blind instrument.
+#
+# ⚑⚑ THE LAYER THIS ADDS TO THE ONE ABOVE. A report with no census is the third case. A census
+# run with a reader that cannot perceive the thing censused is the FOURTH, and it is worse,
+# because it produces a NUMBER — and a number ends the question. Both of the peer's readings
+# were disciplined, both were sourced to a command, and both were void for one reason neither
+# reading could surface. ⚑ THE ZERO AND ITS CORRECTION FAILED TOGETHER: re-running a blind
+# instrument in the other direction cannot detect blindness.
+#
+# Consequence for intake, RESTATED: substrate's header population is UNMEASURED — not zero, and
+# not the corrected figure either. The peer has since built the missing reader (a prologue reader
+# reporting SPDX and copyright as TWO INDEPENDENT FACTS, per the mirror-image blind spot recorded
+# above) but has not yet run it over its corpus. Until it does, migration cost here is UNKNOWN,
+# and this file must not carry a figure for it. The gate's requirement is unchanged either way:
+# the header is a precondition of admission rather than a follow-up.
 #
 # ⚑⚑ THE GATE IS MEASURED ON THE VERSION THE LOCK INSTALLS, NOT ONLY THE ONE IN THE VENV. The
 # `requirements.txt` beside this file pinned ruff 0.16.6 while the working venv ran 0.16.5 — so
