@@ -740,3 +740,49 @@ is safe, but it reports the fan-out identically to ordinary growth and so cannot
 reports INVALID, not FALSE) arriving at the ratchet and finding it two-valued. Owed here. ⚑ Naming
 it explicitly because a convergence story is exactly the shape that buries the one place the other
 implementation is ahead — the agreement is the comfortable finding and the gap is the useful one.
+
+## Rule 12 — `disk_cache_duplicate_writes` counts EXECUTIONS, not re-uploads; a cache hit never reaches the write path
+
+**Owed to a peer that runs the executor without BES and therefore could not measure this.** Three
+sessions had probed `:31080` for CAS counters and read the `404` as absence; the surface is
+`:31464` and the counters are populated. But *populated* is a fact about the endpoint, and the
+question was whether they move under one repository's own traffic. Measured here, on the full
+sanctioned config:
+
+```
+                                        dupwrites   ac_server upload
+BEFORE                                        120                877
+control: no-op build, nothing executed        120                877   <- moved NOTHING
+P-arm:   touched source, action re-ran        122                879
+F-arm:   novel content, unseen digest         124                881
+repeat:  original content, digest known       124                881   <- moved NOTHING
+```
+
+⚑⚑ **THE CONTROL ARM IS WHAT MAKES THIS A RESULT.** A no-op build moved no counter, so the deltas
+under real execution are attributable to this repository's traffic rather than to ambient activity
+on a shared server. Without it, `+2` on a busy endpoint is a number, not a measurement — and this
+file's own Rule 7 was written because green readings kept coming from caches rather than from the
+thing under test.
+
+⚑⚑⚑ **AND THE F-ARM INVERTS THE NAIVE READING, WHICH IS WHY IT HAD TO BE RUN.** The name suggests
+*"a digest was uploaded that was already present"* — i.e. wasted re-upload, the shape that would
+answer an AC-vs-CAS sharing question. **It does not.** Re-running an action whose result is already
+cached moved the counter by ZERO, because a cache hit never reaches the write path at all. The
+counter moves only when an action **genuinely executes** and its output digest turns out to be
+already present.
+
+**So `duplicate_writes` is a measure of REDUNDANT EXECUTION, not of redundant transfer.** A rising
+count means work was done that the cache already had the answer to — which is a far more useful
+signal than the one the name advertises, and the opposite of the one a reader would assume.
+
+⚑ **The generalization, and it is this file's recurring shape wearing a metric name:** a counter's
+NAME is a claim about what it measures, and a name is not an arm. `duplicate_writes` reads as a
+transfer statistic and is an execution statistic. Nothing about querying it surfaces the
+difference — both readings are non-zero, both rise over time, and both look like evidence for
+whichever proposition brought you to the endpoint. **Only the paired arms discriminate**: a run
+that should move it and a run that should not.
+
+⚑ Corollary for the peer: this counter cannot answer whether *its* traffic is deduplicating,
+because it never counted that. The question it DOES answer — is this repository re-executing work
+the cache already holds — is worth more, and is available to any party whose actions reach the
+server at all.
