@@ -149,6 +149,14 @@ say "domain witness: each mypy target's declared domain vs its real one"
 say "rule freshness: are the environment claims this repo cites still true?"
 ./rule_freshness.sh || true
 
+# ⚑⚑ AN UNCLAIMED CHECKER REFUSES, WHERE A STALE ENVIRONMENT CLAIM ONLY REPORTS. The difference is
+# ownership: freshness measures a shared cluster this repo does not control, so blocking on it
+# would block commits their author cannot fix. An orphaned script is entirely inside this tree —
+# it is a file somebody added and nothing runs, which is the green-over-nothing this whole harness
+# exists to refuse, and the fix is always available to whoever tripped it.
+say "orphan check: is every shell checker invoked, or declared as parked?"
+./orphan_check.sh || fail=1
+
 # ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
 # target existed, the shell that runs every other check in this repository was verified by nothing
 # — clean only because its author ran shellcheck by hand after each edit. A convention held in one
