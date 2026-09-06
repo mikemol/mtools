@@ -43,8 +43,23 @@ cited=$("$md" grep "recorded" "$rules" 2>/dev/null \
         | grep -oE 'Rule [0-9]+ recorded [^.]*[0-9]+[a-z%]' \
         | grep -oE '^Rule [0-9]+' | grep -oE '[0-9]+' | sort -u)
 
+# ⚑⚑⚑ A DOCUMENT THAT MAKES CLAIMS AND CITES NO RULE IS THE UNCHECKABLE CASE, AND NAMING IT IS
+# THE ONLY HONEST MOVE. `PATHS-FORWARD.md` asserted "the three modules I need are landable today"
+# for NINE TICKS after a rule falsified it — and this checker cannot detect that, because the
+# derivation cites no rule number to cross-reference. ⚑ The correction reached the findings
+# document without reaching the file a session reads FIRST to decide what to do.
+#
+# ⚑⚑ A CORRECTED CLAIM AND ITS UNCORRECTED RESTATEMENT COEXIST INDEFINITELY when nothing links
+# them: the rule knows what it supersedes, the derivation does not know it was superseded. So this
+# reports the gap rather than pretending a clean scan means a clean document — a "nothing to
+# check" over a corpus that cites nothing is a fact about the CORPUS, not about its accuracy.
 if [ -z "$cited" ]; then
-    echo "  no rule cites another's figure as historical — nothing to check"
+    if grep -qE '\bRule [0-9]+' "$rules" 2>/dev/null; then
+        echo "  no rule cites another's figure as historical — nothing to check"
+    else
+        echo "  ⚑ $rules cites NO rule, so nothing here can be cross-checked against one."
+        echo "    A claim in this file that a rule later falsified would read as current forever."
+    fi
     exit 0
 fi
 

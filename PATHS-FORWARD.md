@@ -36,6 +36,19 @@ stated at the wrong granularity reads as blocking more than it blocks.**
 
 ⚑ **Counting tracked files could never have surfaced this.** 9→10 looks like slow progress;
 the closure says the three modules I need are landable today and the two I do not need are not.
+
+⚑⚑⚑ **FALSIFIED NINE TICKS LATER, AND LEFT HERE BECAUSE THE FALSIFICATION IS THE LESSON.** "Landable
+today" was read from `git ls-files`, which reports a **staged** file as tracked — correctly, since
+the index *is* the tracking record. But *tracked in a peer's index* and *fetchable by me* are
+different properties, and only the second decides whether code can move. Measured under the
+corrected predicate: **not one island module has a commit on any branch.** Every `TRACKED` this
+derivation printed for ten ticks was staged-only. See Rule 27.
+
+⚑⚑ **AND THE CORRECTION REACHED THE RULES FILE WITHOUT REACHING THIS ONE.** For nine ticks the
+findings document recorded the retraction while the file a session reads *first* — to decide what to
+do — still said the work was available. **A corrected claim and its uncorrected restatement can
+coexist in one repository indefinitely**, because nothing links them: the rule knows what it
+supersedes, and the derivation does not know it was superseded.
 Same population, same command, different question.
 
 ### ⚑ `inbox/` is empty AND peers are writing — both true, and the pair is the finding

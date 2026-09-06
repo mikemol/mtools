@@ -164,6 +164,11 @@ say "rule freshness: are the environment claims this repo cites still true?"
 # thing it guards (a 132-second gate) cannot be re-timed inside itself.
 say "figure freshness: is any superseded number still stated in the present tense?"
 ./figure_freshness.sh || true
+# ⚑⚑ THE DERIVATION FILE IS CHECKED TOO, and it is the one that needed it. The findings document
+# recorded a retraction while `PATHS-FORWARD.md` — the file a session reads FIRST, to decide what
+# to work on — kept asserting the falsified claim for nine ticks. ⚑ A correction that reaches the
+# record without reaching the plan changes what is TRUE without changing what gets DONE.
+./figure_freshness.sh PATHS-FORWARD.md || true
 
 # ⚑⚑ AN UNCLAIMED CHECKER REFUSES, WHERE A STALE ENVIRONMENT CLAIM ONLY REPORTS. The difference is
 # ownership: freshness measures a shared cluster this repo does not control, so blocking on it
