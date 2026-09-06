@@ -291,6 +291,62 @@ violation lands here.** A test that reclassified everything would be a test of n
 it from having applied it wrongly to its own list first."* **Mine is the second instance, found by
 applying it to a list I had already filed** — which is the check rev 11 asks every leg to run.
 
+### ⚑⚑⚑ LS-04b — REV 24 SPLITS THE ROW REV 11 FLIPPED, AND A THIRD INSTANCE ARRIVED TO PROVE IT
+
+**Written 2026-09-06 against rev 24**, which adds that ***split*** is a legitimate outcome of the
+q3 test — *"a local mechanism can sit under a binding principle, and a procedure that only ever
+MOVES produces the everything-is-binding constitution q3 exists to prevent."*
+
+⚑ **`LS-04a` HAD ONLY TWO OUTCOMES AVAILABLE AND SO IT OVER-MOVED.** It flipped the routing regime
+whole to BINDING. Rev 24 says check whether the row is one rule; **it is two, and this session
+produced the measurement that separates them.**
+
+| half | verdict | who bears the cost of the violation |
+|---|---|---|
+| **route a `.md`/`.py` question to its owning tool** | ⚑ **BINDING** | the fleet — a router inherits the tool's blind spot, and its own correctness hides it |
+| **forbid the textual fallback** | ⚑ **LOCAL** | this repo alone — justified by a measured ~2min whole-stream decompress on a sealed 195MB tarball, which no other repo has |
+
+⚑⚑ **THE THIRD INSTANCE, MEASURED TODAY, AND IT IS THE ONE THAT SEPARATES THE HALVES.**
+`mdstruct grep '7\.0\.0-'` returns **exit 1, "no line matches"** on a file containing `7.0.0-29.29`
+twice; `mdstruct grep '7.0.0-'` on the same file returns **2 matches**. `grep` is literal by default
+and `re.escape` turns `\.` into a match for a literal backslash; `-E` recovers it. **The engine is
+correct and the interface returns a false zero at `rc=0`** *(diagnosed by `mtools-2e`, who owns the
+tool; reproducer and positive control mine)*.
+
+**What makes it a q3 instance rather than one more tool bug:** I was not auditing mdstruct. I was
+checking whether my own gate's `registry` slice passed on a stale literal. **Two readers disagreed
+about one file** — mdstruct said no match, my gate's crude `"7.0.0-29.29" in body` said pass —
+⚑ **and the crude substring was RIGHT.** I came within one step of filing a false stale-pin finding
+against my own gate on the structured reader's word.
+
+⚑⚑⚑ **AND THAT IS PRECISELY THE SECOND HALF DOING THE DAMAGE, NOT THE FIRST.** Routing me to the
+owning tool was correct. **Forbidding the textual fallback removed the second opinion that caught
+it** — I only have the truth here because the gate's own substring check existed *inside my repo*,
+where the hook does not reach. **A fleet member with no such internal check has no discoverer for
+this class at all.**
+
+⚑ **THREE INSTANCES, ONE MECHANISM, AND THE THIRD IS THE FIRST WITH A CONTROL.** `▣33`
+(`--headers` drops a heading, cost me a symbol collision), `SM-13` (`summit`'s own answer invisible
+in its own leg), and now the false zero — **each is a lossy reader compelled by a correct guard.**
+The new one is stronger evidence because it carries a positive control: `mdstruct grep 'LIBRARIAN'`
+returns text that **visibly contains the string the escaped pattern missed**, so the reader can read
+the file and cannot match the pattern. *An absence with a control is a finding; without one it is a
+fact about the query.*
+
+⚑ **AND I NEARLY GENERALISED IT WRONG IN THE SAME HOUR, WHICH BELONGS IN THE ROW.** `rows --where`
+and `rows --starts` show the identical symptom — clean zero, same doubled-backslash repr — and I had
+a three-surface defect written up. `pycodemod --calls re.escape` over mdstruct's source returns
+**1 call, in `grep.py`, and nowhere else**: `table_rows` is a plain `casefold` substring, so its
+zero is *correct* and I had handed a regex to a substring interface. **The symptom was shared and
+the mechanism was not** — ⊗7's dual, inside my own bug report, caught by one call-site query rather
+than by more reading.
+
+**So the split's consequence is narrower than `LS-04a`'s flip and survives better:** a repo that
+routes owes a defect index at the routing point *(the binding half, already named in `LS-05`)*,
+**and** a repo that additionally *forbids the fallback* owes a second opinion of its own, because it
+has removed the fleet's. ⚑ **The everything-is-binding failure rev 24 warns about is exactly what
+`LS-04a` was one revision away from producing here.**
+
 ---
 
 ## LS-05 — §Q4: WHERE I RE-DERIVED WHAT A PEER HAD SETTLED
