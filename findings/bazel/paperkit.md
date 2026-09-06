@@ -69,6 +69,45 @@ independent reasoning corroborates it; **the attribution is unwitnessed.** *(Che
 `.bazelrc` makes no operator attributions — `grep -nE "operator (ruling|said|decided|asked)"`
 returns nothing.)*
 
+## 3b. ⚑⚑ COPYING THE FLAG SET IS NOT ONE CHANGE — paperkit declares ZERO execution platforms
+
+MEASURED before queueing `Ζ·config·remote`: `grep -rn "extra_execution_platforms\|platform("` over
+`.bazelrc`, `BUILD.bazel` and `tools/BUILD.bazel` returns **nothing**. Cassian's third line is
+`--extra_execution_platforms=//tools:cassian_gate_platform`; paperkit has no analogue.
+
+```
+build:remote --config=cas
+build:remote --remote_executor=grpc://127.0.0.1:31985
+build:remote --remote_local_fallback=true            <- to be removed
+build:remote --remote_instance_name=paperkit
+                                                     <- NO platform line
+```
+
+⚑ **So paperkit's `--config=remote` resolves against the DEFAULT host platform**, and removing the
+fallback exposes whatever that resolves to rather than a declared one. This is the same dependency
+that killed linux-sources' remote config at analysis for weeks — *their* platform existed and was
+**bare** (no `constraint_values`, satisfying no toolchain); paperkit's does not exist at all. Two
+different failure modes, one prerequisite.
+
+⚑⚑ **The lesson is about the copy, not the flags: `--remote_local_fallback` is what makes the other
+three lines' correctness UNOBSERVABLE, so it must come off last, not first.** Removing it before a
+platform is declared converts a silent degradation into a hard analysis failure — which is the
+*point*, but it is a different change than "adopt the sanctioned config", and sequencing it as one
+step would have produced a red gate attributed to the wrong cause.
+
+## 3c. ⚑ THE RBE BLOCK INDEPENDENTLY DOCUMENTS THE EXECROOT ESCAPE
+
+`.bazelrc`'s remote-execution rationale, verbatim, on why a copied rootfs is worth switching to:
+
+> *"unlike Bazel's local sandbox, which symlinks first-party packages straight back to the working
+> tree (measured this session: `$EXECROOT/paperkit` is a symlink to the live checkout, which is how
+> a check could read UNSTAGED sources and pass)."*
+
+**Two independent routes to the same defect** — the sandbox measurement that motivated the staged
+wheel work, and the RBE rationale written for a different purpose. The containment property is the
+reason RBE was adopted; the wheel is the reason the *local* tier stops needing it. ⚑ **They are the
+same finding reached from opposite ends, and neither cites the other.**
+
 ## 4. ⚑⚑ `--remote_local_fallback` IS THE THING THAT HIDES A MISCONFIGURATION
 
 paperkit sets it on **both** remote configs (`.bazelrc:247`, `:283`), justified as *"a cache/executor
