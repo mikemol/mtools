@@ -926,3 +926,52 @@ collection, not a count; a corpus is what a reader that can see it reports.
 is unverified by default. This file's whole method is arms and controls, and an arm is precisely the
 act of going to get something you did not already have. **A finding with no such act behind it is a
 report about your inbox.**
+
+## Rule 15 — a denylist of what exists today is a population query with an expiry date
+
+**Measured in this repository's own re-derivation script, which preaches against this in its header.**
+
+`blockers.sh` answered *"which of a peer's components have landed in mtools?"* by listing every
+top-level tracked name and filtering out the ~17 that existed the day it was written. Every file
+added afterwards therefore reported as a peer's deliverable:
+
+```
+=== mtools: cassian's components ===
+  landed: collect_check.sh
+  landed: PATHS-FORWARD.md      <- both written by this session, hours after the filter
+```
+
+⚑⚑ **THE DIRECTION OF FAILURE IS THE WHOLE PROBLEM: IT FAILS TOWARD FALSE PRESENCE, AND A FALSE
+PRESENCE ENDS AN INQUIRY.** A blocker reporting *still blocked* gets re-measured on the next tick —
+being wrong that way is self-correcting, because the question stays open. A blocker reporting
+*landed* is finished being asked about. This script is run on a schedule precisely so that a cleared
+blocker surfaces; **a false clear is a defect that deletes its own detector.**
+
+⚑ **And it decays silently by construction.** The filter was correct on the day it was written and
+became wrong through no edit — the repo grew. Nothing about a denylist announces its own staleness,
+because the thing that invalidates it happens somewhere else.
+
+### The repair is a structural criterion, never a longer list
+
+**A component IS a directory carrying a `pyproject.toml`.** That is a property of the thing being
+asked about rather than an enumeration of what was present once; it cannot drift as this repo grows,
+and any landed component necessarily satisfies it.
+
+⚑⚑ **Extending the denylist would have been the tempting fix and it is the same defect one cycle
+later.** Adding `collect_check|PATHS-FORWARD` to the pattern restores today's correct answer and
+guarantees tomorrow's wrong one. **When a query rots by growth, adding a row does not repair the
+query — it re-arms the trap with a longer fuse.**
+
+### Both arms, because a control that has never failed is decoration
+
+```
+CONTROL   the three known distributions must be FOUND       -> silent (passes)
+F-arm     blind the query to return nothing                 -> fires 3x, one per known dist
+P-arm     a genuinely landed component (tofu_validate)      -> "landed: tofu_validate"
+```
+
+⚑ **The P-arm is the one that would have been skipped**, and it answers a different question than
+the F-arm: the F-arm proves the control can detect a broken query, while the P-arm proves the query
+can detect a real arrival. A query that never yields a false positive and also never yields a true
+one passes both a control and a negative arm while being useless — which is what the old denylist
+would have looked like if the repo had simply stopped growing.

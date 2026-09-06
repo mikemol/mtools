@@ -60,12 +60,34 @@ echo "=== substrate: the membudget ledger ==="
 # ⚑ `scripts/`, NOT `substrate/scripts/` — corrected by the peer who owns the tree.
 tracked "$sub" scripts/membudget-ledger "scripts/membudget-ledger"
 
-echo "=== mtools: cassian's components ==="
-git -C "$mtools" ls-files \
-    | cut -d/ -f1 | sort -u \
-    | grep -vE '^(hooks|mdstruct|ratchet|rbe|findings|inbox|\.|BUILD|LICENSE|MODULE|README|SKELETON|blockers|pytest_main|setup|shellcheck_test|ruff_check|ratchet_check|mypy_check|mypy_runner)' \
+# ⚑⚑⚑ A DENYLIST OF WHAT EXISTED WHEN IT WAS WRITTEN IS NOT A POPULATION QUERY, AND THIS ONE
+# ROTTED IN EXACTLY THE WAY THIS SCRIPT'S OWN HEADER WARNS ABOUT. The first cut listed every
+# top-level name and filtered out the ~17 that were present that day. So every file added AFTER
+# it was written reported as a peer's landed component: measured, `collect_check.sh` and
+# `PATHS-FORWARD.md` — two files this session wrote — were announced as cassian's deliverables.
+#
+# ⚑⚑ AND IT FAILS TOWARD FALSE PRESENCE, WHICH IS THE DIRECTION THAT ENDS AN INQUIRY. A blocker
+# reporting "still blocked" gets re-measured next tick; one reporting "landed" is done being
+# asked about. This script exists to be re-run on a schedule, so a false clear is a defect that
+# removes its own detector.
+#
+# ⚑ THE REPAIR IS A STRUCTURAL CRITERION RATHER THAN A LONGER DENYLIST: a component IS a
+# directory carrying a `pyproject.toml`. That cannot drift as this repo grows, a landed component
+# necessarily satisfies it, and the three known distributions are the control below.
+echo "=== mtools: components (a dir with a pyproject.toml) ==="
+known="hooks mdstruct ratchet"
+found=$(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u)
+
+# ⚑ THE CONTROL MUST FIND THE THREE THIS REPO ALREADY HAS. A structural query that returned
+# nothing would print "none landed" and read exactly like a correct negative.
+for k in $known; do
+    printf '%s\n' "$found" | grep -qx "$k" \
+        || echo "  CONTROL FAILED: $k has a pyproject.toml and this query missed it"
+done
+
+printf '%s\n' "$found" | grep -vxF -e hooks -e mdstruct -e ratchet \
     | sed 's/^/  landed: /' \
-    || echo "  none landed"
+    | grep . || echo "  none landed beyond the three this session authored"
 
 echo "=== mtools: paperkit resolvable ==="
 if "$mtools/mdstruct/.venv/bin/python3" -c 'import paperkit' 2>/dev/null; then

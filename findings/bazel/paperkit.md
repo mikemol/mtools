@@ -297,6 +297,41 @@ budget and the sandbox tier could partition the graph differently than the runs 
 earlier figures. The measurement is the configured count on this invocation; attributing the delta
 to an arc would be the same inference this entry is correcting.
 
+## 5e. ⚑⚑ THE `Ζ·stamp·bytes` FIX IS SMALLER AND MORE WRONG THAN QUEUED — measured before editing
+
+Four ticks of notes carried the repair as *"add `sha256sum $(readlink -f "$bin")` with an
+absent/unhashable sentinel."* **Reading the file first changed both halves.**
+
+⚑ **The sentinel already exists, and so does the whole pattern.** `emit()` already yields `absent`
+(no such command) and `present-unversioned` (command with no banner). And the veraPDF **jar** branch
+is a fully worked-out content-hash with every edge closed — **CITATION**:
+
+> *"A shell glob needs no subprocess at all: it expands to the matches, or to the UNEXPANDED PATTERN
+> when there are none — which `-f` then rejects, so **absence is tested rather than inferred from a
+> swallowed error**."*
+
+It globs rather than parsing `ls`, tests `-f`, checks `sha256sum` is available, and emits `absent`
+otherwise. **So the repair is to GENERALIZE AN EXISTING LOCAL PATTERN, not to design one** — the
+correct mechanism is already in the file, applied to exactly one of four tools.
+
+⚑⚑ **And `readlink -f` is not sufficient for all three — MEASURED:**
+
+```
+pandoc     /home/mikemol/bin/pandoc  -> ELF 64-bit executable        163,589,968 B   ✓ hashable
+lualatex   /usr/bin/lualatex         -> /usr/bin/luahbtex, ELF         7,142,032 B   ✓ hashable
+soffice    /usr/bin/soffice          -> …/program/soffice, SHELL SCRIPT    6,621 B   ⚑ WRAPPER
+```
+
+`soffice` resolves to a **shell script that execs `soffice.bin`**. Hashing it keys on a launcher
+that changes rarely while the suite underneath changes often — **the banner defect in a new costume:
+a stable proxy standing in for the thing that decides the verdict.** The fix covers 2 of 3; the
+third needs its own target (`…/program/soffice.bin`) or an explicit, recorded limit.
+
+⚑ **A correction inside this measurement, worth keeping because it nearly shipped.** A first pass
+read `stat -c%s` as 8 and 34 bytes for `lualatex`/`soffice` and concluded both were stubs. Those are
+**symlink** sizes — `stat` measured the link, not the target. *An instrument pointed at a pointer
+reports on the pointer*, which is this file's §6 defect with `stat` in place of a comment.
+
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
 `.githooks/local.env` held:
