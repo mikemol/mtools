@@ -48,8 +48,23 @@ for dist in hooks mdstruct ratchet; do
 done
 
 # ⚑ THE INDEX IS MATERIALISED SO THE CHECKS READ WHAT IS BEING COMMITTED, not what is on disk.
-staged="$(mktemp -d)"
-trap 'rm -rf "$staged"' EXIT
+# ⚑⚑⚑ A STABLE PATH, NOT A TEMP DIR, BECAUSE BAZEL RUNS HERE TOO AND ITS OUTPUT BASE IS A HASH OF
+# THE WORKSPACE PATH. Measured, full suite, three configurations:
+#
+#   working tree (warm)          14s   152 action cache hits
+#   fresh mktemp staging         99s     0 action cache hits, 68 disk cache hits
+#   stable staging, 1st / 2nd   104s / 5s
+#
+# ⚑⚑ A NEW OUTPUT BASE IS NOT A COLD BUILD, AND THAT IS THE TRAP. The mktemp run reported
+# `Executed 0 out of 34 tests` — no test reran, the disk cache carried every result — and still
+# took 99s, because 187 processes of ANALYSIS were redone. A pass is not a cost measurement.
+# The disk cache is content-addressed and crosses workspaces; the ACTION cache lives in the output
+# base and does not.
+#
+# ⚑ THE DIRECTORY IS NOT REMOVED ON EXIT, deliberately: removing it discards the action cache and
+# restores the 99s. It is refreshed from the index each run, so it never holds stale content.
+staged="${TMPDIR:-/home/mikemol/.cache}/mtools-staged"
+rm -rf "$staged"; mkdir -p "$staged"
 git checkout-index --all --prefix="$staged/"
 
 for dist in hooks mdstruct ratchet; do
@@ -113,7 +128,21 @@ fi
 # because the script was already dead. ⚑ The repair for one pipeline hazard introduced another:
 # `PIPESTATUS` is only readable if control reaches the line that reads it. `|| true` exempts the
 # pipeline from `-e` while `PIPESTATUS[0]` still carries bazel's verdict.
-bazel test //... --test_output=errors 2>&1 | tee "$staged/.suite.log" || true
+# ⚑⚑⚑ THE SUITE RUNS IN THE STAGED TREE, so both halves of this gate check the same code. Host
+# ruff and mypy already ran in `$staged`; `bazel test` did not, and measured on one planted defect
+# the two halves returned OPPOSITE verdicts in a single run — host mypy said "Success: no issues
+# found in 8 source files" while `//ratchet:mypy` said FAILED. ⚑ A gate that disagrees with itself
+# about what its subject is has no verdict to give.
+#
+# ⚑⚑ THE WITNESSES STILL READ THE WORKING TREE, AND THAT IS NOT A GAP IN THIS FIX. Armed with a
+# working-tree-only defect: the suite did NOT refuse (this change working), and a domain witness
+# DID — its control found the target red before the probe and declined to interpret its arms.
+# ⚑ A witness proves a domain by mutating the REAL file and restoring it; a witness over a copy
+# would prove the copy's domain. So the witnesses are irreducibly working-tree-scoped, and a
+# peer's dirty file can still refuse a commit through them. That is one row of a three-row class:
+# the sweep (held by `git commit -- <path>`), a gate reading the tree (closed by staging), and a
+# witness mutating real files (open, and closable only by a lock).
+( cd "$staged" && bazel test //... --test_output=errors ) 2>&1 | tee "$staged/.suite.log" || true
 if [ "${PIPESTATUS[0]}" -ne 0 ]; then
     failed_targets=$(grep -oE '^//[^ ]+' "$staged/.suite.log" 2>/dev/null | sort -u | tr '\n' ' ')
     fail=1
