@@ -161,3 +161,57 @@ distribution and leaving two carrying the identical unarmed claim is the *"a con
 works, never that the search space was right"* defect — the witness exists, so the remaining cost is
 naming the other two victims, and not doing it would leave 2/3 of the corpus asserting an untested
 property.
+
+
+---
+
+# Tick 3 — 2026-09-06
+
+**Measured:** identical to tick 2 — 5 of 6 legs, no freeze, all six live, no blocker cleared.
+⚑ **A tick where nothing moved is still a tick**; the measurement is what makes "nothing moved" a
+finding rather than an assumption.
+
+**Consumed: Ⓖ¹** — domain witness extended to `mdstruct` and `hooks`. Rule 17. Cost: **77s/commit**,
+uncacheable by construction.
+
+## Re-derived
+
+| | step | unblocked? | why here |
+|---|---|---|---|
+| ~~Ⓩ~~ | ~~Retire or wire `inbox/`~~ | **DONE — and the premise was false** | Rule 18. 79 messages across 4 peers; mine is the only empty one. WIRE, not retire. |
+| **Ⓝ₄** | 62-key preview debt paydown | YES | pure paydown; leverage to nothing |
+| **Ⓡ** | Domain witness for the OTHER checkers (ruff, ratchet) | ⚑ **NEWLY VISIBLE** | see below |
+| **Ⓒ¹** | Intake the closed ratchet subgraph | PARTIAL | ruling exists; substrate confirms with its operator |
+| **Ⓔ Ⓓ Ⓕ Ⓢ¹** | ledger / components / projection / conversion | NO | unchanged |
+
+### ⚑⚑ Ⓡ became visible only by finishing Ⓖ¹, which is what the sequencing rule is for
+
+Three ticks have armed **mypy's** domain across three distributions. **Nothing has armed ruff's or
+the ratchet's.** The claim is weaker for them — ruff is per-file, so its domain is less obviously
+transitive — but *"weaker claim"* is not *"tested claim"*, and the ratchet's domain includes its own
+**baseline file**, which is the input a careless declaration drops (`ratchet_check.sh` says so in its
+own header and nothing verifies it).
+
+⚑ **The witness is generic and takes `(dist, target, victim)`.** The remaining cost is naming a
+victim per checker — but ⚑⚑ **arm 2 needs a defect the checker will actually catch**, and a *type*
+error is mypy-specific. A ruff witness needs a lint violation; a ratchet witness needs a new census
+key. **The witness's arm-2 payload is checker-specific and currently hardcoded** — that is the real
+work in Ⓡ, and it was invisible until three mypy witnesses existed to generalize from.
+
+⚑ **Ⓩ still outranks it** on cost: retiring `inbox/` is minutes and removes a standing green-over-
+nothing, where Ⓡ is a parameterization job.
+
+
+## ⚑⚑ Tick 3 addendum — Ⓩ reversed the derivation that proposed it
+
+Tick 1 recorded: *"the inbox is not the channel; the message bus is. The inbox measures a thing
+nobody uses."* **Measured across peer trees: 79 messages in four peer inboxes, zero in mine.** The
+channel is the ecosystem's most-used durable transport and mtools is the only party receiving
+nothing — while I had written **four files into peer inboxes the same day**.
+
+⚑ **The item survived three derivations as "cheap, removes a green-over-nothing" because the
+derivation kept re-reading its own earlier conclusion instead of the directory.** That is precisely
+what "derive it FRESH" is for, and it took actually running a command against peer trees to break.
+
+**Standing action, not a code change:** peers do not know this inbox exists. Telling them is a
+message, and it is the only thing that converts a working channel into a used one.
