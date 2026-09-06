@@ -134,3 +134,66 @@ def test_row_index_is_still_tuples_method() -> None:
     """
     row = tables.Row(table=0, cells=("a", "b"))
     assert row.index(("a", "b")) == 1
+
+
+# ⚑ BOTH ROWS, and the name says which two: the one DECLARING the event and the one DISCUSSING
+# the declaration. A bare `2` would leave a reader counting rows in the fixture to learn why.
+_ROWS_MENTIONING = 2
+
+_ANCHOR_FIXTURE = """# Anchors
+
+| rev | what changed |
+|---|---|
+| 1 | FREEZE CALLED — the event |
+| 2 | ⚑⚑ a repair to the FREEZE CALLED predicate |
+"""
+
+
+# ⚑ CALLED, NOT BARE — the same reason as `document` above: the overloaded decorator's bare form
+# collapses the fixture to `Any`, which `disallow_any_expr` refuses.
+@pytest.fixture()
+def anchored(doc: Path) -> Path:
+    """Write a document whose second row MENTIONS what the first row DECLARES."""
+    doc.write_text(_ANCHOR_FIXTURE, encoding="utf-8")
+    return doc
+
+
+def test_a_row_wide_filter_cannot_separate_declaring_from_mentioning(anchored: Path) -> None:
+    """⚑⚑ The defect that motivated the anchored filter, pinned as the reason it exists.
+
+    A row-wide substring matches BOTH the row declaring an event and the row discussing the
+    declaration. Measured on a peer's revision log: a row announcing a repair to a freeze
+    mechanism matched a poll for the freeze itself, and would have released an embargo nobody
+    had lifted.
+    """
+    assert len(tables.table_rows(anchored, where="FREEZE CALLED")) == _ROWS_MENTIONING
+
+
+def test_an_anchored_filter_matches_only_the_declaring_row(anchored: Path) -> None:
+    """⚑ The same corpus, the same term, one match — because a declaration is a PREFIX.
+
+    A cell that begins with the term is making the claim; a cell that contains it later is
+    talking about one.
+    """
+    rows = tables.table_rows(anchored, col=1, starts="FREEZE CALLED")
+    assert len(rows) == 1
+    assert rows[0].cells[0] == "1"
+
+
+def test_the_anchor_skips_leading_decoration(anchored: Path) -> None:
+    """⚑⚑⚑ Without this the anchored filter is STRICTLY WORSE than the substring it replaces.
+
+    Every cell in the corpus this was built for opens with emphasis markers. A naive
+    `startswith` anchors to the marker, matches nothing, and reads as a clean negative — a
+    reader would conclude the event had not occurred.
+    """
+    assert tables.table_rows(anchored, col=1, starts="a repair")
+
+
+def test_an_out_of_range_column_drops_the_row_rather_than_raising(document: Path) -> None:
+    """⚑ Tables in one document have different widths.
+
+    A predicate scoped to a column and asked across a whole file must not abort on the first
+    narrower table it meets, or a question about one table becomes an error about another.
+    """
+    assert tables.table_rows(document, col=99, starts="anything") == []

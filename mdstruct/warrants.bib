@@ -490,3 +490,39 @@
   claim   = {Every allowlist entry is a constructor, never a called function --- which is what keeps the allowlist from becoming a suppression list. mdstruct NEVER constructs a panflute element; it reads them via isinstance checks and attribute access from whatever `load` returns, so a constructor entry is surface the stub declines to model while a non-constructor entry is a real inconsistency in something this package calls. THE GENERATED ALLOWLIST WAS NOT USABLE AS GENERATED: `--generate-allowlist` produced 15 entries and two of them were `load` and `stringify`, both carrying real defects, so accepting the generated file would have frozen both as permanently allowed and made the gate vacuous at exactly the point it exists to check. A KNOWN BOUND, F-armed: stubtest compares SIGNATURES and not RETURN TYPES, so declaring `stringify` as returning int passes silently --- that case is caught by mypy against the CALL SITES instead},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_every_allowlist_entry_is_a_constructor}
 }
+
+@misc{mdstruct-tables-a-row-wide-filter-cannot-separate-declaring-from-mentioning,
+  section = {tables},
+  title   = {A row-wide substring cannot separate a declaration from a discussion},
+  note    = {Measured on a peer's revision log designated as the artifact of record for an
+             event: a row announcing a repair to the freeze mechanism carried the literal
+             trigger in its description, matched a poll for the freeze, and would have
+             released an embargo nobody had lifted. The two questions -- does a cell MENTION
+             this, does a column DECLARE it -- diverge the moment a document explains its own
+             predicate.}
+}
+
+@misc{mdstruct-tables-an-anchored-filter-matches-only-the-declaring-row,
+  section = {tables},
+  title   = {A declaration is a prefix},
+  note    = {Same corpus, same term, one match. A cell beginning with the term is making the
+             claim; a cell containing it later is talking about one. This is why the filter is
+             anchored and column-scoped rather than merely narrowed.}
+}
+
+@misc{mdstruct-tables-the-anchor-skips-leading-decoration,
+  section = {tables},
+  title   = {Decoration is skipped before anchoring, or the anchor is worse than nothing},
+  note    = {Every cell in the corpus this was built for opens with emphasis markers. A naive
+             startswith anchors to the marker, matches nothing, and reads as a clean negative
+             -- strictly worse than the substring it replaces, because a reader would conclude
+             the event had not occurred rather than that the query was wrong.}
+}
+
+@misc{mdstruct-tables-an-out-of-range-column-drops-the-row-rather-than-raising,
+  section = {tables},
+  title   = {An out-of-range column drops the row rather than raising},
+  note    = {Tables in one document have different widths. A predicate scoped to a column and
+             asked across a whole file must not abort on the first narrower table it meets, or
+             a question about one table becomes an error about another.}
+}

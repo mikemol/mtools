@@ -6,6 +6,7 @@
     mdstruct grep PATTERN FILE.md [-i] [-E] # where text is, AS A SPAN
     mdstruct tables FILE.md                 # every table: position, size, header
     mdstruct rows FILE.md [--where TEXT]    # the cells, optionally filtered
+                  [--col N --starts TEXT]   # ...or anchored to one column's PREFIX
     mdstruct labels FILE.md                 # every worklist label the document mentions
     mdstruct roundtrip FILE.md              # what ONE normalization pass changes
     mdstruct fixpoint FILE.md               # does normalization CONVERGE, and in how many
@@ -108,11 +109,31 @@ def _tables(path: Path) -> int:
 
 
 def _rows(path: Path, argv: list[str]) -> int:
-    """Print table rows, optionally filtered by a substring."""
+    """Print table rows, filtered by a row-wide substring or a column-anchored prefix.
+
+    ⚑⚑ `--starts` ANSWERS A DIFFERENT QUESTION FROM `--where` AND THE DIFFERENCE IS
+    LOAD-BEARING: `--where` asks whether any cell MENTIONS a term, `--starts` asks whether one
+    column DECLARES it. A document that explains its own predicate mentions the term while
+    declaring nothing — measured on a peer's revision log, where a row announcing a repair to a
+    freeze mechanism matched a poll for the freeze itself.
+    """
     where = _flag(argv, "--where")
-    found = tables.table_rows(path, where=where)
+    starts = _flag(argv, "--starts")
+    col_raw = _flag(argv, "--col")
+    # ⚑ AN UNPARSEABLE --col REFUSES RATHER THAN DEFAULTING TO 0. Silently reading column 0 for
+    # `--col two` would answer a question nobody asked and report it as a clean result.
+    if col_raw is not None and not col_raw.isdigit():
+        sys.stderr.write(f"mdstruct: --col wants a column number, got {col_raw!r}\n")
+        return 2
+    if col_raw is not None and starts is None:
+        sys.stderr.write("mdstruct: --col names a column; --starts says what it must begin with\n")
+        return 2
+    col = int(col_raw) if col_raw is not None else None
+    found = tables.table_rows(path, where=where, col=col, starts=starts)
     if not found:
-        sys.stdout.write(f"mdstruct: no row in {path} matches {where!r}\n")
+        asked = starts if starts is not None else where
+        how = f"column {col or 0} beginning with" if starts is not None else "matching"
+        sys.stdout.write(f"mdstruct: no row in {path} with {how} {asked!r}\n")
         return 1
     for row in found:
         cells = " | ".join(cell[:_CELL_WIDTH] for cell in row.cells)

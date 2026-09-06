@@ -157,13 +157,7 @@ Facts no leg can infer from its own corpus:
 | rev | when | what changed | affects |
 |---|---|---|---|
 | 1 | 2026-09-06 | initial | — |
-| 2 | 2026-09-06 | `rosettapkg` dispatched later than the other five — no session existed at rev 1. **Byte-identical message, no substitution.** Recorded as a dispatch-time asymmetry, not a content one. | apex §accounting; `rosettapkg`'s brief §9 disclosure |
-
-⚑ **rev 2 is an accounting entry, not an instruction.** No leg needs to re-read anything. It exists
-so the apex can distinguish *"filed late"* from *"had less notice"* — and so `rosettapkg`'s own §9
-disclosure can state the input asymmetry rather than the apex inferring it. **All six parties
-received the same bytes; only the clock differed.**
-
+| 2 | 2026-09-06 | `rosettapkg` dispatched later than the other five — no session existed at rev 1. **Byte-identical message, no substitution.** A dispatch-time asymmetry, not a content one; all six received the same bytes, only the clock differed. No leg need re-read anything. | apex §accounting; `rosettapkg`'s brief §9 disclosure |
 | 3 | 2026-09-06 | ⚑ **ORIGIN IS NOT ATTRIBUTABLE FROM GIT LOG IN A CONSOLIDATION REPO.** See `§Y`. | apex phase 1; every leg's antecedent probe |
 | 4 | 2026-09-06 | ⚑ **A leg may mis-grade itself in EITHER direction; verify self-reported weaknesses on the same terms as strengths.** See `§Z`. | apex weighting |
 | 5 | 2026-09-06 | ⚑ **Filing status is MEASURED at freeze time, never carried in the dispatcher's head.** See `§F`. | the freeze; apex accounting |
@@ -174,6 +168,15 @@ received the same bytes; only the clock differed.**
 | 10 | 2026-09-06 | ⚑⚑ **THE FREEZE IS AN ARTIFACT IN `§V`, NOT A MESSAGE. Poll this table.** See `§G`. | every leg's embargo; the freeze |
 | 11 | 2026-09-06 | ⚑⚑ **`mdstruct --headers` SILENTLY DROPS SECTIONS — cross-check with `--budget`.** Now `§M` in the **companion**. | apex phase 1; every leg read |
 | 12 | 2026-09-06 | ⚑⚑ **FILE SPLIT. This file is control flow ONLY; cross-leg findings move to `CENSUS-deps-build-ANALYSIS.md`, embargoed until the freeze.** Ruling on `substrate`'s `gate-G14`. **No leg need re-read anything; a leg that polled `§V`/`§S`/`§G` read nothing it should not have.** | every leg's embargo; the apex reads both |
+| 13 | 2026-09-06 | ⚑⚑⚑ **THIS TABLE WAS BROKEN AND THE FREEZE ROW WOULD HAVE BEEN INVISIBLE.** A prose paragraph after rev 2 terminated the GFM table; **revs 3–12 decoded as paragraphs**, so a structural reader saw a 2-row `§V`. Reported by `mtools-ce`, verified here (`mdstruct --rows`: `t2` returned 2 of 12). Prose folded into rev 2's cell; the table is now unbroken. ⚑ **No prose may interrupt this table.** | every leg polling for the freeze |
+| 14 | 2026-09-06 | ⚑⚑⚑ **THE REPAIR TRIPPED ITS OWN PREDICATE.** Rev 13's cell contained the literal trigger string while announcing no freeze, so `--where` matched **with the control passing** — a leg obeying `§G` would have begun cross-reading. Reported by `mtools-ce`, reproduced here. Trigger string removed from rev 13; the freeze predicate is now **anchored**, see `§G`. ⚑ **A document that explains its own predicate accretes mentions of its own trigger, and every repair adds one.** | every leg polling for the freeze |
+| 15 | 2026-09-06 | ⚑ **THE `§S` PREDICATE IS ARMED, AND ARMING FOUND A HOLE.** Both arms run (1 non-terminal, 5 terminal, 6 = roster). ⚑⚑ **A party silently absent from `§S` says nothing, exactly like a party with no non-terminal status — so a dropped row reads as FROZEN.** The freeze condition now requires a **count identity** (`§S` rows == `§R` surveyors) as well as no non-terminal status. `§F` reappearing inside the instrument built to prevent it. | the freeze; every leg polling |
+
+⚑ **RULE, and it is why rev 13 exists rather than a silent fix:** ⚑⚑ **NOTHING MAY BE WRITTEN BETWEEN
+THE ROWS OF THIS TABLE.** A GFM table ends at the first non-row block; every row after that decodes
+as a paragraph. Commentary on a revision goes **in its own cell** or **below the table**, never
+between rows. `§G` designates this table as the freeze instrument, so a break here makes the only
+observable event in the run unobservable to exactly the readers `§G` told everyone to use.
 
 ---
 
@@ -202,6 +205,59 @@ messages* — and substrate's reason for preferring it over a locally-evaluable 
 that decides it: **a condition like "all six files present" produces no accounting artifact**, while
 `§6` requires every party marked `filed` / `declined` / `no response` *before* the apex begins. The
 revision produces the artifact the brief already demands.
+
+### ⚑ The predicate — and why a substring is not one
+
+⚑⚑ **THE FREEZE IS `§S`, NOT A STRING.** The event is: **every party in `§S` carries a terminal
+status** — `filed`, `declined`, or `no response` — and none reads `in progress`. `§6` requires that
+accounting to exist before the apex begins, so **the roster IS the freeze**; a `§V` row is its
+announcement, not its substance. *(`mtools-ce`'s formulation, adopted.)*
+
+**Read `§S`'s table rows.** Not its heading — ⚑ per rev 13's rule a heading is not a row, so
+`## §S … NOT YET CALLED` is human-legible and **not machine-pollable**; do not key on it.
+
+⚑⚑ **A SUBSTRING PREDICATE CANNOT WORK HERE, AND THIS IS MEASURED TWICE.** `grep -i "freeze called"`
+false-positives on `§G`'s own prose describing the rule. Then rev 13 — **the fix for the broken
+table** — put the literal trigger in a cell, so `--where "FREEZE CALLED"` matched **with the control
+passing** while `§S` still read *in progress*. Both readers wrong, in opposite directions.
+
+> ⚑ **A document that explains its own predicate accretes mentions of its own trigger, and every
+> repair adds one.** The instrument's own maintenance is the contaminant.
+
+**Until a column-scoped mode exists** (`mtools-ce` owns `mdstruct` and is building one; `--where` is
+row-wide free text with no column scoping, and `rows` truncates cells to ~40 chars for *display*
+while matching the full cell — so eyeballing the output is not a check):
+
+- **Poll `§S`'s rows** and require every status terminal. That is a statement about the roster, not
+  about a string, and no amount of prose about freezing can satisfy it.
+- ⚑ **Arm it first.** Ask for a row that **does** exist and confirm it returns — a poll that says
+  *"not called"* is indistinguishable from one that **cannot see rows at all**, and that state is
+  not hypothetical: this table was broken from rev 3 to rev 12 and every structural reader saw two
+  rows. **Brief §5's positive control, applied to a control-flow predicate.**
+- **A `FREEZE CALLED` row in `§V` remains the human-facing announcement.** ⚑ It is corroboration,
+  never the sole trigger — rev 14 is why.
+
+#### ⚑ The predicate ARMED, 2026-09-06 — both arms, and the hole they leave
+
+Written last revision and **not armed until now**, which is the defect rev 14 records, one turn later.
+A predicate stated is not a predicate exercised:
+
+    --where "in progress"  ->  1 of 33   cassian-observability      NON-TERMINAL, correct
+    --where "filed"        ->  5 of 33   the other five             CONTROL: statuses ARE readable
+
+**5 terminal + 1 non-terminal = 6 = the roster.** The predicate reads `§S` and discriminates; a
+freeze poll today correctly returns *not frozen*.
+
+⚑⚑ **AND THE ARMING EXPOSES A HOLE NOTHING CHECKS: the count identity is load-bearing and unasserted.**
+*"No row says `in progress`"* is the freeze condition, and **a party silently absent from `§S` also
+says nothing** — so a dropped row reads as frozen. The two states are distinguishable only by
+counting.
+
+> **The freeze condition is: `§S` has exactly as many rows as `§R` has surveyors, AND none is
+> non-terminal.** Poll both. ⚑ *A completeness check is not optional here — this is `§F`
+> (`A` computed over the wrong `N`) reappearing inside the instrument that exists to prevent it.*
+
+**Current:** `§R` lists 6 surveyors + the apex; `§S` holds 6 rows. Identity holds.
 
 ⚑ **Until `FREEZE CALLED` appears in `§V`, the embargo holds and legs are not blocked on anything.**
 Answering substrate's direct question: **nothing is owed by a filed leg.** File once, then the

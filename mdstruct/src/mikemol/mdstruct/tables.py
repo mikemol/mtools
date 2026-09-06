@@ -93,12 +93,35 @@ def tables(path: Path) -> list[Table]:
     return out
 
 
+def _undecorated(cell: str) -> str:
+    """Return `cell` case-folded with leading emphasis markers and whitespace removed."""
+    return cell.lstrip("⚑*_# \t").casefold()
+
+
 def table_rows(path: Path, position: int | None = None,
-               where: str | None = None) -> list[Row]:
-    """Return the cells of every row, optionally narrowed to one table or a substring.
+               where: str | None = None,
+               col: int | None = None,
+               starts: str | None = None) -> list[Row]:
+    """Return the cells of every row, optionally narrowed to one table, a substring, or a column.
 
     ⚑ `where` IS CASE-FOLDED AND MATCHES ACROSS A ROW, which is what a lookup in a name→home
     index actually wants: the reader knows a name, not which column holds it.
+
+    ⚑⚑⚑ `starts` EXISTS BECAUSE A ROW-WIDE SUBSTRING CANNOT ANSWER A CONTROL-FLOW QUESTION, AND
+    THAT WAS MEASURED RATHER THAN ANTICIPATED. A peer designated one table as the artifact of
+    record for an event, so a reader had to ask "does a row DECLARE this?" — and `where` answers
+    "does any cell MENTION this?" The two diverge the moment the document explains its own
+    predicate: a revision row announcing a repair to the freeze mechanism carried the literal
+    string `FREEZE CALLED` in its description, matched, and would have released an embargo nobody
+    had lifted.
+    ⚑⚑ AND THE DIVERGENCE IS NOT A ONE-OFF: a fix and its announcement necessarily discuss the
+    thing being fixed, so a table used as an instrument ACCRETES MENTIONS OF ITS OWN TRIGGER, and
+    every repair adds one. A row-wide substring gets monotonically less able to answer the
+    question the table exists to answer.
+
+    ⚑ SO THE PREDICATE IS ANCHORED AND COLUMN-SCOPED: `col` names the position, `starts` matches
+    that cell's PREFIX. A cell that BEGINS with the term is making a declaration; a cell that
+    contains it somewhere may be discussing one.
     """
     out = []
     for table_at, table in enumerate(_tables_in(ast.document(path))):
@@ -110,5 +133,19 @@ def table_rows(path: Path, position: int | None = None,
                 if where is not None and (
                         where.casefold() not in _CELL_SEP.join(cells).casefold()):
                     continue
+                if starts is not None:
+                    # ⚑ AN OUT-OF-RANGE COLUMN DROPS THE ROW RATHER THAN RAISING. Tables in one
+                    # document have different widths, and a predicate scoped to column 2 asked
+                    # across a whole file must not abort on the first 2-column table it meets.
+                    at = 0 if col is None else col
+                    if at >= len(cells):
+                        continue
+                    # ⚑⚑ DECORATION IS SKIPPED BEFORE ANCHORING. Every cell in the corpus this
+                    # was built for opens with ⚑ markers carrying emphasis, so a naive
+                    # `startswith` anchors to the marker and never to the claim — which would
+                    # make an anchored predicate strictly WORSE than the substring it replaces:
+                    # it would match nothing at all, and read as a clean negative.
+                    if not _undecorated(cells[at]).startswith(starts.casefold()):
+                        continue
                 out.append(Row(table=table_at, cells=cells))
     return out
