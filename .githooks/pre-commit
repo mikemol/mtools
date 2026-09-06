@@ -141,6 +141,14 @@ say "domain witness: each mypy target's declared domain vs its real one"
 ./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/src/mikemol/ratchet/state.py ratchet || fail=1
 ./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/ratchet-preview.txt          baseline || fail=1
 
+# ⚑⚑ FRESHNESS REPORTS, IT DOES NOT REFUSE, AND THE `|| true` IS DELIBERATE RATHER THAN LAZY. Its
+# subject is a shared cluster this repository does not own: a red gate on someone else's outage
+# blocks commits unrelated to it, and a gate that blocks for reasons its author cannot fix is a
+# gate that gets bypassed — which trades one stale rule for a disarmed harness. The output is the
+# product; the exit status is not.
+say "rule freshness: are the environment claims this repo cites still true?"
+./rule_freshness.sh || true
+
 # ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
 # target existed, the shell that runs every other check in this repository was verified by nothing
 # — clean only because its author ran shellcheck by hand after each edit. A convention held in one

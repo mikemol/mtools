@@ -796,7 +796,7 @@ a peer's cluster read; verified here:
 buildbuddy-66cfb69d88-9rdff             0/1  ContainerStatusUnknown   app=buildbuddy   podIP <none>
 buildbuddy-enterprise-58c588548b-cfsgx  1/1  Running                  app=buildbuddy   podIP 10.42.0.15
 svc/buildbuddy selector: {"app":"buildbuddy"}       <- matches both
-endpoints:               10.42.0.15:8080,:9464,:1985 <- exactly one
+endpoints:               10.42.0.15:8080,:9464,:1985 <- exactly one, AT THE TIME OF WRITING
 ```
 
 **The rule survives**: one endpoint, so the port I built against and the port I scraped are the
@@ -1535,3 +1535,58 @@ capability claim against a party who holds a different copy, not for being more 
 **The operational form:** before reporting a capability present or absent, ask *what is the smallest
 thing I could run that would return a different answer if I were wrong* — and run it. A count cannot
 be that thing. Neither can a single negative from one path.
+
+## Rule 26 — a citation gate proves the pointer resolves; nothing proves the target is still true
+
+**Ⓦ, and it found a stale figure in this file on its first run.**
+
+`rule_citations.sh` (Rule 23's addendum) closed the case where a commit names a rule that was never
+written. **The next case is worse: a rule that IS written, IS cited, and has quietly stopped
+describing the world.** A stale rule is indistinguishable from a live one at every point except the
+measurement it was derived from — and that measurement is in the past by construction.
+
+⚑⚑ **THE SCOPE IS ENVIRONMENT CLAIMS, AND THE SCOPE IS THE DESIGN.** A rule about how to arm a probe
+is a claim about reasoning and does not decay. A rule naming a **port**, a **pod**, or a **counter**
+is a claim about a running system that changes without anyone touching this repository. Three rules
+here cite `:31464`; Rule 12's own addendum records that the Service selector matches **two** pods with
+only readiness disambiguating them. **That is one `kubectl` away from being false.**
+
+### The first run, which is the argument
+
+```
+Rule 12 premise FRESH: exactly one endpoint serves the metrics Service (10.42.0.31)
+metrics port FRESH:    http://127.0.0.1:31464/metrics answers
+```
+
+⚑⚑⚑ **THE PREMISE HELD AND THE FIGURE DID NOT. Rule 12 records `10.42.0.15`; the endpoint is now
+`10.42.0.31`** — the pod was replaced at some point after the rule was written, and nothing in this
+repository noticed. The rule's *conclusion* survives (one endpoint, so the measurement was sound);
+the *address* it cites as evidence is already wrong. **Amended in place rather than silently
+corrected**, because the interesting fact is not the new IP — it is that a load-bearing figure went
+stale inside a document nobody had reason to re-open.
+
+### Three outcomes, all armed
+
+```
+one endpoint        -> FRESH
+two endpoints       -> ⚑ STALE, with the reason: counter deltas sample an unknown one of two
+                       populations, and THE CONTROL ARM CANNOT DETECT IT
+no kubectl          -> UNVERIFIABLE: "a fact about this reader, not the cluster"
+```
+
+⚑ **UNVERIFIABLE is a first-class outcome, not a soft failure.** This repository's standing rule is
+that a comparison which cannot be made reports INVALID rather than FALSE; the same discipline that
+put `suspect` in the ratchet (Rule 20) puts it here.
+
+### ⚑ It reports and does not refuse, and that is not a weak gate
+
+The subject is a **shared cluster this repository does not own**. A red gate on someone else's outage
+blocks commits that have nothing to do with it — and **a gate that blocks for reasons its author
+cannot fix is a gate that gets bypassed**, which converts one stale rule into a disarmed harness.
+Reporting is the correct strength for a claim about a system outside the tree.
+
+⚑⚑ **The general shape, and it is why this is a rule rather than a script:** every measured claim has
+a **shelf life set by its subject, not by its author's confidence.** A claim about a function's
+semantics keeps until the function changes and the tests say so. A claim about a cluster, a port, a
+peer's tree or a counter's meaning keeps until something outside this repository moves — and nothing
+in the commit history will mark that day.
