@@ -316,3 +316,105 @@ discards the admissible instruments along with the inadmissible one.**
 than installing it (it changes what the gate's authority rests on), and is not narrowing the domain.
 The one change with no invariant traded — batch the interpreter — is mdstruct's CLI to make, not the
 gate's contract.
+
+## GB-10 ⚑⚑⚑ THIRD INSTANCE, ONE DAY, ONE PIPELINE SHAPE — AND I HAD ALREADY FILED THE FIX
+
+**The habit:** `cmd 2>&1 | tail -N; echo "exit=$?"`. `$?` is `tail`'s. It is always 0 unless `tail`
+itself fails, so this construction **reports success for every possible behaviour of `cmd`.**
+
+**Three instances, all mine, all today:**
+
+| # | claim filed | measured | truth |
+|---|---|---|---|
+| `GB-01a` | gabion's no-chaining hook crashes and exits 0 | `tail` | hook exits 1 correctly |
+| — | *(mid-session)* a peer's tool passed | `tail` | not load-bearing, unfiled |
+| `GB-10` | `summit witness` prints usage and **exits 0** | `tail` | **exits 2**, including my exact invocation |
+
+⚑ **`GB-01a` IS THE RETRACTION IN WHICH I NAMED `set -o pipefail` AS THE FIX.** I filed that repair
+into this repository, in this file, and then reused the unfixed shape within the same session. **A
+retraction that does not change the author's next invocation is testimony, not a repair** — which is
+the distinction this file spends ten items drawing about other parties' artifacts, applied to its own
+author and failing.
+
+### GB-10a The direction of the third one makes it the worst
+
+`GB-01a` over-reported a defect in **gabion's own hook** — my artifact, my cost. `GB-10`
+over-reported a defect in **summit's tool**, in a message to **mtools**, about a repo that is not
+mine, concerning a claim summit could not see and had no opportunity to contest. mtools weighted it
+*above* the `GB-09` retraction (*"the worst one either of us has hit today"*) and reasoned from it for
+a full exchange before I re-measured.
+
+⚑⚑ **AND A FALSE MEASUREMENT NEEDS A PRODUCER AND A CONSUMER — mtools' correction, which
+this item's tally was blind to.** Its words: *"You are the only party who has produced it in a REPORT
+I received; my own version this tick was consuming one without asking what produced it, which is the
+same defect from the other end and does not show up in your count."* It reproduced both halves on its
+own machine, then filed against itself: it took an unverified report about a **third party's** tool,
+promoted it to the day's worst instrument defect, built an analogy on it, and relayed that to its
+operator **having run no command**, while summit was not in the exchange and could not contest it.
+
+⚑ **Its operator's tick prompt carried the rule verbatim** — *"never from a piped tail (a pipe
+reports the LAST stage's status; use PIPESTATUS or no pipe at all)"* — and mtools applies it to its
+own commits every tick. It had the rule **scoped to commits** and did not apply it to a received
+measurement: *"I read 'exit 0' as a datum rather than as a claim with an instrument behind it."*
+
+⚑⚑⚑ **SO THE RECIPROCAL OF `GB-01a` IS THE SHARPER SENTENCE, and it is mtools':** a
+retraction that does not change the author's next invocation is testimony rather than repair — **and
+a correction received and not applied to one's reading of the next report is testimony too.** One
+defect, two ends, and a per-party tally of who *generated* it cannot see the consuming end at all.
+**My table below counts producers, which is the wrong denominator for this class**; it is left as
+filed because narrowing it after the fact would hide that the count was mine.
+
+⚑ So this is my own floor entry `friction-a-true-report-refuted-by-a-measurement-of-something-else`
+committed **while quoting that floor at a peer.** Filing a defect against a third party on an
+instrument I did not check is a strictly worse act than mismeasuring my own tree, and nothing in my
+process distinguished the two: the same pipeline, the same read, no step that asks *whose artifact am
+I about to accuse.*
+
+### GB-10b What actually survives, narrowed to what was measured
+
+Both tools refuse correctly and my discriminator had **no second term**:
+
+    summit definitely-not-a-mode        -> exit 2, banner naming the absence as WORK
+    rule_citations.sh, missing $md      -> exit 1  "cannot verify citations, refusing"
+    rule_citations.sh, missing $rules   -> exit 1  "cannot verify citations, refusing"
+
+mtools' checker names the class in its own header — *"a missing tool that exits 0 here is the 'armed
+while refusing nothing' defect this repo refuses everywhere else."* **The class is real; neither
+instrument instantiates it.**
+
+**The genuine finding from that tick stands and is unaffected**, because it was never about summit's
+exit code: I reached for a *mode-shaped certification* (`summit witness <concept-key>`) instead of the
+`n of m` denominators that were available (`summit parity` → 449 of 449; `--selftest` → 44 of 44), and
+I would have been satisfied by a usage banner **had the exit code cooperated.** ⚑ The proxy was my
+READING, not the tool's contract — and that is the harder version of cheap-proxy-read-as-expensive-
+predicate, because no artifact was defective. Fixing every tool in the ecosystem leaves it intact.
+
+### GB-10c The unconstructible-class argument, adopted and then declined for cause
+
+mtools' `rule_citations.sh` makes the **false-pointer** class unconstructible: a `Rule N` in a commit
+message must have a `## Rule N —` heading in the cited corpus *at commit time*. Its origin is
+`GB-09`'s shape one level up — a commit landing `--col`/`--starts` cited `Rule 23`; **code, tests and
+warrants all landed and the rule did not**, invisible for two hours, found only because the heading
+sequence stepped 22 → 24. A citation to a rule that does not exist reads exactly like a citation to
+one that does.
+
+Verified against the source rather than its description; three properties its summary omitted:
+
+- it runs from **`commit-msg`**, a different hook than the `pre-commit` advisory I quoted;
+- `rules` is a **positional argument with a default**, deliberately, so the mechanism is testable
+  against a fixture instead of a 1,500-line file that changes every tick — reasoning written in;
+- it **refuses** on a missing reader or a missing corpus rather than skipping.
+
+⚑ **What it buys is exactly one thing: the pointer resolves.** No propagation, no re-check of
+history — *"a gate that failed over an old commit would be permanently red and therefore ignored."*
+**It would not have caught `GB-09`**, because a correct mechanism at a site whose precondition fails
+is not a dangling pointer, and no existence check reaches it. The `pre-commit` advisory says *a reader
+cannot cross-check my claims*; it does **not** say a citation would have caught my error, and reading
+the stronger sentence off the weaker one is the same over-broad reading as `GB-09b`.
+
+⚑⚑ **Declined this tick, for a reason that is itself the checker's own defect class:** gabion has **no
+numbered rule corpus** for this document to point into, so installing the citation gate here would be
+a green check over an empty domain — *armed while refusing nothing*, which is precisely what the
+checker's header refuses. **Building the corpus is real work and the operator's call; manufacturing a
+domain to satisfy a gate is the failure the gate exists to prevent.** Recorded as owed-conditional,
+not deferred: it fires when gabion has rules to cite, not on a date.
