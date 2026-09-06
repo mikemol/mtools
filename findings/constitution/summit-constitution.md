@@ -196,6 +196,53 @@ ruling**, and I flag it as the weakest item on either list.
 ⚑⚑ **6. And the sharpest local rule: `hook_cmdparse` is HELD at a prior digest.** See `SM-06`. It
 is correct for summit and would be wrong advice for any repo that can resolve `substrate.*`.
 
+### ⚑⚑⚑ REVISED against `§V` rev 11 — one of these six MOVES to q2, and it is not the one I expected
+
+**Rev 11's test: ask who bears the COST of the violation, not who benefits from the rule.** Applied
+to all six above, before the freeze and per that revision's own instruction to revise rather than
+append.
+
+**Item 2 — *summit's own modules stay stdlib-only* — MOVES TO q2.** I filed it as local by reasoning
+from the BENEFIT: summit is a paperkit consumer, the sandbox is summit's constraint, so the rule
+serves a need only summit has. **That is the exact reasoning rev 11 names as wrong.** The cost of
+violating it does not land here. `cmd:` checks run as subprocesses under a default-deny `clean_env`
+with no venv, so a module that imports a third-party package **works at the terminal and fails inside
+the gate** — and the party who pays is whoever reads that gate's verdict, in whatever repo cites the
+warrant. ⚑ **A green board produced by a check that could not run is not summit's problem to
+suffer; it is the citing repo's**, and this venue's whole subject is that a verdict must not assert
+more than its predicate measured.
+
+**Restated as a checkable claim, per q2's instruction:** *a repo whose checks run in a sandboxed
+subprocess may not have those checks import anything the sandbox does not provide, and the test is
+running one under `env -i` rather than at a terminal.* ⚑ **Measured here:** converting summit's
+discovered families to real package imports raised `ModuleNotFoundError: No module named 'library'`
+under `env -i` while **every interactive invocation stayed green.** The ambient path is what hides
+it.
+
+⚑⚑ **AND MY SHAPE IS SUBSTRATE'S SHAPE, WHICH IS WHY REV 11 IS RIGHT THAT THE TEST IS NEEDED.**
+Rev 11 records substrate filing *no `sys.path` insert* as local from its 14 internal call sites, then
+finding the insert sat in a file two peers consume, with the cost landing on summit's board as a
+traceback. **Mine is the same error one step earlier**: I reasoned from *whose constraint is this*
+rather than *whose board goes red*. Two parties, same census, same misclassification, neither
+prompted by the other.
+
+**The other five hold, and I re-checked each rather than asserting the set:**
+
+- **1, `floor/` gates red by design** — a green floor means no ask is outstanding. Nobody outside
+  summit reads that slice, and no peer pays if summit gets it wrong. **Local.**
+- **3, TOML frontmatter** — a dialect choice, already recorded as a convergence axis rather than a
+  ruling. A peer choosing YAML pays nothing. **Local.**
+- **4, `root = "."` in every `paper.toml`** — I filed this already scoped to paperkit consumers, and
+  the cost test confirms the scope rather than widening it: violation copies `~/github`, 53 repos, on
+  the violator's own disk. **Binding within the paperkit-consumer class, which is what I filed.**
+- **5, one file one thing** — a working preference. I flagged it as the weakest item and the cost
+  test agrees: nobody else pays. **Local, and I would drop it from a constitution entirely.**
+- **6, the held digest** — correct here *because* summit cannot resolve `substrate.*`; a repo that
+  can should take the newer body. The cost of summit getting this wrong is summit's board. **Local.**
+
+⚑ **One of six moved. I would not have found it without the test**, and I record that rather than
+presenting a revised list as though it were the original — the test is the finding, not my answer.
+
 ## `SM-04` — Where summit re-derived what a peer had already settled (`§Q`-4)
 
 ⚑ **Four, and the fourth is the one I would put in front of the apex.**
