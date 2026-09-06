@@ -150,13 +150,32 @@ find "$mtools/inbox" -maxdepth 1 -name '*.md' ! -name README.md -printf '  UNREA
 # "what ELSE produces this reading" rather than "can I make this fail", and it finds what the
 # first question cannot, because the first requires imagining the bad state in advance.
 echo "=== census: is the freeze called? ==="
-census="$mtools/findings/CENSUS-deps-build.md"
+# ⚑⚑⚑ THE POPULATION IS DERIVED, AND HARDCODING ONE PATH MADE THIS POLL BLIND TO A WHOLE CENSUS.
+# This block named `CENSUS-deps-build.md` directly. A second census — `CENSUS-constitution.md` —
+# was convened, run, and FROZEN while this script reported a confident state that did not mention
+# it. MEASURED on the tick that found it: the poll said `FROZEN` and I had to discover by hand
+# that a second census existed, was frozen, and had an unadmitted eighth leg in its directory.
+#
+# ⚑⚑ THAT IS `MEASURED-WITH-THE-WRONG-KEY` (gabion, 2026-09-06) IN THIS INSTRUMENT: the poll
+# answered *is deps-build frozen* and its reader took it for *what is my census state*. A key that
+# is cheap to compute and never asked what it is evidence OF gives a clean, well-formed, confident
+# answer about the wrong question — which is worse than a noisy one, because nothing looks wrong.
+#
+# ⚑ EIGHTH HAND-WRITTEN POPULATION FOUND IN THIS REPOSITORY'S OWN CHECKERS. Every previous one
+# rotted the same way: the denylist, the shellcheck target list, `exports_files`, the figure scan,
+# the orphan sites, the hardcoded roster size, and §X's drift table omitting `hook_pycheck`.
 md="$mtools/mdstruct/.venv/bin/mdstruct"
+# `CENSUS-BRIEF` is the standing brief and `-ANALYSIS` is a companion; neither carries a roster.
+censuses=$(cd "$mtools" && git ls-files 'findings/CENSUS-*.md' \
+    | grep -v 'CENSUS-BRIEF' | grep -v 'ANALYSIS')
 if [ ! -x "$md" ]; then
     echo "  UNMEASURED: $md is not executable — this is a fact about the reader, not the freeze"
-elif [ ! -f "$census" ]; then
-    echo "  UNMEASURED: no census file at $census"
+elif [ -z "$censuses" ]; then
+    echo "  UNMEASURED: no census run file is tracked under findings/"
 else
+  for rel in $censuses; do
+    census="$mtools/$rel"
+    printf '  --- %s\n' "$rel"
     # ⚑⚑⚑ BOTH QUERIES ARE SCOPED BY THE TABLE'S HEADER SIGNATURE, and only the first one was.
     # The roster count already keyed on `party | status`, which is a property of the table. The
     # PENDING count did not: `rows --col 1 --starts` searches EVERY table in the document, so a
@@ -168,7 +187,18 @@ else
     # `--table 4`, and inserting a section renumbered the tables so the roster stayed at 4 BY
     # LUCK. A positional predicate that silently retargets produces a CONFIDENT WRONG ANSWER,
     # where an expired pointer at least fails to resolve. Reported to me, checked here, present.
-    sig='party | status'
+    # ⚑⚑⚑ THE SIGNATURE IS PER-CENSUS AND HARDCODING ONE MADE THE POLL REPORT A FROZEN CENSUS AS
+    # NOT FROZEN. `deps-build`'s §S is `party | status`; `constitution`'s is `surveyor | status`.
+    # MEASURED the moment this block was generalised over both: roster `? of 7`, then
+    # `NOT FROZEN — the roster is SHORT`, against a census whose §V carries FREEZE CALLED at rev 37
+    # and whose seven legs are all in HEAD. ⚑ A confident refusal produced by a missing table, not
+    # by a missing row — the same class as the positional `--table N` predicate this block already
+    # refuses, arriving through the header instead of the index.
+    #
+    # ⚑ SO THE STATUS TABLE IS IDENTIFIED BY ITS SECOND COLUMN, which is the property that makes
+    # it the status table, rather than by the noun a given run file happened to choose for parties.
+    sig=$("$md" tables "$census" 2>/dev/null | grep -oE '(party|surveyor) \| status' | head -1)
+    [ -n "$sig" ] || sig='party | status'
     roster=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
     tbl=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE 'table [0-9]+' | grep -oE '[0-9]+')
     if [ -z "$tbl" ]; then
@@ -214,6 +244,29 @@ else
             echo "    That is the coordinator's to declare; a met precondition is not the event."
         fi
     fi
+    # ⚑⚑⚑ AN UNADMITTED LEG IS INVISIBLE TO EVERY QUERY ABOVE, AND THAT IS THE CASE THAT OCCURRED.
+    # `gabion` filed into `findings/constitution/` AFTER the freeze accounted seven parties —
+    # untracked, correctly flagged as out-of-freeze by its author, and absorbed by nobody. The
+    # roster count reads §S, the freeze reads §V, and NEITHER can see a file on disk that no row
+    # mentions. ⚑ So a party that never appeared in the accounting is exactly the thing `§G` calls
+    # a remainder entry rather than a silent omission — and it stayed silent to this poll.
+    #
+    # ⚑⚑ NOT AN ERROR, AND REPORTED AS SUCH. Admitting an eighth party against a roster frozen at
+    # seven is an operator's act. This line makes it VISIBLE at the start of a derivation instead
+    # of at the moment someone reads `ls-tree` and finds a count that disagrees with `§S`.
+    legs="$mtools/findings/$(basename "$rel" .md | sed 's/^CENSUS-//')"
+    if [ -d "$legs" ]; then
+        unadmitted=$(cd "$mtools" && git ls-files --others --exclude-standard "${legs#"$mtools"/}")
+        if [ -n "$unadmitted" ]; then
+            echo "  ⚑ UNADMITTED artifact(s) in the leg directory — in no commit, in no §S row:"
+            # ⚑ ONE LINE PER FILE, read from the variable rather than splitting it: `printf` with
+            # an unquoted expansion would split correctly here and be indistinguishable from the
+            # accidental splitting shellcheck exists to catch.
+            printf '%s\n' "$unadmitted" | sed 's/^/      /'
+            echo "    Whether these enter the accounting is the operator's, not the poll's."
+        fi
+    fi
+  done
 fi
 
 # ⚑⚑⚑ FRESHNESS RUNS HERE *AND* IN THE GATE, AND THAT IS TWO QUESTIONS RATHER THAN ONE ANSWER
