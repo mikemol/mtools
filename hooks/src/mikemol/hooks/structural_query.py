@@ -45,11 +45,36 @@ from mikemol.hooks import payload as _payload
 # ⚑ WIDENED AFTER A LIVE BYPASS. The first six were `grep rg egrep fgrep sed awk`; every other
 # line-reader was a silent hole. A tool that reads a file's BYTES to answer a question about its
 # STRUCTURE belongs here regardless of how blunt it is.
+# ⚑⚑⚑ A DENYLIST, DELIBERATELY, AND THE ALTERNATIVE WAS MEASURED BEFORE SETTLING. An allowlist
+# would have to enumerate every command that touches a file WITHOUT reading it textually — `git
+# add`, `rm`, `cp`, `mv`, `ls`, `chmod`, `git diff`, the owning tool itself, and whatever a future
+# workflow reaches for. That population is unbounded and its omissions REFUSE legitimate work,
+# where this list's omissions merely fail to catch one. ⚑ Both are hand-written; only one fails
+# safe.
+#
+# ⚑⚑ AND IT WAS INCOMPLETE, MEASURED: `perl`, `python3 -c`, `less`, `more` and `jq` all read a
+# claimed artifact textually and all PASSED. A roster that decides what is blocked is a roster
+# whose omissions are silent permissions — the same shape as the four enumerated populations this
+# repository repaired, except this one cannot be enumerated: there is no filesystem or config to
+# derive tool names from, so it grows by measurement rather than by query.
 TEXTUAL = frozenset((
     "grep", "rg", "egrep", "fgrep", "sed", "awk",
     "head", "tail", "cut", "sort", "uniq", "wc", "tr", "nl", "rev",
     "strings", "cat", "tac", "od", "xxd", "diff", "comm", "join", "paste",
+    # ⚑ Added after measuring that each passed a textual read of a claimed artifact.
+    "perl", "less", "more", "jq", "column", "fold", "expand", "unexpand",
 ))
+
+# ⚑⚑⚑ `python3` IS DELIBERATELY ABSENT, AND THE REASON IS THAT IT IS THE OWNING TOOL'S OWN
+# INVOCATION. `python3 -m mikemol.mdstruct.cli spans f.md` is the route this hook PRESCRIBES;
+# listing the interpreter would refuse the answer alongside the question. ⚑ So
+# `python3 -c "print(open(1).read())" f.md` passes, measured, and that is a KNOWN OPENING rather
+# than an omission — an interpreter is not a tool, it is a way to be any tool, and no name-based
+# roster can separate the two.
+#
+# ⚑⚑ NAMED HERE BECAUSE AN UNRECORDED GAP IS INDISTINGUISHABLE FROM AN UNNOTICED ONE. A reader
+# meeting this list cannot otherwise tell whether `python3` was considered and excluded or simply
+# forgotten, and those warrant different responses: the first is a boundary, the second is a bug.
 
 # ⚑ NO HARDCODED SUFFIX LIST LIVES HERE. It was `STRUCTURED_SUFFIX = (".py", ".md", …)` — a SECOND
 # roster beside the routing table, which is the frozen-roster shape the table exists to retire.

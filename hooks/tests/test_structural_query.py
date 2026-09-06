@@ -281,3 +281,50 @@ def test_an_advisory_hook_writes_to_stderr_and_leaves_stdout_empty(
     captured = capsys.readouterr()
     assert captured.out == ""
     assert "structural-query" in captured.err
+
+
+@pytest.mark.parametrize("tool", ["perl", "less", "more", "jq", "column"])
+def test_a_pager_or_filter_reading_a_claimed_artifact_is_refused(tool: str) -> None:
+    """⚑⚑ Each of these read a claimed artifact textually and PASSED, measured.
+
+    A roster that decides what is blocked is a roster whose omissions are silent permissions —
+    and unlike this repository's four enumerated populations, this one cannot be derived from a
+    filesystem or a config. There is no query that yields "tool names", so it grows by
+    measurement rather than by enumeration.
+    """
+    # ⚑ THE TABLE IS PASSED, NOT DISCOVERED. `verdict()` falls back to `routing_table.claims()`,
+    # which reads the repo's SKILL.md relative to the CWD — so a test relying on the default
+    # asserts against an EMPTY table under pytest and passes nothing to the gate. The first cut
+    # did exactly that: five arms failed while the same commands blocked correctly from a shell.
+    assert structural_query.verdict(f"{tool} notes.md", _CLAIMS)[0], (
+        f"{tool} reads a claimed artifact textually and must be refused")
+
+
+def test_the_interpreter_is_not_listed_because_it_is_the_prescribed_route() -> None:
+    """⚑⚑⚑ A known opening, recorded so it is not mistaken for an oversight.
+
+    `python3 -m mikemol.mdstruct.cli spans f.md` is the route this hook PRESCRIBES, so listing
+    the interpreter would refuse the answer alongside the question. ⚑ An interpreter is not a
+    tool, it is a way to be any tool, and no name-based roster can separate the two.
+
+    ⚑ A reader meeting the roster cannot otherwise tell whether `python3` was considered and
+    excluded or simply forgotten — and those warrant different responses: the first is a
+    boundary, the second is a bug.
+    """
+    assert not structural_query.verdict(
+        "python3 -m mikemol.mdstruct.cli spans notes.md", _CLAIMS)[0], (
+        "the owning tool's own invocation must not be refused")
+
+
+def test_a_command_that_touches_without_reading_is_permitted() -> None:
+    """⚑ The P-arm for the denylist's SHAPE, and it is why an allowlist was rejected.
+
+    Eight commands touch a claimed artifact without reading it textually — `git add`, `rm`,
+    `cp`, `mv`, `ls`, `chmod`, `git diff`, the owning tool. An allowlist would have to enumerate
+    every one of those plus whatever a future workflow reaches for; that population is unbounded
+    and its omissions REFUSE legitimate work, where a denylist's omissions merely fail to catch
+    one. Both are hand-written; only one fails safe.
+    """
+    for cmd in ("git add notes.md", "rm notes.md", "cp notes.md other.md", "chmod 644 notes.md"):
+        assert not structural_query.verdict(cmd, _CLAIMS)[0], (
+            f"{cmd} does not read the file and must be permitted")
