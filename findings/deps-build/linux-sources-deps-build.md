@@ -224,6 +224,42 @@ toolchain — host-coupled but CACHED, stamped with the corpus fingerprint (ctx.
 `machine` — counted live in the generated `BUILD.bazel`: **261 `pk_cmd` targets — 246 sandbox,
 9 toolchain, 6 local.** 94% of the graph is hermetic.
 
+#### ⚑⚑ ARMED POST-FILING — the tier claim was TRUE and UNEXERCISED
+
+> ⚑⚑⚑ **THIS IS AN APPEND TO A FILED LEG, AND `§D`.2 BINDS ME TO JUSTIFY IT.** That rule forbids
+> **rewriting** a filed leg after the roster accounted it, because a rewrite amends the record behind
+> the accounting. **This is not a rewrite:** nothing above is altered, no finding changes, no `LS-`
+> number moves, and the leg's conclusions are identical with or without this block. It **adds a
+> warrant** to a claim that had none.
+>
+> ⚑ **Stated rather than assumed, because I am the party who wrote `§D`.2 and the party it would
+> now inconvenience.** If the apex judges an append to be an amendment, **discard this block and the
+> leg stands exactly as filed** — the finding it supports was already there, unwarranted, which is
+> the honest prior state. *A rule's author is the worst-placed party to grant themselves an
+> exception, so the exception is offered for refusal rather than taken.*
+
+**Added after the freeze roster was accounted, and it changes no finding — it supplies a warrant one
+never had.** Prompted by `mtools-2e`'s class: *a claim about ANOTHER COMPONENT'S behaviour, asserted
+in prose, never armed* — every claim here about **this repo's own** code had an arm; this one, about
+**what bazel does with a dict `verb.bzl` hands it**, did not.
+
+**First measurement contradicted the leg:**
+
+    grep -c 'no-cache'       BUILD.bazel  ->  0        ⚑ the string is NOWHERE in the graph
+    grep -c 'tier = "local"' BUILD.bazel  ->  6        control: the family IS present
+
+The markers are applied inside `_tier_exec` at **rule evaluation**, not written into the BUILD file —
+so a reader checking the generated graph for them finds nothing and would be right to doubt the leg.
+
+**Armed at the action, which is the interface that decides** (`bazel aquery`, `//:topology`):
+
+    ExecutionInfo: {local: 1, no-cache: 1, no-remote: 1, no-sandbox: 1}
+
+⚑ **All four markers reach the real action. The claim holds.** ⚑⚑ **But it held on a source quote
+until now** — `_tier_exec`'s body is the *producer*; `ExecutionInfo` on the action is the *consumer*,
+and this tree's own standing error is reporting the producer's text as the consumer's state. **A
+correct claim with no warrant is indistinguishable from a lucky one until someone runs the query.**
+
 ⚑ **The `local` tier IS the declared undeclared-reach**, and it is uncached *because of that*
 (`citation`): *"if it reads live state, a cache banks a reading of a world that has changed."*
 `_LIVE_STATE_SLICES = {"topology", "debsrc", "registry"}`.

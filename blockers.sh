@@ -157,8 +157,26 @@ if [ ! -x "$md" ]; then
 elif [ ! -f "$census" ]; then
     echo "  UNMEASURED: no census file at $census"
 else
-    roster=$("$md" tables "$census" 2>/dev/null | grep 'party | status' | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
-    pending=$("$md" rows "$census" --col 1 --starts "in progress" 2>/dev/null | grep -cE '^  table')
+    # ⚑⚑⚑ BOTH QUERIES ARE SCOPED BY THE TABLE'S HEADER SIGNATURE, and only the first one was.
+    # The roster count already keyed on `party | status`, which is a property of the table. The
+    # PENDING count did not: `rows --col 1 --starts` searches EVERY table in the document, so a
+    # row in an unrelated table whose second column begins "in progress" is counted as a
+    # non-terminal party. ⚑ MEASURED on a fixture with one extra table: 2 matches, one of them
+    # from a table that is not the roster.
+    #
+    # ⚑⚑ THE PEER FOUND THE SAME CLASS IN ITS OWN INSTRUMENT — `§G` keyed the freeze poll on
+    # `--table 4`, and inserting a section renumbered the tables so the roster stayed at 4 BY
+    # LUCK. A positional predicate that silently retargets produces a CONFIDENT WRONG ANSWER,
+    # where an expired pointer at least fails to resolve. Reported to me, checked here, present.
+    sig='party | status'
+    roster=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
+    tbl=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE 'table [0-9]+' | grep -oE '[0-9]+')
+    if [ -z "$tbl" ]; then
+        echo "  UNMEASURED: no table carries the roster's header signature ($sig)"
+        tbl=-1
+    fi
+    pending=$("$md" rows "$census" --col 1 --starts "in progress" 2>/dev/null \
+        | grep -cE "^  table ${tbl} ")
     printf '  roster: %s of 6 parties listed; %s non-terminal\n' "${roster:-?}" "${pending:-?}"
     # ⚑⚑ BOTH ARMS MEASURED, on constructed fixtures, before this was trusted:
     #   all six terminal            -> roster=6 pending=0 -> FROZEN      (the poll CAN fire)
