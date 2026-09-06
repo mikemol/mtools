@@ -166,8 +166,25 @@ echo "=== census: is the freeze called? ==="
 # the orphan sites, the hardcoded roster size, and §X's drift table omitting `hook_pycheck`.
 md="$mtools/mdstruct/.venv/bin/mdstruct"
 # `CENSUS-BRIEF` is the standing brief and `-ANALYSIS` is a companion; neither carries a roster.
-censuses=$(cd "$mtools" && git ls-files 'findings/CENSUS-*.md' \
-    | grep -v 'CENSUS-BRIEF' | grep -v 'ANALYSIS')
+# ⚑⚑⚑ TRACKED IS NOT THE POPULATION, AND KEYING ON IT REPRODUCED THE DEFECT THE PREVIOUS REPAIR
+# WAS FOR. One tick ago this line was a hardcoded path; replacing it with `git ls-files` looked
+# like deriving the population and was a SECOND cheap key — `is it committed` rather than `is it
+# a census run file`. MEASURED the tick after: `CENSUS-build-hermeticity.md` was convened by a
+# peer, placed in this tree, carried mtools on its roster, and was INVISIBLE here because its
+# dispatcher had not committed it yet.
+#
+# ⚑⚑ THAT IS THE MOST COMMON STATE, NOT AN EDGE CASE. A census is dispatched the moment the run
+# file lands on disk — peers read it by path and file legs against it — and it reaches HEAD
+# whenever its author next gets a clear interval, which in this tree is minutes to hours behind.
+# So `git ls-files` excludes precisely the window in which a poll saying "here is what is open"
+# has the most to report. ⚑ `§F`'s own inversion, arriving in my instrument: a file in a working
+# tree is not an artifact another party can READ, but it is one another party can be ROSTERED BY.
+#
+# ⚑ SO THE FILESYSTEM IS THE POPULATION AND TRACKEDNESS IS A COLUMN. `find` sees both; the
+# untracked ones are marked, because "this census is not in HEAD" is a fact worth reporting rather
+# than a reason to omit the row.
+censuses=$(cd "$mtools" && find findings -maxdepth 1 -name 'CENSUS-*.md' -type f 2>/dev/null \
+    | grep -v 'CENSUS-BRIEF' | grep -v 'ANALYSIS' | sort)
 if [ ! -x "$md" ]; then
     echo "  UNMEASURED: $md is not executable — this is a fact about the reader, not the freeze"
 elif [ -z "$censuses" ]; then
@@ -175,7 +192,14 @@ elif [ -z "$censuses" ]; then
 else
   for rel in $censuses; do
     census="$mtools/$rel"
-    printf '  --- %s\n' "$rel"
+    # ⚑ TRACKEDNESS IS REPORTED, NOT USED AS A FILTER. An untracked run file is a live census whose
+    # dispatcher has not committed it — every peer reading it by path is already bound by it, and
+    # a poll that omitted the row would be silent on the census most likely to be news.
+    if (cd "$mtools" && git ls-files --error-unmatch "$rel" >/dev/null 2>&1); then
+        printf '  --- %s\n' "$rel"
+    else
+        printf '  --- %s  ⚑ NOT IN HEAD (dispatched on disk; peers are bound by it anyway)\n' "$rel"
+    fi
     # ⚑⚑⚑ BOTH QUERIES ARE SCOPED BY THE TABLE'S HEADER SIGNATURE, and only the first one was.
     # The roster count already keyed on `party | status`, which is a property of the table. The
     # PENDING count did not: `rows --col 1 --starts` searches EVERY table in the document, so a
@@ -201,10 +225,17 @@ else
     [ -n "$sig" ] || sig='party | status'
     roster=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
     tbl=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE 'table [0-9]+' | grep -oE '[0-9]+')
+    # ⚑⚑ A CENSUS WITH NO §S TABLE IS PRE-FILING, NOT SHORT-ROSTERED, AND THE POLL SAID SHORT.
+    # MEASURED on `CENSUS-build-hermeticity.md` minutes after its dispatch: `§R` carries 9 rows and
+    # no status table exists yet, so the roster count read `? of 8` and the branch below reported
+    # `the roster is SHORT: a dropped row reads as terminal` — a DELETION claim about a table that
+    # was never written. ⚑ That is absent-versus-unavailable inside the instrument that reports it:
+    # a missing §S means *nobody has filed yet*, and a short §S means *a row was dropped*. Reading
+    # the first as the second manufactures an accusation out of a census's normal opening state.
     if [ -z "$tbl" ]; then
-        echo "  UNMEASURED: no table carries the roster's header signature ($sig)"
-        tbl=-1
-    fi
+        echo "  no §S status table yet — PRE-FILING, not short-rostered."
+        echo "    (a missing §S is 'nobody has filed'; a short §S is 'a row was dropped')"
+    else
     pending=$("$md" rows "$census" --col 1 --starts "in progress" 2>/dev/null \
         | grep -cE "^  table ${tbl} ")
     # ⚑⚑⚑ THE EXPECTED SIZE IS DERIVED FROM §R, NOT HARDCODED. The roster grew to seven when the
@@ -243,6 +274,7 @@ else
             echo "  NOT FROZEN — the roster condition is met, but §V carries no FREEZE CALLED row."
             echo "    That is the coordinator's to declare; a met precondition is not the event."
         fi
+    fi
     fi
     # ⚑⚑⚑ AN UNADMITTED LEG IS INVISIBLE TO EVERY QUERY ABOVE, AND THAT IS THE CASE THAT OCCURRED.
     # `gabion` filed into `findings/constitution/` AFTER the freeze accounted seven parties —
