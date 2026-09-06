@@ -100,6 +100,44 @@ echo "=== mtools: inbox ==="
 find "$mtools/inbox" -name '*.md' ! -name README.md -printf '  mail: %f\n' 2>/dev/null \
     | grep . || echo "  inbox empty"
 
+# ⚑⚑⚑ THE CENSUS FREEZE, POLLED AS A ROSTER RATHER THAN AS A STRING. A peer designated its
+# revision log as the freeze artifact, and BOTH obvious string predicates were wrong: `grep`
+# false-positived on the section's own prose describing the rule, and a row-wide substring matched
+# the revision that REPAIRED the mechanism, because a cell announcing a fix carries the trigger it
+# announces. The freeze is a property of the ROSTER — every party terminal — not of a spelling.
+#
+# ⚑⚑ AND THE COUNT IDENTITY IS THE PEER'S FINDING, NOT MINE: a party silently ABSENT from the
+# table says exactly what a party with a terminal status says, so a dropped row reads as FROZEN.
+# Asking "is anything non-terminal" is not enough; the population must also be whole. That is
+# "what ELSE produces this reading" rather than "can I make this fail", and it finds what the
+# first question cannot, because the first requires imagining the bad state in advance.
+echo "=== census: is the freeze called? ==="
+census="$mtools/findings/CENSUS-deps-build.md"
+md="$mtools/mdstruct/.venv/bin/mdstruct"
+if [ ! -x "$md" ]; then
+    echo "  UNMEASURED: $md is not executable — this is a fact about the reader, not the freeze"
+elif [ ! -f "$census" ]; then
+    echo "  UNMEASURED: no census file at $census"
+else
+    roster=$("$md" tables "$census" 2>/dev/null | grep 'party | status' | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
+    pending=$("$md" rows "$census" --col 1 --starts "in progress" 2>/dev/null | grep -cE '^  table')
+    printf '  roster: %s of 6 parties listed; %s non-terminal\n' "${roster:-?}" "${pending:-?}"
+    # ⚑⚑ BOTH ARMS MEASURED, on constructed fixtures, before this was trusted:
+    #   all six terminal            -> roster=6 pending=0 -> FROZEN      (the poll CAN fire)
+    #   cassian's §S row deleted    -> roster=5 pending=0 -> caught here (the pending check
+    #                                  alone reported FROZEN; only the count identity refused)
+    # ⚑ The second arm is the peer's finding and it is the one a "can I make this fail" probe
+    # misses: nothing about a deleted row is a bad STATUS, so you only find it by asking what
+    # ELSE produces "nothing non-terminal".
+    if [ "${roster:-0}" -ne 6 ]; then
+        echo "  NOT FROZEN — and the roster is SHORT: a dropped row reads as terminal"
+    elif [ "${pending:-1}" -ne 0 ]; then
+        echo "  NOT FROZEN — a party is still non-terminal; the embargo holds"
+    else
+        echo "  ⚑ FROZEN — every party terminal over a whole roster. Cross-reading is now the point."
+    fi
+fi
+
 # ⚑⚑ REACHABILITY IS NOT CHECKED HERE AND THAT IS DELIBERATE. It is a live-session property, not a
 # filesystem one — `ListAgents` is the instrument and only the harness can run it. Naming its
 # absence is the point: this script covers what it covers, and the one claim it CANNOT cover is
