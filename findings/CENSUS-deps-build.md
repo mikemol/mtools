@@ -242,6 +242,19 @@ while matching the full cell — so eyeballing the output is not a check):
       mdstruct --tables  FILE          # find the party/status/evidence table
       mdstruct --rows    FILE --table <that N> --where "in progress"
 
+  ⚑⚑ **`--table` IS NOT OPTIONAL, AND OMITTING IT IS WRONG *TODAY*, NOT HYPOTHETICALLY.** Measured
+  on this file 2026-09-06:
+
+      --where "in progress"                  ->  3 matches   ⚑ t2 rev 17, t2 rev 18, t4 cassian
+      --table <§S> --where "in progress"     ->  1 match     ⚑ correct
+
+  **An unscoped poll reports THREE non-terminal parties over a six-row roster** — and two of them are
+  `§V` rows *about the freeze*. ⚑ This is rev 14's contamination (*a document that explains its own
+  predicate accretes mentions of its own trigger*) **composing with an unscoped reader**: either
+  alone is survivable, together they produce a confident wrong count. *Reported independently by
+  `mtools-2e`, whose own poll had the unscoped half and was correct only because no other table in
+  its document happened to carry the phrase.*
+
   ⚑ **A predicate keyed on position is a predicate that silently retargets** — the same defect the
   ledger's symbol-stability contract exists to prevent, in the freeze instrument. *(Caught while
   adding `§D`; `t4` was still correct, which is exactly why it needed checking rather than assuming.)*

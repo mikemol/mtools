@@ -21,6 +21,19 @@ root="$(git rev-parse --show-toplevel)"
 cd "$root"
 
 fail=0
+
+# ⚑⚑⚑ WHAT FAILED IS RECORDED, NOT JUST THAT SOMETHING DID. `fail=1` collapses nineteen distinct
+# checks to one bit, so the gate knew why it refused and could not say. Measured by a peer: a
+# control failure sat TWENTY-TWO LINES above `REFUSED`, with every subsequent check printing green
+# in between — baselines unchanged, roster 51/51, figure freshness clean, orphan check clean.
+#
+# ⚑⚑ THE INTERVENING GREENS ARE NOT NEUTRAL, THEY ARE PERSUASIVE. A reader looking at the tail
+# sees a clean run that refuses for no stated reason, and the evidence for "everything is fine" is
+# the LAST thing printed. That is this repository's own subject arriving in its output layer
+# rather than its logic.
+failed_checks=""
+note_failure() { failed_checks="$failed_checks
+  - $1"; }
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
 
 # ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
@@ -42,11 +55,11 @@ git checkout-index --all --prefix="$staged/"
 for dist in hooks mdstruct ratchet; do
   [ -d "$staged/$dist" ] || continue
   say "checking $dist"
-  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/ruff" check --no-cache . ) || fail=1
-  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/mypy" ) || fail=1
+  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/ruff" check --no-cache . ) || { fail=1; note_failure "( cd '$staged/$dist' && '$root/$dist/.venv/bin/ruff' check --no-c..."; }
+  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/mypy" ) || { fail=1; note_failure "( cd '$staged/$dist' && '$root/$dist/.venv/bin/mypy' )"; }
   # ⚑ TESTS RUN FROM THE REAL TREE: their venv holds absolute paths, and a witness that cannot
   # find its own interpreter is an infrastructure failure reported as a red gate.
-  ( cd "$root/$dist" && .venv/bin/python3 -m pytest -q ) || fail=1
+  ( cd "$root/$dist" && .venv/bin/python3 -m pytest -q ) || { fail=1; note_failure "( cd '$root/$dist' && .venv/bin/python3 -m pytest -q )"; }
 done
 
 # ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership
@@ -61,13 +74,13 @@ for dist in hooks mdstruct ratchet; do
   t=$(cat "$staged/$dist"/tests/test_*.py | grep -c '^def test_')
   if [ "$w" -ne "$t" ]; then
     say "$dist: $w warrants against $t test functions — every test must arrive warranted"
-    fail=1
+    fail=1; note_failure "$dist: warrant ledger 1:1"
   fi
   if ! diff -q \
       <(grep -o 'section = {[^}]*}' "$staged/$dist/warrants.bib" | sed 's/.*{\(.*\)}/\1/' | sort -u) \
       <(grep -v '^#' "$staged/$dist/rubric.tsv" | cut -f1 | sort -u) >/dev/null; then
     say "$dist: warrant sections and rubric sections disagree"
-    fail=1
+    fail=1; note_failure "$dist: warrant sections vs rubric sections"
   fi
 done
 
@@ -84,7 +97,7 @@ if ! command -v bazel >/dev/null 2>&1; then
   say "bazel not found — cannot run the hermetic suite, commit refused"
   exit 1
 fi
-bazel test //... --test_output=errors || fail=1
+bazel test //... --test_output=errors || { fail=1; note_failure "bazel test //... --test_output=errors"; }
 
 # ⚑⚑⚑ THE DOMAIN WITNESS RUNS HERE AND NOT AS A BAZEL ACTION, DELIBERATELY. It probes whether a
 # checker's DECLARED domain equals its REAL one, which it can only do by mutating a source file and
@@ -110,9 +123,9 @@ bazel test //... --test_output=errors || fail=1
 # the arm would confirm the declaration rather than the CLOSURE. The victim must be a file the
 # checker reaches only by following imports.
 say "domain witness: each mypy target's declared domain vs its real one"
-./domain_witness.sh ratchet  //ratchet:mypy  ratchet/src/mikemol/ratchet/state.py        || fail=1
-./domain_witness.sh mdstruct //mdstruct:mypy mdstruct/src/mikemol/mdstruct/frontmatter.py || fail=1
-./domain_witness.sh hooks    //hooks:mypy    hooks/src/mikemol/hooks/cmdparse.py          || fail=1
+./domain_witness.sh ratchet  //ratchet:mypy  ratchet/src/mikemol/ratchet/state.py || { fail=1; note_failure "./domain_witness.sh ratchet  //ratchet:mypy  ratchet/src/mikemol/..."; }
+./domain_witness.sh mdstruct //mdstruct:mypy mdstruct/src/mikemol/mdstruct/frontmatter.py || { fail=1; note_failure "./domain_witness.sh mdstruct //mdstruct:mypy mdstruct/src/mikemol..."; }
+./domain_witness.sh hooks    //hooks:mypy    hooks/src/mikemol/hooks/cmdparse.py || { fail=1; note_failure "./domain_witness.sh hooks    //hooks:mypy    hooks/src/mikemol/ho..."; }
 
 # ⚑⚑ RUFF TOO, AND THE PROBE KIND IS EXPLICIT. Three ticks armed mypy's domain across three
 # distributions and left ruff's untested — "weaker claim" is not "tested claim". The 4th argument
@@ -123,16 +136,16 @@ say "domain witness: each mypy target's declared domain vs its real one"
 # ⚑ COST, MEASURED RATHER THAN PROJECTED: a mypy witness is ~13s and a ruff witness ~1s, because
 # mypy re-analyses its whole closure per action while ruff is per-file. Adding three ruff witnesses
 # costs ~3s, not the ~26s a linear projection from the mypy figure would have predicted.
-./domain_witness.sh ratchet  //ratchet:ruff  ratchet/src/mikemol/ratchet/state.py  ruff || fail=1
-./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff || fail=1
-./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff || fail=1
+./domain_witness.sh ratchet  //ratchet:ruff  ratchet/src/mikemol/ratchet/state.py  ruff || { fail=1; note_failure "./domain_witness.sh ratchet  //ratchet:ruff  ratchet/src/mikemol/..."; }
+./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff || { fail=1; note_failure "./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol..."; }
+./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff || { fail=1; note_failure "./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/ho..."; }
 
 # ⚑⚑⚑ THE LAST UNARMED CHECKER, AND IT GUARDS THIS FILE. mypy, ruff and the ratchet each have a
 # domain witness across three distributions; `shellcheck_githooks` had none — so the one target
 # that checks EVERY shell file, including the gate you are reading, was asserting a domain nobody
 # had tested. Its population became a `glob()` two ticks ago precisely because a hand list had
 # drifted to 7-of-11, which makes the untested domain the more consequential half.
-./domain_witness.sh .        //:shellcheck_githooks blockers.sh                shellcheck || fail=1
+./domain_witness.sh .        //:shellcheck_githooks blockers.sh                shellcheck || { fail=1; note_failure "./domain_witness.sh .        //:shellcheck_githooks blockers.sh  ..."; }
 
 # ⚑⚑⚑ THE RATCHET GATE, AND ITS BASELINE AS A SEPARATE VICTIM. `ratchet_check.sh`'s own header
 # warns that "a ratchet whose baseline sits outside its own key can be lowered with no gate
@@ -145,8 +158,8 @@ say "domain witness: each mypy target's declared domain vs its real one"
 # the census does not produce is paydown. Only a REMOVED key leaves a real finding unaccounted. An
 # arm built on the intuitive direction would have reported FAILED against a gate working exactly as
 # designed.
-./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/src/mikemol/ratchet/state.py ratchet || fail=1
-./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/ratchet-preview.txt          baseline || fail=1
+./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/src/mikemol/ratchet/state.py ratchet || { fail=1; note_failure "./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/src/mi..."; }
+./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/ratchet-preview.txt          baseline || { fail=1; note_failure "./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/ratche..."; }
 
 # ⚑⚑ FRESHNESS REPORTS, IT DOES NOT REFUSE, AND THE `|| true` IS DELIBERATE RATHER THAN LAZY. Its
 # subject is a shared cluster this repository does not own: a red gate on someone else's outage
@@ -180,7 +193,7 @@ say "figure freshness: is any superseded number still stated in the present tens
 # it is a file somebody added and nothing runs, which is the green-over-nothing this whole harness
 # exists to refuse, and the fix is always available to whoever tripped it.
 say "orphan check: is every shell checker invoked, or declared as parked?"
-./orphan_check.sh || fail=1
+./orphan_check.sh || { fail=1; note_failure "./orphan_check.sh"; }
 
 # ⚑⚑ THE ROSTER IS THE ONE POPULATION IN THIS REPOSITORY THAT CANNOT BE ENUMERATED, measured
 # rather than assumed: PATH yields 2,843 executables and flagging all of it is useless; an
@@ -206,7 +219,7 @@ say "roster drift: does the textual roster still match the tools present?"
 # `stringify` was missing `newlines` entirely.
 if [ -x mdstruct/.venv/bin/python3 ]; then
   ( cd mdstruct && MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
-      --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise ) || fail=1
+      --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise ) || { fail=1; note_failure "--ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --..."; }
 fi
 
 # ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
@@ -217,7 +230,7 @@ fi
 # are not the ones a reader would go fix.
 if [ -x ratchet/.venv/bin/mikemol-ratchet ]; then
   for dist in hooks mdstruct ratchet; do
-    ratchet/.venv/bin/mikemol-ratchet "$root/$dist" || fail=1
+    ratchet/.venv/bin/mikemol-ratchet "$root/$dist" || { fail=1; note_failure "ratchet/.venv/bin/mikemol-ratchet '$root/$dist'"; }
   done
 fi
 
@@ -230,9 +243,16 @@ if [ -x mdstruct/.venv/bin/python3 ]; then
   while IFS= read -r md; do
     [ -f "$staged/$md" ] || continue
     ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli verify "$staged/$md" >/dev/null ) \
-      || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"; fail=1; }
+      || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"
+           fail=1; note_failure "$md: headings unreachable to mdstruct"; }
   done < <(git diff --cached --name-only --diff-filter=ACM -- '*.md')
 fi
 
-[ "$fail" -eq 0 ] || { say "REFUSED"; exit 1; }
+# ⚑ THE CAUSE IS RESTATED AT THE POINT OF REFUSAL, because that is where a reader is looking.
+# A refusal that does not name its cause is read as a glitch, and a glitch is what gets bypassed.
+if [ "$fail" -ne 0 ]; then
+    say "REFUSED — the following check(s) failed:${failed_checks:-
+  (unattributed: a check set the failure flag without naming itself)}"
+    exit 1
+fi
 say "ok"
