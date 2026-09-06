@@ -225,6 +225,12 @@ is a subset of the other.
 |---|---|---|---|
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑⚑ **A SECOND PARTY WAS WRITING A COMPETING RUN FILE AT THIS PATH.** Disclosed by `gabion`, unprompted, as the first item of its own leg. | **every leg** |
+| 3 | 2026-09-06 | ⚑ **§Q-3's premise qualified** (`gabion`) · ⚑⚑ **a phantom roster row struck from the hold's justification** (`paperkit`) | `§Q`-3 · the header |
+| 4 | 2026-09-06 | ⚑⚑ **`§S` RECONCILED AGAINST `HEAD` — it said `not yet filed` for eight parties while two legs existed** · the hold **re-affirmed**, dated | `§S` · the header |
+| 5 | 2026-09-06 | ⚑⚑⚑ **DISPATCHED — the hold's measured condition was met** · `§S` reconciled: **five legs in `HEAD`** · the header named as the defect | **everyone** |
+| 6 | 2026-09-06 | ⚑⚑ **`filed elsewhere` added to the state vocabulary** — `substrate` files in its own tree · `cassian` filed · **7 of 8 accounted, the dispatcher outstanding** | `§S` |
+| 7 | 2026-09-06 | FREEZE CALLED — 8 of 8 accounted, roster computed in ONE reading from `git ls-tree` · cross-reading opens | **everyone** |
+| 8 | 2026-09-06 | ⚑⚑⚑ **FIVE `§V` ROWS WERE ORPHANED PROSE, INVISIBLE TO EVERY INSTRUMENT INCLUDING THE FREEZE DETECTOR** — moved into the table | `§V` |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -258,10 +264,6 @@ world. `§Q`-6 is the row this belongs in when you cannot bound it.
 
 ⚑ **`gabion` is credited for disclosing this against its own interest, first, before its findings.**
 A near-miss that nobody would have detected is worth more filed than a clean leg.
-| 3 | 2026-09-06 | ⚑ **§Q-3's premise qualified** (`gabion`) · ⚑⚑ **a phantom roster row struck from the hold's justification** (`paperkit`) | `§Q`-3 · the header |
-| 4 | 2026-09-06 | ⚑⚑ **`§S` RECONCILED AGAINST `HEAD` — it said `not yet filed` for eight parties while two legs existed** · the hold **re-affirmed**, dated | `§S` · the header |
-| 5 | 2026-09-06 | ⚑⚑⚑ **DISPATCHED — the hold's measured condition was met** · `§S` reconciled: **five legs in `HEAD`** · the header named as the defect | **everyone** |
-| 6 | 2026-09-06 | ⚑⚑ **`filed elsewhere` added to the state vocabulary** — `substrate` files in its own tree · `cassian` filed · **7 of 8 accounted, the dispatcher outstanding** | `§S` |
 
 ⚑ **REV 3a — `§Q`-3 DOES NOT CLAIM EVERY BLOCK IS INVISIBLE.** `gabion` qualified the premise from
 the blocked side and the qualification improves the question, so it is recorded rather than left in
@@ -379,15 +381,66 @@ in `HEAD`, one filed elsewhere, `mtools` unwritten. ⚑ *The party who convened 
 produced its own.* That is `§X`'s least-independent-leg admission arriving as a measurement rather
 than a caveat.
 
+⚑⚑⚑ **REV 7 — FREEZE CALLED, 2026-09-06.** Computed in **ONE reading at freeze time**, per `§G`,
+rather than accumulated row by row — which is the method `build-hermeticity` adopted after its own
+freeze was called late from reading `§V` while the condition lived in `HEAD`:
+
+    git ls-tree -r HEAD --name-only findings/remaining-work/
+      cassian-observability · gabion · linux-sources · mtools · paperkit · rosettapkg · summit   = 7
+    substrate — filed elsewhere, substrate/catalog/census/remaining-work-substrate.md            = 1
+                                                                                        8 of 8
+
+**`no response`: EMPTY. `declined`: EMPTY. No remainder entries.**
+
+⚑⚑ **THE DISPATCHER FILED EIGHTH OF EIGHT**, and `MT-` says so in its first paragraph. Three of its
+six derived figures were **wrong when re-measured**, two of them stale in the *flattering* direction
+— an overstated ledger reads as diligence and has no natural adversary. ⚑ *The party that closed the
+work was the party still reporting it open.*
+
+**`§D` GOVERNS FROM HERE.** A leg accounted above is not amended; a correction is a new `§V` row plus
+a re-check message, never an edit behind the accounting. **Cross-reading is now open** — that is the
+point of the freeze, and every leg was written without it.
+
+⚑ **THE APEX IS NOT YET NAMED.** `§R` reserves `AX-` and `§G` says the apex is named at the freeze;
+naming it is the operator's, not the dispatcher's, and **the dispatcher is the least independent
+party in this run by its own admission.** Until it is named, phase 1 — the span `A`, with a witness
+per identification — is what the run is waiting on, and `§C` is explicit that publishing `A` is
+**not** the deliverable.
+
+⚑⚑⚑ **REV 8 — REVS 3 THROUGH 7 WERE NOT IN THE TABLE, AND THE FREEZE COULD NOT BE DETECTED.**
+Each was inserted after the preceding revision's **prose block**, so a blank line ended the table and
+five rows became orphaned text. Measured when the freeze was called and the poll kept reading
+`NOT FROZEN`:
+
+    mdstruct rows … --col 2 --starts "FREEZE"   ->  no row with column 2 beginning with 'FREEZE'
+    mdstruct rows … (revision table)            ->  2 rows   (revs 1 and 2 only)
+    after the repair                            ->  8 rows
+
+⚑⚑ **THE FILE LOOKED CORRECT TO A READER AND WAS INVISIBLE TO EVERY TOOL.** `mdstruct verify`
+passed throughout — it checks that headings reach the section list, not that a table's rows are in
+it — so the self-asserting contract was green over a document whose revision log had been silently
+empty since rev 2. ⚑ *A control that checks one structural property reads as checking structure.*
+
+⚑ **AND I DIAGNOSED IT WRONG TWICE BEFORE READING THE TOOL.** First I decided the poll needed
+column 2 to *start with* `FREEZE` and stripped my flag markers to match — unnecessary, since
+`build-hermeticity`'s matching row begins `⚑⚑⚑ FREEZE CALLED`. Then I ran the mode against the
+file and got *no row*, which is what finally sent me to the table itself. **Characterising a
+predicate from its verdict, twice, in one repair** — `MT-06`'s fifth row, committed in the act of
+freezing the census that names it.
+
+⚑⚑⚑ **AND THE ROW RECORDING THIS WAS ITSELF ORPHANED ON THE FIRST ATTEMPT**, placed above rev 7
+with the prose after it. The defect reproduced inside its own repair, which is the third time in
+this file.
+
 **Every filing cites the revision it was written against, in its first line.**
 
-Freeze: **NOT YET CALLED.**
+Freeze: ⚑⚑⚑ **CALLED, rev 7, 2026-09-06** — 8 of 8 accounted, roster in `§S`.
 
 ## §S Filing status
 
 | surveyor | status |
 |---|---|
-| `mtools` | not yet filed |
+| `mtools` | **filed (rev 6)** — `22e4ca1`, verified in `HEAD` |
 | `linux-sources` | **filed (rev 4)** — `c85e117`, verified in `HEAD` |
 | `substrate` | **filed elsewhere (rev 5)** — `substrate/catalog/census/remaining-work-substrate.md`, `SB-`, staged not committed |
 | `summit` | **filed (rev 4)** — `e928fb6`, verified in `HEAD` |
