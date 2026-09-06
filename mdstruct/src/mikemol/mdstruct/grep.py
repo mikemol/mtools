@@ -78,6 +78,38 @@ def container_of(sections: list[spans_mod.Span], line_no: int) -> tuple[str, int
     return path, deepest.start, deepest.end - 1
 
 
+def regex_tell(pattern: str) -> str:
+    r"""Return the regex construct a LITERAL-mode pattern appears to intend, or "".
+
+    ⚑⚑ THIS EXISTS BECAUSE LITERAL-BY-DEFAULT PRODUCED THE FALSE NEGATIVE ITS OWN DOCSTRING
+    WARNED ABOUT, IN THE DIRECTION THE DOCSTRING NAMED. `grep '7\.0\.0-'` re-escapes the
+    backslash and searches for a literal `\` followed by `.`, so a file containing `7.0.0-29.29`
+    twice reports *no line matches* — a zero byte-identical to a true absence.
+
+    ⚑ MEASURED, AND THE DEFAULT IS STILL RIGHT: a staleness sweep looks for prose, prose contains
+    `.` and `(`, and a regex default would break those searches instead. The defect was never the
+    default; it was that the zero carried no way to tell the two cases apart. So the repair is a
+    ROUTED zero, not a changed default.
+
+    ⚑⚑⚑ AND THE FAILURE HAD NO NATURAL DISCOVERER. This repository's own PreToolUse hook routes
+    every `.md` query here, which is the point of it — and that same routing removes the second
+    reader who would notice. It was found (linux-sources, 2026-09-06) only because a crude
+    `"7.0.0-29.29" in body` substring check disagreed with this tool, and the crude one was right.
+    A false finding gets argued with; a clean zero gets banked.
+
+    Returns:
+        the offending construct, quoted, or "" when the pattern reads as ordinary literal text.
+
+    """
+    # ⚑ ORDERED MOST-SPECIFIC FIRST: `\.` is reported as itself rather than as a bare backslash,
+    # because the escaped-dot form is what a reader writes when searching a version or a path —
+    # the highest-value queries, and the ones this defect lands on.
+    for tell in ("\\.", "\\d", "\\w", "\\s", ".*", ".+", "[", "(", "|", "^", "$", "?"):
+        if tell in pattern:
+            return tell
+    return ""
+
+
 def search(path: Path, pattern: str, *, regex: bool = False,
            ignore_case: bool = False) -> list[Hit]:
     """Return every matching line with the structural span containing it.
@@ -86,6 +118,14 @@ def search(path: Path, pattern: str, *, regex: bool = False,
     `.`, `(`, `[` and `*` — a regex default would make such a search either error or match
     something else, silently, toward a FALSE NEGATIVE. That is the wrong direction for a scan
     whose whole purpose is completeness.
+
+    ⚑ THE DEFAULT SURVIVES; THE SILENT ZERO DOES NOT. See `regex_tell`: a caller printing a
+    no-match result must say whether the pattern looked like a regex, because otherwise a
+    literal-mode misfire and a true absence are the same output.
+
+    Returns:
+        every matching line paired with the structural span containing it.
+
     """
     flags = re.IGNORECASE if ignore_case else 0
     probe = re.compile(pattern if regex else re.escape(pattern), flags)

@@ -112,3 +112,63 @@ def test_case_folding_is_opt_in(document: Path) -> None:
     """`-i` widens the search and the default does not."""
     assert grep.search(document, "needle") == []
     assert len(grep.search(document, "needle", ignore_case=True)) == _HITS
+
+# --- the routed zero: a literal-mode misfire must not look like a true absence ----------------
+#
+# ⚑⚑ THE BEHAVIOUR ABOVE WAS ALREADY TESTED AND THE SILENCE WAS NOT. `test_regex_is_opt_in` has
+# always passed, and `grep '7\\.0\\.0-'` still reported *no line matches* on a file containing
+# `7.0.0-29.29` twice (linux-sources, 2026-09-06). The tests asserted what the mode DOES; nothing
+# asserted that a zero produced by the mode is distinguishable from a zero produced by the file.
+
+
+def test_an_escaped_dot_is_a_regex_tell() -> None:
+    r"""`\\.` in a literal pattern is reported: it is what a version or path search looks like."""
+    assert grep.regex_tell(r"7\.0\.0-") == "\\."
+
+
+def test_a_char_class_is_a_regex_tell() -> None:
+    """`[` in a literal pattern is reported."""
+    assert grep.regex_tell("ver[0-9]") == "["
+
+
+def test_a_star_quantifier_is_a_regex_tell() -> None:
+    """`.*` in a literal pattern is reported."""
+    assert grep.regex_tell("foo.*bar") == ".*"
+
+
+def test_ordinary_prose_is_not_a_regex_tell() -> None:
+    """A sentence ending in a full stop is NOT a tell.
+
+    ⚑ THE NEGATIVE ARM IS WHAT KEEPS THE DEFAULT USABLE. A staleness sweep searches prose, prose
+    ends in `.`, and a tell that fired on every sentence would train its reader to ignore it —
+    which is the same disabling pressure a false-positive gate creates.
+    """
+    assert not grep.regex_tell("the pin is stale.")
+
+
+def test_a_bare_dot_is_not_a_regex_tell() -> None:
+    """A single `.` is not reported: in literal mode it matches a dot, which is what was meant."""
+    assert not grep.regex_tell("7.0.0-29.29")
+
+
+def test_the_escaped_pattern_still_finds_nothing_in_literal_mode(tmp_path: Path) -> None:
+    r"""The defect itself, pinned: `\\.` in literal mode matches a backslash, so the zero is real.
+
+    ⚑ THE REPAIR DOES NOT CHANGE THE DEFAULT and this case says so. `search` still returns [];
+    what changed is that the CLI can now say why. A fix that flipped the default would break every
+    prose sweep to repair one version search.
+    """
+    doc = tmp_path / "tell.md"
+    doc.write_text("# H\n\nkernel 7.0.0-29.29 here\n", encoding="utf-8")
+    assert grep.search(doc, r"7\.0\.0-") == []
+
+
+def test_the_same_escaped_pattern_matches_under_dash_e(tmp_path: Path) -> None:
+    """POSITIVE CONTROL for the case above: `-E` finds what literal mode could not.
+
+    ⚑ Without this arm the case above passes against a `search` that finds nothing at all, which
+    is the broken-shut gate one layer down.
+    """
+    doc = tmp_path / "tell.md"
+    doc.write_text("# H\n\nkernel 7.0.0-29.29 here\n", encoding="utf-8")
+    assert grep.search(doc, r"7\.0\.0-", regex=True)

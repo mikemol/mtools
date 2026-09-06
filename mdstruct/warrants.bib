@@ -526,3 +526,45 @@
              asked across a whole file must not abort on the first narrower table it meets, or
              a question about one table becomes an error about another.}
 }
+
+@misc{mdstruct-grep-escaped-dot-is-a-regex-tell,
+  section = {grep},
+  claim   = {`\\.` in a literal pattern is reported: it is what a version or path search looks like},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_an_escaped_dot_is_a_regex_tell}
+}
+
+@misc{mdstruct-grep-char-class-is-a-regex-tell,
+  section = {grep},
+  claim   = {`[` in a literal pattern is reported},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_a_char_class_is_a_regex_tell}
+}
+
+@misc{mdstruct-grep-star-quantifier-is-a-regex-tell,
+  section = {grep},
+  claim   = {`.*` in a literal pattern is reported},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_a_star_quantifier_is_a_regex_tell}
+}
+
+@misc{mdstruct-grep-ordinary-prose-is-not-a-regex-tell,
+  section = {grep},
+  claim   = {A sentence ending in a full stop is NOT a tell},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_ordinary_prose_is_not_a_regex_tell}
+}
+
+@misc{mdstruct-grep-bare-dot-is-not-a-regex-tell,
+  section = {grep},
+  claim   = {A single `.` is not reported: in literal mode it matches a dot, which is what was meant},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_a_bare_dot_is_not_a_regex_tell}
+}
+
+@misc{mdstruct-grep-escaped-pattern-still-finds-nothing-in-literal-mode,
+  section = {grep},
+  claim   = {The defect itself, pinned: `\\.` in literal mode matches a backslash, so the zero is real},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_the_escaped_pattern_still_finds_nothing_in_literal_mode}
+}
+
+@misc{mdstruct-grep-same-escaped-pattern-matches-under-dash-e,
+  section = {grep},
+  claim   = {POSITIVE CONTROL for the case above: `-E` finds what literal mode could not},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_the_same_escaped_pattern_matches_under_dash_e}
+}

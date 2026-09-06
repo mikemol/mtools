@@ -80,9 +80,35 @@ def _spans(path: Path) -> int:
 
 def _grep(pattern: str, path: Path, argv: list[str]) -> int:
     """Print the structural span of every match."""
-    hits = grep.search(path, pattern, regex="-E" in argv, ignore_case="-i" in argv)
+    is_regex = "-E" in argv
+    hits = grep.search(path, pattern, regex=is_regex, ignore_case="-i" in argv)
     if not hits:
+        # ⚑⚑ A READER'S NEGATIVE MUST CARRY ITS DENOMINATOR AND ITS SCOPE (rosettapkg,
+        # 2026-09-06). `-E` detection alone is half a repair: it catches the mode misfire and
+        # leaves the next silent zero silent. A sibling reader in this ecosystem prints
+        # "no line carries X in 2183 file(s) of dpkg 1.23.7ubuntu1 — UNAVAILABLE at this version,
+        # NOT a claim that it does not exist upstream", and a wrapper can act on that where it
+        # cannot act on a bare "no match". This is census-kit §5's positive-control rule applied
+        # to the INSTRUMENT rather than to the surveyor — which is strictly stronger, because it
+        # holds when the surveyor forgets.
+        mode = "REGEX" if is_regex else "LITERAL"
+        n_lines = len(path.read_text(encoding="utf-8").split("\n"))
         sys.stdout.write(f"mdstruct: no line in {path} matches {pattern!r}\n")
+        sys.stdout.write(f"    searched {n_lines} line(s) in {mode.upper()} mode. This is a fact\n"
+                         f"    about THIS FILE at THIS PATH — not a claim about any other file.\n")
+        # ⚑⚑ A ZERO THAT CANNOT SAY WHY IS THE WORST RESULT A READER CAN RETURN, and this one had
+        # no natural discoverer: the struct-tools hook routes every `.md` query here, so the
+        # routing that makes this tool authoritative also removes the reader who would disagree.
+        # Measured (linux-sources, 2026-09-06): `grep '7\.0\.0-'` reported no match on a file
+        # containing `7.0.0-29.29` twice, because LITERAL mode escapes the backslash again.
+        tell = "" if is_regex else grep.regex_tell(pattern)
+        if tell:
+            sys.stdout.write(
+                f"  ⚑ THE PATTERN CONTAINS {tell!r} AND THIS WAS A **LITERAL** SEARCH, so that\n"
+                f"    was matched as text rather than as a regex. This zero may be an artefact\n"
+                f"    of the mode rather than a fact about the file.\n"
+                f"  re-run with -E for a regex, or drop the escapes for a literal search:\n"
+                f"      mdstruct grep -E {pattern!r} {path}\n")
         return 1
     for hit in hits:
         sys.stdout.write(f"  {hit.container}\n")
