@@ -1760,3 +1760,36 @@ gate costs 132s"* asserted a stability the quantity does not have.
 
 **Recorded this way because a reader deciding whether the gate is affordable needs to know which
 they will pay** — and a fresh clone pays the first, every contributor thereafter pays the second.
+
+## Rule 29 — "this session" is a deictic whose referent expires, and every census leg used it
+
+**Found by `ListAgents` reporting a name I did not recognise as my own.** This session is
+`mtools-2e`; it filed under `mtools-ce`. Every peer had a new name and a start time under two
+minutes — **all five surveying sessions were replaced at once**, and nothing on disk recorded it.
+
+⚑⚑ **THE ARTIFACT SURVIVED AND THE IDENTITY DID NOT.** The filed leg is committed and readable;
+its first disclosure paragraph reads *"Every artifact cited below was written by **this
+session**"* — a pointer to a process that no longer exists. Counted across the survey:
+
+```
+linux-sources  1     mtools  1     paperkit  1     rosettapkg  5     substrate  2
+```
+
+**Ten deictic references, in five of five legs.** This is a property of the census rather than one
+party's slip.
+
+⚑ **What it costs is specific and small, which is why it needs saying rather than fixing.** The
+apex reads these legs from a session that is none of the filers. *"This session"* still resolves —
+to the leg's own authorship, which is what §9 asked for — but it can no longer be **cross-examined**:
+nobody can ask that session what it meant, and a reader who tries to correlate a leg with a live
+peer will correlate it with a stranger.
+
+⚑⚑⚑ **THE GENERAL FORM: A DEICTIC IS A CLAIM WHOSE TRUTH DEPENDS ON WHO IS SPEAKING, AND A FILED
+DOCUMENT HAS NO SPEAKER.** Rule 14 says a signal that arrives on its own gets substituted for a
+record you must go and read. This is the mirror: **a record that reads as self-contained contains a
+pointer to its own writing context**, and that context is exactly what filing discards. The
+substitution is invisible because the sentence stays grammatical.
+
+**Not repaired in the leg.** Editing a filed leg post-hoc to name `mtools-ce` would be rewriting the
+record after the freeze roster was accounted — the change belongs in the apex's reading, not in the
+artifact. Reported to the coordinator as control flow.
