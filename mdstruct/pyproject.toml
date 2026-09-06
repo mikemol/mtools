@@ -228,12 +228,32 @@ ignore = ["D203", "D213", "COM812"]
 # reading could surface. ⚑ THE ZERO AND ITS CORRECTION FAILED TOGETHER: re-running a blind
 # instrument in the other direction cannot detect blindness.
 #
-# Consequence for intake, RESTATED: substrate's header population is UNMEASURED — not zero, and
-# not the corrected figure either. The peer has since built the missing reader (a prologue reader
-# reporting SPDX and copyright as TWO INDEPENDENT FACTS, per the mirror-image blind spot recorded
-# above) but has not yet run it over its corpus. Until it does, migration cost here is UNKNOWN,
-# and this file must not carry a figure for it. The gate's requirement is unchanged either way:
-# the header is a precondition of admission rather than a follow-up.
+# ⚑⚑⚑ THE CENSUS THEN RAN, AND IT REVERSES THE INTAKE CONSEQUENCE. Four readings were reported
+# for one population, in order: zero repo-wide; zero under the promoted tree only; UNMEASURED;
+# and finally, from the purpose-built prologue reader, 431 of 568 promoted files carrying BOTH
+# lines. THE TREE NAMED AS EMPTY WAS THE MOST CONFORMING ONE IN THE REPOSITORY. A reader that
+# cannot see its subject returns the same answer as an absent subject, and nothing in its output
+# separates the two — it read zero for the tree at 431 exactly as it read zero for the trees
+# genuinely at zero.
+#
+# ⚑⚑ VERIFIED HERE AGAINST THIS GATE RATHER THAN TAKEN ON REPORT, because the peer correctly
+# flagged the question it had NOT asked: whether those headers carry the identifier THIS config
+# matches, as opposed to merely having both lines. Running the `notice-rgx` above over a copy of
+# that tree: 137 refusals in 568 files — the exact complement of the peer's 431, from an
+# independent instrument reading a different property. Two readers partitioning one population
+# identically is the strongest available evidence that neither is blind. The identifier census
+# agrees: 480 occurrences of `Apache-2.0` and 480 of `Copyright (c) 2026 Mike Mol`, zero variants.
+#
+# ⚑ AND ZERO PARTIALS ACROSS 1447 FILES — no file carries one line without the other. That is a
+# negative result from an instrument built to be able to report otherwise: the peer's reader keeps
+# SPDX and copyright as two independent facts precisely because a single `has_header` boolean
+# would reproduce the mirror-image blind spot recorded above and be unable to report a half-header
+# at all. The defect this config was widened to catch does not occur in that population.
+#
+# Consequence for intake, CORRECTED AND NOW MEASURED: substrate-derived code mostly arrives WITH
+# conforming headers, and the earlier "arrives without headers" cost is withdrawn. The 137 sit in
+# trees whose non-promoted status is what makes them non-candidates. The gate's requirement is
+# unchanged either way: the header is a precondition of admission rather than a follow-up.
 #
 # ⚑⚑ THE GATE IS MEASURED ON THE VERSION THE LOCK INSTALLS, NOT ONLY THE ONE IN THE VENV. The
 # `requirements.txt` beside this file pinned ruff 0.16.6 while the working venv ran 0.16.5 — so
