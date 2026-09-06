@@ -30,6 +30,7 @@ future key is new and therefore refused.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
 from mikemol.ratchet.state import BaselineState
@@ -56,6 +57,28 @@ if TYPE_CHECKING:
 # `name::relpath` with the path SECOND. mtools' grammar is fixed — `path:rule` — so the identity is
 # just the rule, and the schema machinery that peer needs has no counterpart here. The CONCEPT
 # transfers; the modules would have been a solution to a problem this repository does not have.
+def _plausible_move(old_path: str, new_path: str) -> bool:
+    """Report whether `new_path` is a plausible destination for `old_path`.
+
+    ⚑⚑ A SHARED IDENTITY IS NOT EVIDENCE OF A MOVE — that is the false absolution. The move shapes
+    this evidences are path-LOCAL, which is a peer's design and the half a count asymmetry cannot
+    supply on its own:
+
+        a module split into its own directory: "src/x.py" becomes "src/x/leaf.py"
+        a module renamed within its directory: "pkg/x.py" becomes "pkg/y.py"
+
+    ⚑ ANYTHING ELSE IS NOT A MOVE THIS CAN EVIDENCE, so it is not churn. Widening the predicate to
+    "some file with this rule moved" launders every new violation carrying that rule — measured in
+    this repository's own first cut, where a retirement of "a.py" absolved an unrelated "z.py".
+    """
+    if old_path == new_path:
+        return False
+    stem = old_path.removesuffix(".py")
+    if new_path.startswith(stem + "/"):
+        return True
+    return PurePosixPath(old_path).parent == PurePosixPath(new_path).parent
+
+
 def _identity(key: str) -> str:
     """Return the part of a key that survives a move: everything but the path.
 
@@ -108,12 +131,42 @@ def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
     cur, base = frozenset(current), frozenset(baseline)
     added, paid = cur - base, base - cur
 
-    # ⚑ A KEY IS A MOVE WHEN A RETIRED KEY SHARES ITS IDENTITY. Pairing is by identity alone, so a
-    # finding that relocates is neither new debt nor discharged debt — the debt still exists and
-    # the total did not rise.
-    paid_by_identity: dict[str, str] = {_identity(k): k for k in paid}
+    # ⚑⚑⚑ IDENTITY ALONE IS NOT ENOUGH, AND ASSUMING IT WAS IS A FALSE-ABSOLUTION BUG. A peer hit
+    # this on its first live run and this repository shipped the same defect an hour after reading
+    # that warning without reading the module that carried it. MEASURED in the committed code:
+    #
+    #     a baseline of one key at "a.py", a census of two at "b.py" and "z.py", the same rule
+    #     on all three: TWO moves recognised, ZERO additions, grew = False, THE GATE PASSED.
+    #
+    # One retired key absolved TWO new ones: a.py moved to b.py, and a genuinely-new violation at
+    # an unrelated z.py was laundered as churn. A file split into ten would absolve nine real
+    # findings. That is a stale green inside the machinery whose purpose is refusing stale greens.
+    #
+    # ⚑⚑ THE BOUND IS A COUNT ASYMMETRY, which is the peer's own answer: a move is ONE-TO-ONE. A
+    # one-old-to-many-new fan-out is not churn, it is churn plus growth, and it must be reported as
+    # SUSPECT rather than absolved. Only an unambiguous pairing — exactly one retired key and
+    # exactly one added key sharing an identity — is a move.
+    #
+    # ⚑ THE HONEST LIMITATION, CARRIED RATHER THAN QUIETLY DROPPED: if a finding relocates AND a
+    # genuinely-new violation of the same rule appears elsewhere in the same run, the pairing is
+    # ambiguous and BOTH are refused as growth. That is the safe direction — a domain too wide
+    # fails loudly, a domain too narrow serves a stale green.
+    added_by_identity: dict[str, list[str]] = {}
+    for key in added:
+        added_by_identity.setdefault(_identity(key), []).append(key)
+    paid_by_identity: dict[str, list[str]] = {}
+    for key in paid:
+        paid_by_identity.setdefault(_identity(key), []).append(key)
+
+    # ⚑⚑ BOTH CONDITIONS: an unambiguous one-to-one pairing AND a plausible path move. The count
+    # asymmetry alone refuses a legitimate 2-old-to-2-new directory move; path plausibility alone
+    # re-admits the fan-out. Together they pair a relocation and refuse everything else.
     moved = frozenset(
-        (paid_by_identity[_identity(k)], k) for k in added if _identity(k) in paid_by_identity)
+        (paid_keys[0], added_keys[0])
+        for ident, added_keys in added_by_identity.items()
+        if len(added_keys) == 1
+        and len(paid_keys := paid_by_identity.get(ident, [])) == 1
+        and _plausible_move(paid_keys[0].rpartition(":")[0], added_keys[0].rpartition(":")[0]))
     relocated_from = {src for src, _dst in moved}
     relocated_to = {dst for _src, dst in moved}
     return Diff(added=frozenset(added - relocated_to),

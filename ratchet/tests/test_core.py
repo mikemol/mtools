@@ -196,3 +196,36 @@ def test_a_move_alongside_growth_still_refuses(tmp_path: Path) -> None:
     path = _base(tmp_path, {"a.py:rule1"})
     assert ratchet({"b.py:rule1", "c.py:new"}, path, write=True)[0] == 1
     assert read_baseline(path)[1] == frozenset({"a.py:rule1"})
+
+
+def test_one_retirement_cannot_absolve_two_arrivals(tmp_path: Path) -> None:
+    """Refuse an absolution of two arrivals by one retirement.
+
+    ⚑⚑ The false absolution, F-armed. Identity alone paired `a.py` with BOTH `b.py` and
+    `z.py` and reported no growth — measured in this repository's own first cut, and warned
+    about by the peer that hit it on its first live run. A move is ONE-TO-ONE.
+    """
+    path = _base(tmp_path, {"a.py:rule1"})
+    assert ratchet({"b.py:rule1", "z.py:rule1"}, path, write=True)[0] == 1
+    assert read_baseline(path)[1] == frozenset({"a.py:rule1"})
+
+
+def test_a_shared_rule_at_an_unrelated_path_is_not_a_move(tmp_path: Path) -> None:
+    """Refuse a pairing that names no relocation.
+
+    ⚑ One-to-one is necessary and NOT sufficient: `a.py` and `q/z.py` are unambiguously
+    pairable by count while naming no relocation any tree performed. The pairing therefore
+    also demands a plausible path move — a split into a directory, or a rename within one.
+    """
+    path = _base(tmp_path, {"a.py:rule1"})
+    assert ratchet({"q/z.py:rule1"}, path, write=True)[0] == 1
+
+
+def test_two_findings_relocating_together_are_two_moves(tmp_path: Path) -> None:
+    """Recognise a two-for-two directory reorganisation.
+
+    ⚑ The case the count asymmetry alone REFUSED. A directory reorganisation retires two
+    keys and adds two; distinct identities pair independently, so this is churn, not growth.
+    """
+    path = _base(tmp_path, {"pkg/a.py:rule1", "pkg/b.py:rule2"})
+    assert ratchet({"pkg/x.py:rule1", "pkg/y.py:rule2"}, path, write=True)[0] == 0

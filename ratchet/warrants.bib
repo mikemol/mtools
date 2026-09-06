@@ -185,3 +185,28 @@
   claim   = {Recognising a move must not launder the growth beside it --- a run that both relocates and grows still REFUSES and writes nothing},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_move_alongside_growth_still_refuses}
 }
+
+@misc{ratchet-core-one-retirement-cannot-absolve-two-arrivals,
+  section = {membership},
+  title   = {A single retired key absolves at most one arrival},
+  note    = {Pairing on identity alone let one departure launder an unbounded fan-out of
+             new findings carrying the same rule. Measured here as
+             a.py -> {b.py, z.py} reporting no growth; a peer hit the same shape on its
+             first live run and named it a false absolution. The pairing is one-to-one.}
+}
+
+@misc{ratchet-core-a-shared-rule-at-an-unrelated-path-is-not-a-move,
+  section = {membership},
+  title   = {One-to-one pairing is necessary but not sufficient},
+  note    = {A lone retirement and a lone arrival sharing a rule are pairable by count while
+             naming no relocation. A move must also be path-plausible: a split into a
+             directory of the module's own name, or a rename within one directory.}
+}
+
+@misc{ratchet-core-two-findings-relocating-together-are-two-moves,
+  section = {membership},
+  title   = {A directory reorganisation is churn, not growth},
+  note    = {The count asymmetry alone refuses a legitimate two-for-two relocation. Distinct
+             identities pair independently, so both moves are recognised. This is the case
+             that proves path plausibility is load-bearing rather than merely restrictive.}
+}
