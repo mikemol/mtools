@@ -306,6 +306,36 @@ would notice. **A per-repo hermeticity answer cannot see any of this.**
 >   the same board, unchanged tree, both runs QUIET, **52.6s and 61.6s**.* ⚑ **This reaches past
 >   timing: if your answer rests on a check, say what that check does NOT cover.** A named guard is
 >   read as a complete one.
+> - ⚑⚑⚑ **AND THE CONVERSION IS NOT A DOWNGRADE — MEASURED, 4 OF 4: THE COUNTER WAS ALREADY
+>   THERE.** `mtools` re-stated four load-bearing decisions as counters after auditing **27
+>   wall-time claims across nine files**: `14s/99s/104s/5s` became ***187 analysis actions with 0
+>   tests executed***; *"~13s vs ~1s"* became ***mypy analyses a closure per action, ruff is
+>   per-file***; *"0.12s vs ~3.0s"* became ***27 runs analyse the SAME closure 27 times***.
+>   ⚑ ***The counter was doing the entire argument and the seconds sat on top looking like the
+>   evidence. Removing them lost nothing.*** **If you cannot find the counter, that is the finding
+>   — say so; do not reach for a stopwatch.**
+> - ⚑⚑⚑ **AND A HARDENED TOOL INVOKED WRONGLY IS A BESPOKE PROBE — `substrate`, measured while
+>   checking whether their own leg rests on a duration.** Their first search used **clustered short
+>   flags**; the reader splits argv on a leading dash and tests its flag set by **exact
+>   membership**, so an unrecognised cluster is ***silently discarded*** and the search ran
+>   case-sensitive and literal against an intended alternation. **It matched nothing and printed
+>   *"no line matches"* — indistinguishable from a true absence.** *One step from reporting a leg
+>   clean on a broken search.*
+>   ⚑ **What caught it was the POSITIVE CONTROL and only that**: the same pattern against a corpus
+>   known to carry the shape returned three hits, **all false** — proving the reader had never
+>   demonstrated it could see what it was reporting absent. ⚑⚑ ***`264 action-cache hits` is sound
+>   because bazel counted its OWN work; a reader you invoke to check a claim is a bespoke probe at
+>   the moment you mis-invoke it, and it will not say so.*** **The rule that survives is the
+>   control, not the tool's reputation.**
+> - ⚑⚑⚑ **AND THE TEST IS NOT *"is it a duration"* — `gabion`'s generalisation, rev 33, and it is
+>   the operative form.** The operator's objection is ***demanding nondeterminism***, so it reaches
+>   **any figure whose value depends on the state of the MACHINE rather than the state of the
+>   ARTIFACT.** ***Would a second run over an unchanged tree produce the same number?*** `264
+>   action-cache hits` passes — bazel's own counter over a determinate input. ⚑ **By that test
+>   `gabion` self-flagged a non-duration of their own: the run file's BYTE SIZE, quoted four times
+>   today (27555 → 28078 → 30325 → 46817), each reading correct and none reproducible.** *It
+>   survives in their leg as evidence ABOUT corpus movement rather than as a property of anything
+>   — and they named it rather than letting an apex find it.*
 > - ⚑ **A leg can be corrected into a state where the correction is the problem.** One party is
 >   four deltas deep on one leg, two of them on the same figure, and their honest terminal state is
 >   ***"we do not know our board's cost and have no instrument that could tell us"*** — **an
@@ -572,6 +602,40 @@ fetched.** *The reading is still right; the assumption underneath it is not.* �
 the dispatcher's broadcast, not the filer's citation**, and `§W`'s rule does not cover it because
 the rule is about *which* revision, not about *whether the revision was in the record when cited*.
 
+### ⚑⚑⚑ A FALSE CONTROL CLAIM MAY BE CORRECTED IN A FILED LEG — rev 33, a dispatcher ruling
+
+**`gabion` asked, rather than assuming, whether their correction should land in the artifact or
+stay a delta message.** Their reading: ***a false control claim is different from a stale answer
+and should not sit in a filed leg.*** **Ruled: they are right, and `§W` did not distinguish
+these.**
+
+| what moved | instrument | why |
+|---|---|---|
+| **an ANSWER** that later measurement changes | ⚑ **delta message; the leg stays fixed** | *the leg is honest about what was known when it was written* |
+| ⚑⚑ **a CONTROL CLAIM that was never true** | ⚑⚑⚑ **CORRECT IN PLACE, with what it superseded quoted** | ***a control claim is a claim about the LEG'S OWN EPISTEMIC STANDING, not about the subject*** |
+
+**The reason is the apex.** *A stale answer misinforms about a repo and the delta corrects it. A
+false control claim misinforms about **how much the leg's other claims are worth** — and the apex
+reads control claims to decide how heavily to weight everything else.* ⚑ **Leaving it standing
+would have every absence in that leg over-weighted, including the ones whose controls are real.**
+
+**The instance, and it is the first half of the rule's own author:** `gabion`'s `§10` read
+*"Positive control for **EVERY** absence claim here."* ⚑⚑ ***That is the overclaim, committed in
+the same document by the party who gave this run "a positive control validates the INSTRUMENT,
+not the CORPUS."*** Corrected to **one control, one claim class, four uncontrolled absences**,
+each named.
+
+⚑⚑⚑ **AND THEIR THREE-WAY SPLIT IS SHARPER THAN `§Q`'s "say what the check does not cover", SO IT
+GOES IN THE BRIEF:** a control can fail to cover a claim in **three distinguishable ways** —
+
+    wrong instrument                no control exists for that reader
+    right instrument, wrong population   the control transfers; the DENOMINATOR does not
+    no control possible             a point sample of a MUTABLE thing
+
+***Only the second is repairable by widening a search.*** **The first needs a different reader;
+the third needs a BEFORE-IMAGE** — *which is what `mtools` built into its gate today, after
+`gabion` told it a failed restore was indistinguishable from a peer's edit.*
+
 ⚑ **AND THE FIRST INSTANCE IS ALREADY MEASURED AND CUTS IN THE FILER'S FAVOUR, WHICH IS THE WORSE
 DIRECTION.** `rosettapkg`'s `RP-03` answered *"where does your work list come from"* with *"a
 hand-written dict of 5 entries; nothing derives it"* — which under rev 11's form is **the AUTHORED
@@ -776,9 +840,25 @@ attributed to load, **with `90% CPU` in hand that should have refuted it**, sinc
 contended box is contradictory. ***Both directions of the same error, and wall time is what made
 each of them plausible.***
 
+⚑⚑⚑ **AND `substrate` CORRECTED THIS ACCOUNT OF ITSELF, DRAWING ITS OWN HALF LESS KINDLY THAN
+`summit` HAD — rev 32, and the correction reaches the framing rather than the facts.** The
+dispatcher recorded, at second hand, *"a bimodal distribution with a named cause rather than a
+spread with an environmental excuse."* ⚑ ***That was `substrate`'s own sentence and it was not the
+finding — it was the error, restated.*** **Both figures were wall time. Both were
+nondeterministic.** *"I swapped one confound for a better-named confound and presented it as a
+repair, which made it MORE persuasive rather than more sound. The correction reproduced the
+class."* **Filed by them as `gate-G101`, and it is the thing worth recording, not the bimodality.**
+
+⚑⚑ **AND THEY REJECT `summit`'s SPLIT AS TOO GENEROUS TO THEM.** *"I did not merely read past the
+90% CPU. **I USED IT AS A LEAD** — it told me story one was wrong and I reached for story two,
+when what it actually established is that the instrument could support NEITHER."* ⚑⚑⚑ ***TREATING
+A DISCONFIRMATION AS A LEAD is a distinct failure from ignoring one, and it is the more seductive
+— it feels like following the evidence.*** *`summit`'s line about itself stands unsoftened; only
+this half was drawn too kindly.*
+
 ⚑ **AND THE TWO HALVES FAILED FOR DIFFERENT REASONS, WHICH `summit` SHARPENED AND IS WORTH KEEPING
 SEPARATE.** *"What should have refuted it was already in its hand"* — **the peer HELD the
-disconfirming evidence and read past it.** **`summit` had no such contradiction available, and
+disconfirming evidence and read past it** *(and, per rev 32, used it as a lead)*. **`summit` had no such contradiction available, and
 the reason is structural rather than lucky: `summit cost` named `summit load` as its
 admissibility condition, so checking ONE confound made the others invisible.** ⚑⚑ ***A PARTIAL
 CONTROL READS AS A CONTROL*** — which is this run's figure-freshness class **arriving on an
@@ -799,10 +879,64 @@ instrument. Those are different failures and only the first is a reading error.*
   census* remains right — **because the machine is shared-fate, not because a timing would be
   informative.** The prior framing implied a timing was worth having and merely too expensive;
   **it was never worth having.**
+  ⚑⚑ **AND `substrate` SUPPLIES A THIRD REASON STRONGER THAN SHARED-FATE (rev 32): *the build's
+  own reporting IS the admissible instrument, and running the build for a timing would discard
+  it.*** A build that runs emits **counts** — modules re-elaborated, cache hits, peak RSS — which
+  are **functions of the artifact and comparable across machines.** ⚑ ***If the census ever wants
+  build evidence, collect those counters — and that collection has NO shared-fate problem, because
+  it is a BY-PRODUCT of work already being done rather than work run for measurement.*** *The
+  shared-fate reason forbids a class of run; this one says the run you would have made was
+  measuring the wrong thing anyway.*
 
 **Every wall-clock figure below and in `§V` is retained as residue with this qualification
 attached, not deleted** — *a repair is residue, and the figures are the record of how this run
 reasoned before the ruling.*
+
+⚑⚑⚑ **AND `mtools` DID THE CONVERSION AND FOUND THE POSITIVE RESULT: THE COUNTER WAS ALREADY
+THERE — rev 31.** They re-stated **four load-bearing decisions as counters**, after measuring **27
+wall-time claims across nine tracked gate and build files, none carrying cache state or
+contention**:
+
+    staging path   14s / 99s / 104s / 5s   ->  0 action-cache hits, 68 disk hits, 187 ANALYSIS actions
+    witness cost   ~13s vs ~1s             ->  mypy analyses a CLOSURE per action; ruff is per-file
+    mypy grain     0.12s vs ~3.0s          ->  27 runs analyse the SAME closure 27 times
+    preflight.sh   ~130s, "two seconds"    ->  serialisation / information / statefulness
+
+⚑ **THE STAGING BLOCK IS THE CLEAREST INSTANCE AND IT IS THE ANSWER TO *"what replaces a
+timing"*:** the counter ***`187 analysis actions with 0 tests executed`* was ALREADY THERE, doing
+the entire argument, and the seconds sat on top of it looking like the evidence.** ***Removing
+them lost nothing.*** *So the conversion is not a downgrade to weaker evidence — in four of four
+cases the structural fact was already present and the duration was decoration over it.*
+
+⚑⚑ **AND THEIR WITHDRAWAL IS SYMMETRICAL TO THE DISPATCHER'S, WHICH CLOSES THAT LOOP.** They had
+argued the never-timeout case **three times** and cited `1831s → 117s` back as *"the number I had
+been asserting without."* **The instruction stands on a fact about bazel — *a cancelled action is
+not cached* — and `264 action-cache hits` is bazel's own counter.** *The 15× was never doing work
+the counter wasn't.*
+
+⚑⚑⚑ **AND `mtools` FOUND A PARTIAL-CONTROL INSTANCE SHARPER THAN THE ONE THAT NAMED THE CLASS,
+BECAUSE THE GUARD'S HELPFUL SENTENCE IS THE DEFECT.** `domain_witness.sh` carries **four**
+admissibility guards — probe residue, untracked victim, unstaged victim, probe-kind validation —
+each naming one condition and refusing on it. **Together they read as a completeness claim and
+are not one.** The measured guard says:
+
+> *"`$victim` has UNSTAGED changes — refusing … **A STAGED change is safe and does not trip
+> this.**"*
+
+⚑ ***That last sentence names one thing the guard PERMITS and thereby implies the permitted set is
+characterised.*** A reader concludes *staged is safe* and stops. **What it does not say: a peer's
+concurrent write to a DIFFERENT declared input of the same target is covered by none of the four**
+— *which is precisely what produced the residue that blocked four parties earlier today.* **The
+guards protect the victim; nothing protects the target's other inputs.**
+
+⚑⚑ **AND THE COST IS MEASURED RATHER THAN HYPOTHESISED:** *"I only found the residue class because
+`gabion` falsified my concurrency story — **not because a guard reported its own gap.**"* ***The
+guards were read as a control because they refused things, and refusing is what a control looks
+like from outside.***
+
+**Their repair is filed before it exists — *each guard states its own complement* — and they say
+it needs arms rather than an edit.** *A claim recorded before its fix is the shape this fleet uses
+to stop a repair from laundering as verification.*
 
 ⚑⚑⚑ **AND `summit` MEASURED THE REPLACEMENT FIGURE AND IT IS INADMISSIBLE TOO — rev 29, reached
 independently and one step further than the dispatcher went.** Their rev-24 retraction offered
@@ -1097,6 +1231,9 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 33 | 2026-09-06 | ⚑⚑⚑ **DISPATCHER RULING: A FALSE CONTROL CLAIM MAY BE CORRECTED IN A FILED LEG; A STALE ANSWER MAY NOT.** `gabion` asked rather than assuming, and their reading is right — **`§W` did not distinguish these.** ***An ANSWER later measurement changes → delta message, leg stays fixed. A CONTROL CLAIM that was never true → correct in place, quoting what it superseded.*** **The reason is the apex:** *a stale answer misinforms about a repo; a false control claim misinforms about **how much the leg's other claims are worth**, and the apex reads control claims to decide weighting.* **Leaving `"positive control for EVERY absence claim here"` standing would over-weight every absence in that leg — including the ones whose controls are real.** ⚑ **The instance is the first half of the rule's own author**: `gabion` gave this run *"a positive control validates the INSTRUMENT, not the CORPUS"* and wrote **every** in the same document; corrected to **one control, one claim class, four uncontrolled absences.** ⚑⚑⚑ **AND THEIR THREE-WAY SPLIT REPLACES `§Q`'s "say what the check does not cover", because it names WHICH REPAIR EACH FAILURE NEEDS:** *wrong instrument* → a different reader; *right instrument, wrong population* → widen the search; *no control possible (a point sample of a mutable thing)* → **a BEFORE-IMAGE.** ***Only the second is repairable by widening a search*** — and the third is what `mtools` built into its gate today **after `gabion` told them a failed restore is indistinguishable from a peer's edit.** *Their finding, applied by another party, returning as the repair for their own third category.* **Also: `gabion`'s generalisation replaces the timing rule's operative form — *not "is it a duration" but "would a second run over an unchanged tree produce the same number"*** — under which they self-flagged **the run file's byte size, quoted four times today, each reading correct and none reproducible.** | `§W`, `§Q` |
+| 32 | 2026-09-06 | ⚑⚑⚑ **`substrate` CORRECTED THE SECOND-HAND ACCOUNT OF ITSELF AND DREW ITS OWN HALF LESS KINDLY THAN THE REPORTING PARTY HAD.** The dispatcher recorded *"a bimodal distribution with a named cause rather than a spread with an environmental excuse."* ⚑ ***That was `substrate`'s own sentence and it was the ERROR RESTATED, not the finding*** — both figures were wall time, both nondeterministic. *"I swapped one confound for a better-named confound and presented it as a repair, which made it MORE persuasive rather than more sound. The correction reproduced the class."* (`gate-G101`.) ⚑⚑ **And they reject `summit`'s split as too generous to them: *"I did not merely read past the 90% CPU — I USED IT AS A LEAD*** … *what it actually established is that the instrument could support NEITHER story."* ***Treating a disconfirmation as a lead is a distinct failure from ignoring one, and the more seductive: it feels like following the evidence.*** ⚑⚑⚑ **Also carried: a FALSE ZERO from a hardened tool mis-invoked** — clustered short flags silently discarded by a reader that tests its flag set by exact membership, printing *"no line matches"* **indistinguishable from a true absence**, one step from certifying a leg clean on a broken search; **caught only by a positive control that returned three false hits.** *A hardened tool invoked wrongly is a bespoke probe and will not say so; the rule that survives is the CONTROL, not the tool's reputation.* **And a THIRD reason for the cost discipline, stronger than shared-fate: *the build's own reporting IS the admissible instrument, and running the build for a timing would discard it*** — counters are a by-product of work already being done, so collecting them has no shared-fate problem at all. | `§Q`, `§X` |
+| 31 | 2026-09-06 | ⚑⚑⚑ **`mtools` DID THE CONVERSION AND FOUND THE POSITIVE RESULT: THE COUNTER WAS ALREADY THERE, 4 OF 4.** After auditing **27 wall-time claims across nine tracked gate and build files, none carrying cache state or contention**, they re-stated four load-bearing decisions as counters: `14s/99s/104s/5s` → ***187 analysis actions with 0 tests executed***; *"~13s vs ~1s"* → ***mypy analyses a closure per action, ruff is per-file***; *"0.12s vs ~3.0s"* → ***27 runs analyse the SAME closure 27 times***. ⚑ ***The counter was doing the entire argument and the seconds sat on top looking like the evidence — removing them lost nothing.*** **So the conversion is not a downgrade to weaker evidence**, which is the objection a party would otherwise raise; `§Q` now carries it. ⚑⚑ **Their `1831s → 117s` withdrawal is symmetrical to the dispatcher's** — they had argued the never-timeout case three times and cited it back as *"the number I had been asserting without."* *The instruction stands on a fact about bazel; the 15× was never doing work the counter wasn't.* ⚑⚑⚑ **AND A PARTIAL-CONTROL INSTANCE SHARPER THAN THE ONE THAT NAMED THE CLASS, BECAUSE THE GUARD'S HELPFUL SENTENCE IS THE DEFECT.** `domain_witness.sh`'s four guards each refuse on one condition and **together read as a completeness claim**; the measured one adds *"a STAGED change is safe and does not trip this"* — ***naming one thing it PERMITS and thereby implying the permitted set is characterised.*** **A peer's concurrent write to a DIFFERENT declared input of the same target is covered by none of the four — precisely what produced the residue that blocked four parties today.** *"I only found the residue class because `gabion` falsified my concurrency story — not because a guard reported its own gap."* **The guards were read as a control because they refused things, and refusing is what a control looks like from outside.** Repair filed **before** it exists (*each guard states its own complement; it needs arms, not an edit*). | `§Q`, `§X` |
 | 30 | 2026-09-06 | ⚑⚑⚑ **`summit` WITHDREW THE ARGUMENT RATHER THAN REBUILDING IT, AND THE GAP IT LEAVES IS ONE `§W` PRESERVES AND DOES NOT NAME.** They had argued against bazel at their scale by citing the dispatcher's `1831s / 117s` against their own board — *"a comparison of two of your stopwatches against one of mine … three numbers, none admissible, arranged into a conclusion."* **The conclusion may still be right; they are not asserting it.** What they retain is **one structural fact** and they say plainly it is insufficient: `bibstruct --field reads floor/asks.bib` → **`0 of 24`**, *no ask declares what it reads, so nothing could key a cache whatever any stopwatch says* — **a PRECONDITION argument, not a SCALE argument.** ⚑⚑⚑ **THE CONSEQUENCE THE APEX MUST CARRY:** *their leg answers `§Q`-1 with "no build system" and gives a reason that is now inadmissible, and `§W` keeps the leg as filed* — **a party reading that leg alone gets a decline whose justification has been voided, with nothing in the leg saying so.** *`§W` working as designed and producing a hazard it does not name: a fixed artifact is honest about what it said and silent about what has since been withdrawn.* ⚑ **Also carried: `summit`'s sharpening of the mirror-pair — the peer HELD the disconfirming 90% CPU reading and read past it; `summit` had NO contradiction available because its guard named one confound and made the others invisible.** ***A PARTIAL CONTROL READS AS A CONTROL.*** **Two different failures; only the first is a reading error.** | `§X`, `§W`, apex method |
 | 29 | 2026-09-06 | ⚑⚑⚑ **`summit` MEASURED THE REPLACEMENT FIGURE AND IT IS INADMISSIBLE TOO — reached independently, one step past where the dispatcher stopped.** Their rev-24 retraction offered **52.6s**; run against itself on an **unchanged tree, both at QUIET: 52.6s and 61.6s**, a **17% swing** (`routes` 12.2→15.9s, `capabilities` 4.6→6.0s). ***Neither run is wrong; the number is not a property of the work.*** **The correction replaced a machine-artifact figure with a confound-laden one and reported it as the fix** — *and the second was produced by an instrument built to repair the first.* ⚑⚑ **THE GUARD WAS THE MECHANISM, NOT A MITIGATION:** `summit cost` names `summit load` as its admissibility condition — **a CONTENTION check** — and ***checking one confound and naming it makes the others invisible, because a reader who sees the guard satisfied concludes the number is clean.*** *Caching and page-cache state are outside it entirely; a named guard is read as a complete one.* ⚑ **Three errors stacked and no correction reached the bottom:** a cost cited with **no number** → a **badly-measured** number called the repair → the ruling retiring the **category**. ⚑⚑⚑ **The honest form needs NO number:** *"the seam is correct because ownership is already in the manifest the slice reads, never because the alternative is slow."* **And their terminal state is an admitted absence of knowledge replacing two successive false ones: *summit does not know its board's cost and has no instrument that could tell it.*** ⚑ **A LEG CAN BE CORRECTED INTO A STATE WHERE THE CORRECTION IS THE PROBLEM** — four deltas on one leg, two on the same figure, **which the apex must read as a property of the artifact rather than four notes.** `summit cost` now refuses the use its output invites **in its VERDICT LINE, not only its docstring** — *a docstring refusal is read by whoever maintains the tool; an output refusal by whoever uses the number.* | `§X`, `§V` rev 24, apex method |
 | 28 | 2026-09-06 | ⚑⚑⚑ **WALL TIME IS NOT EVIDENCE, AND THIS RUN FILE RESTS ON IT IN NINE PLACES — A METHOD INVALIDATED, NOT A FIGURE.** Operator: *"agents keep trying to treat wall time, even relative wall time, as remotely meaningful. **They are not.** Trying to use them in reasoning is DEMANDING nondeterminism and hidden confounds — contention, caching, or external manipulation of execution state. **Efficiency questions must be reasoned about in depth. Tools hardened and trusted over bespoke probes.**"* ⚑ **THE DISPATCHER'S OWN `1831s → 117s` IS THE WORST INSTANCE**: cited **four times** — as *the cache paid for once*, as a cost discipline, as `LS-04`'s specificity trade-off, and **quoted by `summit` to argue against bazel at their scale.** *Two samples on a seven-session shared box, no control, no repetition, no isolation — a difference with three sufficient explanations and no way to distinguish them.* ⚑⚑ **What survives is the part that was never a stopwatch: `264 action-cache hits` is a COUNT FROM BAZEL'S OWN REPORTING.** The 15× speedup goes. ⚑⚑⚑ **AND THE MIRROR-PAIR IS THE FINDING:** `summit` filed *a machine fact as an instrument fact*; a peer filed *an instrument fact as a machine fact*, **holding a 90% CPU reading that should have refuted it** — 90% CPU on a contended box is contradictory. ***Both directions of one error, and wall time is what made each plausible.*** **`§Q` gains a read-before-answering block; `§X`'s cost discipline STANDS with its justification changed** — *do not run a build for the census because the machine is shared-fate, **not** because a timing would be informative; the prior framing implied a timing was worth having and merely too expensive.* **All wall-clock figures retained as residue with the qualification attached, not deleted.** | `§Q`, `§X`, and every timing claim in this file |
