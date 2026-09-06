@@ -97,8 +97,18 @@ else
 fi
 
 echo "=== mtools: inbox ==="
-find "$mtools/inbox" -name '*.md' ! -name README.md -printf '  mail: %f\n' 2>/dev/null \
-    | grep . || echo "  inbox empty"
+# ⚑⚑⚑ UNREAD, NOT PRESENT — AND THE FIRST CUT MEASURED THE WRONG ONE. It listed every message
+# in `inbox/`, so a message ACTED ON two ticks earlier reported as `mail:` on every subsequent
+# tick, forever. That is Rule 18's own failure forming in the instrument that produced Rule 18: a
+# line that says the same thing every time stops being read as a measurement and becomes
+# furniture. A permanent "you have mail" is exactly as uninformative as a permanent "inbox empty".
+#
+# ⚑⚑ THE ARCHIVE CONVENTION IS THE ECOSYSTEM'S, NOT AN INVENTION. Measured before adopting:
+# `cassian-observability` holds 9 live / 11 archived and `paperkit` 42 / 5, both under
+# `inbox/archive/` with the filename unchanged. Inventing a marker here would have been a second
+# convention for a solved problem — the re-derivation this repository exists to stop.
+find "$mtools/inbox" -maxdepth 1 -name '*.md' ! -name README.md -printf '  UNREAD: %f\n' 2>/dev/null \
+    | grep . || echo "  inbox: nothing unread ($(find "$mtools/inbox/archive" -name '*.md' 2>/dev/null | wc -l) archived)"
 
 # ⚑⚑⚑ THE CENSUS FREEZE, POLLED AS A ROSTER RATHER THAN AS A STRING. A peer designated its
 # revision log as the freeze artifact, and BOTH obvious string predicates were wrong: `grep`
