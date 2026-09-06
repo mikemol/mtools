@@ -479,6 +479,109 @@ record, so the discriminator survives to the artifact.
 and not the third is not established. What is established is that it is not the relocation, not the
 verb, not the witness script, and not the check's own verdict.
 
+## 5j. ⚑⚑ THE `Ζ·calc·reachable` FIX IS CORRECT AND DID NOT CLEAR THE RED — the chain had a gap
+
+The `_run` fix (§5i) is proven at unit level — `cannot_run → flipped=False`, `refuted → flipped=True`
+unchanged — and a full 47,279-action re-sweep left `library//:adequacy` **RED**, with the ∅ cell
+still `flipped: true`. **The fix was necessary and aimed one hop short.**
+
+⚑ **The ∅ record's `why` is the assertion message, not a cannot-run line**, which is the evidence
+that settles it: the witness RAN and its assertion genuinely failed. So `rc` was never 3 at that
+layer, and no amount of sentinel-honoring in `_run` could have changed it.
+
+⚑⚑ **AND THE ROOT-CAUSE CHAIN IN §5i NAMED A PATH THE CELL DOES NOT TAKE.** MEASURED with
+`bazel aquery`, which is the instrument that should have been used first:
+
+```
+--check paperkit/library/concepts.py      <- the eval cell runs concepts.py DIRECTLY
+```
+
+Not `run-witness`. §5i reproduced a `uv sync` failure from an extracted wheel and presented it as
+the cause; **the outer invocation never touches that script.** *A reproduction is not a diagnosis
+unless the path reproduced is the path taken.*
+
+**What is actually true, re-derived:** `concepts.py` asserts a disclaimed key falls through to the
+engine's library, and *that* resolve spawns `_library_cmd` → `['sh', './run-witness',
+'label-carrier']` with **`cwd=_LIBRARY`**. So `run-witness` is on the path — one level deeper than
+claimed, reached by the nested spawn rather than the cell.
+
+⚑⚑⚑ **And the discriminator is `cwd`, measured:**
+
+```
+repo root : python3 -c 'import paperkit'  -> OK   (cwd is on sys.path)
+/tmp      : python3 -c 'import paperkit'  -> ModuleNotFoundError
+```
+
+`run-witness`'s fast path is `if python3 -c 'import paperkit'; then exec python3 "$HERE/concepts.py"`.
+From `cwd=_LIBRARY` that import **fails**, so the script falls through to the `uv sync` arm — which
+fails because `ROOT=$HERE/../..` is the execroot, with no `pyproject.toml`. The script's own comment
+predicts the shape: *"a path relative to a directory that moved is the same defect `_LIBRARY` had
+one level up."*
+
+**So the defect is an implicit dependency on cwd-as-import-root** — the check passes in a checkout
+because the developer happens to run from the repo root, and fails wherever cwd differs. It is the
+`§Q`-2 implicit-dependency class from this repo's own census leg, firing on the engine's own library.
+
+**Kept, not reverted:** the `_run` sentinel fix stays staged. It is independently correct — a
+payload's cannot-run must not read as a refutation — and it is the mechanism that will carry this
+verdict *once the layer below emits the sentinel at all*. What it does not do is manufacture a
+sentinel that was never raised.
+
+## 5k. ⚑⚑⚑ Ζ·witness·cwd — CLOSED. `library//:adequacy` RED → GREEN
+
+```
+GATE GREEN: {"verb":"adequacy","verdict":"pass"}
+INFO: Build completed successfully, 49473 total actions
+```
+
+**The defect, in one line:** `run-witness`'s fast path is `if python3 -c 'import paperkit'`, and a
+bare import succeeds only because **CWD is on `sys.path`**. The engine's own nested resolve spawns
+that script with `cwd=_LIBRARY` (`resolver._library_cmd` → `['sh', './run-witness', …]`, `cwd=lib`),
+so the import failed, the script fell through to its `uv sync` arm, and *that* failed because
+`ROOT=$HERE/../..` inside a sandbox is the execroot with no `pyproject.toml`.
+
+**Fix — use the root the script already computes**, correct in a checkout *and* a sandbox:
+
+```sh
+_PK_PP="$ROOT${PYTHONPATH:+:$PYTHONPATH}"
+if PYTHONPATH="$_PK_PP" python3 -c 'import paperkit' 2>/dev/null; then
+    PYTHONPATH="$_PK_PP" exec python3 "$HERE/concepts.py" "$@"
+fi
+```
+
+**⟨P, F, δ⟩, run from the nested spawn's own cwd** — not from the repo root, which is what hid it:
+
+| arm | result |
+|---|---|
+| F — pre-fix script, `cwd=library` | `CANNOT RUN — uv sync failed; cannot establish the witness environment` |
+| P — fixed script, same cwd | `concept label-carrier: OK` |
+| the failing claim, foreign cwd | `concept concept-shareable: OK` |
+| gate | `GATE GREEN`, 49,473 actions |
+
+⚑⚑ **THE COST OF THE TWO WRONG HYPOTHESES IS THE FINDING.** This took four ticks and ~3.5 hours of
+sweeps, and the two dead ends were not random:
+
+1. **§5f — "the library relocation broke a path."** Plausible, and refuted by measurement: all three
+   claims share the same verb and root-relative command, and two of the three passed.
+2. **§5i — "`run-witness` fails from an installed wheel because `uv sync` has no `pyproject.toml`
+   ancestor."** ⚑ **The reproduction was real and the path was wrong.** `bazel aquery` shows the
+   eval cell runs `--check paperkit/library/concepts.py` **directly** — it never invokes
+   `run-witness`. The script *is* on the path, but one level deeper, reached by the nested resolve.
+   *A reproduction is not a diagnosis unless the path reproduced is the path taken*, and `aquery`
+   is the instrument that settles which path that is. It should have been the first tool, not the
+   fourth.
+
+⚑ **And the tell was in the artifact from the start.** The ∅ eval record's `why` carried the
+**assertion message**, not a cannot-run line — so the witness had RUN and its assertion had failed.
+That single field ruled out §5i three ticks before `aquery` did. The record was already honest; I was
+reading around it.
+
+**What stays, and why it is not a wasted fix:** `Ζ·calc·reachable`'s `_run` change (§5i) remains
+staged. It is independently correct — a payload's `CANNOT_RUN` must never read as a refutation — and
+its unit arm holds (`cannot_run → flipped=False`, `refuted → flipped=True` unchanged). It could not
+have fixed *this* red, because the sentinel was never raised on this path. **A correct fix aimed at
+the wrong layer is still a correct fix; it just is not this one's.**
+
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
 `.githooks/local.env` held:

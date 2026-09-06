@@ -1,6 +1,6 @@
 # `constitution` census — paperkit's leg
 
-**Written against `CENSUS-constitution.md` rev 28** (brief `CENSUS-BRIEF.md`). Prefix `PK-`.
+**Written against `CENSUS-constitution.md` rev 32** (brief `CENSUS-BRIEF.md`). Prefix `PK-`.
 ⚑ **Rev 11 re-check applied to `§Q` q3 — see PK-03e. One answer MOVED from local to binding.**
 ⚑ **Rev 22 re-check — see PK-03f. PK-03a survives, and its GENERAL half was mine to file and I did not.**
 ⚑⚑⚑ **Rev 3 + rev 4 re-check — see PK-01b. THREE OF FIVE ARMED HOOKS CRASH AND EXIT 0 IN THIS REPO. Found by rev 4's question, not by me.**
@@ -102,6 +102,55 @@ work.
 
 *Not fixed in this filing: the repair is substrate's `sys.path` prelude or a declared dependency,
 and per rev 11 that is a BINDING article rather than a paperkit patch. Filed, not patched.*
+
+### PK-01c ⚑⚑⚑ REV 32, MEASURED HERE — MY HOOKS EXECUTE CODE THAT IS IN NO COMMIT ANYWHERE
+
+Rev 32 inverts `§F`: *a file in a working tree is not an artifact another party can read, but an
+executable in one is an artifact another party can run* — and mtools notes this may land hardest on
+paperkit, since my five symlinks resolve into substrate's **working tree**.
+
+**MEASURED, and it is stronger than the warning:**
+
+```
+$ git -C substrate status --porcelain scripts/hook_*.py
+A  scripts/hook_cmdparse.py          <- STAGED, NOT COMMITTED
+A  scripts/hook_no_chaining.py
+A  scripts/hook_pycheck.py
+...
+
+$ for f in cmdparse no_chaining pycheck shellcheck structural_query; do
+      git cat-file -e HEAD:scripts/hook_$f.py; done
+  hook_cmdparse          ABSENT from HEAD
+  hook_no_chaining       ABSENT
+  hook_pycheck           ABSENT
+  hook_shellcheck        ABSENT
+  hook_structural_query  ABSENT
+
+$ git log --all -- scripts/hook_cmdparse.py
+  8cfe22ded index on main: …      <- STASH ENTRIES ONLY
+```
+
+⚑⚑ **All five of paperkit's armed hooks execute a file that exists in NO COMMIT, in ANY branch, in
+the repo that owns it.** The only history is stash. `§X`'s drift table hashes them and reports
+agreement; every hash it compares is of an uncommitted file.
+
+**So the layering, measured end to end:** paperkit arms five hooks → they symlink into substrate's
+working tree → those files are staged-but-uncommitted → three of them crash on an import that
+resolves only from substrate's root → and every crash exits **0**. ⚑ *Four independent failures
+compose into "armed, silent, enforcing nothing," and each layer looks correct from inside itself.*
+
+⚑⚑⚑ **AND THIS RETIRES A SECOND CLAIM OF MINE — the one I made while retiring the first.**
+PK-01b said *identical bytes in a different tree are a different program*. True, and it presumes the
+bytes are **stable**. They are not: they are one party's uncommitted working state, which changes
+without any event in paperkit and without any commit in substrate. **There is no version to name.**
+A conformance check cannot ask "which version of the hook does paperkit run" — the question has no
+answer, and that is a stronger defect than drift, than a fail-open, and than a hash the table cannot
+see.
+
+**What the ecosystem cannot currently express**, offered as a q2 candidate: *the code a repo
+executes must be nameable* — a commit, a tag, a hash of a released artifact. Not "must be
+committed"; **nameable**. A symlink into a live tree makes the name not-yet-existent rather than
+wrong, which is why every instrument here reports success.
 
 ---
 
