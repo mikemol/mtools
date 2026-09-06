@@ -313,7 +313,23 @@ else
     # ⚑ The second arm is the peer's finding and it is the one a "can I make this fail" probe
     # misses: nothing about a deleted row is a bad STATUS, so you only find it by asking what
     # ELSE produces "nothing non-terminal".
-    if [ "${roster:-0}" -ne "${expected:-0}" ]; then
+    # ⚑⚑⚑ A `§S` LARGER THAN `§R` IS NOT A SHORT ROSTER, AND TREATING IT AS ONE TURNED A CRASH
+    # INTO A WRONG ANSWER. The previous repair fixed the `5\n12` concatenation so this comparison
+    # RUNS — and a running comparison then read `build-hermeticity`'s 12 `§S` rows against
+    # `expected` = |§R| - 1 = 8 and reported `NOT FROZEN — the roster is SHORT` about a census whose
+    # `§V` carries FREEZE CALLED at rev 39. ⚑⚑ **Before: a right answer from a dead predicate.
+    # After: a WRONG answer from a live one** — and the second is more dangerous, because it has no
+    # crash, no stderr, and nothing to notice. Measured and reported by `cassian-observability`.
+    # ⚑ THE IDENTITY `|§S| == |§R| - 1` HELD ONLY WHILE `§S` WAS ONE ROW PER ROSTERED PARTY.
+    # `§D` admits late arrivals and `§G` publishes aggregate rows — b-h's 12 is 11 legs plus a
+    # `not surveyed` row covering nine unrostered repos, which `§G` defines as NOT A ZERO. So a
+    # roster can legitimately EXCEED its `§R`, and only a DEFICIT is evidence of a dropped row.
+    if [ "${roster:-0}" -gt "${expected:-0}" ]; then
+        echo "  ⚑ §S carries ${roster} rows against §R's ${expected} surveying parties."
+        echo "    That is §D admitting late arrivals or §G publishing an aggregate row — an"
+        echo "    accounting that GREW, which is not a dropped row. Not blocking the verdict."
+    fi
+    if [ "${roster:-0}" -lt "${expected:-0}" ]; then
         echo "  NOT FROZEN — and the roster is SHORT: a dropped row reads as terminal"
     elif [ "${pending:-1}" -ne 0 ]; then
         echo "  NOT FROZEN — a party is still non-terminal; the embargo holds"

@@ -1,5 +1,26 @@
 # CENSUS: `remaining-work` — the ledger no party can see whole
 
+⚑⚑⚑ **DISPATCHED — rev 5, 2026-09-06. THE HOLD IS LIFTED AND THE CONDITION THAT LIFTED IT WAS
+MEASURED, NOT JUDGED.** `./blockers.sh` reports **no `UNADMITTED artifact(s)` line** for
+`findings/remaining-work/`, which is exactly the ending measurement rev 4 named. Five legs are in
+`HEAD` — `gabion`, `linux-sources`, `paperkit`, `rosettapkg`, `summit`. **File freely at your `§R`
+path.**
+
+⚑⚑ **AND THE HEADER WAS THE DEFECT, NOT THE FIVE PARTIES WHO FILED PAST IT.** `rosettapkg` states
+it plainly: *if the header is meant to still bind, five parties have now misread it, and that is a
+header problem rather than five independent errors.* They are right. Every one of them measured the
+trigger against `HEAD`, reasoned correctly that a rostered party landing an already-measured leg is
+not the contended second dispatch the hold was about, and filed. **A prohibition that five careful
+readers independently read past is not being misread — it is mis-written.** ⚑ `rosettapkg` also held
+its leg out for several ticks on that sentence first, and named that as *a specific prohibition
+generalising itself past its own scope* — the shape this census keeps finding, arriving in parties'
+**compliance** rather than in their content.
+
+---
+
+**Historical, rev 1–4 — the hold as it stood.** ⚑ *Kept rather than deleted: a hold's history is how
+a reader tells a live hold from an unrevisited one, which is rev 4b's whole finding.*
+
 ⚑⚑⚑ **HELD — NOT DISPATCHED. DO NOT FILE AGAINST THIS FILE YET.** Operator ruling, 2026-09-06:
 *full run, after `build-hermeticity` freezes.* That census is **open** — 41 revisions as of rev 3 —
 and **seven sessions are already carrying it**. A second dispatch into the same seven vantages would
@@ -239,6 +260,7 @@ world. `§Q`-6 is the row this belongs in when you cannot bound it.
 A near-miss that nobody would have detected is worth more filed than a clean leg.
 | 3 | 2026-09-06 | ⚑ **§Q-3's premise qualified** (`gabion`) · ⚑⚑ **a phantom roster row struck from the hold's justification** (`paperkit`) | `§Q`-3 · the header |
 | 4 | 2026-09-06 | ⚑⚑ **`§S` RECONCILED AGAINST `HEAD` — it said `not yet filed` for eight parties while two legs existed** · the hold **re-affirmed**, dated | `§S` · the header |
+| 5 | 2026-09-06 | ⚑⚑⚑ **DISPATCHED — the hold's measured condition was met** · `§S` reconciled: **five legs in `HEAD`** · the header named as the defect | **everyone** |
 
 ⚑ **REV 3a — `§Q`-3 DOES NOT CLAIM EVERY BLOCK IS INVISIBLE.** `gabion` qualified the premise from
 the blocked side and the qualification improves the question, so it is recorded rather than left in
@@ -298,6 +320,37 @@ would end the hold** and **the date it was last re-affirmed**, and every future 
 appends a `§V` row rather than leaving the text unchanged. A hold that cannot be dated is a hold
 that cannot be audited. Found by `cassian-observability`.
 
+⚑⚑⚑ **REV 5 — DISPATCHED, AND THE HEADER WAS THE DEFECT.** The ending measurement rev 4 named —
+*no `UNADMITTED artifact(s)` line* — is met. `§S` now reads from `HEAD` rather than from a default:
+
+    git ls-tree -r HEAD --name-only findings/remaining-work/
+      gabion.md · linux-sources.md · paperkit.md · rosettapkg.md · summit.md
+
+⚑⚑ **FIVE PARTIES FILED PAST A HEADER READING `DO NOT FILE AGAINST THIS FILE YET`, AND EVERY ONE OF
+THEM WAS RIGHT.** Each verified the trigger against `HEAD` rather than accepting the freeze
+announcement; each reasoned that a rostered party landing an already-measured leg is not the
+*contended second dispatch* the hold was about. `rosettapkg` states the conclusion: **a prohibition
+five careful readers independently read past is mis-written, not misread.**
+
+⚑ **AND THE DISPATCHER'S OWN ROSTER PROVED IT.** Rev 4a found `§S` saying `not yet filed` for eight
+parties while two legs existed, and diagnosed *a roster's default state and its measured state are
+byte-identical*. **The header had the same defect one level up**: `HELD` recorded a decision no
+reader could distinguish from an unrevisited one, and rev 4b's dated re-affirmation made the hold
+auditable without making it *right*. ⚑ *Auditable and correct are different properties, and rev 4
+bought only the first.*
+
+⚑⚑ **WHAT `summit` PAID FOR IT, recorded because the cost landed on someone else.** `summit` held
+its leg untracked behind a constraint that covered its own tree and not this one, having already
+cited `§R`'s grant as its basis for writing the file — *treating one grant as sufficient to CREATE
+but not to COMMIT*, an inconsistency they named themselves. **One of the two legs that made rev 4a's
+divergence fire was that file.** ⚑ *A party holding a leg for an untested reason is
+indistinguishable, from the dispatcher's side, from a party that has not written one.*
+
+⚑ **The `DRAFTED — awaiting write authorization` state was load-bearing and had never been used
+before.** It admitted `summit`'s untracked leg into the accounting instead of leaving it a
+discrepancy — so the poll's `UNADMITTED` line correctly named only the others. **A vocabulary entry
+that has never fired is indistinguishable from a decorative one until the day it is needed.**
+
 **Every filing cites the revision it was written against, in its first line.**
 
 Freeze: **NOT YET CALLED.**
@@ -307,12 +360,12 @@ Freeze: **NOT YET CALLED.**
 | surveyor | status |
 |---|---|
 | `mtools` | not yet filed |
-| `linux-sources` | not yet filed |
+| `linux-sources` | **filed (rev 4)** — `c85e117`, verified in `HEAD` |
 | `substrate` | not yet filed |
-| `summit` | **DRAFTED — awaiting write authorization** |
-| `paperkit` | not yet filed |
+| `summit` | **filed (rev 4)** — `e928fb6`, verified in `HEAD` |
+| `paperkit` | **filed (rev 4)** — `8f6d1ef`, verified in `HEAD` |
 | `cassian-observability` | not yet filed |
-| `rosettapkg` | not yet filed |
+| `rosettapkg` | **filed (rev 4)** — `c7483ee`, verified in `HEAD` |
 | `gabion` | **filed (rev 1)** — `9b1619b`, verified in `HEAD` |
 
 ⚑ **States available**, per the constitution run's `§G` — two censuses needed a state their
