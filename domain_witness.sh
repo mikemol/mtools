@@ -104,8 +104,16 @@ case "$probe_kind" in
     ratchet) printf '\n\ndef _transient_domain_probe():\n    """Probe."""\n    return 1\n' >> "$victim" ;;
     *)       say "arm 2 FAILED: unknown probe kind $probe_kind"; exit 1 ;;
 esac
-out="$(bazel test "$target" 2>&1)"
-if printf '%s' "$out" | grep -q "FAILED"; then
+# ⚑⚑⚑ THE EXIT STATUS IS THE VERDICT, NOT A STRING IN THE TRANSCRIPT. The first cut matched
+# `FAILED` in bazel's output, which is a SUBSTRING OF A STATUS LINE and not the status: it appears
+# in a cached summary, in an unrelated target's row when the arm runs inside a suite, and nowhere
+# at all when a target fails to build rather than to test. Measured: this arm reported FAILED
+# inside the gate — where `bazel test //...` had just run and one unrelated target was red — while
+# passing in isolation seconds later. An ORDER-DEPENDENT arm is worse than a failing one, because
+# it is green whenever anyone checks it directly.
+# ⚑ THAT IS THIS REPOSITORY'S OWN RULE 25 IN THE WITNESS BUILT TO ENFORCE ITS FAMILY: a string
+# match answers "does this word appear", and the question was "did this target refuse".
+if ! bazel test "$target" >/dev/null 2>&1; then
     say "arm 2 VERDICT: a $probe_kind defect in $victim fails $target"
 else
     # ⚑ THE TWO EXPLANATIONS ARE NAMED, because this arm cannot tell them apart and a message that

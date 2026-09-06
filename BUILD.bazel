@@ -22,26 +22,21 @@ sh_test(
     # itself is the shape this repository keeps finding: `shellcheck_test.sh` is shell, it runs
     # in the gate, and excluding it would leave exactly one unchecked file — the one nobody
     # would think to look at, for the same reason nobody checked the hook before this target.
-    args = [
-        "$(location @shellcheck//:bin)",
-        "$(location //:.githooks/pre-commit)",
-        "$(location //:shellcheck_test.sh)",
-        "$(location //:setup.sh)",
-        "$(location //:ruff_check.sh)",
-        "$(location //:ratchet_check.sh)",
-        "$(location //:mypy_check.sh)",
-        "$(location //:blockers.sh)",
+    # ⚑⚑⚑ GLOBBED, NOT LISTED, AND THE HAND LIST HAD ALREADY DRIFTED. It named 7 files while the
+    # repo held more: `domain_witness.sh` and `collect_check.sh` were written after it and were
+    # never added, and `.githooks/commit-msg` arrived with this change. Measured now: 11 shell
+    # files against a list of 7, so the gate that checks every shell file was checking 7/11. That is
+    # this repository's own denylist defect (a population enumerated once, correct on the day it
+    # was written, wrong by growth) in the target whose purpose is total coverage.
+    #
+    # ⚑⚑ A GLOB CANNOT DRIFT: a new `.sh` at the root is covered the moment it exists, with no
+    # edit here and nothing to remember. The hooks are named explicitly because they carry no
+    # suffix — `.githooks/*` is the whole directory, so a hook added later is covered too.
+    args = ["$(location @shellcheck//:bin)"] + [
+        "$(location //:%s)" % f
+        for f in glob(["*.sh", ".githooks/*"], allow_empty = False)
     ],
-    data = [
-        "//:.githooks/pre-commit",
-        "//:blockers.sh",
-        "//:mypy_check.sh",
-        "//:ratchet_check.sh",
-        "//:ruff_check.sh",
-        "//:setup.sh",
-        "//:shellcheck_test.sh",
-        "@shellcheck//:bin",
-    ],
+    data = glob(["*.sh", ".githooks/*"], allow_empty = False) + ["@shellcheck//:bin"],
     size = "small",
 )
 

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑⚑⚑ THE FIRST GATE IN THIS REPOSITORY THAT CHECKS THE COMMIT MESSAGE AGAINST THE TREE. Every
+# other gate asks whether the CODE is correct; this asks whether the MESSAGE is true. Both are
+# claims, only one was checked, and the unchecked one is the durable artifact — a reader six months
+# out reads the message, not the diff.
+#
+# ⚑⚑ IT EXISTS BECAUSE A COMMIT ASSERTED A RULE THAT WAS NEVER WRITTEN. "mdstruct: add a
+# column-anchored row filter; Rule 23" landed with its code, its tests and its warrants; the rule
+# itself did not. It survived two hours and was found by eye, from the heading sequence stepping
+# 22 -> 24. ⚑ A citation to a rule that does not exist reads exactly like a citation to one that
+# does: nothing is malformed, the document exists, and only following the pointer separates them.
+#
+# ⚑ COMMIT-MSG, NOT PRE-COMMIT, because the message is not available at pre-commit time — and this
+# is the one property whose subject IS the message.
+set -uo pipefail
+
+repo="$(git rev-parse --show-toplevel)"
+say() { printf 'commit-msg: %s\n' "$*" >&2; }
+
+if [ ! -x "$repo/rule_citations.sh" ]; then
+    say "rule_citations.sh is missing or not executable — cannot verify citations, commit refused"
+    say "  a gate that skips when its checker is absent is armed while refusing nothing"
+    exit 1
+fi
+
+"$repo/rule_citations.sh" "$1" || {
+    say "REFUSED"
+    exit 1
+}

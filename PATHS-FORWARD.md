@@ -215,3 +215,51 @@ what "derive it FRESH" is for, and it took actually running a command against pe
 
 **Standing action, not a code change:** peers do not know this inbox exists. Telling them is a
 message, and it is the only thing that converts a working channel into a used one.
+
+
+---
+
+# Tick 8 — 2026-09-06
+
+**Measured:** freeze **NOT CALLED** (`roster: 6 of 6, 1 non-terminal`), no blocker cleared, all six
+parties live, one inbox message already consumed. ⚑ The freeze poll now runs from `blockers.sh`
+rather than being reconstructed — the first tick where I read the answer instead of deriving it.
+
+**Consumed: Ⓠ** — the cron's own *"prefer runnable over recorded"* instruction, applied literally,
+and it found a defect in the record on the first look.
+
+## What the instruction actually surfaced
+
+Counting: **26 rule headings, 9 executable lines in the gate.** But the useful finding was not the
+ratio — it was that the heading sequence **stepped 22 → 24**. Rule 23 was cited by a commit and
+never written.
+
+⚑⚑ **Every gate here checks whether the CODE is correct. Nothing checked whether the MESSAGE was
+true** — and the message is the durable artifact. A reader six months out reads the commit, not the
+diff. Now gated (`rule_citations.sh` + a `commit-msg` hook), and armed against **the real historical
+commit**: it refuses at the moment the defect was made and passes now.
+
+**Second-order:** wiring that hook exposed the shellcheck target naming **7 files by hand against a
+repo holding 11**. `domain_witness.sh` and `collect_check.sh` had been written and never added. That
+is Rule 15's denylist defect **inside the target whose purpose is total coverage** — globbed, and
+F-armed with a deliberately broken `.sh` at the root.
+
+⚑ **Three ticks running, the item has been an instrument rather than a feature**, and each was found
+by using the previous one. `blockers.sh` (tick 1) → the domain witness (2–5) → the freeze poll
+(7) → the citation gate (8). **An unarmed claim outranks an unpaid debt** still holds, and the
+supply of unarmed claims is not running out because each new instrument makes a new class visible.
+
+## Re-derived
+
+| | step | unblocked? | why here |
+|---|---|---|---|
+| **Ⓝ₄** | 62-key preview debt paydown | YES | the only remaining item that is *work* rather than instrumentation |
+| **Ⓦ** | A witness that a rule's *claim* is still true, not just cited | YES | the citation gate proves a rule EXISTS; nothing checks it still holds |
+| **Ⓒ¹** | Intake the closed ratchet subgraph | PARTIAL | operator ruling exists; substrate confirms with its own operator |
+| **Ⓔ Ⓓ Ⓕ Ⓢ¹** | ledger / components / projection / conversion | NO | unchanged |
+
+⚑ **Ⓦ is the honest successor to this tick and I am naming it rather than doing it**, because it is
+the same shape one layer up: a rule can be present, cited, and *stale*. Rule 12's counter semantics,
+Rule 3's platform behaviour and Rule 6's mypy claim are all measurements of a system that changes
+under them. **A citation gate proves the pointer resolves; it says nothing about whether the target
+is still true.** That is a real instrument and a large one.

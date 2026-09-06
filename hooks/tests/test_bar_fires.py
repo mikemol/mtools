@@ -339,13 +339,32 @@ def test_the_gates_own_shell_is_checked() -> None:
     nobody checked the hook. Both are asserted here rather than assumed from the BUILD file
     being present, because a `data` entry that is not also an `args` entry stages a file the
     checker never opens.
+
+    ⚑⚑⚑ THE ASSERTION IS OVER THE FILESYSTEM, NOT OVER THE BUILD FILE'S TEXT, AND THE FIRST CUT
+    WAS OVER THE TEXT. It held a seven-name list and grepped for `$(location //:<name>)` — so it
+    verified the BUILD file's LISTING STYLE, not its coverage, and it broke the moment that list
+    became a `glob()` while coverage went UP from 7 files to 11. ⚑⚑ Worse, it carried the same
+    hand-written population as the thing it guarded: two copies of one list, drifting together,
+    and the test could never have reported the two files (`domain_witness.sh`, `collect_check.sh`)
+    that were missing from BOTH. A guard that enumerates the same way as its subject cannot
+    detect an omission they share.
     """
     build = (_DIST.parent / "BUILD.bazel").read_text(encoding="utf-8")
-    for shell in (".githooks/pre-commit", "shellcheck_test.sh", "setup.sh",
-                  "ruff_check.sh", "ratchet_check.sh",
-                  "mypy_check.sh", "blockers.sh"):
-        assert f'"$(location //:{shell})"' in build, f"{shell} is not passed to the checker"
-        assert f'"//:{shell}"' in build, f"{shell} is not staged for the checker"
+    # ⚑⚑⚑ NO FILESYSTEM ENUMERATION HERE, AND THE SANDBOX IS WHY. A cut of this test globbed
+    # `*.sh` and `.githooks/*` off disk to build the expected population: it PASSED locally and
+    # FAILED hermetically with `FileNotFoundError: .../.githooks`, because inside the sandbox only
+    # DECLARED inputs exist. That is the escape this target's own BUILD comment warns about —
+    # these witnesses once "passed only by resolving OUT of the sandbox into the live tree" — and
+    # declaring `.githooks` as data to make the read work would have re-opened the hole rather
+    # than closed it.
+    #
+    # ⚑⚑ THE GLOB IS THE COVERAGE CLAIM, SO THE GLOB IS WHAT GETS ASSERTED. `glob()` covers every
+    # matching file by construction and cannot drift as files are added — which the seven-name
+    # list it replaced could and did, missing two. Asserting the mechanism is strictly stronger
+    # than re-listing its outputs, and it needs no input the sandbox has not staged.
+    assert 'glob(["*.sh", ".githooks/*"]' in build, (
+        "the shellcheck target must glob its population, not enumerate it")
+    assert '"@shellcheck//:bin"' in build, "the checker binary must be staged"
 
 
 def test_no_witness_reads_a_developer_venv() -> None:

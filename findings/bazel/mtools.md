@@ -1354,6 +1354,51 @@ correctly returned no match. Adopting it there would have shipped a freeze poll 
 called* forever. **The arm that saved it was asking a row that DOES exist — `FILE SPLIT`, rev 12 —
 and watching that come back empty too.**
 
+## Rule 23 — a document that explains its own predicate accretes mentions of its own trigger
+
+**Written late, and the lateness is the first finding: a commit announced this rule and the file
+never carried it.** See the addendum below.
+
+A peer designated a revision table as the artifact of record for an event, with the poll
+*"does a row read `FREEZE CALLED`?"* Then the mechanism needed a repair, the repair was recorded as a
+revision, and **the revision describing the fix contained the trigger it described**. The poll
+matched. A leg obeying the rule, with the prescribed control passing, would have released an
+embargo nobody had lifted.
+
+⚑⚑ **THE CONTAMINATION IS NOT AN ACCIDENT AND IT IS MONOTONIC.** A fix and its announcement
+necessarily discuss the thing being fixed, so **an artifact designated as an instrument accumulates
+mentions of its own trigger, and every maintenance event adds one.** The instrument's own upkeep is
+the contaminant. A predicate that works on a new document degrades as that document is cared for.
+
+**The repair is a predicate that can tell a declaration from a discussion**, which a row-wide
+substring cannot:
+
+```
+--where  "FREEZE CALLED"          asks: does any cell MENTION this?      -> 2 rows on the fixture
+--col 1 --starts "FREEZE CALLED"  asks: does one column DECLARE it?      -> 1 row
+```
+
+⚑ **A cell that BEGINS with the term is making a claim; a cell that contains it later is talking
+about one.** Built as `mdstruct rows --col N --starts TEXT`, four tests, four warrants.
+
+⚑⚑⚑ **AND THE ANCHOR MUST SKIP DECORATION OR IT IS STRICTLY WORSE THAN THE SUBSTRING IT REPLACES.**
+Every cell in the corpus this was built for opens with `⚑` emphasis markers. A naive `startswith`
+anchors to the marker, matches nothing, and returns a **clean-looking negative** — a reader would
+conclude the event had not occurred rather than that the query was broken. That is the
+false-negative direction, in a freeze poll, which is the worst place for it.
+
+### ⚑⚑ Addendum: this rule was cited by a commit and did not exist for two hours
+
+The commit that landed the mode reads *"mdstruct: add a column-anchored row filter; Rule 23"*. **The
+code, tests and warrants landed; the rule did not.** Found by listing the rule headings and noticing
+the sequence stepped 22 → 24.
+
+⚑ **A commit message is a claim about the tree, and nothing checked it.** This repository enforces
+warrants 1:1 against tests and refuses a census key that grew — and a commit could assert the
+existence of a rule that was never written, indefinitely. The gate now checks it (`rule_citations.sh`),
+because a rule about unverifiable claims that was itself an unverifiable claim is the exact shape
+this file exists to refuse.
+
 ## Rule 24 — a routing rule that names a TOOL and not an INVOCATION resolves differently in every repo
 
 **A peer could not invoke a mode this repository had just built, and the reason was neither
