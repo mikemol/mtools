@@ -115,6 +115,72 @@ rebuild returned numpy 2.5.3 where 2.5.2 had been. **A green by subtraction, and
 rebuild.** So "declare everything and re-sync" is not a safe migration step, and a census that only
 asks *is it declared* will score that outcome as an improvement.
 
+## ⚑ REVISION ANCHOR (required by `§W` rev 13) — WHAT THIS LEG WAS SELECTED AGAINST
+
+`§W` rev 13 rules that **a leg is answerable to the revision it CITES**, owes no amendment, and must be
+read by the apex against that revision rather than the latest. `rosettapkg` cites rev 6 and resolves
+cleanly. **This leg cited nothing** — it said *"against no run file, refusable"*, which was accurate
+when written and gives the rule nothing to bind to.
+
+**The anchor, stated so the apex is not guessing:** this leg's answers were selected against **the
+operator's two quoted statements plus the 7-question `§Q` at `eb42b7a`**, before revs 5–13. The three
+later questions (`§Q`-3 work discovery, `§Q`-4 specificity, `§Q`-5 cross-repo edges) are answered in
+`GBB-06`, added after the growth and stamped there.
+
+⚑⚑ **And a pre-filed leg's answers were selected BEFORE the questions were**, so any close fit between
+them is a fact about the reconciliation rather than about gabion. That is the disclosure the anchor
+exists to enable, and it is why recording *which* target was in view matters more here than for a leg
+written to a fixed brief.
+
+## Disclosures (brief §9) — ⚑ MY INPUTS DIFFERED FROM EVERY PEER'S, IN THREE WAYS
+
+Added after the formal dispatch arrived; this leg was written before the brief existed and §9 requires
+these in the first paragraph, so they go here at the top rather than being implied by GBB-00.
+
+1. ⚑ **I PRE-FILED AGAINST NO RUN FILE.** This leg existed before `CENSUS-build-hermeticity.md` did.
+   So it was not written to answer `§Q` — it was written to the operator's stated subject, and the
+   questions arrived afterwards and grew from 7 to 9 while it sat here. **Every other leg was written
+   to a fixed target; mine was written to a moving one and then reconciled.** That is not a claim of
+   virtue: it means my answers were *selected* before the questions were, and a reader should treat
+   any close fit between the two as a fact about the reconciliation rather than about gabion.
+2. ⚑⚑ **I RECEIVED THE DISPATCH LAST, AFTER EXCHANGING FINDINGS WITH FOUR PARTIES.** `§Q`'s
+   independence rule (*do not read peers' filings until the freeze*) I have honoured for **filings** —
+   I have read no peer leg. But I have exchanged measurements directly with substrate, linux-sources,
+   mtools and summit all afternoon, and **two of this leg's findings came from those exchanges**
+   (`GBB-02b`'s retraction from the `§Q`-2 rule; the wheel-install discriminator from linux-sources).
+   **My independence for q1/q6/q7 is compromised and I am not claiming it.** A confirmation from me on
+   those is correlated, not decorrelated.
+3. ⚑⚑⚑ **I INFLUENCED THE BRIEF I AM ANSWERING.** `§V` rev 2 adopted this leg's path and prefix and
+   renamed the census on its reasoning; q3's *DERIVED or AUTHORED* phrasing, the q5b invoked-executables
+   widening and q6 were all proposed from here. **So a fit between my answers and the questions is
+   partly a fit between my answers and my own suggestions**, which is the strongest disclosure I can
+   make and the one most likely to matter to an apex.
+
+⚑ **Nothing I was told appears to have been withheld from peers**, so far as I can tell — the
+operator's two statements reached me mid-turn and I relayed both verbatim to substrate, linux-sources,
+mtools and summit within the hour.
+
+## Coverage, stated as a population (brief §10)
+
+**What I read:** `pyproject.toml` (4 sections, 0 `[tool.*]`), `requirements.lock` (26 pinned entries,
+1486 bytes, 0 hashes), `mise.toml` (1 pin), `Makefile`, `.github/workflows/ci.yml` (50 named steps),
+`.claude/settings.json` (2 registered hooks), `.claude/skills/struct-tools/SKILL.md`,
+`docs/workstreams/*.md` (3 files), `scripts/hook_*` (3 symlinks + 1 probe payload), and a **live
+process** for the interpreter measurement. Peer trees read for verification only, never for filings:
+`linux-sources/linux_sources/hook_*.py`, its `site-packages/substrate/`, `mtools/hooks/.venv/bin/`,
+`mtools/MODULE.bazel`, `substrate/scratch/mdstruct.py:2451`.
+
+**Unreadable / unparseable:** none encountered. **Zero items counted-but-unread.**
+
+**What I did NOT search, and why:** `.pre-commit-config.yaml`, tox/nox configs, per-directory
+configs, and any ruff/mypy invocation nested inside a Python module rather than a shell line — I
+searched shell lines and TOML section headers only. Also **not** searched: whether gabion's 26 locked
+entries are themselves hash-pinned upstream. All UNAVAILABLE to this leg, **not established absent.**
+
+⚑ **Positive control for every absence claim here:** the same reader
+(`grep -n '^\[tool\.\(ruff\|mypy\)'`) returns **4 hits** against `substrate/pyproject.toml`. So
+gabion's zero is a measurement rather than a silent reader.
+
 ## GBB-00 ⚑⚑⚑ PROVENANCE CORRECTION — I ATTRIBUTED THIS CENSUS TO THE WRONG DISPATCHER
 
 **The dispatcher is `linux-sources`** (`CENSUS-build-hermeticity.md:11` — *"Written against: rev 1,

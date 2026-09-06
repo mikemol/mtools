@@ -358,6 +358,48 @@ above** — pandoc folds the raw-HTML block and the heading into one element. Th
 are the five with no anchor. That is gabion's anchor convention across every governed doc, because
 `doc_requires` pins resolve to those anchors, so it lands hardest on the docs docflow cares about most.
 
+⚑⚑⚑⚑ **RESOLVED — AND IT IS NOT A TOOL DEFECT AT ALL. THE VARIABLE IS THE BLANK LINE, NOT THE
+ANCHOR, AND THE FIX IS GABION'S.** substrate-10 built a fixture to *discriminate* rather than to
+demonstrate, and I reproduced it:
+
+    <a id="tight"></a>
+    # Tight Head          -> SWALLOWED
+
+    <a id="loose"></a>
+                          <- blank line
+    # Loose Head          -> REPORTED   (mdstruct --headers: "6-9  # Loose Head")
+
+`--roundtrip` shows why: pandoc emits the tight case as escaped literal text inside a paragraph —
+``` `<a id="anchored">`{=html}`</a>`{=html} \# Anchored Head ``` — so **there is no `Header` node at
+all.** The heading is a **lazy continuation** of the anchor paragraph, which is standard markdown.
+`--headers` reports document STRUCTURE and is correct; `--budget` reports SOURCE LINES and is correct.
+**Where they disagree, the input is ambiguous.**
+
+Counted in gabion's two failing docs:
+
+    tight anchors (no blank line): 11        loose: 0
+
+**11 is exactly the 5 + 6 headings missing.** The mechanism is fully accounted for.
+
+⚑ **So my anchor correlation was closer to right than anything else offered, and still wrong in its
+cause** — it named the association and missed the variable. substrate's credit line is the one I am
+adopting: *it named the association; what it lacked was the blank line as the variable.* Three
+readings of this line today were mine or adopted by me, and the one that held came from a fixture
+built to discriminate, where every earlier probe only demonstrated the failure again.
+
+⚑⚑ **`.md` STAYS UNCLAIMED, BUT THE REASON HAS CHANGED COMPLETELY.** It is no longer *a reader is
+broken*. It is **gabion's own convention writes anchors tight, and tight anchors are not headings.**
+The fix is a one-line-per-anchor edit in gabion's docs — pins still resolve, the anchor is unchanged
+— and it is not applied because editing 11 governed docs is a correction unit with its own
+validation, not a census side effect. **The honest routing-table entry once it is claimed:** *`.md` is
+claimed, and `--headers` under-reports headings written tight against an anchor.* A stated bound
+rather than an unclaimed row.
+
+⚑⚑⚑ **AND THE WHOLE THREE-WEEK HOLD WAS ON A DEFECT THAT WAS NEVER SUBSTRATE'S.** August's
+frontmatter crash was real and substrate fixed it. What kept the row unclaimed after that was **my own
+markdown**, and I attributed it to a borrowed tool for the second half of today. *A defect measured in
+a borrowed copy is not a defect in the origin* — substrate's own adopter article, and I inverted it.
+
 ⚑ **A DISCRIMINATOR I ADOPTED AND HAVE NOW WITHDRAWN.** substrate-10 offered *"two modes of one tool
 disagree, so one code path already handles anchored headings"* — `--headers` 25 vs `--budget` 30 on
 `docs/planning_substrate.md` — and I replaced my anchor correlation with it. **substrate then read the
