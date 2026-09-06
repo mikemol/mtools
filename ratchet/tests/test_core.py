@@ -250,3 +250,41 @@ def test_fan_out_refusal_is_unconditional_not_a_mode(tmp_path: Path) -> None:
     path = _base(tmp_path, {"a.py:rule1"})
     assert ratchet({"b.py:rule1", "z.py:rule1"}, path, write=True)[0] == 1
     assert "moved" not in " ".join(ratchet({"b.py:rule1", "z.py:rule1"}, path, write=False)[1])
+
+
+def test_an_ambiguous_refusal_is_marked_suspect() -> None:
+    """⚑⚑ The third outcome: refused, AND the evidence could not distinguish it from a move.
+
+    A fan-out means at most one of the arrivals is the relocation and nothing in the census
+    says which. Both are refused — the verdict is unchanged — but an operator reading the
+    transcript needs "I refused this and could not have told you it was real" apart from
+    "this is new debt".
+    """
+    assert partition({"b.py:rule1", "z.py:rule1"}, {"a.py:rule1"}).suspect == frozenset(
+        {"b.py:rule1", "z.py:rule1"})
+
+
+def test_an_unambiguous_refusal_is_not_suspect() -> None:
+    """⚑⚑⚑ The arm that gives the mark its meaning. A state everything carries says nothing.
+
+    `q/z.py` shares a rule with the retired `a.py` and is refused — but it was never
+    path-plausible, so the census CAN tell it is new debt. Marking it too would make
+    `suspect` a synonym for `added`, which is the failure mode of every added state that
+    was not F-armed.
+    """
+    assert partition({"q/z.py:rule1"}, {"a.py:rule1"}).suspect == frozenset()
+
+
+def test_suspect_never_softens_the_verdict(tmp_path: Path) -> None:
+    """⚑⚑⚑ `suspect` says WHY a key was refused, never WHETHER.
+
+    The peer implementation carries this state behind a `strict=` flag defaulting OFF, so its
+    fan-out classifies as churn unless asked — measured by running its own classifier. Here
+    the refusal is unconditional and the state is pure vocabulary, so it cannot become a route
+    by which something passes. This test is the guard on that.
+    """
+    path = _base(tmp_path, {"a.py:rule1"})
+    code, lines = ratchet({"b.py:rule1", "z.py:rule1"}, path, write=True)
+    assert code == 1
+    assert any("AMBIGUOUS" in line for line in lines)
+    assert read_baseline(path)[1] == frozenset({"a.py:rule1"})

@@ -97,10 +97,16 @@ class Diff:
     added: frozenset[str]
     paid: frozenset[str]
     moved: frozenset[tuple[str, str]] = frozenset()
+    suspect: frozenset[str] = frozenset()
 
     @property
     def grew(self) -> bool:
-        """Report whether any key is present now and absent from the baseline."""
+        """Report whether any key is present now and absent from the baseline.
+
+        ⚑ SUSPECT KEYS ARE INCLUDED IN `added` AND THEREFORE COUNT AS GROWTH. `suspect` says
+        WHY a key was refused, never WHETHER — a state that softened the verdict would be the
+        `strict=`-defaulting-off defect wearing a different name.
+        """
         return bool(self.added)
 
 
@@ -169,9 +175,35 @@ def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
         and _plausible_move(paid_keys[0].rpartition(":")[0], added_keys[0].rpartition(":")[0]))
     relocated_from = {src for src, _dst in moved}
     relocated_to = {dst for _src, dst in moved}
+
+    # ⚑⚑⚑ SUSPECT IS THE THIRD OUTCOME ARRIVING AT THE RATCHET. This repository's standing rule
+    # is that a comparison which CANNOT BE MADE reports INVALID rather than FALSE — and the
+    # ratchet was the one place holding that rule while violating it. A refusal because a key is
+    # plainly new and a refusal because the evidence was AMBIGUOUS are different facts, and a
+    # two-valued verdict reports them identically.
+    #
+    # ⚑⚑ A KEY IS SUSPECT WHEN IT WAS PATH-PLAUSIBLE AGAINST SOME RETIREMENT AND LOST ONLY ON
+    # AMBIGUITY — the 1-old-to-N-new fan-out, where at most one of the N is the move and nothing
+    # in the census says which. The operator reading a refusal needs exactly this: "I refused
+    # this and I could not have told you it was real" is a different instruction from "this is
+    # new debt".
+    #
+    # ⚑ IT NEVER CHANGES THE VERDICT, AND THAT IS THE WHOLE DESIGN. The peer implementation this
+    # was compared against carries the same state behind a `strict=` flag defaulting OFF, so its
+    # fan-out is CHURN unless asked — measured. Here the refusal is unconditional and `suspect`
+    # is pure vocabulary, which means it cannot become a way to let something through.
+    suspect = frozenset(
+        key
+        for ident, added_keys in added_by_identity.items()
+        if len(added_keys) > 1
+        for key in added_keys
+        if any(_plausible_move(old.rpartition(":")[0], key.rpartition(":")[0])
+               for old in paid_by_identity.get(ident, [])))
+
     return Diff(added=frozenset(added - relocated_to),
                 paid=frozenset(paid - relocated_from),
-                moved=moved)
+                moved=moved,
+                suspect=suspect)
 
 
 def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
@@ -234,7 +266,14 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool) -> tuple[int, li
         lines.extend(f"  ~ {src} -> {dst}" for src, dst in sorted(diff.moved))
     if diff.added:
         lines.append(f"{len(diff.added)} new key(s) REFUSED:")
-        lines.extend(f"  + {key}" for key in sorted(diff.added))
+        # ⚑ THE MARK IS ON THE KEY, NOT IN A SEPARATE SECTION. A second list would let a reader
+        # scan the refusals and never reach the ambiguity — the operator seeing "+ b.py:rule1"
+        # needs to know AT THAT LINE that this one could not be told apart from a relocation.
+        lines.extend(f"  {'?' if key in diff.suspect else '+'} {key}"
+                     for key in sorted(diff.added))
+    if diff.suspect:
+        lines.append(f"  ? = {len(diff.suspect)} of these is/are AMBIGUOUS: path-plausible "
+                     f"against a retired key, refused because a fan-out hides which")
     if diff.paid:
         verb = "LOWERED" if write and not diff.added else "would lower"
         lines.append(f"{len(diff.paid)} key(s) paid down — baseline {verb}:")

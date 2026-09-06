@@ -786,3 +786,36 @@ that should move it and a run that should not.
 because it never counted that. The question it DOES answer — is this repository re-executing work
 the cache already holds — is worth more, and is available to any party whose actions reach the
 server at all.
+
+### ⚑⚑ The premise this rule rests on, checked only because the operator supplied it
+
+**Two BuildBuddy pods exist and the Service selector matches BOTH.** Reported by the operator via
+a peer's cluster read; verified here:
+
+```
+buildbuddy-66cfb69d88-9rdff             0/1  ContainerStatusUnknown   app=buildbuddy   podIP <none>
+buildbuddy-enterprise-58c588548b-cfsgx  1/1  Running                  app=buildbuddy   podIP 10.42.0.15
+svc/buildbuddy selector: {"app":"buildbuddy"}       <- matches both
+endpoints:               10.42.0.15:8080,:9464,:1985 <- exactly one
+```
+
+**The rule survives**: one endpoint, so the port I built against and the port I scraped are the
+same process. But it survives **by a mechanism I had not checked** — Kubernetes excludes
+not-Ready pods from endpoints, and the dead pod has no IP to route to. The *selector* is genuinely
+ambiguous; only readiness disambiguates it.
+
+⚑⚑⚑ **HAD THE DEAD POD BEEN MERELY UNHEALTHY RATHER THAN DEAD, IT WOULD HAVE BEEN IN THE ENDPOINT
+SET, AND `curl` WOULD HAVE LOAD-BALANCED BETWEEN TWO SERVERS.** Every reading in this rule would
+then be a sample from an unknown one of two populations — and the counters would still have been
+non-zero, still risen, and still looked exactly like the measurement above. **The control arm does
+not protect against this**: a no-op build moves neither pod's counters, so the control passes
+identically in both worlds.
+
+⚑ **So this is a premise the arms structurally cannot reach**, and it was supplied by the operator
+rather than found by the instrument. The general form, and it is the sharpest version of this
+file's recurring subject: *an arm discriminates between hypotheses about the thing it measures; it
+is silent about WHICH THING it measured.* `--config`-never-entered, the `tail` exit status, the
+`:31080` 404 and this are one class — **the reading was fine, the referent was unverified**.
+
+**Recorded as a standing check**: before trusting any metric delta from this cluster, confirm the
+endpoint set has exactly one member. It is one command and it is not implied by any green.
