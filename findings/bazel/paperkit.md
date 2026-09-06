@@ -426,6 +426,59 @@ telemetry path that is explicitly best-effort. `PAPERKIT_BES` gates participatio
 is the available mitigation — but the correct fix is a **bounded** shutdown
 (`--bes_timeout`), since a best-effort sideline must not be able to hold a verdict hostage.
 
+## 5h. ⚑⚑ THE FOUR REDS DIAGNOSED — and the relocation hypothesis is REFUTED
+
+§5f recorded four failures and named the library relocation as *plausible, not established*. Chased
+to a discriminator; **the relocation is not the cause.**
+
+**Two records exist per claim, and they disagree:**
+
+```
+                     __calc.calc.json    __dcalc.sens.json
+concept-shareable    baseline=True       baseline=False     -> grade "broken"
+concept-views        baseline=True       baseline=False     -> grade "broken"
+adequacy-gap         baseline=True       baseline=True      -> grade "behavioral"   (passes)
+```
+
+⚑ `_grade_from_sens` emits `broken` on `not baseline`, and the grade cell reads the **dcalc**. So
+the **file-level** sweep establishes a baseline for all three while the **definition-level** sweep
+fails for exactly the two that grade broken. *One claim, two instruments, opposite answers.*
+
+**What the relocation hypothesis predicted and what refutes it:**
+
+- all three claims use the **same** verb (`check = {claim:<id>}`) and the same root-relative
+  command `sh ./run-witness {target}` — so a path-resolution failure would break all three, not two;
+- run directly in the checkout, **both** a failing and a passing claim return `rc=0`;
+- `concept-shareable.verdict.json` says **`verdict: pass`** — ⚑ **the check itself passes.** The
+  defect is in *grading*, not in the check.
+
+**So `broken` here is not "the check could not run" in the ordinary sense** — it is the
+definition-mutation sandbox failing to establish a baseline for two specific claims whose checks
+pass everywhere else.
+
+⚑ **And the engine already owns the distinction the artifact then discards.** `grade.py`'s
+`Ζ·broken·offaxis` branch emits `baseline: "unreachable"` vs `"refuted"` plus a `why`:
+
+> **CITATION:** *"passing `reachable=False` says WHICH, so the record stops asserting 'repo is not
+> green' about a repo whose check merely could not run."*
+
+But the published grade artifact carries **two fields**:
+
+```
+{"claim": "concept-shareable", "grade": "broken"}      <- broken
+{"claim": "adequacy-gap", "grade": "behavioral"}       <- healthy, same shape
+```
+
+**`baseline` and `why` are computed and dropped at the projection.** ⚑⚑ *A distinction the engine
+went to trouble to make is unavailable to the reader of the record it makes it for* — which is why
+§5f could not tell cannot-run from refuted, and why the relocation hypothesis survived a tick longer
+than the evidence supported. New symbol `Ζ·grade·why`: project `baseline` and `why` into the grade
+record, so the discriminator survives to the artifact.
+
+**Frontier, stated rather than inferred:** *why* the definition-level baseline fails for these two
+and not the third is not established. What is established is that it is not the relocation, not the
+verb, not the witness script, and not the check's own verdict.
+
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
 `.githooks/local.env` held:

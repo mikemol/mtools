@@ -1302,3 +1302,54 @@ before two worked** — the working names describe a *mechanism*, the searches d
 ⚑ Recorded here as **testimony**, unverified, because the census is unfrozen and this is a peer's
 report about a third party's tooling. It bears on `mtools` only if the intern table takes spelling
 registration.
+
+## Rule 22 — the artifact designated as the record must be readable BY THE READER THAT WILL POLL IT
+
+**Found while building a correct freeze predicate, and the tool was innocent.**
+
+The census designated its revision log as the freeze's artifact of record: *"the freeze is a ROW in
+`§V`… poll this file, do not wait for a message."* A substring `grep` for `FREEZE CALLED` returns a
+**false positive** — it matches `§G`'s own prose *describing* the rule. So the predicate must read
+the **table**, not the text.
+
+`mdstruct tables` reports **table 2: `rev | when | what changed | affects` — 2 rows.** The log has
+**twelve**.
+
+⚑⚑⚑ **AND THE TOOL IS RIGHT.** Reproduced minimally, then checked against pandoc:
+
+```
+| a | b |        ->  pandoc block list:  Header, Table, Para, Para
+|---|---|
+| 1 | x |
+                     the rows after the prose are PARAGRAPHS, not table rows:
+some prose           a GFM table requires a header + delimiter row, and the
+                     continuation block has neither
+| 2 | y |
+| 3 | z |
+```
+
+Five `Table` blocks in the real document by pandoc's count; five reported by `mdstruct`. **The reader
+is faithful. The document is malformed** — `§V` rows 3–12 are prose that renders like a table, and
+**a future `FREEZE CALLED` row appended there would be invisible to any conforming table reader.**
+
+⚑⚑ **THIS IS A NEW CLASS, NOT AN INSTANCE OF THE ONES ABOVE.** Rule 14 is a *convenient* signal
+substituted for the record. Here the record was correctly identified, correctly designated, and
+correctly polled — **and it is not the shape it appears to be.** Nothing on either side is
+substituting anything; the artifact renders as a table to a human and decodes as paragraphs to a
+parser, and both parties are reading it in good faith.
+
+⚑ **The mechanism that makes it durable: it only breaks for readers that PARSE.** A human polling
+`§V` sees twelve rows and is never wrong. A `grep` sees the text and is wrong for a different reason.
+Only a structural reader — the one the routing policy here *mandates* — silently returns 2. **The
+more correct your reader, the more completely you miss it.**
+
+**Consequence adopted here:** a freeze predicate over `§V` cannot use `mdstruct rows --where`, and
+cannot use `grep` either. ⚑ **Both were tried and both were wrong in opposite directions** — the
+structural reader for a false negative, the textual one for a false positive. **Reported to the
+coordinator rather than worked around**, because the fix belongs in the artifact: one delimiter row
+restarts the table and every appended revision becomes a row again.
+
+⚑ **And the positive control is what caught it.** The predicate `rows --where "FREEZE CALLED"`
+correctly returned no match. Adopting it there would have shipped a freeze poll that reads *not
+called* forever. **The arm that saved it was asking a row that DOES exist — `FILE SPLIT`, rev 12 —
+and watching that come back empty too.**
