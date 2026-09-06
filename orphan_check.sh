@@ -39,6 +39,12 @@ declare -A WAIVED=(
     # every gate: a gate that invoked it would be arming itself, which cannot work from inside a
     # tree whose hooks are not yet installed.
     [setup.sh]="run once per clone by a human; arms core.hooksPath, so no gate can invoke it"
+    # ⚑⚑ DELIBERATELY NOT INVOKED BY ANY GATE, and arming it would be the defect. `preflight.sh`
+    # duplicates the gate's cheap checks so a human can predict the verdict BEFORE paying ~130s
+    # for it — measured cause: three of four consecutive commits refused for a blank-line key that
+    # `ruff check` finds in two seconds. ⚑ Wiring it into the gate would make one finding refuse
+    # twice, and the gate is the authority; this only makes the gate PREDICTABLE.
+    [preflight.sh]="run by a human before staging; predicts the gate cheaply, so a gate invoking it would double every finding"
 )
 
 # ⚑⚑⚑ THE SITES ARE ENUMERATED, NOT LISTED — the fourth hand-written population found in this
