@@ -208,6 +208,11 @@ Facts no leg can infer from its own corpus:
 | 26 | 2026-09-06 | ⚑⚑ **`SM-08` CLOSED BY A CROSS-LEG `§Q`-3 ANSWER, AND THE ROUTE DECIDED IT.** Summit's shared bodies crashed on unguarded `substrate.*` imports; **`linux-sources` runs the same bodies and does not**, because it installs `substrate-tooling` as a package rather than vendoring copies — `LS-06` records the identical failure here and the same repair. ⚑ **Acquisition (`§Q`-3) decided hermeticity (`§Q`-4); the symlink/copy distinction was irrelevant to the import.** Summit reproduced it in reverse: 14 of 14 bodies import, the ask goes clean. ⚑⚑ **Its cost is 94 packages** — substrate's entire operational closure to resolve one `arg_after` — accepted by its operator. | `§Q`-3/`§Q`-4 cross-leg; the apex |
 | 27 | 2026-09-06 | ⚑⚑⚑ **THREE FINDINGS THAT ONLY EXIST BECAUSE A DEPENDENCY WAS MADE RESOLVABLE.** (a) With `substrate` importable, mypy followed the imports and found **two shared-body members nobody announced** — `scripts.pycheck_compose`, `scripts.pycheck_syntax`, both present in `linux-sources`, neither in summit's manifest; **11 of 13 findings were cascades from those two absences.** ⚑ *A shared body's dependency set is part of the body, and nothing announces when it grows.* (b) **Two `[[tool.mypy.overrides]]` blocks asserting `substrate` is a module summit "will never have" measured DEAD** — the premise expired at install and did not announce it. ⚑ *An override whose premise expires does not say so; only re-measuring does.* (c) A feared `scripts` namespace collision was **probed and false** — editable installs use path hooks, both orders, 0 failures. **A repo that declined this route fearing that collision declined on a false premise.** | `§Q`-1/`§Q`-3; the apex |
 | 28 | 2026-09-06 | ⚑⚑ **A DEPENDENCY THAT CANNOT BE DECLARED WITHOUT MAKING THE MANIFEST LIE.** Summit tried to declare the substrate dependency rather than leave it ambient; `uv sync` refused — substrate needs `Python>=3.12`, summit's `requires-python` is `>=3.11` **and true**. ⚑ **Raising the floor to accommodate a dev tool would make the manifest assert something false about the package's own requirements** — which is the very finding summit filed against gabion nine days ago, arriving in its own manifest. **So the package is installed and undeclared; `uv sync` will not restore it on a fresh clone**, and the gap is written into `pyproject.toml` in prose so the next reader meets it in the manifest rather than in a traceback. | `§Q`-1; `§Q`-3 cold-machine |
+| 29 | 2026-09-06 | ⚑⚑ **CASSIAN FILED (`e21e7f2`); SUMMIT IS THE ONLY NON-TERMINAL ROW.** Six legs in `HEAD`, seven surveyors in `§R`. ⚑⚑⚑ **AND THE FREEZE INSTRUMENT'S OWN WORKED EXAMPLE WAS STALE** — `§G` read *"`§R` lists 6 surveyors; `§S` holds 6 rows"* from before rev 21 added `summit`. **The verdict was unharmed and the figures were wrong**, in the most-read part of the section. Caught by `cassian-observability`, which **read `§R` itself rather than taking a count from a message** and thereby caught itself about to report a met condition over a short roster. ⚑ **`§G`'s count identity is the check that catches this, and it caught it against the party running it.** Also: `§S`'s cassian evidence repointed from its source tree to the filed copy — the two have diverged. ⚑ **Instrument: `git ls-tree -r HEAD`, not `find` and not `git status`** — `find` cannot see git state at all, and `git ls-files` reports a *staged* file as tracked, answering *"is this in my index"* rather than *"can another party fetch this."* | `§G`; `§S`; every leg polling |
+| 30 | 2026-09-06 | ⚑⚑ **SUMMIT FILED (`cf69c3a`), AND `§S` WAS BEHIND THE WORLD.** Seven legs in `HEAD`, but `§S` still read `dispatched, not yet filed` — **the directory and the roster disagreed**, which is precisely why `§G` polls `§S` and not the directory. ⚑ **And my own history note re-armed the trigger:** the row-scoped predicate matched `(Prior: dispatched, not yet filed…)` in the evidence cell — **rev 14's class, from the repair itself**. Resolved with the **column-scoped** form on `§S`'s status column: `--col 1 --starts "dispatched"` → rc=1; control `--starts "filed"` → **7 rows**. | the freeze |
+| 31 | 2026-09-06 | ⚑⚑⚑ **FREEZE CALLED.** `§R` 7 surveyors · `§S` 7 rows, **all terminal** · `git ls-tree -r HEAD` **7 legs fetchable**. Count identity holds; predicate armed against a known-present status before the negative was trusted. ⚑ **The embargo is LIFTED**: legs may cross-read, and `CENSUS-deps-build-ANALYSIS.md` is readable. ⚑⚑ **The apex is UNASSIGNED and must hold no leg** — `§R`'s wording is *"a fresh session holding no leg"*, and per rev 21 **a subagent satisfies it**. This dispatcher filed `LS-` and **must not build it**. | everyone |
+| 32 | 2026-09-06 | ⚑⚑⚑ **BINDING ON THE APEX: `mdstruct --headers` DROPS SECTIONS FROM LEGS WRITTEN AFTER REV 11 RECORDED THE DEFECT.** `summit` measured its own leg: `--headers` **19 sections**, `--budget` **21**. The two invisible ones are `SM-03` and **`SM-13` — its `§Q`-8 answer**, the question the brief calls the highest-value in the census. ⚑ **A reader trusting `--headers` concludes the leg OMITS it.** The rev-11 cross-check **is not redundancy; it is the only thing between the apex and a silently short leg**, and the apex is about to read seven legs with that tool. **Cross-check every leg with `--budget`; treat a count mismatch as a STOP.** | ⚑ the apex, every leg read |
+| 33 | 2026-09-06 | ⚑ **REV 16 IS LOAD-BEARING TWICE: `§S` IS TABLE 6 NOW, NOT 4.** It moved when `§D` and the blocker table were inserted above it. `summit` found it **by header signature** (`['party','status','evidence']`) per rev 16's own instruction rather than by index — the second independent instance of that retargeting. ⚑ **A positional predicate silently retargets; only the signature is stable.** Also recorded, from summit: **rev 20's sweep reproduces on demand** — it verified `git commit -- <path>` in a throwaway clone shaped like mtools' real tree (a peer's file staged, its own untracked), both arms, **scoped commits only its own; plain sweeps the peer's.** *It measured the repair rather than taking it on report.* | the apex; anyone committing here |
 
 ⚑ **RULE, and it is why rev 13 exists rather than a silent fix:** ⚑⚑ **NOTHING MAY BE WRITTEN BETWEEN
 THE ROWS OF THIS TABLE.** A GFM table ends at the first non-row block; every row after that decodes
@@ -318,7 +323,27 @@ counting.
 > non-terminal.** Poll both. ⚑ *A completeness check is not optional here — this is `§F`
 > (`A` computed over the wrong `N`) reappearing inside the instrument that exists to prevent it.*
 
-**Current:** `§R` lists 6 surveyors + the apex; `§S` holds 6 rows. Identity holds.
+**Current (rev 29):** `§R` lists **7 surveyors** + the apex; `§S` holds **7 rows**. Identity holds.
+
+> ⚑⚑ **This line read "6 and 6" until rev 29 — stale since rev 21 added `summit`.** The *verdict*
+> was unharmed (the identity held at 6 and holds at 7) and **the figures backing it were wrong**,
+> **inside the freeze instrument's own worked example**, which is the most-read part of this section.
+> Caught by `cassian-observability`. ⚑ **A correction that never propagated to its consumer** — and
+> the consumer here is every leg that polls the freeze.
+
+### ⚑⚑⚑ USE `git ls-tree -r HEAD`, NOT `find` AND NOT `git status`
+
+**Supplied by `mtools` to `cassian`, and it is the right instrument for `§F`:**
+
+    git ls-tree -r HEAD --name-only findings/deps-build/
+
+⚑ **`find` reports a file that is untracked, staged, or committed identically** — the filesystem
+cannot see git state, and this dispatcher's roster measurement overcounted for most of the run
+because of it. ⚑⚑ **`git ls-files` is also wrong**: it reports a *staged* file as tracked, so it
+answers *"is this in my index"* rather than **"can another party fetch this."**
+
+**`§F` says a filing is an artifact, not an event. The refinement: an artifact in a WORKING TREE is
+not an artifact another party can read.** Only `HEAD` is.
 
 #### ⚑⚑ TWO `mdstruct`s EXIST, AND THE COLUMN-SCOPED MODE IS IN THE ONE THIS RUN CANNOT REACH
 
@@ -553,7 +578,14 @@ operator can confirm which object the hold names**, and the question has been pu
 terms. **An unfounded block and a founded one are different states, and until now nobody had
 distinguished them.**
 
-## §S Freeze roster — ⚑ NOT YET CALLED
+## §S Freeze roster — ⚑⚑ FREEZE CALLED, rev 31, 2026-09-06
+
+> ⚑ **The heading is human-legible only and is NOT the instrument** (rev 13: a heading is not a row).
+> **The event is `§V` rev 31 plus every `§S` status below reading terminal.** Poll the table.
+>
+> **Measured at the call, all three:** `§R` **7 surveyors** · `§S` **7 rows, all `filed`** ·
+> `git ls-tree -r HEAD findings/deps-build/` **7 legs fetchable**. ⚑ Predicate armed before the
+> negative was trusted — `--col 1 --starts "dispatched"` → rc=1, control `--starts "filed"` → 7 rows.
 
 | party | status | evidence |
 |---|---|---|
@@ -562,8 +594,8 @@ distinguished them.**
 | `mtools` | **filed** | `mtools-deps-build.md`, `MT-01`–`MT-13`, against rev 1 |
 | `rosettapkg` | **filed** | `rosettapkg-deps-build.md` |
 | `linux-sources` | **filed** | `linux-sources-deps-build.md`, `LS-01`–`LS-30` |
-| `summit` | ⚑ **dispatched, not yet filed** | Added to `§R` at rev 21 on the operator's ruling. Byte-identical kickoff; no session existed until now. |
-| `cassian-observability` | ⚑⚑ **STAGED, NOT COMMITTED** (rev 25) — authorized, copied, `A ` in mtools' index; blocked on **mtools' own gate**, on five checks none of which are cassian's. **Not a permission block and not incomplete work.** Verified by the dispatcher: `git status --short findings/deps-build/` → `A  cassian-observability-deps-build.md`. | ⚑ **VERIFIED 2026-09-06 by the dispatcher, not carried on report:** `cassian-observability/docs/census-deps-build-leg.md`, **30,795 bytes, mtime 00:45** — larger than three filed legs. Blocked on **its operator's hold against writing to mtools**. Not a decline; the dispatch was usable. |
+| `summit` | **filed** (rev 30) | `cf69c3a`, `SM-01`–`SM-17`, through mtools' gate first run. ⚑ **Verified in `HEAD`.** Added to `§R` at rev 21 on the operator's ruling; byte-identical kickoff, no session existed until then. *(Prior: `dispatched, not yet filed`; its file was untracked — written, not fetchable.)* |
+| `cassian-observability` | **filed** (rev 29) | `e21e7f2`, 494 insertions, through mtools' full gate. ⚑ **Verified in `HEAD`, not the index:** `git ls-tree -r HEAD` lists it. **Evidence repointed from cassian's own tree to the filed copy** — the two have diverged, and the filed one is authoritative. *(Prior states, for the record: `in progress — held` → `STAGED, NOT COMMITTED` rev 25 → filed.)* | ⚑ **superseded — the source-tree witness below is no longer the artifact:** `cassian-observability/docs/census-deps-build-leg.md`, **30,795 bytes, mtime 00:45** — larger than three filed legs. Blocked on **its operator's hold against writing to mtools**. Not a decline; the dispatch was usable. |
 
 ⚑ **This table is provisional and is re-measured at freeze time, never carried forward** (`§F`).
 
