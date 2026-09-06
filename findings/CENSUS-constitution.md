@@ -66,6 +66,13 @@ So, five questions. Answer each with measurements from your own repo:
    or merely noise, elsewhere. ⚑ **This question is as important as 2 and is the one that gets
    skipped.** A constitution where everything is binding fails six repos on rules never meant for
    them, and the operator is then relitigating THAT.
+   ⚑⚑ **Per `§V` rev 11, apply this test to every q3 answer before you file it: ask who bears the
+   COST of the violation, not who benefits from the rule.** A rule you filed as local because it
+   serves a need only you have may be BINDING because a peer pays when it is broken. `substrate`
+   filed *no `sys.path` insert* as local — reasoning from its own 14 internal call sites — then
+   found the insert sits in a file two peers consume and its cost landed on summit's board as a
+   traceback. It moved. **If you have already filed, re-check your q3 list against this and revise;
+   the freeze is not called.**
 
 4. **Where did you re-derive something a peer had already settled?** Name it, and say what would
    have had to exist for you to have found the prior ruling instead. ⚑ This is the highest-value
@@ -208,6 +215,7 @@ target — and whether any consumer actually runs these under `/bin/sh` — is u
 | 9 | 2026-09-06 | ⚑ **`§S`'s STATE SPACE IS TOO SMALL, FOR THE SECOND CENSUS RUNNING, AND BOTH TIMES THE MISSING STATE WAS "DONE, BLOCKED ON THE DISPATCHER."** `cassian-observability`'s leg is written, dated, verified against `mdstruct spans` and unfiled — for a **permission** reason, not a work reason — and `§S` could express neither *filed* nor *not yet filed* about it honestly. Last run needed `STAGED`; this run needs `DRAFTED — awaiting write authorization`. Both added. ⚑ A status vocabulary that cannot say *waiting on the coordinator* systematically under-reports the coordinator as a bottleneck, which is a defect in the accounting rather than in any leg — and `§G` exists to stop exactly this class, where a row cannot distinguish *they had nothing* from *they were never reached* from *they are waiting on me*. | `§S`, `§G` |
 | 10 | 2026-09-06 | ⚑⚑ **A REGISTERED INSTRUMENT FOR A DEFECT CLASS CAUGHT NEITHER OF THAT CLASS'S TWO INSTANCES THIS CENSUS PRODUCED IN ONE DAY — AND NOT BECAUSE THE INSTRUMENT IS WEAK.** `summit` owns `spelling-census` (*"witnesses whose predicate asserts a SPELLING where the claim needs a BEHAVIOUR"*). Rev 5's doubled hook count and rev 7's missed line-437 import are both that class. `substrate` checked whether its instrument would have caught either and answered **NO for both, for different reasons**: rev 5 was the wrong artifact kind (a grep over another repo's JSON, not a witness), rev 7 was the right kind **in the wrong tree**. ⚑ **A per-repo instrument is scoped to its repo while the defect is ecosystem-wide** — the same gap `§X` has at the hook layer, arriving one level up. ⚑⚑ This is the strongest argument in the survey so far that the constitution needs *cross-repo* conformance checking rather than better per-repo instruments, and it arrived as a **negative** answer from the party who could have claimed coverage. | `§Q` q2, q4 |
 | 11 | 2026-09-06 | ⚑⚑ **A TEST FOR THE Q2/Q3 BOUNDARY: ASK WHO BEARS THE COST OF THE VIOLATION, NOT WHO BENEFITS FROM THE RULE.** `substrate` had filed *no `sys.path` insert* as binding-only-on-itself, reasoning from substrate's own motive (14 internal call sites). Rev 7's finding made it re-read: the insert lives in a file **two peers consume**, and its cost landed on **summit's board** as a traceback. So the rule splits — no insert in internal tooling is LOCAL; no insert in an artifact another repo consumes is **BINDING** — and substrate moved it. ⚑ The test is offered as an answer to `§Q` q5's amendment question and is **derived from having applied it wrongly to its own list first**, which is the only reason its author trusts it. ⚑ Every leg should re-check its own q3 answers against it: a rule filed as local because *you* benefit from it locally may be binding because a peer pays for its violation. | `§Q` q2, q3, q5 |
+| 12 | 2026-09-06 | ⚑⚑ **EVERY LEG IN THIS CENSUS WILL TRIP mtools' FIGURE-FRESHNESS GATE, AND THE FLAG MEANS *UN-CROSS-CHECKABLE*, NOT *STALE*.** mtools' pre-commit gate reports `carries measurements and cites NO rule, so none can be cross-checked` against `summit`'s leg and `rosettapkg`'s, and will against the rest. ⚑ **A census leg is a measurement-carrying document with no rule to cross-check against, by construction** — its figures ARE its substance, and `§D` forbids amending them after accounting anyway. The gate is right that the claims can go stale and right that nothing in the file can tell. What is missing is a way for a leg to declare *"these figures were measured at filing time and are not maintained"*, which several legs say in prose and no gate can read. **The apex must read this flag on all seven legs as expected and non-diagnostic.** Raised by `summit`, which declined to silence it in its own leg. | apex, every leg |
 
 **Every filing cites the revision it was written against, in its first line.**
 
@@ -222,7 +230,7 @@ Freeze: **NOT YET CALLED.**
 | `linux-sources` | not yet filed |
 | `cassian-observability` | DRAFTED — awaiting write authorization (granted; see rev 9) |
 | `paperkit` | filed (rev 1) |
-| `summit` | filed (rev 1) |
+| `summit` | filed (rev 1), `616fa45`, verified in `HEAD` |
 | `rosettapkg` | filed (rev 1) |
 
 ## §G The freeze
