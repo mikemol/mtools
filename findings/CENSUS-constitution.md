@@ -6,13 +6,13 @@
 
 | surveyor | prefix | file |
 |---|---|---|
-| `mtools` | `MT-` | `findings/constitution/mtools-constitution.md` |
-| `substrate` | `SB-` | `findings/constitution/substrate-constitution.md` |
-| `linux-sources` | `LS-` | `findings/constitution/linux-sources-constitution.md` |
-| `cassian-observability` | `CO-` | `findings/constitution/cassian-observability-constitution.md` |
-| `paperkit` | `PK-` | `findings/constitution/paperkit-constitution.md` |
-| `summit` | `SM-` | `findings/constitution/summit-constitution.md` |
-| `rosettapkg` | `RP-` | `findings/constitution/rosettapkg-constitution.md` |
+| `mtools` | **filed** — `5c09536`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `substrate` | **filed** — `028af06`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `linux-sources` | **filed** — `9c387ef`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `cassian-observability` | **filed** — `4233d7e`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `paperkit` | **filed** — in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `summit` | **filed** — `1524aeb`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `rosettapkg` | **filed** — `eef90ff`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
 | **apex** — named at the freeze, from a party whose leg is filed | `AX-` | `findings/constitution/constitution-apex.md` |
 
 Conventions fixed here rather than negotiated: filename pattern as above; ID prefixes as above; all
@@ -257,22 +257,23 @@ target — and whether any consumer actually runs these under `/bin/sh` — is u
 | 34 | 2026-09-06 | ⚑ **REV 26 FIXED THE INSTRUMENT AND LEFT THE TIMING OPEN, WHICH PRODUCES THE SAME DRIFT ONE LAYER UP.** `§S` is computed by hand from `git ls-tree` *at the moment a row is written*, so the roster read **two** legs when an early row was written, **three** when `linux-sources` ran, and **four** minutes later. ⚑ `linux-sources` classifies it as *a figure going stale in the present tense* — **not a wrong number, a number that was right at a moment nobody recorded.** Repair: the freeze roster is **one measurement taken at freeze time**, not accumulated rows, and every `§S` row carries the timestamp of its own measurement or the next reader inherits the ambiguity. | `§S`, `§G`, rev 26 |
 | 35 | 2026-09-06 | ⚑⚑ **REV 34's DRIFT OCCURRED WHILE IMPLEMENTING REV 34, INSIDE ONE TOOL CALL.** Applying rev 34's repair — stamp every `§S` row with the timestamp of its own measurement — the dispatcher read `git ls-tree`, wrote `paperkit` as *NOT in `HEAD`*, and the same measurement's output showed six legs **including paperkit**. It had landed between the read that informed the row and the write that recorded it. ⚑ The timestamp is what caught it: the row and the measurement disagreed *in the same output*, which an untimestamped row could not have surfaced. **The repair worked on its first application by exposing a drift instance its own author was committing.** ⚑ Roster measured `2026-09-06T14:38:02-04:00`: six legs in `HEAD` — `cassian-observability`, `linux-sources`, `mtools`, `paperkit`, `rosettapkg`, `summit`. `substrate` staged, not in `HEAD`. | `§S`, rev 34 |
 | 36 | 2026-09-06 | ⚑⚑⚑ **A REPO THAT EXPORTS CAPABILITY BY PATH EXPORTS ITS UNCOMMITTED STATE — AND SUBSTRATE'S CASE IS WORSE THAN REV 32's.** Following rev 32, `substrate` measured its own tree: `scratch/mdstruct.py` is **`??` — untracked entirely**, so every party routing `.md` through substrate's reader executes a file that exists **in no commit anywhere**. Not a stale copy, not a mid-edit window; no history behind it at all. ⚑ And it moved two peer-invoked files mid-session: `hook_no_chaining.py` and `hook_structural_query.py` both changed their **refusal text** while rev 32 was being written, both staged-never-committed. `cassian-observability` was insulated **only because it holds vendored COPIES rather than a path reference** — the hold-it-as-code-not-a-symlink invariant turning out to be load-bearing for a reason nobody stated when it was adopted. ⚑⚑ `substrate`'s formulation: **the staging discipline bounds what enters HISTORY without bounding what peers EXECUTE.** The operator ruling that peers copy from the working tree makes that intentional for READS; the unexamined half is that it makes every mid-edit moment runnable by someone else, and no party had separated those two before today. | `§F`, rev 32, apex |
+| 37 | 2026-09-06 | ⚑⚑⚑ **FREEZE CALLED.** Roster measured in ONE reading from `git ls-tree -r HEAD findings/constitution/` at **2026-09-06T14:54:59-04:00**, per rev 26 (compute from `HEAD`) and rev 34 (one measurement at freeze time, not accumulated rows): **seven of seven legs present, ZERO remainder entries, zero `declined`, zero `no response`.** ⚑ Peer contact about findings is now OPEN and cross-reading is the point. The embargo on reading peer legs lifts by its own terms. ⚑⚑ **The apex is NOT yet named** — `§R` says a session with no leg, or a named party whose leg is filed and frozen first. Every party has a filed leg, so the second clause is the only one available and the choice is the operator's, not the dispatcher's. **mtools should not build it:** this leg is disclosed as the least independent of the seven (written last, after reading six parties' correction traffic), and mtools owns the tree, the reader, the gate and the poll — three of which were measured defective *during* this census by peers. An apex built by the party who supplied the defective `§X` is the over-glue risk `§3` names, with the dispatcher's convenience as its witness. | `§G`, `§S`, apex |
 
 **Every filing cites the revision it was written against, in its first line.**
 
 Freeze: **NOT YET CALLED.**
 
-## §S Filing status
+## §S Freeze roster — ⚑⚑ FREEZE CALLED, rev 37, 2026-09-06T14:54:59-04:00
 
 | surveyor | status |
 |---|---|
-| `mtools` | filed, `5c09536`, in `HEAD` @ 2026-09-06T14:38:02-04:00 |
-| `substrate` | staged, **NOT in `HEAD`** @ 2026-09-06T14:38:02-04:00 (see rev 26) |
-| `linux-sources` | filed, `9c387ef`, verified in `HEAD` |
-| `cassian-observability` | filed, `4233d7e`, verified in `HEAD` |
-| `paperkit` | filed, in `HEAD` @ 2026-09-06T14:38:02-04:00 |
-| `summit` | filed, revised against rev 11, `1524aeb`, verified in `HEAD` |
-| `rosettapkg` | filed, `eef90ff`, verified in `HEAD` |
+| `mtools` | **filed** — `5c09536`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `substrate` | **filed** — `028af06`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `linux-sources` | **filed** — `9c387ef`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `cassian-observability` | **filed** — `4233d7e`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `paperkit` | **filed** — in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `summit` | **filed** — `1524aeb`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
+| `rosettapkg` | **filed** — `eef90ff`, in `HEAD` @ 2026-09-06T14:54:59-04:00 |
 
 ## §G The freeze
 
