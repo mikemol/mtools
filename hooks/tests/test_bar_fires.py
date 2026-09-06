@@ -712,3 +712,53 @@ def test_the_witness_refuses_a_victim_carrying_probe_residue(tmp_path: Path) -> 
         capture_output=True, check=False, text=True, cwd=str(_DIST.parent))
     assert out.returncode == _ARG_REFUSED
     assert "probe residue" in out.stderr, "the residue guard must be the one that fired"
+
+
+@pytest.mark.skipif(
+    not (_DIST.parent / ".git").exists(),
+    reason="materialisation is a property of the host git repository; the sandbox has none",
+)
+def test_the_gate_reads_the_index_not_the_working_tree(tmp_path: Path) -> None:
+    """⚑⚑⚑ A property nobody designed for is one nobody is maintaining.
+
+    The hook materialises the index into a temp tree and runs its checks there, so what is
+    checked is what is being committed rather than what is on disk. That block predates every use
+    made of it — it was written because `git add` is usually partial — and its most load-bearing
+    consequence was never reasoned about: **a second session's dirty file is invisible to this
+    gate.** A peer filed "a shared working tree has no safe operation" as structural; this is why
+    half of it dissolved.
+
+    ⚑ It had no test. A refactor for tidiness would take the guarantee with it and nothing would
+    fail, which is exactly what "nobody is maintaining it" means.
+
+    ⚑ HOST TIER, AND THE SKIP IS A DECLARATION. The subject is a property of THIS git repository
+    — what `checkout-index` produces from a real index — and the sandbox has no repository at all,
+    so `git checkout-index` exits non-zero there. Staging a `.git` directory to make it run would
+    be staging the very thing under test. `--strict-markers` is on, so the skip is visible.
+
+    ⚑⚑ THE ARM IS THE DIFFERENCE, NOT THE PRESENCE. Asserting the staged copy exists proves
+    nothing — it would exist under any implementation. This writes text that is ONLY in the
+    working tree and requires the materialised copy not to carry it.
+    """
+    root = _DIST.parent
+    marker = "probe-only-in-working-tree"
+    staged = tmp_path / "staged"
+    staged.mkdir()
+    # ⚑ RESOLVED, NOT BARE. `git` on PATH is a dependency this test does not declare, and S607 is
+    # right to say so — the same reason no witness here reads a developer venv. If git is absent
+    # the test cannot run, and that is a fact about the reader worth failing on rather than
+    # silencing.
+    git = shutil.which("git")
+    assert git, "git is not on PATH — this test cannot measure what it claims"
+    subprocess.run(  # noqa: S603
+        [git, "checkout-index", "--all", f"--prefix={staged}/"],
+        check=True, cwd=str(root), capture_output=True)
+    victim = root / "ratchet" / "warrants.bib"
+    committed = victim.read_text(encoding="utf-8")
+    try:
+        victim.write_text(committed + f"\n{marker}\n", encoding="utf-8")
+        assert marker in victim.read_text(encoding="utf-8"), "the fixture did not take"
+        assert marker not in (staged / "ratchet" / "warrants.bib").read_text(encoding="utf-8"), (
+            "the materialised tree carries a working-tree-only change: the gate is reading disk")
+    finally:
+        victim.write_text(committed, encoding="utf-8")

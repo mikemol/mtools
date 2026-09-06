@@ -693,3 +693,18 @@
              than the code alone, because an untracked victim exits 2 as well and a test
              asserting a code two guards share proves nothing about either.}
 }
+
+@misc{hooks-bar-fires-the-gate-reads-the-index-not-the-working-tree,
+  section = {bar-fires},
+  title   = {A property nobody designed for is one nobody is maintaining},
+  note    = {The hook materialises the index and runs its checks there, so what is checked is what
+             is being committed. That block predates every use made of it -- written because git
+             add is usually partial -- and its most load-bearing consequence was never reasoned
+             about: a second session's dirty file is invisible to this gate. A peer filed "a
+             shared working tree has no safe operation" as structural, and this is why half of it
+             dissolved. It had no test, so a refactor for tidiness would take the guarantee with
+             it and nothing would fail. The arm is the DIFFERENCE rather than the presence:
+             asserting the staged copy exists proves nothing, since it would exist under any
+             implementation. F-armed by copying the working tree instead of the index, which
+             carries the marker and fails the test.}
+}
