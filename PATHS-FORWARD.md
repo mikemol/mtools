@@ -52,8 +52,8 @@ visible there, and it would not be. Recorded; see Ⓩ.
 
 | | step | unblocked? | why here |
 |---|---|---|---|
-| **Ⓜ** | Intake the closed move subgraph from substrate | ⚑ **YES — newly** | I re-derived this machinery independently an hour ago; the peer's version is tested, and the divergence is measurable |
-| **Ⓑ¹** | `:31464` counters under my own traffic | YES | owed to a peer who cannot run it; I am the only party on both halves |
+| ~~Ⓜ~~ | ~~Intake the closed move subgraph~~ | **DONE** | Rule 11. Every classification agrees; the peer's fan-out defence defaults OFF. Divergence pinned as a test. |
+| ~~Ⓑ¹~~ | ~~`:31464` counters under my own traffic~~ | **DONE** | Rule 12. It counts redundant EXECUTION, not redundant transfer. Control arm + F-arm. |
 | **Ⓨ** | Standing witness on the mypy transitive domain | YES | the Π-typing claim has no permanent arm |
 | **Ⓩ** | Retire or wire `inbox/` | YES | cheap; removes a green-over-nothing |
 | **Ⓝ₄** | 62-key preview debt paydown | YES | pure paydown, no leverage to anything |
@@ -84,3 +84,48 @@ for Ⓔ (the claim ratchet is the same machinery).
 - **Ⓓ** — cassian's operator releases the three components; cassian has the platform fix committed
   and the first sandbox-tier target makes it live, so Ⓓ and that fix are one event.
 - **Ⓕ** — paperkit publishes something importable. Not a decision anyone here can take.
+
+
+---
+
+# Re-derivation, same session, after Ⓜ and Ⓑ¹
+
+⚑ **Two items consumed; the list is re-derived rather than resumed.** Neither completed step
+unblocked anything downstream — which is itself the finding, and it changes what belongs on top.
+
+## What the two completions actually changed
+
+- **Ⓜ** settled the canonical-ratchet question by *convergence*: two independent implementations
+  partition identically. That was a precondition I had assigned to Ⓓ and Ⓔ. **It is now met, and
+  both remain blocked for unrelated reasons** — so clearing it moved nothing forward. ⚑ A
+  precondition that was not the binding constraint.
+- **Ⓑ¹** discharged a debt to a peer and produced Rule 12, but nothing here consumes the metric.
+
+⚑⚑ **So the top of the list is now determined by what is OWED to this tree rather than by what
+unblocks a peer.** Both completed items were outward-facing. The next one should not be.
+
+## The sequence, re-derived
+
+| | step | unblocked? | why here |
+|---|---|---|---|
+| **Ⓢ** | `suspect` — the third ratchet state | YES | measured gap, named in Rule 11, in the component both trees now depend on |
+| **Ⓨ** | Standing witness on the mypy transitive domain | YES | the Π-typing claim is load-bearing and has no permanent arm |
+| **Ⓩ** | Retire or wire `inbox/` | YES | cheap; removes a green-over-nothing |
+| **Ⓝ₄** | 62-key preview debt paydown | YES | pure paydown; leverage to nothing |
+| **Ⓔ Ⓓ Ⓕ** | ledger / components / projection | **NO** | unchanged: untracked, operator, unimportable |
+
+### Why Ⓢ is top
+
+⚑⚑⚑ **It is the only item on the list that this session has already MEASURED to be a defect and
+then declined to fix in the same breath.** Rule 11 records: the ratchet is two-valued, it reports a
+fan-out identically to ordinary growth, and an operator cannot tell which refusal was ambiguous.
+That was written down as *owed* — and a thing recorded as owed by the same session that recorded it
+is at maximum risk of never being collected, because the writing feels like discharge.
+
+**Structural leverage:** the three-outcome discipline is already this repo's rule (a comparison
+that cannot be made reports INVALID, not FALSE). The ratchet is the one place holding it that
+violates it. Every later component lands *under* the ratchet, so a two-valued ratchet propagates
+its ambiguity into everything Ⓓ brings in.
+
+⚑ **And it closes the one axis where the peer is ahead**, which matters while the divergence is
+small — the same hash-consing argument that made Ⓜ urgent, still live.
