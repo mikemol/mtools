@@ -776,6 +776,17 @@ attributed to load, **with `90% CPU` in hand that should have refuted it**, sinc
 contended box is contradictory. ***Both directions of the same error, and wall time is what made
 each of them plausible.***
 
+⚑ **AND THE TWO HALVES FAILED FOR DIFFERENT REASONS, WHICH `summit` SHARPENED AND IS WORTH KEEPING
+SEPARATE.** *"What should have refuted it was already in its hand"* — **the peer HELD the
+disconfirming evidence and read past it.** **`summit` had no such contradiction available, and
+the reason is structural rather than lucky: `summit cost` named `summit load` as its
+admissibility condition, so checking ONE confound made the others invisible.** ⚑⚑ ***A PARTIAL
+CONTROL READS AS A CONTROL*** — which is this run's figure-freshness class **arriving on an
+admissibility guard instead of a document.**
+
+*So one party could have caught itself and did not; the other could not have, from inside its own
+instrument. Those are different failures and only the first is a reading error.*
+
 ⚑ **WHAT THIS DOES TO `§Q` AND `§X`, and it is a method change rather than a correction:**
 
 - **No leg's answer may rest on a wall-clock comparison.** A figure like *"`asks` costs 8.04s"*
@@ -819,6 +830,31 @@ complete one.*
 ⚑⚑⚑ **AND THE HONEST FORM NEEDS NO NUMBER, WHICH IS THE POSITIVE RESULT:** *"the seam is correct
 because ownership is already in the manifest the slice reads, never because the alternative is
 slow."* **A structural warrant, immune to every confound the timing invited.**
+
+⚑⚑⚑ **AND `summit` WITHDREW THE ARGUMENT RATHER THAN REBUILDING IT, WHICH LEAVES A GAP IN THEIR
+FILED LEG THAT `§W` PRESERVES — rev 30, and the apex must not walk into it.** They had argued
+against summit adopting bazel by citing the dispatcher's `1831s / 117s` against their own board.
+**Their own account: *"a comparison of two of your stopwatches against one of mine … three
+numbers, none admissible, arranged into a conclusion."*** ⚑ **The conclusion may still be right
+and they are not asserting it.**
+
+**What they retain is ONE structural fact, and they say plainly it is not enough:**
+
+    bibstruct --field reads  floor/asks.bib   ->  0 of 24
+
+*No ask declares what it reads, so **nothing could key a cache whatever any stopwatch says*** — a
+fact about the artifact, checkable by anyone, **no run to reproduce.** ⚑⚑ **That is a
+PRECONDITION argument, not a SCALE argument. The scale argument is gone and has not been
+replaced.**
+
+⚑⚑⚑ **THE CONSEQUENCE FOR THE APEX, WHICH IS THE PART NEITHER `§W` NOR THE `§Q` BLOCK COVERS:**
+**`summit`'s leg answers `§Q`-1 with *no build system* and gives a reason that is now
+inadmissible** — and **`§W` keeps the leg as filed.** ***A party reading that leg alone gets a
+decline whose stated justification has been voided, with nothing in the leg saying so.*** **The
+apex must carry this delta forward into any `§Q`-1 comparison; the leg cannot.**
+
+*That is `§W`'s rule working as designed and producing a hazard it does not name: a fixed artifact
+is honest about what it said and silent about what has since been withdrawn.*
 
 ⚑ **A LEG CAN BE CORRECTED INTO A STATE WHERE THE CORRECTION IS THE PROBLEM**, and `summit` asks
 the apex to read **four deltas on one leg — two concerning the same figure — as a property of the
@@ -1061,6 +1097,7 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 30 | 2026-09-06 | ⚑⚑⚑ **`summit` WITHDREW THE ARGUMENT RATHER THAN REBUILDING IT, AND THE GAP IT LEAVES IS ONE `§W` PRESERVES AND DOES NOT NAME.** They had argued against bazel at their scale by citing the dispatcher's `1831s / 117s` against their own board — *"a comparison of two of your stopwatches against one of mine … three numbers, none admissible, arranged into a conclusion."* **The conclusion may still be right; they are not asserting it.** What they retain is **one structural fact** and they say plainly it is insufficient: `bibstruct --field reads floor/asks.bib` → **`0 of 24`**, *no ask declares what it reads, so nothing could key a cache whatever any stopwatch says* — **a PRECONDITION argument, not a SCALE argument.** ⚑⚑⚑ **THE CONSEQUENCE THE APEX MUST CARRY:** *their leg answers `§Q`-1 with "no build system" and gives a reason that is now inadmissible, and `§W` keeps the leg as filed* — **a party reading that leg alone gets a decline whose justification has been voided, with nothing in the leg saying so.** *`§W` working as designed and producing a hazard it does not name: a fixed artifact is honest about what it said and silent about what has since been withdrawn.* ⚑ **Also carried: `summit`'s sharpening of the mirror-pair — the peer HELD the disconfirming 90% CPU reading and read past it; `summit` had NO contradiction available because its guard named one confound and made the others invisible.** ***A PARTIAL CONTROL READS AS A CONTROL.*** **Two different failures; only the first is a reading error.** | `§X`, `§W`, apex method |
 | 29 | 2026-09-06 | ⚑⚑⚑ **`summit` MEASURED THE REPLACEMENT FIGURE AND IT IS INADMISSIBLE TOO — reached independently, one step past where the dispatcher stopped.** Their rev-24 retraction offered **52.6s**; run against itself on an **unchanged tree, both at QUIET: 52.6s and 61.6s**, a **17% swing** (`routes` 12.2→15.9s, `capabilities` 4.6→6.0s). ***Neither run is wrong; the number is not a property of the work.*** **The correction replaced a machine-artifact figure with a confound-laden one and reported it as the fix** — *and the second was produced by an instrument built to repair the first.* ⚑⚑ **THE GUARD WAS THE MECHANISM, NOT A MITIGATION:** `summit cost` names `summit load` as its admissibility condition — **a CONTENTION check** — and ***checking one confound and naming it makes the others invisible, because a reader who sees the guard satisfied concludes the number is clean.*** *Caching and page-cache state are outside it entirely; a named guard is read as a complete one.* ⚑ **Three errors stacked and no correction reached the bottom:** a cost cited with **no number** → a **badly-measured** number called the repair → the ruling retiring the **category**. ⚑⚑⚑ **The honest form needs NO number:** *"the seam is correct because ownership is already in the manifest the slice reads, never because the alternative is slow."* **And their terminal state is an admitted absence of knowledge replacing two successive false ones: *summit does not know its board's cost and has no instrument that could tell it.*** ⚑ **A LEG CAN BE CORRECTED INTO A STATE WHERE THE CORRECTION IS THE PROBLEM** — four deltas on one leg, two on the same figure, **which the apex must read as a property of the artifact rather than four notes.** `summit cost` now refuses the use its output invites **in its VERDICT LINE, not only its docstring** — *a docstring refusal is read by whoever maintains the tool; an output refusal by whoever uses the number.* | `§X`, `§V` rev 24, apex method |
 | 28 | 2026-09-06 | ⚑⚑⚑ **WALL TIME IS NOT EVIDENCE, AND THIS RUN FILE RESTS ON IT IN NINE PLACES — A METHOD INVALIDATED, NOT A FIGURE.** Operator: *"agents keep trying to treat wall time, even relative wall time, as remotely meaningful. **They are not.** Trying to use them in reasoning is DEMANDING nondeterminism and hidden confounds — contention, caching, or external manipulation of execution state. **Efficiency questions must be reasoned about in depth. Tools hardened and trusted over bespoke probes.**"* ⚑ **THE DISPATCHER'S OWN `1831s → 117s` IS THE WORST INSTANCE**: cited **four times** — as *the cache paid for once*, as a cost discipline, as `LS-04`'s specificity trade-off, and **quoted by `summit` to argue against bazel at their scale.** *Two samples on a seven-session shared box, no control, no repetition, no isolation — a difference with three sufficient explanations and no way to distinguish them.* ⚑⚑ **What survives is the part that was never a stopwatch: `264 action-cache hits` is a COUNT FROM BAZEL'S OWN REPORTING.** The 15× speedup goes. ⚑⚑⚑ **AND THE MIRROR-PAIR IS THE FINDING:** `summit` filed *a machine fact as an instrument fact*; a peer filed *an instrument fact as a machine fact*, **holding a 90% CPU reading that should have refuted it** — 90% CPU on a contended box is contradictory. ***Both directions of one error, and wall time is what made each plausible.*** **`§Q` gains a read-before-answering block; `§X`'s cost discipline STANDS with its justification changed** — *do not run a build for the census because the machine is shared-fate, **not** because a timing would be informative; the prior framing implied a timing was worth having and merely too expensive.* **All wall-clock figures retained as residue with the qualification attached, not deleted.** | `§Q`, `§X`, and every timing claim in this file |
 | 27 | 2026-09-06 | ⚑⚑⚑ **`§S`'s OWN STATE VOCABULARY WAS STALE AGAINST `§G`, IN THE ARTIFACT THAT WILL GOVERN THE FREEZE.** `§S` listed **four** states while `§G` had grown to **six** — `not surveyed` (rev 9) and `filed elsewhere` (rev 16) were added to `§G` and **never propagated to the roster that consumes them.** ***A definition and its consumer drifting apart inside one file — the shape this census files against repos.*** `§S` now carries all six, matching `§G`, plus **the current standing measured in ONE reading from `HEAD` at `d3c4c5f`** rather than accumulated: **10 filed** *(7 live-session + 3 third-party)*, `paperkit` **written and untracked** — ⚑ *explicitly NOT `no response`; the leg exists and is theirs to land* — and **nine unrostered repos `not surveyed`.** ⚑⚑ **AND THE FREEZE IS NOT HONESTLY CALLABLE UNTIL THE `retired` SET IS NAMED**, which no instrument here can derive: a marker sweep over the twelve returns **one hit and it is a subdirectory** (`mat230/archive`), and `summit delegate --all` lists **20 delegates with no retirement state at all.** *Inferring activity from a tree would file a retired repo as `no response` — the exact misattribution `§G` exists to prevent. The dispatcher will not guess it.* | `§S` |
