@@ -40,7 +40,7 @@ declare -A WAIVED=(
     # tree whose hooks are not yet installed.
     [setup.sh]="run once per clone by a human; arms core.hooksPath, so no gate can invoke it"
     # ⚑⚑ DELIBERATELY NOT INVOKED BY ANY GATE, and arming it would be the defect. `preflight.sh`
-    # duplicates the gate's cheap checks so a human can predict the verdict BEFORE paying ~130s
+    # duplicates the checks the gate runs first, so a human can predict the verdict BEFORE the suite runs
     # for it — measured cause: three of four consecutive commits refused for a blank-line key that
     # `ruff check` finds in two seconds. ⚑ Wiring it into the gate would make one finding refuse
     # twice, and the gate is the authority; this only makes the gate PREDICTABLE.

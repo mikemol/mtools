@@ -5,14 +5,18 @@
 # ⚑⚑⚑ ONE ACTION PER DISTRIBUTION, DECLARING THAT DISTRIBUTION'S WHOLE CLOSURE — and the grain was
 # MEASURED rather than chosen by analogy to a peer with 2,254 targets.
 #
-#     mdstruct, whole distribution (27 files)   0.12s
-#     mdstruct, one file alone                  0.11s
-#     so 27 per-file actions                    ~3.0s   -- 25x MORE
+# ⚑⚑ THE ARGUMENT IS STRUCTURAL AND THE SECONDS WERE A PROXY FOR IT. This block previously read
+# `0.12s` for the whole distribution against `~3.0s` for 27 per-file actions. Those figures are
+# properties of one machine at one moment; the property that decides the grain is not:
 #
-# mypy's startup dominates at this scale and each per-file run re-analyses the same closure. The
-# influence cones ARE real (ast is imported by 4 of 27 files, spans by 5), so per-file granularity
-# would buy genuine invalidation precision — and a cache hit on a 0.12s action saves 0.12s. A peer
-# runs 2,254 per-file targets because at ITS scale that arithmetic reverses.
+#     mypy ANALYSES A CLOSURE, not a file. Running it once over 27 files analyses the closure once.
+#     Running it 27 times analyses THE SAME CLOSURE 27 TIMES, plus 27 interpreter startups.
+#
+# So per-file actions here multiply the dominant work by the file count while buying invalidation
+# precision the influence cones make partly redundant anyway (`ast` is imported by 4 of 27 files,
+# `spans` by 5 — counts, not timings). ⚑ A peer runs 2,254 per-file targets because at ITS scale
+# the closure is not shared across the population, which reverses the same structural argument
+# rather than a different arithmetic.
 #
 # ⚑⚑ THE DOMAIN IS THE SAME EITHER WAY, WHICH IS WHY THIS IS STILL Π-TYPED. mypy's verdict on a
 # file depends on the types of everything it imports — measured: break a return type in ast.py and
@@ -21,8 +25,9 @@
 # something it read. Per-file with a computed closure would be the same property, stated tighter.
 #
 # ⚑ AND THE DIRECTION OF ERROR MATTERS. A domain too WIDE over-invalidates and fails loudly; a
-# domain too NARROW serves a stale green. This is deliberately the wide one, at a scale where
-# wideness costs 0.12s.
+# domain too NARROW serves a stale green. This is deliberately the wide one, at a scale where the
+# whole closure is analysed in one action either way — so wideness costs an invalidation, not an
+# analysis.
 set -uo pipefail
 
 py="$(realpath "${1:?the interpreter was not passed}")"

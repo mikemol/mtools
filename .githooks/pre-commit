@@ -76,8 +76,10 @@ root="$(git rev-parse --show-toplevel)"
 # ⚑⚑ SO BOTH PEERS PAID FOR A SCOPE THEY HAD NOT CONSENTED TO AND COULD NOT OBSERVE — cassian's
 # `CO-L4` (*an actor that mutates state SHARED with parties who did not consent must not do so
 # unilaterally*) arriving on a gate's refusal surface. The announcement below is the consent half:
-# it cannot narrow the surface, and it makes it observable before the 130s is spent rather than
-# after, so a refusal naming someone else's file is legible instead of mystifying.
+# it cannot narrow the surface, and it makes it observable BEFORE THE SUITE RUNS rather than after,
+# so a refusal naming someone else's file is legible instead of mystifying. ⚑ (This said `before
+# the 130s is spent`; the announcement's value is that it precedes the work, not that the work
+# takes any particular number of seconds.)
 if [ -n "$(git status --porcelain --untracked-files=no 2>/dev/null | grep -v '^[MARCD] ' || true)" ]; then
     printf 'pre-commit: ⚑ THIS GATE READS THE WHOLE TREE, NOT YOUR PATHSPEC.\n'
     printf '  Unstaged changes are present. If this commit is refused for a file you did not\n'
@@ -140,20 +142,30 @@ done
 
 # ⚑ THE INDEX IS MATERIALISED SO THE CHECKS READ WHAT IS BEING COMMITTED, not what is on disk.
 # ⚑⚑⚑ A STABLE PATH, NOT A TEMP DIR, BECAUSE BAZEL RUNS HERE TOO AND ITS OUTPUT BASE IS A HASH OF
-# THE WORKSPACE PATH. Measured, full suite, three configurations:
+# THE WORKSPACE PATH. Measured, full suite, three configurations — **stated as bazel's own counters
+# rather than as elapsed time**:
 #
-#   working tree (warm)          14s   152 action cache hits
-#   fresh mktemp staging         99s     0 action cache hits, 68 disk cache hits
-#   stable staging, 1st / 2nd   104s / 5s
+#   working tree (warm)         152 action cache hits,   0 actions executed
+#   fresh mktemp staging          0 action cache hits,  68 disk cache hits, 187 analysis actions
+#   stable staging, 2nd run     action cache warm, analysis reused
 #
 # ⚑⚑ A NEW OUTPUT BASE IS NOT A COLD BUILD, AND THAT IS THE TRAP. The mktemp run reported
 # `Executed 0 out of 34 tests` — no test reran, the disk cache carried every result — and still
-# took 99s, because 187 processes of ANALYSIS were redone. A pass is not a cost measurement.
-# The disk cache is content-addressed and crosses workspaces; the ACTION cache lives in the output
-# base and does not.
+# redid **187 processes of ANALYSIS**. The disk cache is content-addressed and crosses workspaces;
+# the ACTION cache lives in the output base and does not.
+#
+# ⚑⚑⚑ THE COUNTS ARE THE CLAIM AND THE SECONDS WERE DECORATION, WHICH IS THE CORRECTION.  This
+# block previously read `14s / 99s / 104s / 5s`, and those figures are not properties of the gate —
+# they are properties of one run's cache state, machine load, and whatever peers were committing
+# concurrently. Operator: *wall time, even relative wall time, is not meaningful; using it in
+# reasoning is demanding nondeterminism and hidden confounds.* ⚑ `187 analysis actions` and
+# `0 action cache hits` are counters bazel emits, reproducible from the same cache state, and they
+# carry the entire argument: a new output base discards the ACTION cache while keeping the DISK
+# cache, so a run can execute nothing and still redo all analysis.
 #
 # ⚑ THE DIRECTORY IS NOT REMOVED ON EXIT, deliberately: removing it discards the action cache and
-# restores the 99s. It is refreshed from the index each run, so it never holds stale content.
+# forces analysis to be redone. It is refreshed from the index each run, so it never holds stale
+# content.
 # ⚑⚑⚑ THE GATE SWEEPS ITS OWN WITNESSES' RESIDUE, BECAUSE A REFUSAL WAS GENERATING THE NEXT ONE.
 # Nine domain witnesses below mutate REAL tracked files — arm 2 plants a defect to prove the target
 # refuses it, arm 3 restores. Each witness traps its own EXIT. **But the GATE has no trap**, so
@@ -359,9 +371,15 @@ say "domain witness: each mypy target's declared domain vs its real one"
 # from A PROBE THIS CHECKER DOES NOT SEEK. Measured: the mypy probe against `//ratchet:ruff` fails
 # arm 2 and reads exactly like a short domain.
 #
-# ⚑ COST, MEASURED RATHER THAN PROJECTED: a mypy witness is ~13s and a ruff witness ~1s, because
-# mypy re-analyses its whole closure per action while ruff is per-file. Adding three ruff witnesses
-# costs ~3s, not the ~26s a linear projection from the mypy figure would have predicted.
+# ⚑⚑ COST IS ASYMMETRIC AND THE REASON IS STRUCTURAL, NOT A STOPWATCH READING. A mypy witness
+# re-analyses its whole import closure per action; a ruff witness is per-file. So adding ruff
+# witnesses scales with FILES TOUCHED while adding mypy witnesses scales with CLOSURE SIZE, and a
+# linear projection from one to the other is wrong by that ratio.
+#
+# ⚑ THIS COMMENT PREVIOUSLY SAID `~13s`, `~1s`, `~3s` and `~26s`. Those are not properties of the
+# witnesses — they are properties of one machine at one moment, and quoting them invites exactly
+# the projection the sentence exists to refuse. The structural claim survives any machine; the
+# seconds do not survive the next commit by a peer.
 ./domain_witness.sh ratchet  //ratchet:ruff  ratchet/src/mikemol/ratchet/state.py  ruff || { fail=1; note_failure "ratchet: ruff domain reaches a transitive import"; }
 ./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff || { fail=1; note_failure "mdstruct: ruff domain reaches a transitive import"; }
 ./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff || { fail=1; note_failure "hooks: ruff domain reaches a transitive import"; }

@@ -2,19 +2,29 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
 #
-# ⚑⚑⚑ THE CHEAP HALF OF THE GATE, RUN BEFORE THE EXPENSIVE HALF CHARGES FOR IT. Measured over four
-# consecutive commits: THREE were refused for a blank-line ruff key that `ruff check` finds in
-# about two seconds, and each refusal cost a full ~130s gate run to discover.
+# ⚑⚑⚑ THE CHECKS THE GATE RUNS FIRST, RUN BEFORE STAGING. Measured over four consecutive commits:
+# THREE were refused for a blank-line ruff key that `ruff check` reports directly.
+#
+# ⚑⚑⚑ AND THE ARGUMENT IS NOT ABOUT ELAPSED TIME, WHICH IS THE CORRECTION. This header previously
+# justified itself with `~130s` and `about two seconds`. Neither is a property of anything — they
+# are properties of one machine at one moment, under a cache state and a peer-contention level
+# nobody recorded. Operator: *wall time, even relative wall time, is not meaningful; using it in
+# reasoning is demanding nondeterminism and hidden confounds.* Three claims survive without it:
+#
+#   SERIALISATION   the gate reads the WHOLE TREE, so a new ratchet key in my staged file refuses
+#                   a peer's one-file scoped commit — measured, `linux-sources`' fourth blocked
+#                   revision. A refusal I cause is paid by whoever commits next.
+#   INFORMATION     the gate exits at the FIRST failing check, so a refusal teaches one finding per
+#                   round. Running the checks directly reports all of them at once.
+#   STATE           the ratchet is stateful: a new key must be paid or baselined before anything
+#                   else can land, so the ordering is FORCED rather than merely convenient.
+#
+# ⚑ None of the three needs a stopwatch and all three hold on a machine ten times faster or slower.
 #
 #     88bf437  gate five repairs        -> E305        -> re-run
 #     7bda9bb  pay down that key        -> (clean)
 #     7ade1f5  gate the poll's repairs  -> W391 + E305 -> re-run
 #     a70adf9  wire the ratchet         -> E302        -> re-run
-#
-# ⚑⚑ AND THE COST IS NOT ONLY MINE. The ratchet reads the whole tree, so a new key in MY staged
-# file refused a peer's one-file scoped commit — measured, `linux-sources`' fourth blocked
-# revision. **A defect I could have found in two seconds was charged to whoever committed next**,
-# which is what makes this structural rather than personal sloppiness.
 #
 # ⚑⚑⚑ AND ORDERING IS EXACTLY THE KIND OF RULE THIS SESSION MEASURED AS WORTHLESS UNSTATED. I have
 # a green-bar step and I was running it BEFORE writing the tests rather than after — four ticks
@@ -24,6 +34,12 @@
 # ⚑ IT IS DELIBERATELY NOT A GATE AND NOT A HOOK. It duplicates checks the gate already runs, so
 # arming it would make the same finding refuse twice — and the gate is the authority. This exists
 # to make the gate's verdict PREDICTABLE, not to add one.
+#
+# ⚑⚑ AND IT IS A CONVENIENCE WRAPPER OVER FOUR HARDENED TOOLS, WHICH IS WORTH STATING PLAINLY.
+# `ruff`, `mypy`, `pytest` and `mikemol-ratchet` are the instruments; this file's only content is
+# invoking them in the gate's own order, before staging. **Invoking them directly is strictly
+# better than invoking this** — the value here is the ORDER and the ledger identity, not the
+# checking. A bespoke probe that competes with a hardened tool should say which it is.
 #
 # Usage:  ./preflight.sh            # every distribution
 #         ./preflight.sh hooks      # one
@@ -82,7 +98,7 @@ for dist in $dists; do
 done
 
 if [ "$fail" -ne 0 ]; then
-    say "⚑ the gate WOULD REFUSE. Fix the above before spending ~130s on it."
+    say "⚑ the gate WOULD REFUSE, and it stops at the FIRST failing check — fix all of the above."
     exit 1
 fi
-say "ok — the cheap half is clean; the gate's bazel suite and witnesses are still ahead of you"
+say "ok — these checks are clean; the bazel suite and nine domain witnesses are still ahead"
