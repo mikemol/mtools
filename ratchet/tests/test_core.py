@@ -288,3 +288,34 @@ def test_suspect_never_softens_the_verdict(tmp_path: Path) -> None:
     assert code == 1
     assert any("AMBIGUOUS" in line for line in lines)
     assert read_baseline(path)[1] == frozenset({"a.py:rule1"})
+
+
+def test_a_comment_line_in_the_baseline_is_not_a_key(tmp_path: Path) -> None:
+    """⚑⚑⚑ Two instruments, each correct alone, wrong together.
+
+    The domain witness appends a nonce to the baseline as a `#` comment — deliberately, so the
+    file's digest moves while its census does not. This reader had no comment handling, so the
+    nonce was read as a KEY: the gate refused, reporting the nonce as a paid-down key and an
+    unrelated finding as new.
+
+    ⚑ The witness's own comment claimed the nonce was *"outside the census, so the verdict is
+    unchanged"*. It was not, and nothing found it until both ran in one gate. A claim about
+    another component's behaviour is a claim, and this one was never armed.
+    """
+    path = tmp_path / "b.txt"
+    path.write_text("# a note\na.py:rule1\n#another\nb.py:rule2\n", encoding="utf-8")
+    assert read_baseline(path)[1] == frozenset({"a.py:rule1", "b.py:rule2"})
+
+
+def test_a_baseline_of_only_comments_reads_empty_not_ok(tmp_path: Path) -> None:
+    """⚑ EMPTY is the zero-tolerance setting, and a commented-out baseline must reach it.
+
+    A file holding only annotations asserts no debt, which is a different fact from a file
+    holding keys. Reading it as OK-with-no-keys would be the same value by a route that loses
+    the distinction the state enum exists to keep.
+    """
+    path = tmp_path / "b.txt"
+    path.write_text("# everything paid down\n", encoding="utf-8")
+    state, keys = read_baseline(path)
+    assert not keys
+    assert state is BaselineState.EMPTY

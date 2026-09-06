@@ -128,7 +128,19 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
         body = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
         return BaselineState.UNREAD, frozenset()
-    keys = frozenset(line.strip() for line in body.splitlines() if line.strip())
+    # ⚑⚑⚑ A `#` LINE IS A COMMENT, NOT A KEY, AND THIS READER TREATED IT AS ONE. Measured: the
+    # domain witness appends a nonce to this file as a `#` comment — deliberately, so that the
+    # digest moves while the census does not — and the gate REFUSED, reporting the nonce as a
+    # paid-down key and an unrelated finding as new. ⚑ The witness's own comment claimed the nonce
+    # was "outside the census, so the verdict is unchanged". It was not, and only running both
+    # instruments in one gate showed it: each was correct alone.
+    #
+    # ⚑⚑ THE DIRECTION MATTERS. A comment read as a key inflates the baseline, which is the SAFE
+    # direction for a paydown-only ratchet — it never absolves real debt. But it makes the file
+    # un-annotatable, and a baseline nobody may explain is one whose entries lose their reasons.
+    keys = frozenset(
+        stripped for line in body.splitlines()
+        if (stripped := line.strip()) and not stripped.startswith("#"))
     return (BaselineState.EMPTY if not keys else BaselineState.OK), keys
 
 

@@ -252,3 +252,24 @@
              vocabulary, which is what makes it structurally unable to become a route by
              which something passes. The baseline is asserted unchanged to prove it.}
 }
+
+@misc{ratchet-core-a-comment-line-in-the-baseline-is-not-a-key,
+  section = {states},
+  title   = {Two instruments, each correct alone, wrong together},
+  note    = {The domain witness appends a nonce to the baseline as a # comment, deliberately, so
+             the file's digest moves while its census does not. This reader had no comment
+             handling, so the nonce was read as a KEY: the gate refused, reporting the nonce as a
+             paid-down key and an unrelated finding as new. The witness's own comment claimed the
+             nonce was outside the census and the verdict unchanged. It was not, and nothing
+             found it until both ran in one gate. A claim about another component's behaviour is
+             a claim, and this one was never armed.}
+}
+
+@misc{ratchet-core-a-baseline-of-only-comments-reads-empty-not-ok,
+  section = {states},
+  title   = {A commented-out baseline must reach EMPTY},
+  note    = {EMPTY is the zero-tolerance setting. A file holding only annotations asserts no debt,
+             which is a different fact from a file holding keys, and reading it as OK-with-no-keys
+             would reach the same value by a route that loses the distinction the state enum
+             exists to keep.}
+}

@@ -1264,6 +1264,14 @@ edit to arm 1. **Repaired by making it deliberate:** the probe appends a nonce a
 outside the census, so the verdict is unchanged, and inside the digest, so re-execution is
 guaranteed by construction rather than by a neighbour's behaviour.
 
+⚑⚑⚑ **AND "OUTSIDE THE CENSUS" WAS FALSE, MEASURED ONE TICK LATER.** The baseline reader had no
+comment handling, so the `#` nonce was read as a KEY: the gate refused, reporting the nonce as a
+paid-down key and an unrelated finding as new. ⚑ **Each instrument was correct alone.** The witness
+mutated a file it was entitled to mutate; the ratchet censused a file it was entitled to census.
+Nothing found the collision until both ran in one gate, because **a claim about another component's
+behaviour is a claim, and this one was never armed.** Repaired in the reader — a baseline is a data
+file and every other one here permits comments.
+
 **Coverage after this rule:** 8 witnesses over 3 distributions — mypy ×3, ruff ×3, ratchet sources
 ×1, ratchet baseline ×1. ⚑ Every checker in the gate now has its declared domain armed rather than
 asserted.
