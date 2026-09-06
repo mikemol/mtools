@@ -1084,7 +1084,19 @@ found: per-witness cost is a property of the **checker**, not the witness, so my
 ⚑ **A FIGURE STATED IN THE PRESENT TENSE OUTLIVES ITS MEASUREMENT.** This paragraph read *"77s is a
 real tax"* for eleven ticks after it stopped being true, and nothing in the sentence marked it as a
 reading taken at one moment. **Every cost figure in this file is a measurement with a date**, and
-the ones written as bare present-tense assertions are the ones that decay unnoticed. ⚑ **Recorded now rather than discovered at the moment
+the ones written as bare present-tense assertions are the ones that decay unnoticed.
+
+⚑⚑⚑ **AND THE SUPERSESSION ABOVE CORRECTED THE COUNT WITHOUT CORRECTING THE STABILITY, WHICH IS THE
+SAME DEFECT ONE LAYER IN.** It said *"77s was measured with three witnesses; 132s with nine"* — as
+though the difference were the witness count. **Both numbers are single samples of a series that
+converges as the action cache warms**: measured across four consecutive runs on an unchanged tree,
+132 → 88 → 65 → 61. ⚑ **Neither 77 nor 132 was ever a property of the gate.** The witness count
+explains part of the gap and the cache state explains the rest, and nothing here distinguished them
+until the series was run.
+
+⚑ **`77s` therefore has no defensible restatement**, because nobody recorded whether that reading
+was warm or cold. It stands as an uninterpretable number with a date, which is the honest
+disposition — a figure whose conditions were never captured cannot be rescued by re-reading it. ⚑ **Recorded now rather than discovered at the moment
 someone is in a hurry** — an unexplained slow gate gets bypassed, and a gate bypassed once is a gate
 whose greens no longer mean anything.
 
@@ -1189,6 +1201,17 @@ one mypy witness   13s     mypy re-analyses its whole closure per action
 one ruff witness    1s     ruff is per-file
 six witnesses     ~42s     not the ~150s the projection predicted
 ```
+
+⚑⚑ **THESE ARE WARM-CACHE READINGS AND THE ORIGINAL DID NOT SAY SO.** Found by scanning every rule
+carrying a time figure for a stated cache condition: three lacked one, and two were false
+positives — Rule 5's `10.087s vs 8.605s` is a **delta between two arms** rather than a cost, and
+Rule 10's *"killed mid-run at 20s"* describes **an action taken**, not a measurement. ⚑ Only these
+were bare cost claims.
+
+**The ratio survives the omission and the absolute numbers do not.** mypy re-analyses a closure
+where ruff is per-file, so mypy costs an order of magnitude more *under any cache state* — which is
+what the rule actually argues. **A reader budgeting from `13s` is reading a warm number that a cold
+run will not reproduce.**
 
 ⚑ **The per-witness cost is a property of the CHECKER, not of the witness.** Extrapolating from the
 expensive one would have made the honest recording of Rule 17's tax into an argument against
