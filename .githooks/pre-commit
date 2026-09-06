@@ -70,10 +70,49 @@ git checkout-index --all --prefix="$staged/"
 for dist in hooks mdstruct ratchet; do
   [ -d "$staged/$dist" ] || continue
   say "checking $dist"
-  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/ruff" check --no-cache . ) || { fail=1; note_failure "$dist: ruff — lint clean under select=[ALL]"; }
-  ( cd "$staged/$dist" && "$root/$dist/.venv/bin/mypy" ) || { fail=1; note_failure "$dist: mypy — types clean, strict"; }
+  # ⚑⚑⚑ `MYPYPATH` AND `PYTHONPATH` POINT AT THE STAGED TREE, AND WITHOUT THIS THE GATE REPORTED
+  # ONE VERDICT OVER TWO POPULATIONS. The venv is an EDITABLE install — a `.pth` plus an
+  # import-hook finder naming `$root/$dist/src` — so `cd $staged/$dist` changed the cwd and not
+  # the import closure. MEASURED: a type defect planted in the WORKING tree, absent from the
+  # staged copy, was still imported by a run inside the staged copy —
+  #     staged run imports payload from /home/mikemol/github/mtools/hooks/src/... ; has leak? True
+  # so mypy type-checked staged sources whose imports resolved to unstaged ones.
+  #
+  # ⚑⚑ THE HALF I FIXED WAS THE HALF I COULD SEE FROM THE SHELL. The tree-vs-index gap was closed
+  # for the checkers three commits earlier, with a commit message about the gate's two halves
+  # checking different code — and the import closure was left open, because `cd` looks like it
+  # relocates a program and only relocates its cwd.
+  #
+  # ⚑ CREDIT: linux-sources, which hit the same class from the other direction — an UNDECLARED
+  # INPUT present in an unsandboxed run and absent in a sandboxed one. Their statement is the
+  # general form: *a green from the unsandboxed path is not evidence about the sandboxed one;
+  # they are different populations.* An editable install naming a root and a missing declared
+  # input are two mechanisms of one failure — the thing under test reaching outside its declared
+  # closure, and the reader unable to tell.
+  ( cd "$staged/$dist" \
+      && MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
+         PYTHONPATH="$staged/$dist/src" \
+         "$root/$dist/.venv/bin/ruff" check --no-cache . ) \
+    || { fail=1; note_failure "$dist: ruff — lint clean under select=[ALL]"; }
+  ( cd "$staged/$dist" \
+      && MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
+         PYTHONPATH="$staged/$dist/src" \
+         "$root/$dist/.venv/bin/mypy" ) \
+    || { fail=1; note_failure "$dist: mypy — types clean, strict"; }
   # ⚑ TESTS RUN FROM THE REAL TREE: their venv holds absolute paths, and a witness that cannot
   # find its own interpreter is an infrastructure failure reported as a red gate.
+  #
+  # ⚑⚑ AND THIS IS THE THIRD POPULATION, LEFT OPEN DELIBERATELY AND NAMED SO IT IS NOT MISTAKEN
+  # FOR CLOSED. ruff and mypy now read the staged tree through `PYTHONPATH`; `bazel test //...`
+  # below reads a sandbox built from declared `srcs`; this line reads the WORKING TREE. So a
+  # pytest green covers what is on disk, not what is being committed, and the two diverge exactly
+  # when `git add` is partial — which is the normal case.
+  #
+  # ⚑ IT IS NOT CLOSED BY POINTING THIS AT `$staged` BECAUSE THE BAZEL SUITE ALREADY COVERS THE
+  # STAGED TREE HERMETICALLY, and a second staged-tree pytest would duplicate it while losing the
+  # one thing this run has that bazel does not: the developer venv, where a missing dependency
+  # surfaces as an import error rather than as a sandbox that never had it. The honest statement
+  # is that this line is a DEVELOPER-TREE smoke check and the hermetic verdict is bazel's.
   ( cd "$root/$dist" && .venv/bin/python3 -m pytest -q ) || { fail=1; note_failure "$dist: pytest — every case passes"; }
 done
 
