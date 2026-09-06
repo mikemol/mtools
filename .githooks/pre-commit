@@ -97,7 +97,28 @@ if ! command -v bazel >/dev/null 2>&1; then
   say "bazel not found — cannot run the hermetic suite, commit refused"
   exit 1
 fi
-bazel test //... --test_output=errors || { fail=1; note_failure "bazel test //... — the hermetic suite"; }
+# ⚑⚑⚑ THE SUITE NAMES ITS FAILING TARGETS, because a label is only as specific as the check under
+# it. A peer read a real refusal and found every label actionable except this one: "the hermetic
+# suite" is a claim, but a suite is MANY claims, so on failure it collapses them exactly as
+# `fail=1` collapsed nineteen checks. ⚑ That was the granularity bound, not a defect in the
+# labels — and bazel already prints `//pkg:target   FAILED`, so the information existed and was
+# being discarded one line from where it was needed.
+# ⚑⚑ THE STATUS IS CAPTURED, NOT PIPED. `if ! bazel ... | tee` reads TEE's status, and measured
+# here a failing left side is LOST without `pipefail` — a green over a failed suite, inside the
+# fix for a labelling bound. This file does set `pipefail` at the top, so the piped form would
+# have worked; it would have worked BY A SETTING THREE SECTIONS AWAY rather than by construction,
+# and a future edit that scoped that setting would break this silently.
+# ⚑⚑⚑ AND `set -e` KILLS A BARE FAILING PIPELINE BEFORE THE CHECK BELOW RUNS. Measured: with a
+# planted defect the gate exited 3 — bazel's own code — and printed no attributed refusal at all,
+# because the script was already dead. ⚑ The repair for one pipeline hazard introduced another:
+# `PIPESTATUS` is only readable if control reaches the line that reads it. `|| true` exempts the
+# pipeline from `-e` while `PIPESTATUS[0]` still carries bazel's verdict.
+bazel test //... --test_output=errors 2>&1 | tee "$staged/.suite.log" || true
+if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    failed_targets=$(grep -oE '^//[^ ]+' "$staged/.suite.log" 2>/dev/null | sort -u | tr '\n' ' ')
+    fail=1
+    note_failure "the hermetic suite: ${failed_targets:-no target named — see the log above}"
+fi
 
 # ⚑⚑⚑ THE DOMAIN WITNESS RUNS HERE AND NOT AS A BAZEL ACTION, DELIBERATELY. It probes whether a
 # checker's DECLARED domain equals its REAL one, which it can only do by mutating a source file and
