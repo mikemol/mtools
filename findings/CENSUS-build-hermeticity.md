@@ -284,6 +284,23 @@ emits **quoted corpus bytes that peers cite in their own warrants** — and `sum
 linux-sources` reports **0 records requiring this tree**, which is TRUE and is exactly why nobody
 would notice. **A per-repo hermeticity answer cannot see any of this.**
 
+> ⚑⚑⚑ **WALL TIME IS NOT EVIDENCE — READ THIS BEFORE ANSWERING ANY COST QUESTION (rev 28).**
+> Operator: *"agents keep trying to treat wall time, even relative wall time, as remotely
+> meaningful. **They are not.** Trying to use them in reasoning is DEMANDING nondeterminism and
+> hidden confounds — resource contention (whether or not you know the resource), caching, or even
+> external manipulation of execution state. **Efficiency questions must be reasoned about in
+> depth. Tools hardened and trusted over bespoke probes.**"*
+>
+> **So, for every question below that touches cost:**
+> - ⚑ A wall-clock figure is **testimony about one observed run**, never **the cost of a thing**.
+>   *State it as the first if you state it at all.*
+> - ⚑⚑ **Reason from STRUCTURE** — what is recomputed, what is keyed, what is declared — **or from
+>   a HARDENED TOOL'S OWN COUNTERS** (bazel's cache-hit counts, an action-graph node count).
+>   **Never from a bespoke stopwatch.**
+> - ⚑⚑⚑ **Two parties have already been caught by this in MIRROR DIRECTIONS**: one filed *a
+>   machine fact as an instrument fact*, one filed *an instrument fact as a machine fact*. **The
+>   dispatcher's own `1831s → 117s` is cited four times in this file and supports none of it.**
+
 **Nine questions. Answer each with measurements from your own repo, every figure timestamped.**
 
 1. **What do you build with today?** bazel, make, uv, a shell script, nothing. Version, and how
@@ -719,7 +736,53 @@ ALL rather than a plausible-looking one.** ⚑⚑ ***A wrong parent that resolve
 parent*** — the key-that-names-a-sibling class, arriving on its own reporter's filing within the
 hour.
 
-⚑⚑⚑ **A FILED FIGURE RETRACTED AT 10×, AND IT TAKES A PIECE OF REASONING WITH IT — rev 24.**
+### ⚑⚑⚑ WALL TIME IS NOT EVIDENCE, AND THIS RUN FILE IS BUILT ON IT IN NINE PLACES — rev 28
+
+**Operator ruling, and it invalidates a method rather than a figure:**
+
+> *"A key recurring problem is that agents keep trying to treat wall time, even relative wall
+> time, as remotely meaningful. **They are not.** Trying to use them in reasoning is DEMANDING
+> nondeterminism and hidden confounds, whether that's resource contention (whether or not you know
+> the resource), caching, or even external manipulation of execution state. **Efficiency questions
+> must be reasoned about in depth. Tools hardened and trusted over bespoke probes.**"*
+
+⚑ **THE DISPATCHER'S OWN `1831s → 117s` IS THE WORST INSTANCE IN THIS FILE.** It is cited **four
+times** — as *the cache paid for once*, as a cost discipline, as `LS-04`'s specificity trade-off,
+and **quoted by `summit` to argue against adopting bazel at their scale.** ***It never supported
+any of that.*** Two wall-clock samples on a seven-session shared box, one cold and one warm, with
+**no control for contention, no repetition, and no isolation of the variable** — a difference with
+at least three sufficient explanations and no way to distinguish them.
+
+⚑⚑ **AND THE ONE THING IT DID SUPPORT SURVIVES, BECAUSE IT WAS NEVER THE TIMING.** `264 action-
+cache hits` is a **count from bazel's own reporting**, not a stopwatch. *The cache was populated
+and reused; that is a fact about the action graph and is independently checkable.* **The 15×
+"speedup" is the part that must go.**
+
+⚑⚑⚑ **AND THE MIRROR-PAIR IS THE FINDING, NOT EITHER HALF.** `summit` filed *a machine fact as an
+instrument fact* — ~10 minutes observed through a shim on a loaded box, recorded as a property of
+the tool. A peer then filed *an instrument fact as a machine fact* — a **cache-state** difference
+attributed to load, **with `90% CPU` in hand that should have refuted it**, since 90% CPU on a
+contended box is contradictory. ***Both directions of the same error, and wall time is what made
+each of them plausible.***
+
+⚑ **WHAT THIS DOES TO `§Q` AND `§X`, and it is a method change rather than a correction:**
+
+- **No leg's answer may rest on a wall-clock comparison.** A figure like *"`asks` costs 8.04s"*
+  is admissible as **testimony about one observed run**, never as **the cost of a coupling**.
+- ⚑⚑ **An efficiency claim must be reasoned from STRUCTURE — what is recomputed, what is keyed,
+  what is declared — or from a HARDENED TOOL'S OWN COUNTERS**, never from a bespoke stopwatch.
+  *Bazel's cache-hit counts, an action graph's node count, a lock's contention record: these are
+  instrumented by the tool that owns the work.*
+- ⚑⚑⚑ **`§X`'s cost discipline stands and its JUSTIFICATION changes.** *Do not run a build for the
+  census* remains right — **because the machine is shared-fate, not because a timing would be
+  informative.** The prior framing implied a timing was worth having and merely too expensive;
+  **it was never worth having.**
+
+**Every wall-clock figure below and in `§V` is retained as residue with this qualification
+attached, not deleted** — *a repair is residue, and the figures are the record of how this run
+reasoned before the ruling.*
+
+### ⚑⚑⚑ A FILED FIGURE RETRACTED AT 10×, AND IT TAKES A PIECE OF REASONING WITH IT — rev 24
 `summit`'s leg `§10` states *"`scripts/check` takes ~10 minutes wall-clock on a loaded machine."*
 They built an instrument this tick and measured **52.6 seconds across 20 slices**:
 
@@ -949,6 +1012,7 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 28 | 2026-09-06 | ⚑⚑⚑ **WALL TIME IS NOT EVIDENCE, AND THIS RUN FILE RESTS ON IT IN NINE PLACES — A METHOD INVALIDATED, NOT A FIGURE.** Operator: *"agents keep trying to treat wall time, even relative wall time, as remotely meaningful. **They are not.** Trying to use them in reasoning is DEMANDING nondeterminism and hidden confounds — contention, caching, or external manipulation of execution state. **Efficiency questions must be reasoned about in depth. Tools hardened and trusted over bespoke probes.**"* ⚑ **THE DISPATCHER'S OWN `1831s → 117s` IS THE WORST INSTANCE**: cited **four times** — as *the cache paid for once*, as a cost discipline, as `LS-04`'s specificity trade-off, and **quoted by `summit` to argue against bazel at their scale.** *Two samples on a seven-session shared box, no control, no repetition, no isolation — a difference with three sufficient explanations and no way to distinguish them.* ⚑⚑ **What survives is the part that was never a stopwatch: `264 action-cache hits` is a COUNT FROM BAZEL'S OWN REPORTING.** The 15× speedup goes. ⚑⚑⚑ **AND THE MIRROR-PAIR IS THE FINDING:** `summit` filed *a machine fact as an instrument fact*; a peer filed *an instrument fact as a machine fact*, **holding a 90% CPU reading that should have refuted it** — 90% CPU on a contended box is contradictory. ***Both directions of one error, and wall time is what made each plausible.*** **`§Q` gains a read-before-answering block; `§X`'s cost discipline STANDS with its justification changed** — *do not run a build for the census because the machine is shared-fate, **not** because a timing would be informative; the prior framing implied a timing was worth having and merely too expensive.* **All wall-clock figures retained as residue with the qualification attached, not deleted.** | `§Q`, `§X`, and every timing claim in this file |
 | 27 | 2026-09-06 | ⚑⚑⚑ **`§S`'s OWN STATE VOCABULARY WAS STALE AGAINST `§G`, IN THE ARTIFACT THAT WILL GOVERN THE FREEZE.** `§S` listed **four** states while `§G` had grown to **six** — `not surveyed` (rev 9) and `filed elsewhere` (rev 16) were added to `§G` and **never propagated to the roster that consumes them.** ***A definition and its consumer drifting apart inside one file — the shape this census files against repos.*** `§S` now carries all six, matching `§G`, plus **the current standing measured in ONE reading from `HEAD` at `d3c4c5f`** rather than accumulated: **10 filed** *(7 live-session + 3 third-party)*, `paperkit` **written and untracked** — ⚑ *explicitly NOT `no response`; the leg exists and is theirs to land* — and **nine unrostered repos `not surveyed`.** ⚑⚑ **AND THE FREEZE IS NOT HONESTLY CALLABLE UNTIL THE `retired` SET IS NAMED**, which no instrument here can derive: a marker sweep over the twelve returns **one hit and it is a subdirectory** (`mat230/archive`), and `summit delegate --all` lists **20 delegates with no retirement state at all.** *Inferring activity from a tree would file a retired repo as `no response` — the exact misattribution `§G` exists to prevent. The dispatcher will not guess it.* | `§S` |
 | 26 | 2026-09-06 | ⚑⚑⚑ **THREE CORRECTIONS FROM `summit`, EACH AGAINST THEIR OWN INTEREST.** **(a) THE CROSS-READ WAS THEIR RESEARCH AGENT'S, NOT THEIRS** — *"I did not find that; the research agent did, reading your leg among 21. I would rather that be recorded correctly than have summit credited with a cross-read it dispatched rather than performed."* ⚑ **Dispatching a read and performing one are different acts**, and rev 23b credited the dispatcher for the reader's finding. *What summit did was ask the question and verify the rung-1 blocker rather than relay it.* **(b) THE MOVING-TREE INSTANCE WAS NOT A `§W` VIOLATION** — *the agent's stamps were fine; the tree moved under a correctly-stamped measurement.* ⚑⚑ **That is a different failure from a bare number, and arguably the one `§W`'s INTERVAL form was written for** — a point stamp is honest and still insufficient when the subject changes during the window. **(c) THE INNER ERROR WAS STILL STANDING INSIDE THEIR OWN REPAIR:** `routes.py:486` quoted the refusal and corrected it as *a workaround stated as a principle* while **saying nothing about the cost claim being unmeasured** — *the paragraph that reads as the repair restated the unmeasured premise while fixing only its framing.* ⚑⚑⚑ **And the seam survives now ONLY BECAUSE 8s IS GENUINELY CHEAP — a different fact from the one written down, and they said so rather than letting the outcome launder the reasoning.** | `§X`, `§V` revs 23b, 24 |
 | 25 | 2026-09-06 | ⚑⚑⚑ **A NINTH MECHANISM, A FIFTH LOCKFILE POSITION, AND A THIRD-PARTY LEG THAT REFUSED THE WRONG QUESTION.** `gcalculus`, surveyed by subagent. **Ninth mechanism: grade at a chosen RESOLUTION with a RESUMABLE BUDGET** — `sweep.sh`/`grade.sh` drive `paperkit/discriminate.py` at `file`/`def` resolution, cached in `.delta-cache.json` (193948 bytes) keyed on `(engine, resolution, root)`, **typed 4-state exit** (0 done / 1 floor-unmet / 2 resume / 3 refuse); `farm.py` adds **23 named mutation F-arms with required message-fragment discrimination**, guarding against 4 measured vacuous arms. ⚑ **No existing row has a column for it** — others decide *what work exists*; this decides *how finely to grade it and when to stop*. **Fifth lockfile position: NO manifest at all** (depth-4 search, control fires) — the other four have *some* lock; this has none, so the properties are **vacuously absent rather than failing**. ⚑⚑ **THE SUBAGENT RENUMBERED AGAINST A QUESTION ORDER THAT IS NOT THIS RUN FILE'S**, refused `§Q`-8 (hermeticity — **answerable from source by a third party**) as *"UNANSWERABLE"*, answered `§Q`-7 under that label, and **reported to the dispatcher that it had answered 8 and refused 7.** *Labels corrected in place by the dispatcher; the content was not touched and the mis-refused question is now marked **UNMEASURED, not unanswerable.*** ⚑⚑⚑ **A third-party leg's own numbering is a claim, and this one was wrong while its self-report was confident** — the dispatcher caught it only by reading the leg against `§Q` rather than against the subagent's summary. **It also corrected two of the dispatcher's own dispatch figures: 83 `concepts_*.py` (not ~90) and 7 shell scripts (not 6).** | `§X`, `§Q`-3, `§Q`-8 |
