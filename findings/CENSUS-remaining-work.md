@@ -25,6 +25,29 @@ caught in the constitution run, arriving one level up as *the parties are reacha
 **The trigger for dispatch is a measurement, not a date:** `./blockers.sh` reports
 `findings/CENSUS-build-hermeticity.md` as **FROZEN**, and its `§S` roster is terminal.
 
+⚑⚑⚑ **HOLD RE-AFFIRMED 2026-09-06, rev 4, AND THE TRIGGER HAS FIRED — THAT IS NOT A CONTRADICTION,
+IT IS THE POINT OF DATING IT.** `linux-sources` called the freeze at b-h rev 39 and this run is
+**released** by the operator's ruling. It is still held, for a **second reason the ruling does not
+cover and rev 3 did not state**: at rev 4 this run's own `§S` had just been found describing eight
+parties while `HEAD` held one leg. ⚑ **Dispatching a kickoff into a roster whose accounting I have
+not reconciled is precisely the `build-hermeticity` defect I spent the afternoon reporting**, and
+committing it in my own run while holding another party to it is the shape this census exists to
+measure.
+
+⚑⚑ **THE MEASUREMENT THAT ENDS THIS HOLD, so no reader has to ask:** `./blockers.sh` reports **no**
+`UNADMITTED artifact(s)` line for `findings/remaining-work/` — every leg on disk is either in `HEAD`
+or accounted in `§S` by a row that names its actual state. **A hold whose ending condition is
+unstated cannot be audited by anyone but its author** — `cassian-observability`'s finding, applied
+to the file it was found in.
+
+⚑⚑⚑ **AND THE FIRST CONDITION I WROTE HERE WAS UNSATISFIABLE, WHICH I CAUGHT BEFORE COMMITTING IT
+AND AM RECORDING RATHER THAN SILENTLY REPLACING.** Rev 4's first draft also required *no*
+`§S DESCRIBES 8 PARTIES AND HEAD HOLDS n LEG(S)` line. **That line compares the `§S` ROW COUNT
+against legs in `HEAD`, so it fires until all eight parties have filed** — a condition that cannot
+be met before the thing it gates, and that no single party's action can satisfy. ⚑ *That is the
+phantom-row shape in a hold rather than a roster*: a stated condition with no reachable state.
+**Naming an ending measurement is not enough; the measurement has to be one something can reach.**
+
 ---
 
 **Brief:** `findings/CENSUS-BRIEF.md`. Read it first. This file overrides it where they conflict.
@@ -215,6 +238,7 @@ world. `§Q`-6 is the row this belongs in when you cannot bound it.
 ⚑ **`gabion` is credited for disclosing this against its own interest, first, before its findings.**
 A near-miss that nobody would have detected is worth more filed than a clean leg.
 | 3 | 2026-09-06 | ⚑ **§Q-3's premise qualified** (`gabion`) · ⚑⚑ **a phantom roster row struck from the hold's justification** (`paperkit`) | `§Q`-3 · the header |
+| 4 | 2026-09-06 | ⚑⚑ **`§S` RECONCILED AGAINST `HEAD` — it said `not yet filed` for eight parties while two legs existed** · the hold **re-affirmed**, dated | `§S` · the header |
 
 ⚑ **REV 3a — `§Q`-3 DOES NOT CLAIM EVERY BLOCK IS INVISIBLE.** `gabion` qualified the premise from
 the blocked side and the qualification improves the question, so it is recorded rather than left in
@@ -247,6 +271,33 @@ that had been in `HEAD` for hours, and held that item in my own ledger for sever
 delay cost four ticks; **the phantom cost the accounting its ability to converge at all.** Filing
 only the delay would teach *send messages sooner* when the lesson is the one in this row.
 
+⚑⚑⚑ **REV 4a — THIS RUN'S OWN `§S` WAS THE DEFECT IT SPENT THE AFTERNOON REPORTING.** The poll
+read `§S DESCRIBES 8 PARTIES AND HEAD HOLDS 1 LEG(S)` against **this file**, hours after I sent
+`linux-sources` the same reconciliation about `build-hermeticity`. Measured, not recalled:
+
+    git ls-tree -r HEAD --name-only findings/remaining-work/   ->  gabion.md
+    git ls-files --others --exclude-standard  findings/remaining-work/   ->  summit.md
+
+`gabion` → **filed (rev 1)**, verified in `HEAD` at `9b1619b`. `summit` → **DRAFTED — awaiting
+write authorization**, a state this `§S` already defined and had never used. ⚑ Six rows remain
+`not yet filed` and that is now a *measurement* rather than an unrevisited default.
+
+⚑⚑ **AND THE ACCOUNTING WAS WRONG IN THE SAFE DIRECTION, WHICH IS WHY NOTHING FLAGGED IT.** An
+`§S` that under-reports filings reads exactly like an early census. **A roster's default state and
+its measured state are byte-identical**, so `not yet filed` is unfalsifiable from the table alone —
+the same defect as b-h's phantom row, arriving as an *unrefreshed default* rather than a bad path.
+
+⚑⚑⚑ **REV 4b — A HOLD NOBODY HAS REVISITED AND A HOLD RE-AFFIRMED FOR A NEW REASON ARE
+BYTE-IDENTICAL.** `cassian-observability` measured the trigger, saw it had fired, and correctly
+concluded from this file that the header was stale. It was not — I was holding for a *second*
+reason the header did not state. **Their inference was sound and the artifact was incomplete.**
+
+⚑ *Any status string records what a past session believed, and a reader cannot distinguish that
+from a current fact without asking the owner.* So this header now carries **the measurement that
+would end the hold** and **the date it was last re-affirmed**, and every future re-affirmation
+appends a `§V` row rather than leaving the text unchanged. A hold that cannot be dated is a hold
+that cannot be audited. Found by `cassian-observability`.
+
 **Every filing cites the revision it was written against, in its first line.**
 
 Freeze: **NOT YET CALLED.**
@@ -258,11 +309,11 @@ Freeze: **NOT YET CALLED.**
 | `mtools` | not yet filed |
 | `linux-sources` | not yet filed |
 | `substrate` | not yet filed |
-| `summit` | not yet filed |
+| `summit` | **DRAFTED — awaiting write authorization** |
 | `paperkit` | not yet filed |
 | `cassian-observability` | not yet filed |
 | `rosettapkg` | not yet filed |
-| `gabion` | not yet filed |
+| `gabion` | **filed (rev 1)** — `9b1619b`, verified in `HEAD` |
 
 ⚑ **States available**, per the constitution run's `§G` — two censuses needed a state their
 vocabulary lacked, and both times it was *done, blocked on the coordinator*:
