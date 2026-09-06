@@ -63,7 +63,34 @@ TEXTUAL = frozenset((
     "strings", "cat", "tac", "od", "xxd", "diff", "comm", "join", "paste",
     # ⚑ Added after measuring that each passed a textual read of a claimed artifact.
     "perl", "less", "more", "jq", "column", "fold", "expand", "unexpand",
+    # ⚑⚑ A SECOND PASS, MEASURED AGAINST TOOLS ACTUALLY PRESENT ON THE HOST rather than against
+    # imagination: 26 more were installed and absent from this roster. They are not all alike, and
+    # the classification is why only some are here.
+    #   READERS — open a named file and emit its bytes as text:
+    "hexdump", "hd", "cmp", "sdiff", "col", "colrm", "pr", "look", "ptx", "base64", "iconv",
+    "split", "csplit",
+    #   EDITORS — interactive, but they read the file to display it, and a pager already is here:
+    "vim", "vimdiff", "nano", "ed", "ex", "view",
 ))
+
+# ⚑⚑⚑ THREE THINGS FOUND ON THE HOST ARE DELIBERATELY ABSENT, AND EACH FOR A DIFFERENT REASON.
+#
+#   `pandoc` — mdstruct's own docstring calls it *"the ONE conversion point, and the only
+#   subprocess in this package"*. Blocking it blocks the owning tool's backend, which is the
+#   `python3` case again: the route this hook PRESCRIBES must not be refused alongside the
+#   textual reads it exists to stop.
+#
+#   `tee`, `xargs`, `shuf`, `tsort` — these consume STDIN. `tee notes.md` WRITES to that path and
+#   never reads it, so blocking them would refuse a command that does not do the thing the gate
+#   objects to. ⚑ A denylist entry that fires on a non-reader is the allowlist's failure mode
+#   arriving by the back door: it refuses legitimate work.
+#
+#   `xmllint` — reads XML, and no artifact in this repository's routing table claims that suffix.
+#   Adding it would arm the gate for a claim nobody has made.
+#
+# ⚑⚑ The distinction the roster actually encodes is READS A CLAIMED ARTIFACT AS TEXT, not
+# "processes text". Getting that wrong in either direction costs something: an omission fails to
+# catch one command, an over-inclusion refuses one that was never the problem.
 
 # ⚑⚑⚑ `python3` IS DELIBERATELY ABSENT, AND THE REASON IS THAT IT IS THE OWNING TOOL'S OWN
 # INVOCATION. `python3 -m mikemol.mdstruct.cli spans f.md` is the route this hook PRESCRIBES;

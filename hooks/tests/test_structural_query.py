@@ -328,3 +328,34 @@ def test_a_command_that_touches_without_reading_is_permitted() -> None:
     for cmd in ("git add notes.md", "rm notes.md", "cp notes.md other.md", "chmod 644 notes.md"):
         assert not structural_query.verdict(cmd, _CLAIMS)[0], (
             f"{cmd} does not read the file and must be permitted")
+
+
+@pytest.mark.parametrize("tool", ["hexdump", "vim", "sdiff", "col", "base64", "ed"])
+def test_a_reader_or_editor_found_on_the_host_is_refused(tool: str) -> None:
+    """⚑⚑ A second pass, measured against tools ACTUALLY INSTALLED rather than imagined.
+
+    Twenty-six more were present on the host and absent from the roster. ⚑ Enumerating what a
+    machine has is not the same as enumerating what could exist — but it is a real population,
+    where a list written from memory is a guess about one.
+    """
+    assert structural_query.verdict(f"{tool} notes.md", _CLAIMS)[0], (
+        f"{tool} reads a claimed artifact as text and must be refused")
+
+
+@pytest.mark.parametrize(
+    ("tool", "why"),
+    [
+        ("pandoc", "mdstruct's own backend — blocking it blocks the prescribed route"),
+        ("tee", "consumes stdin and WRITES the named path; it never reads it"),
+        ("xargs", "consumes stdin; the named path is not opened"),
+    ],
+)
+def test_a_non_reader_on_the_host_is_permitted(tool: str, why: str) -> None:
+    """⚑⚑⚑ The roster encodes READS A CLAIMED ARTIFACT AS TEXT, not "processes text".
+
+    Getting that wrong costs something in both directions, and they are not symmetric: an
+    omission fails to catch one command, while an over-inclusion REFUSES one that was never the
+    problem. ⚑ A denylist entry firing on a non-reader is the allowlist's failure mode arriving
+    by the back door.
+    """
+    assert not structural_query.verdict(f"{tool} notes.md", _CLAIMS)[0], f"{tool}: {why}"
