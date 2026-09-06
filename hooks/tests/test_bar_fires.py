@@ -927,3 +927,93 @@ def test_the_gate_points_the_checkers_at_the_staged_tree() -> None:
     body = _GATE.read_text(encoding="utf-8")
     assert 'MYPYPATH="$staged/' in body, "mypy must resolve inside the staged tree"
     assert 'PYTHONPATH="$staged/' in body, "the import closure must be the staged one"
+
+# --- blockers.sh: three defects in three consecutive ticks, none of them gated -----------------
+#
+# ⚑⚑⚑ THE POLL SELECTS EVERY SUBSEQUENT TICK'S WORK, SO A WRONG ANSWER HERE MIS-SEQUENCES
+# EVERYTHING DOWNSTREAM — and its failure mode is worse than the gate's. A wrong gate refuses a
+# commit LOUDLY. A wrong poll silently derives the wrong top item, which is what happened when it
+# reported `7 of 7 FROZEN` while `HEAD` held 8 legs and I acted on that reading for a full tick.
+#
+# ⚑ Three defects, three consecutive ticks, each found by hand or by a peer's work and none gated:
+# a hardcoded census path; `git ls-files` as the population (excluding the untracked run file of a
+# census convened minutes earlier); and a one-sided reconciliation whose SILENCE read as agreement.
+
+
+_POLL = _DIST.parent / "blockers.sh"
+
+
+def test_the_poll_enumerates_censuses_from_the_filesystem() -> None:
+    """⚑⚑⚑ TRACKED WAS A SECOND CHEAP KEY, INSIDE THE REPAIR FOR THE FIRST.
+
+    Tick 1 replaced a hardcoded `CENSUS-deps-build.md` with `git ls-files`, which looked like
+    deriving the population and was `is it committed` rather than `is it a census run file`.
+    ⚑ Measured the tick after: `CENSUS-build-hermeticity.md` was convened by a peer, placed in this
+    tree, carried mtools on its roster, and was INVISIBLE because its dispatcher had not committed
+    it. That window is the one where a poll has the most to report.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "find findings" in body, "the population must be the filesystem, not the index"
+    assert "git ls-files 'findings/CENSUS-" not in body, "trackedness is a column, not a filter"
+
+
+def test_the_poll_marks_an_untracked_run_file_rather_than_hiding_it() -> None:
+    """⚑ `§F` INVERTED: a run file not in `HEAD` still ROSTERS the parties who read it by path."""
+    body = _POLL.read_text(encoding="utf-8")
+    assert "NOT IN HEAD" in body, "an untracked census must be reported, not omitted"
+
+
+def test_the_poll_derives_the_status_table_signature() -> None:
+    """⚑⚑ A HARDCODED SIGNATURE REPORTED A FROZEN CENSUS AS NOT FROZEN.
+
+    `deps-build`'s `§S` is `party | status`; `constitution`'s is `surveyor | status`. Measured the
+    moment the block was generalised over both: roster `? of 7`, then
+    `NOT FROZEN — the roster is SHORT`, against a census whose `§V` carries FREEZE CALLED at rev 37
+    and whose seven legs are all in `HEAD`. ⚑ A confident refusal produced by a missing TABLE rather
+    than a missing ROW — the same class as the positional `--table N` predicate this block already
+    refuses, arriving through the header instead of the index.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "(party|surveyor) \\| status" in body, "the signature must be derived, not fixed"
+
+
+def test_the_poll_distinguishes_a_missing_status_table_from_a_short_one() -> None:
+    """⚑⚑⚑ IT MANUFACTURED A DELETION CLAIM ABOUT A TABLE NOBODY HAD WRITTEN.
+
+    A census with no `§S` yet made the roster read `? of 8`, and the branch reported
+    *the roster is SHORT: a dropped row reads as terminal*. ⚑ Absent-versus-unavailable inside the
+    instrument that reports it: a missing `§S` means *nobody has filed*; a short `§S` means *a row
+    was dropped*; and reading the first as the second invents a defect out of a census's normal
+    opening state.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "PRE-FILING, not short-rostered" in body
+
+
+def test_the_poll_reconciles_head_against_the_status_roster() -> None:
+    """⚑⚑⚑ THE UNADMITTED CHECK SAW ONE DIRECTION, AND ITS SILENCE READ AS AGREEMENT.
+
+    The check finds files with no `§S` row. It cannot find `§S` rows that no longer cover the
+    directory — so when a late leg went from untracked to COMMITTED, the only signal there was went
+    quiet at the exact moment the disagreement became permanent rather than pending. ⚑ Measured:
+    `HEAD` held 8 constitution legs, `§S` held 7 rows, and the poll reported `7 of 7 — FROZEN`.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "n_head=" in body, "the poll must count HEAD's legs, not only §S's rows"
+    assert "DESCRIBES" in body, "the divergence must be reported rather than inferred"
+
+
+def test_the_polls_fetchability_predicate_is_not_ls_files() -> None:
+    """⚑⚑ `ls-files` REPORTS A STAGED FILE AS TRACKED, WHICH IS THE WRONG QUESTION FOR INTAKE.
+
+    *Tracked in a peer's index* and *fetchable by me* are different properties and only the second
+    decides whether code can move. ⚑ Measured: every island module this poll called TRACKED had
+    ZERO commits on the branch — a blocker reported as clearing, for ten ticks, that never cleared.
+    And `git log --all` is worse rather than better: 33 commits, every one under
+    `refs/edit-snapshots/`, none carried by a clone.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    start = body.index("tracked() {")
+    fn = body[start:body.index("\n}", start)]
+    assert "log --oneline" in fn, "fetchability needs branch history, not index membership"
+    assert "staged only (NOT fetchable)" in fn, "the three-valued answer must be stated"
