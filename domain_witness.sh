@@ -87,9 +87,22 @@ fi
 # ⚑ IT REFUSES RATHER THAN SAVING AND REPLAYING THE EDIT. A witness that stashed and restored a
 # user's work would be a second mutation path over the same file, and the failure mode of a
 # stash-replay that goes wrong is silent corruption rather than a refusal.
-if [ -n "$(git status --porcelain -- "$victim" 2>/dev/null)" ]; then
-    echo "domain_witness: $victim has uncommitted changes — refusing" >&2
-    echo "  arm 3 restores with 'git checkout' and would DISCARD them. Commit or stash first." >&2
+# ⚑⚑⚑ UNSTAGED, NOT MERELY UNCOMMITTED — AND THE FIRST CUT OF THIS GUARD WAS A DEADLOCK.
+# `git status --porcelain` is non-empty for a STAGED change too, so refusing on it made every
+# victim file permanently uncommittable: a change to `blockers.sh` could never pass the gate that
+# runs a witness over `blockers.sh`. Measured: rc=2 on a staged-only edit.
+#
+# ⚑⚑ AND THE DISTINCTION IS NOT A CONVENIENCE, IT IS WHAT `git checkout` DOES. Measured in a
+# scratch repo: with v2 staged and v3 in the working tree, `git checkout -- f.txt` yields **v2**.
+# It restores from the INDEX. So a staged change SURVIVES arm 3 and only unstaged work is
+# destroyed — which is exactly the set this guard must refuse, and no larger.
+#
+# ⚑ THE FIX FOR MY OWN DEADLOCK IS THE MEASUREMENT I SHOULD HAVE TAKEN BEFORE WRITING THE GUARD:
+# I knew the restore was file-granular and assumed it was HEAD-granular too.
+if [ -n "$(git diff --name-only -- "$victim" 2>/dev/null)" ]; then
+    echo "domain_witness: $victim has UNSTAGED changes — refusing" >&2
+    echo "  arm 3 restores from the index with 'git checkout' and would DISCARD them." >&2
+    echo "  Stage them (git add) or stash. A STAGED change is safe and does not trip this." >&2
     exit 2
 fi
 
