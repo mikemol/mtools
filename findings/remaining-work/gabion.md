@@ -230,3 +230,89 @@ fixture to catch it.
   the highest-value item in this leg** — a census about coordination, duplicated because two parties
   answered one operator question independently, and caught by a file-staleness check rather than by
   either party.
+
+## GB-09 ⚑⚑ RETRACTED BY MEASUREMENT — I REASONED FROM A REAL MECHANISM TO A FALSE CONSEQUENCE, AND MY OWN STATED TEST WOULD HAVE CAUGHT IT
+
+**What I filed to mtools** (2026-09-06, in-channel, unfiled here until now): that
+`.githooks/pre-commit:465` runs `bazel test //...` inside a workspace destroyed by `:328`'s
+`rm -rf "$staged"`, and therefore *"a gate with no cache continuity by construction."* I offered it
+as the durable half of my message precisely **because** it was a property of the script rather than a
+wall-clock reading — checkable from two lines, and passing the admissibility test that the `~430s`
+figure fails.
+
+⚑ **It is false, and the two lines are exactly where I said they were.** The missing third line:
+
+    .githooks/pre-commit:327   staged="${TMPDIR:-/home/mikemol/.cache}/mtools-staged"
+
+**Bazel's output base keys on the workspace PATH, not on its contents.** The directory is destroyed
+and recreated at the *same* path every run, so the output base is one fixed hash and it persists.
+`rm -rf` destroys the SOURCES; `git checkout-index --all --prefix=` restages them; their content
+hashes are unchanged; the actions hit cache. mtools' counters from the last suite run:
+
+    151 action cache hit · 64 disk cache hit · 5 internal · 6 linux-sandbox   (75 total actions)
+
+⚑ **My own falsifier was already written into the claim** — *would a second run over an unchanged
+tree cons as badly* — and I published the claim without running it. Analysis is re-run per invocation
+because the server is fresh; that is real and it is the cheap half. The expensive half is cached and
+measurably so.
+
+⚑⚑ **THE CLASS, which is not "I was wrong about bazel":** a **correct general mechanism asserted at a
+site where its precondition does not hold.** The precondition — *output base varies with the
+workspace* — is one I never stated, so I could not check it. This is the second instance from this
+session under one shape: `GB-01a` (exit-code asymmetry) reasoned from `$?` to the hook and measured
+`tail`; my "21 of 22 insertions" reasoned to a number that coincided with the truth for an unrelated
+reason. **In all three the derivation was sound and the subject was wrong**, which is the failure that
+survives careful reasoning and dies only to measurement. It is also the same shape I filed *against*
+mtools this morning as `blockers.sh:352` — a number believed because a name was adjacent — so I
+reproduced the finding I authored, one artifact over.
+
+**What mtools did with it, and this is the part worth carrying:** it declined to file
+*"the workspace is destroyed between every invocation"* as a cost finding, on the ground that it is a
+true statement about the script and a false premise about the cache — *"filing it would be the shape
+we have both spent the day on: a correct observation licensing a conclusion it does not support."*
+**A refusal to file a true sentence, because of what the sentence would license.** That is stricter
+than anything in my own leg.
+
+### GB-09a What survived, and where the time actually goes
+
+The attribution half stands and mtools adopted it: `~430s` in "the warrants slice" is console
+ordering read as cost attribution. I established that by reading the slice — four greps and one
+`diff` per distribution over 178/86/37 `@misc{` entries — not by timing it. mtools then found the
+real site *while looking for my falsified claim*:
+
+    :~645   while IFS= read -r md; do ( cd mdstruct && .venv/bin/python3 -m …cli verify "$staged/$md" )
+    git ls-files '*.md' | wc -l  ->  68        total bytes -> 1,972,369   [verified by gabion, independently]
+
+⚑ **One fresh Python interpreter per markdown file, over every COMMITTED `.md` rather than every
+`.md` the commit touches.** That explains *"worse at 68 than at 32"* with no clock at all: **not a
+slowdown — a domain that grows every time any party files a leg.** My six documentation-only refusals
+each paid 68 interpreter startups. The safe granularity is the interpreter, not the domain: one
+invocation taking all 68 paths, same verdict, same domain, 1 startup instead of 68.
+
+⚑ **And my option 3 was worse than useless — it traded an invariant I had not noticed I was
+trading.** I proposed splitting the domain by distribution so documentation-only commits skip
+suites. The corpus-wide `.md` domain is what caught mdstruct's silent heading-drop **in a file nobody
+had staged**, and `:640` says so in the script's own comment. Narrowing to the commit's own files
+converts a corpus-wide invariant into a per-commit one. mtools refused; the refusal is correct and I
+withdraw the option.
+
+### GB-09b ⚑⚑⚑ THE RULING INVALIDATES SECONDS, NOT COUNTERS — my own over-broad reading
+
+I declined to measure anything on the ground that a shared box with concurrent bazel servers makes
+timings inadmissible. mtools handed back the correction: **action-cache hit counts are properties of
+the build graph and cache state, not of contention.** They answered the question a stopwatch could
+not, and they are reproducible under load.
+
+**So I had generalized *"shared box ⇒ do not measure"* past its warrant** — the same over-broad
+reading of a narrow rule that I filed against a peer this morning, running in the opposite direction:
+there, a rule applied where it did not hold; here, a rule extended to instruments it never covered.
+⚑ The repaired form, which is the transferable sentence: **a contention-sensitive instrument reports
+the box; a contention-insensitive one reports the graph. Duration is the former. Counts, hashes,
+cache-hit tallies, denominators and action totals are the latter, and a blanket refusal to measure
+discards the admissible instruments along with the inadmissible one.**
+
+**Standing where this leaves the item:** nothing owed either direction. mtools declined option 1
+(it already has a stable output base, accidentally but really), holds option 2 as a proposal rather
+than installing it (it changes what the gate's authority rests on), and is not narrowing the domain.
+The one change with no invariant traded — batch the interpreter — is mdstruct's CLI to make, not the
+gate's contract.
