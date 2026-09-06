@@ -74,6 +74,33 @@ provenance.**
 **Conventions fixed here rather than negotiated:** filename pattern as above; ID prefixes as
 above; all files land in `findings/build-hermeticity/` in **mtools**; quote the byte, cite file and line.
 
+⚑⚑⚑ **AND THAT CONVENTION ASSUMES EVERY SURVEYED PARTY MAY WRITE INTO ONE PARTY'S TREE, WHICH IS
+FALSE — rev 16.** `cassian-observability` holds a standing **operator limit**: *"DO NOT WRITE INTO
+~/github/mtools — cassian is holding until Ⓒ sets the floor; mtools-05 owns that sequencing."*
+They checked mtools `HEAD` for a floor-setting commit, found none, and **the hold stood**.
+
+⚑ **SO THEY AUTHORED THE LEG IN THE REPO IT SURVEYS** —
+`cassian-observability:docs/census-build-hermeticity-leg.md`, committed `bdd61c0`, citing rev 13
+— **and declared the deviation in the file's own second paragraph.** Their reasoning, which is
+the correct one: ***a leg at the wrong path is VISIBLE; a leg written past an operator hold is not
+recoverable.*** They took the failure mode a reader can see.
+
+⚑⚑ **AND THEY REFUSED TO INFER THE LIFT FROM MY DISPATCH, WHICH IS THE PART THAT MATTERS MOST.**
+*"A peer cannot lift an operator's hold, and I would rather be the party that asked twice."* **A
+census dispatch is not an authorization to write anywhere**, and a dispatcher who assumed
+otherwise would have been laundering a permission through a roster convention.
+
+**Resolved by ADOPTION, not by anyone breaching a hold:** the dispatcher copied the file to the
+`§R` path, byte-identical (`md5 2336113438ec2ba9291404bc01848aaa`, verified both sides), **after
+reading it in full** — a file published into a shared tree must be read by whoever publishes it.
+
+⚑⚑⚑ **THE DEFECT IS `§R`'s AND THE FAILURE MODE IS SILENT, WHICH IS WHY IT IS A ROSTER ROW AND
+NOT A FOOTNOTE.** Had `cassian` simply not filed, the freeze would have recorded **`no response`**
+— *the exact misattribution `§G`'s vocabulary exists to prevent*, and indistinguishable from a
+party that was asked and ignored it. **A roster must not encode a write permission it has not
+verified**, and this one did. *A sixth silence state — `filed elsewhere, adoption pending` — is
+now real and was not in `§G`'s table.*
+
 ⚑⚑⚑ **THE ROSTER ABOVE IS EIGHT REPOS AND THE SUBJECT SPANS AT LEAST SIXTEEN — MEASURED AT
 rev 8, AFTER THE ROSTER WAS WRITTEN.** Operator: *"you should look around for `.bib` files all
 over, because a lot of them are actually cotype files."* Measured across `~/github`, excluding
@@ -582,6 +609,7 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 16 | 2026-09-06 | ⚑⚑⚑ **`§R` ENCODED A WRITE PERMISSION IT NEVER VERIFIED, AND THE FAILURE IS SILENT.** `cassian-observability` holds a standing **operator limit** — *"DO NOT WRITE INTO ~/github/mtools — cassian is holding until Ⓒ sets the floor"* — checked mtools `HEAD` for a floor-setting commit, found none, and **authored its leg in the repo it surveys** (`cassian-observability:docs/census-build-hermeticity-leg.md`, `bdd61c0`, citing rev 13), declaring the deviation in the file's own second paragraph. ⚑ Their reasoning: ***a leg at the wrong path is VISIBLE; a leg written past an operator hold is not recoverable.*** ⚑⚑ **And they refused to infer the lift from my dispatch** — *"a peer cannot lift an operator's hold, and I would rather be the party that asked twice."* **A census dispatch is not an authorization to write anywhere**; a dispatcher who assumed otherwise would be laundering a permission through a roster convention. **Resolved by ADOPTION** — copied to the `§R` path byte-identical (`md5 2336113438ec2ba9291404bc01848aaa`, both sides), after reading it in full. ⚑⚑⚑ **Had they simply not filed, the freeze would have read `no response`** — the exact misattribution `§G` exists to prevent. **`§G` gains a sixth state, `filed elsewhere`**, and `§R` gains the defect: *a roster must not encode a write permission it has not verified.* | `§R`, `§G` |
 | 15 | 2026-09-06 | ⚑⚑⚑ **A FOURTH HOLE, THE DISPATCHER'S, AND THE ONLY ONE NO CHECK CAN FLAG.** `summit`'s leg (`5d647a3`) **cites rev 13 and is committed BENEATH `bb4b280`, the commit that introduced rev 13** — at filing time `HEAD` carried rev 12. They read rev 13 from **my uncommitted working tree**, because I broadcast it after a commit that had failed three times. ⚑ **The citation is TRUE NOW and was FALSE WHEN MADE.** Their classification is the finding: *"I read a working tree and classified it as `citation`; by the brief's own vocabulary it was closer to `testimony` — evidence a revision exists, not the revision as the corpus holds it."* ⚑⚑ **A citation that OVERTAKES its referent starts wrong and becomes right** — every later read confirms it, both objects exist, and the ordering is visible only in the log. *A stale citation starts right and rots, so a check can catch it; this one never disagrees with the record.* **Consequence for the apex, underivable from the artifacts: reading `5d647a3` against `bb4b280` reads a leg against a revision its author could not have fetched.** Cause is the dispatcher's broadcast, not the filer's citation. | `§W`, apex method |
 | 14b | 2026-09-06 | ⚑⚑ **THREE PARTIES HELD A RULE AND DID NOT FIRE IT ON THEMSELVES, UNPROMPTED, IN ONE AFTERNOON — `summit-3a` names it as a property of this census's CONSTRUCTION rather than three self-corrections.** `paperkit`'s null-result, `gabion`'s population-scope, and **the dispatcher's own**: *I checked `HEAD` rather than trusting my own commit — the rule I had been applying to everyone else's claims all day and had not applied to my own dispatch.* ⚑ **Same shape as the constitution apex's `AX-06a`** (*an article's author is the worst-placed party to find its violations at home*), arriving a second time in a second census **without anyone testing for it**, and each instance found by the party itself only after a peer's unrelated report made the rule salient. *Recorded here so the apex reads it as one observation with three witnesses rather than three apologies.* | apex method |
 | 14 | 2026-09-06 | ⚑⚑⚑ **rev 13's RULE HAS A HOLE AND THREE PARTIES FOUND IT FROM THREE DIRECTIONS WITHIN THE HOUR.** *"Answerable to the revision it cites"* presupposes the citation is **present and correct**, and it was neither. **`summit`: a DRAFT IN FLIGHT** — drafted at rev 11, rev 13 landed before filing; *"the rule protects a filer from drift AFTER filing; it says nothing about a draft in flight."* ⚑ **Ruling: pre-filing, the CURRENT revision binds; post-filing, the CITED one does.** **`gabion`: NO CITATION AT ALL** — pre-filed *"against no run file"*, accurate and useless as an anchor; **ruling: record the target actually measured against** (here the operator's two quotes plus the 7-question `§Q` at `eb42b7a`). **`rosettapkg`: a WRONG CITATION** — leg says rev 6, the file they read carried **ten** revisions. ⚑⚑ **AND THE CAUSE IS MY OWN HEADER SENTENCE**: they read *"renamed at rev 6"* — a **provenance note** — as a version stamp, *the same shape as probing `.git/hooks/` on a repo with `core.hooksPath`.* **A warning block now says `§V`'s last row is the only version stamp**, because a run file demanding a citation owes a place to read it that cannot be confused with prose. ⚑⚑⚑ **The two defects are mirrors — I moved a question under a correct citation; they mis-stated a citation under a correct question — and both glue a leg to the wrong revision.** | `§W`, header, apex method |
@@ -623,6 +651,7 @@ twelve silences as twelve zeros**:
 | `not surveyed` | ⚑⚑ **no live session; no subagent was dispatched to read the tree** | ⚑ **NO — and this is the one that reads as a zero.** *Nobody asked.* |
 | `retired` | ⚑ **no leg owed**; operator-held knowledge, recorded nowhere in any artifact | **NO.** Not an omission at all. |
 | `declined` | reached and chose not to file | — |
+| `filed elsewhere` | ⚑⚑ **the leg EXISTS and is committed, at a path `§R` did not name** — because the party could not write where `§R` said | ⚑ **NO, and it is the silence `§R` itself creates.** *Resolved by ADOPTION by the dispatcher, never by asking the party to breach a hold.* |
 
 ⚑ **`not surveyed` and `nothing to report` are the same blank and opposite facts**, and twelve
 of the repos in `§R` start in that state by construction. **A freeze that does not name it
