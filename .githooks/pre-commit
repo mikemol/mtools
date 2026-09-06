@@ -56,8 +56,32 @@ fail=0
 # the LAST thing printed. That is this repository's own subject arriving in its output layer
 # rather than its logic.
 failed_checks=""
-note_failure() { failed_checks="$failed_checks
-  - $1"; }
+failed_detail=""
+# ⚑⚑⚑ A REFUSAL THAT NAMES AN OUTCOME AND NOT A SUBJECT IS ONE NOBODY CAN CLEAR, AND THIS GATE
+# SHIPPED ONE. `linux-sources` was refused by `shellcheck domain reaches every shell file` and
+# reported that `grep shellcheck` over the ENTIRE run returned two lines: a passing bazel target
+# and the refusal summary. No file, no rule, no count. ⚑ The witness DOES print three arms — but
+# to stderr, interleaved into a 35-target bazel run hundreds of lines earlier, so the account
+# exists and is unfindable. **Detail that exists somewhere and is not attached to the verdict is
+# detail the reader does not have.**
+#
+# ⚑⚑ THE SAME SHAPE THIS ECOSYSTEM SPENT AN AFTERNOON ON, IN THE OTHER GATE. `linux-sources`'
+# `//:gate` printed `gate verdict: fail` while fifteen per-claim records held `1 failing of 1` in
+# one file and `0 of 1` in fourteen — *a two-second read against fifteen guesses*. Mine was worse:
+# zero of unknown, because no per-check record exists to go read.
+#
+# ⚑ SO A FAILING CHECK CAPTURES ITS OWN OUTPUT AND REPLAYS IT UNDER THE VERDICT. The second
+# argument is optional; where it is absent the label still lands, which keeps every existing call
+# site correct rather than making 20 of them a prerequisite for the repair.
+note_failure() {
+    failed_checks="$failed_checks
+  - $1"
+    if [ -n "${2:-}" ] && [ -s "$2" ]; then
+        failed_detail="$failed_detail
+  --- $1
+$(sed 's/^/      /' "$2")"
+    fi
+}
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
 
 # ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
@@ -258,7 +282,15 @@ say "domain witness: each mypy target's declared domain vs its real one"
 # that checks EVERY shell file, including the gate you are reading, was asserting a domain nobody
 # had tested. Its population became a `glob()` two ticks ago precisely because a hand list had
 # drifted to 7-of-11, which makes the untested domain the more consequential half.
-./domain_witness.sh .        //:shellcheck_githooks blockers.sh                shellcheck || { fail=1; note_failure "shellcheck domain reaches every shell file"; }
+# ⚑ THE WITNESS THAT REFUSED A PEER WITH NO ACCOUNT. Its arms go to stderr and vanish into a
+# 35-target bazel run; captured here so the refusal carries them.
+wlog="$staged/.witness-shellcheck.log"
+if ! ./domain_witness.sh . //:shellcheck_githooks blockers.sh shellcheck >"$wlog" 2>&1; then
+    cat "$wlog" >&2
+    fail=1; note_failure "shellcheck domain reaches every shell file" "$wlog"
+else
+    cat "$wlog" >&2
+fi
 
 # ⚑⚑⚑ THE RATCHET GATE, AND ITS BASELINE AS A SEPARATE VICTIM. `ratchet_check.sh`'s own header
 # warns that "a ratchet whose baseline sits outside its own key can be lowered with no gate
@@ -366,6 +398,15 @@ fi
 if [ "$fail" -ne 0 ]; then
     say "REFUSED — the following check(s) failed:${failed_checks:-
   (unattributed: a check set the failure flag without naming itself)}"
+    # ⚑ THE ACCOUNT IS REPLAYED UNDER THE VERDICT, not left where it was printed. A reader who
+    # greps for the failing check's name must find its arms next to it rather than several
+    # hundred interleaved bazel lines earlier.
+    if [ -n "$failed_detail" ]; then
+        say "the failing check(s) said:$failed_detail"
+    else
+        say "  ⚑ no check captured its own output — the label above is all the account there is."
+        say "    That is a defect in the CHECK, not in your commit: scroll for its name."
+    fi
     exit 1
 fi
 say "ok"
