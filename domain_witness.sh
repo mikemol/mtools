@@ -101,6 +101,14 @@ case "$probe_kind" in
                   && mv "$victim.probe" "$victim" ;;
     mypy)    printf '\n\ndef _transient_domain_probe() -> int:\n    return "not an int"\n' >> "$victim" ;;
     ruff)    printf '\nimport os  # transient domain probe\n' >> "$victim" ;;
+    # ⚑ SHELLCHECK'S DEFECT CLASS IS AN UNQUOTED EXPANSION — the one thing every other probe here
+    # cannot express, because the other checkers read Python. Measured: this single line yields
+    # SC2034, SC2086 and SC2116, so the probe is unambiguous rather than resting on one rule
+    # remaining enabled.
+    # ⚑⚑ THE PAYLOAD IS ASSEMBLED, NOT WRITTEN LITERALLY, because a literal unquoted expansion in
+    # THIS file makes THIS file fail the very checker it is probing — measured: the control caught
+    # it and refused, correctly, since a target already red makes every arm below meaningless.
+    shellcheck) printf '\nprobe_unused=%s%s(echo %sPROBE_UNQUOTED)\n' '$' '' '$' >> "$victim" ;;
     ratchet) printf '\n\ndef _transient_domain_probe():\n    """Probe."""\n    return 1\n' >> "$victim" ;;
     *)       say "arm 2 FAILED: unknown probe kind $probe_kind"; exit 1 ;;
 esac

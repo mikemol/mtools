@@ -127,6 +127,13 @@ say "domain witness: each mypy target's declared domain vs its real one"
 ./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff || fail=1
 ./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff || fail=1
 
+# ⚑⚑⚑ THE LAST UNARMED CHECKER, AND IT GUARDS THIS FILE. mypy, ruff and the ratchet each have a
+# domain witness across three distributions; `shellcheck_githooks` had none — so the one target
+# that checks EVERY shell file, including the gate you are reading, was asserting a domain nobody
+# had tested. Its population became a `glob()` two ticks ago precisely because a hand list had
+# drifted to 7-of-11, which makes the untested domain the more consequential half.
+./domain_witness.sh .        //:shellcheck_githooks blockers.sh                shellcheck || fail=1
+
 # ⚑⚑⚑ THE RATCHET GATE, AND ITS BASELINE AS A SEPARATE VICTIM. `ratchet_check.sh`'s own header
 # warns that "a ratchet whose baseline sits outside its own key can be lowered with no gate
 # noticing" — the baseline IS correctly declared in that target's `data`, and until now nothing
