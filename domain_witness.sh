@@ -270,8 +270,8 @@ case "$probe_kind" in
     # ⚑⚑ THE PAYLOAD IS ASSEMBLED, NOT WRITTEN LITERALLY, because a literal unquoted expansion in
     # THIS file makes THIS file fail the very checker it is probing — measured: the control caught
     # it and refused, correctly, since a target already red makes every arm below meaningless.
-    shellcheck) printf '\nprobe_unused=%s%s(echo %sPROBE_UNQUOTED)\n' '$' '' '$' >> "$victim" ;;
-    ratchet) printf '\n\ndef _transient_domain_probe():\n    """Probe."""\n    return 1\n' >> "$victim" ;;
+    shellcheck) printf '\n# transient domain probe %s\nprobe_unused=%s%s(echo %sPROBE_UNQUOTED)\n' "$(date +%s%N)" '$' '' '$' >> "$victim" ;;
+    ratchet) printf '\n\n# transient domain probe %s\ndef _transient_domain_probe():\n    """Probe."""\n    return 1\n' "$(date +%s%N)" >> "$victim" ;;
     *)       say "arm 2 FAILED: unknown probe kind $probe_kind"; exit 1 ;;
 esac
 # ⚑⚑⚑ THE EXIT STATUS IS THE VERDICT, NOT A STRING IN THE TRANSCRIPT. The first cut matched

@@ -1118,3 +1118,27 @@
   claim   = {THE GATE NAMED THIS GAP ABOUT ITSELF BEFORE ANYONE ELSE DID},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_ratchet_check_captures_its_own_output}
 }
+
+@misc{hooks-bar-fires-witness-call-site-goes-through-the-capturing-helper,
+  section = {bar-fires},
+  claim   = {EIGHT WITNESSES COULD NOT CARRY THEIR OWN ACCOUNT, IN A FILE WHOSE COMMENT SAID WHY},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_witness_call_site_goes_through_the_capturing_helper}
+}
+
+@misc{hooks-bar-fires-sweep-runs-up-front-as-well-as-at-exit,
+  section = {bar-fires},
+  claim   = {AN EXIT TRAP CLEANS UP AFTER THE RUN IT COULD HAVE SAVED},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_sweep_runs_up_front_as_well_as_at_exit}
+}
+
+@misc{hooks-bar-fires-restore-separates-a-lock-failure-from-a-content-failure,
+  section = {bar-fires},
+  claim   = {A BEFORE-IMAGE FIXES ATTRIBUTION; IT DOES NOT MAKE A READING CURRENT (gabion)},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_restore_separates_a_lock_failure_from_a_content_failure}
+}
+
+@misc{hooks-bar-fires-probe-payload-carries-the-residue-marker,
+  section = {bar-fires},
+  claim   = {ONE PAYLOAD CARRIED NO MARKER, SO THE GUARD AND THE SWEEP WERE BOTH BLIND TO IT},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_probe_payload_carries_the_residue_marker}
+}

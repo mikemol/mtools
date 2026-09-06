@@ -1041,3 +1041,89 @@ def test_the_ratchet_check_captures_its_own_output() -> None:
     block = body[start:start + 400]
     assert 'note_failure "$dist: ratchet' in block
     assert '"$rlog"' in block, "the ratchet must capture its output for the verdict to replay"
+
+# --- four repairs from two ticks, each armed by hand once and none gated ------------------------
+#
+# ⚑⚑⚑ A COMMENT NAMING A CLASS IS EVIDENCE THE CLASS WAS SEEN ONCE, AND IS ROUTINELY READ AS
+# EVIDENCE IT WAS HANDLED (`gabion`, 2026-09-06). `.githooks/pre-commit` carries elaborate prose
+# about the exit-trap distinction, the lock-versus-content separation and the marker gap — and not
+# one of those paragraphs is an arm. ⚑ I gated five repairs for exactly this reason two ticks ago
+# and then added four more ungated ones to the same file: **the prose accumulated faster than the
+# coverage**, which is the cheap-proxy class with a comment as the proxy.
+
+
+def test_every_witness_call_site_goes_through_the_capturing_helper() -> None:
+    """⚑⚑⚑ EIGHT WITNESSES COULD NOT CARRY THEIR OWN ACCOUNT, IN A FILE WHOSE COMMENT SAID WHY.
+
+    The shellcheck witness and the ratchet were wired to capture; the ratchet's own comment reads
+    *a repair applied to one call site is not a repair to the class* — and eight witnesses sat
+    unwired in the same file. ⚑ Measured from the blocked seat: a refusal named seven witnesses and
+    printed seven bare labels, then the gate's own honest line about no check capturing its output.
+
+    ⚑⚑ THE ASSERTION IS THAT NO BARE CALL SURVIVES, not that the helper exists. A helper nobody
+    routes through is the same defect wearing a definition.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "witness() {" in body, "the capturing helper must exist"
+    bare = [ln for ln in body.split("\n")
+            if ln.startswith("./domain_witness.sh") and "note_failure" in ln]
+    assert not bare, f"{len(bare)} witness call site(s) bypass the helper: {bare[:2]}"
+
+
+def test_the_sweep_runs_up_front_as_well_as_at_exit() -> None:
+    """⚑⚑⚑ AN EXIT TRAP CLEANS UP AFTER THE RUN IT COULD HAVE SAVED.
+
+    Measured: a refusal showed two witnesses reporting `already carries probe residue` on
+    `cmdparse.py`, and the **very next line of the same run** swept that residue. The sweep did its
+    job one run too late.
+
+    ⚑ The trap and the pre-flight are two jobs wearing one name — the trap clears THIS run's
+    residue for the next party; the up-front call clears a PREDECESSOR's for this run. Neither
+    substitutes for the other, and having only the first cost **exactly one extra full refusal per
+    stranded probe**, which is the arithmetic that accounts for four of one peer's five refusals
+    where no story about concurrency did.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "trap sweep_witness_residue EXIT" in body, "the trap must still fire on any exit"
+    lines = [ln.strip() for ln in body.split("\n")]
+    assert "sweep_witness_residue" in lines, "the sweep must also be CALLED, not only trapped"
+
+
+def test_the_restore_separates_a_lock_failure_from_a_content_failure() -> None:
+    """⚑⚑⚑ A BEFORE-IMAGE FIXES ATTRIBUTION; IT DOES NOT MAKE A READING CURRENT (`gabion`).
+
+    Measured by a peer in one sequence: the gate printed `CONTENT DIFFERS before=… now=…`, an
+    immediate check found `git hash-object` == `git ls-files -s` == **the very `before=` the
+    message named as correct**, and the retry then failed with `Unable to create .git/index.lock`.
+    ⚑ The `checkout` never ran; something else restored the file; and the message described a state
+    that no longer existed when it was read.
+
+    So a non-zero `checkout` is *I could not act* and says nothing about the file; a zero
+    `checkout` with a differing hash is *I acted and it did not take*.
+    """
+    body = (_DIST.parent / "domain_witness.sh").read_text(encoding="utf-8")
+    assert "COULD NOT RESTORE" in body, "a failed checkout must not read as a failed restore"
+    assert "_co_rc" in body, "the checkout's own exit status must be captured, not discarded"
+
+
+def test_every_probe_payload_carries_the_residue_marker() -> None:
+    """⚑⚑⚑ ONE PAYLOAD CARRIED NO MARKER, SO THE GUARD AND THE SWEEP WERE BOTH BLIND TO IT.
+
+    The residue guard and the gate's sweep key on the literal `transient domain probe`. The mypy
+    payload appended a bare function definition without it — so a stranded mypy probe was invisible
+    to **both** mechanisms built to catch exactly that.
+
+    ⚑ Measured from two seats and resolved by neither: one peer saw four files swept with
+    `state.py` absent and correctly declined to guess between a missing path and a late probe;
+    another measured the same file by content hash and found a live probe. **It was neither — the
+    path was in the list and the predicate could not see the payload.**
+    """
+    body = (_DIST.parent / "domain_witness.sh").read_text(encoding="utf-8")
+    # ⚑ THE WHOLE FILE, NOT A SLICE. The first cut sliced 900 bytes from the `case` and matched
+    # nothing at all — so the test failed for the right reason by accident, and a narrower bug
+    # would have passed. Every append to the victim is a payload wherever it appears.
+    payloads = [ln for ln in body.split("\n")
+                if '>> "$victim"' in ln and "printf" in ln]
+    assert payloads, "the probe payloads must be findable to be checked"
+    unmarked = [ln for ln in payloads if "transient domain probe" not in ln]
+    assert not unmarked, f"payload(s) without the residue marker: {unmarked}"
