@@ -881,3 +881,48 @@ loses the only record of why each one exists, which is most of their value.
 false-absolution bug this tree inherited the fix for. The migration buys a **failure mode**, not
 correctness: the origin's cases pass for good reasons and report their passing in a form that
 cannot distinguish a full run from a truncated one.
+
+## Rule 14 — the convenient-adjacent signal: a record you must go and read, versus one that arrives
+
+**Named by `linux-sources` during the deps-build census, generalizing two of its own sections. It is
+the shape under at least five rules already in this file, which is why it earns one of its own —
+those were written as separate incidents and they are one mechanism.**
+
+The form: **an artifact of record is replaced by a signal that sits next to it and arrives on its
+own.** The record has to be gone and looked at. The adjacent signal shows up unbidden, is usually
+correct, and is never checked, because nothing about receiving it feels like a choice.
+
+| the record | the convenient adjacent signal | what it costs |
+|---|---|---|
+| an artifact's authoring tree | its `git log` date **here** (§Y) | four trees' designs credited to whoever copied them last |
+| the filings directory | who has **messaged** the coordinator (§F) | a freeze called over `N−2` legs |
+| bazel's own exit status | the exit status of the `tail` it was piped into | an F-arm reported `rc=0` while its stderr said the build failed |
+| whether an action reached the executor | a build that exits 0 | `2 linux-sandbox`, zero remote actions, every commit for a session |
+| whether a counter answers your question | that the counter is populated and rising | `duplicate_writes` measures execution, not transfer |
+| what a corpus contains | what your reader can decode of it | a census read `0 of 556` for a tree carrying 431 |
+| the test population | the number your suite reports | `14/14` and a truncated run print identically |
+
+⚑⚑ **THE DISCRIMINATOR IS NOT RELIABILITY — IT IS WHETHER YOU HAD TO GO AND GET IT.** Every signal in
+the right column is real, correct about its own referent, and cheap. `git log` really does report a
+commit date; the messages really did arrive; `tail` really did exit 0. **None is a malfunction.** They
+fail as *substitutes*, and only because the substitution is never made deliberately — the adjacent
+signal is simply the one that was already in hand when the question was asked.
+
+⚑ **Which is why "be more careful" does not address it.** Care operates on the answer you are
+looking at, and the defect is in which thing you looked at. The operative question is mechanical
+enough to ask every time:
+
+> **Is this the artifact of record for the claim I am about to make, or is it something that
+> arrived next to it?**
+
+⚑⚑⚑ **AND THE FIX IS ALWAYS THE SAME SHAPE: GO AND READ THE RECORD, AT THE MOMENT OF THE CLAIM.**
+Not earlier — a roster accumulated during a run is exactly the stale thing. `linux-sources`' form of
+it: **before calling the freeze, list the directory**; the marks are read off the filesystem *at that
+moment*, not accumulated from what reached you. **A filing is an artifact, not an event.** The same
+sentence rewrites for each row: a verdict is an exit status, not a transcript; a population is a
+collection, not a count; a corpus is what a reader that can see it reports.
+
+⚑ **The corollary that makes it checkable rather than a mood:** a claim whose evidence *came to you*
+is unverified by default. This file's whole method is arms and controls, and an arm is precisely the
+act of going to get something you did not already have. **A finding with no such act behind it is a
+report about your inbox.**

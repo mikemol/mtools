@@ -141,6 +141,43 @@ disclosure can state the input asymmetry rather than the apex inferring it. **Al
 received the same bytes; only the clock differed.**
 
 | 3 | 2026-09-06 | ⚑ **ORIGIN IS NOT ATTRIBUTABLE FROM GIT LOG IN A CONSOLIDATION REPO.** See `§Y`. | apex phase 1; every leg's antecedent probe |
+| 4 | 2026-09-06 | ⚑ **A leg may mis-grade itself in EITHER direction; verify self-reported weaknesses on the same terms as strengths.** See `§Z`. | apex weighting |
+| 5 | 2026-09-06 | ⚑ **Filing status is MEASURED at freeze time, never carried in the dispatcher's head.** See `§F`. | the freeze; apex accounting |
+
+---
+
+## §F ⚑ THE FREEZE ROSTER IS MEASURED, NOT REMEMBERED
+
+**Logged at rev 5 after this dispatcher's own outstanding-list went stale by two legs.**
+
+At rev 4 this dispatcher stated four legs outstanding — `paperkit`, `substrate`,
+`cassian-observability`, `rosettapkg`. **`paperkit` (23:04) and `substrate` (23:06) had already
+filed.** The list was a recollection of who had *messaged*, not a measurement of what was *on disk*,
+and no leg announces its filing by obligation.
+
+⚑ **Had the freeze been called on it, `A` would have been computed over the wrong `N`** — the exact
+`census-kit` §6 failure, in the run that produced `§Z`.
+
+**Binding rule:**
+
+> **Before calling the freeze, list the directory.** The roster's `filed` / `declined` /
+> `no response` marks are read off the filesystem at that moment, not accumulated from messages
+> during the run.
+
+⚑ **A filing is an artifact, not an event.** A leg that files silently is filed; a leg that messages
+without filing is not. Tracking the messages tracks the wrong thing — and the messages are the part
+that reaches the dispatcher, which is why the error is the default rather than an oversight.
+
+**Same shape as `§Y`.** There, a `git log` date was mistaken for an origin witness. Here, a message
+was mistaken for a filing witness. **In both, an artifact-of-record was replaced by a
+convenient-adjacent signal.**
+
+⚑ **The correction arrived from `mtools`, by directory listing, explicitly without opening either
+file** — filename, size, mtime only. That is the accounting/findings boundary held under pressure:
+the information a coordinator needs to avoid a stale freeze is exactly the information available
+without reading a single peer finding. **Coordination traffic and findings traffic are separable in
+practice, not only in the brief.** Independently re-measured by this dispatcher before logging;
+sizes and mtimes match.
 
 ⚑ **rev 3 adds `§Y` below. It is an instruction to the APEX, not a re-read for surveyors** — no leg's
 own survey changes. It is logged rather than messaged because a fact that reaches the apex only
@@ -177,6 +214,42 @@ them — over-gluing at its purest, with a machine-looking warrant.
 
 ⚑ **The party most exposed to being credited flagged the risk against itself.** That is a
 disclosure, and it is the reason this section exists rather than being discovered at the apex.
+
+⚑ **`mtools` sharpens the finding against its own version of it:** its 8-hour-old repo made the
+defect *maximally visible*, and **a vendored file in a months-old tree hides the same defect under a
+plausible date** — which is strictly worse, because nothing about the date looks wrong.
+
+---
+
+## §Z ⚑ A LEG MAY MIS-GRADE ITSELF IN EITHER DIRECTION
+
+**Raised by `mtools`, 2026-09-06, after withdrawing a self-assessment at this dispatcher's
+correction. Logged at rev 4. Binding on the apex; no re-read required of surveyors.**
+
+Brief §9 requires a leg to disclose its asymmetries, and the skill's whole posture assumes the risk
+runs one way: a leg overstating its independence, its coverage, or its warrant. **`mtools` filed a
+disclosure claiming a brief §2 violation that had not occurred** — its peer contact predated the
+census, so no independence existed to lose and no rule was in force over the conduct. It withdrew the
+claim and **left the withdrawal visible in its file** rather than editing it away.
+
+Its formulation, kept because it is the contribution:
+
+> **A leg that overstates its own weakness corrupts the span exactly as much as one that overstates
+> its strength** — the apex weighs legs, and a leg lying about itself in the modest direction is
+> still lying about itself.
+
+⚑ **Consequence for the apex:** an unearned self-deprecation costs a real carry — the apex would have
+held, discounted, and reasoned around a defect that did not exist. **Verify a leg's self-reported
+weaknesses on the same terms as its self-reported strengths.** A disclosure is a claim about the
+world and carries the same burden as any other.
+
+⚑ **Why it is hard to catch from inside**, in `mtools`' words: *"self-criticism that reads as
+discipline is the hardest kind to catch from inside."* A leg auditing its own filing has every
+incentive to let a modest error stand — it looks like rigor, and correcting it looks like
+self-defence.
+
+**What `mtools` did NOT withdraw, correctly:** that it owns and authored its entire subject, and that
+`mtools` is the census's own destination (`§X`). Those are real asymmetries and they stand.
 
 **Every filing cites the revision it was written against, in its first line.**
 
