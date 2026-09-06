@@ -144,6 +144,105 @@ received the same bytes; only the clock differed.**
 | 4 | 2026-09-06 | ⚑ **A leg may mis-grade itself in EITHER direction; verify self-reported weaknesses on the same terms as strengths.** See `§Z`. | apex weighting |
 | 5 | 2026-09-06 | ⚑ **Filing status is MEASURED at freeze time, never carried in the dispatcher's head.** See `§F`. | the freeze; apex accounting |
 | 6 | 2026-09-06 | ⚑ **SIX ROSTER NOMINATIONS RECEIVED — the index may be short. NOT dispatched.** See `§N`. | apex §A4; roster accounting |
+| 7 | 2026-09-06 | ⚑ **`summit` independently corroborated by a second leg, different reason.** See `§N` end. | apex §A4 |
+| 8 | 2026-09-06 | ⚑ **TWO REPOS HOLD OPPOSITE FAIL-OPEN POLICIES ON ONE SHARED EXECUTOR.** See `§P`. | apex divergence register |
+| 9 | 2026-09-06 | ⚑⚑ **`§Q`-10 ANSWERS ARE TYPED, NOT RANKED — do not sum or average them.** See `§T`. | apex phase 2; `§Q`-10 handling |
+
+---
+
+## §T ⚑⚑ "WHAT BINDS YOU" HAS INCOMPATIBLE KINDS OF ANSWER — keep them typed
+
+**Found by `cassian-observability` measuring against `linux-sources`' answer, 2026-09-06.
+Class: `testimony` for cassian's numbers (its leg is unfiled); `machine` for linux-sources'.**
+
+Two legs measured their own gate's critical path. Both measurements are sound. **They are not
+comparable.**
+
+| leg | measured | kind of constraint |
+|---|---|---|
+| `linux-sources` | `PkCmd warrants.verdict.json` still running at **407s**, 15 of 17 actions done; `--check_up_to_date` confirms legitimately stale | ⚑ **CORPUS** — a kernel-source tree whose verdict action is genuinely expensive |
+| `cassian-observability` | **0.36s critical path**, 8 actions, `1 action cache hit · 2 disk cache hit · 4 internal · 1 linux-sandbox · 1 local`, 15.7s elapsed | ⚑ **PERMISSIONS** — no sudo, so root work is prepared in-tree and executed by a human |
+
+Cassian's formulation, quoted rather than paraphrased:
+
+> A 0.36s critical path over 8 actions against your 400s+ over 17 is not a faster version of one
+> graph — it is a **different graph**.
+
+⚑⚑ **BINDING ON THE APEX: `§Q`-10 answers are TYPES, not MAGNITUDES.** A span that ranked, averaged,
+or picked a maximum across these would produce **a number describing no repo**. The corpus
+constraint and the permissions constraint do not sit on one axis, and the arithmetic that would
+combine them is undefined rather than merely misleading.
+
+⚑ **And the escalation rule cassian supplies is better than the observation:**
+
+> If a third leg answers with a third type, **that is probably the finding rather than the outlier.**
+
+`inference`: this is the pushout's own logic applied to one `§Q` item — a third incomparable kind is
+not noise to be normalised away, it is evidence that *"what binds you"* was never a scalar question.
+**Carry every type; identify none.**
+
+### ⚑ How it was found is the part that generalises
+
+Neither leg could have produced this alone. `linux-sources` measured a 400s tail and read it as *its
+own* binding constraint — correctly. `cassian` measured 0.36s and, **rather than concluding one repo
+was slow and the other fast, asked what kind of thing each number was.** Cassian states plainly it
+*"would not have had it without your answer differing from mine."*
+
+⚑ **This is the survey's premise paying out**: the finding is a property of the *relation between*
+two legs, not of either leg — and no single-vantage census could hold it. Same shape as `§N`'s
+independent `summit` corroboration, one `§Q` item down.
+
+### A capability recorded and deliberately NOT exercised
+
+Cassian notes its 15s gate **could** run the post-test-failure arm `linux-sources` could not reach,
+and **declined to run it**, with the reason:
+
+> Doing work in my tree at a peer's suggestion is fine; doing it **AS a test bench for another
+> repo's config question** is outward-facing work that belongs to my operator, not to me.
+
+It recorded the capability at `◆gate-critical-path-is-not-the-shared-shape` for either operator to
+pick up. ⚑ **Recorded here because a declined-and-named capability is a different artefact from an
+unnoticed one** — and because the decline is correct: a peer's suggestion is not an operator's
+authorization, in either direction.
+
+⚑ Also measured by cassian: it sets `--notest_keep_going` **nowhere** (grep of its `.bazelrc`, no
+match). **So `linux-sources`' fail-fast finding is about its own config, not a shared default** — the
+run file should not carry it as ecosystem guidance.
+
+---
+
+## §P ⚑ A LIVE POLICY SPLIT ON THE SHARED EXECUTOR — carried, not adjudicated
+
+**Reported by `cassian-observability` pre-filing, 2026-09-06. Class: `testimony` — its leg is not yet
+filed and this reaches the run through a message. NOT verified by this dispatcher.**
+
+> paperkit sets `--remote_local_fallback=true` on both `:cas` and `:remote`; cassian sets it nowhere,
+> per an operator ruling of 2026-09-04.
+
+⚑ **`§X` states the no-fallback position as ecosystem guidance**, and `linux-sources` records the
+reasoning in its own leg (`LS-12`, quoting the operator): *"it evades the scheduler and consumes
+resources against the very same machine the scheduler is protecting."*
+
+**So, if the report holds: two parties on ONE shared executor hold opposite fail-open/fail-closed
+policies for the SAME outage** — and `§X` records that executor as currently degraded.
+
+⚑ **Explicitly NOT resolved here, and the reason is the point.** `cassian` states it *"cannot tell
+from here whether paperkit's setting predates the ruling."* Neither can this dispatcher without
+reading paperkit's leg, which is forbidden pre-freeze. **A setting that predates a ruling is a stale
+config; a setting that postdates one is a divergence.** Those are different findings with different
+repairs, and nothing available to a surveyor distinguishes them.
+
+**Binding on the apex:**
+
+- This belongs in the **divergence register**, with both branches standing and their instruments
+  named. Do not prefer the better-documented party.
+- ⚑ The discriminator is a **date**, and `§Y` applies to obtaining it: read the origin in the tree
+  that authored the setting, not in whichever tree currently holds it.
+- ⚑ **This is `LS-12`'s finding arriving from a second vantage.** `linux-sources` found the flag
+  *hid a defect* — it *"caught the analysis failure and returned green with zero remote actions"* —
+  which is a stronger claim than "it is against guidance." **If paperkit's fallback is live, that
+  repo's remote-execution greens are subject to the same doubt**, and no party can check that from
+  inside its own leg.
 
 ---
 
@@ -190,6 +289,35 @@ the survey discovers its own index was incomplete,"* and they are carried, not s
 also this dispatcher. That is the weakest possible warrant for a roster claim and is stated as such:
 it is one party's view of who else touches its own dependencies. **Any other leg nominating the same
 party independently would make it materially stronger**, and the apex should check whether one does.
+
+### ⚑⚑ `summit` IS INDEPENDENTLY CORROBORATED — two legs, two different reasons (rev 7)
+
+`cassian-observability` nominates `summit`, and states it **wrote that nomination before reading
+`§N`.** Class: `testimony` (its leg is not yet filed; this reaches the run through a message).
+
+⚑ **The two reasons do not overlap, and that is what makes the corroboration worth something:**
+
+| leg | why `summit` |
+|---|---|
+| `linux-sources` (`LS-30`) | a **live, uncacheable build input** — the `registry` slice is `local`-tier *because* it reads summit's working tree |
+| `cassian-observability` | the **capability index that exists to answer "does this already exist elsewhere"** |
+
+Its formulation, quoted rather than paraphrased:
+
+> A survey about re-derivation running without the index that would have prevented the
+> re-derivation.
+
+⚑ **That is `§Q`-8 — the census's own highest-value question — indicting the roster it runs over.**
+One leg makes `summit` a *dependency of a leg*; the other makes it *the index the central question
+presupposes*. **Complementary, not duplicate.**
+
+⚑ **This is the two-witnesses-that-could-have-disagreed test passing** — and it is the exact check
+this section asked the apex to perform, answered before the apex exists. `cassian` explicitly takes
+**no position on the other five**, having not examined them: those remain single-leg.
+
+⚑ **Note the shape against `LS-10`** (*"agreement between two instruments that share a blind spot is
+the blind spot, twice"*). These two did **not** share an instrument or a reason — the agreement is on
+the *conclusion* from independent premises, which is the case where agreement carries information.
 
 ---
 

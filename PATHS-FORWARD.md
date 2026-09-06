@@ -129,3 +129,35 @@ its ambiguity into everything Ⓓ brings in.
 
 ⚑ **And it closes the one axis where the peer is ahead**, which matters while the divergence is
 small — the same hash-consing argument that made Ⓜ urgent, still live.
+
+
+---
+
+# Tick 2 — 2026-09-06
+
+**Measured:** 5 of 6 census legs filed (`rosettapkg` landed since tick 1); all six parties live; **no
+freeze called**. Substrate's island unchanged at 10/32; ledger untracked; paperkit unimportable.
+
+**Consumed: Ⓨ** — the mypy domain witness, wired into the gate and F-armed. Rule 16.
+
+⚑ **The tick's own instrument was the previous tick's item, and this tick's item found two defects
+in itself.** `blockers.sh` (tick 1) and `domain_witness.sh` (tick 2) are both meta-instruments —
+things that check whether a check is real. That is not a coincidence of ordering: **an unarmed claim
+outranks an unpaid debt**, because the debt is visible and the unarmed claim is not.
+
+## Re-derived
+
+| | step | unblocked? | why here |
+|---|---|---|---|
+| **Ⓖ¹** | Domain witness for the OTHER two distributions | YES | `hooks` and `mdstruct` have the same unarmed claim; the witness is written and takes an argument |
+| **Ⓩ** | Retire or wire `inbox/` | YES | measures a channel nobody uses; cheap |
+| **Ⓝ₄** | 62-key preview debt paydown | YES | pure paydown, leverage to nothing |
+| **Ⓒ¹** | Intake the closed ratchet subgraph under the operator ruling | **PARTIAL** | ruling exists; substrate must confirm with its own operator |
+| **Ⓢ¹** | selftest→pytest conversion (Rule 13's contract) | **NO** | needs the code to be intaken first |
+| **Ⓔ Ⓓ Ⓕ** | ledger / components / projection | **NO** | unchanged |
+
+**Ⓖ¹ is top** and it is nearly free: the witness already takes `(dist, target, victim)`. ⚑ Arming one
+distribution and leaving two carrying the identical unarmed claim is the *"a control proves the query
+works, never that the search space was right"* defect — the witness exists, so the remaining cost is
+naming the other two victims, and not doing it would leave 2/3 of the corpus asserting an untested
+property.

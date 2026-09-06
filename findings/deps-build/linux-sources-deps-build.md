@@ -350,6 +350,28 @@ Ask what would DIFFER before building the arm.**"*
 SESSION OBSERVED THE ABSENCE AND DID NOT CONNECT IT TO THE RULING … **The push was absorbed as an
 observation and the change did not happen.**"*
 
+⚑ **VERIFIED, then BOUNDED — two corrections to this item, post-filing (2026-09-06).**
+
+**(a) The defaults table is a citation, re-read live** (`machine`, `bazel help test`, 8.7.0 on this
+box): `--[no]keep_going [-k] (default: "false")` / `--[no]test_keep_going (default: "true")`.
+Confirmed, not recalled.
+
+**(b) ⚑ THE BEHAVIOURAL ARM COULD NOT BE REACHED, and this item does not claim it.** Attempted:
+`//:gate`'s critical path is a single toolchain-tier action (`PkCmd warrants.verdict.json`) still
+running at **407s** with 15 of 17 actions complete. `--check_up_to_date` confirms the action is
+**legitimately stale**, so that is the cache behaving correctly and not a tier defect — the
+non-result is a real bound, not a broken instrument. **A flag governing what happens AFTER a test
+fails cannot be observed until a test RUNS.** State: *correct by citation, unexercised by
+measurement.*
+
+**(c) ⚑ SCOPE CORRECTION — this is a finding about THIS REPO'S config, not an ecosystem default.**
+The `.bazelrc` comment's framing *"the operator asked for this FOUR TIMES and no repo had it"* is
+about the ruling's reception, and a reader may take it as a claim about the fleet. `testimony`
+(`cassian-observability`, 2026-09-06): cassian sets `--notest_keep_going` **nowhere** — grep of its
+`.bazelrc`, no match. **So the absence is real elsewhere and this leg makes no claim about whether
+that is a defect there.** Per `§T`, a constraint measured in one repo is not automatically the same
+kind of thing in another.
+
 ---
 
 ## §Q-6 — Test design

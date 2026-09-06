@@ -1037,3 +1037,42 @@ the witness discriminates rather than passing regardless.
 so it is bazel-in-bazel and the sandbox holds no bazel. Declaring it a build action would put an
 unrunnable target in the graph and call the property covered. **It is the only check in the gate that
 asks whether the declared input set is the RIGHT set**; every other one asks whether that set passes.
+
+## Rule 17 — the nonce that makes a witness honest also makes it uncacheable, and that cost is the witness
+
+**Ⓖ¹: the domain witness extended from one distribution to all three.** `mdstruct`'s victim is four
+import hops from its CLI (`cli → tables → ast → pandoc → frontmatter`), `hooks`' is two
+(`structural_query → cmdparse`). All three pass all three arms.
+
+⚑ **The victim must be TRANSITIVE, and a leaf would pass arm 1 for the wrong reason.** A
+directly-named file is trivially an input, so probing one confirms the *declaration* rather than the
+*closure* — the arm would go green while proving nothing about the property under test. This is the
+positive-control discipline applied to the choice of probe: the probe must be a thing the checker
+reaches only by following imports.
+
+⚑⚑ **And arming ONE distribution while two carried the identical unarmed claim would have been this
+file's own recurring defect** — *a control proves the query works, never that the search space was
+right.* One green witness over one third of the corpus reads in a transcript exactly like coverage.
+
+### The measured cost, recorded because a cost discovered later gets the gate disabled
+
+```
+three witnesses, three arms each, nine bazel invocations   -> 77s added to every commit
+```
+
+⚑⚑⚑ **THE NONCE IS WHY THIS CANNOT BE CACHED, AND THAT IS NOT AN INEFFICIENCY — IT IS THE
+MEASUREMENT.** Rule 16 established that a fixed probe payload is a digest the remote cache has
+already answered, so the witness must plant novel bytes every run. **Novel bytes are an uncacheable
+action by definition.** A witness that got faster on its second run would be a witness that stopped
+running.
+
+⚑ **So this check is structurally exempt from the acceleration every other gate here enjoys**, and
+the exemption is load-bearing. Every other action in this repository is designed to be served from
+cache on an unchanged input; this one exists precisely to prove that *changed* inputs are noticed,
+which requires changing one.
+
+**The honest disposition:** 77s is a real tax on every commit, it will grow linearly with each new
+distribution, and it buys the only check in the gate that asks whether the declared input set is the
+*right* set rather than whether it passes. ⚑ **Recorded now rather than discovered at the moment
+someone is in a hurry** — an unexplained slow gate gets bypassed, and a gate bypassed once is a gate
+whose greens no longer mean anything.

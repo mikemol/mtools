@@ -378,6 +378,54 @@ regardless (the tree changed 70 minutes into this run, voiding its verdict), but
 a **known red** to fix first rather than a hoped-for green. ⚑ *The four-hour run was not wasted: a
 voided verdict still produced four real defect reports and banked ~168,000 actions of cache.*
 
+## 5g. ⚑⚑⚑ THE BUILD FINISHED AND THE GATE DID NOT — a BES stream that never drains
+
+MEASURED. Bazel's own final lines, in the log:
+
+```
+INFO: Elapsed time: 14420.169s, Critical Path: 149.04s
+INFO: 111270 processes: 57658 action cache hit, 135 internal, 111106 linux-sandbox, 29 local.
+INFO: Build completed, 4 tests FAILED, 111270 total actions
+```
+
+**The build is over.** Five-plus minutes later the gate had still not returned a verdict, and the
+log had gained **0 bytes in 32 seconds of sampling**. Diagnosed by process rather than by log:
+
+```
+2183961  /bin/sh .githooks/pre-commit   S   WCHAN=do_wait      <- waiting on a child
+2184518  bazel test //:hook             Sl  WCHAN=ep_poll  0%  <- blocked on the network
+         children of 2184518:           NONE
+         open sockets:                  1
+         /proc/net/tcp6 peer 0x8743 (34627), state 01 = ESTABLISHED
+```
+
+⚑ **And the server confirms the stream is dead, not slow:**
+
+```
+buildbuddy_build_event_handler_duration_usec_count{status="0"}   2212 -> 2212   (8s apart)
+```
+
+**The connection is open, ESTABLISHED, and consuming nothing.** The only network flag on this
+invocation is `--bes_backend`; `:31985` answers a fresh TCP connect. So a **completed** build is held
+open by a BES stream that will not drain, and `--bes_upload_mode=fully_async` — chosen so telemetry
+would not block the critical path — does not cover the *shutdown* path.
+
+⚑⚑ **This is the run-file's `§X` executor-degradation note arriving as a gate that cannot
+terminate.** That note says a degraded scheduler is *"a known environmental fact and not evidence
+about your configuration"* — true, and the consequence for paperkit is sharper than the note
+implies: **an environmental fault in a TELEMETRY sideline blocks a verdict the build already
+computed.** The failure mode is not a lost record; it is a gate that never finishes.
+
+⚑ **And it is the fifth face of the exit-code class**, distinct from the four already catalogued
+(§5). Those were *wrong* verdicts read from the wrong layer. This is **no verdict at all, with the
+answer already sitting in the log four lines above** — `4 tests FAILED` was knowable at
+`t+14420s` and the wrapper was still silent at `t+14760s`.
+
+**Immediate consequence:** the tree stayed frozen ~6 minutes longer than the work required, on a
+telemetry path that is explicitly best-effort. `PAPERKIT_BES` gates participation, so unsetting it
+is the available mitigation — but the correct fix is a **bounded** shutdown
+(`--bes_timeout`), since a best-effort sideline must not be able to hold a verdict hostage.
+
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
 `.githooks/local.env` held:

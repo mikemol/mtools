@@ -96,8 +96,23 @@ bazel test //... --test_output=errors || fail=1
 # asks "does the declared input set pass?" — this one asks whether that set is the right set. A
 # `srcs` narrowed in a refactor, a glob that stopped matching, or a distribution added without the
 # pattern all leave every other check green.
-say "domain witness: mypy's declared domain vs its real one"
-./domain_witness.sh ratchet //ratchet:mypy ratchet/src/mikemol/ratchet/state.py || fail=1
+# ⚑⚑ ALL THREE DISTRIBUTIONS, NOT ONE. Arming a single distribution and leaving two carrying the
+# identical unarmed claim is this repository's own "a control proves the QUERY works, never that the
+# SEARCH SPACE was right" — the witness would report green over 1/3 of the corpus while 2/3 asserted
+# an untested property. The population here is enumerated from the distributions that exist, and
+# each victim is a genuinely TRANSITIVE module rather than a leaf:
+#
+#   ratchet   state.py       <- core.py <- cli.py
+#   mdstruct  frontmatter.py <- pandoc.py <- ast.py <- tables.py <- cli.py   (four hops)
+#   hooks     cmdparse.py    <- structural_query.py
+#
+# ⚑ A LEAF WOULD PASS ARM 1 FOR THE WRONG REASON: a directly-named file is trivially an input, so
+# the arm would confirm the declaration rather than the CLOSURE. The victim must be a file the
+# checker reaches only by following imports.
+say "domain witness: each mypy target's declared domain vs its real one"
+./domain_witness.sh ratchet  //ratchet:mypy  ratchet/src/mikemol/ratchet/state.py        || fail=1
+./domain_witness.sh mdstruct //mdstruct:mypy mdstruct/src/mikemol/mdstruct/frontmatter.py || fail=1
+./domain_witness.sh hooks    //hooks:mypy    hooks/src/mikemol/hooks/cmdparse.py          || fail=1
 
 # ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
 # target existed, the shell that runs every other check in this repository was verified by nothing
