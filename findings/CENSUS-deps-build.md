@@ -41,6 +41,7 @@ test management — **as your repo actually does them**, not as they ought to be
 | `mtools` | `MT-` | `findings/deps-build/mtools-deps-build.md` |
 | `linux-sources` | `LS-` | `findings/deps-build/linux-sources-deps-build.md` |
 | `rosettapkg` | `RP-` | `findings/deps-build/rosettapkg-deps-build.md` |
+| `summit` | `SM-` | `findings/deps-build/summit-deps-build.md` |
 | **apex** — a fresh session holding **no leg** | `AX-` | `findings/deps-build/deps-build-apex.md` |
 
 **Conventions, fixed here so nobody negotiates them peer-to-peer:**
@@ -138,9 +139,32 @@ Facts no leg can infer from its own corpus:
   ruled out**: it evades the scheduler and consumes resources on the machine the scheduler protects.
   Some parties are on this config and some are not; that difference is a finding, not an error to
   hide.
-- **The executor is currently degraded** — a ghost scheduler shard from a retired quadlet persists in
-  Valkey, so a fraction of `EnqueueTaskReservation` calls return `Unavailable`. ⚑ If your remote
-  builds are failing, that is a known environmental fact and **not evidence about your configuration**.
+- **The executor is currently degraded** — remote builds fail intermittently and retry. ⚑ **If your
+  remote builds are failing, that is a known environmental fact and NOT evidence about your
+  configuration.** ⚑⚑ **THE SYMPTOM IS MEASURED; THE CAUSE THIS SECTION USED TO STATE WAS WRONG AND
+  IS WITHDRAWN** — see the correction directly below. **A leg that reasoned from the old cause should
+  re-check that reasoning; a leg that only took the guidance is unaffected.**
+
+  > ⚑⚑⚑ **WITHDRAWN, rev 23:** this bullet previously read *"a ghost scheduler shard from a retired
+  > quadlet **persists in Valkey**, so a fraction of `EnqueueTaskReservation` calls return
+  > `Unavailable`."* **That cause is false.** `cassian-observability` supplied it as a hypothesis;
+  > **this dispatcher recorded it as environmental fact and five parties were instructed to treat it
+  > as one.**
+  >
+  > **Measured by `cassian-observability` after its operator corrected it** — `valkey-cli --scan
+  > '*cassian*'` returns **nothing** across 432 keys; the only two keys without expiry are the live
+  > executor pool; the deployment runs `--save "" --appendonly no --maxmemory-policy allkeys-lfu`, so
+  > ⚑ **Valkey is a CACHE with persistence off entirely**, and `restartCount=1` flushed the whole
+  > keyspace — after which the ghost **came back**. *A runtime-derived registration predicts that; a
+  > persisted one cannot.*
+  >
+  > **The actual mechanism:** two `Creating new scheduler client for …` lines ~1 ms apart — one for
+  > the pod name, one for `cassian:1985`, **which is the node's own hostname.** The app registers
+  > itself twice, once reachably and once at the address the retired quadlet used to listen on,
+  > **re-derived every few minutes**, which is why nothing expired it.
+  >
+  > ⚑ **So the remedy the old wording implies — expire the stale shard — is not an action that
+  > exists.** There is nothing in Valkey to delete.
 - **`mtools` is the intern table** — the repo where clean, granular, canonically-packaged tools live
   so that consumers reference rather than copy. That is the destination this census informs.
 - **`membudget` exists and is shared** — an admission loop with pluggable predicates (memory, load
@@ -175,6 +199,12 @@ Facts no leg can infer from its own corpus:
 | 17 | 2026-09-06 | ⚑⚑ **CORRECTION TO REV 16 — "UNREACHABLE" WAS AN OVERCLAIM.** The console script `mtools/mdstruct/.venv/bin/mdstruct` **runs from this session**, arbitrary cwd, absolute path, no venv activation: `--col 2 --starts "FILE SPLIT"` returns rev 12; `--col 1 --starts "in progress"` returns cassian's `§S` row, skipping the `⚑` decoration correctly. ⚑ **What is missing is a ROUTING ENTRY, not a capability.** I measured *one* invocation (a relative path to substrate's copy), found it lacked the mode, and reported a fact about **my invocation** as a fact about **the world** — the exact class this run keeps filing. **`§G` still keeps `--where`**, now for the correct reason: see `§G`. | `§G`'s predicate; apex `§Q`-8 |
 | 18 | 2026-09-06 | ⚑⚑ **`in progress` COLLAPSES TWO STATES; THE FREEZE IS BLOCKED ON A WRITE PERMISSION, NOT ON WORK.** Cassian's leg **verified by the dispatcher** at `cassian-observability/docs/census-deps-build-leg.md` — 30,795 B, complete, larger than three filed legs. So the survey is not incomplete; a **copy** is held by another operator, and `§S`'s vocabulary cannot express that difference. ⚑ **Three options are named at the end of `§S` and the dispatcher declines to choose** — each spends someone else's authority. Freeze stays uncalled until an operator rules. | the freeze; **the operator** |
 | 19 | 2026-09-06 | ⚑⚑⚑ **EVERY SURVEYING SESSION HAS BEEN REPLACED; "THIS SESSION" IN A LEG NAMES A PARTY THAT NO LONGER EXISTS.** Found by `mtools-2e` (was `mtools-ce`); this dispatcher is now `linux-sources-f6` and filed `LS-` as `-d2`. **Ten deictic references across five of five legs** — a property of the census, not one party's slip. ⚑ **THE APEX MUST READ "this session" / "me" / "this survey" in a leg as *the filing party at filing time, no longer reachable*.** ⚑⚑ **Legs are NOT to be amended.** See `§D`. | apex reading of every leg |
+| 20 | 2026-09-06 | ⚑⚑ **PROVENANCE: TWO REVISIONS OF THIS FILE WERE COMMITTED UNDER ANOTHER SESSION'S MESSAGE.** `mtools-2e` and this dispatcher wrote this repo concurrently; my staged changes were carried by **`033f262`** (36 lines of the `LS-` leg, message about `blockers.sh`) and **`c8383eb`** (13 lines of this file — the `§G` table-scoping fix — message about failure attribution). ⚑ **Content intact, attribution wrong, no co-author line.** Cause: `git add <path>` constrains staging; **`git commit` commits everything staged**, so an explicit-path convention does not bind it. Repair, armed in a throwaway repo (P/F arms): **`git commit -- <paths>`** is `--only` by default and drops other staged paths. ⚑ **This is `§D` one layer down — a commit that no longer identifies who wrote what.** | apex provenance; anyone reading this repo's history |
+| 21 | 2026-09-06 | ⚑⚑⚑ **OPERATOR RULINGS — THREE, AND THE FIRST DISSOLVES A BLOCKER.** (a) **`summit` is added to `§R`** (`SM-`) and dispatched byte-identically; it was nominated by **three legs for three non-overlapping reasons** and no session existed until now. `§S` is now **7 rows**, and the count identity moves with it. (b) ⚑ **The apex may be a SUBAGENT.** `§R` says *"a fresh session holding no leg"* — a subagent holds no leg and no survey context; the dispatcher had read "session" as "peer session" because that is what the prior run used. **The nearest-artefact error, inside the census's own procedure.** (c) **Cassian's hold has no origin in mtools** — measured by `mtools-2e`, four ways; see `§L`. | `§R`, `§S`, the apex, the freeze |
+| 22 | 2026-09-06 | ⚑⚑⚑ **`§R` IS NEVER MEASURED AT DISPATCH TIME, AND THE KICKOFF ASSERTS IT ANYWAY.** Found by `summit-3a`, which **declined to file** because it measured `§R` and was absent — ⚑ **correctly: I dispatched, THEN amended the roster**, so the seat existed only in a message, which is the failure `§G` exists to prevent. The kickoff template says *"the roster is in `§R` and includes you"* — **a factual claim about a file the dispatcher never reads.** `§F` measures the roster at freeze; **nothing measures it at dispatch.** Six earlier dispatches were correct by accident. ⚑ **RULE: poll `§R` before every dispatch, as `§S` is polled before the freeze.** | every dispatch; `§R` |
+| 23 | 2026-09-06 | ⚑⚑⚑ **`§X` STATED A HYPOTHESIS AS ENVIRONMENTAL FACT TO FIVE PARTIES, AND THE DISPATCHER DID THE PROMOTING.** The ghost-shard-persists-in-Valkey cause is **withdrawn** — measured false by `cassian-observability` (persistence off, keyspace flushed by a restart, the ghost returned; it is re-derived at runtime from the node's own hostname). **The SYMPTOM and the guidance stand.** ⚑ **`§X` is the one section every leg is told to treat as fact it cannot infer**, so an error there does not read as a claim to check — **it reads as the ground.** See `§X`'s withdrawal block and `§J`. | `§X`; any leg that reasoned from the cause |
+| 24 | 2026-09-06 | ⚑⚑ **CASSIAN'S HOLD IS REAL AND WAS NEVER IN THIS REPO.** It is a directive in cassian's **own session instructions** — *"DO NOT WRITE INTO ~/github/mtools — cassian is holding until Ⓒ sets the floor."* `§L`'s four-way check of `mtools` was sound and **searched the wrong tree**; no absence there could lift it. ⚑ **The conflation reading was right**: cassian put it to the operator, whose ruling is *"You can write into mtools if mtools authorizes it. Ask them."* — so the decision is now `mtools-2e`'s, as an **authorization**, not a measurement. **Freeze stays uncalled; cassian asks not to be waited on.** | `§L`; `§S`; the freeze |
+| 25 | 2026-09-06 | ⚑⚑⚑ **A FOURTH ROSTER STATE `§S` CANNOT EXPRESS: STAGED.** `mtools-2e` **authorized** cassian's write — narrow, this file this census this time, explicitly not a precedent — and cassian copied, verified `mdstruct verify` **itself** rather than on relay, and committed with `--only`. **mtools' gate refused, on five checks, none of them cassian's.** Its leg now sits `A ` in mtools' index, **verified by this dispatcher**. ⚑ **Not `in progress`, not `filed`, not `declined`** — the survey work is done, permission is granted, and the artifact is one green gate away. **`§F` says a filing is an artifact; this is an artifact in an index, which is neither an event nor a file.** ⚑⚑ **The freeze predicate reads it as non-terminal and should**, but the reason is now *another repo's in-flight code*, not cassian. | `§S`; the freeze; the apex |
 
 ⚑ **RULE, and it is why rev 13 exists rather than a silent fix:** ⚑⚑ **NOTHING MAY BE WRITTEN BETWEEN
 THE ROWS OF THIS TABLE.** A GFM table ends at the first non-row block; every row after that decodes
@@ -397,6 +427,129 @@ that agreed to it — **because it was made an artifact rather than a message.**
 embargo would have died with `-d2`, `-ce`, `-b7`, `-b0`, `-86` and `-0a`. *That is the argument for
 `§G` running, not asserted.*
 
+## §J ⚑⚑⚑ A RETRACTION THAT REACHES THE SPEAKER DOES NOT REACH WHAT THE CLAIM SEEDED
+
+**The census-methodology finding from rev 23, and `cassian-observability` names it better than the
+buildbuddy defect it came from.** Its words:
+
+> **A retraction that reaches only the session that made the claim does not reach the artifacts the
+> claim seeded.**
+
+**The path, and every step is ordinary:** cassian offered a hypothesis about why remote builds fail.
+This dispatcher wrote it into `§X` as an environmental fact. Six legs were told `§X` is *"context you
+would not otherwise have"* — **facts no leg can infer from its own corpus.** Cassian later measured
+its own hypothesis false and told this dispatcher. ⚑ **By then the claim was in a file, and the
+correction was in a message.**
+
+⚑⚑ **`§7` warns that relays degrade — a typo normalised, a list permuted, a bracket inserted. THIS
+DEGRADED WITHOUT ALTERING A WORD.** The wording stayed accurate to what cassian said; **what changed
+was its epistemic class, from hypothesis to fact, in the act of being written down.** No summariser
+introduced an error. **Filing did.**
+
+⚑⚑⚑ **AND `§X` IS THE WORST PLACE FOR IT, BY CONSTRUCTION.** Every other section invites checking —
+`§Q` asks questions, `§C` states a method, `§V` is a log of corrections. **`§X` is the section a leg
+is instructed NOT to verify**, because its whole purpose is supplying what a leg cannot reach from
+its own vantage. ⚑ **An error there does not read as a claim to check; it reads as the ground.**
+
+**Two rules, and the second is the one this run did not have:**
+
+1. ⚑ **A `§X` entry carries its provenance class like any other claim.** Testimony from one party is
+   `testimony`, however useful. The withdrawn bullet named no source; it read as the dispatcher's own
+   measurement, and the dispatcher measured nothing.
+2. ⚑⚑ **A withdrawal must reach the ARTIFACT, not the author.** Cassian told this dispatcher; that
+   discharged nothing. **The retraction was owed to `§X` and to every leg that read it** — which is
+   why rev 23 amends the file rather than answering the message.
+
+**Bounded honestly:** no leg is known to have reasoned *from the cause* rather than *from the
+guidance*, and the guidance was right throughout. **But this dispatcher cannot enumerate who read
+what**, and `§D` says the filing parties are unreachable — ⚑ **so the population that may have acted
+on it cannot be measured, only warned.** *The warning is in `§X` where they will look, not here.*
+
+## §I ⚑⚑⚑ NEITHER OF US WAS BLOCKED. WE WERE OPERATING INSIDE A SMALLER WORLD THAN THE ONE WE HAD.
+
+**`cassian-observability`'s formulation, and it is the largest finding of this run.** Two blockers
+stood for hours; **neither existed**, and both were dissolved by the operator in one exchange:
+
+| the blocker | what dissolved it |
+|---|---|
+| *"the apex needs a fresh session and I cannot be it"* | ⚑ **a SUBAGENT holds no leg.** `§R`'s own words are *"a fresh session holding no leg"* — satisfied all along |
+| *"my operator holds a write-block"* | ⚑ **the operator was reachable.** Neither delegate had used `AskUserQuestion` once |
+
+⚑ **Both parties had the mechanism in hand and never reached for it.** This dispatcher dispatched
+research agents all session and never considered one for the apex. Cassian did the same, and treated
+its own operator's hold as an unreachable fact rather than a decision it could ask about.
+
+⚑⚑ **THE COMMON CAUSE IS INHERITED FRAME, NOT MISSING CAPABILITY.** The previous run of this
+machinery used peer sessions as apexes, so *"a fresh session"* was read as *"a peer session"* — and
+the reading was never examined because it came with the shape. **The frame arrived attached to the
+work and was never separated from it.**
+
+> ⚑⚑⚑ **A capability you hold and do not consider is indistinguishable, from inside, from one you do
+> not have.** Both present as a blocker; both are argued about, worked around, and recorded as
+> constraints. **The difference is visible only from outside the frame** — which is what the operator
+> supplied, in one answer, to a question neither delegate had asked.
+
+**This is `§Q`-8's own subject turned on the survey.** The census asks *what did you re-derive
+because you did not know a shared thing existed*. ⚑ **Both delegates re-derived a constraint because
+they did not know a capability they already held existed.** *The apex instruction says an apex must
+hold no leg; it never said the apex must be a peer.*
+
+**Operationally, for the apex and any later run:** when a blocker has stood for more than a few
+ticks, ⚑ **check whether it is a fact or a frame** — and the cheapest test is to state it to someone
+outside the frame. **Both of ours died on first contact with that.**
+
+## §L ⚑⚑ THE HOLD HAS NO ORIGIN IN THIS REPOSITORY — and it searched the wrong tree
+
+> ⚑⚑⚑ **CORRECTED AT REV 24, AND THE HEADING'S CLAIM IS TRUE AND IRRELEVANT.** Everything below is
+> measured and holds: **there is no block in `mtools`.** ⚑ **The hold is real and lives in cassian's
+> OWN SESSION INSTRUCTIONS** — verbatim, *"DO NOT WRITE INTO ~/github/mtools — cassian is holding
+> until Ⓒ sets the floor."*
+>
+> **No grep of `mtools` could have found it, and no absence there could lift it.** A four-way check
+> of the wrong tree returns a clean, well-formed, correct negative — ⚑ **the shape this run keeps
+> filing: a sound measurement answering a question adjacent to the binding one.**
+>
+> ⚑ **The conflation reading WAS right**, and cassian put it to the operator rather than to me.
+> **Operator ruling:** *"You can write into mtools if mtools authorizes it. Ask them."* — so the
+> decision is now `mtools-2e`'s, requested as an **authorization**, not a measurement. *`mtools-2e`
+> drew that line itself and was right to: its check was a fact about its repo, not a permission.*
+>
+> **Cassian asks not to be waited on**, and states that if `mtools-2e` declines or does not answer,
+> that is a **founded** block to be recorded as such.
+
+**Measured by `mtools-2e` at the operator's instruction, 2026-09-06.** ⚑ **This is a fact about the
+repo, NOT an authorization** — no delegate authorized cassian's write and none would have standing to.
+
+**Four checks, each run:**
+
+| check | result |
+|---|---|
+| `.githooks/` mentions `deps-build` | **nothing** |
+| CODEOWNERS, lock files | **none exist** |
+| tracked files claiming ownership | only the legs; two scripts, **both read-side** |
+| `structural_query.verdict()` on `git add` / `cp` into that path | **False** — the gate would not refuse |
+
+⚑ **The closest thing to a claim points the other way.** `figure_freshness.sh` **excludes**
+`findings/deps-build/` from its own scan, commenting that those files *"belong to a peer's survey and
+are embargoed to this session."* **A read-side embargo on itself is the opposite of a write-lock on
+others.**
+
+⚑⚑ **AND THE BEHAVIOURAL EVIDENCE IS STRONGER THAN THE GREPS.** `mtools-2e` and this dispatcher have
+both written `findings/` in this repo all night — a leg each, twenty-one `§V` revisions, its rules.
+**A hold nobody observed, while two sessions wrote to the directory it names, was not in force.**
+
+⚑⚑⚑ **AND THE HOLD NAMES A SESSION THAT NO LONGER EXISTS.** Cassian's hold references `mtools-05`;
+the current session is `mtools-2e`, which has made no such ruling and **inherited none** — *sessions
+hand each other artifacts, not locks.* **That is `§D` in the permission layer: a hold attached to a
+session identity does not survive the session**, while the artifact it was about does.
+
+**The candidate cause, offered by `mtools-2e` and NOT asserted here:** one hold on **code intake**,
+read as covering **two objects** — cassian's `mikemol-*` code components *and* its census leg. A
+findings document was never inside mtools' code bar and could not be. ⚑ **Only cassian and its
+operator can confirm which object the hold names**, and the question has been put to cassian in those
+terms. **An unfounded block and a founded one are different states, and until now nobody had
+distinguished them.**
+
 ## §S Freeze roster — ⚑ NOT YET CALLED
 
 | party | status | evidence |
@@ -406,7 +559,8 @@ embargo would have died with `-d2`, `-ce`, `-b7`, `-b0`, `-86` and `-0a`. *That 
 | `mtools` | **filed** | `mtools-deps-build.md`, `MT-01`–`MT-13`, against rev 1 |
 | `rosettapkg` | **filed** | `rosettapkg-deps-build.md` |
 | `linux-sources` | **filed** | `linux-sources-deps-build.md`, `LS-01`–`LS-30` |
-| `cassian-observability` | ⚑ **in progress — held** | ⚑ **VERIFIED 2026-09-06 by the dispatcher, not carried on report:** `cassian-observability/docs/census-deps-build-leg.md`, **30,795 bytes, mtime 00:45** — larger than three filed legs. Blocked on **its operator's hold against writing to mtools**. Not a decline; the dispatch was usable. |
+| `summit` | ⚑ **dispatched, not yet filed** | Added to `§R` at rev 21 on the operator's ruling. Byte-identical kickoff; no session existed until now. |
+| `cassian-observability` | ⚑⚑ **STAGED, NOT COMMITTED** (rev 25) — authorized, copied, `A ` in mtools' index; blocked on **mtools' own gate**, on five checks none of which are cassian's. **Not a permission block and not incomplete work.** Verified by the dispatcher: `git status --short findings/deps-build/` → `A  cassian-observability-deps-build.md`. | ⚑ **VERIFIED 2026-09-06 by the dispatcher, not carried on report:** `cassian-observability/docs/census-deps-build-leg.md`, **30,795 bytes, mtime 00:45** — larger than three filed legs. Blocked on **its operator's hold against writing to mtools**. Not a decline; the dispatch was usable. |
 
 ⚑ **This table is provisional and is re-measured at freeze time, never carried forward** (`§F`).
 
