@@ -129,6 +129,27 @@ $(sed 's/^/      /' "$2")"
 }
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
 
+# ⚑⚑⚑ ONE HELPER, BECAUSE EIGHT CALL SITES WITH THE SAME REPAIR IS EIGHT PLACES TO FORGET IT.
+# The shellcheck witness was wired to capture two commits ago and the other eight were not, so a
+# refusal naming seven witnesses printed seven bare labels and then the gate's own honest line:
+# *no check captured its own output.* ⚑ MEASURED FROM THE BLOCKED SEAT: `linux-sources`, refused
+# five times, said that line is *why I looked at `state.py` instead of at my own diff* — the
+# account being missing was itself actionable. But an actionable absence is still an absence.
+#
+# ⚑⚑ A REPAIR APPLIED TO ONE CALL SITE IS NOT A REPAIR TO THE CLASS. I wrote that sentence into
+# the ratchet's wiring and then left eight witnesses unwired in the same file. This is the fix
+# stated once so the next witness added inherits it.
+witness() {  # label, then domain_witness.sh's own arguments
+    _wlabel="$1"; shift
+    _wlog="$staged/.witness-$(printf '%s' "$_wlabel" | tr -c 'a-zA-Z0-9' '_').log"
+    if ./domain_witness.sh "$@" >"$_wlog" 2>&1; then
+        cat "$_wlog" >&2
+    else
+        cat "$_wlog" >&2
+        fail=1; note_failure "$_wlabel" "$_wlog"
+    fi
+}
+
 # ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
 for dist in hooks mdstruct ratchet; do
   for tool in ruff mypy python3; do
@@ -202,15 +223,61 @@ ratchet/ratchet-preview.txt"
 sweep_witness_residue() {
     for v in $_witness_victims; do
         [ -n "$v" ] || continue
-        git diff -- "$v" 2>/dev/null | grep -q 'transient domain probe' || continue
-        if git checkout -- "$v" 2>/dev/null; then
+        # ⚑⚑⚑ BOTH SPELLINGS, BECAUSE ONE PAYLOAD CARRIED NEITHER MARKER AND WAS INVISIBLE HERE.
+        # The mypy probe appended `def _transient_domain_probe()` with NO marker comment, so this
+        # predicate skipped it while the other four victims swept cleanly. ⚑ MEASURED FROM TWO
+        # SEATS: `linux-sources` reported four files swept with `state.py` absent from the list and
+        # correctly declined to guess whether that was a missing path or a probe planted after the
+        # sweep; `gabion` measured the same file by content hash and found a live probe. **It was
+        # neither — the path was in the list and the predicate could not see the payload.**
+        #
+        # ⚑⚑ The payload now carries the marker too (`domain_witness.sh`), so this is belt AND
+        # braces: a sweep keyed on one spelling of a thing with two spellings is the same
+        # cheap-key defect this repository has now found in six instruments.
+        git diff -- "$v" 2>/dev/null \
+            | grep -qE 'transient domain probe|_transient_domain_probe' || continue
+        # ⚑⚑⚑ THE THREE OUTCOMES ARE SEPARATED, AND CONFLATING THEM WAS THE MIRROR OF THE DEFECT
+        # THIS SWEEP EXISTS TO REPAIR. The first cut ran `git checkout -- "$v" 2>/dev/null` and
+        # branched on its status alone, so a failure to acquire `.git/index.lock` was reported as
+        # `COULD NOT sweep probe residue` — indistinguishable from a real content failure.
+        #
+        # ⚑⚑ MEASURED BY A PEER, THEN REPRODUCED HERE. `gabion` was refused with three files named
+        # unsweepable and found all three CLEAN seconds later; reproduced in a scratch repo with a
+        # held lock: `git checkout` exits 128 and the file stays dirty, and nothing in the message
+        # says which of the two happened. ⚑ Their statement of it is the one to keep: *arm 3 used
+        # to say "the tree is dirty" when it meant "my residue survived"; this said "COULD NOT
+        # sweep" when the residue was gone. The attribution was repaired and the polarity was then
+        # wrong in the other direction.*
+        #
+        # ⚑ SO THE ERROR IS CAPTURED RATHER THAN DISCARDED, and the file is re-measured afterward.
+        # A checkout that failed on the lock while another party's commit cleared the same residue
+        # leaves the file CLEAN, which is a success this gate should not report as a failure.
+        _sweep_err="$(git checkout -- "$v" 2>&1)"; _sweep_rc=$?
+        if [ "$_sweep_rc" -eq 0 ]; then
             say "swept this gate's own probe residue from $v"
+        elif ! git diff -- "$v" 2>/dev/null | grep -q 'transient domain probe'; then
+            say "probe residue in $v is gone — the checkout failed but the file is clean"
+            say "  (git said: ${_sweep_err%%$'\n'*})"
         else
             say "⚑ COULD NOT sweep probe residue from $v — run: git checkout -- $v"
+            say "  git said: ${_sweep_err%%$'\n'*}"
         fi
     done
 }
 trap sweep_witness_residue EXIT
+
+# ⚑⚑⚑ AND IT RUNS ONCE UP FRONT, BECAUSE AN EXIT TRAP CLEANS UP AFTER THE RUN IT COULD HAVE SAVED.
+# MEASURED: a commit was refused by two witnesses, both reporting `already carries probe residue`
+# on `cmdparse.py`, and the very next line of the same run read
+# `swept this gate's own probe residue from hooks/src/mikemol/hooks/cmdparse.py`. ⚑ The sweep did
+# its job — one run too late. The residue was a PREDECESSOR's, the trap fired at the end as
+# designed, and the witnesses had already refused on a condition this gate was about to clear.
+#
+# ⚑⚑ SO THE TRAP AND THE PRE-FLIGHT ARE TWO DIFFERENT JOBS WEARING ONE NAME. The trap cleans up
+# THIS run's own residue so the NEXT party is not blocked. This call clears a PREDECESSOR's so
+# THIS run is not blocked by a corpse. Neither substitutes for the other, and having only the
+# first meant every stranded probe cost exactly one extra full refusal before it was swept.
+sweep_witness_residue
 
 staged="${TMPDIR:-/home/mikemol/.cache}/mtools-staged"
 rm -rf "$staged"; mkdir -p "$staged"
@@ -361,9 +428,9 @@ fi
 # the arm would confirm the declaration rather than the CLOSURE. The victim must be a file the
 # checker reaches only by following imports.
 say "domain witness: each mypy target's declared domain vs its real one"
-./domain_witness.sh ratchet  //ratchet:mypy  ratchet/src/mikemol/ratchet/state.py || { fail=1; note_failure "ratchet: mypy domain reaches a transitive import"; }
-./domain_witness.sh mdstruct //mdstruct:mypy mdstruct/src/mikemol/mdstruct/frontmatter.py || { fail=1; note_failure "mdstruct: mypy domain reaches a transitive import"; }
-./domain_witness.sh hooks    //hooks:mypy    hooks/src/mikemol/hooks/cmdparse.py || { fail=1; note_failure "hooks: mypy domain reaches a transitive import"; }
+witness "ratchet: mypy domain reaches a transitive import" ratchet  //ratchet:mypy  ratchet/src/mikemol/ratchet/state.py
+witness "mdstruct: mypy domain reaches a transitive import" mdstruct //mdstruct:mypy mdstruct/src/mikemol/mdstruct/frontmatter.py
+witness "hooks: mypy domain reaches a transitive import" hooks    //hooks:mypy    hooks/src/mikemol/hooks/cmdparse.py
 
 # ⚑⚑ RUFF TOO, AND THE PROBE KIND IS EXPLICIT. Three ticks armed mypy's domain across three
 # distributions and left ruff's untested — "weaker claim" is not "tested claim". The 4th argument
@@ -380,9 +447,9 @@ say "domain witness: each mypy target's declared domain vs its real one"
 # witnesses — they are properties of one machine at one moment, and quoting them invites exactly
 # the projection the sentence exists to refuse. The structural claim survives any machine; the
 # seconds do not survive the next commit by a peer.
-./domain_witness.sh ratchet  //ratchet:ruff  ratchet/src/mikemol/ratchet/state.py  ruff || { fail=1; note_failure "ratchet: ruff domain reaches a transitive import"; }
-./domain_witness.sh mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff || { fail=1; note_failure "mdstruct: ruff domain reaches a transitive import"; }
-./domain_witness.sh hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff || { fail=1; note_failure "hooks: ruff domain reaches a transitive import"; }
+witness "ratchet: ruff domain reaches a transitive import" ratchet  //ratchet:ruff  ratchet/src/mikemol/ratchet/state.py  ruff
+witness "mdstruct: ruff domain reaches a transitive import" mdstruct //mdstruct:ruff mdstruct/src/mikemol/mdstruct/frontmatter.py ruff
+witness "hooks: ruff domain reaches a transitive import" hooks    //hooks:ruff    hooks/src/mikemol/hooks/cmdparse.py   ruff
 
 # ⚑⚑⚑ THE LAST UNARMED CHECKER, AND IT GUARDS THIS FILE. mypy, ruff and the ratchet each have a
 # domain witness across three distributions; `shellcheck_githooks` had none — so the one target
@@ -410,8 +477,8 @@ fi
 # the census does not produce is paydown. Only a REMOVED key leaves a real finding unaccounted. An
 # arm built on the intuitive direction would have reported FAILED against a gate working exactly as
 # designed.
-./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/src/mikemol/ratchet/state.py ratchet || { fail=1; note_failure "ratchet gate domain reaches its census sources"; }
-./domain_witness.sh ratchet //ratchet:ratchet_gate ratchet/ratchet-preview.txt          baseline || { fail=1; note_failure "ratchet gate domain reaches its BASELINE"; }
+witness "ratchet gate domain reaches its census sources" ratchet //ratchet:ratchet_gate ratchet/src/mikemol/ratchet/state.py ratchet
+witness "ratchet gate domain reaches its BASELINE" ratchet //ratchet:ratchet_gate ratchet/ratchet-preview.txt          baseline
 
 # ⚑⚑ FRESHNESS REPORTS, IT DOES NOT REFUSE, AND THE `|| true` IS DELIBERATE RATHER THAN LAZY. Its
 # subject is a shared cluster this repository does not own: a red gate on someone else's outage

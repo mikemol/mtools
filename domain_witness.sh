@@ -131,17 +131,39 @@ fi
 # to make the restore VERIFIABLE independent of everything else in the tree.
 before_image="$(git hash-object "$victim" 2>/dev/null)"
 
+# ⚑⚑⚑ `git checkout`'s OWN STATUS IS REPORTED SEPARATELY FROM THE DIRTINESS RE-READ, AND
+# CONFLATING THEM MADE THE BEFORE-IMAGE REPAIR INHERIT THE DEFECT IT FIXED. The before-image made
+# a failed restore ATTRIBUTABLE — correctly, which is why the message could say *this is my
+# residue* rather than *the tree is dirty*. ⚑ But the comparison is still A POINT SAMPLE OF A
+# MUTABLE FILE, so it can be right about attribution and wrong about the present.
+#
+# ⚑⚑ MEASURED FROM THE BLOCKED SEAT (`gabion`, in one sequence): the gate printed
+# `CONTENT DIFFERS ... before=d960db4d now=59f4460e`, and an immediate check found
+# `git hash-object` == `git ls-files -s` == the very `before=` the message named as correct — then
+# the retry failed with `Unable to create .git/index.lock`. **The `checkout` never ran; something
+# else restored the file; and the message described a state that no longer existed when it was
+# read.**
+#
+# ⚑⚑⚑ SO THE TWO OUTCOMES ARE NOW NAMED. A non-zero `checkout` is *I could not act* — a lock, a
+# permission, a missing path — and says nothing about the file. A zero `checkout` with a hash that
+# still differs is *I acted and it did not take*. `gabion`'s statement of the class is the one to
+# keep: **a before-image fixes attribution; it does not make a reading current.**
 restore() {
-    git checkout "$victim" 2>/dev/null
+    _co_err="$(git checkout "$victim" 2>&1)"; _co_rc=$?
     now="$(git hash-object "$victim" 2>/dev/null)"
     if [ "$now" = "$before_image" ]; then
         return 0
     fi
-    # ⚑ THE TWO CASES ARE NOW SEPARABLE, AND THEY WANT DIFFERENT READERS. If the content differs
-    # from the before-image, this script failed to put back what it took. If it matches and the
-    # tree is still dirty elsewhere, that is a peer's write and not this witness's residue.
+    if [ "$_co_rc" -ne 0 ]; then
+        echo "domain_witness: $victim — COULD NOT RESTORE; git checkout exited $_co_rc" >&2
+        echo "  git said: ${_co_err%%$'\n'*}" >&2
+        echo "  ⚑ THIS IS 'I COULD NOT ACT', NOT 'MY RESTORE FAILED'. The file's state is" >&2
+        echo "  unknown to this witness — re-read it rather than trusting this line." >&2
+        return 0
+    fi
     echo "domain_witness: $victim CONTENT DIFFERS FROM THE BEFORE-IMAGE — this witness's own" >&2
-    echo "  restore failed. before=${before_image:-<unmeasured>} now=${now:-<unreadable>}" >&2
+    echo "  restore ran (rc=0) and did not take. before=${before_image:-<unmeasured>}" >&2
+    echo "  now=${now:-<unreadable>}" >&2
     echo "  ⚑ THIS IS MY RESIDUE, NOT A PEER'S EDIT. Run: git checkout $victim" >&2
 }
 trap restore EXIT
@@ -233,7 +255,13 @@ case "$probe_kind" in
     baseline) head -n -1 "$victim" > "$victim.probe" \
                   && printf '# transient domain probe %s\n' "$(date +%s%N)" >> "$victim.probe" \
                   && mv "$victim.probe" "$victim" ;;
-    mypy)    printf '\n\ndef _transient_domain_probe() -> int:\n    return "not an int"\n' >> "$victim" ;;
+    # ⚑⚑⚑ EVERY PAYLOAD CARRIES THE MARKER, AND THIS ONE DID NOT. The residue guard (line ~54) and
+    # the gate's sweep both key on the literal `transient domain probe`; the mypy payload was the
+    # one probe kind that omitted it, so a stranded mypy probe was invisible to BOTH — measured
+    # today, `ratchet/src/mikemol/ratchet/state.py` dirty with a probe that `grep -c 'transient
+    # domain probe'` reported as 0. ⚑ A guard and a sweep that agree on a predicate the payload
+    # does not satisfy is a control that cannot see the thing it exists for.
+    mypy)    printf '\n\n# transient domain probe %s\ndef _transient_domain_probe() -> int:\n    return "not an int"\n' "$(date +%s%N)" >> "$victim" ;;
     ruff)    printf '\nimport os  # transient domain probe\n' >> "$victim" ;;
     # ⚑ SHELLCHECK'S DEFECT CLASS IS AN UNQUOTED EXPANSION — the one thing every other probe here
     # cannot express, because the other checkers read Python. Measured: this single line yields
