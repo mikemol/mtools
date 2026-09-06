@@ -306,6 +306,7 @@ would notice. **A per-repo hermeticity answer cannot see any of this.**
    | `substrate` (ii) | **censuses + 9 ratchet baselines + paydown** (`gate_census.py`, `build_census.py`, `paydown_census.py`) | populations it enumerates | ⚑ **no build system at all** |
    | `substrate` (iii) | ⚑⚑ **THE WORKLIST — work planning as a GATED PAPERKIT PROJECT.** `scripts/worklist_gate.py` **67772 bytes**, `worklist.py` 35167, a `worklist_engine`, and `catalog/worklist/` holding its own **`warrants.bib` (69790 bytes)** + `paper.toml` + `WORKLIST.md` + a `.delta-cache.json` | ⚑ **the work list is ITSELF a warranted artifact** | continuously; the ledger is the cotype |
    | `gabion` | ⚑⚑ **AUTHORED, NOT DERIVED** — `docs/workstreams/*.md`, a typed registry in each doc's **YAML frontmatter** (`root`/`subqueue`/`touchpoint`/`touchsite`) lifted into an invariant graph; the graph computes *projections* (queue health, ranked cuts, blocker chains) but **the units are hand-declared** | ⚑ **nothing generates it** — and each unit **requires** a `reason` and a `reasoning.summary` | authored; staleness is a red claim |
+   | `memory-concepts` *(third-party)* | ⚑⚑⚑ **DERIVED, AND ITS OUTPUT IS ANOTHER REPO'S SESSION MEMORY** — `gen_index.py:build()` reads `warrants.bib` + `rubric.tsv` through paperkit's own `bib` module and emits a deterministic markdown index | `warrants.bib` + `rubric.tsv` | ⚑ **by hand or CI — NOT at commit**; `.git/hooks/` holds 13 `*.sample` and **zero real hooks** |
 
    ⚑⚑⚑ **`substrate` HOLDS THREE OF THE SIX AND THEY ARE NOT VARIANTS OF EACH OTHER.** Its
    Makefile generator is **structurally the same shape as `linux-sources`' bazel generator** —
@@ -321,6 +322,26 @@ would notice. **A per-repo hermeticity answer cannot see any of this.**
    is GATED RATHER THAN CHECKED**, and going stale is a red claim rather than a drift report.
    ⚑ *A census that asks only "what generates your work list" cannot see this row, because
    nothing generates it — it is authored and warranted.*
+
+   ⚑⚑⚑ **AND THE EIGHTH MECHANISM'S OUTPUT IS A CROSS-REPO EMIT EDGE, WHICH IS SHARPER THAN THE
+   MECHANISM — rev 23.** `memory-concepts`' index is consumed by **`cassian-observability`'s live
+   session memory**, not by a build. **It is invisible from `memory-concepts`' own manifest** and
+   visible only by reading the generator's `--write` target handling. *That is `§Q`-5's emit
+   direction — the one no census of declared dependencies can see — appearing in a repo that is
+   not registered with `summit` at all.*
+
+   ⚑⚑ **AND IT CARRIES A DELIBERATE TWO-CHECK SPLIT THAT A ONE-BIT READING WOULD DESTROY**, read
+   from source rather than from the reporting party:
+
+       gen_index.py --check            SNAPSHOT.read_text() != body   -> return 1   ⚑ GATED
+       gen_index.py --deployed-check   deployed != body               -> return 0   ⚑ ADVISORY
+
+   **The in-repo snapshot is gated; the DEPLOYED copy is advisory and always exits 0**, with the
+   reason in its own comment: *"a gate that FAILED on this would flap — the corpus/warrants change
+   between sessions by design."* ⚑ *`cassian` nominated this repo and described `MEMORY.md` as
+   gated; the gated artifact is `MEMORY.index.md`, and the file they named is the one that is
+   explicitly NOT gated.* **Right about the mechanism, wrong about which artifact — and the
+   distinction is the whole design.**
 
    ⚑ **So the axis is not `bazel` vs `not bazel`.** It is *where the work list comes from, what
    emits it, and what notices when the emission goes stale* — and `gabion`'s bespoke tooling is
