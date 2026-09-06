@@ -14,6 +14,17 @@
 # so. ⚑ That is an invariant BETWEEN two statements in one corpus, so it needs no clock, no
 # cluster and no re-measurement.
 #
+# ⚑⚑⚑ THE NEWEST FIGURE IS ALWAYS THE LEAST PROTECTED, AND THAT IS STRUCTURAL RATHER THAN A GAP
+# TO CLOSE. This detects a stale figure only once a LATER rule cites it as historical — so the
+# most recent measurement in the corpus is, by construction, invisible to the check. Measured: the
+# rule that re-measured the gate's cost states its own number in the present tense, nothing cites
+# it yet, and this checker reports nothing about it.
+#
+# ⚑⚑ THE ASYMMETRY IS THE OPPOSITE OF WHAT ONE WOULD WANT: a figure gains protection as it ages,
+# and is unprotected exactly while it is most likely to be quoted. Naming it here because a reader
+# who sees a clean scan should not conclude the corpus has no stale figures — only that none has
+# been contradicted IN WRITING yet.
+#
 # ⚑ IT REPORTS RATHER THAN REFUSES, for the reason the freshness gate does: the fix is prose in a
 # findings document, and a commit blocked on unwritten prose is a commit whose author reaches for
 # --no-verify.

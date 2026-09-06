@@ -1709,3 +1709,31 @@ measuring nine independent domain claims costs when each must genuinely execute.
 
 **Recorded rather than optimized.** The disposition is the operator's: this repository's gate now
 costs over two minutes per commit, every commit, and that is the price of the property it asserts.
+
+### ⚑⚑⚑ SUPERSEDED — and 132s was never a stable quantity, which is worse than being stale
+
+Re-measured on an unchanged tree, four consecutive runs:
+
+```
+132s  →  88s  →  65s  →  61s
+```
+
+**Monotonically decreasing, converging near 61s.** Nothing was optimized between those runs; three
+more checkers were *added*. ⚑ The variance is the suite's action cache warming — `bazel test //...`
+reports **206 action cache hits** once warm — and the witnesses contribute none of it, because the
+nonce makes them uncacheable by construction (Rule 16).
+
+⚑⚑ **THIS IS A SHARPER FAILURE THAN THE 77s ONE ABOVE.** That figure was correct when taken and
+went stale as the tree grew — a measurement outliving its conditions. **This one was never a
+property of the gate at all**: it was one sample of a converging series, and stating it as *"the
+gate costs 132s"* asserted a stability the quantity does not have.
+
+⚑ **The honest form is a range with its conditions, not a number:**
+
+| cache state | cost |
+|---|---|
+| cold (fresh clone, empty action cache) | **≥132s**, and unbounded upward — nothing measured the true cold floor |
+| warm (a developer's second commit onward) | **~61s** |
+
+**Recorded this way because a reader deciding whether the gate is affordable needs to know which
+they will pay** — and a fresh clone pays the first, every contributor thereafter pays the second.
