@@ -47,14 +47,31 @@ cd "$(dirname "$0")" || exit 1
 # file the author did not touch. A pre-flight refusal is the whole repair.
 #
 # ⚑ IT RUNS BEFORE THE TRACKED CHECK, and the order is a claim about what each guard KNOWS.
+# ⚑⚑⚑ AND THE ORIGINAL ACCOUNT OF THIS REFUSAL NAMED ONE CAUSE OUT OF TWO, WHICH IS A
+# HAND-WRITTEN POPULATION INSIDE A GUARD. It said *a previous witness was killed inside its
+# mutation window* and told the reader to run `git checkout`. MEASURED: SEVEN witnesses refused at
+# once — mypy and ruff across all three distributions plus shellcheck — while a peer's gate was
+# mid-run. Nothing had been killed. `_witness_victims` is a FIXED five-path list and every party
+# runs this same hook, so concurrent gates contend for the same files by construction.
+# ⚑⚑ THE WRONG HALF OF THE ADVICE IS ACTIVELY HARMFUL: `git checkout` on a LIVE probe destroys the
+# mutation another party's witness is mid-way through measuring, turning their correct run into a
+# spurious arm-1 failure. **A guard that names one cause of two sends half its readers to a remedy
+# that breaks someone else's measurement.** The refusal was right; the account was not.
+#
 # Residue is a fact about the file's CONTENTS and needs no repository; tracking is a fact about
 # git. Checking contents first gives the more specific diagnosis — and it also makes the guard
 # reachable by a fixture, where the tracked check would have refused first and a test could not
 # tell which guard fired.
 if grep -q "transient domain probe" "$victim" 2>/dev/null; then
     echo "domain_witness: $victim already carries probe residue — refusing" >&2
-    echo "  a previous witness was killed inside its mutation window (SIGKILL defeats the" >&2
-    echo "  EXIT trap). Run: git checkout $victim" >&2
+    echo "  TWO CAUSES, and the remedy differs. This guard cannot tell them apart." >&2
+    echo "  1. ANOTHER PARTY'S GATE IS RUNNING RIGHT NOW. The victim list is FIXED and every" >&2
+    echo "     party runs this same hook, so concurrent gates contend for these five files." >&2
+    echo "     Their probe is LIVE. Do NOT check it out — wait and retry; their EXIT trap" >&2
+    echo "     sweeps it. Check first: pgrep -f domain_witness" >&2
+    echo "  2. A witness was KILLED inside its mutation window (SIGKILL defeats the EXIT" >&2
+    echo "     trap), so the residue is abandoned and nothing will sweep it." >&2
+    echo "     Then, and only then: git checkout $victim" >&2
     exit 2
 fi
 

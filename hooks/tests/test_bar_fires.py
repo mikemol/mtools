@@ -941,6 +941,7 @@ def test_the_gate_points_the_checkers_at_the_staged_tree() -> None:
 
 
 _POLL = _DIST.parent / "blockers.sh"
+_WITNESS = _DIST.parent / "domain_witness.sh"
 
 
 def test_the_poll_enumerates_censuses_from_the_filesystem() -> None:
@@ -1243,3 +1244,30 @@ def test_the_poll_reports_more_than_one_roster_shaped_table() -> None:
     assert 'grep -c "$sig"' in body, "the poll must COUNT its matches, not assume one"
     assert "roster-shaped tables" in body, "multiplicity must be reported, not resolved silently"
     assert "tail -1" in body, "the running roster is taken; the summary is not a second roster"
+
+
+def test_the_residue_guard_names_both_causes_not_one() -> None:
+    """⚑⚑⚑ A GUARD WHOSE ACCOUNT NAMED ONE CAUSE OF TWO SENT HALF ITS READERS TO A HARMFUL REMEDY.
+
+    The refusal said *a previous witness was killed inside its mutation window* and told the reader
+    to run `git checkout`. ⚑ MEASURED: **seven witnesses refused at once** — mypy and ruff across
+    all three distributions, plus shellcheck — while a PEER'S GATE WAS MID-RUN. Nothing had been
+    killed. `_witness_victims` is a fixed five-path list and every party runs the same hook, so
+    concurrent gates contend for those files **by construction**.
+
+    ⚑⚑ AND THE WRONG HALF OF THE ADVICE IS ACTIVELY HARMFUL: `git checkout` on a LIVE probe
+    destroys the mutation another party's witness is mid-way through measuring, converting their
+    correct run into a spurious arm-1 failure. **The refusal was right; the account was not** — a
+    hand-written population of causes, inside a guard, in the repository that has spent a day
+    measuring hand-written populations.
+
+    Both causes are now named with their differing remedies, and the concurrent case is told to
+    check `pgrep` and WAIT rather than check out.
+    """
+    body = _WITNESS.read_text(encoding="utf-8")
+    assert "TWO CAUSES" in body, "the guard must not name one cause of two"
+    assert "ANOTHER PARTY'S GATE IS RUNNING RIGHT NOW" in body
+    assert "Do NOT check it out" in body, (
+        "the concurrent case must be steered away from the remedy that breaks a live measurement"
+    )
+    assert "pgrep -f domain_witness" in body, "the reader needs a way to tell the two apart"
