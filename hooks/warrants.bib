@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-poll-reports-more-than-one-roster-shaped-table,
+  section = {bar-fires},
+  claim   = {Two roster-shaped tables concatenated their row counts into 5\n12 and a failed [ takes the ELSE branch, so FROZEN printed from a predicate that never ran},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_reports_more_than_one_roster_shaped_table}
+}
+
 @misc{hooks-bar-fires-warrant-count-is-anchored-against-a-quoted-delimiter,
   section = {bar-fires},
   claim   = {An unanchored entry-delimiter count reads a QUOTATION as a warrant: 2 unanchored, 1 anchored, measured on a fixture},

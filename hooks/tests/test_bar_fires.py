@@ -1218,3 +1218,28 @@ def test_the_gate_names_the_population_its_ledger_ranges_over() -> None:
     body = _GATE.read_text(encoding="utf-8")
     assert "TEST **FUNCTIONS**, NOT TEST **CASES**" in body
     assert "248" in body, "the case count must be stated, or the gap is invisible again"
+
+
+def test_the_poll_reports_more_than_one_roster_shaped_table() -> None:
+    r"""⚑⚑⚑ TWO MATCHING TABLES CONCATENATED THEIR ROW COUNTS AND FED `5\n12` TO `[`.
+
+    At its freeze `build-hermeticity` carries BOTH `party | state at freeze` — `§G`'s publication,
+    5 GROUPED rows — and `party | state`, `§S`'s running roster at 12 rows, one party each. Both
+    are correct, and `§G` requires the first. ⚑ **So the poll broke at the exact moment its subject
+    did the right thing**, which is the third instrument here to degrade that way in one day: a
+    column renamed while its census repaired its own state vocabulary, and a correction-rate grep
+    defeated by commit subjects that name the defect rather than the act.
+
+    ⚑⚑ AND A FAILED `[` TAKES THE ELSE BRANCH, so the roster-identity guard did not run and the
+    poll fell through to the `§V` check — which printed `FROZEN` correctly. **A right answer from a
+    dead predicate is indistinguishable from a right answer.** Diagnosed from the consuming side by
+    `cassian-observability` while `rosettapkg` measured the cause from the producing side.
+
+    ⚑ BOUNDED, because the obvious worry is whether earlier verdicts were also ungated: measured
+    `git show HEAD~1` of that census — **1 matching table before the freeze commit, 2 after** — so
+    the second table arrived WITH the freeze and no earlier reading could have been affected.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert 'grep -c "$sig"' in body, "the poll must COUNT its matches, not assume one"
+    assert "roster-shaped tables" in body, "multiplicity must be reported, not resolved silently"
+    assert "tail -1" in body, "the running roster is taken; the summary is not a second roster"

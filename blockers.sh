@@ -240,8 +240,37 @@ else
     # no table at all / ⚑ A TABLE SHAPED LIKE A ROSTER UNDER A HEADER I DO NOT KNOW. The third is
     # the state this poll was silently in for `build-hermeticity`, and it read as the second.
     if [ -n "$sig" ]; then
-        roster=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
-        tbl=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE 'table [0-9]+' | grep -oE '[0-9]+')
+        # ⚑⚑⚑ A CENSUS MAY CARRY MORE THAN ONE ROSTER-SHAPED TABLE, AND ASSUMING ONE CONCATENATED
+        # TWO ROW COUNTS INTO `5\n12`, WHICH REACHED `[` AS A NON-INTEGER. `build-hermeticity` at
+        # its freeze carries BOTH `party | state at freeze` (§G's publication, 5 GROUPED rows) and
+        # `party | state` (§S's running roster, 12 rows, one party each). Both are correct and §G
+        # asks for the first — ⚑ so the poll broke at the exact moment its subject did the right
+        # thing, which is the THIRD instrument of mine to degrade that way today (a column renamed
+        # during a vocabulary repair; a correction-rate grep defeated by subjects that name the
+        # defect rather than the act). `rosettapkg` measured this one.
+        # ⚑⚑ THE FIX IS NOT TO PICK ONE BY POSITION OR BY SPELLING. Keying on `state at freeze`
+        # would be a fourth guessed literal, and `head -1` would silently prefer whichever table a
+        # future edit happens to put first — the positional-predicate defect this block already
+        # refuses. The MULTIPLICITY IS REPORTED and the RUNNING ROSTER is taken, because §S is what
+        # a filer files into and §G's publication is a summary OF it at one instant.
+        _hits=$("$md" tables "$census" 2>/dev/null | grep -c "$sig")
+        if [ "$_hits" -gt 1 ]; then
+            echo "  ⚑ ${_hits} roster-shaped tables — §G's freeze publication and §S's running"
+            echo "    roster both match. Reading §S; §G's is a SUMMARY of it, not a second roster."
+            "$md" tables "$census" 2>/dev/null | grep "$sig" | sed 's/^/      /'
+        fi
+        # ⚑ THE LAST MATCH IS TAKEN, AND THE REASON I FIRST WROTE HERE WAS FALSE. I claimed §G's
+        # publication sits above §S. MEASURED: `§S Freeze roster` spans L1355-1435 and `§G The
+        # freeze` L1436-1459 — §G comes AFTER, and BOTH matching tables live inside §S. The freeze
+        # publication was written into the §S section, so the ordering that makes `tail -1` correct
+        # is *summary first, then the per-party roster it summarises*, WITHIN §S.
+        # ⚑⚑ THAT IS AN OBSERVED CONVENTION OF ONE RUN FILE, NOT AN INVARIANT, and it is recorded
+        # as such: if a census ever publishes its summary below its roster this takes the wrong
+        # table — which is why the multiplicity is PRINTED above rather than resolved silently. A
+        # reader sees both counts and can tell. That is the residue, stated, not closed.
+        _row=$("$md" tables "$census" 2>/dev/null | grep "$sig" | tail -1)
+        roster=$(printf '%s' "$_row" | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
+        tbl=$(printf '%s' "$_row" | grep -oE 'table [0-9]+' | grep -oE '[0-9]+')
     else
         roster=''
         tbl=''
