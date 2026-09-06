@@ -107,11 +107,42 @@ if [ -n "$(git diff --name-only -- "$victim" 2>/dev/null)" ]; then
 fi
 
 # ⚑⚑ THE RESTORE VERIFIES, because a restore that fails silently is the same defect one layer in.
+# ⚑⚑⚑ THE BEFORE-IMAGE IS TAKEN BEFORE ANY MUTATION, AND WITHOUT IT THIS WITNESS COULD NOT TELL
+# ITS OWN RESIDUE FROM A PEER'S WORK. `restore` compared `git diff --quiet -- $victim`, which is a
+# WHOLE-FILE predicate: it conflates *I failed to restore my own edit* with *someone else's edit
+# arrived while I ran*. Both print `the tree is dirty`, and only the first is this script's
+# business.
+#
+# ⚑⚑ MEASURED, AND IT BLOCKED FOUR PARTIES AT ONCE (2026-09-06). Seven sessions write this tree.
+# Four witnesses lost the arm-3 race simultaneously and left sabotage in `blockers.sh`,
+# `cmdparse.py`, `frontmatter.py` and `state.py` — including a TYPE defect
+# (`def _transient_domain_probe() -> int: return "not an int"`) that produced six mypy/ruff
+# refusals I read as six separate failures. `gabion` diagnosed the attribution half and declined
+# to revert a file it did not own, which was correct and is why it stayed stranded.
+#
+# ⚑⚑⚑ AND THE DANGEROUS DIRECTION IS THAT THE SABOTAGE OUTLIVES THE RUN THAT MADE IT. A later
+# commit by ANY party carries `probe_unused=$(echo $PROBE_UNQUOTED)` into HEAD as real content,
+# after which `//:shellcheck_githooks` fails on it FOR REAL, in a file nobody edited on purpose.
+# **A witness that proves a gate can fail by writing a defect it does not reliably clean up is a
+# defect generator under concurrency** — gabion's phrase, and it names what I built.
+#
+# ⚑ THE SABOTAGE STAYS IN THE REAL FILE. A witness over a copy proves the COPY's domain, which is
+# the whole reason arm 2 mutates the tracked file. So the repair is not to move the mutation; it is
+# to make the restore VERIFIABLE independent of everything else in the tree.
+before_image="$(git hash-object "$victim" 2>/dev/null)"
+
 restore() {
     git checkout "$victim" 2>/dev/null
-    if ! git diff --quiet -- "$victim" 2>/dev/null; then
-        echo "domain_witness: $victim did not restore — the tree is dirty" >&2
+    now="$(git hash-object "$victim" 2>/dev/null)"
+    if [ "$now" = "$before_image" ]; then
+        return 0
     fi
+    # ⚑ THE TWO CASES ARE NOW SEPARABLE, AND THEY WANT DIFFERENT READERS. If the content differs
+    # from the before-image, this script failed to put back what it took. If it matches and the
+    # tree is still dirty elsewhere, that is a peer's write and not this witness's residue.
+    echo "domain_witness: $victim CONTENT DIFFERS FROM THE BEFORE-IMAGE — this witness's own" >&2
+    echo "  restore failed. before=${before_image:-<unmeasured>} now=${now:-<unreadable>}" >&2
+    echo "  ⚑ THIS IS MY RESIDUE, NOT A PEER'S EDIT. Run: git checkout $victim" >&2
 }
 trap restore EXIT
 
@@ -237,10 +268,27 @@ restore
 
 # ⚑ ARM 3 — RESTORATION. A witness that leaves the tree dirty makes the NEXT gate's verdict a
 # fact about this script.
-if bazel test "$target" >/dev/null 2>&1; then
+# ⚑⚑ THE VICTIM'S CONTENT IS CHECKED BEFORE THE TARGET IS, BECAUSE THE TARGET CANNOT ATTRIBUTE.
+# `bazel test` going red after a restore has two causes — my probe survived, or a peer wrote to
+# some other declared input while I ran — and this arm reported the first for both. Comparing the
+# victim against its before-image separates them: if the content matches, my restore succeeded and
+# anything still red belongs to someone else's write.
+after_image="$(git hash-object "$victim" 2>/dev/null)"
+if [ "$after_image" != "$before_image" ]; then
+    say "arm 3 FAILED: $victim's content differs from its before-image — MY restore failed"
+    say "  before=${before_image:-<unmeasured>} after=${after_image:-<unreadable>}"
+    say "  ⚑ this is this witness's own residue. Run: git checkout $victim"
+    fail=1
+elif bazel test "$target" >/dev/null 2>&1; then
     say "arm 3 RESTORED: $dist is green again"
 else
-    say "arm 3 FAILED: $victim was not restored — the tree is dirty"
+    # ⚑ NOT A RESTORE FAILURE, AND SAYING SO IS THE POINT. The victim is byte-identical to what
+    # this witness found. A red target now is a fact about a DIFFERENT input — a peer's in-flight
+    # write, or a defect that was already there — and reporting it as `was not restored` sends the
+    # reader to `git checkout` a file that is already correct.
+    say "arm 3: $victim RESTORED (content matches its before-image), but $target is RED"
+    say "  ⚑ that is NOT this witness's residue — some other declared input of $target changed"
+    say "  seven sessions write this tree; check 'git status' before treating it as a defect"
     fail=1
 fi
 

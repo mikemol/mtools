@@ -111,6 +111,52 @@ done
 #
 # ⚑ THE DIRECTORY IS NOT REMOVED ON EXIT, deliberately: removing it discards the action cache and
 # restores the 99s. It is refreshed from the index each run, so it never holds stale content.
+# ⚑⚑⚑ THE GATE SWEEPS ITS OWN WITNESSES' RESIDUE, BECAUSE A REFUSAL WAS GENERATING THE NEXT ONE.
+# Nine domain witnesses below mutate REAL tracked files — arm 2 plants a defect to prove the target
+# refuses it, arm 3 restores. Each witness traps its own EXIT. **But the GATE has no trap**, so
+# when an early check fails and the run is abandoned, witnesses die inside their mutation windows
+# and their probes survive into the NEXT attempt, which refuses on residue rather than on content.
+#
+# ⚑⚑ MEASURED, TWICE IN ONE TICK. Attempt 1 left residue in four victims (`blockers.sh`,
+# `cmdparse.py`, `frontmatter.py`, `state.py`) — one of them a TYPE defect, which produced six
+# mypy/ruff refusals that read as six independent failures. Attempt 2, after clearing all four by
+# hand, left residue in three more. **The refusal generates its own next refusal**, and each round
+# strands sabotage for whoever commits next — which, with seven sessions writing this tree, is
+# usually not the party that produced it.
+#
+# ⚑⚑⚑ AND A PEER CORRECTLY WILL NOT CLEAR IT. `gabion` declined twice today to revert files it does
+# not own, for the right reason: a peer cannot distinguish a witness's sabotage from the owner's
+# in-flight work. So the only party who can clean it is the one whose gate made it, and that party
+# has already exited. **The cleanup has to be the gate's, not a reader's.**
+#
+# ⚑ THIS SWEEPS ONLY WHAT CARRIES THE PROBE MARKER, never a file merely dirty. A blanket
+# `git checkout` over the victims would discard a peer's real work in the window where this gate
+# happens to run — the exact defect `domain_witness`'s own unstaged-victim guard exists to refuse.
+_witness_victims="blockers.sh
+hooks/src/mikemol/hooks/cmdparse.py
+mdstruct/src/mikemol/mdstruct/frontmatter.py
+ratchet/src/mikemol/ratchet/state.py
+ratchet/ratchet-preview.txt"
+
+# ⚑⚑ NO PIPELINE HERE, DELIBERATELY. A `printf | while read` puts the loop in a SUBSHELL, so a
+# `git checkout` inside it cannot report failure to the caller and the sweep silently does nothing.
+# MEASURED on the first cut of this function: residue planted, sweep run, residue still present,
+# and the function printed no error. That is this repository's own pipeline-swallows-the-status
+# defect — the one `hook_no_chaining` exists to refuse — committed inside the repair for a
+# different silent failure.
+sweep_witness_residue() {
+    for v in $_witness_victims; do
+        [ -n "$v" ] || continue
+        git diff -- "$v" 2>/dev/null | grep -q 'transient domain probe' || continue
+        if git checkout -- "$v" 2>/dev/null; then
+            say "swept this gate's own probe residue from $v"
+        else
+            say "⚑ COULD NOT sweep probe residue from $v — run: git checkout -- $v"
+        fi
+    done
+}
+trap sweep_witness_residue EXIT
+
 staged="${TMPDIR:-/home/mikemol/.cache}/mtools-staged"
 rm -rf "$staged"; mkdir -p "$staged"
 git checkout-index --all --prefix="$staged/"
