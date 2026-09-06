@@ -975,3 +975,65 @@ the F-arm: the F-arm proves the control can detect a broken query, while the P-a
 can detect a real arrival. A query that never yields a false positive and also never yields a true
 one passes both a control and a negative arm while being useless — which is what the old denylist
 would have looked like if the repo had simply stopped growing.
+
+## Rule 16 — a probe with a fixed payload measures whether it has run before
+
+**Ⓨ, the standing witness on mypy's domain, closed — and it cost two defects in the witness itself,
+both of which this file already had rules for.**
+
+The claim being armed: mypy's verdict on a file depends on files it does not name, so its action's
+declared domain must be the full transitive closure or every unseen input yields a stale green. The
+declaration was structurally right (`glob(["src/**/*.py", "tests/**/*.py", "stubs/**"])`) and **had
+never been tested against a transitive edit** — true and unarmed, which is the state this repository
+refuses everywhere else.
+
+### ⚑⚑⚑ Defect 1: a fixed probe string is a digest the cache has already answered
+
+The witness appends a probe to a transitively-imported module and asserts the action **re-executes**.
+With a constant payload, the second run of the witness is served from the remote cache:
+
+```
+identical `# probe` append      -> Executed 0 out of 1 test      <- reads as "not an input"
+nonce-carrying append           -> 1 linux-sandbox, Executed 1   <- same file, seconds later
+```
+
+⚑⚑ **"NOT AN INPUT" AND "ALREADY ANSWERED" PRINT IDENTICALLY**, and the arm reads only that line. A
+witness that cannot separate them is not measuring the domain — it is measuring **whether it has run
+before**, which is the one question nobody asked. The repair is a nonce in the payload.
+
+⚑ **This is the inverse of the usual failure and worth naming as such.** The familiar defect is a
+gate that is permanently green; this one is permanently RED after its first run — and a permanent
+red is *also* uninformative, because a witness that always refuses gets disabled or ignored, which
+returns it to green by another route.
+
+### ⚑⚑⚑ Defect 2: `bazel | grep -q` under `pipefail` fails BECAUSE it matched
+
+Both arms initially reported FAILED against a tree that had passed the same probes by hand minutes
+earlier. Cause: `grep -q` exits on its first match and closes the pipe; bazel takes SIGPIPE; under
+`set -o pipefail` the pipeline's status is bazel's death. **The arm fails precisely when it finds
+what it is looking for.**
+
+⚑⚑ **That is Rule 14 — the reporter's status standing in for the subject's — reappearing INSIDE the
+witness written to enforce the discipline it belongs to.** The same defect that produced `rc=0` from
+a `tail` on a failing build. Capture the output, then match it; never `| grep -q` a command whose
+exit status is the finding.
+
+### The witness, and its own F-arm
+
+```
+arm 1 REACHABILITY  a transitive content change re-executes the action
+arm 2 VERDICT       a type error planted in that module fails the target
+arm 3 RESTORATION   the tree is green again afterwards
+```
+
+⚑ **One-armed versions are each strictly weaker and look identical when passing:** arm 1 alone proves
+the file is *an input*; arm 2 alone proves *mypy works*. Only the pair proves the **domain is
+complete** — the edit must reach the action, and the defect must reach the verdict.
+
+**F-armed against a file outside the domain** (`README.md`): arms 1 and 2 both fire, `REFUSED`. So
+the witness discriminates rather than passing regardless.
+
+⚑ **Placement is host-tier and that is not a compromise.** It mutates a source and re-invokes bazel,
+so it is bazel-in-bazel and the sandbox holds no bazel. Declaring it a build action would put an
+unrunnable target in the graph and call the property covered. **It is the only check in the gate that
+asks whether the declared input set is the RIGHT set**; every other one asks whether that set passes.

@@ -332,6 +332,52 @@ read `stat -c%s` as 8 and 34 bytes for `lualatex`/`soffice` and concluded both w
 **symlink** sizes — `stat` measured the link, not the target. *An instrument pointed at a pointer
 reports on the pointer*, which is this file's §6 defect with `stat` in place of a comment.
 
+## 5f. ⚑⚑ THE STAGED WORK IS RED — four failures, and the corruption alibi does not cover them
+
+The `//:hook` run gating 46 staged files reached `23 / 24 tests` after **3h55m** with **4 failed**:
+
+```
+FAIL @@+bib+paperkit_render//:gate      RED  rnd-pdf: {"verb":"cmd","verdict":"fail"}
+FAIL @@+bib+paperkit_library//:adequacy RED  concept-shareable__grade: {"grade": "broken"}
+                                        RED  concept-views__grade:     {"grade": "broken"}
+FAIL @@+bib+paperkit_talk//:adequacy
+FAIL @@+bib+paperkit_paper//:adequacy
+```
+
+⚑ **`grade: "broken"` is −1 on the ladder — CANNOT-RUN, not refuted.** A claim graded `broken`
+reports that its check could not execute; it is the signature of a resolution failure, not of a
+false claim.
+
+⚑⚑ **And it is NOT the `.cellvenv` race that this same run found earlier.** MEASURED: `grep -rl
+cellvenv` over every failing test log returns **0**. Two distinct causes, and the race fix does not
+address either. *The convenient explanation was available and is refuted.*
+
+**What the evidence supports and where it stops.** The staged change **relocates the library**
+(`library/` → `paperkit/library/`, 8 files including `concepts.bib` and `run-witness`), and the
+failing claims are declared in that moved tree with a **project-declared verb whose command is
+root-relative**:
+
+```
+[checks.claim]  cmd = "sh ./run-witness {target}"
+```
+
+The script exists and is `-rwxrwxr-x` in the checkout, so the failure is not the exec-bit case the
+file's own comment already documents:
+
+> **CITATION:** *"`sh`, NOT `./` — THE WHEEL DOES NOT CARRY THE EXEC BIT. Measured: package-data
+> files install as `-rw-rw-r--`, so `./run-witness` from an INSTALLED paperkit fails with Permission
+> denied while working perfectly in a checkout."*
+
+⚑ **The cause is not established, and the adequacy log does not carry it** — it records the verdict
+(`{"grade": "broken"}`) and not the underlying error. Naming the relocation as the cause would be
+inference; what is measured is that the failing claims live in the relocated tree, use a
+root-relative command, and grade `broken` rather than `fail`.
+
+**Consequence for the queue:** `Ζ·venv·build` cannot land as staged. `Ζ·hook·green` must re-run
+regardless (the tree changed 70 minutes into this run, voiding its verdict), but the re-run now has
+a **known red** to fix first rather than a hoped-for green. ⚑ *The four-hour run was not wasted: a
+voided verdict still produced four real defect reports and banked ~168,000 actions of cache.*
+
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
 `.githooks/local.env` held:

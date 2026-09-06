@@ -86,6 +86,19 @@ if ! command -v bazel >/dev/null 2>&1; then
 fi
 bazel test //... --test_output=errors || fail=1
 
+# ⚑⚑⚑ THE DOMAIN WITNESS RUNS HERE AND NOT AS A BAZEL ACTION, DELIBERATELY. It probes whether a
+# checker's DECLARED domain equals its REAL one, which it can only do by mutating a source file and
+# re-invoking bazel — so it is bazel-in-bazel, non-hermetic, and the sandbox has no bazel in it.
+# Host tier is the honest placement; pretending otherwise would put an unrunnable target in the
+# graph and call it covered.
+#
+# ⚑⚑ IT IS THE ONLY CHECK HERE THAT CAN CATCH A GREEN OVER A SHORT DOMAIN. Every other gate above
+# asks "does the declared input set pass?" — this one asks whether that set is the right set. A
+# `srcs` narrowed in a refactor, a glob that stopped matching, or a distribution added without the
+# pattern all leave every other check green.
+say "domain witness: mypy's declared domain vs its real one"
+./domain_witness.sh ratchet //ratchet:mypy ratchet/src/mikemol/ratchet/state.py || fail=1
+
 # ⚑⚑⚑ THIS FILE IS CHECKED BY `bazel test //:shellcheck_githooks`, WHICH IS RUN ABOVE. Until that
 # target existed, the shell that runs every other check in this repository was verified by nothing
 # — clean only because its author ran shellcheck by hand after each edit. A convention held in one

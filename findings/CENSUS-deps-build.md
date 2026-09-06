@@ -143,6 +143,53 @@ received the same bytes; only the clock differed.**
 | 3 | 2026-09-06 | ⚑ **ORIGIN IS NOT ATTRIBUTABLE FROM GIT LOG IN A CONSOLIDATION REPO.** See `§Y`. | apex phase 1; every leg's antecedent probe |
 | 4 | 2026-09-06 | ⚑ **A leg may mis-grade itself in EITHER direction; verify self-reported weaknesses on the same terms as strengths.** See `§Z`. | apex weighting |
 | 5 | 2026-09-06 | ⚑ **Filing status is MEASURED at freeze time, never carried in the dispatcher's head.** See `§F`. | the freeze; apex accounting |
+| 6 | 2026-09-06 | ⚑ **SIX ROSTER NOMINATIONS RECEIVED — the index may be short. NOT dispatched.** See `§N`. | apex §A4; roster accounting |
+
+---
+
+## §N ⚑ ROSTER NOMINATIONS — the index is under question, and the question is left open
+
+**Logged at rev 6, before the freeze, from `linux-sources`' filed leg (`LS-30`).**
+
+Brief §0 asks every surveyor to name parties who should be on `§R` and are not. `linux-sources`
+named six. ⚑ **They are recorded here and have NOT been dispatched.** The reasoning for not
+dispatching is below and is itself a finding.
+
+| nominated | not on §R | what the nominating leg says it holds |
+|---|---|---|
+| `earley` | ✅ absent | ⚑ **The house lint/type standard `linux-sources` adopted verbatim** — its `[tool.mypy]` and `[tool.ruff]` are copied rather than an ad-hoc subset. |
+| `summit` | ✅ absent | ⚑ **A live, uncacheable build input** — the `registry` slice is `local`-tier *specifically because* it reads summit's working tree. |
+| `gcalculus` | ✅ absent | An external dependency of the 60s `participants` tool; its summit filing is cited verbatim as the reason a design exists. |
+| `freecell`, `el-openglo`, `gabion` | ✅ absent | Named as the three other repos on the **same hook-adoption-by-symlink route**. |
+| `mat260` | retired per `§X` | ⚑ Its ruling on capability residency is **load-bearing in `linux-sources`' `routes` gate arm today.** |
+
+### ⚑ Why these are NOT being dispatched, and why that is a decision rather than an omission
+
+Dispatching six more legs now would re-open the survey after four of six have filed. **Every existing
+leg was written against a roster that did not include them**, and a leg's `§Q`-8/`§Q`-9 answers
+(*what did you re-derive, what did you decline*) are relative to who else was asked. Adding parties
+mid-run changes what the filed legs mean without changing their text.
+
+⚑ **So the honest handling is to carry the nominations as a first-class remainder rather than to act
+on them** — `references/apex.md` §A4 says exactly this: nominations are *"the only mechanism by which
+the survey discovers its own index was incomplete,"* and they are carried, not silently resolved.
+
+**Binding on the apex:**
+
+- ⚑ **The span `A` is computed over six legs and may be short by up to six parties.** That is a
+  stated bound on `A`, not a defect in it.
+- ⚑ **`earley` and `summit` are the two the apex should weigh hardest.** `earley` is claimed to be
+  the *origin* of a standard two repos declare; a dependency-declaration census that omits the origin
+  of the config attributes it to its adopters — **the same shape as `§Y`'s consolidation-repo trap,
+  one layer up.** `summit` is claimed to be a live build input, which makes it a *dependency* of at
+  least one leg rather than a peer of it.
+- **A second-round census over the nominated set is a separate run**, with its own run file. It is
+  not this one, and this one must not pretend to cover it.
+
+⚑ **Single-leg provenance.** All six nominations come from **one leg** (`LS-30`), whose surveyor is
+also this dispatcher. That is the weakest possible warrant for a roster claim and is stated as such:
+it is one party's view of who else touches its own dependencies. **Any other leg nominating the same
+party independently would make it materially stronger**, and the apex should check whether one does.
 
 ---
 
