@@ -148,6 +148,22 @@ else
     fi
 fi
 
+# ⚑⚑⚑ FRESHNESS RUNS HERE *AND* IN THE GATE, AND THAT IS TWO QUESTIONS RATHER THAN ONE ANSWER
+# TWICE. The gate asks it once per commit — AFTER the work, when a stale premise can no longer
+# change what was worth doing. This script runs at the START of a derivation, where the same
+# answer REORDERS THE LIST: a rule whose cited premise has moved is a blocker, and a blocker that
+# only surfaces at commit time surfaces after every decision it should have informed.
+#
+# ⚑⚑ MEASURED BEFORE ADDING IT: the tick was blind to this. `./blockers.sh | grep -ci
+# 'fresh|stale|unverifiable'` returned 0 while `rule_freshness.sh` had been running in the gate
+# for a full tick — the finding existed, was armed, and reached the one moment it could not act on.
+if [ -x "$mtools/rule_freshness.sh" ]; then
+    echo "=== are the environment claims this repo cites still true? ==="
+    "$mtools/rule_freshness.sh" || true
+else
+    echo "=== rule freshness: UNMEASURED — rule_freshness.sh is not executable ==="
+fi
+
 # ⚑⚑ REACHABILITY IS NOT CHECKED HERE AND THAT IS DELIBERATE. It is a live-session property, not a
 # filesystem one — `ListAgents` is the instrument and only the harness can run it. Naming its
 # absence is the point: this script covers what it covers, and the one claim it CANNOT cover is
