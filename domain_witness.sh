@@ -72,6 +72,27 @@ if ! git ls-files --error-unmatch "$victim" >/dev/null 2>&1; then
     exit 2
 fi
 
+# ⚑⚑⚑ A DIRTY VICTIM IS REFUSED, BECAUSE ARM 3 RESTORES WITH `git checkout <path>` AND THAT
+# DISCARDS THE WHOLE FILE — not just the probe. MEASURED: an uncommitted edit to `blockers.sh`
+# was destroyed by the shellcheck witness, which reported rc=0 while doing it. The next commit
+# then failed with `no changes added to commit`, and I spent a tick attributing that to
+# `git commit --only` and then to path scope, testing and eliminating both, because a witness
+# reporting success is not where one looks for a deletion.
+#
+# ⚑⚑ THE WITNESS CANNOT TELL ITS OWN PROBE FROM A USER'S WORK. `git checkout` is file-granular
+# and the probe is line-granular, so restoration is necessarily over-broad. The residue guard
+# above catches a probe left by a KILLED predecessor; this catches work that was never a probe at
+# all, and both are the same underlying fact: this instrument's restore is a whole-file operation.
+#
+# ⚑ IT REFUSES RATHER THAN SAVING AND REPLAYING THE EDIT. A witness that stashed and restored a
+# user's work would be a second mutation path over the same file, and the failure mode of a
+# stash-replay that goes wrong is silent corruption rather than a refusal.
+if [ -n "$(git status --porcelain -- "$victim" 2>/dev/null)" ]; then
+    echo "domain_witness: $victim has uncommitted changes — refusing" >&2
+    echo "  arm 3 restores with 'git checkout' and would DISCARD them. Commit or stash first." >&2
+    exit 2
+fi
+
 # ⚑⚑ THE RESTORE VERIFIES, because a restore that fails silently is the same defect one layer in.
 restore() {
     git checkout "$victim" 2>/dev/null
