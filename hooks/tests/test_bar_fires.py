@@ -679,3 +679,36 @@ def test_the_witness_refuses_an_untracked_victim() -> None:
     """
     assert _witness_args(
         "ratchet", "//ratchet:mypy", "ratchet/definitely_not_tracked.py", "mypy") == _ARG_REFUSED
+
+
+def test_the_witness_refuses_a_victim_carrying_probe_residue(tmp_path: Path) -> None:
+    """⚑⚑⚑ `trap ... EXIT` cannot fire on SIGKILL, so a killed witness leaves its probe behind.
+
+    Measured: killing a witness inside its mutation window leaves the payload in the victim, and
+    the NEXT gate run censuses it — reporting ratchet keys from a probe nobody wrote, in a file
+    the author did not touch. SIGTERM is fine because the trap runs; SIGKILL is not, and no
+    handler can make it be.
+
+    ⚑ The residue is syntactically valid and the suite still passes, so only the ratchet notices,
+    and it notices as NEW DEBT. A pre-flight refusal is the whole repair — the witness cannot
+    prevent its own death, but it can decline to run on a corpse's leftovers.
+
+    ⚑⚑ THE MESSAGE IS ASSERTED, NOT JUST THE CODE, and the first cut of this test could not tell
+    which guard it had tripped. An untracked victim also exits 2 — measured — so a `tmp_path`
+    fixture with no residue at all produces the same number. A test asserting a code that two
+    guards share proves nothing about either, which is this repository's own green-over-nothing
+    at the granularity of an exit status.
+
+    ⚑ A FIXTURE, NOT A REAL SOURCE FILE. A first cut mutated a tracked file in another
+    distribution: it passed locally and failed hermetically, because the sandbox does not stage
+    another distribution's sources — and staging them would let a test write into them. The guard
+    now runs before the tracked check, so a fixture reaches it.
+    """
+    victim = tmp_path / "residue.py"
+    victim.write_text("x = 1\n# transient domain probe 123\n", encoding="utf-8")
+    out = subprocess.run(  # noqa: S603
+        [str(_DIST.parent / "domain_witness.sh"), "ratchet", "//ratchet:mypy",
+         str(victim), "mypy"],
+        capture_output=True, check=False, text=True, cwd=str(_DIST.parent))
+    assert out.returncode == _ARG_REFUSED
+    assert "probe residue" in out.stderr, "the residue guard must be the one that fired"

@@ -37,6 +37,27 @@ victim="${3:?the transitive module was not passed}"
 probe_kind="${4:-mypy}"
 
 cd "$(dirname "$0")" || exit 1
+# ⚑⚑⚑ RESIDUE FROM A KILLED PREDECESSOR IS DETECTED BEFORE ANYTHING RUNS, because `trap ... EXIT`
+# CANNOT fire on SIGKILL. Measured: killing a witness inside its mutation window leaves the probe
+# in the victim, and the next gate run censuses it — reporting ratchet keys from a probe nobody
+# wrote. ⚑ SIGTERM is fine (the trap runs); SIGKILL is not, and no handler can make it be.
+#
+# ⚑⚑ THIS IS THE ONLY CASE WHERE A WITNESS CAN POISON A LATER RUN, and it is silent: the residue
+# is syntactically valid, the suite still passes, and only the ratchet notices — as new debt, in a
+# file the author did not touch. A pre-flight refusal is the whole repair.
+#
+# ⚑ IT RUNS BEFORE THE TRACKED CHECK, and the order is a claim about what each guard KNOWS.
+# Residue is a fact about the file's CONTENTS and needs no repository; tracking is a fact about
+# git. Checking contents first gives the more specific diagnosis — and it also makes the guard
+# reachable by a fixture, where the tracked check would have refused first and a test could not
+# tell which guard fired.
+if grep -q "transient domain probe" "$victim" 2>/dev/null; then
+    echo "domain_witness: $victim already carries probe residue — refusing" >&2
+    echo "  a previous witness was killed inside its mutation window (SIGKILL defeats the" >&2
+    echo "  EXIT trap). Run: git checkout $victim" >&2
+    exit 2
+fi
+
 # ⚑⚑⚑ THE VICTIM MUST BE TRACKED, AND NOTHING CHECKED IT. `git checkout` on an untracked path
 # silently does nothing, so every arm ran, the payloads ACCUMULATED, and arm 3 reported RESTORED
 # over a file it had not restored. ⚑ MEASURED: a test passed `ratchet/x.py` — a path that did not

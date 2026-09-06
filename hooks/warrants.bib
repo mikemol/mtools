@@ -682,3 +682,14 @@
              denylist entry firing on a non-reader is the allowlist's failure mode arriving by
              the back door.}
 }
+
+@misc{hooks-bar-fires-the-witness-refuses-a-victim-carrying-probe-residue,
+  section = {bar-fires},
+  title   = {A killed witness leaves its probe, and trap EXIT cannot fire on SIGKILL},
+  note    = {Measured: killing a witness inside its mutation window leaves the payload in the
+             victim, and the next gate run censuses it -- reporting ratchet keys from a probe
+             nobody wrote, in a file the author did not touch. SIGTERM is fine because the trap
+             runs; SIGKILL is not, and no handler can make it be. The message is asserted rather
+             than the code alone, because an untracked victim exits 2 as well and a test
+             asserting a code two guards share proves nothing about either.}
+}
