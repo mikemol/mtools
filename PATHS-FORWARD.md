@@ -263,3 +263,62 @@ the same shape one layer up: a rule can be present, cited, and *stale*. Rule 12'
 Rule 3's platform behaviour and Rule 6's mypy claim are all measurements of a system that changes
 under them. **A citation gate proves the pointer resolves; it says nothing about whether the target
 is still true.** That is a real instrument and a large one.
+
+
+---
+
+# Tick 10 — 2026-09-06
+
+**Measured:** freeze **NOT CALLED** (6 of 6, 1 non-terminal), no blocker cleared, six parties live.
+
+**Consumed:** the inbox reader — it listed messages *present* rather than *unread*, so the
+rosettapkg letter (acted on, and the basis for Rule 21) reported as new mail every tick and would
+have forever. ⚑ **Rule 18's own failure forming inside the instrument that produced Rule 18.**
+Fixed by adopting `inbox/archive/`, **measured in two peer trees before inventing anything**
+(cassian 9 live / 11 archived; paperkit 42 / 5).
+
+## Ⓝ₄ examined and NOT taken — it is an operator decision, not work
+
+The 62-key preview debt breaks down as:
+
+```
+35  docstring-missing-returns      <- 56% of the whole debt, one rule
+ 6  noqa-comments
+ 5  docstring-missing-exception
+ 5  compare-to-empty-string
+ 4  suspicious-subprocess-import
+ 7  others (7 distinct rules, 1 each)
+```
+
+⚑⚑ **The 35 are not missing documentation.** Measured: almost every flagged docstring **already
+states its return in the summary line** — *"Return the baseline's state and its key set"*, *"Run the
+ratchet…; return 0 on pass, 1 on refusal"*. DOC201 wants a literal `Returns:` **section**; the
+corpus uses a declarative first line, consistently, across ~150 files (**3 sectioned docstrings
+total, repo-wide**).
+
+⚑ **A hypothesis I ran instead of reporting:** that this was one unset config key
+(`[tool.ruff.lint.pydocstyle] convention`). **Measured: `pep257` leaves all 10 ratchet findings
+standing** — that key governs `D` rules, not `DOC` rules. Verified the accepted form by adding a
+real `Returns:` block to one method: `All checks passed!`. So the paydown is genuine work, ~35
+docstrings, and **it would restate what the summary lines already say.**
+
+**This is a decision about house style, not a defect**, and it is the operator's:
+
+| option | cost | effect |
+|---|---|---|
+| pay it down | ~35 docstrings across 3 dists | satisfies DOC201; adds a section restating each summary line |
+| declare the convention | one `ignore` entry, with its measurement | ⚑ but this repo's rule is **declare, never suppress** — an `ignore` needs an argued reason, not a preference |
+| leave it baselined | zero | the ratchet already refuses *growth*; the debt is frozen and cannot expand |
+
+⚑ **Leaving it baselined is not neglect** — the set-membership ratchet refuses any new key, so this
+debt is bounded. **Ⓝ₄ is therefore the lowest-leverage item on the list and I am not taking it
+without a ruling**, because either action changes ~35 files to satisfy a preference nobody has
+stated.
+
+## Re-derived
+
+| | step | unblocked? | why here |
+|---|---|---|---|
+| **Ⓐ¹** | Wire `rule_freshness.sh` into `blockers.sh` too | YES | it runs in the gate but not in the tick's own re-derivation |
+| **Ⓝ₄** | preview debt | ⚑ **NEEDS A RULING** | see above — style decision, not work |
+| **Ⓒ¹ Ⓔ Ⓓ Ⓕ Ⓢ¹** | intake / ledger / components / projection | NO | unchanged |
