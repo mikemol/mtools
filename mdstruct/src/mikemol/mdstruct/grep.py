@@ -69,6 +69,10 @@ def container_of(sections: list[spans_mod.Span], line_no: int) -> tuple[str, int
     ⚑ INNERMOST, BECAUSE SECTIONS NEST. A line inside a `####` is also inside its `##` parent;
     the editable unit is the deepest one, and returning the outermost would hand back a range far
     larger than the reader asked about.
+
+    Returns:
+        `(header path, start, end)` for the innermost section containing `line_no`.
+
     """
     chain = spans_mod.enclosing(sections, line_no)
     if not chain:

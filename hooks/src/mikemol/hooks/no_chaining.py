@@ -139,6 +139,10 @@ def strip_heredoc_bodies(cmd: str) -> str:
 
     `<<-TAG` and quoted tags (`<<'EOF'`) are both handled; an unterminated heredoc drops the
     remainder, which is the conservative reading — an unterminated body cannot be shell either.
+
+    Returns:
+        the heredoc BODIES, keeping the `<<TAG` redirection itself.
+
     """
     m = _HEREDOC_OPEN.search(cmd)
     if not m:
@@ -151,7 +155,12 @@ def strip_heredoc_bodies(cmd: str) -> str:
 
 
 def _mentions_interpreter(toks: list[str]) -> bool:
-    """Report whether an interpreter is named anywhere in this command's tokens."""
+    """Report whether an interpreter is named anywhere in this command's tokens.
+
+    Returns:
+        whether an interpreter is named anywhere in this command's tokens.
+
+    """
     return any(Path(t).name in INTERPRETERS for t in toks)
 
 
@@ -160,6 +169,10 @@ def _tokenize(cmd: str) -> list[str]:
 
     ⚑ An unbalanced quote is bash's verdict, not ours: let it through and let bash report it.
     Never break the session on a parse failure.
+
+    Returns:
+        the a command into shell words, or [] when it will not parse.
+
     """
     try:
         lx = shlex.shlex(cmd, punctuation_chars=True)
@@ -170,7 +183,12 @@ def _tokenize(cmd: str) -> list[str]:
 
 
 def _classify(tok: str, *, found: list[Finding], pending_interp: bool) -> bool:
-    """Record any inline-script tell on `tok`; return the new pending-interp state."""
+    """Record any inline-script tell on `tok`; return the new pending-interp state.
+
+    Returns:
+        the any inline-script tell on `tok`; return the new pending-interp state.
+
+    """
     if Path(tok).name in INTERPRETERS:
         # ⚑ SEEN ANYWHERE, NOT ONLY IN COMMAND POSITION — `timeout 300 python3 -c`,
         # `uv run --with x python3 -c` and `PYTHONPATH=. python3 -c` all bury the
@@ -190,7 +208,12 @@ def _classify(tok: str, *, found: list[Finding], pending_interp: bool) -> bool:
 
 
 def _scan_tokens(toks: list[str]) -> list[Finding]:
-    """Walk the token stream once, collecting every composition point."""
+    """Walk the token stream once, collecting every composition point.
+
+    Returns:
+        the the token stream once, collecting every composition point.
+
+    """
     found: list[Finding] = []
     at_command_start = True
     pending_interp = False       # an interpreter is open; its flags are in scope
@@ -221,6 +244,10 @@ def analyze(cmd: str) -> list[Finding]:
     contains `;` and `|` — a commit message describing a shell pipeline. Scanned as shell, every one
     reads as an operator, and the hook refuses a single tool call for the content of its own
     argument. The body is stripped BEFORE tokenising, and only the body.
+
+    Returns:
+        composition points in one Bash command string.
+
     """
     toks = _tokenize(strip_heredoc_bodies(cmd))
     found = _scan_tokens(toks)
@@ -250,6 +277,10 @@ def command_of(payload: object) -> str:
     arrives as untyped JSON, and every level is narrowed with a real runtime `isinstance` before
     anything is read from it — a check, not an assertion. A `cast` would ASSERT what this VALIDATES,
     and a guard that mis-reads its input renders a verdict about something other than what ran.
+
+    Returns:
+        the the Bash command from a PreToolUse payload, or "" if absent.
+
     """
     if not isinstance(payload, dict):
         return ""
@@ -267,6 +298,10 @@ def deny_payload(reason: str) -> str:
     `json.dumps({"hookSpecificOutput": {…}})` the INNER literal is inferred on its own as
     `dict[Any, Any]` — the call site gives it nothing to check against — and `disallow_any_expr`
     refuses it.
+
+    Returns:
+        the a PreToolUse deny decision as JSON.
+
     """
     decision: dict[str, str] = {
         "hookEventName": "PreToolUse",
@@ -284,6 +319,10 @@ def armed() -> bool:
     convenience, but reading it as a bare `or` makes `NOCHAIN_HOOK_BLOCK=0` unable to stand this
     hook down while its sibling blocks — the per-hook switch has to be able to override the shared
     one, or staging one hook ahead of the other is impossible.
+
+    Returns:
+        whether this hook should DENY rather than advise.
+
     """
     own = os.environ.get("NOCHAIN_HOOK_BLOCK")
     if own is not None:
@@ -292,7 +331,12 @@ def armed() -> bool:
 
 
 def refusal(found: list[Finding]) -> str:
-    """Build the refusal TEXT, so a test can read what the hook says."""
+    """Build the refusal TEXT, so a test can read what the hook says.
+
+    Returns:
+        the the refusal TEXT, so a test can read what the hook says.
+
+    """
     lines = ["no-chaining: this command COMPOSES where one tool call belongs."]
     lines.extend(f"  `{tok}`  {why}" for tok, why in found)
     # ⚑ THE TAILS ARE MODULE CONSTANTS, NOT INLINE LITERALS, AND THE FIRST FIX WAS WRONG.
@@ -310,6 +354,10 @@ def main() -> int:
     ⚑ THE EXCEPTIONS ARE NAMED. A bare `except Exception` would swallow a bug in this hook's own
     logic and return 0 — i.e. ALLOW — making a broken gate indistinguishable from a passing one.
     Only a malformed payload is tolerated.
+
+    Returns:
+        the the PreToolUse payload from stdin and refuse or allow the command.
+
     """
     try:
         payload: object = json.load(sys.stdin)

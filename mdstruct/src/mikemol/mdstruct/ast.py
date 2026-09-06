@@ -58,13 +58,23 @@ if TYPE_CHECKING:
 
 
 def document(path: Path) -> panflute.Doc:
-    """Return the parsed document for one markdown file."""
+    """Return the parsed document for one markdown file.
+
+    Returns:
+        parsed document for one markdown file.
+
+    """
     body = pandoc.convert(path.read_text(encoding="utf-8"), "json")
     return panflute.load(io.StringIO(body))
 
 
 def headers(path: Path) -> list[tuple[int, str]]:
-    """Return `[(level, text)]` — the section skeleton, structurally."""
+    """Return `[(level, text)]` — the section skeleton, structurally.
+
+    Returns:
+        `[(level, text)]` — the section skeleton, structurally.
+
+    """
     return [(element.level, panflute.stringify(element).strip())
             for element in document(path).content
             if isinstance(element, panflute.Header)]
@@ -79,6 +89,10 @@ def render_headings(raw_lines: list[str]) -> list[str]:
 
     ⚑ A LINE THAT IS NOT A HEADING YIELDS NO ENTRY, so the result is positional only with respect
     to the lines that ARE headings. Callers pair it with `anchor_key` rather than by index.
+
+    Returns:
+        the candidate heading lines through pandoc, returning each one's heading text.
+
     """
     if not raw_lines:
         return []
@@ -116,5 +130,9 @@ def anchor_key(text: str) -> str:
     ⚑ IT OVER-MATCHES ONLY WHERE TWO HEADINGS RENDER IDENTICALLY, and the section finder REFUSES
     ambiguity rather than picking one — so the over-match surfaces as a refusal naming both
     candidates, never as a write to the wrong section.
+
+    Returns:
+        a heading's ANCHOR KEY: whitespace-collapsed and case-folded RENDERED text.
+
     """
     return " ".join(text.split()).strip().casefold()

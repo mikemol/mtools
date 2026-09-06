@@ -64,6 +64,10 @@ def _tables_in(doc: panflute.Doc) -> list[panflute.Table]:
     ⚑ A FULL WALK, NOT A TOP-LEVEL SCAN. A table nested inside a list item or a blockquote is
     still a table; iterating only the document's own blocks would miss it and report a document
     as tableless while it renders three.
+
+    Returns:
+        every table in the document, in order.
+
     """
     found: list[panflute.Table] = []
 
@@ -77,14 +81,24 @@ def _tables_in(doc: panflute.Doc) -> list[panflute.Table]:
 
 
 def _header_of(table: panflute.Table) -> tuple[str, ...]:
-    """Return the header cells of one table, or empty when it declares no head."""
+    """Return the header cells of one table, or empty when it declares no head.
+
+    Returns:
+        header cells of one table, or empty when it declares no head.
+
+    """
     for row in table.head.content:
         return tuple(panflute.stringify(cell).strip() for cell in row.content)
     return ()
 
 
 def tables(path: Path) -> list[Table]:
-    """Return every table in the document with its size and header."""
+    """Return every table in the document with its size and header.
+
+    Returns:
+        every table in the document with its size and header.
+
+    """
     out = []
     for position, table in enumerate(_tables_in(ast.document(path))):
         header = _header_of(table)
@@ -94,7 +108,12 @@ def tables(path: Path) -> list[Table]:
 
 
 def _undecorated(cell: str) -> str:
-    """Return `cell` case-folded with leading emphasis markers and whitespace removed."""
+    """Return `cell` case-folded with leading emphasis markers and whitespace removed.
+
+    Returns:
+        `cell` case-folded with leading emphasis markers and whitespace removed.
+
+    """
     return cell.lstrip("⚑*_# \t").casefold()
 
 
@@ -122,6 +141,10 @@ def table_rows(path: Path, position: int | None = None,
     ⚑ SO THE PREDICATE IS ANCHORED AND COLUMN-SCOPED: `col` names the position, `starts` matches
     that cell's PREFIX. A cell that BEGINS with the term is making a declaration; a cell that
     contains it somewhere may be discussing one.
+
+    Returns:
+        cells of every row, optionally narrowed to one table, a substring, or a column.
+
     """
     out = []
     for table_at, table in enumerate(_tables_in(ast.document(path))):

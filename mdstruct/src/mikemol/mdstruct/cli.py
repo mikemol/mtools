@@ -55,6 +55,10 @@ def _flag(argv: list[str], name: str) -> str | None:
 
     ⚑ BOTH SPELLINGS BIND, because a reader arriving from another tool types the spaced form and
     accepting one only would let the other ride through and be silently discarded.
+
+    Returns:
+        a `--name value` or `--name=value` argument, or None.
+
     """
     for i, arg in enumerate(argv):
         if arg == name and i + 1 < len(argv):

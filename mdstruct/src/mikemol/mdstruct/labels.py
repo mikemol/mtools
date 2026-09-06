@@ -75,6 +75,10 @@ def labels_in(line: str) -> list[str]:
     ⚑ AND AN EXCLUDED TOKEN IS NOT A DIFFERENT LABEL. Once a group has fired the match is
     settled: if that token is a non-label the match yields nothing, rather than falling through
     to a later group that did not match anything anyway.
+
+    Returns:
+        every label the line mentions, in order.
+
     """
     out: list[str] = []
     for found in ITEM_RE.finditer(line):

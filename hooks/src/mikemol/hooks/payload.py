@@ -31,6 +31,10 @@ def as_record(value: object) -> dict[str, object]:
     to `object`, and every read is then narrowed with a real runtime `isinstance` at the use
     site — a CHECK, not an assertion. `isinstance(x, dict)` alone narrows to `dict[Any, Any]`, so
     every read through it inherits the `Any` a strict bar exists to refuse.
+
+    Returns:
+        `value` as a string-keyed record, or an empty one if not a mapping.
+
     """
     if not isinstance(value, dict):
         return {}
@@ -38,7 +42,12 @@ def as_record(value: object) -> dict[str, object]:
 
 
 def text_of(value: object) -> str:
-    """Return `value` when it is a string, else an empty string."""
+    """Return `value` when it is a string, else an empty string.
+
+    Returns:
+        `value` when it is a string, else an empty string.
+
+    """
     return value if isinstance(value, str) else ""
 
 
@@ -50,6 +59,10 @@ def armed() -> bool:
     keeps exiting 0 — detecting every violation and reporting none, **reading as armed in review
     and off in fact**. Set the switch inline in the command string. Two independent adopters
     volunteered this trap.
+
+    Returns:
+        whether this hook is set to DENY — own switch first, then the shared one.
+
     """
     own = os.environ.get(OWN_SWITCH)
     if own is not None:

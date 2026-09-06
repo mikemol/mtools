@@ -48,6 +48,10 @@ def project_for(path: str | Path) -> Path | None:
     ⚑ `absolute()` RATHER THAN `resolve()` — see the module note. The caller's path is taken as
     given: a file reached through a symlink belongs to the project it was reached THROUGH, which
     is what an adopting repo means by adopting.
+
+    Returns:
+        nearest directory at or above `path` holding a `pyproject.toml`.
+
     """
     start = Path(path).absolute()
     here = start if start.is_dir() else start.parent
@@ -58,7 +62,12 @@ def project_for(path: str | Path) -> Path | None:
 
 
 def config_for(path: str | Path) -> Path | None:
-    """Return the `pyproject.toml` governing `path`, or None when it is under no project."""
+    """Return the `pyproject.toml` governing `path`, or None when it is under no project.
+
+    Returns:
+        `pyproject.toml` governing `path`, or None when it is under no project.
+
+    """
     root = project_for(path)
     return (root / MARKER) if root is not None else None
 
@@ -71,6 +80,10 @@ def venv_python_for(path: str | Path) -> Path | None:
     would resolve against the wrong editable install — silently, and in the direction that finds
     less. A project without a venv returns None so the caller can say so rather than falling
     back to whichever interpreter happens to be running.
+
+    Returns:
+        interpreter of the project governing `path`, when it has one.
+
     """
     root = project_for(path)
     if root is None:

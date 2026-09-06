@@ -38,12 +38,22 @@ _CLAIMS: dict[str, tuple[str, str]] = {
 
 
 def _fires(cmd: str) -> bool:
-    """Report whether the gate refuses `cmd` against the fixed table."""
+    """Report whether the gate refuses `cmd` against the fixed table.
+
+    Returns:
+        whether the gate refuses `cmd` against the fixed table.
+
+    """
     return structural_query.verdict(cmd, _CLAIMS)[0]
 
 
 def _stdin(text: str) -> io.StringIO:
-    """Return a stand-in for `sys.stdin` delivering `text`."""
+    """Return a stand-in for `sys.stdin` delivering `text`.
+
+    Returns:
+        a stand-in for `sys.stdin` delivering `text`.
+
+    """
     return io.StringIO(text)
 
 
@@ -54,6 +64,10 @@ def _payload_json(command: str) -> str:
     inferred on its own as `dict[Any, Any]` — the call site gives it nothing to check against —
     and the strict bar refuses it. The same construct in the hook itself cost six wrong
     attributions before a checker rendered the line.
+
+    Returns:
+        the a PreToolUse payload carrying `command`, typed at every level.
+
     """
     tool_input: dict[str, object] = {"command": command}
     envelope: dict[str, object] = {"tool_input": tool_input}
@@ -137,7 +151,12 @@ def test_the_reasons_name_the_argument_and_its_owner() -> None:
 
 
 def _read_message() -> str:
-    """Return the refusal text for a plain read of a claimed artifact."""
+    """Return the refusal text for a plain read of a claimed artifact.
+
+    Returns:
+        refusal text for a plain read of a claimed artifact.
+
+    """
     return structural_query.refusal(structural_query.verdict("wc -l scratch/tool.py", _CLAIMS)[1])
 
 
@@ -207,7 +226,12 @@ def test_a_well_formed_payload_yields_its_command() -> None:
 
 
 def _bad_payloads() -> list[tuple[str, object]]:
-    """Return the malformed payload shapes, each built through a typed local."""
+    """Return the malformed payload shapes, each built through a typed local.
+
+    Returns:
+        malformed payload shapes, each built through a typed local.
+
+    """
     non_mapping: list[str] = ["nope"]
     no_tool_input: dict[str, object] = {}
     bad_tool_input: dict[str, object] = {"tool_input": "nope"}
@@ -245,7 +269,12 @@ def test_unparseable_stdin_lets_the_call_through(monkeypatch: pytest.MonkeyPatch
 
 
 def _fixed_claims() -> dict[str, tuple[str, str]]:
-    """Return the test table, as a stand-in for the repo-derived reader."""
+    """Return the test table, as a stand-in for the repo-derived reader.
+
+    Returns:
+        test table, as a stand-in for the repo-derived reader.
+
+    """
     return _CLAIMS
 
 

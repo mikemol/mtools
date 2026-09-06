@@ -51,6 +51,10 @@ def _anchors(path: Path) -> list[tuple[int, str, int]]:
     ⚑ ONE FORWARD CURSOR, NEVER A SEARCH FROM THE TOP. A document may repeat a heading text, and
     rebinding a later header to an earlier line would nest the spans wrongly — producing a
     section that contains its own predecessor.
+
+    Returns:
+        `[(level, text, start_line)]` by matching rendered headers to raw lines.
+
     """
     lines = path.read_text(encoding="utf-8").split("\n")
 
@@ -79,7 +83,12 @@ def _anchors(path: Path) -> list[tuple[int, str, int]]:
 
 
 def spans(path: Path) -> list[Span]:
-    """Return every section's line span, 1-indexed with an exclusive end."""
+    """Return every section's line span, 1-indexed with an exclusive end.
+
+    Returns:
+        every section's line span, 1-indexed with an exclusive end.
+
+    """
     lines = path.read_text(encoding="utf-8").split("\n")
     anchors = _anchors(path)
 
@@ -100,6 +109,10 @@ def find_section(path: Path, needle: str) -> Span:
     ⚑ RAISES ON AMBIGUITY, naming both candidates. A substring matching two headings cannot be
     resolved by taking the earlier one — that is the silent-wrong-target class, and the caller
     is usually about to write.
+
+    Returns:
+        oNE section whose heading contains `needle`.
+
     """
     hits = [s for s in spans(path) if needle.casefold() in s.text.casefold()]
     if not hits:
@@ -119,5 +132,9 @@ def enclosing(sections: list[Span], line_no: int) -> list[Span]:
 
     ⚑ SECTIONS NEST, so a line has a CHAIN of containers rather than one. A caller wanting the
     editable unit takes the last; one wanting a readable address joins the whole chain.
+
+    Returns:
+        every section containing `line_no`, outermost first.
+
     """
     return [s for s in sections if s.start <= line_no < s.end]

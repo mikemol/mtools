@@ -55,5 +55,10 @@ class BaselineState(enum.Enum):
         self.deserves_mark = deserves_mark
 
     def __str__(self) -> str:
-        """Render as the declared label."""
+        """Render as the declared label.
+
+        Returns:
+            the as the declared label.
+
+        """
         return self.label

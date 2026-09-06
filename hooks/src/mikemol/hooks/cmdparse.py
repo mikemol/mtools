@@ -149,6 +149,10 @@ def _is_operand(word: str, wrapper: str) -> bool:
     ⚑ CONSERVATIVE BY DESIGN: only forms that CANNOT name a program are consumed. Guessing wrong
     here silently reopens the bypass, so a doubtful token ends the skip and is treated as the
     program.
+
+    Returns:
+        whether `word` is an operand OF the wrapper, not the program it wraps.
+
     """
     if word.replace(".", "", 1).isdigit():                 # timeout 180 / 1.5
         return True
@@ -166,6 +170,10 @@ def tokenize(cmd: str) -> list[str]:
 
     ⚑ AN UNBALANCED QUOTE IS BASH'S VERDICT, NOT OURS: return empty and let the command through
     rather than breaking the session on a parse failure.
+
+    Returns:
+        the a command into shell words with operators separated.
+
     """
     try:
         lx = shlex.shlex(cmd, punctuation_chars=True)
@@ -181,6 +189,10 @@ def commands(cmd: str) -> list[list[str]]:
     Each element is one command's words, operators removed. `a | b && c` yields three lists. This
     is what lets a caller ask "is a textual tool in command position ANYWHERE in this line", which
     is the question `toks[0]` could not answer.
+
+    Returns:
+        the the command string into its individual commands.
+
     """
     out: list[list[str]] = []
     cur: list[str] = []
@@ -203,6 +215,10 @@ def programs(cmd: str) -> list[tuple[str, list[str]]]:
     ('grep', ['-c', 'x', 'f.py']) — the wrapper and its numeric argument are consumed, and the real
     program is reported with the arguments IT receives. A wrapper's own flags (`env -i`,
     `timeout -s KILL`) are skipped too.
+
+    Returns:
+        every program INVOKED, seeing through wrappers, with its own arguments.
+
     """
     found: list[tuple[str, list[str]]] = []
     for words in commands(cmd):

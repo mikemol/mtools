@@ -25,7 +25,12 @@ _ONE_DELIMITER_SPLITS_INTO = 2
 
 
 def _progs(cmd: str) -> list[str]:
-    """Return just the program names `cmd` invokes."""
+    """Return just the program names `cmd` invokes.
+
+    Returns:
+        just the program names `cmd` invokes.
+
+    """
     return [p for p, _args in cmdparse.programs(cmd)]
 
 

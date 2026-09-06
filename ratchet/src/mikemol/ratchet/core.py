@@ -70,6 +70,10 @@ def _plausible_move(old_path: str, new_path: str) -> bool:
     ⚑ ANYTHING ELSE IS NOT A MOVE THIS CAN EVIDENCE, so it is not churn. Widening the predicate to
     "some file with this rule moved" launders every new violation carrying that rule — measured in
     this repository's own first cut, where a retirement of "a.py" absolved an unrelated "z.py".
+
+    Returns:
+        whether `new_path` is a plausible destination for `old_path`.
+
     """
     if old_path == new_path:
         return False
@@ -85,6 +89,10 @@ def _identity(key: str) -> str:
     ⚑ `rsplit`, NOT `split` — a path may contain colons and the rule never does, so the LAST field
     is the identity and the rest is the path. Splitting from the left would take a directory as
     the identity for any path carrying one.
+
+    Returns:
+        part of a key that survives a move: everything but the path.
+
     """
     _path, _, rule = key.rpartition(":")
     return rule or key
@@ -121,6 +129,10 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
     ⚑ AN UNREADABLE FILE IS `UNREAD`, NOT `EMPTY`. A decode error is a fact about the READER,
     not a verdict about the gate, and reporting it as an empty baseline would silently widen
     what the ratchet permits to everything.
+
+    Returns:
+        baseline's state and its key set.
+
     """
     if not path.is_file():
         return BaselineState.ABSENT, frozenset()
@@ -145,7 +157,12 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
 
 
 def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
-    """Split the census against its baseline into growth and paydown."""
+    """Split the census against its baseline into growth and paydown.
+
+    Returns:
+        the the census against its baseline into growth and paydown.
+
+    """
     cur, base = frozenset(current), frozenset(baseline)
     added, paid = cur - base, base - cur
 
@@ -256,6 +273,10 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool) -> tuple[int, li
     ⚑ PAYDOWN LOWERS THE BASELINE PERMANENTLY. A paid-down key cannot return without the
     gate refusing, so a repair cannot silently regress. That is what makes the ratchet a
     ratchet rather than a report.
+
+    Returns:
+        the the paydown-only ratchet. Return (exit code, report lines).
+
     """
     state, base = read_baseline(path)
     if state.is_defect:

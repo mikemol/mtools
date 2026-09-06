@@ -29,6 +29,10 @@ def checker_argv(tmp: Path, path: str, venv_py: Path,
 
     ⚑ TWO MECHANISMS, BECAUSE THE TWO CHECKERS SPELL THIS DIFFERENTLY, and the third tuple
     element is what keeps the caller from having to know which is which.
+
+    Returns:
+        `(name, argv, reads_stdin)` for each checker, naming `path` as the subject.
+
     """
     real = path or str(tmp)
     return (

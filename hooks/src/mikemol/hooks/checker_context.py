@@ -42,7 +42,12 @@ _PROJECT: ContextVar[Path | None] = ContextVar("checker_project", default=None)
 
 
 def project() -> Path | None:
-    """Return the project a checker should run in, or None for this process's directory."""
+    """Return the project a checker should run in, or None for this process's directory.
+
+    Returns:
+        project a checker should run in, or None for this process's directory.
+
+    """
     return _PROJECT.get()
 
 

@@ -104,6 +104,10 @@ def _ruff(rel: str, body: str, tmp: Path) -> str:
 
     ⚑ `--no-cache` because a cache keyed on a path would answer about a previous body, and this
     function writes many bodies to few paths.
+
+    Returns:
+        the this distribution's ruff, with this distribution's config, over one written file.
+
     """
     target = tmp / rel
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -121,6 +125,10 @@ def tree(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
     ⚑ The shape matters: per-file-ignores resolve by PATH, so a probe written to `src/` and one
     written to `tests/` must sit under those names to be judged the way real files are.
+
+    Returns:
+        a temp tree shaped like a distribution.
+
     """
     return tmp_path_factory.mktemp("bar")
 
@@ -441,7 +449,12 @@ _needs_reader = pytest.mark.skipif(
 
 
 def _citations(message: str, rules: str, tree: Path) -> int:
-    """Run the citation gate over `message` against a `rules` fixture; return its exit code."""
+    """Run the citation gate over `message` against a `rules` fixture; return its exit code.
+
+    Returns:
+        the the citation gate over `message` against a `rules` fixture; return its exit code.
+
+    """
     msg = tree / "msg.txt"
     msg.write_text(message, encoding="utf-8")
     doc = tree / "rules.md"
@@ -489,6 +502,10 @@ def _orphans(tree: Path, scripts: dict[str, str], sites: dict[str, str]) -> int:
     first cut did exactly that and the P-arm failed because the SITE was an orphan, not because
     the invoked script was. The gate reads `.githooks/pre-commit` as a site too, and that name is
     not matched by `*.sh`.
+
+    Returns:
+        the a fixture tree of shell files and call sites; return the orphan gate's exit code.
+
     """
     (tree / ".githooks").mkdir(exist_ok=True)
     for name, body in scripts.items():
@@ -561,7 +578,12 @@ def test_a_srcs_entry_is_an_invocation(tmp_path: Path) -> None:
 
 
 def _freshness(tree: Path, rules: str, *, readable: bool) -> int:
-    """Run the freshness gate against a corpus fixture; return its exit code."""
+    """Run the freshness gate against a corpus fixture; return its exit code.
+
+    Returns:
+        the the freshness gate against a corpus fixture; return its exit code.
+
+    """
     doc = tree / "rules.md"
     doc.write_text(rules, encoding="utf-8")
     script = (_DIST.parent / "rule_freshness.sh").read_text(encoding="utf-8")

@@ -63,6 +63,10 @@ def _is_synthesized(path: str, root: Path) -> bool:
     ⚑ rules_python writes an EMPTY `__init__.py` at every level of a runfiles tree so it is
     importable. A hand-written one has content. Checking the bytes rather than the name keeps a
     real file's debt in the census while dropping an artifact the baseline never saw.
+
+    Returns:
+        whether `path` names a build-system-synthesized package marker.
+
     """
     if not path.endswith(_SYNTHESIZED):
         return False
@@ -77,6 +81,10 @@ def parse_concise(lines: Iterable[str], root: Path | None = None) -> frozenset[s
     caller checks the process's exit code separately: a checker that crashed emits no
     matching lines, which would otherwise read as a clean census and pay the whole baseline
     down in one run. `run_ruff` refuses on an unexpected exit rather than trusting the parse.
+
+    Returns:
+        `{file:rule}` keys from a checker's concise output.
+
     """
     out: set[str] = set()
     for line in lines:
@@ -98,6 +106,10 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     ELSE (2 is a usage or internal error) means the checker did not run, and a census read
     from a checker that did not run is an empty set that looks exactly like a clean tree.
     That is the fail-open shape this ecosystem keeps paying for, so it raises instead.
+
+    Returns:
+        the ruff over one distribution and return its census.
+
     """
     # ⚑⚑ THE DECLARED BINARY WINS OVER A VENV PATH. This read `.venv/bin/ruff` unconditionally,
     # which is a developer venv no clone contains — the same escape the hooks suite already

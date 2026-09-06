@@ -77,6 +77,10 @@ def _blank(match: re.Match[str]) -> str:
     typed loosely enough that an inline lambda infers `Callable[[Any], Any]`, so `match.group(0)`
     reads as `Any` and that `Any` propagates out of a function whose signature promises `str`. A
     named function carries the annotation, and the strict bar then checks the body it was hiding.
+
+    Returns:
+        spaces of the matched span's own length.
+
     """
     return " " * len(match.group(0))
 
@@ -85,12 +89,21 @@ def _mask_code(line: str) -> str:
     """Return the line with inline code spans blanked, preserving column positions.
 
     ⚑ SAME LENGTH, so a finding's column still points at the right place in the original.
+
+    Returns:
+        line with inline code spans blanked, preserving column positions.
+
     """
     return _CODE_SPAN.sub(_blank, line)
 
 
 def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
-    """Return every shape finding in the document body."""
+    """Return every shape finding in the document body.
+
+    Returns:
+        every shape finding in the document body.
+
+    """
     head, body = frontmatter.split(path.read_text(encoding="utf-8"))
     offset = head.count("\n")
     lines = body.split("\n")
@@ -140,6 +153,10 @@ def narrowest_width(path: Path, lo: int = 60, hi: int = 2000) -> int | None:
 
     ⚑ `None` WHEN NOTHING IN RANGE FITS, never a silent `hi`. A document with a line longer than
     the ceiling has no admissible width here, and reporting the ceiling would claim one.
+
+    Returns:
+        narrowest width at which no line overflows, or None if none in range.
+
     """
     _head, body = frontmatter.split(path.read_text(encoding="utf-8"))
     longest = 0

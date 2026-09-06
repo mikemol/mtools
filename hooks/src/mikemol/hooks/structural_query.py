@@ -124,6 +124,10 @@ def verdict(cmd: str, table: dict[str, tuple[str, str]] | None = None) -> tuple[
     was `timeout`, and a `timeout` prefix is the ordinary invocation shape, so the gate was open
     for nearly every command issued. `cmdparse.programs` sees through wrappers and returns the
     REAL program with the arguments it receives.
+
+    Returns:
+        (is_violation, reasons) for one command.
+
     """
     tbl = routing_table.claims() if table is None else table
     reasons: list[Reason] = []
@@ -157,6 +161,10 @@ def refusal(reasons: list[Reason], cmd: str = "") -> str:
 
     ⚑ `cmd` IS READ ONLY TO CHOOSE THE ROUTE, NEVER TO CHANGE THE VERDICT. The caller has already
     decided; this tells a blocked WRITER something a blocked READER does not need.
+
+    Returns:
+        the the refusal TEXT, so a test can read what a refused author actually sees.
+
     """
     lines = ["structural-query: this asks about a STRUCTURED artifact textually."]
     for prog, hits in reasons:
@@ -206,6 +214,10 @@ def deny_payload(reason: str) -> str:
     `dict[Any, Any]` — the call site gives it nothing to check against — and `disallow_any_expr`
     refuses it. A sibling hook carried the identical construct and it cost six wrong attributions
     there before the checker rendered the line.
+
+    Returns:
+        the a PreToolUse deny decision as JSON.
+
     """
     decision: dict[str, str] = {
         "hookEventName": "PreToolUse",
@@ -221,6 +233,10 @@ def command_of(value: object) -> str:
 
     ⚑ EVERY LEVEL IS NARROWED WITH A REAL RUNTIME CHECK, not an assertion. A hook that mis-reads
     its own input renders a verdict about something other than what ran.
+
+    Returns:
+        the the Bash command from a PreToolUse payload, or "" when absent.
+
     """
     record = _payload.as_record(value)
     tool_input = _payload.as_record(record.get("tool_input"))
@@ -243,6 +259,10 @@ def main() -> int:
     own logic and return 0 — i.e. ALLOW — making a broken gate indistinguishable from a passing
     one. Only a malformed or unreadable payload is tolerated; anything else must crash loudly
     where it can be seen.
+
+    Returns:
+        the the PreToolUse payload from stdin and route or refuse the command.
+
     """
     try:
         parsed: object = json.load(sys.stdin)

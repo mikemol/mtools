@@ -82,7 +82,12 @@ class Fixpoint(NamedTuple):
 
 
 def diff(before: str, after: str, limit: int = _SAMPLE) -> tuple[int, tuple[str, ...]]:
-    """Return how many lines changed, and a bounded sample of them."""
+    """Return how many lines changed, and a bounded sample of them.
+
+    Returns:
+        how many lines changed, and a bounded sample of them.
+
+    """
     lines = [line for line in difflib.unified_diff(
         before.split("\n"), after.split("\n"), lineterm="", n=0)
         if line.startswith(("+", "-")) and not line.startswith(("+++", "---"))]
@@ -95,6 +100,10 @@ def roundtrip(path: Path, opts: str | None = None) -> Drift:
     ⚑ NOT A PASS/FAIL. Pandoc normalizes by design, so `identical` is the UNUSUAL case; what a
     caller needs is the SIZE and SHAPE of the drift, which is why the sample travels with the
     count.
+
+    Returns:
+        what one normalization pass does to the document.
+
     """
     src = path.read_text(encoding="utf-8")
     out = pandoc.convert(src, opts or "markdown")

@@ -37,6 +37,10 @@ def split(src: str) -> tuple[str, str]:
     ⚑ AN UNTERMINATED FENCE IS NOT FRONTMATTER. A document that opens `---` and never closes it
     is markdown whose first line is a rule; treating the whole file as metadata would hand the
     body to no writer at all.
+
+    Returns:
+        `(frontmatter_or_empty, body)`.
+
     """
     if not src.startswith(OPEN_FENCE):
         return "", src

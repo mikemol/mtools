@@ -54,7 +54,12 @@ _SUFFIX_RE = re.compile(r"`(\.[A-Za-z0-9]+)`")
 
 
 def project_dir() -> Path:
-    """Return the repo this invocation governs — the harness's, else this process's directory."""
+    """Return the repo this invocation governs — the harness's, else this process's directory.
+
+    Returns:
+        repo this invocation governs — the harness's, else this process's directory.
+
+    """
     declared = os.environ.get(PROJECT_DIR_ENV)
     if declared:
         return Path(declared).absolute()
@@ -67,6 +72,10 @@ def table_path(root: Path | None = None) -> Path | None:
     ⚑ None IS A THIRD STATE AND THE CALLER MUST KEEP IT. Collapsing "no table here" into "a table
     claiming nothing" makes an unconfigured repo indistinguishable from a permissive one — and the
     permissive reading is the one that ships a gate refusing nothing.
+
+    Returns:
+        routing table for `root`, or None when that repo declares none.
+
     """
     base = project_dir() if root is None else Path(root).absolute()
     candidate = base / SKILL_RELPATH
@@ -80,6 +89,10 @@ def _table_rows(skill: Path) -> list[list[str]]:
     subtly different cell handling — one stripped backticks before the header test, the other
     after. Two bodies reading one table is the same defect the shared tokenizer removed, at the
     smallest possible scale.
+
+    Returns:
+        table's markdown rows as stripped cell lists.
+
     """
     try:
         src = skill.read_text(encoding="utf-8")
@@ -99,7 +112,12 @@ def _table_rows(skill: Path) -> list[list[str]]:
 
 
 def routes(skill: Path | None = None) -> list[tuple[str, str]]:
-    """Return the (artifact, tool) mapping, READ from the repo's own table."""
+    """Return the (artifact, tool) mapping, READ from the repo's own table.
+
+    Returns:
+        (artifact, tool) mapping, READ from the repo's own table.
+
+    """
     path = table_path() if skill is None else skill
     if path is None:
         return []
@@ -115,6 +133,10 @@ def _declared_suffixes(cell: str) -> list[str]:
 
     ⚑ THE `str()` IS THE NARROWING, NOT A FORMALITY. A regex group is typed `str | Any`, and an
     `Any` reaching the returned mapping is an unchecked shape crossing this module's boundary.
+
+    Returns:
+        `.suffix` tokens a `claims` cell declares, lowercased.
+
     """
     return [str(m.group(1)).lower() for m in _SUFFIX_RE.finditer(cell)]
 
@@ -126,6 +148,10 @@ def claims(skill: Path | None = None) -> dict[str, tuple[str, str]]:
     inside the repo?") cannot do this job: it would guard only the invoking checkout while PASSING
     a `.py` read out of a sibling one, and a `.py` is owned by its structural editor wherever it
     sits.
+
+    Returns:
+        {suffix: (artifact, tool)}, read from the table's `claims` column.
+
     """
     path = table_path() if skill is None else skill
     if path is None:

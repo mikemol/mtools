@@ -41,6 +41,10 @@ def replace_section(path: Path, needle: str, body: str) -> tuple[str, spans_mod.
 
     ⚑ THE SPAN IS RETURNED SO THE CALLER CAN REPORT WHAT IT HIT. A write that says only "done"
     leaves a reader to re-derive which section moved.
+
+    Returns:
+        document with ONE section's body replaced, and the span it targeted.
+
     """
     span = spans_mod.find_section(path, needle)
     lines = path.read_text(encoding="utf-8").split("\n")
@@ -54,6 +58,10 @@ def append_to_section(path: Path, needle: str, body: str) -> tuple[str, spans_mo
     ⚑ TRAILING BLANK LINES ARE PRESERVED BENEATH THE INSERTION, not swallowed. Markdown block
     separation is load-bearing, and an append that eats the blank line before the next heading
     produces a document that renders differently from the one the author reviewed.
+
+    Returns:
+        document with `body` appended INSIDE one section, before the next heading.
+
     """
     span = spans_mod.find_section(path, needle)
     lines = path.read_text(encoding="utf-8").split("\n")

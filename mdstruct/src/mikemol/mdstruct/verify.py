@@ -54,6 +54,10 @@ def source_headings(text: str) -> list[tuple[int, int, str]]:
     ⚑ NOT A PARSE. This is the independent witness, so it must not import this tool's model of a
     document. Fenced blocks are masked because a `#` inside a fence is not a heading in any
     reading; nothing else is interpreted.
+
+    Returns:
+        `[(line, level, text)]` by a PLAIN SCAN of raw source.
+
     """
     out: list[tuple[int, int, str]] = []
     fence: str | None = None
@@ -79,6 +83,10 @@ def missing_headings(path: Path) -> list[Missing]:
 
     ⚑ KEYED ON LINE NUMBER, not on text. A heading whose text renders differently is the exact
     defect being checked for, so comparing text would ask the parser to adjudicate its own bug.
+
+    Returns:
+        every source heading that does NOT appear in this tool's section list.
+
     """
     reached = {span.start for span in spans_mod.spans(path)}
     body = path.read_text(encoding="utf-8")

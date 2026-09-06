@@ -337,6 +337,10 @@ def _run(payload: str, *, block: str) -> subprocess.CompletedProcess[str]:
 
     ⚑ THE PROBE RUNS THE HOOK RATHER THAN READING ITS CONFIG. A gate that reports what its
     config says is the green-over-nothing failure at the harness layer.
+
+    Returns:
+        the the module's `main()` in a subprocess with a synthetic PreToolUse payload.
+
     """
     env = dict(os.environ, STRUCT_HOOK_BLOCK=block)
     env.pop("NOCHAIN_HOOK_BLOCK", None)

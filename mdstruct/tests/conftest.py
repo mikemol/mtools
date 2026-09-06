@@ -36,6 +36,10 @@ def _pandoc() -> str | None:
     developer host it is unset and PATH answers. Preferring PATH would let a sandbox silently use
     a host binary it never declared, which is the sandbox-escape class this repository refuses
     for editable installs — the same defect one layer down.
+
+    Returns:
+        a usable pandoc, preferring a DECLARED one over whatever PATH offers.
+
     """
     declared = os.environ.get("PANDOC_BIN")
     if declared and Path(declared).is_file():
@@ -69,5 +73,9 @@ def doc(tmp_path: Path) -> Path:
     announces a teardown phase; this one has none — `tmp_path` owns the cleanup. Yielding said
     there was something to undo here, so a reader looking for the teardown would find nothing
     and could not tell whether it was missing or unnecessary.
+
+    Returns:
+        a factory-free path for a document a test writes itself.
+
     """
     return tmp_path / "doc.md"

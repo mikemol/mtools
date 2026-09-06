@@ -27,7 +27,12 @@ _BASELINE = Path("ratchet-preview.txt")
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Run the ratchet for one distribution; return 0 on pass, 1 on refusal."""
+    """Run the ratchet for one distribution; return 0 on pass, 1 on refusal.
+
+    Returns:
+        the the ratchet for one distribution; return 0 on pass, 1 on refusal.
+
+    """
     parser = argparse.ArgumentParser(prog="mikemol-ratchet", description=__doc__)
     parser.add_argument("dist", type=Path, help="the distribution root to census")
     parser.add_argument("--init-absent", action="store_true",

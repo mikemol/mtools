@@ -28,7 +28,12 @@ _CHECKER_COUNT = 2
 
 
 def _argv_for(name: str, path: str = _REAL) -> list[str]:
-    """Return one checker's argv, or fail the calling test if it is not registered."""
+    """Return one checker's argv, or fail the calling test if it is not registered.
+
+    Returns:
+        one checker's argv, or fail the calling test if it is not registered.
+
+    """
     for got, argv, _stdin in checkers.checker_argv(_TMP, path, _VENV, _CFG):
         if got == name:
             return argv
