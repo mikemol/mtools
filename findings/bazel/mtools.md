@@ -819,3 +819,65 @@ is silent about WHICH THING it measured.* `--config`-never-entered, the `tail` e
 
 **Recorded as a standing check**: before trusting any metric delta from this cluster, confirm the
 endpoint set has exactly one member. It is one command and it is not implied by any green.
+
+## Rule 13 — a suite whose failure mode is a COUNT loses the case that failed
+
+**Operator ruling: substrate's clean code moves to mtools, and its selftests migrate to pytest to
+meet this repository's standard.** The conversion is not cosmetic, and the reason is measurable in
+the source being converted.
+
+The origin idiom, read from the modules actually being taken:
+
+```python
+def _cases() -> list[tuple[str, bool]]:
+    out: list[tuple[str, bool]] = []
+    def check(label: str, *, passed: bool) -> None:
+        out.append((label, passed))
+    check("a decomposed file's key keeps its move token",
+          passed=move(old) == move(new))       # <- evaluated BEFORE check() is entered
+    ...
+
+def selftest() -> bool:
+    ok = sum(1 for _, passed in cases if passed)
+    print(f"selftest: {ok}/{len(cases)}")
+    return ok == len(cases)
+```
+
+⚑⚑⚑ **`passed=` IS AN ARGUMENT, SO THE ASSERTION HAS ALREADY RUN BY THE TIME THE HARNESS SEES IT.**
+A case that raises does not fail — it aborts **collection**, and every case after it in the list is
+never constructed. The suite then reports a total over the cases that survived. Measured:
+`ratchet_move_selftest._cases()` returns 14 entries, and 14 is also the only evidence that 14 cases
+exist. **There is no declared population to compare the count against.**
+
+⚑⚑ **That is this file's subject in a test harness.** A green `14/14` and a green `9/9` after five
+cases stopped being constructed are the same shape, and the number is larger in the healthy case
+only if you already know what it should be. It is the hand-written blocker list (`0 of 5` reported
+as `0 of the island`) and the frozen roster (`no mismatches` as a verdict about the repo) — a
+result reported over a population the instrument itself defined.
+
+### The conversion contract, and it is 1:1 by construction
+
+**One `check(label, ...)` becomes one `def test_<label>()`.** Verified before converting:
+`ratchet_move_selftest` has **14 cases with 14 distinct labels**, so the mapping is injective and
+nothing merges. That matters because a many-to-one conversion would hide exactly what the migration
+is for.
+
+What pytest supplies that the count cannot:
+
+- **A raising case is a FAILURE, not a shortened population.** Collection is per-function, so one
+  broken case cannot delete its successors.
+- **The population is declared.** `--collect-only` names the cases before any of them runs, so
+  "did every case execute" stops being answered by the same number that answers "did every case
+  pass". ⚑ Those are two questions and the origin idiom returns one integer for both.
+- **The warrant gate can bind to it.** This repo enforces warrants 1:1 against test node-ids; a
+  case that exists only as a string inside a list comprehension has no node-id to warrant.
+
+⚑ **The prose does NOT get regenerated.** Each label and each evidence-comment is transcribed into
+the test's docstring, because — as this repository's own warrant rule already states — *the prose
+was authored at the moment the defect was measured*. A converted suite that paraphrases its cases
+loses the only record of why each one exists, which is most of their value.
+
+⚑⚑ **AND THE ORIGIN'S SUITES ARE NOT WRONG TODAY.** They found real defects, including the
+false-absolution bug this tree inherited the fix for. The migration buys a **failure mode**, not
+correctness: the origin's cases pass for good reasons and report their passing in a form that
+cannot distinguish a full run from a truncated one.
