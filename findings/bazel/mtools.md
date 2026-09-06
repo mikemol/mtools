@@ -1411,3 +1411,38 @@ grep -c "\-\-col\|\-\-starts" substrate/scratch/mdstruct.py   ->  16
 `--columns` — a prefix substring, counted as a feature. I nearly told a peer their measurement was
 wrong on the strength of it. ⚑ Running the command (`rows does not exist`) took one line and settled
 it; **a count is not an invocation, and only the invocation answers "can you call this."**
+
+### ⚑⚑ Addendum to Rule 24 — I raised a gate outage that was not one, twice, in one repair
+
+Fixing the routing table, I ran two probes and misread both.
+
+**Probe 1.** `claims(Path('.'))` returned `{}`, and I concluded I had broken the routing table by
+writing prose after its row — Rule 22, self-inflicted, twenty minutes after publishing it. ⚑ **The
+table was fine.** `claims(skill=...)` takes the SKILL **file**, and I passed the repo root; the
+function looked for a table in a directory and correctly found none. `claims()` with its own default
+returns `{'.md': ('markdown', 'mdstruct/.venv/bin/mdstruct')}`.
+
+**Probe 2.** Plain `grep` over a `.md` then succeeded where it had been refused minutes earlier, and
+I read that as the gate having gone down. ⚑ **Invoking the installed hook exactly as the harness
+does settles it:**
+
+```
+echo '{"tool_input":{"command":"grep -n x README.md"}}' | STRUCT_HOOK_BLOCK=1 hooks/.venv/bin/mikemol-hook-structural-query
+  -> "permissionDecision": "deny" ... the tool that owns it: mdstruct/.venv/bin/mdstruct
+```
+
+**The hook fires and carries the new invocation.** What varied was whether the harness re-ran it, not
+whether the gate worked.
+
+⚑⚑⚑ **BOTH MISREADINGS ARE THE SAME SHAPE AND IT IS THE ONE THIS FILE OPENS WITH: I READ MY OWN
+PROBE'S OUTPUT AS A FACT ABOUT THE SUBJECT.** An empty dict from a wrong argument is a fact about the
+call. A `grep` that succeeded is a fact about the harness's invocation policy. Neither is a fact
+about the routing table, and both *looked* exactly like one — `{}` is what a broken table returns,
+and an unrefused `grep` is what a dead hook allows.
+
+⚑ **The correction cost is asymmetric and that is why this is worth recording rather than quietly
+fixing.** Had I stopped at probe 1, I would have "repaired" a table that was not broken and
+attributed the repair to a rule I had just written — a false confirmation of Rule 22 by an author
+motivated to find one. **The arm that broke both was invoking the real thing**: `claims()` with its
+own defaults, and the hook through its own entry point, rather than reconstructing what I believed
+they did.
