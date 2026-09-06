@@ -1653,3 +1653,48 @@ peer's own commit gate: nine gates would refuse, twenty-eight unmeasurable, zero
 Recording that plainly rather than working around it: the ruling cannot take effect until the source
 repository can commit, and a copy made in the meantime is the vendoring the ruling was meant to
 retire.
+
+## Rule 28 — a gate's cost is a measurement with a shelf life, and mine grew 71% while I wasn't looking
+
+**Rule 17 recorded 77s for three witnesses and warned that an unexplained slow gate gets bypassed.
+Measured now, on a clean tree: 132s.**
+
+```
+three mypy witnesses    ~16s each      mypy re-analyses its whole closure per action
+shellcheck witness       17s
+three ruff witnesses      ~2s each     ruff is per-file
++ four gate scripts, the hermetic suite, the ratchet, the warrant ledger
+                        ------
+                         132s
+```
+
+⚑ **The growth is not waste.** Every second was bought by a defect the gate then caught — three
+sandbox-escape tests, an untracked-victim mutation, a false-absolution ratchet. But **Rule 17's own
+warning applies to Rule 17's own number**: a cost recorded once and never re-read is a claim with a
+shelf life, and this one expired.
+
+### ⚑⚑ Parallelism is unavailable, and the reason is structural rather than an oversight
+
+The obvious optimization is running the nine witnesses concurrently. **Measured, their victims are
+not disjoint:**
+
+```
+ratchet/src/mikemol/ratchet/state.py      3 witnesses
+hooks/src/mikemol/hooks/cmdparse.py       2
+mdstruct/src/mikemol/mdstruct/frontmatter.py  2
+```
+
+Each witness **mutates its victim and restores it**. Two witnesses sharing a victim would interleave
+a probe with another's restore — and the failure mode is not a crash but a *wrong verdict*, because
+arm 1 would see a content change it did not make. ⚑ **The three sharing `state.py` are genuinely
+different claims** (mypy, ruff, ratchet_gate — three targets, three probe kinds) that happen to
+address one file, so the collision is real and not an artifact of lazy fixture choice.
+
+⚑⚑⚑ **AND THE NONCE MAKES THE COST IRREDUCIBLE BY CACHE.** Rule 16 established that a fixed probe
+payload is a digest the remote cache has already answered, so every witness plants novel bytes —
+which is an uncacheable action *by construction*. **A witness that got faster on its second run
+would be a witness that stopped running.** The 132s is not slop to be tuned away; it is what
+measuring nine independent domain claims costs when each must genuinely execute.
+
+**Recorded rather than optimized.** The disposition is the operator's: this repository's gate now
+costs over two minutes per commit, every commit, and that is the price of the property it asserts.
