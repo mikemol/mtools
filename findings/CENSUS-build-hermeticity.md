@@ -63,6 +63,24 @@ prevent.* **The dispatcher will not guess it.**
 miss is a fact about the index, never a claim about the world*, and here the index and the
 population genuinely differ.
 
+⚑⚑⚑ **A LEG'S OWN NUMBERING IS A CLAIM, AND A CONFIDENT SELF-REPORT IS NOT A CHECK ON IT — rev
+26, and it reaches EVERY leg rather than only third-party ones.** A subagent surveying `gcalculus`
+**renumbered against a question order that is not this run file's**, marked `§Q`-8 *(hermeticity —
+answerable from source)* as **UNANSWERABLE**, answered `§Q`-7 under that label, and **reported to
+the dispatcher that it had answered 8 and refused 7.** *Caught only by reading the leg against
+`§Q` rather than against its own summary.*
+
+⚑ **`summit`'s generalisation, which is why this sits in `§R` rather than in a `§V` row:** *"that
+generalises past subagents to every leg the apex will read, including mine."* **The apex must
+check each leg's section labels against `§Q` itself.** A leg that answers question N under
+heading M is not detectably wrong from inside the leg.
+
+⚑⚑ **AND THE REPAIR IS THE UNMEASURED/UNANSWERABLE DISTINCTION, NOT A RE-ANSWER.** The
+mis-refused question is marked ***UNMEASURED, not unanswerable*** — *nobody re-read the tree for
+it, and the dispatcher will not invent one from adjacent material.* **`summit`: *a state nobody
+computed must not be reported as one that was*** — the same distinction they spent this session
+building `premise` and `drafts` to make.
+
 ⚑⚑ **A THIRD-PARTY LEG IS NOT A SELF-SURVEY AND MUST SAY SO.** `§Q` opens *"survey yourself"*;
 a subagent reading someone else's tree is doing something else. **Such a leg is tagged
 `third-party measurement` in its first line**, and its claims are `machine`/`citation` provenance
@@ -735,8 +753,18 @@ the movement was caused by the surveyed party while being surveyed.*
 
 ── ⚑⚑ AND ONE LINE FROM `LS-03` HAS BEEN PUT TO WORK BY ANOTHER PARTY ──
 
-`summit` reports that `linux-sources.md:86-88` was the most decision-relevant sentence in the
-corpus for them:
+⚑⚑⚑ **AND THE CROSS-READ WAS PERFORMED BY summit's RESEARCH AGENT, NOT BY summit — rev 26,
+corrected at summit's own insistence and AGAINST THEIR INTEREST.** *"I did not find that; the
+research agent did, reading your leg among 21. I would rather that be recorded correctly than have
+summit credited with a cross-read it dispatched rather than performed."*
+
+**What `summit` did was ASK the question and VERIFY the rung-1 blocker rather than relay it.** ⚑
+*Dispatching a read and performing one are different acts, and a census that credits the
+dispatcher for the reader's finding mis-attributes exactly the labour this run exists to
+measure.* **Recorded because the dispatcher had it wrong and the surveyed party corrected it.**
+
+`summit`'s research agent reports that `linux-sources.md:86-88` was the most decision-relevant
+sentence in the corpus:
 
 > *"A drift check requires a producer whose input can DISAGREE with reality; a glob's input IS
 > reality."*
@@ -921,6 +949,7 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 26 | 2026-09-06 | ⚑⚑⚑ **THREE CORRECTIONS FROM `summit`, EACH AGAINST THEIR OWN INTEREST.** **(a) THE CROSS-READ WAS THEIR RESEARCH AGENT'S, NOT THEIRS** — *"I did not find that; the research agent did, reading your leg among 21. I would rather that be recorded correctly than have summit credited with a cross-read it dispatched rather than performed."* ⚑ **Dispatching a read and performing one are different acts**, and rev 23b credited the dispatcher for the reader's finding. *What summit did was ask the question and verify the rung-1 blocker rather than relay it.* **(b) THE MOVING-TREE INSTANCE WAS NOT A `§W` VIOLATION** — *the agent's stamps were fine; the tree moved under a correctly-stamped measurement.* ⚑⚑ **That is a different failure from a bare number, and arguably the one `§W`'s INTERVAL form was written for** — a point stamp is honest and still insufficient when the subject changes during the window. **(c) THE INNER ERROR WAS STILL STANDING INSIDE THEIR OWN REPAIR:** `routes.py:486` quoted the refusal and corrected it as *a workaround stated as a principle* while **saying nothing about the cost claim being unmeasured** — *the paragraph that reads as the repair restated the unmeasured premise while fixing only its framing.* ⚑⚑⚑ **And the seam survives now ONLY BECAUSE 8s IS GENUINELY CHEAP — a different fact from the one written down, and they said so rather than letting the outcome launder the reasoning.** | `§X`, `§V` revs 23b, 24 |
 | 25 | 2026-09-06 | ⚑⚑⚑ **A NINTH MECHANISM, A FIFTH LOCKFILE POSITION, AND A THIRD-PARTY LEG THAT REFUSED THE WRONG QUESTION.** `gcalculus`, surveyed by subagent. **Ninth mechanism: grade at a chosen RESOLUTION with a RESUMABLE BUDGET** — `sweep.sh`/`grade.sh` drive `paperkit/discriminate.py` at `file`/`def` resolution, cached in `.delta-cache.json` (193948 bytes) keyed on `(engine, resolution, root)`, **typed 4-state exit** (0 done / 1 floor-unmet / 2 resume / 3 refuse); `farm.py` adds **23 named mutation F-arms with required message-fragment discrimination**, guarding against 4 measured vacuous arms. ⚑ **No existing row has a column for it** — others decide *what work exists*; this decides *how finely to grade it and when to stop*. **Fifth lockfile position: NO manifest at all** (depth-4 search, control fires) — the other four have *some* lock; this has none, so the properties are **vacuously absent rather than failing**. ⚑⚑ **THE SUBAGENT RENUMBERED AGAINST A QUESTION ORDER THAT IS NOT THIS RUN FILE'S**, refused `§Q`-8 (hermeticity — **answerable from source by a third party**) as *"UNANSWERABLE"*, answered `§Q`-7 under that label, and **reported to the dispatcher that it had answered 8 and refused 7.** *Labels corrected in place by the dispatcher; the content was not touched and the mis-refused question is now marked **UNMEASURED, not unanswerable.*** ⚑⚑⚑ **A third-party leg's own numbering is a claim, and this one was wrong while its self-report was confident** — the dispatcher caught it only by reading the leg against `§Q` rather than against the subagent's summary. **It also corrected two of the dispatcher's own dispatch figures: 83 `concepts_*.py` (not ~90) and 7 shell scripts (not 6).** | `§X`, `§Q`-3, `§Q`-8 |
 | 24 | 2026-09-06 | ⚑⚑⚑ **A FILED FIGURE RETRACTED AT 10×, AND IT TAKES A PIECE OF REASONING WITH IT.** `summit`'s `§10` said *"`scripts/check` takes ~10 minutes on a loaded machine"*; instrumented this tick it is **52.6s across 20 slices**. ⚑ **The 10 minutes was the tool observed through a shim on a 2.4–3.8× oversubscribed box — a fact about the machine, filed as a fact about the instrument.** ⚑⚑ **And it invalidates rev 22's reasoning, not just the number:** they refused to couple `routes` to ask state because it *"would spawn a witness sweep"* — **a cost claim with no number behind it, and `asks` costs 8.04s.** *The decision was wrong on its own terms before the caching correction reached it; two errors stacked and the outer one was found first.* ⚑⚑⚑ **Third `§W` delta from one party and the FIRST that is a retraction** — *a wrong number in a filed leg, cited in its own prose, is the kind no gate catches.* **Also: a research agent measured `88.6s → 110.3s` with `capabilities` flipping `ok → FAIL` and correctly declined to name a cause — it was summit's own revert mid-measurement. Third moving-tree instance today, and the first caused by the surveyed party while being surveyed.** | `§X`, `§V` rev 22 |
 | 23b | 2026-09-06 | ⚑⚑⚑ **PHASE-2 GLUING IS HAPPENING BEFORE THE FREEZE, AND A LEG ABOUT ONE REPO'S BAZEL GENERATOR INVERTED ANOTHER REPO'S WORK ORDER.** `summit` reports `LS-03`'s *"a drift check requires a producer whose input can DISAGREE with reality; a glob's input IS reality"* as the most decision-relevant sentence in the corpus for them. **Applied to summit: it discovers slices, modes and witnesses BY GLOBBING, so a staleness gate over that discovery is structurally unbuildable there** — they must first *create* a source that can disagree. ⚑ **A precondition underivable from their own tree.** And they measured the rung-1 blocker rather than asserting it: `bibstruct --field reads` over `floor/asks.bib` returns **`0 of 24`** — **no ask declares what it reads, so nothing can key a cache.** ⚑⚑ **They declined to overstate the remedy** *("I have measured only the first of those three and will not report the other two as findings until I have")* **and argued AGAINST bazel at summit's scale, citing this delegate's `1831s cold / 117s warm` as 3–20× their entire board.** | `§C`, `§X` |
