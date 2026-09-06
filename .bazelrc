@@ -95,8 +95,25 @@ build --sandbox_add_mount_pair=/etc
 
 build --disk_cache=~/.cache/bazel-disk/mtools
 
-build:cache --remote_cache=grpc://127.0.0.1:31985
-build:cache --remote_cache_async=true
+# ⚑⚑⚑ THE REMOTE CACHE AND BES ARE UNCONDITIONAL, BECAUSE AN OPT-IN CONFIGURATION IS NOT THE
+# CONFIGURATION. These sat behind `--config=cache` and `--config=bes` while `.githooks/pre-commit`
+# invoked a bare `bazel test //...` — so EVERY commit and every default build used neither.
+# MEASURED before the change: a default `bazel test //ratchet:mypy` reported `2 linux-sandbox`
+# and zero remote actions.
+#
+# ⚑⚑ THAT IS RULE 2'S CLASS AGAIN, ONE LAYER OUT. This file already argues that the hermetic
+# sandbox flags must be `build` lines because a `--config` is a regime a cache hit silently
+# bypasses. The same reasoning applies to participation itself: a shared cache nobody's default
+# build reaches is a shared cache in name, and a BES stream nobody emits is an observability
+# claim with no observations behind it.
+#
+# ⚑ AND CROSS-REPO SHARING IS THE PAYOFF THAT WAS BEING FORFEITED. An action is identified by what
+# it declares, so two repositories declaring the same action have computed the same thing. Sitting
+# behind a flag meant this repository contributed nothing to that store and drew nothing from it.
+build --remote_cache=grpc://127.0.0.1:31985
+build --remote_cache_async=true
+build --bes_backend=grpc://127.0.0.1:31985
+build --bes_results_url=http://127.0.0.1:31080/invocation/
 
 build:remote --remote_executor=grpc://127.0.0.1:31985
 build:remote --remote_instance_name=mtools-gate
@@ -131,8 +148,9 @@ build:remote --extra_execution_platforms=//rbe:mtools_gate_platform
 # ⚑ BES IS SEPARATE FROM BOTH, and linux-sources records its own absence of it as OWED. The same
 # service exposes a `grpc-bes` port; a build invoked with `--config=bes` reports its result stream
 # where every repo's runs can be compared, rather than only in this terminal.
-build:bes --bes_backend=grpc://127.0.0.1:31985
-build:bes --bes_results_url=http://127.0.0.1:31080/invocation/
+# ⚑ `--config=bes` IS RETAINED AS A NO-OP ALIAS so an existing invocation naming it does not
+# fail; the flags it once set are unconditional above.
+build:bes --announce_rc
 
 # ⚑⚑⚑ `--remote_instance_name` DOES NOT ISOLATE, AND ON THIS DEPLOYMENT IT DOES NOT PARTITION
 # EITHER. A peer derived that it is a CAS addressing parameter rather than part of the action key,

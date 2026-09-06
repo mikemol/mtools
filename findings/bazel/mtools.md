@@ -290,6 +290,29 @@ traffic**, not about the cache.
 findings meeting in the middle. It is one finding and one definition: the action-cache measurement
 was right, the content-addressing argument was right, and they were never in conflict.
 
+⚑⚑⚑ **POSTSCRIPT: THE COUNTERS WERE REACHABLE ALL ALONG — THREE SESSIONS PROBED THE WRONG PORT.**
+`:31080/metrics` returns `404`, reproduced independently by three parties, and all three inferred
+the surface did not exist. **It is on `:31464`.** The service carries three NodePorts — `1985:31985`
+gRPC, `8080:31080` app/UI, `9464:31464` prometheus — and nobody checked the third. Measured here:
+**9,537 metric lines**, including
+
+```
+buildbuddy_remote_cache_disk_cache_duplicate_writes
+  # HELP  Number of writes for digests that already exist.
+buildbuddy_remote_cache_upload_size_bytes_{bucket,count,sum}
+buildbuddy_remote_cache_download_size_bytes_*
+```
+
+⚑ **A 404 LOOKS LIKE A MEASUREMENT AND FUNCTIONS AS A FACT ABOUT THE WORLD.** It is a real HTTP
+response, so it reads as evidence of absence rather than as evidence about *one address*. The
+earlier framing — *"a fact about access, not about the CAS"* — was the right instinct and still
+landed wrong: it was a fact about **the port**. This is Rule 9 with a status code standing in for
+a figure, and *the same reading taken by three vantages is still one reading*.
+
+The withdrawal stands on its own terms — content addressing makes sharing definitional — but
+`disk_cache_duplicate_writes` is exactly the counter that would have settled the original question,
+and it was available the whole time.
+
 ⚑ **THE TRANSFERABLE RULE: a null result from a well-run probe is evidence the QUESTION is wrong at
 least as often as it is evidence the ACCESS is short.** Rule 7 protects against a *contaminated*
 arm. It does nothing against measuring a distinction the substrate cannot express — those arms were
@@ -527,6 +550,57 @@ to succeed — arriving at a filesystem query rather than a build.
 
 The third is the same class arriving from a third direction, and it is why Rule 7 requires
 `bazel clean` rather than only disabling caches.
+
+## Rule 10 — a config the default path never enters is worse than one a cache hit bypasses
+
+Rule 2 says the hermetic sandbox flags must be `build` lines because **a `--config` is a regime a
+cache hit silently bypasses.** The same reasoning applies one layer out, to *participation itself*,
+and this repository failed to apply it to the adjacent case for a full session.
+
+`--remote_cache` and `--bes_backend` sat behind `--config=cache` and `--config=bes` while
+`.githooks/pre-commit` invoked a bare `bazel test //...`. **So every commit and every default build
+used neither.** Measured before the change:
+
+```
+bazel test //ratchet:mypy     ->  2 linux-sandbox, zero remote actions
+```
+
+⚑⚑ **A shared cache nobody's default build reaches is a shared cache in name, and a BES stream
+nobody emits is an observability claim with no observations behind it.** The cross-repo sharing
+this file argues is the payoff was being forfeited entirely — nothing contributed, nothing drawn.
+
+⚑ **AND THE ASYMMETRY IS THE POINT: Rule 2's failure has a hit to notice; this one has nothing at
+all.** A bypassed regime still runs the action, under the wrong rules. A config never entered
+produces no signal of any kind — no wrong verdict, no slow build, no error. Silence that is
+indistinguishable from correctness, which is why it survived a session of daily gate runs.
+
+**Now unconditional, and F-armed for the property that matters when there is no fallback:**
+
+```
+build --remote_cache / --remote_cache_async / --bes_backend / --bes_results_url
+  default invocation  ->  "Streaming build results to: .../invocation/<id>"
+  dead cache endpoint ->  "Failed to query remote execution capabilities: Connection refused"
+```
+
+It **fails loudly** rather than degrading — necessary, because `--remote_local_fallback` is
+deliberately absent (a fallback evades the scheduler protecting the very cores it falls back onto,
+and silently re-opens the sandbox escape remote routing exists to contain).
+
+### ⚑⚑ A killed build leaves a record, which fixes a failure mode by construction
+
+Measured here, because this is the first repository in the ecosystem running **both** BES and the
+executor — one peer has the executor without BES, another BES without the executor:
+
+```
+bazel test //... , killed mid-run at 20s
+  -> Streaming build results to: .../invocation/7e669b26-…
+  -> the app returns HTTP 200 for that id, 3,906 bytes — substantive, not an empty shell
+```
+
+⚑ **This retires a failure mode a peer paid for: they declared a run finished because its log went
+static, and it was still in analysis eight minutes later.** A log going quiet is indistinguishable
+from a log that ended. **An invocation record is not** — it exists, and it carries a state. That is
+a fix by construction rather than by discipline, and it is available to anyone streaming BES.
 
 ## Bounds
 
