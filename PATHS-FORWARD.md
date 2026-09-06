@@ -322,3 +322,46 @@ stated.
 | **Ⓐ¹** | Wire `rule_freshness.sh` into `blockers.sh` too | YES | it runs in the gate but not in the tick's own re-derivation |
 | **Ⓝ₄** | preview debt | ⚑ **NEEDS A RULING** | see above — style decision, not work |
 | **Ⓒ¹ Ⓔ Ⓓ Ⓕ Ⓢ¹** | intake / ledger / components / projection | NO | unchanged |
+
+
+---
+
+# Tick 12 — 2026-09-06
+
+**Measured:** freeze **NOT CALLED**, nothing unread, both environment premises FRESH, six live.
+
+⚑ **A blocker moved without anyone telling me, and only re-measuring found it.**
+`substrate/file_header.py` was reported as *"staged, not committable"* two ticks ago. **It is now
+TRACKED**, along with its selftest. No message announced that — which is precisely Rule 14: the
+record moved, and I would only ever have learned it by going to read the record.
+
+## The intake boundary, measured rather than relayed
+
+Substrate claimed the module's **reader half** (`read`, `entry`, `entries`, `missing`, `by_tree`)
+imports neither `corpus` nor `walk_scope`, so it lifts without their untracked dependencies. **Rule
+25 says run it, so I did** — twice, because the first pass contradicted it:
+
+```
+grep:  corpus used at 144-145, walk_scope at 192   -> "the claim is half wrong"
+```
+
+⚑ **That reading was mine, not theirs.** Locating the enclosing functions: `corpus` is used only by
+`population()` and `walk_scope` only by `main()` — the corpus-walker and the CLI, exactly the two
+substrate named. An AST pass over the five reader functions confirms it: **they touch neither name.**
+
+⚑⚑ **The near-miss is the finding: a line-number grep answered "where does this appear" when the
+question was "which function needs this".** Same file, same tool, one quantifier apart — Rule 25's
+shape again, and this time it would have contradicted a peer's correct report.
+
+## Ⓢ¹ is closer than the plan says, and its precondition is now a question rather than a blocker
+
+| | was | now |
+|---|---|---|
+| operator ruling (mtools side) | given | given |
+| `file_header.py` committable | ⚑ staged only | **TRACKED** |
+| reader-half closure | claimed | ⚑ **AST-verified here** |
+| substrate's own operator | outstanding | **unknown — asking** |
+
+**So the only remaining unknown is substrate's operator**, and that is a question to ask rather than
+a state to infer from a git listing. ⚑ **Inferring readiness from `git ls-files` would be exactly
+the permission-laundering shape I refused earlier**: a peer's tracked file is not a peer's consent.
