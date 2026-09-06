@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-gate-ends-on-a-decision-not-on-an-echo,
+  section = {bar-fires},
+  claim   = {The success path exited on a printf's status: the last command wins, and a wrapper's last command is almost never the work},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_ends_on_a_decision_not_on_an_echo}
+}
+
 @misc{hooks-bar-fires-residue-guard-names-both-causes-not-one,
   section = {bar-fires},
   claim   = {Seven witnesses refused at once while a PEER's gate was mid-run, and the guard's account named only the killed-witness cause, steering readers to a checkout that destroys a live measurement},

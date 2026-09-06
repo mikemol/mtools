@@ -668,4 +668,26 @@ if [ "$fail" -ne 0 ]; then
     fi
     exit 1
 fi
+# ⚑⚑⚑ THE VERDICT IS AN EXPLICIT `exit 0`, NOT AN `echo`'s STATUS. The last line of a script is
+# its exit code, and this line was `say "ok"` — a `printf` that succeeds unconditionally. The gate
+# was CORRECT, because the refusal path `exit 1`s above; but the success path was reporting
+# "printf worked", and those two agree only by luck of the control flow.
+#
+# ⚑⚑ MEASURED, because a caller two seats away paid for this shape. `rosettapkg` reported a
+# backgrounded run that printed `All checks passed!`, exited 0, and left its file STAGED AND
+# UNCOMMITTED — two runs, same exit status, opposite outcomes. Reproduced here:
+#
+#     for i in 1 2 3; do ./gate.sh; done            -> rc=1   the work's status survives
+#     for i in 1 2 3; do ./gate.sh || true; done
+#     echo "done"                                    -> rc=0   the TRAILING COMMAND won
+#
+# ⚑ THE GENERAL FORM IS NOT ABOUT PIPES OR LOOPS: **the last command wins, and a wrapper's last
+# command is almost never the work.** A pipe reports its last stage, a loop reports its last
+# iteration, a script reports its last line. Same rule, three surfaces — `gabion`'s formulation
+# after hitting the third instance in one day.
+#
+# ⚑ SO THIS FILE ENDS ON A DECISION. `exit 0` cannot be reached by a stray `echo` appended later,
+# which is the reversion this guards against: the defect was not that the code was wrong, it was
+# that the code was RIGHT BY ACCIDENT and nothing said so.
 say "ok"
+exit 0

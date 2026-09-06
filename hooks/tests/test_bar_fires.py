@@ -1271,3 +1271,31 @@ def test_the_residue_guard_names_both_causes_not_one() -> None:
         "the concurrent case must be steered away from the remedy that breaks a live measurement"
     )
     assert "pgrep -f domain_witness" in body, "the reader needs a way to tell the two apart"
+
+
+def test_the_gate_ends_on_a_decision_not_on_an_echo() -> None:
+    """⚑⚑⚑ THE GATE'S SUCCESS PATH EXITED ON A `printf`'s STATUS, NOT ON A VERDICT.
+
+    The last line was `say "ok"` — a `printf` that succeeds unconditionally. The gate was CORRECT,
+    because the refusal path `exit 1`s above it; but "the commit is clean" and "printf worked" are
+    two different propositions that agreed only by luck of the control flow. ⚑ **Right by accident,
+    with nothing saying so.**
+
+    ⚑⚑ A CALLER TWO SEATS AWAY PAID FOR THIS SHAPE. `rosettapkg` reported a backgrounded run that
+    printed `All checks passed!`, exited 0, and left its file STAGED AND UNCOMMITTED — two runs,
+    same exit status, opposite outcomes, distinguishable only by `git ls-tree`. Reproduced on a
+    fixture: a loop whose every attempt refused reports `rc=1`, but the same loop followed by one
+    trailing `echo` reports **`rc=0`**.
+
+    ⚑ THE GENERAL FORM IS NOT ABOUT PIPES OR LOOPS: **the last command wins, and a wrapper's last
+    command is almost never the work.** A pipe reports its last stage, a loop its last iteration, a
+    script its last line — same rule, three surfaces.
+
+    MEASURED, four arms, before this test was written: an appended `false` sets `rc=1` on an
+    unguarded script and **cannot reach the exit status** on one ending in `exit 0`.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert body.rstrip().endswith("exit 0"), (
+        "the gate must end on an explicit decision; a trailing command appended later would "
+        "otherwise become its exit status"
+    )
