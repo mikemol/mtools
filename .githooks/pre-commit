@@ -169,6 +169,12 @@ say "figure freshness: is any superseded number still stated in the present tens
 # to work on — kept asserting the falsified claim for nine ticks. ⚑ A correction that reaches the
 # record without reaching the plan changes what is TRUE without changing what gets DONE.
 ./figure_freshness.sh PATHS-FORWARD.md || true
+# ⚑⚑ AND THE ONBOARDING DOCUMENT, WHICH IS WHERE A STALE FIGURE COSTS MOST. `SKELETON.md` told a
+# new contributor to expect "25 of 25" from the suite while the tree held 34 — and a reader who
+# sees a different number cannot tell whether they broke something, whether their checkout is
+# wrong, or whether the document is old. ⚑ All three look identical from a fresh clone, and only
+# the third is true.
+./figure_freshness.sh SKELETON.md || true
 
 # ⚑⚑ AN UNCLAIMED CHECKER REFUSES, WHERE A STALE ENVIRONMENT CLAIM ONLY REPORTS. The difference is
 # ownership: freshness measures a shared cluster this repo does not control, so blocking on it

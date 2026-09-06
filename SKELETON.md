@@ -9,7 +9,7 @@ is per-clone git config rather than a tracked file, so `.githooks/pre-commit` si
 never runs until this is done. Measured: `git config --get core.hooksPath` in a fresh clone
 returns nothing.
 
-⚑ **NOTHING ELSE NEEDS INSTALLING TO CHECK YOUR WORK.** `bazel test //...` passes 25 of 25 in a
+⚑ **NOTHING ELSE NEEDS INSTALLING TO CHECK YOUR WORK.** `bazel test //...` passes 34 of 34 in a
 clone with no venvs at all — every tool it needs is a hash-pinned declared input. The venvs are a
 developer convenience for fast iteration, not a precondition.
 
@@ -84,3 +84,22 @@ the file or drop the key; do not inherit the bug.
 struct-tools/SKILL.md` briefly claimed `.bib` for `bibstruct`, which is not on `PATH` and not a
 dependency of anything — so the gate refused a read and named a route the author could not take.
 A block without a route is worse than no block.
+
+
+---
+
+## ⚑ On the number above
+
+It read **25 of 25** until 2026-09-06, when the tree held **34**. Nine targets were added over a
+day of work and nothing re-read the sentence that told a new contributor what to expect.
+
+⚑⚑ **This document's whole purpose is telling someone how to verify their work, so a stale count
+here fails in the worst direction:** a reader who runs the suite and sees a different number cannot
+tell whether they broke something, whether their checkout is wrong, or whether the document is old.
+**All three look identical from a fresh clone**, and the first two are alarming while only the third
+is true.
+
+⚑ It was found by a checker that flags a document carrying measurements while citing no rule to
+cross-check them against — and it was found only because the population being scanned was widened
+past the two files already covered. **A figure decays wherever it sits; the checker had been looking
+where the figures were already known.**

@@ -56,8 +56,16 @@ cited=$("$md" grep "recorded" "$rules" 2>/dev/null \
 if [ -z "$cited" ]; then
     if grep -qE '\bRule [0-9]+' "$rules" 2>/dev/null; then
         echo "  no rule cites another's figure as historical — nothing to check"
+    elif ! grep -qE '\b[0-9]+ (of|keys?|files?|tests?|rules?|targets?|commits?)\b|MEASURED' \
+            "$rules" 2>/dev/null; then
+        # ⚑⚑⚑ A DOCUMENT WITH NO MEASUREMENT CANNOT GO STALE, AND FLAGGING IT IS NOISE. The first
+        # cut warned about every file citing no rule — including `README.md`, which is a statement
+        # of INTENT carrying zero figures. ⚑ Nothing in it can be falsified, so "this cannot be
+        # cross-checked" is true and useless, and a checker that cries about files with nothing to
+        # check is a checker whose output stops being read.
+        echo "  $rules carries no measurement — nothing here can go stale"
     else
-        echo "  ⚑ $rules cites NO rule, so nothing here can be cross-checked against one."
+        echo "  ⚑ $rules carries measurements and cites NO rule, so none can be cross-checked."
         echo "    A claim in this file that a rule later falsified would read as current forever."
     fi
     exit 0
