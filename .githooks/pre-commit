@@ -163,18 +163,16 @@ say "rule freshness: are the environment claims this repo cites still true?"
 # so. ⚑ No clock, no cluster, no re-measurement — which is why it can run every commit while the
 # thing it guards (a 132-second gate) cannot be re-timed inside itself.
 say "figure freshness: is any superseded number still stated in the present tense?"
+# ⚑⚑ ONE INVOCATION, AND IT ENUMERATES ITS OWN POPULATION. The gate named three documents by hand
+# against seven this repository owns — the denylist defect fixed twice already here (a shellcheck
+# target at 7 of 11, an `exports_files` at 8 of 13) reappearing in the checker built to catch stale
+# claims. ⚑ The four unlisted files happened to be clean; the list would have missed them either
+# way, which is luck rather than coverage.
 ./figure_freshness.sh || true
 # ⚑⚑ THE DERIVATION FILE IS CHECKED TOO, and it is the one that needed it. The findings document
 # recorded a retraction while `PATHS-FORWARD.md` — the file a session reads FIRST, to decide what
 # to work on — kept asserting the falsified claim for nine ticks. ⚑ A correction that reaches the
 # record without reaching the plan changes what is TRUE without changing what gets DONE.
-./figure_freshness.sh PATHS-FORWARD.md || true
-# ⚑⚑ AND THE ONBOARDING DOCUMENT, WHICH IS WHERE A STALE FIGURE COSTS MOST. `SKELETON.md` told a
-# new contributor to expect "25 of 25" from the suite while the tree held 34 — and a reader who
-# sees a different number cannot tell whether they broke something, whether their checkout is
-# wrong, or whether the document is old. ⚑ All three look identical from a fresh clone, and only
-# the third is true.
-./figure_freshness.sh SKELETON.md || true
 
 # ⚑⚑ AN UNCLAIMED CHECKER REFUSES, WHERE A STALE ENVIRONMENT CLAIM ONLY REPORTS. The difference is
 # ownership: freshness measures a shared cluster this repo does not control, so blocking on it

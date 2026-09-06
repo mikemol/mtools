@@ -20,7 +20,25 @@
 set -uo pipefail
 
 cd "$(dirname "$0")" || exit 1
-rules="${1:-findings/bazel/mtools.md}"
+# ⚑⚑⚑ WITH NO ARGUMENT THIS SCANS EVERY DOCUMENT THIS REPOSITORY OWNS, because the gate named
+# THREE by hand against a population of SEVEN. That is the denylist defect this repo has now fixed
+# twice — a shellcheck target listing 7 of 11 files, an `exports_files` listing 8 of 13 — arriving
+# in the checker built to catch stale claims. ⚑ The four unlisted documents happened to be clean,
+# which is luck rather than coverage: the list would have missed them either way.
+#
+# ⚑⚑ THE CENSUS AND INBOX TREES ARE EXCLUDED BY OWNERSHIP, NOT CONVENIENCE. `findings/CENSUS-*`
+# and `findings/deps-build/` belong to a peer's survey and are embargoed to this session;
+# `findings/membudget/` is a filed corpus nobody amends; `inbox/` is mail. A figure in someone
+# else's document is not mine to re-measure, and flagging it would be noise I cannot act on.
+if [ -z "${1:-}" ]; then
+    for doc in $(git ls-files '*.md' 2>/dev/null \
+            | grep -vE 'findings/membudget|findings/deps-build|findings/CENSUS|^inbox/'); do
+        "$0" "$doc"
+    done
+    exit 0
+fi
+
+rules="$1"
 md="mdstruct/.venv/bin/mdstruct"
 
 if [ ! -f "$rules" ]; then
@@ -55,7 +73,10 @@ cited=$("$md" grep "recorded" "$rules" 2>/dev/null \
 # check" over a corpus that cites nothing is a fact about the CORPUS, not about its accuracy.
 if [ -z "$cited" ]; then
     if grep -qE '\bRule [0-9]+' "$rules" 2>/dev/null; then
-        echo "  no rule cites another's figure as historical — nothing to check"
+        # ⚑ THE SUBJECT IS NAMED. Scanning seven documents, two printed "nothing to check" with
+        # no filename — a verdict a reader cannot act on, and the same defect fixed once already
+        # in this repo's arm-2 message. A per-file line must say which file.
+        echo "  $rules: no rule cites another's figure as historical — nothing to check"
     elif ! grep -qE '\b[0-9]+ (of|keys?|files?|tests?|rules?|targets?|commits?)\b|MEASURED' \
             "$rules" 2>/dev/null; then
         # ⚑⚑⚑ A DOCUMENT WITH NO MEASUREMENT CANNOT GO STALE, AND FLAGGING IT IS NOISE. The first
