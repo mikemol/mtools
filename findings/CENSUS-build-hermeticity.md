@@ -81,6 +81,22 @@ it, and the dispatcher will not invent one from adjacent material.* **`summit`: 
 computed must not be reported as one that was*** — the same distinction they spent this session
 building `premise` and `drafts` to make.
 
+⚑⚑⚑ **AND THE CENSUS HAS ONE PRE-EMPTIVE CATCH AGAINST TEN POST-HOC RETRACTIONS — rev 34,
+counted by `gabion` across five parties.** *Every other correction today, theirs and everyone's,
+was **land then retract**. One was **kill then land correctly***: a commit already running whose
+message said *"revs 31–32"* while the file carried rev 33, stopped and rewritten.
+
+⚑ **THE DISTINCTION MATTERS BECAUSE THE APEX READS ARTIFACTS.** ***A retraction leaves TWO
+artifacts in the record; a pre-emptive catch leaves ONE.*** *So the ratio is not a scorecard — it
+is a statement about how much of this run's record is correction rather than finding, and the
+apex is reading a corpus whose corrections outnumber its pre-emptions ten to one.*
+
+⚑⚑ **AND THE AVAILABLE REMEDY DIFFERED BY STANDING, WHICH IS `gabion`'s OBSERVATION AND NOT A
+COMPLAINT.** Two instances of the same defect — ***content landed, accounting did not*** — resolved
+differently: **`gabion` filed a notice INSIDE THEIR OWN LEG because they had no authority over the
+roster; the dispatcher added the missing `§V` row before committing because the log was theirs.**
+*Same defect, different remedy, and the difference is authority rather than diligence.*
+
 ⚑⚑ **A THIRD-PARTY LEG IS NOT A SELF-SURVEY AND MUST SAY SO.** `§Q` opens *"survey yourself"*;
 a subagent reading someone else's tree is doing something else. **Such a leg is tagged
 `third-party measurement` in its first line**, and its claims are `machine`/`citation` provenance
@@ -929,6 +945,40 @@ concurrent write to a DIFFERENT declared input of the same target is covered by 
 — *which is precisely what produced the residue that blocked four parties earlier today.* **The
 guards protect the victim; nothing protects the target's other inputs.**
 
+⚑⚑⚑ **AND THE DISPATCHER'S OWN PRE-FLIGHT CHECK IS NECESSARY AND NOT SUFFICIENT — rev 34,
+`gabion` sharpening it against the party who proposed it.** Facing `gate-G86`, the dispatcher ran
+`bash -n` on `.githooks/pre-commit` before spending a gate run, got a clean parse, and committed.
+⚑ ***`bash -n` proves the hook PARSES; it does not prove the hook and its witnesses are the SAME
+GENERATION.***
+
+**`gabion`'s fifth refusal is the instance, and it is a new mechanism rather than residue:**
+
+    cat: .../.witness-hooks__mypy_domain_reaches_a_transitive_import.log: No such file or directory
+
+    bash -n .githooks/pre-commit  -> PARSES
+    bash -n domain_witness.sh     -> PARSES
+    git diff --cached --stat      -> 114 lines staged across BOTH, uncommitted   ⚑ measured here
+
+***A hook expecting a log its witness does not yet write — both halves syntactically fine, one
+repair applied and its counterpart pending in the index.*** ⚑⚑ **So the honest form of the check
+is *parses AND is not staged*: a STAGED gate is a gate whose halves may disagree, and `bash -n`
+cannot see that.** *The dispatcher's commit ran through exactly that state and succeeded; the
+check was read as a clearance when it was only a syntax proof.*
+
+⚑ **AND `gabion` RECORDED THE FIVE REFUSALS AS A SET, WHICH IS SHARPER THAN ANY ONE OF THEM:**
+
+    1  arm 3 "tree is dirty"        concurrency misattributed
+    2  arm 3 fresh probe each run   restore broken for every invocation
+    3  "COULD NOT sweep" ×3         files already clean — polarity inverted
+    4  "CONTENT DIFFERS"            file matched index AND before= hash; then index.lock
+    5  missing witness log          gate source staged mid-repair
+
+⚑⚑⚑ **Four of five are the after-check reading a MOVING TARGET; the fifth is the gate reading its
+own HALF-INSTALLED SOURCE.** *All five are `friction-the-gate-reads-the-tree-not-the-index` **with
+a write attached** — `summit` filed that shape for READS, where a gate cannot express "I am
+holding something back"; a gate that MUTATES what it gates additionally cannot express **"this
+dirt is mine"** or **"my source is mid-swap."***
+
 ⚑⚑ **AND THE COST IS MEASURED RATHER THAN HYPOTHESISED:** *"I only found the residue class because
 `gabion` falsified my concurrency story — **not because a guard reported its own gap.**"* ***The
 guards were read as a control because they refused things, and refusing is what a control looks
@@ -1231,6 +1281,7 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 34 | 2026-09-06 | ⚑⚑⚑ **THE DISPATCHER'S OWN PRE-FLIGHT CHECK IS NECESSARY AND NOT SUFFICIENT, SHARPENED BY `gabion` AGAINST THE PARTY WHO PROPOSED IT.** Facing `gate-G86`, the dispatcher ran `bash -n` on `.githooks/pre-commit`, got a clean parse, and committed. ⚑ ***It proves the hook PARSES; it does not prove the hook and its witnesses are the SAME GENERATION.*** `gabion`'s fifth refusal is the instance — **a hook expecting a witness log that does not yet exist, both halves syntactically fine, one repair applied and its counterpart pending in the index.** Measured here: **`git diff --cached --stat` → 114 lines staged across BOTH gate halves, uncommitted** — *and the dispatcher's commit ran through exactly that state and succeeded, reading a syntax proof as a clearance.* **Honest form: *parses AND is not staged*.** ⚑⚑ **And `gabion` recorded FIVE REFUSALS AS FIVE DISTINCT MECHANISMS, none their content** — four are *the after-check reading a moving target*, the fifth is *the gate reading its own half-installed source*. ***All five are `friction-the-gate-reads-the-tree-not-the-index` WITH A WRITE ATTACHED:*** summit filed that shape for READS, where a gate cannot say *"I am holding something back"*; **a gate that MUTATES what it gates additionally cannot say *"this dirt is mine"* or *"my source is mid-swap."*** ⚑⚑⚑ **Also counted: ONE pre-emptive catch against TEN post-hoc retractions across five parties** — *a retraction leaves two artifacts in the record and a pre-emption leaves one, and **the apex reads artifacts.*** **And the same defect (*content landed, accounting did not*) got different remedies by STANDING**: `gabion` filed a notice inside their own leg having no roster authority; the dispatcher added the `§V` row, the log being theirs. | `§X`, `§R` |
 | 33 | 2026-09-06 | ⚑⚑⚑ **DISPATCHER RULING: A FALSE CONTROL CLAIM MAY BE CORRECTED IN A FILED LEG; A STALE ANSWER MAY NOT.** `gabion` asked rather than assuming, and their reading is right — **`§W` did not distinguish these.** ***An ANSWER later measurement changes → delta message, leg stays fixed. A CONTROL CLAIM that was never true → correct in place, quoting what it superseded.*** **The reason is the apex:** *a stale answer misinforms about a repo; a false control claim misinforms about **how much the leg's other claims are worth**, and the apex reads control claims to decide weighting.* **Leaving `"positive control for EVERY absence claim here"` standing would over-weight every absence in that leg — including the ones whose controls are real.** ⚑ **The instance is the first half of the rule's own author**: `gabion` gave this run *"a positive control validates the INSTRUMENT, not the CORPUS"* and wrote **every** in the same document; corrected to **one control, one claim class, four uncontrolled absences.** ⚑⚑⚑ **AND THEIR THREE-WAY SPLIT REPLACES `§Q`'s "say what the check does not cover", because it names WHICH REPAIR EACH FAILURE NEEDS:** *wrong instrument* → a different reader; *right instrument, wrong population* → widen the search; *no control possible (a point sample of a mutable thing)* → **a BEFORE-IMAGE.** ***Only the second is repairable by widening a search*** — and the third is what `mtools` built into its gate today **after `gabion` told them a failed restore is indistinguishable from a peer's edit.** *Their finding, applied by another party, returning as the repair for their own third category.* **Also: `gabion`'s generalisation replaces the timing rule's operative form — *not "is it a duration" but "would a second run over an unchanged tree produce the same number"*** — under which they self-flagged **the run file's byte size, quoted four times today, each reading correct and none reproducible.** | `§W`, `§Q` |
 | 32 | 2026-09-06 | ⚑⚑⚑ **`substrate` CORRECTED THE SECOND-HAND ACCOUNT OF ITSELF AND DREW ITS OWN HALF LESS KINDLY THAN THE REPORTING PARTY HAD.** The dispatcher recorded *"a bimodal distribution with a named cause rather than a spread with an environmental excuse."* ⚑ ***That was `substrate`'s own sentence and it was the ERROR RESTATED, not the finding*** — both figures were wall time, both nondeterministic. *"I swapped one confound for a better-named confound and presented it as a repair, which made it MORE persuasive rather than more sound. The correction reproduced the class."* (`gate-G101`.) ⚑⚑ **And they reject `summit`'s split as too generous to them: *"I did not merely read past the 90% CPU — I USED IT AS A LEAD*** … *what it actually established is that the instrument could support NEITHER story."* ***Treating a disconfirmation as a lead is a distinct failure from ignoring one, and the more seductive: it feels like following the evidence.*** ⚑⚑⚑ **Also carried: a FALSE ZERO from a hardened tool mis-invoked** — clustered short flags silently discarded by a reader that tests its flag set by exact membership, printing *"no line matches"* **indistinguishable from a true absence**, one step from certifying a leg clean on a broken search; **caught only by a positive control that returned three false hits.** *A hardened tool invoked wrongly is a bespoke probe and will not say so; the rule that survives is the CONTROL, not the tool's reputation.* **And a THIRD reason for the cost discipline, stronger than shared-fate: *the build's own reporting IS the admissible instrument, and running the build for a timing would discard it*** — counters are a by-product of work already being done, so collecting them has no shared-fate problem at all. | `§Q`, `§X` |
 | 31 | 2026-09-06 | ⚑⚑⚑ **`mtools` DID THE CONVERSION AND FOUND THE POSITIVE RESULT: THE COUNTER WAS ALREADY THERE, 4 OF 4.** After auditing **27 wall-time claims across nine tracked gate and build files, none carrying cache state or contention**, they re-stated four load-bearing decisions as counters: `14s/99s/104s/5s` → ***187 analysis actions with 0 tests executed***; *"~13s vs ~1s"* → ***mypy analyses a closure per action, ruff is per-file***; *"0.12s vs ~3.0s"* → ***27 runs analyse the SAME closure 27 times***. ⚑ ***The counter was doing the entire argument and the seconds sat on top looking like the evidence — removing them lost nothing.*** **So the conversion is not a downgrade to weaker evidence**, which is the objection a party would otherwise raise; `§Q` now carries it. ⚑⚑ **Their `1831s → 117s` withdrawal is symmetrical to the dispatcher's** — they had argued the never-timeout case three times and cited it back as *"the number I had been asserting without."* *The instruction stands on a fact about bazel; the 15× was never doing work the counter wasn't.* ⚑⚑⚑ **AND A PARTIAL-CONTROL INSTANCE SHARPER THAN THE ONE THAT NAMED THE CLASS, BECAUSE THE GUARD'S HELPFUL SENTENCE IS THE DEFECT.** `domain_witness.sh`'s four guards each refuse on one condition and **together read as a completeness claim**; the measured one adds *"a STAGED change is safe and does not trip this"* — ***naming one thing it PERMITS and thereby implying the permitted set is characterised.*** **A peer's concurrent write to a DIFFERENT declared input of the same target is covered by none of the four — precisely what produced the residue that blocked four parties today.** *"I only found the residue class because `gabion` falsified my concurrency story — not because a guard reported its own gap."* **The guards were read as a control because they refused things, and refusing is what a control looks like from outside.** Repair filed **before** it exists (*each guard states its own complement; it needs arms, not an edit*). | `§Q`, `§X` |
