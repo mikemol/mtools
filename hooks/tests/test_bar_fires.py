@@ -972,9 +972,33 @@ def test_the_poll_derives_the_status_table_signature() -> None:
     and whose seven legs are all in `HEAD`. ⚑ A confident refusal produced by a missing TABLE rather
     than a missing ROW — the same class as the positional `--table N` predicate this block already
     refuses, arriving through the header instead of the index.
+
+    ⚑⚑⚑ AND THE SECOND COLUMN IS NOT ALWAYS `status`, WHICH IS HOW THIS WENT BLIND AGAIN.
+    `build-hermeticity` renamed its `§S` to `party | state` at rev 27 — in the act of REPAIRING its
+    own state vocabulary — and the poll reported it `PRE-FILING` while `HEAD` held 11 legs. That
+    census's freeze is the stated dispatch trigger for TWO held runs, so the instrument that fires
+    the trigger could not evaluate the condition. ⚑ Reported by `rosettapkg`, from outside.
     """
     body = _POLL.read_text(encoding="utf-8")
-    assert "(party|surveyor) \\| status" in body, "the signature must be derived, not fixed"
+    assert "(party|surveyor|repo|leg) \\| (status|state)" in body, (
+        "the signature must range over the NOUNS AND THE STATE WORDS actually in use; "
+        "a set that covers only the headers its author had seen is a hand-written population"
+    )
+
+
+def test_the_poll_reports_an_unrecognised_status_header_rather_than_defaulting() -> None:
+    """⚑⚑⚑ AN UNMATCHED SIGNATURE MUST NOT BECOME `grep ""`, WHICH MATCHES EVERY TABLE.
+
+    Removing the `party | status` default fixes a wrong-answer defect and opens a worse one: an
+    empty `$sig` makes `grep "$sig"` match the FIRST table in the document and report its row count
+    as the roster. ⚑ Three outcomes, not two — recognised / no table at all / **a table shaped like
+    a roster under a header I do not know**. The third is the state the poll was silently in, and
+    it read as the second. The arm also PRINTS the headers it found, so the set above is widened by
+    measurement rather than by another guessed literal.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "§S UNRECOGNISED, not absent" in body
+    assert 'if [ -n "$sig" ]; then' in body, "the empty signature must be branched on, not used"
 
 
 def test_the_poll_distinguishes_a_missing_status_table_from_a_short_one() -> None:

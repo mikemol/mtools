@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-poll-reports-an-unrecognised-status-header-rather-than-defaulting,
+  section = {bar-fires},
+  claim   = {AN UNMATCHED SIGNATURE MUST NOT BECOME grep "" — three outcomes, not two: recognised / no table at all / a roster-shaped table under a header I do not know},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_reports_an_unrecognised_status_header_rather_than_defaulting}
+}
+
 @misc{hooks-bar-fires-poll-distinguishes-a-missing-status-table-from-a-short-one,
   section = {bar-fires},
   claim   = {IT MANUFACTURED A DELETION CLAIM ABOUT A TABLE NOBODY HAD WRITTEN},

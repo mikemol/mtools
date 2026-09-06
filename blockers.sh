@@ -221,10 +221,36 @@ else
     #
     # ⚑ SO THE STATUS TABLE IS IDENTIFIED BY ITS SECOND COLUMN, which is the property that makes
     # it the status table, rather than by the noun a given run file happened to choose for parties.
-    sig=$("$md" tables "$census" 2>/dev/null | grep -oE '(party|surveyor) \| status' | head -1)
-    [ -n "$sig" ] || sig='party | status'
-    roster=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
-    tbl=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE 'table [0-9]+' | grep -oE '[0-9]+')
+    # ⚑⚑⚑ AND THE SECOND COLUMN IS NOT ALWAYS SPELLED `status` — THIS BLOCK WENT BLIND BECAUSE THE
+    # CENSUS IT WATCHES IMPROVED. `build-hermeticity` renamed its §S to `party | state` at rev 27,
+    # in the act of REPAIRING its own state vocabulary, and this poll reported it `PRE-FILING` while
+    # HEAD held 11 legs. MEASURED: `mdstruct tables` shows `table 8  12 row(s) x 2 col(s)
+    # party | state`. ⚑ The freeze of that census is the stated dispatch trigger for TWO held runs
+    # (`remaining-work`, `backlog`), so the instrument that fires the trigger could not evaluate the
+    # condition, and both would have waited on a reading that never changes.
+    # ⚑⚑ FOUND BY `rosettapkg`, FROM OUTSIDE, against my instrument — the third consecutive defect
+    # in this poll reported by the party it misinformed rather than by me. A poll is a hand-written
+    # population of the shapes its author had seen.
+    # ⚑ So the noun is enumerated as a SET and a miss is REPORTED rather than defaulted: defaulting
+    # to `party | status` is what turned an unrecognised header into a confident PRE-FILING.
+    sig=$("$md" tables "$census" 2>/dev/null \
+        | grep -oE '(party|surveyor|repo|leg) \| (status|state)' | head -1)
+    # ⚑⚑ AN EMPTY SIGNATURE MUST NOT FALL THROUGH TO `grep ""`, WHICH MATCHES EVERY TABLE AND WOULD
+    # REPORT AN UNRELATED TABLE'S ROW COUNT AS THE ROSTER. Three outcomes, not two: recognised /
+    # no table at all / ⚑ A TABLE SHAPED LIKE A ROSTER UNDER A HEADER I DO NOT KNOW. The third is
+    # the state this poll was silently in for `build-hermeticity`, and it read as the second.
+    if [ -n "$sig" ]; then
+        roster=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
+        tbl=$("$md" tables "$census" 2>/dev/null | grep "$sig" | grep -oE 'table [0-9]+' | grep -oE '[0-9]+')
+    else
+        roster=''
+        tbl=''
+        # ⚑ Name the unrecognised headers rather than asserting absence: this is the poll's own
+        # absent-versus-unavailable line, and it now prints the evidence a reader needs to widen
+        # the set above by MEASUREMENT instead of by another guessed literal.
+        _hdrs=$("$md" tables "$census" 2>/dev/null | grep -oE '[a-z-]+ \| [a-z-]+$' | sort -u | paste -sd' · ')
+        [ -n "$_hdrs" ] && echo "  ⚑ §S UNRECOGNISED, not absent — two-column headers present: $_hdrs"
+    fi
     # ⚑⚑ A CENSUS WITH NO §S TABLE IS PRE-FILING, NOT SHORT-ROSTERED, AND THE POLL SAID SHORT.
     # MEASURED on `CENSUS-build-hermeticity.md` minutes after its dispatch: `§R` carries 9 rows and
     # no status table exists yet, so the roster count read `? of 8` and the branch below reported
