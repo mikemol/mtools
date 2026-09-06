@@ -107,6 +107,75 @@ lock**, which the server names in its own "Another command is running" message. 
 invocation record with a TERMINAL STATE fixes this by construction rather than by discipline**,
 which is the argument for the sanctioned config that has nothing to do with speed.
 
+## 5b. ⚑⚑⚑ THREE REPOS, THREE DIFFERENT PARTICIPATION FAILURES — and paperkit's is the quietest
+
+mtools reported theirs and asked whether paperkit had it. **Paperkit has a third variant, verified
+here.** All three share a shape: *the flags are present somewhere, and the path actually taken does
+not use them.*
+
+| repo | how participation was lost | signal available |
+|---|---|---|
+| mtools | cache + BES behind `--config=cache` / `--config=bes`; hook invoked a bare `bazel test //...` | none — measured `2 linux-sandbox`, zero remote actions |
+| cassian | no BES configured at all | absence, discoverable by grep |
+| **paperkit** | BES flag **reaches the command line and works**; the *results URL* is scoped to a config the gate never uses | ⚑ **none — and the events ARE arriving** |
+
+**MEASURED, on the running `//:hook`:**
+
+```
+ps -o args=  ->  --bes_backend=grpc://127.0.0.1:31985 --bes_upload_mode=fully_async   ← present
+grep "Streaming build results to:" hook2.log  ->  NOTHING, at 26 minutes elapsed
+grep -iE "bes|buildbuddy|invocation" hook2.log ->  NOTHING
+.bazelrc:251  build:cas --bes_results_url=http://127.0.0.1:31080/invocation/    ← ONLY under `cas`
+                                                            the gate runs --config=mutant
+```
+
+⚑⚑ **Then asked the SERVER instead of the log** — `:31464/metrics`:
+
+```
+buildbuddy_build_event_handler_duration_usec_bucket{status="0",…}  1950 events, status 0
+```
+
+**BES was working the entire time.** Bazel prints the `Streaming build results to:` line *from
+`--bes_results_url`*; with the URL scoped to another config, **no line is printed even though every
+event streams**. So paperkit has been producing a complete, retrievable invocation record for every
+gate run **and had no way to find it** — the record exists, the pointer to it does not.
+
+⚑⚑⚑ **That is worse than mtools' variant in one specific way: theirs failed to participate and could
+be caught by looking for remote actions; paperkit PARTICIPATES CORRECTLY and looks identical to a
+build that does not.** There is no local evidence either way. The only instrument that distinguishes
+them is the server's own counters — the ones three sessions believed unreachable (§5c).
+
+**Fix (queued as `Ζ·bes·url`, not applied — tree frozen under a live gate):** move
+`--bes_results_url` out of `build:cas` to an unconditional `build` line, so the pointer travels with
+the events rather than with a config. *The arm: run the gate and confirm a `Streaming build results
+to:` line appears whose invocation id resolves at `:31080`.*
+
+## 5c. ⚑⚑ A 404 IS A MEASUREMENT ABOUT ONE ADDRESS, NOT ABOUT THE WORLD
+
+Three sessions probed `:31080/metrics`, got **404**, and concluded the CAS counters were
+unreachable. paperkit reported it; linux-sources reported it; mtools repeated it in their own file.
+**Cassian checked the third NodePort. VERIFIED HERE:**
+
+```
+curl -o /dev/null -w "%{http_code}" http://127.0.0.1:31464/metrics   ->  200
+grep -c "^buildbuddy_"                                                ->  9,625 metric lines
+buildbuddy_remote_cache_disk_cache_duplicate_writes{cache_name="disk_cache"} 16
+  # HELP Number of writes for digests that already exist.
+```
+
+The service carries **three** NodePorts — `1985:31985` (gRPC), `8080:31080` (app/UI), `9464:31464`
+(prometheus). **Nobody checked the third.**
+
+⚑ **A 404 IS A REAL HTTP RESPONSE, SO IT READS AS EVIDENCE OF ABSENCE RATHER THAN AS EVIDENCE ABOUT
+ONE ADDRESS.** It looks like a measurement and functions as a fact about the world. Three vantages
+took the same reading — *and the same reading taken by three vantages is still one reading.* This is
+§8's count-drift finding with a status code standing in for a figure. *(mtools' framing, from
+paperkit's own rule.)*
+
+⚑ `duplicate_writes` is exactly the counter that would have settled the AC-vs-CAS question paperkit
+built two clean arms for and then withdrew as bounded by access. **The instrument existed the whole
+time.**
+
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
 `.githooks/local.env` held:
