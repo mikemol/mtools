@@ -9,11 +9,14 @@ the shape table cannot lie in either direction without the selftest failing.
 
 from __future__ import annotations
 
+import io
+import sys
+from contextlib import redirect_stdout
 from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.mdstruct import ast, verify
+from mikemol.mdstruct import ast, cli, verify
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -122,3 +125,66 @@ def test_render_headings_returns_one_entry_per_input() -> None:
     with an empty string rather than dropping out and shifting every later pairing.
     """
     assert ast.render_headings(["# A", "#not a heading", "## B leg"]) == ["A", "", "B leg"]
+
+
+_RC_USAGE = 2
+
+
+def _run_cli(*args: str) -> int:
+    """Invoke the CLI's verify mode in-process.
+
+    Returns:
+        the exit code `cli.main()` produced for this invocation.
+
+    """
+    argv = ["mdstruct", "verify", *args]
+    old = sys.argv
+    sys.argv = argv
+    try:
+        return cli.main()
+    finally:
+        sys.argv = old
+
+
+def test_verify_takes_many_paths_without_repeating_the_first(tmp_path: Path) -> None:
+    """⚑⚑⚑ SLICING `argv[2:]` VERIFIED THE FIRST FILE TWICE, AND A DUPLICATE PASS IS INVISIBLE.
+
+    `verify` grew a multi-path form so a caller pays one interpreter startup rather than one per
+    file. The first implementation built its list as `[path, *argv[2:]]` — but `argv[2:]` already
+    CONTAINS that path, so a single-path invocation checked the same document twice and printed the
+    same green line twice. ⚑ MEASURED on the single-path arm, which is the only reason it was
+    caught: in a green run a duplicate PASS looks exactly like a pass.
+    """
+    good = tmp_path / "good.md"
+    good.write_text("# A\n\ntext\n\n## B plain\n\nmore\n", encoding="utf-8")
+
+    out = io.StringIO()
+    with redirect_stdout(out):
+        rc = _run_cli(str(good))
+    assert rc == 0
+    assert out.getvalue().count(str(good)) == 1, "a single path must be verified exactly once"
+
+
+def test_verify_reports_a_failure_that_a_later_success_would_mask(tmp_path: Path) -> None:
+    """⚑⚑ A BATCHED CHECK THAT STOPS AT THE FIRST VERDICT IS A GATE THAT REPORTS ONE FILE.
+
+    The multi-path form must verify EVERY path and return the worst verdict, in both orders — a
+    failure first, and a failure last behind a success. ⚑ The second is the masking case: returning
+    the LAST file's status would let one clean document certify a corrupt one.
+
+    The defective fixture is a heading swallowed by an HTML block, chosen because the shape table
+    carries no known-unreachable rows any more — an earlier fixture built from the apostrophe
+    defect verified CLEAN, since that defect has been repaired, and would have passed these arms
+    for the wrong reason.
+    """
+    good = tmp_path / "good.md"
+    good.write_text("# A\n\ntext\n\n## B plain\n\nmore\n", encoding="utf-8")
+    bad = tmp_path / "bad.md"
+    bad.write_text("# A\n\n<div>\n\n## B swallowed\n\n</div>\n\n## C plain\n", encoding="utf-8")
+
+    out = io.StringIO()
+    with redirect_stdout(out):
+        assert _run_cli(str(bad), str(good)) == 1, "a failure first must survive a later success"
+        assert _run_cli(str(good), str(bad)) == 1, "a failure LAST must not be masked by the first"
+        assert _run_cli(str(good), str(tmp_path / "absent.md")) == _RC_USAGE, (
+            "a missing path escalates")

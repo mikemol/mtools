@@ -471,6 +471,18 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_render_headings_returns_one_entry_per_input}
 }
 
+@misc{md-verify-takes-many-paths-without-repeating-the-first,
+  section = {verify},
+  claim   = {Slicing argv[2:] verified the FIRST file twice, and a duplicate PASS is invisible in a green run},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_verify_takes_many_paths_without_repeating_the_first}
+}
+
+@misc{md-verify-reports-a-failure-a-later-success-would-mask,
+  section = {verify},
+  claim   = {A batched check must return the WORST verdict over every path, in both orders: a clean document must not certify a corrupt one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_verify_reports_a_failure_that_a_later_success_would_mask}
+}
+
 @misc{md-verify-selftest-fires-when-the-table-lies,
   section = {verify},
   claim   = {A shape table asserting the OPPOSITE of the truth makes the selftest FAIL, in both directions --- a row claiming a swallowed shape is reachable trips the P-arm, and a row claiming a reachable shape is swallowed trips the F-arm. This is the contract's own F-arm: without it the selftest could be green because it is aimed at the wrong predicate, which is the class this repo paid for twice in one day. A configured-but-inert gate fires on nothing and is eventually noticed; an ACTIVE gate aimed at the wrong predicate produces findings, passes review, and its greens are indistinguishable from correct ones},

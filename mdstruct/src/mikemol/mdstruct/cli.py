@@ -293,13 +293,8 @@ def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     return _lint(path, argv)
 
 
-def _verify_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
-    """Assert this tool's own contract: every source heading reaches the section list.
-
-    ⚑ A TOOL OWES A SELF-ASSERTING CONTRACT. `lint` and `roundtrip` both report green on a
-    document this tool silently corrupts, so neither can stand in for this. Run it on a document
-    before trusting a bounded write into that document.
-    """
+def _verify_one(path: Path) -> int:
+    """Verify one document. Returns 0 when every heading reaches the section list."""
     missing = verify.missing_headings(path)
     if not missing:
         sys.stdout.write(f"  {path}: every source heading reaches the section list\n")
@@ -311,6 +306,45 @@ def _verify_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
         f"  {len(missing)} heading(s) in {path} are unreachable. A bounded write against the "
         "PRECEDING section would land inside one of them.\n")
     return 1
+
+
+def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
+    """Assert this tool's own contract: every source heading reaches the section list.
+
+    ⚑ A TOOL OWES A SELF-ASSERTING CONTRACT. `lint` and `roundtrip` both report green on a
+    document this tool silently corrupts, so neither can stand in for this. Run it on a document
+    before trusting a bounded write into that document.
+
+    ⚑⚑⚑ IT TAKES MANY PATHS BECAUSE THE GATE PAID ONE INTERPRETER STARTUP PER FILE. The pre-commit
+    hook loops over every committed markdown file and spawns a fresh `python3 -m` for each —
+    MEASURED: 68 files, 1,972,369 bytes, 68 startups to check 1.9MB. ⚑ And the domain is *every
+    committed markdown file*, not the ones a commit touches, so the work grows every time any party
+    files a census leg: 32 files when the loop was written, 68 now. **That is not a slowdown, it is
+    a domain that expands with the corpus.**
+
+    ⚑⚑ ONLY THE INTERPRETER IS BATCHED, NOT THE DOMAIN. Narrowing to staged files would trade a
+    corpus-wide invariant for a per-commit one — and the defect this mode exists for was found in a
+    file NOBODY HAD STAGED, corrupted by another party's write. Same verdict over the same set,
+    one startup instead of N.
+
+    ⚑ EVERY PATH IS VERIFIED BEFORE RETURNING: the loop does not stop at the first failure, because
+    a gate that reports one finding per run teaches one finding per round — the same
+    information-per-refusal argument `preflight.sh` is built on.
+    """
+    # ⚑ `argv[2:]` STILL CONTAINS THE FIRST PATH, and slicing it naively verified that file TWICE.
+    # MEASURED on the single-path arm — `verify README.md` printed the same green line twice — which
+    # is why the arm exists: a duplicate PASS is invisible in a green run and would have doubled the
+    # gate's first file forever. Positional args after the mode are `args[1:]`; `path` is `args[1]`.
+    positional = [a for a in argv[1:] if not a.startswith("-")]
+    paths = [path, *(Path(p) for p in positional[2:])]
+    worst = 0
+    for candidate in paths:
+        if not candidate.exists():
+            sys.stderr.write(f"mdstruct: no such file: {candidate}\n")
+            worst = max(worst, 2)
+            continue
+        worst = max(worst, _verify_one(candidate))
+    return worst
 
 
 def _narrowest_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
