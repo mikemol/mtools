@@ -18,6 +18,30 @@
 set -euo pipefail
 
 root="$(git rev-parse --show-toplevel)"
+
+# ⚑⚑⚑ THIS GATE'S FAILURE SURFACE IS WIDER THAN YOUR COMMIT, AND IT SAYS SO BEFORE IT RUNS.
+# Filed as BINDING by the constitution apex (`AX-03d`), against mtools' own filing of it as local.
+# mtools recorded that the cost does not land only on mtools and kept the rule local anyway,
+# reasoning that seven sessions sharing one working tree is a deployment fact rather than a
+# property of the rule. That is sound for the RULE and left the binding half unfiled.
+#
+# The mechanism: the domain witnesses below mutate the REAL file, because a witness over a copy
+# proves the copy's domain. So this gate reads the whole tree, and a peer's in-flight edit
+# refuses YOUR scoped, correct commit. Measured: `paperkit` and `substrate` each had one refused
+# by mtools' uncommitted mdstruct work, and both correctly declined `--no-verify`.
+#
+# ⚑⚑ SO BOTH PEERS PAID FOR A SCOPE THEY HAD NOT CONSENTED TO AND COULD NOT OBSERVE — cassian's
+# `CO-L4` (*an actor that mutates state SHARED with parties who did not consent must not do so
+# unilaterally*) arriving on a gate's refusal surface. The announcement below is the consent half:
+# it cannot narrow the surface, and it makes it observable before the 130s is spent rather than
+# after, so a refusal naming someone else's file is legible instead of mystifying.
+if [ -n "$(git status --porcelain --untracked-files=no 2>/dev/null | grep -v '^[MARCD] ' || true)" ]; then
+    printf 'pre-commit: ⚑ THIS GATE READS THE WHOLE TREE, NOT YOUR PATHSPEC.\n'
+    printf '  Unstaged changes are present. If this commit is refused for a file you did not\n'
+    printf '  touch, that is this gate'"'"'s scope and not your defect — the domain witnesses\n'
+    printf '  mutate real files, so the tree is the subject. Dirty, excluding your staged set:\n'
+    git status --porcelain --untracked-files=no 2>/dev/null | grep -v '^[MARCD] ' | sed 's/^/    /'
+fi
 cd "$root"
 
 fail=0
