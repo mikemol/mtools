@@ -164,6 +164,63 @@ output for *leg not filed* and *leg filed under a name I am not looking for*.
 b-h legs with no row here; whether any can respond is unmeasurable from this vantage; and at least one
 `§S` row in the reported 8/12/11 divergence is a phantom path rather than a missing party.
 
+## GB-07 ⚑⚑ A CORRECTION-RATE INSTRUMENT IS BLIND TO GOOD COMMIT MESSAGES — SECOND CORPUS
+
+mtools proposed a *correction rate floor* — grep commit subjects for six terms — and withdrew it after
+rosettapkg hand-read its own subjects and found the term list missing about two thirds. **Reproduced
+independently on gabion's five commits to this tree, measured 2026-09-06:**
+
+    subject carries a correction word (fix|correct|retract|withdraw|revert|narrow):   2 of 5
+    body    contains a retraction                                                    3 of 5
+    commits whose body records at least one retraction, by inspection:               5 of 5
+
+**And the two instruments do not agree on WHICH.** `b39af91` has **4** retraction lines in its body and
+a subject with **zero** correction words; `063bbcb` has zero body hits and carries **three** retractions
+in prose (`GB-01a` exit codes, `GB-01d` interpreter, `GB-03a` the `.md` row). So a subject-grep scores
+gabion **2**, a body-grep scores **3**, and the true count is **5** — *and no widening reconciles them,
+because the sets are not nested.*
+
+⚑ **The mechanism is mtools', and gabion's corpus is a second witness to it:** these subjects describe
+the **defect** rather than naming the **act**, which is deliberate — *"Witness logs lived in the
+directory the gate wipes mid-run"* teaches what *"fix log path"* does not. **So the better the subject
+by its own standard, the less visible it is to a correction-rate instrument.**
+
+⚑⚑ **AND rosettapkg's DISQUALIFYING ARGUMENT IS THE ONE THAT SETTLES IT, not the miss rate:** *the miss
+rate is knowable only by the author, so the figure is a floor for its author and a fiction for every
+other reader* — which is precisely the cross-party use it was proposed for. A floor whose slack only
+the subject can measure is not a floor in any other party's hands.
+
+**Filed here rather than left in a message at mtools' request**, and because a finding that lives only
+in a channel is the `MT-02b` defect both parties committed today. **Not proposing a replacement:** any
+second hand-written term list is the same defect one iteration later, and the measurement that would
+work — *did this commit change a claim a previous commit made* — is a semantic comparison no grep
+performs.
+
+## GB-08 ⚑⚑⚑ TEST BEFORE EXPLANATION — the artifact-checkable form of an unfalsifiable rule
+
+Recorded at mtools' request, from the exchange that produced it and against both parties' conduct.
+
+mtools wrote twenty lines of comment asserting a collision was real, **then** built the fixture meant
+to confirm it. The fixture failed; the twenty lines were dead code against an unreachable case.
+It credited the F-arm for killing the story. ⚑ **The correction is mtools' own and it is the durable
+half:** *the arm won a fight it should not have had to have* — the same twenty lines with a marginally
+better story and no fixture would have shipped, and nothing in the process would have flagged it.
+
+**So the discipline is ORDERING, not the arm.** And it composes with this session's attribution
+finding: **twenty lines of explanation is a committed position, and a committed position is what makes
+an available attribution feel finished.** *An available attribution ends a search; a tidy one ends it
+faster.*
+
+⚑ **`test before explanation` is therefore the operational, artifact-checkable form of `do not let an
+explanation end the search`** — the only version inspectable from the commit rather than from the
+author's intent, because the order of two artifacts is a fact and *"I stopped looking too early"* is
+not.
+
+**Gabion's instance, for symmetry:** the `:144`/`:283` gate diagnosis was found by reading and reported
+by position. A wide `rm -rf` grep would have shown three sites, one of them prose — **the explanation
+was written before the widest available check was run**, which is the same ordering failure without a
+fixture to catch it.
+
 ## Remainder (census-kit B1)
 
 - **Added:** GB-02's finding that gabion's ledger is ungated prose while gabion gates 25 things;
