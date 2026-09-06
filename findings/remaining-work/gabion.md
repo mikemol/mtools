@@ -134,11 +134,35 @@ because it was mtools' tree — **never paperkit, whose files they are.** paperk
 
 ## Roster nomination (brief §0)
 
-⚑ **Four parties filed on `build-hermeticity` and have no live session I can see:** `el-openglo`,
-`gcalculus`, `memory-concepts`, and paperkit's second leg. `§R` here lists 8 surveyors against
-build-hermeticity's 11 filed legs. **The three missing are `no response` candidates rather than
-`nothing to report`**, and if `§S` does not distinguish them a silence reads as a zero — this venue's
-absent-vs-unavailable defect applied to its own roster.
+⚑⚑ **CORRECTED — THIS NOMINATION CARRIED TWO DEFECTS OF ITS OWN, AND BOTH ARE THE CLASS IT
+NOMINATES ABOUT.** As first filed: *"Four parties filed on `build-hermeticity` and have no live
+session I can see: `el-openglo`, `gcalculus`, `memory-concepts`, and paperkit's second leg... The
+three missing are `no response` candidates."*
+
+**Defect 1 — paperkit HAS a live session.** `paperkit-20` was in continuous exchange with gabion while
+that sentence was written, and is the party that refuted two of this session's claims. Not a stale
+reading — **contradicted by the channel I was using to write it.**
+
+**Defect 2 — "Four parties" then "the three missing", in one sentence.** An internal inconsistency that
+survived my own re-read. Neither number was measured; I counted table rows and did not recount after
+naming them.
+
+**Measured now:** `§R` of this run file lists **8** surveyors; `findings/build-hermeticity/` holds
+**11** legs in `HEAD`. The three delegates with b-h legs and no row here are `el-openglo`,
+`gcalculus`, `memory-concepts`. **Live-session status is unmeasurable for any of them** — `ListAgents`
+reports who is listening at the instant it is asked, which is this floor's own tristate: *not spawned,
+crashed, and finished normally are three worlds behind one empty slot.*
+
+⚑⚑⚑ **AND THE ROSTER DEFECT UNDER IT IS WORSE THAN A MISCOUNT** (mtools' measurement, verified here):
+b-h's `§R` names `findings/build-hermeticity/paperkit.md`, **a path that has never existed in `HEAD`**
+— `git log -- paperkit.md` returns nothing, while the real leg has sat at
+`paperkit-build-hermeticity.md` since `41dc1c3`. **So a population count over that roster has no
+fixpoint against the tree and cannot converge by re-polling.** An unadmitted-leg check emits identical
+output for *leg not filed* and *leg filed under a name I am not looking for*.
+
+**The honest form of this nomination is therefore a refusal to state a count:** three delegates hold
+b-h legs with no row here; whether any can respond is unmeasurable from this vantage; and at least one
+`§S` row in the reported 8/12/11 divergence is a phantom path rather than a missing party.
 
 ## Remainder (census-kit B1)
 
