@@ -133,9 +133,30 @@ defect and also cannot have the guarantee.*
   `py=3.13`) and **fails on corpus drift** — but ⚑ *reporting a resolution is not proving one.* **A
   stamp is an observation; a build artifact is a constraint.** This repo has the observation.
 
-⚑ **What I proved rather than declared, and the distinction the census asks for:** every gate arm
-here was **exercised**, not asserted — population (planted a file), drift (poisoned a pin), tree-move
-(edited mid-run), each with a restore. **An unexercised arm is a configuration, not a gate.**
+⚑ **What I proved rather than declared, and the distinction the census asks for:** ⚑⚑ **CORRECTED
+IN PLACE 2026-09-06 per `§V` rev 33** — *a control claim that was never true is corrected in the leg,
+quoting what it superseded; a stale answer is not.*
+
+> **SUPERSEDED:** *"**every** gate arm here was **exercised**, not asserted — population (planted a
+> file), drift (poisoned a pin), tree-move (edited mid-run), each with a restore."*
+
+**That was false when filed.** Three arms were exercised; the gate emits **seven** verdicts, and
+⚑ **`SPLICED` — the only verdict that FAILS THE RUN — had never been demonstrated firing.** The leg's
+hard-fail arm was the unexercised one, in the sentence claiming every arm was exercised.
+
+**Exercised now, and the first attempt failed informatively:**
+
+```
+splice two real, NON-ADJACENT lines in upstream order   ->  ELIDED, rc=0   ⚑ not caught
+REVERSE two real adjacent lines                         ->  SPLICED=1, rc=1
+  "line out of order upstream: 'if (!new_waitees.empty()) {'"
+restore                                                 ->  rc=0
+```
+
+⚑ **So the corrected claim is narrower and true:** four arms exercised — population, drift, tree-move,
+splice — **and `SPLICED` catches REORDERING, not omission**, because `ELIDED` accepts real lines in
+upstream order by design. `MISSING`, `NO-ANCHOR` and `STALE-PATH` fire in normal runs and are
+observed, not planted. **An unexercised arm is a configuration, not a gate** — and I had one.
 
 ## `RP-09` — Solved / declined
 
