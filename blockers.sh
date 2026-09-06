@@ -177,7 +177,19 @@ else
     fi
     pending=$("$md" rows "$census" --col 1 --starts "in progress" 2>/dev/null \
         | grep -cE "^  table ${tbl} ")
-    printf '  roster: %s of 6 parties listed; %s non-terminal\n' "${roster:-?}" "${pending:-?}"
+    # ⚑⚑⚑ THE EXPECTED SIZE IS DERIVED FROM §R, NOT HARDCODED. The roster grew to seven when the
+    # operator added `summit` at rev 21, and this script reported `7 of 6 — the roster is SHORT`,
+    # which INVERTS ITS OWN EVIDENCE: the count exceeded the target and the string said deficit.
+    # ⚑ Not an off-by-one — a predicate whose comparison could not represent the case that
+    # occurred, so it fell through to the wrong branch and asserted with confidence.
+    #
+    # ⚑⚑ §R IS THE AUTHORITY AND CARRIES THE APEX AS AN EXTRA ROW. Measured: §R has 8 rows to §S's
+    # 7, and the difference is exactly the apex line, which is not a surveying party. So expected
+    # = |§R| - 1, and the identity survives every future dispatch without an edit here.
+    expected=$(( $("$md" tables "$census" 2>/dev/null | grep 'surveyor | prefix' \
+        | grep -oE '[0-9]+ row' | grep -oE '[0-9]+') - 1 ))
+    printf '  roster: %s of %s parties listed; %s non-terminal\n' \
+        "${roster:-?}" "${expected:-?}" "${pending:-?}"
     # ⚑⚑ BOTH ARMS MEASURED, on constructed fixtures, before this was trusted:
     #   all six terminal            -> roster=6 pending=0 -> FROZEN      (the poll CAN fire)
     #   cassian's §S row deleted    -> roster=5 pending=0 -> caught here (the pending check
@@ -185,12 +197,22 @@ else
     # ⚑ The second arm is the peer's finding and it is the one a "can I make this fail" probe
     # misses: nothing about a deleted row is a bad STATUS, so you only find it by asking what
     # ELSE produces "nothing non-terminal".
-    if [ "${roster:-0}" -ne 6 ]; then
+    if [ "${roster:-0}" -ne "${expected:-0}" ]; then
         echo "  NOT FROZEN — and the roster is SHORT: a dropped row reads as terminal"
     elif [ "${pending:-1}" -ne 0 ]; then
         echo "  NOT FROZEN — a party is still non-terminal; the embargo holds"
     else
-        echo "  ⚑ FROZEN — every party terminal over a whole roster. Cross-reading is now the point."
+        # ⚑⚑⚑ THE ROSTER CONDITION IS NECESSARY AND NOT SUFFICIENT. §G is explicit: the freeze
+        # is a ROW IN §V reading `FREEZE CALLED`, and a message is a courtesy rather than the
+        # event. Measured the moment the roster went terminal: no such row exists and §S's own
+        # heading still reads NOT YET CALLED. ⚑ A satisfied precondition read as the event is this
+        # repository's own green-over-nothing, in the poll that exists to refuse it.
+        if "$md" rows "$census" --col 2 --starts "FREEZE" >/dev/null 2>&1; then
+            echo "  ⚑ FROZEN — roster terminal AND §V carries the row. Cross-reading is the point."
+        else
+            echo "  NOT FROZEN — the roster condition is met, but §V carries no FREEZE CALLED row."
+            echo "    That is the coordinator's to declare; a met precondition is not the event."
+        fi
     fi
 fi
 
