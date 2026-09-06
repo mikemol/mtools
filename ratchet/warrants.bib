@@ -161,3 +161,27 @@
   claim   = {An EMPTY `__init__.py` is a build artifact and does not enter the census. rules_python writes one at every level of a runfiles tree so it is importable; none exist in the source tree, and `src/mikemol/__init__.py` is the file PEP 420 forbids here outright because it would make the first-installed distribution the exclusive owner of the `mikemol` prefix. MEASURED: the first honest run of the bazel ratchet gate REFUSED 8 keys, all from these --- the census was correct about what it saw, and what it saw was not the distribution. THE DISCRIMINATOR IS EMPTINESS, NOT THE NAME: a first cut excluded every `__init__.py` and over-excluded, because mdstruct's own package marker exists, carries content, and legitimately held a key, so dropping it PAID DOWN REAL DEBT by accident. That is the mirror defect --- a domain too NARROW, which serves a stale green rather than failing loudly},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_synthesized_package_marker_is_not_censused}
 }
+
+@misc{ratchet-membership-move-is-not-growth,
+  section = {membership},
+  claim   = {A relocated finding is a MOVE, not growth. A rename is content-preserving but KEY-CHANGING --- the old key retires and a new one is minted for a byte-identical finding --- so a set ratchet sees "a key appeared" and refuses, and because it returns on `added` BEFORE reaching the paydown branch, the churn also stops real paydown from recording. The act of reorganising a tree then makes every gate over it read as growth while the credit that reorganisation earns cannot be banked. MEASURED here before the repair, one `git mv` of lint.py to linting.py with no content change: "1 new key REFUSED" AND "1 key paid down" in the same run. THE IDENTITY IS EVERY FIELD EXCEPT THE PATH --- the design a peer arrived at over a per-gate key schema where which field holds the path differs by gate; mtools' grammar is fixed at `path:rule`, so the identity is just the rule and the schema machinery has no counterpart here. The concept transfers; the modules would have solved a problem this repository does not have},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_relocated_finding_is_a_move_not_growth}
+}
+
+@misc{ratchet-membership-move-lowers-the-baseline,
+  section = {membership},
+  claim   = {A move lowers the baseline. Otherwise the next run refuses the same relocation again --- blocking a reorganisation PERMANENTLY rather than once, which is the defect the whole distinction exists to remove},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_move_lowers_the_baseline}
+}
+
+@misc{ratchet-membership-different-rule-is-growth,
+  section = {membership},
+  claim   = {A different rule at a new path is GROWTH, not a move. The identity is the rule, so only a matching rule pairs --- a different finding at a different path is two facts rather than one relocated one, and absorbing it as a move would be the ratchet weakened rather than sharpened},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_different_rule_at_a_new_path_is_growth}
+}
+
+@misc{ratchet-membership-move-with-growth-still-refuses,
+  section = {membership},
+  claim   = {Recognising a move must not launder the growth beside it --- a run that both relocates and grows still REFUSES and writes nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_move_alongside_growth_still_refuses}
+}

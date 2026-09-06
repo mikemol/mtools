@@ -153,3 +153,46 @@ def test_each_state_declares_two_independent_properties(
     """
     assert state.is_defect is is_defect
     assert state.deserves_mark is deserves_mark
+
+
+def test_a_relocated_finding_is_a_move_not_growth(tmp_path: Path) -> None:
+    """A rename is content-preserving but KEY-CHANGING, and must not read as new debt.
+
+    ⚑⚑⚑ CONFLATING A MOVE WITH GROWTH BLOCKS THE DRAIN THAT EARNS THE PAYDOWN. The old key
+    retires and a new one is minted for a byte-identical finding; a set ratchet sees "a key
+    appeared" and refuses — and because it returns on `added` before reaching the paydown
+    branch, the churn also stops real paydown recording. MEASURED before this existed, one
+    `git mv` of lint.py: `1 new key REFUSED` AND `1 key paid down`, for no content change.
+    """
+    path = _base(tmp_path, {"a.py:rule1"})
+    code, lines = ratchet({"b.py:rule1"}, path, write=False)
+    assert code == 0
+    assert any("MOVED" in line for line in lines)
+
+
+def test_a_move_lowers_the_baseline(tmp_path: Path) -> None:
+    """A move lowers the baseline.
+
+    ⚑ Else the next run refuses the same relocation again, blocking a reorganisation
+    permanently rather than once — which is the defect the distinction exists to remove.
+    """
+    path = _base(tmp_path, {"a.py:rule1"})
+    assert ratchet({"b.py:rule1"}, path, write=True)[0] == 0
+    assert read_baseline(path)[1] == frozenset({"b.py:rule1"})
+
+
+def test_a_different_rule_at_a_new_path_is_growth(tmp_path: Path) -> None:
+    """A different rule at a new path is growth, not a move.
+
+    ⚑ THE IDENTITY IS THE RULE, so only a matching rule pairs. A different finding at a
+    different path is two facts, not one relocated one — and absorbing it as a move would be
+    the ratchet weakened rather than sharpened.
+    """
+    assert ratchet({"b.py:rule2"}, _base(tmp_path, {"a.py:rule1"}), write=False)[0] == 1
+
+
+def test_a_move_alongside_growth_still_refuses(tmp_path: Path) -> None:
+    """⚑ Recognising the move must not launder the growth beside it."""
+    path = _base(tmp_path, {"a.py:rule1"})
+    assert ratchet({"b.py:rule1", "c.py:new"}, path, write=True)[0] == 1
+    assert read_baseline(path)[1] == frozenset({"a.py:rule1"})

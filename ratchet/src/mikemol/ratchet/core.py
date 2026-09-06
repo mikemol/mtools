@@ -39,12 +39,41 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
+# ⚑⚑⚑ A MOVE IS NEITHER GROWTH NOR PAYDOWN, AND CONFLATING IT WITH GROWTH BLOCKS THE DRAIN THAT
+# EARNS THE PAYDOWN. A rename is content-preserving but KEY-CHANGING: the old key retires and a new
+# one is minted for a byte-identical finding. A set ratchet sees "a key appeared" and refuses — and
+# because it returns on `added` BEFORE reaching the paydown branch, the churn also stops real
+# paydown from recording. So the act of reorganising a tree makes every gate over it read as
+# growth, and the credit that reorganisation earns cannot be banked.
+#
+# MEASURED HERE, one `git mv` of `lint.py` -> `linting.py`, no content change:
+#
+#     1 new key(s) REFUSED:        + src/mikemol/mdstruct/linting.py:docstring-missing-returns
+#     1 key(s) paid down:          - src/mikemol/mdstruct/lint.py:docstring-missing-returns
+#
+# ⚑⚑ THE IDENTITY IS EVERY FIELD EXCEPT THE PATH. That is the design a peer arrived at over a
+# per-gate key schema, where which field holds the path differs by gate and one census even emits
+# `name::relpath` with the path SECOND. mtools' grammar is fixed — `path:rule` — so the identity is
+# just the rule, and the schema machinery that peer needs has no counterpart here. The CONCEPT
+# transfers; the modules would have been a solution to a problem this repository does not have.
+def _identity(key: str) -> str:
+    """Return the part of a key that survives a move: everything but the path.
+
+    ⚑ `rsplit`, NOT `split` — a path may contain colons and the rule never does, so the LAST field
+    is the identity and the rest is the path. Splitting from the left would take a directory as
+    the identity for any path carrying one.
+    """
+    _path, _, rule = key.rpartition(":")
+    return rule or key
+
+
 @dataclass(frozen=True, slots=True)
 class Diff:
     """One census against its baseline, partitioned into three independent verdicts."""
 
     added: frozenset[str]
     paid: frozenset[str]
+    moved: frozenset[tuple[str, str]] = frozenset()
 
     @property
     def grew(self) -> bool:
@@ -77,7 +106,19 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
 def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
     """Split the census against its baseline into growth and paydown."""
     cur, base = frozenset(current), frozenset(baseline)
-    return Diff(added=frozenset(cur - base), paid=frozenset(base - cur))
+    added, paid = cur - base, base - cur
+
+    # ⚑ A KEY IS A MOVE WHEN A RETIRED KEY SHARES ITS IDENTITY. Pairing is by identity alone, so a
+    # finding that relocates is neither new debt nor discharged debt — the debt still exists and
+    # the total did not rise.
+    paid_by_identity: dict[str, str] = {_identity(k): k for k in paid}
+    moved = frozenset(
+        (paid_by_identity[_identity(k)], k) for k in added if _identity(k) in paid_by_identity)
+    relocated_from = {src for src, _dst in moved}
+    relocated_to = {dst for _src, dst in moved}
+    return Diff(added=frozenset(added - relocated_to),
+                paid=frozenset(paid - relocated_from),
+                moved=moved)
 
 
 def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
@@ -131,6 +172,13 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool) -> tuple[int, li
                    "  this is a fact about the reader, not a verdict about the gate"]
     diff = partition(current, base)
     lines: list[str] = []
+    # ⚑ MOVES ARE REPORTED, NEVER SILENT. A relocation that vanished from the transcript would be
+    # indistinguishable from nothing having happened — and the whole reason to separate it from
+    # growth is that a reader needs to see the debt moved rather than infer it from two numbers
+    # that cancelled.
+    if diff.moved:
+        lines.append(f"{len(diff.moved)} key(s) MOVED (same finding, new path):")
+        lines.extend(f"  ~ {src} -> {dst}" for src, dst in sorted(diff.moved))
     if diff.added:
         lines.append(f"{len(diff.added)} new key(s) REFUSED:")
         lines.extend(f"  + {key}" for key in sorted(diff.added))
@@ -143,6 +191,10 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool) -> tuple[int, li
     # ⚑ THE BASELINE IS LOWERED ONLY WHEN NOTHING GREW. Lowering alongside growth would
     # bank the paydown and lose the refusal in the same run, so a mixed run reports both
     # and writes neither.
-    if diff.paid:
+    # ⚑⚑ A MOVE LOWERS THE BASELINE TOO, and that is the point of separating it. The debt did not
+    # change; its address did. Leaving the baseline unwritten would make the next run refuse the
+    # same relocation again — the ratchet would block a reorganisation permanently rather than
+    # once, which is the defect this whole distinction exists to remove.
+    if diff.paid or diff.moved:
         write_baseline(path, current, write=write)
     return 0, lines or [f"baseline {state}: {len(base)} key(s), unchanged"]
