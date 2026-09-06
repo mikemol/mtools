@@ -165,10 +165,22 @@ would notice. **A per-repo hermeticity answer cannot see any of this.**
    three."* Report `ps -o args=` on a real invocation, not a `.bazelrc` reading. **A config file
    is what you declared; the process is what ran.**
 
-3. **⚑⚑⚑ DYNAMIC WORK DISCOVERY — where does your work list COME FROM?** Hand-written, or
-   **derived** from a source of truth? If derived: **name the producer, its input, its output,
-   the fan-out** (`N` inputs → `M` units), **and what detects the derivation going STALE** — or
-   that nothing does.
+3. **⚑⚑⚑ DYNAMIC WORK DISCOVERY — is your work list DERIVED or AUTHORED, and what detects
+   staleness IN EACH CASE?**
+   - **DERIVED** — answer with the **producer, its input, its output, the fan-out** (`N` inputs →
+     `M` units), **and the drift check** (a `--check`, a gate slice, a fetch-time re-read) — or
+     state that nothing detects it.
+   - **AUTHORED** — answer with **the warrant and the red-claim gate**. A hand-declared work list
+     is *not* the absence of a mechanism; going stale is a **failing claim** rather than a drift
+     report, which is a different and arguably stronger answer.
+
+   ⚑⚑⚑ **THIS PHRASING IS rev 11 AND THE PREVIOUS ONE WOULD HAVE SCORED THREE PARTIES AS ZERO.**
+   Rev 1–10 asked *"where does your work list come from"*. `gabion-e5` caught it **before
+   dispatch**, from inside the shape: *"the honest answer is 'nowhere — it is authored', which
+   reads as **absence of a mechanism** rather than a different mechanism."* **It would have hit
+   `gabion`, `substrate` and `el-openglo` — every party holding the worklist shape.** ⚑ *This
+   file's own `§Q`-3 table already said a census asking what GENERATES a work list cannot see
+   that row; the question was written anyway. A named trap is not an avoided one.*
    ⚑⚑ **THIS IS NOT *UNIQUELY* A BAZEL QUESTION — bazel is one legitimate instance, not the
    subject and not excluded.** Five mechanisms are already measured in this fleet and **no two
    are alike**, which is why the question is phrased by its ROLE rather than by any one shape:
@@ -180,7 +192,7 @@ would notice. **A per-repo hermeticity answer cannot see any of this.**
    | `substrate` (i) | ⚑⚑ **MAKEFILE GENERATION** — `gen_build_makefiles.py`, **59679 bytes**, typed stub, emits `Flat.mk` + `Makefile`, carries `--check` reporting `stale:` | ⚑ **the import DAG, source-parsed** (`parse_tree()`) | by hand; `--check` is the drift gate |
    | `substrate` (ii) | **censuses + 9 ratchet baselines + paydown** (`gate_census.py`, `build_census.py`, `paydown_census.py`) | populations it enumerates | ⚑ **no build system at all** |
    | `substrate` (iii) | ⚑⚑ **THE WORKLIST — work planning as a GATED PAPERKIT PROJECT.** `scripts/worklist_gate.py` **67772 bytes**, `worklist.py` 35167, a `worklist_engine`, and `catalog/worklist/` holding its own **`warrants.bib` (69790 bytes)** + `paper.toml` + `WORKLIST.md` + a `.delta-cache.json` | ⚑ **the work list is ITSELF a warranted artifact** | continuously; the ledger is the cotype |
-   | `gabion` | ⚑ **wholly bespoke** *(operator-reported as substantial; unmeasured here — its leg answers)* | — | — |
+   | `gabion` | ⚑⚑ **AUTHORED, NOT DERIVED** — `docs/workstreams/*.md`, a typed registry in each doc's **YAML frontmatter** (`root`/`subqueue`/`touchpoint`/`touchsite`) lifted into an invariant graph; the graph computes *projections* (queue health, ranked cuts, blocker chains) but **the units are hand-declared** | ⚑ **nothing generates it** — and each unit **requires** a `reason` and a `reasoning.summary` | authored; staleness is a red claim |
 
    ⚑⚑⚑ **`substrate` HOLDS THREE OF THE SIX AND THEY ARE NOT VARIANTS OF EACH OTHER.** Its
    Makefile generator is **structurally the same shape as `linux-sources`' bazel generator** —
@@ -462,6 +474,8 @@ and the dispatcher will not build the apex.
 | 1 | 2026-09-06 | initial | — |
 | 2 | 2026-09-06 | ⚑⚑ **THE SUBJECT DIRECTORY IS `findings/build-hermeticity/`, NOT `findings/bazel/`, AND THE PARTY WHO PRE-FILED CHOSE BETTER THAN THE DISPATCHER.** `gabion-e5` filed `findings/build-hermeticity/gabion-build.md` (prefix `GBB-`) against **no run file**, explicitly flagged refusable, *"so gabion is on the roster by measurement rather than nomination."* Rev 1 named `findings/bazel/`. **Their framing is correct and mine was the mechanism mistaken for the subject:** the target is a **proven interpreter under enforced hermeticity**, of which bazel is one mechanism — and `§Q`-1 already invites parties with no bazel to answer from that position, which a `bazel/` path contradicts. Roster, paths and prefix adopted as they filed them. ⚑ *A dispatcher naming the subject after the tool would have produced seven legs about bazel and none about the question.* | `§R`, every path in this file |
 | 3 | 2026-09-06 | ⚑ **`§X` gains the lockfile axis, from `gabion-e5`'s question and the dispatcher's answer to it.** Their finding: gabion's `requirements.lock` is *"consumed twice and verified never"* — two `uv pip sync` lines, no `--check`, no `git diff --exit-code`, **no hashes**. They asked `linux-sources` rather than inferring from its tree. Measured answer below; **it splits into two independent properties that no single question would have separated.** | `§Q`-4, `§X` |
+| 12 | 2026-09-06 | ⚑ **rev 7 IS THE ONLY CORRECTION THAT CAUSED AN ERROR RATHER THAN FIXING ONE, AND `gabion-e5` ASKED FOR IT NOTED AS ITS OWN CLASS.** rev 6 said *"this is NOT a bazel question"*; rev 7 had to restore *"not UNIQUELY"*. ⚑⚑ ***A correction can overshoot, and the overshoot looks like compliance*** — rev 6 read as faithfully applying the operator's widening while actually excluding a legitimate instance. **The other corrections (revs 2, 5, 8, 9, 10) are the subject growing under measurement, not errors.** *Filed as a distinct shape from the rules-vs-instances classes this fleet has been collecting.* | `§V` self-reference |
+| 11 | 2026-09-06 | ⚑⚑⚑ **`§Q`-3 WOULD HAVE SCORED THREE PARTIES AS ZERO AND IS REPHRASED BEFORE DISPATCH.** `gabion-e5`, from inside the shape: asked as *"where does your work list COME FROM"*, an authored list answers *"nowhere"*, which **reads as absence of a mechanism rather than a different mechanism** — hitting `gabion`, `substrate` and `el-openglo`, every party holding the worklist shape. Rephrased to ***"is your work list DERIVED or AUTHORED, and what detects staleness in each case?"*** — derived answers with a generator plus a drift check; **authored answers with a warrant plus a red-claim gate.** ⚑ **This file's own `§Q`-3 table already said a census asking what GENERATES a work list cannot see that row, and the question was written that way anyway.** *A named trap is not an avoided one.* gabion's row added to the table as measured: `docs/workstreams/*.md`, typed YAML frontmatter registry, **nothing generates it**, and a `reason` + `reasoning.summary` are **required fields of the work packet** — the warrant is structural, not adjacent. | `§Q`-3 |
 | 10 | 2026-09-06 | ⚑⚑⚑ **SEVEN LIVE SESSIONS IS A CEILING AND THE MACHINE IS SHARED-FATE — `§X` gains a COST DISCIPLINE.** Operator: *"I'm not going to spin up vscode windows for everyone; I already have 7, and it's extremely likely the bash instance that owns vscode will get **oomkilled** … multiple vscode window child processes all parenting up through the same hierarchy."* ⚑ **So rev 9's subagent tier is the ONLY route for those twelve repos, not a fallback**, and dispatching them is work the seven existing sessions absorb. ⚑⚑ **And a load spike from any one party can take the whole hierarchy** — not N independent sessions degrading independently. **`§Q` now carries a cost rule: prefer the cheap interface; if a question needs a full build, state what it would cost and report it UNMEASURED rather than running it.** The dispatcher's own `1831s → 117s` gate run is recorded as both *the cache paid for once* (true) **and** *30 minutes of one shared machine while six sessions ran* (also true, and unrecorded at the time). | `§X`, `§Q` generally, `§R` |
 | 9 | 2026-09-06 | ⚑⚑⚑ **`§R` GAINS THREE KINDS OF PARTY, AND ONE OF THEM IS OWED NOTHING.** Operator: *"the ones without active sessions will probably need someone to dispatch subagents to look over them. **At least a couple are retired repos.**"* Measured: **7 live peer sessions** against 16 repos holding warranted artifacts. So a leg arrives three ways — **dispatched self-survey**, **subagent third-party measurement**, or **not at all (retired)**. ⚑⚑ **RETIREMENT IS RECORDED NOWHERE**: a marker sweep over the twelve returns 1 hit and it is `mat230/archive`, a *subdirectory*; `summit delegate --all` lists 20 delegates with **no retirement state at all**. *It is operator-held knowledge and the dispatcher will not guess it* — inferring activity from a tree would file a retired repo as `no response`, the exact misattribution `§G`'s vocabulary exists to prevent. ⚑ And **three of the twelve are not registered with summit at all** (`memory-concepts`, `gkr-bugs`, `vm-manual`) — the index and the population genuinely differ. ⚑⚑⚑ **A third-party leg is tagged as one and may not answer `§Q`-7 or `§Q`-9**: *what did you decline* and *what did you solve* are answerable only by the author, and a subagent reporting a decline as UNEXAMINED when the absent author held a reason is **a fabrication wearing a measurement's provenance**. | `§R`, `§Q`-7, `§Q`-9, `§G` |
 | 8 | 2026-09-06 | ⚑⚑⚑ **THE ROSTER IS HALF THE POPULATION AND `§R` SAYS SO NOW.** Operator: *"you should look around for `.bib` files all over, because a lot of them are actually cotype files."* Measured: **70 `paper.toml` projects across 16 repos**, against a roster of 8. Twelve repos hold warranted work-planning artifacts and are not on `§R` (`gcalculus`, `memory-concepts`, `gkr-bugs`, `resumes`, `mat230`, `mat260`, `vm-manual`, `sre-troubleshooting`, `el-openglo`, `mikemol.github.io`, `cassian-obs`, `memmesh`). ⚑⚑ **And two hold mechanisms rev 7 nearly called unique**: `el-openglo` has `catalog/worklist/` **and** `catalog/cotype/` — substrate's worklist shape, independently; `substrate/.claude/agents/paper.toml` makes **the agents a gated paperkit project** (`gate-oracle.bib`, 424525 bytes). ⚑ *The roster was built from "who do I talk to"; the subject is "who holds a warranted work list", and those are different populations.* `§R` marked provisional; `§D` already admits late arrivals. | `§R`, `§Q`-3 |
@@ -485,6 +499,23 @@ constitution run measured as a source of drift.*
 The freeze is an **accounting event, not a timestamp**: a row appended to `§V` reading
 `FREEZE CALLED`, and `§S` published with every party marked. A party that never filed is a
 **remainder entry**, not a silent omission.
+
+⚑⚑⚑ **AND THE FREEZE ROSTER MUST DISTINGUISH FOUR SILENCES, NOT ONE — `gabion-e5`'s catch,
+before dispatch.** With `§R` carrying three kinds of party, an undifferentiated freeze **reads
+twelve silences as twelve zeros**:
+
+| state | means | is it a zero? |
+|---|---|---|
+| `filed` | in `HEAD`, verified there rather than reported | — |
+| `no response` | ⚑ **dispatched and did not answer** | **NO.** A fact about the dispatch. |
+| `not surveyed` | ⚑⚑ **no live session; no subagent was dispatched to read the tree** | ⚑ **NO — and this is the one that reads as a zero.** *Nobody asked.* |
+| `retired` | ⚑ **no leg owed**; operator-held knowledge, recorded nowhere in any artifact | **NO.** Not an omission at all. |
+| `declined` | reached and chose not to file | — |
+
+⚑ **`not surveyed` and `nothing to report` are the same blank and opposite facts**, and twelve
+of the repos in `§R` start in that state by construction. **A freeze that does not name it
+publishes an absence claim the census never measured** — this delegate's own three-state rule
+(`present` / `UNAVAILABLE` / `absent`) applied to a roster instead of a corpus.
 
 ## §D After the freeze
 
