@@ -20,7 +20,12 @@ set -uo pipefail
 
 cd "$(dirname "$0")" || exit 1
 msg="${1:?the commit message file was not passed}"
-rules="findings/bazel/mtools.md"
+# ⚑⚑ THE CORPUS IS AN ARGUMENT SO A WITNESS CAN SUPPLY ITS OWN. Hardcoding the path made this
+# gate untestable in a sandbox: staging the real rules document as test data means every arm
+# depends on a 1,500-line file whose content changes every tick, so a test asserting "Rule 99 is
+# absent" would break the day someone writes Rule 99. A fixture the test controls asserts the
+# MECHANISM; the default keeps the gate honest in the hook, where the real corpus is the subject.
+rules="${2:-findings/bazel/mtools.md}"
 md="mdstruct/.venv/bin/mdstruct"
 
 # ⚑ THE READER'S ABSENCE IS REPORTED, NEVER SKIPPED. A missing tool that exits 0 here is the

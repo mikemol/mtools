@@ -516,3 +516,29 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_hermetic_sandbox_is_a_default_not_a_config}
 }
 
+
+@misc{hooks-bar-fires-the-citation-gate-passes-a-rule-that-exists,
+  section = {bar-fires},
+  title   = {The P-arm for the citation gate},
+  note    = {Without it every arm below passes against a gate that refuses all input. This is the
+             same pairing the header gate uses, and it is the arm most easily skipped because a
+             gate that refuses everything looks identical to a gate that refuses correctly.}
+}
+
+@misc{hooks-bar-fires-the-citation-gate-fires-on-a-rule-that-does-not-exist,
+  section = {bar-fires},
+  title   = {A citation to a rule that does not exist must refuse},
+  note    = {A commit announced Rule 23; the code, tests and warrants landed and the rule did not.
+             It stood two hours and was found by eye, from the heading sequence stepping 22 to 24.
+             A citation to a nonexistent rule reads exactly like a citation to a real one --
+             nothing is malformed, the document exists, and only following the pointer separates
+             them.}
+}
+
+@misc{hooks-bar-fires-the-citation-gate-is-silent-when-nothing-is-cited,
+  section = {bar-fires},
+  title   = {A message citing no rule must pass},
+  note    = {Most commits cite nothing. A gate that refused them would be bypassed within a day,
+             and a bypassed gate is a disarmed one -- so this arm guards the gate's own survival
+             rather than a property of the corpus.}
+}

@@ -40,13 +40,25 @@ sh_test(
     size = "small",
 )
 
+# ⚑⚑ THIS LIST HAD DRIFTED TO 8 OF 13 and the failure mode reads as a permissions problem rather
+# than a declaration one: a label for an unexported source resolves and is then REFUSED with a
+# *Visibility error*, so the natural reading is "I may not depend on that" instead of "nobody
+# exported it". Five scripts written after this list — `collect_check`, `domain_witness`,
+# `orphan_check`, `rule_citations`, `rule_freshness` — were all unreachable as data.
+# ⚑ A `glob()` is the right shape here, as it was for the shellcheck target, but it changes the
+# default visibility and that is a separate measurement; listed explicitly until then.
 exports_files([
     ".bazelrc",
     "blockers.sh",
+    "collect_check.sh",
+    "domain_witness.sh",
     "mypy_check.sh",
     "mypy_runner.py",
+    "orphan_check.sh",
     "ratchet_check.sh",
     "ruff_check.sh",
+    "rule_citations.sh",
+    "rule_freshness.sh",
     ".githooks/pre-commit",
     "setup.sh",
 ])

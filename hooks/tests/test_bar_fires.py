@@ -422,3 +422,60 @@ def test_the_hermetic_sandbox_is_a_default_not_a_config() -> None:
                  "--sandbox_add_mount_pair=/usr"):
         assert f"build {flag}" in rc, f"{flag} is not an unconditional build flag"
         assert f"build:hermetic {flag}" not in rc, f"{flag} was made opt-in"
+
+
+# ⚑⚑⚑ HOST TIER, AND THE SKIP IS A DECLARATION RATHER THAN A CONVENIENCE. `rule_citations.sh`
+# asks whether a heading exists in a markdown document — a STRUCTURAL query, which this repo's
+# routing rule assigns to `mdstruct`. That dependency is correct, not incidental: answering it
+# with `grep` is the textual fallback the hook refuses. But `mdstruct` lives in a developer venv,
+# and a witness resolving into `.venv` is the sandbox escape another test in this very file
+# exists to forbid.
+# ⚑⚑ So these arms cannot be hermetic without vendoring a reader, and pretending otherwise would
+# mean either staging a venv or weakening the gate to use `grep`. They SKIP with a stated reason
+# instead — `--strict-markers` is on, so the skip is declared and visible, never silent.
+_CITATION_GATE_READER = _DIST.parent / "mdstruct" / ".venv" / "bin" / "mdstruct"
+_needs_reader = pytest.mark.skipif(
+    not _CITATION_GATE_READER.is_file(),
+    reason="rule_citations.sh routes its heading query through mdstruct, which is host-tier",
+)
+
+
+def _citations(message: str, rules: str, tree: Path) -> int:
+    """Run the citation gate over `message` against a `rules` fixture; return its exit code."""
+    msg = tree / "msg.txt"
+    msg.write_text(message, encoding="utf-8")
+    doc = tree / "rules.md"
+    doc.write_text(rules, encoding="utf-8")
+    gate = _DIST.parent / "rule_citations.sh"
+    return subprocess.run(  # noqa: S603
+        [str(gate), str(msg), str(doc)],
+        capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
+
+
+@_needs_reader
+def test_the_citation_gate_passes_a_rule_that_exists(tree: Path) -> None:
+    """The P-arm. Without it every arm below passes against a gate that refuses all input."""
+    assert _citations("x; Rule 25\n", "## Rule 25 — real\n", tree) == 0
+
+
+@_needs_reader
+def test_the_citation_gate_fires_on_a_rule_that_does_not_exist(tree: Path) -> None:
+    """⚑⚑ The defect this gate was built for, as a permanent arm.
+
+    A commit announced `Rule 23`; the code, tests and warrants landed and the rule did not. It
+    stood two hours and was found by eye, from the heading sequence stepping 22 to 24. ⚑ A
+    citation to a rule that does not exist reads exactly like a citation to one that does —
+    nothing is malformed, the document exists, and only following the pointer separates them.
+    """
+    assert _citations("x; Rule 99\n", "## Rule 25 — real\n", tree) == 1
+
+
+@_needs_reader
+def test_the_citation_gate_is_silent_when_nothing_is_cited(tree: Path) -> None:
+    """⚑ A message citing no rule must PASS, not pass vacuously for want of a corpus.
+
+    Most commits cite nothing. A gate that refused them would be bypassed within a day, and a
+    bypassed gate is a disarmed one — so this arm guards the gate's own survival rather than a
+    property of the corpus.
+    """
+    assert _citations("an ordinary commit\n", "## Rule 25 — real\n", tree) == 0
