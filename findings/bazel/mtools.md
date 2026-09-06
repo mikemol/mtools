@@ -1801,3 +1801,48 @@ substitution is invisible because the sentence stays grammatical.
 **Not repaired in the leg.** Editing a filed leg post-hoc to name `mtools-ce` would be rewriting the
 record after the freeze roster was accounted — the change belongs in the apex's reading, not in the
 artifact. Reported to the coordinator as control flow.
+
+## Rule 30 — two gates on one working tree defeat each other's witnesses, and the fix exists in another repo
+
+**The composition seam, third finding.** Rule 28 recorded that the nine witnesses cannot run in
+parallel because their victims are not disjoint — three share one file. It stated the hazard and
+never armed it. Armed now:
+
+```
+witness A (mypy)  and  witness B (ruff), same victim, started 1s apart
+  -> A: arm 2 FAILED — //ratchet:mypy did not refuse a planted mypy defect
+  -> B: arm 2 FAILED — //ratchet:ruff did not refuse a planted ruff defect
+  -> tree clean afterwards
+```
+
+⚑⚑ **EACH RESTORE WIPED THE OTHER'S PLANTED DEFECT**, so neither target saw anything to refuse.
+Both witnesses then reported *"the domain did not range over this file"* — **which is exactly what a
+genuinely short domain looks like.** The failure direction is safe (a false negative on the claim,
+never a false green), and it is **indistinguishable from the real defect the witness exists to
+find.**
+
+⚑ **AND IT IS REACHABLE, WHICH IS THE PART RULE 28 DID NOT SAY.** The gate runs its nine witnesses
+sequentially, so one session cannot collide with itself. **Two sessions share this working tree** —
+demonstrated twice within an hour, once by a `git add -A` sweeping a peer's staged leg into a commit
+of mine, once by my half-written file refusing a peer's commit. **Two concurrent gates are two
+concurrent witness suites.**
+
+### The primitive exists and is fetchable, and taking it is not mine to decide
+
+`membudget`'s claim predicate is exactly this lock. Measured rather than assumed:
+
+```
+substrate/scripts/membudget          17 branch commits   FETCHABLE
+substrate/scripts/membudget-ledger    0 branch commits   staged only
+membudget run 64 claim:<tag> -- <cmd>    -> claim taken, command runs, released on exit
+```
+
+⚑⚑⚑ **THE TOOL WORKS AND ITS LEDGER IS NOT FETCHABLE**, which is the census's own recorded blocker
+still standing. And per the operator's packaging ruling, **copying it here is the anti-pattern the
+ruling exists to end** — mtools is the repository that consumers should reference rather than vendor,
+so vendoring into it would be the defect at its source.
+
+**Recorded, not wired.** The hazard is real, the fix is identified, and acting on it means either
+vendoring against a standing ruling or waiting for a peer's commit gate to clear. ⚑ Naming which of
+those it is matters more than closing it: this is **blocked on another repository's ability to
+commit**, not on design.
