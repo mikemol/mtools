@@ -8,10 +8,40 @@ intentions, decisions, or declines. Timestamp of measurement: 2026-09-06.
 
 ## MC-0 The cassian-observability claim, verified rather than inherited
 
-`cassian-observability` reported: *"MEMORY.md is projected from its warrants.bib with a
-byte-compare freshness gate."* Already found partly wrong by the dispatcher (filename:
-`MEMORY.index.md`, not `MEMORY.md`, per positive control below). I independently re-derived the
-whole claim from the tree rather than carrying either version forward.
+⚑⚑⚑ **ATTRIBUTION CORRECTED 2026-09-06 BY `cassian-observability`, WHO MEASURED IT AGAINST THEIR
+OWN FILED LEG.** This section originally read *"`cassian-observability` reported: 'MEMORY.md is
+projected from its warrants.bib with a byte-compare freshness gate.'"* **That sentence is from a
+`SendMessage` SUMMARY, not from their leg** — the record showed a party filing a claim it did not
+file. Corrected here per `§W`'s rule that a false attribution is repaired in place; the **findings
+below are unchanged**, at their explicit request.
+
+**What the filed leg actually says**, `§0`, verified by the dispatcher against
+`findings/build-hermeticity/cassian-observability.md` at `md5 2336113438ec2ba9291404bc01848aaa`
+(byte-identical to their own copy):
+
+> *"a bib→index projector, a byte-compare freshness gate, and an explicit two-property split
+> between **the projection is deterministic** (gateable there) and **the deployed copy in
+> `~/.claude` is stale** (**deliberately not gated**, because a gate reaching into a tree it does
+> not own would assert a property of a tree that changes between sessions by design)"*
+
+⚑⚑ **SO THE SPLIT THIS LEG INDEPENDENTLY RE-DERIVED — SNAPSHOT GATED, DEPLOYED COPY ADVISORY — WAS
+ALREADY IN THE SOURCE LEG, CORRECTLY ATTRIBUTED TO THE SOURCE'S OWN REASONING.** The summary
+collapsed six lines into one sentence and **named the advisory artifact as the gated one.**
+
+⚑⚑⚑ **AND THE CLASS IS ONE THE CENSUS SHOULD HAVE: A PARTY'S SUMMARY OF ITS OWN ARTIFACT DEGRADED
+IT, AND THE SUMMARY IS WHAT THE CONSUMER MEASURED AGAINST.** The usual lossy-channel finding is a
+relay degrading someone *else's* claim. Here **the author was the lossy channel about their own
+work, and the loss was invisible to them because they could still see the artifact** — while the
+consumer had no way to know the summary was lossier than the file, which was sitting in the
+consumer's own tree. ⚑ **Nothing gates it**: cassian's commit-msg hook binds numbers a run
+produced, the leg is byte-gated by md5 on adoption, and **nothing compares a MESSAGE about an
+artifact to the artifact.** *A measurement restated at a consumer site, where the consumer is a
+peer session.* Not mechanizable here, and not claimed to be.
+
+⚑ **THE ERROR STOPPED AT ATTRIBUTION BECAUSE THIS LEG REFUSED TO CARRY EITHER VERSION FORWARD.**
+The original filename claim was also partly wrong (`MEMORY.index.md`, not `MEMORY.md`, per the
+positive control below) — and re-deriving the whole claim from the tree is why a lossy summary
+produced a corrected record rather than a propagated fact.
 
 **Positive control for the filename claim** (machine, 2026-09-06):
 
