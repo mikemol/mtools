@@ -582,6 +582,62 @@ its unit arm holds (`cannot_run → flipped=False`, `refuted → flipped=True` u
 have fixed *this* red, because the sentinel was never raised on this path. **A correct fix aimed at
 the wrong layer is still a correct fix; it just is not this one's.**
 
+## 5l. ⚑⚑ Ζ·render·gate — EIGHT REDS, TWO KINDS, AND `talk` IS ENTIRELY DOWNSTREAM
+
+MEASURED 2026-09-06T~17:00. `render//:gate` carries **eight** reds, not the three earlier notes
+recorded — six `fail` and two `cannot-run`:
+
+```
+rnd-a11y  rnd-latex  rnd-pdf  rnd-wcag  rnd-wcag-entail  rnd-widen   -> verdict "fail"
+rnd-link-alt  rnd-math-alt                                            -> verdict "cannot-run"
+```
+
+⚑ **`talk//:gate` is not an independent red.** Its two claims delegate by `result:`:
+
+```
+t-a11y-claim  check = {result:render#rnd-wcag-entail}      <- cites a render claim that is RED
+```
+
+So `talk` fails *because* render does. **One fix clears two targets**, the same delegation structure
+that let `Ζ·witness·cwd` clear three at once — and the dependency was established by reading the
+warrant rather than by inferring from the shared subject.
+
+### ⚑⚑⚑ THE TWO `cannot-run` HAVE DIFFERENT CAUSES, AND `aquery` NAMED THE DISCRIMINATOR
+
+`bazel aquery` on the cell shows the verdict mapping explicitly — *this is the instrument that
+should be reached for first, and this time was*:
+
+```
+( cd 'render' && sh -c 'python3 checks/linkalt.py --selftest' ) >/dev/null; rc=$?
+if [ "$rc" = 0 ]; then V=pass; elif [ "$rc" = 3 ]; then V=cannot-run; else V=fail; fi
+```
+
+**So `cannot-run` IS exit 3 — the engine's declared CANNOT_RUN sentinel — and both checks are
+raising it deliberately.** Neither is a crash; both are refusing to skip-green, which is the
+behaviour the constitution census settled as binding (*a gate must REFUSE when its tool is absent,
+never skip*). ⚑ **The reds are the engine working.**
+
+The two causes are **not the same**, which a shared verdict conceals:
+
+| claim | mechanism | measured |
+|---|---|---|
+| `rnd-math-alt` | `try: import pikepdf / except ImportError: → exit 3` (`mathalt.py:26-28`) | ⚑ `pikepdf` IS declared in `render/paper.toml` `pydeps` and IS staged into the cell venv per aquery — **host import succeeds, 10.10.0** |
+| `rnd-link-alt` | `subprocess.run(["pdftotext", "-bbox", …])` (`linkalt.py:45`) | ⚑⚑ `pdftotext` is a **PATH binary**, present on the host at `/usr/bin/pdftotext`, **staged as no input and absent from the toolchain stamp** (`grep -c '^emit .*pdftotext' tools/toolchain_status.sh` → **0**) |
+
+**Both selftests pass on the host** (`rc=0` each), so neither is a broken check.
+
+⚑ **`rnd-link-alt` is an undeclared implicit dependency** — exactly the `§Q`-2 class paperkit filed
+in its own deps-build leg (*"paperkit runs arbitrary PATH programs"*), arriving as a red. The four
+stamped tools are pandoc/verapdf/lualatex/soffice; **poppler is a fifth the stamp does not know
+about**, so a machine without it produces `cannot-run` and a machine with it produces a verdict
+keyed on nothing.
+
+**FRONTIER, stated rather than inferred:** *why* the cell venv fails to supply `pikepdf` when aquery
+shows it staged is **not established**. Candidates not yet distinguished: the `_pydeps.pth` roots not
+reaching the interpreter, the venv build racing, or the import failing for a reason other than
+absence. ⚑ *The last diagnosis I shipped on this file was wrong because I reproduced a failure on a
+path the cell does not take; I am not repeating that by naming a cause I have not isolated.*
+
 ## 6. A STALE CLAIM CARRYING ITS OWN VERIFICATION
 
 `.githooks/local.env` held:
