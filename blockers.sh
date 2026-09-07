@@ -376,9 +376,21 @@ else
         # it needs no knowledge of what the columns mean.
         _cells=$(awk -F'|' '/^\| [0-9]+ \|/{print NF-2}' "$census" 2>/dev/null | sort -u | tr '\n' ' ')
         if [ "$(printf '%s' "$_cells" | wc -w)" -gt 1 ]; then
-            echo "  ⚑ §V ROWS DISAGREE ON CELL COUNT: ${_cells}— a row carries an unescaped pipe"
-            echo "    (usually inside a code span). Every table reader STOPS at the first such row"
+            echo "  ⚑ §V ROWS DISAGREE ON CELL COUNT: ${_cells}— a row carries a raw pipe,"
+            echo "    usually inside a code span. Every table reader STOPS at the first such row"
             echo "    and reports what it saw as complete. Counts over this table are UNRELIABLE."
+            # ⚑⚑ REMOVE THE PIPE — DO NOT ESCAPE IT. `awk -F'|'` and every field-splitting reader
+            # split on the RAW BYTE, so `\|` changes rendering and not the split. MEASURED on a
+            # fixture: an escaped row still yields 5 cells against 4. The first version of this
+            # message said "unescaped pipe", which told a filer that escaping would fix it.
+            echo "    ⚑ REMOVE the pipe; escaping it does NOT help — a field-splitting reader"
+            echo "      splits on the raw byte and \\| still ends the cell."
+            # ⚑ AND THIS ARM ANSWERS *ARE THE SHAPES UNIFORM*, NOT *IS EACH ROW CORRECT*. A peer
+            # read `4 5 6` after a failed revert as evidence the revert worked; the file was at
+            # 3 cells and the distinct-value set happened to contain the right numbers.
+            echo "    ⚑ This reports the SET of shapes. It cannot tell you a given row is correct;"
+            echo "      re-measure PER ROW after any repair."
+
         fi
         _dups=$(grep -oE '^\| [0-9]+ \|' "$census" 2>/dev/null \
             | grep -oE '[0-9]+' | sort -n | uniq -d | tr '\n' ' ')

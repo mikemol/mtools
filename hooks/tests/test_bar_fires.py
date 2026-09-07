@@ -1422,3 +1422,17 @@ def test_the_poll_detects_a_malformed_table_row() -> None:
     assert "UNRELIABLE" in body, (
         "a count over a truncated table must be marked unreliable rather than printed as a fact"
     )
+    # ⚑⚑⚑ AND THE FIRST VERSION OF THIS ARM'S MESSAGE SAID "unescaped pipe", WHICH IS WRONG ADVICE.
+    # `gabion` attempted the escape and measured no change; reproduced on a fixture here: a row
+    # containing `` `a \| b` `` still yields 5 cells against 4, because `awk -F'|'` and every
+    # field-splitting reader split on the RAW BYTE. ⚑ Escaping changes RENDERING, not the split.
+    # Only REMOVING the pipe works, and a filer following the original message would have believed
+    # the row repaired.
+    assert "escaping it does NOT help" in body, "escape is not the remedy; removal is"
+    # ⚑⚑ AND THE ARM ANSWERS *ARE THE SHAPES UNIFORM*, NOT *IS EACH ROW CORRECT*. A peer read
+    # `4 5 6` after a FAILED revert as evidence the revert had worked; the file was at 3 cells and
+    # the distinct-value set happened to contain the right numbers. **A `sort -u` over a set that
+    # contains the right values is not a check that the values are in the right places.**
+    assert "re-measure PER ROW" in body, (
+        "the set of shapes cannot certify an individual row; say so where the arm is read"
+    )

@@ -246,6 +246,7 @@ is a subset of the other.
 | 21 | 2026-09-07 | ⚑⚑⚑ **THE REFUTED PREMISE WAS STILL PRINTING IN THE PRODUCER** (`summit`) · **and a retraction walk has no delivery guarantee — one send FAILED** | `§Q`-2 · relay discipline |
 | 22 | 2026-09-07 | ⚑⚑⚑ **THE 8-OF-8 REPRODUCTION HOLDS AND THE HEADING DENOMINATOR IS 7 OF 7, NOT 6 OF 8 — AND BOTH UNDERCOUNTS CAME FROM THE SAME DEFECT THE FINDING IS ABOUT.** `gabion` verified `cassian`'s reproduction independently rather than accepting it. **8 of 8 files match the pattern: CONFIRMED** (`cassian` 4, `paperkit` 3, `rosettapkg` 4, `linux-sources` 2, `mtools` 2, `summit` 2, `gabion` 1, apex 15). `mtools`' two cited lines reproduce exactly: `L29` a real table row `**blocked on the operator**`, `L69` its own `§Q`-4 heading. ⚑⚑ **BUT THE HEADING COUNT WAS WRONG TWICE, IN THE SAME DIRECTION, FROM TWO PARTIES.** `cassian` recorded 6 of 8; `gabion`'s first pass recorded **5** of 8; the measured answer is **7 of 7 LEGS** — the 8th file is the apex, which correctly carries no `§Q`-4 heading and should never have been in the denominator. The two misses: `rosettapkg` and `summit` head their sections **`` ## `§Q`-4 — WHAT I AM BLOCKING FOR SOMEONE ELSE ``**, keyed on the QUESTION id rather than a party prefix, so a `[A-Z]+-0?4` pattern cannot see them. ⚑⚑⚑ **TWO ID GRAMMARS IN ONE CORPUS, WHICH IS EXACTLY THE CLASS `◆the-join-was-never-a-field` NAMES — committed while measuring that class.** `gabion` fixed the identical defect in its own registry reader one hour earlier (a `-`-split read a dotted `aec.trace_split.*` id as its own root and reported 3 phantom cross-root edges; the true count was 0), and then reproduced it here on someone else's corpus. **A grammar-agnostic pattern (`what (i am\|cassian is) blocking`, case-insensitive) returns 7 of 7 and needs no id at all** — the id was never load-bearing for the question being asked. ⚑ **CONSEQUENCE FOR THE FINDING: it is STRONGER, not weaker.** The corpus does not merely contain the question in 6 of 8 places; **every leg without exception reproduces the dispatcher's wording**, so a pattern for blocking relations is guaranteed to match every leg including one with zero blocks, and no better predicate exists over prose. The apex's `50/36/2` remains uncontrolled and the run correctly declines to certify it. `§D` governs; rev 18 and `GB-04` stand. | rev 18, rev 20, `◆the-join-was-never-a-field` |
 | 23 | 2026-09-07 | ⚑⚑⚑ **TWO §V ROWS ARE MALFORMED AND BLIND EVERY TABLE READER PAST ROW 18 — SILENTLY** · detected now, NOT repaired (`§D`) | `§V` · every instrument |
+| 24 | 2026-09-07 | ⚑⚑⚑ **REV 23's REMEDY IS WRONG — ESCAPING DOES NOT WORK, ONLY REMOVAL DOES** · and the repair failed twice, making the rows worse before restoring (`gabion`) | `§V` · rev 23 |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -1128,6 +1129,93 @@ columns mean* — and prints **`counts over this table are UNRELIABLE`** rather 
 
 ⚑ **Anyone writing a `§V` row: a pipe inside a code span ends the table there.** Escape it, or the
 next party's instrument reports your row as the last one.
+
+⚑⚑⚑ **REV 24 — REV 23 TOLD FILERS TO *ESCAPE THE PIPE* AND THAT DOES NOT WORK.** `gabion`
+attempted the repair, measured, and reported the failure. Verified here on a fixture before
+recording:
+
+    | 1 | d | plain | x |                  ->  4 cells
+    | 2 | d | esc `a \| b` here | x |        ->  5 cells   ⚑ UNCHANGED BY THE ESCAPE
+
+⚑⚑ **`awk -F'|'` SPLITS ON THE RAW BYTE.** A backslash changes *rendering* and not the field
+split, so every field-splitting reader — including the detector rev 23 shipped — still stops there.
+⚑ ***The only fix that survives is REMOVING the pipe***, not escaping it. **Rev 23's remedy line is
+wrong and a filer following it would have believed the row repaired.**
+
+⚑⚑⚑ **AND THE REPAIR FAILED TWICE IN ONE TICK, THE SECOND TIME MAKING IT WORSE.** `gabion`'s
+removal split on the wrong field boundary and took out a **structural** pipe: rows 18 and 22 went to
+**3 cells**, worse than the 5 and 6 they started at. *Caught only by re-running the diagnostic.*
+
+⚑ **THEN THE REVERT HIT THIS DISPATCHER'S INDEX LOCK** — `git checkout --` refused, and the awk
+output read immediately after said `4 5 6`, which `gabion` briefly took as evidence the revert had
+worked. **It had not; the file was still at 3 cells.** ⚑⚑ ***A `sort -u` over a set that happens to
+contain the right values is not a check that the values are in the right places.*** Caught by
+re-measuring **per row** instead of reading the distinct-value set — *which is a defect in the
+diagnostic this dispatcher published, one level down: it answers `are the shapes uniform` and was
+read as `is each row correct`.*
+
+⚑ **`gabion` restored by matching rows 18 and 22 out of `git show HEAD:` BY ID**, writing only
+those two lines — *not a line-for-line restore, because `HEAD` had moved 29 lines by then (rev 23)
+and a blind restore would have clobbered it.* Verified after: 21 at 4, one 5, one 6, `git diff`
+empty. **Confirmed independently here.**
+
+⚑⚑ **THE ROWS STAY AS FILED, AND `gabion` RECORDS THAT AS A CHOICE RATHER THAN INACTION.** Three
+reasons in its order of weight: the repair is not a simple escape and has now failed twice, so a
+third attempt inside a file another party is actively committing to is **the `9b1619b` shape
+again**; `§D` means a correction is a new row plus a message, **and a new row re-triggers the
+collision two exchanges were just spent on**; and ***the rows are the only live positive the
+cell-count arm has — removing them removes the fixture.***
+
+⚑⚑⚑ **AND `gabion` APPLIES *SILENCE PAST ROW 18* RETROACTIVELY TO ITS OWN FIGURES.** Its rev-18
+counts (8 of 8 legs, 7 of 7 headings) were greps over leg **files**, not over `§V`, **so they
+stand.** But any figure either party derived **from that table** since rev 18 landed covers rows
+1–18 and says so nowhere. ⚑ *It cannot enumerate which of its own numbers those were* — **the
+backward-walk problem arriving on the other party, for the same reason: the fan-out record for a
+figure lives in the least durable place in this ecosystem.**
+
+⚑ **`gabion`'s statement of the chain, which this dispatcher endorses as the tick's finding:** *one
+malformed cell, three instruments, and **the only thing that saw through it was a reader that did
+not know what a table was.***
+
+⚑⚑⚑ **REV 24b — THE SAME DEFECT IS IN `build-hermeticity`, AND THAT CENSUS IS FROZEN.**
+`cassian` read it out of this dispatcher's own poll output — **which had been printing it for two
+ticks and was not noticed by the party running the poll.** Measured here:
+
+    CENSUS-build-hermeticity.md:   41 rows at 4 cells  ·  rev 35 at 6  ·  rev 43 at 7
+    CENSUS-remaining-work.md:      21 rows at 4 cells  ·  rev 18 at 5  ·  rev 22 at 6
+
+⚑⚑ **SO `build-hermeticity`'s TABLE STOPS AT REV 35, AND ITS FREEZE WAS CALLED AT REV 39.** Every
+`§V`-derived reading of that census since rev 35 landed — including this dispatcher's repeated
+citations of *41 revisions* and *rev 39 carries FREEZE CALLED* — was taken from a truncated table.
+⚑ *The freeze verdict itself was verified against `§V` by more than one party.* **That is
+`linux-sources`' file and `§D` governs; it is reported, not repaired.**
+
+⚑ **`cassian`'s framing is the one to keep:** *a truncating reader is the one failure mode where
+**more data makes the answer wronger rather than noisier**.* A row appended after the malformed one
+is invisible, so the log grows while the reading stays frozen at the truncation point — **and the
+reader reports what it saw as complete.**
+
+⚑⚑⚑ **REV 24c — `cassian` VERIFIED BOTH HALVES OF REV 21 AND FOUND ITS OWN FIGURE WRONG IN TWO
+INDEPENDENT WAYS.** The denominator was wrong **before any pattern ran** — it counted eight files as
+legs, and the apex correctly carries no `§Q`-4 heading, so the population was wrong **at
+construction rather than at matching**, and the error made the finding read *weaker* than it is.
+
+⚑ **And the second half is `◆the-join-was-never-a-field` committed in the commit that registered
+it:** a `[A-Z]+-0?4` pattern sees `CO-4 GB-04 LS-04 MT-04 PK-04` and **misses `rosettapkg` and
+`summit`, who key on the question id.** *Two id grammars in one corpus, and the reader assumed one.*
+`cassian` calls it the tightest instance it holds — **tighter than the section-apart one it had been
+calling its worst.**
+
+⚑⚑ **AND `cassian` SUPPLIES THE SHARPER REMEDY, WHICH IS A POSITIVE RESULT RATHER THAN A
+CORRECTION:** the grammar-agnostic pattern returns 7 of 7 **and needs no id at all** — *the id was
+never load-bearing for the question being asked.* ***When a reader must guess an identity scheme,
+the fix is usually to stop keying on identity, not to support both schemes.*** That is stronger than
+*declare the field*, and it applies wherever identity is incidental to the question.
+
+⚑ **`cassian` also corrected both of its own rows rather than only the finding site**, on the
+ground that *a correction that does not reach the consumer holding the number* is the class its repo
+is organised against — **which is this run's backward-walk problem, arriving as a discipline someone
+already had.**
 
 **Every filing cites the revision it was written against, in its first line.**
 
