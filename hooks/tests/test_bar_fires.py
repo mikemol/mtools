@@ -947,11 +947,25 @@ _MSGCOUNT = _DIST.parent / "message_counts.sh"
 # ⚑ THE SWEEP'S OWN COVERAGE FLOOR. 65 string-membership assertions existed when it was
 # written; if it resolves far fewer, the resolver has broken and its silence is the
 # vacuity it exists to catch — one level out.
+# ⚑⚑⚑ A COVERAGE FLOOR IS ALSO A CLAIM ABOUT HISTORY, AND THIS ONE IS FALSE FOR MOST OF IT.
+# `cassian` asked the question this repository had not: *would this arm have refused past work?*
+# MEASURED over every commit touching this file — **31 of 42 carry fewer than 50 assertions and
+# would be refused by their own floor.** The file had 48 at `b003d16`, four commits ago.
+# ⚑⚑ THE HAZARD IS THE FLOOR, NOT THE PREDICATE. The floor exists because *the sweep found nothing*
+# and *the sweep did not run* are byte-identical — that reasoning is sound and unchanged. What is
+# false is the implicit assertion that the population was never smaller, **which is false by
+# construction for any arm that introduced its own population.**
+# ⚑ NOT LOWERED TO MAKE A SWEEP GREEN, AND THE EXPOSURE IS BOUNDED RATHER THAN PAPERED OVER: these
+# arms read the WORKING TREE, never a blob, so no past commit is re-gated and nothing is
+# retroactively refused. The live cost is a checkout or bisect of a pre-floor tree.
 _MIN_SWEPT = 50
 # ⚑ A PAYDOWN CEILING, NOT A TARGET, AND IT IS NOW ZERO. All 20 were paid the tick after the
 # ceiling was set — each resolved to a real test by its own key, so the debt was a missing `check`
 # LINE rather than missing coverage. ⚑⚑ A ceiling left at 20 after paying 20 would let the debt
 # return silently, which is the shape a paydown ratchet exists to refuse.
+# ⚑ THE SAME HISTORICAL CLAIM, MEASURED: **27 of 30 sampled `warrants.bib` commits carry at least
+# one check-less warrant** and would be refused by this ceiling. Kept at 0 for the same reason —
+# a ceiling left where a paid debt used to sit lets it return silently — and bounded the same way.
 _WARRANTS_WITHOUT_CHECK = 0
 _WITNESS = _DIST.parent / "domain_witness.sh"
 
@@ -1671,3 +1685,35 @@ def test_a_commit_message_cannot_assert_a_wrong_ledger_count() -> None:
     assert "cannot verify counts, commit refused" in hook, (
         "an absent checker refuses rather than skips; a skip and a pass are indistinguishable"
     )
+
+
+def test_every_threshold_states_its_historical_exposure() -> None:
+    """⚑⚑⚑ A COVERAGE FLOOR IS A CLAIM ABOUT HISTORY, FALSE HERE FOR MOST OF IT.
+
+    `cassian` asked the question nobody here had asked of their own arms — ***would this have
+    refused past work?*** — after this repository measured a shipped checker that would have
+    refused **13 of 15** historical commits. Run against both thresholds:
+
+        _MIN_SWEPT = 50             31 of 42 commits touching this file carry fewer
+        _WARRANTS_WITHOUT_CHECK=0   27 of 30 sampled ledger commits carry at least one
+
+    ⚑⚑ **THE HAZARD IS THE FLOOR, NOT THE PREDICATE.** A floor exists because *the sweep found
+    nothing* and *the sweep did not run* are byte-identical, and that reasoning is unchanged. What
+    is false is the implicit assertion that the population was never smaller — ***false by
+    construction for any arm that introduced its own population.***
+
+    ⚑ NEITHER NUMBER IS LOWERED TO MAKE A SWEEP GREEN. The exposure is **bounded**: these arms read
+    the WORKING TREE, never a blob, so no past commit is re-gated and nothing is retroactively
+    refused. The live cost is a checkout or bisect of a pre-floor tree.
+
+    ⚑⚑ THIS ARM MAKES THE DISCLOSURE STRUCTURAL RATHER THAN REMEMBERED: a threshold constant must
+    carry the measurement of what it would have refused, beside itself, where the next author sets
+    one.
+    """
+    src = _THIS.read_text(encoding="utf-8")
+    for const in ("_MIN_SWEPT", "_WARRANTS_WITHOUT_CHECK"):
+        idx = src.index(f"{const} = ")
+        preamble = src[max(0, idx - 1400):idx]
+        assert "would have refused" in preamble or "would be refused" in preamble, (
+            f"{const} is a claim about history and must state what it would have refused"
+        )

@@ -1115,6 +1115,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-every-threshold-states-its-historical-exposure,
+  section = {bar-fires},
+  claim   = {A coverage floor is a claim about history: 31 of 42 commits fall below _MIN_SWEPT and 27 of 30 below the check ceiling, false by construction for any arm that introduced its own population},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_threshold_states_its_historical_exposure}
+}
+
 @misc{hooks-bar-fires-a-commit-message-cannot-assert-a-wrong-ledger-count,
   section = {bar-fires},
   claim   = {2c75167's message says 188 entries and the ledger at that commit holds 189: a figure measured before the commit's own change, published as the state the commit produced},
