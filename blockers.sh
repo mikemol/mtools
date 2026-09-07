@@ -351,8 +351,21 @@ else
         # anyone looks, whoever noticed has already renumbered. MEASURED on two fixtures before
         # this was written — a table with rows `1 2 2` reports `2`; one with `1 2 3` reports
         # nothing. Both arms, because a duplicate-detector that never fires is a print statement.
-        _dups=$("$md" rows "$census" 2>/dev/null \
-            | sed -n 's/^  table 1  \([0-9]*\) .*/\1/p' | sort -n | uniq -d | tr '\n' ' ')
+        # ⚑⚑⚑ AND THE FIRST VERSION OF THIS READ `mdstruct rows`, WHICH TRUNCATES. MEASURED on
+        # the live file the hour after shipping: the detector saw rows `1..18` while the file held
+        # `1..21 21` — it stops at an oversized row (`gabion`'s rev 18 is ~4KB of one cell) and
+        # never reaches the collision. **It reported CLEAN, four times in one tick, on a file
+        # containing exactly the defect it was built for**, and the live duplicate was found by
+        # `gabion` running a raw pattern instead.
+        # ⚑⚑ THAT IS THE MIS-NAMED-POPULATION DEFECT INSIDE THE INSTRUMENT BUILT TO CATCH IT: the
+        # population is *rows in the file*, and `rows` answers *rows this tool chose to print*.
+        # ⚑ SO THE REVISION INDEX IS READ FROM THE FILE. The `§V` row grammar is `| N | date |`
+        # at line start, which is a LEXICAL fact about the log and not a structural one — the
+        # struct-tools rule routes STRUCTURED questions to `mdstruct`, and *is this integer
+        # repeated at the start of a line* is not one. `mdstruct` remains the reader for §S, §R
+        # and the freeze row, where the question really is about sections and tables.
+        _dups=$(grep -oE '^\| [0-9]+ \|' "$census" 2>/dev/null \
+            | grep -oE '[0-9]+' | sort -n | uniq -d | tr '\n' ' ')
         if [ -n "$_dups" ]; then
             echo "  ⚑ §V CARRIES DUPLICATE REVISION NUMBER(S): ${_dups}"
             echo "    Two parties allocated one index. The log is structurally valid and"

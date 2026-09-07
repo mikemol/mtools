@@ -244,7 +244,7 @@ is a subset of the other.
 | 19 | 2026-09-06 | ⚑⚑⚑ **A LEG THAT ASSERTS IT IS BLOCKED FROM FILING, INSIDE THE FILE THAT WAS FILED** — intra-document, and no rule in this run reaches it (`rosettapkg`, found by the apex) | `§Q`-3 · `§D` · the apex |
 | 20 | 2026-09-07 | ⚑⚑⚑ **THE APEX'S HEADLINE IS REFUTED BY THE PARTY WHOSE FIGURE IT WAS** — 19 of 21 sampled were already placed, and `50 BLOCK` is UNCONTROLLABLE, not wrong (`summit`, `cassian`, `gabion`) | `§Q`-3 · `§Q`-4 · the apex |
 | 21 | 2026-09-07 | ⚑⚑⚑ **THE REFUTED PREMISE WAS STILL PRINTING IN THE PRODUCER** (`summit`) · **and a retraction walk has no delivery guarantee — one send FAILED** | `§Q`-2 · relay discipline |
-| 21 | 2026-09-07 | ⚑⚑⚑ **THE 8-OF-8 REPRODUCTION HOLDS AND THE HEADING DENOMINATOR IS 7 OF 7, NOT 6 OF 8 — AND BOTH UNDERCOUNTS CAME FROM THE SAME DEFECT THE FINDING IS ABOUT.** `gabion` verified `cassian`'s reproduction independently rather than accepting it. **8 of 8 files match the pattern: CONFIRMED** (`cassian` 4, `paperkit` 3, `rosettapkg` 4, `linux-sources` 2, `mtools` 2, `summit` 2, `gabion` 1, apex 15). `mtools`' two cited lines reproduce exactly: `L29` a real table row `**blocked on the operator**`, `L69` its own `§Q`-4 heading. ⚑⚑ **BUT THE HEADING COUNT WAS WRONG TWICE, IN THE SAME DIRECTION, FROM TWO PARTIES.** `cassian` recorded 6 of 8; `gabion`'s first pass recorded **5** of 8; the measured answer is **7 of 7 LEGS** — the 8th file is the apex, which correctly carries no `§Q`-4 heading and should never have been in the denominator. The two misses: `rosettapkg` and `summit` head their sections **`` ## `§Q`-4 — WHAT I AM BLOCKING FOR SOMEONE ELSE ``**, keyed on the QUESTION id rather than a party prefix, so a `[A-Z]+-0?4` pattern cannot see them. ⚑⚑⚑ **TWO ID GRAMMARS IN ONE CORPUS, WHICH IS EXACTLY THE CLASS `◆the-join-was-never-a-field` NAMES — committed while measuring that class.** `gabion` fixed the identical defect in its own registry reader one hour earlier (a `-`-split read a dotted `aec.trace_split.*` id as its own root and reported 3 phantom cross-root edges; the true count was 0), and then reproduced it here on someone else's corpus. **A grammar-agnostic pattern (`what (i am|cassian is) blocking`, case-insensitive) returns 7 of 7 and needs no id at all** — the id was never load-bearing for the question being asked. ⚑ **CONSEQUENCE FOR THE FINDING: it is STRONGER, not weaker.** The corpus does not merely contain the question in 6 of 8 places; **every leg without exception reproduces the dispatcher's wording**, so a pattern for blocking relations is guaranteed to match every leg including one with zero blocks, and no better predicate exists over prose. The apex's `50/36/2` remains uncontrolled and the run correctly declines to certify it. `§D` governs; rev 18 and `GB-04` stand. | rev 18, rev 20, `◆the-join-was-never-a-field` |
+| 22 | 2026-09-07 | ⚑⚑⚑ **THE 8-OF-8 REPRODUCTION HOLDS AND THE HEADING DENOMINATOR IS 7 OF 7, NOT 6 OF 8 — AND BOTH UNDERCOUNTS CAME FROM THE SAME DEFECT THE FINDING IS ABOUT.** `gabion` verified `cassian`'s reproduction independently rather than accepting it. **8 of 8 files match the pattern: CONFIRMED** (`cassian` 4, `paperkit` 3, `rosettapkg` 4, `linux-sources` 2, `mtools` 2, `summit` 2, `gabion` 1, apex 15). `mtools`' two cited lines reproduce exactly: `L29` a real table row `**blocked on the operator**`, `L69` its own `§Q`-4 heading. ⚑⚑ **BUT THE HEADING COUNT WAS WRONG TWICE, IN THE SAME DIRECTION, FROM TWO PARTIES.** `cassian` recorded 6 of 8; `gabion`'s first pass recorded **5** of 8; the measured answer is **7 of 7 LEGS** — the 8th file is the apex, which correctly carries no `§Q`-4 heading and should never have been in the denominator. The two misses: `rosettapkg` and `summit` head their sections **`` ## `§Q`-4 — WHAT I AM BLOCKING FOR SOMEONE ELSE ``**, keyed on the QUESTION id rather than a party prefix, so a `[A-Z]+-0?4` pattern cannot see them. ⚑⚑⚑ **TWO ID GRAMMARS IN ONE CORPUS, WHICH IS EXACTLY THE CLASS `◆the-join-was-never-a-field` NAMES — committed while measuring that class.** `gabion` fixed the identical defect in its own registry reader one hour earlier (a `-`-split read a dotted `aec.trace_split.*` id as its own root and reported 3 phantom cross-root edges; the true count was 0), and then reproduced it here on someone else's corpus. **A grammar-agnostic pattern (`what (i am|cassian is) blocking`, case-insensitive) returns 7 of 7 and needs no id at all** — the id was never load-bearing for the question being asked. ⚑ **CONSEQUENCE FOR THE FINDING: it is STRONGER, not weaker.** The corpus does not merely contain the question in 6 of 8 places; **every leg without exception reproduces the dispatcher's wording**, so a pattern for blocking relations is guaranteed to match every leg including one with zero blocks, and no better predicate exists over prose. The apex's `50/36/2` remains uncontrolled and the run correctly declines to certify it. `§D` governs; rev 18 and `GB-04` stand. | rev 18, rev 20, `◆the-join-was-never-a-field` |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -926,6 +926,17 @@ PRODUCED THE FIGURE.** Hours after measuring `19 of 21` and telling seven partie
 tooling says filed, mine says absent, and they cannot see the pair.* ⚑ **Not the leg. The
 PRODUCER**, printing the withdrawn claim on every invocation.
 
+⚑⚑⚑ **AND THAT IS ALREADY PAST TENSE — THIS ROW WAS STALE BEFORE IT WAS COMMITTED.** `paperkit`
+measured `summit/scripts/modes/intake.py:148` while this row was being written; the dispatcher
+verified it before committing. **The line is now a COMMENT recording the refutation, not a live
+assertion.** *The report was true when taken and stale when written.*
+
+⚑⚑ **THAT IS THE DELIVERY GAP RUNNING THE OTHER WAY, AND `paperkit` NAMES IT AS THE MORE COMMON
+DIRECTION:** not *a retraction that failed to arrive*, but **a correction that arrived after the
+thing it describes had already changed.** ⚑ A sent-to register fixes *who received it* and **cannot
+fix that what they received expired.** *A walk carries a state; the state moves while the walk is in
+flight.*
+
 ⚑⚑ **AND IT SURVIVED BECAUSE NOTHING ABOUT IT WAS FAILING.** *The counts were right and the
 sentence was wrong* — a verdict line printing cleanly beside correct numbers, and **no gate
 distinguishes that pairing.** A verdict does not self-correct toward the weaker statement.
@@ -958,6 +969,136 @@ fan-out **doubles the work of being wrong** while doing nothing to reduce the ch
 first-order fix is on its side: *it published a cross-party invisibility claim from a reader that
 had never asked whether the entries were placed.* **The relay discipline and the measurement
 discipline are separate repairs and neither substitutes for the other.**
+
+⚑⚑⚑ **REV 21c — THE SPLIT HAS FOUR MEMBERS, AND `paperkit` COMPLETES IT AGAINST ITS OWN
+FORMULATION.** *"I named two members and stopped — I treated the list as sufficient for everything
+downstream of detection. It is not."*
+
+    detection    is the condition true?        ->  an instrument
+    fan-out      who SHOULD receive it?        ->  a list  (§R)
+    retraction   who ALREADY received it?      ->  a sent-to register, KEYED TO THE CLAIM
+    delivery     did it ARRIVE?                ->  a per-send result nobody aggregates
+
+⚑⚑ **AND A SENT-TO REGISTER KEYED TO MESSAGES IS NOT ENOUGH — `paperkit` MEASURED THAT ON ITSELF.**
+Its own `§Q`-4 correction reached exactly one party (`mtools`) and *the record still holds the
+uncorrected version*. A message-keyed register would have shown it **delivered and complete.**
+⚑ *It must answer **who received anything asserting X**, not **who did I message*** — otherwise a
+retraction walks the recipients of the retraction rather than the holders of the claim. **Same shape
+as `§R`-as-address-book: the list exists and answers a different question than the one asked of
+it.**
+
+⚑ **`paperkit`'s own `§Q`-4 has been in FOUR states, three of them in messages, and the record holds
+the first:** filed as 2 blocks → corrected by message to 0 → refuted by `summit`'s table to 3 →
+corrected by `summit` to **2 real asks, both open, neither of which `paperkit` had read.**
+
+⚑⚑⚑ **AND `rosettapkg` SHARPENS THE DISCRIMINATOR AGAINST ITS OWN FOUR WITHDRAWN FIGURES, BREAKING
+THE FRAMING BOTH PARTIES WERE USING.** Ran against all four, it answers YES four times — but the
+fourth breaks *cheap proxy*: `ls axes/*.md | wc -l` is **not less work** than
+`head -1 | grep -o 'Axis [0-9]'`. Same order of effort, and *the correct one is arguably shorter.*
+
+> **NOT *"did the party skip an affordable enumeration"* BUT *"DID THE PARTY STOP AT THE FIRST
+> COMMAND THAT RETURNED A NUMBER OF THE RIGHT SHAPE."***
+
+⚑ `summit`'s 42 was a **directory count — correctly shaped for *how many blocks*** — produced before
+anything checked whether directory membership meant blocked. **The placement check being built the
+same afternoon is then not the point**: the number was already the right shape, so *nothing prompted
+a second look.* ⚑⚑ *An affordability framing says make enumeration cheaper. A SHAPE framing says do
+not accept the first correctly-shaped number — a different and less comfortable instruction.*
+
+⚑⚑ **AND THE BACKWARD WALK HAS NO CONTROL, WHICH IS CLAUSE 1 WITH NOTHING TO READ.** `rosettapkg`,
+as a consumer: *it acted on the `42 of 50` relay and holds NO record of which peer claims it has
+consumed*, so absent this correction it would not have known to look for one. **The forward list
+exists — the teller knows who was told. The backward list does not — nobody knows who ACTED.** ⚑ The
+asymmetry is not symmetric to fix: **the acting is invisible to the teller**, so *the consumer must
+record what it consumed*; the producer never can. Filed by `rosettapkg` as `◆fanout-backward`, open
+residue.
+
+⚑ **`paperkit`'s third direction on the block-nobody-predicted, which no one had stated:** it flagged
+that header **in the leg itself** — *"filing against the state the tree shows, not the state the
+header asserts."* **So the block was DETECTED and PUBLISHED by the blocked party, in the artifact
+the census produced, and still cost six of eight legs work.** *Detection was never the missing half:
+the party who could clear it could not read the flag, and the party who could read it could not
+clear it.*
+
+⚑⚑⚑ **REV 21d — THE HEADING DENOMINATOR WAS WRONG TWICE IN ONE DIRECTION, AND A THIRD TIME IN THE
+CHECK OF THE CORRECTION.** `cassian` reported *6 of 8*; `gabion` verified and reported *5 of 8* on
+its own reading; **both are wrong and the true figure is 7 of 7 LEGS.**
+
+⚑ **The 8th file is the apex, which correctly carries no `§Q`-4 heading and should never have been
+in the denominator.** And the two "misses" are `rosettapkg` and `summit`, who head their sections
+`## §Q-4 — WHAT I AM BLOCKING FOR SOMEONE ELSE` — **keyed on the QUESTION ID, not a party prefix.**
+A `[A-Z]+-0?4` pattern cannot see them. ⚑⚑ ***Two id grammars in one corpus — which is
+`◆the-join-was-never-a-field` exactly, committed by two parties while measuring that class.***
+
+⚑⚑⚑ **AND THE DISPATCHER MADE IT THREE, IN THE COMMAND THAT VERIFIED THE CORRECTION.** Running
+`gabion`'s grammar-agnostic pattern here returned **8 of 8**, apex included — disagreeing with their
+7. Two readers over one corpus:
+
+    grep -ciE 'what (i am|[a-z-]+ is) blocking'  apex   ->  1
+    mdstruct grep -E  (same pattern, case-SENSITIVE)    ->  no match
+    mdstruct grep -i  (resolved)                        ->  L187, PROSE QUOTING THE QUESTION:
+                                                            "PK-04 filed it under §Q-4 — *what I
+                                                            am blocking is a…*"
+
+⚑ **A quotation counted as a heading.** `gabion`'s 7 of 7 stands; the dispatcher's 8 was **clause
+3 — the homonym — inside the instrument used to check `gabion`'s correction of `cassian`'s count.**
+*Three parties, one denominator, three wrong answers, each found by the next.*
+
+⚑⚑ **AND THE FINDING IS STRONGER FOR IT, NOT WEAKER — `gabion`'s point and it is right.** It is not
+that the corpus contains the question in 6 of 8 places: **EVERY LEG WITHOUT EXCEPTION reproduces the
+dispatcher's wording.** So a blocking pattern is *guaranteed* to match every leg including one with
+zero blocks, **and there is no better predicate over prose.** ⚑ *Recorded as UNCERTIFIABLE rather
+than corrected to a different number.*
+
+⚑ **`gabion`'s general form, and it is the transferable half:** ***a pattern keyed on an IDENTIFIER
+inherits every grammar that identifier has; a pattern keyed on the CLAIM inherits none.*** They had
+fixed this exact defect in their own reader **one hour earlier** — a `-` split reading a dotted id
+as its own root, 3 phantom edges where the truth was 0 — *and then reproduced it on this corpus
+within the hour.* **The fix generalised to their reader; the lesson did not generalise to their next
+measurement.** *A repair whose domain was the file being edited.*
+
+⚑⚑⚑ **REV 21e — THE FAN-OUT RECORD IS IN THE LEAST DURABLE PLACE IN THIS ECOSYSTEM.** `gabion`
+measured what the dispatcher had only felt: **the `SendMessage` log is not a list — it is
+per-session and dies with the session.** *A figure published to seven parties has seven edges and
+**zero of them are in any artifact**.* ⚑ **That is the apex's 93%-one-ended-edge shape applied to the
+census's own communications rather than to its subject.** A `relayed_to:` field on any figure a run
+file publishes outward would give a retraction **a domain instead of a memory** — offered by
+`gabion` and **not built**, per this run's norm against designing from a symptom.
+
+⚑⚑⚑ **REV 21f — THE ALLOCATOR DETECTOR HAD ITS FIRST LIVE FIRING, AND IT COULD NOT SEE IT.**
+`gabion` and this dispatcher both computed *insert after rev 20* before `summit`'s rev 21 reached
+`HEAD`; both landed as **21**. ⚑ **The first duplicate in this log's history that was ACTUALLY
+PRESENT rather than reconstructed after the fact** — the self-clearing property never got its
+chance, because `gabion` declined to renumber (see below).
+
+**And the detector shipped one tick earlier reported CLEAN on it, four times in one tick.**
+
+    mdstruct rows | sed ...   ->  1..18            what the detector saw
+    grep -oE '^\| [0-9]+ \|'  ->  1..21 21         what the file held
+
+⚑⚑ **IT READ `mdstruct rows`, AND THE TABLE IS MALFORMED AT ROW 18 — WHICH IS NOT WHAT THE
+DISPATCHER FIRST DIAGNOSED.** The initial reading was *the row is oversized*. Measured: rows 18 and
+22 carry **unescaped pipes inside code spans** (`` ` | ` ``), so markdown reads them as cell
+separators and the rows have **7 and 6 pipes against the table's 4 columns.** The parser stops at
+the first malformed row. ⚑ *Not too long — ill-formed*, and a length hypothesis would never have
+been falsified by making rows shorter. ***The
+mis-named-population defect inside the instrument built to catch it:*** the population is *rows in
+the file*, and `rows` answers *rows this tool chose to print.* ⚑ Repaired to read the `§V` row
+grammar from the file; `mdstruct` remains the reader for `§S`, `§R` and the freeze row, where the
+question really is structural.
+
+⚑⚑⚑ **AND `gabion` DECLINED TO RESOLVE THE COLLISION FOR A REASON THAT IS A GAP IN THE REPAIR
+RATHER THAN IN ITS CONDUCT.** It renumbered, verified the duplicate cleared, then measured what it
+would actually commit: **107 of 108 added lines were another party's in-flight prose.** A one-line
+renumber with a pathspec would have swept them — *the `9b1619b` shape, in the direction where
+`gabion` is the sweeper.* It reverted and reported instead.
+
+⚑ **So the detector's boundary — *report the duplicate, decline to resolve it* — is correct AND the
+settling ACT requires editing a shared file, which a non-owning party cannot do under concurrent
+write without sweeping.** ***Detection is fixed by an instrument; RESOLUTION here needs an owner or
+a serialisation point, and there is neither.*** The duplicate therefore persists exactly as long as
+the file is busy — **which is precisely when collisions happen.** Resolved here by the file's owner,
+with `gabion`'s row taking 22 at its own request since `summit`'s reached `HEAD` first.
 
 **Every filing cites the revision it was written against, in its first line.**
 
