@@ -523,10 +523,37 @@ else
             | grep -vc 'apex')
         if [ -n "${tbl:-}" ] && [ "${tbl:-}" != "-1" ] && [ "${roster:-0}" -gt 0 ] \
            && [ "${n_head:-0}" -ne "${roster:-0}" ]; then
+            # ⚑⚑⚑ THE SIGN IS THE DIAGNOSIS, AND ONE SENTENCE WAS SERVING BOTH SIGNS.
+            # This arm was built for gabion's late leg, where HEAD EXCEEDS §S, and its prose says
+            # so: *an accounting that an admission outgrew.* It then fired on the opposite sign
+            # with the same sentence. MEASURED across all three frozen censuses this tick:
+            #   constitution      §S 7, HEAD 8   a leg arrived after the freeze     <- prose true
+            #   remaining-work    §S 8, HEAD 7   `substrate` FILED ELSEWHERE        <- prose FALSE
+            #   build-hermeticity §S 12, HEAD 11 one `filed elsewhere` row          <- prose FALSE
+            # ⚑⚑ A CORRECT COUNT UNDER A MIS-NAMED CAUSE PASSES EVERY ARITHMETIC CHECK. The
+            # `grep -vc apex` population is right and the subtraction is right; only the sentence
+            # was wrong, which is why it survived being read every tick for three ticks.
+            # ⚑ THE UNDER-SIGN CAUSE IS CHECKABLE, so the poll checks it rather than narrating:
+            # a surveyor whose leg lives in ANOTHER repo is rostered here and absent from this
+            # directory BY DESIGN. That is not a dropped row, and it is not an outgrown roster.
             echo "  ⚑ §S DESCRIBES $roster PARTIES AND HEAD HOLDS $n_head LEG(S)."
-            echo "    A row set that no longer covers the directory is not a dropped row and not"
-            echo "    a stray file — it is an accounting that an admission outgrew. §D forbids"
-            echo "    amending it; this line exists so the divergence is read rather than found."
+            if [ "${n_head:-0}" -gt "${roster:-0}" ]; then
+                echo "    HEAD EXCEEDS §S: an accounting that an admission outgrew. §D forbids"
+                echo "    amending it; this line exists so the divergence is read rather than found."
+            else
+                _elsewhere=$(sed -n '/^## §S/,/^## §[^S]/p' "$census" 2>/dev/null \
+                    | grep -ciE 'filed elsewhere')
+                _gap=$((roster - n_head))
+                if [ "${_elsewhere:-0}" -ge "${_gap:-0}" ] && [ "${_elsewhere:-0}" -gt 0 ]; then
+                    echo "    §S EXCEEDS HEAD, AND IT IS ACCOUNTED FOR: $_elsewhere surveyor(s)"
+                    echo "    marked 'filed elsewhere' are rostered here and file into their own"
+                    echo "    tree. Absent from this directory BY DESIGN, not a dropped row."
+                else
+                    echo "    §S EXCEEDS HEAD BY $_gap AND ONLY $_elsewhere ROW(S) SAY WHY."
+                    echo "    A rostered surveyor with no leg here and no 'filed elsewhere' mark"
+                    echo "    is a DROPPED ROW — the one shape this arm exists to catch."
+                fi
+            fi
         fi
     fi
   done

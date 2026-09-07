@@ -1790,3 +1790,34 @@ def test_the_poll_repeats_its_unread_count_where_a_trailing_window_reaches_it() 
     assert body.rindex("END OF POLL") > body.rindex("=== NOT COVERED"), (
         "the digest must follow every other section, or a trailing window can exclude it too"
     )
+
+
+def test_the_poll_diagnoses_the_roster_divergence_by_sign_not_by_one_sentence() -> None:
+    """⚑⚑⚑ A CORRECT COUNT UNDER A MIS-NAMED CAUSE PASSES EVERY ARITHMETIC CHECK.
+
+    This arm was built for `gabion`'s late leg, where HEAD EXCEEDS §S, and its prose said exactly
+    that: *an accounting that an admission outgrew.* It then fired on the OPPOSITE sign with the
+    same sentence, and this dispatcher read it every tick for three ticks without noticing —
+    because the count was right. ⚑ Measured across all three frozen censuses:
+
+        constitution       §S 7,  HEAD 8    a leg arrived after the freeze     prose TRUE
+        remaining-work     §S 8,  HEAD 7    `substrate` filed elsewhere        prose FALSE
+        build-hermeticity  §S 12, HEAD 11   one `filed elsewhere` row          prose FALSE
+
+    ⚑⚑ The `grep -vc apex` population and the subtraction were both correct. Only the sentence was
+    wrong, which is why nothing caught it: an arithmetic check cannot see a mis-named cause.
+
+    ⚑ The under-sign cause is CHECKABLE rather than narratable — a surveyor marked `filed
+    elsewhere` is rostered here and files into its own tree, absent by design. So the poll
+    distinguishes *accounted-for* from a genuine DROPPED ROW, which is the one shape it exists to
+    catch and the one shape no census in this tree currently exhibits.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "HEAD EXCEEDS §S" in body, "the over-sign keeps the outgrown-accounting diagnosis"
+    assert "filed elsewhere" in body, "the under-sign must check the cause, not narrate it"
+    assert "is a DROPPED ROW" in body, "an unexplained under-sign is the shape worth catching"
+    # ⚑ THE SIGN MUST BE TESTED, not merely mentioned. A body naming both outcomes while emitting
+    # one unconditionally is exactly the defect this arm repairs, one level out.
+    assert 'if [ "${n_head:-0}" -gt "${roster:-0}" ]' in body, (
+        "the diagnosis must branch on the sign of the divergence"
+    )
