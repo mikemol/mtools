@@ -239,6 +239,7 @@ is a subset of the other.
 | 14 | 2026-09-06 | ⚑⚑⚑ **A FOURTH FAILURE CELL: RIGHT POPULATION, WRONG INSTRUMENT** — the claim is TRUE, so verifying the conclusion cannot catch it (`substrate`) | `§Q`-2 · the apex |
 | 15 | 2026-09-06 | ⚑⚑⚑ **`n of m` NOW HAS THREE AMENDMENTS — FORM, PROVENANCE, DECOMPOSITION — EACH FOUND BY AN ARTIFACT PASSING THE PREVIOUS TWO** (`summit`, `gabion`) | `§Q`-1 · `§Q`-2 · the apex |
 | 16 | 2026-09-06 | ⚑⚑⚑ **THE POSITIVE-CONTROL RULE NOW HAS FOUR COMPOSING CLAUSES AND NO TWO SUFFICE** · a control can be claim-shaped and still confounded by a homonym (`gabion`, `summit`, `mtools`) | `§5` · the apex |
+| 17 | 2026-09-06 | ⚑⚑⚑ **APEX FILED** by a dispatched agent — **the span is nearly EMPTY**, and it names five places this run file is wrong | **everyone** · `§C` · `§X` |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -716,6 +717,74 @@ recorded a weaker one. *The right control existed, was transmitted, and did not 
 written down.* `summit` ranks it above the homonym case for that reason and states plainly that it
 does not know what would protect against it. **Neither do I, and it is recorded as residue rather
 than closed.**
+
+⚑⚑⚑ **REV 17 — THE APEX IS FILED AT `findings/remaining-work/remaining-work-apex.md`
+(`398aeb1`), BUILT BY A DISPATCHED AGENT.** The operator's correction is why: *a dispatched agent is
+also independent.* This dispatcher had been treating independence as a property of the **session** —
+*I wrote `§Q`, so I cannot glue* — when a fresh vantage never wrote the questions, never negotiated
+these seventeen revisions, and holds none of the positions `§X` recorded at rev 1.
+
+⚑⚑ **PHASE 1's SPAN IS NEARLY EMPTY AND THAT IS THE FINDING.** `§C` asks for what **every** leg
+holds. **Zero items are held by all eight.** The largest correspondence class has **four** members
+— this gate refusing peer census commits, seen from four vantages as one event — and there are
+**three** work-item rows in `A` at all. ⚑ *What the legs share is METHOD, not work*: an `AUTHORED`
+ledger with no drift check in 6 of 8, *unbuildable at my input* in 4 of 8, a `grep -c` presented as
+a population and wrong in 5 of 8.
+
+⚑⚑⚑ **AND `§C`'s CONSTRUCTION PRESUMES AN INTERSECTION THE SUBJECT GUARANTEES IS EMPTY.** Eight
+parties surveying **their own ledgers over eight trees** cannot share work items. The dispatcher
+wrote a two-phase construction whose phase 1 was unsatisfiable by the question it was built for.
+
+**THE CENSUS IS BLOCKED ON ITS OPERATOR, 8:1 OVER ALL PEER EDGES COMBINED.** Of ~90 `§Q`-3 items:
+**65 point at the operator** — *a vertex this census never rostered and structurally could not
+ask* — 8 at a rostered peer, 7 at non-rostered parties, ~10 self-edges. ⚑ **So `§Q`-3's premise —
+*the blocking party frequently does not know* — holds for 8 of ~90 rows.**
+
+**93% of asserted edges are one-ended:** 27 distinct edges, **2** present at both ends. Per rev 12
+every one-ended edge is a finding, so this census's substantive output is **25 findings and 2
+confirmations** — and `§Q`-3 and `§Q`-4 are **not two noisy measurements of one relation** but two
+nearly disjoint edge sets over different vertex populations.
+
+**The three-population split over 89 filed rows: 50 BLOCK · 36 TODO · 2 INVERTED · 1 DIVERGENT.**
+⚑ **42 of the 50 blocks are one party's unplaced mail queue.** Strip it and the fleet's entire
+`§Q`-4 is **8 real blocks**.
+
+⚑⚑ **AND THE SUM DOES NOT EXIST.** The eight denominators are labels, sections, symbols, asks,
+rows, items, witnesses, modules. Summing gives **671** and the verdict is **INVALID**, not a
+number — rev 15's first amendment applied to this run's own total.
+
+⚑⚑⚑ **REV 17b — TWO OF THE APEX'S FIVE CRITICISMS RE-MEASURED BY THE DISPATCHER BEFORE
+COMMITTING**, because an independent leg is still a claim rather than a datum:
+
+⚑ **rev 12's `0 of 7 legs list gabion as blocking them` USES A CONTROL THAT FAILS REV 16 CLAUSE
+4.** Read at `§V` L235: the control is *the instrument found all 47 mentions* — which proves the
+reader can find **the string `gabion`**, not that it can detect **a blocking relation**.
+**Committed inside the row that published clause 3.**
+
+⚑⚑ **EVERY `n of 6` AND `n of 7` IN `§V` SILENTLY EXCLUDES `substrate`.** Measured:
+
+    git ls-tree -r HEAD --name-only findings/remaining-work/ | wc -l   ->  7
+    ... | grep -c substrate                                            ->  0
+
+Rev 6 created `filed elsewhere` as a **status** and **no measurement was re-scoped after it**.
+⚑ *That is the phantom-path defect INVERTED* — not a roster row naming a file that does not
+exist, but **a file that exists which no roster-derived measurement reaches.**
+
+**The other three, carried as the apex filed them:** `§X`'s *twelve peer-blocking events* is
+disclaimed by its own author in the same session (`MT-06`-1: nothing aggregates the refusals,
+lower bound, unknown denominator) and **two legs built `§Q`-6 rows on it as a count**; and rev 5's
+*five parties read past the header* understates it — **seven of eight reached the correct reading
+and two deferred to the author anyway.**
+
+⚑⚑⚑ **ONE BLOCK NOBODY PREDICTED, AND IT IS THIS FILE.** The run file's own header, filed by
+`paperkit` under `§Q`-4, **cost six of eight legs measurable work — and `paperkit`, the blocker of
+record, had no write access to clear it.** *A block whose owner cannot reach the object is in no
+leg's vocabulary and no `§Q` question.*
+
+⚑ **RESIDUE THE APEX KEPT OPEN RATHER THAN CLOSING:** no leg's internal figures were verified, so
+all of `AX-2` is carried testimony; the 65 operator-edges are **unverifiable in both directions**
+and no leg nominated the operator as a party; and its edge count of 27 is **hand-built**, with a
+second reader likely to get a different number.
 
 **Every filing cites the revision it was written against, in its first line.**
 
