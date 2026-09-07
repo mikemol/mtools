@@ -374,7 +374,25 @@ else
         # else, and nothing would have reported it. So the SHAPE is checked before any count over
         # the table is trusted — a cell count that differs from its siblings is the property, and
         # it needs no knowledge of what the columns mean.
+        # ⚑⚑⚑ AND THE SHAPE DISAGREEMENT HAS THREE CAUSES, NOT ONE — `cassian` measured this over
+        # 105 tracked files in an independent corpus: 12 anomalies, **three mechanisms**. Nine were
+        # a raw pipe inside a cell (this repository's case, and EVERY ONE WAS ALREADY ESCAPED —
+        # independent confirmation that escaping does not help). Five were the `||||` spanning-row
+        # idiom, DELIBERATE and correct. Two were a genuinely missing cell, an author merging two
+        # columns. ⚑⚑ A UNIFORM `fix the pipe` SWEEP WOULD HAVE DAMAGED FIVE AND MISSED NINE.
+        # ⚑ THE OVER/UNDER SPLIT ROUTES THE REMEDY AND IS ONE `awk` COMPARISON: a row with MORE
+        # cells than its header gained a separator (a raw pipe); one with FEWER lost a cell. The
+        # arm still cannot name the cause — it reports a shape disagreement — but it can say which
+        # of two remedies is even applicable, which the set alone could not.
+        _over=$(awk -F'|' '/^\|/{if(!t){t=1;h=NF;next} if(NF>h)c++} !/^\|/{t=0} END{print c+0}' "$census" 2>/dev/null)
+        _under=$(awk -F'|' '/^\|/{if(!t){t=1;h=NF;next} if(NF<h)c++} !/^\|/{t=0} END{print c+0}' "$census" 2>/dev/null)
         _cells=$(awk -F'|' '/^\| [0-9]+ \|/{print NF-2}' "$census" 2>/dev/null | sort -u | tr '\n' ' ')
+        if [ "$(printf '%s' "$_cells" | wc -w)" -gt 1 ]; then
+            echo "  ⚑ ${_over} row(s) OVER their header (a raw pipe added a separator)," \
+                 "${_under} UNDER (a cell is missing)."
+            echo "    Different causes, different remedies — and the ||||-spanning-row idiom is a"
+            echo "    legitimate OVER that must not be 'repaired'. Read the row before acting."
+        fi
         if [ "$(printf '%s' "$_cells" | wc -w)" -gt 1 ]; then
             echo "  ⚑ §V ROWS DISAGREE ON CELL COUNT: ${_cells}— a row carries a raw pipe,"
             echo "    usually inside a code span. Every table reader STOPS at the first such row"

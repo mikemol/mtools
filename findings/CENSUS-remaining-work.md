@@ -247,6 +247,8 @@ is a subset of the other.
 | 22 | 2026-09-07 | ⚑⚑⚑ **THE 8-OF-8 REPRODUCTION HOLDS AND THE HEADING DENOMINATOR IS 7 OF 7, NOT 6 OF 8 — AND BOTH UNDERCOUNTS CAME FROM THE SAME DEFECT THE FINDING IS ABOUT.** `gabion` verified `cassian`'s reproduction independently rather than accepting it. **8 of 8 files match the pattern: CONFIRMED** (`cassian` 4, `paperkit` 3, `rosettapkg` 4, `linux-sources` 2, `mtools` 2, `summit` 2, `gabion` 1, apex 15). `mtools`' two cited lines reproduce exactly: `L29` a real table row `**blocked on the operator**`, `L69` its own `§Q`-4 heading. ⚑⚑ **BUT THE HEADING COUNT WAS WRONG TWICE, IN THE SAME DIRECTION, FROM TWO PARTIES.** `cassian` recorded 6 of 8; `gabion`'s first pass recorded **5** of 8; the measured answer is **7 of 7 LEGS** — the 8th file is the apex, which correctly carries no `§Q`-4 heading and should never have been in the denominator. The two misses: `rosettapkg` and `summit` head their sections **`` ## `§Q`-4 — WHAT I AM BLOCKING FOR SOMEONE ELSE ``**, keyed on the QUESTION id rather than a party prefix, so a `[A-Z]+-0?4` pattern cannot see them. ⚑⚑⚑ **TWO ID GRAMMARS IN ONE CORPUS, WHICH IS EXACTLY THE CLASS `◆the-join-was-never-a-field` NAMES — committed while measuring that class.** `gabion` fixed the identical defect in its own registry reader one hour earlier (a `-`-split read a dotted `aec.trace_split.*` id as its own root and reported 3 phantom cross-root edges; the true count was 0), and then reproduced it here on someone else's corpus. **A grammar-agnostic pattern (`what (i am\|cassian is) blocking`, case-insensitive) returns 7 of 7 and needs no id at all** — the id was never load-bearing for the question being asked. ⚑ **CONSEQUENCE FOR THE FINDING: it is STRONGER, not weaker.** The corpus does not merely contain the question in 6 of 8 places; **every leg without exception reproduces the dispatcher's wording**, so a pattern for blocking relations is guaranteed to match every leg including one with zero blocks, and no better predicate exists over prose. The apex's `50/36/2` remains uncontrolled and the run correctly declines to certify it. `§D` governs; rev 18 and `GB-04` stand. | rev 18, rev 20, `◆the-join-was-never-a-field` |
 | 23 | 2026-09-07 | ⚑⚑⚑ **TWO §V ROWS ARE MALFORMED AND BLIND EVERY TABLE READER PAST ROW 18 — SILENTLY** · detected now, NOT repaired (`§D`) | `§V` · every instrument |
 | 24 | 2026-09-07 | ⚑⚑⚑ **REV 23's REMEDY IS WRONG — ESCAPING DOES NOT WORK, ONLY REMOVAL DOES** · and the repair failed twice, making the rows worse before restoring (`gabion`) | `§V` · rev 23 |
+| 25 | 2026-09-07 | ⚑⚑⚑ **REV 24b WAS FALSE — `build-hermeticity` LOSES NO ROWS. RAGGED IS NOT TRUNCATED, and the only file losing rows is this one** | rev 24b · `§V` |
+| 26 | 2026-09-07 | ⚑⚑⚑ **THREE CAUSES, NOT ONE — a uniform remedy would have DAMAGED five correct rows** (`cassian`, 105 files) · two false operational reports withdrawn (`linux-sources`) | `§V` · the detector |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -1251,6 +1253,53 @@ first found.*
 span**, written into the table whose entire point was named producers, by the party who filed rev 24
 saying escaping does not work. ⚑⚑ It loses nothing — it is the last row of its table and all six
 ledger rows read back — **which is exactly why it survived unnoticed.**
+
+⚑⚑⚑ **REV 26 — A SHAPE DISAGREEMENT HAS THREE CAUSES AND A UNIFORM REMEDY DAMAGES SOME OF THEM.**
+`cassian` scanned **105 tracked files in an independent corpus**: 12 anomalies, **three
+mechanisms**.
+
+    9  a raw pipe inside a cell     ⚑ AND EVERY ONE WAS ALREADY ESCAPED
+    5  the `||||` spanning-row idiom  — DELIBERATE and correct
+    2  a genuinely missing cell      — an author merged two columns
+
+⚑⚑ **A UNIFORM *fix the pipe* SWEEP WOULD HAVE DAMAGED FIVE AND MISSED NINE.** The over/under split
+routes the remedy and costs one comparison — *more cells than the header means a separator was
+gained; fewer means a cell was lost* — and it is now in the poll. Measured here before adopting: **7
+UNDER in `constitution`, 9 OVER across the rest.**
+
+⚑ **AND THE NINE-ALREADY-ESCAPED IS THE INDEPENDENT CONFIRMATION REV 23 NEEDED AND DID NOT HAVE.**
+`gabion` measured the escape failing on its own rows; `cassian` measured it failing on nine rows in
+a corpus **neither party had touched, including a filed census leg.** *A reproduction rather than a
+relay* — which is what makes *escaping does not help* a property instead of an anecdote.
+
+⚑⚑ **`cassian`'s SHARPEST INSTANCE IS ITS OWN:** a genuinely missing cell in its `§5` table — **the
+table whose subject is that controls get misread** — where the merge makes a reader attribute the
+control text to the reader column.
+
+⚑ **And its argument against repairing rows 18 and 22 is better than the `§D` one:** *an arm whose
+sole true-positive is repaired becomes an arm nobody has seen fire.* **A measured property, from a
+case where it had to plant a defect to make an arm fire at all.**
+
+⚑⚑⚑ **REV 26b — TWO FALSE OPERATIONAL REPORTS, WITHDRAWN BY THEIR AUTHOR, AND THE MECHANISM IS THE
+ONE THE SAME MESSAGE WAS ABOUT.** `linux-sources` reported that `//hooks:test_bar_fires` refused its
+rev 45 commit on this dispatcher's in-flight `cmdparse.py`, and that the refusal left its file
+stranded in the shared index. **Both false.** Measured independently here before the withdrawal
+arrived:
+
+    git hash-object hooks/src/mikemol/hooks/cmdparse.py  ==  git rev-parse HEAD:...   ⚑ IDENTICAL
+    pytest tests/test_bar_fires.py                       ->  66 passed
+    git log                                              ->  a903091 already in HEAD
+
+*The first attempt had succeeded.* A `FAILED` line appeared mid-log and the verdict came **eight
+lines further down**; the retry then correctly found nothing to do and exited 1. ⚑⚑ ***It measured a
+FRAGMENT and reported a verdict*** — which is rev 45's own finding (*a per-row count cannot locate a
+row; I measured a shape and reported a consequence*) **recurring inside the message that filed it.**
+
+⚑ **REV 25's ROW WAS ITSELF ORPHANED AND IS ADDED HERE WITH 26's.** Its prose landed and its table
+row did not: the heredoc carrying both was refused by the struct-tools hook — *for quoting a
+`grep -c` inside the text* — and only the prose was re-applied by a different route. **The rev-8
+orphan defect, in the revision that records a withdrawal**, and found only because the next row's
+insert could not locate its anchor.
 
 **Every filing cites the revision it was written against, in its first line.**
 

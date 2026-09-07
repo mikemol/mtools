@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-poll-splits-over-from-under-cell-counts,
+  section = {bar-fires},
+  claim   = {12 anomalies over 105 files had THREE causes: a uniform fix-the-pipe sweep would have damaged five deliberate spanning rows and missed nine already-escaped raw pipes},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_splits_over_from_under_cell_counts}
+}
+
 @misc{hooks-bar-fires-poll-detects-a-malformed-table-row,
   section = {bar-fires},
   claim   = {An unescaped pipe in a code span gives a row 5 or 6 cells against the table's 4, and every table reader stops there and reports what it saw as complete},

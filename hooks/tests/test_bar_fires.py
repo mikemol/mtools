@@ -1436,3 +1436,32 @@ def test_the_poll_detects_a_malformed_table_row() -> None:
     assert "re-measure PER ROW" in body, (
         "the set of shapes cannot certify an individual row; say so where the arm is read"
     )
+
+
+def test_the_poll_splits_over_from_under_cell_counts() -> None:
+    """⚑⚑⚑ A SHAPE DISAGREEMENT HAS THREE CAUSES AND A UNIFORM REMEDY DAMAGES SOME OF THEM.
+
+    `cassian` measured this over **105 tracked files in an independent corpus**: 12 anomalies,
+    **three mechanisms**. Nine were a raw pipe inside a cell — and ⚑ **every one was already
+    escaped**, which is independent confirmation that escaping does not help, reached on a corpus
+    neither this repository nor `gabion` had touched. Five were the `||||` spanning-row idiom,
+    **deliberate and correct**. Two were a genuinely missing cell.
+
+    ⚑⚑ **A UNIFORM `fix the pipe` SWEEP WOULD HAVE DAMAGED FIVE AND MISSED NINE.**
+
+    The over/under split routes the remedy and costs one comparison: a row with MORE cells than its
+    header **gained a separator**; one with FEWER **lost a cell**. ⚑ The arm still cannot name the
+    cause — it reports a shape disagreement — but it can say which of two remedies is even
+    applicable, *which the set alone could not*.
+
+    ⚑ And one of `cassian`'s two genuinely-missing cells is in its `§5` table — **the table whose
+    subject is that controls get misread** — where a merged cell makes a reader attribute the
+    control text to the reader column.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "OVER their header" in body, "the over/under split must be reported, not just the set"
+    assert "must not be 'repaired'" in body, (
+        "the ||||-spanning-row idiom is a legitimate OVER; a uniform remedy would damage it"
+    )
+    assert "if(NF>h)" in body, "rows OVER their header must be counted"
+    assert "if(NF<h)" in body, "rows UNDER their header are a different cause and count separately"
