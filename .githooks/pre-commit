@@ -142,6 +142,14 @@ say() { printf 'pre-commit: %s\n' "$1" >&2; }
 # ⚑ THE LOG DIRECTORY IS CREATED ONCE, HERE, AND NOTHING ELSE OWNS IT. It is deliberately NOT
 # `$staged`: see `witness()` below.
 _witness_logs="${TMPDIR:-/home/mikemol/.cache}/mtools-gate-logs"
+# ⚑⚑ THE RECORDER IS SHARED WITH `commit-msg`, which held four unrecorded refusal paths. Sourced
+# rather than duplicated: this file's own `note_failure` comment says a repair applied to one call
+# site is not a repair to the class, and two writers for one record is that shape.
+if [ -r "$(git rev-parse --show-toplevel)/refusal_record.sh" ]; then
+    . "$(git rev-parse --show-toplevel)/refusal_record.sh"
+else
+    record_refusal() { :; }
+fi
 mkdir -p "$_witness_logs"
 
 witness() {  # label, then domain_witness.sh's own arguments
@@ -201,6 +209,7 @@ for dist in hooks mdstruct ratchet; do
     if [ ! -x "$dist/.venv/bin/$tool" ]; then
       say "$dist/.venv/bin/$tool not found — cannot run the gate, commit refused"
       say "  a skip here would report green over a check that never executed"
+      record_refusal pre-commit " - $dist/.venv/bin/$tool absent"
       exit 1
     fi
   done
@@ -444,6 +453,7 @@ done
 # suite that never ran, which is the defect this file exists to refuse.
 if ! command -v bazel >/dev/null 2>&1; then
   say "bazel not found — cannot run the hermetic suite, commit refused"
+  record_refusal pre-commit " - bazel absent"
   exit 1
 fi
 # ⚑⚑⚑ THE SUITE NAMES ITS FAILING TARGETS, because a label is only as specific as the check under
@@ -705,52 +715,10 @@ if [ "$fail" -ne 0 ]; then
     # ⚑ THE COMMITTER IS KEPT ANYWAY, and not because it discriminates. It does not. It is the
     # identity the commit will actually carry, so a reader comparing this record against `git log`
     # needs it to join on; dropping it would make the row true and unjoinable.
-    _refusal_log="$_witness_logs/REFUSALS.tsv"
-    # ⚑⚑⚑ THE COLUMN THAT WAS ADDED TO DISCRIMINATE RETURNS THE NON-DISCRIMINATING CONSTANT
-    # FOR EVERY ROW WRITTEN BEFORE IT EXISTED. MEASURED in the live record: rows 1-2 carry 3
-    # fields and row 3 carries 4, so a reader splitting on tab reads `$2` as
-    # `mikemol@gmail.com` — the session id for two of three rows. Not a parse error. A PLAUSIBLE
-    # WRONG VALUE, in the exact column added because the email was a constant that could not
-    # tell two parties apart. The schema changed at `6963eaa` and the file did not.
-    # ⚑⚑ RAGGED IS NOT TRUNCATED, AND THE CENSUS TAUGHT THIS REPO WHICH ONE COSTS: position
-    # decides. Here the short rows come FIRST, so every later row is read correctly and only the
-    # oldest two are silently wrong — the direction that looks healthy from the tail.
-    # ⚑ A HEADER IS THE FIX AND A VERSION FIELD IS NOT. Measured before choosing: the record has
-    # ZERO readers (`grep -rn REFUSALS` over every `.sh` and `.py` finds the writer and two
-    # assertions about it, and no consumer) over the window `fa7ba18` 2026-09-06T20:23 to now, so
-    # there is nothing to migrate and no parser to teach a version to. What a header buys is that
-    # the columns are SELF-DESCRIBING at the moment a first reader arrives, and a row whose field
-    # count disagrees with the header is DETECTABLE rather than plausible.
-    # ⚑ Written only when absent, so it cannot re-enter an append-only file on every refusal.
-    if [ ! -s "$_refusal_log" ]; then
-        printf '%s\t%s\t%s\t%s\n' \
-            'utc' 'session' 'committer' 'failed_checks' \
-            >> "$_refusal_log" 2>/dev/null || true
-    fi
-    printf '%s\t%s\t%s\t%s\n' \
-        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-        "${CLAUDE_CODE_SESSION_ID:-unknown-session}" \
-        "$(git config user.email 2>/dev/null || echo unknown)" \
-        "$(printf '%s' "$failed_checks" | tr '\n' ' ' | sed 's/  */ /g')" \
-        >> "$_refusal_log" 2>/dev/null || true
-    # ⚑⚑⚑ THE DURABLE RECORD KEPT THE LABEL AND DROPPED THE ARMS, WHICH IS THE DEFECT THE LINE
-    # BELOW ARGUES AGAINST — applied to the transcript and not to the record. `failed_detail`
-    # reaches stderr only. ⚑ MEASURED on this gate's own last refusal: the record preserves
-    # `hooks: warrant sections vs rubric sections` and nothing else, while the account that
-    # actually resolved it — a two-line diff naming `tests/test_bar_fires.py` as the section with
-    # no rubric row — existed for one screen and was gone. I re-derived it by hand the next tick.
-    # ⚑⚑ A LABEL IS A POINTER INTO A TRANSCRIPT, AND THE TRANSCRIPT IS THE EPHEMERAL HALF. The
-    # record outlives the session that caused the refusal; the scratch log it points at is
-    # TRUNCATED by the next run of the same check. So the durable half kept the part that needs
-    # the ephemeral half to be readable — which is the furniture rule inverted: not a line nobody
-    # reads, but a line that cannot be acted on by the time anybody does.
-    # ⚑ ONE FILE PER REFUSAL, NAMED BY THE SAME UTC STAMP THE ROW CARRIES, so the join is the
-    # timestamp rather than a guess. Append-only like the row: nothing is pruned, because a
-    # rotation policy decides what may be forgotten and this gate has no standing to decide that.
-    if [ -n "${failed_detail:-}" ]; then
-        printf '%s\n' "$failed_detail" \
-            > "$_witness_logs/refusal-$(date -u +%Y%m%dT%H%M%SZ)-detail.log" 2>/dev/null || true
-    fi
+    # ⚑ ONE WRITER. This was an inline block; `commit-msg`'s four refusal paths could not reach
+    # it, so six of seven paths recorded nothing. The shared recorder carries the header, the
+    # session column, the hook column and the detail file — all measured here first.
+    record_refusal pre-commit "$failed_checks" "${failed_detail:-}"
     say "REFUSED — the following check(s) failed:${failed_checks:-
   (unattributed: a check set the failure flag without naming itself)}"
     # ⚑ THE ACCOUNT IS REPLAYED UNDER THE VERDICT, not left where it was printed. A reader who

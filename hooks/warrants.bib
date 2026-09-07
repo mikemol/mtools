@@ -1337,3 +1337,20 @@
             the same UTC stamp, and only when a check actually captured one.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_durable_refusal_record_keeps_the_account_not_only_the_label},
 }
+
+@misc{hooks-bar-fires-every-refusal-path-records-not-only-the-verdict-one,
+  title  = {The record counted one refusal path and called itself refusals},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The refusal record exists as a lower bound on how many peer commits this gate has
+            refused. Measured across every hook: seven paths reach exit 1 and exactly one wrote
+            a row --- pre-commit's accumulated-failure verdict. Two early exits and all four
+            commit-msg exits refused and vanished. Every row was true and the arithmetic right;
+            the population was refusals of one kind, and it undercounts in the flattering
+            direction, which bears on the gate-cost question an operator is holding open. One
+            recorder sourced by both hooks, carrying a hook column, verified end to end by a
+            real commit-msg refusal that previously recorded nothing. The arm counts every exit
+            rather than sampling, because the defect was six unwired sites and one wired.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_every_refusal_path_records_not_only_the_verdict_one},
+}

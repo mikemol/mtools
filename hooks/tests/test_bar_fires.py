@@ -1362,14 +1362,17 @@ def test_the_gate_retains_a_refusal_record() -> None:
     has no standing to make that decision. Growth is bounded by how often the gate refuses, which
     is the quantity being measured.
     """
-    body = _GATE.read_text(encoding="utf-8")
+    body = _RECORDER.read_text(encoding="utf-8")
     assert "REFUSALS.tsv" in body, "a refusal must leave a durable record"
-    assert '>> "$_refusal_log"' in body, (
+    assert '>> "$_rr_log"' in body, (
         "the record must APPEND; a truncating write reproduces the defect being repaired"
     )
-    refusal_at = body.index("_refusal_log=")
-    verdict_at = body.index('say "REFUSED')
-    assert refusal_at < verdict_at, "the record is written before the verdict is printed"
+    # ⚑ THE ORDERING IS A PROPERTY OF THE CALLER, NOT THE RECORDER, since the writer moved to a
+    # shared file. Read where the assertion's subject now lives rather than where it used to.
+    gate = _GATE.read_text(encoding="utf-8")
+    assert gate.index("record_refusal pre-commit") < gate.index('say "REFUSED'), (
+        "the record is written before the verdict is printed"
+    )
 
 
 def test_every_refusal_site_carries_its_own_detail() -> None:
@@ -1576,7 +1579,14 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     """
     src = _THIS.read_text(encoding="utf-8")
     tree = pyast.parse(src)
-    targets = {"_POLL": _POLL, "_GATE": _GATE, "_WITNESS": _WITNESS, "_THIS": _THIS}
+    # ⚑ A TARGET MISSING FROM THIS MAP IS NOT A GAP THE SWEEP REPORTS — the test resolves to
+    # whatever OTHER file it reads, and its assertions are checked against the wrong haystack.
+    # `_RECORDER` was absent when the refusal writer moved into it, and three arms went red
+    # against `pre-commit` rather than being swept against the file they now read.
+    targets = {
+        "_POLL": _POLL, "_GATE": _GATE, "_WITNESS": _WITNESS, "_THIS": _THIS,
+        "_RECORDER": _RECORDER, "_MSGHOOK": _MSGHOOK, "_MSGCOUNT": _MSGCOUNT,
+    }
     checked = 0
     missing: list[str] = []
     for fn in (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef)):
@@ -1591,9 +1601,16 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
             and isinstance(n.value.func.value, pyast.Name)
         }
         named = [targets[r] for r in reads if r in targets]
-        if len(named) != 1:
+        # ⚑⚑⚑ `len(named) != 1: continue` SILENTLY SKIPPED EVERY MULTI-FILE TEST, which is the
+        # vacuity the sweep exists to catch, inside the sweep. The first test to read two files
+        # exposed it — and it exposed it by FAILING rather than by being skipped only because a
+        # target was missing from the map above; with the map complete it would have gone quiet.
+        # ⚑ THE UNION IS ALSO THE CORRECT PREDICATE, not merely the one that admits these tests:
+        # an assertion is vacuous when its literal appears in NO file the test reads, and taking
+        # `named[0]` asserted that a test's first file is its only one.
+        if not named:
             continue
-        haystack = named[0].read_text(encoding="utf-8")
+        haystack = "\n".join(f.read_text(encoding="utf-8") for f in named)
         for node in pyast.walk(fn):
             if (
                 isinstance(node, pyast.Compare)
@@ -1695,7 +1712,10 @@ def test_a_commit_message_cannot_assert_a_wrong_ledger_count() -> None:
     assert "ledger (holds|has)" in body, (
         "the claim must be POSITIONED as a total; a subset count is not a ledger claim at all"
     )
-    hook = (_DIST.parent / ".githooks" / "commit-msg").read_text(encoding="utf-8")
+    # ⚑ NAMED, NOT INLINE. The sweep resolves a test's sources by VARIABLE NAME, so an inline
+    # path expression is a file the sweep cannot see — these two assertions were checked against
+    # `message_counts.sh`, where they are absent, and the multi-file skip hid that they were.
+    hook = _MSGHOOK.read_text(encoding="utf-8")
     assert "message_counts.sh" in hook, "the checker must be invoked, not merely present"
     assert "cannot verify counts, commit refused" in hook, (
         "an absent checker refuses rather than skips; a skip and a pass are indistinguishable"
@@ -1751,7 +1771,7 @@ def test_the_refusal_record_names_the_party_not_the_committer() -> None:
     identity the commit will carry, so a reader joining this record against `git log` needs it.
     **Dropping it would make the row true and unjoinable.**
     """
-    body = _GATE.read_text(encoding="utf-8")
+    body = _RECORDER.read_text(encoding="utf-8")
     assert "CLAUDE_CODE_SESSION_ID" in body, (
         "the party is the session; the committer is a constant in this tree"
     )
@@ -1842,13 +1862,13 @@ def test_the_refusal_record_names_its_own_columns() -> None:
     and no parser to teach. What a header buys is columns that are self-describing when a first
     reader arrives, and a field count a reader can DISAGREE with.
     """
-    body = _GATE.read_text(encoding="utf-8")
-    assert "'utc' 'session' 'committer' 'failed_checks'" in body, (
+    body = _RECORDER.read_text(encoding="utf-8")
+    assert "'utc' 'session' 'committer' 'hook' 'failed_checks'" in body, (
         "the record must name its columns, or a short row is plausible rather than detectable"
     )
     # ⚑ WRITTEN ONLY WHEN ABSENT. An append-only file that re-emits its header on every refusal
     # is worse than one with none: the header becomes a row.
-    assert 'if [ ! -s "$_refusal_log" ]; then' in body, (
+    assert 'if [ ! -s "$_rr_log" ]; then' in body, (
         "the header must be conditional on an empty file, never appended per refusal"
     )
     # ⚑ THE HEADER MUST PRECEDE THE ROW WRITE. Positional, like the digest arm: a header emitted
@@ -1878,7 +1898,7 @@ def test_the_durable_refusal_record_keeps_the_account_not_only_the_label() -> No
     furniture rule inverted: not a line nobody reads, but a line that cannot be acted on by the
     time anybody does.**
     """
-    body = _GATE.read_text(encoding="utf-8")
+    body = _RECORDER.read_text(encoding="utf-8")
     assert "-detail.log" in body, "the account must outlive the run that produced it"
     # ⚑ THE JOIN MUST BE THE ROW'S OWN KEY. A detail file a reader cannot tie to a row is a second
     # artifact with the first one's problem.
@@ -1887,6 +1907,65 @@ def test_the_durable_refusal_record_keeps_the_account_not_only_the_label() -> No
     )
     # ⚑ AND IT MUST BE CONDITIONAL. An empty detail file asserts that a refusal had no account,
     # which is a different claim from a check that captured none — the gate says that in words.
-    assert 'if [ -n "${failed_detail:-}" ]; then' in body, (
+    assert 'if [ -n "${3:-}" ]; then' in body, (
         "no detail must create no file, never an empty one"
     )
+
+
+_MSGHOOK = _DIST.parent / ".githooks" / "commit-msg"
+_RECORDER = _DIST.parent / "refusal_record.sh"
+
+
+def test_every_refusal_path_records_not_only_the_verdict_one() -> None:
+    """⚑⚑⚑ THE RECORD COUNTED ONE REFUSAL PATH AND CALLED ITSELF REFUSALS.
+
+    Its purpose is a lower bound on how many peer commits this gate has refused. ⚑ MEASURED across
+    every hook in `.githooks/`: **seven paths reach `exit 1` and exactly one wrote a row** —
+    `pre-commit`'s accumulated-failure verdict. The two early exits (a missing tool, a missing
+    bazel) and all four `commit-msg` exits refused and vanished.
+
+    ⚑⚑ A CORRECT COUNT OVER A MIS-NAMED POPULATION. Every row was true and the arithmetic was
+    right; the column said `failed_checks`, so nothing in the file could reveal that its
+    population was *refusals of one kind*. It undercounts in the FLATTERING direction — a gate
+    refusing more than it records reads as cheaper than it is, which is the live question an
+    operator is holding open about this gate's cost.
+
+    ⚑ ONE FILE SOURCED BY BOTH HOOKS, because this gate's own `note_failure` comment says a repair
+    applied to one call site is not a repair to the class. A second copy in `commit-msg` would be
+    the exact shape that comment was written about.
+    """
+    rec = _RECORDER.read_text(encoding="utf-8")
+    msg = _MSGHOOK.read_text(encoding="utf-8")
+    gate = _GATE.read_text(encoding="utf-8")
+    assert "record_refusal()" in rec, "the recorder is one function in one file"
+    # ⚑ THE HOOK IS A COLUMN because the PATH is what was missing. A row saying only that some
+    # check failed cannot answer which gate refused, and that is the record's whole question.
+    assert "'hook'" in rec, "the row must name which hook refused"
+    assert '"$1" \\' in rec, "the hook argument must reach the row it names"
+    # ⚑ BOTH HOOKS SOURCE IT RATHER THAN COPYING IT. Two writers for one record is the defect.
+    assert 'refusal_record.sh"' in msg, "commit-msg must source the shared recorder"
+    assert 'refusal_record.sh"' in gate, "pre-commit must source the shared recorder"
+    assert '_refusal_log="$_witness_logs' not in gate, (
+        "pre-commit's inline writer must be gone, or the record has two authors"
+    )
+    # ⚑ EVERY `exit 1` IN EITHER HOOK IS PRECEDED BY A RECORD. Counted, not spot-checked: this
+    # defect was six unwired sites and one wired, which no single spot-check would have caught.
+    for name, body in (("commit-msg", msg), ("pre-commit", gate)):
+        exits = [
+            i for i, ln in enumerate(body.splitlines())
+            if ln.strip() == "exit 1" and not ln.strip().startswith("#")
+        ]
+        lines = body.splitlines()
+        # ⚑⚑ A PROXIMITY WINDOW WAS THE WRONG PREDICATE, AND ITS OWN F-ARM SAID SO. Six lines
+        # caught five sites and failed the verdict's, whose `record_refusal` sits eight lines up
+        # with the account-printing block between. ⚑ Widening the window would weaken the check to
+        # fit one case — a threshold tuned until it stops complaining. The property is ORDER, not
+        # nearness: every `exit 1` must carry a record since the PREVIOUS one, so each refusal
+        # path is covered exactly once and none inherits its predecessor's row.
+        prev = 0
+        for i in exits:
+            block = "\n".join(lines[prev:i])
+            assert "record_refusal" in block, (
+                f"{name} line {i + 1}: an exit 1 with no record_refusal since the previous one"
+            )
+            prev = i

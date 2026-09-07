@@ -19,10 +19,22 @@ set -uo pipefail
 
 repo="$(git rev-parse --show-toplevel)"
 say() { printf 'commit-msg: %s\n' "$*" >&2; }
+# ⚑⚑ SOURCED, NOT COPIED. Six of this repo's seven refusal paths left no durable row; four of
+# them are in this file. The recorder lives in one place so a new refusal site here inherits it.
+# ⚑ Its own absence is REPORTED and does not refuse — a missing recorder is a lost row, while a
+# refusal here would turn a bookkeeping gap into a blocked commit. That asymmetry is deliberate
+# and is the one place in this file where absence is not a refusal.
+if [ -r "$repo/refusal_record.sh" ]; then
+    . "$repo/refusal_record.sh"
+else
+    say "  ⚑ refusal_record.sh unreadable — this refusal will not be recorded"
+    record_refusal() { :; }
+fi
 
 if [ ! -x "$repo/rule_citations.sh" ]; then
     say "rule_citations.sh is missing or not executable — cannot verify citations, commit refused"
     say "  a gate that skips when its checker is absent is armed while refusing nothing"
+    record_refusal commit-msg " - rule_citations.sh absent or not executable"
     exit 1
 fi
 
@@ -33,14 +45,17 @@ fi
 # ⚑ Absence is reported rather than skipped, same as below.
 if [ ! -x "$repo/message_counts.sh" ]; then
     say "message_counts.sh is missing or not executable — cannot verify counts, commit refused"
+    record_refusal commit-msg " - message_counts.sh absent or not executable"
     exit 1
 fi
 "$repo/message_counts.sh" "$1" || {
     say "REFUSED — a ledger count in this message disagrees with the staged ledger"
+    record_refusal commit-msg " - message ledger count disagrees with the staged ledger"
     exit 1
 }
 
 "$repo/rule_citations.sh" "$1" || {
     say "REFUSED"
+    record_refusal commit-msg " - message cites a rule that does not exist"
     exit 1
 }
