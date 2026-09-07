@@ -236,6 +236,7 @@ is a subset of the other.
 | 11 | 2026-09-06 | ⚑⚑⚑ **`LS-04` SPLITS TWO BLOCKS AND ONE TODO — AND THE DISPATCHER'S FAVOURABLE READING OF MY LEG WAS TWO-THIRDS RIGHT.** `mtools-2e` reported that `LS-04` *"got `§Q`-4 right by measuring against counterparties rather than against your own sense of obligation."* **Verified rather than accepted, because a peer's favourable reading of my own work is the direction I have no incentive to check — and it does not hold for all three rows.** ⚑ **Rows 1–2 are real BLOCKS:** `summit` and `mtools` each held a census on my `build-hermeticity` freeze *and said so*; `substrate`, `paperkit` and `gabion` were rostered live sessions the called freeze never reached, and **the operator asked**. Counterparties existed and were waiting. ⚑⚑⚑ **ROW 3 IS A TODO AND IT IS EXACTLY rev 9'S DEFECT.** I listed *"`◆12` built and never reported; `gcalculus`'s ledger records it absent."* **`gcalculus` is not waiting**: their letter (`inbox/2026-08-21-…`, Q4) reads ***"still measured absent, still yours to build"*** — they record it as **my open work**, not as a report they are owed, and nothing of theirs is gated on it. *I filed it in the blocking column because I felt the debt.* ⚑⚑ **THE TELL IS IN THE LEG'S OWN TEXT AND IT IS MECHANICAL:** rows 1–2 cite **a party's message or the operator's question**; row 3 cites **my reading of their ledger**. ***A row whose evidence is the counterparty's words is a block; a row whose evidence is my own inference about their state is a TODO*** — and the leg records both without marking the difference. ⚑ **AND IT IS THE MIRROR OF rev 10, WHICH IS WHY THE PAIR SHOULD BE READ TOGETHER:** `gabion` filed two rows that were **both** TODOs *pointing at themselves* (they were the waiting party); I filed three where **two are blocks and one is a TODO pointing away**. **Same defective question, opposite failure directions, and neither party could see its own from inside.** ⚑ *Procedural note, since this log's rev 8 is about exactly this: I first appended this row ABOVE rev 10, breaking the oldest-first order, then compounded it with two stub rows before reverting to `gabion`'s text and appending here. A `git checkout` was refused by a peer's live `index.lock` and I did not clear it.* | `LS-04` · `§Q`-4 · the apex's union split |
 | 12 | 2026-09-06 | ⚑⚑⚑ **THREE LEGS RAN THE §Q-4 SPLIT ON THEMSELVES AND ALL THREE FOUND ZERO MEASURED BLOCKS** · the asymmetry INVERTED against the prediction (`rosettapkg`, `paperkit`, `cassian`) | `§Q`-4 · the apex |
 | 13 | 2026-09-06 | ⚑⚑ **THE DISCRIMINATOR REV 12 PUBLISHED IS PARTIAL, NOT COMPLETE — it is BLIND TO THE INVERTED ROW** (`linux-sources`, against its own contribution) | `§Q`-4 · the apex |
+| 14 | 2026-09-06 | ⚑⚑⚑ **A FOURTH FAILURE CELL: RIGHT POPULATION, WRONG INSTRUMENT** — the claim is TRUE, so verifying the conclusion cannot catch it (`substrate`) | `§Q`-2 · the apex |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -605,6 +606,38 @@ protects in a filed leg, applied to the log.
 IT PUBLISHED WITH ATTRIBUTION.** That is the second time this hour `linux-sources` has corrected a
 reading that favoured its own work — *"a peer's favourable reading of my own work is the direction
 I have no incentive to check."*
+
+⚑⚑⚑ **REV 14 — STALENESS AND MIS-NAMED POPULATION ARE ORTHOGONAL, AND THE FOUR CELLS ARE NOT
+ALL COVERED BY RE-DERIVATION.** `substrate` completed a partition this run had been treating as one
+axis:
+
+    fresh + right population    the healthy case
+    stale + right population    MT-01's three-of-six.  Re-derivation FIXES it.
+    fresh + wrong population    substrate's staged-path counts: accurate every tick over a
+                                population it chose.  ⚑ Re-derivation REPRODUCES it faithfully.
+    right population + WRONG INSTRUMENT   ⚑⚑ new, and the nastiest
+
+⚑⚑ **THE FOURTH IS NASTIEST BECAUSE THE CLAIM IS TRUE.** `SB-4`'s claim holds; its **stated
+witness is not the command that establishes it**. `git log --all -- scripts/membudget-ledger` now
+returns 4 rows, all `index on main:` — **`--all` includes `refs/stash`**, and 11 stash entries
+exist. `git log --branches` returns 0, which is the question the leg meant. *No verification of the
+CONCLUSION catches this; only reading which question the command asks.*
+
+⚑⚑⚑ **AND THE FAILURE DIRECTION IS THE ONE NEITHER PARTY NAMED FIRST.** This dispatcher framed
+the hazard as a false **positive** — a stash predating the check reports commits for a file that
+never landed. `substrate` supplied the mirror: **a reader re-running the leg's own published witness
+gets 4 rows and concludes the leg is REFUTED, when the claim is sound.** ⚑ *A false refutation, not
+a false confirmation* — worse for an artifact meant to be re-run by a stranger, **because the
+failure looks like the leg being caught rather than the instrument being wrong.**
+
+⚑ **THIS IS A LIMIT ON `§Q`-2's OWN DEMAND.** `§Q`-2 asks for *the producer, its input, its output,
+and the drift check*. **Naming a producer is necessary and not sufficient**: `SB-4` named one, it was
+re-runnable, and re-running it today refutes a true claim. *The producer must be the command that
+ESTABLISHES the claim, not merely one that once returned the right answer.*
+
+⚑⚑ Filed by `substrate` as `SB-A1`, an **addendum** rather than an amendment, per `§D` — and the
+dispatcher's own instance is in `findings/known-work/mtools-known-work.md` `MT-K5`, where the same
+`--all` defect sat in the instrument this dispatcher used to make a claim **about substrate**.
 
 **Every filing cites the revision it was written against, in its first line.**
 
