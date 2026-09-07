@@ -990,6 +990,11 @@ _MAX_UNRESOLVED = 23
 # gate, the preflight that predicts it, and the message checker. If a sweep finds fewer, the
 # pattern stopped matching and the anchoring arm passes by finding nothing to check.
 _MIN_WARRANT_COUNT_SITES = 3
+# ⚑ A FLOOR ON THE HARNESS SCRIPT POPULATION, not a target. Sixteen shell scripts plus the
+# two git hooks were present when this shipped; a glob that stopped matching would make any
+# harness-wide arm pass by finding nothing to check, which is the direction that reads as
+# success. Set below the measured count so adding or removing one script is not a refusal.
+_MIN_HARNESS_SCRIPTS = 12
 # ⚑ A PAYDOWN CEILING, NOT A TARGET, AND IT IS NOW ZERO. All 20 were paid the tick after the
 # ceiling was set — each resolved to a real test by its own key, so the debt was a missing `check`
 # LINE rather than missing coverage. ⚑⚑ A ceiling left at 20 after paying 20 would let the debt
@@ -2516,21 +2521,45 @@ def test_no_gate_asserts_a_figure_it_cannot_reach() -> None:
     from the corpus. The discriminator is not *is it hardcoded* but *can anything here check it* —
     which is why this arm names the unreachable referent rather than banning figures.
     """
+    # ⚑⚑⚑ THIS ARM SAID *NO GATE* AND READ ONE OF EIGHTEEN SCRIPTS. Its name states a universal
+    # over gates; its haystack was `domain_witness.sh` alone, so any sibling could carry the same
+    # unreachable figure with this green. That is the defect measured at `383dacd` — an arm whose
+    # population is one file where the property is about the harness — reproduced in an arm
+    # written two ticks earlier, by me, three ticks before I named the class.
+    # ⚑⚑ MEASURED ACROSS ALL EIGHTEEN: zero violations. So this is COVERAGE, not a live defect,
+    # and saying so is the honest sizing rather than the alarming one.
     body = _WITNESS.read_text(encoding="utf-8")
-    commands = "\n".join(
+    witness_commands = "\n".join(
         ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
     )
     # ⚑ POSITIVE CONTROL: the file must still emit the warning this arm is about, or the
     # assertion below passes because the sentence vanished rather than because it was fixed.
-    assert "write this tree" in commands, (
+    assert "write this tree" in witness_commands, (
         "the concurrent-writer warning must still be emitted; this arm would pass on its absence"
     )
-    # ⚑ NO SESSION COUNT. Only a harness reading can produce it, and only for one instant.
-    counted: list[str] = pyre.findall(
-        r"\b(one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+sessions?\b", commands
+    # ⚑ NO SESSION COUNT, IN ANY SCRIPT. Only a harness reading can produce it, and only for one
+    # instant — `blockers.sh` says so in as many words about peer reachability.
+    session_count = pyre.compile(
+        r"\b(one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+sessions?\b"
+    )
+    counted: list[str] = []
+    scanned = 0
+    for script in [*sorted(_DIST.parent.glob("*.sh")), _GATE, _MSGHOOK]:
+        scanned += 1
+        commands = "\n".join(
+            ln for ln in script.read_text(encoding="utf-8").splitlines()
+            if not ln.lstrip().startswith("#")
+        )
+        counted.extend(
+            f"{script.name}: {m.group(0)}" for m in session_count.finditer(commands)
+        )
+    # ⚑ FLOOR ON THE POPULATION: a glob that stopped matching would make this vacuous in the
+    # direction that reads as success.
+    assert scanned >= _MIN_HARNESS_SCRIPTS, (
+        f"only {scanned} script(s) scanned; the population is wrong"
     )
     assert not counted, (
-        f"a gate asserts {counted} sessions write this tree — a figure no script can reach, "
+        f"a gate asserts {counted} — a figure no script can reach, "
         "since live sessions are a harness reading rather than a fact about the tree"
     )
 
