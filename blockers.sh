@@ -719,6 +719,29 @@ else
                     | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
                 _notyet=${_notyet:-0}
                 _accounted=$((_elsewhere + _pending + _declined + _notyet))
+                # ⚑⚑⚑ THE TERMS AND THE TOTAL MUST COME FROM DIFFERENT MEASUREMENTS, and this
+                # partition did not. Every term above is the same query with a different prefix,
+                # and `_accounted` is their sum — so when the four prefixes match nothing, all
+                # four terms are 0, the total is 0, and **they agree with each other because they
+                # are one failure counted four times.** Printing the terms proves nothing there.
+                # ⚑⚑ THE BOUND IS `rosettapkg`'s, ON A RULE THEY HAD JUST TAKEN FROM ME. Printing
+                # the operands stops a HIDDEN operand; it does not stop a partition whose terms
+                # share a source. Their own figure line read `0 of >=0`, which is true of every
+                # population — *a claim that cannot be wrong, wearing the shape of a clean result*.
+                # ⚑⚑⚑ AND MEASURING IT FOUND A SECOND DEFECT UNDERNEATH. On
+                # `CENSUS-build-hermeticity.md` the four terms are 0 while `--starts 'filed'`
+                # returns **14 rows at rc=0** — the reader parses that file perfectly. Every §S row
+                # there says `filed`, a terminal state my four prefixes never enumerated because I
+                # built them from the two censuses I happened to be reading. **A hand-written
+                # vocabulary, in the arm written to repair a hand-written population.**
+                # ⚑ SO THE TOTAL IS NOW READ FROM THE TABLE ITSELF rather than summed from the
+                # probes: `§S` row count is an independent measurement, and a disagreement between
+                # it and the sum is exactly the signal the sum alone cannot produce.
+                _rows=$("$md" tables "$census" 2>/dev/null \
+                    | grep -E 'surveyor \| status|party \| state' | tail -1 \
+                    | sed -n 's/^  table [0-9]*  \([0-9]*\) row(s).*/\1/p')
+                _rows=${_rows:-0}
+                _unmatched=$((_rows - _accounted))
                 # ⚑⚑⚑ EVERY COMPONENT OF THE ASSERTED EXPRESSION IS PRINTED, NOT JUST ITS VERDICT.
                 # The old branch asserted `_elsewhere >= _gap` and printed only `_elsewhere`, so a
                 # reader got a conclusion with one operand invisible and no way to check the
@@ -731,12 +754,26 @@ else
                 echo "    §S marks: $_elsewhere (col-1 cells DECLARING it; $_anywhere mention it anywhere)"
                 echo "    gap:      $_gap = roster $roster - HEAD legs $n_head"
                 echo "    states:   $_accounted = $_elsewhere filed + $_pending pending + $_declined declined + $_notyet not-yet"
+                # ⚑ THE INDEPENDENT SECOND SOURCE, PRINTED BESIDE THE SUM. `§S` holds this many
+                # rows; the probes classified that many. The remainder is states this arm's
+                # vocabulary does not know — a fact about THIS READER, and it is now visible
+                # rather than absorbed into a zero.
+                echo "    §S rows:  $_rows measured; $_unmatched carry a state these probes do not name"
                 # ⚑ THE THIRD OUTCOME, AND IT IS NOT A FAILURE. When no cell declares the mark but
                 # some row mentions it, this reader cannot adjudicate the file — that is INVALID,
                 # not FALSE, and reporting it as a dropped row would be a statement about the
                 # reader dressed as a finding about the census. The same three-state discipline
                 # this fleet applies to lease identity and to absence claims.
-                if [ "${_elsewhere:-0}" -eq 0 ] && [ "${_anywhere:-0}" -gt 0 ]; then
+                # ⚑⚑ THE VOCABULARY-GAP BRANCH COMES FIRST, because it explains the others.
+                # If §S holds rows and NONE of them classified, the arm is reading a dialect it
+                # does not know — and every downstream figure is 0 for that one reason. Reporting
+                # a dropped row there would be *the reader described as the file*, which is the
+                # same three-state discipline UNADJUDICATED already applies one axis over.
+                if [ "${_rows:-0}" -gt 0 ] && [ "${_accounted:-0}" -eq 0 ]; then
+                    echo "    UNCLASSIFIED: $_rows §S row(s) and 0 matched any state this arm"
+                    echo "    names. The terms below would all read 0 for that ONE reason, so"
+                    echo "    their agreement is not evidence. Extend the vocabulary or read §S."
+                elif [ "${_elsewhere:-0}" -eq 0 ] && [ "${_anywhere:-0}" -gt 0 ]; then
                     echo "    UNADJUDICATED: 0 cells declare the mark, $_anywhere mention it. This"
                     echo "    census phrases the mark differently — a prefix reader cannot settle"
                     echo "    it, and calling it a dropped row would report the READER, not the file."

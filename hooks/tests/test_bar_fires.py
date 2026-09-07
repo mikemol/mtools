@@ -3518,3 +3518,52 @@ def test_the_roster_gap_is_compared_against_every_state_not_only_the_mark() -> N
     ) in commands, (
         "the accounted total must be printed with the states that compose it, not as a bare number"
     )
+
+
+def test_a_partitions_terms_and_total_come_from_different_measurements() -> None:
+    """⚑⚑⚑ PRINTING THE TERMS DOES NOT SAVE A PARTITION WHOSE TERMS SHARE A SOURCE.
+
+    The operator's rule — *anywhere you assert an expression, print that expression's components* —
+    stops a HIDDEN operand. **It does not stop a partition whose terms are all zero because the
+    same failed match produced every one of them.** Then the printed terms prove only that they
+    agree with each other, and agreement among four readings of one failure is not evidence.
+
+    ⚑⚑ THE BOUND IS `rosettapkg`'s, ON A RULE THEY HAD JUST TAKEN FROM ME, and they found it in
+    their own instrument first: a figure line reading `0 of >=0`, which is **true of every
+    population** — a claim that cannot be wrong wearing the shape of a clean result. The floor
+    notation made it look deliberate, which is worse than a bare zero.
+
+    ⚑⚑⚑ MEASURING IT HERE FOUND A SECOND DEFECT UNDERNEATH. On `CENSUS-build-hermeticity.md` all
+    four state terms read 0 while `--starts 'filed'` returns **14 rows at rc=0** — the reader parses
+    that file perfectly. Every `§S` row there says `filed`, a terminal state the four probes never
+    enumerated **because they were built from the two censuses I happened to be reading.** A
+    hand-written vocabulary, inside the arm written to repair a hand-written population.
+
+    ⚑ SO THE TOTAL IS READ FROM THE TABLE rather than summed from the probes, and the remainder is
+    printed. `§S`'s row count and the probes' classification are two measurements of one population;
+    their difference is the only thing that can reveal a vocabulary this arm does not speak.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the partition must still be computed, or every assertion below passes
+    # because the arm vanished rather than because it gained a second source.
+    assert "_accounted=$((" in commands, (
+        "the state partition must still be summed; this arm would pass on its absence"
+    )
+    # ⚑ THE TOTAL COMES FROM THE TABLE, NOT FROM THE TERMS.
+    assert '_rows=$("$md" tables "$census"' in commands, (
+        "the §S row count must be measured from the table itself — a total summed from the same "
+        "probes that produced the terms cannot disagree with them"
+    )
+    # ⚑ AND THE REMAINDER IS PRINTED, so a vocabulary gap is visible rather than absorbed into 0.
+    assert "carry a state these probes do not name" in commands, (
+        "the rows the probes could not classify must be reported; absorbing them into a zero is "
+        "what made four agreeing terms look like a measurement"
+    )
+    # ⚑ THE ALL-ZERO CASE IS ITS OWN VERDICT, ahead of the others, because it explains them.
+    assert "UNCLASSIFIED:" in commands, (
+        "a §S holding rows where none classified must say so rather than report a downstream "
+        "figure that is 0 for that one reason"
+    )
