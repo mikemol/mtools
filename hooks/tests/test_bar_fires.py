@@ -941,6 +941,11 @@ def test_the_gate_points_the_checkers_at_the_staged_tree() -> None:
 
 
 _POLL = _DIST.parent / "blockers.sh"
+_THIS = Path(__file__)
+# ⚑ THE SWEEP'S OWN COVERAGE FLOOR. 65 string-membership assertions existed when it was
+# written; if it resolves far fewer, the resolver has broken and its silence is the
+# vacuity it exists to catch — one level out.
+_MIN_SWEPT = 50
 _WITNESS = _DIST.parent / "domain_witness.sh"
 
 
@@ -1511,3 +1516,63 @@ def test_the_poll_measures_reader_reach_not_a_cause() -> None:
     # escaped backtick breaks the structural one.
     assert "INSIDE A TABLE ROW" in body, "position decides; a bare count cannot"
     assert "_ebt_row=" in body, "the in-table subset must be counted separately"
+
+
+def test_no_string_assertion_in_this_module_is_vacuous() -> None:
+    """⚑⚑⚑ AN ASSERTION WHOSE LITERAL IS NOT IN ITS TARGET PASSES WHILE TESTING NOTHING.
+
+    Written after one shipped and survived a full tick. It checked for a pattern whose escaping did
+    not match `blockers.sh`, so `in body` was satisfied by a string the file does not contain —
+    ⚑ **caught only by evaluating the membership by hand**, which is not a procedure.
+
+    ⚑⚑ **65 SUCH ASSERTIONS EXIST IN THIS MODULE AND NOTHING ENUMERATED THEM.** A hand-written
+    population with no enumeration procedure is this repository's most-measured defect, and it was
+    sitting in the suite that measures it. **This is the enumeration.**
+
+    ⚑ AND IT IS ALSO THE ANSWER TO THE T139 GAP `cassian` NAMED — *an arm nobody has seen fire.*
+    Every assertion here now has a live positive by construction: **if its literal is absent from
+    the file it names, this test fails.** A green suite means the literals are real, not that
+    nobody looked.
+
+    ⚑⚑ THE SWEEP READS THE MODULE'S OWN SOURCE AND RESOLVES EACH ASSERTION AGAINST THE FILE ITS
+    ENCLOSING TEST READS, so it needs no list to maintain — *a list would be the same defect one
+    level out.*
+    """
+    src = _THIS.read_text(encoding="utf-8")
+    tree = pyast.parse(src)
+    targets = {"_POLL": _POLL, "_GATE": _GATE, "_WITNESS": _WITNESS, "_THIS": _THIS}
+    checked = 0
+    missing: list[str] = []
+    for fn in (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef)):
+        # which file does this test read?  the `X.read_text(...)` call names it
+        reads = {
+            n.value.func.value.id
+            for n in pyast.walk(fn)
+            if isinstance(n, pyast.Assign)
+            and isinstance(n.value, pyast.Call)
+            and isinstance(n.value.func, pyast.Attribute)
+            and n.value.func.attr == "read_text"
+            and isinstance(n.value.func.value, pyast.Name)
+        }
+        named = [targets[r] for r in reads if r in targets]
+        if len(named) != 1:
+            continue
+        haystack = named[0].read_text(encoding="utf-8")
+        for node in pyast.walk(fn):
+            if (
+                isinstance(node, pyast.Compare)
+                and len(node.ops) == 1
+                and isinstance(node.ops[0], pyast.In)
+                and isinstance(node.left, pyast.Constant)
+                and isinstance(node.left.value, str)
+            ):
+                checked += 1
+                if node.left.value not in haystack:
+                    missing.append(f"{fn.name}: {node.left.value!r}")
+    assert checked >= _MIN_SWEPT, (
+        f"the sweep resolved only {checked} assertions; it is not covering this module"
+    )
+    assert not missing, (
+        "assertion literal(s) absent from the file the test reads — these pass vacuously:\n  "
+        + "\n  ".join(missing)
+    )

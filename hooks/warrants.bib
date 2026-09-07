@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-no-string-assertion-in-this-module-is-vacuous,
+  section = {bar-fires},
+  claim   = {An assertion whose literal is absent from its target passes while testing nothing: one shipped and survived a tick, and 65 such assertions existed with nothing enumerating them},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_string_assertion_in_this_module_is_vacuous}
+}
+
 @misc{hooks-bar-fires-poll-measures-reader-reach-not-a-cause,
   section = {bar-fires},
   claim   = {Four cause hypotheses, three dead and one necessary-not-sufficient: the arm measures rows REACHED against rows PRESENT and needs no theory of the trigger},
