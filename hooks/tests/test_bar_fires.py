@@ -1465,3 +1465,38 @@ def test_the_poll_splits_over_from_under_cell_counts() -> None:
     )
     assert "if(NF>h)" in body, "rows OVER their header must be counted"
     assert "if(NF<h)" in body, "rows UNDER their header are a different cause and count separately"
+
+
+def test_the_poll_measures_reader_reach_not_a_cause() -> None:
+    """⚑⚑⚑ FOUR CAUSE HYPOTHESES, THREE DEAD AND ONE NECESSARY-NOT-SUFFICIENT — SO MEASURE REACH.
+
+    Pipes (a real defect, repaired, not the cause), length (row 11 is longer and reads fine),
+    encoding (clean both sides), and finally the escaped backtick — **which bisection located and a
+    minimal fixture of the same construct does NOT reproduce.** Something in that row combined with
+    it and what remains unknown.
+
+    ⚑⚑ **SO THE ARM STOPPED HUNTING THE CAUSE AND MEASURES THE CONSEQUENCE**: rows the structural
+    reader REACHES versus rows PRESENT. It needs no theory of the trigger.
+
+    Both arms measured before this was written:
+
+        pre-repair blob   reach=18  present=27   -> TRUNCATED, arm fires
+        clean fixture     reach=2   present=2    -> ok, arm silent
+
+    ⚑ AND THE ESCAPED-BACKTICK ARM WAS CORRECTED IN THE SAME PASS. It had asserted that such a line
+    *loses every table row after it*; the two it fires on in this repository are **prose, correctly
+    fenced, and all 29 revisions read.** ***An arm that warns about a non-defect trains its reader
+    to ignore it.*** It now reports a smell, says it cannot tell harmless from truncating, and
+    names the check that settles it.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "STRUCTURAL READER STOPS EARLY" in body, "reach must be measured, not inferred"
+    assert "_present=" in body, "rows present is the denominator and must be computed"
+    # ⚑⚑⚑ POSITION IS THE WHOLE PREDICTIVE CONTENT AND IT WAS ABANDONED FOR A TICK. Measured
+    # across three blobs of one file: 49a4f5a has the escape INSIDE table row 18 and reads 18 of
+    # 27; 057bf13 has two in PROSE and reads 28 of 28. ⚑ RAGGEDNESS came and went across that same
+    # pair WITHOUT changing the reach — so the correlation four revisions asserted as a mechanism
+    # was never the cause. Two real defects in one row: pipes break field-splitting readers, the
+    # escaped backtick breaks the structural one.
+    assert "INSIDE A TABLE ROW" in body, "position decides; a bare count cannot"
+    assert "_ebt_row=" in body, "the in-table subset must be counted separately"

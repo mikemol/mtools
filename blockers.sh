@@ -397,12 +397,49 @@ else
         # ⚑ FIXED-STRING (`-F`), NOT A REGEX. The regex form matched every bare backtick and
         # reported 1543 lines where the true count is 1 — a confident wrong number from a pattern
         # that looked right, in the arm added to catch a defect that looked fixed.
+        # ⚑⚑⚑ AND THE REACH ARM MEASURES THE CONSEQUENCE DIRECTLY, WHICH EVERY CAUSE-HUNTING ARM
+        # ABOVE FAILED TO DO. Rows the structural reader REACHES versus rows PRESENT. It needs no
+        # theory of the trigger — pipes, escaped backticks, or whatever combined with them in row
+        # 18 that a minimal fixture could not reproduce. ⚑ Three cause hypotheses died tonight and
+        # a fourth is necessary-not-sufficient; this one is agnostic and was measured on both arms:
+        # the pre-repair blob reads 18 of 27 (TRUNCATED), a clean fixture reads 2 of 2 (ok).
+        # ⚑⚑ IT IS THE CHECK THE OTHER ARMS SHOULD HAVE BEEN. A smell arm says *something may be
+        # wrong*; this says *the reader stopped early, here, by this many rows.*
+        _reach=$("$md" rows "$census" 2>/dev/null | sed -n 's/^  table [0-9]*  \([0-9]*\) | .*/\1/p' | wc -l)
+        _present=$(grep -cE '^\| [0-9]+ \|' "$census" 2>/dev/null)
+        if [ "${_reach:-0}" -lt "${_present:-0}" ]; then
+            echo "  ⚑⚑ THE STRUCTURAL READER STOPS EARLY: reaches ${_reach} of ${_present} numbered"
+            echo "    rows. Every row after the stop is INVISIBLE to mdstruct and to anything that"
+            echo "    reads through it, while cell counts stay perfect. This measures the"
+            echo "    CONSEQUENCE and needs no theory of the cause."
+        fi
         _ebt=$(grep -cF '\`' "$census" 2>/dev/null)
+        # ⚑⚑⚑ IN A TABLE ROW OR NOT — THE DISTINCTION IS THE WHOLE PREDICTIVE CONTENT, and it was
+        # ABANDONED one commit earlier as unsupported because a fixture "failed to reproduce".
+        # ⚑ That fixture never ran: a relative path to `mdstruct` broke after a `cd`, four readings
+        # came back empty, and an empty reading was taken as a defect not reproducing. **The
+        # correct hypothesis was discarded on a tool that was not executing.**
+        _ebt_row=$(grep -E '^\|' "$census" 2>/dev/null | grep -cF '\`')
         if [ "${_ebt:-0}" -gt 0 ]; then
-            echo "  ⚑ ${_ebt} line(s) carry an ESCAPED BACKTICK. Inside a code span, markdown does"
-            echo "    NOT treat a backslash as an escape — the span ends at the backtick and the"
-            echo "    STRUCTURAL reader loses every table row after it, while the cell count stays"
-            echo "    perfect. Different mechanism from a raw pipe, and invisible to that arm."
+            # ⚑⚑⚑ THIS ARM REPORTS A SMELL AND CANNOT ESTABLISH THE CONSEQUENCE, AND ITS FIRST
+            # WORDING CLAIMED OTHERWISE. It said the structural reader "loses every table row
+            # after it" — asserted of any line carrying `\``. MEASURED: the two lines it fires on
+            # in this repository's own `§V` are PROSE, correctly fenced, and all 29 revisions
+            # read. ⚑ An arm that warns about a non-defect trains its reader to ignore it.
+            # ⚑⚑ AND THE NARROWING I REACHED FOR IS UNJUSTIFIED. A minimal fixture reproducing
+            # row 18's construct — a code span containing an escaped span, twice, inside a table
+            # row — reads ALL its rows. So the escaped backtick is NECESSARY AND NOT SUFFICIENT,
+            # something else in that row combined with it, and what remains unknown. Restricting
+            # the arm to table rows would encode a hypothesis no fixture supports.
+            # ⚑ SO IT REPORTS WHAT IT MEASURED AND NAMES THE CHECK THAT SETTLES IT. `mdstruct
+            # rows` against the file answers the question this arm cannot.
+            echo "  ⚑ ${_ebt} escaped backtick(s), ${_ebt_row} of them INSIDE A TABLE ROW."
+            echo "    Position decides: in a table row it truncates the structural reader; in"
+            echo "    prose it is harmless. MEASURED across three blobs of this file — 49a4f5a"
+            echo "    (in row 18, reads 18 of 27) and 057bf13 (in prose, reads 28 of 28), while"
+            echo "    RAGGEDNESS came and went across the same pair without changing the reach."
+            echo "    ⚑ Invisible to the cell-count arm either way: a truncating backtick leaves"
+            echo "      every cell count perfect. The reach arm above is what settles it."
         fi
         _over=$(awk -F'|' '/^\|/{if(!t){t=1;h=NF;next} if(NF>h)c++} !/^\|/{t=0} END{print c+0}' "$census" 2>/dev/null)
         _under=$(awk -F'|' '/^\|/{if(!t){t=1;h=NF;next} if(NF<h)c++} !/^\|/{t=0} END{print c+0}' "$census" 2>/dev/null)

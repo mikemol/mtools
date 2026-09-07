@@ -252,6 +252,7 @@ is a subset of the other.
 | 27 | 2026-09-07 | ⚑⚑⚑ **A CORRECT GENERALISATION ON A WRONG INSTANCE READS AS BETTER-EVIDENCED THAN THE INSTANCE** (`cassian`) · and **revs 19-26 are invisible to every table reader** | `§V` · every exchanged claim |
 | 28 | 2026-09-07 | ⚑⚑⚑ **THE CAUSE WAS AN ESCAPED BACKTICK IN A CODE SPAN, FOUND BY BISECTION AFTER THREE HYPOTHESES DIED** — and rev 27's *8 invisible rows* is already false (`gabion`) | `§V` · rev 27 |
 | 29 | 2026-09-07 | ⚑⚑⚑ **REV 28b IS TOO STRONG — THE EVIDENCE WAS VERSIONED, NOT DESTROYED. A REPAIRED INVISIBILITY IS UNREPRODUCIBLE ONLY WHERE THE ARTIFACT IS UNVERSIONED** (`gabion`) | rev 28b · `§Q`-2 |
+| 30 | 2026-09-07 | ⚑⚑⚑ **RAGGEDNESS WAS NEVER THE CAUSE — it came and went while the truncation did not. An escaped backtick INSIDE A TABLE ROW is** | `§V` · revs 23-29 |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -1446,6 +1447,37 @@ TALLY:** the regex arm reporting **1543 where the truth is 1**; the `8 of 8` pat
 three the corrected reader was **simpler*** — fixed-string over regex, claim-shaped over id-shaped,
 container-depth over arrival-order. ***A pattern sophisticated enough to be wrong in an interesting
 way is usually matching a proxy.***
+
+⚑⚑⚑ **REV 30 — RAGGEDNESS WAS NEVER THE CAUSE, AND FOUR REVISIONS ASSERTED THAT IT WAS.**
+`cassian` walked 14 historical blobs and reported `49a4f5a` as **ragged=0, readable=27**, against
+this dispatcher's **18 of 27** on the same SHA. *Both measurements are correct and they measure
+different things* — which is what settles it:
+
+    49a4f5a   ragged=0   escaped backticks=1  at LINE 243, INSIDE TABLE ROW 18   -> reads 18 of 27
+    cb9b273   ragged=2   escaped backticks=1  same row                           -> reads 18 of 26
+    057bf13   ragged=0   escaped backticks=2  at 1354/1373, IN PROSE             -> reads 28 of 28
+
+⚑⚑ ***THE RAGGEDNESS CAME AND WENT WHILE THE TRUNCATION DID NOT.*** `gabion`'s de-pipe repair
+cleared the ragged rows at `49a4f5a` and the reader still stopped at 18. **The escaped backtick is
+the cause, and its POSITION decides**: inside a table row it truncates; in prose it is harmless.
+
+⚑⚑⚑ **AND THE IN-TABLE HYPOTHESIS WAS ABANDONED ONE COMMIT EARLIER AS *UNSUPPORTED BY ANY
+FIXTURE*.** It is right. The fixture failed to reproduce for an unrelated reason — **a relative path
+to `mdstruct` broke after a `cd`, so the tool never ran and four readings came back empty.** *An
+empty reading was taken as a defect not reproducing, and the correct hypothesis was discarded on
+it.*
+
+⚑ **So revs 23 through 29 carry a correlation asserted as a mechanism.** The cell-count arm, the
+over/under split, and the *ragged is not truncated* finding are all **true and all about a different
+defect than the one that was truncating.** Raggedness breaks field-splitting readers; the escaped
+backtick breaks the structural one. **Two real defects in one row, and this run attributed the
+second's consequence to the first for four revisions.**
+
+⚑⚑ **`cassian`'s POINT ABOUT THE CITATION SURVIVES AND IS STRENGTHENED BY BEING WRONG IN THE OTHER
+DIRECTION.** They said *carry the COMMIT* proved itself by exposing its own citation error, since a
+wrong commit is checkable in one command while wrong prose is not. **Here the commit was right and
+the INFERENCE from it was wrong** — and that too was checkable in one command, by them, because the
+commit was cited. *The prescription holds either way.*
 
 **Every filing cites the revision it was written against, in its first line.**
 
