@@ -271,6 +271,25 @@ def main() -> int:
     cmd = command_of(parsed)
     if not cmd:
         return 0
+    # ⚑⚑⚑ AN EMPTY ROUTING TABLE ALLOWS EVERY COMMAND, SILENTLY. `claims()` resolves the table
+    # relative to the CWD, so a hook invoked from anywhere without a `.claude/skills/` tree reads
+    # ZERO claims and every textual read of every artifact passes. ⚑ MEASURED: from `hooks/` the
+    # table holds 0 entries and a plain `grep` of a claimed artifact returns a clean verdict; from
+    # the repo root it holds 1 and the same command refuses. The gate reads as armed either way.
+    # ⚑⚑ THIS IS THE SHAPE THE HOOK ITSELF EXISTS TO REFUSE — a check whose silence is
+    # indistinguishable from a pass — and it is the shape this repository refused from a peer's
+    # `check_scratch_runtime.py`, which printed SKIPPED and exited 0. Absence of the table is
+    # reported rather than skipped, so a misconfigured hook is visible instead of open.
+    # ⚑ IT DOES NOT REFUSE THE COMMAND. A hook that blocked every Bash call on a missing table
+    # would take the session down over its own configuration; the honest act is to say the gate
+    # is not covering anything and let the command through.
+    if not routing_table.claims():
+        sys.stderr.write(
+            "structural-query: ⚑ NO ROUTING TABLE resolved from "
+            f"{routing_table.project_dir()} — this gate is allowing every command.\n"
+            "  It is not armed here: a textual read of a claimed artifact would pass unseen.\n"
+        )
+        return 0
     hit, reasons = verdict(cmd)
     if not hit:
         return 0

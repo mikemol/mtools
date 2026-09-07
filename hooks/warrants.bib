@@ -1372,3 +1372,21 @@
             and a clean corpus both print nothing.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_citation_gate_checks_the_rules_file_against_itself},
 }
+
+@misc{hooks-bar-fires-the-structural-gate-discloses-an-empty-routing-table,
+  title  = {An empty routing table allows every command, silently},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The routing table resolves relative to the working directory, so the hook invoked
+            without a .claude/skills tree reads zero claims and every textual read of every
+            claimed artifact passes while the gate still reads as armed. Measured: from the
+            hooks directory the table holds 0 entries and a plain grep of a claimed artifact
+            returns a clean verdict; from the repo root it holds 1 and the same command refuses.
+            That is the shape this hook exists to refuse and the shape this repository declined
+            from a peer gate that printed SKIPPED and exited 0. It discloses rather than
+            refusing, because blocking every command over the hook's own configuration is a
+            worse failure than the one being repaired. Both arms measured through the console
+            script; the module has no main guard, so running it as -m prints nothing.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_structural_gate_discloses_an_empty_routing_table},
+}

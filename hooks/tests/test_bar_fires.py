@@ -2021,3 +2021,41 @@ def test_the_citation_gate_checks_the_rules_file_against_itself() -> None:
     assert "sort -n" not in selfcheck, (
         "comm requires its inputs in the collation it compares with"
     )
+
+
+_SQ = _DIST / "src" / "mikemol" / "hooks" / "structural_query.py"
+
+
+def test_the_structural_gate_discloses_an_empty_routing_table() -> None:
+    """⚑⚑⚑ AN EMPTY ROUTING TABLE ALLOWS EVERY COMMAND, SILENTLY.
+
+    `claims()` resolves the table relative to the CWD, so the hook invoked anywhere without a
+    `.claude/skills/` tree reads ZERO claims and every textual read of every claimed artifact
+    passes. ⚑ MEASURED: from `hooks/` the table holds 0 entries and a plain `grep` of a claimed
+    artifact returns a clean verdict; from the repo root it holds 1 and the same command refuses.
+    **The gate reads as armed either way.**
+
+    ⚑⚑ THAT IS THE SHAPE THIS HOOK EXISTS TO REFUSE — a check whose silence cannot be told from a
+    pass — and the shape this repository declined from a peer's `check_scratch_runtime.py`, which
+    printed SKIPPED and exited 0.
+
+    ⚑ IT DISCLOSES RATHER THAN REFUSING. A hook blocking every Bash call over its own
+    configuration would take the session down; the honest act is to say the gate covers nothing
+    and let the command through. Both arms measured through the console script, which is the real
+    entry point — the module has no `__main__` guard, so `-m` runs nothing and prints nothing,
+    which is how three readings of this instrument came back empty before the entry point was
+    read rather than assumed.
+    """
+    body = _SQ.read_text(encoding="utf-8")
+    assert "NO ROUTING TABLE resolved" in body, (
+        "an unarmed gate must say so; silence is indistinguishable from a pass"
+    )
+    # ⚑ THE DISCLOSURE MUST PRECEDE THE VERDICT. Emitted after, it would describe a decision the
+    # empty table had already made — the account arriving behind the thing it explains.
+    assert body.index("NO ROUTING TABLE resolved") < body.index("hit, reasons = verdict(cmd)"), (
+        "the table is checked before a verdict is computed from it"
+    )
+    # ⚑ AND IT MUST NOT REFUSE. A gate that blocks on its own misconfiguration is a worse failure
+    # than the one being repaired.
+    tail = body.split("NO ROUTING TABLE resolved")[1].split("hit, reasons")[0]
+    assert "return 0" in tail, "a missing table discloses and allows; it does not block the session"
