@@ -958,6 +958,21 @@ _MSGCOUNT = _DIST.parent / "message_counts.sh"
 # ⚑ NOT LOWERED TO MAKE A SWEEP GREEN, AND THE EXPOSURE IS BOUNDED RATHER THAN PAPERED OVER: these
 # arms read the WORKING TREE, never a blob, so no past commit is re-gated and nothing is
 # retroactively refused. The live cost is a checkout or bisect of a pre-floor tree.
+#
+# ⚑⚑⚑ AND `cassian`'s BINARY NEEDS A THIRD TERM, MEASURED HERE AGAINST ITS OWN CLASSIFICATION.
+# Their rule: *an arm that measures a PRE-EXISTING declaration inherits a true floor; an arm that
+# ships its own population cannot.* They placed all three of this module's arms in the second
+# class, on this dispatcher's own report. **Measured, that is wrong — all three read populations
+# that predate them**: 65 assertions before the sweep, 188 warrants before the pairing arm, 5
+# constant references before the disclosure arm.
+# ⚑⚑ YET THE FLOOR IS STILL FALSE FOR 31 OF 44 COMMITS, WHICH THE CLASSIFICATION PREDICTS IT
+# SHOULD NOT BE. The resolution: the population **predates the ARM and not the FILE.** It was 0 for
+# the first six commits and first reached 50 at `1ad358d`, eight commits before the sweep shipped.
+# ⚑ ***Inheriting a population is not inheriting a HISTORY.*** An arm inherits a true floor only
+# back to where its population first crossed the floor — never to the file's beginning — so the
+# sweep is owed for every arm whose subject GREW, which is nearly all of them.
+# ⚑ This floor would be refused by 31 of 44 commits and is honest from `1ad358d` onward.
+_MIN_SWEPT_FLOOR_HONEST_FROM = "1ad358d"
 _MIN_SWEPT = 50
 # ⚑ A PAYDOWN CEILING, NOT A TARGET, AND IT IS NOW ZERO. All 20 were paid the tick after the
 # ceiling was set — each resolved to a real test by its own key, so the debt was a missing `check`
