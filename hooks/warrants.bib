@@ -1806,3 +1806,25 @@
             the fall cannot come from editing a number.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_sweeps_ceiling_falls_rather_than_standing},
 }
+
+@misc{hooks-bar-fires-the-sweep-states-the-share-of-arms-it-covers,
+  title  = {The sweep covers a predicate shape, not arms, and said so nowhere},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The sweep's floor counts assertions and its docstring says every assertion has a live
+            positive by construction, both true --- but a green run had been read as covering the
+            module, and measured it does not: of ninety-odd arms, roughly a fifth read no file at
+            all because they run subprocess probes and have no haystack to be absent from,
+            eighteen read a file the resolver cannot reach, and eight resolve but assert by regex
+            or count. That is not a defect in the sweep, since a string-membership check cannot
+            check a regex without becoming a different tool; what was missing is the scope
+            statement, and a coverage figure read as covering the whole is the mis-named
+            population this repository has measured eight times in its own checkers. The share is
+            derived by the sweep rather than recorded, and floored below the measurement so reach
+            may grow and cannot silently shrink; dropping a single resolver target takes it from
+            fifty-two percent to thirty-six, which is exactly how a target once went missing. The
+            previous tick's gain was also smaller than recorded: three of the five newly resolved
+            arms carry no string-membership assertion at all.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_sweep_states_the_share_of_arms_it_covers},
+}

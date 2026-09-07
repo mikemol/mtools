@@ -995,6 +995,15 @@ _MIN_SWEPT = 50
 # paydown with a witness.
 _MAX_UNRESOLVED_WAS = 23
 _MAX_UNRESOLVED = 18
+# ⚑⚑ THE SHARE OF ARMS THE SWEEP ACTUALLY CHECKS, as a percentage floor. MEASURED at the tick
+# it shipped: 48 of 94 arms, 51%. The remainder is not debt — 21 arms run subprocesses and
+# have no haystack to be absent from, and 8 assert by regex or count, which a string-membership
+# check cannot see without becoming a different tool.
+# ⚑ A FLOOR BELOW THE MEASUREMENT, not a target at it: the reach may grow, and this refuses a
+# silent shrink. Stated because a green sweep reads as module coverage and is not — the
+# mis-named population this repository has measured eight times, arriving in the arm that
+# enumerates the others.
+_SWEEP_COVERS_ARMS = 45
 # ⚑ A FLOOR ON THE COUNTING SITES, not a target. Three files count the warrant ledger --- the
 # gate, the preflight that predicts it, and the message checker. If a sweep finds fewer, the
 # pattern stopped matching and the anchoring arm passes by finding nothing to check.
@@ -1661,7 +1670,20 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     checked = 0
     missing: list[str] = []
     unresolved: list[str] = []
+    # ⚑⚑⚑ THE SWEEP COVERS A PREDICATE SHAPE, NOT ARMS, AND SAID SO NOWHERE. Its floor counts
+    # ASSERTIONS, and a green run reads as covering this module — MEASURED, it does not: some arms
+    # read no file at all (subprocess probes, correctly outside — there is no haystack to be
+    # absent from), some read a file this resolver cannot reach, and some resolve but assert by
+    # regex or count rather than string membership.
+    # ⚑ THAT IS NOT A DEFECT IN THE SWEEP. A vacuity check for `"literal" in body` cannot check a
+    # regex without becoming a different tool. What was missing is the SCOPE, and a coverage
+    # figure read as covering the whole is the mis-named population this repository has measured
+    # eight times in its own checkers — this is the ninth, in the arm built to enumerate them.
+    total_arms = 0
+    swept_arms = 0
     for fn in (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef)):
+        if fn.name.startswith("test_"):
+            total_arms += 1
         # which file does this test read?  the `X.read_text(...)` call names it
         reads = {
             n.value.func.value.id
@@ -1713,6 +1735,7 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
                 unresolved.append(fn.name)
             continue
         haystack = "\n".join(f.read_text(encoding="utf-8") for f in named)
+        arm_swept = False
         for node in pyast.walk(fn):
             if (
                 isinstance(node, pyast.Compare)
@@ -1722,8 +1745,11 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
                 and isinstance(node.left.value, str)
             ):
                 checked += 1
+                arm_swept = True
                 if node.left.value not in haystack:
                     missing.append(f"{fn.name}: {node.left.value!r}")
+        if arm_swept and fn.name.startswith("test_"):
+            swept_arms += 1
     assert checked >= _MIN_SWEPT, (
         f"the sweep resolved only {checked} assertions; it is not covering this module"
     )
@@ -1733,6 +1759,13 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     )
     # ⚑ A CEILING, NOT A TARGET. It may fall; it rises only when a new inline read is added, which
     # is exactly the moment a reader should be told rather than the moment coverage quietly drops.
+    # ⚑ THE SHARE IS DERIVED AND STATED, never written down: a recorded figure is the
+    # hand-written population this module exists to refuse. It is a FLOOR, so the sweep's reach
+    # may grow and cannot silently shrink.
+    assert swept_arms * 100 >= total_arms * _SWEEP_COVERS_ARMS, (
+        f"the sweep checks string membership in {swept_arms} of {total_arms} arm(s) — "
+        f"below the {_SWEEP_COVERS_ARMS}% floor. A green sweep is not module coverage."
+    )
     assert len(unresolved) <= _MAX_UNRESOLVED, (
         f"{len(unresolved)} test(s) read a file the sweep cannot resolve, up from "
         f"{_MAX_UNRESOLVED} — their assertions are unswept: {sorted(unresolved)}"
@@ -3099,4 +3132,62 @@ def test_the_sweeps_ceiling_falls_rather_than_standing() -> None:
     body = _THIS.read_text(encoding="utf-8")
     assert "_resolve_path" in body, (
         "the ceiling may only fall because more paths resolve, not because the number was edited"
+    )
+
+
+def test_the_sweep_states_the_share_of_arms_it_covers() -> None:
+    """⚑⚑⚑ THE SWEEP COVERS A PREDICATE SHAPE, NOT ARMS, AND HAS NEVER SAID SO.
+
+    Its floor counts ASSERTIONS — `_MIN_SWEPT = 50` — and its docstring says every assertion has a
+    live positive by construction. Both true. ⚑ But I have read a green sweep as covering this
+    module, and MEASURED it does not:
+
+        arms in the module                          94
+        read no file at all                         21
+        read a file the sweep cannot resolve        17
+        resolved, but assert no string membership    8
+        resolved AND string-membership checked      48
+
+    **48 of 94.** The 21 running subprocesses are correctly outside — there is no haystack to be
+    absent from. The 8 resolved-but-unchecked assert by regex, count or parsed structure, which
+    the sweep's predicate does not see.
+
+    ⚑⚑ THIS IS NOT A DEFECT IN THE SWEEP AND NAMING IT AS ONE WOULD BE WRONG. A vacuity check for
+    `"literal" in body` cannot check a regex without becoming a different tool. What was missing
+    is the SCOPE STATEMENT: a coverage figure read as covering the whole is the mis-named
+    population this session has measured eight times in its own checkers, and this is the ninth —
+    in the arm built to enumerate the others.
+
+    ⚑ AND LAST TICK'S GAIN WAS SMALLER THAN I RECORDED IT. Five arms became resolvable; **three of
+    them carry zero string-membership assertions**, so sweeping them added nothing. The two that
+    did carry assertions were checked and both resolve to their real subject. Clean, and worth
+    one sentence rather than the sentence I wrote.
+    """
+    # ⚑⚑⚑ THIS ARM PASSED BEFORE ITS SUBJECT EXISTED, FOR THE FOURTH TIME IN THIS SUITE. Written
+    # as a whole-file search it matched its own docstring, where both literals appear in prose
+    # describing the fix. The repair is the one already used by the sibling arm above: read the
+    # PARSED sweep function with its docstring node dropped, so a description cannot satisfy a
+    # check about an instance.
+    module = pyast.parse(_THIS.read_text(encoding="utf-8"))
+    sweep = next(
+        (n for n in pyast.walk(module)
+         if isinstance(n, pyast.FunctionDef)
+         and n.name == "test_no_string_assertion_in_this_module_is_vacuous"),
+        None,
+    )
+    assert sweep is not None, "the sweep function was not found; this arm would pass on absence"
+    statements = sweep.body[1:] if (
+        sweep.body and isinstance(sweep.body[0], pyast.Expr)
+        and isinstance(sweep.body[0].value, pyast.Constant)
+    ) else sweep.body
+    code = "\n".join(pyast.dump(n) for n in statements)
+    # ⚑ THE SWEEP MUST STATE WHAT IT DOES NOT COVER. A floor over assertions with no statement of
+    # the arm share reads as a floor over arms — which is what I read it as for six ticks.
+    assert "_SWEEP_COVERS_ARMS" in code, (
+        "the sweep's arm-share must be stated, or its assertion floor reads as arm coverage"
+    )
+    # ⚑ AND THE SHARE MUST BE DERIVED, not asserted: a written figure is the hand-written
+    # population this module exists to refuse, one level in.
+    assert "swept_arms" in code, (
+        "the arm share must be counted by the sweep, not recorded as a constant"
     )
