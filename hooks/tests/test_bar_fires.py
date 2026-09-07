@@ -1717,3 +1717,33 @@ def test_every_threshold_states_its_historical_exposure() -> None:
         assert "would have refused" in preamble or "would be refused" in preamble, (
             f"{const} is a claim about history and must state what it would have refused"
         )
+
+
+def test_the_refusal_record_names_the_party_not_the_committer() -> None:
+    """⚑⚑⚑ EVERY PARTY IN THIS SHARED TREE COMMITS AS THE SAME `user.email`.
+
+    MEASURED: `mikemol@gmail.com` for all of them. The refusal record was built to answer *how many
+    peer refusals has this gate caused* — the row this repository's own leg lists as **unbuildable,
+    a lower bound with an unknown denominator** — and it recorded a **constant**. ⚑ *A column that
+    is the same for every row is a column that was never asked.*
+
+    ⚑⚑ `CLAUDE_CODE_SESSION_ID` IS IN THE HOOK'S ENVIRONMENT AND DISTINGUISHES. Both arms run
+    before the change: the committer email is **identical** across two simulated parties, the
+    session id **differs**. Then the block itself was executed twice with different ids and wrote
+    two rows differing in exactly that column.
+
+    ⚑ THE COMMITTER IS KEPT ANYWAY AND NOT BECAUSE IT DISCRIMINATES — it does not. It is the
+    identity the commit will carry, so a reader joining this record against `git log` needs it.
+    **Dropping it would make the row true and unjoinable.**
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "CLAUDE_CODE_SESSION_ID" in body, (
+        "the party is the session; the committer is a constant in this tree"
+    )
+    assert "unknown-session" in body, "an absent session id is named, not silently empty"
+    assert "git config user.email" in body, (
+        "the committer is kept for the join against git log, not for discrimination"
+    )
+    sess = body.index("CLAUDE_CODE_SESSION_ID")
+    email = body.index("git config user.email", sess)
+    assert sess < email, "session before committer: the discriminating column leads"

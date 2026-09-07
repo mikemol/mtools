@@ -1115,6 +1115,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-refusal-record-names-the-party-not-the-committer,
+  section = {bar-fires},
+  claim   = {Every party in this shared tree commits as the same user.email, so the refusal record built to count peer refusals recorded a constant: a column identical in every row was never asked},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_refusal_record_names_the_party_not_the_committer}
+}
+
 @misc{hooks-bar-fires-every-threshold-states-its-historical-exposure,
   section = {bar-fires},
   claim   = {A coverage floor is a claim about history: 31 of 42 commits fall below _MIN_SWEPT and 27 of 30 below the check ceiling, false by construction for any arm that introduced its own population},

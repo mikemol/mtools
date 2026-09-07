@@ -693,9 +693,22 @@ if [ "$fail" -ne 0 ]; then
     # ⚑ APPEND-ONLY, ONE LINE PER REFUSAL, NO PRUNING. A rotation policy is a decision about what
     # may be forgotten and this gate has no standing to make it; growth is bounded by how often
     # the gate refuses, which is the quantity being measured.
+    # ⚑⚑⚑ THE PARTY IS THE SESSION, NOT THE COMMITTER. Every party in this shared tree commits as
+    # the SAME `user.email` — MEASURED: `mikemol@gmail.com` for all of them, so the field this
+    # record originally carried was **structurally incapable of naming who was refused.** The
+    # record was built to answer *how many peer refusals has this gate caused*, and it recorded a
+    # constant. ⚑ *A column that is the same for every row is a column that was never asked.*
+    # ⚑⚑ `CLAUDE_CODE_SESSION_ID` IS IN THE HOOK'S ENVIRONMENT AND DISTINGUISHES. Measured: this
+    # session reads `0709aae6-…` and is stable across reads; a different session reads its own.
+    # Both arms run before this was written — the email identical across two simulated parties,
+    # the session id different.
+    # ⚑ THE COMMITTER IS KEPT ANYWAY, and not because it discriminates. It does not. It is the
+    # identity the commit will actually carry, so a reader comparing this record against `git log`
+    # needs it to join on; dropping it would make the row true and unjoinable.
     _refusal_log="$_witness_logs/REFUSALS.tsv"
-    printf '%s\t%s\t%s\n' \
+    printf '%s\t%s\t%s\t%s\n' \
         "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        "${CLAUDE_CODE_SESSION_ID:-unknown-session}" \
         "$(git config user.email 2>/dev/null || echo unknown)" \
         "$(printf '%s' "$failed_checks" | tr '\n' ' ' | sed 's/  */ /g')" \
         >> "$_refusal_log" 2>/dev/null || true
