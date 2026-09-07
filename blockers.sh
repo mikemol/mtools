@@ -258,6 +258,26 @@ else
     # population of the shapes its author had seen.
     # ⚑ So the noun is enumerated as a SET and a miss is REPORTED rather than defaulted: defaulting
     # to `party | status` is what turned an unrecognised header into a confident PRE-FILING.
+    # ⚑⚑⚑ ONE PROBE WHOSE STATUS IS READ, BEFORE ANY READ WHOSE EMPTINESS WOULD BE INTERPRETED.
+    # Every `$md` call below is `2>/dev/null` and reads only stdout, so a reader that RUNS and
+    # FAILS returns nothing — byte-identical to a file that legitimately has no such table.
+    # ⚑⚑ MEASURED against the real reader, and the states ARE separable by status:
+    #     a real census file          rc=0, 5 lines
+    #     a markdown file, no tables  rc=0, 1 line   <- the honest empty
+    #     an undecodable file         rc=1, 0 lines
+    #     a path that does not exist  rc=2, 0 lines
+    # The honest empty carries rc=0. Every failure carries a nonzero status, so the discriminator
+    # exists and was being thrown away — the `paperkit` arm's defect one level in.
+    # ⚑ WHY IT MATTERS HERE SPECIFICALLY: this poll selects every later tick's work. A census whose
+    # reader failed would report `0 of 0 parties listed` — a clean-looking line about the census
+    # rather than about the read, which is worse than an error because nothing looks wrong.
+    # ⚑ ONE GUARD, NOT TEN. Repeating this at every call site is ten places to forget it, which is
+    # the lesson `note_failure` in the gate was written for.
+    if ! "$md" tables "$census" >/dev/null 2>&1; then
+        echo "  ⚑ READER FAILED on this file — mdstruct exited nonzero."
+        echo "    Every verdict below would describe the READ, not the census. Skipping it."
+        continue
+    fi
     sig=$("$md" tables "$census" 2>/dev/null \
         | grep -oE '(party|surveyor|repo|leg) \| (status|state)' | head -1)
     # ⚑⚑ AN EMPTY SIGNATURE MUST NOT FALL THROUGH TO `grep ""`, WHICH MATCHES EVERY TABLE AND WOULD

@@ -1610,3 +1610,24 @@
             including paperkit installed into a throwaway venv reading importable.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_paperkit_arm_names_a_cause_and_carries_a_control},
 }
+
+@misc{hooks-bar-fires-the-census-arm-can-tell-a-failed-read-from-an-empty-one,
+  title  = {The poll discards the one field that separates a broken read from an empty one},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The census block guards whether its reader is executable and names that absence
+            honestly, then makes every subsequent call with stderr discarded and only stdout
+            read. A reader that runs and fails returns nothing, which is byte-identical to a file
+            that legitimately has no such table. Measured against the real reader, the states are
+            separable by exit status: a real census reads five lines at rc 0, a markdown file
+            with no tables reads one line at rc 0, an undecodable file gives zero lines at rc 1,
+            and a missing path zero lines at rc 2. The honest empty carries rc 0, so the
+            discriminator existed and was being thrown away. This poll selects every later tick's
+            work, so a census whose reader failed would report zero of zero parties listed --- a
+            clean-looking line about the census rather than about the read. One guard runs before
+            the first interpreted read rather than at ten call sites, and three arms confirm a
+            real census still reads its roster, an undecodable file names the failed read, and a
+            genuinely empty census reports no signature.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_census_arm_can_tell_a_failed_read_from_an_empty_one},
+}

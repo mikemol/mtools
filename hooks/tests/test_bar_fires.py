@@ -2531,3 +2531,43 @@ def test_the_paperkit_arm_names_a_cause_and_carries_a_control() -> None:
     assert "not installed here" in body, (
         "the arm must distinguish 'nobody installed it' from 'it is broken'"
     )
+
+
+def test_the_census_arm_can_tell_a_failed_read_from_an_empty_one() -> None:
+    """⚑⚑⚑ THE POLL DISCARDS THE ONE FIELD THAT SEPARATES A BROKEN READ FROM AN EMPTY ONE.
+
+    Line 213 guards *is the reader executable* and names its absence honestly. Every `mdstruct`
+    call after it is `2>/dev/null`, reading only stdout — so a reader that RUNS and FAILS returns
+    nothing and is byte-identical to a file that legitimately has no such table.
+
+    ⚑ MEASURED against the real reader, and the states ARE separable:
+
+        a real census file          rc=0, 5 lines
+        a markdown file, no tables  rc=0, 1 line     <- the honest empty
+        an undecodable file         rc=1, 0 lines
+        a path that does not exist  rc=2, 0 lines
+
+    **The honest empty carries `rc=0`.** Every failure carries a nonzero status and an empty
+    stdout, so the discriminator exists and the poll throws it away — the same shape as the
+    `paperkit` arm repaired at `f9feacf`, one level in, and reached by the same question.
+
+    ⚑⚑ THE POLL SELECTS EVERY LATER TICK'S WORK, so a census whose reader failed reports as a
+    census with no roster: `0 of 0 parties listed`, a clean-looking line. That is worse than an
+    error, because a reader who sees it concludes something about the census rather than about
+    the read.
+
+    ⚑ THE REPAIR IS A GUARD ON THE FIRST READ, not on every call. One probe of the file with its
+    status inspected tells the block whether anything below can be trusted; repeating it at ten
+    call sites would be ten places to forget it — this gate's own `note_failure` lesson.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    # ⚑ THE STATUS MUST BE INSPECTED SOMEWHERE. `2>/dev/null` on every call means the only
+    # remaining signal is the exit code, and reading neither leaves the block guessing.
+    assert "READER FAILED" in body, (
+        "a reader that ran and failed must be named, not read as an empty result"
+    )
+    # ⚑ AND THE GUARD MUST PRECEDE THE READS IT PROTECTS. Placed after, it would describe a
+    # verdict the failed read had already produced.
+    assert body.index("READER FAILED") < body.index('sig=$("$md" tables'), (
+        "the guard runs before the first read whose emptiness it explains"
+    )
