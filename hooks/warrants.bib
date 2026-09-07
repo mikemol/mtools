@@ -2001,3 +2001,99 @@
             a claim about the table, without touching the instrument.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_roster_gap_is_compared_against_every_state_not_only_the_mark},
 }
+
+@misc{hooks-no-verify-every-gate-bypass-shape-is-refused,
+  section = {no_verify},
+  title  = {Each refused shape is a route around the gate, not a variant of one string},
+  claim  = {The operator's policy is never to bypass the pre-commit gate, and the shapes that bypass it
+            are not spellings of a single flag. The long flag names it; its short form reaches the
+            same code path; git accepts any unambiguous prefix of a long option, so shorter
+            abbreviations reach it too; and pointing the hooks path at an empty or absent directory
+            disarms every hook at once without naming the flag at all. A guard enumerating only the
+            flag would leave the configuration route open, which is the same defect as a checker
+            whose population is a hand-written list rather than a predicate. The abbreviation case
+            is handled as a property, is this token a prefix of the long option long enough to be
+            unambiguous, rather than as membership in a set of three spellings that would pass the
+            fourth.},
+  check  = {pytest hooks/tests/test_no_verify.py -k test_every_gate_bypass_shape_is_refused},
+}
+
+@misc{hooks-no-verify-ordinary-commands-are-not-refused,
+  section = {no_verify},
+  title  = {The arm that makes the deny arm mean something},
+  claim  = {A hook that refused every command would satisfy every deny arm in its own suite and be
+            useless, so the allow arm is what gives the deny arm content. The commands held here
+            include this policy's own wording quoted inside a commit message, a search for the flag
+            name in a file, and a git subcommand the policy does not cover. Each is a shape a
+            substring matcher refuses and git would have run, and a guard whose first act is to
+            break a working session trains its owner to disable it. The false positive surface is
+            therefore part of the design rather than an afterthought, which is why the token stream
+            is parsed and the flag recognised only where git would recognise it.},
+  check  = {pytest hooks/tests/test_no_verify.py -k test_ordinary_commands_are_not_refused},
+}
+
+@misc{hooks-no-verify-an-unparseable-command-is-not-a-bypass,
+  section = {no_verify},
+  title  = {An unparseable command is a statement about the parser},
+  claim  = {A command with unbalanced quotes cannot be parsed, and the shell would refuse it for the
+            same reason. Reporting a policy violation against such a string would be a statement
+            about the reader wearing the shape of a finding about the command, which is the defect
+            class this repository has measured repeatedly in its own checkers. The hook returns no
+            findings in that case, so an unparseable string is neither approved nor accused.},
+  check  = {pytest hooks/tests/test_no_verify.py -k test_an_unparseable_command_is_not_a_bypass},
+}
+
+@misc{hooks-no-verify-the-installed-console-script-denies-when-armed,
+  section = {no_verify},
+  title  = {The predicate and the entry point are different claims},
+  claim  = {Every unit arm exercises the matching function directly. A hook can have a correct
+            predicate and a broken entry point, and only an end to end arm can tell those apart.
+            This repository has the measured instance: a sibling hook shipped with a rubric section,
+            fifty two tests and fifty two warrants while the settings file wired only its sibling,
+            and the module docstring said so in its first paragraph while the suite stayed green. So
+            this arm runs the installed console script with a real harness payload and reads the
+            decision out of its output rather than trusting that the wiring resolves.},
+  check  = {pytest hooks/tests/test_no_verify.py -k test_the_installed_console_script_denies_when_armed},
+}
+
+@misc{hooks-no-verify-the-installed-console-script-is-silent-when-unarmed,
+  section = {no_verify},
+  title  = {An unarmed hook must emit no decision at all, not an advisory},
+  claim  = {Measured by a peer repository: an unarmed hook that exits zero with no permission decision
+            is read by the harness as allow, nothing to report, so any advisory text it prints
+            reaches nobody. An advisory tier therefore looks like caution and behaves like silence,
+            and a guard in that state reads as armed in review while detecting every violation and
+            reporting none. Two states only, armed or absent. This arm holds the hook to that rather
+            than letting a third state grow.},
+  check  = {pytest hooks/tests/test_no_verify.py -k test_the_installed_console_script_is_silent_when_unarmed},
+}
+
+@misc{hooks-no-verify-the-hook-is-wired-into-settings,
+  section = {no_verify},
+  title  = {A shipped hook nothing invokes is the packager not using its own package},
+  claim  = {This repository's named defect, measured on its own sibling, which carried full coverage
+            and no entry point while its own docstring recorded the fact. The wiring is therefore an
+            assertion rather than a convention. The arm also requires that the arming be inline in
+            the command string rather than in the environment block alone, because two peers
+            measured independently that a session already running when the settings file changes
+            never picks up the environment, so the hooks keep exiting zero and the guard is off in
+            fact while reading as armed in review.},
+  check  = {pytest hooks/tests/test_no_verify.py -k test_the_hook_is_wired_into_settings},
+}
+
+@misc{hooks-no-verify-the-post-commit-verifies-the-gate-ran-before-pushing,
+  section = {no_verify},
+  title  = {Two mechanisms, and they fail differently},
+  claim  = {The pre tool use hook reads a command string and can be evaded by a spelling nobody
+            enumerated. The post commit hook reads the result: a commit whose tree the gate never
+            verified carries no witness, however it was produced. Neither mechanism subsumes the
+            other, which is why both were ruled. The witness keys on the staged tree because it must,
+            since the gate runs before the commit object exists and there is no revision to name
+            yet, while the commit that follows carries the same tree the gate verified. The absence
+            of the witness file and a tree missing from a present witness are different facts: the
+            first says the gate has never run in this clone, which is a statement about the
+            environment, and the second says it ran for other commits and not this one, which is the
+            bypass. Collapsing them would be this repository's standing defect one layer out, so the
+            hook reports them separately and refuses to push in either case.},
+  check  = {pytest hooks/tests/test_no_verify.py -k test_the_post_commit_verifies_the_gate_ran_before_pushing},
+}

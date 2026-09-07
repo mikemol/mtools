@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑⚑⚑ TWO JOBS, AND THE ORDER IS THE POINT: verify the gate actually ran for this commit, THEN
+# push. The operator's policy is *never `--no-verify`* — and a policy nothing can check after the
+# fact is a policy that reads as enforced and is not. A PreToolUse hook refuses the flag before
+# the command runs; this is the independent second mechanism, downstream, that catches a bypass
+# arriving by a route the first did not anticipate.
+#
+# ⚑⚑ TWO MECHANISMS RATHER THAN ONE, BECAUSE THEY FAIL DIFFERENTLY. The PreToolUse hook sees a
+# command string and can be evaded by a spelling nobody enumerated. This sees the RESULT and cannot
+# be evaded by spelling at all — a commit whose tree the gate never verified has no witness,
+# however it was produced. Neither subsumes the other.
+#
+# ⚑ AND IT REFUSES TO PUSH RATHER THAN REFUSING THE COMMIT. post-commit cannot undo a commit; a
+# hook that pretended otherwise would be theatre. What it CAN do is decline to publish, which is
+# the consequence that matters for a public repo.
+
+set -uo pipefail
+
+_git_dir=$(git rev-parse --git-dir)
+_witness="$_git_dir/mtools/gate-verified"
+# ⚑ QUOTED, because `HEAD^{tree}` reads as brace-expansion to a shell and shellcheck says so
+# (SC1083). Unquoted it happens to work here and would break the moment a sibling brace appeared.
+_tree=$(git rev-parse "HEAD^{tree}")
+
+# ⚑⚑⚑ THE ABSENCE OF THE WITNESS FILE AND A TREE THAT IS NOT IN IT ARE DIFFERENT FACTS, and
+# collapsing them would be this repo's standing defect one layer out. A missing file means the gate
+# has never run in this clone — a fresh checkout, or `core.hooksPath` unset — which is a statement
+# about the ENVIRONMENT. A present file lacking this tree means the gate ran for other commits and
+# not this one, which is a statement about THIS COMMIT. Only the second is a bypass.
+if [ ! -r "$_witness" ]; then
+    echo "post-commit: no gate witness in this clone — run setup.sh to arm core.hooksPath."
+    echo "post-commit: NOT pushing. This is a statement about the environment, not the commit."
+    exit 0
+fi
+
+if ! grep -qxF "$_tree" "$_witness"; then
+    echo "post-commit: ⚑ THE GATE DID NOT RUN FOR THIS COMMIT."
+    echo "post-commit:   HEAD tree   $_tree"
+    echo "post-commit:   witness     $_witness ($(wc -l < "$_witness") tree(s) recorded)"
+    echo "post-commit: mtools policy is never --no-verify. NOT PUSHING."
+    echo "post-commit: re-commit through the gate, or state why this commit is exempt."
+    exit 0
+fi
+
+# ⚑⚑ THE PUSH IS UNCONDITIONAL ACROSS AUTHORS, BY OPERATOR RULING. Eight sessions commit to this
+# tree and every one of their commits passed the same gate, so withholding a peer's commit would
+# publish a partial history and call it the repo. What is gated is the GATE HAVING RUN, not who ran
+# it.
+#
+# ⚑ A DIVERGED REMOTE IS REPORTED, NEVER RESOLVED HERE. A hook that fetched and rebased under a
+# concurrent writer would rewrite history nobody asked it to touch, and it would do so inside a
+# hook whose output the caller may not read. `git push` refuses on divergence by itself; this
+# surfaces that refusal with the command to run rather than papering over it.
+if git push origin HEAD:main 2>&1; then
+    echo "post-commit: pushed $(git rev-parse --short HEAD) to origin/main"
+else
+    echo "post-commit: ⚑ PUSH REFUSED — the remote has moved. The commit is SAFE and LOCAL."
+    echo "post-commit: a peer pushed first. Reconcile deliberately:"
+    echo "post-commit:   git fetch origin && git rebase origin/main && git push origin HEAD:main"
+    echo "post-commit: this hook does not rebase for you — that would rewrite history unasked."
+fi
+
+# ⚑ EXITS 0 IN EVERY BRANCH, DELIBERATELY. A post-commit's status cannot unmake the commit, and a
+# nonzero exit here is read by git as nothing at all — so a refusal must be a MESSAGE, not a code.
+# Saying so explicitly because the natural reading of `exit 1` is *it stopped something*, and here
+# it would stop nothing while looking like it had.
+exit 0

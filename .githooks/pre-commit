@@ -764,5 +764,25 @@ fi
 # ⚑ SO THIS FILE ENDS ON A DECISION. `exit 0` cannot be reached by a stray `echo` appended later,
 # which is the reversion this guards against: the defect was not that the code was wrong, it was
 # that the code was RIGHT BY ACCIDENT and nothing said so.
+# ⚑⚑⚑ THE GATE LEAVES A WITNESS, because until now NOTHING RECORDED THAT IT RAN. Measured: the
+# only trace of a pre-commit run was its stdout, which is gone the moment the terminal scrolls.
+# So `did the gate run for this commit` was UNANSWERABLE — and a policy of *never `--no-verify`*
+# that cannot be checked after the fact is a policy that reads as enforced and is not.
+#
+# ⚑⚑ THE WITNESS KEYS ON THE STAGED TREE, NOT ON HEAD, and that is forced rather than chosen: this
+# hook runs BEFORE the commit object exists, so there is no SHA to name yet. `write-tree` is the
+# tree the gate actually verified, and the commit that follows carries that same tree — so a later
+# reader recomputes the key from `git rev-parse HEAD^{tree}` and compares. A commit made with
+# `--no-verify` produces a tree this file never names.
+#
+# ⚑ IT IS A WITNESS, NOT A LOCK. It proves the gate ran over these bytes; it cannot prove nobody
+# edited afterward, and it is deliberately not in the repo (`.git/` is not committed) because a
+# committed witness would be a claim about a run that the next clone did not perform.
+_witness_tree=$(git write-tree 2>/dev/null || true)
+if [ -n "${_witness_tree:-}" ]; then
+    mkdir -p "$(git rev-parse --git-dir)/mtools"
+    printf '%s\n' "$_witness_tree" \
+        >> "$(git rev-parse --git-dir)/mtools/gate-verified"
+fi
 say "ok"
 exit 0
