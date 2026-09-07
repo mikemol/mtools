@@ -984,6 +984,10 @@ _MIN_SWEPT = 50
 _WARRANTS_WITHOUT_CHECK = 0
 _WITNESS = _DIST.parent / "domain_witness.sh"
 _PREFLIGHT = _DIST.parent / "preflight.sh"
+# ⚑ A FLOOR ON THE POPULATION, not a target: a glob that stopped matching would make the
+# comment-claim arm vacuous in the direction that reads as success. Measured 8 at the tick it
+# shipped; set below that so adding or removing one script is not a false refusal.
+_MIN_SHELL_SCRIPTS = 3
 
 
 def test_the_poll_enumerates_censuses_from_the_filesystem() -> None:
@@ -2214,4 +2218,67 @@ def test_the_preflight_runs_the_ruff_the_gate_runs() -> None:
     # lint finding, and the census this repo runs raises on exactly that distinction.
     assert "ruff EXITED" in preflight, (
         "a checker that failed to RUN must not be reported as a checker that found something"
+    )
+
+
+def test_a_comment_naming_a_flag_says_whether_it_is_passed() -> None:
+    """⚑⚑⚑ THE OBVIOUS SWEEP FOR LAST TICK'S DEFECT SCORES THE FIXED FILE WORSE THAN THE BROKEN ONE.
+
+    At `d2596d7` a comment asserted `--preview` was included while the command beneath it never
+    passed it. The mechanical generalisation is: *a comment naming a flag absent from every command
+    in its own file.* ⚑ MEASURED against the pre-fix blob, that sweep FIRES — one hit, the right
+    line. The control passes.
+
+    ⚑⚑ AND AGAINST THE FIXED FILE IT FIRES FOUR TIMES. The repair added prose explaining WHY
+    `--preview` is not passed, and every sentence of that explanation is another hit. **The sweep
+    cannot tell an assertion from an explanation, so its signal is inverted by its own repair** —
+    a metric that rewards deleting the reasoning and punishes recording it.
+
+    ⚑ SO THE SHIPPED PROPERTY IS NARROWER AND IT IS ABOUT THE VERB. A comment may name any flag it
+    likes while discussing another tool, another target, or a decision not to pass it. What it may
+    not do is claim THIS file passes one it does not. `IS INCLUDED` was that claim; the corrected
+    text says `is NOT passed below`. The check is on assertions of inclusion, not on mentions.
+
+    ⚑⚑ THE OTHER EIGHT HITS WERE MEASURED AND ARE ALL LEGITIMATE — `.githooks/pre-commit` on the
+    ratchet's blanket census, `ratchet_check.sh` on a flag applied inside the census it delegates
+    to, `rule_citations.sh` on the mdstruct modes that motivated it. A sweep whose true-positive
+    rate is one in nine does not ship as a gate; the property it was reaching for does.
+    """
+    inclusion = pyre.compile(
+        r"`(--[a-z][a-z0-9-]{2,})`[^\n]*?\b(IS INCLUDED|is included|is passed)\b"
+    )
+    offenders: list[str] = []
+    scanned = 0
+    for script in sorted(_DIST.parent.glob("*.sh")):
+        text = script.read_text(encoding="utf-8")
+        scanned += 1
+        code = "\n".join(
+            ln for ln in text.splitlines() if not ln.lstrip().startswith("#")
+        )
+        # ⚑⚑⚑ A QUOTATION IS NOT AN ASSERTION, AND THIS IS THE THIRD CHECKER HERE TO NEED THAT.
+        # `message_counts.sh` exempts four-space-indented lines so a message can quote the figure
+        # it is correcting; `rule_citations.sh` has no such exemption and has refused two commits
+        # of mine for quoting a rule number. ⚑ The marker differs by medium — indentation in a
+        # commit message, quotation marks in a shell comment — but the property is one: a checker
+        # that cannot tell a claim from a report of a claim refuses the authors most careful to
+        # record what they corrected.
+        # ⚑⚑ STRIPPED OVER THE JOINED COMMENT TEXT, NOT PER LINE. Measured: the quotation that
+        # motivated this opens on one line and closes on the next, so a per-line strip leaves both
+        # halves bare and the arm fires on the correction it was written to permit.
+        comment_text = "\n".join(
+            ln.lstrip().lstrip("#") for ln in text.splitlines() if ln.lstrip().startswith("#")
+        )
+        unquoted = pyre.sub(r'"[^"]*"', "", comment_text, flags=pyre.DOTALL)
+        offenders.extend(
+            f"{script.name}: claims {m.group(1)} is passed, and it is not"
+            for m in inclusion.finditer(unquoted)
+            if m.group(1) not in code
+        )
+    # ⚑ POSITIVE CONTROL ON THE POPULATION, not on the predicate: a glob that stopped matching
+    # would make this arm vacuous in the direction that reads as success.
+    assert scanned >= _MIN_SHELL_SCRIPTS, (
+        f"only {scanned} shell script(s) scanned; the population is wrong"
+    )
+    assert not offenders, (
+        "comment(s) asserting a flag the file does not pass:\n  " + "\n  ".join(offenders)
     )

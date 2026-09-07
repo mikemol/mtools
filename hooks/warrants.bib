@@ -1471,3 +1471,23 @@
             caused this would otherwise satisfy it.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_preflight_runs_the_ruff_the_gate_runs},
 }
+
+@misc{hooks-bar-fires-a-comment-naming-a-flag-says-whether-it-is-passed,
+  title  = {The obvious sweep scores the fixed file worse than the broken one},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {A comment once asserted a flag was included while the command beneath it never
+            passed it. The mechanical generalisation --- a comment naming a flag absent from
+            every command in its own file --- fires correctly on the pre-fix blob and fires four
+            times on the corrected one, because the repair added prose explaining why the flag is
+            not passed. A metric that rewards deleting the reasoning and punishes recording it is
+            inverted by its own repair, so the shipped property is about the verb rather than the
+            mention: a comment may name any flag while discussing another tool or a decision not
+            to pass it, but may not claim this file passes one it does not. Eight of nine hits
+            from the broad sweep were measured legitimate. A quotation is not an assertion, and
+            this is the third checker here to need that exemption; the marker differs by medium
+            but the property is one, and the quote stripping is over the joined comment block
+            because the quotation that motivated it spans two lines.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_a_comment_naming_a_flag_says_whether_it_is_passed},
+}

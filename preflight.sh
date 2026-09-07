@@ -67,9 +67,13 @@ for dist in $dists; do
         fi
     done
 
-    # ⚑⚑ `--preview` IS INCLUDED BECAUSE THE RATCHET CENSUSES PREVIEW RULES. Three of the four
-    # refusals above were preview keys (`blank-lines-*`), which a bare `ruff check` does not
-    # report — so a pre-flight without it would have passed all three and predicted nothing.
+    # ⚑⚑ THIS BLOCK ONCE OPENED WITH THE SENTENCE "`--preview` IS INCLUDED BECAUSE THE RATCHET
+    # CENSUSES PREVIEW RULES", AND THAT SENTENCE WAS FALSE ABOUT THE LINE BENEATH IT. It is
+    # quoted rather than restated, because a false assertion left as the block's FIRST line is
+    # the one a reader meets before the correction — the staler an authority, the likelier it is
+    # the one a new reader meets first. ⚑ The fact it rested on is true: three of the four
+    # refusals it cites were preview keys (`blank-lines-*`), which a bare `ruff check` does not
+    # report. What was wrong was the instrument it credited.
     #
     #
     # ⚑⚑⚑ AND THE COMMENT ABOVE IS WRONG ABOUT ITS OWN LINE, WHICH IS WHY IT IS KEPT AND
