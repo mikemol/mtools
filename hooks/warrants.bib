@@ -1452,3 +1452,22 @@
             passed explicitly rather than inherited from wherever pytest runs.},
   check  = {pytest hooks/tests/test_adoption.py -k test_both_distributions_co_install_under_one_namespace},
 }
+
+@misc{hooks-bar-fires-the-preflight-runs-the-ruff-the-gate-runs,
+  title  = {The comment asserted a flag the command never passed, and the command was right},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {preflight.sh carried a comment stating that --preview was included and citing three
+            refusals as proof, while the command beneath it did not pass it. Measured, the
+            comment was wrong and the command was right: the gate's own ruff runs without
+            --preview too, so adding it would have made the prediction stricter than its subject
+            --- 34 findings in hooks, 51 in mdstruct, 11 in ratchet, none of which the gate's
+            ruff refuses, including an open operator decision that would have failed every run.
+            The preview census belongs to the ratchet, which the preflight already runs, so the
+            prediction was complete via the ratchet line rather than the ruff line. The arm holds
+            agreement between the two commands rather than the absence of a flag, so it survives
+            either side changing, and it reads only non-comment lines because the prose that
+            caused this would otherwise satisfy it.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_preflight_runs_the_ruff_the_gate_runs},
+}

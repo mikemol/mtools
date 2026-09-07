@@ -983,6 +983,7 @@ _MIN_SWEPT = 50
 # a ceiling left where a paid debt used to sit lets it return silently — and bounded the same way.
 _WARRANTS_WITHOUT_CHECK = 0
 _WITNESS = _DIST.parent / "domain_witness.sh"
+_PREFLIGHT = _DIST.parent / "preflight.sh"
 
 
 def test_the_poll_enumerates_censuses_from_the_filesystem() -> None:
@@ -1586,6 +1587,7 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     targets = {
         "_POLL": _POLL, "_GATE": _GATE, "_WITNESS": _WITNESS, "_THIS": _THIS,
         "_RECORDER": _RECORDER, "_MSGHOOK": _MSGHOOK, "_MSGCOUNT": _MSGCOUNT,
+        "_PREFLIGHT": _PREFLIGHT,
     }
     checked = 0
     missing: list[str] = []
@@ -2156,4 +2158,60 @@ def test_a_module_with_no_local_caller_declares_who_consumes_it() -> None:
     assert not orphans, (
         f"module(s) with no local caller and no consumer declaration: {orphans}. "
         "An import count of zero is not evidence of disuse when peers import a copy."
+    )
+
+
+def test_the_preflight_runs_the_ruff_the_gate_runs() -> None:
+    """⚑⚑⚑ THE PREFLIGHT PREDICTS THE GATE, SO ITS RUFF MUST BE THE GATE'S RUFF — MEASURED BOTH.
+
+    `preflight.sh` exists to answer *what will the gate say about what I am about to stage*, and
+    it carried a comment asserting `--preview` was passed while the command beneath it did not
+    pass it. ⚑ I read that as the defect and nearly made the preflight stricter.
+
+    ⚑⚑ MEASURED, THE COMMENT WAS WRONG AND THE COMMAND WAS RIGHT. The gate's own ruff — the
+    `$dist: ruff — lint clean under select=[ALL]` check — runs `ruff check --no-cache .` with no
+    `--preview` either. Adding it to the preflight would have surfaced **34 findings in `hooks`,
+    51 in `mdstruct`, 11 in `ratchet`, none of which the gate's ruff refuses**, including
+    `rule-codes-in-selectors`, which is an OPEN OPERATOR DECISION. A preflight failing every run
+    on a decision nobody has made is furniture by the second tick.
+
+    ⚑ THE PREVIEW CENSUS BELONGS TO THE RATCHET, which the preflight also runs. So the prediction
+    was already complete — via the ratchet line, not the ruff line. The original comment got the
+    fact right (the three `blank-lines-*` refusals were preview keys) and attributed the coverage
+    to the wrong instrument.
+
+    ⚑⚑ SO THE ARM HOLDS AGREEMENT, NOT A FLAG. Whatever ruff the gate runs, the preflight runs —
+    which is the property that makes a prediction one, and it stays true if either side changes.
+    """
+    preflight = _PREFLIGHT.read_text(encoding="utf-8")
+    gate = _GATE.read_text(encoding="utf-8")
+
+    def _ruff_flags(body: str) -> set[str]:
+        """Collect flags from every non-comment `ruff check` line, so prose cannot satisfy it.
+
+        Returns:
+            the flags passed on each line that actually invokes ruff.
+
+        """
+        flags: set[str] = set()
+        found = False
+        for line in body.splitlines():
+            if "ruff" not in line or "check" not in line or line.lstrip().startswith("#"):
+                continue
+            found = True
+            flags |= {w for w in line.split() if w.startswith("--")}
+        assert found, "no ruff invocation found; this arm would pass by finding nothing"
+        return flags
+
+    # ⚑ THE COMPARISON IS BETWEEN COMMANDS, NOT AGAINST A LITERAL. Asserting `--preview` absent
+    # would encode today's answer; asserting AGREEMENT survives the gate changing its mind.
+    assert _ruff_flags(preflight) == _ruff_flags(gate), (
+        f"preflight runs a ruff the gate does not: preflight={_ruff_flags(preflight)} "
+        f"gate={_ruff_flags(gate)}. A prediction that differs from its subject is not one."
+    )
+    # ⚑⚑ AND THE EXIT STATUS MUST BE DISCRIMINATED. `||` folds *the checker could not start* into
+    # *the gate will refuse this* — ruff exits 2 on a usage or internal error, which is not a
+    # lint finding, and the census this repo runs raises on exactly that distinction.
+    assert "ruff EXITED" in preflight, (
+        "a checker that failed to RUN must not be reported as a checker that found something"
     )

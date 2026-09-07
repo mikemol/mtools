@@ -70,8 +70,30 @@ for dist in $dists; do
     # ⚑⚑ `--preview` IS INCLUDED BECAUSE THE RATCHET CENSUSES PREVIEW RULES. Three of the four
     # refusals above were preview keys (`blank-lines-*`), which a bare `ruff check` does not
     # report — so a pre-flight without it would have passed all three and predicted nothing.
-    ( cd "$dist" && .venv/bin/ruff check --no-cache . ) \
-        || { fail=1; say "$dist: ruff — the gate will refuse this"; }
+    #
+    #
+    # ⚑⚑⚑ AND THE COMMENT ABOVE IS WRONG ABOUT ITS OWN LINE, WHICH IS WHY IT IS KEPT AND
+    # CORRECTED HERE RATHER THAN DELETED. `--preview` is NOT passed below, and it must not be:
+    # MEASURED, the gate's own ruff (`.githooks/pre-commit`, `$dist: ruff — lint clean under
+    # select=[ALL]`) runs `ruff check --no-cache .` with no `--preview` either. A pre-flight that
+    # added it would be STRICTER THAN THE THING IT PREDICTS — 34 findings in `hooks`, 51 in
+    # `mdstruct`, 11 in `ratchet`, none of which the gate's ruff refuses.
+    # ⚑⚑ THE PREVIEW CENSUS BELONGS TO THE RATCHET ALONE, and the ratchet call below is what
+    # covers it: it runs its own `--preview` census and refuses NEW keys. So the prediction is
+    # complete, and it is complete because of the ratchet line rather than the ruff line.
+    # ⚑ WHAT THE ORIGINAL COMMENT GOT RIGHT is that the three `blank-lines-*` refusals were
+    # preview keys. It attributed their coverage to this ruff invocation instead of to the
+    # ratchet, and named a flag that was never here.
+    # ⚑⚑ EXIT 0 AND 1 ARE BOTH THE CHECKER RUNNING; anything else is the checker failing to run,
+    # which a bare `||` folds into `the gate will refuse this` — a checker that could not start
+    # reported as a lint finding.
+    ( cd "$dist" && .venv/bin/ruff check --no-cache . )
+    _rc=$?
+    case "$_rc" in
+        0) ;;
+        1) fail=1; say "$dist: ruff — the gate will refuse this" ;;
+        *) fail=1; say "$dist: ruff EXITED $_rc — the checker did not run; this is not a clean tree" ;;
+    esac
     ( cd "$dist" && .venv/bin/mypy ) \
         || { fail=1; say "$dist: mypy — the gate will refuse this"; }
     ( cd "$dist" && .venv/bin/python3 -m pytest -q ) \
