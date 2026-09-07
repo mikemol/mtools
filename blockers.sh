@@ -690,6 +690,35 @@ else
                     | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
                 _anywhere=${_anywhere:-0}
                 _gap=$((roster - n_head))
+                # ⚑⚑⚑ A GAP IS NOT MADE OF ONE STATE, AND THE ARM COUNTED AS IF IT WERE. `_gap`
+                # is every rostered party with no leg in THIS directory — which includes parties
+                # that have not filed ANYWHERE. A surveyor who accepted and has not yet written is
+                # PENDING; one who declined with a measured reason is TERMINAL. **Neither is a
+                # dropped row**, and the arm called both one because it compared the gap against
+                # `filed elsewhere` alone.
+                # ⚑⚑ REPORTED BY `rosettapkg`, who verified before claiming a pattern: they
+                # cross-tabulated every census in this tree that rosters them against what their
+                # own HEAD holds, found ONE disagreeing row out of seven adjudicable, and handed
+                # over the row rather than a claim about the table. They did not touch this file.
+                # ⚑ THE PRECEDENT IS THIS ARM'S OWN UNADJUDICATED BRANCH, one axis over: calling a
+                # census this reader cannot parse a dropped row *reports the READER*. Calling a
+                # party who has not filed anywhere a dropped row **reports the CALENDAR**.
+                #
+                # ⚑⚑ THE STATES ARE COUNTED AS A UNION OVER ROWS, NOT SUMMED. `--starts 'filed'`
+                # is a PREFIX OF `filed elsewhere`, so summing the probes double-counts — MEASURED:
+                # `--starts filed` returns 14 against `build-hermeticity`'s 12-row §S. The probe
+                # below asks for rows whose state is NOT the mark and NOT one of the terminal or
+                # pending forms; a row matching none of them is the residue this arm exists for.
+                _pending=$("$md" rows "$census" --col 1 --starts 'accepted' 2>/dev/null \
+                    | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
+                _pending=${_pending:-0}
+                _declined=$("$md" rows "$census" --col 1 --starts 'scoped decline' 2>/dev/null \
+                    | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
+                _declined=${_declined:-0}
+                _notyet=$("$md" rows "$census" --col 1 --starts 'not yet filed' 2>/dev/null \
+                    | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
+                _notyet=${_notyet:-0}
+                _accounted=$((_elsewhere + _pending + _declined + _notyet))
                 # ⚑⚑⚑ EVERY COMPONENT OF THE ASSERTED EXPRESSION IS PRINTED, NOT JUST ITS VERDICT.
                 # The old branch asserted `_elsewhere >= _gap` and printed only `_elsewhere`, so a
                 # reader got a conclusion with one operand invisible and no way to check the
@@ -701,6 +730,7 @@ else
                 # be trusted or doubted.
                 echo "    §S marks: $_elsewhere (col-1 cells DECLARING it; $_anywhere mention it anywhere)"
                 echo "    gap:      $_gap = roster $roster - HEAD legs $n_head"
+                echo "    states:   $_accounted = $_elsewhere filed + $_pending pending + $_declined declined + $_notyet not-yet"
                 # ⚑ THE THIRD OUTCOME, AND IT IS NOT A FAILURE. When no cell declares the mark but
                 # some row mentions it, this reader cannot adjudicate the file — that is INVALID,
                 # not FALSE, and reporting it as a dropped row would be a statement about the
@@ -710,13 +740,14 @@ else
                     echo "    UNADJUDICATED: 0 cells declare the mark, $_anywhere mention it. This"
                     echo "    census phrases the mark differently — a prefix reader cannot settle"
                     echo "    it, and calling it a dropped row would report the READER, not the file."
-                elif [ "${_elsewhere:-0}" -ge "${_gap:-0}" ] && [ "${_elsewhere:-0}" -gt 0 ]; then
-                    echo "    ACCOUNTED: $_elsewhere >= $_gap — every unfiled surveyor is rostered"
-                    echo "    here and files into its own tree. Absent BY DESIGN, not a dropped row."
+                elif [ "${_accounted:-0}" -ge "${_gap:-0}" ] && [ "${_accounted:-0}" -gt 0 ]; then
+                    echo "    ACCOUNTED: $_accounted >= $_gap — every rostered surveyor without a"
+                    echo "    leg here carries a state that explains it: filed elsewhere, still"
+                    echo "    pending, or terminally declined. None is a dropped row."
                 else
-                    echo "    DROPPED ROW: $_elsewhere < $_gap — $_gap surveyor(s) have no leg here"
-                    echo "    and only $_elsewhere say why. A rostered surveyor with neither is the"
-                    echo "    one shape this arm exists to catch."
+                    echo "    DROPPED ROW: $_accounted < $_gap — $_gap surveyor(s) have no leg here"
+                    echo "    and only $_accounted carry any state at all. A rostered surveyor with"
+                    echo "    neither a leg nor a state is the one shape this arm exists to catch."
                 fi
             fi
         fi

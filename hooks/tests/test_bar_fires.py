@@ -3361,6 +3361,13 @@ def test_asserted_comparisons_print_both_operands() -> None:
     ⚑ THE ARM IS ABOUT THE SHAPE, NOT THIS ONE SITE. It requires that every branch which announces
     an accounting verdict names both sides of its comparison. A future arm added with a hidden
     operand fails here rather than three ticks later when its figure is absurd on its face.
+
+    ⚑⚑ AND IT WAS ITSELF WRITTEN TOO SPECIFICALLY, WHICH THE NEXT REPAIR EXPOSED. It asserted the
+    literal `$_elsewhere`, so when the left operand correctly became `$_accounted` — because a gap
+    is not made of one state — **this arm failed on a change that strengthened its subject.** An arm
+    that names a variable cannot outlive the variable, and it was asserting an IDENTIFIER where the
+    rule is about a RELATION. It now derives both operand names from the `-ge` condition itself, so
+    a rename passes and a hidden operand still fails.
     """
     body = _POLL.read_text(encoding="utf-8")
     commands = "\n".join(
@@ -3377,17 +3384,30 @@ def test_asserted_comparisons_print_both_operands() -> None:
     assert "DROPPED ROW:" in commands, (
         "the dropped-row verdict must still be emitted; this arm would pass on its absence"
     )
-    # ⚑ BOTH OPERANDS ARE NAMED ON THE VERDICT LINE ITSELF, not merely computed above it.
+    # ⚑⚑⚑ THE OPERANDS ARE DERIVED FROM THE COMPARISON, NOT HARDCODED — and this arm learned that
+    # by going red for the wrong reason. It asserted the literal `$_elsewhere`, so when the left
+    # operand correctly became `$_accounted` (a gap is not made of one state), the arm failed on a
+    # change that STRENGTHENED its subject. ⚑⚑ AN ARM THAT NAMES A VARIABLE CANNOT OUTLIVE THE
+    # VARIABLE, and it was asserting an identifier where the rule is about a RELATION. Now it reads
+    # the `-ge` condition, extracts whatever two operands the poll actually compares, and requires
+    # both on the verdict lines — so the next rename passes and the next hidden operand still fails.
+    # ⚑ THE COMPARISON, NOT THE LINE. A first attempt matched every `${_x:-0}` on the line and read
+    # THREE operands, because the branch also carries `&& [ "${_accounted:-0}" -gt 0 ]`. Extracting
+    # from the whole line answers "what variables appear near a comparison"; the rule is about the
+    # comparison's own two sides.
+    cond = next(ln for ln in commands.splitlines() if '" -ge "' in ln)
+    ge = pyre.search(r"\$\{(_\w+):-0\}\"\s+-ge\s+\"\$\{(_\w+):-0\}", cond)
+    assert ge is not None, (
+        f"could not read a two-sided `-ge` comparison to derive the rule from: {cond.strip()}"
+    )
+    left, right = ge.group(1), ge.group(2)
     for verdict in ("ACCOUNTED:", "DROPPED ROW:"):
         line = next(ln for ln in commands.splitlines() if verdict in ln)
-        assert "$_elsewhere" in line, (
-            f"the {verdict} line asserts a comparison but does not print its LEFT operand: "
-            f"{line.strip()}"
-        )
-        assert "$_gap" in line, (
-            f"the {verdict} line asserts a comparison but does not print its RIGHT operand: "
-            f"{line.strip()}"
-        )
+        for operand in (left, right):
+            assert f"${operand}" in line, (
+                f"the {verdict} line asserts `{left} >= {right}` but does not print "
+                f"its operand ${operand}: {line.strip()}"
+            )
     # ⚑ AND THE GAP IS PRINTED AS ITS OWN DERIVATION, so a reader can check the subtraction rather
     # than accept a difference. `roster` and `n_head` are the two facts it comes from.
     assert "$_gap = roster $roster - HEAD legs $n_head" in commands, (
@@ -3441,4 +3461,60 @@ def test_roster_mark_is_read_from_a_cell_not_a_substring() -> None:
     # report a dropped row, which would be a statement about the reader dressed as a finding.
     assert "UNADJUDICATED:" in commands, (
         "a census whose mark this reader cannot parse must report UNADJUDICATED, not a dropped row"
+    )
+
+
+def test_the_roster_gap_is_compared_against_every_state_not_only_the_mark() -> None:
+    """⚑⚑⚑ A GAP IS NOT MADE OF ONE STATE, AND THE ARM COUNTED AS IF IT WERE.
+
+    `_gap` is every rostered party with no leg in the census's own directory — which includes
+    parties that have not filed **anywhere**. A surveyor who accepted and has not yet written is
+    PENDING. One who declined with a measured reason is TERMINAL. **Neither is a dropped row**, and
+    the arm called both one because it compared the gap against `filed elsewhere` alone.
+
+    ⚑⚑ MEASURED on `CENSUS-paperkit-use.md`: roster 8, legs in HEAD 0, gap 8, and the states are
+    `4 filed + 2 pending + 1 declined + 1 not-yet = 8`. **Every rostered party carried a state that
+    explained its absence, and the arm reported the one shape it exists to catch.**
+
+    ⚑ THE PRECEDENT IS THIS SAME ARM'S `UNADJUDICATED` BRANCH, one axis over: calling a census this
+    reader cannot parse a dropped row *reports the READER*. Calling a party who has not filed
+    anywhere a dropped row **reports the CALENDAR**. Same three-state discipline, different axis.
+
+    ⚑⚑ REPORTED BY `rosettapkg`, who verified before claiming a pattern — they cross-tabulated
+    every census in this tree that rosters them against what their own HEAD holds, found ONE
+    disagreeing row out of seven adjudicable, and handed over the row rather than a claim about the
+    table's reliability. They did not touch `blockers.sh`.
+
+    ⚑ AND THE STATES CANNOT BE SUMMED FROM A NAIVE PROBE: `--starts 'filed'` is a PREFIX of
+    `filed elsewhere`. Measured — `--starts filed` returns 14 against a 12-row §S. The arm probes
+    the states that are actually disjoint at the head of the cell.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the verdict branches must still exist, or every assertion below passes
+    # because the arm vanished rather than because it improved.
+    assert "ACCOUNTED:" in commands, (
+        "the accounted verdict must still be emitted; this arm would pass on its absence"
+    )
+    assert "DROPPED ROW:" in commands, (
+        "the dropped-row verdict must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑ THE COMPARISON IS AGAINST THE UNION OF STATES, NOT THE MARK ALONE.
+    assert '"${_accounted:-0}" -ge "${_gap:-0}"' in commands, (
+        "the gap must be compared against every state that explains an absence, not against "
+        "`filed elsewhere` alone — a pending or declined party is not a dropped row"
+    )
+    # ⚑ EACH STATE IS READ AS A COLUMN DECLARATION, so prose describing a state is not a party.
+    for state in ("accepted", "scoped decline", "not yet filed"):
+        assert f"--col 1 --starts '{state}'" in commands, (
+            f"the {state!r} state must be counted as a column-1 declaration"
+        )
+    # ⚑ AND THE COMPOSITION IS PRINTED, so a reader can check the sum rather than accept a total.
+    assert (
+        "$_accounted = $_elsewhere filed + $_pending pending "
+        "+ $_declined declined + $_notyet not-yet"
+    ) in commands, (
+        "the accounted total must be printed with the states that compose it, not as a bare number"
     )

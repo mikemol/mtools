@@ -1977,3 +1977,27 @@
             cannot settle a question must say so rather than report a finding about itself.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_roster_mark_is_read_from_a_cell_not_a_substring},
 }
+
+@misc{hooks-bar-fires-roster-gap-compared-against-every-state,
+  section = {bar-fires},
+  title  = {A gap is not made of one state},
+  claim  = {The poll's roster arm computed the gap as every rostered party lacking a leg in the
+            census's own directory, then compared that gap against the count of parties marked as
+            having filed elsewhere. Those are different populations. The gap includes parties that
+            have not filed anywhere: a surveyor who accepted and has not yet written is pending, and
+            one who declined with a measured reason is terminal, and neither is a dropped row.
+            Measured on the paperkit-use census: roster eight, legs in the directory zero, gap
+            eight, and the states present were four filed elsewhere, two accepted, one scoped
+            decline and one not yet filed, summing to exactly eight. Every rostered party carried a
+            state explaining its absence and the arm reported the one shape it exists to catch. The
+            precedent for the repair is the same arm's own unadjudicated branch one axis over:
+            calling a census this reader cannot parse a dropped row reports the reader, and calling
+            a party that has not filed anywhere a dropped row reports the calendar. The states
+            cannot be probed naively because the mark's own spelling is a prefix of another state's,
+            so a summed probe double-counts; measured, a prefix query for the shorter spelling
+            returns fourteen against a twelve-row table. Reported by a peer who cross-tabulated
+            every census in this tree that rosters them against what their own repository holds,
+            found one disagreeing row out of seven adjudicable, and handed over the row rather than
+            a claim about the table, without touching the instrument.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_roster_gap_is_compared_against_every_state_not_only_the_mark},
+}
