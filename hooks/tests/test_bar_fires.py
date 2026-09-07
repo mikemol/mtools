@@ -1666,6 +1666,7 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
         # resolves. `is_file()` above rejects the bare name, so adding it cannot make a test
         # resolve to a directory and read nothing.
         "_DIST": _DIST,
+        "_BRIEF": _BRIEF,
     }
     checked = 0
     missing: list[str] = []
@@ -2506,6 +2507,10 @@ def test_the_citation_gate_reports_a_figure_that_moves() -> None:
 
 
 _SHELLCHECK_TEST = _DIST.parent / "shellcheck_test.sh"
+# ⚑ HOISTED BESIDE THE OTHERS so the sweep's target map can carry it. Defined at its arm, it
+# resolved to no NAME and the ceiling caught the arm — third consecutive tick, and the third time
+# the honest repair was making the arm visible rather than raising the number.
+_BRIEF = _DIST.parent / "findings" / "CENSUS-BRIEF.md"
 
 
 def test_the_shell_gate_says_what_it_checked() -> None:
@@ -3190,4 +3195,35 @@ def test_the_sweep_states_the_share_of_arms_it_covers() -> None:
     # population this module exists to refuse, one level in.
     assert "swept_arms" in code, (
         "the arm share must be counted by the sweep, not recorded as a constant"
+    )
+
+
+def test_the_brief_states_what_homing_grants_and_what_it_does_not() -> None:
+    """⚑⚑⚑ FOUR CENSUSES ARE HOMED IN THIS TREE AND THE GRANT WAS NEVER WRITTEN DOWN.
+
+    `rosettapkg` asked to home a fifth and split the ask in two: may the run file live here, and
+    would this tree OWN the accounting. ⚑ They were right to split it, and right not to read the
+    existing grant as covering a new run file — because there was no written grant to read. Four
+    censuses landed here by precedent, and precedent is what a peer has to guess at.
+
+    ⚑⚑ THE TWO PERMISSIONS ARE GENUINELY DIFFERENT AND THE BRIEF NOW SAYS SO. Hosting is this
+    tree's to give: it is a path in this repository and the operator asked for findings homed
+    rather than scattered. **Ownership of a census — the §S accounting, the freeze — is the
+    OPERATOR's**, and a homing tree that assumed it would be deciding an ownership question by
+    writing code, which is the one thing this session's standing instructions forbid.
+
+    ⚑ A GRANT THAT LIVES IN A MESSAGE IS NOT A GRANT. This session has measured that a claim with
+    no re-derivation procedure will not be re-checked however load-bearing it is; a permission
+    with no written form is worse, because the next party to ask cannot find it and the one who
+    does not ask cannot be refused.
+    """
+    brief = _BRIEF.read_text(encoding="utf-8")
+    # ⚑ HOSTING IS GRANTED IN WRITING, so a peer need not ask a session that may not be running.
+    assert "may host a run file" in brief, (
+        "the brief must state the homing grant; precedent is what a peer has to guess at"
+    )
+    # ⚑ AND THE LIMIT IS STATED WITH IT. A grant whose boundary is unwritten reads as unlimited to
+    # whoever needs it to be — the shape this repository refuses in its own gates.
+    assert "does not transfer ownership" in brief, (
+        "hosting and owning are different permissions; the brief must not let one imply the other"
     )

@@ -108,3 +108,30 @@ anyone holding one document, which is every reader until the apex.
 
 Before filing, answer in one line: *could a reader of my file alone reconstruct what was asked of
 the other legs?* If no — that is expected. Say so, and name it as the apex's job.
+
+## §13 Homing — hosting a run file here, and what that does not grant
+
+⚑⚑⚑ **FOUR CENSUSES WERE HOMED IN THIS TREE BEFORE THIS SECTION EXISTED, ALL BY PRECEDENT.** A
+fifth dispatcher asked rather than assuming, split the ask into hosting and ownership, and was
+right on both counts — there was no written grant to read, and precedent is what a peer has to
+guess at. *A permission with no written form is worse than a claim with no re-derivation
+procedure: the next party to ask cannot find it, and the one who does not ask cannot be refused.*
+
+**Any dispatcher may host a run file here**, at `findings/CENSUS-<name>.md` with legs at
+`findings/<name>/<party>.md`. No further permission is needed and none should be waited for. The
+operator asked for findings homed here rather than scattered, and a session that has to be awake
+to say yes is a bottleneck standing where a written rule belongs.
+
+⚑⚑ **Hosting does not transfer ownership, and the two are genuinely different permissions.** The
+`§S` accounting, the freeze, and naming an apex belong to whoever the **operator** put in that
+seat. A homing tree that assumed them because the file sits in its directory would be settling an
+ownership question by writing code — and a dispatcher who hands ownership away with the file has
+given away something that was not theirs either.
+
+⚑ **SO A HOSTED RUN FILE NAMES ITS OWN DISPATCHER IN `§X`, and that party keeps the freeze.**
+`blockers.sh` here reports every census it finds on the filesystem, hosted or not; being *reported*
+is not being *owned*, and the poll says which is which.
+
+⚑ **A DISPATCHER WHO IS ALSO THE LEAST QUALIFIED SURVEYOR SHOULD SAY SO IN `§X` RATHER THAN
+RECUSE.** Testimony about the alternative is evidence, and recording it as bias is what makes it
+usable; a recusal loses the leg and the bias both.
