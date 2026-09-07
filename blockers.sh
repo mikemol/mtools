@@ -75,7 +75,27 @@ tracked "$sub" applied_grammar.py "substrate applied_grammar.py (control)"
 # reporting "the CAS counters are out of reach" from one endpoint without enumerating the service's
 # ports: that was `0 of 1` reported as `0 of the world`, and one `kubectl get svc` would have shown
 # three. So this counts what exists before reporting what is tracked.
-echo "=== substrate: the ratchet island ==="
+# ⚑⚑⚑ THIS SECTION WAS A BLOCKER AND IS NOT ONE ANY MORE, AND NOTHING SAID SO. It was carried in
+# the symbol set every tick of this session, unmeasured, because it sits under the heading *the
+# standing blockers*. MEASURED: it blocks nothing here — the only reference to any island module
+# anywhere in this repository is the line below that reports it.
+#
+# ⚑⚑ THE DEPENDENCY WAS INVERTED AT `6da1021`, whose subject reads *built from the design not the
+# modules*. mtools ships its own `mikemol-ratchet`, and the two are not the same code: `core.py`
+# here is 325 lines defining six functions against substrate's 193 defining four, ONE NAME SHARED
+# OUT OF TEN. That commit's reason: importing untracked modules would vendor a snapshot nobody can
+# fetch, which is the anti-pattern this repository exists to retire.
+#
+# ⚑ SO IT REPORTS A TRUE FACT UNDER A HEADING THAT MADE IT LOOK ACTIONABLE. Thirty-two lines of a
+# peer's working state, listed among blockers, trains a reader to scroll past thirty-two lines —
+# the furniture rule reached by VOLUME rather than by constancy.
+#
+# ⚑ KEPT RATHER THAN DELETED: the count is still evidence about a peer this repo consumes from,
+# and deleting it would lose the enumeration this block's own comment argues for. What changes is
+# that it names its own status.
+echo "=== substrate: the ratchet island (reported, not a blocker here) ==="
+echo "  mtools ships mikemol-ratchet, interned at 6da1021 from the DESIGN, not these modules;"
+echo "  whether substrate tracks them is substrate's call and blocks nothing in this tree."
 island=$(find "$sub/substrate" -maxdepth 1 -name 'ratchet*.py' -o -maxdepth 1 -name 'baseline*.py' \
          -o -maxdepth 1 -name 'withheld*.py' 2>/dev/null | wc -l)
 echo "  population: $island module(s) match the island's naming on disk"

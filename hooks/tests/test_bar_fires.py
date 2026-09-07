@@ -2571,3 +2571,46 @@ def test_the_census_arm_can_tell_a_failed_read_from_an_empty_one() -> None:
     assert body.index("READER FAILED") < body.index('sig=$("$md" tables'), (
         "the guard runs before the first read whose emptiness it explains"
     )
+
+
+def test_the_island_arm_says_the_dependency_was_inverted() -> None:
+    """⚑⚑⚑ A BLOCKER SECTION FOR A BLOCKER THAT WAS RESOLVED BY INVERSION.
+
+    The poll prints 32 substrate modules as untracked-or-staged-only under the heading *the
+    ratchet island*, and I carried `⟐SUBSTRATE-ISLAND` in the symbol set every tick without
+    measuring what it blocks.
+
+    ⚑ MEASURED: it blocks nothing here. The only reference to any island module anywhere in this
+    repository is the poll line that reports it. mtools ships its OWN `mikemol-ratchet` —
+    `census`, `cli`, `core`, `state` — landed at `6da1021`, whose subject reads *built from the
+    design not the modules*.
+
+    ⚑⚑ AND THE TWO ARE NOT THE SAME CODE. `core.py` here is 325 lines defining six functions;
+    substrate's `ratchet_core.py` is 193 defining four. **One name is shared out of ten.** The
+    commit says why: importing untracked modules *would vendor a snapshot nobody can fetch — the
+    anti-pattern this repository exists to retire.*
+
+    ⚑⚑⚑ SO THE SECTION REPORTS A TRUE FACT UNDER A HEADING THAT MAKES IT ACTIONABLE, AND IT IS
+    NOT. Those modules being untracked is substrate's business; it stopped being mtools' blocker
+    the moment the dependency inverted. A poll that lists 32 lines of another repo's working state
+    under *the standing blockers* trains its reader to scroll past thirty-two lines — the furniture
+    rule reached by volume rather than by constancy.
+
+    ⚑ THE SECTION IS KEPT, NOT DELETED. The count is still evidence about a peer this repo
+    consumes from, and deleting it would lose the enumeration whose derivation the block's own
+    comment argues for. What changes is that it names its own status: reported, not blocking.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ THE SECTION MUST SAY WHOSE STATE IT IS. Without that a reader takes 32 untracked modules
+    # for work this repository is waiting on.
+    assert "not a blocker here" in commands, (
+        "the island section must say it reports a peer's state rather than a blocker of ours"
+    )
+    # ⚑ AND IT MUST NAME THE COMMIT THAT INVERTED IT, so the claim is checkable rather than
+    # asserted — a reader can run `git show` and read the decision.
+    assert "6da1021" in commands, (
+        "the inversion must cite the commit that performed it, not merely assert it happened"
+    )

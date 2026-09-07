@@ -1631,3 +1631,25 @@
             genuinely empty census reports no signature.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_census_arm_can_tell_a_failed_read_from_an_empty_one},
 }
+
+@misc{hooks-bar-fires-the-island-arm-says-the-dependency-was-inverted,
+  title  = {A blocker section for a blocker that was resolved by inversion},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The poll printed thirty-two substrate modules as untracked or staged-only under the
+            heading of standing blockers, and the symbol was carried every tick of this session
+            unmeasured. Measured, it blocks nothing here: the only reference to any island module
+            anywhere in this repository is the poll line reporting it. mtools ships its own
+            ratchet distribution, interned from the design rather than the modules, and the two
+            are not the same code --- 325 lines defining six functions against 193 defining four,
+            with one name shared out of ten. The interning commit gives the reason: importing
+            untracked modules would vendor a snapshot nobody can fetch. So the section reported a
+            true fact under a heading that made it look actionable, and thirty-two lines of a
+            peer's working state listed among blockers trains a reader to scroll past thirty-two
+            lines --- the furniture rule reached by volume rather than by constancy. The section
+            is kept because the count is still evidence about a peer, and it now names its own
+            status and cites the commit that inverted the dependency, in an emitted line rather
+            than a comment.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_island_arm_says_the_dependency_was_inverted},
+}
