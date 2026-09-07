@@ -384,6 +384,26 @@ else
         # cells than its header gained a separator (a raw pipe); one with FEWER lost a cell. The
         # arm still cannot name the cause — it reports a shape disagreement — but it can say which
         # of two remedies is even applicable, which the set alone could not.
+        # ⚑⚑⚑ AND AN ESCAPED BACKTICK IN A CODE SPAN TRUNCATES THE STRUCTURAL READER WHILE LEAVING
+        # THE CELL COUNT PERFECT. Found by BISECTION after three hypotheses died — pipes (a real
+        # defect, repaired, not the cause), length (row 11 is 2325 chars and reads fine), encoding
+        # (clean UTF-8 both sides of the boundary). Truncating the offending row at 800 chars read
+        # all 27 rows; at 1050 it stopped at 18; the span between held `` `blocked on \`mtools\`` ``.
+        # ⚑⚑ MARKDOWN DOES NOT TREAT A BACKSLASH AS AN ESCAPE INSIDE A CODE SPAN, so `\`` ends the
+        # span at the backtick and the parser loses every row after it. **Two independent
+        # truncation mechanisms lived in one row, each invisible to the instrument the other
+        # blinds**: pipes stop field-splitting readers, escaped backticks stop the structural one.
+        # ⚑ SO THE CELL-COUNT ARM CANNOT SEE THIS AND SAYS SO. It is a separate check.
+        # ⚑ FIXED-STRING (`-F`), NOT A REGEX. The regex form matched every bare backtick and
+        # reported 1543 lines where the true count is 1 — a confident wrong number from a pattern
+        # that looked right, in the arm added to catch a defect that looked fixed.
+        _ebt=$(grep -cF '\`' "$census" 2>/dev/null)
+        if [ "${_ebt:-0}" -gt 0 ]; then
+            echo "  ⚑ ${_ebt} line(s) carry an ESCAPED BACKTICK. Inside a code span, markdown does"
+            echo "    NOT treat a backslash as an escape — the span ends at the backtick and the"
+            echo "    STRUCTURAL reader loses every table row after it, while the cell count stays"
+            echo "    perfect. Different mechanism from a raw pipe, and invisible to that arm."
+        fi
         _over=$(awk -F'|' '/^\|/{if(!t){t=1;h=NF;next} if(NF>h)c++} !/^\|/{t=0} END{print c+0}' "$census" 2>/dev/null)
         _under=$(awk -F'|' '/^\|/{if(!t){t=1;h=NF;next} if(NF<h)c++} !/^\|/{t=0} END{print c+0}' "$census" 2>/dev/null)
         _cells=$(awk -F'|' '/^\| [0-9]+ \|/{print NF-2}' "$census" 2>/dev/null | sort -u | tr '\n' ' ')
