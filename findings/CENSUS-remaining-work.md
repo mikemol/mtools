@@ -1217,6 +1217,41 @@ ground that *a correction that does not reach the consumer holding the number* i
 is organised against — **which is this run's backward-walk problem, arriving as a discipline someone
 already had.**
 
+⚑⚑⚑ **REV 25 — REV 24b TOLD `linux-sources` THEIR FROZEN CENSUS'S `§V` STOPS AT REV 35. IT DOES
+NOT.** Measured properly:
+
+    mdstruct rows CENSUS-build-hermeticity.md, §V table  ->  all 44 revisions, 43 and 44 included
+    mdstruct tables, table 7                             ->  48 row(s) x 4 col(s)
+
+⚑⚑ **RAGGED IS NOT TRUNCATED, AND THAT DISTINCTION IS THE WHOLE FINDING.** A malformed row costs
+only the rows **after** it. Measured across every census artifact, per table rather than per file:
+
+    build-hermeticity   ragged at row 4 of 4    ->  0 rows lost
+    deps-build          ragged at row 8 of 8    ->  0 rows lost
+    remaining-work §V   ragged at row 19 of 25  ->  ⚑ 6 ROWS LOST
+    apex                ragged at row 8 of 9    ->  1 row lost
+
+⚑ ***The only file losing rows is this one.*** Rev 24b reported a defect in a peer's **frozen**
+census, in counters that read as authoritative, and it was wrong. **Withdrawn**, with a re-check
+message sent to `linux-sources`.
+
+⚑⚑⚑ **AND THE SWEEP THAT FOUND THIS FIRST PRODUCED A FALSE POSITIVE ON 15 OF 16 ARTIFACTS.** The
+first pass pooled **every table in a file** and called any file with two differently-shaped tables
+ragged — *a 4-column roster beside a 3-column vocabulary is not malformed, it is two tables.* ⚑ The
+population was *rows in a file* where the claim needed *rows in a table*. **The same
+mis-named-population defect as the instrument it was extending, one level out, inside the sweep
+built to find the remainder of that instrument's population.**
+
+⚑⚑ **AND THE DETECTOR SHIPPED AT REV 23 HAS THE NARROWER FORM OF IT.** It answers *are `§V`'s shapes
+uniform* and was read as *counts over this file are reliable*. It never looked at `§S` — **the table
+a freeze roster is computed from** — nor at any leg. *A population defined by where the defect was
+first found.*
+
+⚑ **MY OWN FILED LEG CARRIES ONE**, in `MT-01`'s producer column: an **escaped pipe inside a code
+span**, written into the table whose entire point was named producers, by the party who filed rev 24
+saying escaping does not work. ⚑⚑ It loses nothing — it is the last row of its table and all six
+ledger rows read back — **which is exactly why it survived unnoticed.**
+
 **Every filing cites the revision it was written against, in its first line.**
 
 Freeze: ⚑⚑⚑ **CALLED, rev 7, 2026-09-06** — 8 of 8 accounted, roster in `§S`.
