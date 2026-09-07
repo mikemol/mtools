@@ -117,6 +117,99 @@ def _undecorated(cell: str) -> str:
     return cell.lstrip("⚑*_# \t").casefold()
 
 
+def vocabulary(path: Path, header: str = "state") -> tuple[str, ...]:
+    """Return the states a document declares in its own `state | means` table.
+
+    ⚑⚑⚑ A DOCUMENT THAT PUBLISHES ITS VOCABULARY IS THE ONLY POPULATION THAT CANNOT GO STALE, and
+    five of the eight censuses in the corpus this was built for publish theirs. The consumer that
+    needed this had four states written by hand from the two files its author happened to be
+    reading; the declared union across the corpus was twice that, and two of the states it missed
+    were load-bearing — one of them annotated in its own document as *reading like a zero when
+    nobody was asked*.
+
+    ⚑⚑ THE HEADER IS THE KEY, NOT A POSITION. A vocabulary table is identified by what its first
+    column is called, so a document may carry it anywhere and may add columns beside it: the corpus
+    has both `state | means` and `state | means | is it a zero?`.
+
+    Returns:
+        each declared state, longest first, so a caller matching in order gets the specific one.
+
+    """
+    found: list[str] = []
+    for table_at, table in enumerate(_tables_in(ast.document(path))):
+        if not _header_of(table) or _header_of(table)[0].strip().casefold() != header:
+            continue
+        found.extend(
+            _undecorated(row.cells[0]).strip()
+            for row in table_rows(path, position=table_at)
+            if row.cells
+        )
+    # ⚑ LONGEST FIRST, AND THE ORDER IS THE WHOLE POINT. `filed` is a PREFIX of `filed elsewhere`,
+    # measured in this corpus: a prefix query for the shorter returns 8 rows where the true count
+    # is 7, because it swallows the longer state's row. Matching longest-first is what makes the
+    # two distinguishable at all.
+    return tuple(sorted((s for s in found if s), key=len, reverse=True))
+
+
+def classify(path: Path, states: tuple[str, ...], col: int = 1,
+             position: int | None = None) -> dict[str, list[Row]]:
+    """Group a table's rows by which declared state their cell announces.
+
+    ⚑⚑⚑ THE PREDICATE IS LONGEST-DECLARED-PREFIX, NOT EQUALITY, AND THAT WAS MEASURED RATHER THAN
+    CHOSEN. An exact test matches nothing here: the cells read `filed (rev 6) — 22e4ca1, verified
+    in HEAD`, so equality against `filed` returns zero and would read as a clean negative. A bare
+    prefix test is worse still — it cannot separate `filed` from `filed elsewhere`.
+
+    ⚑⚑ SO THE VOCABULARY SUPPLIES THE ALTERNATIVES AND THE LONGEST ONE WINS. This is only sound
+    because the states come from the document: a hand-written list would make the disambiguation a
+    guess about which state was meant, where a published list makes it the author's own answer.
+
+    ⚑ ROWS MATCHING NO DECLARED STATE ARE RETURNED UNDER THE EMPTY KEY rather than dropped. A
+    classifier that silently discards its residue reports its own coverage as complete, which is
+    the defect this whole module keeps measuring — and the residue is the only thing that can
+    reveal a state the document uses and never declared. **The first run of this function returned
+    55 unclassified rows out of 55, and that residue is what exposed both defects below.**
+
+    ⚑⚑ A DECLARED STATE MAY BE A SCHEMA RATHER THAN A LITERAL, measured immediately: one census
+    declares `filed (rev n)` while its cells read `filed (rev 6)`. The `n` is a metavariable, so a
+    literal prefix test classifies **nothing** — the document is describing a shape, not a string.
+    A trailing parenthetical is therefore truncated to the state's stem before matching, which is
+    the smallest reading that makes a published schema usable without inventing a pattern language.
+
+    Returns:
+        each declared state mapped to its rows, with unclassified rows under "".
+
+    """
+    out: dict[str, list[Row]] = {state: [] for state in states}
+    out[""] = []
+    # ⚑ THE STEM IS MATCHED, THE FULL STATE IS THE KEY. A caller asking about `filed (rev n)` must
+    # get its rows back under the name the document gave it, not under a truncation this function
+    # invented — the key is the author's word and the stem is only how it is recognised.
+    stems = {state: state.split("(")[0].strip() or state for state in states}
+    for row in table_rows(path, position=position):
+        if col >= len(row.cells):
+            continue
+        cell = _undecorated(row.cells[col])
+        hit = next((s for s in states if cell.startswith(stems[s])), "")
+        # ⚑⚑⚑ A STEM MATCH THAT CONTINUES IN WORDS IS AMBIGUOUS, NOT CLASSIFIED, AND THIS WAS
+        # MEASURED AGAINST A REAL CENSUS. One document declares `filed (rev n)` and uses
+        # `filed elsewhere (rev 5)` in a status row **without declaring that second state at all**.
+        # The stem `filed` matches both, so classification silently reported 8 rows in one state
+        # where the truth is 7 and 1 — absorbing an undeclared state into a declared one and
+        # reporting full coverage.
+        # ⚑⚑ SO THE RESIDUE IS DEFENDED: after the stem, a classified cell may continue with
+        # punctuation or a parenthetical, but a further WORD means the document is naming a state
+        # this vocabulary does not contain. **That row is the finding** — a state in use and never
+        # declared — and it belongs in the residue where a reader will see it, not folded into
+        # whichever declared state happens to be its prefix.
+        if hit:
+            rest = cell[len(stems[hit]):].lstrip()
+            if rest[:1].isalpha():
+                hit = ""
+        out[hit].append(row)
+    return out
+
+
 def table_rows(path: Path, position: int | None = None,
                where: str | None = None,
                col: int | None = None,

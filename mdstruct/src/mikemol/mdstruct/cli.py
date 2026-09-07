@@ -6,6 +6,8 @@
     mdstruct grep PATTERN FILE.md [-i] [-E] # where text is, AS A SPAN
     mdstruct tables FILE.md                 # every table: position, size, header
     mdstruct rows FILE.md [--where TEXT]    # the cells, optionally filtered
+    mdstruct classify FILE.md [--col N]     # rows grouped by the doc's OWN declared states
+                  [--table N]               # ...scoped to one table
                   [--col N --starts TEXT]   # ...or anchored to one column's PREFIX
     mdstruct labels FILE.md                 # every worklist label the document mentions
     mdstruct roundtrip FILE.md              # what ONE normalization pass changes
@@ -352,6 +354,65 @@ def _narrowest_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
     return _narrowest(path)
 
 
+def _classify(path: Path, argv: list[str]) -> int:
+    """Group a table's rows by the states the document itself declares.
+
+    ⚑⚑⚑ THE VOCABULARY COMES FROM THE DOCUMENT, WHICH IS THE WHOLE POINT. A consumer of this
+    corpus had four states written by hand from the two files its author happened to be reading;
+    the declared union across the corpus was twice that, and one of the states it missed is
+    annotated in its own document as *reading like a zero when nobody was asked*. A published
+    vocabulary is the only population that cannot go stale.
+
+    ⚑⚑ EVERY GROUP IS PRINTED WITH ITS COUNT, INCLUDING THE RESIDUE. A classifier that reports
+    only what it matched describes its own coverage as complete; the unclassified group is the
+    only thing that can reveal a state the document uses and never declared — measured, one census
+    does exactly that.
+
+    Returns:
+        0 when the document declares a vocabulary, 2 when it does not.
+
+    """
+    states = tables.vocabulary(path)
+    if not states:
+        sys.stderr.write(
+            f"mdstruct: {path} declares no `state | means` table — nothing to classify against. "
+            "That is a fact about the document, not about this reader.\n")
+        return 2
+    col_raw = _flag(argv, "--col")
+    if col_raw is not None and not col_raw.isdigit():
+        sys.stderr.write(f"mdstruct: --col wants a column number, got {col_raw!r}\n")
+        return 2
+    pos_raw = _flag(argv, "--table")
+    if pos_raw is not None and not pos_raw.isdigit():
+        sys.stderr.write(f"mdstruct: --table wants a table number, got {pos_raw!r}\n")
+        return 2
+    groups = tables.classify(
+        path,
+        states,
+        col=int(col_raw) if col_raw is not None else 1,
+        position=int(pos_raw) if pos_raw is not None else None,
+    )
+    sys.stdout.write(f"  {len(states)} declared state(s) in {path}\n")
+    total = 0
+    for state, rows in groups.items():
+        if not rows:
+            continue
+        total += len(rows)
+        sys.stdout.write(f"  {len(rows):>4}  {state or '⚑ UNCLASSIFIED — no declared state'}\n")
+    sys.stdout.write(f"  {total} row(s) classified in {path}\n")
+    return 0
+
+
+def _classify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
+    """Adapt the classifier to the uniform mode signature.
+
+    Returns:
+        the classifier's status.
+
+    """
+    return _classify(path, argv)
+
+
 # ⚑⚑⚑ THE MODE ROSTER IS DATA, NOT A BRANCH CHAIN. As nine `if mode == …` arms `main` sat over
 # three complexity bars at once — and, the part that actually cost something, **nothing could
 # answer "which modes exist" without walking a function body.** The usage text and the dispatch
@@ -362,6 +423,7 @@ _MODES: dict[str, _Mode] = {
     _PATTERN_MODE: _grep,
     "tables": _tables_mode,
     "rows": _rows_mode,
+    "classify": _classify_mode,
     "labels": _labels_mode,
     "roundtrip": _roundtrip_mode,
     "fixpoint": _fixpoint_mode,

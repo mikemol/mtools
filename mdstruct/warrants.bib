@@ -580,3 +580,78 @@
   claim   = {POSITIVE CONTROL for the case above: `-E` finds what literal mode could not},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_grep.py -k test_the_same_escaped_pattern_matches_under_dash_e}
 }
+
+@misc{mdstruct-tables-vocabulary-is-read-from-the-document,
+  section = {tables},
+  title  = {A published vocabulary is the only population that cannot go stale},
+  claim  = {A consumer of this corpus carried four states written by hand from the two documents its
+            author happened to be reading, and the declared union across the corpus was twice that.
+            One of the states it missed is annotated in its own document as reading like a zero
+            when nobody was asked, so a reader blind to that state reports the absence of a survey
+            as the absence of a finding. Reading the vocabulary from the document itself removes
+            the hand-written list entirely: the population is whatever the author published, and a
+            document that adds a state is understood the moment it does so rather than after
+            someone notices.},
+  check  = {pytest mdstruct/tests/test_tables.py -k test_the_vocabulary_is_read_from_the_document},
+}
+
+@misc{mdstruct-tables-vocabulary-is-ordered-longest-first,
+  section = {tables},
+  title  = {One declared state can be a prefix of another},
+  claim  = {Measured in this corpus: a prefix query for the shorter of two declared states returns the
+            longer one's rows as well, eight where the truth is seven. The declared states are
+            therefore not a partition and cannot be summed, and matching them longest-first is what
+            makes them separable at all. The ordering is part of the contract rather than a
+            convenience, because a caller that iterates in declaration order silently classifies
+            the specific case under the general one.},
+  check  = {pytest mdstruct/tests/test_tables.py -k test_the_vocabulary_is_ordered_longest_first},
+}
+
+@misc{mdstruct-tables-a-state-declared-as-a-schema-still-classifies,
+  section = {tables},
+  title  = {A declared state may be a shape rather than a string},
+  claim  = {One census declares a state carrying a metavariable for a revision number while its cells
+            carry concrete revisions. A literal test classifies nothing there, measured as
+            fifty-five unclassified rows out of fifty-five, and that reads as a clean negative
+            rather than as a reader unable to parse a schema. Truncating a trailing parenthetical
+            to the state's stem is the smallest reading that makes a published schema usable
+            without inventing a pattern language for the document to conform to.},
+  check  = {pytest mdstruct/tests/test_tables.py -k test_a_state_declared_as_a_schema_still_classifies},
+}
+
+@misc{mdstruct-tables-an-undeclared-state-lands-in-the-residue,
+  section = {tables},
+  title  = {The row a stem match would have absorbed is the finding},
+  claim  = {Measured on a real census: it declares one state as a schema, uses a second state in a
+            status row, and never declares that second state at all. The first state's stem is a
+            prefix of the second, so a stem classifier reported eight rows in one state where the
+            truth is seven and one, folding an undeclared state into a declared one and calling its
+            coverage complete. A stem match that continues with another word is therefore treated
+            as ambiguous rather than classified: punctuation or a parenthetical may follow a state,
+            but a further word means the document is naming something the vocabulary does not
+            contain, and that row is the only evidence such a state exists.},
+  check  = {pytest mdstruct/tests/test_tables.py -k test_an_undeclared_state_lands_in_the_residue_not_in_its_prefix},
+}
+
+@misc{mdstruct-tables-the-residue-is-returned-rather-than-dropped,
+  section = {tables},
+  title  = {A classifier that discards its residue reports its own coverage as complete},
+  claim  = {Every row seen appears under some key, declared or empty, so that totals describe the
+            document rather than what the reader could parse. The first run of this classifier
+            returned fifty-five unclassified rows out of fifty-five, and that residue is what
+            exposed two defects at once: a walk that ranged over every table in the document rather
+            than the one asked about, and a declared state written as a schema that no literal test
+            could match. Neither would have been visible from a count of what matched.},
+  check  = {pytest mdstruct/tests/test_tables.py -k test_the_residue_is_returned_rather_than_dropped},
+}
+
+@misc{mdstruct-tables-a-document-declaring-no-vocabulary-yields-none,
+  section = {tables},
+  title  = {An absent vocabulary is a fact about the document, not about the reader},
+  claim  = {Three of the eight censuses in the corpus this was built for publish no vocabulary table.
+            Returning an empty vocabulary lets a caller report that plainly and refuse to
+            adjudicate, where inventing a default would make every such document classify against
+            states its author never chose and would present the reader's assumptions as the
+            document's declarations.},
+  check  = {pytest mdstruct/tests/test_tables.py -k test_a_document_declaring_no_vocabulary_yields_none},
+}

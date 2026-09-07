@@ -197,3 +197,118 @@ def test_an_out_of_range_column_drops_the_row_rather_than_raising(document: Path
     narrower table it meets, or a question about one table becomes an error about another.
     """
     assert tables.table_rows(document, col=99, starts="anything") == []
+
+
+# ⚑⚑⚑ THE FIXTURE REPRODUCES BOTH MEASURED HAZARDS, because either alone passes a wrong reader.
+# It declares a state as a SCHEMA (`filed (rev n)`) whose cells carry a concrete revision, and it
+# USES a state it never declares (`filed elsewhere`) whose stem is a declared state's stem. A
+# classifier that handles only the first reports full coverage over an absorbed row.
+_VOCAB_FIXTURE = """# Fixture
+
+## Status
+
+| surveyor | status |
+|---|---|
+| alpha | filed (rev 6) — abc1234, verified in HEAD |
+| beta | filed (rev 4) — def5678, verified in HEAD |
+| gamma | filed elsewhere (rev 5) — another/tree.md |
+| delta | not yet filed |
+
+## Vocabulary
+
+| state | means |
+|---|---|
+| filed (rev n) | in HEAD, verified there |
+| not yet filed | no leg written |
+| declined | reached, chose not to file |
+"""
+
+_DECLARED_STATES = 3
+_FILED_ROWS = 2
+_STATUS_TABLE = 0
+
+
+@pytest.fixture()
+def vocabulary_doc(doc: Path) -> Path:
+    """Write a document that declares its own states, one as a schema."""
+    doc.write_text(_VOCAB_FIXTURE, encoding="utf-8")
+    return doc
+
+
+def test_the_vocabulary_is_read_from_the_document(vocabulary_doc: Path) -> None:
+    """⚑⚑⚑ A PUBLISHED VOCABULARY IS THE ONLY POPULATION THAT CANNOT GO STALE.
+
+    A consumer of this corpus carried four states written by hand from the two files its author
+    happened to be reading. **Measured, the declared union across the corpus was twice that**, and
+    one of the states it missed is annotated in its own document as *reading like a zero when
+    nobody was asked* — so an arm blind to it reports the absence of a survey as the absence of a
+    finding.
+    """
+    assert len(tables.vocabulary(vocabulary_doc)) == _DECLARED_STATES
+
+
+def test_the_vocabulary_is_ordered_longest_first(vocabulary_doc: Path) -> None:
+    """⚑⚑ ONE DECLARED STATE CAN BE A PREFIX OF ANOTHER, measured in this corpus.
+
+    A prefix query for the shorter returns the longer's rows too — 8 where the truth is 7 — so the
+    states are not a partition and cannot be summed. **Matching longest-first is what makes them
+    separable at all**, and the order is therefore part of the contract rather than a convenience.
+    """
+    states = tables.vocabulary(vocabulary_doc)
+    assert list(states) == sorted(states, key=len, reverse=True)
+
+
+def test_a_state_declared_as_a_schema_still_classifies(vocabulary_doc: Path) -> None:
+    """⚑⚑⚑ A DECLARED STATE MAY BE A SHAPE RATHER THAN A STRING.
+
+    One census declares `filed (rev n)` while its cells read `filed (rev 6)`. **A literal test
+    classifies NOTHING there** — measured, 55 rows unclassified out of 55 — and reads as a clean
+    negative rather than as a reader that cannot parse a schema. The trailing parenthetical is
+    truncated to the stem, which is the smallest reading that makes a published schema usable
+    without inventing a pattern language.
+    """
+    groups = tables.classify(
+        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE)
+    assert len(groups["filed (rev n)"]) == _FILED_ROWS
+
+
+def test_an_undeclared_state_lands_in_the_residue_not_in_its_prefix(vocabulary_doc: Path) -> None:
+    """⚑⚑⚑ THE ROW A STEM MATCH WOULD HAVE ABSORBED IS THE FINDING.
+
+    Measured on a real census: it declares `filed (rev n)`, uses `filed elsewhere (rev 5)` in a
+    status row, and **never declares that second state at all.** The stem `filed` matches both, so
+    a stem classifier reported 8 rows in one state where the truth is 7 and 1 — folding an
+    undeclared state into a declared one and calling its coverage complete.
+
+    ⚑ So a stem match that continues with a WORD is ambiguous rather than classified. Punctuation
+    or a parenthetical may follow a state; another word means the document is naming something this
+    vocabulary does not contain, and **that row is the only evidence such a state exists.**
+    """
+    groups = tables.classify(
+        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE)
+    assert len(groups[""]) == 1
+    assert "elsewhere" in groups[""][0].cells[1]
+
+
+def test_the_residue_is_returned_rather_than_dropped(vocabulary_doc: Path) -> None:
+    """⚑⚑ A CLASSIFIER THAT DISCARDS ITS RESIDUE REPORTS ITS OWN COVERAGE AS COMPLETE.
+
+    Every row seen must appear under some key, declared or empty, or the totals describe what the
+    reader could parse and read as a description of the document. **The first run of this function
+    returned 55 unclassified rows out of 55, and that residue is what exposed two defects** — an
+    unscoped table walk and an unhandled schema — neither of which any count would have shown.
+    """
+    groups = tables.classify(
+        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE)
+    seen = sum(len(rows) for rows in groups.values())
+    assert seen == len(tables.table_rows(vocabulary_doc, position=_STATUS_TABLE))
+
+
+def test_a_document_declaring_no_vocabulary_yields_none(document: Path) -> None:
+    """⚑ AND THAT IS A FACT ABOUT THE DOCUMENT, NOT ABOUT THIS READER.
+
+    Three of eight censuses in the corpus publish no `state | means` table. Returning an empty
+    vocabulary lets a caller say so; inventing a default would make every such document classify
+    against states its author never chose.
+    """
+    assert tables.vocabulary(document) == ()
