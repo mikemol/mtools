@@ -1910,3 +1910,24 @@
             interpreter script by naming the interpreter.},
   check  = {pytest hooks/tests/test_cmdparse.py -k test_a_wrapper_whose_argument_is_a_command_reports_the_wrapper},
 }
+
+@misc{hooks-bar-fires-the-apex-probe-reads-a-column-rather-than-grepping-a-phrase,
+  title  = {The announcement of the fix was half the evidence that it was unfixed},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The poll reported the apex slot unfilled while the roster read mtools. It keyed on a
+            phrase that survives in every retrospective description of the state it names,
+            including the revision row recording that the slot was filled, which quotes the old
+            wording to say it changed --- so the slot could not be observed as filled while its
+            own revision row existed. That is the same lesson the row-filter carries in its own
+            docstring, which exists because a fix and its announcement necessarily discuss the
+            thing being fixed, so a table used as an instrument accretes mentions of its own
+            trigger; the poll had that lesson available and did not apply it. Reported by
+            rosettapkg, who touched neither file and supplied the discriminator from their own
+            tree: key on position rather than wording, because a roster row's identity is its
+            place in a table. The probe now reads the row by column prefix, and the verifying
+            classifier written to check the report repeated the poll's own error by labelling a
+            revision row as a roster row because the line contained the prefix.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_apex_probe_reads_a_column_rather_than_grepping_a_phrase},
+}

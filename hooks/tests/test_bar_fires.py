@@ -3294,3 +3294,39 @@ def test_the_roster_count_derives_the_apex_row_rather_than_assuming_it() -> None
     assert "grep -ci apex" in commands, (
         "the apex row must be derived from the roster, not subtracted as a constant"
     )
+
+
+def test_the_apex_probe_reads_a_column_rather_than_grepping_a_phrase() -> None:
+    """⚑⚑⚑ THE ANNOUNCEMENT OF THE FIX IS HALF THE EVIDENCE THAT IT IS UNFIXED.
+
+    The poll reported the apex slot unfilled while `§R` read `mtools`. ⚑ It keys on the phrase
+    *named at the freeze*, which survives in every retrospective description of the state it
+    names — including `§V` rev 32, **the row recording that the slot was filled**, which quotes
+    the old wording to say it changed.
+
+    ⚑⚑ SO THE SLOT COULD NOT BE OBSERVED AS FILLED WHILE ITS OWN `§V` ROW EXISTED. A probe whose
+    needle is a phrase cannot distinguish a state from a report of that state, and a correction
+    necessarily discusses what it corrected — this is `table_rows`' own `--starts` lesson, which
+    exists because *a fix and its announcement necessarily discuss the thing being fixed, so a
+    table used as an instrument ACCRETES MENTIONS OF ITS OWN TRIGGER.* The poll had that lesson
+    available and did not apply it here.
+
+    ⚑ REPORTED BY `rosettapkg`, who did not touch either file — `§R` is this tree's accounting and
+    the poll is this tree's instrument. They also supplied the discriminator from their own tree:
+    key on POSITION rather than wording, because a roster row's identity is its place in a table.
+    Their ragged-row arm uses the same shape.
+
+    ⚑⚑ AND MY OWN CLASSIFIER REPEATED THE POLL'S ERROR while verifying theirs: it labelled the
+    `§V` row as a `§R` roster row because the line contains `AX-`. Two readers, one confusion,
+    and the structural read settles it — the roster's `AX-` row reads `mtools`.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ THE PROBE MUST READ THE ROSTER ROW, not the file. `rows --col` names a position; a phrase
+    # names a wording that every correction reproduces.
+    assert "--col 1 --starts" in commands, (
+        "the apex slot must be read by column position, not by grepping a phrase that survives "
+        "in the record of its own removal"
+    )

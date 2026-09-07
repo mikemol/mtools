@@ -698,12 +698,43 @@ fi
 # They dissolved because this script re-printed them until someone asked what they blocked. An
 # unpolled symbol has no such pressure, so the four that rotted are exactly the four never printed.
 echo "=== carried symbols: the ones no filesystem section re-derives ==="
-_apex=$("$md" grep 'AX-' "$mtools/findings/CENSUS-remaining-work.md" 2>/dev/null \
-        | grep -c 'named at the freeze' || true)
-if [ "${_apex:-0}" -gt 0 ]; then
-    echo "  apex slot: still 'named at the freeze' — unfilled; the operator's at the freeze"
+# ⚑⚑⚑ THE ANNOUNCEMENT OF THE FIX WAS HALF THE EVIDENCE THAT IT WAS UNFIXED. This probe grepped
+# the file for the phrase `named at the freeze`, which survives in every retrospective description
+# of the state it names — including the `§V` row RECORDING that the slot was filled, which quotes
+# the old wording to say it changed. So the slot could not be observed as filled while its own
+# revision row existed, and the poll reported it unfilled while `§R` read `mtools`.
+#
+# ⚑⚑ THAT IS `table_rows`' OWN `--starts` LESSON, WHICH THIS POLL HAD AVAILABLE AND DID NOT APPLY:
+# *a fix and its announcement necessarily discuss the thing being fixed, so a table used as an
+# instrument ACCRETES MENTIONS OF ITS OWN TRIGGER, and every repair adds one.* A phrase cannot
+# distinguish a state from a report of that state.
+#
+# ⚑ REPORTED BY `rosettapkg`, who touched neither file — `§R` is this tree's accounting and this
+# script is its instrument — and who supplied the discriminator from their own tree: key on
+# POSITION rather than wording, because a roster row's identity is its place in a table. Their
+# ragged-row arm keys on a cell count differing from its own header's, which no prose can imitate.
+#
+# ⚑⚑ AND THE SLOT IS READ FROM ITS ROW'S FIRST CELL. `--col 1 --starts` anchors on the PREFIX of
+# the prefix column, so the row is found by what it IS rather than by how it is worded — which
+# also survives someone rewording the slot.
+# ⚑ THE DENOMINATOR LINE IS THE TOOL'S, NOT A ROW. `mdstruct` prints its count with every mode —
+# deliberately, so an empty result cannot read as a tool that failed — and a caller splicing raw
+# output into its own report leaks that line. Kept out by taking only rows, and the count is not
+# lost: an empty `$_apex_row` is the UNMEASURED branch below.
+_apex_row=$("$md" rows "$mtools/findings/CENSUS-remaining-work.md" \
+            --col 1 --starts 'AX-' 2>/dev/null | grep '^  table ' || true)
+if [ -z "$_apex_row" ]; then
+    echo "  apex slot: UNMEASURED — no roster row carries the AX- prefix."
+    echo "    That is a fact about this reader or a moved roster, not about the naming."
+elif printf '%s' "$_apex_row" | grep -q 'named at the freeze'; then
+    echo "  apex slot: unfilled — the roster row still reads 'named at the freeze'"
 else
-    echo "  apex slot: no unfilled marker found — re-read §R before assuming it is named"
+    # ⚑ THE PARTY IS THE ROW'S FIRST CELL, and `rows` truncates cells to its own display width —
+    # a reader's formatting, not the artifact. So the name is taken and the annotation dropped
+    # rather than printing a cell cut mid-word, which would read as a party named `operato`.
+    printf '  apex slot: NAMED — %s\n' \
+        "$(printf '%s' "$_apex_row" \
+           | sed 's/.*table [0-9]*  //; s/ | .*//; s/ —.*//; s/[[:space:]]*$//')"
 fi
 _rt="$_witness_logs_probe/REFUSALS.tsv"
 if [ -r "$_rt" ]; then
