@@ -1658,6 +1658,14 @@ def test_a_commit_message_cannot_assert_a_wrong_ledger_count() -> None:
         "anchored, matching the gate's own count — unanchored counts a quotation as a warrant"
     )
     assert "asserts no ledger count" in body, "a message with no count must pass, not be demanded"
+    # ⚑⚑⚑ AND THE NOUN ALONE IS NOT THE CLAIM. The first cut matched any `N entries|warrants` and
+    # would have REFUSED 13 OF 15 historical commits — *"All 20 check-less warrants paid"* is a
+    # SUBSET count read as a ledger total. ⚑ **A checker that cannot tell *how many of X* from
+    # *how many X exist* refuses the messages most careful about their populations.** Measured
+    # against its own history: the corrected predicate inspects 1 commit and refuses 0.
+    assert "ledger (holds|has)" in body, (
+        "the claim must be POSITIONED as a total; a subset count is not a ledger claim at all"
+    )
     hook = (_DIST.parent / ".githooks" / "commit-msg").read_text(encoding="utf-8")
     assert "message_counts.sh" in hook, "the checker must be invoked, not merely present"
     assert "cannot verify counts, commit refused" in hook, (

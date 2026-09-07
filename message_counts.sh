@@ -55,8 +55,18 @@ fi
 # written about is a checker nobody can document.*
 # ⚑⚑ The exemption is `cassian`'s A51 shape, adopted for the same reason: indentation is already
 # how this corpus marks a transcribed measurement, so the convention is read rather than invented.
+# ⚑⚑⚑ AND THE NOUN ALONE IS NOT THE CLAIM — MEASURED AGAINST ITS OWN HISTORY. The first cut
+# matched `\b[0-9]+ (entries|warrants)\b` and would have REFUSED 13 OF 15 historical commits,
+# because *"All 20 check-less warrants paid"* is a SUBSET count and the predicate read it as a
+# ledger total. ⚑ **A checker that cannot tell *how many of X* from *how many X exist* refuses the
+# messages that are most careful about their populations** — which is this repository's own subject
+# turned against its authors.
+# ⚑⚑ SO THE CLAIM MUST BE POSITIONED AS A TOTAL: `ledger holds N`. That is a narrower predicate
+# than the noun, and it is narrow in the direction that matters — a subset count is no longer a
+# ledger claim at all, rather than a ledger claim that happens to be wrong.
 claimed=$(grep -vE '^    ' "$msg" 2>/dev/null \
-    | grep -oE '\b[0-9]+ (entries|warrants)\b' | grep -oE '^[0-9]+' | head -1)
+    | grep -oiE 'ledger (holds|has) [0-9]+ (entries|warrants)' \
+    | grep -oE '[0-9]+' | head -1)
 
 if [ -z "$claimed" ]; then
     echo "message_counts: this message asserts no ledger count"
