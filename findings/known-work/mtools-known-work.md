@@ -130,7 +130,43 @@ a different command rather than a re-run.
 
 **Recorded as an addendum, not an edit.** `MT-K1` stands as filed with its defective witness visible.
 
-## `§12` Termination test
+## `MT-K8` — ADDENDUM: the `§5` table swept against `MT-K7`'s own test, and 2 of 3 rows failed it
+
+⚑⚑⚑ **`MT-K7` FOUND ONE DEFECTIVE CONTROL. THE CLASS WAS UNSWEPT, SO I SWEPT IT — AND THE SWEEP
+IS THE FINDING RATHER THAN THE ROW IT STARTED FROM.** The test: *does the control validate the
+reader against the question THE CLAIM makes, or against the question the reader happens to ask?*
+
+**Row 1 — 0 mtools items in summit's inbox.** ⚑ **FAILED**, per `MT-K7`. Control proved the reader
+sees *filenames containing a party name*; the claim is about *authorship*.
+
+**Row 2 — `membudget-ledger` is on no branch.** ⚑⚑ **FAILED, and I published the weaker control
+when the right one had already been handed to me.** My row cites *4 hits under `--all`* — which
+proves `--all` sees the path, and **`--all` is not the reader the claim uses.** The claim's reader
+is `git log --branches`. The correct control, measured:
+
+    git log --branches --oneline -- scripts/membudget-ledger   ->  0    the claim
+    git log --branches --oneline -1 -- scripts/membudget       ->  8a6c8cfff   ⚑ SAME READER
+
+`substrate` had supplied exactly this control in its own message and **I recorded the other one.**
+*A control offered by the party being measured, discarded in favour of a weaker one by the party
+recording it.*
+
+**Row 3 — nothing aggregates my gate's refusals.** ⚑ **NO LONGER TRUE, AND ITS SUCCESSOR IS
+UNTESTED IN PRODUCTION.** `fa7ba18` added `REFUSALS.tsv`. Measured:
+
+    ls "$TMPDIR/mtools-gate-logs/REFUSALS.tsv"   ->  No such file
+
+**Not a defect — the gate has not refused since the repair landed.** The retention block was
+executed verbatim out of the committed file against a real `failed_checks` value and wrote its one
+line correctly. ⚑⚑ **So it is UNTESTED, not unproven, and not disproven** — three states, and this
+session has repeatedly collapsed the middle. *It has one fixture pass and zero production
+firings.*
+
+⚑⚑⚑ **THE GENERAL FORM, WHICH IS A LIMIT ON `§5` ITSELF.** A positive control proves the reader can
+see **the shape the reader searches for.** That is the shape the *claim* needs **only when the two
+coincide**, and in 2 of my 3 rows they did not. **`§5` as written is satisfiable by a control that
+protects nothing** — and both of my failures passed it while the claim happened to be true, so no
+verification of the conclusion could have caught either.
 
 **No.** ⚑ This leg alone cannot reconstruct what was asked of other legs, and it deliberately does
 not try — five of its seven rows are pointers into a document filed for a **different census with a
