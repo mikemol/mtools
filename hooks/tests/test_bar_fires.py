@@ -974,6 +974,18 @@ _MSGCOUNT = _DIST.parent / "message_counts.sh"
 # ⚑ This floor would be refused by 31 of 44 commits and is honest from `1ad358d` onward.
 _MIN_SWEPT_FLOOR_HONEST_FROM = "1ad358d"
 _MIN_SWEPT = 50
+# ⚑⚑⚑ THE SWEEP'S OWN SKIPPED POPULATION, AND THE FIRST NUMBER WRITTEN HERE WAS WRONG BY 6x.
+# A regex over the test module reported FOUR — it matched one syntactic form, `(_CONST / "a")`.
+# The sweep's actual predicate is broader: any `read_text` receiver that is not a mapped NAME.
+# ⚑⚑ MEASURED BY THE SWEEP ITSELF: 23. A ceiling of 4 over a population of 23 would have been a
+# correct-looking figure over a MIS-NAMED POPULATION — this session's most-measured defect, and
+# it was caught only because the assertion fired on the real count rather than on my regex's.
+# ⚑ THE POPULATION IS CLEAN, which is what makes this a ceiling rather than tolerated debt.
+# Resolving every skipped test's path against this module's own constants and running the
+# sweep's predicate by hand: 0 vacuous. Two forms, 12 path expressions and 4 bare names.
+# ⚑ A CEILING, NOT A TARGET. It may fall; it rises only when a new unresolvable read is added,
+# which is exactly the moment a reader should be told rather than the moment coverage drops.
+_MAX_UNRESOLVED = 23
 # ⚑ A PAYDOWN CEILING, NOT A TARGET, AND IT IS NOW ZERO. All 20 were paid the tick after the
 # ceiling was set — each resolved to a real test by its own key, so the debt was a missing `check`
 # LINE rather than missing coverage. ⚑⚑ A ceiling left at 20 after paying 20 would let the debt
@@ -1595,6 +1607,7 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     }
     checked = 0
     missing: list[str] = []
+    unresolved: list[str] = []
     for fn in (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef)):
         # which file does this test read?  the `X.read_text(...)` call names it
         reads = {
@@ -1615,6 +1628,23 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
         # an assertion is vacuous when its literal appears in NO file the test reads, and taking
         # `named[0]` asserted that a test's first file is its only one.
         if not named:
+            # ⚑⚑⚑ A QUIET `continue` IS HOW THIS SWEEP HID ITS OWN BLIND SPOT TWICE. The first was
+            # `len(named) != 1`, which skipped every multi-file test until one failed for an
+            # unrelated reason. This is the second: a test opening its file by an INLINE path
+            # expression — `(_DIST / "pyproject.toml")` — resolves to no name and vanishes.
+            # ⚑ MEASURED at the tick this was added: FOUR such tests, 2 string-membership
+            # assertions between them, 0 vacuous. A coverage gap rather than a live defect, which
+            # is the honest sizing.
+            # ⚑ RESOLVING ARBITRARY PATH EXPRESSIONS IS A PARSER THIS MODULE SHOULD NOT GROW. A
+            # skipped test that is REPORTED is honest; one that vanishes is the vacuity being
+            # measured, one level out. So the skip is counted and ceilinged.
+            if any(
+                isinstance(n, pyast.Call)
+                and isinstance(n.func, pyast.Attribute)
+                and n.func.attr == "read_text"
+                for n in pyast.walk(fn)
+            ):
+                unresolved.append(fn.name)
             continue
         haystack = "\n".join(f.read_text(encoding="utf-8") for f in named)
         for node in pyast.walk(fn):
@@ -1634,6 +1664,12 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     assert not missing, (
         "assertion literal(s) absent from the file the test reads — these pass vacuously:\n  "
         + "\n  ".join(missing)
+    )
+    # ⚑ A CEILING, NOT A TARGET. It may fall; it rises only when a new inline read is added, which
+    # is exactly the moment a reader should be told rather than the moment coverage quietly drops.
+    assert len(unresolved) <= _MAX_UNRESOLVED, (
+        f"{len(unresolved)} test(s) read a file the sweep cannot resolve, up from "
+        f"{_MAX_UNRESOLVED} — their assertions are unswept: {sorted(unresolved)}"
     )
 
 
@@ -2672,9 +2708,16 @@ def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
     vacuity sweep's inline reads, and the interning gap.
 
     ⚑⚑ AND TWO HAD ALREADY DRIFTED, WHICH IS THE EVIDENCE RATHER THAN THE WORRY. I carried the
-    sweep gap as *one instance fixed*; a regex over the test module finds **four** inline
-    path-expression reads. I carried the refusal record as *two ragged rows*; a field count finds
-    **three of seven**. Both were re-stated from memory every tick and neither was re-read.
+    refusal record as *two ragged rows*; a field count finds **three of seven**. I carried the
+    sweep gap as *one instance fixed*; it is **23**. Both were re-stated from memory every tick
+    and neither was re-read.
+
+    ⚑⚑⚑ AND THE SWEEP FIGURE WAS WRONG AGAIN ONE TICK LATER, BY 6x. This section first counted it
+    with a regex matching one syntactic form and reported FOUR; the sweep's own predicate — any
+    `read_text` receiver that is not a mapped NAME — measures **23**. A correct-looking number
+    over a mis-named population, produced by the instrument built to refuse exactly that.
+    ⚑ SO THE POLL ASKS THE SWEEP rather than re-deriving with a second, weaker predicate. Two
+    instruments computing one figure two ways is how they disagree without either noticing.
 
     ⚑ THE SYMBOLS THAT DISSOLVED THIS WEEK WERE ALL POLLED ONES — paperkit, the island, the
     ledger. They dissolved because the poll re-printed them until someone asked what they blocked.
@@ -2702,6 +2745,66 @@ def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
     assert "ragged" in commands, (
         "the refusal record's ragged rows must be counted, not remembered"
     )
-    assert "inline" in commands, (
-        "the vacuity sweep's inline reads must be counted, not remembered"
+    # ⚑ THE PROPERTY IS THAT THE FIGURE COMES FROM THE SWEEP, not that a particular word appears.
+    # This asserted `inline`, a word the repaired line no longer uses — an arm keyed to today's
+    # phrasing rather than to what makes the line trustworthy.
+    assert "_MAX_UNRESOLVED" in commands, (
+        "the sweep's skipped count must be read from the sweep, not re-derived by the poll"
+    )
+
+
+def test_the_vacuity_sweep_resolves_an_inline_path_read() -> None:
+    """⚑⚑⚑ FOUR TESTS ARE SKIPPED ENTIRELY BY THE SWEEP, AND IT SAYS SO NOWHERE.
+
+    The sweep resolves a test's subject by matching `X.read_text(...)` where `X` is a NAME in its
+    target map. A test opening its file by an inline expression — `(_DIST / "pyproject.toml")` —
+    resolves to nothing, hits `if not named: continue`, and every assertion in it goes unchecked.
+
+    ⚑ MEASURED, now that the poll derives the figure rather than my memory carrying it: **four
+    such tests**, and the sweep sees NOTHING for all four. Not *the wrong file* — nothing.
+
+    ⚑⚑ AND THEY ARE NOT CURRENTLY VACUOUS, which is the honest sizing rather than the alarming
+    one. Resolving all four by hand and running the sweep's own predicate: **2 string-membership
+    assertions, 0 vacuous.** This is a coverage gap, not a live defect, and saying so is the
+    difference between a finding and a scare.
+
+    ⚑⚑⚑ THE SKIP IS THE PART WORTH FIXING REGARDLESS. `continue` on an unresolvable test is the
+    same shape the sweep already repaired once: `len(named) != 1: continue` silently skipped every
+    MULTI-file test until one failed for an unrelated reason. **The sweep has now hidden its own
+    blind spot twice by the same mechanism** — a quiet `continue` — and both times the population
+    it skipped was invisible in a green run.
+
+    ⚑ SO THE SWEEP COUNTS WHAT IT SKIPPED. Resolving arbitrary path expressions is a parser this
+    module should not grow; a skipped test that is REPORTED is honest, while one that vanishes is
+    the vacuity being measured, one level out.
+    """
+    # ⚑⚑⚑ THIS ARM PASSED BEFORE ITS SUBJECT EXISTED, because its literals appear in the prose
+    # above. Written as a whole-file search it read its OWN DOCSTRING and reported the fix as
+    # already shipped — a checker that cannot tell a description from an instance, for the third
+    # time in this suite and the first time inside the arm that measures vacuity.
+    # ⚑ SO THE SUBJECT IS THE PARSED MODULE, not its text: the sweep function's own body, with
+    # docstrings excluded by construction rather than by stripping comments.
+    module = pyast.parse(_THIS.read_text(encoding="utf-8"))
+    sweep = next(
+        (n for n in pyast.walk(module)
+         if isinstance(n, pyast.FunctionDef)
+         and n.name == "test_no_string_assertion_in_this_module_is_vacuous"),
+        None,
+    )
+    assert sweep is not None, "the sweep function was not found; this arm would pass on absence"
+    # drop the docstring node, which is where a description of the defect lives
+    body = sweep.body[1:] if (
+        sweep.body and isinstance(sweep.body[0], pyast.Expr)
+        and isinstance(sweep.body[0].value, pyast.Constant)
+    ) else sweep.body
+    code = "\n".join(pyast.dump(n) for n in body)
+    # ⚑ THE SWEEP MUST ACCOUNT FOR WHAT IT COULD NOT RESOLVE. A count it prints is a count a
+    # reader can compare against the poll's, which derives the same figure independently.
+    assert "unresolved" in code, (
+        "the sweep must report the tests it skipped, not drop them silently"
+    )
+    # ⚑ AND THE ACCOUNTING MUST BE A CEILING, not a target: it may fall, and rises only when a
+    # new inline read is added — which is the moment a reader should be told.
+    assert "_MAX_UNRESOLVED" in code, (
+        "the skipped population needs a ceiling, or it grows back silently"
     )

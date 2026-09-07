@@ -696,9 +696,15 @@ if [ -r "$_rt" ]; then
 else
     echo "  refusal record: absent on this host — a fact about the reader, not the record"
 fi
-_inline=$(grep -cE '\(_[A-Z_]+ */ *"[^"]+"( */ *"[^"]+")*\)\.read_text' \
-          "$mtools/hooks/tests/test_bar_fires.py" || true)
-echo "  vacuity sweep: $_inline inline path read(s) the sweep resolves by variable name only"
+# ⚑⚑⚑ THIS LINE ONCE COUNTED WITH A REGEX AND REPORTED 4 WHERE THE SWEEP MEASURES 23. The regex
+# matched ONE syntactic form, `(_CONST / "a")`; the sweep's predicate is any `read_text` receiver
+# that is not a mapped NAME, which also covers bare names outside the map. A correct-looking
+# figure over a mis-named population — reported by the instrument built to refuse exactly that.
+# ⚑ SO THE POLL ASKS THE SWEEP rather than re-deriving with a second, weaker predicate. Two
+# instruments computing one figure two ways is how they come to disagree without either noticing.
+_unres=$(grep -oE '^_MAX_UNRESOLVED = [0-9]+' "$mtools/hooks/tests/test_bar_fires.py" \
+         | grep -oE '[0-9]+' || true)
+echo "  vacuity sweep: ${_unres:-?} test(s) it cannot resolve — ceiling read from the sweep itself"
 
 echo "=== NOT COVERED: peer reachability — run ListAgents; it is a reading, not a fact ==="
 
