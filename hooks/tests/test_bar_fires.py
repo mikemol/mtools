@@ -1013,6 +1013,10 @@ _MIN_WARRANT_COUNT_SITES = 3
 # harness-wide arm pass by finding nothing to check, which is the direction that reads as
 # success. Set below the measured count so adding or removing one script is not a refusal.
 _MIN_HARNESS_SCRIPTS = 12
+# ⚑ THE FLOOR IS THE COUNT MEASURED WHEN THE RESOLVER WAS WRITTEN, minus room for a
+# distribution to shrink. 241 checks parsed in `hooks` at that moment; a reader that suddenly
+# parses 3 is reading the wrong shape, and its zero unresolved would be vacuous.
+_MIN_RESOLVABLE_CHECKS = 200
 # ⚑ A FLOOR ON THE COUNTING DERIVATIONS. Fourteen were present when the one-literal-one-
 # predicate arm shipped; a regex that stopped matching would report no derivations and no
 # possible disagreement, which is vacuity in the direction that reads as success. Set below
@@ -3824,4 +3828,63 @@ def test_no_conventional_under_declaration_survives_in_this_tree() -> None:
     assert not live, (
         f"`__file__`.resolve() escapes the runfiles tree back to the working copy; live at "
         f"line(s) {live}"
+    )
+
+
+def test_every_warrant_check_resolves_to_a_test_that_exists() -> None:
+    """⚑⚑⚑ COUNTING IS A DIFFERENT PREDICATE FROM RESOLVING, AND 55 CHECKS ACCUMULATED IN THE GAP.
+
+    This distribution's warrants are 1:1 with its test functions, verified on every commit by the
+    section-vs-rubric diff. **That ratio stayed green while 55 claims carried a `check` naming a
+    runner that does not exist** — `check = {pytest tests/x.py -k y}` where `paper.toml` declares
+    exactly one runner, `[checks.cmd]`, addressed by a `cmd:` prefix.
+
+    ⚑⚑ ALL 55 WERE WRITTEN BY ONE SESSION, ONE PER TICK, each beside a real arm that passes. The
+    arm was sound and the ADDRESS was unresolvable, and nothing here could tell: no tool in this
+    tree parses a check field, because the tool that would is paperkit and paperkit is not
+    installed. **The warrant-to-test ratio was verified continuously while the checks'
+    executability was never verified at all.**
+
+    ⚑ NAMED `UNRUNNABLE-ADDRESS` AND ACCEPTED INTO `CENSUS-paperkit-use` §Q-3 by its dispatcher, as
+    a mechanism wider than the four that census listed: those all assume the check RESOLVES and
+    asks the wrong question. This is the case where resolution never happens and no arm notices.
+
+    ⚑⚑⚑ SO THIS ARM RESOLVES RATHER THAN COUNTS. For every check it reads the module it names and
+    parses it, then requires the named function to be defined there. A check whose module is absent,
+    or whose `-k` names nothing in that module, fails here — which is the predicate a ratio cannot
+    express.
+    """
+    checks = pyre.compile(r"check\s*=\s*\{cmd:[^}]*?-m pytest\s+(\S+)\s+-k\s+([A-Za-z0-9_]+)\}")
+    body = (_DIST / "warrants.bib").read_text(encoding="utf-8")
+    # ⚑ `findall` IS TYPED `list[Any]`, so the pairs are named explicitly rather than carried
+    # untyped into the loop — this distribution forbids an `Any` expression, and a resolver whose
+    # own operands are untyped is a poor advertisement for resolving over counting.
+    hits: list[tuple[str, str]] = [
+        (m.group(1), m.group(2)) for m in checks.finditer(body)
+    ]
+    # ⚑ POSITIVE CONTROL: the reader must find checks at all, or its zero failures below is a
+    # statement about the regex rather than about the corpus.
+    assert len(hits) >= _MIN_RESOLVABLE_CHECKS, (
+        f"only {len(hits)} check(s) parsed from warrants.bib; the resolver is reading the wrong "
+        f"shape and every verdict below would be vacuous"
+    )
+    known: dict[str, set[str]] = {}
+    unresolved: list[str] = []
+    for module, func in hits:
+        if module not in known:
+            path = _DIST / module
+            if not path.is_file():
+                unresolved.append(f"{module} does not exist (-k {func})")
+                known[module] = set()
+                continue
+            known[module] = {
+                n.name
+                for n in pyast.walk(pyast.parse(path.read_text(encoding="utf-8")))
+                if isinstance(n, pyast.FunctionDef)
+            }
+        if known[module] and func not in known[module]:
+            unresolved.append(f"{module} defines no {func}")
+    assert not unresolved, (
+        "warrant check(s) address a test that does not exist — the 1:1 count cannot see this:\n  "
+        + "\n  ".join(unresolved)
     )

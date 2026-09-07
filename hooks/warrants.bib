@@ -1284,7 +1284,7 @@
             nothing could gate it. The poll now repeats its unread count last, where every
             trailing window reaches it, and names its own terminus so truncation is detected
             rather than read as quiet.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_repeats_its_unread_count_where_a_trailing_window_reaches_it},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_repeats_its_unread_count_where_a_trailing_window_reaches_it},
 }
 
 @misc{hooks-bar-fires-the-poll-diagnoses-the-roster-divergence-by-sign-not-by-one-sentence,
@@ -1301,7 +1301,7 @@
             which is why three ticks of reading it did not catch it. The poll now branches on
             the sign and checks the under-sign cause rather than narrating it, so an unexplained
             shortfall reports as a dropped row.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_diagnoses_the_roster_divergence_by_sign_not_by_one_sentence},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_diagnoses_the_roster_divergence_by_sign_not_by_one_sentence},
 }
 
 @misc{hooks-bar-fires-the-refusal-record-names-its-own-columns,
@@ -1319,7 +1319,7 @@
             tail looks healthy. A header rather than a version field, because the record has
             zero readers over its whole lifetime and nothing to migrate: what a header buys is
             a field count a first reader can disagree with.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_refusal_record_names_its_own_columns},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_refusal_record_names_its_own_columns},
 }
 
 @misc{hooks-bar-fires-the-durable-refusal-record-keeps-the-account-not-only-the-label,
@@ -1335,7 +1335,7 @@
             pointer into a transcript, and every scratch log it could point at is truncated by
             the next run of the same check. The account is now written beside the row, keyed by
             the same UTC stamp, and only when a check actually captured one.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_durable_refusal_record_keeps_the_account_not_only_the_label},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_durable_refusal_record_keeps_the_account_not_only_the_label},
 }
 
 @misc{hooks-bar-fires-every-refusal-path-records-not-only-the-verdict-one,
@@ -1352,7 +1352,7 @@
             recorder sourced by both hooks, carrying a hook column, verified end to end by a
             real commit-msg refusal that previously recorded nothing. The arm counts every exit
             rather than sampling, because the defect was six unwired sites and one wired.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_every_refusal_path_records_not_only_the_verdict_one},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_refusal_path_records_not_only_the_verdict_one},
 }
 
 @misc{hooks-bar-fires-the-citation-gate-checks-the-rules-file-against-itself,
@@ -1370,7 +1370,7 @@
             pattern against comm's newline-separated output, reporting itself broken on a corpus
             where it worked. The control runs on every invocation because a blinded comparison
             and a clean corpus both print nothing.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_citation_gate_checks_the_rules_file_against_itself},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_citation_gate_checks_the_rules_file_against_itself},
 }
 
 @misc{hooks-bar-fires-the-structural-gate-discloses-an-empty-routing-table,
@@ -1388,7 +1388,7 @@
             refusing, because blocking every command over the hook's own configuration is a
             worse failure than the one being repaired. Both arms measured through the console
             script; the module has no main guard, so running it as -m prints nothing.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_structural_gate_discloses_an_empty_routing_table},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_structural_gate_discloses_an_empty_routing_table},
 }
 
 @misc{hooks-bar-fires-every-shipped-hook-is-actually-invoked,
@@ -1407,7 +1407,7 @@
             carries a positive control since a regex that stopped matching would pass by finding
             nothing. It also asserts inline arming, which both peer repos measured independently:
             a session already running when the env block changes never picks it up.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_every_shipped_hook_is_actually_invoked},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_shipped_hook_is_actually_invoked},
 }
 
 @misc{hooks-bar-fires-a-module-with-no-local-caller-declares-who-consumes-it,
@@ -1429,7 +1429,7 @@
             here, because those trees belong to their owners; the arm holds only that a module
             with no local caller must say who consumes it, so the next reader does not read
             unused off an import count and delete it.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_a_module_with_no_local_caller_declares_who_consumes_it},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_module_with_no_local_caller_declares_who_consumes_it},
 }
 
 @misc{hooks-adoption-both-distributions-co-install-under-one-namespace,
@@ -1450,7 +1450,7 @@
             tree reachable on sys.path and never consulted the installed distributions. With cwd
             set to the probe venv both editable and wheel installs go red, so that condition is
             passed explicitly rather than inherited from wherever pytest runs.},
-  check  = {pytest hooks/tests/test_adoption.py -k test_both_distributions_co_install_under_one_namespace},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adoption.py -k test_both_distributions_co_install_under_one_namespace},
 }
 
 @misc{hooks-bar-fires-the-preflight-runs-the-ruff-the-gate-runs,
@@ -1469,7 +1469,7 @@
             agreement between the two commands rather than the absence of a flag, so it survives
             either side changing, and it reads only non-comment lines because the prose that
             caused this would otherwise satisfy it.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_preflight_runs_the_ruff_the_gate_runs},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_preflight_runs_the_ruff_the_gate_runs},
 }
 
 @misc{hooks-bar-fires-a-comment-naming-a-flag-says-whether-it-is-passed,
@@ -1489,7 +1489,7 @@
             this is the third checker here to need that exemption; the marker differs by medium
             but the property is one, and the quote stripping is over the joined comment block
             because the quotation that motivated it spans two lines.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_a_comment_naming_a_flag_says_whether_it_is_passed},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_comment_naming_a_flag_says_whether_it_is_passed},
 }
 
 @misc{hooks-bar-fires-the-count-checker-narrows-by-position-not-by-indent-alone,
@@ -1510,7 +1510,7 @@
             to one citing it, and what separates them is a speaker no regex reads, so the cost is
             paid on the author's side deliberately and the reason is recorded beside the
             predicate.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_count_checker_narrows_by_position_not_by_indent_alone},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_count_checker_narrows_by_position_not_by_indent_alone},
 }
 
 @misc{hooks-bar-fires-the-citation-gate-reports-a-figure-that-moves,
@@ -1528,7 +1528,7 @@
             unconditionally and was measured contradicting itself, printing a dangling reference
             on stderr while claiming on stdout that everything resolved; the claim is now
             conditional on the verdict it describes.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_citation_gate_reports_a_figure_that_moves},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_citation_gate_reports_a_figure_that_moves},
 }
 
 @misc{hooks-bar-fires-the-shell-gate-says-what-it-checked,
@@ -1548,7 +1548,7 @@
             pair reports the count, a planted defect still fails with the count printed first and
             the exec preserving shellcheck's status, and a missing binary refuses without
             reporting a count.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_shell_gate_says_what_it_checked},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_shell_gate_says_what_it_checked},
 }
 
 @misc{hooks-bar-fires-the-preflight-does-not-hardcode-the-witness-count,
@@ -1567,7 +1567,7 @@
             unknown rather than guessed when the gate cannot be read. The arm asserts the absence
             of a spelled-out literal rather than a value, because asserting eight would be a
             second hand-written population in the file that exists to catch them.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_preflight_does_not_hardcode_the_witness_count},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_preflight_does_not_hardcode_the_witness_count},
 }
 
 @misc{hooks-bar-fires-no-gate-asserts-a-figure-it-cannot-reach,
@@ -1593,7 +1593,7 @@
             reachable and measures correctly against rules 5, 12 and 26; the discriminator is not
             whether a figure is hardcoded but whether anything here can check it. Four arms
             measured, including that a corrected-but-still-counted figure still fires.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_no_gate_asserts_a_figure_it_cannot_reach},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_gate_asserts_a_figure_it_cannot_reach},
 }
 
 @misc{hooks-bar-fires-the-paperkit-arm-names-a-cause-and-carries-a-control,
@@ -1614,7 +1614,7 @@
             now carries a control, because through a discarded stderr a failing import and a
             missing interpreter are byte-identical. All four branches driven on real inputs,
             including paperkit installed into a throwaway venv reading importable.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_paperkit_arm_names_a_cause_and_carries_a_control},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_paperkit_arm_names_a_cause_and_carries_a_control},
 }
 
 @misc{hooks-bar-fires-the-census-arm-can-tell-a-failed-read-from-an-empty-one,
@@ -1635,7 +1635,7 @@
             the first interpreted read rather than at ten call sites, and three arms confirm a
             real census still reads its roster, an undecodable file names the failed read, and a
             genuinely empty census reports no signature.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_census_arm_can_tell_a_failed_read_from_an_empty_one},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_census_arm_can_tell_a_failed_read_from_an_empty_one},
 }
 
 @misc{hooks-bar-fires-the-island-arm-says-the-dependency-was-inverted,
@@ -1657,7 +1657,7 @@
             is kept because the count is still evidence about a peer, and it now names its own
             status and cites the commit that inverted the dependency, in an emitted line rather
             than a comment.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_island_arm_says_the_dependency_was_inverted},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_island_arm_says_the_dependency_was_inverted},
 }
 
 @misc{hooks-bar-fires-the-ledger-section-distinguishes-deferred-from-resolved,
@@ -1678,7 +1678,7 @@
             from a thing nobody looked at again. The word names two referents in this tree and a
             hit count of four would have read as four consumers; both pairs turned out to be a
             local corpus and prose about a hypothetical sibling, neither of them the ledger.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_ledger_section_distinguishes_deferred_from_resolved},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_ledger_section_distinguishes_deferred_from_resolved},
 }
 
 @misc{hooks-bar-fires-the-poll-covers-the-symbols-carried-between-ticks,
@@ -1700,7 +1700,7 @@
             apex slot, a field count answers the record, a regex answers the sweep. Each is
             measured rather than listed, because a list of symbol names inside the instrument
             that exists to refuse hand-written lists is the defect one level out.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_covers_the_symbols_carried_between_ticks},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_covers_the_symbols_carried_between_ticks},
 }
 
 @misc{hooks-bar-fires-the-vacuity-sweep-resolves-an-inline-path-read,
@@ -1722,7 +1722,7 @@
             without either noticing. The arm itself first passed before its subject existed,
             reading its own docstring; it now reads the parsed function body with the docstring
             node dropped.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_vacuity_sweep_resolves_an_inline_path_read},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_vacuity_sweep_resolves_an_inline_path_read},
 }
 
 @misc{hooks-bar-fires-every-warrant-count-in-the-harness-is-anchored,
@@ -1742,7 +1742,7 @@
             figure independently drift without either noticing. The population is every counting
             site, derived rather than listed, with a floor so a pattern that stopped matching
             cannot pass by finding nothing.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_every_warrant_count_in_the_harness_is_anchored},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_warrant_count_in_the_harness_is_anchored},
 }
 
 @misc{hooks-bar-fires-the-test-function-count-survives-a-missing-trailing-newline,
@@ -1763,7 +1763,7 @@
             tick. The gate now counts per file, which is correct independent of file endings; a
             lint rule forbidding the missing newline would have fixed the accident and left the
             reader wrong.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_test_function_count_survives_a_missing_trailing_newline},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_test_function_count_survives_a_missing_trailing_newline},
 }
 
 @misc{hooks-bar-fires-two-instruments-counting-one-literal-use-one-predicate,
@@ -1784,7 +1784,7 @@
             pair, naming the anchored and unanchored forms of the same subject, and goes clean at
             the commit that repaired it --- so it would have caught that defect a tick earlier
             without anyone reading for it.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_two_instruments_counting_one_literal_use_one_predicate},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_two_instruments_counting_one_literal_use_one_predicate},
 }
 
 @misc{hooks-bar-fires-the-sweeps-ceiling-falls-rather-than-standing,
@@ -1804,7 +1804,7 @@
             which is the defect three consecutive ticks were spent repairing. The former value is
             kept so the direction is assertable, and the arm requires the evaluator to exist so
             the fall cannot come from editing a number.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_sweeps_ceiling_falls_rather_than_standing},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_sweeps_ceiling_falls_rather_than_standing},
 }
 
 @misc{hooks-bar-fires-the-sweep-states-the-share-of-arms-it-covers,
@@ -1826,7 +1826,7 @@
             fifty-two percent to thirty-six, which is exactly how a target once went missing. The
             previous tick's gain was also smaller than recorded: three of the five newly resolved
             arms carry no string-membership assertion at all.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_sweep_states_the_share_of_arms_it_covers},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_sweep_states_the_share_of_arms_it_covers},
 }
 
 @misc{hooks-bar-fires-the-brief-states-what-homing-grants-and-what-it-does-not,
@@ -1845,7 +1845,7 @@
             dispatcher who hands ownership away with the file gives away something that was not
             theirs either. The brief now states both the grant and its boundary, because a grant
             whose limit is unwritten reads as unlimited to whoever needs it to be.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_brief_states_what_homing_grants_and_what_it_does_not},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_brief_states_what_homing_grants_and_what_it_does_not},
 }
 
 @misc{hooks-bar-fires-the-poll-does-not-carry-a-self-raised-decision-as-blocked,
@@ -1866,7 +1866,7 @@
             made are otherwise byte-identical in the symbol set, and one of them is not blocked
             at all. The property is held in the poll rather than in the filed leg, because a
             filed leg is not amended.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_does_not_carry_a_self_raised_decision_as_blocked},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_does_not_carry_a_self_raised_decision_as_blocked},
 }
 
 @misc{hooks-bar-fires-the-roster-count-derives-the-apex-row-rather-than-assuming-it,
@@ -1886,7 +1886,7 @@
             of eight and the four with apex rows are unchanged. The reporter declined the repair
             that would have hidden it, since editing their roster to satisfy the probe would have
             meant deleting a real party to make a green line.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_roster_count_derives_the_apex_row_rather_than_assuming_it},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_roster_count_derives_the_apex_row_rather_than_assuming_it},
 }
 
 @misc{hooks-cmdparse-a-wrapper-whose-argument-is-a-command-reports-the-wrapper,
@@ -1908,7 +1908,7 @@
             of an opaque token, so the wrapper is reported, which is what sh -c and bash -c
             already report and what the routing hook relies on when it refuses an inline
             interpreter script by naming the interpreter.},
-  check  = {pytest hooks/tests/test_cmdparse.py -k test_a_wrapper_whose_argument_is_a_command_reports_the_wrapper},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_wrapper_whose_argument_is_a_command_reports_the_wrapper},
 }
 
 @misc{hooks-bar-fires-the-apex-probe-reads-a-column-rather-than-grepping-a-phrase,
@@ -1929,7 +1929,7 @@
             place in a table. The probe now reads the row by column prefix, and the verifying
             classifier written to check the report repeated the poll's own error by labelling a
             revision row as a roster row because the line contained the prefix.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_apex_probe_reads_a_column_rather_than_grepping_a_phrase},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_apex_probe_reads_a_column_rather_than_grepping_a_phrase},
 }
 
 @misc{hooks-bar-fires-asserted-comparisons-print-both-operands,
@@ -1951,7 +1951,7 @@
             the shape rather than the single call site, so a future branch added with a hidden
             operand fails at the point of writing rather than three ticks later when its figure
             happens to be absurd on its face.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_asserted_comparisons_print_both_operands},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_asserted_comparisons_print_both_operands},
 }
 
 @misc{hooks-bar-fires-roster-mark-is-read-from-a-cell-not-a-substring,
@@ -1975,7 +1975,7 @@
             discover that its term has dialects because every dialect satisfies it. The poll now
             reports that case as unadjudicated rather than absorbing it, because a reader that
             cannot settle a question must say so rather than report a finding about itself.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_roster_mark_is_read_from_a_cell_not_a_substring},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_roster_mark_is_read_from_a_cell_not_a_substring},
 }
 
 @misc{hooks-bar-fires-roster-gap-compared-against-every-state,
@@ -1999,7 +1999,7 @@
             every census in this tree that rosters them against what their own repository holds,
             found one disagreeing row out of seven adjudicable, and handed over the row rather than
             a claim about the table, without touching the instrument.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_roster_gap_is_compared_against_every_state_not_only_the_mark},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_roster_gap_is_compared_against_every_state_not_only_the_mark},
 }
 
 @misc{hooks-no-verify-every-gate-bypass-shape-is-refused,
@@ -2015,7 +2015,7 @@
             is handled as a property, is this token a prefix of the long option long enough to be
             unambiguous, rather than as membership in a set of three spellings that would pass the
             fourth.},
-  check  = {pytest hooks/tests/test_no_verify.py -k test_every_gate_bypass_shape_is_refused},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_every_gate_bypass_shape_is_refused},
 }
 
 @misc{hooks-no-verify-ordinary-commands-are-not-refused,
@@ -2029,7 +2029,7 @@
             break a working session trains its owner to disable it. The false positive surface is
             therefore part of the design rather than an afterthought, which is why the token stream
             is parsed and the flag recognised only where git would recognise it.},
-  check  = {pytest hooks/tests/test_no_verify.py -k test_ordinary_commands_are_not_refused},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_ordinary_commands_are_not_refused},
 }
 
 @misc{hooks-no-verify-an-unparseable-command-is-not-a-bypass,
@@ -2040,7 +2040,7 @@
             about the reader wearing the shape of a finding about the command, which is the defect
             class this repository has measured repeatedly in its own checkers. The hook returns no
             findings in that case, so an unparseable string is neither approved nor accused.},
-  check  = {pytest hooks/tests/test_no_verify.py -k test_an_unparseable_command_is_not_a_bypass},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_an_unparseable_command_is_not_a_bypass},
 }
 
 @misc{hooks-no-verify-the-installed-console-script-denies-when-armed,
@@ -2053,7 +2053,7 @@
             and the module docstring said so in its first paragraph while the suite stayed green. So
             this arm runs the installed console script with a real harness payload and reads the
             decision out of its output rather than trusting that the wiring resolves.},
-  check  = {pytest hooks/tests/test_no_verify.py -k test_the_installed_console_script_denies_when_armed},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_the_installed_console_script_denies_when_armed},
 }
 
 @misc{hooks-no-verify-the-installed-console-script-is-silent-when-unarmed,
@@ -2065,7 +2065,7 @@
             and a guard in that state reads as armed in review while detecting every violation and
             reporting none. Two states only, armed or absent. This arm holds the hook to that rather
             than letting a third state grow.},
-  check  = {pytest hooks/tests/test_no_verify.py -k test_the_installed_console_script_is_silent_when_unarmed},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_the_installed_console_script_is_silent_when_unarmed},
 }
 
 @misc{hooks-no-verify-the-hook-is-wired-into-settings,
@@ -2078,7 +2078,7 @@
             measured independently that a session already running when the settings file changes
             never picks up the environment, so the hooks keep exiting zero and the guard is off in
             fact while reading as armed in review.},
-  check  = {pytest hooks/tests/test_no_verify.py -k test_the_hook_is_wired_into_settings},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_the_hook_is_wired_into_settings},
 }
 
 @misc{hooks-no-verify-the-post-commit-verifies-the-gate-ran-before-pushing,
@@ -2095,7 +2095,7 @@
             environment, and the second says it ran for other commits and not this one, which is the
             bypass. Collapsing them would be this repository's standing defect one layer out, so the
             hook reports them separately and refuses to push in either case.},
-  check  = {pytest hooks/tests/test_no_verify.py -k test_the_post_commit_verifies_the_gate_ran_before_pushing},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_the_post_commit_verifies_the_gate_ran_before_pushing},
 }
 
 @misc{hooks-bar-fires-partition-terms-and-total-from-different-measurements,
@@ -2120,7 +2120,7 @@
             than absorbed into a zero. The all-zero case is reported as its own verdict ahead of the
             others because it explains them, in the same three-state discipline the unadjudicated
             branch already applies one axis over.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_a_partitions_terms_and_total_come_from_different_measurements},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_partitions_terms_and_total_come_from_different_measurements},
 }
 
 @misc{hooks-bar-fires-unmatched-state-says-whether-the-census-declared-it,
@@ -2144,7 +2144,7 @@
             census that declares its states is this reader failing to read a published list, while
             an unmatched row in one that declares nothing is a state nobody wrote down, and the two
             call for different repairs.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_an_unmatched_state_says_whether_the_census_declared_it},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_an_unmatched_state_says_whether_the_census_declared_it},
 }
 
 @misc{hooks-bar-fires-poll-reads-each-census-against-its-own-vocabulary,
@@ -2167,7 +2167,7 @@
             vocabulary names eleven of those twelve, leaving one row that uses a state the census
             never declared. Only the document-relative reading can reveal that row, and the
             reader-relative line correctly reports its own blindness rather than the document's.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_reads_each_census_against_its_own_declared_vocabulary},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_reads_each_census_against_its_own_declared_vocabulary},
 }
 
 @misc{hooks-bar-fires-vocabulary-reading-not-gated-on-divergence,
@@ -2192,7 +2192,7 @@
             the predicate was right to leave it, because the poll's own prose calls it a summary of
             the status section rather than a second roster, and taking both would make the
             last-match rule arbitrary between two tables answering different questions.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_vocabulary_reading_is_not_gated_on_the_divergence_branch},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_vocabulary_reading_is_not_gated_on_the_divergence_branch},
 }
 
 @misc{hooks-bar-fires-witness-reads-the-artifact-not-the-exit-status,
@@ -2217,7 +2217,7 @@
             keyed on the specific exit code, because keying on the number would make the next
             infrastructure code a false red, and this witness can no more enumerate bazel's exit
             codes than an arm here could enumerate a census's declared state vocabulary.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_witness_reads_bazels_artifact_not_its_exit_status},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_witness_reads_bazels_artifact_not_its_exit_status},
 }
 
 @misc{hooks-bar-fires-no-conventional-under-declaration-survives,
@@ -2242,5 +2242,26 @@
             all. The host-tool arm had the same shape, appearing to show a document converter
             invoked from a distribution that does not declare it, where reading the sites showed two
             comments and one test fixture string.},
-  check  = {pytest hooks/tests/test_bar_fires.py -k test_no_conventional_under_declaration_survives_in_this_tree},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_conventional_under_declaration_survives_in_this_tree},
+}
+
+@misc{hooks-bar-fires-every-warrant-check-resolves,
+  section = {bar-fires},
+  claim   = {Counting is a different predicate from resolving, and fifty-five checks accumulated in
+            the gap between them. This distribution's warrants are one-to-one with its test
+            functions and the gate verifies that ratio on every commit, yet fifty-five claims
+            carried a check naming a runner that does not exist: the project file declares exactly
+            one runner, addressed by a prefix, and those checks omitted it. All fifty-five were
+            written by one session at one per tick, each beside a real arm that passes, so the arm
+            was sound and the address was unresolvable. Nothing in this tree could detect it,
+            because no tool here parses a check field; the tool that would is the projection engine
+            and it is not installed. The warrant-to-test ratio was therefore verified continuously
+            while the checks' executability was never verified at all. The mechanism was accepted
+            into a fleet census as wider than the four that census listed, since those all assume
+            the check resolves and asks the wrong question, where this is the case in which
+            resolution never happens and no arm notices. This arm resolves rather than counts: for
+            every check it parses the module named and requires the named function to be defined
+            there, with a floor on how many checks it parsed so that a reader reading the wrong
+            shape cannot report zero failures vacuously.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_warrant_check_resolves_to_a_test_that_exists}
 }
