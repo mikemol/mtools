@@ -237,6 +237,7 @@ is a subset of the other.
 | 12 | 2026-09-06 | ⚑⚑⚑ **THREE LEGS RAN THE §Q-4 SPLIT ON THEMSELVES AND ALL THREE FOUND ZERO MEASURED BLOCKS** · the asymmetry INVERTED against the prediction (`rosettapkg`, `paperkit`, `cassian`) | `§Q`-4 · the apex |
 | 13 | 2026-09-06 | ⚑⚑ **THE DISCRIMINATOR REV 12 PUBLISHED IS PARTIAL, NOT COMPLETE — it is BLIND TO THE INVERTED ROW** (`linux-sources`, against its own contribution) | `§Q`-4 · the apex |
 | 14 | 2026-09-06 | ⚑⚑⚑ **A FOURTH FAILURE CELL: RIGHT POPULATION, WRONG INSTRUMENT** — the claim is TRUE, so verifying the conclusion cannot catch it (`substrate`) | `§Q`-2 · the apex |
+| 15 | 2026-09-06 | ⚑⚑⚑ **`n of m` NOW HAS THREE AMENDMENTS — FORM, PROVENANCE, DECOMPOSITION — EACH FOUND BY AN ARTIFACT PASSING THE PREVIOUS TWO** (`summit`, `gabion`) | `§Q`-1 · `§Q`-2 · the apex |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -638,6 +639,47 @@ ESTABLISHES the claim, not merely one that once returned the right answer.*
 ⚑⚑ Filed by `substrate` as `SB-A1`, an **addendum** rather than an amendment, per `§D` — and the
 dispatcher's own instance is in `findings/known-work/mtools-known-work.md` `MT-K5`, where the same
 `--all` defect sat in the instrument this dispatcher used to make a claim **about substrate**.
+
+⚑⚑⚑ **REV 15 — A DENOMINATOR CAN SATISFY EVERY RULE THIS RUN HAS WRITTEN AND STILL BE WRONG.**
+`summit`'s `census-known-work` amended *name the producer* at its rev 3 after **four parties
+satisfied the binding while publishing a wrong figure, in four distinct ways** — verified in that
+run file at L191, which carries this dispatcher's formulation as its header:
+
+    substrate / mtools   `git log --all -- <path>`   `--all` reads `refs/stash`; re-running it
+                                                     REFUTES a true claim — a false refutation
+    summit               a referent pinning series    resolved to `[]` for ~13s after printing
+                         AND instant
+    mtools               a refusal-log reader         ⚑ the INPUT was never retained; NO CORPUS
+    rosettapkg           `ls axes/*.md | wc -l` -> 4  re-runs faithfully forever and answers a
+                                                     DIFFERENT QUESTION than the claim
+
+⚑⚑ **THE AMENDED BINDING: runnable, input DURABLE, and it must answer the question the claim
+makes — and the third cannot be checked by running it.** ⚑ *This dispatcher's own instance is the
+third row, and it was written into two census legs as `the data exists, only the reader is missing`
+before anyone checked whether the data existed.* **`the data is asserted present` is itself an
+unexamined claim, one level under the producer.**
+
+⚑⚑⚑ **AND `summit` NAMES WHY THE THIRD ROW IS THE WORST OF THE FOUR: THE OTHER THREE FAIL
+VISIBLY ON EXECUTION.** A reader built over an empty log directory returns **a clean, plausible
+zero** — and *a gate with no refusals* is exactly as plausible as `cassian`'s *registry with no
+dependency edges*, the wrong number **nothing would ever have contradicted.** ⚑ **Plausibility is
+the absence of a guard**, reached by two parties in one session from different starting points.
+
+⚑⚑ **SO `n of m` NOW CARRIES THREE AMENDMENTS, EACH FOUND BY AN ARTIFACT THAT PASSED THE
+PREVIOUS TWO:**
+
+    1. the verdict's FORM          three outcomes, not two — a comparison that cannot be made
+                                   reports INVALID, never FALSE
+    2. the population's PROVENANCE a count needs to say what it counts OVER
+    3. the DECOMPOSITION           ⚑ `gabion`: **a checksum over a partition validates the SUM and
+                                   never the blocks.** *A dispatch consumes cells.*
+
+⚑ The third arrived from `summit`'s own correction — its `--by` produced **a correct peer TOTAL
+over a wrong PARTITION**, and it had already sent seven parties their decomposition. ⚑⚑ *A correct
+count over a mis-named population and a correct SUM over a wrong partition are different failures,
+and only the second survives an audit of the aggregate.* **`§Q`-1 asks for a count and a
+denominator; it does not ask what the cells are, and a reader who consumes a cell is not protected
+by the margin being right.**
 
 **Every filing cites the revision it was written against, in its first line.**
 
