@@ -1491,3 +1491,24 @@
             because the quotation that motivated it spans two lines.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_a_comment_naming_a_flag_says_whether_it_is_passed},
 }
+
+@misc{hooks-bar-fires-the-count-checker-narrows-by-position-not-by-indent-alone,
+  title  = {Three checkers needing one exemption was a resemblance, not a class},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The previous tick recorded that three checkers need the same exemption and that the
+            marker differs by medium while the property is one. Measured against the two commits
+            rule_citations.sh actually refused, no marker exempts both: the four-space indent
+            exempts one, quotation marks exempt neither, backticks exempt neither. The
+            discriminator in message_counts.sh is not its indent but its position --- the number
+            must be positioned as a total, so a subset count is not a ledger claim rather than a
+            wrong one, and the indent is secondary. A positional narrowing for rule citations
+            passed every arm until the verb citing was added to its list, where it plainly
+            belongs, at which point it refuses the message it appeared to exempt: the exemption
+            was luck about a word list. A message narrating a rule number is lexically identical
+            to one citing it, and what separates them is a speaker no regex reads, so the cost is
+            paid on the author's side deliberately and the reason is recorded beside the
+            predicate.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_count_checker_narrows_by_position_not_by_indent_alone},
+}

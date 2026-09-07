@@ -2282,3 +2282,42 @@ def test_a_comment_naming_a_flag_says_whether_it_is_passed() -> None:
     assert not offenders, (
         "comment(s) asserting a flag the file does not pass:\n  " + "\n  ".join(offenders)
     )
+
+
+def test_the_count_checker_narrows_by_position_not_by_indent_alone() -> None:
+    """⚑⚑⚑ THREE CHECKERS NEEDING ONE EXEMPTION WAS A RESEMBLANCE, NOT A CLASS.
+
+    Last tick recorded that `message_counts.sh`, `rule_citations.sh` and the comment-claim arm all
+    need the same exemption — *the marker differs by medium but the property is one.* ⚑ MEASURED
+    against the two commits `rule_citations.sh` actually refused, **no marker exempts both**:
+    four-space indent (its own precedent) exempts one, quotation marks exempt neither, backticks
+    exempt neither.
+
+    ⚑⚑ THE DISCRIMINATOR WAS IN `message_counts.sh` ALL ALONG AND IT IS NOT THE INDENT. Its
+    predicate is `ledger (holds|has) N` — the number must be **positioned as a total**, so a subset
+    count is not a ledger claim at all rather than a ledger claim that is wrong. The indent is
+    secondary, covering the quotation of the very figure being corrected. `rule_citations.sh` has
+    no positional requirement: any `Rule N` anywhere is a citation.
+
+    ⚑⚑⚑ AND A POSITIONAL NARROWING DOES NOT TRANSFER. A candidate reading citation verbs and
+    semicolon tails passed all six arms — until `citing` was added to the verb list, which it
+    plainly belongs in. Then it refuses the very message it appeared to exempt. **The exemption
+    was luck about my word list.** *"a message citing Rule 9999"* is lexically identical to a
+    citation; what separates them is a SPEAKER between the verb and the author, and no regex
+    reads speakers.
+
+    ⚑ SO THE PROPERTY THIS ARM HOLDS IS THE ONE THAT SURVIVED: the count checker narrows by
+    POSITION, and that narrowing is what makes its indent exemption safe rather than the reverse.
+    An indent exemption without it would let a wrong total through by indenting it.
+    """
+    body = _MSGCOUNT.read_text(encoding="utf-8")
+    # ⚑ THE POSITIONAL PREDICATE IS THE LOAD-BEARING HALF. Measured: it is what makes a subset
+    # count a non-claim, and the arm asserts it rather than the indent that gets the attention.
+    assert "ledger (holds|has)" in body, (
+        "the count must be positioned AS A TOTAL, or a subset count reads as a wrong total"
+    )
+    # ⚑ AND THE INDENT EXEMPTION IS SECONDARY, not the mechanism. It is asserted too, because a
+    # message that cannot quote the figure it is correcting cannot record a correction at all.
+    assert "grep -vE '^    '" in body, (
+        "a message must be able to quote the figure it is correcting"
+    )

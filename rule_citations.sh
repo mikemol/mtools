@@ -86,6 +86,28 @@ if [ -n "$_defined" ]; then
     fi
 fi
 
+# ⚑⚑⚑ THERE IS NO QUOTATION EXEMPTION HERE, AND IT IS NOT AN OVERSIGHT. This checker has refused
+# two commits of mine for NARRATING a fixture — "a message citing Rule 9999", "corpus naming Rule
+# 77" — and the obvious repair is `message_counts.sh`'s four-space-indent exemption. MEASURED
+# against both refusals: the indent exempts ONE of them, quotation marks exempt NEITHER, and
+# backticks exempt neither. No marker covers the population.
+#
+# ⚑⚑ THE DISCRIMINATOR IN `message_counts.sh` IS NOT ITS INDENT, IT IS ITS POSITION. Its predicate
+# is `ledger (holds|has) N`: the number must be positioned AS A TOTAL, so a subset count is not a
+# ledger claim rather than a wrong one. The indent is secondary, covering the quotation of the
+# very figure being corrected. That narrowing has no analogue here — a rule number carries no
+# positional marker distinguishing a citation from a report of one.
+#
+# ⚑⚑⚑ A POSITIONAL NARROWING WAS TRIED AND IT FAILED BY LUCK. Reading citation verbs and
+# semicolon tails passed every arm — the original `Rule 23` defect caught, both refusals exempt —
+# until `citing` was added to the verb list, where it plainly belongs. Then it refuses the message
+# it appeared to exempt. *"a message citing Rule 9999"* is lexically identical to a citation; what
+# separates them is a SPEAKER between the verb and the author, and no regex reads speakers.
+#
+# ⚑ SO THE COST IS PAID ON THE AUTHOR'S SIDE, DELIBERATELY: a message narrating a rule number must
+# rephrase. That is a real cost and it is the cheaper one — the alternative is a checker that lets
+# a dangling citation through whenever it is phrased as narration, which is the defect this file
+# exists for wearing a disguise.
 cited=$(grep -oE '\bRule [0-9]+\b' "$msg" 2>/dev/null | sort -u -k2 -n)
 if [ -z "$cited" ]; then
     echo "rule_citations: this message cites no rule"
