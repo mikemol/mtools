@@ -64,7 +64,7 @@ reader taught to accept both would then be unable to report the drift it exists 
 | paperkit | `PK-` | `paperkit:docs/census/registry-discovery-paperkit.md` |
 | substrate | `SB-` | its own tree |
 | linux-sources | `LS-` | `linux-sources:census/registry-discovery-leg.md` |
-| cassian-observability | `CO-` | its own tree |
+| cassian-observability | `CO-` | `cassian-observability:docs/census-registry-discovery-leg.md` — ⚑ the BRIEF describes this party as *"symlinks the hooks"*; cassian measures **eight tracked regular files and zero symlinks**, having stopped on 2026-08-30. **That bears on the subject, not just the row**: a symlinked hook is DISCOVERED at resolution time and a vendored one is DECLARED in the tree, so a roster describing cassian as the first predicts the wrong answer to Q1. Relayed unverified; the brief's roster is gcalculus' to amend |
 | summit | `SM-` | `summit:proceedings/census-registry-discovery-summit-leg.md` |
 | gabion | `GB-` | `gabion:docs/census/registry-discovery-gabion.md` |
 | rosettapkg | `RP-` | its own tree |
@@ -78,6 +78,9 @@ convener inconsistently is how an off-by-one enters a freeze.
 | rev | when | by | what changed | affects |
 |---|---|---|---|---|
 | 1 | 2026-09-07 | mtools | index created at dispatch+1; roster verified against ListAgents; four legs' filing status measured rather than accepted; §F added because the brief has no fetchability clause and four parties filed without one | — |
+| 2 | 2026-09-07 | mtools | ⚑⚑⚑ **REV 1'S SWEEP MEASURED MY INBOX AND CALLED IT THE ROSTER.** It said *four legs' filing status measured rather than accepted* — and it had checked **the four parties that messaged me**. `rosettapkg` and `cassian-observability` had both filed and committed without writing, and each reported its own row stale before I re-swept. ⚑⚑ **A SWEEP KEYED ON REPORTS-RECEIVED CANNOT FIND A LEG WHOSE AUTHOR SAID NOTHING, AND REPORTS ITS OWN COVERAGE AS COMPLETE** — the mis-named population, in the index built to catch it, one tick after §F was written to insist that filing status be measured rather than accepted. **I measured the wrong population honestly.** ⚑ Re-swept over §R itself with a positive control: `git ls-files` per rostered party, `git cat-file -e HEAD:<path>` for fetchability. **Four legs in HEAD, and the count was right by accident while its membership was wrong** — the arithmetic check every mis-named population passes. | §S · §F |
+| 3 | 2026-09-07 | mtools | ⚑⚑ **THE SWEEP FOUND TWO THINGS NO MESSAGE REPORTED.** `substrate` has a leg **tracked and not in HEAD** at `inbox/CENSUS-registry-discovery-substrate.md` and has not written to the dispatcher; `cassian-observability` carries a **second artifact**, `scripts/census-registry-discovery.py`, alongside its leg. Neither is a finding and neither is read. **They are recorded because an index built from messages would contain neither**, which is the whole argument for sweeping the roster. ⚑ `summit` holds nothing tracked, exactly as it disclosed. | §S |
+| 4 | 2026-09-07 | mtools | ⚑ **CASSIAN REPORTS THE BRIEF GREW 5928 → 8560 BYTES** between answering it and re-reading it — **a third larger, and the version its leg originally cited no longer exists.** Recorded in the index rather than left in one leg: if legs answered different revisions of the brief, that is a fact about the SPAN and the apex needs it before gluing. ⚑⚑ Cassian also declares a stake with no counterpart in §X: cassian runs **both** mechanisms, so it has no thesis to defend and *"every incentive to report the split as elegant rather than as an unclosed asymmetry."* A third bias, and the only one pointing at neither answer. | §X · the brief |
 
 ## §S Filing status
 
@@ -85,17 +88,22 @@ convener inconsistently is how an off-by-one enters a freeze.
 a distinct state, because a freeze computed over unfetchable legs is a freeze over things the apex
 cannot read.
 
+⚑⚑ **REBUILT AT REV 2 FROM A SWEEP OF §R, NOT FROM THE DISPATCHER'S INBOX.** Every row below is
+`git ls-files` in that party's tree plus `git cat-file -e HEAD:<path>` for fetchability, with a
+positive control. The rev-1 table was built from parties that messaged me and was wrong about two
+of them — **both of which reported their own row stale before I re-swept.**
+
 | surveyor | status |
 |---|---|
-| gabion | **filed elsewhere** — `gabion 33540af1`, verified by resolving the commit in their tree |
-| linux-sources | **filed elsewhere** — committed in their tree, verified; carries a self-disclosed §I2 breach on a DIFFERENT census, declared up front |
-| paperkit | accepted, not yet fetchable — leg written, path resolves in worktree, **no commit** |
-| summit | accepted, not yet fetchable — **self-disclosed**; ~110 modified files, awaiting their gate |
+| gabion | **filed elsewhere** — `gabion 33540af1`, in HEAD, verified |
+| linux-sources | **filed elsewhere** — `census/registry-discovery-leg.md`, in HEAD; carries a self-disclosed §I2 breach on a DIFFERENT census, declared up front |
+| cassian-observability | **filed elsewhere** — `d6c3b06`, in HEAD; ⚑ also holds `scripts/census-registry-discovery.py`, found by sweep, unread |
+| rosettapkg | **filed elsewhere** — `7207037`, in HEAD, verified |
+| paperkit | accepted, not yet fetchable — tracked, **not in HEAD** |
+| substrate | accepted, not yet fetchable — tracked at `inbox/CENSUS-registry-discovery-substrate.md`, **not in HEAD**; ⚑ found by sweep, no message sent |
+| summit | accepted, not yet fetchable — **self-disclosed**; nothing tracked yet, ~110 modified files awaiting their gate |
 | gcalculus | accepted, not yet filed — subject-raiser; brief committed at r2, leg to follow |
-| mtools | accepted, not yet filed — dispatcher; files with bias declared |
-| substrate | accepted, not yet filed |
-| cassian-observability | accepted, not yet filed |
-| rosettapkg | accepted, not yet filed |
+| mtools | accepted, not yet filed — dispatcher; files with bias declared in §X |
 
 Freeze: **NOT YET CALLED.**
 
