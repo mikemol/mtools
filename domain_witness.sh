@@ -333,7 +333,18 @@ else
     # reader to `git checkout` a file that is already correct.
     say "arm 3: $victim RESTORED (content matches its before-image), but $target is RED"
     say "  ⚑ that is NOT this witness's residue — some other declared input of $target changed"
-    say "  seven sessions write this tree; check 'git status' before treating it as a defect"
+    # ⚑⚑⚑ THIS LINE CARRIED A COUNT — `seven sessions` — AND ITS REFERENT IS NOT IN THE TREE.
+    # Live sessions are a harness reading available for one instant; `blockers.sh` already says so
+    # in as many words (*NOT COVERED: peer reachability — run ListAgents; it is a reading, not a
+    # fact*). A shell script has no path to that number, so the figure was authored once and could
+    # only ever drift — MEASURED at the tick it was found, seven interactive peers plus this
+    # session, which is eight writers.
+    # ⚑⚑ WORSE THAN A STALE FIGURE, WHICH IS THE POINT. A stale count can be re-derived; this one
+    # cannot be checked by anything here, so no green run would ever have contradicted it.
+    # ⚑ THE COUNT IS DROPPED RATHER THAN CORRECTED. The sentence's work is *other parties write
+    # here, so check before concluding a defect* — true at any cardinality, and it stays true when
+    # a session starts or exits. The number bought nothing and rotted.
+    say "  other sessions write this tree; check 'git status' before treating it as a defect"
     fail=1
 fi
 

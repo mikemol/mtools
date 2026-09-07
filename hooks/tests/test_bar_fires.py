@@ -2452,3 +2452,44 @@ def test_the_preflight_does_not_hardcode_the_witness_count() -> None:
         f"the preflight hardcodes a witness count {spelled}; the gate invokes "
         f"{len(witnesses)}, and the figure moves whenever a witness is added"
     )
+
+
+def test_no_gate_asserts_a_figure_it_cannot_reach() -> None:
+    """⚑⚑⚑ A HARDCODED FIGURE WHOSE REFERENT NO SCRIPT CAN READ IS WORSE THAN A STALE ONE.
+
+    `domain_witness.sh` told a reader whose target went red: *seven sessions write this tree;
+    check `git status` before treating it as a defect.* ⚑ MEASURED at the tick it was found:
+    `ListAgents` reports **seven interactive peers plus this session — eight writers.**
+
+    ⚑⚑ AND THE DEFECT IS NOT THE ARITHMETIC. A stale count can be re-derived; this one cannot,
+    because **its referent is not in the tree.** Live sessions are a harness reading available for
+    one instant, which the poll already declares about peer reachability: *NOT COVERED — run
+    `ListAgents`; it is a reading, not a fact.* A shell script has no path to that number, so the
+    figure was authored once and can only ever drift.
+
+    ⚑ THE REPAIR IS TO DROP THE COUNT, NOT TO CORRECT IT. The sentence's work is *other parties
+    write here, so check before concluding* — which is true at any cardinality and stays true when
+    a session starts or exits. A number added to that sentence buys nothing and rots.
+
+    ⚑⚑ MEASURED AGAINST THE SIBLING CLAIM THAT SURVIVED. `rule_freshness.sh` says *three rules
+    cite it* about the metrics port, and that IS reachable: rules 5, 12 and 26 name it, counted
+    from the corpus. The discriminator is not *is it hardcoded* but *can anything here check it* —
+    which is why this arm names the unreachable referent rather than banning figures.
+    """
+    body = _WITNESS.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the file must still emit the warning this arm is about, or the
+    # assertion below passes because the sentence vanished rather than because it was fixed.
+    assert "write this tree" in commands, (
+        "the concurrent-writer warning must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑ NO SESSION COUNT. Only a harness reading can produce it, and only for one instant.
+    counted: list[str] = pyre.findall(
+        r"\b(one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+sessions?\b", commands
+    )
+    assert not counted, (
+        f"a gate asserts {counted} sessions write this tree — a figure no script can reach, "
+        "since live sessions are a harness reading rather than a fact about the tree"
+    )

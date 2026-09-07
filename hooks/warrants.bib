@@ -1569,3 +1569,23 @@
             second hand-written population in the file that exists to catch them.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_preflight_does_not_hardcode_the_witness_count},
 }
+
+@misc{hooks-bar-fires-no-gate-asserts-a-figure-it-cannot-reach,
+  title  = {A hardcoded figure whose referent no script can read is worse than a stale one},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The domain witness told a reader whose target went red that seven sessions write this
+            tree. Measured at the tick it was found, the harness reports seven interactive peers
+            plus this session, which is eight writers. The defect is not the arithmetic: a stale
+            count can be re-derived, but this referent is not in the tree at all --- live
+            sessions are a harness reading for one instant, which the poll already declares about
+            peer reachability. No script has a path to that number, so no green run could ever
+            have contradicted it. The count is dropped rather than corrected, because the
+            sentence's work is that other parties write here and that is true at any cardinality.
+            The sibling claim that three rules cite the metrics port survives, because it is
+            reachable and measures correctly against rules 5, 12 and 26; the discriminator is not
+            whether a figure is hardcoded but whether anything here can check it. Four arms
+            measured, including that a corrected-but-still-counted figure still fires.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_no_gate_asserts_a_figure_it_cannot_reach},
+}
