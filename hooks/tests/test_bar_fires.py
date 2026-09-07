@@ -1394,3 +1394,31 @@ def test_the_poll_detects_a_duplicate_revision_number() -> None:
     assert "sort -n | uniq -d" in body, (
         "numeric sort before uniq -d: lexical order groups 1, 10, 11 and misses 2, 2"
     )
+
+
+def test_the_poll_detects_a_malformed_table_row() -> None:
+    """⚑⚑⚑ A MALFORMED ROW BLINDS EVERY TABLE READER PAST IT, SILENTLY.
+
+    `§V` rows 18 and 22 carry **unescaped pipes inside code spans**, so markdown counts 5 and 6
+    cells against the table's 4 and `mdstruct rows` stops at the first one. MEASURED on the live
+    file: **20 rows at 4 cells, one at 5, one at 6.**
+
+    ⚑⚑ THAT IS HOW THE DUPLICATE DETECTOR SHIPPED ONE TICK EARLIER REPORTED CLEAN ON A DUPLICATE
+    THAT WAS PRESENT — it read a mode that had already stopped. And the dispatcher's first
+    diagnosis of the truncation was **the row is oversized**, which is false: *not too long,
+    ill-formed*, and a length hypothesis would never have been falsified by shortening rows.
+
+    ⚑ SILENCE PAST ROW 18 IS INDISTINGUISHABLE FROM A CLEAN READ. It was found by accident while
+    checking something else, and nothing would have reported it. **So the SHAPE is checked before
+    any count over the table is trusted** — a cell count that differs from its siblings is the
+    property, and it needs no knowledge of what the columns mean.
+
+    Both arms measured on fixtures first: a table with one pipe-carrying row yields cell counts
+    `4 5`; a clean one yields `4`.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "ROWS DISAGREE ON CELL COUNT" in body, "a malformed row must be reported, not skipped"
+    assert "NF-2" in body, "the cell count per row is the property; column meaning is irrelevant"
+    assert "UNRELIABLE" in body, (
+        "a count over a truncated table must be marked unreliable rather than printed as a fact"
+    )

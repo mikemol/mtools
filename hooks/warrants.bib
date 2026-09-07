@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-poll-detects-a-malformed-table-row,
+  section = {bar-fires},
+  claim   = {An unescaped pipe in a code span gives a row 5 or 6 cells against the table's 4, and every table reader stops there and reports what it saw as complete},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_detects_a_malformed_table_row}
+}
+
 @misc{hooks-bar-fires-poll-detects-a-duplicate-revision-number,
   section = {bar-fires},
   claim   = {Two parties allocated one revision index twice, both resolved by hand, and the poll read the log by column so a duplicate was invisible: structurally valid and semantically ambiguous},

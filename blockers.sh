@@ -364,6 +364,22 @@ else
         # struct-tools rule routes STRUCTURED questions to `mdstruct`, and *is this integer
         # repeated at the start of a line* is not one. `mdstruct` remains the reader for §S, §R
         # and the freeze row, where the question really is about sections and tables.
+        # ⚑⚑⚑ A MALFORMED ROW BLINDS EVERY TABLE READER PAST IT, SILENTLY. Rows 18 and 22 carry
+        # UNESCAPED PIPES inside code spans, so markdown counts 5 and 6 cells against the table's
+        # 4 and `mdstruct rows` stops at the first one. MEASURED on the live file: 20 rows at 4
+        # cells, one at 5, one at 6. ⚑ That is how the duplicate detector shipped one tick earlier
+        # reported CLEAN on a duplicate that was present — it read a mode that had already stopped.
+        # ⚑⚑ AND SILENCE PAST ROW 18 IS INDISTINGUISHABLE FROM A CLEAN READ, which is this
+        # repository's dominant defect class. It was found by accident, while checking something
+        # else, and nothing would have reported it. So the SHAPE is checked before any count over
+        # the table is trusted — a cell count that differs from its siblings is the property, and
+        # it needs no knowledge of what the columns mean.
+        _cells=$(awk -F'|' '/^\| [0-9]+ \|/{print NF-2}' "$census" 2>/dev/null | sort -u | tr '\n' ' ')
+        if [ "$(printf '%s' "$_cells" | wc -w)" -gt 1 ]; then
+            echo "  ⚑ §V ROWS DISAGREE ON CELL COUNT: ${_cells}— a row carries an unescaped pipe"
+            echo "    (usually inside a code span). Every table reader STOPS at the first such row"
+            echo "    and reports what it saw as complete. Counts over this table are UNRELIABLE."
+        fi
         _dups=$(grep -oE '^\| [0-9]+ \|' "$census" 2>/dev/null \
             | grep -oE '[0-9]+' | sort -n | uniq -d | tr '\n' ' ')
         if [ -n "$_dups" ]; then
