@@ -22,6 +22,9 @@ confusion these hooks were written to refuse.
 
 from __future__ import annotations
 
+import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -106,3 +109,83 @@ def test_the_refusal_names_a_tool_the_adopting_repo_actually_declares(adopter: P
     declared = {tool for _artifact, tool in routing_table.routes()}
     assert named
     assert named <= declared
+
+
+# ⚑⚑⚑ THE CLAIM PEP 420 ACTUALLY MAKES, AND NOTHING IN THIS REPOSITORY TESTED IT. Both
+# distributions omit `src/mikemol/__init__.py` so they can share the `mikemol` prefix — an
+# `__init__.py` would make the first-installed distribution the exclusive owner and SHADOW its
+# sibling. Every existing case installs one distribution, so the shadowing this layout exists to
+# prevent could not be observed by any of them.
+_SIBLING_DISTS = ("hooks", "mdstruct")
+
+# ⚑ ABSOLUTE, LIKE `_ADOPTER` ABOVE, AND FOR THE SAME REASON. This case's subject is what a real
+# checkout produces when installed, so it must reach a real checkout or skip — it cannot be
+# satisfied by the runfiles copy, and reaching that copy by resolving `__file__` is the sandbox
+# escape a sibling witness in `test_bar_fires.py` refuses.
+_SOURCE_TREE = Path("/home/mikemol/github/mtools")
+
+
+def test_both_distributions_co_install_under_one_namespace() -> None:
+    """⚑⚑⚑ THE PEP 420 CLAIM, EXERCISED IN A REAL INTERPRETER RATHER THAN ARGUED.
+
+    ⚑ MEASURED 2026-09-07, and the measurement is what made this worth a case. `substrate` carries
+    an EDITABLE install of `mikemol-mdstruct` and the `mikemol` namespace resolves there — its
+    import error names `mikemol.hooks`, while `paperkit` and `summit` fail one level earlier at
+    `mikemol`. So a peer already consumes this repository BY PACKAGE, with exactly one of the two
+    siblings installed: the half of the claim that cannot fail.
+
+    ⚑⚑⚑ FOUR F-ARMS FAILED BEFORE THIS CASE EARNED ITS ASSERTION, and the first three killed the
+    mechanism this docstring originally claimed. A planted `src/mikemol/__init__.py` does NOT
+    shadow: setuptools' `namespace-packages` declaration excludes it from the built distribution,
+    so it never ships — measured editable AND non-editable, `mikemol.__file__` is `None` in every
+    cell. Declaring `mikemol` a regular package with an explicit `packages` list does not shadow
+    either, because the second install writes into the same `site-packages/mikemol/` directory.
+
+    ⚑⚑ THE FOURTH FAILURE WAS THE INSTRUMENT, NOT THE PROPERTY. Scoping `mikemol.hooks` out of the
+    distribution entirely still imported — because the probe ran with the SOURCE TREE reachable on
+    `sys.path`, so it never consulted the installed distributions at all. **An assertion that
+    passes when a distribution ships nothing is measuring the working directory.** With `cwd` set
+    to the probe venv, both editable and wheel installs go RED. That condition is load-bearing and
+    is passed explicitly below rather than inherited from wherever pytest happens to run.
+
+    ⚑ IT INSTALLS INTO A THROWAWAY INTERPRETER, never the working venvs, so a peer's live
+    environment is not mutated by a test run. The case SKIPS when a distribution is missing from
+    disk, because a skip that passed would report an absent checkout as evidence of
+    co-installability — this file's standing rule.
+    """
+    # ⚑⚑⚑ NOT `Path(__file__).resolve()` — a sibling witness caught that and was right. Inside
+    # bazel's sandbox that call follows the runfiles symlink back OUT to the live working tree, so
+    # a hermetic action would build wheels from a developer's checkout. This case needs the SOURCE
+    # tree by construction (it installs the distributions), so it names it absolutely and SKIPS
+    # when absent, exactly as this file does for its adopting checkout.
+    missing = [d for d in _SIBLING_DISTS if not (_SOURCE_TREE / d / "pyproject.toml").is_file()]
+    if missing:
+        pytest.skip(f"distribution(s) not on disk: {missing} — absence is not adoptability")
+    repo = _SOURCE_TREE
+
+    with tempfile.TemporaryDirectory() as td:
+        venv = Path(td) / "probe"
+        subprocess.run(
+            [sys.executable, "-m", "venv", str(venv)], check=True, capture_output=True
+        )
+        py = venv / "bin" / "python"
+        for dist in _SIBLING_DISTS:
+            installed = subprocess.run(
+                [str(py), "-m", "pip", "install", "-q", "--no-deps", "-e", str(repo / dist)],
+                capture_output=True, text=True, check=False,
+            )
+            assert installed.returncode == 0, (
+                f"{dist} would not install: {installed.stderr[-400:]}"
+            )
+        # ⚑⚑ BOTH IMPORTED IN ONE INTERPRETER, FROM A NEUTRAL DIRECTORY. `cwd` is the condition
+        # the verdict depends on: run from anywhere the source tree is reachable and this passes
+        # even when a distribution ships no package at all — measured, and it is why the first
+        # F-arms were green. Importing in two processes would also pass under a real shadowing.
+        both = subprocess.run(
+            [str(py), "-c", "import mikemol.hooks, mikemol.mdstruct"],
+            capture_output=True, text=True, check=False, cwd=str(venv),
+        )
+        assert both.returncode == 0, (
+            "the two distributions do not co-install under the shared `mikemol` namespace: "
+            f"{both.stderr[-400:]}"
+        )

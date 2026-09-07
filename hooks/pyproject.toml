@@ -231,3 +231,19 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # file rather than to the package. An entry naming a directory would grant it to every hook in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.
 "src/mikemol/hooks/verdict.py" = ["S603"]
+
+# ⚑⚑ THE SAME RULE, THE SAME REASON, A SECOND NAMED FILE. `test_adoption.py`'s subject is what a
+# real checkout produces WHEN INSTALLED, so building venvs and installing wheels is the case
+# rather than a helper around it. ⚑ MEASURED: every argument is a literal or a path this module
+# constructs — `sys.executable`, a `tempfile` directory, and `_SOURCE_TREE / dist` — so there is
+# no untrusted input for S603 to be about here.
+# ⚑ DECLARED IN CONFIG, NOT AS `noqa`. Three line directives were written first and the ratchet
+# refused them as new keys, correctly: this repository's rule is DECLARE, NEVER SUPPRESS, and a
+# line directive travels with the code into a peer tree that may not even enable the rule —
+# measured by substrate as `RUF100 Unused noqa`. A config entry stays behind.
+# ⚑⚑ `S404` IS PREVIEW-ONLY AND THE RATCHET SEES IT WHILE `ruff check` DOES NOT. The census runs
+# ruff with `--preview`, so hoisting `import subprocess` to module scope minted a new baseline key
+# that a plain preflight reports as clean — measured: `ruff check` passes, `ruff check --preview`
+# names `suspicious-subprocess-import`. A gate and a preflight disagreeing about the same file is
+# exactly the shape that makes a green local run mean nothing.
+"tests/test_adoption.py" = ["S101", "S404", "S603"]

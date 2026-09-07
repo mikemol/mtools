@@ -1431,3 +1431,24 @@
             unused off an import count and delete it.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_a_module_with_no_local_caller_declares_who_consumes_it},
 }
+
+@misc{hooks-adoption-both-distributions-co-install-under-one-namespace,
+  title  = {An assertion that passes when a distribution ships nothing is measuring the cwd},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {adoption},
+  note   = {Both distributions omit an __init__ under src/mikemol so they can share the prefix,
+            and nothing in this repository exercised that claim: every case installs one
+            distribution. substrate carries an editable install of mikemol-mdstruct and resolves
+            the namespace, so a peer already consumes this repo by package with exactly one
+            sibling present --- the half that cannot fail. Four F-arms failed before the
+            assertion was earned. A planted src/mikemol/__init__.py does not shadow, because the
+            namespace-packages declaration excludes it from the built distribution; an explicit
+            regular-package declaration does not shadow either, because the second install writes
+            into the same site-packages directory. The fourth failure was the instrument: scoping
+            the subpackage out entirely still imported, because the probe ran with the source
+            tree reachable on sys.path and never consulted the installed distributions. With cwd
+            set to the probe venv both editable and wheel installs go red, so that condition is
+            passed explicitly rather than inherited from wherever pytest runs.},
+  check  = {pytest hooks/tests/test_adoption.py -k test_both_distributions_co_install_under_one_namespace},
+}
