@@ -26,6 +26,20 @@ if [ ! -x "$repo/rule_citations.sh" ]; then
     exit 1
 fi
 
+# ⚑⚑⚑ A COUNT IS A CITATION TOO. `rule_citations.sh` refuses a message naming a rule that does
+# not exist; this refuses one asserting a ledger count the staged ledger does not have. MEASURED:
+# `2c75167` says *188 entries* and the ledger at that commit holds 189 — a figure taken before the
+# commit's own change, published as the state the commit produced.
+# ⚑ Absence is reported rather than skipped, same as below.
+if [ ! -x "$repo/message_counts.sh" ]; then
+    say "message_counts.sh is missing or not executable — cannot verify counts, commit refused"
+    exit 1
+fi
+"$repo/message_counts.sh" "$1" || {
+    say "REFUSED — a ledger count in this message disagrees with the staged ledger"
+    exit 1
+}
+
 "$repo/rule_citations.sh" "$1" || {
     say "REFUSED"
     exit 1

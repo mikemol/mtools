@@ -1115,6 +1115,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-a-commit-message-cannot-assert-a-wrong-ledger-count,
+  section = {bar-fires},
+  claim   = {2c75167's message says 188 entries and the ledger at that commit holds 189: a figure measured before the commit's own change, published as the state the commit produced},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_commit_message_cannot_assert_a_wrong_ledger_count}
+}
+
 @misc{hooks-bar-fires-every-warrant-names-a-test-that-exists,
   section = {bar-fires},
   claim   = {The 1:1 ledger counts entries and never checks the pairing: 188 entries against 187 tests passes while 20 entries carry no check field and 20 tests are named by no warrant},

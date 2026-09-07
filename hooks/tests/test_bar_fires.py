@@ -943,6 +943,7 @@ def test_the_gate_points_the_checkers_at_the_staged_tree() -> None:
 
 _POLL = _DIST.parent / "blockers.sh"
 _THIS = Path(__file__)
+_MSGCOUNT = _DIST.parent / "message_counts.sh"
 # ⚑ THE SWEEP'S OWN COVERAGE FLOOR. 65 string-membership assertions existed when it was
 # written; if it resolves far fewer, the resolver has broken and its silence is the
 # vacuity it exists to catch — one level out.
@@ -1627,4 +1628,38 @@ def test_every_warrant_names_a_test_that_exists() -> None:
     assert len(without) <= _WARRANTS_WITHOUT_CHECK, (
         f"{len(without)} warrants carry no check field, up from {_WARRANTS_WITHOUT_CHECK}. "
         f"A warrant with no check asserts a claim nothing can run: {without[:5]}"
+    )
+
+
+def test_a_commit_message_cannot_assert_a_wrong_ledger_count() -> None:
+    """⚑⚑⚑ A MESSAGE ASSERTING A COUNT OF THE FILE IT IS COMMITTING, MEASURED BEFORE ITS OWN CHANGE.
+
+    `2c75167`'s message reads *"188 entries, 187 test names"* and the ledger **at that very commit**
+    holds **189** — the figure was taken pre-commit and the commit added a warrant. ⚑ *The message
+    describes the state the author started from, published as the state the commit produced*, in a
+    commit whose subject was unverified pairings.
+
+    ⚑⚑ IT IS `rule_citations.sh`'s CLASS ONE LEVEL OVER. That gate exists because *a citation to a
+    rule that does not exist reads exactly like a citation to one that does.* **A count off by one
+    reads exactly like a count that is right.**
+
+    ⚑ SCOPE IS DELIBERATELY NARROW so the arm cannot drift: ONE quantity, `N entries` or
+    `N warrants`, against `grep -c '^@misc{'` on the **staged** ledger. A message with no such
+    count passes — *this is not a demand to quote figures, it is a refusal to quote wrong ones.*
+
+    Three arms measured on fixtures before wiring: wrong count `rc=1`, right count `rc=0`, no count
+    `rc=0`.
+    """
+    body = _MSGCOUNT.read_text(encoding="utf-8")
+    assert 'git show ":$bib"' in body, (
+        "the STAGED ledger is the subject; the working tree describes a file nobody is landing"
+    )
+    assert "grep -c '^@misc{'" in body, (
+        "anchored, matching the gate's own count — unanchored counts a quotation as a warrant"
+    )
+    assert "asserts no ledger count" in body, "a message with no count must pass, not be demanded"
+    hook = (_DIST.parent / ".githooks" / "commit-msg").read_text(encoding="utf-8")
+    assert "message_counts.sh" in hook, "the checker must be invoked, not merely present"
+    assert "cannot verify counts, commit refused" in hook, (
+        "an absent checker refuses rather than skips; a skip and a pass are indistinguishable"
     )
