@@ -1368,3 +1368,29 @@ def test_every_refusal_site_carries_its_own_detail() -> None:
     assert 'note_failure "$md: headings unreachable to mdstruct" "$_mdlog"' in body, (
         "verify names the swallowed heading and its line; /dev/null discarded exactly that"
     )
+
+
+def test_the_poll_detects_a_duplicate_revision_number() -> None:
+    """⚑⚑⚑ `§V` HAS NO ALLOCATOR, TWO ROWS COLLIDED TWICE, AND NOTHING CHANGED IN BETWEEN.
+
+    Rev 12 recorded it — `gabion` filed 10 and `linux-sources` 11 while the dispatcher was writing
+    another 10 — and rev 19 hit it again, `gabion`'s 18 reaching `HEAD` first. **Both were resolved
+    by renumbering BY HAND.** ⚑ A finding recorded twice and never repaired is being treated as
+    decoration.
+
+    ⚑⚑ THE POLL READS `§V` BY COLUMN (`--col 2 --starts FREEZE`) AND NEVER BY ROW NUMBER, so a
+    duplicate index was invisible to it: the log stays **structurally valid** and becomes
+    **semantically ambiguous**, and `mdstruct` sees only the first. A leg citing that revision
+    cites two rows.
+
+    ⚑ AND THE DEFECT IS SELF-CLEARING BY MANUAL LABOUR, which is why it survived — by the time
+    anyone looks, whoever noticed has already renumbered. **Both arms measured on fixtures before
+    this was written**: a table with rows `1 2 2` reports `2`; one with `1 2 3` reports nothing.
+    A duplicate-detector that never fires is a print statement wearing a control's name.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "uniq -d" in body, "the poll must detect a repeated revision index"
+    assert "DUPLICATE REVISION NUMBER" in body, "and must report it rather than resolve it"
+    assert "sort -n | uniq -d" in body, (
+        "numeric sort before uniq -d: lexical order groups 1, 10, 11 and misses 2, 2"
+    )

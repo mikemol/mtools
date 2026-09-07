@@ -339,6 +339,25 @@ else
         # event. Measured the moment the roster went terminal: no such row exists and §S's own
         # heading still reads NOT YET CALLED. ⚑ A satisfied precondition read as the event is this
         # repository's own green-over-nothing, in the poll that exists to refuse it.
+        # ⚑⚑⚑ `§V` HAS NO ALLOCATOR AND TWO ROWS HAVE COLLIDED TWICE. Rev 12 recorded it —
+        # `gabion` filed 10 and `linux-sources` 11 while this dispatcher was writing another 10 —
+        # and rev 19 hit it again, `gabion`'s 18 reaching `HEAD` first. **Both were resolved by
+        # renumbering BY HAND, and nothing between the two recurrences changed.**
+        # ⚑⚑ A FINDING RECORDED TWICE AND NEVER FIXED IS BEING TREATED AS DECORATION. The poll
+        # reads `§V` by COLUMN (`--col 2 --starts FREEZE`) and never by row number, so a duplicate
+        # index is invisible to it: the log stays STRUCTURALLY VALID and becomes SEMANTICALLY
+        # AMBIGUOUS, which is `linux-sources`' formulation and `mdstruct` sees only the first.
+        # ⚑ THE DEFECT IS SELF-CLEARING BY MANUAL LABOUR, which is why it survived: by the time
+        # anyone looks, whoever noticed has already renumbered. MEASURED on two fixtures before
+        # this was written — a table with rows `1 2 2` reports `2`; one with `1 2 3` reports
+        # nothing. Both arms, because a duplicate-detector that never fires is a print statement.
+        _dups=$("$md" rows "$census" 2>/dev/null \
+            | sed -n 's/^  table 1  \([0-9]*\) .*/\1/p' | sort -n | uniq -d | tr '\n' ' ')
+        if [ -n "$_dups" ]; then
+            echo "  ⚑ §V CARRIES DUPLICATE REVISION NUMBER(S): ${_dups}"
+            echo "    Two parties allocated one index. The log is structurally valid and"
+            echo "    semantically ambiguous; a leg citing that revision cites two rows."
+        fi
         if "$md" rows "$census" --col 2 --starts "FREEZE" >/dev/null 2>&1; then
             echo "  ⚑ FROZEN — roster terminal AND §V carries the row. Cross-reading is the point."
         else

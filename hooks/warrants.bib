@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-poll-detects-a-duplicate-revision-number,
+  section = {bar-fires},
+  claim   = {Two parties allocated one revision index twice, both resolved by hand, and the poll read the log by column so a duplicate was invisible: structurally valid and semantically ambiguous},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_detects_a_duplicate_revision_number}
+}
+
 @misc{hooks-bar-fires-every-refusal-site-carries-its-own-detail,
   section = {bar-fires},
   claim   = {Six refusals named a claim and discarded the finding that proved it, including a verify whose entire output is the list of swallowed headings sent to /dev/null},
