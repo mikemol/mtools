@@ -648,17 +648,75 @@ else
                 echo "    HEAD EXCEEDS §S: an accounting that an admission outgrew. §D forbids"
                 echo "    amending it; this line exists so the divergence is read rather than found."
             else
-                _elsewhere=$(sed -n '/^## §S/,/^## §[^S]/p' "$census" 2>/dev/null \
-                    | grep -ciE 'filed elsewhere')
+                # ⚑⚑⚑ COUNT THE MARK IN A TABLE CELL, NEVER THE STRING IN A SECTION. This was
+                # `grep -ciE 'filed elsewhere'` over a `sed` range and it reported the count as
+                # `surveyor(s)`. It counts neither surveyors nor rows: it counts LINES CARRYING A
+                # SUBSTRING, over a range that includes every paragraph explaining what the mark
+                # is for. MEASURED on `CENSUS-vfs.md`: 11 against a roster of 8, and the file's own
+                # §S prose documents walking into it twice while writing that prose.
+                # ⚑⚑ A TABLE USED AS AN INSTRUMENT ACCRETES MENTIONS OF ITS OWN TRIGGER — recorded
+                # at mdstruct/src/mikemol/mdstruct/tables.py:137, and `rows --where` carries the
+                # same lesson in its docstring: *--where asks whether any cell MENTIONS a term,
+                # --starts asks whether one column DECLARES it.* The right instrument existed and
+                # its documentation was written about this exact failure.
+                # ⚑ FOUR PARTIES CONVERGED ON THIS REPAIR INDEPENDENTLY. `vfs_census` scored ten of
+                # nineteen rows on prose in comments and string literals before the same fix; its
+                # repair was to reach the read through a Call node rather than a text match.
+                # Structure, not text, in both cases.
+                #
+                # ⚑ TWO-ARMED BEFORE IT WAS WRITTEN, because a one-armed test passes a broken-shut
+                # gate. On `CENSUS-vfs.md`: intact -> 8 (equals the roster); one surveyor's mark
+                # deleted -> 7 (the dropped row IS seen); one sentence of prose mentioning the mark
+                # added -> 8 (unmoved). The old grep read 11 / 10 / 12 on those same three.
+                # ⚑⚑⚑ ZERO MATCHES EXITS rc=1 AND WRITES TO stderr, so there is no `row(s)` line
+                # to capture and the substitution yields EMPTY, not `0`. An empty string then flows
+                # into `-ge` as a syntax error or a silent 0 depending on the shell's mood. MEASURED
+                # the first time this arm ran: `CENSUS-build-hermeticity.md` printed
+                # `§S marks:  (cells declaring the mark, col 1)` — a blank where a number belongs.
+                # ⚑⚑ THE `:-0` IS NOT A PAPERING-OVER, BECAUSE THE TWO CASES ARE NOW DISTINGUISHED
+                # BELOW. A count of zero and a query that could not run are different facts, and
+                # the old arm's grep could not tell them apart either — it just never showed one.
+                _elsewhere=$("$md" rows "$census" --col 1 --starts 'filed elsewhere' 2>/dev/null \
+                    | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
+                _elsewhere=${_elsewhere:-0}
+                # ⚑⚑⚑ THE MARK'S VOCABULARY IS NOT UNIFORM ACROSS CENSUSES, and only a prefix
+                # predicate could reveal it. `CENSUS-build-hermeticity.md` §S says
+                # `filed (authored elsewhere under an operator's...)` — the mark inside a
+                # parenthetical rather than at the head of the cell. `--starts` correctly reports
+                # no match; the old substring grep matched it anywhere and read six phrasings as
+                # one. ⚑ A SUBSTRING SEARCH CANNOT DISCOVER THAT ITS TERM HAS DIALECTS, because
+                # every dialect satisfies it. This arm names the shortfall instead of absorbing it.
+                _anywhere=$("$md" rows "$census" --where 'elsewhere' 2>/dev/null \
+                    | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
+                _anywhere=${_anywhere:-0}
                 _gap=$((roster - n_head))
-                if [ "${_elsewhere:-0}" -ge "${_gap:-0}" ] && [ "${_elsewhere:-0}" -gt 0 ]; then
-                    echo "    §S EXCEEDS HEAD, AND IT IS ACCOUNTED FOR: $_elsewhere surveyor(s)"
-                    echo "    marked 'filed elsewhere' are rostered here and file into their own"
-                    echo "    tree. Absent from this directory BY DESIGN, not a dropped row."
+                # ⚑⚑⚑ EVERY COMPONENT OF THE ASSERTED EXPRESSION IS PRINTED, NOT JUST ITS VERDICT.
+                # The old branch asserted `_elsewhere >= _gap` and printed only `_elsewhere`, so a
+                # reader got a conclusion with one operand invisible and no way to check the
+                # comparison that produced it. THAT IS WHY THE WRONG POPULATION SURVIVED: the
+                # number on screen was not the number doing the work.
+                # ⚑⚑ A PRINTED EXPRESSION IS A PROOF-CARRYING ARTIFACT — or a disproof-carrying
+                # one, which is the half that matters: a reader can falsify it from the line alone,
+                # without re-deriving anything. An asserted verdict with hidden operands can only
+                # be trusted or doubted.
+                echo "    §S marks: $_elsewhere (col-1 cells DECLARING it; $_anywhere mention it anywhere)"
+                echo "    gap:      $_gap = roster $roster - HEAD legs $n_head"
+                # ⚑ THE THIRD OUTCOME, AND IT IS NOT A FAILURE. When no cell declares the mark but
+                # some row mentions it, this reader cannot adjudicate the file — that is INVALID,
+                # not FALSE, and reporting it as a dropped row would be a statement about the
+                # reader dressed as a finding about the census. The same three-state discipline
+                # this fleet applies to lease identity and to absence claims.
+                if [ "${_elsewhere:-0}" -eq 0 ] && [ "${_anywhere:-0}" -gt 0 ]; then
+                    echo "    UNADJUDICATED: 0 cells declare the mark, $_anywhere mention it. This"
+                    echo "    census phrases the mark differently — a prefix reader cannot settle"
+                    echo "    it, and calling it a dropped row would report the READER, not the file."
+                elif [ "${_elsewhere:-0}" -ge "${_gap:-0}" ] && [ "${_elsewhere:-0}" -gt 0 ]; then
+                    echo "    ACCOUNTED: $_elsewhere >= $_gap — every unfiled surveyor is rostered"
+                    echo "    here and files into its own tree. Absent BY DESIGN, not a dropped row."
                 else
-                    echo "    §S EXCEEDS HEAD BY $_gap AND ONLY $_elsewhere ROW(S) SAY WHY."
-                    echo "    A rostered surveyor with no leg here and no 'filed elsewhere' mark"
-                    echo "    is a DROPPED ROW — the one shape this arm exists to catch."
+                    echo "    DROPPED ROW: $_elsewhere < $_gap — $_gap surveyor(s) have no leg here"
+                    echo "    and only $_elsewhere say why. A rostered surveyor with neither is the"
+                    echo "    one shape this arm exists to catch."
                 fi
             fi
         fi

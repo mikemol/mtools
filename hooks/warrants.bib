@@ -1931,3 +1931,49 @@
             revision row as a roster row because the line contained the prefix.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_apex_probe_reads_a_column_rather_than_grepping_a_phrase},
 }
+
+@misc{hooks-bar-fires-asserted-comparisons-print-both-operands,
+  section = {bar-fires},
+  title  = {A gate that asserts an expression must print that expression's components},
+  claim  = {The poll's roster arm asserted that the count of accounted surveyors was at least the
+            gap between the roster and the legs in HEAD, and printed only the first of those two
+            numbers. A reader therefore received a verdict with one operand invisible and no way
+            to check the comparison that produced it. That is how the arm's population error
+            survived: the count was of lines carrying a substring over a text range that included
+            every paragraph explaining the mark, so it read thirteen against a roster of eight and
+            then eleven after unrelated prose edits, and both figures passed the comparison. A
+            count that moves when prose is edited is not counting surveyors, and one printed
+            operand could not reveal that while the other stayed hidden. Printing every component
+            of an asserted expression makes the line a proof-carrying artifact, or a
+            disproof-carrying one, which is the half that earns it: a reader can falsify the claim
+            from the line alone without re-deriving anything or trusting the deriver, where an
+            asserted verdict with hidden operands can only be believed or doubted. The arm asserts
+            the shape rather than the single call site, so a future branch added with a hidden
+            operand fails at the point of writing rather than three ticks later when its figure
+            happens to be absurd on its face.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_asserted_comparisons_print_both_operands},
+}
+
+@misc{hooks-bar-fires-roster-mark-is-read-from-a-cell-not-a-substring,
+  section = {bar-fires},
+  title  = {Count the mark in a table cell, never the string in a section},
+  claim  = {The roster arm counted the filed-elsewhere mark with a case-insensitive line count over
+            a stream-edited range and reported the result as a number of surveyors. It counted
+            neither surveyors nor rows but lines carrying a substring, over a range that included
+            the prose explaining the mark, so the vfs census read eleven against a roster of eight
+            while that file's own filing-status section documented walking into the same trap twice
+            in the course of writing the paragraph about it. A table used as an instrument accretes
+            mentions of its own trigger, which the markdown table reader records at its own site and
+            carries in the row filter's docstring: a substring filter asks whether any cell mentions
+            a term, a prefix filter asks whether one column declares it. The right instrument
+            existed and its documentation was written about this exact failure. Four parties reached
+            the same repair independently from different corpora, one of them a conduit census that
+            scored ten of nineteen rows on prose in comments and string literals and repaired it by
+            reaching the read through a call node rather than a text match. The prefix predicate
+            also discovered what the substring could not: the mark's wording is not uniform across
+            censuses, one phrasing placing it inside a parenthetical, and a substring search cannot
+            discover that its term has dialects because every dialect satisfies it. The poll now
+            reports that case as unadjudicated rather than absorbing it, because a reader that
+            cannot settle a question must say so rather than report a finding about itself.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_roster_mark_is_read_from_a_cell_not_a_substring},
+}

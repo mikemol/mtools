@@ -1977,7 +1977,14 @@ def test_the_poll_diagnoses_the_roster_divergence_by_sign_not_by_one_sentence() 
     body = _POLL.read_text(encoding="utf-8")
     assert "HEAD EXCEEDS §S" in body, "the over-sign keeps the outgrown-accounting diagnosis"
     assert "filed elsewhere" in body, "the under-sign must check the cause, not narrate it"
-    assert "is a DROPPED ROW" in body, "an unexplained under-sign is the shape worth catching"
+    # ⚑⚑ THE LITERAL MOVED WHEN THE VERDICT LINE STARTED PRINTING ITS OPERANDS: `is a DROPPED ROW`
+    # became `DROPPED ROW: $_elsewhere < $_gap`. **The behaviour this arm asserts was preserved and
+    # its string was not**, so the arm went red on a change that strengthened its subject — which is
+    # the correct direction for that failure. Caught twice independently in the same run: here, and
+    # by the vacuity sweep reporting the literal absent from the file this arm reads.
+    # ⚑ ANCHORED ON THE VERDICT WORD RATHER THAN THE SENTENCE, because the sentence around a verdict
+    # is where operands and explanations accrete, and this arm is about the verdict existing.
+    assert "DROPPED ROW:" in body, "an unexplained under-sign is the shape worth catching"
     # ⚑ THE SIGN MUST BE TESTED, not merely mentioned. A body naming both outcomes while emitting
     # one unconditionally is exactly the defect this arm repairs, one level out.
     assert 'if [ "${n_head:-0}" -gt "${roster:-0}" ]' in body, (
@@ -3329,4 +3336,109 @@ def test_the_apex_probe_reads_a_column_rather_than_grepping_a_phrase() -> None:
     assert "--col 1 --starts" in commands, (
         "the apex slot must be read by column position, not by grepping a phrase that survives "
         "in the record of its own removal"
+    )
+
+
+def test_asserted_comparisons_print_both_operands() -> None:
+    """⚑⚑⚑ ANYWHERE A GATE ASSERTS AN EXPRESSION, IT MUST PRINT THAT EXPRESSION'S COMPONENTS.
+
+    The poll's roster arm asserted `_elsewhere >= _gap` and printed only `_elsewhere`. A reader got
+    a verdict with one operand invisible and no way to check the comparison that produced it — so
+    when `_elsewhere` turned out to count the wrong population entirely, **the number on screen was
+    never the number doing the work, and nothing on the line could reveal that.**
+
+    ⚑⚑ MEASURED, AND THE MEASUREMENT IS THE ARGUMENT: the arm reported `13 surveyor(s)` against a
+    roster of 8, then `11` after unrelated prose edits, because it counted lines-carrying-a-
+    substring over a text range that included every paragraph explaining the mark. Both figures
+    passed the comparison. **A count that moves when you edit prose is not counting surveyors**,
+    and one printed operand could not show that while the other stayed hidden.
+
+    ⚑ A PRINTED EXPRESSION IS A PROOF-CARRYING ARTIFACT — or a DISPROOF-carrying one, which is the
+    half that earns it: a reader can falsify the claim from the line alone, without re-deriving
+    anything or trusting the deriver. An asserted verdict with hidden operands can only be believed
+    or doubted, and this corpus has measured what happens to claims that offer no third option.
+
+    ⚑ THE ARM IS ABOUT THE SHAPE, NOT THIS ONE SITE. It requires that every branch which announces
+    an accounting verdict names both sides of its comparison. A future arm added with a hidden
+    operand fails here rather than three ticks later when its figure is absurd on its face.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the verdict lines this arm is about must still exist, or the assertions
+    # below pass because the branch vanished rather than because it prints its operands.
+    # ⚑ SPLIT, AND PT018 IS RIGHT FOR THIS ARM'S OWN REASON: a composite assertion reports that the
+    # conjunction failed without saying WHICH conjunct — a verdict with a hidden operand, which is
+    # the exact defect this arm exists to forbid. The checker caught me writing it here.
+    assert "ACCOUNTED:" in commands, (
+        "the accounted-for verdict must still be emitted; this arm would pass on its absence"
+    )
+    assert "DROPPED ROW:" in commands, (
+        "the dropped-row verdict must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑ BOTH OPERANDS ARE NAMED ON THE VERDICT LINE ITSELF, not merely computed above it.
+    for verdict in ("ACCOUNTED:", "DROPPED ROW:"):
+        line = next(ln for ln in commands.splitlines() if verdict in ln)
+        assert "$_elsewhere" in line, (
+            f"the {verdict} line asserts a comparison but does not print its LEFT operand: "
+            f"{line.strip()}"
+        )
+        assert "$_gap" in line, (
+            f"the {verdict} line asserts a comparison but does not print its RIGHT operand: "
+            f"{line.strip()}"
+        )
+    # ⚑ AND THE GAP IS PRINTED AS ITS OWN DERIVATION, so a reader can check the subtraction rather
+    # than accept a difference. `roster` and `n_head` are the two facts it comes from.
+    assert "$_gap = roster $roster - HEAD legs $n_head" in commands, (
+        "the gap must be printed with the subtraction that produced it, not as a bare number"
+    )
+
+
+def test_roster_mark_is_read_from_a_cell_not_a_substring() -> None:
+    """⚑⚑⚑ COUNT THE MARK IN A TABLE CELL, NEVER THE STRING IN A SECTION.
+
+    The roster arm counted `filed elsewhere` with `grep -ciE` over a `sed` range and reported the
+    result as `surveyor(s)`. It counted neither: it counted **lines carrying a substring**, over a
+    range including the prose that explains the mark. `CENSUS-vfs.md` read 11 against a roster of
+    8, and that file's own `§S` documents walking into the same trap twice *while writing the
+    paragraph about it*.
+
+    ⚑⚑ A TABLE USED AS AN INSTRUMENT ACCRETES MENTIONS OF ITS OWN TRIGGER — recorded at
+    `mdstruct/src/mikemol/mdstruct/tables.py:137`, and `table_rows` carries the discriminator in
+    its own docstring: *`--where` asks whether any cell MENTIONS a term, `--starts` asks whether
+    one column DECLARES it.* **The right instrument existed, its documentation was written about
+    this exact failure, and the arm used a text search anyway.**
+
+    ⚑ FOUR PARTIES CONVERGED ON THE SAME REPAIR INDEPENDENTLY, from different corpora: a peer's
+    conduit census scored ten of nineteen rows on prose in comments and string literals and
+    repaired it by reaching the read through a Call node. Structure, not text, in both cases.
+
+    ⚑⚑ AND THE PREFIX PREDICATE DISCOVERED SOMETHING THE SUBSTRING COULD NOT: the mark's wording is
+    **not uniform across censuses**. One phrases it `filed (authored elsewhere ...)`, with the mark
+    inside a parenthetical. A substring search cannot discover that its term has dialects, because
+    every dialect satisfies it — so the poll now reports UNADJUDICATED rather than absorbing the
+    difference into a count.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the roster diagnosis must still run, or every assertion below is vacuous.
+    assert "§S DESCRIBES" in commands, (
+        "the roster diagnosis must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑ THE MARK IS READ AS A COLUMN DECLARATION.
+    assert "--col 1 --starts 'filed elsewhere'" in commands, (
+        "the roster mark must be counted as a column-1 declaration, not as a substring anywhere "
+        "in the section — prose explaining the mark is not a surveyor"
+    )
+    # ⚑ NO SUBSTRING COUNT OF THE MARK SURVIVES ANYWHERE IN THE POLL.
+    assert "grep -ciE 'filed elsewhere'" not in commands, (
+        "a substring count of the roster mark counts the prose that explains it"
+    )
+    # ⚑ THE THIRD OUTCOME EXISTS. A reader that cannot settle the question must say so rather than
+    # report a dropped row, which would be a statement about the reader dressed as a finding.
+    assert "UNADJUDICATED:" in commands, (
+        "a census whose mark this reader cannot parse must report UNADJUDICATED, not a dropped row"
     )
