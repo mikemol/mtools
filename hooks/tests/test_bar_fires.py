@@ -1299,3 +1299,33 @@ def test_the_gate_ends_on_a_decision_not_on_an_echo() -> None:
         "the gate must end on an explicit decision; a trailing command appended later would "
         "otherwise become its exit status"
     )
+
+
+def test_the_gate_retains_a_refusal_record() -> None:
+    """⚑⚑⚑ TWO CENSUS LEGS CLAIMED THE REFUSAL DATA EXISTED. MEASURED: IT DID NOT.
+
+    `MT-06` row 1 and `MT-K4` both state that this gate emits a refusal account on every failure
+    and nothing aggregates them — filed as *the population was never named*, with the data asserted
+    present and only the reader missing. ⚑ MEASURED in the log directory: **17 files, 0 containing
+    a refusal**, because every run OVERWRITES them.
+
+    ⚑⚑ **THE MISSING PIECE WAS RETENTION, NOT A READER, AND THE WRONG ONE WAS NAMED TWICE.** A
+    reader built against that claim would have found an empty population and reported **zero peer
+    refusals** — a confident answer over a corpus that does not exist, which is this session's own
+    recurring defect arriving inside the repair for it.
+
+    MEASURED, three arms, on a fixture before the gate was changed: a PASS writes nothing; a
+    refusal appends one line; a second refusal APPENDS rather than overwrites.
+
+    ⚑ Append-only with no pruning: a rotation policy decides what may be forgotten and this gate
+    has no standing to make that decision. Growth is bounded by how often the gate refuses, which
+    is the quantity being measured.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "REFUSALS.tsv" in body, "a refusal must leave a durable record"
+    assert '>> "$_refusal_log"' in body, (
+        "the record must APPEND; a truncating write reproduces the defect being repaired"
+    )
+    refusal_at = body.index("_refusal_log=")
+    verdict_at = body.index('say "REFUSED')
+    assert refusal_at < verdict_at, "the record is written before the verdict is printed"

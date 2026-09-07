@@ -655,6 +655,26 @@ fi
 # ⚑ THE CAUSE IS RESTATED AT THE POINT OF REFUSAL, because that is where a reader is looking.
 # A refusal that does not name its cause is read as a glitch, and a glitch is what gets bypassed.
 if [ "$fail" -ne 0 ]; then
+    # ⚑⚑⚑ THE REFUSAL IS RECORDED, BECAUSE THE DATA I CLAIMED EXISTED DID NOT. Two of this
+    # repository's own census legs (`MT-06` row 1, `MT-K4`) state that the gate emits a refusal
+    # account on every failure and nothing aggregates them — filed as *the population was never
+    # named*, with the data said to be present. ⚑ MEASURED: the log directory holds **17 files, 0
+    # containing a refusal**, because every run OVERWRITES them. There was no corpus to aggregate.
+    #
+    # ⚑⚑ SO THE MISSING PIECE WAS RETENTION, NOT A READER, and I had named the wrong one twice.
+    # A reader built against that claim would have found an empty population and reported zero
+    # peer refusals — a confident answer over a corpus that does not exist, which is this session's
+    # own recurring defect arriving in the repair for it.
+    #
+    # ⚑ APPEND-ONLY, ONE LINE PER REFUSAL, NO PRUNING. A rotation policy is a decision about what
+    # may be forgotten and this gate has no standing to make it; growth is bounded by how often
+    # the gate refuses, which is the quantity being measured.
+    _refusal_log="$_witness_logs/REFUSALS.tsv"
+    printf '%s\t%s\t%s\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        "$(git config user.email 2>/dev/null || echo unknown)" \
+        "$(printf '%s' "$failed_checks" | tr '\n' ' ' | sed 's/  */ /g')" \
+        >> "$_refusal_log" 2>/dev/null || true
     say "REFUSED — the following check(s) failed:${failed_checks:-
   (unattributed: a check set the failure flag without naming itself)}"
     # ⚑ THE ACCOUNT IS REPLAYED UNDER THE VERDICT, not left where it was printed. A reader who

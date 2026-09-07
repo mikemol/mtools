@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-gate-retains-a-refusal-record,
+  section = {bar-fires},
+  claim   = {Two census legs claimed the refusal data existed and nothing aggregated it: measured 17 log files, 0 refusals, because every run overwrites. The missing piece was RETENTION, not a reader},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_retains_a_refusal_record}
+}
+
 @misc{hooks-bar-fires-gate-ends-on-a-decision-not-on-an-echo,
   section = {bar-fires},
   claim   = {The success path exited on a printf's status: the last command wins, and a wrapper's last command is almost never the work},
