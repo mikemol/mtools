@@ -2169,3 +2169,53 @@
             reader-relative line correctly reports its own blindness rather than the document's.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_reads_each_census_against_its_own_declared_vocabulary},
 }
+
+@misc{hooks-bar-fires-vocabulary-reading-not-gated-on-divergence,
+  section = {bar-fires},
+  title  = {A census can agree on totals and still use a state it never declared},
+  claim  = {The vocabulary reading was emitted inside the branch that fires when the status section
+            and the legs in HEAD disagree, which is right for a divergence diagnosis and wrong for a
+            classification, because those are independent questions that happened to share a branch.
+            One census has seven rostered parties and seven legs in HEAD, so it agrees, so the block
+            was skipped entirely and that census printed neither the reading nor the refusal,
+            leaving a reader unable to distinguish a clean census from an unreached one. The symbol
+            carried into this tick named the wrong cause and survived a tick on it: it said the
+            status-table finder missed a three-column header spelling, and it did, but that was
+            never why the census was silent, and repairing the finder alone would have left the
+            silence while reading as a repair. The finder is repaired here as well, as a predicate
+            rather than a longer list: the first column names a party and the second names a state,
+            anything after being description, measured against all twenty-five distinct table
+            headers in the corpus with both arms passing twelve of twelve. The false-positive arm
+            earned the boundary, since two headers open with a party word and are not status tables,
+            so a widened list would have classified a roster against a state vocabulary. The freeze
+            summary is refused deliberately: the first expectation listed it as a table to take and
+            the predicate was right to leave it, because the poll's own prose calls it a summary of
+            the status section rather than a second roster, and taking both would make the
+            last-match rule arbitrary between two tables answering different questions.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_vocabulary_reading_is_not_gated_on_the_divergence_branch},
+}
+
+@misc{hooks-bar-fires-witness-reads-the-artifact-not-the-exit-status,
+  section = {bar-fires},
+  title  = {An exit status is not a verdict about the subject},
+  claim  = {The domain witness carries two comments warning that a reporter's status must not stand
+            in for the subject's, one about a closed pipe making bazel's death the verdict and one
+            about a wrapper reporting itself, and between them it read bazel's exit code as the
+            target's health. It refused a correct commit on that reading: six targets were reported
+            red before the probe while bazel printed a passing test tally and its own success line.
+            Bazel had exited thirty-eight because its build event upload failed, the telemetry
+            Service having been deleted after the node hit disk pressure and evicted fifty-seven
+            pods. The sink was gone and the tests were green. The behaviour was reproduced
+            deliberately rather than inferred, by pointing the build event backend at a closed port
+            over a passing target. The first repair was wrong in the direction that hides defects:
+            it asked whether a failure line was present and treated its absence as green, and the
+            second arm refuted it in one run, because a request for a nonexistent target exits
+            nonzero and prints an error carrying none of the failure markers, so a missing target
+            read as clean. The predicate is therefore positive rather than negative: bazel must
+            state its own success and print a test tally, and anything else with a nonzero status is
+            reported as unexplained rather than absorbed into either verdict. It is deliberately not
+            keyed on the specific exit code, because keying on the number would make the next
+            infrastructure code a false red, and this witness can no more enumerate bazel's exit
+            codes than an arm here could enumerate a census's declared state vocabulary.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_witness_reads_bazels_artifact_not_its_exit_status},
+}

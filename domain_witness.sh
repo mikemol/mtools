@@ -201,9 +201,53 @@ esac
 fail=0
 say() { printf '  %s\n' "$*"; }
 
+# ⚑⚑⚑ AN EXIT STATUS IS NOT A VERDICT ABOUT THE SUBJECT, AND THIS FILE ALREADY SAYS SO TWICE
+# BELOW — about SIGPIPE, and about a wrapper reporting itself — while reading `bazel test`'s rc as
+# the target's health. MEASURED, and it refused a correct commit: six targets reported
+# `CONTROL FAILED: red BEFORE the probe` while `bazel test` printed **`1 test passes`** and
+# **`Build completed successfully`**. Bazel exited **38** because its Build Event Protocol upload
+# to a telemetry endpoint failed — the sink was down, the tests were green.
+# ⚑⚑ REPRODUCED DELIBERATELY rather than inferred: `--bes_backend=grpc://127.0.0.1:1` on a passing
+# target gives rc=38 with `Executed 0 out of 1 test: 1 test passes`. A genuinely failing suite gives
+# rc=3, and a build error gives rc=1. **The codes are distinct and only one of them is about the
+# tree.**
+# ⚑ SO THE VERDICT IS READ FROM THE ARTIFACT, NOT THE STATUS. `_bazel_green` runs the test,
+# captures what bazel SAID, and reports red only when bazel reports a failure — a nonzero rc whose
+# output carries no failure line is an infrastructure fault and is announced as one rather than
+# charged to the repository.
+# ⚑⚑ AND IT IS NOT `rc == 38 ? ok : red`, DELIBERATELY. Keying on the number would make the next
+# infrastructure code a false red, and this witness cannot enumerate bazel's exit codes any more
+# than it could enumerate a census's state vocabulary. The artifact is the population.
+_bazel_green() {
+    _bg_out="$(bazel test "$1" 2>&1)"
+    _bg_rc=$?
+    if [ "$_bg_rc" -eq 0 ]; then
+        return 0
+    fi
+    # ⚑⚑⚑ GREEN REQUIRES BAZEL TO SAY IT SUCCEEDED — not merely to omit a failure. A first draft
+    # asked whether a FAILURE line was present and treated its absence as green; the second arm
+    # refuted it immediately. `bazel test //hooks:no_such_target` exits 1 and prints
+    # `ERROR: no such target` with **no `Exit N`, no `BUILD FAILURE`, no `FAILED in`** — so a
+    # missing target read as CLEAN. That is the direction that hides defects, and it is why the
+    # allow-arm exists rather than only the deny-arm.
+    # ⚑⚑ SO THE PREDICATE IS POSITIVE: bazel must have printed its own success line AND a test
+    # tally. Anything else with a nonzero status is unexplained, and unexplained is reported rather
+    # than absorbed into either verdict.
+    if ! printf '%s' "$_bg_out" | grep -q 'Build completed successfully'; then
+        return 1
+    fi
+    if ! printf '%s' "$_bg_out" | grep -qE 'tests?: [0-9]+ tests? pass|test passes'; then
+        return 1
+    fi
+    say "⚑ bazel exited $_bg_rc with NO failure line — the run did not fail, something after it did"
+    say "  (measured: a dead Build Event Protocol sink gives rc=38 over a passing suite)"
+    printf '%s' "$_bg_out" | sed -n 's/^ERROR: \(.*\)/    bazel said: \1/p' | head -2
+    return 0
+}
+
 # ⚑ THE CONTROL RUNS FIRST AND MUST PASS. An arm measured against an already-red tree reports the
 # pre-existing failure as its own finding — and every subsequent arm agrees for the wrong reason.
-if ! bazel test "$target" >/dev/null 2>&1; then
+if ! _bazel_green "$target"; then
     say "CONTROL FAILED: $target is red BEFORE the probe — the arms below would be meaningless"
     exit 1
 fi
@@ -300,7 +344,7 @@ esac
 # it is green whenever anyone checks it directly.
 # ⚑ THAT IS THIS REPOSITORY'S OWN RULE 25 IN THE WITNESS BUILT TO ENFORCE ITS FAMILY: a string
 # match answers "does this word appear", and the question was "did this target refuse".
-if ! bazel test "$target" >/dev/null 2>&1; then
+if ! _bazel_green "$target"; then
     say "arm 2 VERDICT: a $probe_kind defect in $victim fails $target"
 else
     # ⚑ THE TWO EXPLANATIONS ARE NAMED, because this arm cannot tell them apart and a message that
@@ -324,7 +368,7 @@ if [ "$after_image" != "$before_image" ]; then
     say "  before=${before_image:-<unmeasured>} after=${after_image:-<unreadable>}"
     say "  ⚑ this is this witness's own residue. Run: git checkout $victim"
     fail=1
-elif bazel test "$target" >/dev/null 2>&1; then
+elif _bazel_green "$target"; then
     say "arm 3 RESTORED: $dist is green again"
 else
     # ⚑ NOT A RESTORE FAILURE, AND SAYING SO IS THE POINT. The victim is byte-identical to what

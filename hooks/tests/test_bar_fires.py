@@ -3651,7 +3651,12 @@ def test_the_poll_reads_each_census_against_its_own_declared_vocabulary() -> Non
         "with no caller is a component whose own packager does not use it"
     )
     # ⚑ AND THE DOCUMENT-RELATIVE READING IS PRINTED BESIDE THE READER-RELATIVE ONE.
-    assert "match a state this census publishes" in commands, (
+    # ⚑⚑ THE LITERAL MOVED WHEN THE READING WAS LIFTED OUT OF THE DIVERGENCE BRANCH: the phrase
+    # `declared:` became `§S vocabulary:` and the emission now runs for every census rather than
+    # only the diverging ones. **The behaviour this arm asserts was strengthened and its string
+    # changed**, so it went red on an improvement — the correct direction, and caught twice in one
+    # run, here and by the vacuity sweep reporting the literal absent from the file this arm reads.
+    assert "§S vocabulary:" in commands, (
         "the document-relative count must be printed; where it disagrees with the probes is the "
         "only place a state used-but-never-declared can show up"
     )
@@ -3659,4 +3664,107 @@ def test_the_poll_reads_each_census_against_its_own_declared_vocabulary() -> Non
     assert "publishes no state|means table" in commands, (
         "a census with no vocabulary cannot be read against one, and that is a fact about the "
         "document rather than a clean result"
+    )
+
+
+def test_the_vocabulary_reading_is_not_gated_on_the_divergence_branch() -> None:
+    """⚑⚑⚑ A CENSUS CAN AGREE ON TOTALS AND STILL USE A STATE IT NEVER DECLARED.
+
+    The vocabulary reading was emitted inside the branch that fires when `§S` and HEAD DISAGREE.
+    That is right for a divergence diagnosis and wrong for a classification: they are independent
+    questions that happened to share a branch. **`CENSUS-deps-build.md` has 7 rostered and 7 legs
+    in HEAD, so it agrees, so the whole block was skipped** — and that census printed no reading and
+    no refusal, leaving a reader unable to tell a clean census from an unreached one.
+
+    ⚑⚑ I NAMED THE WRONG CAUSE FOR A TICK AND THE SYMBOL SURVIVED ON IT. The carried finding said
+    the §S table-finder missed `party | status | evidence`, and it did — that is repaired here too,
+    as a measured predicate rather than a longer list. **But the finder was never why deps-build
+    was silent**, and fixing it alone would have left the silence while reading as a repair.
+
+    ⚑ THE FINDER IS NOW A PREDICATE: column 0 names a party, column 1 names a state, anything after
+    is description. Measured against all 25 distinct table headers in the corpus, two-armed, 12 of
+    12. The false-positive arm earned the boundary — `surveyor | prefix | file` and `party | the
+    hole | resolution` both open with a party word and are NOT status tables, so a widened list
+    would have classified a roster against a state vocabulary.
+
+    ⚑⚑ AND `party | state at freeze` IS REFUSED DELIBERATELY. My first expectation listed it as a
+    table to take; the predicate was right to leave it. It is §G's freeze summary, which the poll's
+    own prose calls a summary of §S rather than a second roster — taking both would make the
+    last-match rule a coin-flip between two tables answering different questions.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the divergence diagnosis must still exist, or this arm passes because the
+    # branch vanished rather than because the reading was lifted out of it.
+    assert "§S DESCRIBES" in commands, (
+        "the divergence diagnosis must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑ THE READING IS EMITTED UNCONDITIONALLY FOR ANY CENSUS WITH A §S.
+    assert "§S vocabulary:" in commands, (
+        "the vocabulary reading must run for every census with a §S, not only diverging ones"
+    )
+    # ⚑ THE FINDER IS A PREDICATE OVER TWO COLUMNS, not an enumeration of header spellings.
+    assert "(surveyor|party) \\| (status|state)( \\||$)" in commands, (
+        "the §S table must be found by shape — a party column then a state column — rather than "
+        "by a hand-written list of header spellings that misses the next census"
+    )
+    # ⚑ AND THE NO-VOCABULARY CASE STILL SPEAKS, so silence never stands for either answer.
+    assert "publishes no state|means table" in commands, (
+        "a census with no vocabulary must say so; a census that prints nothing is "
+        "indistinguishable from one this reader never reached"
+    )
+
+
+def test_the_witness_reads_bazels_artifact_not_its_exit_status() -> None:
+    """⚑⚑⚑ AN EXIT STATUS IS NOT A VERDICT ABOUT THE SUBJECT, AND THE WITNESS SAID SO TWICE.
+
+    `domain_witness.sh` carries two comments warning that a reporter's status must not stand in for
+    the subject's — one about SIGPIPE closing a pipe so bazel's death becomes the verdict, one about
+    a wrapper reporting itself — **and then read `bazel test`'s exit code as the target's health.**
+
+    ⚑⚑ IT REFUSED A CORRECT COMMIT. Six targets reported `CONTROL FAILED: red BEFORE the probe`
+    while `bazel test` printed `1 test passes` and `Build completed successfully`. Bazel exited
+    **38** because its Build Event Protocol upload failed: a peer measured that the buildbuddy
+    Service object had been deleted after the node hit DiskPressure and evicted 57 pods. **The sink
+    was gone and the tests were green.**
+
+    ⚑ REPRODUCED DELIBERATELY rather than inferred — `--bes_backend=grpc://127.0.0.1:1` over a
+    passing target gives rc=38 with `Executed 0 out of 1 test: 1 test passes`.
+
+    ⚑⚑⚑ AND THE FIRST FIX WAS WRONG IN THE DIRECTION THAT HIDES DEFECTS. It asked whether a FAILURE
+    line was present and called its absence green; the second arm refuted it in one run.
+    `bazel test //hooks:no_such_target` exits 1 and prints `ERROR: no such target` with **no
+    `Exit N`, no `BUILD FAILURE`, no `FAILED in`** — so a missing target read as CLEAN. The
+    predicate is therefore POSITIVE: bazel must SAY it succeeded and print a test tally. Three arms,
+    3 of 3: dead sink → green, nonexistent target → red, working sink → green.
+
+    ⚑ NOT KEYED ON 38, DELIBERATELY. Keying on the number would make the next infrastructure code a
+    false red, and this witness can no more enumerate bazel's exit codes than an arm here could
+    enumerate a census's state vocabulary. **The artifact is the population.**
+    """
+    body = _WITNESS.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the control gate must still exist, or this arm passes because the check
+    # was deleted rather than because it reads the right thing.
+    assert "CONTROL FAILED" in commands, (
+        "the pre-probe control must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑ THE VERDICT COMES FROM WHAT BAZEL SAID.
+    assert "Build completed successfully" in commands, (
+        "green must require bazel's own success line — a nonzero status with no failure reported "
+        "is an infrastructure fault, not a red target"
+    )
+    # ⚑ AND FROM A TEST TALLY, so a build that succeeds while running no tests is not green.
+    assert "test passes" in commands, (
+        "green must also require a test tally; a successful build that ran nothing is not a "
+        "passing suite"
+    )
+    # ⚑ NO DECISION SITE READS THE BARE STATUS ANY MORE.
+    assert 'bazel test "$target" >/dev/null 2>&1' not in commands, (
+        "no decision may rest on bazel's exit status alone — that is the defect this file's own "
+        "comments warn about twice, committed in the code between them"
     )

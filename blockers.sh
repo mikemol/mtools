@@ -763,13 +763,36 @@ else
                 # probes: `§S` row count is an independent measurement, and a disagreement between
                 # it and the sum is exactly the signal the sum alone cannot produce.
                 # ⚑⚑ THE §S TABLE IS FOUND BY SHAPE, NOT BY POSITION. A census may carry a §G
-                # freeze summary with the same header, so the LAST match wins — the poll already
+                # freeze summary with a similar header, so the LAST match wins — the poll already
                 # documents that §S is the running roster and §G is a summary of it.
+                # ⚑⚑⚑ THE SHAPE WAS TWO HAND-WRITTEN ALTERNATIVES AND IT MISSED A CENSUS SILENTLY.
+                # `surveyor | status` and `party | state` were written from the files in front of
+                # their author; `CENSUS-deps-build.md` heads its §S `party | status | evidence`, a
+                # third column neither allows for. **That census printed no `declared:` line at
+                # all** — not the classified reading, not the refusal — so a reader saw six censuses
+                # answered and one silent, with nothing saying which it was. Absence and unavailable,
+                # in the table-finder every downstream figure comes from.
+                # ⚑⚑ THE REPAIR IS A PREDICATE, NOT A LONGER LIST: column 0 names a PARTY, column 1
+                # names a STATE, and anything after is description. MEASURED against every table
+                # header in the corpus — 25 distinct headers — two-armed, 12 of 12.
+                # ⚑ THE FALSE-POSITIVE ARM IS THE ONE THAT EARNED THE BOUNDARY. `surveyor | prefix
+                # | file` and `party | the hole | resolution` both open with a party word and are
+                # NOT §S tables; a widened list would have taken them and classified a roster
+                # against a state vocabulary. And `party | state at freeze` is §G — my first
+                # expectation listed it as a table to TAKE and the predicate was right to refuse
+                # it: taking both would make `last wins` a coin-flip between two tables answering
+                # different questions.
+                # ⚑⚑⚑ AND THIS FILE ALREADY KNEW. Line 285, written long before the finder existed,
+                # says in as many words: *`deps-build`'s §S is `party | status`; `constitution`'s is
+                # `surveyor | status`.* The fact was in the script, in prose, above the code that
+                # needed it — **a recorded lesson is not an applied one**, measured here for the
+                # fifth time in this tree and the first where the record and the defect are in the
+                # same file.
                 _spos=$("$md" tables "$census" 2>/dev/null \
-                    | grep -E 'surveyor \| status|party \| state' | tail -1 \
+                    | grep -E '^  table [0-9]*  .*(surveyor|party) \| (status|state)( \||$)' | tail -1 \
                     | sed -n 's/^  table \([0-9]*\)  .*/\1/p')
                 _rows=$("$md" tables "$census" 2>/dev/null \
-                    | grep -E 'surveyor \| status|party \| state' | tail -1 \
+                    | grep -E '^  table [0-9]*  .*(surveyor|party) \| (status|state)( \||$)' | tail -1 \
                     | sed -n 's/^  table [0-9]*  \([0-9]*\) row(s).*/\1/p')
                 _rows=${_rows:-0}
                 _unmatched=$((_rows - _accounted))
@@ -823,17 +846,13 @@ else
                 # states the census declares; a residue there is a state the document USES and never
                 # DECLARED, which is a finding about the census rather than about this reader — the
                 # inverse of the line above it, and the pair is why both are printed.
-                if [ "${_cls_ok:-0}" -eq 1 ]; then
-                    echo "    declared: $_cls_named row(s) match a state this census publishes;" \
-                         "$_cls_residue do not"
-                    if [ "${_cls_residue:-0}" -gt 0 ]; then
-                        echo "      ⚑ a row using a state the census never declared is the one"
-                        echo "        thing only this reading can reveal — mdstruct classify" \
-                             "$(basename "$census") --table $_spos"
-                    fi
-                else
-                    echo "    declared: this census publishes no state|means table, so it cannot" \
-                         "be read against its own vocabulary"
+                # ⚑ THE `declared:` LINE MOVED OUT OF THIS BRANCH, and only the residue POINTER
+                # stays — the count is now printed for every census below, diverging or not, so
+                # emitting it here too would report one census twice and the rest once.
+                if [ "${_cls_ok:-0}" -eq 1 ] && [ "${_cls_residue:-0}" -gt 0 ]; then
+                    echo "    ⚑ a row using a state the census never declared is the one thing"
+                    echo "      only that reading reveals — mdstruct classify" \
+                         "$(basename "$census") --table $_spos"
                 fi
                 # ⚑ AND WHETHER THE CENSUS PUBLISHED ITS VOCABULARY IS ITSELF THE DISCRIMINATOR.
                 # An unmatched row in a census that DECLARES its states is this reader failing to
@@ -870,6 +889,35 @@ else
                     echo "    and only $_accounted carry any state at all. A rostered surveyor with"
                     echo "    neither a leg nor a state is the one shape this arm exists to catch."
                 fi
+            fi
+        fi
+        # ⚑⚑⚑ THE VOCABULARY READING BELONGS OUTSIDE THE DIVERGENCE BRANCH, AND I PUT IT INSIDE.
+        # Everything above runs only when `§S` and HEAD DISAGREE, which is right for a divergence
+        # diagnosis and wrong for a classification. `CENSUS-deps-build.md` has 7 rostered and 7
+        # legs in HEAD, so it AGREES, so the block was skipped and that census printed **no
+        # `declared:` line at all** — not the reading, not the refusal.
+        # ⚑⚑ I NAMED THE WRONG CAUSE FOR A TICK. The symbol I carried said the §S table-finder
+        # missed `party | status | evidence`, and it did — the finder is now a measured predicate,
+        # two-armed, 12 of 12 — **but that was never why deps-build was silent.** A census can
+        # agree on totals and still use a state it never declared; those are independent questions
+        # that happened to share a branch, and fixing the finder alone would have left the silence.
+        # ⚑ A READER WHO SEES SIX ANSWERS AND ONE SILENCE cannot tell whether the seventh was clean
+        # or unreached — absence-versus-unavailable, in the accounting every downstream figure of
+        # this section comes from. So the reading is emitted for every census that has a §S.
+        _vpos=$("$md" tables "$census" 2>/dev/null \
+            | grep -E '^  table [0-9]*  .*(surveyor|party) \| (status|state)( \||$)' | tail -1 \
+            | sed -n 's/^  table \([0-9]*\)  .*/\1/p')
+        if [ -n "${_vpos:-}" ]; then
+            _v=$("$md" classify "$census" --table "$_vpos" 2>/dev/null || true)
+            if [ -n "$_v" ]; then
+                _vr=$(printf '%s\n' "$_v" | sed -n 's/^ *\([0-9]*\)  ⚑ UNCLASSIFIED.*/\1/p')
+                _vr=${_vr:-0}
+                _vt=$(printf '%s\n' "$_v" | sed -n 's/^  \([0-9]*\) row(s) classified.*/\1/p')
+                echo "  §S vocabulary: $(( ${_vt:-0} - _vr )) of ${_vt:-0} row(s) match a state" \
+                     "this census publishes; $_vr do not"
+            else
+                echo "  §S vocabulary: this census publishes no state|means table, so its §S" \
+                     "cannot be read against its own declarations"
             fi
         fi
     fi
