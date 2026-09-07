@@ -1969,3 +1969,55 @@ def test_every_refusal_path_records_not_only_the_verdict_one() -> None:
                 f"{name} line {i + 1}: an exit 1 with no record_refusal since the previous one"
             )
             prev = i
+
+
+_RULECITE = _DIST.parent / "rule_citations.sh"
+
+
+def test_the_citation_gate_checks_the_rules_file_against_itself() -> None:
+    """⚑⚑⚑ IT CHECKED EVERY MESSAGE AGAINST THE RULES FILE AND NEVER THE FILE AGAINST ITSELF.
+
+    Its whole subject is *a pointer to nothing reads like a pointer* — and the densest population
+    of such pointers is the document doing the pointing. ⚑ MEASURED: 31 rules defined, 31 distinct
+    rule numbers named within the file, every intra-file reference resolving today.
+
+    ⚑⚑ A CLEAN CORPUS IS THE ONLY MOMENT A CHECK ARMS WITH ZERO MIGRATION, which is why this is
+    worth gating now rather than after the first dangling reference. Armed now it is a ratchet;
+    armed later it is a paydown.
+
+    ⚑ TWO DEFECTS FOUND WHILE MEASURING IT, both in the arm itself. `exit 0` on the cites-no-rule
+    path discarded the self-check's verdict — and 19 of the last 20 commits take that path, so the
+    one arm firing on nearly every commit was the one throwing its result away. And the control's
+    `case` matched a space-separated string against `comm`'s newline-separated output, reporting
+    itself broken on a corpus where it worked.
+    """
+    body = _RULECITE.read_text(encoding="utf-8")
+    assert "does not define it" in body, "the rules file must be checked against itself"
+    # ⚑ THE CONTROL RUNS EVERY TIME rather than as a fixture: a comparison gone blind and a clean
+    # corpus both print nothing, so the arm's silence is only worth reading if a planted number
+    # is reported missing on the same invocation.
+    assert "SELF-CHECK INVALID" in body, (
+        "a self-check with no live control cannot distinguish clean from blind"
+    )
+    # ⚑ THE VERDICT MUST SURVIVE THE COMMONEST PATH. `exit 0` here was measured masking a real
+    # dangling-reference finding on a message that cited nothing.
+    assert 'exit "$fail"' in body, (
+        "the cites-no-rule path must carry the self-check's verdict, not discard it"
+    )
+    # ⚑ LEXICAL SORT, NOT NUMERIC: `sort -n` made `comm` print an ordering error and NO OUTPUT,
+    # which reads exactly like a clean corpus. Measured while writing this arm.
+    # ⚑ SCOPED TO THE SELF-CHECK BLOCK. A first draft sliced to `cited=` and caught the
+    # PRE-EXISTING `sort -u -k2 -n` that orders citations for display, which is correct where it
+    # is. An assertion whose window is wider than its subject reports the wrong file's habits.
+    # ⚑⚑ COMMENTS ARE STRIPPED FIRST, and that is not a convenience. The block's own comment
+    # NAMES the defect — *`sort -n` produced an ordering error and no output* — so a text search
+    # matches the description of the bug and reports the bug. A checker that cannot tell a
+    # description from an instance is this module's own subject, one level in.
+    selfcheck = "\n".join(
+        ln for ln in body.split("_defined=")[1].split("\ncited=")[0].splitlines()
+        if not ln.lstrip().startswith("#")
+    )
+    assert "| sort -u" in selfcheck, "the comparison's inputs are sorted lexically"
+    assert "sort -n" not in selfcheck, (
+        "comm requires its inputs in the collation it compares with"
+    )

@@ -40,10 +40,60 @@ if [ ! -f "$rules" ]; then
 fi
 
 fail=0
+
+# ⚑⚑⚑ THIS GATE CHECKED EVERY MESSAGE AGAINST THE RULES FILE AND NEVER THE RULES FILE AGAINST
+# ITSELF. Its whole subject is *a pointer to nothing reads like a pointer* — and the densest
+# population of such pointers is the document doing the pointing. MEASURED: 31 rules defined, 31
+# distinct rule numbers referenced within the file, and every intra-file reference resolves today.
+# ⚑⚑ THAT IS EXACTLY WHY IT IS WORTH GATING NOW. A clean corpus is the only moment a check can be
+# armed with zero migration — the same reason this repo's header gate landed at commit 1. Armed
+# after the first dangling reference, it is a paydown; armed now, it is a ratchet.
+# ⚑ THE POSITIVE CONTROL RUNS EVERY TIME rather than being a fixture, because a comparison that
+# has gone blind and a corpus that is clean both print nothing. A planted number MUST be reported
+# as missing, or the arm below is a statement about the reader.
+_defined=$(grep -oE '^## Rule [0-9]+' "$rules" 2>/dev/null | grep -oE '[0-9]+' | sort -u)
+_named=$(grep -oE '\bRule [0-9]+\b' "$rules" 2>/dev/null | grep -oE '[0-9]+' | sort -u)
+if [ -n "$_defined" ]; then
+    # ⚑ LEXICAL SORT, NOT NUMERIC. `comm` requires its inputs in the collation it compares with;
+    # `sort -n` produced "file 1 is not in sorted order" and NO OUTPUT — a failure that reads
+    # exactly like a clean corpus. Measured while writing this arm, and the reason the control
+    # below is not optional.
+    # ⚑ THE CONTROL COMPARES AGAINST THE SAME SORTED INPUTS THE REAL ARM USES. A first attempt
+    # appended the sentinel to `$_named` and re-sorted, and `comm` reported it missing only when
+    # it happened to collate clear of the real numbers — it fired FALSELY on a two-rule corpus.
+    # A control whose verdict depends on the corpus's size is not a control.
+    _control=$(comm -13 <(printf '%s\n' "$_defined") \
+                        <(printf '%s\n' "$_named" 9999 | sort -u))
+    # ⚑⚑ THE MATCH MUST FLATTEN THE COMPARISON'S OUTPUT. `comm` emits one number per LINE, and
+    # `case " $x "` was written as if it emitted one line of spaces — so with two entries the
+    # sentinel sat behind a newline where the pattern wanted a space, and the control reported
+    # itself broken on a corpus where it was working. A control that fails on its own output
+    # format is worse than none: it converts every real finding into a second false alarm.
+    case " $(printf '%s' "$_control" | tr '\n' ' ') " in
+        *" 9999 "*) : ;;
+        *) echo "rule_citations: ⚑ SELF-CHECK INVALID — a planted missing rule was not reported;" >&2
+           echo "  this arm cannot see a dangling reference, so its silence means nothing" >&2
+           fail=1 ;;
+    esac
+    _dangling=$(comm -13 <(printf '%s\n' "$_defined") <(printf '%s\n' "$_named"))
+    if [ -n "$_dangling" ]; then
+        for _n in $_dangling; do
+            echo "rule_citations: $rules names Rule $_n and does not define it" >&2
+        done
+        echo "  a rules document citing a rule it lacks is the defect this gate exists for," >&2
+        echo "  one level in: the corpus every other citation is checked against" >&2
+        fail=1
+    fi
+fi
+
 cited=$(grep -oE '\bRule [0-9]+\b' "$msg" 2>/dev/null | sort -u -k2 -n)
 if [ -z "$cited" ]; then
     echo "rule_citations: this message cites no rule"
-    exit 0
+    # ⚑⚑ `exit 0` HERE DISCARDED THE SELF-CHECK'S VERDICT. Measured on a corpus naming an
+    # undefined rule: the dangling reference was REPORTED and the gate still exited 0, because
+    # 19 of the last 20 commits cite no rule and take this path. The one arm that fires on nearly
+    # every commit was the one that threw the result away.
+    exit "$fail"
 fi
 
 while read -r _ n; do

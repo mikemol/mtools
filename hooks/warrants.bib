@@ -1354,3 +1354,21 @@
             rather than sampling, because the defect was six unwired sites and one wired.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_every_refusal_path_records_not_only_the_verdict_one},
 }
+
+@misc{hooks-bar-fires-the-citation-gate-checks-the-rules-file-against-itself,
+  title  = {It checked every message against the rules file and never the file against itself},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The citation gate exists because a pointer to nothing reads like a pointer, and the
+            densest population of such pointers is the document doing the pointing. Measured: 31
+            rules defined, 31 rule numbers named within the file, every intra-file reference
+            resolving --- which is why arming it now costs no migration. Two defects surfaced
+            while measuring the arm: exit 0 on the cites-no-rule path discarded the self-check's
+            verdict, and 19 of the last 20 commits take that path, so the arm firing on nearly
+            every commit threw its own result away; and the control matched a space-separated
+            pattern against comm's newline-separated output, reporting itself broken on a corpus
+            where it worked. The control runs on every invocation because a blinded comparison
+            and a clean corpus both print nothing.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_citation_gate_checks_the_rules_file_against_itself},
+}
