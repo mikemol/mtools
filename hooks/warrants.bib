@@ -1550,3 +1550,22 @@
             reporting a count.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_shell_gate_says_what_it_checked},
 }
+
+@misc{hooks-bar-fires-the-preflight-does-not-hardcode-the-witness-count,
+  title  = {The tool that predicts the gate asserted a figure the gate disagrees with},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The preflight's pass line read that nine domain witnesses were still ahead. Measured
+            against the gate: it invokes eight, three mypy and three ruff and two ratchet-gate.
+            A hand-written population inside the instrument whose whole job is predicting that
+            gate, and it passed every arithmetic check because nothing about the number was
+            malformed --- a correct-looking figure over a population nobody enumerated. The
+            figure moves by construction, since a witness is added by writing one line, so a
+            hardcoded number describing something designed to grow rots silently and reports the
+            rot as reassurance. The count is now derived from the gate itself, and reported as
+            unknown rather than guessed when the gate cannot be read. The arm asserts the absence
+            of a spelled-out literal rather than a value, because asserting eight would be a
+            second hand-written population in the file that exists to catch them.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_preflight_does_not_hardcode_the_witness_count},
+}

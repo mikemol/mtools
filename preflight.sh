@@ -127,4 +127,20 @@ if [ "$fail" -ne 0 ]; then
     say "⚑ the gate WOULD REFUSE, and it stops at the FIRST failing check — fix all of the above."
     exit 1
 fi
-say "ok — these checks are clean; the bazel suite and nine domain witnesses are still ahead"
+# ⚑⚑⚑ THIS LINE ONCE SAID `nine domain witnesses` AND THE GATE INVOKES EIGHT. A hand-written
+# population inside the instrument whose entire job is predicting that gate — and it passed every
+# arithmetic check, because nothing about `nine` is malformed. It is a correct-looking number over
+# a population nobody enumerated, which is the defect this session has measured most.
+# ⚑⚑ THE FIGURE MOVES BY CONSTRUCTION: a witness is added by writing one `witness` line, so the
+# count changes whenever the gate's coverage does. A hardcoded number describing a thing designed
+# to grow rots silently and reports the rot as reassurance.
+# ⚑ DERIVED FROM THE GATE ITSELF rather than restated here, so the two cannot disagree. If the
+# gate is unreadable the count is reported as UNKNOWN rather than guessed — an unmeasured figure
+# named as unmeasured is the honest form, and a fabricated one is the defect being repaired.
+_gate="$root/.githooks/pre-commit"
+if [ -r "$_gate" ]; then
+    _witnesses="$(grep -c '^witness ' "$_gate")"
+else
+    _witnesses="an unknown number of"
+fi
+say "ok — these checks are clean; the bazel suite and $_witnesses domain witnesses are still ahead"

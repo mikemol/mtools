@@ -2405,3 +2405,50 @@ def test_the_shell_gate_says_what_it_checked() -> None:
     assert body.index("shellcheck_test: checked") < body.index('exec "$sc"'), (
         "the pass line must be emitted before exec replaces this process"
     )
+
+
+def test_the_preflight_does_not_hardcode_the_witness_count() -> None:
+    """⚑⚑⚑ THE TOOL THAT PREDICTS THE GATE ASSERTED A FIGURE THE GATE DISAGREES WITH.
+
+    `preflight.sh`'s pass line read *the bazel suite and nine domain witnesses are still ahead*.
+    ⚑ MEASURED: the gate invokes **eight** — three `mypy`, three `ruff`, two ratchet-gate. A
+    hand-written population inside the instrument whose entire job is predicting that gate.
+
+    ⚑⚑ THIS IS THE DEFECT THIS SESSION HAS MEASURED MOST, AND IT PASSES EVERY ARITHMETIC CHECK.
+    Nothing about `nine` is malformed; it is a correct-looking number over a population nobody
+    enumerated. A reader trusting the preflight would expect one more witness than exists and
+    would not learn otherwise from any green run.
+
+    ⚑ AND THE FIGURE MOVES BY CONSTRUCTION — a witness is added by writing one `witness` line, so
+    the count changes whenever the gate's coverage does. That is precisely the case where a
+    hardcoded number rots silently: the thing it describes is designed to grow.
+
+    ⚑⚑ SO THE ARM ASSERTS THE ABSENCE OF A LITERAL, NOT A VALUE. Asserting *eight* here would
+    reproduce the defect one level out — a second hand-written population, in the file that exists
+    to catch hand-written populations.
+    """
+    body = _PREFLIGHT.read_text(encoding="utf-8")
+    gate = _GATE.read_text(encoding="utf-8")
+    # ⚑ POSITIVE CONTROL ON THE POPULATION: a pattern that stopped matching would make the
+    # comparison below vacuous in the direction that reads as agreement.
+    witnesses: list[str] = pyre.findall(r"^witness ", gate, pyre.MULTILINE)
+    assert witnesses, "no witness invocations found; this arm would pass by finding nothing"
+    # ⚑ NO SPELLED-OUT COUNT IN THE PASS LINE. The words are checked rather than digits, because
+    # the defect was spelled `nine` and a digit-only check would have read it as clean.
+    # ⚑⚑ COMMENTS ARE STRIPPED FIRST, AND THIS ARM FIRED ON ITS OWN CORRECTION TO PROVE IT. The
+    # repair records the old figure in prose — *this line once said `nine` and the gate invokes
+    # eight* — and a whole-file search reads that record as the defect. **A checker that cannot
+    # tell a description of a bug from an instance of one refuses the authors who document what
+    # they fixed**, which is the same finding this suite reached at `36249ea` and `6702b03`,
+    # arriving a third time in a third medium.
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    spelled: list[str] = pyre.findall(
+        r"\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+domain witness",
+        commands,
+    )
+    assert not spelled, (
+        f"the preflight hardcodes a witness count {spelled}; the gate invokes "
+        f"{len(witnesses)}, and the figure moves whenever a witness is added"
+    )
