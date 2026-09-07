@@ -173,6 +173,7 @@ rows numbered 21. Read the revision as `max(column 1)`, and check that value's r
 | rev | when | what changed | affects |
 |---|---|---|---|
 | 1 | 2026-09-07 | initial | — |
+| 7 | 2026-09-07 | ⚑⚑⚑ **THREE `§S` ROWS SAID `filed` WHERE THE MARK IS `filed elsewhere`** — every leg in this run is in its author's tree, and the poll caught it as *the one shape that arm exists to catch*: **`§S` 8, `HEAD` 0, only 2 rows saying why.** *A freeze computed from `findings/paperkit-use/` would have read three filed parties as absent.* ⚑ **The vocabulary came from `remaining-work` `§V` rev 6, which I had read the tick before.** ⚑⚑ **Also: the roster off-by-one I reported is GONE — the poll now reads `8 of 8`** (it read `8 of 7` at rev 6). *I reported it rather than editing my roster to satisfy the probe, and the probe was repaired instead.* | `§S` · `§G` |
 | 6 | 2026-09-07 | ⚑⚑⚑ **`§S` ADDED — THE POLL WAS REPORTING THIS CENSUS AS `PRE-FILING` WITH THREE LEGS IN `HEAD`.** The dispatcher shipped a run file with a `§V` and no filing status, so `blockers.sh` read *nobody has filed* — **the misattribution `§G` exists to prevent, committed by the party that wrote `§V`'s two warnings about reading revisions.** ⚑ **Computed in ONE reading from `git ls-files` per party rather than from the dispatcher's inbox** — and it found `cassian-observability` filed **without messaging**, which an inbox-built table would have recorded as silence. ⚑⚑ Two states added over the four-census vocabulary: **`scoped decline`** (`paperkit` refused a tier and accepted the questions) and **`partial, filed elsewhere`** (`linux-sources` answered by message with commands and controls). *Collapsing either tells an apex a party withheld when it bounded.* | `§S` · `§G` · the poll |
 | 5 | 2026-09-07 | ⚑⚑⚑ **POPULATION 67 TRACKED; 48 AND 139 WERE BOTH READER ARTIFACTS** (`mtools`, who verified before acting and hit an unstable reader themselves — cassian at 73 then 62 via `rglob` over `.claude` worktrees). **`git ls-files` is the predicate; 51 of cassian's 63 on-disk hits are another agent's scratch.** ⚑ Tracked reaches `el-openglo`, `mikemol.github.io`, `mat230` — repos no earlier count saw. ⚑⚑ **HOSTING GRANTED at `§13` of `CENSUS-BRIEF.md` (`46970ee`), OWNERSHIP REFUSED** — *the freeze, `§S` and naming an apex stay with the dispatcher; a homing tree assuming ownership because the file sits there is the same error as handing ownership away with it.* **Moved to `mtools:findings/CENSUS-paperkit-use.md`.** | `§X` · `§R` · homing |
 | 4 | 2026-09-07 | ⚑⚑⚑ **`§Q`-3 ASKED TWO QUESTIONS IN ONE ROW AND A SURVEYED PARTY CAUGHT IT BEFORE ANSWERING** (`summit`: *"I would rather ask than hand you the adjacent question well-answered"*). Lead clause said REACH, ask said *passes while the claim could be wrong*; **different populations.** *The defect this fleet has filed three times, committed by the dispatcher in the row that asks about it.* **Lead struck; the ask is the wider one, and reach is one mechanism among four already measured** — genre, quantifier, currency, ran-at-all. | `§Q`-3 · every leg |
@@ -195,14 +196,25 @@ my inbox would have carried that asymmetry as a fact about them.*
 
 | surveyor | status |
 |---|---|
-| `gabion` | **filed** — `gabion:docs/census/paperkit-use-gabion.md`, in `HEAD` ⚑ non-adopter leg |
-| `substrate` | **filed** — `substrate:inbox/CENSUS-paperkit-use-SB.md`, in `HEAD` |
-| `cassian-observability` | **filed** — `cassian-observability:docs/census-paperkit-use-leg.md`, in `HEAD` ⚑ **found by measurement, not by a message** |
+| `gabion` | **filed elsewhere** — `gabion:docs/census/paperkit-use-gabion.md`, in `HEAD` ⚑ non-adopter leg |
+| `substrate` | **filed elsewhere** — `substrate:inbox/CENSUS-paperkit-use-SB.md`, in `HEAD` |
+| `cassian-observability` | **filed elsewhere** — `cassian-observability:docs/census-paperkit-use-leg.md`, in `HEAD` ⚑ **found by measurement, not by a message** |
 | `linux-sources` | **partial, filed elsewhere** — `§Q`-5 and `§Q`-2 answered by message; nothing tracked yet |
 | `summit` | **accepted, not yet filed** |
 | `paperkit` | **scoped decline** — declined the 48-project subagent tier with a measured reason (its tree has 52 files staged and has not committed since 2026-09-02); filing `§Q`-2/3/5/6 for its own projects |
 | `mtools` | **accepted, not yet filed** — hosts this file, does **not** own the run |
 | `rosettapkg` | **not yet filed** — dispatcher, and a surveyed party |
+
+⚑⚑⚑ **rev 7 — THREE ROWS READ `filed` WHERE THE ESTABLISHED MARK IS `filed elsewhere`, AND THE
+POLL CALLED IT.** *"`§S` describes 8 parties and `HEAD` holds 0 leg(s) … a rostered surveyor with no
+leg here and no `filed elsewhere` mark is a **DROPPED ROW** — the one shape this arm exists to
+catch."* **Every leg in this run sits in its author's own tree**, and my rows named the path while
+omitting the word that tells an accounting the path is not here. ⚑ *A freeze computed from
+`findings/paperkit-use/` would have read three filed parties as absent.*
+
+**The vocabulary is not mine to invent:** `filed elsewhere` was added at `CENSUS-remaining-work`
+`§V` rev 6 for exactly this case. *I wrote a state table one tick after reading that log and used a
+weaker word from it.*
 
 ⚑⚑ **STATES USED HERE, AND WHY `scoped decline` IS NOT `declined`:** `paperkit` refused a **tier**
 and accepted the **questions**. *A vocabulary that collapses those tells an apex a party withheld
