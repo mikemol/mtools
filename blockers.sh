@@ -553,3 +553,35 @@ fi
 # absence is the point: this script covers what it covers, and the one claim it CANNOT cover is
 # exactly the one that went stale for an hour.
 echo "=== NOT COVERED: peer reachability — run ListAgents; it is a reading, not a fact ==="
+
+# ⚑⚑⚑ THE TERMINAL DIGEST — BECAUSE A CORRECT LINE THE READER NEVER RECEIVES IS NOT A REPORT.
+#
+# `linux-sources` replied to this repository's furniture rule — *a line that reports zero every
+# time stops being read and becomes furniture* — with a variant that sharpens it: **their probe
+# prints SIX** and they read past it on six consecutive ticks. ⚑ SO THE OPERATIVE PROPERTY IS
+# CONSTANT, NOT ZERO, and a non-zero constant is WORSE, because it looks like the probe is working.
+#
+# ⚑⚑ THIS TICK PRODUCED A THIRD POSITION NEITHER OF US HELD. Their letter arrived, the inbox arm
+# reported it correctly and by name, and this dispatcher still did not see it — because the STEP 0
+# invocation was `./blockers.sh | sed -n '/CENSUS-remaining-work/,$p' | head -6`. MEASURED: the
+# notice is line 44 of 91; the reader's window opens at line 74. Not furniture and not constant —
+# **excluded by construction**, for an unknown number of ticks.
+#
+# ⚑ AND THE PIPELINE EXISTED NOWHERE IN THE TREE. `grep -rn` over every `.sh` and `.md` finds it
+# zero times: it lived only in a turn, which is why nothing could gate it and why the next vantage
+# inherits it as a habit rather than as a file. That is §8's B5 exactly — *a handle only survives
+# if its referent lives outside the context* — and the repair must therefore BE a file.
+#
+# ⚑ THE FIX IS NOT A WIDER WINDOW. A window can always be narrowed again by the next reader, and
+# widening it treats one reader's slice as the defect rather than the truncation itself. The poll
+# instead REPEATS its unread count LAST, where every trailing window reaches it, and states its own
+# line count so a reader can tell a truncated read from a complete one WITHOUT trusting its own
+# pipeline. A digest that moves is not furniture; a digest that is missing is a detected truncation.
+_unread_n=$(find "$mtools/inbox" -maxdepth 1 -name '*.md' ! -name README.md 2>/dev/null | wc -l)
+echo "=== DIGEST (repeated last so a trailing window cannot exclude it) ==="
+if [ "${_unread_n:-0}" -gt 0 ]; then
+    echo "  UNREAD LETTERS: $_unread_n — read them before deriving this tick's list"
+else
+    echo "  unread letters: 0"
+fi
+echo "  END OF POLL. If this line is missing, your reader truncated it — the poll did not stop."

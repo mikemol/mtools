@@ -1762,3 +1762,31 @@ def test_the_refusal_record_names_the_party_not_the_committer() -> None:
     sess = body.index("CLAUDE_CODE_SESSION_ID")
     email = body.index("git config user.email", sess)
     assert sess < email, "session before committer: the discriminating column leads"
+
+
+def test_the_poll_repeats_its_unread_count_where_a_trailing_window_reaches_it() -> None:
+    """⚑⚑⚑ A CORRECT LINE THE READER NEVER RECEIVES IS NOT A REPORT.
+
+    `linux-sources` sharpened this repository's furniture rule from the outside: **their probe
+    prints SIX** and they read past it six consecutive ticks, so the operative property is
+    CONSTANT, not ZERO — and a non-zero constant is worse, because it looks like the probe works.
+
+    ⚑⚑ This tick produced a THIRD position neither party held. The inbox arm reported their letter
+    correctly and by name, and the dispatcher still missed it: STEP 0 ran the poll through
+    `sed -n '/CENSUS-remaining-work/,$p' | head -6`. MEASURED — the notice is line 44 of 91 and
+    the window opens at line 74. Not furniture, not constant: **excluded by construction.**
+
+    ⚑ And the truncating pipeline existed NOWHERE in the tree, so nothing could gate it. The
+    repair must be a file (§8 B5), and it must not be a wider window — a window is the reader's
+    and can always be narrowed again. The poll repeats the count LAST, where every trailing
+    window reaches it, and names its own terminus so a truncated read is DETECTED rather than
+    mistaken for a quiet one.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "END OF POLL" in body, "a reader must be able to tell truncation from a quiet poll"
+    assert "UNREAD LETTERS" in body, "the unread count must be repeated after every section"
+    # ⚑ THE DIGEST MUST BE LAST. Its whole property is positional: a digest emitted mid-script is
+    # exactly the line this defect discarded. Measured by position, not by presence.
+    assert body.rindex("END OF POLL") > body.rindex("=== NOT COVERED"), (
+        "the digest must follow every other section, or a trailing window can exclude it too"
+    )

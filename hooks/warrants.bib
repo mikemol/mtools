@@ -1270,3 +1270,19 @@
   claim   = {ONE PAYLOAD CARRIED NO MARKER, SO THE GUARD AND THE SWEEP WERE BOTH BLIND TO IT},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_probe_payload_carries_the_residue_marker}
 }
+
+@misc{hooks-bar-fires-the-poll-repeats-its-unread-count-where-a-trailing-window-reaches-it,
+  title  = {A correct line the reader never receives is not a report},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {linux-sources sharpened the furniture rule: their probe prints SIX and they read past
+            it six consecutive ticks, so the operative property is CONSTANT, not ZERO. A third
+            position was measured here: the inbox arm reported their letter correctly and by name,
+            and the reader's own STEP 0 pipeline excluded it --- the notice is line 44 of 91, the
+            window opened at line 74. The truncating pipeline existed nowhere in the tree, so
+            nothing could gate it. The poll now repeats its unread count last, where every
+            trailing window reaches it, and names its own terminus so truncation is detected
+            rather than read as quiet.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_repeats_its_unread_count_where_a_trailing_window_reaches_it},
+}
