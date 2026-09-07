@@ -1847,3 +1847,44 @@
             whose limit is unwritten reads as unlimited to whoever needs it to be.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_brief_states_what_homing_grants_and_what_it_does_not},
 }
+
+@misc{hooks-bar-fires-the-poll-does-not-carry-a-self-raised-decision-as-blocked,
+  title  = {I carried a decision to the operator that I had raised myself and answered already},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The operator asked why we were concerned about gate cost and there was no answer.
+            The only commit raising it is mine, and its own finding is that no stable quantity
+            exists: four runs on an unchanged tree read a decreasing series converging as the
+            action cache warmed, while three checkers were added. The measurement dissolved the
+            question it was then listed under, and nothing in the corpus records a consequence
+            --- no refused commit, no bypass, no complaint that the gate is unaffordable. A
+            decision with no consequence and no petitioner is not blocked on anyone; it is a
+            measurement promoted to a standing ask and re-derived every tick as though the
+            promotion were a fact. The defect is the promotion rather than the figure, so the
+            poll now carries a petitioner column: a self-raised measurement and a request someone
+            made are otherwise byte-identical in the symbol set, and one of them is not blocked
+            at all. The property is held in the poll rather than in the filed leg, because a
+            filed leg is not amended.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_does_not_carry_a_self_raised_decision_as_blocked},
+}
+
+@misc{hooks-bar-fires-the-roster-count-derives-the-apex-row-rather-than-assuming-it,
+  title  = {A subtraction right four times and wrong the first time a peer hosted here},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {rosettapkg hosted a census in this tree under the new homing grant and reported from
+            outside that their roster holds eight parties while the poll read seven. They offered
+            a candidate cause, a trailing annotation on one row, and explicitly did not assert
+            it. Measured, the cause is different: the poll subtracted one unconditionally because
+            the census it was written against carries an apex line that is not a surveying party.
+            Five of six run files carry such a row and the newly hosted one does not. A constant
+            correct for every file its author has seen is indistinguishable from a measurement
+            until a file arrives from elsewhere, which the homing grant now guarantees will keep
+            happening. The apex row is counted rather than assumed; the hosted census reads eight
+            of eight and the four with apex rows are unchanged. The reporter declined the repair
+            that would have hidden it, since editing their roster to satisfy the probe would have
+            meant deleting a real party to make a green line.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_roster_count_derives_the_apex_row_rather_than_assuming_it},
+}

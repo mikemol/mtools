@@ -392,8 +392,25 @@ else
     # ⚑⚑ §R IS THE AUTHORITY AND CARRIES THE APEX AS AN EXTRA ROW. Measured: §R has 8 rows to §S's
     # 7, and the difference is exactly the apex line, which is not a surveying party. So expected
     # = |§R| - 1, and the identity survives every future dispatch without an edit here.
-    expected=$(( $("$md" tables "$census" 2>/dev/null | grep 'surveyor | prefix' \
-        | grep -oE '[0-9]+ row' | grep -oE '[0-9]+') - 1 ))
+    # ⚑⚑⚑ AND THAT `- 1` WAS A HARDCODED POPULATION, RIGHT FOUR TIMES AND WRONG THE FIFTH.
+    # `rosettapkg` hosted a census here under §13 and reported, from outside, that their §R holds
+    # EIGHT parties while this poll read seven. They offered a candidate cause — a trailing
+    # annotation on one row — and did not assert it. MEASURED, the cause is different: five of the
+    # six run files carry an apex row in §R and theirs does not, so the constant was a claim about
+    # every §R this poll would ever read, made from the four its author had seen.
+    # ⚑⚑ THE FOUR EARLIER CENSUSES MADE IT LOOK DERIVED. A constant correct for every file its
+    # author has seen is indistinguishable from a measurement until a file arrives from elsewhere,
+    # which §13 now guarantees will keep happening.
+    # ⚑ AND THE REPORTER DECLINED THE REPAIR THAT WOULD HAVE HIDDEN IT: editing their roster to
+    # satisfy this probe would have meant deleting a real party to make a green line.
+    _r_rows=$("$md" tables "$census" 2>/dev/null | grep 'surveyor | prefix' \
+        | grep -oE '[0-9]+ row' | grep -oE '[0-9]+')
+    _r_apex=$("$md" rows "$census" 2>/dev/null | grep -ci apex || true)
+    if [ "${_r_apex:-0}" -gt 0 ]; then
+        expected=$(( ${_r_rows:-0} - 1 ))
+    else
+        expected=${_r_rows:-0}
+    fi
     printf '  roster: %s of %s parties listed; %s non-terminal\n' \
         "${roster:-?}" "${expected:-?}" "${pending:-?}"
     # ⚑⚑ BOTH ARMS MEASURED, on constructed fixtures, before this was trusted:
@@ -705,6 +722,26 @@ fi
 _unres=$(grep -oE '^_MAX_UNRESOLVED = [0-9]+' "$mtools/hooks/tests/test_bar_fires.py" \
          | grep -oE '[0-9]+' || true)
 echo "  vacuity sweep: ${_unres:-?} test(s) it cannot resolve — ceiling read from the sweep itself"
+
+# ⚑⚑⚑ AN OPERATOR DECISION MUST NAME WHO RAISED IT, AND ONE OF THREE HAD NOBODY. The operator
+# asked *why are we concerned about cost?* and there was no answer: the only commit raising the
+# gate-cost question is `614163d`, MINE, and its own finding is that no stable quantity exists —
+# four runs on an unchanged tree read 132s, 88s, 65s, 61s, converging as the action cache warmed
+# while three checkers were ADDED. The measurement dissolved the question it was then listed under.
+#
+# ⚑⚑ AND NOTHING RECORDED A CONSEQUENCE. No refused commit, no bypass, no complaint that the gate
+# is unaffordable. A decision with no consequence and no petitioner is not blocked on anyone; it
+# is a measurement promoted to a standing ask, re-derived every tick as though the promotion were
+# a fact. THE DEFECT IS THE PROMOTION, NOT THE FIGURE — `614163d` is sound, and its range stated
+# with conditions is the honest form.
+#
+# ⚑ SO THE PETITIONER IS A COLUMN. A self-raised measurement and a request someone made are
+# otherwise byte-identical in the symbol set, and one of them is not blocked at all.
+echo "=== operator decisions carried, and who raised each ==="
+echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt"
+echo "  cassian's hook components  raised by cassian  ANSWERED 2026-09-07: mtools asks for a diff"
+echo "  gate cost                  raised by mtools   ⚑ WITHDRAWN — self-raised, no consequence"
+echo "    614163d measured that no stable figure exists; carrying it as blocked was my error."
 
 echo "=== NOT COVERED: peer reachability — run ListAgents; it is a reading, not a fact ==="
 

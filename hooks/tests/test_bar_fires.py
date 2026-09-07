@@ -3227,3 +3227,70 @@ def test_the_brief_states_what_homing_grants_and_what_it_does_not() -> None:
     assert "does not transfer ownership" in brief, (
         "hosting and owning are different permissions; the brief must not let one imply the other"
     )
+
+
+def test_the_poll_does_not_carry_a_self_raised_decision_as_blocked() -> None:
+    """⚑⚑⚑ I CARRIED A DECISION TO THE OPERATOR THAT I HAD RAISED MYSELF, AND ANSWERED ALREADY.
+
+    The operator asked *why are we concerned about cost?* — and there was no answer. ⚑ MEASURED:
+    the only commit raising it is mine, `614163d`, and its own finding is that **no stable
+    quantity exists**: four runs on an unchanged tree read 132s, 88s, 65s, 61s, converging as the
+    action cache warmed while three checkers were ADDED. The measurement dissolved the question it
+    was then listed under.
+
+    ⚑⚑ AND NOTHING RECORDS A CONSEQUENCE. Searching the corpus for a refused commit, a bypass, or
+    a complaint that the gate is unaffordable returns **none**. A decision with no consequence and
+    no petitioner is not blocked on anyone — it is a measurement promoted to a standing ask, then
+    re-derived every tick as though the promotion were a fact.
+
+    ⚑ THE DEFECT IS THE PROMOTION, NOT THE FIGURE. `614163d` is a good measurement and its range —
+    cold at least 132s, warm about 61s, stated with conditions — is the honest form. What was
+    wrong is that *I measured something* became *the operator must decide something* with no step
+    between where anyone asked.
+
+    ⚑⚑ THE PROPERTY IS HELD IN THE POLL, NOT IN MY FILED LEG. `§D` forbids amending a filed leg
+    and that leg is filed at `22e4ca1`; the correction belongs where the symbol is re-derived each
+    tick, which is the only place it could have been caught.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ A CARRIED OPERATOR DECISION MUST NAME ITS PETITIONER. Without one, a measurement I
+    # promoted and a request someone made are byte-identical in the symbol set — and one of them
+    # is not blocked at all.
+    assert "raised by" in commands, (
+        "an operator decision the poll carries must name who raised it; a self-raised measurement "
+        "promoted to a decision is indistinguishable from a request nobody made"
+    )
+
+
+def test_the_roster_count_derives_the_apex_row_rather_than_assuming_it() -> None:
+    """⚑⚑⚑ `expected = |§R| - 1` WAS RIGHT FOUR TIMES AND WRONG THE FIRST TIME A PEER HOSTED HERE.
+
+    ⚑ REPORTED BY `rosettapkg`, from outside, against my instrument: their §R holds eight parties
+    and the poll read seven. They offered a candidate cause — a trailing `⚑` annotation on one row
+    — and explicitly did not assert it. **Measured, the cause is different and worse.**
+
+    ⚑⚑ THE SUBTRACTION IS A HARDCODED POPULATION ASSUMPTION. `remaining-work`'s §R carries an apex
+    line that is not a surveying party, so the poll subtracts one — unconditionally. Measured
+    across all six run files: **five carry an apex row and one does not**, and the one that does
+    not is the first census hosted here by another dispatcher.
+
+    ⚑ THE FOUR EARLIER CENSUSES MADE IT LOOK DERIVED. A constant that is correct for every file
+    its author has seen is indistinguishable from a measurement until a file arrives from
+    somewhere else — which is what `§13` now guarantees will keep happening.
+
+    ⚑⚑ AND THE REPORTER DECLINED THE REPAIR THAT WOULD HAVE HIDDEN IT. They said so: editing their
+    roster to satisfy the probe would have meant deleting a real party to make a green line. The
+    file was right and the reader was short.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ THE APEX ROW MUST BE COUNTED, NOT ASSUMED. A literal `- 1` is a claim about every §R this
+    # poll will ever read, made from the four its author had seen.
+    assert "grep -ci apex" in commands, (
+        "the apex row must be derived from the roster, not subtracted as a constant"
+    )
