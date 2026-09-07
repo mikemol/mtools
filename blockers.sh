@@ -117,11 +117,36 @@ printf '%s\n' "$found" | grep -vxF -e hooks -e mdstruct -e ratchet \
     | sed 's/^/  landed: /' \
     | grep . || echo "  none landed beyond the three this session authored"
 
+# ⚑⚑⚑ THIS ARM PRINTED ONE WORD FOR THREE STATES WITH THREE DIFFERENT OWNERS. `unimportable`
+# collapses *paperkit is broken* (its owner's), *it is not installed here* (this repo's), and
+# *the interpreter is absent* (a fact about the reader). A blocker that cannot say which it found
+# cannot be acted on — and this one was carried unacted-on for the whole session because
+# `unimportable` reads like a defect in paperkit.
+#
+# ⚑⚑ MEASURED WHICH: `uv pip install --dry-run` resolves the local checkout in milliseconds —
+# *Would install 1 package*. paperkit is neither broken nor missing. Nothing here installs it, and
+# `mdstruct/pyproject.toml` says why: it is declared as a PUBLISHED PACKAGE, never a path. THAT IS
+# AN OPERATOR DECISION and this arm does not settle it; it reports which state it observed.
+#
+# ⚑ AND THE PROBE CARRIES A CONTROL, because through `2>/dev/null` a failing import and a missing
+# interpreter are byte-identical. A probe whose failure mode includes *the reader was absent* must
+# exhibit a hit of the same shape — this repository's own rule, applied to the one arm that never
+# carried it.
 echo "=== mtools: paperkit resolvable ==="
-if "$mtools/mdstruct/.venv/bin/python3" -c 'import paperkit' 2>/dev/null; then
-    echo "  paperkit IMPORTABLE"
+_pk_py="$mtools/mdstruct/.venv/bin/python3"
+if [ ! -x "$_pk_py" ]; then
+    echo "  paperkit: CONTROL UNAVAILABLE — $_pk_py is not executable."
+    echo "    That is a fact about this reader, not about paperkit."
+elif ! "$_pk_py" -c 'import json' 2>/dev/null; then
+    echo "  paperkit: CONTROL FAILED — the interpreter cannot import a stdlib module."
+    echo "    Any verdict below would describe the reader rather than paperkit."
+elif "$_pk_py" -c 'import paperkit' 2>/dev/null; then
+    echo "  paperkit IMPORTABLE (control: this interpreter imports)"
 else
-    echo "  paperkit unimportable"
+    echo "  paperkit not installed here (control: this interpreter imports stdlib fine)"
+    echo "    NOT a defect in paperkit: its checkout resolves as an installable package."
+    echo "    It is declared as a published package rather than a path — whether to install"
+    echo "    it from a local checkout is the operator's call, not this poll's."
 fi
 
 echo "=== mtools: inbox ==="

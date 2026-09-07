@@ -2493,3 +2493,41 @@ def test_no_gate_asserts_a_figure_it_cannot_reach() -> None:
         f"a gate asserts {counted} sessions write this tree — a figure no script can reach, "
         "since live sessions are a harness reading rather than a fact about the tree"
     )
+
+
+def test_the_paperkit_arm_names_a_cause_and_carries_a_control() -> None:
+    """⚑⚑⚑ ONE WORD FOR THREE STATES WITH THREE DIFFERENT OWNERS.
+
+    The poll printed `paperkit unimportable` every tick for the life of this session, and I
+    carried it as a standing blocker without measuring it once. ⚑ MEASURED: it probes ONE
+    interpreter — `mdstruct/.venv` — and prints an unqualified verdict about the repository.
+
+    ⚑⚑ THE VERDICT IS RIGHT AND THE ACCOUNT IS MISSING, which is the harder shape. All three venvs
+    agree, so nothing about the word is false. But *unimportable* collapses three states:
+    **paperkit is broken** (paperkit's owner), **it is not installed here** (this repo's), and
+    **the interpreter is absent** (a fact about the reader, not the subject). A blocker that
+    cannot say which of those it found cannot be acted on, and this one sat unacted-on for the
+    whole session.
+
+    ⚑ MEASURED WHICH: `uv pip install --dry-run` resolves the local checkout in 4ms —
+    *Would install 1 package*. paperkit is not broken and not missing. Nothing here installs it,
+    and the declaration in `mdstruct/pyproject.toml` says why: *a published package, never a
+    path*. **That is an operator decision and this arm does not settle it** — it only requires the
+    poll to report which state it observed.
+
+    ⚑⚑ AND THE PROBE NEEDS A CONTROL, because `import paperkit` failing and the interpreter not
+    existing are byte-identical through `2>/dev/null`. A probe whose failure mode includes *the
+    reader was absent* must exhibit a hit of the same shape, or its negative is a statement about
+    itself — this repository's own rule, applied to the one arm that never carried it.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    # ⚑ THE CONTROL: a module known-importable must be probed by the same interpreter, so a
+    # failing `import paperkit` is distinguishable from an interpreter that cannot import at all.
+    assert "paperkit: CONTROL" in body, (
+        "the probe must exhibit a known-importable module, or its negative describes the reader"
+    )
+    # ⚑ AND THE VERDICT MUST NAME WHICH STATE. `unimportable` alone is three findings with three
+    # owners collapsed into one word.
+    assert "not installed here" in body, (
+        "the arm must distinguish 'nobody installed it' from 'it is broken'"
+    )

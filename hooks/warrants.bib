@@ -1589,3 +1589,24 @@
             measured, including that a corrected-but-still-counted figure still fires.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_no_gate_asserts_a_figure_it_cannot_reach},
 }
+
+@misc{hooks-bar-fires-the-paperkit-arm-names-a-cause-and-carries-a-control,
+  title  = {One word for three states with three different owners},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The poll printed that paperkit was unimportable on every tick of this session and the
+            symbol was carried unmeasured throughout. Measured: it probes one interpreter and
+            prints an unqualified verdict about the repository, and the word collapses three
+            states --- paperkit is broken, it is not installed here, and the interpreter is
+            absent --- which have three different owners. The verdict was right and the account
+            was missing, which is the harder shape, because a blocker that cannot say which state
+            it found cannot be acted on. A dry-run resolve of the local checkout finishes in
+            milliseconds and would install one package, so paperkit is neither broken nor
+            missing; nothing here installs it, and the declaration says it is a published package
+            rather than a path, which is an operator decision this arm does not settle. The probe
+            now carries a control, because through a discarded stderr a failing import and a
+            missing interpreter are byte-identical. All four branches driven on real inputs,
+            including paperkit installed into a throwaway venv reading importable.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_paperkit_arm_names_a_cause_and_carries_a_control},
+}
