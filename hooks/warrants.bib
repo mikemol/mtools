@@ -1512,3 +1512,21 @@
             predicate.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_count_checker_narrows_by_position_not_by_indent_alone},
 }
+
+@misc{hooks-bar-fires-the-citation-gate-reports-a-figure-that-moves,
+  title  = {The gate announced the trivial half and stayed silent about the half that can be wrong},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The only line this gate printed on the common path reported the absence of a claim,
+            and it fired on 29 of 30 commits. Deleting it was the wrong fix: it is the sole
+            stdout on that path, so a checker that ran would be byte-identical to one that did
+            not. Meanwhile the corpus self-check ran on every commit and said nothing when it
+            passed. The pass line now carries the rule count and the self-check's verdict, and
+            that figure moves --- 26 distinct counts across 37 commits touching the corpus, so
+            reporting it is not renaming furniture. A first version asserted resolution
+            unconditionally and was measured contradicting itself, printing a dangling reference
+            on stderr while claiming on stdout that everything resolved; the claim is now
+            conditional on the verdict it describes.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_citation_gate_reports_a_figure_that_moves},
+}

@@ -110,7 +110,30 @@ fi
 # exists for wearing a disguise.
 cited=$(grep -oE '\bRule [0-9]+\b' "$msg" 2>/dev/null | sort -u -k2 -n)
 if [ -z "$cited" ]; then
-    echo "rule_citations: this message cites no rule"
+    # ⚑⚑⚑ THIS LINE ONCE READ ONLY `this message cites no rule`, AND IT FIRED ON 29 OF 30
+    # COMMITS. A line reporting the same thing every run stops being read — `linux-sources`
+    # measured that with a probe printing SIX which they read past six consecutive ticks, so the
+    # operative property is CONSTANT rather than ZERO.
+    # ⚑⚑ DELETING IT WOULD HAVE BEEN THE WRONG FIX. It is the only stdout on this path, so a
+    # checker that ran would be byte-identical to one that did not — the shape refused everywhere
+    # else in this harness. The line is load-bearing as a *gate ran* signal and was uninformative
+    # only as a *finding*.
+    # ⚑⚑⚑ AND THE SAME RUN WAS DOING WORK IT NEVER MENTIONED: the corpus self-check above
+    # executes on every commit and said nothing when it passed, so the gate announced the trivial
+    # half and stayed silent about the half that can be wrong.
+    # ⚑ THE FIGURE MOVES, which is what separates this from renaming furniture — measured across
+    # 37 commits touching the corpus, 26 distinct rule counts, stepping nearly every time it
+    # changes. A number that never moves is the same furniture with a digit on it.
+    # ⚑⚑⚑ THE VERDICT TEXT WAS UNCONDITIONAL WHERE THE VERDICT IS NOT. A first version said
+    # `all named ones resolve` on every run — MEASURED against a corpus naming an undefined rule,
+    # it reported the dangling reference on stderr and then asserted on stdout that everything
+    # resolved, in the same run. A line that contradicts the finding printed two lines above it is
+    # worse than the constant line it replaced, because it is confidently wrong rather than dull.
+    if [ "$fail" -eq 0 ]; then
+        echo "rule_citations: no rule cited; $(printf '%s\n' "$_defined" | grep -c .) rules define the corpus, every named one resolves"
+    else
+        echo "rule_citations: no rule cited; the corpus self-check above FAILED — see stderr"
+    fi
     # ⚑⚑ `exit 0` HERE DISCARDED THE SELF-CHECK'S VERDICT. Measured on a corpus naming an
     # undefined rule: the dangling reference was REPORTED and the gate still exited 0, because
     # 19 of the last 20 commits cite no rule and take this path. The one arm that fires on nearly

@@ -2321,3 +2321,50 @@ def test_the_count_checker_narrows_by_position_not_by_indent_alone() -> None:
     assert "grep -vE '^    '" in body, (
         "a message must be able to quote the figure it is correcting"
     )
+
+
+_RULECITE = _DIST.parent / "rule_citations.sh"
+
+
+def test_the_citation_gate_reports_a_figure_that_moves() -> None:
+    """⚑⚑⚑ THE ONLY LINE THIS GATE PRINTS ON THE COMMON PATH REPORTS THE ABSENCE OF A CLAIM.
+
+    ⚑ MEASURED over 30 commits: `this message cites no rule` fires on **29 of 30 — 96%**. By
+    `linux-sources`' sharpening, a line reporting the same thing every run stops being read.
+
+    ⚑⚑ AND DELETING IT IS THE WRONG FIX, which is why the constant-line rule does not simply
+    apply. It is the ONLY stdout on that path: remove it and a checker that ran is byte-identical
+    to one that did not — the shape this repository refuses in every other gate. The line is
+    load-bearing as a *gate ran* signal and uninformative as a *finding*.
+
+    ⚑⚑⚑ MEANWHILE THE SAME RUN DOES REAL WORK IT NEVER MENTIONS. The corpus self-check — every
+    rule NAMED in the rules document is also DEFINED there, with a live planted control — executes
+    on every commit and says nothing when it passes. So the gate announces the trivial half and
+    stays silent about the half that could actually be wrong.
+
+    ⚑ THE FIGURE MOVES, WHICH IS WHAT MAKES REPORTING IT DIFFERENT FROM RENAMING FURNITURE.
+    Measured across 37 commits touching the corpus: **26 distinct rule counts**, stepping nearly
+    every time it changes. A number that moves is read; a number that never moves is the same
+    furniture with a digit on it.
+    """
+    body = _RULECITE.read_text(encoding="utf-8")
+    # ⚑ THE GATE-RAN SIGNAL MUST SURVIVE. Exactly one unconditional stdout line on the pass path,
+    # and it must carry the corpus figure rather than only the absence of a citation.
+    assert "rules define" in body, (
+        "the pass line must report the corpus it checked, not only that nothing was cited"
+    )
+    # ⚑ AND IT MUST STILL SAY THE SELF-CHECK RAN. A count with no verdict attached is a number;
+    # the reader needs to know the arm that could have failed did not.
+    assert "every named one resolves" in body, (
+        "the pass line must report the self-check's verdict, which is the half that can be wrong"
+    )
+    # ⚑⚑ AND THE VERDICT TEXT MUST FOLLOW THE VERDICT. A first version asserted it unconditionally
+    # and was MEASURED contradicting itself: against a corpus naming an undefined rule it printed
+    # the dangling reference on stderr, then claimed on stdout that everything resolved. A line
+    # that contradicts the finding two lines above it is worse than the constant one it replaced.
+    assert 'if [ "$fail" -eq 0 ]; then' in body, (
+        "the pass line's claim must be conditional on the self-check having passed"
+    )
+    assert "self-check above FAILED" in body, (
+        "a failed self-check must be named on the same stream the pass line uses"
+    )
