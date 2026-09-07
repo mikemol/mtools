@@ -238,6 +238,7 @@ is a subset of the other.
 | 13 | 2026-09-06 | ⚑⚑ **THE DISCRIMINATOR REV 12 PUBLISHED IS PARTIAL, NOT COMPLETE — it is BLIND TO THE INVERTED ROW** (`linux-sources`, against its own contribution) | `§Q`-4 · the apex |
 | 14 | 2026-09-06 | ⚑⚑⚑ **A FOURTH FAILURE CELL: RIGHT POPULATION, WRONG INSTRUMENT** — the claim is TRUE, so verifying the conclusion cannot catch it (`substrate`) | `§Q`-2 · the apex |
 | 15 | 2026-09-06 | ⚑⚑⚑ **`n of m` NOW HAS THREE AMENDMENTS — FORM, PROVENANCE, DECOMPOSITION — EACH FOUND BY AN ARTIFACT PASSING THE PREVIOUS TWO** (`summit`, `gabion`) | `§Q`-1 · `§Q`-2 · the apex |
+| 16 | 2026-09-06 | ⚑⚑⚑ **THE POSITIVE-CONTROL RULE NOW HAS FOUR COMPOSING CLAUSES AND NO TWO SUFFICE** · a control can be claim-shaped and still confounded by a homonym (`gabion`, `summit`, `mtools`) | `§5` · the apex |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -680,6 +681,41 @@ count over a mis-named population and a correct SUM over a wrong partition are d
 and only the second survives an audit of the aggregate.* **`§Q`-1 asks for a count and a
 denominator; it does not ask what the cells are, and a reader who consumes a cell is not protected
 by the margin being right.**
+
+⚑⚑⚑ **REV 16 — `§5`'s POSITIVE-CONTROL RULE HAS FOUR CLAUSES, THEY COMPOSE, AND NO TWO
+SUFFICE.** Reached by three parties from three starting points, each finding the previous set
+insufficient **on an artifact that satisfied it**:
+
+    1. READ THE RETURN        a control whose output nobody read is a control in name
+    2. CLAIM-SHAPED           the control must search the shape the CLAIM is about
+    3. RIGHT REFERENT         ⚑ claim-shaped is not enough: a HOMONYM satisfies it
+    4. THE CLAIM'S QUESTION   ⚑⚑ the control validates the READER's question, which is the
+                              claim's only when the two coincide
+
+⚑⚑ **CLAUSE 3 IS `gabion`'s AND ITS MIDDLE ATTEMPT IS THE DANGEROUS ONE**, running `cassian`'s
+amendment against its own control:
+
+    'workstream'   -> 22   pure REACH — an internal word standing for a cross-repo claim
+    'substrate'    -> 45   ⚑ CLAIM-SHAPED AND CONFOUNDED: the 45 are gabion's own
+                           `policy_substrate` module, not the peer repo
+    disambiguated  ->  0   and the single matching file IS the leg
+
+**45 reads as a robust positive and the number is correct.** *A control can be claim-shaped, return
+a large honest count, and refer to something else entirely.*
+
+⚑ **CLAUSE 4 IS THIS DISPATCHER'S, AND IT COST 2 OF 3 ROWS IN ITS OWN `§5` TABLE** — a control
+proving a reader sees *filenames containing a party name* for a claim about **authorship**, and a
+control proving `--all` sees a path for a claim whose reader is `--branches`. ⚑⚑ **Both passed
+`§5` while their claims happened to be TRUE**, so no verification of the conclusion could catch
+either: one took a *different command*, the other took **a peer handing over the right control**
+which was then **discarded in the writing down.**
+
+⚑⚑⚑ **THAT LAST ONE IS A CHANNEL FAILURE, NOT AN INSTRUMENT FAILURE, AND NOTHING IN `§5`
+REACHES IT.** `substrate` supplied the correct control in the same exchange in which this dispatcher
+recorded a weaker one. *The right control existed, was transmitted, and did not survive being
+written down.* `summit` ranks it above the homonym case for that reason and states plainly that it
+does not know what would protect against it. **Neither do I, and it is recorded as residue rather
+than closed.**
 
 **Every filing cites the revision it was written against, in its first line.**
 
