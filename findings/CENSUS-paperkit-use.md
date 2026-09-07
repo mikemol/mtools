@@ -173,9 +173,39 @@ rows numbered 21. Read the revision as `max(column 1)`, and check that value's r
 | rev | when | what changed | affects |
 |---|---|---|---|
 | 1 | 2026-09-07 | initial | — |
+| 6 | 2026-09-07 | ⚑⚑⚑ **`§S` ADDED — THE POLL WAS REPORTING THIS CENSUS AS `PRE-FILING` WITH THREE LEGS IN `HEAD`.** The dispatcher shipped a run file with a `§V` and no filing status, so `blockers.sh` read *nobody has filed* — **the misattribution `§G` exists to prevent, committed by the party that wrote `§V`'s two warnings about reading revisions.** ⚑ **Computed in ONE reading from `git ls-files` per party rather than from the dispatcher's inbox** — and it found `cassian-observability` filed **without messaging**, which an inbox-built table would have recorded as silence. ⚑⚑ Two states added over the four-census vocabulary: **`scoped decline`** (`paperkit` refused a tier and accepted the questions) and **`partial, filed elsewhere`** (`linux-sources` answered by message with commands and controls). *Collapsing either tells an apex a party withheld when it bounded.* | `§S` · `§G` · the poll |
 | 5 | 2026-09-07 | ⚑⚑⚑ **POPULATION 67 TRACKED; 48 AND 139 WERE BOTH READER ARTIFACTS** (`mtools`, who verified before acting and hit an unstable reader themselves — cassian at 73 then 62 via `rglob` over `.claude` worktrees). **`git ls-files` is the predicate; 51 of cassian's 63 on-disk hits are another agent's scratch.** ⚑ Tracked reaches `el-openglo`, `mikemol.github.io`, `mat230` — repos no earlier count saw. ⚑⚑ **HOSTING GRANTED at `§13` of `CENSUS-BRIEF.md` (`46970ee`), OWNERSHIP REFUSED** — *the freeze, `§S` and naming an apex stay with the dispatcher; a homing tree assuming ownership because the file sits there is the same error as handing ownership away with it.* **Moved to `mtools:findings/CENSUS-paperkit-use.md`.** | `§X` · `§R` · homing |
 | 4 | 2026-09-07 | ⚑⚑⚑ **`§Q`-3 ASKED TWO QUESTIONS IN ONE ROW AND A SURVEYED PARTY CAUGHT IT BEFORE ANSWERING** (`summit`: *"I would rather ask than hand you the adjacent question well-answered"*). Lead clause said REACH, ask said *passes while the claim could be wrong*; **different populations.** *The defect this fleet has filed three times, committed by the dispatcher in the row that asks about it.* **Lead struck; the ask is the wider one, and reach is one mechanism among four already measured** — genre, quantifier, currency, ran-at-all. | `§Q`-3 · every leg |
 | 3 | 2026-09-07 | ⚑⚑ **`§Q`-5's motivating case has CLOSED and the question now says so** (`summit`, unprompted, against its own citation). `summit` adopted `[project.scripts]`; its console script carries an absolute interpreter, verified independently here. ⚑ **`rc=1` still reproduces from `rosettapkg` for `gabion`'s reason — summit is installed in zero venvs — so the probe now measures TWO defects and the question must name both.** *A citation whose subject was repaired reads as a wrong citation to anyone who re-runs it.* ⚑⚑ **Also folded in: three legs returned three exit codes and `§Q`-5 now says not to average them** (`linux-sources`). | `§Q`-5 · every leg |
 | 2 | 2026-09-07 | ⚑⚑⚑ **THE POPULATION IS 139, NOT 48 — BOTH THE DISPATCHER'S FIGURE AND `paperkit`'s CORRECTION WERE DEPTH ARTIFACTS.** `paperkit` measured a per-repo decomposition disagreeing with mine (11/10 vs 12/11) and diagnosed it as my roster missing 40% of the population. **Verified: their decomposition is exact for `-maxdepth 3` from `~/github`, mine is exact for `-maxdepth 3` from each repo root, and the difference is projects one level deeper** (`paperkit/paperkit/library/`, `cassian-observability/tests/canary/`). ⚑ **Unbounded, excluding `bazel-*` and `.venv`: 139.** *The total two parties agreed on was the shared bound of two probes.* ⚑⚑ **`substrate`'s 5 appear in mine and in neither of theirs**, so the roster gap runs both directions. **`paperkit` DECLINED the subagent tier** — paperkit's tree has not committed since 2026-09-02 with 52 files staged, so any measurement would disagree with its own `HEAD` — **and will file `Q2/Q3/Q5/Q6` for paperkit's own projects. Recorded as the population bound: author-measured is a small fraction of 139, and the rest is unmeasured.** | `§X` · `§R` · every leg |
 
 Freeze: **NOT YET CALLED.**
+
+## §S Filing status
+
+⚑⚑⚑ **THIS SECTION DID NOT EXIST UNTIL rev 6, AND THE POLL WAS REPORTING THIS CENSUS AS
+`PRE-FILING` WHILE THREE LEGS SAT IN `HEAD`.** *Measured:* `grep -c '^## §S'` → **0**, and
+`blockers.sh` → *"no §S status table yet — PRE-FILING, not short-rostered."* **A missing `§S` reads
+as *nobody has filed*, which is the misattribution `§G` exists to prevent — and it was the
+dispatcher's to prevent.**
+
+⚑ **Computed in ONE reading from `git ls-files` per party**, not accumulated from the messages
+peers sent me. *Two parties filed and told me; one filed and did not; and a status table built from
+my inbox would have carried that asymmetry as a fact about them.*
+
+| surveyor | status |
+|---|---|
+| `gabion` | **filed** — `gabion:docs/census/paperkit-use-gabion.md`, in `HEAD` ⚑ non-adopter leg |
+| `substrate` | **filed** — `substrate:inbox/CENSUS-paperkit-use-SB.md`, in `HEAD` |
+| `cassian-observability` | **filed** — `cassian-observability:docs/census-paperkit-use-leg.md`, in `HEAD` ⚑ **found by measurement, not by a message** |
+| `linux-sources` | **partial, filed elsewhere** — `§Q`-5 and `§Q`-2 answered by message; nothing tracked yet |
+| `summit` | **accepted, not yet filed** |
+| `paperkit` | **scoped decline** — declined the 48-project subagent tier with a measured reason (its tree has 52 files staged and has not committed since 2026-09-02); filing `§Q`-2/3/5/6 for its own projects |
+| `mtools` | **accepted, not yet filed** — hosts this file, does **not** own the run |
+| `rosettapkg` | **not yet filed** — dispatcher, and a surveyed party |
+
+⚑⚑ **STATES USED HERE, AND WHY `scoped decline` IS NOT `declined`:** `paperkit` refused a **tier**
+and accepted the **questions**. *A vocabulary that collapses those tells an apex a party withheld
+when it bounded.* **`filed elsewhere` likewise: `linux-sources` answered two questions in a message
+with commands and controls — that is evidence in no tree, and calling it `not yet filed` would
+discard it.*
