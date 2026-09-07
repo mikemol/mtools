@@ -3613,3 +3613,50 @@ def test_an_unmatched_state_says_whether_the_census_declared_it() -> None:
         "an unmatched row in a census that declares its states must say so; collapsing it with "
         "the undeclared case hides which repair is owed"
     )
+
+
+def test_the_poll_reads_each_census_against_its_own_declared_vocabulary() -> None:
+    """⚑⚑⚑ A SHIPPED MODE WITH NO CALLER IS THE PACKAGER NOT USING ITS OWN PACKAGE.
+
+    The previous tick measured that five censuses publish a `state | means` table, reported that
+    the poll read none of them, and shipped `mdstruct classify` to close it — **and then did not
+    consume it.** One tick later the poll's output was byte-identical: same four hand-written
+    prefixes, same residue. This repository has the named instance: a hook carrying 52 tests and 52
+    warrants that `settings.json` invoked nowhere, its own docstring saying so while the suite
+    stayed green.
+
+    ⚑⚑ THE HAND-WRITTEN PROBES ARE KEPT, NOT REPLACED, AND THAT IS THE DESIGN. Three censuses
+    publish no vocabulary at all, so a classifier refuses them while the prefixes still say
+    something. Deleting the fallback would trade a blind spot for a hole — and the two readings
+    answer different questions, so the poll prints **both** and reconciles neither.
+
+    ⚑⚑⚑ WHERE THEY DISAGREE IS THE FINDING, and they do. Measured on one frozen census: the
+    prefixes report *12 rows carry a state these probes do not name* while the document's own
+    vocabulary names **11 of those 12**. The residue of one is a row using a state the census
+    never declared — which only the document-relative reading can reveal, and which the
+    reader-relative line reports as its own blindness.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the reader-relative residue must still be reported, or this arm passes
+    # because the pair collapsed to one reading rather than because both are printed.
+    assert "carry a state these probes do not name" in commands, (
+        "the reader-relative residue must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑ THE MODE IS ACTUALLY INVOKED, not merely available.
+    assert '"$md" classify "$census"' in commands, (
+        "the poll must read each census against the vocabulary that census publishes — a mode "
+        "with no caller is a component whose own packager does not use it"
+    )
+    # ⚑ AND THE DOCUMENT-RELATIVE READING IS PRINTED BESIDE THE READER-RELATIVE ONE.
+    assert "match a state this census publishes" in commands, (
+        "the document-relative count must be printed; where it disagrees with the probes is the "
+        "only place a state used-but-never-declared can show up"
+    )
+    # ⚑ A CENSUS THAT PUBLISHES NOTHING IS SAID SO, rather than reported as a residue of zero.
+    assert "publishes no state|means table" in commands, (
+        "a census with no vocabulary cannot be read against one, and that is a fact about the "
+        "document rather than a clean result"
+    )

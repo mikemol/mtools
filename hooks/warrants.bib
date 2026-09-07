@@ -2146,3 +2146,26 @@
             call for different repairs.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_an_unmatched_state_says_whether_the_census_declared_it},
 }
+
+@misc{hooks-bar-fires-poll-reads-each-census-against-its-own-vocabulary,
+  section = {bar-fires},
+  title  = {A shipped mode with no caller is the packager not using its own package},
+  claim  = {The previous tick measured that five censuses publish their state vocabulary in a
+            declared table, reported that the poll read none of them, and shipped a classify mode
+            to close it, and then did not consume it. One tick later the poll's output was
+            byte-identical: the same four hand-written prefixes and the same residue. This
+            repository carries the named instance of that defect already, a hook with fifty-two
+            tests and fifty-two warrants that the settings file invoked nowhere while its own
+            docstring said so and the suite stayed green. The hand-written probes are kept rather
+            than replaced, because three censuses publish no vocabulary at all and a classifier
+            refuses those while the prefixes still report something, so deleting the fallback would
+            trade a blind spot for a hole. The two readings answer different questions and are
+            printed side by side rather than reconciled in the script, because reconciling them
+            there would be judgement in the turn rather than a measurement a reader can check.
+            Where they disagree is the finding, and they do: on one frozen census the prefixes
+            report twelve rows carrying a state they do not name while the document's own
+            vocabulary names eleven of those twelve, leaving one row that uses a state the census
+            never declared. Only the document-relative reading can reveal that row, and the
+            reader-relative line correctly reports its own blindness rather than the document's.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_reads_each_census_against_its_own_declared_vocabulary},
+}

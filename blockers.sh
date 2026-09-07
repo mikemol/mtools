@@ -762,11 +762,46 @@ else
                 # ⚑ SO THE TOTAL IS NOW READ FROM THE TABLE ITSELF rather than summed from the
                 # probes: `§S` row count is an independent measurement, and a disagreement between
                 # it and the sum is exactly the signal the sum alone cannot produce.
+                # ⚑⚑ THE §S TABLE IS FOUND BY SHAPE, NOT BY POSITION. A census may carry a §G
+                # freeze summary with the same header, so the LAST match wins — the poll already
+                # documents that §S is the running roster and §G is a summary of it.
+                _spos=$("$md" tables "$census" 2>/dev/null \
+                    | grep -E 'surveyor \| status|party \| state' | tail -1 \
+                    | sed -n 's/^  table \([0-9]*\)  .*/\1/p')
                 _rows=$("$md" tables "$census" 2>/dev/null \
                     | grep -E 'surveyor \| status|party \| state' | tail -1 \
                     | sed -n 's/^  table [0-9]*  \([0-9]*\) row(s).*/\1/p')
                 _rows=${_rows:-0}
                 _unmatched=$((_rows - _accounted))
+                # ⚑⚑⚑ AND NOW THE DOCUMENT'S OWN VOCABULARY IS ACTUALLY READ, by the mode built
+                # for it. The previous tick measured that five censuses publish a `state | means`
+                # table, reported that this arm read none of them, and shipped `mdstruct classify`
+                # to close it — **and then did not consume it.** A component with full coverage and
+                # no caller is *the packager is not a user of its own package*, which is this
+                # repository's named defect, demonstrated one tick earlier by a hook carrying 52
+                # warrants that `settings.json` invoked nowhere. This is the wiring.
+                # ⚑⚑ THE HAND-WRITTEN PROBES ABOVE ARE KEPT, NOT REPLACED, and the reason is that
+                # they answer a DIFFERENT question: three censuses publish no vocabulary at all, so
+                # a classifier refuses them (rc=2) while the prefixes still say something. Deleting
+                # the fallback would trade a blind spot for a hole.
+                # ⚑ THE TWO READINGS ARE PRINTED SIDE BY SIDE rather than reconciled here. Where
+                # they disagree, that is the finding — and reconciling them in this script would be
+                # judgement in the turn rather than a measurement a reader can check.
+                _cls_named=0
+                _cls_residue=0
+                _cls_ok=0
+                if [ -n "${_spos:-}" ]; then
+                    _cls=$("$md" classify "$census" --table "$_spos" 2>/dev/null || true)
+                    if [ -n "$_cls" ]; then
+                        _cls_ok=1
+                        _cls_residue=$(printf '%s\n' "$_cls" \
+                            | sed -n 's/^ *\([0-9]*\)  ⚑ UNCLASSIFIED.*/\1/p')
+                        _cls_residue=${_cls_residue:-0}
+                        _cls_named=$(printf '%s\n' "$_cls" \
+                            | sed -n 's/^  \([0-9]*\) row(s) classified.*/\1/p')
+                        _cls_named=$(( ${_cls_named:-0} - _cls_residue ))
+                    fi
+                fi
                 # ⚑⚑⚑ EVERY COMPONENT OF THE ASSERTED EXPRESSION IS PRINTED, NOT JUST ITS VERDICT.
                 # The old branch asserted `_elsewhere >= _gap` and printed only `_elsewhere`, so a
                 # reader got a conclusion with one operand invisible and no way to check the
@@ -784,6 +819,22 @@ else
                 # vocabulary does not know — a fact about THIS READER, and it is now visible
                 # rather than absorbed into a zero.
                 echo "    §S rows:  $_rows measured; $_unmatched carry a state these probes do not name"
+                # ⚑ THE DOCUMENT'S OWN READING, BESIDE THIS ARM'S. `classify` groups §S against the
+                # states the census declares; a residue there is a state the document USES and never
+                # DECLARED, which is a finding about the census rather than about this reader — the
+                # inverse of the line above it, and the pair is why both are printed.
+                if [ "${_cls_ok:-0}" -eq 1 ]; then
+                    echo "    declared: $_cls_named row(s) match a state this census publishes;" \
+                         "$_cls_residue do not"
+                    if [ "${_cls_residue:-0}" -gt 0 ]; then
+                        echo "      ⚑ a row using a state the census never declared is the one"
+                        echo "        thing only this reading can reveal — mdstruct classify" \
+                             "$(basename "$census") --table $_spos"
+                    fi
+                else
+                    echo "    declared: this census publishes no state|means table, so it cannot" \
+                         "be read against its own vocabulary"
+                fi
                 # ⚑ AND WHETHER THE CENSUS PUBLISHED ITS VOCABULARY IS ITSELF THE DISCRIMINATOR.
                 # An unmatched row in a census that DECLARES its states is this reader failing to
                 # read a published list; an unmatched row in one that declares nothing is a state
