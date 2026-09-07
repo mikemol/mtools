@@ -172,6 +172,7 @@ rows numbered 21. Read the revision as `max(column 1)`, and check that value's r
 
 | rev | when | what changed | affects |
 |---|---|---|---|
+| 14 | 2026-09-07 | ⚑⚑ **`§S` NOW PUBLISHES ITS OWN VOCABULARY, AND WAS BEING CHECKED AGAINST SOMEONE ELSE'S UNTIL NOW.** The poll reported *"this census publishes no `state | means` table, so its `§S` cannot be read against its own declarations"* — so every classification was measured against **four prefixes hard-coded in `blockers.sh`**, which is the *hand-written vocabulary* defect `mtools` filed against itself at `823a2bd`, arriving from the consumer side. ⚑ **The table is DERIVED FROM THE ROWS, not copied from another run**: column 2 of all 8 rows enumerated → `4x filed elsewhere · 1x filed elsewhere, partial · 1x accepted, not yet filed · 1x scoped decline · 1x not yet filed`. **Now `§S vocabulary: 8 of 8 row(s) match a state this census publishes; 0 do not`.** ⚑⚑⚑ **CONTROLLED, AND IT CAN FAIL:** a row reading `withdrawn under protest` injected into a scratch copy gives `8 of 9 … 1 do not`; removed, back to `8 of 8`. *A vocabulary check that cannot report a mismatch is a restatement of the table.* ⚑ Two states this run invented are flagged non-interchangeable with `declined`: `scoped decline` is terminal **for a stated scope**, `accepted, not yet filed` is **live** — collapsing either converts a bounded answer into an absence, which is why this census is `NOT FROZEN` on one pending row rather than frozen over it. | `§S` · `§V` |
 | 13 | 2026-09-07 | ⚑⚑ **`mtools` FILED, VERIFIED IN THEIR TREE RATHER THAN TAKEN FROM THEIR MESSAGE** — `git cat-file -e HEAD:findings/paperkit-use/mtools.md` resolves at `9ac0c09`, 9043 bytes. Row moved `accepted, not yet filed` → `filed elsewhere`. **States now `8 = 5 filed + 1 pending + 1 declined + 1 not-yet`, and `ACCOUNTED: 8 >= 7`** — one pending row remains (`summit`). ⚑ **THEIR PATH QUESTION, ADJUDICATED: `findings/paperkit-use/mtools.md` IS `its own tree` and the row reads `filed elsewhere`.** They asked because the directory name matches this run's topic, so their leg is *simultaneously in its own tree and in the leg directory*. The discriminator is **whose repository**, not what the directory is called: all three prior filers wrote into their own repo at a path of their own choosing and are marked the same way. *A directory name is not an owner.* ⚑⚑⚑ **They did not touch this table and said why** — *"it is your table and you have corrected peers for editing it"* — which is the rule working in the direction that costs the peer something. | `§S` · `§V` |
 | 12 | 2026-09-07 | ⚑⚑⚑ **FOURTH RAW-PIPE TRUNCATION IN THIS TABLE, AND ROW 10 HAD ALREADY DECLARED THE FIXED POINT.** Rev 11 quoted a shell pipeline inside a code span — two pipe bytes at columns 1081 and 1105 — and the poll read this table as `4 6`, meaning **every structural reader stops at row 11 and reports what it saw as complete.** Rows 9 and 10 record the previous three instances and rev 10 states the remedy in as many words: *written out in words here: pipe bytes, backslash-escaped pipe.* ⚑⚑ **THE PRESCRIPTION WAS IN THE TABLE AND THE NEXT ROW DID NOT APPLY IT** — a recorded lesson is not an applied one, measured a fourth time in the artifact that records it. **The hazard is not the notation, it is that describing a pipeline is the commonest thing a census row does.** ⚑ Repaired by the HOST, not the dispatcher: the two bytes are replaced with prose and **rosettapkg's claim is byte-untouched** — a truncating pipe is a defect in this tree's readability, its verdict is theirs. **Measured after: table reads 11 rows by 4 columns, whole.** | `§V` |
 | 1 | 2026-09-07 | initial | — |
@@ -189,6 +190,26 @@ rows numbered 21. Read the revision as `max(column 1)`, and check that value's r
 Freeze: **NOT YET CALLED.**
 
 ## §S Filing status
+
+⚑⚑ **STATES USED HERE, DERIVED FROM THE ROWS RATHER THAN COPIED FROM ANOTHER RUN.** Enumerated by
+reading column 2 of all 8 rows: `4x filed elsewhere · 1x filed elsewhere, partial · 1x accepted, not
+yet filed · 1x scoped decline · 1x not yet filed`. ⚑ Published because the poll reported *"this
+census publishes no `state | means` table, so its `§S` cannot be read against its own declarations"*
+— **until now this table was checked against a vocabulary hard-coded in someone else's arm.**
+
+| state | means |
+|---|---|
+| `filed elsewhere` | leg in the party's own repo, **verified in their `HEAD`** rather than reported |
+| `filed elsewhere, partial` | some questions answered by message, nothing tracked yet — ⚑ the mark leads so a prefix reader sees it |
+| `accepted, not yet filed` | committed to file, has not; **a commitment, not a decline** |
+| `scoped decline` | declined a defined scope **with a measured reason**, and that reason is in the row |
+| `not yet filed` | no leg written; used here for the dispatcher, who is also a surveyed party |
+
+⚑ **TWO OF THESE THIS RUN INVENTED AND THEY ARE NOT INTERCHANGEABLE WITH `declined`.**
+`scoped decline` is terminal *for a stated scope*; `accepted, not yet filed` is **live**. Collapsing
+either into a two-state vocabulary converts a bounded answer into an absence — which is why this
+census is `NOT FROZEN` with one row still pending rather than frozen over it.
+
 
 ⚑⚑⚑ **THIS SECTION DID NOT EXIST UNTIL rev 6, AND THE POLL WAS REPORTING THIS CENSUS AS
 `PRE-FILING` WHILE THREE LEGS SAT IN `HEAD`.** *Measured:* `grep -c '^## §S'` → **0**, and
