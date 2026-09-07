@@ -67,7 +67,25 @@ OPERATORS: frozenset[str] = frozenset({"|", "||", "&&", ";", "&", "|&"})
 WRAPPERS: frozenset[str] = frozenset({
     "timeout", "env", "xargs", "command", "builtin", "exec",
     "nice", "ionice", "nohup", "stdbuf", "time", "watch",
-    "sudo", "doas", "setsid", "script",
+    # ⚑⚑⚑ `script` IS NOT HERE, AND ITS PRESENCE READ A PATH AS A PROGRAM. Membership means *the
+    # real program follows this token*, which holds for `setsid grep …` and fails for
+    # `script -c 'grep x' /dev/null`: the wrapped program is INSIDE the quoted argument, and the
+    # token after it is the typescript FILE. MEASURED before the repair: `programs()` reported
+    # `null`.
+    # ⚑⚑ FOUND BY `cassian-observability`, who drove both copies of this module over 17 commands
+    # rather than reading them — 0 disagreements, and this one shape wrong in both. They named
+    # `sudo -C` and `xargs -I` as worth checking for the same property and explicitly did NOT
+    # claim they shared it; measured, both are correct, because for those the program really does
+    # follow.
+    # ⚑ IT STAYS IN `_FLAGS_WITH_ARG` so `-c`'s argument is still consumed rather than read as a
+    # program. The two tables answer different questions: one asks *does a program follow*, the
+    # other *does this flag take an argument*, and `script` is yes to the second and no to the
+    # first.
+    # ⚑⚑ THE BOUND, STATED RATHER THAN CLOSED: the wrapped program is not recovered, because
+    # recovering it means parsing shell out of an opaque token. `script` reports `script`, which
+    # is what `sh -c` and `bash -c` already report and what the routing hook relies on when it
+    # refuses `python3 -c` by naming the interpreter.
+    "sudo", "doas", "setsid",
     "uv", "poetry", "pipenv", "hatch", "rye",
 })
 

@@ -215,3 +215,34 @@ def test_a_flag_argument_at_the_end_does_not_overrun() -> None:
     a command the user merely mistyped.
     """
     assert _progs("env -u") == []
+
+
+def test_a_wrapper_whose_argument_is_a_command_reports_the_wrapper() -> None:
+    """⚑⚑⚑ `script -c 'grep x' /dev/null` REPORTED `null` AS THE PROGRAM.
+
+    ⚑ FOUND BY `cassian-observability`, driving both copies of this module over 17 commands rather
+    than reading them: 0 disagreements, and this one shape wrong in both. Verified here against
+    this module before believing it — it reproduces exactly.
+
+    ⚑⚑ AND THEIR CAUTION WAS RIGHT. They named `sudo -C` and `xargs -I` as worth checking for the
+    same property and explicitly did not claim they shared it. **Measured: both report `grep`
+    correctly.** `script` is the single case.
+
+    ⚑ THE CAUSE IS NARROWER THAN *the flag logic has a hole*. `script` is not in `_FLAGS_WITH_ARG`
+    at all, so `-c` is never consumed as a flag-with-argument and `/dev/null` is read as the next
+    bare token. The flag table is not wrong; `script` is simply absent from it.
+
+    ⚑⚑ AND THE FIX IS NOT TO PARSE THE ARGUMENT. `script -c` takes a SHELL COMMAND — the wrapped
+    program lives inside a quoted string, and recovering it means parsing shell out of an opaque
+    token, which is a different capability. `sh -c` and `bash -c` already report the SHELL, which
+    is the honest answer for that class: the routing hook refuses `python3 -c` by naming the
+    interpreter, not by reading its argument. So `script` reports `script`.
+    """
+    assert [prog for prog, _ in cmdparse.programs("script -c 'grep x' /dev/null")] == ["script"], (
+        "a wrapper whose flag argument is a shell command must report the wrapper, "
+        "never the token after the argument it failed to consume"
+    )
+    # ⚑ AND THE TWO cassian FLAGGED AS UNCHECKED MUST STAY CORRECT — they were clean when measured
+    # and a widened table is exactly what could break them.
+    assert [prog for prog, _ in cmdparse.programs("sudo -C 3 grep x f")] == ["grep"]
+    assert [prog for prog, _ in cmdparse.programs("xargs -I {} grep x {}")] == ["grep"]

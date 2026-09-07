@@ -90,7 +90,7 @@ for the same reason.
 | `cassian-observability` | `CO-` | `findings/remaining-work/cassian-observability.md` |
 | `rosettapkg` | `RP-` | `findings/remaining-work/rosettapkg.md` |
 | `gabion` | `GB-` | `findings/remaining-work/gabion.md` |
-| **apex** — named at the freeze | `AX-` | `findings/remaining-work/remaining-work-apex.md` |
+| `mtools` — **named 2026-09-07 by the operator** | `AX-` | `findings/remaining-work/remaining-work-apex.md` |
 
 ⚑ **WRITE AUTHORIZATION, STATED ONCE SO NO PARTY INFERS IT FROM A PATH TABLE.** `§R` naming a path
 in mtools' tree is a **convention, not a grant** — that distinction cost this ecosystem a
@@ -254,6 +254,7 @@ is a subset of the other.
 | 29 | 2026-09-07 | ⚑⚑⚑ **REV 28b IS TOO STRONG — THE EVIDENCE WAS VERSIONED, NOT DESTROYED. A REPAIRED INVISIBILITY IS UNREPRODUCIBLE ONLY WHERE THE ARTIFACT IS UNVERSIONED** (`gabion`) | rev 28b · `§Q`-2 |
 | 30 | 2026-09-07 | ⚑⚑⚑ **RAGGEDNESS WAS NEVER THE CAUSE — it came and went while the truncation did not. An escaped backtick INSIDE A TABLE ROW is** | `§V` · revs 23-29 |
 | 31 | 2026-09-07 | ⚑⚑⚑ **FOUR READERS IN SEQUENCE, EACH BUILT FOR THE LAST ONE'S BLIND SPOT, EACH SHIPPED WITH AN UNCALIBRATED DENOMINATOR** (`cassian`) | `§Q`-2 · the arms |
+| 32 | 2026-09-07 | ⚑⚑⚑ **THE APEX IS NAMED: `mtools`, by the operator.** `§R`'s `AX-` slot read *named at the freeze* from the freeze until now, and `§G` put the naming with the operator rather than the dispatcher. Asked and answered 2026-09-07. ⚑ The apex was built by a dispatched agent rather than written by this session, and the operator's ruling is that the accountable party is the one who dispatched it — a name a reader can ask about, which is what every other `§R` row carries. ⚑⚑ **No leg is amended and none is re-opened**: `§R` is the accounting, not a leg, and `§D` governs legs. | `§R` · `§G` |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 

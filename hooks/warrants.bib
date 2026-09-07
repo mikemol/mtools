@@ -1888,3 +1888,25 @@
             meant deleting a real party to make a green line.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_roster_count_derives_the_apex_row_rather_than_assuming_it},
 }
+
+@misc{hooks-cmdparse-a-wrapper-whose-argument-is-a-command-reports-the-wrapper,
+  title  = {A wrapper table entry that read a typescript file as the program},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {cmdparse},
+  note   = {cassian-observability drove both copies of this module over seventeen commands rather
+            than reading them, found zero disagreements, and found one shape wrong in both:
+            script -c with a quoted command reported the typescript file as the program.
+            Verified here before believing it, and it reproduced. Their caution was also right ---
+            they named two other flags as worth checking for the same property and explicitly did
+            not claim they shared it, and measured, both were already correct. The cause is
+            membership in the wrapper set, which means the real program follows this token: true
+            for setsid, false here, because the wrapped program is inside the quoted argument and
+            the token after it is a file. It stays in the flag table so the argument is still
+            consumed; the two tables answer different questions. The bound is stated rather than
+            closed --- the wrapped program is not recovered, because that means parsing shell out
+            of an opaque token, so the wrapper is reported, which is what sh -c and bash -c
+            already report and what the routing hook relies on when it refuses an inline
+            interpreter script by naming the interpreter.},
+  check  = {pytest hooks/tests/test_cmdparse.py -k test_a_wrapper_whose_argument_is_a_command_reports_the_wrapper},
+}
