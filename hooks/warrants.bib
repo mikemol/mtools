@@ -1530,3 +1530,23 @@
             conditional on the verdict it describes.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_citation_gate_reports_a_figure_that_moves},
 }
+
+@misc{hooks-bar-fires-the-shell-gate-says-what-it-checked,
+  title  = {Zero bytes on the pass path: a run and a non-run are byte-identical},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {Measured by running the shell gate on a clean file: zero bytes of output and exit 0.
+            shellcheck says nothing when it finds nothing and the script ends in exec, so the
+            pass path emitted literally nothing --- the shape this repository refuses in every
+            other gate, sitting in the gate that checks the shell those refusals are written in.
+            The staged-file count is the figure and it moves, because targets arrive from bazel's
+            location expansion and a glob that stopped matching would stage fewer files while
+            still exiting 0 silently; the script's own comment records that a find-based version
+            once returned nothing. The line is emitted before the exec, since after it this shell
+            does not exist and a line written below would never run. Three arms measured: a clean
+            pair reports the count, a planted defect still fails with the count printed first and
+            the exec preserving shellcheck's status, and a missing binary refuses without
+            reporting a count.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_shell_gate_says_what_it_checked},
+}

@@ -30,5 +30,22 @@ for target in "$@"; do
     fi
 done
 
+# ⚑⚑⚑ THE PASS PATH EMITTED ZERO BYTES, SO A RUN AND A NON-RUN WERE BYTE-IDENTICAL. MEASURED on
+# a clean file: 0 bytes, exit 0. `shellcheck` says nothing when it finds nothing and this script
+# ends in `exec`, so there was nothing to say it had happened. That is the shape refused in every
+# other gate here — `preflight.sh` refuses a missing tool rather than skipping, `rule_citations.sh`
+# keeps a pass line SPECIFICALLY so a run is distinguishable from a non-run — and it was sitting
+# in the gate that checks the shell those refusals are written in.
+#
+# ⚑⚑ THE COUNT IS THE FIGURE, AND IT MOVES. Targets arrive from bazel's `$(location …)` expansion,
+# so *how many files were staged* is exactly what a silent pass hides: a glob that stopped matching
+# would stage FEWER files and still exit 0 with no output. The comment above records that a
+# `find`-based version once returned NOTHING and was caught only because the guard refused an
+# empty list — the count is the reading that would have named it rather than merely stopping it.
+#
+# ⚑ BEFORE THE `exec`, NOT AFTER. After it this shell does not exist; a line written below would
+# never run, which is the same defect wearing a fix.
+echo "shellcheck_test: checked $# shell file(s) with $(basename "$sc")"
+
 # ⚑ EXCLUDE IS EMPTY. Waivers are measured here, never inherited from a peer.
 exec "$sc" "$@"

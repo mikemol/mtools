@@ -2368,3 +2368,40 @@ def test_the_citation_gate_reports_a_figure_that_moves() -> None:
     assert "self-check above FAILED" in body, (
         "a failed self-check must be named on the same stream the pass line uses"
     )
+
+
+_SHELLCHECK_TEST = _DIST.parent / "shellcheck_test.sh"
+
+
+def test_the_shell_gate_says_what_it_checked() -> None:
+    """⚑⚑⚑ ZERO BYTES ON THE PASS PATH: A RUN AND A NON-RUN ARE BYTE-IDENTICAL.
+
+    ⚑ MEASURED by running it on a clean file: **0 bytes of output, exit 0**. `shellcheck` prints
+    nothing when it finds nothing, and this script ends in `exec "$sc" "$@"`, so the pass path
+    emits literally nothing. That is the shape this repository refuses in every other gate —
+    `preflight.sh` refuses a missing tool rather than skipping, `rule_citations.sh` keeps a pass
+    line *specifically* so a run is distinguishable from a non-run — and it is sitting in the gate
+    that checks the shell those refusals are written in.
+
+    ⚑⚑ THE FILE COUNT IS THE FIGURE, AND IT MOVES. The `sh_test` receives its targets from bazel's
+    `$(location …)` expansion, so *how many shell files were staged* is exactly the quantity a
+    silent pass hides: a rule that stopped matching would stage FEWER files and still exit 0 with
+    no output. Its own comment records that a `find`-based version once returned nothing and was
+    caught only because the guard refused an empty list.
+
+    ⚑ NOT A CONSTANT LINE. `linux-sources` measured that a probe printing a fixed number is read
+    past — theirs printed SIX for six consecutive ticks — so the pass line carries the count, which
+    changes whenever the staged set does, rather than a fixed *ok*.
+    """
+    body = _SHELLCHECK_TEST.read_text(encoding="utf-8")
+    # ⚑ THE PASS PATH MUST EMIT SOMETHING. Asserting on the string alone would be satisfied by a
+    # comment; this asserts the count is interpolated, which only a command can do.
+    assert "shellcheck_test: " in body, "the pass path must be distinguishable from a non-run"
+    assert "$#" in body.split("exec")[0], (
+        "the staged-file count must be read before the exec that replaces this shell"
+    )
+    # ⚑⚑ AND IT MUST PRECEDE THE `exec`. After it, this shell no longer exists — a pass line
+    # written below the exec is a line that never runs, which is the defect with extra steps.
+    assert body.index("shellcheck_test: checked") < body.index('exec "$sc"'), (
+        "the pass line must be emitted before exec replaces this process"
+    )
