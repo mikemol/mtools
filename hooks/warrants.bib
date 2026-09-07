@@ -2122,3 +2122,27 @@
             branch already applies one axis over.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_a_partitions_terms_and_total_come_from_different_measurements},
 }
+
+@misc{hooks-bar-fires-unmatched-state-says-whether-the-census-declared-it,
+  section = {bar-fires},
+  title  = {A residue against a published list is a different fact from a residue against none},
+  claim  = {Five of the eight censuses in this tree publish their own state vocabulary in a
+            state-and-meaning table, and the poll's roster arm read none of them: its four state
+            prefixes were written by hand from the two files their author happened to be reading.
+            The declared union across the corpus is far wider, and two of the states it misses are
+            load-bearing. One census annotates not-surveyed in its own table as reading like a zero
+            when nobody was asked, so an arm blind to that state reports the absence of a survey as
+            the absence of a finding, which is the single confusion the whole poll exists to
+            refuse. The obvious repair was refused after measurement: adding the shortest state to
+            the probe list would turn seven unnamed rows green on one census, but a prefix query for
+            it returns eight of eight there because it also matches a longer declared state, so the
+            declared states are not a partition and summing per-state probes double-counts in
+            exactly the arithmetic that had already read fourteen against a twelve-row table. The
+            row count measured from the table therefore remains the independent total, and what the
+            repair adds is the diagnosis a residue needs in order to be actionable. The
+            discriminator is whether the census published anything at all: an unmatched row in a
+            census that declares its states is this reader failing to read a published list, while
+            an unmatched row in one that declares nothing is a state nobody wrote down, and the two
+            call for different repairs.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_an_unmatched_state_says_whether_the_census_declared_it},
+}

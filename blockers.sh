@@ -719,6 +719,31 @@ else
                     | sed -n 's/^  \([0-9]\+\) row(s).*/\1/p')
                 _notyet=${_notyet:-0}
                 _accounted=$((_elsewhere + _pending + _declined + _notyet))
+                # ⚑⚑⚑ FIVE OF EIGHT CENSUSES PUBLISH THEIR OWN STATE VOCABULARY IN A
+                # `state | means` TABLE, AND THIS ARM READ NONE OF THEM. The four prefixes above
+                # were written by hand from the two files their author was reading. MEASURED, the
+                # declared union is far wider: `filed`, `not surveyed`, `retired`, `no response`,
+                # `DRAFTED`, `STAGED`, `declined`, `filed (rev n)`.
+                # ⚑⚑ TWO OF THE UNSEEN STATES ARE LOAD-BEARING, and one census says so in its own
+                # table: `not surveyed` is annotated *⚑⚑⚑ NO — and it READS as a zero. Nobody was
+                # asked.* An arm that cannot see it reports the absence of a survey as the absence
+                # of a finding — the one confusion this whole poll exists to refuse.
+                # ⚑ SO THE VOCABULARY IS READ FROM THE CENSUS rather than extended here. Adding
+                # `filed` to the list would repair one file and leave the mechanism: the next
+                # census to mint a state would be miscounted the same way, and nothing would say
+                # so. A published declaration is the only population that cannot go stale.
+                # ⚑⚑⚑ AND `filed` IS NOT ADDED TO THE PROBES, DELIBERATELY, THOUGH IT WOULD TURN
+                # `remaining-work`'s seven unnamed rows green. MEASURED: `--starts 'filed'` returns
+                # **8 of 8** there — it matches `filed elsewhere` too, because one declared state
+                # is a PREFIX OF ANOTHER. Summing per-state probes over a declared vocabulary
+                # double-counts, which is the same arithmetic that read 14 against a 12-row table.
+                # ⚑⚑ SO THE DECLARED STATES ARE NOT A PARTITION AND CANNOT BE SUMMED. The row
+                # count from the table stays the total — one measurement, independent of the
+                # probes — and what this detector adds is the DIAGNOSIS a residue needs to be
+                # actionable, not a bigger sum that would be wrong in a new way.
+                _declared=$("$md" tables "$census" 2>/dev/null \
+                    | grep -c 'state | means' || true)
+                _declared=${_declared:-0}
                 # ⚑⚑⚑ THE TERMS AND THE TOTAL MUST COME FROM DIFFERENT MEASUREMENTS, and this
                 # partition did not. Every term above is the same query with a different prefix,
                 # and `_accounted` is their sum — so when the four prefixes match nothing, all
@@ -759,6 +784,14 @@ else
                 # vocabulary does not know — a fact about THIS READER, and it is now visible
                 # rather than absorbed into a zero.
                 echo "    §S rows:  $_rows measured; $_unmatched carry a state these probes do not name"
+                # ⚑ AND WHETHER THE CENSUS PUBLISHED ITS VOCABULARY IS ITSELF THE DISCRIMINATOR.
+                # An unmatched row in a census that DECLARES its states is this reader failing to
+                # read a published list; an unmatched row in one that declares nothing is a state
+                # nobody wrote down. Different repairs, and the arm could not tell them apart.
+                if [ "${_unmatched:-0}" -gt 0 ] && [ "${_declared:-0}" -gt 0 ]; then
+                    echo "    ⚑ this census PUBLISHES a state|means table and $_unmatched row(s)"
+                    echo "      still went unnamed — the vocabulary is declared and unread."
+                fi
                 # ⚑ THE THIRD OUTCOME, AND IT IS NOT A FAILURE. When no cell declares the mark but
                 # some row mentions it, this reader cannot adjudicate the file — that is INVALID,
                 # not FALSE, and reporting it as a dropped row would be a statement about the

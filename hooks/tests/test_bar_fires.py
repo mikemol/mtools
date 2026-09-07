@@ -3567,3 +3567,49 @@ def test_a_partitions_terms_and_total_come_from_different_measurements() -> None
         "a §S holding rows where none classified must say so rather than report a downstream "
         "figure that is 0 for that one reason"
     )
+
+
+def test_an_unmatched_state_says_whether_the_census_declared_it() -> None:
+    """⚑⚑⚑ FIVE OF EIGHT CENSUSES PUBLISH THEIR STATE VOCABULARY AND THIS ARM READ NONE OF THEM.
+
+    The poll's four state prefixes were written by hand from the two files their author happened to
+    be reading. **Measured, the declared union across the corpus is far wider** — `filed`,
+    `not surveyed`, `retired`, `no response`, `DRAFTED`, `STAGED`, `declined`, `filed (rev n)` —
+    each published by a census in its own `state | means` table.
+
+    ⚑⚑ TWO OF THE UNSEEN STATES ARE LOAD-BEARING, AND ONE CENSUS SAYS SO IN ITS OWN TABLE.
+    `not surveyed` is annotated there as *⚑⚑⚑ NO — and it READS as a zero. Nobody was asked.* An
+    arm blind to it reports **the absence of a survey as the absence of a finding**, which is the
+    single confusion this entire poll exists to refuse.
+
+    ⚑⚑⚑ AND `filed` IS NOT ADDED TO THE PROBES, THOUGH IT WOULD TURN SEVEN UNNAMED ROWS GREEN.
+    Measured: `--starts 'filed'` returns **8 of 8** on `remaining-work` because it also matches
+    `filed elsewhere` — **one declared state is a prefix of another.** The declared states are not
+    a partition and cannot be summed; doing so is the arithmetic that already read 14 against a
+    12-row table. So the row count from the table stays the total, and what this adds is the
+    DIAGNOSIS a residue needs to be actionable rather than a larger sum that is wrong in a new way.
+
+    ⚑ THE DISCRIMINATOR IS WHETHER THE CENSUS PUBLISHED ANYTHING. An unmatched row in a census that
+    DECLARES its states is *this reader failing to read a published list*; an unmatched row in one
+    that declares nothing is *a state nobody wrote down*. Different repairs, and the arm could not
+    tell them apart until it looked for the declaration.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the residue must still be computed, or the diagnosis below is attached
+    # to nothing and this arm passes on the absence of its own subject.
+    assert "_unmatched=$((" in commands, (
+        "the unclassified residue must still be computed; this arm would pass on its absence"
+    )
+    # ⚑ THE DECLARATION IS LOOKED FOR, in the census rather than in this script.
+    assert "'state | means'" in commands, (
+        "the arm must detect whether the census publishes its own state vocabulary — a residue "
+        "against a published list is a different fact from a residue against no list"
+    )
+    # ⚑ AND THE TWO CASES ARE REPORTED DIFFERENTLY.
+    assert "the vocabulary is declared and unread" in commands, (
+        "an unmatched row in a census that declares its states must say so; collapsing it with "
+        "the undeclared case hides which repair is owed"
+    )
