@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-every-warrant-names-a-test-that-exists,
+  section = {bar-fires},
+  claim   = {The 1:1 ledger counts entries and never checks the pairing: 188 entries against 187 tests passes while 20 entries carry no check field and 20 tests are named by no warrant},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_warrant_names_a_test_that_exists}
+}
+
 @misc{hooks-bar-fires-no-string-assertion-in-this-module-is-vacuous,
   section = {bar-fires},
   claim   = {An assertion whose literal is absent from its target passes while testing nothing: one shipped and survived a tick, and 65 such assertions existed with nothing enumerating them},

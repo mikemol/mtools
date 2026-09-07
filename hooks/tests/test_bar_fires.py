@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import ast as pyast
 import os
+import re as pyre
 import shutil
 import subprocess
 import sys
@@ -946,6 +947,9 @@ _THIS = Path(__file__)
 # written; if it resolves far fewer, the resolver has broken and its silence is the
 # vacuity it exists to catch — one level out.
 _MIN_SWEPT = 50
+# ⚑ A PAYDOWN CEILING, NOT A TARGET. 20 warrants carry no `check` field; the arm refuses an
+# INCREASE and says nothing about the existing 20 being acceptable. Lower it as they are paid.
+_WARRANTS_WITHOUT_CHECK = 20
 _WITNESS = _DIST.parent / "domain_witness.sh"
 
 
@@ -1575,4 +1579,50 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     assert not missing, (
         "assertion literal(s) absent from the file the test reads — these pass vacuously:\n  "
         + "\n  ".join(missing)
+    )
+
+
+def test_every_warrant_names_a_test_that_exists() -> None:
+    r"""⚑⚑⚑ THE 1:1 LEDGER COUNTS ENTRIES AND NEVER CHECKS THE PAIRING.
+
+    The gate refuses unless `@misc{` count equals `def test_` count. Measured: **188 entries, 187
+    test names, and the arithmetic passes** — while **20 entries carry no `check` field at all**
+    and **20 tests are named by no warrant.** ⚑ *A correct count over an unverified pairing*, which
+    is the defect this suite exists to find, in the ledger that enforces it.
+
+    ⚑⚑ AND THE FIRST PREDICATE FOR THIS MEASURED ITS OWN PROSE. `'check' not in entry` reported
+    **12**; a structural `^\s*check\s*=` reported **20**. The 8 difference were entries whose
+    *claim text* contains the word *check* — *"A checker nothing invokes is a green over nothing"*
+    among them. ***A resolver whose population admits its own documentation***, which `cassian` hit
+    in the same hour from the other side: their T140 resolver matched the comment explaining its
+    own marker convention.
+
+    Both arms measured before this was written: 20 selector-less entries on the live corpus, 21
+    with one planted.
+
+    ⚑ **UNRESOLVABLE SELECTORS: 0.** Every `-k` names a real test. The defect is not dangling
+    pointers — it is entries with **no pointer at all**, which the count cannot see.
+    """
+    bib = (_DIST / "warrants.bib").read_text(encoding="utf-8")
+    entries = bib.split("@misc{")[1:]
+    # ⚑ STRUCTURAL, not substring: `check` must be a FIELD, else a claim mentioning the word
+    # "check" reads as one. That distinction is 8 entries wide here.
+    without: list[str] = [
+        e.split(",", 1)[0].strip()
+        for e in entries
+        if not pyre.search(r"^\s*check\s*=", e, pyre.MULTILINE)
+    ]
+    sel_found: list[str] = pyre.findall(r"-k ([a-z_0-9]+)", bib)
+    selectors: set[str] = set(sel_found)
+    names: set[str] = set()
+    for f in sorted((_DIST / "tests").glob("test_*.py")):
+        found: list[str] = pyre.findall(
+            r"^def (test_[a-z_0-9]+)", f.read_text(encoding="utf-8"), pyre.MULTILINE
+        )
+        names |= set(found)
+    dangling = sorted(selectors - names)
+    assert not dangling, f"warrant selector(s) naming no test: {dangling}"
+    assert len(without) <= _WARRANTS_WITHOUT_CHECK, (
+        f"{len(without)} warrants carry no check field, up from {_WARRANTS_WITHOUT_CHECK}. "
+        f"A warrant with no check asserts a claim nothing can run: {without[:5]}"
     )
