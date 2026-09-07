@@ -1821,3 +1821,38 @@ def test_the_poll_diagnoses_the_roster_divergence_by_sign_not_by_one_sentence() 
     assert 'if [ "${n_head:-0}" -gt "${roster:-0}" ]' in body, (
         "the diagnosis must branch on the sign of the divergence"
     )
+
+
+def test_the_refusal_record_names_its_own_columns() -> None:
+    """⚑⚑⚑ THE COLUMN ADDED TO DISCRIMINATE RETURNS THE NON-DISCRIMINATING CONSTANT.
+
+    The session column was added at `6963eaa` because `git config user.email` is the same for
+    every party in this shared tree. ⚑ MEASURED in the live record: rows 1-2 carry three fields
+    and row 3 carries four, so a reader splitting on tab reads `$2` as `mikemol@gmail.com` — the
+    session id, for two of three rows. **Not a parse error. A plausible wrong value**, in exactly
+    the column that exists because that value cannot tell two parties apart.
+
+    ⚑⚑ Ragged is not truncated and position decides — this repository learned that from a census
+    table. Here the short rows come FIRST, so every later row reads correctly and only the oldest
+    two are silently wrong: the direction that looks healthy from the tail.
+
+    ⚑ A HEADER IS THE FIX AND A VERSION FIELD IS NOT, and the measurement chose it. The record
+    has ZERO readers over its whole lifetime — `grep -rn REFUSALS` across every `.sh` and `.py`
+    returns the writer and two assertions about it, no consumer — so there is nothing to migrate
+    and no parser to teach. What a header buys is columns that are self-describing when a first
+    reader arrives, and a field count a reader can DISAGREE with.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "'utc' 'session' 'committer' 'failed_checks'" in body, (
+        "the record must name its columns, or a short row is plausible rather than detectable"
+    )
+    # ⚑ WRITTEN ONLY WHEN ABSENT. An append-only file that re-emits its header on every refusal
+    # is worse than one with none: the header becomes a row.
+    assert 'if [ ! -s "$_refusal_log" ]; then' in body, (
+        "the header must be conditional on an empty file, never appended per refusal"
+    )
+    # ⚑ THE HEADER MUST PRECEDE THE ROW WRITE. Positional, like the digest arm: a header emitted
+    # after the row it describes is a header for the next row.
+    assert body.index("'utc' 'session'") < body.index('"${CLAUDE_CODE_SESSION_ID:-'), (
+        "the header is written before the row it describes"
+    )

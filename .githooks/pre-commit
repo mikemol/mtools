@@ -706,6 +706,27 @@ if [ "$fail" -ne 0 ]; then
     # identity the commit will actually carry, so a reader comparing this record against `git log`
     # needs it to join on; dropping it would make the row true and unjoinable.
     _refusal_log="$_witness_logs/REFUSALS.tsv"
+    # ⚑⚑⚑ THE COLUMN THAT WAS ADDED TO DISCRIMINATE RETURNS THE NON-DISCRIMINATING CONSTANT
+    # FOR EVERY ROW WRITTEN BEFORE IT EXISTED. MEASURED in the live record: rows 1-2 carry 3
+    # fields and row 3 carries 4, so a reader splitting on tab reads `$2` as
+    # `mikemol@gmail.com` — the session id for two of three rows. Not a parse error. A PLAUSIBLE
+    # WRONG VALUE, in the exact column added because the email was a constant that could not
+    # tell two parties apart. The schema changed at `6963eaa` and the file did not.
+    # ⚑⚑ RAGGED IS NOT TRUNCATED, AND THE CENSUS TAUGHT THIS REPO WHICH ONE COSTS: position
+    # decides. Here the short rows come FIRST, so every later row is read correctly and only the
+    # oldest two are silently wrong — the direction that looks healthy from the tail.
+    # ⚑ A HEADER IS THE FIX AND A VERSION FIELD IS NOT. Measured before choosing: the record has
+    # ZERO readers (`grep -rn REFUSALS` over every `.sh` and `.py` finds the writer and two
+    # assertions about it, and no consumer) over the window `fa7ba18` 2026-09-06T20:23 to now, so
+    # there is nothing to migrate and no parser to teach a version to. What a header buys is that
+    # the columns are SELF-DESCRIBING at the moment a first reader arrives, and a row whose field
+    # count disagrees with the header is DETECTABLE rather than plausible.
+    # ⚑ Written only when absent, so it cannot re-enter an append-only file on every refusal.
+    if [ ! -s "$_refusal_log" ]; then
+        printf '%s\t%s\t%s\t%s\n' \
+            'utc' 'session' 'committer' 'failed_checks' \
+            >> "$_refusal_log" 2>/dev/null || true
+    fi
     printf '%s\t%s\t%s\t%s\n' \
         "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
         "${CLAUDE_CODE_SESSION_ID:-unknown-session}" \

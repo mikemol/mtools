@@ -1303,3 +1303,21 @@
             shortfall reports as a dropped row.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_poll_diagnoses_the_roster_divergence_by_sign_not_by_one_sentence},
 }
+
+@misc{hooks-bar-fires-the-refusal-record-names-its-own-columns,
+  title  = {The column added to discriminate returns the non-discriminating constant},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The session column was added because the committer email is identical for every
+            party in this shared tree. Measured in the live record: the two rows written before
+            that change carry three fields where the current format writes four, so a reader
+            splitting on tab reads the email as the session id for two of three rows --- a
+            plausible wrong value rather than a parse error, in the exact column that exists
+            because the email cannot tell two parties apart. Ragged is not truncated and
+            position decides; the short rows come first, so only the oldest are wrong and the
+            tail looks healthy. A header rather than a version field, because the record has
+            zero readers over its whole lifetime and nothing to migrate: what a header buys is
+            a field count a first reader can disagree with.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_refusal_record_names_its_own_columns},
+}
