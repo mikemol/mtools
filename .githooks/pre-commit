@@ -733,6 +733,24 @@ if [ "$fail" -ne 0 ]; then
         "$(git config user.email 2>/dev/null || echo unknown)" \
         "$(printf '%s' "$failed_checks" | tr '\n' ' ' | sed 's/  */ /g')" \
         >> "$_refusal_log" 2>/dev/null || true
+    # ⚑⚑⚑ THE DURABLE RECORD KEPT THE LABEL AND DROPPED THE ARMS, WHICH IS THE DEFECT THE LINE
+    # BELOW ARGUES AGAINST — applied to the transcript and not to the record. `failed_detail`
+    # reaches stderr only. ⚑ MEASURED on this gate's own last refusal: the record preserves
+    # `hooks: warrant sections vs rubric sections` and nothing else, while the account that
+    # actually resolved it — a two-line diff naming `tests/test_bar_fires.py` as the section with
+    # no rubric row — existed for one screen and was gone. I re-derived it by hand the next tick.
+    # ⚑⚑ A LABEL IS A POINTER INTO A TRANSCRIPT, AND THE TRANSCRIPT IS THE EPHEMERAL HALF. The
+    # record outlives the session that caused the refusal; the scratch log it points at is
+    # TRUNCATED by the next run of the same check. So the durable half kept the part that needs
+    # the ephemeral half to be readable — which is the furniture rule inverted: not a line nobody
+    # reads, but a line that cannot be acted on by the time anybody does.
+    # ⚑ ONE FILE PER REFUSAL, NAMED BY THE SAME UTC STAMP THE ROW CARRIES, so the join is the
+    # timestamp rather than a guess. Append-only like the row: nothing is pruned, because a
+    # rotation policy decides what may be forgotten and this gate has no standing to decide that.
+    if [ -n "${failed_detail:-}" ]; then
+        printf '%s\n' "$failed_detail" \
+            > "$_witness_logs/refusal-$(date -u +%Y%m%dT%H%M%SZ)-detail.log" 2>/dev/null || true
+    fi
     say "REFUSED — the following check(s) failed:${failed_checks:-
   (unattributed: a check set the failure flag without naming itself)}"
     # ⚑ THE ACCOUNT IS REPLAYED UNDER THE VERDICT, not left where it was printed. A reader who

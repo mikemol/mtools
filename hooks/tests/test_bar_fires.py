@@ -1856,3 +1856,37 @@ def test_the_refusal_record_names_its_own_columns() -> None:
     assert body.index("'utc' 'session'") < body.index('"${CLAUDE_CODE_SESSION_ID:-'), (
         "the header is written before the row it describes"
     )
+
+
+def test_the_durable_refusal_record_keeps_the_account_not_only_the_label() -> None:
+    """⚑⚑⚑ THE RECORD KEPT THE LABEL AND DROPPED THE ARMS.
+
+    This gate already argues the principle, at the line that replays the account under the
+    verdict: *a reader who greps for the failing check's name must find its arms next to it.* ⚑ It
+    applies that to the TRANSCRIPT, which is the ephemeral half, and `failed_detail` reaches
+    stderr only.
+
+    ⚑⚑ MEASURED on this gate's own last refusal. The durable row preserves
+    `hooks: warrant sections vs rubric sections` and nothing more, while the account that actually
+    resolved it — a two-line diff naming `tests/test_bar_fires.py` as the section carrying no
+    rubric row — lived for one screen. It was gone by the next tick and re-derived by hand.
+
+    ⚑ A LABEL IS A POINTER INTO A TRANSCRIPT. The row outlives the session that caused it; the
+    scratch log it points at is TRUNCATED by the next run of the same check, because those logs
+    are per-run scratch read back immediately — measured across all four of them. So the durable
+    half kept precisely the part that needs the ephemeral half to be legible. **That is the
+    furniture rule inverted: not a line nobody reads, but a line that cannot be acted on by the
+    time anybody does.**
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert "-detail.log" in body, "the account must outlive the run that produced it"
+    # ⚑ THE JOIN MUST BE THE ROW'S OWN KEY. A detail file a reader cannot tie to a row is a second
+    # artifact with the first one's problem.
+    assert "refusal-$(date -u +%Y%m%dT%H%M%SZ)-detail.log" in body, (
+        "the detail file is keyed by the same UTC stamp the row carries"
+    )
+    # ⚑ AND IT MUST BE CONDITIONAL. An empty detail file asserts that a refusal had no account,
+    # which is a different claim from a check that captured none — the gate says that in words.
+    assert 'if [ -n "${failed_detail:-}" ]; then' in body, (
+        "no detail must create no file, never an empty one"
+    )

@@ -1321,3 +1321,19 @@
             a field count a first reader can disagree with.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_refusal_record_names_its_own_columns},
 }
+
+@misc{hooks-bar-fires-the-durable-refusal-record-keeps-the-account-not-only-the-label,
+  title  = {The durable record kept the label and dropped the arms},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The gate already argues that a reader who greps for a failing check's name must find
+            its arms beside it, and applies that to the transcript --- the ephemeral half ---
+            while failed_detail reaches stderr only. Measured on the gate's own last refusal:
+            the durable row preserves the label and nothing else, while the diff that resolved
+            it lived for one screen and was re-derived by hand a tick later. A label is a
+            pointer into a transcript, and every scratch log it could point at is truncated by
+            the next run of the same check. The account is now written beside the row, keyed by
+            the same UTC stamp, and only when a check actually captured one.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_durable_refusal_record_keeps_the_account_not_only_the_label},
+}
