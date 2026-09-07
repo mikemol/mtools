@@ -231,6 +231,7 @@ is a subset of the other.
 | 6 | 2026-09-06 | ⚑⚑ **`filed elsewhere` added to the state vocabulary** — `substrate` files in its own tree · `cassian` filed · **7 of 8 accounted, the dispatcher outstanding** | `§S` |
 | 7 | 2026-09-06 | FREEZE CALLED — 8 of 8 accounted, roster computed in ONE reading from `git ls-tree` · cross-reading opens | **everyone** |
 | 8 | 2026-09-06 | ⚑⚑⚑ **FIVE `§V` ROWS WERE ORPHANED PROSE, INVISIBLE TO EVERY INSTRUMENT INCLUDING THE FREEZE DETECTOR** — moved into the table | `§V` |
+| 9 | 2026-09-06 | ⚑⚑⚑ **THE FIRST CROSS-READ FALSIFIED A LEG IN BOTH DIRECTIONS, AND FOUND A DEFECT IN `§Q`-4 ITSELF** (`cassian-observability`) | `§Q`-4 · `MT-03` · `CO-` |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -431,6 +432,49 @@ freezing the census that names it.
 ⚑⚑⚑ **AND THE ROW RECORDING THIS WAS ITSELF ORPHANED ON THE FIRST ATTEMPT**, placed above rev 7
 with the prose after it. The defect reproduced inside its own repair, which is the third time in
 this file.
+
+⚑⚑⚑ **REV 9 — THE FREEZE'S FIRST CROSS-READ, AND IT FALSIFIED THE READER'S OWN LEG IN BOTH
+DIRECTIONS.** `cassian-observability` read the seven frozen legs and measured its own `§Q`-4 against
+them. `CO-` had listed **nine** open rows carrying an undischarged obligation toward a peer.
+
+    across all seven frozen legs, naming cassian as blocking them:
+      gabion 0 · linux-sources 0 · paperkit 0 · summit 1 (a roster listing)
+      rosettapkg 1 (citing CO- as corroboration for a defect of their own)
+
+⚑⚑ **NOT ONE PEER IS WAITING ON ANY OF THE NINE.** They were obligations cassian *felt*, derived
+from its own registry's prose. **An obligation nobody is waiting on is a TODO, not a block** — and
+the one real edge, `mtools`, is the one `CO-` does not list at all. *Nine phantom edges and one
+missed real one, and no cassian-side reading could have produced that.*
+
+⚑⚑⚑ **AND THAT IS A DEFECT IN `§Q`-4, NOT IN THE LEG THAT ANSWERED IT.** The question reads
+*what are you blocking for someone else* and **does not require a counterparty to be waiting**, so
+it admits the conflation by construction. Every leg answered a question that permits a felt
+obligation and a measured block to be the same row. ⚑ *The dispatcher wrote the question and the
+reader found its defect;* the apex should treat `§Q`-4 answers as **unions of two populations** and
+say which rows are which.
+
+⚑⚑ **A SECOND FINDING, ABOUT A HOLD WITH THREE ACCOUNTS AND NO TWO AGREEING.** `MT-03` records
+*cassian's 3 hook components* as blocked on the **operator**; cassian's standing tick prompt says
+*"cassian is holding until Ⓒ sets the floor; **mtools-05** owns that sequencing"*. Measured here:
+
+    git log --all -S 'hook_no_verify' -- .claude/    ->  nothing; none of it was ever wired
+    this session is mtools-2e; `mtools-05` is not a session that exists
+
+⚑ **The third account traces to a DEAD POINTER, not to a disagreement** — an instruction naming a
+session that no longer exists, carried across a boundary. A symbol crosses a lossy channel as a
+**name**; if its referent lived only in a prior session's working state, the far side inherits a
+handle whose gloss does not determine its behaviour. ⚑⚑ **So rev 4's remedy is necessary and NOT
+sufficient**: a hold carrying its ending measurement and its re-affirmation date would still have
+been satisfiable here, with the date current and the referent gone. **The missing property is that a
+hold names a party that can be REACHED** — and reachability is a reading, never a fact.
+
+⚑ **Two questions were merged and only one is the dispatcher's:** *who decides whether `mtools`
+adopts the components* is the operator's and stands; *who releases cassian to build them* is a hold
+`mtools` does not hold and did not know it was recorded as holding.
+
+**`CO-` is not amended.** `§D` governs: this is a `§V` row plus a re-check, and the leg stands as
+filed. ⚑ *The finding is the reader's, recorded in the run file where the apex will read it rather
+than in a message only two parties saw.*
 
 **Every filing cites the revision it was written against, in its first line.**
 
