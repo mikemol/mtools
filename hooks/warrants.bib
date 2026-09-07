@@ -1718,3 +1718,23 @@
             node dropped.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_vacuity_sweep_resolves_an_inline_path_read},
 }
+
+@misc{hooks-bar-fires-every-warrant-count-in-the-harness-is-anchored,
+  title  = {An arm already forbids the unanchored count, and the preflight uses it anyway},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {An existing arm asserts the unanchored warrant count must not appear, and it reads
+            the gate and nothing else. The preflight counted the ledger unanchored while the gate
+            and the message checker both anchor, so the rule was stated, enforced, and violated
+            in the same tree with every run green --- the population was one file where the
+            property is about a pair. The two counts agree today by luck, at 215 both ways,
+            because the ledger carries zero lines with the delimiter off column 0; a copy with
+            one added entry whose note quotes the delimiter twice reads 216 anchored and 218
+            unanchored, so the preflight would predict a total the gate disagrees with. This is
+            the same defect as the previous commit one file over: two instruments deriving one
+            figure independently drift without either noticing. The population is every counting
+            site, derived rather than listed, with a floor so a pattern that stopped matching
+            cannot pass by finding nothing.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_every_warrant_count_in_the_harness_is_anchored},
+}

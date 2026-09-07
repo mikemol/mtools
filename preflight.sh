@@ -114,7 +114,16 @@ for dist in $dists; do
     # ⚑ THE WARRANT LEDGER IS 1:1 AND THE GATE ENFORCES IT, so a test added without a warrant is a
     # refusal this script can predict for free. Counted the way the gate counts it.
     if [ -f "$dist/warrants.bib" ]; then
-        w=$(grep -c '@misc{' "$dist/warrants.bib")
+        # ⚑⚑⚑ ANCHORED, BECAUSE THE GATE ANCHORS AND THIS FILE EXISTS TO PREDICT THE GATE. It
+        # counted `@misc{` unanchored while `.githooks/pre-commit` and `message_counts.sh` both
+        # use `^@misc{`. MEASURED: 215 both ways today, because the ledger happens to carry ZERO
+        # lines with `@misc{` off column 0 — one quoted example inside a `note` field splits them.
+        # ⚑⚑ AN ARM ALREADY FORBADE THE UNANCHORED FORM and read only the gate, so the rule was
+        # stated, enforced, and violated in the same tree with every run green. The population was
+        # one file where the property is about a PAIR.
+        # ⚑ SAME DEFECT AS `01dc5e7` ONE FILE OVER: two instruments deriving one figure
+        # independently drift without either noticing, and agree until an accident stops holding.
+        w=$(grep -c '^@misc{' "$dist/warrants.bib")
         t=$(grep -h -c '^def test_' "$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
         if [ "${w:-0}" -ne "${t:-0}" ]; then
             fail=1

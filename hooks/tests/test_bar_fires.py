@@ -986,6 +986,10 @@ _MIN_SWEPT = 50
 # ⚑ A CEILING, NOT A TARGET. It may fall; it rises only when a new unresolvable read is added,
 # which is exactly the moment a reader should be told rather than the moment coverage drops.
 _MAX_UNRESOLVED = 23
+# ⚑ A FLOOR ON THE COUNTING SITES, not a target. Three files count the warrant ledger --- the
+# gate, the preflight that predicts it, and the message checker. If a sweep finds fewer, the
+# pattern stopped matching and the anchoring arm passes by finding nothing to check.
+_MIN_WARRANT_COUNT_SITES = 3
 # ⚑ A PAYDOWN CEILING, NOT A TARGET, AND IT IS NOW ZERO. All 20 were paid the tick after the
 # ceiling was set — each resolved to a real test by its own key, so the debt was a missing `check`
 # LINE rather than missing coverage. ⚑⚑ A ceiling left at 20 after paying 20 would let the debt
@@ -2807,4 +2811,61 @@ def test_the_vacuity_sweep_resolves_an_inline_path_read() -> None:
     # new inline read is added — which is the moment a reader should be told.
     assert "_MAX_UNRESOLVED" in code, (
         "the skipped population needs a ceiling, or it grows back silently"
+    )
+
+
+def test_every_warrant_count_in_the_harness_is_anchored() -> None:
+    """⚑⚑⚑ AN ARM ALREADY FORBIDS THE UNANCHORED COUNT, AND THE PREFLIGHT USES IT ANYWAY.
+
+    `test_the_warrant_count_is_anchored_against_a_quoted_delimiter` asserts
+    `grep -c '@misc{'` must not appear — ⚑ MEASURED, it reads `_GATE` and nothing else. The
+    preflight's `w=$(grep -c '@misc{' …)` is outside its population entirely, so the rule is
+    stated, enforced, and violated in the same tree with every run green.
+
+    ⚑⚑ THE COUNTS AGREE TODAY BY LUCK. 215 both ways, because the ledger has **zero** lines
+    carrying `@misc{` off column 0. One quoted example inside a `note` field would split them,
+    and the preflight — whose entire job is predicting the gate — would predict a warrant total
+    the gate disagrees with.
+
+    ⚑ THIS IS THE SAME DEFECT AS `01dc5e7`, ONE FILE OVER. There the poll and the sweep computed
+    the skipped-test count two ways and disagreed 4 against 23; here the preflight and the gate
+    compute the warrant total two ways and agree only while an accident holds. **Two instruments
+    deriving one figure independently is how they drift without either noticing**, and a
+    single-file arm cannot see the pair.
+
+    ⚑⚑ SO THE POPULATION IS EVERY COUNTING SITE, derived rather than listed: any non-comment line
+    in the harness that counts `@misc{` must anchor it. A per-file arm would be the hand-written
+    population this suite exists to refuse.
+    """
+    # ⚑⚑⚑ READ THROUGH NAMED CONSTANTS, NOT A DICT — AND THE CEILING ADDED LAST TICK CAUGHT THIS
+    # ARM ON ITS FIRST LIVE OPPORTUNITY. A dict of paths resolves to no NAME, so the sweep could
+    # not see this test and its own assertions would have gone unswept: the arm about a blind
+    # spot, blind in the same way. Raising the ceiling would have been the flattering repair.
+    preflight = _PREFLIGHT.read_text(encoding="utf-8")
+    gate = _GATE.read_text(encoding="utf-8")
+    msgcount = _MSGCOUNT.read_text(encoding="utf-8")
+    sources = {
+        "preflight.sh": preflight,
+        ".githooks/pre-commit": gate,
+        "message_counts.sh": msgcount,
+    }
+    unanchored: list[str] = []
+    counting = 0
+    for name, text in sources.items():
+        for line in text.splitlines():
+            if line.lstrip().startswith("#") or "@misc{" not in line:
+                continue
+            if "grep -c" not in line:
+                continue
+            counting += 1
+            if "'^@misc{'" not in line:
+                unanchored.append(f"{name}: {line.strip()}")
+    # ⚑ POSITIVE CONTROL ON THE POPULATION: a pattern that stopped matching would make this arm
+    # vacuous in the direction that reads as success — no counting sites, nothing to check.
+    assert counting >= _MIN_WARRANT_COUNT_SITES, (
+        f"only {counting} warrant-counting site(s) found; the population is wrong"
+    )
+    assert not unanchored, (
+        "warrant count(s) not anchored to column 0 — these disagree with the gate the moment a "
+        "quoted `@misc{` appears in the ledger:\n  " + "\n  ".join(unanchored)
     )
