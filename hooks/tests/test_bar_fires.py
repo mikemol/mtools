@@ -1329,3 +1329,42 @@ def test_the_gate_retains_a_refusal_record() -> None:
     refusal_at = body.index("_refusal_log=")
     verdict_at = body.index('say "REFUSED')
     assert refusal_at < verdict_at, "the record is written before the verdict is printed"
+
+
+def test_every_refusal_site_carries_its_own_detail() -> None:
+    """⚑⚑⚑ SIX REFUSALS NAMED A CLAIM AND DISCARDED THE FINDING THAT PROVED IT.
+
+    Each of these had its detail in hand and threw it away: the warrant ledger computed both counts
+    and passed neither; the section check ran `diff -q` FOR ITS STATUS ALONE, so the refusal said a
+    disagreement existed and never which sections; `orphan_check` and `stubtest` streamed to stderr
+    and passed a bare label; and the markdown check sent `verify` to **/dev/null** — for the one
+    check whose entire output is a list of specific swallowed headings and line numbers.
+
+    ⚑⚑ THAT MATTERS MORE SINCE `REFUSALS.tsv` EXISTS: the durable record carries the LABEL, so a
+    bare label writes a row saying *something disagreed* with no way to learn what. **A refusal is
+    read by the party it blocked, and twelve peer refusals in one afternoon were each diagnosed by
+    the blocked party rather than by this gate.**
+
+    ⚑ AND ONE SITE MY OWN SWEEP MISCLASSIFIED: the hermetic-suite refusal takes no log argument but
+    extracts the failing target names INTO its label. My `grep` defined the population by *absence
+    of a second argument* rather than by *whether the refusal is informative* — the population was
+    defined by the instrument's shape, not the claim's question, which is the defect this session
+    has recorded four times.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    assert 'note_failure "$dist: warrant ledger 1:1" "$_wlog"' in body, (
+        "the two disagreeing counts exist at the site and must reach the record"
+    )
+    assert 'note_failure "$dist: warrant sections vs rubric sections" "$_slog"' in body
+    # ⚑ THE `diff -q` IN THE CONDITION IS CORRECT AND MUST STAY — it is the test. What was missing
+    # is a SECOND, un-`-q` diff writing the symmetric difference into the record. An earlier form
+    # of this assertion searched for the absence of `diff -q` and failed against the guard it was
+    # meant to protect: the predicate was defined by a string rather than by the property.
+    assert '> "$_slog"' in body, (
+        "a second diff must write the symmetric difference to the log, not merely a status"
+    )
+    assert 'run_checked "every shell checker is invoked or declared parked"' in body
+    assert 'run_checked "stubtest' in body
+    assert 'note_failure "$md: headings unreachable to mdstruct" "$_mdlog"' in body, (
+        "verify names the swallowed heading and its line; /dev/null discarded exactly that"
+    )

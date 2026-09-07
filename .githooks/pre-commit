@@ -409,13 +409,27 @@ for dist in hooks mdstruct ratchet; do
   t=$(cat "$staged/$dist"/tests/test_*.py | grep -c '^def test_')
   if [ "$w" -ne "$t" ]; then
     say "$dist: $w warrants against $t test functions — every test must arrive warranted"
-    fail=1; note_failure "$dist: warrant ledger 1:1"
+    # ⚑⚑ THE NUMBERS GO INTO THE RECORD, NOT ONLY ONTO stderr. `say` reaches a human at a
+    # terminal; `note_failure`'s LABEL is what the refusal summary and `REFUSALS.tsv` carry, and a
+    # bare label writes a row saying *the ledger disagreed* without saying by how much or which
+    # way. ⚑ The two counts already exist here — withholding them from the record was a choice
+    # nobody made deliberately.
+    _wlog="$_witness_logs/warrant-ledger-$dist.log"
+    printf '%s warrants against %s test functions (parametrize expands cases beyond functions)\n' \
+        "$w" "$t" > "$_wlog"
+    fail=1; note_failure "$dist: warrant ledger 1:1" "$_wlog"
   fi
   if ! diff -q \
       <(grep -o 'section = {[^}]*}' "$staged/$dist/warrants.bib" | sed 's/.*{\(.*\)}/\1/' | sort -u) \
       <(grep -v '^#' "$staged/$dist/rubric.tsv" | cut -f1 | sort -u) >/dev/null; then
     say "$dist: warrant sections and rubric sections disagree"
-    fail=1; note_failure "$dist: warrant sections vs rubric sections"
+    # ⚑ THE DIFF IS THE FINDING AND IT WAS DISCARDED. `diff -q` was run for its status alone, so
+    # the refusal named a disagreement and never said WHICH sections. Re-run without `-q` into the
+    # record: a reader gets the symmetric difference rather than the fact that one exists.
+    _slog="$_witness_logs/warrant-sections-$dist.log"
+    diff <(grep -o 'section = {[^}]*}' "$staged/$dist/warrants.bib" | sed 's/.*{\(.*\)}/\1/' | sort -u) \
+         <(grep -v '^#' "$staged/$dist/rubric.tsv" | cut -f1 | sort -u) > "$_slog" 2>&1 || true
+    fail=1; note_failure "$dist: warrant sections vs rubric sections" "$_slog"
   fi
 done
 
@@ -577,7 +591,9 @@ say "figure freshness: is any superseded number still stated in the present tens
 # it is a file somebody added and nothing runs, which is the green-over-nothing this whole harness
 # exists to refuse, and the fix is always available to whoever tripped it.
 say "orphan check: is every shell checker invoked, or declared as parked?"
-./orphan_check.sh || { fail=1; note_failure "every shell checker is invoked or declared parked"; }
+# ⚑ CAPTURED, because the orphan it names is the whole content of the refusal. A bare label says
+# *some checker is unaccounted for* and the reader must re-run the script to learn which.
+run_checked "every shell checker is invoked or declared parked" ./orphan_check.sh
 
 # ⚑⚑ THE ROSTER IS THE ONE POPULATION IN THIS REPOSITORY THAT CANNOT BE ENUMERATED, measured
 # rather than assumed: PATH yields 2,843 executables and flagging all of it is useless; an
@@ -602,8 +618,11 @@ say "roster drift: does the textual roster still match the tools present?"
 # `load`'s parameter was named `source` where the runtime calls it `input_stream`, and
 # `stringify` was missing `newlines` entirely.
 if [ -x mdstruct/.venv/bin/python3 ]; then
-  ( cd mdstruct && MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
-      --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise ) || { fail=1; note_failure "stubtest — the panflute stub still matches its module"; }
+  # ⚑ `--concise` EXISTS TO MAKE THIS READABLE AND THE READER NEVER SAW IT. stubtest names the
+  # exact symbol whose signature drifted; the bare label said only that the stub disagreed.
+  run_checked "stubtest — the panflute stub still matches its module" \
+    env -C mdstruct MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
+      --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise
 fi
 
 # ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
@@ -646,9 +665,14 @@ fi
 if [ -x mdstruct/.venv/bin/python3 ]; then
   while IFS= read -r md; do
     [ -f "$staged/$md" ] || continue
-    ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli verify "$staged/$md" >/dev/null ) \
+    # ⚑⚑ `verify` NAMES THE SWALLOWED HEADING AND ITS LINE, AND THIS DISCARDED IT TO /dev/null.
+    # The refusal said a document had unreachable headings and made the author re-run the tool to
+    # learn WHICH — for the one check whose whole output is a list of specific lines.
+    _mdlog="$_witness_logs/mdverify-$(printf '%s' "$md" | tr -c 'a-zA-Z0-9' '_').log"
+    ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli verify "$staged/$md" >"$_mdlog" 2>&1 ) \
       || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"
-           fail=1; note_failure "$md: headings unreachable to mdstruct"; }
+           cat "$_mdlog" >&2
+           fail=1; note_failure "$md: headings unreachable to mdstruct" "$_mdlog"; }
   done < <(git diff --cached --name-only --diff-filter=ACM -- '*.md')
 fi
 

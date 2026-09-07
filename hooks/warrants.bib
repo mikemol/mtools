@@ -1095,6 +1095,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-every-refusal-site-carries-its-own-detail,
+  section = {bar-fires},
+  claim   = {Six refusals named a claim and discarded the finding that proved it, including a verify whose entire output is the list of swallowed headings sent to /dev/null},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_refusal_site_carries_its_own_detail}
+}
+
 @misc{hooks-bar-fires-gate-retains-a-refusal-record,
   section = {bar-fires},
   claim   = {Two census legs claimed the refusal data existed and nothing aggregated it: measured 17 log files, 0 refusals, because every run overwrites. The missing piece was RETENTION, not a reader},
