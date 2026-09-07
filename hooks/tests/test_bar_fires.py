@@ -985,7 +985,16 @@ _MIN_SWEPT = 50
 # sweep's predicate by hand: 0 vacuous. Two forms, 12 path expressions and 4 bare names.
 # ⚑ A CEILING, NOT A TARGET. It may fall; it rises only when a new unresolvable read is added,
 # which is exactly the moment a reader should be told rather than the moment coverage drops.
-_MAX_UNRESOLVED = 23
+# ⚑⚑⚑ LOWERED FROM 23 BY RESOLVING, NOT BY EDITING. A bounded evaluator now reaches the
+# `_CONST / "literal"` form, and the sweep itself reports the new figure — my hand-count said
+# four and the sweep found FIVE, because one arm I had classified by eye also uses that form.
+# The ceiling is the instrument's number, never the reader's: two readers computing one figure
+# is the defect three consecutive ticks were spent repairing.
+# ⚑⚑ THE FORMER VALUE IS KEPT so the ratchet's DIRECTION is assertable. A ceiling that only
+# ever holds reports the same number every run and stops being read; one that must fall is a
+# paydown with a witness.
+_MAX_UNRESOLVED_WAS = 23
+_MAX_UNRESOLVED = 18
 # ⚑ A FLOOR ON THE COUNTING SITES, not a target. Three files count the warrant ledger --- the
 # gate, the preflight that predicts it, and the message checker. If a sweep finds fewer, the
 # pattern stopped matching and the anchoring arm passes by finding nothing to check.
@@ -1588,6 +1597,32 @@ def test_the_poll_measures_reader_reach_not_a_cause() -> None:
     assert "_ebt_row=" in body, "the in-table subset must be counted separately"
 
 
+def _resolve_path(node: pyast.expr, targets: dict[str, Path]) -> Path | None:
+    """Resolve `_CONST` and `_CONST / "literal" / …` to a path, and nothing else.
+
+    ⚑⚑⚑ BOUNDED ON PURPOSE. The sweep skipped every test whose file-read receiver was not a bare
+    NAME, and 12 of the 23 skipped open their file with a path expression — but only **4** are
+    this shape. The rest divide by names or call results, and resolving those needs a parser this
+    module should not grow: a skipped test that is REPORTED stays honest, while a half-built
+    evaluator guessing at expressions would resolve to the WRONG file and check assertions against
+    it, which is worse than skipping.
+
+    Returns:
+        the path the expression denotes, or None when it is outside this bounded form.
+
+    """
+    if isinstance(node, pyast.Name):
+        return targets.get(node.id)
+    if isinstance(node, pyast.BinOp) and isinstance(node.op, pyast.Div):
+        left = _resolve_path(node.left, targets)
+        if left is None or not isinstance(node.right, pyast.Constant):
+            return None
+        if not isinstance(node.right.value, str):
+            return None
+        return left / node.right.value
+    return None
+
+
 def test_no_string_assertion_in_this_module_is_vacuous() -> None:
     """⚑⚑⚑ AN ASSERTION WHOSE LITERAL IS NOT IN ITS TARGET PASSES WHILE TESTING NOTHING.
 
@@ -1618,6 +1653,10 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
         "_POLL": _POLL, "_GATE": _GATE, "_WITNESS": _WITNESS, "_THIS": _THIS,
         "_RECORDER": _RECORDER, "_MSGHOOK": _MSGHOOK, "_MSGCOUNT": _MSGCOUNT,
         "_PREFLIGHT": _PREFLIGHT,
+        # ⚑ `_DIST` IS A DIRECTORY, not a file — it is here only so `_DIST / "pyproject.toml"`
+        # resolves. `is_file()` above rejects the bare name, so adding it cannot make a test
+        # resolve to a directory and read nothing.
+        "_DIST": _DIST,
     }
     checked = 0
     missing: list[str] = []
@@ -1634,6 +1673,19 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
             and isinstance(n.value.func.value, pyast.Name)
         }
         named = [targets[r] for r in reads if r in targets]
+        # ⚑ AND THE BOUNDED EVALUATOR REACHES THE `_CONST / "literal"` FORM, which is 4 of the 12
+        # path-expression skips. Anything else still falls through to the counted-and-ceilinged
+        # branch below rather than being guessed at.
+        if not named:
+            named = [
+                resolved
+                for call in pyast.walk(fn)
+                if isinstance(call, pyast.Call)
+                and isinstance(call.func, pyast.Attribute)
+                and call.func.attr == "read_text"
+                for resolved in [_resolve_path(call.func.value, targets)]
+                if resolved is not None and resolved.is_file()
+            ]
         # ⚑⚑⚑ `len(named) != 1: continue` SILENTLY SKIPPED EVERY MULTI-FILE TEST, which is the
         # vacuity the sweep exists to catch, inside the sweep. The first test to read two files
         # exposed it — and it exposed it by FAILING rather than by being skipped only because a
@@ -3011,4 +3063,40 @@ def test_two_instruments_counting_one_literal_use_one_predicate() -> None:
     assert not split, (
         "one quantity counted by two different predicates — they agree only while an accident "
         f"holds, which is how the last three of these were found: {split}"
+    )
+
+
+def test_the_sweeps_ceiling_falls_rather_than_standing() -> None:
+    """⚑⚑⚑ A CEILING OVER A STATIC POPULATION IS FURNITURE WITH A NUMBER ATTACHED.
+
+    Two ticks running, the ceiling caught a new arm at 24 and I recorded that as the ceiling
+    earning itself. ⚑ MEASURED against every arm added since it shipped: **10 of 11 were
+    resolvable as written.** The two it caught were caught in DRAFT, before commit. The ceiling
+    is not under pressure from my authoring, and the story I was telling about it was wrong.
+
+    ⚑⚑ THE 23 ARE A FIXED INHERITANCE, almost all from the founding commit. A ceiling over a
+    population that neither grows nor shrinks reports the same number every run — `linux-sources`
+    measured that a probe printing SIX gets read past for six consecutive ticks, and the operative
+    property is CONSTANT rather than zero.
+
+    ⚑ AND A BOUNDED EVALUATOR REACHES PART OF IT. Of the 12 unresolvable arms opening their file
+    with a path expression, **4 are exactly `_CONST / "literal"`** — no arbitrary expressions, no
+    parser this module should not grow. The remaining 8 divide by names or call results, and 6
+    more read through a local variable. Those stay counted.
+
+    ⚑⚑ SO THE CEILING FALLS BY MEASUREMENT RATHER THAN BY DECREE. It is asserted to be BELOW its
+    former value, which is the property that distinguishes a ratchet paying down from a ratchet
+    holding: a number that only ever holds is one nobody will read again.
+    """
+    # ⚑ THE CEILING MUST HAVE FALLEN. Asserting a value would fix today's answer; asserting the
+    # DIRECTION keeps the constant honest as the evaluator reaches further.
+    assert _MAX_UNRESOLVED < _MAX_UNRESOLVED_WAS, (
+        f"the ceiling stands at {_MAX_UNRESOLVED}, unchanged from {_MAX_UNRESOLVED_WAS}; "
+        "a ceiling over a static population is a constant nobody reads twice"
+    )
+    # ⚑ AND THE EVALUATOR MUST EXIST, or the fall came from lowering a number rather than from
+    # resolving anything — the flattering repair this suite has declined twice.
+    body = _THIS.read_text(encoding="utf-8")
+    assert "_resolve_path" in body, (
+        "the ceiling may only fall because more paths resolve, not because the number was edited"
     )
