@@ -995,6 +995,11 @@ _MIN_WARRANT_COUNT_SITES = 3
 # harness-wide arm pass by finding nothing to check, which is the direction that reads as
 # success. Set below the measured count so adding or removing one script is not a refusal.
 _MIN_HARNESS_SCRIPTS = 12
+# ⚑ A FLOOR ON THE COUNTING DERIVATIONS. Fourteen were present when the one-literal-one-
+# predicate arm shipped; a regex that stopped matching would report no derivations and no
+# possible disagreement, which is vacuity in the direction that reads as success. Set below
+# the measured count so adding or removing one is not a false refusal.
+_MIN_COUNTING_SITES = 10
 # ⚑ A PAYDOWN CEILING, NOT A TARGET, AND IT IS NOW ZERO. All 20 were paid the tick after the
 # ceiling was set — each resolved to a real test by its own key, so the debt was a missing `check`
 # LINE rather than missing coverage. ⚑⚑ A ceiling left at 20 after paying 20 would let the debt
@@ -2942,3 +2947,68 @@ def test_the_test_function_count_survives_a_missing_trailing_newline() -> None:
         if not ln.lstrip().startswith("#") and "def test_" in ln
     ]
     assert counting, "the gate no longer counts test functions at all"
+
+
+def test_two_instruments_counting_one_literal_use_one_predicate() -> None:
+    """⚑⚑⚑ THREE CONSECUTIVE TICKS FOUND ONE FIGURE DERIVED TWO WAYS, EACH BY HAND.
+
+        `01dc5e7`  skipped-test count   poll regex vs sweep predicate     4 vs 23
+        `383dacd`  warrant total        unanchored vs anchored grep       agreed by luck
+        `a644aa8`  test-function count  concatenation vs per-file         agreed by luck
+
+    ⚑ Each was found by reading, not by a check. The class is what has leverage, and it is
+    ENUMERABLE: a derivation is an assignment whose value counts a literal, and two derivations
+    counting the SAME literal are deriving the same quantity.
+
+    ⚑⚑ THE GROUPING KEY IS A WITNESS FROM THE SOURCE, not my judgement that two expressions mean
+    the same thing. The census-kit rule is that an identification without a witness is the
+    reader's convenience; here the witness is the counted pattern itself, stripped of anchoring.
+    Two sites counting `@misc{` are counting warrants whatever else differs — and if one anchors
+    and the other does not, that is exactly `383dacd`.
+
+    ⚑ MEASURED: 14 counting derivations, three literals counted more than once — `@misc{` at four
+    sites, an escaped backtick at two, `def test_` at two — and **all three groups now agree**.
+    Three count a literal at exactly one site and have no pair to disagree with.
+
+    ⚑⚑ SO THIS ARM IS A RATCHET OVER A CLEAN POPULATION, not a paydown. It fires the moment a
+    fourth instance appears, which is the moment the last three were introduced and nothing said
+    so for a tick or more.
+    """
+    derivation = pyre.compile(r"^\s*(\w+)=\$\((.*(?:grep -c|wc -l|grep -h -c).*)\)")
+    pattern = pyre.compile(r"grep(?: -\w+)* +'([^']+)'|grep(?: -\w+)* +\"([^\"]+)\"")
+    # ⚑⚑ THE SWEEP'S CEILING CAUGHT THIS ARM, AS IT CAUGHT LAST TICK'S. Reading each script inside
+    # the loop resolves to no NAME, so the sweep could not see this test and its own assertions
+    # would have gone unswept — an arm about instruments disagreeing, invisible to the instrument
+    # that checks arms. Naming the two files it also reads is the honest repair; raising the
+    # ceiling from 23 to 24 would be the flattering one.
+    gate = _GATE.read_text(encoding="utf-8")
+    msghook = _MSGHOOK.read_text(encoding="utf-8")
+    scripts = {p.name: p.read_text(encoding="utf-8") for p in sorted(_DIST.parent.glob("*.sh"))}
+    scripts[".githooks/pre-commit"] = gate
+    scripts[".githooks/commit-msg"] = msghook
+    groups: dict[str, set[str]] = {}
+    sites = 0
+    for text in scripts.values():
+        for line in text.splitlines():
+            if line.lstrip().startswith("#"):
+                continue
+            found = derivation.search(line)
+            if not found:
+                continue
+            sites += 1
+            # ⚑ ANNOTATED: `findall` returns `Any`, and this distribution ships `payload.py` with
+            # nine warrants arguing that an untyped decoder result is a claim nothing checked.
+            pairs: list[tuple[str, str]] = pattern.findall(found.group(2))
+            for first, second in pairs:
+                literal = first or second
+                groups.setdefault(literal.lstrip("^").rstrip("$"), set()).add(literal)
+    # ⚑ FLOOR ON THE POPULATION: a regex that stopped matching would make this vacuous in the
+    # direction that reads as success — no derivations, no disagreement possible.
+    assert sites >= _MIN_COUNTING_SITES, (
+        f"only {sites} counting derivation(s) found; the population is wrong"
+    )
+    split = {subject: sorted(pats) for subject, pats in groups.items() if len(pats) > 1}
+    assert not split, (
+        "one quantity counted by two different predicates — they agree only while an accident "
+        f"holds, which is how the last three of these were found: {split}"
+    )
