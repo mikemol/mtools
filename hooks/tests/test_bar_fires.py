@@ -3768,3 +3768,60 @@ def test_the_witness_reads_bazels_artifact_not_its_exit_status() -> None:
         "no decision may rest on bazel's exit status alone — that is the defect this file's own "
         "comments warn about twice, committed in the code between them"
     )
+
+
+def test_no_conventional_under_declaration_survives_in_this_tree() -> None:
+    """⚑⚑⚑ THE ONLY LIVE CAS RISK IS AN OMISSION SEVERAL REPOSITORIES MAKE IDENTICALLY.
+
+    Operator ruling: *there is no false green risk if the cache keys are constructed properly, and
+    if they are not constructed properly the risk does not depend on peers to cause the collision.*
+    A shared cache introduces no failure mode that correct keying does not already prevent, and
+    none that incorrect keying would not produce in isolation — **cache sharing is not the
+    variable, key construction is.**
+
+    ⚑⚑ WHICH LOCATES THE RESIDUAL RISK PRECISELY. Poisoning needs BOTH parties' keys improper in
+    the SAME WAY: an under-declaring producer computes a key describing that narrower action, and a
+    consumer receives the entry only by making the same omission. So idiosyncratic sloppiness is
+    harmless — it produces keys nobody else computes — and **a SHARED HABIT is the only thing that
+    collides.** Undeclared host tools, `$HOME` reads, `__file__` escaping the runfiles tree.
+
+    ⚑⚑⚑ AND THE FIRST AUDIT PROBE WAS BLIND IN EXACTLY THE WAY IT WAS AUDITING FOR. It reported
+    three `__file__.resolve()` sites; **all three were COMMENTS explaining why not to write one.**
+    A corpus containing prose about itself must strip the prose before measuring — recorded at
+    `mdstruct/src/mikemol/mdstruct/tables.py:137` — and the probe written to find blind spots
+    matched its own documentation. Re-measured through the AST: **0 live call sites**, with a
+    control confirming the reader finds `.resolve()` calls at all.
+
+    ⚑ SAME SHAPE ON THE HOST-TOOL ARM. `pandoc` appeared to be invoked from three `hooks/` files
+    while only `mdstruct/BUILD.bazel` declares `@pandoc//:bin`. Read: two are prose and one is a
+    test fixture string. `hooks` never runs it.
+    """
+    src = _THIS.read_text(encoding="utf-8")
+    # ⚑ THE READ IS THROUGH THE AST, so a comment about the pattern is not an instance of it.
+    tree = pyast.parse(src)
+    live = [
+        node.lineno
+        for node in pyast.walk(tree)
+        if isinstance(node, pyast.Call)
+        and isinstance(node.func, pyast.Attribute)
+        and node.func.attr == "resolve"
+        and any(isinstance(c, pyast.Name) and c.id == "__file__"
+                for c in pyast.walk(node.func.value))
+    ]
+    # ⚑ POSITIVE CONTROL: the reader must find `.resolve()` calls of SOME kind here, or its zero
+    # above is a statement about the reader rather than about the file.
+    any_resolve = [
+        node.lineno
+        for node in pyast.walk(tree)
+        if isinstance(node, pyast.Call)
+        and isinstance(node.func, pyast.Attribute)
+        and node.func.attr == "resolve"
+    ]
+    assert any_resolve, (
+        "the AST reader found no `.resolve()` call of any kind — its zero for the escaping form "
+        "would be a fact about the reader, not about this module"
+    )
+    assert not live, (
+        f"`__file__`.resolve() escapes the runfiles tree back to the working copy; live at "
+        f"line(s) {live}"
+    )
