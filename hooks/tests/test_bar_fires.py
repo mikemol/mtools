@@ -947,9 +947,11 @@ _THIS = Path(__file__)
 # written; if it resolves far fewer, the resolver has broken and its silence is the
 # vacuity it exists to catch — one level out.
 _MIN_SWEPT = 50
-# ⚑ A PAYDOWN CEILING, NOT A TARGET. 20 warrants carry no `check` field; the arm refuses an
-# INCREASE and says nothing about the existing 20 being acceptable. Lower it as they are paid.
-_WARRANTS_WITHOUT_CHECK = 20
+# ⚑ A PAYDOWN CEILING, NOT A TARGET, AND IT IS NOW ZERO. All 20 were paid the tick after the
+# ceiling was set — each resolved to a real test by its own key, so the debt was a missing `check`
+# LINE rather than missing coverage. ⚑⚑ A ceiling left at 20 after paying 20 would let the debt
+# return silently, which is the shape a paydown ratchet exists to refuse.
+_WARRANTS_WITHOUT_CHECK = 0
 _WITNESS = _DIST.parent / "domain_witness.sh"
 
 

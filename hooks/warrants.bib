@@ -522,7 +522,8 @@
   title   = {The P-arm for the citation gate},
   note    = {Without it every arm below passes against a gate that refuses all input. This is the
              same pairing the header gate uses, and it is the arm most easily skipped because a
-             gate that refuses everything looks identical to a gate that refuses correctly.}
+             gate that refuses everything looks identical to a gate that refuses correctly.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_citation_gate_passes_a_rule_that_exists}
 }
 
 @misc{hooks-bar-fires-the-citation-gate-fires-on-a-rule-that-does-not-exist,
@@ -532,7 +533,8 @@
              It stood two hours and was found by eye, from the heading sequence stepping 22 to 24.
              A citation to a nonexistent rule reads exactly like a citation to a real one --
              nothing is malformed, the document exists, and only following the pointer separates
-             them.}
+             them.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_citation_gate_fires_on_a_rule_that_does_not_exist}
 }
 
 @misc{hooks-bar-fires-the-citation-gate-is-silent-when-nothing-is-cited,
@@ -540,7 +542,8 @@
   title   = {A message citing no rule must pass},
   note    = {Most commits cite nothing. A gate that refused them would be bypassed within a day,
              and a bypassed gate is a disarmed one -- so this arm guards the gate's own survival
-             rather than a property of the corpus.}
+             rather than a property of the corpus.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_citation_gate_is_silent_when_nothing_is_cited}
 }
 
 @misc{hooks-bar-fires-the-orphan-gate-passes-an-invoked-script,
@@ -549,7 +552,8 @@
   note    = {Without it every arm below passes against a gate that refuses all input. The fixture
              writes its call site to .githooks/pre-commit rather than blockers.sh, because a
              call site that is itself a .sh becomes a subject of the census it feeds -- the first
-             cut did that and the P-arm failed because the SITE was an orphan.}
+             cut did that and the P-arm failed because the SITE was an orphan.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_orphan_gate_passes_an_invoked_script}
 }
 
 @misc{hooks-bar-fires-the-orphan-gate-fires-on-a-script-nothing-invokes,
@@ -557,7 +561,8 @@
   title   = {A checker nothing invokes is a green over nothing},
   note    = {A .sh can be written, pass its linter, sit in the tree and never execute. An
              intentional orphan is the same file on disk as a forgotten one, which is why the
-             gate demands a declaration rather than trusting memory.}
+             gate demands a declaration rather than trusting memory.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_orphan_gate_fires_on_a_script_nothing_invokes}
 }
 
 @misc{hooks-bar-fires-an-exports-files-entry-is-not-an-invocation,
@@ -567,7 +572,8 @@
              collect_check.sh was added to exports_files -- which only makes a source dependable,
              never run -- the gate reported it invoked and stopped printing its declared-orphan
              line. The waiver did not fail loudly, it went quiet, which is the failure direction
-             that removes its own detector.}
+             that removes its own detector.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_an_exports_files_entry_is_not_an_invocation}
 }
 
 @misc{hooks-bar-fires-a-srcs-entry-is-an-invocation,
@@ -576,14 +582,16 @@
   note    = {Restricting the match to srcs and location reported four action wrappers as orphans;
              they are srcs = ["//:mypy_check.sh"] in the per-distribution build files, a label
              form the pattern missed in files it never read. Doing both narrowings at once turned
-             one false negative into four false positives in a single step.}
+             one false negative into four false positives in a single step.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_srcs_entry_is_an_invocation}
 }
 
 @misc{hooks-bar-fires-the-freshness-gate-passes-a-corpus-citing-no-environment-claim,
   section = {bar-fires},
   title   = {A corpus with no environment claim has nothing to re-check},
   note    = {Most rules are claims about reasoning and do not decay. A gate that refused them
-             would be refusing the ordinary case, and would be bypassed within a day.}
+             would be refusing the ordinary case, and would be bypassed within a day.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_freshness_gate_passes_a_corpus_citing_no_environment_claim}
 }
 
 @misc{hooks-bar-fires-the-freshness-gate-refuses-a-corpus-it-cannot-read,
@@ -594,7 +602,8 @@
              "no rule cites the metrics port" and exited 0. Measured with a degraded PATH: the
              script reported nothing to re-check and returned success, having checked nothing. A
              green over a reader failure, inside the checker written to catch stale claims. Same
-             file, same content, only the permission bit differs, and the verdicts are opposite.}
+             file, same content, only the permission bit differs, and the verdicts are opposite.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_freshness_gate_refuses_a_corpus_it_cannot_read}
 }
 
 @misc{hooks-bar-fires-the-witness-refuses-an-unknown-probe-kind-before-running-anything,
@@ -604,7 +613,8 @@
              the file -- both produce an identical arm-2 red, so a typo'd kind reports a DOMAIN
              finding about whatever target it was aimed at. The guard originally sat after the
              control and after arm 1, so a mistyped kind paid for a full control invocation and a
-             mutate-plus-rebuild before refusing, with the victim already edited.}
+             mutate-plus-rebuild before refusing, with the victim already edited.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_witness_refuses_an_unknown_probe_kind_before_running_anything}
 }
 
 @misc{hooks-bar-fires-the-witness-accepts-every-declared-probe-kind,
@@ -615,14 +625,16 @@
              16.9s for one test, and every second exercised the arms rather than the guard. The
              property is that the dispatch and the validator name the same kinds, which is
              structural. F-armed by dropping one kind from the validator while leaving it in the
-             dispatch.}
+             dispatch.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_witness_accepts_every_declared_probe_kind}
 }
 
 @misc{hooks-bar-fires-the-witness-refuses-a-missing-argument,
   section = {bar-fires},
   title   = {A witness with no target must refuse rather than default},
   note    = {Every argument names something the arms will mutate or measure, so a default would
-             pick a victim the caller did not choose.}
+             pick a victim the caller did not choose.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_witness_refuses_a_missing_argument}
 }
 
 @misc{hooks-bar-fires-the-witness-refuses-an-untracked-victim,
@@ -632,7 +644,8 @@
              payloads accumulated, and arm 3 reported RESTORED over a file it had not restored.
              Measured: a test passed a path that did not exist, the witness created it across
              five invocations, and the 432-byte result was censused by the ratchet -- which
-             refused the commit and is the only reason it surfaced.}
+             refused the commit and is the only reason it surfaced.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_witness_refuses_an_untracked_victim}
 }
 
 @misc{hooks-structural-query-a-pager-or-filter-reading-a-claimed-artifact-is-refused,
@@ -641,7 +654,8 @@
   note    = {perl, less, more, jq and column each read a claimed artifact textually and each
              PASSED, measured. Unlike this repository's four enumerated populations this one
              cannot be derived from a filesystem or a config -- there is no query that yields
-             tool names -- so it grows by measurement rather than by enumeration.}
+             tool names -- so it grows by measurement rather than by enumeration.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_pager_or_filter_reading_a_claimed_artifact_is_refused}
 }
 
 @misc{hooks-structural-query-the-interpreter-is-not-listed-because-it-is-the-prescribed-route,
@@ -651,7 +665,8 @@
              interpreter would refuse the answer alongside the question. An interpreter is not a
              tool, it is a way to be any tool, and no name-based roster separates the two. A
              reader cannot otherwise tell whether python3 was considered and excluded or simply
-             forgotten, and those warrant different responses.}
+             forgotten, and those warrant different responses.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_the_interpreter_is_not_listed_because_it_is_the_prescribed_route}
 }
 
 @misc{hooks-structural-query-a-command-that-touches-without-reading-is-permitted,
@@ -661,7 +676,8 @@
              cp, mv, ls, chmod, git diff, the owning tool. An allowlist would have to enumerate
              every one plus whatever a future workflow reaches for; that population is unbounded
              and its omissions REFUSE legitimate work, where a denylist's omissions merely fail
-             to catch one. Both are hand-written; only one fails safe.}
+             to catch one. Both are hand-written; only one fails safe.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_command_that_touches_without_reading_is_permitted}
 }
 
 @misc{hooks-structural-query-a-reader-or-editor-found-on-the-host-is-refused,
@@ -669,7 +685,8 @@
   title   = {Measured against tools installed, not tools imagined},
   note    = {Twenty-six more text readers were present on the host and absent from the roster.
              Enumerating what a machine has is not the same as enumerating what could exist, but
-             it is a real population where a list written from memory is a guess about one.}
+             it is a real population where a list written from memory is a guess about one.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_reader_or_editor_found_on_the_host_is_refused}
 }
 
 @misc{hooks-structural-query-a-non-reader-on-the-host-is-permitted,
@@ -680,7 +697,8 @@
              costs something in both directions and they are not symmetric: an omission fails to
              catch one command, an over-inclusion refuses one that was never the problem. A
              denylist entry firing on a non-reader is the allowlist's failure mode arriving by
-             the back door.}
+             the back door.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_non_reader_on_the_host_is_permitted}
 }
 
 @misc{hooks-bar-fires-the-witness-refuses-a-victim-carrying-probe-residue,
@@ -691,7 +709,8 @@
              nobody wrote, in a file the author did not touch. SIGTERM is fine because the trap
              runs; SIGKILL is not, and no handler can make it be. The message is asserted rather
              than the code alone, because an untracked victim exits 2 as well and a test
-             asserting a code two guards share proves nothing about either.}
+             asserting a code two guards share proves nothing about either.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_witness_refuses_a_victim_carrying_probe_residue}
 }
 
 @misc{hooks-bar-fires-the-gate-reads-the-index-not-the-working-tree,
@@ -706,7 +725,8 @@
              it and nothing would fail. The arm is the DIFFERENCE rather than the presence:
              asserting the staged copy exists proves nothing, since it would exist under any
              implementation. F-armed by copying the working tree instead of the index, which
-             carries the marker and fails the test.}
+             carries the marker and fails the test.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_reads_the_index_not_the_working_tree}
 }
 
 % ---------------------------------------------------------------- no_chaining
