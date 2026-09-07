@@ -2898,3 +2898,47 @@ def test_every_warrant_count_in_the_harness_is_anchored() -> None:
         "warrant count(s) not anchored to column 0 — these disagree with the gate the moment a "
         "quoted `@misc{` appears in the ledger:\n  " + "\n  ".join(unanchored)
     )
+
+
+def test_the_test_function_count_survives_a_missing_trailing_newline() -> None:
+    """⚑⚑⚑ THE GATE COUNTS OVER A CONCATENATION AND THE PREFLIGHT COUNTS PER FILE.
+
+    Both compare warrants against `^def test_`, and they agree only while every test module ends
+    in a newline. ⚑ `cat a b | grep -c` welds `a`'s last line to `b`'s first, so a `def test_` at
+    the start of the next file stops matching the anchor. MEASURED on a two-file fixture where the
+    first lacks its newline: **preflight 3, gate 2.**
+
+    ⚑⚑ AND THE GATE'S ERROR IS THE REFUSING DIRECTION. It reads FEWER test functions than exist,
+    so a ledger that is genuinely 1:1 looks like it carries surplus warrants and the commit is
+    refused. The preflight — whose whole job is predicting that refusal — would have said the
+    tree was clean.
+
+    ⚑ ALL 25 TEST MODULES END IN A NEWLINE TODAY, across all three distributions, so the counts
+    agree at 216, 88 and 37. That is the accident holding, not the property being enforced: this
+    is the third consecutive tick where two instruments derive one figure by different predicates
+    and agree only by luck.
+
+    ⚑⚑ THE FIX IS THE GATE COUNTING THE WAY THE PREFLIGHT DOES, not the reverse. Per-file counting
+    is correct independent of file endings; concatenation is correct only under a condition
+    nothing here enforces. A `.editorconfig` or a lint rule would ALSO work and would be a second
+    thing to keep true — the weaker repair, because it fixes the accident rather than the reader.
+    """
+    gate = _GATE.read_text(encoding="utf-8")
+    # ⚑ THE GATE MUST NOT COUNT OVER A CONCATENATION. `cat … | grep -c` is the exact construction
+    # that loses a match at every file boundary lacking a newline.
+    catted = [
+        ln.strip() for ln in gate.splitlines()
+        if not ln.lstrip().startswith("#")
+        and "def test_" in ln and "cat " in ln
+    ]
+    assert not catted, (
+        "the gate counts test functions over a concatenation; a file without a trailing newline "
+        f"welds two lines and the count drops: {catted}"
+    )
+    # ⚑ AND IT MUST STILL COUNT THEM — a repair that removed the check would pass the assertion
+    # above by deleting the property, which is the vacuity this suite exists to refuse.
+    counting = [
+        ln.strip() for ln in gate.splitlines()
+        if not ln.lstrip().startswith("#") and "def test_" in ln
+    ]
+    assert counting, "the gate no longer counts test functions at all"

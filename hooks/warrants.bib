@@ -1744,3 +1744,24 @@
             cannot pass by finding nothing.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_every_warrant_count_in_the_harness_is_anchored},
 }
+
+@misc{hooks-bar-fires-the-test-function-count-survives-a-missing-trailing-newline,
+  title  = {The gate counts over a concatenation and the preflight counts per file},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {Both instruments compare warrants against test functions, and they agree only while
+            every test module ends in a newline: concatenating the files welds one file's last
+            line to the next file's first, so a definition at that boundary stops matching the
+            column-zero anchor. Measured on a two-file fixture where the first lacks its newline,
+            the per-file sum reads three and the concatenation reads two. The gate's error is the
+            refusing direction --- fewer test functions than exist, so a ledger that is genuinely
+            one-to-one looks like it carries surplus warrants and the commit is refused, while
+            the preflight predicts a clean tree. All twenty-five modules across three
+            distributions end in a newline today, so the counts agreed at 216, 88 and 37: the
+            accident holding rather than the property being enforced, for the third consecutive
+            tick. The gate now counts per file, which is correct independent of file endings; a
+            lint rule forbidding the missing newline would have fixed the accident and left the
+            reader wrong.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_test_function_count_survives_a_missing_trailing_newline},
+}

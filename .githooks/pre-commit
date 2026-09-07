@@ -415,7 +415,18 @@ for dist in hooks mdstruct ratchet; do
   # ⚑ `cat` then a single `grep -c`, NOT `grep -c` over the glob: -c counts PER FILE and would emit
   # one number per test module rather than the suite's total. shellcheck's SC2126 suggests a swap
   # that is wrong here — the aggregate is the point.
-  t=$(cat "$staged/$dist"/tests/test_*.py | grep -c '^def test_')
+  # ⚑⚑⚑ COUNTED PER FILE, NOT OVER A CONCATENATION. `cat a b | grep -c '^def test_'` welds `a`'s
+  # last line to `b`'s first, so a definition at the start of the next file stops matching the
+  # anchor. MEASURED on a two-file fixture where the first lacks its trailing newline: the
+  # per-file sum reads 3 and the concatenation reads 2.
+  # ⚑⚑ AND THE ERROR IS THE REFUSING DIRECTION — fewer test functions than exist, so a ledger that
+  # is genuinely 1:1 looks like it carries surplus warrants and the commit is refused, while
+  # `preflight.sh` (which already counts per file) predicts a clean tree.
+  # ⚑ ALL TEST MODULES END IN A NEWLINE TODAY, so the two agreed. That is the accident holding
+  # rather than the property being enforced. Per-file counting is correct independent of file
+  # endings; a lint rule forbidding the missing newline would fix the ACCIDENT and leave the
+  # reader wrong — a second thing to keep true instead of one thing that cannot go wrong.
+  t=$(grep -h -c '^def test_' "$staged/$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
   if [ "$w" -ne "$t" ]; then
     say "$dist: $w warrants against $t test functions — every test must arrive warranted"
     # ⚑⚑ THE NUMBERS GO INTO THE RECORD, NOT ONLY ONTO stderr. `say` reaches a human at a
