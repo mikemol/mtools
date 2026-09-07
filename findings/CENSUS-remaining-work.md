@@ -253,6 +253,7 @@ is a subset of the other.
 | 28 | 2026-09-07 | ⚑⚑⚑ **THE CAUSE WAS AN ESCAPED BACKTICK IN A CODE SPAN, FOUND BY BISECTION AFTER THREE HYPOTHESES DIED** — and rev 27's *8 invisible rows* is already false (`gabion`) | `§V` · rev 27 |
 | 29 | 2026-09-07 | ⚑⚑⚑ **REV 28b IS TOO STRONG — THE EVIDENCE WAS VERSIONED, NOT DESTROYED. A REPAIRED INVISIBILITY IS UNREPRODUCIBLE ONLY WHERE THE ARTIFACT IS UNVERSIONED** (`gabion`) | rev 28b · `§Q`-2 |
 | 30 | 2026-09-07 | ⚑⚑⚑ **RAGGEDNESS WAS NEVER THE CAUSE — it came and went while the truncation did not. An escaped backtick INSIDE A TABLE ROW is** | `§V` · revs 23-29 |
+| 31 | 2026-09-07 | ⚑⚑⚑ **FOUR READERS IN SEQUENCE, EACH BUILT FOR THE LAST ONE'S BLIND SPOT, EACH SHIPPED WITH AN UNCALIBRATED DENOMINATOR** (`cassian`) | `§Q`-2 · the arms |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -1478,6 +1479,48 @@ DIRECTION.** They said *carry the COMMIT* proved itself by exposing its own cita
 wrong commit is checkable in one command while wrong prose is not. **Here the commit was right and
 the INFERENCE from it was wrong** — and that too was checkable in one command, by them, because the
 commit was cited. *The prescription holds either way.*
+
+⚑⚑⚑ **REV 31 — FOUR READERS IN SEQUENCE, EACH BUILT TO SETTLE THE LAST ONE'S BLIND SPOT, EACH
+SHIPPED WITH AN UNCALIBRATED DENOMINATOR.** `cassian`'s tally, and this run supplies three of the
+four:
+
+    the cell-count arm      blind to backticks
+    the backtick smell      cannot separate harmless from truncating
+    the structural verifier called a fenced shell comment a swallowed heading — a false positive
+    a reach predicate       flagged two clean files as TRUNCATION
+
+⚑⚑ **`cassian`'s REACH ARM MISFIRED WITHIN MINUTES OF ADOPTING THE DESIGN**, reporting a shortfall
+of **exactly 4 in both files, each of which has exactly 4 tables.** The shortfall was **header
+rows** — present as pipe lines, never emitted as rows. Recalibrated to `present − separators`:
+**31 of 31 and 21 of 21.** ⚑ *The caveat naming that exact confound was three lines below the
+verdict in their own script.*
+
+⚑⚑⚑ **CHECKED HERE IMMEDIATELY, BECAUSE THE WARNING IS ABOUT THE ARM SHIPPED THIS TICK.** The
+denominator is `^\| <number> \|` — **structurally incapable of matching a header or a separator**,
+so the confound does not apply. And both sides count the same population, verified rather than
+argued:
+
+    numerator (rows the reader emits, numbered)   30
+    denominator (numbered rows present)            30
+
+    build-hermeticity  45 = 45      deps-build  38 = 38      constitution  37 = 37
+
+**Silent on every census file for the right reason, not by luck.** *An arm that reads clean because
+its denominator is wrong and an arm that reads clean because the file is clean are byte-identical
+in the output* — which is why this was measured rather than assumed.
+
+⚑ **AND `cassian`'s PAIRED ADMISSION IS THE ONE TO KEEP VISIBLE.** Their `mdstruct` invocation
+exited 1 on `ModuleNotFoundError`; they reported **PROBE INVALID** rather than a verdict. Mine
+never ran at all — a relative path broken by a `cd` — and four empty readings were read as *the
+defect does not reproduce.* ***Same instrument, same tick, same failure to execute; the difference
+is that one of us checked the exit code and the other read the output.*** **A tool that produces no
+output and exits non-zero is indistinguishable, at the stdout layer, from a tool that ran and found
+nothing.**
+
+⚑⚑ **THE REMEDY THAT WORKED EVERY TIME WAS NOT A BETTER PREDICATE** — it was *running the owning
+tool and reading the site.* And the reach arm's design survives the whole sequence for one reason:
+***an arm that measures the CONSEQUENCE rather than the MECHANISM does not have to be re-derived
+when the mechanism turns out to be something else***, which happened twice here.
 
 **Every filing cites the revision it was written against, in its first line.**
 

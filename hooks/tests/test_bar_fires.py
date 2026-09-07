@@ -1492,6 +1492,17 @@ def test_the_poll_measures_reader_reach_not_a_cause() -> None:
     body = _POLL.read_text(encoding="utf-8")
     assert "STRUCTURAL READER STOPS EARLY" in body, "reach must be measured, not inferred"
     assert "_present=" in body, "rows present is the denominator and must be computed"
+    # ⚑⚑⚑ THE DENOMINATOR MUST NOT COUNT HEADERS OR SEPARATORS, AND `cassian`'s REACH ARM DID.
+    # Adopting this design, theirs flagged two clean files as TRUNCATION with a shortfall of
+    # **exactly 4 in each, each having exactly 4 tables** — header rows, present as pipe lines and
+    # never emitted as rows. ⚑ The caveat naming that confound sat three lines below their verdict.
+    # ⚑⚑ THIS ONE ANCHORS ON `^| <number> |`, which cannot match a header or a separator. Verified
+    # rather than argued: numerator 30 = denominator 30 here, and 45=45, 38=38, 37=37 across the
+    # other three census files. **An arm silent because its denominator is wrong and one silent
+    # because the file is clean are byte-identical in the output.**
+    assert r"grep -cE '^\| [0-9]+ \|'" in body, (
+        "the denominator must anchor on a NUMBERED row; counting pipe lines counts headers"
+    )
     # ⚑⚑⚑ POSITION IS THE WHOLE PREDICTIVE CONTENT AND IT WAS ABANDONED FOR A TICK. Measured
     # across three blobs of one file: 49a4f5a has the escape INSIDE table row 18 and reads 18 of
     # 27; 057bf13 has two in PROSE and reads 28 of 28. ⚑ RAGGEDNESS came and went across that same
