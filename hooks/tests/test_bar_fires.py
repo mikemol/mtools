@@ -2104,3 +2104,56 @@ def test_every_shipped_hook_is_actually_invoked() -> None:
     assert commands, "no hook commands parsed from settings"
     for command in commands:
         assert "_HOOK_BLOCK=1 " in command, f"hook armed only ambiently: {command}"
+
+
+_PKG = _DIST / "src" / "mikemol" / "hooks"
+
+
+def test_a_module_with_no_local_caller_declares_who_consumes_it() -> None:
+    """⚑⚑⚑ THE TWO MOST-REUSED MODULES HERE ARE CALLED BY NOTHING IN THIS REPOSITORY.
+
+    Last tick gated *every declared hook script is wired*. Asking the wider question — for each
+    module, what calls it — found `checker_context` and `project_root` imported by no production
+    source and **no test**, while `checkers` is imported only by its own test.
+
+    ⚑⚑ A FLEET SWEEP INVERTED THAT READING. Each has **8 importers** across `substrate`,
+    `paperkit` and `summit`. They are the most cross-repo-reused code in this distribution, and by
+    the operator's membership criterion — *reuse across repos, not repo-local* — the most clearly
+    earned. The local zero was never evidence of dead code.
+
+    ⚑⚑⚑ AND THE PEERS IMPORT THEIR OWN COPIES. Measured by hash: `substrate/scripts/` and
+    `summit/scripts/` carry byte-identical siblings that DIFFER from mtools'. mtools' are strictly
+    ahead — they carry the `Returns:` sections its ruff demands and drop the shebang its own
+    `EXE001` reasoning removed — and no consumer reads them. **The interning this repository
+    exists to perform has not happened for its two most-reused modules.**
+
+    ⚑ THE ARM CANNOT ASSERT THE INTERNING, because the peer trees are not this repository's to
+    edit. What it can hold is the thing that made the divergence survivable: a module with no
+    local caller must SAY who consumes it, so the next reader does not read *unused* off an
+    import count, delete it, and break three repos.
+    """
+    # ⚑ THE POPULATION IS DERIVED, not listed. A hand-written module list is the reified-symbol
+    # defect this suite was built around; it goes stale the tick a module is added.
+    modules = sorted(f for f in _PKG.glob("*.py") if f.stem != "__init__")
+    assert modules, "no modules found; this arm would pass by finding nothing"
+    sources = [f.read_text(encoding="utf-8") for f in _PKG.glob("*.py")]
+    sources += [f.read_text(encoding="utf-8") for f in (_DIST / "tests").glob("*.py")]
+    orphans: list[str] = []
+    for mod in modules:
+        name = mod.stem
+        imported = any(
+            pyre.search(rf"^\s*from\s+[\w.]+\s+import\s+[^\n]*\b{name}\b", src, pyre.MULTILINE)
+            for src in sources
+        )
+        if imported:
+            continue
+        body = mod.read_text(encoding="utf-8")
+        # An entry point is consumed by the settings that invoke it, not by an import.
+        if pyre.search(rf"mikemol\.hooks\.{name}:", _PYPROJECT.read_text(encoding="utf-8")):
+            continue
+        if "CONSUMED BY:" not in body:
+            orphans.append(name)
+    assert not orphans, (
+        f"module(s) with no local caller and no consumer declaration: {orphans}. "
+        "An import count of zero is not evidence of disuse when peers import a copy."
+    )

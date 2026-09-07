@@ -1,5 +1,26 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
+
+# ⚑⚑⚑ CONSUMED BY: no caller in this repository, and EIGHT across the fleet.
+#   substrate/scripts/pycheck_verdict.py      substrate/scripts/pycheck_analyze.py
+#   paperkit/scripts/pycheck_verdict.py       paperkit/scripts/pycheck_analyze.py
+#   summit/scripts/pycheck_verdict.py         summit/scripts/pycheck_analyze.py
+#   (plus substrate/build/lib/ copies of the first two)
+#
+# ⚑⚑ MEASURED 2026-09-07, and the local zero nearly read as dead code. An AST sweep and a regex
+# sweep agreed that NOTHING here imports this module — not even its own test — and both were
+# right. A fleet sweep then inverted the reading entirely: this is among the most cross-repo-reused
+# code in the distribution, and by the operator's membership criterion (*reuse across repos, not
+# repo-local*) the most clearly earned. AN IMPORT COUNT OF ZERO IS NOT EVIDENCE OF DISUSE.
+#
+# ⚑⚑⚑ AND THE PEERS IMPORT THEIR OWN COPIES, NOT THIS ONE. Measured by hash: `substrate/scripts/`
+# and `summit/scripts/` carry byte-identical siblings that DIFFER from this file. This copy is
+# strictly ahead — it carries the `Returns:` sections this repo's ruff demands — and no consumer
+# reads it. The interning mtools exists to perform has not happened for this module.
+#
+# ⚑ THE DIVERGENCE IS NOT REPAIRED HERE. Those trees are their owners', and a peer cannot lift
+# another's hold. What is recorded is the measurement, so the next reader meets it before an
+# import count.
 """The project a checker run belongs to — ambient to the analysis, not threaded through it.
 
 ⚑⚑⚑ A `ContextVar`, NOT A PARAMETER (operator, 2026-08-31: *"Contextvars; don't thread."*). The

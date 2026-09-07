@@ -1,5 +1,24 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
+
+# ⚑⚑⚑ CONSUMED BY: no caller in this repository, and EIGHT across the fleet.
+#   substrate/scripts/hook_fire_probe.py      substrate/scripts/pycheck_analyze.py
+#   substrate/substrate/project_root_selftest.py
+#   paperkit/scripts/pycheck_analyze.py       summit/scripts/pycheck_analyze.py
+#   (plus substrate/build/lib/ copies of the first three)
+#
+# ⚑⚑ MEASURED 2026-09-07. Two independent readers agreed nothing here imports this module, and a
+# third — swept fleet-wide — found eight importers. ⚑ THE FIRST FLEET READER FAILED ITS OWN
+# CONTROL and reported zero: it required the module name inside a dotted path, while the real
+# shape is `from mikemol.hooks import project_root`, with the name after `import` past a space the
+# pattern could not cross. That negative was a statement about the reader, and it is the reason
+# the control is run before the count is read.
+#
+# ⚑⚑⚑ THE PEERS IMPORT THEIR OWN COPIES. By hash, `substrate/scripts/` and `summit/scripts/` hold
+# byte-identical siblings differing from this file; this copy drops the shebang that this repo's
+# own `EXE001` reasoning removed for an imported module. Strictly ahead, and unread.
+#
+# ⚑ NOT REPAIRED HERE — those trees belong to their owners. The record is the deliverable.
 """Which project governs a file — the nearest `pyproject.toml` at or above it.
 
 ⚑⚑⚑ A CHECKER POINTED AT THE WRONG CONFIG IS A CHECKER THAT AGREES WITH YOU, AND THE HOOK WAS

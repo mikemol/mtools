@@ -1409,3 +1409,25 @@
             a session already running when the env block changes never picks it up.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_every_shipped_hook_is_actually_invoked},
 }
+
+@misc{hooks-bar-fires-a-module-with-no-local-caller-declares-who-consumes-it,
+  title  = {An import count of zero is not evidence of disuse},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {Asking which modules have a caller found checker_context and project_root imported by
+            no production source and no test in this repository. Two independent readers, regex
+            and AST, agreed --- and both were right. A fleet sweep inverted the reading: each has
+            eight importers across substrate, paperkit and summit, making them the most
+            cross-repo-reused code in the distribution and the most clearly earned under the
+            operator's membership criterion. The first fleet reader failed its own control and
+            reported zero, because it required the module name inside a dotted path while the
+            real shape puts it after import; that negative was a statement about the reader.
+            Measured by hash, the peers import their own byte-different copies while this
+            repository's are strictly ahead and unread, so the interning mtools exists to perform
+            has not happened for its two most-reused modules. The divergence is not repaired
+            here, because those trees belong to their owners; the arm holds only that a module
+            with no local caller must say who consumes it, so the next reader does not read
+            unused off an import count and delete it.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_a_module_with_no_local_caller_declares_who_consumes_it},
+}
