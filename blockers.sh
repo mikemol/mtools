@@ -22,6 +22,9 @@
 set -uo pipefail
 
 sub=/home/mikemol/github/substrate
+# ⚑ THE GATE'S LOG DIRECTORY, resolved the same way the gate resolves it, so the poll reads the
+# record the gate actually writes rather than a path that merely looks like it.
+_witness_logs_probe="${TMPDIR:-/home/mikemol/.cache}/mtools-gate-logs"
 mtools="$(cd "$(dirname "$0")" && pwd)"
 
 # ⚑⚑⚑ `ls-files` ANSWERS A DIFFERENT QUESTION THAN INTAKE ASKS, AND THIS SCRIPT ASKED THE WRONG
@@ -666,6 +669,37 @@ fi
 # filesystem one — `ListAgents` is the instrument and only the harness can run it. Naming its
 # absence is the point: this script covers what it covers, and the one claim it CANNOT cover is
 # exactly the one that went stale for an hour.
+# ⚑⚑⚑ THE SYMBOLS CARRIED BETWEEN TICKS HAD NO RE-DERIVATION PROCEDURE, WHICH IS THE DEFECT THIS
+# FILE'S OPENING COMMENT NAMES. It fixed the remembered-list problem for filesystem blockers and
+# left the tick's own carried set hand-written — the reified population, one level out.
+#
+# ⚑⚑ MEASURED, AND TWO HAD ALREADY DRIFTED. The vacuity sweep's inline-path gap was carried as
+# *one instance fixed* and reads FOUR; the refusal record was carried as *two ragged rows* and
+# reads THREE OF SEVEN. Both were re-stated from memory every tick and neither was re-read.
+#
+# ⚑ THE SYMBOLS THAT DISSOLVED THIS WEEK WERE ALL POLLED ONES — paperkit, the island, the ledger.
+# They dissolved because this script re-printed them until someone asked what they blocked. An
+# unpolled symbol has no such pressure, so the four that rotted are exactly the four never printed.
+echo "=== carried symbols: the ones no filesystem section re-derives ==="
+_apex=$("$md" grep 'AX-' "$mtools/findings/CENSUS-remaining-work.md" 2>/dev/null \
+        | grep -c 'named at the freeze' || true)
+if [ "${_apex:-0}" -gt 0 ]; then
+    echo "  apex slot: still 'named at the freeze' — unfilled; the operator's at the freeze"
+else
+    echo "  apex slot: no unfilled marker found — re-read §R before assuming it is named"
+fi
+_rt="$_witness_logs_probe/REFUSALS.tsv"
+if [ -r "$_rt" ]; then
+    _ragged=$(awk -F'\t' 'NF!=5' "$_rt" | grep -c . || true)
+    _rows=$(grep -c . "$_rt" || true)
+    echo "  refusal record: $_ragged of $_rows row(s) ragged — pre-column rows are unattributable"
+else
+    echo "  refusal record: absent on this host — a fact about the reader, not the record"
+fi
+_inline=$(grep -cE '\(_[A-Z_]+ */ *"[^"]+"( */ *"[^"]+")*\)\.read_text' \
+          "$mtools/hooks/tests/test_bar_fires.py" || true)
+echo "  vacuity sweep: $_inline inline path read(s) the sweep resolves by variable name only"
+
 echo "=== NOT COVERED: peer reachability — run ListAgents; it is a reading, not a fact ==="
 
 # ⚑⚑⚑ THE TERMINAL DIGEST — BECAUSE A CORRECT LINE THE READER NEVER RECEIVES IS NOT A REPORT.

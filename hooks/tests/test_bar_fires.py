@@ -2660,3 +2660,48 @@ def test_the_ledger_section_distinguishes_deferred_from_resolved() -> None:
     assert "not a blocker here" not in ledger_block, (
         "the ledger is deferred, not resolved; the island's wording would be a false claim"
     )
+
+
+def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
+    """⚑⚑⚑ THE POLL FIXED THE REMEMBERED-LIST DEFECT FOR FILESYSTEM BLOCKERS AND NOT FOR MINE.
+
+    Its opening comment states the rule it was built on: *a claim with no re-derivation procedure
+    will not be re-checked however load-bearing it is, because nothing about it announces that it
+    could be.* ⚑ MEASURED against the symbols actually carried between ticks: **four have no
+    procedure at all** — the apex's unfilled slot, the refusal record's pre-column rows, the
+    vacuity sweep's inline reads, and the interning gap.
+
+    ⚑⚑ AND TWO HAD ALREADY DRIFTED, WHICH IS THE EVIDENCE RATHER THAN THE WORRY. I carried the
+    sweep gap as *one instance fixed*; a regex over the test module finds **four** inline
+    path-expression reads. I carried the refusal record as *two ragged rows*; a field count finds
+    **three of seven**. Both were re-stated from memory every tick and neither was re-read.
+
+    ⚑ THE SYMBOLS THAT DISSOLVED THIS WEEK WERE ALL POLLED ONES — paperkit, the island, the
+    ledger. They dissolved because the poll re-printed them until someone asked what they blocked.
+    **An unpolled symbol has no such pressure**, which is why the four that rotted are exactly the
+    four the poll never printed. The discriminator was never importance.
+
+    ⚑⚑ REACHABLE, ALL FOUR, and that is what makes this coverable rather than a complaint: a
+    structural read answers the apex slot, a field count answers the record, a regex answers the
+    sweep. The fourth's subject is peer trees — reachable, but a fact about them.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ THE SECTION MUST EXIST. A carried symbol with no printed line is one nothing re-derives.
+    assert "carried symbols" in commands, (
+        "the poll must re-derive the symbols carried between ticks, not only filesystem blockers"
+    )
+    # ⚑ AND IT MUST DERIVE THEM, not list them. A hand-written list of symbol names inside the
+    # instrument that exists to refuse hand-written lists is the defect one level out — this
+    # repository has measured eight of those in its own checkers.
+    # ⚑ SPLIT, because a compound assertion names neither half when it fails. The gate's own
+    # ruff caught this: one message for two properties is the collapsed verdict this suite
+    # refuses elsewhere, arriving in an assertion rather than in a checker.
+    assert "ragged" in commands, (
+        "the refusal record's ragged rows must be counted, not remembered"
+    )
+    assert "inline" in commands, (
+        "the vacuity sweep's inline reads must be counted, not remembered"
+    )
