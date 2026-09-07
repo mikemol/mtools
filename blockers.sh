@@ -104,7 +104,29 @@ for f in $(find "$sub/substrate" -maxdepth 1 \( -name 'ratchet*.py' -o -name 'ba
     tracked "$sub" "substrate/$f" "$f"
 done
 
-echo "=== substrate: the membudget ledger ==="
+# ⚑⚑⚑ THIS SECTION SITS BESIDE THE ISLAND'S AND HAS A DIFFERENT STATUS, WHICH IS THE POINT OF
+# SAYING SO. The island reports a blocker RESOLVED by inversion — mtools built its own ratchet
+# from the design. This one is DEFERRED: there is no `membudget/` here, no distribution, and no
+# commit deciding it. What exists is `findings/membudget/`, 22 filings from five parties, eight
+# of which discuss the keyway the intake plan named as its open design question.
+#
+# ⚑⚑ COPYING THE ISLAND'S WORDING WOULD HAVE BEEN A FALSE CLAIM. *Not a blocker here* is true
+# there and false here: this repository does intend to intern membudget, and what stops it is a
+# design question with a named owner rather than an inverted dependency. Reporting deferred work
+# as resolved is the FLATTERING direction — the same direction the refusal record undercounted in.
+#
+# ⚑ A DEFERRAL WITH NO STATED EXIT IS INDISTINGUISHABLE FROM A THING NOBODY LOOKED AT AGAIN, so
+# the exit condition is named rather than left to a reader who would have to find eight filings
+# to reconstruct it.
+#
+# ⚑ THE WORD NAMES TWO REFERENTS IN THIS TREE and a hit count would have read as consumers:
+# `figure_freshness.sh` mentions membudget twice and both are `findings/membudget/`, the corpus
+# here; `mdstruct/pyproject.toml` mentions it twice and both are prose about a hypothetical
+# sibling distribution. Neither is substrate's ledger script.
+echo "=== substrate: the membudget ledger (DEFERRED here, not resolved) ==="
+echo "  mtools intends to intern this; nothing is built yet and no commit decides it."
+echo "  The exit is the keyway — declare the KIND (claim:path:, claim:label:), bare tags"
+echo "  uncomparable — discussed across 8 of the 22 filings in findings/membudget/."
 # ⚑ `scripts/`, NOT `substrate/scripts/` — corrected by the peer who owns the tree.
 tracked "$sub" scripts/membudget-ledger "scripts/membudget-ledger"
 

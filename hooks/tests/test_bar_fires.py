@@ -2614,3 +2614,49 @@ def test_the_island_arm_says_the_dependency_was_inverted() -> None:
     assert "6da1021" in commands, (
         "the inversion must cite the commit that performed it, not merely assert it happened"
     )
+
+
+def test_the_ledger_section_distinguishes_deferred_from_resolved() -> None:
+    """⚑⚑⚑ TWO POLL SECTIONS, ONE SHAPE, AND THE OBVIOUS READING WOULD HAVE BEEN WRONG.
+
+    Last tick the ratchet-island section turned out to report *a blocker resolved by inversion*.
+    The membudget-ledger section sits beside it, is also one substrate path reported as untracked,
+    and the tempting move was to repair it identically.
+
+    ⚑ MEASURED, AND IT IS A DIFFERENT STATUS. The island blocks nothing because mtools built its
+    own ratchet from the design. The ledger has no mtools counterpart: **no `membudget/`
+    directory, no distribution, no commit deciding it.** What exists is
+    `findings/membudget/` — **22 filings from five parties**, eight of which discuss the keyway
+    that the intake plan named as its open design question.
+
+    ⚑⚑ SO ONE IS RESOLVED AND THE OTHER IS DEFERRED, and those are not the same line. *Not a
+    blocker here* would be false: this repository does intend to intern membudget, and the thing
+    stopping it is a design question with a named owner rather than an inverted dependency.
+    Reporting deferred work as resolved is the flattering direction — the same direction the
+    refusal record undercounted in.
+
+    ⚑ THE WORD `membudget` NAMES TWO REFERENTS IN THIS TREE, which is why the sweep needed reading
+    rather than counting. `figure_freshness.sh` mentions it twice and both are
+    `findings/membudget/`, a filed corpus here; `mdstruct/pyproject.toml` mentions it twice and
+    both are prose about a hypothetical sibling distribution. Neither is substrate's ledger
+    script. A hit count of four would have read as four consumers.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ THE SECTION MUST NAME ITS STATUS, like the island's — but with the status it actually has.
+    assert "DEFERRED" in commands, (
+        "the ledger section must say it is deferred, not leave a reader to infer a blocker"
+    )
+    # ⚑ AND IT MUST NAME WHAT WOULD END THE DEFERRAL. A deferral with no stated exit is
+    # indistinguishable from a thing nobody looked at again.
+    assert "keyway" in commands, (
+        "a deferral must name the question that ends it, or it is a hold nobody revisited"
+    )
+    # ⚑ IT MUST NOT CLAIM TO BE RESOLVED. The island's wording is correct there and false here;
+    # copying it would report deferred work as done, which is the flattering direction.
+    ledger_block = commands.split("membudget ledger")[1].split("=== ")[0]
+    assert "not a blocker here" not in ledger_block, (
+        "the ledger is deferred, not resolved; the island's wording would be a false claim"
+    )

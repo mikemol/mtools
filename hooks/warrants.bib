@@ -1653,3 +1653,24 @@
             than a comment.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_island_arm_says_the_dependency_was_inverted},
 }
+
+@misc{hooks-bar-fires-the-ledger-section-distinguishes-deferred-from-resolved,
+  title  = {Two poll sections, one shape, and the obvious reading would have been wrong},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {The ratchet-island section was found to report a blocker resolved by inversion. The
+            membudget-ledger section sits beside it, is also one substrate path reported as
+            untracked, and the tempting move was to repair it identically. Measured, it is a
+            different status: the island blocks nothing because this repository built its own
+            ratchet from the design, while the ledger has no counterpart here --- no directory,
+            no distribution, no commit deciding it --- and what exists is a corpus of 22 filings
+            from five parties, eight of which discuss the keyway named as the open design
+            question. So one is resolved and the other deferred, and copying the island's wording
+            would have reported deferred work as done, which is the flattering direction. The
+            exit condition is named, because a deferral with no stated exit is indistinguishable
+            from a thing nobody looked at again. The word names two referents in this tree and a
+            hit count of four would have read as four consumers; both pairs turned out to be a
+            local corpus and prose about a hypothetical sibling, neither of them the ledger.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_the_ledger_section_distinguishes_deferred_from_resolved},
+}
