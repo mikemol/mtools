@@ -51,6 +51,47 @@ py_library(
         data = [
             "pyproject.toml",
             "requirements.txt",
+            # ⚑⚑⚑ THE GATE ITSELF IS DATA, AND ITS ABSENCE MADE 56 ARMS FAIL HERMETICALLY WHILE
+            # THE PREFLIGHT READ THEM ALL GREEN. `_GATE` is read by 22 call sites here; in the
+            # sandbox the path did not exist, so every one raised FileNotFoundError. The preflight
+            # runs from the working tree where `.githooks/pre-commit` is simply there.
+            # ⚑⚑ THE LESSON WAS ALREADY IN THIS FILE. The comment below records that a
+            # `.githooks/` read "taught this here two ticks ago, where a test passed locally and
+            # failed hermetically" — and the fix that lesson describes was never applied to this
+            # target. A RECORDED LESSON IS NOT AN APPLIED ONE: the reasoning existed, in the same
+            # data list, and nothing consulted it when the next arm reading that path was written.
+            # ⚑ NAMED BY LABEL, not by glob. The root package exports it (`//:` at BUILD.bazel:62)
+            # so the dependency is declared where a reader looking for it will find it, and a glob
+            # would stage whatever else lands in `.githooks/` without anyone deciding to.
+            "//:.githooks/pre-commit",
+            # ⚑⚑ AND THE OTHER EIGHT, DERIVED FROM THE FAILURES RATHER THAN GUESSED AT. Staging
+            # the gate took 56 hermetic failures to 39; the remainder named nine distinct paths,
+            # and this list is that enumeration. A hand-written guess at "what a test module
+            # probably reads" is the reified population this repository has measured nine times.
+            # ⚑ EVERY ONE IS A SUBJECT THIS SUITE ASSERTS ABOUT — the poll, the preflight that
+            # predicts the gate, the refusal recorder, both commit hooks, the shell gate, the
+            # warrant ledger, the census brief, and the settings that arm the hooks. They are
+            # data because the arms read them, not because they happen to be nearby.
+            # ⚑⚑⚑ THE ROOT SCRIPTS, GLOBBED FROM THE PACKAGE THAT OWNS THEM. This was NINE
+            # transcribed labels and the tree holds sixteen scripts, so seven were unreachable.
+            # The arm `test_no_gate_asserts_a_figure_it_cannot_reach` globs `*.sh` and counted
+            # eleven (nine plus the two hooks), which is how the gap was measured, not noticed.
+            # ⚑ THE FIGURE IN AN EARLIER DRAFT OF THIS COMMENT WAS TWELVE, taken from `grep -o`,
+            # which counts MATCHES — three more labels exist in this file as `srcs` of separate
+            # targets and are correctly individual. Reading the lines gives nine. A count
+            # characterised from an instrument's output rather than its subject, written into the
+            # comment repairing exactly that defect.
+            # ⚑⚑ AN ARM WHOSE POPULATION IS A GLOB, FED BY A DATA LIST THAT IS A TRANSCRIPTION,
+            # IS GREEN OVER WHATEVER THE LIST HAPPENED TO NAME. The arm was right and its
+            # environment was short — the same shape as every mis-named population this suite
+            # exists to refuse, with the truncation living in the build file rather than the test.
+            # ⚑ `//:all_root_scripts` is a filegroup so the population is declared ONCE, in the
+            # package that owns those files, and every consumer inherits additions for free.
+            "//:all_root_scripts",
+            "//:.githooks/commit-msg",
+            "warrants.bib",
+            "//:.claude/settings.json",
+            "//:findings/CENSUS-BRIEF.md",
             # ⚑ THE BUILD FILES ARE DATA BECAUSE TWO WITNESSES READ THEM — the one asserting
             # every py_test names the pytest entry point, and the one asserting the gate's own
             # shell is checked. They passed before only by resolving OUT of the sandbox into the
@@ -66,28 +107,34 @@ py_library(
             # witness supplies a fixture it controls. Staging the real rules document would make
             # every arm depend on a file that changes every tick — an arm asserting "Rule 99 is
             # absent" would break the day someone writes Rule 99.
-            "//:rule_citations.sh",
             # ⚑ THE ORPHAN GATE IS STAGED AND ITS ARMS ARE HERMETIC, unlike the citation gate's.
             # It is pure shell over a filesystem the witness builds, with no reader to route
             # through — so there is no venv to reach for and no reason to skip.
-            "//:orphan_check.sh",
             # ⚑ THE FRESHNESS GATE IS STAGED AS A SOURCE THE WITNESS REWRITES, not run in place:
             # its arms substitute a fixture corpus for the real one, so the sandbox never needs
             # the 1,500-line rules document. `kubectl` and `curl` are absent there, which is
             # exactly the UNVERIFIABLE path the gate declares — the arms exercise the corpus
             # branch, which is the half that does not need a cluster.
-            "//:rule_freshness.sh",
             # ⚑ THE WITNESS IS STAGED FOR ITS PRE-BAZEL ARMS ONLY. Its later arms invoke bazel and
             # cannot run here; what the sandbox exercises is argument validation and the probe-kind
             # guard, both of which refuse before the first side effect and need only the script.
-            "//:domain_witness.sh",
             "//:.bazelrc",
             "//:BUILD.bazel",
             "//hooks:BUILD.bazel",
             "//mdstruct:BUILD.bazel",
             "//ratchet:BUILD.bazel",
             "@ruff//:bin",
-        ],
+            # ⚑⚑⚑ THE SIBLING TEST MODULES, because three arms sweep the whole SUITE rather
+            # than this file: the warrant ledger's 1:1 against every test NAME, the
+            # module-consumer check, and the harness-wide figure arm. In the sandbox they saw
+            # only this module and reported 130 warrant selectors as naming no test.
+            # ⚑⚑ THE ARMS WERE RIGHT AND THE POPULATION WAS SHORT — a checker reporting
+            # confidently over a population its ENVIRONMENT truncated. The preflight could not
+            # see it because the working tree holds every file; only the sandbox is short.
+            # ⚑ GLOBBED, because the population is *every test module in this distribution*
+            # and a list would go stale the next time one is added — the reified population
+            # this suite exists to refuse.
+        ] + glob(["tests/test_*.py"]),
         env = {"RUFF_BIN": "$(location @ruff//:bin)"},
 
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,

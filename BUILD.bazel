@@ -47,20 +47,45 @@ sh_test(
 # `orphan_check`, `rule_citations`, `rule_freshness` — were all unreachable as data.
 # ⚑ A `glob()` is the right shape here, as it was for the shellcheck target, but it changes the
 # default visibility and that is a separate measurement; listed explicitly until then.
-exports_files([
+# ⚑⚑⚑ GLOBBED, AND THE DEFERRAL ABOVE IS RETIRED BY MEASUREMENT. The comment said a glob
+# "is the right shape here, as it was for the shellcheck target, but it changes the default
+# visibility and that is a separate measurement". ⚑ MEASURED: this file declares no `package()`
+# and no `default_visibility`, so the list form and the glob form take the IDENTICAL default.
+# The deferral's premise — that the two forms differ on visibility — is false, and it held a
+# correct repair for two drifts.
+# ⚑⚑ THE LIST DRIFTED TWICE AND BOTH DRIFTS ARE RECORDED ABOVE: 8 of 13, then short by seven.
+# A THIRD was already in the tree when this was written — `figure_freshness.sh` and
+# `roster_drift.sh` are root scripts this list never named, found because a hermetic arm counted
+# 11 scripts where the tree holds 16. Three drifts of one list, each repaired by re-transcribing
+# it, is the reified population this repo keeps measuring in other people's checkers: a fix that
+# restores the count and leaves the mechanism that produced it.
+# ⚑ SO THE POPULATION IS DECLARED BY CONSTRUCTION. `*.sh` is exactly "every root script", which
+# is the property every consumer wants; a script added tomorrow is exported the moment it exists.
+# `allow_empty = False` matches the shellcheck target above and refuses the vacuous read where a
+# moved directory leaves the glob green over nothing.
+exports_files(glob(
+    ["*.sh", ".githooks/*"],
+    allow_empty = False,
+) + [
     ".bazelrc",
-    "blockers.sh",
-    "collect_check.sh",
-    "domain_witness.sh",
-    "mypy_check.sh",
     "mypy_runner.py",
-    "orphan_check.sh",
-    "ratchet_check.sh",
-    "ruff_check.sh",
-    "rule_citations.sh",
-    "rule_freshness.sh",
-    ".githooks/pre-commit",
-    "setup.sh",
+    ".claude/settings.json",
+    "findings/CENSUS-BRIEF.md",
 ])
+
+# ⚑⚑⚑ ONE NAME FOR "EVERY ROOT SCRIPT", so a consumer depends on the POPULATION rather than on
+# a transcription of it. `hooks/BUILD.bazel` carried twelve of these labels by hand while the
+# tree held sixteen; the four it missed were invisible because a label for an unexported source
+# fails as a *Visibility error*, which reads as "I may not depend on that".
+# ⚑⚑ A CONSUMER CANNOT DETECT A SHORT LIST — that is the whole difficulty. It sees the files it
+# was given and reports confidently over them, which is this repo's standing defect class with
+# the truncation moved into the build graph. Declaring the set here makes the omission
+# unconstructible instead of merely unlikely.
+# ⚑ `allow_empty = False` so a moved directory refuses rather than silently supplying nothing.
+filegroup(
+    name = "all_root_scripts",
+    srcs = glob(["*.sh", ".githooks/*"], allow_empty = False),
+    visibility = ["//visibility:public"],
+)
 
 exports_files(["BUILD.bazel"])
