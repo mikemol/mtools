@@ -95,6 +95,24 @@ build --sandbox_add_mount_pair=/etc
 
 build --disk_cache=~/.cache/bazel-disk/mtools
 
+# ⚑⚑⚑ AND THE DISK CACHE IS WHAT MAKES A PURGE CHEAP, WHICH IS WORTH KNOWING BEFORE ONE IS ORDERED.
+# An operator directive to reclaim disk had this repository stop its server and delete THREE output
+# bases — 4.7G: the live one plus two the gate creates, because `.githooks/pre-commit` materialises
+# the staged index with `git checkout-index` and runs the suite at a transient path that gets its
+# own base. MEASURED IMMEDIATELY AFTER:
+#
+#     bazel test //hooks:ruff   ->   5.8s, "2 disk cache hit", 1 test passes
+#
+# A cold output base rebuilt in under six seconds because THIS line survived it. Purging output
+# bases and keeping the disk cache are not in tension; the second is what makes the first free.
+#
+# ⚑⚑ ONE TRANSIENT FAILURE FOLLOWS A PURGE AND IS NOT A DEFECT. The first full run after refetching
+# the Python toolchain failed three targets with `input dependency
+# .../encodings/__pycache__/__init__.cpython-313.pyc was modified during execution` — the
+# interpreter byte-compiles its freshly-fetched stdlib while parallel actions read the same tree.
+# The immediately following run: 36 of 36, rc=0, no change to any file. ⚑ RE-RUN BEFORE CONCLUDING;
+# a first-run race after a purge reads exactly like a hermeticity defect and is not one.
+
 # ⚑⚑⚑ THE REMOTE CACHE AND BES ARE UNCONDITIONAL, BECAUSE AN OPT-IN CONFIGURATION IS NOT THE
 # CONFIGURATION. These sat behind `--config=cache` and `--config=bes` while `.githooks/pre-commit`
 # invoked a bare `bazel test //...` — so EVERY commit and every default build used neither.
@@ -162,6 +180,31 @@ build:bes --announce_rc
 #
 # A result computed under one instance name was SERVED under another. So `mtools-gate` is a label
 # on the same shared store rather than a namespace.
+#
+# ⚑⚑⚑ AND A PEER RAN THE SAME PROBE WITH A CONTROL ARM AND GOT THE OPPOSITE RESULT. `paperkit`
+# reports: warm run executes and uploads; `--remote_instance_name=WRONG` MISSES and re-executes;
+# the unmodified config HITS — `bazel clean` between each arm, with the third arm existing so a
+# miss cannot be confused with a system that was not caching at all. **Two probes, same stated
+# controls, opposite verdicts.** Recorded rather than resolved.
+#
+# ⚑⚑ THEIR HYPOTHESIS FOR THE DISCREPANCY DOES NOT FIT THIS PROBE, AND SAYING SO IS NOT THE SAME AS
+# BEING RIGHT. They suggest a hit without `bazel clean` between arms may be the LOCAL action cache,
+# since a local hit and a remote hit are indistinguishable at the "that was fast" layer. The arms
+# above did clean and did disable the disk cache, and the token read was the literal
+# `REMOTE CACHE HIT` — the same discriminator they name. So the offered explanation does not cover
+# this measurement, which leaves the disagreement unexplained rather than settled in either
+# direction.
+#
+# ⚑⚑⚑ AND IT CANNOT BE RE-RUN TODAY: `ss -ltn sport = :31985` returns no listener. The endpoint
+# both probes measured is down — the buildbuddy Service was deleted after the node hit disk
+# pressure. **A negative about a live shared artifact carries its window, and this one's window has
+# closed.** Whoever re-opens it should run BOTH arms in ONE session against a restored endpoint,
+# because the two results were produced hours apart against a store that has since been evicted.
+#
+# ⚑ NONE OF WHICH CHANGES ANY DECISION HERE, and that is the point worth keeping. Both parties
+# withdrew the FRAMING and kept the measurement, and the framing was the part that mattered:
+# partitioning was never a property worth wanting, so a flag that does or does not deliver it
+# changes nothing about adoption. The reconciliation is owed to the record, not to the config.
 #
 # ⚑⚑⚑ AND CROSS-REPO CACHE SHARING IS INTENTIONAL (operator) — this is the payoff, not a leak. An
 # action is identified by WHAT IT DECLARES, so two repositories that declare the same action have
