@@ -102,6 +102,34 @@ only by the author, making it a floor for its author and a fiction for every oth
 | `membudget-ledger` on no branch | all branches | `git log --branches` | ⚑ **4 hits under `--all`**, proving the reader sees the path |
 | nothing aggregates my gate's refusals | — | — | ⚑ **NONE — this is an unbuilt-instrument claim, not a measured absence**, and it is stated as such |
 
+## `MT-K7` — ADDENDUM: `MT-K1`'s ZERO WAS RIGHT AND ITS INSTRUMENT WAS NOT
+
+⚑⚑⚑ **THE THIRD INSTANCE OF THIS SESSION'S OWN DEFECT, IN THE LEG THAT RECORDS THE SECOND.**
+`MT-K1` reports `ls ~/github/summit/floor/inbox/ | grep -ci mtools` → **0**, with a control at 9.
+**That searches FILENAMES.** A content search over the same corpus:
+
+    grep -rli 'mtools'    ~/github/summit/floor/inbox/   ->   6
+    grep -rli 'gcalculus' ~/github/summit/floor/inbox/   ->  15   (control)
+
+⚑⚑ **THE CLAIM SURVIVES AND THE WITNESS DOES NOT.** Checked authorship of all six: `by=` resolves
+to `linux-sources`, `summit` ×3, `gabion`, and one with no tail (`rosettapkg`). **Not one is
+authored by `mtools`**, so *zero mtools-authored drafts are blocking in that queue* — the answer
+`MT-K1` gives. ⚑ *But `grep -ci` over a file LIST cannot distinguish "no such author" from "no such
+filename", and a party whose name never appears in a filename would report zero regardless of how
+many drafts it had filed.*
+
+⚑ **THE CONTROL PASSED AND DID NOT PROTECT ME.** 9 `gcalculus` hits proved the reader could see
+*filenames containing a party name* — which is a real shape, and **not the shape the claim is
+about.** `§5`'s rule is satisfied by a control on the reader's actual question, and mine answered
+its own.
+
+⚑⚑ **This is rev 15's third amendment arriving in the leg that supplied rev 15's third example.**
+The producer was runnable, its input durable, and it **answered a different question than the claim
+made** — exactly the row that *cannot be checked by running it*. It took a content search, which is
+a different command rather than a re-run.
+
+**Recorded as an addendum, not an edit.** `MT-K1` stands as filed with its defective witness visible.
+
 ## `§12` Termination test
 
 **No.** ⚑ This leg alone cannot reconstruct what was asked of other legs, and it deliberately does
