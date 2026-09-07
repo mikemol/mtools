@@ -2059,3 +2059,48 @@ def test_the_structural_gate_discloses_an_empty_routing_table() -> None:
     # than the one being repaired.
     tail = body.split("NO ROUTING TABLE resolved")[1].split("hit, reasons")[0]
     assert "return 0" in tail, "a missing table discloses and allows; it does not block the session"
+
+
+_SETTINGS = _DIST.parent / ".claude" / "settings.json"
+_PYPROJECT = _DIST / "pyproject.toml"
+
+
+def test_every_shipped_hook_is_actually_invoked() -> None:
+    """⚑⚑⚑ SHIPPED, WARRANTED 52:52, AND INVOKED BY NOTHING.
+
+    `no_chaining` carried a rubric section, 52 test functions and 52 warrants — an exact 1:1 — and
+    `settings.json` wired only its sibling. ⚑ Its own module docstring says so in the first
+    paragraph: *this repo ran ONE PreToolUse hook while its own plan listed `no_chaining` as
+    adopted*, and names three measurement errors the absent hook cost in one session.
+
+    ⚑⚑ A COMPONENT WITH FULL COVERAGE AND NO ENTRY POINT IS THIS REPOSITORY'S OWN NAMED DEFECT —
+    *the packager is not a user of its own package* — with every test passing. Coverage measures
+    whether the code is right; it cannot measure whether anything runs it.
+
+    ⚑ THE ARM IS OVER THE POPULATION, NOT THIS ONE HOOK. A single-hook assertion would be the
+    same defect: correct today, silent for the next module shipped unwired. Every declared
+    console script whose name marks it a hook must appear in the settings that invoke hooks.
+    """
+    pyproject = _PYPROJECT.read_text(encoding="utf-8")
+    settings = _SETTINGS.read_text(encoding="utf-8")
+    scripts: list[str] = pyre.findall(
+        r"^(mikemol-hook-[a-z-]+)\s*=", pyproject, pyre.MULTILINE
+    )
+    # ⚑ POSITIVE CONTROL. A regex that silently stopped matching would make this arm vacuous in
+    # the direction that reads as success — no scripts found, nothing to check, green.
+    assert scripts, "no console scripts parsed; this arm would pass by finding nothing"
+    unwired: list[str] = sorted(s for s in scripts if s not in settings)
+    assert not unwired, (
+        f"declared hook script(s) that nothing invokes: {unwired}. "
+        "A gate with full coverage and no caller refuses nothing."
+    )
+    # ⚑ AND THE WIRING MUST ARM INLINE. Both peer repos measured that a session already running
+    # when `env` changes never picks it up, so a hook armed only by the env block keeps exiting 0
+    # — detecting every violation and reporting none.
+    # ⚑ NARROWED AT THE BOUNDARY rather than trusting `json.loads`. This distribution ships
+    # `payload.py` with nine warrants arguing exactly this: an untyped `Any` from a decoder is a
+    # claim about a shape nothing checked.
+    commands: list[str] = pyre.findall(r'"command":\s*"([^"]+)"', settings)
+    assert commands, "no hook commands parsed from settings"
+    for command in commands:
+        assert "_HOOK_BLOCK=1 " in command, f"hook armed only ambiently: {command}"

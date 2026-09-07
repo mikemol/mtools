@@ -41,6 +41,12 @@ dependencies = ["ruff", "mypy"]
 # because it appears in a config file a human reads, not on a command line anyone types twice.
 [project.scripts]
 mikemol-hook-structural-query = "mikemol.hooks.structural_query:main"
+# ⚑⚑⚑ SHIPPED, WARRANTED 52:52, AND INVOKED BY NOTHING. `no_chaining` carried a rubric section,
+# 52 tests and 52 warrants, and was the one PreToolUse hook this repo's own plan listed as adopted
+# while `settings.json` wired only its sibling. Its module docstring says so in the first
+# paragraph. ⚑ A component with full coverage and no entry point is *the packager is not a user of
+# its own package* — this repository's named defect — with the tests passing.
+mikemol-hook-no-chaining = "mikemol.hooks.no_chaining:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"

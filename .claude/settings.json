@@ -11,6 +11,10 @@
           {
             "type": "command",
             "command": "STRUCT_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/.venv/bin/mikemol-hook-structural-query\""
+          },
+          {
+            "type": "command",
+            "command": "NOCHAIN_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/.venv/bin/mikemol-hook-no-chaining\""
           }
         ]
       }

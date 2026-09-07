@@ -1390,3 +1390,22 @@
             script; the module has no main guard, so running it as -m prints nothing.},
   check  = {pytest hooks/tests/test_bar_fires.py -k test_the_structural_gate_discloses_an_empty_routing_table},
 }
+
+@misc{hooks-bar-fires-every-shipped-hook-is-actually-invoked,
+  title  = {Shipped, warranted 52:52, and invoked by nothing},
+  author = {Mike Mol},
+  year   = {2026},
+  section = {bar-fires},
+  note   = {no_chaining carried a rubric section, 52 test functions and 52 warrants --- an exact
+            1:1 --- and settings.json wired only its sibling. Its own module docstring says so in
+            the first paragraph and names three measurement errors the absent hook cost in a
+            single session. A component with full coverage and no entry point is this
+            repository's named defect, the packager not being a user of its own package, with
+            every test passing: coverage measures whether the code is right and cannot measure
+            whether anything runs it. The arm is over the population rather than this one hook,
+            because a single-hook assertion would be the same defect one module later, and it
+            carries a positive control since a regex that stopped matching would pass by finding
+            nothing. It also asserts inline arming, which both peer repos measured independently:
+            a session already running when the env block changes never picks it up.},
+  check  = {pytest hooks/tests/test_bar_fires.py -k test_every_shipped_hook_is_actually_invoked},
+}
