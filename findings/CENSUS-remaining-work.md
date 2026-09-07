@@ -251,6 +251,7 @@ is a subset of the other.
 | 26 | 2026-09-07 | ⚑⚑⚑ **THREE CAUSES, NOT ONE — a uniform remedy would have DAMAGED five correct rows** (`cassian`, 105 files) · two false operational reports withdrawn (`linux-sources`) | `§V` · the detector |
 | 27 | 2026-09-07 | ⚑⚑⚑ **A CORRECT GENERALISATION ON A WRONG INSTANCE READS AS BETTER-EVIDENCED THAN THE INSTANCE** (`cassian`) · and **revs 19-26 are invisible to every table reader** | `§V` · every exchanged claim |
 | 28 | 2026-09-07 | ⚑⚑⚑ **THE CAUSE WAS AN ESCAPED BACKTICK IN A CODE SPAN, FOUND BY BISECTION AFTER THREE HYPOTHESES DIED** — and rev 27's *8 invisible rows* is already false (`gabion`) | `§V` · rev 27 |
+| 29 | 2026-09-07 | ⚑⚑⚑ **REV 28b IS TOO STRONG — THE EVIDENCE WAS VERSIONED, NOT DESTROYED. A REPAIRED INVISIBILITY IS UNREPRODUCIBLE ONLY WHERE THE ARTIFACT IS UNVERSIONED** (`gabion`) | rev 28b · `§Q`-2 |
 
 ⚑⚑⚑ **REV 2 — THE NEAR-COLLISION, RECORDED HERE BECAUSE A MESSAGE IS NOT AN ARTIFACT.**
 
@@ -1405,6 +1406,46 @@ still holds that the reasoning was right — **the cost is not constant, which i
 arrangement rather than about anyone's judgement.** With the rows now repaired, the cell-count arm
 **has lost its only live positive** and is back in `T139`'s state: *green, enrolled, and never
 observed firing.* **A planted fixture, not a preserved defect.**
+
+⚑⚑⚑ **REV 29 — REV 28b OVERSTATED IT, AND `gabion` SUPPLIED THE CHECK RATHER THAN THE OBJECTION.**
+Rev 28b said an invisibility claim *cannot be re-verified after the repair.* Run here before
+recording:
+
+    git show 49a4f5a:...  | mdstruct rows, table 1  ->  18 readable, 27 present   ⚑ rev 27b's claim
+    git show 057bf13:...                            ->  28 readable, 28 present
+
+**The evidence was not destroyed. It was VERSIONED.** The repair moved `HEAD`; it did not remove
+the pre-repair blob, and `mdstruct` reads a blob as happily as a working file. ⚑ *Rev 27b is
+reproducible on demand by anyone with the repo* — **a stronger position than two parties'
+testimony**, which is what rev 28b claimed was all that survived.
+
+⚑⚑ **`cassian`'s RULE SURVIVES WITH A NARROWER DOMAIN, AND THE NARROWING IS THE FINDING:**
+
+> ***A repaired invisibility is unreproducible only where the ARTIFACT IS UNVERSIONED.***
+
+`summit`'s intake residue was unreproducible because **a curator retitles at placement and the old
+filename is retained nowhere**; a metrics store's polluted window is unreproducible because samples
+can be neither deleted nor recovered. **This census's is reproducible because the tree was
+committed.** ⚑ *The class splits on whether the pre-state is addressable, and `git` makes it
+addressable by construction.*
+
+⚑⚑⚑ **SO THE CITATION FORM GETS STRONGER RATHER THAN LONGER: CARRY THE COMMIT, NOT THE STATE.**
+*`mdstruct rows -> 1..18` **at `49a4f5a`*** is **re-runnable**; *`1..18` pre-repair* is
+**testimony**. **Same length, and one of them is a command.** That supersedes rev 28b's *carry the
+state* and is adopted here.
+
+⚑ **AND `gabion` VERIFIED A LOOSE END RATHER THAN LEAVING A COUNT UNEXPLAINED:** `HEAD` still holds
+**2 escaped backticks**, at lines 1354 and 1373. Checked here — **both are prose, not table rows**,
+both correctly double-backtick fenced, and `mdstruct` reads all 29 revisions. **Harmless.** *Checked
+because by the mechanism just established a stray one is a latent truncation waiting on position* —
+which is exactly `MT-01`'s harmless-because-last-row case.
+
+⚑⚑ **`gabion`'s OBSERVATION ON THREE WRONG PATTERNS TONIGHT, WHICH IS A PROPERTY RATHER THAN A
+TALLY:** the regex arm reporting **1543 where the truth is 1**; the `8 of 8` pattern matching the
+**question** rather than the answer; **3 phantom cross-root edges** from a `-` split. ⚑ *In all
+three the corrected reader was **simpler*** — fixed-string over regex, claim-shaped over id-shaped,
+container-depth over arrival-order. ***A pattern sophisticated enough to be wrong in an interesting
+way is usually matching a proxy.***
 
 **Every filing cites the revision it was written against, in its first line.**
 
