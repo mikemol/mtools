@@ -4593,6 +4593,49 @@ def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
     )
 
 
+def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() -> None:
+    """⚑⚑⚑ A PAYDOWN THAT ARMS NOTHING IS A DELETION WEARING A PAYDOWN'S NAME.
+
+    The operator ruled on 2026-09-08 to lower this baseline by the two keys the ratchet reported
+    paid down. ⚑ Removing a line and *arming a refusal* are different events, and the diff shows
+    only the first: two deletions, zero additions. Whether the gate now REFUSES what it used to
+    tolerate is a separate claim, and nothing in the artifact carries it.
+
+    ⚑⚑ MEASURED, BOTH ARMS, on the real baseline before this was written. Re-introducing the paid-
+    down comparison at `tests/test_payload.py:48` — `== _EMPTY` back to `== ""` — made the ratchet
+    exit 1 with `1 new key(s) REFUSED: + tests/test_payload.py:compare-to-empty-string`. Restored,
+    it read `baseline ok: 13 key(s), unchanged`. Before the paydown that same comparison was
+    baselined and SILENT. So the removal did arm the gate against exactly the finding it retired.
+
+    ⚑ THE ARM ASSERTS THE ABSENCE, not the count. A count-shaped assertion (`13 keys`) goes stale
+    at the next legitimate paydown and says nothing about which keys; this asserts that these two
+    specific retired keys are not present, which is the property the F-arm proved load-bearing. A
+    key re-entering the baseline would restore the silence the operator's ruling ended.
+
+    ⚑ POSITIVE CONTROL BELOW: an unreadable or empty baseline satisfies an absence assertion
+    trivially, so the file's own content is asserted before the absence is claimed.
+    """
+    assert (_DIST / "ratchet-preview.txt").is_file(), (
+        f"no baseline at {_DIST / 'ratchet-preview.txt'} — this arm would pass vacuously"
+    )
+    keys = {
+        ln.strip()
+        for ln in (_DIST / "ratchet-preview.txt").read_text(encoding="utf-8").splitlines()
+        if ln.strip()
+    }
+    assert keys, "the baseline holds no keys — an absence claim over it would be vacuous"
+    retired = {
+        "tests/test_payload.py:compare-to-empty-string",
+        "tests/test_structural_query.py:compare-to-empty-string",
+    }
+    returned = sorted(keys & retired)
+    assert not returned, (
+        f"{len(returned)} key(s) retired by the operator's 2026-09-08 paydown are back in the "
+        "baseline — a re-entered key restores the silence that paydown ended, and the ratchet "
+        f"would tolerate the finding again:\n  " + "\n  ".join(returned)
+    )
+
+
 def test_the_refusal_records_ragged_rows_are_reported_by_shape() -> None:
     """⚑⚑⚑ THE COUNT IS RIGHT AND THE CAUSE IS WRONG, one layer down from a corrected count.
 
