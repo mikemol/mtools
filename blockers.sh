@@ -323,6 +323,22 @@ else
         echo "    Every verdict below would describe the READ, not the census. Skipping it."
         continue
     fi
+    # ⚑⚑⚑ THIS NOUN CLASS IS REPEATED AT FOUR SITES AND THREE OF THEM HAD A DIFFERENT ONE.
+    # This site read `(party|surveyor|repo|leg)`; lines 817, 820 and 985 read `(surveyor|party)`,
+    # dropping `repo` and `leg`. ⚑ AND THE ARM PINNED ONLY THIS ONE — a single assertion that the
+    # signature is derived rather than hardcoded, satisfied by the site that was already right, so
+    # three quarters of the finders used a narrower predicate than the test checked. An n-of-m
+    # whose population is *places I looked* rather than *places the predicate lives*.
+    # ⚑⚑ MEASURED HARMLESS TODAY, WHICH IS WHY IT SURVIVED. Across all ten run files this poll
+    # reads, both spellings select the same table: no census currently heads its §S with `repo` or
+    # `leg`. A divergence that only shows on inputs nothing produces yet is unreachable from
+    # output — the first census to head its §S `leg | status` would be found here and MISSED at
+    # the three sites below, so the poll would publish a roster from one branch and a vocabulary
+    # refusal from another about the same file.
+    # ⚑ POSITIVE CONTROL: `leg | why` is a real two-column header in this corpus
+    # (findings/CENSUS-deps-build-ANALYSIS.md), so the noun exists here. That file is outside this
+    # poll's population by the `grep -v ANALYSIS` above, which is what makes it a control and not
+    # a finding.
     sig=$("$md" tables "$census" 2>/dev/null \
         | grep -oE '(party|surveyor|repo|leg) \| (status|state)' | head -1)
     # ⚑⚑ AN EMPTY SIGNATURE MUST NOT FALL THROUGH TO `grep ""`, WHICH MATCHES EVERY TABLE AND WOULD
@@ -814,10 +830,10 @@ else
                 # fifth time in this tree and the first where the record and the defect are in the
                 # same file.
                 _spos=$("$md" tables "$census" 2>/dev/null \
-                    | grep -E '^  table [0-9]*  .*(surveyor|party) \| (status|state)( \||$)' | tail -1 \
+                    | grep -E '^  table [0-9]*  .*(party|surveyor|repo|leg) \| (status|state)( \||$)' | tail -1 \
                     | sed -n 's/^  table \([0-9]*\)  .*/\1/p')
                 _rows=$("$md" tables "$census" 2>/dev/null \
-                    | grep -E '^  table [0-9]*  .*(surveyor|party) \| (status|state)( \||$)' | tail -1 \
+                    | grep -E '^  table [0-9]*  .*(party|surveyor|repo|leg) \| (status|state)( \||$)' | tail -1 \
                     | sed -n 's/^  table [0-9]*  \([0-9]*\) row(s).*/\1/p')
                 _rows=${_rows:-0}
                 _unmatched=$((_rows - _accounted))
@@ -982,7 +998,7 @@ else
         # or unreached — absence-versus-unavailable, in the accounting every downstream figure of
         # this section comes from. So the reading is emitted for every census that has a §S.
         _vpos=$("$md" tables "$census" 2>/dev/null \
-            | grep -E '^  table [0-9]*  .*(surveyor|party) \| (status|state)( \||$)' | tail -1 \
+            | grep -E '^  table [0-9]*  .*(party|surveyor|repo|leg) \| (status|state)( \||$)' | tail -1 \
             | sed -n 's/^  table \([0-9]*\)  .*/\1/p')
         if [ -n "${_vpos:-}" ]; then
             _v=$("$md" classify "$census" --table "$_vpos" 2>/dev/null || true)

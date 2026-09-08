@@ -1090,6 +1090,48 @@ def test_the_poll_marks_an_untracked_run_file_rather_than_hiding_it() -> None:
     assert "NOT IN HEAD" in body, "an untracked census must be reported, not omitted"
 
 
+def test_every_status_table_finder_uses_one_signature() -> None:
+    r"""⚑⚑⚑ ONE PREDICATE, FOUR SITES, TWO SPELLINGS — AND THE ARM PINNED THE RIGHT ONE.
+
+    The sibling arm below asserts `(party|surveyor|repo|leg) \| (status|state)` appears in the
+    poll. It does, at ONE site. MEASURED this tick: the poll finds the `§S` table at FOUR places,
+    and three of them spell the noun class `(surveyor|party)` — dropping `repo` and `leg`. So an
+    arm reading *the signature is derived, not hardcoded* passed while three quarters of the
+    finders used a narrower predicate than the one it checked.
+
+    ⚑⚑ A ONE-SITE ASSERTION ABOUT A FOUR-SITE PREDICATE IS AN N-OF-M WITH THE M UNSTATED. Its
+    population is *places I looked*, not *places the predicate lives*, and a correct check over
+    that population passes every time while the divergence grows.
+
+    ⚑ THE DIVERGENCE IS CURRENTLY HARMLESS AND THAT IS WHY IT SURVIVES. Measured across all ten
+    run files the poll reads: the two spellings select the SAME table in every case, because no
+    census today heads its `§S` with `repo` or `leg`. A predicate that only differs on inputs
+    nothing produces yet cannot be caught by output at all — the census whose header first uses
+    `leg |` would be found by one site and missed by three, and the poll would report a roster
+    from one branch and a vocabulary refusal from another about the same file.
+
+    ⚑ POSITIVE CONTROL for the absence claim above: `leg | why` DOES occur as a two-column header
+    in `findings/CENSUS-deps-build-ANALYSIS.md`, so the noun is real in this corpus and the reader
+    can see it. That file is excluded from the poll's population by `grep -v ANALYSIS`, which is
+    why it is a control rather than a finding.
+
+    ⚑ THE ARM COUNTS SPELLINGS, NOT SITES. Requiring `== 4` would break at the next legitimate
+    finder; requiring ONE distinct noun class is the property that makes four sites one predicate.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    found: list[str] = pyre.findall(
+        r"\(([a-z|]*(?:surveyor|party)[a-z|]*)\) \\\| \(status\|state\)", body)
+    spellings = set(found)
+    assert spellings, (
+        "no §S signature found in the poll at all — this arm would pass vacuously"
+    )
+    assert len(spellings) == 1, (
+        f"the §S table is found by {len(spellings)} different noun classes, so the poll holds "
+        "more than one idea of what a roster table is; a census heading its §S with a noun only "
+        f"some of them admit is found by some branches and missed by others: {sorted(spellings)}"
+    )
+
+
 def test_the_poll_derives_the_status_table_signature() -> None:
     """⚑⚑ A HARDCODED SIGNATURE REPORTED A FROZEN CENSUS AS NOT FROZEN.
 
@@ -3807,7 +3849,13 @@ def test_the_vocabulary_reading_is_not_gated_on_the_divergence_branch() -> None:
         "the vocabulary reading must run for every census with a §S, not only diverging ones"
     )
     # ⚑ THE FINDER IS A PREDICATE OVER TWO COLUMNS, not an enumeration of header spellings.
-    assert "(surveyor|party) \\| (status|state)( \\||$)" in commands, (
+    # ⚑⚑ THE NOUN CLASS HERE WAS `(surveyor|party)` AND THE SIBLING SITE'S WAS
+    # `(party|surveyor|repo|leg)` — one predicate, two spellings, and TWO TESTS EACH PINNING ITS
+    # OWN SITE. Neither could see the divergence, because each was correct about the site it read.
+    # That is why `test_every_status_table_finder_uses_one_signature` asserts over the SET of
+    # spellings rather than the presence of any one: a per-site literal is exactly the shape that
+    # let four finders drift into two rules while every arm stayed green.
+    assert "(party|surveyor|repo|leg) \\| (status|state)( \\||$)" in commands, (
         "the §S table must be found by shape — a party column then a state column — rather than "
         "by a hand-written list of header spellings that misses the next census"
     )
