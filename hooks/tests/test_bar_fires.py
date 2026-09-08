@@ -27,6 +27,7 @@ on a version the build would not install.
 from __future__ import annotations
 
 import ast as pyast
+import json
 import os
 import re as pyre
 import shutil
@@ -1003,7 +1004,12 @@ _MAX_UNRESOLVED_WAS = 23
 # constant would have resolved the sweep and re-introduced the hand-written population the arm
 # was built to refuse — buying coverage of the arm by breaking what the arm measures. The ceiling
 # says "reader, you are told"; it does not say "do not add one".
-_MAX_UNRESOLVED = 19
+# ⚑⚑ 19 -> 20, THE SECOND RISE, AND THE SAME CAUSE AS THE FIRST. The arm added this tick reads
+# `<dist>/pyproject.toml` for each of three distributions through a LOOP VARIABLE, so the resolver
+# has no name to resolve — the population is chosen at runtime rather than written down, which is
+# the property that makes the arm honest and the sweep blind. Keying it to three literal paths
+# would resolve the sweep and re-introduce the hand-written population the arm refuses.
+_MAX_UNRESOLVED = 20
 # ⚑⚑ THE SHARE OF ARMS THE SWEEP ACTUALLY CHECKS, as a percentage floor. MEASURED at the tick
 # it shipped: 48 of 94 arms, 51%. The remainder is not debt — 21 arms run subprocesses and
 # have no haystack to be absent from, and 8 assert by regex or count, which a string-membership
@@ -2332,8 +2338,12 @@ def test_the_preflight_runs_the_ruff_the_gate_runs() -> None:
     `$dist: ruff — lint clean under select=[ALL]` check — runs `ruff check --no-cache .` with no
     `--preview` either. Adding it to the preflight would have surfaced **34 findings in `hooks`,
     51 in `mdstruct`, 11 in `ratchet`, none of which the gate's ruff refuses**, including
-    `rule-codes-in-selectors`, which is an OPEN OPERATOR DECISION. A preflight failing every run
-    on a decision nobody has made is furniture by the second tick.
+    `rule-codes-in-selectors`. ⚑ THAT WAS RECORDED HERE AS AN OPEN OPERATOR DECISION AND IS NOW
+    ANSWERED — adopt, ruled 2026-09-07, with a second ruling on 2026-09-08 to take tree-wide
+    `--preview` FIRST because a renamed selector is unloadable without it: measured, every ruff
+    target exits 2 with *selecting rules by name requires preview mode*. A preflight failing every
+    run on a decision nobody has made is furniture by the second tick; a stale record of a decision
+    that HAS been made is worse, because a reader treats it as still open.
 
     ⚑ THE PREVIEW CENSUS BELONGS TO THE RATCHET, which the preflight also runs. So the prediction
     was already complete — via the ratchet line, not the ruff line. The original comment got the
@@ -4299,4 +4309,110 @@ def test_the_gate_refuses_a_ragged_row_it_did_not_already_have() -> None:
     # reads. The gate separates rc>1 from rc<=1 and says so.
     assert "shape linter FAILED" in body, (
         "a linter that could not run must be distinguished from a document with no findings"
+    )
+
+
+def _rule_name(code: str) -> str | None:
+    """Return ruff's own name for a rule code, or None when ruff does not know it.
+
+    ⚑ ASKED OF THE CHECKER, NOT TABULATED HERE. `ruff rule <code>` is the authority on what a code
+    is called; a table written into this file would be a hand-written population that goes stale
+    at exactly the moment a rule is renamed — which is the event this arm exists to catch.
+
+    Returns:
+        the rule's name, or None if the code does not resolve.
+
+    """
+    argv = _ruff_argv()
+    proc = subprocess.run(  # noqa: S603 — the checker is the subject of this case
+        [*argv, "rule", code, "--output-format", "json"],
+        capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    parsed: object = json.loads(proc.stdout)
+    if not isinstance(parsed, dict):
+        return None
+    name: object = parsed.get("name")
+    return name if isinstance(name, str) else None
+
+
+def test_a_selector_and_the_comment_explaining_it_name_the_same_rule() -> None:
+    """⚑⚑⚑ THE AUTOFIX REWRITES THE VALUE AND LEAVES THE PROSE, SO THE TWO CAN DISAGREE.
+
+    The operator ruled on 2026-09-07 to adopt `RUF201`, which replaces a rule CODE in a selector
+    with the rule's NAME. Measured across the three distributions: twenty-six findings, every one
+    inside a `pyproject.toml`, every one autofixable. **But this repository's selectors carry
+    comments that cite those codes BY CODE** — *`S101` bans `assert`*, *the `S603` exemption a
+    subprocess needs* — and an autofix touches the list while leaving the sentence above it.
+
+    ⚑⚑ A CONFIG WHOSE VALUE AND WHOSE EXPLANATION NAME DIFFERENT THINGS IS WORSE THAN EITHER
+    SPELLING ALONE. A reader checking whether an exemption is justified reads the comment, finds
+    a code, and greps for a code that is no longer there. The rename is the easy half; keeping the
+    two halves saying one thing is the half that has to be asserted.
+
+    ⚑ THE ARM DOES NOT REQUIRE A PARTICULAR SPELLING, which is deliberate. Requiring names would
+    re-litigate the operator's ruling every time ruff renames a rule; requiring codes would
+    contradict it. What must hold is AGREEMENT: every code named in a selector is either absent
+    from the surrounding prose or present in it, and never contradicted by a name for a different
+    rule.
+    """
+    codes = pyre.compile(r"\b([A-Z]{1,4}\d{3,4})\b")
+    checked = 0
+    disagreeing: list[str] = []
+    for dist in ("hooks", "mdstruct", "ratchet"):
+        config = _DIST.parent / dist / "pyproject.toml"
+        if not config.is_file():
+            continue
+        checked += 1
+        lines = config.read_text(encoding="utf-8").splitlines()
+        for i, line in enumerate(lines):
+            if line.lstrip().startswith("#") or "=" not in line:
+                continue
+            # ⚑⚑⚑ NO `if not in_value: continue` HERE, AND A FIRST CUT HAD ONE. It skipped every
+            # entry carrying no code — which after the rename is EXACTLY the population this arm
+            # exists for. The arm went blind at the moment it was supposed to fire, and passed
+            # green over a config whose comments cite codes the values no longer carry. Measured
+            # by probing the walk-back directly rather than trusting the green.
+            value = line.split("=", 1)[1]
+            # ⚑ THE PROSE IMMEDIATELY ABOVE, walking back to the blank line or section head that
+            # bounds the comment block. A fixed window would read a neighbouring entry's comment
+            # and report a disagreement between two entries that each agree with themselves.
+            prose: list[str] = []
+            for back in range(i - 1, -1, -1):
+                if not lines[back].lstrip().startswith("#"):
+                    break
+                prose.append(lines[back])
+            # ⚑ NARROWED AT THE EDGE. `findall` is typed `list[Any]`, and under this repo's
+            # `disallow_any_expr` that `Any` poisons every downstream expression — ten errors from
+            # one unannotated call. Declaring the type here is the narrowing the flag exists to
+            # force, rather than carrying `Any` inward and reading green.
+            found: list[str] = codes.findall("\n".join(prose))
+            in_prose = set(found)
+            # ⚑⚑⚑ ONLY A CODE THE SELECTOR ALSO NAMES BY ITS RULE NAME IS A DISAGREEMENT, and the
+            # first cut got this wrong: it flagged every comment mentioning ANY other code. Three
+            # findings, all false — the prose there cites a DIFFERENT rule to explain why the
+            # entry exists at all (`RUF100` for why a line directive became a config entry,
+            # `CPY001` for a peer's ignore this repo declined). **A comment naming another rule is
+            # normal and correct**; a comment naming a rule the same entry has since RENAMED is
+            # the defect, because a reader greps for a code the selector no longer carries.
+            # ⚑⚑ THE CODE-TO-NAME MAP IS ASKED OF RUFF, NEVER WRITTEN HERE. A hand-written table
+            # is the population defect this tree has measured eleven times, and it would go stale
+            # the first time ruff renamed a rule — which is the very event this arm exists for.
+            contradicted = {
+                code for code in in_prose
+                if (name := _rule_name(code)) is not None and name in value
+            }
+            if contradicted:
+                disagreeing.append(
+                    f"{dist}/pyproject.toml:{i + 1}: the selector names this rule by NAME while "
+                    f"the comment above still cites {sorted(contradicted)} — a reader greps for "
+                    "a code the selector no longer carries"
+                )
+    # ⚑ POSITIVE CONTROL: the configs must have been read, or an empty disagreement list means the
+    # loop found no files rather than that the tree agrees with itself.
+    assert checked, "no pyproject.toml was read — this arm would pass vacuously"
+    assert not disagreeing, (
+        f"{len(disagreeing)} selector(s) are explained by prose naming a rule the selector does "
+        "not:\n  " + "\n  ".join(disagreeing)
     )

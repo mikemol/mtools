@@ -1090,6 +1090,21 @@ echo "  vacuity sweep: ${_unres:-?} test(s) it cannot resolve — ceiling read f
 # otherwise byte-identical in the symbol set, and one of them is not blocked at all.
 echo "=== operator decisions carried, and who raised each ==="
 echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt"
+# ⚑⚑⚑ AND THE ADOPTION HAS A PRECONDITION THE FIRST ATTEMPT DISCOVERED. Applying the autofix
+# renamed 26 selectors and made EVERY ruff target exit 2: *Invalid selector … Selecting rules by
+# name requires preview mode*. The gate runs `ruff check` with no `--preview`, so a renamed config
+# is unloadable by the checker that gates this tree. Reverted; nothing shipped.
+# ⚑⚑ SECOND RULING 2026-09-08: take tree-wide `--preview` FIRST, then rename. Measured paydown,
+# three separate runs rather than one figure: hooks 41 + mdstruct 55 + ratchet 11 = 107.
+# ⚑ ALL 107 ARE ALREADY RATCHET BASELINE KEYS — the ratchet runs preview and tolerates them. Arming
+# the GATE with `--preview` converts 107 tolerated findings into hard failures, because the gate's
+# ruff has no baseline. So the paydown precedes the arming, or the gate blocks the commits that
+# would clean it.
+echo "    ⚑ BLOCKED on a 107-finding paydown: hooks 41 + mdstruct 55 + ratchet 11."
+echo "      Renaming first is unshippable — a name selector needs --preview to LOAD."
+echo "      First step measured: RUF105 wants \`ruff: ignore\` for every \`noqa\`, 16 in hooks,"
+echo "      0 auto-fixable. Whether \`ruff: ignore\` is itself preview-only is UNMEASURED, and"
+echo "      if it is, swapping recreates the same unloadable-config trap."
 echo "  cassian's hook components  raised by cassian  ANSWERED 2026-09-07: mtools asks for a diff"
 echo "  gate cost                  raised by mtools   ⚑ WITHDRAWN — self-raised, no consequence"
 echo "    614163d measured that no stable figure exists; carrying it as blocked was my error."

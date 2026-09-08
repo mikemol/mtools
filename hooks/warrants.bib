@@ -2464,3 +2464,32 @@
             outlive a rename, which this file has now measured three times on one comparison arm.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_refuses_a_ragged_row_it_did_not_already_have}
 }
+
+@misc{hooks-bar-fires-selector-and-comment-name-the-same-rule,
+  section = {bar-fires},
+  title   = {A selector and the comment explaining it name the same rule},
+  note    = {The operator ruled to adopt the rule that replaces a rule code in a selector with the
+            rule's name. Measured across the three distributions, twenty-six selectors would be
+            rewritten, every one inside a project config, every one autofixable — but this
+            repository's selectors carry comments citing those codes by code, and an autofix
+            touches the list while leaving the sentence above it. A config whose value and whose
+            explanation name different things is worse than either spelling alone: a reader
+            checking whether an exemption is justified reads the comment, finds a code, and greps
+            for a spelling the file no longer carries. The rename is the easy half; keeping the two
+            halves saying one thing is the half that must be asserted. The arm does not require a
+            particular spelling, deliberately, since requiring names would re-litigate the ruling
+            every time a rule is renamed and requiring codes would contradict it; what must hold is
+            agreement. Two defects in the arm itself were measured rather than reasoned. The first
+            cut flagged every comment mentioning any other code and produced three findings, all
+            false: prose there cites a different rule to explain why an entry exists at all, which
+            is normal and correct. The second cut then skipped any entry whose value contained no
+            code — which after a rename is exactly the population the arm exists for, so it went
+            blind at the moment it was supposed to fire and passed green over a config whose
+            comments contradicted its values; that was found by probing the walk-back directly
+            rather than trusting the green. The code-to-name mapping is asked of the checker rather
+            than tabulated here, because a table would be a hand-written population that goes stale
+            at precisely the event this arm watches for. The prose block is bounded by walking back
+            to the first non-comment line, so a neighbouring entry's comment cannot be read as this
+            entry's explanation.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_selector_and_the_comment_explaining_it_name_the_same_rule}
+}
