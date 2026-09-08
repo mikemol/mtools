@@ -2572,3 +2572,34 @@
             assertions cannot pass by the section vanishing.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_refusal_records_ragged_rows_are_reported_by_shape}
 }
+
+@misc{hooks-bar-fires-poll-does-not-re-ask-an-answered-question,
+  section = {bar-fires},
+  title   = {The poll does not re-ask a question it has already answered},
+  note    = {The poll exceeded a foreground time limit on every tick for several ticks, and every
+            time the response was that a duration is not a property, followed by backgrounding it.
+            That is true about seconds and useless as a diagnosis. The property is how many times
+            the reader process is STARTED, which does not change when an unrelated job runs, and it
+            was measurable throughout. Measured from the source, because neither alternative was
+            admissible: a shim placed on the search path cannot intercept the calls, since the poll
+            resolves the reader by an absolute path; and swapping the real binary for a counting
+            one would work but is refused, because eight peer sessions run in this shared tree and
+            a swapped binary is precisely the concurrency hazard measured one tick earlier, when
+            another party's planted defect was captured by this session's own build and reported as
+            a failure in a distribution it had not touched. Twenty-two invocation sites sit inside
+            the per-census loop and two outside it; against ten censuses that is two hundred and
+            twenty-two process starts for one run. The actionable half is not the total: one reader
+            mode is invoked eleven times on the same file within a single iteration and another
+            nine, which is the identical query against an unchanged path, whose answer cannot
+            differ between calls. Roughly two hundred of those starts re-ask something already
+            answered. The arm therefore bounds the per-mode repeat count rather than the total,
+            because a total would fall when a census is deleted and rise when one is added,
+            reporting the corpus instead of the poll, while the repeat count is a property of the
+            script alone and moves only when someone adds another redundant call. The ceiling is
+            the instrument's own measurement rather than a round number chosen for comfort, so any
+            rise is a change someone made rather than a threshold crossed. The loop header is read
+            from the source rather than assumed, after a first attempt searched for a spelling the
+            script does not use, and the arm asserts that some reader call was found so that an
+            empty result cannot read as an absence of repeats.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_does_not_re_ask_a_question_it_has_already_answered}
+}

@@ -1015,6 +1015,18 @@ _MAX_UNRESOLVED_WAS = 23
 # property making these arms honest, so the ceiling rises rather than the arms being rewritten to
 # name paths they would then have to keep in sync.
 _MAX_UNRESOLVED = 21
+
+# ⚑⚑⚑ THE MOST TIMES ONE READER MODE IS INVOKED ON THE SAME FILE IN ONE LOOP ITERATION. Measured
+# at 11 for `tables` and 9 for `rows`, against 10 censuses — so 22 sites in the loop plus 2 outside
+# is 222 process starts per run, and roughly two hundred of those re-ask a question already
+# answered on an unchanged path.
+# ⚑⚑ A CEILING, NOT A TARGET, AND IT BOUNDS THE REPEATS RATHER THAN THE TOTAL. A total would fall
+# when a census is deleted and rise when one is added — reporting the CORPUS rather than the poll.
+# The per-mode repeat count is a property of the script alone, so it moves only when someone adds
+# another redundant call, which is the event worth refusing.
+# ⚑ THE FIGURE IS THE INSTRUMENT'S, not a round number chosen to be comfortable: it is what the
+# script measures today, so any rise is a change someone made rather than a threshold crossed.
+_MAX_SAME_QUERY = 11
 # ⚑⚑ THE SHARE OF ARMS THE SWEEP ACTUALLY CHECKS, as a percentage floor. MEASURED at the tick
 # it shipped: 48 of 94 arms, 51%. The remainder is not debt — 21 arms run subprocesses and
 # have no haystack to be absent from, and 8 assert by regex or count, which a string-membership
@@ -4603,4 +4615,66 @@ def test_the_refusal_records_ragged_rows_are_reported_by_shape() -> None:
     assert "host-local" in commands, (
         "the line must say the record is host-local — a static numerator otherwise reads as a "
         "carried blocker rather than as a figure no commit can move"
+    )
+
+
+def test_the_poll_does_not_re_ask_a_question_it_has_already_answered() -> None:
+    """⚑⚑⚑ THE POLL'S COST IS A COUNTER, AND I CARRIED IT AS A DURATION FOR SEVERAL TICKS.
+
+    Every tick the poll exceeded a foreground limit, and every tick the response was *a duration
+    is not a property* followed by backgrounding it. That is true about SECONDS and useless as a
+    diagnosis: the property is how many times the reader is STARTED, which does not move when an
+    unrelated job runs, and it was measurable the whole time.
+
+    ⚑⚑ MEASURED FROM THE SOURCE, because neither alternative was admissible. A PATH shim cannot
+    see the calls — the poll resolves the binary by absolute path. Swapping the real binary would
+    work and is refused: eight peers run in this tree, and a swapped binary is the concurrency
+    hazard measured one tick earlier, when another party's planted defect was captured by my own
+    build and reported as a failure in a distribution I had not touched.
+
+        22 invocation sites inside the per-census loop, 10 censuses, 2 outside = 222 starts
+
+    ⚑⚑⚑ AND THE ACTIONABLE HALF IS NOT THE TOTAL. `tables` is invoked ELEVEN times on the same
+    file within one iteration, `rows` nine — the identical query on an unchanged path, whose
+    answer cannot differ between calls. Roughly two hundred of those starts re-ask a question the
+    poll has already answered.
+
+    ⚑ THE ARM BOUNDS THE REPEATS, NOT THE TOTAL. A total would fall when a census is deleted and
+    rise when one is added, reporting the corpus rather than the poll. The repeat count per mode
+    is a property of the SCRIPT, so it moves only when someone adds another redundant call — which
+    is exactly the event worth refusing.
+    """
+    lines = _POLL.read_text(encoding="utf-8").splitlines()
+    # ⚑ THE LOOP HEADER IS READ, NOT ASSUMED. A first cut searched for `for census in` and found
+    # nothing: the loop is `for rel in $censuses`, assigning `census` inside. Guessing a loop's
+    # spelling is characterising an instrument from expectation rather than from its source.
+    starts = [i for i, ln in enumerate(lines) if pyre.search(r"for rel in \$censuses", ln)]
+    assert len(starts) == 1, (
+        f"the per-census loop must be findable to bound its calls; found {len(starts)} header(s)"
+    )
+    ends = [
+        i for i, ln in enumerate(lines[starts[0]:], start=starts[0])
+        if pyre.match(r"^  done\s*$", ln)
+    ]
+    assert ends, "the per-census loop's `done` must be findable"
+    modes: dict[str, int] = {}
+    for ln in lines[starts[0]:ends[0]]:
+        if ln.lstrip().startswith("#"):
+            continue
+        found = pyre.search(r'"\$md" (\w+) "\$census"', ln)
+        if found:
+            modes[found.group(1)] = modes.get(found.group(1), 0) + 1
+    # ⚑ POSITIVE CONTROL: the loop must call the reader at all, or an empty `modes` reads as "no
+    # repeats" when it means "the arm found nothing to measure".
+    assert modes, "no reader call was found inside the per-census loop — this arm measured nothing"
+    worst = max(modes.values())
+    assert worst <= _MAX_SAME_QUERY, (
+        f"one mode is invoked {worst} times on the same file in a single iteration, above the "
+        # ⚑ NO `key=lambda` HERE. An inline lambda's parameter carries no annotation, infers as
+        # `Any`, and the strict bar refuses the expression — measured as two errors. The identical
+        # defect was fixed in the sibling distribution two ticks ago with a named function; the
+        # lesson did not cross the distribution boundary. Sorting is not needed to name the modes.
+        f"ceiling of {_MAX_SAME_QUERY}: {modes}. "
+        "The same query on an unchanged path cannot return a different answer; each extra call is "
+        "a process start that re-asks something already answered."
     )
