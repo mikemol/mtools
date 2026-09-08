@@ -41,6 +41,15 @@ if TYPE_CHECKING:
 # accidentally match across a cell boundary the way a space or a pipe would.
 _CELL_SEP = " \x00 "
 
+# A vocabulary table needs both columns to identify it: the state, and what it MEANS. ⚑ Keying on
+# column 1 alone admitted `state | what it means for the apex` — a two-row table about whether a
+# leg exists — as a census's state vocabulary, and reported its §S as 0 of 7 matching.
+_VOCABULARY_COLUMNS = 2
+
+# ⚑ A PREFIX, NOT EQUALITY. The corpus carries `means` and `means | is it a zero?`; a longer
+# heading that BEGINS with the word is the same table, one that merely contains it is not.
+_MEANS = "means"
+
 
 class Table(NamedTuple):
     """One table's shape: its position in the document, its size, and its header cells.
@@ -144,9 +153,23 @@ def vocabulary(path: Path, header: str = "state") -> tuple[str, ...]:
     were load-bearing — one of them annotated in its own document as *reading like a zero when
     nobody was asked*.
 
-    ⚑⚑ THE HEADER IS THE KEY, NOT A POSITION. A vocabulary table is identified by what its first
-    column is called, so a document may carry it anywhere and may add columns beside it: the corpus
-    has both `state | means` and `state | means | is it a zero?`.
+    ⚑⚑ THE HEADER IS THE KEY, NOT A POSITION. A vocabulary table is identified by what its columns
+    are called, so a document may carry it anywhere and may add columns beside it: the corpus has
+    both `state | means` and `state | means | is it a zero?`.
+
+    ⚑⚑⚑ BOTH COLUMNS, AND KEYING ON THE FIRST ALONE READ A DIFFERENT TABLE AS THIS ONE. A frozen
+    census in the corpus reported `§S: 0 of 7 rows match a state this census publishes` — seven
+    rows using undeclared states, the worst reading in the corpus. **The census was clean**: every
+    §S row says `filed`, which it declares. What the reader classified against was that census's
+    `state | what it means for the apex` — two rows about whether a LEG EXISTS, answering an
+    unrelated question, whose first column happens to be called `state`. Zero matches, correctly,
+    over the wrong population, which passes every arithmetic check.
+
+    ⚑⚑ AND THIS DOCSTRING GENERALISED PAST ITS OWN EVIDENCE. It argued *the header is the key* and
+    cited only `state | means…` variants; the rule as stated was wider than the rule its examples
+    supported, and that gap is what admitted the decoy. A vocabulary maps a state to what it MEANS,
+    so column 2 is part of the identification — matched as a PREFIX, which keeps `means` and
+    `means | is it a zero?` while refusing `what it means for the apex`.
 
     Returns:
         each declared state, longest first, so a caller matching in order gets the specific one.
@@ -154,7 +177,10 @@ def vocabulary(path: Path, header: str = "state") -> tuple[str, ...]:
     """
     found: list[str] = []
     for table_at, table in enumerate(_tables_in(ast.document(path))):
-        if not _header_of(table) or _header_of(table)[0].strip().casefold() != header:
+        cols = _header_of(table)
+        if len(cols) < _VOCABULARY_COLUMNS or cols[0].strip().casefold() != header:
+            continue
+        if not cols[1].strip().casefold().startswith(_MEANS):
             continue
         found.extend(
             _undecorated(row.cells[0]).strip()

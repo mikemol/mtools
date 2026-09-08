@@ -684,3 +684,36 @@
             re-measured rather than trusted.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_short_row_is_padded_by_the_parser_so_this_reader_cannot_see_it}
 }
+
+@misc{mdstruct-tables-state-headed-decoy-is-not-a-vocabulary,
+  section = {tables},
+  title   = {A state-headed table that is not a vocabulary is not read as one},
+  note    = {The vocabulary finder identified a document's declared states by one property: that a
+            table's first column is called `state`. Measured on a frozen census in this corpus,
+            that reported its filing-status section as zero of seven rows matching a state the
+            census publishes — seven rows using undeclared states, the worst reading anywhere in
+            the corpus and the one a reader would act on first. The census was clean. Every one of
+            those rows says filed. What the reader had classified against was a different table in
+            the same document, two rows headed `state | what it means for the apex`, about whether
+            a leg exists at all and answering an unrelated question; its first column is called
+            state, so the finder took it as the vocabulary and checked filing statuses against
+            `waiting is the only option`. Zero matches, arithmetically correct, over a mis-named
+            population — which passes every check that catches wrong counts. The finder's own
+            docstring is where the defect entered: it argued that the header is the key rather than
+            a position, so a document may carry its vocabulary anywhere and add columns beside it,
+            and every example it cited was a state-and-means variant. The rule as written was wider
+            than the rule its examples supported, and that gap is exactly what admitted the decoy.
+            The repair keys on both columns, because a vocabulary maps a state to what it MEANS and
+            a table whose second column asks a different question is a different table whatever its
+            first column is called. Column two is matched as a prefix, which keeps the corpus's real
+            variants including a three-column form while refusing the decoy. Running the repaired
+            reader against that census produces a third answer and the correct one: it declares no
+            vocabulary at all, so the reader refuses rather than reporting a count, which makes the
+            original figure wrong twice over — the wrong population, and a reading offered where a
+            refusal was owed. The arm carries a positive control asserting the real table is still
+            found, so it cannot pass by the finder going blind; it names the decoy's rows rather
+            than only counting, since two populations of the same size can differ entirely; and it
+            asserts the consequence as well as the cause, requiring the status rows to classify
+            with an empty residue.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_state_headed_table_that_is_not_a_vocabulary_is_not_read_as_one}
+}

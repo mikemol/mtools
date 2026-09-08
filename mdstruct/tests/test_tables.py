@@ -370,3 +370,79 @@ def test_a_short_row_is_padded_by_the_parser_so_this_reader_cannot_see_it(doc: P
         f"the padded column must be empty, read {short_row.cells[-1]!r} — an absent cell is being "
         "presented as a present blank one, which is why it reads as a value"
     )
+
+
+_DECOY_FIXTURE = """# Census
+
+## §S Filing status
+
+| party | status | evidence |
+|---|---|---|
+| alpha | filed | alpha-leg.md |
+| beta | filed (rev 30) | cf69c3a, through the gate |
+
+## §L What blocks the apex
+
+| state | what it means for the apex |
+|---|---|
+| the leg does not exist yet | waiting is the only option |
+| the leg EXISTS and is COMPLETE | the content is reviewable |
+
+## Vocabulary
+
+| state | means |
+|---|---|
+| filed (rev n) | in HEAD, verified there |
+| filed | in HEAD |
+"""
+
+# The §S table, whose rows are the population being classified.
+_DECOY_STATUS_TABLE = 0
+
+# `filed (rev n)` and `filed` — from the VOCABULARY table only, not the §L decoy.
+_DECOY_DECLARED = 2
+
+
+def test_a_state_headed_table_that_is_not_a_vocabulary_is_not_read_as_one(doc: Path) -> None:
+    """⚑⚑⚑ THE FINDER TOOK ANY TABLE WHOSE FIRST COLUMN IS `state`, AND A CENSUS USED THAT WORD.
+
+    Measured on a frozen census in this corpus: `§S` read `0 of 7 rows match a state this census
+    publishes`, which reads as seven rows using undeclared states — the worst reading in the whole
+    corpus and the one a reader would act on first. **The census was clean.** Every `§S` row says
+    `filed`, and `filed` is declared.
+
+    ⚑⚑ WHAT THE READER CLASSIFIED AGAINST WAS A DIFFERENT TABLE. That census carries `state | what
+    it means for the apex` — two rows, about whether a LEG EXISTS, answering an unrelated question.
+    Its first column is called `state`, so the finder took it as the vocabulary and checked `§S`'s
+    filing statuses against *waiting is the only option*. Zero matches, correctly, over the wrong
+    population — which passes every arithmetic check and is immune to the checks that catch wrong
+    counts.
+
+    ⚑ AND THE DOCSTRING GENERALISED PAST ITS OWN EVIDENCE. It argues *the header is the key, not a
+    position*, so a document may carry its vocabulary anywhere and add columns beside it — and
+    every example it cites is `state | means…`. The rule it states is wider than the rule its
+    examples support, which is how a `state`-headed table that means something else gets admitted.
+
+    ⚑ THE REPAIR KEYS ON BOTH COLUMNS. A vocabulary maps a state to what it MEANS; a table whose
+    second column asks a different question is a different table, whatever its first column is
+    called. Widening column 2 to a prefix keeps `means`, `means | is it a zero?` and the corpus's
+    real variants while refusing `what it means for the apex`.
+    """
+    doc.write_text(_DECOY_FIXTURE, encoding="utf-8")
+    # ⚑ POSITIVE CONTROL: the real vocabulary must still be found, or this arm passes because the
+    # finder went blind rather than because it stopped taking the decoy.
+    states = tables.vocabulary(doc)
+    assert len(states) == _DECOY_DECLARED, (
+        f"the `state | means` table declares {_DECOY_DECLARED} states and the finder returned "
+        f"{len(states)}: {states} — a decoy admitted, or the real table missed"
+    )
+    # ⚑ THE DECOY'S ROWS MUST NOT APPEAR. Naming them is what distinguishes this from a count.
+    assert not any("waiting" in s or "reviewable" in s for s in states), (
+        f"a row from the §L decoy table reached the vocabulary: {states}"
+    )
+    # ⚑ AND THE CONSEQUENCE IS ASSERTED, NOT ONLY THE CAUSE: §S must classify cleanly.
+    grouped = tables.classify(doc, states, position=_DECOY_STATUS_TABLE)
+    assert not grouped.get(""), (
+        f"§S rows landed in the residue against a correct vocabulary: {grouped.get('')} — "
+        "the rows say `filed` and `filed (rev 30)`, both declared"
+    )
