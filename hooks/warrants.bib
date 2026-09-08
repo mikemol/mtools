@@ -1950,7 +1950,23 @@
             asserted verdict with hidden operands can only be believed or doubted. The arm asserts
             the shape rather than the single call site, so a future branch added with a hidden
             operand fails at the point of writing rather than three ticks later when its figure
-            happens to be absurd on its face.},
+            happens to be absurd on its face. Twice since, the arm has gone red on changes that
+            strengthened its subject, and each time the arm was the thing at fault. First it named
+            the left operand as a literal, so a correct rename broke it — an arm that names a
+            variable cannot outlive the variable, and it was asserting an identifier where the rule
+            is about a relation; it now derives both operand names from the comparison itself.
+            Second, it took the first comparison and checked it against the first verdict line,
+            which was correct while the poll held exactly one of each. A second verdict then landed
+            — a census whose reader-side prefixes match nothing can still be adjudicated by its own
+            declared states — and the arm compared the new branch's operands against the old
+            branch's line, reporting a hidden operand where both lines were complete. That is this
+            arm committing the defect it measures, one level up: taking the first of something names
+            a population of one and says so nowhere, so a poll with two comparisons is read as a
+            poll with one, and the resulting count is arithmetically fine and about the wrong thing.
+            Each comparison is now paired with the verdict it guards by scanning forward from the
+            condition rather than by index, and the number of comparisons read is required to equal
+            the number present, so a regex that stopped matching cannot report zero failures
+            vacuously.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_asserted_comparisons_print_both_operands},
 }
 
@@ -2355,4 +2371,32 @@
             with a backslash so the reported string sits on the following line, and comment lines
             are excluded so the arm cannot pass on a comment that merely mentions the phrase.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_second_source_is_not_gated_on_the_divergence_branch}
+}
+
+@misc{hooks-bar-fires-gap-verdict-uses-declared-vocabulary,
+  section = {bar-fires},
+  title   = {The gap verdict uses the declared vocabulary when the prefixes cannot},
+  note    = {Two censuses reached no verdict at all while their own vocabularies answered
+            perfectly. Both printed a four-term partition of zeros over status tables of eight and
+            twelve rows, so the arm took its refusal branch and correctly declined to call the
+            zeros a finding — while three lines below, the document-relative reading partitioned
+            the same rows without residue, one of them into three filed and five not-yet-filed
+            against a roster of eight. The four prefixes were the last hand-written population in
+            this poll, and their provenance is the defect: they were written from the two censuses
+            their author happened to be reading at the time. This session then rewrote one of those
+            censuses' status sections to use a different pair of states, and the prefixes matched
+            none of it — a hand-written vocabulary made stale by its own author's edit, inside the
+            arm built to catch stale hand-written vocabularies. What the verdict needs is a count of
+            rows carrying a state that explains an absent leg, and the classifier already produces
+            exactly that from the census's own declarations, so a census whose vocabulary partitions
+            its status table can be adjudicated rather than refused. The refusal branch survives and
+            the arm requires it to, because three censuses publish no vocabulary at all and the
+            classifier refuses those while the prefixes still say something; a repair that
+            adjudicated every census by deleting the refusal would trade a blind spot for a false
+            verdict. The report names which instrument produced the figure, because a verdict that
+            silently switched sources would print two different measurements under one label, which
+            is the manufactured corroboration this poll refuses elsewhere. Measured after: the two
+            censuses reach a verdict labelled by declared states, the three the prefixes could
+            already adjudicate print the unchanged plain verdict, and none falls into the refusal.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gap_verdict_uses_the_declared_vocabulary_when_the_prefixes_cannot}
 }

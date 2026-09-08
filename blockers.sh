@@ -816,6 +816,7 @@ else
                 # this poll keeps producing: a value measured for a caller that no longer wants it.
                 _cls_residue=0
                 _cls_ok=0
+                _cls_accounted=0
                 if [ -n "${_spos:-}" ]; then
                     _cls=$("$md" classify "$census" --table "$_spos" 2>/dev/null || true)
                     if [ -n "$_cls" ]; then
@@ -823,6 +824,19 @@ else
                         _cls_residue=$(printf '%s\n' "$_cls" \
                             | sed -n 's/^ *\([0-9]*\)  ⚑ UNCLASSIFIED.*/\1/p')
                         _cls_residue=${_cls_residue:-0}
+                        # ⚑⚑⚑ THE ROWS CARRYING A STATE THE CENSUS ITSELF DECLARES — the same
+                        # quantity `_accounted` estimates with four hand-written prefixes, read
+                        # from the document instead. MEASURED: two censuses printed
+                        # `0 = 0+0+0+0` over §S tables of 8 and 12 rows and reached NO VERDICT,
+                        # while their own vocabularies partitioned those rows without residue.
+                        # ⚑⚑ AND THE PREFIXES WENT STALE BY MY OWN HAND. This session rewrote
+                        # `CENSUS-vfs.md`'s §S to `filed` / `no leg yet`; the prefixes say
+                        # `filed elsewhere`, `accepted`, `scoped decline`, `not yet filed` and
+                        # match none of it. A hand-written vocabulary made stale by its author's
+                        # edit, inside the arm built to catch stale hand-written vocabularies.
+                        _cls_total=$(printf '%s\n' "$_cls" \
+                            | sed -n 's/^  \([0-9]*\) row(s) classified.*/\1/p')
+                        _cls_accounted=$(( ${_cls_total:-0} - _cls_residue ))
                     fi
                 fi
                 # ⚑⚑⚑ EVERY COMPONENT OF THE ASSERTED EXPRESSION IS PRINTED, NOT JUST ITS VERDICT.
@@ -899,7 +913,18 @@ else
                 # does not know — and every downstream figure is 0 for that one reason. Reporting
                 # a dropped row there would be *the reader described as the file*, which is the
                 # same three-state discipline UNADJUDICATED already applies one axis over.
-                if [ "${_rows:-0}" -gt 0 ] && [ "${_accounted:-0}" -eq 0 ]; then
+                # ⚑⚑⚑ WHEN THE PREFIXES REACH NOTHING AND THE DOCUMENT'S OWN STATES REACH
+                # EVERYTHING, THE DOCUMENT WINS — and the line says which instrument answered.
+                # A verdict that silently switched sources would print two different measurements
+                # under one label, which is the manufactured corroboration this poll refuses
+                # elsewhere. The prefixes are a READER's vocabulary; the declared states are the
+                # FILE's, and only the second can be stale-proof.
+                if [ "${_rows:-0}" -gt 0 ] && [ "${_accounted:-0}" -eq 0 ] \
+                   && [ "${_cls_accounted:-0}" -ge "${_gap:-0}" ] && [ "${_cls_accounted:-0}" -gt 0 ]; then
+                    echo "    ACCOUNTED by declared states: $_cls_accounted >= $_gap — the four"
+                    echo "    prefixes above matched nothing, and this census's OWN vocabulary"
+                    echo "    explains every rostered surveyor without a leg here. None is dropped."
+                elif [ "${_rows:-0}" -gt 0 ] && [ "${_accounted:-0}" -eq 0 ]; then
                     echo "    UNCLASSIFIED: $_rows §S row(s) and 0 matched any state this arm"
                     echo "    names. The terms below would all read 0 for that ONE reason, so"
                     echo "    their agreement is not evidence. Extend the vocabulary or read §S."

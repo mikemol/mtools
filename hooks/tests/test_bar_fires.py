@@ -3408,19 +3408,43 @@ def test_asserted_comparisons_print_both_operands() -> None:
     # THREE operands, because the branch also carries `&& [ "${_accounted:-0}" -gt 0 ]`. Extracting
     # from the whole line answers "what variables appear near a comparison"; the rule is about the
     # comparison's own two sides.
-    cond = next(ln for ln in commands.splitlines() if '" -ge "' in ln)
-    ge = pyre.search(r"\$\{(_\w+):-0\}\"\s+-ge\s+\"\$\{(_\w+):-0\}", cond)
-    assert ge is not None, (
-        f"could not read a two-sided `-ge` comparison to derive the rule from: {cond.strip()}"
-    )
-    left, right = ge.group(1), ge.group(2)
-    for verdict in ("ACCOUNTED:", "DROPPED ROW:"):
-        line = next(ln for ln in commands.splitlines() if verdict in ln)
+    # ⚑⚑⚑ EVERY COMPARISON, NOT THE FIRST — AND THIS ARM WENT RED BY PAIRING THEM WRONG. `next()`
+    # took comparison[0] and checked it against verdict-line[0], which was correct while the poll
+    # held exactly one of each. A second verdict then landed — a census whose four prefixes match
+    # nothing can still be adjudicated by its OWN declared states — and the arm compared the new
+    # branch's operands against the OLD branch's line. It reported a hidden operand where both
+    # lines were complete.
+    # ⚑⚑ THAT IS THIS ARM COMMITTING THE DEFECT IT MEASURES, one level up: `next()` names a
+    # population of one and says so nowhere, so a poll with two comparisons is read as a poll with
+    # one. A count of 1 over a population of 2, arithmetically fine and about the wrong thing.
+    # ⚑ SO EACH COMPARISON IS PAIRED WITH THE VERDICT IT GUARDS, by scanning forward from the
+    # condition to the next verdict line rather than by index.
+    lines = commands.splitlines()
+    conds = [i for i, ln in enumerate(lines) if '" -ge "' in ln]
+    assert conds, "the poll must still assert a `-ge` comparison; this arm needs one to read"
+    checked = 0
+    for at in conds:
+        ge = pyre.search(r"\$\{(_\w+):-0\}\"\s+-ge\s+\"\$\{(_\w+):-0\}", lines[at])
+        if ge is None:
+            continue
+        left, right = ge.group(1), ge.group(2)
+        verdict = next(
+            (ln for ln in lines[at:] if "ACCOUNTED" in ln or "DROPPED ROW:" in ln), None
+        )
+        assert verdict is not None, (
+            f"the comparison `{left} >= {right}` guards no verdict line: {lines[at].strip()}"
+        )
         for operand in (left, right):
-            assert f"${operand}" in line, (
-                f"the {verdict} line asserts `{left} >= {right}` but does not print "
-                f"its operand ${operand}: {line.strip()}"
+            assert f"${operand}" in verdict, (
+                f"the verdict asserts `{left} >= {right}` but does not print "
+                f"its operand ${operand}: {verdict.strip()}"
             )
+        checked += 1
+    # ⚑ A FLOOR, so a regex that stopped matching cannot report zero failures vacuously.
+    assert checked == len(conds), (
+        f"{len(conds)} `-ge` comparison(s) in the poll and only {checked} were readable — an "
+        "unread comparison is an unchecked one"
+    )
     # ⚑ AND THE GAP IS PRINTED AS ITS OWN DERIVATION, so a reader can check the subtraction rather
     # than accept a difference. `roster` and `n_head` are the two facts it comes from.
     assert "$_gap = roster $roster - HEAD legs $n_head" in commands, (
@@ -4077,4 +4101,56 @@ def test_the_second_source_is_not_gated_on_the_divergence_branch() -> None:
     ), (
         "the no-vocabulary path must say the prefix terms are the only reading and share one "
         "source — a refusal that does not say what remains leaves the zeros looking corroborated"
+    )
+
+
+def test_the_gap_verdict_uses_the_declared_vocabulary_when_the_prefixes_cannot() -> None:
+    """⚑⚑⚑ TWO CENSUSES REACH NO VERDICT AT ALL WHILE THEIR OWN VOCABULARY ANSWERS PERFECTLY.
+
+    `CENSUS-vfs.md` and `CENSUS-build-hermeticity.md` both print `states: 0 = 0 + 0 + 0 + 0` over
+    §S tables of 8 and 12 rows, so the arm takes the UNCLASSIFIED branch and correctly refuses to
+    call the zeros a finding. **Three lines below, the document-relative reading partitions the
+    same rows without residue** — vfs classifies 3 `filed` + 5 `no leg yet` = 8, exactly its
+    roster.
+
+    ⚑⚑ THE PREFIXES ARE THE LAST HAND-WRITTEN POPULATION IN THIS POLL, and their provenance is the
+    defect: they were written from the two censuses their author happened to be reading. This
+    session then REWROTE `CENSUS-vfs.md`'s §S to say `filed` / `no leg yet`, and the prefixes —
+    `filed elsewhere`, `accepted`, `scoped decline`, `not yet filed` — matched none of it. **A
+    hand-written vocabulary made stale by its own author's edit, in the arm built to catch stale
+    hand-written vocabularies.**
+
+    ⚑ THE VERDICT NEEDS A COUNT OF ROWS THAT EXPLAIN AN ABSENT LEG, not those four words. The
+    classifier already produces that per state, from the census's own declarations, so a census
+    whose vocabulary partitions its §S can be adjudicated rather than refused.
+
+    ⚑ AND THE UNCLASSIFIED BRANCH STAYS. Three censuses publish no vocabulary at all, so the
+    classifier refuses them while the prefixes still say something — the branch remains the honest
+    answer for exactly those, which is why this arm requires it to survive.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    lines = body.splitlines()
+    commands = "\n".join(ln for ln in lines if not ln.lstrip().startswith("#"))
+    # ⚑ POSITIVE CONTROL: the refusal branch must still exist. A repair that adjudicated every
+    # census by deleting the refusal would trade a blind spot for a false verdict, which is the
+    # trade this poll's own comments refuse three times over.
+    assert "UNCLASSIFIED:" in commands, (
+        "the refusal branch must survive — three censuses publish no vocabulary, and a reader "
+        "that adjudicates them anyway reports itself rather than the file"
+    )
+    # ⚑ THE VERDICT MUST HAVE A SECOND WAY TO REACH `_accounted`. Asserting only that the
+    # classifier is called would pass on the call it already makes for the residue pointer.
+    assert "_cls_accounted" in commands, (
+        "the gap verdict must be able to draw its accounting from the census's own declared "
+        "states; with only the four prefixes, a census that renames its states reaches no verdict"
+    )
+    # ⚑ AND THE SOURCE OF THE FIGURE MUST BE SAID OUT LOUD IN THE REPORT. A verdict that silently
+    # switches instruments is two measurements printed under one label — the manufactured
+    # corroboration this poll already refuses elsewhere.
+    joined = commands.replace("\\\n", " ")
+    assert any(
+        "declared states" in ln and "echo" in ln for ln in joined.splitlines()
+    ), (
+        "when the verdict comes from the declared vocabulary rather than the prefixes, the line "
+        "must say so — otherwise one label carries two different measurements"
     )
