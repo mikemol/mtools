@@ -712,9 +712,16 @@ if [ -x mdstruct/.venv/bin/python3 ]; then
     # ⚑⚑ THE LINTER'S OUTPUT IS CAPTURED TO A FILE, NOT PIPED. `lint` exits 1 when it has
     # findings, so `| grep -c` would report grep's status and mask a CRASHED linter as a clean
     # document — a false zero, from the instrument, in the check built to catch false reads.
+    # ⚑⚑⚑ `|| true`, AND WITHOUT IT THIS CHECK NEVER RAN. `lint` exits 1 whenever it has any
+    # finding, and under `set -e` a bare failing command kills the script before the next line
+    # reads `$?` — so the rc capture built to handle a nonzero status was unreachable for exactly
+    # the case it exists for. MEASURED: a planted ragged row made the gate exit 1 with NO
+    # attributed refusal, because the script was already dead. ⚑⚑ This file records that same
+    # hazard at line 481, with this same remedy, about a different pipeline — a recorded lesson
+    # is not an applied one, and here the record and the defect are in one file.
+    _rag_rc=0
     ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$staged/$md" ) \
-      >"$_mdlog.now" 2>&1
-    _rag_rc=$?
+      >"$_mdlog.now" 2>&1 || _rag_rc=$?
     if [ "$_rag_rc" -gt 1 ]; then
       say "$md: the shape linter FAILED (rc=$_rag_rc) — a count from a crashed reader is not zero"
       cat "$_mdlog.now" >&2
