@@ -2431,3 +2431,36 @@
             as a clean one.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_census_declares_every_state_its_own_status_rows_use}
 }
+
+@misc{hooks-bar-fires-gate-refuses-a-new-ragged-row,
+  section = {bar-fires},
+  title   = {The gate refuses a ragged row it did not already have},
+  note    = {A peer's line-based arm has been finding ragged table rows in this repository from
+            outside it, and they measured why that is not enough: their arm fires at their own
+            commit on their own repository, so a peer file is swept strictly later than the write
+            and often later than someone else's repair. Every party in this fleet writes rows into
+            every other party's censuses, so every structural arm in the fleet has the same hole,
+            and the gate that runs when the bytes land is the receiver's. That is the one moment a
+            write and a check coincide. The defect is also unreadable to every reader here that
+            goes through the parse, since a short row is padded to its header's width before the
+            AST exists, so the rule lives in the line-based shape linter and the gate reads it
+            there. It is armed against new rows only, and that difference is the whole design: a
+            first sweep measured fifteen ragged rows across thirteen files, several in frozen
+            censuses and two in this session's own filed legs, none of which may be amended under
+            standing constraints. Arming a gate over a tree that does not pass it blocks the
+            commits that would clean it, which this corpus records as a measured hazard, so the
+            refusal reads the same path out of HEAD and fires only on an increase. The comparison
+            is a count rather than a set of lines, and the weakness is stated rather than hidden:
+            moving a ragged row while adding another elsewhere holds the count and passes. Set
+            membership is the stronger form and belongs with the ratchet's machinery; a count
+            catches the case this gate exists for, which is a row that was not ragged becoming
+            ragged. The linter's output is captured to a file rather than piped into a counter,
+            because the linter exits nonzero when it has findings and a pipe would report the
+            counter's status instead, turning a crashed reader into a clean document — a false
+            zero from the instrument, inside the check built to catch false reads; the gate
+            separates a linter that could not run from a document with no findings and says which.
+            The arm asserts the property rather than a spelling, after a first cut named a literal
+            command string that the gate writes differently — an arm that names a spelling cannot
+            outlive a rename, which this file has now measured three times on one comparison arm.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_refuses_a_ragged_row_it_did_not_already_have}
+}

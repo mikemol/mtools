@@ -57,6 +57,15 @@ _HTML_TAG = re.compile(r"<(/?[A-Za-z][A-Za-z0-9-]*)(\s[^>]*)?>")
 # A fence opener or closer.
 _FENCE = "```"
 
+# A table row: a line whose first non-space character is a pipe. ⚑ THE OPENING PIPE IS THE
+# DISCRIMINATOR, not the presence of one anywhere — prose mentioning a | pipe is not a row, and a
+# rule that could not tell them apart would report the reader rather than the document.
+_TABLE_ROW = re.compile(r"^\s{0,3}\|")
+
+# A delimiter row: the `|---|---|` line that separates a header from its body and fixes the
+# column count. ⚑ Its own cell count is the header's, and it is not itself measured against one.
+_DELIMITER = re.compile(r"^\s{0,3}\|[\s:|-]+\|?\s*$")
+
 
 class Finding(NamedTuple):
     """One lint finding: where, which rule, and what it saw.
@@ -97,6 +106,79 @@ def _mask_code(line: str) -> str:
     return _CODE_SPAN.sub(_blank, line)
 
 
+def _at(finding: Finding) -> tuple[int, str]:
+    """Return a finding's document position, for ordering a report.
+
+    ⚑ A NAMED FUNCTION RATHER THAN A LAMBDA, and the type checker is why. An inline `key=lambda f:
+    ...` carries no annotation, so its parameter infers as `Any` and the strict bar refuses the
+    expression — three errors from one lambda. The same reason the fixture decorators in this
+    package's tests are called rather than bare.
+
+    Returns:
+        the line and rule, so findings order by position and ties break stably.
+
+    """
+    return (finding.line, finding.rule)
+
+
+def _ragged_rows(lines: list[str], offset: int) -> list[Finding]:
+    """Return every table row whose cell count differs from its own table's header.
+
+    ⚑⚑⚑ THE ONE STRUCTURAL DEFECT NO AST READER IN THIS PACKAGE CAN SEE. Pandoc pads a short row
+    to its header's width before the AST exists — a two-cell row under three columns parses as two
+    values and an empty string — so the absence is destroyed upstream of every reader built on that
+    parse, and the table module asserts it as a limit rather than repairing it. Raggedness is a
+    fact about the RAW LINES, and this is the only place in this package it can be read.
+
+    ⚑⚑ ITS OWN FUNCTION BECAUSE IT IS THE ONLY STATEFUL RULE. Every other check in `shape` is a
+    predicate on one line; this one carries the current table's declared width ACROSS lines. Inline
+    it pushed that function past the complexity bar, and the checker was right: a rule that
+    remembers is a different kind of thing from a rule that looks.
+
+    ⚑ CODE SPANS ARE NOT MASKED, unlike the inline-HTML scan. A pipe inside a code span is
+    precisely the defect — it splits the cell for every field-splitting reader — and masking it
+    would hide every instance this corpus has measured. Escaping does not help either: a
+    field-splitting reader splits on the raw byte.
+
+    ⚑ THE TWO DIRECTIONS ARE SEPARATE BECAUSE THEIR CAUSES ARE OPPOSITE. Wider than the header
+    means a separator was ADDED; narrower means a cell is MISSING. One `ragged` count would state
+    a number and imply a cause it had not measured.
+
+    Returns:
+        every row whose cell count differs from the width its own table declared.
+
+    """
+    found: list[Finding] = []
+    in_fence = False
+    # ⚑ THE COLUMN COUNT THE CURRENT TABLE DECLARED, or None between tables. A row is measured
+    # against ITS OWN table's header, so two tables of different widths in one document do not
+    # contaminate each other — which a document-wide count would do silently.
+    columns: int | None = None
+    for i, line in enumerate(lines, start=1):
+        if line.lstrip().startswith(_FENCE):
+            in_fence = not in_fence
+            columns = None
+            continue
+        if in_fence:
+            continue
+        if not _TABLE_ROW.match(line):
+            if not line.strip():
+                columns = None
+            continue
+        cells = line.strip().strip("|").count("|") + 1
+        # ⚑ THE DELIMITER ROW AND THE FIRST ROW BOTH DECLARE the width; neither is measured
+        # against one. Combined, because the two branches assign the same thing — the checker
+        # caught them written apart, and separate branches would imply a distinction there is not.
+        if _DELIMITER.match(line) or columns is None:
+            columns = cells
+        elif cells != columns:
+            how = "a separator was added" if cells > columns else "a cell is missing"
+            found.append(Finding(
+                line=offset + i, rule="MD056",
+                detail=f"{cells} cells against {columns} declared — {how}"))
+    return found
+
+
 def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
     """Return every shape finding in the document body.
 
@@ -108,7 +190,7 @@ def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
     offset = head.count("\n")
     lines = body.split("\n")
 
-    rows: list[Finding] = []
+    rows: list[Finding] = _ragged_rows(lines, offset)
     in_fence = False
     for i, line in enumerate(lines, start=1):
         if line.lstrip().startswith(_FENCE):
@@ -141,7 +223,10 @@ def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
     if first and not first.startswith("#"):
         rows.append(Finding(line=offset + 1, rule="MD041",
                             detail="body does not open with a heading"))
-    return rows
+    # ⚑ IN DOCUMENT ORDER, because the ragged-row pass runs first and would otherwise report every
+    # one of its findings ahead of every other rule's. A reader walks a lint report top to bottom
+    # against the file; a report grouped by rule makes them jump.
+    return sorted(rows, key=_at)
 
 
 def narrowest_width(path: Path, lo: int = 60, hi: int = 2000) -> int | None:

@@ -694,6 +694,48 @@ if [ -x mdstruct/.venv/bin/python3 ]; then
       || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"
            cat "$_mdlog" >&2
            fail=1; note_failure "$md: headings unreachable to mdstruct" "$_mdlog"; }
+    # ⚑⚑⚑ A RAGGED ROW IS THE ONE STRUCTURAL DEFECT NO AST READER HERE CAN SEE, AND THIS IS THE
+    # ONLY MOMENT IT IS CATCHABLE. Pandoc pads a short row to its header's width before the AST
+    # exists, so `mdstruct tables` reports a broken table as clean — measured, and asserted there
+    # as a limit rather than repaired. Only the line-based shape linter can read it.
+    # ⚑⚑ AND ONLY THE RECEIVING REPOSITORY'S GATE RUNS WHEN THE BYTES LAND. A peer's arm has been
+    # finding these in this tree from outside, and they measured why that is not enough: a peer
+    # file is swept at THEIR commit, strictly later than the write and often later than someone
+    # else's repair. Every party here writes rows into every other party's censuses.
+    # ⚑ AGAINST HEAD, NOT ABSOLUTE. Fifteen ragged rows exist across thirteen files, several in
+    # FROZEN censuses and two in this session's own filed legs — none of which may be amended.
+    # An absolute refusal would block every commit touching them, which is the arm-over-a-red-tree
+    # hazard this repo records. The refusal fires on an INCREASE.
+    # ⚑ A COUNT, AND ITS WEAKNESS IS STATED: moving a ragged row while adding another elsewhere
+    # holds the count and passes. Set membership is stronger and belongs with the ratchet; this
+    # catches the case the gate exists for — a row that was not ragged becoming ragged.
+    # ⚑⚑ THE LINTER'S OUTPUT IS CAPTURED TO A FILE, NOT PIPED. `lint` exits 1 when it has
+    # findings, so `| grep -c` would report grep's status and mask a CRASHED linter as a clean
+    # document — a false zero, from the instrument, in the check built to catch false reads.
+    ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$staged/$md" ) \
+      >"$_mdlog.now" 2>&1
+    _rag_rc=$?
+    if [ "$_rag_rc" -gt 1 ]; then
+      say "$md: the shape linter FAILED (rc=$_rag_rc) — a count from a crashed reader is not zero"
+      cat "$_mdlog.now" >&2
+      fail=1; note_failure "$md: shape linter rc=$_rag_rc" "$_mdlog.now"
+    else
+      _rag_now=$(grep -c MD056 "$_mdlog.now" || true)
+      _rag_head=0
+      if git show "HEAD:$md" >"$_mdlog.head" 2>/dev/null; then
+        ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$_mdlog.head" ) \
+          >"$_mdlog.was" 2>&1 || true
+        _rag_head=$(grep -c MD056 "$_mdlog.was" || true)
+      fi
+      if [ "${_rag_now:-0}" -gt "${_rag_head:-0}" ]; then
+        say "$md: ragged table row(s) — $_rag_now staged against $_rag_head in HEAD"
+        say "  a raw or escaped pipe inside a code span splits the cell; every structural reader"
+        say "  STOPS at that row and reports what it saw as complete. Escaping does NOT help —"
+        say "  a field-splitting reader splits on the raw byte and an escaped pipe still ends it."
+        grep MD056 "$_mdlog.now" >&2 || true
+        fail=1; note_failure "$md: $_rag_now ragged row(s), was $_rag_head" "$_mdlog.now"
+      fi
+    fi
   done < <(git diff --cached --name-only --diff-filter=ACM -- '*.md')
 fi
 

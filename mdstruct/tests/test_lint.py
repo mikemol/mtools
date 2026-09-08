@@ -131,3 +131,85 @@ def test_narrowest_is_none_when_nothing_in_range_fits(doc: Path) -> None:
     """
     doc.write_text("# H\n\n" + "x" * 500 + "\n", encoding="utf-8")
     assert lint.narrowest_width(doc, lo=60, hi=100) is None
+
+
+_RAGGED_FIXTURE = """# Tables
+
+| surveyor | prefix | file |
+|---|---|---|
+| alpha | AL- | alpha.md |
+| beta | **filed** — b1c2d3 |
+| gamma | GA- | gamma.md | stray |
+
+| rev | what changed |
+|---|---|
+| 1 | a row quoting `a | b` inside a code span |
+
+```
+| fenced | table | row | that | must | not | be | measured |
+```
+
+Prose mentioning a | pipe outside any table, which is not a row at all.
+"""
+
+# The beta row: three declared columns, two cells. A cell is MISSING.
+_SHORT_ROWS = 1
+
+# The gamma row and the code-span row: one cell too many. A separator was ADDED.
+_LONG_ROWS = 2
+
+
+def test_a_row_whose_cell_count_differs_from_its_header_is_reported(doc: Path) -> None:
+    """⚑⚑⚑ THE ONE STRUCTURAL DEFECT NO AST READER IN THIS PACKAGE CAN SEE.
+
+    Pandoc pads a short row to its header's width before the AST exists — a two-cell row under
+    three columns parses as two values and an empty string, measured and asserted as a limit in
+    the table reader. So raggedness is a fact about the RAW LINES, and the shape linter is the
+    only place in this package where it can be read at all.
+
+    ⚑⚑ A PEER'S LINE-BASED ARM HAS BEEN CATCHING THESE IN THIS REPOSITORY FROM OUTSIDE IT. They
+    reported seven ragged rows in a census this package's table reader called clean, and they were
+    right. Their arm sweeps peer files strictly LATER than the write — it fires at their commit,
+    on their repo — so the defect is found after the bytes have landed and often after someone
+    else has repaired them. **The receiving repository's own gate is the only place where the
+    write and a check coincide**, and this rule is what lets that gate see it.
+
+    ⚑ BOTH DIRECTIONS, SEPARATELY, BECAUSE THEY HAVE OPPOSITE CAUSES. A row WIDER than its header
+    gained a separator — a raw pipe inside a code span, seven measured instances in this corpus. A
+    row NARROWER lost a cell. A single `ragged` count would state a number and imply a cause it
+    had not measured, which is the defect one level up from the one this rule catches.
+
+    ⚑ AND A FENCED TABLE IS NOT A TABLE. Every rule in this linter skips fenced blocks because a
+    code block's own syntax is not a document defect; a fixture line of pipes inside a fence is
+    the control that keeps this rule inside that discipline.
+    """
+    doc.write_text(_RAGGED_FIXTURE, encoding="utf-8")
+    findings = lint.shape(doc)
+    short = [f for f in findings if f.rule == "MD056" and "missing" in f.detail]
+    long = [f for f in findings if f.rule == "MD056" and "added" in f.detail]
+    assert len(short) == _SHORT_ROWS, (
+        f"{_SHORT_ROWS} row carries fewer cells than its header; reported {len(short)}: "
+        f"{[f.detail for f in short]}"
+    )
+    assert len(long) == _LONG_ROWS, (
+        f"{_LONG_ROWS} rows carry more cells than their header; reported {len(long)}: "
+        f"{[f.detail for f in long]}"
+    )
+    # ⚑ POSITIVE CONTROL, AND IT IS THE HALF THAT EARNS THE RULE: the well-formed rows and the
+    # fenced pipes must NOT be reported. A rule that flagged every line containing a pipe would
+    # satisfy both counts above while being useless.
+    flagged = {f.line for f in findings if f.rule == "MD056"}
+    fenced_at = next(
+        i for i, ln in enumerate(_RAGGED_FIXTURE.split("\n"), start=1) if "fenced | table" in ln
+    )
+    assert fenced_at not in flagged, (
+        f"a pipe row inside a fenced block was reported at line {fenced_at} — every rule in this "
+        "linter skips fences, because a code block's syntax is not a document defect"
+    )
+    prose_at = next(
+        i for i, ln in enumerate(_RAGGED_FIXTURE.split("\n"), start=1) if ln.startswith("Prose")
+    )
+    assert prose_at not in flagged, (
+        f"prose mentioning a pipe was reported at line {prose_at} — a line is a table ROW only "
+        "inside a table, and a rule that cannot tell them apart reports the reader"
+    )

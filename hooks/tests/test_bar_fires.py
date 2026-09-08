@@ -4237,3 +4237,66 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         f"{len(unnamed)} of {checked} readable census(es) use a state their own vocabulary does "
         "not declare — the row is a fact and the vocabulary is the gap:\n  " + "\n  ".join(unnamed)
     )
+
+
+def test_the_gate_refuses_a_ragged_row_it_did_not_already_have() -> None:
+    """⚑⚑⚑ THE RECEIVING REPOSITORY'S GATE IS THE ONLY MOMENT A WRITE AND A CHECK COINCIDE.
+
+    A peer's line-based arm has been finding ragged rows in this tree from outside it, and they
+    measured why that is not enough: their arm fires at THEIR commit on THEIR repo, so a peer file
+    is swept strictly later than the write — often later than someone else's repair. Every party
+    in this fleet writes rows into every other party's censuses, so every structural arm in the
+    fleet has that hole. **The gate that runs when the bytes land is the receiver's.**
+
+    ⚑⚑ AND THIS DEFECT IS UNREADABLE TO EVERY AST-BASED READER HERE. Pandoc pads a short row to
+    its header's width before the AST exists, so the table module asserts that limit rather than
+    repairing it. The shape linter reads raw lines, which is why the rule lives there and why the
+    gate can see it at all.
+
+    ⚑ ARMED AGAINST NEW ROWS ONLY, AND THE DIFFERENCE IS THE WHOLE DESIGN. A first sweep measured
+    fifteen ragged rows across thirteen files, several in frozen censuses and two in this
+    session's own filed legs — neither of which may be amended. Arming a gate over a tree that
+    does not pass it blocks the commits that would clean it, which this corpus records as a
+    measured hazard. So the refusal compares the staged file against the same file in HEAD and
+    fires only on an INCREASE.
+
+    ⚑ A COUNT, NOT A LINE SET, AND THE WEAKNESS IS STATED RATHER THAN HIDDEN: moving a ragged row
+    while adding another elsewhere holds the count and passes. The set-membership form is stronger
+    and belongs with the ratchet's machinery; a count catches the case this gate exists for — a
+    row that was not ragged becoming ragged — and says what it cannot catch.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the staged-markdown walk must still exist, or every assertion below
+    # passes because the walk vanished rather than because it gained a check.
+    assert "--diff-filter=ACM" in commands, (
+        "the gate must still walk staged markdown; this arm would pass on its absence"
+    )
+    assert "MD056" in commands, (
+        "the gate must check for ragged table rows — the one structural defect no AST reader in "
+        "this tree can see, and the receiving gate is the only place it is catchable at write time"
+    )
+    # ⚑⚑ AGAINST HEAD, NOT ABSOLUTE. An absolute refusal would block every commit touching the
+    # thirteen files that already carry one, including the frozen censuses and filed legs that may
+    # not be amended at all — the clean-the-tree-then-arm hazard, armed backwards.
+    # ⚑ THE PROPERTY, NOT A SPELLING. A first cut asserted the literal `git show HEAD` and the
+    # gate writes `git show "HEAD:$md"` — an arm that names a spelling cannot outlive a rename,
+    # which this file has now measured three times on one comparison arm. What must hold is that
+    # the check reads the SAME PATH out of HEAD and compares two counts.
+    assert pyre.search(r'git show "HEAD:\$\w+"', commands), (
+        "the ragged-row check must read the same path out of HEAD, or it refuses commits to the "
+        "fifteen rows that already exist and cannot all be repaired"
+    )
+    assert pyre.search(r'"\$\{_rag_now:-0\}"\s+-gt\s+"\$\{_rag_head:-0\}"', commands), (
+        "the refusal must fire on an INCREASE against HEAD; an absolute test arms a gate over a "
+        "tree that does not pass it and blocks the commits that would clean it"
+    )
+    # ⚑⚑ AND A CRASHED LINTER MUST NOT READ AS A CLEAN DOCUMENT. `lint` exits 1 when it has
+    # findings, so piping into a counter reports the counter's status and turns a broken reader
+    # into a zero — a false negative from the instrument, inside the check built to catch false
+    # reads. The gate separates rc>1 from rc<=1 and says so.
+    assert "shape linter FAILED" in body, (
+        "a linter that could not run must be distinguished from a document with no findings"
+    )

@@ -764,3 +764,34 @@
             made the asymmetry hard to see from either side alone.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_an_unparseable_table_index_refuses}
 }
+
+@misc{mdstruct-lint-ragged-table-row-is-reported,
+  section = {lint},
+  title   = {A row whose cell count differs from its header is reported},
+  note    = {This is the one structural defect no reader in this package can see through the AST.
+            Pandoc pads a short row to its header's width before the parse exists, so a two-cell
+            row under three columns arrives as two values and an empty string; the table module
+            asserts that as a measured limit rather than repairing it, because the absence is
+            destroyed upstream of every reader built on the same parse. Raggedness is therefore a
+            fact about the raw lines, and the shape linter is the only place in this package where
+            it can be read at all. A peer's line-based arm has been finding these in this
+            repository from outside it, and was right where this package's own table reader called
+            a broken table clean. The two directions are reported separately because their causes
+            are opposite: a row wider than its header gained a separator, which in this corpus is
+            always a raw or escaped pipe inside a code span, and a row narrower lost a cell. A
+            single ragged count would state a number and imply a cause it had not measured. Code
+            spans are deliberately not masked here, unlike the inline-HTML scan in the same loop,
+            because a pipe inside a code span is precisely the defect: it splits the cell for every
+            field-splitting reader, and masking would hide every instance this corpus has measured.
+            Escaping does not help either, since a field-splitting reader splits on the raw byte.
+            Each row is measured against its own table's declared width rather than a document-wide
+            count, so two tables of different widths in one document do not contaminate each other,
+            and a fenced block is skipped like every other rule in this linter because a code
+            block's own syntax is not a document defect. The arm carries both controls: a fenced
+            row of pipes and a prose line mentioning a pipe must not be reported, since a rule
+            flagging every line containing a pipe would satisfy the counts while being useless.
+            Verified two-armed against the corpus rather than only a fixture: silent on a census
+            whose ragged section was repaired, and reproducing exactly the seven rows a peer
+            reported on the same file's broken revision, with the direction named.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_row_whose_cell_count_differs_from_its_header_is_reported}
+}
