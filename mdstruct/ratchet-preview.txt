@@ -8,6 +8,8 @@ src/mikemol/mdstruct/roundtrip.py:docstring-missing-returns
 src/mikemol/mdstruct/spans.py:docstring-missing-exception
 src/mikemol/mdstruct/verify.py:docstring-missing-returns
 src/mikemol/mdstruct/verify.py:noqa-comments
+tests/test_cli_flags.py:noqa-comments
+tests/test_cli_flags.py:suspicious-subprocess-import
 tests/test_frontmatter.py:compare-to-empty-string
 tests/test_grep.py:docstring-missing-returns
 tests/test_lint.py:docstring-missing-returns

@@ -717,3 +717,50 @@
             with an empty residue.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_state_headed_table_that_is_not_a_vocabulary_is_not_read_as_one}
 }
+
+@misc{mdstruct-cli-rows-scoped-to-one-table,
+  section = {cli-flags},
+  title   = {Rows scoped to one table returns only that table's rows},
+  note    = {The capability asserted before the refusals mean anything: a mode that refused every
+            table index would satisfy an arm checking only that impossible indices are rejected,
+            so this pins that a valid index does the thing the flag claims. The fixture's two
+            tables hold different row counts, which makes a scoped read distinguishable from an
+            unscoped one by count as well as by content, and the rows are named rather than only
+            counted, because two populations of the same size can differ entirely and a future
+            off-by-one selecting the same table twice would pass a count check.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_rows_scoped_to_one_table_returns_only_that_tables_rows}
+}
+
+@misc{mdstruct-cli-impossible-table-index-refuses,
+  section = {cli-flags},
+  title   = {An impossible table index refuses rather than returning everything},
+  note    = {A peer measured this from the consumer side: asking the rows mode for table 99 of a
+            five-table document returned all thirty-three rows, byte-identical to the output for a
+            valid index and to the output for no index at all. The flag was parsed by the classify
+            mode and never looked for by the rows mode, so it worked in whichever of the two a
+            reader happened to try second, while both share a document, a vocabulary and a help
+            text whose continuation lines were attached to the wrong verb. The cost landed in a
+            commit message of mine, which cited measuring with that flag as the evidence for a
+            defect report; the operation never occurred, since the output had been read in full and
+            the isolation attributed to a filter that did nothing. The conclusion held because the
+            wanted table was visible unfiltered, but a defect report whose reproduction step does
+            not reproduce is one revision from being uncheckable, which is the actual finding. The
+            repair refuses rather than returning an empty result, because empty is
+            indistinguishable from a table that genuinely holds no rows — the absence-versus-
+            unavailable confusion this corpus keeps measuring, arriving in the flag a reader
+            reaches for when narrowing. The refusal names the rejected index and the range that
+            exists, so the message carries the components of the comparison that produced it.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_an_impossible_table_index_refuses_rather_than_returning_everything}
+}
+
+@misc{mdstruct-cli-unparseable-table-index-refuses,
+  section = {cli-flags},
+  title   = {An unparseable table index refuses},
+  note    = {The same discipline the column flag already had, with its reason recorded beside it:
+            silently reading table zero for a non-numeric index would answer a question nobody
+            asked and report it as a clean result. The classify mode already refused this while the
+            rows mode did not, so one document read two ways gave two answers to one malformed
+            query — and the mode that refused was not the mode whose flag was inert, which is what
+            made the asymmetry hard to see from either side alone.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_an_unparseable_table_index_refuses}
+}

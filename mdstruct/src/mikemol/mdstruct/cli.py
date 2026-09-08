@@ -6,9 +6,10 @@
     mdstruct grep PATTERN FILE.md [-i] [-E] # where text is, AS A SPAN
     mdstruct tables FILE.md                 # every table: position, size, header
     mdstruct rows FILE.md [--where TEXT]    # the cells, optionally filtered
-    mdstruct classify FILE.md [--col N]     # rows grouped by the doc's OWN declared states
                   [--table N]               # ...scoped to one table
                   [--col N --starts TEXT]   # ...or anchored to one column's PREFIX
+    mdstruct classify FILE.md [--col N]     # rows grouped by the doc's OWN declared states
+                  [--table N]               # ...scoped to one table
     mdstruct labels FILE.md                 # every worklist label the document mentions
     mdstruct roundtrip FILE.md              # what ONE normalization pass changes
     mdstruct fixpoint FILE.md               # does normalization CONVERGE, and in how many
@@ -161,7 +162,31 @@ def _rows(path: Path, argv: list[str]) -> int:
         sys.stderr.write("mdstruct: --col names a column; --starts says what it must begin with\n")
         return 2
     col = int(col_raw) if col_raw is not None else None
-    found = tables.table_rows(path, where=where, col=col, starts=starts)
+    # ⚑⚑⚑ `--table` WAS ACCEPTED AND IGNORED HERE, AND A PEER MEASURED IT. `rows FILE --table 99`
+    # on a five-table document returned all 33 rows — byte-identical to a valid index, and to no
+    # index at all. `classify` parses this flag; `rows` never looked for it, so the flag works in
+    # whichever mode a reader happens to try second.
+    # ⚑⚑ THE COST LANDED IN A COMMIT MESSAGE: *"measured with `rows --table 6`"* named an
+    # operation that did not occur. The conclusion held because the wanted table was visible in
+    # the unfiltered output; the REPRODUCTION STEP did not reproduce, which is how a defect report
+    # becomes un-checkable one revision later.
+    pos_raw = _flag(argv, "--table")
+    if pos_raw is not None and not pos_raw.isdigit():
+        sys.stderr.write(f"mdstruct: --table wants a table number, got {pos_raw!r}\n")
+        return 2
+    position = int(pos_raw) if pos_raw is not None else None
+    # ⚑ AN OUT-OF-RANGE INDEX REFUSES RATHER THAN RETURNING EMPTY. An empty result is
+    # indistinguishable from a table that genuinely holds no rows — absence versus unavailable, in
+    # the flag a reader reaches for when narrowing.
+    if position is not None:
+        count = len(tables.tables(path))
+        if position >= count:
+            sys.stderr.write(
+                f"mdstruct: --table {position} but {path} holds {count} table(s), "
+                f"numbered 0-{count - 1}\n" if count else
+                f"mdstruct: --table {position} but {path} holds no tables\n")
+            return 2
+    found = tables.table_rows(path, where=where, col=col, starts=starts, position=position)
     if not found:
         asked = starts if starts is not None else where
         how = f"column {col or 0} beginning with" if starts is not None else "matching"
