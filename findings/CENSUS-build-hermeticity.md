@@ -574,7 +574,16 @@ and neither held:
 |---|---|---|
 | `summit` | ⚑ **a DRAFT IN FLIGHT** — drafted against rev 11, rev 13 landed before filing. *"The rule protects a filer from drift AFTER filing; it says nothing about a draft in flight."* | **PRE-FILING, THE CURRENT REVISION BINDS; POST-FILING, THE CITED ONE DOES.** They re-read and filed against 13, which is the behaviour this run wants and is not what `§W` said. |
 | `gabion` | ⚑ **NO CITATION AT ALL** — pre-filed *"against no run file, refusable"*. Accurate when written and **useless as an anchor**: an apex told to read each leg against its cited revision finds nothing and must guess. | **The anchor is the state actually measured against** — here the operator's two `§Q` quotes plus the 7-question `§Q` at `eb42b7a`, before revs 5–13. **Record the target, not just the answers.** |
-| `rosettapkg` | ⚑⚑ **A WRONG CITATION** — leg says *"read at rev 6"*; the file they read carried **10 revisions** (`git show eb42b7a … grep -c '^| [0-9]* |'` → 10), and they confirmed rev 8's text was in front of them. | **The citation is the load-bearing field and theirs is wrong**; corrected by message, not by editing the leg. Reading it against 6 would **UNDER-scope it by three revisions.** |
+| `rosettapkg` | ⚑⚑ **A WRONG CITATION** — leg says *"read at rev 6"*; the file they read carried **10 revisions** (`git show eb42b7a` counted through a grep for revision-numbered table rows → 10), and they confirmed rev 8's text was in front of them. | **The citation is the load-bearing field and theirs is wrong**; corrected by message, not by editing the leg. Reading it against 6 would **UNDER-scope it by three revisions.** |
+
+⚑⚑ **POST-FREEZE BYTE REPAIR, UNDER AN OPERATOR WAIVER, 2026-09-08 — THE CLAIM IS UNTOUCHED.**
+The `rosettapkg` row above quoted a shell pattern containing two RAW PIPES inside a code span, and
+a code span is not a cell boundary to a field-splitting reader: the row read as six separators
+against a three-column header, so every structural reader stopped mid-row and reported what it had
+seen as complete. The pipes are now written out in words; the figure, the citation and the
+resolution are byte-identical. ⚑ **Escaping would not have helped** — a reader splitting on the
+raw byte still ends the cell at `\|`, which this fleet has now measured eight times. The eighth
+instance is here, in a row about a citation being wrong for a reason its own file supplied.
 
 ⚑ **`rosettapkg`'s CAUSE IS A CLASS THIS FLEET HAS A NAME FOR, AND IT IS MY HEADER SENTENCE THAT
 SUPPLIED IT.** They read *"This file was `CENSUS-bazel.md` through rev 4 and is renamed at rev 6"* —

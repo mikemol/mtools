@@ -600,9 +600,28 @@ distinguished them.**
 | `rosettapkg` | **filed** | `rosettapkg-deps-build.md` |
 | `linux-sources` | **filed** | `linux-sources-deps-build.md`, `LS-01`–`LS-30` |
 | `summit` | **filed** (rev 30) | `cf69c3a`, `SM-01`–`SM-17`, through mtools' gate first run. ⚑ **Verified in `HEAD`.** Added to `§R` at rev 21 on the operator's ruling; byte-identical kickoff, no session existed until then. *(Prior: `dispatched, not yet filed`; its file was untracked — written, not fetchable.)* |
-| `cassian-observability` | **filed** (rev 29) | `e21e7f2`, 494 insertions, through mtools' full gate. ⚑ **Verified in `HEAD`, not the index:** `git ls-tree -r HEAD` lists it. **Evidence repointed from cassian's own tree to the filed copy** — the two have diverged, and the filed one is authoritative. *(Prior states, for the record: `in progress — held` → `STAGED, NOT COMMITTED` rev 25 → filed.)* | ⚑ **superseded — the source-tree witness below is no longer the artifact:** `cassian-observability/docs/census-deps-build-leg.md`, **30,795 bytes, mtime 00:45** — larger than three filed legs. Blocked on **its operator's hold against writing to mtools**. Not a decline; the dispatch was usable. |
+| `cassian-observability` | **filed** (rev 29) | `e21e7f2`, 494 insertions, through mtools' full gate. ⚑ **Verified in `HEAD`, not the index:** `git ls-tree -r HEAD` lists it. **Evidence repointed from cassian's own tree to the filed copy** — the two have diverged, and the filed one is authoritative. *(Prior states, for the record: `in progress — held` → `STAGED, NOT COMMITTED` rev 25 → filed.)* — ⚑ **superseded — the source-tree witness below is no longer the artifact:** `cassian-observability/docs/census-deps-build-leg.md`, **30,795 bytes, mtime 00:45** — larger than three filed legs. Blocked on **its operator's hold against writing to mtools**. Not a decline; the dispatch was usable. |
 
 ⚑ **This table is provisional and is re-measured at freeze time, never carried forward** (`§F`).
+
+⚑⚑⚑ **POST-FREEZE AMENDMENT, UNDER AN OPERATOR WAIVER, 2026-09-08 — AND IT IS AN ADJUDICATION
+RATHER THAN A REPAIR.** The `cassian-observability` row was WRITTEN with four fields against this
+table's three-column header, so every structural reader stopped at its fourth separator and
+reported what it had seen as complete. The fourth cell's text now sits inside the evidence cell,
+joined by an em-dash; **no figure, commit id, byte count or claim changed** — `git diff --stat`
+reads one insertion and one deletion on one line.
+
+⚑⚑ **WHAT MAKES IT AN ADJUDICATION IS THAT NOBODY HAD ESTABLISHED WHICH SIDE WAS RIGHT.** A row
+disagreeing with its header can be repaired in two directions: the header was wrong and should
+gain a column, or the row was malformed and should lose a separator. Taking the second decides
+that the declared header is authoritative — a decision, not a transcription, and it is recorded
+here because a reader meeting a clean three-cell row would otherwise never learn one was taken.
+
+⚑ **HOW IT WAS FOUND, AND WHY THE INSTRUMENT COULD NOT SEE IT.** `mdstruct tables` reports this
+table as three columns and says nothing about its rows: pandoc pads a short row and *splits* a
+long one before the AST exists, so the reader called a broken table clean. The line-based shape
+linter is the only place in that toolkit where raggedness is readable, and the byte was located by
+printing every separator's column position rather than by reading the row.
 
 ### ⚑⚑ `in progress` IS COLLAPSING TWO STATES, AND THE OPERATOR SHOULD DECIDE WHICH ONE THIS IS
 
