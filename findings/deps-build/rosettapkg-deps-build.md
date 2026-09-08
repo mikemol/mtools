@@ -87,7 +87,7 @@ a row.
 |---|---|---|
 | `python3` ≥3.13 | `lattice/pm-depsort.py:1` `#!/usr/bin/env python3`; resolves to `/home/mikemol/.local/share/mise/installs/python/3.13/bin/python3` on this box | citation + inference |
 | `~/github/linux-sources` **at that literal path** | `managers/pacman.md:4` invokes `linux_sources/corpora …` with no repo qualifier | citation |
-| 30 live squashfs **mounts** | `mount \| grep -c squashfs` → `30`; the corpora are mounts, not files in any repo | citation (machine) |
+| 30 live squashfs **mounts** | `mount` piped to `grep -c squashfs` → `30`; the corpora are mounts, not files in any repo | citation (machine) |
 | `~/github/substrate` | `lattice/pm-depsort.py:6` names the ported original by path | citation |
 | ⚑ **another repo's uv environment** | see RP-03 | citation |
 
