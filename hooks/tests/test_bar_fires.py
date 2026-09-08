@@ -4678,3 +4678,50 @@ def test_the_poll_does_not_re_ask_a_question_it_has_already_answered() -> None:
         "The same query on an unchanged path cannot return a different answer; each extra call is "
         "a process start that re-asks something already answered."
     )
+
+
+def test_the_poll_states_no_paydown_figure_it_cannot_re_derive() -> None:
+    """⚑⚑⚑ THE POLL HARDCODED A THREE-PART SUM AND REPRINTED IT EVERY TICK, THREE OFF.
+
+    It announced a blocked paydown as `hooks 41 + mdstruct 55 + ratchet 11 = 107`. Measured at the
+    tick this arm was written: ratchet is **8** — three were paid down two ticks earlier, by me,
+    and the poll went on asserting the pre-paydown figure. Hooks is **43**, having GROWN by two
+    from directives I added while paying ratchet.
+
+    ⚑⚑ THIS IS THE DEFECT THE POLL EXISTS TO PREVENT, in the poll. Its own opening states the
+    rule: *a claim with no re-derivation procedure will not be re-checked however load-bearing it
+    is, because nothing about it announces that it could be.* A typed figure announces nothing.
+    Worse, it sits in the section reporting OPERATOR DECISIONS — the figure a reader would use to
+    judge whether the decision is still worth its cost.
+
+    ⚑ AND IT IS ALSO THE PARTITION SHAPE. Three terms and a total, all from one typing, none
+    re-measured: the terms agree with the total because they were written together, which is
+    agreement that carries no information. The poll refuses exactly this arrangement elsewhere.
+
+    ⚑ THE ARM DOES NOT REQUIRE THE FIGURE TO BE PRINTED. Deriving three ruff runs inside the poll
+    would add three subprocess starts per run to a script this session has just measured at 222 —
+    and the honest alternative to a stale number is no number, with a pointer to the command that
+    yields one. What must not survive is a figure a reader will believe and nothing will correct.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the decision must still be reported, or this arm passes because the
+    # section vanished rather than because its figure stopped being asserted.
+    assert "RUF201" in commands, (
+        "the carried operator decision must still be reported; this arm would pass on its absence"
+    )
+    # ⚑⚑ A BARE MULTI-DIGIT COUNT NEXT TO A DISTRIBUTION NAME IS THE SHAPE THAT ROTS. Matching the
+    # shape rather than the specific numbers, so a reader who updates the figures by hand — which
+    # is the move that produced this defect — does not satisfy the arm by editing digits.
+    # ⚑ NARROWED AT THE CALL. `findall` is typed `list[Any]`, and under `disallow_any_expr` that
+    # `Any` poisons every downstream expression — three errors from one call. THIRD instance of
+    # this in three ticks: mdstruct, then this file, now this file again. The fix is recorded
+    # twice already and did not reach the hand writing the next `findall`.
+    stale: list[str] = pyre.findall(r"\b(?:hooks|mdstruct|ratchet)\s+\d+", commands)
+    assert not stale, (
+        f"the poll states {len(stale)} hardcoded per-distribution figure(s): {stale}. A typed "
+        "count announces no way to re-check it and will be reprinted after the work it describes "
+        "is done — measured three off, two ticks after the paydown that moved it."
+    )

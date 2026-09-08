@@ -1117,7 +1117,20 @@ echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt
 # the GATE with `--preview` converts 107 tolerated findings into hard failures, because the gate's
 # ruff has no baseline. So the paydown precedes the arming, or the gate blocks the commits that
 # would clean it.
-echo "    ⚑ BLOCKED on a 107-finding paydown: hooks 41 + mdstruct 55 + ratchet 11."
+# ⚑⚑⚑ THE FIGURE WAS TYPED HERE AND REPRINTED EVERY TICK, THREE OFF. It read `hooks 41 +
+# mdstruct 55 + ratchet 11 = 107`; measured two ticks after a paydown moved it, ratchet was 8 and
+# hooks had GROWN to 43. A typed count announces no way to re-check it — this poll's own opening
+# rule — and it sat in the section reporting OPERATOR DECISIONS, which is the figure a reader
+# would use to judge whether a decision is still worth its cost.
+# ⚑⚑ IT WAS ALSO THE PARTITION SHAPE: three terms and a total from one typing, agreeing because
+# they were written together, which is agreement carrying no information.
+# ⚑ AND THE REPAIR IS NOT TO DERIVE IT HERE. Three ruff runs per poll would add three process
+# starts to a script measured at 222, and the honest alternative to a stale number is NO number
+# plus the command that yields a fresh one. A reader who wants the size can take it.
+echo "    ⚑ BLOCKED on a preview-wide paydown whose size is NOT stated here — a typed count"
+echo "      goes stale the tick after the work moves it. Measure it:"
+echo "        for d in hooks mdstruct ratchet; do"
+echo "          env -C \$d .venv/bin/ruff check --preview --statistics . ; done"
 echo "      Renaming first is unshippable — a name selector needs --preview to LOAD."
 # ⚑⚑⚑ THE SUPPRESSION RULES CHAIN, AND THE SECOND LINK IS PREVIEW-ONLY. Measured on a probe with
 # an F-arm (a bare violation is REPORTED in both configurations, so a rc=0 below means suppression
