@@ -810,7 +810,10 @@ else
                 # ⚑ THE TWO READINGS ARE PRINTED SIDE BY SIDE rather than reconciled here. Where
                 # they disagree, that is the finding — and reconciling them in this script would be
                 # judgement in the turn rather than a measurement a reader can check.
-                _cls_named=0
+                # ⚑ ONLY THE RESIDUE IS READ HERE, and only to decide whether to point a reader at
+                # the tool. The COUNT is emitted once, ungated, further down — a `_cls_named` was
+                # computed here too and became dead when that emission moved, which is the shape
+                # this poll keeps producing: a value measured for a caller that no longer wants it.
                 _cls_residue=0
                 _cls_ok=0
                 if [ -n "${_spos:-}" ]; then
@@ -820,9 +823,6 @@ else
                         _cls_residue=$(printf '%s\n' "$_cls" \
                             | sed -n 's/^ *\([0-9]*\)  ⚑ UNCLASSIFIED.*/\1/p')
                         _cls_residue=${_cls_residue:-0}
-                        _cls_named=$(printf '%s\n' "$_cls" \
-                            | sed -n 's/^  \([0-9]*\) row(s) classified.*/\1/p')
-                        _cls_named=$(( ${_cls_named:-0} - _cls_residue ))
                     fi
                 fi
                 # ⚑⚑⚑ EVERY COMPONENT OF THE ASSERTED EXPRESSION IS PRINTED, NOT JUST ITS VERDICT.
@@ -858,16 +858,17 @@ else
                 # printed `0 = 0 + 0 + 0 + 0` over §S tables of 8 and 12 rows while the document's
                 # own vocabulary named 8 of 8 and 11 of 12. Printing the operands cannot detect
                 # that; a term from a DIFFERENT source can.
-                if [ "${_cls_ok:-0}" -eq 1 ]; then
-                    echo "    declared: $_cls_named of $_rows §S row(s) match a state this census" \
-                         "publishes, $_cls_residue do not — a SECOND source, not the prefixes above"
-                else
-                    # ⚑ REFUSAL, NOT A ZERO. A census publishing no vocabulary cannot be read
-                    # against one, and reporting that as `0 matched` would be this reader's
-                    # blindness wearing the shape of a finding about the census.
-                    echo "    declared: this census publishes no state|means table — the four" \
-                         "terms above are the ONLY reading, and they share one source"
-                fi
+                # ⚑⚑⚑ AND THE EMISSION THAT WAS HERE WAS GATED, WHICH IS THE DEFECT THE HOISTED
+                # BLOCK BELOW EXISTS TO PREVENT — added one tick after that hoist, inside the
+                # branch it was hoisted out of. `deps-build` and `constitution` AGREE on totals,
+                # so this whole block is skipped and neither printed a `declared:` line: the four
+                # censuses that did print one were exactly the four that DIVERGE, which reads as a
+                # property of those censuses and is a property of the branch.
+                # ⚑⚑ IT WAS ALSO A DUPLICATE MEASUREMENT. `_cls_named`/`_cls_residue` here and
+                # `_vt`/`_vr` below are the same `classify` call on the same table; two readings of
+                # one source are not two sources, and keeping both would have made a reader think
+                # the poll had corroboration it does not have. The second-source FRAMING moved
+                # down to the ungated line; the computation here is gone rather than re-emitted.
                 # ⚑ THE DOCUMENT'S OWN READING, BESIDE THIS ARM'S. `classify` groups §S against the
                 # states the census declares; a residue there is a state the document USES and never
                 # DECLARED, which is a finding about the census rather than about this reader — the
@@ -939,11 +940,21 @@ else
                 _vr=$(printf '%s\n' "$_v" | sed -n 's/^ *\([0-9]*\)  ⚑ UNCLASSIFIED.*/\1/p')
                 _vr=${_vr:-0}
                 _vt=$(printf '%s\n' "$_v" | sed -n 's/^  \([0-9]*\) row(s) classified.*/\1/p')
+                # ⚑⚑ THIS IS THE SECOND SOURCE, AND SAYING SO IS THE POINT OF THE LINE. The four
+                # state terms above are one query run with four prefixes, so when the prefixes miss
+                # they all read 0 and agree with each other — one failure counted four times, which
+                # printing the operands cannot detect. This count comes from the DOCUMENT's own
+                # declarations, so a disagreement between the two is a real reading rather than a
+                # restatement.
                 echo "  §S vocabulary: $(( ${_vt:-0} - _vr )) of ${_vt:-0} row(s) match a state" \
-                     "this census publishes; $_vr do not"
+                     "this census publishes; $_vr do not — a SECOND source, not the prefixes above"
             else
+                # ⚑ REFUSAL, NOT A ZERO. A census publishing no vocabulary cannot be read against
+                # one, and reporting that as `0 matched` would be this reader's blindness wearing
+                # the shape of a finding about the census.
                 echo "  §S vocabulary: this census publishes no state|means table, so its §S" \
-                     "cannot be read against its own declarations"
+                     "cannot be read against its own declarations — the prefix terms are then the" \
+                     "ONLY reading, and they share one source"
             fi
         fi
     fi

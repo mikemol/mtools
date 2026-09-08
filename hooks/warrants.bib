@@ -2325,3 +2325,34 @@
             which is the only interface this script has.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_classifiers_count_is_printed_and_not_merely_computed}
 }
+
+@misc{hooks-bar-fires-second-source-not-gated-on-divergence,
+  section = {bar-fires},
+  title   = {The second source is not gated on the divergence branch},
+  note    = {A sibling arm exists because the document-relative reading once sat inside the branch
+            that fires only when the status table and HEAD disagree, so a census whose totals agree
+            printed neither a reading nor a refusal. That was repaired by hoisting the line out of
+            the branch. One tick later the second-source count was added back INSIDE that same
+            branch, reproducing the defect the sibling arm was written to prevent, in the script it
+            was written about. Measured: two censuses agree on totals, so the block was skipped and
+            neither printed the line, while the four that did print one were exactly the four that
+            diverge — which reads as a property of those censuses and is a property of the branch.
+            The cause was also misdiagnosed twice. The carried symbol said the status-table finder
+            does not match a three-column party-status-evidence header; run against the finder's own
+            predicate that header matches, so the finder was never why the census was silent, and
+            the sibling arm's own docstring already records that identical misdiagnosis from the
+            tick before. The repair removed rather than moved the gated emission, because the two
+            computations were the same classify call on the same table: two readings of one source
+            are not two sources, and keeping both would suggest corroboration the poll does not
+            have. The second-source framing moved down to the ungated line, and the no-vocabulary
+            path now states that the prefix terms are then the only reading and share one source,
+            since a refusal that does not say what remains leaves four agreeing zeros looking
+            corroborated. The assertion is structural rather than textual, because requiring the
+            string to appear somewhere is exactly what let the regression through: the previous arm
+            required the value to reach an echo and it did, an unreachable one. Two further reader
+            defects were found while writing it and are guarded here — the emission is located by
+            its text rather than by a line starting with the verb, since this poll wraps echoes
+            with a backslash so the reported string sits on the following line, and comment lines
+            are excluded so the arm cannot pass on a comment that merely mentions the phrase.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_second_source_is_not_gated_on_the_divergence_branch}
+}

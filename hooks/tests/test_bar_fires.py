@@ -3990,17 +3990,91 @@ def test_the_classifiers_count_is_printed_and_not_merely_computed() -> None:
     commands = "\n".join(
         ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
     )
-    # ⚑ POSITIVE CONTROL: the value must still be COMPUTED, or this arm passes because the
-    # classifier call was deleted rather than because its result reached the reader.
-    assert "_cls_named=$((" in commands, (
-        "the classifier's named count must still be computed; this arm would pass on its absence"
+    # ⚑ POSITIVE CONTROL: the classifier must still be CALLED, or this arm passes because the
+    # second reading was deleted rather than because its result reached the reader.
+    assert 'classify "$census"' in commands, (
+        "the document-relative classification must still be measured; this arm would pass on "
+        "its absence"
     )
-    # ⚑ AND IT MUST REACH AN `echo`. A variable assigned and never emitted is invisible to every
-    # reader of the poll, which is the only interface this script has.
+    # ⚑⚑ AND THE COUNT MUST REACH AN `echo`. A variable assigned and never emitted is invisible
+    # to every reader of the poll, which is the only interface this script has.
+    # ⚑⚑⚑ THIS ARM ONCE NAMED THE VARIABLE `_cls_named` AND THAT WAS THE WEAKER ASSERTION. The
+    # emission it guarded sat inside the divergence branch, so the arm passed while two censuses
+    # printed nothing — it required the value to reach AN echo, and an unreachable echo is one.
+    # The property wanted is that a SECOND SOURCE is reported, whatever variable carries it;
+    # reachability is asserted structurally by the sibling arm.
+    # ⚑ THE CONTINUATION IS PART OF THE STATEMENT. This poll wraps its `echo`s with `\`, so the
+    # reported text routinely sits on the line AFTER the verb — an arm keyed on a line STARTING
+    # with `echo` reads the script's line breaks rather than its statements, which is the same
+    # header-versus-body error this file records about table readers. Joined first.
+    joined = commands.replace("\\\n", " ")
     assert any(
-        "_cls_named" in ln and ln.lstrip().startswith("echo")
-        for ln in commands.splitlines()
+        "SECOND source" in ln and "echo" in ln for ln in joined.splitlines()
     ), (
-        "the classifier's count is computed and never printed — a reader sees only the four "
-        "hand-written prefix terms, which is the partition whose terms share a source"
+        "no echo reports a second source — a reader then sees only the four hand-written prefix "
+        "terms, which is the partition whose terms share one query"
+    )
+
+
+def test_the_second_source_is_not_gated_on_the_divergence_branch() -> None:
+    """⚑⚑⚑ THE SAME GATING DEFECT, IN THE FIX FOR THE SAME GATING DEFECT, ONE TICK LATER.
+
+    `test_the_vocabulary_reading_is_not_gated_on_the_divergence_branch` exists because the
+    document-relative reading sat inside the `n_head -ne roster` branch, so a census whose §S and
+    HEAD AGREE printed nothing — neither a reading nor a refusal. That was repaired by hoisting the
+    `§S vocabulary:` line out of the branch. **The `declared:` second source was then added INSIDE
+    that same branch**, reproducing the defect the sibling arm was written to prevent, in the
+    script it was written about.
+
+    ⚑⚑ MEASURED: `CENSUS-deps-build.md` (7 rostered, 7 legs) and `CENSUS-constitution.md` agree on
+    totals, so the block is skipped and neither prints a `declared:` line. The four censuses that
+    DO print one are exactly the four that diverge — which reads as a property of those censuses
+    and is a property of the branch.
+
+    ⚑⚑⚑ AND I NAMED THE WRONG CAUSE FOR THIS SILENCE FOR THE SECOND TIME. Last tick's symbol said
+    the §S table-finder does not match `party | status | evidence`. **Measured against the finder's
+    own predicate, it matches** — the finder was never why deps-build was silent, and the sibling
+    arm's docstring already records that exact misdiagnosis from the tick before. A recorded lesson
+    is not an applied one, measured here in the file that records it.
+
+    ⚑ SO THE ASSERTION IS STRUCTURAL, NOT TEXTUAL. Requiring the string to appear somewhere is what
+    let the regression through: the previous arm asserted the value reaches AN echo, and it did —
+    an unreachable one. This one requires the emitting line to sit outside the divergence branch,
+    which is the property that was actually wanted both times.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    lines = body.splitlines()
+    # ⚑ POSITIVE CONTROL: the branch this arm reasons about must still exist, or the assertion
+    # passes because the structure changed rather than because the line was hoisted.
+    branch = [i for i, ln in enumerate(lines) if '"${n_head:-0}" -ne "${roster:-0}"' in ln]
+    assert len(branch) == 1, (
+        f"the divergence branch must exist exactly once to anchor this arm; found {len(branch)}"
+    )
+    # ⚑ THE EMISSION IS FOUND BY ITS TEXT, NOT BY THE VERB'S LINE. This poll wraps `echo`s with
+    # `\`, so the reported string sits on the line after the verb; keying on a line that STARTS
+    # with `echo` would read the script's line breaks rather than its statements. The line index
+    # of the text is what the branch comparison needs, and it is bounded by the same statement.
+    # ⚑ COMMENTS EXCLUDED, or the arm passes on a comment that merely MENTIONS the phrase — the
+    # accreting-mentions defect this repository has measured in its own table reader.
+    emit = [
+        i
+        for i, ln in enumerate(lines)
+        if "SECOND source" in ln and not ln.lstrip().startswith("#")
+    ]
+    assert emit, "the second source must still be emitted; this arm would pass on its absence"
+    # ⚑ EVERY EMISSION OF IT MUST SIT BELOW THE BRANCH, not merely one of them. Asserting that
+    # SOME line is reachable is what let the regression through: the previous arm required the
+    # value to reach AN echo, and it did — an unreachable one.
+    assert min(emit) > branch[0], (
+        f"a second-source emission (line {min(emit) + 1}) sits inside the divergence branch "
+        f"(line {branch[0] + 1}) — a census whose §S and HEAD agree then prints neither a "
+        "reading nor a refusal, which is absence-versus-unavailable in the accounting itself"
+    )
+    # ⚑ AND THE REFUSAL PATH CARRIES IT TOO. A census with no vocabulary must say that the prefix
+    # terms are then the only reading; otherwise a reader takes four agreeing zeros as evidence.
+    assert any(
+        "ONLY reading" in ln and "share one source" in ln for ln in lines
+    ), (
+        "the no-vocabulary path must say the prefix terms are the only reading and share one "
+        "source — a refusal that does not say what remains leaves the zeros looking corroborated"
     )
