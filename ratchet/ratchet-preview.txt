@@ -1,7 +1,4 @@
 pyproject.toml:rule-codes-in-selectors
-src/mikemol/ratchet/census.py:docstring-missing-exception
-src/mikemol/ratchet/census.py:literal-membership
 src/mikemol/ratchet/census.py:suspicious-subprocess-import
-src/mikemol/ratchet/core.py:docstring-missing-exception
 src/mikemol/ratchet/state.py:noqa-comments
 tests/test_core.py:noqa-comments

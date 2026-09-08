@@ -246,6 +246,11 @@ def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
     ⚑ THE READBACK IS NOT A FORMALITY. A write that succeeds and a write that lands are
     different claims, and a baseline that did not land reads as ABSENT on the next run —
     which reads green while asserting nothing.
+
+    Raises:
+        OSError: when the keys read back differ from the keys written — the readback above,
+            surfaced rather than swallowed, because a baseline that did not land is silent.
+
     """
     if not write:
         return

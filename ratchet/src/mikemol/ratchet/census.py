@@ -108,7 +108,12 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     That is the fail-open shape this ecosystem keeps paying for, so it raises instead.
 
     Returns:
-        the ruff over one distribution and return its census.
+        every `file:rule` key ruff reported, as a frozenset — empty when the tree is clean.
+
+    Raises:
+        RuntimeError: when ruff exits with any status but 0 or 1, because a census read from a
+            checker that did not run is indistinguishable from a clean tree and would pay the
+            whole baseline down in one run.
 
     """
     # ⚑⚑ THE DECLARED BINARY WINS OVER A VENV PATH. This read `.venv/bin/ruff` unconditionally,
@@ -121,7 +126,12 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     if preview:
         argv.insert(3, "--preview")
     proc = subprocess.run(argv, capture_output=True, text=True, check=False, cwd=dist)
-    if proc.returncode not in (0, 1):
+    # ⚑ A SET LITERAL, ON THE CHECKER'S ADVICE, AND THE CONTROL FOR IT WAS MISSING. The arm that
+    # covered this line proved an unexpected status REFUSES and nothing proved 0 and 1 are
+    # ACCEPTED — a predicate refusing everything would have passed it, which is the broken-shut
+    # gate this repository names. The positive arm was written first, so this rewrite has a
+    # witness that it did not change which statuses the census admits.
+    if proc.returncode not in {0, 1}:
         msg = (f"ruff exited {proc.returncode} in {dist} — the census is not trustworthy; "
                f"refusing rather than reporting an empty one\n{proc.stderr}")
         raise RuntimeError(msg)

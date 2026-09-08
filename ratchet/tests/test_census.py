@@ -95,3 +95,35 @@ def test_a_synthesized_package_marker_is_not_censused(tmp_path: Path) -> None:
         ["pkg/__init__.py:1:1: some-rule: msg", "real/__init__.py:1:1: some-rule: msg"],
         tmp_path)
     assert keys == frozenset({"real/__init__.py:some-rule"})
+
+
+@pytest.mark.parametrize("rc", [0, 1])
+def test_a_successful_exit_is_accepted_not_merely_not_refused(rc: int, tmp_path: Path) -> None:
+    """Exit 0 and exit 1 both produce a census rather than a refusal.
+
+    ⚑⚑⚑ THE SIBLING ARM ABOVE IS ONE-ARMED AND WOULD PASS ON A PREDICATE THAT REFUSED
+    EVERYTHING. It proves an unexpected status refuses; nothing proved the expected ones are
+    ACCEPTED. A checker rewritten to refuse every exit status satisfies it completely, which is
+    the broken-shut gate this repository's own discipline names — a refusal arm without its
+    positive control measures that something happened, not that the right thing did.
+
+    ⚑⚑ AND BOTH VALUES ARE LOAD-BEARING FOR DIFFERENT REASONS. Exit 0 is a clean tree; exit 1 is
+    a tree WITH FINDINGS, which is the normal case for a census and the one whose loss would be
+    silent — refusing it would turn every real census into a refusal, and refusing 0 would turn a
+    clean distribution into one that cannot be measured at all.
+
+    ⚑ THIS ARM IS ALSO THE CONTROL FOR A REFACTOR. The membership test is being rewritten from a
+    tuple to a set literal on a linter's advice; a rewrite that changed WHICH statuses are accepted
+    would be invisible to the one-armed sibling and is caught here.
+    """
+    (tmp_path / ".venv" / "bin").mkdir(parents=True)
+    ruff = tmp_path / ".venv" / "bin" / "ruff"
+    ruff.write_text(f"#!/bin/sh\nexit {rc}\n", encoding="utf-8")
+    ruff.chmod(0o755)
+    # ⚑ NO RAISE. The assertion is that this RETURNS at all; an empty census from a checker that
+    # ran cleanly is a correct empty census, unlike one from a checker that never ran.
+    # ⚑⚑ A `frozenset`, AND I ASSERTED A LIST. The first cut compared against `[]` — the return
+    # type read from expectation rather than from the function. The behaviour was already correct;
+    # only my claim about it was wrong, which is the cheapest possible instance of characterising
+    # an instrument without reading it.
+    assert run_ruff(tmp_path, preview=True) == frozenset()

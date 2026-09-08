@@ -273,3 +273,26 @@
              would reach the same value by a route that loses the distinction the state enum
              exists to keep.}
 }
+
+@misc{ratchet-census-successful-exit-is-accepted,
+  section = {census},
+  title   = {A successful exit is accepted, not merely not refused},
+  note    = {The arm covering this predicate was one-armed. It planted a checker exiting with an
+            unexpected status and asserted that the census refuses, which proves a refusal happens
+            and proves nothing about what is accepted: a predicate rewritten to refuse every exit
+            status would satisfy it completely. That is the broken-shut gate this repository names
+            elsewhere, sitting inside the module whose whole subject is refusing a read it cannot
+            trust. Both accepted statuses are load-bearing and for different reasons. Exit zero is
+            a clean tree, and refusing it would make a clean distribution unmeasurable; exit one is
+            a tree WITH findings, which is the normal case for a census, and refusing that would
+            turn every real census into a refusal. The arm is also the control for a refactor taken
+            the same tick: the membership test was rewritten from a tuple to a set literal on the
+            checker's advice, and a rewrite that changed which statuses are admitted would have
+            been invisible to the sibling arm. Writing the positive control first is what made the
+            rewrite witnessed rather than merely plausible. One correction inside the work: the
+            first cut asserted the function returns an empty list, and it returns a frozenset — the
+            return type read from expectation rather than from the function, which is the cheapest
+            possible instance of characterising an instrument without reading it. The behaviour was
+            already correct; only the claim about it was wrong.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_successful_exit_is_accepted_not_merely_not_refused}
+}
