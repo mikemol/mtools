@@ -51,6 +51,15 @@ py_library(
         data = [
             "pyproject.toml",
             "requirements.txt",
+            # ⚑⚑⚑ AND THE RATCHET BASELINE, WHICH IS THE SAME LESSON A THIRD TIME IN THIS LIST.
+            # An arm asserting that every baseline key names a rule the checker still recognises
+            # read `ratchet-preview.txt` and found nothing in the sandbox: it is a data dependency
+            # of the `ratchet` target, not of this one. Its positive control refused to pass
+            # vacuously — a missing baseline reported as "no keys" would have read as "no bad
+            # keys" — so the arm failed honestly rather than going quiet.
+            # ⚑⚑ THE COMMENT BELOW ALREADY SAYS A RECORDED LESSON IS NOT AN APPLIED ONE, about
+            # `_GATE`, in this same data list. This is the next arm reading a path nothing staged.
+            "ratchet-preview.txt",
             # ⚑⚑⚑ THE GATE ITSELF IS DATA, AND ITS ABSENCE MADE 56 ARMS FAIL HERMETICALLY WHILE
             # THE PREFLIGHT READ THEM ALL GREEN. `_GATE` is read by 22 call sites here; in the
             # sandbox the path did not exist, so every one raised FileNotFoundError. The preflight

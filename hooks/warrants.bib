@@ -2493,3 +2493,55 @@
             entry's explanation.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_selector_and_the_comment_explaining_it_name_the_same_rule}
 }
+
+@misc{hooks-bar-fires-suppression-directives-work-under-the-gate,
+  section = {bar-fires},
+  title   = {Every suppression directive suppresses under the gate's own config},
+  note    = {Two preview rules chain over suppression comments. The first moves a noqa comment to a
+            bracketed ignore directive; the second then objects to the code inside those brackets
+            and wants the rule's name instead. Measured with a probe carrying an F-arm, so that a
+            clean result means suppression rather than a rule that never fired: a bare violation is
+            reported in both configurations; the bracketed code form suppresses in both; the
+            bracketed NAME form suppresses only under preview; and a bare ignore with no brackets
+            suppresses nothing at all in either. So satisfying the second rule before tree-wide
+            preview is armed produces directives the gate's own checker does not honour, and the
+            findings they were suppressing come back. This arm therefore checks the property rather
+            than a spelling: it collects every source carrying such a directive and requires the
+            gate's ruff, invoked without the preview flag exactly as the gate invokes it, to report
+            those files clean. It carries a positive control asserting that some file does carry a
+            directive, since otherwise a clean result would mean the arm found nothing to check.
+            Running the arm's own F-arm corrected the probe that motivated it: swapping one
+            directive to the name form fails with two findings rather than one — the un-suppressed
+            original, and a separate diagnostic naming the invalid code in the suppression. The
+            first draft of this reasoning called the failure silent, which was an overstatement
+            drawn from a probe that measured suppression alone; the harm is still the reappearing
+            finding, but a reader has one more signal than was claimed, and claiming less evidence
+            than exists is its own defect.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_suppression_directive_suppresses_under_the_gates_config}
+}
+
+@misc{hooks-bar-fires-no-baseline-key-names-a-vanished-rule,
+  section = {bar-fires},
+  title   = {No baseline key names a rule that no longer exists},
+  note    = {The suppression-directive paydown cleared one preview rule at two files and opened
+            another at the same two, because the rules chain: the first moves a noqa comment to a
+            bracketed ignore directive, and the second objects to the code inside those brackets
+            and wants the rule's name. The ratchet refused, correctly, since a new key is a new key
+            regardless of what it replaced, and paying the second was measurably harmful — the name
+            form is preview-only, so satisfying it would un-suppress sixteen real findings under the
+            configuration the gate actually runs. The operator ruled to substitute rather than grow:
+            fifteen keys before, fifteen after, verified from the diff as two insertions and two
+            deletions rather than asserted. But the baseline is a bare key list with nowhere to
+            record that, so a later reader meeting the new key cannot distinguish a rename recorded
+            from a defect banked, and this repository's standing rule is to pay rather than bank.
+            This arm checks the property that makes the substitution honest rather than the
+            substitution itself: every key in the baseline must name a rule the checker still
+            recognises. A key naming a vanished rule is debt nothing can ever pay, because the rule
+            is gone and the finding cannot recur, so the key sits forever reading as tolerated debt
+            — which is precisely the residue a rename leaves when the old key is kept alongside the
+            new instead of replaced. The rule names are resolved by asking the checker rather than
+            from a table here, since a table would go stale at exactly the rename this arm watches
+            for, and the arm asserts both that the baseline file exists and that it holds keys, so
+            an empty or missing baseline cannot pass as a clean one.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_baseline_key_names_a_rule_that_no_longer_exists}
+}

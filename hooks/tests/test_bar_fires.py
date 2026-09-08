@@ -114,7 +114,7 @@ def _ruff(rel: str, body: str, tmp: Path) -> str:
     target = tmp / rel
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(body, encoding="utf-8")
-    proc = subprocess.run(  # noqa: S603 — the checker is the subject of these cases
+    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of these cases
         [*_ruff_argv(), "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
          "--output-format", "concise", str(target)],
         capture_output=True, text=True, check=False, cwd=tmp)
@@ -237,7 +237,7 @@ def test_the_checker_that_runs_is_the_one_the_lock_pins() -> None:
     """
     pinned = next(ln for ln in (_DIST / "requirements.txt").read_text(encoding="utf-8").splitlines()
                   if ln.startswith("ruff=="))
-    proc = subprocess.run(  # noqa: S603 — the checker is the subject of this case
+    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
         [*_ruff_argv(), "--version"], capture_output=True, text=True, check=True)
     assert proc.stdout.split()[1] == pinned.split("==")[1].strip()
 
@@ -263,7 +263,7 @@ def test_an_unknown_pytest_marker_is_an_error_rather_than_a_skip(tree: Path) -> 
     probe.write_text(
         "import pytest\n\n\n@pytest.mark.nonexistent_marker_probe\ndef test_x() -> None:\n"
         "    assert True\n", encoding="utf-8")
-    proc = subprocess.run(  # noqa: S603 — pytest's own configuration is the subject
+    proc = subprocess.run(  # ruff: ignore[S603] — pytest's own configuration is the subject
         [sys.executable, "-m", "pytest", "--collect-only", "-q",
          "-c", str(_DIST / "pyproject.toml"), str(probe)],
         capture_output=True, text=True, check=False, cwd=_DIST)
@@ -288,7 +288,7 @@ def test_a_declared_pytest_marker_collects_cleanly(tree: Path) -> None:
     probe.write_text(
         "import pytest\n\n\n@pytest.mark.needs_shellcheck\ndef test_x() -> None:\n"
         "    assert True\n", encoding="utf-8")
-    proc = subprocess.run(  # noqa: S603 — pytest's own configuration is the subject
+    proc = subprocess.run(  # ruff: ignore[S603] — pytest's own configuration is the subject
         [sys.executable, "-m", "pytest", "--collect-only", "-q",
          "-c", str(_DIST / "pyproject.toml"), str(probe)],
         capture_output=True, text=True, check=False, cwd=_DIST)
@@ -462,7 +462,7 @@ def _citations(message: str, rules: str, tree: Path) -> int:
     doc = tree / "rules.md"
     doc.write_text(rules, encoding="utf-8")
     gate = _DIST.parent / "rule_citations.sh"
-    return subprocess.run(  # noqa: S603
+    return subprocess.run(  # ruff: ignore[S603]
         [str(gate), str(msg), str(doc)],
         capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
 
@@ -517,7 +517,7 @@ def _orphans(tree: Path, scripts: dict[str, str], sites: dict[str, str]) -> int:
     if not (tree / "BUILD.bazel").exists():
         (tree / "BUILD.bazel").write_text("", encoding="utf-8")
     gate = _DIST.parent / "orphan_check.sh"
-    return subprocess.run(  # noqa: S603
+    return subprocess.run(  # ruff: ignore[S603]
         [str(gate), str(tree)],
         capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
 
@@ -596,7 +596,7 @@ def _freshness(tree: Path, rules: str, *, readable: bool) -> int:
     probe.chmod(0o755)
     doc.chmod(0o644 if readable else 0o000)
     try:
-        return subprocess.run(  # noqa: S603
+        return subprocess.run(  # ruff: ignore[S603]
             [str(probe)], capture_output=True, check=False,
             cwd=str(_DIST.parent)).returncode
     finally:
@@ -642,7 +642,7 @@ def _witness_args(*argv: str) -> int:
     which the sandbox has no business running — so what a test can assert is what the script
     refuses BEFORE its first side effect: a missing argument, and a probe kind no checker seeks.
     """
-    return subprocess.run(  # noqa: S603
+    return subprocess.run(  # ruff: ignore[S603]
         [str(_DIST.parent / "domain_witness.sh"), *argv],
         capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
 
@@ -730,7 +730,7 @@ def test_the_witness_refuses_a_victim_carrying_probe_residue(tmp_path: Path) -> 
     """
     victim = tmp_path / "residue.py"
     victim.write_text("x = 1\n# transient domain probe 123\n", encoding="utf-8")
-    out = subprocess.run(  # noqa: S603
+    out = subprocess.run(  # ruff: ignore[S603]
         [str(_DIST.parent / "domain_witness.sh"), "ratchet", "//ratchet:mypy",
          str(victim), "mypy"],
         capture_output=True, check=False, text=True, cwd=str(_DIST.parent))
@@ -774,7 +774,7 @@ def test_the_gate_reads_the_index_not_the_working_tree(tmp_path: Path) -> None:
     # silencing.
     git = shutil.which("git")
     assert git, "git is not on PATH — this test cannot measure what it claims"
-    subprocess.run(  # noqa: S603
+    subprocess.run(  # ruff: ignore[S603]
         [git, "checkout-index", "--all", f"--prefix={staged}/"],
         check=True, cwd=str(root), capture_output=True)
     victim = root / "ratchet" / "warrants.bib"
@@ -828,7 +828,7 @@ def test_the_snapshot_survives_a_mid_write_edit_to_the_live_file(tmp_path: Path)
     live.write_text(live.read_text(encoding="utf-8") + "\nsyntax error (\n", encoding="utf-8")
 
     def parses(path: Path) -> bool:
-        return subprocess.run(  # noqa: S603
+        return subprocess.run(  # ruff: ignore[S603]
             ["/usr/bin/env", "bash", "-n", str(path)],
             capture_output=True, check=False).returncode == 0
 
@@ -1009,7 +1009,12 @@ _MAX_UNRESOLVED_WAS = 23
 # has no name to resolve — the population is chosen at runtime rather than written down, which is
 # the property that makes the arm honest and the sweep blind. Keying it to three literal paths
 # would resolve the sweep and re-introduce the hand-written population the arm refuses.
-_MAX_UNRESOLVED = 20
+# ⚑ 20 -> 21, THE THIRD RISE, AND THE THREE SHARE ONE CAUSE: each arm's population is chosen at
+# RUNTIME — a glob over hosted censuses, a loop over three distributions, an rglob for sources
+# carrying a directive. The resolver needs a NAME, and a runtime predicate has none. That is the
+# property making these arms honest, so the ceiling rises rather than the arms being rewritten to
+# name paths they would then have to keep in sync.
+_MAX_UNRESOLVED = 21
 # ⚑⚑ THE SHARE OF ARMS THE SWEEP ACTUALLY CHECKS, as a percentage floor. MEASURED at the tick
 # it shipped: 48 of 94 arms, 51%. The remainder is not debt — 21 arms run subprocesses and
 # have no haystack to be absent from, and 8 assert by regex or count, which a string-membership
@@ -3974,7 +3979,7 @@ def test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses() 
         # running an installed binary. This file is not one of them: eleven of its calls carry a
         # line directive and the rest are ordinary code, so a whole-file entry would clear eleven
         # suppressions the ratchet is currently holding as keys.
-        proc = subprocess.run(  # noqa: S603 — the reader is the subject of this case
+        proc = subprocess.run(  # ruff: ignore[S603] — the reader is the subject of this case
             [str(_CITATION_GATE_READER), "tables", str(path)],
             capture_output=True,
             text=True,
@@ -4201,7 +4206,7 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         # measured that `classify` walks EVERY table, so an unscoped read counts revision-log and
         # roster rows as residue — 25 of 33 on one census, which reads alarming and is not. The
         # status table is found the way the poll finds it: a header naming a party and a state.
-        listing = subprocess.run(  # noqa: S603 — the reader is the subject of this case
+        listing = subprocess.run(  # ruff: ignore[S603] — the reader is the subject of this case
             [str(_CITATION_GATE_READER), "tables", str(path)],
             capture_output=True, text=True, check=False,
         )
@@ -4218,7 +4223,7 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         ]
         if not status:
             continue
-        proc = subprocess.run(  # noqa: S603 — the reader is the subject of this case
+        proc = subprocess.run(  # ruff: ignore[S603] — the reader is the subject of this case
             [str(_CITATION_GATE_READER), "classify", str(path), "--table", status[-1]],
             capture_output=True,
             text=True,
@@ -4324,7 +4329,7 @@ def _rule_name(code: str) -> str | None:
 
     """
     argv = _ruff_argv()
-    proc = subprocess.run(  # noqa: S603 — the checker is the subject of this case
+    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
         [*argv, "rule", code, "--output-format", "json"],
         capture_output=True, text=True, check=False,
     )
@@ -4415,4 +4420,125 @@ def test_a_selector_and_the_comment_explaining_it_name_the_same_rule() -> None:
     assert not disagreeing, (
         f"{len(disagreeing)} selector(s) are explained by prose naming a rule the selector does "
         "not:\n  " + "\n  ".join(disagreeing)
+    )
+
+
+def test_every_suppression_directive_suppresses_under_the_gates_config() -> None:
+    """⚑⚑⚑ A DIRECTIVE THE GATE'S CHECKER DOES NOT HONOUR FAILS SILENTLY, WHICH IS THE WORSE HALF.
+
+    Two preview rules chain over suppression comments: the first moves `# noqa: CODE` to `# ruff:
+    ignore[CODE]`, and the second then objects to that very code and wants the rule's NAME.
+    Satisfying the second before tree-wide preview is armed produces directives the gate's ruff
+    **silently ignores** — measured, and worse than the selector rename that started this: that one
+    exited 2 and stopped the build, while this one merely stops suppressing and lets the
+    suppressed findings reappear with nothing saying a directive died.
+
+    ⚑⚑ MEASURED WITH AN F-ARM, so a clean result means suppression rather than a rule that never
+    fired. A bare violation is REPORTED in both configurations; then:
+
+        # ruff: ignore[S101]      no-preview rc=0   --preview rc=0
+        # ruff: ignore[assert]    no-preview rc=1   --preview rc=0
+        # ruff: ignore  (bare)    no-preview rc=1   --preview rc=1
+
+    ⚑ SO THIS ARM CHECKS THE PROPERTY, NOT THE SPELLING. It takes every suppression directive in
+    this distribution's sources and requires the gate's own ruff — no `--preview`, the flag the
+    gate actually passes — to report the file clean. A directive form that stops working is caught
+    here rather than by 16 findings reappearing three ticks later.
+
+    ⚑⚑ AND RUNNING THE ARM'S OWN F-ARM CORRECTED THE PROBE THAT MOTIVATED IT. Swapping one
+    directive to the name form makes this fail with TWO findings, not one: the un-suppressed
+    `S603`, and `RUF102 Invalid rule code in suppression` naming the directive directly. So the
+    failure is **not fully silent** — the probe measured suppression alone and missed that
+    non-preview ruff does complain about the form. The harm is still the reappearing finding; the
+    correction is that a reader has one more signal than I claimed, and claiming less than is
+    there is its own defect.
+    """
+    argv = _ruff_argv()
+    sources = sorted(
+        p
+        for p in (_DIST / "tests").rglob("*.py")
+        if "ruff: ignore" in p.read_text(encoding="utf-8")
+    )
+    # ⚑ POSITIVE CONTROL: some file must carry a directive, or a clean result means this arm found
+    # nothing to check rather than that every directive works.
+    assert sources, (
+        "no source carries a `ruff: ignore` directive — this arm would pass vacuously"
+    )
+    # ⚑⚑⚑ THE FLAGS ARE THE GATE'S AND THE POPULATION IS THIS REPOSITORY'S, AND IT TOOK TWO
+    # HERMETIC FAILURES TO SEPARATE THOSE. First cut: absolute paths plus `--config`, which made
+    # `per-file-ignores` patterns like `tests/*` resolve against the wrong root — 296 `S101`
+    # findings in the sandbox, zero locally. Second cut: `ruff check .` from the distribution
+    # directory, copying the gate exactly — which in the sandbox sweeps `__init__.py` files that
+    # EXIST ONLY IN THE RUNFILES TREE, generated by the build to make the package importable and
+    # absent from the repository.
+    # ⚑⚑ SO "RUN IT AS THE GATE RUNS IT" IS TWO CLAIMS, NOT ONE. The gate's FLAGS are what this arm
+    # must share — no `--preview`, since that is the whole question. The gate's WORKING SET is a
+    # staged checkout that does not exist here, and copying its `.` imports the sandbox's own
+    # staging artifacts into the population. Naming the files keeps the population honest;
+    # `--config` keeps the per-file patterns resolving; neither is a deviation from the gate on the
+    # axis this arm measures.
+    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
+        [*argv, "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
+         "--output-format", "concise", *[str(p) for p in sources]],
+        capture_output=True, text=True, check=False, cwd=str(_DIST),
+    )
+    assert proc.returncode == 0, (
+        f"{len(sources)} file(s) carry `ruff: ignore` directives and the gate's ruff — WITHOUT "
+        f"--preview, as the gate runs it — reports findings:\n{proc.stdout}\n"
+        "a directive form the gate cannot honour lets the finding it suppressed reappear"
+    )
+
+
+def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
+    """⚑⚑⚑ A SUBSTITUTED KEY AND A BANKED ONE ARE BYTE-IDENTICAL IN A BARE KEY LIST.
+
+    The suppression-directive paydown cleared `noqa-comments` at two files and opened
+    `rule-codes-in-suppression-comments` at the same two, because the two preview rules chain: the
+    first moves a noqa comment to a bracketed ignore directive, the second objects to the code
+    inside those brackets. The ratchet refused, correctly — a new key is a new key regardless of
+    what it replaced — and the operator ruled to SUBSTITUTE rather than grow: fifteen keys before,
+    fifteen after, measured from the diff as two insertions and two deletions.
+
+    ⚑⚑ BUT THE BASELINE IS A BARE LIST WITH NO PLACE TO SAY THAT. A later reader meeting
+    `rule-codes-in-suppression-comments` cannot tell a rename recorded from a defect banked, and
+    this repository's standing rule is pay-never-bank. The distinction has to live somewhere the
+    reader will meet it, and a comment in a file the ratchet parses is not that place.
+
+    ⚑ SO THE ARM CHECKS THE PROPERTY THAT MAKES THE SUBSTITUTION HONEST: every key in the baseline
+    names a rule the checker still recognises. A key naming a rule that no longer exists is debt
+    nothing can ever pay — the rule is gone, so the finding cannot recur, so the key sits forever
+    reading as tolerated debt. That is the shape a rename leaves behind when the OLD key is kept
+    instead of replaced, and it is exactly what this substitution avoided.
+    """
+    # ⚑ READ INLINE RATHER THAN THROUGH A LOCAL, so the vacuity sweep's bounded evaluator can
+    # resolve it. Assigning `baseline = _DIST / "…"` first makes the read's receiver a NAME the
+    # sweep's target map does not carry, and the arm joins the unresolved list — a fourth ceiling
+    # rise for a file that is perfectly resolvable in the `_CONST / "literal"` form the evaluator
+    # already handles. The three earlier rises were runtime populations and genuinely unresolvable;
+    # this one would have been my own spelling.
+    assert (_DIST / "ratchet-preview.txt").is_file(), (
+        f"no baseline at {_DIST / 'ratchet-preview.txt'} — this arm would pass vacuously"
+    )
+    keys = [
+        ln.strip()
+        for ln in (_DIST / "ratchet-preview.txt").read_text(encoding="utf-8").splitlines()
+        if ln.strip()
+    ]
+    # ⚑ POSITIVE CONTROL: an empty baseline would satisfy every assertion below.
+    assert keys, "the baseline holds no keys — this arm would pass vacuously"
+    unknown: list[str] = []
+    for key in keys:
+        _, _, rule = key.rpartition(":")
+        # ⚑ ASKED OF THE CHECKER, as the sibling arm does. `ruff rule` is the authority on whether
+        # a name resolves; a list here would go stale at the rename this arm watches for.
+        proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
+            [*_ruff_argv(), "rule", rule, "--output-format", "json"],
+            capture_output=True, text=True, check=False,
+        )
+        if proc.returncode != 0:
+            unknown.append(key)
+    assert not unknown, (
+        f"{len(unknown)} of {len(keys)} baseline key(s) name a rule this checker does not "
+        "recognise — a key for a rule that no longer exists is debt nothing can ever pay, and it "
+        f"reads as tolerated forever:\n  " + "\n  ".join(unknown)
     )

@@ -1102,9 +1102,28 @@ echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt
 # would clean it.
 echo "    ⚑ BLOCKED on a 107-finding paydown: hooks 41 + mdstruct 55 + ratchet 11."
 echo "      Renaming first is unshippable — a name selector needs --preview to LOAD."
-echo "      First step measured: RUF105 wants \`ruff: ignore\` for every \`noqa\`, 16 in hooks,"
-echo "      0 auto-fixable. Whether \`ruff: ignore\` is itself preview-only is UNMEASURED, and"
-echo "      if it is, swapping recreates the same unloadable-config trap."
+# ⚑⚑⚑ THE SUPPRESSION RULES CHAIN, AND THE SECOND LINK IS PREVIEW-ONLY. Measured on a probe with
+# an F-arm (a bare violation is REPORTED in both configurations, so a rc=0 below means suppression
+# rather than a rule that never ran):
+#
+#     # noqa: S101              no-preview rc=0   --preview rc=0
+#     # ruff: ignore[S101]      no-preview rc=0   --preview rc=0    <- both, safe today
+#     # ruff: ignore[assert]    no-preview rc=1   --preview rc=0    <- PREVIEW-ONLY
+#     # ruff: ignore  (bare)    no-preview rc=1   --preview rc=1    <- suppresses NOTHING
+#
+# ⚑⚑ RUF105 moves `noqa:` to `ruff: ignore[CODE]`; RUF106 then objects to that very CODE and wants
+# the NAME. Satisfying RUF106 before preview is armed produces directives the gate's ruff does not
+# honour, and the suppressed findings reappear.
+# ⚑ AND THE ARM'S OWN F-ARM CORRECTED THIS ENTRY. I first wrote that the failure is SILENT. It is
+# not: swapping one directive to the name form yields TWO findings — the un-suppressed one, and
+# `RUF102 Invalid rule code in suppression` naming the directive. The probe measured suppression
+# alone and missed the second signal. The harm is the reappearing finding; the overstatement was
+# mine, and claiming less evidence than exists is its own defect.
+# ⚑ SO THE CODE FORM IS THE RESTING PLACE. 16 directives swapped in hooks and verified: `ruff
+# check` (no preview) still `All checks passed!`, suite 337 pass. RUF105 cleared, RUF106 opened at
+# the same 16 sites, total unmoved at 41 — a rule renamed, not a defect paid.
+echo "      RUF105 -> RUF106 measured: the chain's second link needs --preview to SUPPRESS,"
+echo "      and fails SILENTLY without it. Code form holds until preview is armed."
 echo "  cassian's hook components  raised by cassian  ANSWERED 2026-09-07: mtools asks for a diff"
 echo "  gate cost                  raised by mtools   ⚑ WITHDRAWN — self-raised, no consequence"
 echo "    614163d measured that no stable figure exists; carrying it as blocked was my error."

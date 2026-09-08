@@ -19,7 +19,7 @@ from pathlib import Path
 
 from mikemol.hooks import checkers
 
-_TMP = Path("/tmp/tmpab12cd.py")  # noqa: S108 — a fixed literal, never created or opened
+_TMP = Path("/tmp/tmpab12cd.py")  # ruff: ignore[S108] — a fixed literal, never created or opened
 _REAL = "/home/someone/project/src/thing.py"
 _VENV = Path("/home/someone/project/.venv/bin/python3")
 _CFG = Path("/home/someone/project/pyproject.toml")
