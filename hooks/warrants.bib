@@ -2265,3 +2265,29 @@
             shape cannot report zero failures vacuously.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_warrant_check_resolves_to_a_test_that_exists}
 }
+
+@misc{hooks-bar-fires-census-this-repo-hosts-declares-vocabulary,
+  section = {bar-fires},
+  title   = {A census this repo HOSTS declares the vocabulary its own §S uses},
+  note    = {The poll read `8 filed + 0 pending` over a CENSUS-vfs §S in which three parties had
+            filed and five had not. The count was arithmetically perfect over the wrong population:
+            every row carried the mark `filed elsewhere`, but five of them read `filed elsewhere
+            when it files`, which names a DESTINATION rather than a state — where a leg would go,
+            not that one exists. The distinction had already been argued in that section's own
+            prose two paragraphs above the table, and the table then fused both halves into the one
+            phrase the reader matches, so a stated distinction that the vocabulary does not encode
+            had not in fact been made. A `state | means` table is what makes such a split
+            machine-readable, and this census published none, which the poll reported honestly as a
+            fact about its reader while the defect was in the document and only its host could
+            repair it. The arm is keyed on the predicate rather than on a filename: the population
+            is every census whose roster marks this repo as hosting the file, so a census hosted
+            later is covered on the day it is created and the population cannot itself become the
+            mis-named one. It carries two controls. The population is asserted non-empty, since the
+            marking phrase is one a future edit could reword and an empty population would pass the
+            arm vacuously. The reader's exit status is asserted zero per file, because a reader
+            that did not run cannot report an absence. On its first run it measured one of two
+            hosted censuses undeclared, the second supplying a positive control from the same
+            reader over the same corpus, and it also surfaced that the row describing the host was
+            itself stale — it read `when it files` two commits after the host had filed.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses}
+}

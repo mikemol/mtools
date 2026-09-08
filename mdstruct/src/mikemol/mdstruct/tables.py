@@ -43,7 +43,24 @@ _CELL_SEP = " \x00 "
 
 
 class Table(NamedTuple):
-    """One table's shape: its position in the document, its size, and its header cells."""
+    """One table's shape: its position in the document, its size, and its header cells.
+
+    ⚑⚑⚑ `cols` IS THE HEADER'S WIDTH, AND NO BODY ROW CAN BE MEASURED AGAINST IT HERE. A peer's
+    line-based arm reported seven ragged rows in a census this reader called `8 row(s) x 3
+    col(s)`, clean; the peer was right, and the rows carried two cells under a three-column
+    header. The obvious repair — count each row's cells against the header — was BUILT AND
+    MEASURED AND IT CANNOT WORK: **pandoc pads a short row before the AST exists.**
+
+        source `| 1 | 2 |` under a 3-column header  ->  AST row: ['1', '2', '']
+
+    ⚑⚑ SO THE ABSENCE IS DESTROYED BY THE PARSER, and every AST-based reader is blind to it by
+    construction rather than by omission — this one and any successor built the same way. That is
+    this module's own stated split arriving as a hard limit: **raggedness is a SYNTAX fact about
+    the raw lines**, and the syntax half is the only place it can be read. A structural verdict
+    beat a textual one here in the structural reader's favour, exactly where it had nothing to
+    say, which is the worse of the two failures because a structural verdict is the one a reader
+    trusts.
+    """
 
     position: int
     rows: int

@@ -655,3 +655,32 @@
             document's declarations.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_document_declaring_no_vocabulary_yields_none},
 }
+
+@misc{mdstruct-tables-short-row-padded-by-the-parser,
+  section = {tables},
+  title   = {A short row is padded by the parser, so this reader cannot see raggedness},
+  note    = {A peer's line-based arm reported seven ragged rows in a census this reader called
+            eight rows by three columns, clean. The peer was right: under a `surveyor | prefix |
+            file` header seven rows carried two cells, a filing status pasted into the prefix slot
+            and the remaining columns simply absent. This reader certified a table it had never
+            measured, since the column count came entirely from the header and no body row was
+            ever compared against it — and a structural verdict beating a textual one in the
+            structural reader's favour, exactly where it has nothing to say, is the worse of the
+            two failures, because a structural verdict is the one a reader trusts. The obvious
+            repair was built and measured and it cannot work: counting each row's cells against
+            the header reported zero on a visibly two-cell row, because pandoc pads the row before
+            the AST exists, parsing a two-cell row under three columns as two values and an empty
+            string. The absence is destroyed upstream of every reader in this module, so the
+            blindness is by construction rather than by omission, and it belongs to this reader
+            and to any successor built on the same parse. The module's own docstring already
+            located the fact: table syntax is a property of the raw lines, not of the parsed
+            document, so the syntax half is the only place raggedness can be read and the peer's
+            line-based arm is not merely another way to find it but the only way. The arm
+            therefore asserts a limit rather than a capability, and it asserts the pad positively
+            — that the parser presents three cells with the last one empty — because an arm
+            asserting only that the reader misses raggedness would also pass on a reader that
+            dropped the row entirely, which is a different defect wearing the same silence. If
+            pandoc ever stops padding, the arm fails and says that the recorded limit should be
+            re-measured rather than trusted.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_short_row_is_padded_by_the_parser_so_this_reader_cannot_see_it}
+}

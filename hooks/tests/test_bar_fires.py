@@ -994,7 +994,16 @@ _MIN_SWEPT = 50
 # ever holds reports the same number every run and stops being read; one that must fall is a
 # paydown with a witness.
 _MAX_UNRESOLVED_WAS = 23
-_MAX_UNRESOLVED = 18
+# ⚑⚑⚑ 18 -> 19, AND A RISE IS THE ONE MOVE THIS CEILING EXISTS TO MAKE VISIBLE. The arm added
+# this tick reads its population by GLOB — every census whose §R marks this repo as its host —
+# so there is no named constant to resolve and no single haystack its literals could live in.
+# That is the same reason the subprocess probes sit outside the sweep, arriving by a different
+# route: the file is chosen by a predicate at runtime rather than written down.
+# ⚑⚑ RAISING IT IS THE HONEST MOVE AND KEYING THE ARM TO A FIXED PATH WOULD NOT BE. A named
+# constant would have resolved the sweep and re-introduced the hand-written population the arm
+# was built to refuse — buying coverage of the arm by breaking what the arm measures. The ceiling
+# says "reader, you are told"; it does not say "do not add one".
+_MAX_UNRESOLVED = 19
 # ⚑⚑ THE SHARE OF ARMS THE SWEEP ACTUALLY CHECKS, as a percentage floor. MEASURED at the tick
 # it shipped: 48 of 94 arms, 51%. The remainder is not debt — 21 arms run subprocesses and
 # have no haystack to be absent from, and 8 assert by regex or count, which a string-membership
@@ -3887,4 +3896,65 @@ def test_every_warrant_check_resolves_to_a_test_that_exists() -> None:
     assert not unresolved, (
         "warrant check(s) address a test that does not exist — the 1:1 count cannot see this:\n  "
         + "\n  ".join(unresolved)
+    )
+
+
+@_needs_reader
+def test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses() -> None:
+    """⚑⚑⚑ THE POLL READ `8 filed + 0 pending` OVER A TABLE WHERE ONLY TWO PARTIES HAD FILED.
+
+    `CENSUS-vfs.md` §S marked all eight rows `filed elsewhere`, the poll counted eight marks, and
+    the count was arithmetically perfect over the WRONG POPULATION: five of those rows read *filed
+    elsewhere when it files — no leg yet*, which names a DESTINATION, not a state. The mark says
+    where a leg would go; it does not say one exists. §S's own prose argued exactly this
+    distinction two paragraphs above the table — *the destination and the state, said separately* —
+    and the table then encoded both into one phrase the reader-relative probe matches.
+
+    ⚑⚑ A `state | means` TABLE IS WHAT MAKES THE DISTINCTION MACHINE-READABLE, and this census
+    published none. The poll reports that honestly (*this census publishes no state|means table*),
+    which is a statement about the READER; the defect is in the DOCUMENT, and only the host can fix
+    it. mtools hosts this file, so this is mtools' arm and not a peer's.
+
+    ⚑ KEYED ON THE PREDICATE, NOT ON A FILENAME. The population is every census whose §R marks
+    mtools as `hosts this file` — so a census this repo hosts LATER is covered on the day it is
+    created, and a hardcoded name would be the mis-named population one layer up.
+    """
+    hosted = [
+        path
+        for path in sorted((_DIST.parent / "findings").glob("CENSUS-*.md"))
+        if "hosts this file" in path.read_text(encoding="utf-8")
+    ]
+    # ⚑ POSITIVE CONTROL: an empty population would pass this arm vacuously, and the predicate
+    # is a phrase a future edit could reword. Assert the population is non-empty and name it.
+    assert hosted, (
+        "no census in findings/ marks a host — either mtools hosts none (then this arm is "
+        "vacuous and should be deleted) or the `hosts this file` phrase was reworded"
+    )
+    undeclared = []
+    for path in hosted:
+        # ⚑ THE READER IS THE SAME BINARY THE POLL RUNS, invoked the way the poll invokes it.
+        # `hooks` cannot import `mdstruct` — they are separate distributions, and that separation
+        # is what makes the subprocess the honest read rather than a workaround.
+        # ⚑ `noqa`, NOT A CONFIG ENTRY, AND THAT IS THIS FILE'S CONVENTION RATHER THAN A LAPSE.
+        # Three sibling modules declare `S603` in `per-file-ignores` because their whole subject is
+        # running an installed binary. This file is not one of them: eleven of its calls carry a
+        # line directive and the rest are ordinary code, so a whole-file entry would clear eleven
+        # suppressions the ratchet is currently holding as keys.
+        proc = subprocess.run(  # noqa: S603 — the reader is the subject of this case
+            [str(_CITATION_GATE_READER), "tables", str(path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert proc.returncode == 0, (
+            f"the reader failed on {path.name} (rc={proc.returncode}) — a reader that did not "
+            f"run cannot report an absence:\n{proc.stderr}"
+        )
+        if not pyre.search(r"state \| means", proc.stdout):
+            undeclared.append(path.name)
+    assert not undeclared, (
+        f"{len(undeclared)} of {len(hosted)} census(es) this repo HOSTS publish no `state | means` "
+        "table, so their §S cannot be read against their own declarations and a mark that names a "
+        "destination is indistinguishable from one that names a filed leg:\n  "
+        + "\n  ".join(undeclared)
     )

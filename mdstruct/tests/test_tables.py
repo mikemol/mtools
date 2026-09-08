@@ -312,3 +312,61 @@ def test_a_document_declaring_no_vocabulary_yields_none(document: Path) -> None:
     against states its author never chose.
     """
     assert tables.vocabulary(document) == ()
+
+
+_RAGGED_FIXTURE = """# Doc
+
+| surveyor | prefix | file |
+|---|---|---|
+| `mtools` | **filed** — `5c09536` |
+| **apex** | `AX-` | `findings/apex.md` |
+"""
+
+# The `surveyor | prefix | file` header the fixture declares. Its first body row carries TWO
+# cells; the apex row carries three.
+_HEADER_COLS = 3
+
+# The cell the PARSER supplies for the column the source row omitted.
+_PAD = ""
+
+
+def test_a_short_row_is_padded_by_the_parser_so_this_reader_cannot_see_it(doc: Path) -> None:
+    """⚑⚑⚑ THIS ARM ASSERTS A LIMIT, NOT A CAPABILITY, AND THE LIMIT WAS MEASURED NOT ASSUMED.
+
+    A peer's line-based arm reported seven ragged rows in a census this reader called `8 row(s) x
+    3 col(s)`, clean. The peer was right: under a `surveyor | prefix | file` header, seven rows
+    carried two cells — a filing status pasted into the prefix slot, the remaining columns absent.
+    **This reader certified a table it had not measured**, and a structural verdict beat a textual
+    one in the structural reader's favour exactly where it had nothing to say.
+
+    ⚑⚑ THE OBVIOUS REPAIR WAS BUILT AND IT CANNOT WORK. Counting each row's cells against the
+    header reported `short=0` on a visibly two-cell row, because **pandoc pads the row before the
+    AST exists**: the parse of `| 1 | 2 |` under three columns is `['1', '2', '']`. The absence is
+    destroyed upstream of every reader in this module, so the blindness is BY CONSTRUCTION rather
+    than by omission — this reader and any successor built on the same parse.
+
+    ⚑ SO THE PEER'S LINE-BASED ARM IS NOT MERELY ANOTHER WAY TO FIND THIS, IT IS THE ONLY WAY, and
+    this module's own docstring already said where the fact lives: table SYNTAX is a fact about
+    the raw lines, not about the parsed document. The arm exists so that a later reader who
+    proposes `cols` vs row-width — the natural proposal, made here once already — meets the
+    measurement instead of rebuilding it.
+    """
+    doc.write_text(_RAGGED_FIXTURE, encoding="utf-8")
+    found = tables.tables(doc)
+    assert len(found) == 1, f"fixture must parse as one table, read {len(found)}"
+    table = found[0]
+    assert table.cols == _HEADER_COLS, (
+        f"the header declares {_HEADER_COLS} columns; the reader says {table.cols}"
+    )
+    short_row = next(r for r in tables.table_rows(doc) if "mtools" in r.cells[0])
+    # ⚑ THE PAD IS THE POSITIVE EVIDENCE. Asserting only that the reader misses raggedness would
+    # pass on a reader that dropped the row entirely — a different defect with the same silence.
+    assert len(short_row.cells) == _HEADER_COLS, (
+        f"the source row carries 2 cells and the parser must present {_HEADER_COLS}; "
+        f"read {len(short_row.cells)} — if this fails, pandoc stopped padding and the syntax-half "
+        "limit recorded in this arm should be re-measured rather than trusted"
+    )
+    assert short_row.cells[-1] == _PAD, (
+        f"the padded column must be empty, read {short_row.cells[-1]!r} — an absent cell is being "
+        "presented as a present blank one, which is why it reads as a value"
+    )

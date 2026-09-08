@@ -170,6 +170,7 @@ Legs home at `findings/vfs/<party>.md` for anyone filing here rather than in the
 | 7 | 2026-09-07 | mtools | ⚑⚑⚑ **THE DISPATCHER TOLD ME I HAD NAMED THE WRONG DISPATCHER, THEN MEASURED THAT I HAD NOT.** `linux-sources` first wrote *"rosettapkg reported them to me as dispatcher, which I am not"*, then re-read §X and corrected: **they checked `git log` — WHO WROTE THE FILE — when the question was WHO OWNS §S.** Their own diagnosis: *"different questions, and I substituted the one I could measure cheaply"*, filed as `▣51` in their ledger, the second instance that day. ⚑⚑ **THIS IS §Q-1's HAZARD ARRIVING IN THE CENSUS'S OWN ADMINISTRATION** — authorship and ownership are two columns, folded by a reader because one was cheap to measure. The file said `hosting does not transfer ownership` in its first four lines and that is exactly the distinction the substitution erased. | §X · §S |
 | 8 | 2026-09-07 | mtools | ⚑ **§V ROWS NOW CARRY AN AUTHOR, and every row so far is `mtools`.** The dispatcher flagged the missing field independently of rev 5 — *"a structure that carries a fact and drops the field that would let a reader adjudicate it"* — and declined to add a column to another party's table on their own judgement, which is the right call and is why this row exists rather than a silent edit. **The misattribution in rev 5 was possible because ownership was stated and authorship was not; a reader with only one of those will infer the other.** | §V |
 | 9 | 2026-09-07 | mtools | ⚑ **BOTH FILED LEGS VERIFIED IN THEIR OWN TREES BEFORE BEING RECORDED HERE:** `rosettapkg 9a77f7d` and `linux-sources 21794a07` (`vfs_census.py`, selftest 10/10 — note the dispatcher's earlier figure of 6/6 in §X is superseded by their own later report). ⚑ §S is the DISPATCHER's table and the host edited it, because the host was mid-edit and the dispatcher declined to race the file — *"A / findings/CENSUS-vfs.md when I first looked, M minutes later"*. **The window is now: this file is quiescent at `mtools` HEAD after this commit, and §S is the dispatcher's to edit directly from here.** | §S |
+| 10 | 2026-09-07 | mtools | ⚑⚑⚑ **§S DECLARES A STATE VOCABULARY, AND THE `8 filed + 0 pending` READING IT REPLACES WAS WRONG WHILE THREE PARTIES HAD FILED.** Every row carried `filed elsewhere`; the mark arm counted eight and was arithmetically perfect over the WRONG POPULATION, because five rows read *filed elsewhere WHEN IT FILES* — a **destination**, not a state. ⚑⚑ The split was already argued in §S's own prose two paragraphs above the table (*the destination and the state, said separately*) and the table did not encode it: **a distinction stated in prose and absent from the vocabulary has not been made.** `elsewhere` is now said ONCE in §R, where it was always the census-wide default, and the row says only whether a leg EXISTS. ⚑ **AND THE `mtools` ROW WAS STALE** — it read *when it files* while `mtools 0014994` had filed `findings/vfs/mtools.md` two commits earlier; the row describing the host was the one the host forgot to re-measure. Arm: `test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses`, keyed on §R's `hosts this file` rather than a filename, which measured **1 of 2** hosted censuses undeclared — `CENSUS-registry-discovery.md` supplying the positive control from the same reader and corpus. | §S · §V |
 | 6 | 2026-09-07 | mtools | ⚑ **THE PHRASE-COUNTING DEFECT HAS A NAMED PRIOR INSTANCE, AND THE REPAIR TRANSFERS.** `linux-sources` reports the identical class in `vfs_census` itself: **10 of its 19 rows were prose** — matched in comments and string literals — repaired by stripping both and reaching the read through a Call node. Their proposed analogue here: **count the mark in a table CELL, not the phrase in a section.** Recorded, not applied; the poll is not amended this tick. ⚑ `rosettapkg` further notes that marking their row filed pushes the count 13 → 14 — *the verdict stays right for the same reason it was already right, but the drift becomes traceable to a specific edit rather than accumulating quietly.* | §S · the poll |
 
 ## §S Filing status
@@ -206,13 +207,32 @@ mentions of its own trigger.* Walked into while writing the paragraph that cites
 destination (`filed elsewhere`) and the state (`no leg yet`). A row that fused them — *not yet
 filed elsewhere* — would read as *has not filed elsewhere*, which is the opposite of the fact.
 
-| surveyor | status |
+⚑⚑⚑ **AND THE THIRD DRAFT FAILED IN THE SAME CLASS AGAIN — THE POLL READ `8 filed + 0 pending`
+WHILE TWO PARTIES HAD FILED.** Every row carried `filed elsewhere`, the mark-counting arm counted
+eight, and the arithmetic was perfect over the **wrong population**: five rows read *filed elsewhere
+when it files*, which names a **destination**, not a state. The paragraph immediately above argued
+exactly that split — *the destination and the state, said separately* — and the table then fused
+them into one phrase the reader matches. **A census that states a distinction in prose and does not
+encode it in its vocabulary has not made it.**
+
+⚑⚑ **SO THE STATES ARE DECLARED, AND THE DESTINATION MOVES OUT OF THE STATE COLUMN.** Every §R row
+already routes its surveyor to its own tree, so `elsewhere` was never carrying information at the
+row level: it is the census-wide default, said once in §R. What a row must say is whether a leg
+EXISTS.
+
+| state | means |
 |---|---|
-| linux-sources | **FILED** elsewhere — dispatcher; `vfs_census.py` at `linux-sources 21794a07`, selftest 10/10, findings in their ledger |
-| mtools | filed elsewhere when it files — hosts this file; hosting is not ownership |
-| paperkit | filed elsewhere when it files — no leg yet |
-| cassian-observability | filed elsewhere when it files — no leg yet |
-| substrate | filed elsewhere when it files — no leg yet |
-| summit | filed elsewhere when it files — no leg yet |
-| gabion | filed elsewhere when it files — no leg yet |
-| rosettapkg | **FILED** elsewhere — `rosettapkg 9a77f7d`, the first leg; verified by resolving the commit in their tree |
+| `filed` | a leg exists and the host resolved its commit in the surveyor's own tree |
+| `no leg yet` | rostered, routed by §R, nothing filed — **not** a dropped row, and **not** a decline |
+| `declined` | terminally out; no leg will come. Nobody is in this state here |
+
+| surveyor | state | where, and the witness |
+|---|---|---|
+| linux-sources | filed | dispatcher; `vfs_census.py` at `linux-sources 21794a07`, selftest 10/10, findings in their ledger |
+| mtools | filed | `findings/vfs/mtools.md`, in THIS tree at `mtools 0014994` — hosting is not ownership; this row is the leg, not the hosting |
+| rosettapkg | filed | `rosettapkg 9a77f7d`, the first leg; verified by resolving the commit in their tree |
+| paperkit | no leg yet | routed to its own tree by §R |
+| cassian-observability | no leg yet | routed to its own tree by §R |
+| substrate | no leg yet | routed to its own tree by §R |
+| summit | no leg yet | routed to its own tree by §R |
+| gabion | no leg yet | routed to its own tree by §R |
