@@ -1241,6 +1241,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_reports_an_unrecognised_status_header_rather_than_defaulting}
 }
 
+@misc{hooks-bar-fires-poll-does-not-report-a-ceiling-as-a-measurement,
+  section = {bar-fires},
+  claim   = {THE POLL PRINTED A BOUND AND CALLED IT A READING FROM THE SWEEP — a ceiling is what the sweep MAY report, not what it does, and the arm guarding the line required the confusion},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_does_not_report_a_ceiling_as_a_measurement}
+}
+
 @misc{hooks-bar-fires-every-status-table-finder-uses-one-signature,
   section = {bar-fires},
   claim   = {ONE PREDICATE, FOUR SITES, TWO SPELLINGS — and the arm pinned only the site that was already right, an n-of-m whose population is places I looked rather than places the predicate lives},

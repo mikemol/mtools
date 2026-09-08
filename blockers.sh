@@ -1128,9 +1128,31 @@ fi
 # figure over a mis-named population — reported by the instrument built to refuse exactly that.
 # ⚑ SO THE POLL ASKS THE SWEEP rather than re-deriving with a second, weaker predicate. Two
 # instruments computing one figure two ways is how they come to disagree without either noticing.
+# ⚑⚑⚑ AND THEN THIS LINE PRINTED A BOUND AND CALLED IT A READING. `_MAX_UNRESOLVED` is a
+# HAND-TYPED CONSTANT — what someone declared the sweep MAY report — while the sweep computes
+# `len(unresolved)` and asserts only `<=` between them. The sentence *ceiling read from the sweep
+# itself* promised a measurement over a literal, and the grep above is a grep for that literal;
+# the sweep never runs here.
+# ⚑⚑ MEASURED, by forcing the ceiling to -1 so the sweep's own assertion prints its set:
+# ceiling 21, actual 21. EQUAL TODAY — because the ceiling was last lowered until it touched the
+# count — which is exactly why nothing noticed. The next test the sweep resolves drops the count
+# to 20 while this line keeps printing 21, indistinguishable from correct.
+# ⚑⚑ AND THE ARM REQUIRED IT: `test_the_poll_reports_the_sweeps_own_figure` asserts the string
+# `_MAX_UNRESOLVED` appears here, under a comment reading *THE PROPERTY IS THAT THE FIGURE COMES
+# FROM THE SWEEP*. Satisfied by, and only by, reading the ceiling.
+# ⚑ b98f14b's DEFECT TWO COMMITS LATER, in this file: a typed figure reprinted every tick. There
+# it was a sum; here a bound wearing a measurement's sentence.
+# ⚑ DERIVING IT IS REFUSED, NOT OVERLOOKED. `len(unresolved)` costs a full pytest run per poll
+# invocation, on a script whose process starts are already a measured cost. A bound reported AS a
+# bound is a TRUE statement; what was false was the claim to have read it. So the figure stays and
+# the sentence changes, and the command that yields the real count is printed for a reader who
+# wants it.
 _unres=$(grep -oE '^_MAX_UNRESOLVED = [0-9]+' "$mtools/hooks/tests/test_bar_fires.py" \
          | grep -oE '[0-9]+' || true)
-echo "  vacuity sweep: ${_unres:-?} test(s) it cannot resolve — ceiling read from the sweep itself"
+echo "  vacuity sweep CEILING: ${_unres:-?} — the declared bound, NOT a count of what the sweep"
+echo "    resolves today. The sweep asserts len(unresolved) <= this. To measure the actual:"
+echo "      env -C hooks .venv/bin/python3 -m pytest tests/test_bar_fires.py -k vacuous"
+echo "    with _MAX_UNRESOLVED forced negative, so the assertion prints its own set."
 
 # ⚑⚑⚑ AN OPERATOR DECISION MUST NAME WHO RAISED IT, AND ONE OF THREE HAD NOBODY. The operator
 # asked *why are we concerned about cost?* and there was no answer: the only commit raising the

@@ -3007,6 +3007,69 @@ def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
     )
 
 
+def test_the_poll_does_not_report_a_ceiling_as_a_measurement() -> None:
+    r"""⚑⚑⚑ THE POLL PRINTS A BOUND AND CALLS IT A READING FROM THE SWEEP.
+
+    The line reads `vacuity sweep: N test(s) it cannot resolve — ceiling read from the sweep
+    itself`, and `N` comes from `grep -oE '^_MAX_UNRESOLVED = [0-9]+'` over this module. That is a
+    HAND-TYPED CONSTANT. The sweep never runs; what runs is a grep for a literal.
+
+    ⚑⚑ THE TWO ARE DIFFERENT OBJECTS. `_MAX_UNRESOLVED` is what someone declared the sweep MAY
+    report; `len(unresolved)` is what it DOES report, and the sweep asserts only `<=` between
+    them. MEASURED this tick by forcing the ceiling to `-1` so the assertion prints its own set:
+    ceiling 21, actual 21 — EQUAL TODAY, because the ceiling was last lowered until it touched the
+    count. The next test the sweep resolves drops the count to 20 while the poll keeps printing
+    21, and nothing distinguishes that from correct.
+
+    ⚑⚑ AND `test_the_poll_covers_the_symbols_carried_between_ticks` REQUIRES THE DEFECT. Its
+    comment reads *THE PROPERTY IS THAT THE FIGURE COMES FROM THE SWEEP*, and it asserts the
+    string `_MAX_UNRESOLVED` appears in the poll — which is satisfied by, and only by, reading the
+    ceiling. An arm that cannot tell a bound from a measurement, guarding the line that confuses
+    them. It still passes after this repair, because the grep is not the defect: the SENTENCE was.
+
+    ⚑ THIS IS b98f14b's DEFECT TWO COMMITS LATER: a typed figure reprinted every tick, in the poll
+    whose opening forbids typed figures. There it was a sum; here it is a bound wearing a
+    measurement's sentence.
+
+    ⚑ THE ARM ASSERTS THE LINE'S OWN HONESTY, not a number. Either the poll derives the count, or
+    it names the figure a CEILING — a bound reported AS a bound is a true statement, and it is the
+    cheap repair, because deriving `len(unresolved)` costs a full pytest run per poll invocation.
+
+    ⚑⚑⚑ AND THE FIRST FORM OF THIS ARM WENT VACUOUS THE INSTANT IT PASSED — see the comment on the
+    assertion below. Two-armed after the reformulation, by restoring the original defective line in
+    a copy of the poll: defect present -> rc 1, repaired -> rc 0. A positive-form arm that had
+    merely stopped firing would pass both.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the vacuity line must still exist, or this arm passes on its absence.
+    # ⚑⚑ AND THIS CONTROL FIRED ON MY OWN REPAIR. It read `vacuity sweep:` with the colon, which
+    # the repair moved when the label became `vacuity sweep CEILING:` — so the control refused
+    # rather than passing on an absence I had just created. Keyed to the two words that survive
+    # any honest relabelling, since the label is exactly what this arm expects to change.
+    assert "vacuity sweep" in commands, (
+        "the vacuity line must still be emitted; this arm would pass if it vanished"
+    )
+    # ⚑⚑⚑ AND MY FIRST FORM OF THIS ASSERTION WENT VACUOUS THE MOMENT IT PASSED. It read
+    # `not (reads_ceiling and "read from the sweep itself" in commands)` — a NEGATIVE keyed to the
+    # phrase the repair DELETES, so after the repair that operand is permanently False, the
+    # conjunction can never fire, and half the arm is dead while the whole reads green.
+    # ⚑⚑ THE SWEEP CAUGHT IT IN ONE RUN, by exactly its own predicate: an assertion literal absent
+    # from the file the test reads. The instrument this arm was written about found this arm.
+    # ⚑ SO THE PROPERTY IS STATED POSITIVELY: if the poll greps the constant, the line must NAME it
+    # a ceiling. A required presence cannot be emptied by deleting prose — which is the difference
+    # between an arm that survives its own repair and one that only survived until it worked.
+    if "_MAX_UNRESOLVED" in commands:
+        assert "CEILING" in commands, (
+            "the poll greps the hand-typed `_MAX_UNRESOLVED` constant, which is what the sweep "
+            "MAY report rather than what it does, and the printed line does not name it a "
+            "ceiling. Either derive `len(unresolved)`, or label the figure a CEILING so a bound "
+            "is reported as a bound"
+        )
+
+
 def test_the_vacuity_sweep_resolves_an_inline_path_read() -> None:
     """⚑⚑⚑ FOUR TESTS ARE SKIPPED ENTIRELY BY THE SWEEP, AND IT SAYS SO NOWHERE.
 
