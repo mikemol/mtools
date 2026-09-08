@@ -842,6 +842,32 @@ else
                 # vocabulary does not know — a fact about THIS READER, and it is now visible
                 # rather than absorbed into a zero.
                 echo "    §S rows:  $_rows measured; $_unmatched carry a state these probes do not name"
+                # ⚑⚑⚑ THE SECOND SOURCE, PRINTED — IT WAS COMPUTED AND DISCARDED. `_cls_named` is
+                # the DOCUMENT-relative count: §S read against the states this census declares,
+                # by the mode built for it. It was measured for every census with a §S and only a
+                # conditional pointer to re-run the tool by hand was ever emitted.
+                # ⚑⚑ WHICH IS THE DEFECT THE COMMENT TWENTY LINES UP NAMES, ONE LEVEL IN. That
+                # block argues shipping `classify` and not consuming it is *the packager is not a
+                # user of its own package*, adds the wiring — and then drops the wired value
+                # before the report. A computed value nothing prints is a caller that does not
+                # consume its own call.
+                # ⚑⚑⚑ AND IT IS THE HALF THAT SAVES THE PARTITION. The four terms above are one
+                # query with four prefixes: when the prefixes miss, all four read 0, the total
+                # reads 0, and they agree BECAUSE THEY ARE ONE FAILURE COUNTED FOUR TIMES.
+                # MEASURED the tick this line was added: `vfs` and `build-hermeticity` both
+                # printed `0 = 0 + 0 + 0 + 0` over §S tables of 8 and 12 rows while the document's
+                # own vocabulary named 8 of 8 and 11 of 12. Printing the operands cannot detect
+                # that; a term from a DIFFERENT source can.
+                if [ "${_cls_ok:-0}" -eq 1 ]; then
+                    echo "    declared: $_cls_named of $_rows §S row(s) match a state this census" \
+                         "publishes, $_cls_residue do not — a SECOND source, not the prefixes above"
+                else
+                    # ⚑ REFUSAL, NOT A ZERO. A census publishing no vocabulary cannot be read
+                    # against one, and reporting that as `0 matched` would be this reader's
+                    # blindness wearing the shape of a finding about the census.
+                    echo "    declared: this census publishes no state|means table — the four" \
+                         "terms above are the ONLY reading, and they share one source"
+                fi
                 # ⚑ THE DOCUMENT'S OWN READING, BESIDE THIS ARM'S. `classify` groups §S against the
                 # states the census declares; a residue there is a state the document USES and never
                 # DECLARED, which is a finding about the census rather than about this reader — the

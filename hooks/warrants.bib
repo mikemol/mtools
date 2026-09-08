@@ -2291,3 +2291,37 @@
             itself stale — it read `when it files` two commits after the host had filed.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses}
 }
+
+@misc{hooks-bar-fires-classifier-count-printed-not-merely-computed,
+  section = {bar-fires},
+  title   = {The classifier's count is printed, not merely computed},
+  note    = {The poll computed the document-relative classification for every census whose status
+            table it could find — each row read against the states that census itself declares, by
+            the mode built for exactly that — assigned it to a variable, and never printed it. Only
+            a conditional pointer telling a reader to re-run the tool by hand was ever emitted, so
+            what a reader actually saw was four hand-written prefix terms. That is the defect the
+            surrounding comment names one level in: the block argues at length that shipping a
+            classifier and not consuming it is the packager failing to use its own package, adds
+            the wiring, and then discards the wired value before the report. A computed value
+            nothing prints is a caller that does not consume its own call. It is also the half that
+            rescues the partition, because the four terms are one query run with four different
+            prefixes: when the prefixes match nothing, all four read zero, their total reads zero,
+            and they agree with each other because they are one failure counted four times.
+            Printing the operands cannot detect that, since the rule it satisfies is about hidden
+            operands rather than shared sources; only a term drawn from a different measurement
+            can. Measured at the tick this landed, on three censuses at once: two of them printed a
+            four-term partition of all zeros over status tables of eight and twelve rows while the
+            documents' own vocabularies named eight of eight and eleven of twelve, which localises
+            one genuinely undeclared row and separates it from twelve reader failures that had been
+            indistinguishable from it. The hand-written prefixes are kept rather than replaced,
+            because three censuses publish no vocabulary at all and the classifier refuses those
+            while the prefixes still say something; the two readings answer different questions and
+            the poll prints both rather than reconciling them, since reconciling them in the script
+            would be judgement in the turn rather than a measurement a reader can check. Where no
+            vocabulary is published the line reports a refusal rather than a zero, because a count
+            of zero and a reading that could not be made are different facts and only one of them
+            is about the census. The arm asserts both that the value is still computed, so it
+            cannot pass by the classifier call being deleted, and that the value reaches an echo,
+            which is the only interface this script has.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_classifiers_count_is_printed_and_not_merely_computed}
+}

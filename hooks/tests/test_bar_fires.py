@@ -3958,3 +3958,49 @@ def test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses() 
         "destination is indistinguishable from one that names a filed leg:\n  "
         + "\n  ".join(undeclared)
     )
+
+
+def test_the_classifiers_count_is_printed_and_not_merely_computed() -> None:
+    """⚑⚑⚑ THE CLASSIFIER'S READING WAS MEASURED, ASSIGNED TO A VARIABLE, AND NEVER PRINTED.
+
+    `_cls_named` and `_cls_residue` are computed for every census whose §S is found — the
+    document-relative classification, against the states that census itself declares — and only a
+    conditional POINTER to re-run the tool by hand is emitted. The four hand-written prefix terms
+    are what a reader actually sees.
+
+    ⚑⚑ AND THAT IS THE EXACT DEFECT THE SURROUNDING COMMENT NAMES, one level in. The block argues
+    that shipping `classify` and not consuming it is *the packager is not a user of its own
+    package*; the wiring was then added, and the wired value is discarded before the report. **A
+    computed value nothing prints is a caller that does not consume its own call.** Measured this
+    tick on three censuses at once: `vfs` and `build-hermeticity` both print `states: 0 = 0 + 0 +
+    0 + 0` over §S tables of 8 and 12 rows, while `§S vocabulary:` — the one line that does read
+    the document — reports 8 of 8 and 11 of 12 matching.
+
+    ⚑⚑⚑ THE FOUR ZEROS ARE NOT FOUR MEASUREMENTS. They are one failed match reported four times,
+    which is the partition rule this poll already carries and which printing the operands cannot
+    save: the terms share a source. The classifier's count is the second source, it is already in
+    hand, and the report withholds it.
+
+    ⚑ THE HAND-WRITTEN PREFIXES STAY. Three censuses publish no vocabulary, so the classifier
+    refuses them while the prefixes still say something — the two readings answer different
+    questions and the poll's own design prints both rather than reconciling them. This arm adds
+    the missing half of that pair; it does not remove the half that is there.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the value must still be COMPUTED, or this arm passes because the
+    # classifier call was deleted rather than because its result reached the reader.
+    assert "_cls_named=$((" in commands, (
+        "the classifier's named count must still be computed; this arm would pass on its absence"
+    )
+    # ⚑ AND IT MUST REACH AN `echo`. A variable assigned and never emitted is invisible to every
+    # reader of the poll, which is the only interface this script has.
+    assert any(
+        "_cls_named" in ln and ln.lstrip().startswith("echo")
+        for ln in commands.splitlines()
+    ), (
+        "the classifier's count is computed and never printed — a reader sees only the four "
+        "hand-written prefix terms, which is the partition whose terms share a source"
+    )
