@@ -310,3 +310,15 @@ fixture-parentheses = true
 # format names from a fixed vocabulary; the document travels on stdin as data and never becomes a
 # word in the command.
 "src/mikemol/mdstruct/pandoc.py" = ["S603"]
+
+# ⚑⚑⚑ DECLARED IN CONFIG, AND THIS ENTRY REPLACES TWO RATCHET KEYS I HAD BASELINED. Running the
+# CLI as a caller runs it is this module's one responsibility: the arms are about what a mode does
+# with an argv it does not understand, so an in-process call would exercise the library function
+# the flag was supposed to reach — the very step the defect skipped. The argv is this interpreter,
+# a module name and a fixture path; no untrusted input exists here for `S603` to be about.
+# ⚑⚑ THE `noqa: S603` THIS REPLACES WAS REAL IN ONE CONFIGURATION AND NOISE IN ANOTHER: the
+# non-preview config the gate runs NEEDS the directive, while preview's `RUF100` calls it unused.
+# A line directive whose correctness is config-relative is a key that can never be paid down,
+# because paying it in one configuration creates it in the other. A config entry has no such
+# shadow — it removes the line both rules were arguing about.
+"tests/test_cli_flags.py" = ["S101", "S404", "S603"]

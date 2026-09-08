@@ -67,7 +67,7 @@ def _run(doc: Path, *args: str) -> subprocess.CompletedProcess[str]:
         the completed process, so an arm can assert on its exit status and both streams.
 
     """
-    return subprocess.run(  # noqa: S603 — argv is this interpreter and a fixture path
+    return subprocess.run(
         [sys.executable, "-m", "mikemol.mdstruct.cli", "rows", str(doc), *args],
         check=False, capture_output=True, text=True)
 
