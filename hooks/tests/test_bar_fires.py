@@ -4154,3 +4154,86 @@ def test_the_gap_verdict_uses_the_declared_vocabulary_when_the_prefixes_cannot()
         "when the verdict comes from the declared vocabulary rather than the prefixes, the line "
         "must say so — otherwise one label carries two different measurements"
     )
+
+
+@_needs_reader
+def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
+    """⚑⚑⚑ TWO FROZEN CENSUSES USED A STATE THEIR VOCABULARY NEVER DECLARED, AND BOTH WERE RIGHT.
+
+    `CENSUS-remaining-work.md` carried `substrate | filed elsewhere (rev 5)` against a vocabulary
+    declaring only `filed (rev n)` — *in THIS HEAD, verified there*. Substrate's leg is in
+    substrate's own tree, so the row is accurate and the state is real. `CENSUS-build-hermeticity`
+    carried `paperkit | written and UNTRACKED — not no response`, whose cell says outright which
+    declared state it is NOT: its author knew none fitted and wrote the negation into the row.
+
+    ⚑⚑ NEITHER IS A DEFECT IN A ROW. Both are the vocabulary being narrower than the fleet's
+    actual states — a domain the census partitioned correctly until a case arrived it could not
+    express. `filed` and `filed elsewhere` were one cell until a leg landed in another party's
+    tree; `filed` and `written but untracked` were one cell until a leg existed on disk and not in
+    HEAD.
+
+    ⚑ AND THE PREFIX RULE IS WHY NEITHER FALLS BACK. `filed (rev n)` is not a prefix of `filed
+    elsewhere (rev 5)`: the stem `filed` continues with a WORD, which the classifier treats as
+    ambiguous rather than as a match. That refusal is correct — silently reading the longer state
+    as the shorter one would report a leg in another tree as a leg in this one.
+
+    ⚑ THE ROWS ARE UNTOUCHED, BY OPERATOR RULING, AND THIS ARM PINS THAT. §D forbids amending a
+    frozen census; the ruling permits the vocabulary alone, so no filing status moves and no
+    accounting changes. An arm asserting only that the residue reached zero would pass if a future
+    reader "fixed" a row to match the vocabulary — which is the amendment §D exists to prevent.
+    """
+    censuses = sorted((_DIST.parent / "findings").glob("CENSUS-*.md"))
+    assert censuses, "no censuses found — this arm would pass vacuously"
+    unnamed: list[str] = []
+    checked = 0
+    for path in censuses:
+        # ⚑⚑⚑ SCOPED TO THE STATUS TABLE, AND UNSCOPED WOULD BE THE WRONG POPULATION. A peer
+        # measured that `classify` walks EVERY table, so an unscoped read counts revision-log and
+        # roster rows as residue — 25 of 33 on one census, which reads alarming and is not. The
+        # status table is found the way the poll finds it: a header naming a party and a state.
+        listing = subprocess.run(  # noqa: S603 — the reader is the subject of this case
+            [str(_CITATION_GATE_READER), "tables", str(path)],
+            capture_output=True, text=True, check=False,
+        )
+        assert listing.returncode == 0, (
+            f"could not list tables in {path.name} (rc={listing.returncode}): {listing.stderr}"
+        )
+        shaped = pyre.compile(
+            r"\s*table (\d+)\s.*(?:surveyor|party) \| (?:status|state)(?: \||$)"
+        )
+        status = [
+            m.group(1)
+            for ln in listing.stdout.splitlines()
+            if (m := shaped.match(ln))
+        ]
+        if not status:
+            continue
+        proc = subprocess.run(  # noqa: S603 — the reader is the subject of this case
+            [str(_CITATION_GATE_READER), "classify", str(path), "--table", status[-1]],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        # ⚑ rc=2 IS A REFUSAL, NOT A FAILURE: a census publishing no vocabulary cannot be read
+        # against one. Three do, and counting them as residue would report this reader.
+        if proc.returncode == _ARG_REFUSED:
+            continue
+        assert proc.returncode == 0, (
+            f"the reader failed on {path.name} (rc={proc.returncode}): {proc.stderr}"
+        )
+        checked += 1
+        # ⚑ THE RESIDUE LINE ITSELF, NOT A POSITION. A first cut took `splitlines()[1]` and
+        # reported the first DECLARED state — a message naming the wrong line is a hidden operand
+        # in the failure a reader acts on.
+        residue = [ln.strip() for ln in proc.stdout.splitlines() if "UNCLASSIFIED" in ln]
+        if residue:
+            unnamed.append(f"{path.name}: {residue[0]}")
+    # ⚑ POSITIVE CONTROL: some census must have been readable, or the loop skipped everything and
+    # an empty residue means the reader refused rather than that the corpus is clean.
+    assert checked, (
+        "no census could be classified — every one refused, so this arm measured nothing"
+    )
+    assert not unnamed, (
+        f"{len(unnamed)} of {checked} readable census(es) use a state their own vocabulary does "
+        "not declare — the row is a fact and the vocabulary is the gap:\n  " + "\n  ".join(unnamed)
+    )

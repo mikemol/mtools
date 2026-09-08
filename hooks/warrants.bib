@@ -2400,3 +2400,34 @@
             already adjudicate print the unchanged plain verdict, and none falls into the refusal.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gap_verdict_uses_the_declared_vocabulary_when_the_prefixes_cannot}
 }
+
+@misc{hooks-bar-fires-every-census-declares-every-state-it-uses,
+  section = {bar-fires},
+  title   = {Every census declares every state its own status rows use},
+  note    = {Two frozen censuses each carried one status row using a state their own vocabulary
+            never declared, and both rows were right. One read that a party had filed elsewhere at
+            a given revision, against a vocabulary declaring only filed-at-revision, which its own
+            entry defines as present in THIS repository's HEAD and verified there; that party's leg
+            is in that party's own tree, so the row is accurate and the state is real. The other
+            read that a party's leg was written and untracked, and that cell says outright which
+            declared state it is not — its author knew none fitted and wrote the negation into the
+            row rather than choosing a wrong state. Neither is a defect in a row. Both are the
+            vocabulary being narrower than the fleet's actual states: a domain each census
+            partitioned correctly until a case arrived that it could not express. Filed and filed
+            elsewhere were one cell until a leg landed in another party's tree; filed and written
+            but untracked were one cell until a leg existed on disk and in no commit anywhere. The
+            prefix rule is why neither falls back to the shorter state: a declared state that
+            continues with a further word is treated as ambiguous rather than as a match, and that
+            refusal is correct, since silently reading the longer state as the shorter one would
+            report a leg in another tree as a leg in this one. The rows are untouched by operator
+            ruling, which permitted the vocabulary alone to be amended after the freeze; the
+            resulting diff is one insertion per census with no deletion and no modification, so no
+            filing status moved and no accounting changed. The arm scopes its read to the status
+            table rather than the whole document, because a peer measured that the classifier walks
+            every table and an unscoped read counts revision-log and roster rows as residue. It
+            treats the reader's refusal on a census publishing no vocabulary as a refusal rather
+            than as residue, since counting those would report the reader instead of the corpus,
+            and it asserts that at least one census was readable so an all-refused run cannot pass
+            as a clean one.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_census_declares_every_state_its_own_status_rows_use}
+}

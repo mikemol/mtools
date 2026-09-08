@@ -1549,6 +1549,7 @@ vocabulary lacked, and both times it was *done, blocked on the coordinator*:
 | `DRAFTED — awaiting write authorization` | leg finished, blocked on a **permission** |
 | `STAGED — blocked by the shared gate` | leg finished, blocked by another party's tree state |
 | `filed (rev n)` | in `HEAD`, **verified there** rather than reported |
+| `filed elsewhere (rev n)` | leg in the party's **own tree**, verified there — ⚑ added 2026-09-08 by the apex under an operator ruling permitting the VOCABULARY to be amended after the freeze while every `§S` row stays byte-identical. `substrate`'s row has read this since rev 5 and no declared state covered it: `filed (rev n)` means *in THIS `HEAD`*, and a leg in another party's repository is not that. ⚑⚑ The prose above already recorded two censuses needing a state their vocabulary lacked; this is the third, in the table that records the first two. |
 | `declined` | reached, chose not to file |
 | `no response` | reached, did not answer |
 

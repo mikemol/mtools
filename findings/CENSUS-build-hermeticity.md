@@ -1475,6 +1475,7 @@ twelve silences as twelve zeros**:
 | `retired` | ⚑ **no leg owed**; operator-held knowledge, recorded nowhere in any artifact | **NO.** Not an omission at all. |
 | `declined` | reached and chose not to file | — |
 | `filed elsewhere` | ⚑⚑ **the leg EXISTS and is committed, at a path `§R` did not name** — because the party could not write where `§R` said | ⚑ **NO, and it is the silence `§R` itself creates.** *Resolved by ADOPTION by the dispatcher, never by asking the party to breach a hold.* |
+| `written and untracked` | ⚑⚑⚑ **the leg EXISTS ON DISK and is in NO commit anywhere** — not `filed elsewhere`, which means committed at another path; not `no response`, which `paperkit`'s own cell says it is not. ⚑ Added 2026-09-08 by `mtools` under an operator ruling permitting the VOCABULARY to be amended after the freeze while every `§S` row stays byte-identical. | ⚑⚑ **NO, AND IT IS THE ZERO THIS TABLE EXISTS TO REFUSE.** A file in a working tree is invisible to every reader of `HEAD`, so it reads as *nothing was written* — the exact substitution the six rows above were written to prevent, arriving in a row none of them could express. The author of that `§S` cell knew: it names the state it is NOT, because no state it could name was right. |
 
 ⚑ **`not surveyed` and `nothing to report` are the same blank and opposite facts**, and twelve
 of the repos in `§R` start in that state by construction. **A freeze that does not name it
