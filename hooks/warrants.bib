@@ -33,6 +33,24 @@
 @misc{hooks-payload-non-string-reads-as-empty,
   section = {payload},
   claim   = {A non-string field yields EMPTY TEXT rather than a repr of the value},
+  note    = {The assertion compares against a named empty-string constant rather than testing the
+            result for falsiness, and that is load-bearing rather than stylistic. A preview rule
+            reports the equality as simplifiable to a falsiness test, which is satisfied by None,
+            by zero and by an empty list — so the rewrite would keep this case passing if the
+            function began returning any of them, and the case exists to pin the empty STRING.
+            Four forms were measured against two properties before one was chosen, because the
+            form eventually used had been proposed while explicitly marked unmeasured. The
+            falsiness test silences the rule and does not preserve the predicate. An isinstance
+            conjunction preserves the predicate and does NOT silence the rule, which was the
+            unmeasured guess and was wrong: the rule reads the equality half regardless of what is
+            conjoined to it. Comparing the length to zero silences the rule and rejects None and
+            zero with a type error, but accepts an empty list and an empty dict, which the
+            equality rejects — a different set of false accepts rather than a smaller one, and
+            calling it strictly stronger would have been a claim worth one probe. Comparing
+            against a named constant silences the rule and preserves the predicate exactly,
+            because it is the same predicate with the literal named. Verified against the live
+            function rather than a fixture: weakening the return to None makes all four
+            parametrised cases fail, where under the rule's own fix all four would have passed.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_non_string_reads_as_empty}
 }
 

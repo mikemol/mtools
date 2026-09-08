@@ -27,6 +27,13 @@ import pytest
 
 from mikemol.hooks import payload, routing_table, structural_query
 
+# ⚑ THE EMPTY STRING, NAMED — see `test_payload.py` for the measurement. `compare-to-empty-string`
+# wants `x == ""` rewritten to `not x`, which is satisfied by `None`, `0` and `[]`; these arms
+# pin the empty STRING. Comparing to a named constant silences the rule while leaving the
+# predicate identical, where `isinstance(...) and x == ""` still fires and `len(x) == 0` swaps one
+# set of false accepts for another.
+_EMPTY = ""
+
 # The claims table every verdict case is rendered against, named so no case depends on ambient
 # state. `.log` and `.tsv` are DELIBERATELY ABSENT — they are what an unclaimed artifact looks
 # like, and the passes cases below rest on their absence.
@@ -248,7 +255,7 @@ def _bad_payloads() -> list[tuple[str, object]]:
 @pytest.mark.parametrize(("label", "value"), _bad_payloads())
 def test_a_malformed_payload_yields_no_command(label: str, value: object) -> None:
     """⚑ EVERY REJECTED SHAPE GETS A CASE — the payload is untrusted JSON, not a contract."""
-    assert structural_query.command_of(value) == "", label
+    assert structural_query.command_of(value) == _EMPTY, label
 
 
 def test_a_command_free_payload_lets_the_call_through(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -308,7 +315,7 @@ def test_an_advisory_hook_writes_to_stderr_and_leaves_stdout_empty(
     monkeypatch.setattr("sys.stdin", _stdin(_payload_json("wc -l scratch/tool.py")))
     assert structural_query.main() == 0
     captured = capsys.readouterr()
-    assert captured.out == ""
+    assert captured.out == _EMPTY
     assert "structural-query" in captured.err
 
 

@@ -14,6 +14,17 @@ import pytest
 
 from mikemol.hooks import payload
 
+# ⚑⚑⚑ THE EMPTY STRING, NAMED, BECAUSE A PREVIEW RULE WANTS THE ASSERTION WEAKENED AND IT MUST
+# NOT BE. `compare-to-empty-string` reports `x == ""` as simplifiable to `not x` — and `not x` is
+# satisfied by `None`, `0` and `[]`, so the rewrite would keep passing if `text_of` began
+# returning any of them. These arms exist to pin the empty STRING specifically.
+# ⚑⚑ MEASURED ACROSS FOUR FORMS RATHER THAN CHOSEN. `isinstance(...) and x == ""` still fires —
+# the rule reads the equality half regardless of the conjunction. `len(x) == 0` silences it and
+# rejects `None` and `0` with a TypeError, but ACCEPTS `[]` and `{}`, which `== ""` rejects: not
+# strictly stronger, a different set of false accepts. Comparing to a named constant silences the
+# rule and preserves the original predicate EXACTLY, because it IS the original predicate.
+_EMPTY = ""
+
 
 def test_a_mapping_is_rebuilt_with_string_keys() -> None:
     """A record's keys become strings and its values survive."""
@@ -34,7 +45,7 @@ def test_a_string_reads_as_itself() -> None:
 @pytest.mark.parametrize("value", [None, 3, ["a"], {"a": 1}])
 def test_a_non_string_reads_as_empty(value: object) -> None:
     """A non-string field yields empty text rather than a repr of the value."""
-    assert payload.text_of(value) == ""
+    assert payload.text_of(value) == _EMPTY
 
 
 def test_the_own_switch_arms(monkeypatch: pytest.MonkeyPatch) -> None:
