@@ -1128,6 +1128,35 @@ def test_the_poll_reports_an_unrecognised_status_header_rather_than_defaulting()
     assert 'if [ -n "$sig" ]; then' in body, "the empty signature must be branched on, not used"
 
 
+def test_the_unrecognised_header_probe_anchors_the_left_edge_of_the_header() -> None:
+    r"""⚑⚑⚑ THE LINE SUPPLYING THE EVIDENCE FOR `UNRECOGNISED` WAS FABRICATING IT.
+
+    The probe read `'[a-z-]+ \| [a-z-]+$'` — right-anchored, LEFT-OPEN — so it matched the last two
+    fields of a header of any width and reported them as a two-column table. MEASURED on
+    `CENSUS-backlog.md`, whose tables are 3, 4 and 3 columns wide and none of which is two: it
+    printed `two-column headers present: changed | affects prefix | file`, both fragments being
+    tails of wider headers. On `build-hermeticity` it emitted five, one of them off a FIVE-column
+    table.
+
+    ⚑⚑ The line exists to separate *unrecognised* from *absent*, and its own comment invites a
+    reader to widen the signature set from what it prints — so the fabrication was load-bearing:
+    acting on it would have installed `changed | affects` as an §S signature, a header no census
+    has. ⚑ And the `PRE-FILING` verdict underneath was CORRECT, which is what let a fabricated
+    premise sit above a true conclusion without looking wrong.
+
+    ⚑ The assertion is on the ANCHOR, not on the header set: a probe whose left edge is open cannot
+    report a header, only a suffix of one, whatever literals happen to be in the corpus today.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    assert "grep -oE '[a-z-]+ \\| [a-z-]+$'" not in body, (
+        "a left-open header probe reports the TAIL of any wide header as a two-column table"
+    )
+    assert "grep -oE 'col\\(s\\)  [a-z-]+ \\| [a-z-]+$'" in body, (
+        "the left edge must anchor on the `col(s)` marker, which is where this reader's "
+        "output provably starts the header — an anchor derived from the format, not guessed"
+    )
+
+
 def test_the_poll_distinguishes_a_missing_status_table_from_a_short_one() -> None:
     """⚑⚑⚑ IT MANUFACTURED A DELETION CLAIM ABOUT A TABLE NOBODY HAD WRITTEN.
 

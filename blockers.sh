@@ -367,7 +367,32 @@ else
         # ⚑ Name the unrecognised headers rather than asserting absence: this is the poll's own
         # absent-versus-unavailable line, and it now prints the evidence a reader needs to widen
         # the set above by MEASUREMENT instead of by another guessed literal.
-        _hdrs=$("$md" tables "$census" 2>/dev/null | grep -oE '[a-z-]+ \| [a-z-]+$' | sort -u | paste -sd' · ')
+        #
+        # ⚑⚑⚑ AND THAT EVIDENCE WAS FABRICATED, IN THE LINE WHOSE ONLY JOB IS TO SUPPLY IT.
+        # The regex was `'[a-z-]+ \| [a-z-]+$'` — anchored on the RIGHT and open on the LEFT, so it
+        # matched the last two fields of a header of ANY width and reported them as a two-column
+        # table. MEASURED on `CENSUS-backlog.md`, whose three tables are 3, 4 and 3 columns wide and
+        # not one of which is two: the poll printed `two-column headers present: changed | affects
+        # prefix | file` — `changed | affects` being the tail of `rev | when | what changed |
+        # affects`, and `prefix | file` the tail of `surveyor | prefix | file`. Neither header
+        # exists. On `build-hermeticity` it emitted FIVE, including `substrate | el-openglo` off the
+        # tail of a FIVE-column table.
+        # ⚑⚑ THE LINE EXISTS TO SEPARATE *UNRECOGNISED* FROM *ABSENT* AND IT MANUFACTURED THE
+        # EVIDENCE FOR *UNRECOGNISED*. Its comment invites a reader to widen the signature set from
+        # what it prints; doing so would have added `changed | affects` as an §S signature — a
+        # header no census has. A guessed literal is at least somebody's observation; this was an
+        # artifact of an unanchored match, and it arrived wearing the word MEASUREMENT.
+        # ⚑ AND THE VERDICT UNDERNEATH WAS RIGHT. `backlog` really is pre-filing, so the fabricated
+        # evidence sat directly above a true conclusion, which is what let it read as consistent.
+        # ⚑ THE ANCHOR IS THE `col(s)` MARKER, because that is where the header provably STARTS in
+        # this reader's output — a left anchor derived from the format rather than from the header.
+        # Both arms measured before this was written: `backlog` (no 2-col table) now prints NOTHING,
+        # and `build-hermeticity` prints exactly `party | state`, which IS its §S header.
+        # ⚑ RESIDUE, STATED NOT CLOSED: `[a-z-]+` has no space, so `party | state at freeze` (a real
+        # two-column header) is not reported. Narrower than a real header — but under-reporting a
+        # candidate is a silence, where the old form was a fabrication.
+        _hdrs=$("$md" tables "$census" 2>/dev/null | grep -oE 'col\(s\)  [a-z-]+ \| [a-z-]+$' \
+            | sed 's/^col(s)  //' | sort -u | paste -sd' · ')
         [ -n "$_hdrs" ] && echo "  ⚑ §S UNRECOGNISED, not absent — two-column headers present: $_hdrs"
     fi
     # ⚑⚑ A CENSUS WITH NO §S TABLE IS PRE-FILING, NOT SHORT-ROSTERED, AND THE POLL SAID SHORT.

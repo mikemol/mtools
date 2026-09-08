@@ -1241,6 +1241,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_reports_an_unrecognised_status_header_rather_than_defaulting}
 }
 
+@misc{hooks-bar-fires-unrecognised-header-probe-anchors-the-left-edge-of-the-header,
+  section = {bar-fires},
+  claim   = {THE LINE SUPPLYING THE EVIDENCE FOR UNRECOGNISED WAS FABRICATING IT — a left-open probe reports the TAIL of any wide header as a two-column table, and its comment invites a reader to widen the signature set from what it prints},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_unrecognised_header_probe_anchors_the_left_edge_of_the_header}
+}
+
 @misc{hooks-bar-fires-poll-distinguishes-a-missing-status-table-from-a-short-one,
   section = {bar-fires},
   claim   = {IT MANUFACTURED A DELETION CLAIM ABOUT A TABLE NOBODY HAD WRITTEN},
