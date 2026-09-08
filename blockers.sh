@@ -1058,9 +1058,26 @@ else
 fi
 _rt="$_witness_logs_probe/REFUSALS.tsv"
 if [ -r "$_rt" ]; then
-    _ragged=$(awk -F'\t' 'NF!=5' "$_rt" | grep -c . || true)
+    # ⚑⚑⚑ TWO SHAPES, NOT ONE, AND ONE SENTENCE DESCRIBED BOTH. The count has been right since a
+    # field count corrected it from a remembered two to a measured three; the CAUSE attached to it
+    # was still wrong. Read rather than counted:
+    #   3 fields — no session id AND no gate name: genuinely pre-schema, unattributable
+    #   4 fields — HAS a session id, missing only the gate name: attributable to a SESSION, and
+    #              the gap is WHICH GATE refused
+    # ⚑⚑ *pre-column rows are unattributable* is true of the first shape and false of the second.
+    # A reader acting on it looks for a missing attribution that is present, and misses the
+    # missing gate name that is the actual gap. A correct count under a mis-named cause, one layer
+    # down from the correct count this figure already produced once.
+    _preschema=$(awk -F'\t' 'NF<4' "$_rt" | grep -c . || true)
+    _nogate=$(awk -F'\t' 'NF==4' "$_rt" | grep -c . || true)
     _rows=$(grep -c . "$_rt" || true)
-    echo "  refusal record: $_ragged of $_rows row(s) ragged — pre-column rows are unattributable"
+    # ⚑ AND THE SUBJECT IS NAMED. This record lives in a host-local cache, not the repository, so
+    # NO COMMIT CAN MOVE IT — which is why the numerator sat static across many ticks while it was
+    # re-derived as a carried blocker each time. A reader watching it for movement is watching an
+    # artifact this repository does not write.
+    echo "  refusal record (host-local cache; no commit moves this): $_rows row(s)," \
+         "$_preschema pre-schema (no session id, no gate — unattributable)," \
+         "$_nogate attributable to a session but not to a gate"
 else
     echo "  refusal record: absent on this host — a fact about the reader, not the record"
 fi

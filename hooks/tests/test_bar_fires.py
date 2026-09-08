@@ -2905,8 +2905,16 @@ def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
     # ⚑ SPLIT, because a compound assertion names neither half when it fails. The gate's own
     # ruff caught this: one message for two properties is the collapsed verdict this suite
     # refuses elsewhere, arriving in an assertion rather than in a checker.
-    assert "ragged" in commands, (
-        "the refusal record's ragged rows must be counted, not remembered"
+    # ⚑⚑⚑ THE PROPERTY IS THAT THE RECORD IS READ, not that the word `ragged` appears — and this
+    # assertion was keyed on the word until a repair that IMPROVED the line broke it. The line now
+    # separates two shapes (pre-schema rows versus rows attributable to a session but not a gate)
+    # because one sentence was describing both; the word `ragged` went with the collapsed sentence.
+    # ⚑⚑ THE COMMENT TWO ASSERTIONS BELOW ALREADY RECORDS THIS LESSON, about `inline`, in this same
+    # block: *an arm keyed to today's phrasing rather than to what makes the line trustworthy.*
+    # It was applied to that assertion and not to this one, and this one broke the same way.
+    assert "REFUSALS.tsv" in commands, (
+        "the refusal record must be READ, not remembered — the poll must open the file rather "
+        "than restate a figure from a previous tick"
     )
     # ⚑ THE PROPERTY IS THAT THE FIGURE COMES FROM THE SWEEP, not that a particular word appears.
     # This asserted `inline`, a word the repaired line no longer uses — an arm keyed to today's
@@ -4541,4 +4549,58 @@ def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
         f"{len(unknown)} of {len(keys)} baseline key(s) name a rule this checker does not "
         "recognise — a key for a rule that no longer exists is debt nothing can ever pay, and it "
         f"reads as tolerated forever:\n  " + "\n  ".join(unknown)
+    )
+
+
+def test_the_refusal_records_ragged_rows_are_reported_by_shape() -> None:
+    """⚑⚑⚑ THE COUNT IS RIGHT AND THE CAUSE IS WRONG, one layer down from a corrected count.
+
+    The poll prints *N of M row(s) ragged — pre-column rows are unattributable*, and an earlier
+    tick corrected the COUNT after I carried it from memory as two when a field count found three.
+    The count has been right ever since. **The sentence attached to it is not.** Measured by
+    reading the rows rather than counting them: the three ragged rows are TWO shapes, not one.
+
+        3 fields   no session id AND no gate name   — genuinely pre-schema
+        4 fields   HAS this session's id, missing only the gate name
+
+    ⚑⚑ SO *pre-column rows are unattributable* DESCRIBES THE FIRST SHAPE AND IS APPLIED TO ALL
+    THREE. The four-field row carries a session id, so it IS attributable to a session; what it
+    cannot say is which gate refused. A reader acting on that line would look for a missing
+    attribution that is present, and miss the missing gate name that is the actual gap.
+
+    ⚑ AND THE FIGURE DESCRIBES A HOST-LOCAL CACHE, not the repository — which is why the numerator
+    sat static across many ticks while I re-derived it as *carries* each time. Nothing a commit
+    does can move it. That is not a defect in the record; it is a fact about the figure that the
+    line does not say, and a reader watching it for movement is watching the wrong artifact.
+
+    ⚑ THE ARM CHECKS THE POLL'S SHAPE, NOT THE RECORD'S CONTENT. The record is host-local and may
+    legitimately be absent or hold different rows on another machine; what must hold is that the
+    poll distinguishes the two shapes rather than collapsing them under one cause.
+    """
+    commands = "\n".join(
+        ln for ln in _POLL.read_text(encoding="utf-8").splitlines()
+        if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the record must still be read at all, or every assertion below passes
+    # because the section vanished rather than because it distinguishes the shapes.
+    assert "REFUSALS.tsv" in commands, (
+        "the poll must still read the refusal record; this arm would pass on its absence"
+    )
+    # ⚑⚑ THE TWO SHAPES ARE COUNTED SEPARATELY. One figure over two causes is the collapsed verdict
+    # this suite refuses elsewhere, and here it produced prose that is false of a third of its own
+    # population.
+    assert "NF<4" in commands, (
+        "the pre-schema rows — no session id, no gate name — must be counted apart from rows that "
+        "carry an id and lack only the gate, or one sentence describes two different gaps"
+    )
+    assert "NF==4" in commands, (
+        "a row carrying a session id and missing only the gate name must be counted apart from a "
+        "genuinely unattributable one; it IS attributable, and saying otherwise sends a reader "
+        "looking for the wrong absence"
+    )
+    # ⚑ AND THE FIGURE'S SUBJECT IS NAMED. A reader watching a host-local cache for movement that
+    # only a commit could cause is watching an artifact no commit touches.
+    assert "host-local" in commands, (
+        "the line must say the record is host-local — a static numerator otherwise reads as a "
+        "carried blocker rather than as a figure no commit can move"
     )

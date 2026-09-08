@@ -2545,3 +2545,30 @@
             an empty or missing baseline cannot pass as a clean one.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_baseline_key_names_a_rule_that_no_longer_exists}
 }
+
+@misc{hooks-bar-fires-refusal-record-ragged-rows-by-shape,
+  section = {bar-fires},
+  title   = {The refusal record's ragged rows are reported by shape},
+  note    = {The poll printed a count of ragged rows in the refusal record followed by one
+            sentence naming their cause, and an earlier tick had already corrected the COUNT after
+            it was carried from memory as two when a field count found three. The count has been
+            right ever since; the sentence attached to it was not. Measured by reading the rows
+            rather than counting them, the three are two shapes: rows with three fields carry
+            neither a session id nor a gate name and are genuinely pre-schema, while a row with
+            four fields carries a session id and lacks only the gate name. So the phrase calling
+            them unattributable is true of the first shape and false of the second — that row IS
+            attributable to a session, and its actual gap is which gate refused. A reader acting
+            on the collapsed sentence looks for a missing attribution that is present and misses
+            the one that is absent. That is a correct count under a mis-named cause, arriving one
+            layer down from the correct count this same figure produced when its numerator was
+            wrong. The line also now names its subject: the record lives in a host-local cache
+            rather than in the repository, so no commit can move it, which is why the numerator sat
+            static across many ticks while being re-derived as a carried blocker each time. A
+            reader watching it for movement was watching an artifact this repository does not
+            write. The arm checks the poll's shape rather than the record's content, because the
+            record is host-local and may legitimately be absent or hold different rows elsewhere;
+            what must hold is that the two shapes are counted apart rather than collapsed. It
+            carries a positive control requiring the record to still be read at all, so the
+            assertions cannot pass by the section vanishing.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_refusal_records_ragged_rows_are_reported_by_shape}
+}
