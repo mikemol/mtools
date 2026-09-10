@@ -21,11 +21,23 @@ Written 2026-09-10 by `mtools-27`. HEAD at writing: `9a97ed8`. Tree clean.
 
 ## Open items, with what makes each blocked or ready
 
-### ⟐FENCE-WARRANTS — the gate's warrant loop has a hand-written population
+### ⟐FENCE-WARRANTS — CLEARED at `750cedd`, kept for what measuring it cost
 
-`.githooks/pre-commit` line ~403 reads `for dist in hooks mdstruct ratchet`. `fence` is
-not in it, so its 27 test functions carry ZERO warrants and the 1:1 ledger never looks.
-⚑ The gate is CORRECT OVER THE WRONG SET — the mis-named-population defect, in the gate.
+⚑⚑ CLOSED. Nine sites derived (not the six recorded here), 33 warrants transcribed (not
+27), `fence/rubric.tsv` written, sections verified by the gate's own diff. The entry
+stays because three of its corrections are the reusable part, and a cleared item deleted
+takes its measurements with it.
+
+`.githooks/pre-commit` line ~403 read `for dist in hooks mdstruct ratchet`. `fence` was
+not in it, so its test functions carried ZERO warrants and the 1:1 ledger never looked.
+⚑ The gate was CORRECT OVER THE WRONG SET — the mis-named-population defect, in the gate.
+
+⚑⚑⚑ AND THE WARRANT TARGET WAS THREE DIFFERENT NUMBERS. The gate counted `^def test_`
+anchored at column 0; every fence test is a CLASS METHOD, so the harness counted **0**
+and a ledger of zero warrants against zero functions is 1:1 and PASSES. Measured:
+**0** by the gate's predicate, **33** methods, **45** pytest-collected cases. The "27" in
+this file matched none of them — it came from an early pytest run and was carried across
+ticks as ready work. ⚑ A figure with no stated provenance, in the seed, for several ticks.
 
 ⚑⚑⚑ I CARRIED THIS AS *BLOCKED, ALREADY ASKED* AND HAD NEVER ASKED IT. Flagged in prose
 three times, never once through `AskUserQuestion` — the exact failure the tick prompt
@@ -146,7 +158,77 @@ MEASURED, so a tick does not re-derive it:
 `py_venv`* and they decided on that description; MEASURED against the actual releases,
 it does not exist at 1.0.0 OR at 2.3.3 — checked `//python`, `//python/bin` and
 `//python/uv` BUILD files directly. Re-asked with the correction; the ruling stands: bump
-anyway (done, `50cb2c2`), then build the rule on `//python/uv`'s hermetic uv toolchain.
+anyway (done, `50cb2c2`), then build the rule.
+
+⚑⚑⚑ THE ROUTE IS DECIDED AND IT IS NOT uv: **build from the pip hubs.** Operator ruled
+2026-09-10 after both options were measured.
+
+⚑ WHY uv WAS RULED OUT, measured both arms: `uv sync --offline` SUCCEEDS against a warm
+cache (full venv, correct interpreter, `ruff==0.16.6`) and FAILS with an empty
+`UV_CACHE_DIR`, naming the exact wheel URL it could not fetch. The control is what makes
+the first arm mean anything — it proves the offline run used the CACHE rather than
+silently reaching out. So uv is offline-capable only if the wheels are already local,
+which a network-denied bazel action cannot assume; and `//python/uv` is marked
+*EXPERIMENTAL: may be removed without notice*, while `python/uv/private/lock.bzl` turns
+out to REGENERATE A LOCKFILE rather than materialise a venv — a different job.
+
+⚑⚑ AND THE HUBS ALREADY STAGE EVERYTHING. `@<dist>_dev//<pkg>:extracted_whl_files`
+exposes each wheel UNPACKED — measured on `@hooks_dev//ruff`: `site-packages/…` plus a
+real `bin/ruff`. No installer to reimplement, no uv at build time, nothing experimental,
+and every input already declared in `MODULE.bazel`. The venv becomes a VIEW over inputs
+bazel already has.
+
+⚑ THE GRADER IS THE FORCING CONSUMER, and this is why the direction is a precondition
+rather than a parallel task — see ⟐GRADER-INTERPRETER-UNDECLARED below.
+
+### ⟐MODULE-RUFF-CLAIM-STALE — NEW 2026-09-10, measured, a FALSE recorded measurement
+
+⚑⚑⚑ `MODULE.bazel` ARGUES FOR ITS `http_archive` ON A PREMISE THAT NO LONGER HOLDS. It
+states that ruff must be fetched as an archive because *rules_python STAGES ONLY
+`site-packages`. The wheel's `bin/ruff` is dropped, so the installed package is a Python
+shim whose `find_ruff_bin()` looks for a binary that is not there.*
+
+MEASURED at 2.3.3 via `bazel cquery '@hooks_dev//ruff:extracted_whl_files' --output=files`:
+
+    …/bin/ruff                                    <- STAGED
+    …/site-packages/ruff-0.16.6.dist-info/…       <- and site-packages too
+    …/site-packages/ruff/_find_ruff.py
+
+and `file` on that path reports `ELF 64-bit LSB pie executable … stripped` — a real
+binary, not the shim the comment describes. ⚑ The positive control is in the same
+listing: `site-packages/` IS staged, so the query is not simply returning everything.
+
+⚑⚑ THE PREMISE HELD AT 1.0.0 AND THE BUMP AT `50cb2c2` INVALIDATED IT, and nothing
+noticed — a recorded measurement going stale inside a load-bearing comment is worse than
+no comment, because a reader spends it as evidence. ⚑ TWO SEPARATE ITEMS: the comment is
+false NOW and should be corrected regardless; whether the `http_archive` is therefore
+REDUNDANT is a further question nobody has measured, and removing it on this evidence
+alone would be acting past what was established.
+
+### ⟐GRADER-INTERPRETER-UNDECLARED — NEW 2026-09-10, measured, blocks a soundness claim
+
+`hooks/src/mikemol/hooks/grade.py` builds `dist / ".venv/bin/python3"`. Two problems, and
+the operator named the second:
+
+⚑ THE SANDBOX CRASHED THE GRADER ON A MISSING INTERPRETER, in the very arm asserting it
+distinguishes *could not run* from *ran and failed*. I fixed it with an `OSError` guard —
+which makes the grader TOLERATE an absent interpreter without making one PRESENT. Operator:
+*this is why you're supposed to have the .venv as a build artifact; then you know precisely
+the interpreter you'll have because you built it.* Graceful degradation of an input the
+graph should supply is the shape `external` was retired over.
+
+⚑⚑ AND THE GRADER'S CLAIM DEPENDS ON IT. Its product is *run this test in a known
+environment and see if it flips*. If the environment is whatever the host happens to have,
+A FLIP IS NOT ATTRIBUTABLE — a test could go red because the subject changed or because the
+interpreter differs. paperkit's `content_sensitive` exists to separate exactly that, and it
+can only mean something when the environment is fixed by construction.
+
+⚑ ALSO UNRECORDED UNTIL NOW: `hooks/tests/test_grade.py` SYMLINKS THE HOST VENV into its
+sandbox fixture — reaching out of the hermetic tree at the boundary the sandbox enforces.
+That is the editable-install escape `MODULE.bazel` refuses in strong terms, written as a
+fixture convenience. It goes when the venv is a build artifact.
+
+### ⟐POLL-RUF201-POPULATION — NEW 2026-09-10, small, unlanded
 
 ### ⟐POLL-RUF201-POPULATION — NEW 2026-09-10, small, unlanded
 
@@ -181,6 +263,39 @@ pods). Its docstring reads as the second while doing the first here.
 ⚑ NOT CHANGED ON REASONING ALONE — that would be shipping a guess. cassian's stage 2
 fences both arms per subject and will produce the measurement that settles whether it
 needs saying. Ready when that measurement exists, blocked until then.
+
+### ⟐VACUITY-IS-ONE-CELL — settled 2026-09-10 by research into two peer repositories
+
+⚑⚑⚑ THE OPERATOR NAMED IT: *most of these checks smell like syntactic or existence
+checks, not semantic ones.* Two repositories were read FROM SOURCE and they converge
+without sharing vocabulary.
+
+⚑ **v4cat DOES NOT DEFINE "vacuous"** — 1 occurrence in 90 files, casual English.
+Positive control, same tool and flags: `witness` returns 14 commits, `vacuo` returns 0.
+It does not need to: vacuity is the `10 LEFT` cell of a Klein-four read
+(`methodology.md:288-297`), and `theory.md:436` gives the consequence — *any unary
+operation throws away at least two cells.* `methodology.md:266` names the shape exactly:
+*every read is a comparison. There is no unary query. What looks unary is always a binary
+comparison whose right-hand referent is HIDDEN BY CONVENTION.*
+
+⚑⚑ **paperkit HAS THE LADDER AS A LITERAL**, `grade.py:17`:
+
+    vacuous(0) < indeterminate(1) < existence(1) < behavioral(2) < imported(3)
+
+with `grade.py:21` giving the distinction — *existence (presence proven) < behavioral
+(falsifiability proven).* So a green `test_no_string_assertion_in_this_module_is_vacuous`
+is `existence`, TWO RUNGS BELOW behavioral (ranked 0 and 2). **Passing it means rung 0 was
+avoided, not rung 2 reached.**
+
+⚑ THE GRADER AT `2ed26a4` IS THE INSTRUMENT FOR RUNG 2, and it does not replace the sweep
+— they measure different cells. What is still true of the sweep: it reports `10` only,
+`01` is invisible, and `00` was never a blind spot because `U` was never bounded — which
+`rigorous_use.md:78` calls an *unearned absence*.
+
+⚑ AND `_MAX_UNRESOLVED` IS NOT A DEBT. It counts the RESOLVER'S REACH, a third syntactic
+property, ratcheted by a guard that treats it as owed. The apparent 22→23 collision that
+nearly triggered a redesign was a HELPER counted as a test; scoping to `test_`-prefixed
+functions returned it to 22 with no constant moved.
 
 ### ⟐OOM-GROUP — untouched, and correctly so
 
