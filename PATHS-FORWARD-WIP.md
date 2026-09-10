@@ -163,6 +163,13 @@ anyway (done, `50cb2c2`), then build the rule.
 ⚑⚑⚑ THE ROUTE IS DECIDED AND IT IS NOT uv: **build from the pip hubs.** Operator ruled
 2026-09-10 after both options were measured.
 
+⚑⚑ **RE-ASKED AND RE-RULED 2026-09-10, after measuring that rules_python already builds a
+per-target venv** (below). The operator was given three options — use what bazel already builds
+and inject the interpreter; build the whole-distribution venv anyway; or do both in sequence — and
+chose **BUILD THE WHOLE-DISTRIBUTION VENV**. So the duplication of `venv_runfiles.bzl` is a known,
+accepted cost, not an oversight: a per-target venv cannot be activated by a developer, and the
+three non-bazel consumers above all reach `<dist>/.venv/bin/…`.
+
 ⚑ WHY uv WAS RULED OUT, measured both arms: `uv sync --offline` SUCCEEDS against a warm
 cache (full venv, correct interpreter, `ruff==0.16.6`) and FAILS with an empty
 `UV_CACHE_DIR`, naming the exact wheel URL it could not fetch. The control is what makes
@@ -180,6 +187,58 @@ bazel already has.
 
 ⚑ THE GRADER IS THE FORCING CONSUMER, and this is why the direction is a precondition
 rather than a parallel task — see ⟐GRADER-INTERPRETER-UNDECLARED below.
+
+#### ⚑⚑⚑ rules_python ALREADY BUILDS A VENV PER TARGET — measured 2026-09-10, and the operator ruled anyway
+
+`venv_runfiles.bzl` + `site_init_template.py` construct `_<target>.venv/bin/python3` for every
+`py_test`/`py_binary`. That is what `sys.executable` names inside an action. So a
+whole-distribution rule DUPLICATES construction that already exists — the ruling accepts that cost
+deliberately, because a **per-target** venv is not activatable and *"every project constructs its
+`.venv` the same way"* means one per DISTRIBUTION.
+
+⚑⚑ **AND THE PER-TARGET VENV WORKS FROM OUTSIDE ITS ACTION, ONCE `RUNFILES_DIR` IS SET** — worth
+recording because the failure mode is a trap, not an error. Invoked bare it reports
+`ModuleNotFoundError: No module named 'pytest'` **while `sys.path` visibly contains the pytest
+site-packages directory.** Both are true: `_find_runfiles_root()` falls back to walking up from
+`_bazel_site_init.py`, lands one directory short (`bin/hooks` rather than
+`bin/hooks/test_grade.runfiles`), and every dependency entry becomes a well-formed path to
+**nothing**. Python skips nonexistent `sys.path` entries silently.
+
+```
+as it appeared in sys.path : exists=False   .../bin/hooks/<hub>/site-packages
+under the runfiles root    : exists=True    .../bin/hooks/test_grade.runfiles/<hub>/site-packages
+with RUNFILES_DIR set      : pytest 9.1.1, mikemol.hooks.grade imports
+```
+
+⚑ *"The path is right there in `sys.path`"* is the plausible reading; the subject is a **string**,
+not a directory. Add it to the tally.
+
+#### ⚑⚑ THE ASSEMBLY IS MEASURED END-TO-END, BY HAND, BEFORE ANY STARLARK
+
+A rule written on an untested assembly is an explanation. Assembled in the scratchpad from the
+staged hubs — symlinked site-packages, relative `bin/python3`, hand-written `pyvenv.cfg`:
+
+```
+ARM 0 control   runs: 3.13.13
+ARM 1 packages  pytest 9.1.1 (also ruff, mypy)
+ARM 2 dist      mikemol.hooks.grade imports
+ARM 3 pytest    20 passed   (real hooks tests, tests/test_payload.py)
+ARM 4 MOVED     runs AFTER MOVE — the build-artifact property
+ARM 5 F-arm     panflute refuses
+```
+
+⚑⚑⚑ **ARM 4 IS THE ONE THAT MATTERS AND IT DEPENDS ON ONE BYTE OF DESIGN.** `bin/python3` must be
+a **relative** symlink (`../../toolchain/bin/python3`). An earlier probe established that
+`pyvenv.cfg`'s `home` is INERT — breaking it entirely changed nothing — and that the absolute
+`bin/python3` symlink is the real dependency. A venv that cannot move is not a build artifact.
+
+⚑ **AND THE CLOSURE MUST COME FROM `deps()`, NOT A DIRECTORY SCAN.** The probe scanned
+`external/rules_python++pip+hooks_*` and found **39 directories: 2 with no `site-packages`** (the
+hub aliases `hooks_deps`/`hooks_dev` themselves) and the rest **duplicate pairs** — a short alias
+and a long platform-tagged name resolving to the same wheel. 29 top-level entries linked. The scan
+worked only because duplicate names collide harmlessly; a rule must take
+`deps(@<dist>_dev//<pkg>:pkg)` so the population is derived from the graph rather than from a glob
+that happens not to hurt.
 
 ### ⟐MODULE-RUFF-CLAIM-STALE — NEW 2026-09-10, measured, a FALSE recorded measurement
 
