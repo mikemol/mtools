@@ -1,0 +1,213 @@
+% SPDX-License-Identifier: Apache-2.0
+% Copyright (c) 2026 Mike Mol
+%
+% The warrant set for mikemol-fence. ONE ENTRY PER TEST FUNCTION, and the gate enforces the
+% 1:1 against `grep -cE '^(    )?def test_'` over tests/.
+%
+% TRANSCRIBED, NOT AUTHORED: each claim is the first paragraph of its test's own docstring,
+% because the prose was written at the moment the defect was measured. A thin docstring
+% yields a thin claim -- a fact about the case rather than licence to invent one.
+%
+% THIS DISTRIBUTION'S TESTS ARE CLASS METHODS, and that is why the ledger was empty until
+% 2026-09-10: both counting sites read `^def test_` anchored at column 0, so the harness
+% counted ZERO here and an empty ledger satisfied 1:1 while 33 real tests went unwarranted.
+% The predicate was widened rather than the tests restyled -- the classes group meaningfully
+% and the instrument was the thing that could not see them.
+
+@misc{fence-caps-root-cgroup-line-is-the-hierarchy-root,
+  section = {caps},
+  claim   = {`0::/` names the root itself, not a child of it.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_a_root_cgroup_line_is_the_hierarchy_root}
+}
+
+@misc{fence-caps-root-has-no-parent-inside-the-hierarchy,
+  section = {caps},
+  claim   = {⚑ AT THE ROOT, `.parent` ESCAPES THE CGROUP TREE — a property of the path, not a host.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_the_root_has_no_parent_inside_the_hierarchy}
+}
+
+@misc{fence-caps-nested-cgroup-line-keeps-its-parent-inside,
+  section = {caps},
+  claim   = {⚑ THE POSITIVE CONTROL: a normal pod path has a parent that IS a cgroup directory.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_a_nested_cgroup_line_keeps_its_parent_inside}
+}
+
+@misc{fence-caps-no-caps-is-observe-only,
+  section = {caps},
+  claim   = {An empty `Caps` imposes nothing.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_no_caps_is_observe_only}
+}
+
+@misc{fence-caps-any-cap-is-not-observe-only,
+  section = {caps},
+  claim   = {Any single cap set takes the run out of observe-only.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_any_cap_is_not_observe_only}
+}
+
+@misc{fence-caps-swap-zero-is-a-cap-not-an-absence,
+  section = {caps},
+  claim   = {Reject the falsy reading of `swap="0"`.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_swap_zero_is_a_cap_not_an_absence}
+}
+
+@misc{fence-caps-observe-only-still-needs-controllers,
+  section = {caps},
+  claim   = {Require memory+pids even when nothing is capped.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_observe_only_still_needs_controllers}
+}
+
+@misc{fence-caps-io-cap-adds-its-controller,
+  section = {caps},
+  claim   = {An io cap pulls the io controller into the requirement.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_io_cap_adds_its_controller}
+}
+
+@misc{fence-caps-sizes,
+  section = {caps},
+  claim   = {Each suffix multiplies, and a bare integer passes through.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_sizes}
+}
+
+@misc{fence-caps-max-passes-through,
+  section = {caps},
+  claim   = {`max` is the kernel's spelling for no-limit and must not become a number.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_max_passes_through}
+}
+
+@misc{fence-caps-nothing-bound,
+  section = {caps},
+  claim   = {Clean counters name no binding cap.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_nothing_bound}
+}
+
+@misc{fence-caps-memory-oom-kill,
+  section = {caps},
+  claim   = {An oom_kill names the memory cap.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_memory_oom_kill}
+}
+
+@misc{fence-caps-memory-throttle-without-kill-still-counts,
+  section = {caps},
+  claim   = {Count limit hits without a kill as the memory cap binding.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_memory_throttle_without_kill_still_counts}
+}
+
+@misc{fence-caps-throttle-and-a-kill-do-not-render-the-same-verdict,
+  section = {caps},
+  claim   = {⚑⚑⚑ ONE LABEL OVER TWO OUTCOMES, ON A SWAP-BACKED HOST.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_a_throttle_and_a_kill_do_not_render_the_same_verdict}
+}
+
+@misc{fence-caps-throttle-names-itself-a-throttle,
+  section = {caps},
+  claim   = {⚑ THE READER'S QUESTION IS `was my workload held down`, and only this answers it.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_a_throttle_names_itself_a_throttle}
+}
+
+@misc{fence-caps-kill-names-itself-a-kill,
+  section = {caps},
+  claim   = {⚑ THE POSITIVE CONTROL: renaming the throttle must not rename the kill.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_a_kill_names_itself_a_kill}
+}
+
+@misc{fence-caps-pids,
+  section = {caps},
+  claim   = {A pids.events max hit names the pids cap.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_pids}
+}
+
+@misc{fence-caps-both,
+  section = {caps},
+  claim   = {Two caps binding are reported as two findings, not one.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_both}
+}
+
+@misc{fence-caps-unreadable-counters-bind-nothing,
+  section = {caps},
+  claim   = {An empty dict means the question could not be asked, which must not read as a trip.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_caps.py -k test_unreadable_counters_bind_nothing}
+}
+
+@misc{fence-cli-separator-is-stripped,
+  section = {cli},
+  claim   = {The `--` separator does not reach the payload.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_separator_is_stripped}
+}
+
+@misc{fence-cli-caps-parse,
+  section = {cli},
+  claim   = {Cap flags land on their fields, with `--pids` typed as an int.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_caps_parse}
+}
+
+@misc{fence-cli-observe-defaults-off,
+  section = {cli},
+  claim   = {`--observe` is opt-in; its absence is not a cap.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_observe_defaults_off}
+}
+
+@misc{fence-cli-no-command-is-refused,
+  section = {cli},
+  claim   = {A fence with nothing to fence is a usage error, not an empty success.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_no_command_is_refused}
+}
+
+@misc{fence-cli-observe-refuses-to-combine-with-a-cap,
+  section = {cli},
+  claim   = {Refuse rather than resolve an incoherent instruction.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_observe_refuses_to_combine_with_a_cap}
+}
+
+@misc{fence-cli-observe-alone-is-accepted-by-the-parser,
+  section = {cli},
+  claim   = {The T-arm: `--observe` with no cap parses cleanly.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_observe_alone_is_accepted_by_the_parser}
+}
+
+@misc{fence-fence-measures-without-capping,
+  section = {fence},
+  claim   = {A no-caps run completes, is marked observe-only, and binds nothing.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_measures_without_capping}
+}
+
+@misc{fence-fence-peak-is-read-and-is-not-zero,
+  section = {fence},
+  claim   = {Charge real pages to the fence, or report None.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_peak_is_read_and_is_not_zero}
+}
+
+@misc{fence-fence-events-are-present-and-clean,
+  section = {fence},
+  claim   = {An uncapped run kills nothing.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_events_are_present_and_clean}
+}
+
+@misc{fence-fence-nonzero-propagates,
+  section = {fence},
+  claim   = {A failing payload's code is the fence's code.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_nonzero_propagates}
+}
+
+@misc{fence-fence-missing-command,
+  section = {fence},
+  claim   = {A command that does not exist is 127, the shell's own spelling.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_missing_command}
+}
+
+@misc{fence-fence-failed-payload-is-still-measured,
+  section = {fence},
+  claim   = {Measure the runs most worth measuring.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_a_failed_payload_is_still_measured}
+}
+
+@misc{fence-fence-tight-memory-cap-binds,
+  section = {fence},
+  claim   = {A 256MB allocation under an 8MB cap trips the memory cap and says so.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_a_tight_memory_cap_binds}
+}
+
+@misc{fence-fence-same-payload-passes-uncapped,
+  section = {fence},
+  claim   = {The T-arm: the identical command completes uncapped.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_the_same_payload_passes_uncapped}
+}

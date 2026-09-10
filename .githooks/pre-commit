@@ -203,8 +203,30 @@ run_checked() {  # label, then the command
     fi
 }
 
+# ⚑⚑⚑ THE POPULATION IS DERIVED ONCE, AND IT WAS HAND-WRITTEN AT FOUR SITES IN THIS FILE.
+# Each read `for dist in hooks mdstruct ratchet`. `fence` landed at cc3d301 and NONE of them saw
+# it: its 27 test functions carried zero warrants because the 1:1 ledger below never looked, and
+# its checkers never ran here at all. ⚑ THE GATE WAS CORRECT OVER THE WRONG SET — a correct
+# result over a mis-named population passes every check that examines the result.
+# ⚑⚑ MEASURED SCOPE, and the recorded one was wrong: NINE sites across this file, `preflight.sh`
+# and `test_bar_fires.py`, not the six a note claimed. The count of the defect had the defect.
+# ⚑ THE CRITERION IS NOT INVENTED HERE. `blockers.sh` already enumerates components as *a dir
+# with a pyproject.toml*, arguing that a structural criterion cannot drift as the repo grows and
+# that a landed component necessarily satisfies it. This is that, once, instead of four literals.
+_dists=$(cd "$root" && printf '%s ' */pyproject.toml | sed 's#/pyproject.toml##g')
+# ⚑ AND IT REFUSES AN EMPTY DERIVATION RATHER THAN LOOPING ZERO TIMES. A glob that matched
+# nothing would make every check below a no-op and the gate would pass having examined nothing —
+# green over an empty population, which is the shape this whole file exists to refuse.
+case "$_dists" in
+  ''|'*/pyproject.toml ')
+    say "no distribution found by */pyproject.toml — cannot run the gate, commit refused"
+    say "  an empty population makes every check below a no-op that reports green"
+    exit 1
+    ;;
+esac
+
 # ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
-for dist in hooks mdstruct ratchet; do
+for dist in $_dists; do
   for tool in ruff mypy python3; do
     if [ ! -x "$dist/.venv/bin/$tool" ]; then
       say "$dist/.venv/bin/$tool not found — cannot run the gate, commit refused"
@@ -337,7 +359,7 @@ staged="${TMPDIR:-/home/mikemol/.cache}/mtools-staged"
 rm -rf "$staged"; mkdir -p "$staged"
 git checkout-index --all --prefix="$staged/"
 
-for dist in hooks mdstruct ratchet; do
+for dist in $_dists; do
   [ -d "$staged/$dist" ] || continue
   say "checking $dist"
   # ⚑⚑⚑ `MYPYPATH` AND `PYTHONPATH` POINT AT THE STAGED TREE, AND WITHOUT THIS THE GATE REPORTED
@@ -400,7 +422,7 @@ done
 # ⚑ A correct count over a MIS-NAMED population is harder to catch than a wrong count, because
 # every arithmetic check passes. Naming it here rather than changing the invariant, which is the
 # operator's call and not a defect.
-for dist in hooks mdstruct ratchet; do
+for dist in $_dists; do
   [ -d "$staged/$dist" ] || continue
   # ⚑⚑⚑ ANCHORED, BECAUSE AN UNANCHORED `@misc{` COUNTS A QUOTATION AS A WARRANT. This is a corpus
   # whose `claim` fields QUOTE CODE, so a warrant claiming something about bibtex syntax puts the
@@ -426,7 +448,7 @@ for dist in hooks mdstruct ratchet; do
   # rather than the property being enforced. Per-file counting is correct independent of file
   # endings; a lint rule forbidding the missing newline would fix the ACCIDENT and leave the
   # reader wrong — a second thing to keep true instead of one thing that cannot go wrong.
-  t=$(grep -h -c '^def test_' "$staged/$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
+  t=$(grep -h -cE '^(    )?def test_' "$staged/$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
   if [ "$w" -ne "$t" ]; then
     say "$dist: $w warrants against $t test functions — every test must arrive warranted"
     # ⚑⚑ THE NUMBERS GO INTO THE RECORD, NOT ONLY ONTO stderr. `say` reaches a human at a
@@ -667,7 +689,7 @@ if [ -x ratchet/.venv/bin/mikemol-ratchet ]; then
   # the same *detail that exists somewhere is detail the reader does not have* that the shellcheck
   # witness was wired for two commits earlier. **A repair applied to one call site is not a repair
   # to the class**, and this is the second of the twenty sites to be wired.
-  for dist in hooks mdstruct ratchet; do
+  for dist in $_dists; do
     rlog="$staged/.ratchet-$dist.log"
     if ! ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
         cat "$rlog" >&2

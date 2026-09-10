@@ -128,10 +128,30 @@ py_library(
             # cannot run here; what the sandbox exercises is argument validation and the probe-kind
             # guard, both of which refuse before the first side effect and need only the script.
             "//:.bazelrc",
+            # ⚑⚑⚑ AND THIS LIST WENT STALE EXACTLY AS THE COMMENT BELOW PREDICTS OF LISTS.
+            # `fence` landed at cc3d301 and was named here nowhere, so the arm asserting every
+            # BUILD file wires `pytest_main.py` iterated a population the SANDBOX had truncated
+            # to three — passing over a set that omitted the newest distribution, which is the
+            # `confidently over a population its ENVIRONMENT truncated` defect recorded below,
+            # reproduced in the data list that records it.
+            # ⚑⚑ THE `pyproject.toml` FILES ARE STAGED BECAUSE THE POPULATION IS NOW DERIVED FROM
+            # THEM. `_distributions()` globs `*/pyproject.toml`, matching `blockers.sh`'s
+            # structural criterion — so in the sandbox that glob sees only what is declared here,
+            # and an undeclared distribution is invisible rather than merely unchecked.
+            # ⚑ MEASURED: with only hooks' own pyproject staged, the derivation returned
+            # `['hooks']` and the arm's POSITIVE CONTROL refused. Had that control been `>= 1`,
+            # or absent, the arm would have passed green over a one-distribution view of a
+            # four-distribution repository.
+            # ⚑ STILL A LIST, NOT A GLOB, because bazel labels cannot glob across packages — the
+            # residue is stated rather than hidden, and the arm's control is what catches it.
             "//:BUILD.bazel",
+            "//fence:BUILD.bazel",
+            "//fence:pyproject.toml",
             "//hooks:BUILD.bazel",
             "//mdstruct:BUILD.bazel",
+            "//mdstruct:pyproject.toml",
             "//ratchet:BUILD.bazel",
+            "//ratchet:pyproject.toml",
             "@ruff//:bin",
             # ⚑⚑⚑ THE SIBLING TEST MODULES, because three arms sweep the whole SUITE rather
             # than this file: the warrant ledger's 1:1 against every test NAME, the

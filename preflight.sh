@@ -48,7 +48,12 @@ set -uo pipefail
 root="$(cd "$(dirname "$0")" && pwd)"
 cd "$root" || exit 2
 
-dists="${1:-hooks mdstruct ratchet}"
+# ⚑⚑ THE DEFAULT IS DERIVED, AND A HAND-WRITTEN ONE PREDICTED A GATE THAT NO LONGER EXISTED.
+# This read `hooks mdstruct ratchet`; `fence` landed at cc3d301, so the default population
+# omitted a whole distribution — and this script's job is to PREDICT the gate cheaply, which it
+# cannot do over a smaller set than the gate walks. The criterion is `blockers.sh`'s: a directory
+# carrying a `pyproject.toml`, which a landed component necessarily satisfies.
+dists="${1:-$(cd "$root" && printf '%s ' */pyproject.toml | sed 's#/pyproject.toml##g')}"
 fail=0
 
 say() { printf 'preflight: %s\n' "$1"; }
@@ -124,7 +129,7 @@ for dist in $dists; do
         # ⚑ SAME DEFECT AS `01dc5e7` ONE FILE OVER: two instruments deriving one figure
         # independently drift without either noticing, and agree until an accident stops holding.
         w=$(grep -c '^@misc{' "$dist/warrants.bib")
-        t=$(grep -h -c '^def test_' "$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
+        t=$(grep -h -cE '^(    )?def test_' "$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
         if [ "${w:-0}" -ne "${t:-0}" ]; then
             fail=1
             say "$dist: warrants ${w:-?} vs ${t:-?} test functions — the gate will refuse this"

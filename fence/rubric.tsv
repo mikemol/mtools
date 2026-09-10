@@ -1,0 +1,9 @@
+# rubric.tsv — the sections of the fence warrant set, in document order.
+# ⚑ THE KEYS ARE THE TEST MODULES, and the gate diffs this file's first column against every
+# `section = {…}` in warrants.bib: a section named in one and not the other is a refusal. Adding
+# a test module therefore means adding a row here, which is the point — a warrant filed under a
+# heading nobody declared is a claim with no place in the argument.
+# key <TAB> heading title
+caps	Caps and Counters: Observe-Only as a Contract, and Which Cap Bound
+cli	The Command Line: The Payload's Exit Code, and a Refusal Over a Guess
+fence	The Fence Itself: A Real cgroup, a Real Payload, and a Skip That Says Why

@@ -1253,6 +1253,18 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_does_not_report_a_ceiling_as_a_measurement}
 }
 
+@misc{hooks-bar-fires-every-test-function-count-in-the-harness-sees-a-method,
+  section = {bar-fires},
+  claim   = {THE COUNTER REPORTED ZERO FOR A WHOLE DISTRIBUTION AND 0:0 SATISFIES 1:1. Both counting sites read `grep -h -c '^def test_'` anchored at COLUMN 0, and every test in `fence` is a CLASS METHOD, so the harness counted zero test functions there --- a ledger with zero warrants against zero functions is 1:1 and PASSES while 33 real tests go unwarranted. AND THE FIGURE CARRIED FOR IT CAME FROM A THIRD POPULATION: the seed said 27, measured 0 by the gate's predicate, 33 methods, 45 pytest-collected cases; the 27 matched none of them. The style is fence's alone --- every sibling writes module-level functions --- so the predicate matched the CONVENTION rather than the population, and a distribution arriving from another repo with a different-but-valid style was invisible to it. AND THE ARM'S OWN FIRST CUT REPEATED THE DEFECT: it required the literal `    def test_` and then FAILED AGAINST THE REPAIR, because `^(    )?def test_` admits an indented definition without containing that substring --- an arm keyed to a form rather than a fact, in the hunter. Two-armed after reformulation: original predicate restored -> refuses, repaired -> passes},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_test_function_count_in_the_harness_sees_a_method}
+}
+
+@misc{hooks-bar-fires-no-hand-written-distribution-list-survives-in-the-gate-or-its-checker,
+  section = {bar-fires},
+  claim   = {ONE POPULATION, NINE SITES, AND A LANDED DISTRIBUTION IN NONE OF THEM. `fence` landed at cc3d301 and every loop still read `hooks mdstruct ratchet`: its 27 test functions carried ZERO warrants because the 1:1 ledger never looked, and the arm asserting every BUILD file wires `pytest_main.py` never checked fence's. THE RECORDED SCOPE WAS ITSELF A HAND-WRITTEN POPULATION --- a note said SIX sites; measured from the tree, NINE. The count of the defect had the defect. ONE OF THE NINE IS NOT A DEFECT: `blockers.sh` sets `known=` as a POSITIVE CONTROL over a population already derived structurally, so a bulk edit would have destroyed the distinction --- each site was read before any was changed. AND THE ARM'S FIRST CUT FLAGGED ITSELF: a line scan reported ELEVEN, three of them this arm's own docstring, comment and matching expression; only an AST walk distinguishes an expression from prose about one, the identical lesson the sibling venv arm records},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_hand_written_distribution_list_survives_in_the_gate_or_its_checker}
+}
+
 @misc{hooks-bar-fires-every-status-table-finder-uses-one-signature,
   section = {bar-fires},
   claim   = {ONE PREDICATE, FOUR SITES, TWO SPELLINGS — and the arm pinned only the site that was already right, an n-of-m whose population is places I looked rather than places the predicate lives},

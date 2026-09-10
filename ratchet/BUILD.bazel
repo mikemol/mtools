@@ -8,6 +8,10 @@ load("@ratchet_dev//:requirements.bzl", dev_requirement = "requirement")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
 exports_files([
+    # ⚑ EXPORTED FOR A SIBLING'S WITNESS: `//hooks:test_bar_fires` derives the distribution
+    # population by globbing `*/pyproject.toml`, and in the sandbox an unexported pyproject makes
+    # this distribution invisible to that arm rather than merely unchecked.
+    "pyproject.toml",
     "requirements.txt",
     "requirements-dev.txt",
 ])

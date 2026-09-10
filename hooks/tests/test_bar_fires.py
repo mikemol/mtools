@@ -330,7 +330,9 @@ def test_the_bazel_test_rule_runs_pytest_rather_than_the_module() -> None:
     reveal it. This reads the BUILD files instead.
     """
     root = _DIST.parent
-    for name in ("hooks", "mdstruct", "ratchet"):
+    # ⚑ DERIVED: `fence` landed and this arm never checked its BUILD file. It passes today, which
+    # is the point — an omission that happens to be harmless is still an omission.
+    for name in _distributions():
         build = (root / name / "BUILD.bazel").read_text(encoding="utf-8")
         assert 'main = "//:pytest_main.py"' in build, name
         assert "main = src," not in build, name
@@ -397,7 +399,7 @@ def test_no_witness_reads_a_developer_venv() -> None:
     # which DESCRIBES the defect. Only an AST walk distinguishes an expression from prose about
     # an expression, and a witness that cannot make that distinction cannot live in a file that
     # documents what it forbids.
-    for dist in ("hooks", "mdstruct", "ratchet"):
+    for dist in _distributions():
         for module in sorted((_DIST.parent / dist).glob("tests/test_*.py")):
             tree = pyast.parse(module.read_text(encoding="utf-8"))
             for node in pyast.walk(tree):
@@ -975,6 +977,14 @@ _MSGCOUNT = _DIST.parent / "message_counts.sh"
 # ⚑ This floor would be refused by 31 of 44 commits and is honest from `1ad358d` onward.
 _MIN_SWEPT_FLOOR_HONEST_FROM = "1ad358d"
 _MIN_SWEPT = 50
+# ⚑ A FLOOR, NOT A COUNT. Four distributions exist today; this asserts only that the derivation
+# found SOMETHING, so an absence claim over the population cannot pass because the population is
+# empty. Writing `== 4` would make a derived figure a hand-written one, which is the whole defect.
+_MIN_DISTRIBUTIONS = 2
+# ⚑ A QUOTED SHELL PATTERN NEEDS BOTH QUOTES. `line.count("'") >= 2` is the test for *this line
+# carries a single-quoted string I can extract*; naming it says which 2 — an opening and a
+# closing quote — rather than leaving a bare integer for a reader to re-derive.
+_QUOTED_PAIR = 2
 # ⚑⚑⚑ THE SWEEP'S OWN SKIPPED POPULATION, AND THE FIRST NUMBER WRITTEN HERE WAS WRONG BY 6x.
 # A regex over the test module reported FOUR — it matched one syntactic form, `(_CONST / "a")`.
 # The sweep's actual predicate is broader: any `read_text` receiver that is not a mapped NAME.
@@ -1014,7 +1024,12 @@ _MAX_UNRESOLVED_WAS = 23
 # carrying a directive. The resolver needs a NAME, and a runtime predicate has none. That is the
 # property making these arms honest, so the ceiling rises rather than the arms being rewritten to
 # name paths they would then have to keep in sync.
-_MAX_UNRESOLVED = 21
+# ⚑ 21 -> 22, THE FOURTH RISE, SAME CAUSE AS THE THREE ABOVE AND SHARPER. The new arm forbidding
+# a hand-written distribution list reads `.githooks/pre-commit`, `preflight.sh` and this module,
+# and derives its population from `*/pyproject.toml` at RUNTIME. Naming those paths to satisfy
+# the resolver would re-introduce the very literal the arm exists to refuse — so the ceiling
+# rises, which is the honest direction: it reports a reader's reach, not the arm's quality.
+_MAX_UNRESOLVED = 22
 
 # ⚑⚑⚑ THE MOST TIMES ONE READER MODE IS INVOKED ON THE SAME FILE IN ONE LOOP ITERATION. Measured
 # at 11 for `tables` and 9 for `rows`, against 10 censuses — so 22 sites in the loop plus 2 outside
@@ -1088,6 +1103,92 @@ def test_the_poll_marks_an_untracked_run_file_rather_than_hiding_it() -> None:
     """⚑ `§F` INVERTED: a run file not in `HEAD` still ROSTERS the parties who read it by path."""
     body = _POLL.read_text(encoding="utf-8")
     assert "NOT IN HEAD" in body, "an untracked census must be reported, not omitted"
+
+
+def _distributions() -> list[str]:
+    """Every distribution in this repository, derived from the filesystem.
+
+    ⚑⚑⚑ THE PREDICATE IS *A DIRECTORY CARRYING A `pyproject.toml`*, and it is not invented here:
+    `blockers.sh` already enumerates components that way, with a comment arguing that a structural
+    criterion *cannot drift as this repo grows, and a landed component necessarily satisfies it*.
+    This reuses that rather than adding a second spelling for one idea.
+    """
+    root = _DIST.parent
+    return sorted(p.parent.name for p in root.glob("*/pyproject.toml"))
+
+
+def test_no_hand_written_distribution_list_survives_in_the_gate_or_its_checker() -> None:
+    """⚑⚑⚑ ONE POPULATION, NINE SITES, AND A LANDED DISTRIBUTION IN NONE OF THEM.
+
+    `fence` landed at `cc3d301` and every one of these loops still read
+    `hooks mdstruct ratchet`. The consequences were real and silent: fence's 27 test functions
+    carried ZERO warrants because the gate's 1:1 ledger never looked at them, and the arm
+    asserting every BUILD file wires `pytest_main.py` never checked fence's.
+
+    ⚑⚑ AND THE RECORDED SCOPE WAS ITSELF A HAND-WRITTEN POPULATION. The seed said SIX sites.
+    MEASURED from the tree this tick: NINE — three in this module (I had recorded two), four in
+    `.githooks/pre-commit`, one in `preflight.sh`, and one more in `blockers.sh`. The count of
+    the defect had the defect.
+
+    ⚑ ONE OF THE NINE IS NOT A DEFECT AND IS DELIBERATELY LEFT ALONE. `blockers.sh:151` sets
+    `known="hooks mdstruct ratchet"` as a POSITIVE CONTROL over a population already derived by
+    `git ls-files '*/pyproject.toml'` — the list is there to prove the structural query finds
+    what it must, not to BE the population. A bulk edit would have destroyed that distinction,
+    which is why each site was read before any was changed.
+
+    ⚑ THE ARM ASSERTS THE ABSENCE OF THE LITERAL, not a count of sites. A count goes stale the
+    moment a site is added or removed and says nothing about which; the literal is the defect.
+    """
+    root = _DIST.parent
+    # ⚑ POSITIVE CONTROL: the derivation must find the distributions, or an absence assertion
+    # below passes because the population is empty rather than because it is derived.
+    dists = _distributions()
+    assert len(dists) >= _MIN_DISTRIBUTIONS, (
+        f"derived only {dists} — this arm would pass vacuously over an empty population"
+    )
+    assert "fence" in dists, "the derivation must see the distribution that exposed this defect"
+
+    offenders: list[str] = []
+    # ⚑ ASSERTED, NOT ASSUMED. A first cut wrote `../.githooks/pre-commit` — `_DIST.parent` is
+    # ALREADY the repo root, so the path doubled and the arm failed with FileNotFoundError. RED,
+    # which is what an F-arm should be, AND FOR THE WRONG REASON: a test failing on plumbing
+    # proves nothing about its subject, and the real repair would have "fixed" it by accident.
+    for rel in (".githooks/pre-commit", "preflight.sh"):
+        target = root / rel
+        assert target.is_file(), f"{rel} does not exist — this arm would fail on plumbing"
+        for lineno, line in enumerate(target.read_text(encoding="utf-8").splitlines(), start=1):
+            if not line.lstrip().startswith("#") and "hooks mdstruct ratchet" in line:
+                offenders.append(f"{rel}:{lineno}: {line.strip()}")
+
+    # ⚑⚑⚑ THE PYTHON FILE IS PARSED, NOT SCANNED, AND A LINE SCAN PROVED WHY IN ONE RUN. It
+    # reported ELEVEN offenders — three of them THIS ARM: its own docstring naming the literal,
+    # its comment about `blockers.sh`'s positive control, and the comparison expression doing the
+    # matching. ⚑ The sibling arm at `test_no_witness_reaches_a_venv` records the identical
+    # lesson: *stripping `#` comments then flagged this very docstring, which DESCRIBES the
+    # defect. Only an AST walk distinguishes an expression from prose about an expression.*
+    # A witness that cannot make that distinction cannot live in a file documenting what it
+    # forbids — and this one has to, because the offending sites are in it.
+    module = _DIST / "tests" / "test_bar_fires.py"
+    tree = pyast.parse(module.read_text(encoding="utf-8"))
+    # ⚑⚑ THE PATTERN IS BUILT, NOT WRITTEN, AND THE FIRST CUT FLAGGED ITSELF FOR GOOD REASON.
+    # A literal `("hooks", "mdstruct", "ratchet")` here is indistinguishable to the AST walk from
+    # the sites it hunts — it WAS one, reported at its own line number. Deriving it from the
+    # measured population minus the newcomer keeps the arm honest and keeps the predicate true
+    # if a fifth distribution lands: the shape being refused is *the set as it was before the
+    # last arrival*, which is exactly what a stale hand-written list is.
+    stale = tuple(d for d in dists if d != "fence")
+    for node in pyast.walk(tree):
+        if not isinstance(node, pyast.Tuple):
+            continue
+        values = [e.value for e in node.elts
+                  if isinstance(e, pyast.Constant) and isinstance(e.value, str)]
+        if tuple(values) == stale:
+            offenders.append(f"tests/test_bar_fires.py:{node.lineno}: {stale!r} as a literal")
+
+    assert not offenders, (
+        f"{len(offenders)} site(s) hard-code the distribution list; a landed distribution is "
+        "silently outside every check that reads one:\n  " + "\n  ".join(offenders)
+    )
 
 
 def test_every_status_table_finder_uses_one_signature() -> None:
@@ -1834,7 +1935,15 @@ def test_no_string_assertion_in_this_module_is_vacuous() -> None:
             # ⚑ RESOLVING ARBITRARY PATH EXPRESSIONS IS A PARSER THIS MODULE SHOULD NOT GROW. A
             # skipped test that is REPORTED is honest; one that vanishes is the vacuity being
             # measured, one level out. So the skip is counted and ceilinged.
-            if any(
+            # ⚑⚑⚑ TEST FUNCTIONS ONLY, AND THE CEILING COUNTED HELPERS TOO. This collected every
+            # `FunctionDef` that reads a file, while `total_arms` above counts only `test_`-prefixed
+            # ones — TWO POPULATIONS IN ONE FUNCTION, and the assertion's own message calls the
+            # bigger one *N test(s)*. MEASURED: `_freshness`, a helper at line 584, sat in that
+            # list. A helper cannot pass vacuously; nothing asserts inside it.
+            # ⚑ SO THE CEILING NAMED ONE MORE THAN THE PROPERTY IT MEASURES, and every figure
+            # derived from it inherited the mis-named population — including the carried symbol the
+            # poll prints. A correct count over the wrong set is the defect this module refuses.
+            if fn.name.startswith("test_") and any(
                 isinstance(n, pyast.Call)
                 and isinstance(n.func, pyast.Attribute)
                 and n.func.attr == "read_text"
@@ -3187,6 +3296,59 @@ def test_the_vacuity_sweep_resolves_an_inline_path_read() -> None:
     # new inline read is added — which is the moment a reader should be told.
     assert "_MAX_UNRESOLVED" in code, (
         "the skipped population needs a ceiling, or it grows back silently"
+    )
+
+
+def test_every_test_function_count_in_the_harness_sees_a_method() -> None:
+    """⚑⚑⚑ THE COUNTER REPORTED ZERO FOR A WHOLE DISTRIBUTION AND 0:0 SATISFIES 1:1.
+
+    Both counting sites read `grep -h -c '^def test_'` — anchored at COLUMN 0. Every test in
+    `fence` is a CLASS METHOD (`    def test_`), so the harness counted **zero** test functions
+    there. ⚑ A ledger with zero warrants against zero functions is 1:1 and PASSES, while 33 real
+    tests go unwarranted. The gate would have reported green over a distribution it could not see
+    into, on the very tick that taught it to walk fence at all.
+
+    ⚑⚑ AND THE FIGURE I CARRIED FOR IT WAS FROM A THIRD POPULATION. The seed said fence had 27
+    test functions to warrant. MEASURED: **0** by the gate's predicate, **33** methods, **45**
+    cases collected by pytest. The 27 came from an early pytest run and matched none of them — a
+    count with no stated provenance, carried across ticks as ready work.
+
+    ⚑ THE STYLE IS FENCE'S ALONE, MEASURED: every sibling distribution writes module-level
+    functions and `grep -c '^    def test_'` returns 0 for each. So the predicate matched the
+    convention rather than the population, and a distribution arriving from another repo with a
+    different-but-valid style was invisible to it. The operator ruled: widen the counter.
+
+    ⚑ THE ARM ASSERTS THE PREDICATE, NOT A COUNT. A count goes stale the next time a test lands;
+    what must hold is that both counting sites admit an indented `def test_`, since the gate and
+    the preflight disagreeing is the defect the sibling arm below exists for.
+    """
+    root = _DIST.parent
+    sites = (".githooks/pre-commit", "preflight.sh")
+    blind: list[str] = []
+    for rel in sites:
+        target = root / rel
+        assert target.is_file(), f"{rel} does not exist — this arm would fail on plumbing"
+        for lineno, line in enumerate(target.read_text(encoding="utf-8").splitlines(), start=1):
+            # ⚑ THE COUNTING SITES ARE THE ONES PIPING A `grep` INTO `bc`. A comment mentioning
+            # `def test_` is prose about the predicate, not the predicate — the same
+            # expression-versus-prose-about-an-expression distinction the AST arm above pays for.
+            if line.lstrip().startswith("#"):
+                continue
+            if not ("grep" in line and "bc" in line and "def test_" in line):
+                continue
+            # ⚑⚑⚑ THE PROPERTY IS *INDENTATION IS ADMITTED*, NOT ONE SPELLING OF THE FIX. A first
+            # cut required the literal `    def test_` and then FAILED AGAINST THE REPAIR ITSELF:
+            # `^(    )?def test_` admits an indented definition without containing that substring.
+            # ⚑ An arm keyed to a form rather than a fact — the same defect as the one it hunts,
+            # in the hunter. What is asserted now is that the pattern is not anchored at column 0
+            # with nothing before `def`.
+            pattern = line.split("'")[1] if line.count("'") >= _QUOTED_PAIR else line
+            if pattern.startswith("^def test_"):
+                blind.append(f"{rel}:{lineno}: {line.strip()}")
+    assert not blind, (
+        f"{len(blind)} counting site(s) anchor `def test_` at column 0, so a distribution whose "
+        "tests are class methods counts as ZERO and its empty ledger reads as 1:1:\n  "
+        + "\n  ".join(blind)
     )
 
 
@@ -4588,7 +4750,7 @@ def test_a_selector_and_the_comment_explaining_it_name_the_same_rule() -> None:
     codes = pyre.compile(r"\b([A-Z]{1,4}\d{3,4})\b")
     checked = 0
     disagreeing: list[str] = []
-    for dist in ("hooks", "mdstruct", "ratchet"):
+    for dist in _distributions():
         config = _DIST.parent / dist / "pyproject.toml"
         if not config.is_file():
             continue
