@@ -155,6 +155,22 @@ def parent_with_controllers(want: Iterable[str]) -> Path:
     # consequence one level down. A pod cgroup holds the executor's processes, so descending into
     # it hits EBUSY exactly as creating a sibling beside it hits the namespace root.
     #
+    # ⚑⚑⚑ AND THE POSITIVE HALF, WHICH THE TWO REFUSALS ABOVE DO NOT SUPPLY: what makes the
+    # sibling strategy work where it works. Measured on this host, same probe shape:
+    #   own    = .../app-org.kde.konsole-NNN.scope/tab(NNN).scope  holds 75 processes
+    #   parent = .../app-org.kde.konsole-NNN.scope                 holds ZERO processes;
+    #                                                              subtree_control: cpu memory pids
+    #   mkdir a sibling under that parent -> OK, and `memory.max` is writable in it.
+    # ⚑⚑ SO THE REQUIREMENT IS A PROCESS-FREE PARENT, not merely a delegated one. This host
+    # supplies one because systemd interposes a scope above the leaf; that is a property of the
+    # arrangement, not something this module arranges.
+    # ⚑ WHICH SETTLES A COUNTERFACTUAL RATHER THAN LEAVING IT ASSERTED. A writable bind at the
+    # POD'S OWN SLICE would make that slice the parent — and the pod's slice HOLDS the executor's
+    # processes, so `+memory` there is the EBUSY arm above. The bind was never the missing piece;
+    # it would have moved the refusal from the namespace root to the no-internal-process rule.
+    # Raised by cassian-observability-11 as a conclusion; recorded here because it is entailed by
+    # the two arms rather than by either alone, and neither of us had measured a working parent.
+    #
     # ⚑ SO THE SIBLING PATTERN IS FORCED, NOT PREFERRED, and the honest statement is that the
     # fence cannot run in a cgroup namespace whose root holds processes — a property of the
     # substrate, not a misconfiguration and not a bug in this module. Nothing is guessed into the
