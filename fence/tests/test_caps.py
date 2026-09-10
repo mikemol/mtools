@@ -19,19 +19,21 @@ class TestCgroupOfLine:
     — so the one expression separating "this host can fence" from "it cannot" was checked by a
     mechanism whose failure mode is silence.
 
-    ⚑⚑ MEASURED ON THE k3s EXECUTOR, 2026-09-10, reported by cassian-observability-11 and
-    reproduced here from this module's own source rather than from their trace:
+    ⚑⚑ THE ARITHMETIC, reproduced here from this module's own source rather than from a peer's
+    trace:
 
         /proc/self/cgroup = "0::/"  ->  split("::",1)[1] = "/"  ->  lstrip("/") = ""
         CG_ROOT / ""                =  /sys/fs/cgroup
         .parent                     =  /sys/fs              <- OUTSIDE THE HIERARCHY
         parent/"cgroup.subtree_control" = /sys/fs/cgroup.subtree_control   (does not exist)
 
-    ⚑ SO THE GUARD READ A SIBLING OF THE CGROUP TREE AND CALLED THE OSError A DELEGATION
-    FAILURE. Its message said *no delegated cgroup v2 memory+pids subtree on this host* while
-    cassian measured that subtree POPULATED with memory and pids — a true refusal asserting a
-    cause it never tested, which is the class this distribution's BUILD file documents one level
-    up.
+    ⚑ THESE ARMS PIN THE ARITHMETIC, NOT A VERDICT ABOUT ANY HOST. That distinction was paid for:
+    a refusal built on this expression was added and withdrawn the same day, because what `0::/`
+    MEANS depends on the mount. At containerd's default bind it names the pod's own slice — a
+    real, writable, controller-delegated cgroup — and only a `hostPath` that escapes the pod's
+    cgroup namespace makes it name the machine's root. The path computation below is a fact about
+    `PurePath`; whether reaching it indicates a broken host is a fact about `/proc/self/mountinfo`
+    and is NOT asserted here. See the withdrawal note in `cgroup.py:parent_with_controllers`.
     """
 
     def test_a_root_cgroup_line_is_the_hierarchy_root(self) -> None:
@@ -39,7 +41,11 @@ class TestCgroupOfLine:
         assert cgroup_of_line("0::/") == CG_ROOT
 
     def test_the_root_has_no_parent_inside_the_hierarchy(self) -> None:
-        """⚑ THE DEFECT, PINNED: at the root, `.parent` escapes the cgroup tree entirely."""
+        """⚑ AT THE ROOT, `.parent` ESCAPES THE CGROUP TREE — a property of the path, not a host.
+
+        Whether a caller ever legitimately sits here is the separate question the withdrawn
+        refusal got wrong; this arm asserts only what the arithmetic does.
+        """
         assert not cgroup_of_line("0::/").parent.is_relative_to(CG_ROOT)
 
     def test_a_nested_cgroup_line_keeps_its_parent_inside(self) -> None:

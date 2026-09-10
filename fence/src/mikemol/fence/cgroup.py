@@ -97,25 +97,41 @@ def parent_with_controllers(want: Iterable[str]) -> Path:
     Enables each controller if it is not already enabled; refuses if it cannot.
     """
     own = own_cgroup()
-    # ⚑⚑⚑ REFUSE AT THE ROOT BY ITS OWN NAME, BECAUSE `.parent` ESCAPES THE HIERARCHY THERE.
-    # `/proc/self/cgroup` reading `0::/` means this process sits at the cgroup ROOT; `.parent` is
-    # then `/sys/fs`, and `parent/"cgroup.subtree_control"` is `/sys/fs/cgroup.subtree_control` —
-    # a sibling of the tree, not a file in it. The read failed with ENOENT and the OSError below
-    # reported it as a DELEGATION failure.
-    # ⚑⚑ MEASURED ON THE k3s EXECUTOR (cassian-observability-11, 2026-09-10): mount `rw`,
-    # `cgroup.subtree_control` carrying `memory` and `pids` — both preconditions satisfied — and
-    # this function still refused, saying *no delegated cgroup v2 memory+pids subtree on this
-    # host*. A TRUE REFUSAL ASSERTING A CAUSE IT NEVER TESTED.
-    # ⚑ AND THE ROOT IS 0555 (`dr-xr-xr-x`), so even at the correct path there is no writable
-    # directory to create a sibling in — the kernel exposes the root that way regardless of the
-    # mount being `rw`. Fixing the path alone would move the refusal, not remove it, so the
-    # refusal names the real requirement instead: a NON-ROOT cgroup.
-    if own == CG_ROOT:
-        msg = ("this process is at the cgroup v2 ROOT (/proc/self/cgroup reads '0::/'), which has "
-               "no parent inside the hierarchy to create a sibling fence in — and the root is "
-               "mode 0555, unwritable even by uid 0. The fence needs the caller to occupy a "
-               "NON-ROOT cgroup; on Kubernetes that is a pod placement question, not a mount one")
-        raise FenceUnavailableError(msg)
+    # ⚑⚑⚑ A REFUSAL HERE ON `own == CG_ROOT` WAS ADDED AND WITHDRAWN THE SAME DAY, AND THE
+    # WITHDRAWAL IS THE FINDING. It read: *this process is at the cgroup v2 ROOT, which has no
+    # parent inside the hierarchy... the fence needs a NON-ROOT cgroup; on Kubernetes that is a
+    # pod placement question.* Every measurement behind that sentence was real and its premise
+    # was manufactured.
+    #
+    # ⚑⚑ WHAT `0::/` MEANS DEPENDS ON THE MOUNT, AND NEITHER PARTY HAD READ THE MOUNT.
+    # cassian-observability-11 applied a `hostPath` at /sys/fs/cgroup to make the bind writable;
+    # a hostPath ESCAPES THE POD'S CGROUP NAMESPACE. `/proc/self/mountinfo` in that pod showed the
+    # mount ROOT as `/../../..` — three levels up, the MACHINE's root — so `kubepods.slice`,
+    # `system.slice` and `init.scope` were all visible from inside. THAT root is 0555, and that is
+    # the "third wall" reported to me and recorded here as a host property. It was an artifact of
+    # the bind. Post-revert the same executor reads mount root `/`, and the pod's own
+    # `kubepods-pod<uid>.slice` is 0755 with memory and pids already in its subtree_control — the
+    # writable, delegated parent this function wants existed the whole time.
+    #
+    # ⚑⚑⚑ SO AT CONTAINERD'S DEFAULT BIND, `0::/` IS CORRECT, NOT DEFECTIVE: it means *the pod's
+    # own slice*, mapped onto /sys/fs/cgroup by the namespace. The refusal would have rejected a
+    # correctly-placed pod. Removed rather than reworded.
+    #
+    # ⚑ AND IT PASSED THE BAR WHILE BEING WRONG, because no host here reaches it: this machine's
+    # `/proc/self/cgroup` is a deep `user.slice/...` path, so the branch was never executed by any
+    # green run. A guard whose only true arm lives on a substrate I cannot reach is one I cannot
+    # test — which is why the replacement is NOT a mountinfo predicate. cassian proposes
+    # distinguishing the cases by mountinfo's mount-ROOT field (`/` vs `/../../..`), and that is
+    # plausibly right: measured here, this host reads root `/` on a single unambiguous line. But
+    # the ESCAPED arm exists only in a pod that has now been reverted, so I would be shipping a
+    # two-case predicate having exercised one case. That is the one-armed test this repository
+    # refuses everywhere else.
+    #
+    # ⚑ WHAT WOULD SETTLE IT, and it is reachable: a run on a pod at the DEFAULT bind. If
+    # `parent_with_controllers` succeeds there, `0::/` needs no special case at all and the
+    # ENOENT-on-`/sys/fs/cgroup.subtree_control` path is unreachable in practice. If it fails,
+    # the failure names its own cause now (see `_unfenceable` in tests/test_fence.py), which is
+    # the repair that survives this reversal.
     parent = own.parent
     sub = parent / "cgroup.subtree_control"
     try:
