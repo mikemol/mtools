@@ -2857,3 +2857,27 @@
   claim   = {⚑⚑⚑ THE END-TO-END CLAIM — this venv can do the job the host venv does for the three non-bazel consumers: `.githooks/pre-commit` (13 call sites), `preflight.sh` (7), and the interactive loop, all of which invoke `<dist>/.venv/bin/python3 -m pytest`.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_venv_runs_the_distributions_own_suite}
 }
+
+@misc{hooks-grade-interpreter-is-a-declared-field-rather-than-a-path-convention,
+  section = {grade},
+  claim   = {⚑⚑⚑ A MUTATION FLIP IS ONLY ATTRIBUTABLE IF THE ENVIRONMENT IS FIXED, and it was INFERRED: `Runner` appended `.venv/bin/python3` to `dist`, so which interpreter graded a suite followed from where its directory sat. A red arm then means *the mutation worked* OR *the interpreter differs*, and the instrument built to separate those could not separate its own.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_interpreter_is_a_declared_field_rather_than_a_path_convention}
+}
+
+@misc{hooks-grade-default-interpreter-is-the-convention-it-replaces,
+  section = {grade},
+  claim   = {⚑ THE DEFAULT MUST NOT MOVE, or landing the field silently regrades every existing suite — the point is to make the environment DECLARABLE, not to change what an undeclared caller gets.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_default_interpreter_is_the_convention_it_replaces}
+}
+
+@misc{hooks-grade-declared-interpreter-is-the-one-that-runs,
+  section = {grade},
+  claim   = {⚑⚑ A FIELD NOTHING READS IS THE SHAPE THIS REPOSITORY KEEPS FINDING, so this measures through BEHAVIOUR: a declared interpreter that does not exist must report UNREACHABLE, with the default's real verdict asserted first as the positive control.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_a_declared_interpreter_is_the_one_that_runs}
+}
+
+@misc{hooks-grade-interpreter-is-never-the-string-none,
+  section = {grade},
+  claim   = {⚑⚑ A NULLABLE FIELD WOULD MAKE `str(None)` A WELL-FORMED ARGV ELEMENT NAMING NO FILE — not an error, a path that does not exist, so every arm grades UNREACHABLE and the suite reports *nothing is falsifiable* rather than *the grader was misconfigured*. Typed `Path` with an empty-path sentinel instead.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_interpreter_is_never_the_string_none}
+}

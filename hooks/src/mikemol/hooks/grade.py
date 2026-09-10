@@ -35,7 +35,7 @@ from __future__ import annotations
 
 import ast
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -89,6 +89,28 @@ class Runner:
     dist: Path
     module: str
 
+    # ⚑⚑⚑ THE INTERPRETER IS DECLARED, NOT INFERRED — AND IT USED TO BE INFERRED FROM A DIRECTORY
+    # NAME. `dist / ".venv/bin/python3"` made *which interpreter graded a suite* a consequence of
+    # where its directory sat, so two callers passing the same `dist` from different trees got
+    # different environments with no way to notice. A mutation flip is only ATTRIBUTABLE if the
+    # environment is fixed: otherwise a red arm means *the mutation worked* OR *the interpreter
+    # differs*, and the instrument built to separate those cannot separate its own.
+    # ⚑⚑ THE DEFAULT IS THE OLD CONVENTION, EXACTLY, so no existing caller regrades — what changes
+    # is that the fallback is now STATED rather than being the only possibility. `//:venv.bzl`
+    # builds a real `<dist>/.venv` per distribution, and naming it is now a caller's decision.
+    # ⚑ `Path` AND NOT `Path | None`, WITH THE DEFAULT RESOLVED IN `__post_init__` VIA A FIELD
+    # SENTINEL. A nullable field would leave `str(self.interpreter)` able to produce the literal
+    # string "None" — a well-formed argv element naming no file, which is this session's most
+    # measured shape and would surface as *every arm unreachable* rather than as an error.
+    # The empty `Path()` is the sentinel because a caller cannot mean it: it names the cwd, not an
+    # interpreter, and `Path("")` compares equal to `Path(".")` only after resolution.
+    interpreter: Path = field(default_factory=Path)
+
+    def __post_init__(self) -> None:
+        """Resolve the interpreter default once, so `run` reads a settled value."""
+        if self.interpreter == Path():
+            self.interpreter = self.dist / ".venv/bin/python3"
+
     def run(self, test: str) -> tuple[bool, bool]:
         """Run one test by name. Returns `(passed, reachable)`.
 
@@ -107,7 +129,7 @@ class Runner:
         # raises `PermissionError`, and both are the same fact — the runner could not start.
         try:
             proc = subprocess.run(
-                [str(self.dist / ".venv/bin/python3"), "-m", "pytest", self.module,
+                [str(self.interpreter), "-m", "pytest", self.module,
                  "-k", test, "-q", "--no-header", "-p", "no:cacheprovider"],
                 capture_output=True, text=True, check=False, cwd=str(self.dist),
             )

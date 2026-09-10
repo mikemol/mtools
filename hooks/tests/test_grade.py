@@ -57,9 +57,16 @@ def test_negative() -> None:
 def sandbox(tmp_path: Path) -> Path:
     """Build a project holding one subject and three arms of known grade.
 
-    ⚑ THE VENV IS SYMLINKED FROM THIS DISTRIBUTION rather than built. The subject under test is
-    the grader, not the environment, and building a venv per case would make these arms measure
-    `uv` as much as anything here.
+    ⚑⚑ THE SANDBOX NOW DECLARES ITS INTERPRETER rather than leaving `Runner` to infer one from
+    the directory layout. The `.venv` symlink remains because the sandbox must LOOK like a
+    distribution for the default path to exist at all, but no arm depends on that any more:
+    `_runner()` passes `interpreter=` explicitly.
+
+    ⚑ AND THE SYMLINK IS NOT A HOST ESCAPE, which is worth stating because it reads like one.
+    `_venv()` derives from `sys.executable`, so under bazel it names THE ACTION'S OWN staged venv
+    — measured: `//hooks:test_grade --config=remote` reports 21 passed on the executor, where no
+    host venv exists to reach. Outside bazel it names the developer's venv, which is the
+    interpreter running the case either way.
 
     Returns:
         the sandbox project root, holding `tests/subject.sh`, `tests/test_arms.py` and a
@@ -86,6 +93,21 @@ def _venv() -> Path:
     return Path(sys.executable).parent.parent
 
 
+def _runner(sandbox: Path) -> grade.Runner:
+    """Build a Runner that DECLARES its interpreter instead of letting `dist` imply one.
+
+    ⚑⚑ THE SUITE SHOULD EXERCISE THE PATH IT RECOMMENDS. `Runner.interpreter` exists so callers
+    stop inferring an environment from a directory name; a suite that kept using the default
+    would leave the declared path tested by exactly one arm and used by none.
+
+    Returns:
+        a Runner over the sandbox, naming the interpreter running this case.
+
+    """
+    return grade.Runner(dist=sandbox, module="tests/test_arms.py",
+                        interpreter=Path(sys.executable))
+
+
 def _graded(sandbox: Path) -> dict[str, str]:
     """Run the grader over the sandbox.
 
@@ -96,7 +118,7 @@ def _graded(sandbox: Path) -> dict[str, str]:
     module = sandbox / "tests" / "test_arms.py"
     targets = {"_SUBJ": sandbox / "tests" / "subject.sh"}
     arms = grade.arms_with_subjects(module, targets)
-    runner = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    runner = _runner(sandbox)
     return {t: grade.grade_test(runner, t, s).grade for t, s in sorted(arms.items())}
 
 
@@ -202,7 +224,7 @@ def test_the_report_leads_with_the_worst_rung(sandbox: Path) -> None:
     module = sandbox / "tests" / "test_arms.py"
     targets = {"_SUBJ": sandbox / "tests" / "subject.sh"}
     arms = grade.arms_with_subjects(module, targets)
-    runner = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    runner = _runner(sandbox)
     lines = grade.report([grade.grade_test(runner, t, s) for t, s in sorted(arms.items())])
     assert "indeterminate" in lines[0]
 
@@ -241,7 +263,7 @@ def test_a_flip_requires_the_check_to_be_reachable(sandbox: Path) -> None:
     and an integration-level assertion could not tell a real flip from a crash-flip.
     """
     subject = sandbox / "tests" / "subject.sh"
-    runner = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    runner = _runner(sandbox)
     assert grade._flips(runner, "test_behavioural", subject)
     assert subject.read_text(encoding="utf-8") == _SUBJECT
 
@@ -253,7 +275,7 @@ def test_grading_a_missing_test_reports_broken_not_a_low_rung(sandbox: Path) -> 
     unreachable check as a refuted claim asserts the repository is red on evidence that says
     only that the harness did not work.
     """
-    runner = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    runner = _runner(sandbox)
     g = grade.grade_test(runner, "test_does_not_exist", [sandbox / "tests" / "subject.sh"])
     assert g.grade == "broken"
     assert "NOT a statement that the repository is red" in g.why
@@ -269,7 +291,7 @@ def test_every_grade_states_why_it_is_not_the_rung_above_or_below(sandbox: Path)
     module = sandbox / "tests" / "test_arms.py"
     targets = {"_SUBJ": sandbox / "tests" / "subject.sh"}
     arms = grade.arms_with_subjects(module, targets)
-    runner = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    runner = _runner(sandbox)
     for t, s in sorted(arms.items()):
         g = grade.grade_test(runner, t, s)
         assert g.higher, f"{t} does not say why it is not the rung above"
@@ -299,7 +321,7 @@ def test_content_sensitivity_is_false_when_no_content_is_declared(sandbox: Path)
     module = sandbox / "tests" / "test_arms.py"
     targets = {"_SUBJ": sandbox / "tests" / "subject.sh"}
     arms = grade.arms_with_subjects(module, targets)
-    runner = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    runner = _runner(sandbox)
     g = grade.grade_test(runner, "test_behavioural", arms["test_behavioural"])
     assert g.grade == "behavioral"
     assert not g.content_sensitive
@@ -314,7 +336,7 @@ def test_a_declared_content_file_marks_the_flip_content_sensitive(sandbox: Path)
     module = sandbox / "tests" / "test_arms.py"
     targets = {"_SUBJ": sandbox / "tests" / "subject.sh"}
     arms = grade.arms_with_subjects(module, targets)
-    runner = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    runner = _runner(sandbox)
     g = grade.grade_test(runner, "test_behavioural", arms["test_behavioural"],
                          content={"subject.sh"})
     assert g.content_sensitive
@@ -336,3 +358,86 @@ def test_subjects_are_derived_per_arm_rather_than_from_a_shared_list(sandbox: Pa
     arms = grade.arms_with_subjects(module, targets)
     for subs in arms.values():
         assert other not in subs
+
+
+def test_the_interpreter_is_a_declared_field_rather_than_a_path_convention() -> None:
+    """⚑⚑⚑ A FLIP IS ATTRIBUTABLE ONLY IF THE ENVIRONMENT IS FIXED, AND IT WAS INFERRED.
+
+    `Runner` took `dist` and appended `.venv/bin/python3` — so which interpreter graded a suite
+    was a consequence of where its directory sat, not of anything a caller said. Two callers
+    passing the same `dist` from different trees get different interpreters and no way to notice;
+    a flip could then mean *the mutation worked* or *the interpreter differs*, and the grader
+    cannot tell those apart while its own environment is a derived quantity.
+
+    ⚑⚑ THE REPAIR IS A FIELD, NOT A NEW CONVENTION. `interpreter` defaults to exactly what the
+    old code computed, so every existing caller is unchanged and the DEFAULT is now a stated
+    fallback rather than the only possibility. Naming the venv `//:venv.bzl` builds is then a
+    caller's decision instead of a rewrite.
+
+    ⚑ AND IT ASKS BY CONSTRUCTION RATHER THAN BY INTROSPECTION. A first draft read
+    `dataclasses.fields(grade.Runner)`, which returns `Field[Any]` and imports `Any` into a suite
+    configured to refuse it — mypy said so. Constructing with the keyword answers the same question
+    without the escape, and answers it about the CONSTRUCTOR, which is what a caller touches.
+    """
+    runner = grade.Runner(dist=Path("/nowhere"), module="tests/whatever.py",
+                          interpreter=Path("/some/python3"))
+    assert runner.interpreter == Path("/some/python3"), (
+        f"Runner accepted an `interpreter` and did not keep it: {runner.interpreter}"
+    )
+
+
+def test_the_default_interpreter_is_the_convention_it_replaces(tmp_path: Path) -> None:
+    """⚑ THE DEFAULT MUST NOT MOVE, or landing the field silently regrades every existing suite.
+
+    The point of the field is to make the environment DECLARABLE, not to change what an
+    undeclared caller gets. This pins the fallback to the exact path the previous code built.
+    """
+    runner = grade.Runner(dist=tmp_path, module="tests/whatever.py")
+    assert runner.interpreter == tmp_path / ".venv/bin/python3", (
+        f"the default interpreter moved to {runner.interpreter} — existing callers regrade"
+    )
+
+
+def test_a_declared_interpreter_is_the_one_that_runs(sandbox: Path) -> None:
+    """⚑⚑ THE FIELD IS ONLY REAL IF IT REACHES `subprocess`.
+
+    A field nothing reads is the shape this repository keeps finding.
+
+    ⚑ MEASURED THROUGH BEHAVIOUR RATHER THAN INSPECTION: point the runner at an interpreter that
+    does not exist and it must report UNREACHABLE — `(False, False)` — while the same runner with
+    the default reports the arm's real verdict. Reading the attribute back would prove only that
+    the dataclass stores it.
+    """
+    working = grade.Runner(dist=sandbox, module="tests/test_arms.py")
+    passed, reachable = working.run("test_behavioural")
+    # ⚑ POSITIVE CONTROL FIRST: if the default cannot run the arm either, the refusal below says
+    # nothing about the declared interpreter.
+    assert reachable, "control failed: the default interpreter could not run the arm at all"
+    assert passed, "control failed: the arm does not pass under the default interpreter"
+
+    broken = grade.Runner(dist=sandbox, module="tests/test_arms.py",
+                          interpreter=sandbox / "nonexistent" / "python3")
+    assert broken.run("test_behavioural") == (False, False), (
+        "a declared interpreter that does not exist still ran something — the field is not "
+        "reaching subprocess, and `dist` is still deciding the environment"
+    )
+
+
+def test_the_interpreter_is_never_the_string_none(tmp_path: Path) -> None:
+    """⚑⚑ A NULLABLE FIELD WOULD MAKE `str(None)` A WELL-FORMED ARGV ELEMENT NAMING NO FILE.
+
+    The first version typed this `Path | None` with the default resolved in `__post_init__`. That
+    passes mypy and still leaves a hole: anything assigning `None` afterwards yields the literal
+    string `"None"` as the interpreter, which is not an error — it is a path that does not exist,
+    so every arm grades UNREACHABLE and the suite reports *nothing is falsifiable* rather than
+    *the grader was misconfigured*. This session has measured that shape repeatedly: a string that
+    names nothing, read as a fact about the subject.
+
+    ⚑ SO THE FIELD IS `Path` WITH AN EMPTY-PATH SENTINEL, and this arm pins the property a reader
+    would otherwise have to re-derive from `__post_init__`.
+    """
+    runner = grade.Runner(dist=tmp_path, module="tests/whatever.py")
+    assert str(runner.interpreter) != "None", "the interpreter resolved to the STRING 'None'"
+    assert runner.interpreter != Path(), (
+        "the interpreter is still the empty-path sentinel — __post_init__ did not resolve it"
+    )

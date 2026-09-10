@@ -323,10 +323,35 @@ false NOW and should be corrected regardless; whether the `http_archive` is ther
 REDUNDANT is a further question nobody has measured, and removing it on this evidence
 alone would be acting past what was established.
 
-### ⟐GRADER-INTERPRETER-UNDECLARED — NEW 2026-09-10, measured, blocks a soundness claim
+### ⟐GRADER-INTERPRETER-UNDECLARED — CLEARED 2026-09-10, and one of its two claims was mine and false
 
-`hooks/src/mikemol/hooks/grade.py` builds `dist / ".venv/bin/python3"`. Two problems, and
-the operator named the second:
+⚑⚑⚑ **THE INTERPRETER IS NOW A DECLARED FIELD.** `Runner.interpreter: Path`, defaulting via an
+empty-path sentinel to exactly what the old code computed, so no existing caller regrades — what
+changed is that the fallback is now *stated* rather than being the only possibility. `run()` passes
+it to `subprocess`; four arms pin it (declared value kept, default unmoved, declared interpreter
+actually reaching subprocess, and never the string `"None"`), each shown to fail before the fix and
+for the right reason.
+
+⚑⚑ **AND THE NULLABLE VERSION WAS A HOLE I ALMOST SHIPPED.** First draft typed it `Path | None`
+with the default resolved in `__post_init__` — mypy-clean, and still leaving `str(None)` able to
+produce the literal `"None"` as an argv element. That is not an error: it is a path that does not
+exist, so every arm would grade UNREACHABLE and the suite would report *nothing is falsifiable*
+rather than *the grader was misconfigured*. Same shape as the two path findings above. Typed `Path`
+with an empty-path sentinel instead, and pinned by its own arm.
+
+⚑⚑⚑ **THE SECOND CLAIM BELOW WAS FALSE AND I WROTE IT.** The paragraph read: *"`test_grade.py`
+SYMLINKS THE HOST VENV into its sandbox fixture — reaching out of the hermetic tree."* Measured:
+`_venv()` derives from `sys.executable`, so **under bazel it names the ACTION'S OWN staged venv**,
+and `//hooks:test_grade --config=remote` reports **21 passed on the executor**, where no host venv
+exists to reach. The symlink is not an escape. It reads like one — `.venv` in a fixture, pointing
+somewhere outside `tmp_path` — which is exactly why it went unchecked across several ticks and
+into the cron prompt as established fact. **A claim about an escape needs the same arm as any
+other claim.** What was genuinely wrong is that the fixture *relied on the path convention*; the
+suite now routes every sandbox Runner through `_runner()`, which passes `interpreter=` explicitly,
+so it exercises the path it recommends.
+
+**The original entry follows, kept for what it got right.** `hooks/src/mikemol/hooks/grade.py`
+built `dist / ".venv/bin/python3"`. Two problems, and the operator named the second:
 
 ⚑ THE SANDBOX CRASHED THE GRADER ON A MISSING INTERPRETER, in the very arm asserting it
 distinguishes *could not run* from *ran and failed*. I fixed it with an `OSError` guard —
@@ -341,10 +366,10 @@ A FLIP IS NOT ATTRIBUTABLE — a test could go red because the subject changed o
 interpreter differs. paperkit's `content_sensitive` exists to separate exactly that, and it
 can only mean something when the environment is fixed by construction.
 
-⚑ ALSO UNRECORDED UNTIL NOW: `hooks/tests/test_grade.py` SYMLINKS THE HOST VENV into its
-sandbox fixture — reaching out of the hermetic tree at the boundary the sandbox enforces.
-That is the editable-install escape `MODULE.bazel` refuses in strong terms, written as a
-fixture convenience. It goes when the venv is a build artifact.
+⚑ ~~ALSO UNRECORDED UNTIL NOW: `hooks/tests/test_grade.py` SYMLINKS THE HOST VENV into its
+sandbox fixture — reaching out of the hermetic tree at the boundary the sandbox enforces.~~
+**WITHDRAWN, see the correction at the head of this section:** the symlink target is derived
+from `sys.executable` and under bazel names the action's own venv. 21 passed on the executor.
 
 ### ⟐POLL-RUF201-POPULATION — CLEARED 2026-09-10, and the repair was to DERIVE rather than extend
 
