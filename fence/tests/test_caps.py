@@ -145,6 +145,52 @@ class TestBoundBy:
         assert out
         assert out[0].startswith("MEMORY")
 
+    def test_a_throttle_and_a_kill_do_not_render_the_same_verdict(self) -> None:
+        """⚑⚑⚑ ONE LABEL OVER TWO OUTCOMES, ON A SWAP-BACKED HOST.
+
+        `bound_by` branched on `oom_kill > 0 OR max > 0` — two distinct conditions, one string.
+        So a payload THROTTLED into compressed swap and a payload KILLED both rendered as
+        `BOUND BY MEMORY`.
+
+        ⚑⚑ MEASURED, both arms, 2026-09-10, `--mem 8M` against a deliberate 256MB allocation
+        (reported by cassian-observability-11 and reproduced here independently):
+
+            --mem 8M           payload COMPLETED, printed 268435456 bytes
+                               rc=0   oom_kill=0  max_hits=1424  peak=8400896
+            --mem 8M --swap 0  payload KILLED
+                               rc=137 oom_kill=1  max_hits=35    peak=8388608
+
+        ⚑ ARM A ALLOCATED THE FULL 256MB AND LIVED. The cap held the RESIDENT SET to 8MB and let
+        the rest spill to zram; the enclosing `memory.swap.max` reads `max` on this host. A reader
+        seeing `BOUND BY MEMORY` with rc=0 concludes the cap held the workload down. It did not.
+
+        ⚑⚑ AND IT INVERTS BY SUBSTRATE, which is what makes the collapse expensive rather than
+        untidy: k8s sets `memory.swap.max=0` on a Guaranteed pod cgroup, so the SAME declared cap
+        is a hard ceiling in a pod and a throttle on this host. The verdict string was the only
+        place a caller could have learned which.
+
+        ⚑ THE OPERANDS WERE ALWAYS PRINTED — `oom_kill=` and `max_hits=` are both in the string.
+        Only the LEAD LABEL collapsed them, which is why nothing looked wrong: this module's own
+        `--swap` help already says *0 = no swap, so mem is a kill boundary not a throttle*. The
+        knowledge was in the tool and absent from the verdict.
+        """
+        throttled = bound_by({"oom_kill": 0, "max": 1424}, {"max": 0})
+        killed = bound_by({"oom_kill": 1, "max": 35}, {"max": 0})
+        assert throttled
+        assert killed
+        assert throttled[0] != killed[0], (
+            "a payload that completed in swap and one the kernel killed must not render the "
+            "same verdict; the distinction is oom_kill, and it is already in the counters"
+        )
+
+    def test_a_throttle_names_itself_a_throttle(self) -> None:
+        """⚑ THE READER'S QUESTION IS `was my workload held down`, and only this answers it."""
+        assert "THROTTLED" in bound_by({"oom_kill": 0, "max": 1424}, {"max": 0})[0]
+
+    def test_a_kill_names_itself_a_kill(self) -> None:
+        """⚑ THE POSITIVE CONTROL: renaming the throttle must not rename the kill."""
+        assert "KILLED" in bound_by({"oom_kill": 1, "max": 35}, {"max": 0})[0]
+
     def test_pids(self) -> None:
         """A pids.events max hit names the pids cap."""
         out = bound_by({}, {"max": 7})

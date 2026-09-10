@@ -263,9 +263,31 @@ def bound_by(mem_ev: Mapping[str, int], pid_ev: Mapping[str, int]) -> list[str]:
     pass/fail would leave the caller to guess the mechanism.
     """
     out: list[str] = []
-    if mem_ev.get("oom_kill", 0) > 0 or mem_ev.get("max", 0) > 0:
-        out.append(f"MEMORY (memory.events oom_kill={mem_ev.get('oom_kill', 0)} "
-                   f"max_hits={mem_ev.get('max', 0)})")
+    # ⚑⚑⚑ THIS WAS ONE BRANCH — `oom_kill > 0 OR max > 0` — AND IT RENDERED TWO OUTCOMES AS ONE
+    # VERDICT. On a swap-backed host a memory cap does not necessarily stop a workload: it caps
+    # the RESIDENT SET and the remainder spills to compressed swap. MEASURED here, `--mem 8M`
+    # against a deliberate 256MB allocation (reported by cassian-observability-11, reproduced
+    # independently on this host, whose enclosing `memory.swap.max` reads `max`):
+    #     --mem 8M           payload COMPLETED, printed 268435456 bytes
+    #                        rc=0   oom_kill=0  max_hits=1424  peak=8400896
+    #     --mem 8M --swap 0  payload KILLED
+    #                        rc=137 oom_kill=1  max_hits=35    peak=8388608
+    # Both said `BOUND BY MEMORY`. The first is TRUE and reads as the second.
+    # ⚑⚑ AND IT INVERTS BY SUBSTRATE: k8s sets `memory.swap.max=0` on a Guaranteed pod cgroup, so
+    # the SAME declared cap is a hard ceiling in a pod and a throttle on a host like this one. The
+    # verdict string was the only place a caller could have learned which — and it did not say.
+    # ⚑ THE OPERANDS WERE ALWAYS PRINTED; only the LEAD LABEL collapsed them, which is why nothing
+    # looked wrong. This module's `--swap` help already draws the distinction — *0 = no swap, so
+    # mem is a kill boundary not a throttle* — so the knowledge was in the tool and absent from
+    # the finding. Same class as a skip whose stated reason was never the measured one.
+    if mem_ev.get("oom_kill", 0) > 0:
+        out.append(f"MEMORY, KILLED (memory.events oom_kill={mem_ev['oom_kill']} "
+                   f"max_hits={mem_ev.get('max', 0)}) — the cap was a ceiling")
+    elif mem_ev.get("max", 0) > 0:
+        out.append(f"MEMORY, THROTTLED (memory.events oom_kill=0 "
+                   f"max_hits={mem_ev['max']}) — the cap bound the RESIDENT SET and the payload "
+                   f"was not killed; on a swap-backed host it may have completed in swap. "
+                   f"Add `--swap 0` to make the cap a kill boundary")
     if pid_ev.get("max", 0) > 0:
         out.append(f"PIDS (pids.events max={pid_ev['max']} — fork/spawn pressure hit pids.max)")
     return out
