@@ -132,6 +132,36 @@ def parent_with_controllers(want: Iterable[str]) -> Path:
     # ENOENT-on-`/sys/fs/cgroup.subtree_control` path is unreachable in practice. If it fails,
     # the failure names its own cause now (see `_unfenceable` in tests/test_fence.py), which is
     # the repair that survives this reversal.
+    #
+    # ⚑⚑⚑ THE SETTLER RAN (cassian-observability-11, default bind, `2 remote`) AND `0::/` APPEARS
+    # THERE TOO. So the escaped arm is the ORDINARY LIVE STATE of a k3s pod here, not an artifact
+    # of the reverted hostPath: that bind changed WHAT THE MOUNT POINTED AT, never the
+    # `/proc/self/cgroup` reading. The arithmetic above is load-bearing on this substrate after
+    # all, and the withdrawal's stated premise was wrong in the other direction.
+    #
+    # ⚑⚑⚑ AND THE WITHDRAWN REFUSAL IS STILL NOT REINSTATED, BECAUSE IT NAMED THE WRONG CAUSE.
+    # It said *the fence needs the caller to occupy a NON-ROOT cgroup; on Kubernetes that is a pod
+    # placement question.* Measured post-revert: the pod's own slice is 0755 with memory+pids
+    # already delegated, the container is uid 0, AND `/proc/self/cgroup` reads `0::/` — all at
+    # once, because a cgroup NAMESPACE presents the slice the pod occupies AS the root. The pod is
+    # correctly placed. `own_cgroup()` resolving to CG_ROOT is CORRECT. What fails is that this
+    # module wants a SIBLING, and a namespaced pod has no sibling — only a child.
+    #
+    # ⚑⚑ A CHILD STRATEGY DOES NOT RESCUE IT, AND THAT IS MEASURED HERE RATHER THAN REASONED.
+    # Two arms on this host, in a real delegated cgroup holding 75 processes:
+    #   enable `+memory` in a cgroup that HOLDS processes  -> EBUSY (Device or resource busy)
+    #   same write into a FRESH EMPTY child                -> ENOENT (parent never enabled memory)
+    # The first IS the no-internal-process rule this module's own header cites; the second is its
+    # consequence one level down. A pod cgroup holds the executor's processes, so descending into
+    # it hits EBUSY exactly as creating a sibling beside it hits the namespace root.
+    #
+    # ⚑ SO THE SIBLING PATTERN IS FORCED, NOT PREFERRED, and the honest statement is that the
+    # fence cannot run in a cgroup namespace whose root holds processes — a property of the
+    # substrate, not a misconfiguration and not a bug in this module. Nothing is guessed into the
+    # code for it: no refusal is reinstated, no predicate is invented. The refusal below still
+    # fires, and since `_unfenceable` now carries the exception's own text, what a reader sees is
+    # the ENOENT on `/sys/fs/cgroup.subtree_control` — true, specific, and pointing at the path
+    # that was actually read.
     parent = own.parent
     sub = parent / "cgroup.subtree_control"
     try:
