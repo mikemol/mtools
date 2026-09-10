@@ -20,5 +20,7 @@ pygments==2.21.0
     # via pytest
 pytest==9.1.1
     # via mikemol-fence (pyproject.toml:dev)
+ruff==0.16.6
+    # via mikemol-fence (pyproject.toml:dev)
 typing-extensions==4.16.0
     # via mypy

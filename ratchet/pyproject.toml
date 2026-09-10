@@ -47,7 +47,12 @@ Homepage = "https://github.com/mikemol/mtools"
 # ⚑ `mypy` IS A DEV DEPENDENCY BECAUSE THE BAZEL mypy ACTION STAGES IT AS A DECLARED INPUT. It was
 # absent here while the sibling distributions carried it, so the gate's own type check had no tool
 # to run in the sandbox — the check existed on the host and could not exist in the graph.
-dev = ["pytest", "mypy"]
+# ⚑⚑⚑ `ruff` IS HERE FOR THE SAME REASON AND WAS MISSING FOR LONGER. `.githooks/pre-commit`
+# refuses unless `<dist>/.venv/bin/ruff` exists, and this venv HAD ruff while nothing declared it
+# — a hand install outside the declared inputs, so the gate ran green on something a fresh
+# `uv sync` would not produce. Found when `fence/` was bootstrapped for the first time and site 1
+# refused it: three venvs carried ruff, three pyprojects named it nowhere.
+dev = ["pytest", "mypy", "ruff==0.16.6"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

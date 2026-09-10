@@ -32,7 +32,17 @@ classifiers = [
 # ⚑⚑ AND `shellcheck` IS ABSENT FROM THIS LIST BECAUSE IT IS A SYSTEM BINARY, not a wheel. The
 # shell hook reports its absence rather than passing silently — the same discipline the markdown
 # package applies to pandoc.
-dependencies = ["ruff", "mypy"]
+#
+# ⚑⚑⚑ `ruff` IS PINNED TO THE VERSION THE BUILD GRAPH STAGES, AND THE BARE NAME WAS NOT ENOUGH.
+# `MODULE.bazel` fetches ruff 0.16.6 as an `http_archive`; this list said `"ruff"`, so a `uv sync`
+# resolved 0.16.7 and MOVED THIS VENV OFF THE GRAPH'S VERSION — measured, in this repository, the
+# moment the four distributions were first synced together. The gate runs `<dist>/.venv/bin/ruff`
+# while the sandbox runs the archive, so an unpinned name means a checker that disagrees with
+# itself by substrate.
+# ⚑ AND THE PIN BELONGS HERE RATHER THAN IN `dev` BECAUSE THIS IS WHERE THE DEPENDENCY IS
+# DECLARED: for this distribution the checkers are RUNTIME deps — invoking them is its function —
+# so a `dev`-group pin would not constrain what a consumer installing the wheel receives.
+dependencies = ["ruff==0.16.6", "mypy"]
 
 # ⚑⚑ A CONSOLE SCRIPT IS WHAT MAKES ADOPTION *NOT* A SYMLINK. A settings.json hook line naming
 # `mikemol-hook-structural-query` resolves through the installed distribution, so the adopting

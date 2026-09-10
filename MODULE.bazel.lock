@@ -328,13 +328,13 @@
         "bzlTransitiveDigest": "J8x4DXBGGbJQMTKu3BVCIopHfr/AfDibKrUCj/TXUvY=",
         "usagesDigest": "/XXEioG+8UwBoyUtGfzNAUMVnBkbCxUl7eFiCst77YI=",
         "recordedFileInputs": {
-          "@@//fence/requirements-dev.txt": "7bab9739da9c335954a7b9759f9495de734a34cd646ac5293cdaf72ef8048485",
+          "@@//fence/requirements-dev.txt": "d566412ee184ba779893e2b12065f21d154a595fbdd3833f58b75562eb59b715",
           "@@//fence/requirements.txt": "07db352f9543e7bef2b8dd005e63c4c8f14c865ef75539178f9233d037399b46",
           "@@//hooks/requirements-dev.txt": "7a49d103a2ff9d7db5cc48b8bcf55ea4785e1b90d450fcb52621fa2e0e5f6495",
           "@@//hooks/requirements.txt": "ab91ea8c26cdc64b03b2fad8e552e590b4cc478e34a984a1ebd300de734d924b",
-          "@@//mdstruct/requirements-dev.txt": "ed36720df9baf12651c5bc8963c62f5e492c3c66ce018614a971aa8b17770a92",
+          "@@//mdstruct/requirements-dev.txt": "fa25f2ff48d41bdfdedf7c6b25ada40a40efe1fe1df71828a64d06177763f803",
           "@@//mdstruct/requirements.txt": "6d62f82cc27746c5fe91dfcbd6fa68e1fe0c5ea65411c2c0cb9454bed2fa6ebb",
-          "@@//ratchet/requirements-dev.txt": "7fac53a4c1bc01ba58e1c88b2c57b82ec2e3155548a81ac3e03a059fc74fb59a",
+          "@@//ratchet/requirements-dev.txt": "91554e958468c708af8e262ee76502841066a17a33d123b3af17ee26fbfe632a",
           "@@//ratchet/requirements.txt": "07db352f9543e7bef2b8dd005e63c4c8f14c865ef75539178f9233d037399b46",
           "@@protobuf+//python/requirements.txt": "983be60d3cec4b319dcab6d48aeb3f5b2f7c3350f26b3a9e97486c37967c73c5",
           "@@rules_fuzzing+//fuzzing/requirements.txt": "ab04664be026b632a0d2a2446c4f65982b7654f5b6851d2f9d399a19b7242a5b",
@@ -436,6 +436,15 @@
               "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
               "repo": "fence_dev_313",
               "requirement": "pytest==9.1.1"
+            }
+          },
+          "fence_dev_313_ruff": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "ruff==0.16.6"
             }
           },
           "fence_dev_313_typing_extensions": {
@@ -654,6 +663,15 @@
               "requirement": "ast-serialize==0.9.0"
             }
           },
+          "mdstruct_dev_313_click": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "click==8.5.0"
+            }
+          },
           "mdstruct_dev_313_iniconfig": {
             "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
             "attributes": {
@@ -699,6 +717,24 @@
               "requirement": "packaging==26.3"
             }
           },
+          "mdstruct_dev_313_panflute": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "panflute==2.3.1"
+            }
+          },
+          "mdstruct_dev_313_paperkit": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "paperkit @ git+https://github.com/mikemol/paperkit@7081cd13e2f8d933e0598ecdcc18f7e9cf221295"
+            }
+          },
           "mdstruct_dev_313_pathspec": {
             "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
             "attributes": {
@@ -733,6 +769,24 @@
               "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
               "repo": "mdstruct_dev_313",
               "requirement": "pytest==9.1.1"
+            }
+          },
+          "mdstruct_dev_313_pyyaml": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "pyyaml==6.0.3"
+            }
+          },
+          "mdstruct_dev_313_ruff": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@mdstruct_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "mdstruct_dev_313",
+              "requirement": "ruff==0.16.6"
             }
           },
           "mdstruct_dev_313_typing_extensions": {
@@ -922,6 +976,15 @@
               "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
               "repo": "ratchet_dev_313",
               "requirement": "pytest==9.1.1"
+            }
+          },
+          "ratchet_dev_313_ruff": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@ratchet_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "ratchet_dev_313",
+              "requirement": "ruff==0.16.6"
             }
           },
           "ratchet_dev_313_typing_extensions": {
@@ -3357,6 +3420,7 @@
                 "pluggy": "{\"fence_dev_313_pluggy\":[{\"version\":\"3.13\"}]}",
                 "pygments": "{\"fence_dev_313_pygments\":[{\"version\":\"3.13\"}]}",
                 "pytest": "{\"fence_dev_313_pytest\":[{\"version\":\"3.13\"}]}",
+                "ruff": "{\"fence_dev_313_ruff\":[{\"version\":\"3.13\"}]}",
                 "typing_extensions": "{\"fence_dev_313_typing_extensions\":[{\"version\":\"3.13\"}]}"
               },
               "packages": [
@@ -3370,6 +3434,7 @@
                 "pluggy",
                 "pygments",
                 "pytest",
+                "ruff",
                 "typing_extensions"
               ],
               "groups": {}
@@ -3462,28 +3527,38 @@
               "extra_hub_aliases": {},
               "whl_map": {
                 "ast_serialize": "{\"mdstruct_dev_313_ast_serialize\":[{\"version\":\"3.13\"}]}",
+                "click": "{\"mdstruct_dev_313_click\":[{\"version\":\"3.13\"}]}",
                 "iniconfig": "{\"mdstruct_dev_313_iniconfig\":[{\"version\":\"3.13\"}]}",
                 "librt": "{\"mdstruct_dev_313_librt\":[{\"version\":\"3.13\"}]}",
                 "mypy": "{\"mdstruct_dev_313_mypy\":[{\"version\":\"3.13\"}]}",
                 "mypy_extensions": "{\"mdstruct_dev_313_mypy_extensions\":[{\"version\":\"3.13\"}]}",
                 "packaging": "{\"mdstruct_dev_313_packaging\":[{\"version\":\"3.13\"}]}",
+                "panflute": "{\"mdstruct_dev_313_panflute\":[{\"version\":\"3.13\"}]}",
+                "paperkit": "{\"mdstruct_dev_313_paperkit\":[{\"version\":\"3.13\"}]}",
                 "pathspec": "{\"mdstruct_dev_313_pathspec\":[{\"version\":\"3.13\"}]}",
                 "pluggy": "{\"mdstruct_dev_313_pluggy\":[{\"version\":\"3.13\"}]}",
                 "pygments": "{\"mdstruct_dev_313_pygments\":[{\"version\":\"3.13\"}]}",
                 "pytest": "{\"mdstruct_dev_313_pytest\":[{\"version\":\"3.13\"}]}",
+                "pyyaml": "{\"mdstruct_dev_313_pyyaml\":[{\"version\":\"3.13\"}]}",
+                "ruff": "{\"mdstruct_dev_313_ruff\":[{\"version\":\"3.13\"}]}",
                 "typing_extensions": "{\"mdstruct_dev_313_typing_extensions\":[{\"version\":\"3.13\"}]}"
               },
               "packages": [
                 "ast_serialize",
+                "click",
                 "iniconfig",
                 "librt",
                 "mypy",
                 "mypy_extensions",
                 "packaging",
+                "panflute",
+                "paperkit",
                 "pathspec",
                 "pluggy",
                 "pygments",
                 "pytest",
+                "pyyaml",
+                "ruff",
                 "typing_extensions"
               ],
               "groups": {}
@@ -3531,6 +3606,7 @@
                 "pluggy": "{\"ratchet_dev_313_pluggy\":[{\"version\":\"3.13\"}]}",
                 "pygments": "{\"ratchet_dev_313_pygments\":[{\"version\":\"3.13\"}]}",
                 "pytest": "{\"ratchet_dev_313_pytest\":[{\"version\":\"3.13\"}]}",
+                "ruff": "{\"ratchet_dev_313_ruff\":[{\"version\":\"3.13\"}]}",
                 "typing_extensions": "{\"ratchet_dev_313_typing_extensions\":[{\"version\":\"3.13\"}]}"
               },
               "packages": [
@@ -3544,6 +3620,7 @@
                 "pluggy",
                 "pygments",
                 "pytest",
+                "ruff",
                 "typing_extensions"
               ],
               "groups": {}

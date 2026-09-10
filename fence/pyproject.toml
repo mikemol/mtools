@@ -37,7 +37,22 @@ mikemol-fence = "mikemol.fence.cli:main"
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
-dev = ["pytest", "mypy"]
+# ⚑⚑⚑ `ruff` IS DECLARED BECAUSE THE GATE REQUIRES IT AND NOTHING USED TO SAY SO. `.githooks/
+# pre-commit` refuses unless `<dist>/.venv/bin/ruff` exists. THIS DISTRIBUTION IS WHERE THAT
+# SURFACED: `fence/` had no local venv at all until 2026-09-10 — it only ever built under bazel —
+# and the first `uv sync` produced a venv the gate immediately refused. Measured at that moment:
+# all three sibling venvs CARRIED ruff and only `hooks` declared it (as a RUNTIME dep, because
+# invoking checkers is its function). mdstruct and ratchet had it by hand install, outside the
+# declared inputs, so the gate had been green on something a fresh clone would not reproduce.
+# ⚑⚑⚑ AND THE VERSION IS PINNED TO THE GRAPH'S, WHICH DECLARING ALONE DID NOT DO. A first cut
+# added a bare `ruff` and recompiling `ratchet`'s lock resolved **0.16.7** while `MODULE.bazel`
+# stages **0.16.6** as an `http_archive` — so the gate's per-venv checker and the sandbox's would
+# have run DIFFERENT RUFF VERSIONS ON THE SAME CODE, a checker disagreeing with itself by
+# substrate. Closing the presence gap opened a version gap.
+# ⚑ THE COST IS DELIBERATE: bumping ruff is now a two-file change (`MODULE.bazel` and every dev
+# group), which is correct rather than annoying — they were always required to move together, and
+# only one of them said so.
+dev = ["pytest", "mypy", "ruff==0.16.6"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

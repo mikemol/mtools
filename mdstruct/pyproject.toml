@@ -53,7 +53,36 @@ Homepage = "https://github.com/mikemol/mtools"
 # ⚑ `mypy` IS A DEV DEPENDENCY BECAUSE `stubtest` IS PART OF IT, and the stub-authority witness
 # runs it as a subprocess. Without it declared, that witness passed on a host whose venv happened
 # to carry mypy and FAILED in the sandbox, which is the hermetic gate doing its job.
-dev = ["pytest", "mypy", "paperkit"]
+# ⚑⚑⚑ AND `ruff` WAS THE SAME DEFECT ONE TOOL OVER, LEFT STANDING BESIDE THE NOTE THAT NAMES IT.
+# `.githooks/pre-commit` refuses unless `<dist>/.venv/bin/ruff` exists, and this venv HAD ruff
+# while nothing here declared it — installed by hand, outside the declared inputs, so the gate was
+# green on an undeclared input and a fresh `uv sync` would have been refused. MEASURED when
+# `fence/` was bootstrapped for the first time and site 1 refused it: three venvs carried ruff,
+# three pyprojects named it nowhere. ⚑ `hooks` is the one that got it right, and differently — it
+# declares ruff+mypy as RUNTIME deps because invoking checkers is its function.
+# ⚑⚑⚑ PINNED TO THE GRAPH'S VERSION, BECAUSE DECLARING ALONE OPENED A SECOND GAP. A first cut
+# added a bare `ruff` and recompiling `ratchet`'s lock resolved **0.16.7** against the
+# `http_archive`'s **0.16.6** — the gate's per-venv checker and the sandbox's would then run
+# different ruff versions on the same code. Bumping ruff is now a two-file change, which is what
+# it always was; only `MODULE.bazel` said so.
+dev = [
+    "pytest",
+    "mypy",
+    "ruff==0.16.6",
+    # ⚑⚑⚑ A GIT URL IS A DECLARED, RESOLVABLE INPUT — WHICH IS THE WHOLE POINT, not a workaround
+    # for an unpublished package. As a bare name `paperkit` was unresolvable: `uv pip compile
+    # --group dev` exited *requirements are unsatisfiable* and produced NO lock, so this
+    # distribution's dev lock was compiled from `pytest` alone and a hermetic action staged a test
+    # runner without the projection engine. With a URL the resolver has something to fetch and
+    # HASH, so bazel can construct the `.venv` AS A BUILD ARTIFACT instead of depending on a host
+    # directory somebody populated by hand.
+    # ⚑⚑ THE EDITABLE-INSTALL OBJECTION DOES NOT APPLY AND IS WORTH SAYING SO EXPLICITLY, because
+    # `MODULE.bazel` refuses that arrangement in strong terms: an editable install is a finder
+    # carrying `MAPPING = {'paperkit': '/home/…/paperkit'}`, so staged into a sandbox it resolves
+    # back OUT to the live working tree — *"a sandbox escape that passes is worse than one that
+    # fails"*. A git dependency is none of that: real files, fetched, content-addressed.
+    "paperkit @ git+https://github.com/mikemol/paperkit",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
