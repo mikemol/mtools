@@ -27,6 +27,7 @@ on a version the build would not install.
 from __future__ import annotations
 
 import ast as pyast
+import importlib.metadata
 import json
 import os
 import re as pyre
@@ -60,11 +61,16 @@ def _ruff_argv() -> list[str]:
     hermetic targets passed and this one failed — the suite that exists to catch a gate aimed at
     the wrong thing, itself aimed at a path that is not part of the repository.
 
-    ⚑⚑ `RUFF_BIN` NAMES A HASH-PINNED http_archive, NOT A pip DEPENDENCY. rules_python stages
-    only `site-packages`, dropping the wheel's `bin/ruff`, so the installed package is a shim
-    whose `find_ruff_bin()` searches for a binary that was never staged — `python -m ruff` inside
-    a hermetic action raised and listed the paths it had tried. A pip requirement that cannot be
-    EXECUTED is not a usable dependency for a test that runs the checker.
+    ⚑⚑ `RUFF_BIN` NAMES A HASH-PINNED http_archive, NOT A pip DEPENDENCY — AND THE REASON THIS
+    DOCSTRING GAVE WENT STALE. It said *rules_python stages only `site-packages`, dropping the
+    wheel's `bin/ruff`*. True at rules_python 1.0.0, FALSE at 2.3.3: `bazel cquery
+    '@hooks_dev//ruff:extracted_whl_files'` lists `bin/ruff`, and `file` reports a real ELF. The
+    bump at `50cb2c2` invalidated the premise here and in `MODULE.bazel`, and nothing noticed
+    because NOTHING ASSERTED IT — see `test_the_ruff_archive_rests_on_a_measured_entry_point_set`.
+
+    ⚑ THE CHOICE STANDS ON ITS OTHER LEG: `ruff` declares ZERO console-script entry points, so
+    there is nothing for `py_console_script_binary` to regenerate. That is the leg the decision
+    procedure in `MODULE.bazel` actually keys on, and it is now under an arm.
 
     ⚑ ABSENT EVERY SOURCE, THIS RAISES RATHER THAN SKIPPING. A skipped case and a passing one are
     indistinguishable in a summary line, and every arm below would then report green over a
@@ -240,6 +246,50 @@ def test_the_checker_that_runs_is_the_one_the_lock_pins() -> None:
     proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
         [*_ruff_argv(), "--version"], capture_output=True, text=True, check=True)
     assert proc.stdout.split()[1] == pinned.split("==")[1].strip()
+
+
+def test_the_ruff_archive_rests_on_a_measured_entry_point_set() -> None:
+    """⚑⚑⚑ A LOAD-BEARING COMMENT'S PREMISE WENT FALSE AT A DEPENDENCY BUMP AND NOTHING NOTICED.
+
+    `MODULE.bazel` justified fetching ruff as an `http_archive` by saying *rules_python STAGES
+    ONLY `site-packages`. The wheel's `bin/ruff` is dropped.* That was measured and true at
+    rules_python 1.0.0. At 2.3.3 it is FALSE — `bazel cquery
+    '@hooks_dev//ruff:extracted_whl_files' --output=files` lists `bin/ruff`, and `file` reports
+    `ELF 64-bit LSB pie executable … stripped`. The bump at `50cb2c2` invalidated the sentence
+    and it kept being read as evidence.
+
+    ⚑⚑ IT SURVIVED BECAUSE NOTHING ASSERTED IT. The comment carries a decision procedure — check
+    `entry_points`; non-empty means `py_console_script_binary`, empty plus a compiled `bin/` means
+    `http_archive` — and the CONCLUSION rests on that, not on staging. This arm puts the
+    load-bearing leg under measurement so the next bump cannot quietly move it.
+
+    ⚑ THE POSITIVE CONTROL IS IN THE SAME RUN: `mypy` and `pytest` are asked identically and DO
+    declare console scripts. Without that, an empty result would be indistinguishable from a
+    probe that cannot see entry points at all — which is the shape this suite exists to refuse.
+
+    ⚑ AND IT ASSERTS THE PROPERTY, NOT THE NAMES. Requiring exactly `['dmypy', 'mypy', …]` would
+    break when mypy adds a script, which is not this repository's business; what must hold is
+    that ruff declares NONE while a comparable wheel declares SOME.
+    """
+    dist = importlib.metadata.distribution("ruff")
+    ruff_scripts = [e.name for e in dist.entry_points if e.group == "console_scripts"]
+    # ⚑ THE CONTROL FIRST: if the probe cannot see a known-good case, the negative below says
+    # nothing about ruff and everything about the probe.
+    control = [
+        e.name
+        for pkg in ("mypy", "pytest")
+        for e in importlib.metadata.distribution(pkg).entry_points
+        if e.group == "console_scripts"
+    ]
+    assert control, (
+        "neither mypy nor pytest reports a console script — the probe cannot see entry points, "
+        "so ruff reporting none would be a fact about this reader rather than about ruff"
+    )
+    assert not ruff_scripts, (
+        f"ruff now declares console scripts {ruff_scripts} — the `http_archive` in MODULE.bazel "
+        "is justified by there being NOTHING to regenerate, and that premise has moved: "
+        "`py_console_script_binary` may now be the right instrument"
+    )
 
 
 def test_an_unknown_pytest_marker_is_an_error_rather_than_a_skip(tree: Path) -> None:

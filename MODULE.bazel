@@ -181,11 +181,35 @@ filegroup(
     url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz",
 )
 
-# ⚑⚑⚑ ruff IS AN http_archive AND NOT A pip DEPENDENCY, BECAUSE rules_python STAGES ONLY
-# `site-packages`. The wheel's `bin/ruff` is dropped, so the installed package is a Python shim
-# whose `find_ruff_bin()` looks for a binary that is not there — measured: `python -m ruff` inside
-# a hermetic action raised, listing the paths it had searched. A pip requirement that cannot be
-# EXECUTED is not a usable dependency for a test that runs the checker.
+# ⚑⚑⚑ ruff IS AN http_archive AND NOT A pip DEPENDENCY, AND THE REASON RECORDED HERE WENT STALE.
+#
+# ⚑⚑ THE WITHDRAWN PREMISE, KEPT VISIBLE BECAUSE A READER WILL HAVE SPENT IT: this said
+# *rules_python STAGES ONLY `site-packages`. The wheel's `bin/ruff` is dropped, so the installed
+# package is a Python shim whose `find_ruff_bin()` looks for a binary that is not there.* That was
+# measured and TRUE AT rules_python 1.0.0. It is FALSE at 2.3.3, and the bump at `50cb2c2`
+# invalidated it while nothing noticed. MEASURED:
+#
+#     bazel cquery '@hooks_dev//ruff:extracted_whl_files' --output=files
+#       …/bin/ruff                                  <- STAGED
+#       …/site-packages/ruff-0.16.6.dist-info/…     <- the positive control: site-packages too,
+#       …/site-packages/ruff/_find_ruff.py             so the query is not returning everything
+#     file …/bin/ruff  ->  ELF 64-bit LSB pie executable … stripped
+#
+# ⚑ A RECORDED MEASUREMENT GOING STALE IN A LOAD-BEARING COMMENT IS WORSE THAN NO COMMENT, because
+# a reader spends the sentence as evidence instead of re-deriving it. Deleting it would leave the
+# next reader to rediscover a premise that was once true; the correction is the record.
+#
+# ⚑⚑ AND THE CONCLUSION SURVIVES ON ITS OTHER LEG, WHICH IS THE ONE THAT MATTERS. The decision
+# procedure below keys on ENTRY POINTS, not on staging, and that leg was re-measured 2026-09-10:
+# `ruff` declares ZERO entry points; `mypy` declares 5 and `pytest` 2 in the same run, which is
+# the positive control that the probe can see them at all. There is nothing to regenerate for
+# ruff, so `http_archive` remains the right instrument — for the reason at the `EMPTY and bin/ is
+# a compiled artifact` branch rather than for the withdrawn one above.
+#
+# ⚑ WHAT IS NOT ESTABLISHED, AND IS NOT ASSERTED: whether the archive is now REDUNDANT — the hub
+# stages an executable ruff, so a consumer COULD take it from there. Nobody has measured whether
+# the staged binary is usable as a tool in an action, and removing the archive on this evidence
+# would be acting past what was shown. Two questions, one answered.
 #
 # ⚑⚑ AND THE GENERAL RULE, WHICH THIS REPOSITORY REACHED BY TRIAL AND A PEER REACHED BY KNOWING IT.
 # rules_python ships `@rules_python//python/entry_points:py_console_script_binary.bzl`, which

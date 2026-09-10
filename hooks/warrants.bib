@@ -486,6 +486,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_ignore_list_is_exactly_three_rules}
 }
 
+@misc{hooks-bar-ruff-archive-rests-on-a-measured-entry-point-set,
+  section = {bar-fires},
+  claim   = {A LOAD-BEARING COMMENT'S PREMISE WENT FALSE AT A DEPENDENCY BUMP AND NOTHING NOTICED. `MODULE.bazel` justified fetching ruff as an `http_archive` by saying rules_python STAGES ONLY `site-packages` and the wheel's `bin/ruff` is dropped --- measured and TRUE at rules_python 1.0.0, FALSE at 2.3.3, where `bazel cquery '@hooks_dev//ruff:extracted_whl_files'` lists `bin/ruff` and `file` reports a real stripped ELF. The bump at `50cb2c2` invalidated the sentence and it kept being read as evidence. IT SURVIVED BECAUSE NOTHING ASSERTED IT: the comment's decision procedure keys on ENTRY POINTS rather than staging, and the conclusion rests on that leg, so this arm puts the load-bearing leg under measurement. THE POSITIVE CONTROL IS IN THE SAME RUN --- mypy and pytest are asked identically and DO declare console scripts, without which an empty result would be indistinguishable from a probe that cannot see entry points at all. And it asserts the PROPERTY rather than the names: requiring an exact script list would break when mypy adds one, which is not this repository's business},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_ruff_archive_rests_on_a_measured_entry_point_set}
+}
+
 @misc{hooks-bar-checker-matches-the-lock,
   section = {bar-fires},
   claim   = {A RULE SET IS A PROPERTY OF THE RESOLVER, NOT OF THE CONFIG TEXT. This repo's lock pinned one ruff while its venv ran another, so every arm above had been measured against a version the build would not install --- the drift was benign and being UNMEASURED was not},
