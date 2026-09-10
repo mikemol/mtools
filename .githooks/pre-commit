@@ -448,7 +448,18 @@ for dist in $_dists; do
   # rather than the property being enforced. Per-file counting is correct independent of file
   # endings; a lint rule forbidding the missing newline would fix the ACCIDENT and leave the
   # reader wrong — a second thing to keep true instead of one thing that cannot go wrong.
-  t=$(grep -h -cE '^(    )?def test_' "$staged/$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
+  # ⚑⚑⚑ PARSED, NOT MATCHED, AND A GREP COUNTED TEST SOURCE QUOTED AS DATA. This read
+  # `grep -h -cE '^(    )?def test_'`. `hooks/tests/test_grade.py` builds its fixture arms as an
+  # f-string containing `def test_behavioural()` — test source quoted so the grader under test
+  # has something to grade. MEASURED over that file: `ast.walk` 17, `pytest --collect-only` 17,
+  # the grep 20 — three lines inside a string literal. The ledger is 1:1, so those three could
+  # only ever be satisfied by warrants for things that do not exist.
+  # ⚑⚑ AND THE DISAGREEMENT IS CONFINED, which is what makes the diagnosis a diagnosis: parse
+  # and grep agree exactly on `fence` (33), `mdstruct` (100) and `ratchet` (39), and differ on
+  # `hooks` by precisely 3. A parse that disagreed everywhere would indicate a bug in the parse.
+  # ⚑ THIS IS THE `@misc{` DEFECT ONE FIELD OVER, already recorded above: an artifact that quotes
+  # its own subject cannot be measured by matching that subject's syntax.
+  t=$("$root/count_test_functions.py" "$staged/$dist")
   if [ "$w" -ne "$t" ]; then
     say "$dist: $w warrants against $t test functions — every test must arrive warranted"
     # ⚑⚑ THE NUMBERS GO INTO THE RECORD, NOT ONLY ONTO stderr. `say` reaches a human at a

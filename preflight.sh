@@ -129,7 +129,11 @@ for dist in $dists; do
         # ⚑ SAME DEFECT AS `01dc5e7` ONE FILE OVER: two instruments deriving one figure
         # independently drift without either noticing, and agree until an accident stops holding.
         w=$(grep -c '^@misc{' "$dist/warrants.bib")
-        t=$(grep -h -cE '^(    )?def test_' "$dist"/tests/test_*.py 2>/dev/null | paste -sd+ | bc)
+        # ⚑ PARSED, NOT MATCHED, AND THE SAME TOOL THE GATE CALLS — this script exists to
+        # PREDICT the gate, and two counters computing one figure two ways is exactly how they
+        # drift without either noticing. A grep here counted `def test_` inside a string literal
+        # in `test_grade.py`: 20 where the parse and pytest both say 17.
+        t=$("$root/count_test_functions.py" "$dist")
         if [ "${w:-0}" -ne "${t:-0}" ]; then
             fail=1
             say "$dist: warrants ${w:-?} vs ${t:-?} test functions — the gate will refuse this"

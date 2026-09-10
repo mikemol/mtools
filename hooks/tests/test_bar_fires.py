@@ -3446,11 +3446,20 @@ def test_the_test_function_count_survives_a_missing_trailing_newline() -> None:
     )
     # ⚑ AND IT MUST STILL COUNT THEM — a repair that removed the check would pass the assertion
     # above by deleting the property, which is the vacuity this suite exists to refuse.
-    counting = [
+    # ⚑⚑⚑ THIS LOOKED FOR THE STRING `def test_` IN THE GATE, AND THAT KEYED IT TO ONE
+    # IMPLEMENTATION. The counter moved into `count_test_functions.py` — a PARSE rather than a
+    # match, because a grep counted `def test_` inside a string literal in `test_grade.py`
+    # (ast 17, pytest 17, grep 20). The property survived; the arm read its ABSENCE FROM THIS
+    # FILE as its removal and refused a correct repair.
+    # ⚑⚑ AN ARM KEYED TO A FORM RATHER THAN A FACT, which its own comment above warns about one
+    # sentence earlier — and the third instance this tick. What must hold is that the gate still
+    # OBTAINS a count, wherever the counting lives.
+    counts = [
         ln.strip() for ln in gate.splitlines()
-        if not ln.lstrip().startswith("#") and "def test_" in ln
+        if not ln.lstrip().startswith("#")
+        and ("def test_" in ln or "count_test_functions" in ln)
     ]
-    assert counting, "the gate no longer counts test functions at all"
+    assert counts, "the gate no longer counts test functions at all, by any means"
 
 
 def test_two_instruments_counting_one_literal_use_one_predicate() -> None:

@@ -2690,3 +2690,104 @@
             assertion cannot pass by the section disappearing.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_states_no_paydown_figure_it_cannot_re_derive}
 }
+@misc{hooks-grade-check-whose-subject-matters-grades-behavioural,
+  section = {grade},
+  claim   = {⚑ THE POSITIVE ARM: corrupting the subject flips it, so falsifiability is PROVEN.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_a_check_whose_subject_matters_grades_behavioural}
+}
+
+@misc{hooks-grade-check-indifferent-to-its-subject-does-not-grade-behavioural,
+  section = {grade},
+  claim   = {⚑⚑ THE REFUSAL ARM, AND WITHOUT IT THE POSITIVE ONE MEASURES NOTHING.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_a_check_indifferent_to_its_subject_does_not_grade_behavioural}
+}
+
+@misc{hooks-grade-negative-assertion-is-not-called-vacuous,
+  section = {grade},
+  claim   = {⚑⚑⚑ VACUOUS AND NEGATIVE-ASSERTION ARE NOT THE SAME CLAIM, AND THIS REFUSES TO GUESS.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_a_negative_assertion_is_not_called_vacuous}
+}
+
+@misc{hooks-grade-subject-is-restored-after-grading,
+  section = {grade},
+  claim   = {⚑⚑⚑ THE GRADER WRITES OVER FILES IN A LIVE TREE, so the restore is the safety property.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_subject_is_restored_after_grading}
+}
+
+@misc{hooks-grade-unreachable-check-is-not-reported-as-refuted,
+  section = {grade},
+  claim   = {AN EXIT STATUS IS NOT A VERDICT ABOUT THE SUBJECT, IN THE GRADER'S OWN RUNNER. pytest exits 1 for a failing test and 4 or 5 for a usage error or an empty selection; a runner reading `rc != 0` as *the test failed* would grade a mistyped test name as a behavioural flip, the mutation appearing to work while nothing was measured. AND THIS ARM FOUND A THIRD CASE BY FAILING HERMETICALLY: it passed locally where `hooks/.venv` exists and DIED in the sandbox where none is staged, because `subprocess.run` raises FileNotFoundError when the interpreter itself is absent — so the grader CRASHED on precisely the condition it exists to name. Fixed in the runner rather than in the arm, with an OSError guard returning unreachable, because a caller pointing at a missing venv deserves the tristate and not a traceback},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_an_unreachable_check_is_not_reported_as_refuted}
+}
+
+@misc{hooks-grade-rungs-are-ordered-lowest-to-highest,
+  section = {grade},
+  claim   = {⚑ THE LADDER IS ONE OBJECT, and downstream re-listing is what paperkit warns cost it twice.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_rungs_are_ordered_lowest_to_highest}
+}
+
+@misc{hooks-grade-arm-that-reads-no-file-is-out-of-scope,
+  section = {grade},
+  claim   = {⚑ NO SUBJECT IS NOT A LOW GRADE — it is nothing to grade.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_an_arm_that_reads_no_file_is_out_of_scope}
+}
+
+@misc{hooks-grade-report-leads-with-the-worst-rung,
+  section = {grade},
+  claim   = {⚑ A REPORT THAT LEADS WITH ITS PASSES BURIES THE FINDING UNDER AGREEMENT.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_report_leads_with_the_worst_rung}
+}
+
+@misc{hooks-grade-corrupted-subject-is-syntactically-broken-for-every-kind,
+  section = {grade},
+  claim   = {⚑ AN EMPTY FILE IS A STATE A CHECK MAY LEGITIMATELY TOLERATE, so the mutation is not one.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_a_corrupted_subject_is_syntactically_broken_for_every_kind}
+}
+
+@misc{hooks-grade-runner-invokes-pytest-rather-than-importing-the-module,
+  section = {grade},
+  claim   = {⚑⚑ THE CHECK MUST RUN IN A FRESH PROCESS, or the mutation is invisible to it.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_runner_invokes_pytest_rather_than_importing_the_module}
+}
+
+@misc{hooks-grade-flip-requires-the-check-to-be-reachable,
+  section = {grade},
+  claim   = {⚑⚑⚑ AN UNREACHABLE CHECK IS NOT A FALSIFIABILITY WITNESS.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_a_flip_requires_the_check_to_be_reachable}
+}
+
+@misc{hooks-grade-grading-a-missing-test-reports-broken-not-a-low-rung,
+  section = {grade},
+  claim   = {⚑ A CHECK THAT CANNOT RUN ESTABLISHES NOTHING, and `broken` says so in those words.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_grading_a_missing_test_reports_broken_not_a_low_rung}
+}
+
+@misc{hooks-grade-every-grade-states-why-it-is-not-the-rung-above-or-below,
+  section = {grade},
+  claim   = {⚑⚑ A GRADE THAT STATES ITS OWN BOUNDARIES IS FALSIFIABLE FROM THE RECORD ALONE.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_every_grade_states_why_it_is_not_the_rung_above_or_below}
+}
+
+@misc{hooks-grade-grader-does-not-shell-out-through-a-shell,
+  section = {grade},
+  claim   = {⚑ `subprocess.run` WITH AN ARGV LIST AND NO `shell=True` is the safety property.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_grader_does_not_shell_out_through_a_shell}
+}
+
+@misc{hooks-grade-content-sensitivity-is-false-when-no-content-is-declared,
+  section = {grade},
+  claim   = {⚑⚑ A FLIP IS NOT AUTOMATICALLY A CONTENT FLIP, and the default refuses to claim it is.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_content_sensitivity_is_false_when_no_content_is_declared}
+}
+
+@misc{hooks-grade-declared-content-file-marks-the-flip-content-sensitive,
+  section = {grade},
+  claim   = {⚑ THE POSITIVE CONTROL FOR THE ARM ABOVE: with the subject declared as content, it marks.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_a_declared_content_file_marks_the_flip_content_sensitive}
+}
+
+@misc{hooks-grade-subjects-are-derived-per-arm-rather-than-from-a-shared-list,
+  section = {grade},
+  claim   = {⚑⚑⚑ THE SWEEP THIS SUPERSEDES KEEPS A HAND-WRITTEN MAP OF NINE SUBJECT NAMES INSIDE ITSELF.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_subjects_are_derived_per_arm_rather_than_from_a_shared_list}
+}

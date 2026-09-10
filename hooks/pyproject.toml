@@ -272,3 +272,24 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ DECLARED IN CONFIG, NOT AS `noqa`, following the entry above: a line directive travels with
 # the code into a peer tree that may not enable the rule, and the ratchet refuses new keys.
 "tests/test_no_verify.py" = ["S101", "S404", "S603"]
+
+# ⚑⚑⚑ THE FOURTH NAMED FILE, AND RUNNING A SUBPROCESS IS THE WHOLE MEASUREMENT. `grade.py` awards
+# `behavioral` only when a mutation makes a check go red, and a check cannot go red without being
+# RUN. ⚑ It must be a fresh process rather than an import: Python caches a module's source at
+# import time, so a grader that imported the test module would corrupt a file the already-imported
+# test never re-reads — every arm would grade `indeterminate` and a whole suite would be reported
+# unfalsifiable by an artifact of the grader.
+# ⚑⚑ MEASURED, THE SAME PREVIEW SPLIT AS THE ENTRIES ABOVE: `ruff check` passes on this file and
+# `ruff check --preview` names `suspicious-subprocess-import`, so the ratchet's preview census
+# minted a key a plain preflight reports as clean. Declared here rather than as a `noqa`, because
+# a line directive travels into a peer tree that may not enable the rule.
+# ⚑ AND THE ARGUMENTS CARRY NO UNTRUSTED INPUT: the interpreter is `dist/.venv/bin/python3` built
+# from a caller-supplied Path, the rest are literals and a test NAME — passed as an argv element
+# to `-k`, never through a shell, which `test_the_grader_does_not_shell_out_through_a_shell` pins.
+"src/mikemol/hooks/grade.py" = ["S404", "S603"]
+
+# ⚑ THE GRADER'S OWN CASES. `S101` as everywhere in tests; `SLF001` for ONE arm that reaches
+# `grade._flips` deliberately — that private function is the single place the reachable/passed
+# TRISTATE is consumed, and an integration-level assertion cannot tell a real flip from a
+# crash-flip. Testing the boundary requires crossing it, and the arm says so at its call site.
+"tests/test_grade.py" = ["S101", "SLF001"]
