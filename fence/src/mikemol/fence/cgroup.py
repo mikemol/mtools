@@ -61,6 +61,17 @@ def human_to_bytes(value: str) -> str:
     return str(int(v[:-1]) * mult)
 
 
+def cgroup_of_line(line: str) -> Path:
+    """Map one `0::`-prefixed /proc/self/cgroup line to its cgroup path.
+
+    ⚑ EXTRACTED SO IT CAN BE TESTED. Inlined in `own_cgroup()` this arithmetic was reachable
+    only by reading `/proc/self/cgroup`, so the one expression deciding whether a host can fence
+    was exercised solely through a guard that SKIPS on failure — checked by a mechanism whose
+    failure mode is silence.
+    """
+    return CG_ROOT / line.strip().split("::", 1)[1].lstrip("/")
+
+
 def own_cgroup() -> Path:
     """Return this process's own cgroup v2 path.
 
@@ -75,7 +86,7 @@ def own_cgroup() -> Path:
         raise FenceUnavailableError(msg) from e
     for line in text.splitlines():
         if line.startswith("0::"):
-            return CG_ROOT / line.strip().split("::", 1)[1].lstrip("/")
+            return cgroup_of_line(line)
     msg = "no cgroup v2 membership (is this a cgroup v2 host?)"
     raise FenceUnavailableError(msg)
 
@@ -85,7 +96,27 @@ def parent_with_controllers(want: Iterable[str]) -> Path:
 
     Enables each controller if it is not already enabled; refuses if it cannot.
     """
-    parent = own_cgroup().parent
+    own = own_cgroup()
+    # ⚑⚑⚑ REFUSE AT THE ROOT BY ITS OWN NAME, BECAUSE `.parent` ESCAPES THE HIERARCHY THERE.
+    # `/proc/self/cgroup` reading `0::/` means this process sits at the cgroup ROOT; `.parent` is
+    # then `/sys/fs`, and `parent/"cgroup.subtree_control"` is `/sys/fs/cgroup.subtree_control` —
+    # a sibling of the tree, not a file in it. The read failed with ENOENT and the OSError below
+    # reported it as a DELEGATION failure.
+    # ⚑⚑ MEASURED ON THE k3s EXECUTOR (cassian-observability-11, 2026-09-10): mount `rw`,
+    # `cgroup.subtree_control` carrying `memory` and `pids` — both preconditions satisfied — and
+    # this function still refused, saying *no delegated cgroup v2 memory+pids subtree on this
+    # host*. A TRUE REFUSAL ASSERTING A CAUSE IT NEVER TESTED.
+    # ⚑ AND THE ROOT IS 0555 (`dr-xr-xr-x`), so even at the correct path there is no writable
+    # directory to create a sibling in — the kernel exposes the root that way regardless of the
+    # mount being `rw`. Fixing the path alone would move the refusal, not remove it, so the
+    # refusal names the real requirement instead: a NON-ROOT cgroup.
+    if own == CG_ROOT:
+        msg = ("this process is at the cgroup v2 ROOT (/proc/self/cgroup reads '0::/'), which has "
+               "no parent inside the hierarchy to create a sibling fence in — and the root is "
+               "mode 0555, unwritable even by uid 0. The fence needs the caller to occupy a "
+               "NON-ROOT cgroup; on Kubernetes that is a pod placement question, not a mount one")
+        raise FenceUnavailableError(msg)
+    parent = own.parent
     sub = parent / "cgroup.subtree_control"
     try:
         enabled = sub.read_text(encoding="utf-8").split()

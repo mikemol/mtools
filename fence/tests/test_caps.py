@@ -6,10 +6,51 @@ from __future__ import annotations
 
 import pytest
 
-from mikemol.fence.cgroup import bound_by, human_to_bytes
+from mikemol.fence.cgroup import CG_ROOT, bound_by, cgroup_of_line, human_to_bytes
 from mikemol.fence.core import Caps
 
 BOTH_CAPS_BOUND = 2
+
+
+class TestCgroupOfLine:
+    """⚑⚑⚑ THE PATH ARITHMETIC THAT DECIDES RUN-VS-SKIP, AND IT HAD NO TEST.
+
+    `own_cgroup()` was only ever exercised through the integration guard, which SKIPS on failure
+    — so the one expression separating "this host can fence" from "it cannot" was checked by a
+    mechanism whose failure mode is silence.
+
+    ⚑⚑ MEASURED ON THE k3s EXECUTOR, 2026-09-10, reported by cassian-observability-11 and
+    reproduced here from this module's own source rather than from their trace:
+
+        /proc/self/cgroup = "0::/"  ->  split("::",1)[1] = "/"  ->  lstrip("/") = ""
+        CG_ROOT / ""                =  /sys/fs/cgroup
+        .parent                     =  /sys/fs              <- OUTSIDE THE HIERARCHY
+        parent/"cgroup.subtree_control" = /sys/fs/cgroup.subtree_control   (does not exist)
+
+    ⚑ SO THE GUARD READ A SIBLING OF THE CGROUP TREE AND CALLED THE OSError A DELEGATION
+    FAILURE. Its message said *no delegated cgroup v2 memory+pids subtree on this host* while
+    cassian measured that subtree POPULATED with memory and pids — a true refusal asserting a
+    cause it never tested, which is the class this distribution's BUILD file documents one level
+    up.
+    """
+
+    def test_a_root_cgroup_line_is_the_hierarchy_root(self) -> None:
+        """`0::/` names the root itself, not a child of it."""
+        assert cgroup_of_line("0::/") == CG_ROOT
+
+    def test_the_root_has_no_parent_inside_the_hierarchy(self) -> None:
+        """⚑ THE DEFECT, PINNED: at the root, `.parent` escapes the cgroup tree entirely."""
+        assert not cgroup_of_line("0::/").parent.is_relative_to(CG_ROOT)
+
+    def test_a_nested_cgroup_line_keeps_its_parent_inside(self) -> None:
+        """⚑ THE POSITIVE CONTROL: a normal pod path has a parent that IS a cgroup directory.
+
+        Without this arm the assertion above would pass against a `is_relative_to` that always
+        returned False, and the test would report a defect the code does not have.
+        """
+        own = cgroup_of_line("0::/kubepods/besteffort/podXYZ")
+        assert own.parent.is_relative_to(CG_ROOT)
+        assert own.parent == CG_ROOT / "kubepods/besteffort"
 
 
 class TestObserveOnly:

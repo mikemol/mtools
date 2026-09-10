@@ -21,18 +21,35 @@ pytestmark = pytest.mark.needs_cgroup
 HOG = ["python3", "-c", "x = bytearray(256*1024*1024); print(len(x))"]
 
 
-def _fenceable() -> bool:
-    """Report whether this host delegates what the fence needs."""
+def _unfenceable() -> str:
+    """Return why this host cannot fence, or the empty string if it can.
+
+    ⚑⚑⚑ THE REASON IS THE MEASUREMENT, NOT A GUESS ABOUT IT. This returned `bool` and threw the
+    exception away, so the skip line could only ever carry a HARDCODED cause — and it said *no
+    delegated cgroup v2 memory+pids subtree on this host* on a k3s executor where cassian
+    measured that subtree POPULATED with memory and pids. The refusal was real; the stated cause
+    was invented, and no reading of the skip could tell.
+
+    ⚑⚑ IT ALSO SURVIVED THE FIX THAT WAS SUPPOSED TO REPAIR IT. `parent_with_controllers` was
+    corrected to refuse at the cgroup root by its own name; the remote run still printed the old
+    sentence, because this `reason=` string is a SECOND HOME for the same false claim and is what
+    a reader actually sees. A message repaired at the raise site is not repaired at the report
+    site.
+
+    ⚑ SO THE EXCEPTION'S OWN TEXT IS CARRIED THROUGH. The skip then names the requirement that
+    failed — a non-root cgroup, an undelegated controller, no v2 membership — and a reader can
+    act on it instead of chasing the one cause this string used to assert.
+    """
     try:
         parent_with_controllers(["memory", "pids"])
-    except FenceUnavailableError:
-        return False
-    return True
+    except FenceUnavailableError as e:
+        return f"cannot fence here: {e}"
+    return ""
 
 
-needs_cgroup = pytest.mark.skipif(
-    not _fenceable(),
-    reason="no delegated cgroup v2 memory+pids subtree on this host")
+_WHY = _unfenceable()
+
+needs_cgroup = pytest.mark.skipif(bool(_WHY), reason=_WHY or "host can fence")
 
 
 @needs_cgroup
