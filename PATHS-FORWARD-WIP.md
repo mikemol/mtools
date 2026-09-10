@@ -297,6 +297,58 @@ property, ratcheted by a guard that treats it as owed. The apparent 22→23 coll
 nearly triggered a redesign was a HELPER counted as a test; scoping to `test_`-prefixed
 functions returned it to 22 with no constant moved.
 
+### ⟐EXE002-REMOTE-ONLY — NEW 2026-09-10, measured, THREE TARGETS RED ON THE EXECUTOR
+
+⚑⚑⚑ **`//hooks:ruff` IS GREEN LOCALLY AND RED REMOTELY ON IDENTICAL SOURCES.** Measured at
+unmodified HEAD (`29240c9`), so it is not a consequence of any uncommitted change:
+
+```
+bazel test //hooks:ruff                     All checks passed!
+bazel test //hooks:ruff --config=remote     Found 23 errors.  (EXE002, every .py file)
+bazel test //mdstruct:ruff --config=remote  FAILED            (same shape, both distributions)
+```
+
+**Three targets fail and it is ONE cause.** `//hooks:ratchet` refuses 22 new
+`shebang-missing-executable-file` keys — correctly; it is doing its job over ruff's output — and
+`//hooks:test_bar_fires::test_every_suppression_directive_suppresses_under_the_gates_config`
+fails with 2 `EXE002` for the same reason. With the tick's own new file present the ratchet count
+is 23, the delta being exactly that file; **at HEAD it is 22, which is how all three were
+confirmed pre-existing rather than introduced.**
+
+⚑⚑ **THE RULE'S SUBJECT DOES NOT EXIST INSIDE A BUILD ACTION.** In the repository every one of
+these files is `rw-rw-r--` — *not* executable:
+
+```
+-rw-rw-r-- hooks/src/mikemol/hooks/payload.py
+-rw-rw-r-- hooks/tests/test_grade.py
+```
+
+`EXE002` is a claim about a **mode bit**, a fact about the filesystem the REPOSITORY lives on.
+Bazel does not preserve source mode bits into the executor's staged tree, so remotely the check
+reads `+x` on files that are `+x` nowhere a developer can see. The finding is a true statement
+about the staging and a **false statement about the repository** — the mis-named-population class,
+where a correct check runs over the wrong set.
+
+⚑ **AND THIS IS THE HARD CASE, NOT THE EASY ONE.** An inert gate fires on nothing and someone
+eventually notices. This gate FIRES, produces 23 findings with file and line, and would pass
+review — while supplying evidence for a proposition nobody asked about. It is the
+active-gate-aimed-at-the-wrong-predicate shape, arriving at the executor boundary.
+
+**What it costs now:** `bazel test //... --config=remote` cannot go green, so every hermeticity
+claim wanting the strong instrument sits behind a red bar that is not about the code.
+
+⚑ **THE FIX IS AN OPERATOR DECISION AND HAS NOT BEEN TAKEN.** Candidates:
+
+- **`ignore = [..., "EXE002"]`** with the measurement recorded — declaring the rule's subject
+  unobservable from inside an action. This changes the bar, and *"lowering it is an operator
+  decision"* covers the shape.
+- **Keep `EXE002` and stop running `//*:ruff` remotely** — concedes the weaker instrument for the
+  lint gate specifically.
+- **Normalise the mode bits during staging** — repairs the population rather than the rule; the
+  structurally honest one, and the most work.
+
+Carried as measured, red, and NOT worked around.
+
 ### ⟐OOM-GROUP — untouched, and correctly so
 
 Whether the fence's CHILD cap binds before a POD's ceiling does. k8s sets

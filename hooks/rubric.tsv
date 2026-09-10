@@ -10,3 +10,4 @@ bar-fires	The Bar Fires: Each Rule Asserted Against the Absence It Means
 no_chaining	No Chaining: The Composition Refused, and the Exit Status a Pipe Discards
 no_verify	No Verify: The Gate Bypass Refused Before It Runs, and Detected After
 grade	Grading: Falsifiability Proven by Mutation, Not Presence Proven by Reading
+exec-env	Execution Environment: What a Witness Can Actually Reach, Measured in Both Modes

@@ -16,10 +16,19 @@ test --test_output=errors --test_summary=terse
 # ⟡mtools-toolchain-tier is where that lands.
 
 # ⚑⚑⚑ THE REMOTE EXECUTOR IS A STRONGER SANDBOX THAN THE LOCAL ONE, AND THAT IS WHY IT IS HERE.
-# `linux-sandbox` shares this host's kernel, filesystem namespace and `$HOME` — which is how a
+# BARE `linux-sandbox` shares this host's kernel, filesystem namespace and `$HOME` — which is how a
 # test in this repository came to read `/home/mikemol/github/mtools/hooks/.venv/bin/ruff` from
 # INSIDE a hermetic action, by calling `.resolve()` on a runfiles symlink and following it back
 # out to the source tree. The sandbox permitted the escape and only a deliberate probe caught it.
+#
+# ⚑⚑ READ THE TENSE: THAT ESCAPE IS CLOSED, BY A FLAG ADDED FURTHER DOWN THIS SAME FILE.
+# `--experimental_use_hermetic_linux_sandbox` is unconditional below, and RE-MEASURED under it the
+# local sandbox no longer mounts `$HOME` at all: inside an action `Path.home()` answers
+# `/home/mikemol` while that DIRECTORY DOES NOT EXIST, and the checkout is unreachable. A name
+# outliving its referent — which is precisely why the present-tense sentence above kept reading as
+# a live description of this configuration. It describes the configuration this file REPAIRS.
+# ⚑ The KERNEL half is still true and unqualified; it is the `$HOME` half that is historical.
+# //hooks:test_exec_env asserts the current state continuously, in both modes.
 # An executor has no `~/github/mtools` and no venvs at all: an undeclared input is not a stale
 # value there, it is a MISSING FILE, and every leak of that class fails on first run instead of
 # waiting to be probed for.
@@ -154,9 +163,32 @@ build:remote --extra_execution_platforms=//rbe:mtools_gate_platform
 #     fails open when its linter is absent.
 #
 #   · a fallback "would silently re-open the escape whenever the executor is down" — and the escape
-#     is the whole reason this repository adopted remote execution. A local sandbox shares this
-#     kernel and this $HOME; that is how a test here read the author's own venv from inside a
-#     hermetic action. Degrading to it on failure discards the property being bought.
+#     is the whole reason this repository adopted remote execution. Degrading to it on failure
+#     discards the property being bought.
+#
+#     ⚑⚑⚑ THE $HOME CLAUSE THIS LEG ONCE CARRIED IS WITHDRAWN AS STALE — TRUE OF BARE
+#     `linux-sandbox`, FALSE UNDER THE HERMETIC FLAG THIS FILE SETS UNCONDITIONALLY.
+#     It read: "a local sandbox shares this kernel and this $HOME; that is how a test here read
+#     the author's own venv from inside a hermetic action." MEASURED, by a probe reporting through
+#     the FAILURE channel — a print is captured on a pass, so the first attempt at this very
+#     measurement returned nothing and read as agreement:
+#
+#         field                local sandbox     --config=remote
+#         hostname             cassian           buildbuddy-executor-654cd76d7f-lzb2n
+#         uid                  1000              0
+#         $HOME                /home/mikemol     /root
+#         $HOME EXISTS         FALSE             True (the executor's own)
+#         checkout reachable   FALSE             False
+#
+#     The local sandbox does NOT mount $HOME. `Path.home()` answers `/home/mikemol` because the
+#     VARIABLE is set while the DIRECTORY is absent — a name outliving its referent, which is
+#     exactly why the sentence read as true. The author's tree is unreachable in BOTH modes.
+#     ⚑⚑ THE CONCLUSION SURVIVES ON THE FIRST LEG ALONE (colocated executor, identical cores,
+#     outside the accounting) — a two-legged argument losing one leg, the shape commit 29240c9
+#     recorded one file over. Kept visible because any measurement citing $HOME-sharing as the
+#     reason a run was weakly hermetic cited something that did not happen.
+#     ⚑ THE KERNEL HALF IS UNTOUCHED and still true: a local sandbox shares this kernel.
+#     Asserted continuously by //hooks:test_exec_env, which is run in both modes.
 #
 # ⚑ SO `--config=remote` IS FAIL-CLOSED: an action routed to the executor runs THERE or fails
 # loudly. The accepted cost is that it hard-depends on the executor being up, which is the honest

@@ -2797,3 +2797,21 @@
   claim   = {⚑⚑⚑ THE SWEEP THIS SUPERSEDES KEEPS A HAND-WRITTEN MAP OF NINE SUBJECT NAMES INSIDE ITSELF.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_subjects_are_derived_per_arm_rather_than_from_a_shared_list}
 }
+
+@misc{hooks-exec-env-witness-cannot-reach-the-authors-checkout-in-either-mode,
+  section = {exec-env},
+  claim   = {⚑⚑⚑ MEASURED IN BOTH MODES, AND THE PREMISE THIS ARM REPLACED WAS FALSE: `.bazelrc` says a local sandbox shares this `$HOME`; the checkout is unreachable under BOTH the local sandbox and `--config=remote`, so the refusal is unconditional rather than mode-dependent.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_exec_env.py -k test_a_witness_cannot_reach_the_authors_checkout_in_either_mode}
+}
+
+@misc{hooks-exec-env-home-variable-is-set-to-a-directory-that-may-not-exist,
+  section = {exec-env},
+  claim   = {⚑⚑ `$HOME` IS A VARIABLE, NOT A MOUNT: under the local sandbox it names `/home/mikemol` and that directory DOES NOT EXIST inside the action — a name surviving where its referent does not, which is why "the sandbox shares `$HOME`" read as true.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_exec_env.py -k test_the_home_variable_is_set_to_a_directory_that_may_not_exist}
+}
+
+@misc{hooks-exec-env-witness-runs-under-bazel-and-names-its-own-interpreter,
+  section = {exec-env},
+  claim   = {⚑ THE INTERPRETER IS A FACT ABOUT THE ACTION and nothing recorded it; this arm is also the POSITIVE CONTROL for the two skipped-outside-bazel arms, so it is deliberately NOT skipped — a run where the interpreter were unreadable would be a broken probe, not a strong sandbox.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_exec_env.py -k test_the_witness_runs_under_bazel_and_names_its_own_interpreter}
+}
