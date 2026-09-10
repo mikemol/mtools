@@ -206,7 +206,10 @@ MEASURED, so a tick does not re-derive it:
 - The BUILD files DELIBERATELY avoid the venv (`imports = ["src"]`, resolved by runfiles
   layout) — *"runs these witnesses with no venv at all."* So this is ADDITIVE: nothing in
   the graph starts depending on it.
-- The venv has THREE non-bazel consumers: `.githooks/pre-commit` (13 call sites),
+- The venv has THREE non-bazel consumers: `.githooks/pre-commit` (⚑ 14 `.venv/bin` lines when
+  re-measured 2026-09-10, not the 13 recorded here and repeated into the cron prompt — and the
+  count was the wrong instrument anyway: those lines are not all *uses*. Three were fail-open
+  guards and one is the refusal itself. See ⟐GATE-FAILS-OPEN.),
   `preflight.sh` (7 sites), and the interactive dev loop. All reach `<dist>/.venv/bin/…`
   as a host path no rule produces.
 - The repeated shape is exact across all four distributions — same `[dependency-groups]`,
@@ -370,6 +373,46 @@ can only mean something when the environment is fixed by construction.
 sandbox fixture — reaching out of the hermetic tree at the boundary the sandbox enforces.~~
 **WITHDRAWN, see the correction at the head of this section:** the symlink target is derived
 from `sys.executable` and under bazel names the action's own venv. 21 passed on the executor.
+
+### ⟐GATE-FAILS-OPEN — NEW and CLEARED 2026-09-10, the gate broke a rule it states about itself
+
+⚑⚑⚑ **`.githooks/pre-commit` REFUSES a commit when `ruff`, `mypy` or `python3` is missing from any
+distribution, saying *"a skip here would report green over a check that never executed"* — and then
+sixty lines later guarded three checks with `if [ -x <tool> ]`, which SKIPS SILENTLY.**
+
+Measured, both populations derived from the file rather than typed:
+
+```
+refusing loop covers   ruff mypy python3      × every dist in $_dists (*/pyproject.toml)
+guarded blocks         mdstruct/.venv/bin/python3   ×2  — REDUNDANT, the loop already refuses
+                       ratchet/.venv/bin/mikemol-ratchet — NOT COVERED, a real hole
+mikemol-ratchet lives in   ratchet/ only   (absent from fence, hooks, mdstruct)
+```
+
+So an absent `mikemol-ratchet` silently dropped the **preview-debt ratchet** — the check that has
+refused most often here — and the commit reported green. That is substrate's
+`check_scratch_runtime.py` defect, which the harness union refuses **as a shape**, reproduced in
+mtools' own gate.
+
+⚑ **AND THE ABSENCE PATH HAD NEVER BEEN EXERCISED.** Every guarded tool exists on this host, so the
+guards had only ever taken their true branch. An armed-looking check whose refusal arm has never
+run is exactly what the suite exists to catch — and nothing was catching it.
+
+**Repaired:** two guards deleted as redundant, the third replaced by a real refusal (written as a
+plain `if`, not a one-element `for` — shellcheck's SC2043 is right that the latter reads as a bad
+expansion). `//hooks:test_bar_fires` now derives both populations and refuses any `if [ -x ]` guard
+on a tool no refusal covers.
+
+⚑⚑ **THE ARM PASSED VACUOUSLY ON ITS FIRST RUN AFTER THE REPAIR, AND THAT IS THE FINDING ABOVE THE
+FINDING.** With every guard removed the guarded set is empty, so `assert not unrefused` is trivially
+true: green over a property nobody is checking. It now *also* requires the refusals it credits to
+exist, so a gate that deletes its `mikemol-ratchet` refusal fails even with no guards left.
+F-armed both ways against a mutated copy — control passes, guard-reintroduction refuses,
+refusal-deletion refuses via the second assertion.
+
+⚑ **`re.findall` RETURNS `list[Any]`** and this distribution refuses `Any` in an expression — 20
+mypy errors, the same leak that made a `dataclasses.fields()` arm unusable one commit earlier. The
+answer is annotating each result, never widening the config.
 
 ### ⟐POLL-RUF201-POPULATION — CLEARED 2026-09-10, and the repair was to DERIVE rather than extend
 

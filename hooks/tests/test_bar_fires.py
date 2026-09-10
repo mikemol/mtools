@@ -5192,3 +5192,83 @@ def test_the_poll_states_no_paydown_figure_it_cannot_re_derive() -> None:
         "count announces no way to re-check it and will be reprinted after the work it describes "
         "is done — measured three off, two ticks after the paydown that moved it."
     )
+
+
+def test_every_tool_the_gate_invokes_is_refused_when_absent() -> None:
+    """⚑⚑⚑ THE GATE STATES THIS RULE ABOUT ITSELF AND THEN BREAKS IT SIXTY LINES LATER.
+
+    At its tool-presence loop it says: *a skip here would report green over a check that never
+    executed* — and refuses the commit when `ruff`, `mypy` or `python3` is missing from any
+    distribution. That is the fail-CLOSED shape this repository takes from linux-sources and
+    refuses substrate's `check_scratch_runtime.py` over.
+
+    ⚑⚑ IT THEN DID EXACTLY THAT, THREE TIMES, IN `if [ -x <tool> ]` BLOCKS THAT SKIP SILENTLY.
+    Two named `mdstruct/.venv/bin/python3`, which the loop above ALREADY refuses on — redundant,
+    and harmless only by accident. The third named `ratchet/.venv/bin/mikemol-ratchet`, which is
+    in NO distribution's `ruff mypy python3` triple and lives ONLY in `ratchet/` (measured: absent
+    from fence, hooks and mdstruct). Its absence silently dropped the preview-debt ratchet — the
+    check that has refused most often here — and the commit reported green.
+
+    ⚑ THE ABSENCE PATH HAD NEVER BEEN EXERCISED: every guarded tool exists on this host, so the
+    guards had only ever taken their true branch. An armed-looking check whose refusal arm has
+    never run is the shape this suite exists to catch. All three are now gone — two deleted as
+    redundant, the third replaced by a real refusal.
+
+    ⚑⚑ THE ARM DERIVES BOTH POPULATIONS RATHER THAN NAMING THEM. Typing the tool paths here would
+    go stale the moment the gate grew another, which is the hand-written-population defect one
+    layer up from the gate.
+
+    ⚑⚑⚑ AND IT REFUSES TO PASS VACUOUSLY, WHICH IT DID ON THE FIRST RUN AFTER THE REPAIR. With
+    every guard removed the guarded set is empty, so `assert not unrefused` is trivially true and
+    the arm asserts NOTHING — green over a property nobody is checking, which is the defect one
+    level up from the one it was written for. So it also requires the refusals it credits to be
+    present: a gate that deleted its `mikemol-ratchet` refusal fails here even with no guards left.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+
+    # ⚑ POSITIVE CONTROL: the refusing loop must be findable, or "no guards found" below would
+    # mean this arm could not read the gate rather than that the gate is sound.
+    assert "cannot run the gate, commit refused" in body, (
+        "the gate's tool-presence refusal is not in this file — the arm is reading the wrong thing"
+    )
+
+    # ⚑⚑ THE COVERED POPULATION IS THE UNION OF TWO REFUSAL SHAPES, AND READING ONLY THE LOOP
+    # WOULD MISS THE SECOND. The per-distribution loop iterates `ruff mypy python3`; a SINGLETON
+    # tool that lives in exactly one distribution (`mikemol-ratchet`, measured absent from fence,
+    # hooks and mdstruct) cannot be expressed that way and gets its own `if [ ! -x ]` refusal.
+    # shellcheck's SC2043 refuses a one-element `for`, so the shapes are genuinely different.
+    # ⚑⚑ EVERY `pyre` RESULT IS ANNOTATED, because `findall`/`group` are typed `Any` and this
+    # distribution refuses `Any` in an expression. Same leak that made a `dataclasses.fields()`
+    # arm unusable one commit ago — mypy is the instrument that names it, and the answer is to
+    # state the type rather than to widen the config.
+    loop = pyre.search(r"for tool in ([^;]+); do", body)
+    assert loop, "the gate's tool-presence loop no longer has a `for tool in ...` population"
+    tools: str = loop.group(1)
+    covered: set[str] = set(tools.split())
+    # ⚑ THE VARIABLE'S VALUE, NOT ITS NAME. A first cut also matched `if [ ! -x "$VAR" ]` and put
+    # `VAR` itself into the set — harmless here, and a set holding a shell variable name alongside
+    # tool basenames is a population with two different kinds in it, which is how a later reader
+    # gets a false positive. Only the assignments are read.
+    singletons: list[str] = pyre.findall(r"^_singleton=(\S+)$", body, flags=pyre.MULTILINE)
+    covered |= {Path(m).name for m in singletons}
+
+    guarded: list[str] = pyre.findall(r"^if \[ -x ([^\]]+?) \]; then", body, flags=pyre.MULTILINE)
+    unrefused: list[str] = sorted({g for g in guarded if Path(g.strip()).name not in covered})
+    assert not unrefused, (
+        f"the gate guards on {unrefused} with `if [ -x ]` and skips silently when absent, while "
+        f"its refusals cover only {sorted(covered)} — a missing tool here reports green over a "
+        f"check that never executed, which is the rule the gate states about itself"
+    )
+
+    # ⚑⚑⚑ AND WITHOUT THIS, THE ASSERTION ABOVE PASSES VACUOUSLY THE MOMENT THE LAST GUARD IS
+    # REMOVED — zero guards, empty set, green, asserting nothing. Measured: that is exactly what
+    # happened on the first run after the repair. So the arm also requires the refusals it credits
+    # to BE THERE, which is a claim about the gate rather than about the absence of a pattern.
+    assert "mikemol-ratchet" in covered, (
+        f"`mikemol-ratchet` is not in any refusal population {sorted(covered)} — it lives only in "
+        f"ratchet/.venv, so no iteration of the per-distribution triple covers it, and its absence "
+        f"would silently drop the preview-debt ratchet"
+    )
+    assert {"ruff", "mypy", "python3"} <= covered, (
+        f"the per-distribution triple lost a member: {sorted(covered)}"
+    )

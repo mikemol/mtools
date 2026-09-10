@@ -237,6 +237,27 @@ for dist in $_dists; do
   done
 done
 
+# ⚑⚑⚑ AND THE SINGLETON TOOLS TOO, BECAUSE THE LOOP ABOVE IS PER-DISTRIBUTION AND THEY ARE NOT.
+# `mikemol-ratchet` lives ONLY in `ratchet/.venv` — measured: it is absent from fence, hooks and
+# mdstruct — so no iteration of the triple above ever covers it. It was guarded instead by
+# `if [ -x ... ]`, which SKIPS SILENTLY: the preview-debt ratchet, the check that has refused most
+# often here, would simply not run and the commit would report green.
+# ⚑⚑ THAT IS THE RULE THIS FILE STATES SIXTY LINES ABOVE, BROKEN BY THIS FILE — *a skip here would
+# report green over a check that never executed* — and it is substrate's `check_scratch_runtime.py`
+# defect, which the harness union explicitly refuses as a SHAPE rather than as one gate.
+# ⚑ THE ABSENCE PATH HAD NEVER BEEN EXERCISED: every guarded tool exists on this host, so the
+# guards had only ever taken their true branch. `//hooks:test_bar_fires` now derives both
+# populations from this file and refuses any `if [ -x ]` guard on a tool the loops do not cover.
+# ⚑ WRITTEN AS A PLAIN CHECK, NOT A ONE-ELEMENT LOOP: shellcheck's SC2043 is right that a `for`
+# over a single literal reads as a bad expansion. A second singleton tool gets its own check.
+_singleton=ratchet/.venv/bin/mikemol-ratchet
+if [ ! -x "$_singleton" ]; then
+  say "$_singleton not found — cannot run the gate, commit refused"
+  say "  a skip here would report green over a check that never executed"
+  record_refusal pre-commit " - $_singleton absent"
+  exit 1
+fi
+
 # ⚑ THE INDEX IS MATERIALISED SO THE CHECKS READ WHAT IS BEING COMMITTED, not what is on disk.
 # ⚑⚑⚑ A STABLE PATH, NOT A TEMP DIR, BECAUSE BAZEL RUNS HERE TOO AND ITS OUTPUT BASE IS A HASH OF
 # THE WORKSPACE PATH. Measured, full suite, three configurations — **stated as bazel's own counters
@@ -671,13 +692,15 @@ say "roster drift: does the textual roster still match the tools present?"
 # on its first run it found two real divergences in the two functions this package calls most:
 # `load`'s parameter was named `source` where the runtime calls it `input_stream`, and
 # `stringify` was missing `newlines` entirely.
-if [ -x mdstruct/.venv/bin/python3 ]; then
-  # ⚑ `--concise` EXISTS TO MAKE THIS READABLE AND THE READER NEVER SAW IT. stubtest names the
-  # exact symbol whose signature drifted; the bare label said only that the stub disagreed.
-  run_checked "stubtest — the panflute stub still matches its module" \
-    env -C mdstruct MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
-      --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise
-fi
+# ⚑ NO `if [ -x mdstruct/.venv/bin/python3 ]` GUARD: the per-distribution loop above already
+# REFUSES the commit when any distribution's `python3` is missing, and mdstruct is in `$_dists`
+# (derived from `*/pyproject.toml`). The guard was a redundant SECOND answer to a question already
+# answered loudly — and a silent one, so where the two disagreed the silence would win.
+# ⚑ `--concise` EXISTS TO MAKE THIS READABLE AND THE READER NEVER SAW IT. stubtest names the
+# exact symbol whose signature drifted; the bare label said only that the stub disagreed.
+run_checked "stubtest — the panflute stub still matches its module" \
+  env -C mdstruct MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
+    --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise
 
 # ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
 # 192 findings this bar does not yet enforce; collapsing them to `file:rule` keys gives 62. The
@@ -685,99 +708,102 @@ fi
 # count is unchanged — the substitution a count-based gate cannot see. It runs against the REAL
 # tree rather than the staged copy, because the census keys are paths and a staged copy's paths
 # are not the ones a reader would go fix.
-if [ -x ratchet/.venv/bin/mikemol-ratchet ]; then
-  # ⚑⚑⚑ THE RATCHET CAPTURES ITS OWN OUTPUT, AND THE GATE NAMED THIS GAP ABOUT ITSELF FIRST.
-  # Refusing a commit last tick, it printed the two offending keys and then:
-  #     ⚑ no check captured its own output — the label above is all the account there is.
-  #       That is a defect in the CHECK, not in your commit: scroll for its name.
-  # ⚑ That is the gap-naming repair working as designed — converting a SILENCE into a NAMED gap —
-  # and the check it named is the one that has refused most often today: two paydowns of mine, a
-  # peer's fourth commit, and three earlier rounds. Six refusals, four parties.
-  #
-  # ⚑⚑ THE DETAIL ALWAYS EXISTED. `mikemol-ratchet` prints `N new key(s) REFUSED` and lists them
-  # by `path:rule`. It went to the terminal, hundreds of lines above the verdict and interleaved
-  # with a 35-target bazel run — so a refused party had the keys and could not find them, which is
-  # the same *detail that exists somewhere is detail the reader does not have* that the shellcheck
-  # witness was wired for two commits earlier. **A repair applied to one call site is not a repair
-  # to the class**, and this is the second of the twenty sites to be wired.
-  for dist in $_dists; do
-    rlog="$staged/.ratchet-$dist.log"
-    if ! ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
-        cat "$rlog" >&2
-        fail=1; note_failure "$dist: ratchet — paydown only, no new keys" "$rlog"
-    else
-        cat "$rlog" >&2
-    fi
-  done
-fi
+# ⚑ NO `if [ -x ]` GUARD HERE ANY MORE: the tool's presence is REFUSED ON above, so reaching this
+# line means it exists. A guard would be a second, silent answer to a question already answered
+# loudly — and it was the one that let an absent ratchet report green.
+# ⚑⚑⚑ THE RATCHET CAPTURES ITS OWN OUTPUT, AND THE GATE NAMED THIS GAP ABOUT ITSELF FIRST.
+# Refusing a commit last tick, it printed the two offending keys and then:
+#     ⚑ no check captured its own output — the label above is all the account there is.
+#       That is a defect in the CHECK, not in your commit: scroll for its name.
+# ⚑ That is the gap-naming repair working as designed — converting a SILENCE into a NAMED gap —
+# and the check it named is the one that has refused most often today: two paydowns of mine, a
+# peer's fourth commit, and three earlier rounds. Six refusals, four parties.
+#
+# ⚑⚑ THE DETAIL ALWAYS EXISTED. `mikemol-ratchet` prints `N new key(s) REFUSED` and lists them
+# by `path:rule`. It went to the terminal, hundreds of lines above the verdict and interleaved
+# with a 35-target bazel run — so a refused party had the keys and could not find them, which is
+# the same *detail that exists somewhere is detail the reader does not have* that the shellcheck
+# witness was wired for two commits earlier. **A repair applied to one call site is not a repair
+# to the class**, and this is the second of the twenty sites to be wired.
+for dist in $_dists; do
+  rlog="$staged/.ratchet-$dist.log"
+  if ! ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
+      cat "$rlog" >&2
+      fail=1; note_failure "$dist: ratchet — paydown only, no new keys" "$rlog"
+  else
+      cat "$rlog" >&2
+  fi
+done
 
 # ⚑⚑⚑ THE INSTRUMENT ASSERTS ITS OWN CONTRACT BEFORE ITS OUTPUT IS TRUSTED. mdstruct silently
 # dropped headings while `lint` and `roundtrip` both reported green on the corrupted file, so a
 # bounded write against the parent landed inside the missing child. Every committed markdown file
 # is checked with the tool's own verify mode — including this repo's own documents, which is where
 # the defect was found.
-if [ -x mdstruct/.venv/bin/python3 ]; then
-  while IFS= read -r md; do
-    [ -f "$staged/$md" ] || continue
-    # ⚑⚑ `verify` NAMES THE SWALLOWED HEADING AND ITS LINE, AND THIS DISCARDED IT TO /dev/null.
-    # The refusal said a document had unreachable headings and made the author re-run the tool to
-    # learn WHICH — for the one check whose whole output is a list of specific lines.
-    _mdlog="$_witness_logs/mdverify-$(printf '%s' "$md" | tr -c 'a-zA-Z0-9' '_').log"
-    ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli verify "$staged/$md" >"$_mdlog" 2>&1 ) \
-      || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"
-           cat "$_mdlog" >&2
-           fail=1; note_failure "$md: headings unreachable to mdstruct" "$_mdlog"; }
-    # ⚑⚑⚑ A RAGGED ROW IS THE ONE STRUCTURAL DEFECT NO AST READER HERE CAN SEE, AND THIS IS THE
-    # ONLY MOMENT IT IS CATCHABLE. Pandoc pads a short row to its header's width before the AST
-    # exists, so `mdstruct tables` reports a broken table as clean — measured, and asserted there
-    # as a limit rather than repaired. Only the line-based shape linter can read it.
-    # ⚑⚑ AND ONLY THE RECEIVING REPOSITORY'S GATE RUNS WHEN THE BYTES LAND. A peer's arm has been
-    # finding these in this tree from outside, and they measured why that is not enough: a peer
-    # file is swept at THEIR commit, strictly later than the write and often later than someone
-    # else's repair. Every party here writes rows into every other party's censuses.
-    # ⚑ AGAINST HEAD, NOT ABSOLUTE. Fifteen ragged rows exist across thirteen files, several in
-    # FROZEN censuses and two in this session's own filed legs — none of which may be amended.
-    # An absolute refusal would block every commit touching them, which is the arm-over-a-red-tree
-    # hazard this repo records. The refusal fires on an INCREASE.
-    # ⚑ A COUNT, AND ITS WEAKNESS IS STATED: moving a ragged row while adding another elsewhere
-    # holds the count and passes. Set membership is stronger and belongs with the ratchet; this
-    # catches the case the gate exists for — a row that was not ragged becoming ragged.
-    # ⚑⚑ THE LINTER'S OUTPUT IS CAPTURED TO A FILE, NOT PIPED. `lint` exits 1 when it has
-    # findings, so `| grep -c` would report grep's status and mask a CRASHED linter as a clean
-    # document — a false zero, from the instrument, in the check built to catch false reads.
-    # ⚑⚑⚑ `|| true`, AND WITHOUT IT THIS CHECK NEVER RAN. `lint` exits 1 whenever it has any
-    # finding, and under `set -e` a bare failing command kills the script before the next line
-    # reads `$?` — so the rc capture built to handle a nonzero status was unreachable for exactly
-    # the case it exists for. MEASURED: a planted ragged row made the gate exit 1 with NO
-    # attributed refusal, because the script was already dead. ⚑⚑ This file records that same
-    # hazard at line 481, with this same remedy, about a different pipeline — a recorded lesson
-    # is not an applied one, and here the record and the defect are in one file.
-    _rag_rc=0
-    ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$staged/$md" ) \
-      >"$_mdlog.now" 2>&1 || _rag_rc=$?
-    if [ "$_rag_rc" -gt 1 ]; then
-      say "$md: the shape linter FAILED (rc=$_rag_rc) — a count from a crashed reader is not zero"
-      cat "$_mdlog.now" >&2
-      fail=1; note_failure "$md: shape linter rc=$_rag_rc" "$_mdlog.now"
-    else
-      _rag_now=$(grep -c MD056 "$_mdlog.now" || true)
-      _rag_head=0
-      if git show "HEAD:$md" >"$_mdlog.head" 2>/dev/null; then
-        ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$_mdlog.head" ) \
-          >"$_mdlog.was" 2>&1 || true
-        _rag_head=$(grep -c MD056 "$_mdlog.was" || true)
-      fi
-      if [ "${_rag_now:-0}" -gt "${_rag_head:-0}" ]; then
-        say "$md: ragged table row(s) — $_rag_now staged against $_rag_head in HEAD"
-        say "  a raw or escaped pipe inside a code span splits the cell; every structural reader"
-        say "  STOPS at that row and reports what it saw as complete. Escaping does NOT help —"
-        say "  a field-splitting reader splits on the raw byte and an escaped pipe still ends it."
-        grep MD056 "$_mdlog.now" >&2 || true
-        fail=1; note_failure "$md: $_rag_now ragged row(s), was $_rag_head" "$_mdlog.now"
-      fi
+# ⚑ NO `if [ -x mdstruct/.venv/bin/python3 ]` GUARD: the per-distribution loop above already
+# REFUSES the commit when any distribution's `python3` is missing, and mdstruct is in `$_dists`.
+# The guard was a redundant SECOND answer to a question already answered loudly — and a silent
+# one, so where the two disagreed the silence would win.
+while IFS= read -r md; do
+  [ -f "$staged/$md" ] || continue
+  # ⚑⚑ `verify` NAMES THE SWALLOWED HEADING AND ITS LINE, AND THIS DISCARDED IT TO /dev/null.
+  # The refusal said a document had unreachable headings and made the author re-run the tool to
+  # learn WHICH — for the one check whose whole output is a list of specific lines.
+  _mdlog="$_witness_logs/mdverify-$(printf '%s' "$md" | tr -c 'a-zA-Z0-9' '_').log"
+  ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli verify "$staged/$md" >"$_mdlog" 2>&1 ) \
+    || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"
+         cat "$_mdlog" >&2
+         fail=1; note_failure "$md: headings unreachable to mdstruct" "$_mdlog"; }
+  # ⚑⚑⚑ A RAGGED ROW IS THE ONE STRUCTURAL DEFECT NO AST READER HERE CAN SEE, AND THIS IS THE
+  # ONLY MOMENT IT IS CATCHABLE. Pandoc pads a short row to its header's width before the AST
+  # exists, so `mdstruct tables` reports a broken table as clean — measured, and asserted there
+  # as a limit rather than repaired. Only the line-based shape linter can read it.
+  # ⚑⚑ AND ONLY THE RECEIVING REPOSITORY'S GATE RUNS WHEN THE BYTES LAND. A peer's arm has been
+  # finding these in this tree from outside, and they measured why that is not enough: a peer
+  # file is swept at THEIR commit, strictly later than the write and often later than someone
+  # else's repair. Every party here writes rows into every other party's censuses.
+  # ⚑ AGAINST HEAD, NOT ABSOLUTE. Fifteen ragged rows exist across thirteen files, several in
+  # FROZEN censuses and two in this session's own filed legs — none of which may be amended.
+  # An absolute refusal would block every commit touching them, which is the arm-over-a-red-tree
+  # hazard this repo records. The refusal fires on an INCREASE.
+  # ⚑ A COUNT, AND ITS WEAKNESS IS STATED: moving a ragged row while adding another elsewhere
+  # holds the count and passes. Set membership is stronger and belongs with the ratchet; this
+  # catches the case the gate exists for — a row that was not ragged becoming ragged.
+  # ⚑⚑ THE LINTER'S OUTPUT IS CAPTURED TO A FILE, NOT PIPED. `lint` exits 1 when it has
+  # findings, so `| grep -c` would report grep's status and mask a CRASHED linter as a clean
+  # document — a false zero, from the instrument, in the check built to catch false reads.
+  # ⚑⚑⚑ `|| true`, AND WITHOUT IT THIS CHECK NEVER RAN. `lint` exits 1 whenever it has any
+  # finding, and under `set -e` a bare failing command kills the script before the next line
+  # reads `$?` — so the rc capture built to handle a nonzero status was unreachable for exactly
+  # the case it exists for. MEASURED: a planted ragged row made the gate exit 1 with NO
+  # attributed refusal, because the script was already dead. ⚑⚑ This file records that same
+  # hazard at line 481, with this same remedy, about a different pipeline — a recorded lesson
+  # is not an applied one, and here the record and the defect are in one file.
+  _rag_rc=0
+  ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$staged/$md" ) \
+    >"$_mdlog.now" 2>&1 || _rag_rc=$?
+  if [ "$_rag_rc" -gt 1 ]; then
+    say "$md: the shape linter FAILED (rc=$_rag_rc) — a count from a crashed reader is not zero"
+    cat "$_mdlog.now" >&2
+    fail=1; note_failure "$md: shape linter rc=$_rag_rc" "$_mdlog.now"
+  else
+    _rag_now=$(grep -c MD056 "$_mdlog.now" || true)
+    _rag_head=0
+    if git show "HEAD:$md" >"$_mdlog.head" 2>/dev/null; then
+      ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$_mdlog.head" ) \
+        >"$_mdlog.was" 2>&1 || true
+      _rag_head=$(grep -c MD056 "$_mdlog.was" || true)
     fi
-  done < <(git diff --cached --name-only --diff-filter=ACM -- '*.md')
-fi
+    if [ "${_rag_now:-0}" -gt "${_rag_head:-0}" ]; then
+      say "$md: ragged table row(s) — $_rag_now staged against $_rag_head in HEAD"
+      say "  a raw or escaped pipe inside a code span splits the cell; every structural reader"
+      say "  STOPS at that row and reports what it saw as complete. Escaping does NOT help —"
+      say "  a field-splitting reader splits on the raw byte and an escaped pipe still ends it."
+      grep MD056 "$_mdlog.now" >&2 || true
+      fail=1; note_failure "$md: $_rag_now ragged row(s), was $_rag_head" "$_mdlog.now"
+    fi
+  fi
+done < <(git diff --cached --name-only --diff-filter=ACM -- '*.md')
 
 # ⚑ THE CAUSE IS RESTATED AT THE POINT OF REFUSAL, because that is where a reader is looking.
 # A refusal that does not name its cause is read as a glitch, and a glitch is what gets bypassed.

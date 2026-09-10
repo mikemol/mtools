@@ -2881,3 +2881,9 @@
   claim   = {⚑⚑ A NULLABLE FIELD WOULD MAKE `str(None)` A WELL-FORMED ARGV ELEMENT NAMING NO FILE — not an error, a path that does not exist, so every arm grades UNREACHABLE and the suite reports *nothing is falsifiable* rather than *the grader was misconfigured*. Typed `Path` with an empty-path sentinel instead.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_grade.py -k test_the_interpreter_is_never_the_string_none}
 }
+
+@misc{hooks-bar-fires-every-tool-the-gate-invokes-is-refused-when-absent,
+  section = {bar-fires},
+  claim   = {⚑⚑⚑ THE GATE STATED THIS RULE ABOUT ITSELF AND BROKE IT SIXTY LINES LATER: *a skip here would report green over a check that never executed*, then three `if [ -x ]` blocks skipped silently. `mikemol-ratchet` lives ONLY in ratchet/.venv — measured absent from fence, hooks and mdstruct — so no iteration of the per-distribution `ruff mypy python3` triple covered it, and its absence would drop the preview-debt ratchet while the commit read green. ⚑⚑ The arm also refuses to pass VACUOUSLY, which it did on its first run after the repair: with every guard removed the guarded set is empty and the primary assertion is trivially true, so it additionally requires the refusals it credits to exist.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_tool_the_gate_invokes_is_refused_when_absent}
+}
