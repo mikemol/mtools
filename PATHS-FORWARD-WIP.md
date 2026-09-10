@@ -424,7 +424,46 @@ in `site-packages` but have no console scripts, because `//:venv.bzl` only ever 
 interpreter symlink. The gate invokes `.venv/bin/ruff` directly, so repointing it today fails
 immediately. **That is a gap in the rule I wrote and did not measure.**
 
-**So the sequence the ruling implies, in leverage order:**
+#### ⚑⚑⚑ STEP 1 AND STEP 3 LANDED TOGETHER, BECAUSE AN ARM CORRECTLY REFUSED TO LET THEM SPLIT
+
+The host-venv `ruff` and `mypy` are gone from `.githooks/pre-commit`. `//<dist>:ruff` and
+`//<dist>:mypy`, run by `( cd "$staged" && bazel test //... )`, are now the only run of either.
+
+**The redundancy was measured before the deletion, not inferred from target names:**
+
+```
+ruff   three binaries — host venv, @ruff//:bin, built venv site-packages — ALL 0.16.6
+       on a PLANTED defect: host PLR2004 rc=1 | archive PLR2004 rc=1 | identical rule sets
+       ruff_check.sh passes the same --config and `check .` from the same directory
+mypy   the target deletes synthesized __init__.py markers a staged checkout never has
+       population: 24 source files BOTH ways; a planted type error flips host to rc=1
+       with the population held at 24
+```
+
+**And the delegation was then shown to carry the coverage**, which the arm cannot assert:
+control green on both targets, then `//hooks:ruff` rc=3 on a planted magic value and
+`//hooks:mypy` rc=3 on a planted return type, tree restored.
+
+⚑⚑ **STEP 3 WAS FORCED, NOT CHOSEN.** `test_the_preflight_runs_the_ruff_the_gate_runs` refused the
+tree the moment the gate changed — preflight was still running `.venv/bin/ruff`, predicting a check
+the gate had stopped performing. That arm existed exactly for this and fired exactly when it
+should. `preflight.sh` now runs `bazel test //<dist>:ruff //<dist>:mypy` with `--test_output=errors`
+so a refusal still carries its finding; both targets are cached, so a clean tree answers from the
+action cache and the script stays fast.
+
+⚑ **FOUR EXISTING ARMS REFUSED THE DELETION, AND ALL FOUR WERE RIGHT TO.** Each asserted a
+property of the deleted block:
+
+- **`MYPYPATH="$staged/`** — asserted the *workaround* for the editable-install import closure. Its
+  subject is gone; the target reads a bazel sandbox built from declared `srcs`, where that hazard
+  cannot arise. Rewritten to assert the structural fact instead of demanding the workaround.
+- **three typed check labels** in the capture-discipline arm — a hand-written population inside an
+  arm about capture, refusing a correct change because two of its three names no longer exist. Now
+  derived from the file.
+- **the ruff-agreement arm** — the real finding above.
+- **the vacuity sweep** — caught a literal (`ruff EXITED`) that the rewrite had orphaned.
+
+**The sequence the ruling implied, with 1 and 3 now done:**
 
 1. **Delete the duplicated host-venv checks** at `:405`, `:410`, `:429`, `:711` — the graph already
    produces those verdicts at `:554`, over the same staged tree. This is subtraction, needs no new

@@ -402,22 +402,40 @@ for dist in $_dists; do
   # they are different populations.* An editable install naming a root and a missing declared
   # input are two mechanisms of one failure — the thing under test reaching outside its declared
   # closure, and the reader unable to tell.
-  run_checked "$dist: ruff — lint clean under select=[ALL]" \
-    env -C "$staged/$dist" \
-        MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
-        PYTHONPATH="$staged/$dist/src" \
-        "$root/$dist/.venv/bin/ruff" check --no-cache .
-  run_checked "$dist: mypy — types clean, strict" \
-    env -C "$staged/$dist" \
-        MYPYPATH="$staged/$dist/src:$staged/$dist/stubs" \
-        PYTHONPATH="$staged/$dist/src" \
-        "$root/$dist/.venv/bin/mypy"
+  # ⚑⚑⚑ ruff AND mypy ARE NOT RUN HERE ANY MORE — THEY ARE `//<dist>:ruff` AND `//<dist>:mypy`,
+  # RUN BY THE `bazel test //...` BELOW OVER THIS SAME `$staged` TREE. Operator ruling: *the gate
+  # verdicts should use the build's venv; the gates should be build TARGETS.*
+  #
+  # ⚑⚑ THIS IS SUBTRACTION OF A REDUNDANT INSTRUMENT, AND THE REDUNDANCY WAS MEASURED RATHER THAN
+  # ASSUMED FROM THE TARGET NAMES:
+  #
+  #   ruff  Three binaries exist — this venv's, `@ruff//:bin`, and the built venv's site-packages
+  #         — all 0.16.6, which is a coincidence maintained BY HAND between resolvers with no
+  #         shared constraint. On a PLANTED defect the host and archive binaries both reported
+  #         `PLR2004`: same rc, same rule set. `ruff_check.sh` passes the same `--config` and
+  #         `check .` from the same directory, and ruff does not read the `MYPYPATH`/`PYTHONPATH`
+  #         this block used to set — it does not follow imports, which that script records.
+  #
+  #   mypy  The target deletes synthesized `__init__.py` markers a staged checkout never has, so
+  #         both routes reach the SAME population: 24 source files each way, measured, with a
+  #         planted type error flipping the host run to rc=1 while the population held.
+  #
+  # ⚑ THE DIVERGENCE THIS REMOVES IS SMALL TODAY AND STRUCTURAL: the ratchet's baseline keys ARE
+  # ruff findings, so two ruffs drifting apart would mint or clear keys the build does not see,
+  # with both halves reporting green in their own terms. One instrument cannot disagree with
+  # itself.
+  # ⚑⚑ `//hooks:test_bar_fires` asserts the delegation holds — that every distribution still HAS
+  # those targets, that `bazel test //...` is still invoked, and that a host-venv ruff or mypy
+  # does not reappear here looking like added safety.
+
   # ⚑ TESTS RUN FROM THE REAL TREE: their venv holds absolute paths, and a witness that cannot
   # find its own interpreter is an infrastructure failure reported as a red gate.
   #
   # ⚑⚑ AND THIS IS THE THIRD POPULATION, LEFT OPEN DELIBERATELY AND NAMED SO IT IS NOT MISTAKEN
-  # FOR CLOSED. ruff and mypy now read the staged tree through `PYTHONPATH`; `bazel test //...`
-  # below reads a sandbox built from declared `srcs`; this line reads the WORKING TREE. So a
+  # FOR CLOSED. ⚑ ITS FIRST CLAUSE ONCE READ *"ruff and mypy now read the staged tree through
+  # `PYTHONPATH`"*, WHICH IS NO LONGER TRUE OF THIS FILE — both are `//<dist>:ruff` and
+  # `//<dist>:mypy` now, run by the suite below. The count of populations is unchanged: the
+  # targets read a sandbox built from declared `srcs`; this line reads the WORKING TREE. So a
   # pytest green covers what is on disk, not what is being committed, and the two diverge exactly
   # when `git add` is partial — which is the normal case.
   #
@@ -537,11 +555,15 @@ fi
 # because the script was already dead. ⚑ The repair for one pipeline hazard introduced another:
 # `PIPESTATUS` is only readable if control reaches the line that reads it. `|| true` exempts the
 # pipeline from `-e` while `PIPESTATUS[0]` still carries bazel's verdict.
-# ⚑⚑⚑ THE SUITE RUNS IN THE STAGED TREE, so both halves of this gate check the same code. Host
-# ruff and mypy already ran in `$staged`; `bazel test` did not, and measured on one planted defect
-# the two halves returned OPPOSITE verdicts in a single run — host mypy said "Success: no issues
-# found in 8 source files" while `//ratchet:mypy` said FAILED. ⚑ A gate that disagrees with itself
-# about what its subject is has no verdict to give.
+# ⚑⚑⚑ THE SUITE RUNS IN THE STAGED TREE, so both halves of this gate check the same code. The
+# account is HISTORICAL and reads as present-tense if skimmed: host ruff and mypy ran in `$staged`
+# while `bazel test` did NOT, and measured on one planted defect the two halves returned OPPOSITE
+# verdicts in a single run — host mypy said "Success: no issues found in 8 source files" while
+# `//ratchet:mypy` said FAILED. ⚑ A gate that disagrees with itself about what its subject is has
+# no verdict to give. That is why the `cd "$staged"` below exists.
+# ⚑⚑ AND THE "TWO HALVES" ARE NOW ONE. Host ruff and mypy are gone from this file entirely —
+# `//<dist>:ruff` and `//<dist>:mypy` are the only run of either, over this same staged tree. The
+# disagreement this paragraph records is no longer POSSIBLE rather than merely no longer observed.
 #
 # ⚑⚑ THE WITNESSES STILL READ THE WORKING TREE, AND THAT IS NOT A GAP IN THIS FIX. Armed with a
 # working-tree-only defect: the suite did NOT refuse (this change working), and a domain witness

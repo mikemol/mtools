@@ -114,15 +114,28 @@ for dist in $dists; do
     # ⚑⚑ EXIT 0 AND 1 ARE BOTH THE CHECKER RUNNING; anything else is the checker failing to run,
     # which a bare `||` folds into `the gate will refuse this` — a checker that could not start
     # reported as a lint finding.
-    ( cd "$dist" && .venv/bin/ruff check --no-cache . )
+    # ⚑⚑⚑ ruff AND mypy ARE PREDICTED BY RUNNING THE GATE'S OWN TARGETS, NOT A SECOND COPY.
+    # The gate delegated both to `//<dist>:ruff` and `//<dist>:mypy`; a pre-flight still invoking
+    # `.venv/bin/ruff` would predict a check the gate no longer performs — which is the exact
+    # defect `test_the_preflight_runs_the_ruff_the_gate_runs` exists to refuse, and it DID refuse
+    # this file the moment the gate changed. A prediction whose instrument differs from its
+    # subject's is not one.
+    # ⚑⚑ AND IT STAYS FAST, WHICH IS THIS SCRIPT'S WHOLE PURPOSE: both targets are cached, so a
+    # clean tree answers from the action cache with nothing re-executed.
+    # ⚑ EXIT 0 AND 1..3 ARE DIFFERENT FACTS, kept as they were for the host ruff: bazel exits 3
+    # when a test FAILS and 1 when the BUILD fails, so folding them together would report a broken
+    # build as a lint finding.
+    # ⚑⚑ `--test_output=errors` SO A REFUSAL CARRIES ITS FINDING. Discarding the output would make
+    # this say "the gate will refuse this" with no name for what — the *detail that exists
+    # somewhere is detail the reader does not have* defect, repaired twice elsewhere in this repo.
+    bazel test "//$dist:ruff" "//$dist:mypy" --test_output=errors --noshow_progress \
+        --ui_event_filters=-DEBUG,-WARNING,-INFO
     _rc=$?
     case "$_rc" in
         0) ;;
-        1) fail=1; say "$dist: ruff — the gate will refuse this" ;;
-        *) fail=1; say "$dist: ruff EXITED $_rc — the checker did not run; this is not a clean tree" ;;
+        3) fail=1; say "$dist: ruff/mypy — the gate will refuse this" ;;
+        *) fail=1; say "$dist: bazel EXITED $_rc — the checks did not run; this is not a clean tree" ;;
     esac
-    ( cd "$dist" && .venv/bin/mypy ) \
-        || { fail=1; say "$dist: mypy — the gate will refuse this"; }
     ( cd "$dist" && .venv/bin/python3 -m pytest -q ) \
         || { fail=1; say "$dist: pytest — the gate will refuse this"; }
 

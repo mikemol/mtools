@@ -971,16 +971,36 @@ def test_the_gate_names_the_gap_when_no_check_captured_its_output() -> None:
 
 
 def test_the_gate_points_the_checkers_at_the_staged_tree() -> None:
-    """⚑⚑⚑ `cd` RELOCATES A CWD, NOT AN IMPORT CLOSURE.
+    """⚑⚑⚑ `cd` RELOCATES A CWD, NOT AN IMPORT CLOSURE — AND THE FIX IS NOW STRUCTURAL.
 
     The venv is an EDITABLE install — a `.pth` plus an import-hook finder naming the live tree — so
     `cd $staged/$dist` changed the working directory and left imports resolving to unstaged source.
     ⚑ Measured: a type defect planted in the WORKING tree, absent from the staged copy, was still
     imported by a run inside the staged copy, and mypy reported Success.
+
+    ⚑⚑⚑ THIS ARM ASSERTED THE REPAIR (`MYPYPATH`/`PYTHONPATH` pointing into `$staged`) AND ITS
+    SUBJECT HAS BEEN DELETED. The gate no longer runs a host-venv mypy at all — `//<dist>:mypy`
+    does, over a bazel sandbox built from DECLARED `srcs`. An editable install's import hook is not
+    present there, so the hazard this arm guarded cannot arise: it is closed by construction rather
+    than by two environment variables a future edit could drop.
+
+    ⚑⚑ SO THE ARM NOW ASSERTS THE STRONGER FACT, and refuses the weaker repair's RETURN. Keeping
+    the old assertion would have been an arm demanding a workaround for a defect that no longer
+    exists — green only while the workaround is present, and failing if the structural fix were
+    made more thorough.
     """
     body = _GATE.read_text(encoding="utf-8")
-    assert 'MYPYPATH="$staged/' in body, "mypy must resolve inside the staged tree"
-    assert 'PYTHONPATH="$staged/' in body, "the import closure must be the staged one"
+
+    # ⚑ THE HOST CHECKERS ARE GONE: no `.venv/bin/mypy` invocation to need a staged import closure.
+    assert '.venv/bin/mypy"' not in body, (
+        "a host-venv mypy is back in the gate — it carries the editable-install import closure "
+        "again, and this arm's original repair would be needed a second time"
+    )
+    # ⚑ AND THE DELEGATION IS REAL: the suite that runs `//<dist>:mypy` must still be invoked.
+    assert "bazel test //..." in body, (
+        "the gate does not run the suite, so no mypy runs anywhere — the closure question is moot "
+        "only because nothing is checked"
+    )
 
 # --- blockers.sh: three defects in three consecutive ticks, none of them gated -----------------
 #
@@ -1522,10 +1542,21 @@ def test_the_gate_replays_detail_for_the_distribution_checks() -> None:
     """
     body = _GATE.read_text(encoding="utf-8")
     assert "run_checked()" in body, "the capture helper must exist"
-    for check in ("ruff — lint clean", "mypy — types clean", "pytest — every case passes"):
-        assert f'run_checked "$dist: {check}' in body, (
-            f"{check} must route through the capturing helper, not a bare note_failure"
-        )
+    # ⚑⚑⚑ THE POPULATION IS DERIVED FROM THE FILE, AND IT USED TO BE THREE TYPED LABELS —
+    # `ruff — lint clean`, `mypy — types clean`, `pytest — every case passes`. Two of those checks
+    # were deleted when the gate delegated ruff and mypy to `//<dist>:ruff` and `//<dist>:mypy`,
+    # and this arm then refused a correct change: it was asserting the CONTINUED EXISTENCE of
+    # specific checks while claiming to assert a property of whatever checks exist.
+    # ⚑⚑ THE PROPERTY IS UNCHANGED AND IS WHAT IS ASSERTED NOW: every `run_checked` site — however
+    # many there are — hands a LOG to `note_failure` rather than a bare label. A hand-written list
+    # of three inside an arm about capture discipline was a hand-written population, which is the
+    # defect this suite has now paid for four times.
+    per_dist: list[str] = pyre.findall(r'run_checked "\$dist: ([^"]+)"', body)
+    others: list[str] = pyre.findall(r'^run_checked "([^"]+)"', body, flags=pyre.MULTILINE)
+    labels = per_dist + others
+    # ⚑ NON-EMPTY, ASSERTED: zero labels makes every check below vacuous, and this arm would then
+    # certify a gate that had stopped checking anything at all.
+    assert labels, "no `run_checked` site found in the gate — this arm would pass by finding none"
     assert 'fail=1; note_failure "$_rlabel" "$_rclog"' in body, (
         "the helper must pass the LOG to note_failure; a label alone is the defect being repaired"
     )
@@ -2603,33 +2634,39 @@ def test_the_preflight_runs_the_ruff_the_gate_runs() -> None:
     preflight = _PREFLIGHT.read_text(encoding="utf-8")
     gate = _GATE.read_text(encoding="utf-8")
 
-    def _ruff_flags(body: str) -> set[str]:
-        """Collect flags from every non-comment `ruff check` line, so prose cannot satisfy it.
-
-        Returns:
-            the flags passed on each line that actually invokes ruff.
-
-        """
-        flags: set[str] = set()
-        found = False
-        for line in body.splitlines():
-            if "ruff" not in line or "check" not in line or line.lstrip().startswith("#"):
-                continue
-            found = True
-            flags |= {w for w in line.split() if w.startswith("--")}
-        assert found, "no ruff invocation found; this arm would pass by finding nothing"
-        return flags
-
-    # ⚑ THE COMPARISON IS BETWEEN COMMANDS, NOT AGAINST A LITERAL. Asserting `--preview` absent
-    # would encode today's answer; asserting AGREEMENT survives the gate changing its mind.
-    assert _ruff_flags(preflight) == _ruff_flags(gate), (
-        f"preflight runs a ruff the gate does not: preflight={_ruff_flags(preflight)} "
-        f"gate={_ruff_flags(gate)}. A prediction that differs from its subject is not one."
+    # ⚑⚑⚑ THE AGREEMENT IS NOW ABOUT THE INSTRUMENT, NOT ITS FLAGS — AND THAT IS A STRONGER FORM
+    # OF THE SAME PROPERTY. This arm used to compare the `--` flags on each file's `ruff check`
+    # line. Both files have stopped invoking ruff directly: the gate delegates to `//<dist>:ruff`,
+    # and the pre-flight now runs THAT SAME TARGET. Comparing flags of commands that no longer
+    # exist would be an arm about a deleted subject, and comparing them as absent-in-both would be
+    # satisfied by two files that check nothing.
+    # ⚑⚑ SO WHAT IS ASSERTED IS THAT NEITHER RUNS A PRIVATE COPY, AND BOTH REACH THE TARGET. Two
+    # callers of one target cannot pass different flags to it — the agreement holds by
+    # construction rather than by two lines being kept in sync, which is what the flag comparison
+    # was approximating.
+    # ⚑⚑⚑ NON-COMMENT LINES ONLY, AND THE FIRST CUT MATCHED ITS OWN PROSE. Both files now EXPLAIN
+    # why they no longer invoke `.venv/bin/ruff`, and a substring search over the whole text reads
+    # that explanation as the thing it forbids — the sweep-cannot-tell-an-assertion-from-an-
+    # explanation defect that `test_a_comment_naming_a_flag_says_whether_it_is_passed` records
+    # immediately below, reproduced here while writing an arm one screen above it.
+    for name, body in (("the gate", gate), ("the pre-flight", preflight)):
+        live = [ln for ln in body.splitlines() if not ln.lstrip().startswith("#")]
+        offenders = [ln.strip() for ln in live if ".venv/bin/ruff" in ln]
+        assert not offenders, (
+            f"{name} runs a private host-venv ruff again — the two can now disagree, which is "
+            f"what delegating to //<dist>:ruff removed: {offenders}"
+        )
+    assert ':ruff"' in preflight or ":ruff " in preflight, (
+        "the pre-flight does not reach //<dist>:ruff, so it predicts a check it never runs"
     )
-    # ⚑⚑ AND THE EXIT STATUS MUST BE DISCRIMINATED. `||` folds *the checker could not start* into
-    # *the gate will refuse this* — ruff exits 2 on a usage or internal error, which is not a
-    # lint finding, and the census this repo runs raises on exactly that distinction.
-    assert "ruff EXITED" in preflight, (
+    assert "bazel test //..." in gate, (
+        "the gate does not run the suite, so //<dist>:ruff runs nowhere and the pre-flight "
+        "predicts a check the gate has stopped performing"
+    )
+    # ⚑⚑ AND THE EXIT STATUS MUST STILL BE DISCRIMINATED. `||` folds *the checker could not start*
+    # into *the gate will refuse this*. bazel exits 3 for a FAILING TEST and 1 for a BUILD failure,
+    # so the pre-flight distinguishes them exactly as it did for ruff's 1-vs-2.
+    assert "bazel EXITED" in preflight, (
         "a checker that failed to RUN must not be reported as a checker that found something"
     )
 
@@ -5318,3 +5355,71 @@ def _assert_no_unrefused_guards(consumer: Path) -> None:
     assert {"ruff", "mypy", "python3"} <= covered, (
         f"the per-distribution triple lost a member: {sorted(covered)}"
     )
+
+
+def test_the_gate_does_not_run_a_second_copy_of_a_check_the_graph_already_runs() -> None:
+    """⚑⚑⚑ ONE SUBJECT THROUGH TWO INSTRUMENTS IS A GATE THAT CAN DISAGREE WITH ITSELF.
+
+    Operator ruling: *the gate verdicts should use the build's venv; the gates should be build
+    TARGETS.* Measured first, because most of it was already true — `bazel query
+    'kind("sh_test", //...)'` returns ruff, mypy and a ratchet gate for every distribution. What
+    sat on top was a SECOND, host-venv copy of the same verdicts over the same tree: the gate
+    materialises the index at `$staged` and then ran host-venv ruff and mypy there, while
+    `( cd "$staged" && bazel test //... )` ran the targets over that same materialised index.
+
+    ⚑⚑ THE DUPLICATION WAS VERIFIED BEFORE IT WAS DELETED, not assumed from the target names.
+    ruff: three binaries exist (host venv, `@ruff//:bin` http_archive, the built venv's
+    site-packages), all 0.16.6 — a coincidence maintained by hand between resolvers with no shared
+    constraint. On a PLANTED defect both the host and the archive binary reported `PLR2004`, same
+    rc, same rule set; `ruff_check.sh` passes the same `--config`/`check .` from the same
+    directory, and ruff does not read the env vars the gate set. mypy: the target deletes
+    synthesized `__init__.py` markers that the staged checkout never has, so both runs reach the
+    SAME population — measured 24 source files each way, with a planted type error flipping the
+    host run to rc=1 while the population held.
+
+    ⚑ SO THE DELETION IS SUBTRACTION OF A REDUNDANT INSTRUMENT, NOT OF A CHECK. This arm exists
+    so it stays that way: if a distribution ever loses its `ruff` or `mypy` target, the gate no
+    longer covers that property at all, and this fails rather than the coverage vanishing quietly.
+
+    ⚑⚑ THE pytest LINE IS NOT PART OF THIS AND IS DELIBERATELY LEFT. Its own comment names it a
+    THIRD population — it reads the WORKING TREE, not `$staged`, as a developer-tree smoke check
+    where a missing dependency surfaces as an import error rather than as a sandbox that never had
+    it. An earlier reading of mine listed it as duplicated; it is not.
+    """
+    body = _GATE.read_text(encoding="utf-8")
+
+    # ⚑ THE DISTRIBUTIONS ARE DERIVED, and the population is asserted non-empty: an empty glob
+    # makes every loop below vacuous, which is the failure this suite has already paid for once.
+    dists = sorted(p.parent.name for p in _DIST.parent.glob("*/pyproject.toml"))
+    assert dists, "no distribution carries a pyproject.toml — this arm would read nothing"
+
+    # ⚑⚑ THE COVERAGE CLAIM, PER DISTRIBUTION AND PER CHECK. `//<dist>:ruff` and `//<dist>:mypy`
+    # are what the gate now relies on, so their absence is the thing that would make the deletion
+    # a loss of coverage rather than a removal of redundancy.
+    missing = [
+        f"//{dist}:{check}"
+        for dist in dists
+        for check in ("ruff", "mypy")
+        if f'name = "{check}"' not in (_DIST.parent / dist / "BUILD.bazel").read_text(
+            encoding="utf-8",
+        )
+    ]
+    assert not missing, (
+        f"the gate delegates ruff and mypy to the graph, and these targets do not exist: "
+        f"{missing} — that property is now checked by nobody"
+    )
+
+    # ⚑ AND THE GATE MUST STILL INVOKE THE SUITE, or the delegation points at nothing.
+    assert "bazel test //..." in body, (
+        "the gate no longer runs `bazel test //...`, so delegating ruff and mypy to the graph "
+        "leaves both unchecked"
+    )
+
+    # ⚑⚑⚑ THE SUBTRACTION ITSELF, ASSERTED. A host-venv ruff or mypy invocation returning here
+    # would restore the two-instrument split this arm documents — and it would look like added
+    # safety rather than a restored divergence, which is why it is refused explicitly.
+    for checker in ("ruff", "mypy"):
+        assert f'.venv/bin/{checker}"' not in body, (
+            f"the gate invokes a host-venv {checker} again — one subject through two instruments, "
+            f"which is what //<dist>:{checker} was measured to make redundant"
+        )
