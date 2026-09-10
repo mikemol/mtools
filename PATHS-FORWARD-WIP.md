@@ -228,14 +228,22 @@ sandbox fixture — reaching out of the hermetic tree at the boundary the sandbo
 That is the editable-install escape `MODULE.bazel` refuses in strong terms, written as a
 fixture convenience. It goes when the venv is a build artifact.
 
-### ⟐POLL-RUF201-POPULATION — NEW 2026-09-10, small, unlanded
+### ⟐POLL-RUF201-POPULATION — CLEARED 2026-09-10, and the repair was to DERIVE rather than extend
 
-### ⟐POLL-RUF201-POPULATION — NEW 2026-09-10, small, unlanded
+`blockers.sh`'s RUF201 line printed `for d in hooks mdstruct ratchet` as the command to measure the
+preview paydown. `fence` landed at `cc3d301` and was NOT in that list, so the figure a reader would
+measure omitted a whole distribution — the same hand-written population as ⟐FENCE-WARRANTS, in the
+poll instead of the gate.
 
-`blockers.sh`'s RUF201 line prints `for d in hooks mdstruct ratchet` as the command to
-measure the preview paydown. `fence` landed at `cc3d301` and is NOT in that list, so the
-figure a reader would measure omits a whole distribution — the same hand-written
-population as ⟐FENCE-WARRANTS, in the poll instead of the gate.
+⚑⚑ **FIXED BY DERIVATION, NOT BY ADDING `fence`.** Typing the fourth name would have reproduced the
+defect one distribution later. The poll ALREADY enumerates every distribution by its
+`pyproject.toml` (line 152, with a control arm asserting the query finds the three known ones); the
+RUF201 line now interpolates that same query. Reads `for d in fence hooks mdstruct ratchet` today
+and will read the fifth name the day one lands, with nobody remembering to edit it.
+
+⚑ **AND THE ADJACENT COMMENT'S REFUSAL STILL STANDS, correctly.** It declines to RUN ruff inside
+the poll — three process starts against a script measured at 222 — and that is a separate question
+from which directories to name. Knowing the population is free here; measuring it is not.
 
 ### ⟐UNDECLARED-HOST-INPUTS — the argument that retired `external` does not stop there
 
@@ -315,19 +323,27 @@ fails with 2 `EXE002` for the same reason. With the tick's own new file present 
 is 23, the delta being exactly that file; **at HEAD it is 22, which is how all three were
 confirmed pre-existing rather than introduced.**
 
-⚑⚑ **THE RULE'S SUBJECT DOES NOT EXIST INSIDE A BUILD ACTION.** In the repository every one of
-these files is `rw-rw-r--` — *not* executable:
+⚑⚑⚑ **THE CAUSE, MEASURED DIRECTLY 2026-09-10 — AND IT CORRECTS THIS SECTION'S OWN FIRST
+FRAMING.** An earlier revision of this entry said *"the rule's subject does not exist inside a
+build action"* and asserted, without measuring it, that bazel does not preserve source mode bits.
+Half right, and the wrong half was load-bearing. A probe `stat`-ing its own staged siblings from
+inside an action, reporting through the failure channel:
 
 ```
--rw-rw-r-- hooks/src/mikemol/hooks/payload.py
--rw-rw-r-- hooks/tests/test_grade.py
+                    local sandbox   remote executor   repository
+hooks/tests/*.py    -rw-rw-r--      -rwxr-xr-x        -rw-rw-r--
+S_IXUSR             False           True              False
 ```
 
-`EXE002` is a claim about a **mode bit**, a fact about the filesystem the REPOSITORY lives on.
-Bazel does not preserve source mode bits into the executor's staged tree, so remotely the check
-reads `+x` on files that are `+x` nowhere a developer can see. The finding is a true statement
-about the staging and a **false statement about the repository** — the mis-named-population class,
-where a correct check runs over the wrong set.
+⚑⚑ **SO THE SUBJECT DOES EXIST, AND IS READ CORRECTLY, LOCALLY. IT IS *REMOTE STAGING* THAT
+DISCARDS THE MODE BIT** — the executor materialises every source `+x`. `EXE002` is not
+malfunctioning: it truthfully reports a filesystem the CAS invented. The finding is true of the
+staging and **false of the repository** — the mis-named-population class, where a correct check
+runs over the wrong set.
+
+⚑ **AND THE GENERAL FORM IS BIGGER THAN THIS RULE.** Anything keying on a mode bit is unsound
+under `--config=remote`, not just `EXE002`. That is worth knowing before something else is built
+on one. See ⟐REMOTE-DISCARDS-MODE-BITS.
 
 ⚑ **AND THIS IS THE HARD CASE, NOT THE EASY ONE.** An inert gate fires on nothing and someone
 eventually notices. This gate FIRES, produces 23 findings with file and line, and would pass
@@ -339,15 +355,35 @@ claim wanting the strong instrument sits behind a red bar that is not about the 
 
 ⚑ **THE FIX IS AN OPERATOR DECISION AND HAS NOT BEEN TAKEN.** Candidates:
 
-- **`ignore = [..., "EXE002"]`** with the measurement recorded — declaring the rule's subject
-  unobservable from inside an action. This changes the bar, and *"lowering it is an operator
-  decision"* covers the shape.
+- **`ignore = [..., "EXE002"]`** with the measurement recorded. ⚑ NOTE THE JUSTIFICATION CHANGED
+  WITH THE CAUSE: it is no longer "the subject is unobservable in an action" — the rule works
+  locally — but "the remote population is not the repository's". That is a weaker warrant for
+  disabling a rule that is *correct* on the instrument developers actually run. Still a change to
+  the bar; *"lowering it is an operator decision"* covers the shape.
 - **Keep `EXE002` and stop running `//*:ruff` remotely** — concedes the weaker instrument for the
-  lint gate specifically.
+  lint gate specifically, and is now the *cheapest correct* option rather than a concession: the
+  rule's subject is a repository fact, and the local sandbox is the arm that can see it.
 - **Normalise the mode bits during staging** — repairs the population rather than the rule; the
   structurally honest one, and the most work.
 
 Carried as measured, red, and NOT worked around.
+
+### ⟐REMOTE-DISCARDS-MODE-BITS — NEW 2026-09-10, measured, GENERAL
+
+⚑⚑ **The executor stages every source file `-rwxr-xr-x`; the local sandbox stages it with the
+repository's own `-rw-rw-r--`.** Measured from inside an action in both modes (see the table in
+⟐EXE002-REMOTE-ONLY, which is the first instance rather than the whole finding).
+
+**Why it is filed separately from the ruff red:** `EXE002` is the symptom that surfaced it, but the
+property is about the CAS, not about ruff. **Any check keying on a mode bit is unsound remotely** —
+an executable-script assertion, a permissions gate, a `py_binary` wrapper test. None exists here
+yet; this entry is so that one is not written against a mode bit and then debugged as a flake.
+
+⚑ **AND IT IS AN ASYMMETRY IN THE SUPPOSEDLY STRONGER INSTRUMENT.** Remote execution is adopted in
+`.bazelrc` as the sandbox that proves declarations complete. On this axis it carries LESS
+information than the local one — it cannot represent a fact the local sandbox represents
+faithfully. That does not retract the hermeticity argument, which is about reachable inputs; it
+bounds it. A stronger instrument on one axis is not stronger on all of them.
 
 ### ⟐OOM-GROUP — untouched, and correctly so
 

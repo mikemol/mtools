@@ -1211,7 +1211,15 @@ echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt
 # plus the command that yields a fresh one. A reader who wants the size can take it.
 echo "    ⚑ BLOCKED on a preview-wide paydown whose size is NOT stated here — a typed count"
 echo "      goes stale the tick after the work moves it. Measure it:"
-echo "        for d in hooks mdstruct ratchet; do"
+# ⚑⚑ THE DISTRIBUTION LIST IS DERIVED, NOT TYPED — AND IT WAS TYPED, AND IT WENT STALE. This line
+# read `for d in hooks mdstruct ratchet` while `fence` had landed at cc3d301, so a reader taking
+# the measurement would have omitted a whole distribution and reported a total for a population
+# that is not this repository's. The same hand-written-population defect as ⟐FENCE-WARRANTS, in
+# the poll rather than in the gate.
+# ⚑ AND DERIVING IT COSTS NOTHING HERE: the query at the top of this script already enumerates
+# every distribution by its pyproject.toml. What that comment above refuses is RUNNING RUFF in the
+# poll — three process starts — which is a separate thing from knowing WHICH directories to name.
+echo "        for d in $(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u | tr '\n' ' ' | sed 's/ $//'); do"
 echo "          env -C \$d .venv/bin/ruff check --preview --statistics . ; done"
 echo "      Renaming first is unshippable — a name selector needs --preview to LOAD."
 # ⚑⚑⚑ THE SUPPRESSION RULES CHAIN, AND THE SECOND LINK IS PREVIEW-ONLY. Measured on a probe with
@@ -1236,7 +1244,15 @@ echo "      Renaming first is unshippable — a name selector needs --preview to
 # the same 16 sites, total unmoved at 41 — a rule renamed, not a defect paid.
 echo "      RUF105 -> RUF106 measured: the chain's second link needs --preview to SUPPRESS,"
 echo "      and fails SILENTLY without it. Code form holds until preview is armed."
-echo "  cassian's hook components  raised by cassian  ANSWERED 2026-09-07: mtools asks for a diff"
+# ⚑⚑ DISCHARGED 2026-09-10 AT ab722b5, AND THE OLD LINE SURVIVED THE EVENT IT DESCRIBED. It read
+# "ANSWERED 2026-09-07: mtools asks for a diff" — true when written, false the moment the diff
+# arrived. cassian filed it, mtools answered in findings/cassian-observability.md, and the filing
+# is archived. A carried-decision line naming a request that has been FULFILLED is the stale-record
+# class this poll exists to catch, sitting in the poll itself.
+echo "  cassian's hook components  raised by cassian  DISCHARGED 2026-09-10 at ab722b5"
+echo "    diff filed, answered in findings/cassian-observability.md, filing archived."
+echo "    ⚑ measured while answering: 16 flag-argument arms here against the 7 cassian listed;"
+echo "      nine shapes covered that their list omits. Nothing to lift; flow is outward."
 echo "  gate cost                  raised by mtools   ⚑ WITHDRAWN — self-raised, no consequence"
 echo "    614163d measured that no stable figure exists; carrying it as blocked was my error."
 
