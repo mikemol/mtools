@@ -974,9 +974,28 @@ else
                     echo "    census phrases the mark differently — a prefix reader cannot settle"
                     echo "    it, and calling it a dropped row would report the READER, not the file."
                 elif [ "${_accounted:-0}" -ge "${_gap:-0}" ] && [ "${_accounted:-0}" -gt 0 ]; then
+                    # ⚑⚑⚑ THIS VERDICT SPENT THE ONE READING THIS POLL DECLARES IT CANNOT MAKE.
+                    # It said *filed elsewhere, STILL PENDING, or terminally declined*. `accepted`
+                    # is a PAST-TENSE DOCUMENT STATE; `still pending` is a PRESENT-TENSE CLAIM
+                    # ABOUT A PARTY — and this script's own `NOT COVERED: peer reachability` line
+                    # says liveness is unreadable here. The disclosure was published and the
+                    # defect kept.
+                    # ⚑⚑ MEASURED ACROSS A FLEET RESTART, 09-08 to 09-10: `CENSUS-paperkit-use`'s
+                    # §S is BYTE-IDENTICAL while `summit`, `linux-sources`, `substrate` and
+                    # `paperkit` all went away, `summit` still reading `accepted, not yet filed`.
+                    # A roster CANNOT move when a party stops existing, so its stale state and its
+                    # fresh state are byte-identical — the equality this file's opening refuses.
+                    # ⚑ THE REPAIR DOES NOT ADD A LIVENESS READ, which is impossible here. It
+                    # stops ASSERTING one: the row carries a state, and whether the party is still
+                    # working is a separate question this poll does not answer. `rosettapkg` is
+                    # `not yet filed` by a departed dispatcher — neither pending nor terminal, and
+                    # no vocabulary here has a state for that.
                     echo "    ACCOUNTED: $_accounted >= $_gap — every rostered surveyor without a"
-                    echo "    leg here carries a state that explains it: filed elsewhere, still"
-                    echo "    pending, or terminally declined. None is a dropped row."
+                    echo "    leg here carries a state that explains it: filed elsewhere, accepted"
+                    echo "    and unfiled, or terminally declined. None is a dropped ROW."
+                    echo "    ⚑ A STATE IS NOT A LIVENESS. These are the document's words as"
+                    echo "      written; whether each party is still running is NOT COVERED here"
+                    echo "      (see the reachability line) — run ListAgents against this roster."
                 else
                     echo "    DROPPED ROW: $_accounted < $_gap — $_gap surveyor(s) have no leg here"
                     echo "    and only $_accounted carry any state at all. A rostered surveyor with"

@@ -3007,6 +3007,69 @@ def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
     )
 
 
+def test_the_accounted_verdict_does_not_assert_a_liveness_the_poll_cannot_read() -> None:
+    """⚑⚑⚑ THE POLL'S ONE UNCOVERABLE CLAIM WAS LOAD-BEARING INSIDE A CLAIM IT DOES MAKE.
+
+    The poll declares `NOT COVERED: peer reachability — run ListAgents; it is a reading, not a
+    fact`, and that declaration is correct and deliberate: only the harness can run it. ⚑ But the
+    census section then reads an `accepted` cell and concludes *every rostered surveyor without a
+    leg here carries a state that explains it: filed elsewhere, STILL PENDING, or terminally
+    declined. None is a dropped row.*
+
+    ⚑⚑ `accepted` IS A PAST-TENSE DOCUMENT STATE AND `still pending` IS A PRESENT-TENSE CLAIM
+    ABOUT A PARTY. The document records that someone accepted; whether they are still running is
+    exactly the reading the poll says it cannot make. The verdict *none is dropped* rests on it.
+
+    ⚑⚑ FIRST MEASURED 2026-09-08, when the peer count fell from 12 to 10 with the other six refs
+    unchanged. RE-MEASURED 2026-09-10 across a fleet restart — and the second reading is the
+    stronger one, because `CENSUS-paperkit-use.md`'s §S is BYTE-IDENTICAL across both while every
+    liveness fact under it moved:
+
+        row (unchanged both days)               session on 09-08   on 09-10
+        gabion      filed elsewhere             gone               gone
+        rosettapkg  not yet filed — dispatcher  gone               gone
+        summit      accepted, not yet filed     RUNNING            GONE
+        linux-sources / substrate / paperkit    running            GONE
+
+    ⚑⚑⚑ THE ROSTER CANNOT MOVE WHEN A PARTY STOPS EXISTING, so a §S table two days stale and one
+    written this minute are byte-identical — the roster's default state and its measured state,
+    exactly the equality this poll's own opening refuses elsewhere. On 09-08 an earlier draft of
+    this docstring recorded *summit — still running* as evidence; two days later that sentence was
+    false and nothing in the file could have said so.
+
+    ⚑ `rosettapkg` is `not yet filed` by a party that no longer exists, and it is this census's
+    DISPATCHER — neither pending nor terminal. The census vocabulary has no state for it, and the
+    poll cannot acquire one.
+
+    ⚑ THE ARM DOES NOT ASK THE POLL TO READ LIVENESS. It asks it not to ASSERT liveness: the
+    verdict may say a row carries a state, and must not upgrade that to a claim the party is still
+    working. A tool that names its blind spot in one section and spends it in another has
+    published the disclosure and kept the defect.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: both halves must exist, or this arm passes because one vanished.
+    assert "NOT COVERED: peer reachability" in commands, (
+        "the reachability disclaimer must still be emitted; this arm would pass on its absence"
+    )
+    assert "ACCOUNTED" in commands, (
+        "the accounted verdict must still be emitted; this arm would pass on its absence"
+    )
+    # ⚑⚑⚑ AND MY FIRST PREDICATE HERE EXAMINED THE WRONG REGION AND REPORTED GREEN. It read
+    # `commands.split("ACCOUNTED")[1].split("DROPPED ROW")[0]` — but `ACCOUNTED` occurs TWICE in
+    # the poll, so `[1]` is the slice after the FIRST, which is the `ACCOUNTED by declared states`
+    # branch, and it ends exactly where the verdict under test begins. A mis-named population,
+    # inside the arm written to catch a mis-named claim.
+    # ⚑ SO THE KEY IS THE EMITTED SENTENCE, which is unique and is the thing being asserted about.
+    assert "still" not in commands.split("leg here carries a state that explains it")[1][:200], (
+        "the ACCOUNTED verdict claims a surveyor is STILL pending, which is a present-tense fact "
+        "about a live party — precisely the reading this poll declares NOT COVERED. Report the "
+        "document's state without upgrading it to a claim about who is still working"
+    )
+
+
 def test_the_poll_does_not_report_a_ceiling_as_a_measurement() -> None:
     r"""⚑⚑⚑ THE POLL PRINTS A BOUND AND CALLS IT A READING FROM THE SWEEP.
 
