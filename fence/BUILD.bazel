@@ -59,12 +59,36 @@ py_library(
     )
 ]
 
-# ⚑⚑⚑ THE INTEGRATION WITNESS IS `local`, `external` AND `manual`, AND EACH TAG IS A MEASUREMENT.
+# ⚑⚑⚑ THE INTEGRATION WITNESS CARRIED THREE TAGS AND NOW CARRIES NONE. Each was defended here as
+# a measurement; all three were a defect being managed instead of fixed, and the operator named
+# every one.
 #
 # This module forks a payload into a cgroup it creates beside its own, which needs a WRITABLE
 # cgroup v2 tree with memory+pids delegable. Where that is absent the module's `_fenceable()`
 # guard SKIPS every case — and a skip here is the exact defect this tool argues against, because
 # bazel renders "8 skipped" as `1 test passes`. Green over a fence that never fenced.
+#
+# ⚑⚑⚑ `manual` WAS NOT A FIX FOR THAT AND PRESUPPOSED ONE THAT DOES NOT APPLY. It excluded the
+# target from `//...` so an aggregate run could not bank a skip as coverage — but the skip still
+# renders as a pass wherever the target IS run, so hiding it from the wildcard moved the defect
+# out of view rather than removing it. A tag that answers *who will see this* is not an answer to
+# *what does this report*.
+#
+# ⚑⚑⚑ `external` WAS UNSOUNDNESS MADE CHEAPER TO LIVE WITH. Its argument was that a cached PASS
+# could assert the fence bound a payload on a host that has since lost delegation — true, and the
+# conclusion drawn from it was wrong. A target whose verdict depends on state OUTSIDE THE BUILD
+# GRAPH is unsound by construction; disabling its cache does not make the dependency sound, it
+# only pays for the unsoundness once per run. The answer is to bring the thing into the graph.
+# ⚑⚑ WHAT THAT MEANS CONCRETELY, stated so the next reader is not left with a slogan: the host
+# property this witness depends on is *a process-free parent cgroup with memory+pids delegated*
+# (measured and recorded in `cgroup.py`). Nothing in this BUILD file declares it, so bazel cannot
+# key on it and cannot invalidate on it. Until it is declared, the honest reading of a cached PASS
+# is that it asserts a fact about an undeclared input — which is a defect in this file, not a
+# reason to re-run.
+#
+# ⚑ `local` WAS THE THIRD, REMOVED EARLIER: it pinned the target to the host regardless of
+# `--config=remote`, so every "the executor cannot fence" reading taken through it was about the
+# wrong machine. Same shape as the two above — a tag standing in for a property nobody declared.
 #
 # ⚑⚑ MEASURED ON ALL THREE EXECUTION MODES RATHER THAN ASSUMED (2026-09-10):
 #
@@ -110,21 +134,15 @@ py_library(
 # the file for the next reader to be misled by, and the measurement this target exists to make is
 # precisely the one `local` forbids.
 #
-# `external` — never cached. A cached PASS would assert the fence bound a payload on a host that
-#              may since have lost delegation; the F-arm's whole value is that it RAN.
-# `manual`   — excluded from `//...`, so a remote or CI run cannot silently report this witness
-#              as passing when it skipped. Run it deliberately:
-#                  bazel test //fence:test_fence --config=remote
-#              ⚑ THIS TAG IS A DEBT, NOT A DESIGN. It is right while the executor cannot fence;
-#              it becomes wrong the day that mount is fixed, and the fix is what retires it.
-#              ⚑⚑ STILL OWED BEFORE IT RETIRES, and named by cassian rather than by me: whether
-#              the fence's CHILD cap binds before the POD's ceiling does. k8s sets
-#              `memory.oom.group=1` on every pod cgroup, so if the child cap does not bind first
-#              the F-arm's 256MB kills the WHOLE EXECUTOR POD rather than reddening one test —
-#              `[[pod-memory-ceiling-needs-guaranteed-qos-and-cgroup-scope-fails-green]]`.
-#              256MB is 12% of the pod's 2Gi, so the allocation alone cannot breach it; the risk
-#              is a child cap that fails to bind at all. Baseline recorded before the run:
-#              `buildbuddy-executor-ddcffcd95-tkfht restarts=0 phase=Running`.
+# ⚑⚑ THIS FINDING OUTLIVES THE TAG IT WAS WRITTEN UNDER, so it moves rather than going with it.
+# Named by cassian rather than by me: whether the fence's CHILD cap binds before the POD's ceiling
+# does. k8s sets `memory.oom.group=1` on every pod cgroup, so if the child cap does not bind first
+# the F-arm's 256MB kills the WHOLE EXECUTOR POD rather than reddening one test —
+# `[[pod-memory-ceiling-needs-guaranteed-qos-and-cgroup-scope-fails-green]]`. 256MB is 12% of the
+# pod's 2Gi, so the allocation alone cannot breach it; the risk is a child cap that fails to bind
+# at all. Baseline recorded before the run:
+# `buildbuddy-executor-ddcffcd95-tkfht restarts=0 phase=Running`. STILL UNEXERCISED — nothing has
+# allocated on any pod in any run by either party, so no `restarts=0` reading is survival evidence.
 #
 # ⚑⚑⚑ MEASURED ON THE POST-APPLY EXECUTOR, 2026-09-10, AND THE TAG DOES NOT RETIRE. With `local`
 # gone the witness reached the executor for the first time — `Testing //fence:test_fence; 3s
@@ -171,10 +189,6 @@ py_test(
     # to kill it, and the T-arm beside it allocates the same 256MB successfully. Declaring these
     # `small` would make a genuinely slow witness indistinguishable from a hung one.
     size = "medium",
-    tags = [
-        "external",
-        "manual",
-    ],
     deps = [
         ":fence",
         dev_requirement("pytest"),
