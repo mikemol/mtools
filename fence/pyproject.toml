@@ -1,0 +1,121 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑ PACKAGED OUT OF cassian-observability/scripts/resource-fence (A170/A186), which remains as a
+# thin shim. The origin is a 279-line single-file script reached by path; a consumer in another
+# repo could only adopt it by symlink or by copying — and the census that prompted this move
+# recorded what copying costs: substrate's and paperkit's `cgroup-scope` are the same file with
+# four paperkit-authored fixes that never travelled back, including a measured 1-in-24,376 name
+# collision that killed a build. An installed distribution is the version of that dependency
+# which can be stated instead of re-copied.
+name = "mikemol-fence"
+version = "0.1.0"
+description = "Run a command inside a cgroup and report what it consumed — caps optional, so measurement is separable from actuation."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["cgroup", "cgroup-v2", "resource-limits", "measurement", "memory-peak", "oom"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Systems Administration",
+    "Typing :: Typed",
+]
+
+# ⚑ NO RUNTIME DEPENDENCIES, AND THE ORIGIN CALLS THIS "stdlib only (S20)". The tool reads and
+# writes cgroup interface files and forks; anything it imported would become a dependency of
+# every gate that wraps a command in it, which is the position of maximum blast radius.
+dependencies = []
+
+[project.scripts]
+mikemol-fence = "mikemol.fence.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+dev = ["pytest", "mypy"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑ NO `src/mikemol/__init__.py` — PEP 420 implicit namespace, shared with the sibling
+# distributions in this repo. An `__init__.py` would make the first-installed distribution the
+# exclusive owner of the prefix and shadow the others.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.fence" = ["py.typed"]
+
+[tool.uv]
+# ⚑ LINUX ONLY, AND THAT IS A PROPERTY OF THE SUBJECT rather than a packaging shortcut: cgroup v2
+# is a Linux kernel interface. A macOS install would resolve, import, and fail at the first read
+# of /proc/self/cgroup — so the refusal belongs at resolution time.
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+# ⚑ ONE MARKER, AND IT NAMES A REAL HOST REQUIREMENT. Unlike the sibling ratchet distribution
+# (whose empty roster is honest because it has no system dependency), this package cannot run its
+# integration tests without a delegated cgroup v2 subtree. A skip is the honest outcome there;
+# silently passing a test that never fenced anything is the failure this whole tool argues
+# against.
+markers = ["needs_cgroup: requires a delegated cgroup v2 memory+pids subtree"]
+
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+# ⚑ THE PAIR IS ONE SETTING IN TWO KEYS, per the sibling distribution's measured note: without
+# `mypy_path` an editable install's tests type as `Any` and the suite still passes; without
+# `explicit_package_bases` the source is reachable under two module names and mypy aborts.
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# ⚑ THE NAMESPACE IS DECLARED, NOT SUPPRESSED — `INP001` stays live everywhere else, so a
+# genuinely missing `__init__.py` is still a finding.
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D203", "D213", "COM812"]
+
+[tool.ruff.lint.flake8-pytest-style]
+# ⚑ CALLED, NOT BARE: `pytest.fixture` applied bare resolves to the overload returning
+# `FixtureFunction`, which under `disallow_any_decorated` degrades the decorated signature.
+fixture-parentheses = true
+
+# ⚑ VERIFY WITH `ruff check --show-settings`, NEVER BY READING THE LINE. A TOML *literal* string
+# (single quotes) is required: in a basic string `\.` is an invalid escape, so a double-quoted
+# version compiles to a regex that cannot match — a gate that reads as adopted and is inert.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ ONE FILE-SCOPED IGNORE, AND ONLY BECAUSE THE RULE AND ITS OPPOSITE CANNOT BOTH HOLD.
+# `S101` forbids `assert`; pytest's entire verification mechanism IS `assert`. Satisfying S101 in
+# a test would mean not testing. That is the bar for a suppression here — a genuine contradiction,
+# not an inconvenience.
+#
+# ⚑ EVERYTHING ELSE WAS FIXED RATHER THAN WAIVED, and two were close calls worth recording:
+#   T201 (print) looked unavoidable in a CLI whose job is output. It was not: `sys.stdout.write`
+#     and `sys.stderr.write` satisfy the rule and, routed through `_emit`/`_note`, made the
+#     stdout-is-JSON / stderr-is-narration split explicit instead of incidental.
+#   S606 (no shell) is a real contradiction — but a LOCAL one, so it carries a `noqa` at the one
+#     line it applies to with the argument beside it, where a reader meets it. A file-scoped
+#     entry would have granted it to every future call site in the module.
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]

@@ -73,6 +73,17 @@ pip.parse(
     requirements_lock = "//ratchet:requirements.txt",
 )
 
+# ⚑ `mikemol-fence` DECLARES NO RUNTIME DEPENDENCIES, AND THE EMPTY LOCK IS THE POINT. The tool
+# reads and writes cgroup interface files and forks; anything it imported would become a
+# dependency of every gate that wraps a command in it — the position of maximum blast radius. The
+# hub is still declared rather than skipped, so "this distribution resolves to nothing" is a
+# RECORDED resolution instead of an absent one.
+pip.parse(
+    hub_name = "fence_deps",
+    python_version = "3.13",
+    requirements_lock = "//fence:requirements.txt",
+)
+
 # ⚑⚑⚑ A SECOND LOCK PER DISTRIBUTION, FOR THE WITNESS ACTIONS ONLY. The shipping lock above
 # excludes the dev group, so it cannot supply pytest — and the thesis at the top of this file is
 # that A PYTEST CASE AND A PAPERKIT WITNESS ARE THE SAME OBJECT, which means the action staging a
@@ -95,8 +106,15 @@ pip.parse(
     python_version = "3.13",
     requirements_lock = "//ratchet:requirements-dev.txt",
 )
+pip.parse(
+    hub_name = "fence_dev",
+    python_version = "3.13",
+    requirements_lock = "//fence:requirements-dev.txt",
+)
 use_repo(
     pip,
+    "fence_deps",
+    "fence_dev",
     "hooks_deps",
     "hooks_dev",
     "mdstruct_deps",

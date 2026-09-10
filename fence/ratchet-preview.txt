@@ -1,0 +1,13 @@
+pyproject.toml:rule-codes-in-selectors
+src/mikemol/fence/cgroup.py:docstring-missing-exception
+src/mikemol/fence/cgroup.py:docstring-missing-returns
+src/mikemol/fence/cli.py:docstring-missing-returns
+src/mikemol/fence/cli.py:too-many-statements-in-try-clause
+src/mikemol/fence/core.py:docstring-missing-exception
+src/mikemol/fence/core.py:docstring-missing-returns
+src/mikemol/fence/core.py:noqa-comments
+tests/test_caps.py:no-self-use
+tests/test_cli.py:import-private-name
+tests/test_cli.py:no-self-use
+tests/test_fence.py:docstring-missing-returns
+tests/test_fence.py:no-self-use

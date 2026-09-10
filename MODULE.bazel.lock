@@ -326,8 +326,10 @@
     "@@rules_python+//python/extensions:pip.bzl%pip": {
       "general": {
         "bzlTransitiveDigest": "J8x4DXBGGbJQMTKu3BVCIopHfr/AfDibKrUCj/TXUvY=",
-        "usagesDigest": "RWwHNklYwwrWqoM/O9VP/lCSoVJ5cPPQGCdEoaBZZMs=",
+        "usagesDigest": "/XXEioG+8UwBoyUtGfzNAUMVnBkbCxUl7eFiCst77YI=",
         "recordedFileInputs": {
+          "@@//fence/requirements-dev.txt": "7bab9739da9c335954a7b9759f9495de734a34cd646ac5293cdaf72ef8048485",
+          "@@//fence/requirements.txt": "07db352f9543e7bef2b8dd005e63c4c8f14c865ef75539178f9233d037399b46",
           "@@//hooks/requirements-dev.txt": "7a49d103a2ff9d7db5cc48b8bcf55ea4785e1b90d450fcb52621fa2e0e5f6495",
           "@@//hooks/requirements.txt": "ab91ea8c26cdc64b03b2fad8e552e590b4cc478e34a984a1ebd300de734d924b",
           "@@//mdstruct/requirements-dev.txt": "ed36720df9baf12651c5bc8963c62f5e492c3c66ce018614a971aa8b17770a92",
@@ -346,6 +348,105 @@
           "RULES_PYTHON_REPO_DEBUG_VERBOSITY": null
         },
         "generatedRepoSpecs": {
+          "fence_dev_313_ast_serialize": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "ast-serialize==0.11.1"
+            }
+          },
+          "fence_dev_313_iniconfig": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "iniconfig==2.3.0"
+            }
+          },
+          "fence_dev_313_librt": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "librt==0.15.0"
+            }
+          },
+          "fence_dev_313_mypy": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "mypy==2.3.1"
+            }
+          },
+          "fence_dev_313_mypy_extensions": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "mypy-extensions==1.1.0"
+            }
+          },
+          "fence_dev_313_packaging": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "packaging==26.3"
+            }
+          },
+          "fence_dev_313_pathspec": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "pathspec==1.1.1"
+            }
+          },
+          "fence_dev_313_pluggy": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "pluggy==1.6.0"
+            }
+          },
+          "fence_dev_313_pygments": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "pygments==2.21.0"
+            }
+          },
+          "fence_dev_313_pytest": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "pytest==9.1.1"
+            }
+          },
+          "fence_dev_313_typing_extensions": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
+            "attributes": {
+              "dep_template": "@fence_dev//{name}:{target}",
+              "python_interpreter_target": "@@rules_python++python+python_3_13_host//:python",
+              "repo": "fence_dev_313",
+              "requirement": "typing-extensions==4.16.0"
+            }
+          },
           "hooks_deps_313_ast_serialize": {
             "repoRuleId": "@@rules_python+//python/private/pypi:whl_library.bzl%whl_library",
             "attributes": {
@@ -3228,6 +3329,50 @@
               "urls": [
                 "https://files.pythonhosted.org/packages/54/bf/5c0000c44ebc80123ecbdddba1f5dcd94a5ada602a9c225d84b5aaa55e86/zipp-3.20.2.tar.gz"
               ]
+            }
+          },
+          "fence_deps": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:hub_repository.bzl%hub_repository",
+            "attributes": {
+              "repo_name": "fence_deps",
+              "extra_hub_aliases": {},
+              "whl_map": {},
+              "packages": [],
+              "groups": {}
+            }
+          },
+          "fence_dev": {
+            "repoRuleId": "@@rules_python+//python/private/pypi:hub_repository.bzl%hub_repository",
+            "attributes": {
+              "repo_name": "fence_dev",
+              "extra_hub_aliases": {},
+              "whl_map": {
+                "ast_serialize": "{\"fence_dev_313_ast_serialize\":[{\"version\":\"3.13\"}]}",
+                "iniconfig": "{\"fence_dev_313_iniconfig\":[{\"version\":\"3.13\"}]}",
+                "librt": "{\"fence_dev_313_librt\":[{\"version\":\"3.13\"}]}",
+                "mypy": "{\"fence_dev_313_mypy\":[{\"version\":\"3.13\"}]}",
+                "mypy_extensions": "{\"fence_dev_313_mypy_extensions\":[{\"version\":\"3.13\"}]}",
+                "packaging": "{\"fence_dev_313_packaging\":[{\"version\":\"3.13\"}]}",
+                "pathspec": "{\"fence_dev_313_pathspec\":[{\"version\":\"3.13\"}]}",
+                "pluggy": "{\"fence_dev_313_pluggy\":[{\"version\":\"3.13\"}]}",
+                "pygments": "{\"fence_dev_313_pygments\":[{\"version\":\"3.13\"}]}",
+                "pytest": "{\"fence_dev_313_pytest\":[{\"version\":\"3.13\"}]}",
+                "typing_extensions": "{\"fence_dev_313_typing_extensions\":[{\"version\":\"3.13\"}]}"
+              },
+              "packages": [
+                "ast_serialize",
+                "iniconfig",
+                "librt",
+                "mypy",
+                "mypy_extensions",
+                "packaging",
+                "pathspec",
+                "pluggy",
+                "pygments",
+                "pytest",
+                "typing_extensions"
+              ],
+              "groups": {}
             }
           },
           "hooks_deps": {

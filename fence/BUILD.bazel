@@ -1,0 +1,270 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ THE LOCK IS EXPORTED, NOT A TARGET. `pip.parse` in MODULE.bazel reads both locks by LABEL at
+# module-extension evaluation time, which is before any target in this package is built — so what
+# is needed is visibility of the files, not a rule producing them.
+load("@fence_dev//:requirements.bzl", dev_requirement = "requirement")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+exports_files([
+    "requirements.txt",
+    "requirements-dev.txt",
+])
+
+# ⚑⚑ `imports = ["src"]` IS THE PEP 420 LAYOUT MADE EXPLICIT TO BAZEL. The runfiles tree resolves
+# `mikemol.fence` by LAYOUT rather than by an installed `.pth`, which is what lets the sandbox run
+# these witnesses with no venv at all.
+py_library(
+    name = "fence",
+    srcs = glob(["src/mikemol/fence/**/*.py"]),
+    data = glob(["src/mikemol/fence/py.typed"], allow_empty = True),
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. The thesis in MODULE.bazel is that a
+# pytest case and a paperkit witness are the same object. A failing module names itself rather
+# than collapsing into one red suite target.
+#
+# ⚑⚑ AND THE CGROUP MODULE IS DELIBERATELY NOT DECLARED `small`/hermetic ALONGSIDE THE OTHERS —
+# see the `test_fence` target below. Splitting it out is what keeps `bazel test //fence/...` an
+# honest statement about what ran.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "//:pytest_main.py",
+        args = [
+            "$(location " + src + ")",
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"],
+        # ⚑ SMALL IS A DECLARATION, NOT A GUESS: these two modules are pure — cap arithmetic and
+        # argument parsing, no fork, no cgroup — and run in hundredths of a second.
+        size = "small",
+        deps = [
+            ":fence",
+            dev_requirement("pytest"),
+        ],
+        imports = ["src"],
+    )
+    for src in glob(
+        ["tests/test_*.py"],
+        exclude = ["tests/test_fence.py"],
+    )
+]
+
+# ⚑⚑⚑ THE INTEGRATION WITNESS IS `local`, `external` AND `manual`, AND EACH TAG IS A MEASUREMENT.
+#
+# This module forks a payload into a cgroup it creates beside its own, which needs a WRITABLE
+# cgroup v2 tree with memory+pids delegable. Where that is absent the module's `_fenceable()`
+# guard SKIPS every case — and a skip here is the exact defect this tool argues against, because
+# bazel renders "8 skipped" as `1 test passes`. Green over a fence that never fenced.
+#
+# ⚑⚑ MEASURED ON ALL THREE EXECUTION MODES RATHER THAN ASSUMED (2026-09-10):
+#
+#   host (no sandbox)         8 passed   — the F-arm trips a real 8MB cap
+#   bazel linux-sandbox       8 passed   — /sys/fs/cgroup is the host's; delegation holds
+#   --config=remote (k3s)     8 SKIPPED, reported by bazel as "1 test passes"
+#
+# ⚑⚑⚑ THE REMOTE ARM'S CAUSE IS A MOUNT OPTION, NOT A KERNEL LIMIT — AND SAYING OTHERWISE WOULD
+# HAVE BEEN THE STALE PREMISE THIS REPOSITORY EXISTS TO REFUSE. Probed inside the executor pod:
+#
+#   /proc/self/cgroup                      ->  0::/
+#   /sys/fs/cgroup/cgroup.controllers      ->  cpuset cpu io memory hugetlb pids rdma misc dmem
+#   /sys/fs/cgroup/cgroup.subtree_control  ->  (empty)
+#   findmnt -no OPTIONS /sys/fs/cgroup     ->  ro,...,nsdelegate,memory_recursiveprot
+#   mkdir /sys/fs/cgroup/probe-fence       ->  Read-only file system
+#   id                                     ->  uid=0(root)
+#
+# Every ingredient for delegation is present: the controllers ARE delegated, the mount carries
+# `nsdelegate` (the kernel opting IN across the namespace boundary), the pod is root, and its own
+# `memory.max`/`memory.peak`/`pids.max` are `-rw-`. The single blocker is `ro`, which is
+# containerd's DEFAULT bind — the executor's pod spec declares no cgroup volume at all.
+#
+# ⚑⚑ SO "k8s CANNOT GIVE AN ACTION A CHILD CGROUP" IS FALSE. The fix is a `hostPath` volume at
+# /sys/fs/cgroup mounted `readOnly: false` in cassian's `buildbuddy-executor.tf`, needing no
+# privileged mode and no added capabilities.
+#
+# ⚑⚑⚑ APPLIED 2026-09-10 (cassian 1dd552e), REPORTED BY cassian-observability-11 — and a peer's
+# report is a CLAIM, NOT A DATUM. They said so themselves and were right to: they re-measured
+# `findmnt` BEFORE the apply, and the Deployment replaces the pod, so a pre-apply reading is not a
+# post-apply fact. The current pod is 2m old with restarts=0 — a different pod from the one probed.
+#
+# ⚑⚑⚑ AND THE `local` TAG MADE THE VERIFYING RUN MEASURE THE WRONG SUBJECT. `bazel test
+# //fence:test_fence --config=remote` reported `8 passed`, rc=0 — and the artifact reads
+# `Testing //fence:test_fence; 1s local`, `2 local` processes. `local` PINS THE TARGET TO THE HOST
+# REGARDLESS OF `--config=remote`, so that run reproduced the host row already recorded above and
+# said NOTHING about the executor. Forcing it with `--modify_execution_info=.*=+no-local` did not
+# override the tag either: still local, still `8 passed`.
+# ⚑⚑ THE EXIT-STATUS TRAP IN ITS EXACT FORM, one layer past the one this file already names. The
+# file warns that a SKIP renders as `1 test passes`; this was a genuine 8-case PASS that answered
+# a question nobody asked. A green run on the wrong subject is not weaker evidence than a skip —
+# it is more convincing evidence of the wrong proposition.
+# ⚑ SO THE TAG IS REMOVED RATHER THAN WORKED AROUND. A flag that fights a tag leaves the tag in
+# the file for the next reader to be misled by, and the measurement this target exists to make is
+# precisely the one `local` forbids.
+#
+# `external` — never cached. A cached PASS would assert the fence bound a payload on a host that
+#              may since have lost delegation; the F-arm's whole value is that it RAN.
+# `manual`   — excluded from `//...`, so a remote or CI run cannot silently report this witness
+#              as passing when it skipped. Run it deliberately:
+#                  bazel test //fence:test_fence --config=remote
+#              ⚑ THIS TAG IS A DEBT, NOT A DESIGN. It is right while the executor cannot fence;
+#              it becomes wrong the day that mount is fixed, and the fix is what retires it.
+#              ⚑⚑ STILL OWED BEFORE IT RETIRES, and named by cassian rather than by me: whether
+#              the fence's CHILD cap binds before the POD's ceiling does. k8s sets
+#              `memory.oom.group=1` on every pod cgroup, so if the child cap does not bind first
+#              the F-arm's 256MB kills the WHOLE EXECUTOR POD rather than reddening one test —
+#              `[[pod-memory-ceiling-needs-guaranteed-qos-and-cgroup-scope-fails-green]]`.
+#              256MB is 12% of the pod's 2Gi, so the allocation alone cannot breach it; the risk
+#              is a child cap that fails to bind at all. Baseline recorded before the run:
+#              `buildbuddy-executor-ddcffcd95-tkfht restarts=0 phase=Running`.
+#
+# ⚑⚑⚑ MEASURED ON THE POST-APPLY EXECUTOR, 2026-09-10, AND THE TAG DOES NOT RETIRE. With `local`
+# gone the witness reached the executor for the first time — `Testing //fence:test_fence; 3s
+# remote`, `2 remote` processes — and reported:
+#
+#   8 skipped in 0.02s
+#   SKIPPED fence/tests/test_fence.py:42..100  no delegated cgroup v2 memory+pids subtree on this host
+#   Executed 1 out of 1 test: 1 test passes.        rc=0
+#
+# ⚑⚑ THE SENTENCE THIS FILE PREDICTED, NOW MEASURED RATHER THAN ARGUED: eight skips rendering as
+# `1 test passes`. Green over a fence that never fenced, on the very run that was supposed to
+# retire the tag.
+# ⚑ SO THE RETIREMENT CONDITION IS *THE FENCE WORKS THERE*, NOT *THE MOUNT WAS FIXED*. cassian's
+# `ro` blocker may well be closed; this target still cannot fence on that executor, so `manual`
+# stands. A peer's applied fix is a claim about their tree, and this is the measurement on mine.
+# ⚑⚑ AND WHAT THE SKIP DOES **NOT** SAY: the guard's message is generic. `parent_with_controllers`
+# raises the same `FenceUnavailableError` whether the mount is read-only, `subtree_control` is
+# unwritable, or the controllers are absent — so this run CANNOT distinguish them, and asserting
+# "still ro" from it would be reading the instrument rather than the subject. What is known from
+# the source: the guard must WRITE `+memory`/`+pids` into `own_cgroup().parent/cgroup.subtree_control`,
+# `/proc/self/cgroup` in this pod reads `0::/`, and cassian measured `cgroup.subtree_control` EMPTY.
+# A writable mount is NECESSARY AND NOT SUFFICIENT: the fence also needs a non-root cgroup path
+# whose parent it may write. That is the next probe, and it is cassian's tree to run it in.
+# ⚑ THE OOM-GROUP QUESTION IS UNTOUCHED, NOT CLEARED. Nothing allocated, so nothing exercised the
+# pod ceiling; the pod read `restarts=0 phase=Running` after the run because the payload never ran.
+# A survival that follows from a skip is not evidence about survival under load.
+py_test(
+    name = "test_fence",
+    srcs = ["tests/test_fence.py", "//:pytest_main.py"] + glob(
+        ["tests/conftest.py"],
+        allow_empty = True,
+    ),
+    main = "//:pytest_main.py",
+    args = [
+        "$(location tests/test_fence.py)",
+        "-q",
+        "--strict-markers",
+        "--strict-config",
+        "-c",
+        "$(location pyproject.toml)",
+    ],
+    data = ["pyproject.toml"],
+    # ⚑ MEDIUM, NOT SMALL: the F-arm allocates 256MB against an 8MB cap and waits for the kernel
+    # to kill it, and the T-arm beside it allocates the same 256MB successfully. Declaring these
+    # `small` would make a genuinely slow witness indistinguishable from a hung one.
+    size = "medium",
+    tags = [
+        "external",
+        "manual",
+    ],
+    deps = [
+        ":fence",
+        dev_requirement("pytest"),
+    ],
+    imports = ["src"],
+)
+
+# ⚑ A py_binary SO SIBLING DISTRIBUTIONS AND OTHER REPOS CAN RUN THE FENCE AS A DECLARED TOOL.
+# rules_python builds a runfiles tree at real package paths, so the import resolves BY LAYOUT
+# rather than through a venv the sandbox does not have. This is the target cassian's A186
+# parallel-gate work would depend on rather than reaching for a sibling checkout by path.
+py_binary(
+    name = "fence_cli",
+    srcs = glob(["src/mikemol/fence/**/*.py"]),
+    main = "src/mikemol/fence/cli.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
+exports_files(["BUILD.bazel"])
+
+# ⚑⚑ ruff IN THE GRAPH. Outside it, ruff had no key at all — full re-execution every commit,
+# nothing reused. Its domain is the sources, the config and the binary, all declared below, and
+# all three are hand-writable because ruff does not follow imports.
+sh_test(
+    name = "ruff",
+    srcs = ["//:ruff_check.sh"],
+    args = [
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑⚑ mypy IN THE GRAPH, ONE ACTION PER DISTRIBUTION. The grain is measured rather than inherited:
+# whole-distribution mypy costs a fraction of per-file runs, because mypy's startup dominates at
+# this scale and each per-file run re-analyses the same closure.
+sh_test(
+    name = "mypy",
+    srcs = ["//:mypy_check.sh"],
+    args = [
+        "$(location :mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":mypy_runner",
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
+    size = "small",
+)
+
+py_binary(
+    name = "mypy_runner",
+    srcs = ["//:mypy_runner.py"],
+    main = "//:mypy_runner.py",
+    # ⚑ pytest IS A DEP OF THE CHECKER, NOT JUST OF THE TESTS. mypy checks `files = ["src",
+    # "tests"]`, and a test module imports pytest — so without it staged, mypy reports
+    # `Cannot find implementation or library stub` and every fixture degrades to Any.
+    deps = [
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ],
+)
+
+# ⚑⚑ THE RATCHET IN THE GRAPH, WITH ITS BASELINE DECLARED. Its domain is this distribution's
+# sources and config, the ruff binary, AND `fence-preview.txt` — the last being the one a careless
+# declaration drops. A census keyed without the thing it is compared against could be lowered with
+# no gate noticing.
+sh_test(
+    name = "ratchet",
+    srcs = ["//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        # ⚑ `ratchet-preview.txt`, THE NAME THE CLI DERIVES — not a per-distribution spelling.
+        # A first cut declared `fence-preview.txt` and bazel failed the target as a missing input
+        # rather than running a ratchet against a baseline that was not there. Loud, and the
+        # right direction to be wrong: the CLI itself refuses an ABSENT baseline for the same
+        # reason ("a gate with no baseline reports green over nothing").
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
