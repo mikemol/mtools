@@ -4,7 +4,8 @@
 # ⚑ THE LOCK IS EXPORTED, NOT A TARGET. `pip.parse` in MODULE.bazel reads both locks by LABEL at
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
-load("@hooks_dev//:requirements.bzl", dev_requirement = "requirement")
+load("@hooks_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("//:venv.bzl", "venv_from_hub")
 load("@hooks_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
@@ -253,4 +254,24 @@ sh_test(
         ":mypy_runner",
     ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
     size = "small",
+)
+
+# ⚑⚑⚑ THE DISTRIBUTION'S `.venv`, AS A BUILD ARTIFACT. One macro call; the same four lines appear
+# in every distribution, which is the "trivially-templatizable" property the direction asked for.
+# ⚑⚑ THE POPULATION IS `all_requirements` — THE HUB'S OWN DERIVED CLOSURE, NOT A LIST KEPT HERE.
+# `pip.parse` generates it in `requirements.bzl` from the lock; it is 12 packages for hooks_dev
+# today and becomes 13 the day a wheel is added, with no edit to this file. Naming packages here
+# would be the hand-written-population defect that ⟐POLL-RUF201-POPULATION was, one layer down.
+# ⚑ AND `requirement()` RESOLVES TO `:pkg`, WHICH IS NOT WHAT THIS RULE WANTS. Measured by reading
+# the generated `requirements.bzl`: the accessors are `requirement`/`whl_requirement`/
+# `data_requirement`/`dist_info_requirement` and there is NO accessor for `extracted_whl_files`.
+# A first draft here wrote `dev_requirement("pytest") + "_extracted"`, which would have named a
+# label that does not exist — a guessed suffix, caught by reading the source rather than by the
+# error it would have produced. The macro rewrites `:pkg` to `:extracted_whl_files` itself.
+venv_from_hub(
+    name = ".venv",
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    srcs = glob(["src/mikemol/hooks/**"]),
 )

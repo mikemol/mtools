@@ -2815,3 +2815,45 @@
   claim   = {⚑ THE INTERPRETER IS A FACT ABOUT THE ACTION and nothing recorded it; this arm is also the POSITIVE CONTROL for the two skipped-outside-bazel arms, so it is deliberately NOT skipped — a run where the interpreter were unreadable would be a broken probe, not a strong sandbox.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_exec_env.py -k test_the_witness_runs_under_bazel_and_names_its_own_interpreter}
 }
+
+@misc{hooks-venv-artifact-repository-has-distributions-to-check,
+  section = {venv-artifact},
+  claim   = {⚑ THE POSITIVE CONTROL FOR EVERY DERIVED-POPULATION ARM: a glob returning nothing makes each parametrised arm vacuous — zero cases, green suite, no measurement. ⚑⚑ Its first draft claimed it needed no sandbox guard because "the source tree is present wherever pytest runs" — the sandbox refuted that immediately, having no source tree at all.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_repository_has_distributions_to_check}
+}
+
+@misc{hooks-venv-artifact-every-distribution-builds-a-venv,
+  section = {venv-artifact},
+  claim   = {⚑⚑ THE TEMPLATIZABILITY CLAIM AS AN ARM: "every project constructs its .venv the same way" is falsified by one distribution that does not, and a fifth landing without its `venv_from_hub` call fails here rather than when someone tries to activate a venv nobody declared.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_every_distribution_builds_a_venv}
+}
+
+@misc{hooks-venv-artifact-interpreter-link-is-relative,
+  section = {venv-artifact},
+  claim   = {⚑⚑⚑ RELOCATABILITY IS THE WHOLE BUILD-ARTIFACT PROPERTY, and the RELATIVE `bin/python3` symlink is its only mechanism — `pyvenv.cfg`'s `home` is INERT, measured by rewriting it to `/nonexistent/nowhere` and observing no change.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_interpreter_link_is_relative}
+}
+
+@misc{hooks-venv-artifact-built-interpreter-actually-runs,
+  section = {venv-artifact},
+  claim   = {⚑⚑ A SYMLINK THAT RESOLVES TO NOTHING IS WELL-FORMED AND USELESS, AND THAT SHIPPED ONCE: the rule's first draft computed the link from `short_path`, where an external file's path begins `../`, and built a relative link into `bazel-out/` that named no file. The target built green.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_built_interpreter_actually_runs}
+}
+
+@misc{hooks-venv-artifact-venv-imports-the-distributions-own-package,
+  section = {venv-artifact},
+  claim   = {⚑⚑⚑ THE EDITABLE-INSTALL STEP REPLACED BY A DECLARED INPUT: a venv built from `deps` alone dies on `ModuleNotFoundError: No module named 'mikemol'`, which is CORRECT — a venv holds dependencies, and the project itself arrives by the editable install this rule exists to remove.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_venv_imports_the_distributions_own_package}
+}
+
+@misc{hooks-venv-artifact-package-outside-the-declared-closure-does-not-import,
+  section = {venv-artifact},
+  claim   = {⚑⚑ THE F-ARM, AND THE OBVIOUS VERSION IS VACUOUS: importing a DECLARED dependency to show no leak proves nothing, because a pass is what a correct venv does. The control must be present on the host and ABSENT from the closure — `panflute` is mdstruct's and not hooks'.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_a_package_outside_the_declared_closure_does_not_import}
+}
+
+@misc{hooks-venv-artifact-venv-runs-the-distributions-own-suite,
+  section = {venv-artifact},
+  claim   = {⚑⚑⚑ THE END-TO-END CLAIM — this venv can do the job the host venv does for the three non-bazel consumers: `.githooks/pre-commit` (13 call sites), `preflight.sh` (7), and the interactive loop, all of which invoke `<dist>/.venv/bin/python3 -m pytest`.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_venv_runs_the_distributions_own_suite}
+}

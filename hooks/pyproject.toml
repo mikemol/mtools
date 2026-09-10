@@ -293,3 +293,18 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # TRISTATE is consumed, and an integration-level assertion cannot tell a real flip from a
 # crash-flip. Testing the boundary requires crossing it, and the arm says so at its call site.
 "tests/test_grade.py" = ["S101", "SLF001"]
+
+# ⚑⚑⚑ THE FIFTH NAMED FILE, AND ITS SUBPROCESS IS THE SUBJECT RATHER THAN A CONVENIENCE.
+# `test_venv_artifact.py` asserts that a BUILT venv works, and the only way to know an interpreter
+# works is to RUN it: a symlink that resolves to nothing is well-formed and useless, which is
+# exactly the defect the rule's first draft shipped and only execution caught.
+# ⚑⚑ THE SAME PREVIEW SPLIT AS EVERY ENTRY ABOVE: `ruff check` passes on this file and the
+# ratchet's preview census mints `suspicious-subprocess-import`. Declared here rather than as a
+# `noqa`, because a line directive travels into a peer tree that may not enable the rule.
+# ⚑ AND THE ARGUMENTS CARRY NO UNTRUSTED INPUT: the interpreter path is derived from the
+# repository's own layout, the rest are literals and a distribution NAME taken from a glob over
+# `*/pyproject.toml` in this tree. Never through a shell.
+# ⚑⚑ THE INLINE `# ruff: ignore[S603]` DIRECTIVES THIS REPLACES MINTED A SECOND RATCHET KEY
+# (`rule-codes-in-suppression-comments`), so the two findings had one cause: a suppression written
+# at the line rather than declared for the file. Declaring it removes both.
+"tests/test_venv_artifact.py" = ["S101", "S404", "S603"]

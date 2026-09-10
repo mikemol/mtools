@@ -4,7 +4,8 @@
 # ⚑ THE LOCK IS EXPORTED, NOT A TARGET. `pip.parse` in MODULE.bazel reads both locks by LABEL at
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
-load("@ratchet_dev//:requirements.bzl", dev_requirement = "requirement")
+load("@ratchet_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
 exports_files([
@@ -143,4 +144,14 @@ sh_test(
         ":mypy_runner",
     ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
     size = "small",
+)
+
+# ⚑ THE SAME FOUR LINES AS EVERY OTHER DISTRIBUTION — that repetition IS the deliverable. See
+# //:venv.bzl for why this duplicates rules_python's per-target venv deliberately.
+venv_from_hub(
+    name = ".venv",
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    srcs = glob(["src/mikemol/ratchet/**"]),
 )

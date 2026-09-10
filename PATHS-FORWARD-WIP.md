@@ -131,7 +131,66 @@ NOT buy a verification that the two locks agree. It buys ONE SOURCE for those hu
 agreement between `uv.lock` and `requirements-dev.txt` is ever asserted, it must be
 measured here, not inherited from that sentence.
 
-### ⟐VENV-AS-BUILD-ARTIFACT — the operator's standing direction, and the seed omitted it
+### ⟐VENV-AS-BUILD-ARTIFACT — BUILT 2026-09-10, all four distributions, and what it cost
+
+⚑⚑⚑ **`//:venv.bzl` LANDS THE DIRECTION.** `venv_from_hub` is called once per distribution —
+hooks, mdstruct, ratchet, fence — and each produces `bazel-bin/<dist>/.venv/bin/python3`. Measured
+on all four: interpreter runs `3.13.13`, own package imports, full suite collects (370 / 124 / 43 /
+45, matching the gate's own counts). `//hooks:test_venv_artifact` asserts it continuously: 7
+functions, 22 cases, F-armed.
+
+**The population is derived at every level.** `all_requirements` from the hub's generated
+`requirements.bzl` (12 packages for hooks_dev, 13 the day one is added, no edit); the distribution
+list from `*/pyproject.toml`, which is the rule `blockers.sh` and `test_bar_fires` already use.
+
+⚑⚑ **THREE DEFECTS THE RULE SHIPPED AND MEASUREMENT CAUGHT — recorded because each is a shape,
+not a typo.**
+
+1. **`short_path` vs `path`, and a well-formed link to nothing.** The first draft computed
+   `bin/python3` from `short_path`. An EXTERNAL file's `short_path` begins `../` — runfiles put
+   other repositories beside the main one — so the common-prefix walk compared a workspace-relative
+   path against an escape sequence. Result: a relative symlink resolving into `bazel-out/`, naming
+   no file. **The target built green.** Only running the interpreter caught it. Measured by printing
+   all four values during a build rather than reasoning about which to use:
+
+   ```
+   link.short_path   = hooks/.venv/bin/python3
+   link.path         = bazel-out/k8-fastbuild/bin/hooks/.venv/bin/python3
+   interp.short_path = ../rules_python++python+.../bin/python3      ← LEADING ../
+   interp.path       = external/rules_python++python+.../bin/python3
+   ```
+
+   Same shape as the `sys.path` finding at `8221131`, one layer down: **a path that exists as a
+   string and not as a file.**
+
+2. **A guessed label suffix.** The first BUILD call wrote `dev_requirement("pytest") +
+   "_extracted"`. Reading the generated `requirements.bzl` shows the accessors are
+   `requirement`/`whl_requirement`/`data_requirement`/`dist_info_requirement` and **none** for
+   `extracted_whl_files` — the guess named a label that does not exist. Caught by reading the
+   source, not by the error. The `:pkg` → `:extracted_whl_files` rewrite now happens once inside
+   the macro, so a wrong guess is wrong in one place rather than four.
+
+3. **An arm asserting a property of an environment the environment denies.** The control arm
+   carried *"deliberately NOT skipped — it reads the source tree, which is present wherever pytest
+   runs"*. The sandbox has no source tree; the arm failed with `no directory under
+   /execroot/.../runfiles carries a pyproject.toml`. It now carries the same guard as its siblings.
+
+⚑ **AND ONE BOUND ON THE RELOCATABILITY CLAIM, found when an F-arm's control failed.** The venv
+relocates **as a subtree, not as a lone directory** — the relative link climbs six levels expecting
+the execroot's shape, so copying only `.venv` breaks it. That is the link working correctly. An
+honest move carries the venv and the interpreter together at their relative offsets; done that way,
+it runs after the move.
+
+⚑ **`test_bar_fires` REFUSED THIS FILE'S FIRST DRAFT AND WAS RIGHT.** `Path(__file__).resolve()`
+follows a runfiles symlink back out to the author's checkout — the escape `.bazelrc` documents.
+The root is now derived from the working directory instead.
+
+**Still open under this symbol:** `grade.py:110` still hardcodes `dist/".venv/bin/python3"` as a
+HOST path, and `test_grade.py` still symlinks the host venv into its sandbox. The artifact now
+exists to point them at; pointing them is the next step and is what closes
+⟐GRADER-INTERPRETER-UNDECLARED.
+
+### ⟐VENV-AS-BUILD-ARTIFACT — background: the direction, and how the route was chosen
 
 ⚑⚑⚑ *"All projects in this repo should be constructing their .venv the same way — as a
 build artifact. This should be a trivially-templatizable thing."* Set 2026-09-10, and
