@@ -5218,18 +5218,52 @@ def test_every_tool_the_gate_invokes_is_refused_when_absent() -> None:
     go stale the moment the gate grew another, which is the hand-written-population defect one
     layer up from the gate.
 
+    ⚑⚑⚑ AND ITS *CONSUMER* POPULATION WAS ITSELF HAND-WRITTEN, AT SIZE ONE, WHICH IS WHY THE SAME
+    DEFECT SURVIVED ITS OWN REPAIR ONE FILE OVER. It read `_GATE` alone, so it could not see
+    `preflight.sh:114` carrying the IDENTICAL guard on the IDENTICAL tool — in a file whose own
+    comment says *"an absent one REFUSES rather than skips … this script exists to predict the gate
+    rather than to produce a second, weaker verdict."* A check written against hand-written
+    populations had one. Both consumers are now checked by one predicate.
+
+    ⚑⚑ TWO COLUMN-ANCHOR MISTAKES, THE SECOND MADE WHILE FIXING THE FIRST. `^if` missed
+    preflight's guard because it nests inside a `for dist` loop; `^_singleton=` then missed the
+    refusal that replaced it, for the same reason, in the same edit. Both allow leading whitespace
+    now. The same
+    defect twice in one sitting is the argument for repairing a CLASS over an instance.
+
     ⚑⚑⚑ AND IT REFUSES TO PASS VACUOUSLY, WHICH IT DID ON THE FIRST RUN AFTER THE REPAIR. With
     every guard removed the guarded set is empty, so `assert not unrefused` is trivially true and
     the arm asserts NOTHING — green over a property nobody is checking, which is the defect one
     level up from the one it was written for. So it also requires the refusals it credits to be
     present: a gate that deleted its `mikemol-ratchet` refusal fails here even with no guards left.
     """
-    body = _GATE.read_text(encoding="utf-8")
+    # ⚑ THE CONSUMERS, DERIVED: every shell file in this repository that invokes a `.venv/bin`
+    # tool. Measured with `grep -rln 'venv/bin' .githooks/ preflight.sh` — exactly these two.
+    shell_consumers = sorted(
+        p for p in [_GATE, _DIST.parent / "preflight.sh"] if p.is_file()
+    )
+    # ⚑ NON-EMPTY, ASSERTED: every loop below is over this set, so an empty one makes the whole arm
+    # vacuous — the exact failure this arm hit once already when its guard population went empty.
+    assert shell_consumers, "no shell consumer of the host venv was found — the arm reads nothing"
 
-    # ⚑ POSITIVE CONTROL: the refusing loop must be findable, or "no guards found" below would
-    # mean this arm could not read the gate rather than that the gate is sound.
-    assert "cannot run the gate, commit refused" in body, (
-        "the gate's tool-presence refusal is not in this file — the arm is reading the wrong thing"
+    for consumer in shell_consumers:
+        _assert_no_unrefused_guards(consumer)
+
+
+def _assert_no_unrefused_guards(consumer: Path) -> None:
+    """Refuse any `if [ -x <tool> ]` guard on a tool the file does not also refuse on.
+
+    ⚑ SPLIT OUT SO BOTH CONSUMERS GET THE SAME PREDICATE. A second copy inlined per file is how
+    two checks drift into checking slightly different things.
+    """
+    body = consumer.read_text(encoding="utf-8")
+
+    # ⚑ POSITIVE CONTROL: a refusal must be findable, or "no guards found" below would mean this
+    # arm could not read the file rather than that the file is sound. The two consumers word it
+    # differently — the gate says "commit refused", preflight says "cannot predict the gate" — so
+    # the control is the SHARED substring rather than either spelling.
+    assert "not found — cannot" in body, (
+        f"{consumer.name}: no tool-presence refusal found — the arm is reading the wrong thing"
     )
 
     # ⚑⚑ THE COVERED POPULATION IS THE UNION OF TWO REFUSAL SHAPES, AND READING ONLY THE LOOP
@@ -5242,22 +5276,34 @@ def test_every_tool_the_gate_invokes_is_refused_when_absent() -> None:
     # arm unusable one commit ago — mypy is the instrument that names it, and the answer is to
     # state the type rather than to widen the config.
     loop = pyre.search(r"for tool in ([^;]+); do", body)
-    assert loop, "the gate's tool-presence loop no longer has a `for tool in ...` population"
+    assert loop, f"{consumer.name}: no `for tool in ...` tool-presence population any more"
     tools: str = loop.group(1)
     covered: set[str] = set(tools.split())
     # ⚑ THE VARIABLE'S VALUE, NOT ITS NAME. A first cut also matched `if [ ! -x "$VAR" ]` and put
     # `VAR` itself into the set — harmless here, and a set holding a shell variable name alongside
     # tool basenames is a population with two different kinds in it, which is how a later reader
     # gets a false positive. Only the assignments are read.
-    singletons: list[str] = pyre.findall(r"^_singleton=(\S+)$", body, flags=pyre.MULTILINE)
+    # ⚑ `^\s*` HERE TOO, AND MISSING IT COST A SECOND ROUND. Having just fixed the guard pattern's
+    # column anchor, I left the identical anchor on this one — preflight's assignment is indented
+    # inside its `for dist` loop, so the refusal it declares read as absent and the arm refused a
+    # file that had just been repaired. The same defect twice in one edit is the argument for
+    # fixing a CLASS rather than the instance in front of you.
+    singletons: list[str] = pyre.findall(r"^\s*_singleton=(\S+)$", body, flags=pyre.MULTILINE)
     covered |= {Path(m).name for m in singletons}
 
-    guarded: list[str] = pyre.findall(r"^if \[ -x ([^\]]+?) \]; then", body, flags=pyre.MULTILINE)
+    # ⚑⚑⚑ `^\s*`, NOT `^` — AND THE FIRST VERSION ANCHORED AT COLUMN ZERO AND MISSED AN INDENTED
+    # GUARD. `preflight.sh:114` nests its `if [ -x ... ]` inside a `for dist` loop, so a
+    # column-anchored pattern reported ZERO guards there and the file read as sound. The
+    # anti-vacuity assertion below is what actually caught it — a second assertion catching what
+    # the primary one could not see is the argument for having both, not a redundancy.
+    guarded: list[str] = pyre.findall(
+        r"^\s*if \[ -x ([^\]]+?) \]; then", body, flags=pyre.MULTILINE,
+    )
     unrefused: list[str] = sorted({g for g in guarded if Path(g.strip()).name not in covered})
     assert not unrefused, (
-        f"the gate guards on {unrefused} with `if [ -x ]` and skips silently when absent, while "
-        f"its refusals cover only {sorted(covered)} — a missing tool here reports green over a "
-        f"check that never executed, which is the rule the gate states about itself"
+        f"{consumer.name} guards on {unrefused} with `if [ -x ]` and skips silently when absent, "
+        f"while its refusals cover only {sorted(covered)} — a missing tool here reports green over "
+        f"a check that never executed, which is the rule this file states about itself"
     )
 
     # ⚑⚑⚑ AND WITHOUT THIS, THE ASSERTION ABOVE PASSES VACUOUSLY THE MOMENT THE LAST GUARD IS

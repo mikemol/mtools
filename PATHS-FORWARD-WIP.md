@@ -374,6 +374,83 @@ sandbox fixture — reaching out of the hermetic tree at the boundary the sandbo
 **WITHDRAWN, see the correction at the head of this section:** the symlink target is derived
 from `sys.executable` and under bazel names the action's own venv. 21 passed on the executor.
 
+### ⟐GATES-AS-TARGETS — OPERATOR RULING 2026-09-10, and most of it is ALREADY TRUE
+
+⚑⚑⚑ **THE RULING:** *"the gate verdicts should use the build's venv. To that end, the gates should,
+honestly, be build TARGETS."* Answering the question raised one tick earlier about the three
+non-bazel consumers.
+
+⚑⚑ **AND THE FIRST MEASUREMENT REFRAMES THE WORK: the checks ARE targets already.**
+`bazel query 'kind("sh_test", //...)'` returns **13**: `ruff`, `mypy` and a ratchet gate for each of
+the four distributions, plus `//:shellcheck_githooks`. The per-module `py_test` witnesses are
+targets too. So "make the gates targets" is not construction — it is **removing a second,
+host-venv copy of verdicts the graph already produces.**
+
+**Measured: the gate runs two verdicts over the same subject.** `.githooks/pre-commit:379-381`
+materialises the index with `git checkout-index --all --prefix="$staged/"`, then:
+
+```
+:405  run_checked ruff    $root/$dist/.venv/bin/ruff    over $staged   ← host venv
+:410  run_checked mypy    $root/$dist/.venv/bin/mypy    over $staged   ← host venv
+:429  run_checked pytest  .venv/bin/python3 -m pytest   over $staged   ← host venv
+:554  ( cd "$staged" && bazel test //... )                             ← the targets
+:711  ratchet/.venv/bin/mikemol-ratchet                                ← host venv
+```
+
+⚑⚑⚑ **AND `bazel test` RUNS INSIDE `$staged` TOO, WHICH FALSIFIES A COMMENT AT `:541`.** That
+comment reads *"ruff and mypy already ran in `$staged`; `bazel test` did not"* — the `cd "$staged"`
+on line 554, thirteen lines below it, contradicts it. Both halves check the same materialised
+index. So the duplication is **not** tree-vs-index; it is one subject through two instruments.
+
+**The two instruments differ, and here is the whole of the measured difference:**
+
+```
+                host .venv                     built .venv (//:venv.bzl)
+interpreter     3.13.11  (mise, via uv)        3.13.13  (bazel toolchain)
+ruff            0.16.6                         0.16.6      ← agree TODAY
+mypy            2.3.1                          2.3.1       ← agree TODAY
+declared in     nothing                        MODULE.bazel
+pyvenv.cfg      home = ~/.local/share/mise/…   home = ../bin
+```
+
+⚑ **THE CHECKER VERSIONS AGREE AND THAT IS NOT A GUARANTEE — it is a coincidence maintained by
+hand, from two resolvers with no shared constraint.** The honest statement of the risk is narrow
+and real: the ratchet's baseline keys ARE ruff findings, so a future divergence mints or clears
+keys the build would not, and both halves would report green in their own terms.
+
+⚑⚑ **THE BLOCKER ON REPOINTING, MEASURED: the built venv has no `bin/` entry points.**
+`bazel-bin/hooks/.venv/bin/` contains exactly one file — `python3`. `ruff` and `mypy` are present
+in `site-packages` but have no console scripts, because `//:venv.bzl` only ever creates the
+interpreter symlink. The gate invokes `.venv/bin/ruff` directly, so repointing it today fails
+immediately. **That is a gap in the rule I wrote and did not measure.**
+
+**So the sequence the ruling implies, in leverage order:**
+
+1. **Delete the duplicated host-venv checks** at `:405`, `:410`, `:429`, `:711` — the graph already
+   produces those verdicts at `:554`, over the same staged tree. This is subtraction, needs no new
+   rule, and removes the divergence rather than managing it.
+2. **`//:venv.bzl` grows console scripts** (`rules_python` has `py_console_script_binary`), for the
+   remaining consumers that genuinely need an activatable venv — the interactive dev loop.
+3. **`preflight.sh`** then predicts the gate by running the same targets rather than a second set.
+
+⚑ **AND ONE COST TO STATE PLAINLY BEFORE ANY OF IT:** a gate whose only verdict comes from bazel
+hard-depends on the build. A fresh clone cannot commit until it builds, and the fast host loop
+disappears. That is the trade the ruling accepts; recorded here so nobody re-litigates it as a
+surprise.
+
+### ⟐PREFLIGHT-FAILS-OPEN — NEW 2026-09-10, the same defect as ⟐GATE-FAILS-OPEN, one file over
+
+⚑⚑ **`preflight.sh:114` carries the identical `if [ -x ratchet/.venv/bin/mikemol-ratchet ]` guard
+repaired in the gate at `0097f22`** — and `preflight.sh:63-72` states the rule in its own words:
+*"an absent one REFUSES rather than skips … a skipped check and a passing one are
+indistinguishable downstream, and this script exists to predict the gate rather than to produce a
+second, weaker verdict."* Forty-five lines later it skips silently.
+
+⚑ **THE ARM THAT CAUGHT THE GATE COULD NOT SEE THIS**, because it reads `_GATE` alone — a
+population of one, hard-coded, in an arm written against the hand-written-population defect. The
+repair is to derive the consumers: `grep -rln 'venv/bin' .githooks/ preflight.sh` returns exactly
+those two files.
+
 ### ⟐GATE-FAILS-OPEN — NEW and CLEARED 2026-09-10, the gate broke a rule it states about itself
 
 ⚑⚑⚑ **`.githooks/pre-commit` REFUSES a commit when `ruff`, `mypy` or `python3` is missing from any

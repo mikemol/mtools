@@ -72,6 +72,24 @@ for dist in $dists; do
         fi
     done
 
+    # ⚑⚑⚑ AND THE SINGLETON TOO, BECAUSE THE LOOP ABOVE IS PER-DISTRIBUTION AND IT IS NOT.
+    # `mikemol-ratchet` lives ONLY in `ratchet/.venv` — measured absent from fence, hooks and
+    # mdstruct — so no iteration of the triple ever covers it. It was guarded below by
+    # `if [ -x ... ]`, which SKIPS SILENTLY: the ratchet is *the check this script exists for*
+    # (it refused three of the four cases that motivated the script), and its absence would make
+    # this file predict a green the gate will not give.
+    # ⚑⚑ THE SAME DEFECT AS `.githooks/pre-commit` AT 0097f22, ONE FILE OVER — and the arm that
+    # caught it there could not see it here, because that arm read the gate ALONE: a hand-written
+    # population of one, in a check written against hand-written populations. The arm now derives
+    # its consumers, and also anchors `^\s*if` rather than `^if`, because this guard is indented
+    # inside a `for dist` loop and a column-anchored pattern read this file as sound.
+    _singleton=ratchet/.venv/bin/mikemol-ratchet
+    if [ ! -x "$_singleton" ]; then
+        say "$_singleton not found — cannot predict the gate, refusing"
+        say "  a skip here would report green over a check that never executed"
+        exit 1
+    fi
+
     # ⚑⚑ THIS BLOCK ONCE OPENED WITH THE SENTENCE "`--preview` IS INCLUDED BECAUSE THE RATCHET
     # CENSUSES PREVIEW RULES", AND THAT SENTENCE WAS FALSE ABOUT THE LINE BENEATH IT. It is
     # quoted rather than restated, because a false assertion left as the block's FIRST line is
@@ -111,10 +129,9 @@ for dist in $dists; do
     # ⚑⚑⚑ THE RATCHET IS THE CHECK THAT ACTUALLY REFUSED THREE OF THE FOUR, so it is the one this
     # script exists for. It reads the working tree rather than a staged copy, which is correct
     # here: the point is to answer *what will the gate say about what I am about to stage*.
-    if [ -x ratchet/.venv/bin/mikemol-ratchet ]; then
-        ratchet/.venv/bin/mikemol-ratchet "$root/$dist" \
-            || { fail=1; say "$dist: ratchet — a NEW KEY; the gate will refuse this"; }
-    fi
+    # ⚑ NO `if [ -x ]` GUARD: presence is REFUSED ON above, so reaching this line means it exists.
+    ratchet/.venv/bin/mikemol-ratchet "$root/$dist" \
+        || { fail=1; say "$dist: ratchet — a NEW KEY; the gate will refuse this"; }
 
     # ⚑ THE WARRANT LEDGER IS 1:1 AND THE GATE ENFORCES IT, so a test added without a warrant is a
     # refusal this script can predict for free. Counted the way the gate counts it.
