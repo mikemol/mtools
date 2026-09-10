@@ -56,18 +56,37 @@ _CONCISE = re.compile(
 # the discriminator is emptiness rather than the name.
 _SYNTHESIZED = "__init__.py"
 
+# ⚑⚑⚑ THE SECOND SYNTHESIZED SHAPE, AND IT IS NOT EMPTY. `rules_python` 2.3.3 generates a
+# `_<target>_stage2_bootstrap.py` beside every `py_binary` in the output tree — real Python with
+# real content, so the emptiness test above cannot see it. MEASURED by the 1.0.0 -> 2.3.3 bump:
+# `//ratchet:ratchet_gate` refused **49 new keys**, all in that one generated file.
+# ⚑ MATCHED BY THE SUFFIX THE GENERATOR CHOOSES, not by a leading underscore: `_private.py` is a
+# naming convention this repository uses for its own modules, and excluding on it would pay down
+# real debt by accident — the over-exclusion the `__init__.py` predicate was already corrected
+# for once. The suffix is the build system's, and nothing hand-written wears it.
+_BOOTSTRAP_SUFFIX = "_stage2_bootstrap.py"
+
 
 def _is_synthesized(path: str, root: Path) -> bool:
-    """Report whether `path` names a build-system-synthesized package marker.
+    """Report whether `path` names a build-system-synthesized file.
 
     ⚑ rules_python writes an EMPTY `__init__.py` at every level of a runfiles tree so it is
     importable. A hand-written one has content. Checking the bytes rather than the name keeps a
     real file's debt in the census while dropping an artifact the baseline never saw.
 
+    ⚑⚑ AND THE NAME CHECK RAN FIRST, WHICH MADE THE DOMAIN TOO NARROW. This function's own note
+    says *the discriminator is emptiness rather than the name* — while returning False outright
+    unless the path ended in `__init__.py`, so emptiness was consulted for exactly one filename.
+    A second generated shape, `_<target>_stage2_bootstrap.py`, is NOT empty and slipped straight
+    through. Both are now named, because the two shapes have genuinely different discriminators:
+    one is recognised by being empty, the other by a suffix only the generator writes.
+
     Returns:
-        whether `path` names a build-system-synthesized package marker.
+        whether `path` names a build-system-synthesized file.
 
     """
+    if path.endswith(_BOOTSTRAP_SUFFIX):
+        return True
     if not path.endswith(_SYNTHESIZED):
         return False
     candidate = root.joinpath(path)

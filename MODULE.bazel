@@ -37,7 +37,7 @@ module(name = "mtools", version = "0.1")
 # ⚑ A HERMETIC PYTHON — "which python" is Bazel's, not the host's. Same version the distributions
 # declare (`requires-python = ">=3.13"`), so the interpreter that runs a witness is the interpreter
 # the package claims to support rather than whatever the caller's shell resolved.
-bazel_dep(name = "rules_python", version = "1.0.0")
+bazel_dep(name = "rules_python", version = "2.3.3")
 
 # ⚑ `@platforms` IS DECLARED BECAUSE //rbe NAMES ITS CONSTRAINTS. It arrives transitively for many
 # graphs, but a transitive repository is not a VISIBLE one under bzlmod — measured, `@platforms//os`

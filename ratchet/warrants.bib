@@ -156,6 +156,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_growth_is_refused_through_the_cli}
 }
 
+@misc{ratchet-census-synthesized-bootstrap-is-not-censused,
+  section = {census},
+  claim   = {A generated py_binary bootstrap is a build artifact and does not enter the census. THE SIBLING ARM BELOW RECORDS *the discriminator is emptiness, not the name* AND THE PREDICATE IT GUARDS CHECKED THE NAME FIRST --- `_is_synthesized` returned False outright unless the path ended in `__init__.py`, so emptiness was consulted for exactly one filename. A domain too narrow, which that arm names as the mirror defect and then reproduces. MEASURED by a dependency bump: rules_python 1.0.0 to 2.3.3 generates `_ratchet_cli_stage2_bootstrap.py` into the runfiles tree and the gate REFUSED 49 NEW KEYS, every one in a file nobody wrote; it exists only under bazel-out and `git status --ignored` shows no such file in source. NOT a false positive and NOT a regression --- the census was correct over the wrong population, since its scope is everything ruff reports in cwd and a bump changed what is in cwd. THE RATCHET CAUGHT ITS OWN BLIND SPOT, and a bump that silently added 49 keys to a baseline would have been far worse than one that refused. Matched by the suffix the generator writes rather than a leading underscore, because `_private.py` is this repository's own convention and excluding on it would pay down real debt by accident},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_synthesized_bootstrap_is_not_censused}
+}
+
 @misc{ratchet-census-synthesized-marker-is-not-censused,
   section = {census},
   claim   = {An EMPTY `__init__.py` is a build artifact and does not enter the census. rules_python writes one at every level of a runfiles tree so it is importable; none exist in the source tree, and `src/mikemol/__init__.py` is the file PEP 420 forbids here outright because it would make the first-installed distribution the exclusive owner of the `mikemol` prefix. MEASURED: the first honest run of the bazel ratchet gate REFUSED 8 keys, all from these --- the census was correct about what it saw, and what it saw was not the distribution. THE DISCRIMINATOR IS EMPTINESS, NOT THE NAME: a first cut excluded every `__init__.py` and over-excluded, because mdstruct's own package marker exists, carries content, and legitimately held a key, so dropping it PAID DOWN REAL DEBT by accident. That is the mirror defect --- a domain too NARROW, which serves a stale green rather than failing loudly},
