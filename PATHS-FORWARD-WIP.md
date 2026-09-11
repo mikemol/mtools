@@ -111,7 +111,7 @@ configured; and there is a `git_struct` branch reading `pkg["source"]["git"]`, s
 git-sourced `paperkit` survives that path — which was a live risk worth checking rather
 than assuming.
 
-### ⟐UPSTREAM-DOCSTRING-LIES — NEW 2026-09-10, measured, affects what may be claimed
+### ⟐UPSTREAM-DOCSTRING-LIES — a STANDING constraint on what may be claimed, not work to do
 
 ⚑⚑⚑ `parse_requirements`' OWN DOCSTRING PROMISES A CHECK ITS CODE RETURNS BEFORE
 REACHING. It reads: *If provided, the function will use the uv.lock file as the primary
@@ -130,6 +130,19 @@ and report it as a REASON the two locks are safe to keep.
 NOT buy a verification that the two locks agree. It buys ONE SOURCE for those hubs. If
 agreement between `uv.lock` and `requirements-dev.txt` is ever asserted, it must be
 measured here, not inherited from that sentence.
+
+⚑⚑⚑ **RE-MEASURED 2026-09-11 AND IT STILL HOLDS — BOTH HALVES, because the finding is a MISMATCH
+and one half going stale would dissolve it.** `parse_requirements.bzl:70` still promises *perform a
+consistency check against*; `:89` still reads `if uv_lock and toml_decode:` and returns immediately.
+Neither moved.
+
+⚑⚑ **RECLASSIFIED FROM LIVE TO STANDING, WHICH IS A DIFFERENT STATE AND NOT A CLEARING.** Nothing
+here is work: this repository does not use `uv_lock`, so there is no defect in the tree to repair.
+What the section does is FORBID A FUTURE CLAIM — the same shape as ⟐REMOTE-DISCARDS-MODE-BITS,
+reclassified one tick ago for the same reason. ⚑ A CONSTRAINT PARKED IN THE LIVE COLUMN reads as
+undone work and invites a tick to "finish" it; a constraint deleted because nothing is broken
+leaves the next reader to inherit the docstring's sentence as evidence, which is exactly the damage
+it exists to prevent.
 
 ### ⟐VENV-AS-BUILD-ARTIFACT — BUILT 2026-09-10, all four distributions, and what it cost
 
@@ -302,7 +315,7 @@ worked only because duplicate names collide harmlessly; a rule must take
 `deps(@<dist>_dev//<pkg>:pkg)` so the population is derived from the graph rather than from a glob
 that happens not to hurt.
 
-### ⟐MODULE-RUFF-CLAIM-STALE — NEW 2026-09-10, measured, a FALSE recorded measurement
+### ⟐MODULE-RUFF-CLAIM-STALE — CLEARED; the comment was corrected and this section outlived it
 
 ⚑⚑⚑ `MODULE.bazel` ARGUES FOR ITS `http_archive` ON A PREMISE THAT NO LONGER HOLDS. It
 states that ruff must be fetched as an archive because *rules_python STAGES ONLY
@@ -325,6 +338,31 @@ no comment, because a reader spends it as evidence. ⚑ TWO SEPARATE ITEMS: the 
 false NOW and should be corrected regardless; whether the `http_archive` is therefore
 REDUNDANT is a further question nobody has measured, and removing it on this evidence
 alone would be acting past what was established.
+
+⚑⚑⚑ **CLEARED 2026-09-11 — AND IT WAS ALREADY DONE IN THE FILE, SO THIS SECTION WAS THE LAST
+STALE RECORD OF ITS OWN DEFECT.** `MODULE.bazel:184-212` now opens *"the reason recorded here went
+stale"*, quotes the withdrawn premise as withdrawn (kept visible *because a reader will have spent
+it*), carries the measurement table, and states explicitly what is NOT established. Both items
+above are answered: the comment is corrected, and the redundancy question is recorded as unmeasured
+rather than acted on.
+
+⚑⚑ **BOTH LEGS RE-MEASURED TODAY RATHER THAN READ**, since a comment is output and this symbol
+exists because one went stale:
+
+```
+bazel cquery '@hooks_dev//ruff:extracted_whl_files'  ->  bin/ruff STAGED (+ site-packages,
+                                                          the control that it is not returning all)
+file …/bin/ruff  ->  ELF 64-bit LSB pie executable … stripped
+…/bin/ruff --version  ->  ruff 0.16.6          (a build is not a verdict; it RUNS)
+entry_points:  ruff 0 · mypy 5 · pytest 2      (the control: the reader can see them)
+```
+
+⚑ **THE SURVIVING LEG IS THE ENTRY-POINT ONE AND IT HOLDS.** `ruff` declares zero console scripts,
+so there is nothing for `py_console_script_binary` to regenerate and the `http_archive` remains the
+right instrument — for that reason rather than the withdrawn staging one. ⚑⚑ **A CONCLUSION THAT
+SURVIVES ITS ORIGINAL ARGUMENT IS NOT THEREBY UNSUPPORTED, AND IT IS NOT THEREBY SUPPORTED EITHER**:
+the second leg had to be measured on its own, which is what the comment records and what this
+re-measurement confirms.
 
 ### ⟐GRADER-INTERPRETER-UNDECLARED — CLEARED 2026-09-10, and one of its two claims was mine and false
 
