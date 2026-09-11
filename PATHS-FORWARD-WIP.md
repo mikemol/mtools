@@ -507,6 +507,55 @@ workaround in `_run_cli` is retired: one line now, no global, no `finally`.
 ⚑ *A finding filed outward is not a finding fixed at home*, and the second carry is the part worth
 remembering — the first was honest ignorance, the second was a record I had already written.
 
+### ⟐EXE002-REMOTE-ONLY · ⟐REMOTE-DISCARDS-MODE-BITS — CLEARED 2026-09-11 by operator ruling
+
+⚑⚑⚑ **`bazel test //... --config=remote` IS GREEN FOR THE FIRST TIME: 46 of 46, 26 actions on the
+executor.** It was 43 of 46 for many ticks, three targets red from one cause.
+
+**Operator ruling: normalise the POPULATION, not the rule.** The alternatives put were disabling
+`EXE002` repo-wide — which turns off a check that is *correct* on the instrument developers
+actually run — or excluding the lint targets from remote, conceding the stronger sandbox. Both
+were declined.
+
+⚑ **THE MECHANISM WAS INVESTIGATED BEFORE BEING BUILT, because I had flagged it as unmeasured.**
+Three candidates; `bazel help build` mentions no mode-preserving flag, and the staged files are
+**owner-writable**, so an action may normalise its own copy. ⚑⚑ And the idiom was already in the
+tree: `mypy_check.sh` deletes the synthesized `__init__.py` markers rules_python writes into a
+runfiles tree, for exactly this reason. `ruff_check.sh` now strips `+x` the same way.
+
+⚑⚑ **AND THE FIRST REPAIR REACHED ONE CALL SITE OF TWO.** `//hooks:ruff` and `//hooks:ratchet` went
+green; `//hooks:test_bar_fires` stayed red because its suppression arm runs **its own** ruff
+invocation rather than going through `ruff_check.sh`. *"A repair applied to one call site is not a
+repair to the class"* — recorded elsewhere in this repository about a different check, measured
+again here, in the arm whose own comment already says it must share the gate's setup.
+
+```
+before            43 of 46 remote   (ruff → ratchet → test_bar_fires, ONE cause)
+after script fix  45 of 46 remote   (the arm's own invocation still unnormalised)
+after both        46 of 46 remote, 46 of 46 local
+```
+
+### ⟐RUF201 — operator ruled 2026-09-11: ARM PREVIEW REPO-WIDE, then pay down
+
+⚑ **THE BLOCKING CLAIM WAS TRUE, MEASURED:** `--select magic-value-comparison` gives `rc=2 ruff
+failed` without `--preview` and `rc=1` with it. A name selector genuinely needs preview to load, so
+"rename first" was never available.
+
+⚑⚑ **AND MY OWN PROBE OF THE POPULATION WAS THE WRONG INSTRUMENT.** `--select RUF201` reported
+**zero sites in all four distributions**, contradicting the poll's 18-in-hooks. `--select`
+*replaces* the config's selection, so it loaded the rule without the `select = ["ALL"]` context
+that produces the findings. `--extend-select` reproduces the poll's figure exactly. **The poll was
+right and the probe was wrong** — the same shape as arm C measuring replacement semantics rather
+than the tree.
+
+**The real population in hooks, listed:** 18 `RUF201` (every one in `pyproject.toml`'s own `ignore`
+and `per-file-ignores` lists) + 18 `RUF106` (suppression comments in `test_bar_fires.py` ×17 and
+`test_checkers.py` ×1). **All 36 auto-fixable.** Repo-wide the preview paydown is 171.
+
+**Ruled: arm `preview = true` repo-wide and pay the 171 down.** Not yet begun; the 135 beyond the
+auto-fixable pair are DOC201, FURB113, S404, DOC501, PLR1702 and the other distributions'
+equivalents, and each is pay-or-declare.
+
 ### ⟐ROLE-AXIS-ROW-WAS-AN-ARTIFACT — NEW and CLEARED 2026-09-11, a published row proved nothing
 
 ⚑⚑⚑ **cassian RAISED IT AS A HYPOTHESIS ABOUT MY TOKENISER RATHER THAN A CLAIM ABOUT MY TREE, AND

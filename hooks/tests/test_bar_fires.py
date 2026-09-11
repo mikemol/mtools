@@ -4963,6 +4963,21 @@ def test_every_suppression_directive_suppresses_under_the_gates_config() -> None
     # staging artifacts into the population. Naming the files keeps the population honest;
     # `--config` keeps the per-file patterns resolving; neither is a deviation from the gate on the
     # axis this arm measures.
+    # ⚑⚑⚑ AND THE GATE ALSO NORMALISES THE STAGED MODE BITS, WHICH THIS ARM DID NOT — SO IT WENT
+    # RED REMOTELY WHILE THE GATE'S OWN TARGET WENT GREEN. The executor stages sources
+    # `-rwxr-xr-x` where the repository holds `-rw-rw-r--`, so `EXE002 The file is executable but
+    # no shebang is present` fires on a filesystem the CAS invented. `ruff_check.sh` strips those
+    # bits before invoking ruff, on the operator's ruling to normalise the POPULATION rather than
+    # disable the rule — and this arm runs its OWN invocation, so the repair reached the target and
+    # not the arm.
+    # ⚑⚑ "A REPAIR APPLIED TO ONE CALL SITE IS NOT A REPAIR TO THE CLASS" is recorded elsewhere in
+    # this repository about a different check; measured again here, one commit later, in the arm
+    # whose comment already says it must share the gate's setup.
+    for src in sources:
+        mode = src.stat().st_mode
+        if mode & 0o111:
+            src.chmod(mode & ~0o111)
+
     proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
         [*argv, "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
          "--output-format", "concise", *[str(p) for p in sources]],

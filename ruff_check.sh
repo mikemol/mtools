@@ -41,4 +41,30 @@ fi
 # directory and report the verdict as this distribution's. Stated the same way in both, so the
 # safety does not depend on remembering which script has `-e`.
 cd "$dist" || exit 1
+
+# ⚑⚑⚑ NORMALISE THE STAGED MODE BITS, BECAUSE THE EXECUTOR INVENTS THEM. Measured, both modes:
+#
+#     repository        -rw-rw-r--
+#     local sandbox     -rw-rw-r--     (matches; EXE002 silent)
+#     remote executor   -rwxr-xr-x     (invented; EXE002 fires on EVERY source)
+#
+# `EXE002 The file is executable but no shebang is present` is a claim about a MODE BIT — a fact
+# about the filesystem the REPOSITORY lives on. Bazel does not carry source modes into the
+# executor's staged tree, so remotely the rule reads `+x` on files that are `+x` nowhere a
+# developer can see: a true statement about the staging and a FALSE one about the repository. Three
+# targets went red under `--config=remote` from this one cause — `ruff`, then the `ratchet` census
+# over ruff's output, then `test_bar_fires`' suppression arm.
+#
+# ⚑⚑ OPERATOR RULING: NORMALISE THE POPULATION, NOT THE RULE. The alternatives were disabling
+# `EXE002` repo-wide — which turns off a check that is CORRECT on the instrument developers
+# actually run — or excluding these targets from remote, which concedes the stronger sandbox.
+# This repairs the subject instead.
+#
+# ⚑ AND THE IDIOM IS ALREADY IN THIS TREE: `mypy_check.sh` deletes the synthesized `__init__.py`
+# markers rules_python writes into a runfiles tree, for exactly this reason — an action normalising
+# its own staged inputs so the checker reads the population the repository has. Measured that the
+# staged files are owner-writable, so the action may do it; `|| true` because a read-only staging
+# is a weaker sandbox, not a reason to refuse.
+find . -name '*.py' -perm -u+x -exec chmod u-x,g-x,o-x {} + 2>/dev/null || true
+
 exec "$ruff" check --no-cache --config "$config" .
