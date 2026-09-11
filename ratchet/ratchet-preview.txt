@@ -1,4 +1,0 @@
-pyproject.toml:rule-codes-in-selectors
-src/mikemol/ratchet/census.py:suspicious-subprocess-import
-src/mikemol/ratchet/state.py:noqa-comments
-tests/test_core.py:noqa-comments

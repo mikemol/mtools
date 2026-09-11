@@ -42,7 +42,7 @@ class BaselineState(enum.Enum):
     ABSENT = ("ABSENT", True, True)
     UNREAD = ("UNREAD", False, True)
 
-    def __init__(self, label: str, is_defect: bool, deserves_mark: bool) -> None:  # noqa: FBT001
+    def __init__(self, label: str, is_defect: bool, deserves_mark: bool) -> None:  # ruff: ignore[boolean-type-hint-positional-argument]
         """Declare the label and the two independent properties.
 
         ⚑ POSITIONAL BOOLEANS ARE ORDINARILY A FINDING (FBT001) AND ARE CORRECT HERE: an

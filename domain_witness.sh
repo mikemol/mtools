@@ -166,6 +166,15 @@ before_image="$(git hash-object "$victim" 2>/dev/null)"
 # still differs is *I acted and it did not take*. `gabion`'s statement of the class is the one to
 # keep: **a before-image fixes attribution; it does not make a reading current.**
 restore() {
+    # ⚑⚑⚑ THE SECOND VICTIM, RESTORED FIRST AND UNCONDITIONALLY. The `baseline` probe plants in a
+    # SOURCE file when the baseline is empty (see arm 2), and this function restored only `$victim`
+    # — so that plant would survive as residue, which the gate's own sweep then refuses on the next
+    # run. ⚑ A PROBE THAT DOES NOT CLEAN UP IS THE DEFECT THIS FILE'S COMMENTS ALREADY WARN ABOUT,
+    # and adding a mutation without extending the restore is how it arrives.
+    # ⚑⚑ EMPTY WHEN UNUSED, so the common path is unchanged: `git checkout ""` never runs.
+    if [ -n "${_empty_victim:-}" ] && [ -f "$_empty_victim" ]; then
+        git checkout "$_empty_victim" 2>/dev/null || true
+    fi
     _co_err="$(git checkout "$victim" 2>&1)"; _co_rc=$?
     now="$(git hash-object "$victim" 2>/dev/null)"
     if [ "$now" = "$before_image" ]; then
@@ -313,9 +322,55 @@ case "$probe_kind" in
     # ⚑ THE DIRECTION IS SAFE AND THE AMBIGUITY IS NOT: a false refusal never absolves debt, but
     # it is indistinguishable from a genuine violation, so an operator meeting it debugs a finding
     # that does not exist.
-    baseline) head -n -1 "$victim" > "$victim.probe" \
-                  && printf '# transient domain probe %s\n' "$(date +%s%N)" >> "$victim.probe" \
-                  && mv "$victim.probe" "$victim" ;;
+    # ⚑⚑⚑ AND AN EMPTIED BASELINE HAS NO KEY TO DELETE, SO THE PROBE ABOVE PLANTS NO DEFECT. The
+    # operator lowered `hooks` to zero keys on 2026-09-12 and `ratchet` on 2026-09-13, and this
+    # witness REFUSED the second one — correctly, and for a reason that is not a defect in the
+    # gate: `head -n -1` on an empty file yields an empty file, so the census is unchanged and the
+    # ratchet passes. ⚑ THE PROBE'S PREMISE WAS *THE BASELINE HAS CONTENT*, and the paydown retired
+    # it. That is the same shape as the two test arms whose positive controls fired the day before,
+    # arriving in the witness layer instead.
+    #
+    # ⚑⚑ OPERATOR RULING 2026-09-13: PROBE THE SOURCE WHEN THE BASELINE IS EMPTY. The alternatives
+    # put were skipping the witness for emptied baselines — which removes coverage from exactly the
+    # distributions that are fully paid — and keeping a key in every baseline so the probe still
+    # works, which banks a PAID finding as tolerated debt to suit an instrument. Both declined.
+    #
+    # ⚑⚑⚑ AND THE PROPERTY PROVED IS THE SAME ONE IN BOTH BRANCHES, which is what makes this a
+    # repair rather than a second witness wearing one name: *the gate's verdict depends on this
+    # baseline*. With keys, removing one makes a real finding unaccounted and the ratchet must
+    # refuse. With none, ANY finding in the census is unaccounted by construction — so planting one
+    # in a source file the census reads must refuse, and a pass would mean the baseline is not
+    # being consulted at all.
+    # ⚑ ARM 1 IS UNAFFECTED AND STAYS ON THE BASELINE FILE. It proves the bytes are KEYED, using a
+    # nonce, and a nonce changes the digest of an empty file exactly as well as a full one. Only
+    # arm 2 needs a defect, so only arm 2 branches.
+    baseline)
+        if [ -s "$victim" ]; then
+            head -n -1 "$victim" > "$victim.probe" \
+                && printf '# transient domain probe %s\n' "$(date +%s%N)" >> "$victim.probe" \
+                && mv "$victim.probe" "$victim"
+        else
+            # ⚑⚑⚑ THE SOURCE VICTIM IS DISCOVERED, NOT NAMED — AND THE FIRST DRAFT NAMED IT.
+            # It read `$dist/src/mikemol/$(basename "$dist")/state.py`, which exists in `ratchet`
+            # and NOWHERE ELSE: measured, `hooks` has no `state.py`, and hooks' baseline is empty
+            # too. A filename that happens to exist in the one distribution under the hand is this
+            # repository's hand-written-population defect, written into the repair for it.
+            # ⚑⚑ SO THE PROBE TAKES THE FIRST MODULE THE CENSUS READS, whatever it is called. Any
+            # `.py` under the package works: the census runs ruff over the distribution, so a
+            # finding in any of them is a key the empty baseline cannot absolve.
+            _empty_victim="$(find "$dist/src" -name '*.py' -type f 2>/dev/null | sort | head -1)"
+            if [ -z "$_empty_victim" ] || [ ! -f "$_empty_victim" ]; then
+                say "arm 2 FAILED: baseline is empty and no source file was found under $dist/src"
+                say "  the probe needs a module the census reads; without one it plants no defect"
+                exit 1
+            fi
+            # ⚑⚑ RECORDED FOR arm 3, which restores whatever arm 2 touched. Restoring the BASELINE
+            # here would leave the planted source finding behind — a probe that does not clean up
+            # is residue the gate's own sweep then refuses on the next run.
+            printf '\n\n# transient domain probe %s\ndef _transient_domain_probe():\n    """Probe."""\n    return 1\n' \
+                "$(date +%s%N)" >> "$_empty_victim"
+        fi
+        ;;
     # ⚑⚑⚑ EVERY PAYLOAD CARRIES THE MARKER, AND THIS ONE DID NOT. The residue guard (line ~54) and
     # the gate's sweep both key on the literal `transient domain probe`; the mypy payload was the
     # one probe kind that omitted it, so a stranded mypy probe was invisible to BOTH — measured

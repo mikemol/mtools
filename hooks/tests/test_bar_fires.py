@@ -5170,6 +5170,36 @@ def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
     )
 
 
+def _staged_ratchet() -> Path | None:
+    """Locate the built ratchet CLI under bazel AND under the bare pytest the gate runs.
+
+    ⚑⚑⚑ THE FIRST SPELLING NAMED NOTHING OUTSIDE THE SANDBOX, AND THAT IS THE ENVIRONMENT THE
+    GATE USES. `_DIST.parent / "ratchet" / "ratchet_cli"` is the RUNFILES layout: correct under
+    `bazel test`, where both arms passed, and absent under `.venv/bin/python3 -m pytest`, where
+    they SKIPPED with "the instrument is absent". A skip is honest, but two arms skipping in the
+    gate's own environment is two arms that never run where it matters.
+    ⚑⚑ MEASURED BY RUNNING BOTH WAYS rather than by reading either path — the fifth time in this
+    repository that a path was a string naming nothing, and the second time this session.
+
+    Returns:
+        The first candidate that exists, or `None` when the CLI has not been built. ⚑ `None`
+        rather than a guess: a caller that skips on absence is honest, and a caller handed a
+        non-existent path would fail with a confusing `FileNotFoundError` from a subprocess.
+
+    """
+    for candidate in (
+        # The runfiles tree, when bazel staged it as a declared input.
+        _DIST.parent / "ratchet" / "ratchet_cli",
+        # ⚑ THE CONVENIENCE SYMLINK, which is what a bare pytest run in a checkout sees. It is a
+        # build OUTPUT and deliberately gitignored, so its absence means "not built yet" rather
+        # than "not part of this repository".
+        _DIST.parent / "bazel-bin" / "ratchet" / "ratchet_cli",
+    ):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
 def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() -> None:
     """⚑⚑⚑ A PAYDOWN THAT ARMS NOTHING IS A DELETION WEARING A PAYDOWN'S NAME.
 
@@ -5238,11 +5268,12 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
     # ⚑ `_DIST.parent` IS THE RUNFILES ROOT (`_main`) UNDER BAZEL AND THE REPO ROOT OUTSIDE IT —
     # the property this file's header records and every sibling arm relies on. So one expression
     # names the staged binary in the sandbox and the built one under a bare pytest run.
-    ratchet = _DIST.parent / "ratchet" / "ratchet_cli"
-    # ⚑⚑ STAT IT, NEVER ASSUME IT. A path is a string that names nothing until something reads it,
-    # which this repository has now measured four times.
-    if not ratchet.is_file():
-        pytest.skip(f"no staged ratchet at {ratchet} — the instrument is absent, not passing")
+    # ⚑⚑ STAT IT, NEVER ASSUME IT — `_staged_ratchet` returns None rather than a path that names
+    # nothing, and it checks BOTH the runfiles layout and the bare-pytest one because this arm
+    # used to skip in the gate's own environment while passing in the sandbox.
+    ratchet = _staged_ratchet()
+    if ratchet is None:
+        pytest.skip("the ratchet CLI is not built — the instrument is absent, not passing")
 
     with tempfile.TemporaryDirectory() as tmp:
         probe = Path(tmp) / "hooks"
@@ -5300,6 +5331,102 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
         "the ratchet refused, but did not name the file the finding was planted in — an arm that "
         f"cannot tell its own finding from an unrelated failure is measuring the fixture:\n"
         f"{proc.stdout}{proc.stderr}"
+    )
+
+
+def test_every_emptied_baseline_arms_a_refusal() -> None:
+    """⚑⚑⚑ THE LOWERING IS NOW A STANDING POLICY, SO THE ARM QUANTIFIES OVER DISTRIBUTIONS.
+
+    The sibling arm above proves the property for `hooks`, whose baseline the operator lowered on
+    2026-09-12. On 2026-09-13 that ruling was extended: *lower each distribution's baseline as its
+    paydown lands*. ⚑ A POLICY THAT APPLIES TO EVERY DISTRIBUTION AND AN ARM THAT CHECKS ONE IS
+    THE SHAPE THIS REPOSITORY KEEPS MEASURING — `ratchet` was emptied the same day and nothing
+    would have noticed if its lowering had armed nothing.
+
+    ⚑⚑ THE POPULATION IS DERIVED, NEVER TYPED: every directory carrying a `pyproject.toml` that
+    also carries an EMPTY `ratchet-preview.txt`. A hand-written list would stop covering the
+    distribution emptied after it was written, which is the defect the policy makes more likely
+    rather than less — each paydown adds a member.
+
+    ⚑ AND EMPTY IS THE ONLY STATE THIS ARM CAN CHECK CHEAPLY. With keys present, a planted finding
+    might collide with a baselined one and the refusal would be ambiguous; with none, ANY finding
+    the checker reports must be refused, so the assertion needs no knowledge of what is tolerated.
+
+    ⚑⚑ THE PLANT IS A NEW FILE, NOT A MUTATION. The sibling arm rewrites a directive inside
+    `test_checkers.py`, which only exists in `hooks`; a new module under the distribution's own
+    package works in any of them and disturbs no existing arm's meaning.
+    """
+    ratchet = _staged_ratchet()
+    if ratchet is None:
+        pytest.skip("the ratchet CLI is not built — the instrument is absent, not passing")
+
+    root = _DIST.parent
+    # ⚑⚑⚑ THE POPULATION IS WHAT IS BOTH EMPTIED *AND REACHABLE*, AND THE TWO ARE DIFFERENT
+    # NUMBERS IN THE SANDBOX. This target stages every distribution's `pyproject.toml` — so
+    # `_distributions()` names four — but NOT their `src/` trees or baselines, so a sibling's
+    # files are absent there and present under a bare pytest run.
+    # ⚑⚑ REPORTING THE SHORTFALL RATHER THAN ABSORBING IT. A `continue` over the unreachable ones
+    # would leave this arm checking one distribution while its name promises every one — the
+    # `confidently over a population its ENVIRONMENT truncated` defect that `hooks/BUILD.bazel`'s
+    # data list records, arriving through the same door. The counts are printed in the failure
+    # message and the skip, so a reader can tell "nothing to check" from "could not look".
+    emptied: list[str] = []
+    unreachable: list[str] = []
+    for dist in _distributions():
+        baseline = root / dist / "ratchet-preview.txt"
+        if not baseline.is_file() or not (root / dist / "src" / "mikemol" / dist).is_dir():
+            unreachable.append(dist)
+            continue
+        if not baseline.read_text(encoding="utf-8").strip():
+            emptied.append(dist)
+    # ⚑ POSITIVE CONTROL: with no emptied baseline the loop below runs zero times and every
+    # assertion in it is vacuously satisfied. Skipping says so rather than reporting green, and
+    # names how many distributions could not be read at all.
+    if not emptied:
+        pytest.skip(
+            f"no reachable distribution carries an empty baseline "
+            f"({len(unreachable)} of {len(_distributions())} not readable here) — this arm's "
+            "population is empty and its property would be vacuously true"
+        )
+
+    ignore: Callable[[str, list[str]], set[str]] = shutil.ignore_patterns(
+        ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__")
+    tolerated: list[str] = []
+    for dist in emptied:
+        with tempfile.TemporaryDirectory() as tmp:
+            probe = Path(tmp) / dist
+            shutil.copytree(root / dist, probe, symlinks=True, ignore=ignore)
+            # ⚑ THE PLANTED FINDING IS A COMPARISON TO AN EMPTY STRING, which a preview rule names
+            # and which needs no existing construct to mutate. Its docstring deliberately omits a
+            # Returns section, so a second preview rule fires too — one planting, two independent
+            # reasons the ratchet must refuse.
+            # ⚑ REACHABILITY WAS ESTABLISHED WHEN THE POPULATION WAS BUILT, so this is an
+            # assertion rather than a skip: a package absent HERE means the copy lost it, which is
+            # a fixture failure and must be loud.
+            pkg = probe / "src" / "mikemol" / dist
+            assert pkg.is_dir(), f"the copy of {dist} lost its package — the fixture is broken"
+            (pkg / "_probe.py").write_text(
+                "# SPDX-License-Identifier: Apache-2.0\n"
+                "# Copyright (c) 2026 Mike Mol\n"
+                '"""A planted finding: an emptied baseline must refuse, not tolerate."""\n'
+                "\n\n"
+                "def f(s: str) -> bool:\n"
+                '    """Compare to an empty string."""\n'
+                '    return s == ""\n',
+                encoding="utf-8",
+            )
+            proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the ratchet is the subject of this case
+                [str(ratchet), str(probe)],
+                capture_output=True, text=True, check=False,
+                env={**os.environ, "RUFF_BIN": str(Path(_ruff_argv()[0]).resolve())},
+            )
+        if proc.returncode == 0 or "_probe.py" not in proc.stdout:
+            tolerated.append(f"{dist}: rc={proc.returncode} {proc.stdout.strip()}")
+
+    assert not tolerated, (
+        f"{len(tolerated)} of {len(emptied)} emptied baseline(s) TOLERATED a planted finding — a "
+        "lowering that refuses nothing is a deletion wearing a paydown's name:\n  "
+        + "\n  ".join(tolerated)
     )
 
 

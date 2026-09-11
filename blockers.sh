@@ -1207,12 +1207,26 @@ echo "    with _MAX_UNRESOLVED forced negative, so the assertion prints its own 
 _pbin=$(find "$HOME/.cache/bazel" -path '*/external/*+pandoc/bin/pandoc' -printf '%s\n' 2>/dev/null \
         | sort -n | tail -1 || true)
 echo "  remote sweep: the large declared input is $(if [ -n "$_pbin" ]; then echo "$((_pbin / 1048576)) MB"; else echo "NOT FETCHED here"; fi) (@pandoc//:bin,"
+# ⚑⚑⚑ AND THE LINE THAT STOOD HERE SAID *A WHOLE-TREE REMOTE GREEN IS NOT CURRENTLY OBTAINABLE*,
+# WHICH IS FALSE — MEASURED ONE TICK AFTER I WROTE IT, by running the sweep I had declared
+# impossible. `bazel test //... --config=remote --nocache_test_results`: the fault hit
+# `//mdstruct:test_frontmatter` on attempt one, bazel retried on its own, and attempt two executed
+# all 46 with 81 remote actions and zero faults.
+# ⚑⚑ `lost inputs` IS A RETRYABLE CONDITION AND BAZEL'S OWN RETRY IS THE MECHANISM. I read *faults
+# on some attempt* as *cannot complete* — the second tick running in which the wrong subject was my
+# own characterisation of these failures. Previously I called them RANDOM when they were localised
+# to one input; then I called them FATAL when they are transient. Each reading was drawn from a
+# true observation and pointed one step past it.
+# ⚑ THE LOCALISATION STILL HOLDS and is the useful half: the fault is always in the pandoc-staging
+# set, never elsewhere. What changes is the prescription — retry, do not partition.
 echo "    staged into all 16 mdstruct test targets and no others). Every remote lost-input"
-echo "    fault measured so far is in that set; the other 30 targets sweep clean remotely."
-echo "    To take a remote sweep that means something today:"
-echo "      bazel test //hooks/... //fence/... //ratchet/... --config=remote --nocache_test_results"
-echo "    and mdstruct separately, expecting the fault. A whole-tree remote green is NOT"
-echo "    currently obtainable, and reporting one would be reporting the cache's mood."
+echo "    fault measured so far is in that set; the other 30 targets never fault."
+echo "    ⚑ THE FAULT IS TRANSIENT, NOT FATAL: bazel retries a lost input on its own and the"
+echo "    sweep then completes. Measured 46/46 with 81 remote actions on attempt two. So run"
+echo "    the whole tree and let it retry:"
+echo "      bazel test //... --config=remote --nocache_test_results"
+echo "    ⚑⚑ AND --nocache_test_results IS NOT OPTIONAL: without it a sweep reports 'Executed 0"
+echo "    out of 46' from cache, which measures the cache rather than the executor."
 
 # ⚑⚑⚑ AN OPERATOR DECISION MUST NAME WHO RAISED IT, AND ONE OF THREE HAD NOBODY. The operator
 # asked *why are we concerned about cost?* and there was no answer: the only commit raising the

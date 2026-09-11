@@ -159,8 +159,21 @@ target-version = "py313"
 namespace-packages = ["src/mikemol", "tests"]
 
 [tool.ruff.lint]
+# ⚑⚑⚑ PREVIEW ARMED, ON THE OPERATOR'S RULING (2026-09-11: arm repo-wide, then pay down). This is
+# the second distribution to take it; `hooks` went first at 9802790 and is now clean under preview.
+# ⚑⚑ THE ORDER IS FORCED AND WAS MEASURED, NOT ASSUMED: a rule NAME selector cannot LOAD without
+# preview — `--select magic-value-comparison` exits 2 *ruff failed* without the flag and 1 with it
+# — so `rule-codes-in-selectors` can only be satisfied AFTER arming. Renaming first was never
+# available, which is why an earlier attempt that renamed 26 selectors made every ruff target exit
+# 2 and had to be reverted.
+# ⚑ THE COST WAS MEASURED BEFORE ARMING: 8 findings here, 7 of them auto-fixable (RUF201 5,
+# RUF105 2) and one judgement call (S404). Repo-wide the remaining paydown is 122 — fence 60,
+# mdstruct 54, ratchet 8 — down from 171 before hooks was paid.
+# ⚑⚑ AND ARMING IS NOT PAYING. Every finding below is fixed or DECLARED with its measurement; a
+# blanket `ignore` of a preview rule would be the same silence in a new place.
+preview = true
 select = ["ALL"]
-ignore = ["D203", "D213", "COM812"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
 # ⚑⚑ `@pytest.fixture()` CALLED, NOT BARE — AND THE TWO CHECKERS DISAGREE ABOUT THIS, so the
 # disagreement has to be settled in config rather than re-argued per file. `pytest.fixture` is an
@@ -225,9 +238,21 @@ fixture-parentheses = true
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
+"tests/*" = ["assert"]
 
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
 # file rather than to the package. An entry naming a directory would grant it to every hook in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.
-"src/mikemol/ratchet/census.py" = ["S603"]
+# ⚑⚑⚑ AND `suspicious-subprocess-import` JOINS IT, SURFACED BY ARMING PREVIEW RATHER THAN BY NEW
+# CODE. It is a preview-only rule, so `import subprocess` in this file was invisible to the gate
+# until `preview = true` was set above; the import predates the arming and nothing about it
+# changed. ⚑ THE TWO RULES ARE ONE RESPONSIBILITY SEEN TWICE — one objects to the import, the
+# other to the call — and this module's whole function is to RUN RUFF and read its census. A
+# ratchet that cannot invoke a checker has nothing to ratchet.
+# ⚑⚑ MEASURED: every argument is a literal or a path this module constructs, and `RUFF_BIN` names
+# a binary the BUILD stages — never a shell, never untrusted input. `ratchet_check.sh` exports
+# that variable precisely so the census cannot reach for a developer venv.
+"src/mikemol/ratchet/census.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]

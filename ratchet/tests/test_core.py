@@ -145,7 +145,7 @@ def test_the_partition_separates_growth_from_paydown() -> None:
      (BaselineState.ABSENT, True, True),
      (BaselineState.UNREAD, False, True)])
 def test_each_state_declares_two_independent_properties(
-        state: BaselineState, is_defect: bool, deserves_mark: bool) -> None:  # noqa: FBT001
+        state: BaselineState, is_defect: bool, deserves_mark: bool) -> None:  # ruff: ignore[boolean-type-hint-positional-argument]
     """Each state declares two independent properties.
 
     ⚑⚑ A 2-BIT SPACE A BOOLEAN CANNOT CARRY. UNREAD marks without being a defect; EMPTY is
