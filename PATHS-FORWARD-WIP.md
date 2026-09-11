@@ -397,6 +397,28 @@ materialises the index with `git checkout-index --all --prefix="$staged/"`, then
 :711  ratchet/.venv/bin/mikemol-ratchet                                ← host venv
 ```
 
+⚑⚑⚑ **RE-MEASURED 2026-09-11: THAT TABLE IS A HISTORICAL READING AND TWO OF ITS ROWS ARE GONE.**
+`grep -n 'venv/bin' .githooks/pre-commit` now returns twelve lines and **no ruff and no mypy among
+them** — both verdicts come from the targets. What still runs out of a host venv, measured:
+
+```
+:448  env -C $dist .venv/bin/python3 -m pytest -q        ← per-distribution suite
+:724  mdstruct .venv/bin/python3 -m mypy.stubtest        ← the stub-authority witness
+:752  ratchet/.venv/bin/mikemol-ratchet                  ← the preview-debt ratchet
+:775  mdstruct .venv/bin/python3 -m …cli verify / lint   ← the markdown witnesses
+```
+
+⚑⚑ **SO THE RULING IS MOSTLY DISCHARGED AND WHAT REMAINS IS A DIFFERENT SHAPE THAN THE TABLE
+SUGGESTS.** The two duplicated verdicts — a host copy of a check the graph already produced — are
+the ones that went. Every survivor is a check with **no equivalent target the gate can reach**:
+pytest over the staged index, stubtest, the ratchet, and mdstruct's own witnesses. Removing a
+duplicate and building a missing target are different jobs, and the row list above no longer says
+which one is left.
+
+⚑ **THIS SECTION IS ITSELF THE STALE-RECORD CLASS IT DESCRIBES, in the document a tick reads
+first.** The table was true when written; nothing re-measured it while the work moved underneath,
+and it sat in the LIVE section where a reader takes it for the current state.
+
 ⚑⚑⚑ **AND `bazel test` RUNS INSIDE `$staged` TOO, WHICH FALSIFIES A COMMENT AT `:541`.** That
 comment reads *"ruff and mypy already ran in `$staged`; `bazel test` did not"* — the `cd "$staged"`
 on line 554, thirteen lines below it, contradicts it. Both halves check the same materialised
@@ -894,7 +916,7 @@ constants instead and keeps its population derived from them. *Deriving a popula
 statically resolvable pull against each other; here both were satisfiable, and where they are not,
 the ceiling wins.*
 
-### ⟐PREFLIGHT-FAILS-OPEN — NEW 2026-09-10, the same defect as ⟐GATE-FAILS-OPEN, one file over
+### ⟐PREFLIGHT-FAILS-OPEN — CLEARED, and the clearing needed an F-arm rather than a reading
 
 ⚑⚑ **`preflight.sh:114` carries the identical `if [ -x ratchet/.venv/bin/mikemol-ratchet ]` guard
 repaired in the gate at `0097f22`** — and `preflight.sh:63-72` states the rule in its own words:
@@ -906,6 +928,25 @@ second, weaker verdict."* Forty-five lines later it skips silently.
 population of one, hard-coded, in an arm written against the hand-written-population defect. The
 repair is to derive the consumers: `grep -rln 'venv/bin' .githooks/ preflight.sh` returns exactly
 those two files.
+
+⚑⚑⚑ **CLEARED 2026-09-11, AND THE READING ALONE WOULD NOT HAVE SETTLED IT.** Measured at HEAD: the
+`if [ -x ]` guard is gone, a refusing `_singleton` check stands three lines above the invocation,
+and `preflight.sh:157` states *no guard: presence is REFUSED ON above*. But **the repair being in
+the file and its return being PREVENTED are two claims**, and this repository's standing rule is
+that a deletion premised on a successor must prove the successor FIRES.
+
+⚑⚑ **SO THE SUCCESSOR WAS F-ARMED, AND THE FIRST MUTATION WAS MINE RATHER THAN A GAP.** Planting
+an `if [ -x ratchet/.venv/bin/mikemol-ratchet ]` guard left
+`test_every_tool_the_gate_invokes_is_refused_when_absent` **PASSING** — which looked like a hole and
+was the arm being right: its predicate is not *no guards* but *no guard on a tool the file does not
+ALSO refuse on*, and that tool is refused three lines above, so the guard is unreachable-when-absent
+and harmless. ⚑ **I planted against the arm's NAME; the predicate lives in its helper.** Reading the
+helper is what separated a real gap from my own misfire.
+
+⚑ **RETARGETED AT THE ACTUAL SHAPE — a guard on a tool with NO refusal — the arm FAILS and names
+it:** *`preflight.sh` guards on `['mdstruct/.venv/bin/pandoc']` … while its refusals cover only
+`['mikemol-ratchet', 'mypy', 'python3', 'ruff']`*. The repair is covered going forward; the working
+tree was left clean, the mutation having been applied to a copy.
 
 ### ⟐GATE-FAILS-OPEN — NEW and CLEARED 2026-09-10, the gate broke a rule it states about itself
 
