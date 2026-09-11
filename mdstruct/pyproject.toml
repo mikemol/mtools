@@ -206,6 +206,19 @@ target-version = "py313"
 namespace-packages = ["src/mikemol", "tests"]
 
 [tool.ruff.lint]
+# ⚑⚑⚑ PREVIEW ARMED, ON THE OPERATOR'S RULING (2026-09-11: arm repo-wide, then pay down). Third
+# distribution to take it, after `hooks` (9802790) and `ratchet` (39b25ad), both now clean under
+# preview with their ratchet baselines lowered to zero.
+# ⚑⚑ THE ORDER IS FORCED AND WAS MEASURED: a rule NAME selector cannot LOAD without preview —
+# `--select magic-value-comparison` exits 2 *ruff failed* without the flag and 1 with it — so
+# `rule-codes-in-selectors` can only be satisfied AFTER arming. An earlier attempt that renamed 26
+# selectors first made every ruff target exit 2 and had to be reverted.
+# ⚑ THE COST WAS MEASURED BEFORE ARMING: 54 findings here, 14 auto-fixable (RUF201 10, RUF105 4)
+# and 40 judgement calls led by DOC201 (29). Repo-wide the remaining paydown is 114; `fence` is
+# the last unarmed distribution at 60.
+# ⚑⚑ AND ARMING IS NOT PAYING. Every finding below is fixed or DECLARED with its measurement; a
+# blanket `ignore` of a preview rule would be the same silence in a new place.
+preview = true
 # ⚑ EVERY RULE. A curated subset silently omits whole families and nothing says which — a reader
 # cannot distinguish "we considered this and declined" from "we never knew it existed". `ALL`
 # makes every omission an explicit entry below.
@@ -216,7 +229,7 @@ select = ["ALL"]
 # ⚑⚑ CPY001 IS ABSENT FROM THIS LIST, UNLIKE UPSTREAM — because this repo HAS a license
 # (Apache-2.0, declared above), so the copyright-header rule is a real gate here rather than a
 # licensing decision a linter would be making on the operator's behalf.
-ignore = ["D203", "D213", "COM812"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
 # ⚑⚑ THE PATTERN IS STRICTER THAN ITS PROSE, AND DELIBERATELY. "Carry the two-line header"
 # underspecifies it: this also fixes ORDER (SPDX first), ADJACENCY, the `#` prefix on the
@@ -323,31 +336,72 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 fixture-parentheses = true
 
 [tool.ruff.lint.per-file-ignores]
-# ⚑ `assert` IS THE TEST IDIOM AND `-O` NEVER RUNS THESE. S101 bans `assert` because it vanishes
-# under `-O`; a test run is never invoked that way. Scoped to the test path rather than granted
-# as a blanket, because it would NOT be safe for library code.
-"tests/*" = ["S101"]
+# ⚑ `assert` IS THE TEST IDIOM AND `-O` NEVER RUNS THESE. The rule bans `assert` because it
+# vanishes under `-O`; a test run is never invoked that way. Scoped to the test path rather than
+# granted as a blanket, because it would NOT be safe for library code.
+# ⚑⚑ THE CODE IS DESCRIBED, NOT SPELLED, since the selector beside it now names the rule. An arm
+# reads this block as the selector's explanation and cannot tell a historical citation from a live
+# one — nor should it, since a reader greps the code either way and finds nothing.
+"tests/*" = ["assert"]
 
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and this file's is stubtest. The
 # exemption is scoped to the file rather than to `tests/*`, so a future test that shells out
 # is a finding rather than an inheritance.
-"tests/test_stub_authority.py" = ["S404", "S603"]
+"tests/test_stub_authority.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ RUNNING PANDOC IS ONE MODULE'S ONE RESPONSIBILITY. The `S603` exemption a subprocess needs is
 # granted per FILE, so a module that also parsed or rendered would extend it over those concerns
 # too — which is precisely why this package is one module per concern. The argv is `pandoc` plus
 # format names from a fixed vocabulary; the document travels on stdin as data and never becomes a
 # word in the command.
-"src/mikemol/mdstruct/pandoc.py" = ["S603"]
+# ⚑⚑ AND `suspicious-subprocess-import` JOINS IT, SURFACED BY ARMING PREVIEW RATHER THAN BY NEW
+# CODE. It is preview-only, so `import subprocess` here was invisible to the gate until
+# `preview = true` was set above; the import predates the arming and nothing about it changed. The
+# two rules are one responsibility seen twice — one objects to the import, the other to the call —
+# and the sibling entry above already grants both to `test_stub_authority.py` for the same reason.
+"src/mikemol/mdstruct/pandoc.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+
+# ⚑⚑⚑ THE OUTPUT-CLEANLINESS ARMS RUN THE CLI AS A SUBPROCESS, AND THAT IS THE ONLY WAY TO SEE
+# WHAT THEY MEASURE. Their subject is what a FRESH INTERPRETER writes to stderr and stdout on
+# import — a dependency's warning, a stray print — and an in-process call cannot observe it,
+# because this suite's own import already happened when the module loaded and the warning went
+# wherever it went. ⚑ The argv is `sys.executable`, a module name and a fixture path this module
+# constructs; nothing untrusted reaches it and it never passes through a shell.
+# ⚑⚑ SURFACED BY THE ARMING, like the entry above: the call site already carried its declaration
+# inline, and only the preview-only IMPORT rule was new.
+"tests/test_output_is_clean.py" = ["suspicious-subprocess-import"]
+
+# ⚑⚑⚑ THE PACKAGE `__init__` CARRIES TWO WARNING FILTERS AND THEY ARE THE POINT OF THE FILE.
+# `non-empty-init-module` wants an `__init__` to hold only docstrings and re-exports, which is
+# right for the ordinary case and wrong here: these two `warnings.filterwarnings` calls must run
+# BEFORE `panflute` is imported by anything, and a package's `__init__` is the only place that is
+# guaranteed. Moving them into a module would mean every entry point had to remember to import
+# that module first — a convention, where this is a construction.
+# ⚑⚑ AND THE FILE ALREADY RECORDS WHY THEY EARN IT: a `SyntaxWarning` raised while panflute is
+# COMPILED does not match a `module=` filter, so the second filter keys on the MESSAGE. On a
+# developer host the bug was invisible — panflute had a `__pycache__`, nothing recompiled — and in
+# a hermetic sandbox every import compiles fresh and the warning reached stderr on every run.
+# ⚑ SCOPED TO THIS ONE FILE, so a second `__init__` that accumulates logic is a finding rather
+# than an inheritance. The sibling `tests/*` entry above is the same discipline.
+"src/mikemol/mdstruct/__init__.py" = ["non-empty-init-module"]
 
 # ⚑⚑⚑ DECLARED IN CONFIG, AND THIS ENTRY REPLACES TWO RATCHET KEYS I HAD BASELINED. Running the
 # CLI as a caller runs it is this module's one responsibility: the arms are about what a mode does
 # with an argv it does not understand, so an in-process call would exercise the library function
 # the flag was supposed to reach — the very step the defect skipped. The argv is this interpreter,
-# a module name and a fixture path; no untrusted input exists here for `S603` to be about.
-# ⚑⚑ THE `noqa: S603` THIS REPLACES WAS REAL IN ONE CONFIGURATION AND NOISE IN ANOTHER: the
-# non-preview config the gate runs NEEDS the directive, while preview's `RUF100` calls it unused.
-# A line directive whose correctness is config-relative is a key that can never be paid down,
-# because paying it in one configuration creates it in the other. A config entry has no such
-# shadow — it removes the line both rules were arguing about.
-"tests/test_cli_flags.py" = ["S101", "S404", "S603"]
+# a module name and a fixture path; no untrusted input exists here for the subprocess rule to be
+# about.
+# ⚑⚑ THE INLINE DIRECTIVE THIS REPLACES — naming the subprocess rule by its CODE — WAS REAL IN ONE
+# CONFIGURATION AND NOISE IN ANOTHER: a non-preview config NEEDS the directive, while preview's
+# `RUF100` calls it unused. A line directive whose correctness is config-relative is a key that can
+# never be paid down, because paying it in one configuration creates it in the other. A config
+# entry has no such shadow — it removes the line both rules were arguing about.
+# ⚑⚑⚑ AND THAT HAZARD IS NOW CLOSED BY CONSTRUCTION, which is why this reads as history rather
+# than as a live warning: `preview = true` is set above, so there is no second configuration for
+# the two rules to disagree across. The entry stays because the exemption is still needed.
+# ⚑ THE CODE IS DESCRIBED RATHER THAN QUOTED, for the reason the `tests/*` entry above gives: the
+# arm that reads this block cannot distinguish a historical citation from a live claim.
+"tests/test_cli_flags.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

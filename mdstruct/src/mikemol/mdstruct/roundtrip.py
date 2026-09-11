@@ -119,6 +119,14 @@ def fixpoint(path: Path, opts: str | None = None, rounds: int | None = None) -> 
     ⚑ `rounds` DEFAULTS TO UNBOUNDED and survives only as a runaway guard for a pathological
     input. Bounding it by default is defect (1) in the module note: a cap turns a document that
     needs one more round than the cap into a reported divergence.
+
+    Returns:
+        A `Fixpoint` carrying the converged text, whether it converged, and the PER-ROUND DELTAS.
+        ⚑⚑ THE SEQUENCE IS PART OF THE ANSWER, NOT DIAGNOSTIC DECORATION: a decreasing sequence
+        is approach, a repeated value is a plateau and a growing one is divergence — three
+        different repairs behind one boolean. Two wrong stopping rules were adopted by reading a
+        verdict without its sequence, which is why this returns the deltas rather than a flag.
+
     """
     src = path.read_text(encoding="utf-8")
     current = pandoc.convert(src, opts or "markdown")

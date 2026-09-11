@@ -53,7 +53,15 @@ _FIRST_ROWS = 2
 # ⚑ CALLED, NOT BARE: the overloaded decorator's bare form collapses this fixture to `Any`.
 @pytest.fixture()
 def document(doc: Path) -> Path:
-    """Write the fixture document."""
+    """Write the fixture document.
+
+    Returns:
+        The path that was written, so every arm reads the SAME file the fixture created.
+        ⚑ Returning it rather than letting each test rebuild the path is what keeps the
+        two in step: a reconstructed path is a second spelling of one location, and the
+        arm then measures whichever of the two it happened to name.
+
+    """
     doc.write_text(_FIXTURE, encoding="utf-8")
     return doc
 
@@ -153,7 +161,14 @@ _ANCHOR_FIXTURE = """# Anchors
 # collapses the fixture to `Any`, which `disallow_any_expr` refuses.
 @pytest.fixture()
 def anchored(doc: Path) -> Path:
-    """Write a document whose second row MENTIONS what the first row DECLARES."""
+    """Write a document whose second row MENTIONS what the first row DECLARES.
+
+    Returns:
+        The path to that document. ⚑ THE FIXTURE IS THE DISTINCTION IT CARRIES: the two rows are
+        indistinguishable to a substring search and separable only by a column-anchored one, so
+        an arm handed this path is handed the discriminator between `--where` and `--starts`.
+
+    """
     doc.write_text(_ANCHOR_FIXTURE, encoding="utf-8")
     return doc
 
@@ -230,7 +245,14 @@ _STATUS_TABLE = 0
 
 @pytest.fixture()
 def vocabulary_doc(doc: Path) -> Path:
-    """Write a document that declares its own states, one as a schema."""
+    """Write a document that declares its own states, one as a schema.
+
+    Returns:
+        The path to that document. ⚑ ONE STATE IS DECLARED AS A SCHEMA AND THE REST AS PROSE,
+        which is the shape a census must read without treating the schema row as a member. An arm
+        given this path can tell a vocabulary that DEFINES a term from one that merely uses it.
+
+    """
     doc.write_text(_VOCAB_FIXTURE, encoding="utf-8")
     return doc
 

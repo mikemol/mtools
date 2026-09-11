@@ -53,17 +53,17 @@ def test_a_fresh_import_emits_nothing_on_stderr(doc: Path) -> None:
     the suite loaded, and its warning went wherever it went.
     """
     doc.write_text(_FIXTURE, encoding="utf-8")
-    result = subprocess.run(  # noqa: S603 — argv is this interpreter and a fixture path
+    result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — argv is this interpreter and a fixture path
         [sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)],
         check=False, capture_output=True, text=True)
     assert result.returncode == 0
-    assert result.stderr == "", f"stderr carried: {result.stderr!r}"
+    assert not result.stderr, f"stderr carried: {result.stderr!r}"
 
 
 def test_stdout_is_only_the_answer(doc: Path) -> None:
     """Check every stdout line belongs to the report, not to a dependency."""
     doc.write_text(_FIXTURE, encoding="utf-8")
-    result = subprocess.run(  # noqa: S603 — argv is this interpreter and a fixture path
+    result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — argv is this interpreter and a fixture path
         [sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)],
         check=False, capture_output=True, text=True)
     for line in result.stdout.splitlines():

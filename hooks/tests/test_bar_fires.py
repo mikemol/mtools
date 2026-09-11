@@ -5283,7 +5283,8 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
         # narrowing the flag exists to force — the same move the two `re.findall` sites in this
         # file already carry, for the same reason.
         ignore: Callable[[str, list[str]], set[str]] = shutil.ignore_patterns(
-            ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__")
+            ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__",
+            "build", "dist", "*.egg-info")
         shutil.copytree(_DIST, probe, symlinks=True, ignore=ignore)
         # ⚑ THE PLANTED FINDING IS A SUPPRESSION DIRECTIVE IN THE CODE FORM, which raises
         # `rule-codes-in-suppression-comments` — a preview rule this distribution pays rather than
@@ -5389,8 +5390,16 @@ def test_every_emptied_baseline_arms_a_refusal() -> None:
             "population is empty and its property would be vacuously true"
         )
 
+    # ⚑⚑⚑ `build`, `dist` AND `*.egg-info` ARE IN THIS LIST BECAUSE AN F-ARM CAUGHT THEM, and the
+    # tree is not the thing that was wrong. `mdstruct/build/lib/` is a stale setuptools artifact
+    # holding PRE-PAYDOWN copies of every source — gitignored, so the real ratchet never sees it
+    # and the distribution is genuinely clean. A `copytree` that copies it hands the census ten
+    # findings from files that are not the distribution, and the arm then refuses a CLEAN copy.
+    # ⚑⚑ ONLY THE F-ARM SEPARATED THOSE. A planted copy also refuses — by name, with the right
+    # key — so a P-arm alone reads as success while the arm is measuring build residue.
     ignore: Callable[[str, list[str]], set[str]] = shutil.ignore_patterns(
-        ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__")
+        ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__",
+        "build", "dist", "*.egg-info")
     tolerated: list[str] = []
     for dist in emptied:
         with tempfile.TemporaryDirectory() as tmp:

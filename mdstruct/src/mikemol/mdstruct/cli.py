@@ -72,7 +72,14 @@ def _flag(argv: list[str], name: str) -> str | None:
 
 
 def _spans(path: Path) -> int:
-    """Print every section span, indented by level."""
+    """Print every section span, indented by level.
+
+    Returns:
+        Always 0. ⚑ THE OUTPUT IS THE ANSWER, NOT THE STATUS: an empty result is a fact
+        about the document, so a caller branching on this code learns whether the reader
+        RAN, never what it found. The report on stdout is what carries the finding.
+
+    """
     found = spans.spans(path)
     if not found:
         sys.stdout.write(f"mdstruct: {path} declares no headers\n")
@@ -86,7 +93,21 @@ def _spans(path: Path) -> int:
 
 
 def _grep(pattern: str, path: Path, argv: list[str]) -> int:
-    """Print the structural span of every match."""
+    """Print the structural span of every match.
+
+    Returns:
+        0 when the pattern matches and 1 when it does not — ⚑ THE ONE READER IN THIS FILE WHOSE
+        EMPTY RESULT IS A NONZERO CODE, so `grep`'s exit convention carries over and a caller can
+        branch on it the way they would on the real thing.
+        ⚑⚑ I WROTE *ALWAYS 0* HERE FIRST, FROM THE `return 0` AT THE END OF THE FUNCTION, without
+        reading the early return in the no-match branch. A docstring asserting what the code
+        beside it destroys is this repository's recurring defect, arriving in the very paydown
+        that exists to make return values legible.
+        ⚑ AND THE ZERO IS STILL NOT THE WHOLE ANSWER: the no-match branch prints its DENOMINATOR
+        and its MODE, because a bare *no match* cannot distinguish a document that lacks the term
+        from a LITERAL search that escaped a regex the caller meant.
+
+    """
     is_regex = "-E" in argv
     hits = grep.search(path, pattern, regex=is_regex, ignore_case="-i" in argv)
     if not hits:
@@ -129,7 +150,14 @@ def _grep(pattern: str, path: Path, argv: list[str]) -> int:
 
 
 def _tables(path: Path) -> int:
-    """Print every table's position, size and header."""
+    """Print every table's position, size and header.
+
+    Returns:
+        Always 0. ⚑ THE OUTPUT IS THE ANSWER, NOT THE STATUS: an empty result is a fact
+        about the document, so a caller branching on this code learns whether the reader
+        RAN, never what it found. The report on stdout is what carries the finding.
+
+    """
     found = tables.tables(path)
     if not found:
         sys.stdout.write(f"mdstruct: {path} holds no tables\n")
@@ -149,6 +177,20 @@ def _rows(path: Path, argv: list[str]) -> int:
     column DECLARES it. A document that explains its own predicate mentions the term while
     declaring nothing — measured on a peer's revision log, where a row announcing a repair to a
     freeze mechanism matched a poll for the freeze itself.
+
+    Returns:
+        0 when rows match, 1 when the query is well-formed and matches nothing, 2 when the QUERY
+        ITSELF is malformed — a non-numeric `--col` or `--table`, a `--col` with no `--starts`, an
+        index past the last table.
+        ⚑⚑⚑ THREE VALUES, AND SEPARATING 1 FROM 2 IS THE WHOLE POINT: *this document has no such
+        row* and *I could not understand what you asked* are different facts, and collapsing them
+        lets a typo'd flag report as a clean empty result. The body argues it at each site — an
+        out-of-range `--table` refuses rather than returning empty, because an empty result is
+        indistinguishable from a table that genuinely holds no rows.
+        ⚑ I FIRST WROTE *ALWAYS 0* HERE, and an AST probe over this file's `return` statements
+        caught it along with the same error in `_grep`. Reading a function's last line is not
+        reading its contract.
+
     """
     where = _flag(argv, "--where")
     starts = _flag(argv, "--starts")
@@ -200,7 +242,14 @@ def _rows(path: Path, argv: list[str]) -> int:
 
 
 def _labels(path: Path) -> int:
-    """Print every worklist label the document mentions, with its lines."""
+    """Print every worklist label the document mentions, with its lines.
+
+    Returns:
+        Always 0. ⚑ THE OUTPUT IS THE ANSWER, NOT THE STATUS: an empty result is a fact
+        about the document, so a caller branching on this code learns whether the reader
+        RAN, never what it found. The report on stdout is what carries the finding.
+
+    """
     seen: dict[str, list[int]] = {}
     for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
         for label in labels.labels_in(line):
@@ -220,6 +269,12 @@ def _roundtrip(path: Path) -> int:
 
     ⚑ NOT A PASS/FAIL. Pandoc normalizes by design, so identity is the unusual case; the SIZE
     and SHAPE of the drift is what a caller needs, which is why the sample prints with the count.
+
+    Returns:
+        Always 0, and the paragraph above is why: drift is EXPECTED here, so a nonzero code would
+        report the normal case as a failure. ⚑ The drift's size and sample are on stdout because
+        that is the only place a caller can read what actually changed.
+
     """
     drift = roundtrip.roundtrip(path)
     if drift.identical:
@@ -239,6 +294,13 @@ def _fixpoint(path: Path) -> int:
     repeated value is a plateau, a growing one is divergence — and a bare boolean discards the
     only thing that distinguishes them. Two wrong stopping rules were adopted by reading a
     verdict without its sequence.
+
+    Returns:
+        0 when normalization converges and 1 when it does not — a real verdict, unlike the
+        readers in this file. ⚑ AND THE CODE IS STILL THE SMALLER HALF OF THE ANSWER: it says
+        THAT convergence failed, while the printed deltas say whether the sequence was
+        approaching, plateaued or diverging, which is what decides the repair.
+
     """
     result = roundtrip.fixpoint(path)
     deltas = ", ".join(str(n) for n in result.deltas)
@@ -254,7 +316,14 @@ def _fixpoint(path: Path) -> int:
 
 
 def _lint(path: Path, argv: list[str]) -> int:
-    """Print the shape findings for the document body."""
+    """Print the shape findings for the document body.
+
+    Returns:
+        0 when the document satisfies the check and 1 when it does not. ⚑ UNLIKE THE
+        READERS IN THIS FILE, THE STATUS IS THE VERDICT HERE — a caller may branch on it,
+        and the printed detail explains a failure rather than constituting it.
+
+    """
     width = _flag(argv, "--width")
     rows = lint.shape(path, int(width) if width and width.isdigit() else lint.DEFAULT_WIDTH)
     if not rows:
@@ -271,6 +340,13 @@ def _narrowest(path: Path) -> int:
 
     ⚑ THE NUMBER TO TELL A WIDTH RULE, so the rule agrees with the writer rather than being
     disabled by it.
+
+    Returns:
+        0 when some width in range admits the document, 1 when none does. ⚑ THE FAILING CASE IS
+        NOT *THE DOCUMENT IS TOO WIDE* BUT *NO ADMISSIBLE ANSWER EXISTS* — a line exceeds the
+        ceiling, so there is no number to tell the rule, which is a different fact from a
+        document that merely needs a generous one.
+
     """
     got = lint.narrowest_width(path)
     if got is None:
@@ -286,42 +362,111 @@ def _narrowest(path: Path) -> int:
 # int]` — a typed-LOOKING table checked against nothing. A named function takes the annotation,
 # and the strict bar then verifies each adapter really is a `_Mode`.
 def _spans_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
-    """Adapt the span listing to the uniform mode signature."""
+    """Adapt the span listing to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _spans(path)
 
 
 def _tables_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
-    """Adapt the table listing to the uniform mode signature."""
+    """Adapt the table listing to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _tables(path)
 
 
 def _rows_mode(_pattern: str, path: Path, argv: list[str]) -> int:
-    """Adapt the row listing, which reads a `--where` filter from argv."""
+    """Adapt the row listing, which reads a `--where` filter from argv.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _rows(path, argv)
 
 
 def _labels_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
-    """Adapt the label census to the uniform mode signature."""
+    """Adapt the label census to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _labels(path)
 
 
 def _roundtrip_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
-    """Adapt the one-pass drift report to the uniform mode signature."""
+    """Adapt the one-pass drift report to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _roundtrip(path)
 
 
 def _fixpoint_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
-    """Adapt the convergence report to the uniform mode signature."""
+    """Adapt the convergence report to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _fixpoint(path)
 
 
 def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
-    """Adapt the shape rules, which read a `--width` from argv."""
+    """Adapt the shape rules, which read a `--width` from argv.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _lint(path, argv)
 
 
 def _verify_one(path: Path) -> int:
-    """Verify one document. Returns 0 when every heading reaches the section list."""
+    """Verify one document against this tool's own contract.
+
+    ⚑ THE FACT WAS ALREADY HERE, IN THE WRONG FORM. This summary read *Returns 0 when every
+    heading reaches the section list* — true, complete, and invisible to a reader (human or rule)
+    looking for a Returns section. The content did not change; only where it lives did.
+
+    Returns:
+        0 when every source heading reaches the section list, 1 when any is SWALLOWED. ⚑ A
+        swallowed heading is the defect this whole tool exists to catch: its parent silently
+        absorbs the lines, so a bounded write against the preceding section lands inside a
+        section nobody can see. The unreachable headings are printed because the count alone
+        does not say WHERE a write would go wrong.
+
+    """
     missing = verify.missing_headings(path)
     if not missing:
         sys.stdout.write(f"  {path}: every source heading reaches the section list\n")
@@ -357,6 +502,16 @@ def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     ⚑ EVERY PATH IS VERIFIED BEFORE RETURNING: the loop does not stop at the first failure, because
     a gate that reports one finding per run teaches one finding per round — the same
     information-per-refusal argument `preflight.sh` is built on.
+
+    Returns:
+        The WORST code over every path: 0 all verified, 1 some heading is swallowed, 2 some path
+        does not exist. ⚑⚑ THREE VALUES, NOT TWO, AND THE THIRD IS THE ONE THAT MATTERS: *a file
+        I could not read* is not *a file that failed*, and collapsing them would let a typo'd
+        path report as a clean document. The same distinction this repository draws between
+        ABSENT and EMPTY everywhere else.
+        ⚑ `max` RATHER THAN FIRST-FAILURE, which is what makes the loop above worth running to
+        the end — a caller learns the severest finding across the whole corpus in one run.
+
     """
     # ⚑ `argv[2:]` STILL CONTAINS THE FIRST PATH, and slicing it naively verified that file TWICE.
     # MEASURED on the single-path arm — `verify README.md` printed the same green line twice — which
@@ -375,7 +530,15 @@ def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
 
 
 def _narrowest_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
-    """Adapt the narrowest-width report to the uniform mode signature."""
+    """Adapt the narrowest-width report to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
+        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
+        rewrote a code on the way through would make the table a place where verdicts are
+        decided rather than routed.
+
+    """
     return _narrowest(path)
 
 

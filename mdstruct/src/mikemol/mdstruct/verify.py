@@ -134,9 +134,19 @@ def selftest() -> list[str]:
     ⚑ A P-ARM AND AN F-ARM PER SHAPE. Without the F-arms, "no shape reports missing" is
     indistinguishable from a contract that never fires; without the P-arms, a contract that
     reports EVERYTHING missing also passes. Both directions or neither.
+
+    Returns:
+        One line per failing shape; EMPTY means green. ⚑ A LIST RATHER THAN A BOOLEAN, AND
+        RATHER THAN A RAISE: every shape is exercised before returning, so a caller learns the
+        whole failing set in one run instead of the first member of it. A gate that reports one
+        finding per run teaches one finding per round.
+        ⚑⚑ AND EMPTINESS IS THE GREEN SIGNAL, which is only honest because both arms run: an
+        empty list from a contract that never fires would look identical, and the F-arms are
+        what make this return value mean something.
+
     """
-    import tempfile  # noqa: PLC0415 — a test-only dependency, not a runtime one
-    from pathlib import Path  # noqa: PLC0415
+    import tempfile  # ruff: ignore[import-outside-top-level] — a test-only dependency, not a runtime one
+    from pathlib import Path  # ruff: ignore[import-outside-top-level]
 
     failures: list[str] = []
     for name, heading, reachable in _SHAPES:

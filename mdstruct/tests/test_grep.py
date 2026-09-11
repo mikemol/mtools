@@ -56,7 +56,15 @@ _HITS = 3
 # ⚑ CALLED, NOT BARE: the overloaded decorator's bare form collapses this fixture to `Any`.
 @pytest.fixture()
 def document(doc: Path) -> Path:
-    """Write the fixture document."""
+    """Write the fixture document.
+
+    Returns:
+        The path that was written, so every arm reads the SAME file the fixture created.
+        ⚑ Returning it rather than letting each test rebuild the path is what keeps the
+        two in step: a reconstructed path is a second spelling of one location, and the
+        arm then measures whichever of the two it happened to name.
+
+    """
     doc.write_text(_FIXTURE, encoding="utf-8")
     return doc
 

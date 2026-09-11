@@ -29,7 +29,7 @@ def test_frontmatter_is_split_exactly() -> None:
 def test_a_document_without_frontmatter_is_untouched() -> None:
     """A plain document passes through whole."""
     head, body = frontmatter.split(_BODY)
-    assert head == ""
+    assert not head
     assert body == _BODY
 
 
@@ -44,7 +44,7 @@ def test_an_unterminated_fence_is_not_frontmatter(src: str) -> None:
     whole file and leave nothing for the writer — a silent truncation rather than an error.
     """
     head, body = frontmatter.split(src)
-    assert head == ""
+    assert not head
     assert body == src
 
 
@@ -62,4 +62,4 @@ def test_the_split_rejoins() -> None:
 def test_a_rule_after_prose_is_not_frontmatter() -> None:
     """A `---` that is not at the start is left alone."""
     head, _body = frontmatter.split("# heading\n\n---\n\nmore prose\n")
-    assert head == ""
+    assert not head

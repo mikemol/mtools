@@ -1275,7 +1275,27 @@ echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt
 # ⚑ THE HISTORY ABOVE IS KEPT IN FULL. The preconditions it records are why the ruling has three
 # dates, and a reader meeting only the final state cannot tell an easy decision from one that took
 # three attempts and a reverted autofix.
-echo "    ⚑ PARTIALLY PAID — hooks is armed and clean; the remaining distributions are NOT armed."
+# ⚑⚑⚑ AND THE PREVIOUS REPAIR CLAIMED A DERIVATION IT DID NOT PERFORM. The comment above ends *it
+# is now derived below*, and the line beneath it read `PARTIALLY PAID — hooks is armed and clean;
+# the remaining distributions are NOT armed` — a second hand-written status under a sentence
+# promising a measured one. ⚑ ratchet was armed and paid one tick later and that line kept naming
+# hooks alone, which is the THIRD rot on this single entry: the figure twice, then `BLOCKED`, now
+# the distribution list. A comment asserting what the line beside it destroys.
+# ⚑⚑ THE FACT IS ON THE FILESYSTEM AND COSTS ONE GREP PER DISTRIBUTION: a config either sets
+# `preview = true` in its own `[tool.ruff.lint]` or it does not. No ruff run, no process start —
+# the objection that killed deriving the FIGURE (three ruff invocations per poll) does not apply to
+# the STATUS, and conflating the two is why this stayed typed for three rots.
+_armed=""
+_unarmed=""
+for _d in $(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u); do
+    if grep -qE '^preview[[:space:]]*=[[:space:]]*true' "$mtools/$_d/pyproject.toml"; then
+        _armed="$_armed $_d"
+    else
+        _unarmed="$_unarmed $_d"
+    fi
+done
+echo "    ⚑ ARMED:${_armed:- none} · NOT ARMED:${_unarmed:- none}  (derived: \`preview = true\` in"
+echo "      each distribution's own [tool.ruff.lint], read per poll — no ruff run)"
 echo "      The size is not stated here: a typed count goes stale the tick after the work"
 echo "      moves it, which this entry measured twice. Measure it:"
 # ⚑⚑ THE DISTRIBUTION LIST IS DERIVED, NOT TYPED — AND IT WAS TYPED, AND IT WENT STALE. This line
@@ -1319,8 +1339,12 @@ echo "            env -C \$d \"\$_ruff\" check --preview --statistics . ; done"
 # failed* without `--preview` and rc=1 with it, so the rename had to follow the arming rather than
 # precede it. hooks is armed, and its selectors ARE renamed — stating the bar as still-binding
 # would tell a reader the opposite of what the tree holds.
+# ⚑ AND THE TAIL OF THIS LINE WAS THE SAME ROT A SECOND TIME IN ONE ENTRY. It read *Done for
+# hooks; the other three await it* — a count and a name, both hand-written, both wrong the tick
+# ratchet landed. The order is a permanent fact about ruff and stays typed; WHICH distributions
+# have done it is a fact about this tree and is derived above.
 echo "      Order: ARM preview, THEN rename — a name selector needs --preview to LOAD, so the"
-echo "      reverse order exits 2 on every ruff target. Done for hooks; the other three await it."
+echo "      reverse order exits 2 on every ruff target. Which ones are done: see ARMED above."
 # ⚑⚑⚑ THE SUPPRESSION RULES CHAIN, AND THE SECOND LINK IS PREVIEW-ONLY. Measured on a probe with
 # an F-arm (a bare violation is REPORTED in both configurations, so a rc=0 below means suppression
 # rather than a rule that never ran):
@@ -1349,8 +1373,12 @@ echo "      RUF105 -> RUF106 measured: the chain's second link needs --preview t
 # configuration in which a renamed directive stops suppressing. Measured: reverting one directive
 # to the code form leaves the suppression WORKING and raises only the style rule.
 echo "      and fails SILENTLY without it — in a distribution that is NOT yet armed. Where"
-echo "      preview is armed in the config (hooks), gate and census cannot disagree and both"
-echo "      directive forms suppress; only the style rule objects. Code form holds elsewhere."
+# ⚑ THE THIRD NAME IN THIS ENTRY, AND IT WAS THE NEXT ONE TO ROT. It read `(hooks)` as an example
+# of the mechanism rather than as a status — a distinction that survives exactly until a reader
+# takes it for the list. Pointing at the derived line costs nothing and cannot go stale.
+echo "      preview is armed in the config (the ARMED list above), gate and census cannot"
+echo "      disagree and both directive forms suppress; only the style rule objects."
+echo "      Code form holds in the NOT ARMED ones."
 # ⚑⚑ DISCHARGED 2026-09-10 AT ab722b5, AND THE OLD LINE SURVIVED THE EVENT IT DESCRIBED. It read
 # "ANSWERED 2026-09-07: mtools asks for a diff" — true when written, false the moment the diff
 # arrived. cassian filed it, mtools answered in findings/cassian-observability.md, and the filing

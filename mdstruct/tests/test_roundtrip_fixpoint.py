@@ -39,5 +39,9 @@ def test_the_converged_text_is_returned(doc: Path) -> None:
     """Check the fixpoint's TEXT comes back, not only the fact that one exists."""
     doc.write_text("Heading\n=======\n\ntext\n", encoding="utf-8")
     result = roundtrip.fixpoint(doc)
-    assert result.text
-    assert result.text != "", "the converged text was discarded"
+    # ⚑ ONE ASSERTION, NOT TWO. This read `assert result.text` followed by
+    # `assert result.text != ""` — the same predicate twice, since `text` is typed `str` and an
+    # empty one is the only falsey value it can hold. `compare-to-empty-string` found it by
+    # objecting to the second spelling, and the finding is real: a duplicated assertion looks like
+    # two properties and measures one, so a reader trusts a coverage this arm does not have.
+    assert result.text, "the converged text was discarded"

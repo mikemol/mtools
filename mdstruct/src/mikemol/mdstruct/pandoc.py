@@ -52,6 +52,19 @@ def convert(src: str, to: str, frm: str = "markdown") -> str:
 
     ⚑ A FAILED CONVERSION RAISES RATHER THAN RETURNING EMPTY. An empty return reads as an empty
     document, and a caller writing that back would truncate the file it was converting.
+
+    Returns:
+        The converted document — with any frontmatter re-attached ONLY for a markdown writer,
+        since a YAML block prepended to HTML or LaTeX would be literal text in the output rather
+        than metadata. ⚑ NEVER THE EMPTY STRING ON FAILURE — see the paragraph above: that is
+        the whole reason this raises.
+
+    Raises:
+        RuntimeError: when pandoc exits nonzero, carrying a bounded slice of its stderr. ⚑ THE
+            SLICE IS BOUNDED AT `_ERR_CHARS` so a malformed document names its failure without
+            flooding the caller's context, which is a different failure from the one being
+            reported.
+
     """
     head, body = frontmatter.split(src)
     parts = (to or "markdown").split()

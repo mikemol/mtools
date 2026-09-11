@@ -56,7 +56,15 @@ this fenced line is also very long indeed and must not be reported by the width 
 # function to `Any` — taking this fixture's `Path` return with it into every consuming test.
 @pytest.fixture()
 def document(doc: Path) -> Path:
-    """Write the fixture document."""
+    """Write the fixture document.
+
+    Returns:
+        The path that was written, so every arm reads the SAME file the fixture created.
+        ⚑ Returning it rather than letting each test rebuild the path is what keeps the
+        two in step: a reconstructed path is a second spelling of one location, and the
+        arm then measures whichever of the two it happened to name.
+
+    """
     doc.write_text(_FIXTURE, encoding="utf-8")
     return doc
 
