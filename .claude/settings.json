@@ -10,15 +10,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "STRUCT_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/.venv/bin/mikemol-hook-structural-query\""
+            "command": "STRUCT_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-structural-query\""
           },
           {
             "type": "command",
-            "command": "NOCHAIN_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/.venv/bin/mikemol-hook-no-chaining\""
+            "command": "NOCHAIN_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-no-chaining\""
           },
           {
             "type": "command",
-            "command": "NOVERIFY_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/.venv/bin/mikemol-hook-no-verify\""
+            "command": "NOVERIFY_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-no-verify\""
           }
         ]
       }

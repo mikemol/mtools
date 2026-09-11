@@ -268,8 +268,23 @@ sh_test(
 # A first draft here wrote `dev_requirement("pytest") + "_extracted"`, which would have named a
 # label that does not exist — a guessed suffix, caught by reading the source rather than by the
 # error it would have produced. The macro rewrites `:pkg` to `:extracted_whl_files` itself.
+# ⚑⚑⚑ THE CONSOLE SCRIPTS MIRROR `[project.scripts]` IN pyproject.toml, AND THE DUPLICATION IS
+# GATED RATHER THAN TRUSTED. Starlark cannot read TOML at analysis time — `rules_python`'s
+# `read_pyproject` takes a `module_ctx`, which exists only in a module extension, not in a rule —
+# so the mapping is restated here. ⚑ A restated population is the defect this repository measures
+# most, so `//hooks:test_bar_fires` asserts the two agree: a script added to pyproject and not
+# here (or vice versa) fails rather than silently shipping a venv missing its entry point.
+# ⚑⚑ AND THESE ARE LOAD-BEARING FOR THE HARNESS, not a convenience: `.claude/settings.json`
+# invokes all three as PreToolUse hooks. A missing one FAILS OPEN — measured: rc=0, empty stdout,
+# no decision, which the harness reads as *allow*. `hooks/bin/` holds tracked launchers that
+# refuse loudly instead.
 venv_from_hub(
     name = ".venv",
+    console_scripts = {
+        "mikemol-hook-structural-query": "mikemol.hooks.structural_query:main",
+        "mikemol-hook-no-chaining": "mikemol.hooks.no_chaining:main",
+        "mikemol-hook-no-verify": "mikemol.hooks.no_verify:main",
+    },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",

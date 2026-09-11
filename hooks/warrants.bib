@@ -2905,3 +2905,15 @@
   claim   = {⚑⚑⚑ A POLL THAT TELLS A READER TO MEASURE WITH A RETIRED INSTRUMENT OUTLIVES THE DECISION THAT RETIRED IT. `blockers.sh` printed `env -C $d .venv/bin/ruff check --preview --statistics .` while ad49f96 had removed host ruff from the gate and preflight on the operator's ruling. ⚑⚑ IT SURVIVED BECAUSE THE TWO AGREE: measured on hooks, byte-identical — 48 errors, same seven rules, host venv and `@ruff//:bin` alike, both 0.16.6 by a hand-maintained coincidence between resolvers with no shared constraint. A stale instruction that still gives the right answer is invisible until the coincidence ends. ⚑ THE ARM SWEEPS ONLY `echo`d LINES, so the comment explaining the retirement is not read as the defect — measured: the control passes while `.venv/bin/ruff` is still in the file as prose.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_poll_instruction_names_a_retired_instrument}
 }
+
+@misc{hooks-bar-fires-built-console-scripts-match-the-declared-entry-points,
+  section = {bar-fires},
+  claim   = {⚑⚑⚑ THE BUILD FILE RESTATES `[project.scripts]` AND A RESTATED POPULATION IS THE DEFECT. Starlark cannot read TOML at analysis time — `rules_python`'s `read_pyproject` takes a `module_ctx`, which exists only in a module extension — so `venv_from_hub`'s `console_scripts` mirrors pyproject by hand and this arm gates the duplication. ⚑⚑ The scripts are load-bearing for the harness itself: `.claude/settings.json` invokes all three as PreToolUse hooks, and a missing one FAILS OPEN — measured, a hook that cannot run exits 0 with empty stdout, which reads as ALLOW.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_built_console_scripts_match_the_declared_entry_points}
+}
+
+@misc{hooks-bar-fires-harness-hooks-go-through-the-tracked-launchers,
+  section = {bar-fires},
+  claim   = {⚑⚑⚑ A HOOK POINTED STRAIGHT AT A BUILD ARTIFACT DISAPPEARS WITH `bazel clean`, and disappears in the FAIL-OPEN direction. `bazel-bin` is a convenience symlink into an output base hashed on the workspace path; the host venv's scripts carry a uv-generated absolute shebang. Both are refused in favour of tracked launchers that emit an explicit DENY when the artifact is absent — measured, three hooks, present and absent, with the host scripts as controls. ⚑⚑ AND THE ARM'S FIRST FORM READ 21 CHARACTERS OF A 79-CHARACTER COMMAND: `"command":\s*"([^"]+)"` stops at the first quote and these commands embed escaped quotes, so the path it forbids was never in the searched text. Only the F-arm caught it; the file is parsed as JSON now.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_harness_hooks_go_through_the_tracked_launchers}
+}

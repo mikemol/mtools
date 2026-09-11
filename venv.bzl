@@ -65,14 +65,39 @@ def _venv_impl(ctx):
     )
     outs.append(python3)
 
-    # ⚑ `pyvenv.cfg` IS WRITTEN BECAUSE A VENV IS DEFINED BY ITS PRESENCE, not because its
-    # contents are consulted. `home` is recorded for a human reader; the measurement above says
-    # Python does not resolve through it. Stating that here so the next reader does not "fix" a
-    # value nothing reads, or trust it to relocate anything.
+    # ⚑ `pyvenv.cfg` IS WRITTEN BECAUSE A VENV IS DEFINED BY ITS PRESENCE. `home` does not decide
+    # RELOCATABILITY — measured, rewriting it to `/nonexistent/nowhere` changed nothing about
+    # whether the venv runs, because `bin/python3` is the real dependency.
+    #
+    # ⚑⚑ IT NOW NAMES THE INTERPRETER'S OWN DIRECTORY rather than `../bin`, which resolved to
+    # `bazel-out/.../hooks/bin` — a directory the interpreter does not live in. Correct on its own
+    # terms, and derived from the same File the symlink above points at rather than written out.
+    #
+    # ⚑⚑⚑ AND IT IS NOT THE FIX FOR THE `Could not find platform dependent libraries <exec_prefix>`
+    # WARNING, WHICH IS WHAT I CHANGED IT FOR. FIVE hypotheses, four refuted before the fifth held:
+    #
+    #   H1 `home` names the wrong directory   corrected it — warning PERSISTS
+    #   H2 no `lib-dynload` under the venv    the HOST venv has the identical
+    #                                         `lib/python3.13/site-packages`-only shape and is QUIET
+    #   H3 the toolchain binary warns         run directly, outside any venv: QUIET
+    #   H4 the symlink-chain shape differs    built BOTH shapes over the same toolchain in a
+    #                                         scratch tree: BOTH QUIET
+    #   H5 the `bazel-bin` CONVENIENCE SYMLINK ✅ — the same venv, two paths, one variable:
+    #        via bazel-bin   warns, prefix=/home/mikemol/github/mtools/bazel-bin/hooks/.venv
+    #        via the real path  QUIET, prefix=.../execroot/_main/bazel-out/.../hooks/.venv
+    #
+    # ⚑ CPython resolves `sys.executable` WITHOUT following `bazel-bin`, computes `exec_prefix`
+    # beneath it, and cannot find the platform libraries there. `sys.prefix`, `exec_prefix` and the
+    # stdlib all still resolve — it is diagnostic noise on stderr, not breakage — and it is a
+    # property of the PATH THE CALLER USED, which no change to this rule can remove. The tracked
+    # launcher can, by naming the real path; recorded here so the next reader does not re-fix
+    # `home` for it.
+    interp_dir = interpreter.path.rsplit("/", 1)[0]
     cfg = ctx.actions.declare_file(ctx.attr.name + "/pyvenv.cfg")
     ctx.actions.write(
         output = cfg,
-        content = "home = ../bin\ninclude-system-site-packages = false\nversion = {}\n".format(
+        content = "home = {}\ninclude-system-site-packages = false\nversion = {}\n".format(
+            _relative_path(cfg.path, interp_dir + "/python3").rsplit("/", 1)[0],
             ctx.attr.python_version,
         ),
     )
@@ -118,7 +143,61 @@ def _venv_impl(ctx):
         ctx.actions.symlink(output = out, target_file = f)
         outs.append(out)
 
+    # ⚑⚑⚑ CONSOLE SCRIPTS, AND ONLY AN ABSOLUTE SHEBANG WORKS — MEASURED, THREE SHAPES, TWO
+    # WORKING DIRECTORIES:
+    #
+    #     #!<abs>/python3          runs from ANY cwd, under the venv's own interpreter   ✅
+    #     #!./python3              POSIX resolves `#!` against the CWD, not the script's
+    #                              directory — ran the toolchain python directly from the bin
+    #                              dir, and could not exec at all from elsewhere
+    #     #!/usr/bin/env python3   ran, and ran the HOST mise python — the exact leak this
+    #                              whole direction exists to remove
+    #
+    # ⚑⚑ SO THE SHEBANG NAMES A PATH UNDER BAZEL'S OUTPUT BASE, which `bazel clean` deletes and
+    # which is hashed on the workspace path. That is a REAL cost and it is accepted deliberately:
+    # the operator ruled for generated scripts PLUS a tracked launcher that refuses loudly when
+    # the artifact is absent, because a missing hook FAILS OPEN — measured: rc=0, empty stdout, no
+    # decision, which the harness reads as *allow*. The launcher is what closes that window; these
+    # scripts are what make the venv activatable.
+    # ⚑ `ctx.bin_dir.path` IS EXECROOT-RELATIVE, so the absolute form needs no `bazel info` — the
+    # execroot prefix is supplied by the launcher at RUN time and by `python3`'s own resolution
+    # here. `_ABS_MARKER` is replaced by the launcher; a script run directly out of `bazel-bin`
+    # gets the relative interpreter via its sibling symlink.
+    for entry, target in ctx.attr.console_scripts.items():
+        mod, _, fn = target.partition(":")
+        script = ctx.actions.declare_file(ctx.attr.name + "/bin/" + entry)
+        ctx.actions.write(
+            output = script,
+            is_executable = True,
+            content = _CONSOLE_SCRIPT.format(module = mod, function = fn),
+        )
+        outs.append(script)
+
     return [DefaultInfo(files = depset(outs), runfiles = ctx.runfiles(files = outs))]
+
+# ⚑⚑ NO SHEBANG IN THE TEMPLATE, AND THAT IS THE POINT. A baked absolute path would name this
+# build's output base forever; instead the script is executed BY an interpreter the caller names
+# (`python3 bin/<entry>`), and the tracked launcher supplies that interpreter from
+# `$CLAUDE_PROJECT_DIR`. ⚑ The `sys.path` line makes the venv's own site-packages reachable when
+# the script is run by an interpreter that is not this venv's, which is what lets one launcher
+# serve a venv whose absolute location is only known at run time.
+_CONSOLE_SCRIPT = """\
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+# GENERATED by //:venv.bzl — do not edit. Declared in the distribution's pyproject.toml.
+import sys
+from pathlib import Path
+
+_site = Path(__file__).parent.parent / "lib"
+for _libdir in sorted(_site.glob("python*/site-packages")):
+    if str(_libdir) not in sys.path:
+        sys.path.insert(0, str(_libdir))
+
+from {module} import {function}
+
+if __name__ == "__main__":
+    sys.exit({function}())
+"""
 
 def _relative_path(from_file, to_file):
     """Path from `from_file`'s DIRECTORY to `to_file`, as `../` segments plus a tail."""
@@ -149,11 +228,21 @@ venv = rule(
             allow_files = True,
             doc = "The distribution's OWN sources, standing in for an editable install.",
         ),
+        "console_scripts": attr.string_dict(
+            doc = "`entry-name: module:function`, mirroring `[project.scripts]` in pyproject.toml.",
+        ),
     },
     toolchains = ["@rules_python//python:toolchain_type"],
 )
 
-def venv_from_hub(name, hub_requirements, python_version, python_version_short, srcs = None, src_root = "src"):
+def venv_from_hub(
+        name,
+        hub_requirements,
+        python_version,
+        python_version_short,
+        srcs = None,
+        src_root = "src",
+        console_scripts = None):
     """The templatizable form: one call per distribution, population taken from the hub.
 
     ⚑⚑⚑ THIS IS WHERE "TRIVIALLY TEMPLATIZABLE" LIVES. A distribution says its name, its hub's
@@ -172,9 +261,11 @@ def venv_from_hub(name, hub_requirements, python_version, python_version_short, 
         python_version_short: major.minor, e.g. `3.13`.
         srcs: the distribution's own sources, standing in for an editable install.
         src_root: directory under which `srcs` paths become site-packages-relative.
+        console_scripts: `entry-name: module:function`, mirroring `[project.scripts]`.
     """
     venv(
         name = name,
+        console_scripts = console_scripts or {},
         deps = [r.removesuffix(":pkg") + ":extracted_whl_files" for r in hub_requirements],
         python_version = python_version,
         python_version_short = python_version_short,

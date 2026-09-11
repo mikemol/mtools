@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑⚑⚑ A TRACKED LAUNCHER AT A STABLE PATH, BECAUSE A MISSING HOOK FAILS OPEN. Measured: a hook
+# that cannot run exits 0 with empty stdout, and the harness reads *exit 0, nothing to report* as
+# ALLOW. Every refusal this repository relies on would stop happening and nothing would say so.
+# So absence is answered with an explicit DENY rather than with silence.
+#
+# ⚑⚑ THIS FILE IS THE THING `.claude/settings.json` NAMES, and it never moves. The built venv
+# lives under `bazel-bin`, a convenience symlink into an output base that `bazel clean` deletes
+# and whose path is hashed on the workspace location — so pointing the harness straight at the
+# artifact would make the hooks disappear with a routine command.
+#
+# ⚑ AND IT RESOLVES THE REAL PATH RATHER THAN USING `bazel-bin` DIRECTLY. Measured, five
+# hypotheses deep: CPython reached through the convenience symlink computes `exec_prefix` beneath
+# it and prints `Could not find platform dependent libraries <exec_prefix>` on every invocation —
+# the same venv by its real path is silent. `realpath` removes that noise from the harness's
+# stderr, and is not a workaround for a defect in the venv: the warning is a property of the path
+# the caller used.
+set -euo pipefail
+
+root="${CLAUDE_PROJECT_DIR:?CLAUDE_PROJECT_DIR is unset — the harness did not supply a project}"
+venv="$root/bazel-bin/hooks/.venv"
+entry="$(basename "$0")"
+
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    # ⚑⚑ REFUSE, LOUDLY, IN THE HARNESS'S OWN VOCABULARY. A bare `exit 1` would be reported as a
+    # hook error and — measured — still not deny the call. The JSON below is what makes absence
+    # BLOCK rather than pass, which is the whole reason this launcher exists.
+    cat <<'JSON'
+{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "the hook venv is not built — run `bazel build //hooks:.venv`. Refusing rather than failing open: a hook that cannot run exits 0 with no decision, which reads as ALLOW."}}
+JSON
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry"
