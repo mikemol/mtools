@@ -81,6 +81,14 @@ class Caps:
         needs them: `memory.peak` and `pids.events` do not exist in a cgroup whose controllers
         were never enabled. The controller set is a property of what is being READ, not only of
         what is being capped — which is why an observe-only run is not a zero-requirement run.
+
+        Returns:
+            The controller names, always including `memory` and `pids`. ⚑ NEVER EMPTY, and the
+            paragraph above is why: an empty set would be the honest answer to *what must be
+            capped* and the wrong answer to *what must be delegated*, and this function answers
+            the second. A run that delegated nothing would report a peak of `None` and no events
+            — measurement silently absent, in the tool whose product is measurement.
+
         """
         want = ["memory", "pids"]
         if self.io is not None:
@@ -107,7 +115,15 @@ class Result:
         return not self.bound_by and self.exit_code == 0
 
     def as_dict(self) -> ResultJSON:
-        """Render for `--json`, in the shape the original tool emitted."""
+        """Render for `--json`, in the shape the original tool emitted.
+
+        Returns:
+            A plain dict matching `ResultJSON`. ⚑ THE SHAPE IS THE ORIGIN TOOL'S, DELIBERATELY:
+            this package was extracted from a script consumers already parse, so changing field
+            names here would break every one of them to gain nothing. The tuples become lists
+            because JSON has no tuple, which is a serialisation fact rather than a design one.
+
+        """
         return {
             "cmd": list(self.cmd),
             "caps": {"mem": self.caps.mem, "swap": self.caps.swap,
@@ -157,7 +173,7 @@ def _child(cg: Path, cmd: Sequence[str]) -> None:
         # ⚑ `execvp` WITH AN ARGV LIST IS THE SAFETY PROPERTY, not a risk to be waived: it is
         # precisely what avoids a shell. Routing the payload through one would add an
         # interpreter that re-splits arguments the caller already separated.
-        os.execvp(cmd[0], list(cmd))  # noqa: S606 — no shell IS the intent; see above
+        os.execvp(cmd[0], list(cmd))  # ruff: ignore[start-process-with-no-shell] — no shell IS the intent; see above
     except FileNotFoundError:
         os._exit(EXIT_NOT_FOUND)
     except PermissionError:
@@ -168,7 +184,20 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
     """Run `cmd` in a transient fence cgroup and return what it consumed.
 
     With `caps=None` (or an all-unset `Caps`) this imposes nothing and only measures.
-    Raises `FenceUnavailableError` when the host cannot provide the cgroup.
+
+    Returns:
+        A `Result` carrying the payload's exit code, wall duration, peak memory and the counters
+        — plus `bound_by`, naming which cap bound if any did. ⚑ THE PAYLOAD'S OWN FAILURE IS A
+        RESULT, NOT AN EXCEPTION: a command that exits 1 or is OOM-killed has been measured
+        successfully, and that is exactly what this function was asked to do.
+
+    Raises:
+        cgroup.FenceUnavailableError: when the HOST cannot provide the cgroup — no v2 membership,
+            an undelegated controller, an unwritable interface file, a `mkdir` that fails. ⚑ THE
+            SEPARATION IS THE CONTRACT: *I could not fence* raises and *your command failed*
+            returns, so a caller never has to guess which of the two a nonzero means. The prose
+            above stated both facts already; only their form has changed.
+
     """
     caps = caps or Caps()
     parent = cgroup.parent_with_controllers(caps.controllers())
@@ -225,6 +254,21 @@ def ratchet(cmd: Sequence[str], steps: Sequence[str],
     capping; a ratchet cannot, because its reading IS the trip. Callers wanting a measurement
     without a kill want `run_once`, and the two are separate functions so the choice is explicit
     at the call site rather than implied by which flags were passed.
+
+    Returns:
+        Every run made, in the order tried — STOPPING at the first that binds, so the last entry
+        is either the binding cap or the tightest step that did not bind.
+        ⚑⚑ THE WHOLE SEQUENCE, NOT JUST THE VERDICT, and that is the same argument the sibling
+        `mdstruct.roundtrip.fixpoint` makes about its deltas: the caps that did NOT bind are what
+        establish the binding one is a boundary rather than an isolated failure. A caller handed
+        only the last result cannot tell *it bound at 32M* from *it fails at every cap*.
+        ⚑ NEVER EMPTY WHEN `steps` IS NON-EMPTY: the first step always runs, so a caller reading
+        `results[-1]` has something to read. An empty `steps` yields an empty list — the caller
+        asking for no measurement rather than a measurement that failed — and `cli._report_ratchet`
+        indexes `[-1]`, so a LIBRARY caller passing no steps must not hand the result there.
+        MEASURED that the CLI cannot reach it: `--ratchet ""` is falsey and takes the `run_once`
+        path, so the empty list is a library contract rather than a live hazard.
+
     """
     base = base or Caps()
     out: list[Result] = []

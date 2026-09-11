@@ -106,8 +106,21 @@ target-version = "py313"
 namespace-packages = ["src/mikemol", "tests"]
 
 [tool.ruff.lint]
+# ⚑⚑⚑ PREVIEW ARMED, ON THE OPERATOR'S RULING (2026-09-11: arm repo-wide, then pay down). The
+# LAST of the four distributions — `hooks` at 9802790, `ratchet` at 39b25ad, `mdstruct` at
+# 9129a3d, each now clean under preview with its ratchet baseline lowered to zero.
+# ⚑⚑ THE ORDER IS FORCED AND WAS MEASURED: a rule NAME selector cannot LOAD without preview —
+# `--select magic-value-comparison` exits 2 *ruff failed* without the flag and 1 with it — so
+# `rule-codes-in-selectors` can only be satisfied AFTER arming. An early attempt that renamed 26
+# selectors first made every ruff target exit 2 and had to be reverted.
+# ⚑ THE COST WAS MEASURED BEFORE ARMING: 60 findings here, only 5 auto-fixable. The bulk is
+# `no-self-use` ×33 — one declaration below, not 33 edits — plus DOC201 ×16 and DOC501 ×4, which
+# are written rather than waived.
+# ⚑⚑ AND ARMING IS NOT PAYING. Every finding is fixed or DECLARED with its measurement; a blanket
+# `ignore` of a preview rule would be the same silence in a new place.
+preview = true
 select = ["ALL"]
-ignore = ["D203", "D213", "COM812"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
 [tool.ruff.lint.flake8-pytest-style]
 # ⚑ CALLED, NOT BARE: `pytest.fixture` applied bare resolves to the overload returning
@@ -120,10 +133,13 @@ fixture-parentheses = true
 [tool.ruff.lint.flake8-copyright]
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
-# ⚑⚑ ONE FILE-SCOPED IGNORE, AND ONLY BECAUSE THE RULE AND ITS OPPOSITE CANNOT BOTH HOLD.
-# `S101` forbids `assert`; pytest's entire verification mechanism IS `assert`. Satisfying S101 in
-# a test would mean not testing. That is the bar for a suppression here — a genuine contradiction,
-# not an inconvenience.
+# ⚑⚑ FILE-SCOPED IGNORES, AND ONLY BECAUSE A RULE AND ITS OPPOSITE CANNOT BOTH HOLD. The first
+# forbids `assert`; pytest's entire verification mechanism IS `assert`, so satisfying it in a test
+# would mean not testing. That is the bar for a suppression here — a genuine contradiction, not an
+# inconvenience.
+# ⚑ THE RULE IS DESCRIBED RATHER THAN SPELLED BY CODE, because the selector below now names it.
+# An arm reads this block as that selector's explanation and cannot tell a historical citation
+# from a live one — measured twice already, in `hooks` and in `mdstruct`.
 #
 # ⚑ EVERYTHING ELSE WAS FIXED RATHER THAN WAIVED, and two were close calls worth recording:
 #   T201 (print) looked unavoidable in a CLI whose job is output. It was not: `sys.stdout.write`
@@ -133,4 +149,30 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 #     line it applies to with the argument beside it, where a reader meets it. A file-scoped
 #     entry would have granted it to every future call site in the module.
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
+# ⚑⚑⚑ `no-self-use` IS THE SECOND ENTRY, AND IT MEETS THE SAME BAR: A GENUINE CONTRADICTION.
+# It fires on 33 methods across `test_caps.py`, `test_cli.py` and `test_fence.py` — every one a
+# pytest case inside a `class Test*`, and `self` is pytest's calling convention there, not a
+# parameter the author chose. Satisfying the rule would mean either decorating 33 cases
+# `@staticmethod`, which pytest then collects differently, or abandoning class grouping.
+# ⚑⚑ MEASURED, AND IT IS WHY THIS IS A PER-DISTRIBUTION DECLARATION RATHER THAN A REPO-WIDE ONE:
+# `grep -c '^class Test'` reports 9 classes here and **ZERO** in `hooks`, `mdstruct` and
+# `ratchet`. fence is the only distribution that groups tests in classes, so the exemption has no
+# population anywhere else and granting it globally would exempt a style nobody else uses.
+# ⚑ SCOPED TO `tests/*`, NOT TO THE DISTRIBUTION. A method in `src/` that could be a function is
+# still a finding — the rule is correct there, and it is the test-calling convention that is the
+# exception rather than the rule being wrong.
+"tests/*" = ["assert", "no-self-use"]
+
+# ⚑⚑⚑ ONE FILE REACHES A PRIVATE NAME DELIBERATELY, AND THE CROSSING IS THE SUBJECT. `_Args` is
+# the NARROWED view of argparse's `Namespace`, and `test_cli.py`'s own class docstring says why it
+# tests through that rather than through `parse_args`: the raw `Namespace` types as `Any`, so a
+# test reading it would assert against untyped values and check nothing the type system can see.
+# Testing the narrowing requires naming the narrowed type.
+# ⚑⚑ THE ALTERNATIVE IS WORSE AND WAS CONSIDERED: promoting `_Args` to a public name would make an
+# internal parsing detail part of this distribution's API to satisfy a linter, which is the tail
+# wagging the dog. The sibling `hooks` distribution declares `private-member-access` for
+# `test_grade.py` on exactly this reasoning — testing a boundary requires crossing it, and the
+# declaration says so at the one file that does.
+# ⚑ SCOPED TO THE ONE FILE, never to `tests/*`: a second test reaching into internals is a finding
+# to argue about, not an inheritance.
+"tests/test_cli.py" = ["import-private-name"]

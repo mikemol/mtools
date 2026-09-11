@@ -39,6 +39,14 @@ def _unfenceable() -> str:
     ⚑ SO THE EXCEPTION'S OWN TEXT IS CARRIED THROUGH. The skip then names the requirement that
     failed — a non-root cgroup, an undelegated controller, no v2 membership — and a reader can
     act on it instead of chasing the one cause this string used to assert.
+
+    Returns:
+        The exception's own message when this host cannot fence, or the EMPTY STRING when it can.
+        ⚑⚑ A STRING RATHER THAN A BOOL, AND THAT IS THE REPAIR THIS DOCSTRING IS ABOUT: the bool
+        version threw the cause away, so the skip line could only carry a hardcoded guess — and
+        the guess was measured WRONG on a k3s executor. Emptiness carries the boolean meaning at
+        no cost, and the non-empty case carries the only thing a reader can act on.
+
     """
     try:
         parent_with_controllers(["memory", "pids"])

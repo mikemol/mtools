@@ -50,7 +50,14 @@ def human_to_bytes(value: str) -> str:
     """Render a human byte size as the kernel's own spelling.
 
     Accepts `max` (passed through), a bare integer, or an integer with a K/M/G/T suffix.
-    Returns a string because that is what a cgroup interface file takes.
+
+    Returns:
+        The size as a decimal byte count, or the literal `max`. ⚑ A STRING, NOT AN INT, BECAUSE
+        THAT IS WHAT A CGROUP INTERFACE FILE TAKES — and because `max` is a legitimate value with
+        no integer spelling, so a numeric return type would have to invent a sentinel for the one
+        case the kernel states plainly. The fact was already in this docstring as prose; only its
+        form has changed.
+
     """
     v = value.strip()
     if v == "max":
@@ -68,6 +75,13 @@ def cgroup_of_line(line: str) -> Path:
     only by reading `/proc/self/cgroup`, so the one expression deciding whether a host can fence
     was exercised solely through a guard that SKIPS on failure — checked by a mechanism whose
     failure mode is silence.
+
+    Returns:
+        The absolute path under `CG_ROOT` that the line names. ⚑ THE LEADING SLASH IS STRIPPED
+        BEFORE JOINING, because `CG_ROOT / "/foo"` is `/foo` in pathlib — an absolute right-hand
+        operand DISCARDS the left one, so the arithmetic would silently address the filesystem
+        root instead of the cgroup hierarchy.
+
     """
     return CG_ROOT / line.strip().split("::", 1)[1].lstrip("/")
 
@@ -78,6 +92,16 @@ def own_cgroup() -> Path:
     ⚑ THE `0::` PREFIX IS THE v2 LINE. A hybrid host lists v1 controllers on other lines, and
     picking the first line would silently address a v1 hierarchy where none of these interface
     files exist.
+
+    Returns:
+        The path of the v2 cgroup this process belongs to.
+
+    Raises:
+        FenceUnavailableError: when `/proc/self/cgroup` is unreadable, or when it carries no
+            `0::` line at all. ⚑ BOTH ARE *THIS HOST CANNOT FENCE*, NOT *THE PAYLOAD FAILED* —
+            which is why they raise rather than returning a sentinel: the caller turns this into
+            `EXIT_HARNESS`, and a `None` return would have to be re-classified at every call site.
+
     """
     try:
         text = Path("/proc/self/cgroup").read_text(encoding="utf-8")
@@ -95,6 +119,18 @@ def parent_with_controllers(want: Iterable[str]) -> Path:
     """Return the sibling-cgroup parent, with `want` delegated in its subtree_control.
 
     Enables each controller if it is not already enabled; refuses if it cannot.
+
+    Returns:
+        The parent cgroup, with every wanted controller delegated into its subtree. ⚑ THE PARENT,
+        NOT A NEW CHILD: a cgroup's own `subtree_control` governs its CHILDREN, so the controllers
+        a fence needs must be enabled one level above where the fence will live.
+
+    Raises:
+        FenceUnavailableError: when a controller cannot be delegated — it is absent from the
+            parent's `controllers`, or the write to `subtree_control` is refused. ⚑ REFUSING IS
+            THE POINT: proceeding without a controller yields a cgroup that accepts the run and
+            silently caps nothing, which is a measurement that reads as a success.
+
     """
     own = own_cgroup()
     # ⚑⚑⚑ A REFUSAL HERE ON `own == CG_ROOT` WAS ADDED AND WITHDRAWN THE SAME DAY, AND THE
@@ -199,7 +235,15 @@ def parent_with_controllers(want: Iterable[str]) -> Path:
 
 
 def write_interface(cg: Path, name: str, value: str) -> None:
-    """Write one cgroup interface file, naming the file if the write is refused."""
+    """Write one cgroup interface file, naming the file if the write is refused.
+
+    Raises:
+        FenceUnavailableError: when the write fails, carrying the interface file's NAME and the
+            cgroup path. ⚑ THE NAME IS THE WHOLE VALUE OF THIS WRAPPER: a bare `OSError` from a
+            write says a number could not be set without saying WHICH cap, and the caller is
+            about to report a fencing failure that a reader must be able to act on.
+
+    """
     try:
         with (cg / name).open("w") as f:
             f.write(value)
@@ -215,6 +259,13 @@ def read_events(cg: Path, name: str) -> dict[str, int]:
     dict means the question could not be asked; `{"oom_kill": 0}` means it was asked and the
     answer was none. `bound_by` therefore tests `.get(k, 0) > 0`, which is false in both cases —
     correct here only because an unreadable counter accompanies a cgroup that never existed.
+
+    Returns:
+        The counter names mapped to their values, or `{}` when the file cannot be read. ⚑ THE
+        EMPTY DICT IS *UNAVAILABLE*, NOT *ZERO*, and the paragraph above is the whole argument:
+        the two are indistinguishable to a caller that tests a value rather than a membership,
+        and this reader's contract is that they are different facts.
+
     """
     try:
         text = (cg / name).read_text(encoding="utf-8")
@@ -237,6 +288,14 @@ def read_peak(cg: Path) -> int | None:
     ⚑⚑ THE VALUE IS A LIFETIME WATERMARK OF *THIS* CGROUP, which is exactly right here because
     the cgroup is created per run and destroyed after. Reading the same file on a long-lived
     cgroup answers a different question, and the two are not commensurable.
+
+    Returns:
+        The peak resident bytes, or `None` when the kernel does not carry `memory.peak`. ⚑ THE
+        `None` IS LOAD-BEARING AND IS NOT AN ERROR PATH — see above: it distinguishes *this
+        kernel cannot tell me* from *nothing was used*, and a 0 would report the second when the
+        first is true. `ValueError` is caught alongside `OSError` for the same reason: a file
+        that exists but does not parse has also failed to answer.
+
     """
     try:
         return int((cg / "memory.peak").read_text(encoding="utf-8").strip())
@@ -261,6 +320,17 @@ def bound_by(mem_ev: Mapping[str, int], pid_ev: Mapping[str, int]) -> list[str]:
     a parent's timeout — so an exit code cannot distinguish "the fence bound it" from "something
     else killed it". The counters can, and that distinction is this tool's whole product: a bare
     pass/fail would leave the caller to guess the mechanism.
+
+    Returns:
+        One entry per cap that actually bound, named — and an EMPTY LIST when none did. ⚑ A LIST
+        RATHER THAN A BOOLEAN, because *which* cap bound is the answer the caller came for: a
+        memory throttle and a memory kill are different outcomes at the same cap, and a pids
+        exhaustion is a different resource entirely.
+        ⚑⚑ EMPTY IS ALSO WHAT AN UNREADABLE COUNTER YIELDS, since `read_events` returns `{}` and
+        every test here is `.get(k, 0) > 0`. That is safe ONLY because an unreadable counter
+        accompanies a cgroup that never existed — stated here rather than left implicit, because
+        it is the one place this reader's *unavailable* and its *zero* are allowed to coincide.
+
     """
     out: list[str] = []
     # ⚑⚑⚑ THIS WAS ONE BRANCH — `oom_kill > 0 OR max > 0` — AND IT RENDERED TWO OUTCOMES AS ONE

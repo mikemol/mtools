@@ -30,7 +30,15 @@ from mikemol.fence.core import Caps
 
 
 def _render(r: core.Result) -> str:
-    """One human line: what it cost, and what bound it."""
+    """One human line: what it cost, and what bound it.
+
+    Returns:
+        A single line carrying the exit code, duration, peak memory and the binding constraint.
+        ⚑ ONE LINE, BECAUSE THE RATCHET PRINTS ONE PER CAP: a multi-line rendering would make a
+        sweep unreadable at exactly the moment the sweep is the point, and the caps are meant to
+        be compared down a column.
+
+    """
     what = ("BOUND BY " + "; ".join(r.bound_by)) if r.bound_by else "completed within caps"
     return (f"mikemol-fence: rc={r.exit_code} dur={r.duration_s}s "
             f"peak_mem={r.memory_peak_bytes} {what}")
@@ -52,7 +60,15 @@ def _emit(payload: str) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Construct the argument parser (separate so the tests can exercise it without running)."""
+    """Construct the argument parser.
+
+    Returns:
+        The parser, fully configured. ⚑ BUILT IN ITS OWN FUNCTION SO THE TESTS CAN EXERCISE THE
+        ARGUMENT CONTRACTS WITHOUT RUNNING A PAYLOAD — the refusals (`--observe` with a cap, a
+        missing command) are decisions this parser makes, and checking them through a real fenced
+        run would need a delegated cgroup subtree to assert something that never reaches one.
+
+    """
     ap = argparse.ArgumentParser(
         prog="mikemol-fence",
         description="Run a command inside a cgroup; report what it consumed and which cap bound.")
@@ -94,7 +110,17 @@ class _Args:
 
     @classmethod
     def parse(cls, ap: argparse.ArgumentParser, argv: list[str] | None) -> _Args:
-        """Parse `argv` and narrow every field to its declared type."""
+        """Parse `argv` and narrow every field to its declared type.
+
+        Returns:
+            The parsed arguments as a TYPED record. ⚑⚑ THE NARROWING IS THE WHOLE FUNCTION:
+            argparse's `Namespace` types every attribute as `Any`, so under this distribution's
+            `disallow_any_expr` a caller reading `ns.mem` would be reading an expression the type
+            checker cannot see — and the tests asserting against it would check nothing. Each
+            `cast` here is the one place a claim about a flag's type is made, where it can be
+            read and argued with.
+
+        """
         ns = ap.parse_args(argv)
         raw: list[str] = list(cast("list[str]", ns.cmd))
         cmd = raw[1:] if raw and raw[0] == "--" else raw
@@ -111,8 +137,56 @@ class _Args:
         )
 
 
+def _report_ratchet(results: list[core.Result], *, json_out: bool) -> int:
+    """Render a ratchet sweep and name the binding constraint, if there was one.
+
+    ⚑⚑⚑ EXTRACTED SO THE `try` CAN GUARD WHAT IT ACTUALLY CATCHES. This code used to sit INSIDE a
+    `try/except FenceUnavailableError` together with the `core.ratchet` call it reports on —
+    thirteen statements under a handler that only one of them can trigger. An IndexError or a
+    KeyError in this rendering would have been caught and reported as *the fence is unavailable*,
+    returning `EXIT_HARNESS`: a bug in the reporter made indistinguishable from a missing cgroup
+    subtree, which is precisely the confusion this tool exists to prevent one layer down.
+    ⚑⚑ `too-many-statements-in-try-clause` NAMED IT, and the finding is structural rather than
+    stylistic — narrowing the try is the repair, and moving the body out is what narrows it.
+
+    Args:
+        results: one `Result` per cap tried, in the order they were tried.
+        json_out: emit the machine-readable payload on stdout instead of prose on stderr.
+
+    Returns:
+        Always 0. ⚑ A RATCHET SWEEP THAT COMPLETES HAS SUCCEEDED EVEN WHEN EVERY CAP BOUND — the
+        binding cap is the ANSWER, not a failure, so reporting it through a nonzero code would
+        conflate *I measured the constraint you asked for* with *I could not measure*.
+
+    """
+    for r in results:
+        _note(f"── mikemol-fence ratchet: mem={r.caps.mem} ──")
+        _note(_render(r))
+    last = results[-1]
+    if last.bound_by:
+        _note(f"── BINDING CONSTRAINT at mem={last.caps.mem}: "
+              f"{'; '.join(last.bound_by)} — it completed at every looser cap and bound "
+              f"here, so this is the scale of the resource the command needs ──")
+    else:
+        _note(f"── completed within ALL caps down to {last.caps.mem} — no binding "
+              f"constraint in the tried range (either it is frugal, or the mechanism is "
+              f"not the resource you ratcheted) ──")
+    if json_out:
+        payload: list[core.ResultJSON] = [r.as_dict() for r in results]
+        _emit(json.dumps(payload))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
-    """Parse, run, report. Returns the payload's exit code, or a harness code."""
+    """Parse, run, report.
+
+    Returns:
+        The payload's own exit code when the command ran, or a HARNESS code when it could not —
+        `EXIT_HARNESS` for an unavailable fence, 1 when the payload's code is unknown. ⚑ THE
+        SEPARATION IS THE POINT: a caller must be able to tell *your command failed* from *I
+        could not fence it*, and a single nonzero would merge them.
+
+    """
     ap = build_parser()
     args = _Args.parse(ap, argv)
     cmd = args.cmd
@@ -124,26 +198,25 @@ def main(argv: list[str] | None = None) -> int:
         ap.error("--observe imposes no cap, so it cannot be combined with --mem/--swap/--pids/"
                  "--io/--ratchet; drop --observe to cap, or drop the caps to observe")
 
-    try:
-        if args.ratchet:
+    # ⚑⚑⚑ THE `try` GUARDS THE CALLS INTO `core`, NOT THE REPORTING. It used to wrap thirteen
+    # statements — the ratchet call AND every line that renders its result — and
+    # `too-many-statements-in-try-clause` is right that this is a defect rather than a style
+    # preference: only `core.ratchet` and `core.run_once` raise `FenceUnavailableError`, so a
+    # KeyError or an IndexError in the rendering below would have been caught by a handler that
+    # reports *the fence is unavailable* and returns `EXIT_HARNESS`. A bug in the reporter would
+    # have been indistinguishable from a missing cgroup subtree.
+    # ⚑⚑ NARROWED RATHER THAN SUPPRESSED, and the narrowing is what makes the handler honest: the
+    # rendering now runs OUTSIDE the try, so an error there crashes loudly with its own traceback
+    # instead of being relabelled as an environment problem.
+    if args.ratchet:
+        try:
             results = core.ratchet(cmd, args.ratchet.split(","), caps)
-            for r in results:
-                _note(f"── mikemol-fence ratchet: mem={r.caps.mem} ──")
-                _note(_render(r))
-            last = results[-1]
-            if last.bound_by:
-                _note(f"── BINDING CONSTRAINT at mem={last.caps.mem}: "
-                      f"{'; '.join(last.bound_by)} — it completed at every looser cap and bound "
-                      f"here, so this is the scale of the resource the command needs ──")
-            else:
-                _note(f"── completed within ALL caps down to {last.caps.mem} — no binding "
-                      f"constraint in the tried range (either it is frugal, or the mechanism is "
-                      f"not the resource you ratcheted) ──")
-            if args.json:
-                payload: list[core.ResultJSON] = [r.as_dict() for r in results]
-                _emit(json.dumps(payload))
-            return 0
+        except FenceUnavailableError as e:
+            _note(f"mikemol-fence: {e}")
+            return core.EXIT_HARNESS
+        return _report_ratchet(results, json_out=args.json)
 
+    try:
         r = core.run_once(cmd, caps)
     except FenceUnavailableError as e:
         _note(f"mikemol-fence: {e}")
