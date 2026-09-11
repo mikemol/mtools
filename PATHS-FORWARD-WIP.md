@@ -507,7 +507,45 @@ workaround in `_run_cli` is retired: one line now, no global, no `finally`.
 ⚑ *A finding filed outward is not a finding fixed at home*, and the second carry is the part worth
 remembering — the first was honest ignorance, the second was a record I had already written.
 
-### ⟐PATTERN-AS-ARTIFACT — WIDER THAN RECORDED: it fires on a string literal in Python source
+### ⟐PATTERN-AS-ARTIFACT — FIXED 2026-09-11, both arms, and the file could not be written past it
+
+⚑⚑⚑ **THE DEFECT REFUSED THE ARMS WRITTEN TO FIX IT — six refusals in one write, every one from a
+test fixture.** `cat` is in `TEXTUAL`, so a heredoc carrying `grep -n "SKILL.md" x.py` was read as
+six textual queries. The file documenting the bug could not be written through the gate carrying
+it; the suffix is composed from parts in that test module for exactly that reason.
+
+**Two arms, two different discriminators, fixed in `_scannable()`:**
+
+```
+PATTERN   for {grep,rg,egrep,fgrep,ag,ack} the first non-flag argument is what you search FOR,
+          and `-e`/`-f` carry it too. Dropped once, never for cat/head/wc.
+HEREDOC   everything from `<<` onward is a BODY the command creates. `>` and `>>` name a
+          DESTINATION and STAY IN SCOPE.
+```
+
+⚑ **THE `-e` CASE IS A MEASURED DIVERGENCE FROM cassian'S TREE.** They reported `_FLAGS_WITH_ARG`
+consuming `-e`'s argument before the scan sees it; here it does **not** — that table covers
+WRAPPERS (timeout, env, sudo, xargs), never the textual programs. `grep -e PAT file` left the
+pattern as the first non-flag argument, so **a fix copied from their report alone would have left
+this shape firing.** Tokenisation read, not assumed.
+
+⚑⚑ **TWO EXISTING ARMS REFUSED MY FIRST CUT, AND THEY WERE RIGHT.** It dropped everything from the
+first redirection operator onward, which exempted `cat >> scratch/tool.py` — a shell append to a
+claimed artifact. That arm carries an **operator ruling verbatim**: *"don't support redirection,
+support editing"* / *"appendation causes files to grow out of control"* — and its comment records
+that an earlier fix exempting `>>` was the wrong repair, **with the measured damage**: a staging
+block appended to and never drained outgrew the budget of the reader loading it every session.
+**I reproduced that exact wrong repair.** The arm is what caught it.
+
+⚑ **AND MY OWN HEREDOC ARM WAS WRONG TOO**, measuring two properties at once: it wrote to
+`/tmp/x.py`, and `.py` is claimed in the test table, so the destination firing was *correct
+behaviour*. Isolated with an unclaimed `.txt` destination, plus a new control arm asserting a
+heredoc write to a **claimed** destination still fires.
+
+**Live, through the rebuilt hooks:** cassian's originally-reported command now works; a heredoc
+whose body names `notes.md` goes through; `grep -n test README.md` is still refused.
+
+### ⟐PATTERN-AS-ARTIFACT — the measurement that preceded the fix
 
 ⚑⚑⚑ Writing this tick's arms, the structural-query hook refused a `cat` heredoc **because the
 Python source being written contained the literal `"doc.md"`** — a string inside a test, not a

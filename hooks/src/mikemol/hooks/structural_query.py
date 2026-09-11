@@ -116,6 +116,91 @@ Reason = tuple[str, list[Hit]]
 _REDIRECTS = (">", ">>")
 
 
+# ⚑⚑⚑ PROGRAMS WHOSE FIRST NON-FLAG ARGUMENT IS A PATTERN, NOT A PATH. Reported by cassian after
+# `grep -n "SKILL.md" x.py` routed a PYTHON file to the markdown owner: the scan read every
+# non-flag argument, and for these the first one is what you are searching FOR.
+# ⚑⚑ THE SET IS ENUMERATED AND `cat`/`head`/`wc` ARE DELIBERATELY OUTSIDE IT. They take no
+# pattern, so dropping THEIR first argument would blind the guard to an ordinary read — which is
+# how a fix becomes a de-arming. cassian named that trap and avoided it; the arms in
+# `test_a_real_target_after_the_pattern_still_fires` are what hold it here.
+_PATTERN_FIRST = frozenset(("grep", "rg", "egrep", "fgrep", "ag", "ack"))
+
+# ⚑⚑ FLAGS THAT CARRY THE PATTERN AS THEIR ARGUMENT. `grep -e PAT file` puts the pattern after a
+# flag, so position alone does not find it. ⚑ MEASURED AS A DIVERGENCE FROM cassian'S TREE, not
+# inherited: they reported `_FLAGS_WITH_ARG` consuming `-e` before the scan sees it, and here it
+# does NOT — that table covers WRAPPERS (timeout, env, sudo, xargs), never the textual programs.
+# A fix copied from their report alone would have left this shape firing.
+_PATTERN_FLAGS = frozenset(("-e", "--regexp", "-f", "--file"))
+
+# ⚑ THE HEREDOC OPERATORS, AND ONLY THOSE. `>` and `>>` name a DESTINATION that stays in scope —
+# see `_scannable` for the operator ruling that makes a redirected write a refusal.
+_HEREDOC_OPS = frozenset(("<<", "<<-"))
+
+
+def _scannable(prog: str, args: list[str]) -> list[str]:
+    """Return the arguments that name artifacts this command READS.
+
+    ⚑⚑⚑ TWO SHAPES ARE EXCLUDED, AND BOTH WERE MEASURED AS LIVE DEFECTS:
+
+    * a SEARCH PATTERN — for `grep` and friends the first non-flag argument, or the argument of
+      `-e`/`-f`, is what you search FOR rather than a file you open.
+    * a REDIRECTED WRITE — `cat > x.py <<EOF ... EOF` reports as `cat` with the redirection target
+      and the whole heredoc body in `args`, so a claimed suffix appearing anywhere in the body was
+      read as a textual query. The command CREATES a file; it reads nothing.
+
+    ⚑ THE DISCRIMINATOR FOR THE SECOND IS THE REDIRECTION, NOT THE PROGRAM. Keying on `cat` would
+    disarm `cat notes.md`, which is exactly what this gate is for.
+
+    Returns:
+        the arguments worth testing against the claims table.
+
+    """
+    # ⚑⚑⚑ ONLY THE HEREDOC BODY IS DROPPED, AND A FIRST CUT DROPPED THE REDIRECTION TARGET TOO —
+    # WHICH TWO EXISTING ARMS REFUSED, CORRECTLY. `cat >> scratch/tool.py` is a shell APPEND to a
+    # claimed artifact, and the gate refuses it on an operator ruling recorded in
+    # `test_a_shell_append_to_a_claimed_artifact_still_fires`: *"don't support redirection, support
+    # editing"* / *"appendation causes files to grow out of control"*. That arm's own comment says
+    # an earlier fix exempting `>>` was the wrong repair AND NAMES THE MEASURED DAMAGE — a staging
+    # block appended to and never drained outgrew the budget of the reader loading it every
+    # session. I reproduced that exact wrong repair; the arm is what caught it.
+    #
+    # ⚑⚑ SO THE DISCRIMINATOR IS THE HEREDOC, NOT REDIRECTION IN GENERAL. `>` and `>>` name a
+    # DESTINATION, which is a real artifact being written and stays in scope. `<<` introduces a
+    # BODY — arbitrary text the command creates, never a path it touches — and everything from the
+    # delimiter onward is that body.
+    # ⚑ A FROZENSET RATHER THAN A TUPLE LITERAL: ruff's preview `literal-membership` refuses the
+    # inline form, and the ratchet minted a key for it. Fixing the file rather than the baseline.
+    for i, a in enumerate(args):
+        if a in _HEREDOC_OPS:
+            args = args[:i]
+            break
+
+    if prog not in _PATTERN_FIRST:
+        return [a for a in args if not a.startswith("-")]
+
+    # ⚑ THE PATTERN IS DROPPED ONCE: either the argument of a pattern-taking flag, or — failing
+    # that — the first bare word. A command with only a pattern and no file then scans nothing,
+    # which is correct: it reads stdin.
+    out: list[str] = []
+    skip_next = False
+    dropped_first = False
+    for a in args:
+        if skip_next:
+            skip_next = False
+            dropped_first = True
+            continue
+        if a in _PATTERN_FLAGS:
+            skip_next = True
+            continue
+        if a.startswith("-"):
+            continue
+        if not dropped_first:
+            dropped_first = True
+            continue
+        out.append(a)
+    return out
+
+
 def verdict(cmd: str, table: dict[str, tuple[str, str]] | None = None) -> tuple[bool, list[Reason]]:
     """Return (is_violation, reasons) for one command.
 
@@ -138,9 +223,7 @@ def verdict(cmd: str, table: dict[str, tuple[str, str]] | None = None) -> tuple[
         # so a directory named `pkg.py/` false-positived while an argument's real extension went
         # unexamined.
         hits: list[Hit] = []
-        for a in args:
-            if a.startswith("-"):
-                continue
+        for a in _scannable(prog, args):
             suf = Path(a.strip("'\"")).suffix.lower()
             if suf in tbl:
                 hits.append((a, suf, tbl[suf]))

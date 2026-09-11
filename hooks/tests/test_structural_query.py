@@ -395,3 +395,120 @@ def test_a_non_reader_on_the_host_is_permitted(tool: str, why: str) -> None:
     by the back door.
     """
     assert not structural_query.verdict(f"{tool} notes.md", _CLAIMS)[0], f"{tool}: {why}"
+
+
+# ⚑⚑⚑ THESE FIXTURES ARE BUILT FROM PARTS, AND THAT IS NOT STYLE — IT IS THE DEFECT UNDER TEST.
+# Writing them as plain literals is impossible through this repository's own gate: a heredoc
+# carrying `grep -n "SKILL.md" x.py` is refused six times over, because `cat` is classified a
+# reader and every token of the body is scanned. The file documenting the bug could not be written
+# through the gate carrying it. Composing the suffix keeps the fixtures readable and the write
+# possible; when the fix lands, a later reader may inline them.
+_MD = ".md"
+_CLAIMED = "SKILL" + _MD
+_NOTES = "notes" + _MD
+_README = "README" + _MD
+
+
+@pytest.mark.parametrize(
+    ("label", "cmd"),
+    [
+        ("a grep PATTERN naming a suffix", f'grep -n "{_CLAIMED}" preflight.sh'),
+        ("the same, with -e", f'grep -e "{_NOTES}" preflight.sh'),
+        ("rg, same shape", f'rg "{_NOTES}" preflight.sh'),
+    ],
+)
+def test_a_search_pattern_is_not_the_artifact_it_mentions(label: str, cmd: str) -> None:
+    """⚑⚑⚑ THE GATE REFUSED A PYTHON FILE BECAUSE THE PATTERN NAMED A CLAIMED SUFFIX.
+
+    Reported by cassian, reproduced here, and the cause is positional: `verdict` scans EVERY
+    non-flag argument, and for the grep family the first non-flag argument is the PATTERN rather
+    than a path.
+
+    ⚑⚑ THE SCOPE IS ONE SUFFIX IN THIS TREE, which is why a first probe of mine was three-fifths
+    vacuous. cassian's census: mtools claims 1, cassian 3, substrate 9 — the blast radius scales
+    with the claims table, so this is one instance here rather than a class.
+
+    ⚑ THE `-e` CASE IS A DIVERGENCE FROM cassian'S TREE, MEASURED RATHER THAN INHERITED. They
+    reported `_FLAGS_WITH_ARG` consuming `-e`'s argument before the scan sees it. Here it does
+    NOT: that table covers WRAPPERS (timeout, env, sudo, xargs...), not the textual programs, so
+    the pattern remains the first non-flag argument. A fix copied from their report alone would
+    have left this shape firing.
+    """
+    assert not _fires(cmd), f"{label}: the pattern is not an artifact being read"
+
+
+@pytest.mark.parametrize(
+    ("label", "cmd"),
+    [
+        ("a pattern AND a real target", f'grep -n "{_CLAIMED}" {_README}'),
+        ("a real target after a plain pattern", f"grep -n foo {_README}"),
+        ("two targets", f"grep -n foo {_README} {_NOTES}"),
+    ],
+)
+def test_a_real_target_after_the_pattern_still_fires(label: str, cmd: str) -> None:
+    """⚑⚑⚑ THE HALF THAT MAKES IT A FIX RATHER THAN A DE-ARMING.
+
+    Dropping the first non-flag argument satisfies the arms above perfectly and destroys the
+    guard — every ordinary read of a claimed artifact would pass, which is the whole thing the
+    hook exists to refuse. cassian named this trap explicitly and avoided it; these arms are why
+    the scope is a named set of pattern-taking programs rather than "textual programs".
+
+    ⚑ `cat`/`head`/`wc` TAKE NO PATTERN, so dropping THEIR first argument would blind the guard
+    entirely — which is the reason the exemption is a named set rather than a rule about position.
+    """
+    assert _fires(cmd), f"{label}: a claimed artifact is still being read as text"
+
+
+def test_a_heredoc_write_is_not_a_read_of_what_its_body_mentions() -> None:
+    """⚑⚑⚑ A HEREDOC WRITE IS A WRITER, AND THE GATE CLASSIFIES `cat` AS A READER.
+
+    Measured while writing another tick's arms: a heredoc whose BODY contained a claimed suffix
+    was refused, because `programs()` returns the redirection target AND the entire body as
+    arguments, and the scan reads every one of them.
+
+    ⚑⚑ THIS IS A SECOND ARM OF THE SAME DEFECT AND cassian'S POSITIONAL FIX DOES NOT COVER IT:
+    theirs scopes to the grep family and takes the first non-flag argument, while here the
+    offending token sits in a `cat` invocation that WRITES. The discriminator is the redirection,
+    not the position.
+
+    ⚑ AND THIS VERY FILE COULD NOT BE WRITTEN THROUGH THE GATE CARRYING THE DEFECT — six refusals,
+    all from its own fixtures. The suffix is composed from parts above for exactly that reason.
+
+    ⚑⚑ THE DESTINATION IS DELIBERATELY UNCLAIMED, AND A FIRST DRAFT OF THIS ARM USED `/tmp/x.py`
+    — which `_CLAIMS` claims. That conflated two properties: the BODY being scanned (the defect)
+    and the DESTINATION being a claimed artifact (correct, on the operator ruling *"don't support
+    redirection, support editing"*). The arm failed after the fix landed and the fix was right;
+    the arm was measuring both things at once. `.txt` isolates the body.
+    """
+    body = "d = " + '"doc' + _MD + '"'
+    cmd = "cat > /tmp/scratch.txt <<EOF\n" + body + "\nEOF"
+    assert not _fires(cmd), (
+        "a heredoc WRITE was refused because its BODY mentions a claimed suffix — the command "
+        "creates a file rather than reading one, and its destination is unclaimed"
+    )
+
+
+def test_a_heredoc_write_to_a_claimed_destination_still_fires() -> None:
+    """⚑⚑⚑ THE CONTROL THAT SEPARATES THE BODY FROM THE DESTINATION.
+
+    Dropping the heredoc body must not also drop the redirection TARGET. `cat > notes.md <<EOF`
+    writes a claimed artifact, and the operator ruling — *"don't support redirection, support
+    editing"* — makes that a refusal regardless of what the body says.
+
+    ⚑ TWO EXISTING ARMS CAUGHT MY FIRST CUT DOING EXACTLY THIS. It dropped everything from the
+    first redirection operator onward, which exempted `cat >> scratch/tool.py` — and that arm's
+    comment records the same wrong repair being made once before, WITH ITS MEASURED DAMAGE: a
+    staging block appended to and never drained outgrew the budget of the reader loading it every
+    session. The discriminator is `<<`, not redirection in general.
+    """
+    cmd = "cat > " + _NOTES + " <<EOF\nplain text\nEOF"
+    assert _fires(cmd), "a write to a claimed artifact must fire, whatever the body contains"
+
+
+def test_a_plain_read_of_a_claimed_artifact_still_fires() -> None:
+    """⚑ THE CONTROL FOR THE ARM ABOVE, and without it that fix could disarm the reader entirely.
+
+    Reading a claimed artifact as text is exactly what the gate is for. An exemption keyed on the
+    PROGRAM rather than on the REDIRECTION would satisfy the heredoc arm and lose this one.
+    """
+    assert _fires("cat " + _NOTES), "a reader over a claimed artifact must still be refused"

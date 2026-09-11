@@ -2923,3 +2923,33 @@
   claim   = {⚑⚑⚑ A GATE WHOSE REFUSAL CANNOT BE SATISFIED IS FAIL-SHUT, NOT FAIL-CLOSED. The launcher denies when the built venv is absent — correct, and shipped without a bootstrap exemption. MEASURED IN PRODUCTION one tick later: a rebuild invalidated `bazel-bin`, the launcher refused, and then refused `bazel build //hooks:.venv`, THE COMMAND ITS OWN MESSAGE PRESCRIBES. Every Bash call blocked, including the repair; the session escaped only because the matcher is `Bash` and `Edit` is not gated. ⚑⚑ The exemption is measured 7-of-7 as the narrowest thing that restores the artifact: two repair forms allowed; `bazel test //...`, a DIFFERENT distribution's venv build, and ordinary commands all still denied — with the honest limit recorded that a substring match cannot tell a build from an `echo` of one.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_hook_launcher_exempts_the_command_that_repairs_it}
 }
+
+@misc{hooks-structural-query-a-search-pattern-is-not-the-artifact-it-mentions,
+  section = {structural-query},
+  claim   = {⚑⚑⚑ THE GATE REFUSED A PYTHON FILE BECAUSE THE SEARCH PATTERN NAMED A CLAIMED SUFFIX — reported by cassian, reproduced here, cause positional: `verdict` scanned EVERY non-flag argument and for the grep family the first one is what you search FOR. ⚑⚑ THE `-e` CASE IS A MEASURED DIVERGENCE FROM cassian'S TREE: they reported `_FLAGS_WITH_ARG` consuming it before the scan, and here it does NOT — that table covers WRAPPERS, never the textual programs — so a fix copied from their report alone would have left the shape firing. ⚑ Scope is one suffix in this tree; cassian's census gives mtools 1, cassian 3, substrate 9, so blast radius scales with the claims table.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_search_pattern_is_not_the_artifact_it_mentions}
+}
+
+@misc{hooks-structural-query-a-real-target-after-the-pattern-still-fires,
+  section = {structural-query},
+  claim   = {⚑⚑⚑ THE HALF THAT MAKES IT A FIX RATHER THAN A DE-ARMING: dropping the first non-flag argument satisfies the pattern arms perfectly and destroys the guard, since every ordinary read of a claimed artifact would then pass. cassian named this trap and avoided it; it is why the scope is a named set of pattern-taking programs rather than "textual programs", and why `cat`/`head`/`wc` are deliberately outside it.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_real_target_after_the_pattern_still_fires}
+}
+
+@misc{hooks-structural-query-a-heredoc-write-is-not-a-read-of-what-its-body-mentions,
+  section = {structural-query},
+  claim   = {⚑⚑⚑ A HEREDOC WRITE IS A WRITER AND THE GATE CLASSIFIES `cat` AS A READER: `programs()` returns the redirection target AND the whole body as arguments, so a claimed suffix anywhere in the body read as a textual query. Measured while writing another tick's arms, and THIS VERY TEST FILE COULD NOT BE WRITTEN THROUGH THE GATE CARRYING THE DEFECT — six refusals, all from its own fixtures, which is why the suffix is composed from parts. ⚑⚑ cassian's positional fix does NOT cover this arm: the discriminator is the redirection, not the position.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_heredoc_write_is_not_a_read_of_what_its_body_mentions}
+}
+
+@misc{hooks-structural-query-a-heredoc-write-to-a-claimed-destination-still-fires,
+  section = {structural-query},
+  claim   = {⚑⚑⚑ THE CONTROL SEPARATING THE BODY FROM THE DESTINATION, and TWO EXISTING ARMS CAUGHT MY FIRST CUT COLLAPSING THEM. It dropped everything from the first redirection operator onward, exempting a shell append to a claimed artifact — and that arm's comment records the SAME wrong repair being made once before, with its measured damage: a staging block appended to and never drained outgrew the budget of the reader loading it every session. Operator ruling: *"don't support redirection, support editing"*. The discriminator is `<<`, not redirection in general.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_heredoc_write_to_a_claimed_destination_still_fires}
+}
+
+@misc{hooks-structural-query-a-plain-read-of-a-claimed-artifact-still-fires,
+  section = {structural-query},
+  claim   = {⚑ THE CONTROL FOR THE HEREDOC ARM: an exemption keyed on the PROGRAM rather than on the REDIRECTION would satisfy that arm and disarm an ordinary read, which is exactly what this gate is for.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_plain_read_of_a_claimed_artifact_still_fires}
+}
