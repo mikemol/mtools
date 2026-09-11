@@ -446,12 +446,40 @@ them** — both verdicts come from the targets. What still runs out of a host ve
 :775  mdstruct .venv/bin/python3 -m …cli verify / lint   ← the markdown witnesses
 ```
 
-⚑⚑ **SO THE RULING IS MOSTLY DISCHARGED AND WHAT REMAINS IS A DIFFERENT SHAPE THAN THE TABLE
-SUGGESTS.** The two duplicated verdicts — a host copy of a check the graph already produced — are
-the ones that went. Every survivor is a check with **no equivalent target the gate can reach**:
-pytest over the staged index, stubtest, the ratchet, and mdstruct's own witnesses. Removing a
-duplicate and building a missing target are different jobs, and the row list above no longer says
-which one is left.
+⚑⚑⚑ **AND THAT CORRECTION OVERSTATED ITS OWN FINDING — MEASURED 2026-09-11, ONE OF THE FOUR
+SURVIVORS *IS* A DUPLICATE.** The sentence below reads *every survivor is a check with no
+equivalent target the gate can reach*. It was written from reading the GATE; the claim is about
+the GRAPH, and `bazel query 'kind("py_test|sh_test", //...)'` answers it:
+
+- **`:448` pytest over the developer tree** — target `//<dist>:test_*`. **Not** a duplicate, and
+  the gate argues it in place at `:442`: the developer venv surfaces a missing dependency as an
+  import error, where a sandbox never had it.
+- **`:724` stubtest over panflute** — target `//mdstruct:test_stub_authority`. **DUPLICATE.** Same
+  tool, same allowlist, run twice.
+- **`:752` ratchet over `$root/$dist`** — target `//<dist>:ratchet`. **Not** a duplicate: the
+  target censuses the RUNFILES tree — it had to be taught to exclude synthesized `__init__.py`
+  files the source tree lacks — while the gate censuses the REAL tree, because census keys are
+  paths a reader must be able to go fix.
+- **`:775` mdstruct verify / lint** — no target exists.
+
+⚑⚑ **AN ABSENCE CLAIM ABOUT THE BUILD GRAPH, ASSERTED FROM READING A SHELL SCRIPT.** Three of the
+four rows survive the check and one does not, which is the difference between a measured finding
+and a plausible one. ⚑ The same shape this document records thirty-odd times, arriving in the
+correction to a stale table rather than in the table itself.
+
+⚑ **THE STUBTEST TARGET IS A REAL SUCCESSOR, F-ARMED BEFORE ANY REMOVAL IS PROPOSED**: planting a
+divergence in `stubs/panflute/__init__.pyi` (renaming `stringify`'s first parameter) makes
+`//mdstruct:test_stub_authority` go RED. A deletion premised on a successor must prove the
+successor fires; this one does. The removal itself is not taken here — the ruling covers it, but
+`run_checked` also supplies the gate's failure REPORTING, and whether the target's log reaches a
+refused committer as legibly is a second question nobody has measured.
+
+⚑⚑ **SO THE RULING IS MOSTLY DISCHARGED AND WHAT REMAINS IS SMALLER THAN THE TABLE SUGGESTS.** The
+two duplicated verdicts that went were ruff and mypy; a third — stubtest — is measured as
+duplicated and not yet removed. The other three survivors each answer about a subject no target
+reaches: the developer tree, the real tree, and markdown that has no target at all. ⚑ **REMOVING A
+DUPLICATE, KEEPING A DIFFERENT SUBJECT, AND BUILDING A MISSING TARGET ARE THREE JOBS** — the
+original row list said only "host venv" and made them look like one.
 
 ⚑ **THIS SECTION IS ITSELF THE STALE-RECORD CLASS IT DESCRIBES, in the document a tick reads
 first.** The table was true when written; nothing re-measured it while the work moved underneath,
