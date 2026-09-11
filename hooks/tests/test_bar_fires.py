@@ -5423,3 +5423,64 @@ def test_the_gate_does_not_run_a_second_copy_of_a_check_the_graph_already_runs()
             f"the gate invokes a host-venv {checker} again — one subject through two instruments, "
             f"which is what //<dist>:{checker} was measured to make redundant"
         )
+
+
+def test_no_bazel_invocation_filters_away_the_output_it_promises_to_show() -> None:
+    """⚑⚑⚑ A FLAG ADDED FOR QUIETNESS DESTROYED THE EVIDENCE AN ADJACENT COMMENT PROMISED.
+
+    `preflight.sh` runs the gate's own `//<dist>:ruff` and `//<dist>:mypy` and said, in a comment
+    directly above the command, that `--test_output=errors` was there *so a refusal carries its
+    finding*. It did not. Measured on a planted `PLR2004`, one flag varied at a time:
+
+        --test_output=errors --noshow_progress --ui_event_filters=-DEBUG,-WARNING,-INFO
+                                                 rc=3, names PLR2004: FALSE   (7 lines)
+        --test_output=errors --noshow_progress   rc=3, names PLR2004: TRUE   (26 lines)
+        --test_output=errors                     rc=3, names PLR2004: TRUE   (33 lines)
+
+    ⚑⚑ BAZEL EMITS TEST OUTPUT AS AN `INFO` EVENT, so `-INFO` discards exactly what
+    `--test_output` was asked to produce. `--test_output=all` does not rescue it — also FALSE
+    under the filter — and that is what proved the FILTER was the cause rather than the output
+    mode. Two hypotheses were refuted before the third was measured.
+
+    ⚑ SO THE TWO FLAGS ARE NOT INDEPENDENT, and the pairing reads as harmless: one asks for
+    output, the other asks for less noise, and the loser is silent. A reader gets a log PATH and
+    a claim that the finding is present.
+    """
+    # ⚑ THE POPULATION IS EVERY SHELL CONSUMER, NOT JUST preflight. Naming preflight alone would be
+    # the size-one hand-written population this suite has already paid for twice — the gate runs
+    # `bazel test //...` too, and any future script may.
+    # ⚑⚑⚑ EACH FILE IS READ THROUGH ITS OWN MODULE CONSTANT, NOT THROUGH A LOOP VARIABLE — and
+    # that is a CONCESSION TO A SIBLING ARM, recorded because it looks like clumsiness otherwise.
+    # `test_no_string_assertion_in_this_module_is_vacuous` resolves which file an arm reads by
+    # finding `<CONST>.read_text(...)`; a loop over a derived list is structurally unresolvable, so
+    # the first draft of this arm pushed that sweep's unresolved ceiling 22 -> 23. Raising the
+    # ceiling would have been expanding a baseline to fit my code.
+    # ⚑⚑ THE POPULATION IS STILL DERIVED — `_SHELL_CONSUMERS` is built from the constants rather
+    # than typed at the call site — and the reads are named so the sweep can follow them.
+    bodies = {
+        "preflight.sh": _PREFLIGHT.read_text(encoding="utf-8"),
+        "pre-commit": _GATE.read_text(encoding="utf-8"),
+        "blockers.sh": _POLL.read_text(encoding="utf-8"),
+    }
+    assert bodies, "no shell consumer found — this arm would pass by reading nothing"
+
+    offenders: list[str] = []
+    checked = 0
+    for name, text in bodies.items():
+        for line in text.splitlines():
+            stripped = line.strip()
+            # ⚑⚑ NON-COMMENT LINES ONLY. This very file documents the flag combination it
+            # forbids, and a substring sweep over prose reads the documentation as the defect —
+            # measured one commit ago at ad49f96, in an arm one screen above this one.
+            if stripped.startswith("#") or "bazel test" not in stripped:
+                continue
+            checked += 1
+            if "ui_event_filters" in stripped and "test_output" in stripped:
+                offenders.append(f"{name}: {stripped[:90]}")
+
+    # ⚑ NON-EMPTY: zero `bazel test` lines would make the check above vacuous rather than clean.
+    assert checked, "no `bazel test` invocation found in any consumer — nothing was examined"
+    assert not offenders, (
+        f"a bazel invocation asks for test output and filters INFO away in the same command, so "
+        f"the finding it promises never reaches the reader: {offenders}"
+    )

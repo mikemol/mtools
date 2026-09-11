@@ -125,11 +125,23 @@ for dist in $dists; do
     # ⚑ EXIT 0 AND 1..3 ARE DIFFERENT FACTS, kept as they were for the host ruff: bazel exits 3
     # when a test FAILS and 1 when the BUILD fails, so folding them together would report a broken
     # build as a lint finding.
-    # ⚑⚑ `--test_output=errors` SO A REFUSAL CARRIES ITS FINDING. Discarding the output would make
-    # this say "the gate will refuse this" with no name for what — the *detail that exists
-    # somewhere is detail the reader does not have* defect, repaired twice elsewhere in this repo.
-    bazel test "//$dist:ruff" "//$dist:mypy" --test_output=errors --noshow_progress \
-        --ui_event_filters=-DEBUG,-WARNING,-INFO
+    # ⚑⚑ `--test_output=errors` SO A REFUSAL CARRIES ITS FINDING. Saying "the gate will refuse
+    # this" with no name for WHAT is the *detail that exists somewhere is detail the reader does
+    # not have* defect, repaired twice elsewhere in this repo.
+    #
+    # ⚑⚑⚑ AND `--ui_event_filters=-INFO` SILENTLY DESTROYED EXACTLY THAT, WHILE THE COMMENT ABOVE
+    # CLAIMED OTHERWISE. Measured on a planted `PLR2004`, one flag varied at a time:
+    #
+    #     --test_output=errors --noshow_progress --ui_event_filters=-DEBUG,-WARNING,-INFO
+    #                                              rc=3, names PLR2004: FALSE   (7 lines)
+    #     --test_output=errors --noshow_progress   rc=3, names PLR2004: TRUE   (26 lines)
+    #     --test_output=errors                     rc=3, names PLR2004: TRUE   (33 lines)
+    #
+    # ⚑ BAZEL EMITS TEST OUTPUT AS AN INFO EVENT, so filtering INFO for quietness discards the
+    # finding and leaves a log PATH the reader must go open. `--test_output=all` does not help —
+    # measured, also FALSE under the filter — which is what proved the filter was the cause rather
+    # than the output mode. The filter is gone; `--noshow_progress` alone is the quiet part.
+    bazel test "//$dist:ruff" "//$dist:mypy" --test_output=errors --noshow_progress
     _rc=$?
     case "$_rc" in
         0) ;;

@@ -477,6 +477,52 @@ hard-depends on the build. A fresh clone cannot commit until it builds, and the 
 disappears. That is the trade the ruling accepts; recorded here so nobody re-litigates it as a
 surprise.
 
+### ⟐FILTER-ATE-THE-FINDING — NEW and CLEARED 2026-09-10, in the repair from one tick earlier
+
+⚑⚑⚑ **THE COMMENT PROMISED THE FINDING AND THE FLAG BESIDE IT THREW THE FINDING AWAY.**
+`preflight.sh`, rewritten at `ad49f96` to run `//<dist>:ruff` and `//<dist>:mypy`, passed
+`--test_output=errors` with a comment saying *"so a refusal carries its finding"* — and
+`--ui_event_filters=-DEBUG,-WARNING,-INFO` on the same line. **Bazel emits test output as an
+`INFO` event.**
+
+Measured on a planted `PLR2004`, one flag varied at a time:
+
+```
+--test_output=errors --noshow_progress --ui_event_filters=-DEBUG,-WARNING,-INFO
+                                         rc=3, names PLR2004: FALSE   (7 lines)
+--test_output=errors --noshow_progress   rc=3, names PLR2004: TRUE   (26 lines)
+--test_output=errors                     rc=3, names PLR2004: TRUE   (33 lines)
+```
+
+⚑⚑ **TWO HYPOTHESES WERE REFUTED BEFORE THE THIRD WAS MEASURED.** First: *`errors` prints only for
+tests bazel EXECUTES, so a cached failure prints the path* — refuted, `--nocache_test_results`
+changed nothing. Second: *`errors` never replays and `all` is required* — refuted, `all` was also
+FALSE **under the filter**. Only then did the filter become the candidate, and varying it alone
+settled it. Writing "because caching" after the first arm would have been the invented-cause shape.
+
+**What a reader saw before and after,** on the same planted defect:
+
+```
+before   //ratchet:ruff  FAILED in 0.1s
+         /home/mikemol/.cache/bazel/.../test.log          ← go open it yourself
+after    PLR2004 Magic value used in comparison, consider replacing `42` ...
+           --> src/mikemol/ratchet/cli.py:83:17
+         83 |     return n == 42
+```
+
+⚑ **AND THE DETAIL WAS ALWAYS IN THE LOG** — rule, file, line, source excerpt. This is the
+*detail that exists somewhere is detail the reader does not have* class the gate repaired for its
+own checks with `run_checked`, reintroduced one file over by a flag chosen for tidiness.
+
+⚑⚑ **THE ARM THAT NOW FORBIDS THE PAIRING HAD TO CONCEDE TO A SIBLING ARM, AND THE TENSION IS
+REAL.** Its first draft derived the consumer list into a local variable and read each file in a
+loop — which `test_no_string_assertion_in_this_module_is_vacuous` cannot resolve, because that
+sweep follows `<CONST>.read_text(...)`. The unresolved ceiling went 22 → 23. **Raising the ceiling
+would have been expanding a baseline to fit my code**, so the arm reads through the module
+constants instead and keeps its population derived from them. *Deriving a population and being
+statically resolvable pull against each other; here both were satisfiable, and where they are not,
+the ceiling wins.*
+
 ### ⟐PREFLIGHT-FAILS-OPEN — NEW 2026-09-10, the same defect as ⟐GATE-FAILS-OPEN, one file over
 
 ⚑⚑ **`preflight.sh:114` carries the identical `if [ -x ratchet/.venv/bin/mikemol-ratchet ]` guard

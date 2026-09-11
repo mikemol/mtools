@@ -2893,3 +2893,9 @@
   claim   = {⚑⚑⚑ ONE SUBJECT THROUGH TWO INSTRUMENTS IS A GATE THAT CAN DISAGREE WITH ITSELF. On the operator's ruling that gate verdicts use the build's venv and the gates be build TARGETS, the host-venv ruff and mypy are deleted — `//<dist>:ruff` and `//<dist>:mypy` run over the same `$staged` tree the gate materialises. ⚑⚑ THE REDUNDANCY WAS MEASURED BEFORE THE DELETION: on a PLANTED defect the host and `@ruff//:bin` binaries both reported `PLR2004`, same rc, same rule set; mypy reached the SAME 24-file population each way, with a planted type error flipping the host run while the population held. And both targets were shown to REFUSE planted defects afterwards, with a green control first. ⚑ The pytest line is NOT part of this and stays: its own comment names it a third population reading the WORKING tree.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_does_not_run_a_second_copy_of_a_check_the_graph_already_runs}
 }
+
+@misc{hooks-bar-fires-no-bazel-invocation-filters-away-the-output-it-promises-to-show,
+  section = {bar-fires},
+  claim   = {⚑⚑⚑ A FLAG ADDED FOR QUIETNESS DESTROYED THE EVIDENCE AN ADJACENT COMMENT PROMISED. `preflight.sh` passed `--test_output=errors` *so a refusal carries its finding* and `--ui_event_filters=-DEBUG,-WARNING,-INFO` beside it; bazel emits test output as an INFO event, so the refusal carried a log PATH instead. MEASURED on a planted PLR2004, one flag varied at a time: with the filter, names PLR2004 FALSE (7 lines); without it, TRUE (26 lines). ⚑⚑ `--test_output=all` does NOT rescue it — also FALSE under the filter — which is what refuted the output-mode hypotheses and identified the filter as the cause. Two hypotheses fell before the third was measured.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_bazel_invocation_filters_away_the_output_it_promises_to_show}
+}
