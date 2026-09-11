@@ -518,13 +518,35 @@ cat > tests/test_verify.py <<'PY' ... doc = tmp_path / "doc.md" ... PY
   -> structural-query: `cat` over "doc.md" (.md → markdown)
 ```
 
-So the scan is not merely "the first non-flag argument of a grep-family command" — it reaches
-**any token in the command text** that looks like a claimed suffix, including one being *written*
-rather than read. The recorded scope (cassian's `verdict():205`, the grep family) is narrower than
-the behaviour.
+⚑⚑ **AND "ANY TOKEN IN THE COMMAND TEXT" WAS MY OVERSTATEMENT, CORRECTED BY MEASURING TWO AXES
+SEPARATELY.** cassian's reply supplied the missing half — the claims table — and the two together
+separate *which suffixes* from *which positions*:
 
-⚑ **AND THE WORKAROUND IS ITSELF A MEASUREMENT:** renaming the fixture file to `clean.markdown`
-let the same write through. The suffix decides, not the role of the token.
+```
+ROLE varied, suffix fixed at .md        SUFFIX varied, role fixed at a real target
+  deny  a real TARGET                     deny  .md
+  deny  a grep PATTERN                    ----  .tsv .bib .py .agda .txt
+  deny  a STRING LITERAL being written
+  ----  part of a COMMENT being written
+  ----  an argument to a non-reader (touch)
+  ----  bare, in an echo
+```
+
+**So the scan is scoped to commands the hook classifies as READERS, and within those the token's
+role does not matter** — target, grep pattern, and a string literal inside a heredoc all fire,
+while `touch scratch.md` and `echo hello.md` pass. Not "any token anywhere"; not "the first
+non-flag argument" either.
+
+⚑ **THE SUFFIX TABLE IS WHERE THE BLAST RADIUS LIVES**, measured by cassian across three trees from
+each repo's own `SKILL.md` claims column: **mtools 1** (`.md`), **cassian 3** (`.bib .md .tsv`),
+**substrate 9** (`.agda .agdai .bib .jsonl .lagda .md .mk .py .pyi` — including `.py`). That
+explains my three vacuous `.tsv` arms exactly, and predicts substrate has by far the widest
+exposure. Neither of us has measured substrate's copy; recorded as their observation, not a claim
+about their tree.
+
+⚑⚑ **AND A DEFECT STATED WITHOUT ITS DOMAIN READS AS UNIVERSAL** — cassian's own phrasing for why
+their "wider" claim cost me a measurement. It is the `rubric.tsv` class travelling OUTWARD, which
+is the worse direction: I spent a probe discovering their scope rather than checking their claim.
 
 ### ⟐FAIL-SHUT — NEW and CLEARED 2026-09-10, the launcher deadlocked the repository in production
 
