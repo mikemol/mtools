@@ -1219,8 +1219,25 @@ echo "      goes stale the tick after the work moves it. Measure it:"
 # ⚑ AND DERIVING IT COSTS NOTHING HERE: the query at the top of this script already enumerates
 # every distribution by its pyproject.toml. What that comment above refuses is RUNNING RUFF in the
 # poll — three process starts — which is a separate thing from knowing WHICH directories to name.
-echo "        for d in $(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u | tr '\n' ' ' | sed 's/ $//'); do"
-echo "          env -C \$d .venv/bin/ruff check --preview --statistics . ; done"
+# ⚑⚑⚑ THE DECLARED RUFF, NOT THE HOST VENV'S — AND THIS LINE OUTLIVED THE DECISION THAT RETIRED
+# THAT INSTRUMENT. It read `.venv/bin/ruff` while `ad49f96` removed host ruff from the gate and
+# `preflight.sh` on the operator's ruling that gate verdicts use the build's venv. A poll telling
+# a reader to measure with the instrument the repository has stopped trusting is the stale-record
+# class this poll exists to catch, in the poll.
+# ⚑⚑ THE TWO AGREE TODAY AND THAT IS NOT THE POINT. Measured on `hooks`, byte-identical output:
+# 48 errors, same seven rules, same counts, host venv and `@ruff//:bin` alike. They are 0.16.6 by
+# a coincidence maintained BY HAND between resolvers with no shared constraint — so naming the
+# declared one costs nothing today and is the one that stays right.
+# ⚑ `//<dist>:ratchet` ALREADY RUNS `--preview` and is NOT a substitute here: it reports refusals
+# against a baseline — *did the debt grow* — while this line asks *how big is the debt*. Different
+# questions; the target answers the first, and nothing answers the second without running ruff.
+# ⚑ AND THE PATH MUST BE ABSOLUTE, WHICH THE OBVIOUS FORM IS NOT: `cquery --output=files` prints
+# `external/+_repo_rules+ruff/ruff`, relative to the EXECROOT — measured — so under `env -C $d` it
+# would resolve against the distribution directory and fail. `bazel info execution_root` supplies
+# the prefix. A printed instruction nobody has run is prose, not a measurement.
+echo "          _ruff=\"\$(bazel info execution_root)/\$(bazel cquery '@ruff//:bin' --output=files)\""
+echo "          for d in $(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u | tr '\n' ' ' | sed 's/ $//'); do"
+echo "            env -C \$d \"\$_ruff\" check --preview --statistics . ; done"
 echo "      Renaming first is unshippable — a name selector needs --preview to LOAD."
 # ⚑⚑⚑ THE SUPPRESSION RULES CHAIN, AND THE SECOND LINK IS PREVIEW-ONLY. Measured on a probe with
 # an F-arm (a bare violation is REPORTED in both configurations, so a rc=0 below means suppression

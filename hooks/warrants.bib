@@ -2899,3 +2899,9 @@
   claim   = {⚑⚑⚑ A FLAG ADDED FOR QUIETNESS DESTROYED THE EVIDENCE AN ADJACENT COMMENT PROMISED. `preflight.sh` passed `--test_output=errors` *so a refusal carries its finding* and `--ui_event_filters=-DEBUG,-WARNING,-INFO` beside it; bazel emits test output as an INFO event, so the refusal carried a log PATH instead. MEASURED on a planted PLR2004, one flag varied at a time: with the filter, names PLR2004 FALSE (7 lines); without it, TRUE (26 lines). ⚑⚑ `--test_output=all` does NOT rescue it — also FALSE under the filter — which is what refuted the output-mode hypotheses and identified the filter as the cause. Two hypotheses fell before the third was measured.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_bazel_invocation_filters_away_the_output_it_promises_to_show}
 }
+
+@misc{hooks-bar-fires-no-poll-instruction-names-a-retired-instrument,
+  section = {bar-fires},
+  claim   = {⚑⚑⚑ A POLL THAT TELLS A READER TO MEASURE WITH A RETIRED INSTRUMENT OUTLIVES THE DECISION THAT RETIRED IT. `blockers.sh` printed `env -C $d .venv/bin/ruff check --preview --statistics .` while ad49f96 had removed host ruff from the gate and preflight on the operator's ruling. ⚑⚑ IT SURVIVED BECAUSE THE TWO AGREE: measured on hooks, byte-identical — 48 errors, same seven rules, host venv and `@ruff//:bin` alike, both 0.16.6 by a hand-maintained coincidence between resolvers with no shared constraint. A stale instruction that still gives the right answer is invisible until the coincidence ends. ⚑ THE ARM SWEEPS ONLY `echo`d LINES, so the comment explaining the retirement is not read as the defect — measured: the control passes while `.venv/bin/ruff` is still in the file as prose.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_poll_instruction_names_a_retired_instrument}
+}

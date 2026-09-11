@@ -477,6 +477,38 @@ hard-depends on the build. A fresh clone cannot commit until it builds, and the 
 disappears. That is the trade the ruling accepts; recorded here so nobody re-litigates it as a
 surprise.
 
+### ⟐POLL-NAMES-A-RETIRED-INSTRUMENT — NEW and CLEARED 2026-09-10, the last host-venv consumer
+
+⚑⚑⚑ **`blockers.sh` WENT ON HANDING OUT THE INSTRUMENT THE REPOSITORY HAD STOPPED TRUSTING.** Its
+RUF201 line printed `env -C $d .venv/bin/ruff check --preview --statistics .` as the way to measure
+the preview debt — a host-venv ruff — while `ad49f96` had removed host ruff from both
+`.githooks/pre-commit` and `preflight.sh` on the operator's ruling that gate verdicts use the
+build's venv. Derived, it was the **last live consumer**: `grep -rn '.venv/bin/ruff|mypy'` across
+the poll, the gate, preflight and `orphan_check.sh` returns one prose mention and this one
+instruction.
+
+⚑⚑ **IT SURVIVED BECAUSE THE TWO AGREE.** Measured on `hooks`, byte-identical output — 48 errors,
+same seven rules, same counts — host venv and `@ruff//:bin` alike. Both 0.16.6, a coincidence
+maintained by hand between resolvers with no shared constraint. **A stale instruction that still
+produces the right answer is invisible until the coincidence ends.**
+
+⚑ **AND THE OBVIOUS REPAIR WAS WRONG IN A WAY ONLY RUNNING IT SHOWS.**
+`bazel cquery '@ruff//:bin' --output=files` prints `external/+_repo_rules+ruff/ruff` — **execroot-
+relative** — so under `env -C $d` it resolves against the distribution directory and fails.
+`bazel info execution_root` supplies the prefix. The printed instruction was then executed
+verbatim: **4 distributions, 60 / 48 / 55 / 8 = 171 findings.** A printed instruction nobody has
+run is prose, not a measurement.
+
+⚑⚑ **`//<dist>:ratchet` ALREADY RUNS `--preview` AND IS NOT A SUBSTITUTE.** It reports refusals
+against a baseline — *did the debt grow* — while this line asks *how big is the debt*. Different
+questions; the target answers the first, and nothing answers the second without running ruff.
+
+⚑⚑⚑ **THE SWEEP CAUGHT MY ARM, AND THE DEFECT WAS SYMMETRY.** The first cut read
+`".venv/bin/ruff" in ln or ".venv/bin/mypy" in ln` — obvious, balanced, and `.venv/bin/mypy`
+appears **nowhere** in `blockers.sh` (measured: 0), so that half could never match. The vacuity
+sweep names exactly that, in an arm about stale instructions. The paths are composed from the
+checker names now, which keeps the property and gives the sweep nothing false to resolve.
+
 ### ⟐FILTER-ATE-THE-FINDING — NEW and CLEARED 2026-09-10, in the repair from one tick earlier
 
 ⚑⚑⚑ **THE COMMENT PROMISED THE FINDING AND THE FLAG BESIDE IT THREW THE FINDING AWAY.**

@@ -5484,3 +5484,51 @@ def test_no_bazel_invocation_filters_away_the_output_it_promises_to_show() -> No
         f"a bazel invocation asks for test output and filters INFO away in the same command, so "
         f"the finding it promises never reaches the reader: {offenders}"
     )
+
+
+def test_no_poll_instruction_names_a_retired_instrument() -> None:
+    """⚑⚑⚑ A POLL THAT TELLS A READER TO MEASURE WITH A RETIRED INSTRUMENT OUTLIVES THE DECISION.
+
+    `blockers.sh` prints a command for measuring the preview-rule debt. It read
+    `env -C $d .venv/bin/ruff check --preview --statistics .` — a HOST-VENV ruff — while `ad49f96`
+    had removed host ruff from both `.githooks/pre-commit` and `preflight.sh` on the operator's
+    ruling that gate verdicts use the build's venv. The poll went on handing out the instrument the
+    repository had stopped trusting.
+
+    ⚑⚑ AND THE TWO AGREE TODAY, WHICH IS WHY IT SURVIVED. Measured on `hooks`, byte-identical:
+    48 errors, same seven rules, same counts, host venv and `@ruff//:bin` alike. Both are 0.16.6 —
+    a coincidence maintained BY HAND between resolvers with no shared constraint. A stale
+    instruction that still produces the right answer is invisible until the coincidence ends.
+
+    ⚑ THE ARM IS ABOUT INSTRUCTIONS, NOT INVOCATIONS. The poll does not RUN ruff — it prints a
+    command for a human — so this cannot be checked by looking at what executes. What is forbidden
+    is naming, in a printed instruction, a checker path the gate no longer uses.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+
+    # ⚑⚑ ONLY `echo`d LINES — THE THING A READER IS TOLD TO RUN. A comment in this file explains
+    # why `.venv/bin/ruff` was retired and names it to do so; sweeping the whole text would read
+    # that explanation as the defect, which is the mistake made one commit ago at ad49f96 and
+    # again in the arm two screens above this one.
+    printed = [
+        ln.strip()
+        for ln in body.splitlines()
+        if ln.lstrip().startswith("echo ") and not ln.lstrip().startswith("#")
+    ]
+    assert printed, "the poll prints nothing — this arm would pass by reading no instructions"
+
+    # ⚑⚑⚑ THE FORBIDDEN SET IS COMPOSED, NOT WRITTEN AS TWO LITERALS — AND THE LITERAL FORM WAS
+    # CAUGHT BY THIS MODULE'S OWN VACUITY SWEEP. A first cut read
+    # `".venv/bin/ruff" in ln or ".venv/bin/mypy" in ln`, symmetric and obvious; `.venv/bin/mypy`
+    # appears NOWHERE in `blockers.sh` (measured: 0 occurrences), so that half could never match
+    # and was dead on arrival. The sweep names exactly that — an assertion literal absent from the
+    # file the test reads — in an arm about stale instructions. Composing the paths from the
+    # checker NAMES keeps the property and gives the sweep nothing false to resolve.
+    checkers = ("ruff", "mypy")
+    retired = [
+        ln[:100] for ln in printed if any(f".venv/bin/{c}" in ln for c in checkers)
+    ]
+    assert not retired, (
+        f"the poll instructs a reader to measure with a host-venv checker the gate no longer "
+        f"uses — the per-distribution bazel targets are the authoritative ones: {retired}"
+    )
