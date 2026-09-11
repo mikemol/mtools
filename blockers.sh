@@ -1243,7 +1243,20 @@ echo "    out of 46' from cache, which measures the cache rather than the execut
 # ⚑ SO THE PETITIONER IS A COLUMN. A self-raised measurement and a request someone made are
 # otherwise byte-identical in the symbol set, and one of them is not blocked at all.
 echo "=== operator decisions carried, and who raised each ==="
-echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt"
+# ⚑⚑⚑ DISCHARGED 2026-09-11 AT f7d92c9, AND THE ENTRY OUTLIVED ITS OWN DECISION BY ONE TICK.
+# `ANSWERED: adopt` was true from 2026-09-07 until the last distribution was paid; the moment
+# `NOT ARMED` derived to `none`, everything printed beneath it — the measurement recipe, the
+# ordering rule, the RUF105 chain caveat — became live-voice guidance for an empty population.
+# `Code form holds in the NOT ARMED ones` was advice about a set with no members.
+# ⚑⚑ THE FOURTH ROT ON THIS ENTRY, AND THE FIRST THAT THE DERIVATION COULD NOT CATCH. The figure
+# rotted twice, `BLOCKED` once, the distribution list once — each a FIELD, each repaired by
+# deriving it. This one is the entry's CONTINUED EXISTENCE in the present tense, which no field
+# derivation reaches: the ARMED line was correct on the tick the block around it went obsolete.
+# ⚑ SO THE SHAPE FOLLOWS THE `cassian's hook components` PRECEDENT BELOW — DISCHARGED, a date, a
+# commit, and the measurement that mattered. Every comment in this block is KEPT: they record
+# three separate stale-record defects measured in this very entry, and they are invisible to the
+# poll's output, so they cannot rot the way an `echo` does.
+echo "  RUF201 rule-name autofix   raised by mtools   DISCHARGED 2026-09-11 at f7d92c9"
 # ⚑⚑⚑ AND THE ADOPTION HAS A PRECONDITION THE FIRST ATTEMPT DISCOVERED. Applying the autofix
 # renamed 26 selectors and made EVERY ruff target exit 2: *Invalid selector … Selecting rules by
 # name requires preview mode*. The gate runs `ruff check` with no `--preview`, so a renamed config
@@ -1294,10 +1307,17 @@ for _d in $(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u
         _unarmed="$_unarmed $_d"
     fi
 done
-echo "    ⚑ ARMED:${_armed:- none} · NOT ARMED:${_unarmed:- none}  (derived: \`preview = true\` in"
-echo "      each distribution's own [tool.ruff.lint], read per poll — no ruff run)"
-echo "      The size is not stated here: a typed count goes stale the tick after the work"
-echo "      moves it, which this entry measured twice. Measure it:"
+echo "    every distribution armed and paid; all four ratchet baselines EMPTY. Four commits:"
+echo "    9802790 hooks · 39b25ad ratchet · 9129a3d mdstruct · f7d92c9 fence."
+# ⚑⚑⚑ THE DERIVATION SURVIVES THE DISCHARGE, AND ITS QUESTION HAS INVERTED. While the paydown ran
+# it answered *which are left*; now it answers *has one been UN-armed* — a config edit dropping
+# `preview = true` would silently restore a whole class of findings to unchecked, and this line is
+# the only place a reader would see it. A discharged decision whose state can still regress needs
+# its check kept, which is why this entry is collapsed rather than deleted.
+# ⚑ AND IT COSTS ONE GREP PER DISTRIBUTION, so keeping it is nearly free — the objection that kept
+# the FIGURE out of this poll (three ruff invocations per run) never applied to the STATUS.
+echo "    ⚑ ARMED:${_armed:- none} · NOT ARMED:${_unarmed:- none}  — derived per poll, so this"
+echo "      line now watches for a distribution being UN-armed rather than for work remaining."
 # ⚑⚑ THE DISTRIBUTION LIST IS DERIVED, NOT TYPED — AND IT WAS TYPED, AND IT WENT STALE. This line
 # read `for d in hooks mdstruct ratchet` while `fence` had landed at cc3d301, so a reader taking
 # the measurement would have omitted a whole distribution and reported a total for a population
@@ -1331,9 +1351,12 @@ echo "      moves it, which this entry measured twice. Measure it:"
 # ⚑⚑ `bazel info output_base` IS THE STABLE ANCHOR, and it was available all along. The lesson the
 # comment above records — run the instruction — was applied to the RELATIVE-vs-ABSOLUTE question
 # and not to the prefix itself, so the fix stopped one layer short of the defect.
-echo "          _ruff=\"\$(bazel info output_base)/\$(bazel cquery '@ruff//:bin' --output=files)\""
-echo "          for d in $(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u | tr '\n' ' ' | sed 's/ $//'); do"
-echo "            env -C \$d \"\$_ruff\" check --preview --statistics . ; done"
+# ⚑⚑ THE RECIPE IS NO LONGER PRINTED, AND THE COMMENTS ABOVE ARE WHY IT IS KEPT IN SOURCE. It
+# answered *how big is the remaining paydown* — a question whose answer is now 0 in every
+# distribution, so printing the command invites a reader to run three ruff invocations to be told
+# nothing. ⚑ Its two hard-won corrections (derive the distribution list; `output_base`, not
+# `execution_root`) are recorded in the comments above and would be needed again by whoever arms
+# the next preview-gated rule, which is exactly why they stay readable here rather than being cut.
 # ⚑⚑ THIS LINE WAS A LIVE CONSTRAINT AND IS NOW A HISTORICAL ONE, so it says which. Renaming was
 # unshippable BEFORE the arming: measured, `--select magic-value-comparison` gives rc=2 *ruff
 # failed* without `--preview` and rc=1 with it, so the rename had to follow the arming rather than
@@ -1343,8 +1366,11 @@ echo "            env -C \$d \"\$_ruff\" check --preview --statistics . ; done"
 # hooks; the other three await it* — a count and a name, both hand-written, both wrong the tick
 # ratchet landed. The order is a permanent fact about ruff and stays typed; WHICH distributions
 # have done it is a fact about this tree and is derived above.
-echo "      Order: ARM preview, THEN rename — a name selector needs --preview to LOAD, so the"
-echo "      reverse order exits 2 on every ruff target. Which ones are done: see ARMED above."
+# ⚑ THE ORDERING RULE IS A PERMANENT FACT ABOUT RUFF AND A SPENT INSTRUCTION HERE. *Arm preview,
+# then rename* still holds — a name selector cannot LOAD without it, measured — but there is no
+# distribution left to apply it to, so printing it each tick is guidance for nobody. Kept in
+# source for the next preview-gated adoption; not printed, because a live imperative with no
+# population is the shape this whole entry rotted on four times.
 # ⚑⚑⚑ THE SUPPRESSION RULES CHAIN, AND THE SECOND LINK IS PREVIEW-ONLY. Measured on a probe with
 # an F-arm (a bare violation is REPORTED in both configurations, so a rc=0 below means suppression
 # rather than a rule that never ran):
@@ -1365,20 +1391,19 @@ echo "      reverse order exits 2 on every ruff target. Which ones are done: see
 # ⚑ SO THE CODE FORM IS THE RESTING PLACE. 16 directives swapped in hooks and verified: `ruff
 # check` (no preview) still `All checks passed!`, suite 337 pass. RUF105 cleared, RUF106 opened at
 # the same 16 sites, total unmoved at 41 — a rule renamed, not a defect paid.
-echo "      RUF105 -> RUF106 measured: the chain's second link needs --preview to SUPPRESS,"
+# ⚑⚑⚑ THE CHAIN CAVEAT IS NO LONGER PRINTED BECAUSE THE HAZARD IS CLOSED BY CONSTRUCTION. It
+# warned that a renamed suppression directive fails SILENTLY in a distribution that is not armed —
+# true, and there is now no such distribution. The comments below record the mechanism and the
+# measurement, which is what a future reader arming a preview-gated rule elsewhere would need.
 # ⚑⚑ AND THE SILENT-FAILURE HAZARD IS CLOSED WHERE PREVIEW IS ARMED, WHICH IS WHY THIS SAYS WHERE.
 # The chain fails silently only when the gate and the census disagree about the rule set. `preview
 # = true` in a distribution's own `[tool.ruff.lint]` removes the flag both callers could differ on
 # — the gate passes no `--preview` and loads it from the config — so in hooks there is no longer a
 # configuration in which a renamed directive stops suppressing. Measured: reverting one directive
 # to the code form leaves the suppression WORKING and raises only the style rule.
-echo "      and fails SILENTLY without it — in a distribution that is NOT yet armed. Where"
 # ⚑ THE THIRD NAME IN THIS ENTRY, AND IT WAS THE NEXT ONE TO ROT. It read `(hooks)` as an example
 # of the mechanism rather than as a status — a distinction that survives exactly until a reader
 # takes it for the list. Pointing at the derived line costs nothing and cannot go stale.
-echo "      preview is armed in the config (the ARMED list above), gate and census cannot"
-echo "      disagree and both directive forms suppress; only the style rule objects."
-echo "      Code form holds in the NOT ARMED ones."
 # ⚑⚑ DISCHARGED 2026-09-10 AT ab722b5, AND THE OLD LINE SURVIVED THE EVENT IT DESCRIBED. It read
 # "ANSWERED 2026-09-07: mtools asks for a diff" — true when written, false the moment the diff
 # arrived. cassian filed it, mtools answered in findings/cassian-observability.md, and the filing

@@ -507,7 +507,7 @@ workaround in `_run_cli` is retired: one line now, no global, no `finally`.
 ⚑ *A finding filed outward is not a finding fixed at home*, and the second carry is the part worth
 remembering — the first was honest ignorance, the second was a record I had already written.
 
-### ⟐EXE002-REMOTE-ONLY · ⟐REMOTE-DISCARDS-MODE-BITS — CLEARED 2026-09-11 by operator ruling
+### ⟐EXE002-REMOTE-ONLY — CLEARED 2026-09-11 by operator ruling; ⟐REMOTE-DISCARDS-MODE-BITS STANDS
 
 ⚑⚑⚑ **`bazel test //... --config=remote` IS GREEN FOR THE FIRST TIME: 46 of 46, 26 actions on the
 executor.** It was 43 of 46 for many ticks, three targets red from one cause.
@@ -535,7 +535,16 @@ after script fix  45 of 46 remote   (the arm's own invocation still unnormalised
 after both        46 of 46 remote, 46 of 46 local
 ```
 
-### ⟐RUF201 — operator ruled 2026-09-11: ARM PREVIEW REPO-WIDE, then pay down
+⚑⚑⚑ **AND THIS HEADING SAID BOTH SYMBOLS WERE CLEARED, WHICH IS TRUE OF ONE OF THEM.** The three
+red targets are fixed. **The CAS still discards mode bits** — the repair NORMALISES the population
+so the rule stops misfiring, and changes nothing about the executor. ⟐REMOTE-DISCARDS-MODE-BITS
+therefore STANDS as a property to design against, and its own section records why: any check keying
+on a mode bit is unsound remotely, and none should be written without knowing that.
+⚑⚑ **A FIX FOR A SYMPTOM FILED AS A FIX FOR ITS CAUSE is the recurring shape in this repository's
+own clearing record** — the symptom is what went red, so it is what a reader remembers, and the
+cause quietly inherits the *CLEARED* the symptom earned.
+
+### ⟐RUF201 — DISCHARGED 2026-09-11 at f7d92c9, all four distributions armed and paid
 
 ⚑ **THE BLOCKING CLAIM WAS TRUE, MEASURED:** `--select magic-value-comparison` gives `rc=2 ruff
 failed` without `--preview` and `rc=1` with it. A name selector genuinely needs preview to load, so
@@ -552,9 +561,21 @@ than the tree.
 and `per-file-ignores` lists) + 18 `RUF106` (suppression comments in `test_bar_fires.py` ×17 and
 `test_checkers.py` ×1). **All 36 auto-fixable.** Repo-wide the preview paydown is 171.
 
-**Ruled: arm `preview = true` repo-wide and pay the 171 down.** Not yet begun; the 135 beyond the
-auto-fixable pair are DOC201, FURB113, S404, DOC501, PLR1702 and the other distributions'
-equivalents, and each is pay-or-declare.
+**Ruled: arm `preview = true` repo-wide and pay the 171 down.** ⚑⚑⚑ **DONE, IN FOUR COMMITS:**
+`9802790` hooks · `39b25ad` ratchet · `9129a3d` mdstruct · `f7d92c9` fence. Census measured **0
+across all four**; every ratchet baseline is EMPTY, each lowered on an operator ruling and F-armed
+(a planted finding is refused by name, a clean copy passes).
+
+⚑⚑ **AND THE 171 WAS NEVER RE-MEASURED AFTER IT WAS WRITTEN, WHICH IS WHY IT OUTLIVED ITS SUBJECT.**
+Measured fresh at each arming it read 170, then 122, then 114, then 60, then 0 — the figure in this
+paragraph and in the tick prompt stayed 171 throughout. A recorded count announces no way to
+re-check itself; the poll's own repair for this was to stop printing the number and print the
+command instead, and this section is the same defect one document over.
+
+⚑ **WHAT IS WORTH CARRYING FORWARD IS NOT THE STATUS BUT THE ORDER AND ITS TWO TRAPS**, for whoever
+arms the next preview-gated rule: arm first, rename second (a name selector cannot LOAD without
+preview — measured, rc=2); and probe with `--extend-select`, never `--select`, which replaces the
+config's `select = ["ALL"]` and reported zero where the tree held eighteen.
 
 ### ⟐ROLE-AXIS-ROW-WAS-AN-ARTIFACT — NEW and CLEARED 2026-09-11, a published row proved nothing
 
@@ -1003,7 +1024,7 @@ property, ratcheted by a guard that treats it as owed. The apparent 22→23 coll
 nearly triggered a redesign was a HELPER counted as a test; scoping to `test_`-prefixed
 functions returned it to 22 with no constant moved.
 
-### ⟐EXE002-REMOTE-ONLY — NEW 2026-09-10, measured, THREE TARGETS RED ON THE EXECUTOR
+### ⟐EXE002-REMOTE-ONLY — the measurement that preceded the fix (CLEARED; see the section above)
 
 ⚑⚑⚑ **`//hooks:ruff` IS GREEN LOCALLY AND RED REMOTELY ON IDENTICAL SOURCES.** Measured at
 unmodified HEAD (`29240c9`), so it is not a consequence of any uncommitted change:
@@ -1066,7 +1087,7 @@ claim wanting the strong instrument sits behind a red bar that is not about the 
 
 Carried as measured, red, and NOT worked around.
 
-### ⟐REMOTE-DISCARDS-MODE-BITS — NEW 2026-09-10, measured, GENERAL
+### ⟐REMOTE-DISCARDS-MODE-BITS — a STANDING property of the CAS, not a defect that was fixed
 
 ⚑⚑ **The executor stages every source file `-rwxr-xr-x`; the local sandbox stages it with the
 repository's own `-rw-rw-r--`.** Measured from inside an action in both modes (see the table in
@@ -1093,11 +1114,18 @@ F-arm's 256MB kills the WHOLE EXECUTOR POD rather than reddening one test.
 is survival evidence. ⚑⚑ It does NOT need the RBE substrate: `--mem N --swap 0` on a host
 cgroup is the same deliberate breach at a process-sized blast radius. Not proposed as work.
 
-### ⟐RUF201 — carried, answered, blocked on a paydown
+### ⟐RUF201 — DISCHARGED; this was a SECOND live section for one symbol
 
-Operator ANSWERED 2026-09-07: adopt. Blocked on a preview-wide paydown whose size is
-deliberately NOT stated anywhere — the poll prints the command that measures it. Renaming
-first is unshippable: a name selector needs `--preview` to LOAD.
+⚑⚑⚑ **THIS DOCUMENT CARRIED TWO ⟐RUF201 SECTIONS, BOTH IN THE PRESENT TENSE, AND NEITHER KNEW
+ABOUT THE OTHER.** The section above held the measurement and the ruling; this one held a summary —
+*blocked on a preview-wide paydown … the poll prints the command that measures it* — and the poll
+stopped printing that command the same day the paydown finished. A reader scanning headings meets
+whichever comes first.
+
+⚑⚑ **A SUMMARY OF A LIVE ITEM IS A SECOND PLACE FOR ITS STATUS TO ROT, and it rots faster than the
+original** because it carries no measurement to contradict it. The full section is above; this stub
+remains only so a reader who followed a line reference here is not left wondering whether a third
+account exists.
 
 ### ⟐MD056-CORPUS-12 · ⟐VACUITY-CEILING · ⟐CLASSIFY-SPANS-ALL-TABLES
 
