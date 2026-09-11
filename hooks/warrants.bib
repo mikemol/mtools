@@ -2953,3 +2953,15 @@
   claim   = {⚑ THE CONTROL FOR THE HEREDOC ARM: an exemption keyed on the PROGRAM rather than on the REDIRECTION would satisfy that arm and disarm an ordinary read, which is exactly what this gate is for.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_plain_read_of_a_claimed_artifact_still_fires}
 }
+
+@misc{hooks-structural-query-a-bare-mention-in-a-heredoc-body-passes-with-the-token-present,
+  section = {structural-query},
+  claim   = {⚑⚑⚑ A ROW OF MY OWN PUBLISHED TABLE PASSED BECAUSE ITS TOKEN NEVER EXISTED. cassian raised it as a hypothesis about mtools' tokeniser, not a claim about the tree, and it holds for exactly one row: `#` opens a SHELL COMMENT, so a `# see notes.md` line in a heredoc tokenises away entirely and the role-axis row `---- a COMMENT being written` measured comment-stripping. ⚑⚑ THE CONCLUSION SURVIVES ON THE OTHER ROWS — `touch` and `echo` pass WITH THE TOKEN PRESENT — so five of six were measurements and one was an artifact. This arm uses a BARE mention, which survives tokenisation, and asserts that precondition before asserting the pass.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_bare_mention_in_a_heredoc_body_passes_with_the_token_present}
+}
+
+@misc{hooks-structural-query-a-read-after-a-heredoc-terminator-is-still-seen,
+  section = {structural-query},
+  claim   = {⚑⚑⚑ DROPPING EVERYTHING AFTER `<<` THREW AWAY A REAL READ. The tokeniser does not split on the newline after a terminator, so a heredoc followed by ANY command folds that command into the same invocation and its target vanished from the scan — ordinary shell, not an exotic shape. cassian built the terminator-aware bound and the difference was MEASURED here rather than adopted from the description, the same discipline that caught the `-e` divergence. ⚑ An unterminated tag swallows the remainder deliberately: a body token read as an ARGUMENT is a false refusal of a command that reads nothing, while an argument read as BODY is a missed catch in a command that is WRITING, whose destination is still scanned.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_read_after_a_heredoc_terminator_is_still_seen}
+}

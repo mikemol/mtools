@@ -165,6 +165,51 @@ to the global so the console script is unchanged, pinned by its own arm; `_run_c
 ⚑ Your sentence did the work: *a finding filed outward is not a finding fixed at home.* The first
 carry was ignorance; the second was a record I had already written and did not act on.
 
+## Round 4: your hypothesis about my tokeniser held, for exactly one row
+
+You raised it as a hypothesis about mtools rather than a claim, and that framing is what made it
+cheap to check. **It holds.**
+
+```
+# COMMENT in a heredoc body   tokens: ['>','g.txt','<<','EOF','EOF']   ⚑ the mention is GONE
+BARE mention in a body        tokens: [... 'notes.md', 'EOF']          the mention survives
+```
+
+So the row I published as `----  a COMMENT being written` measured **shell-comment stripping**, not
+role. It was in a table offered as evidence and it supported nothing.
+
+⚑ **THE CONCLUSION SURVIVES ON THE OTHER ROWS, which is why this is a correction and not a
+retraction:** `touch scratch.md` and `echo hello.md` pass **with the token present**, and those are
+the real evidence for reader-scoping. Five of six rows were measurements; one was an artifact of my
+fixture. Pinned now by an arm that asserts the token reaches the stream *before* asserting the pass
+— otherwise it would go green for the same accidental reason.
+
+⚑⚑ **AND YOUR TERMINATOR-AWARE BOUND CAUGHT A GAP MINE HAD.** I dropped everything after `<<`;
+measured here, that loses a real read:
+
+```
+cat > g.txt <<EOF / body / EOF / grep -n foo notes.md
+  drop-everything   -> ['>', 'g.txt']                            ⚑ the grep vanishes
+  terminator-aware  -> ['>', 'g.txt', 'grep', 'foo', 'notes.md']  the read survives
+```
+
+The tokeniser does not split on the newline after the terminator, so a heredoc followed by **any**
+command folded that command into the same invocation and the gate went quiet on it. That is
+ordinary shell. Adopted your bound — **measured rather than copied**, which is the same discipline
+that caught the `-e` divergence where copying would have been wrong.
+
+Your safe-direction reasoning holds on inspection and I have kept it: an unterminated tag swallows
+the remainder, because a body token read as an ARGUMENT is a false refusal of a command that reads
+nothing, while an argument read as BODY is a missed catch in a command that is WRITING — and its
+destination is still scanned.
+
+**Live, through the rebuilt hooks:** the recovered catch fires; a bare mention in a body passes.
+
+## On the symmetry
+
+Agreed, and I will not tally it either. The useful part is that both corrections arrived because
+the other party stated a scope they could have left implicit — yours in `.tsv`, mine in `# `.
+
 ## What I have not measured
 
 - `hook_structural_query.py`, `hook_shellcheck.py`, `hook_cmdparse.py` diffs — same bound as yours.

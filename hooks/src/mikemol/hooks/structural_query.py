@@ -137,6 +137,36 @@ _PATTERN_FLAGS = frozenset(("-e", "--regexp", "-f", "--file"))
 _HEREDOC_OPS = frozenset(("<<", "<<-"))
 
 
+def _without_heredoc_bodies(args: list[str]) -> list[str]:
+    """Drop the tokens strictly between each heredoc tag and its terminator.
+
+    ⚑ THE TAG NAMES ITS OWN TERMINATOR — `<<EOF` ends at the next bare `EOF` — so the body is
+    bounded rather than open-ended. An unterminated tag swallows the remainder, which is the safe
+    direction: a body token read as an argument would REFUSE a command that reads nothing.
+
+    Returns:
+        the arguments with every heredoc body removed.
+
+    """
+    out: list[str] = []
+    i = 0
+    while i < len(args):
+        if args[i] not in _HEREDOC_OPS:
+            out.append(args[i])
+            i += 1
+            continue
+        # ⚑ `<<` then its TAG; the body runs until that tag appears again as its own token.
+        i += 1
+        if i >= len(args):
+            break
+        tag = args[i].strip("'\"")
+        i += 1
+        while i < len(args) and args[i].strip("'\"") != tag:
+            i += 1
+        i += 1  # step over the terminator itself
+    return out
+
+
 def _scannable(prog: str, args: list[str]) -> list[str]:
     """Return the arguments that name artifacts this command READS.
 
@@ -168,12 +198,26 @@ def _scannable(prog: str, args: list[str]) -> list[str]:
     # DESTINATION, which is a real artifact being written and stays in scope. `<<` introduces a
     # BODY — arbitrary text the command creates, never a path it touches — and everything from the
     # delimiter onward is that body.
-    # ⚑ A FROZENSET RATHER THAN A TUPLE LITERAL: ruff's preview `literal-membership` refuses the
-    # inline form, and the ratchet minted a key for it. Fixing the file rather than the baseline.
-    for i, a in enumerate(args):
-        if a in _HEREDOC_OPS:
-            args = args[:i]
-            break
+    # ⚑⚑⚑ ONLY THE TOKENS BETWEEN THE TAG AND ITS TERMINATOR, AND MY FIRST CUT DROPPED EVERYTHING
+    # AFTER `<<` — WHICH LOSES A REAL CATCH. cassian built the terminator-aware bound and I
+    # measured the difference here rather than adopting the description:
+    #
+    #     A heredoc write, its terminator, and then a grep of a claimed artifact tokenise into ONE
+    #     invocation whose arguments run from the redirection through the grep's own target.
+    #     Dropping from the tag onward left only the redirection and its destination — the grep
+    #     vanished. Bounding at the terminator keeps the grep and its target in the scan.
+    #
+    # The tokeniser does not split on the newline after the terminator, so a heredoc followed by
+    # ANY command folded that command into the same invocation. Ordinary shell, not an exotic case.
+    #
+    # ⚑⚑ AN UNTERMINATED TAG TREATS THE REST AS BODY, and that direction is deliberate — cassian's
+    # reasoning, which holds on inspection: a body token read as an ARGUMENT is a FALSE REFUSAL of
+    # a command that reads nothing, while an argument read as BODY is a missed catch in a command
+    # that is WRITING. The first blocks work that is fine; the second lets through a write whose
+    # destination is still scanned.
+    # ⚑ FROZENSET, NOT A TUPLE LITERAL: ruff's preview `literal-membership` refuses the inline
+    # form and the ratchet minted a key for it. Fixed in the file rather than the baseline.
+    args = _without_heredoc_bodies(args)
 
     if prog not in _PATTERN_FIRST:
         return [a for a in args if not a.startswith("-")]

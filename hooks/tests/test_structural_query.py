@@ -25,7 +25,7 @@ import json
 
 import pytest
 
-from mikemol.hooks import payload, routing_table, structural_query
+from mikemol.hooks import cmdparse, payload, routing_table, structural_query
 
 # ⚑ THE EMPTY STRING, NAMED — see `test_payload.py` for the measurement. `compare-to-empty-string`
 # wants `x == ""` rewritten to `not x`, which is satisfied by `None`, `0` and `[]`; these arms
@@ -503,6 +503,65 @@ def test_a_heredoc_write_to_a_claimed_destination_still_fires() -> None:
     """
     cmd = "cat > " + _NOTES + " <<EOF\nplain text\nEOF"
     assert _fires(cmd), "a write to a claimed artifact must fire, whatever the body contains"
+
+
+def test_a_bare_mention_in_a_heredoc_body_passes_with_the_token_present() -> None:
+    """⚑⚑⚑ A ROW OF MY OWN PUBLISHED TABLE PASSED BECAUSE ITS TOKEN NEVER EXISTED.
+
+    cassian raised this as a hypothesis about mtools' tokeniser rather than a claim about the
+    tree, and it holds for exactly one row. The role-axis table published at `e046800` carried
+    `----  a COMMENT being written` as evidence that role does not matter within readers. Measured:
+    `#` opens a SHELL COMMENT, so `cat > g.txt <<EOF / # see notes.md / EOF` tokenises to
+    `['>', 'g.txt', '<<', 'EOF', 'EOF']` — **the mention never becomes a token at all.** That row
+    measured comment-stripping and supported nothing.
+
+    ⚑⚑ THE CONCLUSION SURVIVES ON THE OTHER ROWS, which is why this is a correction rather than a
+    retraction: `touch scratch.md` and `echo hello.md` pass WITH THE TOKEN PRESENT, and those are
+    the real evidence for reader-scoping. Five of six rows were measurements; one was an artifact.
+
+    ⚑ SO THIS ARM USES A BARE MENTION, which survives tokenisation, and asserts the pass is the
+    fix's doing rather than the shell's. Before `_scannable` existed this command FIRED — measured
+    against a reproduction of the old scan — so a green here is a fact about the gate.
+    """
+    body = "PATH = notes" + _MD
+    cmd = "cat > /tmp/scratch.txt <<EOF\n" + body + "\nEOF"
+
+    # ⚑ THE PRECONDITION IS ASSERTED, NOT ASSUMED. If the mention stopped reaching the token
+    # stream, this arm would go green for the same accidental reason the published row did.
+    progs = cmdparse.programs(cmd)
+    tokens = [a for _prog, args in progs for a in args]
+    assert any(_MD in t for t in tokens), (
+        f"the mention never reached the token stream, so a pass would prove nothing: {tokens}"
+    )
+
+    assert not _fires(cmd), "a claimed suffix in a heredoc BODY is data, not an artifact read"
+
+
+def test_a_read_after_a_heredoc_terminator_is_still_seen() -> None:
+    """⚑⚑⚑ MY FIRST CUT DROPPED EVERYTHING AFTER `<<` AND THREW AWAY A REAL READ.
+
+    The tokeniser does not split on the newline after a heredoc terminator, so a heredoc followed
+    by ANY command folds that command into the same invocation:
+
+        cat > g.txt <<EOF / body / EOF / grep -n notes.md
+          tokens: ['>','g.txt','<<','EOF','body','EOF','grep','-n','foo','notes.md']
+
+    Dropping from `<<` onward left `['>', 'g.txt']` — the grep vanished. That is ordinary shell,
+    not an exotic shape, and the gate went quiet on it.
+
+    ⚑⚑ cassian BUILT THE TERMINATOR-AWARE BOUND AND I MEASURED THE DIFFERENCE rather than adopting
+    the description — the same discipline that caught the `-e` divergence, where their tokeniser
+    and mine differed and a copied fix would have been wrong.
+
+    ⚑ THE UNTERMINATED CASE SWALLOWS THE REMAINDER, deliberately, on cassian's reasoning: a body
+    token read as an ARGUMENT is a false refusal of a command that reads nothing, while an argument
+    read as BODY is a missed catch in a command that is WRITING — and its destination is still
+    scanned.
+    """
+    cmd = "cat > /tmp/scratch.txt <<EOF\nbody\nEOF\ngrep -n foo " + _NOTES
+    assert _fires(cmd), (
+        "a read of a claimed artifact after a heredoc terminator was dropped with the body"
+    )
 
 
 def test_a_plain_read_of_a_claimed_artifact_still_fires() -> None:

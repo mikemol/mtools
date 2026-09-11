@@ -507,6 +507,51 @@ workaround in `_run_cli` is retired: one line now, no global, no `finally`.
 ⚑ *A finding filed outward is not a finding fixed at home*, and the second carry is the part worth
 remembering — the first was honest ignorance, the second was a record I had already written.
 
+### ⟐ROLE-AXIS-ROW-WAS-AN-ARTIFACT — NEW and CLEARED 2026-09-11, a published row proved nothing
+
+⚑⚑⚑ **cassian RAISED IT AS A HYPOTHESIS ABOUT MY TOKENISER RATHER THAN A CLAIM ABOUT MY TREE, AND
+IT HOLDS FOR EXACTLY ONE ROW.** The role-axis table published at `e046800` carried
+`----  a COMMENT being written` as evidence that role does not matter within readers. Measured:
+
+```
+# COMMENT in a heredoc body   tokens: ['>','g.txt','<<','EOF','EOF']   ⚑ the mention is GONE
+BARE mention in a body        tokens: [... 'notes.md', 'EOF']          the mention survives
+```
+
+`#` opens a shell comment that swallows the rest of the line, so **the token never existed.** That
+row measured comment-stripping and supported nothing.
+
+⚑⚑ **THE CONCLUSION SURVIVES ON THE OTHER ROWS — a correction, not a retraction.** `touch
+scratch.md` and `echo hello.md` pass **with the token present**, which is the real evidence for
+reader-scoping. Five of six rows were measurements; one was an artifact of my own fixture. Against
+a reproduction of the PRE-FIX scan: the bare mention **fired**, the comment did not — so the
+distinction was live and invisible.
+
+⚑ **THE ARM ASSERTS ITS OWN PRECONDITION.** It checks the mention reaches the token stream before
+asserting the pass; otherwise it would go green for the same accidental reason the published row
+did. *An arm that cannot tell "the gate allowed it" from "the shell ate it" is measuring the
+fixture.*
+
+### ⟐HEREDOC-DROP-LOST-A-CATCH — NEW and CLEARED 2026-09-11, cassian's bound was better than mine
+
+⚑⚑ **DROPPING EVERYTHING AFTER `<<` THREW AWAY A REAL READ.** Measured:
+
+```
+cat > g.txt <<EOF / body / EOF / grep -n foo notes.md
+  drop-everything   -> ['>', 'g.txt']                             ⚑ the grep vanishes
+  terminator-aware  -> ['>', 'g.txt', 'grep', 'foo', 'notes.md']   the read survives
+```
+
+The tokeniser does not split on the newline after a terminator, so a heredoc followed by **any**
+command folds that command into the same invocation — ordinary shell, not an exotic shape — and the
+gate went quiet on it for one tick.
+
+⚑ **ADOPTED cassian'S BOUND BY MEASURING IT, NOT BY COPYING THE DESCRIPTION** — the same discipline
+that caught the `-e` divergence, where copying would have been wrong. Their safe-direction argument
+is kept and holds on inspection: an unterminated tag swallows the remainder, because a body token
+read as an ARGUMENT is a false refusal of a command that reads nothing, while an argument read as
+BODY is a missed catch in a command that is WRITING, whose destination is still scanned.
+
 ### ⟐PATTERN-AS-ARTIFACT — FIXED 2026-09-11, both arms, and the file could not be written past it
 
 ⚑⚑⚑ **THE DEFECT REFUSED THE ARMS WRITTEN TO FIX IT — six refusals in one write, every one from a
