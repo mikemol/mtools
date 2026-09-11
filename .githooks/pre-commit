@@ -573,10 +573,63 @@ fi
 # peer's dirty file can still refuse a commit through them. That is one row of a three-row class:
 # the sweep (held by `git commit -- <path>`), a gate reading the tree (closed by staging), and a
 # witness mutating real files (open, and closable only by a lock).
-( cd "$staged" && bazel test //... --test_output=errors ) 2>&1 | tee "$staged/.suite.log" || true
-if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+# ⚑⚑⚑ THE `|| true` WAS INSIDE THE PIPELINE AND IT MADE `PIPESTATUS[0]` ALWAYS ZERO, so this
+# branch NEVER FIRED — the hermetic suite could go red and the gate recorded nothing at all.
+# MEASURED by reproducing the pipeline with a planted stub divergence: bazel printed
+# `Executed 1 out of 46 tests: 45 tests pass and 1 fails locally` while `PIPESTATUS[0]` read 0.
+# ⚑⚑ `|| true` BINDS TO THE WHOLE PIPELINE, so element 0 of PIPESTATUS is the status of
+# `cd && bazel ... || true` — which is the `true`. The flag existed to stop `set -e` killing the
+# gate before the summary, and it bought that by destroying the only signal the branch reads.
+# ⚑ A FLAG FOR ONE PROPERTY DESTROYING ANOTHER is recorded in this repository about `--select` and
+# about `--ui_event_filters`; this is the same shape in shell, in the gate's own control flow.
+# ⚑⚑ THE REPAIR KEEPS BOTH: the status is captured from the pipeline itself, and the `|| true`
+# moves to the `if` where it cannot overwrite what it was protecting.
+# ⚑⚑⚑ AND `set -euo pipefail` IS ACTIVE AT LINE 18, so simply DELETING the `|| true` would make a
+# red suite exit here and take every other finding with it — the hazard the flag was added for.
+# MEASURED before writing this: the first repair removed it outright and would have traded a branch
+# that never fires for a gate that stops at the first red.
+# ⚑⚑ SO THE PIPELINE IS TESTED BY AN `if`, WHICH IS THE ONE FORM THAT DOES BOTH. `set -e` exempts
+# a command whose status is being tested, so no `|| true` is needed to stay alive; `pipefail` then
+# makes the pipeline carry bazel's own status rather than tee's.
+# ⚑⚑⚑ FOUR FORMS WERE RUN AGAINST A DELIBERATELY FAILING COMMAND UNDER `set -euo pipefail` BEFORE
+# THIS ONE WAS WRITTEN, and two of them were drafts of mine that read correct and measured wrong:
+#
+#     `cmd | tee log || true`, read PIPESTATUS[0]   ->  0   (the pre-fix defect)
+#     `{ cmd || rc=$?; } | tee log`                 ->  0   (a pipeline component is a SUBSHELL)
+#     `if cmd | tee log; then rc=0; else rc=$?; fi` ->  3   ✓ status kept, script alive, log written
+#
+# ⚑ THE SECOND WRONG FORM IS THE INSTRUCTIVE ONE: it looks like it captures the status and the
+# assignment happens in a subshell that exits before the parent reads it. Reasoning about shell
+# scoping produced two wrong answers in a row here; running four candidates produced the right one.
+if ( cd "$staged" && bazel test //... --test_output=errors ) 2>&1 | tee "$staged/.suite.log"; then
+    _suite_rc=0
+else
+    _suite_rc=$?
+fi
+if [ "$_suite_rc" -ne 0 ]; then
     failed_targets=$(grep -oE '^//[^ ]+' "$staged/.suite.log" 2>/dev/null | sort -u | tr '\n' ' ')
     fail=1
+    # ⚑⚑⚑ THE LABEL ONLY, AND THE LOG IS DELIBERATELY *NOT* PASSED — OPERATOR RULING 2026-09-11,
+    # MADE TWICE BECAUSE THE FIRST RULING RESTED ON A FIGURE I GAVE WRONG BY 47×. `note_failure`'s
+    # second argument fills `failed_detail`, which is replayed verbatim under the verdict. I put
+    # *attach the whole suite log* and sized it at ~25 lines — measured from a CONSOLE run, not from
+    # the file. The real `$staged/.suite.log` is **1174 lines**: bazel echoes every action into it,
+    # and `--test_output=errors` suppresses passing test output, not the action stream.
+    # ⚑⚑ SO THE RULING WAS RE-PUT WITH THE TRUE SIZE AND CAME BACK *label only*. Replaying 1174
+    # lines under the verdict would reproduce the exact defect the summary exists to cure — the
+    # account present and unfindable — with the failing case buried mid-scroll instead of several
+    # hundred lines earlier. A cure that restages the disease is not a cure.
+    # ⚑ WHAT THIS COSTS IS REAL AND IS ACCEPTED: the log holds
+    # `FAILED mdstruct/tests/…::test_the_stub_matches_the_library_it_describes` while the grep keeps
+    # only `//mdstruct:test_stub_authority`, so a committer gets the target and must open the log
+    # for the case. ⚑⚑ THE ALTERNATIVE THAT WOULD HAVE BOUGHT BOTH — grep `FAILED|ERROR` into a
+    # small file — was declined in the first ruling as a FILTER that silently stops matching when
+    # bazel's output format shifts, this repository's recurring defect class. Both costs were named
+    # and the quieter one was chosen.
+    # ⚑⚑ AND `line ~871` STILL PRINTS *no check captured its own output* WHEN THIS IS THE ONLY
+    # FAILURE. That sentence is now CORRECT rather than an accusation: this branch genuinely does
+    # not capture an account into the summary, by decision, and the log path is named in the
+    # fallback label so a reader knows where the account is.
     note_failure "the hermetic suite: ${failed_targets:-no target named — see the log above}"
 fi
 
