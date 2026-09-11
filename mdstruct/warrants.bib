@@ -795,3 +795,15 @@
             reported on the same file's broken revision, with the direction named.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_row_whose_cell_count_differs_from_its_header_is_reported}
 }
+
+@misc{mdstruct-verify-main-takes-its-arguments-rather-than-reading-the-global,
+  section = {verify},
+  claim   = {⚑⚑⚑ A FUNCTION THAT READS `sys.argv` CANNOT BE VARIED BY A CASE, so its usage, unknown-mode and arity branches were reachable only through a caller that MUTATES the global and remembers to restore it — which this suite did, putting every case behind one `finally`. ⚑⚑ The shape came from cassian's finding about a different repository: *the captivity is the defect and the raise is its symptom*. mtools recorded it as owed, cassian checked their tree because of that sentence, and mtools carried it as owed a SECOND time before looking. Measured then: the raise-shape is ABSENT from all 36 sources here, with a constructed positive control proving the searcher can see it, and the captivity was in exactly one place.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_main_takes_its_arguments_rather_than_reading_the_global}
+}
+
+@misc{mdstruct-verify-main-still-defaults-to-the-global-for-the-console-script,
+  section = {verify},
+  claim   = {⚑ THE DEFAULT MUST NOT MOVE, or the installed entry point stops working: `[project.scripts]` names this function and a console script calls it with NO arguments. Making `argv` a parameter is safe only if omitting it still reads the global — the same discipline as the grader's interpreter default, pinned for the same reason.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_main_still_defaults_to_the_global_for_the_console_script}
+}

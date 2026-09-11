@@ -458,9 +458,36 @@ _MODES: dict[str, _Mode] = {
 }
 
 
-def main() -> int:
-    """Dispatch one mode."""
-    argv = sys.argv
+def main(argv: list[str] | None = None) -> int:
+    """Dispatch one mode.
+
+    ⚑⚑⚑ `argv` IS A PARAMETER BECAUSE READING THE GLOBAL MAKES EVERY BRANCH BELOW UNREACHABLE
+    FROM A CASE. The usage arm, the unknown-mode arm and the grep-arity arm are all decided from
+    `argv`, and a function that reads `sys.argv` can only be exercised by a caller that MUTATES
+    the global and remembers to restore it — which this suite did, in `_run_cli`, with a `finally`.
+    A case that forgot the restore would poison its neighbours and nothing would catch it.
+
+    ⚑⚑ THE SHAPE CAME FROM A PEER'S FINDING ABOUT A DIFFERENT REPOSITORY. cassian reported
+    `_arg_after` reading `sys.argv` in their copies of a shared hook and named the real defect:
+    *the captivity is the defect and the raise is its symptom*. mtools recorded it as owed, cassian
+    checked their own tree because of that sentence, and mtools carried it as owed a SECOND time
+    without looking. Measured when it finally did: the raise-shape is absent from all 36 sources
+    here — positive control constructed, so the searcher is known to see it — and the captivity was
+    in exactly this one place.
+
+    Args:
+        argv: the full argument vector, `argv[0]` being the program name. Defaults to `sys.argv`.
+
+    ⚑ THE DEFAULT IS THE OLD BEHAVIOUR, EXACTLY. `[project.scripts]` names this function and a
+    console script calls it with no arguments; changing what an undeclared caller gets would break
+    the installed entry point. Pinned by its own arm.
+
+    Returns:
+        the process exit code.
+
+    """
+    if argv is None:
+        argv = sys.argv
     args = [a for a in argv[1:] if not a.startswith("-")]
     if len(args) < _MIN_ARGS:
         sys.stderr.write(__doc__ or "usage: mdstruct <mode> ...\n")

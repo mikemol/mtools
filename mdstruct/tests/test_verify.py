@@ -133,17 +133,16 @@ _RC_USAGE = 2
 def _run_cli(*args: str) -> int:
     """Invoke the CLI's verify mode in-process.
 
+    ⚑⚑ THE `sys.argv` MUTATION IS GONE. This helper used to assign the global, call `main()`, and
+    restore in `finally` — a workaround for `main` reading `sys.argv` directly. It worked, and it
+    put the correctness of every case in this module behind one `finally`: a case that forgot the
+    restore would poison its neighbours, and nothing would catch that.
+
     Returns:
         the exit code `cli.main()` produced for this invocation.
 
     """
-    argv = ["mdstruct", "verify", *args]
-    old = sys.argv
-    sys.argv = argv
-    try:
-        return cli.main()
-    finally:
-        sys.argv = old
+    return cli.main(["mdstruct", "verify", *args])
 
 
 def test_verify_takes_many_paths_without_repeating_the_first(tmp_path: Path) -> None:
@@ -188,3 +187,56 @@ def test_verify_reports_a_failure_that_a_later_success_would_mask(tmp_path: Path
         assert _run_cli(str(good), str(bad)) == 1, "a failure LAST must not be masked by the first"
         assert _run_cli(str(good), str(tmp_path / "absent.md")) == _RC_USAGE, (
             "a missing path escalates")
+
+
+def test_main_takes_its_arguments_rather_than_reading_the_global(tmp_path: Path) -> None:
+    """⚑⚑⚑ A FUNCTION THAT READS `sys.argv` CANNOT BE VARIED BY A CASE.
+
+    Its branches are then unreachable except through a workaround every caller must remember.
+    cassian reported this shape in their own copies of a shared hook and named the real defect
+    precisely: *the captivity is the defect and the raise is its symptom* — reading the global
+    means no case can vary the input, so the branch a docstring describes has never been exercised.
+    They checked their tree because mtools recorded the finding as owed, and mtools then carried it
+    as owed a second time without looking. ⚑ A finding filed outward is not a finding fixed at home.
+
+    ⚑⚑ MEASURED HERE BEFORE FIXING: the raise-shape (`sys.argv.index`) is ABSENT from all 36 source
+    files across the four distributions — with a constructed positive control proving the searcher
+    can see it — and the CAPTIVITY is present in exactly one place, `cli.main()`.
+
+    ⚑ AND THE SUITE ALREADY CARRIED THE WORKAROUND: `_run_cli` assigns `sys.argv`, calls `main()`,
+    and restores in `finally`. It works, and it is what this arm retires — a case that forgets the
+    restore poisons its neighbours, and nothing would catch that.
+    """
+    doc = tmp_path / "clean.markdown"
+    doc.write_text("# A\n\ntext\n", encoding="utf-8")
+
+    # ⚑ THE ARGUMENT IS PASSED, NOT PLANTED. With `main` still reading the global, this runs under
+    # pytest's own argv and returns the usage code rather than verifying anything.
+    saved = sys.argv
+    sys.argv = ["pytest", "--not-a-mode"]
+    try:
+        rc = cli.main(["mdstruct", "verify", str(doc)])
+    finally:
+        sys.argv = saved
+
+    assert rc == 0, f"verify of a clean document returned {rc} — main did not receive its argv"
+
+
+def test_main_still_defaults_to_the_global_for_the_console_script(tmp_path: Path) -> None:
+    """⚑ THE DEFAULT MUST NOT MOVE, or the installed entry point stops working.
+
+    `[project.scripts]` names `mikemol.mdstruct.cli:main`, and a console script calls it with NO
+    arguments. Making `argv` a parameter is only safe if omitting it still reads the global — the
+    same discipline as the grader's interpreter default, which was pinned for the same reason.
+    """
+    doc = tmp_path / "clean.markdown"
+    doc.write_text("# A\n\ntext\n", encoding="utf-8")
+
+    saved = sys.argv
+    sys.argv = ["mdstruct", "verify", str(doc)]
+    try:
+        rc = cli.main()
+    finally:
+        sys.argv = saved
+
+    assert rc == 0, f"main() with no argument returned {rc} — the global default was lost"

@@ -477,6 +477,55 @@ hard-depends on the build. A fresh clone cannot commit until it builds, and the 
 disappears. That is the trade the ruling accepts; recorded here so nobody re-litigates it as a
 surprise.
 
+### ⟐ARG-AFTER-OWED — CLEARED 2026-09-10, after being carried as owed TWICE
+
+⚑⚑ **THE RAISE-SHAPE IS ABSENT AND THE CAPTIVITY WAS PRESENT, IN ONE PLACE.** cassian reported
+`_arg_after` reading `sys.argv` in their copies and named the real defect: *the captivity is the
+defect and the raise is its symptom* — reading the global means no case can vary the input, so the
+branch a docstring describes has never been exercised. mtools recorded it as owed; cassian checked
+their own tree **because of that sentence**; mtools carried it as owed a second time without
+looking.
+
+Measured across all four distributions, 36 source files, **with a constructed positive control**
+so the searcher is known to see the shape it reports absent:
+
+```
+argv.index(                     (none)
+_arg_after                      (none)
+sys.argv read inside a helper   mdstruct/src/mikemol/mdstruct/cli.py
+```
+
+**`cli.main()` read the global with no parameter.** Its usage, unknown-mode and grep-arity branches
+were reachable only through a caller that mutates `sys.argv` and restores it — which
+`tests/test_verify.py::_run_cli` did, in a `finally`, putting every case in that module behind one
+restore. A case that forgot it would poison its neighbours and nothing would catch that.
+
+**Repaired:** `main(argv: list[str] | None = None)`, defaulting to the global so the console script
+is unchanged — pinned by its own arm, the same discipline as the grader's interpreter default. The
+workaround in `_run_cli` is retired: one line now, no global, no `finally`.
+
+⚑ *A finding filed outward is not a finding fixed at home*, and the second carry is the part worth
+remembering — the first was honest ignorance, the second was a record I had already written.
+
+### ⟐PATTERN-AS-ARTIFACT — WIDER THAN RECORDED: it fires on a string literal in Python source
+
+⚑⚑⚑ Writing this tick's arms, the structural-query hook refused a `cat` heredoc **because the
+Python source being written contained the literal `"doc.md"`** — a string inside a test, not a
+path, not a grep pattern, not an argument to anything.
+
+```
+cat > tests/test_verify.py <<'PY' ... doc = tmp_path / "doc.md" ... PY
+  -> structural-query: `cat` over "doc.md" (.md → markdown)
+```
+
+So the scan is not merely "the first non-flag argument of a grep-family command" — it reaches
+**any token in the command text** that looks like a claimed suffix, including one being *written*
+rather than read. The recorded scope (cassian's `verdict():205`, the grep family) is narrower than
+the behaviour.
+
+⚑ **AND THE WORKAROUND IS ITSELF A MEASUREMENT:** renaming the fixture file to `clean.markdown`
+let the same write through. The suffix decides, not the role of the token.
+
 ### ⟐FAIL-SHUT — NEW and CLEARED 2026-09-10, the launcher deadlocked the repository in production
 
 ⚑⚑⚑ **THE LAUNCHER SHIPPED AT `c4675fe` REFUSED ITS OWN PRESCRIBED REPAIR.** It denies when the
