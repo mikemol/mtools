@@ -150,6 +150,14 @@ def _debare(tok: str) -> str | None:
 
     Strips a leading `\` (alias-defeating quote) and resolves a path to its basename, so
     `/usr/bin/grep` and `\grep` both read as `grep`.
+
+    Returns:
+        The bare program name, or `None` when the token names no program at all — an empty
+        token, a flag, or a `VAR=value` assignment prefix. ⚑ `None` IS LOAD-BEARING RATHER THAN
+        AN ERROR CASE: `programs()` uses it to decide a token belongs to a wrapper rather than
+        naming the command, and reading it as "no program here, move on" is what keeps a flag's
+        ARGUMENT from being reported as the program — the measured bypass this module closes.
+
     """
     if not tok:
         return None
@@ -226,6 +234,54 @@ def commands(cmd: str) -> list[list[str]]:
     return out
 
 
+def _past_wrapper(words: list[str], i: int, wrapper: str) -> int:
+    """Advance past a wrapper's own flags and operands to where its command begins.
+
+    ⚑ CONSUME THE WRAPPER *AND ITS OPERANDS*. `timeout 180 grep` puts a DURATION between the
+    wrapper and the real program; a first draft skipped only the wrapper and then reported `180`
+    as the program. An operand that cannot name a program (a number, a duration like `1.5s`, a
+    bare subcommand word for uv/poetry) is skipped; the first token that could be a program ends
+    the skip.
+
+    ⚑⚑ EXTRACTED FROM `programs` RATHER THAN REFORMATTED INSIDE IT. The loop reached six nested
+    blocks, and the depth was not incidental — it is a WHILE over tokens inside a WHILE over
+    tokens, each with its own advance. Flattening by early-continue would have kept one function
+    answering two questions; this is the inner question named, and it has an answer a reader can
+    check in isolation: *given a wrapper here, where does its command start?*
+
+    Args:
+        words: one command's tokens.
+        i: the index just past the wrapper's own name.
+        wrapper: the wrapper's bare name, which selects its flags-with-arguments.
+
+    Returns:
+        The index of the first token that could name a program — or `len(words)` when the wrapper
+        is the whole command and nothing follows it.
+
+    """
+    takes_arg = _FLAGS_WITH_ARG.get(wrapper, frozenset())
+    while i < len(words):
+        raw = words[i]
+        nxt = _debare(raw)
+        if nxt is None:                 # a flag: still the wrapper's
+            # ⚑ IF THIS FLAG TAKES A SEPARATE ARGUMENT, CONSUME THAT TOO — else the argument
+            # (`KILL`, `nobody`, `/tmp`) is read as the program and the real program goes
+            # invisible. That is the measured bypass this module was rewritten to close.
+            bare = raw.lstrip("\\")
+            attached = "=" in bare or (
+                len(bare) > _SHORT_FLAG_LEN and bare[:_SHORT_FLAG_LEN] in takes_arg
+            )
+            i += 1
+            if bare in takes_arg and not attached and i < len(words):
+                i += 1                  # skip the flag's separate argument
+            continue
+        if _is_operand(nxt, wrapper):
+            i += 1
+            continue
+        break
+    return i
+
+
 def programs(cmd: str) -> list[tuple[str, list[str]]]:
     """Return every program INVOKED, seeing through wrappers, with its own arguments.
 
@@ -247,32 +303,7 @@ def programs(cmd: str) -> list[tuple[str, list[str]]]:
                 i += 1
                 continue
             if name in WRAPPERS:
-                # ⚑ CONSUME THE WRAPPER *AND ITS OPERANDS*. `timeout 180 grep` puts a DURATION
-                # between the wrapper and the real program; a first draft skipped only the wrapper
-                # and then reported `180` as the program. An operand that cannot name a program (a
-                # number, a duration like `1.5s`, a bare subcommand word for uv/poetry) is skipped;
-                # the first token that could be a program ends the skip.
-                i += 1
-                takes_arg = _FLAGS_WITH_ARG.get(name, frozenset())
-                while i < len(words):
-                    raw = words[i]
-                    nxt = _debare(raw)
-                    if nxt is None:                 # a flag: still the wrapper's
-                        # ⚑ IF THIS FLAG TAKES A SEPARATE ARGUMENT, CONSUME THAT TOO — else the
-                        # argument (`KILL`, `nobody`, `/tmp`) is read as the program and the real
-                        # program goes invisible. That is the measured bypass above.
-                        bare = raw.lstrip("\\")
-                        attached = "=" in bare or (
-                            len(bare) > _SHORT_FLAG_LEN and bare[:_SHORT_FLAG_LEN] in takes_arg
-                        )
-                        i += 1
-                        if bare in takes_arg and not attached and i < len(words):
-                            i += 1                  # skip the flag's separate argument
-                        continue
-                    if _is_operand(nxt, name):
-                        i += 1
-                        continue
-                    break
+                i = _past_wrapper(words, i + 1, name)
                 continue
             found.append((name, words[i + 1:]))
             break                                  # the rest of THIS command is args

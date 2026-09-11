@@ -19,7 +19,7 @@ from pathlib import Path
 
 from mikemol.hooks import checkers
 
-_TMP = Path("/tmp/tmpab12cd.py")  # ruff: ignore[S108] — a fixed literal, never created or opened
+_TMP = Path("/tmp/tmpab12cd.py")  # ruff: ignore[hardcoded-temp-file] — a fixed literal, never created or opened
 _REAL = "/home/someone/project/src/thing.py"
 _VENV = Path("/home/someone/project/.venv/bin/python3")
 _CFG = Path("/home/someone/project/pyproject.toml")
@@ -28,10 +28,17 @@ _CHECKER_COUNT = 2
 
 
 def _argv_for(name: str, path: str = _REAL) -> list[str]:
-    """Return one checker's argv, or fail the calling test if it is not registered.
+    """Return one checker's argv, looked up by name from the live roster.
 
     Returns:
-        one checker's argv, or fail the calling test if it is not registered.
+        The argv the named checker would be invoked with, taken from `checker_argv` rather than
+        rebuilt here — a second construction would drift from the one the hook actually runs and
+        the arms would then pin a command nothing executes.
+
+    Raises:
+        AssertionError: when no checker of that name is registered. ⚑ RAISED RATHER THAN
+            RETURNING `None`: an absent checker is a failure of the calling test's premise, and
+            handing back `None` would let the caller assert over an empty argv and pass.
 
     """
     for got, argv, _stdin in checkers.checker_argv(_TMP, path, _VENV, _CFG):

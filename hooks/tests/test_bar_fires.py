@@ -120,7 +120,7 @@ def _ruff(rel: str, body: str, tmp: Path) -> str:
     target = tmp / rel
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(body, encoding="utf-8")
-    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of these cases
+    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of these cases
         [*_ruff_argv(), "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
          "--output-format", "concise", str(target)],
         capture_output=True, text=True, check=False, cwd=tmp)
@@ -173,9 +173,17 @@ def test_the_header_gate_fires_when_a_proposition_fails(
     four claims in one regex — and an earlier version of it silently accepted a blank line between
     the two notices while rejecting a `#` line between them. The tidier-looking file was the one
     that slipped through, so the gate was teaching the wrong habit rather than merely missing one.
+
+    ⚑⚑⚑ AND THE RULE IS NAMED, NOT CODED, BECAUSE PREVIEW CHANGED WHAT THE CHECKER PRINTS. These
+    six arms asserted `"CPY001" in out`; under `preview = true` ruff's diagnostics carry
+    `missing-copyright-notice` and the code appears nowhere in the output, so all six went red at
+    once while the gate was firing correctly on every one of them.
+    ⚑⚑ SIX FALSE REDS ARE THE MIRROR OF THE FAILURE THIS FILE EXISTS FOR — the greens that mean
+    nothing have a twin in reds that mean nothing, and a suite crying wolf gets its arms deleted.
+    The spelling is the checker's to choose; what these arms own is that the gate FIRES.
     """
     out = _ruff("src/probe_bad.py", header + '"""D."""\n', tree)
-    assert "CPY001" in out, f"gate did not fire on: {proposition}"
+    assert "missing-copyright-notice" in out, f"gate did not fire on: {proposition}"
 
 
 def test_the_header_gate_accepts_a_shebang_before_the_notice(tree: Path) -> None:
@@ -205,15 +213,27 @@ def test_assert_is_refused_in_src(tree: Path) -> None:
     """`assert` is refused in src.
 
     ⚑ S101 is scoped to tests by PATH, and a scope is only meaningful if it has an outside.
+
+    ⚑⚑⚑ NAMED, NOT CODED, AND THE NEGATIVE ARM IS WHY THIS MATTERS. Under `preview = true` ruff
+    prints `assert:` and never the code `S101`, so the F-arm here went red — loudly, correctly
+    diagnosable. Its P-arm twin asserted `"S101" not in out` and went **GREEN**, because a code
+    that the checker no longer prints is absent from every output whether the exemption holds or
+    not. ⚑⚑ THE VOCABULARY CHANGE TURNED A REAL P-ARM INTO A VACUOUS ONE, and only its F-arm twin
+    made that visible — which is the two-armed discipline earning its keep on a rule that was not
+    even the subject of the change.
     """
     body = _GOOD_HEADER + '"""D."""\n\n\ndef f() -> None:\n    """D."""\n    assert True\n'
-    assert "S101" in _ruff("src/probe_assert.py", body, tree)
+    assert "assert:" in _ruff("src/probe_assert.py", body, tree)
 
 
 def test_assert_is_permitted_in_tests(tree: Path) -> None:
-    """The P-arm for the scope. `assert` is the test idiom and `-O` never runs these."""
+    """The P-arm for the scope. `assert` is the test idiom and `-O` never runs these.
+
+    ⚑ SEE THE F-ARM ABOVE: this arm is the one that went vacuous when the checker's vocabulary
+    changed, so the spelling it matches is the one the checker actually emits.
+    """
     body = _GOOD_HEADER + '"""D."""\n\n\ndef test_f() -> None:\n    """D."""\n    assert True\n'
-    assert "S101" not in _ruff("tests/probe_assert.py", body, tree)
+    assert "assert:" not in _ruff("tests/probe_assert.py", body, tree)
 
 
 # ────────────────────────── declare-never-suppress, asserted as an effect ───────────────────────
@@ -228,10 +248,18 @@ def test_the_ignore_list_is_exactly_three_rules() -> None:
 
     ⚑ A peer carries a fourth (CPY001, deferred for want of a LICENSE). This repo has a LICENSE,
     which is that deferral's own stated exit condition, so it is not inherited.
+
+    ⚑⚑⚑ THE THREE ARE NAMED, NOT CODED, ON THE `rule-codes-in-selectors` RULING (adopt, 2026-09-07;
+    arm tree-wide preview first, 2026-09-08). The rules are the same three; only the spelling the
+    config is allowed to use has changed, and this arm moved with it rather than pinning the tree
+    to a vocabulary its own checker now refuses.
     """
     text = (_DIST / "pyproject.toml").read_text(encoding="utf-8")
     line = next(ln for ln in text.splitlines() if ln.startswith("ignore = "))
-    assert line == 'ignore = ["D203", "D213", "COM812"]'
+    assert line == (
+        'ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", '
+        '"missing-trailing-comma"]'
+    )
 
 
 def test_the_checker_that_runs_is_the_one_the_lock_pins() -> None:
@@ -243,7 +271,7 @@ def test_the_checker_that_runs_is_the_one_the_lock_pins() -> None:
     """
     pinned = next(ln for ln in (_DIST / "requirements.txt").read_text(encoding="utf-8").splitlines()
                   if ln.startswith("ruff=="))
-    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
+    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
         [*_ruff_argv(), "--version"], capture_output=True, text=True, check=True)
     assert proc.stdout.split()[1] == pinned.split("==")[1].strip()
 
@@ -313,7 +341,7 @@ def test_an_unknown_pytest_marker_is_an_error_rather_than_a_skip(tree: Path) -> 
     probe.write_text(
         "import pytest\n\n\n@pytest.mark.nonexistent_marker_probe\ndef test_x() -> None:\n"
         "    assert True\n", encoding="utf-8")
-    proc = subprocess.run(  # ruff: ignore[S603] — pytest's own configuration is the subject
+    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — pytest's own configuration is the subject
         [sys.executable, "-m", "pytest", "--collect-only", "-q",
          "-c", str(_DIST / "pyproject.toml"), str(probe)],
         capture_output=True, text=True, check=False, cwd=_DIST)
@@ -338,7 +366,7 @@ def test_a_declared_pytest_marker_collects_cleanly(tree: Path) -> None:
     probe.write_text(
         "import pytest\n\n\n@pytest.mark.needs_shellcheck\ndef test_x() -> None:\n"
         "    assert True\n", encoding="utf-8")
-    proc = subprocess.run(  # ruff: ignore[S603] — pytest's own configuration is the subject
+    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — pytest's own configuration is the subject
         [sys.executable, "-m", "pytest", "--collect-only", "-q",
          "-c", str(_DIST / "pyproject.toml"), str(probe)],
         capture_output=True, text=True, check=False, cwd=_DIST)
@@ -514,7 +542,7 @@ def _citations(message: str, rules: str, tree: Path) -> int:
     doc = tree / "rules.md"
     doc.write_text(rules, encoding="utf-8")
     gate = _DIST.parent / "rule_citations.sh"
-    return subprocess.run(  # ruff: ignore[S603]
+    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
         [str(gate), str(msg), str(doc)],
         capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
 
@@ -569,7 +597,7 @@ def _orphans(tree: Path, scripts: dict[str, str], sites: dict[str, str]) -> int:
     if not (tree / "BUILD.bazel").exists():
         (tree / "BUILD.bazel").write_text("", encoding="utf-8")
     gate = _DIST.parent / "orphan_check.sh"
-    return subprocess.run(  # ruff: ignore[S603]
+    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
         [str(gate), str(tree)],
         capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
 
@@ -648,7 +676,7 @@ def _freshness(tree: Path, rules: str, *, readable: bool) -> int:
     probe.chmod(0o755)
     doc.chmod(0o644 if readable else 0o000)
     try:
-        return subprocess.run(  # ruff: ignore[S603]
+        return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
             [str(probe)], capture_output=True, check=False,
             cwd=str(_DIST.parent)).returncode
     finally:
@@ -693,8 +721,14 @@ def _witness_args(*argv: str) -> int:
     ⚑ ONLY THE PRE-BAZEL BRANCHES ARE REACHABLE HERE. Every arm of this witness invokes bazel,
     which the sandbox has no business running — so what a test can assert is what the script
     refuses BEFORE its first side effect: a missing argument, and a probe kind no checker seeks.
+
+    Returns:
+        The witness script's exit code. ⚑ THE CODE IS THE MEASUREMENT, not a pass/fail flag: the
+        arms below distinguish `_ARG_REFUSED` from any other nonzero, because "refused its
+        arguments" and "ran and failed" are different verdicts and a boolean would merge them.
+
     """
-    return subprocess.run(  # ruff: ignore[S603]
+    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
         [str(_DIST.parent / "domain_witness.sh"), *argv],
         capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
 
@@ -782,7 +816,7 @@ def test_the_witness_refuses_a_victim_carrying_probe_residue(tmp_path: Path) -> 
     """
     victim = tmp_path / "residue.py"
     victim.write_text("x = 1\n# transient domain probe 123\n", encoding="utf-8")
-    out = subprocess.run(  # ruff: ignore[S603]
+    out = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
         [str(_DIST.parent / "domain_witness.sh"), "ratchet", "//ratchet:mypy",
          str(victim), "mypy"],
         capture_output=True, check=False, text=True, cwd=str(_DIST.parent))
@@ -826,7 +860,7 @@ def test_the_gate_reads_the_index_not_the_working_tree(tmp_path: Path) -> None:
     # silencing.
     git = shutil.which("git")
     assert git, "git is not on PATH — this test cannot measure what it claims"
-    subprocess.run(  # ruff: ignore[S603]
+    subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
         [git, "checkout-index", "--all", f"--prefix={staged}/"],
         check=True, cwd=str(root), capture_output=True)
     victim = root / "ratchet" / "warrants.bib"
@@ -880,7 +914,7 @@ def test_the_snapshot_survives_a_mid_write_edit_to_the_live_file(tmp_path: Path)
     live.write_text(live.read_text(encoding="utf-8") + "\nsyntax error (\n", encoding="utf-8")
 
     def parses(path: Path) -> bool:
-        return subprocess.run(  # ruff: ignore[S603]
+        return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
             ["/usr/bin/env", "bash", "-n", str(path)],
             capture_output=True, check=False).returncode == 0
 
@@ -1187,6 +1221,13 @@ def _distributions() -> list[str]:
     `blockers.sh` already enumerates components that way, with a comment arguing that a structural
     criterion *cannot drift as this repo grows, and a landed component necessarily satisfies it*.
     This reuses that rather than adding a second spelling for one idea.
+
+    Returns:
+        Every distribution name, sorted. ⚑ DERIVED FROM THE FILESYSTEM ON EVERY CALL, never a
+        literal list — a hand-written roster is the shape that silently stops covering the
+        distribution added after it was written, which is the failure the arms calling this
+        exist to prevent.
+
     """
     root = _DIST.parent
     return sorted(p.parent.name for p in root.glob("*/pyproject.toml"))
@@ -4465,7 +4506,7 @@ def test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses() 
         # running an installed binary. This file is not one of them: eleven of its calls carry a
         # line directive and the rest are ordinary code, so a whole-file entry would clear eleven
         # suppressions the ratchet is currently holding as keys.
-        proc = subprocess.run(  # ruff: ignore[S603] — the reader is the subject of this case
+        proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
             [str(_CITATION_GATE_READER), "tables", str(path)],
             capture_output=True,
             text=True,
@@ -4692,7 +4733,7 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         # measured that `classify` walks EVERY table, so an unscoped read counts revision-log and
         # roster rows as residue — 25 of 33 on one census, which reads alarming and is not. The
         # status table is found the way the poll finds it: a header naming a party and a state.
-        listing = subprocess.run(  # ruff: ignore[S603] — the reader is the subject of this case
+        listing = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
             [str(_CITATION_GATE_READER), "tables", str(path)],
             capture_output=True, text=True, check=False,
         )
@@ -4709,7 +4750,7 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         ]
         if not status:
             continue
-        proc = subprocess.run(  # ruff: ignore[S603] — the reader is the subject of this case
+        proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
             [str(_CITATION_GATE_READER), "classify", str(path), "--table", status[-1]],
             capture_output=True,
             text=True,
@@ -4815,7 +4856,7 @@ def _rule_name(code: str) -> str | None:
 
     """
     argv = _ruff_argv()
-    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
+    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
         [*argv, "rule", code, "--output-format", "json"],
         capture_output=True, text=True, check=False,
     )
@@ -4926,10 +4967,42 @@ def test_every_suppression_directive_suppresses_under_the_gates_config() -> None
         # ruff: ignore[assert]    no-preview rc=1   --preview rc=0
         # ruff: ignore  (bare)    no-preview rc=1   --preview rc=1
 
-    ⚑ SO THIS ARM CHECKS THE PROPERTY, NOT THE SPELLING. It takes every suppression directive in
-    this distribution's sources and requires the gate's own ruff — no `--preview`, the flag the
-    gate actually passes — to report the file clean. A directive form that stops working is caught
-    here rather than by 16 findings reappearing three ticks later.
+    ⚑⚑⚑ AND THAT TABLE'S PREMISE HAS SINCE BEEN RETIRED BY THE PREVIEW ARMING — KEPT, BECAUSE IT
+    RECORDS WHY THE ORDER MATTERED. `preview = true` now lives in `[tool.ruff.lint]`, so there is
+    no longer a no-preview configuration for the gate to run: the gate passes no flag and gets
+    preview from the config, which is precisely what made the name form safe to adopt. The rows
+    above describe the window BETWEEN the two rulings — adopt `rule-codes-in-selectors`
+    (2026-09-07) and arm tree-wide preview first (2026-09-08) — and that window is now closed.
+    ⚑⚑ A STALE PREMISE IN A LIVE ARM IS THE FAILURE THIS FILE IS FULL OF, so it is corrected in
+    place rather than left to be re-derived: the arm no longer asserts anything about `--preview`.
+
+    ⚑⚑⚑ AND THIS ARM CURRENTLY HAS NO F-ARM, WHICH IS RECORDED RATHER THAN GLOSSED. Measured: revert
+    one directive to the code form (`# ruff: ignore[S108]`) and this arm stays GREEN — because with
+    preview armed the code form STILL SUPPRESSES. `ruff check` on that file reports
+    `rule-codes-in-suppression-comments` and no `hardcoded-temp-file`: the style rule objects to the
+    spelling while the suppression itself keeps working.
+    ⚑⚑ SO THE HAZARD THIS ARM WAS BUILT FOR IS CLOSED BY THE ARMING, and what remains is a standing
+    guard against its RETURN — a future ruff that drops a name, or a config that unarms preview,
+    puts an unhonourable directive back in reach. That is worth keeping, but an arm no available
+    mutation can redden is one whose green says less than it looks like it says, and a reader is
+    owed that distinction here rather than discovering it by trusting this line.
+    ⚑ THE RULE THAT NOW POLICES THE SPELLING IS `rule-codes-in-suppression-comments`, enforced by
+    `//hooks:ruff`. Suppression FORM has an owner; this arm owns suppression EFFECT.
+
+    ⚑ SO THIS ARM CHECKS THE PROPERTY, NOT THE SPELLING: every suppression directive in this
+    distribution's sources is one the gate's checker HONOURS. A directive form that stops working
+    is caught here rather than by 16 findings reappearing three ticks later.
+
+    ⚑⚑⚑ AND THE POPULATION IS THE DIRECTIVES, NOT THE FILES CARRYING THEM. This arm required each
+    sweeping file to be entirely CLEAN, which silently made it an arm about every rule in the
+    repository: when preview was armed, four unpaid judgement findings — two of
+    `docstring-missing-returns`, one `suspicious-subprocess-import`, one
+    `docstring-missing-exception` — landed in files that happen
+    to carry directives, and this arm went red for debt that has nothing to do with suppression.
+    ⚑⚑ AN ARM THAT FAILS FOR A REASON OUTSIDE ITS SUBJECT IS AN ARM WHOSE RED IS UNINFORMATIVE,
+    and it is the same defect as a green that means nothing. So the assertion is now scoped to the
+    rules actually named in the directives: a finding for a rule some directive claims to suppress
+    is this arm's business, and any other finding belongs to `//hooks:ruff`, which reports it.
 
     ⚑⚑ AND RUNNING THE ARM'S OWN F-ARM CORRECTED THE PROBE THAT MOTIVATED IT. Swapping one
     directive to the name form makes this fail with TWO findings, not one: the un-suppressed
@@ -4978,15 +5051,41 @@ def test_every_suppression_directive_suppresses_under_the_gates_config() -> None
         if mode & 0o111:
             src.chmod(mode & ~0o111)
 
-    proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
+    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
         [*argv, "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
          "--output-format", "concise", *[str(p) for p in sources]],
         capture_output=True, text=True, check=False, cwd=str(_DIST),
     )
-    assert proc.returncode == 0, (
-        f"{len(sources)} file(s) carry `ruff: ignore` directives and the gate's ruff — WITHOUT "
-        f"--preview, as the gate runs it — reports findings:\n{proc.stdout}\n"
-        "a directive form the gate cannot honour lets the finding it suppressed reappear"
+
+    # ⚑⚑⚑ THE RULES THE DIRECTIVES THEMSELVES NAME — derived from the population, never typed. A
+    # literal list here would go stale at the next directive and quietly narrow what is checked.
+    # `RUF102 Invalid rule code in suppression` is added unconditionally: it is the checker's own
+    # report that a directive is unhonourable, which is this arm's subject stated by the tool.
+    claimed = {"RUF102", "invalid-rule-code"}
+    for src in sources:
+        # ⚑ DECLARED AT THE EDGE: `findall` is typed `list[Any]`, and under this repo's
+        # `disallow_any_expr` that `Any` poisons every downstream expression. The sibling arm
+        # `test_a_selector_and_the_comment_explaining_it_name_the_same_rule` carries the same
+        # annotation for the same reason — narrowing here is the flag doing its job.
+        names: list[str] = pyre.findall(
+            r"#\s*ruff:\s*ignore\[([^\]]+)\]", src.read_text(encoding="utf-8")
+        )
+        claimed.update(names)
+    # ⚑ POSITIVE CONTROL: a bracketed directive must exist, or the filter below admits nothing and
+    # the arm passes by matching no line rather than by every directive working.
+    assert claimed > {"RUF102", "invalid-rule-code"}, (
+        "no directive names a rule — this arm would pass by having nothing to match"
+    )
+
+    resurfaced = [
+        ln for ln in proc.stdout.splitlines()
+        if any(f" {rule}" in ln or f"{rule}:" in ln for rule in claimed)
+    ]
+    assert not resurfaced, (
+        f"{len(sources)} file(s) carry `ruff: ignore` directives and the gate's ruff reports "
+        f"findings for {len(resurfaced)} rule(s) those directives claim to suppress:\n"
+        + "\n".join(resurfaced)
+        + "\na directive form the gate cannot honour lets the finding it suppressed reappear"
     )
 
 
@@ -5032,7 +5131,7 @@ def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
         _, _, rule = key.rpartition(":")
         # ⚑ ASKED OF THE CHECKER, as the sibling arm does. `ruff rule` is the authority on whether
         # a name resolves; a list here would go stale at the rename this arm watches for.
-        proc = subprocess.run(  # ruff: ignore[S603] — the checker is the subject of this case
+        proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
             [*_ruff_argv(), "rule", rule, "--output-format", "json"],
             capture_output=True, text=True, check=False,
         )

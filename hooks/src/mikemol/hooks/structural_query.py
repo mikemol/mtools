@@ -296,22 +296,32 @@ def refusal(reasons: list[Reason], cmd: str = "") -> str:
     lines = ["structural-query: this asks about a STRUCTURED artifact textually."]
     for prog, hits in reasons:
         for arg, suf, (artifact, tool) in hits:
-            lines.append(f"  `{prog}` over {arg}  ({suf} → {artifact})")
-            lines.append(f"      the tool that owns it:  {tool}")
-    lines.append("  ⚑ if no mode answers your question, that is WORK (add the mode), not grounds\n"
-                 "     for a textual fallback — the toolkit expands; the rule has no exceptions.")
-    # ⚑ THE MESSAGE ASSUMED THE NAMED TOOL IS RUNNABLE, AND IN A BORROWING REPO IT IS NOT. This
-    # tooling is adopted by other checkouts, where the owning tool may be absent or its
-    # dependencies unmet — so the refusal named the one route the reader could not take and
-    # stopped. A peer hit exactly that and had no move left. `Read` is the answer and needs SAYING:
-    # it is not a shell command, so a reader thinking in Bash calls will not consider it, and it is
-    # a total, structure-preserving read of the whole file — strictly better than the `wc`/`grep`
-    # this hook just refused.
-    lines.append("  ⚑ if that tool is unavailable here (a borrowing checkout, an unmet\n"
-                 "     dependency), use the harness `Read` tool on the file — NOT a textual\n"
-                 "     fallback. Read is not a shell command, which is why it does not come\n"
-                 "     to mind inside a shell-shaped question; it is the honest whole-file\n"
-                 "     read the refused command was approximating.")
+            lines.extend((
+                f"  `{prog}` over {arg}  ({suf} → {artifact})",
+                f"      the tool that owns it:  {tool}",
+            ))
+    # ⚑ THE SECOND LINE EXISTS BECAUSE THE MESSAGE ASSUMED THE NAMED TOOL IS RUNNABLE, AND IN A
+    # BORROWING REPO IT IS NOT. This tooling is adopted by other checkouts, where the owning tool
+    # may be absent or its dependencies unmet — so the refusal named the one route the reader could
+    # not take and stopped. A peer hit exactly that and had no move left. `Read` is the answer and
+    # needs SAYING: it is not a shell command, so a reader thinking in Bash calls will not consider
+    # it, and it is a total, structure-preserving read of the whole file — strictly better than the
+    # `wc`/`grep` this hook just refused.
+    # ⚑⚑ THE EXPLANATION SITS ABOVE BOTH RATHER THAN BETWEEN THEM, which is what lets these be one
+    # `extend`. It previously separated two `append` calls, and a comment standing between two
+    # halves of one emission reads as if it governs only the half beneath it.
+    lines.extend((
+        # ⚑ EACH ELEMENT PARENTHESISED, because inside a collection literal an implicit
+        # concatenation and a forgotten comma are the SAME BYTES — two elements silently becoming
+        # one, which is exactly this emission's failure mode. The parentheses say which was meant.
+        ("  ⚑ if no mode answers your question, that is WORK (add the mode), not grounds\n"
+         "     for a textual fallback — the toolkit expands; the rule has no exceptions."),
+        ("  ⚑ if that tool is unavailable here (a borrowing checkout, an unmet\n"
+         "     dependency), use the harness `Read` tool on the file — NOT a textual\n"
+         "     fallback. Read is not a shell command, which is why it does not come\n"
+         "     to mind inside a shell-shaped question; it is the honest whole-file\n"
+         "     read the refused command was approximating."),
+    ))
     # ⚑⚑⚑ A BLOCKED *WRITER* WAS TOLD TO USE `Read`, WHICH IS USELESS ADVICE FOR AN APPEND — and
     # that made a CORRECT refusal read as a bug. Reported by an adopting repo: `cat >> MEMORY.md`
     # denied as a "structural query", the message offering only reader routes. Their conclusion was
@@ -371,7 +381,16 @@ def command_of(value: object) -> str:
 
 
 def _emit(msg: str) -> int:
-    """Deliver the refusal — deny when armed, advisory otherwise."""
+    """Deliver the refusal — deny when armed, advisory otherwise.
+
+    Returns:
+        The process exit code. ⚑⚑ IT IS 0 IN BOTH BRANCHES, AND THAT IS THE POINT RATHER THAN AN
+        OVERSIGHT: this hook speaks to the harness through its STDOUT payload, not its status, so
+        an armed refusal exits 0 carrying a `deny` decision. A nonzero exit would read as *the
+        hook crashed*, which the harness treats as no decision at all — the fail-open shape this
+        repository refuses everywhere else.
+
+    """
     if _payload.armed():
         sys.stdout.write(deny_payload(msg) + "\n")
         return 0

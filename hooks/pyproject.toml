@@ -173,8 +173,22 @@ target-version = "py313"
 namespace-packages = ["src/mikemol", "tests"]
 
 [tool.ruff.lint]
+# ⚑⚑⚑ PREVIEW IS ARMED REPO-WIDE, ON AN OPERATOR RULING (2026-09-11). ⟐RUF201 was answered
+# "adopt" on 2026-09-07 and carried as blocked for four days on one recorded claim — *a name
+# selector needs `--preview` to LOAD* — which was MEASURED TRUE:
+# `--select magic-value-comparison` gives rc=2 "ruff failed" without the flag, rc=1 with it. So
+# renaming first was never available, and arming is the only route to the ruling.
+#
+# ⚑⚑ THE COST WAS MEASURED AND PUT TO THE OPERATOR BEFORE ARMING: 170 findings across four
+# distributions, not the 171 the seed recorded two ticks earlier — mdstruct had moved. Of those,
+# 62 are auto-fixable (RUF201 37, RUF106 18, RUF105 7) and 108 are judgement, led by DOC201 (51)
+# and PLR6301 (33, all in fence's class-grouped tests).
+#
+# ⚑ AND ARMING IS NOT THE SAME AS PAYING. Every finding below is either fixed or DECLARED with its
+# measurement; a blanket `ignore` of a preview rule would be the same silence in a new place.
+preview = true
 select = ["ALL"]
-ignore = ["D203", "D213", "COM812"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
 # ⚑⚑ `@pytest.fixture()` CALLED, NOT BARE — AND THE TWO CHECKERS DISAGREE ABOUT THIS, so the
 # disagreement has to be settled in config rather than re-argued per file. `pytest.fixture` is an
@@ -239,28 +253,32 @@ fixture-parentheses = true
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
+"tests/*" = ["assert"]
 
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
 # file rather than to the package. An entry naming a directory would grant it to every hook in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.
-"src/mikemol/hooks/verdict.py" = ["S603"]
+"src/mikemol/hooks/verdict.py" = ["subprocess-without-shell-equals-true"]
 
 # ⚑⚑ THE SAME RULE, THE SAME REASON, A SECOND NAMED FILE. `test_adoption.py`'s subject is what a
 # real checkout produces WHEN INSTALLED, so building venvs and installing wheels is the case
 # rather than a helper around it. ⚑ MEASURED: every argument is a literal or a path this module
 # constructs — `sys.executable`, a `tempfile` directory, and `_SOURCE_TREE / dist` — so there is
-# no untrusted input for S603 to be about here.
+# no untrusted input for `subprocess-without-shell-equals-true` to be about here.
 # ⚑ DECLARED IN CONFIG, NOT AS `noqa`. Three line directives were written first and the ratchet
 # refused them as new keys, correctly: this repository's rule is DECLARE, NEVER SUPPRESS, and a
 # line directive travels with the code into a peer tree that may not even enable the rule —
 # measured by substrate as `RUF100 Unused noqa`. A config entry stays behind.
-# ⚑⚑ `S404` IS PREVIEW-ONLY AND THE RATCHET SEES IT WHILE `ruff check` DOES NOT. The census runs
-# ruff with `--preview`, so hoisting `import subprocess` to module scope minted a new baseline key
-# that a plain preflight reports as clean — measured: `ruff check` passes, `ruff check --preview`
-# names `suspicious-subprocess-import`. A gate and a preflight disagreeing about the same file is
-# exactly the shape that makes a green local run mean nothing.
-"tests/test_adoption.py" = ["S101", "S404", "S603"]
+# ⚑⚑ `suspicious-subprocess-import` IS PREVIEW-ONLY, AND THE RATCHET ONCE SAW IT WHILE `ruff check`
+# DID NOT. The census ran ruff with `--preview` while the gate did not, so hoisting
+# `import subprocess` to module scope minted a new baseline key that a plain preflight reported as
+# clean — a gate and a preflight disagreeing about the same file, which is exactly the shape that
+# makes a green local run mean nothing.
+# ⚑⚑⚑ THAT DISAGREEMENT IS NOW CLOSED BY CONSTRUCTION, and the entry is kept because the exemption
+# is still needed, not because the hazard is still live: `preview = true` is set above, so the
+# preview rules are part of the config every caller loads and there is no longer a flag for two
+# callers to differ on. The census and the gate cannot disagree about the rule set any more.
+"tests/test_adoption.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑ THE THIRD NAMED FILE, AND THE SAME REASON AS THE SECOND. `test_no_verify.py`'s subject is
 # what the INSTALLED console script decides — a hook can have a correct predicate and a broken
@@ -268,10 +286,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # case, not a helper around the case.
 # ⚑ MEASURED: every argument is a literal or a path this module constructs — `_BIN` is built from
 # `__file__`'s unresolved parent, and the payload is a `json.dumps` of literals — so there is no
-# untrusted input for `S603` to be about here either.
+# untrusted input for `subprocess-without-shell-equals-true` to be about here either.
 # ⚑ DECLARED IN CONFIG, NOT AS `noqa`, following the entry above: a line directive travels with
 # the code into a peer tree that may not enable the rule, and the ratchet refuses new keys.
-"tests/test_no_verify.py" = ["S101", "S404", "S603"]
+"tests/test_no_verify.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑⚑ THE FOURTH NAMED FILE, AND RUNNING A SUBPROCESS IS THE WHOLE MEASUREMENT. `grade.py` awards
 # `behavioral` only when a mutation makes a check go red, and a check cannot go red without being
@@ -286,13 +304,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ AND THE ARGUMENTS CARRY NO UNTRUSTED INPUT: the interpreter is `dist/.venv/bin/python3` built
 # from a caller-supplied Path, the rest are literals and a test NAME — passed as an argv element
 # to `-k`, never through a shell, which `test_the_grader_does_not_shell_out_through_a_shell` pins.
-"src/mikemol/hooks/grade.py" = ["S404", "S603"]
+"src/mikemol/hooks/grade.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ THE GRADER'S OWN CASES. `S101` as everywhere in tests; `SLF001` for ONE arm that reaches
+# ⚑ THE GRADER'S OWN CASES. `assert` as everywhere in tests; `private-member-access` for ONE arm that reaches
 # `grade._flips` deliberately — that private function is the single place the reachable/passed
 # TRISTATE is consumed, and an integration-level assertion cannot tell a real flip from a
 # crash-flip. Testing the boundary requires crossing it, and the arm says so at its call site.
-"tests/test_grade.py" = ["S101", "SLF001"]
+"tests/test_grade.py" = ["assert", "private-member-access"]
 
 # ⚑⚑⚑ THE FIFTH NAMED FILE, AND ITS SUBPROCESS IS THE SUBJECT RATHER THAN A CONVENIENCE.
 # `test_venv_artifact.py` asserts that a BUILT venv works, and the only way to know an interpreter
@@ -304,7 +322,28 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ AND THE ARGUMENTS CARRY NO UNTRUSTED INPUT: the interpreter path is derived from the
 # repository's own layout, the rest are literals and a distribution NAME taken from a glob over
 # `*/pyproject.toml` in this tree. Never through a shell.
-# ⚑⚑ THE INLINE `# ruff: ignore[S603]` DIRECTIVES THIS REPLACES MINTED A SECOND RATCHET KEY
+# ⚑⚑ THE INLINE SUPPRESSION DIRECTIVES THIS REPLACES — one per call site, each naming
+# `subprocess-without-shell-equals-true` by its CODE — MINTED A SECOND RATCHET KEY
 # (`rule-codes-in-suppression-comments`), so the two findings had one cause: a suppression written
 # at the line rather than declared for the file. Declaring it removes both.
-"tests/test_venv_artifact.py" = ["S101", "S404", "S603"]
+# ⚑ THE OLD CODE IS DESCRIBED HERE RATHER THAN QUOTED, and that is not fussiness: the arm
+# `test_a_selector_and_the_comment_explaining_it_name_the_same_rule` reads the prose block directly
+# above a selector as that selector's explanation, and cannot tell a historical quotation from a
+# live claim — nor should it, since a reader greps the code either way and finds nothing.
+"tests/test_venv_artifact.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑⚑⚑ THE SIXTH AND SEVENTH NAMED FILES, SURFACED BY ARMING PREVIEW RATHER THAN BY NEW CODE.
+# `suspicious-subprocess-import` is preview-only, so `import subprocess` in these two modules was
+# invisible to the gate until `preview = true` was set above — the imports predate the arming and
+# nothing about them changed.
+# ⚑⚑ AND THE REASON IS THE ONE ALREADY ESTABLISHED FOUR TIMES ABOVE, WHICH IS WHY THIS IS A
+# DECLARATION AND NOT A NEW ARGUMENT. `test_bar_fires.py` runs the gates, the checkers and the
+# build to find out what they REFUSE; `test_no_chaining.py` runs the installed hook to find out
+# what it denies. A gate's behaviour is not observable without executing it, so the subprocess is
+# the case rather than a convenience wrapped around one.
+# ⚑ WHAT IS *NOT* EXEMPTED HERE IS `subprocess-without-shell-equals-true`, and the asymmetry is
+# deliberate: these modules already carry that exemption at the individual call sites that need it,
+# where a reader meets the argv being justified. Granting it file-wide would exempt call sites
+# nobody has looked at — the blast radius a per-responsibility override exists to avoid.
+"tests/test_bar_fires.py" = ["assert", "suspicious-subprocess-import"]
+"tests/test_no_chaining.py" = ["assert", "suspicious-subprocess-import"]

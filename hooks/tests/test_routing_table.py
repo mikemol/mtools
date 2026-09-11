@@ -39,7 +39,14 @@ _TABLE = """\
 
 
 def _write_table(root: Path, body: str = _TABLE) -> Path:
-    """Create a repo at `root` carrying `body` as its routing table, and return the table path."""
+    """Create a repo at `root` carrying `body` as its routing table.
+
+    Returns:
+        The path to the table that was written, so a caller can read or mutate the same file the
+        subject under test will resolve — rather than reconstructing the relative path a second
+        time and testing against a location that only looks like the one in use.
+
+    """
     path = root / routing_table.SKILL_RELPATH
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(body, encoding="utf-8")

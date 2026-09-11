@@ -46,6 +46,14 @@ def adopter(monkeypatch: pytest.MonkeyPatch) -> Path:
     ⚑ `CLAUDE_PROJECT_DIR` IS THE WHOLE ADOPTION MECHANISM, exercised here rather than described.
     It is how the harness tells a hook which repo the session is in, and it is what replaced the
     `__file__` walk that cannot survive being installed.
+
+    Returns:
+        The adopting checkout's root, with `CLAUDE_PROJECT_DIR` already bound to it for the
+        duration of the test. ⚑ THE FIXTURE SKIPS RATHER THAN RETURNING A SENTINEL when no such
+        checkout exists on this machine, so no caller ever receives a path that names nothing —
+        a `Path` that does not exist is precisely the shape that produces a green test over an
+        absent subject.
+
     """
     if routing_table.table_path(_ADOPTER) is None:
         pytest.skip(f"no adopting checkout at {_ADOPTER}")
