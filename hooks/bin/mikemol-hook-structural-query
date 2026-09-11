@@ -25,11 +25,33 @@ venv="$root/bazel-bin/hooks/.venv"
 entry="$(basename "$0")"
 
 if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    # ⚑⚑⚑ THE BOOTSTRAP EXEMPTION, AND WITHOUT IT THIS LAUNCHER DEADLOCKS THE REPOSITORY.
+    # MEASURED IN PRODUCTION, one tick after shipping: a rebuild invalidated `bazel-bin`, the
+    # launcher correctly refused — and then refused `bazel build //hooks:.venv`, THE COMMAND ITS
+    # OWN REFUSAL MESSAGE TELLS THE READER TO RUN. Every Bash call was blocked, including the one
+    # that repairs the condition. A gate whose refusal cannot be satisfied is not fail-closed; it
+    # is fail-shut, and the difference is whether a party can get out.
+    #
+    # ⚑⚑ THE EXEMPTION IS THE NARROWEST THING THAT RESTORES THE ARTIFACT: a bazel invocation
+    # naming this venv target. It is not "allow bazel" — `bazel test //...` stays refused, because
+    # nothing about a test run repairs a missing venv. The payload is read rather than trusted:
+    # the harness hands the command on stdin, and the check is a fixed substring, not a parse.
+    #
+    # ⚑ AND IT IS ANNOUNCED RATHER THAN SILENT. A hook that quietly permits one shape is a hole
+    # nobody can audit; this prints why it allowed, on stderr, where the transcript keeps it.
+    _payload="$(cat)"
+    case "$_payload" in
+        *"bazel build //hooks:.venv"*|*"bazel build //hooks/..."*)
+            echo "hook: venv absent, ALLOWING the build that repairs it — bootstrap exemption" >&2
+            exit 0
+            ;;
+    esac
+
     # ⚑⚑ REFUSE, LOUDLY, IN THE HARNESS'S OWN VOCABULARY. A bare `exit 1` would be reported as a
     # hook error and — measured — still not deny the call. The JSON below is what makes absence
     # BLOCK rather than pass, which is the whole reason this launcher exists.
     cat <<'JSON'
-{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "the hook venv is not built — run `bazel build //hooks:.venv`. Refusing rather than failing open: a hook that cannot run exits 0 with no decision, which reads as ALLOW."}}
+{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "the hook venv is not built — run `bazel build //hooks:.venv`, which this hook exempts so the repair is reachable. Refusing everything else rather than failing open: a hook that cannot run exits 0 with no decision, which reads as ALLOW."}}
 JSON
     exit 0
 fi

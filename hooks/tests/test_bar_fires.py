@@ -5653,3 +5653,46 @@ def test_the_harness_hooks_go_through_the_tracked_launchers() -> None:
         "a harness hook names `bazel-bin`, a convenience symlink `bazel clean` deletes — the "
         "hooks would vanish with a routine command, and vanish in the fail-open direction"
     )
+
+
+def test_the_hook_launcher_exempts_the_command_that_repairs_it() -> None:
+    """⚑⚑⚑ A GATE WHOSE REFUSAL CANNOT BE SATISFIED IS FAIL-SHUT, NOT FAIL-CLOSED.
+
+    The launchers emit an explicit `deny` when the built venv is absent, because a hook that
+    cannot run exits 0 with no decision and the harness reads that as ALLOW. Correct — and shipped
+    without a bootstrap exemption.
+
+    ⚑⚑ MEASURED IN PRODUCTION ONE TICK LATER: a rebuild invalidated `bazel-bin`, the launcher
+    refused, and it then refused `bazel build //hooks:.venv` — THE COMMAND ITS OWN REFUSAL MESSAGE
+    PRESCRIBES. Every Bash call was blocked, including the repair. The session escaped only because
+    the hook matcher is `Bash` and `Edit` is not gated.
+
+    ⚑ THE EXEMPTION IS THE NARROWEST THING THAT RESTORES THE ARTIFACT, measured 7 of 7 with the
+    venv absent: the two repair forms allowed; `bazel test //...`, a DIFFERENT distribution's venv
+    build, `rm -rf /` and an ordinary refusable command all still denied. An honest limit is
+    recorded with it — a substring match cannot tell `bazel build //hooks:.venv` from an `echo` of
+    it, and the probe asserts that rather than hiding it.
+    """
+    launcher = (_DIST / "bin" / "mikemol-hook-structural-query").read_text(encoding="utf-8")
+
+    # ⚑ THE REFUSAL AND THE ESCAPE MUST BOTH BE PRESENT. Either alone is a defect: the refusal
+    # without the escape is the deadlock above; the escape without the refusal is a hook that
+    # never denies at all.
+    assert "permissionDecision" in launcher, (
+        "the launcher does not emit a decision — absence would FAIL OPEN, which is the whole "
+        "reason this file exists"
+    )
+    assert "bazel build //hooks:.venv" in launcher, (
+        "the launcher has no bootstrap exemption, so its own prescribed repair is refused and the "
+        "repository deadlocks — measured, in production"
+    )
+
+    # ⚑⚑ AND THE EXEMPTION MUST NOT BE A GENERAL BAZEL HOLE. `bazel test` repairs nothing; if the
+    # launcher ever exempts it, a missing venv would silently permit the whole suite to run
+    # ungated, which is the fail-open shape wearing an exemption's clothes.
+    exempt_block = launcher.partition("_payload")[2].partition("esac")[0]
+    assert exempt_block, "the exemption's `case` block is not findable — the arm reads nothing"
+    assert "bazel test" not in exempt_block, (
+        "the bootstrap exemption admits `bazel test`, which repairs nothing — an exemption wider "
+        "than the repair it exists for"
+    )

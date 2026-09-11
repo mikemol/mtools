@@ -61,6 +61,18 @@ py_library(
             # ⚑⚑ THE COMMENT BELOW ALREADY SAYS A RECORDED LESSON IS NOT AN APPLIED ONE, about
             # `_GATE`, in this same data list. This is the next arm reading a path nothing staged.
             "ratchet-preview.txt",
+            # ⚑⚑⚑ THE LAUNCHERS, AND THIS IS THE SAME LESSON A FOURTH TIME IN THIS LIST. An arm
+            # asserting that `hooks/bin/mikemol-hook-*` carries both a refusal AND a bootstrap
+            # exemption passed locally and failed hermetically with `FileNotFoundError` — the
+            # sandbox stages only declared inputs, and a launcher tracked in the repository is
+            # still not an input to this target until it is named here.
+            # ⚑⚑ THE LIST ITSELF SAYS "A RECORDED LESSON IS NOT AN APPLIED ONE" TWICE ALREADY,
+            # about `ratchet-preview.txt` and about `_GATE`. Writing a new arm that reads a new
+            # path did not prompt me to consult either. The instrument that caught it was the
+            # hermetic run, not the reasoning sitting in the file being edited.
+            "bin/mikemol-hook-structural-query",
+            "bin/mikemol-hook-no-chaining",
+            "bin/mikemol-hook-no-verify",
             # ⚑⚑⚑ THE GATE ITSELF IS DATA, AND ITS ABSENCE MADE 56 ARMS FAIL HERMETICALLY WHILE
             # THE PREFLIGHT READ THEM ALL GREEN. `_GATE` is read by 22 call sites here; in the
             # sandbox the path did not exist, so every one raised FileNotFoundError. The preflight

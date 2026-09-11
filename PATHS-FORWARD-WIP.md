@@ -477,6 +477,62 @@ hard-depends on the build. A fresh clone cannot commit until it builds, and the 
 disappears. That is the trade the ruling accepts; recorded here so nobody re-litigates it as a
 surprise.
 
+### ⟐FAIL-SHUT — NEW and CLEARED 2026-09-10, the launcher deadlocked the repository in production
+
+⚑⚑⚑ **THE LAUNCHER SHIPPED AT `c4675fe` REFUSED ITS OWN PRESCRIBED REPAIR.** It denies when the
+built venv is absent — correct, and the reason the fail-open window closes. One tick later a
+rebuild invalidated `bazel-bin`, the launcher refused as designed, and then refused
+`bazel build //hooks:.venv` — **the command its own refusal message tells the reader to run.**
+Every Bash call was blocked, including the one that repairs the condition.
+
+⚑⚑ **THE SESSION ESCAPED ONLY BY AN ACCIDENT OF SCOPE:** the hook matcher is `Bash`, and `Edit` is
+not gated. Had the matcher been wider there would have been no way out from inside.
+
+**Repaired with a bootstrap exemption, measured 7 of 7 with the venv absent:**
+
+```
+bazel build //hooks:.venv      ALLOW   the repair itself
+bazel build //hooks/...        ALLOW   the package form
+bazel test //...               deny    ⚑ a test run repairs nothing
+bazel build //mdstruct:.venv   deny    ⚑ a DIFFERENT venv is not this hook's repair
+rm -rf /                       deny
+grep -n foo README.md          deny    an ordinary refusable command
+echo bazel build //hooks:.venv ALLOW   ⚑ HONEST LIMIT, recorded rather than hidden:
+                                       a substring match cannot tell a build from an echo
+```
+
+⚑ **A GATE WHOSE REFUSAL CANNOT BE SATISFIED IS NOT FAIL-CLOSED; IT IS FAIL-SHUT, AND THE
+DIFFERENCE IS WHETHER A PARTY CAN GET OUT.** The fail-open analysis was right and incomplete: I
+measured what happens when the hook cannot run, and not what happens when it runs and refuses
+everything. Both are ways for a gate to stop being useful; only one of them looks like safety.
+
+### ⟐CASSIAN-ROUND-2 — answered 2026-09-10, and THREE OF MY OWN FIVE ARMS WERE VACUOUS
+
+cassian confirmed all three findings from `ab722b5` and reported the pattern-as-artifact defect as
+**wider** than I measured — not `.md`-specific but *any* claimed suffix inside a pattern, cause
+positional at their `verdict():205`.
+
+⚑⚑ **MEASURED HERE, AND THE CORRECTION IS MINE TO MAKE:**
+
+```
+grep -n "SKILL.md"   <a .py file>    DENY     ⚑ live here — the original report
+grep -n "rubric.tsv" preflight.sh    no deny
+grep -n "panels.tsv" blockers.sh     no deny
+grep -n foo README.md                DENY     the guard itself, still firing
+grep -n foo hooks/rubric.tsv         no deny  ⚑ A REAL .tsv TARGET ALSO DOES NOT ROUTE
+```
+
+The last row is the finding: **`.tsv` has no owner in mtools** (`grep -rn tsv routing_table.py`
+returns nothing), so the three `.tsv` arms measured **nothing at all, in both directions**. They
+would have read as *mtools is clean* when they only mean *mtools does not route that suffix*.
+The defect is live here for `.md` — one instance, not a class. Their fix shape (positional, scoped
+to the grep family, with `cat`/`head`/`wc` explicitly excluded so the guard is not de-armed) is
+right and is expected to be taken.
+
+⚑ **AND `_arg_after` IS OWED TWICE NOW.** Their sentence — *a finding filed outward is not a
+finding fixed at home* — applies to me symmetrically: I recorded it as owed, they checked their own
+tree because of that, and I still have not checked mine.
+
 ### ⟐CONSOLE-SCRIPTS — OPERATOR-RULED and BUILT 2026-09-10, closing ⟐GATES-AS-TARGETS step 2
 
 ⚑⚑⚑ **I TOLD THE OPERATOR THIS MATTERED "ONLY FOR THE INTERACTIVE DEV LOOP" AND THAT WAS FALSE.**

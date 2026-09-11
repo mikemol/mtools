@@ -2917,3 +2917,9 @@
   claim   = {⚑⚑⚑ A HOOK POINTED STRAIGHT AT A BUILD ARTIFACT DISAPPEARS WITH `bazel clean`, and disappears in the FAIL-OPEN direction. `bazel-bin` is a convenience symlink into an output base hashed on the workspace path; the host venv's scripts carry a uv-generated absolute shebang. Both are refused in favour of tracked launchers that emit an explicit DENY when the artifact is absent — measured, three hooks, present and absent, with the host scripts as controls. ⚑⚑ AND THE ARM'S FIRST FORM READ 21 CHARACTERS OF A 79-CHARACTER COMMAND: `"command":\s*"([^"]+)"` stops at the first quote and these commands embed escaped quotes, so the path it forbids was never in the searched text. Only the F-arm caught it; the file is parsed as JSON now.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_harness_hooks_go_through_the_tracked_launchers}
 }
+
+@misc{hooks-bar-fires-hook-launcher-exempts-the-command-that-repairs-it,
+  section = {bar-fires},
+  claim   = {⚑⚑⚑ A GATE WHOSE REFUSAL CANNOT BE SATISFIED IS FAIL-SHUT, NOT FAIL-CLOSED. The launcher denies when the built venv is absent — correct, and shipped without a bootstrap exemption. MEASURED IN PRODUCTION one tick later: a rebuild invalidated `bazel-bin`, the launcher refused, and then refused `bazel build //hooks:.venv`, THE COMMAND ITS OWN MESSAGE PRESCRIBES. Every Bash call blocked, including the repair; the session escaped only because the matcher is `Bash` and `Edit` is not gated. ⚑⚑ The exemption is measured 7-of-7 as the narrowest thing that restores the artifact: two repair forms allowed; `bazel test //...`, a DIFFERENT distribution's venv build, and ordinary commands all still denied — with the honest limit recorded that a substring match cannot tell a build from an `echo` of one.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_hook_launcher_exempts_the_command_that_repairs_it}
+}
