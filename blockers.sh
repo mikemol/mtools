@@ -1173,6 +1173,47 @@ echo "    resolves today. The sweep asserts len(unresolved) <= this. To measure 
 echo "      env -C hooks .venv/bin/python3 -m pytest tests/test_bar_fires.py -k vacuous"
 echo "    with _MAX_UNRESOLVED forced negative, so the assertion prints its own set."
 
+# ⚑⚑⚑ THE REMOTE SWEEP CANNOT BE TAKEN WHOLE, AND THE CAUSE IS ONE DECLARED INPUT. Measured across
+# two ticks: every `lost inputs with digests` failure under `--config=remote` is in
+# `mdstruct/BUILD.bazel`, and bazel retries until it exhausts them. ISOLATED ON ONE AXIS:
+#
+#     hooks + fence + ratchet   (27 targets, no pandoc)   27/27 PASS, 46 remote actions
+#     mdstruct ruff/mypy/ratchet (3 targets, no pandoc)    3/3  PASS
+#     mdstruct test_*           (16 targets, pandoc)       FAULT on every attempt
+#
+# The distinguishing input is `@pandoc//:bin` — 156 MB, staged into all 16 and none of the others.
+# ⚑⚑ I CALLED THIS INFRASTRUCTURE NOISE ONE TICK AGO, from the true observation that a DIFFERENT
+# target fails each attempt. True, and it pointed at *random* when the pattern is one package and
+# one input: the failing target is just whichever was scheduled when the blob went missing. A
+# plausible reading of a real measurement, aimed at the wrong subject.
+# ⚑ THE DECLARATION ITSELF IS CORRECT AND IS NOT THE DEFECT. `MODULE.bazel` stages pandoc because
+# 54 of 97 mdstruct cases were SILENTLY SKIPPING without it; undeclaring it to make the sweep green
+# would restore a suite that reports green over cases that never ran. The fault is the cache's
+# handling of a large blob, not the input's presence.
+# ⚑ DERIVED RATHER THAN TYPED, because a status word is what rotted twice in the entry below. What
+# is cheap here is the blob's existence and size; whether the cache serves it today is a sweep.
+#
+# ⚑⚑⚑ AND THE FIRST FORM OF THIS PROBE REPORTED `0 MB` — A PATH THAT NAMED THE WRONG FILE, for the
+# fourth time in this repository. It globbed `*+pandoc/bin/pandoc` with `-quit`, which stops at
+# whichever match the TRAVERSAL reaches first — and every mdstruct test's runfiles tree carries a
+# 114-byte SYMLINK at exactly that path. 114/1048576 truncates to 0. The real binary is matched
+# too; it simply was not first, and `-quit` cannot say which it took.
+# ⚑⚑ MY OWN F-ARM PASSED AND COULD NOT HAVE CAUGHT IT: it tested the ABSENT case (no cache -> "NOT
+# FETCHED") and never the present one, so it proved the probe fails safe while the direction that
+# mattered went unmeasured. An arm that tests one direction passes a probe that is wrong in the
+# other — this file's own two-armed discipline, violated by the hand that wrote it down.
+# ⚑ ANCHORED ON `external/` — where the repo rule materialises the download — and taking the MAX
+# rather than the first, so a stray small match cannot win by being reached earlier.
+_pbin=$(find "$HOME/.cache/bazel" -path '*/external/*+pandoc/bin/pandoc' -printf '%s\n' 2>/dev/null \
+        | sort -n | tail -1 || true)
+echo "  remote sweep: the large declared input is $(if [ -n "$_pbin" ]; then echo "$((_pbin / 1048576)) MB"; else echo "NOT FETCHED here"; fi) (@pandoc//:bin,"
+echo "    staged into all 16 mdstruct test targets and no others). Every remote lost-input"
+echo "    fault measured so far is in that set; the other 30 targets sweep clean remotely."
+echo "    To take a remote sweep that means something today:"
+echo "      bazel test //hooks/... //fence/... //ratchet/... --config=remote --nocache_test_results"
+echo "    and mdstruct separately, expecting the fault. A whole-tree remote green is NOT"
+echo "    currently obtainable, and reporting one would be reporting the cache's mood."
+
 # ⚑⚑⚑ AN OPERATOR DECISION MUST NAME WHO RAISED IT, AND ONE OF THREE HAD NOBODY. The operator
 # asked *why are we concerned about cost?* and there was no answer: the only commit raising the
 # gate-cost question is `614163d`, MINE, and its own finding is that no stable quantity exists —
@@ -1209,8 +1250,20 @@ echo "  RUF201 rule-name autofix   raised by mtools   ANSWERED 2026-09-07: adopt
 # ⚑ AND THE REPAIR IS NOT TO DERIVE IT HERE. Three ruff runs per poll would add three process
 # starts to a script measured at 222, and the honest alternative to a stale number is NO number
 # plus the command that yields a fresh one. A reader who wants the size can take it.
-echo "    ⚑ BLOCKED on a preview-wide paydown whose size is NOT stated here — a typed count"
-echo "      goes stale the tick after the work moves it. Measure it:"
+# ⚑⚑⚑ NO LONGER BLOCKED, AND THE WORD OUTLIVED THE WORK BY ONE TICK. Third ruling 2026-09-11: ARM
+# `preview = true` REPO-WIDE, THEN PAY DOWN. hooks was armed and paid at 9802790 — 48 findings, the
+# distribution clean under preview, its ratchet baseline LOWERED to zero on the operator's ruling
+# 2026-09-12 (--write, 13 paid keys removed; a regression is now REFUSED rather than tolerated).
+# ⚑⚑ THE STATUS WORD IS THE PART THAT ROTS, AND THIS ENTRY IS THE THIRD TIME. The figure above went
+# stale twice and was repaired by REMOVING the number and printing the command instead; `BLOCKED`
+# is the same defect one field over — a state word with no way to re-check it, in the section a
+# reader consults to judge whether a decision still costs anything. It is now derived below.
+# ⚑ THE HISTORY ABOVE IS KEPT IN FULL. The preconditions it records are why the ruling has three
+# dates, and a reader meeting only the final state cannot tell an easy decision from one that took
+# three attempts and a reverted autofix.
+echo "    ⚑ PARTIALLY PAID — hooks is armed and clean; the remaining distributions are NOT armed."
+echo "      The size is not stated here: a typed count goes stale the tick after the work"
+echo "      moves it, which this entry measured twice. Measure it:"
 # ⚑⚑ THE DISTRIBUTION LIST IS DERIVED, NOT TYPED — AND IT WAS TYPED, AND IT WENT STALE. This line
 # read `for d in hooks mdstruct ratchet` while `fence` had landed at cc3d301, so a reader taking
 # the measurement would have omitted a whole distribution and reported a total for a population
@@ -1235,10 +1288,25 @@ echo "      goes stale the tick after the work moves it. Measure it:"
 # `external/+_repo_rules+ruff/ruff`, relative to the EXECROOT — measured — so under `env -C $d` it
 # would resolve against the distribution directory and fail. `bazel info execution_root` supplies
 # the prefix. A printed instruction nobody has run is prose, not a measurement.
-echo "          _ruff=\"\$(bazel info execution_root)/\$(bazel cquery '@ruff//:bin' --output=files)\""
+# ⚑⚑⚑ AND THIS RECIPE PRODUCED A PATH THAT NAMES NOTHING, MEASURED BY RUNNING IT — in the very
+# entry whose comment above says *a printed instruction nobody has run is prose*. `execution_root`
+# is `<output_base>/execroot/_main`, and `external/+_repo_rules+ruff/ruff` does NOT exist beneath
+# it; the fetched binary lives at `<output_base>/external/...`. The execroot form resolves only
+# while a build happens to have staged that tree, so it works when you have just built and fails
+# when you have not — a recipe whose correctness depends on unstated state.
+# ⚑⚑ `bazel info output_base` IS THE STABLE ANCHOR, and it was available all along. The lesson the
+# comment above records — run the instruction — was applied to the RELATIVE-vs-ABSOLUTE question
+# and not to the prefix itself, so the fix stopped one layer short of the defect.
+echo "          _ruff=\"\$(bazel info output_base)/\$(bazel cquery '@ruff//:bin' --output=files)\""
 echo "          for d in $(git -C "$mtools" ls-files '*/pyproject.toml' | cut -d/ -f1 | sort -u | tr '\n' ' ' | sed 's/ $//'); do"
 echo "            env -C \$d \"\$_ruff\" check --preview --statistics . ; done"
-echo "      Renaming first is unshippable — a name selector needs --preview to LOAD."
+# ⚑⚑ THIS LINE WAS A LIVE CONSTRAINT AND IS NOW A HISTORICAL ONE, so it says which. Renaming was
+# unshippable BEFORE the arming: measured, `--select magic-value-comparison` gives rc=2 *ruff
+# failed* without `--preview` and rc=1 with it, so the rename had to follow the arming rather than
+# precede it. hooks is armed, and its selectors ARE renamed — stating the bar as still-binding
+# would tell a reader the opposite of what the tree holds.
+echo "      Order: ARM preview, THEN rename — a name selector needs --preview to LOAD, so the"
+echo "      reverse order exits 2 on every ruff target. Done for hooks; the other three await it."
 # ⚑⚑⚑ THE SUPPRESSION RULES CHAIN, AND THE SECOND LINK IS PREVIEW-ONLY. Measured on a probe with
 # an F-arm (a bare violation is REPORTED in both configurations, so a rc=0 below means suppression
 # rather than a rule that never ran):
@@ -1260,7 +1328,15 @@ echo "      Renaming first is unshippable — a name selector needs --preview to
 # check` (no preview) still `All checks passed!`, suite 337 pass. RUF105 cleared, RUF106 opened at
 # the same 16 sites, total unmoved at 41 — a rule renamed, not a defect paid.
 echo "      RUF105 -> RUF106 measured: the chain's second link needs --preview to SUPPRESS,"
-echo "      and fails SILENTLY without it. Code form holds until preview is armed."
+# ⚑⚑ AND THE SILENT-FAILURE HAZARD IS CLOSED WHERE PREVIEW IS ARMED, WHICH IS WHY THIS SAYS WHERE.
+# The chain fails silently only when the gate and the census disagree about the rule set. `preview
+# = true` in a distribution's own `[tool.ruff.lint]` removes the flag both callers could differ on
+# — the gate passes no `--preview` and loads it from the config — so in hooks there is no longer a
+# configuration in which a renamed directive stops suppressing. Measured: reverting one directive
+# to the code form leaves the suppression WORKING and raises only the style rule.
+echo "      and fails SILENTLY without it — in a distribution that is NOT yet armed. Where"
+echo "      preview is armed in the config (hooks), gate and census cannot disagree and both"
+echo "      directive forms suppress; only the style rule objects. Code form holds elsewhere."
 # ⚑⚑ DISCHARGED 2026-09-10 AT ab722b5, AND THE OLD LINE SURVIVED THE EVENT IT DESCRIBED. It read
 # "ANSWERED 2026-09-07: mtools asks for a diff" — true when written, false the moment the diff
 # arrived. cassian filed it, mtools answered in findings/cassian-observability.md, and the filing

@@ -34,9 +34,22 @@ import re as pyre
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
+
+# ⚑⚑ `Callable` IS ANNOTATION-ONLY AND SO IT BELONGS HERE — WHICH IS THE OPPOSITE VERDICT TO
+# `Path` BELOW, FROM THE SAME RULE, FOR THE SAME REASON. TC003 asked for both; the answer is read
+# off the USE, not off the rule. `Path` is evaluated by module-level constants at import time and
+# moving it breaks collection with a NameError; this name appears only inside one annotation, so
+# deferring it costs nothing and the rule is simply right.
+# ⚑ THE PAIR IS WHY THE COMMENT BELOW SAYS THE RULE WAS *ANSWERED BY READING THE USE*: one file,
+# one rule, two opposite correct answers. A blanket obey or a blanket ignore gets one of them
+# wrong, and neither would look wrong at review.
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ⚑ `Path` IS A RUNTIME IMPORT HERE, NOT ANNOTATION-ONLY. ruff's TC003 asked for it to move
 # into a type-checking block; these module-level constants evaluate it at import time, so that
@@ -5125,7 +5138,20 @@ def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
         if ln.strip()
     ]
     # ⚑ POSITIVE CONTROL: an empty baseline would satisfy every assertion below.
-    assert keys, "the baseline holds no keys — this arm would pass vacuously"
+    # ⚑⚑⚑ AND IT IS NOW EMPTY, BY AN OPERATOR RULING, SO THIS SKIPS RATHER THAN FAILS — the
+    # distinction being that a vacuous arm and a broken one are different facts. The hooks baseline
+    # was LOWERED to zero on 2026-09-12 after the preview paydown cleared all thirteen keys
+    # (`mikemol-ratchet --write`, thirteen paid keys removed). There is no key left to name a rule,
+    # so the property this arm asserts is true of nothing.
+    # ⚑⚑ A FAILING ASSERTION HERE WOULD SAY *THE BASELINE IS BROKEN* WHEN WHAT HAPPENED IS *THE
+    # DEBT IS PAID*, which is the best possible outcome reported as a defect. A suite that reddens
+    # on success teaches its reader to delete the arm. The arm stays armed for the moment a key
+    # returns — and the sibling arm below is what proves a returning key is REFUSED.
+    if not keys:
+        pytest.skip(
+            "the baseline is empty — every key was paid down and the operator lowered it; "
+            "this arm's property is vacuous over an empty set and re-arms when a key returns"
+        )
     unknown: list[str] = []
     for key in keys:
         _, _, rule = key.rpartition(":")
@@ -5165,6 +5191,21 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
 
     ⚑ POSITIVE CONTROL BELOW: an unreadable or empty baseline satisfies an absence assertion
     trivially, so the file's own content is asserted before the absence is claimed.
+
+    ⚑⚑⚑ AND THE BASELINE IS NOW EMPTY, WHICH RETIRES THE ABSENCE READING AND STRENGTHENS THE ARM.
+    A second ruling on 2026-09-12 lowered hooks to ZERO keys after the preview paydown cleared all
+    thirteen. Over an empty set *these two specific keys are absent* is true of every key at once,
+    so the assertion stops discriminating — the positive control above was written for exactly this
+    and is why the change was caught rather than absorbed.
+    ⚑⚑ SO THE ARM NOW ASSERTS THE PROPERTY ITS OWN DOCSTRING ALWAYS NAMED, AND IT IS A STRICTLY
+    BETTER ONE: **the ratchet REFUSES a finding the baseline does not carry.** That is what "a
+    paydown that arms nothing is a deletion wearing a paydown's name" was always about, and this
+    file recorded it being MEASURED BY HAND twice — once on 2026-09-08 and again on 2026-09-12 —
+    without any arm carrying it. A measurement that has to be repeated by hand each time the
+    baseline moves is a measurement nobody will take on the tick that matters.
+    ⚑ EMPTY IS THE STRONGEST STATE FOR THIS QUESTION, not the weakest: with no keys at all, ANY
+    finding the checker reports must be refused, so the arm needs no retired key to aim at and
+    cannot go stale at the next paydown.
     """
     assert (_DIST / "ratchet-preview.txt").is_file(), (
         f"no baseline at {_DIST / 'ratchet-preview.txt'} — this arm would pass vacuously"
@@ -5174,7 +5215,6 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
         for ln in (_DIST / "ratchet-preview.txt").read_text(encoding="utf-8").splitlines()
         if ln.strip()
     }
-    assert keys, "the baseline holds no keys — an absence claim over it would be vacuous"
     retired = {
         "tests/test_payload.py:compare-to-empty-string",
         "tests/test_structural_query.py:compare-to-empty-string",
@@ -5184,6 +5224,82 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
         f"{len(returned)} key(s) retired by the operator's 2026-09-08 paydown are back in the "
         "baseline — a re-entered key restores the silence that paydown ended, and the ratchet "
         f"would tolerate the finding again:\n  " + "\n  ".join(returned)
+    )
+
+    # ⚑⚑⚑ THE REFUSAL ITSELF, RUN RATHER THAN DESCRIBED. A copy of the distribution gets one
+    # planted finding whose key the baseline does not carry; the ratchet must exit NONZERO and name
+    # it. ⚑ ON A COPY, because the ratchet reads a whole distribution and this must not depend on —
+    # or disturb — the working tree the gate is about to read.
+    # ⚑⚑ THE DECLARED `//ratchet:ratchet_cli`, NOT `ratchet/.venv/bin/mikemol-ratchet`. The first
+    # draft of this arm reached for the host venv — a path that exists on this workstation and in
+    # NO sandbox, which is ⟐UNDECLARED-HOST-INPUTS written fresh into a new arm while the symbol
+    # for it sits in the poll. `hooks/BUILD.bazel` already stages this target for `//hooks:ratchet`,
+    # so the instrument is in the graph and needs only naming in THIS target's data.
+    # ⚑ `_DIST.parent` IS THE RUNFILES ROOT (`_main`) UNDER BAZEL AND THE REPO ROOT OUTSIDE IT —
+    # the property this file's header records and every sibling arm relies on. So one expression
+    # names the staged binary in the sandbox and the built one under a bare pytest run.
+    ratchet = _DIST.parent / "ratchet" / "ratchet_cli"
+    # ⚑⚑ STAT IT, NEVER ASSUME IT. A path is a string that names nothing until something reads it,
+    # which this repository has now measured four times.
+    if not ratchet.is_file():
+        pytest.skip(f"no staged ratchet at {ratchet} — the instrument is absent, not passing")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        probe = Path(tmp) / "hooks"
+        # ⚑ DECLARED AT THE EDGE: `shutil.ignore_patterns` is typed to return
+        # `Callable[[Any, list[str]], set[str]]`, and under this repository's `disallow_any_expr`
+        # that `Any` poisons the `copytree` call it is passed to. Naming the type here is the
+        # narrowing the flag exists to force — the same move the two `re.findall` sites in this
+        # file already carry, for the same reason.
+        ignore: Callable[[str, list[str]], set[str]] = shutil.ignore_patterns(
+            ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__")
+        shutil.copytree(_DIST, probe, symlinks=True, ignore=ignore)
+        # ⚑ THE PLANTED FINDING IS A SUPPRESSION DIRECTIVE IN THE CODE FORM, which raises
+        # `rule-codes-in-suppression-comments` — a preview rule this distribution pays rather than
+        # baselines, so its key is genuinely absent and the ratchet has no licence to tolerate it.
+        # ⚑⚑⚑ THE CODE FORM IS DERIVED, NOT SPELLED, AND THE VACUITY SWEEP IS WHY. Writing
+        # `"ignore[S108]"` here made the sweep report this arm unresolvable: it checks that every
+        # asserted literal occurs in the file the test READS, and `S108` exists only in a
+        # TemporaryDirectory this arm creates at runtime. The sweep was right — a literal it cannot
+        # resolve is a literal nothing proves is reachable — and `_MAX_UNRESOLVED` may only ever
+        # DECREASE (an arm enforces that), so the repair is to stop needing the literal.
+        # ⚑⚑ SO THE MUTATION IS EXPRESSED AS A TRANSFORMATION OF WHAT THE FILE HOLDS: take the
+        # directive's bracketed NAME and put back a code. Both halves of the substitution are now
+        # values read from the source, and the arm asserts only that the text CHANGED.
+        planted = probe / "tests" / "test_checkers.py"
+        before = planted.read_text(encoding="utf-8")
+        after = pyre.sub(r"ruff: ignore\[[a-z][a-z0-9-]+\]", "ruff: ignore[S108]", before, count=1)
+        planted.write_text(after, encoding="utf-8")
+        # ⚑ POSITIVE CONTROL ON THE FIXTURE: if the substitution did not land, the run below
+        # measures an unmodified tree and its green says nothing. Asserted as a DIFFERENCE rather
+        # than as a literal, for the reason above.
+        assert after != before, (
+            "the planted finding did not take — no name-form directive was found in "
+            f"{planted.name}, so this arm would measure an unmodified copy"
+        )
+        # ⚑⚑⚑ `RUFF_BIN` IS THE CONTRACT, read from `ratchet_check.sh` rather than guessed. That
+        # script exports it so *the census does not reach for a developer venv* — the same
+        # discipline as the pandoc and stubtest witnesses — and an arm that omitted it would either
+        # fail for want of `<dist>/.venv/bin/ruff` or, worse, measure whatever host ruff it found.
+        env = {**os.environ, "RUFF_BIN": str(Path(_ruff_argv()[0]).resolve())}
+        proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the ratchet is the subject of this case
+            [str(ratchet), str(probe)],
+            capture_output=True, text=True, check=False, env=env,
+        )
+
+    assert proc.returncode != 0, (
+        "the ratchet TOLERATED a finding whose key the baseline does not carry — a lowered "
+        "baseline that refuses nothing is the deletion-wearing-a-paydown's-name shape this arm "
+        f"is named for:\n{proc.stdout}{proc.stderr}"
+    )
+    # ⚑⚑ THE KEY IS NAMED BY THE FILE, NOT BY A LITERAL HERE — the same vacuity-sweep constraint as
+    # the substitution above. What must appear in the refusal is the PLANTED FILE's key, and the
+    # file's name is a value this arm already holds. Asserting the rule name as a literal would
+    # make this arm unresolvable for a string that is the checker's to choose anyway.
+    assert planted.name in proc.stdout, (
+        "the ratchet refused, but did not name the file the finding was planted in — an arm that "
+        f"cannot tell its own finding from an unrelated failure is measuring the fixture:\n"
+        f"{proc.stdout}{proc.stderr}"
     )
 
 

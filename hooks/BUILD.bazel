@@ -61,6 +61,20 @@ py_library(
             # ⚑⚑ THE COMMENT BELOW ALREADY SAYS A RECORDED LESSON IS NOT AN APPLIED ONE, about
             # `_GATE`, in this same data list. This is the next arm reading a path nothing staged.
             "ratchet-preview.txt",
+            # ⚑⚑⚑ THE RATCHET CLI, AND THIS IS THE FIRST ENTRY IN THIS LIST ADDED *BEFORE* THE
+            # HERMETIC RUN CAUGHT IT RATHER THAN AFTER. `test_a_key_absent_from_the_baseline_is_
+            # refused_when_its_finding_returns` stopped describing the refusal and started RUNNING
+            # it — planting a finding in a copy of this distribution and requiring the ratchet to
+            # exit nonzero and name it — which makes the ratchet a real input to this target.
+            # ⚑⚑ THE FIRST DRAFT OF THAT ARM REACHED FOR `ratchet/.venv/bin/mikemol-ratchet`, a
+            # HOST path present on one workstation and in no sandbox — ⟐UNDECLARED-HOST-INPUTS
+            # written fresh into a new arm while its symbol sits in the poll. Caught by reading
+            # this list's own four warnings, which is the first time they were consulted while
+            # writing rather than quoted afterwards.
+            # ⚑ `//ratchet:ratchet_cli` WAS ALREADY IN THE GRAPH for `//hooks:ratchet` below; it
+            # needed naming here, not building. An instrument staged for a sibling target is not
+            # an input to this one.
+            "//ratchet:ratchet_cli",
             # ⚑⚑⚑ THE LAUNCHERS, AND THIS IS THE SAME LESSON A FOURTH TIME IN THIS LIST. An arm
             # asserting that `hooks/bin/mikemol-hook-*` carries both a refusal AND a bootstrap
             # exemption passed locally and failed hermetically with `FileNotFoundError` — the
