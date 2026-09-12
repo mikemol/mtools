@@ -91,6 +91,30 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_fenced_hash_opens_no_section}
 }
 
+@misc{md-spans-contained-heading-is-unreachable-by-every-substring,
+  section = {spans},
+  claim   = {THE AMBIGUITY REFUSAL IS A DEAD END FOR A CONTAINED HEADING, NOT A PROMPT. A heading wholly inside another --- `Residue` under `N31 residue --- what the pass left behind` --- is namable by no substring at all: measured EXHAUSTIVELY, all 27 substrings of the short heading match both headings or neither. The refusal tells a caller to be more specific and there is nothing more specific to say, so without an escape the section is unreachable. Reported by linux-sources-94 from substrate's md_spans and CHECKED HERE before the API changed, because a peer's claim is a claim and not a datum},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_contained_heading_is_unreachable_by_every_substring}
+}
+
+@misc{md-spans-exact-reaches-the-contained-heading,
+  section = {spans},
+  claim   = {`exact=True` requires the needle to EQUAL the heading, so a contained heading is namable by its own full text --- the one thing no substring can do. The spelling is substrate's, on an operator ruling, so a caller migrating from substrate/md_spans changes its import and nothing else; adopting a better-looking name would make every migrating call site a rewrite for no measured gain},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_exact_reaches_the_contained_heading_the_substring_finder_cannot}
+}
+
+@misc{md-spans-exact-still-refuses-a-partial-needle,
+  section = {spans},
+  claim   = {THE F-ARM FOR `exact`, WITHOUT WHICH IT COULD BE A FINDER THAT ACCEPTS ANYTHING. `residu` is a substring of a heading and the full text of none, so the substring finder resolves it and the exact finder must not. An `exact` that fell back to substring matching on a miss would pass the reaching arm while changing nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_exact_still_refuses_a_needle_that_is_no_headings_full_text}
+}
+
+@misc{md-spans-exact-is-case-folded-like-the-substring-finder,
+  section = {spans},
+  claim   = {ONE PREDICATE, TWO MODES --- the casefold is not the thing `exact` changes. A caller typing a heading in the wrong case is making the same mistake in either mode, and an `exact` that was also case-SENSITIVE would change two properties under one flag, which this repository has measured as its own defect class},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_exact_is_case_folded_like_the_substring_finder}
+}
+
 @misc{md-spans-ambiguous-needle-refuses-and-names-both,
   section = {spans},
   claim   = {A substring matching two headings raises, and the refusal NAMES the candidates. Ambiguity must refuse because the caller is usually about to write: picking the earlier of two matching sections is the silent-wrong-target class, and a rewrite is not recoverable by re-running. The message is part of the contract --- a refusal that does not say which sections collided leaves the caller to re-derive the ambiguity the tool already computed},
@@ -151,6 +175,24 @@
   section = {sections},
   claim   = {A write tells the caller WHICH section was targeted, by returning the span it hit. A write that says only done leaves a reader to re-derive what moved},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_write_returns_the_span_it_hit}
+}
+
+@misc{md-sections-contained-heading-cannot-be-written-without-exact,
+  section = {sections},
+  claim   = {THE DEAD END AT THE WRITE PATH, WHICH IS WHERE IT COSTS SOMETHING. A heading wholly inside another is unreachable by any substring, so without an escape the section is UNWRITABLE by this tool and the caller's remaining option is to hand-edit the document --- exactly what a structural editor exists to replace. A correct refusal a caller cannot escape is a dead end},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_contained_heading_cannot_be_written_without_exact}
+}
+
+@misc{md-sections-replace-forwards-exact-to-the-finder,
+  section = {sections},
+  claim   = {FORWARDING IS A CLAIM AND find_section's OWN ARMS DO NOT MEASURE IT. A replace_section that accepted `exact` and dropped it would satisfy every signature check and still refuse the write, so the arm reads the RESULT rather than the call --- the target's body gone, the CONTAINER's body untouched, since a write that hit the container would also produce a document containing the new text},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_replace_forwards_exact_to_the_finder}
+}
+
+@misc{md-sections-append-forwards-exact-to-the-finder,
+  section = {sections},
+  claim   = {THE SECOND WRITER, BECAUSE A REPAIR APPLIED TO ONE CALL SITE IS NOT A REPAIR TO THE CLASS. replace_section and append_to_section each call the finder themselves, and threading the flag through one and not the other is the shape this repository has measured repeatedly},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_append_forwards_exact_to_the_finder}
 }
 
 @misc{md-sections-ambiguous-target-refuses-before-writing,

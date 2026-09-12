@@ -36,34 +36,55 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def replace_section(path: Path, needle: str, body: str) -> tuple[str, spans_mod.Span]:
+def replace_section(path: Path, needle: str, body: str, *,
+                    exact: bool = False) -> tuple[str, spans_mod.Span]:
     """Return the document with ONE section's body replaced, and the span it targeted.
 
     ⚑ THE SPAN IS RETURNED SO THE CALLER CAN REPORT WHAT IT HIT. A write that says only "done"
     leaves a reader to re-derive which section moved.
 
+    ⚑⚑ `exact` IS FORWARDED RATHER THAN RE-IMPLEMENTED, and it has to exist HERE rather than only
+    on the finder: this is the write path, and a caller that can locate a contained heading but
+    cannot WRITE to it is exactly as stuck. `find_section` carries the measurement.
+
+    Args:
+        path: the document to read.
+        needle: the heading to target — a substring by default, the whole text under `exact`.
+        body: the replacement body.
+        exact: require the heading to equal `needle` rather than contain it.
+
     Returns:
-        document with ONE section's body replaced, and the span it targeted.
+        The rewritten document and the span it targeted.
 
     """
-    span = spans_mod.find_section(path, needle)
+    span = spans_mod.find_section(path, needle, exact=exact)
     lines = path.read_text(encoding="utf-8").split("\n")
     new = lines[:span.start] + body.rstrip("\n").split("\n") + lines[span.end - 1:]
     return "\n".join(new), span
 
 
-def append_to_section(path: Path, needle: str, body: str) -> tuple[str, spans_mod.Span]:
+def append_to_section(path: Path, needle: str, body: str, *,
+                      exact: bool = False) -> tuple[str, spans_mod.Span]:
     """Return the document with `body` appended INSIDE one section, before the next heading.
 
     ⚑ TRAILING BLANK LINES ARE PRESERVED BENEATH THE INSERTION, not swallowed. Markdown block
     separation is load-bearing, and an append that eats the blank line before the next heading
     produces a document that renders differently from the one the author reviewed.
 
+    ⚑⚑ `exact` IS FORWARDED, for the reason given on `replace_section`: the escape is worthless on
+    the finder alone when the finder's whole purpose here is to locate a WRITE target.
+
+    Args:
+        path: the document to read.
+        needle: the heading to target — a substring by default, the whole text under `exact`.
+        body: the text to append inside that section.
+        exact: require the heading to equal `needle` rather than contain it.
+
     Returns:
-        document with `body` appended INSIDE one section, before the next heading.
+        The rewritten document and the span it targeted.
 
     """
-    span = spans_mod.find_section(path, needle)
+    span = spans_mod.find_section(path, needle, exact=exact)
     lines = path.read_text(encoding="utf-8").split("\n")
     body_lines = lines[span.start:span.end - 1]
 

@@ -152,6 +152,98 @@ def test_an_unambiguous_needle_resolves(document: Path) -> None:
     assert spans.find_section(document, "Child").text == "Child"
 
 
+# ⚑⚑⚑ A CONTAINMENT CASE, WHICH THE FIXTURE ABOVE DOES NOT HAVE. `Parent`/`Child`/`Sibling` are
+# pairwise distinct, so no substring of one is a substring of another and the arms below would
+# measure nothing against it. The shape that matters is a heading WHOLLY CONTAINED in a longer one.
+_CONTAINED = """# Ⓝ31 residue — what the pass left behind
+
+long-heading body
+
+## Residue
+
+short-heading body
+"""
+
+
+# ⚑ CALLED, NOT BARE: same reason as `document` above.
+@pytest.fixture()
+def contained(doc: Path) -> Path:
+    """Write a document whose second heading is wholly inside the first.
+
+    Returns:
+        The path to that document. ⚑ THE CONTAINMENT IS THE SUBJECT: `Residue` is a substring of
+        `Ⓝ31 residue — what the pass left behind`, so every substring of the short heading also
+        appears in the long one and the substring finder can never separate them.
+
+    """
+    doc.write_text(_CONTAINED, encoding="utf-8")
+    return doc
+
+
+def test_a_contained_heading_is_unreachable_by_every_substring(contained: Path) -> None:
+    """⚑⚑⚑ THE AMBIGUITY REFUSAL IS A DEAD END FOR A CONTAINED HEADING, NOT A PROMPT.
+
+    `find_section`'s refusal tells a caller to be more specific, and for a heading wholly inside
+    another there IS no more specific substring — every one of them matches the container too.
+    ⚑⚑ MEASURED EXHAUSTIVELY rather than by trying three: all 27 substrings of `Residue` fail,
+    each either matching both headings or neither. Reported by `linux-sources-94` from substrate's
+    `md_spans`, which carries an `exact` keyword for exactly this; the claim was checked here
+    before the API was changed, because a peer's claim is a claim and not a datum.
+
+    ⚑ AND `find_section` IS A WRITE TARGET — `replace_section` and `append_to_section` both pass
+    `needle` straight through — so a refusal the caller cannot escape means hand-editing the
+    document, which is what the structural editor exists to replace.
+    """
+    short = "Residue"
+    subs = {short[i:j] for i in range(len(short)) for j in range(i + 1, len(short) + 1)}
+    # ⚑ POSITIVE CONTROL: an empty substring set would make the loop below vacuous.
+    assert subs, "no substrings generated — this arm would pass having tried nothing"
+
+    reached: list[str] = []
+    for needle in subs:
+        try:
+            hit = spans.find_section(contained, needle)
+        except LookupError:
+            continue
+        if hit.text == short:
+            reached.append(needle)
+    assert not reached, (
+        f"{len(reached)} substring(s) reached the contained heading, so the substring finder can "
+        f"separate them after all and `exact=` is not needed: {sorted(reached)}"
+    )
+
+
+def test_exact_reaches_the_contained_heading_the_substring_finder_cannot(contained: Path) -> None:
+    """⚑⚑ THE ESCAPE, AND IT IS THE ARM THE PREVIOUS ONE EXISTS TO MOTIVATE.
+
+    With `exact=True` the needle must EQUAL the heading, so a contained heading is namable by its
+    own full text — the one thing no substring can do. Operator ruling 2026-09-12: take substrate's
+    spelling, so a migrating caller changes its import and nothing else.
+    """
+    assert spans.find_section(contained, "Residue", exact=True).text == "Residue"
+
+
+def test_exact_still_refuses_a_needle_that_is_no_headings_full_text(contained: Path) -> None:
+    """⚑ THE F-ARM FOR `exact`, WITHOUT WHICH IT COULD BE A FINDER THAT ACCEPTS ANYTHING.
+
+    `residu` is a substring of a heading and the full text of none, so the substring finder would
+    resolve it and the exact finder must not. An `exact` that fell back to substring matching on a
+    miss would pass the arm above while changing nothing.
+    """
+    with pytest.raises(LookupError):
+        spans.find_section(contained, "residu", exact=True)
+
+
+def test_exact_is_case_folded_like_the_substring_finder(contained: Path) -> None:
+    """⚑ ONE PREDICATE, TWO MODES — the casefold is not the thing `exact` changes.
+
+    A caller typing a heading in the wrong case is making the same mistake in either mode, and
+    having `exact` be case-SENSITIVE while the default is not would make the flag change two
+    properties at once. This repository has measured that shape as its own defect class.
+    """
+    assert spans.find_section(contained, "residue", exact=True).text == "Residue"
+
+
 def test_enclosing_is_a_chain_outermost_first(document: Path) -> None:
     """A line inside a subsection reports every container, outermost first.
 

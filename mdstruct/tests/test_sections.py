@@ -140,3 +140,71 @@ def test_an_ambiguous_target_refuses_before_writing(document: Path) -> None:
     """
     with pytest.raises(LookupError):
         sections.replace_section(document, "ir", "X\n")   # First AND Third
+
+
+# ⚑⚑⚑ A CONTAINMENT FIXTURE, BECAUSE THE ONE ABOVE HAS NONE. `First`/`Second`/`Third` are pairwise
+# distinct, so an `exact` forwarded correctly and an `exact` silently ignored would BOTH pass every
+# arm written against it — the flag would read as covered while measuring nothing.
+_CONTAINED = """# Ⓝ31 residue — what the pass left behind
+
+long-heading body
+
+## Residue
+
+short-heading body
+"""
+
+
+# ⚑ CALLED, NOT BARE: the overloaded decorator's bare form collapses this fixture to `Any`.
+@pytest.fixture()
+def contained(doc: Path) -> Path:
+    """Write a document whose second heading is wholly inside the first.
+
+    Returns:
+        The path to that document. ⚑ `Residue` is a substring of the level-1 heading, so no
+        substring can separate them and only `exact` reaches the short one.
+
+    """
+    doc.write_text(_CONTAINED, encoding="utf-8")
+    return doc
+
+
+def test_a_contained_heading_cannot_be_written_without_exact(contained: Path) -> None:
+    """⚑⚑⚑ THE DEAD END, AT THE WRITE PATH — which is where it actually costs something.
+
+    `find_section`'s ambiguity refusal asks the caller to be more specific, and for a heading
+    wholly inside another no more specific substring exists. Without an escape the section is
+    UNWRITABLE by this tool, and the caller's remaining option is to hand-edit the document —
+    exactly what a structural editor exists to replace.
+    """
+    with pytest.raises(LookupError):
+        sections.replace_section(contained, "Residue", "X\n")
+
+
+def test_replace_forwards_exact_to_the_finder(contained: Path) -> None:
+    """⚑⚑ FORWARDING IS A CLAIM, AND `find_section`'s OWN ARMS DO NOT MEASURE IT.
+
+    A `replace_section` that accepted `exact` and dropped it on the floor would satisfy every
+    signature check and still refuse this write. The arm reads the RESULT, not the call.
+    """
+    got, span = sections.replace_section(contained, "Residue", "X\n", exact=True)
+    assert span.text == "Residue"
+    # ⚑⚑ THE BODY IS GONE AND THE NEIGHBOUR IS NOT, which is what "hit the right section" means.
+    # A first cut asserted `"\nX\n" in got` and FAILED on a correct write: the target is the LAST
+    # section, so its replaced body carries no trailing newline. I wrote the expectation from habit
+    # rather than from the contract, and the arm measured my assumption instead of the edit.
+    assert "short-heading body" not in got
+    assert "long-heading body" in got
+    assert got.rstrip("\n").endswith("X")
+
+
+def test_append_forwards_exact_to_the_finder(contained: Path) -> None:
+    """⚑ THE SECOND WRITER, because a repair applied to one call site is not a repair to the class.
+
+    `replace_section` and `append_to_section` each call the finder themselves; threading the flag
+    through one and not the other is the shape this repository has measured repeatedly.
+    """
+    got, span = sections.append_to_section(contained, "Residue", "X\n", exact=True)
+    assert span.text == "Residue"
+    assert "short-heading body" in got
+    assert "X" in got
