@@ -22,6 +22,7 @@ to notice one it did not.
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from typing import TYPE_CHECKING
@@ -160,6 +161,31 @@ def test_the_usage_text_names_every_registered_mode() -> None:
     ⚑⚑ THE REFUSAL IS THE DENOMINATOR, so the arm asserts it parsed a non-empty list before
     comparing. A split that silently yielded nothing would make this pass over zero modes — the
     vacuous-arm shape, arriving in the arm written to catch a different vacuity.
+
+    ⚑⚑⚑ AND NO CARDINALITY APPEARS ANYWHERE, INCLUDING IN THE EVIDENCE STRING. A first version
+    reported *"N of M mode(s) absent"*, which is a count in prose derived from a correct
+    computation — stale the instant a mode is added, and the very thing the commit correcting this
+    arm's own figures was about. `linux-sources-94` found the identical defect in their uncommitted
+    equivalent (*"both surfaces name the same 13 slice(s)"*) from this rule. The assertion states a
+    RELATION and the message names the DIFFERING ELEMENTS; a reader who wants a total counts the
+    list.
+
+    ⚑⚑ THE COMPARISON RUNS BOTH WAYS, because one-directional containment passes a banner that
+    advertises a mode the dispatcher does not have — the opposite drift, and worse for a reader,
+    since they would run it and get a refusal from the tool that documented it. F-armed in both
+    directions: deleting the `verify` line reds one side, and a `phantom` line documenting an
+    unregistered mode reds the other. The first arm could only have caught the first.
+
+    ⚑⚑ THE POPULATION IS TWO SURFACES, AND THAT IS A MEASUREMENT RATHER THAN AN ASSUMPTION.
+    `linux-sources-94` asked this of their own equivalent and found their tree publishes THREE
+    slice lists — `--help`, the refusal, and a `--slices` flag matched by neither of their
+    patterns — all agreeing today, so a two-surface comparison would have reported concord over an
+    incomplete population. Swept here 2026-09-12: the only other enumerations of this mode set are
+    `mdstruct/build/lib/` (a stale setuptools artifact, not a live surface) and findings prose
+    recording past measurements. `cli.py` is the sole publisher. ⚑ A THIRD SURFACE ADDED LATER
+    WOULD NOT BE CAUGHT BY THIS ARM — the defence there is not a better pattern but a surface the
+    arm does not yet read, which is the no-cardinality rule in the POPULATION dimension rather
+    than the value dimension.
     """
     banner = subprocess.run(
         [sys.executable, "-m", "mikemol.mdstruct.cli"],
@@ -170,14 +196,25 @@ def test_the_usage_text_names_every_registered_mode() -> None:
         capture_output=True, text=True, check=False,
     )
     declared = refusal.stderr.split("known modes are", 1)[-1].strip().rstrip(".")
-    modes = [m.strip() for m in declared.split(",") if m.strip()]
-    assert modes, (
+    dispatchable = {m.strip() for m in declared.split(",") if m.strip()}
+    assert dispatchable, (
         f"the refusal named no modes — this arm cannot measure drift without its denominator; "
         f"stderr was {refusal.stderr!r}"
     )
-    missing = [m for m in modes if f"mdstruct {m} " not in banner.stderr]
-    assert not missing, (
-        f"{len(missing)} of {len(modes)} dispatchable mode(s) absent from the usage text: "
-        f"{sorted(missing)} — a mode a reader cannot see in `--help` is a mode they conclude "
-        f"does not exist"
+    # ⚑ NARROWED AT THE BOUNDARY, NOT SUPPRESSED. `re.findall` is typed `list[Any]`, so every set
+    # operation below would leak an `Any` through this repository's `disallow_any_expr` — and an
+    # annotation on the binding alone does NOT close it, because the comprehension still reads
+    # `Any` elements. `finditer` yields `Match[str]`, whose `.group` is `str` by construction, so
+    # the narrowing happens where the type is actually known rather than being asserted downstream.
+    documented = {m.group(1) for m in
+                  re.finditer(r"^    mdstruct (\w+) ", banner.stderr, re.MULTILINE)}
+    assert documented, (
+        f"the usage banner named no modes — with an empty set this arm's containment check is "
+        f"vacuously true in one direction; stderr was {banner.stderr!r}"
+    )
+    assert dispatchable == documented, (
+        f"the two surfaces disagree. dispatchable but undocumented: "
+        f"{sorted(dispatchable - documented)} — a reader concludes these do not exist. "
+        f"documented but not dispatchable: {sorted(documented - dispatchable)} — a reader runs "
+        f"these and is refused by the tool that advertised them."
     )
