@@ -939,3 +939,30 @@
             flag as unaccepted in the same breath as listing it among those accepted.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_the_owning_mode_still_accepts_its_own_flag}
 }
+
+@misc{mdstruct-cli-every-mode-declares-exactly-the-flags-its-code-reads,
+  section = {cli-flags},
+  title   = {Every mode declares exactly the flags its code reads},
+  note    = {The mode-contract gate, on an operator ruling, armed over a tree that already
+            satisfies it. The per-mode declaration says which modifiers a mode owns and the mode's
+            own code reads flags by name: two spellings of one fact, which is the drift class this
+            module already measured once in the usage banner, where the registry and the
+            hand-written help disagreed and a peer concluded a mode did not exist. Nothing had been
+            checking the same relation for flags. It asserts nothing new about quality, which is
+            precisely why it can be armed now — measured before writing it, twelve modes and zero
+            disagreements, and the source needed no change at all. Arming a gate over a tree that
+            does not yet pass it blocks the commits that would clean it, which is this repository's
+            recorded sequencing hazard, so a gate that fires on nothing today is the one that may
+            land today. The declaration is read from the syntax tree rather than by importing,
+            because the pre-commit gate runs bare pytest with no bazel and no sandbox and the check
+            must not depend on the module being importable there. The probe that became this arm
+            had its own defect first, which is worth recording because it is the shape the arm
+            looks for: the registry keys one mode through a module constant rather than a literal,
+            and a first cut recorded the variable name as a mode, reporting a spurious
+            disagreement and a phantom mode that does not exist. Resolving module-level string
+            constants fixed it. A peer's mode-contract module is the declaration format this
+            answers to, adopted as a concept rather than imported, on their own advice that a
+            declaration without a gate to read it is built-then-orphaned; with the gate in place,
+            importing their format becomes a real question rather than cargo.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_every_mode_declares_exactly_the_flags_its_code_reads}
+}

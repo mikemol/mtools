@@ -22,15 +22,15 @@ to notice one it did not.
 
 from __future__ import annotations
 
+import ast
 import re
 import subprocess
 import sys
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 
-if TYPE_CHECKING:
-    from pathlib import Path
+from mikemol.mdstruct import cli as _cli_module
 
 pytestmark = pytest.mark.needs_pandoc
 
@@ -55,6 +55,15 @@ _TABLE_ONE_ROWS = 2
 _IMPOSSIBLE = "99"
 
 _REFUSED = 2
+
+# ⚑ THE MODULE'S SOURCE, LOCATED VIA THE IMPORTED PACKAGE rather than from this file's own path.
+# A `Path(__file__).parent.parent / "src" / ...` spelling is the runfiles-layout trap this suite
+# has already paid for twice: under bazel the tests and the sources sit in different trees, and a
+# relative walk names nothing there while reading as correct here.
+# ⚑ THE MODULE OBJECT, NOT `find_spec`, because a spec's `origin` is `str | None` on a spec that is
+# itself `ModuleSpec | None` — two unions to narrow for a path that is not in question once the
+# import succeeded. `__file__` on an imported module is the same fact with one narrowing.
+_CLI_SOURCE = Path(str(_cli_module.__file__))
 
 
 def _run(doc: Path, *args: str, mode: str = "rows",
@@ -312,4 +321,163 @@ def test_the_owning_mode_still_accepts_its_own_flag(doc: Path) -> None:
     assert equals.returncode != _REFUSED, (
         f"`lint --width=200` was refused — the `=` spelling binds in `_flag`, so refusing it here "
         f"rejects a form the tool accepts; stderr={equals.stderr!r}"
+    )
+
+
+# ⚑⚑ THE CONTRACT GATE'S READER, AT MODULE LEVEL RATHER THAN INSIDE THE ARM. A first cut put the
+# whole walk in the test body and ruff refused it at complexity 23 — correctly: a check nobody can
+# read is a check nobody can audit, and this one exists to be audited. Split by QUESTION, so each
+# helper answers one and the arm states the relation.
+
+
+def _string_constants(tree: ast.Module) -> dict[str, str]:
+    """Return every module-level `NAME = "literal"` binding.
+
+    ⚑ A REGISTRY KEY SPELLED AS A NAME RESOLVES THROUGH HERE. `_MODES` keys `grep` via the constant
+    `_PATTERN_MODE`, and the probe that became this gate recorded the VARIABLE NAME as a mode —
+    reporting a spurious disagreement plus a phantom mode that does not exist. The probe's own
+    defect wearing the shape of the thing it was built to find.
+
+    Returns:
+        `{name: value}` for module-level string assignments.
+
+    """
+    out: dict[str, str] = {}
+    for node in tree.body:
+        if not isinstance(node, ast.Assign) or not isinstance(node.value, ast.Constant):
+            continue
+        value = node.value.value
+        if not isinstance(value, str):
+            continue
+        for target in node.targets:
+            if isinstance(target, ast.Name):
+                out[target.id] = value
+    return out
+
+
+def _string_literals(node: ast.AST) -> set[str]:
+    """Return every string literal anywhere under `node`.
+
+    Returns:
+        The set of string constants, narrowed at the boundary — `Constant.value` is a union over
+        every literal type, so indexing it without this check leaks `Any` into every caller.
+
+    """
+    return {
+        e.value for e in ast.walk(node)
+        if isinstance(e, ast.Constant) and isinstance(e.value, str)
+    }
+
+
+def _dict_literal(tree: ast.Module, name: str, consts: dict[str, str]) -> dict[str, ast.expr]:
+    """Return the annotated module-level dict `name`, keyed by resolved string.
+
+    Args:
+        tree: the parsed module.
+        name: the variable to find.
+        consts: module-level string constants, for a key spelled as a NAME.
+
+    Returns:
+        `{key: value_node}`, empty when the name is absent — which the arm treats as a REFUSAL
+        rather than as agreement, because a parse that silently yields nothing would make every
+        comparison below vacuously true.
+
+    """
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.AnnAssign) or not isinstance(node.target, ast.Name):
+            continue
+        if node.target.id != name or not isinstance(node.value, ast.Dict):
+            continue
+        out: dict[str, ast.expr] = {}
+        for k, v in zip(node.value.keys, node.value.values, strict=True):
+            if isinstance(k, ast.Constant) and isinstance(k.value, str):
+                out[k.value] = v
+            elif isinstance(k, ast.Name):
+                out[consts.get(k.id, k.id)] = v
+        return out
+    return {}
+
+
+def _flags_reachable(funcs: dict[str, ast.FunctionDef], name: str,
+                     seen: set[str] | None = None) -> set[str]:
+    """Return every dash-leading literal reachable from `name`, following local calls.
+
+    ⚑ FOLLOWING CALLS IS WHAT MAKES THIS MEASURE THE MODE rather than its adapter. Each registry
+    entry names a thin `_x_mode` wrapper that delegates to the real reader, so a walk stopping at
+    the wrapper would find no flags anywhere and report every mode as declaring flags it does not
+    read — a gate that fires on everything, which is the broken-shut failure.
+
+    Returns:
+        The dash-leading string literals in `name` and in everything it calls.
+
+    """
+    seen = seen if seen is not None else set()
+    if name in seen or name not in funcs:
+        return set()
+    seen.add(name)
+    out = {lit for lit in _string_literals(funcs[name]) if lit.startswith("-") and lit != "-"}
+    for node in ast.walk(funcs[name]):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            out |= _flags_reachable(funcs, node.func.id, seen)
+    return out
+
+
+def test_every_mode_declares_exactly_the_flags_its_code_reads() -> None:
+    """⚑⚑⚑ THE MODE-CONTRACT GATE, on an operator ruling, armed over a tree that ALREADY PASSES IT.
+
+    `_MODE_OPTS` says which modifiers a mode owns; the mode's own code reads flags by name. Two
+    spellings of one fact — the drift class this module already measured once in the usage banner,
+    where the registry and the hand-written help disagreed and a peer concluded a mode did not
+    exist. Nothing had been checking the same relation for FLAGS.
+
+    ⚑⚑ IT ASSERTS NOTHING NEW ABOUT QUALITY, WHICH IS WHY IT CAN BE ARMED NOW. Measured before it
+    was written: twelve modes, zero disagreements, and the source needed no change. Arming a gate
+    over a tree that does not yet pass it blocks the commits that would clean it — this
+    repository's recorded sequencing hazard — so a gate firing on nothing today is the one that may
+    land today.
+
+    ⚑ READ FROM THE AST, NOT BY IMPORTING THE REGISTRY. The pre-commit gate runs BARE PYTEST with
+    no bazel and no sandbox, so the check must not depend on import machinery beyond the module
+    itself, and reading the literal is what lets a failure name the MODE rather than an object.
+
+    ⚑ SUBSTRATE'S `climode` IS THE DECLARATION FORMAT THIS ANSWERS TO, adopted as a concept rather
+    than imported — on their own advice that a declaration with no gate to read it is
+    built-then-orphaned. This is that gate; with it, importing their format becomes a real question.
+    """
+    tree = ast.parse(_CLI_SOURCE.read_text(encoding="utf-8"))
+    consts = _string_constants(tree)
+    declared_nodes = _dict_literal(tree, "_MODE_OPTS", consts)
+    registry = _dict_literal(tree, "_MODES", consts)
+    funcs = {n.name: n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)}
+
+    assert registry, (
+        "no mode registry parsed — every comparison below would be vacuously true over an empty "
+        "population, which is the shape this gate exists to catch one level down"
+    )
+    universal: set[str] = set()
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "_GLOBAL_OPTS" for t in node.targets
+        ):
+            universal = _string_literals(node.value)
+    assert universal, (
+        "the universal option set parsed empty — a future global option would then read as "
+        "per-mode drift in every mode at once, which is a false report, not a missed one"
+    )
+
+    declared = {mode: _string_literals(node) for mode, node in declared_nodes.items()}
+    drift: dict[str, tuple[list[str], list[str]]] = {}
+    for mode, entry in registry.items():
+        if not isinstance(entry, ast.Name):
+            continue
+        owns = declared.get(mode, set()) - universal
+        reads = _flags_reachable(funcs, entry.id) - universal
+        if owns != reads:
+            drift[mode] = (sorted(owns - reads), sorted(reads - owns))
+
+    assert not drift, (
+        f"declaration and implementation disagree. per mode, (declared-but-unread, "
+        f"read-but-undeclared): {drift} — a declared flag the code never reads is a promise the "
+        f"refusal still honours, so a caller passes it and NOTHING HAPPENS; a read flag that is "
+        f"undeclared is REFUSED by the very check that should admit it."
     )
