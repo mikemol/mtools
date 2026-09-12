@@ -2169,9 +2169,19 @@ def test_every_warrant_names_a_test_that_exists() -> None:
         names |= set(found)
     dangling = sorted(selectors - names)
     assert not dangling, f"warrant selector(s) naming no test: {dangling}"
+    # ⚑⚑ THE COUNT BELONGS IN THIS ASSERTION AND THE TRUNCATION DID NOT, AND THE TWO ARE DIFFERENT
+    # QUESTIONS. This is a RATCHET: the cardinality IS the subject, compared against a frozen
+    # ceiling, so `len(without)` in the assertion is the measurement rather than a summary of one.
+    # The EVIDENCE was the defect — it printed five names and no total, so a reader over the
+    # threshold saw a sample and could not tell how large the population was.
+    # ⚑ `linux-sources-94` found the same shape in an arm of theirs printing `unpaired e.g.` with
+    # a three-element slice, and named the cost exactly: a failure message is prose that SHIPS, and
+    # it is read precisely when someone is deciding what went wrong. A truncation there withholds
+    # the thing the reader came for, in the one arm whose job is naming what is missing.
     assert len(without) <= _WARRANTS_WITHOUT_CHECK, (
-        f"{len(without)} warrants carry no check field, up from {_WARRANTS_WITHOUT_CHECK}. "
-        f"A warrant with no check asserts a claim nothing can run: {without[:5]}"
+        f"{len(without)} warrants carry no check field, up from the frozen "
+        f"{_WARRANTS_WITHOUT_CHECK}. A warrant with no check asserts a claim nothing can run. "
+        f"All of them, not a sample: {sorted(without)}"
     )
 
 
