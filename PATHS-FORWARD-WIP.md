@@ -1311,10 +1311,60 @@ reach the section list* directly, and a silently-swallowed heading is exactly su
 So the tool without the defect carries the instrument that finds it — worth knowing when the
 migration argument is made on grounds other than provenance.
 
-⚑ NOT FIXED HERE, deliberately — a `replace-section` / `append-section` CLI is a surface decision,
-and the operator has an OPEN question about mdstruct's CLI shape (subcommands vs flags, argument
-order) from `linux-sources-94`'s second message. Building a writer before that is settled would
-author the surface twice.
+⚑⚑⚑ OPERATOR RULING 2026-09-12, BOTH AXES — the writer is UNBLOCKED. **Subcommands**, and
+**needle before file**, matching `grep`.
+
+⚑ THE SUBCOMMAND RULING CONFIRMS THE EXISTING SURFACE RATHER THAN CHANGING IT, which is a fact
+about this tree measured before the ruling was applied: `mdstruct spans FILE.md` is already a mode
+name then arguments. So the migration cost falls on SUBSTRATE, whose `md_spans` is flag-style
+(`--headers --tables --rows`) — the peer's "aliases vs convert once" trade was about their call
+sites, not a change to mine.
+
+⚑⚑ NEEDLE-FIRST IS THE ONE-RULE ANSWER AND IT COSTS NOTHING TO REACH. `grep PATTERN FILE.md` is
+the only existing two-positional mode, and it takes the subject before the file because real
+`grep` does. So `replace-section HEADING FILE.md` gives the tool ONE convention for every
+two-positional mode with no existing call site broken. The alternative — file first, reading
+naturally for a writer — would have left `grep` as the odd one out or required re-spelling it,
+which is a migration for peers already using it.
+
+⚑ WHAT IS STILL OWED, and it is implementation rather than decision: the write modes must carry
+`exact=` (the ambiguity refusal and its escape compose at the write path — see the section above),
+and the body has to arrive as a file rather than an argument, because a shell that can pass a
+multi-line body inline is the `>>` this toolkit refuses.
+
+### ⟐THREE-CLIS-NO-SHARING — NEW 2026-09-12, measured when the operator asked about a shared module
+
+⚑⚑⚑ THE OPERATOR ASKED WHETHER SUBSTRATE'S `cli` MODULE — *"everything was supposed to normalize
+around"* — MADE IT OVER. Measured: **no, and the split is worse than its absence.**
+
+    fence/src/mikemol/fence/cli.py        argparse
+    ratchet/src/mikemol/ratchet/cli.py    argparse
+    mdstruct/src/mikemol/mdstruct/cli.py  HAND-ROLLED (_MODES dict, manual _flag parser)
+    hooks/                                no cli module at all
+
+**Three CLIs, zero sharing, TWO argument frameworks.** mdstruct is the odd one out in its own
+tree: its `_flag()` helper re-derives `--name value` / `--name=value` handling that `argparse`
+already does, one directory from two modules that use `argparse`.
+
+⚑⚑ AND THIS IS THE MEMBERSHIP CRITERION'S OWN CASE, arriving from the inside. The rule is *reuse
+across repos, not repo-local* — and here is machinery re-derived THREE TIMES within ONE repo,
+which no cross-repo criterion would ever surface. A dispatcher is not repo-local by any reading;
+it was simply never interned, because each distribution authored its own on the way to its first
+green.
+
+⚑ IT CHANGES WHAT THE WRITER IS BUILT ON. The ruling above says subcommands, and `argparse` has
+first-class subcommand support (`add_subparsers`) that both siblings already use. So *"confirm
+mdstruct's existing surface"* and *"normalize on the shared mechanism"* are not the same
+instruction, and building `replace-section` onto the hand-rolled dispatcher would author the
+surface twice if the second is intended. ⚑ ASKED `substrate-9c` DIRECTLY rather than inferring:
+what the module is, whether it is domain-neutral, and whether it can actually SHIP — the ratchet
+island qualified on merits and was blocked on mechanics, and a normalization point that cannot
+land is one mtools must provide locally instead.
+
+⚑ NOT RESOLVED BY ADOPTION. If substrate's module carries an argument order or dispatch shape
+disagreeing with the operator's ruling, the RULING wins here and the divergence is recorded — a
+convention is not authority, and reconciling quietly to a peer's shape would be gluing with no
+witness.
 
 ## What the last stretch established, so a tick does not re-derive it
 
