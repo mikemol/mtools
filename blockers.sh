@@ -1224,9 +1224,15 @@ echo "    fault measured so far is in that set; the other 30 targets never fault
 echo "    ⚑ THE FAULT IS TRANSIENT, NOT FATAL: bazel retries a lost input on its own and the"
 echo "    sweep then completes. Measured 46/46 with 81 remote actions on attempt two. So run"
 echo "    the whole tree and let it retry:"
-echo "      bazel test //... --config=remote --nocache_test_results"
-echo "    ⚑⚑ AND --nocache_test_results IS NOT OPTIONAL: without it a sweep reports 'Executed 0"
-echo "    out of 46' from cache, which measures the cache rather than the executor."
+echo "      bazel test //... --config=remote"
+echo "    ⚑⚑ --nocache_test_results ONLY WHEN THE EXECUTOR IS THE SUBJECT, and the line here"
+echo "    previously said it was NEVER optional, which is WRONG and was mine. Operator, 2026-09-12:"
+echo "    *the DAG is either sound or it is not; defeating cache is an assumption it is unsound,"
+echo "    which promotes FLAPPING tests rather than sound ones.* A forced re-execution hides a"
+echo "    test that passes only sometimes, because it never lets the cache report that the inputs"
+echo "    did not change. 'Executed 0 out of 46, 46 pass' is a COMPLETE answer to *does the tree"
+echo "    pass*. Force execution only to answer *does the remote executor work*, which is the"
+echo "    question the pandoc-staging note above is about — a different subject, not a stronger run."
 
 # ⚑⚑⚑ AN OPERATOR DECISION MUST NAME WHO RAISED IT, AND ONE OF THREE HAD NOBODY. The operator
 # asked *why are we concerned about cost?* and there was no answer: the only commit raising the
