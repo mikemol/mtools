@@ -2161,12 +2161,34 @@ def test_every_warrant_names_a_test_that_exists() -> None:
     ]
     sel_found: list[str] = pyre.findall(r"-k ([a-z_0-9]+)", bib)
     selectors: set[str] = set(sel_found)
+    # ⚑⚑⚑ PARSED, NOT MATCHED, AND THE REGEX HAD A FALSE PREMISE THAT WAS HARMLESS BY LUCK.
+    # `^def (test_[a-z_0-9]+)` reads three lines inside a STRING LITERAL in `test_grade.py` — an
+    # f-string holding constructed test arms for the grader under test — as real definitions.
+    # Measured against an AST walk: the regex sees `test_behavioural`, `test_indifferent` and
+    # `test_negative`, none of which exist as functions in that module.
+    # ⚑⚑ TODAY IT COSTS NOTHING because no warrant selector names any of the three, so
+    # `selectors - names` is unchanged. It costs something the moment one does: a selector naming
+    # no real test would be APPROVED, by a set containing a name that is only string content. The
+    # arm exists to catch exactly that.
+    # ⚑ THIS REPOSITORY HAS PAID FOR THE SAME CONFUSION IN THE SAME FILE BEFORE —
+    # `count_test_functions.py` exists because a grep counted 20 where a parse counts 17, and its
+    # docstring says why: *an artifact that quotes its own subject cannot be measured by matching
+    # the subject's syntax.* I re-derived the population with a matcher one field over.
+    # ⚑⚑ AND IT IS `cassian-observability-6a`'s FOURTH SHAPE, which is why I looked: a population
+    # FILTERED by a false ordering-or-syntax premise rather than never populated. Their case was a
+    # log tailer whose "lexical order is chronological" premise walked past six populated files and
+    # returned empty for ten days. The source-side guard above PASSES in both cases — the sources
+    # were non-empty throughout — so asserting non-emptiness is necessary and not sufficient.
     names: set[str] = set()
     for f in sorted((_DIST / "tests").glob("test_*.py")):
-        found: list[str] = pyre.findall(
-            r"^def (test_[a-z_0-9]+)", f.read_text(encoding="utf-8"), pyre.MULTILINE
-        )
-        names |= set(found)
+        try:
+            module = pyast.parse(f.read_text(encoding="utf-8"))
+        except SyntaxError:  # pragma: no cover — a suite that will not parse fails far louder
+            continue
+        names |= {
+            n.name for n in pyast.walk(module)
+            if isinstance(n, pyast.FunctionDef) and n.name.startswith("test_")
+        }
     # ⚑⚑⚑ BOTH SOURCES ASSERTED NON-EMPTY BEFORE THE DIFFERENCE IS TAKEN. `selectors - names` is
     # empty when either side is, so a `-k ` pattern that stopped matching or a test-file glob that
     # found nothing makes this arm green over a property nobody is checking. Found by sweeping the
