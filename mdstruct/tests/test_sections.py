@@ -19,6 +19,8 @@ differently from the one the author reviewed.
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from typing import TYPE_CHECKING
 
 import pytest
@@ -208,3 +210,150 @@ def test_append_forwards_exact_to_the_finder(contained: Path) -> None:
     assert span.text == "Residue"
     assert "short-heading body" in got
     assert "X" in got
+
+
+# ⚑⚑⚑ THE WRITE CLI, WHICH DID NOT EXIST UNTIL NOW. The library functions above predate it by a
+# long way and were reachable only as an import, so the structural-query hook routed WRITES to a
+# command with no write mode — a gate naming a successor that had no mode for the job. Measured by
+# hitting that refusal while filing a section about it.
+
+_WRITE_REFUSED = 2
+
+
+def _write_cli(*args: str) -> subprocess.CompletedProcess[str]:
+    """Invoke a write mode as a caller does, as a subprocess.
+
+    Returns:
+        The completed process. ⚑ A SUBPROCESS BECAUSE THE SUBJECT IS THE COMMAND, not the library
+        function beneath it: every arm here is about what the CLI refuses or applies, and an
+        in-process call would test the layer that was never the gap.
+
+    """
+    return subprocess.run([sys.executable, "-m", "mikemol.mdstruct.cli", *args],
+                          check=False, capture_output=True, text=True)
+
+
+def test_a_dry_run_is_the_default_and_writes_nothing(contained: Path, tmp_path: Path) -> None:
+    """⚑⚑⚑ THE DESTRUCTIVE MODE IS THE FLAG YOU REACH FOR, NEVER THE ONE YOU GET BY FORGETTING.
+
+    This repository's expensive-reading-must-not-be-default rule, applied to a WRITE: substrate
+    paid for the read version three times in their own tree, where a bare invocation WAS the run.
+    For a rewrite the cost of that default is a document, so the preview is what a caller gets
+    and `--apply` is the opt-in.
+    """
+    body = tmp_path / "body.md"
+    body.write_text("NEW BODY\n", encoding="utf-8")
+    before = contained.read_text(encoding="utf-8")
+    result = _write_cli("replace-section", "Residue", str(contained),
+                        "--body-file", str(body), "--exact")
+    assert result.returncode == 0, f"the dry run refused: {result.stderr!r}"
+    assert "NEW BODY" in result.stdout, (
+        f"the dry run did not print the rewritten document, so a caller cannot review what "
+        f"`--apply` would do; stdout was {result.stdout!r}"
+    )
+    assert contained.read_text(encoding="utf-8") == before, (
+        "the DRY RUN WROTE THE FILE — the default mode of a write command must not mutate"
+    )
+
+
+def test_apply_writes_the_target_and_leaves_its_neighbour(contained: Path,
+                                                          tmp_path: Path) -> None:
+    """⚑ THE CAPABILITY, without which the refusal arms below are satisfied by a broken-shut tool.
+
+    A write CLI that refused everything would pass every refusal arm in this module. This pins
+    that `--apply` reaches the named section, replaces its body, and leaves the neighbour and the
+    heading untouched — the three properties `replace_section`'s own arms assert at the library
+    level, now asserted through the command that is finally exposed.
+    """
+    body = tmp_path / "body.md"
+    body.write_text("NEW BODY\n", encoding="utf-8")
+    result = _write_cli("replace-section", "Residue", str(contained),
+                        "--body-file", str(body), "--exact", "--apply")
+    assert result.returncode == 0, f"the write refused: {result.stderr!r}"
+    got = contained.read_text(encoding="utf-8")
+    assert "NEW BODY" in got
+    assert "short-heading body" not in got, "the target's old body survived the replacement"
+    assert "long-heading body" in got, "the NEIGHBOUR's body was destroyed by a bounded write"
+    assert "## Residue" in got, "the heading was rewritten; it is the anchor every reader resolves"
+
+
+def test_an_ambiguous_heading_refuses_at_the_write_path(contained: Path, tmp_path: Path) -> None:
+    """⚑⚑⚑ THE REFUSAL THAT SAVED A PEER'S PROTOCOL FILE, now reachable from the command line.
+
+    `linux-sources-94` hit this on `"§4"` — which matched §1's own body text — and reports the
+    refusal as the only reason a write did not destroy two sections. Here `Residue` is a substring
+    of the level-1 heading, so it names two sections and the tool refuses rather than picking the
+    earlier: a rewrite that edits the wrong section is not recoverable by re-running.
+    """
+    body = tmp_path / "body.md"
+    body.write_text("NEW BODY\n", encoding="utf-8")
+    before = contained.read_text(encoding="utf-8")
+    result = _write_cli("replace-section", "Residue", str(contained), "--body-file", str(body))
+    assert result.returncode == _WRITE_REFUSED, (
+        f"an ambiguous heading did not refuse at the write path; rc={result.returncode}"
+    )
+    assert "REFUSING" in result.stderr, (
+        f"the refusal must say it is refusing rather than reporting an absence; stderr was "
+        f"{result.stderr!r}"
+    )
+    assert contained.read_text(encoding="utf-8") == before, "a refused write mutated the document"
+
+
+def test_the_target_and_the_body_file_may_not_be_the_same_document(contained: Path) -> None:
+    """⚑⚑⚑ WHAT A DROPPED HEADING LOOKS LIKE, and the arity check cannot see it.
+
+    Measured while building this mode: `replace-section FILE.md --body-file B.md` with the HEADING
+    OMITTED leaves two valid positionals, so the FILE slides into the heading slot and `B.md`
+    becomes the target. The tool was one matching heading away from rewriting the BODY FILE instead
+    of the document.
+
+    ⚑⚑ AND THE FINDER REFUSED IT ONLY BY ACCIDENT of the body file having no headings — a refusal
+    that depends on the contents of the WRONG FILE is not a guard. This one is about IDENTITY, so
+    it holds whatever either file contains.
+    """
+    result = _write_cli("replace-section", str(contained), "--body-file", str(contained))
+    assert result.returncode == _WRITE_REFUSED, (
+        f"the target and the body file were the same document and the write was allowed; "
+        f"rc={result.returncode}, stdout={result.stdout!r}"
+    )
+    assert "same document" in result.stderr, (
+        f"the refusal must name the CAUSE — a dropped heading — rather than reporting a confusing "
+        f"heading miss on the wrong file; stderr was {result.stderr!r}"
+    )
+
+
+def test_stating_both_intents_refuses_rather_than_choosing(contained: Path,
+                                                           tmp_path: Path) -> None:
+    """⚑ NOT A PRECEDENCE RULE, and the sibling `fence` distribution reached this independently.
+
+    `--apply --dry-run` has two bad resolutions: a write the caller believed was a preview, or the
+    reverse. Guessing between them is how a caller loses a document, so it refuses — the same
+    shape as fence's refusal to combine `--observe` with a cap.
+    """
+    body = tmp_path / "body.md"
+    body.write_text("NEW BODY\n", encoding="utf-8")
+    before = contained.read_text(encoding="utf-8")
+    result = _write_cli("replace-section", "Residue", str(contained), "--body-file", str(body),
+                        "--exact", "--apply", "--dry-run")
+    assert result.returncode == _WRITE_REFUSED, (
+        f"both intents together were resolved rather than refused; rc={result.returncode}"
+    )
+    assert contained.read_text(encoding="utf-8") == before, "a refused write mutated the document"
+
+
+def test_a_body_on_the_command_line_is_refused(contained: Path) -> None:
+    """⚑⚑ THE BODY IS A FILE, NEVER AN ARGUMENT, and that is the whole point of the mode.
+
+    A multi-line body passed inline is the `>>` this toolkit exists to replace: a shell that can
+    hand over arbitrary text is a shell doing the structuring. Omitting `--body-file` refuses with
+    the route rather than defaulting to empty — an empty body would SILENTLY DELETE the section's
+    contents, which is the worst available reading of a missing argument.
+    """
+    result = _write_cli("replace-section", "Residue", str(contained), "--exact")
+    assert result.returncode == _WRITE_REFUSED, (
+        f"a write with no body was accepted; an empty body silently deletes the section. "
+        f"rc={result.returncode}"
+    )
+    assert "--body-file" in result.stderr, (
+        f"the refusal must name the route, not merely block; stderr was {result.stderr!r}"
+    )

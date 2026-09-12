@@ -405,3 +405,15 @@ fixture-parentheses = true
 # ⚑ THE CODE IS DESCRIBED RATHER THAN QUOTED, for the reason the `tests/*` entry above gives: the
 # arm that reads this block cannot distinguish a historical citation from a live claim.
 "tests/test_cli_flags.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑⚑⚑ THE WRITE-MODE ARMS DRIVE THE CLI AS A SUBPROCESS, AND FOR A WRITE THAT IS THE ONLY HONEST
+# SUBJECT. Their claims are about what the COMMAND refuses and what it leaves on disk — a dry run
+# that writes, a refusal that has already mutated, a body file that became the target — and an
+# in-process call would exercise the library functions beneath, which were never the gap: those
+# functions predate the CLI and were reachable only as an import, so the structural-query hook
+# routed WRITES to a command with no write mode.
+# ⚑⚑ THE ARGV IS `sys.executable`, A MODULE NAME, AND FIXTURE PATHS THIS MODULE CONSTRUCTS under
+# pytest's `tmp_path`. Nothing untrusted reaches it and it never passes through a shell — which is
+# the same argument the two entries above make, granted per FILE so a module that also parsed or
+# rendered would not inherit it.
+"tests/test_sections.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

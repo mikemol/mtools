@@ -17,6 +17,13 @@
     mdstruct verify FILE.md                 # does EVERY source heading reach the section list
     mdstruct narrowest FILE.md              # the narrowest width this document satisfies
 
+  the WRITE modes — heading before file, matching `grep`, and a DRY RUN unless `--apply`:
+
+    mdstruct replace-section HEADING FILE.md --body-file B.md [--exact] [--apply]
+    mdstruct append-section HEADING FILE.md --body-file B.md [--exact] [--apply]
+                  # `--body-file -` reads stdin. A body is a FILE, never an argument:
+                  # a multi-line body on the command line is the `>>` this tool replaces.
+
 ⚑⚑ THE CONSOLE SCRIPT IS THE ADOPTION PATH THAT REPLACES A SYMLINK. Peers previously adopted this
 tool by symlinking one file out of another repo's working tree — which broke silently the moment
 the tool derived its own root with a call that does not resolve symlinks, so the root became the
@@ -33,8 +40,9 @@ from __future__ import annotations
 import sys
 from collections.abc import Callable
 from pathlib import Path
+from typing import cast
 
-from mikemol.mdstruct import grep, labels, lint, roundtrip, spans, tables, verify
+from mikemol.mdstruct import grep, labels, lint, roundtrip, sections, spans, tables, verify
 
 # ⚑ THE SIGNATURE EVERY MODE PRESENTS, even where it uses one of the three arguments. Dispatching
 # on arity instead would put the branching back, one layer down and less visible.
@@ -49,6 +57,16 @@ _MIN_ARGS = 2
 # ⚑ THE ONE MODE TAKING A PATTERN BEFORE ITS PATH, named so the argument-shape special case in
 # `main` cites this rather than spelling the string a second time.
 _PATTERN_MODE = "grep"
+
+# ⚑⚑⚑ EVERY MODE TAKING AN OPERAND BEFORE ITS PATH, which was ONE mode and is now three. The write
+# modes take a HEADING there, on an operator ruling (2026-09-12): needle before file, matching
+# `grep` and the real tool it is named for, so the tool has ONE rule for every two-positional mode
+# rather than a reader-versus-writer split.
+# ⚑⚑ A SET RATHER THAN A SECOND CONSTANT. The arity special case in `main` tested `== _PATTERN_MODE`
+# and would have silently taken the one-positional branch for a write — putting the FILE in the
+# heading slot, which is the silent-wrong-target class this tool's whole refusal layer exists to
+# prevent, arriving through the dispatcher instead of through the finder.
+_OPERAND_FIRST = frozenset({_PATTERN_MODE, "replace-section", "append-section"})
 
 # How many cells of a row to render before truncating, so one wide row cannot flood a terminal.
 _CELL_WIDTH = 40
@@ -65,6 +83,8 @@ _MODE_OPTS: dict[str, frozenset[str]] = {
     "rows": frozenset({"--where", "--starts", "--col", "--table"}),
     "classify": frozenset({"--col", "--table"}),
     "lint": frozenset({"--width"}),
+    "replace-section": frozenset({"--body-file", "--exact", "--apply", "--dry-run"}),
+    "append-section": frozenset({"--body-file", "--exact", "--apply", "--dry-run"}),
 }
 
 # ⚑ EVERY MODE ACCEPTS THESE, so a reader need not learn a per-mode exception for the universal
@@ -538,6 +558,112 @@ def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     return _lint(path, argv)
 
 
+def _write_section(path: Path, needle: str, argv: list[str], *, append: bool) -> int:
+    """Replace or append one section's body, printing the diff or applying it.
+
+    ⚑⚑⚑ THE FIRST WRITE MODE THIS TOOL HAS EXPOSED, and the library functions predate it by a
+    long way — `replace_section` and `append_to_section` were reachable only as an import, so the
+    structural-query hook routed WRITES to a CLI that had none. A gate naming a successor is half
+    a gate when the successor has no mode for the job, and that was measured by hitting the
+    refusal while trying to file a section about it.
+
+    ⚑⚑ THE BODY ARRIVES AS A FILE, NEVER AS AN ARGUMENT. A multi-line body passed inline is the
+    `>>` this toolkit exists to replace: a shell that can hand over arbitrary text is a shell
+    doing the structuring. `--body-file -` reads stdin, so a caller can still pipe without the
+    body becoming argv.
+
+    ⚑⚑ DRY RUN IS THE DEFAULT AND `--apply` IS THE OPT-IN, which is this repository's
+    expensive-reading-must-not-be-default rule applied to a WRITE: the destructive mode is the
+    flag you reach for, not the one you get by forgetting. The refusal to combine them is not a
+    precedence rule — `--dry-run --apply` has two bad resolutions and guessing between them is how
+    a caller loses a document.
+
+    ⚑ `exact=` IS THREADED THROUGH, because the ambiguity refusal and its escape compose at the
+    WRITE path specifically: `linux-sources-94` reports substrate's refusal on `"§4"` as the only
+    reason a write did not destroy two sections of their protocol file, and a correct refusal a
+    caller cannot escape is a dead end. Both halves are one design.
+
+    Args:
+        path: the document to rewrite.
+        needle: the heading to target — a substring by default, the whole text under `--exact`.
+        argv: the full argument vector, for the modifiers this mode owns.
+        append: append inside the section rather than replacing its body.
+
+    Returns:
+        0 when the rewrite is derived (and applied, under `--apply`), 2 on any refusal. ⚑ A
+        REFUSAL IS 2 AND NEVER AN EMPTY DIFF: *I could not find that section* and *that section is
+        already what you asked for* are different facts, and collapsing them would let a typo read
+        as a no-op.
+
+    """
+    body_file = _flag(argv, "--body-file")
+    if body_file is None:
+        sys.stderr.write(
+            f"mdstruct: {'append-section' if append else 'replace-section'} needs --body-file.\n"
+            f"    The body is a FILE, not an argument: a multi-line body on the command line is\n"
+            f"    the shell append this tool exists to replace. Use `--body-file -` for stdin.\n")
+        return 2
+    if "--apply" in argv and "--dry-run" in argv:
+        sys.stderr.write(
+            "mdstruct: state exactly one of --apply / --dry-run.\n"
+            "    Both together is an incoherent instruction with two bad resolutions — a\n"
+            "    write the caller believed was a preview, or the reverse.\n")
+        return 2
+
+    # ⚑⚑⚑ THE TARGET AND THE BODY MUST NOT BE THE SAME FILE, and the shape that produces it is a
+    # DROPPED HEADING rather than a typo. Measured: `replace-section FILE.md --body-file B.md` with
+    # the heading omitted leaves two valid positionals, so the FILE becomes the heading and `B.md`
+    # becomes the document — and the tool was one matching heading away from rewriting the body
+    # file instead of the target. The arity check cannot see this, because the shape is legal.
+    # ⚑⚑ THE FINDER REFUSED IT HERE ONLY BY ACCIDENT of the body file having no headings. A refusal
+    # that depends on the contents of the wrong file is not a guard; this one is about IDENTITY, so
+    # it holds whatever either file contains.
+    if body_file != "-" and Path(body_file).resolve() == path.resolve():
+        sys.stderr.write(
+            f"mdstruct: the target and the body file are the same document ({path}).\n"
+            f"    This is what a DROPPED HEADING looks like: with the heading omitted the file\n"
+            f"    slides into the heading slot and --body-file's argument becomes the target.\n"
+            f"    Re-run as: mdstruct {'append-section' if append else 'replace-section'} "
+            f"HEADING FILE.md --body-file BODY.md\n")
+        return 2
+
+    # ⚑⚑ `sys.stdin.read()` IS `Any`, and the cast is where that is stated — the same narrow-at-the
+    # -boundary discipline the sibling `fence` applies to argparse's `Namespace`.
+    # ⚑ AND I CHASED IT THROUGH THREE WRONG DIAGNOSES, worth recording because each looked
+    # plausible. First I blamed the two writers' differing signatures and split a ternary into an
+    # if/else; then an annotation on the binding, which types the NAME and leaves the EXPRESSION
+    # `Any`; then `str(...)`, which returns `str` while the argument stays `Any`. mypy named the
+    # same line every time and reported `str | Any` — a UNION, so the `str` half was never the
+    # problem. The checker was precise and I read past it twice.
+    if body_file == "-":
+        body = cast("str", sys.stdin.read())
+    else:
+        body = Path(body_file).read_text(encoding="utf-8")
+    exact = "--exact" in argv
+    try:
+        if append:
+            new_text, span = sections.append_to_section(path, needle, body, exact=exact)
+        else:
+            new_text, span = sections.replace_section(path, needle, body, exact=exact)
+    except LookupError as e:
+        # ⚑ THE FINDER'S OWN MESSAGE IS THE REFUSAL, verbatim. It already names both candidates on
+        # an ambiguous needle and tells the caller to pass `--exact`; restating it here would be a
+        # second spelling of one fact, which is the drift this tool has measured in itself twice.
+        sys.stderr.write(f"mdstruct: {e}\n")
+        return 2
+
+    if "--apply" in argv:
+        path.write_text(new_text, encoding="utf-8")
+        sys.stdout.write(f"  {path}: wrote {'into' if append else 'over'} "
+                         f"{'#' * span.level} {span.text} (L{span.start}-{span.end - 1})\n")
+        return 0
+    sys.stdout.write(f"  {path}: would write {'into' if append else 'over'} "
+                     f"{'#' * span.level} {span.text} (L{span.start}-{span.end - 1})\n")
+    sys.stdout.write("  ── the rewritten document follows; re-run with --apply to write it ──\n")
+    sys.stdout.write(new_text if new_text.endswith("\n") else new_text + "\n")
+    return 0
+
+
 def _verify_one(path: Path) -> int:
     """Verify one document against this tool's own contract.
 
@@ -637,6 +763,26 @@ def _narrowest_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
     return _narrowest(path)
 
 
+def _replace_section_mode(needle: str, path: Path, argv: list[str]) -> int:
+    """Adapt the section rewrite to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged.
+
+    """
+    return _write_section(path, needle, argv, append=False)
+
+
+def _append_section_mode(needle: str, path: Path, argv: list[str]) -> int:
+    """Adapt the bounded append to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged.
+
+    """
+    return _write_section(path, needle, argv, append=True)
+
+
 def _classify(path: Path, argv: list[str]) -> int:
     """Group a table's rows by the states the document itself declares.
 
@@ -713,6 +859,8 @@ _MODES: dict[str, _Mode] = {
     "lint": _lint_mode,
     "verify": _verify_mode,
     "narrowest": _narrowest_mode,
+    "replace-section": _replace_section_mode,
+    "append-section": _append_section_mode,
 }
 
 
@@ -773,9 +921,14 @@ def main(argv: list[str] | None = None) -> int:
             f"    to pass a literal operand beginning with '-', put it after '--'.\n")
         return 2
 
-    if mode == _PATTERN_MODE:
+    if mode in _OPERAND_FIRST:
         if len(args) < _MIN_ARGS + 1:
-            sys.stderr.write("usage: mdstruct grep PATTERN FILE.md [-i] [-E]\n")
+            # ⚑⚑ THE ARITY REFUSAL IS WHAT CATCHES A VANISHED OPERAND, and for a WRITE that is the
+            # difference between a usage error and a rewrite of the wrong section. Naming the mode
+            # rather than hardcoding `grep` is what extends that protection to the writers.
+            sys.stderr.write(
+                f"usage: mdstruct {mode} "
+                f"{'PATTERN' if mode == _PATTERN_MODE else 'HEADING'} FILE.md ...\n")
             return 2
         pattern, path = args[1], Path(args[2])
     else:

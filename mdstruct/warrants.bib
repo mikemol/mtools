@@ -966,3 +966,86 @@
             importing their format becomes a real question rather than cargo.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_every_mode_declares_exactly_the_flags_its_code_reads}
 }
+
+@misc{mdstruct-sections-a-dry-run-is-the-default-and-writes-nothing,
+  section = {sections},
+  title   = {A dry run is the default and writes nothing},
+  note    = {The destructive mode is the flag a caller reaches for, never the one they get by
+            forgetting. This is the expensive-reading-must-not-be-default rule applied to a write:
+            a peer paid for the read version three times in their own tree, where a bare
+            invocation was the run rather than a listing. For a rewrite the cost of that default
+            is a document, so the preview is what a caller gets and applying is the opt-in. The
+            arm asserts both halves, that the rewritten document is printed for review and that
+            the file on disk is byte-identical afterwards, because a preview that silently wrote
+            would satisfy the first alone.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_dry_run_is_the_default_and_writes_nothing}
+}
+
+@misc{mdstruct-sections-apply-writes-the-target-and-leaves-its-neighbour,
+  section = {sections},
+  title   = {Apply writes the target and leaves its neighbour},
+  note    = {The capability, without which every refusal arm beside it is satisfied by a tool that
+            refuses everything — the broken-shut failure this repository's two-armed discipline
+            exists to prevent. It pins the three properties the library writers already assert at
+            their own level, now asserted through the command that finally exposes them: the named
+            section's body is replaced, the neighbour's body survives a bounded write, and the
+            heading is untouched because it is the anchor every other reader resolves against.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_apply_writes_the_target_and_leaves_its_neighbour}
+}
+
+@misc{mdstruct-sections-an-ambiguous-heading-refuses-at-the-write-path,
+  section = {sections},
+  title   = {An ambiguous heading refuses at the write path},
+  note    = {The refusal that saved a peer's protocol file, now reachable from the command line.
+            They targeted a section by a string that also appeared inside another heading's own
+            text, and report the ambiguity refusal as the only reason the write did not destroy
+            two sections. Here the needle is a substring of the level-one heading, so it names two
+            sections and the tool refuses rather than picking the earlier: a rewrite that edits the
+            wrong section is not recoverable by re-running, which is what makes first-match
+            resolution the silent-wrong-target class rather than a convenience. The arm also pins
+            that a refused write leaves the document unchanged, because a refusal that had already
+            mutated would be worse than none.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_an_ambiguous_heading_refuses_at_the_write_path}
+}
+
+@misc{mdstruct-sections-the-target-and-the-body-file-may-not-be-the-same-document,
+  section = {sections},
+  title   = {The target and the body file may not be the same document},
+  note    = {What a dropped heading looks like, and the arity check cannot see it. Measured while
+            building the write modes: omitting the heading leaves two valid positionals, so the
+            file slides into the heading slot and the body file's path becomes the target document
+            — the tool was one matching heading away from rewriting the body file instead of the
+            document it was pointed at. The arity check is blind to this because the shape is
+            legal. The finder refused it only by accident of the body file having no headings, and
+            a refusal that depends on the contents of the wrong file is not a guard, so the check
+            is about identity and holds whatever either file contains. The refusal names the cause
+            rather than reporting a heading miss on a file the caller never meant to read.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_the_target_and_the_body_file_may_not_be_the_same_document}
+}
+
+@misc{mdstruct-sections-stating-both-intents-refuses-rather-than-choosing,
+  section = {sections},
+  title   = {Stating both intents refuses rather than choosing},
+  note    = {Not a precedence rule, and the sibling fence distribution reached the same shape
+            independently for its observe flag. Asking for both a preview and an application has
+            two bad resolutions: a write the caller believed was a preview, or a preview the
+            caller believed was a write. Guessing between them is how a caller loses a document,
+            so the tool refuses and the caller states one. The arm pins that the refused
+            invocation left the document unchanged, since a refusal arriving after the write would
+            report the right verdict about the wrong world.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_stating_both_intents_refuses_rather_than_choosing}
+}
+
+@misc{mdstruct-sections-a-body-on-the-command-line-is-refused,
+  section = {sections},
+  title   = {A body on the command line is refused},
+  note    = {The body is a file and never an argument, which is the point of the mode rather than
+            an inconvenience: a multi-line body passed inline is the shell append this toolkit
+            exists to replace, and a shell that can hand over arbitrary text is a shell doing the
+            structuring. Omitting the body flag refuses and names the route rather than defaulting
+            to empty, because an empty body would silently delete the section's contents — the
+            worst available reading of a missing argument, and one the caller would discover only
+            by re-reading the document. A dash reads standard input, so piping remains available
+            without the body becoming part of the argument vector.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_body_on_the_command_line_is_refused}
+}

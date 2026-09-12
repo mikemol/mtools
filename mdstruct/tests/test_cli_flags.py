@@ -234,8 +234,14 @@ def test_the_usage_text_names_every_registered_mode() -> None:
     # annotation on the binding alone does NOT close it, because the comprehension still reads
     # `Any` elements. `finditer` yields `Match[str]`, whose `.group` is `str` by construction, so
     # the narrowing happens where the type is actually known rather than being asserted downstream.
+    # ⚑⚑ `[\w-]` RATHER THAN `\w`, AND THE ARM CAUGHT ITS OWN GAP. When the first HYPHENATED modes
+    # landed (`replace-section`, `append-section`) this pattern matched neither, and the arm
+    # reported them as documented-nowhere — a TRUE statement about the pattern and a false one
+    # about the banner, which had both lines. A reader's pattern is a third spelling of the mode
+    # set, one layer below the two this arm compares, and it drifted the moment the naming
+    # convention widened.
     documented = {m.group(1) for m in
-                  re.finditer(r"^    mdstruct (\w+) ", banner.stderr, re.MULTILINE)}
+                  re.finditer(r"^    mdstruct ([\w-]+) ", banner.stderr, re.MULTILINE)}
     assert documented, (
         f"the usage banner named no modes — with an empty set this arm's containment check is "
         f"vacuously true in one direction; stderr was {banner.stderr!r}"
