@@ -137,6 +137,73 @@ _PATTERN_FLAGS = frozenset(("-e", "--regexp", "-f", "--file"))
 _HEREDOC_OPS = frozenset(("<<", "<<-"))
 
 
+def _is_option(tok: str) -> bool:
+    """Report whether `tok` is an OPTION rather than a dash-leading path.
+
+    ⚑⚑⚑ THE ASYMMETRY DECIDES THIS, AND IT IS ALREADY RECORDED IN THIS FILE. cassian's reasoning
+    on the heredoc bound holds here verbatim: *a body token read as an ARGUMENT is a FALSE REFUSAL
+    of a command that reads nothing, while an argument read as BODY is a missed catch in a command
+    that is WRITING.* A dash-leading token carrying a claimed-looking suffix is the same trade —
+    treating `-notes.md` as an option gives a gate that silently does not fire on a real artifact,
+    and treating it as a path gives at worst a refusal the caller answers with `--`.
+
+    ⚑⚑ SO THE DISCRIMINATOR IS THE SUFFIX, NOT THE DASH. `-i` and `--color=never` carry no
+    filename-shaped tail and stay options; `-notes.md` does and is scanned. This deliberately does
+    NOT try to know every tool's flag grammar — a gate that had to would be wrong for the next
+    tool, and this repository already refuses rosters it cannot derive.
+
+    ⚑ THE TABLE IS NOT CONSULTED HERE, DELIBERATELY. This runs before the claims table is applied
+    and must not depend on it, or the gate's answer would change with the table's contents for
+    reasons unrelated to the token. A dot with an alphanumeric tail is the SHAPE of a filename; the
+    table then decides whether that suffix is claimed.
+
+    Args:
+        tok: one argument token.
+
+    Returns:
+        True when the token should be discarded as an option, False when it must be scanned.
+
+    """
+    if not tok.startswith("-"):
+        return False
+    stem, dot, ext = tok.rpartition(".")
+    return not (dot and stem and ext.isalnum())
+
+
+def _split_at_terminator(args: list[str]) -> tuple[list[str], list[str]]:
+    """Split `args` at a bare `--`, returning `(before, forced_operands)`.
+
+    ⚑⚑⚑ THE TERMINATOR IS LOAD-BEARING IN THE PATTERN-DROPPING BRANCH, AND MY FIRST ARM FOR IT WAS
+    VACUOUS. `grep` drops its first bare word as the search pattern, so a claimed path that is the
+    ONLY bare word is eaten. Measured both ways:
+
+        grep -- notes.md   refused=True    terminator live
+        grep -- notes.md   refused=FALSE   terminator planted off   ← the discriminator
+        grep notes.md      refused=False   in BOTH — correctly: with no terminator that IS a pattern
+
+    An arm asserting `grep foo -- -notes.md` refuses passes with the terminator DISABLED, because
+    the suffix test alone already keeps that token out of the option pile. It named the terminator
+    and measured something else; the F-arm is what said so.
+
+    ⚑⚑ SO THE TERMINATOR CHANGES THE MEANING OF A TOKEN, not merely its shape, and the gate follows
+    the caller's declaration rather than guessing. That is why this is not redundant with
+    `_is_option`: one reads shape, the other reads an explicit statement of intent.
+
+    Args:
+        args: the invocation's arguments, heredoc bodies already dropped.
+
+    Returns:
+        `(before, forced)` — tokens before a bare `--`, and the operands after it. The terminator
+        is consumed. With no terminator, `forced` is empty and `before` is `args` unchanged, so
+        every existing caller's behaviour is untouched.
+
+    """
+    if "--" not in args:
+        return args, []
+    cut = args.index("--")
+    return args[:cut], args[cut + 1:]
+
+
 def _without_heredoc_bodies(args: list[str]) -> list[str]:
     """Drop the tokens strictly between each heredoc tag and its terminator.
 
@@ -218,9 +285,18 @@ def _scannable(prog: str, args: list[str]) -> list[str]:
     # ⚑ FROZENSET, NOT A TUPLE LITERAL: ruff's preview `literal-membership` refuses the inline
     # form and the ratchet minted a key for it. Fixed in the file rather than the baseline.
     args = _without_heredoc_bodies(args)
+    # ⚑⚑ A DASH-LEADING FILENAME WAS INVISIBLE TO THIS GATE — a MISSED REFUSAL, not a bad read.
+    # Measured with both controls firing: `grep foo notes.md` refused, `grep foo -notes.md` did
+    # NOT, and `cat -notes.md` did not either. The refusal's silence is indistinguishable from a
+    # command that genuinely touches nothing claimed, which is silence reading as approval.
+    # ⚑ SAME ROOT AS `mdstruct/cli.py`'s, fixed at `d6e8461`, whose message claimed the class
+    # closed — it closed it in ONE distribution. Found here by inverting the search the way
+    # `substrate-9c` does: enumerate the SHAPE across every distribution rather than grepping for
+    # the helper's name, which would have returned only the sites already repaired.
+    args, forced = _split_at_terminator(args)
 
     if prog not in _PATTERN_FIRST:
-        return [a for a in args if not a.startswith("-")]
+        return [*(a for a in args if not _is_option(a)), *forced]
 
     # ⚑ THE PATTERN IS DROPPED ONCE: either the argument of a pattern-taking flag, or — failing
     # that — the first bare word. A command with only a pattern and no file then scans nothing,
@@ -236,12 +312,17 @@ def _scannable(prog: str, args: list[str]) -> list[str]:
         if a in _PATTERN_FLAGS:
             skip_next = True
             continue
-        if a.startswith("-"):
+        if _is_option(a):
             continue
         if not dropped_first:
             dropped_first = True
             continue
         out.append(a)
+    # ⚑⚑ FORCED OPERANDS NEVER PASS THROUGH THE LOOP ABOVE, and that is the point: the loop exists
+    # to discard the PATTERN, and a token the caller marked as a non-option cannot be one. This is
+    # where the terminator earns its place — without it, a claimed path that is the only bare word
+    # is eaten as grep's pattern and the gate goes quiet.
+    out.extend(forced)
     return out
 
 

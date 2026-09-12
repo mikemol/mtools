@@ -2999,3 +2999,57 @@
             plant that never landed, and the second is silent by construction.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_unrunnable_warrant_evidence_names_members_not_a_count}
 }
+
+@misc{hooks-sq-a-dash-leading-claimed-filename-is-still-seen,
+  section = {structural-query},
+  title   = {A dash-leading claimed filename is still seen},
+  note    = {The argument filter discarded every dash-leading token, so a path beginning with a
+            dash never reached the claims table and the gate allowed a read of an artifact it
+            exists to route. Measured with both controls firing: an ordinary name refused, the
+            dash-leading name did not, and the same held for a non-pattern-first program taking
+            the other branch of the filter, so one branch repaired would not have been the class.
+            This is the same root as the argument defect repaired in the markdown tool's own
+            dispatcher, in a different distribution, and worse here: there the symptom was a bad
+            read a caller could see, while a gate that does not fire reports that the command
+            touches nothing claimed, which is indistinguishable from a command that genuinely
+            touches nothing. Silence reads as approval. It was found by inverting the search on a
+            peer's method: hunting for filters by the helper's name returns only the call sites
+            already repaired and reads as complete, while enumerating the SHAPE across every
+            distribution returns the ones outside the convention.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_dash_leading_claimed_filename_is_still_seen}
+}
+
+@misc{hooks-sq-an-operand-after-a-terminator-escapes-the-pattern-drop,
+  section = {structural-query},
+  title   = {An operand after a terminator escapes the pattern drop},
+  note    = {The first version of this arm was vacuous and its falsification arm is what said so.
+            It asserted that a dash-leading path behind a terminator refuses, which passes with
+            the terminator disabled, because the suffix test alone already keeps that token out of
+            the option pile: the arm named the terminator and measured something else. The case
+            that discriminates is in the pattern-dropping branch, where the search program drops
+            its first bare word as the pattern, so a claimed path that is the only bare word is
+            eaten unless the terminator routes it past that loop. Measured both ways, the verdict
+            flips with the terminator planted off. The control beside it pins that a lone bare word
+            with no terminator is still read as a pattern, because refusing that would be a false
+            positive and is what separates this fix from a broader refusal. The terminator changes
+            the MEANING of a token rather than its shape, so the gate follows the caller's
+            declaration instead of guessing.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_operand_after_a_terminator_escapes_the_pattern_drop}
+}
+
+@misc{hooks-sq-an-ordinary-flag-is-still-not-an-artifact,
+  section = {structural-query},
+  title   = {An ordinary flag is still not an artifact},
+  note    = {The positive control, without which the arms beside it are satisfied by a gate that
+            scans every dash token and refuses on all of them. That would be the broken-shut
+            failure, which is worse than the hole it replaces because it blocks work that is fine.
+            The discriminator is the filename-shaped suffix rather than the dash, so a short flag
+            and a long flag carrying a value both remain options. The test deliberately does not
+            encode any tool's flag grammar, because a gate that had to would be wrong for the next
+            tool and this repository already refuses rosters it cannot derive. Measured by planting
+            a predicate that calls nothing an option: the breakage surfaces in a pre-existing arm
+            contributed by a peer, which distinguishes a search pattern naming a suffix from a path
+            being read — a stronger catch than this control alone, since it fires where the
+            confusion actually costs something.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_ordinary_flag_is_still_not_an_artifact}
+}

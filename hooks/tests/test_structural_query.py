@@ -571,3 +571,86 @@ def test_a_plain_read_of_a_claimed_artifact_still_fires() -> None:
     PROGRAM rather than on the REDIRECTION would satisfy the heredoc arm and lose this one.
     """
     assert _fires("cat " + _NOTES), "a reader over a claimed artifact must still be refused"
+
+
+def test_a_dash_leading_claimed_filename_is_still_seen() -> None:
+    """⚑⚑⚑ A MISSED REFUSAL, NOT A BAD READ — and the gate went quiet on a real artifact.
+
+    The argument filter discarded every dash-leading token, so a path beginning with a dash never
+    reached the claims table. Measured against the shipped hook with both controls firing:
+
+        grep foo notes.md      refused=True    ← control: the gate works on this table
+        grep foo -notes.md     refused=FALSE   ← the claimed artifact was never scanned
+        cat notes.md           refused=True    ← control
+        cat -notes.md          refused=FALSE
+
+    ⚑⚑ THE SAME ROOT AS `mdstruct`'s, IN A DIFFERENT DISTRIBUTION, AND WORSE HERE. `d6e8461` fixed
+    the filter-cannot-refuse defect in `mdstruct/cli.py` and its message claimed the class closed;
+    it closed it in ONE distribution. There the symptom was a bad READ a caller could see. Here the
+    gate reports *this command touches nothing claimed*, which is indistinguishable from a command
+    that genuinely touches nothing — a silence that reads as approval.
+
+    ⚑ FOUND BY INVERTING THE SEARCH, which is `substrate-9c`'s method rather than mine. Hunting for
+    filters by name would have returned only the two call sites already fixed and read as complete;
+    enumerating the SHAPE across every distribution returned this one. Their formulation: enumerate
+    the convention and look at who is ABSENT from it.
+    """
+    assert _fires("grep foo -notes.md"), (
+        "a dash-leading claimed filename escaped the gate — the refusal's silence is "
+        "indistinguishable from a command that touches nothing claimed"
+    )
+    assert _fires("cat -notes.md"), (
+        "the same escape on a non-pattern-first program, which takes the other branch of the "
+        "argument filter — one branch fixed is not the class"
+    )
+
+
+def test_an_operand_after_a_terminator_escapes_the_pattern_drop() -> None:
+    """⚑⚑⚑ MY FIRST VERSION OF THIS ARM WAS VACUOUS AND ITS F-ARM IS WHAT SAID SO.
+
+    It asserted `grep foo -- -notes.md` refuses, and that passes WITH THE TERMINATOR DISABLED —
+    because the suffix test alone already keeps `-notes.md` out of the option pile. The arm named
+    the terminator and measured something else, which is this repository's own recurring shape
+    arriving in the arm written to close a gap.
+
+    ⚑⚑ THE CASE THAT DISCRIMINATES IS IN THE PATTERN-DROPPING BRANCH, not the plain filter.
+    `grep` drops its first bare word as the search pattern, so a claimed path that is the ONLY
+    bare word is eaten — and the terminator is what routes it past that loop:
+
+        grep -- notes.md   refused=True    terminator live
+        grep -- notes.md   refused=FALSE   terminator planted off   ← the discriminator
+        grep notes.md      refused=False   in BOTH — correctly: that IS a pattern
+
+    ⚑ AND THE THIRD LINE IS THE CONTROL THAT KEEPS THE FIX HONEST. Without the terminator a lone
+    bare word really is the pattern, so refusing it would be a false positive; the arm pins that
+    the gate still reads it that way. The terminator changes the MEANING of the token, and the
+    gate must follow the caller's declaration rather than guess from shape.
+    """
+    assert _fires("grep -- notes.md"), (
+        "a path forced by `--` was eaten as grep's search pattern — the terminator is the caller "
+        "DECLARING a path, and the pattern-dropping loop must not consume what it declares"
+    )
+    assert not _fires("grep notes.md"), (
+        "a lone bare word with no terminator IS the search pattern; refusing it would be a false "
+        "positive, and this control is what separates the fix from a broader refusal"
+    )
+
+
+def test_an_ordinary_flag_is_still_not_an_artifact() -> None:
+    """⚑⚑ THE POSITIVE CONTROL, without which the arms above pass on a broken-shut gate.
+
+    Scanning all dash-leading tokens would make every `-i`, `-n` and `--color=never` a candidate
+    path and turn the gate into a refusal machine — the broken-shut failure, which is worse than
+    the hole because it blocks work that is fine. The discriminator is the CLAIMED SUFFIX rather
+    than the dash: `-notes.md` looks like a filename and `-i` does not.
+
+    ⚑ AND IT DOES NOT TRY TO KNOW EVERY TOOL'S FLAG GRAMMAR. A gate that had to would be wrong for
+    the next tool; a suffix test is cheap and its bound is stated — a flag whose VALUE ends in a
+    claimed suffix reads as a path, which is the safe direction and names a real artifact anyway.
+    """
+    assert not _fires("grep -i foo README"), (
+        "a short flag was read as a path — the gate must not refuse on the dash alone"
+    )
+    assert not _fires("grep --color=never foo README"), (
+        "a long flag with a value was read as a path"
+    )
