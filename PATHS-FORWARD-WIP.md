@@ -1366,6 +1366,68 @@ disagreeing with the operator's ruling, the RULING wins here and the divergence 
 convention is not authority, and reconciling quietly to a peer's shape would be gluing with no
 witness.
 
+⚑⚑⚑ ANSWERED 2026-09-12, AND THE ANSWER IS: ADOPT NEITHER MODULE'S DISPATCHER, BUILD THE GATE.
+`substrate-9c` disclosed two modules and the accounting for this tree is not what either of us
+assumed.
+
+`climode` is NOT a parser — it declares per-mode contracts (`operand`, `paths`, `opts`, `scans`,
+`writes`, `why`) that a gate checks. So *"argparse or climode"* was a MALFORMED question and it
+was mine. It sits beside argparse rather than instead of it.
+
+`bib_modes` is the generic dispatcher, surfaced only after the operator named it — substrate
+searched for the word `cli` that I used rather than the capability I described, which is the
+census-keyed-on-one-spelling defect inside a reply about avoiding duplicated capability. ⚑ ITS
+COUPLING IS WORSE THAN `climode`'s AND SUBSTRATE SAID SO UNPROMPTED: `dispatch` is generic in the
+HANDLER but reads a module-level `MODES` global that is bibstruct's own roster — a dispatcher for
+one tool wearing a generic signature. Porting is parameterising the roster, a real edit.
+
+⚑⚑ AND ITS HEADLINE FEATURE DOES NOT APPLY HERE, measured rather than accepted. `unbound()`
+reports *declared-without-handler* and *handled-without-declaration* separately, and substrate
+believed mtools lacked the second. **It cannot have it.** `_MODES` is a SINGLE dict literal, so
+the roster IS the handler table — one definition, one lookup, one derived refusal (`grep -n
+_MODES` → three sites, and two are uses). A handler with no declaration is unconstructible. Their
+`unbound` exists because bibstruct's roster and handlers are separate objects; this defect is
+structural to their layout, not general.
+⚑ THE DRIFT THAT DOES EXIST HERE IS ONE LAYER OVER AND IS ALREADY ARMED: the hand-written BANNER
+is the second spelling, and `f235328` asserts `dispatchable == documented` in both directions.
+That is `unbound()` aimed at the drift this tree actually has.
+
+⚑ SO `bib_modes` SUBSUMES: a 3-line dispatch that is already correct, and a refusal already
+derived. It does NOT subsume `_flag()` — deliberately, since neither substrate module parses argv
+— and `_flag()` is the piece carrying the real defect below. **Two of three, both already solved.**
+
+⚑ NO CLI-SHAPE CONFLICT, confirmed from their side: neither module has an opinion about argument
+order. `bib_modes` assumes only that a mode is keyed by a STRING, and whether that string is
+`--spans` or `spans` is opaque to it. The operator's ruling lives entirely in the entry point.
+
+### ⟐DASH-LEADING-NEEDLE-IS-EATEN — NEW 2026-09-12, and it BLOCKS the writer
+
+⚑⚑⚑ `main` FILTERS EVERY TOKEN STARTING WITH `-` OUT OF ITS POSITIONALS, so an argument whose
+text begins with a dash is silently discarded and the arguments after it SHIFT LEFT. Measured
+against the real program, twice:
+
+    mdstruct grep '-- caveats' FILE.md   → usage error: the needle vanished
+    mdstruct grep -- '-- caveats' FILE.md → same — `--` is stripped like any other dash token
+
+**There is no end-of-options mechanism at all.**
+
+⚑⚑ FOR A READER THIS IS A BAD RESULT; FOR A WRITE IT IS THE SILENT-WRONG-TARGET CLASS. `grep`
+survives only because its arity check catches the collapse. `replace-section HEADING FILE.md
+--body-file X` with a dash-leading heading leaves `args = ["replace-section", "doc.md"]` — a
+VALID two-element shape — so the FILE lands in the needle slot and the write proceeds against a
+target the caller never typed. That is precisely what the ambiguity refusal and `exact=` exist to
+prevent, defeated one layer below them, before `find_section` is ever called.
+
+⚑ A HEADING BEGINNING WITH PUNCTUATION IS NOT EXOTIC — this very document has `⟐`-prefixed
+headings, and `-`-prefixed ones are ordinary in changelogs. The existing modes never hit this
+because a PATTERN that looks like a flag is unusual; a HEADING that does is not.
+
+⚑ SO THIS IS THE FIRST WORK ITEM OF THE WRITER, not a follow-up: positional-aware parsing with a
+real `--` terminator. ⚑⚑ AND IT IS THE ARGUMENT FOR `argparse` ON THE MERITS RATHER THAN FOR
+CONSISTENCY — `argparse` gives `--` for free, both sibling distributions already use it, and
+`_flag()` is a hand-rolled re-derivation that got this wrong. Neither substrate module helps:
+they do not parse argv, by design.
+
 ## What the last stretch established, so a tick does not re-derive it
 
 ⚑⚑⚑ EVERY DEFECT IN THE FENCE EXCHANGE HAD ONE SHAPE: a plausible reading pointing at the
