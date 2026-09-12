@@ -821,7 +821,21 @@ def _classify(path: Path, argv: list[str]) -> int:
         col=int(col_raw) if col_raw is not None else 1,
         position=int(pos_raw) if pos_raw is not None else None,
     )
-    sys.stdout.write(f"  {len(states)} declared state(s) in {path}\n")
+    # ⚑⚑⚑ THE SPAN IS DISCLOSED, AND WITHOUT IT THIS READER INVENTS GAPS. Unscoped, `classify`
+    # walks EVERY table and pools them into one total — measured on a census carrying four tables
+    # of entirely different kinds (a surveyor roster, a revision log, a status table, and the state
+    # vocabulary itself): 56 rows classified and 48 UNCLASSIFIED. Scoped to the one table that
+    # carries statuses: 8 rows, 0 unclassified. Same document, same question, and the unscoped
+    # reading manufactures a 48-row documentation gap that does not exist, because a revision-log
+    # row was never meant to carry a state.
+    # ⚑⚑ THE RESIDUE GROUP WAS ALREADY PRINTED AND THAT IS NOT THE SAME THING. Reporting *48
+    # unclassified* without saying WHAT WAS READ describes a defect in the document; saying it was
+    # read across four tables describes a defect in the QUESTION. This tool's own rule is that
+    # every mode prints its denominator, and a count of rows is only half of one — the other half
+    # is which tables they came from.
+    scope = (f"table {pos_raw}" if pos_raw is not None
+             else f"ALL {len(tables.tables(path))} table(s) — pass --table N to scope")
+    sys.stdout.write(f"  {len(states)} declared state(s) in {path}, read across {scope}\n")
     total = 0
     for state, rows in groups.items():
         if not rows:

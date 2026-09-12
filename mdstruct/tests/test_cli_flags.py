@@ -487,3 +487,72 @@ def test_every_mode_declares_exactly_the_flags_its_code_reads() -> None:
         f"refusal still honours, so a caller passes it and NOTHING HAPPENS; a read flag that is "
         f"undeclared is REFUSED by the very check that should admit it."
     )
+
+
+_MULTI_TABLE = """# Doc
+
+| state | means |
+|---|---|
+| open | not yet done |
+| done | finished |
+
+| rev | what changed |
+|---|---|
+| r1 | a revision-log row, which carries no state and never should |
+| r2 | another |
+| r3 | a third |
+
+| item | state |
+|---|---|
+| alpha | open |
+| beta | done |
+"""
+
+
+def test_an_unscoped_classify_discloses_that_it_read_every_table(doc: Path) -> None:
+    """⚑⚑⚑ WITHOUT ITS SPAN THIS READER INVENTS GAPS THAT READ AS DOCUMENT DEFECTS.
+
+    Measured on a real census carrying four tables of entirely different kinds — a surveyor
+    roster, a revision log, a status table, and the state vocabulary itself. Unscoped: 56 rows
+    classified, 48 UNCLASSIFIED. Scoped to the one table that carries statuses: 8 rows, 0
+    unclassified. Same document, same question, and the unscoped reading manufactures a 48-row
+    documentation gap that does not exist, because a revision-log row was never meant to carry a
+    state.
+
+    ⚑⚑ THE RESIDUE GROUP WAS ALREADY PRINTED AND THAT IS NOT THE SAME THING. Reporting the
+    unclassified count without saying WHAT WAS READ describes a defect in the DOCUMENT; naming the
+    tables describes a defect in the QUESTION. This tool's own rule is that every mode prints its
+    denominator, and a count of rows is half of one — the other half is which tables they are from.
+    """
+    doc.write_text(_MULTI_TABLE, encoding="utf-8")
+    result = _run(doc, mode="classify")
+    assert result.returncode == 0, (
+        f"classify refused a document that declares states: {result.stderr!r}"
+    )
+    assert "ALL 3 table(s)" in result.stdout, (
+        f"the unscoped read did not disclose how many tables it pooled, so its unclassified "
+        f"count reads as a fact about the document; stdout was {result.stdout!r}"
+    )
+    assert "--table" in result.stdout, (
+        f"the disclosure does not name the route to scoping — a reader told the reading is wide "
+        f"and not how to narrow it is told half of something; stdout was {result.stdout!r}"
+    )
+
+
+def test_a_scoped_classify_names_the_table_it_read(doc: Path) -> None:
+    """⚑ THE OTHER HALF, without which a tool printing one fixed disclosure passes the arm above.
+
+    A scope announcement that does not change with `--table` is decoration rather than a
+    denominator — the same defect one level up from the one being repaired, which is why the
+    control asserts the NARROW text and the absence of the wide one.
+    """
+    doc.write_text(_MULTI_TABLE, encoding="utf-8")
+    result = _run(doc, mode="classify", extra=["--table", "2"])
+    assert result.returncode == 0, f"a valid table index was refused: {result.stderr!r}"
+    assert "table 2" in result.stdout, (
+        f"the scoped read did not name the table it was confined to; stdout was {result.stdout!r}"
+    )
+    assert "ALL " not in result.stdout, (
+        f"the scoped read still announced a whole-document walk, so the disclosure does not track "
+        f"what was actually read; stdout was {result.stdout!r}"
+    )

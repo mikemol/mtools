@@ -1049,3 +1049,35 @@
             without the body becoming part of the argument vector.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_body_on_the_command_line_is_refused}
 }
+
+@misc{mdstruct-cli-an-unscoped-classify-discloses-that-it-read-every-table,
+  section = {cli-flags},
+  title   = {An unscoped classify discloses that it read every table},
+  note    = {Without its span this reader invents gaps that read as document defects. Measured on
+            a real census carrying four tables of entirely different kinds — a surveyor roster, a
+            revision log, a status table, and the state vocabulary itself: unscoped, fifty-six rows
+            classified and forty-eight unclassified; scoped to the one table that carries statuses,
+            eight rows and none unclassified. Same document, same question, and the unscoped
+            reading manufactures a forty-eight-row documentation gap that does not exist, because a
+            revision-log row was never meant to carry a state. The residue group was already
+            printed and that is not the same thing: reporting the unclassified count without saying
+            what was read describes a defect in the document, while naming the tables describes a
+            defect in the question. This tool's own rule is that every mode prints its denominator,
+            and a count of rows is half of one — the other half is which tables they came from. The
+            disclosure also names the route to scoping, because a reader told the reading is wide
+            and not told how to narrow it has been given half a finding.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_an_unscoped_classify_discloses_that_it_read_every_table}
+}
+
+@misc{mdstruct-cli-a-scoped-classify-names-the-table-it-read,
+  section = {cli-flags},
+  title   = {A scoped classify names the table it read},
+  note    = {The control, without which a tool printing one fixed disclosure whatever it was asked
+            satisfies the arm beside it. A scope announcement that does not change with the table
+            flag is decoration rather than a denominator, and a disclosure that lies is worse than
+            none: measured by planting a constant wide announcement, the tool then claimed to have
+            read all three tables while reporting two rows from one. So the control asserts both
+            the narrow text and the absence of the wide one, which is the two-armed discipline
+            applied to an output line rather than to a refusal.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_a_scoped_classify_names_the_table_it_read}
+}

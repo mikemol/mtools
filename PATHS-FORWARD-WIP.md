@@ -1237,8 +1237,25 @@ account exists.
 ### ⟐MD056-CORPUS-12 · ⟐VACUITY-CEILING · ⟐CLASSIFY-SPANS-ALL-TABLES
 
 Carried. MD056: 12 ragged rows, all measured out of reach (frozen leg directories, filed
-legs). Vacuity: the poll now prints a CEILING, honestly labelled, not a count. Classify:
-unscoped `classify` walks every table without disclosing its span.
+legs). Vacuity: the poll now prints a CEILING, honestly labelled, not a count.
+
+⚑⚑⚑ ⟐CLASSIFY-SPANS-ALL-TABLES — **CLEARED 2026-09-12**, and the cost of carrying it was
+larger than the note suggested. The note said only *"walks every table without disclosing its
+span"*. Measured: on `findings/CENSUS-remaining-work.md`, which carries FOUR tables of entirely
+different kinds — a surveyor roster, a revision log, a status table, and the state vocabulary
+itself — unscoped `classify` reports **56 rows, 48 UNCLASSIFIED**. Scoped to the one table that
+carries statuses: **8 rows, 0 unclassified**.
+
+⚑⚑ SO THE UNDISCLOSED SPAN DID NOT MERELY WITHHOLD CONTEXT, IT MANUFACTURED A FINDING. A reader
+seeing 48 unclassified infers a documentation gap in the census; the true answer is that 47 of
+those rows are from tables the question does not apply to. A revision-log row was never meant to
+carry a state.
+
+⚑ THE RESIDUE GROUP WAS ALREADY PRINTED AND THAT WAS NOT ENOUGH. Reporting the unclassified
+count without saying WHAT WAS READ describes a defect in the DOCUMENT; naming the tables
+describes a defect in the QUESTION. The tool's own stated rule — every mode prints its
+denominator — was half-kept: a count of rows is half a denominator, and which tables they came
+from is the other half.
 
 ### ⟐PEER-MDSTRUCT-CLAIMS — three claims measured 2026-09-12; ONE REAL, TWO FALSE
 
