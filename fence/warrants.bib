@@ -211,3 +211,69 @@
   claim   = {The T-arm: the identical command completes uncapped.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_the_same_payload_passes_uncapped}
 }
+
+@misc{fence-cli-the-binding-rung-is-named-in-the-payload,
+  section = {cli},
+  title   = {The binding rung is named in the payload},
+  note    = {The answer a ratchet sweep exists to produce lived only in prose on a stream nobody
+            collects. Reported from the consuming side by a peer running these fences as a host:
+            they tracked out-of-memory kills for four ticks and filed a load incident, then read
+            the enforced limits out of the kernel's own dump records and recognised a clean
+            descending ladder, which is a sweep doing exactly what it is designed to do. Their
+            measurement of this tool's own voice was zero summary lines in twenty-four hours,
+            against thirty-four journal lines mentioning the fence that were all the kernel's
+            records rather than ours. The gap is narrower and sharper than the information being
+            missing: the per-rung binding field was already in the payload, and what was absent is
+            the synthesis naming which rung bound, the one thing a sweep computes. A consumer
+            received the ladder and had to re-derive the answer the tool had already rendered for
+            humans. Measured before the repair, a sweep emitted a bare array with no synthesis
+            field anywhere.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_binding_rung_is_named_in_the_payload}
+}
+
+@misc{fence-cli-nothing-binding-reports-null-rather-than-omitting-the-key,
+  section = {cli},
+  title   = {Nothing binding reports null rather than omitting the key},
+  note    = {Absent and null are different claims to a parser. A missing key reads as this tool
+            does not report that, and a null reads as it reports there was none: the first sends a
+            consumer looking for another source, which is precisely the trip the reporting peer
+            made to the kernel's dump records, and the second closes the question. This is the
+            absence-versus-unavailable distinction this repository draws everywhere else, arriving
+            at a serialisation boundary, where it costs one key to state and a reader's whole
+            investigation to omit.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_nothing_binding_reports_null_rather_than_omitting_the_key}
+}
+
+@misc{fence-cli-every-rung-survives-beside-the-synthesis,
+  section = {cli},
+  title   = {Every rung survives beside the synthesis},
+  note    = {The control, and the ladder is not replaced by its summary. A payload carrying only
+            the answer would be smaller and worse, because the rungs are what let a reader check
+            the synthesis rather than trust it, and the reporting peer reconstructed an entire
+            sweep from rung-level evidence alone before this tool told them anything. Summarising
+            is the repair; summarising instead would be the truncation defect this tree has
+            already measured in its own test evidence, where a five-element slice withheld the
+            scale of a finding at the moment scale was the finding.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_every_rung_survives_beside_the_synthesis}
+}
+
+@misc{fence-cli-the-payload-the-sweep-emits-is-the-one-with-the-answer,
+  section = {cli},
+  title   = {The payload the sweep emits is the one with the answer},
+  note    = {The three arms beside this one test a function; this one tests that the function is
+            called. Measured, and it is why the arm exists: reverting the emit line to the bare
+            array left all three green, because they exercise the payload builder directly and an
+            unwired payload — the synthesis computed and then not shipped — satisfies every one of
+            them. That is the packager-is-not-a-user defect appearing inside the arms written to
+            close a wiring gap, on the same tick. So this one drives the reporter and parses real
+            standard output, because the subject is what a consumer receives and nothing short of
+            reading the stream measures it: the reporting peer did not lack a function, they
+            lacked a line on a stream they collect. It also asserts the stream split, since a
+            payload landing on the narration stream would satisfy a looser check while breaking
+            the contract a caller relies on when piping output into a parser. The shape is checked
+            before it is indexed, because the defect it catches is a payload that is a bare list,
+            and indexing one by name raises a type error that hands the reader a crash instead of
+            the finding — measured on the falsification arm, which reported list indices must be
+            integers rather than naming the missing answer.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_payload_the_sweep_emits_is_the_one_with_the_answer}
+}

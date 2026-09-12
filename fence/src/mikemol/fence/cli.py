@@ -137,6 +137,47 @@ class _Args:
         )
 
 
+def _sweep_payload(results: list[core.Result]) -> core.ResultJSON:
+    """Return the sweep's machine-readable payload: the ladder AND the answer it produces.
+
+    ⚑⚑⚑ THE SYNTHESIS WAS ON STDERR AND NOWHERE ELSE, which `cassian-observability` measured from
+    the consuming side: **zero** `BOUND BY` lines in 24h of their journal, against 34 lines
+    mentioning "fence" that were all the KERNEL's oom-kill records rather than this tool's. They
+    reconstructed a ratchet sweep by reading `memory: usage/limit/failcnt` out of the kernel's OOM
+    dumps and recognising a descending ladder — arriving at the right answer through the one voice
+    that *was* collected, because ours never left the process.
+
+    ⚑⚑ AND THE PER-RUNG `bound_by` WAS ALREADY IN THE PAYLOAD, so the gap is narrower and sharper
+    than *the information is missing*: a consumer received the LADDER and had to re-derive the
+    BINDING RUNG, which is the one thing the sweep exists to compute. Measured before writing this
+    — `--json --ratchet 64M,32M` emitted a bare array with no synthesis field anywhere. **The tool
+    knew the answer, rendered it for humans, and withheld it from the machine-readable stream.**
+
+    ⚑ ADDITIVE, NOT BREAKING, AND THAT WAS MEASURED RATHER THAN ASSUMED. A sweep's payload was a
+    bare array; this wraps it. Swept for consumers first: nothing in this tree parses it, and the
+    one live consumer reported reading the kernel's records instead — so the format has no reader
+    to break. A wrapper is the right shape because the sweep's answer is ABOUT the array rather
+    than an element of it.
+
+    Args:
+        results: one `Result` per cap tried, in the order they were tried.
+
+    Returns:
+        `{"rungs": [...], "bound_at": <cap or None>, "bound_by": [...], "completed_within_all":
+        bool}`. ⚑ `bound_at` IS `None` RATHER THAN ABSENT when nothing bound, because a missing key
+        and a null are different claims to a parser: absent reads as *this tool does not report
+        that*, null as *it reports there was none*.
+
+    """
+    last = results[-1]
+    return {
+        "rungs": [r.as_dict() for r in results],
+        "bound_at": last.caps.mem if last.bound_by else None,
+        "bound_by": list(last.bound_by),
+        "completed_within_all": not last.bound_by,
+    }
+
+
 def _report_ratchet(results: list[core.Result], *, json_out: bool) -> int:
     """Render a ratchet sweep and name the binding constraint, if there was one.
 
@@ -151,7 +192,11 @@ def _report_ratchet(results: list[core.Result], *, json_out: bool) -> int:
 
     Args:
         results: one `Result` per cap tried, in the order they were tried.
-        json_out: emit the machine-readable payload on stdout instead of prose on stderr.
+        json_out: ALSO emit the machine-readable payload on stdout. ⚑ THIS SAID *INSTEAD OF* AND
+            THE CODE HAS ALWAYS EMITTED BOTH — a declaration disagreeing with the behaviour beside
+            it, found while repairing a different output gap in this same function. Both streams
+            are correct and the split is the contract: narration on stderr, payload on stdout, so
+            a caller piping stdout into a parser gets JSON and nothing else.
 
     Returns:
         Always 0. ⚑ A RATCHET SWEEP THAT COMPLETES HAS SUCCEEDED EVEN WHEN EVERY CAP BOUND — the
@@ -172,8 +217,7 @@ def _report_ratchet(results: list[core.Result], *, json_out: bool) -> int:
               f"constraint in the tried range (either it is frugal, or the mechanism is "
               f"not the resource you ratcheted) ──")
     if json_out:
-        payload: list[core.ResultJSON] = [r.as_dict() for r in results]
-        _emit(json.dumps(payload))
+        _emit(json.dumps(_sweep_payload(results)))
     return 0
 
 
