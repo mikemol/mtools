@@ -6072,3 +6072,80 @@ def test_the_hook_launcher_exempts_the_command_that_repairs_it() -> None:
         "the bootstrap exemption admits `bazel test`, which repairs nothing — an exemption wider "
         "than the repair it exists for"
     )
+
+
+def test_the_unrunnable_warrant_evidence_names_members_not_a_count() -> None:
+    """⚑⚑⚑ THE FAILURE TEXT RAN AND NO ARM READ IT — a blind spot an F-arm does not close.
+
+    `test_every_warrant_names_a_test_that_exists` carries a repair: its evidence prints EVERY
+    unrunnable warrant rather than a five-element slice. I verified that by breaking the predicate
+    and READING the output, which is the same unverified-by-program step as counting a list by eye.
+    Nothing asserted the property, so a future edit restoring `{without[:5]}` — or replacing the
+    list with `all N warrants runnable` — would pass every other arm in this file.
+
+    ⚑⚑ `linux-sources-94` MEASURED THE GENERAL FORM AND IT IS WORSE THAN SKIPPING THE F-ARM. Their
+    mutation grid forces the red path 28 times, so the rewritten prose EXECUTED 28 times, and every
+    arm asserts only the boolean. *An arm that runs the evidence without reading it is not weaker
+    than no arm; it reads as coverage.* They had the harness and it was blind to the thing the
+    harness was for.
+
+    ⚑ AND THE PASS-PATH CASE IS WHAT MOTIVATES THE SHAPE. They found `all {total} mark(s) present
+    in BOTH files` — a count with NO members, DERIVED from the list it stands in for, so it can
+    never disagree with it: drop a mark and the message is a smaller, equally confident `all N`.
+    That is the replaces-the-members case in its purest form, and no arm checking that the
+    assertion held can see it.
+
+    ⚑⚑⚑ THE MESSAGE IS READ FROM THE AST, AND TWO TEXTUAL CUTS FAILED FIRST — both correctly, and
+    the failures are why this is an AST walk. Splitting the file on the evidence sentence REDDED
+    on a uniqueness guard: the sentence appears TWICE, once in the evidence and once in THIS
+    docstring quoting it, so a cut taking the first occurrence would have read this arm's own prose
+    and reported on itself. Anchoring on the f-string prefix instead made the marker unique by
+    matching the WRONG occurrence — this function's own `marker =` line — because the target's
+    literal is split across adjacent f-string fragments that no substring spans.
+    ⚑⚑ A GREP OVER SOURCE IS THE INSTRUMENT THIS REPOSITORY REFUSES FOR STRUCTURED ARTIFACTS, and
+    Python source is one. The AST joins implicitly-concatenated fragments into the node the
+    compiler sees, which is the object the claim is about; both textual cuts were approximations of
+    that node, and each approximated it wrongly in a different way.
+    """
+    tree = pyast.parse(_THIS.read_text(encoding="utf-8"))
+    target = "test_every_warrant_names_a_test_that_exists"
+    fn = next((n for n in pyast.walk(tree)
+               if isinstance(n, pyast.FunctionDef) and n.name == target), None)
+    assert fn is not None, (
+        f"{target} is not in this file — the arm whose evidence this measures has been renamed or "
+        f"removed, and this arm would silently assert nothing"
+    )
+
+    # ⚑⚑⚑ THE RENAME F-ARM PASSED ONCE, AND THE HOLE WAS IN THE PLANT, NOT THE ARM. A
+    # line-addressed `sed` aimed two lines off the target matched nothing, exited 0, and the arm
+    # then passed for the honest reason that nothing had changed. **A GREEN F-ARM IS AMBIGUOUS
+    # BETWEEN A HOLE IN THE ARM AND A PLANT THAT NEVER LANDED**, and the second is silent by
+    # construction: a substitution that matches nothing is not an error. The plant must be
+    # confirmed present before its result is read — the same absence-versus-unavailable confusion
+    # this corpus keeps measuring, arriving in the instrument used to check instruments.
+    #
+    # ⚑ THE ASSERTION IS FOUND BY ITS SUBJECT, not by position. An index into the body would break
+    # on any edit that adds a statement, and break SILENTLY into measuring a different assertion.
+    claim = "asserts a claim nothing can run"
+    msgs = [pyast.unparse(n.msg) for n in pyast.walk(fn)
+            if isinstance(n, pyast.Assert) and n.msg is not None
+            and claim in pyast.unparse(n.msg)]
+    assert len(msgs) == 1, (
+        f"expected exactly one assertion in {target} whose message carries {claim!r}, found "
+        f"{len(msgs)} — this arm cannot say which message it is measuring"
+    )
+    msg = msgs[0]
+
+    assert "sorted(without)" in msg, (
+        f"the evidence does not print the sorted member list. a reader deciding what went wrong "
+        f"gets a verdict and no subject; the message expression was {msg!r}"
+    )
+    assert "[:" not in msg, (
+        f"the evidence SLICES its member list. length is a MEASUREMENT, and truncating it destroys "
+        f"the finding to protect the reader from it — a reader with N unrunnable warrants needs "
+        f"the scale and the identities both; the message expression was {msg!r}"
+    )
+    assert "e.g." not in msg, (
+        f"the evidence hedges with a sample marker, which reads as completeness while withholding "
+        f"members; the message expression was {msg!r}"
+    )

@@ -2971,3 +2971,31 @@
   claim   = {⚑⚑⚑ DROPPING EVERYTHING AFTER `<<` THREW AWAY A REAL READ. The tokeniser does not split on the newline after a terminator, so a heredoc followed by ANY command folds that command into the same invocation and its target vanished from the scan — ordinary shell, not an exotic shape. cassian built the terminator-aware bound and the difference was MEASURED here rather than adopted from the description, the same discipline that caught the `-e` divergence. ⚑ An unterminated tag swallows the remainder deliberately: a body token read as an ARGUMENT is a false refusal of a command that reads nothing, while an argument read as BODY is a missed catch in a command that is WRITING, whose destination is still scanned.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_read_after_a_heredoc_terminator_is_still_seen}
 }
+
+@misc{hooks-bar-fires-the-unrunnable-warrant-evidence-names-members-not-a-count,
+  section = {bar-fires},
+  title   = {The unrunnable-warrant evidence names members, not a count},
+  note    = {An arm's failure text is prose that ships, and it is read exactly when someone is
+            deciding what went wrong, so a truncation or a bare count there withholds the finding
+            at the moment it is wanted. The sibling arm's evidence was repaired to print every
+            unrunnable warrant rather than a five-element slice, and that repair was verified by
+            breaking the predicate and READING the output, which is the same unverified-by-program
+            step as counting a list by eye. Nothing asserted the property, so an edit restoring the
+            slice, or replacing the list with a confident all-N summary, would have passed every
+            other arm in the file. A peer measured the general form and it is worse than skipping
+            the check: their mutation grid forces the red path twenty-eight times, so the rewritten
+            prose executed twenty-eight times while every arm asserted only the boolean, and an arm
+            that runs the evidence without reading it reads as coverage. The message is read from
+            the abstract syntax tree rather than the source text, because two textual cuts failed
+            first and each failed differently: splitting on the evidence sentence was ambiguous,
+            since the sentence appears both in the evidence and in the arm's own docstring quoting
+            it, so a cut taking the first occurrence would have measured its own prose; anchoring
+            on the format-string prefix then made the marker unique by matching the wrong
+            occurrence, because the target's literal is split across adjacent fragments that no
+            substring spans. The tree joins those fragments into the node the compiler sees, which
+            is the object the claim is about. Four arms measured, and the fourth passed at first
+            because a line-addressed substitution aimed two lines off the target matched nothing
+            and exited zero: a green falsification arm is ambiguous between a hole in the arm and a
+            plant that never landed, and the second is silent by construction.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_unrunnable_warrant_evidence_names_members_not_a_count}
+}
