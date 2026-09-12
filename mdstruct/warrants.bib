@@ -855,15 +855,23 @@
   title   = {The usage text names every registered mode},
   note    = {Two spellings of one fact, and they drifted. The unknown-mode refusal derives its
             list from the dispatch registry, while the usage banner is hand-written prose in the
-            module docstring; measured 2026-09-12, the refusal listed twelve modes and the banner
-            listed eleven. The missing one was verify, which is registered, dispatchable, and
+            module docstring; measured 2026-09-12, the registry held eleven modes and the banner
+            listed ten. The missing one was verify, which is registered, dispatchable, and
             named by the routing table's own instruction to run it before any bounded write. The
             cost is not cosmetic, because the usage text is what a reader consults before
             concluding a capability is absent: a peer migrating onto this tool reads a mode it
             cannot see as a mode the tool does not have, and the honest conclusion from that
-            reading is to keep using the other implementation. The arm compares the prose against
-            the registry rather than against a third hand-copied list, because a third spelling
-            would be one more thing to drift, and the registry is what the dispatcher actually
-            reads.},
+            reading is to keep using the other implementation. The arm drives both surfaces as
+            subprocesses and compares what each PRINTS, rather than importing the module and
+            reading the registry attribute: an in-process read proves nothing about whether the
+            banner a user is shown agrees with the refusal a user is shown, and the first cut,
+            which did exactly that, needed a private-name escape and was refused by both ruff and
+            the ratchet. The figures in this note were themselves wrong when first written, as
+            twelve and eleven, because the refusal's comma-separated list was counted by eye
+            rather than by a counter, inside the repair whose whole subject is a hand-maintained
+            figure drifting from a derived one; a peer re-measured and reported eleven, and the
+            registry literal holds eleven. So the arm asserts a relation between two live
+            surfaces and never a cardinality, which is what makes it unable to inherit the
+            mistake its own warrant records.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_the_usage_text_names_every_registered_mode}
 }

@@ -1288,6 +1288,29 @@ it is *incomplete*, and those should not resolve to the same escape.
 only half a gate if the successor has no mode for the job. The refusal is correct; the route it
 names is a dead end for writes.
 
+⚑⚑ AND THE CENSUS THAT PRODUCED "eleven modes, all readers" WAS ITSELF COMPUTED FROM THE
+UNDER-REPORTING BANNER. `--help` listed ten modes while the registry held eleven; `verify` —
+registered, green, and named by the routing table's own *"`verify` before any bounded write"* —
+was absent from the usage text. Fixed at `b554842` with an arm that drives BOTH surfaces as
+subprocesses and compares what each PRINTS. ⚑ A tool with two spellings of its own capability list
+will drift, and **the hand-written one is the one adopters read**: a mode absent from `--help`
+reads as a mode the tool does not have, and the honest conclusion from that reading is to keep
+using the other implementation. An under-reporting tool loses an adopter without ever failing.
+
+⚑⚑⚑ AND I MISCOUNTED THE REFUSAL WHILE FIXING IT — *12 and 11*, wrong in both terms, shipped in
+the commit message and the warrant. I read the comma-separated list BY EYE rather than running a
+counter, inside the repair whose subject is a hand-maintained figure drifting from a derived one.
+`linux-sources-94` re-measured and reported 11; the registry literal holds 11. Corrected in the
+warrant and the arm's docstring. ⚑ The lesson is not *count more carefully*: a count stated in
+prose is the same object as the banner, one layer up, so the arm asserts a RELATION between two
+live surfaces and never a cardinality.
+
+⚑ `verify` IS THE DETECTOR FOR THE CLASS SUBSTRATE'S READER HAS, reported by `linux-sources-94`
+after running it on `TICK.md` after every structural edit: it answers *did every source heading
+reach the section list* directly, and a silently-swallowed heading is exactly substrate's defect.
+So the tool without the defect carries the instrument that finds it — worth knowing when the
+migration argument is made on grounds other than provenance.
+
 ⚑ NOT FIXED HERE, deliberately — a `replace-section` / `append-section` CLI is a surface decision,
 and the operator has an OPEN question about mdstruct's CLI shape (subcommands vs flags, argument
 order) from `linux-sources-94`'s second message. Building a writer before that is settled would

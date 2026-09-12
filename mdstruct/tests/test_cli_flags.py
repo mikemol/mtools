@@ -132,9 +132,19 @@ def test_the_usage_text_names_every_registered_mode() -> None:
 
     Two spellings of one fact, and they drifted. The unknown-mode refusal DERIVES its list from
     the dispatch registry; the usage banner is hand-written prose. Measured 2026-09-12: the
-    refusal named 12 modes and the banner named 11. The missing one was `verify` — registered,
-    dispatchable, and named by the routing table's own instruction (*"`verify` before any bounded
-    write"*).
+    registry held ELEVEN modes and the banner named TEN. The missing one was `verify` —
+    registered, dispatchable, and named by the routing table's own instruction (*"`verify` before
+    any bounded write"*).
+
+    ⚑⚑⚑ AND I FIRST WROTE THAT AS *12 AND 11*, WHICH IS WRONG IN BOTH TERMS AND SHIPPED IN THE
+    COMMIT THAT FIXED THE DEFECT. I read the refusal's comma-separated list and COUNTED IT BY EYE
+    rather than running a counter — in the very repair whose subject is a hand-maintained figure
+    drifting from a derived one. `linux-sources-94` re-measured and reported 11; the registry
+    literal has 11 entries. The defect, the fix and this arm are unaffected, and every figure in
+    them was wrong.
+    ⚑⚑ THE LESSON IS NOT *COUNT MORE CAREFULLY*. It is that a count stated in prose is the same
+    object as the banner this arm exists to police, one layer up — so the arm below asserts a
+    RELATION between two live surfaces and never a cardinality, and cannot inherit this mistake.
 
     ⚑⚑ AND THE COST IS NOT COSMETIC, because the usage text is what a reader consults BEFORE
     deciding a capability is absent. `linux-sources-94` was migrating onto this tool; a mode
