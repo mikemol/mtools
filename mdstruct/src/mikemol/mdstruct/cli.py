@@ -53,6 +53,91 @@ _PATTERN_MODE = "grep"
 # How many cells of a row to render before truncating, so one wide row cannot flood a terminal.
 _CELL_WIDTH = 40
 
+# ⚑⚑⚑ WHICH MODIFIERS EACH MODE OWNS — the declaration an unknown-flag refusal is derived from.
+# A modifier is owned by ONE mode rather than being globally true: `--width` means nothing to
+# `spans`, and accepting it there would answer a question nobody asked while reporting success.
+# ⚑⚑ THE SHAPE IS SUBSTRATE'S `climode.opts` FIELD, adopted as a CONCEPT rather than imported. That
+# module declares contracts for a gate substrate runs; mtools has no such gate yet, so importing
+# the dataclass would buy a declaration with no enforcement. The enforcement is what matters here,
+# so the declaration is local and the refusal below is the thing that reads it.
+_MODE_OPTS: dict[str, frozenset[str]] = {
+    "grep": frozenset({"-i", "-E"}),
+    "rows": frozenset({"--where", "--starts", "--col", "--table"}),
+    "classify": frozenset({"--col", "--table"}),
+    "lint": frozenset({"--width"}),
+}
+
+# ⚑ EVERY MODE ACCEPTS THESE, so a reader need not learn a per-mode exception for the universal
+# two. Kept separate from `_MODE_OPTS` so the per-mode sets stay a statement about that mode.
+_GLOBAL_OPTS = frozenset({"-h", "--help"})
+
+# The POSIX end-of-options marker: everything after it is an operand, whatever it starts with.
+_END_OF_OPTS = "--"
+
+
+def _split_args(argv: list[str]) -> tuple[list[str], list[str]]:
+    """Split `argv[1:]` into operands and option tokens, honouring `--`.
+
+    ⚑⚑⚑ THE FILTER THIS REPLACES ATE ANY OPERAND BEGINNING WITH A DASH, AND `--` WITH IT. Measured
+    on the shipped tool: `mdstruct grep -- '-caveat' FILE.md` reported a usage error, because the
+    needle AND the terminator were both discarded as option-shaped and the operands shifted left.
+    For a reader that is a bad result. For a WRITE it is the silent-wrong-target class: a
+    `replace-section HEADING FILE.md` whose heading vanishes leaves a VALID two-operand shape, so
+    the FILE slides into the heading slot and the write lands somewhere nobody named — defeating
+    the ambiguity refusal and `exact=` one layer BELOW them, before `find_section` is reached.
+
+    ⚑⚑ A HEADING BEGINNING WITH PUNCTUATION IS NOT EXOTIC — this repository's own worklist is full
+    of `⟐`-prefixed headings and a changelog's are routinely `-`-prefixed. The existing modes never
+    surfaced it because a PATTERN that looks like a flag is unusual; a HEADING that does is not.
+
+    Args:
+        argv: the full argument vector, `argv[0]` being the program name.
+
+    Returns:
+        `(operands, options)`. Everything after a bare `--` is an operand verbatim, and the
+        terminator itself is consumed rather than returned in either list.
+
+    """
+    operands: list[str] = []
+    options: list[str] = []
+    rest = argv[1:]
+    if _END_OF_OPTS in rest:
+        cut = rest.index(_END_OF_OPTS)
+        head, tail = rest[:cut], rest[cut + 1:]
+    else:
+        head, tail = rest, []
+    for arg in head:
+        (options if arg.startswith("-") else operands).append(arg)
+    operands.extend(tail)
+    return operands, options
+
+
+def _unknown_opts(mode: str, options: list[str]) -> list[str]:
+    """Return the option tokens `mode` does not declare, in the order given.
+
+    ⚑⚑⚑ A FILTER CANNOT REFUSE, WHICH IS THE OTHER HALF OF THE SAME DEFECT. Before this, every
+    dash token was discarded unread, so `mdstruct spans FILE.md --nonsense-flag` ran CLEAN and
+    reported success — a flag that does nothing is indistinguishable from a flag that worked.
+    `substrate-9c` measured the identical shape in their own writer the same day and named the
+    root exactly: *the filter is the only thing reading dash tokens, and a filter cannot refuse.*
+
+    ⚑⚑ A VALUE IS NOT AN OPTION. `--width 80` puts `80` in the operand list, not here, so only
+    dash-leading tokens are checked; an option's value is recovered by `_flag` as before.
+
+    Args:
+        mode: the dispatched mode name, which decides the declared set.
+        options: the dash-leading tokens from `_split_args`.
+
+    Returns:
+        Every token not declared by this mode or globally, order preserved so the refusal names
+        them as the caller typed them.
+
+    """
+    allowed = _MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS
+    # ⚑ `--name=value` BINDS TOO, matching `_flag`'s own contract. Checking the raw token would
+    # refuse a spelling the tool accepts, which is a worse failure than the one being fixed.
+    return [o for o in options if o.split("=", 1)[0] not in allowed]
+
 
 def _flag(argv: list[str], name: str) -> str | None:
     """Return a `--name value` or `--name=value` argument, or None.
@@ -518,7 +603,16 @@ def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     # MEASURED on the single-path arm — `verify README.md` printed the same green line twice — which
     # is why the arm exists: a duplicate PASS is invisible in a green run and would have doubled the
     # gate's first file forever. Positional args after the mode are `args[1:]`; `path` is `args[1]`.
-    positional = [a for a in argv[1:] if not a.startswith("-")]
+    # ⚑⚑ AND IT SPLITS THE SAME WAY `main` DOES, rather than re-filtering. This mode takes a PATH
+    # POPULATION, so the eaten-operand defect lands here as a silently SHORTER corpus: a file whose
+    # name begins with a dash would drop out and `verify` would report clean over the files it
+    # happened to keep. A second spelling of the split would be a second thing to drift.
+    # ⚑⚑⚑ THE INDEXING IS THE ORIGINAL'S, DELIBERATELY UNCHANGED. `_split_args` returns operands
+    # from `argv[1:]`, exactly what the old filter produced, so `[2:]` below still means *the paths
+    # after the first*. A first cut here added a `[1:]` and silently SKIPPED ONE PATH — the
+    # duplicate-read defect this comment block was already about, inverted, introduced by the
+    # repair for a different defect in the same three lines.
+    positional, _opts = _split_args(argv)
     paths = [path, *(Path(p) for p in positional[2:])]
     worst = 0
     for candidate in paths:
@@ -652,7 +746,7 @@ def main(argv: list[str] | None = None) -> int:
     """
     if argv is None:
         argv = sys.argv
-    args = [a for a in argv[1:] if not a.startswith("-")]
+    args, options = _split_args(argv)
     if len(args) < _MIN_ARGS:
         sys.stderr.write(__doc__ or "usage: mdstruct <mode> ...\n")
         return 2
@@ -662,6 +756,21 @@ def main(argv: list[str] | None = None) -> int:
     if run is None:
         sys.stderr.write(f"mdstruct: unknown mode {mode!r} — "
                          f"known modes are {', '.join(sorted(_MODES))}\n")
+        return 2
+
+    # ⚑⚑ THE REFUSAL IS DERIVED FROM `_MODE_OPTS`, so a mode gaining a flag gains its acceptance
+    # in one place. It fires AFTER the mode is known, because the declared set is per-mode — an
+    # earlier check could only compare against a global union, which would accept `--width` on
+    # `spans` and be no refusal at all for the case that matters.
+    unknown = _unknown_opts(mode, options)
+    if unknown:
+        declared = sorted(_MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS)
+        sys.stderr.write(
+            f"mdstruct: {mode} does not take {', '.join(unknown)}\n"
+            f"    it takes {', '.join(declared) if declared else 'no modifiers'}.\n"
+            f"    A flag this mode does not read would be SILENTLY IGNORED, and a result\n"
+            f"    that ignored your flag is indistinguishable from one that honoured it.\n"
+            f"    to pass a literal operand beginning with '-', put it after '--'.\n")
         return 2
 
     if mode == _PATTERN_MODE:

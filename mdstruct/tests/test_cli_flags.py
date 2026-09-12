@@ -57,20 +57,39 @@ _IMPOSSIBLE = "99"
 _REFUSED = 2
 
 
-def _run(doc: Path, *args: str) -> subprocess.CompletedProcess[str]:
+def _run(doc: Path, *args: str, mode: str = "rows",
+         extra: list[str] | None = None,
+         terminator: bool = False) -> subprocess.CompletedProcess[str]:
     """Invoke the CLI as a caller does, as a subprocess rather than in-process.
 
     ⚑ A SUBPROCESS IS THE SUBJECT HERE, NOT A CONVENIENCE. These arms are about what a mode does
     with an argv it does not understand, and an in-process call would test the library function
     the flag was supposed to reach — which is the very step the defect skipped.
 
+    ⚑⚑ `mode` DEFAULTS TO `rows` SO THE FOUR EXISTING CALLERS ARE UNCHANGED. Rewriting them to
+    pass a mode they already imply would be a diff across arms this change does not touch, and
+    each one edited is one more chance to alter a measurement while meaning to relocate it.
+
+    Args:
+        doc: the fixture document, passed as the mode's path operand.
+        *args: trailing arguments after the path, for the `rows`-shaped callers.
+        mode: which mode to dispatch.
+        extra: arguments placed AFTER the path, for modes taking modifiers.
+        terminator: place `--` before the first of `*args`, so a dash-leading operand is passed
+            as an operand rather than read as an option. ⚑ The subject of its own arm, so it is
+            a parameter rather than something a caller spells inline and gets subtly wrong.
+
     Returns:
         the completed process, so an arm can assert on its exit status and both streams.
 
     """
-    return subprocess.run(
-        [sys.executable, "-m", "mikemol.mdstruct.cli", "rows", str(doc), *args],
-        check=False, capture_output=True, text=True)
+    head = [sys.executable, "-m", "mikemol.mdstruct.cli", mode]
+    # ⚑ `grep` TAKES ITS PATTERN BEFORE THE PATH and every other mode takes the path first, which
+    # is the tool's own argument order — so the helper follows it rather than imposing one shape.
+    lead = [*(["--"] if terminator else []), *args, str(doc)] if mode == "grep" \
+        else [str(doc), *args]
+    return subprocess.run([*head, *lead, *(extra or [])],
+                          check=False, capture_output=True, text=True)
 
 
 def test_rows_scoped_to_one_table_returns_only_that_tables_rows(doc: Path) -> None:
@@ -217,4 +236,80 @@ def test_the_usage_text_names_every_registered_mode() -> None:
         f"{sorted(dispatchable - documented)} — a reader concludes these do not exist. "
         f"documented but not dispatchable: {sorted(documented - dispatchable)} — a reader runs "
         f"these and is refused by the tool that advertised them."
+    )
+
+
+def test_an_operand_after_the_terminator_reaches_the_mode(doc: Path) -> None:
+    """⚑⚑⚑ THE DEFECT THAT BLOCKS A WRITE CLI, MEASURED AT THE READ PATH WHERE IT IS HARMLESS.
+
+    `main` filtered every dash-leading token out of its operands, and `--` with them. So a needle
+    beginning with a dash VANISHED and the operands shifted left. Measured on the shipped tool
+    before the repair: `grep -- '-caveat' FILE.md` reported a usage error, because both the
+    terminator and the needle were discarded as option-shaped.
+
+    ⚑⚑ FOR A READER THAT IS A BAD RESULT; FOR A WRITE IT IS THE SILENT-WRONG-TARGET CLASS. A
+    `replace-section HEADING FILE.md` whose heading vanishes leaves a VALID two-operand shape, so
+    the FILE slides into the heading slot and the write lands on a section nobody named — beneath
+    the ambiguity refusal and `exact=`, before `find_section` is ever called. `grep` survives only
+    because its arity check catches the collapse; a two-positional writer has no such luck.
+
+    ⚑ A HEADING BEGINNING WITH PUNCTUATION IS NOT EXOTIC. This repository's worklist is full of
+    `⟐`-prefixed headings; a changelog's are routinely `-`-prefixed. The existing modes never
+    surfaced this because a PATTERN that looks like a flag is unusual, and a HEADING that does
+    is not.
+    """
+    doc.write_text("# Top\n\n-caveat appears here\n", encoding="utf-8")
+    result = _run(doc, "-caveat", mode="grep", terminator=True)
+    assert result.returncode == 0, (
+        f"a dash-leading needle after `--` did not reach the searcher; rc={result.returncode}, "
+        f"stderr={result.stderr!r}"
+    )
+    assert "-caveat" in result.stdout, (
+        f"the match was not reported, so the needle reached the searcher as something else; "
+        f"stdout was {result.stdout!r}"
+    )
+
+
+def test_a_flag_the_mode_does_not_own_is_refused(doc: Path) -> None:
+    """⚑⚑⚑ A FILTER CANNOT REFUSE — the other half of the same root cause.
+
+    Every dash token was discarded unread, so `spans FILE.md --nonsense-flag` ran CLEAN and
+    reported success. **A flag that does nothing is indistinguishable from a flag that worked.**
+    `substrate-9c` measured the identical shape in their own writer the same day and named the
+    root exactly: *the filter is the only thing reading dash tokens, and a filter cannot refuse.*
+
+    ⚑⚑ AND THE REFUSAL IS PER-MODE, WHICH A GLOBAL UNION COULD NOT BE. `--width` is a real flag
+    that `lint` owns and `spans` does not read; a union of every flag the tool accepts would admit
+    it here and answer a question nobody asked. The arm below uses `--width` on `spans` precisely
+    because it is the case that separates ownership from mere spelling.
+    """
+    doc.write_text(_FIXTURE, encoding="utf-8")
+    result = _run(doc, mode="spans", extra=["--width", "80"])
+    assert result.returncode == _REFUSED, (
+        f"`spans --width` returned rc={result.returncode} — a mode that does not read a flag must "
+        f"refuse it, not ignore it"
+    )
+    assert "--width" in result.stderr, (
+        f"the refusal must name the flag it rejected; stderr was {result.stderr!r}"
+    )
+
+
+def test_the_owning_mode_still_accepts_its_own_flag(doc: Path) -> None:
+    """⚑ THE POSITIVE CONTROL, without which the arm above passes on a broken-shut gate.
+
+    A refusal that fires on everything is not a refusal, it is a broken-shut gate — the one-armed
+    failure this repository's two-armed hook discipline exists to prevent, arriving in argument
+    parsing. `lint` owns `--width`, so it must still honour it in BOTH spellings the tool's own
+    `_flag` contract accepts: a check on the raw token would refuse `--width=80`, which is a worse
+    defect than the one being repaired.
+    """
+    doc.write_text(_FIXTURE, encoding="utf-8")
+    spaced = _run(doc, mode="lint", extra=["--width", "200"])
+    equals = _run(doc, mode="lint", extra=["--width=200"])
+    assert spaced.returncode != _REFUSED, (
+        f"`lint --width 200` was refused by the mode that owns the flag; stderr={spaced.stderr!r}"
+    )
+    assert equals.returncode != _REFUSED, (
+        f"`lint --width=200` was refused — the `=` spelling binds in `_flag`, so refusing it here "
+        f"rejects a form the tool accepts; stderr={equals.stderr!r}"
     )

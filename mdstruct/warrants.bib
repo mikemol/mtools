@@ -885,3 +885,57 @@
             module, the other enumerations being a stale build artifact and findings prose.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_the_usage_text_names_every_registered_mode}
 }
+
+@misc{mdstruct-cli-an-operand-after-the-terminator-reaches-the-mode,
+  section = {cli-flags},
+  title   = {An operand after the terminator reaches the mode},
+  note    = {The dispatcher filtered every dash-leading token out of its operands, and the POSIX
+            end-of-options marker with them, so an operand beginning with a dash vanished and the
+            operands after it shifted left. Measured on the shipped tool before the repair: a grep
+            for a dash-leading needle reported a usage error whether or not a terminator preceded
+            it, because both were discarded as option-shaped. For a reader that is a bad result;
+            for a write it is the silent-wrong-target class, since a two-operand write whose
+            heading vanishes leaves a valid two-operand shape and the file slides into the heading
+            slot, so the write lands on a section nobody named — beneath the ambiguity refusal and
+            the exact escape, before the finder is ever called. The read modes never surfaced it
+            because a search pattern that looks like a flag is unusual, while a heading that does
+            is not: this repository's own worklist is full of symbol-prefixed headings and a
+            changelog's are routinely dash-prefixed. A filter cannot refuse and a filter cannot
+            except, which is why the repair is a split rather than a wider filter.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_an_operand_after_the_terminator_reaches_the_mode}
+}
+
+@misc{mdstruct-cli-a-flag-the-mode-does-not-own-is-refused,
+  section = {cli-flags},
+  title   = {A flag the mode does not own is refused},
+  note    = {Every dash token was discarded unread, so an unrecognised flag ran clean and the tool
+            reported success: a flag that does nothing is indistinguishable from a flag that
+            worked. A peer measured the identical shape in their own writer the same day and named
+            the root exactly — the filter is the only thing reading dash tokens, and a filter
+            cannot refuse. The refusal is derived from a per-mode declaration rather than from a
+            global union, because a modifier is owned by one mode rather than being globally true:
+            the width flag is real and belongs to the lint mode, so a union of every flag the tool
+            accepts would admit it on the span lister and answer a question nobody asked while
+            reporting success. That is the case the arm exercises, since it separates ownership
+            from mere spelling. The declaration's shape is a peer's mode-contract field adopted as
+            a concept rather than imported, because importing the dataclass without the gate that
+            reads it would buy a declaration with no enforcement, and the enforcement is the part
+            that matters here.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_a_flag_the_mode_does_not_own_is_refused}
+}
+
+@misc{mdstruct-cli-the-owning-mode-still-accepts-its-own-flag,
+  section = {cli-flags},
+  title   = {The owning mode still accepts its own flag},
+  note    = {The positive control, and without it the refusal arm beside it is satisfied by a tool
+            that rejects every flag. A refusal firing on everything is not a refusal but a
+            broken-shut gate, which is the one-armed failure this repository's two-armed hook
+            discipline exists to prevent, arriving in argument parsing. Both spellings the flag
+            reader accepts are exercised, the spaced form and the equals form, because a check
+            against the raw token would reject the equals spelling and that is a worse defect than
+            the one being repaired. Measured by planting an empty allowed set: the control reds,
+            and so do two pre-existing capability arms, so three independent arms catch a
+            broken-shut gate and the refusal's own message becomes self-contradictory, naming a
+            flag as unaccepted in the same breath as listing it among those accepted.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_the_owning_mode_still_accepts_its_own_flag}
+}
