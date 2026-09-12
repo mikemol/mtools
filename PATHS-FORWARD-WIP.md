@@ -1240,6 +1240,59 @@ Carried. MD056: 12 ragged rows, all measured out of reach (frozen leg directorie
 legs). Vacuity: the poll now prints a CEILING, honestly labelled, not a count. Classify:
 unscoped `classify` walks every table without disclosing its span.
 
+### ⟐PEER-MDSTRUCT-CLAIMS — three claims measured 2026-09-12; ONE REAL, TWO FALSE
+
+`linux-sources-94` filed three claims about mtools' mdstruct. Measured before acting on any:
+
+**FALSE — "`hooks/src/mikemol/hooks/no_chaining.py` routes to substrate's mdstruct."** The line
+at `no_chaining.py:18` is a DOCSTRING citing a 2026-09-06 PIPESTATUS incident. It is prose about
+a past measurement, not a route. Nothing in `hooks/` invokes any mdstruct.
+
+**FALSE — "25 references to `scratch/mdstruct` are live routes."** All 25 hits are findings-corpus
+PROSE — a recorded measurement naming where the instrument stood when it was measured. ⚑ Rewriting
+them would falsify the record, which is the opposite of the migration's intent.
+
+⚑⚑ BOTH FALSE CLAIMS HAVE ONE SHAPE: **a grep hit read as a route.** A reference to a tool inside
+a docstring, a finding, or a commit message is a FACT ABOUT THE PAST, and the query that finds it
+cannot distinguish it from an invocation. This is the repository's own recurring shape — a
+plausible reading pointing at the wrong subject — arriving from outside it.
+
+**REAL and CLOSED at `7e4134e` — `find_section` had no `exact=` escape.** The peer's phrasing is
+exact and is quoted in the code: *a correct refusal a caller cannot escape is a dead end*. The
+measurement was 27 substrings of `Residue`, all failing against a document whose other heading
+contains it. `exact=` lands on `find_section`, `replace_section` and `append_to_section` — all
+three, on operator ruling, spelled as substrate's `md_spans` spells it.
+
+⚑ The routing table at `.claude/skills/struct-tools/SKILL.md:25` ALREADY names
+`mdstruct/.venv/bin/mdstruct` — mtools' own build, not substrate's. The repoint the peer asked for
+had already landed; the claim was made against a stale reading of this tree.
+
+⚑ **Recorded here as well as replied, on operator ruling ("Both"):** the correction reaches the
+peer before they act, AND this tree keeps the measurement for the next reader who greps
+`substrate` and finds 25 hits. A correction that lives only in a message is a correction the next
+vantage does not inherit.
+
+### ⟐MDSTRUCT-CLI-HAS-NO-WRITER — NEW 2026-09-12, measured while filing the section above
+
+⚑⚑⚑ **The structural-query hook routes WRITES to a tool whose CLI cannot perform them.** Its
+refusal says, correctly, *"the owning tool is the route for WRITES TOO: `mdstruct/.venv/bin/mdstruct`"*
+— and `mdstruct --help` lists eleven modes, **every one of them a READER**. `replace_section` and
+`append_to_section` exist in `sections.py` and are reachable only as a library import.
+
+Measured by running the tool, not by reading it: attempting to file this very section hit the
+refusal, then found no mode to obey it with. The declared fallback (`Write`/`Edit`, for when the
+owning tool is unavailable) is what wrote it — which is honest, but the tool is not *unavailable*,
+it is *incomplete*, and those should not resolve to the same escape.
+
+⚑ SAME SHAPE AS ⟐PEER-MDSTRUCT-CLAIMS' real claim, one layer up: a gate that names a successor is
+only half a gate if the successor has no mode for the job. The refusal is correct; the route it
+names is a dead end for writes.
+
+⚑ NOT FIXED HERE, deliberately — a `replace-section` / `append-section` CLI is a surface decision,
+and the operator has an OPEN question about mdstruct's CLI shape (subcommands vs flags, argument
+order) from `linux-sources-94`'s second message. Building a writer before that is settled would
+author the surface twice.
+
 ## What the last stretch established, so a tick does not re-derive it
 
 ⚑⚑⚑ EVERY DEFECT IN THE FENCE EXCHANGE HAD ONE SHAPE: a plausible reading pointing at the
