@@ -2167,6 +2167,24 @@ def test_every_warrant_names_a_test_that_exists() -> None:
             r"^def (test_[a-z_0-9]+)", f.read_text(encoding="utf-8"), pyre.MULTILINE
         )
         names |= set(found)
+    # ⚑⚑⚑ BOTH SOURCES ASSERTED NON-EMPTY BEFORE THE DIFFERENCE IS TAKEN. `selectors - names` is
+    # empty when either side is, so a `-k ` pattern that stopped matching or a test-file glob that
+    # found nothing makes this arm green over a property nobody is checking. Found by sweeping the
+    # tree for `assert not <derived population>` with no guard, after `cassian-observability-6a`
+    # named the class from the other side: *an assertion about what did NOT happen is satisfied by
+    # never running.* Their instance was a path never reached, mine a builder never shipped, and
+    # this is the third shape — a population never populated.
+    # ⚑⚑ THE EVIDENCE ARM BELOW WAS STRENGTHENED TWO COMMITS AGO AND I DID NOT LOOK AT THIS ONE.
+    # The same function, four lines apart: I audited what the failure PRINTS and never asked
+    # whether the set it prints from could be empty for reasons unrelated to the claim.
+    assert selectors, (
+        "no `-k` selector parsed out of the ledger — the difference below is then empty whatever "
+        "the tests are named, so this arm would report clean over an unread population"
+    )
+    assert names, (
+        "no test function name parsed out of the suite — same vacuity from the other side: every "
+        "selector would read as dangling, or none would, depending only on the parse"
+    )
     dangling = sorted(selectors - names)
     assert not dangling, f"warrant selector(s) naming no test: {dangling}"
     # ⚑⚑ THE COUNT BELONGS IN THIS ASSERTION AND THE TRUNCATION DID NOT, AND THE TWO ARE DIFFERENT
