@@ -14,6 +14,7 @@
     mdstruct roundtrip FILE.md              # what ONE normalization pass changes
     mdstruct fixpoint FILE.md               # does normalization CONVERGE, and in how many
     mdstruct lint FILE.md [--width N]       # the shape rules, measured on this document
+    mdstruct verify FILE.md                 # does EVERY source heading reach the section list
     mdstruct narrowest FILE.md              # the narrowest width this document satisfies
 
 ⚑⚑ THE CONSOLE SCRIPT IS THE ADOPTION PATH THAT REPLACES A SYMLINK. Peers previously adopted this

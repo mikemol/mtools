@@ -849,3 +849,21 @@
   claim   = {⚑ THE DEFAULT MUST NOT MOVE, or the installed entry point stops working: `[project.scripts]` names this function and a console script calls it with NO arguments. Making `argv` a parameter is safe only if omitting it still reads the global — the same discipline as the grader's interpreter default, pinned for the same reason.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_main_still_defaults_to_the_global_for_the_console_script}
 }
+
+@misc{mdstruct-cli-usage-text-names-every-registered-mode,
+  section = {cli-flags},
+  title   = {The usage text names every registered mode},
+  note    = {Two spellings of one fact, and they drifted. The unknown-mode refusal derives its
+            list from the dispatch registry, while the usage banner is hand-written prose in the
+            module docstring; measured 2026-09-12, the refusal listed twelve modes and the banner
+            listed eleven. The missing one was verify, which is registered, dispatchable, and
+            named by the routing table's own instruction to run it before any bounded write. The
+            cost is not cosmetic, because the usage text is what a reader consults before
+            concluding a capability is absent: a peer migrating onto this tool reads a mode it
+            cannot see as a mode the tool does not have, and the honest conclusion from that
+            reading is to keep using the other implementation. The arm compares the prose against
+            the registry rather than against a third hand-copied list, because a third spelling
+            would be one more thing to drift, and the registry is what the dispatcher actually
+            reads.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_the_usage_text_names_every_registered_mode}
+}

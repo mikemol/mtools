@@ -125,3 +125,49 @@ def test_an_unparseable_table_index_refuses(doc: Path) -> None:
     assert result.returncode == _REFUSED, (
         f"an unparseable table index returned rc={result.returncode}; it must refuse"
     )
+
+
+def test_the_usage_text_names_every_registered_mode() -> None:
+    """⚑⚑⚑ THE TOOL UNDER-REPORTED ITSELF, AND A PEER CONCLUDED A MODE DID NOT EXIST.
+
+    Two spellings of one fact, and they drifted. The unknown-mode refusal DERIVES its list from
+    the dispatch registry; the usage banner is hand-written prose. Measured 2026-09-12: the
+    refusal named 12 modes and the banner named 11. The missing one was `verify` — registered,
+    dispatchable, and named by the routing table's own instruction (*"`verify` before any bounded
+    write"*).
+
+    ⚑⚑ AND THE COST IS NOT COSMETIC, because the usage text is what a reader consults BEFORE
+    deciding a capability is absent. `linux-sources-94` was migrating onto this tool; a mode
+    absent from `--help` reads as a mode the tool does not have, and the honest conclusion from
+    that reading is to keep using the other implementation.
+
+    ⚑ BOTH SURFACES ARE DRIVEN AS PROGRAMS, which is the correction to a first cut that imported
+    the module and read the registry attribute directly. That version needed a private-name escape
+    AND measured an attribute rather than the artifact — and the artifact is the point: these two
+    strings are what a caller actually SEES, and reading the registry in-process proves nothing
+    about whether the banner a user is shown agrees with the refusal a user is shown.
+
+    ⚑⚑ THE REFUSAL IS THE DENOMINATOR, so the arm asserts it parsed a non-empty list before
+    comparing. A split that silently yielded nothing would make this pass over zero modes — the
+    vacuous-arm shape, arriving in the arm written to catch a different vacuity.
+    """
+    banner = subprocess.run(
+        [sys.executable, "-m", "mikemol.mdstruct.cli"],
+        capture_output=True, text=True, check=False,
+    )
+    refusal = subprocess.run(
+        [sys.executable, "-m", "mikemol.mdstruct.cli", "nosuchmode", "x.md"],
+        capture_output=True, text=True, check=False,
+    )
+    declared = refusal.stderr.split("known modes are", 1)[-1].strip().rstrip(".")
+    modes = [m.strip() for m in declared.split(",") if m.strip()]
+    assert modes, (
+        f"the refusal named no modes — this arm cannot measure drift without its denominator; "
+        f"stderr was {refusal.stderr!r}"
+    )
+    missing = [m for m in modes if f"mdstruct {m} " not in banner.stderr]
+    assert not missing, (
+        f"{len(missing)} of {len(modes)} dispatchable mode(s) absent from the usage text: "
+        f"{sorted(missing)} — a mode a reader cannot see in `--help` is a mode they conclude "
+        f"does not exist"
+    )
