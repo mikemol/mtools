@@ -2060,18 +2060,32 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
         if not strings:
             continue
         asserting.append(fn.name)
-        reads = {
-            n.value.func.value.id
+        receivers = [
+            n.value.func.value
             for n in pyast.walk(fn)
             if isinstance(n, pyast.Assign) and isinstance(n.value, pyast.Call)
             and isinstance(n.value.func, pyast.Attribute)
             and n.value.func.attr == "read_text"
-            and isinstance(n.value.func.value, pyast.Name)
+        ]
+        reads = {r.id for r in receivers if isinstance(r, pyast.Name)}
+        # ⚑⚑⚑ AND THE PATH-EXPRESSION READS, WHICH A BARE-NAME COLLECTOR IS BLIND TO. Measured on
+        # this module: **122 bare-name receivers and 19 `_CONST / "literal"` ones, with ZERO in any
+        # other shape** — so the blind spot is not a long tail, it is one form used 19 times.
+        # ⚑⚑ THIS IS WHY `_resolve_path` EXISTS, AND IT WAS ORPHANED BY THE COMMIT THAT BUILT THIS
+        # SWEEP. `aab9f8b` replaced a string-membership check with the set intersection below and
+        # stopped calling the evaluator — which its own guard could not detect, because that guard
+        # asserts the SUBSTRING `_resolve_path` is present and a `def` line satisfies it forever.
+        # ⚑ A BUILDER NEVER SHIPPED: the second of the four vacuity shapes this tree measured,
+        # inside the suite that measures them. Resolving here is what ships it.
+        resolved = {
+            path for r in receivers
+            if not isinstance(r, pyast.Name)
+            and (path := _resolve_path(r, targets)) is not None
         }
         # ⚑ AN ARM READING NO FILE AT ALL IS OUT OF SCOPE, NOT UNRESOLVED. A subprocess probe
         # asserts against captured OUTPUT — there is no haystack on disk to resolve, and calling
         # that a gap would report the check's own boundary as a defect in the suite.
-        if not reads:
+        if not reads and not resolved:
             continue
         # ⚑⚑⚑ AN ARM SWEEPING A POPULATION IS A THIRD CATEGORY, NOT AN UNRESOLVED ONE — and naming
         # it is the whole difference between this check and the one it replaces. A loop variable
@@ -2091,17 +2105,27 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
             for t in pyast.walk(n.target) if isinstance(t, pyast.Name)
         }
         sweeping = reads & loop_bound
-        if sweeping and not (reads & targets.keys()):
+        # ⚑ A RESOLVED PATH EXPRESSION IS A NAMED TARGET, so an arm holding one is not sweeping —
+        # the same reason a bare `_CONST` receiver is not. `root / name / "BUILD.bazel"` resolves
+        # to None (the middle segment is a loop variable, not a constant) and correctly lands here.
+        if sweeping and not (reads & targets.keys()) and not resolved:
             population_sweeps.append(f"{fn.name} sweeps a population via {sorted(sweeping)}")
             continue
         named = reads & targets.keys()
-        if not named:
+        if not named and not resolved:
             unresolved.append(f"{fn.name} reads {sorted(reads)}")
             continue
-        for r in sorted(named):
-            path = targets[r]
-            if not path.exists():
-                unresolved.append(f"{fn.name} reads {r} → {path} (does not exist)")
+        # ⚑⚑ AND THE RESOLVED PATHS ARE CHECKED FOR EXISTENCE LIKE ANY OTHER TARGET. An evaluator
+        # that resolves to a file nobody ships is the same defect as a name that does — the point
+        # of resolving was never the resolution, it was the check on the far side.
+        unresolved.extend(
+            f"{fn.name} reads {path} (does not exist)"
+            for path in sorted(resolved) if not path.exists()
+        )
+        unresolved.extend(
+            f"{fn.name} reads {r} → {targets[r]} (does not exist)"
+            for r in sorted(named) if not targets[r].exists()
+        )
 
     # ⚑⚑ THE POPULATION IS ASSERTED NON-EMPTY AND PRINTED, not counted. A parse that stopped
     # recognising the shape would make every assertion below vacuously true — the defect class this
@@ -3753,11 +3777,26 @@ def test_the_sweeps_ceiling_falls_rather_than_standing() -> None:
         f"the ceiling stands at {_MAX_UNRESOLVED}, unchanged from {_MAX_UNRESOLVED_WAS}; "
         "a ceiling over a static population is a constant nobody reads twice"
     )
-    # ⚑ AND THE EVALUATOR MUST EXIST, or the fall came from lowering a number rather than from
-    # resolving anything — the flattering repair this suite has declined twice.
-    body = _THIS.read_text(encoding="utf-8")
-    assert "_resolve_path" in body, (
-        "the ceiling may only fall because more paths resolve, not because the number was edited"
+    # ⚑⚑⚑ AND THE EVALUATOR MUST BE CALLED, NOT MERELY PRESENT — THIS ARM SHIPPED THE DEFECT IT
+    # NAMES. It asserted `"_resolve_path" in body`, which the evaluator's OWN `def` line satisfies
+    # forever, and `aab9f8b` then orphaned the function while this arm stayed green. A BUILDER
+    # NEVER SHIPPED — the second of the four vacuity shapes this tree measured — guarded by a
+    # substring check inside the suite that measures vacuity shapes.
+    # ⚑⚑ A CALL FROM OUTSIDE ITSELF, because `_resolve_path` RECURSES: it calls itself on
+    # `node.left`, so "is it called anywhere" is satisfied by a corpse that only ever calls itself.
+    # The enclosing function is what distinguishes the two, and nothing about the name does.
+    tree = pyast.parse(_THIS.read_text(encoding="utf-8"))
+    callers = {
+        fn.name
+        for fn in pyast.walk(tree)
+        if isinstance(fn, pyast.FunctionDef)
+        for call in pyast.walk(fn)
+        if isinstance(call, pyast.Call) and isinstance(call.func, pyast.Name)
+        and call.func.id == "_resolve_path" and fn.name != "_resolve_path"
+    }
+    assert callers, (
+        "`_resolve_path` is defined and called by nothing but itself — the ceiling may only fall "
+        "because more paths RESOLVE, and an evaluator nobody invokes resolves none of them"
     )
 
 
