@@ -43,6 +43,25 @@ against an uninstalled tool produces a refusal naming a route the author cannot 
 a **block without a route**, which the adoption suite exists to prevent, and which the
 table's own author walked into one row earlier with `.bib`/`bibstruct`.
 
+⚑⚑ **AND IT IS WORSE THAN BLOCK-WITHOUT-A-ROUTE — measured by `cassian-observability-6a`
+in a tree this repo cannot see, and the name is theirs: BLOCK-TOWARD-A-BANNED-ROUTE.**
+`find ~/github/mtools ~/github/substrate -iname '*pycodemod*'` returns nothing in mtools
+and exactly two homes in substrate: `substrate/scratch/pycodemod.py` (with fourteen
+`_pycodemod_*` modules) and `substrate/substrate/pycodemod_retired.py`. Retired is not a
+route, so the only live tool sits in `scratch/` — **the one location the operator ruled
+out by name.** Verbatim, as cassian quotes it in their own SKILL.md: *"do NOT import from
+scratch. just don't. freeing from dependence on scratch is a prereq to being able to move
+code into mtools."* Cassian had two such symlinks (mdstruct, bibstruct, both into
+`substrate/scratch/`) and removed both under that ruling.
+
+So a table whose entire purpose is to say *where to go instead* would point at the
+forbidden directory. That is a sharper failure than the `.bib` case it generalises:
+bibstruct merely was not here, whereas pycodemod is here and banned.
+
+**The closure is the packaging path mdstruct already took** — into mtools as a
+distribution, installed as a console script. That is distribution-sized work in a tracked
+tree and is not scheduled here; the claim arrives the day the tool does.
+
 So the routing layer is correct to stay silent here. The gap is real and the mechanised
 defence is not available at that layer today.
 
@@ -65,6 +84,24 @@ taken:
 ⚑ (2) is narrower and closes only this literal. (1) generalises and is the larger build.
 Neither is scheduled; this file exists so the next reader does not rediscover the gap by
 having a loud discrepancy.
+
+## A sibling class, measured the same day and repaired separately
+
+⚑ The defect above is *two instruments, one quantity*. A neighbouring one surfaced hours
+later in the same module and is worth naming beside it, because the guard shape is the
+same: **a check that asserts a SUBSTRING is satisfied by the definition it guards.**
+
+- `assert "_resolve_path" in body` was written so a ceiling *"may only fall because more
+  paths resolve"*. A `def _resolve_path` line satisfies it forever, and the function was
+  orphaned for a full commit while the guard reported green. Repaired at `cebbe58` by
+  asserting the CALL, from an enclosing function other than itself — the evaluator
+  recurses, so "called anywhere" is also satisfied by a corpse that only calls itself.
+- `assert "_MAX_UNRESOLVED" in commands` passes if the poll NAMES the constant, never if
+  it USES the value. Still live; filed at `433c1ce`.
+
+Both are the same shape as the counting defect: **a property asserted through a proxy the
+proxy cannot distinguish.** A grep over source that quotes its own subject; a substring
+over a module that defines the name it is looking for.
 
 ## Roster
 
