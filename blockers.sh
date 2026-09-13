@@ -1204,7 +1204,25 @@ echo "    with _MAX_UNRESOLVED forced negative, so the assertion prints its own 
 # other — this file's own two-armed discipline, violated by the hand that wrote it down.
 # ⚑ ANCHORED ON `external/` — where the repo rule materialises the download — and taking the MAX
 # rather than the first, so a stray small match cannot win by being reached earlier.
-_pbin=$(find "$HOME/.cache/bazel" -path '*/external/*+pandoc/bin/pandoc' -printf '%s\n' 2>/dev/null \
+#
+# ⚑⚑⚑ AND THE THIRD DEFECT AT THIS ONE PROBE WAS ITS COST: the walk was UNBOUNDED over a cache that
+# grows with every build, and on 2026-09-13 it pushed the whole poll past a 300s timeout for the
+# first time. MEASURED: `du -s --inodes` on that same cache ALSO timed out, at 120s — counting the
+# tree costs more than two minutes, so any full traversal of it is unbounded in the same way.
+# ⚑⚑ THE ANSWER HAD BEEN CONSTANT ALL SESSION (156 MB) while the walk that computes it got slower
+# every build. An invariant figure recomputed by an unbounded scan, at the head of every tick.
+# ⚑ BOUNDED BY DEPTH, NOT BY PATIENCE. `external/` sits at a FIXED depth — measured, seven output
+# bases here, every one at depth 4 — and the binary a fixed distance below it. 5..7 spans that and
+# stops the walk before it descends into the runfiles trees, which hold the bulk of the inodes.
+# MEASURED: 300s+ → 11s, same three matches, same 163589968 bytes.
+# ⚑⚑ AND THE DEPTH BOUND CLOSES THE ORIGINAL `0 MB` DEFECT BY CONSTRUCTION rather than by taking a
+# max: the 114-byte runfiles SYMLINKS live below depth 7 and are not reached at all. Measured with
+# `-printf '%y %s\n'` — every match inside the bound is `f`. `-type f` is a SECOND, independent
+# guard, stated so a future reader does not read one mechanism where there are two.
+# ⚑ A NONZERO STATUS IS NORMAL HERE and is why `2>/dev/null || true` stays: bazel's
+# `sandbox/inaccessibleHelperDir` is deliberately unreadable, so `find` exits 1 on a HEALTHY cache.
+_pbin=$(find "$HOME/.cache/bazel" -mindepth 5 -maxdepth 7 \
+             -path '*/external/*+pandoc/bin/pandoc' -type f -printf '%s\n' 2>/dev/null \
         | sort -n | tail -1 || true)
 echo "  remote sweep: the large declared input is $(if [ -n "$_pbin" ]; then echo "$((_pbin / 1048576)) MB"; else echo "NOT FETCHED here"; fi) (@pandoc//:bin,"
 # ⚑⚑⚑ AND THE LINE THAT STOOD HERE SAID *A WHOLE-TREE REMOTE GREEN IS NOT CURRENTLY OBTAINABLE*,
