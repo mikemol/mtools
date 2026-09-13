@@ -1586,6 +1586,54 @@ nine warrants about. The tuple form is the same test, fully typed. No waiver, no
 was this hold's release condition and is now simply the next item, carrying its own argument —
 136 def-sites, 11 survivors all closed, and paperkit's ATTEMPTED-beside-KILLED correction.
 
+
+#### ⚑⚑⚑ ⟐MUTATION-PROBE-COUNTS-ERRORS-AS-KILLS — found and repaired at `6143c7d`, and it was in the probe this section quotes
+
+**The precondition for promoting the probe, discovered by reading the artifact rather than this
+record.** `scratchpad/mutate_probe.py` sorted every mutant with
+`(killed if proc.returncode else survived).append(name)`, while `errored` was bound, printed in
+the report, and **never appended to** — three references, no writer.
+
+⚑⚑ **A POPULATION NEVER POPULATED — the third of the four shapes tabulated above — inside the
+instrument built to find them.** A mutant that cannot import returns non-zero and was recorded as
+KILLED, crediting the suite with noticing something it never ran. That is `paperkit-82`'s own
+correction arriving from the opposite side: their fingerprint names only KILLED sites so *absent ≠
+surviving*; this one folded ERRORED into KILLED, the same ambiguity with the opposite sign, and it
+**flatters** rather than under-reports.
+
+⚑ **THE OBVIOUS REPAIR DOES NOT WORK, MEASURED.** pytest's exit codes are documented as separating
+tests-failed (1) from internal error (3) and no-tests-collected (5). Across four shapes, all three
+non-zero cases return **rc=1** — a collection error prints `1 error` rather than carrying a
+distinct code. The discriminator is the terminal summary line: weaker than an exit code, and the
+one that exists. Keying on `rc` would have been a second wrong answer wearing a measurement's
+clothes.
+
+⚑⚑ **RE-MEASURED WITH THE REPAIRED CLASSIFIER, AND THE FIGURES IN THIS SECTION SURVIVE:**
+
+```
+cli.py    ATTEMPTED 28   killed 28   survived 0   errored 0    40.4s (1.4s/cell)
+core.py   ATTEMPTED  8   killed  8   survived 0   errored 0     4.4s (0.5s/cell)
+```
+
+The recorded survivors — mdstruct 10, fence 1 including `core.ratchet` — were real and are now
+closed. **No figure this section quotes was inflated by the defect: the conflation was live but
+never fired on this corpus.** Still a defect, because nothing was keeping it unexercised.
+
+⚑ **AND THE ATTEMPTED SET THIS SECTION ASKED FOR IS NOW ASSERTED RATHER THAN CARRIED.** The probe
+raises unless `killed + survived + errored` is exactly `attempted`, naming any unclassified site,
+and prints the ERRORED section **when empty** — the predecessor hid it behind `if errored:`, so a
+reader could not distinguish *none occurred* from *never populated*, which is precisely the gap the
+defect lived in.
+
+Full account, with the five-shape F-arm and the measurement that refuted the exit-code premise:
+`findings/mutation-probe-errors-as-kills.md`.
+
+⚑⚑⚑ **SO ⟐MUTATION-LAYER-DURABLE IS UNBLOCKED AND ITS PRECONDITION IS NAMED: do not promote a
+probe with a known defect — that is how a defect becomes a component.** The architecture argument
+above stands unchanged (AST rewrite into a temp tree, 45 cells, no caching layer, do not import
+paperkit's build layer); what changes is that the thing being promoted now distinguishes three
+outcomes instead of two.
+
 ### ⟐STRING-SWEEP-IS-A-DETECTOR — measured 2026-09-12 on the operator's question
 
 The operator asked the right question about the string sweep: *a stale literal is something that
