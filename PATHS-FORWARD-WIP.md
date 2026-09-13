@@ -1676,6 +1676,62 @@ the same substring-satisfied-by-its-own-definition shape that hid ⟐ORPHANED-EV
 commit — it is satisfied by the poll *mentioning* the name, never by the poll *using* the value.
 Two instances of one defect in one module, found in one tick, and the second is still live.
 
+
+#### ⚑⚑⚑ WORKED at `4ab4a14` — three parts, and two were not in the filing above
+
+**Two parts CLEARED, the third DELIBERATELY NOT TAKEN.** The filing named one defect; measuring it
+found three, which is the case for re-deriving a list against the tree rather than against its own
+record. **The tree knew more than this section did.**
+
+⚑⚑⚑ **PART 1, CLEARED — a live BLOCK-WITHOUT-A-ROUTE in this repository's own advice line.**
+`blockers.sh` printed `pytest tests/test_bar_fires.py -k vacuous` to any reader wanting the real
+count. **Measured: `no tests collected (144 deselected)`.** `aab9f8b` renamed the arm two commits
+earlier. The poll offered a route the reader could not take — the defect the routing table refuses
+to commit one layer up, arriving in this tree's own poll, because **a rename orphans every pointer
+and a `-k` selector fails SILENTLY**.
+
+⚑⚑ **PART 2, CLEARED — a structural concession that outlived its cause.** An arm read its files
+through hand-typed constants, explaining itself as *a CONCESSION TO A SIBLING ARM ... the first
+draft pushed that sweep's unresolved ceiling 22 -> 23.* Correct when written; void since `aab9f8b`
+replaced that sibling and made loop-variable reads a declared category. **The mechanism was retired
+and the thing that bent around it stayed bent.** Its comment also claimed a derivation via
+`_SHELL_CONSUMERS` that never existed in the module.
+
+⚑ **AND THE DERIVATION FOUND NINE WHERE THE TYPED LIST HELD THREE — the repair's author predicted
+four.** Members, read by forcing the floor above the population: `blockers.sh`, `commit-msg`,
+`domain_witness.sh`, `message_counts.sh`, `pre-commit`, `preflight.sh`, `refusal_record.sh`,
+`rule_citations.sh`, `shellcheck_test.sh`. The arm passes over all nine, so the six newly-admitted
+scripts hold no violations — a result rather than an assumption.
+
+⚑⚑ **PART 3, CLEARED — the substring guard replaced by a resolution check.**
+`assert "_MAX_UNRESOLVED" in commands` passed if the poll NAMED the constant, never if it USED the
+value, and it was the **third** time that block had been keyed to a spelling (its own comment
+records the previous two). The arm now parses the module and asserts every `-k` selector the poll
+prints matches a real test name. F-armed: restoring `-k vacuous` REDS naming `['vacuous']`.
+
+⚑⚑⚑ **WHAT IS NOT DONE, AND WHY IT IS NOT A LEFTOVER: `_MAX_UNRESOLVED = 22` STILL EXISTS.**
+Re-measured after the repair, its surviving references are exactly two live assertions — that it
+**fell** from 23, and that it is **typed** — plus one that is now **DORMANT BY DESIGN RATHER THAN
+DEAD**: `if "_MAX_UNRESOLVED" in commands: assert "CEILING" in commands`. That one fires only when
+the poll greps the constant, which it no longer does, and its own comment says why it is built that
+way: *a required presence cannot be emptied by deleting prose — the difference between an arm that
+survives its own repair and one that only survived until it worked.* Nothing asserts WITH the
+value. The two closures this section proposed are both still open, and the reason for not taking
+either is now clearer than when they were written:
+
+1. **Retiring it deletes the record of four documented rises (18→19→20→21→22), each a real arm.**
+   That record is the only place the *reasons* live — each rise names the arm and the runtime
+   predicate that made it unresolvable. Deleting the constant without rehoming that prose loses
+   measurements, which this tree treats as a worse outcome than carrying a dead number.
+2. **The ceiling-falls arm asserts a DIRECTION, and a direction over a retired constant is not
+   obviously meaningless** — it still refuses a flattering edit to a number, which is a property
+   with no current subject rather than a property that is false.
+
+⚑ **So the honest state is: the LIVE defects are repaired and the DEAD constant is carried, with
+its record intact and its uselessness written down.** That is a different thing from unfinished
+work, and the distinction is the point — a number nobody can raise, whose removal would cost
+measurements, is furniture that is cheaper to label than to move.
+
 ## What the last stretch established, so a tick does not re-derive it
 
 ⚑⚑⚑ EVERY DEFECT IN THE FENCE EXCHANGE HAD ONE SHAPE: a plausible reading pointing at the
