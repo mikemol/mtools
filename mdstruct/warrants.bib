@@ -1081,3 +1081,26 @@
             applied to an output line rather than to a refusal.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_a_scoped_classify_names_the_table_it_read}
 }
+
+@misc{mdstruct-cli-a-registered-mode-answers-when-run-as-a-program,
+  section = {cli-flags},
+  title   = {A registered mode answers when run as a program},
+  note    = {Five modes were registered, documented in the usage banner, checked by the
+            mode-contract gate for flag agreement, and never once run as a program by any test. A
+            mutation sweep found them: replacing each definition's body with a raise and re-running
+            the suite killed thirty-five of forty-five sites across the distribution, and every one
+            of the ten survivors was a command-line adapter for these five modes or the mode
+            function beneath it. Their libraries are well covered — every site in the table reader,
+            the verifier and the span finder died under the same operator — so the gap is precisely
+            the path from an argument vector to that library: the mode dispatches, reads its flags,
+            formats its answer and prints a denominator, and nothing checked that any of it
+            happens. A reader of a hundred and twenty-two passing tests had no way to see it. The
+            assertion is that the mode answered rather than what it answered, because a mode's
+            content is its own suite's subject and asserting it here would duplicate five suites
+            and couple this arm to five formats; it also requires a denominator naming the document
+            read, since this tool's own rule is that every mode prints one and a silent success is
+            indistinguishable from a mode that never ran. Re-running the sweep after these arms
+            landed killed all twenty-eight sites in the command-line module, so the instrument that
+            found the gap also confirms its closure.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_a_registered_mode_answers_when_run_as_a_program}
+}

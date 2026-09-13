@@ -556,3 +556,49 @@ def test_a_scoped_classify_names_the_table_it_read(doc: Path) -> None:
         f"the scoped read still announced a whole-document walk, so the disclosure does not track "
         f"what was actually read; stdout was {result.stdout!r}"
     )
+
+
+# ⚑⚑⚑ THE FIVE MODES A MUTATION SWEEP FOUND UNEXERCISED AT THE CLI. Measured 2026-09-12 by
+# replacing each def-site's body with `raise` and re-running the suite: 45 sites across mdstruct,
+# 10 survivors, ALL of them here — these five modes and their adapters. Their LIBRARY functions
+# are covered (all 8 sites in `tables.py`, all 3 in `verify.py`, all 4 in `spans.py` died), so the
+# gap is precisely the ADAPTER: the mode is registered, documented in the banner, and checked by
+# the contract gate for flag agreement, and no test ever ran it as a program.
+# ⚑⚑ A READER OF 122 PASSING TESTS HAD NO WAY TO SEE THAT. This is the return the operator ruled
+# for when they said BOTH, arriving on the mutation layer's first run.
+_SWEEP_UNCOVERED = ("tables", "labels", "roundtrip", "fixpoint", "narrowest")
+
+
+@pytest.mark.parametrize("mode", _SWEEP_UNCOVERED)
+def test_a_registered_mode_answers_when_run_as_a_program(doc: Path, mode: str) -> None:
+    """⚑⚑⚑ EVERY REGISTERED MODE MUST ANSWER, and five did not until a mutation sweep said so.
+
+    Replacing any of these five bodies with `raise` changed NO test verdict. The library beneath
+    each is well covered — every def-site in `tables.py`, `verify.py` and `spans.py` died under
+    the same operator — so what was missing is the path from argv to that library: the mode
+    dispatches, reads its flags, formats its answer and prints a denominator, and nothing checked
+    that any of that happens.
+
+    ⚑⚑ THE ASSERTION IS *IT ANSWERED*, NOT *IT ANSWERED THIS*. A mode's content is its own arms'
+    subject; this one pins that the adapter exists and runs, which is the property the sweep found
+    absent. Asserting content here would duplicate five suites and couple this arm to five
+    formats.
+
+    ⚑ AND IT REQUIRES A DENOMINATOR, because this tool's own rule is that every mode prints one.
+    A mode that exits 0 with empty stdout would satisfy a bare returncode check while telling a
+    caller nothing — the absence-versus-unavailable defect at the output boundary.
+    """
+    doc.write_text(_FIXTURE, encoding="utf-8")
+    result = _run(doc, mode=mode)
+    assert result.returncode == 0, (
+        f"`{mode}` refused a well-formed document: rc={result.returncode}, "
+        f"stderr={result.stderr!r}"
+    )
+    assert result.stdout.strip(), (
+        f"`{mode}` exited 0 and printed NOTHING — a mode that answers silently is "
+        f"indistinguishable from one that did not run"
+    )
+    assert str(doc) in result.stdout, (
+        f"`{mode}` printed no denominator naming the document it read; this tool's rule is that "
+        f"every mode prints one. stdout was {result.stdout!r}"
+    )
