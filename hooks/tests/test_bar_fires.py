@@ -1107,6 +1107,19 @@ _MIN_DISTRIBUTIONS = 2
 # branch, so the arm PASSED. A floor catches a classifier recognising NOTHING, never one that
 # NARROWS. The members are printed for that reason — a reader sees them on a GREEN run.
 _MIN_POPULATION_NEGATIVES = 10
+# ⚑ A FLOOR ON THE DERIVED SHELL-CONSUMER POPULATION. NOT a count: a new script is a real addition
+# and must not require editing this number. It refuses a derivation that stopped deriving, which
+# would make every assertion over `bodies` pass by reading nothing.
+# ⚑⚑⚑ THE HAND-WRITTEN PREDECESSOR HELD **THREE**; THE DERIVATION FINDS **NINE**, and I predicted
+# four. Measured by forcing this floor above the population so the arm printed its own members:
+# `blockers.sh`, `commit-msg`, `domain_witness.sh`, `message_counts.sh`, `pre-commit`,
+# `preflight.sh`, `refusal_record.sh`, `rule_citations.sh`, `shellcheck_test.sh`. Six real shell
+# consumers this arm never checked — not the single omission I expected when I wrote the repair.
+# ⚑⚑ WHICH IS THE ARGUMENT FOR DERIVING, STATED BY THE MEASUREMENT RATHER THAN BY ME: a typed
+# population is wrong SILENTLY, and its author's estimate of how wrong is also wrong. The floor
+# cannot say WHICH member is missing — only the derivation can, which is why the failure prints
+# the members it found rather than their number.
+_MIN_SHELL_CONSUMERS = 6
 # ⚑ A QUOTED SHELL PATTERN NEEDS BOTH QUOTES. `line.count("'") >= 2` is the test for *this line
 # carries a single-quoted string I can extract*; naming it says which 2 — an opening and a
 # closing quote — rather than leaving a bare integer for a reader to re-derive.
@@ -3409,8 +3422,37 @@ def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
     # ⚑ THE PROPERTY IS THAT THE FIGURE COMES FROM THE SWEEP, not that a particular word appears.
     # This asserted `inline`, a word the repaired line no longer uses — an arm keyed to today's
     # phrasing rather than to what makes the line trustworthy.
-    assert "_MAX_UNRESOLVED" in commands, (
-        "the sweep's skipped count must be read from the sweep, not re-derived by the poll"
+    # ⚑⚑⚑ AND IT THEN ASSERTED `_MAX_UNRESOLVED`, WHICH IS THE SAME DEFECT ONE CONSTANT OVER — the
+    # third time this block has been keyed to a spelling. Worse, a substring assertion cannot
+    # distinguish a poll that USES a value from one that merely NAMES it, which is exactly the
+    # shape that hid an orphaned evaluator for a full commit at `cebbe58`.
+    # ⚑⚑ THE CEILING IS GONE. `aab9f8b` replaced the sweep with one whose `unresolved` is an
+    # outright refusal and whose `population_sweeps` is a declared, printed category — there is no
+    # bound left for the poll to report. So the property is no longer *the figure comes from the
+    # sweep*; it is **the poll points a reader at an arm that EXISTS**.
+    # ⚑⚑⚑ BECAUSE A RENAME ORPHANS EVERY POINTER AND `-k` FAILS SILENTLY. Measured: the poll spent
+    # two commits printing `-k vacuous`, which collected `no tests collected (144 deselected)` —
+    # a BLOCK WITHOUT A ROUTE in this repository's own advice line, the defect its routing table
+    # refuses to commit one layer up. Asserting the selector RESOLVES is what catches that.
+    # ⚑ ANNOTATED AT THE BOUNDARY: `findall` returns `Any`, and this distribution's
+    # `disallow_any_expr` refuses an untyped decoder result deciding anything — the claim
+    # `payload.py` ships nine warrants about. The type becomes knowable here, so it is stated here.
+    selectors: list[str] = pyre.findall(r"-k ([a-z_0-9]+)", commands)
+    assert selectors, (
+        "the poll offers no `-k` selector at all — it once pointed a reader at the sweep's own "
+        "arm, and an advice line that names no route is the half of this the rename broke"
+    )
+    names = {
+        fn.name
+        for fn in pyast.walk(pyast.parse(_THIS.read_text(encoding="utf-8")))
+        if isinstance(fn, pyast.FunctionDef)
+    }
+    # ⚑ SUBSTRING, BECAUSE `-k` IS A SUBSTRING MATCHER — the poll may name a fragment, and what
+    # must hold is that pytest would collect SOMETHING, not that the fragment is a whole name.
+    dangling = [s for s in selectors if not any(s in name for name in names)]
+    assert not dangling, (
+        f"the poll prints `-k` selector(s) matching no test in this module, so a reader following "
+        f"the advice collects nothing: {sorted(dangling)}"
     )
 
 
@@ -6010,20 +6052,40 @@ def test_no_bazel_invocation_filters_away_the_output_it_promises_to_show() -> No
     # ⚑ THE POPULATION IS EVERY SHELL CONSUMER, NOT JUST preflight. Naming preflight alone would be
     # the size-one hand-written population this suite has already paid for twice — the gate runs
     # `bazel test //...` too, and any future script may.
-    # ⚑⚑⚑ EACH FILE IS READ THROUGH ITS OWN MODULE CONSTANT, NOT THROUGH A LOOP VARIABLE — and
-    # that is a CONCESSION TO A SIBLING ARM, recorded because it looks like clumsiness otherwise.
-    # `test_no_string_assertion_in_this_module_is_vacuous` resolves which file an arm reads by
-    # finding `<CONST>.read_text(...)`; a loop over a derived list is structurally unresolvable, so
-    # the first draft of this arm pushed that sweep's unresolved ceiling 22 -> 23. Raising the
-    # ceiling would have been expanding a baseline to fit my code.
-    # ⚑⚑ THE POPULATION IS STILL DERIVED — `_SHELL_CONSUMERS` is built from the constants rather
-    # than typed at the call site — and the reads are named so the sweep can follow them.
-    bodies = {
-        "preflight.sh": _PREFLIGHT.read_text(encoding="utf-8"),
-        "pre-commit": _GATE.read_text(encoding="utf-8"),
-        "blockers.sh": _POLL.read_text(encoding="utf-8"),
+    # ⚑⚑⚑ THIS POPULATION WAS HAND-WRITTEN AS A CONCESSION TO A SIBLING ARM, AND THE CONCESSION
+    # OUTLIVED ITS CAUSE. The comment here read: *each file is read through its own module constant,
+    # NOT through a loop variable ... `test_no_string_assertion_in_this_module_is_vacuous` resolves
+    # which file an arm reads by finding `<CONST>.read_text(...)`; a loop over a derived list is
+    # structurally unresolvable, so the first draft pushed that sweep's unresolved ceiling 22 -> 23.
+    # Raising the ceiling would have been expanding a baseline to fit my code.* That was correct
+    # when written and every word of it is now void: the sibling arm was REPLACED at `aab9f8b`,
+    # loop-variable reads are a DECLARED category (`population_sweeps`) rather than debt, and the
+    # ceiling has no consumer. **A mechanism was retired and the thing that bent around it stayed
+    # bent** — so when a mechanism goes, grep for what deformed itself to accommodate it.
+    # ⚑⚑ AND THE OLD COMMENT CLAIMED A DERIVATION THAT DID NOT EXIST: *`_SHELL_CONSUMERS` is built
+    # from the constants rather than typed at the call site*. There is no `_SHELL_CONSUMERS` in this
+    # module and never was; the dict below was three typed entries. A comment asserting a property
+    # the code does not have is the same class as a docstring stating a refusal nothing enforces.
+    # ⚑ DERIVED FROM `globals()`, THE PROCEDURE `aab9f8b` ESTABLISHED — any `_NAME` bound to a Path
+    # under the repo root whose suffix or name marks it a shell consumer.
+    # ⚑⚑⚑ MEASURED: THE HAND-WRITTEN TRIO WAS MISSING SIX. The derivation finds nine, and when I
+    # wrote this repair I predicted it would find four — so my estimate of the gap was itself
+    # wrong, which is the case for deriving rather than for a better hand-written list.
+    module_names = cast("dict[str, object]", globals())
+    consumers: dict[str, Path] = {
+        name: value for name, value in module_names.items()
+        if name.startswith("_") and name.isupper() and isinstance(value, Path)
+        and (value.suffix == ".sh" or value.parent.name == ".githooks")
     }
-    assert bodies, "no shell consumer found — this arm would pass by reading nothing"
+    bodies = {
+        path.name: path.read_text(encoding="utf-8")
+        for path in sorted(consumers.values()) if path.exists()
+    }
+    assert len(bodies) >= _MIN_SHELL_CONSUMERS, (
+        f"derived only {sorted(bodies)} from this module's Path constants, below the floor of "
+        f"{_MIN_SHELL_CONSUMERS} — the derivation stopped finding shell consumers, and every "
+        f"assertion below would then pass by reading nothing"
+    )
 
     offenders: list[str] = []
     checked = 0

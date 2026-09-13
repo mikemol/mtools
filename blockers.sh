@@ -1161,17 +1161,30 @@ fi
 # FROM THE SWEEP*. Satisfied by, and only by, reading the ceiling.
 # ⚑ b98f14b's DEFECT TWO COMMITS LATER, in this file: a typed figure reprinted every tick. There
 # it was a sum; here a bound wearing a measurement's sentence.
-# ⚑ DERIVING IT IS REFUSED, NOT OVERLOOKED. `len(unresolved)` costs a full pytest run per poll
+# ⚑ DERIVING IT WAS REFUSED, NOT OVERLOOKED. `len(unresolved)` costs a full pytest run per poll
 # invocation, on a script whose process starts are already a measured cost. A bound reported AS a
-# bound is a TRUE statement; what was false was the claim to have read it. So the figure stays and
-# the sentence changes, and the command that yields the real count is printed for a reader who
-# wants it.
-_unres=$(grep -oE '^_MAX_UNRESOLVED = [0-9]+' "$mtools/hooks/tests/test_bar_fires.py" \
-         | grep -oE '[0-9]+' || true)
-echo "  vacuity sweep CEILING: ${_unres:-?} — the declared bound, NOT a count of what the sweep"
-echo "    resolves today. The sweep asserts len(unresolved) <= this. To measure the actual:"
-echo "      env -C hooks .venv/bin/python3 -m pytest tests/test_bar_fires.py -k vacuous"
-echo "    with _MAX_UNRESOLVED forced negative, so the assertion prints its own set."
+# bound is a TRUE statement; what was false was the claim to have read it.
+#
+# ⚑⚑⚑ ALL OF THE ABOVE IS NOW ARCHAEOLOGY, AND IT IS KEPT BECAUSE THE COSTS WERE REAL. The sweep
+# it describes was REPLACED at `aab9f8b` by a target-resolution check with **no ceiling at all**:
+# `unresolved` is an outright refusal (`assert not unresolved`), and `population_sweeps` — the arms
+# that read through a loop variable and have no single target — is a DECLARED category the arm
+# prints by name. There is no bound left to report and nothing to force negative.
+#
+# ⚑⚑ AND THE ADVICE PRINTED HERE WAS A BLOCK WITHOUT A ROUTE FOR TWO COMMITS. It told a reader to
+# run `-k vacuous`, which named the arm before the rename. MEASURED: `no tests collected
+# (144 deselected)`. The poll offered a route the reader could not take — the same defect this
+# repository refuses to commit in its routing table, arriving in its own advice line, because a
+# RENAME ORPHANS EVERY POINTER TO THE OLD NAME and a `-k` selector fails SILENTLY.
+#
+# ⚑ SO THE LINE REPORTS WHAT THE ARM ACTUALLY YIELDS, AND THE COMMAND IS THE PLAIN ONE. The arm
+# prints its unresolved set, its declared population sweeps, and its whole string-asserting
+# population on a RED run, with no constant to edit first.
+echo "  vacuity sweep: no ceiling — unresolved is an outright refusal since aab9f8b, and"
+echo "    population sweeps (loop-variable reads, no single target) are a DECLARED category"
+echo "    printed by name. To see every category with its members:"
+echo "      env -C hooks .venv/bin/python3 -m pytest tests/test_bar_fires.py \\"
+echo "        -k every_string_asserting_arm_resolves_to_a_file_it_reads"
 
 # ⚑⚑⚑ THE REMOTE SWEEP CANNOT BE TAKEN WHOLE, AND THE CAUSE IS ONE DECLARED INPUT. Measured across
 # two ticks: every `lost inputs with digests` failure under `--config=remote` is in
