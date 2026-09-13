@@ -1537,6 +1537,55 @@ and returned 1-in-10 precision against my 1-in-4 — WORSE, which is what made t
 having been fixed at `01f1450`. The refined sweep is in the scratchpad as `vacuity2.py`; the arm
 itself is reconstructable from this section and the two F-arm results above.
 
+
+#### ⚑⚑⚑ LANDED at `19432cc` — operator ruling 2026-09-13, and the hold's two halves came apart
+
+**CLEARED.** The arm is in the suite as
+`test_every_population_shaped_negative_is_guarded_against_being_empty`, warranted, with all three
+F-arms re-run against the shipping code.
+
+⚑⚑ **THE HOLD HAD A REASON AND A RELEASE CONDITION, AND ONLY THE REASON WENT VOID.** Stated above:
+withheld because a loop-variable read would push the old sweep's unresolvable ceiling 22 → 23, and
+*that ratchet may only DECREASE* — **held pending ⟐MUTATION-LAYER**. Measured at `433c1ce`: that
+sweep was replaced at `aab9f8b`, `population_sweeps` is now a declared printed category with no
+ceiling, and `_MAX_UNRESOLVED` has no arm comparing any population against it. So landing it could
+ratchet nothing. **But ⟐MUTATION-LAYER is still a scratchpad probe, so the release condition was
+never met.**
+
+⚑ **A TRIGGER IS NOT A RELEASE CONDITION, AND THAT DISTINCTION WAS MEASURED ELSEWHERE THE SAME
+DAY.** `cassian-observability-6a` read a kubelet's eviction trigger (5%) as its release condition
+(15%) and got a wrong diagnosis out of it. A void reason is not a lifted hold — so this was put to
+the operator rather than inferred, and the ruling was **land it now**.
+
+⚑⚑⚑ **RE-MEASURING F-ARM C CHANGED WHAT THIS SECTION RECORDS, AND THE CORRECTION IS THE FINDING.**
+Above, F-arm C is written down as a real limit: narrowing the classifier to `pyast.Lambda` left
+*12 of 13 admitted through the CALL branch and the arm PASSED*, generalised to **a floor catches a
+classifier recognising NOTHING, never one that NARROWS.** Re-run here, the equivalent plant —
+keep the CALL branch, drop the comprehensions — **REDS at `2 >= 10`.**
+
+The generalisation was too strong. This suite's population negatives are overwhelmingly
+comprehensions, so dropping that branch removes ten of twelve rather than one of thirteen. **The
+floor's reach is a fact about the CORPUS, not about the floor:** it catches a narrowing exactly
+when the narrowed-away shape is most of the population, and a floor of 10 over 12 members tolerates
+losing two. That bound is real, the arm does not claim past it, and the stronger check is still a
+second instrument rather than a bigger assertion.
+
+⚑⚑ **TWO INSTRUMENTS AGREED ON MEMBERSHIP RATHER THAN ON A COUNT** — the discipline three
+near-misses this session were about, two of which agreed by luck. `scratchpad/vacuity2.py` sweeps a
+HAND-WRITTEN root list and reports 12; the landed arm GLOBS `*/tests/test_*.py` and reports the
+same 12 **by name**. The arm's own population was read by forcing its floor negative and reading
+what it printed, rather than by re-implementing the walk a third time.
+
+⚑ **RUFF AND MYPY EACH FOUND A REAL DEFECT IN THE LANDING, BOTH REPAIRED STRUCTURALLY.** Complexity
+11 > 10 plus two undocumented returns, answered by hoisting `_population_negatives` and `_guarded`
+to module scope; then `disallow_any_expr` on `isinstance(src, X | Y)`, whose `UnionType` expression
+types as `Any` — an untyped expression deciding a classification, which is what `payload.py` carries
+nine warrants about. The tuple form is the same test, fully typed. No waiver, no `noqa`.
+
+⚑ **STILL OWED, AND NOT BLOCKED BY THIS:** ⟐MUTATION-LAYER-DURABLE remains a scratchpad probe. It
+was this hold's release condition and is now simply the next item, carrying its own argument —
+136 def-sites, 11 survivors all closed, and paperkit's ATTEMPTED-beside-KILLED correction.
+
 ### ⟐STRING-SWEEP-IS-A-DETECTOR — measured 2026-09-12 on the operator's question
 
 The operator asked the right question about the string sweep: *a stale literal is something that
