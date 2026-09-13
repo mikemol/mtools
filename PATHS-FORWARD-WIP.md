@@ -1672,6 +1672,64 @@ differed from the real path in ways invisible to me. **A reproduction that is no
 test is a second instrument**, which is this session's most-repeated defect arriving in the probe
 built to diagnose a defect.
 
+
+#### ⚑⚑⚑ THE RUNNER'S DEFECT IS DIAGNOSED at tick 10, AND FOUR WRONG DIAGNOSES CAME FIRST
+
+**Not a whole-distribution failure. ONE TEST MODULE fails collection, and `-x` aborts the rest.**
+The framing "all 64 def-sites ERRORED" was true as a count and wrong as a description, and the
+wrong description is what sent four diagnoses into the environment.
+
+⚑⚑ **THE MECHANISM, MEASURED:** `mdstruct/tests/test_cli_flags.py` imports the CLI module **at
+module scope** (line 66, `_CLI_SOURCE = Path(str(_cli_module.__file__))`), and the CLI imports
+`panflute`. In the mutant's temp tree that import resolves against the copied `src` and fails with
+`ModuleNotFoundError: No module named 'panflute'` — at COLLECTION, before any mutated code runs.
+So every cell reports ERRORED for a reason that has nothing to do with its mutation.
+
+⚑ **AND THE ASYMMETRY EXPLAINS WHY IT LOOKED LIKE A WORKING RUNNER.** Measured:
+`mdstruct` declares `dependencies = ["panflute"]`; `ratchet` and `fence` declare `[]`. The two
+distributions the runner was validated on are exactly the two that cannot exercise the defect —
+**a probe validated on the corpora that could not refute it**. `hooks` would fail the same way.
+
+### ⚑⚑⚑ FOUR HYPOTHESES, EACH PROPOSED AND EDITED IN BEFORE BEING TESTED
+
+| # | hypothesis | how it died |
+|---|---|---|
+| 1 | stripped `PATH=/usr/bin:/bin` starves the suite of `pandoc` | changed to inherit `os.environ`; re-ran **byte-identical** |
+| 2 | `PYTHONPATH` replaced resolution instead of prepending | changed to prepend; re-ran **byte-identical** |
+| 3 | the editable install's `.pth` finder | refuted by probe before editing |
+| 4 | pytest `rootdir` set to the real tree by `-c <real>/pyproject.toml` | changed to the temp copy; re-ran **byte-identical** |
+
+⚑⚑ **THE PATTERN IS THE FINDING, NOT ANY ONE MISS.** Three of the four were *edited into the code
+before the mechanism was tested*, and each re-ran identically — which is the cheapest possible
+refutation and arrived only after the edit. The fourth was refuted by a one-variable-at-a-time
+probe **in under a minute**, because that probe tested the mechanism instead of assuming it.
+
+⚑ **WHAT FINALLY WORKED WAS MEASURING A GAP RATHER THAN PROPOSING A CAUSE.** Two facts were
+already established — `import panflute` succeeds under the runner's exact environment, and pytest
+fails in the same tree — so the question became *what differs between them*, answered by printing
+`sys.path` from inside both. Both resolved `panflute`; a synthetic pytest module importing it
+**passed**. That eliminated the environment entirely and pointed at the one module that does the
+import at collection time.
+
+⚑⚑ **AND THE DEBUG MODE IS WHAT MADE ANY OF IT VISIBLE.** `mutant_in_stdout=False` on every cell
+said the mutant was never reached — the single most informative bit, and it was one print
+statement inside the runner's own `run()`. The previous tick's standalone reproduction could not
+have shown it, because it was not the code under test.
+
+### Not repaired
+
+The repair is not written. Candidates, none measured yet:
+
+1. **Install the distribution into the temp tree**, so its dependencies resolve the way they do in
+   the real one. Correct and slow — it pays a pip install per cell against a 1.4s cell.
+2. **Symlink or copy the venv's `site-packages`** into the temp tree. Cheaper, and it makes the
+   mutant's environment differ from the real one in a way that needs its own argument.
+3. **Point `PYTHONPATH` at the temp `src` AND the real venv's site-packages explicitly**, rather
+   than relying on the editable finder that resolves to the real tree.
+
+⚑ (3) looks right and **that is exactly what the four dead hypotheses each looked like.** It is
+not taken this tick, and the runner stays unlanded.
+
 ### Three real findings the build produced, which stand regardless of the runner
 
 ⚑⚑ **1. THE ERRORED CATEGORY FIRED ON ITS FIRST REAL RUN AND FOUND A STRUCTURAL LIMIT.**
