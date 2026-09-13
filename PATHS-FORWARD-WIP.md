@@ -1577,6 +1577,56 @@ different kind from a ratchet. Its ceiling counts arms it could not resolve; an 
 DIRECTORY is structurally outside its reach and counting it as debt mis-states what the number
 means. That is the collision holding two built arms.
 
+
+### ⟐CEILING-WITHOUT-A-CONSUMER — NEW 2026-09-13, measured while repairing ⟐ORPHANED-EVALUATOR
+
+`_MAX_UNRESOLVED = 22` **no longer has any arm asserting against it as a bound.** Measured by
+enumerating every reference in the tree rather than by reading the constant's comment:
+
+| reference | what it asserts |
+|---|---|
+| `_MAX_UNRESOLVED_WAS = 23` | the former value, for the direction check |
+| `assert _MAX_UNRESOLVED < _MAX_UNRESOLVED_WAS` | that it FELL — not that anything is under it |
+| `assert "_MAX_UNRESOLVED" in commands` | that the POLL mentions it |
+| `for typed in (..., "_MAX_UNRESOLVED")` | that it is TYPED |
+
+⚑⚑⚑ **NOT ONE OF THEM COMPARES A MEASURED POPULATION TO IT.** The sweep that did —
+the string-membership vacuity check — was replaced at `aab9f8b` by a target-resolution check
+whose unresolvable arms are a *declared, printed category* with no ceiling at all. So the
+constant survives as a number that four arms assert facts *about*, and none assert *with*.
+
+⚑⚑ **THAT IS FURNITURE WITH A NUMBER ATTACHED, WHICH IS WHAT ITS OWN CARRIER WAS NAMED TO
+PREVENT.** `test_the_sweeps_ceiling_falls_rather_than_standing` opens *"A CEILING OVER A STATIC
+POPULATION IS FURNITURE WITH A NUMBER ATTACHED"* and cites `linux-sources`' measurement that a
+probe printing SIX gets read past for six consecutive ticks — the operative property being
+CONSTANT rather than zero. The arm now carries exactly the object its docstring refuses.
+
+⚑ **AND IT IS NOT THE SAME DEFECT AS ⟐ORPHANED-EVALUATOR, WHICH IS WHY IT IS FILED SEPARATELY.**
+That one was a builder never shipped and is repaired at `cebbe58`. This one is a live constant
+whose consumers all went away — the population it bounded is no longer computed by anyone. Two
+different vacuity shapes arriving from one commit.
+
+**The work, and the choice is a measurement rather than a preference:**
+
+1. **Retire the constant and the direction arm together**, if nothing wants a bound on
+   unresolvable arms now that `unresolved` is an outright refusal. ⚑ Honest only if the
+   replacement sweep's refusal is genuinely stricter — it asserts `not unresolved`, so it is,
+   and a ceiling above zero would be a RELAXATION of a check that currently admits none.
+2. **Re-point it at the new sweep's `population_sweeps`**, if a bound on *declared* sweeps is
+   wanted. ⚑ Refused as stated: that category was made declarative precisely because a ratchet
+   over arms the instrument structurally cannot reach measures the instrument, not the debt.
+
+⚑ **(1) LOOKS RIGHT AND MUST STILL BE MEASURED, because the four recorded rises (18→19→20→21→22)
+each documented a real arm.** Deleting the constant deletes that record. The reading to take
+first: does any arm today resolve to nothing *and* pass? If `assert not unresolved` holds on a
+green run, the ceiling is bounding an empty set and (1) follows; if it does not, the sweep is
+already failing and this is the wrong question.
+
+⚑⚑ **AND THE GUARD SHAPE IS THE TRANSFERABLE HALF.** `assert "_MAX_UNRESOLVED" in commands` is
+the same substring-satisfied-by-its-own-definition shape that hid ⟐ORPHANED-EVALUATOR for a
+commit — it is satisfied by the poll *mentioning* the name, never by the poll *using* the value.
+Two instances of one defect in one module, found in one tick, and the second is still live.
+
 ## What the last stretch established, so a tick does not re-derive it
 
 ⚑⚑⚑ EVERY DEFECT IN THE FENCE EXCHANGE HAD ONE SHAPE: a plausible reading pointing at the
