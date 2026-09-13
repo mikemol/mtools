@@ -1537,6 +1537,46 @@ and returned 1-in-10 precision against my 1-in-4 — WORSE, which is what made t
 having been fixed at `01f1450`. The refined sweep is in the scratchpad as `vacuity2.py`; the arm
 itself is reconstructable from this section and the two F-arm results above.
 
+### ⟐STRING-SWEEP-IS-A-DETECTOR — measured 2026-09-12 on the operator's question
+
+The operator asked the right question about the string sweep: *a stale literal is something that
+needs to be kept in sync, so the solution is ensuring that sync. What makes it stale?*
+
+⚑⚑⚑ MEASURED, AND THE PREMISE PARTLY FAILS. The originating literal was **wrong at authoring, not
+stale**. The arm's own record says it checked *"a pattern whose escaping did not match
+`blockers.sh`"* — the escaping never matched, so there was no sync to break and nothing had
+drifted. The sweep's framing as a VACUITY check was a misdiagnosis carried in its name.
+
+⚑⚑ BUT DRIFT IS ALSO REAL, so both failure modes exist. 223 string-membership assertions in one
+module name strings in files that have been edited **56** (`blockers.sh`) and **49** (the gate)
+times. A literal written against either has had many opportunities to decouple.
+
+⚑ SO WHAT MAKES A LITERAL STALE IS THAT **A TEST NAMES A STRING IN A FILE IT DOES NOT OWN, AND
+NOTHING COUPLES THE TWO.** The sweep detects the decoupling after the fact; it does not create a
+coupling. The operator's proposed repair — ensure the sync — is the right shape, and the question
+is whether a sync is available.
+
+⚑⚑⚑ IT IS AVAILABLE FOR **7 OF 223**, WHICH IS THE MEASUREMENT THAT DECIDES THE ITEM:
+
+| class | count | can a coupling be built |
+|---|---|---|
+| the literal IS a declared name | 7 | yes — derive it from the target |
+| quoted code MENTIONING a name | 31 | no — deriving a whole shell line from a variable is not a coupling |
+| prose | 185 | no — a sentence has nothing to bind to |
+
+⚑⚑ AND THE LOOSE MEASUREMENT SAID 38 BEFORE THE STRICT ONE SAID 7. The first pass counted a
+literal bindable if it CONTAINED a declared name, which admitted fragments like
+`'note_failure "$dist: ratchet'` — a quoted line that merely mentions `note_failure`. Reading the
+members rather than the count is what showed it; the number 38 looked like a fifth of the corpus
+and was mostly one defect in the classifier.
+
+⚑ THE CONCLUSION: **building the coupling is not the repair.** It would fix 3% and leave the sweep
+standing for the other 97%, so the sweep is a DETECTOR by nature rather than by omission — an
+instrument for a class where prevention is unavailable, which is a legitimate kind of tool and a
+different kind from a ratchet. Its ceiling counts arms it could not resolve; an arm that sweeps a
+DIRECTORY is structurally outside its reach and counting it as debt mis-states what the number
+means. That is the collision holding two built arms.
+
 ## What the last stretch established, so a tick does not re-derive it
 
 ⚑⚑⚑ EVERY DEFECT IN THE FENCE EXCHANGE HAD ONE SHAPE: a plausible reading pointing at the
