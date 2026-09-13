@@ -1098,6 +1098,15 @@ _MIN_SWEPT = 50
 # found SOMETHING, so an absence claim over the population cannot pass because the population is
 # empty. Writing `== 4` would make a derived figure a hand-written one, which is the whole defect.
 _MIN_DISTRIBUTIONS = 2
+# ⚑ A FLOOR ON THE POPULATION-SHAPED NEGATIVES the vacuity sweep finds across all four
+# distributions, measured at 12 the tick it shipped. NOT a count: the sweep asserts every one is
+# GUARDED, and this floor only refuses a classifier that quietly stopped recognising the shape —
+# which would make the guard assertion vacuously true, the defect the sweep exists to find.
+# ⚑⚑ AND A FLOOR IS THE WEAKER HALF BY CONSTRUCTION. F-arm C measured it: replacing the
+# comprehension types with `pyast.Lambda` left 12 of 13 candidates still admitted through the CALL
+# branch, so the arm PASSED. A floor catches a classifier recognising NOTHING, never one that
+# NARROWS. The members are printed for that reason — a reader sees them on a GREEN run.
+_MIN_POPULATION_NEGATIVES = 10
 # ⚑ A QUOTED SHELL PATTERN NEEDS BOTH QUOTES. `line.count("'") >= 2` is the test for *this line
 # carries a single-quoted string I can extract*; naming it says which 2 — an opening and a
 # closing quote — rather than leaving a bare integer for a reader to re-derive.
@@ -1952,6 +1961,82 @@ def test_the_poll_measures_reader_reach_not_a_cause() -> None:
     # escaped backtick breaks the structural one.
     assert "INSIDE A TABLE ROW" in body, "position decides; a bare count cannot"
     assert "_ebt_row=" in body, "the in-table subset must be counted separately"
+
+
+# ⚑⚑ DECLARED, NOT INFERRED, and the declaration is the load-bearing part. A name bound from one
+# of these answers a question about ONE input, so its falsity is a VERDICT and its emptiness is not
+# a defect. `paperkit-82` measured the cost of missing this: 26 of their 36 candidates were ⟨F⟩
+# arms — `assert not analyze(cmd)` says *this input must not fire* — and no syntax distinguishes a
+# negative verdict from an empty population, so the list is written down rather than guessed.
+# ⚑ A HAND-WRITTEN LIST THAT IS HONEST, because it enumerates MEANINGS rather than members: adding
+# a verdict-returning helper is a real decision about that helper, not a population that rots.
+_VERDICT_CALLS = frozenset({
+    "analyze", "verdict", "findings", "command_of", "armed", "regex_tell",
+    "parse", "_fires", "cgroup_of_line",
+})
+
+
+def _population_negatives(fn: pyast.FunctionDef) -> list[tuple[str, int]]:
+    """Find every `assert not NAME` whose NAME was bound from a DERIVATION, not a verdict.
+
+    ⚑ A LITERAL COLLECTION IS EXCLUDED BY CONSTRUCTION and a verdict call by DECLARATION — the two
+    false-positive sources `paperkit-82` measured against an earlier shape of this sweep.
+
+    Returns:
+        the bound name and line number of each population-shaped negative in the function.
+
+    """
+    bound: dict[str, pyast.expr] = {
+        node.targets[0].id: node.value
+        for node in pyast.walk(fn)
+        if isinstance(node, pyast.Assign) and len(node.targets) == 1
+        and isinstance(node.targets[0], pyast.Name)
+    }
+    found: list[tuple[str, int]] = []
+    for node in pyast.walk(fn):
+        if not (isinstance(node, pyast.Assert) and isinstance(node.test, pyast.UnaryOp)
+                and isinstance(node.test.op, pyast.Not)
+                and isinstance(node.test.operand, pyast.Name)):
+            continue
+        src = bound.get(node.test.operand.id)
+        # ⚑ A TUPLE, NOT A `|` UNION, AND MYPY IS RIGHT TO INSIST. `X | Y` inside `isinstance`
+        # builds a `UnionType` object whose type this distribution's `disallow_any_expr` reads as
+        # `Any` — an untyped expression deciding a classification, which is the narrowing defect
+        # `payload.py` ships nine warrants about. The tuple form is the same test, fully typed.
+        if not isinstance(src, (pyast.Call, pyast.ListComp, pyast.SetComp,
+                                pyast.DictComp, pyast.GeneratorExp)):
+            continue
+        # ⚑ A VERDICT CALL IS NOT A POPULATION, BY EITHER SPELLING — `analyze(x)` and
+        # `probe.analyze(x)` are the same claim about one input, and a check seeing only the bare
+        # form would admit half of them.
+        called = src.func if isinstance(src, pyast.Call) else None
+        name = (
+            called.id if isinstance(called, pyast.Name)
+            else called.attr if isinstance(called, pyast.Attribute)
+            else None
+        )
+        if name in _VERDICT_CALLS:
+            continue
+        found.append((node.test.operand.id, node.lineno))
+    return found
+
+
+def _guarded(fn: pyast.FunctionDef, line: int) -> bool:
+    """Say whether the function asserts anything truthy besides the negative at `line`.
+
+    ⚑ THE WHOLE FUNCTION IS WALKED, NEVER A PREFIX. `paperkit-82` measured that two of four
+    candidates were guarded by arms sitting immediately BELOW them, so a position-sensitive check
+    reports its own blind spot as a finding about the suite.
+
+    Returns:
+        True when some other assertion in the function is not a bare negation.
+
+    """
+    return any(
+        isinstance(n, pyast.Assert) and n.lineno != line
+        and not (isinstance(n.test, pyast.UnaryOp) and isinstance(n.test.op, pyast.Not))
+        for n in pyast.walk(fn)
+    )
 
 
 def _resolve_path(node: pyast.expr, targets: dict[str, Path]) -> Path | None:
@@ -6243,4 +6328,73 @@ def test_the_unrunnable_warrant_evidence_names_members_not_a_count() -> None:
     assert "e.g." not in msg, (
         f"the evidence hedges with a sample marker, which reads as completeness while withholding "
         f"members; the message expression was {msg!r}"
+    )
+
+
+def test_every_population_shaped_negative_is_guarded_against_being_empty() -> None:
+    """⚑⚑⚑ AN ASSERTION ABOUT WHAT DID **NOT** HAPPEN IS SATISFIED BY NEVER HAPPENING.
+
+    `assert not offenders` is TRUE when the sweep that built `offenders` found nothing — and TRUE
+    when it was never populated at all. The two are indistinguishable from the assertion, and this
+    is the THIRD of four vacuity shapes measured across two trees: a PATH never reached, a BUILDER
+    never shipped, a POPULATION never populated, a POPULATION filtered empty by a false premise.
+
+    ⚑⚑ SO THE ARM ASSERTS THE GUARD, NOT THE EMPTINESS. Every population-shaped negative in every
+    distribution must sit in a function that ALSO asserts something truthy — a non-emptiness floor,
+    a membership, a printed denominator — so a derivation that silently stopped deriving reds
+    somewhere rather than passing everywhere.
+
+    ⚑⚑⚑ TWO IDIOMS FROM `paperkit-82`, WHO RAN AN EARLIER SHAPE OF THIS AGAINST THEIR OWN SUITES
+    AND RETURNED 1-IN-10 PRECISION AGAINST MY 1-IN-4 — **worse, which is what made it useful:**
+
+    - **A VERDICT IS NOT A POPULATION.** 26 of their 36 candidates were ⟨F⟩ arms: `assert not
+      analyze(cmd)` says *this input must not fire*, and one call's answer cannot be empty. No
+      syntax carries that distinction, so `_VERDICT_CALLS` is DECLARED and named rather than
+      inferred — a hand-written list that is honest because it is a list of MEANINGS, not of
+      members, and adding a verdict-returning helper is a real decision about that helper.
+    - **THE GUARD MAY SIT AFTER THE NEGATIVE.** Two of my four original candidates were guarded by
+      arms immediately below them, and a position-sensitive check reported its own blind spot as a
+      finding about the suite. So `_guarded` walks the WHOLE function, never a prefix.
+
+    ⚑⚑ THE LIMIT IS RECORDED, AND RE-MEASURING IT CHANGED THE RECORD — which is why it is stated
+    with its corpus attached rather than as a law. When this was first built against a different
+    tree the narrowing plant (keep the CALL branch, drop the comprehensions) left 12 of 13
+    candidates admitted and the arm PASSED, and that was written down as *a floor catches a
+    classifier recognising NOTHING, never one that NARROWS.* **Re-run here, the same plant REDS at
+    `2 >= 10`** — because this suite's population negatives are overwhelmingly comprehensions, so
+    dropping that branch removes ten of twelve rather than one of thirteen.
+
+    ⚑⚑⚑ SO THE FLOOR'S REACH IS A FACT ABOUT THE CORPUS, NOT ABOUT THE FLOOR. It catches a
+    narrowing exactly when the narrowed-away shape is most of the population, and a floor of 10
+    over 12 members tolerates losing two. That is a real bound and this arm does not claim past it:
+    the stronger check is a SECOND INSTRUMENT, not a bigger assertion — the fourth vacuity shape
+    arriving inside the sweep built for the third. Held as owed.
+
+    ⚑ MEASURED 2026-09-13 across all four distributions: **12 population-shaped, 0 unguarded.**
+    The one real instance was fixed at `01f1450`, before this arm existed to find it.
+    """
+    swept: list[str] = []
+    unguarded: list[str] = []
+    for suite in sorted(_DIST.parent.glob("*/tests/test_*.py")):
+        tree = pyast.parse(suite.read_text(encoding="utf-8"))
+        for fn in (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef)):
+            for target, line in _population_negatives(fn):
+                swept.append(f"{suite.name}:{line} {fn.name} → assert not {target}")
+                if not _guarded(fn, line):
+                    unguarded.append(f"{suite.name}:{line} {fn.name} → assert not {target}")
+
+    # ⚑⚑⚑ THE POPULATION IS PRINTED ON A GREEN RUN, NOT COUNTED. `paperkit-82`'s second idiom:
+    # a reader sees the members whether the arm reds or not, so a classifier that quietly narrowed
+    # is visible BEFORE it matters rather than after. A bare count would hide exactly that.
+    assert len(swept) >= _MIN_POPULATION_NEGATIVES, (
+        f"the sweep found {len(swept)} population-shaped negative(s), below the floor of "
+        f"{_MIN_POPULATION_NEGATIVES} — the classifier stopped recognising the shape, which makes "
+        f"the guard assertion below vacuously true. Found:\n    " + "\n    ".join(sorted(swept))
+    )
+    assert not unguarded, (
+        "a negative asserting a derived population is empty, in a function that asserts nothing "
+        "truthy — so it passes whether the derivation ran or not:\n    "
+        + "\n    ".join(sorted(unguarded))
+        + f"\n\n  swept {len(swept)} population-shaped negative(s):\n    "
+        + "\n    ".join(sorted(swept))
     )
