@@ -1445,6 +1445,60 @@ CONSISTENCY — `argparse` gives `--` for free, both sibling distributions alrea
 `_flag()` is a hand-rolled re-derivation that got this wrong. Neither substrate module helps:
 they do not parse argv, by design.
 
+### ⟐DECLARE-THE-PARTIAL · ⟐MUTATION-LAYER — OPERATOR RULING 2026-09-12: BOTH
+
+Four shapes of green-but-vacuous arm measured across two trees in three days. Each is green under
+every checker either tree has, and each is a TRUE statement about something other than its subject:
+
+| shape | where the not-running happens | measured by |
+|---|---|---|
+| a PATH never reached | before the code | cassian — a run bailed on an unrelated precondition |
+| a BUILDER never shipped | between code and consumer | mtools — arms on a builder nothing shipped |
+| a POPULATION never populated | inside the derivation | mtools — a set empty for unrelated reasons |
+| a POPULATION filtered empty | inside the traversal | cassian — a false ordering premise, ten days of logs lost |
+
+⚑⚑⚑ THE OPERATOR SENT ME TO ASK `paperkit-82` HOW THEY DO MUTATION TESTING, and the answer is
+valuable because it is UNFLATTERING to the thing I was sent to ask about. Against `body → raise`
+at def-site granularity: **one of the four caught, three missed.** Their phrasing, kept because it
+is the whole finding — *mutation testing at this granularity tests whether your test EXERCISES
+code, not whether it MEASURES anything.* Three of the four are POPULATION defects: the data an arm
+gathers rather than code it runs, and no def-site mutation can express *return a differently
+ordered list*.
+
+⚑⚑ SO THE RULING IS **BOTH**, and they are separable work answering different questions.
+
+**⟐DECLARE-THE-PARTIAL — first, because it is small and catches three of four.** paperkit's own
+name for the construction, and they point at it rather than at their framework: *the defect is
+never emptiness, it is UNDECLARED emptiness.* An arm asserts its population is non-empty AND that
+its members are what the arm believes, printed. This tree already has the shape in places — the
+guard at `01f1450`, the shell-consumer assertion — and nowhere as a rule.
+⚑ AND SOURCE-SIDE NON-EMPTINESS IS NECESSARY, NOT SUFFICIENT. The fourth shape passes it: every
+source was non-empty throughout and the TRAVERSAL was wrong. Catching that needs the output
+asserted non-empty given a known-non-empty input, or two instruments compared.
+
+**⟐MUTATION-LAYER — its own arc, and the cost is architectural rather than compute.** paperkit's
+three reusable ideas, none of which require bazel:
+
+- the mutant as a CACHED, CLAIM-INDEPENDENT build artifact — N claims × M sites costs M builds
+- content-addressed bytecode (PEP 552 `UNCHECKED_HASH`, no mtime) so a CAS replays it across runs
+- a fingerprint keyed by MEMBER IDENTITY rather than a kill score
+
+⚑ THEIR MEASURED RETURN IS THE ARGUMENT: on a 223-claim census, **6 claims pass with an empty
+sensitivity set** — they cannot be shown to fail, and every one was green under every other check
+for as long as it existed. 206 behavioural, 10 refuted, 1 unreachable, 6 vacuous.
+⚑⚑ AND THEIR RECORD HAS HALF THE RATCHET I WOULD WANT, which they volunteered: the fingerprint
+names the KILLED sites, so a site absent from it either survived or was never mutated and the
+record cannot say which. Absent ≠ surviving. That is the half to build differently here.
+⚑ THE PRICE THEY PAID was turning their engine into per-module bytecode targets with a declared
+import DAG before one mutant could be built. Not to be discovered mid-arc.
+
+⚑ ONE ARM IS WRITTEN, MEASURED, F-ARMED AND WITHHELD pending this layer: a cross-instrument
+agreement check comparing an arm's parsed population against `count_test_functions.py`. Its F-arm
+reported *parsed 316, counter reported 313* — the fourth shape caught with a NON-EMPTY population
+on both sides, which no source-side guard can do. It is withheld only because it pushed the string
+sweep's unresolvable ceiling from 22 to 23, and that ratchet may only DECREASE. It returns when an
+instrument admits it without a raise.
+
 ## What the last stretch established, so a tick does not re-derive it
 
 ⚑⚑⚑ EVERY DEFECT IN THE FENCE EXCHANGE HAD ONE SHAPE: a plausible reading pointing at the
