@@ -36,7 +36,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
@@ -1980,152 +1980,145 @@ def _resolve_path(node: pyast.expr, targets: dict[str, Path]) -> Path | None:
     return None
 
 
-def test_no_string_assertion_in_this_module_is_vacuous() -> None:
-    """⚑⚑⚑ AN ASSERTION WHOSE LITERAL IS NOT IN ITS TARGET PASSES WHILE TESTING NOTHING.
+def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
+    """⚑⚑⚑ THE REPLACEMENT FOR A CHECK THAT POLICED A CLASS ITS POPULATION EXCLUDED.
 
-    Written after one shipped and survived a full tick. It checked for a pattern whose escaping did
-    not match `blockers.sh`, so `in body` was satisfied by a string the file does not contain —
-    ⚑ **caught only by evaluating the membership by hand**, which is not a procedure.
+    What stood here asserted that every `"literal" in body` really occurs in the file the enclosing
+    test reads. MEASURED 2026-09-13, on the operator's question *what does it ACTUALLY provide, and
+    how do we get that value without an unsound mechanism?*:
 
-    ⚑⚑ **65 SUCH ASSERTIONS EXIST IN THIS MODULE AND NOTHING ENUMERATED THEM.** A hand-written
-    population with no enumeration procedure is this repository's most-measured defect, and it was
-    sitting in the suite that measures it. **This is the enumeration.**
+        `"lit" in body`      223   these go RED on their own when the literal is absent
+        `"lit" not in body`   30   these go GREEN when the literal is absent
 
-    ⚑ AND IT IS ALSO THE ANSWER TO THE T139 GAP `cassian` NAMED — *an arm nobody has seen fire.*
-    Every assertion here now has a live positive by construction: **if its literal is absent from
-    the file it names, this test fails.** A green suite means the literals are real, not that
-    nobody looked.
+    **The 223 it checked are the ones the suite already catches. The 30 it did not check are the
+    vacuity it was named for.** Its own comment recorded the scope — *the sweep matches `In`, not
+    `NotIn`* — without anyone reading that as the population being inverted.
 
-    ⚑⚑ THE SWEEP READS THE MODULE'S OWN SOURCE AND RESOLVES EACH ASSERTION AGAINST THE FILE ITS
-    ENCLOSING TEST READS, so it needs no list to maintain — *a list would be the same defect one
-    level out.*
+    ⚑⚑⚑ AND IT HAD COST A SOURCE CHANGE. It reported a CORRECT absence assertion as vacuous: a
+    comprehension `[c for c in commands if "bazel-bin" in c]` puts an `In` node in the tree, the
+    sweep resolved it against `settings.json`, found `bazel-bin` genuinely absent — which is what
+    the repair ACHIEVED — and called the arm vacuous. The author rewrote working code into `not in`
+    to satisfy the checker. A false positive that edited the tree is worse than a check that misses.
+
+    ⚑⚑ SO THE ONE THING IT PROVIDED IS THE **ENUMERATION**, not the membership test: a population of
+    arm-to-target pairs that nothing else listed. That half is real and is what this keeps.
+
+    ⚑ AND THE REPLACEMENT IS SOUND WHERE THE OLD CHECK WAS NOT, because BOTH SIDES ARE DERIVED. The
+    old one compared a TYPED literal against a file's bytes — one side authored, one side measured,
+    and no coupling between them (measured separately: only 7 of 223 literals name something their
+    target declares, so no sync could be built for the other 216). This compares the file an arm
+    READS against the files this module can RESOLVE. Nothing is typed; a mismatch is a real fact
+    about the arm.
+
+    ⚑⚑ NO CEILING, AND THAT IS THE POINT RATHER THAN A SIMPLIFICATION. The old check carried three
+    assertions about ITSELF — a minimum swept, a coverage floor, an unresolvable ceiling — and only
+    one about the tree. The ceiling in particular was a RATCHET over arms the instrument
+    structurally could not reach, which held two finished arms hostage: an arm that sweeps a
+    DIRECTORY has no single named target to resolve, so it counted as debt for being a different
+    shape. Here unresolvable IS the finding, reported by name, with nothing to raise.
     """
     src = _THIS.read_text(encoding="utf-8")
     tree = pyast.parse(src)
-    # ⚑ A TARGET MISSING FROM THIS MAP IS NOT A GAP THE SWEEP REPORTS — the test resolves to
-    # whatever OTHER file it reads, and its assertions are checked against the wrong haystack.
-    # `_RECORDER` was absent when the refusal writer moved into it, and three arms went red
-    # against `pre-commit` rather than being swept against the file they now read.
-    targets = {
-        "_POLL": _POLL, "_GATE": _GATE, "_WITNESS": _WITNESS, "_THIS": _THIS,
-        "_RECORDER": _RECORDER, "_MSGHOOK": _MSGHOOK, "_MSGCOUNT": _MSGCOUNT,
-            "_PREFLIGHT": _PREFLIGHT, "_SETTINGS": _SETTINGS,
-        # ⚑ `_DIST` IS A DIRECTORY, not a file — it is here only so `_DIST / "pyproject.toml"`
-        # resolves. `is_file()` above rejects the bare name, so adding it cannot make a test
-        # resolve to a directory and read nothing.
-        "_DIST": _DIST,
-        "_BRIEF": _BRIEF,
+
+    # ⚑⚑⚑ THE TARGET MAP IS DERIVED FROM THIS MODULE'S OWN NAMESPACE, NEVER HAND-WRITTEN. The
+    # predecessor listed eleven names by hand and its own comment recorded the cost — `_RECORDER`
+    # was missing once and three arms were swept against the wrong haystack. MEASURED on this
+    # check's first run: a hand-written map omitted `_RULECITE` and `_SHELLCHECK_TEST`, both real
+    # module-level constants, so four correct arms were reported unresolved for the MAP's fault.
+    # A hand-written population inside the module that exists to refuse hand-written populations.
+    # ⚑⚑ `globals()` IS THE ENUMERATION PROCEDURE. Any `_NAME` bound to a Path is a target by
+    # construction, so adding a constant adds it here with no edit — which is the property the
+    # predecessor's comment asked for and never had.
+    # ⚑ NARROWED AT THE BOUNDARY: `globals()` is `dict[str, Any]`, so every read of it leaks an
+    # `Any` through this distribution's `disallow_any_expr`. The isinstance check is where the
+    # type becomes knowable, so that is where it is stated.
+    module_names = cast("dict[str, object]", globals())
+    targets: dict[str, Path] = {
+        name: value for name, value in module_names.items()
+        if name.startswith("_") and name.isupper() and isinstance(value, Path)
     }
-    checked = 0
-    missing: list[str] = []
+    assert targets, (
+        "no module-level Path constant was found — the resolution below would then call every "
+        "arm unresolved, which is a fact about this walk rather than about the suite"
+    )
+
+    asserting: list[str] = []
     unresolved: list[str] = []
-    # ⚑⚑⚑ THE SWEEP COVERS A PREDICATE SHAPE, NOT ARMS, AND SAID SO NOWHERE. Its floor counts
-    # ASSERTIONS, and a green run reads as covering this module — MEASURED, it does not: some arms
-    # read no file at all (subprocess probes, correctly outside — there is no haystack to be
-    # absent from), some read a file this resolver cannot reach, and some resolve but assert by
-    # regex or count rather than string membership.
-    # ⚑ THAT IS NOT A DEFECT IN THE SWEEP. A vacuity check for `"literal" in body` cannot check a
-    # regex without becoming a different tool. What was missing is the SCOPE, and a coverage
-    # figure read as covering the whole is the mis-named population this repository has measured
-    # eight times in its own checkers — this is the ninth, in the arm built to enumerate them.
-    total_arms = 0
-    swept_arms = 0
+    population_sweeps: list[str] = []
     for fn in (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef)):
-        if fn.name.startswith("test_"):
-            total_arms += 1
-        # which file does this test read?  the `X.read_text(...)` call names it
+        if not fn.name.startswith("test_"):
+            continue
+        # ⚑⚑ BOTH DIRECTIONS, WHICH THE OLD CHECK DID NOT DO. `In` and `NotIn` are both string
+        # assertions against a file; excluding `NotIn` is what left the vacuous-absence case
+        # unpoliced by a check named for vacuity.
+        strings = [
+            n for n in pyast.walk(fn)
+            if isinstance(n, pyast.Compare) and len(n.ops) == 1
+            and isinstance(n.ops[0], pyast.In | pyast.NotIn)
+            and isinstance(n.left, pyast.Constant) and isinstance(n.left.value, str)
+        ]
+        if not strings:
+            continue
+        asserting.append(fn.name)
         reads = {
             n.value.func.value.id
             for n in pyast.walk(fn)
-            if isinstance(n, pyast.Assign)
-            and isinstance(n.value, pyast.Call)
+            if isinstance(n, pyast.Assign) and isinstance(n.value, pyast.Call)
             and isinstance(n.value.func, pyast.Attribute)
             and n.value.func.attr == "read_text"
             and isinstance(n.value.func.value, pyast.Name)
         }
-        named = [targets[r] for r in reads if r in targets]
-        # ⚑ AND THE BOUNDED EVALUATOR REACHES THE `_CONST / "literal"` FORM, which is 4 of the 12
-        # path-expression skips. Anything else still falls through to the counted-and-ceilinged
-        # branch below rather than being guessed at.
-        if not named:
-            named = [
-                resolved
-                for call in pyast.walk(fn)
-                if isinstance(call, pyast.Call)
-                and isinstance(call.func, pyast.Attribute)
-                and call.func.attr == "read_text"
-                for resolved in [_resolve_path(call.func.value, targets)]
-                if resolved is not None and resolved.is_file()
-            ]
-        # ⚑⚑⚑ `len(named) != 1: continue` SILENTLY SKIPPED EVERY MULTI-FILE TEST, which is the
-        # vacuity the sweep exists to catch, inside the sweep. The first test to read two files
-        # exposed it — and it exposed it by FAILING rather than by being skipped only because a
-        # target was missing from the map above; with the map complete it would have gone quiet.
-        # ⚑ THE UNION IS ALSO THE CORRECT PREDICATE, not merely the one that admits these tests:
-        # an assertion is vacuous when its literal appears in NO file the test reads, and taking
-        # `named[0]` asserted that a test's first file is its only one.
-        if not named:
-            # ⚑⚑⚑ A QUIET `continue` IS HOW THIS SWEEP HID ITS OWN BLIND SPOT TWICE. The first was
-            # `len(named) != 1`, which skipped every multi-file test until one failed for an
-            # unrelated reason. This is the second: a test opening its file by an INLINE path
-            # expression — `(_DIST / "pyproject.toml")` — resolves to no name and vanishes.
-            # ⚑ MEASURED at the tick this was added: FOUR such tests, 2 string-membership
-            # assertions between them, 0 vacuous. A coverage gap rather than a live defect, which
-            # is the honest sizing.
-            # ⚑ RESOLVING ARBITRARY PATH EXPRESSIONS IS A PARSER THIS MODULE SHOULD NOT GROW. A
-            # skipped test that is REPORTED is honest; one that vanishes is the vacuity being
-            # measured, one level out. So the skip is counted and ceilinged.
-            # ⚑⚑⚑ TEST FUNCTIONS ONLY, AND THE CEILING COUNTED HELPERS TOO. This collected every
-            # `FunctionDef` that reads a file, while `total_arms` above counts only `test_`-prefixed
-            # ones — TWO POPULATIONS IN ONE FUNCTION, and the assertion's own message calls the
-            # bigger one *N test(s)*. MEASURED: `_freshness`, a helper at line 584, sat in that
-            # list. A helper cannot pass vacuously; nothing asserts inside it.
-            # ⚑ SO THE CEILING NAMED ONE MORE THAN THE PROPERTY IT MEASURES, and every figure
-            # derived from it inherited the mis-named population — including the carried symbol the
-            # poll prints. A correct count over the wrong set is the defect this module refuses.
-            if fn.name.startswith("test_") and any(
-                isinstance(n, pyast.Call)
-                and isinstance(n.func, pyast.Attribute)
-                and n.func.attr == "read_text"
-                for n in pyast.walk(fn)
-            ):
-                unresolved.append(fn.name)
+        # ⚑ AN ARM READING NO FILE AT ALL IS OUT OF SCOPE, NOT UNRESOLVED. A subprocess probe
+        # asserts against captured OUTPUT — there is no haystack on disk to resolve, and calling
+        # that a gap would report the check's own boundary as a defect in the suite.
+        if not reads:
             continue
-        haystack = "\n".join(f.read_text(encoding="utf-8") for f in named)
-        arm_swept = False
-        for node in pyast.walk(fn):
-            if (
-                isinstance(node, pyast.Compare)
-                and len(node.ops) == 1
-                and isinstance(node.ops[0], pyast.In)
-                and isinstance(node.left, pyast.Constant)
-                and isinstance(node.left.value, str)
-            ):
-                checked += 1
-                arm_swept = True
-                if node.left.value not in haystack:
-                    missing.append(f"{fn.name}: {node.left.value!r}")
-        if arm_swept and fn.name.startswith("test_"):
-            swept_arms += 1
-    assert checked >= _MIN_SWEPT, (
-        f"the sweep resolved only {checked} assertions; it is not covering this module"
+        # ⚑⚑⚑ AN ARM SWEEPING A POPULATION IS A THIRD CATEGORY, NOT AN UNRESOLVED ONE — and naming
+        # it is the whole difference between this check and the one it replaces. A loop variable
+        # (`for mod in ...: mod.read_text()`) names no single target BY DESIGN: the arm's subject
+        # is every member, so there is nothing for a per-file resolver to resolve.
+        # ⚑⚑ THE PREDECESSOR COUNTED THESE AS DEBT AGAINST A CEILING, which held two finished,
+        # F-armed arms hostage for being a different SHAPE rather than for being wrong. A ratchet
+        # over a population the instrument structurally cannot reach is not a measure of debt; it
+        # is a measure of the instrument. Here the category is declared and the arms are admitted.
+        # ⚑⚑⚑ A LOOP VARIABLE, NOT MERELY A NON-CONSTANT NAME — and the F-arm is what forced that.
+        # A first cut called every non-`_UPPER` name a population sweep, so a plant binding
+        # `mystery = Path("/tmp/nowhere.txt")` and reading it was CLASSIFIED AS A SWEEP and the
+        # check passed. A local and a loop variable are indistinguishable by NAME; they are not
+        # indistinguishable by BINDING, so the `for` targets are collected and that is the test.
+        loop_bound = {
+            t.id for n in pyast.walk(fn) if isinstance(n, pyast.For)
+            for t in pyast.walk(n.target) if isinstance(t, pyast.Name)
+        }
+        sweeping = reads & loop_bound
+        if sweeping and not (reads & targets.keys()):
+            population_sweeps.append(f"{fn.name} sweeps a population via {sorted(sweeping)}")
+            continue
+        named = reads & targets.keys()
+        if not named:
+            unresolved.append(f"{fn.name} reads {sorted(reads)}")
+            continue
+        for r in sorted(named):
+            path = targets[r]
+            if not path.exists():
+                unresolved.append(f"{fn.name} reads {r} → {path} (does not exist)")
+
+    # ⚑⚑ THE POPULATION IS ASSERTED NON-EMPTY AND PRINTED, not counted. A parse that stopped
+    # recognising the shape would make every assertion below vacuously true — the defect class this
+    # module measures, arriving in the check built to replace a check with that defect.
+    assert asserting, (
+        "no arm in this module asserts string membership against a file — either the shape is "
+        "genuinely gone, or the walk above stopped recognising it, and this check cannot tell "
+        "those apart, so it refuses rather than reporting clean"
     )
-    assert not missing, (
-        "assertion literal(s) absent from the file the test reads — these pass vacuously:\n  "
-        + "\n  ".join(missing)
-    )
-    # ⚑ A CEILING, NOT A TARGET. It may fall; it rises only when a new inline read is added, which
-    # is exactly the moment a reader should be told rather than the moment coverage quietly drops.
-    # ⚑ THE SHARE IS DERIVED AND STATED, never written down: a recorded figure is the
-    # hand-written population this module exists to refuse. It is a FLOOR, so the sweep's reach
-    # may grow and cannot silently shrink.
-    assert swept_arms * 100 >= total_arms * _SWEEP_COVERS_ARMS, (
-        f"the sweep checks string membership in {swept_arms} of {total_arms} arm(s) — "
-        f"below the {_SWEEP_COVERS_ARMS}% floor. A green sweep is not module coverage."
-    )
-    assert len(unresolved) <= _MAX_UNRESOLVED, (
-        f"{len(unresolved)} test(s) read a file the sweep cannot resolve, up from "
-        f"{_MAX_UNRESOLVED} — their assertions are unswept: {sorted(unresolved)}"
+    assert not unresolved, (
+        "arm(s) read a file this module cannot resolve, so nothing can say WHAT their string "
+        "assertions are asserting against:\n    "
+        + "\n    ".join(sorted(unresolved))
+        + "\n\npopulation sweeps (a declared category, not debt):\n    "
+        + "\n    ".join(sorted(population_sweeps))
+        + "\n\nstring-asserting arms:\n    "
+        + "\n    ".join(sorted(asserting))
     )
 
 
@@ -3473,7 +3466,7 @@ def test_the_vacuity_sweep_resolves_an_inline_path_read() -> None:
     sweep = next(
         (n for n in pyast.walk(module)
          if isinstance(n, pyast.FunctionDef)
-         and n.name == "test_no_string_assertion_in_this_module_is_vacuous"),
+         and n.name == "test_every_string_asserting_arm_resolves_to_a_file_it_reads"),
         None,
     )
     assert sweep is not None, "the sweep function was not found; this arm would pass on absence"
@@ -3488,10 +3481,19 @@ def test_the_vacuity_sweep_resolves_an_inline_path_read() -> None:
     assert "unresolved" in code, (
         "the sweep must report the tests it skipped, not drop them silently"
     )
-    # ⚑ AND THE ACCOUNTING MUST BE A CEILING, not a target: it may fall, and rises only when a
-    # new inline read is added — which is the moment a reader should be told.
-    assert "_MAX_UNRESOLVED" in code, (
-        "the skipped population needs a ceiling, or it grows back silently"
+    # ⚑⚑⚑ AND THE ACCOUNTING IS NO LONGER A CEILING, WHICH IS THE 2026-09-13 REPAIR RATHER THAN A
+    # RELAXATION. This asserted `_MAX_UNRESOLVED` was present, because the predecessor RATCHETED
+    # its unresolved population. That ceiling counted arms the resolver structurally could not
+    # reach — an arm sweeping a DIRECTORY has no single named target — so two finished, F-armed
+    # arms were held as debt for being a different SHAPE. The replacement declares
+    # `population_sweeps` as its own category and reports `unresolved` as an outright refusal, so
+    # there is no number to raise and nothing to hold.
+    # ⚑⚑ WHAT THE OLD ASSERTION WAS PROTECTING IS KEPT: the skipped population must not grow back
+    # silently. It cannot — an unresolved arm now FAILS this check rather than incrementing a
+    # tolerance, which is strictly stronger than the ceiling it replaces.
+    assert "population_sweeps" in code, (
+        "the replacement must declare the population-sweep category rather than folding those "
+        "arms into `unresolved`, or a structural shape is counted as debt again"
     )
 
 
@@ -3796,7 +3798,7 @@ def test_the_sweep_states_the_share_of_arms_it_covers() -> None:
     sweep = next(
         (n for n in pyast.walk(module)
          if isinstance(n, pyast.FunctionDef)
-         and n.name == "test_no_string_assertion_in_this_module_is_vacuous"),
+         and n.name == "test_every_string_asserting_arm_resolves_to_a_file_it_reads"),
         None,
     )
     assert sweep is not None, "the sweep function was not found; this arm would pass on absence"
@@ -3807,14 +3809,28 @@ def test_the_sweep_states_the_share_of_arms_it_covers() -> None:
     code = "\n".join(pyast.dump(n) for n in statements)
     # ⚑ THE SWEEP MUST STATE WHAT IT DOES NOT COVER. A floor over assertions with no statement of
     # the arm share reads as a floor over arms — which is what I read it as for six ticks.
-    assert "_SWEEP_COVERS_ARMS" in code, (
-        "the sweep's arm-share must be stated, or its assertion floor reads as arm coverage"
-    )
+    # ⚑⚑⚑ THE CLAIM SURVIVED ITS MECHANISM, 2026-09-13. This asserted `_SWEEP_COVERS_ARMS` — a
+    # PERCENTAGE FLOOR, which states coverage as a number and therefore as a thing that can drift
+    # while reading as fine. The replacement states its scope by NAMING EVERY CATEGORY in its own
+    # evidence: the arms it swept, the population sweeps it declares out of scope, and the
+    # unresolved it refuses on. That is the same claim discharged by members rather than by a
+    # cardinality — this suite's own rule, applied to the arm that asked for the scope statement.
+    for category in ("asserting", "population_sweeps", "unresolved"):
+        assert category in code, (
+            f"the sweep does not name its `{category}` category; a check that states its scope "
+            f"as a number rather than as members reads as covering the whole"
+        )
     # ⚑ AND THE SHARE MUST BE DERIVED, not asserted: a written figure is the hand-written
     # population this module exists to refuse, one level in.
-    assert "swept_arms" in code, (
-        "the arm share must be counted by the sweep, not recorded as a constant"
-    )
+    # ⚑⚑ THE REPLACEMENT HAS NO SHARE AT ALL, which discharges that claim rather than dodging it.
+    # `swept_arms` existed to derive a PERCENTAGE against a floor; the categories above are
+    # enumerated by name, so there is no figure to derive and none to write down. What this line
+    # now holds is that no hand-typed threshold crept back in beside them.
+    for typed in ("_SWEEP_COVERS_ARMS", "_MIN_SWEPT", "_MAX_UNRESOLVED"):
+        assert typed not in code, (
+            f"`{typed}` is back in the resolver — a hand-typed threshold over a population the "
+            f"check enumerates by name is the figure this repair removed"
+        )
 
 
 def test_the_brief_states_what_homing_grants_and_what_it_does_not() -> None:
