@@ -277,3 +277,61 @@
             integers rather than naming the missing answer.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_payload_the_sweep_emits_is_the_one_with_the_answer}
 }
+
+@misc{fence-core-the-sweep-stops-at-the-first-cap-that-binds,
+  section = {fence},
+  title   = {The sweep stops at the first cap that binds},
+  note    = {The stopping rule is the whole point of a ratchet, and nothing asserted it. A
+            mutation sweep found the loop unexercised: replacing the sweep function's body with a
+            raise changed no test verdict, the only survivor in more than fifty def-sites across
+            two distributions. The arms that existed tested the REPORTER, with hand-built results,
+            so the function that walks the ladder was never called — the same shape as the finding
+            one layer over in the markdown tool, where five modes were registered, documented,
+            gate-checked and never run as programs. A sweep that ran every step would report the
+            tightest cap as binding rather than the first, and those are different answers: the
+            first is the scale of the resource the command needs, the tightest is only the end of
+            the list the caller happened to type. No delegated subtree is needed to check any of
+            this, because the subject is the loop rather than the fence, and injecting the runner
+            is what separates the two questions.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_the_sweep_stops_at_the_first_cap_that_binds}
+}
+
+@misc{fence-core-the-sweep-returns-every-step-not-only-the-verdict,
+  section = {fence},
+  title   = {The sweep returns every step, not only the verdict},
+  note    = {The caps that did not bind are what establish that the binding one is a boundary
+            rather than an isolated failure. The function's own docstring states it — a caller
+            handed only the last result cannot tell that it bound at one cap from that it fails at
+            every cap — and nothing asserted the sequence survived. This matters beyond the
+            library, because the command line publishes that sequence to consumers as the rungs
+            field of its machine-readable payload, and a peer running these fences reconstructed a
+            whole ladder from kernel records precisely because the tool's own account of it was not
+            reaching them.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_the_sweep_returns_every_step_not_only_the_verdict}
+}
+
+@misc{fence-core-a-sweep-that-never-binds-runs-every-step,
+  section = {fence},
+  title   = {A sweep that never binds runs every step},
+  note    = {The control, without which the stopping arm beside it is satisfied by a loop that
+            always stops after one step. It pins that the sweep stops only when something binds,
+            and it is also the honest-negative case the reporter renders as completed within all
+            caps: either the command is frugal, or the mechanism being ratcheted is not the
+            resource that constrains it. A ratchet with no binding cap is a real and reportable
+            outcome rather than a failure to measure, which is why the exit code stays zero.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_a_sweep_that_never_binds_runs_every_step}
+}
+
+@misc{fence-core-the-base-caps-carry-through-every-step,
+  section = {fence},
+  title   = {The base caps carry through every step},
+  note    = {Only the memory cap ratchets; the other caps are the invariant the sweep measures
+            against. A ladder that dropped a swap setting between steps would change what a memory
+            cap MEANS halfway down — a throttle at one rung and a kill boundary at the next — so
+            the binding cap it reported would not be a measurement of one thing. The tool's own
+            refusal text advises callers to set swap to zero to make the cap a kill boundary, and
+            that advice is only sound if the setting survives every rung. The arm asserts a step
+            ran before asserting anything about the steps, because an empty sequence would satisfy
+            a universally-quantified claim over it while measuring nothing.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_the_base_caps_carry_through_every_step}
+}

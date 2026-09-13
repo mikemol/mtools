@@ -9,6 +9,8 @@ meaningful only if something could have. The skip names the missing capability.
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 import pytest
 
 from mikemol.fence import core
@@ -19,6 +21,11 @@ pytestmark = pytest.mark.needs_cgroup
 
 # A payload that allocates far more than the tight cap below, and prints so a silent no-op fails.
 HOG = ["python3", "-c", "x = bytearray(256*1024*1024); print(len(x))"]
+
+# A `--pids` value carried through a ratchet's base caps. ⚑ NAMED rather than written inline
+# twice: the arm sets it and asserts it, and two spellings of one fixture value is the drift this
+# tree keeps measuring in larger objects.
+PIDS_CARRIED = 8
 
 
 def _unfenceable() -> str:
@@ -130,3 +137,127 @@ class TestCapBinds:
         r = core.run_once(HOG)
         assert r.exit_code == 0
         assert r.bound_by == ()
+
+
+class TestRatchetSweep:
+    """The cap ladder itself, which a mutation sweep found unexercised.
+
+    ⚑⚑⚑ MEASURED 2026-09-12: replacing `core.ratchet`'s body with `raise` changed NO test verdict,
+    the only survivor in 50-plus sites across `fence` and `hooks`. The arms that exist test
+    `cli._report_ratchet` — the REPORTER — with hand-built `Result` objects, so the function that
+    actually walks the ladder was never called. That is the same shape as the finding one layer
+    over in `mdstruct`, where five modes were registered, documented, gate-checked and never run.
+
+    ⚑⚑ AND IT IS THE FUNCTION `cassian-observability-6a`'s WHOLE REPORT WAS ABOUT. They
+    reconstructed a descending ladder out of kernel OOM records because this tool's summary never
+    reached their journal; the sweep they were reading is produced here, and nothing asserted it
+    stops where it says it stops.
+
+    ⚑ NO CGROUP IS NEEDED FOR ANY OF THIS. Every contract below is about the LOOP — which steps
+    run, in what order, carrying which base caps — and injecting the runner is what separates that
+    question from the delegated-subtree question `TestObserveOnlyRun` already answers. An arm that
+    needed a real fence would be unrunnable in the sandbox where the suite runs, which is how a
+    contract goes untested for as long as this one did.
+
+    ⚑⚑ SO THE MODULE'S `needs_cgroup` MARKER IS OVERRIDDEN HERE, DELIBERATELY. Inheriting it would
+    attach a requirement that is FALSE of these arms — and a marker is a declaration a reader and a
+    runner both act on, so a false one is the mis-declared-population defect wearing a pytest hat.
+    The sibling classes keep it because they genuinely fence.
+    """
+
+    pytestmark: ClassVar[list[pytest.MarkDecorator]] = []
+
+    @staticmethod
+    def _recording(binds_at: str | None = None) -> tuple[list[Caps], object]:
+        """Return `(seen, runner)` — a fake `run_once` recording the caps it was handed.
+
+        Returns:
+            The list it appends to, and the runner itself. ⚑ The list is returned rather than
+            read back off the function, so an arm asserts against the ACTUAL call sequence
+            instead of a reconstruction of it.
+
+        """
+        seen: list[Caps] = []
+
+        def runner(cmd: tuple[str, ...], caps: Caps) -> core.Result:
+            seen.append(caps)
+            bound = ("MEMORY",) if caps.mem == binds_at else ()
+            return core.Result(cmd=cmd, caps=caps, duration_s=0.0, exit_code=0,
+                               memory_peak_bytes=1, bound_by=bound)
+
+        return seen, runner
+
+    def test_the_sweep_stops_at_the_first_cap_that_binds(
+            self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """⚑⚑⚑ THE STOPPING RULE, which is the whole point of a ratchet.
+
+        A sweep that ran every step would report the TIGHTEST cap as binding rather than the
+        FIRST, and those are different answers: the first is the scale of the resource the command
+        needs, the tightest is only the end of the list the caller happened to type.
+        """
+        seen, runner = self._recording(binds_at="32M")
+        monkeypatch.setattr(core, "run_once", runner)
+        out = core.ratchet(("true",), ["64M", "32M", "16M", "8M"])
+        assert [c.mem for c in seen] == ["64M", "32M"], (
+            f"the sweep did not stop at the binding cap; it ran {[c.mem for c in seen]}"
+        )
+        assert [r.caps.mem for r in out] == ["64M", "32M"], (
+            f"the returned sequence does not match what ran: {[r.caps.mem for r in out]}"
+        )
+        assert out[-1].bound_by, "the last result is not the binding one"
+
+    def test_the_sweep_returns_every_step_not_only_the_verdict(
+            self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """⚑⚑ THE CAPS THAT DID NOT BIND ESTABLISH THAT THE BINDING ONE IS A BOUNDARY.
+
+        The function's own docstring states it: a caller handed only the last result cannot tell
+        *it bound at 32M* from *it fails at every cap*. Nothing asserted the sequence survived
+        until now, and `cli._sweep_payload` publishes it to consumers as `rungs`.
+        """
+        _seen, runner = self._recording(binds_at="16M")
+        monkeypatch.setattr(core, "run_once", runner)
+        out = core.ratchet(("true",), ["64M", "32M", "16M"])
+        assert [r.caps.mem for r in out] == ["64M", "32M", "16M"], (
+            f"the non-binding steps were dropped from the sequence: {[r.caps.mem for r in out]}"
+        )
+        # ⚑ ONE ASSERTION PER STEP, because a composite reports which CONJUNCTION failed and not
+        # which STEP — and the whole subject here is that a particular step is misreported.
+        unbound = [r.caps.mem for r in out if not r.bound_by]
+        assert unbound == ["64M", "32M"], (
+            f"a step that did not bind is reported as binding; unbound steps were {unbound}"
+        )
+
+    def test_a_sweep_that_never_binds_runs_every_step(
+            self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """⚑ THE CONTROL, without which the stopping arm is satisfied by a loop that always stops.
+
+        A sweep breaking after the first step would pass an arm asserting *it stopped*; this pins
+        that it stops only when something BINDS. It is also the honest-negative case the reporter
+        renders as *completed within ALL caps* — a frugal command, or a mechanism that is not the
+        resource the caller ratcheted.
+        """
+        seen, runner = self._recording(binds_at=None)
+        monkeypatch.setattr(core, "run_once", runner)
+        out = core.ratchet(("true",), ["64M", "32M", "16M"])
+        assert [c.mem for c in seen] == ["64M", "32M", "16M"], (
+            f"a sweep with no binding cap did not run every step: {[c.mem for c in seen]}"
+        )
+        assert not any(r.bound_by for r in out), "a step bound when the runner never binds"
+
+    def test_the_base_caps_carry_through_every_step(
+            self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """⚑⚑ ONLY `mem` RATCHETS; THE OTHER CAPS ARE THE INVARIANT the sweep measures against.
+
+        A ladder that dropped `--swap 0` between steps would change what a memory cap MEANS
+        halfway down — a throttle at one rung and a kill boundary at the next — so the binding cap
+        it reported would not be a measurement of one thing. The tool's own advice tells callers to
+        add `--swap 0` to make the cap a kill boundary, which is only sound if it survives.
+        """
+        seen, runner = self._recording(binds_at="16M")
+        monkeypatch.setattr(core, "run_once", runner)
+        core.ratchet(("true",), ["64M", "32M", "16M"], base=Caps(swap="0", pids=8))
+        assert seen, "no step ran — the assertions below would hold over nothing"
+        assert all(c.swap == "0" and c.pids == PIDS_CARRIED for c in seen), (
+            f"the base caps did not survive the ladder: "
+            f"{[(c.mem, c.swap, c.pids) for c in seen]}"
+        )
