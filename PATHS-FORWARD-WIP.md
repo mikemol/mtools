@@ -1690,6 +1690,68 @@ So every cell reports ERRORED for a reason that has nothing to do with its mutat
 distributions the runner was validated on are exactly the two that cannot exercise the defect —
 **a probe validated on the corpora that could not refute it**. `hooks` would fail the same way.
 
+
+#### ⚑⚑⚑ FIVE HYPOTHESES REFUTED, THE REPAIR STILL NOT WRITTEN, AND THE PROBE HAD TO BE FIXED THREE TIMES
+
+**Tick 11 spent on the repair and produced NEGATIVES, not a fix.** Filed because a set of
+eliminated causes is a real result and because the next tick must not re-walk them.
+
+⚑⚑ **WHAT IS NOW ELIMINATED BY MEASUREMENT, each against the mutated tree:**
+
+| candidate | measured |
+|---|---|
+| the temp tree itself | **151 passed** unmutated — the copy is sound |
+| the runner's env (PYTHONPATH + HOME) | mutated control **`1 failed, 73 passed`** — a KILL, correctly |
+| (3) PYTHONPATH + venv site-packages | same KILL — no improvement, nothing to fix |
+| (2) symlink site-packages beside temp/src | same KILL |
+| (1) `pip install -e` the temp tree | same KILL |
+| empty `__init__.py` deletion | **no empty markers exist** in the distribution — a no-op |
+| inherited `PYTHONPATH` from the parent | **unset** — the tick-10 append branch is inert |
+| temp-disk exhaustion | 64 GiB free; each copy is 8.4 MiB and is freed per cell |
+
+**So every named difference between the probe and the runner is eliminated, and the probe
+reproduces a correct KILL where the runner reports `ModuleNotFoundError`.** The mechanism is not
+established. My model of the runner is wrong somewhere I cannot yet name.
+
+⚑⚑⚑ **AND THE PROBE ITSELF WAS WRONG THREE TIMES, EACH CAUGHT BY ITS OWN CONTROL.** This is the
+part worth keeping:
+
+1. **`--collect-only`** — the control COLLECTED cleanly, so all four rows read identically and the
+   probe discriminated nothing. Its own docstring says *the control must fail or this measures an
+   unbroken tree*, and it measured an unbroken tree on the first run.
+2. **No mutation** — the control PASSED 15 of 15, because the runner REWRITES a source through
+   `ast.unparse` before running and the probe did not.
+3. **One module instead of `tests`** — still passed. Naming the directory is what the runner does,
+   and only then did the control finally FAIL.
+
+⚑ **THREE DRAFTS, EACH DIFFERING FROM THE CODE UNDER TEST IN ONE ARGUMENT, AND EACH PASSING
+BECAUSE OF IT.** That is the second-instrument defect four deep in one session — and the only
+reason it was caught each time is that the probe carried an explicit control with a stated
+required outcome. **A probe without a must-fail control cannot tell you it is measuring nothing.**
+
+⚑⚑ **LOAD-DEPENDENCE: TESTED AND REFUTED.** The host is under real pressure (`MemAvailable
+2.05 GiB`, `psi memory avg10=6.18`, zram holding 4.89 GiB in 1.16 GiB), and the probe runs 4 cells
+where the runner runs 64 — so accumulation was the one variable the probe could not hold constant.
+**Measured: the FIRST cell fails, at 0.05s.** Not accumulation, not exhaustion.
+
+⚑⚑⚑ **AND 0.05s IS ITSELF THE SHARPEST REMAINING CLUE, RECORDED RATHER THAN CHASED.** The probe's
+equivalent run takes 2.5–3s and reaches a real KILL. A failure returning in **0.05 seconds has not
+imported anything** — it is too fast for the interpreter to have reached `panflute` at all. The
+error path also changed with the tick-10 rootdir fix, from `../../../github/mtools/mdstruct/
+test_cli_flags.py` to `tests/test_cli_flags.py`, so the config now resolves inside the temp tree
+and the failure moved with it rather than disappearing.
+
+⚑ **WHAT IS STILL NOT EXPLAINED: the probe and the runner now agree on the copy (identical
+`ignore_patterns`), the config path, the environment, the mutation, and the target (`tests`) — and
+one takes 3s to a KILL while the other takes 0.05s to a ModuleNotFoundError.** Something differs
+that I have not named, and naming it is the next tick's first job. The candidate worth testing
+first is whatever makes a 0.05s failure possible: an import that fails before `sys.path` is
+consulted at all.
+
+⚑ **THE RUNNER STAYS UNLANDED.** Five refuted hypotheses do not make a repair, and the rule that
+kept it out of the tree two ticks running is the same one: do not promote a probe with a known
+defect.
+
 ### ⚑⚑⚑ FOUR HYPOTHESES, EACH PROPOSED AND EDITED IN BEFORE BEING TESTED
 
 | # | hypothesis | how it died |
