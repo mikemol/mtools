@@ -1634,6 +1634,72 @@ above stands unchanged (AST rewrite into a temp tree, 45 cells, no caching layer
 paperkit's build layer); what changes is that the thing being promoted now distinguishes three
 outcomes instead of two.
 
+
+#### ⚑⚑⚑ PROMOTION ATTEMPTED 2026-09-13 AND DELIBERATELY NOT LANDED — operator ruled the SHAPE, and the build found three things
+
+**Operator ruling: a gate target, per distribution** — `sh_test`/`py_binary` per distribution so the
+DAG decides when the grid re-runs, unchanged sources meaning a cache hit. That settles the design
+question this section carried; what follows is what building it measured.
+
+⚑⚑ **THE COST IS NOT THE PROBLEM, AND THAT IS NOW MEASURED PER DISTRIBUTION RATHER THAN ASSERTED:**
+
+| distribution | modules | def-sites | per cell |
+|---|---|---|---|
+| ratchet | 4 | 13 | 0.2s |
+| hooks | 10 | 56 | 0.4s |
+| fence | 3 | 25 | 0.5s |
+| mdstruct | 12 | 64 | 1.4s |
+
+**158 def-sites, under four minutes whole-tree.** ⚑ AND THE WIP'S RECORDED FIGURE WAS **136** — stale
+by 22, quoted across at least six ticks. Nothing was wrong when written; the tree grew and nothing
+re-derived it. `-x` means a KILLED cell stops at the first failing test, so only SURVIVORS pay a
+full suite — the opposite of the profile paperkit's caching layer exists for.
+
+⚑ **AND THE RUNNER IS NOT LANDED, DELIBERATELY.** It reports **all 64 of mdstruct's def-sites as
+ERRORED**, which is a whole-distribution failure and therefore a defect in the runner rather than a
+finding about the suite. ⚑⚑ `run()` and `verdict()` classify the same mutant as **KILLED** when
+called directly — traced, with the mutant's `AssertionError` in the output — so the defect is
+somewhere in `main()`'s loop and is NOT yet diagnosed. Landing it would be exactly what the
+preceding section forbids: *do not promote a probe with a known defect.* The work-in-progress is at
+`scratchpad/mutate_runner.wip.py`.
+
+⚑⚑⚑ **MY FIRST DIAGNOSIS OF THAT FAILURE WAS WRONG, AND I REASONED IT RATHER THAN MEASURING IT.**
+I ran `which pandoc`, found `~/bin/pandoc`, concluded the runner's pinned `PATH=/usr/bin:/bin` was
+starving mdstruct's suite, and changed the code. Re-run: **identical 64 ERRORED.** A repair to
+something that was not the defect. ⚑ The reason it was believable is that my standalone
+reproduction *worked* — because it RECONSTRUCTED `run()` by hand instead of calling it, and so
+differed from the real path in ways invisible to me. **A reproduction that is not the code under
+test is a second instrument**, which is this session's most-repeated defect arriving in the probe
+built to diagnose a defect.
+
+### Three real findings the build produced, which stand regardless of the runner
+
+⚑⚑ **1. THE ERRORED CATEGORY FIRED ON ITS FIRST REAL RUN AND FOUND A STRUCTURAL LIMIT.**
+`BaselineState.__init__` and `__str__` in `ratchet/state.py` error rather than kill: `BaselineState`
+subclasses `enum.Enum`, so its members are constructed **when the class body executes** — mutating
+them raises at import and no test ever collects. That is a limit of `body -> raise` at def-site
+granularity, not a gap in the suite, and the two are easy to confuse because both read as *the
+suite did not notice*. Declared as a fourth category, UNREACHABLE, **derived structurally** (a
+method of an `Enum` subclass) rather than by a name list — matching `__init__` by name would
+exclude every ordinary constructor, over-declaring the limit to cover two cases. Measured: 158
+def-sites tree-wide, exactly 2 in this class, both the ones ERRORED named.
+
+⚑⚑⚑ **2. THE FIRST ERRORED PREDICATE WAS TOO BROAD AND ITS OWN CATEGORY CAUGHT IT.** It read *any*
+collection error as ERRORED, on a four-shape measurement where every error was an import failure.
+Run against `fence`, three ordinary functions errored — and the traceback showed the suite calling
+them **at collection time**, through a module-level `_WHY = _unfenceable()` guard that decides
+whether to skip. The suite's own code ran and REACHED the mutant. **So the distinction is not *did
+collection finish* but *was the mutant reached*,** which is the question the grid asks. With that
+corrected, fence goes 22-killed-3-errored → **25 of 25 killed**. ⚑ And the exit code there was
+`rc=2`, a shape the original four-case measurement never produced — a predicate is only as wide as
+the corpus it was measured on.
+
+⚑ **3. THE ACCOUNTING ASSERTION IS WHAT MAKES THE CATEGORIES HONEST.** `attempted` is carried and
+the runner refuses unless `killed + survived + errored + unreachable` equals it exactly. An
+UNREACHABLE site stays in `attempted` rather than being dropped — dropping it would balance the
+books by shrinking the denominator, which is the flattering direction and the one the predecessor
+took with ERRORED.
+
 ### ⟐STRING-SWEEP-IS-A-DETECTOR — measured 2026-09-12 on the operator's question
 
 The operator asked the right question about the string sweep: *a stale literal is something that
