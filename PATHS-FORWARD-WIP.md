@@ -1499,6 +1499,44 @@ on both sides, which no source-side guard can do. It is withheld only because it
 sweep's unresolvable ceiling from 22 to 23, and that ratchet may only DECREASE. It returns when an
 instrument admits it without a raise.
 
+#### ⚑⚑⚑ ⟐DECLARE-THE-PARTIAL IS BUILT AND HELD — operator ruling 2026-09-12, the SECOND hold
+
+Written, F-armed both ways, and withheld at the operator's ruling for the same reason as the
+agreement arm before it: it reads files through a LOOP VARIABLE rather than a module-level target,
+so the older string-membership sweep cannot resolve it and its unresolvable ceiling would go
+22 → 23. **That ratchet may only DECREASE.** Held pending ⟐MUTATION-LAYER, which is the instrument
+that admits both without a raise.
+
+⚑⚑ WHAT IT MEASURED, so the arc inherits measurements rather than a description:
+
+- **12 population-shaped negatives in this tree, all named and all guarded.** Not a count — the
+  arm prints its whole swept population on a green run, which is `paperkit-82`'s second idiom
+  (*the count in the description*): a reader sees the members whether it reds or not, so a sweep
+  that quietly narrowed is visible before it matters.
+- **F-arm A:** a planted `assert not offenders` over an unguarded comprehension REDS, names the
+  planted arm, and prints all 13 beside it.
+- **F-arm B:** emptying the classifier entirely REDS on the vacuity guard.
+- ⚑ **F-arm C EXPOSED A REAL LIMIT AND IS RECORDED RATHER THAN GLOSSED.** Replacing the
+  comprehension types with `pyast.Lambda` left 12 of 13 still admitted through the CALL branch,
+  and the arm PASSED. So the guard catches a classifier that recognises NOTHING and not one that
+  NARROWS: the floor is *the shape is still recognised at all*, never *recognised completely*.
+  The stronger check is a second instrument, not a bigger assertion — the fourth vacuity shape
+  arriving inside the sweep built for the third.
+
+⚑ TWO IDIOMS TAKEN FROM `paperkit-82`, who ran my sweep's earlier shape against their own suites
+and returned 1-in-10 precision against my 1-in-4 — WORSE, which is what made the report useful:
+
+- **a VERDICT is not a POPULATION.** 26 of their 36 candidates were ⟨F⟩ arms — `assert not
+  analyze(cmd)` says *this input must not fire*, and one call's answer cannot be empty. No syntax
+  carries that distinction, so the exclusion list is declared and named rather than inferred.
+- **the guard may sit AFTER the negative.** Two of my four original candidates were guarded by
+  arms immediately below them; a position-sensitive check reported its own blind spot as a finding
+  about the suite.
+
+⚑⚑ APPLYING BOTH, THE SWEEP RETURNS **12 population-shaped, 0 undeclared** — the one real instance
+having been fixed at `01f1450`. The refined sweep is in the scratchpad as `vacuity2.py`; the arm
+itself is reconstructable from this section and the two F-arm results above.
+
 ## What the last stretch established, so a tick does not re-derive it
 
 ⚑⚑⚑ EVERY DEFECT IN THE FENCE EXCHANGE HAD ONE SHAPE: a plausible reading pointing at the
