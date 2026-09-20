@@ -290,6 +290,24 @@ sh_test(
     size = "small",
 )
 
+# ⚑⚑ THE MUTATION GRID AS A GATE TARGET — same shape as //ratchet:mutants, which carries the
+# rationale; //mdstruct:mutants is the F-arm (real deps). fence, like ratchet, passes under a
+# bare interpreter and cannot detect a wrong-interpreter defect.
+sh_test(
+    name = "mutants",
+    srcs = ["//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location //:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
 # ⚑ THE SAME FOUR LINES AS EVERY OTHER DISTRIBUTION — that repetition IS the deliverable. See
 # //:venv.bzl for why this duplicates rules_python's per-target venv deliberately.
 venv_from_hub(

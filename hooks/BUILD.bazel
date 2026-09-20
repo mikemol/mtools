@@ -282,6 +282,23 @@ sh_test(
     size = "small",
 )
 
+# ⚑⚑ THE MUTATION GRID AS A GATE TARGET — same shape as //ratchet:mutants, which carries the
+# rationale; //mdstruct:mutants is the F-arm (real deps).
+sh_test(
+    name = "mutants",
+    srcs = ["//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location //:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
 # ⚑⚑⚑ THE DISTRIBUTION'S `.venv`, AS A BUILD ARTIFACT. One macro call; the same four lines appear
 # in every distribution, which is the "trivially-templatizable" property the direction asked for.
 # ⚑⚑ THE POPULATION IS `all_requirements` — THE HUB'S OWN DERIVED CLOSURE, NOT A LIST KEPT HERE.
