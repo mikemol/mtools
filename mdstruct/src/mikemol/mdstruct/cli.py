@@ -117,88 +117,40 @@ _OPT_ARITY: dict[str, bool] = {
     "--help": False,
 }
 
-# The POSIX end-of-options marker: everything after it is an operand, whatever it starts with.
-_END_OF_OPTS = "--"
 
+def _locate_mode(argv: list[str]) -> int | None:
+    """Return the index in `argv[1:]` of the mode word, or None when there is none.
 
-def _split_args(argv: list[str]) -> tuple[list[str], list[str]]:
-    """Split `argv[1:]` into operands and option tokens, honouring `--`.
-
-    ⚑⚑⚑ THE FILTER THIS REPLACES ATE ANY OPERAND BEGINNING WITH A DASH, AND `--` WITH IT. Measured
-    on the shipped tool: `mdstruct grep -- '-caveat' FILE.md` reported a usage error, because the
-    needle AND the terminator were both discarded as option-shaped and the operands shifted left.
-    For a reader that is a bad result. For a WRITE it is the silent-wrong-target class: a
-    `replace-section HEADING FILE.md` whose heading vanishes leaves a VALID two-operand shape, so
-    the FILE slides into the heading slot and the write lands somewhere nobody named — defeating
-    the ambiguity refusal and `exact=` one layer BELOW them, before `find_section` is reached.
-
-    ⚑⚑ A HEADING BEGINNING WITH PUNCTUATION IS NOT EXOTIC — this repository's own worklist is full
-    of `⟐`-prefixed headings and a changelog's are routinely `-`-prefixed. The existing modes never
-    surfaced it because a PATTERN that looks like a flag is unusual; a HEADING that does is not.
-
-    Args:
-        argv: the full argument vector, `argv[0]` being the program name.
+    ⚑⚑⚑ THE MODE IS FOUND BEFORE ANY PARSER RUNS, because the parser is PER-MODE: which flags
+    exist depends on which word comes first. The retired `_split_args` found it as the first
+    operand; this finds it the same way — the first token that is not option-shaped — so
+    `mdstruct -i grep …` still dispatches `grep`, exactly as before the argparse switch.
 
     Returns:
-        `(operands, options)`. Everything after a bare `--` is an operand verbatim, and the
-        terminator itself is consumed rather than returned in either list.
+        the index into `argv[1:]`, or None.
 
     """
-    operands: list[str] = []
-    options: list[str] = []
+    return next((i for i, tok in enumerate(argv[1:]) if not tok.startswith("-")), None)
+
+
+def _mode_operands(argv: list[str]) -> list[str]:
+    """Return the operands `main` parsed for this invocation, without the mode word.
+
+    ⚑ FOR A MODE THAT TAKES A PATH POPULATION (`verify`), which needs every operand and not just
+    the first two `main` hands it. It re-runs the SAME parse `main` ran, from the same tables, so
+    there is one split and not two spellings of one. A refused parse cannot reach here — `main`
+    has already refused it — so an empty list means "no operands", never "parse failed".
+
+    Returns:
+        every operand after the mode, in order, with values of value-taking flags consumed.
+
+    """
+    at = _locate_mode(argv)
+    if at is None:
+        return []
     rest = argv[1:]
-    if _END_OF_OPTS in rest:
-        cut = rest.index(_END_OF_OPTS)
-        head, tail = rest[:cut], rest[cut + 1:]
-    else:
-        head, tail = rest, []
-    # ⚑⚑⚑ A VALUE-TAKING FLAG'S VALUE IS NOT AN OPERAND, AND FOR ONE ARGUMENT ORDER THAT WAS A
-    # LIVE DEFECT. Before this, `--width 80` put `80` in the operands and every mode read only
-    # the operands it needed — harmless with the flag AFTER the file, and MEASURED on the shipped
-    # tool with it BEFORE: `mdstruct lint --width 80 FILE.md` → `no such file: 80`. Found by the
-    # argparse parity arm (tests/test_cli_argparse_parity.py), which is what a second parser over
-    # the same table is for. `_OPT_ARITY` says which flags consume the next token; `--name=value`
-    # carries its value inside the token and consumes nothing.
-    skip = False
-    for arg in head:
-        if skip:
-            skip = False
-            continue
-        if arg.startswith("-"):
-            options.append(arg)
-            skip = _OPT_ARITY.get(arg, False)
-        else:
-            operands.append(arg)
-    operands.extend(tail)
-    return operands, options
-
-
-def _unknown_opts(mode: str, options: list[str]) -> list[str]:
-    """Return the option tokens `mode` does not declare, in the order given.
-
-    ⚑⚑⚑ A FILTER CANNOT REFUSE, WHICH IS THE OTHER HALF OF THE SAME DEFECT. Before this, every
-    dash token was discarded unread, so `mdstruct spans FILE.md --nonsense-flag` ran CLEAN and
-    reported success — a flag that does nothing is indistinguishable from a flag that worked.
-    `substrate-9c` measured the identical shape in their own writer the same day and named the
-    root exactly: *the filter is the only thing reading dash tokens, and a filter cannot refuse.*
-
-    ⚑⚑ A VALUE IS NOT AN OPTION. `--width 80`'s `80` is consumed by `_split_args` (it used to
-    land in the operands — see the note there), so only dash-leading tokens reach here; an
-    option's value is recovered by `_flag` as before.
-
-    Args:
-        mode: the dispatched mode name, which decides the declared set.
-        options: the dash-leading tokens from `_split_args`.
-
-    Returns:
-        Every token not declared by this mode or globally, order preserved so the refusal names
-        them as the caller typed them.
-
-    """
-    allowed = _MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS
-    # ⚑ `--name=value` BINDS TOO, matching `_flag`'s own contract. Checking the raw token would
-    # refuse a spelling the tool accepts, which is a worse failure than the one being fixed.
-    return [o for o in options if o.split("=", 1)[0] not in allowed]
+    operands, refusal = _parse_mode_args(rest[at], rest[:at] + rest[at + 1:])
+    return [] if refusal is not None else operands
 
 
 def _flag(argv: list[str], name: str) -> str | None:
@@ -220,21 +172,23 @@ def _flag(argv: list[str], name: str) -> str | None:
 
 
 def argparse_parser(mode: str) -> argparse.ArgumentParser:
-    """Build the `argparse` parser for one mode from the same three tables the old parser reads.
+    """Build the `argparse` parser for one mode from `_MODE_OPTS`, `_GLOBAL_OPTS` and `_OPT_ARITY`.
 
-    ⚑⚑⚑ NO CALLER YET — OPERATOR RULING 2026-09-20 (W9): migrate to argparse, PARITY FIRST. Public
-    because it is the parser `main()` will use and the parity arm reaches it as a caller would. This
-    function exists beside `_split_args`/`_unknown_opts`/`_flag` so `tests/test_cli_argparse_
-    parity.py` can hand both parsers the same argv and refuse any disagreement about what is
-    accepted, what is refused, and what the operands are. `main()` switches only when that arm is
-    green; the old three are deleted only then. Two parsers reading one table is the second
-    instrument this repository prefers over a floor: they can disagree, and a floor cannot.
+    ⚑⚑⚑ OPERATOR RULING 2026-09-20 (W9): migrate to argparse, PARITY FIRST. This parser was built
+    beside the hand-rolled `_split_args`/`_unknown_opts` with no caller, and the parity arm in
+    `tests/test_cli_flags.py` handed both the same argv on fourteen shapes and refused any
+    disagreement about what is
+    accepted, what is refused, and which token lands in the file slot. Writing that arm found a
+    live defect in the OLD parser (a value flag's value leaked into the operands). `main()` then
+    switched here and the old two were deleted; the parity arm remains, now holding `main()`
+    against this parser directly. Public because it is what `main()` uses and the arm reaches it as
+    a caller would.
 
     ⚑ MODES STAY POSITIONAL WORDS (`mdstruct spans FILE`), not subparsers: the operator ruled on
     the surface, and `add_subparsers` would change the usage text and the unknown-mode refusal.
-    The mode is dispatched by `main()` before this parser sees the rest, exactly as today.
+    The mode is located by `main()` before this parser sees the rest.
 
-    ⚑ `allow_abbrev=False`, because the old parser refuses `--wid` and argparse would otherwise
+    ⚑ `allow_abbrev=False`, because the old parser refused `--wid` and argparse would otherwise
     accept it as `--width` — an acceptance the parity arm would (correctly) call a divergence.
 
     Args:
@@ -245,7 +199,11 @@ def argparse_parser(mode: str) -> argparse.ArgumentParser:
         everything else, and collecting operands (after an optional `--`) as `operands`.
 
     """
-    parser = argparse.ArgumentParser(prog=f"mdstruct {mode}", add_help=False, allow_abbrev=False)
+    # ⚑ `exit_on_error=False` so a parse failure is an exception `main()` renders in this tool's
+    # own voice, never a `SystemExit` from inside a library call.
+    parser = argparse.ArgumentParser(
+        prog=f"mdstruct {mode}", add_help=False, allow_abbrev=False, exit_on_error=False,
+    )
     for opt in sorted(_MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS):
         if _OPT_ARITY[opt]:
             parser.add_argument(opt, dest=opt.lstrip("-").replace("-", "_"))
@@ -811,13 +769,15 @@ def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     # POPULATION, so the eaten-operand defect lands here as a silently SHORTER corpus: a file whose
     # name begins with a dash would drop out and `verify` would report clean over the files it
     # happened to keep. A second spelling of the split would be a second thing to drift.
-    # ⚑⚑⚑ THE INDEXING IS THE ORIGINAL'S, DELIBERATELY UNCHANGED. `_split_args` returns operands
-    # from `argv[1:]`, exactly what the old filter produced, so `[2:]` below still means *the paths
-    # after the first*. A first cut here added a `[1:]` and silently SKIPPED ONE PATH — the
-    # duplicate-read defect this comment block was already about, inverted, introduced by the
-    # repair for a different defect in the same three lines.
-    positional, _opts = _split_args(argv)
-    paths = [path, *(Path(p) for p in positional[2:])]
+    # ⚑⚑⚑ THE OPERANDS COME FROM THE SAME PARSE `main` RAN, through `_mode_operands`, which
+    # returns them WITHOUT the mode word — so the whole list IS the path population, and `path`
+    # (already `operands[0]`) is not added a second time. The previous cut indexed `[2:]` over a
+    # list that still carried the mode; an earlier one added `[1:]` and silently SKIPPED ONE PATH.
+    # Both defects were off-by-one over a list whose first element meant something different from
+    # the rest; a list of only paths has no such element.
+    paths = [Path(p) for p in _mode_operands(argv)]
+    if not paths:
+        paths = [path]
     worst = 0
     for candidate in paths:
         if not candidate.exists():
@@ -956,6 +916,56 @@ _MODES: dict[str, _Mode] = {
 }
 
 
+def _parse_mode_args(mode: str, rest: list[str]) -> tuple[list[str], str | None]:
+    """Parse one mode's arguments with argparse; return its operands or the refusal to print.
+
+    ⚑⚑⚑ ARGPARSE PARSES THE REST — operator ruling 2026-09-20 (W9), step 2 of the migration.
+    `parse_known_args` so an UNDECLARED flag comes back as an extra rather than as argparse's own
+    error text, and the refusal stays word-for-word what it was: it names the mode, the tokens as
+    the caller typed them, and the declared set. `tests/test_cli_flags.py`'s parity arm holds
+    `main()` against `argparse_parser` directly on every shape.
+
+    ⚑ A VALUE FLAG WITH NO VALUE (`--width` last) is the one refusal argparse makes that the old
+    parser did not — `_flag` returned None and the mode carried on. That was a silent
+    fall-through; naming it is the better behaviour, and it is not a parity shape because the two
+    parsers are MEANT to differ there.
+
+    ⚑⚑ THE UNKNOWN-FLAG REFUSAL IS DERIVED FROM `_MODE_OPTS`, so a mode gaining a flag gains its
+    acceptance in one place. It fires AFTER the mode is known, because the declared set is
+    per-mode — an earlier check could only compare against a global union, which would accept
+    `--width` on `spans` and be no refusal at all for the case that matters.
+
+    Args:
+        mode: the dispatched mode, already known to exist.
+        rest: every argv token except the program name and the mode word.
+
+    Returns:
+        `(operands, None)` on success, or `([], text)` where `text` is the complete refusal for
+        stderr. One of the two is always empty.
+
+    """
+    parser = argparse_parser(mode)
+    try:
+        ns, unknown = parser.parse_known_args(rest)
+    except argparse.ArgumentError as exc:
+        return [], f"mdstruct: {mode}: {exc}\n"
+    if unknown:
+        declared = sorted(_MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS)
+        return [], (
+            f"mdstruct: {mode} does not take {', '.join(unknown)}\n"
+            f"    it takes {', '.join(declared) if declared else 'no modifiers'}.\n"
+            f"    A flag this mode does not read would be SILENTLY IGNORED, and a result\n"
+            f"    that ignored your flag is indistinguishable from one that honoured it.\n"
+            f"    to pass a literal operand beginning with '-', put it after '--'.\n"
+        )
+    # ⚑ NARROWED AT THE EDGE: `Namespace` attributes are `Any` and this package's mypy refuses
+    # an `Any` expression, so the one untyped value argparse hands back is checked here once.
+    raw_operands: object = getattr(ns, "operands", None)
+    if not isinstance(raw_operands, list):
+        return [], "mdstruct: internal: argparse returned no operand list\n"
+    return [str(o) for o in raw_operands], None
+
+
 def main(argv: list[str] | None = None) -> int:
     """Dispatch one mode.
 
@@ -986,42 +996,38 @@ def main(argv: list[str] | None = None) -> int:
     """
     if argv is None:
         argv = sys.argv
-    args, options = _split_args(argv)
-    if len(args) < _MIN_ARGS:
+    rest = argv[1:]
+    mode_at = _locate_mode(argv)
+    if mode_at is None:
         sys.stderr.write(__doc__ or "usage: mdstruct <mode> ...\n")
         return 2
-
-    mode = args[0]
+    mode = rest[mode_at]
     run = _MODES.get(mode)
     if run is None:
         sys.stderr.write(f"mdstruct: unknown mode {mode!r} — "
                          f"known modes are {', '.join(sorted(_MODES))}\n")
         return 2
 
-    # ⚑⚑ THE REFUSAL IS DERIVED FROM `_MODE_OPTS`, so a mode gaining a flag gains its acceptance
-    # in one place. It fires AFTER the mode is known, because the declared set is per-mode — an
-    # earlier check could only compare against a global union, which would accept `--width` on
-    # `spans` and be no refusal at all for the case that matters.
-    unknown = _unknown_opts(mode, options)
-    if unknown:
-        declared = sorted(_MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS)
-        sys.stderr.write(
-            f"mdstruct: {mode} does not take {', '.join(unknown)}\n"
-            f"    it takes {', '.join(declared) if declared else 'no modifiers'}.\n"
-            f"    A flag this mode does not read would be SILENTLY IGNORED, and a result\n"
-            f"    that ignored your flag is indistinguishable from one that honoured it.\n"
-            f"    to pass a literal operand beginning with '-', put it after '--'.\n")
+    operands, refusal = _parse_mode_args(mode, rest[:mode_at] + rest[mode_at + 1:])
+    if refusal is not None:
+        sys.stderr.write(refusal)
         return 2
-
-    if mode in _OPERAND_FIRST:
-        if len(args) < _MIN_ARGS + 1:
-            # ⚑⚑ THE ARITY REFUSAL IS WHAT CATCHES A VANISHED OPERAND, and for a WRITE that is the
-            # difference between a usage error and a rewrite of the wrong section. Naming the mode
-            # rather than hardcoding `grep` is what extends that protection to the writers.
+    args = [mode, *operands]
+    # ⚑⚑ THE ARITY REFUSAL IS WHAT CATCHES A VANISHED OPERAND, and for a WRITE that is the
+    # difference between a usage error and a rewrite of the wrong section. Naming the mode rather
+    # than hardcoding `grep` is what extends that protection to the writers. One rule, two
+    # messages: a mode short of its file gets the whole usage; an operand-first mode short of
+    # its needle gets its own line.
+    need = _MIN_ARGS + (1 if mode in _OPERAND_FIRST else 0)
+    if len(args) < need:
+        if len(args) < _MIN_ARGS:
+            sys.stderr.write(__doc__ or "usage: mdstruct <mode> ...\n")
+        else:
             sys.stderr.write(
                 f"usage: mdstruct {mode} "
                 f"{'PATTERN' if mode == _PATTERN_MODE else 'HEADING'} FILE.md ...\n")
-            return 2
+        return 2
+    if mode in _OPERAND_FIRST:
         pattern, path = args[1], Path(args[2])
     else:
         pattern, path = "", Path(args[1])

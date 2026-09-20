@@ -22,6 +22,7 @@ to notice one it did not.
 
 from __future__ import annotations
 
+import argparse
 import ast
 import contextlib
 import io
@@ -755,10 +756,12 @@ def _new_parser(mode: str, rest: list[str]) -> tuple[bool, str | None]:
 
     """
     parser = _cli_module.argparse_parser(mode)
+    # ⚑ `exit_on_error=False` makes a refusal an `ArgumentError`, not a `SystemExit` — the
+    # library never exits the process from inside this tool. Catching only the exception the
+    # parser is built to raise is what keeps an unexpected exit visible as a failure here.
     try:
-        with contextlib.redirect_stderr(io.StringIO()):
-            ns = parser.parse_args(rest)
-    except SystemExit:
+        ns = parser.parse_args(rest)
+    except argparse.ArgumentError:
         return False, None
     # ⚑ NARROWED AT THE EDGE: `Namespace` attributes are `Any`, and this suite's mypy refuses an
     # `Any` expression; asserting the shape here is the one place the untyped value is met.
