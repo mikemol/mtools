@@ -23,6 +23,8 @@ to notice one it did not.
 from __future__ import annotations
 
 import ast
+import contextlib
+import io
 import re
 import subprocess
 import sys
@@ -602,3 +604,207 @@ def test_a_registered_mode_answers_when_run_as_a_program(doc: Path, mode: str) -
         f"`{mode}` printed no denominator naming the document it read; this tool's rule is that "
         f"every mode prints one. stdout was {result.stdout!r}"
     )
+
+
+# ⚑⚑⚑ ARGPARSE PARITY — OPERATOR RULING 2026-09-20 (W9): migrate to argparse, parity FIRST.
+# `cli.argparse_parser(mode)` exists beside the hand-rolled parser with no caller. The three arms
+# below are why it may replace it: the arity table it is built from must match how the module
+# actually reads each flag, and both parsers must accept, refuse and slot operands identically.
+# ⚑ Reusing this module's AST readers rather than writing a second set: `_dict_literal` already
+# reads `_MODE_OPTS` from source, and two readers of one table would be the re-derivation the
+# repository's census discipline exists to catch.
+
+_VALUE = "value"
+_SWITCH = "switch"
+
+
+def _is_flag_read(node: ast.AST) -> str | None:
+    """Return the flag a `_flag(argv, "--x")` call reads, or None.
+
+    Returns:
+        the flag literal, or None when `node` is not that call shape.
+
+    """
+    if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+        return None
+    if node.func.id != "_flag" or len(node.args) != _MIN_FLAG_ARGS:
+        return None
+    lit = node.args[1]
+    return lit.value if isinstance(lit, ast.Constant) and isinstance(lit.value, str) else None
+
+
+def _is_switch_read(node: ast.AST) -> str | None:
+    """Return the flag a `"--x" in argv` test reads, or None.
+
+    Returns:
+        the flag literal, or None when `node` is not that comparison shape.
+
+    """
+    if not isinstance(node, ast.Compare) or len(node.ops) != 1:
+        return None
+    if not isinstance(node.ops[0], ast.In) or not isinstance(node.left, ast.Constant):
+        return None
+    rhs = node.comparators[0]
+    if not isinstance(rhs, ast.Name) or rhs.id != "argv":
+        return None
+    lit = node.left.value
+    return lit if isinstance(lit, str) and lit.startswith("-") else None
+
+
+_MIN_FLAG_ARGS = 2
+
+
+def _arity_from_call_sites(tree: ast.Module) -> dict[str, str]:
+    """Derive each flag's arity from how `cli.py` reads it.
+
+    Returns:
+        flag → `_VALUE` (read by `_flag`) or `_SWITCH` (read by `in argv`). A flag read both
+        ways is a defect in the module and is asserted against here rather than resolved.
+
+    """
+    found: dict[str, set[str]] = {}
+    for node in ast.walk(tree):
+        if (flag := _is_flag_read(node)) is not None:
+            found.setdefault(flag, set()).add(_VALUE)
+        if (flag := _is_switch_read(node)) is not None:
+            found.setdefault(flag, set()).add(_SWITCH)
+    # ⚑ POSITIVE CONTROL IN THE SAME FUNCTION AS THE NEGATIVE: the hooks vacuity floor refused
+    # this helper for asserting `not both` with nothing truthy beside it — a walk that matched
+    # no read at all would have passed. It was right.
+    assert found, "the walk found no flag read in cli.py — nothing below is measured"
+    both = sorted(k for k, v in found.items() if len(v) > 1)
+    assert not both, f"read BOTH as value and as switch in cli.py: {both}"
+    return {k: next(iter(v)) for k, v in found.items()}
+
+
+def _stated_arity(tree: ast.Module, consts: dict[str, str]) -> dict[str, str]:
+    """Read `_OPT_ARITY` from source.
+
+    Returns:
+        flag → `_VALUE`/`_SWITCH`; empty when the table is absent, which the caller REFUSES.
+
+    """
+    out: dict[str, str] = {}
+    for flag, node in _dict_literal(tree, "_OPT_ARITY", consts).items():
+        assert isinstance(node, ast.Constant), f"_OPT_ARITY[{flag!r}] is not a literal"
+        assert isinstance(node.value, bool), f"_OPT_ARITY[{flag!r}] is not a bool"
+        out[flag] = _VALUE if node.value else _SWITCH
+    return out
+
+
+def test_every_flag_has_a_stated_arity_that_matches_how_it_is_read() -> None:
+    """⚑⚑ `_OPT_ARITY` IS A RESTATED POPULATION, GATED IN BOTH DIRECTIONS AGAINST THE SOURCE.
+
+    Membership: every flag in `_MODE_OPTS | _GLOBAL_OPTS` has a stated arity and nothing else
+    does. Value: the stated arity equals the call-site reading. `-h`/`--help` are declared and
+    never read by name (the usage arm is arity-based), so they are exempt from the read check
+    and from nothing else.
+
+    ⚑ POSITIVE CONTROLS: the derivation must find at least one flag of each arity, or a walker
+    matching nothing would pass by vacuity.
+    """
+    tree = ast.parse(_CLI_SOURCE.read_text(encoding="utf-8"))
+    consts = _string_constants(tree)
+    declared: set[str] = set()
+    for node in _dict_literal(tree, "_MODE_OPTS", consts).values():
+        declared |= {lit for lit in _string_literals(node) if lit.startswith("-")}
+    assert declared, "no _MODE_OPTS flags read from source — the reader failed, not the module"
+    globals_ = {"-h", "--help"}
+    stated = _stated_arity(tree, consts)
+    assert stated, "no _OPT_ARITY read from source — the reader failed, not the module"
+    assert (declared | globals_) - set(stated) == set(), (
+        f"declared but arity unstated: {sorted((declared | globals_) - set(stated))}"
+    )
+    assert set(stated) - (declared | globals_) == set(), (
+        f"arity stated for undeclared: {sorted(set(stated) - (declared | globals_))}"
+    )
+    derived = _arity_from_call_sites(tree)
+    assert _VALUE in derived.values(), "walker found no `_flag(argv, …)` read — control failed"
+    assert _SWITCH in derived.values(), "walker found no `X in argv` read — control failed"
+    disagreements = {
+        f: (stated[f], r) for f, r in derived.items() if f in stated and stated[f] != r
+    }
+    assert not disagreements, f"_OPT_ARITY (stated, read): {disagreements}"
+    unread = sorted(set(stated) - set(derived) - globals_)
+    assert not unread, f"stated in _OPT_ARITY but never read by cli.py: {unread}"
+
+
+def _old_parser(mode: str, rest: list[str]) -> tuple[bool, str | None]:
+    """Take the hand-rolled parser's verdict through `main()`, its only public surface.
+
+    Returns:
+        `(accepted, path)`: accepted is False on a usage or unknown-flag refusal; path is the
+        token `main` tried to open (it names it in `no such file: X`), or None when refused.
+
+    """
+    err = io.StringIO()
+    with contextlib.redirect_stderr(err):
+        rc = _cli_module.main(["mdstruct", mode, *rest])
+    text = err.getvalue()
+    if rc == 0 or "no such file: " not in text:
+        return False, None
+    return True, text.split("no such file: ", 1)[1].strip()
+
+
+def _new_parser(mode: str, rest: list[str]) -> tuple[bool, str | None]:
+    """Take the argparse parser's verdict, applying the same slotting rule `main` does.
+
+    Returns:
+        `(accepted, path)`: the operand `main` would open — the second for operand-first modes,
+        the first otherwise — or None when argparse refuses or the arity is short.
+
+    """
+    parser = _cli_module.argparse_parser(mode)
+    try:
+        with contextlib.redirect_stderr(io.StringIO()):
+            ns = parser.parse_args(rest)
+    except SystemExit:
+        return False, None
+    # ⚑ NARROWED AT THE EDGE: `Namespace` attributes are `Any`, and this suite's mypy refuses an
+    # `Any` expression; asserting the shape here is the one place the untyped value is met.
+    raw: object = getattr(ns, "operands", None)
+    assert isinstance(raw, list), f"argparse operands are {type(raw).__name__}, not a list"
+    ops: list[str] = [str(o) for o in raw]
+    slot = 1 if mode in {"grep", "replace-section", "append-section"} else 0
+    if len(ops) <= slot:
+        return False, None
+    return True, ops[slot]
+
+
+# ⚑ SHAPES, NOT MODES. Each row is (mode, argv-after-mode, note); `NOFILE` stands in for the
+# path so `main` reports it back. The set is the surface W11 measured plus both `_flag`
+# spellings plus the refusals `_unknown_opts` makes plus the value-before-file order that was a
+# LIVE defect until the arity table existed (`lint --width 80 FILE` → `no such file: 80`).
+_NOFILE = "/nonexistent/parity.md"
+_SHAPES: list[tuple[str, list[str], str]] = [
+    ("spans", [_NOFILE], "one operand"),
+    ("grep", ["needle", _NOFILE], "two operands"),
+    ("grep", ["-i", "needle", _NOFILE], "switch before operands"),
+    ("grep", ["needle", _NOFILE, "-E"], "switch after operands"),
+    ("grep", ["--", "-needle", _NOFILE], "dash-leading operand after --"),
+    ("lint", [_NOFILE, "--width", "80"], "value flag after file, spaced"),
+    ("lint", ["--width", "80", _NOFILE], "value flag BEFORE file, spaced"),
+    ("lint", [_NOFILE, "--width=80"], "value flag, equals"),
+    ("rows", [_NOFILE, "--col", "1", "--starts", "filed"], "two value flags"),
+    ("replace-section", ["H", _NOFILE, "--body-file", "b.md", "--apply"], "value + switch"),
+    ("replace-section", [_NOFILE, "--body-file", "b.md"], "dropped heading"),
+    ("spans", [_NOFILE, "--width", "80"], "flag this mode does not take"),
+    ("grep", ["needle", _NOFILE, "--nonsense"], "undeclared flag"),
+    ("lint", [_NOFILE, "--wid", "80"], "abbreviation"),
+]
+
+
+@pytest.mark.parametrize(("mode", "rest", "note"), _SHAPES, ids=[s[2] for s in _SHAPES])
+def test_both_parsers_agree_on_every_shape(mode: str, rest: list[str], note: str) -> None:
+    """Accept/refuse AND the file slot must agree for every shape.
+
+    ⚑⚑ THE ARM THAT FOUND A LIVE DEFECT while being written: the hand-rolled parser put a value
+    flag's VALUE into the operands, harmless with the flag after the file and wrong with it before
+    — `lint --width 80 FILE` opened `80`. `_split_args` now consumes values per `_OPT_ARITY`.
+    """
+    old_ok, old_path = _old_parser(mode, rest)
+    new_ok, new_path = _new_parser(mode, rest)
+    assert old_ok == new_ok, (
+        f"{note}: old={'accept' if old_ok else 'refuse'} new={'accept' if new_ok else 'refuse'}"
+    )
+    assert old_path == new_path, f"{note}: file slot differs — old={old_path!r} new={new_path!r}"

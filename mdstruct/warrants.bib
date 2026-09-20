@@ -967,6 +967,39 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_every_mode_declares_exactly_the_flags_its_code_reads}
 }
 
+@misc{mdstruct-cli-every-flag-has-a-stated-arity-that-matches-how-it-is-read,
+  section = {cli-flags},
+  title   = {Every flag has a stated arity that matches how it is read},
+  note    = {The mode-option table never said whether a flag takes a value; the hand-rolled parser
+            read that from the call site — a flag read by the value helper is value-taking, a flag
+            read by membership is a switch. argparse needs it stated, so an arity table states it
+            once, and that table is a restated population, the defect this repository measures
+            most. This arm gates it in both directions against the source: membership between the
+            declared options and the table, and value agreement between the table and a walk over
+            the module's syntax tree that finds every value read and every switch read. Positive
+            controls require the walk to find at least one of each. Planted mis-statement of one
+            flag: this arm and the parity arm both red, naming the flag.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_every_flag_has_a_stated_arity_that_matches_how_it_is_read}
+}
+
+@misc{mdstruct-cli-both-parsers-agree-on-every-shape,
+  section = {cli-flags},
+  title   = {Both parsers agree on every shape},
+  note    = {Operator ruling 2026-09-20: migrate the command to argparse, parity first. The argparse
+            parser exists beside the hand-rolled one with no caller, and this arm is the reason it
+            may replace it: for every shape — one and two operands, switches before and after,
+            a dash-leading operand after the terminator, value flags in both spellings and in
+            both orders, a dropped heading, a flag the mode does not own, an undeclared flag, an
+            abbreviation — both parsers must accept or refuse alike and put the same token in the
+            file slot. The hand-rolled verdict is taken through main, its only public surface,
+            which names the path it tried to open. Writing this arm found a live defect: the old
+            parser put a value flag's value into the operands, harmless with the flag after the
+            file and wrong before it — lint --width 80 FILE opened a file named 80. Repaired in
+            the old parser by consuming values per the arity table; the arm stays as the second
+            instrument until the old parser is deleted.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_both_parsers_agree_on_every_shape}
+}
+
 @misc{mdstruct-sections-a-dry-run-is-the-default-and-writes-nothing,
   section = {sections},
   title   = {A dry run is the default and writes nothing},
@@ -1008,18 +1041,29 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_an_ambiguous_heading_refuses_at_the_write_path}
 }
 
+@misc{mdstruct-sections-a-dropped-heading-is-an-arity-refusal-now,
+  section = {sections},
+  title   = {A dropped heading is an arity refusal now},
+  note    = {What a dropped heading looks like — and the arity check does see it now. Omitting the
+            heading from a write left two valid positionals, so the file slid into the heading slot
+            and the body file became the target. That second positional was the body file itself:
+            the hand-rolled parser put a value flag's value into the operands. Repaired 2026-09-20
+            when the argparse parity arm found it (W9): the parser consumes a value-taking flag's
+            value per the arity table, so the same argv has one positional and the arity check
+            refuses it as a usage error before any file is opened.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_dropped_heading_is_an_arity_refusal_now}
+}
+
 @misc{mdstruct-sections-the-target-and-the-body-file-may-not-be-the-same-document,
   section = {sections},
   title   = {The target and the body file may not be the same document},
-  note    = {What a dropped heading looks like, and the arity check cannot see it. Measured while
-            building the write modes: omitting the heading leaves two valid positionals, so the
-            file slides into the heading slot and the body file's path becomes the target document
-            — the tool was one matching heading away from rewriting the body file instead of the
-            document it was pointed at. The arity check is blind to this because the shape is
-            legal. The finder refused it only by accident of the body file having no headings, and
-            a refusal that depends on the contents of the wrong file is not a guard, so the check
-            is about identity and holds whatever either file contains. The refusal names the cause
-            rather than reporting a heading miss on a file the caller never meant to read.},
+  note    = {The identity guard, reached honestly — with a heading given. Before the arity repair
+            this case was reached only through the leaked-value path. It still matters: a caller
+            who names a heading and passes the document as its own body file is one matching
+            heading away from rewriting the body file. The finder refusing by accident of the body
+            file having no headings is not a guard; this one is about identity and holds whatever
+            either file contains. The refusal names the cause rather than reporting a heading miss
+            on a file the caller never meant to read.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_the_target_and_the_body_file_may_not_be_the_same_document}
 }
 

@@ -37,6 +37,7 @@ does not contain the thing.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from collections.abc import Callable
 from pathlib import Path
@@ -91,6 +92,31 @@ _MODE_OPTS: dict[str, frozenset[str]] = {
 # two. Kept separate from `_MODE_OPTS` so the per-mode sets stay a statement about that mode.
 _GLOBAL_OPTS = frozenset({"-h", "--help"})
 
+# ⚑⚑⚑ ARITY, WHICH `_MODE_OPTS` NEVER DECLARED. The hand-rolled parser reads it from the CALL
+# SITE: `_flag(argv, "--width")` makes `--width` value-taking, `"--exact" in argv` makes `--exact`
+# a switch. That works and it is invisible — a flag's arity lives wherever its mode happens to
+# read it. `argparse` needs it stated, so it is stated here ONCE, and `tests/test_cli_flags.py`
+# derives the same table from the call sites by walking this module's AST and refuses
+# any disagreement: a flag read by `_flag` that is listed here as a switch, a flag read by `in`
+# that is listed as value-taking, or a flag declared in `_MODE_OPTS` and absent here. A restated
+# population is the defect this repository measures most; this one is gated in both directions.
+# ⚑ True = takes a value (`--name value` or `--name=value`); False = presence is the value.
+_OPT_ARITY: dict[str, bool] = {
+    "-i": False,
+    "-E": False,
+    "--where": True,
+    "--starts": True,
+    "--col": True,
+    "--table": True,
+    "--width": True,
+    "--body-file": True,
+    "--exact": False,
+    "--apply": False,
+    "--dry-run": False,
+    "-h": False,
+    "--help": False,
+}
+
 # The POSIX end-of-options marker: everything after it is an operand, whatever it starts with.
 _END_OF_OPTS = "--"
 
@@ -126,8 +152,23 @@ def _split_args(argv: list[str]) -> tuple[list[str], list[str]]:
         head, tail = rest[:cut], rest[cut + 1:]
     else:
         head, tail = rest, []
+    # ⚑⚑⚑ A VALUE-TAKING FLAG'S VALUE IS NOT AN OPERAND, AND FOR ONE ARGUMENT ORDER THAT WAS A
+    # LIVE DEFECT. Before this, `--width 80` put `80` in the operands and every mode read only
+    # the operands it needed — harmless with the flag AFTER the file, and MEASURED on the shipped
+    # tool with it BEFORE: `mdstruct lint --width 80 FILE.md` → `no such file: 80`. Found by the
+    # argparse parity arm (tests/test_cli_argparse_parity.py), which is what a second parser over
+    # the same table is for. `_OPT_ARITY` says which flags consume the next token; `--name=value`
+    # carries its value inside the token and consumes nothing.
+    skip = False
     for arg in head:
-        (options if arg.startswith("-") else operands).append(arg)
+        if skip:
+            skip = False
+            continue
+        if arg.startswith("-"):
+            options.append(arg)
+            skip = _OPT_ARITY.get(arg, False)
+        else:
+            operands.append(arg)
     operands.extend(tail)
     return operands, options
 
@@ -141,8 +182,9 @@ def _unknown_opts(mode: str, options: list[str]) -> list[str]:
     `substrate-9c` measured the identical shape in their own writer the same day and named the
     root exactly: *the filter is the only thing reading dash tokens, and a filter cannot refuse.*
 
-    ⚑⚑ A VALUE IS NOT AN OPTION. `--width 80` puts `80` in the operand list, not here, so only
-    dash-leading tokens are checked; an option's value is recovered by `_flag` as before.
+    ⚑⚑ A VALUE IS NOT AN OPTION. `--width 80`'s `80` is consumed by `_split_args` (it used to
+    land in the operands — see the note there), so only dash-leading tokens reach here; an
+    option's value is recovered by `_flag` as before.
 
     Args:
         mode: the dispatched mode name, which decides the declared set.
@@ -175,6 +217,42 @@ def _flag(argv: list[str], name: str) -> str | None:
         if arg.startswith(name + "="):
             return arg.split("=", 1)[1]
     return None
+
+
+def argparse_parser(mode: str) -> argparse.ArgumentParser:
+    """Build the `argparse` parser for one mode from the same three tables the old parser reads.
+
+    ⚑⚑⚑ NO CALLER YET — OPERATOR RULING 2026-09-20 (W9): migrate to argparse, PARITY FIRST. Public
+    because it is the parser `main()` will use and the parity arm reaches it as a caller would. This
+    function exists beside `_split_args`/`_unknown_opts`/`_flag` so `tests/test_cli_argparse_
+    parity.py` can hand both parsers the same argv and refuse any disagreement about what is
+    accepted, what is refused, and what the operands are. `main()` switches only when that arm is
+    green; the old three are deleted only then. Two parsers reading one table is the second
+    instrument this repository prefers over a floor: they can disagree, and a floor cannot.
+
+    ⚑ MODES STAY POSITIONAL WORDS (`mdstruct spans FILE`), not subparsers: the operator ruled on
+    the surface, and `add_subparsers` would change the usage text and the unknown-mode refusal.
+    The mode is dispatched by `main()` before this parser sees the rest, exactly as today.
+
+    ⚑ `allow_abbrev=False`, because the old parser refuses `--wid` and argparse would otherwise
+    accept it as `--width` — an acceptance the parity arm would (correctly) call a divergence.
+
+    Args:
+        mode: the dispatched mode name; decides which of `_MODE_OPTS` applies.
+
+    Returns:
+        a parser accepting this mode's declared options with their declared arity, refusing
+        everything else, and collecting operands (after an optional `--`) as `operands`.
+
+    """
+    parser = argparse.ArgumentParser(prog=f"mdstruct {mode}", add_help=False, allow_abbrev=False)
+    for opt in sorted(_MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS):
+        if _OPT_ARITY[opt]:
+            parser.add_argument(opt, dest=opt.lstrip("-").replace("-", "_"))
+        else:
+            parser.add_argument(opt, dest=opt.lstrip("-").replace("-", "_"), action="store_true")
+    parser.add_argument("operands", nargs="*")
+    return parser
 
 
 def _spans(path: Path) -> int:

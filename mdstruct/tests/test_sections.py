@@ -299,26 +299,44 @@ def test_an_ambiguous_heading_refuses_at_the_write_path(contained: Path, tmp_pat
     assert contained.read_text(encoding="utf-8") == before, "a refused write mutated the document"
 
 
-def test_the_target_and_the_body_file_may_not_be_the_same_document(contained: Path) -> None:
-    """⚑⚑⚑ WHAT A DROPPED HEADING LOOKS LIKE, and the arity check cannot see it.
+def test_a_dropped_heading_is_an_arity_refusal_now(contained: Path) -> None:
+    """⚑⚑⚑ WHAT A DROPPED HEADING LOOKS LIKE — and the arity check DOES see it now.
 
     Measured while building this mode: `replace-section FILE.md --body-file B.md` with the HEADING
-    OMITTED leaves two valid positionals, so the FILE slides into the heading slot and `B.md`
-    becomes the target. The tool was one matching heading away from rewriting the BODY FILE instead
-    of the document.
-
-    ⚑⚑ AND THE FINDER REFUSED IT ONLY BY ACCIDENT of the body file having no headings — a refusal
-    that depends on the contents of the WRONG FILE is not a guard. This one is about IDENTITY, so
-    it holds whatever either file contains.
+    OMITTED left two valid positionals, so the FILE slid into the heading slot and `B.md` became
+    the target. That second positional was `B.md` itself — the hand-rolled parser put a value
+    flag's VALUE into the operands. Repaired 2026-09-20 (W9, found by the argparse parity arm):
+    `_split_args` consumes a value-taking flag's value, so the same argv now has ONE positional
+    and the arity check refuses it as a usage error, before any file is opened.
     """
     result = _write_cli("replace-section", str(contained), "--body-file", str(contained))
+    assert result.returncode == _WRITE_REFUSED, (
+        f"a heading was omitted and the write was allowed; rc={result.returncode}, "
+        f"stdout={result.stdout!r}"
+    )
+    assert "usage:" in result.stderr, (
+        f"the dropped heading must be refused as ARITY — the parser no longer manufactures a "
+        f"second positional out of the body file; stderr was {result.stderr!r}"
+    )
+
+
+def test_the_target_and_the_body_file_may_not_be_the_same_document(contained: Path) -> None:
+    """⚑⚑ THE IDENTITY GUARD, reached HONESTLY — with a heading given.
+
+    Before the arity repair above this case was reached only through the leaked-value path. It
+    still matters: a caller who names a heading and passes the document as its own body file is
+    one matching heading away from rewriting the body file. The finder refusing by accident of
+    the body file having no headings is not a guard; this one is about IDENTITY and holds
+    whatever either file contains.
+    """
+    result = _write_cli("replace-section", "Residue", str(contained), "--body-file", str(contained))
     assert result.returncode == _WRITE_REFUSED, (
         f"the target and the body file were the same document and the write was allowed; "
         f"rc={result.returncode}, stdout={result.stdout!r}"
     )
     assert "same document" in result.stderr, (
-        f"the refusal must name the CAUSE — a dropped heading — rather than reporting a confusing "
-        f"heading miss on the wrong file; stderr was {result.stderr!r}"
+        f"the refusal must name the CAUSE — the same document on both sides — rather than "
+        f"reporting a heading miss on the wrong file; stderr was {result.stderr!r}"
     )
 
 
