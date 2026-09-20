@@ -69,6 +69,7 @@ exports_files(glob(
 ) + [
     ".bazelrc",
     "mypy_runner.py",
+    "mutate_runner.py",
     ".claude/settings.json",
     "findings/CENSUS-BRIEF.md",
 ])

@@ -103,6 +103,28 @@ sh_test(
     size = "small",
 )
 
+# ⚑⚑ THE MUTATION GRID AS A GATE TARGET — operator ruling 2026-09-13 ("a gate target, per
+# distribution"), re-confirmed against a 17x cost range ("the DAG absorbs it"). Its domain is the
+# sources, the tests, the config, the runner, AND the distribution's own venv: `mutate_check.sh`
+# derives `bin/python3` from the config's directory and REFUSES if it is not staged, so a missing
+# `.venv` here is a one-line refusal rather than a grid run under the sandbox's python.
+# ⚑ FIRST DECLARED 2026-09-19 (W2). An earlier draft lived only in a scratchpad and died with it;
+# "//ratchet:mutants failed in 0.6s" in the record describes that draft, not this target.
+sh_test(
+    name = "mutants",
+    srcs = ["//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location //:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
 # ⚑ A py_binary SO SIBLING DISTRIBUTIONS CAN RUN THE RATCHET AS A DECLARED TOOL. rules_python
 # builds a runfiles tree at real package paths, so the import resolves BY LAYOUT rather than
 # through a venv the sandbox does not have.

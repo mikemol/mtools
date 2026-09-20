@@ -95,20 +95,39 @@ def test_every_distribution_builds_a_venv(dist: str) -> None:
 
 @_NEEDS_BUILT_VENV
 @pytest.mark.parametrize("dist", _DISTS)
-def test_the_interpreter_link_is_relative(dist: str) -> None:
-    """⚑⚑⚑ RELOCATABILITY, AND IT IS THE WHOLE BUILD-ARTIFACT PROPERTY.
+def test_the_interpreter_link_is_depth_independent(dist: str) -> None:
+    """⚑⚑⚑ RELOCATABILITY, RE-MEASURED: THE LINK IS ABSOLUTE, BY OPERATOR RULING 2026-09-19.
 
-    An artifact valid only at the path it was built at is host state with a build step in front of
-    it. MEASURED: `pyvenv.cfg`'s `home` is INERT — rewriting it to `/nonexistent/nowhere` changed
-    nothing — so the absolute-vs-relative `bin/python3` symlink is the real dependency, and an
-    earlier probe that "confirmed" relocatability by editing `home` had measured nothing at all.
+    This arm used to assert the link was RELATIVE, on the reasoning that an absolute link pins the
+    venv to one host. What it did not measure: a relative link pins the venv to one DEPTH. The same
+    venv staged into a test's runfiles tree sits four directories from the runfiles root where
+    `bazel-bin` sits six from the execroot, and the relative link dangled there —
+    `//ratchet:mutants` refused on `-x bin/python3` with all 2,070 venv files staged. An absolute
+    link into the toolchain resolves from `bazel-bin`, from any runfiles tree, and from a scratch
+    copy four directories deeper run from `/` (measured). `pyvenv.cfg`'s `home` is `bin`, the
+    venv's own directory, so no second coordinate is baked in.
+
+    ⚑ Under a SANDBOX the link is not a link at all — bazel hardlinks the resolved interpreter —
+    and the stdlib is found through `PYTHONHOME`, from the repo name written beside `pyvenv.cfg`.
+    That file is asserted here too, because the checker reads it and a missing one is a silent
+    fall-through to a dead interpreter.
     """
     py = _venv_python(dist)
-    assert py.is_symlink(), f"{dist}: bin/python3 is not a symlink, so it cannot be relative"
+    assert py.is_symlink(), f"{dist}: bin/python3 is not a symlink"
     target = str(py.readlink())
-    assert not target.startswith("/"), (
-        f"{dist}: bin/python3 points at an ABSOLUTE path ({target}) — the venv is pinned to this "
-        f"host and is not relocatable"
+    assert target.startswith("/"), (
+        f"{dist}: bin/python3 is RELATIVE ({target}) — valid at one depth only; it dangles "
+        f"inside a runfiles tree (measured 2026-09-19, //ratchet:mutants)"
+    )
+    assert target.endswith("/bin/python3"), f"{dist}: the link names {target}, not an interpreter"
+    note = py.parent.parent / "pythonhome.runfiles"
+    assert note.is_file(), f"{dist}: {note} missing — the sandboxed arm has no PYTHONHOME to set"
+    repo = note.read_text(encoding="utf-8").strip()
+    assert repo, f"{dist}: pythonhome.runfiles is empty — no repo name for PYTHONHOME"
+    assert "/" not in repo, f"{dist}: pythonhome.runfiles holds a path {repo!r}, not a repo name"
+    assert f"/{repo}/bin/python3" in target, (
+        f"{dist}: the note names {repo!r} but the link goes to {target} — two answers to one "
+        f"question"
     )
 
 

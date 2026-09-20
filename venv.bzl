@@ -31,38 +31,30 @@ _SITE = "site-packages/"
 def _venv_impl(ctx):
     outs = []
 
-    # ⚑⚑⚑ THE INTERPRETER LINK MUST BE RELATIVE, AND THIS IS THE WHOLE BUILD-ARTIFACT PROPERTY.
-    # MEASURED, both arms: a venv whose `bin/python3` is an ABSOLUTE symlink stops working the
-    # moment the interpreter moves, while `pyvenv.cfg`'s `home` is INERT -- rewriting it to
-    # `/nonexistent/nowhere` changed NOTHING, so an earlier probe that "confirmed" relocatability
-    # by editing `home` had measured nothing at all. The symlink is the real dependency.
-    # ⚑ An artifact that is only valid at the path it was built at is host state with a build
-    # step in front of it.
+    # ⚑⚑⚑ THE INTERPRETER LINK IS ABSOLUTE — operator ruling 2026-09-19, REVERSING the relative
+    # link this rule carried from its first draft. The earlier reasoning ("a venv whose `bin/python3`
+    # is an ABSOLUTE symlink stops working the moment the interpreter moves") measured a true
+    # thing and drew the wrong line: a RELATIVE link also dies when the interpreter moves, and it
+    # additionally works at exactly ONE depth. `pyvenv.cfg`'s `home` remains INERT (rewriting it to
+    # `/nonexistent/nowhere` changed nothing); the symlink is still the real dependency.
+    #
+    # ⚑⚑⚑ MEASURED, THE DEFECT THE RELATIVE LINK PRODUCED: `//ratchet:mutants` staged all 2,070
+    # venv files into its runfiles tree, and `bin/python3` there carried the same six-`../` text it
+    # has in `bazel-bin/ratchet/.venv/bin/` — from `<test>.runfiles/_main/ratchet/.venv/bin/`, six
+    # up is `bazel-bin`, which has no `external/`, so the link dangled and `mutate_check.sh`
+    # refused on `-x`, correctly. The previous draft's own comment named the two coordinate systems
+    # (`path` = execroot, `short_path` = runfiles) and could only serve one of them with one
+    # relative string. A runfiles-only second link (`ctx.runfiles(symlinks=…)`) was probed and
+    # loses to `data=`'s file at the same short_path unless the built link leaves `files=`, which
+    # breaks `bazel build //<dist>:.venv`. One absolute link serves both, and the sandbox too.
+    #
+    # ⚑ `declare_file` + `target_file`, NOT `declare_symlink` + a hand-built path: bazel writes the
+    # resolved target itself, so no coordinate-system arithmetic is done here at all. That
+    # arithmetic is where the first draft's `short_path` bug lived (an external file's short_path
+    # begins `../`, and the common-prefix walk counted it as a segment).
     interpreter = ctx.toolchains["@rules_python//python:toolchain_type"].py3_runtime.interpreter
-
-    # bin/python3 -> the staged toolchain, by a path relative to the link's own directory.
-    python3 = ctx.actions.declare_symlink(ctx.attr.name + "/bin/python3")
-
-    # ⚑⚑⚑ `path`, NOT `short_path`, AND THE FIRST DRAFT USED `short_path` AND BUILT A BROKEN LINK.
-    # Both are "the file's path" and they are DIFFERENT VIEWS. Measured, by printing all four
-    # during a build rather than reasoning about which to use:
-    #
-    #     link.short_path   = hooks/.venv/bin/python3
-    #     link.path         = bazel-out/k8-fastbuild/bin/hooks/.venv/bin/python3
-    #     interp.short_path = ../rules_python++python+.../bin/python3      <- LEADING ../
-    #     interp.path       = external/rules_python++python+.../bin/python3
-    #
-    # ⚑⚑ AN EXTERNAL FILE'S `short_path` BEGINS `../`, because runfiles put other repositories
-    # BESIDE the main one. Walking a common prefix across a `short_path` pair therefore compares a
-    # workspace-relative path against an escape sequence, and the `../` counted as an ordinary
-    # segment. The link that produced was well-formed, pointed into `bazel-out/`, and named
-    # nothing — the same shape as the sys.path finding at 8221131, one layer down: a path that
-    # exists as a string and not as a file. `path` is execroot-relative for BOTH, so the walk is
-    # over one coordinate system.
-    ctx.actions.symlink(
-        output = python3,
-        target_path = _relative_path(python3.path, interpreter.path),
-    )
+    python3 = ctx.actions.declare_file(ctx.attr.name + "/bin/python3")
+    ctx.actions.symlink(output = python3, target_file = interpreter, is_executable = True)
     outs.append(python3)
 
     # ⚑ `pyvenv.cfg` IS WRITTEN BECAUSE A VENV IS DEFINED BY ITS PRESENCE. `home` does not decide
@@ -92,12 +84,19 @@ def _venv_impl(ctx):
     # property of the PATH THE CALLER USED, which no change to this rule can remove. The tracked
     # launcher can, by naming the real path; recorded here so the next reader does not re-fix
     # `home` for it.
-    interp_dir = interpreter.path.rsplit("/", 1)[0]
+    #
+    # ⚑⚑⚑ `home` IS NOT INERT ONCE THE LINK IS ABSOLUTE — the measurement above was taken where
+    # the relative link already resolved on its own. With an absolute `bin/python3` invoked from a
+    # runfiles tree, a `home` computed for bazel-bin's depth pointed nowhere and CPython died with
+    # `Failed to import encodings module` (measured, `//ratchet:mutants`, 2026-09-19). So `home`
+    # names the venv's OWN `bin/`: CPython follows the absolute symlink it finds there to the
+    # toolchain, and the stdlib resolves from the real interpreter. MEASURED depth-independent
+    # (a scratch venv four directories deeper, run from `/`): `stdlib = <toolchain>/lib/python3.13`,
+    # scheme `venv`, no warning. No coordinate arithmetic remains in this rule.
     cfg = ctx.actions.declare_file(ctx.attr.name + "/pyvenv.cfg")
     ctx.actions.write(
         output = cfg,
-        content = "home = {}\ninclude-system-site-packages = false\nversion = {}\n".format(
-            _relative_path(cfg.path, interp_dir + "/python3").rsplit("/", 1)[0],
+        content = "home = bin\ninclude-system-site-packages = false\nversion = {}\n".format(
             ctx.attr.python_version,
         ),
     )
@@ -173,7 +172,32 @@ def _venv_impl(ctx):
         )
         outs.append(script)
 
-    return [DefaultInfo(files = depset(outs), runfiles = ctx.runfiles(files = outs))]
+    # ⚑⚑ THE TOOLCHAIN'S OWN FILES ARE RUNFILES OF THE VENV. `bin/python3` names the interpreter,
+    # but the interpreter needs its `lib/python3.13` beside it, and a sandbox stages only what is
+    # DECLARED. MEASURED 2026-09-19: `//ratchet:mutants` with the link and `home` both correct
+    # still died with `No module named 'encodings'` under linux-sandbox and PASSED (13 attempted,
+    # 11 killed, 0 survived, 2 unreachable) under `--spawn_strategy=local` — one flag, one
+    # variable, so the missing thing was a declaration and not a path.
+    runtime = ctx.toolchains["@rules_python//python:toolchain_type"].py3_runtime
+
+    # ⚑⚑⚑ AND UNDER A SANDBOX THE LINK IS NOT A LINK. Printed from a kept sandbox (`--sandbox_debug`,
+    # 2026-09-19): bazel resolves a symlink artifact at staging and HARDLINKS the interpreter into
+    # `.venv/bin/python3` (link count 5, a regular file). There is nothing for CPython to follow,
+    # `home = bin` names itself, and the toolchain sits at `<runfiles>/<repo>/` where nothing
+    # points. `PYTHONHOME=<runfiles>/<repo>` MEASURED in that sandbox: scheme `venv`, site-packages
+    # under the venv, stdlib from the staged toolchain. The repo's runfiles-relative name is the
+    # one fact the checker cannot derive, so it is written here for `mutate_check.sh` to read.
+    # ⚑ `short_path` of an external file begins `../<repo>/…` — the exact shape the earlier draft
+    # mis-walked; here only the first segment after `../` is taken, no prefix arithmetic.
+    toolchain_repo = interpreter.short_path.removeprefix("../").split("/", 1)[0]
+    home_note = ctx.actions.declare_file(ctx.attr.name + "/pythonhome.runfiles")
+    ctx.actions.write(output = home_note, content = toolchain_repo + "\n")
+    outs.append(home_note)
+
+    return [DefaultInfo(
+        files = depset(outs),
+        runfiles = ctx.runfiles(files = outs, transitive_files = runtime.files),
+    )]
 
 # ⚑⚑ NO SHEBANG IN THE TEMPLATE, AND THAT IS THE POINT. A baked absolute path would name this
 # build's output base forever; instead the script is executed BY an interpreter the caller names

@@ -2846,10 +2846,10 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_every_distribution_builds_a_venv}
 }
 
-@misc{hooks-venv-artifact-interpreter-link-is-relative,
+@misc{hooks-venv-artifact-interpreter-link-is-depth-independent,
   section = {venv-artifact},
-  claim   = {⚑⚑⚑ RELOCATABILITY IS THE WHOLE BUILD-ARTIFACT PROPERTY, and the RELATIVE `bin/python3` symlink is its only mechanism — `pyvenv.cfg`'s `home` is INERT, measured by rewriting it to `/nonexistent/nowhere` and observing no change.},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_interpreter_link_is_relative}
+  claim   = {⚑⚑⚑ RELOCATABILITY RE-MEASURED: a RELATIVE `bin/python3` link pins the venv to one DEPTH, and the same venv staged into a runfiles tree (four from the root, where bazel-bin is six from the execroot) dangled — `//ratchet:mutants` refused with all 2,070 venv files staged. The link is ABSOLUTE by operator ruling 2026-09-19, `home` is the venv's own `bin`, and `pythonhome.runfiles` names the staged toolchain repo for the sandboxed arm, where bazel hardlinks the interpreter and nothing is a link at all.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_the_interpreter_link_is_depth_independent}
 }
 
 @misc{hooks-venv-artifact-built-interpreter-actually-runs,

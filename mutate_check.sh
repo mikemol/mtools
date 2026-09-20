@@ -50,6 +50,17 @@ if [ ! -x "$py" ]; then
     exit 1
 fi
 
+# ⚑⚑⚑ UNDER BAZEL'S SANDBOX THE INTERPRETER IS A HARDLINK, NOT A LINK, and it cannot find its own
+# stdlib: bazel resolves the venv's symlink at staging (printed from a kept sandbox, 2026-09-19),
+# so CPython has nothing to follow and `pyvenv.cfg`'s `home` names the venv's own `bin/`. The
+# toolchain IS staged — at `$RUNFILES_DIR/<repo>/` — and `PYTHONHOME` is the one mechanism that
+# names it without baking a path into an artifact. The repo name is written by `venv.bzl` beside
+# `pyvenv.cfg`; outside a runfiles tree the symlink resolves on its own and nothing is set.
+if [ -n "${RUNFILES_DIR:-}" ] && [ -r "$dist/.venv/pythonhome.runfiles" ]; then
+    PYTHONHOME="$RUNFILES_DIR/$(cat "$dist/.venv/pythonhome.runfiles")"
+    export PYTHONHOME
+fi
+
 # ⚑ AND `-x` IS NECESSARY, NOT SUFFICIENT. A dangling symlink is mode 775 and `-x`-true right up
 # until `execve` refuses it — measured on 2026-09-16 when a whole interpreter root was removed. The
 # grid below RUNS the interpreter, and its verdict is what settles whether the venv is real.
