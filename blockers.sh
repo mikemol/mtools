@@ -253,8 +253,17 @@ md="$mtools/mdstruct/.venv/bin/mdstruct"
 # ⚑ SO THE FILESYSTEM IS THE POPULATION AND TRACKEDNESS IS A COLUMN. `find` sees both; the
 # untracked ones are marked, because "this census is not in HEAD" is a fact worth reporting rather
 # than a reason to omit the row.
+# ⚑⚑ AN APEX IS NOT A RUN FILE, AND THE GLOB ADMITTED ONE. `CENSUS-registry-discovery-APEX.md`
+# landed at c286805 carrying a `surveyor | status at freeze`-shaped remainder table and no §R; this
+# poll read it as a census, derived `expected = |§R| - 1 = -1`, printed `4 of -1 parties listed`
+# and a NOT FROZEN verdict about a document that has no freeze to call. ⚑ REPORTED BY `rosettapkg`
+# from outside, the fourth consecutive defect in this block found by the party it misinformed. The
+# class is the one this file keeps naming: an artefact improved (the census grew an apex) and an
+# instrument keyed on its surface form (the filename prefix) followed it into a wrong answer.
+# ⚑ The discriminator is the suffix, matching the two exclusions already here; the absence of §R
+# would be the structural one, and is left as the better repair for whoever adds a third case.
 censuses=$(cd "$mtools" && find findings -maxdepth 1 -name 'CENSUS-*.md' -type f 2>/dev/null \
-    | grep -v 'CENSUS-BRIEF' | grep -v 'ANALYSIS' | sort)
+    | grep -v 'CENSUS-BRIEF' | grep -v 'ANALYSIS' | grep -v -- '-APEX' | sort)
 if [ ! -x "$md" ]; then
     echo "  UNMEASURED: $md is not executable — this is a fact about the reader, not the freeze"
 elif [ -z "$censuses" ]; then
@@ -318,7 +327,10 @@ else
     # rather than about the read, which is worse than an error because nothing looks wrong.
     # ⚑ ONE GUARD, NOT TEN. Repeating this at every call site is ten places to forget it, which is
     # the lesson `note_failure` in the gate was written for.
-    if ! "$md" tables "$census" >/dev/null 2>&1; then
+    # ⚑ THE GUARD'S OUTPUT IS KEPT. The freeze-column derivation below needs the same listing, and
+    # the gate's ceiling on repeated `tables` starts per census is the reason to read it once here
+    # rather than a twelfth time there — the arm that bounds re-asked questions refused the extra.
+    if ! _tables=$("$md" tables "$census" 2>/dev/null); then
         echo "  ⚑ READER FAILED on this file — mdstruct exited nonzero."
         echo "    Every verdict below would describe the READ, not the census. Skipping it."
         continue
@@ -622,8 +634,23 @@ else
             echo "    Two parties allocated one index. The log is structurally valid and"
             echo "    semantically ambiguous; a leg citing that revision cites two rows."
         fi
-        if "$md" rows "$census" --col 2 --starts "FREEZE" >/dev/null 2>&1; then
-            echo "  ⚑ FROZEN — roster terminal AND §V carries the row. Cross-reading is the point."
+        # ⚑⚑⚑ THE FREEZE COLUMN IS DERIVED FROM §V's HEADER, NOT POSITIONAL. This read `--col 2`
+        # for as long as every §V was `rev | when | what changed | affects`. `registry-discovery`'s
+        # §V carries a `by` column (`rev | when | by | what changed | affects`, since its rev 1), so
+        # column 2 is the AUTHOR and the poll reported NOT FROZEN for a census whose rev 5 reads
+        # `FREEZE CALLED` — the positional-predicate class this block already refuses for `--table N`,
+        # arriving through a column index. MEASURED 2026-09-20: `--col 2` finds nothing, `--col 3`
+        # finds the row. ⚑ A header without a `what…` column is REPORTED, never defaulted to 2 —
+        # defaulting is what turned an unrecognised §S header into a confident PRE-FILING above.
+        _vcol=$(printf '%s\n' "$_tables" \
+            | grep -E '^  table [0-9]+  .*  rev \| ' | tail -1 \
+            | sed 's/^  table [0-9]*  [0-9]* row(s) x [0-9]* col(s)  //' \
+            | awk -F' \\| ' '{for(i=1;i<=NF;i++) if($i ~ /^what/){print i-1; exit}}')
+        if [ -z "${_vcol:-}" ]; then
+            echo "  ⚑ §V UNREADABLE for the freeze row: no \`rev | …\` table with a \`what…\` column."
+            echo "    Not a verdict — the freeze predicate has no column to read."
+        elif "$md" rows "$census" --col "$_vcol" --starts "FREEZE" >/dev/null 2>&1; then
+            echo "  ⚑ FROZEN — roster terminal AND §V carries the row (col ${_vcol}). Cross-reading is the point."
         else
             echo "  NOT FROZEN — the roster condition is met, but §V carries no FREEZE CALLED row."
             echo "    That is the coordinator's to declare; a met precondition is not the event."

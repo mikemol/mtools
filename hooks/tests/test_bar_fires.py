@@ -1447,6 +1447,57 @@ def test_the_poll_derives_the_status_table_signature() -> None:
     )
 
 
+def test_the_freeze_row_column_is_derived_from_the_revision_log_header() -> None:
+    """⚑⚑⚑ `--col 2` WAS THE FREEZE PREDICATE FOR AS LONG AS EVERY §V HAD FOUR COLUMNS.
+
+    `registry-discovery`'s §V has carried a `by` column since its rev 1 — `rev | when | by | what
+    changed | affects` — so column 2 is the AUTHOR, and the poll reported NOT FROZEN for a census
+    whose rev 5 reads `FREEZE CALLED`. MEASURED 2026-09-20: `--col 2 --starts FREEZE` finds no
+    row, `--col 3` finds it. The positional-predicate class the block already refuses for
+    `--table N`, arriving through a column index. ⚑ Reported by `rosettapkg`, from outside, in the
+    same message as the apex-in-the-glob defect below — two shapes, one class.
+
+    ⚑ THE MISS IS REPORTED, NOT DEFAULTED. A §V header with no `what…` column prints UNREADABLE;
+    defaulting to 2 is what turned an unrecognised §S header into a confident PRE-FILING.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the freeze predicate still exists and reads a derived column.
+    assert '--col "$_vcol" --starts "FREEZE"' in commands, (
+        "the freeze row must be read at the column the §V header names, not at a position"
+    )
+    assert "UNREADABLE for the freeze row" in commands, (
+        "a §V header without a `what…` column is a refusal, never a default to column 2"
+    )
+    # ⚑ THE NEGATIVE, in the same function as its control.
+    assert '--col 2 --starts "FREEZE"' not in commands, (
+        "a positional freeze column silently retargets when a census adds a `by` column"
+    )
+
+
+def test_the_census_population_excludes_an_apex() -> None:
+    """⚑⚑ AN APEX IS NOT A RUN FILE, AND `CENSUS-*.md` ADMITTED ONE.
+
+    `CENSUS-registry-discovery-APEX.md` (c286805) carries a remainder table shaped like a §S and
+    no §R; the poll derived `expected = |§R| - 1 = -1`, printed `4 of -1 parties listed` and a
+    freeze verdict about a document with no freeze to call. An artefact improved (the census grew
+    an apex), an instrument keyed on its surface form (the filename prefix). ⚑ Reported by
+    `rosettapkg`, from outside — the fourth consecutive defect in this block found by the party it
+    misinformed.
+    """
+    body = _POLL.read_text(encoding="utf-8")
+    commands = "\n".join(
+        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
+    )
+    # ⚑ POSITIVE CONTROL: the population is still enumerated from the filesystem by prefix.
+    assert "-name 'CENSUS-*.md'" in commands, "the census population must still be the glob"
+    assert "grep -v -- '-APEX'" in commands, (
+        "an apex must be excluded from the census population; it has no roster to freeze"
+    )
+
+
 def test_the_poll_reports_an_unrecognised_status_header_rather_than_defaulting() -> None:
     """⚑⚑⚑ AN UNMATCHED SIGNATURE MUST NOT BECOME `grep ""`, WHICH MATCHES EVERY TABLE.
 

@@ -1139,6 +1139,18 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_derives_the_status_table_signature}
 }
 
+@misc{hooks-bar-fires-freeze-row-column-is-derived-from-the-revision-log-header,
+  section = {bar-fires},
+  claim   = {`--col 2` WAS THE FREEZE PREDICATE FOR AS LONG AS EVERY §V HAD FOUR COLUMNS},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_freeze_row_column_is_derived_from_the_revision_log_header}
+}
+
+@misc{hooks-bar-fires-census-population-excludes-an-apex,
+  section = {bar-fires},
+  claim   = {AN APEX IS NOT A RUN FILE, AND `CENSUS-*.md` ADMITTED ONE},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_census_population_excludes_an_apex}
+}
+
 @misc{hooks-bar-fires-refusal-record-names-the-party-not-the-committer,
   section = {bar-fires},
   claim   = {Every party in this shared tree commits as the same user.email, so the refusal record built to count peer refusals recorded a constant: a column identical in every row was never asked},
