@@ -242,6 +242,25 @@ _bazel_green() {
     # ⚑⚑ SO THE PREDICATE IS POSITIVE: bazel must have printed its own success line AND a test
     # tally. Anything else with a nonzero status is unexplained, and unexplained is reported rather
     # than absorbed into either verdict.
+    #
+    # ⚑⚑⚑ THE SCOPE OF THAT CONJUNCTION, STATED — because a peer measured that it was not.
+    # `linux-sources` reproduced the dead-sink state on their own box (BES pointed at discard port
+    # 127.0.0.1:9) and found that **`bazel build` and `bazel test` emit DIFFERENT summary lines for
+    # one state**: a build prints `Build completed successfully` and NO test tally, because there
+    # are no tests to tally. Over such a target the second conjunct is unsatisfiable, so a green
+    # build with a dead sink returns 1 here and is charged to the repository — the false red this
+    # very comment exists to prevent, surviving inside the fix as a scope nobody had written down.
+    # ⚑⚑ THE SCOPE IS STRUCTURAL, NOT A COINCIDENCE OF CALLERS. This function issues `bazel test`
+    # itself, three lines up. It CANNOT be handed a build target; every caller passes a test label
+    # and always will, because the invocation is fixed inside. So the second conjunct is sound HERE
+    # and would be a false red anywhere the invocation is `build`. Their phrasing, kept: *a census
+    # of callers bounds what IS; only a stated scope bounds what CAN BE.* This is the stated scope.
+    # ⚑ AND IT WAS MEASURED IN THIS TREE THE SAME DAY THE LETTER WAS READ: `bazel build
+    # //hooks:.venv` on a fresh host returned rc=38 with `Build completed successfully` and no
+    # tally — the exact state — outside this function, where nothing charged it to anyone. Had a
+    # build-shaped caller existed, it would have been a false red the peer predicted before it fired.
+    # Filed against this tree as `ask-bazel-summary-line-differs-by-invocation` in
+    # `summit/floor/asks.bib`; this comment is the answer, and it is scope rather than a rewrite.
     if ! printf '%s' "$_bg_out" | grep -q 'Build completed successfully'; then
         return 1
     fi

@@ -33,6 +33,11 @@ cd "${1:-$(dirname "$0")}" || exit 1
 # decided should not run yet, and the decision is written down where the next reader meets it.
 declare -A WAIVED=(
     [collect_check.sh]="parked: per-case bazel targets, unwired pending a census freeze"
+    # ⚑ PARKED, NOT WAIVED. The operator ruled it a gate target per distribution; the wiring is
+    # blocked on the commit that lands the script itself, and a BUILD target that fails in 0.6s
+    # with `.venv` absent from runfiles (measured) is the diagnosis that wiring must start from.
+    # This checker caught the script landing unwired — correctly — on the fourth commit attempt.
+    [mutate_check.sh]="parked: gate target per distribution ruled, wiring blocked on //ratchet:mutants runfiles defect"
     # ⚑ NOT A DEFECT, AND THE CHECKER FOUND IT HONESTLY. `setup.sh` arms a fresh clone —
     # `core.hooksPath` is per-clone git config, not a tracked file, so a clone has no gates and
     # looks exactly like a repo that passes them. It is run ONCE BY A HUMAN, deliberately outside

@@ -1175,6 +1175,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_population_shaped_negative_is_guarded_against_being_empty}
 }
 
+@misc{hooks-bar-fires-two-walks-agree-on-every-population-shaped-negative-by-name,
+  section = {bar-fires},
+  claim   = {A floor over a derived population catches a classifier that recognises NOTHING and tolerates one that NARROWS: re-measured on this corpus, a plant dropping two of thirteen members cleared the floor of ten and the arm PASSED. The floor's reach is a fact about the corpus, not about the floor. The stronger check is a SECOND INSTRUMENT, not a bigger assertion — a walk from binding to assert-use beside the existing walk from assert to binding — and this arm asserts the two agree on MEMBERSHIP, naming what either side holds alone. F-armed both directions with a plant chosen by measurement (the shape holding exactly two members): the floor arm passes and this arm reds, naming the two dropped and which walk dropped them. Its predecessor was a scratchpad instrument erased by a directory move; a second instrument outside the tree is a second instrument until the first boundary},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_two_walks_agree_on_every_population_shaped_negative_by_name}
+}
+
 @misc{hooks-bar-fires-poll-measures-reader-reach-not-a-cause,
   section = {bar-fires},
   claim   = {Four cause hypotheses, three dead and one necessary-not-sufficient: the arm measures rows REACHED against rows PRESENT and needs no theory of the trigger},
@@ -3058,4 +3064,22 @@
             being read — a stronger catch than this control alone, since it fires where the
             confusion actually costs something.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_ordinary_flag_is_still_not_an_artifact}
+}
+
+@misc{hooks-reader-guard-a-reader-whose-shebang-resolves-is-admitted,
+  section = {reader-guard},
+  claim   = {The ADMIT arm of the reader guard. A guard whose predicate is an invocation can degrade into one that always skips, and on a host where the reader is dead that is indistinguishable from one that works. This constructs a script whose shebang resolves and asserts the predicate admits it — the control without which the two SKIP arms prove nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_reader_guard.py -k test_a_reader_whose_shebang_resolves_is_admitted}
+}
+
+@misc{hooks-reader-guard-a-present-reader-with-a-dead-shebang-is-skipped,
+  section = {reader-guard},
+  claim   = {The guard tested `is_file()` and admitted a corpse: a 340-byte script, mode 775, whose shebang interpreter pointed at a removed venv root. Three arms passed the guard and failed inside with FileNotFoundError naming the present script — execve reports ENOENT against the SCRIPT when the shebang target is unresolvable, the shape linux-sources measured across 25 of 37 venvs. This constructs that corpse under a shebang that does not exist, asserts it IS a file and IS executable, and asserts the repaired predicate skips it. F-armed: making the predicate ignore OSError reds this arm and only this arm},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_reader_guard.py -k test_a_present_reader_with_a_dead_shebang_is_skipped}
+}
+
+@misc{hooks-reader-guard-an-absent-reader-is-skipped-too,
+  section = {reader-guard},
+  claim   = {The original case the guard was written for still holds after the repair: a reader that does not exist at all is skipped. Presence is necessary for admission and not sufficient; this arm pins the necessary half so the repair of the sufficient half did not lose it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_reader_guard.py -k test_an_absent_reader_is_skipped_too}
 }

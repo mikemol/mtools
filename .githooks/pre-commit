@@ -606,6 +606,43 @@ if ( cd "$staged" && bazel test //... --test_output=errors ) 2>&1 | tee "$staged
 else
     _suite_rc=$?
 fi
+# ⚑⚑⚑ THE VERDICT IS READ FROM BAZEL'S OWN AFFIRMATIVE LINE, NOT FROM ITS EXIT STATUS — and this
+# gate keyed on the status for its whole life while `domain_witness.sh`, forty lines below, has
+# carried the correct predicate since 2026-09-12 with a comment explaining why. THE GATE DID NOT
+# USE WHAT THE TREE KNEW. `linux-sources` built the three-row discriminator from this tree's own
+# relayed datum and shipped it in THEIR gate on 2026-09-16; this is the same repair arriving home.
+#
+#     state                                 rc   bazel's own summary
+#     green                                  0   INFO: Build completed successfully
+#     executor absent, NOTHING RAN          34   ERROR: Build did NOT complete successfully
+#     BEP upload failed, EVERY TEST PASSED  38   INFO: Build completed successfully
+#                                                + ERROR: The Build Event Protocol upload failed
+#
+# ⚑⚑ ROWS 2 AND 3 ARE BOTH NON-ZERO AND BAZEL SAYS OPPOSITE THINGS ABOUT THEM. `[ $_suite_rc -ne 0 ]`
+# refused row 3 — a commit whose gate bazel itself reports as passing — every time the BES sink was
+# down. Measured here on 2026-09-19: a fresh host with no cluster, sink REFUSED on a TCP connect,
+# rc=38 over a green build, and every commit blocked indefinitely on infrastructure that has nothing
+# to do with the tree.
+#
+# ⚑⚑⚑ AND THE OBVIOUS REPAIR FAILS OPEN — the peer named it before this tree could ship it. Keying
+# on *"the BEP upload failed" is PRESENT* would pass a run where a real target also failed in the
+# same invocation, because both messages are in the log at once. So the predicate is POSITIVE:
+# green requires bazel's affirmative success line AND a test tally, and anything else non-zero is
+# refused. A dead sink is then a row-3 pass and a dead sink with a broken target is a refusal,
+# because the tally line does not appear when a target fails.
+# ⚑ THIS IS `_bazel_green`'s CONJUNCTION, and its scope holds here for the same reason it holds
+# there: the invocation is `bazel test`, fixed, so the tally line is always emitted on success.
+_suite_green=0
+if grep -q 'Build completed successfully' "$staged/.suite.log" \
+   && grep -qE 'tests?: [0-9]+ tests? pass|test passes' "$staged/.suite.log"; then
+    _suite_green=1
+fi
+if [ "$_suite_rc" -ne 0 ] && [ "$_suite_green" -eq 1 ]; then
+    say "⚑ bazel exited $_suite_rc and reported SUCCESS with a test tally — the run did not fail,"
+    say "  something after it did (a dead Build Event Protocol sink gives rc=38 over a green suite)"
+    sed -n 's/^ERROR: \(.*\)/    bazel said: \1/p' "$staged/.suite.log" | head -2
+    _suite_rc=0
+fi
 if [ "$_suite_rc" -ne 0 ]; then
     failed_targets=$(grep -oE '^//[^ ]+' "$staged/.suite.log" 2>/dev/null | sort -u | tr '\n' ' ')
     fail=1

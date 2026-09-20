@@ -1088,6 +1088,231 @@ here (`//fence:ruff`, `//fence:mypy`, the ratchet targets). THAT IS A CLAIM I HA
 TESTED. A tick taking this should MEASURE the scope before proposing anything — an
 unmeasured generalisation from one instance is the shape this session kept catching.
 
+
+### ⟐HOST-VENVS-DANGLE — NEW 2026-09-16, found by a PEER, half-repaired by operator ruling
+
+**`~/.local/share/mise/installs/` was removed 2026-09-15 20:47 and took every host interpreter in
+this tree with it.** Found not by this session but by `linux-sources`, who filed unprompted after
+their own gate died calling `mdstruct/.venv/bin/mdstruct`.
+
+⚑⚑⚑ **THE ERRNO NAMED THE WRONG ARTEFACT, AND THAT IS THE TRANSFERABLE HALF.** Their report:
+`FileNotFoundError ... mdstruct/.venv/bin/mdstruct` — where **that file exists**, 340 bytes, mode
+775. `execve` reports ENOENT against a SCRIPT when its shebang INTERPRETER cannot be resolved. This
+session would have read that as *the script is missing* and looked in the wrong place.
+
+⚑⚑ **THEIR CENSUS IS A DENOMINATOR NO SOLIPSIST MEASUREMENT HERE COULD REACH:** 37 venvs under
+`~/github`, **25 dangling, 12 resolving** — and every one of the twelve resolves to a `uv`-managed
+interpreter or `/usr/bin`, **none through mise**. So the split is not random; it is exactly the
+venvs built against the removed root. That is the census-kit obligation arriving unprompted from
+the other side.
+
+### Measured here, independently
+
+| | |
+|---|---|
+| `~/.local/share/mise/installs/` | **absent** |
+| `mise ls --installed` | empty |
+| `mise` binary | present, `/snap/bin/mise` |
+| `bazel`, `bazelisk` | **not on PATH** |
+| `mdstruct/.venv/bin/python3 --version` | **exit 127** |
+| `bazel-bin/mdstruct/.venv/bin/python3 --version` | **Python 3.13.13** |
+| the bazel **cache** | survives, `~/.cache/bazel/_bazel_mikemol` |
+
+⚑⚑⚑ **NOTHING IN THIS TREE FAILED OPEN, AND THAT WAS MEASURED RATHER THAN HOPED.** Two guards were
+suspected and both are honest:
+
+- `.githooks/pre-commit` tests `[ ! -x "$dist/.venv/bin/$tool" ]` over `ruff`, `mypy`, `python3`
+  per distribution (**12 call sites, re-derived — the comment in `venv.bzl` says 13**) and refused
+  with *"fence/.venv/bin/python3 not found — cannot run the gate, commit refused"*.
+- `venv_python_for` gates on `Path.exists()`, which I suspected of admitting a dangling symlink.
+  **Measured false:** `.exists()` FOLLOWS the chain and returned `False` for the dead link while
+  returning `True` for the bazel-built control. The resolver is correct as written.
+
+⚑ **AND `venv_from_hub` PAID OFF EXACTLY AS ARGUED.** Its comment states the reason directly — *an
+artifact that is only valid at the path it was built at is host state with a build step in front of
+it* — and the operator ruled for a whole-distribution venv over rules_python's per-target one
+knowing the non-bazel consumers would depend on it. The mise root vanishing is the failure that
+argument was about. **This is not a lucky side effect; it is the design's stated purpose meeting
+its case.**
+
+### The repair, by operator ruling: migrate to uv-managed interpreters
+
+Ruled against the alternative of reinstalling mise, on the evidence that the twelve surviving venvs
+under `~/github` all resolve through uv. `uv venv --python 3.13 --allow-existing` per distribution:
+
+- uv **fetched cpython-3.13.13**, byte-matching what `venv_from_hub` pins and what the bazel venv
+  reports — so the pin did not have to move.
+- ⚑ `--allow-existing` REPLACED ONLY THE INTERPRETER LINKS. Every installed package survived:
+  `ruff 0.16.6` and `mypy 2.3.1` still run in all four. The damage was one symlink per venv.
+- **VERIFIED BY RUNNING, NOT BY `-x`** — which is this tick's own lesson, since the dead interpreter
+  was `-x`-true until `execve` refused it. All **12 of 12** tool/distribution pairs print a version.
+
+⚑⚑ **THE GATE NOW GETS FURTHER AND STILL REFUSES, HONESTLY:** all four suites run (fence 53,
+hooks 417+3s, mdstruct 151, ratchet 43 — **664 tests**), then *"bazel not found — cannot run the
+hermetic suite, commit refused"*. That is `linux-sources`' own fail-shut shape working as designed.
+
+### Still open
+
+- **`bazel` is gone and uv does not manage it.** The cache survives, so a reinstalled binary would
+  find its state. Not covered by the ruling; **commits remain blocked** until it is decided.
+- ⚑ **A REPLY IS OWED TO `linux-sources`:** they asked whether to file this against the other 24
+  affected repos and explicitly said they would rather ask than spray. Unanswered.
+- ⚑ **THE `project-tooling` SKILL IS NOW PARTLY STALE** and says so by measurement: it maps mise to
+  `/usr/bin/mise` (this box has `/snap/bin/mise`) and names `~/.local/share/mise/installs/` as where
+  interpreters live — the directory that no longer exists. Its uv half is exactly right and is what
+  this repair followed.
+
+### ⟐GATE-KEYS-ON-RC — NEW 2026-09-19, and the tree already held the correct predicate forty lines away
+
+**The pre-commit gate judged `bazel test //...` by `[ $_suite_rc -ne 0 ]` alone.** `domain_witness.sh`,
+in the same file's execution path, has carried `_bazel_green` — a positive predicate on bazel's own
+success line plus a test tally — since 2026-09-12, with a comment explaining why the exit status is
+not a verdict. **The gate did not use what the tree knew.** `linux-sources` built a three-row
+discriminator from this tree's relayed rc=38 datum, shipped it in *their* gate on 09-16, and wrote to
+say so; this is the same repair arriving home three days later.
+
+| state | rc | bazel's own summary |
+|---|---|---|
+| green | 0 | `Build completed successfully` |
+| executor absent, nothing ran | **34** | `Build did NOT complete successfully` |
+| BEP upload failed, every test passed | **38** | `Build completed successfully` + `ERROR: The Build Event Protocol upload failed` |
+
+⚑⚑ Rows 2 and 3 are both non-zero and bazel says OPPOSITE things about them. Keying on the scalar
+refused row 3 — a commit whose gate bazel itself reports passing — every time the sink was down.
+
+⚑⚑⚑ **AND THE OBVIOUS REPAIR FAILS OPEN, which the peer named before this tree could ship it.**
+Keying on *"BEP upload failed" is present* passes a run where a real target also failed, because
+both messages are in the log together. The repair is POSITIVE: green requires the affirmative line
+AND a tally. Shipped in `.githooks/pre-commit` (staged) as `_suite_green`.
+
+### ⟐BAZEL-GREEN-IS-A-CONJUNCTION — the same peer letter, the other half
+
+`_bazel_green`'s tally conjunct is a **false red over any build target** — a `bazel build` with a
+dead sink prints the success line and no tally, because there are no tests to tally. The peer
+reproduced this on their box (BES → discard port `127.0.0.1:9`) and found `build` and `test` emit
+different summary lines for one state; my relayed spelling would have missed the state it was built
+for.
+
+⚑⚑ **THE SCOPE IS STRUCTURAL, NOT A COINCIDENCE OF CALLERS.** `_bazel_green` issues `bazel test`
+INSIDE itself — it cannot be handed a build label. So the conjunct is sound there and would be wrong
+anywhere the invocation is `build`. *A census of callers bounds what IS; only a stated scope bounds
+what CAN BE.* The scope is now stated in the function's comment and **asserted in an arm**:
+`test_the_witness_reads_bazels_artifact_not_its_exit_status` requires `bazel test "$1"` inside the
+function body and forbids `bazel build` there. F-armed: switching the fixed invocation to `build`
+reds it by name.
+
+⚑ Filed against this tree by the peer as `ask-bazel-summary-line-differs-by-invocation` in
+`summit/floor/asks.bib`. The answer is scope, not rewrite, and it is in the tree.
+
+### ⟐NO-CLUSTER-ON-THIS-HOST — measured, HELD by operator ruling
+
+This host (Gentoo, 2026-09-19) has no BuildBuddy. `bep_probe.py` — **rebuilt in the tree** after its
+scratchpad predecessor was erased — reports `REFUSED — nothing is listening`. `.bazelrc` hardwires
+`--remote_cache` and `--bes_backend` to `127.0.0.1:31985` unconditionally, so `bazel test` returns
+**rc=34** (row 2: the remote *cache* needs a capabilities handshake before any action) and every
+commit is blocked. Measured that the tree is sound: with `--remote_cache= --bes_backend=` passed
+per-invocation, `//:shellcheck_githooks` passes 1/1 over the edited gate.
+
+⚑⚑ **OPERATOR RULING: wait on BuildBuddy. `linux-sources` and `cassian-observability` are bringing
+up infra on luthen.** `.bazelrc` is not edited, the gate is not routed around, `--no-verify` is not
+used. Seven paths are staged and survive a boundary; the dispatcher's unstaged rev 17 to
+`findings/CENSUS-paperkit-use.md` is theirs and untouched.
+
+⚑ THREE HOST INPUTS DIED ON THIS HOST IN ONE TICK: the uv interpreter root (host venvs dead again),
+`shellcheck` (mise-managed), and **`pandoc`** — which is why this section was written with the
+harness `Edit` rather than `mdstruct append-section`: the structural writer shells to `pandoc` on
+PATH and there is none. The bazel graph stages `@pandoc//:bin` as a declared input; the host-side
+tool does not, and that asymmetry is this symbol's argument arriving for the third time in one tick.
+
+⚑ A COST ON THIS HOST, NAMED: every bazel invocation that touches the action graph invalidates the
+hook venv, and the PreToolUse hook then refuses all Bash until `bazel build //hooks:.venv` is re-run.
+Three rebuilds this tick. The hook is right to refuse rather than fail open; the cost is real.
+
+### ⟐MUTATION-GATE-TARGETS — `mutate_check.sh` rewritten IN THE TREE, 2026-09-19 tick 18
+
+The scratchpad copy died with the OS change; this one is at the repo root and staged. Shellcheck-clean
+through `//:shellcheck_githooks` (the target re-executed — 2 sandbox actions — so it genuinely read the
+new file; host `shellcheck` is gone). Interpreter DERIVED from `dirname` of the config, never
+`realpath`'d; refuses when not `-x`; refuses on empty output.
+
+⚑ **MEASURED ON THIS HOST, both arms:** the runner through `bazel-bin/ratchet/.venv/bin/python3`
+reports **13 = 11 killed + 2 unreachable, 0 survived, 0 errored** — identical to the 09-13 baseline
+through a third interpreter. And the script's precondition refuses the dead host venv by name
+(`ratchet/.venv/bin/python3 was not staged`) — a real dead interpreter, not a plant.
+
+⚑⚑ **THE RUNFILES QUESTION IS NARROWED, NOT ANSWERED.** `venv.bzl:176` returns
+`DefaultInfo(files=..., runfiles=ctx.runfiles(files=outs))`, so `data = [":.venv"]` SHOULD stage
+the tree — yet the 09-13 runfiles listing showed `mutants`, `pyproject.toml`, `src`, `tests` and no
+`.venv` at all. The one `declare_symlink` output (`bin/python3`, line 44) could be dropped from a
+runfiles tree, but that would lose one file, not the whole directory. **Whatever the cause, it needs
+`bazel test` to reproduce, and the hold forbids that.** The BUILD wiring stays unwritten until 31985
+answers. Written down as the next measurement, not as a hypothesis to edit in.
+
+### ⟐SECOND-INSTRUMENT-FOR-NARROWING — CLEARED (staged) 2026-09-19 tick 19
+
+`_population_negatives_by_binding` walks binding → assert-use, the reverse of the existing
+assert → binding walk, and `test_two_walks_agree_on_every_population_shaped_negative_by_name`
+asserts the two sets are EQUAL by member. Both live in `test_bar_fires.py`; the scratchpad
+predecessor `vacuity2.py` is not needed and is not coming back.
+
+⚑⚑⚑ **THE PLANT WAS CHOSEN BY MEASUREMENT, AND THE FIRST GUESS DEMONSTRATED THE WRONG THING.**
+Dropping `ListComp` lost nine of thirteen — the floor caught it, so both arms red and the gap was
+not shown. A one-off reader censused the binding shapes: `DictComp 1 · Call 2 · ListComp 10`.
+Dropping `Call` loses exactly two, 11 clears the floor of 10, and the result is `.F` — **floor
+passes, agreement reds, naming the two members and which walk dropped them.** That is F-arm C's
+gap closed by a second instrument rather than a bigger assertion. Symmetric: the reverse plant
+reds with the same two on the other side.
+
+⚑ THE POPULATION IS THIRTEEN, NOT TWELVE — grown by one since 09-13 (the selector-resolution arm
+from `4ab4a14`), re-derived rather than quoted. And the agreement arm's own two negatives are
+counted in the population it measures, correctly: they are bound from `sorted(...)`, guarded by the
+floor above them, and admitted by both walks. Fifteen with those two.
+
+⚑ RUFF CAUGHT A COMPOSITE ASSERTION (`not A and not B` names neither half) and the split is
+better: each direction of narrowing now says which WALK dropped what, because the repair differs by
+direction. The plant-selection reader was deleted rather than kept — it was a probe, not a
+component, and under the distribution's bar it would have been five findings.
+
+⚑⚑ **THREE PRE-EXISTING ARMS FAILED ON THIS HOST FOR A REASON WORTH NAMING — repaired tick 20.**
+`_needs_reader` guarded them on the mdstruct console script EXISTING (`is_file()`), and
+`mdstruct/.venv/bin/mdstruct` exists — its shebang interpreter does not. `FileNotFoundError` against
+the script, the file present: the ENOENT-names-the-wrong-artefact shape linux-sources measured,
+inside this tree's own guard.
+
+### ⟐READER-GUARD-TESTS-PRESENCE-NOT-RUNNABILITY — CLEARED (staged) 2026-09-19 tick 20
+
+The predicate is now `_reader_runs()`: an invocation of the reader with `--help`, where any exit
+proves `execve` accepted it and `OSError` is the corpse. On this host the three arms now SKIP with a
+reason that names present-but-unrunnable, where they FAILED blaming a present file. **Three skipped
+arms with a stated reason is the honest state on a host without the reader; three failed arms
+blaming the wrong file is not.**
+
+⚑⚑ **BOTH ARMS OF THE GUARD, IN THE TREE, HOST-INDEPENDENT.** `test_reader_guard.py` builds a
+live reader (shebang `/bin/sh`) and a corpse (shebang at a path that does not exist, mode 775,
+`is_file()` true) and asserts the predicate admits one and skips the other. The corpse is
+CONSTRUCTED, not found — pointing at the host's actual dead script would make the arm's verdict
+depend on which host it runs on, the exact coupling the guard exists to survive. F-armed: making
+the predicate ignore `OSError` reds the dead-shebang arm and only that arm.
+
+⚑ Ruff surfaced six findings in the new module and mypy one; all repaired structurally — the
+`subprocess` import declared per-file in `pyproject.toml` with the reason (the guard's subject IS
+execution), `Path` moved to a type-checking block, docstrings given Returns sections. No noqa beyond
+the one call-site directive the file's convention already uses.
+
+⚑ NINE OTHER ARMS FAIL ON THIS HOST and none is this change: `fence/.venv` not built here, the hook
+console scripts absent from the dead host venv, `test_adoption`'s probe venv refused by the bazel
+interpreter's missing `exec_prefix`. Host state, each — and each the same class as the one just
+repaired, which is why they are listed rather than fixed in this tick.
+
+### What the boundary erased, so it is not re-derived from nothing
+
+The OS change moved the scratchpad and emptied it. Lost: `await_bep.py`, `mutate_check.wip.sh`,
+`mutate_runner.wip.py`, `vacuity2.py`, every F-arm plant, every probe. ⚑ **Census-kit B5, measured
+the expensive way:** a handle only survives if its referent lives outside the context. `bep_probe.py`
+is the first instrument rebuilt in the tree; the mutation gate wiring (`mutate_check.sh`) must be
+rewritten the same way — shellcheck-clean, interpreter derived from `dirname` of the config, NOT
+`realpath`'d.
+
 ### ⟐RATCHET-MEANS-TWO-THINGS — measured, reported, deliberately not acted on
 
 `--ratchet` finds the scale at which the RESIDENT SET binds on a swap-backed host, and
@@ -1751,6 +1976,103 @@ consulted at all.
 ⚑ **THE RUNNER STAYS UNLANDED.** Five refuted hypotheses do not make a repair, and the rule that
 kept it out of the tree two ticks running is the same one: do not promote a probe with a known
 defect.
+
+
+#### ⚑⚑⚑ THE SANDBOX QUESTION IS MEASURED AND THE ANSWER IS YES — and the per-cell cost figure turned out to be load-dependent
+
+**Tick 13. The runner is landed at `35931c3`; this measures what a gate target needs before any
+BUILD file is written.** Nothing was typed into a build file this tick: the open question was
+whether the runner's central assumption — shelling to a venv interpreter **by path** — survives a
+bazel sandbox at all, and that is now answered.
+
+⚑⚑ **ONLY A VENV INTERPRETER WORKS, WITH A CONTROL THAT FAILS.** Measured against the runner's own
+`run()` on `mdstruct` (the distribution that declares `panflute`, so the one that can refute):
+
+| interpreter | verdict |
+|---|---|
+| the distribution's `.venv/bin/python` | **killed** |
+| the bare mise interpreter the venv symlinks to | errored |
+| `sys.executable` of the calling process | errored |
+
+So the dependency on the venv is real and structural, not incidental — which is the same fact the
+`.resolve()` defect was made of, now stated as a requirement rather than discovered as a bug.
+
+⚑⚑⚑ **AND THE TREE ALREADY BUILDS A VENV AS A TARGET: `venv_from_hub` (⟐VENV-AS-BUILD-ARTIFACT),
+called once per distribution.** Its interpreter symlink is deliberately RELATIVE — its own comment
+records measuring both arms, because *an artifact that is only valid at the path it was built at is
+host state with a build step in front of it*. That is precisely the property a sandboxed gate
+needs, and it was built for a different reason two arcs ago.
+
+**MEASURED END TO END:** `bazel build //mdstruct:.venv` produces `bazel-bin/mdstruct/.venv/bin/
+python3`, and handing THAT to the runner **kills the mutant** — the same verdict as the host venv.
+The gate target therefore stages `//<dist>:.venv` as data and passes its interpreter. No new
+mechanism is needed.
+
+### ⚑⚑⚑ THE COST FIGURE IN THIS SECTION IS LOAD-DEPENDENT, AND NOTHING RECORDED THAT
+
+The per-cell figures recorded above — `ratchet 0.2s · hooks 0.4s · fence 0.5s · mdstruct 1.4s`,
+and the *under four minutes whole-tree* conclusion drawn from them — were taken on a quiet machine.
+Re-measured this tick at **load average 48.65**:
+
+```
+host venv        23.6s for ONE mdstruct cell   (recorded: 1.4s)
+bazel-built venv 27.9s for the same cell       (~18% slower than host, which is the real comparison)
+```
+
+⚑⚑ **SO THE HONEST STATEMENT IS A RANGE WITH ITS CONDITION ATTACHED, NOT A NUMBER.** At 1.4s/cell
+mdstruct's 64 sites are 90 seconds; at 23.6s they are 25 minutes. The first whole-grid run this
+tick **timed out at 300s** and that timeout was the machine, not a hang — established by running
+one cell under both interpreters with the host venv as a control that had to finish.
+
+⚑ **THE BAZEL-VS-HOST DELTA IS THE FIGURE THAT SURVIVES, because both arms were measured in the
+same minute under the same load: ~18%.** A ratio between two things measured together is robust to
+a condition that moves them both; an absolute second-count is not. **The recorded absolutes should
+be read as *taken quiet*, and the gate's cost argument re-measured on the machine that will run
+it** rather than inherited from this section.
+
+### ⚑⚑ THE OPERATOR RE-CONFIRMED THE RULING AGAINST THE CORRECTED RANGE
+
+Asked with the 17x spread stated: **wire it as ruled — the DAG absorbs it.** The reasoning
+recorded with the ruling: the per-commit cost is ~0 for untouched distributions, one grid for a
+changed one, and the 25-minute figure is a cold worst case on a loaded machine rather than a tax.
+
+### Written this tick, and where it stopped
+
+`mutate_check.sh` (shellcheck clean, runs correctly outside bazel: ratchet 13 = 11 killed + 2
+unreachable) and a `//ratchet:mutants` `sh_test`. ⚑ THE SCRIPT DELIBERATELY DOES **NOT** `realpath`
+THE INTERPRETER, where `mypy_check.sh` does — mypy's runner is a staged `py_binary`, but
+dereferencing a venv symlink is the defect that cost three ticks.
+
+⚑⚑ **BAZEL REFUSED `$(location :.venv)` AND THE REFUSAL WAS CORRECT:** that target expands to
+2,225 files, so no single-file expression can name `bin/python3`. Repaired by deriving the
+interpreter from `dirname` of the config, which is the distribution root under any staging prefix.
+
+⚑⚑⚑ **THEN THE TARGET FAILED IN 0.6s, AND THE SCRIPT'S OWN REFUSAL IS WHAT CAUGHT IT:**
+
+```
+mutate_check: ratchet/.venv/bin/python3 was not staged — refusing rather than running a grid
+  under whatever interpreter happens to be on PATH
+```
+
+**MEASURED: the runfiles tree holds `mutants`, `pyproject.toml`, `src`, `tests` — and no `.venv`,
+despite `:.venv` being named in `data`.** Why a `venv_from_hub` target listed as data does not
+stage is **UNMEASURED** and is the next tick's first job.
+
+⚑ **AND THE 0.6s IS THE DURATION-AS-EVIDENCE LESSON PAYING OFF IMMEDIATELY.** A grid cannot run in
+0.6s; the clock said *the interpreter precondition fired* before the log was read. The same reading
+took three ticks to arrive at last time, on a 0.04s failure whose message named a missing package.
+
+⚑⚑ **THE PRECONDITION EARNED ITSELF ON ITS FIRST REAL USE.** Without it the grid would have run
+under whatever `python3` the sandbox provides — reporting every site ERRORED, which reads as *the
+suite did not run* rather than *the harness is misconfigured*. That is exactly the three-tick
+ambiguity, and the refusal converted it into one line.
+
+⚑ **NOTHING FROM THIS TICK LANDS IN THE TREE, AND THE SCRIPT IS HELD RATHER THAN COMMITTED.** The
+BUILD changes are reverted because the target is RED. `mutate_check.sh` is correct on its own
+(shellcheck clean, runs the grid outside bazel) but **no target calls it** — committing it would
+be the *console script nothing consumed* shape this tree measured once already, where
+`mikemol-hook-structural-query` was a distribution's only entry point and nothing used it. It sits
+at `scratchpad/mutate_check.wip.sh` until the staging question is answered and the target is green.
 
 ### ⚑⚑⚑ FOUR HYPOTHESES, EACH PROPOSED AND EDITED IN BEFORE BEING TESTED
 

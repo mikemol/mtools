@@ -537,9 +537,49 @@ def test_the_hermetic_sandbox_is_a_default_not_a_config() -> None:
 # mean either staging a venv or weakening the gate to use `grep`. They SKIP with a stated reason
 # instead — `--strict-markers` is on, so the skip is declared and visible, never silent.
 _CITATION_GATE_READER = _DIST.parent / "mdstruct" / ".venv" / "bin" / "mdstruct"
+
+
+def _reader_runs() -> bool:
+    """Say whether the host-tier reader can actually be EXECUTED, not merely whether it exists.
+
+    ⚑⚑⚑ THE GUARD TESTED PRESENCE AND ADMITTED A CORPSE. `is_file()` was true for
+    `mdstruct/.venv/bin/mdstruct` on 2026-09-19 — a 340-byte script, mode 775 — while its shebang
+    interpreter pointed at a venv whose base interpreter no longer existed. Three arms passed the
+    guard and failed INSIDE with `FileNotFoundError: .../bin/mdstruct`, naming a file that was
+    right there. `execve` reports ENOENT against the SCRIPT when the shebang target is
+    unresolvable; `linux-sources` measured that shape across 25 of 37 venvs and wrote to say so,
+    and this guard reproduced it in the tree that received the letter.
+
+    ⚑⚑ SO THE PREDICATE IS AN INVOCATION. `--help` exits 2 by mdstruct's own convention (its usage
+    is printed on the error stream and the tool refuses to guess a mode), and ANY exit is proof the
+    interpreter resolved; what distinguishes a runnable reader from a corpse is that `execve`
+    succeeded at all. A `FileNotFoundError` or `OSError` here is the corpse, and the arm SKIPS with
+    a reason that says which — not FAILS blaming the script.
+
+    ⚑ THREE SKIPPED ARMS WITH A STATED REASON IS THE HONEST STATE ON A HOST WITHOUT THE READER.
+    Three failed arms blaming a present file is not. `--strict-markers` keeps the skip visible.
+
+    Returns:
+        True when the reader's interpreter resolves and the script executes.
+
+    """
+    if not _CITATION_GATE_READER.is_file():
+        return False
+    try:
+        subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject
+            [str(_CITATION_GATE_READER), "--help"], capture_output=True, check=False, timeout=30,
+        )
+    except OSError:
+        # ⚑ ENOENT AGAINST A FILE THAT EXISTS, or EACCES, or a dead interpreter root — every one of
+        # these is "the reader cannot run here", and none of them is a fact about the arm.
+        return False
+    return True
+
+
 _needs_reader = pytest.mark.skipif(
-    not _CITATION_GATE_READER.is_file(),
-    reason="rule_citations.sh routes its heading query through mdstruct, which is host-tier",
+    not _reader_runs(),
+    reason="rule_citations.sh routes its heading query through mdstruct, which is host-tier and "
+           "must be RUNNABLE here — present-but-unrunnable (a dead shebang interpreter) skips too",
 )
 
 
@@ -2050,6 +2090,66 @@ def _guarded(fn: pyast.FunctionDef, line: int) -> bool:
         and not (isinstance(n.test, pyast.UnaryOp) and isinstance(n.test.op, pyast.Not))
         for n in pyast.walk(fn)
     )
+
+
+def _population_negatives_by_binding(fn: pyast.FunctionDef) -> list[tuple[str, int]]:
+    """Find the same population as `_population_negatives`, walking in the OPPOSITE direction.
+
+    ⚑⚑⚑ A SECOND INSTRUMENT, NOT A SECOND ASSERTION. The arm over `_population_negatives` asserts a
+    FLOOR on the population it finds, and F-arm C measured what a floor cannot do: it catches a
+    classifier that recognises NOTHING and tolerates one that NARROWS — a plant that dropped ten of
+    twelve members still cleared `>= 10` on a different corpus, and here dropped two of twelve and
+    PASSED. The floor's reach is a fact about the corpus, not about the floor.
+
+    ⚑⚑ TWO WALKS THAT AGREE ON MEMBERSHIP ARE EVIDENCE; ONE WALK THAT CLEARS A FLOOR IS NOT. This
+    starts from the OTHER end: `_population_negatives` goes assert → operand name → binding, and
+    this goes binding → uses in asserts. If the first narrows (a comprehension type dropped from its
+    isinstance tuple, say) it loses members this still finds; if this narrows, the reverse. The
+    agreement arm reds on any asymmetry BY NAME, which is exactly what the floor could not do.
+
+    ⚑ AND IT SHARES `_VERDICT_CALLS` DELIBERATELY. That exclusion is a DECLARED list of meanings,
+    not a derived population; two instruments that disagreed about what counts as a verdict would be
+    measuring different questions, not the same one twice. The shared part is the definition; the
+    independent part is the walk.
+
+    ⚑ ITS PREDECESSOR LIVED IN A SCRATCHPAD AND DIED WITH IT on 2026-09-19 — `vacuity2.py` agreed
+    with the arm on the same twelve members by name, and was erased by a directory move. This one is
+    in the tree.
+
+    Returns:
+        the bound name and assert line of each population-shaped negative, found from the binding.
+
+    """
+    found: list[tuple[str, int]] = []
+    for node in pyast.walk(fn):
+        if not (isinstance(node, pyast.Assign) and len(node.targets) == 1
+                and isinstance(node.targets[0], pyast.Name)):
+            continue
+        name = node.targets[0].id
+        src = node.value
+        # ⚑ THE ADMISSION PREDICATE IS RESTATED, NOT SHARED, because sharing it would make one walk
+        # a rename of the other. Both admit a Call or a comprehension; both exclude a declared
+        # verdict call. Stated twice, so a narrowing in either copy shows as a disagreement.
+        is_derived = isinstance(src, (pyast.Call, pyast.ListComp, pyast.SetComp,
+                                      pyast.DictComp, pyast.GeneratorExp))
+        if not is_derived:
+            continue
+        called = src.func if isinstance(src, pyast.Call) else None
+        callee = (
+            called.id if isinstance(called, pyast.Name)
+            else called.attr if isinstance(called, pyast.Attribute)
+            else None
+        )
+        if callee in _VERDICT_CALLS:
+            continue
+        found.extend(
+            (name, use.lineno)
+            for use in pyast.walk(fn)
+            if isinstance(use, pyast.Assert) and isinstance(use.test, pyast.UnaryOp)
+            and isinstance(use.test.op, pyast.Not) and isinstance(use.test.operand, pyast.Name)
+            and use.test.operand.id == name
+        )
+    return found
 
 
 def _resolve_path(node: pyast.expr, targets: dict[str, Path]) -> Path | None:
@@ -4592,6 +4692,29 @@ def test_the_witness_reads_bazels_artifact_not_its_exit_status() -> None:
         "no decision may rest on bazel's exit status alone — that is the defect this file's own "
         "comments warn about twice, committed in the code between them"
     )
+    # ⚑⚑⚑ THE TEST-TALLY CONJUNCT IS SOUND ONLY BECAUSE THE FUNCTION FIXES ITS OWN INVOCATION.
+    # `linux-sources` measured, on their box with BES pointed at a discard port, that `bazel build`
+    # and `bazel test` print DIFFERENT summary lines for one dead-sink state — a build prints the
+    # success line and NO tally. So the tally conjunct above is a false red over any build target,
+    # and it is honest here for exactly one reason: `_bazel_green` issues `bazel test` itself and
+    # can never be handed a build label. This asserts THAT reason, so a refactor that lifts the
+    # invocation out to the caller (making the function invocation-agnostic) reds here before the
+    # predicate silently becomes wrong for half its possible callers.
+    # ⚑ THE PEER'S PHRASING, kept: *a census of callers bounds what IS; only a stated scope bounds
+    # what CAN BE.* A scope stated in a comment is prose; this is the scope stated in an arm.
+    fn_start = commands.index("_bazel_green() {")
+    fn_end = commands.index("\n}", fn_start)
+    fn_body = commands[fn_start:fn_end]
+    assert 'bazel test "$1"' in fn_body, (
+        "`_bazel_green` must issue `bazel test` INSIDE itself — the test-tally conjunct is only "
+        "sound while the function cannot be handed a build target, and that property lives in the "
+        "invocation being fixed here rather than passed in by a caller"
+    )
+    assert "bazel build" not in fn_body, (
+        "`_bazel_green` must never issue `bazel build` — a build prints no test tally, so the "
+        "tally conjunct would return 1 over a green build with a dead sink, which is the exact "
+        "false red this predicate was written to prevent"
+    )
 
 
 def test_no_conventional_under_declaration_survives_in_this_tree() -> None:
@@ -6459,4 +6582,68 @@ def test_every_population_shaped_negative_is_guarded_against_being_empty() -> No
         + "\n    ".join(sorted(unguarded))
         + f"\n\n  swept {len(swept)} population-shaped negative(s):\n    "
         + "\n    ".join(sorted(swept))
+    )
+
+
+def test_two_walks_agree_on_every_population_shaped_negative_by_name() -> None:
+    """⚑⚑⚑ THE FLOOR ABOVE TOLERATES A NARROWED CLASSIFIER; THIS DOES NOT.
+
+    `test_every_population_shaped_negative_is_guarded_against_being_empty` asserts `>= 10` over the
+    population `_population_negatives` finds. F-arm C, re-measured on this corpus: a plant that
+    narrowed the classifier's isinstance tuple lost **two of twelve** members and the arm PASSED,
+    because 10 clears a floor of 10. On the corpus it was first built against, the same plant lost
+    one of thirteen. **The floor's reach is a fact about the corpus, not about the floor** — and a
+    check whose strength depends on how many members happen to exist is a check that gets weaker
+    as the suite gets smaller.
+
+    ⚑⚑ THE STRONGER CHECK IS A SECOND INSTRUMENT, NOT A BIGGER ASSERTION. `_population_negatives`
+    walks assert → operand → binding; `_population_negatives_by_binding` walks binding → uses. Two
+    walks that agree on MEMBERSHIP are evidence about the population. One walk clearing a floor is
+    evidence about the floor. This asserts the two sets are EQUAL, and prints the members each side
+    holds alone — so a narrowing in either walk reds with the name of what it dropped.
+
+    ⚑ AND THE POSITIVE CONTROL IS SHARED WITH THE FLOOR ARM. An empty population on BOTH sides
+    would satisfy set equality trivially, which is the vacuity this module measures; the floor is
+    what refuses that, so the two arms are complementary and neither is sufficient alone.
+
+    ⚑ THE PREDECESSOR WAS `scratchpad/vacuity2.py`, which agreed with the arm on the same twelve by
+    name on 2026-09-13 and was erased by a directory move on 2026-09-19. A second instrument that
+    lives outside the tree is a second instrument until the first boundary.
+    """
+    forward: set[str] = set()
+    backward: set[str] = set()
+    for suite in sorted(_DIST.parent.glob("*/tests/test_*.py")):
+        tree = pyast.parse(suite.read_text(encoding="utf-8"))
+        for fn in (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef)):
+            forward.update(
+                f"{suite.name}:{line} {fn.name} → assert not {target}"
+                for target, line in _population_negatives(fn)
+            )
+            backward.update(
+                f"{suite.name}:{line} {fn.name} → assert not {target}"
+                for target, line in _population_negatives_by_binding(fn)
+            )
+    # ⚑ THE FLOOR IS RESTATED HERE, because set equality over two empty sets is TRUE and would read
+    # as agreement. Both walks finding nothing is the vacuity, not the consensus.
+    assert len(forward) >= _MIN_POPULATION_NEGATIVES, (
+        f"the forward walk found {len(forward)}, below the floor — this arm cannot distinguish "
+        f"agreement from two empty sets"
+    )
+    only_forward = sorted(forward - backward)
+    only_backward = sorted(backward - forward)
+    agreed = "\n    ".join(sorted(forward & backward))
+    # ⚑ TWO ASSERTIONS, NOT ONE CONJUNCTION — ruff's `pytest-composite-assertion` is right that
+    # `not A and not B` names neither half when it fails. Each direction of narrowing gets its own
+    # message naming which WALK dropped what, because the repair differs by direction.
+    assert not only_backward, (
+        "the ASSERT→BINDING walk (`_population_negatives`) has NARROWED — it misses members the "
+        "binding→assert walk still finds. The floor arm may still pass, which is why this exists:\n"
+        f"  missed by assert→binding ({len(only_backward)}):\n    " + "\n    ".join(only_backward)
+        + f"\n  agreed ({len(forward & backward)}):\n    " + agreed
+    )
+    assert not only_forward, (
+        "the BINDING→ASSERT walk (`_population_negatives_by_binding`) has NARROWED — it misses "
+        "members the assert→binding walk still finds:\n"
+        f"  missed by binding→assert ({len(only_forward)}):\n    " + "\n    ".join(only_forward)
+        + f"\n  agreed ({len(forward & backward)}):\n    " + agreed
     )

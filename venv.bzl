@@ -11,7 +11,7 @@ builds `_<target>.venv/bin/python3` for every `py_test`/`py_binary` — that is 
 `sys.executable` names inside an action, measured. The operator was shown this and ruled for a
 whole-distribution venv anyway, because a PER-TARGET venv cannot be ACTIVATED, and this
 repository has three non-bazel consumers that reach `<dist>/.venv/bin/...`: `.githooks/pre-commit`
-(13 call sites), `preflight.sh` (7), and the interactive dev loop. Those are the users; the
+(12 call sites), `preflight.sh` (6) — measured `grep -c .venv/bin/` at 35931c3, an earlier draft said 13/7 and had drifted — and the interactive dev loop. Those are the users; the
 duplication is the price.
 
 ⚑ WHAT IS NOT DUPLICATED: no resolver, no installer, no network. The wheels arrive already

@@ -347,3 +347,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody has looked at — the blast radius a per-responsibility override exists to avoid.
 "tests/test_bar_fires.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_no_chaining.py" = ["assert", "suspicious-subprocess-import"]
+# ⚑⚑ THE EIGHTH, AND ITS SUBJECT IS EXECUTION ITSELF. `test_reader_guard.py` exists because a
+# guard that tested `is_file()` admitted a script whose shebang interpreter was gone — present,
+# mode 775, and `execve` refused it naming the script. The repaired guard's predicate is an
+# invocation, and this module F-arms that predicate against a constructed corpse: a script under a
+# shebang that does not resolve. There is no way to ask "does this execute" without executing it.
+# ⚑ THE CALL SITE CARRIES ITS OWN `subprocess-without-shell-equals-true` directive, per the
+# asymmetry stated above; this line clears only the import.
+"tests/test_reader_guard.py" = ["assert", "suspicious-subprocess-import"]
