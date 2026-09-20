@@ -39,6 +39,20 @@ module(name = "mtools", version = "0.1")
 # the package claims to support rather than whatever the caller's shell resolved.
 bazel_dep(name = "rules_python", version = "2.3.3")
 
+# ⚑⚑⚑ rules_python IS PATCHED, AND THE PATCH IS DECLARED HERE RATHER THAN APPLIED TO THE FETCHED
+# COPY. Operator ruling 2026-09-20 (W10): "We need to keep kind:git." MEASURED: `pip.parse(uv_lock
+# = …)` fails for a git-sourced package — `_parse_uv_lock_json` builds a `git_struct` with
+# `kind = "git"`, then emits `paperkit==0.1.0` as the requirement line and hands the git URL to
+# bazel's downloader, which fetches a web page. `patches/rules_python-uv-lock-git-kind.patch`
+# carries the measurement and the two-line repair: a git source reaches pip as
+# `name @ git+url@rev`, the form `uv pip compile` already writes. Until upstream carries it,
+# this override is the declared input; the fetched module under ~/.cache is never edited.
+single_version_override(
+    module_name = "rules_python",
+    patch_strip = 1,
+    patches = ["//patches:rules_python-uv-lock-git-kind.patch"],
+)
+
 # ⚑ `@platforms` IS DECLARED BECAUSE //rbe NAMES ITS CONSTRAINTS. It arrives transitively for many
 # graphs, but a transitive repository is not a VISIBLE one under bzlmod — measured, `@platforms//os`
 # resolved to "unknown repo requested from @@" until this line existed. A dependency a file
@@ -109,22 +123,17 @@ pip.parse(
     python_version = "3.13",
     uv_lock = "//hooks:uv.lock",
 )
-# ⚑⚑⚑ mdstruct_dev STAYS ON THE COMPILED LOCK, AND THE REASON IS A MEASURED UPSTREAM DEFECT.
-# mdstruct's dev group carries `paperkit`, a GIT source. `uv_lock` handling in rules_python
-# (`private/pypi/parse_requirements.bzl:227-291`) recognises `source.git` and builds a
-# `git_struct` — then emits `requirement_line = "paperkit==0.1.0"` (line 278) and drops
-# `kind = "git"` from `resolved_srcs`, so `pip_archive` asks an index for a version that exists
-# only in a repository: `No matching distribution found for paperkit==0.1.0`. MEASURED
-# 2026-09-20 by pointing this hub at uv.lock and building //mdstruct:.venv. The WIP's earlier
-# claim that "the git-sourced paperkit survives that path" read the branch's existence, not its
-# output. `uv pip compile` writes `paperkit @ git+https://…@<sha>`, which pip honours, so the
-# compiled lock is the one that can feed this hub until upstream carries the git kind through.
-# ⚑ The resolver divergence (⟐TWO-RESOLVERS-DISAGREE) therefore REMAINS for mdstruct alone;
-# the other three dev hubs read uv.lock and agree with their host venvs.
+# ⚑⚑⚑ mdstruct_dev READS uv.lock TOO, THROUGH THE PATCH DECLARED ABOVE. mdstruct's dev group
+# carries `paperkit`, a GIT source, and unpatched rules_python turned it into `paperkit==0.1.0`
+# for an index: `No matching distribution found` (measured 2026-09-20, the F-arm for the patch).
+# The WIP's earlier claim that "the git-sourced paperkit survives that path" had read the
+# branch's existence, not its output. With the patch, the git source reaches pip as
+# `paperkit @ git+https://…@<sha>` — the same line `uv pip compile` writes — and all four dev
+# hubs resolve from one lock each.
 pip.parse(
     hub_name = "mdstruct_dev",
     python_version = "3.13",
-    requirements_lock = "//mdstruct:requirements-dev.txt",
+    uv_lock = "//mdstruct:uv.lock",
 )
 pip.parse(
     hub_name = "ratchet_dev",
