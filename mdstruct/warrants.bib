@@ -967,6 +967,22 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_every_mode_declares_exactly_the_flags_its_code_reads}
 }
 
+@misc{mdstruct-cli-lint-reads-every-path-it-is-given-and-attributes-findings-to-each,
+  section = {cli-flags},
+  title   = {Lint reads every path it is given and attributes findings to each},
+  note    = {The corpus-wide question — how many files carry a ragged-row finding — was
+            unmeasurable through this mode: handed ninety-one paths by a find, lint read the first
+            and stopped, and a grep over its output returned zero with a failed positive control.
+            A shell loop is refused by this repository's hook and is the wrong instrument; the tool
+            owes the mode. Lint now iterates the path population through the same loop verify uses,
+            one loop and not one per mode. This arm hands it two documents with different findings
+            and asserts each is reported under its own file — attribution, not a count, because a
+            mode that read both and printed everything under the first path would count right and
+            name wrong. Positive control: the first file alone produces its finding. Planted
+            single-path read: the arm reds naming the file that never appeared.},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_lint_reads_every_path_it_is_given_and_attributes_findings_to_each}
+}
+
 @misc{mdstruct-cli-every-flag-has-a-stated-arity-that-matches-how-it-is-read,
   section = {cli-flags},
   title   = {Every flag has a stated arity that matches how it is read},

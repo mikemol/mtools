@@ -1482,6 +1482,30 @@ describes a defect in the QUESTION. The tool's own stated rule — every mode pr
 denominator — was half-kept: a count of rows is half a denominator, and which tables they came
 from is the other half.
 
+⚑⚑⚑ **MEASURED 2026-09-20 (W8), AND THE CARRIED FIGURE WAS RIGHT — BUT ON 09-19 IT WAS
+UNVERIFIABLE.** `find findings inbox -name '*.md' -exec mdstruct lint {} +` handed the tool 91
+paths and it read the FIRST and stopped; a grep for MD056 over that output returned 0 with a
+FAILED positive control (no rule code at all appeared). The zero was a fact about the reader.
+`lint` now takes a path population like `verify` (`_over_paths`, shared, `52eded7`→W8): the same
+command prints 91 denominator lines for 91 files, and the count is:
+
+    MD056: 12 rows in 9 files      positive control: MD013 943, same reader, same run
+
+    findings/bazel/paperkit.md                                    L135
+    findings/constitution/cassian-observability-constitution.md  L44 L45 L46
+    findings/constitution/substrate-constitution.md              L102
+    findings/deps-build/deps-build-apex.md                        L103
+    findings/known-work/mtools-known-work.md                      L101
+    findings/membudget/linux-sources.md                           L152 L234
+    findings/remaining-work/mtools.md                             L25
+    findings/remaining-work/paperkit.md                           L38
+    findings/remaining-work/remaining-work-apex.md                L52
+
+Every row is `N cells against M declared — a separator was added`: a `|` inside a cell, read as
+a column break. Eight of nine files are filed legs or apexes under frozen censuses and may not
+be amended; `findings/known-work/mtools-known-work.md` is this repository's own and is the one
+repairable row. The count is the deliverable; the repair of that one row is not this item.
+
 ### ⟐PEER-MDSTRUCT-CLAIMS — three claims measured 2026-09-12; ONE REAL, TWO FALSE
 
 `linux-sources-94` filed three claims about mtools' mdstruct. Measured before acting on any:

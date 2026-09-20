@@ -582,16 +582,22 @@ def _fixpoint_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
 
 
 def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
-    """Adapt the shape rules, which read a `--width` from argv.
+    """Adapt the shape rules, which read a `--width` from argv, over a PATH POPULATION.
+
+    ⚑⚑ MANY PATHS, LIKE `verify` — W8, 2026-09-20. A corpus-wide count (`how many files carry
+    MD056?`) was UNMEASURABLE through this mode: `find … -exec mdstruct lint {} +` handed it
+    ninety paths and it read the first, and a grep over the result returned 0 with a FAILED
+    positive control. A shell loop is refused by this repository's no-chaining hook and is the
+    wrong instrument anyway — the tool owes the mode. Each file prints its own findings and its
+    own denominator line, exactly as before; the file count is the count of those lines.
 
     Returns:
-        The verb's exit code, forwarded unchanged. ⚑ AN ADAPTER NORMALISES THE SIGNATURE,
-        NEVER THE VERDICT: the dispatch table needs one callable shape, and a mode that
-        rewrote a code on the way through would make the table a place where verdicts are
-        decided rather than routed.
+        The WORST code over every path: 0 every document satisfies the check, 1 some does not,
+        2 some path does not exist. ⚑ AN ADAPTER NORMALISES THE SIGNATURE, NEVER THE VERDICT:
+        the per-file code is `_lint`'s own, folded with `max`.
 
     """
-    return _lint(path, argv)
+    return _over_paths(path, argv, lambda p: _lint(p, argv))
 
 
 def _write_section(path: Path, needle: str, argv: list[str], *, append: bool) -> int:
@@ -761,20 +767,42 @@ def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
         the end — a caller learns the severest finding across the whole corpus in one run.
 
     """
-    # ⚑ `argv[2:]` STILL CONTAINS THE FIRST PATH, and slicing it naively verified that file TWICE.
-    # MEASURED on the single-path arm — `verify README.md` printed the same green line twice — which
-    # is why the arm exists: a duplicate PASS is invisible in a green run and would have doubled the
-    # gate's first file forever. Positional args after the mode are `args[1:]`; `path` is `args[1]`.
-    # ⚑⚑ AND IT SPLITS THE SAME WAY `main` DOES, rather than re-filtering. This mode takes a PATH
-    # POPULATION, so the eaten-operand defect lands here as a silently SHORTER corpus: a file whose
-    # name begins with a dash would drop out and `verify` would report clean over the files it
-    # happened to keep. A second spelling of the split would be a second thing to drift.
-    # ⚑⚑⚑ THE OPERANDS COME FROM THE SAME PARSE `main` RAN, through `_mode_operands`, which
-    # returns them WITHOUT the mode word — so the whole list IS the path population, and `path`
-    # (already `operands[0]`) is not added a second time. The previous cut indexed `[2:]` over a
-    # list that still carried the mode; an earlier one added `[1:]` and silently SKIPPED ONE PATH.
-    # Both defects were off-by-one over a list whose first element meant something different from
-    # the rest; a list of only paths has no such element.
+    return _over_paths(path, argv, _verify_one)
+
+
+def _over_paths(path: Path, argv: list[str], one: Callable[[Path], int]) -> int:
+    """Run `one` over every path operand and return the WORST code.
+
+    ⚑⚑⚑ THE OPERANDS COME FROM THE SAME PARSE `main` RAN, through `_mode_operands`, which returns
+    them WITHOUT the mode word — so the whole list IS the path population, and `path` (already
+    `operands[0]`) is not added a second time. Two earlier cuts of this loop, inside `verify`,
+    were each off by one: one indexed `[2:]` over a list that still carried the mode and read
+    the first file TWICE (measured: `verify README.md` printed the same green line twice); the
+    next added `[1:]` and silently SKIPPED ONE PATH. Both were indexing over a list whose first
+    element meant something different from the rest; a list of only paths has no such element.
+
+    ⚑⚑ SHARED BY `verify` AND `lint` (W8, 2026-09-20) so a mode that takes a population has one
+    loop, not one per mode: a second spelling of *iterate, refuse a missing file, keep the worst*
+    would be a second thing to drift — and `lint` reading one file where the corpus has ninety
+    was exactly the reader failure a positive control caught on tick 13.
+
+    ⚑ EVERY PATH IS VISITED BEFORE RETURNING: the loop does not stop at the first failure,
+    because a gate that reports one finding per run teaches one finding per round.
+
+    Args:
+        path: the first operand, already opened by `main`; the fallback when the parse yields
+            no operands (it cannot, once `main` has run, but the loop must not be empty).
+        argv: the full argument vector, re-parsed for the population.
+        one: the per-file verb; its code is folded with `max`.
+
+    Returns:
+        The WORST code over every path: the verb's own codes, or 2 for a path that does not
+        exist. ⚑⚑ *A file I could not read* is not *a file that failed*, and collapsing them
+        would let a typo'd path report as a clean document — the ABSENT/EMPTY distinction this
+        repository draws everywhere else. `max` rather than first-failure is what makes visiting
+        every path worth doing: a caller learns the severest finding across the corpus in one run.
+
+    """
     paths = [Path(p) for p in _mode_operands(argv)]
     if not paths:
         paths = [path]
@@ -784,7 +812,7 @@ def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
             sys.stderr.write(f"mdstruct: no such file: {candidate}\n")
             worst = max(worst, 2)
             continue
-        worst = max(worst, _verify_one(candidate))
+        worst = max(worst, one(candidate))
     return worst
 
 

@@ -607,6 +607,54 @@ def test_a_registered_mode_answers_when_run_as_a_program(doc: Path, mode: str) -
     )
 
 
+_WIDE = "x" * 130
+
+
+def test_lint_reads_every_path_it_is_given_and_attributes_findings_to_each(
+    doc: Path,
+) -> None:
+    """⚑⚑ `lint` OVER A PATH POPULATION — W8, 2026-09-20.
+
+    The corpus-wide question *how many files carry MD056* was unmeasurable: handed ninety paths,
+    `lint` read the first and stopped, and a grep over its output returned 0 with a FAILED
+    positive control. This arm hands it two documents with DIFFERENT findings and asserts each
+    finding is reported under its own file — attribution, not just a count, because a mode that
+    read both and printed everything under the first path would count right and name wrong.
+
+    ⚑ POSITIVE CONTROL: the first document alone must produce its finding, so the second's
+    presence in the output is evidence the loop reached it and not evidence the arm is vacuous.
+    """
+    first = doc
+    first.write_text("# A\n\n" + _WIDE + "\n", encoding="utf-8")
+    second = doc.parent / "second.md"
+    second.write_text("# B\n\n<div>\n", encoding="utf-8")
+    alone = _run(first, mode="lint")
+    assert "MD013" in alone.stdout, f"control: first file alone reports no MD013: {alone.stdout!r}"
+    result = _run(first, mode="lint", extra=[str(second)])
+    assert result.returncode == 1, f"rc={result.returncode}, stderr={result.stderr!r}"
+    lines = result.stdout.splitlines()
+
+    def _at(needle: str) -> int:
+        hits = [i for i, ln in enumerate(lines) if needle in ln]
+        assert hits, f"{needle!r} never appears in lint's output: {result.stdout!r}"
+        return hits[0]
+
+    first_denominator = _at(str(first))
+    second_denominator = _at(str(second))
+    assert first_denominator < second_denominator, "files reported out of the order given"
+    # ⚑ ATTRIBUTION: MD013 (the wide line) precedes the first file's denominator; MD033 (the
+    # inline HTML) sits between the two denominators — under the second file, not the first.
+    md013_at = _at("MD013")
+    md033_at = _at("MD033")
+    assert md013_at < first_denominator, "the first file's finding is not under the first file"
+    assert first_denominator < md033_at < second_denominator, (
+        "the second file's finding is not under the second file"
+    )
+    assert "MD013" not in "\n".join(lines[first_denominator + 1:]), (
+        "the first file's finding was repeated under the second"
+    )
+
+
 # ⚑⚑⚑ ARGPARSE PARITY — OPERATOR RULING 2026-09-20 (W9): migrate to argparse, parity FIRST.
 # `cli.argparse_parser(mode)` exists beside the hand-rolled parser with no caller. The three arms
 # below are why it may replace it: the arity table it is built from must match how the module
