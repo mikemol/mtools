@@ -44,12 +44,31 @@ def _pandoc() -> str | None:
     declared = os.environ.get("PANDOC_BIN")
     if declared and Path(declared).is_file():
         return declared
+    # ⚑⚑⚑ UNDER BAZEL, PATH IS NOT AN ANSWER. MEASURED 2026-09-19 with one plant and two runs:
+    # a `py_test` with `PANDOC_BIN` removed and `/usr/bin/pandoc` blocked from the sandbox
+    # skipped its cases (honest); the same plant with the block lifted RAN them — linux-sandbox
+    # mounts `/usr` read-only, so `shutil.which` found the HOST binary and the hermetic suite
+    # exercised code against an input nothing declared and no cache key knew. The `//mdstruct:
+    # mutants` target had exactly that omission for three commits. Inside a runfiles tree the
+    # only pandoc that may answer is the declared one; a missing declaration is refused here so
+    # it cannot be read as a pass, and cannot be read as a skip either — a skip under bazel is
+    # the 54-of-97 silent-green this file's header records.
+    if os.environ.get("RUNFILES_DIR") or os.environ.get("TEST_SRCDIR"):
+        return None
     return shutil.which("pandoc")
 
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
-    """Skip pandoc-marked tests when the binary is absent, saying so."""
+    """Skip pandoc-marked tests on a HOST without pandoc; FAIL them under bazel without it."""
     if item.get_closest_marker("needs_pandoc") and _pandoc() is None:
+        if os.environ.get("RUNFILES_DIR") or os.environ.get("TEST_SRCDIR"):
+            pytest.fail(
+                "pandoc is a DECLARED input under bazel and PANDOC_BIN is unset — this target is "
+                'missing `data = ["@pandoc//:bin"]` + `env = {"PANDOC_BIN": ...}`; refusing '
+                "rather than skipping (silent green) or reading the host's copy through the "
+                "sandbox's /usr mount (undeclared input)",
+                pytrace=False,
+            )
         pytest.skip("pandoc is not installed on this machine (a SYSTEM dependency)")
 
 

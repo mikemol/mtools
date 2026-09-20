@@ -157,6 +157,14 @@ sh_test(
 # rationale. ⚑ THIS IS THE F-ARM DISTRIBUTION: mdstruct has real dependencies (panflute), so a
 # grid that runs under the wrong interpreter reports every site ERRORED here and nowhere else —
 # ratchet and fence pass under a bare interpreter and cannot detect that defect at all.
+#
+# ⚑⚑⚑ pandoc IS STAGED AND NAMED HERE TOO, AND THE FIRST DRAFT OMITTED IT — MEASURED: the grid
+# killed `pandoc.py::convert` sandboxed, which means the mutated suite converted markdown, which
+# means it found a pandoc. It found `/usr/bin/pandoc` through linux-sandbox's read-only `/usr`
+# mount, because `conftest` falls back to `shutil.which` when `PANDOC_BIN` is unset. A host
+# without pandoc would have SKIPPED 54 cases and the grid would have reported those sites
+# SURVIVED — a verdict that depends on which machine ran it, inside the hermetic suite. The
+# pytest target above already carries this pair; a sibling that reads the same conftest must too.
 sh_test(
     name = "mutants",
     srcs = ["//:mutate_check.sh"],
@@ -168,7 +176,9 @@ sh_test(
         "pyproject.toml",
         ":.venv",
         "//:mutate_runner.py",
+        "@pandoc//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    env = {"PANDOC_BIN": "$(location @pandoc//:bin)"},
     size = "medium",
 )
 

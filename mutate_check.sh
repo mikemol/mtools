@@ -61,6 +61,18 @@ if [ -n "${RUNFILES_DIR:-}" ] && [ -r "$dist/.venv/pythonhome.runfiles" ]; then
     export PYTHONHOME
 fi
 
+# ⚑⚑ A DECLARED TOOL PATH IS RUNFILES-RELATIVE, AND THE RUNNER LEAVES THE RUNFILES TREE. bazel
+# expands `$(location @pandoc//:bin)` relative to the test's cwd; the grid copies the tree to a
+# temp directory and runs pytest THERE, where the relative path names nothing. MEASURED
+# 2026-09-19: 64 of 64 mdstruct sites ERRORED the moment `conftest` stopped falling back to PATH
+# under bazel — which also settled that the earlier 64 KILLED had been running the HOST's pandoc.
+# Absolutised here, once, before the cwd changes; unset stays unset (a host run has no
+# declaration and `conftest` reads PATH there, honestly).
+if [ -n "${PANDOC_BIN:-}" ] && [ "${PANDOC_BIN#/}" = "$PANDOC_BIN" ]; then
+    PANDOC_BIN="$PWD/$PANDOC_BIN"
+    export PANDOC_BIN
+fi
+
 # ⚑ AND `-x` IS NECESSARY, NOT SUFFICIENT. A dangling symlink is mode 775 and `-x`-true right up
 # until `execve` refuses it — measured on 2026-09-16 when a whole interpreter root was removed. The
 # grid below RUNS the interpreter, and its verdict is what settles whether the venv is real.
