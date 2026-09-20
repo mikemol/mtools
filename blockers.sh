@@ -960,11 +960,27 @@ else
                 # under one label, which is the manufactured corroboration this poll refuses
                 # elsewhere. The prefixes are a READER's vocabulary; the declared states are the
                 # FILE's, and only the second can be stale-proof.
-                if [ "${_rows:-0}" -gt 0 ] && [ "${_accounted:-0}" -eq 0 ] \
+                # ⚑⚑⚑ AND THE DOCUMENT WINS WHENEVER IT PUBLISHES A VOCABULARY, NOT ONLY WHEN THE
+                # PREFIXES REACH NOTHING. The gate on `_accounted -eq 0` was the residue of the
+                # prefix reader being primary: it let the declared reading in only as a fallback.
+                # MEASURED 2026-09-20 on `CENSUS-paperkit-use.md`, reported by that census's own
+                # author: prefixes reached 6, the declared vocabulary named 8 of 8, gap 7 — and the
+                # verdict printed `DROPPED ROW: 6 < 7` while the line under it said 8 of 8 match.
+                # The two unnamed rows carried `filed, not in HEAD`, a state the census DECLARES.
+                # By this arm's own definition a dropped row has NEITHER a leg NOR a state; those
+                # rows had a state. A verdict contradicted by the reading printed beside it is the
+                # two-sources-disagreeing shape this poll exists to surface, and it was choosing
+                # the stale one. ⚑ The prefix line stays printed — labelled as this READER's
+                # vocabulary — so the disagreement remains visible; it no longer decides.
+                if [ "${_rows:-0}" -gt 0 ] && [ "${_cls_ok:-0}" -eq 1 ] \
                    && [ "${_cls_accounted:-0}" -ge "${_gap:-0}" ] && [ "${_cls_accounted:-0}" -gt 0 ]; then
-                    echo "    ACCOUNTED by declared states: $_cls_accounted >= $_gap — the four"
-                    echo "    prefixes above matched nothing, and this census's OWN vocabulary"
-                    echo "    explains every rostered surveyor without a leg here. None is dropped."
+                    echo "    ACCOUNTED by declared states: $_cls_accounted >= $_gap — this census's"
+                    echo "    OWN vocabulary explains every rostered surveyor without a leg here"
+                    echo "    (the four prefixes above reach $_accounted; they are this reader's"
+                    echo "    words, not the file's). None is dropped."
+                    echo "    ⚑ A STATE IS NOT A LIVENESS. These are the document's words as"
+                    echo "      written; whether each party is still running is NOT COVERED here"
+                    echo "      (see the reachability line) — run ListAgents against this roster."
                 elif [ "${_rows:-0}" -gt 0 ] && [ "${_accounted:-0}" -eq 0 ]; then
                     echo "    UNCLASSIFIED: $_rows §S row(s) and 0 matched any state this arm"
                     echo "    names. The terms below would all read 0 for that ONE reason, so"
