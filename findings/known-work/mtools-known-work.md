@@ -98,7 +98,7 @@ only by the author, making it a floor for its author and a fiction for every oth
 
 | negative | denominator | reader | positive control |
 |---|---|---|---|
-| 0 mtools items in summit's inbox | 74 files | `ls \| grep -ci` | ⚑ **9 gcalculus items, same reader, same corpus** |
+| 0 mtools items in summit's inbox | 74 files | `ls` + `grep -ci` | ⚑ **9 gcalculus items, same reader, same corpus** |
 | `membudget-ledger` on no branch | all branches | `git log --branches` | ⚑ **4 hits under `--all`**, proving the reader sees the path |
 | nothing aggregates my gate's refusals | — | — | ⚑ **NONE — this is an unbuilt-instrument claim, not a measured absence**, and it is stated as such |
 
