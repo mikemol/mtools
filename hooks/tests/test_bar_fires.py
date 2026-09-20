@@ -5525,6 +5525,12 @@ def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
     )
 
 
+_RATCHET_ABSENT = (
+    "the ratchet CLI is not built, or was built without its .runfiles sibling "
+    "(run `bazel build //ratchet:ratchet_cli`) — the instrument is absent, not passing"
+)
+
+
 def _staged_ratchet() -> Path | None:
     """Locate the built ratchet CLI under bazel AND under the bare pytest the gate runs.
 
@@ -5537,21 +5543,33 @@ def _staged_ratchet() -> Path | None:
     repository that a path was a string naming nothing, and the second time this session.
 
     Returns:
-        The first candidate that exists, or `None` when the CLI has not been built. ⚑ `None`
-        rather than a guess: a caller that skips on absence is honest, and a caller handed a
-        non-existent path would fail with a confusing `FileNotFoundError` from a subprocess.
+        The first candidate that exists AND can run, or `None` when the CLI has not been built
+        or was built without its runfiles. ⚑ `None` rather than a guess: a caller that skips on
+        absence is honest, and a caller handed a present-but-dead path fails with a traceback
+        that names the wrong thing.
 
     """
+    # ⚑⚑⚑ PRESENT IS NOT RUNNABLE, THIRD INSTANCE IN THIS REPOSITORY. A rules_python binary needs
+    # its `<name>.runfiles` sibling; `bazel test //...` builds `ratchet_cli` as a test dependency
+    # WITHOUT that sibling (siblings staged as tests keep theirs), so after any gate run the
+    # bare-pytest candidate is a regular file, mode 555, that dies with `Cannot find .runfiles
+    # directory`. MEASURED 2026-09-19: the gate's own suite invalidated the NEXT gate run, and
+    # two arms here failed rather than skipped. `is_file()` admitted the corpse — the same shape
+    # the reader guard (test_reader_guard.py) and the venv `-x` check each caught on their own
+    # instrument. Requiring the sibling turns that into an honest skip naming the repair.
     for candidate in (
-        # The runfiles tree, when bazel staged it as a declared input.
+        # The runfiles tree, when bazel staged it as a declared input. Inside a runfiles tree the
+        # binary finds its manifest through $RUNFILES_DIR, not through a sibling directory.
         _DIST.parent / "ratchet" / "ratchet_cli",
-        # ⚑ THE CONVENIENCE SYMLINK, which is what a bare pytest run in a checkout sees. It is a
-        # build OUTPUT and deliberately gitignored, so its absence means "not built yet" rather
-        # than "not part of this repository".
-        _DIST.parent / "bazel-bin" / "ratchet" / "ratchet_cli",
     ):
         if candidate.is_file():
             return candidate
+    # ⚑ THE CONVENIENCE SYMLINK, which is what a bare pytest run in a checkout sees. It is a
+    # build OUTPUT and deliberately gitignored, so its absence means "not built yet" rather
+    # than "not part of this repository".
+    built = _DIST.parent / "bazel-bin" / "ratchet" / "ratchet_cli"
+    if built.is_file() and (built.parent / "ratchet_cli.runfiles").is_dir():
+        return built
     return None
 
 
@@ -5628,7 +5646,7 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
     # used to skip in the gate's own environment while passing in the sandbox.
     ratchet = _staged_ratchet()
     if ratchet is None:
-        pytest.skip("the ratchet CLI is not built — the instrument is absent, not passing")
+        pytest.skip(_RATCHET_ABSENT)
 
     with tempfile.TemporaryDirectory() as tmp:
         probe = Path(tmp) / "hooks"
@@ -5714,7 +5732,7 @@ def test_every_emptied_baseline_arms_a_refusal() -> None:
     """
     ratchet = _staged_ratchet()
     if ratchet is None:
-        pytest.skip("the ratchet CLI is not built — the instrument is absent, not passing")
+        pytest.skip(_RATCHET_ABSENT)
 
     root = _DIST.parent
     # ⚑⚑⚑ THE POPULATION IS WHAT IS BOTH EMPTIED *AND REACHABLE*, AND THE TWO ARE DIFFERENT

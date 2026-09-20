@@ -380,6 +380,38 @@ staged="${TMPDIR:-/home/mikemol/.cache}/mtools-staged"
 rm -rf "$staged"; mkdir -p "$staged"
 git checkout-index --all --prefix="$staged/"
 
+# ⚑⚑⚑ THIS GATE INVALIDATED ITS OWN SUCCESSOR, AND THE REPAIR IS TO BUILD WHAT THE NEXT STEP
+# READS. `bazel test //...` below builds `//ratchet:ratchet_cli` as a test DEPENDENCY, which
+# gives it no `ratchet_cli.runfiles` sibling; the hooks suite two sections up then finds
+# `bazel-bin/ratchet/ratchet_cli` by stat, runs it, and it dies with `Cannot find .runfiles
+# directory`. MEASURED 2026-09-19: attempt 4 of a commit ran the suite green, and attempt 5 was
+# refused by two arms the suite it had just run had broken — the operator had to remember
+# `bazel build //ratchet:ratchet_cli` by hand between every pair of commits. A gate whose
+# precondition is a human's memory of its last run is a gate that reads green over habit.
+# ⚑ SO THE BINARY IS BUILT AS A TOP-LEVEL TARGET HERE, before any pytest, on every run. It is a
+# cache hit when nothing changed and takes under a second; the runfiles tree is a top-level
+# output, so this is the one invocation shape that produces it. `_staged_ratchet()` in
+# `test_bar_fires.py` also now REQUIRES the sibling, so if this line is ever removed the arms
+# skip with a reason rather than failing on a corpse.
+# ⚑ REFUSES IF BAZEL IS ABSENT, like every other tool here — the same check the suite section
+# repeats, because this section runs first and cannot lean on one below it.
+if ! command -v bazel >/dev/null 2>&1; then
+  say "bazel not found — cannot build the ratchet CLI the hooks suite reads, commit refused"
+  record_refusal pre-commit " - bazel absent (before the per-distribution suites)"
+  exit 1
+fi
+if ! ( cd "$root" && bazel build //ratchet:ratchet_cli ) >"$staged/.ratchet_cli.log" 2>&1; then
+  say "bazel build //ratchet:ratchet_cli FAILED — the hooks suite would run a dead binary, commit refused"
+  sed 's/^/    /' "$staged/.ratchet_cli.log" | tail -20
+  record_refusal pre-commit " - //ratchet:ratchet_cli did not build"
+  exit 1
+fi
+if [ ! -d "$root/bazel-bin/ratchet/ratchet_cli.runfiles" ]; then
+  say "bazel-bin/ratchet/ratchet_cli.runfiles is absent after a green build — refusing rather than running the hooks suite against a binary that cannot start"
+  record_refusal pre-commit " - ratchet_cli.runfiles absent after build"
+  exit 1
+fi
+
 for dist in $_dists; do
   [ -d "$staged/$dist" ] || continue
   say "checking $dist"
