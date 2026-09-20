@@ -12,6 +12,10 @@ load("@rules_python//python:defs.bzl", "py_library", "py_test")
 exports_files([
     "requirements.txt",
     "requirements-dev.txt",
+    # ⚑ THE DEV HUB IS FED FROM uv.lock (W10), so the host venv and the bazel venv resolve one
+    # pyproject to one closure; `requirements-dev.txt` stays exported for the reader that
+    # compares them and for the shipping-hub split MODULE.bazel argues.
+    "uv.lock",
 ])
 
 # ⚑⚑ `imports = ["src"]` IS THE PEP 420 LAYOUT MADE EXPLICIT TO BAZEL. The runfiles tree resolves

@@ -16,6 +16,7 @@ exports_files([
     "pyproject.toml",
     "requirements.txt",
     "requirements-dev.txt",
+    "uv.lock",
 ])
 
 # ⚑⚑ `imports = ["src"]` IS THE PEP 420 LAYOUT MADE EXPLICIT TO BAZEL. The runfiles tree resolves

@@ -91,11 +91,36 @@ pip.parse(
 # shipping a test runner to every consumer, which is the over-admission `pip.parse`'s one-hub-per-
 # distribution split exists to refuse. Two locks, two hubs: what a consumer installs and what a
 # witness runs under are different questions with different answers.
+# ⚑⚑⚑ THE DEV HUBS READ uv.lock, THE SHIPPING HUBS DO NOT, AND THE ASYMMETRY IS THE POINT.
+# MEASURED (PATHS-FORWARD-WIP ⟐TWO-RESOLVERS-DISAGREE): `uv sync` and `uv pip compile --group
+# dev` resolved the SAME pyproject, same machine, same minute, to `ast-serialize==0.11.1` and
+# `==0.9.0` respectively — so the host venv the gate's per-distribution checkers run under and
+# the bazel venv the hermetic suite runs under carried different mypy transitives over identical
+# source. Two resolvers, one declaration, two answers; neither hand-editable into agreement.
+# The operator ruled: point the graph at uv.lock. It is done here for the `_dev` hubs ONLY,
+# because `_parse_uv_lock_json` iterates EVERY package in the lock with no group selection
+# (`private/pypi/parse_requirements.bzl:171`, measured: ratchet's lock is 28 packages against a
+# shipping closure of 0) — feeding a `_deps` hub from it would ship pytest, mypy and ruff to
+# every consumer, the over-admission the two-hub split above exists to refuse.
+# ⚑ Landed one hub at a time, each measured by comparing the ast-serialize dist-info under
+# bazel-bin/<dist>/.venv against <dist>/.venv before the next.
 pip.parse(
     hub_name = "hooks_dev",
     python_version = "3.13",
-    requirements_lock = "//hooks:requirements-dev.txt",
+    uv_lock = "//hooks:uv.lock",
 )
+# ⚑⚑⚑ mdstruct_dev STAYS ON THE COMPILED LOCK, AND THE REASON IS A MEASURED UPSTREAM DEFECT.
+# mdstruct's dev group carries `paperkit`, a GIT source. `uv_lock` handling in rules_python
+# (`private/pypi/parse_requirements.bzl:227-291`) recognises `source.git` and builds a
+# `git_struct` — then emits `requirement_line = "paperkit==0.1.0"` (line 278) and drops
+# `kind = "git"` from `resolved_srcs`, so `pip_archive` asks an index for a version that exists
+# only in a repository: `No matching distribution found for paperkit==0.1.0`. MEASURED
+# 2026-09-20 by pointing this hub at uv.lock and building //mdstruct:.venv. The WIP's earlier
+# claim that "the git-sourced paperkit survives that path" read the branch's existence, not its
+# output. `uv pip compile` writes `paperkit @ git+https://…@<sha>`, which pip honours, so the
+# compiled lock is the one that can feed this hub until upstream carries the git kind through.
+# ⚑ The resolver divergence (⟐TWO-RESOLVERS-DISAGREE) therefore REMAINS for mdstruct alone;
+# the other three dev hubs read uv.lock and agree with their host venvs.
 pip.parse(
     hub_name = "mdstruct_dev",
     python_version = "3.13",
@@ -104,12 +129,12 @@ pip.parse(
 pip.parse(
     hub_name = "ratchet_dev",
     python_version = "3.13",
-    requirements_lock = "//ratchet:requirements-dev.txt",
+    uv_lock = "//ratchet:uv.lock",
 )
 pip.parse(
     hub_name = "fence_dev",
     python_version = "3.13",
-    requirements_lock = "//fence:requirements-dev.txt",
+    uv_lock = "//fence:uv.lock",
 )
 use_repo(
     pip,
