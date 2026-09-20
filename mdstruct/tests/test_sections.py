@@ -125,6 +125,27 @@ def test_an_append_keeps_the_blank_line(document: Path) -> None:
     assert not lines[lines.index("## Second") - 1].strip()
 
 
+def test_a_replace_keeps_the_blank_lines_on_both_sides(document: Path) -> None:
+    """Check the blank line after the heading AND the one before the next heading survive.
+
+    ⚑⚑ THE APPEND TWIN, WHICH DID NOT EXIST, AND THE WRITER HAD THE DEFECT. Measured 2026-09-20
+    on a real leg: `replace-section --apply` with a five-line table body came back as a diff of
+    one insertion and THREE deletions where one-for-one was intended — the blank line under the
+    heading and the blank line above the next heading were both gone. `append_to_section`
+    preserves the trailing blank run and says why; `replace_section` spliced over the whole span
+    and framed nothing. Block separation is load-bearing (see the append arm); a replace that
+    eats it changes how the document renders while meaning only to change a body.
+    """
+    got, _span = sections.replace_section(document, "Second", "REPLACED\n")
+    lines = got.split("\n")
+    heading = lines.index("## Second")
+    assert not lines[heading + 1].strip(), "the blank line after the heading was swallowed"
+    assert not lines[lines.index("## Third") - 1].strip(), (
+        "the blank line before the next heading was swallowed"
+    )
+    assert "REPLACED" in lines[heading + 2:lines.index("## Third")], "the body did not land"
+
+
 def test_a_write_returns_the_span_it_hit(document: Path) -> None:
     """Check the caller is told which section was targeted.
 

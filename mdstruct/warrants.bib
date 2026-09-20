@@ -171,6 +171,12 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_an_append_keeps_the_blank_line}
 }
 
+@misc{md-sections-replace-keeps-blank-lines-on-both-sides,
+  section = {sections},
+  claim   = {The append twin, which did not exist while the writer had the defect. Measured 2026-09-20 on a real leg: a replace of one section with a five-line table body came back as a diff of one insertion and three deletions where one-for-one was intended --- the blank line under the heading and the blank line above the next heading were both gone. The append writer preserved its trailing blank run and said why; the replace writer spliced the new body over the whole span and framed nothing. Now both writers split the closing blank run through one helper, and a replaced body is framed by a blank line above and the run the old body had below. The arm reds on the old writer naming the swallowed line; the write shape that produced one-for-three now produces one-for-one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_sections.py -k test_a_replace_keeps_the_blank_lines_on_both_sides}
+}
+
 @misc{md-sections-write-returns-span-it-hit,
   section = {sections},
   claim   = {A write tells the caller WHICH section was targeted, by returning the span it hit. A write that says only done leaves a reader to re-derive what moved},

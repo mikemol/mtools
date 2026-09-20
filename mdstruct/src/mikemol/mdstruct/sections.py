@@ -59,8 +59,39 @@ def replace_section(path: Path, needle: str, body: str, *,
     """
     span = spans_mod.find_section(path, needle, exact=exact)
     lines = path.read_text(encoding="utf-8").split("\n")
-    new = lines[:span.start] + body.rstrip("\n").split("\n") + lines[span.end - 1:]
+    old_body = lines[span.start:span.end - 1]
+
+    # ⚑⚑ THE BODY IS FRAMED, NOT SPLICED. The span covers everything between the heading and the
+    # next one — the blank line under the heading and the blank run before the next heading
+    # included — and the first draft wrote the new body over ALL of it. MEASURED 2026-09-20 on a
+    # real leg: a one-cell table edit came back as a diff of one insertion and three deletions;
+    # both framing blank lines were gone and the table sat flush against two headings. Block
+    # separation is load-bearing (the append writer says why and preserves it); this now does the
+    # same — one blank line above the body, and the trailing blank run the old body had below it.
+    _keep, blanks = _split_trailing_blanks(old_body)
+    new = [*lines[:span.start], "", *body.rstrip("\n").split("\n"), *blanks, *lines[span.end - 1:]]
     return "\n".join(new), span
+
+
+def _split_trailing_blanks(body_lines: list[str]) -> tuple[list[str], list[str]]:
+    """Split a section body into its content and the run of blank lines that closes it.
+
+    ⚑ ONE SPELLING FOR BOTH WRITERS. `append_to_section` computed this inline; `replace_section`
+    grew the same four lines when it learned to frame its body — two spellings of one rule is a
+    second thing to drift, so the rule lives here and both call it.
+
+    Returns:
+        `(content, blanks)` — the body up to its last non-blank line, and the blank lines after
+        it; `blanks` is empty when the body ends on content (a last section with no trailing
+        separator).
+
+    """
+    tail = 0
+    while tail < len(body_lines) and not body_lines[len(body_lines) - 1 - tail].strip():
+        tail += 1
+    if not tail:
+        return body_lines, []
+    return body_lines[:len(body_lines) - tail], body_lines[len(body_lines) - tail:]
 
 
 def append_to_section(path: Path, needle: str, body: str, *,
@@ -86,14 +117,7 @@ def append_to_section(path: Path, needle: str, body: str, *,
     """
     span = spans_mod.find_section(path, needle, exact=exact)
     lines = path.read_text(encoding="utf-8").split("\n")
-    body_lines = lines[span.start:span.end - 1]
-
-    tail = 0
-    while tail < len(body_lines) and not body_lines[len(body_lines) - 1 - tail].strip():
-        tail += 1
-    keep = body_lines[:len(body_lines) - tail] if tail else body_lines
-    blanks = body_lines[len(body_lines) - tail:] if tail else []
-
+    keep, blanks = _split_trailing_blanks(lines[span.start:span.end - 1])
     new = (lines[:span.start] + keep + [""] + body.rstrip("\n").split("\n")
            + blanks + lines[span.end - 1:])
     return "\n".join(new), span
