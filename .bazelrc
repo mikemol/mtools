@@ -137,12 +137,29 @@ build --disk_cache=~/.cache/bazel-disk/mtools
 # ⚑ AND CROSS-REPO SHARING IS THE PAYOFF THAT WAS BEING FORFEITED. An action is identified by what
 # it declares, so two repositories declaring the same action have computed the same thing. Sitting
 # behind a flag meant this repository contributed nothing to that store and drew nothing from it.
-build --remote_cache=grpc://127.0.0.1:31985
+# ⚑⚑⚑ SERVICES BY NAME, NOT NODEPORTS — operator ruling 2026-09-20, applied here 2026-09-21. The
+# four addresses below were `127.0.0.1:31985` / `:31080`, loopback NodePorts measured on 09-19
+# (the §40 note above). The operator retired every loopback NodePort on the cluster the next day
+# and nothing listens on them again; this file kept the written values and the gate reported a
+# REFUSED sink for a BuildBuddy that was up. ⚑ A written address is read as authoritative by every
+# later reader and goes stale exactly that way, so the rows below are COPIED FROM THE DIRECTORY at
+# the moment of editing, and the directory — not this file — is the authority:
+#
+#   /home/mikemol/github/luthen-observability/.venv/bin/python \
+#       /home/mikemol/github/luthen-observability/checks/endpoints_query.py grpc-bes --side host
+#   … endpoints_query.py http-web --side host        # bes_results_url, append /invocation/
+#
+# Each answer carries an `as_of`; re-run it before trusting these lines. The names resolve on this
+# workstation because a systemd dns-delegate forwards the cluster domain (luthen's disclosure, and
+# `getent hosts buildbuddy-bes.buildbuddy.svc.cluster.local` → 10.43.197.218 measured here). The
+# namespace is `buildbuddy`, not `cassian` as §40 says — that note is now historical and is left
+# so the correction is visible. `bep_probe.py` asks the same directory at probe time.
+build --remote_cache=grpc://buildbuddy-bes.buildbuddy.svc.cluster.local:1985
 build --remote_cache_async=true
-build --bes_backend=grpc://127.0.0.1:31985
-build --bes_results_url=http://127.0.0.1:31080/invocation/
+build --bes_backend=grpc://buildbuddy-bes.buildbuddy.svc.cluster.local:1985
+build --bes_results_url=http://buildbuddy-web.buildbuddy.svc.cluster.local:8080/invocation/
 
-build:remote --remote_executor=grpc://127.0.0.1:31985
+build:remote --remote_executor=grpc://buildbuddy-bes.buildbuddy.svc.cluster.local:1985
 build:remote --remote_instance_name=mtools-gate
 
 # ⚑ THE EXEC PLATFORM IS DECLARED RATHER THAN INFERRED. Twenty-five targets passed remotely
