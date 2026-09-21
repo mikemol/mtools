@@ -3,6 +3,7 @@
 frontmatter	Frontmatter: What Is Metadata, and What Only Looks Like It
 pandoc	Pandoc: The Re-Attach Rule, In Both Directions
 spans	Spans: Nesting, Anchoring, and the Refusals
+budget	Budget: Bytes and Lines, Because Neither Predicts the Other
 sections	Sections: What a Rewrite Must Not Touch
 grep	Grep: The Span Is the Section's, Not the Line's
 tables	Tables: Including the Ones a Top-Level Scan Cannot See

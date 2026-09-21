@@ -3,6 +3,7 @@
 """The `mdstruct` command — one mode per structural question.
 
     mdstruct spans FILE.md                  # every section, with its line bounds
+    mdstruct budget FILE.md                 # every section's SIZE: lines, bytes, headings below
     mdstruct grep PATTERN FILE.md [-i] [-E] # where text is, AS A SPAN
     mdstruct tables FILE.md                 # every table: position, size, header
     mdstruct rows FILE.md [--where TEXT]    # the cells, optionally filtered
@@ -43,7 +44,17 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import cast
 
-from mikemol.mdstruct import grep, labels, lint, roundtrip, sections, spans, tables, verify
+from mikemol.mdstruct import (
+    budget,
+    grep,
+    labels,
+    lint,
+    roundtrip,
+    sections,
+    spans,
+    tables,
+    verify,
+)
 
 # ⚑ THE SIGNATURE EVERY MODE PRESENTS, even where it uses one of the three arguments. Dispatching
 # on arity instead would put the branching back, one layer down and less visible.
@@ -231,6 +242,36 @@ def _spans(path: Path) -> int:
         sys.stdout.write(f"  L{span.start:>4}-{span.end - 1:<4} "
                          f"{indent}{'#' * span.level} {span.text}\n")
     sys.stdout.write(f"  {len(found)} section(s) in {path}\n")
+    return 0
+
+
+def _budget(path: Path) -> int:
+    """Print every section's size over the same population `spans` prints.
+
+    ⚑ ONE ROW PER SECTION, THEN THE DENOMINATOR: total sections AND total bytes, because a reader
+    deciding what fits in a context needs the whole as well as the parts, and a column of sizes
+    with no total is a list the reader must sum by hand.
+
+    Returns:
+        Always 0 — the report is the answer, as for `spans`.
+
+    """
+    found = budget.budget(path)
+    if not found:
+        sys.stdout.write(f"mdstruct: {path} declares no headers\n")
+        return 0
+    for row in found:
+        indent = "  " * row.span.level
+        sys.stdout.write(
+            f"  L{row.span.start:>4}-{row.span.end - 1:<4} {row.lines:>5} lines "
+            f"{row.size:>7} bytes  {row.below:>3} below  depth {row.depth}  "
+            f"{indent}{'#' * row.span.level} {row.span.text}\n",
+        )
+    # ⚑ THE WHOLE IS THE FILE, NOT A SUM OF ROWS: nested sections overlap their parents, so
+    # summing the column double-counts, and a sum over one level misses any preamble before
+    # the first heading. The file's own byte count is the denominator a reader loads against.
+    total = len(path.read_bytes())
+    sys.stdout.write(f"  {len(found)} section(s), {total} bytes in {path}\n")
     return 0
 
 
@@ -514,6 +555,16 @@ def _spans_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
 
     """
     return _spans(path)
+
+
+def _budget_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+    """Adapt the section budget to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged — see `_spans_mode`.
+
+    """
+    return _budget(path)
 
 
 def _tables_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
@@ -929,6 +980,7 @@ def _classify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
 # the unknown-mode message below derives its list FROM this table, so the two cannot drift.
 _MODES: dict[str, _Mode] = {
     "spans": _spans_mode,
+    "budget": _budget_mode,
     _PATTERN_MODE: _grep,
     "tables": _tables_mode,
     "rows": _rows_mode,

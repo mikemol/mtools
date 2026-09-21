@@ -139,6 +139,38 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_enclosing_is_a_chain_outermost_first}
 }
 
+% ---------------------------------------------------------------- budget
+
+@misc{md-budget-bytes-and-lines-disagree,
+  section = {budget},
+  claim   = {THE 41-KB-IN-4-LINES CASE, IN MINIATURE. Bytes and lines are reported SEPARATELY on a fixture where they rank the sections oppositely --- a section short in lines and long in bytes beside one long in lines and short in bytes. A budget carrying only one column would rank them the way a line count does, which is the failure substrate measured (2026-09-20) and the mode exists to expose. Bytes are the UTF-8 length of the section's lines joined by newline, so the count is of the slice a writer would splice},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_budget.py -k test_bytes_and_lines_are_reported_separately_and_disagree}
+}
+
+@misc{md-budget-below-and-depth-are-strictly-inside,
+  section = {budget},
+  claim   = {`below` counts headings STRICTLY INSIDE the span and `depth` is the deepest nesting beneath it; a parent enclosing one child reports (1, 1) and the child reports (0, 0). A count that included the section's own heading would report 1 for every section and say nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_budget.py -k test_headings_below_and_depth_count_only_what_the_span_encloses}
+}
+
+@misc{md-budget-population-is-the-span-list,
+  section = {budget},
+  claim   = {THE POPULATION IS `spans`', NOT A SECOND WALK. A `#` inside a fence and an ATX line with no blank line before it are non-headings to pandoc; `spans` reports them as body and so must `budget`, or the two modes partition one document two ways and the write modes address a different section list than the sizes describe. The positive control in the same function is that the real headings ARE reported by both},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_budget.py -k test_the_population_is_the_span_list_not_a_second_walk}
+}
+
+@misc{md-budget-cli-denominator-is-the-file,
+  section = {budget},
+  claim   = {One row per section, then a denominator naming the section count and the FILE's byte count --- not a sum of rows, because nested sections overlap their parents and a column sum double-counts, and a one-level sum misses any preamble before the first heading. The file's own byte count is what a reader loads against},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_budget.py -k test_the_cli_prints_one_row_per_section_and_the_file_as_denominator}
+}
+
+@misc{md-budget-headerless-document-names-itself,
+  section = {budget},
+  claim   = {A document with no headers says so and names the path, matching `spans`; silence is indistinguishable from a reader that did not run},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_budget.py -k test_a_headerless_document_says_so_rather_than_printing_nothing}
+}
+
 % ---------------------------------------------------------------- sections
 
 @misc{md-sections-replace-keeps-heading,
