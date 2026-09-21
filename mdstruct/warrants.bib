@@ -171,6 +171,50 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_budget.py -k test_a_headerless_document_says_so_rather_than_printing_nothing}
 }
 
+% ---------------------------------------------------------------- items
+
+@misc{md-items-are-structural-and-a-fenced-marker-is-not-one,
+  section = {items},
+  claim   = {THE POPULATION IS PANDOC'S TREE, so a `-` inside a fence yields no item. Positive control in the same function: nine real items are found, including the one after the fence — a reader that stopped at the fence would report eight},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_items_are_structural_and_a_fenced_marker_is_not_one}
+}
+
+@misc{md-items-lines-recovered-by-a-forward-cursor,
+  section = {items},
+  claim   = {Lines are RECOVERED the way spans recovers heading lines: candidate marker lines rendered in one batched sentinel call, matched by one forward cursor. A repeated item binds to its own line (7 and 8, never both 7), and an item continuing onto a second line still matches because the first line's rendering is a PREFIX of the whole — equality would leave it `?`},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_lines_are_recovered_by_a_forward_cursor}
+}
+
+@misc{md-items-depth-is-the-trees,
+  section = {items},
+  claim   = {`depth` is list nesting in pandoc's tree, not an indentation guess: the two nested bullets are depth 1 and every other item depth 0, including the ordered list, which is a sibling list rather than a child},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_depth_is_the_trees_not_the_indentation}
+}
+
+@misc{md-items-link-targets-structural-wiki-lexical,
+  section = {items},
+  claim   = {`[text](target)` comes from panflute's Link.url — structural; `[[wiki]]` from a regex over the rendered text — LEXICAL, because pandoc parses no wikilink here and the brackets survive as literal text. `[[other|alias]]` yields `other`. Both kinds are carried in one tuple in document order},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_link_targets_are_structural_and_wiki_targets_are_lexical}
+}
+
+@misc{md-items-wiki-regex-is-live,
+  section = {items},
+  claim   = {THE F-ARM FOR THE LEXICAL READ: a regex that matched nothing would leave every wiki target absent while the structural arm still passed on Link targets. Planting a never-matching pattern must empty the wiki line's targets; the live reading is asserted first as the control},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_the_wiki_regex_is_live}
+}
+
+@misc{md-items-cli-three-count-denominator,
+  section = {items},
+  claim   = {One row per item — recovered line or `?`, depth, text, targets — then a denominator carrying THREE counts (items, items with links, distinct targets), because the question the mode serves is whether every pointer resolves and a reader needs the population of pointers, not only of items},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_the_cli_prints_rows_and_the_three_count_denominator}
+}
+
+@misc{md-items-listless-document-says-so,
+  section = {items},
+  claim   = {A document with no list items says so and names the path, matching spans and budget},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_a_listless_document_says_so}
+}
+
 % ---------------------------------------------------------------- sections
 
 @misc{md-sections-replace-keeps-heading,

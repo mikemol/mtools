@@ -4,6 +4,7 @@
 
     mdstruct spans FILE.md                  # every section, with its line bounds
     mdstruct budget FILE.md                 # every section's SIZE: lines, bytes, headings below
+    mdstruct items FILE.md                  # every list item: line, depth, text, link targets
     mdstruct grep PATTERN FILE.md [-i] [-E] # where text is, AS A SPAN
     mdstruct tables FILE.md                 # every table: position, size, header
     mdstruct rows FILE.md [--where TEXT]    # the cells, optionally filtered
@@ -47,6 +48,7 @@ from typing import cast
 from mikemol.mdstruct import (
     budget,
     grep,
+    items,
     labels,
     lint,
     roundtrip,
@@ -272,6 +274,36 @@ def _budget(path: Path) -> int:
     # the first heading. The file's own byte count is the denominator a reader loads against.
     total = len(path.read_bytes())
     sys.stdout.write(f"  {len(found)} section(s), {total} bytes in {path}\n")
+    return 0
+
+
+def _items(path: Path) -> int:
+    """Print every list item with its recovered line, depth, text and link targets.
+
+    ⚑ THE DENOMINATOR CARRIES THREE COUNTS — items, items with links, distinct targets — because
+    the question this mode serves is *does every pointer resolve*, and a reader checking that
+    needs the population of pointers, not just of items. An item's line prints as `?` when the
+    forward-cursor recovery found no candidate, which is reported rather than guessed.
+
+    Returns:
+        Always 0 — the report is the answer, as for `spans`.
+
+    """
+    found = items.items(path)
+    if not found:
+        sys.stdout.write(f"mdstruct: {path} carries no list items\n")
+        return 0
+    targets: set[str] = set()
+    linked = 0
+    for row in found:
+        line = f"{row.line:>4}" if row.line is not None else "   ?"
+        arrow = f"  → {', '.join(row.targets)}" if row.targets else ""
+        sys.stdout.write(f"  L{line}  depth {row.depth}  {row.text!r}{arrow}\n")
+        if row.targets:
+            linked += 1
+            targets.update(row.targets)
+    sys.stdout.write(f"  {len(found)} item(s), {linked} with link(s), "
+                     f"{len(targets)} distinct target(s) in {path}\n")
     return 0
 
 
@@ -565,6 +597,16 @@ def _budget_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
 
     """
     return _budget(path)
+
+
+def _items_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+    """Adapt the item listing to the uniform mode signature.
+
+    Returns:
+        The verb's exit code, forwarded unchanged — see `_spans_mode`.
+
+    """
+    return _items(path)
 
 
 def _tables_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
@@ -981,6 +1023,7 @@ def _classify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
 _MODES: dict[str, _Mode] = {
     "spans": _spans_mode,
     "budget": _budget_mode,
+    "items": _items_mode,
     _PATTERN_MODE: _grep,
     "tables": _tables_mode,
     "rows": _rows_mode,

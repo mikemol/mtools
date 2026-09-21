@@ -57,6 +57,33 @@ class Para(Block):
 
 class LineBreak(Inline): ...
 
+# ⚑ THE LIST CHAIN, READ FROM THE LIBRARY the same way the table chain was (elements.py:797-853):
+#     BulletList.content   ListItem   (`_set_content(args, ListItem)`)
+#     OrderedList.content  ListItem
+#     ListItem.content     Block      (`_set_content(args, Block)`)
+#     Link.content         Inline     (`_set_content(args, Inline)`), url/title `str`
+# Declared for `items` (W21, 2026-09-21); only the attributes it reads.
+class ListItem(Element):
+    content: Sequence[Block]
+
+class BulletList(Block):
+    content: Sequence[ListItem]
+
+class OrderedList(Block):
+    content: Sequence[ListItem]
+
+class Link(Inline):
+    content: Sequence[Inline]
+    url: str
+    title: str
+
+# Block containers a list can sit inside (elements.py:204, :397); `items` descends through them.
+class BlockQuote(Block):
+    content: Sequence[Block]
+
+class Div(Block):
+    content: Sequence[Block]
+
 class TableCell(Element):
     content: Sequence[Block]
     rowspan: int

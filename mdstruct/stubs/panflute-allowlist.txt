@@ -38,3 +38,11 @@ panflute.TableCell.__init__
 panflute.TableFoot.__init__
 panflute.TableHead.__init__
 panflute.TableRow.__init__
+# ⚑ THE LIST CHAIN AND LINK, declared for `items` (W21, 2026-09-21). Constructors only, read
+# and argued: `items` reads these via isinstance and attribute access and constructs none.
+panflute.BlockQuote.__init__
+panflute.BulletList.__init__
+panflute.Div.__init__
+panflute.Link.__init__
+panflute.ListItem.__init__
+panflute.OrderedList.__init__
