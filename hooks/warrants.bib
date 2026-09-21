@@ -3078,6 +3078,24 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_an_ordinary_flag_is_still_not_an_artifact}
 }
 
+@misc{hooks-sq-a-value-flags-operand-and-a-script-are-not-paths,
+  section = {structural-query},
+  claim   = {substrate's path_operands letter (2026-09-21), integrated as roster entries rather than a second function. Four shapes FIRED on HEAD before the merge: a detached value flag (-A 2, -m 1, --include Makefile) had its value eaten as the pattern so the real pattern was read as the first path, and a sed script whose last segment ends in a claimed suffix was read as a file. Two of substrate's own arms had passed here BY ACCIDENT (the 2 eaten, foo suffixless; a script ending in p), which is why the discriminating shapes are pinned rather than the letter's arms alone},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_value_flags_operand_and_a_script_are_not_paths}
+}
+
+@misc{hooks-sq-a-real-target-after-a-value-flag-or-script-still-fires,
+  section = {structural-query},
+  claim   = {The half that keeps the value-flag roster and the sed/awk entries from being an exemption: stepping over a value flag's operand must not step over the file after it, and dropping a script must drop only the script. Includes a wrapper case so the role rule is applied to the REAL program's arguments after cmdparse sees through timeout},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_real_target_after_a_value_flag_or_script_still_fires}
+}
+
+@misc{hooks-sq-a-flag-without-an-operand-is-not-in-the-value-roster,
+  section = {structural-query},
+  claim   = {Two entries of substrate's roster were REFUSED by measurement and kept as residue: -v and -F take no operand in grep or rg, and as value flags they would eat the PATTERN so the real target is dropped as the pattern — a FALSE PASS the caller never sees. The asymmetry _is_option records decides the bar: a missing entry is a false fire answered with --, a wrong entry is a silent hole. Positive control in the same function: -A IS a value flag and its shape passes},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_flag_without_an_operand_is_not_in_the_value_roster}
+}
+
 @misc{hooks-reader-guard-a-reader-whose-shebang-resolves-is-admitted,
   section = {reader-guard},
   claim   = {The ADMIT arm of the reader guard. A guard whose predicate is an invocation can degrade into one that always skips, and on a host where the reader is dead that is indistinguishable from one that works. This constructs a script whose shebang resolves and asserts the predicate admits it — the control without which the two SKIP arms prove nothing},

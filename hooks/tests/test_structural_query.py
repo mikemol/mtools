@@ -654,3 +654,75 @@ def test_an_ordinary_flag_is_still_not_an_artifact() -> None:
     assert not _fires("grep --color=never foo README"), (
         "a long flag with a value was read as a path"
     )
+
+
+# ⚑⚑⚑ substrate'S `path_operands` LETTER (2026-09-21), INTEGRATED AS ROSTER ENTRIES, NOT AS A
+# SECOND FUNCTION. mtools' `_scannable` already carried the pattern-first drop, the pattern flags,
+# the terminator and the suffix-shaped option test; the letter's genuine delta was a roster of
+# VALUE-TAKING flags and two more pattern-first programs. Measured on HEAD before merging — all 15
+# of substrate's arms already passed, and TWO of them passed BY ACCIDENT (`grep -A 2 foo notes.txt`:
+# the `2` was eaten as the pattern and `foo` carried no suffix; `sed 's/x.py/y/p'`: the script's
+# last segment happened to be `p`). The four arms below are the shapes those accidents hid.
+_PY = ".py"
+_GATE = "gate" + _PY
+_TOOL = "scratch/tool" + _PY
+
+
+@pytest.mark.parametrize(
+    ("label", "cmd"),
+    [
+        ("a detached -A value before the pattern", f"grep -A 2 {_GATE} notes.txt"),
+        ("a detached -m value before the pattern", f"grep -m 1 {_GATE} notes.txt"),
+        ("a detached --include value before the pattern",
+         f"grep --include Makefile {_GATE} notes.txt"),
+        ("a sed script whose last segment ends in a claimed suffix",
+         f"sed -e 's/foo/bar{_PY}/' notes.txt"),
+        ("summit's payload: includes attached, pattern quoted",
+         f'grep -rl --include=Makefile --include=pre-commit "{_GATE}" /home/x/github'),
+        ("an awk program mentioning a claimed suffix", f"awk '/tool{_PY}/ {{print}}' notes.txt"),
+    ],
+)
+def test_a_value_flags_operand_and_a_script_are_not_paths(label: str, cmd: str) -> None:
+    """⚑⚑⚑ FOUR OF THESE FIRED ON HEAD BEFORE substrate'S ROSTER LANDED.
+
+    A detached value flag (`-A 2`) had its value eaten as the pattern, so the real pattern was
+    read as the first path; a sed script is a script, and one whose last `/`-segment ends in a
+    claimed suffix was read as a file. Both are the silent-wrong-target class — a pattern read as
+    a path — one role finer than the option/path split `_is_option` already draws.
+    """
+    assert not _fires(cmd), f"{label}: a non-path operand was read as a claimed artifact"
+
+
+@pytest.mark.parametrize(
+    ("label", "cmd"),
+    [
+        ("a value flag then a real target", f"grep -A 2 foo {_TOOL}"),
+        ("sed over a claimed file", f"sed -e 's/a/b/' {_TOOL}"),
+        ("awk over a claimed file", f"awk '{{print}}' {_TOOL}"),
+        ("a claimed-shaped pattern does not shield a claimed path", f"grep {_GATE} {_TOOL}"),
+        ("a wrapper is seen through before the role rule",
+         f"timeout 180 grep -c __main__ {_TOOL}"),
+    ],
+)
+def test_a_real_target_after_a_value_flag_or_script_still_fires(label: str, cmd: str) -> None:
+    """⚑⚑ THE HALF THAT KEEPS THE ROSTER FROM BEING AN EXEMPTION.
+
+    Stepping over a value flag's operand must not step over the file that follows it, and adding
+    `sed`/`awk` to the pattern-first set must drop only their SCRIPT.
+    """
+    assert _fires(cmd), f"{label}: a claimed artifact is still being read as text"
+
+
+def test_a_flag_without_an_operand_is_not_in_the_value_roster() -> None:
+    """⚑⚑⚑ TWO ENTRIES OF substrate'S ROSTER WERE REFUSED BY MEASUREMENT, AND THIS ARM IS WHY.
+
+    `-v` (invert-match) and `-F` (fixed-strings) take NO operand in grep or rg. Listed as value
+    flags they would eat the PATTERN, and the real target would then be dropped as the pattern —
+    a FALSE PASS on `grep -v foo x.py`, which the caller never sees. The asymmetry `_is_option`
+    records decides it: a missing roster entry is a false fire answered with `--`; a wrong one is
+    a silent hole. ⚑ POSITIVE CONTROL in the same function: a flag that DOES take an operand is
+    in the roster and its shape passes.
+    """
+    assert _fires(f"grep -v foo {_TOOL}"), "-v must not eat the pattern: the target went unseen"
+    assert _fires(f"grep -F foo {_TOOL}"), "-F must not eat the pattern: the target went unseen"
+    assert not _fires(f"grep -A 2 {_GATE} notes.txt"), "control: -A IS a value flag"

@@ -123,14 +123,35 @@ _REDIRECTS = (">", ">>")
 # pattern, so dropping THEIR first argument would blind the guard to an ordinary read — which is
 # how a fix becomes a de-arming. cassian named that trap and avoided it; the arms in
 # `test_a_real_target_after_the_pattern_still_fires` are what hold it here.
-_PATTERN_FIRST = frozenset(("grep", "rg", "egrep", "fgrep", "ag", "ack"))
+# ⚑⚑ `sed` AND `awk` JOINED ON substrate'S LETTER (2026-09-21, `path_operands`): their first
+# operand is a SCRIPT, and a script whose last `/`-segment ends in a claimed suffix reads as a path.
+# MEASURED on HEAD before the merge: `sed -e 's/foo/bar.py/' notes.txt` FIRED. The union is taken
+# — substrate's roster lacked `ag`/`ack`, ours lacked `sed`/`awk`; neither list was the population.
+_PATTERN_FIRST = frozenset(("grep", "rg", "egrep", "fgrep", "ag", "ack", "sed", "awk"))
 
 # ⚑⚑ FLAGS THAT CARRY THE PATTERN AS THEIR ARGUMENT. `grep -e PAT file` puts the pattern after a
 # flag, so position alone does not find it. ⚑ MEASURED AS A DIVERGENCE FROM cassian'S TREE, not
 # inherited: they reported `_FLAGS_WITH_ARG` consuming `-e` before the scan sees it, and here it
 # does NOT — that table covers WRAPPERS (timeout, env, sudo, xargs), never the textual programs.
 # A fix copied from their report alone would have left this shape firing.
-_PATTERN_FLAGS = frozenset(("-e", "--regexp", "-f", "--file"))
+# ⚑ `--expression` is sed's long spelling of `-e`, from substrate's roster.
+_PATTERN_FLAGS = frozenset(("-e", "--regexp", "-f", "--file", "--expression"))
+
+# ⚑⚑⚑ FLAGS WHOSE DETACHED NEXT TOKEN IS A VALUE — neither the pattern nor a path. Without this
+# roster `grep -A 2 gate.py notes.txt` FIRED on HEAD: the `2` was eaten as the pattern and
+# `gate.py` was then read as a path. substrate's letter supplied the roster; three of its entries
+# were REFUSED here by measurement, and the refusal is the residue this repository keeps:
+#   `-v`  grep/rg invert-match, NO operand — listing it eats the pattern, and `grep -v foo x.py`
+#         then drops `x.py` as the pattern: a FALSE PASS on a real target.
+#   `-F`  grep/rg fixed-strings, NO operand — same false pass.
+#   `-d`  grep `-d ACTION` takes an operand, but rg `-d` does not exist and sed `-d` is not a flag;
+#         kept, because the only hazard of a spurious entry is reading a real operand as a value.
+# The bar for this roster is the ASYMMETRY `_is_option` already records: a missing entry gives a
+# false FIRE the caller answers with `--`; a wrong entry gives a false PASS the caller never sees.
+# So an entry must be a flag that takes a detached operand in EVERY program of `_PATTERN_FIRST`
+# that accepts it, or it is left out.
+_VALUE_FLAGS = frozenset(("-A", "-B", "-C", "-m", "--max-count", "-d", "-D", "-t", "--type",
+                          "-g", "--glob", "--include", "--exclude", "--exclude-dir"))
 
 # ⚑ THE HEREDOC OPERATORS, AND ONLY THOSE. `>` and `>>` name a DESTINATION that stays in scope —
 # see `_scannable` for the operator ruling that makes a redirected write a refusal.
@@ -307,9 +328,14 @@ def _scannable(prog: str, args: list[str]) -> list[str]:
     for a in args:
         if skip_next:
             skip_next = False
-            dropped_first = True
             continue
         if a in _PATTERN_FLAGS:
+            # ⚑ THE FLAG'S OPERAND IS THE PATTERN, so the first bare word is no longer one.
+            skip_next = True
+            dropped_first = True
+            continue
+        if a in _VALUE_FLAGS:
+            # ⚑ THE FLAG'S OPERAND IS A VALUE — stepped over; the pattern is still to come.
             skip_next = True
             continue
         if _is_option(a):
