@@ -6374,8 +6374,12 @@ def test_the_built_console_scripts_match_the_declared_entry_points() -> None:
     dpairs: list[tuple[str, str]] = pyre.findall(
         r'^([\w-]+)\s*=\s*"([^"]+)"', section, flags=pyre.MULTILINE,
     )
+    # ⚑⚑ THE TWO SIDES MUST BE READ WITH THE SAME REACH. This read once matched only
+    # `mikemol-hook-…` in BUILD while the pyproject read takes every script, so the first
+    # console script that is NOT a hook (`mikemol-shellcheck`, 2026-09-22) was reported "declared
+    # only" while it sat in both files — an arm that could never admit a non-hook script.
     wpairs: list[tuple[str, str]] = pyre.findall(
-        r'"(mikemol-hook-[\w-]+)":\s*"([^"]+)"', build,
+        r'"(mikemol-[\w-]+)":\s*"([\w.]+:\w+)"', build,
     )
     declared: dict[str, str] = dict(dpairs)
     wired: dict[str, str] = dict(wpairs)

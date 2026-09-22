@@ -14,3 +14,4 @@ exec-env	Execution Environment: What a Witness Can Actually Reach, Measured in B
 venv-artifact	The Venv as a Build Artifact: Relocatable, Closed, and the Same in Every Distribution
 reader-guard	The Reader Guard: Runnability Tested by Executing, Not Presence Tested by Stat
 shellcheck	The Shell Hook: What the Linter Says, and What an Absent Linter Does
+shellcheck-cli	The Shell Hook by Hand: One File, One Tree, One Command, and Could-Not-Look Is Never Clean

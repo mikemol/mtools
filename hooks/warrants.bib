@@ -3480,3 +3480,88 @@
   claim  = {Garbage on stdin exits 0 and denies nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_malformed_payload_denies_nothing},
 }
+
+@misc{hooks-shellcheck-cli-non-shell-file-reports-not-shell-and-exits-zero,
+  section = {shellcheck-cli},
+  title  = {A python file is NOT SHELL, a different fact from clean, and exits 0},
+  claim  = {A python file is NOT SHELL, a different fact from clean, and exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_non_shell_file_reports_not_shell_and_exits_zero},
+}
+
+@misc{hooks-shellcheck-cli-unreadable-file-exits-two,
+  section = {shellcheck-cli},
+  title  = {A path that cannot be read exits 2 — the could-not-look code},
+  claim  = {A path that cannot be read exits 2 — the could-not-look code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_an_unreadable_file_exits_two},
+}
+
+@misc{hooks-shellcheck-cli-shell-file-with-no-linter-exits-two,
+  section = {shellcheck-cli},
+  title  = {A shell file the linter cannot judge exits 2, never 0 as the origin did},
+  claim  = {A shell file the linter cannot judge exits 2, never 0 as the origin did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_shell_file_with_no_linter_exits_two},
+}
+
+@misc{hooks-shellcheck-cli-tree-with-no-linter-exits-two,
+  section = {shellcheck-cli},
+  title  = {A census that cannot lint a shell file is UNKNOWN, not a clean count},
+  claim  = {A census that cannot lint a shell file is UNKNOWN, not a clean count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_tree_with_no_linter_exits_two},
+}
+
+@misc{hooks-shellcheck-cli-explain-with-no-linter-exits-two,
+  section = {shellcheck-cli},
+  title  = {Explaining a command the linter cannot judge exits 2},
+  claim  = {Explaining a command the linter cannot judge exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_explain_with_no_linter_exits_two},
+}
+
+@misc{hooks-shellcheck-cli-no-mode-is-a-usage-error,
+  section = {shellcheck-cli},
+  title  = {With no mode the tool refuses rather than guessing one},
+  claim  = {With no mode the tool refuses rather than guessing one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_no_mode_is_a_usage_error},
+}
+
+@misc{hooks-shellcheck-cli-file-with-a-finding-exits-one-and-names-it,
+  section = {shellcheck-cli},
+  title  = {A shell file with a defect exits 1 and prints the rule},
+  claim  = {A shell file with a defect exits 1 and prints the rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_file_with_a_finding_exits_one_and_names_it},
+}
+
+@misc{hooks-shellcheck-cli-clean-file-exits-zero,
+  section = {shellcheck-cli},
+  title  = {A clean shell file exits 0 — the arm that makes exit 1 mean something},
+  claim  = {A clean shell file exits 0 — the arm that makes exit 1 mean something.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_clean_file_exits_zero},
+}
+
+@misc{hooks-shellcheck-cli-tree-census-counts-its-population,
+  section = {shellcheck-cli},
+  title  = {The census reports N shell files and M with findings, skipping non-shell and VCS dirs},
+  claim  = {The census reports N shell files and M with findings, skipping non-shell and VCS dirs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_tree_census_counts_its_population},
+}
+
+@misc{hooks-shellcheck-cli-file-honours-its-trees-waiver,
+  section = {shellcheck-cli},
+  title  = {A dated waiver in the governing pyproject clears the file — the mode reads the tree's set},
+  claim  = {A dated waiver in the governing pyproject clears the file — the mode reads the tree's
+            set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_file_honours_its_trees_waiver},
+}
+
+@misc{hooks-shellcheck-cli-explain-reports-a-finding-and-exits-one,
+  section = {shellcheck-cli},
+  title  = {Explaining a defective command exits 1 and names the rule},
+  claim  = {Explaining a defective command exits 1 and names the rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_explain_reports_a_finding_and_exits_one},
+}
+
+@misc{hooks-shellcheck-cli-explain-of-clean-shell-exits-zero,
+  section = {shellcheck-cli},
+  title  = {Explaining clean shell exits 0},
+  claim  = {Explaining clean shell exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_explain_of_clean_shell_exits_zero},
+}
