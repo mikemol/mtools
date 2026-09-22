@@ -507,3 +507,95 @@
   claim  = {`maxload=0` admits under any load.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_zero_maxload_disables_the_load_gate},
 }
+
+@misc{fence-admit-init-declares-the-total-once,
+  section = {admit},
+  title  = {The first init writes TOTAL_MB; a second does not resize the shared pool},
+  claim  = {The first init writes TOTAL_MB; a second does not resize the shared pool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_init_declares_the_total_once},
+}
+
+@misc{fence-admit-default-total-is-seventy-percent-capped-at-eight-gib,
+  section = {admit},
+  title  = {`min(70% MemTotal, 8192)`: a small host gets 70%, a large one the cap},
+  claim  = {`min(70% MemTotal, 8192)`: a small host gets 70%, a large one the cap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_the_default_total_is_seventy_percent_capped_at_eight_gib},
+}
+
+@misc{fence-admit-lease-is-released-when-its-block-exits,
+  section = {admit},
+  title  = {Inside `admit` the lease is in the ledger; after it, it is gone},
+  claim  = {Inside `admit` the lease is in the ledger; after it, it is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_lease_is_released_when_its_block_exits},
+}
+
+@misc{fence-admit-impossible-request-is-refused-without-waiting,
+  section = {admit},
+  title  = {`mb > TOTAL_MB` raises at once, with no NOBLOCK and no sleep},
+  claim  = {`mb > TOTAL_MB` raises at once, with no NOBLOCK and no sleep.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_an_impossible_request_is_refused_without_waiting},
+}
+
+@misc{fence-admit-noblock-refuses-a-request-that-would-wait,
+  section = {admit},
+  title  = {Held TOTAL-10: a second request for 20 with NOBLOCK exits 3 at once},
+  claim  = {Held TOTAL-10: a second request for 20 with NOBLOCK exits 3 at once. THE CONTROL: the
+            same request for 10 is admitted beside the holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_noblock_refuses_a_request_that_would_wait},
+}
+
+@misc{fence-admit-timeout-gives-up-with-the-refused-code,
+  section = {admit},
+  title  = {TIMEOUT: a blocked request gives up with 3 soon after its bound, not later},
+  claim  = {TIMEOUT: a blocked request gives up with 3 soon after its bound, not later.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_timeout_gives_up_with_the_refused_code},
+}
+
+@misc{fence-admit-blocked-request-proceeds-after-the-holder-releases,
+  section = {admit},
+  title  = {A holds TOTAL-10, B asks 20 and BLOCKS; A releases during B's wait; B is admitted},
+  claim  = {A holds TOTAL-10, B asks 20 and BLOCKS; A releases during B's wait; B is admitted. THE
+            WAIT IS ASSERTED, not assumed: B's injected sleep is where A releases, so B
+            can only be admitted after sleeping at least once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_blocked_request_proceeds_after_the_holder_releases},
+}
+
+@misc{fence-admit-high-load-holds-a-start-back-and-zero-maxload-lets-it-through,
+  section = {admit},
+  title  = {Load over the ceiling with NOBLOCK is 3; the same load with `maxload=0` is admitted},
+  claim  = {Load over the ceiling with NOBLOCK is 3; the same load with `maxload=0` is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_high_load_holds_a_start_back_and_zero_maxload_lets_it_through},
+}
+
+@misc{fence-admit-two-racing-claims-admit-exactly-one,
+  section = {admit},
+  title  = {Two processes claim `claim:x` at once: one holds (0), the other is refused (3)},
+  claim  = {Two processes claim `claim:x` at once: one holds (0), the other is refused (3). THE RE-
+            CHECK UNDER THE LOCK IS WHAT THIS PINS — both may pass the lock-free read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_two_racing_claims_admit_exactly_one},
+}
+
+@misc{fence-admit-killed-holder-is-reaped-before-it-is-believed,
+  section = {admit},
+  title  = {A SIGKILLed holder's lease is reaped by the next contender, not waited on},
+  claim  = {Holder H leases 400 of 512 and is SIGKILLed; its lease is STILL in the ledger; contender
+            C asks 400 without waiting, reaps H, and is admitted. THE LEDGER IS READ RAW
+            BETWEEN THE KILL AND THE CONTENDER — a reading that gc'd would remove the
+            lease itself and C would never reach the reap branch this arm exists to
+            test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_killed_holder_is_reaped_before_it_is_believed},
+}
+
+@misc{fence-admit-reap-with-nothing-dead-leaves-the-file-untouched,
+  section = {admit},
+  title  = {Nothing dead: no rewrite, so the inode is unchanged. ⚑ THE CONTROL: a dead lease DOES},
+  claim  = {Nothing dead: no rewrite, so the inode is unchanged. THE CONTROL: a dead lease DOES.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_reap_with_nothing_dead_leaves_the_file_untouched},
+}
+
+@misc{fence-admit-lock-is-acquired-within-its-bound-or-refused,
+  section = {admit},
+  title  = {A held lock makes a second acquire raise after its bound, not wait forever},
+  claim  = {A held lock makes a second acquire raise after its bound, not wait forever.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_the_lock_is_acquired_within_its_bound_or_refused},
+}

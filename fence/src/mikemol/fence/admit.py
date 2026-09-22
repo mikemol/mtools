@@ -7,11 +7,11 @@ Ported by design from substrate's `scripts/membudget` (bash: `cmd_run` plus the 
 knows about no other; this module decides whether that command may START, against every live lease
 on the host.
 
-⚑⚑ THIS FILE IS THE PURE HALF, AND THE SPLIT IS THE DESIGN. Everything here is a function of a
-ledger SNAPSHOT and injected facts (which owners are alive, what the load is): parsing, gc to a
-fixpoint, the admission verdict, the claim keyway. The locked file, the wait loop and the context
-manager are the effectful half and sit on top. A verdict computed from a snapshot can be tested
-against every row of the letter's table without a lock, a clock or a second process.
+⚑⚑ TWO HALVES, AND THE SPLIT IS THE DESIGN. The first is a function of a ledger SNAPSHOT and
+injected facts (which owners are alive, what the load is): parsing, gc to a fixpoint, the admission
+verdict, the claim keyway — every row of the letter's table is testable without a lock, a clock or a
+second process. The second, below it, is the locked file, the wait loop and the lease's lifetime,
+and it decides nothing the first half did not already decide.
 
 ⚑⚑ NESTED LEASES ARE DISJOINT, NOT SUB-ALLOCATED. Every lease, top-level or nested, draws from the
 GLOBAL pool and gets its own cap; a parent governs only cascade-gc and the parent-gone refusal. The
@@ -24,14 +24,19 @@ over it once it lands (letter, "After it lands").
 
 from __future__ import annotations
 
+import contextlib
 import enum
+import fcntl
 import os
+import sys
+import time
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterator
 
 # The ledger's two line kinds, and each one's word count (a lease's label may hold spaces, so its
 # count is a minimum).
@@ -338,3 +343,304 @@ def load_ok(load: tuple[float, float, float], nproc: int, maxload: float) -> boo
     ceiling = nproc * maxload
     load1, load5, load15 = load
     return load1 <= ceiling and min(load5, load15) <= ceiling
+
+
+# --- the effectful half: the locked ledger file, the wait loop, the lease's lifetime ---
+
+# The origin's defaults: a bounded lock acquire, a gc rate limit, and the waiter's poll backoff.
+LOCK_TIMEOUT_S = 10.0
+GC_INTERVAL_S = 2.0
+POLL_START_S = 0.1
+POLL_MAX_S = 2.0
+_BACKOFF = 1.6
+
+# `TOTAL_MB`'s default: 70% of the host's memory, never more than 8 GiB.
+_DEFAULT_FRACTION = 0.7
+_DEFAULT_CEILING_MB = 8192
+_KIB_PER_MB = 1024
+
+# The load gate's default ceiling, per CPU.
+MAXLOAD = 10.0
+
+
+class LockTimeoutError(RuntimeError):
+    """The ledger lock stayed held past its bound — a live but wedged holder, never a dead one."""
+
+
+class RefusedError(RuntimeError):
+    """Admission was refused; `code` is the origin's exit code (3 or 4)."""
+
+    def __init__(self, verdict: Verdict, code: int, message: str) -> None:
+        """Carry the verdict and its exit code with the message."""
+        super().__init__(message)
+        self.verdict = verdict
+        self.code = code
+
+
+@dataclass(frozen=True, slots=True)
+class Store:
+    """The shared ledger file and its lock file beside it.
+
+    ⚑⚑ WRITES ARE ATOMIC, SO A READ OUTSIDE THE LOCK IS ALWAYS CONSISTENT: a claim is one appended
+    line; gc and release write a sibling file and rename it over the ledger. A stale read can only
+    UNDER-count free budget — the safe direction — so the waiter polls without the lock and takes
+    it only to claim or reap.
+    """
+
+    path: Path
+    lock_timeout_s: float = LOCK_TIMEOUT_S
+
+    @property
+    def lock_path(self) -> Path:
+        """The lock file, `<ledger>.lock`."""
+        return self.path.with_name(self.path.name + ".lock")
+
+    @contextlib.contextmanager
+    def locked(self) -> Iterator[None]:
+        """Hold the ledger lock, acquiring it within `lock_timeout_s` or raising.
+
+        ⚑ BOUNDED, BECAUSE A DEAD HOLDER'S DESCRIPTOR CLOSES AND FREES IT: a timeout can only mean
+        a live holder that is wedged, and waiting forever on that is how one repo stalls the rest.
+
+        Yields:
+            nothing; the lock is held for the block's duration.
+
+        Raises:
+            LockTimeoutError: the lock stayed held past the bound.
+
+        """
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        fd = os.open(self.lock_path, os.O_RDWR | os.O_CREAT, 0o644)
+        try:
+            deadline = time.monotonic() + self.lock_timeout_s
+            while True:
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError:
+                    if time.monotonic() >= deadline:
+                        msg = f"{self.lock_path} held past {self.lock_timeout_s}s"
+                        raise LockTimeoutError(msg) from None
+                    time.sleep(0.01)
+            yield
+        finally:
+            os.close(fd)
+
+    def read(self) -> Ledger:
+        """Return the current snapshot; an absent ledger is an empty one with no total.
+
+        Returns:
+            the snapshot.
+
+        """
+        try:
+            return parse(self.path.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            return Ledger(None, ())
+
+    def append(self, lease: Lease) -> None:
+        """Append one lease line. Call only under the lock."""
+        with self.path.open("a", encoding="utf-8") as handle:
+            handle.write(lease.line() + "\n")
+
+    def rewrite(self, ledger: Ledger) -> None:
+        """Replace the ledger atomically: write a sibling, rename it. Under the lock only."""
+        tmp = self.path.with_name(f"{self.path.name}.{os.getpid()}.tmp")
+        tmp.write_text(ledger.render(), encoding="utf-8")
+        tmp.replace(self.path)
+
+
+def default_total_mb(meminfo: Path = Path("/proc/meminfo")) -> int:
+    """Return `min(70% of MemTotal, 8192)` in megabytes.
+
+    Returns:
+        the default `TOTAL_MB`.
+
+    """
+    for line in meminfo.read_text(encoding="utf-8").splitlines():
+        if line.startswith("MemTotal:"):
+            kib = int(line.split()[1])
+            return min(int(kib / _KIB_PER_MB * _DEFAULT_FRACTION), _DEFAULT_CEILING_MB)
+    return _DEFAULT_CEILING_MB
+
+
+def init(store: Store, total_mb: int) -> bool:
+    """Declare the ledger's total, unless one is already declared.
+
+    ⚑ AN EXISTING TOTAL IS NOT OVERWRITTEN: every repo on the host shares it, and a second init
+    resizing the pool under live leases would change what each of them was admitted against.
+
+    Returns:
+        whether this call wrote the total.
+
+    """
+    with store.locked():
+        snap = store.read()
+        if snap.total_mb is not None:
+            return False
+        store.rewrite(Ledger(total_mb, snap.leases))
+        return True
+
+
+def reap(store: Store, is_alive: Callable[[str], bool] = alive) -> Ledger:
+    """Gc the ledger under the lock, rewriting it ONLY when something was dropped.
+
+    Returns:
+        the snapshot after gc.
+
+    """
+    with store.locked():
+        snap = store.read()
+        kept = gc(snap, is_alive)
+        if kept is not snap:
+            store.rewrite(kept)
+        return kept
+
+
+def _announce(msg: str) -> None:
+    """Write a waiter's one-time notice where a person watching the run will see it."""
+    sys.stderr.write(msg + "\n")
+
+
+@dataclass(frozen=True, slots=True)
+class Waiting:
+    """How a blocked request waits: whether it may, for how long, and against which load ceiling."""
+
+    noblock: bool = False
+    timeout_s: float | None = None
+    maxload: float = MAXLOAD
+    poll_start_s: float = POLL_START_S
+    poll_max_s: float = POLL_MAX_S
+    gc_interval_s: float = GC_INTERVAL_S
+
+
+@dataclass(frozen=True, slots=True)
+class Host:
+    """The facts about the machine the loop reads — injected, so no arm depends on the box."""
+
+    is_alive: Callable[[str], bool] = alive
+    loadavg: Callable[[], tuple[float, float, float]] = os.getloadavg
+    nproc: int = os.cpu_count() or 1
+    clock: Callable[[], float] = time.monotonic
+    sleep: Callable[[float], None] = time.sleep
+    announce: Callable[[str], None] = _announce
+
+
+# The defaults `acquire` and `admit` wait and read the host with, as singletons.
+WAIT = Waiting()
+HOST = Host()
+
+
+def _terminal_message(verdict: Verdict, request: Request, snap: Ledger) -> str:
+    """Say why a verdict waiting cannot change is a refusal.
+
+    Returns:
+        the refusal's message.
+
+    """
+    messages = {
+        Verdict.IMPOSSIBLE: f"IMPOSSIBLE: {request.mb} MB exceeds the total {snap.total_mb} MB",
+        Verdict.PARENT_GONE: f"parent lease {request.parent} is no longer in the ledger",
+        Verdict.NO_TOTAL: "the ledger declares no TOTAL_MB — run init first",
+    }
+    return messages.get(verdict, verdict.name)
+
+
+def _claim(store: Store, request: Request, host: Host) -> Lease | None:
+    """Under the lock: gc, re-decide, and append the lease only if it STILL fits.
+
+    ⚑⚑ THE RE-CHECK UNDER THE LOCK IS WHAT MAKES A RACE HAVE ONE WINNER. Two contenders can both
+    pass the lock-free check; only the one that re-decides ADMIT against the locked snapshot writes.
+
+    Returns:
+        the appended lease, or None when the locked snapshot no longer admits it.
+
+    """
+    with store.locked():
+        raw = store.read()
+        snap = gc(raw, host.is_alive)
+        if snap is not raw:
+            store.rewrite(snap)
+        if decide(request, snap) is not Verdict.ADMIT:
+            return None
+        lease = Lease(uuid.uuid4().hex[:12], request.mb, owner_of(os.getpid()),
+                      int(time.time()), request.parent, request.label)
+        store.append(lease)
+        return lease
+
+
+def acquire(store: Store, request: Request, waiting: Waiting = WAIT,
+            host: Host = HOST) -> Lease:
+    """Wait for `request` to fit, then lease it; or refuse.
+
+    ⚑⚑ A DEAD HOLDER IS REAPED BEFORE IT IS BELIEVED: every pass that would BLOCK first gcs, so a
+    budget held by a killed process is freed by the next contender rather than waited on forever.
+
+    Returns:
+        the lease, live until `release`.
+
+    Raises:
+        RefusedError: the request is impossible, the ledger refuses it, or it would wait while
+            `noblock` is set or past `timeout_s`.
+
+    """
+    started = host.clock()
+    poll = waiting.poll_start_s
+    announced = False
+    last_gc = float("-inf")
+    while True:
+        snap = store.read()
+        now = host.clock()
+        if now - last_gc >= waiting.gc_interval_s or not announced:
+            snap = reap(store, host.is_alive)
+            last_gc = now
+        verdict = decide(request, snap)
+        if verdict not in {Verdict.ADMIT, Verdict.BLOCK, Verdict.CLAIMED}:
+            code = exit_code(verdict) or EXIT_REFUSED
+            raise RefusedError(verdict, code, _terminal_message(verdict, request, snap))
+        load_fits = load_ok(host.loadavg(), host.nproc, waiting.maxload)
+        if verdict is Verdict.ADMIT and load_fits:
+            lease = _claim(store, request, host)
+            if lease is not None:
+                return lease
+            continue
+        if waiting.noblock:
+            raise RefusedError(verdict, EXIT_REFUSED, f"would wait ({verdict.name}); noblock set")
+        if waiting.timeout_s is not None and now - started >= waiting.timeout_s:
+            raise RefusedError(verdict, EXIT_REFUSED, f"gave up after {waiting.timeout_s}s")
+        if not announced:
+            free = (snap.total_mb or 0) - snap.used
+            host.announce(f"fence.admit: waiting ({verdict.name}, load ok={load_fits}): "
+                          f"need {request.mb} MB, free {free} MB of {snap.total_mb} MB")
+            announced = True
+        host.sleep(poll)
+        poll = min(poll * _BACKOFF, waiting.poll_max_s)
+
+
+def release(store: Store, lease: Lease) -> None:
+    """Drop `lease` from the ledger. If the lock cannot be taken, leave it for gc to reap.
+
+    ⚑ GIVING UP IS SAFE HERE: the lease's owner is this process, and once it exits the next gc
+    drops the line — releasing early only returns the budget sooner.
+    """
+    with contextlib.suppress(LockTimeoutError), store.locked():
+        snap = store.read()
+        kept = tuple(item for item in snap.leases if item.lease_id != lease.lease_id)
+        if len(kept) != len(snap.leases):
+            store.rewrite(Ledger(snap.total_mb, kept))
+
+
+@contextlib.contextmanager
+def admit(store: Store, request: Request, waiting: Waiting = WAIT,
+          host: Host = HOST) -> Iterator[Lease]:
+    """Hold a lease for the duration of a `with` block — acquired on entry, released on exit.
+
+    Yields:
+        the lease.
+
+    """
+    lease = acquire(store, request, waiting, host)
+    try:
+        yield lease
+    finally:
+        release(store, lease)
