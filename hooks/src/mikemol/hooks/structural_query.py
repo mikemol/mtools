@@ -34,7 +34,6 @@ from __future__ import annotations
 
 import json
 import sys
-from pathlib import Path
 
 from mikemol.hooks import cmdparse, routing_table
 from mikemol.hooks import payload as _payload
@@ -108,7 +107,8 @@ TEXTUAL = frozenset((
 # The claims come from the table's `claims` column, so adding a row arms the gate in every repo
 # that adopts this package, with no edit here.
 
-# A verdict's hit: the argument, its suffix, and the (artifact, owner) that claims it.
+# A verdict's hit: the argument, the key that claims it (a suffix or a bare filename), and the
+# (artifact, owner) behind that key.
 Hit = tuple[str, str, tuple[str, str]]
 Reason = tuple[str, list[Hit]]
 
@@ -375,9 +375,9 @@ def verdict(cmd: str, table: dict[str, tuple[str, str]] | None = None) -> tuple[
         # unexamined.
         hits: list[Hit] = []
         for a in _scannable(prog, args):
-            suf = Path(a.strip("'\"")).suffix.lower()
-            if suf in tbl:
-                hits.append((a, suf, tbl[suf]))
+            claimed = routing_table.claimed_by(a, tbl)
+            if claimed is not None:
+                hits.append((a, claimed[0], tbl[claimed[0]]))
         if hits:
             reasons.append((prog, hits))
     return bool(reasons), reasons

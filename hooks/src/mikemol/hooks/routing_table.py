@@ -52,6 +52,15 @@ _CLAIMS_COLUMN = 3
 # The suffixes a `claims` cell may declare, e.g. `.py` / `.agda`.
 _SUFFIX_RE = re.compile(r"`(\.[A-Za-z0-9]+)`")
 
+# ⚑⚑⚑ AND THE BARE FILENAMES IT MAY DECLARE, e.g. `Makefile` — because A SUFFIX-KEYED CLAIM CANNOT
+# EXPRESS A SUFFIXLESS ARTIFACT. `Path("agda/Makefile").suffix` is "", so before this no cell value
+# could bind it: writing `Makefile` into the column read as a declaration and bound nothing
+# (substrate, measured, letter 2026-09-22).
+# ⚑⚑ THE TWO KEY SPACES CANNOT COLLIDE: a suffix key begins with `.`, a filename key begins with a
+# letter (this regex), so one map carries both — pinned by the collision arms, not by this sentence.
+# ⚑ CASE-PRESERVED IN THE CLAIM, FOLDED AT THE LOOKUP, so the refusal names `Makefile` as written.
+_FILENAME_RE = re.compile(r"`([A-Za-z][A-Za-z0-9_+-]*)`")
+
 
 def project_dir() -> Path:
     """Return the repo this invocation governs — the harness's, else this process's directory.
@@ -141,8 +150,45 @@ def _declared_suffixes(cell: str) -> list[str]:
     return [str(m.group(1)).lower() for m in _SUFFIX_RE.finditer(cell)]
 
 
+def _declared_filenames(cell: str) -> list[str]:
+    """Return the bare-filename tokens a `claims` cell declares, verbatim — NOT lowercased.
+
+    ⚑ ANY BACKTICKED WORD IN THE CELL IS READ AS A NAME, so the claims column must hold only keys:
+    a cell mentioning a tool as `pycodemod` would claim a file of that name.
+
+    Returns:
+        the filename tokens, in their declared case.
+
+    """
+    return [str(m.group(1)) for m in _FILENAME_RE.finditer(cell)]
+
+
+def claimed_by(arg: str, table: dict[str, tuple[str, str]]) -> tuple[str, str] | None:
+    """Return the `(key, owner-tool)` claiming `arg`, or None when nothing claims it.
+
+    ⚑⚑ THE SUFFIX IS TRIED FIRST AND THE FILENAME SECOND. The kind claim is the general one and
+    must win, so a filename claim never shadows it.
+
+    ⚑⚑ AND THE FOLD IS OVER BOTH SIDES — substrate's failing case established it: folding only the
+    argument compares two spellings of `makefile` against one spelling of the claim.
+
+    Returns:
+        the claiming key and the tool that owns it, or None.
+
+    """
+    path = Path(arg.strip("'\""))
+    suf = path.suffix.lower()
+    if suf and suf in table:
+        return suf, table[suf][1]
+    name = path.name.lower()
+    for key, (_artifact, tool) in table.items():
+        if not key.startswith(".") and key.lower() == name:
+            return key, tool
+    return None
+
+
 def claims(skill: Path | None = None) -> dict[str, tuple[str, str]]:
-    """Return {suffix: (artifact, tool)}, read from the table's `claims` column.
+    """Return {suffix-or-filename: (artifact, tool)}, read from the table's `claims` column.
 
     ⚑ THE CLAIM IS THE ARTIFACT KIND, NOT THE CHECKOUT IT LIVES IN. A location test ("is this path
     inside the repo?") cannot do this job: it would guard only the invoking checkout while PASSING
@@ -150,7 +196,7 @@ def claims(skill: Path | None = None) -> dict[str, tuple[str, str]]:
     sits.
 
     Returns:
-        {suffix: (artifact, tool)}, read from the table's `claims` column.
+        {suffix-or-filename: (artifact, tool)}, read from the table's `claims` column.
 
     """
     path = table_path() if skill is None else skill
@@ -161,6 +207,7 @@ def claims(skill: Path | None = None) -> dict[str, tuple[str, str]]:
         if len(cells) < _MIN_CLAIM_CELLS:
             continue
         artifact, tool = cells[0].strip("`"), cells[1].strip("`")
-        for suf in _declared_suffixes(cells[_CLAIMS_COLUMN]):
-            out[suf] = (artifact, tool)
+        cell = cells[_CLAIMS_COLUMN]
+        for key in _declared_suffixes(cell) + _declared_filenames(cell):
+            out[key] = (artifact, tool)
     return out

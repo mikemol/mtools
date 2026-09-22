@@ -71,6 +71,7 @@ exports_files(glob(
     "mypy_runner.py",
     "mutate_runner.py",
     ".claude/settings.json",
+    ".claude/skills/struct-tools/SKILL.md",
     "findings/CENSUS-BRIEF.md",
 ])
 

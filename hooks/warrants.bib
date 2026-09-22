@@ -3565,3 +3565,90 @@
   claim  = {Explaining clean shell exits 0.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_explain_of_clean_shell_exits_zero},
 }
+
+@misc{hooks-routing-table-claimed-file-routes-to-its-key-and-owner,
+  section = {routing-table},
+  title  = {Suffix and filename claims both route, case-folded on the argument, quotes stripped},
+  claim  = {Suffix and filename claims both route, case-folded on the argument, quotes stripped.
+            `agda/Makefile` IS THE CASE THE OLD MECHANISM COULD NOT PASS: its suffix is
+            empty, so no suffix-keyed cell could bind it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_claimed_file_routes_to_its_key_and_owner},
+}
+
+@misc{hooks-routing-table-fold-is-on-the-claim-side-too,
+  section = {routing-table},
+  title  = {A lowercase claim routes a capitalised file — substrate's recorded failing case},
+  claim  = {A lowercase claim routes a capitalised file — substrate's recorded failing case.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_the_fold_is_on_the_claim_side_too},
+}
+
+@misc{hooks-routing-table-suffix-claim-beats-a-filename-claim-for-one-file,
+  section = {routing-table},
+  title  = {The kind claim is the general one and wins; a filename claim never shadows it},
+  claim  = {The kind claim is the general one and wins; a filename claim never shadows it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_suffix_claim_beats_a_filename_claim_for_one_file},
+}
+
+@misc{hooks-routing-table-filename-key-is-reached-when-its-suffix-is-unclaimed,
+  section = {routing-table},
+  title  = {With no suffix claim, a (fixture-only) dotted filename key still routes},
+  claim  = {With no suffix claim, a (fixture-only) dotted filename key still routes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_filename_key_is_reached_when_its_suffix_is_unclaimed},
+}
+
+@misc{hooks-routing-table-two-key-spaces-do-not-collide,
+  section = {routing-table},
+  title  = {A filename claim never routes a suffix-shaped file, nor a suffix claim a suffixless one},
+  claim  = {A filename claim never routes a suffix-shaped file, nor a suffix claim a suffixless one.
+            THE CONDITION ON TAKING THIS FEATURE, AS A TEST RATHER THAN A SENTENCE. Both
+            directions, each beside the row where the same key DOES route, so an empty
+            lookup cannot pass. A dotfile `.Makefile` is claimed by neither key —
+            pathlib reads the leading dot as part of the stem — and that row, with the
+            two near names, was reasoned rather than run in the letter; run here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_the_two_key_spaces_do_not_collide},
+}
+
+@misc{hooks-routing-table-cell-declares-a-suffix-and-a-filename-together,
+  section = {routing-table},
+  title  = {The suffix is lowercased and the filename kept verbatim, in one map},
+  claim  = {The suffix is lowercased and the filename kept verbatim, in one map.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_cell_declares_a_suffix_and_a_filename_together},
+}
+
+@misc{hooks-routing-table-dotted-token-is-read-only-as-a-suffix,
+  section = {routing-table},
+  title  = {`.Makefile` is a suffix key — the filename reader needs a leading letter},
+  claim  = {`.Makefile` is a suffix key — the filename reader needs a leading letter.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_dotted_token_is_read_only_as_a_suffix},
+}
+
+@misc{hooks-routing-table-bare-word-is-read-only-as-a-filename,
+  section = {routing-table},
+  title  = {`Makefile` is a filename key — the suffix reader needs a leading dot},
+  claim  = {`Makefile` is a filename key — the suffix reader needs a leading dot.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_bare_word_is_read_only_as_a_filename},
+}
+
+@misc{hooks-routing-table-live-tables-filename-keys-never-start-with-a-dot,
+  section = {routing-table},
+  title  = {Over this repo's own table, the key set is non-empty and no filename-shaped key has a dot},
+  claim  = {Over this repo's own table, the key set is non-empty and no filename-shaped key has a
+            dot. ASSERTED AS ITS PARTS. Substrate's first version was `k.startswith(".")
+            or not …` — true of every string, so true of a broken table too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_the_live_tables_filename_keys_never_start_with_a_dot},
+}
+
+@misc{hooks-routing-table-textual-read-of-a-claimed-filename-is-refused,
+  section = {routing-table},
+  title  = {The gate now fires on a suffixless file its table claims by name},
+  claim  = {The gate now fires on a suffixless file its table claims by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_textual_read_of_a_claimed_filename_is_refused},
+}
+
+@misc{hooks-routing-table-claimed-name-that-is-not-a-read-path-is-not-refused,
+  section = {routing-table},
+  title  = {A glob value, a search PATTERN, and a non-textual program pass},
+  claim  = {A glob value, a search PATTERN, and a non-textual program pass. THE CONTROL IS THE ARM
+            ABOVE: the same table refuses `cat agda/Makefile`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_claimed_name_that_is_not_a_read_path_is_not_refused},
+}
