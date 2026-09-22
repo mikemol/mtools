@@ -19,6 +19,19 @@
           {
             "type": "command",
             "command": "NOVERIFY_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-no-verify\""
+          },
+          {
+            "type": "command",
+            "command": "SHELLCHECK_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-shellcheck\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "SHELLCHECK_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-shellcheck\""
           }
         ]
       }

@@ -66,6 +66,7 @@ mikemol-hook-no-chaining = "mikemol.hooks.no_chaining:main"
 # otherwise: a hook with full coverage and no entry point is *the packager is not a user of its own
 # package*, with the tests passing.
 mikemol-hook-no-verify = "mikemol.hooks.no_verify:main"
+mikemol-hook-shellcheck = "mikemol.hooks.shellcheck:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -310,6 +311,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # from a caller-supplied Path, the rest are literals and a test NAME — passed as an argv element
 # to `-k`, never through a shell, which `test_the_grader_does_not_shell_out_through_a_shell` pins.
 "src/mikemol/hooks/grade.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ RUNNING THE LINTER IS THE SHELL HOOK'S ONE RESPONSIBILITY. argv is the resolved linter path
+# and literals; the script under judgement travels on STDIN, never through a shell.
+"src/mikemol/hooks/shellcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE GRADER'S OWN CASES. `assert` as everywhere in tests; `private-member-access` for ONE arm that reaches
 # `grade._flips` deliberately — that private function is the single place the reachable/passed

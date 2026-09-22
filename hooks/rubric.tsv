@@ -13,3 +13,4 @@ grade	Grading: Falsifiability Proven by Mutation, Not Presence Proven by Reading
 exec-env	Execution Environment: What a Witness Can Actually Reach, Measured in Both Modes
 venv-artifact	The Venv as a Build Artifact: Relocatable, Closed, and the Same in Every Distribution
 reader-guard	The Reader Guard: Runnability Tested by Executing, Not Presence Tested by Stat
+shellcheck	The Shell Hook: What the Linter Says, and What an Absent Linter Does

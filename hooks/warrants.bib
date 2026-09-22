@@ -3125,3 +3125,358 @@
   claim   = {The original case the guard was written for still holds after the repair: a reader that does not exist at all is skipped. Presence is necessary for admission and not sufficient; this arm pins the necessary half so the repair of the sufficient half did not lose it},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_reader_guard.py -k test_an_absent_reader_is_skipped_too}
 }
+@misc{hooks-shellcheck-sh-path-is-bash,
+  section = {shellcheck},
+  title  = {A `.sh` path with no shebang is bash, the house default},
+  claim  = {A `.sh` path with no shebang is bash, the house default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_sh_path_is_bash},
+}
+
+@misc{hooks-shellcheck-bash-shebang-is-bash,
+  section = {shellcheck},
+  title  = {A `#!/bin/bash` shebang is bash whatever the name},
+  claim  = {A `#!/bin/bash` shebang is bash whatever the name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_bash_shebang_is_bash},
+}
+
+@misc{hooks-shellcheck-sh-shebang-is-sh,
+  section = {shellcheck},
+  title  = {A `#!/bin/sh` shebang is the sh dialect, not bash},
+  claim  = {A `#!/bin/sh` shebang is the sh dialect, not bash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_sh_shebang_is_sh},
+}
+
+@misc{hooks-shellcheck-env-style-shebang-is-read,
+  section = {shellcheck},
+  title  = {`#!/usr/bin/env bash` is read through `env`},
+  claim  = {`#!/usr/bin/env bash` is read through `env`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_env_style_shebang_is_read},
+}
+
+@misc{hooks-shellcheck-python-shebang-in-a-sh-file-is-not-shell,
+  section = {shellcheck},
+  title  = {The shebang outranks the suffix: a `.sh` file that is really python is not linted},
+  claim  = {The shebang outranks the suffix: a `.sh` file that is really python is not linted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_python_shebang_in_a_sh_file_is_not_shell},
+}
+
+@misc{hooks-shellcheck-plain-python-file-is-not-shell,
+  section = {shellcheck},
+  title  = {A `.py` file with no shebang is not shell},
+  claim  = {A `.py` file with no shebang is not shell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_plain_python_file_is_not_shell},
+}
+
+@misc{hooks-shellcheck-zsh-is-not-lintable,
+  section = {shellcheck},
+  title  = {A zsh shebang is an answer — not shell shellcheck can read — not a miss},
+  claim  = {A zsh shebang is an answer — not shell shellcheck can read — not a miss.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_zsh_is_not_lintable},
+}
+
+@misc{hooks-shellcheck-zsh-suffix-without-a-shebang-is-not-lintable,
+  section = {shellcheck},
+  title  = {A `.zsh` fragment is not defaulted to bash},
+  claim  = {A `.zsh` fragment is not defaulted to bash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_zsh_suffix_without_a_shebang_is_not_lintable},
+}
+
+@misc{hooks-shellcheck-byte-order-mark-does-not-hide-the-shebang,
+  section = {shellcheck},
+  title  = {A leading BOM is stripped before the shebang is read},
+  claim  = {A leading BOM is stripped before the shebang is read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_byte_order_mark_does_not_hide_the_shebang},
+}
+
+@misc{hooks-shellcheck-markdown-file-is-not-shell,
+  section = {shellcheck},
+  title  = {Markdown with a backticked command in it is not shell},
+  claim  = {Markdown with a backticked command in it is not shell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_markdown_file_is_not_shell},
+}
+
+@misc{hooks-shellcheck-non-shell-file-is-not-linted,
+  section = {shellcheck},
+  title  = {A non-shell file is `[]` BEFORE the linter is looked for — no linter needed},
+  claim  = {A non-shell file is `[]` BEFORE the linter is looked for — no linter needed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_non_shell_file_is_not_linted},
+}
+
+@misc{hooks-shellcheck-dated-warrant-waives-its-code,
+  section = {shellcheck},
+  title  = {A code with a dated warrant longer than the minimum is in the governing set},
+  claim  = {A code with a dated warrant longer than the minimum is in the governing set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_dated_warrant_waives_its_code},
+}
+
+@misc{hooks-shellcheck-undated-warrant-waives-nothing,
+  section = {shellcheck},
+  title  = {A warrant naming no year is suppression, not relief: the code is not waived},
+  claim  = {A warrant naming no year is suppression, not relief: the code is not waived. THE
+            POSITIVE CONTROL SITS IN THE SAME FIXTURE: a dated sibling IS waived, so an
+            empty reader cannot pass this arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_undated_warrant_waives_nothing},
+}
+
+@misc{hooks-shellcheck-short-warrant-waives-nothing,
+  section = {shellcheck},
+  title  = {A dated warrant too short to say what was measured waives nothing},
+  claim  = {A dated warrant too short to say what was measured waives nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_short_warrant_waives_nothing},
+}
+
+@misc{hooks-shellcheck-list-of-bare-codes-waives-nothing,
+  section = {shellcheck},
+  title  = {A list is not the table's shape; it waives nothing rather than everything it names},
+  claim  = {A list is not the table's shape; it waives nothing rather than everything it names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_list_of_bare_codes_waives_nothing},
+}
+
+@misc{hooks-shellcheck-no-governing-project-waives-nothing,
+  section = {shellcheck},
+  title  = {With no path there is no project, and the package set — empty — applies},
+  claim  = {With no path there is no project, and the package set — empty — applies.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_no_governing_project_waives_nothing},
+}
+
+@misc{hooks-shellcheck-unparseable-pyproject-waives-nothing,
+  section = {shellcheck},
+  title  = {A pyproject that is not TOML yields the package set, not a crash},
+  claim  = {A pyproject that is not TOML yields the package set, not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_unparseable_pyproject_waives_nothing},
+}
+
+@misc{hooks-shellcheck-json1-comment-becomes-a-finding,
+  section = {shellcheck},
+  title  = {A well-formed comment becomes (code, line, message)},
+  claim  = {A well-formed comment becomes (code, line, message).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_json1_comment_becomes_a_finding},
+}
+
+@misc{hooks-shellcheck-waived-code-is-dropped-and-its-neighbour-kept,
+  section = {shellcheck},
+  title  = {The exclude set drops its codes and only its codes},
+  claim  = {The exclude set drops its codes and only its codes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_waived_code_is_dropped_and_its_neighbour_kept},
+}
+
+@misc{hooks-shellcheck-non-mapping-output-yields-no-findings,
+  section = {shellcheck},
+  title  = {An output shape this hook does not read yields no findings, not a wrong verdict},
+  claim  = {An output shape this hook does not read yields no findings, not a wrong verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_non_mapping_output_yields_no_findings},
+}
+
+@misc{hooks-shellcheck-non-list-comments-field-yields-no-findings,
+  section = {shellcheck},
+  title  = {`comments` that is not a list yields no findings},
+  claim  = {`comments` that is not a list yields no findings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_non_list_comments_field_yields_no_findings},
+}
+
+@misc{hooks-shellcheck-non-integer-line-reads-as-zero,
+  section = {shellcheck},
+  title  = {A malformed line number is 0 — visibly wrong rather than silently shifted},
+  claim  = {A malformed line number is 0 — visibly wrong rather than silently shifted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_non_integer_line_reads_as_zero},
+}
+
+@misc{hooks-shellcheck-write-carries-the-whole-content,
+  section = {shellcheck},
+  title  = {A Write's content is the post-edit file, exactly},
+  claim  = {A Write's content is the post-edit file, exactly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_write_carries_the_whole_content},
+}
+
+@misc{hooks-shellcheck-unreadable-edit-target-is-unknown,
+  section = {shellcheck},
+  title  = {An Edit whose target cannot be read yields None — unknown, not a guess},
+  claim  = {An Edit whose target cannot be read yields None — unknown, not a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_unreadable_edit_target_is_unknown},
+}
+
+@misc{hooks-shellcheck-edit-replaces-the-first-occurrence-only,
+  section = {shellcheck},
+  title  = {An Edit without `replace_all` applies once, as the harness does},
+  claim  = {An Edit without `replace_all` applies once, as the harness does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_edit_replaces_the_first_occurrence_only},
+}
+
+@misc{hooks-shellcheck-edit-with-replace-all-replaces-every-occurrence,
+  section = {shellcheck},
+  title  = {`replace_all` applies the edit everywhere},
+  claim  = {`replace_all` applies the edit everywhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_edit_with_replace_all_replaces_every_occurrence},
+}
+
+@misc{hooks-shellcheck-another-tool-carries-no-content,
+  section = {shellcheck},
+  title  = {A tool that writes nothing this hook can reconstruct yields None},
+  claim  = {A tool that writes nothing this hook can reconstruct yields None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_another_tool_carries_no_content},
+}
+
+@misc{hooks-shellcheck-installing-the-linter-is-a-repair,
+  section = {shellcheck},
+  title  = {`mise use -g shellcheck@latest` is the repair the refusal names},
+  claim  = {`mise use -g shellcheck@latest` is the repair the refusal names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_installing_the_linter_is_a_repair},
+}
+
+@misc{hooks-shellcheck-installing-something-else-is-not-a-repair,
+  section = {shellcheck},
+  title  = {The package manager alone is not exempt: `apt install jq` stays refused},
+  claim  = {The package manager alone is not exempt: `apt install jq` stays refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_installing_something_else_is_not_a_repair},
+}
+
+@misc{hooks-shellcheck-unquoted-expansion-is-caught,
+  section = {shellcheck},
+  title  = {`[ $f = x ]` is a finding — the T-arm},
+  claim  = {`[ $f = x ]` is a finding — the T-arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_unquoted_expansion_is_caught},
+}
+
+@misc{hooks-shellcheck-clean-shell-passes,
+  section = {shellcheck},
+  title  = {`echo "hello"` is measured-clean — the F-arm, without which the hook could deny all},
+  claim  = {`echo "hello"` is measured-clean — the F-arm, without which the hook could deny all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_clean_shell_passes},
+}
+
+@misc{hooks-shellcheck-clean-file-passes,
+  section = {shellcheck},
+  title  = {A clean bash file is measured-clean},
+  claim  = {A clean bash file is measured-clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_clean_file_passes},
+}
+
+@misc{hooks-shellcheck-trap-handler-before-an-exit-fires-with-no-waiver,
+  section = {shellcheck},
+  title  = {With an empty exclude set, SC2329 fires on a trap handler before `exit 0`},
+  claim  = {With an empty exclude set, SC2329 fires on a trap handler before `exit 0`. INVERTED FROM
+            THE ORIGIN, where this passed only because the origin waived SC2329.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_trap_handler_before_an_exit_fires_with_no_waiver},
+}
+
+@misc{hooks-shellcheck-trap-handler-before-an-exit-passes-with-its-waiver,
+  section = {shellcheck},
+  title  = {With SC2329 waived, the same script is clean — the waiver reaches the linter's verdict},
+  claim  = {With SC2329 waived, the same script is clean — the waiver reaches the linter's verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_trap_handler_before_an_exit_passes_with_its_waiver},
+}
+
+@misc{hooks-shellcheck-finding-on-the-first-line-reports-line-one,
+  section = {shellcheck},
+  title  = {The synthetic preamble is invisible: the operator's first line is line 1},
+  claim  = {The synthetic preamble is invisible: the operator's first line is line 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_finding_on_the_first_line_reports_line_one},
+}
+
+@misc{hooks-shellcheck-fragment-earns-no-missing-shebang-finding,
+  section = {shellcheck},
+  title  = {SC2148 is about the wrapper, never reported for a command fragment},
+  claim  = {SC2148 is about the wrapper, never reported for a command fragment. THE POSITIVE CONTROL
+            IS IN THE SAME FUNCTION: the same fragment's defect IS reported, so an empty
+            verdict cannot pass this arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_fragment_earns_no_missing_shebang_finding},
+}
+
+@misc{hooks-shellcheck-commit-message-heredoc-body-is-data,
+  section = {shellcheck},
+  title  = {Prose with `$word` and backticks in a heredoc body is not linted as shell},
+  claim  = {Prose with `$word` and backticks in a heredoc body is not linted as shell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_commit_message_heredoc_body_is_data},
+}
+
+@misc{hooks-shellcheck-neutralizing-does-not-unterminate-the-document,
+  section = {shellcheck},
+  title  = {Quoting the tag leaves the heredoc terminated: no SC1044/SC1072},
+  claim  = {Quoting the tag leaves the heredoc terminated: no SC1044/SC1072.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_neutralizing_does_not_unterminate_the_document},
+}
+
+@misc{hooks-shellcheck-finding-after-a-heredoc-keeps-its-true-line,
+  section = {shellcheck},
+  title  = {Real shell after a heredoc still lints, on its own line — the body was quoted, not cut},
+  claim  = {Real shell after a heredoc still lints, on its own line — the body was quoted, not cut.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_finding_after_a_heredoc_keeps_its_true_line},
+}
+
+@misc{hooks-shellcheck-already-quoted-heredoc-tag-is-left-alone,
+  section = {shellcheck},
+  title  = {A quoted tag is not re-quoted, and its body stays data},
+  claim  = {A quoted tag is not re-quoted, and its body stays data.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_already_quoted_heredoc_tag_is_left_alone},
+}
+
+@misc{hooks-shellcheck-armed-hook-with-no-linter-refuses-and-names-the-repair,
+  section = {shellcheck},
+  title  = {Armed with no linter: a deny naming the install — never a silent allow},
+  claim  = {Armed with no linter: a deny naming the install — never a silent allow.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_with_no_linter_refuses_and_names_the_repair},
+}
+
+@misc{hooks-shellcheck-unarmed-hook-with-no-linter-advises-on-stderr,
+  section = {shellcheck},
+  title  = {Unarmed with no linter: nothing on stdout, the advisory on stderr},
+  claim  = {Unarmed with no linter: nothing on stdout, the advisory on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_unarmed_hook_with_no_linter_advises_on_stderr},
+}
+
+@misc{hooks-shellcheck-armed-hook-with-no-linter-admits-the-install,
+  section = {shellcheck},
+  title  = {The install the refusal names is admitted, and says so — no deadlock},
+  claim  = {The install the refusal names is admitted, and says so — no deadlock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_with_no_linter_admits_the_install},
+}
+
+@misc{hooks-shellcheck-armed-hook-with-no-linter-admits-a-non-shell-write,
+  section = {shellcheck},
+  title  = {A non-shell file never reaches the linter, so the settings stay editable},
+  claim  = {A non-shell file never reaches the linter, so the settings stay editable. THE CONTROL IS
+            THE ARM ABOVE THIS FILE'S FIRST: the same environment denies a Bash call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_with_no_linter_admits_a_non_shell_write},
+}
+
+@misc{hooks-shellcheck-unparseable-verdict-is-refused-as-unknown,
+  section = {shellcheck},
+  title  = {A present linter that returns no parseable verdict is UNKNOWN, and refused as such},
+  claim  = {A present linter that returns no parseable verdict is UNKNOWN, and refused as such.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_unparseable_verdict_is_refused_as_unknown},
+}
+
+@misc{hooks-shellcheck-own-switch-at-zero-stands-down-over-the-shared-one,
+  section = {shellcheck},
+  title  = {`SHELLCHECK_HOOK_BLOCK=0` wins over `STRUCT_HOOK_BLOCK=1`: no deny},
+  claim  = {`SHELLCHECK_HOOK_BLOCK=0` wins over `STRUCT_HOOK_BLOCK=1`: no deny.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_the_own_switch_at_zero_stands_down_over_the_shared_one},
+}
+
+@misc{hooks-shellcheck-shared-switch-arms-when-the-own-one-is-unset,
+  section = {shellcheck},
+  title  = {With its own switch unset, the shared one arms this hook — by ITS name, not pycheck's},
+  claim  = {With its own switch unset, the shared one arms this hook — by ITS name, not pycheck's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_the_shared_switch_arms_when_the_own_one_is_unset},
+}
+
+@misc{hooks-shellcheck-armed-hook-denies-a-finding-and-names-the-rule,
+  section = {shellcheck},
+  title  = {Armed, a linted defect is a deny naming the rule and the pyproject waiver table},
+  claim  = {Armed, a linted defect is a deny naming the rule and the pyproject waiver table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_denies_a_finding_and_names_the_rule},
+}
+
+@misc{hooks-shellcheck-armed-hook-allows-clean-shell,
+  section = {shellcheck},
+  title  = {Armed, clean shell produces no decision — the not-deny arm},
+  claim  = {Armed, clean shell produces no decision — the not-deny arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_allows_clean_shell},
+}
+
+@misc{hooks-shellcheck-malformed-payload-denies-nothing,
+  section = {shellcheck},
+  title  = {Garbage on stdin exits 0 and denies nothing},
+  claim  = {Garbage on stdin exits 0 and denies nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_malformed_payload_denies_nothing},
+}

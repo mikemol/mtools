@@ -331,6 +331,7 @@ venv_from_hub(
         "mikemol-hook-structural-query": "mikemol.hooks.structural_query:main",
         "mikemol-hook-no-chaining": "mikemol.hooks.no_chaining:main",
         "mikemol-hook-no-verify": "mikemol.hooks.no_verify:main",
+        "mikemol-hook-shellcheck": "mikemol.hooks.shellcheck:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
