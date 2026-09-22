@@ -97,3 +97,36 @@ def test_only_the_exact_value_arms(monkeypatch: pytest.MonkeyPatch, value: str) 
     monkeypatch.setenv(payload.OWN_SWITCH, value)
     monkeypatch.delenv(payload.SHARED_SWITCH, raising=False)
     assert payload.armed() is False
+
+
+_OTHER = "SHELLCHECK_HOOK_BLOCK"
+
+
+def test_a_named_own_switch_is_read_instead_of_the_default(
+        monkeypatch: pytest.MonkeyPatch) -> None:
+    """⚑⚑ `armed(own=...)` READS THE CALLER'S SWITCH, NOT THE DEFAULT HOOK'S.
+
+    substrate's shellcheck letter (2026-09-22): a second hook calling bare `armed()` would be
+    armed and stood down by `PYCHECK_HOOK_BLOCK`. Standing down the default hook's switch must
+    leave a hook that names its own untouched — and the POSITIVE CONTROL in the same function is
+    that the default reader still sees its own `0`, so this cannot pass by ignoring env entirely.
+    """
+    monkeypatch.setenv(payload.OWN_SWITCH, "0")
+    monkeypatch.setenv(_OTHER, "1")
+    monkeypatch.delenv(payload.SHARED_SWITCH, raising=False)
+    assert payload.armed(_OTHER) is True, "the named switch was not the one read"
+    assert payload.armed() is False, "control: the default hook's own 0 still disarms it"
+
+
+def test_a_named_own_switch_set_to_zero_wins_over_the_shared_one(
+        monkeypatch: pytest.MonkeyPatch) -> None:
+    """⚑ STANDING ONE HOOK DOWN MUST NOT DEPEND ON ANOTHER HOOK'S SWITCH.
+
+    With the shared switch on, `SHELLCHECK_HOOK_BLOCK=0` disarms the shellcheck hook while the
+    default hook, whose own switch is unset, stays armed through the shared one.
+    """
+    monkeypatch.delenv(payload.OWN_SWITCH, raising=False)
+    monkeypatch.setenv(_OTHER, "0")
+    monkeypatch.setenv(payload.SHARED_SWITCH, "1")
+    assert payload.armed(_OTHER) is False
+    assert payload.armed() is True, "control: the shared switch still arms the other hook"

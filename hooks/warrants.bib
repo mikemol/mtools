@@ -84,6 +84,18 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_only_the_exact_value_arms}
 }
 
+@misc{hooks-payload-named-own-switch-is-read,
+  section = {payload},
+  claim   = {armed(own=...) reads the CALLER's switch, not the default hook's. The default OWN_SWITCH is one hook's (PYCHECK_HOOK_BLOCK); a second hook calling bare armed() would be armed and stood down by that variable with no error. Found by substrate's shellcheck letter (2026-09-22) before the shellcheck port could re-key its switch. Positive control in the same function: the default reader still sees its own 0},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_named_own_switch_is_read_instead_of_the_default}
+}
+
+@misc{hooks-payload-named-own-switch-zero-wins-over-shared,
+  section = {payload},
+  claim   = {Standing one hook down does not depend on another hook's switch: with the shared switch on, a named own switch set to 0 disarms that hook while the default hook, whose own switch is unset, stays armed through the shared one},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_named_own_switch_set_to_zero_wins_over_the_shared_one}
+}
+
 % ---------------------------------------------------------------- checkers
 
 @misc{hooks-checkers-both-are-registered,

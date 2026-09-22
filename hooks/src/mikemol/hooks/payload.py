@@ -51,8 +51,15 @@ def text_of(value: object) -> str:
     return value if isinstance(value, str) else ""
 
 
-def armed() -> bool:
+def armed(own: str = OWN_SWITCH) -> bool:
     """Report whether this hook is set to DENY — own switch first, then the shared one.
+
+    ⚑⚑ `own` NAMES THE CALLING HOOK'S SWITCH, AND THE DEFAULT IS ONE HOOK'S, NOT ALL OF THEM.
+    `OWN_SWITCH` is `PYCHECK_HOOK_BLOCK` — the origin tree's python-check hook. A second hook
+    calling a bare `armed()` would be switched by THAT variable, so standing down one hook would
+    silently stand down, or arm, another. Found by substrate's shellcheck letter (2026-09-22): a
+    plain port would have re-keyed `SHELLCHECK_HOOK_BLOCK` onto `PYCHECK_HOOK_BLOCK` with no error.
+    Every hook other than the default's owner passes its own name.
 
     ⚑⚑ ARMED ON THE COMMAND LINE, NOT BY AN ENVIRONMENT BLOCK ALONE. A session already running
     when its settings change never re-reads them, so a hook armed only in a settings env block
@@ -64,7 +71,7 @@ def armed() -> bool:
         whether this hook is set to DENY — own switch first, then the shared one.
 
     """
-    own = os.environ.get(OWN_SWITCH)
-    if own is not None:
-        return own == "1"
+    mine = os.environ.get(own)
+    if mine is not None:
+        return mine == "1"
     return os.environ.get(SHARED_SWITCH) == "1"
