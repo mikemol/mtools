@@ -740,3 +740,46 @@
   claim  = {With no test target the name is `pid.second`, as it always was — the stated bound.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fence_name_outside_bazel_is_pid_and_second},
 }
+
+@misc{fence-peaks-report-prints-each-label-and-states-its-method,
+  section = {peaks},
+  title  = {A label's line carries runs, max, median, p90 and the suggested bucket; the method follows},
+  claim  = {A label's line carries runs, max, median, p90 and the suggested bucket; the method
+            follows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_peaks.py -k test_the_report_prints_each_label_and_states_its_method},
+}
+
+@misc{fence-peaks-unmeasured-cpu-prints-a-dash-not-zero,
+  section = {peaks},
+  title  = {Rows with no CPU print `-` in the cpu% column — never 0 for unmeasured},
+  claim  = {Rows with no CPU print `-` in the cpu% column — never 0 for unmeasured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_peaks.py -k test_unmeasured_cpu_prints_a_dash_not_zero},
+}
+
+@misc{fence-peaks-prefix-limits-the-report,
+  section = {peaks},
+  title  = {`selftest:` reports `selftest:a` and leaves out `gate:a`},
+  claim  = {`selftest:` reports `selftest:a` and leaves out `gate:a`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_peaks.py -k test_the_prefix_limits_the_report},
+}
+
+@misc{fence-peaks-missing-ledger-exits-one-and-says-so,
+  section = {peaks},
+  title  = {No ledger file: exit 1 and `no label ledger yet` on stderr, nothing on stdout},
+  claim  = {No ledger file: exit 1 and `no label ledger yet` on stderr, nothing on stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_peaks.py -k test_a_missing_ledger_exits_one_and_says_so},
+}
+
+@misc{fence-peaks-prefix-matching-nothing-exits-one,
+  section = {peaks},
+  title  = {Rows exist but none match: exit 1 with a message, rather than an empty table},
+  claim  = {Rows exist but none match: exit 1 with a message, rather than an empty table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_peaks.py -k test_a_prefix_matching_nothing_exits_one},
+}
+
+@misc{fence-peaks-no-ledger-argument-is-a-usage-error,
+  section = {peaks},
+  title  = {With no LEDGER the command refuses rather than guessing one},
+  claim  = {With no LEDGER the command refuses rather than guessing one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_peaks.py -k test_no_ledger_argument_is_a_usage_error},
+}
