@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import os
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
 # Where a repo keeps its artifact→tool routing table, relative to the repo root.
@@ -48,6 +49,11 @@ _MIN_CLAIM_CELLS = 4
 
 # The `claims` column's position in the routing table.
 _CLAIMS_COLUMN = 3
+
+# The header cell that opens the retirement table, and that table's row width:
+# `retired | origin | successor | why | measured`.
+RETIRED_HEADER = "retired"
+_MIN_RETIRED_CELLS = 5
 
 # The suffixes a `claims` cell may declare, e.g. `.py` / `.agda`.
 _SUFFIX_RE = re.compile(r"`(\.[A-Za-z0-9]+)`")
@@ -103,21 +109,79 @@ def _table_rows(skill: Path) -> list[list[str]]:
         table's markdown rows as stripped cell lists.
 
     """
+    return [cells for header, cells in _all_rows(skill) if header != RETIRED_HEADER]
+
+
+def _all_rows(skill: Path) -> list[tuple[str, list[str]]]:
+    """Return every table row in the file, each tagged with its table's header cell.
+
+    ⚑⚑ THE TAG KEEPS TWO TABLES IN ONE FILE DISJOINT. The skill file carries the routing table and,
+    since substrate's retired-verdict letter (2026-09-22), a retirement table. Read untagged, a
+    retirement row is an (artifact, tool) pair to `routes()` — measured in the letter, not guessed.
+    A row belongs to the table whose header it follows; a non-table line ends the table.
+
+    Returns:
+        (lowercased first header cell, stripped cells) per data row.
+
+    """
     try:
         src = skill.read_text(encoding="utf-8")
     except OSError:
         return []
-    rows: list[list[str]] = []
+    rows: list[tuple[str, list[str]]] = []
+    header = ""
     for line in src.splitlines():
         if not line.startswith("|"):
+            header = ""
             continue
         cells = [c.strip() for c in line.strip("|").split("|")]
-        if not cells or not cells[0] or cells[0].lower() == "artifact":
+        if not cells or not cells[0]:
+            continue
+        first = cells[0].strip("`").lower()
+        if first in {"artifact", RETIRED_HEADER}:
+            header = first
             continue
         if set(cells[0]) <= set("-: "):        # the header separator row
             continue
-        rows.append(cells)
+        rows.append((header, cells))
     return rows
+
+
+@dataclass(frozen=True, slots=True)
+class Retirement:
+    """One retired mode of one tool, its successor, and the measurement that retired it.
+
+    ⚑ `measured` IS WHAT MAKES THE RETIREMENT FALSIFIABLE: a reader re-runs that comparison and sees
+    the origin's zero against the successor's count, rather than trusting the table.
+    """
+
+    flag: str
+    origin: str
+    successor: str
+    why: str
+    measured: str
+
+
+def retirements(skill: Path | None = None) -> dict[tuple[str, str], Retirement]:
+    """Return {(origin_stem, flag): Retirement} from the repo's retirement table.
+
+    ⚑ AN ABSENT TABLE AND AN EMPTY ONE BOTH YIELD {}, and that collapse is harmless in this
+    direction only: no row means no refusal, which is the behaviour before the feature existed.
+
+    Returns:
+        the retired modes, keyed by the origin's file stem and the flag.
+
+    """
+    path = table_path() if skill is None else skill
+    if path is None:
+        return {}
+    out: dict[tuple[str, str], Retirement] = {}
+    for header, cells in _all_rows(path):
+        if header != RETIRED_HEADER or len(cells) < _MIN_RETIRED_CELLS:
+            continue
+        flag, origin, successor, why, measured = (c.strip("`") for c in cells[:_MIN_RETIRED_CELLS])
+        out[origin, flag] = Retirement(flag, origin, successor, why, measured)
+    return out
 
 
 def routes(skill: Path | None = None) -> list[tuple[str, str]]:

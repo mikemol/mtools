@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import io
 import json
+from pathlib import Path
 
 import pytest
 
@@ -726,3 +727,139 @@ def test_a_flag_without_an_operand_is_not_in_the_value_roster() -> None:
     assert _fires(f"grep -v foo {_TOOL}"), "-v must not eat the pattern: the target went unseen"
     assert _fires(f"grep -F foo {_TOOL}"), "-F must not eat the pattern: the target went unseen"
     assert not _fires(f"grep -A 2 {_GATE} notes.txt"), "control: -A IS a value flag"
+
+
+# --- retired tool modes (substrate's retired-verdict letter, 2026-09-22) ----------------------
+
+# The letter's two measured retirements, as a fixture: each returned a FALSE ZERO.
+_RETIRED: dict[tuple[str, str], routing_table.Retirement] = {
+    ("pycodemod", "--attr"): routing_table.Retirement(
+        "--attr", "pycodemod", "substrate/attr_reads.py",
+        "dotted operand compared against a bare attr name; could never match",
+        "corpus.ROOT: origin 0, successor 121 in 66 files"),
+    ("pycodemod", "--importers"): routing_table.Retirement(
+        "--importers", "pycodemod", "substrate/module_importers.py",
+        "keyed on first dotted component; submodule queries answered 0",
+        "substrate.corpus: origin 0, successor 68 in 68 files"),
+}
+
+
+@pytest.mark.parametrize(
+    ("cmd", "successor"),
+    [
+        ("python3 scratch/pycodemod.py --attr corpus.ROOT", "attr_reads.py"),
+        ("python3 scratch/pycodemod.py --importers substrate.corpus", "module_importers.py"),
+        ("./scratch/pycodemod.py --attr corpus.ROOT", "attr_reads.py"),
+        ("timeout 60 python3 scratch/pycodemod.py --attr corpus.ROOT", "attr_reads.py"),
+    ],
+)
+def test_a_retired_mode_is_refused_and_names_its_successor(cmd: str, successor: str) -> None:
+    """A retired flag on its origin is refused, the successor named — direct execution included.
+
+    ⚑ `./scratch/pycodemod.py` IS THE ARM SUBSTRATE'S FIRST DRAFT MISSED: the script is the
+    PROGRAM there, absent from its own args, so the program word must be rejoined.
+    """
+    got = structural_query.retired_verdict(cmd, _RETIRED)
+    assert "RETIRED" in got
+    assert successor in got
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "python3 scratch/pycodemod.py --calls reach_ratchet",
+        "python3 scratch/pycodemod.py --binding MODES",
+        "python3 scratch/pycodemod.py --literal -- --attr",
+        "python3 substrate/attr_reads.py --attr corpus.ROOT",
+        "echo --importers",
+    ],
+)
+def test_a_working_mode_or_a_successor_is_not_refused(cmd: str) -> None:
+    """Working modes, a flag after `--`, the successor itself, and a stray word all pass.
+
+    ⚑ THE CONTROL IS THE ARM ABOVE: the same table refuses `--attr` on the origin.
+    """
+    assert structural_query.retired_verdict(cmd, _RETIRED) == _EMPTY
+
+
+def test_the_tool_the_gate_recommends_is_still_admitted() -> None:
+    """The refusal still names `pycodemod` as the `.py` owner, and a working mode of it passes.
+
+    ⚑⚑⚑ THE COLLISION ARM, THE ONE THAT MATTERS MOST. A retirement keyed on the tool alone would
+    refuse the very route every `.py` refusal prescribes, making each one a dead end.
+    """
+    _hit, reasons = structural_query.verdict("wc -l scratch/tool.py", _CLAIMS)
+    assert "pycodemod" in structural_query.refusal(reasons)
+    assert structural_query.retired_verdict(
+        "python3 scratch/pycodemod.py --calls foo", _RETIRED) == _EMPTY
+
+
+def test_an_empty_retirement_table_refuses_nothing() -> None:
+    """With no retirement rows, a command that WOULD fire passes — the borrowing-checkout case.
+
+    ⚑ THE CONTROL: the same command against the fixture is refused.
+    """
+    cmd = "python3 scratch/pycodemod.py --attr corpus.ROOT"
+    assert structural_query.retired_verdict(cmd, _RETIRED)
+    assert structural_query.retired_verdict(cmd, {}) == _EMPTY
+
+
+def test_the_refusal_prints_the_root_its_route_assumes() -> None:
+    """The successor route is repo-relative, so the refusal prints the root beside it."""
+    r = _RETIRED["pycodemod", "--attr"]
+    text = structural_query.retired_refusal(r, Path("/somewhere/repo"))
+    assert "/somewhere/repo" in text
+    assert "corpus.ROOT: origin 0, successor 121 in 66 files" in text
+
+
+_SKILL = """\
+| artifact | tool | notes | claims |
+|---|---|---|---|
+| python source | `pycodemod.py` | the AST reader | `.py` |
+
+| retired | origin | successor | why | measured |
+|---|---|---|---|---|
+| `--attr` | `pycodemod` | `substrate/attr_reads.py` | never matched | corpus.ROOT: 0 vs 121 |
+"""
+
+
+def _hook(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, cmd: str, *, armed: str
+) -> None:
+    """Run `main()` over one Bash command in a repo carrying `_SKILL`."""
+    skill = tmp_path / routing_table.SKILL_RELPATH
+    skill.parent.mkdir(parents=True)
+    skill.write_text(_SKILL, encoding="utf-8")
+    monkeypatch.setenv(routing_table.PROJECT_DIR_ENV, str(tmp_path))
+    monkeypatch.setenv(payload.OWN_SWITCH, armed)
+    tool_input: dict[str, str] = {"command": cmd}
+    record: dict[str, object] = {"tool_name": "Bash", "tool_input": tool_input}
+    payload_json = json.dumps(record)
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload_json))
+    assert structural_query.main() == 0
+
+
+def test_an_armed_hook_denies_a_retired_mode(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Armed, the retired mode read from the repo's own table is a deny naming the successor."""
+    _hook(monkeypatch, tmp_path, "python3 scratch/pycodemod.py --attr corpus.ROOT", armed="1")
+    out = capsys.readouterr().out
+    assert '"deny"' in out
+    assert "attr_reads.py" in out
+
+
+def test_a_stood_down_hook_does_not_deny_a_retired_mode(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Stood down, the retirement is advised on stderr, not denied — no hook here is unliftable.
+
+    ⚑ AGREED WITH SUBSTRATE: the unconditional guarantee is the retired TOOL's own refusal; a
+    deny nobody could stand down would turn a stem-match false FIRE into a wall.
+    """
+    _hook(monkeypatch, tmp_path, "python3 scratch/pycodemod.py --attr corpus.ROOT", armed="0")
+    got = capsys.readouterr()
+    assert not got.out
+    assert "RETIRED" in got.err

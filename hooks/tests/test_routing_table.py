@@ -288,3 +288,36 @@ def test_a_claimed_name_that_is_not_a_read_path_is_not_refused(cmd: str) -> None
     ⚑ THE CONTROL IS THE ARM ABOVE: the same table refuses `cat agda/Makefile`.
     """
     assert not structural_query.verdict(cmd, _MAKE)[0]
+
+
+# --- the retirement table (substrate's retired-verdict letter, 2026-09-22) ---------------------
+
+_TWO_TABLES = _TABLE + """
+| retired | origin | successor | why | measured |
+|---|---|---|---|---|
+| `--attr` | `pycodemod` | `substrate/attr_reads.py` | never matched | corpus.ROOT: 0 vs 121 |
+"""
+
+
+def test_a_retirement_row_is_read_under_its_header(tmp_path: Path) -> None:
+    """The retirement table yields its row, keyed by origin stem and flag, backticks stripped."""
+    got = routing_table.retirements(_write_table(tmp_path, _TWO_TABLES))
+    assert got["pycodemod", "--attr"].successor == "substrate/attr_reads.py"
+
+
+def test_a_retirement_row_is_not_a_route(tmp_path: Path) -> None:
+    """The two tables stay disjoint: `routes()` does not list the retirement row.
+
+    ⚑ THE CONTROL IS IN THE SAME FILE: its routing rows are still read.
+    """
+    tools = {tool for _artifact, tool in routing_table.routes(_write_table(tmp_path, _TWO_TABLES))}
+    assert "pycodemod.py" in tools
+    assert "pycodemod" not in tools
+
+
+def test_a_routing_table_alone_retires_nothing(tmp_path: Path) -> None:
+    """A repo with only a routing table has no retirements — no row, no refusal.
+
+    ⚑ THE CONTROL: the arm above reads a row from the two-table file.
+    """
+    assert routing_table.retirements(_write_table(tmp_path)) == {}

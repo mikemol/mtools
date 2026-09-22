@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 
 from mikemol.hooks import cmdparse, routing_table
 from mikemol.hooks import payload as _payload
@@ -472,6 +473,83 @@ def deny_payload(reason: str) -> str:
     return json.dumps(envelope)
 
 
+# The word after which every word is an operand, never a flag.
+_END_OF_FLAGS = "--"
+
+
+def retired_in(
+    words: list[str], table: dict[tuple[str, str], routing_table.Retirement]
+) -> routing_table.Retirement | None:
+    """Return the retirement this word list invokes, or None.
+
+    ⚑⚑⚑ BOTH HALVES ARE REQUIRED: the ORIGIN'S STEM and a retired FLAG after it, before `--`. Keyed
+    on the flag alone it refuses the SUCCESSOR, which takes the same flag. Keyed on the tool alone
+    it refuses the tool's WORKING modes — and `refusal()` RECOMMENDS that tool as an owner, so every
+    refusal the gate issues would become a dead end.
+
+    Returns:
+        the invoked retirement, or None.
+
+    """
+    stems = {origin for origin, _flag in table}
+    origin: str | None = None
+    for word in words:
+        if word == _END_OF_FLAGS:
+            return None
+        stem = Path(word.strip("'\"")).stem
+        if origin is None and stem in stems:
+            origin = stem
+            continue
+        if origin is not None and (origin, word) in table:
+            return table[origin, word]
+    return None
+
+
+def retired_refusal(r: routing_table.Retirement, root: Path) -> str:
+    """Render the refusal: the flag, why, the measurement, and the successor anchored at `root`.
+
+    ⚑⚑ THE ROUTE NAMES THE DIRECTORY IT ASSUMES. A peer read substrate's redirect from `~/github`
+    and took both successors as one component short; neither spelling was wrong, the reader's
+    position differed. So the root is printed beside the repo-relative route.
+
+    Returns:
+        the refusal text.
+
+    """
+    return "\n".join((
+        f"{r.origin}: {r.flag} is RETIRED — it returned FALSE ZEROS.",
+        f"  why:      {r.why}",
+        f"  measured: {r.measured}",
+        f"  use:      python3 {r.successor} <operand>",
+        f"     from:  {root}   (the route is REPO-RELATIVE — from elsewhere, spell it absolute)",
+        "  ⚑ REFUSING rather than answering. A superseded reader that still RESPONDS is worse",
+        "     than a deleted one: it answers whoever reaches the old spelling first, wrongly.",
+    ))
+
+
+def retired_verdict(
+    cmd: str, table: dict[tuple[str, str], routing_table.Retirement] | None = None
+) -> str:
+    """Return the refusal for a RETIRED tool mode invoked by `cmd`, or "" when none is.
+
+    ⚑ THE PROGRAM WORD IS PREPENDED. `cmdparse.programs` reports `./scratch/pycodemod.py --attr X`
+    with the script AS the program and absent from its args; without rejoining, direct execution
+    passes while the `python3 …` spelling is caught.
+
+    Returns:
+        the refusal text, or "".
+
+    """
+    tbl = routing_table.retirements() if table is None else table
+    if not tbl:
+        return ""
+    for prog, args in cmdparse.programs(cmd):
+        r = retired_in([prog, *args], tbl)
+        if r is not None:
+            return retired_refusal(r, routing_table.project_dir())
+    return ""
+
+
 def command_of(value: object) -> str:
     """Extract the Bash command from a PreToolUse payload, or "" when absent.
 
@@ -524,6 +602,16 @@ def main() -> int:
     cmd = command_of(parsed)
     if not cmd:
         return 0
+    # ⚑⚑ A RETIRED MODE IS CHECKED FIRST — a repo may retire modes without claiming any artifact —
+    # AND THROUGH `_emit`, like every refusal here, NOT AS AN UNCONDITIONAL DENY. Agreed with
+    # substrate (2026-09-22): the harm is the retired mode's ANSWER, and the tool's own refusal
+    # stops that on every path — hook, alias, import, CI. The hook adds the redirect. A deny
+    # nobody could stand down would turn a stem-match false FIRE into a wall. Bound: this holds
+    # only while the retired tool refuses itself; a second spelling that recomputes the answer
+    # without passing through the tool is covered by neither layer.
+    retired = retired_verdict(cmd)
+    if retired:
+        return _emit(retired)
     # ⚑⚑⚑ AN EMPTY ROUTING TABLE ALLOWS EVERY COMMAND, SILENTLY. `claims()` resolves the table
     # relative to the CWD, so a hook invoked from anywhere without a `.claude/skills/` tree reads
     # ZERO claims and every textual read of every artifact passes. ⚑ MEASURED: from `hooks/` the
