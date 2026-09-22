@@ -599,3 +599,82 @@
   claim  = {A held lock makes a second acquire raise after its bound, not wait forever.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_the_lock_is_acquired_within_its_bound_or_refused},
 }
+
+@misc{fence-ledger-bucket-is-the-next-power-of-two-above-a-floor,
+  section = {ledger},
+  title  = {65→128, 128→128, 129→256, 200→256, 257→512, 3→64 — never below the peak, never under 64},
+  claim  = {65→128, 128→128, 129→256, 200→256, 257→512, 3→64 — never below the peak, never under 64.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_the_bucket_is_the_next_power_of_two_above_a_floor},
+}
+
+@misc{fence-ledger-row-round-trips-through-its-line,
+  section = {ledger},
+  title  = {Rendering then parsing yields the same row, with all seven fields},
+  claim  = {Rendering then parsing yields the same row, with all seven fields.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_row_round_trips_through_its_line},
+}
+
+@misc{fence-ledger-absent-value-is-an-empty-field-not-zero,
+  section = {ledger},
+  title  = {A run with no probe writes empty peak and CPU fields, and reads them back as None},
+  claim  = {A run with no probe writes empty peak and CPU fields, and reads them back as None. THE
+            CONTROL: a measured zero stays a zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_an_absent_value_is_an_empty_field_not_zero},
+}
+
+@misc{fence-ledger-truncated-row-is-skipped-and-the-rest-survive,
+  section = {ledger},
+  title  = {A partial last line — a concurrent append — is skipped; the whole row before it is kept},
+  claim  = {A partial last line — a concurrent append — is skipped; the whole row before it is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_truncated_row_is_skipped_and_the_rest_survive},
+}
+
+@misc{fence-ledger-older-four-field-row-is-still-read,
+  section = {ledger},
+  title  = {A row from before the CPU probe (four fields) reads, with no CPU},
+  claim  = {A row from before the CPU probe (four fields) reads, with no CPU.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_an_older_four_field_row_is_still_read},
+}
+
+@misc{fence-ledger-report-selects-by-label-prefix,
+  section = {ledger},
+  title  = {`selftest:` includes `selftest:a` and excludes `gate:a`},
+  claim  = {`selftest:` includes `selftest:a` and excludes `gate:a`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_the_report_selects_by_label_prefix},
+}
+
+@misc{fence-ledger-median-and-p90-follow-the-origins-index-rule,
+  section = {ledger},
+  title  = {Over (40, 188, 90): median 90, p90 188 — the origin's rule, not an interpolated one},
+  claim  = {Over (40, 188, 90): median 90, p90 188 — the origin's rule, not an interpolated one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_median_and_p90_follow_the_origins_index_rule},
+}
+
+@misc{fence-ledger-one-observation-has-a-p90,
+  section = {ledger},
+  title  = {A single run's p90 is that run — the index rule does not run off the end},
+  claim  = {A single run's p90 is that run — the index rule does not run off the end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_one_observation_has_a_p90},
+}
+
+@misc{fence-ledger-cpu-percent-is-unmeasured-when-no-row-carries-cpu,
+  section = {ledger},
+  title  = {Rows with no CPU give None, not 0. ⚑ THE CONTROL: rows that carry it give a number},
+  claim  = {Rows with no CPU give None, not 0. THE CONTROL: rows that carry it give a number.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_cpu_percent_is_unmeasured_when_no_row_carries_cpu},
+}
+
+@misc{fence-ledger-suggested-size-is-the-leases-bucket-of-the-max,
+  section = {ledger},
+  title  = {`suggested` is exactly `bucket(max)` — one function, so column and lease cannot disagree},
+  claim  = {`suggested` is exactly `bucket(max)` — one function, so column and lease cannot
+            disagree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_the_suggested_size_is_the_leases_bucket_of_the_max},
+}
+
+@misc{fence-ledger-label-with-no-peak-suggests-nothing,
+  section = {ledger},
+  title  = {Only probe-less rows: no max and no suggestion, rather than a floor-sized guess},
+  claim  = {Only probe-less rows: no max and no suggestion, rather than a floor-sized guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_label_with_no_peak_suggests_nothing},
+}
