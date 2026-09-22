@@ -678,3 +678,51 @@
   claim  = {Only probe-less rows: no max and no suggestion, rather than a floor-sized guess.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_label_with_no_peak_suggests_nothing},
 }
+
+@misc{fence-ledger-clean-run-appends-exactly-one-seven-field-row,
+  section = {ledger},
+  title  = {Exit 0 appends one row: maxRSS as peak_mb, the cgroup peak as cg_peak_mb, the run's wall},
+  claim  = {Exit 0 appends one row: maxRSS as peak_mb, the cgroup peak as cg_peak_mb, the run's
+            wall.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_clean_run_appends_exactly_one_seven_field_row},
+}
+
+@misc{fence-ledger-failed-or-killed-run-appends-nothing,
+  section = {ledger},
+  title  = {rc!=0 — a failure, an OOM kill (137), a run never reaped — writes no row},
+  claim  = {rc!=0 — a failure, an OOM kill (137), a run never reaped — writes no row. THE CONTROL IS
+            THE ARM ABOVE: the same call with exit 0 writes one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_failed_or_killed_run_appends_nothing},
+}
+
+@misc{fence-ledger-run-with-no-rusage-records-an-empty-peak,
+  section = {ledger},
+  title  = {No probe value → an empty peak field, not 0},
+  claim  = {No probe value → an empty peak field, not 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_run_with_no_rusage_records_an_empty_peak},
+}
+
+@misc{fence-ledger-unwritable-ledger-is-not-an-error,
+  section = {ledger},
+  title  = {A read-only ledger directory returns False and raises nothing — the run still happened},
+  claim  = {A read-only ledger directory returns False and raises nothing — the run still happened.
+            THE CONTROL: the same record into a writable directory returns True.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_an_unwritable_ledger_is_not_an_error},
+}
+
+@misc{fence-ledger-fenced-run-carries-its-own-rusage,
+  section = {ledger},
+  title  = {A real fenced run reports its payload's maxRSS and CPU from `wait4`, not None},
+  claim  = {A real fenced run reports its payload's maxRSS and CPU from `wait4`, not None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fenced_run_carries_its_own_rusage},
+}
+
+@misc{fence-ledger-fence-name-taken-in-the-same-second-does-not-collide,
+  section = {ledger},
+  title  = {A cgroup already named `.mikemol-fence.<pid>.<second>` does not stop the next run},
+  claim  = {A cgroup already named `.mikemol-fence.<pid>.<second>` does not stop the next run. THE
+            GATE'S COLLISION, MADE DETERMINISTIC: two Bazel sandboxes each saw their
+            test process as pid 12 and fenced in the same second. Here the second is
+            pinned and that name pre-created.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fence_name_taken_in_the_same_second_does_not_collide},
+}

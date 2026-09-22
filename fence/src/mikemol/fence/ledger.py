@@ -28,11 +28,15 @@ every fence letter has landed.
 from __future__ import annotations
 
 import statistics
+import time
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
+    from pathlib import Path
+
+    from mikemol.fence.core import Result
 
 # The smallest cap the report suggests, and the lease uses: below it a bucket is not worth sizing.
 BUCKET_FLOOR_MB = 64
@@ -203,3 +207,55 @@ def report(rows: Iterable[Row], prefix: str = "") -> list[Peaks]:
             suggested_mb=bucket(top) if top is not None else None,
         ))
     return out
+
+
+_KB_PER_MB = 1024
+_BYTES_PER_MB = 1024 * 1024
+
+
+def row_of(label: str, result: Result, stamp_epoch: int) -> Row | None:
+    """Return the ledger row a run earns, or None when it earns none.
+
+    ⚑ ONLY A CLEAN EXIT IS RECORDED: a killed run's peak is the CAP it hit, not the size it needed,
+    and folding it into the history would size the next cap from the last one's limit.
+    ⚑ WALL IS THE RUN'S OWN `duration_s`, measured by `run_once` after admission, so time spent
+    waiting for a lease never reads as time spent working.
+
+    Returns:
+        the row, or None for a run that did not exit 0.
+
+    """
+    if result.exit_code != 0:
+        return None
+    return Row(
+        label=label,
+        wall_s=result.duration_s,
+        peak_mb=None if result.maxrss_kb is None else result.maxrss_kb / _KB_PER_MB,
+        stamp_epoch=stamp_epoch,
+        user_s=result.user_s,
+        sys_s=result.sys_s,
+        cg_peak_mb=(None if result.memory_peak_bytes is None
+                    else result.memory_peak_bytes / _BYTES_PER_MB),
+    )
+
+
+def record(path: Path, label: str, result: Result) -> bool:
+    """Append the row `result` earns to the ledger at `path`, best-effort.
+
+    ⚑ NEVER RAISES AND NEVER CHANGES THE PAYLOAD'S OUTCOME: the ledger is history about a run, and a
+    run whose history could not be written still happened. An unwritable ledger returns False.
+
+    Returns:
+        whether a row was written.
+
+    """
+    row = row_of(label, result, int(time.time()))
+    if row is None:
+        return False
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write(row.line() + "\n")
+    except OSError:
+        return False
+    return True

@@ -29,12 +29,14 @@ from __future__ import annotations
 import os
 import sys
 import time
+import uuid
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from mikemol.fence import cgroup
 
 if TYPE_CHECKING:
+    import resource
     from collections.abc import Sequence
     from pathlib import Path
 
@@ -108,6 +110,14 @@ class Result:
     memory_events: dict[str, int] = field(default_factory=dict)
     pids_events: dict[str, int] = field(default_factory=dict)
     bound_by: tuple[str, ...] = ()
+    # ⚑⚑ THE PAYLOAD'S OWN RUSAGE, FROM `wait4` ON THE CHILD — its maxRSS and its CPU, the numbers
+    # `/usr/bin/time -v` used to supply to the run ledger. OBSERVATIONS, like everything above:
+    # None when the child was never reaped. ⚑ `maxrss_kb` IS NOT `memory_peak_bytes`: the first is
+    # the largest single process's resident set, the second the whole cgroup's charge (page cache,
+    # every descendant), and the ledger keeps them in separate columns for that reason.
+    maxrss_kb: int | None = None
+    user_s: float | None = None
+    sys_s: float | None = None
 
     @property
     def completed_within_caps(self) -> bool:
@@ -135,6 +145,9 @@ class Result:
             "pids_events": self.pids_events,
             "bound_by": list(self.bound_by),
             "completed_within_caps": self.completed_within_caps,
+            "maxrss_kb": self.maxrss_kb,
+            "user_s": self.user_s,
+            "sys_s": self.sys_s,
         }
 
 
@@ -201,7 +214,12 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
     """
     caps = caps or Caps()
     parent = cgroup.parent_with_controllers(caps.controllers())
-    cg = parent / f".mikemol-fence.{os.getpid()}.{int(time.time())}"
+    # ⚑⚑ THE NAME CARRIES A RANDOM PART, BECAUSE `pid.second` IS NOT UNIQUE ACROSS PID NAMESPACES.
+    # Measured 2026-09-22 in the gate: two Bazel sandboxes, each seeing its test process as pid 12,
+    # started a fenced run in the same second and the second `mkdir` failed with EEXIST — reported
+    # as "cannot fence", a false statement about the host. The cgroup tree is shared by every
+    # namespace on the machine; the pid is not.
+    cg = parent / f".mikemol-fence.{os.getpid()}.{int(time.time())}.{uuid.uuid4().hex[:8]}"
     try:
         cg.mkdir()
     except OSError as e:
@@ -216,12 +234,17 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
         _child(cg, cmd)
 
     rc: int | None = None
+    usage: resource.struct_rusage | None = None
     try:
         while True:
-            pid, status = os.waitpid(child, os.WNOHANG)
+            # ⚑ `wait4`, NOT `waitpid`: the same reap, plus THIS child's rusage. A
+            # `getrusage(RUSAGE_CHILDREN)` delta cannot stand in for it — maxRSS is a maximum over
+            # every child ever reaped, and a difference of two maxima is not this child's peak.
+            pid, status, reaped = os.wait4(child, os.WNOHANG)
             if pid == child:
                 rc = (os.WEXITSTATUS(status) if os.WIFEXITED(status)
                       else 128 + os.WTERMSIG(status))
+                usage = reaped
                 break
             time.sleep(POLL)
     finally:
@@ -238,6 +261,12 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
         cmd=tuple(cmd), caps=caps, duration_s=duration, exit_code=rc,
         memory_peak_bytes=peak, memory_events=mem_ev, pids_events=pid_ev,
         bound_by=tuple(cgroup.bound_by(mem_ev, pid_ev)),
+        # ⚑ NO None BRANCH HERE, and mypy proved why: the reap loop exits ONLY through the `break`
+        # that sets `usage`, so a `return` reached at all is a return after a reap. The fields stay
+        # Optional for a `Result` built without a run.
+        maxrss_kb=usage.ru_maxrss,
+        user_s=usage.ru_utime,
+        sys_s=usage.ru_stime,
     )
 
 
