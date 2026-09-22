@@ -39,10 +39,15 @@ classifiers = [
 # moment the four distributions were first synced together. The gate runs `<dist>/.venv/bin/ruff`
 # while the sandbox runs the archive, so an unpinned name means a checker that disagrees with
 # itself by substrate.
-# ⚑ AND THE PIN BELONGS HERE RATHER THAN IN `dev` BECAUSE THIS IS WHERE THE DEPENDENCY IS
-# DECLARED: for this distribution the checkers are RUNTIME deps — invoking them is its function —
-# so a `dev`-group pin would not constrain what a consumer installing the wheel receives.
-dependencies = ["ruff==0.16.6", "mypy"]
+# ⚑⚑⚑⚑ AND THE EXACT PIN WAS WITHDRAWN FROM HERE, BECAUSE IT CONSTRAINED THE WRONG PARTY. The
+# graph-vs-venv disagreement above is a fact about THIS repository's venv; an exact runtime pin
+# exported it to every adopter, overruling the adopter's own checker. Measured by substrate
+# (2026-09-22): `uv add mikemol-hooks` had no solution, `ruff==0.16.6` against its `ruff>=0.16.8`.
+# An earlier note here argued the pin belonged in the runtime list "because a dev-group pin would
+# not constrain what a consumer receives" — true, and it is exactly why the consumer must not get
+# it. So: a FLOOR here (the oldest ruff this config is measured against), and the EXACT pin in
+# `dev`, which is what keeps this repository's venv on the graph's archive.
+dependencies = ["ruff>=0.16.6", "mypy"]
 
 # ⚑⚑ A CONSOLE SCRIPT IS WHAT MAKES ADOPTION *NOT* A SYMLINK. A settings.json hook line naming
 # `mikemol-hook-structural-query` resolves through the installed distribution, so the adopting
@@ -66,7 +71,7 @@ mikemol-hook-no-verify = "mikemol.hooks.no_verify:main"
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
-dev = ["pytest"]
+dev = ["pytest", "ruff==0.16.6"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
