@@ -335,3 +335,175 @@
             a universally-quantified claim over it while measuring nothing.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_fence.py -k test_the_base_caps_carry_through_every_step}
 }
+
+@misc{fence-admit-ledger-round-trips-through-its-text,
+  section = {admit},
+  title  = {Rendering then parsing yields the same snapshot, a spaced label included},
+  claim  = {Rendering then parsing yields the same snapshot, a spaced label included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_ledger_round_trips_through_its_text},
+}
+
+@misc{fence-admit-torn-line-is-skipped-not-fatal,
+  section = {admit},
+  title  = {A malformed lease reads as absent; its well-formed neighbour is kept},
+  claim  = {A malformed lease reads as absent; its well-formed neighbour is kept. THE CONTROL IS THE
+            KEPT NEIGHBOUR — an empty parse cannot pass this arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_torn_line_is_skipped_not_fatal},
+}
+
+@misc{fence-admit-ledger-with-no-total-parses-as-none,
+  section = {admit},
+  title  = {No TOTAL_MB line is None — distinct from a total of zero},
+  claim  = {No TOTAL_MB line is None — distinct from a total of zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_ledger_with_no_total_parses_as_none},
+}
+
+@misc{fence-admit-request-over-the-total-is-impossible-not-blocked,
+  section = {admit},
+  title  = {`mb > TOTAL_MB` refuses at once — waiting cannot make it fit},
+  claim  = {`mb > TOTAL_MB` refuses at once — waiting cannot make it fit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_request_over_the_total_is_impossible_not_blocked},
+}
+
+@misc{fence-admit-requests-that-fit-are-admitted,
+  section = {admit},
+  title  = {Two leases summing to the total leave room for neither more nor less},
+  claim  = {Two leases summing to the total leave room for neither more nor less.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_requests_that_fit_are_admitted},
+}
+
+@misc{fence-admit-request-over-the-free-budget-blocks,
+  section = {admit},
+  title  = {Over free but under total is BLOCK — a wait, not a refusal},
+  claim  = {Over free but under total is BLOCK — a wait, not a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_request_over_the_free_budget_blocks},
+}
+
+@misc{fence-admit-nesting-is-disjoint-so-an-inner-lease-counts-in-full,
+  section = {admit},
+  title  = {Outer 256 plus inner 256 holds 512, not 256 — a child draws from the global pool},
+  claim  = {Outer 256 plus inner 256 holds 512, not 256 — a child draws from the global pool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_nesting_is_disjoint_so_an_inner_lease_counts_in_full},
+}
+
+@misc{fence-admit-oversubscribed-tree-blocks-rather-than-deadlocking-or-refusing,
+  section = {admit},
+  title  = {TOTAL 512 with outer 384: an inner 256 under it BLOCKS},
+  claim  = {TOTAL 512 with outer 384: an inner 256 under it BLOCKS.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_an_oversubscribed_tree_blocks_rather_than_deadlocking_or_refusing},
+}
+
+@misc{fence-admit-vanished-parent-is-refused,
+  section = {admit},
+  title  = {A parent no longer in the ledger refuses with the ledger code},
+  claim  = {A parent no longer in the ledger refuses with the ledger code. THE CONTROL: the same
+            request under a present parent is not refused for that.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_vanished_parent_is_refused},
+}
+
+@misc{fence-admit-ledger-with-no-total-is-refused-before-anything-else,
+  section = {admit},
+  title  = {No TOTAL_MB refuses with the ledger code, even for an impossible request},
+  claim  = {No TOTAL_MB refuses with the ledger code, even for an impossible request.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_ledger_with_no_total_is_refused_before_anything_else},
+}
+
+@misc{fence-admit-claim-needs-no-capacity,
+  section = {admit},
+  title  = {`mb=0` with a claim is a first-class request, admitted with the budget exhausted},
+  claim  = {`mb=0` with a claim is a first-class request, admitted with the budget exhausted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_claim_needs_no_capacity},
+}
+
+@misc{fence-admit-held-claim-excludes-only-its-own-tag,
+  section = {admit},
+  title  = {`claim:x` held: another `claim:x` is CLAIMED, `claim:y` is admitted},
+  claim  = {`claim:x` held: another `claim:x` is CLAIMED, `claim:y` is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_held_claim_excludes_only_its_own_tag},
+}
+
+@misc{fence-admit-gc-drops-a-dead-owner-and-keeps-a-live-one,
+  section = {admit},
+  title  = {A dead owner's lease goes; a live owner's stays},
+  claim  = {A dead owner's lease goes; a live owner's stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_gc_drops_a_dead_owner_and_keeps_a_live_one},
+}
+
+@misc{fence-admit-gc-cascades-to-the-orphans-of-a-dead-parent,
+  section = {admit},
+  title  = {Parent P dead, child L alive under P, grandchild alive under L: all three go},
+  claim  = {Parent P dead, child L alive under P, grandchild alive under L: all three go.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_gc_cascades_to_the_orphans_of_a_dead_parent},
+}
+
+@misc{fence-admit-gc-with-nothing-dead-returns-the-same-snapshot,
+  section = {admit},
+  title  = {Nothing dead is the SAME object — the caller's signal to skip the rewrite},
+  claim  = {Nothing dead is the SAME object — the caller's signal to skip the rewrite. THE CONTROL:
+            with one owner dead, a different snapshot comes back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_gc_with_nothing_dead_returns_the_same_snapshot},
+}
+
+@misc{fence-admit-this-process-is-alive-by-its-own-identity,
+  section = {admit},
+  title  = {`owner_of(own pid)` reads as alive — the T-arm for the pid:starttime identity},
+  claim  = {`owner_of(own pid)` reads as alive — the T-arm for the pid:starttime identity.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_this_process_is_alive_by_its_own_identity},
+}
+
+@misc{fence-admit-live-pid-with-the-wrong-starttime-is-dead,
+  section = {admit},
+  title  = {PID reuse: this pid with a start time it never had counts as dead},
+  claim  = {PID reuse: this pid with a start time it never had counts as dead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_live_pid_with_the_wrong_starttime_is_dead},
+}
+
+@misc{fence-admit-comm-with-spaces-and-parens-does-not-shift-the-fields,
+  section = {admit},
+  title  = {Fields are counted from the LAST `)`, so a comm like `a) b (c` reads field 22 correctly},
+  claim  = {Fields are counted from the LAST `)`, so a comm like `a) b (c` reads field 22 correctly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_comm_with_spaces_and_parens_does_not_shift_the_fields},
+}
+
+@misc{fence-admit-path-claims-compare-by-realpath,
+  section = {admit},
+  title  = {`claim:path:/a/b` and `claim:path:/a/b/` are one claim},
+  claim  = {`claim:path:/a/b` and `claim:path:/a/b/` are one claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_path_claims_compare_by_realpath},
+}
+
+@misc{fence-admit-label-claims-are-never-realpathed,
+  section = {admit},
+  title  = {`claim:label://x:y` stays a label; `//x` and `//x:x` are one target},
+  claim  = {`claim:label://x:y` stays a label; `//x` and `//x:x` are one target. THE CONTROL: a
+            different target in the same package is a different claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_label_claims_are_never_realpathed},
+}
+
+@misc{fence-admit-bare-claims-stay-byte-compared,
+  section = {admit},
+  title  = {Bare `claim:a/b` and `claim:a/b/` BOTH acquire — the documented uncomparable fallback},
+  claim  = {Bare `claim:a/b` and `claim:a/b/` BOTH acquire — the documented uncomparable fallback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_bare_claims_stay_byte_compared},
+}
+
+@misc{fence-admit-label-without-the-claim-prefix-claims-nothing,
+  section = {admit},
+  title  = {An ordinary label is not a claim},
+  claim  = {An ordinary label is not a claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_label_without_the_claim_prefix_claims_nothing},
+}
+
+@misc{fence-admit-load-gate-needs-both-conjuncts,
+  section = {admit},
+  title  = {Proceed only if load1 AND min(load5, load15) are under nproc × maxload},
+  claim  = {Proceed only if load1 AND min(load5, load15) are under nproc × maxload.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_the_load_gate_needs_both_conjuncts},
+}
+
+@misc{fence-admit-zero-maxload-disables-the-load-gate,
+  section = {admit},
+  title  = {`maxload=0` admits under any load},
+  claim  = {`maxload=0` admits under any load.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_zero_maxload_disables_the_load_gate},
+}
