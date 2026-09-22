@@ -783,3 +783,55 @@
   claim  = {With no LEDGER the command refuses rather than guessing one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_peaks.py -k test_no_ledger_argument_is_a_usage_error},
 }
+
+@misc{fence-autosize-lease-is-the-bucket-of-the-max-not-the-median,
+  section = {autosize},
+  title  = {(40, 188, 90) leases 256: the bucket of 188, where the median's bucket would be 128},
+  claim  = {(40, 188, 90) leases 256: the bucket of 188, where the median's bucket would be 128.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_the_lease_is_the_bucket_of_the_max_not_the_median},
+}
+
+@misc{fence-autosize-no-history-leases-the-default,
+  section = {autosize},
+  title  = {With no recorded peak the lease is the default, unclamped},
+  claim  = {With no recorded peak the lease is the default, unclamped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_no_history_leases_the_default},
+}
+
+@misc{fence-autosize-peak-over-the-cap-is-clamped-and-says-so,
+  section = {autosize},
+  title  = {Peak 600, ceiling 384: the lease is 384 and a warning names the key, peak and cap},
+  claim  = {Peak 600, ceiling 384: the lease is 384 and a warning names the key, peak and cap. THE
+            CONTROL: a peak under the cap yields no warning.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_a_peak_over_the_cap_is_clamped_and_says_so},
+}
+
+@misc{fence-autosize-explicit-default-above-the-ceiling-raises-the-cap,
+  section = {autosize},
+  title  = {DEFAULT=1024 with a 600 peak leases at least 600 — the origin's silent clamp to 384},
+  claim  = {DEFAULT=1024 with a 600 peak leases at least 600 — the origin's silent clamp to 384.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_an_explicit_default_above_the_ceiling_raises_the_cap},
+}
+
+@misc{fence-autosize-climb-obeys-the-same-raised-cap,
+  section = {autosize},
+  title  = {DEFAULT=1024, a 384 lease killed: the climb may pass 384 — the origin's retry could not},
+  claim  = {DEFAULT=1024, a 384 lease killed: the climb may pass 384 — the origin's retry could not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_the_climb_obeys_the_same_raised_cap},
+}
+
+@misc{fence-autosize-climb-doubles-and-stops-at-the-cap,
+  section = {autosize},
+  title  = {64→128→256→384 under a 384 cap, then None: bounded, never a loop},
+  claim  = {64→128→256→384 under a 384 cap, then None: bounded, never a loop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_the_climb_doubles_and_stops_at_the_cap},
+}
+
+@misc{fence-autosize-only-a-memory-kill-triggers-a-climb,
+  section = {autosize},
+  title  = {`MEMORY, KILLED` climbs; a throttle, a pids trip and a bare SIGKILL do not},
+  claim  = {`MEMORY, KILLED` climbs; a throttle, a pids trip and a bare SIGKILL do not. THE BARE 137
+            IS THE ARM THE ORIGIN'S EXIT-CODE TRIGGER FAILS: `kill -9 $$` with no cap
+            breach has an empty `bound_by` and must not climb.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_only_a_memory_kill_triggers_a_climb},
+}
