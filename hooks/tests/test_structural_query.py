@@ -831,7 +831,7 @@ def _hook(
     skill.parent.mkdir(parents=True)
     skill.write_text(_SKILL, encoding="utf-8")
     monkeypatch.setenv(routing_table.PROJECT_DIR_ENV, str(tmp_path))
-    monkeypatch.setenv(payload.OWN_SWITCH, armed)
+    monkeypatch.setenv(payload.SHARED_SWITCH, armed)
     tool_input: dict[str, str] = {"command": cmd}
     record: dict[str, object] = {"tool_name": "Bash", "tool_input": tool_input}
     payload_json = json.dumps(record)
@@ -863,3 +863,23 @@ def test_a_stood_down_hook_does_not_deny_a_retired_mode(
     got = capsys.readouterr()
     assert not got.out
     assert "RETIRED" in got.err
+
+
+def test_its_own_switch_at_zero_stands_it_down_over_the_python_hooks_switch(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str],
+) -> None:
+    """`STRUCT_HOOK_BLOCK=0` stands this hook down even with `PYCHECK_HOOK_BLOCK=1` set beside it.
+
+    ⚑⚑ THE SETTINGS SHAPE THIS REPO ACTUALLY HAS: `PYCHECK_HOOK_BLOCK=1` in the shared env block.
+    Read through `armed()`'s default, the python hook's switch was checked first and won, so this
+    hook could not be stood down by its own name. ⚑ THE CONTROL IS IN THE SAME FUNCTION: with its
+    own switch at 1 the same command IS denied.
+    """
+    monkeypatch.setenv("PYCHECK_HOOK_BLOCK", "1")
+    cmd = "python3 scratch/pycodemod.py --attr corpus.ROOT"
+    _hook(monkeypatch, tmp_path / "armed", cmd, armed="1")
+    assert '"deny"' in capsys.readouterr().out
+    monkeypatch.setenv(payload.SHARED_SWITCH, "0")
+    monkeypatch.setattr("sys.stdin", _stdin(_payload_json(cmd)))
+    assert structural_query.main() == 0
+    assert '"deny"' not in capsys.readouterr().out

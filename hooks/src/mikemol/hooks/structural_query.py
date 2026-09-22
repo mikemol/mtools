@@ -113,6 +113,15 @@ TEXTUAL = frozenset((
 Hit = tuple[str, str, tuple[str, str]]
 Reason = tuple[str, list[Hit]]
 
+# ⚑⚑ THIS HOOK'S OWN SWITCH, NAMED — it was read through `payload.armed()`'s DEFAULT, which is the
+# python-check hook's `PYCHECK_HOOK_BLOCK`. This repo's settings set `PYCHECK_HOOK_BLOCK=1` in the
+# shared env block, so an operator writing `STRUCT_HOOK_BLOCK=0` on THIS hook's command line could
+# not stand it down: the other hook's switch was read first and won. Found 2026-09-22 while landing
+# `retired_verdict`, the same defect `armed(own=)` was added to prevent for the shell hook.
+# ⚑ The name is the one this hook has always been armed with inline, and it is also the family's
+# shared fallback — which is where the shared switch's name came from.
+OWN_SWITCH = _payload.SHARED_SWITCH
+
 # The redirection operators that make a refused command a WRITE rather than a read.
 _REDIRECTS = (">", ">>")
 
@@ -576,7 +585,7 @@ def _emit(msg: str) -> int:
         repository refuses everywhere else.
 
     """
-    if _payload.armed():
+    if _payload.armed(OWN_SWITCH):
         sys.stdout.write(deny_payload(msg) + "\n")
         return 0
     sys.stderr.write(msg + "\n")

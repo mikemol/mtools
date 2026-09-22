@@ -3735,3 +3735,15 @@
             the arm above reads a row from the two-table file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_a_routing_table_alone_retires_nothing},
 }
+
+@misc{hooks-structural-query-its-own-switch-at-zero-stands-it-down-over-the-python-hooks-switch,
+  section = {structural-query},
+  title  = {`STRUCT_HOOK_BLOCK=0` stands this hook down even with `PYCHECK_HOOK_BLOCK=1` set beside it},
+  claim  = {`STRUCT_HOOK_BLOCK=0` stands this hook down even with `PYCHECK_HOOK_BLOCK=1` set beside
+            it. THE SETTINGS SHAPE THIS REPO ACTUALLY HAS: `PYCHECK_HOOK_BLOCK=1` in the
+            shared env block. Read through `armed()`'s default, the python hook's switch
+            was checked first and won, so this hook could not be stood down by its own
+            name. THE CONTROL IS IN THE SAME FUNCTION: with its own switch at 1 the same
+            command IS denied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_its_own_switch_at_zero_stands_it_down_over_the_python_hooks_switch},
+}
