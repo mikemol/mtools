@@ -209,12 +209,14 @@ def test_a_fenced_run_carries_its_own_rusage() -> None:
 def test_a_fence_name_taken_in_the_same_second_does_not_collide(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A cgroup already named `.mikemol-fence.<pid>.<second>` does not stop the next run.
+    """Another target's cgroup at the same pid and second does not stop this target's run.
 
     ⚑ THE GATE'S COLLISION, MADE DETERMINISTIC: two Bazel sandboxes each saw their test process as
-    pid 12 and fenced in the same second. Here the second is pinned and that name pre-created.
+    pid 12 and fenced in the same second. Here the second is pinned, this run names its target, and
+    the name a target-less run would take is pre-created.
     """
     monkeypatch.setattr(time, "time", lambda: 1_700_000_000.0)
+    monkeypatch.setenv("TEST_TARGET", "//fence:collide")
     parent = parent_with_controllers(["memory", "pids"])
     squatter = parent / f".mikemol-fence.{os.getpid()}.1700000000"
     squatter.mkdir()
@@ -222,3 +224,14 @@ def test_a_fence_name_taken_in_the_same_second_does_not_collide(
         assert core.run_once(["true"]).exit_code == 0
     finally:
         squatter.rmdir()
+
+
+def test_a_fence_name_carries_its_test_target() -> None:
+    """Under Bazel the name ends in the test target, made safe for a directory name."""
+    name = core.fence_name(12, 1_700_000_000.5, {"TEST_TARGET": "//fence:test_ledger"})
+    assert name == ".mikemol-fence.12.1700000000.__fence_test_ledger"
+
+
+def test_a_fence_name_outside_bazel_is_pid_and_second() -> None:
+    """With no test target the name is `pid.second`, as it always was — the stated bound."""
+    assert core.fence_name(12, 1_700_000_000.5, {}) == ".mikemol-fence.12.1700000000"

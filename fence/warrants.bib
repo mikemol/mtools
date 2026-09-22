@@ -726,3 +726,17 @@
             pinned and that name pre-created.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fence_name_taken_in_the_same_second_does_not_collide},
 }
+
+@misc{fence-ledger-fence-name-carries-its-test-target,
+  section = {ledger},
+  title  = {Under Bazel the name ends in the test target, made safe for a directory name},
+  claim  = {Under Bazel the name ends in the test target, made safe for a directory name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fence_name_carries_its_test_target},
+}
+
+@misc{fence-ledger-fence-name-outside-bazel-is-pid-and-second,
+  section = {ledger},
+  title  = {With no test target the name is `pid.second`, as it always was — the stated bound},
+  claim  = {With no test target the name is `pid.second`, as it always was — the stated bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fence_name_outside_bazel_is_pid_and_second},
+}

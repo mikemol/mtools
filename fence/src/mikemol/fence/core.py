@@ -27,9 +27,9 @@ that read from inside the payload would lose exactly the runs worth measuring.
 from __future__ import annotations
 
 import os
+import re
 import sys
 import time
-import uuid
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -37,7 +37,7 @@ from mikemol.fence import cgroup
 
 if TYPE_CHECKING:
     import resource
-    from collections.abc import Sequence
+    from collections.abc import Mapping, Sequence
     from pathlib import Path
 
 POLL = 0.2
@@ -193,6 +193,34 @@ def _child(cg: Path, cmd: Sequence[str]) -> None:
         os._exit(EXIT_NOT_EXECUTABLE)
 
 
+# A cgroup directory name may not carry `/`, and `:` and `@` read badly in `ls`; a Bazel label has
+# all three, so everything outside this set becomes `_`.
+_NAME_UNSAFE = re.compile(r"[^A-Za-z0-9_.-]")
+
+
+def fence_name(pid: int, now: float, env: Mapping[str, str]) -> str:
+    """Return the transient cgroup's name: the run's pid and second, and the test target if any.
+
+    ⚑⚑ THE TARGET, NOT A RANDOM SUFFIX, IS WHAT DISAMBIGUATES — and the difference is the point.
+    Measured 2026-09-22 in the gate: two Bazel sandboxes, each seeing its test process as pid 12,
+    fenced in the same second and the second `mkdir` failed with EEXIST, reported as "cannot fence"
+    — false about the host. The collision was between two TEST TARGETS, and Bazel names each one in
+    `TEST_TARGET`; carrying it separates exactly the runs that collided and says, in `ls`, which
+    target a leaked cgroup belongs to. A random suffix would separate them too and say nothing.
+    ⚑ BOUND, STATED: outside Bazel there is no target, and the name is `pid.second` as it always
+    was; two runs of one target in parallel (`--runs_per_test`, shards) would still share a target.
+
+    Returns:
+        the directory name, with no path separator in it.
+
+    """
+    parts = [".mikemol-fence", str(pid), str(int(now))]
+    target = env.get("TEST_TARGET")
+    if target:
+        parts.append(_NAME_UNSAFE.sub("_", target))
+    return ".".join(parts)
+
+
 def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
     """Run `cmd` in a transient fence cgroup and return what it consumed.
 
@@ -214,12 +242,7 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
     """
     caps = caps or Caps()
     parent = cgroup.parent_with_controllers(caps.controllers())
-    # ⚑⚑ THE NAME CARRIES A RANDOM PART, BECAUSE `pid.second` IS NOT UNIQUE ACROSS PID NAMESPACES.
-    # Measured 2026-09-22 in the gate: two Bazel sandboxes, each seeing its test process as pid 12,
-    # started a fenced run in the same second and the second `mkdir` failed with EEXIST — reported
-    # as "cannot fence", a false statement about the host. The cgroup tree is shared by every
-    # namespace on the machine; the pid is not.
-    cg = parent / f".mikemol-fence.{os.getpid()}.{int(time.time())}.{uuid.uuid4().hex[:8]}"
+    cg = parent / fence_name(os.getpid(), time.time(), os.environ)
     try:
         cg.mkdir()
     except OSError as e:
