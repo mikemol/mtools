@@ -23,3 +23,13 @@ __pycache__/
 # duplicates as new debt — measured, four keys, from a probe install that was never meant to
 # persist.
 build/
+
+# ⚑⚑ LIVE INBOX DROPS ARE IGNORED; THE ARCHIVE AND THE README ARE THE RECORD. A letter in `inbox/`
+# is in flight — another party's session writes it into this working tree, and until it is read it
+# belongs to no commit. Once integrated it moves to `inbox/archive/`, which IS tracked: the letters
+# are the provenance of what landed. Asked for by summit on enrolment (2026-09-22): its delivery
+# check reads a declared inbox that is NOT ignored as BROKEN, because a writer dropping live mail
+# into a tracked path makes every peer's letter look like uncommitted work here.
+/inbox/*
+!/inbox/archive/
+!/inbox/README.md
