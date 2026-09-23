@@ -1,0 +1,1098 @@
+% warrants.bib — one claim PER TEST CASE in the pathsforward suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: pathsforward-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+@misc{pathsforward-model-symbol-parses-to-its-number,
+  section = {model},
+  title  = {`W7` parses to 7},
+  claim  = {`W7` parses to 7.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_symbol_parses_to_its_number},
+}
+
+@misc{pathsforward-model-malformed-symbol-parses-to-none,
+  section = {model},
+  title  = {A malformed symbol parses to None rather than raising (gabion crashed on `Wx`)},
+  claim  = {A malformed symbol parses to None rather than raising (gabion crashed on `Wx`).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_malformed_symbol_parses_to_none},
+}
+
+@misc{pathsforward-model-validate-accepts-a-minimal-document,
+  section = {model},
+  title  = {A minimal document validates, and its lists are the document's own},
+  claim  = {A minimal document validates, and its lists are the document's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_validate_accepts_a_minimal_document},
+}
+
+@misc{pathsforward-model-validate-creates-an-absent-residue,
+  section = {model},
+  title  = {An absent residue is created empty},
+  claim  = {An absent residue is created empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_validate_creates_an_absent_residue},
+}
+
+@misc{pathsforward-model-validate-refuses-a-non-object,
+  section = {model},
+  title  = {A document that is not an object is refused},
+  claim  = {A document that is not an object is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_validate_refuses_a_non_object},
+}
+
+@misc{pathsforward-model-validate-refuses-non-list-waypoints,
+  section = {model},
+  title  = {A `waypoints` that is not a list is refused (summit's `_waypoints`)},
+  claim  = {A `waypoints` that is not a list is refused (summit's `_waypoints`).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_validate_refuses_non_list_waypoints},
+}
+
+@misc{pathsforward-model-validate-refuses-a-non-object-record,
+  section = {model},
+  title  = {A record that is not an object is refused},
+  claim  = {A record that is not an object is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_validate_refuses_a_non_object_record},
+}
+
+@misc{pathsforward-model-validate-refuses-a-record-without-a-string-symbol,
+  section = {model},
+  title  = {A record whose symbol is not a string is refused},
+  claim  = {A record whose symbol is not a string is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_validate_refuses_a_record_without_a_string_symbol},
+}
+
+@misc{pathsforward-model-validate-refuses-a-bad-counter,
+  section = {model},
+  title  = {A counter that is not a non-negative integer is refused; a bool is not an integer here},
+  claim  = {A counter that is not a non-negative integer is refused; a bool is not an integer here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_validate_refuses_a_bad_counter},
+}
+
+@misc{pathsforward-model-text-reads-absent-and-null-as-empty,
+  section = {model},
+  title  = {An absent or null field reads as the empty string, anything else as its str},
+  claim  = {An absent or null field reads as the empty string, anything else as its str.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_text_reads_absent_and_null_as_empty},
+}
+
+@misc{pathsforward-model-strlist-reads-a-bare-string-as-one-element,
+  section = {model},
+  title  = {A bare string is one element, never an iterable of characters},
+  claim  = {A bare string is one element, never an iterable of characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_strlist_reads_a_bare_string_as_one_element},
+}
+
+@misc{pathsforward-model-strlist-reads-a-list-and-an-absence,
+  section = {model},
+  title  = {A list reads as its elements' strings, and an absence as []},
+  claim  = {A list reads as its elements' strings, and an absence as [].},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_strlist_reads_a_list_and_an_absence},
+}
+
+@misc{pathsforward-model-ticks-reads-only-an-integer,
+  section = {model},
+  title  = {ticks_blocked reads an int, and a bool or an absence as 0},
+  claim  = {ticks_blocked reads an int, and a bool or an absence as 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_ticks_reads_only_an_integer},
+}
+
+@misc{pathsforward-digest-v2-is-tagged-compact-ascii-sixteen-hex,
+  section = {digest},
+  title  = {v2 is `v2:` plus the first 16 hex of the compact, ASCII-escaped serialisation (D1)},
+  claim  = {v2 is `v2:` plus the first 16 hex of the compact, ASCII-escaped serialisation (D1).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_v2_is_tagged_compact_ascii_sixteen_hex},
+}
+
+@misc{pathsforward-digest-four-legacy-forms-are-four-digests-on-non-ascii,
+  section = {digest},
+  title  = {On non-ASCII waypoints the four forms are four distinct digests (the grid is real)},
+  claim  = {On non-ASCII waypoints the four forms are four distinct digests (the grid is real).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_the_four_legacy_forms_are_four_digests_on_non_ascii},
+}
+
+@misc{pathsforward-digest-legacy-forms-match-an-independent-computation,
+  section = {digest},
+  title  = {Each named form is the byte-form its name says},
+  claim  = {Each named form is the byte-form its name says.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_the_legacy_forms_match_an_independent_computation},
+}
+
+@misc{pathsforward-digest-ascii-waypoints-collapse-the-ascii-axis,
+  section = {digest},
+  title  = {On pure-ASCII waypoints C/A and C/U coincide, as the survey measured on gabion},
+  claim  = {On pure-ASCII waypoints C/A and C/U coincide, as the survey measured on gabion.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_ascii_waypoints_collapse_the_ascii_axis},
+}
+
+@misc{pathsforward-digest-exact-v2-matches,
+  section = {digest},
+  title  = {The file's own v2 value is a match},
+  claim  = {The file's own v2 value is a match.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_an_exact_v2_matches},
+}
+
+@misc{pathsforward-digest-different-v2-diverges,
+  section = {digest},
+  title  = {A different tagged value is a divergence; a tagged value is never prefix-matched},
+  claim  = {A different tagged value is a divergence; a tagged value is never prefix-matched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_a_different_v2_diverges},
+}
+
+@misc{pathsforward-digest-every-legacy-prefix-is-a-transition,
+  section = {digest},
+  title  = {Every legacy form at 12, 16 or 64 hex is a transition naming that form, not a divergence},
+  claim  = {Every legacy form at 12, 16 or 64 hex is a transition naming that form, not a
+            divergence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_every_legacy_prefix_is_a_transition},
+}
+
+@misc{pathsforward-digest-foreign-hex-diverges,
+  section = {digest},
+  title  = {Hex that no form explains is a divergence, and names no form},
+  claim  = {Hex that no form explains is a divergence, and names no form.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_a_foreign_hex_diverges},
+}
+
+@misc{pathsforward-digest-malformed-claim-is-malformed,
+  section = {digest},
+  title  = {Under 12 hex, uppercase, or not hex at all is malformed rather than a divergence},
+  claim  = {Under 12 hex, uppercase, or not hex at all is malformed rather than a divergence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_a_malformed_claim_is_malformed},
+}
+
+@misc{pathsforward-digest-verdict-carries-the-current-hash,
+  section = {digest},
+  title  = {Whatever the outcome, the verdict names the file's current v2 value},
+  claim  = {Whatever the outcome, the verdict names the file's current v2 value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_digest.py -k test_the_verdict_carries_the_current_hash},
+}
+
+@misc{pathsforward-check-clean-state-has-no-findings,
+  section = {check},
+  title  = {The positive control: a clean state yields no finding from any property},
+  claim  = {The positive control: a clean state yields no finding from any property.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_clean_state_has_no_findings},
+}
+
+@misc{pathsforward-check-vanished-symbol-is-not-coverable,
+  section = {check},
+  title  = {An issued symbol in neither list is a coverage finding},
+  claim  = {An issued symbol in neither list is a coverage finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_vanished_symbol_is_not_coverable},
+}
+
+@misc{pathsforward-check-duplicate-live-symbol-is-found,
+  section = {check},
+  title  = {A symbol claimed twice fails the check (el-openglo's `--check` passed it)},
+  claim  = {A symbol claimed twice fails the check (el-openglo's `--check` passed it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_duplicate_live_symbol_is_found},
+}
+
+@misc{pathsforward-check-symbol-live-and-residue-is-a-duplicate,
+  section = {check},
+  title  = {A symbol in both lists is claimed twice},
+  claim  = {A symbol in both lists is claimed twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_symbol_live_and_residue_is_a_duplicate},
+}
+
+@misc{pathsforward-check-malformed-symbol-is-a-finding-not-a-crash,
+  section = {check},
+  title  = {`Wx` is reported (gabion crashed with ValueError on `int()`)},
+  claim  = {`Wx` is reported (gabion crashed with ValueError on `int()`).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_malformed_symbol_is_a_finding_not_a_crash},
+}
+
+@misc{pathsforward-check-symbol-above-the-counter-is-found,
+  section = {check},
+  title  = {`W999` above counter=3 is found (el-openglo's `--check` passed it)},
+  claim  = {`W999` above counter=3 is found (el-openglo's `--check` passed it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_symbol_above_the_counter_is_found},
+}
+
+@misc{pathsforward-check-reasonless-drop-is-found,
+  section = {check},
+  title  = {A residue entry whose reason is blank is found},
+  claim  = {A residue entry whose reason is blank is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_reasonless_drop_is_found},
+}
+
+@misc{pathsforward-check-dangling-symbol-edge-is-found,
+  section = {check},
+  title  = {An `enables` target that looks like a symbol and resolves nowhere is found},
+  claim  = {An `enables` target that looks like a symbol and resolves nowhere is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_dangling_symbol_edge_is_found},
+}
+
+@misc{pathsforward-check-party-in-blocked-on-is-not-an-edge,
+  section = {check},
+  title  = {A `blocked_on` naming a party, not a symbol, is not a dangling edge},
+  claim  = {A `blocked_on` naming a party, not a symbol, is not a dangling edge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_party_in_blocked_on_is_not_an_edge},
+}
+
+@misc{pathsforward-check-bogus-status-is-found,
+  section = {check},
+  title  = {`status=bogus` is outside the enum and found},
+  claim  = {`status=bogus` is outside the enum and found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_bogus_status_is_found},
+}
+
+@misc{pathsforward-check-dropped-status-names-the-residue-move,
+  section = {check},
+  title  = {`status=dropped` in the live list is a finding pointing at --drop (D5 default)},
+  claim  = {`status=dropped` in the live list is a finding pointing at --drop (D5 default).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_dropped_status_names_the_residue_move},
+}
+
+@misc{pathsforward-check-underspecified-block-is-found,
+  section = {check},
+  title  = {A blocked waypoint without a party or an agent|human kind is found},
+  claim  = {A blocked waypoint without a party or an agent|human kind is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_an_underspecified_block_is_found},
+}
+
+@misc{pathsforward-check-complete-block-is-not-found,
+  section = {check},
+  title  = {A blocked waypoint with a party and a kind is not found},
+  claim  = {A blocked waypoint with a party and a kind is not found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_complete_block_is_not_found},
+}
+
+@misc{pathsforward-check-bare-string-list-field-is-found,
+  section = {check},
+  title  = {`blocked_on="mikemol"` is found as the wrong type (el-openglo's `--set` stored it)},
+  claim  = {`blocked_on="mikemol"` is found as the wrong type (el-openglo's `--set` stored it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_bare_string_list_field_is_found},
+}
+
+@misc{pathsforward-check-relative-or-empty-root-is-found,
+  section = {check},
+  title  = {A project_root that is relative or empty is found},
+  claim  = {A project_root that is relative or empty is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_relative_or_empty_root_is_found},
+}
+
+@misc{pathsforward-check-missing-root-is-found,
+  section = {check},
+  title  = {A project_root that does not exist is found},
+  claim  = {A project_root that does not exist is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_missing_root_is_found},
+}
+
+@misc{pathsforward-check-evidence-naming-a-missing-path-is-found,
+  section = {check},
+  title  = {An evidence path that does not exist is found; one that exists is not (positive control)},
+  claim  = {An evidence path that does not exist is found; one that exists is not (positive
+            control).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_evidence_naming_a_missing_path_is_found},
+}
+
+@misc{pathsforward-check-bare-check-does-not-read-evidence,
+  section = {check},
+  title  = {The bare check is cheap: a missing evidence path is not one of its findings},
+  claim  = {The bare check is cheap: a missing evidence path is not one of its findings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_the_bare_check_does_not_read_evidence},
+}
+
+@misc{pathsforward-payload-payload-under-budget-is-not-marked-truncated,
+  section = {payload},
+  title  = {A payload that fits whole carries no truncation marker (sre's was always True)},
+  claim  = {A payload that fits whole carries no truncation marker (sre's was always True).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_payload_under_budget_is_not_marked_truncated},
+}
+
+@misc{pathsforward-payload-state-path-is-the-path-read-not-the-files-key,
+  section = {payload},
+  title  = {The payload names the path it was built from, never the document's `state_path` key},
+  claim  = {The payload names the path it was built from, never the document's `state_path` key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_state_path_is_the_path_read_not_the_files_key},
+}
+
+@misc{pathsforward-payload-oversize-payload-is-refused,
+  section = {payload},
+  title  = {A top step that cannot fit is refused rather than emitted over budget (D4)},
+  claim  = {A top step that cannot fit is refused rather than emitted over budget (D4).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_an_oversize_payload_is_refused},
+}
+
+@misc{pathsforward-payload-big-state-is-trimmed-under-budget-and-says-so,
+  section = {payload},
+  title  = {A state far over budget in full is trimmed under it, and marked truncated},
+  claim  = {A state far over budget in full is trimmed under it, and marked truncated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_big_state_is_trimmed_under_budget_and_says_so},
+}
+
+@misc{pathsforward-payload-no-payload-is-ever-over-its-budget,
+  section = {payload},
+  title  = {Across a sweep of budgets every payload fits, marker included, or is refused},
+  claim  = {Across a sweep of budgets every payload fits, marker included, or is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_no_payload_is_ever_over_its_budget},
+}
+
+@misc{pathsforward-payload-residue-is-dropped-first,
+  section = {payload},
+  title  = {The first rung drops residue reasons, and names it},
+  claim  = {The first rung drops residue reasons, and names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_residue_is_dropped_first},
+}
+
+@misc{pathsforward-payload-done-waypoint-costs-one-line,
+  section = {payload},
+  title  = {A done waypoint is listed by symbol only},
+  claim  = {A done waypoint is listed by symbol only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_done_waypoint_costs_one_line},
+}
+
+@misc{pathsforward-payload-dropped-status-is-not-shown-live,
+  section = {payload},
+  title  = {A waypoint with status=dropped is not printed as live (summit printed it)},
+  claim  = {A waypoint with status=dropped is not printed as live (summit printed it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_dropped_status_is_not_shown_live},
+}
+
+@misc{pathsforward-payload-evidence-is-the-first-line-only,
+  section = {payload},
+  title  = {Evidence is carried as its first line},
+  claim  = {Evidence is carried as its first line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_evidence_is_the_first_line_only},
+}
+
+@misc{pathsforward-payload-standing-rules-are-emitted-verbatim,
+  section = {payload},
+  title  = {`preamble`, `standing` and `host` are emitted as declared (el-openglo, mtools)},
+  claim  = {`preamble`, `standing` and `host` are emitted as declared (el-openglo, mtools).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_standing_rules_are_emitted_verbatim},
+}
+
+@misc{pathsforward-payload-list-preamble-is-accepted,
+  section = {payload},
+  title  = {A preamble stored as a list is emitted line by line},
+  claim  = {A preamble stored as a list is emitted line by line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_list_preamble_is_accepted},
+}
+
+@misc{pathsforward-payload-no-rules-emit-no-block,
+  section = {payload},
+  title  = {Without the three keys there is no block},
+  claim  = {Without the three keys there is no block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_no_rules_emit_no_block},
+}
+
+@misc{pathsforward-payload-rules-are-dropped-last-and-named,
+  section = {payload},
+  title  = {An over-budget preamble is dropped at the last rung and named with its line count},
+  claim  = {An over-budget preamble is dropped at the last rung and named with its line count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_rules_are_dropped_last_and_named},
+}
+
+@misc{pathsforward-payload-scheduler-verbs-come-from-bindings,
+  section = {payload},
+  title  = {A bound capability is named by its binding; an unbound one by its capability},
+  claim  = {A bound capability is named by its binding; an unbound one by its capability.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_scheduler_verbs_come_from_bindings},
+}
+
+@misc{pathsforward-payload-header-carries-the-hash-and-the-build-time,
+  section = {payload},
+  title  = {The header carries the v2 hash and the time it was built, not the heartbeat},
+  claim  = {The header carries the v2 hash and the time it was built, not the heartbeat.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_header_carries_the_hash_and_the_build_time},
+}
+
+@misc{pathsforward-payload-bare-string-blocked-on-is-one-party,
+  section = {payload},
+  title  = {`blocked_on="mikemol"` renders as one party, not as characters},
+  claim  = {`blocked_on="mikemol"` renders as one party, not as characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_bare_string_blocked_on_is_one_party},
+}
+
+@misc{pathsforward-payload-long-line-is-clipped,
+  section = {payload},
+  title  = {A collapsed stanza longer than CLIP is clipped to CLIP with an ellipsis},
+  claim  = {A collapsed stanza longer than CLIP is clipped to CLIP with an ellipsis.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_long_line_is_clipped},
+}
+
+@misc{pathsforward-payload-short-line-is-kept,
+  section = {payload},
+  title  = {A collapsed stanza within CLIP is its first line unchanged},
+  claim  = {A collapsed stanza within CLIP is its first line unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_short_line_is_kept},
+}
+
+@misc{pathsforward-payload-ladder-adds-the-rules-rung-only-with-rules,
+  section = {payload},
+  title  = {The last rung (drop the rules) exists only when there are rules to drop},
+  claim  = {The last rung (drop the rules) exists only when there are rules to drop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_ladder_adds_the_rules_rung_only_with_rules},
+}
+
+@misc{pathsforward-ops-find-resolves-a-live-symbol,
+  section = {ops},
+  title  = {A live symbol resolves to its waypoint},
+  claim  = {A live symbol resolves to its waypoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_find_resolves_a_live_symbol},
+}
+
+@misc{pathsforward-ops-find-names-the-residue-reason,
+  section = {ops},
+  title  = {A residue symbol is refused with its reason (skill section 2)},
+  claim  = {A residue symbol is refused with its reason (skill section 2).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_find_names_the_residue_reason},
+}
+
+@misc{pathsforward-ops-find-refuses-an-unissued-symbol,
+  section = {ops},
+  title  = {A symbol in neither list is refused, never guessed},
+  claim  = {A symbol in neither list is refused, never guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_find_refuses_an_unissued_symbol},
+}
+
+@misc{pathsforward-ops-out-of-enum-update-is-refused-and-changes-nothing,
+  section = {ops},
+  title  = {`status=bogus` (el-openglo accepted it) and its kin are refused, and nothing changes},
+  claim  = {`status=bogus` (el-openglo accepted it) and its kin are refused, and nothing changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_out_of_enum_update_is_refused_and_changes_nothing},
+}
+
+@misc{pathsforward-ops-blocking-without-a-party-is-refused-whole,
+  section = {ops},
+  title  = {A status=blocked with no party is refused, and the next step set beside it is not kept},
+  claim  = {A status=blocked with no party is refused, and the next step set beside it is not kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_blocking_without_a_party_is_refused_whole},
+}
+
+@misc{pathsforward-ops-ready-clears-the-block,
+  section = {ops},
+  title  = {Moving to ready clears blocked_on and blocked_kind, and resets the count},
+  claim  = {Moving to ready clears blocked_on and blocked_kind, and resets the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_ready_clears_the_block},
+}
+
+@misc{pathsforward-ops-done-clears-the-next-step,
+  section = {ops},
+  title  = {Moving to done clears the next step},
+  claim  = {Moving to done clears the next step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_done_clears_the_next_step},
+}
+
+@misc{pathsforward-ops-blocking-resets-the-count,
+  section = {ops},
+  title  = {Blocking a waypoint resets ticks_blocked (sre never reset it)},
+  claim  = {Blocking a waypoint resets ticks_blocked (sre never reset it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_blocking_resets_the_count},
+}
+
+@misc{pathsforward-ops-new-party-resets-the-count,
+  section = {ops},
+  title  = {Changing who a block is on resets the count; something about it changed},
+  claim  = {Changing who a block is on resets the count; something about it changed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_new_party_resets_the_count},
+}
+
+@misc{pathsforward-ops-unrelated-edit-keeps-the-count,
+  section = {ops},
+  title  = {An edit that does not touch the block keeps the count (positive control for the reset)},
+  claim  = {An edit that does not touch the block keeps the count (positive control for the reset).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_unrelated_edit_keeps_the_count},
+}
+
+@misc{pathsforward-ops-explicit-count-wins,
+  section = {ops},
+  title  = {An explicit ticks_blocked is set after any reset},
+  claim  = {An explicit ticks_blocked is set after any reset.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_explicit_count_wins},
+}
+
+@misc{pathsforward-ops-evidence-is-appended-with-its-date,
+  section = {ops},
+  title  = {Evidence is appended with a date, starting clean when there was none},
+  claim  = {Evidence is appended with a date, starting clean when there was none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_evidence_is_appended_with_its_date},
+}
+
+@misc{pathsforward-ops-update-stamps-last-worked,
+  section = {ops},
+  title  = {Every update stamps last_worked},
+  claim  = {Every update stamps last_worked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_update_stamps_last_worked},
+}
+
+@misc{pathsforward-ops-add-mints-the-next-symbol,
+  section = {ops},
+  title  = {Adding mints W<counter+1> as ready and advances the counter},
+  claim  = {Adding mints W<counter+1> as ready and advances the counter.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_add_mints_the_next_symbol},
+}
+
+@misc{pathsforward-ops-refused-add-mints-nothing,
+  section = {ops},
+  title  = {A refused add leaves the counter and the list untouched (validate before minting)},
+  claim  = {A refused add leaves the counter and the list untouched (validate before minting).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_refused_add_mints_nothing},
+}
+
+@misc{pathsforward-ops-drop-moves-to-residue-with-the-reason,
+  section = {ops},
+  title  = {Dropping moves a waypoint to residue with its reason},
+  claim  = {Dropping moves a waypoint to residue with its reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_drop_moves_to_residue_with_the_reason},
+}
+
+@misc{pathsforward-ops-drop-refuses-a-blank-reason,
+  section = {ops},
+  title  = {A drop without a reason is refused},
+  claim  = {A drop without a reason is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_drop_refuses_a_blank_reason},
+}
+
+@misc{pathsforward-ops-drop-refuses-residue,
+  section = {ops},
+  title  = {Dropping a symbol that is already residue is refused},
+  claim  = {Dropping a symbol that is already residue is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_drop_refuses_residue},
+}
+
+@misc{pathsforward-ops-backoff-ticks-nudge,
+  section = {ops},
+  title  = {Ticks 1, 2, 4 and 8 nudge},
+  claim  = {Ticks 1, 2, 4 and 8 nudge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_the_backoff_ticks_nudge},
+}
+
+@misc{pathsforward-ops-tick-sixteen-escalates,
+  section = {ops},
+  title  = {Tick 16 escalates, once},
+  claim  = {Tick 16 escalates, once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_tick_sixteen_escalates},
+}
+
+@misc{pathsforward-ops-other-ticks-are-quiet,
+  section = {ops},
+  title  = {Every other tick is quiet, including after the escalation},
+  claim  = {Every other tick is quiet, including after the escalation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_other_ticks_are_quiet},
+}
+
+@misc{pathsforward-ops-bump-counts-only-blocked-and-not-excluded,
+  section = {ops},
+  title  = {Bumping counts every blocked waypoint not excluded, and nothing else},
+  claim  = {Bumping counts every blocked waypoint not excluded, and nothing else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_bump_counts_only_blocked_and_not_excluded},
+}
+
+@misc{pathsforward-ops-bump-does-not-touch-the-heartbeat,
+  section = {ops},
+  title  = {Bumping leaves heartbeat alone (sre rewrote it)},
+  claim  = {Bumping leaves heartbeat alone (sre rewrote it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_bump_does_not_touch_the_heartbeat},
+}
+
+@misc{pathsforward-ops-arm-records-job-and-heartbeat,
+  section = {ops},
+  title  = {Arming records the job id and the heartbeat},
+  claim  = {Arming records the job id and the heartbeat.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_arm_records_job_and_heartbeat},
+}
+
+@misc{pathsforward-ops-arm-refuses-an-empty-job,
+  section = {ops},
+  title  = {An empty job id is refused},
+  claim  = {An empty job id is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_arm_refuses_an_empty_job},
+}
+
+@misc{pathsforward-ops-preamble-is-set-and-cleared,
+  section = {ops},
+  title  = {A preamble is stored, and clearing it reports how many lines went},
+  claim  = {A preamble is stored, and clearing it reports how many lines went.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_the_preamble_is_set_and_cleared},
+}
+
+@misc{pathsforward-ops-blank-preamble-is-refused,
+  section = {ops},
+  title  = {A preamble of blank lines is refused},
+  claim  = {A preamble of blank lines is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_blank_preamble_is_refused},
+}
+
+@misc{pathsforward-lock-unlocked-state-is-acquired,
+  section = {lock},
+  title  = {An unlocked state is acquired and the field names the holder},
+  claim  = {An unlocked state is acquired and the field names the holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_an_unlocked_state_is_acquired},
+}
+
+@misc{pathsforward-lock-fresh-lock-is-held,
+  section = {lock},
+  title  = {Another holder's lock under 30 minutes old is held, and nothing is written},
+  claim  = {Another holder's lock under 30 minutes old is held, and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_a_fresh_lock_is_held},
+}
+
+@misc{pathsforward-lock-stale-lock-is-taken-over,
+  section = {lock},
+  title  = {Another holder's lock over 30 minutes old is taken over, naming the previous holder},
+  claim  = {Another holder's lock over 30 minutes old is taken over, naming the previous holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_a_stale_lock_is_taken_over},
+}
+
+@misc{pathsforward-lock-unparseable-stamp-is-stale,
+  section = {lock},
+  title  = {A lock whose stamp cannot be read is stale, not eternal},
+  claim  = {A lock whose stamp cannot be read is stale, not eternal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_an_unparseable_stamp_is_stale},
+}
+
+@misc{pathsforward-lock-same-holder-refreshes,
+  section = {lock},
+  title  = {The holder re-acquiring its own lock refreshes it},
+  claim  = {The holder re-acquiring its own lock refreshes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_the_same_holder_refreshes},
+}
+
+@misc{pathsforward-lock-holder-releases,
+  section = {lock},
+  title  = {The holder releases, and the field is cleared},
+  claim  = {The holder releases, and the field is cleared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_the_holder_releases},
+}
+
+@misc{pathsforward-lock-another-cannot-release,
+  section = {lock},
+  title  = {Another holder cannot release, and the field is kept},
+  claim  = {Another holder cannot release, and the field is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_another_cannot_release},
+}
+
+@misc{pathsforward-lock-releasing-an-unlocked-state-is-released,
+  section = {lock},
+  title  = {Releasing when nobody holds the lock is a release},
+  claim  = {Releasing when nobody holds the lock is a release.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_releasing_an_unlocked_state_is_released},
+}
+
+@misc{pathsforward-lock-stamp-round-trips,
+  section = {lock},
+  title  = {A stamp parses back to the time it formatted, with `Z` and with `+00:00`},
+  claim  = {A stamp parses back to the time it formatted, with `Z` and with `+00:00`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_a_stamp_round_trips},
+}
+
+@misc{pathsforward-lock-naive-or-garbage-stamp-is-unparseable,
+  section = {lock},
+  title  = {A naive time or garbage parses to None},
+  claim  = {A naive time or garbage parses to None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_a_naive_or_garbage_stamp_is_unparseable},
+}
+
+@misc{pathsforward-lock-racing-lockers-never-double-acquire,
+  section = {lock},
+  title  = {Across racing processes exactly one acquires each trial: never two, never none},
+  claim  = {Across racing processes exactly one acquires each trial: never two, never none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock.py -k test_racing_lockers_never_double_acquire},
+}
+
+@misc{pathsforward-store-missing-file-is-refused,
+  section = {store},
+  title  = {A missing state file is refused, naming the path},
+  claim  = {A missing state file is refused, naming the path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_a_missing_file_is_refused},
+}
+
+@misc{pathsforward-store-unparseable-file-is-refused,
+  section = {store},
+  title  = {An unparseable state file is refused},
+  claim  = {An unparseable state file is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_an_unparseable_file_is_refused},
+}
+
+@misc{pathsforward-store-malformed-file-is-refused,
+  section = {store},
+  title  = {A structurally malformed state file is refused},
+  claim  = {A structurally malformed state file is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_a_malformed_file_is_refused},
+}
+
+@misc{pathsforward-store-save-round-trips-every-key,
+  section = {store},
+  title  = {A save keeps keys the tool does not know, and writes UTF-8 rather than escapes},
+  claim  = {A save keeps keys the tool does not know, and writes UTF-8 rather than escapes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_a_save_round_trips_every_key},
+}
+
+@misc{pathsforward-store-write-replaces-rather-than-truncates,
+  section = {store},
+  title  = {A write lands as a new inode (temp then replace) and leaves no temp file behind},
+  claim  = {A write lands as a new inode (temp then replace) and leaves no temp file behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_a_write_replaces_rather_than_truncates},
+}
+
+@misc{pathsforward-store-siblings-follow-the-state-path,
+  section = {store},
+  title  = {The mirror, ledger and flock sidecar sit beside the state file},
+  claim  = {The mirror, ledger and flock sidecar sit beside the state file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_the_siblings_follow_the_state_path},
+}
+
+@misc{pathsforward-store-flock-excludes-another-process,
+  section = {store},
+  title  = {While the flock is held a locker in another process waits; on release it proceeds},
+  claim  = {While the flock is held a locker in another process waits; on release it proceeds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_the_flock_excludes_another_process},
+}
+
+@misc{pathsforward-store-reader-never-sees-a-torn-write,
+  section = {store},
+  title  = {A reader racing a writer decodes every read; the count of reads is the positive control},
+  claim  = {A reader racing a writer decodes every read; the count of reads is the positive control.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store.py -k test_a_reader_never_sees_a_torn_write},
+}
+
+@misc{pathsforward-ledger-line-carries-the-mechanism-column,
+  section = {ledger},
+  title  = {The line is stamp, kind, symbol, outcome, mechanism, quoted note (summit's columns)},
+  claim  = {The line is stamp, kind, symbol, outcome, mechanism, quoted note (summit's columns).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_line_carries_the_mechanism_column},
+}
+
+@misc{pathsforward-ledger-evidence-is-appended-as-a-column,
+  section = {ledger},
+  title  = {Evidence, when given, is the last column},
+  claim  = {Evidence, when given, is the last column.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_evidence_is_appended_as_a_column},
+}
+
+@misc{pathsforward-ledger-quote-in-the-note-is-escaped,
+  section = {ledger},
+  title  = {A double quote inside the note is escaped, so the note stays one quoted column},
+  claim  = {A double quote inside the note is escaped, so the note stays one quoted column.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_quote_in_the_note_is_escaped},
+}
+
+@misc{pathsforward-ledger-entry-that-would-shift-columns-is-refused,
+  section = {ledger},
+  title  = {A spaced or empty column, a malformed symbol, or a multi-line note is refused},
+  claim  = {A spaced or empty column, a malformed symbol, or a multi-line note is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_an_entry_that_would_shift_columns_is_refused},
+}
+
+@misc{pathsforward-ledger-append-only-appends,
+  section = {ledger},
+  title  = {Two appends leave two lines, in order},
+  claim  = {Two appends leave two lines, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_append_only_appends},
+}
+
+@misc{pathsforward-render-mirror-says-it-is-derived,
+  section = {render},
+  title  = {The mirror's first line says it is derived and must not be edited},
+  claim  = {The mirror's first line says it is derived and must not be edited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_mirror_says_it_is_derived},
+}
+
+@misc{pathsforward-render-mirror-carries-the-v2-hash,
+  section = {render},
+  title  = {The mirror carries the same v2 hash the payload does},
+  claim  = {The mirror carries the same v2 hash the payload does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_mirror_carries_the_v2_hash},
+}
+
+@misc{pathsforward-render-pipe-in-a-title-does-not-break-the-table,
+  section = {render},
+  title  = {A pipe in a title is escaped inside its cell},
+  claim  = {A pipe in a title is escaped inside its cell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_a_pipe_in_a_title_does_not_break_the_table},
+}
+
+@misc{pathsforward-render-empty-residue-says-none,
+  section = {render},
+  title  = {An empty residue renders as (none); a populated one lists its reasons},
+  claim  = {An empty residue renders as (none); a populated one lists its reasons.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_an_empty_residue_says_none},
+}
+
+@misc{pathsforward-render-queue-is-numbered-in-array-order,
+  section = {render},
+  title  = {The queue lists waypoints in array order, which is the rank, with the reason},
+  claim  = {The queue lists waypoints in array order, which is the rank, with the reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_queue_is_numbered_in_array_order},
+}
+
+@misc{pathsforward-selftest-every-arm-holds,
+  section = {selftest},
+  title  = {Every built-in arm holds on this code},
+  claim  = {Every built-in arm holds on this code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_selftest.py -k test_every_arm_holds},
+}
+
+@misc{pathsforward-selftest-hash-arms-are-present,
+  section = {selftest},
+  title  = {The two hash arms (summit's) are among the arms, so a pass is not a pass over nothing},
+  claim  = {The two hash arms (summit's) are among the arms, so a pass is not a pass over nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_selftest.py -k test_the_hash_arms_are_present},
+}
+
+@misc{pathsforward-cli-there-is-no-default-root,
+  section = {cli},
+  title  = {Without --state the CLI refuses and names why (sre and gabion hardcoded a root)},
+  claim  = {Without --state the CLI refuses and names why (sre and gabion hardcoded a root).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_there_is_no_default_root},
+}
+
+@misc{pathsforward-cli-no-module-hardcodes-a-home-path,
+  section = {cli},
+  title  = {No module's string literals name /home/; the scanner finds one planted (positive control)},
+  claim  = {No module's string literals name /home/; the scanner finds one planted (positive
+            control).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_no_module_hardcodes_a_home_path},
+}
+
+@misc{pathsforward-cli-bare-call-reads-and-writes-nothing,
+  section = {cli},
+  title  = {The bare call prints a summary and leaves the directory byte-for-byte as it was},
+  claim  = {The bare call prints a summary and leaves the directory byte-for-byte as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_bare_call_reads_and_writes_nothing},
+}
+
+@misc{pathsforward-cli-selftest-needs-no-state,
+  section = {cli},
+  title  = {The selftest runs without --state and reports every arm holding},
+  claim  = {The selftest runs without --state and reports every arm holding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_selftest_needs_no_state},
+}
+
+@misc{pathsforward-cli-hash-prints-v2,
+  section = {cli},
+  title  = {--hash prints the v2 hash},
+  claim  = {--hash prints the v2 hash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_hash_prints_v2},
+}
+
+@misc{pathsforward-cli-verify-matches-v2,
+  section = {cli},
+  title  = {--verify on the current v2 matches and ledgers nothing},
+  claim  = {--verify on the current v2 matches and ledgers nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_verify_matches_v2},
+}
+
+@misc{pathsforward-cli-verify-accepts-a-legacy-hash-as-a-transition,
+  section = {cli},
+  title  = {A legacy C/U prefix (mtools' form) exits 0 and is ledgered as a transition},
+  claim  = {A legacy C/U prefix (mtools' form) exits 0 and is ledgered as a transition.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_verify_accepts_a_legacy_hash_as_a_transition},
+}
+
+@misc{pathsforward-cli-verify-diverges-on-a-foreign-hash,
+  section = {cli},
+  title  = {A foreign hash exits 4 and is ledgered as a divergence the file wins},
+  claim  = {A foreign hash exits 4 and is ledgered as a divergence the file wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_verify_diverges_on_a_foreign_hash},
+}
+
+@misc{pathsforward-cli-verify-refuses-a-malformed-hash,
+  section = {cli},
+  title  = {A malformed claim is refused},
+  claim  = {A malformed claim is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_verify_refuses_a_malformed_hash},
+}
+
+@misc{pathsforward-cli-render-writes-the-mirror-beside-the-copy,
+  section = {cli},
+  title  = {--render writes the mirror beside the state copy},
+  claim  = {--render writes the mirror beside the state copy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_render_writes_the_mirror_beside_the_copy},
+}
+
+@misc{pathsforward-cli-payload-names-the-copy,
+  section = {cli},
+  title  = {The payload built from a copy names the copy, never the file's state_path key},
+  claim  = {The payload built from a copy names the copy, never the file's state_path key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_payload_names_the_copy},
+}
+
+@misc{pathsforward-cli-oversize-payload-exits-1-and-prints-nothing,
+  section = {cli},
+  title  = {An oversize payload is refused: exit 1, nothing on stdout, the reason on stderr},
+  claim  = {An oversize payload is refused: exit 1, nothing on stdout, the reason on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_oversize_payload_exits_1_and_prints_nothing},
+}
+
+@misc{pathsforward-cli-queue-lists-the-waypoints,
+  section = {cli},
+  title  = {--queue lists each waypoint},
+  claim  = {--queue lists each waypoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_queue_lists_the_waypoints},
+}
+
+@misc{pathsforward-cli-check-passes-a-clean-copy,
+  section = {cli},
+  title  = {--check exits 0 on a clean state (the positive control for the refusals below)},
+  claim  = {--check exits 0 on a clean state (the positive control for the refusals below).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_passes_a_clean_copy},
+}
+
+@misc{pathsforward-cli-check-refuses-a-malformed-symbol-without-crashing,
+  section = {cli},
+  title  = {`Wx` is refused with exit 2 (gabion crashed with rc 1 on it)},
+  claim  = {`Wx` is refused with exit 2 (gabion crashed with rc 1 on it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_refuses_a_malformed_symbol_without_crashing},
+}
+
+@misc{pathsforward-cli-check-refuses-a-duplicate,
+  section = {cli},
+  title  = {A duplicate symbol is refused (el-openglo passed it)},
+  claim  = {A duplicate symbol is refused (el-openglo passed it).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_refuses_a_duplicate},
+}
+
+@misc{pathsforward-cli-evidence-is-read-only-when-asked,
+  section = {cli},
+  title  = {--check passes a missing evidence path; --check-evidence refuses it},
+  claim  = {--check passes a missing evidence path; --check-evidence refuses it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_evidence_is_read_only_when_asked},
+}
+
+@misc{pathsforward-cli-lock-is-taken-and-then-held,
+  section = {cli},
+  title  = {A lock is taken, then held against another holder with exit 3},
+  claim  = {A lock is taken, then held against another holder with exit 3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_lock_is_taken_and_then_held},
+}
+
+@misc{pathsforward-cli-takeover-is-ledgered,
+  section = {cli},
+  title  = {A stale lock is taken over and the takeover is written to the ledger (section 4.1)},
+  claim  = {A stale lock is taken over and the takeover is written to the ledger (section 4.1).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_takeover_is_ledgered},
+}
+
+@misc{pathsforward-cli-unlock-by-the-holder-and-not-by-another,
+  section = {cli},
+  title  = {Only the holder unlocks; another gets exit 3 and the lock stays},
+  claim  = {Only the holder unlocks; another gets exit 3 and the lock stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_unlock_by_the_holder_and_not_by_another},
+}
+
+@misc{pathsforward-cli-armed-records-the-job,
+  section = {cli},
+  title  = {--armed records the job id},
+  claim  = {--armed records the job id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_armed_records_the_job},
+}
+
+@misc{pathsforward-cli-bogus-status-is-refused-before-anything-is-read,
+  section = {cli},
+  title  = {`--status bogus` is refused by the parser (el-openglo's `--set` took it), file untouched},
+  claim  = {`--status bogus` is refused by the parser (el-openglo's `--set` took it), file
+            untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_bogus_status_is_refused_before_anything_is_read},
+}
+
+@misc{pathsforward-cli-update-sets-typed-fields,
+  section = {cli},
+  title  = {--update blocks a waypoint with a party and a kind},
+  claim  = {--update blocks a waypoint with a party and a kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_sets_typed_fields},
+}
+
+@misc{pathsforward-cli-refused-update-exits-2-and-saves-nothing,
+  section = {cli},
+  title  = {Blocking without a party is refused with exit 2 and nothing saved},
+  claim  = {Blocking without a party is refused with exit 2 and nothing saved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_refused_update_exits_2_and_saves_nothing},
+}
+
+@misc{pathsforward-cli-add-mints-and-saves,
+  section = {cli},
+  title  = {--add mints the next symbol and saves the counter},
+  claim  = {--add mints the next symbol and saves the counter.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_add_mints_and_saves},
+}
+
+@misc{pathsforward-cli-drop-moves-to-residue,
+  section = {cli},
+  title  = {--drop moves a waypoint to residue},
+  claim  = {--drop moves a waypoint to residue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_drop_moves_to_residue},
+}
+
+@misc{pathsforward-cli-drop-without-a-reason-is-refused,
+  section = {cli},
+  title  = {--drop with a blank reason exits 2},
+  claim  = {--drop with a blank reason exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_drop_without_a_reason_is_refused},
+}
+
+@misc{pathsforward-cli-bump-blocked-says-who-is-owed,
+  section = {cli},
+  title  = {--bump-blocked prints NUDGE on the first blocked tick, and honours --except},
+  claim  = {--bump-blocked prints NUDGE on the first blocked tick, and honours --except.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bump_blocked_says_who_is_owed},
+}
+
+@misc{pathsforward-cli-ledger-appends-a-structured-line,
+  section = {cli},
+  title  = {--ledger appends a structured line with evidence},
+  claim  = {--ledger appends a structured line with evidence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_ledger_appends_a_structured_line},
+}
+
+@misc{pathsforward-cli-malformed-ledger-line-is-refused,
+  section = {cli},
+  title  = {A ledger line with a spaced column exits 2},
+  claim  = {A ledger line with a spaced column exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_malformed_ledger_line_is_refused},
+}
+
+@misc{pathsforward-cli-show-resolves-live-and-residue,
+  section = {cli},
+  title  = {--show resolves a live symbol and a residue one, and refuses an unissued one},
+  claim  = {--show resolves a live symbol and a residue one, and refuses an unissued one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_show_resolves_live_and_residue},
+}
+
+@misc{pathsforward-cli-preamble-is-set-and-cleared,
+  section = {cli},
+  title  = {--preamble-set stores a file's lines; --preamble-clear removes them},
+  claim  = {--preamble-set stores a file's lines; --preamble-clear removes them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_preamble_is_set_and_cleared},
+}
+
+@misc{pathsforward-cli-blank-preamble-file-is-refused,
+  section = {cli},
+  title  = {A preamble file of blank lines exits 2},
+  claim  = {A preamble file of blank lines exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_blank_preamble_file_is_refused},
+}
+
+@misc{pathsforward-cli-unreadable-state-is-refused,
+  section = {cli},
+  title  = {A missing state file exits 2 rather than raising},
+  claim  = {A missing state file exits 2 rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unreadable_state_is_refused},
+}
+
+@misc{pathsforward-cli-unknown-flag-is-refused,
+  section = {cli},
+  title  = {An unknown flag beside a valid mode exits 2, not run},
+  claim  = {An unknown flag beside a valid mode exits 2, not run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unknown_flag_is_refused},
+}
+
+@misc{pathsforward-cli-main-reads-sys-argv,
+  section = {cli},
+  title  = {The console script reads sys.argv when called with no arguments},
+  claim  = {The console script reads sys.argv when called with no arguments.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_main_reads_sys_argv},
+}
+
+@misc{pathsforward-cli-mode-defaults-to-the-summary,
+  section = {cli},
+  title  = {With no mode the summary is selected; a flag or a value selects its mode},
+  claim  = {With no mode the summary is selected; a flag or a value selects its mode.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_mode_defaults_to_the_summary},
+}

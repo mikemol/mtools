@@ -1,0 +1,13 @@
+# rubric.tsv — the sections of the pathsforward warrant set, one per test module, in document order.
+# key <TAB> heading title
+model	The Model: A Malformed Document Is Refused, a Malformed Symbol Never Crashes
+digest	The Hash: One Tagged Form Emitted, Four Legacy Forms Accepted as a Transition
+check	The Check: Every Property Fires on Its Defect, and a Clean State Fires None
+payload	The Payload: Budgeted With the Marker Counted, Refused When Nothing Fits
+ops	The Mutations: Typed, All or Nothing, and Honest About the Block Count
+lock	The Tick Lock: A Pure Decision, and One Holder Among Racing Processes
+store	The Store: Atomic Replace, a Flock That Excludes, and No Torn Read
+ledger	The Ledger: Structured Columns, and a Refusal of Anything That Shifts Them
+render	The Mirror: Derived, Said So, and in Rank Order
+selftest	The Selftest: The Installed Tool Witnesses Itself
+cli	The CLI: No Default Root, the Bare Call Reads, and Every Exit Code

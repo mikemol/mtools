@@ -1,0 +1,155 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ MIRRORS //ratchet:BUILD.bazel TARGET FOR TARGET, with //fence's console_scripts on the venv.
+# The rationale for each shape lives there; this file says only where it differs.
+# ⚑⚑ `@pathsforward_dev` DOES NOT EXIST UNTIL MODULE.bazel DECLARES IT — see NOTES.md, "root
+# wiring". Until then this package does not load, which is the honest state of a proposal.
+load("@pathsforward_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("//:venv.bzl", "venv_from_hub")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+exports_files([
+    # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
+    "pyproject.toml",
+    "requirements.txt",
+    "requirements-dev.txt",
+    "uv.lock",
+])
+
+py_library(
+    name = "pathsforward",
+    srcs = glob(["src/mikemol/pathsforward/**/*.py"]),
+    data = glob(["src/mikemol/pathsforward/py.typed"], allow_empty = True),
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
+# ⚑⚑ `test_lock` AND `test_store` SPAWN REAL PROCESSES — the defects they close (a double
+# acquire in 6 of 40 trials, a torn read) were races BETWEEN processes, and an in-process arm
+# cannot race. They launch `sys.executable -m mikemol.pathsforward` with PYTHONPATH derived from
+# the imported package, so the runfiles copy is the one under test. Every wait is bounded (60s),
+# so they are `medium` for the headroom, not because they are slow: measured under 3s together.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "//:pytest_main.py",
+        args = [
+            "$(location " + src + ")",
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-o",
+            "faulthandler_timeout=60",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"],
+        size = "medium" if src in ("tests/test_lock.py", "tests/test_store.py") else "small",
+        deps = [
+            ":pathsforward",
+            dev_requirement("pytest"),
+        ],
+        imports = ["src"],
+    )
+    for src in glob(["tests/test_*.py"])
+]
+
+exports_files(["BUILD.bazel"])
+
+sh_test(
+    name = "ruff",
+    srcs = ["//:ruff_check.sh"],
+    args = [
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ THE BASELINE WAS MINTED EMPTY (`mikemol-ratchet <dist> --init-absent` -> 0 keys): the
+# distribution enters clean under preview, so the ratchet can only hold it there.
+sh_test(
+    name = "ratchet",
+    srcs = ["//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ MEASURED BEFORE PROPOSING: 104 def-sites, 104 KILLED, 0 SURVIVED, 0 ERRORED.
+sh_test(
+    name = "mutants",
+    srcs = ["//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location //:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
+# ⚑ A py_binary SO OTHER REPOS CAN RUN THE TOOL AS A DECLARED TOOL rather than a copied script —
+# the copies are how four hash schemes arose.
+py_binary(
+    name = "pathsforward_cli",
+    srcs = glob(["src/mikemol/pathsforward/**/*.py"]),
+    main = "src/mikemol/pathsforward/cli.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
+py_binary(
+    name = "mypy_runner",
+    srcs = ["//:mypy_runner.py"],
+    main = "//:mypy_runner.py",
+    deps = [
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ],
+)
+
+sh_test(
+    name = "mypy",
+    srcs = ["//:mypy_check.sh"],
+    args = [
+        "$(location :mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":mypy_runner",
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
+    size = "small",
+)
+
+venv_from_hub(
+    name = ".venv",
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as //fence:.venv mirrors its own.
+    console_scripts = {
+        "mikemol-paths-forward": "mikemol.pathsforward.cli:main",
+    },
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    srcs = glob(["src/mikemol/pathsforward/**"]),
+)

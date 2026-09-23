@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.pathsforward: one reader and writer for a loop's state, where six copies had drifted into four hashes"
+subtitle = "Every defect the six-tool survey reproduced --- a lock two processes both acquired, a truncated flag that was always true, a payload that named the live file when built from a copy --- is written here as the witness that would have caught it, because each one passed its own tool's run."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "PATHSFORWARD.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
