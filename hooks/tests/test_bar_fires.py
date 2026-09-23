@@ -6734,6 +6734,10 @@ _SCRUB_FN = pyre.compile(r"^git_scrubbed\(\) \{.*?^\}\n", pyre.DOTALL | pyre.MUL
 _LAUNCH = pyre.compile(r"bazel (?:test|build) |-m pytest|mikemol-ratchet \"|mypy\.stubtest")
 _NOT_A_LAUNCH = ("#", "say ", "echo ", "printf ", "record_refusal ")
 _LAUNCHERS = (_GATE, _DIST.parent / "preflight.sh", _DIST.parent / "domain_witness.sh")
+# ⚑⚑ ONE SHELL SPELLING: the function is defined in `git_env.sh` and every launcher sources it.
+_SCRUB_SH = _DIST.parent / "git_env.sh"
+_SOURCES_SCRUB = pyre.compile(r"^\s*\. \./git_env\.sh$", pyre.MULTILINE)
+_SHELL_GLOBS = ("*.sh", ".githooks/*")
 
 
 def _launches(script: Path) -> list[tuple[int, str]]:
@@ -6760,34 +6764,63 @@ def test_every_test_the_gate_launches_runs_without_the_hooks_git_env() -> None:
 def test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names(
     tmp_path: Path,
 ) -> None:
-    """A fixture commit launched through `git_scrubbed` lands in its own dir, not in the decoy.
+    """A fixture commit launched through the sourced `git_scrubbed` lands in its own dir.
 
     ⚑ THE DECOY STANDS IN FOR THE REAL REPOSITORY: `GIT_DIR` and `GIT_INDEX_FILE` point at it, as a
     hook's do, and the fixture does what the measured one did. Nothing here names a real repo.
+    ⚑ THE FILE IS SOURCED, AS THE LAUNCHERS SOURCE IT, rather than a function body extracted from
+    it: what runs here is what `. ./git_env.sh` gives them.
     ⚑ Armed by hand: an inert `git_scrubbed() { "$@"; }` puts the fixture's commit in the decoy.
     """
     clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
-    for script in _LAUNCHERS:
-        fn = _SCRUB_FN.search(script.read_text(encoding="utf-8"))
-        assert fn, f"{script.name}: defines no `{_SCRUB}` — its launches inherit GIT_*"
-        work = tmp_path / script.name
-        work.mkdir()
-        # ⚑ ONE SCRIPT, LITERAL ARGV: the decoy is made with no GIT_* at all, then GIT_DIR and
-        # GIT_INDEX_FILE are aimed at it as a hook aims them at the real repo, the fixture
-        # commits through `git_scrubbed`, and the decoy's refs are printed — empty when scrubbed.
-        proc = subprocess.run(
-            ["/bin/bash", "-euc",
-             ('eval "$SCRUB_FN"\n'
-              "env -u GIT_DIR -u GIT_INDEX_FILE git init -q decoy\n"
-              'export GIT_DIR="$PWD/decoy/.git" GIT_INDEX_FILE="$PWD/decoy/.git/index"\n'
-              "git_scrubbed git init -q fixture\n"
-              "git_scrubbed git -c user.name=f -c user.email=f@invalid -C fixture"
-              " commit -q --allow-empty -m f\n"
-              "env -u GIT_DIR -u GIT_INDEX_FILE git -C decoy for-each-ref\n")],
-            cwd=work, capture_output=True, text=True, check=False,
-            env={**clean, "SCRUB_FN": fn.group(0)})
-        assert proc.returncode == 0, f"{script.name}: {proc.stderr.strip()}"
-        assert not proc.stdout, f"{script.name}: a fixture commit reached the decoy:\n{proc.stdout}"
+    # ⚑ ONE SCRIPT, LITERAL ARGV: the decoy is made with no GIT_* at all, then GIT_DIR and
+    # GIT_INDEX_FILE are aimed at it as a hook aims them at the real repo, the fixture
+    # commits through `git_scrubbed`, and the decoy's refs are printed — empty when scrubbed.
+    proc = subprocess.run(
+        ["/bin/bash", "-euc",
+         ('. "$SCRUB_SH"\n'
+          "env -u GIT_DIR -u GIT_INDEX_FILE git init -q decoy\n"
+          'export GIT_DIR="$PWD/decoy/.git" GIT_INDEX_FILE="$PWD/decoy/.git/index"\n'
+          "git_scrubbed git init -q fixture\n"
+          "git_scrubbed git -c user.name=f -c user.email=f@invalid -C fixture"
+          " commit -q --allow-empty -m f\n"
+          "env -u GIT_DIR -u GIT_INDEX_FILE git -C decoy for-each-ref\n")],
+        cwd=tmp_path, capture_output=True, text=True, check=False,
+        env={**clean, "SCRUB_SH": str(_SCRUB_SH)})
+    assert proc.returncode == 0, f"{_SCRUB_SH.name}: {proc.stderr.strip()}"
+    assert not proc.stdout, f"{_SCRUB_SH.name}: a fixture commit reached the decoy:\n{proc.stdout}"
+
+
+_KEPT_NAME = "SCRUB_MARKER"
+_KEPT_VALUE = "kept"
+
+
+def test_the_scrub_with_no_git_env_set_is_plain_env(tmp_path: Path) -> None:
+    """With no GIT_* set, `git_scrubbed CMD` runs CMD with a non-GIT_ variable intact."""
+    clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    proc = subprocess.run(
+        ["/bin/bash", "-euc", '. "$SCRUB_SH"\ngit_scrubbed printenv SCRUB_MARKER\n'],
+        cwd=tmp_path, capture_output=True, text=True, check=False,
+        env={**clean, "SCRUB_SH": str(_SCRUB_SH), _KEPT_NAME: _KEPT_VALUE})
+    assert proc.returncode == 0, proc.stderr.strip()
+    assert proc.stdout.strip() == _KEPT_VALUE, "the scrub dropped a variable that is not GIT_*"
+
+
+def test_every_launcher_sources_the_one_scrub() -> None:
+    """Each launcher sources `git_env.sh`; one that stopped would launch with GIT_* intact."""
+    assert _SCRUB_SH.is_file(), f"{_SCRUB_SH} is absent — there is nothing to source"
+    assert all(s.is_file() for s in _LAUNCHERS), "a launcher this arm reads is absent"
+    unsourced = [s.name for s in _LAUNCHERS
+                 if not _SOURCES_SCRUB.search(s.read_text(encoding="utf-8"))]
+    assert not unsourced, f"no `. ./git_env.sh` in: {unsourced}"
+
+
+def test_the_scrub_is_defined_exactly_once() -> None:
+    """Only `git_env.sh` defines `git_scrubbed`; a second copy in any root shell file is refused."""
+    shells = {p for g in _SHELL_GLOBS for p in _DIST.parent.glob(g) if p.is_file()}
+    definers = sorted(p.name for p in shells
+                      if _SCRUB_FN.search(p.read_text(encoding="utf-8", errors="replace")))
+    assert definers == [_SCRUB_SH.name], f"`{_SCRUB}` is defined in {definers}"
 
 
 _COUNTER = _DIST.parent / "count_test_functions.py"

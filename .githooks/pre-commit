@@ -139,14 +139,8 @@ say() { printf 'pre-commit: %s\n' "$1" >&2; }
 # commit holds — all of which NEED the hook's variables. Unsetting them at the top would gate the
 # wrong index, and a restore would fight the commit's own `index.lock`.
 # ⚑ substrate's rule (`git_env.clean_env`): every name starting `GIT_`, nothing kept.
-git_scrubbed() {  # the command, run with every GIT_* variable removed from its environment
-    local _name
-    local -a _unset=()
-    for _name in $(compgen -e); do
-        case "$_name" in GIT_*) _unset+=(-u "$_name") ;; esac
-    done
-    env "${_unset[@]}" "$@"
-}
+# ⚑⚑ `git_scrubbed` IS SOURCED FROM `git_env.sh`, THE ONE SHELL SPELLING, just below the recorder
+# (so an unreadable one is a RECORDED refusal).
 
 # ⚑⚑⚑ ONE HELPER, BECAUSE EIGHT CALL SITES WITH THE SAME REPAIR IS EIGHT PLACES TO FORGET IT.
 # The shellcheck witness was wired to capture two commits ago and the other eight were not, so a
@@ -168,6 +162,15 @@ if [ -r "$(git rev-parse --show-toplevel)/refusal_record.sh" ]; then
     . "$(git rev-parse --show-toplevel)/refusal_record.sh"
 else
     record_refusal() { :; }
+fi
+# ⚑⚑ UNLIKE THE RECORDER, NO INERT FALLBACK: a stub `git_scrubbed` would launch every suite with
+# the hook's `GIT_*`, the defect it exists to prevent. `$root` is the cwd here (`cd` above).
+if [ -r ./git_env.sh ]; then
+    . ./git_env.sh
+else
+    say "$root/git_env.sh is unreadable — no launch can be scrubbed of GIT_*, commit refused"
+    record_refusal pre-commit " - git_env.sh unreadable"
+    exit 1
 fi
 mkdir -p "$_witness_logs"
 
@@ -249,6 +252,7 @@ case "$_dists" in
   ''|'* ')
     say "no distribution found by */pyproject.toml — cannot run the gate, commit refused"
     say "  an empty population makes every check below a no-op that reports green"
+    record_refusal pre-commit " - no distribution found by */pyproject.toml"
     exit 1
     ;;
 esac

@@ -60,6 +60,10 @@ def _not_source(_directory: str, names: list[str]) -> set[str]:
 
 
 # The prefix every per-invocation git variable carries; none reaches a mutant's suite.
+# ⚑⚑ RESTATED, NOT IMPORTED FROM `mikemol.fence.git_env.clean_env`, AND THAT IS MEASURED. This
+# runs under each distribution's own `.venv` (`mutate_check.sh`), and only fence's can import
+# `mikemol.fence` (2026-09-23: hooks, mdstruct, ratchet, pathsforward all ModuleNotFoundError);
+# `//:test_mutate_runner` depends on pytest alone. Importing it would break four of five grids.
 _GIT_PREFIX = "GIT_"
 
 

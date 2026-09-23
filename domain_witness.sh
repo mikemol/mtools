@@ -41,17 +41,15 @@ probe_kind="${4:-mypy}"
 # test fixture running `git commit` in its temp dir follows them back (measured 2026-09-23: nine
 # junk commits). ⚑⚑ NOT GLOBAL: `git diff` refuses a dirty victim and `git checkout` restores it,
 # both against the index the calling commit holds — unset, they would read `.git/index` and the
-# restore would fight the commit's own `index.lock`. Same function as the gate's.
-git_scrubbed() {  # the command, run with every GIT_* variable removed from its environment
-    local _name
-    local -a _unset=()
-    for _name in $(compgen -e); do
-        case "$_name" in GIT_*) _unset+=(-u "$_name") ;; esac
-    done
-    env "${_unset[@]}" "$@"
-}
-
+# restore would fight the commit's own `index.lock`. Same function as the gate's: sourced from
+# `git_env.sh` once the cwd is this script's own directory, and an unreadable one refuses.
 cd "$(dirname "$0")" || exit 1
+if [ -r ./git_env.sh ]; then
+    . ./git_env.sh
+else
+    echo "domain_witness: git_env.sh is unreadable — refusing to launch bazel with GIT_* intact" >&2
+    exit 1
+fi
 # ⚑⚑⚑ RESIDUE FROM A KILLED PREDECESSOR IS DETECTED BEFORE ANYTHING RUNS, because `trap ... EXIT`
 # CANNOT fire on SIGKILL. Measured: killing a witness inside its mutation window leaves the probe
 # in the victim, and the next gate run censuses it — reporting ratchet keys from a probe nobody

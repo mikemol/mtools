@@ -68,15 +68,14 @@ say() { printf 'preflight: %s\n' "$1"; }
 # ⚑⚑ EVERY CHECK THIS SCRIPT LAUNCHES RUNS WITHOUT `GIT_*`, THE SAME SCOPE AS THE GATE IT PREDICTS.
 # A hook exports `GIT_DIR`/`GIT_INDEX_FILE` naming the real repository, and a test fixture running
 # `git commit` in its temp dir follows them back (measured 2026-09-23: nine junk commits). This
-# script runs no git of its own, so the function is the same one the gate uses, not a variant.
-git_scrubbed() {  # the command, run with every GIT_* variable removed from its environment
-    local _name
-    local -a _unset=()
-    for _name in $(compgen -e); do
-        case "$_name" in GIT_*) _unset+=(-u "$_name") ;; esac
-    done
-    env "${_unset[@]}" "$@"
-}
+# script runs no git of its own, so the function is the same one the gate uses, not a variant —
+# sourced from the one file that defines it, so "the same" is a fact rather than a claim.
+if [ -r ./git_env.sh ]; then
+    . ./git_env.sh
+else
+    say "$root/git_env.sh is unreadable — refusing to launch checks with GIT_* intact"
+    exit 2
+fi
 
 for dist in $dists; do
     [ -d "$dist" ] || { say "no such distribution: $dist"; exit 2; }

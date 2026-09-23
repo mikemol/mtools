@@ -4045,8 +4045,26 @@
 
 @misc{hooks-bar-fires-scrub-keeps-a-fixture-commit-out-of-the-decoy,
   section = {bar-fires},
-  claim   = {Each launcher's `git_scrubbed`, run with GIT_DIR and GIT_INDEX_FILE aimed at a decoy repository, lets a fixture commit land in its own dir and leaves the decoy with no refs. Armed: an inert `git_scrubbed` puts the commit in the decoy},
+  claim   = {The `git_scrubbed` that `git_env.sh` defines, sourced as the launchers source it and run with GIT_DIR and GIT_INDEX_FILE aimed at a decoy repository, lets a fixture commit land in its own dir and leaves the decoy with no refs. Armed: an inert `git_scrubbed` puts the commit in the decoy},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names}
+}
+
+@misc{hooks-bar-fires-scrub-with-no-git-env-is-plain-env,
+  section = {bar-fires},
+  claim   = {With no GIT_* variable set, `git_scrubbed CMD` runs CMD with every other variable intact: the scrub removes GIT_* and nothing else},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_scrub_with_no_git_env_set_is_plain_env}
+}
+
+@misc{hooks-bar-fires-every-launcher-sources-the-one-scrub,
+  section = {bar-fires},
+  claim   = {The gate, the preflight and the domain witness each source `./git_env.sh`, the one shell spelling of the GIT_* scrub. A launcher that stopped sourcing it would launch with the hook's GIT_* intact. Red on e4a171b..f7a4b80, where each defined its own copy},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_launcher_sources_the_one_scrub}
+}
+
+@misc{hooks-bar-fires-scrub-is-defined-exactly-once,
+  section = {bar-fires},
+  claim   = {Of every root `*.sh` and every `.githooks/*` file, only `git_env.sh` defines `git_scrubbed`. A second copy reappearing anywhere in that population is refused. Red on f7a4b80, where three files each defined it},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_scrub_is_defined_exactly_once}
 }
 
 @misc{hooks-bar-fires-gate-refuses-an-orphan-warrant-and-admits-the-clean-tree,
