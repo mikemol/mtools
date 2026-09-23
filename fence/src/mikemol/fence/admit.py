@@ -31,7 +31,7 @@ import os
 import sys
 import time
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -89,6 +89,15 @@ class Ledger:
 
     total_mb: int | None
     leases: tuple[Lease, ...]
+    # How many `TOTAL_MB` lines the text carried. ⚑ MORE THAN ONE IS CORRUPTION, NOT A CHOICE:
+    # taking either would size the shared pool by line order, so `decide` refuses and nothing
+    # rewrites it.
+    total_lines: int = 0
+
+    @property
+    def ambiguous(self) -> bool:
+        """Whether the ledger declares its total more than once — refused, never resolved."""
+        return self.total_lines > 1
 
     @property
     def used(self) -> int:
@@ -123,17 +132,22 @@ def parse(text: str) -> Ledger:
 
     """
     total: int | None = None
+    total_lines = 0
     leases: list[Lease] = []
     for raw in text.splitlines():
         words = raw.split(" ")
-        if words[0] == _TOTAL and len(words) == _TOTAL_FIELDS and words[1].isdigit():
-            total = int(words[1])
+        if words[0] == _TOTAL:
+            # ⚑ COUNTED EVEN WHEN MALFORMED: a second total that does not parse is still a second
+            # claim about the pool's size.
+            total_lines += 1
+            if len(words) == _TOTAL_FIELDS and words[1].isdigit():
+                total = int(words[1])
         elif words[0] == _LEASE and len(words) >= _LEASE_FIELDS:
             _kind, lease_id, mb, owner, epoch, parent = words[:6]
             if mb.isdigit() and epoch.isdigit():
                 label = " ".join(words[6:])
                 leases.append(Lease(lease_id, int(mb), owner, int(epoch), parent, label))
-    return Ledger(total, tuple(leases))
+    return Ledger(total, tuple(leases), total_lines)
 
 
 def starttime(pid: int, proc: str = "/proc") -> str | None:
@@ -195,7 +209,7 @@ def gc(ledger: Ledger, is_alive: Callable[[str], bool]) -> Ledger:
         kept = [lease for lease in kept if lease not in orphans]
     if len(kept) == len(ledger.leases):
         return ledger
-    return Ledger(ledger.total_mb, tuple(kept))
+    return replace(ledger, leases=tuple(kept))
 
 
 class Verdict(enum.Enum):
@@ -207,6 +221,7 @@ class Verdict(enum.Enum):
     PARENT_GONE = "parent-gone"
     NO_TOTAL = "no-total"
     CLAIMED = "claimed"
+    AMBIGUOUS_TOTAL = "ambiguous-total"
 
 
 # Exit codes, as the origin: 3 = cannot proceed now (or ever), 4 = the ledger itself says no.
@@ -229,6 +244,7 @@ def exit_code(verdict: Verdict) -> int | None:
         Verdict.CLAIMED: EXIT_REFUSED,
         Verdict.PARENT_GONE: EXIT_LEDGER,
         Verdict.NO_TOTAL: EXIT_LEDGER,
+        Verdict.AMBIGUOUS_TOTAL: EXIT_LEDGER,
     }.get(verdict)
 
 
@@ -312,6 +328,30 @@ def decide(request: Request, ledger: Ledger) -> Verdict:
         the verdict.
 
     """
+    refused = _refusal(request, ledger)
+    if refused is not None:
+        return refused
+    key = claim_key(request.label)
+    if key is not None and any(claim_key(lease.label) == key for lease in ledger.leases):
+        return Verdict.CLAIMED
+    total = ledger.total_mb if ledger.total_mb is not None else 0
+    if request.mb > total - ledger.used:
+        return Verdict.BLOCK
+    return Verdict.ADMIT
+
+
+def _refusal(request: Request, ledger: Ledger) -> Verdict | None:
+    """Return the verdict waiting cannot change, or None when the request may wait or proceed.
+
+    ⚑ THE LEDGER'S OWN REFUSALS COME FIRST — two totals, then none — because nothing may be compared
+    against a pool whose size is unknown or contested.
+
+    Returns:
+        AMBIGUOUS_TOTAL, NO_TOTAL, IMPOSSIBLE or PARENT_GONE, or None.
+
+    """
+    if ledger.ambiguous:
+        return Verdict.AMBIGUOUS_TOTAL
     if ledger.total_mb is None:
         return Verdict.NO_TOTAL
     if request.mb > ledger.total_mb:
@@ -319,12 +359,7 @@ def decide(request: Request, ledger: Ledger) -> Verdict:
     if request.parent != NO_PARENT and request.parent not in {
             lease.lease_id for lease in ledger.leases}:
         return Verdict.PARENT_GONE
-    key = claim_key(request.label)
-    if key is not None and any(claim_key(lease.label) == key for lease in ledger.leases):
-        return Verdict.CLAIMED
-    if request.mb > ledger.total_mb - ledger.used:
-        return Verdict.BLOCK
-    return Verdict.ADMIT
+    return None
 
 
 def load_ok(load: tuple[float, float, float], nproc: int, maxload: float) -> bool:
@@ -444,7 +479,14 @@ class Store:
             handle.write(lease.line() + "\n")
 
     def rewrite(self, ledger: Ledger) -> None:
-        """Replace the ledger atomically: write a sibling, rename it. Under the lock only."""
+        """Replace the ledger atomically: write a sibling, rename it. Under the lock only.
+
+        ⚑⚑ AN AMBIGUOUS LEDGER IS NEVER REWRITTEN. Rendering writes ONE total, so a gc or a release
+        over a file with two would quietly "repair" it by keeping one — the guess `decide` exists to
+        refuse. The one place that guards it is here, so no caller can reach around it.
+        """
+        if ledger.ambiguous:
+            return
         tmp = self.path.with_name(f"{self.path.name}.{os.getpid()}.tmp")
         tmp.write_text(ledger.render(), encoding="utf-8")
         tmp.replace(self.path)
@@ -473,9 +515,16 @@ def init(store: Store, total_mb: int) -> bool:
     Returns:
         whether this call wrote the total.
 
+    Raises:
+        RefusedError: the ledger declares its total more than once — fix the file; init guesses
+            nothing, the same rule substrate's bash applies.
+
     """
     with store.locked():
         snap = store.read()
+        if snap.ambiguous:
+            raise RefusedError(Verdict.AMBIGUOUS_TOTAL, EXIT_LEDGER,
+                               f"{store.path} has {snap.total_lines} TOTAL_MB lines")
         if snap.total_mb is not None:
             return False
         store.rewrite(Ledger(total_mb, snap.leases))
@@ -542,6 +591,8 @@ def _terminal_message(verdict: Verdict, request: Request, snap: Ledger) -> str:
         Verdict.IMPOSSIBLE: f"IMPOSSIBLE: {request.mb} MB exceeds the total {snap.total_mb} MB",
         Verdict.PARENT_GONE: f"parent lease {request.parent} is no longer in the ledger",
         Verdict.NO_TOTAL: "the ledger declares no TOTAL_MB — run init first",
+        Verdict.AMBIGUOUS_TOTAL: (f"the ledger has {snap.total_lines} TOTAL_MB lines — corrupt or "
+                                  "hand-edited; fix the file, do not guess"),
     }
     return messages.get(verdict, verdict.name)
 

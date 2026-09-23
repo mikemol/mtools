@@ -881,3 +881,49 @@
   claim  = {After a climb succeeds, its recorded peak sizes the next lease — history converges.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_a_success_records_a_peak_the_next_size_is_taken_from},
 }
+
+@misc{fence-admit-ledger-with-two-totals-is-refused-not-resolved,
+  section = {admit},
+  title  = {Two TOTAL_MB lines refuse with the ledger code — neither line is picked},
+  claim  = {Two TOTAL_MB lines refuse with the ledger code — neither line is picked. THE CONTROL:
+            the same request against one total is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_ledger_with_two_totals_is_refused_not_resolved},
+}
+
+@misc{fence-admit-malformed-second-total-still-counts,
+  section = {admit},
+  title  = {A second TOTAL_MB that does not parse is still a second claim about the pool's size},
+  claim  = {A second TOTAL_MB that does not parse is still a second claim about the pool's size.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_malformed_second_total_still_counts},
+}
+
+@misc{fence-admit-ambiguous-ledger-is-never-rewritten,
+  section = {admit},
+  title  = {Gc over two totals and a dead lease leaves the file byte-for-byte — no silent repair},
+  claim  = {Gc over two totals and a dead lease leaves the file byte-for-byte — no silent repair.
+            THE CONTROL: the same dead lease under ONE total is reaped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_an_ambiguous_ledger_is_never_rewritten},
+}
+
+@misc{fence-admit-init-refuses-an-ambiguous-ledger,
+  section = {admit},
+  title  = {Init over two totals raises with the ledger code rather than writing one — as bash does},
+  claim  = {Init over two totals raises with the ledger code rather than writing one — as bash does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_init_refuses_an_ambiguous_ledger},
+}
+
+@misc{fence-admit-acquire-refuses-an-ambiguous-ledger,
+  section = {admit},
+  title  = {A lease request against two totals raises at once with the ledger code — it never waits},
+  claim  = {A lease request against two totals raises at once with the ledger code — it never waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_acquire_refuses_an_ambiguous_ledger},
+}
+
+@misc{fence-ledger-fractional-peak-is-written-as-whole-megabytes-rounded-up,
+  section = {ledger},
+  title  = {2049 KB writes as 3 MB, never 2.001 and never 2 — substrate's reader takes integers only},
+  claim  = {2049 KB writes as 3 MB, never 2.001 and never 2 — substrate's reader takes integers
+            only. THE CONTROL: an exact 2048 KB writes as 2, so the rounding is up, not
+            a blanket +1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fractional_peak_is_written_as_whole_megabytes_rounded_up},
+}

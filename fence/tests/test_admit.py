@@ -50,7 +50,7 @@ def _ledger(*leases: admit.Lease, total: int | None = _TOTAL) -> admit.Ledger:
         the snapshot.
 
     """
-    return admit.Ledger(total, leases)
+    return admit.Ledger(total, leases, total_lines=0 if total is None else 1)
 
 
 # --- the ledger text ---
@@ -441,3 +441,57 @@ def test_the_lock_is_acquired_within_its_bound_or_refused(tmp_path: Path) -> Non
     impatient = admit.Store(store.path, lock_timeout_s=0.2)
     with store.locked(), pytest.raises(admit.LockTimeoutError), impatient.locked():
         pass
+
+
+# --- a ledger that declares its total twice ---
+
+_TWO_TOTALS = "TOTAL_MB 512\nTOTAL_MB 1024\n"
+
+
+def test_a_ledger_with_two_totals_is_refused_not_resolved() -> None:
+    """Two TOTAL_MB lines refuse with the ledger code — neither line is picked.
+
+    ⚑ THE CONTROL: the same request against one total is admitted.
+    """
+    verdict = admit.decide(admit.Request(10), admit.parse(_TWO_TOTALS))
+    assert verdict is admit.Verdict.AMBIGUOUS_TOTAL
+    assert admit.exit_code(verdict) == admit.EXIT_LEDGER
+    assert admit.decide(admit.Request(10), admit.parse("TOTAL_MB 512\n")) is admit.Verdict.ADMIT
+
+
+def test_a_malformed_second_total_still_counts() -> None:
+    """A second TOTAL_MB that does not parse is still a second claim about the pool's size."""
+    assert admit.parse("TOTAL_MB 512\nTOTAL_MB lots\n").ambiguous
+    assert not admit.parse("TOTAL_MB 512\n").ambiguous
+
+
+def test_an_ambiguous_ledger_is_never_rewritten(tmp_path: Path) -> None:
+    """Gc over two totals and a dead lease leaves the file byte-for-byte — no silent repair.
+
+    ⚑ THE CONTROL: the same dead lease under ONE total is reaped.
+    """
+    dead = "LEASE x 10 1:0 0 - run\n"
+    store = admit.Store(tmp_path / "ledger")
+    store.path.write_text(_TWO_TOTALS + dead, encoding="utf-8")
+    admit.reap(store, lambda _owner: False)
+    assert store.path.read_text(encoding="utf-8") == _TWO_TOTALS + dead
+    store.path.write_text("TOTAL_MB 512\n" + dead, encoding="utf-8")
+    assert admit.reap(store, lambda _owner: False).leases == ()
+
+
+def test_init_refuses_an_ambiguous_ledger(tmp_path: Path) -> None:
+    """Init over two totals raises with the ledger code rather than writing one — as bash does."""
+    store = admit.Store(tmp_path / "ledger")
+    store.path.write_text(_TWO_TOTALS, encoding="utf-8")
+    with pytest.raises(admit.RefusedError) as err:
+        admit.init(store, _TOTAL)
+    assert err.value.code == admit.EXIT_LEDGER
+
+
+def test_acquire_refuses_an_ambiguous_ledger(tmp_path: Path) -> None:
+    """A lease request against two totals raises at once with the ledger code — it never waits."""
+    store = admit.Store(tmp_path / "ledger")
+    store.path.write_text(_TWO_TOTALS, encoding="utf-8")
+    with pytest.raises(admit.RefusedError) as err:
+        admit.acquire(store, admit.Request(10))
+    assert err.value.verdict is admit.Verdict.AMBIGUOUS_TOTAL

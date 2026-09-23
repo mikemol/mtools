@@ -220,6 +220,10 @@ def row_of(label: str, result: Result, stamp_epoch: int) -> Row | None:
     and folding it into the history would size the next cap from the last one's limit.
     ⚑ WALL IS THE RUN'S OWN `duration_s`, measured by `run_once` after admission, so time spent
     waiting for a lease never reads as time spent working.
+    ⚑⚑ PEAKS ARE WHOLE MEGABYTES, ROUNDED UP. Substrate's label reader accepts only integer peaks,
+    so during the overlap a fractional one read there as NO HISTORY and the label fell back to its
+    default (measured by the label-lease port study, 2026-09-22). Rounded UP, never down: a floored
+    peak under-sizes the next lease by up to a megabyte, the one direction a cap must not err.
 
     Returns:
         the row, or None for a run that did not exit 0.
@@ -230,13 +234,23 @@ def row_of(label: str, result: Result, stamp_epoch: int) -> Row | None:
     return Row(
         label=label,
         wall_s=result.duration_s,
-        peak_mb=None if result.maxrss_kb is None else result.maxrss_kb / _KB_PER_MB,
+        peak_mb=None if result.maxrss_kb is None else _whole_mb(result.maxrss_kb, _KB_PER_MB),
         stamp_epoch=stamp_epoch,
         user_s=result.user_s,
         sys_s=result.sys_s,
         cg_peak_mb=(None if result.memory_peak_bytes is None
-                    else result.memory_peak_bytes / _BYTES_PER_MB),
+                    else _whole_mb(result.memory_peak_bytes, _BYTES_PER_MB)),
     )
+
+
+def _whole_mb(amount: int, per_mb: int) -> float:
+    """Return `amount` in whole megabytes, rounded UP.
+
+    Returns:
+        the ceiling of `amount / per_mb`, as a float the row carries.
+
+    """
+    return float(-(-amount // per_mb))
 
 
 def record(path: Path, label: str, result: Result) -> bool:

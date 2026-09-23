@@ -141,6 +141,10 @@ def test_a_label_with_no_peak_suggests_nothing() -> None:
 
 _MB = 1024 * 1024
 
+# maxRSS one KB over 2 MB, and exactly 2 MB, for the round-UP arm.
+_JUST_OVER_2MB_KB = 2049
+_EXACT_2MB_KB = 2048
+
 
 def _result(exit_code: int | None, *, maxrss_kb: int | None = 2048) -> core.Result:
     """Return a finished run's result without running anything.
@@ -235,3 +239,15 @@ def test_a_fence_name_carries_its_test_target() -> None:
 def test_a_fence_name_outside_bazel_is_pid_and_second() -> None:
     """With no test target the name is `pid.second`, as it always was — the stated bound."""
     assert core.fence_name(12, 1_700_000_000.5, {}) == ".mikemol-fence.12.1700000000"
+
+
+def test_a_fractional_peak_is_written_as_whole_megabytes_rounded_up(tmp_path: Path) -> None:
+    """2049 KB writes as 3 MB, never 2.001 and never 2 — substrate's reader takes integers only.
+
+    ⚑ THE CONTROL: an exact 2048 KB writes as 2, so the rounding is up, not a blanket +1.
+    """
+    path = tmp_path / "labels.tsv"
+    ledger.record(path, "gate:a", _result(0, maxrss_kb=_JUST_OVER_2MB_KB))
+    ledger.record(path, "gate:b", _result(0, maxrss_kb=_EXACT_2MB_KB))
+    fields = [line.split("\t")[2] for line in path.read_text(encoding="utf-8").splitlines()]
+    assert fields == ["3", "2"]
