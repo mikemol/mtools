@@ -256,3 +256,19 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+# ⚑ THE REMAP GUARD'S ONE SUBPROCESS IS `git show --end-of-options <rev>:<file>` — argv list, no
+# shell, and the user-supplied rev cannot be read as an option. Its baseline
+# IS the git revision, so reading the revision is the module's responsibility, as ruff is census's.
+# ⚑ `git` IS RESOLVED FROM PATH (start-process-with-partial-path): unlike ruff, git is not a
+# binary the BUILD stages, and the guard needs the work tree's own repository.
+"src/mikemol/ratchet/remap.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+    "start-process-with-partial-path",
+]
+# ⚑ ITS WITNESS BUILDS A REAL REPOSITORY, because the baseline under test IS a git revision.
+"tests/test_remap.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+    "start-process-with-partial-path",
+]

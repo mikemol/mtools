@@ -18,28 +18,67 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
+from typing import cast
 
 from mikemol.ratchet.census import run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
+from mikemol.ratchet.remap import __doc__ as remap_doc
+from mikemol.ratchet.remap import remap_guard
 from mikemol.ratchet.state import BaselineState
 
 _BASELINE = Path("ratchet-preview.txt")
 
 
+_REMAP = "remap"
+
+
+def _remap_main(argv: list[str]) -> int:
+    """Run `mikemol-ratchet remap DIST FILE... [--rev REV] [--write]`.
+
+    ⚑ A SUBCOMMAND, NOT A FLAG ON THE CENSUS: it shares neither ruff nor `ratchet-preview.txt`
+    with it, and as a flag `--write` meant two different things. `--rev` exists only here.
+
+    Returns:
+        remap.CLEAN, remap.REFUSED or remap.UNREADABLE.
+
+    """
+    parser = argparse.ArgumentParser(prog=f"mikemol-ratchet {_REMAP}", description=remap_doc)
+    parser.add_argument("dist", type=Path, help="a git work tree; FILEs are relative to it")
+    parser.add_argument("files", nargs="+", metavar="FILE", help="JSON baselines to guard")
+    parser.add_argument("--rev", default="HEAD", help="the revision to compare against")
+    parser.add_argument("--write", action="store_true",
+                        help="rewrite every file to its path-only projection (all or nothing)")
+    opts: dict[str, object] = vars(parser.parse_args(argv))
+    code, lines = remap_guard(Path(str(opts["dist"])),
+                              [str(f) for f in cast("list[str]", opts["files"])],
+                              rev=str(opts["rev"]), write=bool(opts["write"]))
+    for line in lines:
+        sys.stdout.write(f"{line}\n")
+    return code
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the ratchet for one distribution; return 0 on pass, 1 on refusal.
 
+    ⚑ `remap` AS THE FIRST ARGUMENT SELECTS THE SUBCOMMAND. A distribution directory literally
+    named `remap` is reached as `./remap`.
+
     Returns:
-        the the ratchet for one distribution; return 0 on pass, 1 on refusal.
+        0 on pass, 1 on refusal (the remap subcommand returns its own codes).
 
     """
-    parser = argparse.ArgumentParser(prog="mikemol-ratchet", description=__doc__)
+    args_in = sys.argv[1:] if argv is None else argv
+    if args_in[:1] == [_REMAP]:
+        return _remap_main(args_in[1:])
+    parser = argparse.ArgumentParser(
+        prog="mikemol-ratchet", description=__doc__,
+        epilog=f"subcommand: mikemol-ratchet {_REMAP} DIST FILE... [--rev REV] [--write]")
     parser.add_argument("dist", type=Path, help="the distribution root to census")
     parser.add_argument("--init-absent", action="store_true",
                         help="mint a baseline that does not exist yet (the birth move)")
     parser.add_argument("--write", action="store_true",
                         help="lower the baseline when the census pays debt down")
-    args = parser.parse_args(argv)
+    args = parser.parse_args(args_in)
 
     # ⚑⚑ argparse's `Namespace` is untyped, so `args.dist` is `Any` and poisons the expression
     # it lands in under `disallow_any_expr` — and the poison is at the ATTRIBUTE ACCESS, so

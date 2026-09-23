@@ -302,3 +302,113 @@
             already correct; only the claim about it was wrong.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_successful_exit_is_accepted_not_merely_not_refused}
 }
+
+% ---------------------------------------------------------------- remap
+
+@misc{ratchet-remap-unchanged-baseline-passes,
+  section = {remap},
+  claim   = {No diff is the trivial pass. The P-arm: without it every refusal below passes against a guard that refuses everything},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_an_unchanged_baseline_passes}
+}
+
+@misc{ratchet-remap-path-only-remap-passes,
+  section = {remap},
+  claim   = {The move the guard exists to admit: only the `path` leaf changed, string to string},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_path_only_remap_passes}
+}
+
+@misc{ratchet-remap-content-change-under-a-move-is-refused,
+  section = {remap},
+  claim   = {A remap that also edits a count is debt edited in under cover of a move, and the refusal NAMES the leaf},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_content_change_under_a_move_is_refused}
+}
+
+@misc{ratchet-remap-added-key-is-refused,
+  section = {remap},
+  claim   = {A new non-path field is growth, not relocation},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_an_added_key_is_refused}
+}
+
+@misc{ratchet-remap-unreadable-side-exits-2-and-says-so,
+  section = {remap},
+  claim   = {A file absent at the revision is a fact about the reader, not a verdict. EXIT 2 IS ALSO ARGPARSE'S USAGE ERROR, so the number alone cannot tell "file unreadable" from "mode missing": the report line is asserted with it. Measured: against the pre-patch CLI this arm fails on the line, not the number},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_an_unreadable_side_exits_2_and_says_so}
+}
+
+@misc{ratchet-remap-write-keeps-the-remap-and-discards-the-rest,
+  section = {remap},
+  claim   = {`--write` projects the file onto its path-only remap --- changed counts and added keys are undone --- and the check then passes},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_write_keeps_the_remap_and_discards_the_rest}
+}
+
+@misc{ratchet-remap-bare-remap-does-not-mutate,
+  section = {remap},
+  claim   = {THE CHEAP READ IS THE DEFAULT. A refusal without `--write` leaves the file byte-identical to what the author left},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_the_bare_remap_does_not_mutate}
+}
+
+@misc{ratchet-remap-type-change-is-one-leaf,
+  section = {remap},
+  claim   = {A dict becoming a list differs at its own pointer, not below it --- one leaf, reported once},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_type_change_is_one_leaf}
+}
+
+@misc{ratchet-remap-deleted-path-key-is-refused,
+  section = {remap},
+  claim   = {P2. A `path` key that is now MISSING is not a path rewrite: the entry lost its identity. The origin counted it as a path leaf because only the pointer was consulted; here a path leaf must be a STRING ON BOTH SIDES},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_deleted_path_key_is_refused}
+}
+
+@misc{ratchet-remap-payload-under-a-path-key-is-refused-and-not-written,
+  section = {remap},
+  claim   = {P4. A path string that became a container carrying `count: 999` hid a whole payload under the one key a move may change, and the origin's projection KEPT it, so its rewrite laundered the payload into the baseline. Refused here, and `--write` restores the revision's string},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_payload_under_a_path_key_is_refused_and_not_written}
+}
+
+@misc{ratchet-remap-dotted-key-is-not-a-path-leaf,
+  section = {remap},
+  claim   = {P5. Pointers are TUPLES OF SEGMENTS. The origin joined keys with an unescaped `.`, so a key literally named `x.path` was indistinguishable from key `path` under `x`, and passed as a path leaf},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_key_named_with_a_dotted_path_suffix_is_not_a_path_leaf}
+}
+
+@misc{ratchet-remap-collapsed-paths-are-refused,
+  section = {remap},
+  claim   = {P7. Two entries collapsed onto one path change nothing but path leaves and still leave the file with duplicate identities. A list whose path duplicates GREW is refused, under `--write` too, and the refused write touches nothing},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_two_entries_collapsed_onto_one_path_are_refused}
+}
+
+@misc{ratchet-remap-swapped-paths-pass-as-documented-residue,
+  section = {remap},
+  claim   = {P1, RESIDUE. Two entries swapping paths PASSES although each one's counts now read as the other's. It is inherent to "any path rewrite is allowed" and is recorded in the module docstring rather than claimed caught; this arm pins the blind spot so that closing it has to change the claim too},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_two_entries_swapping_paths_pass_as_documented_residue}
+}
+
+@misc{ratchet-remap-rev-cannot-inject-a-git-option,
+  section = {remap},
+  claim   = {`git show REV:FILE` reads an argument spelled `--output=FILE` as an OPTION. With `--end-of-options` it is a revision that fails to resolve: exit 2, and no file is written},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_rev_cannot_inject_a_git_option}
+}
+
+@misc{ratchet-remap-write-is-all-or-nothing,
+  section = {remap},
+  claim   = {A run that exits 2 must not have mutated anything. The first draft rewrote file one before file two failed to load; every file is now loaded and every projection verified before any is written},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_write_is_all_or_nothing}
+}
+
+@misc{ratchet-remap-write-keeps-the-source-formatting,
+  section = {remap},
+  claim   = {A rewrite at a fixed `indent=2` turns a compact or indent-4 source into a whole-file churn diff that hides the one leaf that changed. The source's indent width or compactness, key order and trailing newline are kept},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_write_keeps_the_source_formatting}
+}
+
+@misc{ratchet-remap-pure-reorder-is-refused-as-documented-residue,
+  section = {remap},
+  claim   = {P6, RESIDUE. A pure reorder of entries changes no identity yet is REFUSED, because lists compare by index. It errs toward a false alarm, never a laundered change, and is recorded in the module docstring; this arm pins it so admitting reorders has to change the claim too},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_pure_reorder_is_refused_as_documented_residue}
+}
+
+@misc{ratchet-remap-write-failure-leaves-earlier-files-untouched,
+  section = {remap},
+  claim   = {Loading and verifying first was not enough: each write was a plain overwrite, so an OSError on file two left file one rewritten. Outputs are now staged as temps beside their targets and replaced only once all are written; a staging failure removes the temps and exits 2 with "nothing written". The replace phase itself is atomic per file only, as the module docstring states},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_write_failure_on_the_second_file_leaves_the_first_untouched}
+}

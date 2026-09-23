@@ -56,6 +56,10 @@ py_library(
             dev_requirement("pytest"),
         ],
         imports = ["src"],
+        # ⚑ `test_remap` NEEDS AN UNDECLARED HOST TOOL: `git`, from the sandbox PATH. It builds
+        # its own repository in tmp_path, so the workspace `.git` is NOT needed — only the
+        # binary. The tag makes that dependency visible and filterable rather than ambient.
+        tags = ["requires-git"] if src == "tests/test_remap.py" else [],
     )
     for src in glob(["tests/test_*.py"])
 ]
