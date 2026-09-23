@@ -221,3 +221,64 @@ def test_a_row_whose_cell_count_differs_from_its_header_is_reported(doc: Path) -
         f"prose mentioning a pipe was reported at line {prose_at} — a line is a table ROW only "
         "inside a table, and a rule that cannot tell them apart reports the reader"
     )
+
+
+# ⚑ THE LICENCE HEADER EVERY README IN THIS REPOSITORY IS REQUIRED TO OPEN WITH. Named because the
+# first-line rule reported every conforming README for carrying it.
+_SPDX_HEADER = (
+    "<!-- SPDX-License-Identifier: Apache-2.0 -->\n"
+    "<!-- Copyright (c) 2026 Mike Mol -->\n"
+    "\n"
+)
+
+_HEADING = "# A title\n"
+
+_PROSE = "Prose where a title should be.\n"
+
+_FIRST_LINE_RULE = "MD041"
+
+
+def _first_line_findings(doc: Path, text: str) -> list[lint.Finding]:
+    """Write `text` and return its first-line findings.
+
+    Returns:
+        every MD041 finding the shape linter reports on the written document.
+
+    """
+    doc.write_text(text, encoding="utf-8")
+    return [f for f in lint.shape(doc) if f.rule == _FIRST_LINE_RULE]
+
+
+def test_a_comment_header_before_a_heading_is_not_a_first_line_finding(doc: Path) -> None:
+    """Check a leading SPDX comment header followed by a heading gives no MD041.
+
+    ⚑⚑⚑ EVERY README HERE WAS REPORTED FOR CARRYING ITS REQUIRED HEADER. A finding every
+    conforming file must trigger is the rule mis-modelling the file.
+    """
+    assert not _first_line_findings(doc, _SPDX_HEADER + _HEADING)
+
+
+def test_a_comment_header_before_prose_is_still_a_first_line_finding(doc: Path) -> None:
+    """Check a comment header followed by PROSE still gives MD041, on the prose line.
+
+    ⚑⚑ THE POSITIVE CONTROL. Skipping the header must not skip the content after it, or the rule
+    would pass every file that opens with a comment.
+    """
+    found = _first_line_findings(doc, _SPDX_HEADER + _PROSE)
+    prose_at = _SPDX_HEADER.count("\n") + 1
+    assert [f.line for f in found] == [prose_at]
+
+
+def test_a_heading_with_no_header_is_not_a_first_line_finding(doc: Path) -> None:
+    """Check a body opening with a heading and no header gives no MD041, as before."""
+    assert not _first_line_findings(doc, _HEADING)
+
+
+def test_a_comment_after_prose_does_not_hide_the_prose(doc: Path) -> None:
+    """Check prose, then a comment, then a heading still gives MD041 on the first line.
+
+    ⚑ ONLY A LEADING BLOCK IS SKIPPED. A comment later in the body is not a header, and the
+    prose before it is the first line the rule judges.
+    """
+    found = _first_line_findings(doc, _PROSE + "\n" + _SPDX_HEADER + _HEADING)
+    assert [f.line for f in found] == [1]

@@ -66,6 +66,11 @@ _TABLE_ROW = re.compile(r"^\s{0,3}\|")
 # column count. ⚑ Its own cell count is the header's, and it is not itself measured against one.
 _DELIMITER = re.compile(r"^\s{0,3}\|[\s:|-]+\|?\s*$")
 
+# An HTML comment's delimiters. ⚑ A LEADING BLOCK OF WHOLE COMMENTS is skipped by the first-line
+# rule, as markdownlint does, because a licence header is not where a title could live.
+_COMMENT_OPEN = "<!--"
+_COMMENT_CLOSE = "-->"
+
 
 class Finding(NamedTuple):
     """One lint finding: where, which rule, and what it saw.
@@ -179,6 +184,45 @@ def _ragged_rows(lines: list[str], offset: int) -> list[Finding]:
     return found
 
 
+def _first_content(lines: list[str]) -> int | None:
+    """Return the index of the body's first line that is neither blank nor a leading comment.
+
+    ⚑⚑⚑ EVERY README IN THIS REPOSITORY WAS REPORTED, and every one was conforming. Each opens
+    with the required SPDX licence header — two `<!-- … -->` lines — then its `# Title`. A finding
+    that every conforming file must trigger is the rule mis-modelling the file, not a defect in it.
+    Markdownlint's own first-line rule skips leading HTML comments exactly as it skips frontmatter:
+    both are content no reader sees, and neither is where a title could live.
+
+    ⚑⚑ ONLY A LEADING BLOCK, AND ONLY WHOLE COMMENTS. A comment is skipped when its line OPENS
+    with `<!--` and the `-->` that closes it — on that line or a later one — ends its line.
+    Anything after the closer, an unterminated opener, or any other line is content, and the scan
+    stops there: prose before a comment is still the first line, so the rule still fires on it.
+
+    Returns:
+        the index of the first content line, or None for a body with none.
+
+    """
+    # ⚑ WHERE AN OPEN COMMENT BEGAN, or None outside one. An unterminated comment is not a
+    # header, so its opener is what the rule reports.
+    opened: int | None = None
+    for i, line in enumerate(lines):
+        text = line.strip()
+        if opened is None:
+            if not text:
+                continue
+            if not text.startswith(_COMMENT_OPEN):
+                return i
+            opened = i
+            text = text[len(_COMMENT_OPEN):]
+        closer = text.find(_COMMENT_CLOSE)
+        if closer == -1:
+            continue
+        if text[closer + len(_COMMENT_CLOSE):].strip():
+            return i
+        opened = None
+    return opened
+
+
 def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
     """Return every shape finding in the document body.
 
@@ -219,9 +263,11 @@ def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
 
     # ⚑ THE FIRST-LINE RULE IS A PROPERTY OF THE BODY, NOT OF THE FILE. A document opening with
     # frontmatter opens, as far as this rule is concerned, at its first body line.
-    first = next((line for line in lines if line.strip()), "")
-    if first and not first.startswith("#"):
-        rows.append(Finding(line=offset + 1, rule="MD041",
+    # ⚑ A LEADING COMMENT HEADER IS SKIPPED THE SAME WAY — see `_first_content` — and the
+    # finding names the line the rule actually judged.
+    first = _first_content(lines)
+    if first is not None and not lines[first].startswith("#"):
+        rows.append(Finding(line=offset + first + 1, rule="MD041",
                             detail="body does not open with a heading"))
     # ⚑ IN DOCUMENT ORDER, because the ragged-row pass runs first and would otherwise report every
     # one of its findings ahead of every other rule's. A reader walks a lint report top to bottom

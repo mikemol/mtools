@@ -1318,3 +1318,37 @@
             reach.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_fenced_twin_of_a_real_heading_leaves_the_contract_clean},
 }
+
+@misc{mdstruct-lint-comment-header-before-a-heading-is-not-a-first-line-finding,
+  section = {lint},
+  title  = {Check a leading SPDX comment header followed by a heading gives no MD041},
+  claim  = {Check a leading SPDX comment header followed by a heading gives no MD041. EVERY README
+            HERE WAS REPORTED FOR CARRYING ITS REQUIRED HEADER. A finding every
+            conforming file must trigger is the rule mis-modelling the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_comment_header_before_a_heading_is_not_a_first_line_finding},
+}
+
+@misc{mdstruct-lint-comment-header-before-prose-is-still-a-first-line-finding,
+  section = {lint},
+  title  = {Check a comment header followed by PROSE still gives MD041, on the prose line},
+  claim  = {Check a comment header followed by PROSE still gives MD041, on the prose line. THE
+            POSITIVE CONTROL. Skipping the header must not skip the content after it, or
+            the rule would pass every file that opens with a comment.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_comment_header_before_prose_is_still_a_first_line_finding},
+}
+
+@misc{mdstruct-lint-heading-with-no-header-is-not-a-first-line-finding,
+  section = {lint},
+  title  = {Check a body opening with a heading and no header gives no MD041, as before},
+  claim  = {Check a body opening with a heading and no header gives no MD041, as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_heading_with_no_header_is_not_a_first_line_finding},
+}
+
+@misc{mdstruct-lint-comment-after-prose-does-not-hide-the-prose,
+  section = {lint},
+  title  = {Check prose, then a comment, then a heading still gives MD041 on the first line},
+  claim  = {Check prose, then a comment, then a heading still gives MD041 on the first line. ONLY A
+            LEADING BLOCK IS SKIPPED. A comment later in the body is not a header, and
+            the prose before it is the first line the rule judges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_comment_after_prose_does_not_hide_the_prose},
+}
