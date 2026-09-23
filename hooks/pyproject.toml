@@ -67,6 +67,7 @@ mikemol-hook-no-chaining = "mikemol.hooks.no_chaining:main"
 # package*, with the tests passing.
 mikemol-hook-no-verify = "mikemol.hooks.no_verify:main"
 mikemol-hook-shellcheck = "mikemol.hooks.shellcheck:main"
+mikemol-hook-pycheck = "mikemol.hooks.pycheck:main"
 # ⚑ THE SAME LINTER BY HAND — one file, one tree, one command — and deliberately NOT named
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that
 # requires every hook script to be invoked keys on that prefix.

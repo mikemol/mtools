@@ -32,6 +32,10 @@
           {
             "type": "command",
             "command": "SHELLCHECK_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-shellcheck\""
+          },
+          {
+            "type": "command",
+            "command": "PYCHECK_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-pycheck\""
           }
         ]
       }
