@@ -19,6 +19,7 @@ under `--check-evidence`, never as the bare check.
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -30,6 +31,9 @@ if TYPE_CHECKING:
 
 _DROPPED = "dropped"
 _PATH_TRIM = ",;:()[]'\"`"
+# ⚑ A BAZEL LABEL IS NOT A PATH: `//pkg:f`, `@repo//pkg:f`, `@@//pkg:f`. summit's W37 evidence
+# names `//paperkit:components.bzl`, which `--check-evidence` reported missing.
+_LABEL = re.compile(r"@{0,2}[\w.~+-]*//")
 
 
 def _claimed(state: State) -> list[str]:
@@ -68,14 +72,32 @@ def duplicates(state: State) -> list[str]:
     return [f"{sym}: claimed {n} times" for sym, n in sorted(counts.items()) if n > 1]
 
 
+def historical(rec: Json) -> bool:
+    """Say whether a residue record is an admitted historical name: not `W<n>`, with a reason.
+
+    ⚑ OPERATOR RULING: summit's `W50b` was issued by a tick that broke the integer rule. It is
+    admitted in residue ONLY, and only with a reason, so a stale reference resolves to "W50b,
+    residue, here's why". It is never counted against `counter` (it has no number).
+
+    Returns:
+        True for a non-`W<n>` symbol whose `reason` is non-blank.
+
+    """
+    return symbol_number(text(rec, "symbol")) is None and bool(text(rec, "reason").strip())
+
+
 def malformed(state: State) -> list[str]:
     """Report a symbol that is not `W<n>` — refused, never `int()`-ed into a crash.
+
+    A historical name in residue with a reason is admitted; live, or reasonless, it is refused.
 
     Returns:
         one finding per malformed symbol.
 
     """
-    return [f"{sym!r}: not a W<n> symbol" for sym in _claimed(state) if symbol_number(sym) is None]
+    live = [text(w, "symbol") for w in state.waypoints]
+    dead = [text(r, "symbol") for r in state.residue if not historical(r)]
+    return [f"{sym!r}: not a W<n> symbol" for sym in (*live, *dead) if symbol_number(sym) is None]
 
 
 def above_counter(state: State) -> list[str]:
@@ -199,14 +221,14 @@ def check(state: State) -> list[str]:
 
 
 def _absolute_paths(rec: Json) -> list[str]:
-    """Pick the absolute-path tokens out of a record's evidence.
+    """Pick the absolute-path tokens out of a record's evidence; a bazel label is not one.
 
     Returns:
         the tokens, trimmed of surrounding punctuation.
 
     """
     tokens = (token.strip(_PATH_TRIM) for token in text(rec, "evidence").split())
-    return [token for token in tokens if token.startswith("/")]
+    return [token for token in tokens if token.startswith("/") and not _LABEL.match(token)]
 
 
 def evidence_findings(state: State) -> list[str]:

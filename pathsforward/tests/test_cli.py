@@ -216,6 +216,15 @@ def test_check_refuses_a_malformed_symbol_without_crashing(tmp_path: Path) -> No
     assert _run(_file(tmp_path, [_wp("W1"), _wp("W2"), _wp("Wx")]), "--check") == _REFUSED
 
 
+def test_check_admits_a_historical_residue_name_and_show_resolves_it(
+        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """A residue `W50b` with a reason passes --check, and --show resolves it with its reason."""
+    residue = [{"symbol": "W3", "reason": "why"}, {"symbol": "W50b", "reason": "historical"}]
+    path = _file(tmp_path, residue=residue)
+    assert (_run(path, "--check"), _run(path, "--show", "W50b")) == (_OK, _OK)
+    assert '"reason": "historical"' in capsys.readouterr().out
+
+
 def test_check_refuses_a_duplicate(tmp_path: Path) -> None:
     """A duplicate symbol is refused (el-openglo passed it)."""
     assert _run(_file(tmp_path, [_wp("W1"), _wp("W1"), _wp("W2")]), "--check") == _REFUSED

@@ -224,6 +224,15 @@ def test_arm_records_job_and_heartbeat() -> None:
     assert (state.doc["job_id"], state.doc["heartbeat"]) == ("job-9", _NOW)
 
 
+def test_arm_keeps_the_outgoing_job_as_predecessor() -> None:
+    """Re-arming records the outgoing job_id as predecessor_job_id before overwriting it."""
+    old, new = "job-old", "job-new"
+    state = _state()
+    state.doc["job_id"] = old
+    ops.arm(state, new, _NOW)
+    assert (state.doc.get("predecessor_job_id"), state.doc["job_id"]) == (old, new)
+
+
 def test_arm_refuses_an_empty_job() -> None:
     """An empty job id is refused."""
     with pytest.raises(ops.RefusedError, match="job id is empty"):

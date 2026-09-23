@@ -22,6 +22,16 @@ Rec = dict[str, object]
 
 _COUNTER = 3
 _ABOVE = 999
+_BAD = "Wx"
+_HISTORICAL = "W50b"
+_HISTORICAL_REASON = "issued by a tick that broke the integer rule; kept as a historical name"
+_MISSING = "/nonexistent/x"
+# summit's W37 evidence, verbatim in the parts that name labels, plus one real missing path.
+_W37_EVIDENCE = (
+    "Summit ran it: exit 1, 'state=open, bazel exit 7: Unable to load package for "
+    "//paperkit:components.bzl' — F-arm on a synthetic dep: @@//pkg:f → open, //pkg:f from "
+    f"inside the dep → @dep//pkg:f closed. Also {_MISSING} is missing."
+)
 
 
 def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
@@ -166,6 +176,31 @@ def test_evidence_naming_a_missing_path_is_found(tmp_path: Path) -> None:
     state = _state(tmp_path, waypoints=[_wp("W1", evidence=ev), _wp("W2")])
     assert chk.evidence_findings(state) == [
         f"W1: evidence names {tmp_path}/gone.txt, which does not exist"]
+
+
+def test_a_historical_name_in_residue_with_a_reason_is_admitted(tmp_path: Path) -> None:
+    """`W50b` in residue with a reason is admitted; a live `Wx` beside it is still found."""
+    state = _state(tmp_path, waypoints=[_wp("W1"), _wp("W2"), _wp(_BAD)],
+                   residue=[_res("W3"), _res(_HISTORICAL, _HISTORICAL_REASON)])
+    assert chk.malformed(state) == [f"{_BAD!r}: not a W<n> symbol"]
+
+
+def test_a_historical_name_is_refused_live(tmp_path: Path) -> None:
+    """`W50b` in the live waypoints is refused, reason or not."""
+    state = _state(tmp_path, waypoints=[_wp("W1"), _wp("W2"), _wp(_HISTORICAL)])
+    assert chk.malformed(state) == [f"{_HISTORICAL!r}: not a W<n> symbol"]
+
+
+def test_a_reasonless_historical_name_in_residue_is_refused(tmp_path: Path) -> None:
+    """`W50b` in residue with a blank reason is refused as malformed."""
+    state = _state(tmp_path, residue=[_res("W3"), _res(_HISTORICAL, "  ")])
+    assert chk.malformed(state) == [f"{_HISTORICAL!r}: not a W<n> symbol"]
+
+
+def test_a_bazel_label_is_not_an_evidence_path(tmp_path: Path) -> None:
+    """Summit's W37 labels are not reported; a real missing path beside them is (control)."""
+    state = _state(tmp_path, waypoints=[_wp("W1", evidence=_W37_EVIDENCE), _wp("W2")])
+    assert chk.evidence_findings(state) == [f"W1: evidence names {_MISSING}, which does not exist"]
 
 
 def test_the_bare_check_does_not_read_evidence(tmp_path: Path) -> None:

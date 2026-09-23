@@ -381,13 +381,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_no_rules_emit_no_block},
 }
 
-@misc{pathsforward-payload-rules-are-dropped-last-and-named,
-  section = {payload},
-  title  = {An over-budget preamble is dropped at the last rung and named with its line count},
-  claim  = {An over-budget preamble is dropped at the last rung and named with its line count.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_rules_are_dropped_last_and_named},
-}
-
 @misc{pathsforward-payload-scheduler-verbs-come-from-bindings,
   section = {payload},
   title  = {A bound capability is named by its binding; an unbound one by its capability},
@@ -421,13 +414,6 @@
   title  = {A collapsed stanza within CLIP is its first line unchanged},
   claim  = {A collapsed stanza within CLIP is its first line unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_short_line_is_kept},
-}
-
-@misc{pathsforward-payload-ladder-adds-the-rules-rung-only-with-rules,
-  section = {payload},
-  title  = {The last rung (drop the rules) exists only when there are rules to drop},
-  claim  = {The last rung (drop the rules) exists only when there are rules to drop.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_ladder_adds_the_rules_rung_only_with_rules},
 }
 
 @misc{pathsforward-ops-find-resolves-a-live-symbol,
@@ -1095,4 +1081,104 @@
   title  = {With no mode the summary is selected; a flag or a value selects its mode},
   claim  = {With no mode the summary is selected; a flag or a value selects its mode.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_mode_defaults_to_the_summary},
+}
+
+@misc{pathsforward-check-historical-name-in-residue-with-a-reason-is-admitted,
+  section = {check},
+  title  = {`W50b` in residue with a reason is admitted; a live `Wx` beside it is still found},
+  claim  = {`W50b` in residue with a reason is admitted; a live `Wx` beside it is still found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_historical_name_in_residue_with_a_reason_is_admitted},
+}
+
+@misc{pathsforward-check-historical-name-is-refused-live,
+  section = {check},
+  title  = {`W50b` in the live waypoints is refused, reason or not},
+  claim  = {`W50b` in the live waypoints is refused, reason or not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_historical_name_is_refused_live},
+}
+
+@misc{pathsforward-check-reasonless-historical-name-in-residue-is-refused,
+  section = {check},
+  title  = {`W50b` in residue with a blank reason is refused as malformed},
+  claim  = {`W50b` in residue with a blank reason is refused as malformed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_reasonless_historical_name_in_residue_is_refused},
+}
+
+@misc{pathsforward-check-bazel-label-is-not-an-evidence-path,
+  section = {check},
+  title  = {Summit's W37 labels are not reported; a real missing path beside them is (control)},
+  claim  = {Summit's W37 labels are not reported; a real missing path beside them is (control).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_bazel_label_is_not_an_evidence_path},
+}
+
+@misc{pathsforward-cli-check-admits-a-historical-residue-name-and-show-resolves-it,
+  section = {cli},
+  title  = {A residue `W50b` with a reason passes --check, and --show resolves it with its reason},
+  claim  = {A residue `W50b` with a reason passes --check, and --show resolves it with its reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_admits_a_historical_residue_name_and_show_resolves_it},
+}
+
+@misc{pathsforward-ops-arm-keeps-the-outgoing-job-as-predecessor,
+  section = {ops},
+  title  = {Re-arming records the outgoing job_id as predecessor_job_id before overwriting it},
+  claim  = {Re-arming records the outgoing job_id as predecessor_job_id before overwriting it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_arm_keeps_the_outgoing_job_as_predecessor},
+}
+
+@misc{pathsforward-payload-standing-rules-survive-the-last-rung,
+  section = {payload},
+  title  = {On the last rung the standing list is present while host and collapsed lines are gone},
+  claim  = {On the last rung the standing list is present while host and collapsed lines are gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_standing_rules_survive_the_last_rung},
+}
+
+@misc{pathsforward-payload-standing-plus-first-step-over-budget-is-refused-with-both-sizes,
+  section = {payload},
+  title  = {Standing rules and a first ready step that cannot fit together are refused, sized},
+  claim  = {Standing rules and a first ready step that cannot fit together are refused, sized.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_standing_plus_first_step_over_budget_is_refused_with_both_sizes},
+}
+
+@misc{pathsforward-payload-ladder-adds-the-host-rung-only-with-a-host,
+  section = {payload},
+  title  = {The host rung exists only with a host block; every ladder ends by dropping collapsed},
+  claim  = {The host rung exists only with a host block; every ladder ends by dropping collapsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_ladder_adds_the_host_rung_only_with_a_host},
+}
+
+@misc{pathsforward-payload-ready-waypoint-is-listed-above-a-blocked-one,
+  section = {payload},
+  title  = {A ready W24 is listed above a blocked W22 that precedes it in the file (skill section 3)},
+  claim  = {A ready W24 is listed above a blocked W22 that precedes it in the file (skill section
+            3).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_ready_waypoint_is_listed_above_a_blocked_one},
+}
+
+@misc{pathsforward-payload-first-ready-step-survives-steps-below-1,
+  section = {payload},
+  title  = {At steps-below-1 the first ready waypoint's step is kept whole below two working ones},
+  claim  = {At steps-below-1 the first ready waypoint's step is kept whole below two working ones.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_first_ready_step_survives_steps_below_1},
+}
+
+@misc{pathsforward-payload-first-ready-step-that-cannot-fit-is-refused,
+  section = {payload},
+  title  = {A first ready step too big for the budget is refused, never collapsed away (D4)},
+  claim  = {A first ready step too big for the budget is refused, never collapsed away (D4).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_first_ready_step_that_cannot_fit_is_refused},
+}
+
+@misc{pathsforward-payload-reconcile-command-is-the-running-script,
+  section = {payload},
+  title  = {Run as the console script, the reconcile line names it by its resolved absolute path},
+  claim  = {Run as the console script, the reconcile line names it by its resolved absolute path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_reconcile_command_is_the_running_script},
+}
+
+@misc{pathsforward-payload-reconcile-command-is-absolute-when-run-otherwise,
+  section = {payload},
+  title  = {Run by pytest, the command is the venv's script or `<python> -m`, and absolute either way},
+  claim  = {Run by pytest, the command is the venv's script or `<python> -m`, and absolute either
+            way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_reconcile_command_is_absolute_when_run_otherwise},
 }

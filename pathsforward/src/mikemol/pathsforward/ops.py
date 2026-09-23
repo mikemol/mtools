@@ -260,6 +260,9 @@ def bump_blocked(state: State, exclude: frozenset[str]) -> list[Nudge]:
 def arm(state: State, job_id: str, now: str) -> None:
     """Record the verified job and the heartbeat (skill section 4.3).
 
+    ⚑ THE OUTGOING `job_id` BECOMES `predecessor_job_id` BEFORE IT IS OVERWRITTEN: it is the job
+    the re-arm must delete. Re-recording the same id keeps the predecessor it already had.
+
     Raises:
         RefusedError: on an empty job id.
 
@@ -267,6 +270,9 @@ def arm(state: State, job_id: str, now: str) -> None:
     if not job_id.strip():
         msg = "armed: the job id is empty"
         raise RefusedError(msg)
+    previous = text(state.doc, "job_id")
+    if previous and previous != job_id:
+        state.doc["predecessor_job_id"] = previous
     state.doc["job_id"] = job_id
     state.doc["heartbeat"] = now
 

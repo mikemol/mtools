@@ -3,9 +3,20 @@
 """The scheduler payload: the queue forced into the tick's context, budgeted, or refused.
 
 ⚑⚑ OPERATOR RULING D4: A PAYLOAD THAT CANNOT FIT IS REFUSED, NEVER TRIMMED SILENTLY. The ladder
-is el-openglo's (residue, then evidence, then steps below the top 5/2/1, then the standing rules),
-and `PayloadOverBudgetError` is raised when even the last rung is over. The survey measured the
-alternatives: mtools emitted 56159 characters under a 12000 budget with `TRUNCATED:` attached.
+drops residue, then evidence, then `host`, then the steps below the top 5/2/1, then the collapsed
+lower waypoints, and `PayloadOverBudgetError` is raised when even the last rung is over. The
+survey measured the alternatives: mtools emitted 56159 characters under a 12000 budget with
+`TRUNCATED:` attached.
+
+⚑⚑ TWO THINGS ARE NEVER A RUNG (coordinator ruling, 2026-09-23): the STANDING RULES (`preamble`
+and `standing`) and the FIRST READY WAYPOINT'S STEP. The rules are the guardrails — among them
+the GIT_*-decoy rule written after a real incident — and a tick that loses them can repeat it;
+the step is the unit of work the tick needs. mtools' W24 once lost its step to `steps-below-1`,
+and the fix for that then dropped the rules instead. When the two together do not fit, the
+payload is refused, naming both sizes.
+
+⚑ LIVE WAYPOINTS ARE LISTED working, ready, blocked (skill section 3), each group in file order.
+A blocked W22 listed above a ready W24 put the tick's attention on the item it cannot work.
 
 ⚑⚑ `truncated` IS EMITTED ONLY WHEN A RUNG DROPPED SOMETHING, and the budget is measured WITH the
 marker on. sre's was a constant True (its 5552-character fixture payload said it was truncated),
@@ -16,45 +27,73 @@ still be over by the marker's length.
 `state_path` from the document, so a payload built from a scratch copy named the LIVE file and
 every copy-based test targeted live.
 
+⚑ THE RECONCILE COMMAND IS ABSOLUTE. A cron tick's PATH does not carry the venv, so the bare
+`mikemol-paths-forward` it once named did not resolve there.
+
 ⚑ THE FORMAT IS el-openglo's TEXT (D6, pending the operator), made repo-neutral: the scheduler
 verbs come from the file's `bindings`, and there is no repo-specific ground-truth command. The
-standing rules are three declared keys, emitted verbatim: el-openglo's `preamble`, and mtools'
-`standing` (a list) and `host` (an object).
+rules are three declared keys, emitted verbatim: el-openglo's `preamble`, and mtools'
+`standing` (a list) and `host` (an object). `host` describes the machine, not a guardrail, so
+it is droppable.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward.digest import v2
 from mikemol.pathsforward.model import strlist, text, ticks
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from mikemol.pathsforward.model import Json, State
 
+PROG = "mikemol-paths-forward"
 PAYLOAD_BUDGET = 6000
 CLIP = 160
 _ELLIPSIS = "..."
 _EVIDENCE = "      evidence:"
 _TOP_STEPS = (5, 2, 1)
 _HIDDEN = ("done", "dropped")
+_READY = "ready"
+_RANK: dict[str, int] = {"working": 0, _READY: 1, "blocked": 2}
 
 
 class PayloadOverBudgetError(RuntimeError):
     """Even the last rung is over budget; arming with it would be arming with a lie."""
 
 
+def script_command() -> str:
+    """Name this tool by an absolute path, because a cron tick's PATH does not carry the venv.
+
+    Tried in order: the running console script (`sys.argv[0]`, resolved), the console script
+    beside the running interpreter, then that interpreter with `-m`.
+
+    Returns:
+        an absolute command.
+
+    """
+    script = Path(sys.argv[0])
+    if script.name == PROG and script.is_file():
+        return str(script.resolve())
+    python = Path(sys.executable).absolute()
+    sibling = python.parent / PROG
+    if sibling.is_file():
+        return str(sibling)
+    return f"{python} -m mikemol.pathsforward"
+
+
 @dataclass(frozen=True)
 class Request:
-    """What a payload is built from: the state, where it was read, and when."""
+    """What a payload is built from: the state, where it was read, when, and by which command."""
 
     state: State
     state_path: Path
     generated_at: str
     budget: int = PAYLOAD_BUDGET
+    command: str = field(default_factory=script_command)
 
 
 @dataclass(frozen=True)
@@ -64,7 +103,8 @@ class _Rung:
     steps: int
     evidence: bool
     residue: bool
-    rules: bool
+    host: bool
+    collapsed: bool
     dropped: tuple[str, ...]
 
 
@@ -93,7 +133,7 @@ def header(req: Request) -> list[str]:
         f"state_path={path}",
         f"project_root={text(state.doc, 'project_root')}",
         f"counter={state.counter} state_hash={v2(state.waypoints)} generated_at={req.generated_at}",
-        (f"Reconcile first: `mikemol-paths-forward --state {path} --verify <state_hash>`; "
+        (f"Reconcile first: `{req.command} --state {path} --verify <state_hash>`; "
          "exit 4 means the FILE wins."),
         (f"Re-arm when the hash changes: {_binding(state, 'SCHEDULE_CREATE')} a fresh job from "
          f"`--payload`, verify with {_binding(state, 'SCHEDULE_LIST')}, THEN "
@@ -102,11 +142,11 @@ def header(req: Request) -> list[str]:
     ]
 
 
-def rules(state: State) -> list[str]:
-    """Build the standing-rules block: `preamble`, `standing` and `host`, verbatim.
+def guards(state: State) -> list[str]:
+    """Build the standing rules every rung keeps: `preamble` and `standing`, verbatim.
 
     Returns:
-        the block's lines; [] when none of the three keys is set.
+        the block's lines; [] when neither key is set.
 
     """
     out: list[str] = []
@@ -117,11 +157,31 @@ def rules(state: State) -> list[str]:
     standing = strlist(state.doc, "standing")
     if standing:
         out += ["standing:", *(f"  - {line}" for line in standing)]
+    return out
+
+
+def host_block(state: State) -> list[str]:
+    """Build the droppable `host` block, verbatim.
+
+    Returns:
+        the block's lines; [] when `host` is unset or empty.
+
+    """
     host = state.doc.get("host")
     if isinstance(host, dict) and host:
         pairs = cast("Json", host)
-        out += ["host:", *(f"  {key}={_host_value(value)}" for key, value in pairs.items())]
-    return out
+        return ["host:", *(f"  {key}={_host_value(value)}" for key, value in pairs.items())]
+    return []
+
+
+def rules(state: State) -> list[str]:
+    """Build the whole rules block: the standing rules, then `host`.
+
+    Returns:
+        the block's lines; [] when none of the three keys is set.
+
+    """
+    return guards(state) + host_block(state)
 
 
 def _host_value(value: object) -> str:
@@ -166,29 +226,81 @@ def clip(block: str) -> str:
     return head if len(head) <= CLIP else head[: CLIP - len(_ELLIPSIS)] + _ELLIPSIS
 
 
-def ladder(n_live: int, *, has_rules: bool) -> list[_Rung]:
+def _rank(w: Json) -> int:
+    """Rank a live waypoint's status: working, ready, blocked, then anything else.
+
+    Returns:
+        the rank.
+
+    """
+    return _RANK.get(text(w, "status"), len(_RANK))
+
+
+def ordered(state: State) -> list[Json]:
+    """List the live waypoints by status rank, each rank in file order (the sort is stable).
+
+    Returns:
+        the live waypoints.
+
+    """
+    return sorted((w for w in state.waypoints if text(w, "status") not in _HIDDEN), key=_rank)
+
+
+def _pinned(live: list[Json]) -> int:
+    """Find the first ready waypoint, whose stanza every rung keeps whole.
+
+    Returns:
+        its index, or 0 when none is ready (the top stanza is always kept).
+
+    """
+    return next((i for i, w in enumerate(live) if text(w, "status") == _READY), 0)
+
+
+def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
     """List the rungs in order, from everything to the least a tick can act on.
 
     Returns:
-        the rungs; the last drops the standing rules only when there are some.
+        the rungs; the host rung exists only when there is a host block to drop.
 
     """
     rungs = [
-        _Rung(n_live, evidence=True, residue=True, rules=True, dropped=()),
-        _Rung(n_live, evidence=True, residue=False, rules=True, dropped=("residue",)),
-        _Rung(n_live, evidence=False, residue=False, rules=True,
+        _Rung(n_live, evidence=True, residue=True, host=True, collapsed=True, dropped=()),
+        _Rung(n_live, evidence=True, residue=False, host=True, collapsed=True,
+              dropped=("residue",)),
+        _Rung(n_live, evidence=False, residue=False, host=True, collapsed=True,
               dropped=("residue", "evidence")),
     ]
+    trimmed: tuple[str, ...] = ("residue", "evidence")
+    if has_host:
+        trimmed += ("host",)
+        rungs.append(_Rung(n_live, evidence=False, residue=False, host=False, collapsed=True,
+                           dropped=trimmed))
     rungs += [
-        _Rung(top, evidence=False, residue=False, rules=True,
-              dropped=("residue", "evidence", f"steps-below-{top}"))
+        _Rung(top, evidence=False, residue=False, host=False, collapsed=True,
+              dropped=(*trimmed, f"steps-below-{top}"))
         for top in _TOP_STEPS
     ]
-    if has_rules:
-        last = _TOP_STEPS[-1]
-        rungs.append(_Rung(last, evidence=False, residue=False, rules=False,
-                           dropped=("residue", "evidence", f"steps-below-{last}", "rules")))
+    last = _TOP_STEPS[-1]
+    rungs.append(_Rung(last, evidence=False, residue=False, host=False, collapsed=False,
+                       dropped=(*trimmed, f"steps-below-{last}", "collapsed")))
     return rungs
+
+
+def _waypoint_lines(live: list[Json], rung: _Rung) -> list[str]:
+    """Render the live waypoints one rung keeps: the top and the first ready whole.
+
+    Returns:
+        the lines; a collapsed waypoint is one clipped line, or absent on the last rung.
+
+    """
+    keep = _pinned(live)
+    out: list[str] = []
+    for i, w in enumerate(live):
+        if i < rung.steps or i == keep:
+            out.append(stanza(w))
+        elif rung.collapsed:
+            out.append(clip(stanza(w)))
+    return out
 
 
 def _compose(req: Request, rung: _Rung) -> str:
@@ -199,14 +311,12 @@ def _compose(req: Request, rung: _Rung) -> str:
 
     """
     state = req.state
-    live = [stanza(w) for w in state.waypoints if text(w, "status") not in _HIDDEN]
     done = [text(w, "symbol") for w in state.waypoints if text(w, "status") == "done"]
-    block = rules(state)
-    lines = header(req)
-    if rung.rules:
-        lines += block
+    lines = header(req) + guards(state)
+    if rung.host:
+        lines += host_block(state)
     lines.append("waypoints:")
-    lines += live[: rung.steps] + [clip(s) for s in live[rung.steps:]]
+    lines += _waypoint_lines(ordered(state), rung)
     if done:
         lines.append(f"  done ({len(done)}): {', '.join(done)}")
     if rung.residue and state.residue:
@@ -216,9 +326,21 @@ def _compose(req: Request, rung: _Rung) -> str:
     if not rung.evidence:
         body = "\n".join(ln for ln in body.splitlines() if not ln.startswith(_EVIDENCE))
     if rung.dropped:
-        named = [f"rules({len(block)}-lines)" if d == "rules" else d for d in rung.dropped]
-        body += f"\ntruncated=true dropped={','.join(named)} - read state_path for the rest."
+        body += (f"\ntruncated=true dropped={','.join(rung.dropped)} - read state_path "
+                 "for the rest.")
     return body
+
+
+def _kept_sizes(state: State) -> tuple[int, int]:
+    """Measure the two things no rung drops: the standing rules and the first ready stanza.
+
+    Returns:
+        (standing-rules characters, first-ready-stanza characters).
+
+    """
+    live = ordered(state)
+    step = len(stanza(live[_pinned(live)])) if live else 0
+    return len("\n".join(guards(state))), step
 
 
 def build(req: Request) -> str:
@@ -228,16 +350,18 @@ def build(req: Request) -> str:
         the payload, at most `req.budget` characters.
 
     Raises:
-        PayloadOverBudgetError: when no rung fits.
+        PayloadOverBudgetError: when no rung fits; it names both sizes no rung drops.
 
     """
-    n_live = sum(1 for w in req.state.waypoints if text(w, "status") not in _HIDDEN)
+    rungs = ladder(len(ordered(req.state)), has_host=bool(host_block(req.state)))
     size = 0
-    for rung in ladder(n_live, has_rules=bool(rules(req.state))):
+    for rung in rungs:
         body = _compose(req, rung)
         size = len(body)
         if size <= req.budget:
             return body
+    standing, step = _kept_sizes(req.state)
     msg = (f"payload is {size} characters even at the last rung; the budget is {req.budget}. "
-           "Shorten the top waypoint's next_bounded_step or split the waypoint.")
+           f"The standing rules are {standing} characters and the first ready waypoint's "
+           f"stanza is {step}; neither is ever dropped. Shorten one, or split the waypoint.")
     raise PayloadOverBudgetError(msg)
