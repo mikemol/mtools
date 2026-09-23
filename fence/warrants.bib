@@ -1462,3 +1462,52 @@
   claim  = {THE FIX: the same commit run under `clean_env` leaves the decoy with no refs.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_git_env.py -k test_a_scrubbed_fixture_leaves_the_decoy_empty},
 }
+
+@misc{fence-membudget-cli-retry-off-leaves-a-cap-kill-at-137,
+  section = {membudget_cli},
+  title  = {Without MEMBUDGET_RETRY_OOM a cap kill is 137 after one rung; the control, set, climbs},
+  claim  = {Without MEMBUDGET_RETRY_OOM a cap kill is 137 after one rung; the control, set, climbs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_retry_off_leaves_a_cap_kill_at_137},
+}
+
+@misc{fence-membudget-cli-retry-climbs-to-the-next-bucket-and-records-it,
+  section = {membudget_cli},
+  title  = {A kill at 64 re-enters at 128, which exits 0, and only that clean rung is recorded},
+  claim  = {A kill at 64 re-enters at 128, which exits 0, and only that clean rung is recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_retry_climbs_to_the_next_bucket_and_records_it},
+}
+
+@misc{fence-membudget-cli-retry-stops-at-the-ceiling-with-137,
+  section = {membudget_cli},
+  title  = {Under AGDA_MB_MAX=128 a payload needing 1024 is killed at 64 then 128, and exits 137},
+  claim  = {Under AGDA_MB_MAX=128 a payload needing 1024 is killed at 64 then 128, and exits 137.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_retry_stops_at_the_ceiling_with_137},
+}
+
+@misc{fence-membudget-cli-retry-holds-one-lease-at-a-time,
+  section = {membudget_cli},
+  title  = {Every rung runs under exactly one live lease, and none is left after the climb},
+  claim  = {Every rung runs under exactly one live lease, and none is left after the climb.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_retry_holds_one_lease_at_a_time},
+}
+
+@misc{fence-membudget-cli-auto-sizes-an-agda-compile-from-its-module,
+  section = {membudget_cli},
+  title  = {`auto` on `Heavy.agda` leases the bucket of that module's 600MB, not its label's 40MB},
+  claim  = {`auto` on `Heavy.agda` leases the bucket of that module's 600MB, not its label's 40MB.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_auto_sizes_an_agda_compile_from_its_module},
+}
+
+@misc{fence-membudget-cli-clean-agda-run-records-to-its-module,
+  section = {membudget_cli},
+  title  = {A clean `Light.agda` run appends a `Light.agda` row beside it, and none to the labels},
+  claim  = {A clean `Light.agda` run appends a `Light.agda` row beside it, and none to the labels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_clean_agda_run_records_to_its_module},
+}
+
+@misc{fence-membudget-cli-non-agda-command-keeps-the-label-path,
+  section = {membudget_cli},
+  title  = {No module argument leases the label's bucket; a `.agdai` argument leases its module's},
+  claim  = {No module argument leases the label's bucket; a `.agdai` argument leases its module's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_non_agda_command_keeps_the_label_path},
+}

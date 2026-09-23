@@ -649,6 +649,159 @@ def test_lease_and_deadline_answer_through_label_lease(
     assert _cli(["lease", runs], ctx) == _EXIT_USAGE
 
 
+# --- retry-on-OOM (R3) and the per-module `.agda` key (R5), through the fence seam ---
+
+# The climb: a start rung, the rung above it, a payload that needs the upper one, and one that
+# needs more than any rung the ceiling allows.
+_RUNG_LOW = 64
+_RUNG_HIGH = 128
+_NEEDS_HIGH = 100
+_NEEDS_TOO_MUCH = 1024
+
+# A peak the fake reports for a clean run, in KB, and the whole MB the ledger rounds it to.
+_CLEAN_RSS_KB = 90 * 1024
+_CLEAN_PEAK_MB = 90.0
+
+# The cgroup verdict `autosize.killed_by_cap` reads as the cap's kill.
+_CAP_KILL = ("MEMORY, KILLED (memory.events oom_kill=1 oom=1) — simulated",)
+
+# A module's ledger, as bash's `_record_time` writes it beside the module; the peaks it holds for
+# a heavy and a light module, and the light label peak a label-keyed lease would take instead.
+_MODULE_LEDGER = ".agda-times.tsv"
+_HEAVY_MODULE = "Heavy.agda"
+_LIGHT_MODULE = "Light.agda"
+_CORE_MODULE = "Heavy.agdai"
+_LABEL_PEAK = 40.0
+
+
+@dataclass
+class _OomFence:
+    """A fence that kills any rung below `need_mb` as the cap would, and records every call."""
+
+    ledger: Path
+    need_mb: int
+    calls: list[tuple[int, int]]
+
+    def __call__(self, cmd: Sequence[str], env: Mapping[str, str],
+                 caps: core.Caps) -> core.Result:
+        """Record (rung MB, live leases), then kill below `need_mb` or exit clean.
+
+        Returns:
+            the simulated result.
+
+        """
+        del env
+        mb = int((caps.mem or "0M").removesuffix("M"))
+        self.calls.append((mb, len(admit.Store(self.ledger).read().leases)))
+        if mb < self.need_mb:
+            return core.Result(cmd=tuple(cmd), caps=caps, duration_s=0.0,
+                               exit_code=_SIGKILLED, memory_peak_bytes=None,
+                               bound_by=_CAP_KILL)
+        return core.Result(cmd=tuple(cmd), caps=caps, duration_s=1.0, exit_code=_EXIT_OK,
+                           memory_peak_bytes=None, maxrss_kb=_CLEAN_RSS_KB)
+
+
+def _oom_ctx(ledger: Path, need_mb: int, **extra: str) -> tuple[membudget_cli.Context, _OomFence]:
+    """Return a quiet context over a large pool whose fence is an `_OomFence`, and that fence.
+
+    Returns:
+        the context and the fence.
+
+    """
+    if not ledger.exists():
+        _write(ledger, f"TOTAL_MB {_POOL_MB}\n")
+    fake = _OomFence(ledger, need_mb, [])
+    return membudget_cli.Context(env=_env(ledger, **extra), host=_host(), fence=fake), fake
+
+
+def test_retry_off_leaves_a_cap_kill_at_137(ledger: Path) -> None:
+    """Without MEMBUDGET_RETRY_OOM a cap kill is 137 after one rung; the control, set, climbs."""
+    argv = ["run", str(_RUNG_LOW), "job", "--", "agda"]
+    ctx, fake = _oom_ctx(ledger, _NEEDS_HIGH)
+    assert _cli(argv, ctx) == _SIGKILLED
+    assert [mb for mb, _ in fake.calls] == [_RUNG_LOW]
+    ctx, fake = _oom_ctx(ledger, _NEEDS_HIGH, MEMBUDGET_RETRY_OOM="1")
+    assert _cli(argv, ctx) == _EXIT_OK
+
+
+def test_retry_climbs_to_the_next_bucket_and_records_it(
+        ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """A kill at 64 re-enters at 128, which exits 0, and only that clean rung is recorded."""
+    ctx, fake = _oom_ctx(ledger, _NEEDS_HIGH, MEMBUDGET_RETRY_OOM="1")
+    assert _cli(["run", str(_RUNG_LOW), "job", "--", "agda"], ctx) == _EXIT_OK
+    assert [mb for mb, _ in fake.calls] == [_RUNG_LOW, _RUNG_HIGH]
+    assert f"retrying at {_RUNG_HIGH}MB" in capsys.readouterr().err
+    rows = run_ledger.parse(_runs(ledger).read_text(encoding="utf-8"))
+    assert [(row.label, row.peak_mb) for row in rows] == [("job", _CLEAN_PEAK_MB)]
+
+
+def test_retry_stops_at_the_ceiling_with_137(ledger: Path) -> None:
+    """Under AGDA_MB_MAX=128 a payload needing 1024 is killed at 64 then 128, and exits 137."""
+    ctx, fake = _oom_ctx(ledger, _NEEDS_TOO_MUCH, MEMBUDGET_RETRY_OOM="1",
+                         AGDA_MB_DEFAULT=str(_RUNG_LOW), AGDA_MB_MAX=str(_RUNG_HIGH))
+    assert _cli(["run", str(_RUNG_LOW), "job", "--", "agda"], ctx) == _SIGKILLED
+    assert [mb for mb, _ in fake.calls] == [_RUNG_LOW, _RUNG_HIGH]
+    assert not _runs(ledger).exists()
+
+
+def test_retry_holds_one_lease_at_a_time(ledger: Path) -> None:
+    """Every rung runs under exactly one live lease, and none is left after the climb."""
+    ctx, fake = _oom_ctx(ledger, _NEEDS_TOO_MUCH, MEMBUDGET_RETRY_OOM="1",
+                         AGDA_MB_MAX=str(_NEEDS_TOO_MUCH))
+    assert _cli(["run", str(_RUNG_LOW), "job", "--", "agda"], ctx) == _EXIT_OK
+    assert [live for _, live in fake.calls] == [1] * len(fake.calls)
+    assert len(fake.calls) > 1
+    assert _ids(ledger) == (_POOL_MB, [])
+
+
+def _modules(tmp_path: Path) -> Path:
+    """Write a module ledger, as bash writes it, holding a 600MB heavy and a 40MB light module.
+
+    Returns:
+        the directory the modules and their ledger live in.
+
+    """
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / _MODULE_LEDGER).write_text(
+        f"{_HEAVY_MODULE}\t12.0\t{_BIG_PEAK:g}\n{_LIGHT_MODULE}\t1.0\t{_LABEL_PEAK:g}\n",
+        encoding="utf-8")
+    return src
+
+
+def test_auto_sizes_an_agda_compile_from_its_module(ledger: Path, tmp_path: Path) -> None:
+    """`auto` on `Heavy.agda` leases the bucket of that module's 600MB, not its label's 40MB."""
+    src = _modules(tmp_path)
+    _seed(ledger, "agda", _LABEL_PEAK)
+    argv = ["run", "auto", "agda", "--", "agda", "-c", str(src / _HEAVY_MODULE)]
+    ctx, fake = _oom_ctx(ledger, 0, AGDA_MB_MAX=str(_WIDE_CEILING_MB))
+    assert _cli(argv, ctx) == _EXIT_OK
+    assert fake.calls == [(_BIG_BUCKET, 1)]
+
+
+def test_a_clean_agda_run_records_to_its_module(ledger: Path, tmp_path: Path) -> None:
+    """A clean `Light.agda` run appends a `Light.agda` row beside it, and none to the labels."""
+    src = _modules(tmp_path)
+    ctx, _ = _oom_ctx(ledger, 0)
+    assert _cli(["run", "1", "agda", "--", "agda", str(src / _LIGHT_MODULE)], ctx) == _EXIT_OK
+    rows = run_ledger.parse((src / _MODULE_LEDGER).read_text(encoding="utf-8"))
+    assert [(row.label, row.peak_mb) for row in rows] == [(_LIGHT_MODULE, _CLEAN_PEAK_MB)]
+    assert not _runs(ledger).exists()
+
+
+def test_a_non_agda_command_keeps_the_label_path(ledger: Path, tmp_path: Path) -> None:
+    """No module argument leases the label's bucket; a `.agdai` argument leases its module's."""
+    src = _modules(tmp_path)
+    (src / _MODULE_LEDGER).write_text(f"{_CORE_MODULE}\t12.0\t{_BIG_PEAK:g}\n", encoding="utf-8")
+    _seed(ledger, "ingest", *_SEEDED_PEAKS)
+    ctx, fake = _oom_ctx(ledger, 0, AGDA_MB_MAX=str(_WIDE_CEILING_MB))
+    plain = ["run", "auto", "ingest", "--", "ingest", str(src / "notes.txt")]
+    core_arg = ["run", "auto", "ingest", "--", "ingest", str(src / _CORE_MODULE)]
+    assert _cli(plain, ctx) == _EXIT_OK
+    assert _cli(core_arg, ctx) == _EXIT_OK
+    assert [mb for mb, _ in fake.calls] == [_SEEDED_LEASE, _BIG_BUCKET]
+
+
 # --- the cross-client arm: bash `membudget` on the same ledger ---
 
 @dataclass(frozen=True, slots=True)

@@ -15,13 +15,18 @@ through `admit`, whose rules already take bash's side where the two could differ
 and bash's honour each other's leases (the cross-client arm in `tests/test_membudget_cli.py`).
 
 ⚑⚑ `run` CAPS THE COMMAND AT ITS LEASE, AS BASH'S `MemoryMax` SCOPE DOES. The cap is
-`autosize.rung_caps` — the lease itself, swap forbidden — run by `core.run_once`; nothing about
+`autosize.rung_caps` — the lease itself, swap forbidden — run by `autosize.climb`; nothing about
 the cap is restated here. ⚑ NO FENCE IS A REFUSAL (3), NEVER AN UNCAPPED RUN: bash's `none`
 backend refuses for the same reason — an uncapped payload is the OOM the lease exists to prevent.
 
-⚑⚑ `auto` IS `label_lease.lease` OVER THE RUN LEDGER, WITH THE CEILING PASSED. Bash's label arm
-hands `label_lease` its default only, so `AGDA_MB_MAX` never reached it (A1 of the label-lease
-letter); here both variables reach the one sizing rule, and a clamp says so on stderr.
+⚑⚑ `MEMBUDGET_RETRY_OOM` CLIMBS. Set non-empty (bash's `[ -n … ]`), a rung the cap kills is
+released and the next power-of-two rung admitted, up to the one cap; the last rung's code is the
+outcome. It is `autosize.climb` — one lease at a time, each under the ORIGINAL parent.
+
+⚑⚑ `auto` IS `label_lease` OVER THE RUN'S `History`, WITH THE CEILING PASSED. A command naming a
+module sizes from that module's own ledger; any other from its label's. Bash's label arm hands
+`label_lease` its default only, so `AGDA_MB_MAX` never reached it (A1 of the label-lease letter);
+here both variables reach the one sizing rule, and a clamp says so on stderr.
 
 ⚑ A SCRIPT OF ITS OWN, NOT A MODE OF `mikemol-fence`, for the reason `peaks` gives: that command
 fences whatever follows its flags, so it cannot take a subcommand.
@@ -67,6 +72,10 @@ ENV_DEFAULT_MB = "AGDA_MB_DEFAULT"
 ENV_CEILING_MB = "AGDA_MB_MAX"
 ENV_LABEL_LEDGER = "MEMBUDGET_LABEL_LEDGER"
 ENV_NOLABELLEDGER = "MEMBUDGET_NOLABELLEDGER"
+
+# The caller's declaration that its command re-runs cleanly, so a cap kill may climb (bash's
+# retry block in `cmd_run`; substrate's agda shim sets it on every compile).
+ENV_RETRY_OOM = "MEMBUDGET_RETRY_OOM"
 
 # Bash's values when those are unset — substrate-tuned, and the operator's to override.
 DEFAULT_MB = 192
@@ -202,10 +211,47 @@ def label_ledger_of(env: Mapping[str, str]) -> Path:
 
 
 @dataclass(frozen=True, slots=True)
-class AutoSize:
-    """What `auto` sizes from: the run ledger, the default with no history, and the ceiling."""
+class History:
+    """Where a run's history is read and recorded: the ledger, the key, and the module if any.
+
+    ⚑⚑ TWO KEYS, AS BASH HAS: a command naming a module (`label_lease.module_of`) keys on THAT
+    MODULE's basename, in the ledger beside it; any other keys on its label, in the run ledger. A
+    label-only ledger would put every agda compile on one label's max.
+    """
 
     runs: Path
+    key: str
+    module: Path | None = None
+
+    @classmethod
+    def of(cls, command: Sequence[str], label: str, env: Mapping[str, str]) -> History:
+        """Return the history `command` run under `label` reads and writes.
+
+        Returns:
+            the module's history when an argument names one, else the label's.
+
+        """
+        module = label_lease.module_of(command)
+        if module is None:
+            return cls(label_ledger_of(env), label)
+        return cls(label_lease.module_ledger(module), module.name, module)
+
+    def record(self, result: core.Result, env: Mapping[str, str]) -> None:
+        """Append the row `result` earns, as bash's `_record_time` does.
+
+        ⚑ `MEMBUDGET_NOLABELLEDGER` GATES THE LABEL LEDGER ONLY: bash writes a module's row before
+        it reads that variable, so a module's history is always kept.
+        """
+        if self.module is not None:
+            ledger.record(self.runs, self.key, result)
+        elif not env.get(ENV_NOLABELLEDGER):
+            ledger.record(self.runs, self.key or UNLABELLED, result)
+
+
+@dataclass(frozen=True, slots=True)
+class AutoSize:
+    """What `auto` sizes from and a climb stops at: the default with no history, and the ceiling."""
+
     default_mb: int
     ceiling_mb: int
 
@@ -221,23 +267,25 @@ class AutoSize:
         """
         default = env.get(ENV_DEFAULT_MB)
         ceiling = env.get(ENV_CEILING_MB)
-        return cls(label_ledger_of(env),
-                   megabytes(default, zero_ok=False) if default else DEFAULT_MB,
+        return cls(megabytes(default, zero_ok=False) if default else DEFAULT_MB,
                    megabytes(ceiling, zero_ok=False) if ceiling else CEILING_MB)
 
-    def lease(self, label: str) -> autosize.Sizing:
-        """Return `label`'s lease — `label_lease.lease` over the ledger, the ceiling passed.
+    def lease(self, history: History) -> autosize.Sizing:
+        """Return the lease `history` earns — its module's own peaks, else its label's.
 
         Returns:
             the sizing, `clamped_from` set when the one cap cut it.
 
         """
-        return label_lease.lease(label_lease.read_rows(self.runs), label,
+        if history.module is not None:
+            return label_lease.module_lease(history.module, default_mb=self.default_mb,
+                                            ceiling_mb=self.ceiling_mb)
+        return label_lease.lease(label_lease.read_rows(history.runs), history.key,
                                  default_mb=self.default_mb, ceiling_mb=self.ceiling_mb)
 
     @property
     def cap(self) -> int:
-        """The one cap the sizing obeyed: the ceiling, raised by a larger default."""
+        """The one cap the sizing and the climb obey: the ceiling, raised by a larger default."""
         return autosize.cap_of(self.ceiling_mb, self.default_mb)
 
 
@@ -346,8 +394,8 @@ def _say(text: str) -> None:
     sys.stderr.write(f"membudget: {text}\n")
 
 
-def sized_call(call: RunArgs, env: Mapping[str, str]) -> RunArgs:
-    """Return `call` with `auto` replaced by the lease its label's history earns.
+def sized_call(call: RunArgs, history: History, auto: AutoSize) -> RunArgs:
+    """Return `call` with `auto` replaced by the lease its history earns.
 
     ⚑ A CLAMP IS LOUD: the warning `autosize.clamp_warning` owes goes to stderr, never stdout.
 
@@ -357,40 +405,64 @@ def sized_call(call: RunArgs, env: Mapping[str, str]) -> RunArgs:
     """
     if call.mb is not None:
         return call
-    auto = AutoSize.of(env)
-    got = auto.lease(call.label)
-    warning = autosize.clamp_warning(call.label, got, auto.cap)
+    got = auto.lease(history)
+    warning = autosize.clamp_warning(history.key, got, auto.cap)
     if warning is not None:
         sys.stderr.write(warning + "\n")
     return replace(call, mb=got.mb)
 
 
-def cmd_run(args: Sequence[str], ctx: Context) -> int:
-    """`run MB|auto [LABEL] -- CMD...`: admit, run capped at the lease, release, record.
-
-    ⚑ ONLY A CLEAN RUN IS RECORDED (`ledger.row_of`): a killed run's peak is the cap it hit.
+def _announcer(label: str) -> Callable[[admit.Request, admit.Lease], None]:
+    """Return the narration each admitted rung gets: TOP or SUB, its size, its lease id.
 
     Returns:
-        the command's exit code — 137 when the cap killed it; 3 when no cap could be applied.
+        the callback `autosize.Rig.announce` takes.
 
     """
-    call = sized_call(RunArgs.parse(args), ctx.env)
+    def announce(rung: admit.Request, lease: admit.Lease) -> None:
+        where = "TOP" if rung.parent == admit.NO_PARENT else f"SUB under {rung.parent}"
+        _say(f"{where} lease {rung.mb}MB [{label}] id={lease.lease_id} → MemoryMax={rung.mb}M")
+
+    return announce
+
+
+def _narrate_kills(label: str, results: Sequence[core.Result]) -> None:
+    """Say, for each rung the cap killed, where it died and — when it climbed — where to."""
+    for rung, result in enumerate(results):
+        if not autosize.killed_by_cap(result):
+            continue
+        then = ""
+        if rung + 1 < len(results):
+            then = f" — retrying at {results[rung + 1].caps.mem}B (idempotent)"
+        _say(f"OOM-killed at {result.caps.mem}B [{label}] — {'; '.join(result.bound_by)}{then}")
+
+
+def cmd_run(args: Sequence[str], ctx: Context) -> int:
+    """`run MB|auto [LABEL] -- CMD...`: admit, run capped at the lease, climb, release, record.
+
+    ⚑ ONLY A CLEAN RUN IS RECORDED (`ledger.row_of`): a killed run's peak is the cap it hit — so
+    of a climb, only the rung that finished can earn a row.
+
+    Returns:
+        the last rung's exit code — 137 when the cap killed it; 3 when no cap could be applied.
+
+    """
+    call = RunArgs.parse(args)
+    history = History.of(call.command, call.label, ctx.env)
+    auto = AutoSize.of(ctx.env)
+    call = sized_call(call, history, auto)
     request = request_of(call, ctx.env)
-    store = store_of(ctx.env)
-    with admit.admit(store, request, waiting_of(ctx.env), ctx.host) as lease:
-        where = "TOP" if request.parent == admit.NO_PARENT else f"SUB under {request.parent}"
-        _say(f"{where} lease {request.mb}MB [{call.label}] id={lease.lease_id}"
-             f" → MemoryMax={request.mb}M")
-        try:
-            result = ctx.fence(call.command, {**ctx.env, admit.ENV_PARENT: lease.lease_id},
-                               autosize.rung_caps(request.mb))
-        except FenceUnavailableError as exc:
-            _say(f"REFUSED [{call.label}] — no memory cap can be applied: {exc}")
-            return EXIT_NO_CAP
-    if autosize.killed_by_cap(result):
-        _say(f"OOM-killed at {request.mb}MB [{call.label}] — {'; '.join(result.bound_by)}")
-    if not ctx.env.get(ENV_NOLABELLEDGER):
-        ledger.record(label_ledger_of(ctx.env), call.label or UNLABELLED, result)
+    plan = autosize.Plan(request.mb, auto.cap, retry=bool(ctx.env.get(ENV_RETRY_OOM)),
+                         request=request)
+    rig = autosize.Rig(waiting_of(ctx.env), ctx.host, ctx.env, ctx.fence, _announcer(call.label))
+    try:
+        results = autosize.climb(store_of(ctx.env), call.command, plan, rig)
+    except FenceUnavailableError as exc:
+        _say(f"REFUSED [{call.label}] — no memory cap can be applied: {exc}")
+        return EXIT_NO_CAP
+    _narrate_kills(call.label, results)
+    result = results[-1]
+    history.record(result, ctx.env)
     return core.EXIT_HARNESS if result.exit_code is None else result.exit_code
 
 

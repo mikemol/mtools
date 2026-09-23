@@ -12,7 +12,8 @@ larger of `margin * slowest wall` and `hang_multiple * slowest CPU`, so an obser
 never killed and a multi-threaded run (CPU > wall) is not either.
 
 ⚑ PER-LABEL IS THE CALLER'S KEY for work that runs once per label; it is the wrong key for per-core
-work, and this module does not choose.
+work, which `module_lease` keys by the module argument instead (substrate `_auto_mb`'s `.agda` arm).
+The caller chooses; `module_of` states the rule it chooses by.
 
 ⚑ A MODULE OF ITS OWN, NOT A MODE OF `mikemol-fence`, for the reason `peaks` gives: that command
 fences whatever follows its flags. `python -m mikemol.fence.label_lease` is the entry until the
@@ -169,6 +170,58 @@ def read_rows(path: Path) -> list[ledger.Row]:
         return ledger.parse(path.read_text(encoding="utf-8", errors="replace"))
     except OSError:
         return []
+
+
+# --- the per-module key: substrate `_auto_mb`'s `.agda` arm and `_record_time`'s write side ---
+
+# What makes an argument a module identity, and the ledger that sits beside it. Spelled as bash
+# spells them (`*.agda|*.agdai`, `$(dirname "$mod")/.agda-times.tsv`) so the two clients share it.
+MODULE_SUFFIXES = (".agda", ".agdai")
+MODULE_LEDGER_NAME = ".agda-times.tsv"
+
+
+def module_of(command: Iterable[str]) -> Path | None:
+    """Return the command's module — its LAST argument ending `.agda` or `.agdai` — or None.
+
+    ⚑⚑ THE KEY RULE, EXPLICIT: the module is the last such argument ANYWHERE in the command (bash
+    scans every "$@" word, the program included); its history lives in `.agda-times.tsv` in THAT
+    ARGUMENT's directory, keyed by its BASENAME. So a `.agdai` under `_build/` reads a ledger
+    beside itself, not the source's — a decode and a compile are different workloads on one name.
+
+    Returns:
+        the module's path as given, or None when no argument names one.
+
+    """
+    found = [arg for arg in command if arg.endswith(MODULE_SUFFIXES)]
+    return Path(found[-1]) if found else None
+
+
+def module_ledger(module: Path) -> Path:
+    """Return the ledger that holds `module`'s history: `.agda-times.tsv` beside it.
+
+    Returns:
+        the path.
+
+    """
+    return module.parent / MODULE_LEDGER_NAME
+
+
+def module_lease(module: Path, *, default_mb: int, ceiling_mb: int) -> autosize.Sizing:
+    """Return `module`'s lease — `autosize.size` over THAT MODULE's peaks, never its label's.
+
+    ⚑ A MISSING OR UNREADABLE LEDGER IS NO HISTORY, and no history is the default, as bash's
+    `[ -f "$led" ] || { echo "$def"; return; }`.
+
+    Returns:
+        the sizing; `clamped_from` set only when the cap cut it.
+
+    """
+    try:
+        text = module_ledger(module).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        text = ""
+    return autosize.size(ledger.key_peaks(text, module.name), default=default_mb,
+                         ceiling=ceiling_mb)
 
 
 @dataclass(frozen=True, slots=True)

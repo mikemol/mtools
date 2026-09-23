@@ -24,19 +24,20 @@ it. A payload that `kill -9`s itself must not climb.
 ⚑ THE CEILING HAS NO UNIVERSAL DEFAULT. The origin's 384 is substrate-tuned, and the origin itself
 calls whether it is right UNRESOLVED; it is a parameter here.
 
-CONSUMED BY: the `mikemol-membudget` console script that closes the fence set.
+CONSUMED BY: the `mikemol-membudget` console script, whose `run` climbs under MEMBUDGET_RETRY_OOM.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import os
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from mikemol.fence import admit, core
 from mikemol.fence.ledger import bucket
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Mapping, Sequence
 
     from mikemol.fence.core import Result
 
@@ -167,18 +168,56 @@ def rung_caps(mb: int) -> core.Caps:
     return core.Caps(mem=f"{mb}M", swap="0")
 
 
-def climb(
-    store: admit.Store,
-    cmd: Sequence[str],
-    plan: Plan,
-    waiting: admit.Waiting = admit.WAIT,
-    host: admit.Host = admit.HOST,
-) -> list[Result]:
+def _run_once(cmd: Sequence[str], env: Mapping[str, str], caps: core.Caps) -> Result:
+    """Run one rung through `core.run_once`, looked up at call time so a test's seam reaches it.
+
+    Returns:
+        the rung's result.
+
+    """
+    return core.run_once(cmd, caps, env)
+
+
+def _silent(_rung: admit.Request, _lease: admit.Lease) -> None:
+    """Announce nothing — a climb's default narration."""
+
+
+def _environ() -> Mapping[str, str]:
+    """Return the live process environment.
+
+    Returns:
+        `os.environ`.
+
+    """
+    return os.environ
+
+
+@dataclass(frozen=True, slots=True)
+class Rig:
+    """What a climb reads from the world: admission's waiting and host, the env, and the runner.
+
+    ⚑⚑ `env` REACHES EVERY RUNG, AS `core.run_once` GAINED IT IN 26d717d, with `$MEMBUDGET_PARENT`
+    set to THAT rung's lease — as bash exports it before its scope — so a lease the payload takes
+    nests under the live rung. `announce` is told each admitted rung before it runs.
+    """
+
+    waiting: admit.Waiting = admit.WAIT
+    host: admit.Host = admit.HOST
+    env: Mapping[str, str] = field(default_factory=_environ)
+    run: Callable[[Sequence[str], Mapping[str, str], core.Caps], Result] = _run_once
+    announce: Callable[[admit.Request, admit.Lease], None] = _silent
+
+
+RIG = Rig()
+
+
+def climb(store: admit.Store, cmd: Sequence[str], plan: Plan, rig: Rig = RIG) -> list[Result]:
     """Run `cmd` under a lease of `plan.start_mb`, climbing while the cap kills it and retry allows.
 
     ⚑⚑ EVERY RUNG RE-ENTERS ADMISSION UNDER THE ORIGINAL PARENT. The lease is released before the
     next is taken, and the next names `plan.request.parent` — never the lease just released, or the
-    retry would be "a child of a corpse" that cascade-gc removes.
+    retry would be "a child of a corpse" that cascade-gc removes. ⚑ SO NO TWO RUNGS' LEASES ARE EVER
+    HELD AT ONCE: each `with` closes before the next rung is requested.
 
     Returns:
         every rung's result, in order; the last is the outcome.
@@ -188,8 +227,10 @@ def climb(
     mb = plan.start_mb
     while True:
         rung = admit.Request(mb, plan.request.label, plan.request.parent)
-        with admit.admit(store, rung, waiting, host):
-            result = core.run_once(cmd, rung_caps(mb))
+        with admit.admit(store, rung, rig.waiting, rig.host) as lease:
+            rig.announce(rung, lease)
+            env = {**rig.env, admit.ENV_PARENT: lease.lease_id}
+            result = rig.run(cmd, env, rung_caps(mb))
         results.append(result)
         if not plan.retry or not killed_by_cap(result):
             return results

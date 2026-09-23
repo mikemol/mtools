@@ -47,6 +47,9 @@ FIELDS = ("label", "wall_s", "peak_mb", "stamp_epoch", "user_s", "sys_s", "cg_pe
 # The fewest fields a row may carry and still be read: an older row predates the CPU probe.
 _MIN_FIELDS = 4
 
+# The index of `peak_mb`, the one column the origin's module ledger and this one agree on.
+_PEAK_FIELD = FIELDS.index("peak_mb")
+
 # The p90 index rule, as the origin computes it — pinned exactly rather than "a percentile".
 _P90 = 0.9
 
@@ -141,6 +144,29 @@ def parse(text: str) -> list[Row]:
         rows.append(Row(cells[0], wall, _num(cells[2]), int(stamp), _num(cells[4]),
                         _num(cells[5]), _num(cells[6])))
     return rows
+
+
+def key_peaks(text: str, key: str) -> list[float]:
+    """Return the `peak_mb` column of every row keyed `key`, reading the origin's 3-field rows too.
+
+    ⚑⚑ BASH'S MODULE LEDGER (`.agda-times.tsv`) WRITES `name, wall, peak` — THREE FIELDS, no stamp
+    — which `parse` skips as truncated. Reading it through `parse` would size every module from NO
+    history while its history sat in the file. Fence-written rows share the first three columns, so
+    one reader serves both writers. ⚑ A ROW WITH NO PEAK IS SKIPPED, never read as 0.
+
+    Returns:
+        the peaks, in file order.
+
+    """
+    peaks: list[float] = []
+    for raw in text.splitlines():
+        cells = raw.split("\t")
+        if len(cells) <= _PEAK_FIELD or cells[0] != key:
+            continue
+        peak = _num(cells[_PEAK_FIELD])
+        if peak is not None:
+            peaks.append(peak)
+    return peaks
 
 
 @dataclass(frozen=True, slots=True)
