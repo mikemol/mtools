@@ -3,8 +3,8 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` (`hooks`, `mdstruct`, `fence`, `ratchet`) is its
-own distribution. A repository that adopts one installs it from git by subdirectory:
+Each top-level directory with a `pyproject.toml` (`hooks`, `mdstruct`, `fence`, `ratchet`,
+`pathsforward`) is its own distribution. A repository that adopts one installs it from git by subdirectory:
 
 ```console
 $ uv add "mikemol-hooks @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=hooks"
@@ -28,6 +28,19 @@ dependencies = [
     "mikemol-mdstruct @ git+https://github.com/mikemol/mtools.git@e85ba31d4bfd8634d4afe8c498348db7727c382a#subdirectory=mdstruct",
 ]
 ```
+
+## With an environment marker
+
+A direct reference takes a PEP 508 marker after the URL, **separated by a space before the `;`**.
+PEP 508 requires that whitespace, because `;` is a legal character inside a URL. summit measured
+this form on 2026-09-23: `uv lock` accepted it and recorded it byte-identically to the
+`[tool.uv.sources]` spelling it replaced.
+
+```toml
+"mikemol-hooks @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=hooks ; python_full_version >= '3.13'"
+```
+
+## One sha across every spec
 
 One sha across all specs is what you want anyway: the distributions are developed and gated
 together, so a set taken from one commit is a set that passed one gate. Move the pin by editing
