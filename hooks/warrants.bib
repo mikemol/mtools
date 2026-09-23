@@ -4089,3 +4089,45 @@
             presents.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_venv_artifact.py -k test_a_console_script_runs_directly_under_the_venvs_python},
 }
+
+@misc{hooks-no-chaining-two-command-lines-are-refused-as-a-sequence,
+  section = {no_chaining},
+  title  = {Two commands on two lines are refused, as `ls; ls` is: the newline separates them},
+  claim  = {Two commands on two lines are refused, as `ls; ls` is: the newline separates them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_two_command_lines_are_refused_as_a_sequence},
+}
+
+@misc{hooks-no-chaining-newline-refusal-names-the-newline,
+  section = {no_chaining},
+  title  = {The refusal names the newline the way it names `;`, so the caller knows what to remove},
+  claim  = {The refusal names the newline the way it names `;`, so the caller knows what to remove.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_the_newline_refusal_names_the_newline},
+}
+
+@misc{hooks-no-chaining-heredoc-is-one-command-not-a-sequence,
+  section = {no_chaining},
+  title  = {A heredoc's body lines are data: `cat > f <<'EOF'` with a two-line body is admitted},
+  claim  = {A heredoc's body lines are data: `cat > f <<'EOF'` with a two-line body is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_heredoc_is_one_command_not_a_sequence},
+}
+
+@misc{hooks-no-chaining-newline-inside-quotes-is-data,
+  section = {no_chaining},
+  title  = {A newline inside a quoted string separates nothing: the command is admitted},
+  claim  = {A newline inside a quoted string separates nothing: the command is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_newline_inside_quotes_is_data},
+}
+
+@misc{hooks-no-chaining-backslash-continuation-is-one-command,
+  section = {no_chaining},
+  title  = {A backslash-newline continues the command: the two physical lines are admitted},
+  claim  = {A backslash-newline continues the command: the two physical lines are admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_backslash_continuation_is_one_command},
+}
+
+@misc{hooks-no-chaining-single-line-command-is-admitted,
+  section = {no_chaining},
+  title  = {Control: one command on one line, with no operator, is admitted},
+  claim  = {Control: one command on one line, with no operator, is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_single_line_command_is_admitted},
+}

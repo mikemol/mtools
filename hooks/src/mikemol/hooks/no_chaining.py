@@ -132,10 +132,26 @@ Finding = tuple[str, str]
 # quoting, comments and `<<<`, and replaces a body with a bare newline, which this hook's own
 # tokenizer reads as whitespace.
 #
-# ⚑ A MULTI-LINE COMMAND IS STILL NOT CHAINING HERE, AND THAT IS A CHOICE, MEASURED: on HEAD
-# `echo a` / `echo b` on two lines was admitted, and it still is. `_tokenize` below is this hook's
-# own and does not mark newlines, while `cmdparse.tokenize` now does — so the hooks that ask WHICH
-# PROGRAMS RUN see every line, and this one, which asks whether the call COMPOSES, is unchanged.
+# ⚑⚑ A NEWLINE THAT ENDS A COMMAND IS A `;`, BY THE OPERATOR'S RULING (2026-09-23). This hook once
+# admitted `echo a` / `echo b` on two lines as a deliberate choice; that choice is withdrawn — two
+# lines are two calls exactly as `a; b` is. WHERE the separating newlines are is not re-derived
+# here: `cmdparse.separate_lines` already knows (quotes, backslash continuations, a trailing `|` or
+# `&&`, comments), and heredoc bodies are cut first, so a heredoc stays one command.
+_NEWLINE = "\\n"
+_NEWLINE_REASON = "a sequence (a newline) — run the calls separately, or add the mode"
+
+
+def _command_lines(stripped: str) -> int:
+    """Count the command lines in a heredoc-stripped command.
+
+    A line that tokenizes to nothing — blank, or a comment alone — is not a command.
+
+    Returns:
+        how many of the newline-separated segments carry at least one shell word.
+
+    """
+    segments = cmdparse.separate_lines(stripped).split(cmdparse.LINE_MARK)
+    return sum(1 for seg in segments if _tokenize(seg))
 
 
 def _mentions_interpreter(toks: list[str]) -> bool:
@@ -233,8 +249,11 @@ def analyze(cmd: str) -> list[Finding]:
         composition points in one Bash command string.
 
     """
-    toks = _tokenize(cmdparse.strip_heredoc_bodies(cmd))
+    stripped = cmdparse.strip_heredoc_bodies(cmd)
+    toks = _tokenize(stripped)
     found = _scan_tokens(toks)
+    if _command_lines(stripped) > 1:
+        found.append((_NEWLINE, _NEWLINE_REASON))
 
     # ⚑ A HEREDOC INTO AN INTERPRETER YIELDS NO `-c` AND NO `-` TOKEN — the redirection itself is
     # the only tell. Test for the redirection rather than for a still-open interpreter: a bare

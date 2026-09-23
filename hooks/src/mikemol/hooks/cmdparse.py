@@ -394,7 +394,7 @@ def strip_heredoc_bodies(cmd: str) -> str:
 # a mark without a leading newline would be swallowed by a comment on the line it ends; and
 # `punctuation_chars` fuses ADJACENT punctuation, so a bare `;` next to a `;` would become `;;`.
 # ⚑ HEREDOC BODIES MUST BE CUT FIRST (`commands` does so); a body's newlines are not shell.
-_LINE_MARK = "\n;\n"
+LINE_MARK = "\n;\n"
 _CONTINUED_BY = ("|", "|&", "&&", "||")
 _LINE_BLANKS = " \t\r"
 
@@ -413,7 +413,7 @@ class _LineSeparator:
         """Copy the command through, marking separating newlines.
 
         Returns:
-            the command with each separating newline replaced by `_LINE_MARK`.
+            the command with each separating newline replaced by `LINE_MARK`.
 
         """
         while self.i < len(self.cmd):
@@ -449,7 +449,7 @@ class _LineSeparator:
             self._take(len(cmd) if end < 0 else end)
         elif ch == "\n":
             tail = "".join(self.out).rstrip(_LINE_BLANKS)
-            self.out.append("\n" if tail.endswith(_CONTINUED_BY) else _LINE_MARK)
+            self.out.append("\n" if tail.endswith(_CONTINUED_BY) else LINE_MARK)
             self.i += 1
         else:
             self._take(i + 1)

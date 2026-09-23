@@ -388,7 +388,41 @@ def test_a_quoted_heredoc_operator_does_not_hide_a_later_pipe() -> None:
     ⚑ MEASURED ON HEAD: this hook's private stripper matched `<<EOF` inside the quotes, found no
     terminator, and dropped the rest of the command — the pipe with it. It now uses
     `cmdparse.strip_heredoc_bodies`, which honours quoting. The control is a real heredoc whose
-    body holds a pipe and whose next line is a second command: data, and (as before) not chaining.
+    body holds a pipe and whose next line is a second command: the body is data, so no `|` is
+    found. (The second line is now refused as a newline sequence; that is a separate claim.)
     """
     assert no_chaining.analyze("echo '<<EOF' | tail -1"), "a quoted `<<` hid the pipe"
-    assert no_chaining.analyze("cat <<EOF\nx | y\nEOF\necho b") == [], "a heredoc body was read"
+    found = [tok for tok, _ in no_chaining.analyze("cat <<EOF\nx | y\nEOF\necho b")]
+    assert "|" not in found, "a heredoc body was read"
+
+
+# --- a newline that ends a command is a sequence ------------------------------------------------
+
+def test_two_command_lines_are_refused_as_a_sequence() -> None:
+    """Two commands on two lines are refused, as `ls; ls` is: the newline separates them."""
+    assert [tok for tok, _ in no_chaining.analyze("ls\nls")] == ["\\n"]
+
+
+def test_the_newline_refusal_names_the_newline() -> None:
+    """The refusal names the newline the way it names `;`, so the caller knows what to remove."""
+    assert "`\\n`  a sequence" in no_chaining.refusal(no_chaining.analyze("ls\nls"))
+
+
+def test_a_heredoc_is_one_command_not_a_sequence() -> None:
+    """A heredoc's body lines are data: `cat > f <<'EOF'` with a two-line body is admitted."""
+    assert not no_chaining.analyze("cat > f <<'EOF'\na\nb\nEOF")
+
+
+def test_a_newline_inside_quotes_is_data() -> None:
+    """A newline inside a quoted string separates nothing: the command is admitted."""
+    assert not no_chaining.analyze("echo 'a\nb'")
+
+
+def test_a_backslash_continuation_is_one_command() -> None:
+    """A backslash-newline continues the command: the two physical lines are admitted."""
+    assert not no_chaining.analyze("ls \\\n  -la")
+
+
+def test_a_single_line_command_is_admitted() -> None:
+    """Control: one command on one line, with no operator, is admitted."""
+    assert not no_chaining.analyze("ls -la")
