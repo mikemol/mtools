@@ -100,8 +100,8 @@ def main(argv: list[str] | None = None) -> int:
     # wrapping it in `str()` narrows the result while the access itself is still a finding. The
     # boundary is `vars()`, which is a plain `dict[str, Any]`: reading through it and narrowing
     # each value once is the repair the rule exists to force. Silencing it would push the `Any`
-    # downstream into `run_ruff` and the baseline path, which is exactly what payload.py exists
-    # to prevent one layer over.
+    # downstream into `run_ruff` and the baseline path, which is exactly what hooks'
+    # `mikemol.hooks.payload` exists to prevent for hook payloads.
     opts: dict[str, object] = vars(args)
     dist = Path(str(opts["dist"]))
     init_absent = bool(opts["init_absent"])

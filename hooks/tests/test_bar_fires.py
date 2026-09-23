@@ -1587,6 +1587,10 @@ def test_the_polls_fetchability_predicate_is_not_ls_files() -> None:
     assert "staged only (NOT fetchable)" in fn, "the three-valued answer must be stated"
 
 
+# The ratchet call site's span in the gate: the invocation, its status branch and both refusals.
+_RATCHET_BLOCK = 700
+
+
 def test_the_ratchet_check_captures_its_own_output() -> None:
     """⚑⚑⚑ THE GATE NAMED THIS GAP ABOUT ITSELF BEFORE ANYONE ELSE DID.
 
@@ -1605,10 +1609,14 @@ def test_the_ratchet_check_captures_its_own_output() -> None:
     # ⚑ ANCHOR ON THE INVOCATION, NOT THE GUARD. The first `mikemol-ratchet` in the file is the
     # `[ -x ... ]` presence check; slicing from there missed the call site by nine lines and the
     # first cut of this test failed against a correct repair.
-    start = body.index("if ! git_scrubbed ratchet/.venv/bin/mikemol-ratchet")
-    block = body[start:start + 400]
+    start = body.index('git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog"')
+    block = body[start:start + _RATCHET_BLOCK]
     assert 'note_failure "$dist: ratchet' in block
     assert '"$rlog"' in block, "the ratchet must capture its output for the verdict to replay"
+    # ⚑ AND ITS TWO REFUSALS ARE NAMED APART. Exit 2 is `cli.CANNOT_CENSUS` (415d532): no ruff ran.
+    # Named like a new key, it sent the reader hunting for a key that was never there.
+    assert "COULD NOT CENSUS" in block, "a census that could not run must not read as a new key"
+    assert "no new keys" in block, "the new-key refusal is still named"
 
 # --- four repairs from two ticks, each armed by hand once and none gated ------------------------
 #

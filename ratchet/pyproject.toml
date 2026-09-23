@@ -235,7 +235,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/*" = ["assert"]
 
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
-# file rather than to the package. An entry naming a directory would grant it to every hook in
+# file rather than to the package. An entry naming a directory would grant it to every module in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.
 # ⚑⚑⚑ AND `suspicious-subprocess-import` JOINS IT, SURFACED BY ARMING PREVIEW RATHER THAN BY NEW
 # CODE. It is a preview-only rule, so `import subprocess` in this file was invisible to the gate

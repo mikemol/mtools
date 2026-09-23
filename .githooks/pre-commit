@@ -925,13 +925,20 @@ run_checked "stubtest — the panflute stub still matches its module" \
 # the same *detail that exists somewhere is detail the reader does not have* that the shellcheck
 # witness was wired for two commits earlier. **A repair applied to one call site is not a repair
 # to the class**, and this is the second of the twenty sites to be wired.
+# ⚑⚑ TWO REFUSALS, TWO NAMES. The ratchet exits 1 when the census found NEW KEYS and 2
+# (`cli.CANNOT_CENSUS`, 415d532) when it could not census at all — ruff missing, not executable,
+# or exiting oddly. Both refuse; naming them alike sent a reader hunting for a key that was never
+# there, when the repair was to supply a checker.
+_RATCHET_CANNOT_CENSUS=2
 for dist in $_dists; do
   rlog="$staged/.ratchet-$dist.log"
-  if ! git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
-      cat "$rlog" >&2
+  git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1
+  _rc=$?
+  cat "$rlog" >&2
+  if [ "$_rc" -eq "$_RATCHET_CANNOT_CENSUS" ]; then
+      fail=1; note_failure "$dist: ratchet — COULD NOT CENSUS (no ruff to run); not a new key" "$rlog"
+  elif [ "$_rc" -ne 0 ]; then
       fail=1; note_failure "$dist: ratchet — paydown only, no new keys" "$rlog"
-  else
-      cat "$rlog" >&2
   fi
 done
 

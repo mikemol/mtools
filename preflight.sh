@@ -176,8 +176,14 @@ for dist in $dists; do
     # script exists for. It reads the working tree rather than a staged copy, which is correct
     # here: the point is to answer *what will the gate say about what I am about to stage*.
     # ⚑ NO `if [ -x ]` GUARD: presence is REFUSED ON above, so reaching this line means it exists.
-    git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" \
-        || { fail=1; say "$dist: ratchet — a NEW KEY; the gate will refuse this"; }
+    # ⚑ EXIT 2 IS `cli.CANNOT_CENSUS` (no ruff to run), NOT a new key — the gate names them apart.
+    git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist"
+    _rc=$?
+    if [ "$_rc" -eq 2 ]; then
+        fail=1; say "$dist: ratchet — COULD NOT CENSUS (no ruff); the gate will refuse this"
+    elif [ "$_rc" -ne 0 ]; then
+        fail=1; say "$dist: ratchet — a NEW KEY; the gate will refuse this"
+    fi
 
     # ⚑ THE WARRANT LEDGER IS 1:1 AND THE GATE ENFORCES IT, so a test added without a warrant is a
     # refusal this script can predict for free. Counted the way the gate counts it.
