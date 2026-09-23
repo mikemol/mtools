@@ -33,6 +33,13 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
+from mikemol.ratchet.keys import (
+    RUFF,
+    MalformedKeyError,
+    UnknownSchemaError,
+    parse_all,
+    schema_named,
+)
 from mikemol.ratchet.state import BaselineState
 
 if TYPE_CHECKING:
@@ -54,9 +61,9 @@ if TYPE_CHECKING:
 #
 # ⚑⚑ THE IDENTITY IS EVERY FIELD EXCEPT THE PATH. That is the design a peer arrived at over a
 # per-gate key schema, where which field holds the path differs by gate and one census even emits
-# `name::relpath` with the path SECOND. mtools' grammar is fixed — `path:rule` — so the identity is
-# just the rule, and the schema machinery that peer needs has no counterpart here. The CONCEPT
-# transfers; the modules would have been a solution to a problem this repository does not have.
+# `name::relpath` with the path SECOND. This file once said mtools' grammar was fixed at
+# `path:rule` and needed none of that; retargeting at the peer's baselines made it false, so the
+# schema is now DECLARED (`keys.py`) and `path:rule` is merely the default one.
 def _plausible_move(old_path: str, new_path: str) -> bool:
     """Report whether `new_path` is a plausible destination for `old_path`.
 
@@ -81,21 +88,6 @@ def _plausible_move(old_path: str, new_path: str) -> bool:
     if new_path.startswith(stem + "/"):
         return True
     return PurePosixPath(old_path).parent == PurePosixPath(new_path).parent
-
-
-def _identity(key: str) -> str:
-    """Return the part of a key that survives a move: everything but the path.
-
-    ⚑ `rsplit`, NOT `split` — a path may contain colons and the rule never does, so the LAST field
-    is the identity and the rest is the path. Splitting from the left would take a directory as
-    the identity for any path carrying one.
-
-    Returns:
-        part of a key that survives a move: everything but the path.
-
-    """
-    _path, _, rule = key.rpartition(":")
-    return rule or key
 
 
 @dataclass(frozen=True, slots=True)
@@ -156,14 +148,19 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
     return (BaselineState.EMPTY if not keys else BaselineState.OK), keys
 
 
-def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
+def partition(current: Iterable[str], baseline: Iterable[str], *, schema: str = RUFF) -> Diff:
     """Split the census against its baseline into growth and paydown.
+
+    ⚑⚑ EVERY KEY ON BOTH SIDES IS PARSED UNDER THE DECLARED `schema` BEFORE ANY IS COMPARED, so
+    one malformed key refuses the run (`MalformedKeyError` propagates) rather than being read as
+    a path somewhere downstream. The default, `ruff`, is total and never refuses.
 
     Returns:
         the the census against its baseline into growth and paydown.
 
     """
     cur, base = frozenset(current), frozenset(baseline)
+    parsed = parse_all(schema_named(schema), cur | base)
     added, paid = cur - base, base - cur
 
     # ⚑⚑⚑ IDENTITY ALONE IS NOT ENOUGH, AND ASSUMING IT WAS IS A FALSE-ABSOLUTION BUG. A peer hit
@@ -186,12 +183,12 @@ def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
     # genuinely-new violation of the same rule appears elsewhere in the same run, the pairing is
     # ambiguous and BOTH are refused as growth. That is the safe direction — a domain too wide
     # fails loudly, a domain too narrow serves a stale green.
-    added_by_identity: dict[str, list[str]] = {}
+    added_by_identity: dict[tuple[str, ...], list[str]] = {}
     for key in added:
-        added_by_identity.setdefault(_identity(key), []).append(key)
-    paid_by_identity: dict[str, list[str]] = {}
+        added_by_identity.setdefault(parsed[key].identity, []).append(key)
+    paid_by_identity: dict[tuple[str, ...], list[str]] = {}
     for key in paid:
-        paid_by_identity.setdefault(_identity(key), []).append(key)
+        paid_by_identity.setdefault(parsed[key].identity, []).append(key)
 
     # ⚑⚑ BOTH CONDITIONS: an unambiguous one-to-one pairing AND a plausible path move. The count
     # asymmetry alone refuses a legitimate 2-old-to-2-new directory move; path plausibility alone
@@ -201,7 +198,7 @@ def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
         for ident, added_keys in added_by_identity.items()
         if len(added_keys) == 1
         and len(paid_keys := paid_by_identity.get(ident, [])) == 1
-        and _plausible_move(paid_keys[0].rpartition(":")[0], added_keys[0].rpartition(":")[0]))
+        and _plausible_move(parsed[paid_keys[0]].path, parsed[added_keys[0]].path))
     relocated_from = {src for src, _dst in moved}
     relocated_to = {dst for _src, dst in moved}
 
@@ -226,7 +223,7 @@ def partition(current: Iterable[str], baseline: Iterable[str]) -> Diff:
         for ident, added_keys in added_by_identity.items()
         if len(added_keys) > 1
         for key in added_keys
-        if any(_plausible_move(old.rpartition(":")[0], key.rpartition(":")[0])
+        if any(_plausible_move(parsed[old].path, parsed[key].path)
                for old in paid_by_identity.get(ident, [])))
 
     return Diff(added=frozenset(added - relocated_to),
@@ -264,7 +261,8 @@ def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
         raise OSError(msg)
 
 
-def ratchet(current: Iterable[str], path: Path, *, write: bool) -> tuple[int, list[str]]:
+def ratchet(current: Iterable[str], path: Path, *, write: bool,
+            schema: str = RUFF) -> tuple[int, list[str]]:
     """Run the paydown-only ratchet. Return (exit code, report lines).
 
     0 = pass, 1 = the debt grew or the baseline cannot be trusted.
@@ -278,6 +276,9 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool) -> tuple[int, li
     ⚑ PAYDOWN LOWERS THE BASELINE PERMANENTLY. A paid-down key cannot return without the
     gate refusing, so a repair cannot silently regress. That is what makes the ratchet a
     ratchet rather than a report.
+
+    ⚑⚑ A KEY THE DECLARED `schema` CANNOT PARSE EXITS 1 AND IS NAMED, and nothing is written. A
+    key read as a path it is not would make real debt look like churn.
 
     Returns:
         the the paydown-only ratchet. Return (exit code, report lines).
@@ -293,7 +294,10 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool) -> tuple[int, li
     if state is BaselineState.UNREAD:
         return 1, [f"baseline {state}: {path} could not be read",
                    "  this is a fact about the reader, not a verdict about the gate"]
-    diff = partition(current, base)
+    try:
+        diff = partition(current, base, schema=schema)
+    except (MalformedKeyError, UnknownSchemaError) as exc:
+        return 1, [f"key schema {schema!r} refused: {exc}"]
     lines: list[str] = []
     # ⚑ MOVES ARE REPORTED, NEVER SILENT. A relocation that vanished from the transcript would be
     # indistinguishable from nothing having happened — and the whole reason to separate it from

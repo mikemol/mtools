@@ -22,6 +22,7 @@ from typing import cast
 
 from mikemol.ratchet.census import run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
+from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
 from mikemol.ratchet.remap import __doc__ as remap_doc
 from mikemol.ratchet.remap import remap_guard
 from mikemol.ratchet.state import BaselineState
@@ -63,6 +64,11 @@ def main(argv: list[str] | None = None) -> int:
     ⚑ `remap` AS THE FIRST ARGUMENT SELECTS THE SUBCOMMAND. A distribution directory literally
     named `remap` is reached as `./remap`.
 
+    ⚑⚑ `--key-schema` IS DECLARED BY THE CALLER, NEVER GUESSED FROM THE KEYS. This package reads
+    no per-distribution config, so the flag is the declaration; a schema inferred from key shape
+    would read a malformed key as whichever schema it happened to fit. A census key the declared
+    schema cannot parse refuses by name, and `--init-absent` mints nothing.
+
     Returns:
         0 on pass, 1 on refusal (the remap subcommand returns its own codes).
 
@@ -78,6 +84,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="mint a baseline that does not exist yet (the birth move)")
     parser.add_argument("--write", action="store_true",
                         help="lower the baseline when the census pays debt down")
+    parser.add_argument("--key-schema", choices=SCHEMA_NAMES, default=RUFF,
+                        help="the declared grammar of a baseline key (default: ruff path:rule)")
     args = parser.parse_args(args_in)
 
     # ⚑⚑ argparse's `Namespace` is untyped, so `args.dist` is `Any` and poisons the expression
@@ -91,6 +99,7 @@ def main(argv: list[str] | None = None) -> int:
     dist = Path(str(opts["dist"]))
     init_absent = bool(opts["init_absent"])
     write = bool(opts["write"])
+    schema = str(opts["key_schema"])
     path = dist / _BASELINE
     census = run_ruff(dist, preview=True)
 
@@ -99,11 +108,16 @@ def main(argv: list[str] | None = None) -> int:
         if state is not BaselineState.ABSENT:
             sys.stderr.write(f"{path} is {state}, not ABSENT — refusing to re-mint\n")
             return 1
+        try:
+            parse_all(schema_named(schema), census)
+        except MalformedKeyError as exc:
+            sys.stderr.write(f"key schema {schema!r} refused: {exc} — minting nothing\n")
+            return 1
         write_baseline(path, census, write=True)
         sys.stdout.write(f"{path}: minted {len(census)} key(s)\n")
         return 0
 
-    code, lines = ratchet(census, path, write=write)
+    code, lines = ratchet(census, path, write=write, schema=schema)
     for line in lines:
         sys.stdout.write(f"{line}\n")
     return code

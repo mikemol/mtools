@@ -412,3 +412,66 @@
   claim   = {Loading and verifying first was not enough: each write was a plain overwrite, so an OSError on file two left file one rewritten. Outputs are now staged as temps beside their targets and replaced only once all are written; a staging failure removes the temps and exits 2 with "nothing written". The replace phase itself is atomic per file only, as the module docstring states},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_write_failure_on_the_second_file_leaves_the_first_untouched}
 }
+
+@misc{ratchet-keys-default-schema-partitions-ruff-keys-as-before,
+  section = {keys},
+  title  = {Declaring `ruff` yields exactly the undeclared partition over a ruff population},
+  claim  = {Declaring `ruff` yields exactly the undeclared partition over a ruff population.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_the_default_schema_partitions_ruff_keys_as_before},
+}
+
+@misc{ratchet-keys-cli-round-trips-ruff-keys-under-the-default-schema,
+  section = {keys},
+  title  = {`--key-schema ruff` mints and re-reads a ruff census, colon-bearing path included},
+  claim  = {`--key-schema ruff` mints and re-reads a ruff census, colon-bearing path included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_the_cli_round_trips_ruff_keys_under_the_default_schema},
+}
+
+@misc{ratchet-keys-reversed-key-relocating-is-a-move,
+  section = {keys},
+  title  = {Under sumtype the path is field 1, so a renamed file pairs as a move},
+  claim  = {Under sumtype the path is field 1, so a renamed file pairs as a move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_a_reversed_key_relocating_is_a_move},
+}
+
+@misc{ratchet-keys-reversed-key-with-a-new-name-is-growth-not-a-move,
+  section = {keys},
+  title  = {Under discharge a different leading name in the same file is new debt, not churn},
+  claim  = {Under discharge a different leading name in the same file is new debt, not churn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_a_reversed_key_with_a_new_name_is_growth_not_a_move},
+}
+
+@misc{ratchet-keys-triple-sharing-its-middle-field-relocates-as-a-move,
+  section = {keys},
+  title  = {Positive control: a ban triple whose identity is intact pairs across a move},
+  claim  = {Positive control: a ban triple whose identity is intact pairs across a move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_a_triple_sharing_its_middle_field_relocates_as_a_move},
+}
+
+@misc{ratchet-keys-ban-triples-differing-in-the-middle-do-not-collide,
+  section = {keys},
+  title  = {Two ban triples sharing only the last field are growth, not a move},
+  claim  = {Two ban triples sharing only the last field are growth, not a move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_ban_triples_differing_in_the_middle_do_not_collide},
+}
+
+@misc{ratchet-keys-claims-triples-differing-in-the-middle-do-not-collide,
+  section = {keys},
+  title  = {Two claims triples sharing only the last field are growth, not a move},
+  claim  = {Two claims triples sharing only the last field are growth, not a move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_claims_triples_differing_in_the_middle_do_not_collide},
+}
+
+@misc{ratchet-keys-malformed-key-is-refused-by-the-ratchet,
+  section = {keys},
+  title  = {A pair under a triple schema exits nonzero and names the error; a triple passes},
+  claim  = {A pair under a triple schema exits nonzero and names the error; a triple passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_a_malformed_key_is_refused_by_the_ratchet},
+}
+
+@misc{ratchet-keys-malformed-census-is-refused-by-the-cli,
+  section = {keys},
+  title  = {A ruff key under a `::` schema is refused by name, and nothing is minted},
+  claim  = {A ruff key under a `::` schema is refused by name, and nothing is minted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_a_malformed_census_is_refused_by_the_cli},
+}
