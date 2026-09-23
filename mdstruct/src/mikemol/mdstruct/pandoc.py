@@ -42,6 +42,19 @@ MD_WRITERS = ("markdown", "commonmark", "gfm")
 # so a malformed document cannot flood a caller's context.
 _ERR_CHARS = 400
 
+# ⚑⚑ THE READER FOR EVERY AST READ: PUNCTUATION AS TYPED (operator ruling, "show as typed"). With
+# `smart` on, `'` became U+2019, `--` an en dash and `...` an ellipsis in every heading and cell,
+# so a needle typed on a keyboard matched nothing — a FALSE EMPTY from `rows --where` and a
+# refusal from `replace-section` that blamed the caller's spelling. Substrate reads with this
+# same spelling, so a caller migrating from it sees identical text.
+# ⚑⚑ NOT THE DEFAULT FOR `convert`, MEASURED: a markdown→markdown pass with the reader smart-off
+# and the writer smart-on escapes every `'` and `--` (`rule\'s`, `\--`), so `roundtrip` and
+# `fixpoint` keep `markdown` on both sides, byte-for-byte as before.
+# ⚑ EVERY `-t json` SITE MUST USE IT TOGETHER. `spans` and `items` pair a candidate line's
+# rendering with the document's; one reader smart-on and the other off drops every heading or
+# item carrying `'`, and under a forward cursor every one after it too.
+AST_READER = "markdown-smart"
+
 
 def convert(src: str, to: str, frm: str = "markdown") -> str:
     """Convert `src` with pandoc; `to` may carry writer FLAGS after the format name.

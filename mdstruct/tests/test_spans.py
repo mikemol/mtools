@@ -252,3 +252,90 @@ def test_enclosing_is_a_chain_outermost_first(document: Path) -> None:
     """
     chain = spans.enclosing(spans.spans(document), 10)
     assert [s.text for s in chain] == ["Top", "Parent", "Child"]
+
+
+# ⚑⚑ PUNCTUATION AS TYPED. With pandoc's `smart` extension on in the AST reader, `'` became
+# U+2019, `--` an en dash and `...` an ellipsis in every heading, so a needle typed on a keyboard
+# found nothing — a refusal blaming the caller's spelling. Operator ruling: show as typed.
+_TYPED = """# Top
+
+## The rule's scope
+
+text
+
+## A -- B ... C
+
+more
+"""
+
+
+def test_a_typed_apostrophe_finds_its_heading(doc: Path) -> None:
+    """A needle with a straight `'` finds the heading typed with one, and shows it as typed.
+
+    ⚑ POSITIVE CONTROL in the same function: a needle no heading contains still refuses, so the
+    find is discriminating rather than a finder that now accepts anything.
+    """
+    doc.write_text(_TYPED, encoding="utf-8")
+    assert spans.find_section(doc, "rule's").text == "The rule's scope"
+    with pytest.raises(LookupError):
+        spans.find_section(doc, "rule's absent")
+
+
+def test_a_typed_dash_and_ellipsis_find_their_heading(doc: Path) -> None:
+    """`--` and `...` survive into heading text rather than becoming an en dash and an ellipsis."""
+    doc.write_text(_TYPED, encoding="utf-8")
+    assert spans.find_section(doc, "A -- B ... C", exact=True).text == "A -- B ... C"
+
+
+# ⚑⚑ S1: A FENCED `#` LINE WITH THE SAME TEXT AS A REAL HEADING. Each candidate line used to be
+# rendered ALONE, so the fenced `# Setup` rendered as a heading and the forward cursor bound the
+# document's real `## Setup` to the line inside the fence. The fixture above has a fenced `#`
+# too, but its text matches no heading, so it could never be mis-bound: this one can.
+_FENCED_TWIN = """# Top
+
+```sh
+# Setup
+echo hi
+```
+
+## Setup
+
+body
+"""
+
+_UNFENCED_TWIN = """# Top
+
+## Setup
+
+body
+"""
+
+# 1-indexed line of the REAL `## Setup` in each document, derived from the text, not counted.
+_FENCED_SETUP_LINE = _FENCED_TWIN.split("\n").index("## Setup") + 1
+_UNFENCED_SETUP_LINE = _UNFENCED_TWIN.split("\n").index("## Setup") + 1
+# 1-indexed line of the fenced `# Setup`, derived the same way.
+_FENCED_TWIN_LINE = _FENCED_TWIN.split("\n").index("# Setup") + 1
+
+
+def test_a_fenced_twin_does_not_anchor_the_real_heading(doc: Path, tmp_path: Path) -> None:
+    """The real `## Setup` anchors at its own line, not at the `# Setup` inside the fence.
+
+    ⚑ POSITIVE CONTROL in the same function: without the fence, `## Setup` anchors at its own
+    line — so the arm measures the fence, not a finder that anchors nothing.
+    """
+    doc.write_text(_FENCED_TWIN, encoding="utf-8")
+    assert spans.find_section(doc, "Setup", exact=True).start == _FENCED_SETUP_LINE
+    control = tmp_path / "unfenced.md"
+    control.write_text(_UNFENCED_TWIN, encoding="utf-8")
+    assert spans.find_section(control, "Setup", exact=True).start == _UNFENCED_SETUP_LINE
+
+
+def test_a_fenced_twin_is_contained_by_the_section_before_it_only(doc: Path) -> None:
+    """The fenced line's container chain is `Top` alone — Top's body, not Setup's heading.
+
+    ⚑ THIS IS WHAT `grep` PRINTS AS A MATCH'S ADDRESS, so a mis-anchor labels every hit in the
+    fence as belonging to a section that has not started yet.
+    """
+    doc.write_text(_FENCED_TWIN, encoding="utf-8")
+    chain = spans.enclosing(spans.spans(doc), _FENCED_TWIN_LINE)
+    assert [s.text for s in chain] == ["Top"]

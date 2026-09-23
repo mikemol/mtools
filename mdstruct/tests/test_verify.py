@@ -112,10 +112,13 @@ def test_a_source_line_renders_to_exactly_what_its_document_header_renders_to() 
     growing it "into a grammar the renderer does not share". It did not grow, and that was the
     defect — pandoc also smart-quotes and unwraps links. Rendering the raw line through the SAME
     pipeline cannot drift from that pipeline, by construction.
+
+    ⚑ `B's leg` KEEPS ITS STRAIGHT QUOTE now the AST reader has `smart` off (operator
+    ruling, "show as typed"); its apostrophe was U+2019 while every AST read smart-quoted.
     """
     raw = ["## B's leg", "## C [l](u) leg", "## D ![i](u) leg", "## E `c` leg", "## F *em* leg"]
     assert ast.render_headings(raw) == [
-        "B\u2019s leg", "C l leg", "D i leg", "E c leg", "F em leg"]
+        "B's leg", "C l leg", "D i leg", "E c leg", "F em leg"]
 
 
 def test_render_headings_returns_one_entry_per_input() -> None:
@@ -240,3 +243,15 @@ def test_main_still_defaults_to_the_global_for_the_console_script(tmp_path: Path
         sys.argv = saved
 
     assert rc == 0, f"main() with no argument returned {rc} — the global default was lost"
+
+
+def test_a_fenced_twin_of_a_real_heading_leaves_the_contract_clean(tmp_path: Path) -> None:
+    """A fenced `# B leg` sharing the real heading's text does not steal its anchor.
+
+    ⚑ POSITIVE CONTROL in the same function: the document's reader does see `## B leg`, so an
+    empty result means the heading was reached, not that there was nothing to reach.
+    """
+    path = tmp_path / "twin.md"
+    path.write_text("# A\n\n```\n# B leg\n```\n\n## B leg\n\nx\n", encoding="utf-8")
+    assert (2, "B leg") in ast.headers(path)
+    assert verify.missing_headings(path) == []

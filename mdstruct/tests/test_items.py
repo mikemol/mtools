@@ -143,3 +143,21 @@ def test_a_listless_document_says_so(doc: Path, capsys: pytest.CaptureFixture[st
     out = capsys.readouterr().out
     assert "carries no list items" in out
     assert str(doc) in out
+
+
+# ⚑ ITEM TEXT AS TYPED. The item renderer and the document reader must agree on punctuation, or
+# the line recovery pairs nothing; both now read with `smart` off, so the text is the source's.
+_TYPED_FIXTURE = """# Typed
+
+- the item's text -- as typed...
+"""
+
+# 1-indexed line of the one item, derived from the text rather than counted.
+_TYPED_LINE = _TYPED_FIXTURE.split("\n").index("- the item's text -- as typed...") + 1
+
+
+def test_an_items_text_is_shown_as_typed_and_its_line_recovered(doc: Path) -> None:
+    """The item's text keeps `'`, `--` and `...`, and its line is still recovered."""
+    doc.write_text(_TYPED_FIXTURE, encoding="utf-8")
+    found = [(item.line, item.text) for item in items.items(doc)]
+    assert found == [(_TYPED_LINE, "the item's text -- as typed...")]

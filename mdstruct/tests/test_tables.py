@@ -468,3 +468,29 @@ def test_a_state_headed_table_that_is_not_a_vocabulary_is_not_read_as_one(doc: P
         f"§S rows landed in the residue against a correct vocabulary: {grouped.get('')} — "
         "the rows say `filed` and `filed (rev 30)`, both declared"
     )
+
+
+# ⚑⚑ CELLS AS TYPED. With `smart` on in the AST reader a cell typed `don't` was read with U+2019,
+# so `where="don't"` returned NOTHING — a false EMPTY that reads as a clean negative. The `plain`
+# row is the discriminator: an equality over the whole result shows it was excluded.
+_TYPED_FIXTURE = """# Typed
+
+| name  | note   |
+|-------|--------|
+| don't | x -- y |
+| plain | none   |
+"""
+
+
+def test_a_typed_apostrophe_finds_its_row(doc: Path) -> None:
+    """`where="don't"` returns exactly the row typed with it, cells shown as typed."""
+    doc.write_text(_TYPED_FIXTURE, encoding="utf-8")
+    found = [row.cells for row in tables.table_rows(doc, where="don't")]
+    assert found == [("don't", "x -- y")]
+
+
+def test_a_typed_apostrophe_anchors_a_column_prefix(doc: Path) -> None:
+    """`col=0, starts="don't"` anchors on the cell whose prefix carries a straight `'`."""
+    doc.write_text(_TYPED_FIXTURE, encoding="utf-8")
+    rows = tables.table_rows(doc, col=0, starts="don't")
+    assert [row.cells[0] for row in rows] == ["don't"]

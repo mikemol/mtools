@@ -64,7 +64,7 @@ def document(path: Path) -> panflute.Doc:
         parsed document for one markdown file.
 
     """
-    body = pandoc.convert(path.read_text(encoding="utf-8"), "json")
+    body = pandoc.convert(path.read_text(encoding="utf-8"), "json", pandoc.AST_READER)
     return panflute.load(io.StringIO(body))
 
 
@@ -103,9 +103,12 @@ def render_headings(raw_lines: list[str]) -> list[str]:
     # replaced, and it was caught by the contract's own after-fence arm rather than by review.
     # Each input is bracketed by a level-6 sentinel; the text between two sentinels is that
     # input's rendering, and an input that is not a heading yields the empty string.
+    # ⚑⚑ A LINE RENDERED HERE HAS LOST ITS FENCE. A `# Setup` that sat inside a code block in the
+    # document is a heading on its own, so this function CANNOT say which lines are headings in
+    # context — `heading_lines` answers that, and callers filter by it first.
     sentinel = "###### \u241f"
     joined = ("\n\n" + sentinel + "\n\n").join(["", *raw_lines, ""])
-    body = pandoc.convert(joined, "json")
+    body = pandoc.convert(joined, "json", pandoc.AST_READER)
     texts: dict[int, str] = {}
     index = -1
     for element in panflute.load(io.StringIO(body)).content:
@@ -117,6 +120,41 @@ def render_headings(raw_lines: list[str]) -> list[str]:
         elif 0 <= index < len(raw_lines):
             texts[index] = text
     return [texts.get(position, "") for position in range(len(raw_lines))]
+
+
+# A candidate line's in-place tag: its 0-based index between two U+241E record separators, a
+# character no governed document is expected to carry and none of pandoc's readers rewrites.
+_TAG_MARK = "␞"
+
+
+def heading_lines(lines: list[str], candidates: list[int]) -> frozenset[int]:
+    """Return which candidate line indices are headings IN THE DOCUMENT'S OWN CONTEXT.
+
+    ⚑⚑ `render_headings` RENDERS EACH LINE ALONE, so a `# Setup` inside a fence is a heading
+    there, and the forward cursor in `spans` once bound the document's real `## Setup` to the
+    fenced line (S1). Tagging each candidate IN PLACE and parsing the WHOLE document once lets
+    pandoc say which tagged lines it read as headers: a fenced line keeps its tag in a CodeBlock.
+    Nothing here models fences; pandoc answers for itself, as it does for the rendering.
+
+    ⚑ ONE EXTRA PANDOC CALL PER `spans()`. The tag is appended AFTER the line's text, so a
+    trailing `{#id}` is read as literal text in this throwaway parse only — the line is still a
+    Header and its tag is still found, so the filter is unaffected.
+
+    Returns:
+        the subset of `candidates` whose tagged line pandoc parsed as a Header.
+
+    """
+    tagged = list(lines)
+    for i in candidates:
+        tagged[i] = f"{lines[i]} {_TAG_MARK}{i}{_TAG_MARK}"
+    body = pandoc.convert("\n".join(tagged), "json", pandoc.AST_READER)
+    found: set[int] = set()
+    for element in panflute.load(io.StringIO(body)).content:
+        if isinstance(element, panflute.Header):
+            # ⚑ The odd-numbered pieces of a split on the mark are exactly the tagged indices.
+            pieces = panflute.stringify(element).split(_TAG_MARK)[1::2]
+            found.update(int(piece) for piece in pieces if piece.isdigit())
+    return frozenset(found)
 
 
 def anchor_key(text: str) -> str:

@@ -1246,3 +1246,71 @@
             found the gap also confirms its closure.},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_cli_flags.py -k test_a_registered_mode_answers_when_run_as_a_program}
 }
+
+@misc{mdstruct-spans-typed-apostrophe-finds-its-heading,
+  section = {spans},
+  title  = {A needle with a straight `'` finds the heading typed with one, and shows it as typed},
+  claim  = {A needle with a straight `'` finds the heading typed with one, and shows it as typed.
+            POSITIVE CONTROL in the same function: a needle no heading contains still
+            refuses, so the find is discriminating rather than a finder that now accepts
+            anything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_typed_apostrophe_finds_its_heading},
+}
+
+@misc{mdstruct-spans-typed-dash-and-ellipsis-find-their-heading,
+  section = {spans},
+  title  = {`--` and `...` survive into heading text rather than becoming an en dash and an ellipsis},
+  claim  = {`--` and `...` survive into heading text rather than becoming an en dash and an
+            ellipsis.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_typed_dash_and_ellipsis_find_their_heading},
+}
+
+@misc{mdstruct-spans-fenced-twin-does-not-anchor-the-real-heading,
+  section = {spans},
+  title  = {The real `## Setup` anchors at its own line, not at the `# Setup` inside the fence},
+  claim  = {The real `## Setup` anchors at its own line, not at the `# Setup` inside the fence.
+            POSITIVE CONTROL in the same function: without the fence, `## Setup` anchors
+            at its own line — so the arm measures the fence, not a finder that anchors
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_fenced_twin_does_not_anchor_the_real_heading},
+}
+
+@misc{mdstruct-spans-fenced-twin-is-contained-by-the-section-before-it-only,
+  section = {spans},
+  title  = {The fenced line's container chain is `Top` alone — Top's body, not Setup's heading},
+  claim  = {The fenced line's container chain is `Top` alone — Top's body, not Setup's heading. THIS
+            IS WHAT `grep` PRINTS AS A MATCH'S ADDRESS, so a mis-anchor labels every hit
+            in the fence as belonging to a section that has not started yet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_fenced_twin_is_contained_by_the_section_before_it_only},
+}
+
+@misc{mdstruct-tables-typed-apostrophe-finds-its-row,
+  section = {tables},
+  title  = {`where="don't"` returns exactly the row typed with it, cells shown as typed},
+  claim  = {`where="don't"` returns exactly the row typed with it, cells shown as typed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_typed_apostrophe_finds_its_row},
+}
+
+@misc{mdstruct-tables-typed-apostrophe-anchors-a-column-prefix,
+  section = {tables},
+  title  = {`col=0, starts="don't"` anchors on the cell whose prefix carries a straight `'`},
+  claim  = {`col=0, starts="don't"` anchors on the cell whose prefix carries a straight `'`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_typed_apostrophe_anchors_a_column_prefix},
+}
+
+@misc{mdstruct-items-items-text-is-shown-as-typed-and-its-line-recovered,
+  section = {items},
+  title  = {The item's text keeps `'`, `--` and `...`, and its line is still recovered},
+  claim  = {The item's text keeps `'`, `--` and `...`, and its line is still recovered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_items.py -k test_an_items_text_is_shown_as_typed_and_its_line_recovered},
+}
+
+@misc{mdstruct-verify-fenced-twin-of-a-real-heading-leaves-the-contract-clean,
+  section = {verify},
+  title  = {A fenced `# B leg` sharing the real heading's text does not steal its anchor},
+  claim  = {A fenced `# B leg` sharing the real heading's text does not steal its anchor. POSITIVE
+            CONTROL in the same function: the document's reader does see `## B leg`, so
+            an empty result means the heading was reached, not that there was nothing to
+            reach.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_fenced_twin_of_a_real_heading_leaves_the_contract_clean},
+}

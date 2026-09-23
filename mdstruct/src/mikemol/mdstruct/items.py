@@ -138,7 +138,8 @@ def _render_candidates(raw_lines: list[str]) -> list[str]:
         return []
     sentinel = "###### ␟"
     joined = ("\n\n" + sentinel + "\n\n").join(["", *(ln.lstrip() for ln in raw_lines), ""])
-    doc = panflute.load(io.StringIO(pandoc.convert(joined, "json")))
+    # ⚑ THE SAME READER AS `ast.document`, or the pairing below compares `'` against U+2019.
+    doc = panflute.load(io.StringIO(pandoc.convert(joined, "json", pandoc.AST_READER)))
     texts: dict[int, str] = {}
     index = -1
     for element in doc.content:
