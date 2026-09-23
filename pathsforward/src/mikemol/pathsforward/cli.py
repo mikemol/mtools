@@ -137,6 +137,7 @@ def _parser() -> argparse.ArgumentParser:
     ap.add_argument("--blocked-on", nargs="*", metavar="WHO")
     ap.add_argument("--blocked-kind", choices=BLOCKED_KINDS)
     ap.add_argument("--next", metavar="TEXT")
+    ap.add_argument("--title", metavar="TEXT", help="--update: replace a stale one-line title")
     ap.add_argument("--evidence-append", metavar="TEXT")
     ap.add_argument("--ticks-blocked", type=int, metavar="N")
     ap.add_argument("--enables", nargs="+", metavar="SYMBOL")
@@ -377,7 +378,7 @@ def _update(ctx: Ctx) -> int:
     upd = ops.Update(status=ctx.get("status"), blocked_on=ctx.many("blocked_on"),
                      blocked_kind=ctx.get("blocked_kind"), next_step=ctx.get("next"),
                      evidence_append=ctx.get("evidence_append"),
-                     ticks_blocked=ctx.number("ticks_blocked"))
+                     ticks_blocked=ctx.number("ticks_blocked"), title=ctx.get("title"))
 
     def edit(state: State) -> int:
         sym = ctx.get("update") or ""

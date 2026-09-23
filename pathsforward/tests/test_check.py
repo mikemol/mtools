@@ -26,6 +26,9 @@ _BAD = "Wx"
 _HISTORICAL = "W50b"
 _HISTORICAL_REASON = "issued by a tick that broke the integer rule; kept as a historical name"
 _MISSING = "/nonexistent/x"
+_NOTE = "file.md"
+_GONE = "gone.md"
+_DOTTED = "v1."
 # summit's W37 evidence, verbatim in the parts that name labels, plus one real missing path.
 _W37_EVIDENCE = (
     "Summit ran it: exit 1, 'state=open, bazel exit 7: Unable to load package for "
@@ -201,6 +204,30 @@ def test_a_bazel_label_is_not_an_evidence_path(tmp_path: Path) -> None:
     """Summit's W37 labels are not reported; a real missing path beside them is (control)."""
     state = _state(tmp_path, waypoints=[_wp("W1", evidence=_W37_EVIDENCE), _wp("W2")])
     assert chk.evidence_findings(state) == [f"W1: evidence names {_MISSING}, which does not exist"]
+
+
+def test_a_sentence_final_mark_is_not_part_of_an_evidence_path(tmp_path: Path) -> None:
+    """A real file ending a sentence (`.`, `).`, `,`) is found, not reported missing."""
+    (tmp_path / _NOTE).write_text("x", encoding="utf-8")
+    ev = f"see {tmp_path}/{_NOTE}. Also ({tmp_path}/{_NOTE}). And {tmp_path}/{_NOTE},"
+    state = _state(tmp_path, waypoints=[_wp("W1", evidence=ev), _wp("W2")])
+    assert chk.evidence_findings(state) == []
+
+
+def test_a_missing_path_is_reported_without_its_sentence_period(tmp_path: Path) -> None:
+    """A missing path ending a sentence is still reported (control), named without the period."""
+    state = _state(tmp_path, waypoints=[_wp("W1", evidence=f"wrote {tmp_path}/{_GONE}."),
+                                        _wp("W2")])
+    assert chk.evidence_findings(state) == [
+        f"W1: evidence names {tmp_path}/{_GONE}, which does not exist"]
+
+
+def test_a_dot_that_is_part_of_a_real_name_is_kept(tmp_path: Path) -> None:
+    """A real name ending in `.`, then a sentence period, resolves to that real name."""
+    (tmp_path / _DOTTED).write_text("x", encoding="utf-8")
+    state = _state(tmp_path, waypoints=[_wp("W1", evidence=f"kept {tmp_path}/{_DOTTED}."),
+                                        _wp("W2")])
+    assert chk.evidence_findings(state) == []
 
 
 def test_the_bare_check_does_not_read_evidence(tmp_path: Path) -> None:

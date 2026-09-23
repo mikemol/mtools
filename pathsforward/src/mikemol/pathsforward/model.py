@@ -24,6 +24,7 @@ BLOCKED_KINDS: tuple[str, ...] = ("agent", "human")
 NO_SYMBOL = "--"
 
 _SYMBOL = re.compile(r"W([1-9][0-9]*)")
+_RANK: dict[str, int] = {"working": 0, "ready": 1, "blocked": 2}
 
 
 class MalformedStateError(ValueError):
@@ -136,6 +137,30 @@ def strlist(rec: Json, key: str) -> list[str]:
     if isinstance(value, list):
         return [str(item) for item in cast("list[object]", value)]
     return [str(value)]
+
+
+def _rank(w: Json) -> int:
+    """Rank a waypoint's status: working, ready, blocked, then anything else.
+
+    Returns:
+        the rank.
+
+    """
+    return _RANK.get(text(w, "status"), len(_RANK))
+
+
+def ordered(waypoints: list[Json]) -> list[Json]:
+    """Order waypoints working, ready, blocked, then any other status; each group in file order.
+
+    ⚑ ONE ORDER FOR EVERY VIEW: the payload, `--queue` and the mirror all call this, so the three
+    cannot disagree about what comes first. A blocked W22 listed above a ready W24 put a tick's
+    attention on the item it cannot work. The payload then hides `done`; the views keep it last.
+
+    Returns:
+        the waypoints, stably sorted by status rank.
+
+    """
+    return sorted(waypoints, key=_rank)
 
 
 def ticks(rec: Json) -> int:

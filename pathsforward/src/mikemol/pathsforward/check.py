@@ -31,6 +31,9 @@ if TYPE_CHECKING:
 
 _DROPPED = "dropped"
 _PATH_TRIM = ",;:()[]'\"`"
+# ⚑ A SENTENCE MAY END ON A PATH: `/home/x/file.md.` was reported missing. These marks are tried
+# off the end one at a time; see `missing` for when a trimmed reading is believed.
+_SENTENCE_END = (".", ",", ";", ":", ")")
 # ⚑ A BAZEL LABEL IS NOT A PATH: `//pkg:f`, `@repo//pkg:f`, `@@//pkg:f`. summit's W37 evidence
 # names `//paperkit:components.bzl`, which `--check-evidence` reported missing.
 _LABEL = re.compile(r"@{0,2}[\w.~+-]*//")
@@ -231,6 +234,37 @@ def _absolute_paths(rec: Json) -> list[str]:
     return [token for token in tokens if token.startswith("/") and not _LABEL.match(token)]
 
 
+def _readings(token: str) -> list[str]:
+    """List a token's readings: itself, then each shorter by one trailing sentence mark.
+
+    Returns:
+        the readings, longest first; the last ends in no sentence mark.
+
+    """
+    readings = [token]
+    while readings[-1].endswith(_SENTENCE_END):
+        readings.append(readings[-1][:-1])
+    return readings
+
+
+def missing(token: str) -> str | None:
+    """Resolve an evidence token against the filesystem, sentence punctuation allowed.
+
+    ⚑ THE RULE: the token names an existing file when ANY reading exists, tried longest first,
+    so a real name ending in `.` is kept whenever it exists, and `/x/file.md.` at a sentence's
+    end is `/x/file.md` when that exists. Only when no reading exists is it missing, and it is
+    reported by its shortest reading, without the sentence's punctuation.
+
+    Returns:
+        None when a reading exists, else the path to report as missing.
+
+    """
+    readings = _readings(token)
+    if any(Path(reading).exists() for reading in readings):
+        return None
+    return readings[-1]
+
+
 def evidence_findings(state: State) -> list[str]:
     """Report an absolute path named in evidence that does not exist (opt-in: it stats files).
 
@@ -241,6 +275,6 @@ def evidence_findings(state: State) -> list[str]:
     return [
         f"{text(w, 'symbol')}: evidence names {path}, which does not exist"
         for w in state.waypoints
-        for path in _absolute_paths(w)
-        if not Path(path).exists()
+        for path in (missing(token) for token in _absolute_paths(w))
+        if path is not None
     ]

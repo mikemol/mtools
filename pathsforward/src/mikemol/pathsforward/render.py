@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from mikemol.pathsforward.digest import v2
-from mikemol.pathsforward.model import strlist, text
+from mikemol.pathsforward.model import ordered, strlist, text
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -52,7 +52,7 @@ def mirror(state: State, state_path: Path) -> str:
         f"| {i} | {_cell(text(w, 'symbol'))} | {_cell(text(w, 'status'))} | "
         f"{_cell(text(w, 'title'))} | {_cell(', '.join(strlist(w, 'blocked_on')))} | "
         f"{_cell(text(w, 'next_bounded_step'))} |"
-        for i, w in enumerate(state.waypoints, 1)
+        for i, w in enumerate(ordered(state.waypoints), 1)
     ]
     lines += ["", "## residue", ""]
     lines += [
@@ -64,7 +64,7 @@ def mirror(state: State, state_path: Path) -> str:
 
 
 def queue(state: State) -> str:
-    """Render the queue in array order, which is the rank.
+    """Render the queue in the one shared order: working, ready, blocked, then the rest.
 
     Returns:
         one line per waypoint.
@@ -73,5 +73,5 @@ def queue(state: State) -> str:
     return "\n".join(
         f"{i:>2}. {text(w, 'symbol'):<4} {text(w, 'status'):<8} {text(w, 'title')}"
         f"  \u2014 {text(w, 'rank_reason')}"
-        for i, w in enumerate(state.waypoints, 1)
+        for i, w in enumerate(ordered(state.waypoints), 1)
     )

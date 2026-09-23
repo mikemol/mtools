@@ -45,7 +45,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward.digest import v2
-from mikemol.pathsforward.model import strlist, text, ticks
+from mikemol.pathsforward.model import ordered, strlist, text, ticks
 
 if TYPE_CHECKING:
     from mikemol.pathsforward.model import Json, State
@@ -58,7 +58,6 @@ _EVIDENCE = "      evidence:"
 _TOP_STEPS = (5, 2, 1)
 _HIDDEN = ("done", "dropped")
 _READY = "ready"
-_RANK: dict[str, int] = {"working": 0, _READY: 1, "blocked": 2}
 
 
 class PayloadOverBudgetError(RuntimeError):
@@ -226,24 +225,14 @@ def clip(block: str) -> str:
     return head if len(head) <= CLIP else head[: CLIP - len(_ELLIPSIS)] + _ELLIPSIS
 
 
-def _rank(w: Json) -> int:
-    """Rank a live waypoint's status: working, ready, blocked, then anything else.
-
-    Returns:
-        the rank.
-
-    """
-    return _RANK.get(text(w, "status"), len(_RANK))
-
-
-def ordered(state: State) -> list[Json]:
-    """List the live waypoints by status rank, each rank in file order (the sort is stable).
+def _shown(state: State) -> list[Json]:
+    """List the unhidden waypoints in the one order every view shares (`model.ordered`).
 
     Returns:
         the live waypoints.
 
     """
-    return sorted((w for w in state.waypoints if text(w, "status") not in _HIDDEN), key=_rank)
+    return [w for w in ordered(state.waypoints) if text(w, "status") not in _HIDDEN]
 
 
 def _pinned(live: list[Json]) -> int:
@@ -316,7 +305,7 @@ def _compose(req: Request, rung: _Rung) -> str:
     if rung.host:
         lines += host_block(state)
     lines.append("waypoints:")
-    lines += _waypoint_lines(ordered(state), rung)
+    lines += _waypoint_lines(_shown(state), rung)
     if done:
         lines.append(f"  done ({len(done)}): {', '.join(done)}")
     if rung.residue and state.residue:
@@ -338,7 +327,7 @@ def _kept_sizes(state: State) -> tuple[int, int]:
         (standing-rules characters, first-ready-stanza characters).
 
     """
-    live = ordered(state)
+    live = _shown(state)
     step = len(stanza(live[_pinned(live)])) if live else 0
     return len("\n".join(guards(state))), step
 
@@ -353,7 +342,7 @@ def build(req: Request) -> str:
         PayloadOverBudgetError: when no rung fits; it names both sizes no rung drops.
 
     """
-    rungs = ladder(len(ordered(req.state)), has_host=bool(host_block(req.state)))
+    rungs = ladder(len(_shown(req.state)), has_host=bool(host_block(req.state)))
     size = 0
     for rung in rungs:
         body = _compose(req, rung)

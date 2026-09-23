@@ -74,6 +74,7 @@ class Update:
     next_step: str | None = None
     evidence_append: str | None = None
     ticks_blocked: int | None = None
+    title: str | None = None
 
 
 @dataclass(frozen=True)
@@ -123,6 +124,37 @@ def _refuse_enums(upd: Update) -> None:
     if upd.ticks_blocked is not None and upd.ticks_blocked < 0:
         msg = f"ticks_blocked {upd.ticks_blocked} is negative"
         raise RefusedError(msg)
+    _refuse_title(upd.title)
+
+
+def _refuse_title(title: str | None) -> None:
+    """Refuse a title that is blank or spans lines; a waypoint's title is its one-line name.
+
+    ⚑ A TITLE GOES STALE: mtools' W24 kept "substrate offers three hooks additions…" long after
+    its work changed, and `--update` had no way to say so.
+
+    Raises:
+        RefusedError: on a blank title, or one carrying a line break.
+
+    """
+    if title is None:
+        return
+    if not title.strip():
+        msg = "title is empty"
+        raise RefusedError(msg)
+    if "\n" in title or "\r" in title:
+        msg = f"title {title!r} is not a single line"
+        raise RefusedError(msg)
+
+
+def _set_given(new: Json, upd: Update) -> None:
+    """Set each plain field the update gives, over whatever the status change implied."""
+    given: dict[str, object | None] = {
+        "blocked_on": None if upd.blocked_on is None else list(upd.blocked_on),
+        "blocked_kind": upd.blocked_kind, "next_bounded_step": upd.next_step,
+        "title": upd.title,
+    }
+    new.update({key: value for key, value in given.items() if value is not None})
 
 
 def _applied(w: Json, upd: Update, now: str) -> Json:
@@ -139,12 +171,7 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
             new["blocked_on"], new["blocked_kind"] = [], None
         if upd.status == "done":
             new["next_bounded_step"] = ""
-    if upd.blocked_on is not None:
-        new["blocked_on"] = list(upd.blocked_on)
-    if upd.blocked_kind is not None:
-        new["blocked_kind"] = upd.blocked_kind
-    if upd.next_step is not None:
-        new["next_bounded_step"] = upd.next_step
+    _set_given(new, upd)
     if upd.evidence_append is not None:
         old = text(w, "evidence")
         entry = f"{now[:_DATE]}: {upd.evidence_append}"

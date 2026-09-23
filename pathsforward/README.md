@@ -19,7 +19,7 @@ mikemol-paths-forward --state S --hash           v2:<16 hex>
 mikemol-paths-forward --state S --verify H       0 match/transition · 4 divergence (FILE wins)
 mikemol-paths-forward --state S --payload        the scheduler payload, or exit 1 if it cannot fit
 mikemol-paths-forward --state S --render         write the derived mirror
-mikemol-paths-forward --state S --queue          one line per waypoint, in rank order
+mikemol-paths-forward --state S --queue          one line per waypoint: working, ready, blocked, rest
 mikemol-paths-forward --state S --check          every mechanical charter property; exit 2 on a finding
 mikemol-paths-forward --state S --check-evidence --check, plus a stat of every evidence path (opt-in)
 mikemol-paths-forward --state S --lock HOLDER    exit 3 if another holder took it under 30 min ago
@@ -27,6 +27,7 @@ mikemol-paths-forward --state S --unlock HOLDER
 mikemol-paths-forward --state S --armed JOB_ID
 mikemol-paths-forward --state S --update W7 [--status S] [--blocked-on WHO…] [--blocked-kind K]
                                             [--next T] [--evidence-append T] [--ticks-blocked N]
+                                            [--title T]   one non-blank line
 mikemol-paths-forward --state S --add TITLE [--next T] [--enables W…] [--touches TAG…]
 mikemol-paths-forward --state S --drop W7 REASON
 mikemol-paths-forward --state S --bump-blocked [--except W…]   NUDGE at 1,2,4,8 · ESCALATE at 16

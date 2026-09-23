@@ -28,6 +28,8 @@ _HUGE_STEP = 7000
 _STALE = timedelta(minutes=45)
 _LEGACY_WIDTH = 16
 _HOME = re.compile(r"/home/")
+_NEW_TITLE = "the title the waypoint's work now has"
+_BAD_TITLES = ("", "   ", "first line\nsecond line", "first line\rsecond line")
 
 
 def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
@@ -290,6 +292,39 @@ def test_a_refused_update_exits_2_and_saves_nothing(tmp_path: Path) -> None:
     before = path.read_bytes()
     assert (_run(path, "--update", "W1", "--status", "blocked"), path.read_bytes() == before) == (
         _REFUSED, True)
+
+
+def _code(path: Path, *args: str) -> int:
+    """Run the CLI, reading a parser refusal as its exit code rather than raising it.
+
+    Returns:
+        the exit code.
+
+    """
+    try:
+        return _run(path, *args)
+    except SystemExit as exc:
+        return exc.code if isinstance(exc.code, int) else _REFUSED
+
+
+def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
+    """--update --title replaces the title, stamps last_worked, and leaves the step alone."""
+    path = _file(tmp_path)
+    code = _code(path, "--update", "W1", "--title", _NEW_TITLE)
+    w = _first(path)
+    assert (code, w["title"], w["next_bounded_step"], "last_worked" in w) == (
+        _OK, _NEW_TITLE, "s", True)
+
+
+@pytest.mark.parametrize("title", _BAD_TITLES)
+def test_a_blank_or_multiline_title_is_refused(
+        tmp_path: Path, capsys: pytest.CaptureFixture[str], title: str) -> None:
+    """A blank or multi-line --title is refused by the tool, naming the title; nothing is saved."""
+    path = _file(tmp_path)
+    before = path.read_bytes()
+    code = _code(path, "--update", "W1", "--title", title)
+    err = capsys.readouterr().err
+    assert (code, path.read_bytes() == before, "REFUSED: title" in err) == (_REFUSED, True, True)
 
 
 def test_add_mints_and_saves(tmp_path: Path) -> None:
