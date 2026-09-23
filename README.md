@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright (c) 2026 Mike Mol -->
+
 I suppose I wonder why I've brought you all here.
 
 This repo will not just be for mdstruct or hooks.
