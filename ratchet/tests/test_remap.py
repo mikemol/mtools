@@ -34,8 +34,34 @@ _OTHER: dict[str, object] = {"path": "src/b.py", "rule": "r2", "count": 5}
 _BASE: dict[str, object] = {"version": 1, "entries": [_ENTRY]}
 
 
+@pytest.fixture()
+def no_ambient_git(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Make every case blind to any git that is running THIS suite.
+
+    ⚑⚑ THE CALLER'S `GIT_*` ENVIRONMENT IS REMOVED, for the fixture repos AND for the guard's own
+    `git show` (the CLI runs in-process, so it inherits this process's environment). Measured
+    2026-09-23: under a PATH commit (`git commit -F msg <path>`) the pre-commit gate ran this suite
+    inside the outer commit's hook environment, and all 18 cases died at their own `git commit -qm
+    base` with rc=1 — the suite that passed under a plain commit an hour earlier. `-C` alone does
+    not stop an exported `GIT_DIR` or `GIT_INDEX_FILE` from winning.
+    ⚑ DECLARED FOR THE MODULE BY `pytestmark`, NOT `autouse`: the scope is written where it applies.
+    """
+    for key in [name for name in os.environ if name.startswith("GIT_")]:
+        monkeypatch.delenv(key)
+
+
+pytestmark = pytest.mark.usefixtures("no_ambient_git")
+
+
 def _git(root: Path, *args: str) -> None:
-    subprocess.run(["git", "-C", str(root), *args], check=True, capture_output=True)
+    """Run git in a fixture repository, carrying git's stderr into any failure.
+
+    ⚑ THE STDERR IS THE POINT: the refusal above printed only `returned non-zero exit status 1`,
+    and its cause could not be read from the gate's report.
+    """
+    proc = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True,
+                          check=False)
+    assert proc.returncode == 0, f"git {' '.join(args)} failed: {proc.stderr.strip()}"
 
 
 def _commit(root: Path, **files: object) -> Path:

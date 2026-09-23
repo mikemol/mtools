@@ -30,6 +30,7 @@ cost the build-graph surgery paperkit named as its price.
 from __future__ import annotations
 
 import ast
+import concurrent.futures
 import os
 import pathlib
 import shutil
@@ -290,6 +291,7 @@ def main(argv: list[str]) -> int:
     survived: list[str] = []
     errored: list[str] = []
     unreachable: list[str] = []
+    jobs: list[tuple[str, pathlib.Path, str, str]] = []
     for mod in modules:
         source = mod.read_text(encoding="utf-8")
         tree = ast.parse(source)
@@ -304,10 +306,23 @@ def main(argv: list[str]) -> int:
             if node.name in skip:
                 unreachable.append(site)
                 continue
-            got = run(py, dist, rel, source, node.name, config, debug=debug)
-            if debug:
-                print(f"    {site} -> {got}")
-            {"killed": killed, "survived": survived, "errored": errored}[got].append(site)
+            jobs.append((site, rel, source, node.name))
+
+    # ⚑⚑ THE MUTANTS RUN CONCURRENTLY, BECAUSE SERIAL COST GREW PAST THE TARGET'S CEILING. Measured
+    # 2026-09-23: adding `membudget_cli` (~30 def-sites) took //fence:mutants past 300s at a load of
+    # ~33 — the grid, not the host, was the cost: one full `-x` suite per site, one after another.
+    # Raising the ceiling was refused (a standing rule) and so was narrowing the grid. Each mutant
+    # already builds in its OWN temp tree with its OWN `HOME`, so they share nothing to race on;
+    # results are gathered in SITE ORDER, so the report is the serial report, byte for byte.
+    # `MUTATE_JOBS` bounds the pool; `1` restores the serial run.
+    workers = int(os.environ.get("MUTATE_JOBS", "") or (os.cpu_count() or 1))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        verdicts = list(pool.map(
+            lambda job: run(py, dist, job[1], job[2], job[3], config, debug=debug), jobs))
+    for (site, _rel, _source, _name), got in zip(jobs, verdicts, strict=True):
+        if debug:
+            print(f"    {site} -> {got}")
+        {"killed": killed, "survived": survived, "errored": errored}[got].append(site)
 
     # ⚑⚑ SURVIVORS ARE `attempted - killed - errored` BY CONSTRUCTION, ASSERTED RATHER THAN
     # ASSUMED. paperkit's fingerprint names only the KILLED sites, so a site absent from it either
