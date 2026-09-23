@@ -3,8 +3,10 @@
 """`mikemol-membudget`: bash's verbs and exit codes over `admit`, then one ledger shared with bash.
 
 ⚑ EVERY ARM USES A LEDGER UNDER `tmp_path`, named through `MEMBUDGET_FILE` in an explicit
-environment — never the host's `~/.cache/membudget`. ⚑ `run` READS A QUIET, INJECTED LOAD: the
-default `Host` reads the real loadavg, which hangs a waiter on a busy box.
+environment — never the host's `~/.cache/membudget`, and the run ledger lands beside it. ⚑ `run`
+READS A QUIET, INJECTED LOAD: the default `Host` reads the real loadavg, which hangs a waiter on a
+busy box. ⚑ THE ADMISSION ARMS RUN UNFENCED (the `ledger` fixture swaps `core.run_once`); the cap's
+own arms keep the real fence and skip, saying why, where the host has no delegated cgroup.
 
 ⚑⚑ THE LAST ARMS ARE THE CROSS-CLIENT ARM (`.claude/swarm/cross-client.md` §7): substrate's bash
 `membudget`, copied beside the ledger so it can build or write nothing in substrate, runs against
@@ -27,7 +29,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.fence import admit, membudget_cli
+from mikemol.fence import admit, core, membudget_cli
+from mikemol.fence import ledger as run_ledger
+from mikemol.fence.cgroup import FenceUnavailableError, parent_with_controllers
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping, Sequence
@@ -63,6 +67,37 @@ _EXIT_LEDGER = 4
 _EXIT_NOT_FOUND = 127
 _SIGNAL_BASE = 128
 
+# A cap's kill as the shell reports it: SIGKILL, 128 + 9.
+_SIGKILLED = _SIGNAL_BASE + signal.SIGKILL
+
+# The cap arms: a lease, a payload that touches far more than it, and one that touches far less.
+_CAP_MB = 64
+_HOG_OVER_MB = 256
+_ROOM_MB = 256
+_HOG_UNDER_MB = 16
+
+# Bash's run ledger beside the budget (`_record_time`), and its label for an unlabelled run —
+# spelled as bash spells them, so the arms are an oracle independent of the script under test.
+_RUNS_NAME = "labels.tsv"
+_UNLABELLED = "?"
+
+# A pool above every `auto` lease here, so admission never refuses one.
+_POOL_MB = 8192
+
+# The autosize letter's three peaks, and the bucket of their max (188 → 256), not of the median.
+_SEEDED_PEAKS = (40.0, 188.0, 90.0)
+_SEEDED_LEASE = 256
+
+# Bash's `AGDA_MB_DEFAULT` when unset, and an operator's own default.
+_BASH_DEFAULT_MB = 192
+_OWN_DEFAULT_MB = 100
+
+# The origin's heavy module, bash's ceiling, a ceiling above it, and the bucket it then leases.
+_BIG_PEAK = 600.0
+_CEILING_MB = 384
+_WIDE_CEILING_MB = 2048
+_BIG_BUCKET = 1024
+
 # A pid far above any `pid_max`, so its owner is dead on every host.
 _DEAD_OWNER = "4194305:1"
 
@@ -76,6 +111,15 @@ _PROBE = ("import os, pathlib, sys\n"
           "text = pathlib.Path(os.environ['MEMBUDGET_FILE']).read_text()\n"
           "pathlib.Path(sys.argv[1]).write_text(lid + ' ' + str(f'LEASE {lid} ' in text))\n"
           "sys.exit(int(sys.argv[2]))\n")
+
+# A child that reports the MB of the lease it runs under, as the shared ledger records it.
+_LEASE_PROBE = ("import os, pathlib, sys\n"
+                "lid = os.environ['MEMBUDGET_PARENT']\n"
+                "text = pathlib.Path(os.environ['MEMBUDGET_FILE']).read_text()\n"
+                "for line in text.splitlines():\n"
+                "    f = line.split()\n"
+                "    if f[:2] == ['LEASE', lid]:\n"
+                "        pathlib.Path(sys.argv[1]).write_text(f[2])\n")
 
 
 def _quiet() -> tuple[float, float, float]:
@@ -176,9 +220,44 @@ def _ids(ledger: Path) -> tuple[int | None, list[str]]:
     return snap.total_mb, [lease.lease_id for lease in snap.leases]
 
 
+def _unfenced(cmd: Sequence[str], caps: core.Caps | None = None,
+              env: Mapping[str, str] | None = None) -> core.Result:
+    """Run `cmd` in `env` with NO fence — `core.run_once`'s shape, for the admission arms.
+
+    Returns:
+        the result: the command's code as a shell reports it, and nothing measured.
+
+    """
+    try:
+        pid = os.posix_spawnp(cmd[0], list(cmd), dict(env or {}))
+    except FileNotFoundError:
+        code = core.EXIT_NOT_FOUND
+    else:
+        code = os.waitstatus_to_exitcode(os.waitpid(pid, 0)[1])
+        code = _SIGNAL_BASE - code if code < 0 else code
+    return core.Result(cmd=tuple(cmd), caps=caps or core.Caps(), duration_s=0.0,
+                       exit_code=code, memory_peak_bytes=None)
+
+
 @pytest.fixture()
 def ledger(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """Return a ledger path under `tmp_path`, with no inherited parent lease.
+    """Return a ledger path under `tmp_path`, with no inherited parent lease and no real fence.
+
+    ⚑ `core.run_once` IS REPLACED BY `_unfenced` HERE, so the admission arms run on a host with no
+    delegated cgroup; the cap's own arms use `fenced_ledger`, which keeps the real fence.
+
+    Returns:
+        the path, not yet created.
+
+    """
+    monkeypatch.delenv(admit.ENV_PARENT, raising=False)
+    monkeypatch.setattr(core, "run_once", _unfenced)
+    return tmp_path / "budget.cotype"
+
+
+@pytest.fixture()
+def fenced_ledger(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Return a ledger path under `tmp_path`, with no inherited parent lease and the real fence.
 
     Returns:
         the path, not yet created.
@@ -391,6 +470,170 @@ def test_a_held_lock_exits_1(ledger: Path) -> None:
     with admit.Store(ledger).locked():
         assert _cli(["status"], ctx) == _EXIT_LOCK
     assert _cli(["status"], ctx) == _EXIT_OK
+
+
+# --- run caps its command at its lease (R1) ---
+
+def _unfenceable() -> str:
+    """Return why this host cannot fence, or the empty string when it can — as test_fence does.
+
+    Returns:
+        the reason, or "".
+
+    """
+    try:
+        parent_with_controllers(["memory", "pids"])
+    except FenceUnavailableError as e:
+        return f"cannot fence here: {e}"
+    return ""
+
+
+_WHY = _unfenceable()
+needs_cgroup = pytest.mark.skipif(bool(_WHY), reason=_WHY or "host can fence")
+
+
+def _hog(mb: int) -> list[str]:
+    """Return a command that really touches `mb` MB — a bytes product writes every page.
+
+    Returns:
+        the argv.
+
+    """
+    return [sys.executable, "-c", f"s = b'x' * ({mb} * 1024 * 1024)"]
+
+
+@needs_cgroup
+def test_run_kills_a_payload_over_its_lease(
+        fenced_ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """A 256MB payload under a 64MB lease is killed by the cap: 137, and stderr says so."""
+    argv = ["run", str(_CAP_MB), "hog", "--", *_hog(_HOG_OVER_MB)]
+    assert _cli(argv, _ctx(fenced_ledger)) == _SIGKILLED
+    assert f"OOM-killed at {_CAP_MB}MB [hog]" in capsys.readouterr().err
+    assert _ids(fenced_ledger) == (_DEFAULT_TOTAL, [])
+
+
+@needs_cgroup
+def test_run_under_its_lease_completes(
+        fenced_ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """The positive control: a 16MB payload under a 256MB lease completes with 0, unkilled."""
+    argv = ["run", str(_ROOM_MB), "fits", "--", *_hog(_HOG_UNDER_MB)]
+    assert _cli(argv, _ctx(fenced_ledger)) == _EXIT_OK
+    assert "OOM-killed" not in capsys.readouterr().err
+
+
+def test_run_without_a_fence_refuses_3(
+        ledger: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """With no cgroup `run` exits 3, never starts the command, and releases its lease."""
+    def unavailable(*_args: object) -> core.Result:
+        raise FenceUnavailableError(_WHY or "no delegated cgroup")
+
+    monkeypatch.setattr(core, "run_once", unavailable)
+    marker = ledger.parent / "ran"
+    argv = ["run", str(_TINY), "--", sys.executable, "-c", f"open({str(marker)!r}, 'w')"]
+    assert _cli(argv, _ctx(ledger)) == _EXIT_REFUSED
+    assert not marker.exists()
+    assert _ids(ledger) == (_DEFAULT_TOTAL, [])
+
+
+def test_the_cap_is_the_lease_with_swap_forbidden(
+        ledger: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """`run 64` fences at memory 64M and swap 0 — `autosize.rung_caps`, restated nowhere."""
+    seen: list[core.Caps] = []
+
+    def recording(cmd: Sequence[str], caps: core.Caps | None = None,
+                  env: Mapping[str, str] | None = None) -> core.Result:
+        seen.append(caps or core.Caps())
+        return _unfenced(cmd, caps, env)
+
+    monkeypatch.setattr(core, "run_once", recording)
+    assert _cli(["run", str(_CAP_MB), "--", "true"], _ctx(ledger)) == _EXIT_OK
+    assert seen == [core.Caps(mem=f"{_CAP_MB}M", swap="0")]
+
+
+# --- the run ledger, and `auto` sized from it (R2) ---
+
+def _runs(ledger: Path) -> Path:
+    """Return the run ledger bash would use beside `ledger`.
+
+    Returns:
+        `labels.tsv` in `ledger`'s directory.
+
+    """
+    return ledger.parent / _RUNS_NAME
+
+
+def _seed(ledger: Path, label: str, *peaks: float) -> None:
+    """Write one clean-run row per peak for `label` into the run ledger beside `ledger`."""
+    rows = [run_ledger.Row(label, 1.0, peak, 0) for peak in peaks]
+    _runs(ledger).write_text("".join(row.line() + "\n" for row in rows), encoding="utf-8")
+
+
+def _leased(ledger: Path, label: str, **extra: str) -> tuple[int, str]:
+    """Run `run auto LABEL` over a large pool; return its code and the lease MB its child saw.
+
+    Returns:
+        the exit code, and the MB (empty when the child never ran).
+
+    """
+    if not ledger.exists():
+        _write(ledger, f"TOTAL_MB {_POOL_MB}\n")
+    seen = ledger.parent / "leased"
+    seen.unlink(missing_ok=True)
+    argv = ["run", "auto", label, "--", sys.executable, "-c", _LEASE_PROBE, str(seen)]
+    code = _cli(argv, membudget_cli.Context(env=_env(ledger, **extra), host=_host()))
+    return code, seen.read_text(encoding="utf-8") if seen.exists() else ""
+
+
+def test_auto_sizes_from_a_seeded_ledger(ledger: Path) -> None:
+    """Peaks (40, 188, 90) for `job` lease 256 — the bucket of the max, from the run ledger."""
+    _seed(ledger, "job", *_SEEDED_PEAKS)
+    assert _leased(ledger, "job") == (_EXIT_OK, str(_SEEDED_LEASE))
+
+
+def test_auto_with_no_history_takes_the_default(ledger: Path) -> None:
+    """With no history `auto` leases bash's 192; the control, AGDA_MB_DEFAULT=100, leases 100."""
+    assert _leased(ledger, "fresh") == (_EXIT_OK, str(_BASH_DEFAULT_MB))
+    own = _leased(ledger, "fresh", AGDA_MB_DEFAULT=str(_OWN_DEFAULT_MB))
+    assert own == (_EXIT_OK, str(_OWN_DEFAULT_MB))
+
+
+def test_auto_passes_the_ceiling_and_it_clamps(
+        ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """A 600MB peak leases 384 under AGDA_MB_MAX=384 and warns; under 2048 it leases 1024."""
+    _seed(ledger, "heavy", _BIG_PEAK)
+    clamped = _leased(ledger, "heavy", AGDA_MB_MAX=str(_CEILING_MB))
+    assert clamped == (_EXIT_OK, str(_CEILING_MB))
+    assert "BELOW the measured need" in capsys.readouterr().err
+    wide = _leased(ledger, "heavy", AGDA_MB_MAX=str(_WIDE_CEILING_MB))
+    assert wide == (_EXIT_OK, str(_BIG_BUCKET))
+    assert "BELOW" not in capsys.readouterr().err
+
+
+def test_auto_rejects_a_malformed_ceiling(ledger: Path) -> None:
+    """AGDA_MB_MAX=lots is a usage error, 2; the control, an unset one, runs."""
+    assert _leased(ledger, "x", AGDA_MB_MAX="lots") == (_EXIT_USAGE, "")
+    assert _leased(ledger, "x")[0] == _EXIT_OK
+
+
+def test_a_clean_run_is_recorded_and_a_failed_one_is_not(ledger: Path) -> None:
+    """Exit 0 appends one row under its label; exit 1 appends none; unlabelled records as `?`."""
+    ctx = _ctx(ledger)
+    assert _cli(["run", "1", "rec", "--", "true"], ctx) == _EXIT_OK
+    assert _cli(["run", "1", "rec", "--", "false"], ctx) != _EXIT_OK
+    assert _cli(["run", "1", "--", "true"], ctx) == _EXIT_OK
+    rows = run_ledger.parse(_runs(ledger).read_text(encoding="utf-8"))
+    assert [row.label for row in rows] == ["rec", _UNLABELLED]
+
+
+def test_the_run_ledger_honours_its_path_and_opt_out(ledger: Path, tmp_path: Path) -> None:
+    """MEMBUDGET_LABEL_LEDGER moves the ledger; MEMBUDGET_NOLABELLEDGER=1 writes none at all."""
+    moved = tmp_path / "elsewhere.tsv"
+    assert _cli(["run", "1", "a", "--", "true"],
+                _ctx(ledger, MEMBUDGET_LABEL_LEDGER=str(moved))) == _EXIT_OK
+    assert [row.label for row in run_ledger.parse(moved.read_text(encoding="utf-8"))] == ["a"]
+    assert _cli(["run", "1", "b", "--", "true"],
+                _ctx(ledger, MEMBUDGET_NOLABELLEDGER="1")) == _EXIT_OK
+    assert not _runs(ledger).exists()
 
 
 # --- lease and deadline ---

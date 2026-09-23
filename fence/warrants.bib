@@ -1314,6 +1314,76 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_held_lock_exits_1},
 }
 
+@misc{fence-membudget-cli-run-kills-a-payload-over-its-lease,
+  section = {membudget_cli},
+  title  = {A 256MB payload under a 64MB lease is killed by the cap: 137, and stderr says so},
+  claim  = {A 256MB payload under a 64MB lease is killed by the cap: 137, and stderr says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_kills_a_payload_over_its_lease},
+}
+
+@misc{fence-membudget-cli-run-under-its-lease-completes,
+  section = {membudget_cli},
+  title  = {The positive control: a 16MB payload under a 256MB lease completes with 0, unkilled},
+  claim  = {The positive control: a 16MB payload under a 256MB lease completes with 0, unkilled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_under_its_lease_completes},
+}
+
+@misc{fence-membudget-cli-run-without-a-fence-refuses-3,
+  section = {membudget_cli},
+  title  = {With no cgroup `run` exits 3, never starts the command, and releases its lease},
+  claim  = {With no cgroup `run` exits 3, never starts the command, and releases its lease.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_without_a_fence_refuses_3},
+}
+
+@misc{fence-membudget-cli-the-cap-is-the-lease-with-swap-forbidden,
+  section = {membudget_cli},
+  title  = {`run 64` fences at memory 64M and swap 0 — `autosize.rung_caps`, restated nowhere},
+  claim  = {`run 64` fences at memory 64M and swap 0 — `autosize.rung_caps`, restated nowhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_the_cap_is_the_lease_with_swap_forbidden},
+}
+
+@misc{fence-membudget-cli-auto-sizes-from-a-seeded-ledger,
+  section = {membudget_cli},
+  title  = {Peaks (40, 188, 90) for `job` lease 256 — the bucket of the max, from the run ledger},
+  claim  = {Peaks (40, 188, 90) for `job` lease 256 — the bucket of the max, from the run ledger.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_auto_sizes_from_a_seeded_ledger},
+}
+
+@misc{fence-membudget-cli-auto-with-no-history-takes-the-default,
+  section = {membudget_cli},
+  title  = {With no history `auto` leases bash's 192; the control, AGDA_MB_DEFAULT=100, leases 100},
+  claim  = {With no history `auto` leases bash's 192; the control, AGDA_MB_DEFAULT=100, leases 100.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_auto_with_no_history_takes_the_default},
+}
+
+@misc{fence-membudget-cli-auto-passes-the-ceiling-and-it-clamps,
+  section = {membudget_cli},
+  title  = {A 600MB peak leases 384 under AGDA_MB_MAX=384 and warns; under 2048 it leases 1024},
+  claim  = {A 600MB peak leases 384 under AGDA_MB_MAX=384 and warns; under 2048 it leases 1024.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_auto_passes_the_ceiling_and_it_clamps},
+}
+
+@misc{fence-membudget-cli-auto-rejects-a-malformed-ceiling,
+  section = {membudget_cli},
+  title  = {AGDA_MB_MAX=lots is a usage error, 2; the control, an unset one, runs},
+  claim  = {AGDA_MB_MAX=lots is a usage error, 2; the control, an unset one, runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_auto_rejects_a_malformed_ceiling},
+}
+
+@misc{fence-membudget-cli-a-clean-run-is-recorded-and-a-failed-one-is-not,
+  section = {membudget_cli},
+  title  = {Exit 0 appends one row under its label; exit 1 appends none; unlabelled records as `?`},
+  claim  = {Exit 0 appends one row under its label; exit 1 appends none; unlabelled records as `?`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_clean_run_is_recorded_and_a_failed_one_is_not},
+}
+
+@misc{fence-membudget-cli-the-run-ledger-honours-its-path-and-opt-out,
+  section = {membudget_cli},
+  title  = {MEMBUDGET_LABEL_LEDGER moves the ledger; MEMBUDGET_NOLABELLEDGER=1 writes none at all},
+  claim  = {MEMBUDGET_LABEL_LEDGER moves the ledger; MEMBUDGET_NOLABELLEDGER=1 writes none at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_the_run_ledger_honours_its_path_and_opt_out},
+}
+
 @misc{fence-membudget-cli-lease-and-deadline-answer-through-label-lease,
   section = {membudget_cli},
   title  = {With no history `lease` prints the default MB and `deadline` the default seconds},

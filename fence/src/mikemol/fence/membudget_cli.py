@@ -2,25 +2,32 @@
 # Copyright (c) 2026 Mike Mol
 """`mikemol-membudget`: substrate's bash `membudget` surface, over `admit` and `label_lease`.
 
-Designed in `.claude/swarm/cross-client.md` §5-§7. The verbs are bash's: `run MB [LABEL] -- CMD`,
-`init [N]`, `init --reset N` and `status`; `lease` and `deadline` are `label_lease`'s modes, which
-waited for this script (`label_lease`'s module docstring). The exit codes are bash's too: the
-command's own code from `run` (a signal as 128 + its number), 1 when the ledger lock stays busy,
-2 on a usage error, 3 when admission is refused or would wait under `MEMBUDGET_NOBLOCK` or past
-`MEMBUDGET_TIMEOUT`, and 4 when the ledger itself says no.
+Designed in `.claude/swarm/cross-client.md` §5-§7. The verbs are bash's: `run MB|auto [LABEL] --
+CMD`, `init [N]`, `init --reset N` and `status`; `lease` and `deadline` are `label_lease`'s modes,
+which waited for this script (`label_lease`'s module docstring). The exit codes are bash's too: the
+command's own code from `run` (a signal as 128 + its number, so a cap's kill is 137), 1 when the
+ledger lock stays busy, 2 on a usage error, 3 when admission is refused or would wait under
+`MEMBUDGET_NOBLOCK` or past `MEMBUDGET_TIMEOUT` — or when no memory cap can be applied — and 4 when
+the ledger itself says no.
 
 ⚑⚑ ONE LEDGER, TWO CLIENTS. Nothing here holds a rule of its own about the file: every write goes
 through `admit`, whose rules already take bash's side where the two could differ, so this script
 and bash's honour each other's leases (the cross-client arm in `tests/test_membudget_cli.py`).
 
-⚑⚑ `run` DOES NOT CAP THE COMMAND. Bash launches it in a `MemoryMax` scope; this script admits,
-runs and releases, and a cap is `mikemol-fence`'s job — composed as `run MB L -- mikemol-fence …`.
+⚑⚑ `run` CAPS THE COMMAND AT ITS LEASE, AS BASH'S `MemoryMax` SCOPE DOES. The cap is
+`autosize.rung_caps` — the lease itself, swap forbidden — run by `core.run_once`; nothing about
+the cap is restated here. ⚑ NO FENCE IS A REFUSAL (3), NEVER AN UNCAPPED RUN: bash's `none`
+backend refuses for the same reason — an uncapped payload is the OOM the lease exists to prevent.
+
+⚑⚑ `auto` IS `label_lease.lease` OVER THE RUN LEDGER, WITH THE CEILING PASSED. Bash's label arm
+hands `label_lease` its default only, so `AGDA_MB_MAX` never reached it (A1 of the label-lease
+letter); here both variables reach the one sizing rule, and a clamp says so on stderr.
 
 ⚑ A SCRIPT OF ITS OWN, NOT A MODE OF `mikemol-fence`, for the reason `peaks` gives: that command
 fences whatever follows its flags, so it cannot take a subcommand.
 
 ⚑ THE EFFECTFUL EDGE IS ONE FUNCTION PER VERB, and each reads the machine only through a `Context`
-— the environment, `admit.Host` and the spawner — so no arm depends on the box's load or memory.
+— the environment, `admit.Host` and the fencer — so no arm depends on the box's load or memory.
 """
 
 from __future__ import annotations
@@ -29,9 +36,11 @@ import math
 import os
 import sys
 from dataclasses import dataclass, field, replace
+from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.fence import admit, label_lease
+from mikemol.fence import admit, autosize, core, label_lease, ledger
+from mikemol.fence.cgroup import FenceUnavailableError
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping, Sequence
@@ -40,12 +49,8 @@ if TYPE_CHECKING:
 EXIT_LOCK = 1
 EXIT_USAGE = 2
 
-# The shell's codes for a command that could not be run: not found, and not executable.
-EXIT_NOT_FOUND = 127
-EXIT_NOT_EXECUTABLE = 126
-
-# A command killed by signal N exits 128 + N, as the shell reports it.
-_SIGNAL_BASE = 128
+# Bash's code when no memory-cap backend exists: `_launch_scope`'s `none` arm returns 3.
+EXIT_NO_CAP = 3
 
 # The variables bash reads that shape the wait and the lock.
 ENV_LOCK_TIMEOUT = "MEMBUDGET_LOCK_TIMEOUT"
@@ -56,11 +61,27 @@ ENV_POLL = "MEMBUDGET_POLL"
 ENV_POLL_MAX = "MEMBUDGET_POLL_MAX"
 ENV_GC_INTERVAL = "MEMBUDGET_GC_INTERVAL"
 
+# The variables bash's `_auto_mb` and `_record_time` read: the size with no history, the ceiling on
+# an extrapolation from history, the run ledger's path, and the opt-out from recording to it.
+ENV_DEFAULT_MB = "AGDA_MB_DEFAULT"
+ENV_CEILING_MB = "AGDA_MB_MAX"
+ENV_LABEL_LEDGER = "MEMBUDGET_LABEL_LEDGER"
+ENV_NOLABELLEDGER = "MEMBUDGET_NOLABELLEDGER"
+
+# Bash's values when those are unset — substrate-tuned, and the operator's to override.
+DEFAULT_MB = 192
+CEILING_MB = 384
+
+# The run ledger's name beside the budget ledger, and the label bash records an unlabelled run as.
+LABEL_LEDGER_NAME = "labels.tsv"
+UNLABELLED = "?"
+
+_AUTO = "auto"
 _SEPARATOR = "--"
 _RESET = "--reset"
 _RESET_ARGS = 2
 
-USAGE = ("usage: mikemol-membudget {run MB [LABEL] -- CMD... | init [MB] | init --reset MB"
+USAGE = ("usage: mikemol-membudget {run MB|auto [LABEL] -- CMD... | init [MB] | init --reset MB"
          " | status | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
          " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n")
 
@@ -69,23 +90,14 @@ class UsageError(ValueError):
     """The invocation is malformed; the message says how."""
 
 
-def spawn(command: Sequence[str], env: Mapping[str, str]) -> int:
-    """Run `command` to completion with `env`, and return its exit code as a shell reports it.
-
-    ⚑ AN ARGV LIST, NO SHELL: `posix_spawnp` searches `PATH` and execs; nothing is re-parsed.
+def fence(command: Sequence[str], env: Mapping[str, str], caps: core.Caps) -> core.Result:
+    """Run `command` in `env` inside a fence capped by `caps` — `core.run_once`, nothing added.
 
     Returns:
-        the command's code; 128 + N when signal N killed it; 127 or 126 when it could not start.
+        what the run consumed, its exit code as a shell reports it, and which cap bound.
 
     """
-    try:
-        pid = os.posix_spawnp(command[0], list(command), dict(env))
-    except FileNotFoundError:
-        return EXIT_NOT_FOUND
-    except PermissionError:
-        return EXIT_NOT_EXECUTABLE
-    code = os.waitstatus_to_exitcode(os.waitpid(pid, 0)[1])
-    return _SIGNAL_BASE - code if code < 0 else code
+    return core.run_once(command, caps, env)
 
 
 def _environ() -> Mapping[str, str]:
@@ -100,11 +112,11 @@ def _environ() -> Mapping[str, str]:
 
 @dataclass(frozen=True, slots=True)
 class Context:
-    """What a verb reads from the world: the environment, the host's facts, and the spawner."""
+    """What a verb reads from the world: the environment, the host's facts, and the fencer."""
 
     env: Mapping[str, str] = field(default_factory=_environ)
     host: admit.Host = admit.HOST
-    spawn: Callable[[Sequence[str], Mapping[str, str]], int] = spawn
+    fence: Callable[[Sequence[str], Mapping[str, str], core.Caps], core.Result] = fence
 
 
 # --- the pure half: arguments and environment, read into `admit`'s types ---
@@ -178,20 +190,71 @@ def megabytes(raw: str, *, zero_ok: bool) -> int:
     return int(raw)
 
 
+def label_ledger_of(env: Mapping[str, str]) -> Path:
+    """Return the run ledger bash would use: `$MEMBUDGET_LABEL_LEDGER`, else beside the budget.
+
+    Returns:
+        the path; an empty variable counts as unset, as bash's `${…:-}` does.
+
+    """
+    named = env.get(ENV_LABEL_LEDGER)
+    return Path(named) if named else admit.default_path(env).parent / LABEL_LEDGER_NAME
+
+
+@dataclass(frozen=True, slots=True)
+class AutoSize:
+    """What `auto` sizes from: the run ledger, the default with no history, and the ceiling."""
+
+    runs: Path
+    default_mb: int
+    ceiling_mb: int
+
+    @classmethod
+    def of(cls, env: Mapping[str, str]) -> AutoSize:
+        """Read `AGDA_MB_DEFAULT` and `AGDA_MB_MAX`; unset or empty is bash's value.
+
+        ⚑ EACH MUST BE A POSITIVE WHOLE MB, or `megabytes` raises the usage error.
+
+        Returns:
+            the sizing inputs.
+
+        """
+        default = env.get(ENV_DEFAULT_MB)
+        ceiling = env.get(ENV_CEILING_MB)
+        return cls(label_ledger_of(env),
+                   megabytes(default, zero_ok=False) if default else DEFAULT_MB,
+                   megabytes(ceiling, zero_ok=False) if ceiling else CEILING_MB)
+
+    def lease(self, label: str) -> autosize.Sizing:
+        """Return `label`'s lease — `label_lease.lease` over the ledger, the ceiling passed.
+
+        Returns:
+            the sizing, `clamped_from` set when the one cap cut it.
+
+        """
+        return label_lease.lease(label_lease.read_rows(self.runs), label,
+                                 default_mb=self.default_mb, ceiling_mb=self.ceiling_mb)
+
+    @property
+    def cap(self) -> int:
+        """The one cap the sizing obeyed: the ceiling, raised by a larger default."""
+        return autosize.cap_of(self.ceiling_mb, self.default_mb)
+
+
 @dataclass(frozen=True, slots=True)
 class RunArgs:
-    """`run`'s operands: the lease size, its label, and the command it runs."""
+    """`run`'s operands: the lease size (None for `auto`), its label, and the command it runs."""
 
-    mb: int
+    mb: int | None
     label: str
     command: tuple[str, ...]
 
     @classmethod
     def parse(cls, args: Sequence[str]) -> RunArgs:
-        """Read `MB [LABEL] -- CMD...`.
+        """Read `MB|auto [LABEL] -- CMD...`.
 
-        ⚑ A ZERO LEASE IS ALLOWED: a claim needs no capacity (`admit.decide`). `auto` is NOT —
-        bash sizes it from `labels.tsv`, and this script does not read that file yet.
+        ⚑ A ZERO LEASE IS ALLOWED: a claim needs no capacity (`admit.decide`) — but it is also a
+        zero memory cap, as bash's `MemoryMax=0M` is, so its command cannot run.
 
         Returns:
             the operands.
@@ -209,11 +272,12 @@ class RunArgs:
             msg = "run takes MB [LABEL] -- CMD..."
             raise UsageError(msg)
         label = head[1] if len(head) > 1 else ""
-        return cls(megabytes(head[0], zero_ok=True), label, command)
+        mb = None if head[0] == _AUTO else megabytes(head[0], zero_ok=True)
+        return cls(mb, label, command)
 
 
 def request_of(call: RunArgs, env: Mapping[str, str]) -> admit.Request:
-    """Return the admission request, nested under the lease the environment names.
+    """Return the admission request for a sized call, nested under the lease the env names.
 
     Returns:
         the request.
@@ -223,7 +287,7 @@ def request_of(call: RunArgs, env: Mapping[str, str]) -> admit.Request:
 
     """
     try:
-        return admit.Request(call.mb, call.label, admit.inherited_parent(env))
+        return admit.Request(call.mb or 0, call.label, admit.inherited_parent(env))
     except ValueError as exc:
         raise UsageError(str(exc)) from exc
 
@@ -282,20 +346,52 @@ def _say(text: str) -> None:
     sys.stderr.write(f"membudget: {text}\n")
 
 
-def cmd_run(args: Sequence[str], ctx: Context) -> int:
-    """`run MB [LABEL] -- CMD...`: admit, run the command under its lease, release.
+def sized_call(call: RunArgs, env: Mapping[str, str]) -> RunArgs:
+    """Return `call` with `auto` replaced by the lease its label's history earns.
+
+    ⚑ A CLAMP IS LOUD: the warning `autosize.clamp_warning` owes goes to stderr, never stdout.
 
     Returns:
-        the command's exit code.
+        the call with a size.
 
     """
-    call = RunArgs.parse(args)
+    if call.mb is not None:
+        return call
+    auto = AutoSize.of(env)
+    got = auto.lease(call.label)
+    warning = autosize.clamp_warning(call.label, got, auto.cap)
+    if warning is not None:
+        sys.stderr.write(warning + "\n")
+    return replace(call, mb=got.mb)
+
+
+def cmd_run(args: Sequence[str], ctx: Context) -> int:
+    """`run MB|auto [LABEL] -- CMD...`: admit, run capped at the lease, release, record.
+
+    ⚑ ONLY A CLEAN RUN IS RECORDED (`ledger.row_of`): a killed run's peak is the cap it hit.
+
+    Returns:
+        the command's exit code — 137 when the cap killed it; 3 when no cap could be applied.
+
+    """
+    call = sized_call(RunArgs.parse(args), ctx.env)
     request = request_of(call, ctx.env)
     store = store_of(ctx.env)
     with admit.admit(store, request, waiting_of(ctx.env), ctx.host) as lease:
         where = "TOP" if request.parent == admit.NO_PARENT else f"SUB under {request.parent}"
-        _say(f"{where} lease {call.mb}MB [{call.label}] id={lease.lease_id}")
-        return ctx.spawn(call.command, {**ctx.env, admit.ENV_PARENT: lease.lease_id})
+        _say(f"{where} lease {request.mb}MB [{call.label}] id={lease.lease_id}"
+             f" → MemoryMax={request.mb}M")
+        try:
+            result = ctx.fence(call.command, {**ctx.env, admit.ENV_PARENT: lease.lease_id},
+                               autosize.rung_caps(request.mb))
+        except FenceUnavailableError as exc:
+            _say(f"REFUSED [{call.label}] — no memory cap can be applied: {exc}")
+            return EXIT_NO_CAP
+    if autosize.killed_by_cap(result):
+        _say(f"OOM-killed at {request.mb}MB [{call.label}] — {'; '.join(result.bound_by)}")
+    if not ctx.env.get(ENV_NOLABELLEDGER):
+        ledger.record(label_ledger_of(ctx.env), call.label or UNLABELLED, result)
+    return core.EXIT_HARNESS if result.exit_code is None else result.exit_code
 
 
 def cmd_status(args: Sequence[str], ctx: Context) -> int:

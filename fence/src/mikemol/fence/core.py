@@ -167,8 +167,8 @@ def _apply(cg: Path, caps: Caps) -> None:
         cgroup.write_interface(cg, "io.max", caps.io)
 
 
-def _child(cg: Path, cmd: Sequence[str]) -> None:
-    """Join the fence, then exec. Never returns.
+def _child(cg: Path, cmd: Sequence[str], env: Mapping[str, str]) -> None:
+    """Join the fence, then exec in `env`. Never returns.
 
     ⚑ THE CHILD JOINS BEFORE IT EXECS, so the payload and every descendant it spawns are charged
     to the fence. Joining after exec would leave a window in which the payload runs uncharged,
@@ -185,8 +185,9 @@ def _child(cg: Path, cmd: Sequence[str]) -> None:
     try:
         # ⚑ `execvp` WITH AN ARGV LIST IS THE SAFETY PROPERTY, not a risk to be waived: it is
         # precisely what avoids a shell. Routing the payload through one would add an
-        # interpreter that re-splits arguments the caller already separated.
-        os.execvp(cmd[0], list(cmd))  # ruff: ignore[start-process-with-no-shell] — no shell IS the intent; see above
+        # interpreter that re-splits arguments the caller already separated. The `e` form
+        # searches `env`'s own `PATH`: the environment decides what the payload sees and where.
+        os.execvpe(cmd[0], list(cmd), dict(env))  # ruff: ignore[start-process-with-no-shell] — no shell IS the intent; see above
     except FileNotFoundError:
         os._exit(EXIT_NOT_FOUND)
     except PermissionError:
@@ -221,10 +222,13 @@ def fence_name(pid: int, now: float, env: Mapping[str, str]) -> str:
     return ".".join(parts)
 
 
-def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
+def run_once(cmd: Sequence[str], caps: Caps | None = None,
+             env: Mapping[str, str] | None = None) -> Result:
     """Run `cmd` in a transient fence cgroup and return what it consumed.
 
-    With `caps=None` (or an all-unset `Caps`) this imposes nothing and only measures.
+    With `caps=None` (or an all-unset `Caps`) this imposes nothing and only measures. With `env` the
+    payload runs in exactly that environment — how `mikemol-membudget run` hands it the lease it
+    runs under — and without it, in this process's.
 
     Returns:
         A `Result` carrying the payload's exit code, wall duration, peak memory and the counters
@@ -254,7 +258,7 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None) -> Result:
     t0 = time.time()
     child = os.fork()
     if child == 0:
-        _child(cg, cmd)
+        _child(cg, cmd, os.environ if env is None else env)
 
     rc: int | None = None
     usage: resource.struct_rusage | None = None
