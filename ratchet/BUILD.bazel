@@ -46,7 +46,15 @@ py_library(
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"],
+        # ⚑ THE CHECKER IS STAGED FOR THE ONE ARM THAT NEEDS A REAL ONE. `test_cannot_census`'s
+        # positive control runs a real census, and the sandbox venv carries no `ruff` binary —
+        # measured, it refused with the census's own "could not be run", the refusal working.
+        # ⚑⚑ UNDER ITS OWN NAME, NOT `RUFF_BIN`: `RUFF_BIN` outranks `<dist>/.venv/bin/ruff`, and
+        # `test_census` plants fake checkers at that venv path. Exporting `RUFF_BIN` to every
+        # module ran the real ruff past three plants (measured: 3 modules red). The ratchet never
+        # reads `CONTROL_RUFF`; only the control does, and hands it on as `RUFF_BIN`.
+        data = ["pyproject.toml", "@ruff//:bin"],
+        env = {"CONTROL_RUFF": "$(location @ruff//:bin)"},
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,
         # and bazel's default of `medium` reserves a timeout budget nothing uses. An honest
         # size is what lets a genuinely slow witness stand out later instead of blending in.

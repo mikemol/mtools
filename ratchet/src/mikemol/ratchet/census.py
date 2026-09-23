@@ -118,6 +118,13 @@ def parse_concise(lines: Iterable[str], root: Path | None = None) -> frozenset[s
     return frozenset(out)
 
 
+class CensusUnavailableError(RuntimeError):
+    """The checker could not produce a census; the gate must refuse, not crash or pass.
+
+    ⚑ A `RuntimeError` subclass, so a caller that already refused on `RuntimeError` still does.
+    """
+
+
 def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     """Run ruff over one distribution and return its census.
 
@@ -130,21 +137,40 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
         every `file:rule` key ruff reported, as a frozenset — empty when the tree is clean.
 
     Raises:
-        RuntimeError: when ruff exits with any status but 0 or 1, because a census read from a
-            checker that did not run is indistinguishable from a clean tree and would pay the
-            whole baseline down in one run.
+        CensusUnavailableError: when ruff cannot be started (missing, not executable), or exits
+            with any status but 0 or 1, because a census read from a checker that did not run is
+            indistinguishable from a clean tree and would pay the whole baseline down in one run.
 
     """
     # ⚑⚑ THE DECLARED BINARY WINS OVER A VENV PATH. This read `.venv/bin/ruff` unconditionally,
     # which is a developer venv no clone contains — the same escape the hooks suite already
     # closed. Under bazel `RUFF_BIN` names a hash-pinned staged input; unset, the venv answers as
     # before. An action reaching for an undeclared binary is invisible to its own key.
-    binary = os.environ.get("RUFF_BIN") or str(dist / ".venv" / "bin" / "ruff")
+    venv_ruff = dist / ".venv" / "bin" / "ruff"
+    # ⚑⚑ A RELATIVE `RUFF_BIN` IS ANCHORED WHERE IT WAS NAMED, NOT WHERE RUFF RUNS. ruff runs with
+    # `cwd=dist`, so a relative path resolved against the distribution instead of the caller.
+    # Measured: bazel's `$(location @ruff//:bin)` is `../+_repo_rules+ruff/ruff`, and exporting it
+    # to the ratchet's own tests made every census "could not be run". Callers had dodged it one
+    # by one (`Path(...).resolve()` at two hooks call sites); anchoring it here covers them all.
+    # `cwd() / declared` is the caller's directory joined WITHOUT following links, and an
+    # absolute `declared` wins the join unchanged.
+    declared = os.environ.get("RUFF_BIN")
+    binary = str(dist.cwd() / declared) if declared else str(venv_ruff)
     argv = [binary, "check", "--no-cache",
             "--output-format", "concise", "."]
     if preview:
         argv.insert(3, "--preview")
-    proc = subprocess.run(argv, capture_output=True, text=True, check=False, cwd=dist)
+    # ⚑⚑⚑ A CHECKER THAT CANNOT START IS A REFUSAL, NOT A CRASH. Measured: with no
+    # `<dist>/.venv/bin/ruff` and `RUFF_BIN` unset, this call raised a raw `FileNotFoundError`,
+    # and the interpreter's default handler exits 1 — the status of "new keys refused". A
+    # non-executable binary does the same as `PermissionError`. Both are `OSError`, and the
+    # message names the path tried and the two ways to supply one.
+    try:
+        proc = subprocess.run(argv, capture_output=True, text=True, check=False, cwd=dist)
+    except OSError as exc:
+        msg = (f"cannot census {dist}: ruff at {binary} could not be run ({exc.strerror}) — "
+               f"supply one as {venv_ruff} or name one in RUFF_BIN")
+        raise CensusUnavailableError(msg) from exc
     # ⚑ A SET LITERAL, ON THE CHECKER'S ADVICE, AND THE CONTROL FOR IT WAS MISSING. The arm that
     # covered this line proved an unexpected status REFUSES and nothing proved 0 and 1 are
     # ACCEPTED — a predicate refusing everything would have passed it, which is the broken-shut
@@ -153,5 +179,5 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     if proc.returncode not in {0, 1}:
         msg = (f"ruff exited {proc.returncode} in {dist} — the census is not trustworthy; "
                f"refusing rather than reporting an empty one\n{proc.stderr}")
-        raise RuntimeError(msg)
+        raise CensusUnavailableError(msg)
     return parse_concise(proc.stdout.splitlines(), dist)

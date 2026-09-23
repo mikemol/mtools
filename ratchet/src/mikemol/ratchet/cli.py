@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 from typing import cast
 
-from mikemol.ratchet.census import run_ruff
+from mikemol.ratchet.census import CensusUnavailableError, run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
 from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
 from mikemol.ratchet.remap import __doc__ as remap_doc
@@ -28,6 +28,12 @@ from mikemol.ratchet.remap import remap_guard
 from mikemol.ratchet.state import BaselineState
 
 _BASELINE = Path("ratchet-preview.txt")
+
+# ⚑⚑ "COULD NOT LOOK" IS NOT "LOOKED AND REFUSED", AND THE STATUS SAYS WHICH. 2 matches
+# `remap.UNREADABLE` and argparse's own usage status: in all three the gate did not run. Every
+# consumer measured (`.githooks/pre-commit`, `preflight.sh`, `hooks/tests/test_bar_fires.py`)
+# tests only for nonzero, so each still refuses; only the reason becomes readable from the status.
+CANNOT_CENSUS = 2
 
 
 _REMAP = "remap"
@@ -59,7 +65,7 @@ def _remap_main(argv: list[str]) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Run the ratchet for one distribution; return 0 on pass, 1 on refusal.
+    """Run the ratchet for one distribution; 0 on pass, 1 on refusal, 2 when it cannot census.
 
     ⚑ `remap` AS THE FIRST ARGUMENT SELECTS THE SUBCOMMAND. A distribution directory literally
     named `remap` is reached as `./remap`.
@@ -70,7 +76,8 @@ def main(argv: list[str] | None = None) -> int:
     schema cannot parse refuses by name, and `--init-absent` mints nothing.
 
     Returns:
-        0 on pass, 1 on refusal (the remap subcommand returns its own codes).
+        0 on pass, 1 on refusal, CANNOT_CENSUS when ruff could not produce a census (the remap
+        subcommand returns its own codes).
 
     """
     args_in = sys.argv[1:] if argv is None else argv
@@ -101,7 +108,11 @@ def main(argv: list[str] | None = None) -> int:
     write = bool(opts["write"])
     schema = str(opts["key_schema"])
     path = dist / _BASELINE
-    census = run_ruff(dist, preview=True)
+    try:
+        census = run_ruff(dist, preview=True)
+    except CensusUnavailableError as exc:
+        sys.stderr.write(f"{exc}\n")
+        return CANNOT_CENSUS
 
     if init_absent:
         state, _keys = read_baseline(path)

@@ -3,13 +3,6 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# ⚑⚑⚑ THESE HOOKS ARE ALREADY ADOPTED ACROSS REPOS BY SYMLINK, AND THAT IS THE DEFECT THIS
-# PACKAGE ENDS. A symlinked script derives its own root from `__file__` — and `abspath` does not
-# resolve symlinks, so the root becomes the CONSUMER's repo. Measured: a peer's adopted tool
-# failed on every invocation with `ModuleNotFoundError`, and the cause was neither their code nor
-# a refactor but a latent property of being reached through a link. An installed package cannot
-# have that defect: it knows where it lives, and it can DECLARE what it needs instead of hoping
-# the surrounding layout supplies it.
 name = "mikemol-ratchet"
 version = "0.1.0"
 description = "A paydown-only ratchet over a baseline SET, with four baseline states whose properties are declared rather than re-derived."
@@ -24,16 +17,18 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ THE CHECKERS ARE RUNTIME DEPENDENCIES, NOT DEV EXTRAS. This package's whole function is to
-# invoke them; a consumer installing it without ruff and mypy gets a hook that reports
-# `is not installed in the project venv` on every edit — armed and checking nothing, which is the
-# state these hooks exist to make impossible.
-#
-# ⚑⚑ AND `shellcheck` IS ABSENT FROM THIS LIST BECAUSE IT IS A SYSTEM BINARY, not a wheel. The
-# shell hook reports its absence rather than passing silently — the same discipline the markdown
-# package applies to pandoc.
 # ⚑ NO RUNTIME DEPENDENCIES. A ratchet reads a set of strings and a file; anything it
 # imported would become a dependency of every gate that adopts it.
+#
+# ⚑⚑⚑ BUT IT NEEDS A ruff BINARY AT RUNTIME, AND DOES NOT DECLARE ONE. The census runs
+# `<dist>/.venv/bin/ruff`, or the binary `RUFF_BIN` names (README.md, census.py). That is the
+# CENSUSED distribution's ruff, not this package's: a rule set is a property of the ruff version
+# that runs it, and under bazel `RUFF_BIN` names the hash-pinned staged input. A ruff declared
+# here would install into the ratchet's own environment, which the census never reads — a
+# dependency that looks like it supplies the checker and supplies nothing.
+# ⚑ SO ITS ABSENCE IS A REFUSAL, NOT A CRASH. Measured: with neither present, the census died
+# with a raw `FileNotFoundError` traceback and exit 1, the same status as "new keys refused".
+# It now exits `cli.CANNOT_CENSUS` (2) and names the path it tried and both ways to supply one.
 dependencies = []
 
 
@@ -75,9 +70,8 @@ addopts = "--strict-markers --strict-config"
 # roster is the honest one; --strict-markers then refuses any marker a test invents.
 markers = []
 
-# ⚑⚑ THE BAR IS THE ONE THESE HOOKS ENFORCE, APPLIED TO THEMSELVES. A linting tool held to a
-# weaker standard than it imposes is the shape its own refusal message argues against — and this
-# package's `pycheck` hook is the thing that would be checking it.
+# ⚑⚑ THE BAR IS THE ONE THE `hooks` DISTRIBUTION ENFORCES ON EVERY EDIT, APPLIED HERE TOO. A gate
+# held to a weaker standard than the gates it runs beside is the shape this repository refuses.
 [tool.mypy]
 strict = true
 extra_checks = true
@@ -92,7 +86,7 @@ enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 files = ["src", "tests"]
 # ⚑⚑⚑ WITHOUT THIS, THE TESTS TYPE AS `Any` AND THE SUITE STILL PASSES. An editable install
 # lands as a `.pth` plus an import-hook FINDER, and mypy reads the filesystem rather than running
-# `sys.path` hooks — so `from mikemol.ratchet import payload` resolves at RUNTIME and not to the
+# `sys.path` hooks — so `from mikemol.ratchet import census` resolves at RUNTIME and not to the
 # type checker. Every expression through the package then degrades to `Any`, and under
 # `disallow_any_expr` that surfaces as dozens of errors; without that setting it would have been
 # SILENT, and a green suite would have stood in for a checked one.
@@ -127,8 +121,8 @@ files = ["src", "tests"]
 # ⟡mtools-drop-mypypath is CLOSED as won't-fix, with the measurement above as its warrant.
 mypy_path = "src"
 # ⚑⚑ AND `mypy_path` ALONE MAKES THE SOURCE REACHABLE UNDER TWO NAMES. With `src` a search root,
-# `src/mikemol/hooks/payload.py` is both `mikemol.ratchet.payload` (from the project root) and
-# `hooks.payload` (from `src/mikemol`), which mypy refuses outright — correctly, since it cannot
+# `src/mikemol/ratchet/census.py` is both `mikemol.ratchet.census` (from the project root) and
+# `ratchet.census` (from `src/mikemol`), which mypy refuses outright — correctly, since it cannot
 # know which one a consumer means. `explicit_package_bases` says the module name is derived from
 # the declared roots, so exactly one spelling survives.
 #
@@ -271,4 +265,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
     "start-process-with-partial-path",
+]
+# ⚑ ITS WITNESSES RUN THE CLI AS A CHILD PROCESS, because the defect under test is what the
+# process prints and exits: an uncaught error exits 1 with a traceback, which an in-process call
+# cannot observe. The argv is `sys.executable` and literals — no shell, no partial path.
+"tests/test_cannot_census.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
 ]

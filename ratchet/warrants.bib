@@ -484,3 +484,43 @@
   claim  = {A ruff key under a `::` schema is refused by name, and nothing is minted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_keys.py -k test_a_malformed_census_is_refused_by_the_cli},
 }
+
+@misc{ratchet-cannot-census-missing-ruff-refuses-by-name-without-a-traceback,
+  section = {cannot_census},
+  title  = {A missing ruff refuses with its own status, names both supplies, and prints no traceback},
+  claim  = {A missing ruff refuses with its own status, names both supplies, and prints no
+            traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cannot_census.py -k test_a_missing_ruff_refuses_by_name_without_a_traceback},
+}
+
+@misc{ratchet-cannot-census-present-ruff-gives-a-normal-census,
+  section = {cannot_census},
+  title  = {Positive control: the ratchet venv's own ruff censuses a clean tree and mints},
+  claim  = {Positive control: the ratchet venv's own ruff censuses a clean tree and mints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cannot_census.py -k test_a_present_ruff_gives_a_normal_census},
+}
+
+@misc{ratchet-cannot-census-non-executable-ruff-refuses-by-name,
+  section = {cannot_census},
+  title  = {A ruff that exists but cannot be executed refuses with the census status, not a crash},
+  claim  = {A ruff that exists but cannot be executed refuses with the census status, not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cannot_census.py -k test_a_non_executable_ruff_refuses_by_name},
+}
+
+@misc{ratchet-cannot-census-unexpected-ruff-exit-refuses-through-the-cli,
+  section = {cannot_census},
+  title  = {A ruff exiting 2 refuses through the CLI with the census status, not a traceback},
+  claim  = {A ruff exiting 2 refuses through the CLI with the census status, not a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cannot_census.py -k test_an_unexpected_ruff_exit_refuses_through_the_cli},
+}
+
+@misc{ratchet-cannot-census-relative-ruff-bin-is-anchored-where-it-was-named,
+  section = {cannot_census},
+  title  = {A relative RUFF_BIN names a path from the CALLER's directory, not from the distribution's},
+  claim  = {A relative RUFF_BIN names a path from the CALLER's directory, not from the
+            distribution's. ruff runs with `cwd=dist`; unanchored, `RUFF_BIN=../x/ruff`
+            resolved inside the distribution and the census could not start. The
+            distribution sits one level below the caller here, so the two readings of
+            the same relative path name different files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cannot_census.py -k test_a_relative_ruff_bin_is_anchored_where_it_was_named},
+}
