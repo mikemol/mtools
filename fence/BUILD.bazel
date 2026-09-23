@@ -313,6 +313,10 @@ sh_test(
 # //:venv.bzl for why this duplicates rules_python's per-target venv deliberately.
 venv_from_hub(
     name = ".venv",
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as `//hooks:.venv` mirrors its own.
+    console_scripts = {
+        "mikemol-membudget": "mikemol.fence.membudget_cli:main",
+    },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",

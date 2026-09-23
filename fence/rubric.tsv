@@ -12,3 +12,4 @@ ledger	The Run Ledger: Empty Is Not Zero, and One Observation Cannot Size a Cap
 peaks	The Peaks Report: What Each Label Needs, and the Method That Says So
 autosize	Autosizing: The Bucket of the Max, One Cap for Size and Climb, and a Climb Only on a Kill
 label_lease	Label Leases: A Label Sized From Its Own History, Read by the One Parser, and a Hang Guard That Is Not the Work
+membudget_cli	The membudget Console Script: Bash's Verbs and Exit Codes, and One Ledger Two Clients Honour

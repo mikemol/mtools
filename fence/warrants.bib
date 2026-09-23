@@ -1152,3 +1152,206 @@
             fixture's promise).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_admit_exports_its_lease_as_membudget_parent},
 }
+
+@misc{fence-membudget-cli-run-args-parse-size-label-and-command,
+  section = {membudget_cli},
+  title  = {`run 300 job -- a b` reads 300, `job` and the command `a b`},
+  claim  = {`run 300 job -- a b` reads 300, `job` and the command `a b`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_args_parse_size_label_and_command},
+}
+
+@misc{fence-membudget-cli-run-label-is-optional,
+  section = {membudget_cli},
+  title  = {`run 300 -- a` has an empty label; the control carries one},
+  claim  = {`run 300 -- a` has an empty label; the control carries one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_label_is_optional},
+}
+
+@misc{fence-membudget-cli-env-maps-onto-waiting-and-the-lock,
+  section = {membudget_cli},
+  title  = {NOBLOCK, TIMEOUT, MAXLOAD and LOCK_TIMEOUT land in Waiting and Store; unset is admit's},
+  claim  = {NOBLOCK, TIMEOUT, MAXLOAD and LOCK_TIMEOUT land in Waiting and Store; unset is admit's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_env_maps_onto_waiting_and_the_lock},
+}
+
+@misc{fence-membudget-cli-status-renders-as-bash-does,
+  section = {membudget_cli},
+  title  = {Totals then one line per lease, top or under its parent; free counts top-level only},
+  claim  = {Totals then one line per lease, top or under its parent; free counts top-level only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_status_renders_as_bash_does},
+}
+
+@misc{fence-membudget-cli-an-unknown-verb-exits-2,
+  section = {membudget_cli},
+  title  = {An unknown verb and no verb exit 2; the control, `status`, exits 0},
+  claim  = {An unknown verb and no verb exit 2; the control, `status`, exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_an_unknown_verb_exits_2},
+}
+
+@misc{fence-membudget-cli-a-malformed-invocation-exits-2,
+  section = {membudget_cli},
+  title  = {No `--`, no command, a bad MB, a spaced label, or wrong operands exit 2 and write nothing},
+  claim  = {No `--`, no command, a bad MB, a spaced label, or wrong operands exit 2 and write nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_malformed_invocation_exits_2},
+}
+
+@misc{fence-membudget-cli-a-bad-env-number-exits-2,
+  section = {membudget_cli},
+  title  = {A non-numeric MEMBUDGET_TIMEOUT exits 2; the control, a numeric one, runs},
+  claim  = {A non-numeric MEMBUDGET_TIMEOUT exits 2; the control, a numeric one, runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_bad_env_number_exits_2},
+}
+
+@misc{fence-membudget-cli-init-creates-the-total,
+  section = {membudget_cli},
+  title  = {`init 1000` on no file writes TOTAL_MB 1000},
+  claim  = {`init 1000` on no file writes TOTAL_MB 1000.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_init_creates_the_total},
+}
+
+@misc{fence-membudget-cli-init-without-a-size-takes-the-default,
+  section = {membudget_cli},
+  title  = {`init` with no MB declares the host's default total},
+  claim  = {`init` with no MB declares the host's default total.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_init_without_a_size_takes_the_default},
+}
+
+@misc{fence-membudget-cli-init-never-overwrites-a-total,
+  section = {membudget_cli},
+  title  = {A second `init 2000` leaves 1000 and says so; the control: the first init wrote 1000},
+  claim  = {A second `init 2000` leaves 1000 and says so; the control: the first init wrote 1000.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_init_never_overwrites_a_total},
+}
+
+@misc{fence-membudget-cli-reset-resizes-and-keeps-a-live-lease,
+  section = {membudget_cli},
+  title  = {`init --reset 2000` sets 2000 and keeps a live lease and bash's `#` header},
+  claim  = {`init --reset 2000` sets 2000 and keeps a live lease and bash's `#` header.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_reset_resizes_and_keeps_a_live_lease},
+}
+
+@misc{fence-membudget-cli-reset-below-the-leased-warns,
+  section = {membudget_cli},
+  title  = {A reset under the leased total warns over-subscribed; the control, above it, does not},
+  claim  = {A reset under the leased total warns over-subscribed; the control, above it, does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_reset_below_the_leased_warns},
+}
+
+@misc{fence-membudget-cli-reset-refuses-two-totals,
+  section = {membudget_cli},
+  title  = {A ledger with two TOTAL_MB lines exits 4 and is left byte-for-byte},
+  claim  = {A ledger with two TOTAL_MB lines exits 4 and is left byte-for-byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_reset_refuses_two_totals},
+}
+
+@misc{fence-membudget-cli-status-reaps-a-dead-lease,
+  section = {membudget_cli},
+  title  = {A dead owner's lease is dropped; the control, a live owner's, is listed},
+  claim  = {A dead owner's lease is dropped; the control, a live owner's, is listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_status_reaps_a_dead_lease},
+}
+
+@misc{fence-membudget-cli-run-holds-its-lease-while-the-command-runs,
+  section = {membudget_cli},
+  title  = {The child sees MEMBUDGET_PARENT naming a lease in the ledger; its code is returned},
+  claim  = {The child sees MEMBUDGET_PARENT naming a lease in the ledger; its code is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_holds_its_lease_while_the_command_runs},
+}
+
+@misc{fence-membudget-cli-run-releases-its-lease,
+  section = {membudget_cli},
+  title  = {After `run` the ledger holds no lease, and the run created it with the default total},
+  claim  = {After `run` the ledger holds no lease, and the run created it with the default total.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_releases_its_lease},
+}
+
+@misc{fence-membudget-cli-run-reports-a-signal-as-128-plus-it,
+  section = {membudget_cli},
+  title  = {A child killed by SIGTERM exits 143, as a shell reports it},
+  claim  = {A child killed by SIGTERM exits 143, as a shell reports it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_reports_a_signal_as_128_plus_it},
+}
+
+@misc{fence-membudget-cli-run-of-a-missing-command-exits-127,
+  section = {membudget_cli},
+  title  = {A command that does not exist exits 127, and its lease is still released},
+  claim  = {A command that does not exist exits 127, and its lease is still released.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_of_a_missing_command_exits_127},
+}
+
+@misc{fence-membudget-cli-noblock-over-free-exits-3,
+  section = {membudget_cli},
+  title  = {With 300 of 1000 held, NOBLOCK 800 exits 3 without running; the control, 400, runs},
+  claim  = {With 300 of 1000 held, NOBLOCK 800 exits 3 without running; the control, 400, runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_noblock_over_free_exits_3},
+}
+
+@misc{fence-membudget-cli-timeout-gives-up-with-3,
+  section = {membudget_cli},
+  title  = {A tiny MEMBUDGET_TIMEOUT over free gives up with 3; the control, a fit, runs},
+  claim  = {A tiny MEMBUDGET_TIMEOUT over free gives up with 3; the control, a fit, runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_timeout_gives_up_with_3},
+}
+
+@misc{fence-membudget-cli-impossible-exits-3-and-no-total-exits-4,
+  section = {membudget_cli},
+  title  = {Over the total is 3; a file with no total is 4; the control, within the total, is 0},
+  claim  = {Over the total is 3; a file with no total is 4; the control, within the total, is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_impossible_exits_3_and_no_total_exits_4},
+}
+
+@misc{fence-membudget-cli-a-busy-load-holds-run-back,
+  section = {membudget_cli},
+  title  = {Under a busy injected load NOBLOCK exits 3; the control, MAXLOAD=0, runs},
+  claim  = {Under a busy injected load NOBLOCK exits 3; the control, MAXLOAD=0, runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_busy_load_holds_run_back},
+}
+
+@misc{fence-membudget-cli-a-held-lock-exits-1,
+  section = {membudget_cli},
+  title  = {With the lock held past MEMBUDGET_LOCK_TIMEOUT, `status` exits 1; released, it exits 0},
+  claim  = {With the lock held past MEMBUDGET_LOCK_TIMEOUT, `status` exits 1; released, it exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_held_lock_exits_1},
+}
+
+@misc{fence-membudget-cli-lease-and-deadline-answer-through-label-lease,
+  section = {membudget_cli},
+  title  = {With no history `lease` prints the default MB and `deadline` the default seconds},
+  claim  = {With no history `lease` prints the default MB and `deadline` the default seconds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_lease_and_deadline_answer_through_label_lease},
+}
+
+@misc{fence-membudget-cli-cross-python-reads-bash-init,
+  section = {membudget_cli},
+  title  = {Bash `init 1000` reads as 1000 here; a python reset to 2000 is what bash's status prints},
+  claim  = {Bash `init 1000` reads as 1000 here; a python reset to 2000 is what bash's status prints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_cross_python_reads_bash_init},
+}
+
+@misc{fence-membudget-cli-cross-bash-honours-a-python-lease,
+  section = {membudget_cli},
+  title  = {Under a live python 300 of 1000, bash NOBLOCK 800 exits 3; the control, bash 400, runs},
+  claim  = {Under a live python 300 of 1000, bash NOBLOCK 800 exits 3; the control, bash 400, runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_cross_bash_honours_a_python_lease},
+}
+
+@misc{fence-membudget-cli-cross-python-honours-a-bash-lease,
+  section = {membudget_cli},
+  title  = {Under a live bash 300 of 1000, python NOBLOCK 800 exits 3; the control, 400, runs},
+  claim  = {Under a live bash 300 of 1000, python NOBLOCK 800 exits 3; the control, 400, runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_cross_python_honours_a_bash_lease},
+}
+
+@misc{fence-membudget-cli-cross-python-reset-keeps-a-bash-lease,
+  section = {membudget_cli},
+  title  = {A python `init --reset` under a live bash lease keeps that lease},
+  claim  = {A python `init --reset` under a live bash lease keeps that lease.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_cross_python_reset_keeps_a_bash_lease},
+}
+
+@misc{fence-membudget-cli-cross-bash-init-keeps-a-python-lease,
+  section = {membudget_cli},
+  title  = {Bash `init 2000` over a python lease changes nothing; bash `--reset` resizes and keeps it},
+  claim  = {Bash `init 2000` over a python lease changes nothing; bash `--reset` resizes and keeps it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_cross_bash_init_keeps_a_python_lease},
+}

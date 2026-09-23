@@ -32,6 +32,9 @@ dependencies = []
 
 [project.scripts]
 mikemol-fence = "mikemol.fence.cli:main"
+# ⚑ A SECOND SCRIPT, NOT A MODE OF THE FIRST: `mikemol-fence` fences whatever follows its flags, so
+# it cannot take verbs (`peaks.py`). This one carries substrate's bash `membudget` surface.
+mikemol-membudget = "mikemol.fence.membudget_cli:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
