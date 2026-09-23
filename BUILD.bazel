@@ -70,6 +70,7 @@ exports_files(glob(
     ".bazelrc",
     "mypy_runner.py",
     "mutate_runner.py",
+    "count_test_functions.py",
     ".claude/settings.json",
     ".claude/skills/struct-tools/SKILL.md",
     "findings/CENSUS-BRIEF.md",
@@ -108,4 +109,42 @@ py_test(
     args = ["$(location test_mutate_runner.py)", "-q", "-p", "no:cacheprovider"],
     size = "small",
     deps = [root_dev_requirement("pytest")],
+)
+
+# ⚑⚑⚑ THE ROOT SCRIPTS MEET THE DISTRIBUTIONS' BAR, AND UNTIL THESE TARGETS NOTHING HELD THEM TO
+# ANY. Each distribution's `//<dist>:ruff` and `//<dist>:mypy` stop at its own `pyproject.toml`, so
+# `mutate_runner.py`, `pytest_main.py`, `mypy_runner.py`, `bep_probe.py`, `count_test_functions.py`
+# and `test_mutate_runner.py` were linted by nothing and type-checked by nothing. MEASURED before
+# the root `pyproject.toml` existed, under the house config: 26 ruff findings and 11 strict-mypy
+# errors — paid in the same change that armed these, never baselined.
+# ⚑⚑ THE SAME TWO SCRIPTS EVERY DISTRIBUTION USES, SO THE ROOT IS CHECKED THE WAY THEY ARE and a
+# repair to either reaches all six. `bazel test //...` in the gate runs both; `preflight.sh` names
+# them. ⚑ GLOBBED, for the reason the exports above are: a root script added tomorrow is checked
+# the moment it exists, and `allow_empty = False` refuses a green over nothing.
+_ROOT_PY = glob(["*.py"], allow_empty = False)
+
+sh_test(
+    name = "ruff",
+    srcs = ["ruff_check.sh"],
+    args = [
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location %s)" % f for f in _ROOT_PY],
+    data = ["pyproject.toml", "@ruff//:bin"] + _ROOT_PY,
+    size = "small",
+)
+
+# ⚑⚑ THE RUNNER IS `//hooks:mypy_runner`, NOT ONE DECLARED HERE. A py_binary in THIS package writes
+# its generated `_<name>_stage2_bootstrap.py` into `_main/`, which `files = ["*.py"]` then checks —
+# measured, 154 errors, all in the bootstrap. hooks' runner carries the same mypy and pytest pins
+# (`@hooks_dev`) and leaves its bootstrap under `_main/hooks/`.
+sh_test(
+    name = "mypy",
+    srcs = ["mypy_check.sh"],
+    args = [
+        "$(location //hooks:mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = ["pyproject.toml", "//hooks:mypy_runner"] + _ROOT_PY,
+    size = "small",
 )

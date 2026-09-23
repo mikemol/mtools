@@ -6,6 +6,9 @@
 # absolute paths (see MODULE.bazel) — the property that makes it unfit as a
 # Bazel input makes it unfit to commit.
 .venv/
+# The root's `.venv` is a SYMLINK to hooks/.venv (setup.sh makes it), and `.venv/` matches only a
+# directory — so the link needs its own line, or it shows as untracked in every clone.
+/.venv
 
 # Checker caches: keyed by absolute path and mtime. A committed cache reports
 # another machine's verdict.

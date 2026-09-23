@@ -194,6 +194,7 @@
 
 @misc{ratchet-core-one-retirement-cannot-absolve-two-arrivals,
   section = {membership},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_one_retirement_cannot_absolve_two_arrivals},
   title   = {A single retired key absolves at most one arrival},
   note    = {Pairing on identity alone let one departure launder an unbounded fan-out of
              new findings carrying the same rule. Measured here as
@@ -203,6 +204,7 @@
 
 @misc{ratchet-core-a-shared-rule-at-an-unrelated-path-is-not-a-move,
   section = {membership},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_shared_rule_at_an_unrelated_path_is_not_a_move},
   title   = {One-to-one pairing is necessary but not sufficient},
   note    = {A lone retirement and a lone arrival sharing a rule are pairable by count while
              naming no relocation. A move must also be path-plausible: a split into a
@@ -211,6 +213,7 @@
 
 @misc{ratchet-core-two-findings-relocating-together-are-two-moves,
   section = {membership},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_two_findings_relocating_together_are_two_moves},
   title   = {A directory reorganisation is churn, not growth},
   note    = {The count asymmetry alone refuses a legitimate two-for-two relocation. Distinct
              identities pair independently, so both moves are recognised. This is the case
@@ -219,6 +222,7 @@
 
 @misc{ratchet-core-fan-out-refusal-is-unconditional-not-a-mode,
   section = {membership},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_fan_out_refusal_is_unconditional_not_a_mode},
   title   = {The fan-out refusal is unconditional, never a mode},
   note    = {The peer implementation this machinery was derived from agrees on every
              classification and diverges on one axis: its fan-out defence is a strict=
@@ -231,6 +235,7 @@
 
 @misc{ratchet-core-an-ambiguous-refusal-is-marked-suspect,
   section = {membership},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_ambiguous_refusal_is_marked_suspect},
   title   = {A refusal on ambiguity is marked apart from a refusal on evidence},
   note    = {A fan-out means at most one arrival is the relocation and nothing in the census
              says which. Both are refused, but an operator needs "I refused this and could
@@ -242,6 +247,7 @@
 
 @misc{ratchet-core-an-unambiguous-refusal-is-not-suspect,
   section = {membership},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_unambiguous_refusal_is_not_suspect},
   title   = {The mark discriminates, or it means nothing},
   note    = {A key sharing a rule with a retirement but never path-plausible is refused as
              plain new debt and must NOT be marked. A state that everything carries is a
@@ -251,6 +257,7 @@
 
 @misc{ratchet-core-suspect-never-softens-the-verdict,
   section = {membership},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_suspect_never_softens_the_verdict},
   title   = {Suspect says why a key was refused, never whether},
   note    = {The peer implementation carries this state behind a strict= flag defaulting
              off, so its fan-out classifies as churn unless asked -- measured by running its
@@ -261,6 +268,7 @@
 
 @misc{ratchet-core-a-comment-line-in-the-baseline-is-not-a-key,
   section = {states},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_comment_line_in_the_baseline_is_not_a_key},
   title   = {Two instruments, each correct alone, wrong together},
   note    = {The domain witness appends a nonce to the baseline as a # comment, deliberately, so
              the file's digest moves while its census does not. This reader had no comment
@@ -273,6 +281,7 @@
 
 @misc{ratchet-core-a-baseline-of-only-comments-reads-empty-not-ok,
   section = {states},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_baseline_of_only_comments_reads_empty_not_ok},
   title   = {A commented-out baseline must reach EMPTY},
   note    = {EMPTY is the zero-tolerance setting. A file holding only annotations asserts no debt,
              which is a different fact from a file holding keys, and reading it as OK-with-no-keys

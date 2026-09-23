@@ -46,7 +46,9 @@ _NEEDS_BUILT_VENV = pytest.mark.skipif(
 # ⟐POLL-RUF201-POPULATION was — it went stale the tick a fifth distribution landed. Every directory
 # with a `pyproject.toml` is a distribution, which is the same rule `blockers.sh` and
 # `test_bar_fires` already use.
-_DISTS = sorted(p.parent.name for p in _REPO.glob("*/pyproject.toml"))
+# ⚑ A symlinked directory is never a distribution: `bazel-mtools` mirrors the root, and once the
+# root carried a pyproject.toml it matched this glob (measured, 5 phantom failures here).
+_DISTS = sorted(p.parent.name for p in _REPO.glob("*/pyproject.toml") if not p.parent.is_symlink())
 
 # ⚑ TWO IS THE SMALLEST POPULATION THAT CAN TEST A TEMPLATE. One distribution cannot distinguish
 # "the same everywhere" from "the only one there is", so the control below requires at least a

@@ -53,7 +53,14 @@ cd "$root" || exit 2
 # omitted a whole distribution — and this script's job is to PREDICT the gate cheaply, which it
 # cannot do over a smaller set than the gate walks. The criterion is `blockers.sh`'s: a directory
 # carrying a `pyproject.toml`, which a landed component necessarily satisfies.
-dists="${1:-$(cd "$root" && printf '%s ' */pyproject.toml | sed 's#/pyproject.toml##g')}"
+# ⚑ A DISTRIBUTION IS A REAL DIRECTORY, NEVER A SYMLINK — the gate's rule, for the same measured
+# reason: `bazel-mtools` mirrors the root, and once the root carried a pyproject.toml it matched.
+_derived=""
+for _f in */pyproject.toml; do
+    _d="${_f%/pyproject.toml}"
+    [ -L "$_d" ] || _derived="$_derived$_d "
+done
+dists="${1:-$_derived}"
 fail=0
 
 say() { printf 'preflight: %s\n' "$1"; }
@@ -163,6 +170,8 @@ for dist in $dists; do
     esac
     ( cd "$dist" && git_scrubbed .venv/bin/python3 -m pytest -q ) \
         || { fail=1; say "$dist: pytest — the gate will refuse this"; }
+    "$root/count_test_functions.py" --pairing "$dist" \
+        || { fail=1; say "$dist: warrant pairing — the gate will refuse this"; }
 
     # ⚑⚑⚑ THE RATCHET IS THE CHECK THAT ACTUALLY REFUSED THREE OF THE FOUR, so it is the one this
     # script exists for. It reads the working tree rather than a staged copy, which is correct
@@ -195,6 +204,19 @@ for dist in $dists; do
         fi
     fi
 done
+
+# ⚑⚑ THE ROOT'S OWN BAR, WHICH NO DISTRIBUTION'S LOOP REACHES. The root scripts are linted by
+# `//:ruff` and `//:mypy` under the root's lint-only `pyproject.toml`, and its one suite is paired
+# against the root `warrants.bib` — the same three predictions as a distribution, over `.`.
+git_scrubbed bazel test //:ruff //:mypy --test_output=errors --noshow_progress
+_rc=$?
+case "$_rc" in
+    0) ;;
+    3) fail=1; say "root: ruff/mypy — the gate will refuse this" ;;
+    *) fail=1; say "root: bazel EXITED $_rc — the checks did not run; this is not a clean tree" ;;
+esac
+"$root/count_test_functions.py" --pairing "$root" \
+    || { fail=1; say "root: warrant pairing — the gate will refuse this"; }
 
 if [ "$fail" -ne 0 ]; then
     say "⚑ the gate WOULD REFUSE, and it stops at the FIRST failing check — fix all of the above."

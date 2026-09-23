@@ -39,6 +39,11 @@ _QUERY = [str(_LUTHEN / ".venv/bin/python"), str(_LUTHEN / "checks/endpoints_que
 _SERVICE = "grpc-bes"
 
 
+def _say(line: str) -> None:
+    """Write one outcome line; the outcome IS this probe's output, so it goes to stdout."""
+    sys.stdout.write(f"{line}\n")
+
+
 def directory_address() -> tuple[str, int] | None:
     """Ask luthen's endpoint directory for the BES gRPC address, host side.
 
@@ -49,7 +54,7 @@ def directory_address() -> tuple[str, int] | None:
 
     """
     try:
-        done = subprocess.run(  # noqa: S603 — a fixed argv into a sibling checkout; nothing untrusted
+        done = subprocess.run(
             [*_QUERY, _SERVICE, "--side", "host"],
             check=False, capture_output=True, text=True, timeout=20,
         )
@@ -58,10 +63,18 @@ def directory_address() -> tuple[str, int] | None:
     if done.returncode != 0:
         return None
     try:
-        answer = json.loads(done.stdout)
-        return str(answer["host"]), int(answer["port"])
-    except (ValueError, KeyError, TypeError):
+        answer: object = json.loads(done.stdout)
+    except ValueError:
         return None
+    # ⚑ THE ANSWER IS NARROWED, NOT TRUSTED: the directory is another repository's program, and a
+    # shape it did not promise is the directory failing to answer rather than an address.
+    if not isinstance(answer, dict):
+        return None
+    host: object = answer.get("host")
+    port: object = answer.get("port")
+    if not isinstance(host, str) or not isinstance(port, int):
+        return None
+    return host, port
 
 
 def main(argv: list[str]) -> int:
@@ -80,21 +93,21 @@ def main(argv: list[str]) -> int:
         target = directory_address()
         origin = "from luthen's endpoint directory"
     if target is None:
-        print("BEP sink UNMEASURED — the endpoint directory gave no address "
-              f"({' '.join(_QUERY)} {_SERVICE} --side host); pass HOST:PORT to probe one")
+        _say("BEP sink UNMEASURED — the endpoint directory gave no address "
+             f"({' '.join(_QUERY)} {_SERVICE} --side host); pass HOST:PORT to probe one")
         return 3
     host, port = target
     try:
         with socket.create_connection((host, port), timeout=3):
-            print(f"BEP sink {host}:{port} ACCEPTS ({origin}) — something is listening "
-                  "(not proof it is ready)")
+            _say(f"BEP sink {host}:{port} ACCEPTS ({origin}) — something is listening "
+                 "(not proof it is ready)")
             return 0
     except ConnectionRefusedError:
-        print(f"BEP sink {host}:{port} REFUSED ({origin}) — nothing is listening on the port")
+        _say(f"BEP sink {host}:{port} REFUSED ({origin}) — nothing is listening on the port")
         return 1
     except OSError as e:
-        print(f"BEP sink {host}:{port} UNREACHABLE ({origin}) — {e} "
-              "(not a refusal; the route is the subject)")
+        _say(f"BEP sink {host}:{port} UNREACHABLE ({origin}) — {e} "
+             "(not a refusal; the route is the subject)")
         return 2
 
 

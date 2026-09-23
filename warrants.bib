@@ -1,0 +1,40 @@
+% warrants.bib — one claim PER TEST FUNCTION in the repository root's suite.
+%
+% The root carries one test module, `test_mutate_runner.py`, beside the script it tests: the
+% runner is a root file every distribution's `mutants` target runs, and a test importing it from
+% inside a distribution would read it as `Any` under strict mypy. Its tests had no warrant home
+% until this file; the gate now holds them to the same 1:1 ledger, section diff and pairing as
+% every distribution. The checks run from the repository root with the hooks venv's interpreter,
+% which carries the same pytest pin the `//:test_mutate_runner` target stages.
+%
+% Keying convention: root-<section>-<test name minus its `test_` prefix, hyphenated>.
+
+@misc{root-mutate-runner-methods-of-two-classes-are-two-sites-and-the-second-mutates-the-second,
+  section = {mutate_runner},
+  claim   = {Two classes' `run` methods are two def-sites, and mutating the second leaves the first alone. The bare-name runner mutated the FIRST def carrying a name, so both rows were one mutation},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_methods_of_two_classes_are_two_sites_and_the_second_mutates_the_second}
+}
+
+@misc{root-mutate-runner-a-protocol-stub-and-a-function-of-its-name-are-separate-sites,
+  section = {mutate_runner},
+  claim   = {A Protocol stub and a same-named function are separate sites, and the function mutates itself. Measured on ratchet: a stub `parse` came back SURVIVED three times because every `parse` mutated the stub},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_protocol_stub_and_a_function_of_its_name_are_separate_sites}
+}
+
+@misc{root-mutate-runner-a-nested-def-is-addressed-through-its-enclosing-function,
+  section = {mutate_runner},
+  claim   = {A nested def is addressed as `outer.<locals>.inner`, following Python's own qualname, and is distinct from a module-level `inner`},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_nested_def_is_addressed_through_its_enclosing_function}
+}
+
+@misc{root-mutate-runner-a-module-of-unique-names-is-addressed-and-mutated-as-before,
+  section = {mutate_runner},
+  claim   = {The positive control: unique top-level names keep their bare paths and the same mutant, docstring kept. Without it every refusal above passes against a runner that renamed everything},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_module_of_unique_names_is_addressed_and_mutated_as_before}
+}
+
+@misc{root-mutate-runner-a-mutant-suite-cannot-commit-into-the-repository-the-caller-names,
+  section = {mutate_runner},
+  claim   = {A mutant's suite committing in its own directory lands there and not in the repository an exported GIT_DIR names. Measured 2026-09-23: a fixture under a pre-commit hook wrote nine commits into the calling repo. Armed against a decoy, never the real repository},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names}
+}

@@ -131,6 +131,9 @@ py_library(
             # ⚑ `//:all_root_scripts` is a filegroup so the population is declared ONCE, in the
             # package that owns those files, and every consumer inherits additions for free.
             "//:all_root_scripts",
+            # ⚑ THE PAIRING CHECK IS STAGED BECAUSE A WITNESS RUNS IT — the gate's own call, over
+            # this distribution's staged ledger and suite, with one orphan planted in a copy.
+            "//:count_test_functions.py",
             # ⚑⚑ THE LIVE ROUTING TABLE, THE SAME LESSON A FIFTH TIME IN THIS LIST. An arm
             # asserting the parts of this repo's own claim set read `{}` hermetically: the table
             # was not an input, and its non-empty control refused to pass vacuously (2026-09-22).
@@ -269,6 +272,12 @@ py_binary(
     name = "mypy_runner",
     srcs = ["//:mypy_runner.py"],
     main = "//:mypy_runner.py",
+    # ⚑⚑ VISIBLE TO THE ROOT, WHICH BORROWS THIS RUNNER RATHER THAN DECLARING ITS OWN. A py_binary
+    # in the root package writes its generated `_<name>_stage2_bootstrap.py` into `_main/` — the
+    # directory `//:mypy` checks with `files = ["*.py"]`. MEASURED: a root-owned runner made
+    # `//:mypy` report 154 errors, every one in that bootstrap. A runner in this package leaves
+    # its bootstrap in `_main/hooks/`, outside the root's glob. Same pins (`@hooks_dev`).
+    visibility = ["//:__pkg__"],
     # ⚑ pytest IS A DEP OF THE CHECKER, NOT JUST OF THE TESTS. mypy checks `files = ["src",
     # "tests"]`, and a test module imports pytest — so without it staged, mypy reports
     # `Cannot find implementation or library stub for module named "pytest"` and every fixture

@@ -18,7 +18,7 @@ import os
 import pathlib
 import subprocess
 import sys
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 import mutate_runner
 
@@ -132,7 +132,6 @@ def test_a_module_of_unique_names_is_addressed_and_mutated_as_before() -> None:
     assert _body_of(mutant, "beta") == "return 2"
 
 
-_REAL_RUN = subprocess.run
 _GIT_ID = ("-c", "user.name=fixture", "-c", "user.email=fixture@invalid")
 _SITE_SOURCE = "def f():\n    return 1\n"
 _SITE = "f"
@@ -146,8 +145,8 @@ def _git(*args: str, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
         the completed process.
 
     """
-    proc = _REAL_RUN(["git", *_GIT_ID, *args], capture_output=True, text=True,
-                     check=False, env=env)
+    proc = subprocess.run(["git", *_GIT_ID, *args], capture_output=True, text=True,
+                          check=False, env=env)
     assert proc.returncode == 0, f"git {' '.join(args)} failed: {proc.stderr.strip()}"
     return proc
 
@@ -170,17 +169,20 @@ def test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names(
     (dist / "pyproject.toml").write_text("", encoding="utf-8")
     seen: list[dict[str, str]] = []
 
-    def suite(argv: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
-        env = cast("dict[str, str]", kwargs["env"])
+    def suite(
+        argv: list[str], cwd: pathlib.Path, env: dict[str, str],
+    ) -> subprocess.CompletedProcess[str]:
         seen.append(env)
-        _git("init", "-q", str(kwargs["cwd"]), env=env)
-        _git("-C", str(kwargs["cwd"]), "commit", "-q", "--allow-empty", "-m", "fixture", env=env)
+        _git("init", "-q", str(cwd), env=env)
+        _git("-C", str(cwd), "commit", "-q", "--allow-empty", "-m", "fixture", env=env)
         return subprocess.CompletedProcess(argv, 0, _PASSED, "")
 
     monkeypatch.setenv("GIT_DIR", str(decoy / ".git"))
-    monkeypatch.setattr(mutate_runner.subprocess, "run", suite)
-    mutate_runner.run(pathlib.Path(sys.executable), dist, pathlib.Path("mod.py"), _SITE_SOURCE,
-                      _SITE, dist / "pyproject.toml")
+    # ⚑ THE RUNNER'S ONE SEAM, NOT `subprocess.run`: patching the module attribute replaced it for
+    # the whole interpreter, so `_git` had to hoard the real one before the patch landed.
+    monkeypatch.setattr(mutate_runner, "launch", suite)
+    grid = mutate_runner.Grid(pathlib.Path(sys.executable), dist, dist / "pyproject.toml")
+    mutate_runner.run(grid, mutate_runner.Mutant(pathlib.Path("mod.py"), _SITE_SOURCE, _SITE))
     refs = _git("-C", str(decoy), "for-each-ref", env=clean).stdout
     assert not refs, f"the suite committed into the decoy: {refs.strip()}"
     assert [k for k in seen[0] if k.startswith("GIT_")] == [], "a GIT_* variable reached the suite"

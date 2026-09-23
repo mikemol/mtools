@@ -31,6 +31,8 @@ from __future__ import annotations
 
 import ast
 import concurrent.futures
+import dataclasses
+import fnmatch
 import os
 import pathlib
 import shutil
@@ -41,9 +43,21 @@ import tempfile
 # ⚑ THE SANDBOX STAGES ONLY WHAT IS DECLARED, so these are the trees a mutant must not carry into
 # its copy. `.venv` in particular is a directory of pointers at host absolute paths — the property
 # that makes it unfit as a bazel input makes it unfit to copy.
-_NOT_SOURCE = shutil.ignore_patterns(
-    ".venv", "build", "*.egg-info", "__pycache__", ".*_cache", "bazel-*",
-)
+_NOT_SOURCE_PATTERNS = (".venv", "build", "*.egg-info", "__pycache__", ".*_cache", "bazel-*")
+
+
+def _not_source(_directory: str, names: list[str]) -> set[str]:
+    """Name the entries of one directory that a mutant's copy must leave behind.
+
+    ⚑ WRITTEN OUT RATHER THAN `shutil.ignore_patterns(...)`, whose return type carries `Any` in
+    its first parameter — a callable the root's strict mypy cannot admit as an expression.
+
+    Returns:
+        the subset of `names` matching any pattern in `_NOT_SOURCE_PATTERNS`.
+
+    """
+    return {n for n in names if any(fnmatch.fnmatch(n, p) for p in _NOT_SOURCE_PATTERNS)}
+
 
 # The prefix every per-invocation git variable carries; none reaches a mutant's suite.
 _GIT_PREFIX = "GIT_"
@@ -52,6 +66,39 @@ _GIT_PREFIX = "GIT_"
 _ENUM_BASES = frozenset(
     {"enum.Enum", "Enum", "enum.StrEnum", "StrEnum", "enum.IntEnum", "IntEnum"},
 )
+
+
+@dataclasses.dataclass(frozen=True)
+class Grid:
+    """What every mutant of one distribution shares: its interpreter, its tree, its config."""
+
+    py: pathlib.Path
+    dist: pathlib.Path
+    config: pathlib.Path
+
+
+@dataclasses.dataclass(frozen=True)
+class Mutant:
+    """One def-site to mutate: the module it lives in, that module's source, the site's path."""
+
+    rel: pathlib.Path
+    source: str
+    name: str
+
+
+def launch(
+    argv: list[str], cwd: pathlib.Path, env: dict[str, str],
+) -> subprocess.CompletedProcess[str]:
+    """Run one mutant's suite: argv only, no shell, output captured as text.
+
+    ⚑ ONE SEAM FOR THE ONE SUBPROCESS, so a test replaces THIS rather than `subprocess.run` for the
+    whole interpreter — which also replaced the git its own fixture needed.
+
+    Returns:
+        the completed process; its status is read by `verdict`, never raised.
+
+    """
+    return subprocess.run(argv, cwd=cwd, capture_output=True, text=True, check=False, env=env)
 
 
 def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | None]]:
@@ -85,7 +132,7 @@ def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | 
             elif isinstance(child, ast.AsyncFunctionDef | ast.Lambda):
                 # ⚑ NOT A SITE (the operator never mutated these), but a def nested in one
                 # still needs the path Python would give it.
-                name = getattr(child, "name", "<lambda>")
+                name = child.name if isinstance(child, ast.AsyncFunctionDef) else "<lambda>"
                 visit(child, f"{prefix}{name}.<locals>.", None)
             elif isinstance(child, ast.ClassDef):
                 visit(child, f"{prefix}{child.name}.", child)
@@ -211,7 +258,7 @@ def verdict(rc: int, stdout: str) -> str:
     # noticed it, and where it noticed is not the measurement. That is a KILL.
     # ⚑ AND THE EXIT CODE WAS rc=2 HERE, a shape the original four-case measurement never
     # produced — a reminder that a predicate is only as wide as the corpus it was measured on.
-    if 'AssertionError: mutant' in stdout or "AssertionError('mutant')" in stdout:
+    if "AssertionError: mutant" in stdout or "AssertionError('mutant')" in stdout:
         return "killed"
     # ⚑ THE LAST NON-EMPTY LINE IS pytest's SUMMARY under `-q`. Scanning the whole stdout would
     # also match the word `error` inside the traceback of a genuine FAILURE.
@@ -225,8 +272,24 @@ def verdict(rc: int, stdout: str) -> str:
     return "killed"
 
 
-def run(py: pathlib.Path, dist: pathlib.Path, rel: pathlib.Path,
-        source: str, name: str, config: pathlib.Path, *, debug: bool = False) -> str:
+def _report_debug(proc: subprocess.CompletedProcess[str]) -> None:
+    """Print what one mutant's suite said, for `--debug`."""
+    tail = [ln for ln in proc.stdout.splitlines() if ln.strip()][-1:]
+    reached = "AssertionError: mutant" in proc.stdout
+    sys.stdout.write(f"      rc={proc.returncode} mutant_in_stdout={reached} "
+                     f"summary={tail[0] if tail else '<none>'!r}\n")
+    if proc.stderr.strip():
+        sys.stdout.write(f"      stderr: {proc.stderr.strip().splitlines()[-1]}\n")
+    # ⚑ WHEN THE MUTANT NEVER APPEARS, THE INTERESTING TEXT IS THE ERROR ITSELF — the
+    # suite failed BEFORE reaching mutated code, so the summary line says nothing about
+    # the mutation and everything about the environment.
+    if not reached:
+        for ln in proc.stdout.splitlines():
+            if "Error" in ln or "error" in ln.lower():
+                sys.stdout.write(f"      | {ln.strip()[:160]}\n")
+
+
+def run(grid: Grid, mutant: Mutant, *, debug: bool = False) -> str:
     """Build one mutant in a temp copy of the distribution and run its suite against it.
 
     Returns:
@@ -235,8 +298,8 @@ def run(py: pathlib.Path, dist: pathlib.Path, rel: pathlib.Path,
     """
     with tempfile.TemporaryDirectory() as tmp:
         work = pathlib.Path(tmp) / "dist"
-        shutil.copytree(dist, work, ignore=_NOT_SOURCE)
-        (work / rel).write_text(mutate(source, name), encoding="utf-8")
+        shutil.copytree(grid.dist, work, ignore=_not_source)
+        (work / mutant.rel).write_text(mutate(mutant.source, mutant.name), encoding="utf-8")
         # ⚑ THE SYNTHESIZED PACKAGE MARKERS GO, for the reason `mypy_check.sh` records: rules_python
         # writes an empty `__init__.py` at every runfiles level, including the `src/mikemol/` one
         # PEP 420 forbids here. Only the EMPTY ones — a hand-written package `__init__.py` has
@@ -273,7 +336,8 @@ def run(py: pathlib.Path, dist: pathlib.Path, rel: pathlib.Path,
         # covered too. A suite reading git state finds the repository from its `cwd` as before.
         env = {k: v for k, v in os.environ.items() if not k.startswith(_GIT_PREFIX)}
         existing = env.get("PYTHONPATH", "")
-        env["PYTHONPATH"] = f"{work / 'src'}{os.pathsep}{existing}" if existing else str(work / "src")
+        src = str(work / "src")
+        env["PYTHONPATH"] = f"{src}{os.pathsep}{existing}" if existing else src
         env["HOME"] = tmp
         # ⚑ THE CONFIG IS THE TEMP TREE'S OWN COPY. Passing the REAL `pyproject.toml` sets pytest's
         # rootdir to the real distribution while `cwd` is the temp copy, so reported paths climb
@@ -286,26 +350,45 @@ def run(py: pathlib.Path, dist: pathlib.Path, rel: pathlib.Path,
         # RULED OUT alongside what it found.
         # ⚑ `shutil.copytree` ALREADY BRINGS `pyproject.toml` ACROSS, so this names the copy
         # rather than adding a file: the fix is which path is passed, not what exists.
-        proc = subprocess.run(
-            [str(py), "-m", "pytest", "-x", "-q", "--no-header",
-             "-p", "no:cacheprovider", "-c", str(work / config.name), "tests"],
-            cwd=work, capture_output=True, text=True, check=False, env=env,
+        proc = launch(
+            [str(grid.py), "-m", "pytest", "-x", "-q", "--no-header",
+             "-p", "no:cacheprovider", "-c", str(work / grid.config.name), "tests"],
+            work, env,
         )
         if debug:
-            tail = [ln for ln in proc.stdout.splitlines() if ln.strip()][-1:]
-            marker = "AssertionError: mutant" in proc.stdout
-            print(f"      rc={proc.returncode} mutant_in_stdout={marker} "
-                  f"summary={tail[0] if tail else '<none>'!r}")
-            if proc.stderr.strip():
-                print(f"      stderr: {proc.stderr.strip().splitlines()[-1]}")
-            # ⚑ WHEN THE MUTANT NEVER APPEARS, THE INTERESTING TEXT IS THE ERROR ITSELF — the
-            # suite failed BEFORE reaching mutated code, so the summary line says nothing about
-            # the mutation and everything about the environment.
-            if not marker:
-                for ln in proc.stdout.splitlines():
-                    if "Error" in ln or "error" in ln.lower():
-                        print(f"      | {ln.strip()[:160]}")
+            _report_debug(proc)
         return verdict(proc.returncode, proc.stdout)
+
+
+def _plan(dist: pathlib.Path, modules: list[pathlib.Path]) -> tuple[
+    list[str], list[str], list[tuple[str, Mutant]],
+]:
+    """Enumerate every def-site, setting aside the ones this operator cannot reach.
+
+    Returns:
+        `(attempted, unreachable, jobs)` — every site, the import-time ones, and the rest as
+        `(site, Mutant)` in source order.
+
+    """
+    attempted: list[str] = []
+    unreachable: list[str] = []
+    jobs: list[tuple[str, Mutant]] = []
+    for mod in modules:
+        source = mod.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        rel = mod.relative_to(dist)
+        skip = import_time_sites(tree)
+        for path, _node in sites(tree):
+            site = f"{rel}::{path}"
+            attempted.append(site)
+            # ⚑ COUNTED IN ATTEMPTED AND NOT RUN. Dropping it from `attempted` would make the
+            # accounting balance by shrinking the denominator, which is the flattering direction
+            # and the one this runner's predecessor took with ERRORED.
+            if path in skip:
+                unreachable.append(site)
+                continue
+            jobs.append((site, Mutant(rel, source, path)))
+    return attempted, unreachable, jobs
 
 
 def main(argv: list[str]) -> int:
@@ -340,32 +423,11 @@ def main(argv: list[str]) -> int:
     # relative argument names nothing there — measured, `FileNotFoundError` on the first cell.
     # `absolute()` prepends the caller's cwd WITHOUT following symlinks, which is exactly the
     # distinction this line turns on.
-    py = pathlib.Path(argv[1]).absolute()
     config = pathlib.Path(argv[2]).resolve()
-    dist = config.parent
-    modules = sorted((dist / "src").rglob("*.py"))
-
-    attempted: list[str] = []
-    killed: list[str] = []
-    survived: list[str] = []
-    errored: list[str] = []
-    unreachable: list[str] = []
-    jobs: list[tuple[str, pathlib.Path, str, str]] = []
-    for mod in modules:
-        source = mod.read_text(encoding="utf-8")
-        tree = ast.parse(source)
-        rel = mod.relative_to(dist)
-        skip = import_time_sites(tree)
-        for path, _node in sites(tree):
-            site = f"{rel}::{path}"
-            attempted.append(site)
-            # ⚑ COUNTED IN ATTEMPTED AND NOT RUN. Dropping it from `attempted` would make the
-            # accounting balance by shrinking the denominator, which is the flattering direction
-            # and the one this runner's predecessor took with ERRORED.
-            if path in skip:
-                unreachable.append(site)
-                continue
-            jobs.append((site, rel, source, path))
+    grid = Grid(py=pathlib.Path(argv[1]).absolute(), dist=config.parent, config=config)
+    modules = sorted((grid.dist / "src").rglob("*.py"))
+    attempted, unreachable, jobs = _plan(grid.dist, modules)
+    groups: dict[str, list[str]] = {"killed": [], "survived": [], "errored": []}
 
     # ⚑⚑ THE MUTANTS RUN CONCURRENTLY, BECAUSE SERIAL COST GREW PAST THE TARGET'S CEILING. Measured
     # 2026-09-23: adding `membudget_cli` (~30 def-sites) took //fence:mutants past 300s at a load of
@@ -376,12 +438,24 @@ def main(argv: list[str]) -> int:
     # `MUTATE_JOBS` bounds the pool; `1` restores the serial run.
     workers = int(os.environ.get("MUTATE_JOBS", "") or (os.cpu_count() or 1))
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        verdicts = list(pool.map(
-            lambda job: run(py, dist, job[1], job[2], job[3], config, debug=debug), jobs))
-    for (site, _rel, _source, _name), got in zip(jobs, verdicts, strict=True):
+        futures = [pool.submit(run, grid, mutant, debug=debug) for _site, mutant in jobs]
+        verdicts = [f.result() for f in futures]
+    for (site, _mutant), got in zip(jobs, verdicts, strict=True):
         if debug:
-            print(f"    {site} -> {got}")
-        {"killed": killed, "survived": survived, "errored": errored}[got].append(site)
+            sys.stdout.write(f"    {site} -> {got}\n")
+        groups[got].append(site)
+    return _account(grid.dist.name, len(modules), attempted, unreachable, groups)
+
+
+def _account(name: str, module_count: int, attempted: list[str], unreachable: list[str],
+             groups: dict[str, list[str]]) -> int:
+    """Check that every site landed in exactly one category, then report all four by name.
+
+    Returns:
+        0 when every site was accounted for and none survived, 1 otherwise.
+
+    """
+    killed, survived, errored = groups["killed"], groups["survived"], groups["errored"]
 
     # ⚑⚑ SURVIVORS ARE `attempted - killed - errored` BY CONSTRUCTION, ASSERTED RATHER THAN
     # ASSUMED. paperkit's fingerprint names only the KILLED sites, so a site absent from it either
@@ -391,11 +465,12 @@ def main(argv: list[str]) -> int:
     accounted = sorted(killed + survived + errored + unreachable)
     if accounted != sorted(attempted):
         missing = sorted(set(attempted) - set(accounted))
-        print(f"mutate: {len(attempted)} attempted, {len(accounted)} accounted — "
-              f"unclassified: {missing}", file=sys.stderr)
+        sys.stderr.write(f"mutate: {len(attempted)} attempted, {len(accounted)} accounted — "
+                         f"unclassified: {missing}\n")
         return 1
 
-    print(f"{dist.name}: ATTEMPTED {len(attempted)} def-site(s) in {len(modules)} module(s)")
+    sys.stdout.write(
+        f"{name}: ATTEMPTED {len(attempted)} def-site(s) in {module_count} module(s)\n")
     # ⚑⚑⚑ EVERY CATEGORY PRINTS EVEN WHEN EMPTY, AND THAT IS NOT COSMETIC. The predecessor hid
     # ERRORED behind `if errored:`, so a reader saw no heading and could not tell *none occurred*
     # from *the set is never populated* — and the defect lived in exactly that gap for as long as
@@ -408,18 +483,19 @@ def main(argv: list[str]) -> int:
          ("constructed at IMPORT time (an Enum member); this OPERATOR cannot reach them, "
           "which is a fact about `body -> raise` and not about the suite")),
     ):
-        print(f"\n{label} ({len(group)}) — {gloss}:")
+        sys.stdout.write(f"\n{label} ({len(group)}) — {gloss}:\n")
         for site in sorted(group):
-            print(f"    {site}")
+            sys.stdout.write(f"    {site}\n")
 
     if errored:
-        print(f"\nmutate: {len(errored)} mutant(s) could not be RUN — the grid is incomplete and "
-              f"a clean SURVIVED list would be a claim over a population that was never measured",
-              file=sys.stderr)
+        sys.stderr.write(
+            f"\nmutate: {len(errored)} mutant(s) could not be RUN — the grid is incomplete and "
+            f"a clean SURVIVED list would be a claim over a population that was never measured\n")
         return 1
     if survived:
-        print(f"\nmutate: {len(survived)} def-site(s) SURVIVED — mutating them changed no verdict, "
-              f"so nothing in this distribution's suite exercises them", file=sys.stderr)
+        sys.stderr.write(
+            f"\nmutate: {len(survived)} def-site(s) SURVIVED — mutating them changed no verdict, "
+            f"so nothing in this distribution's suite exercises them\n")
         return 1
     return 0
 

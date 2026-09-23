@@ -1,0 +1,98 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑⚑⚑ THE ROOT IS NOT A DISTRIBUTION, AND THIS FILE CARRIES NO `[project]` FOR THAT REASON. It
+# exists so the root scripts — the mutation runner, the pytest shim, the mypy wrapper, the BEP
+# probe, the test counter and the runner's own tests — meet the same bar as every distribution. Before it,
+# no configuration reached them: each distribution's `pyproject.toml` stops at its own directory,
+# so ruff fell back to its defaults and mypy was never run at all.
+# ⚑⚑ AND THE GATE'S POPULATION IS UNCHANGED BY IT — BUT ONLY BECAUSE A SYMLINK IS NOT A
+# DISTRIBUTION. `_dists` is derived from `*/pyproject.toml`. This file does not match that glob
+# itself, but bazel's convenience link `bazel-mtools` mirrors the root, so `bazel-mtools/
+# pyproject.toml` DID match the moment this file existed: measured, preflight saw a sixth
+# "distribution" and 1,653 collection errors. The gate, preflight and the hooks tests now skip any
+# symlinked directory. The root's checks are the `//:ruff` and `//:mypy` targets beside it, which
+# `bazel test //...` already runs.
+
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+# ⚑ A GLOB OVER THE ROOT'S OWN LEVEL, NOT `.` AND NOT A LIST. `.` would recurse into every
+# distribution under a config that is not theirs; a hand list would miss the next root script on
+# the day it lands — the drift `BUILD.bazel` records three times for its own root populations.
+files = ["*.py"]
+# ⚑⚑⚑ THE ROOT SCRIPTS ARE TOP-LEVEL MODULES, AND WITHOUT THIS MYPY CLIMBS OUT OF THE CHECKOUT TO
+# NAME THEM. No base declared means mypy crawls up the directory tree deriving a package name for
+# each file; under bazel the checkout is `mypy.runfiles/_main`, and rules_python writes an empty
+# `__init__.py` at the runfiles ROOT. MEASURED: `//:mypy` refused with *"mypy.runfiles contains
+# __init__.py but is not a valid Python package name"* — the crawl reached a directory the
+# repository does not have. Deleting markers from `_main` did not help, because the one that
+# stopped it sat ABOVE `_main`. The distributions never hit this: they declare
+# `explicit_package_bases` with `mypy_path = "src"`, so their crawl ends at a declared root.
+# ⚑ With no `mypy_path`, the declared base is the directory mypy runs in — which is exactly the
+# claim: `mutate_runner.py` is module `mutate_runner`, and `test_mutate_runner` imports it so.
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# ⚑ THE ROOT'S RUFF STOPS AT THE ROOT. Each distribution already has its own config, and ruff picks
+# the nearest one per file, so this line matters only for directories that carry none.
+extend-exclude = ["bazel-*", "inbox", "findings", "patches", "rbe", ".claude"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = [
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+[tool.mikemol-hooks.shellcheck.exclude]
+# ⚑ THE ROOT GOVERNS THE ROOT'S SHELL NOW, so the shellcheck edit hook reads its policy from here.
+# One waiver, and it is a genuine contradiction, not a finding to pay: SC1091 is *"not following
+# ./refusal_record.sh"*, because the hook runs shellcheck on one file without `-x`. The file it will
+# not follow is itself a root `.sh`, checked in full by `//:shellcheck_githooks`, which globs every
+# root script. So following it here would only check the same file twice.
+SC1091 = "2026-09-23: .githooks/pre-commit sources refusal_record.sh; that file is checked by //:shellcheck_githooks (glob *.sh). Measured: with this root pyproject present and no waiver, every edit to the gate was refused on this info-level note."
+
+[tool.ruff.lint.per-file-ignores]
+# ⚑ RELIEF IS PER FILE AND PER RESPONSIBILITY, the shape `ratchet/pyproject.toml` records: an entry
+# naming a directory would grant it to every script in order to cover one call.
+#
+# ⚑ RUNNING A SUITE IS THE MUTATION RUNNER'S WHOLE JOB. Its one subprocess is `launch`: an argv
+# list, no shell, an interpreter path the caller supplies and a fixed pytest command line.
+"mutate_runner.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ ASKING LUTHEN'S ENDPOINT DIRECTORY IS HALF OF THE BEP PROBE'S JOB (the address is asked for at
+# probe time, never written here — its docstring says why). A fixed argv into a sibling checkout.
+"bep_probe.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ A TEST MODULE ASSERTS; that is what pytest reads. And its GIT_* witness builds a real decoy
+# repository, because the hazard under test is git following an exported GIT_DIR — `git` is
+# resolved from PATH as `ratchet/tests/test_remap.py` resolves it, for the same reason.
+"test_mutate_runner.py" = [
+    "assert",
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+    "start-process-with-partial-path",
+]

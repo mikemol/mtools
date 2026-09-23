@@ -4048,3 +4048,9 @@
   claim   = {Each launcher's `git_scrubbed`, run with GIT_DIR and GIT_INDEX_FILE aimed at a decoy repository, lets a fixture commit land in its own dir and leaves the decoy with no refs. Armed: an inert `git_scrubbed` puts the commit in the decoy},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names}
 }
+
+@misc{hooks-bar-fires-gate-refuses-an-orphan-warrant-and-admits-the-clean-tree,
+  section = {bar-fires},
+  claim   = {The gate runs `count_test_functions.py --pairing` over every distribution and the root, and that call refuses a warrant whose check names a test that does not exist while admitting the ledger as it stands. Two arms: this distribution's real ledger is admitted, and the same ledger plus one planted orphan is refused with the orphan named. The count and the section diff both passed over two such orphans on 2026-09-23, found only by hand},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gate_refuses_an_orphan_warrant_and_admits_the_clean_tree}
+}

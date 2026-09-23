@@ -232,12 +232,21 @@ run_checked() {  # label, then the command
 # ⚑ THE CRITERION IS NOT INVENTED HERE. `blockers.sh` already enumerates components as *a dir
 # with a pyproject.toml*, arguing that a structural criterion cannot drift as the repo grows and
 # that a landed component necessarily satisfies it. This is that, once, instead of four literals.
-_dists=$(cd "$root" && printf '%s ' */pyproject.toml | sed 's#/pyproject.toml##g')
+# ⚑⚑ A DISTRIBUTION IS A REAL DIRECTORY, NEVER A SYMLINK. Measured when the root gained its own
+# lint-only `pyproject.toml`: bazel's convenience link `bazel-mtools` points at the execroot, which
+# mirrors the root, so `bazel-mtools/pyproject.toml` matched and a SIXTH "distribution" appeared —
+# 1,653 collection errors in preflight. Every `bazel-*` entry is a link bazel makes (`.gitignore`
+# already treats `/bazel-*` as output); no distribution is ever one.
+_dists=""
+for _f in */pyproject.toml; do
+  _d="${_f%/pyproject.toml}"
+  [ -L "$_d" ] || _dists="$_dists$_d "
+done
 # ⚑ AND IT REFUSES AN EMPTY DERIVATION RATHER THAN LOOPING ZERO TIMES. A glob that matched
 # nothing would make every check below a no-op and the gate would pass having examined nothing —
 # green over an empty population, which is the shape this whole file exists to refuse.
 case "$_dists" in
-  ''|'*/pyproject.toml ')
+  ''|'* ')
     say "no distribution found by */pyproject.toml — cannot run the gate, commit refused"
     say "  an empty population makes every check below a no-op that reports green"
     exit 1
@@ -513,7 +522,12 @@ done
 # ⚑ A correct count over a MIS-NAMED population is harder to catch than a wrong count, because
 # every arithmetic check passes. Naming it here rather than changing the invariant, which is the
 # operator's call and not a defect.
-for dist in $_dists; do
+# ⚑⚑ AND THE ROOT (`.`) IS A MEMBER, THOUGH IT IS NOT A DISTRIBUTION. `test_mutate_runner.py` lives
+# beside the script it tests and carried no warrant anywhere: `$_dists` is `*/pyproject.toml`, which
+# the root's lint-only `pyproject.toml` does not match, so no loop here ever saw it. The root keeps
+# its own `warrants.bib` and `rubric.tsv`, and `count_test_functions.py` reads `test_*.py` at the
+# top of whatever it is handed — so the checks below apply to it unchanged.
+for dist in $_dists .; do
   [ -d "$staged/$dist" ] || continue
   # ⚑⚑⚑ ANCHORED, BECAUSE AN UNANCHORED `@misc{` COUNTS A QUOTATION AS A WARRANT. This is a corpus
   # whose `claim` fields QUOTE CODE, so a warrant claiming something about bibtex syntax puts the
@@ -576,6 +590,23 @@ for dist in $_dists; do
     fail=1; note_failure "$dist: warrant sections vs rubric sections" "$_slog"
   fi
 done
+
+# ⚑⚑⚑ THE PAIRING, BECAUSE A COUNT AND A HEADING SET CANNOT SEE ONE. The two checks above compare
+# how MANY warrants there are and which SECTIONS they file under; neither reads what a warrant's
+# `check` runs. MEASURED 2026-09-23: two warrants whose `-k` named a test renamed away passed both
+# and were removed by hand, and thirteen more (mdstruct 4, ratchet 9) carried NO check while every
+# count stayed exact — each paired with a test no check named, so the arithmetic balanced.
+# ⚑⚑ SO THIS RESOLVES BOTH DIRECTIONS: an ORPHAN WARRANT (a check naming a test that does not
+# exist), an UNWARRANTED test (a function no check names), and a warrant with no parseable check
+# at all. One call over the whole population, the root included; it prints every finding before
+# its verdict, and `run_checked` replays them under the refusal.
+# ⚑ THE SAME PARSE THE COUNT USES (`count_test_functions.py`), so the two figures cannot drift.
+_pairing=()
+for dist in $_dists .; do
+  if [ -d "$staged/$dist" ]; then _pairing+=("$staged/$dist"); fi
+done
+run_checked "every warrant check names a test that exists, and every test is named" \
+  "$root/count_test_functions.py" --pairing "${_pairing[@]}"
 
 # ⚑⚑⚑ THE HERMETIC SUITE IS THE ONE THAT PROVES THE DEPENDENCIES ARE DECLARED. The host runs
 # above use each distribution's own `.venv`, which can satisfy an import nobody declared — a

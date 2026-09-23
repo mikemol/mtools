@@ -1305,7 +1305,10 @@ def _distributions() -> list[str]:
 
     """
     root = _DIST.parent
-    return sorted(p.parent.name for p in root.glob("*/pyproject.toml"))
+    # ⚑ A SYMLINKED DIRECTORY IS NEVER A DISTRIBUTION — the gate's rule. `bazel-mtools` mirrors
+    # the root, so once the root carried a pyproject.toml it matched this glob.
+    return sorted(p.parent.name for p in root.glob("*/pyproject.toml")
+                  if not p.parent.is_symlink())
 
 
 def test_no_hand_written_distribution_list_survives_in_the_gate_or_its_checker() -> None:
@@ -6185,7 +6188,7 @@ def test_the_gate_does_not_run_a_second_copy_of_a_check_the_graph_already_runs()
 
     # ⚑ THE DISTRIBUTIONS ARE DERIVED, and the population is asserted non-empty: an empty glob
     # makes every loop below vacuous, which is the failure this suite has already paid for once.
-    dists = sorted(p.parent.name for p in _DIST.parent.glob("*/pyproject.toml"))
+    dists = _distributions()
     assert dists, "no distribution carries a pyproject.toml — this arm would read nothing"
 
     # ⚑⚑ THE COVERAGE CLAIM, PER DISTRIBUTION AND PER CHECK. `//<dist>:ruff` and `//<dist>:mypy`
@@ -6785,3 +6788,70 @@ def test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names(
             env={**clean, "SCRUB_FN": fn.group(0)})
         assert proc.returncode == 0, f"{script.name}: {proc.stderr.strip()}"
         assert not proc.stdout, f"{script.name}: a fixture commit reached the decoy:\n{proc.stdout}"
+
+
+_COUNTER = _DIST.parent / "count_test_functions.py"
+_PAIRING_CALL = '"$root/count_test_functions.py" --pairing "${_pairing[@]}"'
+_ORPHAN = "test_this_function_was_renamed_away"
+
+
+def _pairing(dist: Path) -> subprocess.CompletedProcess[str]:
+    """Run the gate's own pairing check over one distribution directory.
+
+    ⚑ THE ARGV IS ALL LITERALS AND THE OPERANDS TRAVEL IN THE ENVIRONMENT, the shape
+    `test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names` uses: nothing
+    variable reaches the process table as an argument this module composed.
+
+    Returns:
+        the completed process; its status is the verdict the gate reads.
+
+    """
+    clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    return subprocess.run(
+        ["/bin/bash", "-euc", 'exec "$PAIRING_PY" "$PAIRING_COUNTER" --pairing "$PAIRING_DIST"'],
+        capture_output=True, text=True, check=False,
+        env={**clean, "PAIRING_PY": sys.executable, "PAIRING_COUNTER": str(_COUNTER),
+             "PAIRING_DIST": str(dist)},
+    )
+
+
+def test_the_gate_refuses_an_orphan_warrant_and_admits_the_clean_tree(tmp_path: Path) -> None:
+    """A warrant whose check names a missing test is refused; the ledger as it stands is admitted.
+
+    ⚑⚑⚑ THE COUNT AND THE SECTION DIFF BOTH PASSED OVER TWO ORPHANS, MEASURED 2026-09-23: each
+    compares a cardinality or a heading set and neither reads what a `check` runs, so a warrant
+    naming a renamed-away test balanced the ledger for as long as some test went unnamed. Found by
+    hand. The gate now runs `count_test_functions.py --pairing` over every distribution and the
+    root; this arm plants the defect in a copy and runs that same call.
+    ⚑⚑ TWO ARMS, BECAUSE EITHER ALONE PROVES NOTHING. A checker that refuses everything passes the
+    planted arm; one that admits everything passes the clean arm. The clean arm is this
+    distribution's REAL ledger and suite — the sandbox stages both — and the planted arm is that
+    same pair plus one warrant, so the planted warrant is the only difference between the verdicts.
+    """
+    gate = _GATE.read_text(encoding="utf-8")
+    assert _PAIRING_CALL in gate, "the gate no longer runs the pairing check this arm exercises"
+    assert 'run_checked "every warrant check names a test that exists' in gate, (
+        "the pairing check must run through `run_checked`, or its findings are not replayed"
+    )
+
+    clean = _pairing(_DIST)
+    assert clean.returncode == 0, f"the clean ledger was refused:\n{clean.stdout}{clean.stderr}"
+    assert ", 0 finding(s)" in clean.stdout, f"no clean tally printed:\n{clean.stdout}"
+
+    planted = tmp_path / "hooks"
+    shutil.copytree(_DIST / "tests", planted / "tests")
+    bib = (_DIST / "warrants.bib").read_text(encoding="utf-8")
+    orphan = (
+        "\n@misc{hooks-bar-fires-planted-orphan,\n  section = {bar-fires},\n"
+        "  claim   = {Planted by the pairing arm.},\n"
+        f"  check   = {{cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k {_ORPHAN}}}\n"
+        "}\n"
+    )
+    (planted / "warrants.bib").write_text(bib + orphan, encoding="utf-8")
+    refused = _pairing(planted)
+    assert refused.returncode == 1, (
+        f"a planted orphan was admitted (rc={refused.returncode}):\n{refused.stdout}"
+    )
+    assert f"ORPHAN WARRANT tests/test_bar_fires.py::{_ORPHAN}" in refused.stdout, (
+        f"the refusal does not name the planted orphan:\n{refused.stdout}"
+    )

@@ -1,0 +1,6 @@
+# rubric.tsv — the sections of the repository ROOT's warrant set, in document order.
+# ⚑ THE ROOT IS NOT A DISTRIBUTION AND STILL HAS A SUITE: `test_mutate_runner.py` tests the runner
+# every distribution's `mutants` target runs. The gate diffs this file's first column against every
+# `section = {…}` in the root `warrants.bib`, exactly as it does for each distribution.
+# key <TAB> heading title
+mutate_runner	The Mutation Runner: A Qualified Path Per Def-Site, and No GIT_* Reaching a Mutant

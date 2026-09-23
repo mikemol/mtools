@@ -65,6 +65,23 @@ cd "$dist" || exit 1
 # its own staged inputs so the checker reads the population the repository has. Measured that the
 # staged files are owner-writable, so the action may do it; `|| true` because a read-only staging
 # is a weaker sandbox, not a reason to refuse.
-find . -name '*.py' -perm -u+x -exec chmod u-x,g-x,o-x {} + 2>/dev/null || true
+#
+# ⚑⚑⚑ AND ONLY FILES WITH NO SHEBANG, BECAUSE STRIPPING EVERY BIT MADE THE OPPOSITE RULE LIE.
+# `EXE002` is the rule an invented bit trips, and it fires only on a file WITHOUT a shebang — so
+# that is the whole population needing repair. The first cut stripped `+x` from every `.py`, and
+# the root's `count_test_functions.py` — `100755` in git, `#!/usr/bin/env python3`, executed
+# directly by the gate as `"$root/count_test_functions.py"` — then failed `EXE001
+# shebang-not-executable` under `//:ruff`. MEASURED: restoring 755 in the tree changed nothing,
+# because this line took the bit back off inside the sandbox. A true statement about the
+# repository was being manufactured false by the normaliser.
+# ⚑ WHAT THIS COSTS, STATED: on a remote executor that invents `+x`, a shebang file that is NOT
+# executable in git reads as executable, so `EXE001` cannot fire there. Locally the sandbox links
+# the source, the mode is git's, and `EXE001` is exact. The alternative — stripping a shebang
+# file's bit — is wrong on every executor, not just the remote one.
+while IFS= read -r -d '' _py; do
+    if [ "$(head -c 2 "$_py")" != '#!' ]; then
+        chmod u-x,g-x,o-x "$_py" 2>/dev/null || true
+    fi
+done < <(find . -name '*.py' -perm -u+x -print0)
 
 exec "$ruff" check --no-cache --config "$config" .

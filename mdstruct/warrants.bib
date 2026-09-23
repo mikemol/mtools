@@ -629,6 +629,7 @@
 
 @misc{mdstruct-tables-a-row-wide-filter-cannot-separate-declaring-from-mentioning,
   section = {tables},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_row_wide_filter_cannot_separate_declaring_from_mentioning},
   title   = {A row-wide substring cannot separate a declaration from a discussion},
   note    = {Measured on a peer's revision log designated as the artifact of record for an
              event: a row announcing a repair to the freeze mechanism carried the literal
@@ -640,6 +641,7 @@
 
 @misc{mdstruct-tables-an-anchored-filter-matches-only-the-declaring-row,
   section = {tables},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_an_anchored_filter_matches_only_the_declaring_row},
   title   = {A declaration is a prefix},
   note    = {Same corpus, same term, one match. A cell beginning with the term is making the
              claim; a cell containing it later is talking about one. This is why the filter is
@@ -648,6 +650,7 @@
 
 @misc{mdstruct-tables-the-anchor-skips-leading-decoration,
   section = {tables},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_the_anchor_skips_leading_decoration},
   title   = {Decoration is skipped before anchoring, or the anchor is worse than nothing},
   note    = {Every cell in the corpus this was built for opens with emphasis markers. A naive
              startswith anchors to the marker, matches nothing, and reads as a clean negative
@@ -657,6 +660,7 @@
 
 @misc{mdstruct-tables-an-out-of-range-column-drops-the-row-rather-than-raising,
   section = {tables},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_an_out_of_range_column_drops_the_row_rather_than_raising},
   title   = {An out-of-range column drops the row rather than raising},
   note    = {Tables in one document have different widths. A predicate scoped to a column and
              asked across a whole file must not abort on the first narrower table it meets, or
