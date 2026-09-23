@@ -45,8 +45,14 @@ def checker_argv(tmp: Path, path: str, venv_py: Path,
         # ⚑ IT ALSO RETIRES THE PATH REWRITE FOR THE RUFF HALF. ruff renders the author's path in
         # its own findings rather than a `tmpab12cd.py` the reader cannot map to anything; the
         # analyze module still rewrites for mypy.
+        # ⚑⚑ `--force-exclude` MAKES A TREE'S `extend-exclude` REACH IT TOO. Under
+        # `--stdin-filename` ruff lints what it is handed and ignores the exclusion list unless
+        # forced — measured on a
+        # fixture (ruff 0.16.6, 2026-09-22): a file under an excluded `gen/` was REFUSED without the
+        # flag and admitted with it, while a non-excluded path stayed refused. substrate carried
+        # the same gap (its letter; summit's `ask-force-exclude-reaches-a-staged-edit`).
         ("ruff", [str(venv_py), "-m", "ruff", "check",
-                  "--config", str(pyproject), "--no-cache",
+                  "--config", str(pyproject), "--no-cache", "--force-exclude",
                   "--stdin-filename", real, "-"], True),
         # ⚑⚑ `--pretty` RENDERS THE SOURCE LINE AND A CARET, AND ITS ABSENCE COST AN AFTERNOON.
         # Without it mypy emits a bare line number naming a line in a tempfile that is deleted

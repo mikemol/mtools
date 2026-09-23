@@ -15,3 +15,4 @@ venv-artifact	The Venv as a Build Artifact: Relocatable, Closed, and the Same in
 reader-guard	The Reader Guard: Runnability Tested by Executing, Not Presence Tested by Stat
 shellcheck	The Shell Hook: What the Linter Says, and What an Absent Linter Does
 shellcheck-cli	The Shell Hook by Hand: One File, One Tree, One Command, and Could-Not-Look Is Never Clean
+pycheck	The Python Edit Gate: The Post-Edit File Checked, a Tree Exclusion Honoured, and No Check Means No Pass

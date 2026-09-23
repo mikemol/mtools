@@ -268,7 +268,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
 # file rather than to the package. An entry naming a directory would grant it to every hook in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.
-"src/mikemol/hooks/verdict.py" = ["subprocess-without-shell-equals-true"]
+"src/mikemol/hooks/verdict.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑ THE SAME RULE, THE SAME REASON, A SECOND NAMED FILE. `test_adoption.py`'s subject is what a
 # real checkout produces WHEN INSTALLED, so building venvs and installing wheels is the case
