@@ -135,7 +135,7 @@ sign: *does the row's own text make the filer's action conditional on the counte
 | `CO-` | 8 rows (`◆build-census-leg`, `A171`, `A165`, `A159`, `A210/211`, `◆file-rbe-…`, `◆jsonl-…`) | ⚑ **none of the 8** appears in `LS-`'s or `SM-`'s `§Q`-3 | **8 TODO** | rev 9, measured by `CO-` itself against 7 legs. Rows cite cassian's own registry prose — **filer's inference**, `LS` discriminator → TODO. |
 | `CO-` | summit's 9 unmeasured capability asks | ⚑ **`SM-§Q-3` does NOT list cassian** — its 10 asks split 6 substrate / 3 paperkit / 1 mat230 | ⚑⚑ **DIVERGENCE, not a TODO** | `CO-4` says *"summit is holding its registry open on my answer"* — a claim about summit's state. `SM-`'s own `§Q`-3 contradicts it. **Both stand; see `AX-4`.** |
 | `GB-` | 2 rows (withdrawn-corroboration; pinned-reader friction) | none | ⚑ **2 INVERTED** | Both conditional on **summit** acting (`GB-01` owner-of-next-action column reads `summit` for both). Sign test fires. `LS` discriminator alone would have read these as BLOCKS — rev 13's exact warning. |
-| `PK-` | 1 (the run file's stale header) | ⚑ appears at 5 legs' `§Q`-3-adjacent prose (`RP-T1`, `CO-5`, `SM`, `LS`, `GB`) | ⚑ **REAL BLOCK, and the only unanticipated one** | See `AX-3d`. |
+| `PK-` | 1 (the run file's stale header) | ⚑ appears at 5 legs' `§Q`-3-adjacent prose (`RP-` preamble, `CO-5`, `SM`, `LS`, `GB`) | ⚑ **REAL BLOCK, and the only unanticipated one** | See `AX-3d`. |
 | `PK-` | 1 (3 files uncommitted in mtools' tree) | ✔ `LS-05` row 4, `GB-03`, `MT-04` all report the *effect* | **REAL BLOCK, discharged** | The one `§Q`-4 row in the census that a counterparty's `§Q`-3 independently corroborates without the filer having been told first. |
 | `SM-` | 4 known deferrals + 69/42 unplaced drafts | ⚑ **no leg's `§Q`-3 names summit as its blocker** | **42 BLOCK · 27 TODO** (per `§V` rev 12's 42-of-73 split, re-based to 69 at `SM`'s own commit figure) | The 42 have named counterparties with ages; `gcalculus` alone holds 9, oldest 21.1d, **on no roster**. |
 | `SB-` | 1 (mtools' two items) | ✔ `MT-04` ¶`⚑` | **REAL BLOCK, resolved by the asking** | `A-ITEM-1`. |
@@ -168,7 +168,7 @@ edges. **One party's unplaced-mail queue outweighs the other seven ledgers 5:1.*
 | `SM-` (1 ask) | `mat230` | ✘ **structurally unanswerable** — mat230 has no inbox. `SM` reports it as a distinct tier. |
 | `CO-` (1) | `substrate` (`◆routed-struct-tools-cannot-run`, 13 bare-name imports) | ✘ **absent from `SB-`'s leg entirely.** Carried. |
 | `CO-` (1) | `mtools` (`◆cross-repo-write-authority`, the Ⓒ/Ⓓ sequencing hold) | ⚑ **`MT-03` carries it pointed at the OPERATOR, not at cassian.** `§V` rev 9 resolves the third account to a **dead pointer** (`mtools-05` is not a session that exists). Carried as `AX-4`. |
-| `RP-` (`RP-07`) | *"the `build-hermeticity` census"* | ⚑ **a block on a PROCESS, not a party.** `RP-05`'s own gloss: *"there is no party who could know they are blocking me, because no party is."* |
+| `RP-` (`RP-07`) | *"the `build-hermeticity` census"* | ⚑ **a block on a PROCESS, not a party.** `RP-07`'s own gloss (rev 3a table): *"there is no party who could know they are blocking me, because no party is."* |
 | `LS-` (`⊘3`) | `gcalculus` | ✘ **not on the roster.** |
 | `PK-` (`Ζ·venv·build`, 52 files) | **paperkit itself** | ⚑ self-edge; `PK-03` says so. |
 
@@ -190,7 +190,7 @@ counterparties can be enumerated from the legs themselves:
 
 | party | what the header cost, in that leg's own words |
 |---|---|
-| `RP-` | `RP-T1`: *"I held this leg out of the tree for several ticks on that sentence. That was my error."* Filed as `RP-05`, a `§Q`-3 block. |
+| `RP-` | preamble: *"I held this leg out of the tree for several ticks on that sentence. That was my error and it is the census's own recurring shape"* — then filed at the `§R` path while undispatched. Filed as `RP-05`, a `§Q`-3 block. |
 | `CO-` | `CO-5` row 5: filing this leg, **HELD**. `CO-`'s header: *"Cassian did not [file]… The correction was the thing that needed correcting."* Filed **fifth**. |
 | `SM-` | `§V` rev 5: held its leg untracked, *"treating one grant as sufficient to CREATE but not to COMMIT."* |
 | `GB-`, `LS-`, `PK-` | filed past it; each verified the trigger against `HEAD` first — a cost paid in verification rather than delay. |
@@ -280,11 +280,12 @@ did not.
 ### `AX-5e` The header's own claim that five parties were right is true, and the run file never counted the sixth and seventh who were also right and paid for it
 
 Rev 5: *"FIVE PARTIES FILED PAST A HEADER READING `DO NOT FILE`, AND EVERY ONE OF THEM WAS RIGHT."*
-⚑ Correct. **But `CO-` and `RP-` both measured the header as stale and did NOT file** — `CO-` says
-so directly (*"Two ticks ago I read that header as stale — which was correct — and then deferred"*),
-`RP-` says so directly (*"I held this leg out of the tree for several ticks on that sentence"*).
-**Seven of eight parties reached the correct reading; five acted on it and two deferred to the
-author.** The run file reports the 5 and not the 7, so it reads as *five careful readers* when the
+⚑ Correct. **But `CO-` and `RP-` both measured the header as stale and DEFERRED filing before
+filing anyway** — `CO-` says so directly (*"Two ticks ago I read that header as stale — which was
+correct — and then deferred"*), `RP-` says so directly (*"I held this leg out of the tree for several
+ticks on that sentence. That was my error"*) and then filed at the `§R` path while the run file was
+still undispatched. **Seven of eight parties reached the correct reading; five acted on it at once
+and two deferred to the author for several ticks first.** The run file reports the 5 and not the 7, so it reads as *five careful readers* when the
 measurement is *seven careful readers and a two-party compliance failure in the deferential
 direction*. ⚑ **The stronger finding is the one the smaller number hides:** the header was not merely
 mis-written, it was **correctly diagnosed by 7 of 8 and still cost 2 of them their filing order** —
