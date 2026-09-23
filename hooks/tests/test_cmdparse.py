@@ -246,3 +246,15 @@ def test_a_wrapper_whose_argument_is_a_command_reports_the_wrapper() -> None:
     # and a widened table is exactly what could break them.
     assert [prog for prog, _ in cmdparse.programs("sudo -C 3 grep x f")] == ["grep"]
     assert [prog for prog, _ in cmdparse.programs("xargs -I {} grep x {}")] == ["grep"]
+
+
+def test_several_heredocs_on_one_line_each_take_their_own_body() -> None:
+    """Two heredocs on one line: both bodies are data, and only the one real program is seen."""
+    cmd = "cat <<A >/tmp/o <<'B'\nx; head a.txt\nA\ny; tail b.txt\nB"
+    assert _progs(cmd) == ["cat"]
+
+
+def test_a_here_string_is_not_a_heredoc_and_its_word_stays() -> None:
+    """`<<<` feeds one ordinary shell word; it is left in the command, and nothing is cut."""
+    cmd = "grep x <<< EOF ; head b.txt\nEOF"
+    assert _progs(cmd) == ["grep", "head"]

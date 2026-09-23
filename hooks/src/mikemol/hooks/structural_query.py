@@ -236,14 +236,17 @@ def _split_at_terminator(args: list[str]) -> tuple[list[str], list[str]]:
 
 
 def _without_heredoc_bodies(args: list[str]) -> list[str]:
-    """Drop the tokens strictly between each heredoc tag and its terminator.
+    """Drop each heredoc operator and its tag; the BODY never reaches this function.
 
-    ⚑ THE TAG NAMES ITS OWN TERMINATOR — `<<EOF` ends at the next bare `EOF` — so the body is
-    bounded rather than open-ended. An unterminated tag swallows the remainder, which is the safe
-    direction: a body token read as an argument would REFUSE a command that reads nothing.
+    ⚑⚑ THE BODY IS CUT IN `cmdparse.strip_heredoc_bodies`, BEFORE TOKENIZING. This function once
+    searched the token stream for a terminator token, which only worked while the body stayed
+    inside one command: a `;` or `|` in the body split it into commands, and the half after the
+    operator was judged as a real `grep`. Measured on HEAD, `cat >> ledger <<'EOF'` with the body
+    `step; grep x notes.md` was refused. What is left here is the operator and its delimiter word
+    (`<<-` tokenizes as `<<` then `-EOF`, or `<<` then `-` then `EOF` when spaced).
 
     Returns:
-        the arguments with every heredoc body removed.
+        the arguments with every heredoc operator and tag removed.
 
     """
     out: list[str] = []
@@ -253,15 +256,10 @@ def _without_heredoc_bodies(args: list[str]) -> list[str]:
             out.append(args[i])
             i += 1
             continue
-        # ⚑ `<<` then its TAG; the body runs until that tag appears again as its own token.
         i += 1
-        if i >= len(args):
-            break
-        tag = args[i].strip("'\"")
-        i += 1
-        while i < len(args) and args[i].strip("'\"") != tag:
+        if i < len(args) and args[i] == "-":
             i += 1
-        i += 1  # step over the terminator itself
+        i += 1  # step over the tag itself
     return out
 
 

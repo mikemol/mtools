@@ -3880,3 +3880,46 @@
   claim  = {Garbage on stdin exits 0 and denies nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_malformed_payload_denies_nothing},
 }
+
+@misc{hooks-structural-query-heredoc-append-whose-body-names-a-grep-is-admitted-and-a-real-grep-is-not,
+  section = {structural-query},
+  title  = {A ledger append is data; the same grep typed as a real command is still refused},
+  claim  = {A ledger append is data; the same grep typed as a real command is still refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_heredoc_append_whose_body_names_a_grep_is_admitted_and_a_real_grep_is_not},
+}
+
+@misc{hooks-structural-query-dash-heredoc-body-is-data-up-to-its-tab-indented-terminator,
+  section = {structural-query},
+  title  = {`<<-` strips leading tabs from the terminator line, and its body is data too},
+  claim  = {`<<-` strips leading tabs from the terminator line, and its body is data too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_dash_heredoc_body_is_data_up_to_its_tab_indented_terminator},
+}
+
+@misc{hooks-structural-query-quoted-delimiter-ends-only-at-a-line-that-is-exactly-the-delimiter,
+  section = {structural-query},
+  title  = {A double-quoted delimiter is unquoted to find its terminator; a mid-line mention is body},
+  claim  = {A double-quoted delimiter is unquoted to find its terminator; a mid-line mention is
+            body.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_quoted_delimiter_ends_only_at_a_line_that_is_exactly_the_delimiter},
+}
+
+@misc{hooks-structural-query-command-after-the-heredoc-terminator-is-still-refused,
+  section = {structural-query},
+  title  = {A real grep on the line after the terminator is parsed as a command and refused},
+  claim  = {A real grep on the line after the terminator is parsed as a command and refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_command_after_the_heredoc_terminator_is_still_refused},
+}
+
+@misc{hooks-cmdparse-several-heredocs-on-one-line-each-take-their-own-body,
+  section = {cmdparse},
+  title  = {Two heredocs on one line: both bodies are data, and only the one real program is seen},
+  claim  = {Two heredocs on one line: both bodies are data, and only the one real program is seen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_several_heredocs_on_one_line_each_take_their_own_body},
+}
+
+@misc{hooks-cmdparse-here-string-is-not-a-heredoc-and-its-word-stays,
+  section = {cmdparse},
+  title  = {`<<<` feeds one ordinary shell word; it is left in the command, and nothing is cut},
+  claim  = {`<<<` feeds one ordinary shell word; it is left in the command, and nothing is cut.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_here_string_is_not_a_heredoc_and_its_word_stays},
+}

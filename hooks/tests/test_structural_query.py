@@ -527,12 +527,18 @@ def test_a_bare_mention_in_a_heredoc_body_passes_with_the_token_present() -> Non
     body = "PATH = notes" + _MD
     cmd = "cat > /tmp/scratch.txt <<EOF\n" + body + "\nEOF"
 
-    # ⚑ THE PRECONDITION IS ASSERTED, NOT ASSUMED. If the mention stopped reaching the token
+    # ⚑ THE PRECONDITION IS ASSERTED, NOT ASSUMED. If the mention stopped reaching the RAW token
     # stream, this arm would go green for the same accidental reason the published row did.
-    progs = cmdparse.programs(cmd)
-    tokens = [a for _prog, args in progs for a in args]
+    # ⚑⚑ AND IT IS NOW ASSERTED ON THE RAW TOKENS, NOT ON `programs()`: the body is cut in
+    # `cmdparse.strip_heredoc_bodies` before any program is extracted, so its absence from the
+    # program arguments is the fix's doing — shown by its presence one layer down.
+    tokens = cmdparse.tokenize(cmd)
     assert any(_MD in t for t in tokens), (
         f"the mention never reached the token stream, so a pass would prove nothing: {tokens}"
+    )
+    progs = cmdparse.programs(cmd)
+    assert not any(_MD in a for _prog, args in progs for a in args), (
+        "the heredoc body reached a program's arguments"
     )
 
     assert not _fires(cmd), "a claimed suffix in a heredoc BODY is data, not an artifact read"
@@ -883,3 +889,36 @@ def test_its_own_switch_at_zero_stands_it_down_over_the_python_hooks_switch(
     monkeypatch.setattr("sys.stdin", _stdin(_payload_json(cmd)))
     assert structural_query.main() == 0
     assert '"deny"' not in capsys.readouterr().out
+
+
+# ⚑⚑ A LEDGER APPEND WHOSE BODY NAMES A MATCHER AND A CLAIMED PATH. The body is stdin DATA; its `;`
+# is a character in a sentence, not an operator. Built from parts for the reason `_MD` records.
+_LEDGER_APPEND = "cat >> /tmp/ledger <<'EOF'\n"
+_BODY_WITH_A_COMMAND = "ran it; grep x " + _NOTES
+
+
+def test_a_heredoc_append_whose_body_names_a_grep_is_admitted_and_a_real_grep_is_not() -> None:
+    """A ledger append is data; the same grep typed as a real command is still refused."""
+    append = _LEDGER_APPEND + _BODY_WITH_A_COMMAND + "\nEOF"
+    assert not _fires(append), "a heredoc BODY was parsed as a command"
+    assert _fires("grep x " + _README), "the control: a real grep over a claimed artifact"
+    assert _fires("timeout 5 grep x " + _README), "the control, behind a wrapper"
+    assert _fires("ls | grep x " + _README), "the control, inside a pipeline"
+
+
+def test_a_dash_heredoc_body_is_data_up_to_its_tab_indented_terminator() -> None:
+    """`<<-` strips leading tabs from the terminator line, and its body is data too."""
+    cmd = "cat >> /tmp/ledger <<-EOF\n\t" + _BODY_WITH_A_COMMAND + "\n\tEOF"
+    assert not _fires(cmd), "a `<<-` body was parsed as a command"
+
+
+def test_a_quoted_delimiter_ends_only_at_a_line_that_is_exactly_the_delimiter() -> None:
+    """A double-quoted delimiter is unquoted to find its terminator; a mid-line mention is body."""
+    cmd = 'cat >> /tmp/ledger <<"EOF"\nsee EOF here; grep x ' + _NOTES + "\nEOF"
+    assert not _fires(cmd), "a quoted-delimiter body was parsed as a command"
+
+
+def test_a_command_after_the_heredoc_terminator_is_still_refused() -> None:
+    """A real grep on the line after the terminator is parsed as a command and refused."""
+    cmd = _LEDGER_APPEND + "note: 'unclosed\nEOF\n; grep x a" + _MD
+    assert _fires(cmd), "a read after the heredoc terminator went unseen"

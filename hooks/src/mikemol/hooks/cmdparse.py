@@ -209,12 +209,177 @@ def tokenize(cmd: str) -> list[str]:
         return []
 
 
+# ⚑⚑⚑ A HEREDOC BODY IS STDIN DATA, NEVER ARGV — AND THE TOKENIZER READ IT AS SHELL. MEASURED on
+# HEAD: `cat >> ledger <<'EOF'` whose body held `step; grep x notes.md` was REFUSED by the
+# structural-query hook, because shlex split the body's `;` as an operator and the body's second
+# half became a `grep` in command position. The same body carrying an apostrophe went the other
+# way: shlex raised on the unbalanced quote, `tokenize` returned [], and a REAL read after the
+# terminator passed unseen. Both are one defect — the body was never removed before tokenizing.
+#
+# ⚑⚑ SO THE BODY IS CUT HERE, ONCE, before any consumer sees a token, on bash's own rules:
+#   * the operator is `<<` or `<<-` OUTSIDE quotes and comments; `<<<` is a HERE-STRING, whose
+#     word is an ordinary shell word and stays exactly as it was.
+#   * the delimiter is the word after the operator with its quoting removed (`'EOF'`, `"EOF"`,
+#     `\EOF` all end at a bare `EOF` line); several heredocs on one line take their bodies in order.
+#   * a body ends at a line that IS the delimiter — `<<-` first strips leading TABS. A line that
+#     merely CONTAINS the delimiter (`see EOF here`) is body.
+#   * an unterminated body runs to the end, as bash reads it.
+# ⚑ THE BODY IS REPLACED BY A SEPARATOR, because the line after a terminator starts a NEW command.
+# The tokenizer does not split on newlines, so without one the next command folded into the
+# heredoc's own argument list and was judged as that command's arguments.
+_HEREDOC_WORD_END = frozenset(" \t\n;|&<>()")
+_QUOTES = frozenset("'\"")
+_DELIMITER_QUOTING = frozenset("'\"\\")
+_COMMENT_MAY_FOLLOW = frozenset(" \t\n;|&()")
+_BODY_SEPARATOR = "\n;\n"
+
+
+class _HeredocStripper:
+    """One left-to-right pass over a command, copying everything except heredoc bodies."""
+
+    def __init__(self, cmd: str) -> None:
+        """Hold the command and the pass's cursor, output, quote state and pending delimiters."""
+        self.cmd = cmd
+        self.i = 0
+        self.out: list[str] = []
+        self.quote = ""
+        self.pending: list[tuple[str, bool]] = []
+
+    def run(self) -> str:
+        """Copy the command through, dropping each heredoc body.
+
+        Returns:
+            the command with every heredoc body replaced by a command separator.
+
+        """
+        while self.i < len(self.cmd):
+            self._step()
+        return "".join(self.out)
+
+    def _take(self, end: int) -> None:
+        """Copy the text from the cursor up to `end`, and move the cursor there."""
+        end = min(end, len(self.cmd))
+        self.out.append(self.cmd[self.i:end])
+        self.i = end
+
+    def _line_end(self, start: int) -> int:
+        """Return the index of the newline ending the line at `start`, or the command's length.
+
+        Returns:
+            the index of the next newline at or after `start`, or `len(cmd)`.
+
+        """
+        end = self.cmd.find("\n", start)
+        return len(self.cmd) if end < 0 else end
+
+    def _step(self) -> None:
+        """Advance over one lexical unit: a character, an escape, a comment, or a heredoc."""
+        cmd, i = self.cmd, self.i
+        ch = cmd[i]
+        if self.quote:
+            self._step_quoted(ch)
+        elif ch == "\\":
+            self._take(i + 2)
+        elif ch in _QUOTES:
+            self.quote = ch
+            self._take(i + 1)
+        elif ch == "#" and (i == 0 or cmd[i - 1] in _COMMENT_MAY_FOLLOW):
+            self._take(self._line_end(i))
+        elif cmd.startswith("<<<", i):
+            self._take(i + 3)               # a here-string: its word is ordinary shell
+        elif cmd.startswith("<<", i):
+            self._open(i)
+        elif ch == "\n" and self.pending:
+            self._skip_bodies()
+        else:
+            self._take(i + 1)
+
+    def _step_quoted(self, ch: str) -> None:
+        """Advance inside a quoted string, where no heredoc operator can open."""
+        if ch == "\\" and self.quote == '"':
+            self._take(self.i + 2)
+            return
+        if ch == self.quote:
+            self.quote = ""
+        self._take(self.i + 1)
+
+    def _open(self, i: int) -> None:
+        """Copy a heredoc operator and its delimiter word, and queue the delimiter."""
+        j = i + 2
+        dash = self.cmd.startswith("-", j)
+        if dash:
+            j += 1
+        while j < len(self.cmd) and self.cmd[j] in " \t":
+            j += 1
+        end = self._word_end(j)
+        delimiter = "".join(c for c in self.cmd[j:end] if c not in _DELIMITER_QUOTING)
+        if delimiter:
+            self.pending.append((delimiter, dash))
+        self._take(end)
+
+    def _word_end(self, start: int) -> int:
+        """Return where the delimiter word starting at `start` ends, honouring its quoting.
+
+        Returns:
+            the index just past the delimiter word.
+
+        """
+        k = start
+        while k < len(self.cmd) and self.cmd[k] not in _HEREDOC_WORD_END:
+            if self.cmd[k] in _QUOTES:
+                close = self.cmd.find(self.cmd[k], k + 1)
+                k = len(self.cmd) if close < 0 else close + 1
+            elif self.cmd[k] == "\\":
+                k += 2
+            else:
+                k += 1
+        return min(k, len(self.cmd))
+
+    def _skip_bodies(self) -> None:
+        """At the newline ending a heredoc line, skip every queued body and its terminator."""
+        k = self.i + 1
+        for delimiter, dash in self.pending:
+            k = self._body_end(k, delimiter, dash=dash)
+        self.pending = []
+        self.out.append(_BODY_SEPARATOR)
+        self.i = min(k, len(self.cmd))
+
+    def _body_end(self, start: int, delimiter: str, *, dash: bool) -> int:
+        """Return the index just past the line that terminates a body beginning at `start`.
+
+        Returns:
+            the index after the terminator line, or `len(cmd)` when the body is unterminated.
+
+        """
+        k = start
+        while k < len(self.cmd):
+            end = self._line_end(k)
+            line = self.cmd[k:end]
+            k = end + 1
+            if (line.lstrip("\t") if dash else line) == delimiter:
+                return k
+        return len(self.cmd)
+
+
+def strip_heredoc_bodies(cmd: str) -> str:
+    """Remove every heredoc BODY from `cmd`, keeping the `<<TAG` redirection itself.
+
+    Returns:
+        `cmd` with each body and its terminator replaced by a command separator; a command with
+        no heredoc is returned unchanged.
+
+    """
+    if "<<" not in cmd:
+        return cmd
+    return _HeredocStripper(cmd).run()
+
+
 def commands(cmd: str) -> list[list[str]]:
     """Split the command string into its individual commands.
 
     Each element is one command's words, operators removed. `a | b && c` yields three lists. This
     is what lets a caller ask "is a textual tool in command position ANYWHERE in this line", which
-    is the question `toks[0]` could not answer.
+    is the question `toks[0]` could not answer. Heredoc bodies are removed first — they are data.
 
     Returns:
         the the command string into its individual commands.
@@ -222,7 +387,7 @@ def commands(cmd: str) -> list[list[str]]:
     """
     out: list[list[str]] = []
     cur: list[str] = []
-    for tok in tokenize(cmd):
+    for tok in tokenize(strip_heredoc_bodies(cmd)):
         if tok in OPERATORS:
             if cur:
                 out.append(cur)
