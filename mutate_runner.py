@@ -46,14 +46,61 @@ _NOT_SOURCE = shutil.ignore_patterns(
 )
 
 
-def sites(tree: ast.Module) -> list[ast.FunctionDef]:
-    """List every function definition in a parsed module, in source order.
+_ENUM_BASES = frozenset(
+    {"enum.Enum", "Enum", "enum.StrEnum", "StrEnum", "enum.IntEnum", "IntEnum"},
+)
+
+
+def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | None]]:
+    """Walk the module in source order, naming each def by its QUALIFIED path.
+
+    ⚑⚑⚑ A BARE NAME IS NOT AN ADDRESS, AND THE GRID WAS ADDRESSING BY ONE. Sites were reported as
+    `<module>::<name>` and each mutant mutated the FIRST def carrying that name, so two `parse`s
+    in one module were two rows over ONE mutation. Measured on ratchet: a Protocol stub `parse`
+    that nothing calls came back SURVIVED three times, because every `parse` mutated the stub
+    and the implementations were never touched — counted, and never measured.
+    ⚑⚑ THE PATH FOLLOWS PYTHON'S OWN `__qualname__`: `Class.method`, `outer.<locals>.inner`.
+    ⚑ AND A PATH CAN STILL REPEAT — a property getter and setter are both `C.x`, and so are the
+    two arms of an `if TYPE_CHECKING:` — so the n-th repeat (n >= 2) carries `#n`. The first
+    keeps the bare path, which is what leaves a module of unique names reported as before.
 
     Returns:
-        the `FunctionDef` nodes, nested ones included.
+        `(qualified path, node, owning class or None)`, in source order.
 
     """
-    return [n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]
+    found: list[tuple[str, ast.FunctionDef, ast.ClassDef | None]] = []
+    seen: dict[str, int] = {}
+
+    def visit(body: ast.AST, prefix: str, owner: ast.ClassDef | None) -> None:
+        for child in ast.iter_child_nodes(body):
+            if isinstance(child, ast.FunctionDef):
+                path = f"{prefix}{child.name}"
+                seen[path] = seen.get(path, 0) + 1
+                label = path if seen[path] == 1 else f"{path}#{seen[path]}"
+                found.append((label, child, owner))
+                visit(child, f"{path}.<locals>.", None)
+            elif isinstance(child, ast.AsyncFunctionDef | ast.Lambda):
+                # ⚑ NOT A SITE (the operator never mutated these), but a def nested in one
+                # still needs the path Python would give it.
+                name = getattr(child, "name", "<lambda>")
+                visit(child, f"{prefix}{name}.<locals>.", None)
+            elif isinstance(child, ast.ClassDef):
+                visit(child, f"{prefix}{child.name}.", child)
+            else:
+                visit(child, prefix, owner)
+
+    visit(tree, "", None)
+    return found
+
+
+def sites(tree: ast.Module) -> list[tuple[str, ast.FunctionDef]]:
+    """List every function definition in a parsed module, in source order, by qualified path.
+
+    Returns:
+        `(qualified path, FunctionDef)` pairs, nested defs included; every path is distinct.
+
+    """
+    return [(path, node) for path, node, _owner in _owned(tree)]
 
 
 def import_time_sites(tree: ast.Module) -> set[str]:
@@ -74,19 +121,18 @@ def import_time_sites(tree: ast.Module) -> set[str]:
     limit to cover two real cases. Measured across the tree: 158 def-sites, exactly 2 in this
     class, both the ones ERRORED named. The derivation admits a new enum method for free.
 
+    ⚑⚑ AND THE SET IS OF QUALIFIED PATHS, as `sites` now reports. It returned BARE names while
+    this docstring promised `<Class>.<method>`, so an enum's `__str__` also skipped every other
+    class's `__str__` in the same module — the same bare-name collision as the mutation itself.
+
     Returns:
         `"<Class>.<method>"` for every method of an `Enum` subclass in this module.
 
     """
-    enum_bases = {"enum.Enum", "Enum", "enum.StrEnum", "StrEnum", "enum.IntEnum", "IntEnum"}
-    excluded: set[str] = set()
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.ClassDef):
-            continue
-        if not ({ast.unparse(b) for b in node.bases} & enum_bases):
-            continue
-        excluded |= {i.name for i in node.body if isinstance(i, ast.FunctionDef)}
-    return excluded
+    return {
+        path for path, _node, owner in _owned(tree)
+        if owner is not None and {ast.unparse(b) for b in owner.bases} & _ENUM_BASES
+    }
 
 
 def mutate(source: str, target: str) -> str:
@@ -96,16 +142,19 @@ def mutate(source: str, target: str) -> str:
     everything including the docstring would change two things under one label, and a mutant that
     alters more than its operator claims cannot support a conclusion about that operator.
 
+    ⚑⚑ `target` IS A QUALIFIED PATH FROM `sites`, NOT A BARE NAME: a bare name picked the first
+    same-named def, so every other one was reported and never mutated.
+
     Returns:
         the module source with `target` mutated.
 
     Raises:
-        LookupError: when no def-site carries that name.
+        LookupError: when no def-site carries that path.
 
     """
     tree = ast.parse(source)
-    for node in sites(tree):
-        if node.name != target:
+    for path, node in sites(tree):
+        if path != target:
             continue
         keep = node.body[:1] if (
             isinstance(node.body[0], ast.Expr)
@@ -115,7 +164,7 @@ def mutate(source: str, target: str) -> str:
         raiser = ast.parse('raise AssertionError("mutant")').body
         node.body = [*keep, *raiser]
         return ast.unparse(ast.fix_missing_locations(tree))
-    msg = f"no def-site named {target}"
+    msg = f"no def-site at {target}"
     raise LookupError(msg)
 
 
@@ -297,16 +346,16 @@ def main(argv: list[str]) -> int:
         tree = ast.parse(source)
         rel = mod.relative_to(dist)
         skip = import_time_sites(tree)
-        for node in sites(tree):
-            site = f"{rel}::{node.name}"
+        for path, _node in sites(tree):
+            site = f"{rel}::{path}"
             attempted.append(site)
             # ⚑ COUNTED IN ATTEMPTED AND NOT RUN. Dropping it from `attempted` would make the
             # accounting balance by shrinking the denominator, which is the flattering direction
             # and the one this runner's predecessor took with ERRORED.
-            if node.name in skip:
+            if path in skip:
                 unreachable.append(site)
                 continue
-            jobs.append((site, rel, source, node.name))
+            jobs.append((site, rel, source, path))
 
     # ⚑⚑ THE MUTANTS RUN CONCURRENTLY, BECAUSE SERIAL COST GREW PAST THE TARGET'S CEILING. Measured
     # 2026-09-23: adding `membudget_cli` (~30 def-sites) took //fence:mutants past 300s at a load of

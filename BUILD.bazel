@@ -91,3 +91,21 @@ filegroup(
 )
 
 exports_files(["BUILD.bazel"])
+
+# ⚑⚑ THE MUTATION RUNNER IS TESTED WHERE IT LIVES. It is a root script every distribution's
+# `mutants` target runs, and until this target NOTHING tested it — measured by its own defect: it
+# addressed def-sites by BARE name, so a second same-named def was counted and never mutated. A
+# distribution's test module would need to import a root file by path, which strict mypy's
+# `disallow_any_expr` reads as `Any`; beside the script, `import mutate_runner` is a plain import.
+# ⚑ pytest COMES FROM THE HOOKS DEV HUB, the same pin every distribution's suite runs under.
+load("@hooks_dev//:requirements.bzl", root_dev_requirement = "requirement")
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "test_mutate_runner",
+    srcs = ["test_mutate_runner.py", "mutate_runner.py", "pytest_main.py"],
+    main = "pytest_main.py",
+    args = ["$(location test_mutate_runner.py)", "-q", "-p", "no:cacheprovider"],
+    size = "small",
+    deps = [root_dev_requirement("pytest")],
+)
