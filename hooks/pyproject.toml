@@ -302,6 +302,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # the code into a peer tree that may not enable the rule, and the ratchet refuses new keys.
 "tests/test_no_verify.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ THE SAME REASON AGAIN: `test_adopt_launcher.py`'s subject is what the consumer launcher does
+# WHEN EXECUTED, so running it is the case. Arguments are the launcher path this module derives
+# from `__file__` (or a copy/symlink of it under `tmp_path`) and literal entry names, with an
+# explicit env and a `json.dumps` payload on stdin. Never through a shell.
+"tests/test_adopt_launcher.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑⚑⚑ THE FOURTH NAMED FILE, AND RUNNING A SUBPROCESS IS THE WHOLE MEASUREMENT. `grade.py` awards
 # `behavioral` only when a mutation makes a check go red, and a check cannot go red without being
 # RUN. ⚑ It must be a fresh process rather than an import: Python caches a module's source at

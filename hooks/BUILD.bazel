@@ -91,6 +91,9 @@ py_library(
             "bin/mikemol-hook-structural-query",
             "bin/mikemol-hook-no-chaining",
             "bin/mikemol-hook-no-verify",
+            # ⚑ THE CONSUMER LAUNCHER, EXECUTED rather than read by `test_adopt_launcher.py` —
+            # the same lesson as the three above: tracked is not staged until named here.
+            "adopt/tools-hook",
             # ⚑⚑⚑ THE GATE ITSELF IS DATA, AND ITS ABSENCE MADE 56 ARMS FAIL HERMETICALLY WHILE
             # THE PREFLIGHT READ THEM ALL GREEN. `_GATE` is read by 22 call sites here; in the
             # sandbox the path did not exist, so every one raised FileNotFoundError. The preflight

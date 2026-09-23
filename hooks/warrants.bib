@@ -3987,3 +3987,52 @@
             a second command: data, and (as before) not chaining.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_quoted_heredoc_operator_does_not_hide_a_later_pipe},
 }
+
+@misc{hooks-adopt-launcher-built-venv-execs-the-entry,
+  section = {adopt-launcher},
+  title  = {Venv present: the entry is exec'd through the venv's python3},
+  claim  = {Venv present: the entry is exec'd through the venv's python3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_a_built_venv_execs_the_entry},
+}
+
+@misc{hooks-adopt-launcher-absent-venv-denies,
+  section = {adopt-launcher},
+  title  = {Venv absent: an ordinary command gets an explicit deny, never a silent exit 0},
+  claim  = {Venv absent: an ordinary command gets an explicit deny, never a silent exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_an_absent_venv_denies},
+}
+
+@misc{hooks-adopt-launcher-exact-repair-is-admitted-with-a-notice,
+  section = {adopt-launcher},
+  title  = {Venv absent: `env -C <root> bazel build //hooks:.venv`, bare or quoted, is admitted},
+  claim  = {Venv absent: `env -C <root> bazel build //hooks:.venv`, bare or quoted, is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_the_exact_repair_is_admitted_with_a_notice},
+}
+
+@misc{hooks-adopt-launcher-consumer-local-build-is-still-denied,
+  section = {adopt-launcher},
+  title  = {Venv absent: a local build, a wrong root, or a tail appended to the repair is denied},
+  claim  = {Venv absent: a local build, a wrong root, or a tail appended to the repair is denied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_a_consumer_local_build_is_still_denied},
+}
+
+@misc{hooks-adopt-launcher-unusable-root-denies,
+  section = {adopt-launcher},
+  title  = {MTOOLS_ROOT unset on a copied launcher, or naming a non-checkout, denies naming the fix},
+  claim  = {MTOOLS_ROOT unset on a copied launcher, or naming a non-checkout, denies naming the fix.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_an_unusable_root_denies},
+}
+
+@misc{hooks-adopt-launcher-symlinked-launcher-derives-its-root,
+  section = {adopt-launcher},
+  title  = {MTOOLS_ROOT unset: a symlink to `<root>/hooks/adopt/tools-hook` resolves that root},
+  claim  = {MTOOLS_ROOT unset: a symlink to `<root>/hooks/adopt/tools-hook` resolves that root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_a_symlinked_launcher_derives_its_root},
+}
+
+@misc{hooks-adopt-launcher-traversal-entry-is-refused,
+  section = {adopt-launcher},
+  title  = {An entry that is not `mikemol-hook-<name>` is denied before it reaches a path},
+  claim  = {An entry that is not `mikemol-hook-<name>` is denied before it reaches a path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_a_traversal_entry_is_refused},
+}

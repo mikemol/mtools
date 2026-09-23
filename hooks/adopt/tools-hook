@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑⚑⚑ THE CONSUMER-SIDE LAUNCHER: a repo that is NOT mtools runs mtools' built hooks from its own
+# `.claude/settings.json` as `tools/hook <entry>`. Adopted from sre-troubleshooting (2026-09-22)
+# and mirrored on `hooks/bin/mikemol-hook-structural-query`, whose measured comments govern here:
+# a hook that cannot run exits 0 with no decision and the harness reads that as ALLOW, so every
+# failure below is an explicit DENY on stdout with exit 0 — never a bare non-zero exit.
+#
+# ⚑⚑ MTOOLS_ROOT, in this order: the variable if set; else the tree this file REALLY lives in, when
+# the adopter symlinked it (realpath lands on `<root>/hooks/adopt/tools-hook`); else DENY naming
+# the fix. No `$HOME/github/mtools` default: a guessed root that happens to exist is a silent
+# dependency on one host's layout. The fix for an unusable root is an Edit to settings.json, which
+# the Bash matcher does not gate, so this deny cannot deadlock the way a venv deny could.
+#
+# ⚑ realpath on the venv for the same measured reason as the mtools launcher: CPython reached
+# through `bazel-bin` prints `Could not find platform dependent libraries` on every call.
+set -euo pipefail
+
+deny() {
+    local reason="$*"
+    reason="${reason//\\/\\\\}"
+    reason="${reason//\"/\\\"}"
+    printf '%s%s%s\n' \
+        '{"hookSpecificOutput": {"hookEventName": "PreToolUse", ' \
+        '"permissionDecision": "deny", "permissionDecisionReason": "' \
+        "$reason\"}}"
+    exit 0
+}
+
+# ⚑⚑ THE ENTRY IS INTERPOLATED INTO A PATH, so it is matched against the one shape mtools ships
+# before it touches one: `../../x` or `a/b` never reaches `$venv/bin/`. Not echoed back on refusal.
+entry="${1:-}"
+if [[ ! "$entry" =~ ^mikemol-hook-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+    deny "tools/hook: refusing an entry that is not a mikemol-hook-<name> console script." \
+        "Fix the hook command in .claude/settings.json."
+fi
+
+root="${MTOOLS_ROOT:-}"
+if [ -z "$root" ]; then
+    self="$(realpath "$0")"
+    root="${self%/hooks/adopt/tools-hook}"
+    [ "$root" != "$self" ] || root=""
+fi
+if [ -z "$root" ] || [ ! -f "$root/hooks/BUILD.bazel" ]; then
+    deny "tools/hook: no usable mtools checkout (MTOOLS_ROOT='$root')." \
+        "Set MTOOLS_ROOT in the hook command in .claude/settings.json, or symlink" \
+        "tools/hook to <mtools>/hooks/adopt/tools-hook. Refusing rather than failing open."
+fi
+
+venv="$root/bazel-bin/hooks/.venv"
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    # ⚑⚑⚑ THE BOOTSTRAP EXEMPTION, NARROWED TO THE ONE COMMAND THAT REPAIRS THIS VENV. A bare
+    # `bazel build //hooks:.venv` in the CONSUMER builds the consumer's target and repairs
+    # nothing, so it stays denied. Admitted: the WHOLE command (closing quote adjacent) being
+    # `env -C <root> bazel build //hooks:.venv`, root bare or double-quoted (arriving as \").
+    # The payload is the harness's JSON; both `"command":"` and `"command": "` spellings match.
+    repair="env -C $root bazel build //hooks:.venv"
+    quoted="env -C \\\"$root\\\" bazel build //hooks:.venv"
+    payload="$(cat)"
+    case "$payload" in
+        *"\"command\":\"$repair\""* | *"\"command\": \"$repair\""* | \
+        *"\"command\":\"$quoted\""* | *"\"command\": \"$quoted\""*)
+            echo "tools/hook: mtools hook venv absent, ALLOWING the build that repairs it" >&2
+            exit 0
+            ;;
+        *) ;;
+    esac
+    deny "hook $entry cannot run: mtools' hook venv is not built." \
+        "Repair: run exactly \`$repair\` (exempted). Refusing rather than failing open."
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry"
