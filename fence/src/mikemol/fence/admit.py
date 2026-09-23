@@ -18,6 +18,18 @@ GLOBAL pool and gets its own cap; a parent governs only cascade-gc and the paren
 "recursive sub-allocation" model was retired at the origin on 2026-08-05 and survives in prose
 there; this follows the live source.
 
+⚑⚑ THE LEDGER FILE IS SHARED WITH SUBSTRATE'S BASH `membudget`, SO ITS RULES BIND HERE TOO
+(`.claude/swarm/cross-client.md`, 2026-09-22). Measured there: an admit rewrite left only
+`TOTAL_MB 1000` where bash had written a five-line `#` header (W1); nothing stopped a label from
+carrying a newline, which forges a ledger line bash would then believe (W2); and admit had no
+default path, no create-on-run and no `MEMBUDGET_PARENT` (E1-E3), so on a fresh host it exited 4
+where bash proceeds, and a bash run nested under an admit lease registered as top-level. Where the
+two clients could differ, each rule takes bash's side: a line of an unknown kind is kept verbatim
+(bash gc keeps every non-LEASE line); a label may hold no whitespace (bash compares `$7`, one
+word); the default path is bash's; the create happens only when the file is ABSENT (bash's
+`ensure`), never over a file that exists without a total; and the parent is read from, and
+exported as, the same variable.
+
 CONSUMED BY: nothing in this repository yet — substrate's `scripts/membudget` becomes a thin CLI
 over it once it lands (letter, "After it lands").
 """
@@ -31,12 +43,12 @@ import os
 import sys
 import time
 import uuid
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
+    from collections.abc import Callable, Iterator, Mapping
 
 # The ledger's two line kinds, and each one's word count (a lease's label may hold spaces, so its
 # count is a minimum).
@@ -54,6 +66,11 @@ NO_PARENT = "-"
 
 # The label prefix that makes a lease exclusive by name.
 CLAIM = "claim:"
+
+# The variables substrate's bash reads, and its default ledger under `$HOME`.
+ENV_FILE = "MEMBUDGET_FILE"
+ENV_PARENT = "MEMBUDGET_PARENT"
+DEFAULT_FILE = Path(".cache", "membudget", "budget.cotype")
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,6 +110,9 @@ class Ledger:
     # taking either would size the shared pool by line order, so `decide` refuses and nothing
     # rewrites it.
     total_lines: int = 0
+    # Every line of neither kind — bash's `#` header, a kind this reader does not know — verbatim.
+    # ⚑ KEPT, NOT PARSED: a rewrite that dropped them would delete what another client wrote.
+    extra: tuple[str, ...] = ()
 
     @property
     def ambiguous(self) -> bool:
@@ -117,15 +137,19 @@ class Ledger:
 
         """
         head = [] if self.total_mb is None else [f"{_TOTAL} {self.total_mb}"]
-        return "".join(f"{line}\n" for line in head + [lease.line() for lease in self.leases])
+        lines = [*self.extra, *head, *(lease.line() for lease in self.leases)]
+        return "".join(f"{line}\n" for line in lines)
 
 
 def parse(text: str) -> Ledger:
-    """Read ledger text. A line of neither kind, or a malformed lease, is skipped.
+    """Read ledger text. A malformed lease is skipped; a line of neither kind is kept verbatim.
 
     ⚑ SKIPPED, NOT FATAL: the ledger is appended by many processes, and one torn line must not take
     every repo's admission down. A malformed lease reads as ABSENT — which frees its budget early,
     the one direction a bad line can err in, and gc would have dropped it anyway.
+    ⚑ A LINE OF NEITHER KIND IS NOT A BAD LINE: bash writes a `#` header and its gc keeps every
+    non-LEASE line, so it rides in `extra` and survives this client's rewrites. Extras render FIRST,
+    where bash's header sits, so a stray line after the leases moves up; no client reads order.
 
     Returns:
         the snapshot.
@@ -134,6 +158,7 @@ def parse(text: str) -> Ledger:
     total: int | None = None
     total_lines = 0
     leases: list[Lease] = []
+    extra: list[str] = []
     for raw in text.splitlines():
         words = raw.split(" ")
         if words[0] == _TOTAL:
@@ -147,7 +172,9 @@ def parse(text: str) -> Ledger:
             if mb.isdigit() and epoch.isdigit():
                 label = " ".join(words[6:])
                 leases.append(Lease(lease_id, int(mb), owner, int(epoch), parent, label))
-    return Ledger(total, tuple(leases), total_lines)
+        elif words[0] != _LEASE:
+            extra.append(raw)
+    return Ledger(total, tuple(leases), total_lines, tuple(extra))
 
 
 def starttime(pid: int, proc: str = "/proc") -> str | None:
@@ -306,13 +333,39 @@ def claim_key(label: str) -> ClaimKey | None:
     return ClaimKey(Kind.BARE, tag)
 
 
+def inherited_parent(env: Mapping[str, str] = os.environ) -> str:
+    """Return the lease this process runs under, as an enclosing `membudget` or `admit` set it.
+
+    Returns:
+        `$MEMBUDGET_PARENT`, or NO_PARENT when it is unset or empty (bash's `${…:--}`).
+
+    """
+    return env.get(ENV_PARENT) or NO_PARENT
+
+
 @dataclass(frozen=True, slots=True)
 class Request:
-    """What a caller asks for: an amount, a label, and the lease it nests under."""
+    """What a caller asks for: an amount, a label, and the lease it nests under.
+
+    ⚑⚑ A LABEL WITH WHITESPACE IS REFUSED AT CONSTRUCTION. The ledger is space-separated lines:
+    a newline in a label writes a second, forged line every client believes, and a space splits
+    what bash compares as one word (`$7`), so a spaced claim excludes nothing on bash's side.
+    """
 
     mb: int
     label: str = ""
-    parent: str = NO_PARENT
+    parent: str = field(default_factory=inherited_parent)
+
+    def __post_init__(self) -> None:
+        """Refuse a label the shared ledger cannot hold as one word.
+
+        Raises:
+            ValueError: the label contains whitespace.
+
+        """
+        if any(char.isspace() for char in self.label):
+            msg = f"a lease label may not contain whitespace: {self.label!r}"
+            raise ValueError(msg)
 
 
 def decide(request: Request, ledger: Ledger) -> Verdict:
@@ -412,6 +465,20 @@ class RefusedError(RuntimeError):
         self.code = code
 
 
+def default_path(env: Mapping[str, str] = os.environ) -> Path:
+    """Return the ledger substrate's bash uses: `$MEMBUDGET_FILE`, else under `$HOME/.cache`.
+
+    Returns:
+        the ledger path; an empty variable counts as unset, as bash's `${…:-…}` does.
+
+    """
+    explicit = env.get(ENV_FILE)
+    if explicit:
+        return Path(explicit)
+    home = env.get("HOME")
+    return (Path(home) if home else Path.home()) / DEFAULT_FILE
+
+
 @dataclass(frozen=True, slots=True)
 class Store:
     """The shared ledger file and its lock file beside it.
@@ -422,7 +489,7 @@ class Store:
     it only to claim or reap.
     """
 
-    path: Path
+    path: Path = field(default_factory=default_path)
     lock_timeout_s: float = LOCK_TIMEOUT_S
 
     @property
@@ -527,7 +594,24 @@ def init(store: Store, total_mb: int) -> bool:
                                f"{store.path} has {snap.total_lines} TOTAL_MB lines")
         if snap.total_mb is not None:
             return False
-        store.rewrite(Ledger(total_mb, snap.leases))
+        store.rewrite(replace(snap, total_mb=total_mb, total_lines=1))
+        return True
+
+
+def ensure(store: Store, total_mb: int) -> bool:
+    """Create the ledger with `total_mb`, but only when no file exists — bash's `ensure`.
+
+    ⚑ ABSENT, NOT TOTAL-LESS: a file that exists without a total is left to refuse (exit 4), as
+    bash leaves it; declaring a total over it is `init`, an operator's act, not a run's.
+
+    Returns:
+        whether this call created the ledger.
+
+    """
+    with store.locked():
+        if store.path.exists():
+            return False
+        store.rewrite(Ledger(total_mb, (), total_lines=1))
         return True
 
 
@@ -573,6 +657,7 @@ class Host:
     clock: Callable[[], float] = time.monotonic
     sleep: Callable[[float], None] = time.sleep
     announce: Callable[[str], None] = _announce
+    default_total: Callable[[], int] = default_total_mb
 
 
 # The defaults `acquire` and `admit` wait and read the host with, as singletons.
@@ -622,7 +707,7 @@ def _claim(store: Store, request: Request, host: Host) -> Lease | None:
 
 def acquire(store: Store, request: Request, waiting: Waiting = WAIT,
             host: Host = HOST) -> Lease:
-    """Wait for `request` to fit, then lease it; or refuse.
+    """Create the ledger if absent, wait for `request` to fit, then lease it; or refuse.
 
     ⚑⚑ A DEAD HOLDER IS REAPED BEFORE IT IS BELIEVED: every pass that would BLOCK first gcs, so a
     budget held by a killed process is freed by the next contender rather than waited on forever.
@@ -635,6 +720,8 @@ def acquire(store: Store, request: Request, waiting: Waiting = WAIT,
             `noblock` is set or past `timeout_s`.
 
     """
+    if not store.path.exists():
+        ensure(store, host.default_total())
     started = host.clock()
     poll = waiting.poll_start_s
     announced = False
@@ -678,7 +765,7 @@ def release(store: Store, lease: Lease) -> None:
         snap = store.read()
         kept = tuple(item for item in snap.leases if item.lease_id != lease.lease_id)
         if len(kept) != len(snap.leases):
-            store.rewrite(Ledger(snap.total_mb, kept))
+            store.rewrite(replace(snap, leases=kept))
 
 
 @contextlib.contextmanager
@@ -686,12 +773,22 @@ def admit(store: Store, request: Request, waiting: Waiting = WAIT,
           host: Host = HOST) -> Iterator[Lease]:
     """Hold a lease for the duration of a `with` block — acquired on entry, released on exit.
 
+    ⚑ `MEMBUDGET_PARENT` NAMES THIS LEASE FOR THE BLOCK and is restored after it, as bash exports
+    it to its child: a process the block spawns, a bash `membudget` included, then nests under it,
+    so cascade-gc reaches it.
+
     Yields:
         the lease.
 
     """
     lease = acquire(store, request, waiting, host)
+    previous = os.environ.get(ENV_PARENT)
+    os.environ[ENV_PARENT] = lease.lease_id
     try:
         yield lease
     finally:
+        if previous is None:
+            os.environ.pop(ENV_PARENT, None)
+        else:
+            os.environ[ENV_PARENT] = previous
         release(store, lease)

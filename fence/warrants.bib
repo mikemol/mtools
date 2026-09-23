@@ -1095,3 +1095,60 @@
   claim  = {An unknown mode, a short argv and a non-integer size each exit 2 with usage on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_cli_refuses_a_bad_invocation},
 }
+
+@misc{fence-admit-reap-keeps-comment-and-unknown-lines,
+  section = {admit},
+  title  = {A gc rewrite keeps bash's `#` header and an unknown line kind verbatim (W1)},
+  claim  = {A gc rewrite keeps bash's `#` header and an unknown line kind verbatim (W1). THE
+            CONTROL: the dead lease in the same file IS dropped, so a rewrite really
+            happened.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_reap_keeps_comment_and_unknown_lines},
+}
+
+@misc{fence-admit-release-keeps-comment-and-unknown-lines,
+  section = {admit},
+  title  = {Releasing a lease rewrites the file without losing a line of another kind (W1)},
+  claim  = {Releasing a lease rewrites the file without losing a line of another kind (W1). THE
+            CONTROL: the released lease is gone from the same file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_release_keeps_comment_and_unknown_lines},
+}
+
+@misc{fence-admit-label-with-whitespace-is-refused,
+  section = {admit},
+  title  = {A label bash cannot hold as one word, a newline above all, is refused at construction (W2)},
+  claim  = {A label bash cannot hold as one word, a newline above all, is refused at construction
+            (W2). THE CONTROL: a one-word claim label constructs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_label_with_whitespace_is_refused},
+}
+
+@misc{fence-admit-default-ledger-is-bashs,
+  section = {admit},
+  title  = {`Store()` is `$MEMBUDGET_FILE`, else `$HOME/.cache/membudget/budget.cotype` (E1)},
+  claim  = {`Store()` is `$MEMBUDGET_FILE`, else `$HOME/.cache/membudget/budget.cotype` (E1).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_the_default_ledger_is_bashs},
+}
+
+@misc{fence-admit-run-creates-an-absent-ledger-but-not-a-totalless-one,
+  section = {admit},
+  title  = {An absent ledger is created with the default total (E2); a total-less FILE still refuses},
+  claim  = {An absent ledger is created with the default total (E2); a total-less FILE still
+            refuses. THE CONTROL IS THE SECOND HALF: a file that exists without a total
+            is bash's exit 4 too — creation is for absence only, never a silent `init`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_run_creates_an_absent_ledger_but_not_a_totalless_one},
+}
+
+@misc{fence-admit-request-inherits-membudget-parent,
+  section = {admit},
+  title  = {A request's default parent is `$MEMBUDGET_PARENT` (E3); unset or empty is top-level},
+  claim  = {A request's default parent is `$MEMBUDGET_PARENT` (E3); unset or empty is top-level.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_request_inherits_membudget_parent},
+}
+
+@misc{fence-admit-admit-exports-its-lease-as-membudget-parent,
+  section = {admit},
+  title  = {Inside the block `MEMBUDGET_PARENT` is the lease's id, so a child nests; after, it is unset},
+  claim  = {Inside the block `MEMBUDGET_PARENT` is the lease's id, so a child nests; after, it is
+            unset. THE CONTROL: before the block the variable is absent (the `top_level`
+            fixture's promise).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_admit_exports_its_lease_as_membudget_parent},
+}

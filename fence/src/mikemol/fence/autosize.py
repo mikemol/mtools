@@ -133,7 +133,9 @@ def next_rung(mb: int, cap: int) -> int | None:
 
 # The default request a climb re-admits under: no label and no parent. Only its label and parent are
 # read — each rung supplies its own size.
-TOP_LEVEL = admit.Request(0)
+# ⚑ THE PARENT IS SPELLED, NOT DEFAULTED: a bare `Request` now inherits `$MEMBUDGET_PARENT`, and
+# this constant is built at IMPORT, so it would freeze whatever lease the importer ran under.
+TOP_LEVEL = admit.Request(0, parent=admit.NO_PARENT)
 
 
 @dataclass(frozen=True, slots=True)

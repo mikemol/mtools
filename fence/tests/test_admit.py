@@ -31,6 +31,23 @@ _GENEROUS_S = 3.0
 # The default total's ceiling, as the letter states it: 8 GiB.
 _CEILING_MB = 8192
 
+# Spelled out rather than read from `admit`, so this module still imports where the name is absent.
+_PARENT_VAR = "MEMBUDGET_PARENT"
+
+
+@pytest.fixture()
+def top_level(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Run every arm as a top-level lease, whatever `membudget` the suite itself runs under.
+
+    ⚑ A REQUEST NOW INHERITS `MEMBUDGET_PARENT`; under a real `membudget run` that names a lease in
+    the HOST ledger, which no arm's temporary ledger holds — every request would be PARENT_GONE.
+    ⚑ DECLARED FOR THE MODULE BY `pytestmark`, NOT `autouse`: the scope is written where it applies.
+    """
+    monkeypatch.delenv(_PARENT_VAR, raising=False)
+
+
+pytestmark = pytest.mark.usefixtures("top_level")
+
 
 def _lease(lease_id: str, mb: int, *, owner: str = "1:1", parent: str = admit.NO_PARENT,
            label: str = "run") -> admit.Lease:
@@ -248,6 +265,12 @@ def _store(tmp_path: Path, total: int = _TOTAL) -> admit.Store:
 
 _NOBLOCK = admit.Waiting(noblock=True)
 
+# ⚑⚑ A HOST WITH NO LOAD, FOR EVERY ARM THAT IS NOT ABOUT LOAD. The default `Host` reads the real
+# `os.getloadavg`, so on a busy box (measured 2026-09-23: load5/15 ~512-555 over a 24*10 ceiling)
+# an arm about release, nesting or the parent export BLOCKED on the machine, not on its subject —
+# a hang, not a failure. The load-gate arms inject their own busy host and keep testing the gate.
+_QUIET = admit.Host(loadavg=lambda: (0.0, 0.0, 0.0))
+
 
 def _spawn(
     store: admit.Store, request: admit.Request, release: tuple[int, int]
@@ -273,7 +296,7 @@ def _spawn(
         os.close(release_w)
         code = 0
         try:
-            lease = admit.acquire(store, request, _NOBLOCK)
+            lease = admit.acquire(store, request, _NOBLOCK, host=_QUIET)
             os.write(ready_w, b"h")
             os.read(release_r, 1)
             admit.release(store, lease)
@@ -316,7 +339,7 @@ def test_the_default_total_is_seventy_percent_capped_at_eight_gib(tmp_path: Path
 def test_a_lease_is_released_when_its_block_exits(tmp_path: Path) -> None:
     """Inside `admit` the lease is in the ledger; after it, it is gone."""
     store = _store(tmp_path)
-    with admit.admit(store, admit.Request(100)) as lease:
+    with admit.admit(store, admit.Request(100), host=_QUIET) as lease:
         assert [item.lease_id for item in store.read().leases] == [lease.lease_id]
     assert store.read().leases == ()
 
@@ -337,11 +360,11 @@ def test_noblock_refuses_a_request_that_would_wait(tmp_path: Path) -> None:
     ⚑ THE CONTROL: the same request for 10 is admitted beside the holder.
     """
     store = _store(tmp_path)
-    with admit.admit(store, admit.Request(_TOTAL - 20)):
+    with admit.admit(store, admit.Request(_TOTAL - 20), host=_QUIET):
         with pytest.raises(admit.RefusedError) as err:
-            admit.acquire(store, admit.Request(30), _NOBLOCK)
+            admit.acquire(store, admit.Request(30), _NOBLOCK, host=_QUIET)
         assert err.value.code == admit.EXIT_REFUSED
-        with admit.admit(store, admit.Request(10), _NOBLOCK):
+        with admit.admit(store, admit.Request(10), _NOBLOCK, host=_QUIET):
             pass
 
 
@@ -349,10 +372,10 @@ def test_a_timeout_gives_up_with_the_refused_code(tmp_path: Path) -> None:
     """TIMEOUT: a blocked request gives up with 3 soon after its bound, not later."""
     store = _store(tmp_path)
     waiting = admit.Waiting(timeout_s=0.3, poll_start_s=0.05, poll_max_s=0.1)
-    with admit.admit(store, admit.Request(_TOTAL)):
+    with admit.admit(store, admit.Request(_TOTAL), host=_QUIET):
         started = time.monotonic()
         with pytest.raises(admit.RefusedError) as err:
-            admit.acquire(store, admit.Request(1), waiting)
+            admit.acquire(store, admit.Request(1), waiting, host=_QUIET)
     assert err.value.code == admit.EXIT_REFUSED
     assert time.monotonic() - started < _GENEROUS_S
 
@@ -364,14 +387,15 @@ def test_a_blocked_request_proceeds_after_the_holder_releases(tmp_path: Path) ->
     admitted after sleeping at least once.
     """
     store = _store(tmp_path)
-    holder = admit.acquire(store, admit.Request(_TOTAL - 10))
+    holder = admit.acquire(store, admit.Request(_TOTAL - 10), host=_QUIET)
     slept: list[float] = []
 
     def release_then_sleep(seconds: float) -> None:
         slept.append(seconds)
         admit.release(store, holder)
 
-    host = admit.Host(sleep=release_then_sleep, announce=lambda _msg: None)
+    host = admit.Host(loadavg=_QUIET.loadavg, sleep=release_then_sleep,
+                      announce=lambda _msg: None)
     lease = admit.acquire(store, admit.Request(20), host=host)
     assert slept
     assert [item.lease_id for item in store.read().leases] == [lease.lease_id]
@@ -420,14 +444,14 @@ def test_a_killed_holder_is_reaped_before_it_is_believed(tmp_path: Path) -> None
     os.waitpid(pid, 0)
     assert [lease.mb for lease in admit.parse(store.path.read_text(encoding="utf-8")).leases] == [
         400]
-    with admit.admit(store, admit.Request(400), _NOBLOCK):
+    with admit.admit(store, admit.Request(400), _NOBLOCK, host=_QUIET):
         pass
 
 
 def test_a_reap_with_nothing_dead_leaves_the_file_untouched(tmp_path: Path) -> None:
     """Nothing dead: no rewrite, so the inode is unchanged. ⚑ THE CONTROL: a dead lease DOES."""
     store = _store(tmp_path)
-    with admit.admit(store, admit.Request(10)):
+    with admit.admit(store, admit.Request(10), host=_QUIET):
         before = store.path.stat().st_ino
         admit.reap(store)
         assert store.path.stat().st_ino == before
@@ -493,5 +517,106 @@ def test_acquire_refuses_an_ambiguous_ledger(tmp_path: Path) -> None:
     store = admit.Store(tmp_path / "ledger")
     store.path.write_text(_TWO_TOTALS, encoding="utf-8")
     with pytest.raises(admit.RefusedError) as err:
-        admit.acquire(store, admit.Request(10))
+        admit.acquire(store, admit.Request(10), host=_QUIET)
     assert err.value.verdict is admit.Verdict.AMBIGUOUS_TOTAL
+
+
+# --- one ledger, two clients: substrate's bash `membudget` shares the file (cross-client.md) ---
+
+# bash `ensure`'s header shape, and a line kind no client here knows.
+_HEADER = "# membudget cotype — a comment bash writes above TOTAL_MB"
+_UNKNOWN = "FUTURE kind-from-another-client"
+_DEAD = "LEASE dead 10 1:0 0 - run"
+_SMALL_MB = 1
+
+
+def test_a_reap_keeps_comment_and_unknown_lines(tmp_path: Path) -> None:
+    """A gc rewrite keeps bash's `#` header and an unknown line kind verbatim (W1).
+
+    ⚑ THE CONTROL: the dead lease in the same file IS dropped, so a rewrite really happened.
+    """
+    store = admit.Store(tmp_path / "ledger")
+    store.path.write_text(f"{_HEADER}\n{_UNKNOWN}\nTOTAL_MB {_TOTAL}\n{_DEAD}\n", encoding="utf-8")
+    admit.reap(store, lambda _owner: False)
+    lines = store.path.read_text(encoding="utf-8").splitlines()
+    assert _HEADER in lines
+    assert _UNKNOWN in lines
+    assert _DEAD not in lines
+
+
+def test_a_release_keeps_comment_and_unknown_lines(tmp_path: Path) -> None:
+    """Releasing a lease rewrites the file without losing a line of another kind (W1).
+
+    ⚑ THE CONTROL: the released lease is gone from the same file.
+    """
+    store = admit.Store(tmp_path / "ledger")
+    store.path.write_text(f"{_HEADER}\n{_UNKNOWN}\nTOTAL_MB {_TOTAL}\n", encoding="utf-8")
+    with admit.admit(store, admit.Request(_SMALL_MB), _NOBLOCK, host=_QUIET):
+        pass
+    snap = store.read()
+    assert snap.leases == ()
+    lines = store.path.read_text(encoding="utf-8").splitlines()
+    assert _HEADER in lines
+    assert _UNKNOWN in lines
+
+
+@pytest.mark.parametrize("label", ["two words", "forged\nLEASE x 1 1:1 0 - run", "tab\there"])
+def test_a_label_with_whitespace_is_refused(label: str) -> None:
+    """A label bash cannot hold as one word, a newline above all, is refused at construction (W2).
+
+    ⚑ THE CONTROL: a one-word claim label constructs.
+    """
+    assert admit.Request(_SMALL_MB, label="claim:path:/x").label == "claim:path:/x"
+    with pytest.raises(ValueError, match="whitespace"):
+        admit.Request(_SMALL_MB, label=label)
+
+
+def test_the_default_ledger_is_bashs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """`Store()` is `$MEMBUDGET_FILE`, else `$HOME/.cache/membudget/budget.cotype` (E1)."""
+    explicit = tmp_path / "elsewhere"
+    monkeypatch.setenv("MEMBUDGET_FILE", str(explicit))
+    assert admit.Store().path == explicit
+    monkeypatch.setenv("MEMBUDGET_FILE", "")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    assert admit.Store().path == tmp_path / ".cache" / "membudget" / "budget.cotype"
+
+
+def test_a_run_creates_an_absent_ledger_but_not_a_totalless_one(tmp_path: Path) -> None:
+    """An absent ledger is created with the default total (E2); a total-less FILE still refuses.
+
+    ⚑ THE CONTROL IS THE SECOND HALF: a file that exists without a total is bash's exit 4 too —
+    creation is for absence only, never a silent `init`.
+    """
+    fresh = admit.Store(tmp_path / "new" / "ledger")
+    loose = admit.Waiting(noblock=True, maxload=0)
+    with admit.admit(fresh, admit.Request(_SMALL_MB), loose, host=_QUIET):
+        pass
+    assert fresh.read().total_mb == admit.default_total_mb()
+    bare = admit.Store(tmp_path / "bare")
+    bare.path.write_text(f"{_HEADER}\n", encoding="utf-8")
+    with pytest.raises(admit.RefusedError) as err:
+        admit.acquire(bare, admit.Request(_SMALL_MB), loose, host=_QUIET)
+    assert err.value.verdict is admit.Verdict.NO_TOTAL
+
+
+def test_a_request_inherits_membudget_parent(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A request's default parent is `$MEMBUDGET_PARENT` (E3); unset or empty is top-level."""
+    monkeypatch.setenv(_PARENT_VAR, "outer")
+    assert admit.Request(_SMALL_MB).parent == "outer"
+    monkeypatch.setenv(_PARENT_VAR, "")
+    assert admit.Request(_SMALL_MB).parent == admit.NO_PARENT
+
+
+def test_admit_exports_its_lease_as_membudget_parent(tmp_path: Path) -> None:
+    """Inside the block `MEMBUDGET_PARENT` is the lease's id, so a child nests; after, it is unset.
+
+    ⚑ THE CONTROL: before the block the variable is absent (the `top_level` fixture's promise).
+    ⚑ NOBLOCK WITH THE LOAD GATE OFF: the default `Waiting` blocked on the HOST's load (measured:
+    load ~180 over an nproc*10 ceiling hung this arm), so a busy box read as a failing export.
+    """
+    store = _store(tmp_path)
+    assert _PARENT_VAR not in os.environ
+    loose = admit.Waiting(noblock=True, maxload=0)
+    with admit.admit(store, admit.Request(_SMALL_MB), loose, host=_QUIET) as lease:
+        assert os.environ.get(_PARENT_VAR) == lease.lease_id
+    assert _PARENT_VAR not in os.environ

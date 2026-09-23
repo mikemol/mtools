@@ -217,7 +217,8 @@ def test_a_nested_climb_re_admits_under_the_outer_lease(
         seen.append(request)
         return real(store, request, waiting, host)
 
-    with admit.admit(store, admit.Request(_START)) as outer:
+    # Top-level by spelling: a bare `Request` inherits `$MEMBUDGET_PARENT`, absent from this ledger.
+    with admit.admit(store, admit.Request(_START, parent=admit.NO_PARENT)) as outer:
         monkeypatch.setattr(admit, "acquire", spy)
         plan = autosize.Plan(_START, _CEILING, retry=True,
                              request=admit.Request(0, parent=outer.lease_id))
