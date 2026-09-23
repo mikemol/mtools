@@ -179,3 +179,15 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ SCOPED TO THE ONE FILE, never to `tests/*`: a second test reaching into internals is a finding
 # to argue about, not an inheritance.
 "tests/test_cli.py" = ["import-private-name"]
+
+# ⚑⚑ ONE FILE RUNS `git` AS A SUBPROCESS, AND RUNNING IT IS THE SUBJECT. `test_git_env.py` codifies
+# the negative control for `git_env.clean_env`: a fixture commit under a hostile `GIT_DIR` aimed at a
+# DECOY repository must land in the decoy unscrubbed and nowhere near it scrubbed. That cannot be
+# asserted without executing git, and `git` is a host tool found on PATH like the fixture code it
+# stands in for. The arguments are fixed literals and temp paths, never input.
+# ⚑ SCOPED TO THE ONE FILE: another test shelling out is a finding to argue about, not an inheritance.
+"tests/test_git_env.py" = [
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+    "start-process-with-partial-path",
+]

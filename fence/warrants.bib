@@ -1355,3 +1355,40 @@
   claim  = {Bash `init 2000` over a python lease changes nothing; bash `--reset` resizes and keeps it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_cross_bash_init_keeps_a_python_lease},
 }
+
+@misc{fence-git-env-every-git-variable-is-dropped-and-nothing-else-is,
+  section = {git_env},
+  title  = {All `GIT_*` go (no allowlist); a name merely CONTAINING `GIT` is the kept control},
+  claim  = {All `GIT_*` go (no allowlist); a name merely CONTAINING `GIT` is the kept control.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_git_env.py -k test_every_git_variable_is_dropped_and_nothing_else_is},
+}
+
+@misc{fence-git-env-base-mapping-is-not-modified,
+  section = {git_env},
+  title  = {A caller's mapping comes back untouched; the result is a new dict},
+  claim  = {A caller's mapping comes back untouched; the result is a new dict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_git_env.py -k test_the_base_mapping_is_not_modified},
+}
+
+@misc{fence-git-env-default-base-is-this-processs-environment,
+  section = {git_env},
+  title  = {With no base, `os.environ` is read — and its `GIT_*` still dropped},
+  claim  = {With no base, `os.environ` is read — and its `GIT_*` still dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_git_env.py -k test_the_default_base_is_this_processs_environment},
+}
+
+@misc{fence-git-env-unscrubbed-fixture-commits-into-the-decoy,
+  section = {git_env},
+  title  = {THE HAZARD, measured: under the hostile environment a fixture's commit lands in the decoy},
+  claim  = {THE HAZARD, measured: under the hostile environment a fixture's commit lands in the
+            decoy. Without this arm the scrubbed arm could pass because the hazard never
+            bit at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_git_env.py -k test_an_unscrubbed_fixture_commits_into_the_decoy},
+}
+
+@misc{fence-git-env-scrubbed-fixture-leaves-the-decoy-empty,
+  section = {git_env},
+  title  = {THE FIX: the same commit run under `clean_env` leaves the decoy with no refs},
+  claim  = {THE FIX: the same commit run under `clean_env` leaves the decoy with no refs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_git_env.py -k test_a_scrubbed_fixture_leaves_the_decoy_empty},
+}
