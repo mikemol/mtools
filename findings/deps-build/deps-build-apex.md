@@ -290,9 +290,11 @@ and **no single leg holds more than a third of it**:
   (`◆mounts-were-not-corpora`): the 30 squashfs mounts were Ubuntu snaps, and the corpus reader is
   in-process (PySquashfsImage + zstandard) and has never mounted anything. The filed leg (`RP-02`,
   leg:90) is unedited; the retraction reaches the apex here. The dependency that remains is **`.sqfs`
-  corpus files at host paths outside any repo**, not mounts. ⚑ The same premise may reach `RP-03`
-  and `RP-10` below (*"resolves through a mount"*, *"reading source through a mount"*) — asked of
-  rosettapkg, not yet corrected.
+  corpus files at host paths outside any repo**, not mounts — images such as
+  `~/.cache/glib-sources/glib-2.88.0.sqfs`, 100 on the filer's host. ⚑ **The retraction reaches the
+  MECHANISM WORD only**, per the filer (rosettapkg-c4, 2026-09-22): `RP-03` and `RP-10` below say
+  *"mount"* and their claims **stand** with the mechanism swapped — a corpus image read in-process
+  is exactly as absent from a fresh checkout as a mount. Neither row is retracted.
 - **⚑ THE OPERATOR** — `CO-§Q-2`: *"`scripts/apply` does not exist and cannot: applying requires
   root and this repo's agent cannot `sudo`. **A human is a declared dependency of the co-sign
   protocol.**"*
@@ -361,7 +363,7 @@ config pins"*). **Neither leg cites the other.**
 | `CO-§Q-3` | `uv sync`, bazel, `tofu init`, podman by digest | ⚑ **What does NOT survive a cold clone: the git hook wiring.** *"`git config core.hooksPath .githooks` must be run once per clone, because **git cannot enable a hook from a commit**"* — and *"an unarmed gate is indistinguishable from a passing one without that check"* |
 | `MT-` | `uv pip compile` locks; `MODULE.bazel.lock` **tracked deliberately** | *"registry hashes only, no host paths, so a peer's first `bazel` invocation cannot silently re-resolve against a live BCR"* |
 | `LS-`§Q-3 | **six routes, deliberately not unified** | ⚑ **`substrate wheel` is pinned by NOTHING — it tracks the sibling's HEAD.** `LS-05` records the trade as a trade (below) |
-| `RP-03` | ⚑ **acquires NOTHING** — no lockfile, no fetch step | ⚑ **Zero of four manager entries are re-verifiable.** *"Every citation resolves through a mount that a fresh checkout of rosettapkg does not create, cannot create, and does not mention"* |
+| `RP-03` | ⚑ **acquires NOTHING** — no lockfile, no fetch step | ⚑ **Zero of four manager entries are re-verifiable.** *"Every citation resolves through a mount that a fresh checkout of rosettapkg does not create, cannot create, and does not mention"* — ⚑ filer's correction: read *"a corpus image"* for *"a mount"* (2700170); the claim stands. |
 | `SM-07` | **vendored, not symlinked**, 12 shared bodies with sha256 | ⚑⚑ *"What was vendored was **never a committed upstream state**… at copy time substrate's `git status` read `??` for several of these files. **These digests pin a WORKING TREE, not a revision.**"* |
 
 ### ⚑ `AX-12a` — `LS-05`: a hermeticity trade recorded AS a trade
@@ -850,7 +852,7 @@ than the outlier."*
 | `MT-10` | ⚑ **nothing outside this repo can depend on anything inside it.** No remote, no published package, no install path. `hooks` declares a console script **no consumer consumes** | **DISTRIBUTION** — *"packaging is the binding constraint, and every hermeticity or granularity item below it is a refinement of a thing nobody can import"* |
 | `SB-10` | ⚑ **the per-file gate's all-or-nothing grain over three monolith files.** `findings.py` carries **8,169 ruff findings**; **four correct repairs were blocked today** | **GRAIN** — a fifth type, and it is *"the gate is right and the constraint is real"* |
 | `PK-10` | ⚑ **the commit queue.** 46 files staged, gate takes **2h28m+**, every defect restarts it. **Three runs today; zero commits.** `HEAD` is from 2026-09-02 | **QUEUE / LATENCY** — arguably `LS-`'s CORPUS type at a different magnitude, ⚑ **but the second-order binder is DIFFERENT in kind**: *"I cannot read my own build's outcome reliably"* |
-| `RP-10` | ⚑ **corpus read time — a HUMAN reading source through a mount** | **HUMAN THROUGHPUT**, and its second-order binder is **DISCOVERABILITY**: *"every finding in this repo is undiscoverable from outside it… which is why `RP-08d` happened inside the same session"* |
+| `RP-10` | ⚑ **corpus read time — a HUMAN reading source in an external corpus image** (filer's correction of *"through a mount"*, 2700170; the binder stands) | **HUMAN THROUGHPUT**, and its second-order binder is **DISCOVERABILITY**: *"every finding in this repo is undiscoverable from outside it… which is why `RP-08d` happened inside the same session"* |
 
 ⚑ **Five of seven legs explicitly say NOT CPU** — `SB-10`, `MT-10`, `CO-`, `PK-10`, `RP-10` — and
 `§X` says the host binds on CPU. ⚑⚑ **That is not a contradiction: `§X` warns that a per-repo answer
