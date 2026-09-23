@@ -922,3 +922,22 @@ def test_a_command_after_the_heredoc_terminator_is_still_refused() -> None:
     """A real grep on the line after the terminator is parsed as a command and refused."""
     cmd = _LEDGER_APPEND + "note: 'unclosed\nEOF\n; grep x a" + _MD
     assert _fires(cmd), "a read after the heredoc terminator went unseen"
+
+
+def test_a_read_on_the_second_line_is_refused_and_a_harmless_second_line_is_not(
+        monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    """A newline separates commands, so a claimed read on line two is denied through `main()`.
+
+    ⚑ MEASURED ON HEAD: `echo a` / `grep x notes.md` passed, because the second line was parsed
+    as arguments of `echo`. The control is the same two lines reading an unclaimed file.
+    """
+    monkeypatch.setenv(payload.SHARED_SWITCH, "1")
+    monkeypatch.delenv(payload.OWN_SWITCH, raising=False)
+    monkeypatch.setattr(routing_table, "claims", _fixed_claims)
+    monkeypatch.setattr("sys.stdin", _stdin(_payload_json("echo a\ngrep x " + _NOTES)))
+    assert structural_query.main() == 0
+    assert '"deny"' in capsys.readouterr().out, "a grep on line two escaped the gate"
+
+    monkeypatch.setattr("sys.stdin", _stdin(_payload_json("echo a\ngrep x /tmp/a.log")))
+    assert structural_query.main() == 0
+    assert capsys.readouterr().out == _EMPTY, "a harmless second line was refused"

@@ -35,7 +35,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import shlex
 import sys
 from pathlib import Path
@@ -114,8 +113,6 @@ _STDIN_SCRIPT = ("a stdin script (heredoc) — same as `-c`: it dies with the tu
 _HEREDOC_SCRIPT = ("a heredoc script — same as `-c`: written in the turn, run once, "
                    "discarded")
 
-_HEREDOC_OPEN = re.compile(r"<<-?\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1")
-
 # The fixed tail of every refusal: why this is a defect, what it costs, and what to do instead.
 _WHY_TURN = ("  ⚑ the judgement in this pipeline is happening in the TURN, not in a program —\n"
              "     it evaporates when the turn ends and the next reader re-derives it "
@@ -129,29 +126,16 @@ _SEE_SKILL = "  see .claude/skills/struct-tools/SKILL.md"
 # A finding: the token that composed, and why that is judgement-in-the-turn.
 Finding = tuple[str, str]
 
-
-def strip_heredoc_bodies(cmd: str) -> str:
-    """Remove heredoc BODIES, keeping the `<<TAG` redirection itself.
-
-    A body is data being handed to a program — a commit message, a config. Its `;` and `|` are
-    characters in that data, not operators in this shell. The redirection stays so the
-    heredoc-into-interpreter test (about the SHAPE of the call, not its content) still sees it.
-
-    `<<-TAG` and quoted tags (`<<'EOF'`) are both handled; an unterminated heredoc drops the
-    remainder, which is the conservative reading — an unterminated body cannot be shell either.
-
-    Returns:
-        the heredoc BODIES, keeping the `<<TAG` redirection itself.
-
-    """
-    m = _HEREDOC_OPEN.search(cmd)
-    if not m:
-        return cmd
-    head, tag = cmd[:m.end()], m.group(2)
-    rest = cmd[m.end():]
-    for line_end in re.finditer(r"\n[\t ]*" + re.escape(tag) + r"[\t ]*(?=\n|$)", rest):
-        return head + strip_heredoc_bodies(rest[line_end.end():])
-    return head
+# ⚑⚑ THE HEREDOC STRIPPER IS `cmdparse`'s, NOT A PRIVATE COPY. This module once carried its own —
+# a regex that matched `<<TAG` INSIDE QUOTES, found no terminator, and dropped the rest of the
+# command: `echo '<<EOF' | tail -1` was admitted with its pipe unseen. The shared stripper honours
+# quoting, comments and `<<<`, and replaces a body with a bare newline, which this hook's own
+# tokenizer reads as whitespace.
+#
+# ⚑ A MULTI-LINE COMMAND IS STILL NOT CHAINING HERE, AND THAT IS A CHOICE, MEASURED: on HEAD
+# `echo a` / `echo b` on two lines was admitted, and it still is. `_tokenize` below is this hook's
+# own and does not mark newlines, while `cmdparse.tokenize` now does — so the hooks that ask WHICH
+# PROGRAMS RUN see every line, and this one, which asks whether the call COMPOSES, is unchanged.
 
 
 def _mentions_interpreter(toks: list[str]) -> bool:
@@ -249,7 +233,7 @@ def analyze(cmd: str) -> list[Finding]:
         composition points in one Bash command string.
 
     """
-    toks = _tokenize(strip_heredoc_bodies(cmd))
+    toks = _tokenize(cmdparse.strip_heredoc_bodies(cmd))
     found = _scan_tokens(toks)
 
     # ⚑ A HEREDOC INTO AN INTERPRETER YIELDS NO `-c` AND NO `-` TOKEN — the redirection itself is

@@ -3923,3 +3923,67 @@
   claim  = {`<<<` feeds one ordinary shell word; it is left in the command, and nothing is cut.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_here_string_is_not_a_heredoc_and_its_word_stays},
 }
+
+@misc{hooks-structural-query-read-on-the-second-line-is-refused-and-a-harmless-second-line-is-not,
+  section = {structural-query},
+  title  = {A newline separates commands, so a claimed read on line two is denied through `main()`},
+  claim  = {A newline separates commands, so a claimed read on line two is denied through `main()`.
+            MEASURED ON HEAD: `echo a` / `grep x notes.md` passed, because the second
+            line was parsed as arguments of `echo`. The control is the same two lines
+            reading an unclaimed file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_structural_query.py -k test_a_read_on_the_second_line_is_refused_and_a_harmless_second_line_is_not},
+}
+
+@misc{hooks-cmdparse-bare-newline-separates-commands-like-a-semicolon,
+  section = {cmdparse},
+  title  = {An unquoted newline ends a command, so the second line's program is seen},
+  claim  = {An unquoted newline ends a command, so the second line's program is seen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_bare_newline_separates_commands_like_a_semicolon},
+}
+
+@misc{hooks-cmdparse-quoted-newline-does-not-split,
+  section = {cmdparse},
+  title  = {A newline inside single or double quotes is data, not a separator},
+  claim  = {A newline inside single or double quotes is data, not a separator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_quoted_newline_does_not_split},
+}
+
+@misc{hooks-cmdparse-backslash-newline-continues-the-command,
+  section = {cmdparse},
+  title  = {A backslash-newline joins the lines into one command, as bash reads it},
+  claim  = {A backslash-newline joins the lines into one command, as bash reads it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_backslash_newline_continues_the_command},
+}
+
+@misc{hooks-cmdparse-trailing-operator-continues-onto-the-next-line,
+  section = {cmdparse},
+  title  = {A newline after `|`, `&&` or `||` continues the list; no separator is inserted},
+  claim  = {A newline after `|`, `&&` or `||` continues the list; no separator is inserted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_trailing_operator_continues_onto_the_next_line},
+}
+
+@misc{hooks-cmdparse-comment-ends-at-its-newline,
+  section = {cmdparse},
+  title  = {A `#` comment stops at the newline, and the next line is a command — even after a quote},
+  claim  = {A `#` comment stops at the newline, and the next line is a command — even after a quote.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_comment_ends_at_its_newline},
+}
+
+@misc{hooks-cmdparse-crlf-line-ending-still-separates,
+  section = {cmdparse},
+  title  = {A CRLF line ending separates like a bare newline},
+  claim  = {A CRLF line ending separates like a bare newline.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cmdparse.py -k test_a_crlf_line_ending_still_separates},
+}
+
+@misc{hooks-no-chaining-quoted-heredoc-operator-does-not-hide-a-later-pipe,
+  section = {no_chaining},
+  title  = {A `<<EOF` inside quotes opens no heredoc, so the pipe after it is still refused},
+  claim  = {A `<<EOF` inside quotes opens no heredoc, so the pipe after it is still refused.
+            MEASURED ON HEAD: this hook's private stripper matched `<<EOF` inside the
+            quotes, found no terminator, and dropped the rest of the command — the pipe
+            with it. It now uses `cmdparse.strip_heredoc_bodies`, which honours quoting.
+            The control is a real heredoc whose body holds a pipe and whose next line is
+            a second command: data, and (as before) not chaining.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_quoted_heredoc_operator_does_not_hide_a_later_pipe},
+}

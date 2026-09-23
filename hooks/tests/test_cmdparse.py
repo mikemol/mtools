@@ -255,6 +255,56 @@ def test_several_heredocs_on_one_line_each_take_their_own_body() -> None:
 
 
 def test_a_here_string_is_not_a_heredoc_and_its_word_stays() -> None:
-    """`<<<` feeds one ordinary shell word; it is left in the command, and nothing is cut."""
+    """`<<<` feeds one ordinary shell word; it is left in the command, and nothing is cut.
+
+    ⚑ THE SECOND LINE IS A COMMAND OF ITS OWN, as bash runs it: nothing was cut, so its `EOF` is
+    a program. This arm once expected it folded into `head`'s arguments, which was the newline
+    blindness that let a second-line read pass the structural-query hook.
+    """
     cmd = "grep x <<< EOF ; head b.txt\nEOF"
-    assert _progs(cmd) == ["grep", "head"]
+    assert _progs(cmd) == ["grep", "head", "EOF"]
+
+
+# ⚑ ONE COMMAND PER LINE, AS BASH READS THEM — each case below pairs a newline that does NOT
+# separate with the bare newline that does, so a tokenizer blind to newlines fails the control.
+_TWO_LINES = "echo a\ngrep x f"
+_BOTH_PROGRAMS = ["echo", "grep"]
+_ONE_COMMAND = 1
+_TWO_COMMANDS = 2
+
+
+def test_a_bare_newline_separates_commands_like_a_semicolon() -> None:
+    """An unquoted newline ends a command, so the second line's program is seen."""
+    assert _progs(_TWO_LINES) == _BOTH_PROGRAMS
+    assert cmdparse.tokenize(_TWO_LINES) == ["echo", "a", ";", "grep", "x", "f"]
+
+
+@pytest.mark.parametrize("quote", ["'", '"'])
+def test_a_quoted_newline_does_not_split(quote: str) -> None:
+    """A newline inside single or double quotes is data, not a separator."""
+    quoted = "echo " + quote + "a\ngrep x f" + quote
+    assert len(cmdparse.commands(quoted)) == _ONE_COMMAND
+    assert len(cmdparse.commands(_TWO_LINES)) == _TWO_COMMANDS
+
+
+def test_a_backslash_newline_continues_the_command() -> None:
+    """A backslash-newline joins the lines into one command, as bash reads it."""
+    assert _progs("echo a \\\ngrep x f") == ["echo"]
+    assert _progs(_TWO_LINES) == _BOTH_PROGRAMS
+
+
+@pytest.mark.parametrize("op", ["|", "&&", "||"])
+def test_a_trailing_operator_continues_onto_the_next_line(op: str) -> None:
+    """A newline after `|`, `&&` or `||` continues the list; no separator is inserted."""
+    assert cmdparse.tokenize("echo a " + op + "\ngrep x f") == ["echo", "a", op, "grep", "x", "f"]
+    assert cmdparse.tokenize(_TWO_LINES) == ["echo", "a", ";", "grep", "x", "f"]
+
+
+def test_a_comment_ends_at_its_newline() -> None:
+    """A `#` comment stops at the newline, and the next line is a command — even after a quote."""
+    assert _progs("echo a # it's\ngrep x f") == _BOTH_PROGRAMS
+
+
+def test_a_crlf_line_ending_still_separates() -> None:
+    """A CRLF line ending separates like a bare newline."""
+    assert _progs("echo a\r\ngrep x f\r\n") == _BOTH_PROGRAMS

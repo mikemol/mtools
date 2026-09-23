@@ -197,12 +197,14 @@ def tokenize(cmd: str) -> list[str]:
     ⚑ AN UNBALANCED QUOTE IS BASH'S VERDICT, NOT OURS: return empty and let the command through
     rather than breaking the session on a parse failure.
 
+    ⚑ A NEWLINE THAT ENDS A COMMAND COMES BACK AS A `;` TOKEN — see `separate_lines`.
+
     Returns:
         the a command into shell words with operators separated.
 
     """
     try:
-        lx = shlex.shlex(cmd, punctuation_chars=True)
+        lx = shlex.shlex(separate_lines(cmd), punctuation_chars=True)
         lx.whitespace_split = True
         return list(lx)
     except ValueError:
@@ -224,14 +226,16 @@ def tokenize(cmd: str) -> list[str]:
 #   * a body ends at a line that IS the delimiter — `<<-` first strips leading TABS. A line that
 #     merely CONTAINS the delimiter (`see EOF here`) is body.
 #   * an unterminated body runs to the end, as bash reads it.
-# ⚑ THE BODY IS REPLACED BY A SEPARATOR, because the line after a terminator starts a NEW command.
-# The tokenizer does not split on newlines, so without one the next command folded into the
-# heredoc's own argument list and was judged as that command's arguments.
+# ⚑ THE BODY IS REPLACED BY A NEWLINE, because the line after a terminator starts a NEW command,
+# and a newline IS a separator now that `separate_lines` reads it as one. It was once `\n;\n`,
+# written while the tokenizer ignored newlines; a literal `;` would read as chaining to a hook
+# that refuses `;` (no-chaining imports this stripper), and a heredoc line ending in `|` must
+# continue onto the line after the terminator, as bash reads it.
 _HEREDOC_WORD_END = frozenset(" \t\n;|&<>()")
 _QUOTES = frozenset("'\"")
 _DELIMITER_QUOTING = frozenset("'\"\\")
 _COMMENT_MAY_FOLLOW = frozenset(" \t\n;|&()")
-_BODY_SEPARATOR = "\n;\n"
+_BODY_SEPARATOR = "\n"
 
 
 class _HeredocStripper:
@@ -372,6 +376,105 @@ def strip_heredoc_bodies(cmd: str) -> str:
     if "<<" not in cmd:
         return cmd
     return _HeredocStripper(cmd).run()
+
+
+# ⚑⚑⚑ A NEWLINE ENDS A COMMAND, AND THE TOKENIZER READ IT AS A SPACE. MEASURED on HEAD: `echo a`
+# on line one and `grep x notes.md` on line two PASSED the structural-query hook, because shlex
+# treats a newline as whitespace and the grep became ARGUMENTS of `echo`. One newline bypassed the
+# hook's core refusal.
+#
+# ⚑⚑ SO EVERY SEPARATING NEWLINE IS MARKED `;` BEFORE SHLEX SEES IT, on bash's own rules:
+#   * inside single or double quotes a newline is data, never a separator;
+#   * a backslash-newline outside single quotes is a CONTINUATION — both characters vanish, as
+#     bash removes them, so `gr\<newline>ep` reads as `grep`;
+#   * a `#` comment runs to the newline and no further — the newline after it still separates;
+#   * a newline after `|`, `|&`, `&&` or `||` continues the pipeline or list;
+#   * CRLF separates like LF: the `\r` is whitespace to shlex.
+# ⚑ THE MARK KEEPS BOTH NEWLINES AROUND THE `;`. shlex reads a comment to the end of its line, so
+# a mark without a leading newline would be swallowed by a comment on the line it ends; and
+# `punctuation_chars` fuses ADJACENT punctuation, so a bare `;` next to a `;` would become `;;`.
+# ⚑ HEREDOC BODIES MUST BE CUT FIRST (`commands` does so); a body's newlines are not shell.
+_LINE_MARK = "\n;\n"
+_CONTINUED_BY = ("|", "|&", "&&", "||")
+_LINE_BLANKS = " \t\r"
+
+
+class _LineSeparator:
+    """One left-to-right pass marking every newline that ends a command."""
+
+    def __init__(self, cmd: str) -> None:
+        """Hold the command, the pass's cursor, its output, and the open quote if any."""
+        self.cmd = cmd
+        self.i = 0
+        self.out: list[str] = []
+        self.quote = ""
+
+    def run(self) -> str:
+        """Copy the command through, marking separating newlines.
+
+        Returns:
+            the command with each separating newline replaced by `_LINE_MARK`.
+
+        """
+        while self.i < len(self.cmd):
+            self._step()
+        return "".join(self.out)
+
+    def _take(self, end: int) -> None:
+        """Copy the text from the cursor up to `end`, and move the cursor there."""
+        end = min(end, len(self.cmd))
+        self.out.append(self.cmd[self.i:end])
+        self.i = end
+
+    def _escape(self) -> None:
+        """Drop a backslash-newline continuation; copy any other escape whole."""
+        if self.cmd.startswith("\\\n", self.i):
+            self.i += len("\\\n")
+        else:
+            self._take(self.i + len("\\\n"))
+
+    def _step(self) -> None:
+        """Advance over one lexical unit: a character, an escape, a comment, or a newline."""
+        cmd, i = self.cmd, self.i
+        ch = cmd[i]
+        if self.quote:
+            self._step_quoted(ch)
+        elif ch == "\\":
+            self._escape()
+        elif ch in _QUOTES:
+            self.quote = ch
+            self._take(i + 1)
+        elif ch == "#" and (i == 0 or cmd[i - 1] in _COMMENT_MAY_FOLLOW):
+            end = cmd.find("\n", i)
+            self._take(len(cmd) if end < 0 else end)
+        elif ch == "\n":
+            tail = "".join(self.out).rstrip(_LINE_BLANKS)
+            self.out.append("\n" if tail.endswith(_CONTINUED_BY) else _LINE_MARK)
+            self.i += 1
+        else:
+            self._take(i + 1)
+
+    def _step_quoted(self, ch: str) -> None:
+        """Advance inside a quoted string, where a newline is data."""
+        if ch == "\\" and self.quote == '"':
+            self._escape()
+            return
+        if ch == self.quote:
+            self.quote = ""
+        self._take(self.i + 1)
+
+
+def separate_lines(cmd: str) -> str:
+    """Mark each newline that ends a command as a `;`, so the tokenizer splits there.
+
+    Returns:
+        `cmd` with every separating newline replaced by a `;` between newlines; a command with no
+        newline is returned unchanged.
+
+    """
+    if "\n" not in cmd:
+        return cmd
+    return _LineSeparator(cmd).run()
 
 
 def commands(cmd: str) -> list[list[str]]:

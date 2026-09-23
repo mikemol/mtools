@@ -380,3 +380,15 @@ def test_end_to_end_a_malformed_payload_denies_nothing() -> None:
     arriving from the linter rather than from review.
     """
     assert not _run("not json at all", block="1").stdout.strip()
+
+
+def test_a_quoted_heredoc_operator_does_not_hide_a_later_pipe() -> None:
+    """A `<<EOF` inside quotes opens no heredoc, so the pipe after it is still refused.
+
+    ⚑ MEASURED ON HEAD: this hook's private stripper matched `<<EOF` inside the quotes, found no
+    terminator, and dropped the rest of the command — the pipe with it. It now uses
+    `cmdparse.strip_heredoc_bodies`, which honours quoting. The control is a real heredoc whose
+    body holds a pipe and whose next line is a second command: data, and (as before) not chaining.
+    """
+    assert no_chaining.analyze("echo '<<EOF' | tail -1"), "a quoted `<<` hid the pipe"
+    assert no_chaining.analyze("cat <<EOF\nx | y\nEOF\necho b") == [], "a heredoc body was read"
