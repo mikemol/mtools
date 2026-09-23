@@ -12,7 +12,7 @@ build-backend = "setuptools.build_meta"
 # the surrounding layout supplies it.
 name = "mikemol-hooks"
 version = "0.1.0"
-description = "PreToolUse hooks that refuse textual queries over structured artifacts, unstated mutations, shell composition, and un-linted Python edits."
+description = "PreToolUse hooks that refuse textual queries over structured artifacts, shell composition, gate bypasses, and shell or Python that shellcheck, ruff or mypy flags."
 readme = "README.md"
 requires-python = ">=3.13"
 authors = [{name = "Mike Mol"}]
