@@ -210,6 +210,63 @@ def test_a_package_outside_the_declared_closure_does_not_import() -> None:
     )
 
 
+# ⚑ THE CONSOLE-SCRIPT POPULATION IS DERIVED FROM THE ARTIFACT, like `_DISTS` from the tree: every
+# regular file in a built `bin/` that is not the interpreter link is an entry `venv.bzl` wrote.
+_ENTRIES = sorted(
+    f"{p.parent.parent.parent.name}/{p.name}"
+    for p in _BAZEL_BIN.glob("*/.venv/bin/*")
+    if p.name != "python3" and not p.is_symlink()
+)
+
+# ⚑ Bounded, because a direct run that reached the shell or the wrong interpreter must fail the arm,
+# not hang it; the hooks read one JSON payload from stdin and exit well inside this.
+_ENTRY_TIMEOUT_S = 60
+
+
+@_NEEDS_BUILT_VENV
+@pytest.mark.parametrize("depth", ["bazel-bin", "symlink-elsewhere"])
+@pytest.mark.parametrize("entry", _ENTRIES)
+def test_a_console_script_runs_directly_under_the_venvs_python(
+    entry: str, depth: str, tmp_path: Path,
+) -> None:
+    """⚑⚑⚑ A DIRECT RUN OF A BUILT ENTRY REACHES PYTHON, NEVER THE SHELL PARSING PYTHON.
+
+    MEASURED 2026-09-23 at HEAD: `bazel-bin/hooks/.venv/bin/mikemol-hook-no-chaining < payload`
+    printed `line 4: import: command not found` and a syntax error on line 7, rc=2 — the entry had
+    no shebang, so the kernel refused it and the shell ran it as a script. The launchers never
+    noticed, because they name the interpreter themselves.
+
+    ⚑⚑ THE POSITIVE WITNESS IS `PYTHONPROFILEIMPORTTIME`: only a CPython writes `import time:` to
+    stderr, so its presence proves an interpreter ran the file; that the distribution's own package
+    appears in it proves the entry got as far as its own import. `symlink-elsewhere` runs the entry
+    through a link at another depth, which is what a runfiles tree presents.
+    """
+    dist, name = entry.split("/")
+    script = _BAZEL_BIN / dist / ".venv" / "bin" / name
+    if depth == "symlink-elsewhere":
+        link = tmp_path / "deeper" / "bin" / name
+        link.parent.mkdir(parents=True)
+        link.symlink_to(script)
+        script = link
+    # ⚑ Through a SHELL, as a person types it: a bare `execve` of a shebang-less file raises
+    # ENOEXEC, while a shell falls back to reading the file as shell — the failure actually seen.
+    proc = subprocess.run(
+        ["/bin/sh", "-c", 'exec "$0"', str(script)],
+        input="{}", capture_output=True, text=True, check=False, timeout=_ENTRY_TIMEOUT_S,
+        env={"PATH": "/usr/bin:/bin", "PYTHONPROFILEIMPORTTIME": "1"},
+    )
+    assert "command not found" not in proc.stderr, (
+        f"{entry}: the SHELL ran the Python file — {proc.stderr.strip()[:300]}"
+    )
+    assert "import time:" in proc.stderr, (
+        f"{entry}: no Python interpreter ran the entry (rc={proc.returncode}): "
+        f"{proc.stderr.strip()[:300]}"
+    )
+    assert f"mikemol.{dist}" in proc.stderr, (
+        f"{entry}: an interpreter ran, but never imported mikemol.{dist} from the venv"
+    )
+
+
 @_NEEDS_BUILT_VENV
 @pytest.mark.parametrize("dist", _DISTS)
 def test_the_venv_runs_the_distributions_own_suite(dist: str) -> None:
