@@ -927,3 +927,171 @@
             a blanket +1.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_fractional_peak_is_written_as_whole_megabytes_rounded_up},
 }
+
+@misc{fence-label-lease-largest-peak-drives-the-lease,
+  section = {label_lease},
+  title  = {(40, 188, 90) leases 256, and the reported peak is 188},
+  claim  = {(40, 188, 90) leases 256, and the reported peak is 188.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_largest_peak_drives_the_lease},
+}
+
+@misc{fence-label-lease-rounding-goes-up-to-a-power-of-two-never-below-the-peak,
+  section = {label_lease},
+  title  = {Each of 65, 128, 129, 200, 257 leases a power of two at least the peak; 128 is exact},
+  claim  = {Each of 65, 128, 129, 200, 257 leases a power of two at least the peak; 128 is exact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_rounding_goes_up_to_a_power_of_two_never_below_the_peak},
+}
+
+@misc{fence-label-lease-small-peak-takes-the-floor,
+  section = {label_lease},
+  title  = {A 3 MB peak leases the 64 MB floor},
+  claim  = {A 3 MB peak leases the 64 MB floor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_small_peak_takes_the_floor},
+}
+
+@misc{fence-label-lease-light-label-sizes-below-the-default,
+  section = {label_lease},
+  title  = {(16, 15, 17) leases under the default of 192 — the concurrency point},
+  claim  = {(16, 15, 17) leases under the default of 192 — the concurrency point.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_light_label_sizes_below_the_default},
+}
+
+@misc{fence-label-lease-unmeasured-label-takes-the-default,
+  section = {label_lease},
+  title  = {A sibling's rows do not size an unmeasured label; the control: they size the sibling},
+  claim  = {A sibling's rows do not size an unmeasured label; the control: they size the sibling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_an_unmeasured_label_takes_the_default},
+}
+
+@misc{fence-label-lease-missing-ledger-takes-the-default,
+  section = {label_lease},
+  title  = {A ledger that does not exist is no history, so the lease is the default},
+  claim  = {A ledger that does not exist is no history, so the lease is the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_missing_ledger_takes_the_default},
+}
+
+@misc{fence-label-lease-another-labels-rows-are-not-read,
+  section = {label_lease},
+  title  = {A lone 16 beside a sibling's 900 leases the floor, not the sibling's size},
+  claim  = {A lone 16 beside a sibling's 900 leases the floor, not the sibling's size.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_another_labels_rows_are_not_read},
+}
+
+@misc{fence-label-lease-peak-above-the-ceiling-clamps,
+  section = {label_lease},
+  title  = {A 900 peak under a 384 ceiling leases 384, clamped from 900},
+  claim  = {A 900 peak under a 384 ceiling leases 384, clamped from 900.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_peak_above_the_ceiling_clamps},
+}
+
+@misc{fence-label-lease-clamp-message-names-the-override-and-says-below,
+  section = {label_lease},
+  title  = {A clamped lease's warning says BELOW and names `ceiling` (needs the autosize amendment)},
+  claim  = {A clamped lease's warning says BELOW and names `ceiling` (needs the autosize amendment).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_clamp_message_names_the_override_and_says_below},
+}
+
+@misc{fence-label-lease-unclamped-sizing-says-nothing,
+  section = {label_lease},
+  title  = {A lease under the cap owes no warning},
+  claim  = {A lease under the cap owes no warning.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_an_unclamped_sizing_says_nothing},
+}
+
+@misc{fence-label-lease-explicit-default-raises-the-ceiling,
+  section = {label_lease},
+  title  = {Default 1024 with a 900 peak leases at least 900, unclamped},
+  claim  = {Default 1024 with a 900 peak leases at least 900, unclamped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_an_explicit_default_raises_the_ceiling},
+}
+
+@misc{fence-label-lease-malformed-rows-are-skipped,
+  section = {label_lease},
+  title  = {A truncated line and a non-numeric peak are skipped; the valid 188 leases 256},
+  claim  = {A truncated line and a non-numeric peak are skipped; the valid 188 leases 256.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_malformed_rows_are_skipped},
+}
+
+@misc{fence-label-lease-fence-written-fractional-peak-is-read,
+  section = {label_lease},
+  title  = {A fence-written 187.53 peak leases 256 — the origin's integer reader saw no history},
+  claim  = {A fence-written 187.53 peak leases 256 — the origin's integer reader saw no history.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_fence_written_fractional_peak_is_read},
+}
+
+@misc{fence-label-lease-slowest-run-drives-the-guard,
+  section = {label_lease},
+  title  = {(30, 511, 200) budgets 1080 — 2 * 511 up to the minute — and owes no warning},
+  claim  = {(30, 511, 200) budgets 1080 — 2 * 511 up to the minute — and owes no warning.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_slowest_run_drives_the_guard},
+}
+
+@misc{fence-label-lease-quick-label-takes-the-floor,
+  section = {label_lease},
+  title  = {A 5 s run budgets the 120 s floor},
+  claim  = {A 5 s run budgets the 120 s floor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_quick_label_takes_the_floor},
+}
+
+@misc{fence-label-lease-untimed-label-takes-the-default,
+  section = {label_lease},
+  title  = {No history budgets the default, unclamped, with no slowest run},
+  claim  = {No history budgets the default, unclamped, with no slowest run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_an_untimed_label_takes_the_default},
+}
+
+@misc{fence-label-lease-guard-above-the-ceiling-clamps-loudly,
+  section = {label_lease},
+  title  = {A 3000 s run clamps to 3600, and the warning names the label and the risk},
+  claim  = {A 3000 s run clamps to 3600, and the warning names the label and the risk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_guard_above_the_ceiling_clamps_loudly},
+}
+
+@misc{fence-label-lease-slowest-cpu-drives-the-guard-when-it-outranks-wall,
+  section = {label_lease},
+  title  = {Wall 100 with CPU 300 + 100 budgets 1620 from 4 * 400, and reports cpu_s 400},
+  claim  = {Wall 100 with CPU 300 + 100 budgets 1620 from 4 * 400, and reports cpu_s 400.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_slowest_cpu_drives_the_guard_when_it_outranks_wall},
+}
+
+@misc{fence-label-lease-row-without-cpu-is-not-read-as-zero,
+  section = {label_lease},
+  title  = {No CPU columns: cpu_s is None and the guard is the floor; the control carries CPU},
+  claim  = {No CPU columns: cpu_s is None and the guard is the floor; the control carries CPU.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_row_without_cpu_is_not_read_as_zero},
+}
+
+@misc{fence-label-lease-clamp-message-reports-the-effective-cap,
+  section = {label_lease},
+  title  = {Under ceiling_s=300 a 1000 s run's warning names 300, not the module's 3600},
+  claim  = {Under ceiling_s=300 a 1000 s run's warning names 300, not the module's 3600.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_clamp_message_reports_the_effective_cap},
+}
+
+@misc{fence-label-lease-one-half-of-cpu-is-no-cpu,
+  section = {label_lease},
+  title  = {A row with user but no sys (or sys but no user) counts as no CPU, not half of it},
+  claim  = {A row with user but no sys (or sys but no user) counts as no CPU, not half of it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_one_half_of_cpu_is_no_cpu},
+}
+
+@misc{fence-label-lease-cli-prints-the-number-and-warns-only-when-clamped,
+  section = {label_lease},
+  title  = {`lease` prints the MB on stdout; stderr is empty unclamped, and warns when clamped},
+  claim  = {`lease` prints the MB on stdout; stderr is empty unclamped, and warns when clamped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_cli_prints_the_number_and_warns_only_when_clamped},
+}
+
+@misc{fence-label-lease-cli-deadline-mode-prints-seconds,
+  section = {label_lease},
+  title  = {`deadline` prints the guard in seconds on stdout, with nothing on stderr},
+  claim  = {`deadline` prints the guard in seconds on stdout, with nothing on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_cli_deadline_mode_prints_seconds},
+}
+
+@misc{fence-label-lease-cli-refuses-a-bad-invocation,
+  section = {label_lease},
+  title  = {An unknown mode, a short argv and a non-integer size each exit 2 with usage on stderr},
+  claim  = {An unknown mode, a short argv and a non-integer size each exit 2 with usage on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_cli_refuses_a_bad_invocation},
+}

@@ -90,7 +90,8 @@ def clamp_warning(key: str, sizing: Sizing, cap: int) -> str | None:
     """Return the stderr line a clamped size owes its reader, or None when nothing was clamped.
 
     ⚑ CLAMPING IS LOUD: a silent clamp is how a 600MB module was leased 384 and OOM-killed with a
-    clean-looking size on stdout. The line names the key, the peak, the cap, and what raises it.
+    clean-looking size on stdout. The line names the key, the peak, the cap, that the lease is
+    BELOW the measured need, and the parameter (`ceiling`) that raises it.
 
     Returns:
         the warning, or None.
@@ -99,7 +100,8 @@ def clamp_warning(key: str, sizing: Sizing, cap: int) -> str | None:
     if sizing.clamped_from is None:
         return None
     return (f"autosize: {key} peaked at {sizing.clamped_from:g} MB but the cap is {cap} MB — "
-            f"leasing {sizing.mb} MB; raise the ceiling, or declare a default above it")
+            f"leasing {sizing.mb} MB, BELOW the measured need; raise `ceiling`, or declare a "
+            f"default above it")
 
 
 def killed_by_cap(result: Result) -> bool:
