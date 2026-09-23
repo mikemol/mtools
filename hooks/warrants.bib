@@ -4036,3 +4036,15 @@
   claim  = {An entry that is not `mikemol-hook-<name>` is denied before it reaches a path.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt_launcher.py -k test_a_traversal_entry_is_refused},
 }
+
+@misc{hooks-bar-fires-every-launch-runs-without-the-hooks-git-env,
+  section = {bar-fires},
+  claim   = {Every pytest, bazel, ratchet and stubtest launch in the gate, the preflight and the domain witness goes through `git_scrubbed`. Under a hook `GIT_DIR` and `GIT_INDEX_FILE` name the REAL repository and a fixture running `git commit` in its temp dir follows them there --- measured 2026-09-23, nine junk commits. The gate's own git calls stay unscrubbed: they need the staged index},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_test_the_gate_launches_runs_without_the_hooks_git_env}
+}
+
+@misc{hooks-bar-fires-scrub-keeps-a-fixture-commit-out-of-the-decoy,
+  section = {bar-fires},
+  claim   = {Each launcher's `git_scrubbed`, run with GIT_DIR and GIT_INDEX_FILE aimed at a decoy repository, lets a fixture commit land in its own dir and leaves the decoy with no refs. Armed: an inert `git_scrubbed` puts the commit in the decoy},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names}
+}

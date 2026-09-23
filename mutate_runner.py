@@ -45,6 +45,9 @@ _NOT_SOURCE = shutil.ignore_patterns(
     ".venv", "build", "*.egg-info", "__pycache__", ".*_cache", "bazel-*",
 )
 
+# The prefix every per-invocation git variable carries; none reaches a mutant's suite.
+_GIT_PREFIX = "GIT_"
+
 
 _ENUM_BASES = frozenset(
     {"enum.Enum", "Enum", "enum.StrEnum", "StrEnum", "enum.IntEnum", "IntEnum"},
@@ -261,7 +264,14 @@ def run(py: pathlib.Path, dist: pathlib.Path, rel: pathlib.Path,
         # cause left standing is read as an established one. Measured: `PYTHONPATH` set to the
         # temp tree alone, prepended, or absent made NO difference — all three produced the same
         # result. The cause was `.resolve()` on the interpreter (see `main`).
-        env = dict(os.environ)
+        # ⚑⚑⚑ EVERY `GIT_*` VARIABLE IS DROPPED, BECAUSE A MUTANT'S SUITE CAN WRITE INTO THE
+        # CALLER'S REPOSITORY. Under a git hook `GIT_DIR` and `GIT_INDEX_FILE` name the REAL repo,
+        # and a fixture that runs `git init; git commit` in its temp dir follows them there — `cwd=`
+        # does not override an exported `GIT_DIR`. Measured 2026-09-23: nine junk commits,
+        # since recovered.
+        # ⚑ substrate's `git_env.clean_env()` rule, at the runner, so suites not yet written are
+        # covered too. A suite reading git state finds the repository from its `cwd` as before.
+        env = {k: v for k, v in os.environ.items() if not k.startswith(_GIT_PREFIX)}
         existing = env.get("PYTHONPATH", "")
         env["PYTHONPATH"] = f"{work / 'src'}{os.pathsep}{existing}" if existing else str(work / "src")
         env["HOME"] = tmp

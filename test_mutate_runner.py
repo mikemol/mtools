@@ -6,13 +6,24 @@
 bare name, so every same-named def in a module was reported as its own site and mutated the same
 node. On ratchet a Protocol stub `parse` came back SURVIVED three times: each `parse` mutated the
 stub. Every test here fails on the bare-name runner by assertion, not by an error.
+
+⚑ AND THE ENVIRONMENT A MUTANT'S SUITE RECEIVES CARRIES NO `GIT_*`: the last case fails by
+assertion on a runner that copies `os.environ` whole, with its decoy repository holding a commit.
 """
 
 from __future__ import annotations
 
 import ast
+import os
+import pathlib
+import subprocess
+import sys
+from typing import TYPE_CHECKING, cast
 
 import mutate_runner
+
+if TYPE_CHECKING:
+    import pytest
 
 _MUTANT = "raise AssertionError('mutant')"
 
@@ -119,3 +130,57 @@ def test_a_module_of_unique_names_is_addressed_and_mutated_as_before() -> None:
     mutant = mutate_runner.mutate(_UNIQUE, "alpha")
     assert _body_of(mutant, "alpha") == f"'Doc.'\n{_MUTANT}"
     assert _body_of(mutant, "beta") == "return 2"
+
+
+_REAL_RUN = subprocess.run
+_GIT_ID = ("-c", "user.name=fixture", "-c", "user.email=fixture@invalid")
+_SITE_SOURCE = "def f():\n    return 1\n"
+_SITE = "f"
+_PASSED = "1 passed in 0.01s\n"
+
+
+def _git(*args: str, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    """Run git with exactly `env`, carrying its stderr into any failure.
+
+    Returns:
+        the completed process.
+
+    """
+    proc = _REAL_RUN(["git", *_GIT_ID, *args], capture_output=True, text=True,
+                     check=False, env=env)
+    assert proc.returncode == 0, f"git {' '.join(args)} failed: {proc.stderr.strip()}"
+    return proc
+
+
+def test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A suite committing in its own dir lands there, not in the repo the caller's GIT_DIR names.
+
+    ⚑⚑⚑ THE DECOY STANDS IN FOR THE REAL REPOSITORY A HOOK EXPORTS. Measured 2026-09-23: a fixture
+    running `git commit` under a pre-commit hook wrote nine commits into the calling repo. The
+    fake suite below does what that fixture did, with whatever environment `run` hands it.
+    """
+    clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    decoy = tmp_path / "decoy"
+    _git("init", "-q", str(decoy), env=clean)
+    dist = tmp_path / "dist"
+    (dist / "tests").mkdir(parents=True)
+    (dist / "mod.py").write_text(_SITE_SOURCE, encoding="utf-8")
+    (dist / "pyproject.toml").write_text("", encoding="utf-8")
+    seen: list[dict[str, str]] = []
+
+    def suite(argv: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        env = cast("dict[str, str]", kwargs["env"])
+        seen.append(env)
+        _git("init", "-q", str(kwargs["cwd"]), env=env)
+        _git("-C", str(kwargs["cwd"]), "commit", "-q", "--allow-empty", "-m", "fixture", env=env)
+        return subprocess.CompletedProcess(argv, 0, _PASSED, "")
+
+    monkeypatch.setenv("GIT_DIR", str(decoy / ".git"))
+    monkeypatch.setattr(mutate_runner.subprocess, "run", suite)
+    mutate_runner.run(pathlib.Path(sys.executable), dist, pathlib.Path("mod.py"), _SITE_SOURCE,
+                      _SITE, dist / "pyproject.toml")
+    refs = _git("-C", str(decoy), "for-each-ref", env=clean).stdout
+    assert not refs, f"the suite committed into the decoy: {refs.strip()}"
+    assert [k for k in seen[0] if k.startswith("GIT_")] == [], "a GIT_* variable reached the suite"

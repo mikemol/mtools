@@ -58,6 +58,19 @@ fail=0
 
 say() { printf 'preflight: %s\n' "$1"; }
 
+# ⚑⚑ EVERY CHECK THIS SCRIPT LAUNCHES RUNS WITHOUT `GIT_*`, THE SAME SCOPE AS THE GATE IT PREDICTS.
+# A hook exports `GIT_DIR`/`GIT_INDEX_FILE` naming the real repository, and a test fixture running
+# `git commit` in its temp dir follows them back (measured 2026-09-23: nine junk commits). This
+# script runs no git of its own, so the function is the same one the gate uses, not a variant.
+git_scrubbed() {  # the command, run with every GIT_* variable removed from its environment
+    local _name
+    local -a _unset=()
+    for _name in $(compgen -e); do
+        case "$_name" in GIT_*) _unset+=(-u "$_name") ;; esac
+    done
+    env "${_unset[@]}" "$@"
+}
+
 for dist in $dists; do
     [ -d "$dist" ] || { say "no such distribution: $dist"; exit 2; }
 
@@ -141,21 +154,21 @@ for dist in $dists; do
     # finding and leaves a log PATH the reader must go open. `--test_output=all` does not help —
     # measured, also FALSE under the filter — which is what proved the filter was the cause rather
     # than the output mode. The filter is gone; `--noshow_progress` alone is the quiet part.
-    bazel test "//$dist:ruff" "//$dist:mypy" --test_output=errors --noshow_progress
+    git_scrubbed bazel test "//$dist:ruff" "//$dist:mypy" --test_output=errors --noshow_progress
     _rc=$?
     case "$_rc" in
         0) ;;
         3) fail=1; say "$dist: ruff/mypy — the gate will refuse this" ;;
         *) fail=1; say "$dist: bazel EXITED $_rc — the checks did not run; this is not a clean tree" ;;
     esac
-    ( cd "$dist" && .venv/bin/python3 -m pytest -q ) \
+    ( cd "$dist" && git_scrubbed .venv/bin/python3 -m pytest -q ) \
         || { fail=1; say "$dist: pytest — the gate will refuse this"; }
 
     # ⚑⚑⚑ THE RATCHET IS THE CHECK THAT ACTUALLY REFUSED THREE OF THE FOUR, so it is the one this
     # script exists for. It reads the working tree rather than a staged copy, which is correct
     # here: the point is to answer *what will the gate say about what I am about to stage*.
     # ⚑ NO `if [ -x ]` GUARD: presence is REFUSED ON above, so reaching this line means it exists.
-    ratchet/.venv/bin/mikemol-ratchet "$root/$dist" \
+    git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" \
         || { fail=1; say "$dist: ratchet — a NEW KEY; the gate will refuse this"; }
 
     # ⚑ THE WARRANT LEDGER IS 1:1 AND THE GATE ENFORCES IT, so a test added without a warrant is a

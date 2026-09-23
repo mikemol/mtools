@@ -1602,7 +1602,7 @@ def test_the_ratchet_check_captures_its_own_output() -> None:
     # ⚑ ANCHOR ON THE INVOCATION, NOT THE GUARD. The first `mikemol-ratchet` in the file is the
     # `[ -x ... ]` presence check; slicing from there missed the call site by nine lines and the
     # first cut of this test failed against a correct repair.
-    start = body.index("if ! ratchet/.venv/bin/mikemol-ratchet")
+    start = body.index("if ! git_scrubbed ratchet/.venv/bin/mikemol-ratchet")
     block = body[start:start + 400]
     assert 'note_failure "$dist: ratchet' in block
     assert '"$rlog"' in block, "the ratchet must capture its output for the verdict to replay"
@@ -6720,3 +6720,68 @@ def test_two_walks_agree_on_every_population_shaped_negative_by_name() -> None:
         f"  missed by binding→assert ({len(only_forward)}):\n    " + "\n    ".join(only_forward)
         + f"\n  agreed ({len(forward & backward)}):\n    " + agreed
     )
+
+
+# ⚑⚑⚑ A TEST THE GATE LAUNCHES INHERITS THE HOOK'S `GIT_*`, AND A FIXTURE FOLLOWS THEM HOME.
+# Under a pre-commit hook `GIT_DIR` and `GIT_INDEX_FILE` name the REAL repository, so a fixture
+# running `git init; git commit` in its temp dir writes there instead: measured 2026-09-23, nine
+# junk commits. The repair is at the launcher (`git_scrubbed`), as substrate's `git_env` is.
+_SCRUB = "git_scrubbed"
+_SCRUB_FN = pyre.compile(r"^git_scrubbed\(\) \{.*?^\}\n", pyre.DOTALL | pyre.MULTILINE)
+_LAUNCH = pyre.compile(r"bazel (?:test|build) |-m pytest|mikemol-ratchet \"|mypy\.stubtest")
+_NOT_A_LAUNCH = ("#", "say ", "echo ", "printf ", "record_refusal ")
+_LAUNCHERS = (_GATE, _DIST.parent / "preflight.sh", _DIST.parent / "domain_witness.sh")
+
+
+def _launches(script: Path) -> list[tuple[int, str]]:
+    """Return each line of `script` that launches a test, build, or checker subprocess.
+
+    Returns:
+        (line number, stripped line) for every launch, comments and messages excluded.
+
+    """
+    lines = script.read_text(encoding="utf-8").splitlines()
+    return [(n, s) for n, raw in enumerate(lines, 1)
+            if _LAUNCH.search(s := raw.strip()) and not s.startswith(_NOT_A_LAUNCH)]
+
+
+def test_every_test_the_gate_launches_runs_without_the_hooks_git_env() -> None:
+    """Every pytest, bazel, ratchet and stubtest launch in the gate and its helpers is scrubbed."""
+    for script in _LAUNCHERS:
+        found = _launches(script)
+        assert found, f"{script.name}: no launch found — the pattern no longer reads this file"
+        bare = [f"{script.name}:{n}: {s}" for n, s in found if _SCRUB not in s]
+        assert not bare, "launched with the hook's GIT_* environment:\n" + "\n".join(bare)
+
+
+def test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names(
+    tmp_path: Path,
+) -> None:
+    """A fixture commit launched through `git_scrubbed` lands in its own dir, not in the decoy.
+
+    ⚑ THE DECOY STANDS IN FOR THE REAL REPOSITORY: `GIT_DIR` and `GIT_INDEX_FILE` point at it, as a
+    hook's do, and the fixture does what the measured one did. Nothing here names a real repo.
+    ⚑ Armed by hand: an inert `git_scrubbed() { "$@"; }` puts the fixture's commit in the decoy.
+    """
+    clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    for script in _LAUNCHERS:
+        fn = _SCRUB_FN.search(script.read_text(encoding="utf-8"))
+        assert fn, f"{script.name}: defines no `{_SCRUB}` — its launches inherit GIT_*"
+        work = tmp_path / script.name
+        work.mkdir()
+        # ⚑ ONE SCRIPT, LITERAL ARGV: the decoy is made with no GIT_* at all, then GIT_DIR and
+        # GIT_INDEX_FILE are aimed at it as a hook aims them at the real repo, the fixture
+        # commits through `git_scrubbed`, and the decoy's refs are printed — empty when scrubbed.
+        proc = subprocess.run(
+            ["/bin/bash", "-euc",
+             ('eval "$SCRUB_FN"\n'
+              "env -u GIT_DIR -u GIT_INDEX_FILE git init -q decoy\n"
+              'export GIT_DIR="$PWD/decoy/.git" GIT_INDEX_FILE="$PWD/decoy/.git/index"\n'
+              "git_scrubbed git init -q fixture\n"
+              "git_scrubbed git -c user.name=f -c user.email=f@invalid -C fixture"
+              " commit -q --allow-empty -m f\n"
+              "env -u GIT_DIR -u GIT_INDEX_FILE git -C decoy for-each-ref\n")],
+            cwd=work, capture_output=True, text=True, check=False,
+            env={**clean, "SCRUB_FN": fn.group(0)})
+        assert proc.returncode == 0, f"{script.name}: {proc.stderr.strip()}"
+        assert not proc.stdout, f"{script.name}: a fixture commit reached the decoy:\n{proc.stdout}"

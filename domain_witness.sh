@@ -36,6 +36,21 @@ victim="${3:?the transitive module was not passed}"
 #   ratchet  a preview-rule violation, which grows the census by a key
 probe_kind="${4:-mypy}"
 
+# ⚑⚑⚑ THIS WITNESS'S `bazel test` RUNS WITHOUT `GIT_*`; ITS OWN git CALLS KEEP THEM. Called from
+# the pre-commit gate, it inherits `GIT_DIR`/`GIT_INDEX_FILE` naming the real repository, and a
+# test fixture running `git commit` in its temp dir follows them back (measured 2026-09-23: nine
+# junk commits). ⚑⚑ NOT GLOBAL: `git diff` refuses a dirty victim and `git checkout` restores it,
+# both against the index the calling commit holds — unset, they would read `.git/index` and the
+# restore would fight the commit's own `index.lock`. Same function as the gate's.
+git_scrubbed() {  # the command, run with every GIT_* variable removed from its environment
+    local _name
+    local -a _unset=()
+    for _name in $(compgen -e); do
+        case "$_name" in GIT_*) _unset+=(-u "$_name") ;; esac
+    done
+    env "${_unset[@]}" "$@"
+}
+
 cd "$(dirname "$0")" || exit 1
 # ⚑⚑⚑ RESIDUE FROM A KILLED PREDECESSOR IS DETECTED BEFORE ANYTHING RUNS, because `trap ... EXIT`
 # CANNOT fire on SIGKILL. Measured: killing a witness inside its mutation window leaves the probe
@@ -228,7 +243,7 @@ say() { printf '  %s\n' "$*"; }
 # infrastructure code a false red, and this witness cannot enumerate bazel's exit codes any more
 # than it could enumerate a census's state vocabulary. The artifact is the population.
 _bazel_green() {
-    _bg_out="$(bazel test "$1" 2>&1)"
+    _bg_out="$(git_scrubbed bazel test "$1" 2>&1)"
     _bg_rc=$?
     if [ "$_bg_rc" -eq 0 ]; then
         return 0
@@ -305,7 +320,7 @@ printf '\n# transient domain probe %s\n' "$(date +%s%N)" >> "$victim"
 # arms of this witness reported FAILED against a tree that had passed the same probes by hand
 # minutes earlier. That is this repository's Rule 14 defect (the reporter's status standing in for
 # the subject's) reappearing inside the witness written to enforce the rule it belongs to.
-out="$(bazel test "$target" 2>&1)"
+out="$(git_scrubbed bazel test "$target" 2>&1)"
 # ⚑⚑ AND `printf "$out" | grep -q` IS THE SAME DEFECT ONE PIPE LATER: the capture fixed bazel's
 # SIGPIPE, then re-piped the capture into `grep -q`, so `printf` took the SIGPIPE instead once the
 # output exceeded the pipe buffer — measured as `printf: write error: Broken pipe` and a FAILED

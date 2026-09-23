@@ -129,6 +129,25 @@ $(sed 's/^/      /' "$2")"
 }
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
 
+# ⚑⚑⚑ EVERY TEST AND BUILD THIS GATE LAUNCHES RUNS WITHOUT `GIT_*`; THE GATE ITSELF KEEPS THEM.
+# git exports `GIT_DIR` and `GIT_INDEX_FILE` into this hook, naming the REAL repository — and under
+# a path commit (`git commit <path>`) a temporary index. A test fixture that runs `git init; git
+# commit` in its own temp dir follows them back here: `cwd` does not override an exported
+# `GIT_DIR`. MEASURED 2026-09-23: nine junk commits written into this repository that way.
+# ⚑⚑ SCOPED, NOT GLOBAL. `git checkout-index` below materialises the STAGED index, `git diff` and
+# `git checkout` sweep residue, and `domain_witness.sh` restores its victim from the index the
+# commit holds — all of which NEED the hook's variables. Unsetting them at the top would gate the
+# wrong index, and a restore would fight the commit's own `index.lock`.
+# ⚑ substrate's rule (`git_env.clean_env`): every name starting `GIT_`, nothing kept.
+git_scrubbed() {  # the command, run with every GIT_* variable removed from its environment
+    local _name
+    local -a _unset=()
+    for _name in $(compgen -e); do
+        case "$_name" in GIT_*) _unset+=(-u "$_name") ;; esac
+    done
+    env "${_unset[@]}" "$@"
+}
+
 # ⚑⚑⚑ ONE HELPER, BECAUSE EIGHT CALL SITES WITH THE SAME REPAIR IS EIGHT PLACES TO FORGET IT.
 # The shellcheck witness was wired to capture two commits ago and the other eight were not, so a
 # refusal naming seven witnesses printed seven bare labels and then the gate's own honest line:
@@ -400,7 +419,8 @@ if ! command -v bazel >/dev/null 2>&1; then
   record_refusal pre-commit " - bazel absent (before the per-distribution suites)"
   exit 1
 fi
-if ! ( cd "$root" && bazel build //ratchet:ratchet_cli ) >"$staged/.ratchet_cli.log" 2>&1; then
+if ! ( cd "$root" && git_scrubbed bazel build //ratchet:ratchet_cli ) \
+    >"$staged/.ratchet_cli.log" 2>&1; then
   say "bazel build //ratchet:ratchet_cli FAILED — the hooks suite would run a dead binary, commit refused"
   sed 's/^/    /' "$staged/.ratchet_cli.log" | tail -20
   record_refusal pre-commit " - //ratchet:ratchet_cli did not build"
@@ -477,7 +497,7 @@ for dist in $_dists; do
   # surfaces as an import error rather than as a sandbox that never had it. The honest statement
   # is that this line is a DEVELOPER-TREE smoke check and the hermetic verdict is bazel's.
   run_checked "$dist: pytest — every case passes" \
-    env -C "$root/$dist" .venv/bin/python3 -m pytest -q
+    git_scrubbed env -C "$root/$dist" .venv/bin/python3 -m pytest -q
 done
 
 # ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership
@@ -633,7 +653,8 @@ fi
 # ⚑ THE SECOND WRONG FORM IS THE INSTRUCTIVE ONE: it looks like it captures the status and the
 # assignment happens in a subshell that exits before the parent reads it. Reasoning about shell
 # scoping produced two wrong answers in a row here; running four candidates produced the right one.
-if ( cd "$staged" && bazel test //... --test_output=errors ) 2>&1 | tee "$staged/.suite.log"; then
+if ( cd "$staged" && git_scrubbed bazel test //... --test_output=errors ) 2>&1 \
+    | tee "$staged/.suite.log"; then
     _suite_rc=0
 else
     _suite_rc=$?
@@ -843,7 +864,7 @@ say "roster drift: does the textual roster still match the tools present?"
 # ⚑ `--concise` EXISTS TO MAKE THIS READABLE AND THE READER NEVER SAW IT. stubtest names the
 # exact symbol whose signature drifted; the bare label said only that the stub disagreed.
 run_checked "stubtest — the panflute stub still matches its module" \
-  env -C mdstruct MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
+  git_scrubbed env -C mdstruct MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
     --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise
 
 # ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
@@ -871,7 +892,7 @@ run_checked "stubtest — the panflute stub still matches its module" \
 # to the class**, and this is the second of the twenty sites to be wired.
 for dist in $_dists; do
   rlog="$staged/.ratchet-$dist.log"
-  if ! ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
+  if ! git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
       cat "$rlog" >&2
       fail=1; note_failure "$dist: ratchet — paydown only, no new keys" "$rlog"
   else
