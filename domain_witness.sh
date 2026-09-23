@@ -261,10 +261,16 @@ _bazel_green() {
     # build-shaped caller existed, it would have been a false red the peer predicted before it fired.
     # Filed against this tree as `ask-bazel-summary-line-differs-by-invocation` in
     # `summit/floor/asks.bib`; this comment is the answer, and it is scope rather than a rewrite.
-    if ! printf '%s' "$_bg_out" | grep -q 'Build completed successfully'; then
+    # ⚑⚑ MATCHED IN THE SHELL, NOT THROUGH `printf | grep -q` — the defect the comment at the
+    # reachability arm names, reproduced inside this function too: under `pipefail` a `grep -q` that
+    # MATCHES exits early, `printf` takes SIGPIPE once the captured output exceeds the pipe buffer,
+    # and the pipeline fails exactly when the line was found. It is intermittent because it needs
+    # a large enough capture; the gate refused a clean commit on it (2026-09-22).
+    if [[ "$_bg_out" != *"Build completed successfully"* ]]; then
         return 1
     fi
-    if ! printf '%s' "$_bg_out" | grep -qE 'tests?: [0-9]+ tests? pass|test passes'; then
+    _bg_tally='tests?: [0-9]+ tests? pass|test passes'
+    if ! [[ "$_bg_out" =~ $_bg_tally ]]; then
         return 1
     fi
     say "⚑ bazel exited $_bg_rc with NO failure line — the run did not fail, something after it did"
@@ -300,7 +306,11 @@ printf '\n# transient domain probe %s\n' "$(date +%s%N)" >> "$victim"
 # minutes earlier. That is this repository's Rule 14 defect (the reporter's status standing in for
 # the subject's) reappearing inside the witness written to enforce the rule it belongs to.
 out="$(bazel test "$target" 2>&1)"
-if printf '%s' "$out" | grep -q "Executed 1 out of 1 test"; then
+# ⚑⚑ AND `printf "$out" | grep -q` IS THE SAME DEFECT ONE PIPE LATER: the capture fixed bazel's
+# SIGPIPE, then re-piped the capture into `grep -q`, so `printf` took the SIGPIPE instead once the
+# output exceeded the pipe buffer — measured as `printf: write error: Broken pipe` and a FAILED
+# arm over //hooks:mypy on 2026-09-22. Matched in the shell: no pipe, nothing to break.
+if [[ "$out" == *"Executed 1 out of 1 test"* ]]; then
     say "arm 1 REACHABILITY: a content change in $victim re-executes the action"
 else
     say "arm 1 FAILED: editing $victim did NOT invalidate $target — it is outside the domain"
