@@ -3,8 +3,9 @@
 """Size a memory lease from the run ledger's history, and climb it when the cap kills the payload.
 
 Ported by design from substrate's `scripts/membudget` (`_auto_mb`, the retry block of `cmd_run`,
-`cmd_verify_ceiling`), per its autosize letter of 2026-09-22. This is the PURE half — the size, the
-single cap, the next rung, the climb trigger; the climb over `admit` + `run_once` sits on top.
+`cmd_verify_ceiling`), per its autosize letter of 2026-09-22. The pure half — the size, the single
+cap, the next rung, the climb trigger — comes first; `climb`, over `admit` and `run_once`, sits on
+top of it and decides nothing they did not already decide.
 
 ⚑⚑ THE STEP IS THE MARGIN. A lease is the power-of-two bucket of the MAX recorded peak — not the
 median, which under-sizes the tail — so a peak in (2^(n-1), 2^n] leases 2^n. `ledger.bucket` is the
@@ -23,7 +24,7 @@ it. A payload that `kill -9`s itself must not climb.
 ⚑ THE CEILING HAS NO UNIVERSAL DEFAULT. The origin's 384 is substrate-tuned, and the origin itself
 calls whether it is right UNRESOLVED; it is a parameter here.
 
-CONSUMED BY: the climb (next), and the `mikemol-membudget` console script that closes the fence set.
+CONSUMED BY: the `mikemol-membudget` console script that closes the fence set.
 """
 
 from __future__ import annotations
@@ -31,6 +32,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from mikemol.fence import admit, core
 from mikemol.fence.ledger import bucket
 
 if TYPE_CHECKING:
@@ -123,3 +125,71 @@ def next_rung(mb: int, cap: int) -> int | None:
     if mb >= cap:
         return None
     return min(_CLIMB_FACTOR * mb, cap)
+
+
+# --- the effectful half: the climb ---
+
+# The default request a climb re-admits under: no label and no parent. Only its label and parent are
+# read — each rung supplies its own size.
+TOP_LEVEL = admit.Request(0)
+
+
+@dataclass(frozen=True, slots=True)
+class Plan:
+    """A climb: where it starts, the one cap it stops at, and whether it may climb at all.
+
+    ⚑ `retry` IS THE CALLER'S DECLARATION THAT THE ACTION IS IDEMPOTENT. Without it one rung runs
+    and its kill is the result. `request` carries the label and the ORIGINAL parent every rung
+    re-enters admission under; its size is ignored.
+    """
+
+    start_mb: int
+    cap: int
+    retry: bool
+    request: admit.Request = TOP_LEVEL
+
+
+def rung_caps(mb: int) -> core.Caps:
+    """Return one rung's caps: the lease as the memory cap, and NO swap.
+
+    ⚑⚑ `swap="0"` IS MANDATORY, NOT A TUNING CHOICE. On a zram host a memory cap with swap allowed
+    only THROTTLES — the payload spills and completes as `MEMORY, THROTTLED` — so `killed_by_cap`
+    never fires and the climb never climbs.
+
+    Returns:
+        the caps.
+
+    """
+    return core.Caps(mem=f"{mb}M", swap="0")
+
+
+def climb(
+    store: admit.Store,
+    cmd: Sequence[str],
+    plan: Plan,
+    waiting: admit.Waiting = admit.WAIT,
+    host: admit.Host = admit.HOST,
+) -> list[Result]:
+    """Run `cmd` under a lease of `plan.start_mb`, climbing while the cap kills it and retry allows.
+
+    ⚑⚑ EVERY RUNG RE-ENTERS ADMISSION UNDER THE ORIGINAL PARENT. The lease is released before the
+    next is taken, and the next names `plan.request.parent` — never the lease just released, or the
+    retry would be "a child of a corpse" that cascade-gc removes.
+
+    Returns:
+        every rung's result, in order; the last is the outcome.
+
+    """
+    results: list[Result] = []
+    mb = plan.start_mb
+    while True:
+        rung = admit.Request(mb, plan.request.label, plan.request.parent)
+        with admit.admit(store, rung, waiting, host):
+            result = core.run_once(cmd, rung_caps(mb))
+        results.append(result)
+        if not plan.retry or not killed_by_cap(result):
+            return results
+        nxt = next_rung(mb, plan.cap)
+        if nxt is None:
+            return results
+        mb = nxt

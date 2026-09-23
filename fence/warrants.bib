@@ -835,3 +835,49 @@
             breach has an empty `bound_by` and must not climb.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_only_a_memory_kill_triggers_a_climb},
 }
+
+@misc{fence-autosize-climb-doubles-until-the-payload-fits,
+  section = {autosize},
+  title  = {A ~300MB payload from 64 climbs 64→128→256→384 and completes at 384},
+  claim  = {A ~300MB payload from 64 climbs 64→128→256→384 and completes at 384.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_a_climb_doubles_until_the_payload_fits},
+}
+
+@misc{fence-autosize-without-retry-one-rung-runs-and-its-kill-is-the-result,
+  section = {autosize},
+  title  = {Retry off: one rung, killed by the cap, and nothing more},
+  claim  = {Retry off: one rung, killed by the cap, and nothing more.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_without_retry_one_rung_runs_and_its_kill_is_the_result},
+}
+
+@misc{fence-autosize-payload-bigger-than-the-cap-stops-at-the-cap-killed,
+  section = {autosize},
+  title  = {A 600MB payload under a 384 cap climbs to 384, is killed there, and stops — bounded},
+  claim  = {A 600MB payload under a 384 cap climbs to 384, is killed there, and stops — bounded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_a_payload_bigger_than_the_cap_stops_at_the_cap_killed},
+}
+
+@misc{fence-autosize-self-inflicted-sigkill-does-not-climb,
+  section = {autosize},
+  title  = {A payload that `kill -9`s itself exits 137 with no cap breach, and the climb stops},
+  claim  = {A payload that `kill -9`s itself exits 137 with no cap breach, and the climb stops. THE
+            ARM THE ORIGIN'S EXIT-CODE TRIGGER FAILS; the control is the climbing arm
+            above.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_a_self_inflicted_sigkill_does_not_climb},
+}
+
+@misc{fence-autosize-nested-climb-re-admits-under-the-outer-lease,
+  section = {autosize},
+  title  = {Inside an outer lease, every rung of an inner climb names the OUTER lease as its parent},
+  claim  = {Inside an outer lease, every rung of an inner climb names the OUTER lease as its parent.
+            NEVER THE LEASE IT JUST RELEASED — that retry would be a child of a corpse,
+            and cascade-gc would remove it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_a_nested_climb_re_admits_under_the_outer_lease},
+}
+
+@misc{fence-autosize-success-records-a-peak-the-next-size-is-taken-from,
+  section = {autosize},
+  title  = {After a climb succeeds, its recorded peak sizes the next lease — history converges},
+  claim  = {After a climb succeeds, its recorded peak sizes the next lease — history converges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_autosize.py -k test_a_success_records_a_peak_the_next_size_is_taken_from},
+}
