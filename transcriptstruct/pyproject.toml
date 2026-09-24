@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑⚑⚑ THE OLD TOOL WAS BLIND TO THREE OF THE SEVEN SHAPES THAT HIDE CONTENT. substrate's
+# `scratch/transcriptstruct.py` decoded 0 blocks from 15,113 attachment records, so a directive
+# typed mid-turn was invisible to every query it ran (`.claude/swarm/transcriptstruct-study.md`).
+# This distribution replaces it stage by stage; stage 1 is `records`: every line yields a record.
+name = "mikemol-transcriptstruct"
+version = "0.1.0"
+description = "Claude Code transcripts read losslessly: one tagged record per JSONL line, attachments decoded, unknown shapes and torn lines reported rather than dropped."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["transcript", "jsonl", "claude-code", "provenance", "census"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+
+# ⚑ NO RUNTIME DEPENDENCIES. The reader parses JSON with the standard library; anything it
+# imported would become a dependency of every repo that mines a transcript.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml): mypy and
+# pytest are staged by the bazel mypy action, and `.githooks/pre-commit` refuses without ruff.
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py` — PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.transcriptstruct" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+# ⚑ NO MARKERS. Every fixture is synthetic and built inline; nothing needs a host or a skip.
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+# A TOML literal string: in a basic string `\.` is an invalid escape.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
+# nobody chose for it; each line below is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+"tests/test_records.py" = ["assert"]

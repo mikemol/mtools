@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.transcriptstruct: a transcript reader for which nothing silently vanishes"
+subtitle = "The tool it replaces decoded 0 of 15,113 attachment records, so a directive typed mid-turn existed in no output it gave. Each stage here is written with the witness that would have caught that, starting with one tagged record per line."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "TRANSCRIPTSTRUCT.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

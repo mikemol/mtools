@@ -1,0 +1,109 @@
+% warrants.bib — one claim PER TEST CASE in the transcriptstruct suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: transcriptstruct-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+
+@misc{transcriptstruct-records-shape1-a-queued-command-with-null-message-is-an-attachment-record,
+  section = {records},
+  title  = {Shape 1: an attachment with `message: null` decodes, and its prompt text is kept},
+  claim  = {Shape 1: an attachment with `message: null` decodes, and its prompt text is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_shape1_a_queued_command_with_null_message_is_an_attachment_record},
+}
+
+@misc{transcriptstruct-records-shape2-origin-is-read-where-it-is-nested,
+  section = {records},
+  title  = {Shape 2: `origin.kind` is read from inside `attachment`, where the harness puts it},
+  claim  = {Shape 2: `origin.kind` is read from inside `attachment`, where the harness puts it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_shape2_origin_is_read_where_it_is_nested},
+}
+
+@misc{transcriptstruct-records-shape2-a-top-level-origin-is-not-mistaken-for-the-nested-one,
+  section = {records},
+  title  = {Shape 2 contrast: a top-level `origin` is not the provenance; the nested absence stands},
+  claim  = {Shape 2 contrast: a top-level `origin` is not the provenance; the nested absence stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_shape2_a_top_level_origin_is_not_mistaken_for_the_nested_one},
+}
+
+@misc{transcriptstruct-records-shape3-a-list-prompt-decodes-to-its-blocks,
+  section = {records},
+  title  = {Shape 3: a LIST prompt is kept as its blocks, so the text is content, not a dict repr},
+  claim  = {Shape 3: a LIST prompt is kept as its blocks, so the text is content, not a dict repr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_shape3_a_list_prompt_decodes_to_its_blocks},
+}
+
+@misc{transcriptstruct-records-attachment-without-a-prompt-decodes-with-prompt-none,
+  section = {records},
+  title  = {An attachment of another kind, with no prompt, still decodes rather than vanishing},
+  claim  = {An attachment of another kind, with no prompt, still decodes rather than vanishing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_an_attachment_without_a_prompt_decodes_with_prompt_none},
+}
+
+@misc{transcriptstruct-records-user-record-keeps-tool-result-blocks-as-content,
+  section = {records},
+  title  = {Shape 4: tool output wearing the user role is a UserRecord whose blocks are kept whole},
+  claim  = {Shape 4: tool output wearing the user role is a UserRecord whose blocks are kept whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_a_user_record_keeps_tool_result_blocks_as_content},
+}
+
+@misc{transcriptstruct-records-compact-summary-is-flagged,
+  section = {records},
+  title  = {Shape 6: `isCompactSummary` is carried on the record, so stage 4 can label it testimony},
+  claim  = {Shape 6: `isCompactSummary` is carried on the record, so stage 4 can label it testimony.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_a_compact_summary_is_flagged},
+}
+
+@misc{transcriptstruct-records-assistant-record-keeps-tool-use-interiors,
+  section = {records},
+  title  = {Shape 7: `tool_use` inputs stay in the assistant content, whole and untruncated},
+  claim  = {Shape 7: `tool_use` inputs stay in the assistant content, whole and untruncated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_an_assistant_record_keeps_tool_use_interiors},
+}
+
+@misc{transcriptstruct-records-unknown-type-yields-an-unknown-record,
+  section = {records},
+  title  = {An undecoded `type` becomes an explicit UnknownRecord carrying the type and the envelope},
+  claim  = {An undecoded `type` becomes an explicit UnknownRecord carrying the type and the
+            envelope.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_an_unknown_type_yields_an_unknown_record},
+}
+
+@misc{transcriptstruct-records-missing-type-and-a-non-object-are-unknown,
+  section = {records},
+  title  = {A line with no `type`, and a JSON value that is not an object, are Unknown, not dropped},
+  claim  = {A line with no `type`, and a JSON value that is not an object, are Unknown, not dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_a_missing_type_and_a_non_object_are_unknown},
+}
+
+@misc{transcriptstruct-records-known-type-with-a-wrong-shape-is-unknown-with-the-reason,
+  section = {records},
+  title  = {A user record whose `message` is null is Unknown with a reason, not a silent empty user},
+  claim  = {A user record whose `message` is null is Unknown with a reason, not a silent empty user.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_a_known_type_with_a_wrong_shape_is_unknown_with_the_reason},
+}
+
+@misc{transcriptstruct-records-malformed-json-is-reported-with-its-line-number,
+  section = {records},
+  title  = {A torn line is a MalformedLine at its 1-based number; the lines around it still decode},
+  claim  = {A torn line is a MalformedLine at its 1-based number; the lines around it still decode.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_malformed_json_is_reported_with_its_line_number},
+}
+
+@misc{transcriptstruct-records-blank-line-is-malformed-not-skipped,
+  section = {records},
+  title  = {A blank line is counted as malformed, so output count equals input line count},
+  claim  = {A blank line is counted as malformed, so output count equals input line count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_a_blank_line_is_malformed_not_skipped},
+}
+
+@misc{transcriptstruct-records-every-line-of-a-file-yields-exactly-one-record,
+  section = {records},
+  title  = {Positive control: a mixed file of N lines reads back as N records, in order, numbered},
+  claim  = {Positive control: a mixed file of N lines reads back as N records, in order, numbered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_every_line_of_a_file_yields_exactly_one_record},
+}
