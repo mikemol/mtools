@@ -100,7 +100,7 @@
 
 @misc{hooks-checkers-both-are-registered,
   section = {checkers},
-  claim   = {The checker roster is EXACTLY ruff then mypy, asserted so a checker cannot silently drop out of the gate. A hook that ran one of two would report clean on a file the missing one refuses --- the same armed-and-checking-nothing shape the arming switch guards against, one layer in},
+  claim   = {The checker roster is EXACTLY ruff, then ruff-format, then mypy, asserted so a checker cannot silently drop out of the gate. A hook that ran fewer would report clean on a file a missing one refuses --- the same armed-and-checking-nothing shape the arming switch guards against, one layer in},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_checkers.py -k test_both_checkers_are_registered}
 }
 
@@ -4167,4 +4167,27 @@
   title  = {index.lock refuses the push, and the local hook is never reached},
   claim  = {index.lock refuses the push, and the local hook is never reached.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_an_operation_in_flight_refuses_before_the_local_hook_runs},
+}
+
+@misc{hooks-pycheck-format-dirty-write-is-refused-though-ruff-check-passes,
+  section = {pycheck},
+  title  = {Content that `ruff check` and mypy pass but `ruff format --check` fails is refused},
+  claim  = {Content that `ruff check` and mypy pass but `ruff format --check` fails is refused.
+            Measured by linux-sources (its parity run against this hook, 2026-09-24):
+            without the format bar the edit gate ADMITS a file the commit gate then
+            refuses, the gap a per-edit gate exists to close. The control is the clean
+            write above, which is already formatted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_format_dirty_write_is_refused_though_ruff_check_passes},
+}
+
+@misc{hooks-pycheck-writing-a-missing-package-marker-is-admitted,
+  section = {pycheck},
+  title  = {A new `__init__.py` in a markerless directory is admitted; a module beside it is not},
+  claim  = {A new `__init__.py` in a markerless directory is admitted; a module beside it is not.
+            Measured by linux-sources: the write that SUPPLIES the marker was refused
+            with INP001 ("add an __init__.py"), because pre-write the marker is not on
+            disk yet. Only a file named exactly `__init__.py` is exempt from INP001, so
+            a plain module in the same directory is still refused, the arm that keeps
+            the exemption from widening.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_writing_a_missing_package_marker_is_admitted},
 }

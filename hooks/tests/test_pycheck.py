@@ -31,8 +31,8 @@ _USE_ONLY = '"""A probe."""\n\nSEP: str = os.sep\n'
 _OVER = pycheck_message.PAYABLE_IN_ONE_EDIT + 1
 
 
-def _project(tmp_path: Path, *, venv: bool = True) -> Path:
-    """Write a fixture project (ruff F-rules, strict mypy, one excluded dir).
+def _project(tmp_path: Path, *, venv: bool = True, select: str = '["F"]') -> Path:
+    """Write a fixture project (ruff rules `select`, strict mypy, one excluded dir).
 
     Returns:
         the project root.
@@ -40,7 +40,7 @@ def _project(tmp_path: Path, *, venv: bool = True) -> Path:
     """
     (tmp_path / "pyproject.toml").write_text(
         '[project]\nname = "fx"\n\n[tool.ruff]\nextend-exclude = ["gen"]\n\n'
-        '[tool.ruff.lint]\nselect = ["F"]\n\n[tool.mypy]\nstrict = true\n',
+        f"[tool.ruff.lint]\nselect = {select}\n\n[tool.mypy]\nstrict = true\n",
         encoding="utf-8",
     )
     if venv:
@@ -219,6 +219,39 @@ def test_extend_exclude_reaches_an_in_flight_edit(
     assert not capsys.readouterr().out
     _main(monkeypatch, _write(root / "src" / "a.py", _IMPORT_ONLY), own="1")
     assert "F401" in capsys.readouterr().out
+
+
+@_needs_checkers
+def test_a_format_dirty_write_is_refused_though_ruff_check_passes(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """Content that `ruff check` and mypy pass but `ruff format --check` fails is refused.
+
+    ⚑⚑ Measured by linux-sources (its parity run against this hook, 2026-09-24): without the
+    format bar the edit gate ADMITS a file the commit gate then refuses, the gap a per-edit gate
+    exists to close. The control is the clean write above, which is already formatted.
+    """
+    root = _project(tmp_path)
+    _main(monkeypatch, _write(root / "src" / "a.py", '"""A probe."""\n\nX: int=1\n'), own="1")
+    assert "format" in capsys.readouterr().out
+
+
+@_needs_checkers
+def test_writing_a_missing_package_marker_is_admitted(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """A new `__init__.py` in a markerless directory is admitted; a module beside it is not.
+
+    ⚑⚑ Measured by linux-sources: the write that SUPPLIES the marker was refused with INP001
+    ("add an __init__.py"), because pre-write the marker is not on disk yet. Only a file named
+    exactly `__init__.py` is exempt from INP001, so a plain module in the same directory is still
+    refused, the arm that keeps the exemption from widening.
+    """
+    root = _project(tmp_path, select='["INP"]')
+    _main(monkeypatch, _write(root / "zz_nopkg" / "__init__.py", '"""A package."""\n'), own="1")
+    assert not capsys.readouterr().out
+    _main(monkeypatch, _write(root / "zz_nopkg" / "mod.py", '"""A module."""\n'), own="1")
+    assert "INP001" in capsys.readouterr().out
 
 
 def test_a_malformed_payload_denies_nothing(

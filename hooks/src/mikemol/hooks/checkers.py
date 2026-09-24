@@ -35,6 +35,12 @@ def checker_argv(tmp: Path, path: str, venv_py: Path,
 
     """
     real = path or str(tmp)
+    # ⚑⚑ WRITING A PACKAGE MARKER MUST NOT BE REFUSED FOR THE MARKER BEING MISSING. INP001 reads the
+    # FILESYSTEM, and pre-write the `__init__.py` being written is not on disk yet, so the one write
+    # that supplies the marker was refused with "add an __init__.py" (measured by linux-sources'
+    # parity run, 2026-09-24). Exempt from INP001: exactly a file named `__init__.py`, on ruff check
+    # only. A plain module in the same markerless directory is still refused.
+    marker = ["--extend-ignore", "INP001"] if real.rsplit("/", 1)[-1] == "__init__.py" else []
     return (
         # ⚑⚑ `--stdin-filename` IS WHAT MAKES CONFIGURATION REACH AN IN-FLIGHT EDIT. ruff
         # evaluates stdin content AS IF it were the named path, so every path-keyed setting in
@@ -52,8 +58,15 @@ def checker_argv(tmp: Path, path: str, venv_py: Path,
         # flag and admitted with it, while a non-excluded path stayed refused. substrate carried
         # the same gap (its letter; summit's `ask-force-exclude-reaches-a-staged-edit`).
         ("ruff", [str(venv_py), "-m", "ruff", "check",
-                  "--config", str(pyproject), "--no-cache", "--force-exclude",
+                  "--config", str(pyproject), "--no-cache", "--force-exclude", *marker,
                   "--stdin-filename", real, "-"], True),
+        # ⚑⚑ THE FORMAT BAR, BESIDE THE LINT BAR. Measured by linux-sources: a file `ruff check`
+        # and mypy pass but `ruff format --check` fails was ADMITTED here and refused at commit,
+        # so the edit gate let through what the commit gate stops. Same stdin, same real path,
+        # same config and exclusions; `--diff` shows the reader what formatting wants.
+        ("ruff-format", [str(venv_py), "-m", "ruff", "format", "--check", "--diff",
+                         "--config", str(pyproject), "--no-cache", "--force-exclude",
+                         "--stdin-filename", real, "-"], True),
         # ⚑⚑ `--pretty` RENDERS THE SOURCE LINE AND A CARET, AND ITS ABSENCE COST AN AFTERNOON.
         # Without it mypy emits a bare line number naming a line in a tempfile that is deleted
         # microseconds later and never existed on disk — a citation with NO READABLE REFERENT.

@@ -24,7 +24,7 @@ _REAL = "/home/someone/project/src/thing.py"
 _VENV = Path("/home/someone/project/.venv/bin/python3")
 _CFG = Path("/home/someone/project/pyproject.toml")
 
-_CHECKER_COUNT = 2
+_CHECKER_COUNT = 3
 
 
 def _argv_for(name: str, path: str = _REAL) -> list[str]:
@@ -49,14 +49,14 @@ def _argv_for(name: str, path: str = _REAL) -> list[str]:
 
 
 def test_both_checkers_are_registered() -> None:
-    """Check the roster is exactly ruff then mypy.
+    """Check the roster is exactly ruff, then ruff-format, then mypy.
 
     ⚑ ASSERTED SO A CHECKER CANNOT SILENTLY DROP OUT OF THE GATE. A hook that ran one of two
     would report clean on a file the missing one refuses — the same armed-and-checking-nothing
     shape the arming switch guards against, one layer in.
     """
     got = [name for name, _argv, _stdin in checkers.checker_argv(_TMP, _REAL, _VENV, _CFG)]
-    assert got == ["ruff", "mypy"]
+    assert got == ["ruff", "ruff-format", "mypy"]
     assert len(got) == _CHECKER_COUNT
 
 
@@ -88,7 +88,7 @@ def test_ruff_reads_stdin_and_mypy_does_not() -> None:
     backwards hands ruff an unread path, or mypy content it never receives.
     """
     got = {name: stdin for name, _argv, stdin in checkers.checker_argv(_TMP, _REAL, _VENV, _CFG)}
-    assert got == {"ruff": True, "mypy": False}
+    assert got == {"ruff": True, "ruff-format": True, "mypy": False}
 
 
 def test_mypy_is_given_the_tempfile_as_its_subject() -> None:
