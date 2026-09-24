@@ -3,9 +3,8 @@
 
 # ⚑ MIRRORS //pathsforward:BUILD.bazel TARGET FOR TARGET, which mirrors //ratchet. The rationale
 # for each shape lives there; this file says only where it differs.
-# ⚑⚑ `@transcriptstruct_dev` DOES NOT EXIST UNTIL MODULE.bazel DECLARES IT — see NOTES.md, "root
-# wiring". Until then this package does not load, which is the honest state of a proposal.
-# ⚑ NO py_binary AND NO console_scripts YET: the CLI is stage 6. Stage 1 ships a library only.
+# `@transcriptstruct_dev` is declared in MODULE.bazel (43b2615).
+# ⚑ NO py_binary AND NO console_scripts YET: the CLI is stage 6. Until then this is a library.
 load("@transcriptstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")

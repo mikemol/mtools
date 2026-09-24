@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the transcriptstruct warrant set, one per test module, in document order.
 # key <TAB> heading title
 records	The Records: One Tagged Record per Line, Attachments Decoded, Nothing Dropped
+walk	The Walk: Every String in a Record, at the Path That Reaches It

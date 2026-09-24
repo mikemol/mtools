@@ -107,3 +107,48 @@
   claim  = {Positive control: a mixed file of N lines reads back as N records, in order, numbered.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_every_line_of_a_file_yields_exactly_one_record},
 }
+
+@misc{transcriptstruct-walk-string-nested-in-an-unknown-field-is-yielded-with-its-path,
+  section = {walk},
+  title  = {A string under a field no decoder knows is still found, at the path that reaches it},
+  claim  = {A string under a field no decoder knows is still found, at the path that reaches it.
+            This is the backstop's whole job: the old reader was blind to three shapes
+            because it read only the fields it knew. The walk knows none, so it cannot
+            be blind to one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_a_string_nested_in_an_unknown_field_is_yielded_with_its_path},
+}
+
+@misc{transcriptstruct-walk-non-string-scalars-yield-nothing,
+  section = {walk},
+  title  = {Numbers, booleans and null are not strings: a record of only scalars yields no leaves},
+  claim  = {Numbers, booleans and null are not strings: a record of only scalars yields no leaves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_non_string_scalars_yield_nothing},
+}
+
+@misc{transcriptstruct-walk-leaves-come-in-document-order,
+  section = {walk},
+  title  = {Keys are walked in file order and list items in index order, so output order is stable},
+  claim  = {Keys are walked in file order and list items in index order, so output order is stable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_leaves_come_in_document_order},
+}
+
+@misc{transcriptstruct-walk-walk-reaches-an-attachment-prompt-through-record-raw,
+  section = {walk},
+  title  = {A decoded attachment's `raw` walks to its prompt: stage 1 and stage 2 compose},
+  claim  = {A decoded attachment's `raw` walks to its prompt: stage 1 and stage 2 compose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_the_walk_reaches_an_attachment_prompt_through_record_raw},
+}
+
+@misc{transcriptstruct-walk-render-spells-a-path-as-it-is-grepped,
+  section = {walk},
+  title  = {`("a", "b", 2, "c")` renders as `a.b[2].c`, and the root as the empty string},
+  claim  = {`("a", "b", 2, "c")` renders as `a.b[2].c`, and the root as the empty string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_render_spells_a_path_as_it_is_grepped},
+}
+
+@misc{transcriptstruct-walk-path-that-starts-with-an-index-renders-without-a-leading-dot,
+  section = {walk},
+  title  = {A top-level list's leaf renders `[0].x`, not `.[0].x` or `0.x`},
+  claim  = {A top-level list's leaf renders `[0].x`, not `.[0].x` or `0.x`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_a_path_that_starts_with_an_index_renders_without_a_leading_dot},
+}
