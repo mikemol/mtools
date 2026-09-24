@@ -152,3 +152,62 @@
   claim  = {A top-level list's leaf renders `[0].x`, not `.[0].x` or `0.x`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_a_path_that_starts_with_an_index_renders_without_a_leading_dot},
 }
+
+@misc{transcriptstruct-blocks-string-content-is-one-text-block,
+  section = {blocks},
+  title  = {A bare string `content` is one decoded text block at `message.content`},
+  claim  = {A bare string `content` is one decoded text block at `message.content`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_string_content_is_one_text_block},
+}
+
+@misc{transcriptstruct-blocks-text-and-thinking-blocks-decode-at-their-field-paths,
+  section = {blocks},
+  title  = {Typed text and thinking blocks decode to their text, at `[i].thinking` and `[i].text`},
+  claim  = {Typed text and thinking blocks decode to their text, at `[i].thinking` and `[i].text`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_text_and_thinking_blocks_decode_at_their_field_paths},
+}
+
+@misc{transcriptstruct-blocks-queued-command-prompt-decodes-as-content,
+  section = {blocks},
+  title  = {An attachment's prompt is content; the old reader, keyed on `message`, decoded nothing},
+  claim  = {An attachment's prompt is content; the old reader, keyed on `message`, decoded nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_queued_command_prompt_decodes_as_content},
+}
+
+@misc{transcriptstruct-blocks-long-tool-use-input-is-not-truncated,
+  section = {blocks},
+  title  = {A tool_use input past the old 20,000-character cap decodes whole},
+  claim  = {A tool_use input past the old 20,000-character cap decodes whole. The old reader cut it
+            at 20,000 with no mark, so a finding past that point was invisible and its
+            absence looked like a fact about the transcript.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_long_tool_use_input_is_not_truncated},
+}
+
+@misc{transcriptstruct-blocks-unknown-block-is-kept-whole-and-marked-undecoded,
+  section = {blocks},
+  title  = {A block type nobody decodes is kept whole with `decoded=False`, not cut to 4,000},
+  claim  = {A block type nobody decodes is kept whole with `decoded=False`, not cut to 4,000.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_an_unknown_block_is_kept_whole_and_marked_undecoded},
+}
+
+@misc{transcriptstruct-blocks-tool-result-text-sub-blocks-decode-and-others-are-undecoded,
+  section = {blocks},
+  title  = {A tool_result list decodes its text parts; an image part is undecoded},
+  claim  = {A tool_result list decodes its text parts; an image part is undecoded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_tool_result_text_sub_blocks_decode_and_others_are_undecoded},
+}
+
+@misc{transcriptstruct-blocks-every-decoded-path-is-a-string-path-the-walk-finds,
+  section = {blocks},
+  title  = {Each decoded block's path is one of the walk's leaf paths, so a later stage can subtract},
+  claim  = {Each decoded block's path is one of the walk's leaf paths, so a later stage can
+            subtract.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_every_decoded_path_is_a_string_path_the_walk_finds},
+}
+
+@misc{transcriptstruct-blocks-unknown-record-has-no-blocks,
+  section = {blocks},
+  title  = {A record this package does not decode yields no blocks; the walk still sees its strings},
+  claim  = {A record this package does not decode yields no blocks; the walk still sees its strings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_an_unknown_record_has_no_blocks},
+}
