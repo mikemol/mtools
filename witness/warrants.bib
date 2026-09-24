@@ -208,3 +208,75 @@
   claim  = {The render says which members still hold several unnamed facts.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_render_marks_an_unsplit_member},
 }
+
+@misc{witness-raw-bib-every-entry-is-read,
+  section = {raw_bib},
+  title  = {Both records parse},
+  claim  = {Both records parse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_every_entry_is_read},
+}
+
+@misc{witness-raw-bib-field-the-engine-drops-is-still-visible,
+  section = {raw_bib},
+  title  = {The reader keeps a field the engine's whitelist would discard},
+  claim  = {The reader keeps a field the engine's whitelist would discard. The whole point: a reader
+            filtered to the engine's vocabulary would answer "no entries carry a dropped
+            field" by construction, a green verdict about its own blindness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_a_field_the_engine_drops_is_still_visible},
+}
+
+@misc{witness-raw-bib-dropped-edge-is-reported-against-the-accepted-set,
+  section = {raw_bib},
+  title  = {The join names the entries whose edges the engine will not render},
+  claim  = {The join names the entries whose edges the engine will not render.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_a_dropped_edge_is_reported_against_the_accepted_set},
+}
+
+@misc{witness-raw-bib-widening-the-accepted-set-empties-the-join,
+  section = {raw_bib},
+  title  = {An accepted edge is not reported: the join's positive control},
+  claim  = {An accepted edge is not reported: the join's positive control. Without it, a join
+            reporting every entry would pass the case above.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_widening_the_accepted_set_empties_the_join},
+}
+
+@misc{witness-raw-bib-redeclared-key-is-a-reported-collision,
+  section = {raw_bib},
+  title  = {Composing two bibs reports the duplicate, and the later declaration wins},
+  claim  = {Composing two bibs reports the duplicate, and the later declaration wins. The measured
+            defect: a plain merge loses the earlier declaration with no signal, which is
+            how 84 records reported as 77.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_a_redeclared_key_is_a_reported_collision},
+}
+
+@misc{witness-raw-bib-collision-is-not-an-entry,
+  section = {raw_bib},
+  title  = {The collision record does not appear in the entry map},
+  claim  = {The collision record does not appear in the entry map. A first cut stored it under a
+            reserved key, a PHANTOM ENTRY inflating the very count being corrected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_the_collision_is_not_an_entry},
+}
+
+@misc{witness-raw-bib-absent-bib-says-absent,
+  section = {raw_bib},
+  title  = {A missing file raises with ABSENT named},
+  claim  = {A missing file raises with ABSENT named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_an_absent_bib_says_absent},
+}
+
+@misc{witness-raw-bib-directory-is-not-an-absence,
+  section = {raw_bib},
+  title  = {A directory raises distinctly from a missing file: one line for three facts is the defect},
+  claim  = {A directory raises distinctly from a missing file: one line for three facts is the
+            defect.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_a_directory_is_not_an_absence},
+}
+
+@misc{witness-raw-bib-mangled-bib-is-broken-not-empty,
+  section = {raw_bib},
+  title  = {Invalid UTF-8 raises rather than decoding into fiction},
+  claim  = {Invalid UTF-8 raises rather than decoding into fiction. The worst direction: replacement
+            characters parse into plausible entries that corroborate themselves, where a
+            missing row would at least move a denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_a_mangled_bib_is_broken_not_empty},
+}
