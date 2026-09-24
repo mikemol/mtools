@@ -70,3 +70,141 @@
   claim  = {A reader can tell a part from a verdict by its kind.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_a_part_and_a_verdict_carry_distinct_kinds},
 }
+
+@misc{witness-witness-family-count-is-derived-from-the-members,
+  section = {witness_family},
+  title  = {The total is the sum of member cases, not a typed constant or the member count},
+  claim  = {The total is the sum of member cases, not a typed constant or the member count. A member
+            declaring two cases contributes two, so a family returning its member COUNT
+            reads 2 here instead of 3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_count_is_derived_from_the_members},
+}
+
+@misc{witness-witness-family-adding-a-member-moves-the-count,
+  section = {witness_family},
+  title  = {The count tracks the roster: the property a hand-summed constant cannot have},
+  claim  = {The count tracks the roster: the property a hand-summed constant cannot have. The
+            measured defect: a hand-summed `_CASE_COUNT` stays put when a member is
+            added.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_adding_a_member_moves_the_count},
+}
+
+@misc{witness-witness-family-premise-naming-a-member-is-not-dangling,
+  section = {witness_family},
+  title  = {A resolvable premise edge is left alone},
+  claim  = {A resolvable premise edge is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_a_premise_naming_a_member_is_not_dangling},
+}
+
+@misc{witness-witness-family-premise-naming-nothing-is-reported,
+  section = {witness_family},
+  title  = {A premise no member supplies is NAMED: the positive control},
+  claim  = {A premise no member supplies is NAMED: the positive control. Without it, a family whose
+            control was deleted still reads as protected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_a_premise_naming_nothing_is_reported},
+}
+
+@misc{witness-witness-family-duplicate-member-name-is-refused,
+  section = {witness_family},
+  title  = {Two members sharing a name raise at construction, naming it},
+  claim  = {Two members sharing a name raise at construction, naming it. Addressability is the point
+            of a name: a duplicate makes `member()` and premises ambiguous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_a_duplicate_member_name_is_refused},
+}
+
+@misc{witness-witness-family-missing-member-lookup-names-the-roster,
+  section = {witness_family},
+  title  = {An unknown member raises and says what IS there: a typo is the common reason to arrive},
+  claim  = {An unknown member raises and says what IS there: a typo is the common reason to arrive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_a_missing_member_lookup_names_the_roster},
+}
+
+@misc{witness-witness-family-unprotected-member-is-censused-not-flagged,
+  section = {witness_family},
+  title  = {Members nothing rests on are reported; members cited as a premise are not},
+  claim  = {Members nothing rests on are reported; members cited as a premise are not. A census, not
+            a finding: most members legitimately stand alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_an_unprotected_member_is_censused_not_flagged},
+}
+
+@misc{witness-witness-family-rendered-family-surfaces-a-dangling-premise,
+  section = {witness_family},
+  title  = {The render marks a dangling premise: a defect printed as inventory reads as inventory},
+  claim  = {The render marks a dangling premise: a defect printed as inventory reads as inventory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_rendered_family_surfaces_a_dangling_premise},
+}
+
+@misc{witness-witness-family-summary-reports-its-denominator,
+  section = {witness_family},
+  title  = {An empty roster says so rather than rendering nothing},
+  claim  = {An empty roster says so rather than rendering nothing. An empty string cannot tell *no
+            families* from *nothing read*.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_summary_reports_its_denominator},
+}
+
+@misc{witness-witness-family-summary-totals-every-family,
+  section = {witness_family},
+  title  = {The roster line sums cases across families, not members},
+  claim  = {The roster line sums cases across families, not members.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_summary_totals_every_family},
+}
+
+@misc{witness-witness-family-member-roster-keeps-its-order,
+  section = {witness_family},
+  title  = {`names` preserves roster order: it is the reading order of the projected prose},
+  claim  = {`names` preserves roster order: it is the reading order of the projected prose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_member_roster_keeps_its_order},
+}
+
+@misc{witness-witness-family-split-members-count-comes-from-its-family,
+  section = {witness_family},
+  title  = {A member holding a sub-family reports the sub-family's total},
+  claim  = {A member holding a sub-family reports the sub-family's total. Splitting must not move
+            the population: a count that changed during a split is a dropped or invented
+            assertion.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_a_split_members_count_comes_from_its_family},
+}
+
+@misc{witness-witness-family-member-declaring-both-a-family-and-cases-is-refused,
+  section = {witness_family},
+  title  = {A split member cannot also hand-declare a total: two authorities on one size},
+  claim  = {A split member cannot also hand-declare a total: two authorities on one size.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_a_member_declaring_both_a_family_and_cases_is_refused},
+}
+
+@misc{witness-witness-family-leaves-flatten-to-dotted-paths,
+  section = {witness_family},
+  title  = {Nesting resolves to one flat roster a runner can address},
+  claim  = {Nesting resolves to one flat roster a runner can address.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_leaves_flatten_to_dotted_paths},
+}
+
+@misc{witness-witness-family-depth-reports-the-nesting,
+  section = {witness_family},
+  title  = {A flat family is depth 1 and a split one is 2: both arms, or a constant would pass},
+  claim  = {A flat family is depth 1 and a split one is 2: both arms, or a constant would pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_depth_reports_the_nesting},
+}
+
+@misc{witness-witness-family-unsplit-member-is-censused,
+  section = {witness_family},
+  title  = {A member asserting several facts under one name is named as the split work list},
+  claim  = {A member asserting several facts under one name is named as the split work list.
+            Measured in substrate: 92 of 285 arms were in that state.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_an_unsplit_member_is_censused},
+}
+
+@misc{witness-witness-family-split-member-is-not-censused-as-unsplit,
+  section = {witness_family},
+  title  = {Splitting a member removes it from the work list: the positive control},
+  claim  = {Splitting a member removes it from the work list: the positive control. Without it, a
+            census naming every member would satisfy the case above.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_a_split_member_is_not_censused_as_unsplit},
+}
+
+@misc{witness-witness-family-render-marks-an-unsplit-member,
+  section = {witness_family},
+  title  = {The render says which members still hold several unnamed facts},
+  claim  = {The render says which members still hold several unnamed facts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_family.py -k test_the_render_marks_an_unsplit_member},
+}

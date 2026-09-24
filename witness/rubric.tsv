@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the witness warrant set, one per test module, in document order.
 # key <TAB> heading title
 witness_row	The Witness Row: Parts as They Are Found, the Verdict Last, and No Size on a Verdict
+witness_family	The Witness Family: Named Claims With Prose, and a Count Derived, Never Typed
