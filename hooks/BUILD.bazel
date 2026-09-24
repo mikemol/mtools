@@ -350,6 +350,7 @@ venv_from_hub(
         "mikemol-hook-shellcheck": "mikemol.hooks.shellcheck:main",
         "mikemol-hook-pycheck": "mikemol.hooks.pycheck:main",
         "mikemol-shellcheck": "mikemol.hooks.shellcheck_cli:main",
+        "mikemol-githook-pre-push": "mikemol.hooks.githook_pre_push:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",

@@ -4131,3 +4131,40 @@
   claim  = {Control: one command on one line, with no operator, is admitted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_chaining.py -k test_a_single_line_command_is_admitted},
 }
+
+@misc{hooks-githook-pre-push-without-a-local-hook-a-clean-repo-pushes,
+  section = {githook-pre-push},
+  title  = {With no pre-push.local, the shared checks alone decide, and a clean repo may push},
+  claim  = {With no pre-push.local, the shared checks alone decide, and a clean repo may push.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_without_a_local_hook_a_clean_repo_pushes},
+}
+
+@misc{hooks-githook-pre-push-local-hook-gets-the-same-stdin-and-arguments,
+  section = {githook-pre-push},
+  title  = {The local hook receives git's ref list byte for byte, and git's arguments},
+  claim  = {The local hook receives git's ref list byte for byte, and git's arguments. Git sends the
+            ref list once; a shared check that consumed it would hand the local hook an
+            empty list, and a hook looping over refs would then check nothing and pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_the_local_hook_gets_the_same_stdin_and_arguments},
+}
+
+@misc{hooks-githook-pre-push-failing-local-hook-refuses-the-push,
+  section = {githook-pre-push},
+  title  = {A pre-push.local that exits non-zero refuses the push},
+  claim  = {A pre-push.local that exits non-zero refuses the push.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_a_failing_local_hook_refuses_the_push},
+}
+
+@misc{hooks-githook-pre-push-non-executable-local-hook-is-ignored,
+  section = {githook-pre-push},
+  title  = {A pre-push.local without the executable bit is not run, even one that would fail},
+  claim  = {A pre-push.local without the executable bit is not run, even one that would fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_a_non_executable_local_hook_is_ignored},
+}
+
+@misc{hooks-githook-pre-push-operation-in-flight-refuses-before-the-local-hook-runs,
+  section = {githook-pre-push},
+  title  = {index.lock refuses the push, and the local hook is never reached},
+  claim  = {index.lock refuses the push, and the local hook is never reached.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_an_operation_in_flight_refuses_before_the_local_hook_runs},
+}

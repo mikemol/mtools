@@ -72,6 +72,9 @@ mikemol-hook-pycheck = "mikemol.hooks.pycheck:main"
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that
 # requires every hook script to be invoked keys on that prefix.
 mikemol-shellcheck = "mikemol.hooks.shellcheck_cli:main"
+# ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
+# `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
+mikemol-githook-pre-push = "mikemol.hooks.githook_pre_push:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -290,6 +293,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # preview rules are part of the config every caller loads and there is no longer a flag for two
 # callers to differ on. The census and the gate cannot disagree about the rule set any more.
 "tests/test_adoption.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ THE SHARED GIT PRE-PUSH: asking git, and running a repo's own pre-push.local, ARE its
+# responsibility. MEASURED: git is resolved by `shutil.which` (absent → refuse); the local hook is
+# a path this module builds as `<git toplevel>/.githooks/pre-push.local` and runs only when
+# executable; the arguments are git's own pre-push argv. Never through a shell.
+"src/mikemol/hooks/githook_pre_push.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
+"tests/test_githook_pre_push.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑ THE THIRD NAMED FILE, AND THE SAME REASON AS THE SECOND. `test_no_verify.py`'s subject is
 # what the INSTALLED console script decides — a hook can have a correct predicate and a broken
