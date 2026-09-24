@@ -147,4 +147,7 @@ sh_test(
     ],
     data = ["pyproject.toml", "//hooks:mypy_runner"] + _ROOT_PY,
     size = "small",
+    # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
+    # things"). See any distribution's mypy target for the measurement.
+    timeout = "long",
 )

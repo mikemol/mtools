@@ -123,6 +123,11 @@ sh_test(
         ":mypy_runner",
     ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
     size = "small",
+    # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
+    # things"). MEASURED under host contention: a cold mypy took wall=295s against user=2.9s, so
+    # the 60s default of `small` timed out on waiting, not on work. `size` stays small (it is a
+    # resource claim); only the wall-clock allowance grows.
+    timeout = "long",
 )
 
 venv_from_hub(
