@@ -1,0 +1,73 @@
+% warrants.bib — one claim PER TEST CASE in the corpus suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: corpus-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+
+@misc{corpus-corpus-root-has-no-default-anywhere,
+  section = {corpus},
+  title  = {No walker defaults its root, and the module holds no `ROOT` to default to},
+  claim  = {No walker defaults its root, and the module holds no `ROOT` to default to. substrate's
+            `ROOT = Path(__file__).absolute().parent.parent` is its repo root in place
+            and the venv's lib directory once installed, so its 173 importers would have
+            censused site-packages with no error. Here, a walker called without a root
+            refuses at the call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_the_root_has_no_default_anywhere},
+}
+
+@misc{corpus-corpus-unresolvable-root-raises-naming-the-request,
+  section = {corpus},
+  title  = {A path neither the current directory nor the root has raises, naming what was asked},
+  claim  = {A path neither the current directory nor the root has raises, naming what was asked.
+            Silently returning the default corpus is the bug: a peer nearly published
+            substrate's census as their own repo's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_an_unresolvable_root_raises_naming_the_request},
+}
+
+@misc{corpus-corpus-exclusion-matches-whole-components-never-substrings,
+  section = {corpus},
+  title  = {`rebuild/` and `buildtools/` stay in; `build/`, caches, venvs and bazel links are out},
+  claim  = {`rebuild/` and `buildtools/` stay in; `build/`, caches, venvs and bazel links are out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_exclusion_matches_whole_components_never_substrings},
+}
+
+@misc{corpus-corpus-root-discovery-uses-the-walk-vocabulary-and-the-caller-skip,
+  section = {corpus},
+  title  = {Generated, hidden and caller-skipped top-level trees are not discovered as roots},
+  claim  = {Generated, hidden and caller-skipped top-level trees are not discovered as roots. A
+            generated tree that is a TOP-LEVEL entry becomes its own root, so the
+            component check below it never sees its name. And `agda` is substrate's
+            policy, passed as `skip`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_root_discovery_uses_the_walk_vocabulary_and_the_caller_skip},
+}
+
+@misc{corpus-corpus-walk-of-a-real-tree-is-not-empty,
+  section = {corpus},
+  title  = {Walking a tree with sources returns at least one file: the positive control},
+  claim  = {Walking a tree with sources returns at least one file: the positive control. Every
+            exclusion returns FEWER files, and an over-eager one returns zero, which
+            reads as a clean tree. The empty list passes sortedness vacuously, so this
+            arm keeps the next two honest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_the_walk_of_a_real_tree_is_not_empty},
+}
+
+@misc{corpus-corpus-population-is-returned-sorted,
+  section = {corpus},
+  title  = {`py_files` hands its population back in sorted order, so a caller can cite it},
+  claim  = {`py_files` hands its population back in sorted order, so a caller can cite it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_the_population_is_returned_sorted},
+}
+
+@misc{corpus-corpus-walk-finds-real-sources-and-omits-generated-copies,
+  section = {corpus},
+  title  = {A named source file is in the population; generated and skipped copies are not},
+  claim  = {A named source file is in the population; generated and skipped copies are not. A named
+            member is what separates a walk from a list: non-emptiness says the walk
+            returned something, membership says it returned the right something.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_the_walk_finds_real_sources_and_omits_generated_copies},
+}

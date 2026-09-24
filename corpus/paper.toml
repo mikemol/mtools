@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.corpus: which Python files are a tree's corpus, asked of the tree the caller names"
+subtitle = "Moved from substrate, where its root was the module's own location: installed, that location is site-packages, and 173 importers would have censused the venv without an error. Here the root is always the caller's to give."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "CORPUS.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
