@@ -29,6 +29,7 @@ from mikemol.transcriptstruct.query import (
     grep_blocks,
     grep_prose,
     prose,
+    raw,
     stats,
 )
 from mikemol.transcriptstruct.records import read_path
@@ -41,6 +42,16 @@ if TYPE_CHECKING:
     from mikemol.transcriptstruct.query import Hit, Result, Stats
 
 _DEFAULT_SPEAKERS = ("human", "peer", "assistant")
+
+
+def _raw(path: Path, types: Sequence[str], window: Window) -> Result:
+    """Read whole records of the named envelope types.
+
+    Returns:
+        the hits and their denominators.
+
+    """
+    return raw(read_path(path), types, window=window)
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -61,6 +72,7 @@ def _parser() -> argparse.ArgumentParser:
     mode.add_argument("--human", metavar="REGEX", help="search what the operator said")
     mode.add_argument("--prose", action="store_true", help="list utterances, whole, in order")
     mode.add_argument("--extract", metavar="LINE", type=int, nargs="+", help="lines' blocks")
+    mode.add_argument("--raw", metavar="TYPE", nargs="+", help="whole records of these types")
     parser.add_argument("--kinds", nargs="+", help="--grep: only these block kinds")
     parser.add_argument("--speakers", nargs="+", help="--prose: only these speaker kinds")
     parser.add_argument(
@@ -191,7 +203,10 @@ def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     window = Window(_number(opts, "since"), _number(opts, "until"))
     scheduled = _texts(opts, "scheduled") or ()
     grep, human, lines = _text(opts, "grep"), _text(opts, "human"), _texts(opts, "extract")
-    if grep is not None:
+    types = _texts(opts, "raw")
+    if types is not None:
+        _emit(_raw(path, types, window), sink)
+    elif grep is not None:
         kinds = _texts(opts, "kinds")
         _emit(grep_blocks(read_path(path), grep, block_kinds=kinds, window=window), sink)
     elif human is not None:

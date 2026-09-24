@@ -396,3 +396,19 @@
             The breakdown answers it from the tool, with no ad hoc pass over the file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_stats_break_the_unknown_count_down_by_record_type},
 }
+
+@misc{transcriptstruct-query-raw-lists-whole-records-of-the-named-types,
+  section = {query},
+  title  = {`raw` returns every record of the named types, whole, and keeps the whole denominator},
+  claim  = {`raw` returns every record of the named types, whole, and keeps the whole denominator.
+            `unknown_types` says how many records of a type exist; this says what they
+            hold, which is what deciding whether a type earns a decoder needs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_raw_lists_whole_records_of_the_named_types},
+}
+
+@misc{transcriptstruct-cli-raw-prints-whole-records-of-a-type,
+  section = {cli},
+  title  = {`--raw user` prints each user record whole, then the denominator line},
+  claim  = {`--raw user` prints each user record whole, then the denominator line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_raw_prints_whole_records_of_a_type},
+}

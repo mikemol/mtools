@@ -22,10 +22,11 @@ were read to decode it.
 
 from __future__ import annotations
 
+import json
 import re
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from mikemol.transcriptstruct.blocks import blocks
 from mikemol.transcriptstruct.provenance import classify
@@ -40,6 +41,53 @@ if TYPE_CHECKING:
     from mikemol.transcriptstruct.walk import Path
 
 _CONTENT_ROOTS: tuple[Path, ...] = (("message", "content"), ("attachment", "prompt"))
+
+
+def _envelope(record: Record) -> object:
+    """Return a record's parsed JSON, or None for a line that did not parse.
+
+    Returns:
+        the envelope as parsed; None for a malformed line.
+
+    """
+    return None if isinstance(record, MalformedLine) else record.raw
+
+
+def _type_of(envelope: object) -> str:
+    """Name an envelope's `type`, as the file spells it.
+
+    Returns:
+        the `type` field; "(none)" when absent or not a string; "(not an object)" otherwise.
+
+    """
+    if not isinstance(envelope, dict):
+        return "(not an object)"
+    value = cast("dict[str, object]", envelope).get("type")
+    return value if isinstance(value, str) else "(none)"
+
+
+def raw(
+    records: Iterable[Record], types: Collection[str], *, window: Window | None = None
+) -> Result:
+    """List whole records of the named envelope types, as JSON, in line order.
+
+    This is the read that decides whether a record type earns a decoder: `unknown_types` says
+    how many there are, and this shows what they hold.
+
+    Returns:
+        one hit per matching record, `kind` its type and `text` its whole JSON, and the
+        denominators.
+
+    """
+    tally = _Tally()
+    for record in _pass(records, window or Window(), tally):
+        envelope = _envelope(record)
+        kind = _type_of(envelope)
+        if kind in types:
+            text = json.dumps(envelope, ensure_ascii=False)
+            tally.hits.append(Hit(record.line, kind, text, (0, len(text))))
+    return tally.result()
+
 
 # An extracted line: its blocks, or None where no well-formed record has that line.
 type Found = tuple[Block, ...] | None

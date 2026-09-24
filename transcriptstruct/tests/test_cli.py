@@ -105,3 +105,10 @@ def test_extract_prints_null_for_a_missing_line(tmp_path: Path) -> None:
         (1, False),
         (9, True),
     ]
+
+
+def test_raw_prints_whole_records_of_a_type(tmp_path: Path) -> None:
+    """`--raw user` prints each user record whole, then the denominator line."""
+    *hits, footer = _run(str(_transcript(tmp_path)), "--raw", "user")
+    assert [_object(hit)["kind"] for hit in hits] == ["user", "user"]
+    assert footer == "# 2 hit(s) in 2 searched of 3 record(s), 1 malformed"

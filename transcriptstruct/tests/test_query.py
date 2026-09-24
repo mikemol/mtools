@@ -16,6 +16,7 @@ from mikemol.transcriptstruct.query import (
     grep_blocks,
     grep_prose,
     prose,
+    raw,
     stats,
 )
 from mikemol.transcriptstruct.records import Record, parse_lines
@@ -132,3 +133,16 @@ def test_stats_break_the_unknown_count_down_by_record_type() -> None:
     counts = stats(records)
     assert counts.unknown_types == {"ai-title": 2, "(none)": 1}
     assert counts.unknown == len(["ai-title", "ai-title", "(none)"])
+
+
+def test_raw_lists_whole_records_of_the_named_types() -> None:
+    """`raw` returns every record of the named types, whole, and keeps the whole denominator.
+
+    ⚑ `unknown_types` says how many records of a type exist; this says what they hold, which is
+    what deciding whether a type earns a decoder needs.
+    """
+    records = _records('{"type": "system", "note": "x"}', _user("hi"), "{torn")
+    result = raw(records, {"system"})
+    assert [(hit.line, hit.kind) for hit in result.hits] == [(1, "system")]
+    assert '"note": "x"' in result.hits[0].text
+    assert (result.searched, result.total, result.malformed) == (2, 3, 1)
