@@ -83,3 +83,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_witness_row.py" = ["assert"]
 "tests/test_witness_family.py" = ["assert"]
 "tests/test_raw_bib.py" = ["assert"]
+# ⚑ THE ENGINE'S PARSE ERRORS ARE ITS OWN TYPES: `read` catches broadly on purpose, so a witness
+# is not coupled to an upstream class hierarchy that has already changed once (substrate's
+# line directive for blind-except, declared here instead, since mtools writes no line directives).
+"src/mikemol/witness/warrant_integrity.py" = ["blind-except"]
+"tests/test_warrant_integrity.py" = ["assert"]

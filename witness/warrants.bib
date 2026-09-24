@@ -280,3 +280,151 @@
             missing row would at least move a denominator.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_a_mangled_bib_is_broken_not_empty},
 }
+
+@misc{witness-warrant-integrity-warrant-set-is-not-empty,
+  section = {warrant_integrity},
+  title  = {The presence witness reaches a closed verdict on a populated set},
+  claim  = {The presence witness reaches a closed verdict on a populated set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_the_warrant_set_is_not_empty},
+}
+
+@misc{witness-warrant-integrity-no-key-is-silently-shadowed,
+  section = {warrant_integrity},
+  title  = {The shadowing witness reaches a closed verdict on distinct keys},
+  claim  = {The shadowing witness reaches a closed verdict on distinct keys.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_no_key_is_silently_shadowed},
+}
+
+@misc{witness-warrant-integrity-every-entry-carries-a-claim-and-a-check,
+  section = {warrant_integrity},
+  title  = {The commitment witness reaches a closed verdict when both fields survive},
+  claim  = {The commitment witness reaches a closed verdict when both fields survive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_every_entry_carries_a_claim_and_a_check},
+}
+
+@misc{witness-warrant-integrity-every-claim-carries-readable-prose,
+  section = {warrant_integrity},
+  title  = {The legibility witness reaches a closed verdict on adequate prose},
+  claim  = {The legibility witness reaches a closed verdict on adequate prose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_every_claim_carries_readable_prose},
+}
+
+@misc{witness-warrant-integrity-well-formed-set-reads-clean,
+  section = {warrant_integrity},
+  title  = {The healthy case reports nothing: the positive control for all four claims},
+  claim  = {The healthy case reports nothing: the positive control for all four claims. Without it,
+            a reader that flagged everything would satisfy every other case here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_well_formed_set_reads_clean},
+}
+
+@misc{witness-warrant-integrity-empty-parse-is-detectable,
+  section = {warrant_integrity},
+  title  = {A bib that parses to nothing is REPORTED empty rather than reading clean},
+  claim  = {A bib that parses to nothing is REPORTED empty rather than reading clean. Zero entries
+            satisfies every "for all" claim, so a destroyed warrant set reads as a
+            perfect one. The fixture is a VALID but entry-less bib (a comment only), not
+            garbage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_an_empty_parse_is_detectable},
+}
+
+@misc{witness-warrant-integrity-malformed-bib-says-why-rather-than-reading-empty,
+  section = {warrant_integrity},
+  title  = {A file the engine rejects returns a REASON, not an empty set},
+  claim  = {A file the engine rejects returns a REASON, not an empty set. "declares no claims" and
+            "is not parseable" call for different repairs; mapping a syntax error onto
+            empty would report a mangled file as an honest absence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_malformed_bib_says_why_rather_than_reading_empty},
+}
+
+@misc{witness-warrant-integrity-populated-set-is-not-reported-empty,
+  section = {warrant_integrity},
+  title  = {The emptiness predicate discriminates: the control for the empty case},
+  claim  = {The emptiness predicate discriminates: the control for the empty case.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_populated_set_is_not_reported_empty},
+}
+
+@misc{witness-warrant-integrity-shadowed-key-is-named,
+  section = {warrant_integrity},
+  title  = {A key written twice is reported by name, and the two routes disagree on the count},
+  claim  = {A key written twice is reported by name, and the two routes disagree on the count. The
+            engine's parse already lost the duplicate; the file says how many were
+            written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_shadowed_key_is_named},
+}
+
+@misc{witness-warrant-integrity-distinct-set-reports-no-shadowing,
+  section = {warrant_integrity},
+  title  = {Distinct keys are not reported: the control for the shadowing case},
+  claim  = {Distinct keys are not reported: the control for the shadowing case.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_distinct_set_reports_no_shadowing},
+}
+
+@misc{witness-warrant-integrity-missing-check-is-named,
+  section = {warrant_integrity},
+  title  = {An entry whose check did not survive the parse is reported: the real silent shadowing},
+  claim  = {An entry whose check did not survive the parse is reported: the real silent shadowing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_missing_check_is_named},
+}
+
+@misc{witness-warrant-integrity-thin-claim-is-named-with-its-length,
+  section = {warrant_integrity},
+  title  = {A claim too short to commit is reported with its length: the length is actionable},
+  claim  = {A claim too short to commit is reported with its length: the length is actionable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_thin_claim_is_named_with_its_length},
+}
+
+@misc{witness-warrant-integrity-full-claim-is-not-reported-thin,
+  section = {warrant_integrity},
+  title  = {Adequate prose passes: the control for the thin case},
+  claim  = {Adequate prose passes: the control for the thin case.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_full_claim_is_not_reported_thin},
+}
+
+@misc{witness-warrant-integrity-absent-bib-says-why,
+  section = {warrant_integrity},
+  title  = {A missing file returns a reason rather than raising: a raise takes the whole roster down},
+  claim  = {A missing file returns a reason rather than raising: a raise takes the whole roster
+            down.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_an_absent_bib_says_why},
+}
+
+@misc{witness-warrant-integrity-every-member-rests-on-the-non-empty-claim,
+  section = {warrant_integrity},
+  title  = {The three universally-quantified members declare a premise},
+  claim  = {The three universally-quantified members declare a premise. Each is satisfied by an
+            empty set, so deleting the non-empty claim makes all three pass vacuously,
+            which a premise edge exists to make visible.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_every_member_rests_on_the_non_empty_claim},
+}
+
+@misc{witness-warrant-integrity-familys-premises-all-resolve,
+  section = {warrant_integrity},
+  title  = {No declared premise names a member the family does not hold},
+  claim  = {No declared premise names a member the family does not hold.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_the_familys_premises_all_resolve},
+}
+
+@misc{witness-warrant-integrity-family-holds-one-member-per-claim,
+  section = {warrant_integrity},
+  title  = {The roster is the four claims, each one case, none unsplit},
+  claim  = {The roster is the four claims, each one case, none unsplit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_the_family_holds_one_member_per_claim},
+}
+
+@misc{witness-warrant-integrity-render-names-every-population,
+  section = {warrant_integrity},
+  title  = {The report covers all four claims, not just the ones with findings},
+  claim  = {The report covers all four claims, not just the ones with findings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_the_render_names_every_population},
+}
+
+@misc{witness-warrant-integrity-witness-on-an-unreadable-bib-opens-naming-why,
+  section = {warrant_integrity},
+  title  = {A witness over a bib that cannot be read yields ONE open verdict carrying the reason},
+  claim  = {A witness over a bib that cannot be read yields ONE open verdict carrying the reason.
+            Found by the mutation grid: no ported arm ran a witness against an
+            unreadable bib, so the verdict for it (substrate's `_unreadable`) could be
+            deleted with every case still green. An unreadable warrant set must read as
+            OPEN, never as a witness that fell silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_witness_on_an_unreadable_bib_opens_naming_why},
+}
