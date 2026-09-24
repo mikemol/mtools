@@ -294,3 +294,64 @@
   claim  = {A record stage 1 could not decode has no speaker: `unknown`, never dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_unknown_and_malformed_lines_are_unknown},
 }
+
+@misc{transcriptstruct-query-denominator-is-the-whole-input-whatever-the-window,
+  section = {query},
+  title  = {A windowed search reports searched, total and malformed over the WHOLE input},
+  claim  = {A windowed search reports searched, total and malformed over the WHOLE input. The old
+            queries counted `total` only up to where they stopped, so a window shrank
+            the denominator along with the numerator and "n of m" understated m.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_the_denominator_is_the_whole_input_whatever_the_window},
+}
+
+@misc{transcriptstruct-query-hit-carries-the-whole-text-and-the-match-span,
+  section = {query},
+  title  = {A match deep in a long block returns the whole block and the span, not a 240-char cut},
+  claim  = {A match deep in a long block returns the whole block and the span, not a 240-char cut.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_a_hit_carries_the_whole_text_and_the_match_span},
+}
+
+@misc{transcriptstruct-query-grep-blocks-filters-by-block-kind,
+  section = {query},
+  title  = {`block_kinds` keeps only matching blocks of those kinds},
+  claim  = {`block_kinds` keeps only matching blocks of those kinds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_grep_blocks_filters_by_block_kind},
+}
+
+@misc{transcriptstruct-query-grep-prose-for-the-human-skips-plumbing-and-tool-output,
+  section = {query},
+  title  = {Searching `human` speech finds the operator's words, not a reminder or tool output},
+  claim  = {Searching `human` speech finds the operator's words, not a reminder or tool output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_grep_prose_for_the_human_skips_plumbing_and_tool_output},
+}
+
+@misc{transcriptstruct-query-prose-lists-utterances-in-line-order,
+  section = {query},
+  title  = {`prose` lists each non-empty utterance by the named speakers, whole, in order},
+  claim  = {`prose` lists each non-empty utterance by the named speakers, whole, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_prose_lists_utterances_in_line_order},
+}
+
+@misc{transcriptstruct-query-extract-reports-a-missing-line-as-none,
+  section = {query},
+  title  = {A requested line with no record is present in the answer as None, never silently absent},
+  claim  = {A requested line with no record is present in the answer as None, never silently absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_extract_reports_a_missing_line_as_none},
+}
+
+@misc{transcriptstruct-query-stats-counts-every-population,
+  section = {query},
+  title  = {Stats count total, malformed, unknown, speakers and block kinds over the whole input},
+  claim  = {Stats count total, malformed, unknown, speakers and block kinds over the whole input.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_stats_counts_every_population},
+}
+
+@misc{transcriptstruct-query-stats-counts-content-strings-no-decoder-read,
+  section = {query},
+  title  = {An undecoded block's strings are counted as undecoded; decoded text and metadata are not},
+  claim  = {An undecoded block's strings are counted as undecoded; decoded text and metadata are
+            not. The study's requirement: what the typed decoders cannot read is a
+            POPULATION to report, so a reader knows how much of the content its answers
+            could not see.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_stats_counts_content_strings_no_decoder_read},
+}
