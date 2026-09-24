@@ -386,3 +386,13 @@
   claim  = {`--extract` prints every requested line, with null blocks where no record exists.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_extract_prints_null_for_a_missing_line},
 }
+
+@misc{transcriptstruct-query-stats-break-the-unknown-count-down-by-record-type,
+  section = {query},
+  title  = {`unknown_types` names which record types the unknown count is made of},
+  claim  = {`unknown_types` names which record types the unknown count is made of. Measured by a
+            consumer: a third of a real transcript came back unknown, and a bare count
+            could not say whether that was a missing decoder or envelope bookkeeping.
+            The breakdown answers it from the tool, with no ad hoc pass over the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_stats_break_the_unknown_count_down_by_record_type},
+}

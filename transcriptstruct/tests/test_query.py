@@ -118,3 +118,17 @@ def test_stats_counts_content_strings_no_decoder_read() -> None:
     counts = stats(_records(_user(content)))
     assert counts.undecoded_blocks == 1
     assert counts.undecoded_strings == len(["novel", "x", "y"])
+
+
+def test_stats_break_the_unknown_count_down_by_record_type() -> None:
+    """`unknown_types` names which record types the unknown count is made of.
+
+    ⚑ Measured by a consumer: a third of a real transcript came back unknown, and a bare count
+    could not say whether that was a missing decoder or envelope bookkeeping. The breakdown
+    answers it from the tool, with no ad hoc pass over the file.
+    """
+    title = '{"type": "ai-title"}'
+    records = _records(title, title, '{"no": "type"}', _user("hi"))
+    counts = stats(records)
+    assert counts.unknown_types == {"ai-title": 2, "(none)": 1}
+    assert counts.unknown == len(["ai-title", "ai-title", "(none)"])

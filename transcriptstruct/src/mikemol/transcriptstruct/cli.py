@@ -153,6 +153,7 @@ def _stats(counts: Stats) -> dict[str, object]:
         "total": counts.total,
         "malformed": counts.malformed,
         "unknown": counts.unknown,
+        "unknown_types": counts.unknown_types,
         "speakers": counts.speakers,
         "block_kinds": counts.block_kinds,
         "undecoded_blocks": counts.undecoded_blocks,

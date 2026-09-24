@@ -214,6 +214,9 @@ class Stats:
     block_kinds: dict[str, int]
     undecoded_blocks: int
     undecoded_strings: int
+    # ⚑ WHICH record types the unknown count is made of, keyed by `type` ("(none)" when absent).
+    # A bare count said "a third of the file is unknown" and could not say why.
+    unknown_types: dict[str, int]
 
 
 def _under(path: Path, roots: Iterable[Path]) -> bool:
@@ -231,18 +234,20 @@ def stats(records: Iterable[Record], *, scheduled: Sequence[str] = ()) -> Stats:
 
     Returns:
         the Stats. `undecoded_strings` counts the strings inside unread blocks and unknown
-        records' content.
+        records' content; `unknown_types` breaks the unknown count down by record type.
 
     """
-    total = malformed = unknown = undecoded_blocks = undecoded_strings = 0
+    total = malformed = undecoded_blocks = undecoded_strings = 0
     speakers: Counter[str] = Counter()
     kinds: Counter[str] = Counter()
+    unknown_types: Counter[str] = Counter()
     for record in records:
         total += 1
         if isinstance(record, MalformedLine):
             malformed += 1
             continue
-        unknown += isinstance(record, UnknownRecord)
+        if isinstance(record, UnknownRecord):
+            unknown_types[record.type or "(none)"] += 1
         speakers[classify(record, scheduled=scheduled).kind] += 1
         decoded = blocks(record)
         kinds.update(block.kind for block in decoded)
@@ -252,5 +257,12 @@ def stats(records: Iterable[Record], *, scheduled: Sequence[str] = ()) -> Stats:
             unread.extend(_CONTENT_ROOTS)
         undecoded_strings += sum(_under(leaf.path, unread) for leaf in strings(record.raw))
     return Stats(
-        total, malformed, unknown, dict(speakers), dict(kinds), undecoded_blocks, undecoded_strings
+        total=total,
+        malformed=malformed,
+        unknown=unknown_types.total(),
+        speakers=dict(speakers),
+        block_kinds=dict(kinds),
+        undecoded_blocks=undecoded_blocks,
+        undecoded_strings=undecoded_strings,
+        unknown_types=dict(unknown_types),
     )
