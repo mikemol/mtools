@@ -1,0 +1,72 @@
+% warrants.bib — one claim PER TEST CASE in the witness suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: witness-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+
+@misc{witness-witness-row-verdict-refuses-a-size,
+  section = {witness_row},
+  title  = {The verdict record does not accept a size},
+  claim  = {The verdict record does not accept a size. The retirement, pinned: the size/rows
+            reconciliation caught a live `mods[:12]` truncation, and it is retired
+            because one walk makes the defect inexpressible. A `size` field here would
+            be the second derivation returning under a new name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_a_verdict_refuses_a_size},
+}
+
+@misc{witness-witness-row-only-the-exact-closed-state-resolves,
+  section = {witness_row},
+  title  = {An unrecognised state reads as open; closed is closed; opened is open},
+  claim  = {An unrecognised state reads as open; closed is closed; opened is open. Every not-ok
+            predicate points the same way: a state nobody recognises must never resolve
+            to closed, because a typo would then close an item silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_only_the_exact_closed_state_resolves},
+}
+
+@misc{witness-witness-row-state-spelling-is-case-sensitive,
+  section = {witness_row},
+  title  = {`OPEN` is uppercase and `closed` is not, and neither is normalised},
+  claim  = {`OPEN` is uppercase and `closed` is not, and neither is normalised. The letter's one
+            contract detail: a `CLOSED` spelled in capitals is not the closed state, so
+            it reads as open rather than being quietly folded into the resolved one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_the_state_spelling_is_case_sensitive},
+}
+
+@misc{witness-witness-row-part-carries-its-route,
+  section = {witness_row},
+  title  = {The route survives onto the row},
+  claim  = {The route survives onto the row. The route is what the graph reads: a witness's per-
+            provider routes were once discarded at the boundary, surviving only inside a
+            formatted string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_a_part_carries_its_route},
+}
+
+@misc{witness-witness-row-rows-are-immutable,
+  section = {witness_row},
+  title  = {A row cannot be mutated after it is emitted},
+  claim  = {A row cannot be mutated after it is emitted. A yielded row may already have been
+            consumed, so a later mutation would change a value someone already acted on
+            — the deposit-and-read-back shape this contract replaces.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_rows_are_immutable},
+}
+
+@misc{witness-witness-row-detail-is-per-row,
+  section = {witness_row},
+  title  = {Two rows do not share one detail mapping},
+  claim  = {Two rows do not share one detail mapping. The mutable-default trap: a shared dict would
+            let one witness's detail appear on another's row, which reads as a
+            measurement rather than as a bug.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_the_detail_is_per_row},
+}
+
+@misc{witness-witness-row-part-and-a-verdict-carry-distinct-kinds,
+  section = {witness_row},
+  title  = {A reader can tell a part from a verdict by its kind},
+  claim  = {A reader can tell a part from a verdict by its kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_row.py -k test_a_part_and_a_verdict_carry_distinct_kinds},
+}

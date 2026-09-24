@@ -1,0 +1,139 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ MIRRORS //pathsforward:BUILD.bazel TARGET FOR TARGET, which mirrors //ratchet. The rationale
+# for each shape lives there; this file says only where it differs.
+# A library only: no CLI binary and no console script. The row contract has no modes to run.
+load("@witness_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("//:venv.bzl", "venv_from_hub")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+exports_files([
+    # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
+    "pyproject.toml",
+    "requirements.txt",
+    "requirements-dev.txt",
+    "uv.lock",
+])
+
+py_library(
+    name = "witness",
+    srcs = glob(["src/mikemol/witness/**/*.py"]),
+    data = glob(["src/mikemol/witness/py.typed"], allow_empty = True),
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. All fixtures are synthetic and inline.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "//:pytest_main.py",
+        args = [
+            "$(location " + src + ")",
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-o",
+            "faulthandler_timeout=60",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"],
+        size = "small",
+        deps = [
+            ":witness",
+            dev_requirement("pytest"),
+        ],
+        imports = ["src"],
+    )
+    for src in glob(["tests/test_*.py"])
+]
+
+exports_files(["BUILD.bazel"])
+
+sh_test(
+    name = "ruff",
+    srcs = ["//:ruff_check.sh"],
+    args = [
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ THE BASELINE WAS MINTED EMPTY: the distribution enters clean under preview, so the ratchet
+# can only hold it there.
+sh_test(
+    name = "ratchet",
+    srcs = ["//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+sh_test(
+    name = "mutants",
+    srcs = ["//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location //:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
+py_binary(
+    name = "mypy_runner",
+    srcs = ["//:mypy_runner.py"],
+    main = "//:mypy_runner.py",
+    deps = [
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ],
+)
+
+sh_test(
+    name = "mypy",
+    srcs = ["//:mypy_check.sh"],
+    args = [
+        "$(location :mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":mypy_runner",
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
+    size = "small",
+    # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
+    # things"). MEASURED under host contention: a cold mypy took wall=295s against user=2.9s, so
+    # the 60s default of `small` timed out on waiting, not on work. `size` stays small (it is a
+    # resource claim); only the wall-clock allowance grows.
+    timeout = "long",
+)
+
+venv_from_hub(
+    name = ".venv",
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    srcs = glob(["src/mikemol/witness/**"]),
+)

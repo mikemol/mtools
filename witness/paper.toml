@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.witness: the rows a witness yields, and the families it is declared in"
+subtitle = "Moved from substrate. A witness yields its parts as it finds them and its verdict last; no verdict carries a size, because under one walk the count is what was forwarded, and an unknown state reads as open."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "WITNESS.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

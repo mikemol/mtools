@@ -123,6 +123,14 @@ pip.parse(
     requirements_lock = "//corpus:requirements.txt",
 )
 
+# ⚑ `mikemol-witness` — substrate's witness row contract and families (N-a row 3, 2026-09-24),
+# and the witness half of the warrant split (N-d). Empty shipping hub: stdlib only.
+pip.parse(
+    hub_name = "witness_deps",
+    python_version = "3.13",
+    requirements_lock = "//witness:requirements.txt",
+)
+
 # ⚑⚑⚑ A SECOND LOCK PER DISTRIBUTION, FOR THE WITNESS ACTIONS ONLY. The shipping lock above
 # excludes the dev group, so it cannot supply pytest — and the thesis at the top of this file is
 # that A PYTEST CASE AND A PAPERKIT WITNESS ARE THE SAME OBJECT, which means the action staging a
@@ -185,8 +193,15 @@ pip.parse(
     python_version = "3.13",
     uv_lock = "//corpus:uv.lock",
 )
+pip.parse(
+    hub_name = "witness_dev",
+    python_version = "3.13",
+    uv_lock = "//witness:uv.lock",
+)
 use_repo(
     pip,
+    "witness_deps",
+    "witness_dev",
     "corpus_deps",
     "corpus_dev",
     "fence_deps",
