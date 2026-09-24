@@ -164,3 +164,62 @@
             so it is a namespace package by construction.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_a_namespace_package_is_refused_not_turned_into_a_bogus_path},
 }
+
+@misc{corpus-import-edges-every-module-scope-import-shape-is-an-eager-edge,
+  section = {import_edges},
+  title  = {Imports at module scope, including inside if/try/except/finally/for/with, are all seen},
+  claim  = {Imports at module scope, including inside if/try/except/finally/for/with, are all seen.
+            Those bodies DO execute on import; a walk that skipped them under-reports,
+            the worse direction: a suite certified as not reaching a store that aborts
+            when run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_every_module_scope_import_shape_is_an_eager_edge},
+}
+
+@misc{corpus-import-edges-imports-inside-definitions-never-leak-into-module-level,
+  section = {import_edges},
+  title  = {An import inside a def or class is NOT a module-level edge},
+  claim  = {An import inside a def or class is NOT a module-level edge. The arm that would have
+            caught substrate's measured 54-of-99 false positive: a lazy import read as
+            eager made a lexer and a text gate both "reach" a store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_imports_inside_definitions_never_leak_into_module_level},
+}
+
+@misc{corpus-import-edges-deferred-imports-are-reported-separately,
+  section = {import_edges},
+  title  = {Imports inside definitions are returned by `deferred`, not merged into module level},
+  claim  = {Imports inside definitions are returned by `deferred`, not merged into module level.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_deferred_imports_are_reported_separately},
+}
+
+@misc{corpus-import-edges-relative-import-is-not-an-edge,
+  section = {import_edges},
+  title  = {`from . import x` contributes no name: it names nothing an index can resolve},
+  claim  = {`from . import x` contributes no name: it names nothing an index can resolve.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_a_relative_import_is_not_an_edge},
+}
+
+@misc{corpus-import-edges-unparseable-or-missing-file-yields-no-edges,
+  section = {import_edges},
+  title  = {A syntax error or a vanished file degrades to no edges rather than raising},
+  claim  = {A syntax error or a vanished file degrades to no edges rather than raising. A census
+            asks every discovered file; the failure surfaces when the file is RUN.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_an_unparseable_or_missing_file_yields_no_edges},
+}
+
+@misc{corpus-import-edges-known-local-import-is-seen,
+  section = {import_edges},
+  title  = {A file with a known local import has that edge: the positive control},
+  claim  = {A file with a known local import has that edge: the positive control. Zero edges is what
+            a broken reader returns AND what a stdlib-only module returns; naming a file
+            whose imports are known separates the two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_a_known_local_import_is_seen},
+}
+
+@misc{corpus-import-edges-dotted-reading-names-submodule-candidates,
+  section = {import_edges},
+  title  = {`from X import Y` yields `X` and the candidate `X.Y`; the top-level reading yields `X`},
+  claim  = {`from X import Y` yields `X` and the candidate `X.Y`; the top-level reading yields `X`.
+            Every file in a package imports the package, so only the dotted reading can
+            tell which module an intra-package edge points at.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_the_dotted_reading_names_submodule_candidates},
+}
