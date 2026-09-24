@@ -71,3 +71,96 @@
             returned something, membership says it returned the right something.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_corpus.py -k test_the_walk_finds_real_sources_and_omits_generated_copies},
 }
+
+@misc{corpus-tree-root-bare-argv-refuses-naming-the-flag,
+  section = {tree_root},
+  title  = {An argv without `--root` refuses, and the refusal names the flag to pass},
+  claim  = {An argv without `--root` refuses, and the refusal names the flag to pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_a_bare_argv_refuses_naming_the_flag},
+}
+
+@misc{corpus-tree-root-adding-only-the-flag-flips-the-refusal,
+  section = {tree_root},
+  title  = {The same argv plus only `--root <dir>` succeeds: the flag is READ, not refused always},
+  claim  = {The same argv plus only `--root <dir>` succeeds: the flag is READ, not refused always.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_adding_only_the_flag_flips_the_refusal},
+}
+
+@misc{corpus-tree-root-flag-with-no-operand-refuses,
+  section = {tree_root},
+  title  = {`--root` as the last token refuses rather than reading past the end},
+  claim  = {`--root` as the last token refuses rather than reading past the end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_a_flag_with_no_operand_refuses},
+}
+
+@misc{corpus-tree-root-flag-is-never-taken-as-the-operand,
+  section = {tree_root},
+  title  = {`--root --apply` refuses for a missing directory, not for `--apply` not existing},
+  claim  = {`--root --apply` refuses for a missing directory, not for `--apply` not existing.
+            Consuming the next token blindly would bind `--apply` as the tree: the right
+            verdict by the wrong route, and the caller told the wrong argument was at
+            fault.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_a_flag_is_never_taken_as_the_operand},
+}
+
+@misc{corpus-tree-root-missing-tree-refuses,
+  section = {tree_root},
+  title  = {`of` refuses a path that is not a directory},
+  claim  = {`of` refuses a path that is not a directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_a_missing_tree_refuses},
+}
+
+@misc{corpus-tree-root-flag-and-operand-are-consumed-in-any-position,
+  section = {tree_root},
+  title  = {`--root <dir>` leaves argv whether it leads, sits in the middle, or trails},
+  claim  = {`--root <dir>` leaves argv whether it leads, sits in the middle, or trails. Order-
+            independent, because a caller's own flags are not this module's to order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_the_flag_and_operand_are_consumed_in_any_position},
+}
+
+@misc{corpus-tree-root-label-trims-inside-and-returns-outside-whole,
+  section = {tree_root},
+  title  = {Inside paths are trimmed; outside, relative, and the tree itself are returned whole},
+  claim  = {Inside paths are trimmed; outside, relative, and the tree itself are returned whole. The
+            outside arm is the crash class: `Path.relative_to` raises there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_label_trims_inside_and_returns_outside_whole},
+}
+
+@misc{corpus-tree-root-holds-in-both-directions-and-not-a-name-prefix,
+  section = {tree_root},
+  title  = {An inside path is held; an outside path and a sibling sharing a name prefix are not},
+  claim  = {An inside path is held; an outside path and a sibling sharing a name prefix are not.
+            `/repo` is a string prefix of `/repository`: a bare `startswith` would claim
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_holds_in_both_directions_and_not_a_name_prefix},
+}
+
+@misc{corpus-tree-root-package-files-names-the-package-asked-for-not-a-tree,
+  section = {tree_root},
+  title  = {`package_files` returns the named package's directory, holding its modules, not a tree},
+  claim  = {`package_files` returns the named package's directory, holding its modules, not a tree.
+            substrate's took no argument and asked for its own package, so moved here
+            unchanged it would have answered with THIS distribution's files: the
+            `corpus.ROOT` defect in a new place.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_package_files_names_the_package_asked_for_not_a_tree},
+}
+
+@misc{corpus-tree-root-census-resolves-every-root-and-refuses-a-missing-one,
+  section = {tree_root},
+  title  = {Every named tree resolves; one missing tree refuses the census; none yields nothing},
+  claim  = {Every named tree resolves; one missing tree refuses the census; none yields nothing.
+            Refusing rather than skipping: a dropped root shrinks the population, not
+            the denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_census_resolves_every_root_and_refuses_a_missing_one},
+}
+
+@misc{corpus-tree-root-namespace-package-is-refused-not-turned-into-a-bogus-path,
+  section = {tree_root},
+  title  = {`package_files` refuses a namespace package rather than returning a path to nowhere},
+  claim  = {`package_files` refuses a namespace package rather than returning a path to nowhere.
+            Measured while porting: `files()` on a namespace package is a
+            `MultiplexedPath` whose `str` is not a path, and `Path(str(...))` made it
+            one silently. The package here is built in tmp_path with no `__init__.py`,
+            so it is a namespace package by construction.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree_root.py -k test_a_namespace_package_is_refused_not_turned_into_a_bogus_path},
+}

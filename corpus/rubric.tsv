@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the corpus warrant set, one per test module, in document order.
 # key <TAB> heading title
 corpus	The Corpus: A Tree's Python Files, Walked From the Root the Caller Gives
+tree_root	The Tree Root: A Tree Handed In, Never Derived, and a Package's Files Asked of the Runtime
