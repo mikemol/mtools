@@ -113,3 +113,16 @@ def test_every_decoded_path_is_a_string_path_the_walk_finds() -> None:
 def test_an_unknown_record_has_no_blocks() -> None:
     """A record this package does not decode yields no blocks; the walk still sees its strings."""
     assert blocks(parse_line('{"type": "summary", "summary": "s"}', 1)) == ()
+
+
+def test_a_tool_reference_decodes_to_its_tool_name() -> None:
+    """A tool_result's `tool_reference` part decodes to the tool it names, at `.tool_name`.
+
+    ⚑ Measured: 80 of these were the whole undecoded-block population of a real transcript.
+    Each is a `tool_reference` object carrying only a `tool_name`, a tool a tool search loaded,
+    so the name is the whole content and nothing is left unread.
+    """
+    parts = [{"type": "tool_reference", "tool_name": "CronCreate"}]
+    (block,) = blocks(parse_line(_user([{"type": "tool_result", "content": parts}]), 1))
+    where = (*_CONTENT, 0, "content", 0, "tool_name")
+    assert block == Block("tool_result:tool_reference", "CronCreate", where, decoded=True)

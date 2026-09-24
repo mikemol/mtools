@@ -57,17 +57,29 @@ def _dump(value: object) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+# The tool_result sub-block types this module reads: each type's block kind, and the one field
+# that holds its content. `tool_reference` names a tool a tool search loaded (measured: the whole
+# undecoded population of a real transcript was these 80), so its name is its content.
+_SUB_FIELD = {
+    "text": ("tool_result", "text"),
+    "tool_reference": ("tool_result:tool_reference", "tool_name"),
+}
+
+
 def _sub_block(sub: object, where: Path) -> Block:
     """Decode one element of a `tool_result`'s content list.
 
     Returns:
-        a decoded `tool_result` block for a text element; else `tool_result:<type>`, undecoded.
+        a decoded block for a text or tool_reference element; else `tool_result:<type>`,
+        undecoded, carrying the element's whole JSON.
 
     """
     body = cast("dict[str, object]", sub) if isinstance(sub, dict) else {}
-    text = body.get("text")
-    if body.get("type") == "text" and isinstance(text, str):
-        return Block("tool_result", text, (*where, "text"), decoded=True)
+    kind = body.get("type")
+    known = _SUB_FIELD.get(kind) if isinstance(kind, str) else None
+    text = body.get(known[1]) if known else None
+    if known and isinstance(text, str):
+        return Block(known[0], text, (*where, known[1]), decoded=True)
     return Block(f"tool_result:{body.get('type', '?')}", _dump(sub), where, decoded=False)
 
 
