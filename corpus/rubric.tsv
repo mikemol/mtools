@@ -4,3 +4,4 @@ corpus	The Corpus: A Tree's Python Files, Walked From the Root the Caller Gives
 tree_root	The Tree Root: A Tree Handed In, Never Derived, and a Package's Files Asked of the Runtime
 import_edges	The Import Edges: What Importing Executes, Kept Apart From What the Code Could Reach
 suite_discovery	The Suite Discovery: A Suite Is What Answers --selftest, and Git Owns What Is Walked
+suite_pragmas	The Suite Pragmas: What a Suite Declares, and a Typo That Declares Nothing
