@@ -86,3 +86,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_corpus.py" = ["assert"]
 "tests/test_tree_root.py" = ["assert"]
 "tests/test_import_edges.py" = ["assert"]
+# ⚑ ASKING GIT WHAT IT IGNORES IS suite_discovery's RESPONSIBILITY: the one owner of the walk's
+# exclusions. MEASURED: git is resolved by `shutil.which`, the argv is fixed
+# (`git -C <root> check-ignore --stdin`), the names go in on stdin, never through a shell.
+"src/mikemol/corpus/suite_discovery.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_suite_discovery.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

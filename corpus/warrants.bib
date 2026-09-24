@@ -223,3 +223,58 @@
             tell which module an intra-package edge points at.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_the_dotted_reading_names_submodule_candidates},
 }
+
+@misc{corpus-suite-discovery-both-live-dispatch-idioms-are-admitted,
+  section = {suite_discovery},
+  title  = {A __main__ guard, a bare argv dispatch, and a flag-naming guard with no body are suites},
+  claim  = {A __main__ guard, a bare argv dispatch, and a flag-naming guard with no body are suites.
+            Requiring the flag alone or the body alone erases one of the other two: both
+            measured live.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suite_discovery.py -k test_both_live_dispatch_idioms_are_admitted},
+}
+
+@misc{corpus-suite-discovery-neither-half-alone-is-a-suite,
+  section = {suite_discovery},
+  title  = {A body with no dispatch is not a suite, and neither is a plain CLI entry point},
+  claim  = {A body with no dispatch is not a suite, and neither is a plain CLI entry point. The
+            entry point alone admits every CLI in the tree; the body alone admits
+            implementation halves that report SILENT while their cases pass under a
+            parent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suite_discovery.py -k test_neither_half_alone_is_a_suite},
+}
+
+@misc{corpus-suite-discovery-vendored-and-snapshot-subtrees-are-walked-past,
+  section = {suite_discovery},
+  title  = {Copies under .venv, .edit-snapshots and __pycache__ are not suites; the real one is},
+  claim  = {Copies under .venv, .edit-snapshots and __pycache__ are not suites; the real one is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suite_discovery.py -k test_vendored_and_snapshot_subtrees_are_walked_past},
+}
+
+@misc{corpus-suite-discovery-roots-are-discovered-not-frozen,
+  section = {suite_discovery},
+  title  = {A new directory is a root, a tracked suiteless one is too, and a dot-directory is not},
+  claim  = {A new directory is a root, a tracked suiteless one is too, and a dot-directory is not.
+            `agda` is admitted deliberately: the name roster that skipped it was deleted
+            by ruling, and a test pinning it would have kept a deleted mechanism alive
+            through its test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suite_discovery.py -k test_roots_are_discovered_not_frozen},
+}
+
+@misc{corpus-suite-discovery-walk-finds-the-suites-a-tree-holds,
+  section = {suite_discovery},
+  title  = {A tree with known suites yields exactly those: the positive control},
+  claim  = {A tree with known suites yields exactly those: the positive control. Zero suites is what
+            a broken walk returns AND what a correct walk returns over an empty tree;
+            only naming files that must be found separates them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suite_discovery.py -k test_the_walk_finds_the_suites_a_tree_holds},
+}
+
+@misc{corpus-suite-discovery-git-ignored-tree-is-not-walked,
+  section = {suite_discovery},
+  title  = {A top-level tree git ignores is not a root: git's ignore is the one owner of exclusions},
+  claim  = {A top-level tree git ignores is not a root: git's ignore is the one owner of exclusions.
+            Measured in substrate: a walker that never asked git kept counting
+            `build/lib/`'s stale copy of every package module, twice, after `build/` was
+            already fixed in git's view.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suite_discovery.py -k test_a_git_ignored_tree_is_not_walked},
+}
