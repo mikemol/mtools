@@ -34,9 +34,22 @@ sh_test(
     # suffix — `.githooks/*` is the whole directory, so a hook added later is covered too.
     args = ["$(location @shellcheck//:bin)"] + [
         "$(location //:%s)" % f
-        for f in glob(["*.sh", ".githooks/*"], allow_empty = False)
+        for f in glob(["*.sh", ".githooks/*", "githooks/*"], allow_empty = False)
     ],
-    data = glob(["*.sh", ".githooks/*"], allow_empty = False) + ["@shellcheck//:bin"],
+    data = glob(["*.sh", ".githooks/*", "githooks/*"], allow_empty = False) + [
+        "@shellcheck//:bin",
+    ],
+    size = "small",
+)
+
+# ⚑ THE SHARED HOOKS OTHER REPOS SYMLINK (githooks/, handed over by substrate 2026-09-23), each
+# witnessed against a decoy repository in TEST_TMPDIR, never the real one. mtools' OWN hooks
+# stay in .githooks/; githooks/ is what ships.
+sh_test(
+    name = "githooks_test",
+    srcs = ["githooks_test.sh"],
+    args = ["$(location githooks/pre-push)"],
+    data = ["githooks/pre-push"],
     size = "small",
 )
 
