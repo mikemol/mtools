@@ -3,3 +3,4 @@
 records	The Records: One Tagged Record per Line, Attachments Decoded, Nothing Dropped
 walk	The Walk: Every String in a Record, at the Path That Reaches It
 blocks	The Blocks: Content Decoded Whole, Attachments Included, the Unread Marked Unread
+provenance	The Provenance: One Speaker Kind per Record, and the Operator Not Over-Counted

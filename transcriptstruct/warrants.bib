@@ -211,3 +211,86 @@
   claim  = {A record this package does not decode yields no blocks; the walk still sees its strings.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_an_unknown_record_has_no_blocks},
 }
+
+@misc{transcriptstruct-provenance-plain-user-prose-is-human,
+  section = {provenance},
+  title  = {Text the operator typed, with nothing wrapped around it, is `human`},
+  claim  = {Text the operator typed, with nothing wrapped around it, is `human`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_plain_user_prose_is_human},
+}
+
+@misc{transcriptstruct-provenance-system-reminder-is-stripped-and-what-remains-is-human,
+  section = {provenance},
+  title  = {A reminder injected around the operator's words is removed; the words stay `human`},
+  claim  = {A reminder injected around the operator's words is removed; the words stay `human`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_a_system_reminder_is_stripped_and_what_remains_is_human},
+}
+
+@misc{transcriptstruct-provenance-text-that-is-only-harness-plumbing-is-harness,
+  section = {provenance},
+  title  = {A task notification alone leaves nothing typed: `harness`, with no text to search},
+  claim  = {A task notification alone leaves nothing typed: `harness`, with no text to search.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_text_that_is_only_harness_plumbing_is_harness},
+}
+
+@misc{transcriptstruct-provenance-tool-output-wearing-the-user-role-is-tool-result,
+  section = {provenance},
+  title  = {User-role content made only of tool_result blocks is `tool_result`, never the operator},
+  claim  = {User-role content made only of tool_result blocks is `tool_result`, never the operator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_tool_output_wearing_the_user_role_is_tool_result},
+}
+
+@misc{transcriptstruct-provenance-compaction-summary-is-its-own-kind,
+  section = {provenance},
+  title  = {An isCompactSummary envelope is `compact_summary`: a gloss, not the operator speaking},
+  claim  = {An isCompactSummary envelope is `compact_summary`: a gloss, not the operator speaking.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_a_compaction_summary_is_its_own_kind},
+}
+
+@misc{transcriptstruct-provenance-queued-attachment-takes-its-nested-origin,
+  section = {provenance},
+  title  = {A queued command's nested `origin.kind` makes it `human` or `peer`},
+  claim  = {A queued command's nested `origin.kind` makes it `human` or `peer`. Measured on a real transcript, 287 queued commands carried an
+            origin and the old reader judged 0 of them human, so an operator's mid-turn
+            directive did not exist to a search.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_a_queued_attachment_takes_its_nested_origin},
+}
+
+@misc{transcriptstruct-provenance-attachment-without-an-origin-is-harness,
+  section = {provenance},
+  title  = {A queued attachment with no origin was put there by the harness itself},
+  claim  = {A queued attachment with no origin was put there by the harness itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_an_attachment_without_an_origin_is_harness},
+}
+
+@misc{transcriptstruct-provenance-unlisted-origin-kind-is-unknown-not-human,
+  section = {provenance},
+  title  = {An origin kind this module does not know is `unknown`: guessing `human` would over-count},
+  claim  = {An origin kind this module does not know is `unknown`: guessing `human` would over-
+            count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_an_unlisted_origin_kind_is_unknown_not_human},
+}
+
+@misc{transcriptstruct-provenance-cross-session-message-in-user-text-is-peer,
+  section = {provenance},
+  title  = {A `<cross-session-message>` wrapper as user text is another session speaking: `peer`},
+  claim  = {A `<cross-session-message>` wrapper as user text is another session speaking: `peer`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_a_cross_session_message_in_user_text_is_peer},
+}
+
+@misc{transcriptstruct-provenance-declared-scheduled-prefix-is-scheduled-and-undeclared-stays-human,
+  section = {provenance},
+  title  = {A tick prompt is `scheduled` only when the caller names its prefix (study shape 5)},
+  claim  = {A tick prompt is `scheduled` only when the caller names its prefix (study shape 5).
+            Nothing in the envelope marks a cron prompt, so the arm pins both sides:
+            declared, it is `scheduled`; undeclared, it is `human`, which is the old
+            behaviour and is not guessed away.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_a_declared_scheduled_prefix_is_scheduled_and_undeclared_stays_human},
+}
+
+@misc{transcriptstruct-provenance-unknown-and-malformed-lines-are-unknown,
+  section = {provenance},
+  title  = {A record stage 1 could not decode has no speaker: `unknown`, never dropped},
+  claim  = {A record stage 1 could not decode has no speaker: `unknown`, never dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_provenance.py -k test_unknown_and_malformed_lines_are_unknown},
+}
