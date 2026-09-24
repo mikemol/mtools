@@ -428,3 +428,79 @@
             OPEN, never as a witness that fell silent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_integrity.py -k test_a_witness_on_an_unreadable_bib_opens_naming_why},
 }
+
+@misc{witness-warrant-bib-module-needs-no-engine,
+  section = {warrant_bib},
+  title  = {Importing this module does not import the engine (substrate gate-G209)},
+  claim  = {Importing this module does not import the engine (substrate gate-G209). A module
+            importing paperkit at module scope made a whole CLI unreachable without it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_the_module_needs_no_engine},
+}
+
+@misc{witness-warrant-bib-there-is-no-default-project,
+  section = {warrant_bib},
+  title  = {No ROOT-derived location remains, and `consumer_fields` refuses a call without a config},
+  claim  = {No ROOT-derived location remains, and `consumer_fields` refuses a call without a config.
+            substrate's PROJECT/BIB/CONFIG were derived from `corpus.ROOT`, which the
+            no-ROOT ruling forbids: installed, they would name a path inside the venv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_there_is_no_default_project},
+}
+
+@misc{witness-warrant-bib-consumer-fields-are-read-from-the-config,
+  section = {warrant_bib},
+  title  = {The declared fields come from the config, in order},
+  claim  = {The declared fields come from the config, in order. A declaration nothing reads is
+            indistinguishable from one nobody made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_the_consumer_fields_are_read_from_the_config},
+}
+
+@misc{witness-warrant-bib-unreadable-config-yields-nothing,
+  section = {warrant_bib},
+  title  = {A missing config yields no fields rather than raising},
+  claim  = {A missing config yields no fields rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_an_unreadable_config_yields_nothing},
+}
+
+@misc{witness-warrant-bib-malformed-config-yields-nothing,
+  section = {warrant_bib},
+  title  = {Invalid TOML, or a wrongly shaped declaration, yields no fields rather than raising},
+  claim  = {Invalid TOML, or a wrongly shaped declaration, yields no fields rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_a_malformed_config_yields_nothing},
+}
+
+@misc{witness-warrant-bib-refusals-are-exceptions-not-exits,
+  section = {warrant_bib},
+  title  = {A missing warrant raises WarrantError, a KeyError, never SystemExit},
+  claim  = {A missing warrant raises WarrantError, a KeyError, never SystemExit. A library function
+            cannot know whether its caller wanted to continue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_refusals_are_exceptions_not_exits},
+}
+
+@misc{witness-warrant-bib-claim-is-read-whitespace-collapsed,
+  section = {warrant_bib},
+  title  = {A warrant's claim is read from the records given, its whitespace collapsed},
+  claim  = {A warrant's claim is read from the records given, its whitespace collapsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_a_claim_is_read_whitespace_collapsed},
+}
+
+@misc{witness-warrant-bib-warrant-with-no-claim-is-refused,
+  section = {warrant_bib},
+  title  = {A warrant present without a claim field is refused, not read as empty prose},
+  claim  = {A warrant present without a claim field is refused, not read as empty prose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_a_warrant_with_no_claim_is_refused},
+}
+
+@misc{witness-warrant-bib-tag-is-read-from-the-claim,
+  section = {warrant_bib},
+  title  = {`[name=N]` in the claim is read as an integer, negative included},
+  claim  = {`[name=N]` in the claim is read as an integer, negative included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_a_tag_is_read_from_the_claim},
+}
+
+@misc{witness-warrant-bib-unanchored-claim-is-refused,
+  section = {warrant_bib},
+  title  = {A claim with no `[name=N]` marker is refused, never defaulted to zero},
+  claim  = {A claim with no `[name=N]` marker is refused, never defaulted to zero. An unanchored
+            figure is a number nobody can audit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_an_unanchored_claim_is_refused},
+}

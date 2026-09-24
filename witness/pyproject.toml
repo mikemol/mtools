@@ -88,3 +88,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # line directive for blind-except, declared here instead, since mtools writes no line directives).
 "src/mikemol/witness/warrant_integrity.py" = ["blind-except"]
 "tests/test_warrant_integrity.py" = ["assert"]
+"tests/test_warrant_bib.py" = ["assert"]
