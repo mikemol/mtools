@@ -355,3 +355,34 @@
             could not see.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_query.py -k test_stats_counts_content_strings_no_decoder_read},
 }
+
+@misc{transcriptstruct-cli-unknown-flag-is-refused-not-ignored,
+  section = {cli},
+  title  = {A flag the CLI does not know exits 2; it is not silently dropped from the query},
+  claim  = {A flag the CLI does not know exits 2; it is not silently dropped from the query.
+            substrate's `_arg` ignored unknown flags, so a mistyped `--timestamps` ran
+            the default query and its answer read as the answer to the question actually
+            asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unknown_flag_is_refused_not_ignored},
+}
+
+@misc{transcriptstruct-cli-bare-invocation-is-the-stats-read,
+  section = {cli},
+  title  = {With no mode, the CLI prints one JSON line of population counts, never a dump},
+  claim  = {With no mode, the CLI prints one JSON line of population counts, never a dump.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_bare_invocation_is_the_stats_read},
+}
+
+@misc{transcriptstruct-cli-human-search-prints-hits-and-the-denominator-line,
+  section = {cli},
+  title  = {`--human` finds the operator's words, not the reminder, and ends with its n-of-m line},
+  claim  = {`--human` finds the operator's words, not the reminder, and ends with its n-of-m line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_human_search_prints_hits_and_the_denominator_line},
+}
+
+@misc{transcriptstruct-cli-extract-prints-null-for-a-missing-line,
+  section = {cli},
+  title  = {`--extract` prints every requested line, with null blocks where no record exists},
+  claim  = {`--extract` prints every requested line, with null blocks where no record exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_extract_prints_null_for_a_missing_line},
+}

@@ -4,7 +4,6 @@
 # ⚑ MIRRORS //pathsforward:BUILD.bazel TARGET FOR TARGET, which mirrors //ratchet. The rationale
 # for each shape lives there; this file says only where it differs.
 # `@transcriptstruct_dev` is declared in MODULE.bazel (43b2615).
-# ⚑ NO py_binary AND NO console_scripts YET: the CLI is stage 6. Until then this is a library.
 load("@transcriptstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
@@ -102,6 +101,16 @@ sh_test(
     size = "medium",
 )
 
+# ⚑ A py_binary SO OTHER REPOS CAN RUN THE TOOL AS A DECLARED TOOL rather than a copied script,
+# which is how substrate came to hold the sole copy this distribution replaces.
+py_binary(
+    name = "transcriptstruct_cli",
+    srcs = glob(["src/mikemol/transcriptstruct/**/*.py"]),
+    main = "src/mikemol/transcriptstruct/cli.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
 py_binary(
     name = "mypy_runner",
     srcs = ["//:mypy_runner.py"],
@@ -128,6 +137,10 @@ sh_test(
 
 venv_from_hub(
     name = ".venv",
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as //pathsforward:.venv mirrors its own.
+    console_scripts = {
+        "mikemol-transcriptstruct": "mikemol.transcriptstruct.cli:main",
+    },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",

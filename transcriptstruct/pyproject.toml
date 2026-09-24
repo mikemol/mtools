@@ -25,6 +25,9 @@ classifiers = [
 # imported would become a dependency of every repo that mines a transcript.
 dependencies = []
 
+[project.scripts]
+mikemol-transcriptstruct = "mikemol.transcriptstruct.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
@@ -92,3 +95,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_blocks.py" = ["assert"]
 "tests/test_provenance.py" = ["assert"]
 "tests/test_query.py" = ["assert"]
+"tests/test_cli.py" = ["assert"]
