@@ -8,3 +8,4 @@ cli	The CLI: The Birth Move, and Which Invocation Mutates
 remap	The Remap Guard: A Move May Change Paths and Nothing Else
 keys	The Key Schema: Which Field Is the Path, Declared Rather Than Guessed
 cannot_census	Cannot Census: A Checker That Cannot Run Refuses With Its Name, Never a Traceback, Never a Green
+render	The Render: Every String a Gate Prints, Nothing It Writes, and a Pointer a Console Script Keeps
