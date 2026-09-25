@@ -1279,3 +1279,19 @@
   claim  = {A whole ledger reads line by line, blank lines skipped, legacy lines kept as `Unparsed`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_read_parses_every_line_in_order},
 }
+
+@misc{pathsforward-ops-add-stamps-minted-during-from-the-lock,
+  section = {ops},
+  title  = {⚑ A mint under a fresh tick lock reads tick; no lock, a stale or unreadable one, interrupt},
+  claim  = { A mint under a fresh tick lock reads tick; no lock, a stale or unreadable one,
+            interrupt. nemik, 2026-09-25: the tool derives it, so a caller cannot answer
+            it from recall.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_add_stamps_minted_during_from_the_lock},
+}
+
+@misc{pathsforward-ops-add-records-caused-by,
+  section = {ops},
+  title  = {⚑ The optional cause is recorded on the minted waypoint; absent, it is null},
+  claim  = { The optional cause is recorded on the minted waypoint; absent, it is null.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_add_records_caused_by},
+}

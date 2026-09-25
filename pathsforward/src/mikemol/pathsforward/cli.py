@@ -164,6 +164,7 @@ def _parser() -> argparse.ArgumentParser:
     ap.add_argument("--ticks-blocked", type=int, metavar="N")
     ap.add_argument("--enables", nargs="+", metavar="SYMBOL")
     ap.add_argument("--touches", nargs="+", metavar="TAG")
+    ap.add_argument("--caused-by", metavar="REF", help="--add: letter path, peer, operator, W<n>")
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", default="tick", help="the ledger line's kind column")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
@@ -437,6 +438,7 @@ def _add(ctx: Ctx) -> int:
         ctx.get("next") or "",
         ctx.many("enables") or (),
         ctx.many("touches") or (),
+        ctx.get("caused_by") or "",
     )
 
     def edit(state: State) -> int:

@@ -23,6 +23,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
+from mikemol.pathsforward import lock
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -85,6 +86,27 @@ class Draft:
     next_step: str = ""
     enables: tuple[str, ...] = ()
     touches: tuple[str, ...] = ()
+    caused_by: str = ""
+
+
+def minted_during(state: State, now: str) -> str:
+    """Say whether a mint happens inside a tick or interrupts one, from the tick lock alone.
+
+    ⚑ THE TOOL DERIVES IT, NOT THE CALLER (nemik, 2026-09-25): a caller asked to say which it is
+    answers from recall. A lock held under LOCK_STALE_S is a tick; none, a stale one, or an
+    unreadable stamp is an interrupt.
+
+    Returns:
+        "tick" or "interrupt".
+
+    """
+    held = lock.current(state)
+    if held is None:
+        return "interrupt"
+    taken, at = lock.parse_time(held[1]), lock.parse_time(now)
+    if taken is None or at is None:
+        return "interrupt"
+    return "tick" if (at - taken).total_seconds() < lock.LOCK_STALE_S else "interrupt"
 
 
 def find(state: State, sym: str) -> Json:
@@ -243,6 +265,9 @@ def add(state: State, draft: Draft, now: str) -> str:
             f"W{max(claimed)}; run --check"
         )
         raise RefusedError(msg)
+    if any(ch.isspace() for ch in draft.caused_by):
+        msg = f"add refused, nothing minted: caused_by {draft.caused_by!r} is not one token"
+        raise RefusedError(msg)
     counter = state.counter + 1
     sym = f"W{counter}"
     state.doc["counter"] = counter
@@ -258,6 +283,8 @@ def add(state: State, draft: Draft, now: str) -> str:
             "next_bounded_step": draft.next_step,
             "evidence": "",
             "issued_at": now,
+            "minted_during": minted_during(state, now),
+            "caused_by": draft.caused_by or None,
             "last_worked": None,
             "ticks_blocked": 0,
         }

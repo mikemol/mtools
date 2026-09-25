@@ -172,6 +172,38 @@ def test_add_mints_the_next_symbol() -> None:
 
 
 @pytest.mark.parametrize(
+    ("lock", "during"),
+    [
+        ({"holder": "tick", "taken_at": "2026-09-23T11:50:00Z"}, "tick"),
+        ({"holder": "tick", "taken_at": "2026-09-23T11:00:00Z"}, "interrupt"),
+        ({"holder": "tick", "taken_at": "unreadable"}, "interrupt"),
+        (None, "interrupt"),
+    ],
+)
+def test_add_stamps_minted_during_from_the_lock(lock: Rec | None, during: str) -> None:
+    """⚑ A mint under a fresh tick lock reads tick; no lock, a stale or unreadable one, interrupt.
+
+    nemik, 2026-09-25: the tool derives it, so a caller cannot answer it from recall.
+    """
+    state = _state()
+    if lock is not None:
+        state.doc["lock"] = lock
+    ops.add(state, ops.Draft("new"), _NOW)
+    assert (state.waypoints[-1]["minted_during"], state.waypoints[-1]["issued_at"]) == (
+        during,
+        _NOW,
+    )
+
+
+@pytest.mark.parametrize(("ref", "stored"), [("W24", "W24"), ("", None)])
+def test_add_records_caused_by(ref: str, stored: str | None) -> None:
+    """⚑ The optional cause is recorded on the minted waypoint; absent, it is null."""
+    state = _state()
+    ops.add(state, ops.Draft("new", caused_by=ref), _NOW)
+    assert state.waypoints[-1]["caused_by"] == stored
+
+
+@pytest.mark.parametrize(
     "draft",
     [
         ops.Draft("  "),
@@ -179,6 +211,7 @@ def test_add_mints_the_next_symbol() -> None:
         # ⚑ nemik 2026-09-25: el-openglo W49/W50/W52/W59 stored "W46,W35" as ONE edge that
         # resolved to nothing. Refused here, never stored.
         ops.Draft("t", enables=("W46,W35",)),
+        ops.Draft("t", caused_by="two words"),
     ],
 )
 def test_a_refused_add_mints_nothing(draft: ops.Draft) -> None:
