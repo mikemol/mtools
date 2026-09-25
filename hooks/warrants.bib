@@ -4244,3 +4244,56 @@
   claim  = {Junk in every slot still emits: a gate that cannot log must still gate.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_junk_arguments_never_raise},
 }
+
+@misc{hooks-flag-contract-unknown-flag-is-refused-naming-the-known-set,
+  section = {flag-contract},
+  title  = {`--queit` is refused, and the refusal names `--quiet` among the flags that exist},
+  claim  = {`--queit` is refused, and the refusal names `--quiet` among the flags that exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_an_unknown_flag_is_refused_naming_the_known_set},
+}
+
+@misc{hooks-flag-contract-known-flag-and-a-bare-path-are-accepted,
+  section = {flag-contract},
+  title  = {A known flag passes, and a bare path is not a flag at all},
+  claim  = {A known flag passes, and a bare path is not a flag at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_a_known_flag_and_a_bare_path_are_accepted},
+}
+
+@misc{hooks-flag-contract-pre-sliced-argv-still-checks-its-first-flag,
+  section = {flag-contract},
+  title  = {A caller passing `argv[1:]` still has its only flag checked: THE PRE-SLICED ARM},
+  claim  = {A caller passing `argv[1:]` still has its only flag checked: THE PRE-SLICED ARM.
+            Substrate measured `--queit` returning rc=0 from the caller that sliced
+            before calling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_a_pre_sliced_argv_still_checks_its_first_flag},
+}
+
+@misc{hooks-flag-contract-unknown-flag-event-carries-what-was-typed-and-what-exists,
+  section = {flag-contract},
+  title  = {The refusal's event names the typo and the known set: a near-miss, not only an error},
+  claim  = {The refusal's event names the typo and the known set: a near-miss, not only an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_an_unknown_flag_event_carries_what_was_typed_and_what_exists},
+}
+
+@misc{hooks-flag-contract-mutation-refuses-neither-and-both-and-accepts-one,
+  section = {flag-contract},
+  title  = {`MUTATION` refuses an unstated intent and a contradiction; exactly one passes},
+  claim  = {`MUTATION` refuses an unstated intent and a contradiction; exactly one passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_mutation_refuses_neither_and_both_and_accepts_one},
+}
+
+@misc{hooks-flag-contract-caller-built-choice-refuses-the-same-way-and-names-its-remedy,
+  section = {flag-contract},
+  title  = {A pair the caller declares (here a stand-in tenant) gets the same three cases and its remedy},
+  claim  = {A pair the caller declares (here a stand-in tenant) gets the same three cases and its
+            remedy. The MECHANISM travels; the tenant flags and remedy are the caller's
+            policy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_a_caller_built_choice_refuses_the_same_way_and_names_its_remedy},
+}
+
+@misc{hooks-flag-contract-unstated-choice-emits-its-own-reason,
+  section = {flag-contract},
+  title  = {Neither flag stated emits the choice's reason, so each contract is its own census},
+  claim  = {Neither flag stated emits the choice's reason, so each contract is its own census.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_an_unstated_choice_emits_its_own_reason},
+}

@@ -19,3 +19,4 @@ pycheck	The Python Edit Gate: The Post-Edit File Checked, a Tree Exclusion Honou
 adopt-launcher	The Consumer Launcher: Another Repo Running This Venv, Failing Closed, With the Repair Reachable
 githook-pre-push	The Shared Pre-Push: An Operation in Flight Refused, and a Repo's Own Hook Given the Same Stdin
 refusal-log	The Refusal Log: A Refused Invocation Recorded Where Its Caller Says, and Not-Sent Reported, Never Swallowed
+flag-contract	The Flag Contract: An Unknown Flag Refused by Name, and an Unstated Choice Between Two Refused
