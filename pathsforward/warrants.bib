@@ -1341,3 +1341,39 @@
   claim  = {A ledger line with no --kind is a tick line, and --kind still names another kind.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_ledger_kind_still_defaults_to_tick},
 }
+
+@misc{pathsforward-model-foreign-symbol-parses-to-its-repo-and-number,
+  section = {model},
+  title  = {⚑⚑ `luthen-observability:W55` is another repo's W55, and never a local symbol},
+  claim  = { `luthen-observability:W55` is another repo's W55, and never a local symbol.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_foreign_symbol_parses_to_its_repo_and_number},
+}
+
+@misc{pathsforward-model-malformed-foreign-symbol-parses-to-none,
+  section = {model},
+  title  = {An empty repo, a bad or zero number, a space, a plain local symbol or a non-string: None},
+  claim  = {An empty repo, a bad or zero number, a space, a plain local symbol or a non-string:
+            None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_malformed_foreign_symbol_parses_to_none},
+}
+
+@misc{pathsforward-ops-edge-may-name-another-repos-waypoint,
+  section = {ops},
+  title  = {⚑⚑ `repo:W<n>` is a legal edge for --add and --update (nemik, 2026-09-25)},
+  claim  = { `repo:W<n>` is a legal edge for --add and --update (nemik, 2026-09-25).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_edge_may_name_another_repos_waypoint},
+}
+
+@misc{pathsforward-ops-malformed-foreign-edge-is-refused,
+  section = {ops},
+  title  = {An empty repo, a missing or zero symbol, a space, or a comma-joined pair is refused},
+  claim  = {An empty repo, a missing or zero symbol, a space, or a comma-joined pair is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_malformed_foreign_edge_is_refused},
+}
+
+@misc{pathsforward-check-foreign-edge-is-not-dangling,
+  section = {check},
+  title  = {⚑ Another repo's `repo:W<n>` is never read as a local symbol, so it never dangles here},
+  claim  = { Another repo's `repo:W<n>` is never read as a local symbol, so it never dangles here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_foreign_edge_is_not_dangling},
+}

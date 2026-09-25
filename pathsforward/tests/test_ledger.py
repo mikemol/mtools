@@ -77,6 +77,7 @@ def test_an_entry_that_would_shift_columns_is_refused(entry: Entry) -> None:
     "entry",
     [
         Entry("tick", "W7", "advanced", "unblock", "skeleton written"),
+        Entry("peer", "luthen-observability:W55", "nudged", "--", "a cross-repo edge"),
         Entry("tick", "--", "idle", "--", 'say "hi"'),
         Entry("tick", "--", "idle", "--", "a\\"),
         Entry("note", "W12", "peer", "--", "n", "commit abc; two words of evidence"),

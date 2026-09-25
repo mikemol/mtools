@@ -27,6 +27,7 @@ from mikemol.pathsforward import lock
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
+    is_reference,
     strlist,
     symbol_number,
     text,
@@ -34,12 +35,24 @@ from mikemol.pathsforward.model import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from mikemol.pathsforward.model import Json, State
 
 NUDGE_TICKS: tuple[int, ...] = (1, 2, 4, 8)
 ESCALATE_TICK = 16
 _DATE = 10
 _UNBLOCKING = ("ready", "done")
+
+
+def _bad_edges(edges: Iterable[str]) -> list[str]:
+    """Name the edges that are neither a local `W<n>` nor another repo's `repo:W<n>`.
+
+    Returns:
+        each malformed edge, in order.
+
+    """
+    return [e for e in edges if not is_reference(e)]
 
 
 class RefusedError(ValueError):
@@ -149,9 +162,9 @@ def _refuse_enums(upd: Update) -> None:
     if upd.ticks_blocked is not None and upd.ticks_blocked < 0:
         msg = f"ticks_blocked {upd.ticks_blocked} is negative"
         raise RefusedError(msg)
-    bad = [e for e in upd.enables or () if symbol_number(e) is None]
+    bad = _bad_edges(upd.enables or ())
     if bad:
-        msg = f"enables {bad} are not W<n> symbols"
+        msg = f"enables {bad} are not W<n> or repo:W<n> symbols"
         raise RefusedError(msg)
     _refuse_title(upd.title)
 
@@ -254,9 +267,9 @@ def add(state: State, draft: Draft, now: str) -> str:
     if not draft.title.strip():
         msg = "add refused, nothing minted: the title is empty"
         raise RefusedError(msg)
-    bad = [e for e in draft.enables if symbol_number(e) is None]
+    bad = _bad_edges(draft.enables)
     if bad:
-        msg = f"add refused, nothing minted: enables {bad} are not W<n> symbols"
+        msg = f"add refused, nothing minted: enables {bad} are not W<n> or repo:W<n> symbols"
         raise RefusedError(msg)
     # ⚑⚑ A SYMBOL IS NEVER ISSUED TWICE (skill section 2). A counter that lags a claimed symbol
     # would re-mint it: measured 2026-09-25 (nemik: rosettapkg W6), counter=5 with W6 in residue

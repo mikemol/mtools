@@ -133,6 +133,12 @@ def test_a_dangling_symbol_edge_is_found(tmp_path: Path) -> None:
     assert chk.edges(state) == ["W1 -> W9: dangling edge"]
 
 
+def test_a_foreign_edge_is_not_dangling(tmp_path: Path) -> None:
+    """⚑ Another repo's `repo:W<n>` is never read as a local symbol, so it never dangles here."""
+    w1 = _wp("W1", enables=["luthen-observability:W55", "W9"])
+    assert chk.edges(_state(tmp_path, waypoints=[w1, _wp("W2")])) == ["W1 -> W9: dangling edge"]
+
+
 def test_a_party_in_blocked_on_is_not_an_edge(tmp_path: Path) -> None:
     """A `blocked_on` naming a party, not a symbol, is not a dangling edge."""
     w1 = _wp("W1", "blocked", blocked_on=["mikemol", "W2"], blocked_kind="human")

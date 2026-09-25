@@ -24,6 +24,7 @@ BLOCKED_KINDS: tuple[str, ...] = ("agent", "human")
 NO_SYMBOL = "--"
 
 _SYMBOL = re.compile(r"W([1-9][0-9]*)")
+_FOREIGN = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*):W([1-9][0-9]*)")
 _RANK: dict[str, int] = {"working": 0, "ready": 1, "blocked": 2}
 
 
@@ -56,6 +57,33 @@ def symbol_number(sym: object) -> int | None:
         return None
     match = _SYMBOL.fullmatch(sym)
     return int(match.group(1)) if match else None
+
+
+def foreign_symbol(sym: object) -> tuple[str, int] | None:
+    """Parse another repo's `repo:W<n>` (e.g. `luthen-observability:W55`) to its repo and `n`.
+
+    ⚑ A FOREIGN SYMBOL IS NEVER A LOCAL ONE: `symbol_number` stays local-only, so no local check
+    (the counter, a dangling edge, residue) ever reads another repo's number as its own
+    (nemik, 2026-09-25, who resolves these into cross-repo edges).
+
+    Returns:
+        (repo, n), or None for anything that is not exactly `<repo>:W<n>`.
+
+    """
+    if not isinstance(sym, str):
+        return None
+    match = _FOREIGN.fullmatch(sym)
+    return (str(match.group(1)), int(match.group(2))) if match else None
+
+
+def is_reference(sym: object) -> bool:
+    """Say whether `sym` names a waypoint: a local `W<n>` or another repo's `repo:W<n>`.
+
+    Returns:
+        True for either form.
+
+    """
+    return symbol_number(sym) is not None or foreign_symbol(sym) is not None
 
 
 def _records(doc: Json, key: str) -> list[Json]:

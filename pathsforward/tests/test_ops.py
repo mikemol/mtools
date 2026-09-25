@@ -334,3 +334,24 @@ def test_a_blank_preamble_is_refused() -> None:
     """A preamble of blank lines is refused."""
     with pytest.raises(ops.RefusedError, match="0 non-blank"):
         ops.set_preamble(_state(), ["", " "])
+
+
+_FOREIGN_EDGE = "luthen-observability:W55"
+
+
+def test_an_edge_may_name_another_repos_waypoint() -> None:
+    """⚑⚑ `repo:W<n>` is a legal edge for --add and --update (nemik, 2026-09-25)."""
+    state = _state()
+    ops.add(state, ops.Draft("new", enables=("W1", _FOREIGN_EDGE)), _NOW)
+    ops.update(state, "W2", ops.Update(enables=(_FOREIGN_EDGE,)), _NOW)
+    assert (state.waypoints[-1]["enables"], state.waypoints[1]["enables"]) == (
+        ["W1", _FOREIGN_EDGE],
+        [_FOREIGN_EDGE],
+    )
+
+
+@pytest.mark.parametrize("edge", [":W5", "repo:", "repo:X5", "repo:W0", "a b:W5", "repo:W5,W6"])
+def test_a_malformed_foreign_edge_is_refused(edge: str) -> None:
+    """An empty repo, a missing or zero symbol, a space, or a comma-joined pair is refused."""
+    with pytest.raises(ops.RefusedError, match="not W<n>"):
+        ops.update(_state(), "W1", ops.Update(enables=(edge,)), _NOW)

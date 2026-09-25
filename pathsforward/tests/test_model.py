@@ -9,6 +9,8 @@ import pytest
 from mikemol.pathsforward.model import (
     MalformedStateError,
     State,
+    foreign_symbol,
+    is_reference,
     strlist,
     symbol_number,
     text,
@@ -18,6 +20,23 @@ from mikemol.pathsforward.model import (
 
 _SEVEN = 7
 _THREE = 3
+_FIFTY_FIVE = 55
+
+
+def test_a_foreign_symbol_parses_to_its_repo_and_number() -> None:
+    """⚑⚑ `luthen-observability:W55` is another repo's W55, and never a local symbol."""
+    sym = "luthen-observability:W55"
+    assert (foreign_symbol(sym), symbol_number(sym), is_reference(sym)) == (
+        ("luthen-observability", _FIFTY_FIVE),
+        None,
+        True,
+    )
+
+
+@pytest.mark.parametrize("bad", [":W5", "repo:", "repo:X5", "repo:W0", "a b:W5", "W5", 7, None])
+def test_a_malformed_foreign_symbol_parses_to_none(bad: object) -> None:
+    """An empty repo, a bad or zero number, a space, a plain local symbol or a non-string: None."""
+    assert foreign_symbol(bad) is None
 
 
 def _doc(**over: object) -> dict[str, object]:

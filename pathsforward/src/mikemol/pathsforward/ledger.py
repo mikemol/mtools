@@ -20,7 +20,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from mikemol.pathsforward import lock
-from mikemol.pathsforward.model import NO_SYMBOL, symbol_number
+from mikemol.pathsforward.model import NO_SYMBOL, is_reference
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -28,6 +28,19 @@ if TYPE_CHECKING:
 
 class MalformedEntryError(ValueError):
     """A ledger entry that would not parse back into its columns."""
+
+
+def is_symbol(sym: str) -> bool:
+    """Say whether a symbol column is legal: `--`, a local `W<n>`, or another repo's `repo:W<n>`.
+
+    ⚑ A CROSS-REPO SYMBOL IS A LEGAL COLUMN (nemik, 2026-09-25): ledgers already write
+    `luthen-observability:W55`, and nemik resolves it into a cross-repo edge.
+
+    Returns:
+        True for any of the three forms.
+
+    """
+    return sym == NO_SYMBOL or is_reference(sym)
 
 
 def is_stamp(stamp: str) -> bool:
@@ -64,8 +77,8 @@ def line(entry: Entry, stamp: str) -> str:
         the line, without a trailing newline.
 
     Raises:
-        MalformedEntryError: on an empty or whitespace-bearing column, a symbol that is neither
-            `--` nor `W<n>`, or a multi-line note.
+        MalformedEntryError: on an empty or whitespace-bearing column, a symbol that is none of
+            `--`, `W<n>` or `repo:W<n>`, or a multi-line note.
 
     """
     if not is_stamp(stamp):
@@ -75,8 +88,8 @@ def line(entry: Entry, stamp: str) -> str:
     if any(not c or any(ch.isspace() for ch in c) for c in columns):
         msg = f"ledger columns must be non-empty single tokens: {columns}"
         raise MalformedEntryError(msg)
-    if entry.symbol != NO_SYMBOL and symbol_number(entry.symbol) is None:
-        msg = f"ledger symbol {entry.symbol!r} is neither {NO_SYMBOL} nor W<n>"
+    if not is_symbol(entry.symbol):
+        msg = f"ledger symbol {entry.symbol!r} is neither {NO_SYMBOL}, W<n> nor repo:W<n>"
         raise MalformedEntryError(msg)
     if "\n" in entry.note or "\n" in entry.evidence:
         msg = "a ledger note is one line"
@@ -145,8 +158,8 @@ def parse(text: str) -> Parsed | Unparsed:
     if not is_stamp(stamp):
         return Unparsed(raw, f"stamp {stamp!r} is not YYYY-MM-DDTHH:MM:SSZ")
     symbol = _group(match, "symbol")
-    if symbol != NO_SYMBOL and symbol_number(symbol) is None:
-        return Unparsed(raw, f"symbol {symbol!r} is neither {NO_SYMBOL} nor W<n>")
+    if not is_symbol(symbol):
+        return Unparsed(raw, f"symbol {symbol!r} is neither {NO_SYMBOL}, W<n> nor repo:W<n>")
     entry = Entry(
         _group(match, "kind"),
         symbol,
