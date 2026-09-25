@@ -90,7 +90,7 @@ def test_nested_calls_sharing_a_start_keep_their_own_facts(tmp_path: Path) -> No
     """⚑⚑ `a().b()`: inner and outer start at one column; the span tells them apart."""
     path = _write(tmp_path, "n.py", "a().b()\n")
     got = sites.scan([path])
-    assert [f.receiver for f in got.at(path, 1)] == [None, "a()"]
+    assert [(f.name, f.receiver) for f in got.at(path, 1)] == [("a", None), ("b", "a()")]
 
 
 def test_a_called_attribute_is_not_also_a_reference(tmp_path: Path) -> None:
@@ -150,6 +150,15 @@ def test_call_facts_carry_every_reading(tmp_path: Path) -> None:
     assert facts.positions == {0: core.UNKNOWN, 1: "w"}
     assert facts.possrc == {0: "x", 1: '"w"'}
     assert (facts.receiver, facts.context, facts.conds) == (None, "<module>", ())
+
+
+def test_a_double_star_is_a_splat_not_a_positional(tmp_path: Path) -> None:
+    """⚑⚑ `*rest` holds an ordinal; `**cfg` holds none, and it opens the keyword set."""
+    path = _write(tmp_path, "s.py", "f(x, *rest, **cfg)\ng(k=1)\n")
+    got = sites.scan([path])
+    (splatted,) = got.at(path, 1)
+    assert (splatted.splat, splatted.possrc) == (True, {0: "x", 1: "rest"})
+    assert got.at(path, 2)[0].splat is False
 
 
 def test_the_result_carries_its_query_and_reports_every_skip(tmp_path: Path) -> None:

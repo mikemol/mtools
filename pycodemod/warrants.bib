@@ -474,3 +474,73 @@
   claim  = {`a.b.c` is spelled; anything with a call or subscript in the chain is not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_dotted_spells_only_name_and_attribute_chains},
 }
+
+@misc{pycodemod-sites-double-star-is-a-splat-not-a-positional,
+  section = {sites},
+  title  = {⚑⚑ `*rest` holds an ordinal; `**cfg` holds none, and it opens the keyword set},
+  claim  = { `*rest` holds an ordinal; `**cfg` holds none, and it opens the keyword set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_a_double_star_is_a_splat_not_a_positional},
+}
+
+@misc{pycodemod-arguments-forwards-has-a-side-for-the-splat,
+  section = {arguments},
+  title  = {⚑⚑ Passes, lacks, and cannot-tell: a `**cfg` call is never counted as lacking},
+  claim  = { Passes, lacks, and cannot-tell: a `**cfg` call is never counted as lacking.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_forwards_has_a_side_for_the_splat},
+}
+
+@misc{pycodemod-arguments-asserted-splits-literal-from-computed,
+  section = {arguments},
+  title  = {`None` is a literal; a name is computed; a call not passing the keyword is on no side},
+  claim  = {`None` is a literal; a name is computed; a call not passing the keyword is on no side.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_asserted_splits_literal_from_computed},
+}
+
+@misc{pycodemod-arguments-values-report-the-constant-or-unknown-over-the-total,
+  section = {arguments},
+  title  = {⚑⚑ Never a guess: `k=x` is UNKNOWN, `k=None` is None, and the denominator is every call},
+  claim  = { Never a guess: `k=x` is UNKNOWN, `k=None` is None, and the denominator is every call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_values_report_the_constant_or_unknown_over_the_total},
+}
+
+@misc{pycodemod-arguments-int-reads-a-position,
+  section = {arguments},
+  title  = {An ordinal reads the positional argument; a `**` splat holds no position},
+  claim  = {An ordinal reads the positional argument; a `**` splat holds no position.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_an_int_reads_a_position},
+}
+
+@misc{pycodemod-arguments-guarded-splits-calls-under-a-test-from-the-top,
+  section = {arguments},
+  title  = {A call under `if a:` carries the test; every other call is at the top of its scope},
+  claim  = {A call under `if a:` carries the test; every other call is at the top of its scope.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_guarded_splits_calls_under_a_test_from_the_top},
+}
+
+@misc{pycodemod-arguments-values-many-reads-several-callees-from-one-scan,
+  section = {arguments},
+  title  = {Each callee's rows and total, from one unnarrowed scan; an absent callee has total 0},
+  claim  = {Each callee's rows and total, from one unnarrowed scan; an absent callee has total 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_values_many_reads_several_callees_from_one_scan},
+}
+
+@misc{pycodemod-arguments-values-many-refuses-a-narrowed-scan,
+  section = {arguments},
+  title  = {⚑⚑ A scan narrowed to `f` would report `g` as never called: a zero about the scan},
+  claim  = { A scan narrowed to `f` would report `g` as never called: a zero about the scan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_values_many_refuses_a_narrowed_scan},
+}
+
+@misc{pycodemod-arguments-calls-filter-by-callee-in-span-order,
+  section = {arguments},
+  title  = {`calls` keeps span order and filters by callee name when asked},
+  claim  = {`calls` keeps span order and filters by callee name when asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_calls_filter_by_callee_in_span_order},
+}
+
+@misc{pycodemod-arguments-missing-renders-as-a-word,
+  section = {arguments},
+  title  = {The not-passed sentinel renders as a word, never as data},
+  claim  = {The not-passed sentinel renders as a word, never as data.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_missing_renders_as_a_word},
+}

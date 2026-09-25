@@ -28,6 +28,10 @@ use-as-value set, so every `x.f()` was reported as a call AND a ref of `f`.
 else-body call read as sitting under the very test that is false when it runs. The body carries
 the test; the `else` carries `not (test)`; an `elif` chain composes.
 
+⚑⚑ A `**mapping` IS NOT A POSITIONAL ARGUMENT. The origin gave it an ordinal slot, so `f(**cfg)`
+read as passing a positional and as passing NO keyword — while `cfg` may carry any keyword at all.
+`splat` records that the keyword set is not closed, so a reader can say "cannot tell".
+
 ⚑ THE RECEIVER IS THE WHOLE SPELLING (`x.store`, not `store`), and a dotted target matches it
 exactly — still spelling, never resolution. ⚑ A METHOD'S CONTEXT IS QUALIFIED by its class. ⚑ A
 KEYWORD'S NAME IS A LABEL, not a use of that name. ⚑ A VISITOR BUG RAISES: only an unreadable or
@@ -52,6 +56,7 @@ if TYPE_CHECKING:
     from mikemol.pycodemod.core import _Unknown
 
 MODULE = "<module>"
+_SPLAT = "**"
 
 type Text = str | _Unknown
 type Key = tuple[str, int, int, int, int]
@@ -70,10 +75,15 @@ class Site:
 
 @dataclass(frozen=True, slots=True)
 class CallFacts:
-    """What one call site says: its receiver, arguments, enclosing scope and `if` tests."""
+    """What one call site says: its callee, receiver, arguments, scope and `if` tests.
 
+    `splat` is True when a `**mapping` is passed: the keyword set is then NOT closed.
+    """
+
+    name: str
     receiver: str | None
     keywords: frozenset[str]
+    splat: bool
     shapes: dict[str, str]
     constants: dict[str, Value]
     positions: dict[int, Value]
@@ -265,14 +275,16 @@ class _Visitor(cst.CSTVisitor):
         start, end = span.start, span.end
         self.rows.append(Site(self.path, "call", name, start.line, start.column))
         key = (self.path, start.line, start.column, end.line, end.column)
-        self.facts[key] = self._facts(node, receiver)
+        self.facts[key] = self._facts(node, name, receiver)
 
-    def _facts(self, node: cst.Call, receiver: str | None) -> CallFacts:
+    def _facts(self, node: cst.Call, name: str, receiver: str | None) -> CallFacts:
         named = [(a.keyword.value, a.value) for a in node.args if a.keyword is not None]
-        positional = [a.value for a in node.args if a.keyword is None]
+        positional = [a.value for a in node.args if a.keyword is None and a.star != _SPLAT]
         return CallFacts(
+            name=name,
             receiver=receiver,
             keywords=frozenset(k for k, _ in named),
+            splat=any(a.star == _SPLAT for a in node.args),
             shapes={k: shape_of(v) for k, v in named},
             constants={k: value_of(v) for k, v in named},
             positions={i: value_of(v) for i, v in enumerate(positional)},
