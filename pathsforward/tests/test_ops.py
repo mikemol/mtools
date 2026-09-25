@@ -171,7 +171,16 @@ def test_add_mints_the_next_symbol() -> None:
     )
 
 
-@pytest.mark.parametrize("draft", [ops.Draft("  "), ops.Draft("t", enables=("mikemol",))])
+@pytest.mark.parametrize(
+    "draft",
+    [
+        ops.Draft("  "),
+        ops.Draft("t", enables=("mikemol",)),
+        # ⚑ nemik 2026-09-25: el-openglo W49/W50/W52/W59 stored "W46,W35" as ONE edge that
+        # resolved to nothing. Refused here, never stored.
+        ops.Draft("t", enables=("W46,W35",)),
+    ],
+)
 def test_a_refused_add_mints_nothing(draft: ops.Draft) -> None:
     """A refused add leaves the counter and the list untouched (validate before minting)."""
     state = _state()
@@ -181,6 +190,25 @@ def test_a_refused_add_mints_nothing(draft: ops.Draft) -> None:
         _COUNTER,
         ["W1", "W2"],
     )
+
+
+@pytest.mark.parametrize("where", ["waypoints", "residue"])
+def test_add_never_re_mints_a_claimed_symbol(where: str) -> None:
+    """⚑⚑ A counter lagging a claimed symbol refuses the add; the symbol is never issued twice.
+
+    Measured on HEAD 2026-09-25 (nemik: rosettapkg W6): counter=5 with W6 in residue minted a
+    live W6, a symbol both live and in residue.
+    """
+    state = _state()
+    claimed = f"W{_COUNTER + 1}"
+    if where == "residue":
+        state.residue.append({"symbol": claimed, "reason": "old", "dropped_at": "d"})
+    else:
+        state.waypoints.append(_wp(claimed))
+    before = copy.deepcopy(state.doc)
+    with pytest.raises(ops.RefusedError, match=rf"nothing minted.*{claimed}.*--check"):
+        ops.add(state, ops.Draft("new"), _NOW)
+    assert state.doc == before
 
 
 def test_drop_moves_to_residue_with_the_reason() -> None:

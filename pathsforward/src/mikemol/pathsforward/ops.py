@@ -228,6 +228,21 @@ def add(state: State, draft: Draft, now: str) -> str:
     if bad:
         msg = f"add refused, nothing minted: enables {bad} are not W<n> symbols"
         raise RefusedError(msg)
+    # ⚑⚑ A SYMBOL IS NEVER ISSUED TWICE (skill section 2). A counter that lags a claimed symbol
+    # would re-mint it: measured 2026-09-25 (nemik: rosettapkg W6), counter=5 with W6 in residue
+    # minted a LIVE W6. Refused, not skipped past: a lagging counter is a finding for the file's
+    # owner, which `--check` names; this tool reports and does not repair (D8).
+    claimed = [
+        n
+        for rec in (*state.waypoints, *state.residue)
+        if (n := symbol_number(text(rec, "symbol"))) is not None and n > state.counter
+    ]
+    if claimed:
+        msg = (
+            f"add refused, nothing minted: counter={state.counter} lags claimed "
+            f"W{max(claimed)}; run --check"
+        )
+        raise RefusedError(msg)
     counter = state.counter + 1
     sym = f"W{counter}"
     state.doc["counter"] = counter

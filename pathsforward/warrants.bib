@@ -1239,3 +1239,12 @@
             saved.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_blank_or_multiline_title_is_refused},
 }
+
+@misc{pathsforward-ops-add-never-re-mints-a-claimed-symbol,
+  section = {ops},
+  title  = {⚑⚑ A counter lagging a claimed symbol refuses the add; the symbol is never issued twice},
+  claim  = { A counter lagging a claimed symbol refuses the add; the symbol is never issued twice.
+            Measured on HEAD 2026-09-25 (nemik: rosettapkg W6): counter=5 with W6 in
+            residue minted a live W6, a symbol both live and in residue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_add_never_re_mints_a_claimed_symbol},
+}
