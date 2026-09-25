@@ -1103,3 +1103,55 @@
   claim  = { An unreadable or unparseable file is skipped with its reason, never silently dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-aliases-each-import-is-graded-by-form,
+  section = {aliases},
+  title  = {⚑⚑ BARE, AS-MOD, FROM, FROM-AS, FROM-STAR and RELATIVE, local modules only},
+  claim  = { BARE, AS-MOD, FROM, FROM-AS, FROM-STAR and RELATIVE, local modules only. `import
+            pkg.sub` binds `pkg`, not `pkg.sub`; the package directory is a local head.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_each_import_is_graded_by_form},
+}
+
+@misc{pycodemod-aliases-scope-is-the-innermost-def-or-class,
+  section = {aliases},
+  title  = {⚑⚑ A def or async def is `func`, a class body is `class`, a method inside it is `func`},
+  claim  = { A def or async def is `func`, a class body is `class`, a method inside it is `func`.
+            The origin marked only defs, so a class-body import read `module`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_scope_is_the_innermost_def_or_class},
+}
+
+@misc{pycodemod-aliases-foreign-modules-are-left-out-unless-asked,
+  section = {aliases},
+  title  = {`import json` is foreign by default and reported with local_only off},
+  claim  = {`import json` is foreign by default and reported with local_only off.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_foreign_modules_are_left_out_unless_asked},
+}
+
+@misc{pycodemod-aliases-caller-can-add-local-heads,
+  section = {aliases},
+  title  = {A head the neighbourhood cannot see, such as a namespace package, is the caller's to add},
+  claim  = {A head the neighbourhood cannot see, such as a namespace package, is the caller's to
+            add.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_the_caller_can_add_local_heads},
+}
+
+@misc{pycodemod-aliases-violations-are-every-non-bare-form,
+  section = {aliases},
+  title  = {Only BARE is compliant; everything else is a violation, wherever it sits},
+  claim  = {Only BARE is compliant; everything else is a violation, wherever it sits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_violations_are_every_non_bare_form},
+}
+
+@misc{pycodemod-aliases-siblings-are-the-py-files-beside-a-path,
+  section = {aliases},
+  title  = {The neighbourhood is the `.py` files in the same directory; a missing one lists nothing},
+  claim  = {The neighbourhood is the `.py` files in the same directory; a missing one lists nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_siblings_are_the_py_files_beside_a_path},
+}
+
+@misc{pycodemod-aliases-unread-file-is-reported,
+  section = {aliases},
+  title  = {⚑ An unreadable or unparseable file is skipped with its reason, never silently dropped},
+  claim  = { An unreadable or unparseable file is skipped with its reason, never silently dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_an_unread_file_is_reported},
+}
