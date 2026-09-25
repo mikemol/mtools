@@ -129,7 +129,8 @@ def test_frontmatter_is_excluded_and_lines_are_offset(document: Path) -> None:
         assert 1 <= finding.line <= len(text)
     # No finding may name a frontmatter line.
     assert all(f.line > _FRONTMATTER_LINES for f in findings), (
-        "a metadata line was reported as prose")
+        "a metadata line was reported as prose"
+    )
 
 
 def test_narrowest_is_none_when_nothing_in_range_fits(doc: Path) -> None:
@@ -226,9 +227,7 @@ def test_a_row_whose_cell_count_differs_from_its_header_is_reported(doc: Path) -
 # ⚑ THE LICENCE HEADER EVERY README IN THIS REPOSITORY IS REQUIRED TO OPEN WITH. Named because the
 # first-line rule reported every conforming README for carrying it.
 _SPDX_HEADER = (
-    "<!-- SPDX-License-Identifier: Apache-2.0 -->\n"
-    "<!-- Copyright (c) 2026 Mike Mol -->\n"
-    "\n"
+    "<!-- SPDX-License-Identifier: Apache-2.0 -->\n<!-- Copyright (c) 2026 Mike Mol -->\n\n"
 )
 
 _HEADING = "# A title\n"

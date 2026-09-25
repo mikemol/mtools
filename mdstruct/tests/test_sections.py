@@ -143,7 +143,7 @@ def test_a_replace_keeps_the_blank_lines_on_both_sides(document: Path) -> None:
     assert not lines[lines.index("## Third") - 1].strip(), (
         "the blank line before the next heading was swallowed"
     )
-    assert "REPLACED" in lines[heading + 2:lines.index("## Third")], "the body did not land"
+    assert "REPLACED" in lines[heading + 2 : lines.index("## Third")], "the body did not land"
 
 
 def test_a_write_returns_the_span_it_hit(document: Path) -> None:
@@ -162,7 +162,7 @@ def test_an_ambiguous_target_refuses_before_writing(document: Path) -> None:
     rewrite is not recoverable by re-running.
     """
     with pytest.raises(LookupError):
-        sections.replace_section(document, "ir", "X\n")   # First AND Third
+        sections.replace_section(document, "ir", "X\n")  # First AND Third
 
 
 # ⚑⚑⚑ A CONTAINMENT FIXTURE, BECAUSE THE ONE ABOVE HAS NONE. `First`/`Second`/`Third` are pairwise
@@ -250,8 +250,12 @@ def _write_cli(*args: str) -> subprocess.CompletedProcess[str]:
         in-process call would test the layer that was never the gap.
 
     """
-    return subprocess.run([sys.executable, "-m", "mikemol.mdstruct.cli", *args],
-                          check=False, capture_output=True, text=True)
+    return subprocess.run(
+        [sys.executable, "-m", "mikemol.mdstruct.cli", *args],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
 
 
 def test_a_dry_run_is_the_default_and_writes_nothing(contained: Path, tmp_path: Path) -> None:
@@ -265,8 +269,9 @@ def test_a_dry_run_is_the_default_and_writes_nothing(contained: Path, tmp_path: 
     body = tmp_path / "body.md"
     body.write_text("NEW BODY\n", encoding="utf-8")
     before = contained.read_text(encoding="utf-8")
-    result = _write_cli("replace-section", "Residue", str(contained),
-                        "--body-file", str(body), "--exact")
+    result = _write_cli(
+        "replace-section", "Residue", str(contained), "--body-file", str(body), "--exact"
+    )
     assert result.returncode == 0, f"the dry run refused: {result.stderr!r}"
     assert "NEW BODY" in result.stdout, (
         f"the dry run did not print the rewritten document, so a caller cannot review what "
@@ -277,8 +282,7 @@ def test_a_dry_run_is_the_default_and_writes_nothing(contained: Path, tmp_path: 
     )
 
 
-def test_apply_writes_the_target_and_leaves_its_neighbour(contained: Path,
-                                                          tmp_path: Path) -> None:
+def test_apply_writes_the_target_and_leaves_its_neighbour(contained: Path, tmp_path: Path) -> None:
     """⚑ THE CAPABILITY, without which the refusal arms below are satisfied by a broken-shut tool.
 
     A write CLI that refused everything would pass every refusal arm in this module. This pins
@@ -288,8 +292,9 @@ def test_apply_writes_the_target_and_leaves_its_neighbour(contained: Path,
     """
     body = tmp_path / "body.md"
     body.write_text("NEW BODY\n", encoding="utf-8")
-    result = _write_cli("replace-section", "Residue", str(contained),
-                        "--body-file", str(body), "--exact", "--apply")
+    result = _write_cli(
+        "replace-section", "Residue", str(contained), "--body-file", str(body), "--exact", "--apply"
+    )
     assert result.returncode == 0, f"the write refused: {result.stderr!r}"
     got = contained.read_text(encoding="utf-8")
     assert "NEW BODY" in got
@@ -361,8 +366,7 @@ def test_the_target_and_the_body_file_may_not_be_the_same_document(contained: Pa
     )
 
 
-def test_stating_both_intents_refuses_rather_than_choosing(contained: Path,
-                                                           tmp_path: Path) -> None:
+def test_stating_both_intents_refuses_rather_than_choosing(contained: Path, tmp_path: Path) -> None:
     """⚑ NOT A PRECEDENCE RULE, and the sibling `fence` distribution reached this independently.
 
     `--apply --dry-run` has two bad resolutions: a write the caller believed was a preview, or the
@@ -372,8 +376,16 @@ def test_stating_both_intents_refuses_rather_than_choosing(contained: Path,
     body = tmp_path / "body.md"
     body.write_text("NEW BODY\n", encoding="utf-8")
     before = contained.read_text(encoding="utf-8")
-    result = _write_cli("replace-section", "Residue", str(contained), "--body-file", str(body),
-                        "--exact", "--apply", "--dry-run")
+    result = _write_cli(
+        "replace-section",
+        "Residue",
+        str(contained),
+        "--body-file",
+        str(body),
+        "--exact",
+        "--apply",
+        "--dry-run",
+    )
     assert result.returncode == _WRITE_REFUSED, (
         f"both intents together were resolved rather than refused; rc={result.returncode}"
     )

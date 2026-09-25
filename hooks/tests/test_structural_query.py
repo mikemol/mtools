@@ -287,7 +287,8 @@ def _fixed_claims() -> dict[str, tuple[str, str]]:
 
 
 def test_an_armed_hook_writes_a_deny_envelope_to_stdout(
-        monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     """⚑ ARMED MEANS THE HARNESS SEES A DENY, NOT MERELY THAT A MESSAGE WAS PRINTED.
 
     An advisory hook writes to stderr, which the harness ignores; only the stdout envelope refuses
@@ -303,7 +304,8 @@ def test_an_armed_hook_writes_a_deny_envelope_to_stdout(
 
 
 def test_an_advisory_hook_writes_to_stderr_and_leaves_stdout_empty(
-        monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     """⚑ THE POSITIVE CONTROL FOR ARMING, AT THE LEVEL THE HARNESS ACTUALLY READS.
 
     Without this the armed case passes against a hook that always denies — which is the failure
@@ -334,7 +336,8 @@ def test_a_pager_or_filter_reading_a_claimed_artifact_is_refused(tool: str) -> N
     # asserts against an EMPTY table under pytest and passes nothing to the gate. The first cut
     # did exactly that: five arms failed while the same commands blocked correctly from a shell.
     assert structural_query.verdict(f"{tool} notes.md", _CLAIMS)[0], (
-        f"{tool} reads a claimed artifact textually and must be refused")
+        f"{tool} reads a claimed artifact textually and must be refused"
+    )
 
 
 def test_the_interpreter_is_not_listed_because_it_is_the_prescribed_route() -> None:
@@ -348,9 +351,9 @@ def test_the_interpreter_is_not_listed_because_it_is_the_prescribed_route() -> N
     excluded or simply forgotten — and those warrant different responses: the first is a
     boundary, the second is a bug.
     """
-    assert not structural_query.verdict(
-        "python3 -m mikemol.mdstruct.cli spans notes.md", _CLAIMS)[0], (
-        "the owning tool's own invocation must not be refused")
+    assert not structural_query.verdict("python3 -m mikemol.mdstruct.cli spans notes.md", _CLAIMS)[
+        0
+    ], "the owning tool's own invocation must not be refused"
 
 
 def test_a_command_that_touches_without_reading_is_permitted() -> None:
@@ -364,7 +367,8 @@ def test_a_command_that_touches_without_reading_is_permitted() -> None:
     """
     for cmd in ("git add notes.md", "rm notes.md", "cp notes.md other.md", "chmod 644 notes.md"):
         assert not structural_query.verdict(cmd, _CLAIMS)[0], (
-            f"{cmd} does not read the file and must be permitted")
+            f"{cmd} does not read the file and must be permitted"
+        )
 
 
 @pytest.mark.parametrize("tool", ["hexdump", "vim", "sdiff", "col", "base64", "ed"])
@@ -376,7 +380,8 @@ def test_a_reader_or_editor_found_on_the_host_is_refused(tool: str) -> None:
     where a list written from memory is a guess about one.
     """
     assert structural_query.verdict(f"{tool} notes.md", _CLAIMS)[0], (
-        f"{tool} reads a claimed artifact as text and must be refused")
+        f"{tool} reads a claimed artifact as text and must be refused"
+    )
 
 
 @pytest.mark.parametrize(
@@ -680,12 +685,18 @@ _TOOL = "scratch/tool" + _PY
     [
         ("a detached -A value before the pattern", f"grep -A 2 {_GATE} notes.txt"),
         ("a detached -m value before the pattern", f"grep -m 1 {_GATE} notes.txt"),
-        ("a detached --include value before the pattern",
-         f"grep --include Makefile {_GATE} notes.txt"),
-        ("a sed script whose last segment ends in a claimed suffix",
-         f"sed -e 's/foo/bar{_PY}/' notes.txt"),
-        ("summit's payload: includes attached, pattern quoted",
-         f'grep -rl --include=Makefile --include=pre-commit "{_GATE}" /home/x/github'),
+        (
+            "a detached --include value before the pattern",
+            f"grep --include Makefile {_GATE} notes.txt",
+        ),
+        (
+            "a sed script whose last segment ends in a claimed suffix",
+            f"sed -e 's/foo/bar{_PY}/' notes.txt",
+        ),
+        (
+            "summit's payload: includes attached, pattern quoted",
+            f'grep -rl --include=Makefile --include=pre-commit "{_GATE}" /home/x/github',
+        ),
         ("an awk program mentioning a claimed suffix", f"awk '/tool{_PY}/ {{print}}' notes.txt"),
     ],
 )
@@ -707,8 +718,7 @@ def test_a_value_flags_operand_and_a_script_are_not_paths(label: str, cmd: str) 
         ("sed over a claimed file", f"sed -e 's/a/b/' {_TOOL}"),
         ("awk over a claimed file", f"awk '{{print}}' {_TOOL}"),
         ("a claimed-shaped pattern does not shield a claimed path", f"grep {_GATE} {_TOOL}"),
-        ("a wrapper is seen through before the role rule",
-         f"timeout 180 grep -c __main__ {_TOOL}"),
+        ("a wrapper is seen through before the role rule", f"timeout 180 grep -c __main__ {_TOOL}"),
     ],
 )
 def test_a_real_target_after_a_value_flag_or_script_still_fires(label: str, cmd: str) -> None:
@@ -740,13 +750,19 @@ def test_a_flag_without_an_operand_is_not_in_the_value_roster() -> None:
 # The letter's two measured retirements, as a fixture: each returned a FALSE ZERO.
 _RETIRED: dict[tuple[str, str], routing_table.Retirement] = {
     ("pycodemod", "--attr"): routing_table.Retirement(
-        "--attr", "pycodemod", "substrate/attr_reads.py",
+        "--attr",
+        "pycodemod",
+        "substrate/attr_reads.py",
         "dotted operand compared against a bare attr name; could never match",
-        "corpus.ROOT: origin 0, successor 121 in 66 files"),
+        "corpus.ROOT: origin 0, successor 121 in 66 files",
+    ),
     ("pycodemod", "--importers"): routing_table.Retirement(
-        "--importers", "pycodemod", "substrate/module_importers.py",
+        "--importers",
+        "pycodemod",
+        "substrate/module_importers.py",
         "keyed on first dotted component; submodule queries answered 0",
-        "substrate.corpus: origin 0, successor 68 in 68 files"),
+        "substrate.corpus: origin 0, successor 68 in 68 files",
+    ),
 }
 
 
@@ -796,8 +812,10 @@ def test_the_tool_the_gate_recommends_is_still_admitted() -> None:
     """
     _hit, reasons = structural_query.verdict("wc -l scratch/tool.py", _CLAIMS)
     assert "pycodemod" in structural_query.refusal(reasons)
-    assert structural_query.retired_verdict(
-        "python3 scratch/pycodemod.py --calls foo", _RETIRED) == _EMPTY
+    assert (
+        structural_query.retired_verdict("python3 scratch/pycodemod.py --calls foo", _RETIRED)
+        == _EMPTY
+    )
 
 
 def test_an_empty_retirement_table_refuses_nothing() -> None:
@@ -829,9 +847,7 @@ _SKILL = """\
 """
 
 
-def _hook(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, cmd: str, *, armed: str
-) -> None:
+def _hook(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, cmd: str, *, armed: str) -> None:
     """Run `main()` over one Bash command in a repo carrying `_SKILL`."""
     skill = tmp_path / routing_table.SKILL_RELPATH
     skill.parent.mkdir(parents=True)
@@ -846,7 +862,8 @@ def _hook(
 
 
 def test_an_armed_hook_denies_a_retired_mode(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """Armed, the retired mode read from the repo's own table is a deny naming the successor."""
@@ -857,7 +874,8 @@ def test_an_armed_hook_denies_a_retired_mode(
 
 
 def test_a_stood_down_hook_does_not_deny_a_retired_mode(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """Stood down, the retirement is advised on stderr, not denied — no hook here is unliftable.
@@ -872,7 +890,9 @@ def test_a_stood_down_hook_does_not_deny_a_retired_mode(
 
 
 def test_its_own_switch_at_zero_stands_it_down_over_the_python_hooks_switch(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     """`STRUCT_HOOK_BLOCK=0` stands this hook down even with `PYCHECK_HOOK_BLOCK=1` set beside it.
 
@@ -925,7 +945,8 @@ def test_a_command_after_the_heredoc_terminator_is_still_refused() -> None:
 
 
 def test_a_read_on_the_second_line_is_refused_and_a_harmless_second_line_is_not(
-        monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A newline separates commands, so a claimed read on line two is denied through `main()`.
 
     ⚑ MEASURED ON HEAD: `echo a` / `grep x notes.md` passed, because the second line was parsed

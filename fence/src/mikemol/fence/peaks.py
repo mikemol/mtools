@@ -21,8 +21,10 @@ from pathlib import Path
 
 from mikemol.fence import ledger
 
-METHOD = ("a SINGLE observation cannot size a cap: max alone is one bad run away from "
-          "over-sizing, median alone under-sizes the tail")
+METHOD = (
+    "a SINGLE observation cannot size a cap: max alone is one bad run away from "
+    "over-sizing, median alone under-sizes the tail"
+)
 
 _HEADER = ("label", "runs", "max_mb", "median", "p90", "max_s", "cpu%", "suggested")
 
@@ -52,9 +54,18 @@ def render(report: list[ledger.Peaks]) -> list[str]:
     """
     lines = ["\t".join(_HEADER)]
     lines.extend(
-        "\t".join((p.label, str(p.runs), _cell(p.max_mb), _cell(p.median_mb), _cell(p.p90_mb),
-                   _cell(p.max_s), _cell(None if p.cpu_percent is None else round(p.cpu_percent)),
-                   _cell(p.suggested_mb)))
+        "\t".join(
+            (
+                p.label,
+                str(p.runs),
+                _cell(p.max_mb),
+                _cell(p.median_mb),
+                _cell(p.p90_mb),
+                _cell(p.max_s),
+                _cell(None if p.cpu_percent is None else round(p.cpu_percent)),
+                _cell(p.suggested_mb),
+            )
+        )
         for p in report
     )
     lines.append(f"# {METHOD}")

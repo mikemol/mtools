@@ -60,12 +60,14 @@ def budget(path: Path) -> list[Budget]:
         # ⚑ STRICTLY INSIDE: a heading AT `span.start` is the section's own; one at `span.end`
         # belongs to the next section. `end` is exclusive, matching the slice.
         inner = [s for s in found if span.start < s.start < span.end]
-        body = "\n".join(lines[span.start - 1:span.end - 1])
-        out.append(Budget(
-            span=span,
-            lines=span.end - span.start,
-            size=len(body.encode("utf-8")),
-            below=len(inner),
-            depth=max((s.level - span.level for s in inner), default=0),
-        ))
+        body = "\n".join(lines[span.start - 1 : span.end - 1])
+        out.append(
+            Budget(
+                span=span,
+                lines=span.end - span.start,
+                size=len(body.encode("utf-8")),
+                below=len(inner),
+                depth=max((s.level - span.level for s in inner), default=0),
+            )
+        )
     return out

@@ -46,13 +46,16 @@ class TestRefusals:
             main([])
         assert e.value.code == USAGE_EXIT
 
-    @pytest.mark.parametrize("extra", [
-        ["--mem", "1G"],
-        ["--swap", "0"],
-        ["--pids", "8"],
-        ["--io", "259:0 wbps=1048576"],
-        ["--ratchet", "2G,1G"],
-    ])
+    @pytest.mark.parametrize(
+        "extra",
+        [
+            ["--mem", "1G"],
+            ["--swap", "0"],
+            ["--pids", "8"],
+            ["--io", "259:0 wbps=1048576"],
+            ["--ratchet", "2G,1G"],
+        ],
+    )
     def test_observe_refuses_to_combine_with_a_cap(self, extra: list[str]) -> None:
         """Refuse rather than resolve an incoherent instruction.
 
@@ -103,8 +106,14 @@ class TestSweepPayload:
             in the sandbox where the suite actually runs.
 
         """
-        return Result(cmd=("true",), caps=Caps(mem=mem), duration_s=0.1,
-                      exit_code=0, memory_peak_bytes=1, bound_by=bound)
+        return Result(
+            cmd=("true",),
+            caps=Caps(mem=mem),
+            duration_s=0.1,
+            exit_code=0,
+            memory_peak_bytes=1,
+            bound_by=bound,
+        )
 
     def test_the_binding_rung_is_named_in_the_payload(self) -> None:
         """⚑⚑⚑ THE ANSWER, AS A FIELD RATHER THAN AS PROSE.
@@ -112,8 +121,9 @@ class TestSweepPayload:
         Without it a consumer scans the ladder for the last entry with a non-empty `bound_by` —
         re-deriving what the tool already computed and rendered for humans.
         """
-        payload = _sweep_payload([self._result("64M"),
-                                  self._result("8M", bound=("MEMORY, THROTTLED",))])
+        payload = _sweep_payload(
+            [self._result("64M"), self._result("8M", bound=("MEMORY, THROTTLED",))]
+        )
         assert payload["bound_at"] == "8M", (
             f"the sweep's answer is not in its payload; got {payload.get('bound_at')!r} — a "
             f"consumer must then re-derive the binding rung from the ladder"
@@ -165,7 +175,8 @@ class TestSweepPayload:
         )
 
     def test_the_payload_the_sweep_emits_is_the_one_with_the_answer(
-            self, capsys: pytest.CaptureFixture[str]) -> None:
+        self, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         """⚑⚑⚑ THE ARMS ABOVE TEST A FUNCTION; THIS ONE TESTS THAT IT IS CALLED.
 
         Measured, and it is why this arm exists: reverting the emit line to the bare array left all
@@ -183,8 +194,9 @@ class TestSweepPayload:
         machine-readable on stdout, so a caller piping stdout into a parser gets JSON and nothing
         else.
         """
-        rc = _report_ratchet([self._result("64M"),
-                              self._result("8M", bound=("MEMORY, THROTTLED",))], json_out=True)
+        rc = _report_ratchet(
+            [self._result("64M"), self._result("8M", bound=("MEMORY, THROTTLED",))], json_out=True
+        )
         assert rc == 0, (
             "a completed sweep reports success even when a cap bound — the binding cap is the "
             "ANSWER, so a nonzero code would conflate it with a failure to measure"

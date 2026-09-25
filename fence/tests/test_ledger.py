@@ -52,8 +52,14 @@ _ALL_CPU = 100
 _EMPTY = ""
 
 
-def _row(label: str, peak: float | None, *, wall: float = 1.0, user: float | None = None,
-         sys: float | None = None) -> ledger.Row:
+def _row(
+    label: str,
+    peak: float | None,
+    *,
+    wall: float = 1.0,
+    user: float | None = None,
+    sys: float | None = None,
+) -> ledger.Row:
     """Return a row with the fields an arm does not care about defaulted.
 
     Returns:
@@ -63,8 +69,9 @@ def _row(label: str, peak: float | None, *, wall: float = 1.0, user: float | Non
     return ledger.Row(label, wall, peak, 0, user, sys)
 
 
-@pytest.mark.parametrize(("mb", "want"), [(65, 128), (128, 128), (129, 256), (200, 256),
-                                          (257, 512), (3, 64)])
+@pytest.mark.parametrize(
+    ("mb", "want"), [(65, 128), (128, 128), (129, 256), (200, 256), (257, 512), (3, 64)]
+)
 def test_the_bucket_is_the_next_power_of_two_above_a_floor(mb: int, want: int) -> None:
     """65→128, 128→128, 129→256, 200→256, 257→512, 3→64 — never below the peak, never under 64."""
     assert ledger.bucket(mb) == want
@@ -101,8 +108,9 @@ def test_an_older_four_field_row_is_still_read() -> None:
 
 def test_the_report_selects_by_label_prefix() -> None:
     """`selftest:` includes `selftest:a` and excludes `gate:a`."""
-    labels = [p.label for p in ledger.report([_row("selftest:a", 1), _row("gate:a", 1)],
-                                             "selftest:")]
+    labels = [
+        p.label for p in ledger.report([_row("selftest:a", 1), _row("gate:a", 1)], "selftest:")
+    ]
     assert labels == ["selftest:a"]
 
 
@@ -153,8 +161,16 @@ def _result(exit_code: int | None, *, maxrss_kb: int | None = 2048) -> core.Resu
         the result.
 
     """
-    return core.Result(cmd=("payload",), caps=core.Caps(), duration_s=1.5, exit_code=exit_code,
-                       memory_peak_bytes=3 * _MB, maxrss_kb=maxrss_kb, user_s=1.0, sys_s=0.25)
+    return core.Result(
+        cmd=("payload",),
+        caps=core.Caps(),
+        duration_s=1.5,
+        exit_code=exit_code,
+        memory_peak_bytes=3 * _MB,
+        maxrss_kb=maxrss_kb,
+        user_s=1.0,
+        sys_s=0.25,
+    )
 
 
 def test_a_clean_run_appends_exactly_one_seven_field_row(tmp_path: Path) -> None:

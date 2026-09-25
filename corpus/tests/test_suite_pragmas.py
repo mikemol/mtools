@@ -64,8 +64,12 @@ def test_a_typo_or_unadmitted_tenant_declares_nothing(tmp_path: Path) -> None:
     ⚑⚑ The load-bearing arm: a misspelled tenant must declare NOTHING, so the runner never
     invents a tenant from a typo and reads plausible rows from a store nobody chose.
     """
-    for src in ("# selftest-tenant: sandbxo\n", "# selftest-tenant: production\n",
-                "print('hi')\n", "import os\nos.environ['SUBSTRATE_STORE'] = 'sandbox'\n"):
+    for src in (
+        "# selftest-tenant: sandbxo\n",
+        "# selftest-tenant: production\n",
+        "print('hi')\n",
+        "import os\nos.environ['SUBSTRATE_STORE'] = 'sandbox'\n",
+    ):
         assert suite_pragmas.tenant(_write(tmp_path, src), admitted=_SUBSTRATE_TENANTS) is None
 
 

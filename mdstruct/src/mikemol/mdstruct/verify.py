@@ -90,9 +90,11 @@ def missing_headings(path: Path) -> list[Missing]:
     """
     reached = {span.start for span in spans_mod.spans(path)}
     body = path.read_text(encoding="utf-8")
-    return [Missing(line=line, level=level, text=text)
-            for line, level, text in source_headings(body)
-            if line not in reached]
+    return [
+        Missing(line=line, level=level, text=text)
+        for line, level, text in source_headings(body)
+        if line not in reached
+    ]
 
 
 # ⚑⚑ THE SHAPE SPACE, not the bug list. Each entry is one heading shape and whether this tool is
@@ -150,8 +152,11 @@ def selftest() -> list[str]:
 
     failures: list[str] = []
     for name, heading, reachable in _SHAPES:
-        body = (f"# A\n\n```\n#not a heading\n```\n\n## {heading}\n\nx\n"
-                if name == "after fence" else f"# A\n\n## {heading}\n\nx\n")
+        body = (
+            f"# A\n\n```\n#not a heading\n```\n\n## {heading}\n\nx\n"
+            if name == "after fence"
+            else f"# A\n\n## {heading}\n\nx\n"
+        )
         path = Path(tempfile.mkdtemp()) / "fixture.md"
         path.write_text(body, encoding="utf-8")
         try:
@@ -164,5 +169,6 @@ def selftest() -> list[str]:
         if not reachable and not missing:
             failures.append(
                 f"F-arm {name!r}: expected UNREACHABLE and it was reached — "
-                "if this was fixed, flip the row and say so")
+                "if this was fixed, flip the row and say so"
+            )
     return failures

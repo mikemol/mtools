@@ -73,8 +73,9 @@ def _anchors(path: Path) -> list[tuple[int, str, int]]:
     # ⚑ `strict=True` IS THE ASSERTION, not a lint fix. `render_headings` returns one entry per
     # input BY CONTRACT, and the defect caught during this repair was exactly that invariant
     # failing silently. A length mismatch must raise here rather than truncate.
-    keyed = [(i, ast.anchor_key(text))
-             for (i, _line), text in zip(candidates, rendered, strict=True)]
+    keyed = [
+        (i, ast.anchor_key(text)) for (i, _line), text in zip(candidates, rendered, strict=True)
+    ]
 
     found: list[tuple[int, str, int]] = []
     cursor = 0
@@ -101,8 +102,8 @@ def spans(path: Path) -> list[Span]:
     out = []
     for idx, (level, text, start) in enumerate(anchors):
         end = len(lines) + 1
-        for level2, _text2, start2 in anchors[idx + 1:]:
-            if level2 <= level:          # same-or-shallower CLOSES the section
+        for level2, _text2, start2 in anchors[idx + 1 :]:
+            if level2 <= level:  # same-or-shallower CLOSES the section
                 end = start2
                 break
         out.append(Span(level=level, text=text, start=start, end=end))
@@ -163,19 +164,30 @@ def find_section(path: Path, needle: str, *, exact: bool = False) -> Span:
     # change two properties under one flag — a shape this repository has measured as its own defect
     # class. The flag changes containment to equality and nothing else.
     want = needle.casefold()
-    hits = [s for s in spans(path)
-            if (s.text.casefold() == want if exact else want in s.text.casefold())]
+    hits = [
+        s
+        for s in spans(path)
+        if (s.text.casefold() == want if exact else want in s.text.casefold())
+    ]
     if not hits:
         how = "equals" if exact else "contains"
-        msg = (f"no section heading {how} {needle!r} in {path}. "
-               "a fact about the QUERY — list the headers to see what is there."
-               + ("" if exact else " ⚑ a heading wholly inside another is unreachable by any "
-                                  "substring — pass exact=True and its full text."))
+        msg = (
+            f"no section heading {how} {needle!r} in {path}. "
+            "a fact about the QUERY — list the headers to see what is there."
+            + (
+                ""
+                if exact
+                else " ⚑ a heading wholly inside another is unreachable by any "
+                "substring — pass exact=True and its full text."
+            )
+        )
         raise LookupError(msg)
     if len(hits) > 1:
         names = "; ".join(f"{'#' * h.level} {h.text!r}" for h in hits)
-        msg = (f"{needle!r} names {len(hits)} sections in {path}: {names}. "
-               "REFUSING rather than picking one — this is a write target.")
+        msg = (
+            f"{needle!r} names {len(hits)} sections in {path}: {names}. "
+            "REFUSING rather than picking one — this is a write target."
+        )
         raise LookupError(msg)
     return hits[0]
 

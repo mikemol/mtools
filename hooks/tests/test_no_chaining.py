@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 
 # --- the composition operators -------------------------------------------------------------
 
+
 def test_a_pipe_fires() -> None:
     """A pipe is refused: the tool should have the mode that produces this directly."""
     assert no_chaining.analyze("scripts/buildtime.py --top | tail -5")
@@ -76,6 +77,7 @@ def test_operator_coverage_is_derived_not_restated() -> None:
 
 # --- shell control flow --------------------------------------------------------------------
 
+
 def test_a_for_loop_fires() -> None:
     """`for` in command position is refused: the iteration belongs in a program."""
     assert no_chaining.analyze("for f in *.py; do wc -l $f; done")
@@ -92,6 +94,7 @@ def test_an_until_loop_fires() -> None:
 
 
 # --- `cd`, and the message that must route ---------------------------------------------------
+
 
 def test_a_bare_cd_fires_on_its_own() -> None:
     """`cd` alone is refused: it mutates state every later command inherits."""
@@ -122,6 +125,7 @@ def test_the_recommended_env_dash_c_form_passes() -> None:
 
 
 # --- the inline interpreter -------------------------------------------------------------------
+
 
 def test_python_dash_c_fires() -> None:
     """`python3 -c` is refused: the program dies with the turn."""
@@ -154,6 +158,7 @@ def test_perl_dash_e_fires() -> None:
 
 
 # --- the false positives: each CONTAINS a banned character and composes nothing ---------------
+
 
 def test_a_quoted_pipe_in_a_regex_is_data() -> None:
     """`grep -nE 'foo|bar'` passes: a `|` inside quotes is data, not an operator."""
@@ -216,6 +221,7 @@ def test_an_unparseable_command_is_allowed_through() -> None:
 
 # --- heredoc bodies are data ------------------------------------------------------------------
 
+
 def test_prose_in_a_heredoc_body_is_not_composition() -> None:
     """A commit message DESCRIBING shell is not shell.
 
@@ -238,6 +244,7 @@ def test_an_operator_after_a_heredoc_still_fires() -> None:
 
 
 # --- the refusal text and the deny envelope ----------------------------------------------------
+
 
 def test_the_refusal_names_the_offending_token() -> None:
     """The message names `|`, so the caller knows which token to remove."""
@@ -274,10 +281,12 @@ def test_the_deny_envelope_carries_the_decision() -> None:
 def test_the_deny_envelope_carries_the_reason() -> None:
     """The envelope carries the reason text, so the refusal reaches the caller."""
     assert "no-chaining" in no_chaining.deny_payload(
-        no_chaining.refusal(no_chaining.analyze("make | tail -5")))
+        no_chaining.refusal(no_chaining.analyze("make | tail -5"))
+    )
 
 
 # --- the payload reader: a hook that mis-reads its input judges the wrong thing -----------------
+
 
 def test_a_well_formed_payload_yields_its_command() -> None:
     """The reader extracts the command from a well-formed PreToolUse payload."""
@@ -306,6 +315,7 @@ def test_a_non_mapping_tool_input_yields_no_command() -> None:
 
 # --- arming ------------------------------------------------------------------------------------
 
+
 def test_the_shared_switch_arms_the_hook(monkeypatch: pytest.MonkeyPatch) -> None:
     """`STRUCT_HOOK_BLOCK=1` arms this hook along with its sibling."""
     monkeypatch.delenv("NOCHAIN_HOOK_BLOCK", raising=False)
@@ -332,6 +342,7 @@ def test_unset_switches_leave_the_hook_unarmed(monkeypatch: pytest.MonkeyPatch) 
 
 # --- end to end, through the real entry point --------------------------------------------------
 
+
 def _run(payload: str, *, block: str) -> subprocess.CompletedProcess[str]:
     """Drive the module's `main()` in a subprocess with a synthetic PreToolUse payload.
 
@@ -346,7 +357,11 @@ def _run(payload: str, *, block: str) -> subprocess.CompletedProcess[str]:
     env.pop("NOCHAIN_HOOK_BLOCK", None)
     return subprocess.run(
         [sys.executable, "-m", "mikemol.hooks.no_chaining"],
-        input=payload, capture_output=True, text=True, env=env, check=False,
+        input=payload,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
     )
 
 
@@ -397,6 +412,7 @@ def test_a_quoted_heredoc_operator_does_not_hide_a_later_pipe() -> None:
 
 
 # --- a newline that ends a command is a sequence ------------------------------------------------
+
 
 def test_two_command_lines_are_refused_as_a_sequence() -> None:
     """Two commands on two lines are refused, as `ls; ls` is: the newline separates them."""

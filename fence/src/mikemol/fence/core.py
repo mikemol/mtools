@@ -136,8 +136,12 @@ class Result:
         """
         return {
             "cmd": list(self.cmd),
-            "caps": {"mem": self.caps.mem, "swap": self.caps.swap,
-                     "pids": self.caps.pids, "io": self.caps.io},
+            "caps": {
+                "mem": self.caps.mem,
+                "swap": self.caps.swap,
+                "pids": self.caps.pids,
+                "io": self.caps.io,
+            },
             "duration_s": self.duration_s,
             "exit_code": self.exit_code,
             "memory_peak_bytes": self.memory_peak_bytes,
@@ -222,8 +226,9 @@ def fence_name(pid: int, now: float, env: Mapping[str, str]) -> str:
     return ".".join(parts)
 
 
-def run_once(cmd: Sequence[str], caps: Caps | None = None,
-             env: Mapping[str, str] | None = None) -> Result:
+def run_once(
+    cmd: Sequence[str], caps: Caps | None = None, env: Mapping[str, str] | None = None
+) -> Result:
     """Run `cmd` in a transient fence cgroup and return what it consumed.
 
     With `caps=None` (or an all-unset `Caps`) this imposes nothing and only measures. With `env` the
@@ -269,8 +274,7 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None,
             # every child ever reaped, and a difference of two maxima is not this child's peak.
             pid, status, reaped = os.wait4(child, os.WNOHANG)
             if pid == child:
-                rc = (os.WEXITSTATUS(status) if os.WIFEXITED(status)
-                      else 128 + os.WTERMSIG(status))
+                rc = os.WEXITSTATUS(status) if os.WIFEXITED(status) else 128 + os.WTERMSIG(status)
                 usage = reaped
                 break
             time.sleep(POLL)
@@ -285,8 +289,13 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None,
         cgroup.cleanup(cg)
 
     return Result(
-        cmd=tuple(cmd), caps=caps, duration_s=duration, exit_code=rc,
-        memory_peak_bytes=peak, memory_events=mem_ev, pids_events=pid_ev,
+        cmd=tuple(cmd),
+        caps=caps,
+        duration_s=duration,
+        exit_code=rc,
+        memory_peak_bytes=peak,
+        memory_events=mem_ev,
+        pids_events=pid_ev,
         bound_by=tuple(cgroup.bound_by(mem_ev, pid_ev)),
         # ⚑ NO None BRANCH HERE, and mypy proved why: the reap loop exits ONLY through the `break`
         # that sets `usage`, so a `return` reached at all is a return after a reap. The fields stay
@@ -297,8 +306,7 @@ def run_once(cmd: Sequence[str], caps: Caps | None = None,
     )
 
 
-def ratchet(cmd: Sequence[str], steps: Sequence[str],
-            base: Caps | None = None) -> list[Result]:
+def ratchet(cmd: Sequence[str], steps: Sequence[str], base: Caps | None = None) -> list[Result]:
     """Tighten `mem` through `steps` until one binds; return every run made.
 
     ⚑ THE BINDING CONSTRAINT IS THE MEASUREMENT. A cap above the payload's legitimate peak

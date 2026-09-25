@@ -158,8 +158,10 @@ def statuses(state: State) -> list[str]:
     for w in state.waypoints:
         status = text(w, "status")
         if status == _DROPPED:
-            found.append(f"{text(w, 'symbol')}: status=dropped in the live list; "
-                         "use --drop to move it to residue with a reason (D5)")
+            found.append(
+                f"{text(w, 'symbol')}: status=dropped in the live list; "
+                "use --drop to move it to residue with a reason (D5)"
+            )
         elif status not in STATUSES:
             found.append(f"{text(w, 'symbol')}: invalid status {status!r}")
     return found
@@ -217,9 +219,16 @@ def check(state: State) -> list[str]:
 
     """
     return [
-        *coverage(state), *duplicates(state), *malformed(state), *above_counter(state),
-        *reasons(state), *edges(state), *statuses(state), *blocked(state),
-        *field_types(state), *root(state),
+        *coverage(state),
+        *duplicates(state),
+        *malformed(state),
+        *above_counter(state),
+        *reasons(state),
+        *edges(state),
+        *statuses(state),
+        *blocked(state),
+        *field_types(state),
+        *root(state),
     ]
 
 

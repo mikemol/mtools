@@ -64,35 +64,62 @@ OPERATORS: frozenset[str] = frozenset({"|", "||", "&&", ";", "&", "|&"})
 
 # ⚑ TRANSPARENT PREFIXES — a wrapper delegates to the command after it, so finding one means KEEP
 # LOOKING, not stop. Every entry here was a live bypass shape.
-WRAPPERS: frozenset[str] = frozenset({
-    "timeout", "env", "xargs", "command", "builtin", "exec",
-    "nice", "ionice", "nohup", "stdbuf", "time", "watch",
-    # ⚑⚑⚑ `script` IS NOT HERE, AND ITS PRESENCE READ A PATH AS A PROGRAM. Membership means *the
-    # real program follows this token*, which holds for `setsid grep …` and fails for
-    # `script -c 'grep x' /dev/null`: the wrapped program is INSIDE the quoted argument, and the
-    # token after it is the typescript FILE. MEASURED before the repair: `programs()` reported
-    # `null`.
-    # ⚑⚑ FOUND BY `cassian-observability`, who drove both copies of this module over 17 commands
-    # rather than reading them — 0 disagreements, and this one shape wrong in both. They named
-    # `sudo -C` and `xargs -I` as worth checking for the same property and explicitly did NOT
-    # claim they shared it; measured, both are correct, because for those the program really does
-    # follow.
-    # ⚑ IT STAYS IN `_FLAGS_WITH_ARG` so `-c`'s argument is still consumed rather than read as a
-    # program. The two tables answer different questions: one asks *does a program follow*, the
-    # other *does this flag take an argument*, and `script` is yes to the second and no to the
-    # first.
-    # ⚑⚑ THE BOUND, STATED RATHER THAN CLOSED: the wrapped program is not recovered, because
-    # recovering it means parsing shell out of an opaque token. `script` reports `script`, which
-    # is what `sh -c` and `bash -c` already report and what the routing hook relies on when it
-    # refuses `python3 -c` by naming the interpreter.
-    "sudo", "doas", "setsid",
-    "uv", "poetry", "pipenv", "hatch", "rye",
-})
+WRAPPERS: frozenset[str] = frozenset(
+    {
+        "timeout",
+        "env",
+        "xargs",
+        "command",
+        "builtin",
+        "exec",
+        "nice",
+        "ionice",
+        "nohup",
+        "stdbuf",
+        "time",
+        "watch",
+        # ⚑⚑⚑ `script` IS NOT HERE, AND ITS PRESENCE READ A PATH AS A PROGRAM. Membership means *the
+        # real program follows this token*, which holds for `setsid grep …` and fails for
+        # `script -c 'grep x' /dev/null`: the wrapped program is INSIDE the quoted argument, and the
+        # token after it is the typescript FILE. MEASURED before the repair: `programs()` reported
+        # `null`.
+        # ⚑⚑ FOUND BY `cassian-observability`, who drove both copies of this module over 17 commands
+        # rather than reading them — 0 disagreements, and this one shape wrong in both. They named
+        # `sudo -C` and `xargs -I` as worth checking for the same property and explicitly did NOT
+        # claim they shared it; measured, both are correct, because for those the program
+        # really does follow.
+        # ⚑ IT STAYS IN `_FLAGS_WITH_ARG` so `-c`'s argument is still consumed rather than read as a
+        # program. The two tables answer different questions: one asks *does a program follow*, the
+        # other *does this flag take an argument*, and `script` is yes to the second and no to the
+        # first.
+        # ⚑⚑ THE BOUND, STATED RATHER THAN CLOSED: the wrapped program is not recovered, because
+        # recovering it means parsing shell out of an opaque token. `script` reports `script`, which
+        # is what `sh -c` and `bash -c` already report and what the routing hook relies on when it
+        # refuses `python3 -c` by naming the interpreter.
+        "sudo",
+        "doas",
+        "setsid",
+        "uv",
+        "poetry",
+        "pipenv",
+        "hatch",
+        "rye",
+    }
+)
 
 # A wrapper's own operand — never the program being wrapped.
-_UV_SUBCOMMANDS: frozenset[str] = frozenset({
-    "run", "tool", "pip", "venv", "sync", "add", "exec", "shell",
-})
+_UV_SUBCOMMANDS: frozenset[str] = frozenset(
+    {
+        "run",
+        "tool",
+        "pip",
+        "venv",
+        "sync",
+        "add",
+        "exec",
+        "shell",
+    }
+)
 
 # ⚑ A duration suffix on a `timeout` operand: `timeout 30s`, `1.5h`.
 _DURATION_SUFFIXES = "smhd"
@@ -126,15 +153,50 @@ _SUBCOMMAND_WRAPPERS: frozenset[str] = frozenset({"uv", "poetry", "pipenv", "hat
 _FLAGS_WITH_ARG: dict[str, frozenset[str]] = {
     "timeout": frozenset({"-s", "--signal", "-k", "--kill-after"}),
     "env": frozenset({"-C", "--chdir", "-u", "--unset", "-S", "--split-string"}),
-    "sudo": frozenset({"-u", "--user", "-g", "--group", "-C", "--close-from", "-h", "--host",
-                       "-p", "--prompt", "-r", "--role", "-t", "--type", "-U", "--other-user"}),
+    "sudo": frozenset(
+        {
+            "-u",
+            "--user",
+            "-g",
+            "--group",
+            "-C",
+            "--close-from",
+            "-h",
+            "--host",
+            "-p",
+            "--prompt",
+            "-r",
+            "--role",
+            "-t",
+            "--type",
+            "-U",
+            "--other-user",
+        }
+    ),
     "doas": frozenset({"-u", "-C", "-a"}),
     "nice": frozenset({"-n", "--adjustment"}),
     "ionice": frozenset({"-c", "--class", "-n", "--classdata", "-p", "--pid"}),
     "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
-    "xargs": frozenset({"-a", "--arg-file", "-E", "-I", "-i", "--replace", "-L", "--max-lines",
-                        "-n", "--max-args", "-P", "--max-procs", "-s", "--max-chars", "-d",
-                        "--delimiter"}),
+    "xargs": frozenset(
+        {
+            "-a",
+            "--arg-file",
+            "-E",
+            "-I",
+            "-i",
+            "--replace",
+            "-L",
+            "--max-lines",
+            "-n",
+            "--max-args",
+            "-P",
+            "--max-procs",
+            "-s",
+            "--max-chars",
+            "-d",
+            "--delimiter",
+        }
+    ),
     "watch": frozenset({"-n", "--interval", "-d", "--differences"}),
     "script": frozenset({"-c", "--command", "-f", "--flush"}),
 }
@@ -165,7 +227,7 @@ def _debare(tok: str) -> str | None:
     if not t or t.startswith("-"):
         return None
     if "=" in t and not t.startswith("/") and t.split("=", 1)[0].isidentifier():
-        return None                      # VAR=value assignment, not a program
+        return None  # VAR=value assignment, not a program
     return Path(t).name
 
 
@@ -180,10 +242,10 @@ def _is_operand(word: str, wrapper: str) -> bool:
         whether `word` is an operand OF the wrapper, not the program it wraps.
 
     """
-    if word.replace(".", "", 1).isdigit():                 # timeout 180 / 1.5
+    if word.replace(".", "", 1).isdigit():  # timeout 180 / 1.5
         return True
     if word[:-1].replace(".", "", 1).isdigit() and word[-1] in _DURATION_SUFFIXES:
-        return True                                        # timeout 30s
+        return True  # timeout 30s
     if wrapper in _SUBCOMMAND_WRAPPERS:
         return word in _UV_SUBCOMMANDS
     return False
@@ -263,7 +325,7 @@ class _HeredocStripper:
     def _take(self, end: int) -> None:
         """Copy the text from the cursor up to `end`, and move the cursor there."""
         end = min(end, len(self.cmd))
-        self.out.append(self.cmd[self.i:end])
+        self.out.append(self.cmd[self.i : end])
         self.i = end
 
     def _line_end(self, start: int) -> int:
@@ -290,7 +352,7 @@ class _HeredocStripper:
         elif ch == "#" and (i == 0 or cmd[i - 1] in _COMMENT_MAY_FOLLOW):
             self._take(self._line_end(i))
         elif cmd.startswith("<<<", i):
-            self._take(i + 3)               # a here-string: its word is ordinary shell
+            self._take(i + 3)  # a here-string: its word is ordinary shell
         elif cmd.startswith("<<", i):
             self._open(i)
         elif ch == "\n" and self.pending:
@@ -423,7 +485,7 @@ class _LineSeparator:
     def _take(self, end: int) -> None:
         """Copy the text from the cursor up to `end`, and move the cursor there."""
         end = min(end, len(self.cmd))
-        self.out.append(self.cmd[self.i:end])
+        self.out.append(self.cmd[self.i : end])
         self.i = end
 
     def _escape(self) -> None:
@@ -531,7 +593,7 @@ def _past_wrapper(words: list[str], i: int, wrapper: str) -> int:
     while i < len(words):
         raw = words[i]
         nxt = _debare(raw)
-        if nxt is None:                 # a flag: still the wrapper's
+        if nxt is None:  # a flag: still the wrapper's
             # ⚑ IF THIS FLAG TAKES A SEPARATE ARGUMENT, CONSUME THAT TOO — else the argument
             # (`KILL`, `nobody`, `/tmp`) is read as the program and the real program goes
             # invisible. That is the measured bypass this module was rewritten to close.
@@ -541,7 +603,7 @@ def _past_wrapper(words: list[str], i: int, wrapper: str) -> int:
             )
             i += 1
             if bare in takes_arg and not attached and i < len(words):
-                i += 1                  # skip the flag's separate argument
+                i += 1  # skip the flag's separate argument
             continue
         if _is_operand(nxt, wrapper):
             i += 1
@@ -567,12 +629,12 @@ def programs(cmd: str) -> list[tuple[str, list[str]]]:
         i = 0
         while i < len(words):
             name = _debare(words[i])
-            if name is None:                      # a flag or VAR= prefix: skip it
+            if name is None:  # a flag or VAR= prefix: skip it
                 i += 1
                 continue
             if name in WRAPPERS:
                 i = _past_wrapper(words, i + 1, name)
                 continue
-            found.append((name, words[i + 1:]))
-            break                                  # the rest of THIS command is args
+            found.append((name, words[i + 1 :]))
+            break  # the rest of THIS command is args
     return found

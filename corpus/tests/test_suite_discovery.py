@@ -23,8 +23,7 @@ if TYPE_CHECKING:
 
 _MAIN_GUARD = 'if __name__ == "__main__":\n    sys.exit(_selftest())\n'
 _ARGV_GUARD = 'if "--selftest" in sys.argv:\n    sys.exit(_selftest())\n'
-_FLAG_IN_GUARD = ('if __name__ == "__main__":\n'
-                  '    sys.exit(0 if "--selftest" in sys.argv else 1)\n')
+_FLAG_IN_GUARD = 'if __name__ == "__main__":\n    sys.exit(0 if "--selftest" in sys.argv else 1)\n'
 _BODY = "def _selftest():\n    return 0\n\n"
 _PLAIN_CLI = 'if __name__ == "__main__":\n    sys.exit(main(sys.argv))\n'
 
@@ -90,9 +89,7 @@ def test_the_walk_finds_the_suites_a_tree_holds(tmp_path: Path) -> None:
     assert found == {"pkg/a_selftest.py", "pkg/b.py"}
 
 
-def test_a_git_ignored_tree_is_not_walked(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_a_git_ignored_tree_is_not_walked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A top-level tree git ignores is not a root: git's ignore is the one owner of exclusions.
 
     ⚑ Measured in substrate: a walker that never asked git kept counting `build/lib/`'s stale

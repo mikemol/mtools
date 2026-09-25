@@ -43,10 +43,29 @@ EXIT_LOCKED = 3
 EXIT_DIVERGED = 4
 
 _SUMMARY = "summary"
-_FLAGS = ("hash", "render", "payload", "queue", "check", "check_evidence", "selftest",
-          "bump_blocked", "preamble_clear")
-_VALUED = ("verify", "lock", "unlock", "armed", "update", "add", "drop", "ledger", "show",
-           "preamble_set")
+_FLAGS = (
+    "hash",
+    "render",
+    "payload",
+    "queue",
+    "check",
+    "check_evidence",
+    "selftest",
+    "bump_blocked",
+    "preamble_clear",
+)
+_VALUED = (
+    "verify",
+    "lock",
+    "unlock",
+    "armed",
+    "update",
+    "add",
+    "drop",
+    "ledger",
+    "show",
+    "preamble_set",
+)
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 
 
@@ -117,8 +136,11 @@ def _parser() -> argparse.ArgumentParser:
         the parser.
 
     """
-    ap = argparse.ArgumentParser(prog="mikemol-paths-forward", allow_abbrev=False,
-                                 description=(__doc__ or "").splitlines()[0])
+    ap = argparse.ArgumentParser(
+        prog="mikemol-paths-forward",
+        allow_abbrev=False,
+        description=(__doc__ or "").splitlines()[0],
+    )
     ap.add_argument("--state", metavar="PATH", help="the state file (required; no default)")
     mode = ap.add_mutually_exclusive_group()
     for flag in _FLAGS:
@@ -177,9 +199,11 @@ def _summary(ctx: Ctx) -> int:
     """
     state = store.load(ctx.path)
     held = lock.current(state)
-    _say(f"counter={state.counter} state_hash={v2(state.waypoints)} "
-         f"live={len(state.waypoints)} residue={len(state.residue)} "
-         f"lock={held[0] if held else '-'}")
+    _say(
+        f"counter={state.counter} state_hash={v2(state.waypoints)} "
+        f"live={len(state.waypoints)} residue={len(state.residue)} "
+        f"lock={held[0] if held else '-'}"
+    )
     return EXIT_OK
 
 
@@ -268,8 +292,10 @@ def _report(state: State, findings: list[str]) -> int:
 
     """
     if not findings:
-        _say(f"check: OK — {state.counter} of {state.counter} symbols resolve; "
-             f"state_hash={v2(state.waypoints)}")
+        _say(
+            f"check: OK — {state.counter} of {state.counter} symbols resolve; "
+            f"state_hash={v2(state.waypoints)}"
+        )
         return EXIT_OK
     _say(f"check: REFUSED — {len(findings)} finding(s):")
     for finding in findings:
@@ -320,14 +346,17 @@ def _lock(ctx: Ctx) -> int:
         EXIT_OK, or EXIT_LOCKED when another holder has it.
 
     """
+
     def edit(state: State) -> int:
         result = lock.acquire(state, ctx.get("lock") or "", ctx.now)
         if result.outcome is lock.Outcome.HELD:
             _say(f"locked by {result.previous} ({result.age_s:.0f}s); skip this tick")
             return EXIT_LOCKED
         if result.outcome is lock.Outcome.TAKEOVER:
-            note = (f"stale lock from {result.previous} ({result.age_s:.0f}s) taken by "
-                    f"{result.holder}; re-read evidence")
+            note = (
+                f"stale lock from {result.previous} ({result.age_s:.0f}s) taken by "
+                f"{result.holder}; re-read evidence"
+            )
             _ledger(ctx, Entry("lock", NO_SYMBOL, "takeover", NO_SYMBOL, note))
         _say(f"{result.outcome} by {result.holder}")
         return EXIT_OK
@@ -342,6 +371,7 @@ def _unlock(ctx: Ctx) -> int:
         EXIT_OK, or EXIT_LOCKED when another holder has it.
 
     """
+
     def edit(state: State) -> int:
         result = lock.release(state, ctx.get("unlock") or "")
         if result.outcome is lock.Outcome.NOT_HOLDER:
@@ -360,6 +390,7 @@ def _armed(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
+
     def edit(state: State) -> int:
         ops.arm(state, ctx.get("armed") or "", ctx.stamp())
         _say(f"armed job_id={ctx.get('armed')}")
@@ -375,10 +406,15 @@ def _update(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    upd = ops.Update(status=ctx.get("status"), blocked_on=ctx.many("blocked_on"),
-                     blocked_kind=ctx.get("blocked_kind"), next_step=ctx.get("next"),
-                     evidence_append=ctx.get("evidence_append"),
-                     ticks_blocked=ctx.number("ticks_blocked"), title=ctx.get("title"))
+    upd = ops.Update(
+        status=ctx.get("status"),
+        blocked_on=ctx.many("blocked_on"),
+        blocked_kind=ctx.get("blocked_kind"),
+        next_step=ctx.get("next"),
+        evidence_append=ctx.get("evidence_append"),
+        ticks_blocked=ctx.number("ticks_blocked"),
+        title=ctx.get("title"),
+    )
 
     def edit(state: State) -> int:
         sym = ctx.get("update") or ""
@@ -396,8 +432,12 @@ def _add(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    draft = ops.Draft(ctx.get("add") or "", ctx.get("next") or "",
-                      ctx.many("enables") or (), ctx.many("touches") or ())
+    draft = ops.Draft(
+        ctx.get("add") or "",
+        ctx.get("next") or "",
+        ctx.many("enables") or (),
+        ctx.many("touches") or (),
+    )
 
     def edit(state: State) -> int:
         sym = ops.add(state, draft, ctx.stamp())
@@ -436,8 +476,7 @@ def _bump_blocked(ctx: Ctx) -> int:
     def edit(state: State) -> int:
         for n in ops.bump_blocked(state, exclude):
             owed = "" if n.action is ops.Action.QUIET else f"  {n.action}"
-            _say(f"{n.symbol} ticks_blocked={n.ticks} on={','.join(n.blocked_on)}"
-                 f"({n.kind}){owed}")
+            _say(f"{n.symbol} ticks_blocked={n.ticks} on={','.join(n.blocked_on)}({n.kind}){owed}")
         return EXIT_OK
 
     return _mutate(ctx, edit)
@@ -500,6 +539,7 @@ def _preamble_clear(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
+
     def edit(state: State) -> int:
         _say(f"preamble cleared ({ops.clear_preamble(state)} line(s) removed)")
         return EXIT_OK
@@ -508,11 +548,25 @@ def _preamble_clear(ctx: Ctx) -> int:
 
 
 _HANDLERS: dict[str, Callable[[Ctx], int]] = {
-    _SUMMARY: _summary, "hash": _hash, "verify": _verify, "render": _render,
-    "payload": _payload, "queue": _queue, "check": _check, "check_evidence": _check_evidence,
-    "lock": _lock, "unlock": _unlock, "armed": _armed, "update": _update, "add": _add,
-    "drop": _drop, "bump_blocked": _bump_blocked, "ledger": _ledger_mode, "show": _show,
-    "preamble_set": _preamble_set, "preamble_clear": _preamble_clear,
+    _SUMMARY: _summary,
+    "hash": _hash,
+    "verify": _verify,
+    "render": _render,
+    "payload": _payload,
+    "queue": _queue,
+    "check": _check,
+    "check_evidence": _check_evidence,
+    "lock": _lock,
+    "unlock": _unlock,
+    "armed": _armed,
+    "update": _update,
+    "add": _add,
+    "drop": _drop,
+    "bump_blocked": _bump_blocked,
+    "ledger": _ledger_mode,
+    "show": _show,
+    "preamble_set": _preamble_set,
+    "preamble_clear": _preamble_clear,
 }
 
 

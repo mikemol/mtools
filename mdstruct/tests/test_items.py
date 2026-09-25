@@ -118,7 +118,8 @@ def test_the_wiki_regex_is_live(monkeypatch: pytest.MonkeyPatch, doc: Path) -> N
 
 
 def test_the_cli_prints_rows_and_the_three_count_denominator(
-    doc: Path, capsys: pytest.CaptureFixture[str],
+    doc: Path,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     """⚑ THREE COUNTS, because the question is *does every pointer resolve*.
 

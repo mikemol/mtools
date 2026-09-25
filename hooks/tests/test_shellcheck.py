@@ -46,6 +46,7 @@ def _codes(found: list[shellcheck.Finding] | None) -> list[str]:
 
 # --- which files are shell ---
 
+
 def test_a_sh_path_is_bash() -> None:
     """A `.sh` path with no shebang is bash, the house default."""
     assert shellcheck.shell_dialect("x.sh", "echo hi") == "bash"
@@ -102,6 +103,7 @@ def test_a_non_shell_file_is_not_linted() -> None:
 
 
 # --- the tree's waivers ---
+
 
 def _tree(tmp_path: Path, table: str) -> str:
     """Write a pyproject carrying `table` and return a shell path it governs.
@@ -172,6 +174,7 @@ def test_an_unparseable_pyproject_waives_nothing(tmp_path: Path) -> None:
 
 # --- the linter's output, narrowed ---
 
+
 def test_a_json1_comment_becomes_a_finding() -> None:
     """A well-formed comment becomes (code, line, message)."""
     raw = {"comments": [{"code": 2086, "line": 3, "message": " Double quote. "}]}
@@ -180,8 +183,12 @@ def test_a_json1_comment_becomes_a_finding() -> None:
 
 def test_a_waived_code_is_dropped_and_its_neighbour_kept() -> None:
     """The exclude set drops its codes and only its codes."""
-    raw = {"comments": [{"code": 2086, "line": 1, "message": "a"},
-                        {"code": 2016, "line": 2, "message": "b"}]}
+    raw = {
+        "comments": [
+            {"code": 2086, "line": 1, "message": "a"},
+            {"code": 2016, "line": 2, "message": "b"},
+        ]
+    }
     assert _codes(shellcheck.findings_of(raw, frozenset({"SC2016"}))) == ["SC2086"]
 
 
@@ -202,6 +209,7 @@ def test_a_non_integer_line_reads_as_zero() -> None:
 
 # --- what the edit will put on disk ---
 
+
 def test_write_carries_the_whole_content() -> None:
     """A Write's content is the post-edit file, exactly."""
     got = shellcheck.post_edit_content("Write", {"file_path": "a.sh", "content": "echo 1"})
@@ -211,7 +219,10 @@ def test_write_carries_the_whole_content() -> None:
 def test_an_unreadable_edit_target_is_unknown() -> None:
     """An Edit whose target cannot be read yields None — unknown, not a guess."""
     tool_input: dict[str, object] = {
-        "file_path": "/nonexistent/zz.sh", "old_string": "a", "new_string": "b"}
+        "file_path": "/nonexistent/zz.sh",
+        "old_string": "a",
+        "new_string": "b",
+    }
     assert shellcheck.post_edit_content("Edit", tool_input)[1] is None
 
 
@@ -228,7 +239,11 @@ def test_an_edit_with_replace_all_replaces_every_occurrence(tmp_path: Path) -> N
     target = tmp_path / "a.sh"
     target.write_text("x x", encoding="utf-8")
     tool_input: dict[str, object] = {
-        "file_path": str(target), "old_string": "x", "new_string": "y", "replace_all": True}
+        "file_path": str(target),
+        "old_string": "x",
+        "new_string": "y",
+        "replace_all": True,
+    }
     assert shellcheck.post_edit_content("Edit", tool_input)[1] == "y y"
 
 
@@ -238,6 +253,7 @@ def test_another_tool_carries_no_content() -> None:
 
 
 # --- the repair exemption ---
+
 
 def test_installing_the_linter_is_a_repair() -> None:
     """`mise use -g shellcheck@latest` is the repair the refusal names."""
@@ -250,6 +266,7 @@ def test_installing_something_else_is_not_a_repair() -> None:
 
 
 # --- the real linter ---
+
 
 @pytest.mark.needs_shellcheck
 @_needs_linter
@@ -344,6 +361,7 @@ def test_an_already_quoted_heredoc_tag_is_left_alone() -> None:
 
 # --- the hook, through main() ---
 
+
 def _main(
     monkeypatch: pytest.MonkeyPatch, record: dict[str, object], *, own: str | None, shared: str
 ) -> None:
@@ -394,7 +412,9 @@ def test_an_armed_hook_with_no_linter_admits_the_install(
     """The install the refusal names is admitted, and says so — no deadlock."""
     _absent(monkeypatch, tmp_path)
     record: dict[str, object] = {
-        "tool_name": "Bash", "tool_input": {"command": "mise use -g shellcheck@latest"}}
+        "tool_name": "Bash",
+        "tool_input": {"command": "mise use -g shellcheck@latest"},
+    }
     _main(monkeypatch, record, own="1", shared="0")
     got = capsys.readouterr()
     assert not got.out
@@ -411,7 +431,8 @@ def test_an_armed_hook_with_no_linter_admits_a_non_shell_write(
     _absent(monkeypatch, tmp_path)
     record: dict[str, object] = {
         "tool_name": "Write",
-        "tool_input": {"file_path": str(tmp_path / "settings.json"), "content": "{}"}}
+        "tool_input": {"file_path": str(tmp_path / "settings.json"), "content": "{}"},
+    }
     _main(monkeypatch, record, own="1", shared="0")
     assert not capsys.readouterr().out
 

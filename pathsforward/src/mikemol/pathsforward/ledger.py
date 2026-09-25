@@ -59,8 +59,7 @@ def line(entry: Entry, stamp: str) -> str:
         msg = "a ledger note is one line"
         raise MalformedEntryError(msg)
     note = entry.note.replace('"', '\\"')
-    out = (f"{stamp}  {entry.kind:5} {entry.symbol:4} {entry.outcome:9} "
-           f'{entry.mechanism:9} "{note}"')
+    out = f'{stamp}  {entry.kind:5} {entry.symbol:4} {entry.outcome:9} {entry.mechanism:9} "{note}"'
     return f"{out}  evidence={entry.evidence}" if entry.evidence else out
 
 

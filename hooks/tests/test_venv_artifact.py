@@ -145,7 +145,9 @@ def test_the_built_interpreter_actually_runs(dist: str) -> None:
     py = _venv_python(dist)
     proc = subprocess.run(
         [str(py), "-c", "import sys; print(sys.version.split()[0])"],
-        capture_output=True, text=True, check=False,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     assert proc.returncode == 0, (
         f"{dist}: the built interpreter did not run (rc={proc.returncode}): "
@@ -167,7 +169,9 @@ def test_the_venv_imports_the_distributions_own_package(dist: str) -> None:
     py = _venv_python(dist)
     proc = subprocess.run(
         [str(py), "-c", f"import mikemol.{dist}"],
-        capture_output=True, text=True, check=False,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     assert proc.returncode == 0, (
         f"{dist}: the venv cannot import its own package `mikemol.{dist}` — does its "
@@ -194,7 +198,10 @@ def test_a_package_outside_the_declared_closure_does_not_import() -> None:
     # ⚑ POSITIVE CONTROL FIRST: a declared package must import, or a refusal below means the
     # interpreter is broken rather than the closure being closed.
     ctrl = subprocess.run(
-        [str(py), "-c", "import pytest"], capture_output=True, text=True, check=False,
+        [str(py), "-c", "import pytest"],
+        capture_output=True,
+        text=True,
+        check=False,
     )
     assert ctrl.returncode == 0, (
         f"control failed: hooks' venv cannot import its declared pytest — "
@@ -202,7 +209,10 @@ def test_a_package_outside_the_declared_closure_does_not_import() -> None:
     )
 
     proc = subprocess.run(
-        [str(py), "-c", "import panflute"], capture_output=True, text=True, check=False,
+        [str(py), "-c", "import panflute"],
+        capture_output=True,
+        text=True,
+        check=False,
     )
     assert proc.returncode != 0, (
         "hooks' venv imported `panflute`, which is mdstruct's dependency and is not in hooks' "
@@ -227,7 +237,9 @@ _ENTRY_TIMEOUT_S = 60
 @pytest.mark.parametrize("depth", ["bazel-bin", "symlink-elsewhere"])
 @pytest.mark.parametrize("entry", _ENTRIES)
 def test_a_console_script_runs_directly_under_the_venvs_python(
-    entry: str, depth: str, tmp_path: Path,
+    entry: str,
+    depth: str,
+    tmp_path: Path,
 ) -> None:
     """⚑⚑⚑ A DIRECT RUN OF A BUILT ENTRY REACHES PYTHON, NEVER THE SHELL PARSING PYTHON.
 
@@ -252,7 +264,11 @@ def test_a_console_script_runs_directly_under_the_venvs_python(
     # ENOEXEC, while a shell falls back to reading the file as shell — the failure actually seen.
     proc = subprocess.run(
         ["/bin/sh", "-c", 'exec "$0"', str(script)],
-        input="{}", capture_output=True, text=True, check=False, timeout=_ENTRY_TIMEOUT_S,
+        input="{}",
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=_ENTRY_TIMEOUT_S,
         env={"PATH": "/usr/bin:/bin", "PYTHONPROFILEIMPORTTIME": "1"},
     )
     assert "command not found" not in proc.stderr, (
@@ -280,7 +296,10 @@ def test_the_venv_runs_the_distributions_own_suite(dist: str) -> None:
     py = _venv_python(dist)
     proc = subprocess.run(
         [str(py), "-m", "pytest", "tests/", "-q", "--no-header", "-p", "no:cacheprovider", "--co"],
-        capture_output=True, text=True, check=False, cwd=str(_REPO / dist),
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=str(_REPO / dist),
     )
     assert proc.returncode == 0, (
         f"{dist}: the built venv could not collect the distribution's suite "

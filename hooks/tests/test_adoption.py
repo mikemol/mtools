@@ -173,25 +173,26 @@ def test_both_distributions_co_install_under_one_namespace() -> None:
 
     with tempfile.TemporaryDirectory() as td:
         venv = Path(td) / "probe"
-        subprocess.run(
-            [sys.executable, "-m", "venv", str(venv)], check=True, capture_output=True
-        )
+        subprocess.run([sys.executable, "-m", "venv", str(venv)], check=True, capture_output=True)
         py = venv / "bin" / "python"
         for dist in _SIBLING_DISTS:
             installed = subprocess.run(
                 [str(py), "-m", "pip", "install", "-q", "--no-deps", "-e", str(repo / dist)],
-                capture_output=True, text=True, check=False,
+                capture_output=True,
+                text=True,
+                check=False,
             )
-            assert installed.returncode == 0, (
-                f"{dist} would not install: {installed.stderr[-400:]}"
-            )
+            assert installed.returncode == 0, f"{dist} would not install: {installed.stderr[-400:]}"
         # ⚑⚑ BOTH IMPORTED IN ONE INTERPRETER, FROM A NEUTRAL DIRECTORY. `cwd` is the condition
         # the verdict depends on: run from anywhere the source tree is reachable and this passes
         # even when a distribution ships no package at all — measured, and it is why the first
         # F-arms were green. Importing in two processes would also pass under a real shadowing.
         both = subprocess.run(
             [str(py), "-c", "import mikemol.hooks, mikemol.mdstruct"],
-            capture_output=True, text=True, check=False, cwd=str(venv),
+            capture_output=True,
+            text=True,
+            check=False,
+            cwd=str(venv),
         )
         assert both.returncode == 0, (
             "the two distributions do not co-install under the shared `mikemol` namespace: "

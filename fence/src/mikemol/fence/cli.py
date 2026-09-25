@@ -40,8 +40,9 @@ def _render(r: core.Result) -> str:
 
     """
     what = ("BOUND BY " + "; ".join(r.bound_by)) if r.bound_by else "completed within caps"
-    return (f"mikemol-fence: rc={r.exit_code} dur={r.duration_s}s "
-            f"peak_mem={r.memory_peak_bytes} {what}")
+    return (
+        f"mikemol-fence: rc={r.exit_code} dur={r.duration_s}s peak_mem={r.memory_peak_bytes} {what}"
+    )
 
 
 def _note(msg: str) -> None:
@@ -71,17 +72,27 @@ def build_parser() -> argparse.ArgumentParser:
     """
     ap = argparse.ArgumentParser(
         prog="mikemol-fence",
-        description="Run a command inside a cgroup; report what it consumed and which cap bound.")
+        description="Run a command inside a cgroup; report what it consumed and which cap bound.",
+    )
     ap.add_argument("--mem", help="memory.max, e.g. 2G / 512M / max")
-    ap.add_argument("--swap", help="memory.swap.max, e.g. 0 / 512M / max "
-                                   "(0 = no swap, so mem is a kill boundary not a throttle)")
+    ap.add_argument(
+        "--swap",
+        help="memory.swap.max, e.g. 0 / 512M / max "
+        "(0 = no swap, so mem is a kill boundary not a throttle)",
+    )
     ap.add_argument("--pids", type=int, help="pids.max (concurrent task ceiling)")
     ap.add_argument("--io", help='io.max, e.g. "259:0 wbps=10485760"')
-    ap.add_argument("--ratchet", help="comma-sep mem caps, tightest last (4G,2G,1G,512M) — "
-                                      "runs until one BINDS and reports the binding constraint")
-    ap.add_argument("--observe", action="store_true",
-                    help="measure only: impose no cap at all (the default when no cap is given, "
-                         "named so it can be relied on)")
+    ap.add_argument(
+        "--ratchet",
+        help="comma-sep mem caps, tightest last (4G,2G,1G,512M) — "
+        "runs until one BINDS and reports the binding constraint",
+    )
+    ap.add_argument(
+        "--observe",
+        action="store_true",
+        help="measure only: impose no cap at all (the default when no cap is given, "
+        "named so it can be relied on)",
+    )
     ap.add_argument("--json", action="store_true", help="emit the result as JSON")
     ap.add_argument("cmd", nargs=argparse.REMAINDER)
     return ap
@@ -209,13 +220,17 @@ def _report_ratchet(results: list[core.Result], *, json_out: bool) -> int:
         _note(_render(r))
     last = results[-1]
     if last.bound_by:
-        _note(f"── BINDING CONSTRAINT at mem={last.caps.mem}: "
-              f"{'; '.join(last.bound_by)} — it completed at every looser cap and bound "
-              f"here, so this is the scale of the resource the command needs ──")
+        _note(
+            f"── BINDING CONSTRAINT at mem={last.caps.mem}: "
+            f"{'; '.join(last.bound_by)} — it completed at every looser cap and bound "
+            f"here, so this is the scale of the resource the command needs ──"
+        )
     else:
-        _note(f"── completed within ALL caps down to {last.caps.mem} — no binding "
-              f"constraint in the tried range (either it is frugal, or the mechanism is "
-              f"not the resource you ratcheted) ──")
+        _note(
+            f"── completed within ALL caps down to {last.caps.mem} — no binding "
+            f"constraint in the tried range (either it is frugal, or the mechanism is "
+            f"not the resource you ratcheted) ──"
+        )
     if json_out:
         _emit(json.dumps(_sweep_payload(results)))
     return 0
@@ -239,8 +254,10 @@ def main(argv: list[str] | None = None) -> int:
 
     caps = Caps(mem=args.mem, swap=args.swap, pids=args.pids, io=args.io)
     if args.observe and (not caps.observe_only or args.ratchet):
-        ap.error("--observe imposes no cap, so it cannot be combined with --mem/--swap/--pids/"
-                 "--io/--ratchet; drop --observe to cap, or drop the caps to observe")
+        ap.error(
+            "--observe imposes no cap, so it cannot be combined with --mem/--swap/--pids/"
+            "--io/--ratchet; drop --observe to cap, or drop the caps to observe"
+        )
 
     # ⚑⚑⚑ THE `try` GUARDS THE CALLS INTO `core`, NOT THE REPORTING. It used to wrap thirteen
     # statements — the ratchet call AND every line that renders its result — and

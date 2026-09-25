@@ -132,12 +132,16 @@ def header(req: Request) -> list[str]:
         f"state_path={path}",
         f"project_root={text(state.doc, 'project_root')}",
         f"counter={state.counter} state_hash={v2(state.waypoints)} generated_at={req.generated_at}",
-        (f"Reconcile first: `{req.command} --state {path} --verify <state_hash>`; "
-         "exit 4 means the FILE wins."),
-        (f"Re-arm when the hash changes: {_binding(state, 'SCHEDULE_CREATE')} a fresh job from "
-         f"`--payload`, verify with {_binding(state, 'SCHEDULE_LIST')}, THEN "
-         f"{_binding(state, 'SCHEDULE_DELETE')} the predecessor "
-         f"(job_id={text(state.doc, 'job_id') or '-'})."),
+        (
+            f"Reconcile first: `{req.command} --state {path} --verify <state_hash>`; "
+            "exit 4 means the FILE wins."
+        ),
+        (
+            f"Re-arm when the hash changes: {_binding(state, 'SCHEDULE_CREATE')} a fresh job from "
+            f"`--payload`, verify with {_binding(state, 'SCHEDULE_LIST')}, THEN "
+            f"{_binding(state, 'SCHEDULE_DELETE')} the predecessor "
+            f"(job_id={text(state.doc, 'job_id') or '-'})."
+        ),
     ]
 
 
@@ -254,24 +258,48 @@ def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
     """
     rungs = [
         _Rung(n_live, evidence=True, residue=True, host=True, collapsed=True, dropped=()),
-        _Rung(n_live, evidence=True, residue=False, host=True, collapsed=True,
-              dropped=("residue",)),
-        _Rung(n_live, evidence=False, residue=False, host=True, collapsed=True,
-              dropped=("residue", "evidence")),
+        _Rung(
+            n_live, evidence=True, residue=False, host=True, collapsed=True, dropped=("residue",)
+        ),
+        _Rung(
+            n_live,
+            evidence=False,
+            residue=False,
+            host=True,
+            collapsed=True,
+            dropped=("residue", "evidence"),
+        ),
     ]
     trimmed: tuple[str, ...] = ("residue", "evidence")
     if has_host:
         trimmed += ("host",)
-        rungs.append(_Rung(n_live, evidence=False, residue=False, host=False, collapsed=True,
-                           dropped=trimmed))
+        rungs.append(
+            _Rung(
+                n_live, evidence=False, residue=False, host=False, collapsed=True, dropped=trimmed
+            )
+        )
     rungs += [
-        _Rung(top, evidence=False, residue=False, host=False, collapsed=True,
-              dropped=(*trimmed, f"steps-below-{top}"))
+        _Rung(
+            top,
+            evidence=False,
+            residue=False,
+            host=False,
+            collapsed=True,
+            dropped=(*trimmed, f"steps-below-{top}"),
+        )
         for top in _TOP_STEPS
     ]
     last = _TOP_STEPS[-1]
-    rungs.append(_Rung(last, evidence=False, residue=False, host=False, collapsed=False,
-                       dropped=(*trimmed, f"steps-below-{last}", "collapsed")))
+    rungs.append(
+        _Rung(
+            last,
+            evidence=False,
+            residue=False,
+            host=False,
+            collapsed=False,
+            dropped=(*trimmed, f"steps-below-{last}", "collapsed"),
+        )
+    )
     return rungs
 
 
@@ -309,14 +337,15 @@ def _compose(req: Request, rung: _Rung) -> str:
     if done:
         lines.append(f"  done ({len(done)}): {', '.join(done)}")
     if rung.residue and state.residue:
-        lines += ["residue:", *(f"  {text(r, 'symbol')}: {text(r, 'reason')}"
-                                for r in state.residue)]
+        lines += [
+            "residue:",
+            *(f"  {text(r, 'symbol')}: {text(r, 'reason')}" for r in state.residue),
+        ]
     body = "\n".join(lines)
     if not rung.evidence:
         body = "\n".join(ln for ln in body.splitlines() if not ln.startswith(_EVIDENCE))
     if rung.dropped:
-        body += (f"\ntruncated=true dropped={','.join(rung.dropped)} - read state_path "
-                 "for the rest.")
+        body += f"\ntruncated=true dropped={','.join(rung.dropped)} - read state_path for the rest."
     return body
 
 
@@ -350,7 +379,9 @@ def build(req: Request) -> str:
         if size <= req.budget:
             return body
     standing, step = _kept_sizes(req.state)
-    msg = (f"payload is {size} characters even at the last rung; the budget is {req.budget}. "
-           f"The standing rules are {standing} characters and the first ready waypoint's "
-           f"stanza is {step}; neither is ever dropped. Shorten one, or split the waypoint.")
+    msg = (
+        f"payload is {size} characters even at the last rung; the budget is {req.budget}. "
+        f"The standing rules are {standing} characters and the first ready waypoint's "
+        f"stanza is {step}; neither is ever dropped. Shorten one, or split the waypoint."
+    )
     raise PayloadOverBudgetError(msg)

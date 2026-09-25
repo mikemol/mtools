@@ -162,7 +162,7 @@ def _mode_operands(argv: list[str]) -> list[str]:
     if at is None:
         return []
     rest = argv[1:]
-    operands, refusal = _parse_mode_args(rest[at], rest[:at] + rest[at + 1:])
+    operands, refusal = _parse_mode_args(rest[at], rest[:at] + rest[at + 1 :])
     return [] if refusal is not None else operands
 
 
@@ -215,7 +215,10 @@ def argparse_parser(mode: str) -> argparse.ArgumentParser:
     # ⚑ `exit_on_error=False` so a parse failure is an exception `main()` renders in this tool's
     # own voice, never a `SystemExit` from inside a library call.
     parser = argparse.ArgumentParser(
-        prog=f"mdstruct {mode}", add_help=False, allow_abbrev=False, exit_on_error=False,
+        prog=f"mdstruct {mode}",
+        add_help=False,
+        allow_abbrev=False,
+        exit_on_error=False,
     )
     for opt in sorted(_MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS):
         if _OPT_ARITY[opt]:
@@ -241,8 +244,9 @@ def _spans(path: Path) -> int:
         return 0
     for span in found:
         indent = "  " * span.level
-        sys.stdout.write(f"  L{span.start:>4}-{span.end - 1:<4} "
-                         f"{indent}{'#' * span.level} {span.text}\n")
+        sys.stdout.write(
+            f"  L{span.start:>4}-{span.end - 1:<4} {indent}{'#' * span.level} {span.text}\n"
+        )
     sys.stdout.write(f"  {len(found)} section(s) in {path}\n")
     return 0
 
@@ -302,8 +306,10 @@ def _items(path: Path) -> int:
         if row.targets:
             linked += 1
             targets.update(row.targets)
-    sys.stdout.write(f"  {len(found)} item(s), {linked} with link(s), "
-                     f"{len(targets)} distinct target(s) in {path}\n")
+    sys.stdout.write(
+        f"  {len(found)} item(s), {linked} with link(s), "
+        f"{len(targets)} distinct target(s) in {path}\n"
+    )
     return 0
 
 
@@ -337,8 +343,10 @@ def _grep(pattern: str, path: Path, argv: list[str]) -> int:
         mode = "REGEX" if is_regex else "LITERAL"
         n_lines = len(path.read_text(encoding="utf-8").split("\n"))
         sys.stdout.write(f"mdstruct: no line in {path} matches {pattern!r}\n")
-        sys.stdout.write(f"    searched {n_lines} line(s) in {mode.upper()} mode. This is a fact\n"
-                         f"    about THIS FILE at THIS PATH — not a claim about any other file.\n")
+        sys.stdout.write(
+            f"    searched {n_lines} line(s) in {mode.upper()} mode. This is a fact\n"
+            f"    about THIS FILE at THIS PATH — not a claim about any other file.\n"
+        )
         # ⚑⚑ A ZERO THAT CANNOT SAY WHY IS THE WORST RESULT A READER CAN RETURN, and this one had
         # no natural discoverer: the struct-tools hook routes every `.md` query here, so the
         # routing that makes this tool authoritative also removes the reader who would disagree.
@@ -351,7 +359,8 @@ def _grep(pattern: str, path: Path, argv: list[str]) -> int:
                 f"    was matched as text rather than as a regex. This zero may be an artefact\n"
                 f"    of the mode rather than a fact about the file.\n"
                 f"  re-run with -E for a regex, or drop the escapes for a literal search:\n"
-                f"      mdstruct grep -E {pattern!r} {path}\n")
+                f"      mdstruct grep -E {pattern!r} {path}\n"
+            )
         return 1
     for hit in hits:
         sys.stdout.write(f"  {hit.container}\n")
@@ -359,8 +368,10 @@ def _grep(pattern: str, path: Path, argv: list[str]) -> int:
     sys.stdout.write(f"  {len(hits)} match(es) in {path}\n")
     # ⚑ THE LIMIT IS PRINTED WITH THE RESULT, not left in a docstring. A reader who expected a
     # table coordinate must see why they got a section one at the moment they read the output.
-    sys.stdout.write("    containers are SECTIONS. pandoc carries no source positions for\n"
-                     "    tables, so a match inside one reports its enclosing section.\n")
+    sys.stdout.write(
+        "    containers are SECTIONS. pandoc carries no source positions for\n"
+        "    tables, so a match inside one reports its enclosing section.\n"
+    )
     return 0
 
 
@@ -378,8 +389,10 @@ def _tables(path: Path) -> int:
         sys.stdout.write(f"mdstruct: {path} holds no tables\n")
         return 0
     for table in found:
-        sys.stdout.write(f"  table {table.position}  {table.rows} row(s) x "
-                         f"{table.cols} col(s)  {' | '.join(table.header)}\n")
+        sys.stdout.write(
+            f"  table {table.position}  {table.rows} row(s) x "
+            f"{table.cols} col(s)  {' | '.join(table.header)}\n"
+        )
     sys.stdout.write(f"  {len(found)} table(s) in {path}\n")
     return 0
 
@@ -440,8 +453,10 @@ def _rows(path: Path, argv: list[str]) -> int:
         if position >= count:
             sys.stderr.write(
                 f"mdstruct: --table {position} but {path} holds {count} table(s), "
-                f"numbered 0-{count - 1}\n" if count else
-                f"mdstruct: --table {position} but {path} holds no tables\n")
+                f"numbered 0-{count - 1}\n"
+                if count
+                else f"mdstruct: --table {position} but {path} holds no tables\n"
+            )
             return 2
     found = tables.table_rows(path, where=where, col=col, starts=starts, position=position)
     if not found:
@@ -495,8 +510,9 @@ def _roundtrip(path: Path) -> int:
     if drift.identical:
         sys.stdout.write(f"  {path}: round-trips IDENTICALLY\n")
         return 0
-    sys.stdout.write(f"  {path}: normalization changes {drift.changed} line(s). First "
-                     f"{len(drift.sample)}:\n")
+    sys.stdout.write(
+        f"  {path}: normalization changes {drift.changed} line(s). First {len(drift.sample)}:\n"
+    )
     for line in drift.sample:
         sys.stdout.write(f"    {line[:150]}\n")
     return 0
@@ -565,8 +581,7 @@ def _narrowest(path: Path) -> int:
     """
     got = lint.narrowest_width(path)
     if got is None:
-        sys.stdout.write(f"  {path}: no admissible width in range — a line exceeds the "
-                         f"ceiling\n")
+        sys.stdout.write(f"  {path}: no admissible width in range — a line exceeds the ceiling\n")
         return 1
     sys.stdout.write(f"  {path}: narrowest admissible width is {got}\n")
     return 0
@@ -736,13 +751,15 @@ def _write_section(path: Path, needle: str, argv: list[str], *, append: bool) ->
         sys.stderr.write(
             f"mdstruct: {'append-section' if append else 'replace-section'} needs --body-file.\n"
             f"    The body is a FILE, not an argument: a multi-line body on the command line is\n"
-            f"    the shell append this tool exists to replace. Use `--body-file -` for stdin.\n")
+            f"    the shell append this tool exists to replace. Use `--body-file -` for stdin.\n"
+        )
         return 2
     if "--apply" in argv and "--dry-run" in argv:
         sys.stderr.write(
             "mdstruct: state exactly one of --apply / --dry-run.\n"
             "    Both together is an incoherent instruction with two bad resolutions — a\n"
-            "    write the caller believed was a preview, or the reverse.\n")
+            "    write the caller believed was a preview, or the reverse.\n"
+        )
         return 2
 
     # ⚑⚑⚑ THE TARGET AND THE BODY MUST NOT BE THE SAME FILE, and the shape that produces it is a
@@ -759,7 +776,8 @@ def _write_section(path: Path, needle: str, argv: list[str], *, append: bool) ->
             f"    This is what a DROPPED HEADING looks like: with the heading omitted the file\n"
             f"    slides into the heading slot and --body-file's argument becomes the target.\n"
             f"    Re-run as: mdstruct {'append-section' if append else 'replace-section'} "
-            f"HEADING FILE.md --body-file BODY.md\n")
+            f"HEADING FILE.md --body-file BODY.md\n"
+        )
         return 2
 
     # ⚑⚑ `sys.stdin.read()` IS `Any`, and the cast is where that is stated — the same narrow-at-the
@@ -789,11 +807,15 @@ def _write_section(path: Path, needle: str, argv: list[str], *, append: bool) ->
 
     if "--apply" in argv:
         path.write_text(new_text, encoding="utf-8")
-        sys.stdout.write(f"  {path}: wrote {'into' if append else 'over'} "
-                         f"{'#' * span.level} {span.text} (L{span.start}-{span.end - 1})\n")
+        sys.stdout.write(
+            f"  {path}: wrote {'into' if append else 'over'} "
+            f"{'#' * span.level} {span.text} (L{span.start}-{span.end - 1})\n"
+        )
         return 0
-    sys.stdout.write(f"  {path}: would write {'into' if append else 'over'} "
-                     f"{'#' * span.level} {span.text} (L{span.start}-{span.end - 1})\n")
+    sys.stdout.write(
+        f"  {path}: would write {'into' if append else 'over'} "
+        f"{'#' * span.level} {span.text} (L{span.start}-{span.end - 1})\n"
+    )
     sys.stdout.write("  ── the rewritten document follows; re-run with --apply to write it ──\n")
     sys.stdout.write(new_text if new_text.endswith("\n") else new_text + "\n")
     return 0
@@ -820,10 +842,12 @@ def _verify_one(path: Path) -> int:
         return 0
     for item in missing:
         sys.stdout.write(
-            f"  L{item.line:>4}  {'#' * item.level} {item.text}  — SWALLOWED, not a section\n")
+            f"  L{item.line:>4}  {'#' * item.level} {item.text}  — SWALLOWED, not a section\n"
+        )
     sys.stdout.write(
         f"  {len(missing)} heading(s) in {path} are unreachable. A bounded write against the "
-        "PRECEDING section would land inside one of them.\n")
+        "PRECEDING section would land inside one of them.\n"
+    )
     return 1
 
 
@@ -964,7 +988,8 @@ def _classify(path: Path, argv: list[str]) -> int:
     if not states:
         sys.stderr.write(
             f"mdstruct: {path} declares no `state | means` table — nothing to classify against. "
-            "That is a fact about the document, not about this reader.\n")
+            "That is a fact about the document, not about this reader.\n"
+        )
         return 2
     col_raw = _flag(argv, "--col")
     if col_raw is not None and not col_raw.isdigit():
@@ -992,8 +1017,11 @@ def _classify(path: Path, argv: list[str]) -> int:
     # read across four tables describes a defect in the QUESTION. This tool's own rule is that
     # every mode prints its denominator, and a count of rows is only half of one — the other half
     # is which tables they came from.
-    scope = (f"table {pos_raw}" if pos_raw is not None
-             else f"ALL {len(tables.tables(path))} table(s) — pass --table N to scope")
+    scope = (
+        f"table {pos_raw}"
+        if pos_raw is not None
+        else f"ALL {len(tables.tables(path))} table(s) — pass --table N to scope"
+    )
     sys.stdout.write(f"  {len(states)} declared state(s) in {path}, read across {scope}\n")
     total = 0
     for state, rows in groups.items():
@@ -1127,11 +1155,12 @@ def main(argv: list[str] | None = None) -> int:
     mode = rest[mode_at]
     run = _MODES.get(mode)
     if run is None:
-        sys.stderr.write(f"mdstruct: unknown mode {mode!r} — "
-                         f"known modes are {', '.join(sorted(_MODES))}\n")
+        sys.stderr.write(
+            f"mdstruct: unknown mode {mode!r} — known modes are {', '.join(sorted(_MODES))}\n"
+        )
         return 2
 
-    operands, refusal = _parse_mode_args(mode, rest[:mode_at] + rest[mode_at + 1:])
+    operands, refusal = _parse_mode_args(mode, rest[:mode_at] + rest[mode_at + 1 :])
     if refusal is not None:
         sys.stderr.write(refusal)
         return 2
@@ -1148,7 +1177,8 @@ def main(argv: list[str] | None = None) -> int:
         else:
             sys.stderr.write(
                 f"usage: mdstruct {mode} "
-                f"{'PATTERN' if mode == _PATTERN_MODE else 'HEADING'} FILE.md ...\n")
+                f"{'PATTERN' if mode == _PATTERN_MODE else 'HEADING'} FILE.md ...\n"
+            )
         return 2
     if mode in _OPERAND_FIRST:
         pattern, path = args[1], Path(args[2])

@@ -44,8 +44,15 @@ def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
         the waypoint.
 
     """
-    w: Rec = {"symbol": sym, "title": sym, "status": status, "blocked_on": [],
-              "blocked_kind": None, "enables": [], "evidence": ""}
+    w: Rec = {
+        "symbol": sym,
+        "title": sym,
+        "status": status,
+        "blocked_on": [],
+        "blocked_kind": None,
+        "enables": [],
+        "evidence": "",
+    }
     w.update(extra)
     return w
 
@@ -60,19 +67,23 @@ def _res(sym: str, reason: str = "r") -> Rec:
     return {"symbol": sym, "reason": reason}
 
 
-def _state(root: Path, waypoints: list[Rec] | None = None,
-           residue: list[Rec] | None = None) -> State:
+def _state(
+    root: Path, waypoints: list[Rec] | None = None, residue: list[Rec] | None = None
+) -> State:
     """Build a state over W1..W3: W1, W2 live and W3 residue unless overridden.
 
     Returns:
         the state.
 
     """
-    return validate({
-        "counter": _COUNTER, "project_root": str(root),
-        "waypoints": [_wp("W1"), _wp("W2")] if waypoints is None else waypoints,
-        "residue": [_res("W3")] if residue is None else residue,
-    })
+    return validate(
+        {
+            "counter": _COUNTER,
+            "project_root": str(root),
+            "waypoints": [_wp("W1"), _wp("W2")] if waypoints is None else waypoints,
+            "residue": [_res("W3")] if residue is None else residue,
+        }
+    )
 
 
 def test_a_clean_state_has_no_findings(tmp_path: Path) -> None:
@@ -178,13 +189,17 @@ def test_evidence_naming_a_missing_path_is_found(tmp_path: Path) -> None:
     ev = f"commit abc; ({tmp_path}/here.txt), {tmp_path}/gone.txt; relative/x"
     state = _state(tmp_path, waypoints=[_wp("W1", evidence=ev), _wp("W2")])
     assert chk.evidence_findings(state) == [
-        f"W1: evidence names {tmp_path}/gone.txt, which does not exist"]
+        f"W1: evidence names {tmp_path}/gone.txt, which does not exist"
+    ]
 
 
 def test_a_historical_name_in_residue_with_a_reason_is_admitted(tmp_path: Path) -> None:
     """`W50b` in residue with a reason is admitted; a live `Wx` beside it is still found."""
-    state = _state(tmp_path, waypoints=[_wp("W1"), _wp("W2"), _wp(_BAD)],
-                   residue=[_res("W3"), _res(_HISTORICAL, _HISTORICAL_REASON)])
+    state = _state(
+        tmp_path,
+        waypoints=[_wp("W1"), _wp("W2"), _wp(_BAD)],
+        residue=[_res("W3"), _res(_HISTORICAL, _HISTORICAL_REASON)],
+    )
     assert chk.malformed(state) == [f"{_BAD!r}: not a W<n> symbol"]
 
 
@@ -216,17 +231,20 @@ def test_a_sentence_final_mark_is_not_part_of_an_evidence_path(tmp_path: Path) -
 
 def test_a_missing_path_is_reported_without_its_sentence_period(tmp_path: Path) -> None:
     """A missing path ending a sentence is still reported (control), named without the period."""
-    state = _state(tmp_path, waypoints=[_wp("W1", evidence=f"wrote {tmp_path}/{_GONE}."),
-                                        _wp("W2")])
+    state = _state(
+        tmp_path, waypoints=[_wp("W1", evidence=f"wrote {tmp_path}/{_GONE}."), _wp("W2")]
+    )
     assert chk.evidence_findings(state) == [
-        f"W1: evidence names {tmp_path}/{_GONE}, which does not exist"]
+        f"W1: evidence names {tmp_path}/{_GONE}, which does not exist"
+    ]
 
 
 def test_a_dot_that_is_part_of_a_real_name_is_kept(tmp_path: Path) -> None:
     """A real name ending in `.`, then a sentence period, resolves to that real name."""
     (tmp_path / _DOTTED).write_text("x", encoding="utf-8")
-    state = _state(tmp_path, waypoints=[_wp("W1", evidence=f"kept {tmp_path}/{_DOTTED}."),
-                                        _wp("W2")])
+    state = _state(
+        tmp_path, waypoints=[_wp("W1", evidence=f"kept {tmp_path}/{_DOTTED}."), _wp("W2")]
+    )
     assert chk.evidence_findings(state) == []
 
 

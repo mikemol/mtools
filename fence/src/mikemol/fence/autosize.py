@@ -100,9 +100,11 @@ def clamp_warning(key: str, sizing: Sizing, cap: int) -> str | None:
     """
     if sizing.clamped_from is None:
         return None
-    return (f"autosize: {key} peaked at {sizing.clamped_from:g} MB but the cap is {cap} MB — "
-            f"leasing {sizing.mb} MB, BELOW the measured need; raise `ceiling`, or declare a "
-            f"default above it")
+    return (
+        f"autosize: {key} peaked at {sizing.clamped_from:g} MB but the cap is {cap} MB — "
+        f"leasing {sizing.mb} MB, BELOW the measured need; raise `ceiling`, or declare a "
+        f"default above it"
+    )
 
 
 def killed_by_cap(result: Result) -> bool:

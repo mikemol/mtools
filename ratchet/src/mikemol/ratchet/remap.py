@@ -106,12 +106,17 @@ class LeafDiff:
     @property
     def is_path(self) -> bool:
         """Report whether this leaf is a path field, the only kind a remap may change."""
-        return (bool(self.pointer) and self.pointer[-1] == PATH_KEY
-                and isinstance(self.before, str) and isinstance(self.after, str))
+        return (
+            bool(self.pointer)
+            and self.pointer[-1] == PATH_KEY
+            and isinstance(self.before, str)
+            and isinstance(self.after, str)
+        )
 
 
-def _dict_diffs(before: dict[str, Json], after: dict[str, Json],
-                pointer: Pointer) -> Iterator[LeafDiff]:
+def _dict_diffs(
+    before: dict[str, Json], after: dict[str, Json], pointer: Pointer
+) -> Iterator[LeafDiff]:
     for key in sorted(set(before) | set(after)):
         here = (*pointer, key)
         if key not in before:
@@ -154,8 +159,11 @@ def leaf_diffs(before: Json, after: Json, pointer: Pointer = ()) -> Iterator[Lea
 
 
 def _duplicate_paths(items: list[Json]) -> int:
-    paths = [path for item in items
-             if isinstance(item, dict) and isinstance(path := item.get(PATH_KEY), str)]
+    paths = [
+        path
+        for item in items
+        if isinstance(item, dict) and isinstance(path := item.get(PATH_KEY), str)
+    ]
     return len(paths) - len(set(paths))
 
 
@@ -200,8 +208,10 @@ def project_path_only(before: Json, after: Json) -> Json:
                 out[key] = project_path_only(val, new)
         return out
     if isinstance(before, list) and isinstance(after, list):
-        return [project_path_only(val, after[idx]) if idx < len(after) else val
-                for idx, val in enumerate(before)]
+        return [
+            project_path_only(val, after[idx]) if idx < len(after) else val
+            for idx, val in enumerate(before)
+        ]
     return before
 
 
@@ -209,7 +219,10 @@ def _load_rev(root: Path, rev: str, rel: str) -> Json:
     # ⚑ `--end-of-options`: without it a rev such as `--output=/x` is read by git as an OPTION.
     result = subprocess.run(
         ["git", "-C", str(root), "show", "--end-of-options", f"{rev}:{rel}"],
-        capture_output=True, text=True, check=False)
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     if result.returncode != 0:
         msg = f"unable to load {rev}:{rel}: {result.stderr.strip()}"
         raise ValueError(msg)
@@ -296,13 +309,16 @@ def _write_all(root: Path, outputs: list[tuple[str, str]]) -> list[str]:
         except OSError as exc:
             _discard(temps[idx:])
             done = ", ".join(outputs[j][0] for j in range(idx)) or "none"
-            return [f"{outputs[idx][0]}: error: {exc}",
-                    f"replace phase failed; already rewritten: {done}"]
+            return [
+                f"{outputs[idx][0]}: error: {exc}",
+                f"replace phase failed; already rewritten: {done}",
+            ]
     return []
 
 
-def remap_guard(root: Path, files: list[str], *, rev: str = "HEAD",
-                write: bool) -> tuple[int, list[str]]:
+def remap_guard(
+    root: Path, files: list[str], *, rev: str = "HEAD", write: bool
+) -> tuple[int, list[str]]:
     """Refuse any baseline whose diff against `rev` touches a non-path leaf. Return (code, lines).
 
     With `write=True` each file's path-only projection is computed and verified FIRST; only if
@@ -318,18 +334,23 @@ def remap_guard(root: Path, files: list[str], *, rev: str = "HEAD",
         try:
             loaded.append(_load(root, rev, rel))
         except (OSError, ValueError) as exc:  # JSONDecodeError, UnicodeDecodeError: ValueError
-            return UNREADABLE, [f"{rel}: error: {exc}", "nothing written" if write else
-                                "remap guard could not read every file"]
+            return UNREADABLE, [
+                f"{rel}: error: {exc}",
+                "nothing written" if write else "remap guard could not read every file",
+            ]
     if write:
-        projected = [_Loaded(i.rel, i.before, project_path_only(i.before, i.after), i.source)
-                     for i in loaded]
+        projected = [
+            _Loaded(i.rel, i.before, project_path_only(i.before, i.after), i.source) for i in loaded
+        ]
         verdicts = [_verdict(p) for p in projected]
         if any(bad for bad, _ in verdicts):
             lines = [line for _, report in verdicts for line in report]
             return REFUSED, [*lines, "path-only projection REFUSED; nothing written"]
-        outputs = [(old.rel, _render_like(new.after, old.source))
-                   for old, new in zip(loaded, projected, strict=True)
-                   if any(leaf_diffs(new.after, old.after))]
+        outputs = [
+            (old.rel, _render_like(new.after, old.source))
+            for old, new in zip(loaded, projected, strict=True)
+            if any(leaf_diffs(new.after, old.after))
+        ]
         failure = _write_all(root, outputs)
         if failure:
             return UNREADABLE, failure

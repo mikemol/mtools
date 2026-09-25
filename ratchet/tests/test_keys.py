@@ -104,8 +104,10 @@ def _dist(tmp_path: Path, findings: frozenset[str]) -> Path:
     """
     binroot = tmp_path / ".venv" / "bin"
     binroot.mkdir(parents=True)
-    body = "".join(f'echo "{key.rpartition(":")[0]}:1:1: {key.rpartition(":")[2]}: msg"\n'
-                   for key in sorted(findings))
+    body = "".join(
+        f'echo "{key.rpartition(":")[0]}:1:1: {key.rpartition(":")[2]}: msg"\n'
+        for key in sorted(findings)
+    )
     ruff = binroot / "ruff"
     ruff.write_text(f"#!/bin/sh\n{body}exit 1\n", encoding="utf-8")
     ruff.chmod(0o755)
@@ -176,7 +178,8 @@ def test_a_malformed_key_is_refused_by_the_ratchet(tmp_path: Path) -> None:
 
 
 def test_a_malformed_census_is_refused_by_the_cli(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A ruff key under a `::` schema is refused by name, and nothing is minted."""
     dist = _dist(tmp_path, frozenset({RUFF_UNDER_PUBLIC}))
     assert _main([str(dist), "--key-schema", PUBLIC, "--init-absent"]) == REFUSED

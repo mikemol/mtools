@@ -129,9 +129,22 @@ class Runner:
         # raises `PermissionError`, and both are the same fact — the runner could not start.
         try:
             proc = subprocess.run(
-                [str(self.interpreter), "-m", "pytest", self.module,
-                 "-k", test, "-q", "--no-header", "-p", "no:cacheprovider"],
-                capture_output=True, text=True, check=False, cwd=str(self.dist),
+                [
+                    str(self.interpreter),
+                    "-m",
+                    "pytest",
+                    self.module,
+                    "-k",
+                    test,
+                    "-q",
+                    "--no-header",
+                    "-p",
+                    "no:cacheprovider",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+                cwd=str(self.dist),
             )
         except OSError:
             return False, False
@@ -185,7 +198,8 @@ def arms_with_subjects(module: Path, targets: dict[str, Path]) -> dict[str, list
         if not isinstance(fn, ast.FunctionDef) or not fn.name.startswith("test_"):
             continue
         reads = any(
-            isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+            isinstance(n, ast.Call)
+            and isinstance(n.func, ast.Attribute)
             and n.func.attr == "read_text"
             for n in ast.walk(fn)
         )
@@ -221,8 +235,9 @@ def _flips(runner: Runner, test: str, subject: Path) -> bool:
         subject.write_bytes(saved)
 
 
-def grade_test(runner: Runner, test: str, subjects: Sequence[Path],
-               content: Iterable[str] = ()) -> Grade:
+def grade_test(
+    runner: Runner, test: str, subjects: Sequence[Path], content: Iterable[str] = ()
+) -> Grade:
     """Grade one test by mutating each of its subjects in turn.
 
     Returns:
@@ -232,12 +247,16 @@ def grade_test(runner: Runner, test: str, subjects: Sequence[Path],
     passed, reachable = runner.run(test)
     if not passed:
         return Grade(
-            test=test, grade="broken",
-            why=("the test could not be REACHED in a pristine tree — nothing was established "
-                 "about it, and this is NOT a statement that the repository is red")
-                if not reachable else
-                "the test does not pass in a pristine tree — the repository is not green",
-            higher="—", lower="—",
+            test=test,
+            grade="broken",
+            why=(
+                "the test could not be REACHED in a pristine tree — nothing was established "
+                "about it, and this is NOT a statement that the repository is red"
+            )
+            if not reachable
+            else "the test does not pass in a pristine tree — the repository is not green",
+            higher="—",
+            lower="—",
             subjects=tuple(str(s) for s in subjects),
         )
 
@@ -245,7 +264,9 @@ def grade_test(runner: Runner, test: str, subjects: Sequence[Path],
     if flipped:
         names = set(content)
         return Grade(
-            test=test, grade="behavioral", flipped=flipped,
+            test=test,
+            grade="behavioral",
+            flipped=flipped,
             subjects=tuple(str(s) for s in subjects),
             why=f"falsifiable — corrupting {len(flipped)} subject(s) flips it red",
             higher="behavioral is the top rung this grader awards; a proof grade is not defined",
@@ -257,13 +278,18 @@ def grade_test(runner: Runner, test: str, subjects: Sequence[Path],
             content_sensitive=any(Path(f).name in names for f in flipped) if names else False,
         )
     return Grade(
-        test=test, grade="indeterminate",
+        test=test,
+        grade="indeterminate",
         subjects=tuple(str(s) for s in subjects),
-        why=("no mutation of its subjects flips it — VACUOUS, or a NEGATIVE assertion that a "
-             "corrupted subject satisfies just as well"),
+        why=(
+            "no mutation of its subjects flips it — VACUOUS, or a NEGATIVE assertion that a "
+            "corrupted subject satisfies just as well"
+        ),
         higher="to rise: a targeted counter-fixture — a mutation that SHOULD flip it",
-        lower=("not provably vacuous: a negative assertion is a real claim, and this grader "
-               "cannot tell the two apart without a counter-fixture"),
+        lower=(
+            "not provably vacuous: a negative assertion is a real claim, and this grader "
+            "cannot tell the two apart without a counter-fixture"
+        ),
     )
 
 
@@ -293,8 +319,10 @@ def report(grades: Iterable[Grade]) -> list[str]:
 
     """
     ordered = sorted(grades, key=_by_rung)
-    lines = [f"  {g.grade:14} {g.test}" + (f"  [{len(g.flipped)} flip(s)]" if g.flipped else "")
-             for g in ordered]
+    lines = [
+        f"  {g.grade:14} {g.test}" + (f"  [{len(g.flipped)} flip(s)]" if g.flipped else "")
+        for g in ordered
+    ]
     tally: dict[str, int] = {}
     for g in ordered:
         tally[g.grade] = tally.get(g.grade, 0) + 1
@@ -302,5 +330,13 @@ def report(grades: Iterable[Grade]) -> list[str]:
     return lines
 
 
-__all__ = ["CORRUPT", "RANK", "Grade", "Runner", "arms_with_subjects", "grade_test", "report",
-           "subjects_of"]
+__all__ = [
+    "CORRUPT",
+    "RANK",
+    "Grade",
+    "Runner",
+    "arms_with_subjects",
+    "grade_test",
+    "report",
+    "subjects_of",
+]

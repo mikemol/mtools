@@ -36,8 +36,9 @@ _MODULE = "-m mikemol.pathsforward"
 _SENTINEL = "never point GIT_* at the real repo"
 _STANDING_LINES = 25
 _HOST_OS = "host-os-sentinel"
-_LAST_RUNG_TAIL = ("dropped=residue,evidence,host,steps-below-1,collapsed - read state_path "
-                   "for the rest.")
+_LAST_RUNG_TAIL = (
+    "dropped=residue,evidence,host,steps-below-1,collapsed - read state_path for the rest."
+)
 
 
 def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
@@ -47,9 +48,16 @@ def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
         the waypoint.
 
     """
-    w: Rec = {"symbol": sym, "title": f"title of {sym}", "status": status, "blocked_on": [],
-              "blocked_kind": None, "next_bounded_step": f"step of {sym}",
-              "evidence": f"evidence of {sym}\nsecond line", "ticks_blocked": 0}
+    w: Rec = {
+        "symbol": sym,
+        "title": f"title of {sym}",
+        "status": status,
+        "blocked_on": [],
+        "blocked_kind": None,
+        "next_bounded_step": f"step of {sym}",
+        "evidence": f"evidence of {sym}\nsecond line",
+        "ticks_blocked": 0,
+    }
     w.update(extra)
     return w
 
@@ -61,9 +69,14 @@ def _state(waypoints: list[Rec], **top: object) -> State:
         the state.
 
     """
-    doc: Rec = {"counter": len(waypoints) + 1, "project_root": "/proj", "state_path": _LIVE,
-                "job_id": "job-7", "waypoints": waypoints,
-                "residue": [{"symbol": f"W{len(waypoints) + 1}", "reason": "gone for good"}]}
+    doc: Rec = {
+        "counter": len(waypoints) + 1,
+        "project_root": "/proj",
+        "state_path": _LIVE,
+        "job_id": "job-7",
+        "waypoints": waypoints,
+        "residue": [{"symbol": f"W{len(waypoints) + 1}", "reason": "gone for good"}],
+    }
     doc.update(top)
     return validate(doc)
 
@@ -85,8 +98,12 @@ def _big() -> State:
         the state.
 
     """
-    return _state([_wp(f"W{i}", title="t" * _LONG_TITLE, next_bounded_step="s" * _LONG_STEP)
-                   for i in range(1, _MANY + 1)])
+    return _state(
+        [
+            _wp(f"W{i}", title="t" * _LONG_TITLE, next_bounded_step="s" * _LONG_STEP)
+            for i in range(1, _MANY + 1)
+        ]
+    )
 
 
 def test_a_payload_under_budget_is_not_marked_truncated() -> None:
@@ -153,10 +170,22 @@ def test_evidence_is_the_first_line_only() -> None:
 
 def test_the_standing_rules_are_emitted_verbatim() -> None:
     """`preamble`, `standing` and `host` are emitted as declared (el-openglo, mtools)."""
-    state = _state([_wp("W1")], preamble="rule one\nrule two", standing=["no swarm"],
-                   host={"venvs": ["a", "b"], "pandoc": "ok"})
-    assert pl.rules(state) == ["preamble:", "  rule one", "  rule two", "standing:",
-                               "  - no swarm", "host:", "  venvs=a,b", "  pandoc=ok"]
+    state = _state(
+        [_wp("W1")],
+        preamble="rule one\nrule two",
+        standing=["no swarm"],
+        host={"venvs": ["a", "b"], "pandoc": "ok"},
+    )
+    assert pl.rules(state) == [
+        "preamble:",
+        "  rule one",
+        "  rule two",
+        "standing:",
+        "  - no swarm",
+        "host:",
+        "  venvs=a,b",
+        "  pandoc=ok",
+    ]
 
 
 def test_a_list_preamble_is_accepted() -> None:
@@ -174,8 +203,11 @@ def test_the_standing_rules_survive_the_last_rung() -> None:
     standing = [f"{_SENTINEL} {i} " + "x" * _PRE_WIDTH for i in range(_STANDING_LINES)]
     text = _build(_state(_big().waypoints, standing=standing, host={"os": _HOST_OS}))
     # the positive control: this really is the last rung, since host and collapsed were dropped.
-    assert (f"  - {_SENTINEL} 0 " in text, text.endswith(_LAST_RUNG_TAIL),
-            _HOST_OS in text) == (True, True, False)
+    assert (f"  - {_SENTINEL} 0 " in text, text.endswith(_LAST_RUNG_TAIL), _HOST_OS in text) == (
+        True,
+        True,
+        False,
+    )
 
 
 def test_standing_plus_first_step_over_budget_is_refused_with_both_sizes() -> None:
@@ -187,8 +219,10 @@ def test_standing_plus_first_step_over_budget_is_refused_with_both_sizes() -> No
     with pytest.raises(pl.PayloadOverBudgetError) as caught:
         _build(state)
     message = str(caught.value)
-    assert (f"standing rules are {rules_size} characters" in message,
-            f"stanza is {len(pl.stanza(first))}" in message) == (True, True)
+    assert (
+        f"standing rules are {rules_size} characters" in message,
+        f"stanza is {len(pl.stanza(first))}" in message,
+    ) == (True, True)
 
 
 def test_the_scheduler_verbs_come_from_bindings() -> None:
@@ -196,7 +230,10 @@ def test_the_scheduler_verbs_come_from_bindings() -> None:
     state = _state([_wp("W1")], bindings={"SCHEDULE_CREATE": "CronCreate"})
     line = pl.header(pl.Request(state, _COPY, _NOW))[-1]
     assert ("CronCreate" in line, "SCHEDULE_LIST" in line, "job_id=job-7" in line) == (
-        True, True, True)
+        True,
+        True,
+        True,
+    )
 
 
 def test_the_header_carries_the_hash_and_the_build_time() -> None:
@@ -227,9 +264,12 @@ def test_the_ladder_adds_the_host_rung_only_with_a_host() -> None:
     """The host rung exists only with a host block; every ladder ends by dropping collapsed."""
     with_host = pl.ladder(1, has_host=True)
     without = pl.ladder(1, has_host=False)
-    assert (len(with_host) - len(without), "host" in with_host[-1].dropped,
-            "host" in without[-1].dropped, without[-1].dropped[-1]) == (1, True, False,
-                                                                        "collapsed")
+    assert (
+        len(with_host) - len(without),
+        "host" in with_host[-1].dropped,
+        "host" in without[-1].dropped,
+        without[-1].dropped[-1],
+    ) == (1, True, False, "collapsed")
 
 
 def test_a_ready_waypoint_is_listed_above_a_blocked_one() -> None:
@@ -241,8 +281,10 @@ def test_a_ready_waypoint_is_listed_above_a_blocked_one() -> None:
 
 def test_the_first_ready_step_survives_steps_below_1() -> None:
     """At steps-below-1 the first ready waypoint's step is kept whole below two working ones."""
-    ws = [_wp(f"W{i}", title="t" * _LONG_TITLE, next_bounded_step="s" * _LONG_STEP)
-          for i in range(1, _MANY + 1)]
+    ws = [
+        _wp(f"W{i}", title="t" * _LONG_TITLE, next_bounded_step="s" * _LONG_STEP)
+        for i in range(1, _MANY + 1)
+    ]
     ws[0]["status"], ws[1]["status"] = "working", "working"
     ws[1]["next_bounded_step"] = "w" * _WIDE_STEP
     ws[2]["next_bounded_step"] = _UNIT
@@ -258,7 +300,8 @@ def test_a_first_ready_step_that_cannot_fit_is_refused() -> None:
 
 
 def test_the_reconcile_command_is_the_running_script(
-        tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Run as the console script, the reconcile line names it by its resolved absolute path."""
     script = tmp_path / _PROG
     script.write_text("", encoding="utf-8")
@@ -268,7 +311,8 @@ def test_the_reconcile_command_is_the_running_script(
 
 
 def test_the_reconcile_command_is_absolute_when_run_otherwise(
-        monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Run by pytest, the command is the venv's script or `<python> -m`, and absolute either way."""
     monkeypatch.setattr("sys.argv", [_ELSEWHERE])
     line = pl.header(pl.Request(_state([_wp("W1")]), _COPY, _NOW))[_RECONCILE]

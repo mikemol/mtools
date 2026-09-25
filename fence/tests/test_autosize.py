@@ -46,8 +46,14 @@ def _killed(*verdicts: str) -> core.Result:
         the result.
 
     """
-    return core.Result(cmd=("payload",), caps=core.Caps(), duration_s=1.0, exit_code=137,
-                       memory_peak_bytes=None, bound_by=verdicts)
+    return core.Result(
+        cmd=("payload",),
+        caps=core.Caps(),
+        duration_s=1.0,
+        exit_code=137,
+        memory_peak_bytes=None,
+        bound_by=verdicts,
+    )
 
 
 def test_the_lease_is_the_bucket_of_the_max_not_the_median() -> None:
@@ -109,6 +115,7 @@ def test_only_a_memory_kill_triggers_a_climb() -> None:
 
 
 # --- the climb, over a real fence ---
+
 
 def _unfenceable() -> str:
     """Return why this host cannot fence, or the empty string when it can — as test_fence does.
@@ -212,16 +219,21 @@ def test_a_nested_climb_re_admits_under_the_outer_lease(
     seen: list[admit.Request] = []
     real = admit.acquire
 
-    def spy(store: admit.Store, request: admit.Request,
-            waiting: admit.Waiting = admit.WAIT, host: admit.Host = admit.HOST) -> admit.Lease:
+    def spy(
+        store: admit.Store,
+        request: admit.Request,
+        waiting: admit.Waiting = admit.WAIT,
+        host: admit.Host = admit.HOST,
+    ) -> admit.Lease:
         seen.append(request)
         return real(store, request, waiting, host)
 
     # Top-level by spelling: a bare `Request` inherits `$MEMBUDGET_PARENT`, absent from this ledger.
     with admit.admit(store, admit.Request(_START, parent=admit.NO_PARENT)) as outer:
         monkeypatch.setattr(admit, "acquire", spy)
-        plan = autosize.Plan(_START, _CEILING, retry=True,
-                             request=admit.Request(0, parent=outer.lease_id))
+        plan = autosize.Plan(
+            _START, _CEILING, retry=True, request=admit.Request(0, parent=outer.lease_id)
+        )
         results = autosize.climb(store, _hog(_HOG_SMALL), plan)
     assert len(results) > 1
     assert {request.parent for request in seen} == {outer.lease_id}
@@ -234,8 +246,11 @@ def test_a_success_records_a_peak_the_next_size_is_taken_from(tmp_path: Path) ->
     last = autosize.climb(_store(tmp_path), _hog(_HOG_SMALL), plan)[-1]
     path = tmp_path / "labels.tsv"
     assert ledger.record(path, "item:hog", last)
-    peaks = [row.peak_mb for row in ledger.parse(path.read_text(encoding="utf-8"))
-             if row.peak_mb is not None]
+    peaks = [
+        row.peak_mb
+        for row in ledger.parse(path.read_text(encoding="utf-8"))
+        if row.peak_mb is not None
+    ]
     next_size = autosize.size(peaks, default=_DEFAULT, ceiling=_CEILING)
     assert next_size.mb == ledger.bucket(max(peaks))
     assert next_size.mb >= _HOG_SMALL

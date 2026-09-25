@@ -22,8 +22,12 @@ if TYPE_CHECKING:
     import pytest
 
 _KEPT = {"PATH": "/usr/bin", "MYGIT_DIR": "not-git's", "LANG": "C"}
-_DROPPED = {"GIT_DIR": "/elsewhere/.git", "GIT_INDEX_FILE": "/elsewhere/index",
-            "GIT_WORK_TREE": "/elsewhere", "GIT_CONFIG_NOSYSTEM": "1"}
+_DROPPED = {
+    "GIT_DIR": "/elsewhere/.git",
+    "GIT_INDEX_FILE": "/elsewhere/index",
+    "GIT_WORK_TREE": "/elsewhere",
+    "GIT_CONFIG_NOSYSTEM": "1",
+}
 _IDENTITY = ("-c", "user.name=t", "-c", "user.email=t@t")
 
 
@@ -74,8 +78,11 @@ def _commit_under_hostile_env(tmp_path: Path, *, scrub: bool) -> str:
     _git(clean, "init", "-q", str(decoy))
     _git(clean, "init", "-q", str(fixture))
     (fixture / "f.txt").write_text("x\n", encoding="utf-8")
-    hostile = {**os.environ, "GIT_DIR": str(decoy / ".git"),
-               "GIT_INDEX_FILE": str(decoy / ".git" / "index")}
+    hostile = {
+        **os.environ,
+        "GIT_DIR": str(decoy / ".git"),
+        "GIT_INDEX_FILE": str(decoy / ".git" / "index"),
+    }
     env = git_env.clean_env(hostile) if scrub else hostile
     _git(env, "-C", str(fixture), "add", "f.txt")
     _git(env, "-C", str(fixture), *_IDENTITY, "commit", "-qm", "fixture")

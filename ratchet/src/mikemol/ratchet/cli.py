@@ -53,12 +53,18 @@ def _remap_main(argv: list[str]) -> int:
     parser.add_argument("dist", type=Path, help="a git work tree; FILEs are relative to it")
     parser.add_argument("files", nargs="+", metavar="FILE", help="JSON baselines to guard")
     parser.add_argument("--rev", default="HEAD", help="the revision to compare against")
-    parser.add_argument("--write", action="store_true",
-                        help="rewrite every file to its path-only projection (all or nothing)")
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="rewrite every file to its path-only projection (all or nothing)",
+    )
     opts: dict[str, object] = vars(parser.parse_args(argv))
-    code, lines = remap_guard(Path(str(opts["dist"])),
-                              [str(f) for f in cast("list[str]", opts["files"])],
-                              rev=str(opts["rev"]), write=bool(opts["write"]))
+    code, lines = remap_guard(
+        Path(str(opts["dist"])),
+        [str(f) for f in cast("list[str]", opts["files"])],
+        rev=str(opts["rev"]),
+        write=bool(opts["write"]),
+    )
     for line in lines:
         sys.stdout.write(f"{line}\n")
     return code
@@ -84,15 +90,25 @@ def main(argv: list[str] | None = None) -> int:
     if args_in[:1] == [_REMAP]:
         return _remap_main(args_in[1:])
     parser = argparse.ArgumentParser(
-        prog="mikemol-ratchet", description=__doc__,
-        epilog=f"subcommand: mikemol-ratchet {_REMAP} DIST FILE... [--rev REV] [--write]")
+        prog="mikemol-ratchet",
+        description=__doc__,
+        epilog=f"subcommand: mikemol-ratchet {_REMAP} DIST FILE... [--rev REV] [--write]",
+    )
     parser.add_argument("dist", type=Path, help="the distribution root to census")
-    parser.add_argument("--init-absent", action="store_true",
-                        help="mint a baseline that does not exist yet (the birth move)")
-    parser.add_argument("--write", action="store_true",
-                        help="lower the baseline when the census pays debt down")
-    parser.add_argument("--key-schema", choices=SCHEMA_NAMES, default=RUFF,
-                        help="the declared grammar of a baseline key (default: ruff path:rule)")
+    parser.add_argument(
+        "--init-absent",
+        action="store_true",
+        help="mint a baseline that does not exist yet (the birth move)",
+    )
+    parser.add_argument(
+        "--write", action="store_true", help="lower the baseline when the census pays debt down"
+    )
+    parser.add_argument(
+        "--key-schema",
+        choices=SCHEMA_NAMES,
+        default=RUFF,
+        help="the declared grammar of a baseline key (default: ruff path:rule)",
+    )
     args = parser.parse_args(args_in)
 
     # ⚑⚑ argparse's `Namespace` is untyped, so `args.dist` is `Any` and poisons the expression

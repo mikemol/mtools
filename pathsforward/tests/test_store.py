@@ -95,8 +95,7 @@ def test_a_save_round_trips_every_key(tmp_path: Path) -> None:
     """A save keeps keys the tool does not know, and writes UTF-8 rather than escapes."""
     path = _write(tmp_path / "s.json", _doc())
     store.save(path, store.load(path))
-    assert (store.load(path).doc, "café" in path.read_text(encoding="utf-8")) == (
-        _doc(), True)
+    assert (store.load(path).doc, "café" in path.read_text(encoding="utf-8")) == (_doc(), True)
 
 
 def test_a_write_replaces_rather_than_truncates(tmp_path: Path) -> None:
@@ -105,7 +104,9 @@ def test_a_write_replaces_rather_than_truncates(tmp_path: Path) -> None:
     before = path.stat().st_ino
     store.save(path, validate(_doc()))
     assert (path.stat().st_ino != before, sorted(p.name for p in tmp_path.iterdir())) == (
-        True, ["s.json"])
+        True,
+        ["s.json"],
+    )
 
 
 def test_the_siblings_follow_the_state_path(tmp_path: Path) -> None:
@@ -121,7 +122,10 @@ def test_the_flock_excludes_another_process(tmp_path: Path) -> None:
     with store.exclusive(path):
         child = subprocess.Popen(
             [sys.executable, "-m", "mikemol.pathsforward", "--state", str(path), "--lock", "B"],
-            env=_env(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            env=_env(),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         with pytest.raises(subprocess.TimeoutExpired):
             child.wait(timeout=_BLOCKED_S)
     assert child.wait(timeout=_WAIT_S) == _OK
@@ -131,7 +135,8 @@ def test_a_reader_never_sees_a_torn_write(tmp_path: Path) -> None:
     """A reader racing a writer decodes every read; the count of reads is the positive control."""
     path = _write(tmp_path / "s.json", {"counter": 0, "waypoints": [], "residue": []})
     writer = subprocess.Popen(
-        [sys.executable, "-c", _WRITER, str(path), str(_WRITES), str(_PAD)], env=_env())
+        [sys.executable, "-c", _WRITER, str(path), str(_WRITES), str(_PAD)], env=_env()
+    )
     reads, torn = 0, 0
     while writer.poll() is None:
         try:

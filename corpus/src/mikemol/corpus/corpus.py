@@ -37,15 +37,28 @@ GENERIC_SKIP_DIRS = frozenset({"node_modules", "__pycache__", ".venv", ".git", "
 # exactly like the source. Measured in substrate: mutation-testing copies under `bazel-bin/`
 # buried the one real definition under 135KB of hits. Matched as whole PATH COMPONENTS, so
 # `rebuild/` and `buildtools/` are unaffected.
-GENERATED_DIRS = frozenset({
-    "bazel-bin", "bazel-out", "bazel-testlogs", "bazel-genfiles",
-    "build", "dist", "_build",
-    ".mypy_cache", ".pytest_cache", ".ruff_cache", ".tox", ".nox", ".eggs",
-})
+GENERATED_DIRS = frozenset(
+    {
+        "bazel-bin",
+        "bazel-out",
+        "bazel-testlogs",
+        "bazel-genfiles",
+        "build",
+        "dist",
+        "_build",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".tox",
+        ".nox",
+        ".eggs",
+    }
+)
 
 # Matched as whole path COMPONENTS, like GENERATED_DIRS.
-_SKIP_PARTS = frozenset({".edit-snapshots", "__pycache__", ".venv", "site-packages",
-                         "node_modules", "_build", ".git"})
+_SKIP_PARTS = frozenset(
+    {".edit-snapshots", "__pycache__", ".venv", "site-packages", "node_modules", "_build", ".git"}
+)
 
 # bazel's convenience symlinks are `bazel-<workspace>`: a set cannot enumerate them.
 _BAZEL_LINK = "bazel-"
@@ -93,14 +106,17 @@ def roots(*, root: Path, skip: Collection[str] = ()) -> tuple[str, ...]:
 
     """
     skipped = GENERIC_SKIP_DIRS | frozenset(skip)
-    return tuple(sorted(
-        d.name for d in root.iterdir()
-        if d.is_dir()
-        and not d.name.startswith(".")
-        and d.name not in skipped
-        and d.name not in GENERATED_DIRS
-        and not d.name.startswith(_BAZEL_LINK)
-    ))
+    return tuple(
+        sorted(
+            d.name
+            for d in root.iterdir()
+            if d.is_dir()
+            and not d.name.startswith(".")
+            and d.name not in skipped
+            and d.name not in GENERATED_DIRS
+            and not d.name.startswith(_BAZEL_LINK)
+        )
+    )
 
 
 def resolve_root(requested: str, *, root: Path) -> Path:

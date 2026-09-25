@@ -64,11 +64,11 @@ from mikemol.hooks import cmdparse
 # So the set is derived from `cmdparse.OPERATORS` — the one authority — and an operator added there
 # is covered here by construction. Only the prose is this hook's own.
 _REASONS = {
-    "|":  "a pipe — the tool should have the mode that produces this directly",
+    "|": "a pipe — the tool should have the mode that produces this directly",
     "&&": "a sequence — two questions that want one mode, or two calls",
     "||": "a fallback — a shell `case` over an error string is judgement-in-turn",
-    ";":  "a sequence — run the calls separately, or add the mode",
-    "&":  "a background spawn — use run_in_background, not shell control flow",
+    ";": "a sequence — run the calls separately, or add the mode",
+    "&": "a background spawn — use run_in_background, not shell control flow",
     "|&": "a pipe (stdout+stderr) — the tool should have the mode that produces this",
 }
 OPERATORS: dict[str, str] = {
@@ -79,8 +79,19 @@ OPERATORS: dict[str, str] = {
 # ⚑ THE INLINE INTERPRETER IS THE SAME DEFECT WITHOUT A SHELL OPERATOR. `python3 -c "..."` composes
 # nothing bash can see, but the program is written in the turn, run once, and discarded. A throwaway
 # script is a tool that was never added.
-INTERPRETERS = ("python", "python3", "python3.13", "python3.14", "uv", "node", "ruby", "perl",
-                "bash", "sh", "zsh")
+INTERPRETERS = (
+    "python",
+    "python3",
+    "python3.13",
+    "python3.14",
+    "uv",
+    "node",
+    "ruby",
+    "perl",
+    "bash",
+    "sh",
+    "zsh",
+)
 
 # The flags meaning "the program is on this command line / on stdin".
 INLINE_FLAGS = {
@@ -90,11 +101,11 @@ INLINE_FLAGS = {
 
 # Shell control flow. A loop belongs to the tool, not to the turn.
 KEYWORDS = {
-    "for":   "a loop — the tool should take the whole set and iterate internally",
+    "for": "a loop — the tool should take the whole set and iterate internally",
     "while": "a loop — same: the iteration belongs in a program",
     "until": "a loop — same: the iteration belongs in a program",
-    "case":  "a dispatch over strings — the classic judgement-not-in-code shape",
-    "if":    "a branch — the decision belongs in the tool that has the data",
+    "case": "a dispatch over strings — the classic judgement-not-in-code shape",
+    "if": "a branch — the decision belongs in the tool that has the data",
 }
 
 # ⚑⚑ `cd` IS FLAGGED IN ITS OWN RIGHT. The `&&` already fires on `cd <dir> && cmd`, so the VERDICT
@@ -102,25 +113,31 @@ KEYWORDS = {
 # refused caller acts on the TEXT, and the text did not name the one-call form that replaces it.
 # `cd` also mutates shell state every later command inherits, which an ordinary sequence does not.
 DIRECTORY_CHANGE = {
-    "cd": ("a directory change — it mutates the shell state every later command "
-           "inherits.\n       Use `env -C <dir> <cmd>` (or the tool's own path "
-           "argument) so the\n       directory is an INPUT to the one call that "
-           "needs it, not an ambient effect."),
+    "cd": (
+        "a directory change — it mutates the shell state every later command "
+        "inherits.\n       Use `env -C <dir> <cmd>` (or the tool's own path "
+        "argument) so the\n       directory is an INPUT to the one call that "
+        "needs it, not an ambient effect."
+    ),
 }
 
-_STDIN_SCRIPT = ("a stdin script (heredoc) — same as `-c`: it dies with the turn; "
-                 "put it in a tool")
-_HEREDOC_SCRIPT = ("a heredoc script — same as `-c`: written in the turn, run once, "
-                   "discarded")
+_STDIN_SCRIPT = "a stdin script (heredoc) — same as `-c`: it dies with the turn; put it in a tool"
+_HEREDOC_SCRIPT = "a heredoc script — same as `-c`: written in the turn, run once, discarded"
 
 # The fixed tail of every refusal: why this is a defect, what it costs, and what to do instead.
-_WHY_TURN = ("  ⚑ the judgement in this pipeline is happening in the TURN, not in a program —\n"
-             "     it evaporates when the turn ends and the next reader re-derives it "
-             "differently.")
-_WHY_RC = ("  ⚑ a pipe also DISCARDS the exit status of every stage but the last: `cmd | tail`\n"
-           "     reports TAIL's rc, which is how a tool that failed reads as one that passed.")
-_WHAT_TO_DO = ("  run ONE tool call. If no mode answers your question, that is WORK (add the\n"
-               "     mode), not grounds for a shell composition — the toolkit expands.")
+_WHY_TURN = (
+    "  ⚑ the judgement in this pipeline is happening in the TURN, not in a program —\n"
+    "     it evaporates when the turn ends and the next reader re-derives it "
+    "differently."
+)
+_WHY_RC = (
+    "  ⚑ a pipe also DISCARDS the exit status of every stage but the last: `cmd | tail`\n"
+    "     reports TAIL's rc, which is how a tool that failed reads as one that passed."
+)
+_WHAT_TO_DO = (
+    "  run ONE tool call. If no mode answers your question, that is WORK (add the\n"
+    "     mode), not grounds for a shell composition — the toolkit expands."
+)
 _SEE_SKILL = "  see .claude/skills/struct-tools/SKILL.md"
 
 # A finding: the token that composed, and why that is judgement-in-the-turn.
@@ -216,7 +233,7 @@ def _scan_tokens(toks: list[str]) -> list[Finding]:
     """
     found: list[Finding] = []
     at_command_start = True
-    pending_interp = False       # an interpreter is open; its flags are in scope
+    pending_interp = False  # an interpreter is open; its flags are in scope
     for tok in toks:
         if tok in OPERATORS:
             found.append((tok, OPERATORS[tok]))
@@ -258,9 +275,11 @@ def analyze(cmd: str) -> list[Finding]:
     # ⚑ A HEREDOC INTO AN INTERPRETER YIELDS NO `-c` AND NO `-` TOKEN — the redirection itself is
     # the only tell. Test for the redirection rather than for a still-open interpreter: a bare
     # `python3` with no args is a REPL, not a script.
-    if (any(t.startswith("<<") for t in toks)
-            and _mentions_interpreter(toks)
-            and not any(t in {"-", "-c", "-e"} for t, _ in found)):
+    if (
+        any(t.startswith("<<") for t in toks)
+        and _mentions_interpreter(toks)
+        and not any(t in {"-", "-c", "-e"} for t, _ in found)
+    ):
         found.append(("<<", _HEREDOC_SCRIPT))
 
     # dedupe, preserving first-seen order
@@ -365,7 +384,7 @@ def main() -> int:
     try:
         payload: object = json.load(sys.stdin)
     except (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError):
-        return 0                      # never break the session on a parse failure
+        return 0  # never break the session on a parse failure
     cmd = command_of(payload)
     if not cmd.strip():
         return 0

@@ -25,8 +25,9 @@ def _dist(tmp_path: Path, findings: frozenset[str]) -> Path:
     """
     binroot = tmp_path / ".venv" / "bin"
     binroot.mkdir(parents=True)
-    body = "".join(f'echo "{key.split(":")[0]}:1:1: {key.split(":")[1]}: msg"\n'
-                   for key in sorted(findings))
+    body = "".join(
+        f'echo "{key.split(":")[0]}:1:1: {key.split(":")[1]}: msg"\n' for key in sorted(findings)
+    )
     ruff = binroot / "ruff"
     ruff.write_text(f"#!/bin/sh\n{body}exit 1\n", encoding="utf-8")
     ruff.chmod(0o755)
@@ -34,7 +35,8 @@ def _dist(tmp_path: Path, findings: frozenset[str]) -> Path:
 
 
 def test_the_bare_invocation_refuses_an_absent_baseline(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """The bare invocation refuses an absent baseline.
 
     ⚑⚑ ABSENT EXITS 1 AND NAMES THE BIRTH MOVE. A gate with no baseline reports green over
@@ -82,6 +84,7 @@ def test_growth_is_refused_through_the_cli(tmp_path: Path) -> None:
     dist = _dist(tmp_path, frozenset({"a.py:r1"}))
     cli.main([str(dist), "--init-absent"])
     (dist / ".venv" / "bin" / "ruff").write_text(
-        '#!/bin/sh\necho "a.py:1:1: r1: m"\necho "b.py:1:1: r2: m"\nexit 1\n', encoding="utf-8")
+        '#!/bin/sh\necho "a.py:1:1: r1: m"\necho "b.py:1:1: r2: m"\nexit 1\n', encoding="utf-8"
+    )
     (dist / ".venv" / "bin" / "ruff").chmod(0o755)
     assert cli.main([str(dist)]) == 1

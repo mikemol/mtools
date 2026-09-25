@@ -140,12 +140,16 @@ def test_the_partition_separates_growth_from_paydown() -> None:
 
 @pytest.mark.parametrize(
     ("state", "is_defect", "deserves_mark"),
-    [(BaselineState.OK, False, False),
-     (BaselineState.EMPTY, False, False),
-     (BaselineState.ABSENT, True, True),
-     (BaselineState.UNREAD, False, True)])
+    [
+        (BaselineState.OK, False, False),
+        (BaselineState.EMPTY, False, False),
+        (BaselineState.ABSENT, True, True),
+        (BaselineState.UNREAD, False, True),
+    ],
+)
 def test_each_state_declares_two_independent_properties(
-        state: BaselineState, is_defect: bool, deserves_mark: bool) -> None:  # ruff: ignore[boolean-type-hint-positional-argument]
+    *, state: BaselineState, is_defect: bool, deserves_mark: bool
+) -> None:
     """Each state declares two independent properties.
 
     ⚑⚑ A 2-BIT SPACE A BOOLEAN CANNOT CARRY. UNREAD marks without being a defect; EMPTY is
@@ -261,7 +265,8 @@ def test_an_ambiguous_refusal_is_marked_suspect() -> None:
     "this is new debt".
     """
     assert partition({"b.py:rule1", "z.py:rule1"}, {"a.py:rule1"}).suspect == frozenset(
-        {"b.py:rule1", "z.py:rule1"})
+        {"b.py:rule1", "z.py:rule1"}
+    )
 
 
 def test_an_unambiguous_refusal_is_not_suspect() -> None:

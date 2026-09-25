@@ -35,8 +35,7 @@ if TYPE_CHECKING:
 # this module's own docstring warns about. It was caught by running the parser rather than by
 # reading it. The path may contain colons (`./src/x.py`), so the split is on the LAST three
 # colon-separated fields rather than the first, and the rule is followed by a COLON.
-_CONCISE = re.compile(
-    r"^(?P<path>.+?):\d+:\d+:\s+(?P<code>[A-Za-z][A-Za-z0-9-]*):")
+_CONCISE = re.compile(r"^(?P<path>.+?):\d+:\d+:\s+(?P<code>[A-Za-z][A-Za-z0-9-]*):")
 
 
 # ⚑⚑⚑ FILES A BUILD SYSTEM SYNTHESIZES ARE NOT PART OF THE DISTRIBUTION'S CENSUS. rules_python
@@ -156,8 +155,7 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     # absolute `declared` wins the join unchanged.
     declared = os.environ.get("RUFF_BIN")
     binary = str(dist.cwd() / declared) if declared else str(venv_ruff)
-    argv = [binary, "check", "--no-cache",
-            "--output-format", "concise", "."]
+    argv = [binary, "check", "--no-cache", "--output-format", "concise", "."]
     if preview:
         argv.insert(3, "--preview")
     # ⚑⚑⚑ A CHECKER THAT CANNOT START IS A REFUSAL, NOT A CRASH. Measured: with no
@@ -168,8 +166,10 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     try:
         proc = subprocess.run(argv, capture_output=True, text=True, check=False, cwd=dist)
     except OSError as exc:
-        msg = (f"cannot census {dist}: ruff at {binary} could not be run ({exc.strerror}) — "
-               f"supply one as {venv_ruff} or name one in RUFF_BIN")
+        msg = (
+            f"cannot census {dist}: ruff at {binary} could not be run ({exc.strerror}) — "
+            f"supply one as {venv_ruff} or name one in RUFF_BIN"
+        )
         raise CensusUnavailableError(msg) from exc
     # ⚑ A SET LITERAL, ON THE CHECKER'S ADVICE, AND THE CONTROL FOR IT WAS MISSING. The arm that
     # covered this line proved an unexpected status REFUSES and nothing proved 0 and 1 are
@@ -177,7 +177,9 @@ def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
     # gate this repository names. The positive arm was written first, so this rewrite has a
     # witness that it did not change which statuses the census admits.
     if proc.returncode not in {0, 1}:
-        msg = (f"ruff exited {proc.returncode} in {dist} — the census is not trustworthy; "
-               f"refusing rather than reporting an empty one\n{proc.stderr}")
+        msg = (
+            f"ruff exited {proc.returncode} in {dist} — the census is not trustworthy; "
+            f"refusing rather than reporting an empty one\n{proc.stderr}"
+        )
         raise CensusUnavailableError(msg)
     return parse_concise(proc.stdout.splitlines(), dist)

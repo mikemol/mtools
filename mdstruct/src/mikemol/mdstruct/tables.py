@@ -194,8 +194,9 @@ def vocabulary(path: Path, header: str = "state") -> tuple[str, ...]:
     return tuple(sorted((s for s in found if s), key=len, reverse=True))
 
 
-def classify(path: Path, states: tuple[str, ...], col: int = 1,
-             position: int | None = None) -> dict[str, list[Row]]:
+def classify(
+    path: Path, states: tuple[str, ...], col: int = 1, position: int | None = None
+) -> dict[str, list[Row]]:
     """Group a table's rows by which declared state their cell announces.
 
     ⚑⚑⚑ THE PREDICATE IS LONGEST-DECLARED-PREFIX, NOT EQUALITY, AND THAT WAS MEASURED RATHER THAN
@@ -246,17 +247,20 @@ def classify(path: Path, states: tuple[str, ...], col: int = 1,
         # declared — and it belongs in the residue where a reader will see it, not folded into
         # whichever declared state happens to be its prefix.
         if hit:
-            rest = cell[len(stems[hit]):].lstrip()
+            rest = cell[len(stems[hit]) :].lstrip()
             if rest[:1].isalpha():
                 hit = ""
         out[hit].append(row)
     return out
 
 
-def table_rows(path: Path, position: int | None = None,
-               where: str | None = None,
-               col: int | None = None,
-               starts: str | None = None) -> list[Row]:
+def table_rows(
+    path: Path,
+    position: int | None = None,
+    where: str | None = None,
+    col: int | None = None,
+    starts: str | None = None,
+) -> list[Row]:
     """Return the cells of every row, optionally narrowed to one table, a substring, or a column.
 
     ⚑ `where` IS CASE-FOLDED AND MATCHES ACROSS A ROW, which is what a lookup in a name→home
@@ -289,8 +293,7 @@ def table_rows(path: Path, position: int | None = None,
         for body in table.content:
             for row in body.content:
                 cells = tuple(panflute.stringify(cell).strip() for cell in row.content)
-                if where is not None and (
-                        where.casefold() not in _CELL_SEP.join(cells).casefold()):
+                if where is not None and (where.casefold() not in _CELL_SEP.join(cells).casefold()):
                     continue
                 if starts is not None:
                     # ⚑ AN OUT-OF-RANGE COLUMN DROPS THE ROW RATHER THAN RAISING. Tables in one

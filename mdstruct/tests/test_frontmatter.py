@@ -33,10 +33,13 @@ def test_a_document_without_frontmatter_is_untouched() -> None:
     assert body == _BODY
 
 
-@pytest.mark.parametrize("src", [
-    "---\nnot really metadata\n\n# heading\n",
-    "---\n",
-])
+@pytest.mark.parametrize(
+    "src",
+    [
+        "---\nnot really metadata\n\n# heading\n",
+        "---\n",
+    ],
+)
 def test_an_unterminated_fence_is_not_frontmatter(src: str) -> None:
     """An opening fence with no close reads as body.
 

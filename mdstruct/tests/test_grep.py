@@ -121,6 +121,7 @@ def test_case_folding_is_opt_in(document: Path) -> None:
     assert grep.search(document, "needle") == []
     assert len(grep.search(document, "needle", ignore_case=True)) == _HITS
 
+
 # --- the routed zero: a literal-mode misfire must not look like a true absence ----------------
 #
 # ⚑⚑ THE BEHAVIOUR ABOVE WAS ALREADY TESTED AND THE SILENCE WAS NOT. `test_regex_is_opt_in` has

@@ -178,9 +178,13 @@ def _ragged_rows(lines: list[str], offset: int) -> list[Finding]:
             columns = cells
         elif cells != columns:
             how = "a separator was added" if cells > columns else "a cell is missing"
-            found.append(Finding(
-                line=offset + i, rule="MD056",
-                detail=f"{cells} cells against {columns} declared — {how}"))
+            found.append(
+                Finding(
+                    line=offset + i,
+                    rule="MD056",
+                    detail=f"{cells} cells against {columns} declared — {how}",
+                )
+            )
     return found
 
 
@@ -213,11 +217,11 @@ def _first_content(lines: list[str]) -> int | None:
             if not text.startswith(_COMMENT_OPEN):
                 return i
             opened = i
-            text = text[len(_COMMENT_OPEN):]
+            text = text[len(_COMMENT_OPEN) :]
         closer = text.find(_COMMENT_CLOSE)
         if closer == -1:
             continue
-        if text[closer + len(_COMMENT_CLOSE):].strip():
+        if text[closer + len(_COMMENT_CLOSE) :].strip():
             return i
         opened = None
     return opened
@@ -246,20 +250,28 @@ def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
             continue
 
         if len(line) > width:
-            rows.append(Finding(line=offset + i, rule="MD013",
-                                detail=f"line is {len(line)} > {width}"))
+            rows.append(
+                Finding(line=offset + i, rule="MD013", detail=f"line is {len(line)} > {width}")
+            )
 
         bare = _mask_code(line)
-        rows.extend(Finding(line=offset + i, rule="MD033",
-                            detail=f"inline HTML <{found.group(1)}>")
-                    for found in _HTML_TAG.finditer(bare))
+        rows.extend(
+            Finding(line=offset + i, rule="MD033", detail=f"inline HTML <{found.group(1)}>")
+            for found in _HTML_TAG.finditer(bare)
+        )
 
         if _LIST_ITEM.match(line) and i > 1:
             previous = lines[i - 2]
-            if (previous.strip() and not _LIST_ITEM.match(previous)
-                    and not previous.startswith("  ")):
-                rows.append(Finding(line=offset + i, rule="MD032",
-                                    detail="list not preceded by a blank line"))
+            if (
+                previous.strip()
+                and not _LIST_ITEM.match(previous)
+                and not previous.startswith("  ")
+            ):
+                rows.append(
+                    Finding(
+                        line=offset + i, rule="MD032", detail="list not preceded by a blank line"
+                    )
+                )
 
     # ⚑ THE FIRST-LINE RULE IS A PROPERTY OF THE BODY, NOT OF THE FILE. A document opening with
     # frontmatter opens, as far as this rule is concerned, at its first body line.
@@ -267,8 +279,11 @@ def shape(path: Path, width: int = DEFAULT_WIDTH) -> list[Finding]:
     # finding names the line the rule actually judged.
     first = _first_content(lines)
     if first is not None and not lines[first].startswith("#"):
-        rows.append(Finding(line=offset + first + 1, rule="MD041",
-                            detail="body does not open with a heading"))
+        rows.append(
+            Finding(
+                line=offset + first + 1, rule="MD041", detail="body does not open with a heading"
+            )
+        )
     # ⚑ IN DOCUMENT ORDER, because the ragged-row pass runs first and would otherwise report every
     # one of its findings ahead of every other rule's. A reader walks a lint report top to bottom
     # against the file; a report grouped by rule makes them jump.

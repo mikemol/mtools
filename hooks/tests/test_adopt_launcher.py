@@ -70,7 +70,10 @@ def _payload(command: str) -> str:
 
 
 def _run(
-    launcher: Path, entry: str, stdin: str, root: Path | None,
+    launcher: Path,
+    entry: str,
+    stdin: str,
+    root: Path | None,
 ) -> subprocess.CompletedProcess[str]:
     """Execute the launcher with only PATH and, if given, MTOOLS_ROOT in its environment.
 
@@ -82,8 +85,13 @@ def _run(
     if root is not None:
         env["MTOOLS_ROOT"] = str(root)
     return subprocess.run(
-        [str(launcher), entry], input=stdin, capture_output=True, text=True,
-        env=env, check=False, timeout=_TIMEOUT_S,
+        [str(launcher), entry],
+        input=stdin,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+        timeout=_TIMEOUT_S,
     )
 
 

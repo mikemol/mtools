@@ -34,9 +34,19 @@ def test_the_stub_matches_the_library_it_describes(tmp_path: Path) -> None:
     exactly the point it exists to check.
     """
     proc = subprocess.run(
-        [sys.executable, "-m", "mypy.stubtest", "panflute", "--ignore-missing-stub",
-         "--allowlist", str(_ALLOWLIST), "--concise"],
-        capture_output=True, text=True, check=False,
+        [
+            sys.executable,
+            "-m",
+            "mypy.stubtest",
+            "panflute",
+            "--ignore-missing-stub",
+            "--allowlist",
+            str(_ALLOWLIST),
+            "--concise",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
         # ⚑⚑ RUN FROM A WRITABLE DIRECTORY, NOT THE DISTRIBUTION ROOT. stubtest writes a sqlite
         # metastore into `.mypy_cache` RELATIVE TO CWD and exposes no knob for it — measured,
         # `--help` carries no cache option and `MYPY_CACHE_DIR` does not reach its build options.
@@ -46,7 +56,8 @@ def test_the_stub_matches_the_library_it_describes(tmp_path: Path) -> None:
         cwd=tmp_path,
         # ⚑ THE PARENT ENVIRONMENT IS INHERITED. A hand-built env looked tidier and was wrong: it
         # dropped `PYTHONPATH`, so under bazel the child could not see the staged `mypy` at all.
-        env={**os.environ, "MYPYPATH": str(_DIST / "stubs")})
+        env={**os.environ, "MYPYPATH": str(_DIST / "stubs")},
+    )
     assert proc.returncode == 0, proc.stdout + proc.stderr
 
 
@@ -59,8 +70,11 @@ def test_every_allowlist_entry_is_a_constructor() -> None:
     an entry that is NOT a constructor is a real inconsistency in something this package calls,
     and it would be hidden rather than fixed.
     """
-    entries = [line.strip() for line in _ALLOWLIST.read_text(encoding="utf-8").splitlines()
-               if line.strip() and not line.startswith("#")]
+    entries = [
+        line.strip()
+        for line in _ALLOWLIST.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    ]
     assert entries
     offenders = [e for e in entries if not e.endswith(("__init__", "__new__", ".walk"))]
     assert offenders == [], f"non-constructor entries hide real divergence: {offenders}"

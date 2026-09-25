@@ -90,9 +90,11 @@ _SEPARATOR = "--"
 _RESET = "--reset"
 _RESET_ARGS = 2
 
-USAGE = ("usage: mikemol-membudget {run MB|auto [LABEL] -- CMD... | init [MB] | init --reset MB"
-         " | status | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
-         " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n")
+USAGE = (
+    "usage: mikemol-membudget {run MB|auto [LABEL] -- CMD... | init [MB] | init --reset MB"
+    " | status | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
+    " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n"
+)
 
 
 class UsageError(ValueError):
@@ -130,6 +132,7 @@ class Context:
 
 # --- the pure half: arguments and environment, read into `admit`'s types ---
 
+
 def _number(env: Mapping[str, str], name: str, default: float) -> float:
     """Return `env[name]` as a finite, non-negative number; unset or empty is `default`.
 
@@ -160,8 +163,9 @@ def store_of(env: Mapping[str, str]) -> admit.Store:
         the store at `$MEMBUDGET_FILE` (else bash's default), bounded by `$MEMBUDGET_LOCK_TIMEOUT`.
 
     """
-    return admit.Store(admit.default_path(env),
-                       _number(env, ENV_LOCK_TIMEOUT, admit.LOCK_TIMEOUT_S))
+    return admit.Store(
+        admit.default_path(env), _number(env, ENV_LOCK_TIMEOUT, admit.LOCK_TIMEOUT_S)
+    )
 
 
 def waiting_of(env: Mapping[str, str]) -> admit.Waiting:
@@ -267,8 +271,10 @@ class AutoSize:
         """
         default = env.get(ENV_DEFAULT_MB)
         ceiling = env.get(ENV_CEILING_MB)
-        return cls(megabytes(default, zero_ok=False) if default else DEFAULT_MB,
-                   megabytes(ceiling, zero_ok=False) if ceiling else CEILING_MB)
+        return cls(
+            megabytes(default, zero_ok=False) if default else DEFAULT_MB,
+            megabytes(ceiling, zero_ok=False) if ceiling else CEILING_MB,
+        )
 
     def lease(self, history: History) -> autosize.Sizing:
         """Return the lease `history` earns — its module's own peaks, else its label's.
@@ -278,10 +284,15 @@ class AutoSize:
 
         """
         if history.module is not None:
-            return label_lease.module_lease(history.module, default_mb=self.default_mb,
-                                            ceiling_mb=self.ceiling_mb)
-        return label_lease.lease(label_lease.read_rows(history.runs), history.key,
-                                 default_mb=self.default_mb, ceiling_mb=self.ceiling_mb)
+            return label_lease.module_lease(
+                history.module, default_mb=self.default_mb, ceiling_mb=self.ceiling_mb
+            )
+        return label_lease.lease(
+            label_lease.read_rows(history.runs),
+            history.key,
+            default_mb=self.default_mb,
+            ceiling_mb=self.ceiling_mb,
+        )
 
     @property
     def cap(self) -> int:
@@ -315,7 +326,7 @@ class RunArgs:
             msg = "run needs `--` before the command"
             raise UsageError(msg)
         cut = list(args).index(_SEPARATOR)
-        head, command = args[:cut], tuple(args[cut + 1:])
+        head, command = args[:cut], tuple(args[cut + 1 :])
         if not command or len(head) not in {1, 2}:
             msg = "run takes MB [LABEL] -- CMD..."
             raise UsageError(msg)
@@ -380,14 +391,18 @@ def resize(store: admit.Store, total_mb: int) -> admit.Ledger:
     with store.locked():
         snap = store.read()
         if snap.ambiguous:
-            raise admit.RefusedError(admit.Verdict.AMBIGUOUS_TOTAL, admit.EXIT_LEDGER,
-                                     f"{store.path} has {snap.total_lines} TOTAL_MB lines")
+            raise admit.RefusedError(
+                admit.Verdict.AMBIGUOUS_TOTAL,
+                admit.EXIT_LEDGER,
+                f"{store.path} has {snap.total_lines} TOTAL_MB lines",
+            )
         sized = replace(snap, total_mb=total_mb, total_lines=1)
         store.rewrite(sized)
         return sized
 
 
 # --- the effectful half: one function per verb ---
+
 
 def _say(text: str) -> None:
     """Write one line of narration to stderr."""
@@ -419,6 +434,7 @@ def _announcer(label: str) -> Callable[[admit.Request, admit.Lease], None]:
         the callback `autosize.Rig.announce` takes.
 
     """
+
     def announce(rung: admit.Request, lease: admit.Lease) -> None:
         where = "TOP" if rung.parent == admit.NO_PARENT else f"SUB under {rung.parent}"
         _say(f"{where} lease {rung.mb}MB [{label}] id={lease.lease_id} → MemoryMax={rung.mb}M")
@@ -452,8 +468,9 @@ def cmd_run(args: Sequence[str], ctx: Context) -> int:
     auto = AutoSize.of(ctx.env)
     call = sized_call(call, history, auto)
     request = request_of(call, ctx.env)
-    plan = autosize.Plan(request.mb, auto.cap, retry=bool(ctx.env.get(ENV_RETRY_OOM)),
-                         request=request)
+    plan = autosize.Plan(
+        request.mb, auto.cap, retry=bool(ctx.env.get(ENV_RETRY_OOM)), request=request
+    )
     rig = autosize.Rig(waiting_of(ctx.env), ctx.host, ctx.env, ctx.fence, _announcer(call.label))
     try:
         results = autosize.climb(store_of(ctx.env), call.command, plan, rig)
@@ -502,16 +519,20 @@ def cmd_init(args: Sequence[str], ctx: Context) -> int:
             raise UsageError(msg)
         sized = resize(store, megabytes(args[1], zero_ok=False))
         if sized.used > (sized.total_mb or 0):
-            _say(f"total {sized.total_mb}MB is below the {sized.used}MB leased — over-subscribed "
-                 "until leases drain; admission blocks meanwhile")
+            _say(
+                f"total {sized.total_mb}MB is below the {sized.used}MB leased — over-subscribed "
+                "until leases drain; admission blocks meanwhile"
+            )
     else:
         if len(args) > 1:
             msg = "init takes at most one MB"
             raise UsageError(msg)
         total = megabytes(args[0], zero_ok=False) if args else ctx.host.default_total()
         if not admit.init(store, total):
-            sys.stdout.write("membudget: ledger exists with a total — init changes nothing (to "
-                             "resize, keeping live leases: membudget init --reset N)\n")
+            sys.stdout.write(
+                "membudget: ledger exists with a total — init changes nothing (to "
+                "resize, keeping live leases: membudget init --reset N)\n"
+            )
     return cmd_status([], ctx)
 
 

@@ -67,8 +67,7 @@ def test_the_own_switch_wins_over_the_shared_one(monkeypatch: pytest.MonkeyPatch
     assert payload.armed() is False
 
 
-def test_the_shared_switch_arms_when_the_own_one_is_unset(
-        monkeypatch: pytest.MonkeyPatch) -> None:
+def test_the_shared_switch_arms_when_the_own_one_is_unset(monkeypatch: pytest.MonkeyPatch) -> None:
     """With no own switch, the shared one decides."""
     monkeypatch.delenv(payload.OWN_SWITCH, raising=False)
     monkeypatch.setenv(payload.SHARED_SWITCH, "1")
@@ -102,8 +101,7 @@ def test_only_the_exact_value_arms(monkeypatch: pytest.MonkeyPatch, value: str) 
 _OTHER = "SHELLCHECK_HOOK_BLOCK"
 
 
-def test_a_named_own_switch_is_read_instead_of_the_default(
-        monkeypatch: pytest.MonkeyPatch) -> None:
+def test_a_named_own_switch_is_read_instead_of_the_default(monkeypatch: pytest.MonkeyPatch) -> None:
     """⚑⚑ `armed(own=...)` READS THE CALLER'S SWITCH, NOT THE DEFAULT HOOK'S.
 
     substrate's shellcheck letter (2026-09-22): a second hook calling bare `armed()` would be
@@ -119,7 +117,8 @@ def test_a_named_own_switch_is_read_instead_of_the_default(
 
 
 def test_a_named_own_switch_set_to_zero_wins_over_the_shared_one(
-        monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """⚑ STANDING ONE HOOK DOWN MUST NOT DEPEND ON ANOTHER HOOK'S SWITCH.
 
     With the shared switch on, `SHELLCHECK_HOOK_BLOCK=0` disarms the shellcheck hook while the

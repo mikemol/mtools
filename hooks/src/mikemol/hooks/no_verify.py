@@ -200,11 +200,11 @@ def main() -> int:
         ]
     )
     decision: dict[str, dict[str, str]] = {
-            "hookSpecificOutput": {
-                "hookEventName": "PreToolUse",
-                "permissionDecision": "deny",
-                "permissionDecisionReason": reason,
-            }
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "deny",
+            "permissionDecisionReason": reason,
+        }
     }
     json.dump(decision, sys.stdout)
     return 0

@@ -36,8 +36,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def replace_section(path: Path, needle: str, body: str, *,
-                    exact: bool = False) -> tuple[str, spans_mod.Span]:
+def replace_section(
+    path: Path, needle: str, body: str, *, exact: bool = False
+) -> tuple[str, spans_mod.Span]:
     """Return the document with ONE section's body replaced, and the span it targeted.
 
     ⚑ THE SPAN IS RETURNED SO THE CALLER CAN REPORT WHAT IT HIT. A write that says only "done"
@@ -59,7 +60,7 @@ def replace_section(path: Path, needle: str, body: str, *,
     """
     span = spans_mod.find_section(path, needle, exact=exact)
     lines = path.read_text(encoding="utf-8").split("\n")
-    old_body = lines[span.start:span.end - 1]
+    old_body = lines[span.start : span.end - 1]
 
     # ⚑⚑ THE BODY IS FRAMED, NOT SPLICED. The span covers everything between the heading and the
     # next one — the blank line under the heading and the blank run before the next heading
@@ -69,7 +70,13 @@ def replace_section(path: Path, needle: str, body: str, *,
     # separation is load-bearing (the append writer says why and preserves it); this now does the
     # same — one blank line above the body, and the trailing blank run the old body had below it.
     _keep, blanks = _split_trailing_blanks(old_body)
-    new = [*lines[:span.start], "", *body.rstrip("\n").split("\n"), *blanks, *lines[span.end - 1:]]
+    new = [
+        *lines[: span.start],
+        "",
+        *body.rstrip("\n").split("\n"),
+        *blanks,
+        *lines[span.end - 1 :],
+    ]
     return "\n".join(new), span
 
 
@@ -91,11 +98,12 @@ def _split_trailing_blanks(body_lines: list[str]) -> tuple[list[str], list[str]]
         tail += 1
     if not tail:
         return body_lines, []
-    return body_lines[:len(body_lines) - tail], body_lines[len(body_lines) - tail:]
+    return body_lines[: len(body_lines) - tail], body_lines[len(body_lines) - tail :]
 
 
-def append_to_section(path: Path, needle: str, body: str, *,
-                      exact: bool = False) -> tuple[str, spans_mod.Span]:
+def append_to_section(
+    path: Path, needle: str, body: str, *, exact: bool = False
+) -> tuple[str, spans_mod.Span]:
     """Return the document with `body` appended INSIDE one section, before the next heading.
 
     ⚑ TRAILING BLANK LINES ARE PRESERVED BENEATH THE INSERTION, not swallowed. Markdown block
@@ -117,7 +125,13 @@ def append_to_section(path: Path, needle: str, body: str, *,
     """
     span = spans_mod.find_section(path, needle, exact=exact)
     lines = path.read_text(encoding="utf-8").split("\n")
-    keep, blanks = _split_trailing_blanks(lines[span.start:span.end - 1])
-    new = (lines[:span.start] + keep + [""] + body.rstrip("\n").split("\n")
-           + blanks + lines[span.end - 1:])
+    keep, blanks = _split_trailing_blanks(lines[span.start : span.end - 1])
+    new = (
+        lines[: span.start]
+        + keep
+        + [""]
+        + body.rstrip("\n").split("\n")
+        + blanks
+        + lines[span.end - 1 :]
+    )
     return "\n".join(new), span

@@ -33,12 +33,15 @@ def test_a_quote_in_the_note_is_escaped() -> None:
     assert line(Entry("tick", "--", "idle", "--", 'say "hi"'), _STAMP).endswith('"say \\"hi\\""')
 
 
-@pytest.mark.parametrize("entry", [
-    Entry("tick", "W7", "two words", "sweep", "n"),
-    Entry("tick", "W7", "", "sweep", "n"),
-    Entry("tick", "Wx", "advanced", "sweep", "n"),
-    Entry("tick", "W7", "advanced", "sweep", "two\nlines"),
-])
+@pytest.mark.parametrize(
+    "entry",
+    [
+        Entry("tick", "W7", "two words", "sweep", "n"),
+        Entry("tick", "W7", "", "sweep", "n"),
+        Entry("tick", "Wx", "advanced", "sweep", "n"),
+        Entry("tick", "W7", "advanced", "sweep", "two\nlines"),
+    ],
+)
 def test_an_entry_that_would_shift_columns_is_refused(entry: Entry) -> None:
     """A spaced or empty column, a malformed symbol, or a multi-line note is refused."""
     with pytest.raises(MalformedEntryError, match="ledger"):

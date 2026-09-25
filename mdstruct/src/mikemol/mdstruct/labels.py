@@ -52,7 +52,8 @@ ITEM_RE = re.compile(
     r"|([①-⓿])"
     # Enclosed-digit dingbats (U+2776..U+2793): three complete runs of enclosed digits and
     # nothing else, so no prose can fire it.
-    r"|([❶-➓])")
+    r"|([❶-➓])"
+)
 
 # ⚑ NOT EVERY CAPITALISED-WORD-WITH-DIGITS IS A LABEL. The ASCII shape occurs in prose too, and
 # each false row teaches a reader to skim the census.

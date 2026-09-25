@@ -21,7 +21,8 @@ if TYPE_CHECKING:
 _COULD_NOT_LOOK = 2
 
 _needs_linter = pytest.mark.skipif(
-    shellcheck.linter() is None, reason="no shellcheck on PATH or at the mise shim")
+    shellcheck.linter() is None, reason="no shellcheck on PATH or at the mise shim"
+)
 
 
 def _absent(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -76,9 +77,7 @@ def test_a_tree_with_no_linter_exits_two(
     assert "shell files:" not in capsys.readouterr().out
 
 
-def test_explain_with_no_linter_exits_two(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_explain_with_no_linter_exits_two(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Explaining a command the linter cannot judge exits 2."""
     _absent(monkeypatch, tmp_path)
     assert shellcheck_cli.main(["--explain", "echo $x"]) == _COULD_NOT_LOOK
@@ -150,9 +149,7 @@ def test_explain_reports_a_finding_and_exits_one(
 
 @pytest.mark.needs_shellcheck
 @_needs_linter
-def test_explain_of_clean_shell_exits_zero(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_explain_of_clean_shell_exits_zero(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Explaining clean shell exits 0."""
     monkeypatch.chdir(tmp_path)
     assert shellcheck_cli.main(["--explain", 'echo "hi"']) == 0

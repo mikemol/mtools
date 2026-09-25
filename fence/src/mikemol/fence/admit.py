@@ -96,8 +96,16 @@ class Lease:
 
         """
         return " ".join(
-            (_LEASE, self.lease_id, str(self.mb), self.owner, str(self.epoch), self.parent,
-             self.label))
+            (
+                _LEASE,
+                self.lease_id,
+                str(self.mb),
+                self.owner,
+                str(self.epoch),
+                self.parent,
+                self.label,
+            )
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -190,7 +198,7 @@ def starttime(pid: int, proc: str = "/proc") -> str | None:
         stat = (Path(proc) / str(pid) / "stat").read_text(encoding="utf-8")
     except OSError:
         return None
-    after = stat[stat.rfind(")") + 2:].split(" ")
+    after = stat[stat.rfind(")") + 2 :].split(" ")
     return after[_STARTTIME_AFTER_COMM] if len(after) > _STARTTIME_AFTER_COMM else None
 
 
@@ -324,7 +332,7 @@ def claim_key(label: str) -> ClaimKey | None:
     """
     if not label.startswith(CLAIM):
         return None
-    tag = label[len(CLAIM):]
+    tag = label[len(CLAIM) :]
     kind, sep, name = tag.partition(":")
     if sep and kind == Kind.PATH.value:
         return ClaimKey(Kind.PATH, os.path.realpath(name))
@@ -410,7 +418,8 @@ def _refusal(request: Request, ledger: Ledger) -> Verdict | None:
     if request.mb > ledger.total_mb:
         return Verdict.IMPOSSIBLE
     if request.parent != NO_PARENT and request.parent not in {
-            lease.lease_id for lease in ledger.leases}:
+        lease.lease_id for lease in ledger.leases
+    }:
         return Verdict.PARENT_GONE
     return None
 
@@ -590,8 +599,11 @@ def init(store: Store, total_mb: int) -> bool:
     with store.locked():
         snap = store.read()
         if snap.ambiguous:
-            raise RefusedError(Verdict.AMBIGUOUS_TOTAL, EXIT_LEDGER,
-                               f"{store.path} has {snap.total_lines} TOTAL_MB lines")
+            raise RefusedError(
+                Verdict.AMBIGUOUS_TOTAL,
+                EXIT_LEDGER,
+                f"{store.path} has {snap.total_lines} TOTAL_MB lines",
+            )
         if snap.total_mb is not None:
             return False
         store.rewrite(replace(snap, total_mb=total_mb, total_lines=1))
@@ -676,8 +688,10 @@ def _terminal_message(verdict: Verdict, request: Request, snap: Ledger) -> str:
         Verdict.IMPOSSIBLE: f"IMPOSSIBLE: {request.mb} MB exceeds the total {snap.total_mb} MB",
         Verdict.PARENT_GONE: f"parent lease {request.parent} is no longer in the ledger",
         Verdict.NO_TOTAL: "the ledger declares no TOTAL_MB — run init first",
-        Verdict.AMBIGUOUS_TOTAL: (f"the ledger has {snap.total_lines} TOTAL_MB lines — corrupt or "
-                                  "hand-edited; fix the file, do not guess"),
+        Verdict.AMBIGUOUS_TOTAL: (
+            f"the ledger has {snap.total_lines} TOTAL_MB lines — corrupt or "
+            "hand-edited; fix the file, do not guess"
+        ),
     }
     return messages.get(verdict, verdict.name)
 
@@ -699,14 +713,19 @@ def _claim(store: Store, request: Request, host: Host) -> Lease | None:
             store.rewrite(snap)
         if decide(request, snap) is not Verdict.ADMIT:
             return None
-        lease = Lease(uuid.uuid4().hex[:12], request.mb, owner_of(os.getpid()),
-                      int(time.time()), request.parent, request.label)
+        lease = Lease(
+            uuid.uuid4().hex[:12],
+            request.mb,
+            owner_of(os.getpid()),
+            int(time.time()),
+            request.parent,
+            request.label,
+        )
         store.append(lease)
         return lease
 
 
-def acquire(store: Store, request: Request, waiting: Waiting = WAIT,
-            host: Host = HOST) -> Lease:
+def acquire(store: Store, request: Request, waiting: Waiting = WAIT, host: Host = HOST) -> Lease:
     """Create the ledger if absent, wait for `request` to fit, then lease it; or refuse.
 
     ⚑⚑ A DEAD HOLDER IS REAPED BEFORE IT IS BELIEVED: every pass that would BLOCK first gcs, so a
@@ -748,8 +767,10 @@ def acquire(store: Store, request: Request, waiting: Waiting = WAIT,
             raise RefusedError(verdict, EXIT_REFUSED, f"gave up after {waiting.timeout_s}s")
         if not announced:
             free = (snap.total_mb or 0) - snap.used
-            host.announce(f"fence.admit: waiting ({verdict.name}, load ok={load_fits}): "
-                          f"need {request.mb} MB, free {free} MB of {snap.total_mb} MB")
+            host.announce(
+                f"fence.admit: waiting ({verdict.name}, load ok={load_fits}): "
+                f"need {request.mb} MB, free {free} MB of {snap.total_mb} MB"
+            )
             announced = True
         host.sleep(poll)
         poll = min(poll * _BACKOFF, waiting.poll_max_s)
@@ -769,8 +790,9 @@ def release(store: Store, lease: Lease) -> None:
 
 
 @contextlib.contextmanager
-def admit(store: Store, request: Request, waiting: Waiting = WAIT,
-          host: Host = HOST) -> Iterator[Lease]:
+def admit(
+    store: Store, request: Request, waiting: Waiting = WAIT, host: Host = HOST
+) -> Iterator[Lease]:
     """Hold a lease for the duration of a `with` block — acquired on entry, released on exit.
 
     ⚑ `MEMBUDGET_PARENT` NAMES THIS LEASE FOR THE BLOCK and is restored after it, as bash exports

@@ -28,8 +28,9 @@ _EXECUTABLE = 0o755
 _CLEAN_SOURCE = '"""A clean module."""\n'
 
 
-def _run(dist: Path, ruff_bin: str | None, *extra: str,
-         cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+def _run(
+    dist: Path, ruff_bin: str | None, *extra: str, cwd: Path | None = None
+) -> subprocess.CompletedProcess[str]:
     """Run the ratchet CLI over `dist` in a child interpreter, from `cwd` when given.
 
     Returns:
@@ -41,7 +42,12 @@ def _run(dist: Path, ruff_bin: str | None, *extra: str,
         env[_SUPPLY_ENV] = ruff_bin
     return subprocess.run(
         [sys.executable, "-m", "mikemol.ratchet.cli", str(dist), *extra],
-        capture_output=True, text=True, check=False, env=env, cwd=cwd)
+        capture_output=True,
+        text=True,
+        check=False,
+        env=env,
+        cwd=cwd,
+    )
 
 
 def _real_ruff() -> Path:

@@ -59,8 +59,9 @@ def _git(root: Path, *args: str) -> None:
     ⚑ THE STDERR IS THE POINT: the refusal above printed only `returned non-zero exit status 1`,
     and its cause could not be read from the gate's report.
     """
-    proc = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True,
-                          check=False)
+    proc = subprocess.run(
+        ["git", "-C", str(root), *args], capture_output=True, text=True, check=False
+    )
     assert proc.returncode == 0, f"git {' '.join(args)} failed: {proc.stderr.strip()}"
 
 
@@ -106,8 +107,7 @@ def _run(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, str]:
     return (code if isinstance(code, int) else REFUSED), out.out + out.err
 
 
-def test_an_unchanged_baseline_passes(tmp_path: Path,
-                                      capsys: pytest.CaptureFixture[str]) -> None:
+def test_an_unchanged_baseline_passes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     """No diff is the trivial pass."""
     code, out = _run(capsys, "remap", str(_repo(tmp_path)), "b.json")
     assert (code, "b.json: no changes" in out) == (CLEAN, True)
@@ -122,7 +122,8 @@ def test_a_path_only_remap_passes(tmp_path: Path, capsys: pytest.CaptureFixture[
 
 
 def test_a_content_change_under_a_move_is_refused(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """⚑⚑ A remap that also edits a count is debt edited in under cover of a move."""
     root = _repo(tmp_path)
     _edit(root, path="src/a/leaf.py", count=3)
@@ -139,7 +140,8 @@ def test_an_added_key_is_refused(tmp_path: Path, capsys: pytest.CaptureFixture[s
 
 
 def test_an_unreadable_side_exits_2_and_says_so(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A file absent at the revision is a fact about the reader, not a verdict.
 
     ⚑ Exit 2 is also argparse's usage error, so the number alone cannot tell "file unreadable"
@@ -152,18 +154,20 @@ def test_an_unreadable_side_exits_2_and_says_so(
 
 
 def test_write_keeps_the_remap_and_discards_the_rest(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """`--write` projects onto the path-only remap, then the check passes."""
     root = _repo(tmp_path)
     _edit(root, path="src/a/leaf.py", count=3, extra=True)
     code, _ = _run(capsys, "remap", str(root), "b.json", "--write")
     landed: object = json.loads((root / "b.json").read_text(encoding="utf-8"))
-    assert (code, landed) == (CLEAN, {"version": 1, "entries": [
-        {"path": "src/a/leaf.py", "rule": "r1", "count": 2}]})
+    assert (code, landed) == (
+        CLEAN,
+        {"version": 1, "entries": [{"path": "src/a/leaf.py", "rule": "r1", "count": 2}]},
+    )
 
 
-def test_the_bare_remap_does_not_mutate(tmp_path: Path,
-                                        capsys: pytest.CaptureFixture[str]) -> None:
+def test_the_bare_remap_does_not_mutate(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     """The cheap read is the default; a refusal leaves the file as the author left it."""
     root = _repo(tmp_path)
     _edit(root, count=3)
@@ -180,8 +184,7 @@ def test_a_type_change_is_one_leaf(tmp_path: Path, capsys: pytest.CaptureFixture
     assert (code, "non_path_leaf_diffs=1" in out, "! /x\n" in out) == (REFUSED, True, True)
 
 
-def test_a_deleted_path_key_is_refused(tmp_path: Path,
-                                       capsys: pytest.CaptureFixture[str]) -> None:
+def test_a_deleted_path_key_is_refused(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     """P2: a `path` that is now MISSING is not a path rewrite — the entry lost its identity."""
     root = _repo(tmp_path)
     _put(root, {"version": 1, "entries": [{"rule": "r1", "count": 2}]})
@@ -190,7 +193,8 @@ def test_a_deleted_path_key_is_refused(tmp_path: Path,
 
 
 def test_a_payload_under_a_path_key_is_refused_and_not_written(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """P4: a path string that became a container carrying counts is a payload, not a path.
 
     ⚑⚑ AND `--write` MUST NOT LAUNDER IT: the projection keeps the revision's string.
@@ -204,7 +208,8 @@ def test_a_payload_under_a_path_key_is_refused_and_not_written(
 
 
 def test_a_key_named_with_a_dotted_path_suffix_is_not_a_path_leaf(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """P5: pointers are segment tuples, so a key literally named `x.path` is not `path`."""
     root = _commit(tmp_path, b={"x.path": "a"})
     _put(root, {"x.path": "b"})
@@ -213,7 +218,8 @@ def test_a_key_named_with_a_dotted_path_suffix_is_not_a_path_leaf(
 
 
 def test_two_entries_collapsed_onto_one_path_are_refused(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """P7: two identities sharing one path is a duplicate, not a move — even under `--write`."""
     root = _commit(tmp_path, b={"entries": [_ENTRY, _OTHER]})
     body = {"entries": [_ENTRY, {**_OTHER, "path": "src/a.py"}]}
@@ -222,11 +228,16 @@ def test_two_entries_collapsed_onto_one_path_are_refused(
     wcode, _ = _run(capsys, "remap", str(root), "b.json", "--write")
     landed: object = json.loads((root / "b.json").read_text(encoding="utf-8"))
     assert (code, "! /entries: path collision" in out, wcode, landed) == (
-        REFUSED, True, REFUSED, body)
+        REFUSED,
+        True,
+        REFUSED,
+        body,
+    )
 
 
 def test_two_entries_swapping_paths_pass_as_documented_residue(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """P1, RESIDUE: a swap moves each entry's counts to the other's path, and PASSES.
 
     ⚑⚑ This arm pins a known blind spot rather than a virtue; the module docstring records it.
@@ -238,8 +249,9 @@ def test_two_entries_swapping_paths_pass_as_documented_residue(
     assert code == CLEAN
 
 
-def test_a_rev_cannot_inject_a_git_option(tmp_path: Path,
-                                          capsys: pytest.CaptureFixture[str]) -> None:
+def test_a_rev_cannot_inject_a_git_option(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """`--end-of-options`: a rev spelled like `--output=FILE` is a revision, not an option."""
     root = _repo(tmp_path)
     sink = tmp_path / "sink"
@@ -255,11 +267,15 @@ def test_write_is_all_or_nothing(tmp_path: Path, capsys: pytest.CaptureFixture[s
     before = (root / "b.json").read_bytes()
     code, out = _run(capsys, "remap", str(root), "b.json", "c.json", "--write")
     assert (code, "c.json: error:" in out, (root / "b.json").read_bytes()) == (
-        UNREADABLE, True, before)
+        UNREADABLE,
+        True,
+        before,
+    )
 
 
 def test_a_pure_reorder_is_refused_as_documented_residue(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """P6, RESIDUE: reordering entries changes no identity, yet is REFUSED (index comparison).
 
     ⚑⚑ Pins the module docstring's P6 claim: a false alarm, never a laundered change.
@@ -271,7 +287,8 @@ def test_a_pure_reorder_is_refused_as_documented_residue(
 
 
 def test_a_write_failure_on_the_second_file_leaves_the_first_untouched(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """R1: outputs are staged as temps and replaced only once all are written.
 
     ⚑ The second file lives in a READ-ONLY directory (and is itself read-only), so staging it
@@ -302,19 +319,26 @@ def test_a_write_failure_on_the_second_file_leaves_the_first_untouched(
             code, out = -1, str(exc)
     finally:
         sub.chmod(0o755)
-    assert (code, "sub/c.json: error:" in out, "nothing written" in out,
-            (root / "b.json").read_bytes(), sorted(p.name for p in sub.iterdir())) == (
-        UNREADABLE, True, True, before, ["c.json"])
+    assert (
+        code,
+        "sub/c.json: error:" in out,
+        "nothing written" in out,
+        (root / "b.json").read_bytes(),
+        sorted(p.name for p in sub.iterdir()),
+    ) == (UNREADABLE, True, True, before, ["c.json"])
 
 
-def test_write_keeps_the_source_formatting(tmp_path: Path,
-                                           capsys: pytest.CaptureFixture[str]) -> None:
+def test_write_keeps_the_source_formatting(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A compact source stays compact and an indent-4 source keeps indent 4: no churn diff."""
     root = _commit(tmp_path, b=_BASE, d=_BASE)
     _put(root, {"version": 1, "entries": [{**_ENTRY, "count": 3}]})
     wide = {"version": 1, "entries": [{**_ENTRY, "count": 3}]}
     (root / "d.json").write_text(json.dumps(wide, indent=4) + "\n", encoding="utf-8")
     code, _ = _run(capsys, "remap", str(root), "b.json", "d.json", "--write")
-    assert (code, (root / "b.json").read_text(encoding="utf-8"),
-            (root / "d.json").read_text(encoding="utf-8")) == (
-        CLEAN, json.dumps(_BASE), json.dumps(_BASE, indent=4) + "\n")
+    assert (
+        code,
+        (root / "b.json").read_text(encoding="utf-8"),
+        (root / "d.json").read_text(encoding="utf-8"),
+    ) == (CLEAN, json.dumps(_BASE), json.dumps(_BASE, indent=4) + "\n")

@@ -56,7 +56,10 @@ def directory_address() -> tuple[str, int] | None:
     try:
         done = subprocess.run(
             [*_QUERY, _SERVICE, "--side", "host"],
-            check=False, capture_output=True, text=True, timeout=20,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=20,
         )
     except (OSError, subprocess.TimeoutExpired):
         return None
@@ -93,21 +96,27 @@ def main(argv: list[str]) -> int:
         target = directory_address()
         origin = "from luthen's endpoint directory"
     if target is None:
-        _say("BEP sink UNMEASURED — the endpoint directory gave no address "
-             f"({' '.join(_QUERY)} {_SERVICE} --side host); pass HOST:PORT to probe one")
+        _say(
+            "BEP sink UNMEASURED — the endpoint directory gave no address "
+            f"({' '.join(_QUERY)} {_SERVICE} --side host); pass HOST:PORT to probe one"
+        )
         return 3
     host, port = target
     try:
         with socket.create_connection((host, port), timeout=3):
-            _say(f"BEP sink {host}:{port} ACCEPTS ({origin}) — something is listening "
-                 "(not proof it is ready)")
+            _say(
+                f"BEP sink {host}:{port} ACCEPTS ({origin}) — something is listening "
+                "(not proof it is ready)"
+            )
             return 0
     except ConnectionRefusedError:
         _say(f"BEP sink {host}:{port} REFUSED ({origin}) — nothing is listening on the port")
         return 1
     except OSError as e:
-        _say(f"BEP sink {host}:{port} UNREACHABLE ({origin}) — {e} "
-             "(not a refusal; the route is the subject)")
+        _say(
+            f"BEP sink {host}:{port} UNREACHABLE ({origin}) — {e} "
+            "(not a refusal; the route is the subject)"
+        )
         return 2
 
 

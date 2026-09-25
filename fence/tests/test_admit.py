@@ -49,8 +49,9 @@ def top_level(monkeypatch: pytest.MonkeyPatch) -> None:
 pytestmark = pytest.mark.usefixtures("top_level")
 
 
-def _lease(lease_id: str, mb: int, *, owner: str = "1:1", parent: str = admit.NO_PARENT,
-           label: str = "run") -> admit.Lease:
+def _lease(
+    lease_id: str, mb: int, *, owner: str = "1:1", parent: str = admit.NO_PARENT, label: str = "run"
+) -> admit.Lease:
     """Return a lease with defaults for the fields an arm does not care about.
 
     Returns:
@@ -71,6 +72,7 @@ def _ledger(*leases: admit.Lease, total: int | None = _TOTAL) -> admit.Ledger:
 
 
 # --- the ledger text ---
+
 
 def test_a_ledger_round_trips_through_its_text() -> None:
     """Rendering then parsing yields the same snapshot, a spaced label included."""
@@ -93,6 +95,7 @@ def test_a_ledger_with_no_total_parses_as_none() -> None:
 
 
 # --- the verdict table ---
+
 
 def test_a_request_over_the_total_is_impossible_not_blocked() -> None:
     """`mb > TOTAL_MB` refuses at once — waiting cannot make it fit."""
@@ -158,6 +161,7 @@ def test_a_held_claim_excludes_only_its_own_tag() -> None:
 
 # --- gc ---
 
+
 def test_gc_drops_a_dead_owner_and_keeps_a_live_one() -> None:
     """A dead owner's lease goes; a live owner's stays."""
     snap = _ledger(_lease("dead", 10, owner="d:1"), _lease("live", 10, owner="l:1"))
@@ -167,8 +171,11 @@ def test_gc_drops_a_dead_owner_and_keeps_a_live_one() -> None:
 
 def test_gc_cascades_to_the_orphans_of_a_dead_parent() -> None:
     """Parent P dead, child L alive under P, grandchild alive under L: all three go."""
-    snap = _ledger(_lease("P", 10, owner="d:1"), _lease("L", 10, owner="l:1", parent="P"),
-                   _lease("G", 10, owner="l:1", parent="L"))
+    snap = _ledger(
+        _lease("P", 10, owner="d:1"),
+        _lease("L", 10, owner="l:1", parent="P"),
+        _lease("G", 10, owner="l:1", parent="L"),
+    )
     assert admit.gc(snap, lambda owner: owner == "l:1").leases == ()
 
 
@@ -183,6 +190,7 @@ def test_gc_with_nothing_dead_returns_the_same_snapshot() -> None:
 
 
 # --- owner liveness ---
+
 
 def test_this_process_is_alive_by_its_own_identity() -> None:
     """`owner_of(own pid)` reads as alive — the T-arm for the pid:starttime identity."""
@@ -204,6 +212,7 @@ def test_a_comm_with_spaces_and_parens_does_not_shift_the_fields(tmp_path: Path)
 
 
 # --- the keyway (held OPEN in the letter; these pin the design it proposes) ---
+
 
 def test_path_claims_compare_by_realpath() -> None:
     """`claim:path:/a/b` and `claim:path:/a/b/` are one claim."""
@@ -234,10 +243,15 @@ def test_a_label_without_the_claim_prefix_claims_nothing() -> None:
 
 # --- the load gate ---
 
+
 @pytest.mark.parametrize(
     ("load", "ok"),
-    [((1.0, 1.0, 1.0), True), ((9.0, 1.0, 1.0), False), ((1.0, 9.0, 9.0), False),
-     ((1.0, 9.0, 1.0), True)],
+    [
+        ((1.0, 1.0, 1.0), True),
+        ((9.0, 1.0, 1.0), False),
+        ((1.0, 9.0, 9.0), False),
+        ((1.0, 9.0, 1.0), True),
+    ],
 )
 def test_the_load_gate_needs_both_conjuncts(load: tuple[float, float, float], *, ok: bool) -> None:
     """Proceed only if load1 AND min(load5, load15) are under nproc x maxload."""
@@ -250,6 +264,7 @@ def test_a_zero_maxload_disables_the_load_gate() -> None:
 
 
 # --- the effectful half: a real ledger file, real processes ---
+
 
 def _store(tmp_path: Path, total: int = _TOTAL) -> admit.Store:
     """Return a ledger under `tmp_path` declaring `total`.
@@ -272,9 +287,7 @@ _NOBLOCK = admit.Waiting(noblock=True)
 _QUIET = admit.Host(loadavg=lambda: (0.0, 0.0, 0.0))
 
 
-def _spawn(
-    store: admit.Store, request: admit.Request, release: tuple[int, int]
-) -> tuple[int, int]:
+def _spawn(store: admit.Store, request: admit.Request, release: tuple[int, int]) -> tuple[int, int]:
     """Fork a process that tries to lease `request` without waiting, then holds until released.
 
     The child writes `h` once it holds the lease, or `r` when refused; it holds until the release
@@ -394,8 +407,7 @@ def test_a_blocked_request_proceeds_after_the_holder_releases(tmp_path: Path) ->
         slept.append(seconds)
         admit.release(store, holder)
 
-    host = admit.Host(loadavg=_QUIET.loadavg, sleep=release_then_sleep,
-                      announce=lambda _msg: None)
+    host = admit.Host(loadavg=_QUIET.loadavg, sleep=release_then_sleep, announce=lambda _msg: None)
     lease = admit.acquire(store, admit.Request(20), host=host)
     assert slept
     assert [item.lease_id for item in store.read().leases] == [lease.lease_id]
@@ -443,7 +455,8 @@ def test_a_killed_holder_is_reaped_before_it_is_believed(tmp_path: Path) -> None
     os.kill(pid, signal.SIGKILL)
     os.waitpid(pid, 0)
     assert [lease.mb for lease in admit.parse(store.path.read_text(encoding="utf-8")).leases] == [
-        400]
+        400
+    ]
     with admit.admit(store, admit.Request(400), _NOBLOCK, host=_QUIET):
         pass
 

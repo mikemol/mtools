@@ -107,8 +107,15 @@ class Row:
             the line, without a newline.
 
         """
-        cells = (self.label, _fmt(self.wall_s), _fmt(self.peak_mb), str(self.stamp_epoch),
-                 _fmt(self.user_s), _fmt(self.sys_s), _fmt(self.cg_peak_mb))
+        cells = (
+            self.label,
+            _fmt(self.wall_s),
+            _fmt(self.peak_mb),
+            str(self.stamp_epoch),
+            _fmt(self.user_s),
+            _fmt(self.sys_s),
+            _fmt(self.cg_peak_mb),
+        )
         return "\t".join(cells)
 
 
@@ -141,8 +148,17 @@ def parse(text: str) -> list[Row]:
         stamp = _num(cells[3])
         if not cells[0] or wall is None or stamp is None:
             continue
-        rows.append(Row(cells[0], wall, _num(cells[2]), int(stamp), _num(cells[4]),
-                        _num(cells[5]), _num(cells[6])))
+        rows.append(
+            Row(
+                cells[0],
+                wall,
+                _num(cells[2]),
+                int(stamp),
+                _num(cells[4]),
+                _num(cells[5]),
+                _num(cells[6]),
+            )
+        )
     return rows
 
 
@@ -222,16 +238,18 @@ def report(rows: Iterable[Row], prefix: str = "") -> list[Peaks]:
         wall = sum(row.wall_s for row in timed)
         cpu = sum((row.user_s or 0) + (row.sys_s or 0) for row in timed)
         top = max(peaks) if peaks else None
-        out.append(Peaks(
-            label=label,
-            runs=len(group),
-            max_mb=top,
-            median_mb=statistics.median_low(peaks) if peaks else None,
-            p90_mb=p90(peaks) if peaks else None,
-            max_s=max(row.wall_s for row in group),
-            cpu_percent=_PERCENT * cpu / wall if timed and wall > 0 else None,
-            suggested_mb=bucket(top) if top is not None else None,
-        ))
+        out.append(
+            Peaks(
+                label=label,
+                runs=len(group),
+                max_mb=top,
+                median_mb=statistics.median_low(peaks) if peaks else None,
+                p90_mb=p90(peaks) if peaks else None,
+                max_s=max(row.wall_s for row in group),
+                cpu_percent=_PERCENT * cpu / wall if timed and wall > 0 else None,
+                suggested_mb=bucket(top) if top is not None else None,
+            )
+        )
     return out
 
 
@@ -264,8 +282,11 @@ def row_of(label: str, result: Result, stamp_epoch: int) -> Row | None:
         stamp_epoch=stamp_epoch,
         user_s=result.user_s,
         sys_s=result.sys_s,
-        cg_peak_mb=(None if result.memory_peak_bytes is None
-                    else _whole_mb(result.memory_peak_bytes, _BYTES_PER_MB)),
+        cg_peak_mb=(
+            None
+            if result.memory_peak_bytes is None
+            else _whole_mb(result.memory_peak_bytes, _BYTES_PER_MB)
+        ),
     )
 
 

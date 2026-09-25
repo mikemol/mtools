@@ -182,13 +182,15 @@ class TestRatchetSweep:
         def runner(cmd: tuple[str, ...], caps: Caps) -> core.Result:
             seen.append(caps)
             bound = ("MEMORY",) if caps.mem == binds_at else ()
-            return core.Result(cmd=cmd, caps=caps, duration_s=0.0, exit_code=0,
-                               memory_peak_bytes=1, bound_by=bound)
+            return core.Result(
+                cmd=cmd, caps=caps, duration_s=0.0, exit_code=0, memory_peak_bytes=1, bound_by=bound
+            )
 
         return seen, runner
 
     def test_the_sweep_stops_at_the_first_cap_that_binds(
-            self, monkeypatch: pytest.MonkeyPatch) -> None:
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """⚑⚑⚑ THE STOPPING RULE, which is the whole point of a ratchet.
 
         A sweep that ran every step would report the TIGHTEST cap as binding rather than the
@@ -207,7 +209,8 @@ class TestRatchetSweep:
         assert out[-1].bound_by, "the last result is not the binding one"
 
     def test_the_sweep_returns_every_step_not_only_the_verdict(
-            self, monkeypatch: pytest.MonkeyPatch) -> None:
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """⚑⚑ THE CAPS THAT DID NOT BIND ESTABLISH THAT THE BINDING ONE IS A BOUNDARY.
 
         The function's own docstring states it: a caller handed only the last result cannot tell
@@ -228,7 +231,8 @@ class TestRatchetSweep:
         )
 
     def test_a_sweep_that_never_binds_runs_every_step(
-            self, monkeypatch: pytest.MonkeyPatch) -> None:
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """⚑ THE CONTROL, without which the stopping arm is satisfied by a loop that always stops.
 
         A sweep breaking after the first step would pass an arm asserting *it stopped*; this pins
@@ -244,8 +248,7 @@ class TestRatchetSweep:
         )
         assert not any(r.bound_by for r in out), "a step bound when the runner never binds"
 
-    def test_the_base_caps_carry_through_every_step(
-            self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_the_base_caps_carry_through_every_step(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """⚑⚑ ONLY `mem` RATCHETS; THE OTHER CAPS ARE THE INVARIANT the sweep measures against.
 
         A ladder that dropped `--swap 0` between steps would change what a memory cap MEANS
@@ -258,6 +261,5 @@ class TestRatchetSweep:
         core.ratchet(("true",), ["64M", "32M", "16M"], base=Caps(swap="0", pids=8))
         assert seen, "no step ran — the assertions below would hold over nothing"
         assert all(c.swap == "0" and c.pids == PIDS_CARRIED for c in seen), (
-            f"the base caps did not survive the ladder: "
-            f"{[(c.mem, c.swap, c.pids) for c in seen]}"
+            f"the base caps did not survive the ladder: {[(c.mem, c.swap, c.pids) for c in seen]}"
         )

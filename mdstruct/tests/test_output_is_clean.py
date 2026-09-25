@@ -55,7 +55,10 @@ def test_a_fresh_import_emits_nothing_on_stderr(doc: Path) -> None:
     doc.write_text(_FIXTURE, encoding="utf-8")
     result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — argv is this interpreter and a fixture path
         [sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)],
-        check=False, capture_output=True, text=True)
+        check=False,
+        capture_output=True,
+        text=True,
+    )
     assert result.returncode == 0
     assert not result.stderr, f"stderr carried: {result.stderr!r}"
 
@@ -65,7 +68,10 @@ def test_stdout_is_only_the_answer(doc: Path) -> None:
     doc.write_text(_FIXTURE, encoding="utf-8")
     result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — argv is this interpreter and a fixture path
         [sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)],
-        check=False, capture_output=True, text=True)
+        check=False,
+        capture_output=True,
+        text=True,
+    )
     for line in result.stdout.splitlines():
         assert "Warning" not in line, f"a warning reached stdout: {line!r}"
 
@@ -81,6 +87,5 @@ def test_the_suppression_does_not_silence_this_packages_own_warnings() -> None:
 
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        warnings.warn("a warning from the package's own code",
-                      SyntaxWarning, stacklevel=1)
+        warnings.warn("a warning from the package's own code", SyntaxWarning, stacklevel=1)
     assert caught, "the package's suppression swallowed a warning it did not own"

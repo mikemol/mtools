@@ -145,14 +145,16 @@ def _git(*args: str, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
         the completed process.
 
     """
-    proc = subprocess.run(["git", *_GIT_ID, *args], capture_output=True, text=True,
-                          check=False, env=env)
+    proc = subprocess.run(
+        ["git", *_GIT_ID, *args], capture_output=True, text=True, check=False, env=env
+    )
     assert proc.returncode == 0, f"git {' '.join(args)} failed: {proc.stderr.strip()}"
     return proc
 
 
 def test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names(
-    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A suite committing in its own dir lands there, not in the repo the caller's GIT_DIR names.
 
@@ -170,7 +172,9 @@ def test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names(
     seen: list[dict[str, str]] = []
 
     def suite(
-        argv: list[str], cwd: pathlib.Path, env: dict[str, str],
+        argv: list[str],
+        cwd: pathlib.Path,
+        env: dict[str, str],
     ) -> subprocess.CompletedProcess[str]:
         seen.append(env)
         _git("init", "-q", str(cwd), env=env)

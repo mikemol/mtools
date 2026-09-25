@@ -51,14 +51,16 @@ def _write_table(root: Path, body: str = _TABLE) -> Path:
 
 
 def test_the_project_dir_env_names_the_repo(
-        tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """The harness's declaration of which repo this session is in wins."""
     monkeypatch.setenv(routing_table.PROJECT_DIR_ENV, str(tmp_path))
     assert routing_table.project_dir() == tmp_path.absolute()
 
 
 def test_without_the_env_the_working_directory_decides(
-        tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """⚑ UNSET FALLS BACK TO THIS PROCESS'S DIRECTORY, which is what an in-repo run always got.
 
     The positive control for the case above: without it, both would pass against a `project_dir`
@@ -70,14 +72,16 @@ def test_without_the_env_the_working_directory_decides(
 
 
 def test_a_repo_with_no_table_reports_none_rather_than_empty(
-        tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """⚑ ABSENT IS NOT EMPTY, and collapsing them makes an unconfigured repo look permissive."""
     monkeypatch.setenv(routing_table.PROJECT_DIR_ENV, str(tmp_path))
     assert routing_table.table_path() is None
 
 
 def test_a_repo_with_a_table_reports_its_path(
-        tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """The found case, without which the absent case above proves nothing."""
     written = _write_table(tmp_path)
     monkeypatch.setenv(routing_table.PROJECT_DIR_ENV, str(tmp_path))
@@ -85,7 +89,8 @@ def test_a_repo_with_a_table_reports_its_path(
 
 
 def test_the_table_is_read_from_the_edited_repo_not_the_package(
-        tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """⚑⚑ THE PORT'S CENTRAL REPAIR, ASSERTED AGAINST A REPO THIS PACKAGE DOES NOT LIVE IN.
 
     An installed package has no `.claude` above its own files, so any `__file__`-derived lookup
@@ -267,7 +272,8 @@ def test_the_live_tables_filename_keys_never_start_with_a_dot() -> None:
 
 
 @pytest.mark.parametrize(
-    "cmd", ["cat agda/Makefile", "grep foo agda/Makefile", "head agda/makefile"],
+    "cmd",
+    ["cat agda/Makefile", "grep foo agda/Makefile", "head agda/makefile"],
 )
 def test_a_textual_read_of_a_claimed_filename_is_refused(cmd: str) -> None:
     """The gate now fires on a suffixless file its table claims by name."""
@@ -292,11 +298,14 @@ def test_a_claimed_name_that_is_not_a_read_path_is_not_refused(cmd: str) -> None
 
 # --- the retirement table (substrate's retired-verdict letter, 2026-09-22) ---------------------
 
-_TWO_TABLES = _TABLE + """
+_TWO_TABLES = (
+    _TABLE
+    + """
 | retired | origin | successor | why | measured |
 |---|---|---|---|---|
 | `--attr` | `pycodemod` | `substrate/attr_reads.py` | never matched | corpus.ROOT: 0 vs 121 |
 """
+)
 
 
 def test_a_retirement_row_is_read_under_its_header(tmp_path: Path) -> None:

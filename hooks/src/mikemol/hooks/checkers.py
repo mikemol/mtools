@@ -23,8 +23,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def checker_argv(tmp: Path, path: str, venv_py: Path,
-                 pyproject: Path) -> tuple[tuple[str, list[str], bool], ...]:
+def checker_argv(
+    tmp: Path, path: str, venv_py: Path, pyproject: Path
+) -> tuple[tuple[str, list[str], bool], ...]:
     """Return `(name, argv, reads_stdin)` for each checker, naming `path` as the subject.
 
     ⚑ TWO MECHANISMS, BECAUSE THE TWO CHECKERS SPELL THIS DIFFERENTLY, and the third tuple
@@ -57,16 +58,47 @@ def checker_argv(tmp: Path, path: str, venv_py: Path,
         # fixture (ruff 0.16.6, 2026-09-22): a file under an excluded `gen/` was REFUSED without the
         # flag and admitted with it, while a non-excluded path stayed refused. substrate carried
         # the same gap (its letter; summit's `ask-force-exclude-reaches-a-staged-edit`).
-        ("ruff", [str(venv_py), "-m", "ruff", "check",
-                  "--config", str(pyproject), "--no-cache", "--force-exclude", *marker,
-                  "--stdin-filename", real, "-"], True),
+        (
+            "ruff",
+            [
+                str(venv_py),
+                "-m",
+                "ruff",
+                "check",
+                "--config",
+                str(pyproject),
+                "--no-cache",
+                "--force-exclude",
+                *marker,
+                "--stdin-filename",
+                real,
+                "-",
+            ],
+            True,
+        ),
         # ⚑⚑ THE FORMAT BAR, BESIDE THE LINT BAR. Measured by linux-sources: a file `ruff check`
         # and mypy pass but `ruff format --check` fails was ADMITTED here and refused at commit,
         # so the edit gate let through what the commit gate stops. Same stdin, same real path,
         # same config and exclusions; `--diff` shows the reader what formatting wants.
-        ("ruff-format", [str(venv_py), "-m", "ruff", "format", "--check", "--diff",
-                         "--config", str(pyproject), "--no-cache", "--force-exclude",
-                         "--stdin-filename", real, "-"], True),
+        (
+            "ruff-format",
+            [
+                str(venv_py),
+                "-m",
+                "ruff",
+                "format",
+                "--check",
+                "--diff",
+                "--config",
+                str(pyproject),
+                "--no-cache",
+                "--force-exclude",
+                "--stdin-filename",
+                real,
+                "-",
+            ],
+            True,
+        ),
         # ⚑⚑ `--pretty` RENDERS THE SOURCE LINE AND A CARET, AND ITS ABSENCE COST AN AFTERNOON.
         # Without it mypy emits a bare line number naming a line in a tempfile that is deleted
         # microseconds later and never existed on disk — a citation with NO READABLE REFERENT.
@@ -99,7 +131,19 @@ def checker_argv(tmp: Path, path: str, venv_py: Path,
         # claim** — and the replacement offered when retracting it ("`files` decides admission")
         # was ALSO unmeasured, the same shape inside a correction. The positive control caught it;
         # re-reading would not have.
-        ("mypy", [str(venv_py), "-m", "mypy", "--config-file", str(pyproject),
-                  "--no-error-summary", "--no-color-output", "--pretty", str(tmp)],
-         False),
+        (
+            "mypy",
+            [
+                str(venv_py),
+                "-m",
+                "mypy",
+                "--config-file",
+                str(pyproject),
+                "--no-error-summary",
+                "--no-color-output",
+                "--pretty",
+                str(tmp),
+            ],
+            False,
+        ),
     )

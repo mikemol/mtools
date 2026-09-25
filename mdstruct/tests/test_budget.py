@@ -38,7 +38,7 @@ _FIXTURE = "# A\n\n" + ("x" * _LONG_LINE) + "\n\n## B\n\nb1\nb2\nb3\nb4\n"
 
 def _slice_bytes(text: str, start: int, end: int) -> int:
     lines = text.split("\n")
-    return len("\n".join(lines[start - 1:end - 1]).encode("utf-8"))
+    return len("\n".join(lines[start - 1 : end - 1]).encode("utf-8"))
 
 
 def test_bytes_and_lines_are_reported_separately_and_disagree(doc: Path) -> None:
@@ -93,7 +93,8 @@ def test_the_population_is_the_span_list_not_a_second_walk(doc: Path) -> None:
 
 
 def test_the_cli_prints_one_row_per_section_and_the_file_as_denominator(
-    doc: Path, capsys: pytest.CaptureFixture[str],
+    doc: Path,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     """⚑ THE DENOMINATOR IS THE FILE'S BYTE COUNT, not a sum of rows.
 
@@ -112,7 +113,8 @@ def test_the_cli_prints_one_row_per_section_and_the_file_as_denominator(
 
 
 def test_a_headerless_document_says_so_rather_than_printing_nothing(
-    doc: Path, capsys: pytest.CaptureFixture[str],
+    doc: Path,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     """⚑ THE EMPTY CASE NAMES ITSELF, matching `spans`.
 

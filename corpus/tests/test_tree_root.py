@@ -60,7 +60,9 @@ def test_the_flag_and_operand_are_consumed_in_any_position(tmp_path: Path) -> No
     """
     root = str(tmp_path)
     assert tr.from_argv(["--calls", "foo", tr.ROOT_FLAG, root, "--apply"])[1] == [
-        "--calls", "foo", "--apply",
+        "--calls",
+        "foo",
+        "--apply",
     ]
     assert tr.from_argv([tr.ROOT_FLAG, root, "--apply"])[1] == ["--apply"]
     assert tr.from_argv(["--apply", tr.ROOT_FLAG, root])[1] == ["--apply"]

@@ -80,7 +80,8 @@ def test_the_selftest_holds_both_arms_over_the_shape_space() -> None:
 
 
 def test_the_selftest_fires_when_a_shape_row_claims_the_opposite(
-        monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """⚑⚑ THE CONTRACT'S OWN F-ARM. A row asserting the opposite of the truth must FAIL.
 
     ⚑ THE P-ARM SIDE IS STUBBED, DELIBERATELY, AND THAT IS A RESULT RATHER THAN A SHORTCUT. It
@@ -117,8 +118,7 @@ def test_a_source_line_renders_to_exactly_what_its_document_header_renders_to() 
     ruling, "show as typed"); its apostrophe was U+2019 while every AST read smart-quoted.
     """
     raw = ["## B's leg", "## C [l](u) leg", "## D ![i](u) leg", "## E `c` leg", "## F *em* leg"]
-    assert ast.render_headings(raw) == [
-        "B's leg", "C l leg", "D i leg", "E c leg", "F em leg"]
+    assert ast.render_headings(raw) == ["B's leg", "C l leg", "D i leg", "E c leg", "F em leg"]
 
 
 def test_render_headings_returns_one_entry_per_input() -> None:
@@ -189,7 +189,8 @@ def test_verify_reports_a_failure_that_a_later_success_would_mask(tmp_path: Path
         assert _run_cli(str(bad), str(good)) == 1, "a failure first must survive a later success"
         assert _run_cli(str(good), str(bad)) == 1, "a failure LAST must not be masked by the first"
         assert _run_cli(str(good), str(tmp_path / "absent.md")) == _RC_USAGE, (
-            "a missing path escalates")
+            "a missing path escalates"
+        )
 
 
 def test_main_takes_its_arguments_rather_than_reading_the_global(tmp_path: Path) -> None:

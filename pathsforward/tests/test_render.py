@@ -17,8 +17,14 @@ _NOW = "2026-09-23T00:00:00Z"
 _BLOCKED = "blocked"
 _DONE = "done"
 # File order is the reverse of the rank: a blocked W22 above a ready W24 is the defect.
-_FILE_ORDER = (("W1", _DONE), ("W2", _BLOCKED), ("W3", "ready"), ("W4", _BLOCKED),
-               ("W5", "working"), ("W6", "ready"))
+_FILE_ORDER = (
+    ("W1", _DONE),
+    ("W2", _BLOCKED),
+    ("W3", "ready"),
+    ("W4", _BLOCKED),
+    ("W5", "working"),
+    ("W6", "ready"),
+)
 _RANKED = ("W5", "W3", "W6", "W2", "W4", "W1")
 _ROW = re.compile(r"^\| \d+ \|")
 _STANZA = re.compile(r"^  (W\d+) \[", re.MULTILINE)
@@ -31,14 +37,18 @@ def _state(residue: list[dict[str, object]]) -> State:
         the state.
 
     """
-    return validate({
-        "counter": 2, "heartbeat": "h", "job_id": "j",
-        "waypoints": [
-            {"symbol": "W2", "title": "a | b", "status": "ready", "rank_reason": "unblocks W1"},
-            {"symbol": "W1", "title": "t", "status": "blocked", "blocked_on": ["mikemol"]},
-        ],
-        "residue": residue,
-    })
+    return validate(
+        {
+            "counter": 2,
+            "heartbeat": "h",
+            "job_id": "j",
+            "waypoints": [
+                {"symbol": "W2", "title": "a | b", "status": "ready", "rank_reason": "unblocks W1"},
+                {"symbol": "W1", "title": "t", "status": "blocked", "blocked_on": ["mikemol"]},
+            ],
+            "residue": residue,
+        }
+    )
 
 
 def _mixed() -> State:
@@ -48,14 +58,24 @@ def _mixed() -> State:
         the state.
 
     """
-    return validate({
-        "counter": len(_FILE_ORDER), "project_root": "/proj",
-        "waypoints": [{"symbol": sym, "title": sym, "status": status, "next_bounded_step": "s",
-                       "blocked_on": ["mikemol"] if status == _BLOCKED else [],
-                       "blocked_kind": "human" if status == _BLOCKED else None}
-                      for sym, status in _FILE_ORDER],
-        "residue": [],
-    })
+    return validate(
+        {
+            "counter": len(_FILE_ORDER),
+            "project_root": "/proj",
+            "waypoints": [
+                {
+                    "symbol": sym,
+                    "title": sym,
+                    "status": status,
+                    "next_bounded_step": "s",
+                    "blocked_on": ["mikemol"] if status == _BLOCKED else [],
+                    "blocked_kind": "human" if status == _BLOCKED else None,
+                }
+                for sym, status in _FILE_ORDER
+            ],
+            "residue": [],
+        }
+    )
 
 
 def _queue_symbols(state: State) -> list[str]:
@@ -115,7 +135,10 @@ def test_the_queue_is_numbered_in_array_order() -> None:
     """The queue numbers its rows and carries each waypoint's rank reason."""
     rows = render.queue(_state([])).splitlines()
     assert (rows[0].split()[:2], rows[1].split()[:2], rows[0].endswith("unblocks W1")) == (
-        ["1.", "W2"], ["2.", "W1"], True)
+        ["1.", "W2"],
+        ["2.", "W1"],
+        True,
+    )
 
 
 def test_the_queue_lists_working_then_ready_then_blocked() -> None:

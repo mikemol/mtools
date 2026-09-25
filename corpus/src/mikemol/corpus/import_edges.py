@@ -57,9 +57,7 @@ def _parse(path: str) -> ast.Module | None:
 
     """
     try:
-        return ast.parse(
-            Path(path).read_text(encoding="utf-8", errors="replace"), filename=path
-        )
+        return ast.parse(Path(path).read_text(encoding="utf-8", errors="replace"), filename=path)
     except (OSError, SyntaxError):
         return None
 

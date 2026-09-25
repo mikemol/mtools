@@ -330,14 +330,16 @@ def render(findings: list[Finding], subject: str) -> str:
     """
     lines = [f"shellcheck: this {subject} has findings the gate refuses."]
     lines.extend(f"  {code} (line {line})  {msg}" for code, line, msg in findings)
-    lines.extend((
-        "  ⚑ there is NO suppression path here, by design — a per-line disable directive",
-        "     does not make the shell correct, it makes it READ as reviewed.",
-        "  fix the shell. If the rule is genuinely wrong for this tree, declare it under",
-        "     [tool.mikemol-hooks.shellcheck.exclude] in the governing pyproject.toml,",
-        "     with a dated warrant saying what was measured.",
-        f"  see https://www.shellcheck.net/wiki/{findings[0][0]}",
-    ))
+    lines.extend(
+        (
+            "  ⚑ there is NO suppression path here, by design — a per-line disable directive",
+            "     does not make the shell correct, it makes it READ as reviewed.",
+            "  fix the shell. If the rule is genuinely wrong for this tree, declare it under",
+            "     [tool.mikemol-hooks.shellcheck.exclude] in the governing pyproject.toml,",
+            "     with a dated warrant saying what was measured.",
+            f"  see https://www.shellcheck.net/wiki/{findings[0][0]}",
+        )
+    )
     return "\n".join(lines)
 
 

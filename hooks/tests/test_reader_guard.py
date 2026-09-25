@@ -48,7 +48,10 @@ def _runs(reader: Path) -> bool:
         return False
     try:
         subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject
-            [str(reader), "--help"], capture_output=True, check=False, timeout=30,
+            [str(reader), "--help"],
+            capture_output=True,
+            check=False,
+            timeout=30,
         )
     except OSError:
         return False

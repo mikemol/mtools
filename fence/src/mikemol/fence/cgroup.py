@@ -228,8 +228,10 @@ def parent_with_controllers(want: Iterable[str]) -> Path:
             with sub.open("w") as f:
                 f.write(f"+{c}")
         except OSError as e:
-            msg = (f"the {c!r} controller is not delegated to your cgroup subtree — the fence "
-                   f"cannot enforce {c} here (need a delegated cgroup v2 {c} controller)")
+            msg = (
+                f"the {c!r} controller is not delegated to your cgroup subtree — the fence "
+                f"cannot enforce {c} here (need a delegated cgroup v2 {c} controller)"
+            )
             raise FenceUnavailableError(msg) from e
     return parent
 
@@ -351,13 +353,17 @@ def bound_by(mem_ev: Mapping[str, int], pid_ev: Mapping[str, int]) -> list[str]:
     # mem is a kill boundary not a throttle* — so the knowledge was in the tool and absent from
     # the finding. Same class as a skip whose stated reason was never the measured one.
     if mem_ev.get("oom_kill", 0) > 0:
-        out.append(f"MEMORY, KILLED (memory.events oom_kill={mem_ev['oom_kill']} "
-                   f"max_hits={mem_ev.get('max', 0)}) — the cap was a ceiling")
+        out.append(
+            f"MEMORY, KILLED (memory.events oom_kill={mem_ev['oom_kill']} "
+            f"max_hits={mem_ev.get('max', 0)}) — the cap was a ceiling"
+        )
     elif mem_ev.get("max", 0) > 0:
-        out.append(f"MEMORY, THROTTLED (memory.events oom_kill=0 "
-                   f"max_hits={mem_ev['max']}) — the cap bound the RESIDENT SET and the payload "
-                   f"was not killed; on a swap-backed host it may have completed in swap. "
-                   f"Add `--swap 0` to make the cap a kill boundary")
+        out.append(
+            f"MEMORY, THROTTLED (memory.events oom_kill=0 "
+            f"max_hits={mem_ev['max']}) — the cap bound the RESIDENT SET and the payload "
+            f"was not killed; on a swap-backed host it may have completed in swap. "
+            f"Add `--swap 0` to make the cap a kill boundary"
+        )
     if pid_ev.get("max", 0) > 0:
         out.append(f"PIDS (pids.events max={pid_ev['max']} — fork/spawn pressure hit pids.max)")
     return out

@@ -42,8 +42,10 @@ MARGIN = 2
 HANG_MULTIPLE = 4
 _MINUTE = 60
 
-_USAGE = ("usage: python -m mikemol.fence.label_lease {lease LEDGER LABEL DEFAULT_MB CEILING_MB"
-          " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n")
+_USAGE = (
+    "usage: python -m mikemol.fence.label_lease {lease LEDGER LABEL DEFAULT_MB CEILING_MB"
+    " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n"
+)
 
 # A mode, and its four operands; and the exit code for anything else.
 _ARGS = 5
@@ -60,8 +62,9 @@ def peaks_of(rows: Iterable[ledger.Row], label: str) -> list[float]:
     return [row.peak_mb for row in rows if row.label == label and row.peak_mb is not None]
 
 
-def lease(rows: Iterable[ledger.Row], label: str, *, default_mb: int,
-          ceiling_mb: int) -> autosize.Sizing:
+def lease(
+    rows: Iterable[ledger.Row], label: str, *, default_mb: int, ceiling_mb: int
+) -> autosize.Sizing:
     """Return the memory lease for `label` — `autosize.size` over that label's peaks.
 
     Returns:
@@ -152,12 +155,15 @@ def deadline_warning(label: str, got: Deadline) -> str | None:
     """
     if not got.clamped or got.slowest_s is None:
         return None
-    return (f"label_lease: {label} ran {got.slowest_s:.0f}s at its slowest but the cap is "
-            f"{got.cap_s}s — budgeting {got.timeout_s}s, BELOW the measured need, which may kill "
-            f"an honest run; raise ceiling_s or name a timeout explicitly")
+    return (
+        f"label_lease: {label} ran {got.slowest_s:.0f}s at its slowest but the cap is "
+        f"{got.cap_s}s — budgeting {got.timeout_s}s, BELOW the measured need, which may kill "
+        f"an honest run; raise ceiling_s or name a timeout explicitly"
+    )
 
 
 # --- the effectful half: read the ledger file, print for the shell ---
+
 
 def read_rows(path: Path) -> list[ledger.Row]:
     """Return the ledger's rows; a missing or unreadable ledger is no history, never an error.
@@ -220,8 +226,9 @@ def module_lease(module: Path, *, default_mb: int, ceiling_mb: int) -> autosize.
         text = module_ledger(module).read_text(encoding="utf-8", errors="replace")
     except OSError:
         text = ""
-    return autosize.size(ledger.key_peaks(text, module.name), default=default_mb,
-                         ceiling=ceiling_mb)
+    return autosize.size(
+        ledger.key_peaks(text, module.name), default=default_mb, ceiling=ceiling_mb
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -254,8 +261,9 @@ def _lease(call: _Call) -> int:
         0.
 
     """
-    got = lease(read_rows(call.ledger), call.label, default_mb=call.default,
-                ceiling_mb=call.ceiling)
+    got = lease(
+        read_rows(call.ledger), call.label, default_mb=call.default, ceiling_mb=call.ceiling
+    )
     cap = autosize.cap_of(call.ceiling, call.default)
     return _answer(got.mb, autosize.clamp_warning(call.label, got, cap))
 
@@ -267,8 +275,9 @@ def _deadline(call: _Call) -> int:
         0.
 
     """
-    got = deadline(read_rows(call.ledger), call.label,
-                   Guard(default_s=call.default, ceiling_s=call.ceiling))
+    got = deadline(
+        read_rows(call.ledger), call.label, Guard(default_s=call.default, ceiling_s=call.ceiling)
+    )
     return _answer(got.timeout_s, deadline_warning(call.label, got))
 
 

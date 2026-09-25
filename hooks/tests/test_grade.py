@@ -104,8 +104,7 @@ def _runner(sandbox: Path) -> grade.Runner:
         a Runner over the sandbox, naming the interpreter running this case.
 
     """
-    return grade.Runner(dist=sandbox, module="tests/test_arms.py",
-                        interpreter=Path(sys.executable))
+    return grade.Runner(dist=sandbox, module="tests/test_arms.py", interpreter=Path(sys.executable))
 
 
 def _graded(sandbox: Path) -> dict[str, str]:
@@ -211,7 +210,8 @@ def test_an_arm_that_reads_no_file_is_out_of_scope(tmp_path: Path) -> None:
     module.write_text(
         '"""No subject."""\n\n\ndef test_pure() -> None:\n    """Arithmetic."""\n'
         "    assert 1 + 1 == 2\n",
-        encoding="utf-8")
+        encoding="utf-8",
+    )
     assert grade.arms_with_subjects(module, {}) == {}
 
 
@@ -246,10 +246,13 @@ def test_the_runner_invokes_pytest_rather_than_importing_the_module() -> None:
     Python caches a module's source at import; a grader that imported the test module would
     corrupt a file the already-imported test never re-reads, and every arm would grade
     `indeterminate` — a whole suite reported unfalsifiable by an artifact of the grader.
+
+    ⚑ COMPARED WITH WHITESPACE REMOVED: the claim is about the argv, not its layout, and the
+    formatter puts one element per line.
     """
-    source = (Path(grade.__file__)).read_text(encoding="utf-8")
+    source = "".join(Path(grade.__file__).read_text(encoding="utf-8").split())
     assert "subprocess.run" in source
-    assert '"-m", "pytest"' in source
+    assert '"-m","pytest"' in source
 
 
 def test_a_flip_requires_the_check_to_be_reachable(sandbox: Path) -> None:
@@ -337,8 +340,9 @@ def test_a_declared_content_file_marks_the_flip_content_sensitive(sandbox: Path)
     targets = {"_SUBJ": sandbox / "tests" / "subject.sh"}
     arms = grade.arms_with_subjects(module, targets)
     runner = _runner(sandbox)
-    g = grade.grade_test(runner, "test_behavioural", arms["test_behavioural"],
-                         content={"subject.sh"})
+    g = grade.grade_test(
+        runner, "test_behavioural", arms["test_behavioural"], content={"subject.sh"}
+    )
     assert g.content_sensitive
 
 
@@ -379,8 +383,9 @@ def test_the_interpreter_is_a_declared_field_rather_than_a_path_convention() -> 
     configured to refuse it — mypy said so. Constructing with the keyword answers the same question
     without the escape, and answers it about the CONSTRUCTOR, which is what a caller touches.
     """
-    runner = grade.Runner(dist=Path("/nowhere"), module="tests/whatever.py",
-                          interpreter=Path("/some/python3"))
+    runner = grade.Runner(
+        dist=Path("/nowhere"), module="tests/whatever.py", interpreter=Path("/some/python3")
+    )
     assert runner.interpreter == Path("/some/python3"), (
         f"Runner accepted an `interpreter` and did not keep it: {runner.interpreter}"
     )
@@ -415,8 +420,9 @@ def test_a_declared_interpreter_is_the_one_that_runs(sandbox: Path) -> None:
     assert reachable, "control failed: the default interpreter could not run the arm at all"
     assert passed, "control failed: the arm does not pass under the default interpreter"
 
-    broken = grade.Runner(dist=sandbox, module="tests/test_arms.py",
-                          interpreter=sandbox / "nonexistent" / "python3")
+    broken = grade.Runner(
+        dist=sandbox, module="tests/test_arms.py", interpreter=sandbox / "nonexistent" / "python3"
+    )
     assert broken.run("test_behavioural") == (False, False), (
         "a declared interpreter that does not exist still ran something — the field is not "
         "reaching subprocess, and `dist` is still deciding the environment"

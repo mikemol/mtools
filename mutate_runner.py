@@ -91,7 +91,9 @@ class Mutant:
 
 
 def launch(
-    argv: list[str], cwd: pathlib.Path, env: dict[str, str],
+    argv: list[str],
+    cwd: pathlib.Path,
+    env: dict[str, str],
 ) -> subprocess.CompletedProcess[str]:
     """Run one mutant's suite: argv only, no shell, output captured as text.
 
@@ -184,7 +186,8 @@ def import_time_sites(tree: ast.Module) -> set[str]:
 
     """
     return {
-        path for path, _node, owner in _owned(tree)
+        path
+        for path, _node, owner in _owned(tree)
         if owner is not None and {ast.unparse(b) for b in owner.bases} & _ENUM_BASES
     }
 
@@ -210,11 +213,15 @@ def mutate(source: str, target: str) -> str:
     for path, node in sites(tree):
         if path != target:
             continue
-        keep = node.body[:1] if (
-            isinstance(node.body[0], ast.Expr)
-            and isinstance(node.body[0].value, ast.Constant)
-            and isinstance(node.body[0].value.value, str)
-        ) else []
+        keep = (
+            node.body[:1]
+            if (
+                isinstance(node.body[0], ast.Expr)
+                and isinstance(node.body[0].value, ast.Constant)
+                and isinstance(node.body[0].value.value, str)
+            )
+            else []
+        )
         raiser = ast.parse('raise AssertionError("mutant")').body
         node.body = [*keep, *raiser]
         return ast.unparse(ast.fix_missing_locations(tree))
@@ -280,8 +287,10 @@ def _report_debug(proc: subprocess.CompletedProcess[str]) -> None:
     """Print what one mutant's suite said, for `--debug`."""
     tail = [ln for ln in proc.stdout.splitlines() if ln.strip()][-1:]
     reached = "AssertionError: mutant" in proc.stdout
-    sys.stdout.write(f"      rc={proc.returncode} mutant_in_stdout={reached} "
-                     f"summary={tail[0] if tail else '<none>'!r}\n")
+    sys.stdout.write(
+        f"      rc={proc.returncode} mutant_in_stdout={reached} "
+        f"summary={tail[0] if tail else '<none>'!r}\n"
+    )
     if proc.stderr.strip():
         sys.stdout.write(f"      stderr: {proc.stderr.strip().splitlines()[-1]}\n")
     # ⚑ WHEN THE MUTANT NEVER APPEARS, THE INTERESTING TEXT IS THE ERROR ITSELF — the
@@ -355,17 +364,33 @@ def run(grid: Grid, mutant: Mutant, *, debug: bool = False) -> str:
         # ⚑ `shutil.copytree` ALREADY BRINGS `pyproject.toml` ACROSS, so this names the copy
         # rather than adding a file: the fix is which path is passed, not what exists.
         proc = launch(
-            [str(grid.py), "-m", "pytest", "-x", "-q", "--no-header",
-             "-p", "no:cacheprovider", "-c", str(work / grid.config.name), "tests"],
-            work, env,
+            [
+                str(grid.py),
+                "-m",
+                "pytest",
+                "-x",
+                "-q",
+                "--no-header",
+                "-p",
+                "no:cacheprovider",
+                "-c",
+                str(work / grid.config.name),
+                "tests",
+            ],
+            work,
+            env,
         )
         if debug:
             _report_debug(proc)
         return verdict(proc.returncode, proc.stdout)
 
 
-def _plan(dist: pathlib.Path, modules: list[pathlib.Path]) -> tuple[
-    list[str], list[str], list[tuple[str, Mutant]],
+def _plan(
+    dist: pathlib.Path, modules: list[pathlib.Path]
+) -> tuple[
+    list[str],
+    list[str],
+    list[tuple[str, Mutant]],
 ]:
     """Enumerate every def-site, setting aside the ones this operator cannot reach.
 
@@ -451,8 +476,13 @@ def main(argv: list[str]) -> int:
     return _account(grid.dist.name, len(modules), attempted, unreachable, groups)
 
 
-def _account(name: str, module_count: int, attempted: list[str], unreachable: list[str],
-             groups: dict[str, list[str]]) -> int:
+def _account(
+    name: str,
+    module_count: int,
+    attempted: list[str],
+    unreachable: list[str],
+    groups: dict[str, list[str]],
+) -> int:
     """Check that every site landed in exactly one category, then report all four by name.
 
     Returns:
@@ -469,12 +499,15 @@ def _account(name: str, module_count: int, attempted: list[str], unreachable: li
     accounted = sorted(killed + survived + errored + unreachable)
     if accounted != sorted(attempted):
         missing = sorted(set(attempted) - set(accounted))
-        sys.stderr.write(f"mutate: {len(attempted)} attempted, {len(accounted)} accounted — "
-                         f"unclassified: {missing}\n")
+        sys.stderr.write(
+            f"mutate: {len(attempted)} attempted, {len(accounted)} accounted — "
+            f"unclassified: {missing}\n"
+        )
         return 1
 
     sys.stdout.write(
-        f"{name}: ATTEMPTED {len(attempted)} def-site(s) in {module_count} module(s)\n")
+        f"{name}: ATTEMPTED {len(attempted)} def-site(s) in {module_count} module(s)\n"
+    )
     # ⚑⚑⚑ EVERY CATEGORY PRINTS EVEN WHEN EMPTY, AND THAT IS NOT COSMETIC. The predecessor hid
     # ERRORED behind `if errored:`, so a reader saw no heading and could not tell *none occurred*
     # from *the set is never populated* — and the defect lived in exactly that gap for as long as
@@ -483,9 +516,14 @@ def _account(name: str, module_count: int, attempted: list[str], unreachable: li
         ("KILLED", killed, "the suite RAN and a test FAILED"),
         ("SURVIVED", survived, "the suite ran and noticed nothing"),
         ("ERRORED", errored, "the suite did NOT run, so it noticed nothing"),
-        ("UNREACHABLE", unreachable,
-         ("constructed at IMPORT time (an Enum member); this OPERATOR cannot reach them, "
-          "which is a fact about `body -> raise` and not about the suite")),
+        (
+            "UNREACHABLE",
+            unreachable,
+            (
+                "constructed at IMPORT time (an Enum member); this OPERATOR cannot reach them, "
+                "which is a fact about `body -> raise` and not about the suite"
+            ),
+        ),
     ):
         sys.stdout.write(f"\n{label} ({len(group)}) — {gloss}:\n")
         for site in sorted(group):
@@ -494,12 +532,14 @@ def _account(name: str, module_count: int, attempted: list[str], unreachable: li
     if errored:
         sys.stderr.write(
             f"\nmutate: {len(errored)} mutant(s) could not be RUN — the grid is incomplete and "
-            f"a clean SURVIVED list would be a claim over a population that was never measured\n")
+            f"a clean SURVIVED list would be a claim over a population that was never measured\n"
+        )
         return 1
     if survived:
         sys.stderr.write(
             f"\nmutate: {len(survived)} def-site(s) SURVIVED — mutating them changed no verdict, "
-            f"so nothing in this distribution's suite exercises them\n")
+            f"so nothing in this distribution's suite exercises them\n"
+        )
         return 1
     return 0
 

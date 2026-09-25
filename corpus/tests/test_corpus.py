@@ -21,8 +21,15 @@ if TYPE_CHECKING:
 _KEEP = ("rebuild", "buildtools", "prebuild/inner")
 
 # Paths that are genuinely generated output or vendored code.
-_DROP = ("build", "dist/wheel", "a/__pycache__/b", "bazel-bin", "bazel-substrate",
-         ".venv/lib", "x/site-packages/y")
+_DROP = (
+    "build",
+    "dist/wheel",
+    "a/__pycache__/b",
+    "bazel-bin",
+    "bazel-substrate",
+    ".venv/lib",
+    "x/site-packages/y",
+)
 
 
 def _tree(root: Path) -> Path:
@@ -32,8 +39,15 @@ def _tree(root: Path) -> Path:
         the tree's root.
 
     """
-    for rel in ("src/pkg/mod.py", "src/pkg/other.py", "tests/test_x.py",
-                "build/lib/copy.py", "bazel-bin/gen.py", "agda/tool.py", ".hidden/h.py"):
+    for rel in (
+        "src/pkg/mod.py",
+        "src/pkg/other.py",
+        "tests/test_x.py",
+        "build/lib/copy.py",
+        "bazel-bin/gen.py",
+        "agda/tool.py",
+        ".hidden/h.py",
+    ):
         path = root / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("", encoding="utf-8")
@@ -97,9 +111,7 @@ def test_the_walk_of_a_real_tree_is_not_empty(
     assert corpus.py_files(root=_tree(tmp_path), skip=("agda",))
 
 
-def test_the_population_is_returned_sorted(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_the_population_is_returned_sorted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """`py_files` hands its population back in sorted order, so a caller can cite it."""
     monkeypatch.chdir(tmp_path)
     got = corpus.py_files(root=_tree(tmp_path), skip=("agda",))
@@ -115,6 +127,8 @@ def test_the_walk_finds_real_sources_and_omits_generated_copies(
     something, membership says it returned the right something.
     """
     monkeypatch.chdir(tmp_path)
-    got = {Path(p).relative_to(tmp_path).as_posix() for p in
-           corpus.py_files(root=_tree(tmp_path), skip=("agda",))}
+    got = {
+        Path(p).relative_to(tmp_path).as_posix()
+        for p in corpus.py_files(root=_tree(tmp_path), skip=("agda",))
+    }
     assert got == {"src/pkg/mod.py", "src/pkg/other.py", "tests/test_x.py"}

@@ -143,8 +143,10 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
     # direction for a paydown-only ratchet — it never absolves real debt. But it makes the file
     # un-annotatable, and a baseline nobody may explain is one whose entries lose their reasons.
     keys = frozenset(
-        stripped for line in body.splitlines()
-        if (stripped := line.strip()) and not stripped.startswith("#"))
+        stripped
+        for line in body.splitlines()
+        if (stripped := line.strip()) and not stripped.startswith("#")
+    )
     return (BaselineState.EMPTY if not keys else BaselineState.OK), keys
 
 
@@ -198,7 +200,8 @@ def partition(current: Iterable[str], baseline: Iterable[str], *, schema: str = 
         for ident, added_keys in added_by_identity.items()
         if len(added_keys) == 1
         and len(paid_keys := paid_by_identity.get(ident, [])) == 1
-        and _plausible_move(parsed[paid_keys[0]].path, parsed[added_keys[0]].path))
+        and _plausible_move(parsed[paid_keys[0]].path, parsed[added_keys[0]].path)
+    )
     relocated_from = {src for src, _dst in moved}
     relocated_to = {dst for _src, dst in moved}
 
@@ -223,13 +226,18 @@ def partition(current: Iterable[str], baseline: Iterable[str], *, schema: str = 
         for ident, added_keys in added_by_identity.items()
         if len(added_keys) > 1
         for key in added_keys
-        if any(_plausible_move(parsed[old].path, parsed[key].path)
-               for old in paid_by_identity.get(ident, [])))
+        if any(
+            _plausible_move(parsed[old].path, parsed[key].path)
+            for old in paid_by_identity.get(ident, [])
+        )
+    )
 
-    return Diff(added=frozenset(added - relocated_to),
-                paid=frozenset(paid - relocated_from),
-                moved=moved,
-                suspect=suspect)
+    return Diff(
+        added=frozenset(added - relocated_to),
+        paid=frozenset(paid - relocated_from),
+        moved=moved,
+        suspect=suspect,
+    )
 
 
 def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
@@ -256,13 +264,16 @@ def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
     path.write_text("".join(f"{key}\n" for key in sorted(wanted)), encoding="utf-8")
     _state, landed = read_baseline(path)
     if landed != wanted:
-        msg = (f"baseline at {path} did not round-trip: "
-               f"{len(wanted)} keys written, {len(landed)} read back")
+        msg = (
+            f"baseline at {path} did not round-trip: "
+            f"{len(wanted)} keys written, {len(landed)} read back"
+        )
         raise OSError(msg)
 
 
-def ratchet(current: Iterable[str], path: Path, *, write: bool,
-            schema: str = RUFF) -> tuple[int, list[str]]:
+def ratchet(
+    current: Iterable[str], path: Path, *, write: bool, schema: str = RUFF
+) -> tuple[int, list[str]]:
     """Run the paydown-only ratchet. Return (exit code, report lines).
 
     0 = pass, 1 = the debt grew or the baseline cannot be trusted.
@@ -288,12 +299,16 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool,
     if state.is_defect:
         return 1, [
             f"baseline {state}: {path}",
-            ("  a gate with no baseline reports green over nothing — "
-             "run with --init-absent to record the zero-tolerance floor"),
+            (
+                "  a gate with no baseline reports green over nothing — "
+                "run with --init-absent to record the zero-tolerance floor"
+            ),
         ]
     if state is BaselineState.UNREAD:
-        return 1, [f"baseline {state}: {path} could not be read",
-                   "  this is a fact about the reader, not a verdict about the gate"]
+        return 1, [
+            f"baseline {state}: {path} could not be read",
+            "  this is a fact about the reader, not a verdict about the gate",
+        ]
     try:
         diff = partition(current, base, schema=schema)
     except (MalformedKeyError, UnknownSchemaError) as exc:
@@ -311,11 +326,12 @@ def ratchet(current: Iterable[str], path: Path, *, write: bool,
         # ⚑ THE MARK IS ON THE KEY, NOT IN A SEPARATE SECTION. A second list would let a reader
         # scan the refusals and never reach the ambiguity — the operator seeing "+ b.py:rule1"
         # needs to know AT THAT LINE that this one could not be told apart from a relocation.
-        lines.extend(f"  {'?' if key in diff.suspect else '+'} {key}"
-                     for key in sorted(diff.added))
+        lines.extend(f"  {'?' if key in diff.suspect else '+'} {key}" for key in sorted(diff.added))
     if diff.suspect:
-        lines.append(f"  ? = {len(diff.suspect)} of these is/are AMBIGUOUS: path-plausible "
-                     f"against a retired key, refused because a fan-out hides which")
+        lines.append(
+            f"  ? = {len(diff.suspect)} of these is/are AMBIGUOUS: path-plausible "
+            f"against a retired key, refused because a fan-out hides which"
+        )
     if diff.paid:
         verb = "LOWERED" if write and not diff.added else "would lower"
         lines.append(f"{len(diff.paid)} key(s) paid down — baseline {verb}:")

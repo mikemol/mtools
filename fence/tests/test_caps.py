@@ -70,12 +70,15 @@ class TestObserveOnly:
         """An empty `Caps` imposes nothing."""
         assert Caps().observe_only
 
-    @pytest.mark.parametrize("caps", [
-        Caps(mem="1G"),
-        Caps(swap="0"),
-        Caps(pids=64),
-        Caps(io="259:0 wbps=1048576"),
-    ])
+    @pytest.mark.parametrize(
+        "caps",
+        [
+            Caps(mem="1G"),
+            Caps(swap="0"),
+            Caps(pids=64),
+            Caps(io="259:0 wbps=1048576"),
+        ],
+    )
     def test_any_cap_is_not_observe_only(self, caps: Caps) -> None:
         """Any single cap set takes the run out of observe-only."""
         assert not caps.observe_only
@@ -105,14 +108,17 @@ class TestObserveOnly:
 class TestHumanToBytes:
     """The kernel's own spellings, including the one that is not a number."""
 
-    @pytest.mark.parametrize(("given", "want"), [
-        ("512", "512"),
-        ("1K", "1024"),
-        ("2M", "2097152"),
-        ("1G", "1073741824"),
-        ("1T", "1099511627776"),
-        ("1g", "1073741824"),
-    ])
+    @pytest.mark.parametrize(
+        ("given", "want"),
+        [
+            ("512", "512"),
+            ("1K", "1024"),
+            ("2M", "2097152"),
+            ("1G", "1073741824"),
+            ("1T", "1099511627776"),
+            ("1g", "1073741824"),
+        ],
+    )
     def test_sizes(self, given: str, want: str) -> None:
         """Each suffix multiplies, and a bare integer passes through."""
         assert human_to_bytes(given) == want

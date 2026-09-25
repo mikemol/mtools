@@ -59,8 +59,13 @@ _LOW_DEFAULT_S = 60
 _OVER_LOW = 1000.0
 
 
-def _row(label: str, *, wall: float = _WALL, peak: float | None = None,
-         cpu: tuple[float | None, float | None] = (None, None)) -> ledger.Row:
+def _row(
+    label: str,
+    *,
+    wall: float = _WALL,
+    peak: float | None = None,
+    cpu: tuple[float | None, float | None] = (None, None),
+) -> ledger.Row:
     """Return one ledger row for `label`.
 
     Returns:
@@ -104,6 +109,7 @@ def _write(tmp_path: Path, lines: list[str]) -> Path:
 
 # --- memory ---
 
+
 def test_the_largest_peak_drives_the_lease() -> None:
     """(40, 188, 90) leases 256, and the reported peak is 188."""
     rows = _peaked(_LABEL, _PEAKS)
@@ -114,8 +120,9 @@ def test_the_largest_peak_drives_the_lease() -> None:
 def test_rounding_goes_up_to_a_power_of_two_never_below_the_peak() -> None:
     """Each of 65, 128, 129, 200, 257 leases a power of two at least the peak; 128 is exact."""
     for peak in _UNROUNDED:
-        got = label_lease.lease(_peaked(_LABEL, (peak,)), _LABEL, default_mb=_DEFAULT_MB,
-                                ceiling_mb=_RAISED_DEFAULT_MB).mb
+        got = label_lease.lease(
+            _peaked(_LABEL, (peak,)), _LABEL, default_mb=_DEFAULT_MB, ceiling_mb=_RAISED_DEFAULT_MB
+        ).mb
         assert got >= peak
         assert got & (got - 1) == 0
     assert _lease(_peaked(_LABEL, (float(_EXACT),))).mb == _EXACT
@@ -193,8 +200,10 @@ def test_a_fence_written_fractional_peak_is_read(tmp_path: Path) -> None:
 
 # --- time ---
 
-def _deadline(rows: list[ledger.Row], guard: label_lease.Guard | None = None
-              ) -> label_lease.Deadline:
+
+def _deadline(
+    rows: list[ledger.Row], guard: label_lease.Guard | None = None
+) -> label_lease.Deadline:
     """Return `_LABEL`'s deadline over `rows`, under the fixture default when no guard is given.
 
     Returns:
@@ -278,18 +287,19 @@ def test_one_half_of_cpu_is_no_cpu() -> None:
 
 # --- the CLI ---
 
+
 def test_the_cli_prints_the_number_and_warns_only_when_clamped(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """`lease` prints the MB on stdout; stderr is empty unclamped, and warns when clamped."""
-    path = _write(tmp_path, [_row(_LABEL, peak=_TOP_PEAK).line(),
-                             _row(_SIBLING, peak=_HUGE).line()])
+    path = _write(
+        tmp_path, [_row(_LABEL, peak=_TOP_PEAK).line(), _row(_SIBLING, peak=_HUGE).line()]
+    )
     assert label_lease.main(["lease", str(path), _LABEL, str(_DEFAULT_MB), str(_CEILING_MB)]) == 0
     calm = capsys.readouterr()
     assert calm.out == f"{_WANT}\n"
     assert not calm.err
-    assert label_lease.main(["lease", str(path), _SIBLING, str(_DEFAULT_MB),
-                             str(_CEILING_MB)]) == 0
+    assert label_lease.main(["lease", str(path), _SIBLING, str(_DEFAULT_MB), str(_CEILING_MB)]) == 0
     loud = capsys.readouterr()
     assert loud.out == f"{_CEILING_MB}\n"
     assert _SIBLING in loud.err
@@ -300,8 +310,7 @@ def test_the_cli_deadline_mode_prints_seconds(
 ) -> None:
     """`deadline` prints the guard in seconds on stdout, with nothing on stderr."""
     path = _write(tmp_path, [row.line() for row in _walled(_WALLS)])
-    assert label_lease.main(["deadline", str(path), _LABEL, str(_DEFAULT_S),
-                             str(_CEILING_S)]) == 0
+    assert label_lease.main(["deadline", str(path), _LABEL, str(_DEFAULT_S), str(_CEILING_S)]) == 0
     got = capsys.readouterr()
     assert got.out == f"{_WALL_GUARD}\n"
     assert not got.err

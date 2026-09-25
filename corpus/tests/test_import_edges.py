@@ -48,8 +48,17 @@ from . import relative
 """
 
 # Names that execute when the module is imported.
-_EAGER = {"plain", "pkg", "dotted", "in_if", "in_try", "in_handler", "in_finally",
-          "in_for", "in_with"}
+_EAGER = {
+    "plain",
+    "pkg",
+    "dotted",
+    "in_if",
+    "in_try",
+    "in_handler",
+    "in_finally",
+    "in_for",
+    "in_with",
+}
 
 # Names that fire only when something is called.
 _LAZY = {"in_function", "deferred", "in_class"}

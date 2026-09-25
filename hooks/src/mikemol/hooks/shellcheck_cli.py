@@ -124,8 +124,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="mikemol-shellcheck", description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check-file", metavar="PATH", help="lint one file on disk")
-    mode.add_argument("--check-tree", metavar="ROOT", nargs="?", const=".",
-                      help="lint every shell file under ROOT (default: here)")
+    mode.add_argument(
+        "--check-tree",
+        metavar="ROOT",
+        nargs="?",
+        const=".",
+        help="lint every shell file under ROOT (default: here)",
+    )
     mode.add_argument("--explain", metavar="CMD", help="lint one Bash-tool command string")
     # ⚑ argparse's `Namespace` is untyped; `vars()` is the boundary, and each value is narrowed
     # once — the shape `mikemol.ratchet.cli` uses, for the reason it records.

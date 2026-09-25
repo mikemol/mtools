@@ -45,8 +45,7 @@ def test_an_unlocked_state_is_acquired() -> None:
     """An unlocked state is acquired and the field names the holder."""
     state = _state()
     result = lock.acquire(state, "A", _NOW)
-    assert (result.outcome, lock.current(state)) == (
-        lock.Outcome.ACQUIRED, ("A", lock.stamp(_NOW)))
+    assert (result.outcome, lock.current(state)) == (lock.Outcome.ACQUIRED, ("A", lock.stamp(_NOW)))
 
 
 def test_a_fresh_lock_is_held() -> None:
@@ -54,7 +53,10 @@ def test_a_fresh_lock_is_held() -> None:
     state = _state("A", lock.stamp(_NOW - _FRESH))
     result = lock.acquire(state, "B", _NOW)
     assert (result.outcome, result.previous, lock.current(state)) == (
-        lock.Outcome.HELD, "A", ("A", lock.stamp(_NOW - _FRESH)))
+        lock.Outcome.HELD,
+        "A",
+        ("A", lock.stamp(_NOW - _FRESH)),
+    )
 
 
 def test_a_stale_lock_is_taken_over() -> None:
@@ -62,7 +64,10 @@ def test_a_stale_lock_is_taken_over() -> None:
     state = _state("A", lock.stamp(_NOW - _STALE))
     result = lock.acquire(state, "B", _NOW)
     assert (result.outcome, result.previous, result.age_s) == (
-        lock.Outcome.TAKEOVER, "A", _STALE.total_seconds())
+        lock.Outcome.TAKEOVER,
+        "A",
+        _STALE.total_seconds(),
+    )
 
 
 def test_an_unparseable_stamp_is_stale() -> None:
@@ -74,14 +79,15 @@ def test_the_same_holder_refreshes() -> None:
     """The holder re-acquiring its own lock refreshes it."""
     state = _state("A", lock.stamp(_NOW - _FRESH))
     assert (lock.acquire(state, "A", _NOW).outcome, lock.current(state)) == (
-        lock.Outcome.ACQUIRED, ("A", lock.stamp(_NOW)))
+        lock.Outcome.ACQUIRED,
+        ("A", lock.stamp(_NOW)),
+    )
 
 
 def test_the_holder_releases() -> None:
     """The holder releases, and the field is cleared."""
     state = _state("A", lock.stamp(_NOW))
-    assert (lock.release(state, "A").outcome, lock.current(state)) == (
-        lock.Outcome.RELEASED, None)
+    assert (lock.release(state, "A").outcome, lock.current(state)) == (lock.Outcome.RELEASED, None)
 
 
 def test_another_cannot_release() -> None:
@@ -89,7 +95,10 @@ def test_another_cannot_release() -> None:
     state = _state("A", lock.stamp(_NOW))
     result = lock.release(state, "B")
     assert (result.outcome, result.previous, lock.current(state)) == (
-        lock.Outcome.NOT_HOLDER, "A", ("A", lock.stamp(_NOW)))
+        lock.Outcome.NOT_HOLDER,
+        "A",
+        ("A", lock.stamp(_NOW)),
+    )
 
 
 def test_releasing_an_unlocked_state_is_released() -> None:
@@ -101,7 +110,9 @@ def test_a_stamp_round_trips() -> None:
     """A stamp parses back to the time it formatted, with `Z` and with `+00:00`."""
     stamped = lock.stamp(_NOW)
     assert (lock.parse_time(stamped), lock.parse_time(stamped.replace("Z", "+00:00"))) == (
-        _NOW, _NOW)
+        _NOW,
+        _NOW,
+    )
 
 
 def test_a_naive_or_garbage_stamp_is_unparseable() -> None:
@@ -131,9 +142,19 @@ def _race(path: Path) -> list[int]:
     """
     procs = [
         subprocess.Popen(
-            [sys.executable, "-m", "mikemol.pathsforward", "--state", str(path),
-             "--lock", f"holder-{i}"],
-            env=_env(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            [
+                sys.executable,
+                "-m",
+                "mikemol.pathsforward",
+                "--state",
+                str(path),
+                "--lock",
+                f"holder-{i}",
+            ],
+            env=_env(),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         for i in range(_LOCKERS)
     ]
     return [p.wait(timeout=_WAIT_S) for p in procs]

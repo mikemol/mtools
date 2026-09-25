@@ -57,21 +57,68 @@ from mikemol.hooks import payload as _payload
 # whose omissions are silent permissions — the same shape as the four enumerated populations this
 # repository repaired, except this one cannot be enumerated: there is no filesystem or config to
 # derive tool names from, so it grows by measurement rather than by query.
-TEXTUAL = frozenset((
-    "grep", "rg", "egrep", "fgrep", "sed", "awk",
-    "head", "tail", "cut", "sort", "uniq", "wc", "tr", "nl", "rev",
-    "strings", "cat", "tac", "od", "xxd", "diff", "comm", "join", "paste",
-    # ⚑ Added after measuring that each passed a textual read of a claimed artifact.
-    "perl", "less", "more", "jq", "column", "fold", "expand", "unexpand",
-    # ⚑⚑ A SECOND PASS, MEASURED AGAINST TOOLS ACTUALLY PRESENT ON THE HOST rather than against
-    # imagination: 26 more were installed and absent from this roster. They are not all alike, and
-    # the classification is why only some are here.
-    #   READERS — open a named file and emit its bytes as text:
-    "hexdump", "hd", "cmp", "sdiff", "col", "colrm", "pr", "look", "ptx", "base64", "iconv",
-    "split", "csplit",
-    #   EDITORS — interactive, but they read the file to display it, and a pager already is here:
-    "vim", "vimdiff", "nano", "ed", "ex", "view",
-))
+TEXTUAL = frozenset(
+    (
+        "grep",
+        "rg",
+        "egrep",
+        "fgrep",
+        "sed",
+        "awk",
+        "head",
+        "tail",
+        "cut",
+        "sort",
+        "uniq",
+        "wc",
+        "tr",
+        "nl",
+        "rev",
+        "strings",
+        "cat",
+        "tac",
+        "od",
+        "xxd",
+        "diff",
+        "comm",
+        "join",
+        "paste",
+        # ⚑ Added after measuring that each passed a textual read of a claimed artifact.
+        "perl",
+        "less",
+        "more",
+        "jq",
+        "column",
+        "fold",
+        "expand",
+        "unexpand",
+        # ⚑⚑ A SECOND PASS, MEASURED AGAINST TOOLS ACTUALLY PRESENT ON THE HOST rather than
+        # against imagination: 26 more were installed and absent from this roster. They are not
+        # all alike, and the classification is why only some are here.
+        #   READERS — open a named file and emit its bytes as text:
+        "hexdump",
+        "hd",
+        "cmp",
+        "sdiff",
+        "col",
+        "colrm",
+        "pr",
+        "look",
+        "ptx",
+        "base64",
+        "iconv",
+        "split",
+        "csplit",
+        #   EDITORS — interactive, but they read the file to display it, and a pager already
+        #   is here:
+        "vim",
+        "vimdiff",
+        "nano",
+        "ed",
+        "ex",
+        "view",
+    )
+)
 
 # ⚑⚑⚑ THREE THINGS FOUND ON THE HOST ARE DELIBERATELY ABSENT, AND EACH FOR A DIFFERENT REASON.
 #
@@ -160,8 +207,24 @@ _PATTERN_FLAGS = frozenset(("-e", "--regexp", "-f", "--file", "--expression"))
 # false FIRE the caller answers with `--`; a wrong entry gives a false PASS the caller never sees.
 # So an entry must be a flag that takes a detached operand in EVERY program of `_PATTERN_FIRST`
 # that accepts it, or it is left out.
-_VALUE_FLAGS = frozenset(("-A", "-B", "-C", "-m", "--max-count", "-d", "-D", "-t", "--type",
-                          "-g", "--glob", "--include", "--exclude", "--exclude-dir"))
+_VALUE_FLAGS = frozenset(
+    (
+        "-A",
+        "-B",
+        "-C",
+        "-m",
+        "--max-count",
+        "-d",
+        "-D",
+        "-t",
+        "--type",
+        "-g",
+        "--glob",
+        "--include",
+        "--exclude",
+        "--exclude-dir",
+    )
+)
 
 # ⚑ THE HEREDOC OPERATORS, AND ONLY THOSE. `>` and `>>` name a DESTINATION that stays in scope —
 # see `_scannable` for the operator ruling that makes a redirected write a refusal.
@@ -232,7 +295,7 @@ def _split_at_terminator(args: list[str]) -> tuple[list[str], list[str]]:
     if "--" not in args:
         return args, []
     cut = args.index("--")
-    return args[:cut], args[cut + 1:]
+    return args[:cut], args[cut + 1 :]
 
 
 def _without_heredoc_bodies(args: list[str]) -> list[str]:
@@ -411,10 +474,12 @@ def refusal(reasons: list[Reason], cmd: str = "") -> str:
     lines = ["structural-query: this asks about a STRUCTURED artifact textually."]
     for prog, hits in reasons:
         for arg, suf, (artifact, tool) in hits:
-            lines.extend((
-                f"  `{prog}` over {arg}  ({suf} → {artifact})",
-                f"      the tool that owns it:  {tool}",
-            ))
+            lines.extend(
+                (
+                    f"  `{prog}` over {arg}  ({suf} → {artifact})",
+                    f"      the tool that owns it:  {tool}",
+                )
+            )
     # ⚑ THE SECOND LINE EXISTS BECAUSE THE MESSAGE ASSUMED THE NAMED TOOL IS RUNNABLE, AND IN A
     # BORROWING REPO IT IS NOT. This tooling is adopted by other checkouts, where the owning tool
     # may be absent or its dependencies unmet — so the refusal named the one route the reader could
@@ -425,18 +490,25 @@ def refusal(reasons: list[Reason], cmd: str = "") -> str:
     # ⚑⚑ THE EXPLANATION SITS ABOVE BOTH RATHER THAN BETWEEN THEM, which is what lets these be one
     # `extend`. It previously separated two `append` calls, and a comment standing between two
     # halves of one emission reads as if it governs only the half beneath it.
-    lines.extend((
-        # ⚑ EACH ELEMENT PARENTHESISED, because inside a collection literal an implicit
-        # concatenation and a forgotten comma are the SAME BYTES — two elements silently becoming
-        # one, which is exactly this emission's failure mode. The parentheses say which was meant.
-        ("  ⚑ if no mode answers your question, that is WORK (add the mode), not grounds\n"
-         "     for a textual fallback — the toolkit expands; the rule has no exceptions."),
-        ("  ⚑ if that tool is unavailable here (a borrowing checkout, an unmet\n"
-         "     dependency), use the harness `Read` tool on the file — NOT a textual\n"
-         "     fallback. Read is not a shell command, which is why it does not come\n"
-         "     to mind inside a shell-shaped question; it is the honest whole-file\n"
-         "     read the refused command was approximating."),
-    ))
+    lines.extend(
+        (
+            # ⚑ EACH ELEMENT PARENTHESISED, because inside a collection literal an implicit
+            # concatenation and a forgotten comma are the SAME BYTES — two elements silently
+            # becoming one, which is exactly this emission's failure mode. The parentheses say
+            # which was meant.
+            (
+                "  ⚑ if no mode answers your question, that is WORK (add the mode), not grounds\n"
+                "     for a textual fallback — the toolkit expands; the rule has no exceptions."
+            ),
+            (
+                "  ⚑ if that tool is unavailable here (a borrowing checkout, an unmet\n"
+                "     dependency), use the harness `Read` tool on the file — NOT a textual\n"
+                "     fallback. Read is not a shell command, which is why it does not come\n"
+                "     to mind inside a shell-shaped question; it is the honest whole-file\n"
+                "     read the refused command was approximating."
+            ),
+        )
+    )
     # ⚑⚑⚑ A BLOCKED *WRITER* WAS TOLD TO USE `Read`, WHICH IS USELESS ADVICE FOR AN APPEND — and
     # that made a CORRECT refusal read as a bug. Reported by an adopting repo: `cat >> MEMORY.md`
     # denied as a "structural query", the message offering only reader routes. Their conclusion was
@@ -446,14 +518,16 @@ def refusal(reasons: list[Reason], cmd: str = "") -> str:
     # support editing"* / *"appendation causes files to grow out of control."*
     if any(op in cmd for op in _REDIRECTS):
         owner = ", ".join(sorted({t for _p, hs in reasons for _a, _s, (_k, t) in hs}))
-        lines.append("  ⚑ THIS LOOKS LIKE A WRITE, AND THE REFUSAL STILL STANDS.\n"
-                     f"     The owning tool is the route for WRITES TOO: {owner}.\n"
-                     "     A structural editor states WHAT changes, refuses a target that\n"
-                     "     moved, and cannot append past the shape; `>>` does none of\n"
-                     "     that. If the owning tool has no mode for this edit, THAT is\n"
-                     "     the work — a missing mode, not grounds for a shell append.\n"
-                     "     `Write`/`Edit` are the fallback when the tool is unavailable\n"
-                     "     here, the same way `Read` is on the query side.")
+        lines.append(
+            "  ⚑ THIS LOOKS LIKE A WRITE, AND THE REFUSAL STILL STANDS.\n"
+            f"     The owning tool is the route for WRITES TOO: {owner}.\n"
+            "     A structural editor states WHAT changes, refuses a target that\n"
+            "     moved, and cannot append past the shape; `>>` does none of\n"
+            "     that. If the owning tool has no mode for this edit, THAT is\n"
+            "     the work — a missing mode, not grounds for a shell append.\n"
+            "     `Write`/`Edit` are the fallback when the tool is unavailable\n"
+            "     here, the same way `Read` is on the query side."
+        )
     lines.append(f"  see {routing_table.SKILL_RELPATH}")
     return "\n".join(lines)
 
@@ -523,15 +597,20 @@ def retired_refusal(r: routing_table.Retirement, root: Path) -> str:
         the refusal text.
 
     """
-    return "\n".join((
-        f"{r.origin}: {r.flag} is RETIRED — it returned FALSE ZEROS.",
-        f"  why:      {r.why}",
-        f"  measured: {r.measured}",
-        f"  use:      python3 {r.successor} <operand>",
-        f"     from:  {root}   (the route is REPO-RELATIVE — from elsewhere, spell it absolute)",
-        "  ⚑ REFUSING rather than answering. A superseded reader that still RESPONDS is worse",
-        "     than a deleted one: it answers whoever reaches the old spelling first, wrongly.",
-    ))
+    return "\n".join(
+        (
+            f"{r.origin}: {r.flag} is RETIRED — it returned FALSE ZEROS.",
+            f"  why:      {r.why}",
+            f"  measured: {r.measured}",
+            f"  use:      python3 {r.successor} <operand>",
+            (
+                f"     from:  {root}   (the route is REPO-RELATIVE — "
+                "from elsewhere, spell it absolute)"
+            ),
+            "  ⚑ REFUSING rather than answering. A superseded reader that still RESPONDS is worse",
+            "     than a deleted one: it answers whoever reaches the old spelling first, wrongly.",
+        )
+    )
 
 
 def retired_verdict(
@@ -605,7 +684,7 @@ def main() -> int:
     try:
         parsed: object = json.load(sys.stdin)
     except (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError):
-        return 0                      # never break the session on a parse failure
+        return 0  # never break the session on a parse failure
     cmd = command_of(parsed)
     if not cmd:
         return 0

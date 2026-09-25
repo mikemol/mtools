@@ -106,20 +106,24 @@ _BASH_DIR = Path.home() / "github" / "substrate" / "scripts"
 _BASH_FILES = ("membudget", "membudget-ledger")
 
 # A child that reports its parent lease id, and whether that lease is in the ledger it runs under.
-_PROBE = ("import os, pathlib, sys\n"
-          "lid = os.environ['MEMBUDGET_PARENT']\n"
-          "text = pathlib.Path(os.environ['MEMBUDGET_FILE']).read_text()\n"
-          "pathlib.Path(sys.argv[1]).write_text(lid + ' ' + str(f'LEASE {lid} ' in text))\n"
-          "sys.exit(int(sys.argv[2]))\n")
+_PROBE = (
+    "import os, pathlib, sys\n"
+    "lid = os.environ['MEMBUDGET_PARENT']\n"
+    "text = pathlib.Path(os.environ['MEMBUDGET_FILE']).read_text()\n"
+    "pathlib.Path(sys.argv[1]).write_text(lid + ' ' + str(f'LEASE {lid} ' in text))\n"
+    "sys.exit(int(sys.argv[2]))\n"
+)
 
 # A child that reports the MB of the lease it runs under, as the shared ledger records it.
-_LEASE_PROBE = ("import os, pathlib, sys\n"
-                "lid = os.environ['MEMBUDGET_PARENT']\n"
-                "text = pathlib.Path(os.environ['MEMBUDGET_FILE']).read_text()\n"
-                "for line in text.splitlines():\n"
-                "    f = line.split()\n"
-                "    if f[:2] == ['LEASE', lid]:\n"
-                "        pathlib.Path(sys.argv[1]).write_text(f[2])\n")
+_LEASE_PROBE = (
+    "import os, pathlib, sys\n"
+    "lid = os.environ['MEMBUDGET_PARENT']\n"
+    "text = pathlib.Path(os.environ['MEMBUDGET_FILE']).read_text()\n"
+    "for line in text.splitlines():\n"
+    "    f = line.split()\n"
+    "    if f[:2] == ['LEASE', lid]:\n"
+    "        pathlib.Path(sys.argv[1]).write_text(f[2])\n"
+)
 
 
 def _quiet() -> tuple[float, float, float]:
@@ -159,8 +163,7 @@ def _host(*, busy: bool = False) -> admit.Host:
         the host.
 
     """
-    return admit.Host(loadavg=_busy if busy else _quiet, nproc=_NPROC,
-                      default_total=_default_total)
+    return admit.Host(loadavg=_busy if busy else _quiet, nproc=_NPROC, default_total=_default_total)
 
 
 def _env(ledger: Path, **extra: str) -> dict[str, str]:
@@ -170,8 +173,12 @@ def _env(ledger: Path, **extra: str) -> dict[str, str]:
         the environment.
 
     """
-    return {"MEMBUDGET_FILE": str(ledger), "HOME": str(ledger.parent),
-            "PATH": os.environ.get("PATH", ""), **extra}
+    return {
+        "MEMBUDGET_FILE": str(ledger),
+        "HOME": str(ledger.parent),
+        "PATH": os.environ.get("PATH", ""),
+        **extra,
+    }
 
 
 def _ctx(ledger: Path, *, busy: bool = False, **extra: str) -> membudget_cli.Context:
@@ -220,8 +227,9 @@ def _ids(ledger: Path) -> tuple[int | None, list[str]]:
     return snap.total_mb, [lease.lease_id for lease in snap.leases]
 
 
-def _unfenced(cmd: Sequence[str], caps: core.Caps | None = None,
-              env: Mapping[str, str] | None = None) -> core.Result:
+def _unfenced(
+    cmd: Sequence[str], caps: core.Caps | None = None, env: Mapping[str, str] | None = None
+) -> core.Result:
     """Run `cmd` in `env` with NO fence — `core.run_once`'s shape, for the admission arms.
 
     Returns:
@@ -235,8 +243,13 @@ def _unfenced(cmd: Sequence[str], caps: core.Caps | None = None,
     else:
         code = os.waitstatus_to_exitcode(os.waitpid(pid, 0)[1])
         code = _SIGNAL_BASE - code if code < 0 else code
-    return core.Result(cmd=tuple(cmd), caps=caps or core.Caps(), duration_s=0.0,
-                       exit_code=code, memory_peak_bytes=None)
+    return core.Result(
+        cmd=tuple(cmd),
+        caps=caps or core.Caps(),
+        duration_s=0.0,
+        exit_code=code,
+        memory_peak_bytes=None,
+    )
 
 
 @pytest.fixture()
@@ -269,6 +282,7 @@ def fenced_ledger(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 # --- the pure half ---
 
+
 def test_run_args_parse_size_label_and_command() -> None:
     """`run 300 job -- a b` reads 300, `job` and the command `a b`."""
     call = membudget_cli.RunArgs.parse(["300", "job", "--", "a", "b"])
@@ -283,9 +297,13 @@ def test_run_label_is_optional() -> None:
 
 def test_env_maps_onto_waiting_and_the_lock() -> None:
     """NOBLOCK, TIMEOUT, MAXLOAD and LOCK_TIMEOUT land in Waiting and Store; unset is admit's."""
-    env = {"MEMBUDGET_NOBLOCK": "1", "MEMBUDGET_TIMEOUT": _TIMEOUT_S,
-           "MEMBUDGET_MAXLOAD": _MAXLOAD, "MEMBUDGET_LOCK_TIMEOUT": _LOCK_BOUND_S,
-           "MEMBUDGET_FILE": "/x"}
+    env = {
+        "MEMBUDGET_NOBLOCK": "1",
+        "MEMBUDGET_TIMEOUT": _TIMEOUT_S,
+        "MEMBUDGET_MAXLOAD": _MAXLOAD,
+        "MEMBUDGET_LOCK_TIMEOUT": _LOCK_BOUND_S,
+        "MEMBUDGET_FILE": "/x",
+    }
     wait = membudget_cli.waiting_of(env)
     assert wait.noblock
     assert wait.timeout_s is not None
@@ -297,16 +315,24 @@ def test_env_maps_onto_waiting_and_the_lock() -> None:
 
 def test_status_renders_as_bash_does() -> None:
     """Totals then one line per lease, top or under its parent; free counts top-level only."""
-    snap = admit.Ledger(_TOTAL, (admit.Lease("a", _HELD, "1:2", 0, "-", "job"),
-                                 admit.Lease("b", _FITS, "1:2", 0, "a", "kid")), 1)
+    snap = admit.Ledger(
+        _TOTAL,
+        (
+            admit.Lease("a", _HELD, "1:2", 0, "-", "job"),
+            admit.Lease("b", _FITS, "1:2", 0, "a", "kid"),
+        ),
+        1,
+    )
     assert membudget_cli.render_status(snap) == (
         f"membudget: TOTAL={_TOTAL}MB top-level-leased={_HELD}MB "
         f"global-free={_TOTAL - _HELD}MB\n"
         f"  [a] {_HELD}MB pid=1:2 (top) job\n"
-        f"  [b] {_FITS}MB pid=1:2 (under a) kid\n")
+        f"  [b] {_FITS}MB pid=1:2 (under a) kid\n"
+    )
 
 
 # --- usage ---
+
 
 def test_an_unknown_verb_exits_2(ledger: Path) -> None:
     """An unknown verb and no verb exit 2; the control, `status`, exits 0."""
@@ -315,10 +341,19 @@ def test_an_unknown_verb_exits_2(ledger: Path) -> None:
     assert _cli(["status"], _ctx(ledger)) == _EXIT_OK
 
 
-@pytest.mark.parametrize("argv", [["run", "300", "true"], ["run", "300", "--"],
-                                  ["run", "lots", "--", "true"], ["run", "300", "a b", "--", "x"],
-                                  ["init", "0"], ["init", "--reset"], ["init", "1", "2"],
-                                  ["status", "x"]])
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["run", "300", "true"],
+        ["run", "300", "--"],
+        ["run", "lots", "--", "true"],
+        ["run", "300", "a b", "--", "x"],
+        ["init", "0"],
+        ["init", "--reset"],
+        ["init", "1", "2"],
+        ["status", "x"],
+    ],
+)
 def test_a_malformed_invocation_exits_2(ledger: Path, argv: list[str]) -> None:
     """No `--`, no command, a bad MB, a spaced label, or wrong operands exit 2 and write nothing."""
     assert _cli(argv, _ctx(ledger)) == _EXIT_USAGE
@@ -334,6 +369,7 @@ def test_a_bad_env_number_exits_2(ledger: Path) -> None:
 
 
 # --- init ---
+
 
 def test_init_creates_the_total(ledger: Path) -> None:
     """`init 1000` on no file writes TOTAL_MB 1000."""
@@ -384,10 +420,14 @@ def test_reset_refuses_two_totals(ledger: Path) -> None:
 
 # --- status ---
 
+
 def test_status_reaps_a_dead_lease(ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
     """A dead owner's lease is dropped; the control, a live owner's, is listed."""
-    _write(ledger, f"TOTAL_MB {_TOTAL}\nLEASE dead {_HELD} {_DEAD_OWNER} 0 - gone\n"
-                   f"LEASE live {_FITS} {_me()} 0 - here\n")
+    _write(
+        ledger,
+        f"TOTAL_MB {_TOTAL}\nLEASE dead {_HELD} {_DEAD_OWNER} 0 - gone\n"
+        f"LEASE live {_FITS} {_me()} 0 - here\n",
+    )
     assert _cli(["status"], _ctx(ledger)) == _EXIT_OK
     out = capsys.readouterr().out
     assert "[live]" in out
@@ -396,11 +436,21 @@ def test_status_reaps_a_dead_lease(ledger: Path, capsys: pytest.CaptureFixture[s
 
 # --- run ---
 
+
 def test_run_holds_its_lease_while_the_command_runs(ledger: Path, tmp_path: Path) -> None:
     """The child sees MEMBUDGET_PARENT naming a lease in the ledger; its code is returned."""
     seen = tmp_path / "seen"
-    argv = ["run", str(_TINY), "job", "--", sys.executable, "-c", _PROBE, str(seen),
-            str(_CHILD_CODE)]
+    argv = [
+        "run",
+        str(_TINY),
+        "job",
+        "--",
+        sys.executable,
+        "-c",
+        _PROBE,
+        str(seen),
+        str(_CHILD_CODE),
+    ]
     assert _cli(argv, _ctx(ledger)) == _CHILD_CODE
     lease_id, present = seen.read_text(encoding="utf-8").split(" ")
     assert lease_id
@@ -474,6 +524,7 @@ def test_a_held_lock_exits_1(ledger: Path) -> None:
 
 # --- run caps its command at its lease (R1) ---
 
+
 def _unfenceable() -> str:
     """Return why this host cannot fence, or the empty string when it can — as test_fence does.
 
@@ -504,7 +555,8 @@ def _hog(mb: int) -> list[str]:
 
 @needs_cgroup
 def test_run_kills_a_payload_over_its_lease(
-        fenced_ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    fenced_ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A 256MB payload under a 64MB lease is killed by the cap: 137, and stderr says so."""
     argv = ["run", str(_CAP_MB), "hog", "--", *_hog(_HOG_OVER_MB)]
     assert _cli(argv, _ctx(fenced_ledger)) == _SIGKILLED
@@ -514,16 +566,17 @@ def test_run_kills_a_payload_over_its_lease(
 
 @needs_cgroup
 def test_run_under_its_lease_completes(
-        fenced_ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    fenced_ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """The positive control: a 16MB payload under a 256MB lease completes with 0, unkilled."""
     argv = ["run", str(_ROOM_MB), "fits", "--", *_hog(_HOG_UNDER_MB)]
     assert _cli(argv, _ctx(fenced_ledger)) == _EXIT_OK
     assert "OOM-killed" not in capsys.readouterr().err
 
 
-def test_run_without_a_fence_refuses_3(
-        ledger: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_run_without_a_fence_refuses_3(ledger: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """With no cgroup `run` exits 3, never starts the command, and releases its lease."""
+
     def unavailable(*_args: object) -> core.Result:
         raise FenceUnavailableError(_WHY or "no delegated cgroup")
 
@@ -536,12 +589,14 @@ def test_run_without_a_fence_refuses_3(
 
 
 def test_the_cap_is_the_lease_with_swap_forbidden(
-        ledger: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    ledger: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """`run 64` fences at memory 64M and swap 0 — `autosize.rung_caps`, restated nowhere."""
     seen: list[core.Caps] = []
 
-    def recording(cmd: Sequence[str], caps: core.Caps | None = None,
-                  env: Mapping[str, str] | None = None) -> core.Result:
+    def recording(
+        cmd: Sequence[str], caps: core.Caps | None = None, env: Mapping[str, str] | None = None
+    ) -> core.Result:
         seen.append(caps or core.Caps())
         return _unfenced(cmd, caps, env)
 
@@ -551,6 +606,7 @@ def test_the_cap_is_the_lease_with_swap_forbidden(
 
 
 # --- the run ledger, and `auto` sized from it (R2) ---
+
 
 def _runs(ledger: Path) -> Path:
     """Return the run ledger bash would use beside `ledger`.
@@ -598,7 +654,8 @@ def test_auto_with_no_history_takes_the_default(ledger: Path) -> None:
 
 
 def test_auto_passes_the_ceiling_and_it_clamps(
-        ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A 600MB peak leases 384 under AGDA_MB_MAX=384 and warns; under 2048 it leases 1024."""
     _seed(ledger, "heavy", _BIG_PEAK)
     clamped = _leased(ledger, "heavy", AGDA_MB_MAX=str(_CEILING_MB))
@@ -628,18 +685,23 @@ def test_a_clean_run_is_recorded_and_a_failed_one_is_not(ledger: Path) -> None:
 def test_the_run_ledger_honours_its_path_and_opt_out(ledger: Path, tmp_path: Path) -> None:
     """MEMBUDGET_LABEL_LEDGER moves the ledger; MEMBUDGET_NOLABELLEDGER=1 writes none at all."""
     moved = tmp_path / "elsewhere.tsv"
-    assert _cli(["run", "1", "a", "--", "true"],
-                _ctx(ledger, MEMBUDGET_LABEL_LEDGER=str(moved))) == _EXIT_OK
+    assert (
+        _cli(["run", "1", "a", "--", "true"], _ctx(ledger, MEMBUDGET_LABEL_LEDGER=str(moved)))
+        == _EXIT_OK
+    )
     assert [row.label for row in run_ledger.parse(moved.read_text(encoding="utf-8"))] == ["a"]
-    assert _cli(["run", "1", "b", "--", "true"],
-                _ctx(ledger, MEMBUDGET_NOLABELLEDGER="1")) == _EXIT_OK
+    assert (
+        _cli(["run", "1", "b", "--", "true"], _ctx(ledger, MEMBUDGET_NOLABELLEDGER="1")) == _EXIT_OK
+    )
     assert not _runs(ledger).exists()
 
 
 # --- lease and deadline ---
 
+
 def test_lease_and_deadline_answer_through_label_lease(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """With no history `lease` prints the default MB and `deadline` the default seconds."""
     runs = str(tmp_path / "labels.tsv")
     ctx = _ctx(tmp_path / "unused")
@@ -682,8 +744,7 @@ class _OomFence:
     need_mb: int
     calls: list[tuple[int, int]]
 
-    def __call__(self, cmd: Sequence[str], env: Mapping[str, str],
-                 caps: core.Caps) -> core.Result:
+    def __call__(self, cmd: Sequence[str], env: Mapping[str, str], caps: core.Caps) -> core.Result:
         """Record (rung MB, live leases), then kill below `need_mb` or exit clean.
 
         Returns:
@@ -694,11 +755,22 @@ class _OomFence:
         mb = int((caps.mem or "0M").removesuffix("M"))
         self.calls.append((mb, len(admit.Store(self.ledger).read().leases)))
         if mb < self.need_mb:
-            return core.Result(cmd=tuple(cmd), caps=caps, duration_s=0.0,
-                               exit_code=_SIGKILLED, memory_peak_bytes=None,
-                               bound_by=_CAP_KILL)
-        return core.Result(cmd=tuple(cmd), caps=caps, duration_s=1.0, exit_code=_EXIT_OK,
-                           memory_peak_bytes=None, maxrss_kb=_CLEAN_RSS_KB)
+            return core.Result(
+                cmd=tuple(cmd),
+                caps=caps,
+                duration_s=0.0,
+                exit_code=_SIGKILLED,
+                memory_peak_bytes=None,
+                bound_by=_CAP_KILL,
+            )
+        return core.Result(
+            cmd=tuple(cmd),
+            caps=caps,
+            duration_s=1.0,
+            exit_code=_EXIT_OK,
+            memory_peak_bytes=None,
+            maxrss_kb=_CLEAN_RSS_KB,
+        )
 
 
 def _oom_ctx(ledger: Path, need_mb: int, **extra: str) -> tuple[membudget_cli.Context, _OomFence]:
@@ -725,7 +797,8 @@ def test_retry_off_leaves_a_cap_kill_at_137(ledger: Path) -> None:
 
 
 def test_retry_climbs_to_the_next_bucket_and_records_it(
-        ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A kill at 64 re-enters at 128, which exits 0, and only that clean rung is recorded."""
     ctx, fake = _oom_ctx(ledger, _NEEDS_HIGH, MEMBUDGET_RETRY_OOM="1")
     assert _cli(["run", str(_RUNG_LOW), "job", "--", "agda"], ctx) == _EXIT_OK
@@ -737,8 +810,13 @@ def test_retry_climbs_to_the_next_bucket_and_records_it(
 
 def test_retry_stops_at_the_ceiling_with_137(ledger: Path) -> None:
     """Under AGDA_MB_MAX=128 a payload needing 1024 is killed at 64 then 128, and exits 137."""
-    ctx, fake = _oom_ctx(ledger, _NEEDS_TOO_MUCH, MEMBUDGET_RETRY_OOM="1",
-                         AGDA_MB_DEFAULT=str(_RUNG_LOW), AGDA_MB_MAX=str(_RUNG_HIGH))
+    ctx, fake = _oom_ctx(
+        ledger,
+        _NEEDS_TOO_MUCH,
+        MEMBUDGET_RETRY_OOM="1",
+        AGDA_MB_DEFAULT=str(_RUNG_LOW),
+        AGDA_MB_MAX=str(_RUNG_HIGH),
+    )
     assert _cli(["run", str(_RUNG_LOW), "job", "--", "agda"], ctx) == _SIGKILLED
     assert [mb for mb, _ in fake.calls] == [_RUNG_LOW, _RUNG_HIGH]
     assert not _runs(ledger).exists()
@@ -746,8 +824,9 @@ def test_retry_stops_at_the_ceiling_with_137(ledger: Path) -> None:
 
 def test_retry_holds_one_lease_at_a_time(ledger: Path) -> None:
     """Every rung runs under exactly one live lease, and none is left after the climb."""
-    ctx, fake = _oom_ctx(ledger, _NEEDS_TOO_MUCH, MEMBUDGET_RETRY_OOM="1",
-                         AGDA_MB_MAX=str(_NEEDS_TOO_MUCH))
+    ctx, fake = _oom_ctx(
+        ledger, _NEEDS_TOO_MUCH, MEMBUDGET_RETRY_OOM="1", AGDA_MB_MAX=str(_NEEDS_TOO_MUCH)
+    )
     assert _cli(["run", str(_RUNG_LOW), "job", "--", "agda"], ctx) == _EXIT_OK
     assert [live for _, live in fake.calls] == [1] * len(fake.calls)
     assert len(fake.calls) > 1
@@ -765,7 +844,8 @@ def _modules(tmp_path: Path) -> Path:
     src.mkdir()
     (src / _MODULE_LEDGER).write_text(
         f"{_HEAVY_MODULE}\t12.0\t{_BIG_PEAK:g}\n{_LIGHT_MODULE}\t1.0\t{_LABEL_PEAK:g}\n",
-        encoding="utf-8")
+        encoding="utf-8",
+    )
     return src
 
 
@@ -804,6 +884,7 @@ def test_a_non_agda_command_keeps_the_label_path(ledger: Path, tmp_path: Path) -
 
 # --- the cross-client arm: bash `membudget` on the same ledger ---
 
+
 @dataclass(frozen=True, slots=True)
 class _Bash:
     """Bash's client, copied under `tmp_path`, and the ledger it shares with this one."""
@@ -818,11 +899,16 @@ class _Bash:
             the environment, with every inherited MEMBUDGET_* variable removed.
 
         """
-        base = {key: value for key, value in os.environ.items()
-                if not key.startswith("MEMBUDGET_")}
-        return {**base, "PATH": f"{self.home}:{base.get('PATH', '')}",
-                "MEMBUDGET_FILE": str(self.ledger), "MEMBUDGET_BACKEND": "systemd",
-                "MEMBUDGET_NOLABELLEDGER": "1", "MEMBUDGET_MAXLOAD": "0", **extra}
+        base = {key: value for key, value in os.environ.items() if not key.startswith("MEMBUDGET_")}
+        return {
+            **base,
+            "PATH": f"{self.home}:{base.get('PATH', '')}",
+            "MEMBUDGET_FILE": str(self.ledger),
+            "MEMBUDGET_BACKEND": "systemd",
+            "MEMBUDGET_NOLABELLEDGER": "1",
+            "MEMBUDGET_MAXLOAD": "0",
+            **extra,
+        }
 
     def start(self, args: Sequence[str], env: Mapping[str, str], out: Path) -> int:
         """Spawn bash's `membudget` in a process group of its own, stdout to `out`.
@@ -880,18 +966,23 @@ def bash(tmp_path: Path, ledger: Path) -> _Bash:
     missing = [name for name in _BASH_FILES if not (_BASH_DIR / name).is_file()]
     tools = [tool for tool in ("bash", "flock", "awk") if shutil.which(tool) is None]
     if missing or tools:
-        pytest.skip(f"cross-client arm needs substrate's bash membudget in {_BASH_DIR} "
-                    f"(missing: {missing}) and bash, flock, awk on PATH (missing: {tools})")
+        pytest.skip(
+            f"cross-client arm needs substrate's bash membudget in {_BASH_DIR} "
+            f"(missing: {missing}) and bash, flock, awk on PATH (missing: {tools})"
+        )
     home = tmp_path / "bash"
     home.mkdir()
     for name in _BASH_FILES:
         shutil.copy2(_BASH_DIR / name, home / name)
     stub = home / "systemd-run"
-    stub.write_text("#!/bin/bash\n"
-                    'while [ $# -gt 0 ]; do case "$1" in\n'
-                    '  --setenv=*) export "${1#--setenv=}"; shift ;;\n'
-                    "  -p) shift 2 ;; --*) shift ;; *) break ;;\n"
-                    'esac; done\nexec "$@"\n', encoding="utf-8")
+    stub.write_text(
+        "#!/bin/bash\n"
+        'while [ $# -gt 0 ]; do case "$1" in\n'
+        '  --setenv=*) export "${1#--setenv=}"; shift ;;\n'
+        "  -p) shift 2 ;; --*) shift ;; *) break ;;\n"
+        'esac; done\nexec "$@"\n',
+        encoding="utf-8",
+    )
     stub.chmod(0o755)
     return _Bash(home, ledger)
 

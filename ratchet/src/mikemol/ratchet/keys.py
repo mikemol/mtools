@@ -86,8 +86,10 @@ def split_fields(key: str, *, shape: FieldShape) -> ParsedKey:
     """
     fields = key.split(shape.sep)
     if len(fields) != shape.arity:
-        msg = (f"MalformedKeyError: expected {shape.arity} {shape.sep!r}-separated "
-               f"field(s), got {len(fields)} in {key!r}")
+        msg = (
+            f"MalformedKeyError: expected {shape.arity} {shape.sep!r}-separated "
+            f"field(s), got {len(fields)} in {key!r}"
+        )
         raise MalformedKeyError(msg)
     ident = tuple(f for i, f in enumerate(fields) if i != shape.path_field)
     return ParsedKey(fields[shape.path_field], ident)

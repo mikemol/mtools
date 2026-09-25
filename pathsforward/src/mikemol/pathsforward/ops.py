@@ -151,7 +151,8 @@ def _set_given(new: Json, upd: Update) -> None:
     """Set each plain field the update gives, over whatever the status change implied."""
     given: dict[str, object | None] = {
         "blocked_on": None if upd.blocked_on is None else list(upd.blocked_on),
-        "blocked_kind": upd.blocked_kind, "next_bounded_step": upd.next_step,
+        "blocked_kind": upd.blocked_kind,
+        "next_bounded_step": upd.next_step,
         "title": upd.title,
     }
     new.update({key: value for key, value in given.items() if value is not None})
@@ -178,7 +179,8 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         new["evidence"] = f"{old} | {entry}" if old else entry
     was_blocked = text(w, "status") == "blocked"
     if (text(new, "status") == "blocked") != was_blocked or (
-            strlist(new, "blocked_on") != strlist(w, "blocked_on")):
+        strlist(new, "blocked_on") != strlist(w, "blocked_on")
+    ):
         new["ticks_blocked"] = 0
     if upd.ticks_blocked is not None:
         new["ticks_blocked"] = upd.ticks_blocked
@@ -200,7 +202,8 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
     w = find(state, sym)
     new = _applied(w, upd, now)
     if text(new, "status") == "blocked" and (
-            not strlist(new, "blocked_on") or text(new, "blocked_kind") not in BLOCKED_KINDS):
+        not strlist(new, "blocked_on") or text(new, "blocked_kind") not in BLOCKED_KINDS
+    ):
         msg = f"{sym}: blocked needs --blocked-on and --blocked-kind agent|human"
         raise RefusedError(msg)
     w.clear()
@@ -228,12 +231,22 @@ def add(state: State, draft: Draft, now: str) -> str:
     counter = state.counter + 1
     sym = f"W{counter}"
     state.doc["counter"] = counter
-    state.waypoints.append({
-        "symbol": sym, "title": draft.title, "status": "ready",
-        "enables": list(draft.enables), "touches": list(draft.touches),
-        "blocked_on": [], "blocked_kind": None, "next_bounded_step": draft.next_step,
-        "evidence": "", "issued_at": now, "last_worked": None, "ticks_blocked": 0,
-    })
+    state.waypoints.append(
+        {
+            "symbol": sym,
+            "title": draft.title,
+            "status": "ready",
+            "enables": list(draft.enables),
+            "touches": list(draft.touches),
+            "blocked_on": [],
+            "blocked_kind": None,
+            "next_bounded_step": draft.next_step,
+            "evidence": "",
+            "issued_at": now,
+            "last_worked": None,
+            "ticks_blocked": 0,
+        }
+    )
     return sym
 
 
@@ -249,8 +262,15 @@ def drop(state: State, sym: str, reason: str, now: str) -> None:
         raise RefusedError(msg)
     w = find(state, sym)
     state.waypoints.remove(w)
-    state.residue.append({"symbol": sym, "title": text(w, "title"), "dropped_at": now,
-                          "reason": reason, "recoverable": True})
+    state.residue.append(
+        {
+            "symbol": sym,
+            "title": text(w, "title"),
+            "dropped_at": now,
+            "reason": reason,
+            "recoverable": True,
+        }
+    )
 
 
 def action_for(count: int) -> Action:
@@ -279,8 +299,15 @@ def bump_blocked(state: State, exclude: frozenset[str]) -> list[Nudge]:
             continue
         count = ticks(w) + 1
         w["ticks_blocked"] = count
-        out.append(Nudge(sym, count, action_for(count), tuple(strlist(w, "blocked_on")),
-                         text(w, "blocked_kind")))
+        out.append(
+            Nudge(
+                sym,
+                count,
+                action_for(count),
+                tuple(strlist(w, "blocked_on")),
+                text(w, "blocked_kind"),
+            )
+        )
     return out
 
 

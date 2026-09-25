@@ -134,9 +134,21 @@ def _ruff(rel: str, body: str, tmp: Path) -> str:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(body, encoding="utf-8")
     proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of these cases
-        [*_ruff_argv(), "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
-         "--output-format", "concise", str(target)],
-        capture_output=True, text=True, check=False, cwd=tmp)
+        [
+            *_ruff_argv(),
+            "check",
+            "--no-cache",
+            "--config",
+            str(_DIST / "pyproject.toml"),
+            "--output-format",
+            "concise",
+            str(target),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=tmp,
+    )
     return proc.stdout + proc.stderr
 
 
@@ -156,6 +168,7 @@ def tree(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 # ────────────────────────── the header notice: four propositions, one rule ──────────────────────
 
+
 def test_the_header_gate_passes_a_correct_notice(tree: Path) -> None:
     """The P-arm. Without it every arm below passes against a rule that rejects all input."""
     assert "CPY001" not in _ruff("src/probe_ok.py", _GOOD_HEADER + '"""D."""\n', tree)
@@ -164,22 +177,29 @@ def test_the_header_gate_passes_a_correct_notice(tree: Path) -> None:
 @pytest.mark.parametrize(
     ("proposition", "header"),
     [
-        ("the SPDX line is present",
-         "# Copyright (c) 2026 Mike Mol\n"),
-        ("the copyright line is present",
-         "# SPDX-License-Identifier: Apache-2.0\n"),
-        ("SPDX comes first",
-         "# Copyright (c) 2026 Mike Mol\n# SPDX-License-Identifier: Apache-2.0\n"),
-        ("the two lines are adjacent, blank line between",
-         "# SPDX-License-Identifier: Apache-2.0\n\n# Copyright (c) 2026 Mike Mol\n"),
-        ("the two lines are adjacent, comment between",
-         "# SPDX-License-Identifier: Apache-2.0\n#\n# Copyright (c) 2026 Mike Mol\n"),
-        ("the holder is this repo's",
-         "# SPDX-License-Identifier: Apache-2.0\n# Copyright (c) 2026 Someone Else\n"),
+        ("the SPDX line is present", "# Copyright (c) 2026 Mike Mol\n"),
+        ("the copyright line is present", "# SPDX-License-Identifier: Apache-2.0\n"),
+        (
+            "SPDX comes first",
+            "# Copyright (c) 2026 Mike Mol\n# SPDX-License-Identifier: Apache-2.0\n",
+        ),
+        (
+            "the two lines are adjacent, blank line between",
+            "# SPDX-License-Identifier: Apache-2.0\n\n# Copyright (c) 2026 Mike Mol\n",
+        ),
+        (
+            "the two lines are adjacent, comment between",
+            "# SPDX-License-Identifier: Apache-2.0\n#\n# Copyright (c) 2026 Mike Mol\n",
+        ),
+        (
+            "the holder is this repo's",
+            "# SPDX-License-Identifier: Apache-2.0\n# Copyright (c) 2026 Someone Else\n",
+        ),
     ],
 )
 def test_the_header_gate_fires_when_a_proposition_fails(
-        proposition: str, header: str, tree: Path) -> None:
+    proposition: str, header: str, tree: Path
+) -> None:
     """The gate fires when any one of the notice's propositions fails.
 
     ⚑ ONE ARM PER PROPOSITION. `notice-rgx` asserts presence, ORDER, ADJACENCY and HOLDER —
@@ -222,6 +242,7 @@ def test_the_header_gate_accepts_a_later_year(tree: Path) -> None:
 
 # ────────────────────────── the scoped exemptions: refused where the reason does not obtain ─────
 
+
 def test_assert_is_refused_in_src(tree: Path) -> None:
     """`assert` is refused in src.
 
@@ -250,6 +271,7 @@ def test_assert_is_permitted_in_tests(tree: Path) -> None:
 
 
 # ────────────────────────── declare-never-suppress, asserted as an effect ───────────────────────
+
 
 def test_the_ignore_list_is_exactly_three_rules() -> None:
     """The ignore list holds exactly three rules.
@@ -282,10 +304,14 @@ def test_the_checker_that_runs_is_the_one_the_lock_pins() -> None:
     ruff 0.16.6 while its venv ran 0.16.5, so every arm above had been measured against a version
     the build would not install. The drift was benign and being UNMEASURED was not.
     """
-    pinned = next(ln for ln in (_DIST / "requirements.txt").read_text(encoding="utf-8").splitlines()
-                  if ln.startswith("ruff=="))
+    pinned = next(
+        ln
+        for ln in (_DIST / "requirements.txt").read_text(encoding="utf-8").splitlines()
+        if ln.startswith("ruff==")
+    )
     proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
-        [*_ruff_argv(), "--version"], capture_output=True, text=True, check=True)
+        [*_ruff_argv(), "--version"], capture_output=True, text=True, check=True
+    )
     assert proc.stdout.split()[1] == pinned.split("==")[1].strip()
 
 
@@ -353,11 +379,25 @@ def test_an_unknown_pytest_marker_is_an_error_rather_than_a_skip(tree: Path) -> 
     probe.parent.mkdir(parents=True, exist_ok=True)
     probe.write_text(
         "import pytest\n\n\n@pytest.mark.nonexistent_marker_probe\ndef test_x() -> None:\n"
-        "    assert True\n", encoding="utf-8")
+        "    assert True\n",
+        encoding="utf-8",
+    )
     proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — pytest's own configuration is the subject
-        [sys.executable, "-m", "pytest", "--collect-only", "-q",
-         "-c", str(_DIST / "pyproject.toml"), str(probe)],
-        capture_output=True, text=True, check=False, cwd=_DIST)
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "--collect-only",
+            "-q",
+            "-c",
+            str(_DIST / "pyproject.toml"),
+            str(probe),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=_DIST,
+    )
     assert proc.returncode != 0
     assert "nonexistent_marker_probe" in proc.stdout + proc.stderr
 
@@ -378,11 +418,25 @@ def test_a_declared_pytest_marker_collects_cleanly(tree: Path) -> None:
     probe.parent.mkdir(parents=True, exist_ok=True)
     probe.write_text(
         "import pytest\n\n\n@pytest.mark.needs_shellcheck\ndef test_x() -> None:\n"
-        "    assert True\n", encoding="utf-8")
+        "    assert True\n",
+        encoding="utf-8",
+    )
     proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — pytest's own configuration is the subject
-        [sys.executable, "-m", "pytest", "--collect-only", "-q",
-         "-c", str(_DIST / "pyproject.toml"), str(probe)],
-        capture_output=True, text=True, check=False, cwd=_DIST)
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "--collect-only",
+            "-q",
+            "-c",
+            str(_DIST / "pyproject.toml"),
+            str(probe),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=_DIST,
+    )
     assert proc.returncode == 0, proc.stdout + proc.stderr
 
 
@@ -466,7 +520,8 @@ def test_the_gates_own_shell_is_checked() -> None:
     # list it replaced could and did, missing two. Asserting the mechanism is strictly stronger
     # than re-listing its outputs, and it needs no input the sandbox has not staged.
     assert 'glob(["*.sh", ".githooks/*"]' in build, (
-        "the shellcheck target must glob its population, not enumerate it")
+        "the shellcheck target must glob its population, not enumerate it"
+    )
     assert '"@shellcheck//:bin"' in build, "the checker binary must be staged"
 
 
@@ -502,7 +557,8 @@ def test_no_witness_reads_a_developer_venv() -> None:
                 inner = func.value
                 names = {n.id for n in pyast.walk(inner) if isinstance(n, pyast.Name)}
                 assert "__file__" not in names, (
-                    f"{dist}/{module.name}:{node.lineno} resolves out of the runfiles tree")
+                    f"{dist}/{module.name}:{node.lineno} resolves out of the runfiles tree"
+                )
 
 
 def test_the_hermetic_sandbox_is_a_default_not_a_config() -> None:
@@ -521,8 +577,7 @@ def test_the_hermetic_sandbox_is_a_default_not_a_config() -> None:
     CONSTRUCTION — and the two are not substitutes.
     """
     rc = (_DIST.parent / ".bazelrc").read_text(encoding="utf-8")
-    for flag in ("--experimental_use_hermetic_linux_sandbox",
-                 "--sandbox_add_mount_pair=/usr"):
+    for flag in ("--experimental_use_hermetic_linux_sandbox", "--sandbox_add_mount_pair=/usr"):
         assert f"build {flag}" in rc, f"{flag} is not an unconditional build flag"
         assert f"build:hermetic {flag}" not in rc, f"{flag} was made opt-in"
 
@@ -567,7 +622,10 @@ def _reader_runs() -> bool:
         return False
     try:
         subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject
-            [str(_CITATION_GATE_READER), "--help"], capture_output=True, check=False, timeout=30,
+            [str(_CITATION_GATE_READER), "--help"],
+            capture_output=True,
+            check=False,
+            timeout=30,
         )
     except OSError:
         # ⚑ ENOENT AGAINST A FILE THAT EXISTS, or EACCES, or a dead interpreter root — every one of
@@ -579,7 +637,7 @@ def _reader_runs() -> bool:
 _needs_reader = pytest.mark.skipif(
     not _reader_runs(),
     reason="rule_citations.sh routes its heading query through mdstruct, which is host-tier and "
-           "must be RUNNABLE here — present-but-unrunnable (a dead shebang interpreter) skips too",
+    "must be RUNNABLE here — present-but-unrunnable (a dead shebang interpreter) skips too",
 )
 
 
@@ -596,8 +654,8 @@ def _citations(message: str, rules: str, tree: Path) -> int:
     doc.write_text(rules, encoding="utf-8")
     gate = _DIST.parent / "rule_citations.sh"
     return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-        [str(gate), str(msg), str(doc)],
-        capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
+        [str(gate), str(msg), str(doc)], capture_output=True, check=False, cwd=str(_DIST.parent)
+    ).returncode
 
 
 @_needs_reader
@@ -651,17 +709,20 @@ def _orphans(tree: Path, scripts: dict[str, str], sites: dict[str, str]) -> int:
         (tree / "BUILD.bazel").write_text("", encoding="utf-8")
     gate = _DIST.parent / "orphan_check.sh"
     return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-        [str(gate), str(tree)],
-        capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
+        [str(gate), str(tree)], capture_output=True, check=False, cwd=str(_DIST.parent)
+    ).returncode
 
 
 def test_the_orphan_gate_passes_an_invoked_script(tmp_path: Path) -> None:
     """The P-arm. Without it every arm below passes against a gate that refuses all input."""
-    assert _orphans(
-        tmp_path,
-        {"used.sh": "#!/usr/bin/env bash\n"},
-        {".githooks/pre-commit": "#!/usr/bin/env bash\n./used.sh\n"},
-    ) == 0
+    assert (
+        _orphans(
+            tmp_path,
+            {"used.sh": "#!/usr/bin/env bash\n"},
+            {".githooks/pre-commit": "#!/usr/bin/env bash\n./used.sh\n"},
+        )
+        == 0
+    )
 
 
 def test_the_orphan_gate_fires_on_a_script_nothing_invokes(tmp_path: Path) -> None:
@@ -671,11 +732,14 @@ def test_the_orphan_gate_fires_on_a_script_nothing_invokes(tmp_path: Path) -> No
     orphan is the same file on disk as a forgotten one, which is why the gate demands a
     declaration rather than trusting anyone's memory.
     """
-    assert _orphans(
-        tmp_path,
-        {"lonely.sh": "#!/usr/bin/env bash\n"},
-        {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
-    ) == 1
+    assert (
+        _orphans(
+            tmp_path,
+            {"lonely.sh": "#!/usr/bin/env bash\n"},
+            {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
+        )
+        == 1
+    )
 
 
 def test_an_exports_files_entry_is_not_an_invocation(tmp_path: Path) -> None:
@@ -688,11 +752,14 @@ def test_an_exports_files_entry_is_not_an_invocation(tmp_path: Path) -> None:
     detector.
     """
     (tmp_path / "BUILD.bazel").write_text('exports_files(["lonely.sh"])\n', encoding="utf-8")
-    assert _orphans(
-        tmp_path,
-        {"lonely.sh": "#!/usr/bin/env bash\n"},
-        {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
-    ) == 1
+    assert (
+        _orphans(
+            tmp_path,
+            {"lonely.sh": "#!/usr/bin/env bash\n"},
+            {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
+        )
+        == 1
+    )
 
 
 def test_a_srcs_entry_is_an_invocation(tmp_path: Path) -> None:
@@ -704,12 +771,16 @@ def test_a_srcs_entry_is_an_invocation(tmp_path: Path) -> None:
     different edits; doing both at once turned one false negative into four false positives.
     """
     (tmp_path / "BUILD.bazel").write_text(
-        'sh_test(\n    name = "x",\n    srcs = ["//:wrapped.sh"],\n)\n', encoding="utf-8")
-    assert _orphans(
-        tmp_path,
-        {"wrapped.sh": "#!/usr/bin/env bash\n"},
-        {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
-    ) == 0
+        'sh_test(\n    name = "x",\n    srcs = ["//:wrapped.sh"],\n)\n', encoding="utf-8"
+    )
+    assert (
+        _orphans(
+            tmp_path,
+            {"wrapped.sh": "#!/usr/bin/env bash\n"},
+            {".githooks/pre-commit": "#!/usr/bin/env bash\n"},
+        )
+        == 0
+    )
 
 
 def _freshness(tree: Path, rules: str, *, readable: bool) -> int:
@@ -724,14 +795,14 @@ def _freshness(tree: Path, rules: str, *, readable: bool) -> int:
     script = (_DIST.parent / "rule_freshness.sh").read_text(encoding="utf-8")
     probe = tree / "probe.sh"
     probe.write_text(
-        script.replace('rules="findings/bazel/mtools.md"', f'rules="{doc}"'),
-        encoding="utf-8")
+        script.replace('rules="findings/bazel/mtools.md"', f'rules="{doc}"'), encoding="utf-8"
+    )
     probe.chmod(0o755)
     doc.chmod(0o644 if readable else 0o000)
     try:
         return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-            [str(probe)], capture_output=True, check=False,
-            cwd=str(_DIST.parent)).returncode
+            [str(probe)], capture_output=True, check=False, cwd=str(_DIST.parent)
+        ).returncode
     finally:
         doc.chmod(0o644)
 
@@ -783,7 +854,10 @@ def _witness_args(*argv: str) -> int:
     """
     return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
         [str(_DIST.parent / "domain_witness.sh"), *argv],
-        capture_output=True, check=False, cwd=str(_DIST.parent)).returncode
+        capture_output=True,
+        check=False,
+        cwd=str(_DIST.parent),
+    ).returncode
 
 
 def test_the_witness_refuses_an_unknown_probe_kind_before_running_anything() -> None:
@@ -800,9 +874,12 @@ def test_the_witness_refuses_an_unknown_probe_kind_before_running_anything() -> 
     # appending a probe payload on each invocation, and `git checkout` could not restore an
     # untracked file. Five runs left a 432-byte file of accumulated payloads; the ratchet censused
     # the debris and refused the commit, which is the only reason it surfaced.
-    assert _witness_args(
-        "ratchet", "//ratchet:mypy",
-        "ratchet/src/mikemol/ratchet/state.py", "nonsense") == _ARG_REFUSED
+    assert (
+        _witness_args(
+            "ratchet", "//ratchet:mypy", "ratchet/src/mikemol/ratchet/state.py", "nonsense"
+        )
+        == _ARG_REFUSED
+    )
 
 
 def test_the_witness_accepts_every_declared_probe_kind() -> None:
@@ -840,8 +917,10 @@ def test_the_witness_refuses_an_untracked_victim() -> None:
     432-byte result was censused by the ratchet — which refused the commit and is the only reason
     it surfaced at all.
     """
-    assert _witness_args(
-        "ratchet", "//ratchet:mypy", "ratchet/definitely_not_tracked.py", "mypy") == _ARG_REFUSED
+    assert (
+        _witness_args("ratchet", "//ratchet:mypy", "ratchet/definitely_not_tracked.py", "mypy")
+        == _ARG_REFUSED
+    )
 
 
 def test_the_witness_refuses_a_victim_carrying_probe_residue(tmp_path: Path) -> None:
@@ -870,9 +949,12 @@ def test_the_witness_refuses_a_victim_carrying_probe_residue(tmp_path: Path) -> 
     victim = tmp_path / "residue.py"
     victim.write_text("x = 1\n# transient domain probe 123\n", encoding="utf-8")
     out = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-        [str(_DIST.parent / "domain_witness.sh"), "ratchet", "//ratchet:mypy",
-         str(victim), "mypy"],
-        capture_output=True, check=False, text=True, cwd=str(_DIST.parent))
+        [str(_DIST.parent / "domain_witness.sh"), "ratchet", "//ratchet:mypy", str(victim), "mypy"],
+        capture_output=True,
+        check=False,
+        text=True,
+        cwd=str(_DIST.parent),
+    )
     assert out.returncode == _ARG_REFUSED
     assert "probe residue" in out.stderr, "the residue guard must be the one that fired"
 
@@ -915,16 +997,21 @@ def test_the_gate_reads_the_index_not_the_working_tree(tmp_path: Path) -> None:
     assert git, "git is not on PATH — this test cannot measure what it claims"
     subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
         [git, "checkout-index", "--all", f"--prefix={staged}/"],
-        check=True, cwd=str(root), capture_output=True)
+        check=True,
+        cwd=str(root),
+        capture_output=True,
+    )
     victim = root / "ratchet" / "warrants.bib"
     committed = victim.read_text(encoding="utf-8")
     try:
         victim.write_text(committed + f"\n{marker}\n", encoding="utf-8")
         assert marker in victim.read_text(encoding="utf-8"), "the fixture did not take"
         assert marker not in (staged / "ratchet" / "warrants.bib").read_text(encoding="utf-8"), (
-            "the materialised tree carries a working-tree-only change: the gate is reading disk")
+            "the materialised tree carries a working-tree-only change: the gate is reading disk"
+        )
     finally:
         victim.write_text(committed, encoding="utf-8")
+
 
 # --- the five gate repairs of 2026-09-06, none of which had a test -----------------------------
 #
@@ -967,9 +1054,12 @@ def test_the_snapshot_survives_a_mid_write_edit_to_the_live_file(tmp_path: Path)
     live.write_text(live.read_text(encoding="utf-8") + "\nsyntax error (\n", encoding="utf-8")
 
     def parses(path: Path) -> bool:
-        return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-            ["/usr/bin/env", "bash", "-n", str(path)],
-            capture_output=True, check=False).returncode == 0
+        return (
+            subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
+                ["/usr/bin/env", "bash", "-n", str(path)], capture_output=True, check=False
+            ).returncode
+            == 0
+        )
 
     assert not parses(live), "the mutated live file must fail to parse — else the arm is vacuous"
     assert parses(snap), "the snapshot must be immune to the live edit"
@@ -1012,7 +1102,7 @@ def test_the_sweep_uses_no_subshell() -> None:
     """
     body = _GATE.read_text(encoding="utf-8")
     start = body.index("sweep_witness_residue() {")
-    fn = body[start:body.index("\n}", start)]
+    fn = body[start : body.index("\n}", start)]
     assert "| while" not in fn, "a piped loop runs in a subshell and cannot report failure"
     assert "for v in" in fn, "the sweep must iterate without a pipeline"
 
@@ -1088,6 +1178,7 @@ def test_the_gate_points_the_checkers_at_the_staged_tree() -> None:
         "the gate does not run the suite, so no mypy runs anywhere — the closure question is moot "
         "only because nothing is checked"
     )
+
 
 # --- blockers.sh: three defects in three consecutive ticks, none of them gated -----------------
 #
@@ -1307,8 +1398,7 @@ def _distributions() -> list[str]:
     root = _DIST.parent
     # ⚑ A SYMLINKED DIRECTORY IS NEVER A DISTRIBUTION — the gate's rule. `bazel-mtools` mirrors
     # the root, so once the root carried a pyproject.toml it matched this glob.
-    return sorted(p.parent.name for p in root.glob("*/pyproject.toml")
-                  if not p.parent.is_symlink())
+    return sorted(p.parent.name for p in root.glob("*/pyproject.toml") if not p.parent.is_symlink())
 
 
 def test_no_hand_written_distribution_list_survives_in_the_gate_or_its_checker() -> None:
@@ -1374,8 +1464,9 @@ def test_no_hand_written_distribution_list_survives_in_the_gate_or_its_checker()
     for node in pyast.walk(tree):
         if not isinstance(node, pyast.Tuple):
             continue
-        values = [e.value for e in node.elts
-                  if isinstance(e, pyast.Constant) and isinstance(e.value, str)]
+        values = [
+            e.value for e in node.elts if isinstance(e, pyast.Constant) and isinstance(e.value, str)
+        ]
         if tuple(values) == stale:
             offenders.append(f"tests/test_bar_fires.py:{node.lineno}: {stale!r} as a literal")
 
@@ -1415,11 +1506,10 @@ def test_every_status_table_finder_uses_one_signature() -> None:
     """
     body = _POLL.read_text(encoding="utf-8")
     found: list[str] = pyre.findall(
-        r"\(([a-z|]*(?:surveyor|party)[a-z|]*)\) \\\| \(status\|state\)", body)
-    spellings = set(found)
-    assert spellings, (
-        "no §S signature found in the poll at all — this arm would pass vacuously"
+        r"\(([a-z|]*(?:surveyor|party)[a-z|]*)\) \\\| \(status\|state\)", body
     )
+    spellings = set(found)
+    assert spellings, "no §S signature found in the poll at all — this arm would pass vacuously"
     assert len(spellings) == 1, (
         f"the §S table is found by {len(spellings)} different noun classes, so the poll holds "
         "more than one idea of what a roster table is; a census heading its §S with a noun only "
@@ -1464,9 +1554,7 @@ def test_the_freeze_row_column_is_derived_from_the_revision_log_header() -> None
     defaulting to 2 is what turned an unrecognised §S header into a confident PRE-FILING.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the freeze predicate still exists and reads a derived column.
     assert '--col "$_vcol" --starts "FREEZE"' in commands, (
         "the freeze row must be read at the column the §V header names, not at a position"
@@ -1491,9 +1579,7 @@ def test_the_census_population_excludes_an_apex() -> None:
     misinformed.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the population is still enumerated from the filesystem by prefix.
     assert "-name 'CENSUS-*.md'" in commands, "the census population must still be the glob"
     assert "grep -v -- '-APEX'" in commands, (
@@ -1582,7 +1668,7 @@ def test_the_polls_fetchability_predicate_is_not_ls_files() -> None:
     """
     body = _POLL.read_text(encoding="utf-8")
     start = body.index("tracked() {")
-    fn = body[start:body.index("\n}", start)]
+    fn = body[start : body.index("\n}", start)]
     assert "log --oneline" in fn, "fetchability needs branch history, not index membership"
     assert "staged only (NOT fetchable)" in fn, "the three-valued answer must be stated"
 
@@ -1610,13 +1696,14 @@ def test_the_ratchet_check_captures_its_own_output() -> None:
     # `[ -x ... ]` presence check; slicing from there missed the call site by nine lines and the
     # first cut of this test failed against a correct repair.
     start = body.index('git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog"')
-    block = body[start:start + _RATCHET_BLOCK]
+    block = body[start : start + _RATCHET_BLOCK]
     assert 'note_failure "$dist: ratchet' in block
     assert '"$rlog"' in block, "the ratchet must capture its output for the verdict to replay"
     # ⚑ AND ITS TWO REFUSALS ARE NAMED APART. Exit 2 is `cli.CANNOT_CENSUS` (415d532): no ruff ran.
     # Named like a new key, it sent the reader hunting for a key that was never there.
     assert "COULD NOT CENSUS" in block, "a census that could not run must not read as a new key"
     assert "no new keys" in block, "the new-key refusal is still named"
+
 
 # --- four repairs from two ticks, each armed by hand once and none gated ------------------------
 #
@@ -1641,8 +1728,11 @@ def test_every_witness_call_site_goes_through_the_capturing_helper() -> None:
     """
     body = _GATE.read_text(encoding="utf-8")
     assert "witness() {" in body, "the capturing helper must exist"
-    bare = [ln for ln in body.split("\n")
-            if ln.startswith("./domain_witness.sh") and "note_failure" in ln]
+    bare = [
+        ln
+        for ln in body.split("\n")
+        if ln.startswith("./domain_witness.sh") and "note_failure" in ln
+    ]
     assert not bare, f"{len(bare)} witness call site(s) bypass the helper: {bare[:2]}"
 
 
@@ -1698,8 +1788,7 @@ def test_every_probe_payload_carries_the_residue_marker() -> None:
     # ⚑ THE WHOLE FILE, NOT A SLICE. The first cut sliced 900 bytes from the `case` and matched
     # nothing at all — so the test failed for the right reason by accident, and a narrower bug
     # would have passed. Every append to the victim is a payload wherever it appears.
-    payloads = [ln for ln in body.split("\n")
-                if '>> "$victim"' in ln and "printf" in ln]
+    payloads = [ln for ln in body.split("\n") if '>> "$victim"' in ln and "printf" in ln]
     assert payloads, "the probe payloads must be findable to be checked"
     unmarked = [ln for ln in payloads if "transient domain probe" not in ln]
     assert not unmarked, f"payload(s) without the residue marker: {unmarked}"
@@ -2085,10 +2174,19 @@ def test_the_poll_measures_reader_reach_not_a_cause() -> None:
 # negative verdict from an empty population, so the list is written down rather than guessed.
 # ⚑ A HAND-WRITTEN LIST THAT IS HONEST, because it enumerates MEANINGS rather than members: adding
 # a verdict-returning helper is a real decision about that helper, not a population that rots.
-_VERDICT_CALLS = frozenset({
-    "analyze", "verdict", "findings", "command_of", "armed", "regex_tell",
-    "parse", "_fires", "cgroup_of_line",
-})
+_VERDICT_CALLS = frozenset(
+    {
+        "analyze",
+        "verdict",
+        "findings",
+        "command_of",
+        "armed",
+        "regex_tell",
+        "parse",
+        "_fires",
+        "cgroup_of_line",
+    }
+)
 
 
 def _population_negatives(fn: pyast.FunctionDef) -> list[tuple[str, int]]:
@@ -2104,30 +2202,37 @@ def _population_negatives(fn: pyast.FunctionDef) -> list[tuple[str, int]]:
     bound: dict[str, pyast.expr] = {
         node.targets[0].id: node.value
         for node in pyast.walk(fn)
-        if isinstance(node, pyast.Assign) and len(node.targets) == 1
+        if isinstance(node, pyast.Assign)
+        and len(node.targets) == 1
         and isinstance(node.targets[0], pyast.Name)
     }
     found: list[tuple[str, int]] = []
     for node in pyast.walk(fn):
-        if not (isinstance(node, pyast.Assert) and isinstance(node.test, pyast.UnaryOp)
-                and isinstance(node.test.op, pyast.Not)
-                and isinstance(node.test.operand, pyast.Name)):
+        if not (
+            isinstance(node, pyast.Assert)
+            and isinstance(node.test, pyast.UnaryOp)
+            and isinstance(node.test.op, pyast.Not)
+            and isinstance(node.test.operand, pyast.Name)
+        ):
             continue
         src = bound.get(node.test.operand.id)
         # ⚑ A TUPLE, NOT A `|` UNION, AND MYPY IS RIGHT TO INSIST. `X | Y` inside `isinstance`
         # builds a `UnionType` object whose type this distribution's `disallow_any_expr` reads as
         # `Any` — an untyped expression deciding a classification, which is the narrowing defect
         # `payload.py` ships nine warrants about. The tuple form is the same test, fully typed.
-        if not isinstance(src, (pyast.Call, pyast.ListComp, pyast.SetComp,
-                                pyast.DictComp, pyast.GeneratorExp)):
+        if not isinstance(
+            src, (pyast.Call, pyast.ListComp, pyast.SetComp, pyast.DictComp, pyast.GeneratorExp)
+        ):
             continue
         # ⚑ A VERDICT CALL IS NOT A POPULATION, BY EITHER SPELLING — `analyze(x)` and
         # `probe.analyze(x)` are the same claim about one input, and a check seeing only the bare
         # form would admit half of them.
         called = src.func if isinstance(src, pyast.Call) else None
         name = (
-            called.id if isinstance(called, pyast.Name)
-            else called.attr if isinstance(called, pyast.Attribute)
+            called.id
+            if isinstance(called, pyast.Name)
+            else called.attr
+            if isinstance(called, pyast.Attribute)
             else None
         )
         if name in _VERDICT_CALLS:
@@ -2148,7 +2253,8 @@ def _guarded(fn: pyast.FunctionDef, line: int) -> bool:
 
     """
     return any(
-        isinstance(n, pyast.Assert) and n.lineno != line
+        isinstance(n, pyast.Assert)
+        and n.lineno != line
         and not (isinstance(n.test, pyast.UnaryOp) and isinstance(n.test.op, pyast.Not))
         for n in pyast.walk(fn)
     )
@@ -2184,22 +2290,28 @@ def _population_negatives_by_binding(fn: pyast.FunctionDef) -> list[tuple[str, i
     """
     found: list[tuple[str, int]] = []
     for node in pyast.walk(fn):
-        if not (isinstance(node, pyast.Assign) and len(node.targets) == 1
-                and isinstance(node.targets[0], pyast.Name)):
+        if not (
+            isinstance(node, pyast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], pyast.Name)
+        ):
             continue
         name = node.targets[0].id
         src = node.value
         # ⚑ THE ADMISSION PREDICATE IS RESTATED, NOT SHARED, because sharing it would make one walk
         # a rename of the other. Both admit a Call or a comprehension; both exclude a declared
         # verdict call. Stated twice, so a narrowing in either copy shows as a disagreement.
-        is_derived = isinstance(src, (pyast.Call, pyast.ListComp, pyast.SetComp,
-                                      pyast.DictComp, pyast.GeneratorExp))
+        is_derived = isinstance(
+            src, (pyast.Call, pyast.ListComp, pyast.SetComp, pyast.DictComp, pyast.GeneratorExp)
+        )
         if not is_derived:
             continue
         called = src.func if isinstance(src, pyast.Call) else None
         callee = (
-            called.id if isinstance(called, pyast.Name)
-            else called.attr if isinstance(called, pyast.Attribute)
+            called.id
+            if isinstance(called, pyast.Name)
+            else called.attr
+            if isinstance(called, pyast.Attribute)
             else None
         )
         if callee in _VERDICT_CALLS:
@@ -2207,8 +2319,10 @@ def _population_negatives_by_binding(fn: pyast.FunctionDef) -> list[tuple[str, i
         found.extend(
             (name, use.lineno)
             for use in pyast.walk(fn)
-            if isinstance(use, pyast.Assert) and isinstance(use.test, pyast.UnaryOp)
-            and isinstance(use.test.op, pyast.Not) and isinstance(use.test.operand, pyast.Name)
+            if isinstance(use, pyast.Assert)
+            and isinstance(use.test, pyast.UnaryOp)
+            and isinstance(use.test.op, pyast.Not)
+            and isinstance(use.test.operand, pyast.Name)
             and use.test.operand.id == name
         )
     return found
@@ -2294,7 +2408,8 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
     # type becomes knowable, so that is where it is stated.
     module_names = cast("dict[str, object]", globals())
     targets: dict[str, Path] = {
-        name: value for name, value in module_names.items()
+        name: value
+        for name, value in module_names.items()
         if name.startswith("_") and name.isupper() and isinstance(value, Path)
     }
     assert targets, (
@@ -2312,10 +2427,13 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
         # assertions against a file; excluding `NotIn` is what left the vacuous-absence case
         # unpoliced by a check named for vacuity.
         strings = [
-            n for n in pyast.walk(fn)
-            if isinstance(n, pyast.Compare) and len(n.ops) == 1
+            n
+            for n in pyast.walk(fn)
+            if isinstance(n, pyast.Compare)
+            and len(n.ops) == 1
             and isinstance(n.ops[0], pyast.In | pyast.NotIn)
-            and isinstance(n.left, pyast.Constant) and isinstance(n.left.value, str)
+            and isinstance(n.left, pyast.Constant)
+            and isinstance(n.left.value, str)
         ]
         if not strings:
             continue
@@ -2323,7 +2441,8 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
         receivers = [
             n.value.func.value
             for n in pyast.walk(fn)
-            if isinstance(n, pyast.Assign) and isinstance(n.value, pyast.Call)
+            if isinstance(n, pyast.Assign)
+            and isinstance(n.value, pyast.Call)
             and isinstance(n.value.func, pyast.Attribute)
             and n.value.func.attr == "read_text"
         ]
@@ -2338,9 +2457,9 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
         # ⚑ A BUILDER NEVER SHIPPED: the second of the four vacuity shapes this tree measured,
         # inside the suite that measures them. Resolving here is what ships it.
         resolved = {
-            path for r in receivers
-            if not isinstance(r, pyast.Name)
-            and (path := _resolve_path(r, targets)) is not None
+            path
+            for r in receivers
+            if not isinstance(r, pyast.Name) and (path := _resolve_path(r, targets)) is not None
         }
         # ⚑ AN ARM READING NO FILE AT ALL IS OUT OF SCOPE, NOT UNRESOLVED. A subprocess probe
         # asserts against captured OUTPUT — there is no haystack on disk to resolve, and calling
@@ -2361,8 +2480,11 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
         # check passed. A local and a loop variable are indistinguishable by NAME; they are not
         # indistinguishable by BINDING, so the `for` targets are collected and that is the test.
         loop_bound = {
-            t.id for n in pyast.walk(fn) if isinstance(n, pyast.For)
-            for t in pyast.walk(n.target) if isinstance(t, pyast.Name)
+            t.id
+            for n in pyast.walk(fn)
+            if isinstance(n, pyast.For)
+            for t in pyast.walk(n.target)
+            if isinstance(t, pyast.Name)
         }
         sweeping = reads & loop_bound
         # ⚑ A RESOLVED PATH EXPRESSION IS A NAMED TARGET, so an arm holding one is not sweeping —
@@ -2380,11 +2502,13 @@ def test_every_string_asserting_arm_resolves_to_a_file_it_reads() -> None:
         # of resolving was never the resolution, it was the check on the far side.
         unresolved.extend(
             f"{fn.name} reads {path} (does not exist)"
-            for path in sorted(resolved) if not path.exists()
+            for path in sorted(resolved)
+            if not path.exists()
         )
         unresolved.extend(
             f"{fn.name} reads {r} → {targets[r]} (does not exist)"
-            for r in sorted(named) if not targets[r].exists()
+            for r in sorted(named)
+            if not targets[r].exists()
         )
 
     # ⚑⚑ THE POPULATION IS ASSERTED NON-EMPTY AND PRINTED, not counted. A parse that stopped
@@ -2463,7 +2587,8 @@ def test_every_warrant_names_a_test_that_exists() -> None:
         except SyntaxError:  # pragma: no cover — a suite that will not parse fails far louder
             continue
         names |= {
-            n.name for n in pyast.walk(module)
+            n.name
+            for n in pyast.walk(module)
             if isinstance(n, pyast.FunctionDef) and n.name.startswith("test_")
         }
     # ⚑⚑⚑ BOTH SOURCES ASSERTED NON-EMPTY BEFORE THE DIFFERENCE IS TAKEN. `selectors - names` is
@@ -2573,7 +2698,7 @@ def test_every_threshold_states_its_historical_exposure() -> None:
     src = _THIS.read_text(encoding="utf-8")
     for const in ("_MIN_SWEPT", "_WARRANTS_WITHOUT_CHECK"):
         idx = src.index(f"{const} = ")
-        preamble = src[max(0, idx - 1400):idx]
+        preamble = src[max(0, idx - 1400) : idx]
         assert "would have refused" in preamble or "would be refused" in preamble, (
             f"{const} is a claim about history and must state what it would have refused"
         )
@@ -2739,9 +2864,7 @@ def test_the_durable_refusal_record_keeps_the_account_not_only_the_label() -> No
     )
     # ⚑ AND IT MUST BE CONDITIONAL. An empty detail file asserts that a refusal had no account,
     # which is a different claim from a check that captured none — the gate says that in words.
-    assert 'if [ -n "${3:-}" ]; then' in body, (
-        "no detail must create no file, never an empty one"
-    )
+    assert 'if [ -n "${3:-}" ]; then' in body, "no detail must create no file, never an empty one"
 
 
 _MSGHOOK = _DIST.parent / ".githooks" / "commit-msg"
@@ -2784,7 +2907,8 @@ def test_every_refusal_path_records_not_only_the_verdict_one() -> None:
     # defect was six unwired sites and one wired, which no single spot-check would have caught.
     for name, body in (("commit-msg", msg), ("pre-commit", gate)):
         exits = [
-            i for i, ln in enumerate(body.splitlines())
+            i
+            for i, ln in enumerate(body.splitlines())
             if ln.strip() == "exit 1" and not ln.strip().startswith("#")
         ]
         lines = body.splitlines()
@@ -2846,13 +2970,12 @@ def test_the_citation_gate_checks_the_rules_file_against_itself() -> None:
     # matches the description of the bug and reports the bug. A checker that cannot tell a
     # description from an instance is this module's own subject, one level in.
     selfcheck = "\n".join(
-        ln for ln in body.split("_defined=")[1].split("\ncited=")[0].splitlines()
+        ln
+        for ln in body.split("_defined=")[1].split("\ncited=")[0].splitlines()
         if not ln.lstrip().startswith("#")
     )
     assert "| sort -u" in selfcheck, "the comparison's inputs are sorted lexically"
-    assert "sort -n" not in selfcheck, (
-        "comm requires its inputs in the collation it compares with"
-    )
+    assert "sort -n" not in selfcheck, "comm requires its inputs in the collation it compares with"
 
 
 _SQ = _DIST / "src" / "mikemol" / "hooks" / "structural_query.py"
@@ -2915,9 +3038,7 @@ def test_every_shipped_hook_is_actually_invoked() -> None:
     """
     pyproject = _PYPROJECT.read_text(encoding="utf-8")
     settings = _SETTINGS.read_text(encoding="utf-8")
-    scripts: list[str] = pyre.findall(
-        r"^(mikemol-hook-[a-z-]+)\s*=", pyproject, pyre.MULTILINE
-    )
+    scripts: list[str] = pyre.findall(r"^(mikemol-hook-[a-z-]+)\s*=", pyproject, pyre.MULTILINE)
     # ⚑ POSITIVE CONTROL. A regex that silently stopped matching would make this arm vacuous in
     # the direction that reads as success — no scripts found, nothing to check, green.
     assert scripts, "no console scripts parsed; this arm would pass by finding nothing"
@@ -3088,9 +3209,7 @@ def test_a_comment_naming_a_flag_says_whether_it_is_passed() -> None:
     for script in sorted(_DIST.parent.glob("*.sh")):
         text = script.read_text(encoding="utf-8")
         scanned += 1
-        code = "\n".join(
-            ln for ln in text.splitlines() if not ln.lstrip().startswith("#")
-        )
+        code = "\n".join(ln for ln in text.splitlines() if not ln.lstrip().startswith("#"))
         # ⚑⚑⚑ A QUOTATION IS NOT AN ASSERTION, AND THIS IS THE THIRD CHECKER HERE TO NEED THAT.
         # `message_counts.sh` exempts four-space-indented lines so a message can quote the figure
         # it is correcting; `rule_citations.sh` has no such exemption and has refused two commits
@@ -3115,8 +3234,8 @@ def test_a_comment_naming_a_flag_says_whether_it_is_passed() -> None:
     assert scanned >= _MIN_SHELL_SCRIPTS, (
         f"only {scanned} shell script(s) scanned; the population is wrong"
     )
-    assert not offenders, (
-        "comment(s) asserting a flag the file does not pass:\n  " + "\n  ".join(offenders)
+    assert not offenders, "comment(s) asserting a flag the file does not pass:\n  " + "\n  ".join(
+        offenders
     )
 
 
@@ -3154,9 +3273,7 @@ def test_the_count_checker_narrows_by_position_not_by_indent_alone() -> None:
     )
     # ⚑ AND THE INDENT EXEMPTION IS SECONDARY, not the mechanism. It is asserted too, because a
     # message that cannot quote the figure it is correcting cannot record a correction at all.
-    assert "grep -vE '^    '" in body, (
-        "a message must be able to quote the figure it is correcting"
-    )
+    assert "grep -vE '^    '" in body, "a message must be able to quote the figure it is correcting"
 
 
 _RULECITE = _DIST.parent / "rule_citations.sh"
@@ -3281,9 +3398,7 @@ def test_the_preflight_does_not_hardcode_the_witness_count() -> None:
     # tell a description of a bug from an instance of one refuses the authors who document what
     # they fixed**, which is the same finding this suite reached at `36249ea` and `6702b03`,
     # arriving a third time in a third medium.
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     spelled: list[str] = pyre.findall(
         r"\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+domain witness",
         commands,
@@ -3324,9 +3439,7 @@ def test_no_gate_asserts_a_figure_it_cannot_reach() -> None:
     # ⚑⚑ MEASURED ACROSS ALL EIGHTEEN: zero violations. So this is COVERAGE, not a live defect,
     # and saying so is the honest sizing rather than the alarming one.
     body = _WITNESS.read_text(encoding="utf-8")
-    witness_commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    witness_commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the file must still emit the warning this arm is about, or the
     # assertion below passes because the sentence vanished rather than because it was fixed.
     assert "write this tree" in witness_commands, (
@@ -3342,12 +3455,11 @@ def test_no_gate_asserts_a_figure_it_cannot_reach() -> None:
     for script in [*sorted(_DIST.parent.glob("*.sh")), _GATE, _MSGHOOK]:
         scanned += 1
         commands = "\n".join(
-            ln for ln in script.read_text(encoding="utf-8").splitlines()
+            ln
+            for ln in script.read_text(encoding="utf-8").splitlines()
             if not ln.lstrip().startswith("#")
         )
-        counted.extend(
-            f"{script.name}: {m.group(0)}" for m in session_count.finditer(commands)
-        )
+        counted.extend(f"{script.name}: {m.group(0)}" for m in session_count.finditer(commands))
     # ⚑ FLOOR ON THE POPULATION: a glob that stopped matching would make this vacuous in the
     # direction that reads as success.
     assert scanned >= _MIN_HARNESS_SCRIPTS, (
@@ -3465,9 +3577,7 @@ def test_the_island_arm_says_the_dependency_was_inverted() -> None:
     comment argues for. What changes is that it names its own status: reported, not blocking.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ THE SECTION MUST SAY WHOSE STATE IT IS. Without that a reader takes 32 untracked modules
     # for work this repository is waiting on.
     assert "not a blocker here" in commands, (
@@ -3506,9 +3616,7 @@ def test_the_ledger_section_distinguishes_deferred_from_resolved() -> None:
     script. A hit count of four would have read as four consumers.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ THE SECTION MUST NAME ITS STATUS, like the island's — but with the status it actually has.
     assert "DEFERRED" in commands, (
         "the ledger section must say it is deferred, not leave a reader to infer a blocker"
@@ -3557,9 +3665,7 @@ def test_the_poll_covers_the_symbols_carried_between_ticks() -> None:
     sweep. The fourth's subject is peer trees — reachable, but a fact about them.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ THE SECTION MUST EXIST. A carried symbol with no printed line is one nothing re-derives.
     assert "carried symbols" in commands, (
         "the poll must re-derive the symbols carried between ticks, not only filesystem blockers"
@@ -3658,9 +3764,7 @@ def test_the_accounted_verdict_does_not_assert_a_liveness_the_poll_cannot_read()
     published the disclosure and kept the defect.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: both halves must exist, or this arm passes because one vanished.
     assert "NOT COVERED: peer reachability" in commands, (
         "the reachability disclaimer must still be emitted; this arm would pass on its absence"
@@ -3715,9 +3819,7 @@ def test_the_poll_does_not_report_a_ceiling_as_a_measurement() -> None:
     merely stopped firing would pass both.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the vacuity line must still exist, or this arm passes on its absence.
     # ⚑⚑ AND THIS CONTROL FIRED ON MY OWN REPAIR. It read `vacuity sweep:` with the colon, which
     # the repair moved when the label became `vacuity sweep CEILING:` — so the control refused
@@ -3777,17 +3879,25 @@ def test_the_vacuity_sweep_resolves_an_inline_path_read() -> None:
     # docstrings excluded by construction rather than by stripping comments.
     module = pyast.parse(_THIS.read_text(encoding="utf-8"))
     sweep = next(
-        (n for n in pyast.walk(module)
-         if isinstance(n, pyast.FunctionDef)
-         and n.name == "test_every_string_asserting_arm_resolves_to_a_file_it_reads"),
+        (
+            n
+            for n in pyast.walk(module)
+            if isinstance(n, pyast.FunctionDef)
+            and n.name == "test_every_string_asserting_arm_resolves_to_a_file_it_reads"
+        ),
         None,
     )
     assert sweep is not None, "the sweep function was not found; this arm would pass on absence"
     # drop the docstring node, which is where a description of the defect lives
-    body = sweep.body[1:] if (
-        sweep.body and isinstance(sweep.body[0], pyast.Expr)
-        and isinstance(sweep.body[0].value, pyast.Constant)
-    ) else sweep.body
+    body = (
+        sweep.body[1:]
+        if (
+            sweep.body
+            and isinstance(sweep.body[0], pyast.Expr)
+            and isinstance(sweep.body[0].value, pyast.Constant)
+        )
+        else sweep.body
+    )
     code = "\n".join(pyast.dump(n) for n in body)
     # ⚑ THE SWEEP MUST ACCOUNT FOR WHAT IT COULD NOT RESOLVE. A count it prints is a count a
     # reader can compare against the poll's, which derives the same figure independently.
@@ -3947,9 +4057,9 @@ def test_the_test_function_count_survives_a_missing_trailing_newline() -> None:
     # ⚑ THE GATE MUST NOT COUNT OVER A CONCATENATION. `cat … | grep -c` is the exact construction
     # that loses a match at every file boundary lacking a newline.
     catted = [
-        ln.strip() for ln in gate.splitlines()
-        if not ln.lstrip().startswith("#")
-        and "def test_" in ln and "cat " in ln
+        ln.strip()
+        for ln in gate.splitlines()
+        if not ln.lstrip().startswith("#") and "def test_" in ln and "cat " in ln
     ]
     assert not catted, (
         "the gate counts test functions over a concatenation; a file without a trailing newline "
@@ -3966,9 +4076,9 @@ def test_the_test_function_count_survives_a_missing_trailing_newline() -> None:
     # sentence earlier — and the third instance this tick. What must hold is that the gate still
     # OBTAINS a count, wherever the counting lives.
     counts = [
-        ln.strip() for ln in gate.splitlines()
-        if not ln.lstrip().startswith("#")
-        and ("def test_" in ln or "count_test_functions" in ln)
+        ln.strip()
+        for ln in gate.splitlines()
+        if not ln.lstrip().startswith("#") and ("def test_" in ln or "count_test_functions" in ln)
     ]
     assert counts, "the gate no longer counts test functions at all, by any means"
 
@@ -4080,8 +4190,10 @@ def test_the_sweeps_ceiling_falls_rather_than_standing() -> None:
         for fn in pyast.walk(tree)
         if isinstance(fn, pyast.FunctionDef)
         for call in pyast.walk(fn)
-        if isinstance(call, pyast.Call) and isinstance(call.func, pyast.Name)
-        and call.func.id == "_resolve_path" and fn.name != "_resolve_path"
+        if isinstance(call, pyast.Call)
+        and isinstance(call.func, pyast.Name)
+        and call.func.id == "_resolve_path"
+        and fn.name != "_resolve_path"
     }
     assert callers, (
         "`_resolve_path` is defined and called by nothing but itself — the ceiling may only fall "
@@ -4124,16 +4236,24 @@ def test_the_sweep_states_the_share_of_arms_it_covers() -> None:
     # check about an instance.
     module = pyast.parse(_THIS.read_text(encoding="utf-8"))
     sweep = next(
-        (n for n in pyast.walk(module)
-         if isinstance(n, pyast.FunctionDef)
-         and n.name == "test_every_string_asserting_arm_resolves_to_a_file_it_reads"),
+        (
+            n
+            for n in pyast.walk(module)
+            if isinstance(n, pyast.FunctionDef)
+            and n.name == "test_every_string_asserting_arm_resolves_to_a_file_it_reads"
+        ),
         None,
     )
     assert sweep is not None, "the sweep function was not found; this arm would pass on absence"
-    statements = sweep.body[1:] if (
-        sweep.body and isinstance(sweep.body[0], pyast.Expr)
-        and isinstance(sweep.body[0].value, pyast.Constant)
-    ) else sweep.body
+    statements = (
+        sweep.body[1:]
+        if (
+            sweep.body
+            and isinstance(sweep.body[0], pyast.Expr)
+            and isinstance(sweep.body[0].value, pyast.Constant)
+        )
+        else sweep.body
+    )
     code = "\n".join(pyast.dump(n) for n in statements)
     # ⚑ THE SWEEP MUST STATE WHAT IT DOES NOT COVER. A floor over assertions with no statement of
     # the arm share reads as a floor over arms — which is what I read it as for six ticks.
@@ -4216,9 +4336,7 @@ def test_the_poll_does_not_carry_a_self_raised_decision_as_blocked() -> None:
     tick, which is the only place it could have been caught.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ A CARRIED OPERATOR DECISION MUST NAME ITS PETITIONER. Without one, a measurement I
     # promoted and a request someone made are byte-identical in the symbol set — and one of them
     # is not blocked at all.
@@ -4249,9 +4367,7 @@ def test_the_roster_count_derives_the_apex_row_rather_than_assuming_it() -> None
     file was right and the reader was short.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ THE APEX ROW MUST BE COUNTED, NOT ASSUMED. A literal `- 1` is a claim about every §R this
     # poll will ever read, made from the four its author had seen.
     assert "grep -ci apex" in commands, (
@@ -4284,9 +4400,7 @@ def test_the_apex_probe_reads_a_column_rather_than_grepping_a_phrase() -> None:
     and the structural read settles it — the roster's `AX-` row reads `mtools`.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ THE PROBE MUST READ THE ROSTER ROW, not the file. `rows --col` names a position; a phrase
     # names a wording that every correction reproduces.
     assert "--col 1 --starts" in commands, (
@@ -4326,9 +4440,7 @@ def test_asserted_comparisons_print_both_operands() -> None:
     a rename passes and a hidden operand still fails.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the verdict lines this arm is about must still exist, or the assertions
     # below pass because the branch vanished rather than because it prints its operands.
     # ⚑ SPLIT, AND PT018 IS RIGHT FOR THIS ARM'S OWN REASON: a composite assertion reports that the
@@ -4371,9 +4483,7 @@ def test_asserted_comparisons_print_both_operands() -> None:
         if ge is None:
             continue
         left, right = ge.group(1), ge.group(2)
-        verdict = next(
-            (ln for ln in lines[at:] if "ACCOUNTED" in ln or "DROPPED ROW:" in ln), None
-        )
+        verdict = next((ln for ln in lines[at:] if "ACCOUNTED" in ln or "DROPPED ROW:" in ln), None)
         assert verdict is not None, (
             f"the comparison `{left} >= {right}` guards no verdict line: {lines[at].strip()}"
         )
@@ -4421,9 +4531,7 @@ def test_roster_mark_is_read_from_a_cell_not_a_substring() -> None:
     difference into a count.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the roster diagnosis must still run, or every assertion below is vacuous.
     assert "§S DESCRIBES" in commands, (
         "the roster diagnosis must still be emitted; this arm would pass on its absence"
@@ -4470,9 +4578,7 @@ def test_the_roster_gap_is_compared_against_every_state_not_only_the_mark() -> N
     the states that are actually disjoint at the head of the cell.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the verdict branches must still exist, or every assertion below passes
     # because the arm vanished rather than because it improved.
     assert "ACCOUNTED:" in commands, (
@@ -4524,9 +4630,7 @@ def test_a_partitions_terms_and_total_come_from_different_measurements() -> None
     their difference is the only thing that can reveal a vocabulary this arm does not speak.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the partition must still be computed, or every assertion below passes
     # because the arm vanished rather than because it gained a second source.
     assert "_accounted=$((" in commands, (
@@ -4575,9 +4679,7 @@ def test_an_unmatched_state_says_whether_the_census_declared_it() -> None:
     tell them apart until it looked for the declaration.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the residue must still be computed, or the diagnosis below is attached
     # to nothing and this arm passes on the absence of its own subject.
     assert "_unmatched=$((" in commands, (
@@ -4617,9 +4719,7 @@ def test_the_poll_reads_each_census_against_its_own_declared_vocabulary() -> Non
     reader-relative line reports as its own blindness.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the reader-relative residue must still be reported, or this arm passes
     # because the pair collapsed to one reading rather than because both are printed.
     assert "carry a state these probes do not name" in commands, (
@@ -4673,9 +4773,7 @@ def test_the_vocabulary_reading_is_not_gated_on_the_divergence_branch() -> None:
     last-match rule a coin-flip between two tables answering different questions.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the divergence diagnosis must still exist, or this arm passes because the
     # branch vanished rather than because the reading was lifted out of it.
     assert "§S DESCRIBES" in commands, (
@@ -4731,9 +4829,7 @@ def test_the_witness_reads_bazels_artifact_not_its_exit_status() -> None:
     enumerate a census's state vocabulary. **The artifact is the population.**
     """
     body = _WITNESS.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the control gate must still exist, or this arm passes because the check
     # was deleted rather than because it reads the right thing.
     assert "CONTROL FAILED" in commands, (
@@ -4814,8 +4910,9 @@ def test_no_conventional_under_declaration_survives_in_this_tree() -> None:
         if isinstance(node, pyast.Call)
         and isinstance(node.func, pyast.Attribute)
         and node.func.attr == "resolve"
-        and any(isinstance(c, pyast.Name) and c.id == "__file__"
-                for c in pyast.walk(node.func.value))
+        and any(
+            isinstance(c, pyast.Name) and c.id == "__file__" for c in pyast.walk(node.func.value)
+        )
     ]
     # ⚑ POSITIVE CONTROL: the reader must find `.resolve()` calls of SOME kind here, or its zero
     # above is a statement about the reader rather than about the file.
@@ -4864,9 +4961,7 @@ def test_every_warrant_check_resolves_to_a_test_that_exists() -> None:
     # ⚑ `findall` IS TYPED `list[Any]`, so the pairs are named explicitly rather than carried
     # untyped into the loop — this distribution forbids an `Any` expression, and a resolver whose
     # own operands are untyped is a poor advertisement for resolving over counting.
-    hits: list[tuple[str, str]] = [
-        (m.group(1), m.group(2)) for m in checks.finditer(body)
-    ]
+    hits: list[tuple[str, str]] = [(m.group(1), m.group(2)) for m in checks.finditer(body)]
     # ⚑ POSITIVE CONTROL: the reader must find checks at all, or its zero failures below is a
     # statement about the regex rather than about the corpus.
     assert len(hits) >= _MIN_RESOLVABLE_CHECKS, (
@@ -4983,9 +5078,7 @@ def test_the_classifiers_count_is_printed_and_not_merely_computed() -> None:
     the missing half of that pair; it does not remove the half that is there.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the classifier must still be CALLED, or this arm passes because the
     # second reading was deleted rather than because its result reached the reader.
     assert 'classify "$census"' in commands, (
@@ -5004,9 +5097,7 @@ def test_the_classifiers_count_is_printed_and_not_merely_computed() -> None:
     # with `echo` reads the script's line breaks rather than its statements, which is the same
     # header-versus-body error this file records about table readers. Joined first.
     joined = commands.replace("\\\n", " ")
-    assert any(
-        "SECOND source" in ln and "echo" in ln for ln in joined.splitlines()
-    ), (
+    assert any("SECOND source" in ln and "echo" in ln for ln in joined.splitlines()), (
         "no echo reports a second source — a reader then sees only the four hand-written prefix "
         "terms, which is the partition whose terms share one query"
     )
@@ -5053,9 +5144,7 @@ def test_the_second_source_is_not_gated_on_the_divergence_branch() -> None:
     # ⚑ COMMENTS EXCLUDED, or the arm passes on a comment that merely MENTIONS the phrase — the
     # accreting-mentions defect this repository has measured in its own table reader.
     emit = [
-        i
-        for i, ln in enumerate(lines)
-        if "SECOND source" in ln and not ln.lstrip().startswith("#")
+        i for i, ln in enumerate(lines) if "SECOND source" in ln and not ln.lstrip().startswith("#")
     ]
     assert emit, "the second source must still be emitted; this arm would pass on its absence"
     # ⚑ EVERY EMISSION OF IT MUST SIT BELOW THE BRANCH, not merely one of them. Asserting that
@@ -5068,9 +5157,7 @@ def test_the_second_source_is_not_gated_on_the_divergence_branch() -> None:
     )
     # ⚑ AND THE REFUSAL PATH CARRIES IT TOO. A census with no vocabulary must say that the prefix
     # terms are then the only reading; otherwise a reader takes four agreeing zeros as evidence.
-    assert any(
-        "ONLY reading" in ln and "share one source" in ln for ln in lines
-    ), (
+    assert any("ONLY reading" in ln and "share one source" in ln for ln in lines), (
         "the no-vocabulary path must say the prefix terms are the only reading and share one "
         "source — a refusal that does not say what remains leaves the zeros looking corroborated"
     )
@@ -5120,9 +5207,7 @@ def test_the_gap_verdict_uses_the_declared_vocabulary_when_the_prefixes_cannot()
     # switches instruments is two measurements printed under one label — the manufactured
     # corroboration this poll already refuses elsewhere.
     joined = commands.replace("\\\n", " ")
-    assert any(
-        "declared states" in ln and "echo" in ln for ln in joined.splitlines()
-    ), (
+    assert any("declared states" in ln and "echo" in ln for ln in joined.splitlines()), (
         "when the verdict comes from the declared vocabulary rather than the prefixes, the line "
         "must say so — otherwise one label carries two different measurements"
     )
@@ -5165,19 +5250,15 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         # status table is found the way the poll finds it: a header naming a party and a state.
         listing = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
             [str(_CITATION_GATE_READER), "tables", str(path)],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         assert listing.returncode == 0, (
             f"could not list tables in {path.name} (rc={listing.returncode}): {listing.stderr}"
         )
-        shaped = pyre.compile(
-            r"\s*table (\d+)\s.*(?:surveyor|party) \| (?:status|state)(?: \||$)"
-        )
-        status = [
-            m.group(1)
-            for ln in listing.stdout.splitlines()
-            if (m := shaped.match(ln))
-        ]
+        shaped = pyre.compile(r"\s*table (\d+)\s.*(?:surveyor|party) \| (?:status|state)(?: \||$)")
+        status = [m.group(1) for ln in listing.stdout.splitlines() if (m := shaped.match(ln))]
         if not status:
             continue
         proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
@@ -5238,9 +5319,7 @@ def test_the_gate_refuses_a_ragged_row_it_did_not_already_have() -> None:
     row that was not ragged becoming ragged — and says what it cannot catch.
     """
     body = _GATE.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the staged-markdown walk must still exist, or every assertion below
     # passes because the walk vanished rather than because it gained a check.
     assert "--diff-filter=ACM" in commands, (
@@ -5288,7 +5367,9 @@ def _rule_name(code: str) -> str | None:
     argv = _ruff_argv()
     proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
         [*argv, "rule", code, "--output-format", "json"],
-        capture_output=True, text=True, check=False,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     if proc.returncode != 0:
         return None
@@ -5362,7 +5443,8 @@ def test_a_selector_and_the_comment_explaining_it_name_the_same_rule() -> None:
             # is the population defect this tree has measured eleven times, and it would go stale
             # the first time ruff renamed a rule — which is the very event this arm exists for.
             contradicted = {
-                code for code in in_prose
+                code
+                for code in in_prose
                 if (name := _rule_name(code)) is not None and name in value
             }
             if contradicted:
@@ -5450,9 +5532,7 @@ def test_every_suppression_directive_suppresses_under_the_gates_config() -> None
     )
     # ⚑ POSITIVE CONTROL: some file must carry a directive, or a clean result means this arm found
     # nothing to check rather than that every directive works.
-    assert sources, (
-        "no source carries a `ruff: ignore` directive — this arm would pass vacuously"
-    )
+    assert sources, "no source carries a `ruff: ignore` directive — this arm would pass vacuously"
     # ⚑⚑⚑ THE FLAGS ARE THE GATE'S AND THE POPULATION IS THIS REPOSITORY'S, AND IT TOOK TWO
     # HERMETIC FAILURES TO SEPARATE THOSE. First cut: absolute paths plus `--config`, which made
     # `per-file-ignores` patterns like `tests/*` resolve against the wrong root — 296 `S101`
@@ -5482,9 +5562,20 @@ def test_every_suppression_directive_suppresses_under_the_gates_config() -> None
             src.chmod(mode & ~0o111)
 
     proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
-        [*argv, "check", "--no-cache", "--config", str(_DIST / "pyproject.toml"),
-         "--output-format", "concise", *[str(p) for p in sources]],
-        capture_output=True, text=True, check=False, cwd=str(_DIST),
+        [
+            *argv,
+            "check",
+            "--no-cache",
+            "--config",
+            str(_DIST / "pyproject.toml"),
+            "--output-format",
+            "concise",
+            *[str(p) for p in sources],
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=str(_DIST),
     )
 
     # ⚑⚑⚑ THE RULES THE DIRECTIVES THEMSELVES NAME — derived from the population, never typed. A
@@ -5508,7 +5599,8 @@ def test_every_suppression_directive_suppresses_under_the_gates_config() -> None
     )
 
     resurfaced = [
-        ln for ln in proc.stdout.splitlines()
+        ln
+        for ln in proc.stdout.splitlines()
         if any(f" {rule}" in ln or f"{rule}:" in ln for rule in claimed)
     ]
     assert not resurfaced, (
@@ -5576,7 +5668,9 @@ def test_no_baseline_key_names_a_rule_that_no_longer_exists() -> None:
         # a name resolves; a list here would go stale at the rename this arm watches for.
         proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
             [*_ruff_argv(), "rule", rule, "--output-format", "json"],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if proc.returncode != 0:
             unknown.append(key)
@@ -5718,8 +5812,15 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
         # narrowing the flag exists to force — the same move the two `re.findall` sites in this
         # file already carry, for the same reason.
         ignore: Callable[[str, list[str]], set[str]] = shutil.ignore_patterns(
-            ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__",
-            "build", "dist", "*.egg-info")
+            ".venv",
+            ".mypy_cache",
+            ".ruff_cache",
+            ".pytest_cache",
+            "__pycache__",
+            "build",
+            "dist",
+            "*.egg-info",
+        )
         shutil.copytree(_DIST, probe, symlinks=True, ignore=ignore)
         # ⚑ THE PLANTED FINDING IS A SUPPRESSION DIRECTIVE IN THE CODE FORM, which raises
         # `rule-codes-in-suppression-comments` — a preview rule this distribution pays rather than
@@ -5751,7 +5852,10 @@ def test_a_key_absent_from_the_baseline_is_refused_when_its_finding_returns() ->
         env = {**os.environ, "RUFF_BIN": str(Path(_ruff_argv()[0]).resolve())}
         proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the ratchet is the subject of this case
             [str(ratchet), str(probe)],
-            capture_output=True, text=True, check=False, env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
         )
 
     assert proc.returncode != 0, (
@@ -5833,8 +5937,15 @@ def test_every_emptied_baseline_arms_a_refusal() -> None:
     # ⚑⚑ ONLY THE F-ARM SEPARATED THOSE. A planted copy also refuses — by name, with the right
     # key — so a P-arm alone reads as success while the arm is measuring build residue.
     ignore: Callable[[str, list[str]], set[str]] = shutil.ignore_patterns(
-        ".venv", ".mypy_cache", ".ruff_cache", ".pytest_cache", "__pycache__",
-        "build", "dist", "*.egg-info")
+        ".venv",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".pytest_cache",
+        "__pycache__",
+        "build",
+        "dist",
+        "*.egg-info",
+    )
     tolerated: list[str] = []
     for dist in emptied:
         with tempfile.TemporaryDirectory() as tmp:
@@ -5861,7 +5972,9 @@ def test_every_emptied_baseline_arms_a_refusal() -> None:
             )
             proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the ratchet is the subject of this case
                 [str(ratchet), str(probe)],
-                capture_output=True, text=True, check=False,
+                capture_output=True,
+                text=True,
+                check=False,
                 env={**os.environ, "RUFF_BIN": str(Path(_ruff_argv()[0]).resolve())},
             )
         if proc.returncode == 0 or "_probe.py" not in proc.stdout:
@@ -5900,7 +6013,8 @@ def test_the_refusal_records_ragged_rows_are_reported_by_shape() -> None:
     poll distinguishes the two shapes rather than collapsing them under one cause.
     """
     commands = "\n".join(
-        ln for ln in _POLL.read_text(encoding="utf-8").splitlines()
+        ln
+        for ln in _POLL.read_text(encoding="utf-8").splitlines()
         if not ln.lstrip().startswith("#")
     )
     # ⚑ POSITIVE CONTROL: the record must still be read at all, or every assertion below passes
@@ -5963,12 +6077,13 @@ def test_the_poll_does_not_re_ask_a_question_it_has_already_answered() -> None:
         f"the per-census loop must be findable to bound its calls; found {len(starts)} header(s)"
     )
     ends = [
-        i for i, ln in enumerate(lines[starts[0]:], start=starts[0])
+        i
+        for i, ln in enumerate(lines[starts[0] :], start=starts[0])
         if pyre.match(r"^  done\s*$", ln)
     ]
     assert ends, "the per-census loop's `done` must be findable"
     modes: dict[str, int] = {}
-    for ln in lines[starts[0]:ends[0]]:
+    for ln in lines[starts[0] : ends[0]]:
         if ln.lstrip().startswith("#"):
             continue
         found = pyre.search(r'"\$md" (\w+) "\$census"', ln)
@@ -6014,9 +6129,7 @@ def test_the_poll_states_no_paydown_figure_it_cannot_re_derive() -> None:
     yields one. What must not survive is a figure a reader will believe and nothing will correct.
     """
     body = _POLL.read_text(encoding="utf-8")
-    commands = "\n".join(
-        ln for ln in body.splitlines() if not ln.lstrip().startswith("#")
-    )
+    commands = "\n".join(ln for ln in body.splitlines() if not ln.lstrip().startswith("#"))
     # ⚑ POSITIVE CONTROL: the decision must still be reported, or this arm passes because the
     # section vanished rather than because its figure stopped being asserted.
     assert "RUF201" in commands, (
@@ -6082,9 +6195,7 @@ def test_every_tool_the_gate_invokes_is_refused_when_absent() -> None:
     """
     # ⚑ THE CONSUMERS, DERIVED: every shell file in this repository that invokes a `.venv/bin`
     # tool. Measured with `grep -rln 'venv/bin' .githooks/ preflight.sh` — exactly these two.
-    shell_consumers = sorted(
-        p for p in [_GATE, _DIST.parent / "preflight.sh"] if p.is_file()
-    )
+    shell_consumers = sorted(p for p in [_GATE, _DIST.parent / "preflight.sh"] if p.is_file())
     # ⚑ NON-EMPTY, ASSERTED: every loop below is over this set, so an empty one makes the whole arm
     # vacuous — the exact failure this arm hit once already when its guard population went empty.
     assert shell_consumers, "no shell consumer of the host venv was found — the arm reads nothing"
@@ -6140,7 +6251,9 @@ def _assert_no_unrefused_guards(consumer: Path) -> None:
     # anti-vacuity assertion below is what actually caught it — a second assertion catching what
     # the primary one could not see is the argument for having both, not a redundancy.
     guarded: list[str] = pyre.findall(
-        r"^\s*if \[ -x ([^\]]+?) \]; then", body, flags=pyre.MULTILINE,
+        r"^\s*if \[ -x ([^\]]+?) \]; then",
+        body,
+        flags=pyre.MULTILINE,
     )
     unrefused: list[str] = sorted({g for g in guarded if Path(g.strip()).name not in covered})
     assert not unrefused, (
@@ -6206,7 +6319,8 @@ def test_the_gate_does_not_run_a_second_copy_of_a_check_the_graph_already_runs()
         f"//{dist}:{check}"
         for dist in dists
         for check in ("ruff", "mypy")
-        if f'name = "{check}"' not in (_DIST.parent / dist / "BUILD.bazel").read_text(
+        if f'name = "{check}"'
+        not in (_DIST.parent / dist / "BUILD.bazel").read_text(
             encoding="utf-8",
         )
     ]
@@ -6276,13 +6390,17 @@ def test_no_bazel_invocation_filters_away_the_output_it_promises_to_show() -> No
     # wrong, which is the case for deriving rather than for a better hand-written list.
     module_names = cast("dict[str, object]", globals())
     consumers: dict[str, Path] = {
-        name: value for name, value in module_names.items()
-        if name.startswith("_") and name.isupper() and isinstance(value, Path)
+        name: value
+        for name, value in module_names.items()
+        if name.startswith("_")
+        and name.isupper()
+        and isinstance(value, Path)
         and (value.suffix == ".sh" or value.parent.name == ".githooks")
     }
     bodies = {
         path.name: path.read_text(encoding="utf-8")
-        for path in sorted(consumers.values()) if path.exists()
+        for path in sorted(consumers.values())
+        if path.exists()
     }
     assert len(bodies) >= _MIN_SHELL_CONSUMERS, (
         f"derived only {sorted(bodies)} from this module's Path constants, below the floor of "
@@ -6351,9 +6469,7 @@ def test_no_poll_instruction_names_a_retired_instrument() -> None:
     # file the test reads — in an arm about stale instructions. Composing the paths from the
     # checker NAMES keeps the property and gives the sweep nothing false to resolve.
     checkers = ("ruff", "mypy")
-    retired = [
-        ln[:100] for ln in printed if any(f".venv/bin/{c}" in ln for c in checkers)
-    ]
+    retired = [ln[:100] for ln in printed if any(f".venv/bin/{c}" in ln for c in checkers)]
     assert not retired, (
         f"the poll instructs a reader to measure with a host-venv checker the gate no longer "
         f"uses — the per-distribution bazel targets are the authoritative ones: {retired}"
@@ -6383,14 +6499,17 @@ def test_the_built_console_scripts_match_the_declared_entry_points() -> None:
     # in an expression. Measured repeatedly — mypy is the instrument that names the leak.
     section = pyproject.partition("[project.scripts]")[2].partition("\n[")[0]
     dpairs: list[tuple[str, str]] = pyre.findall(
-        r'^([\w-]+)\s*=\s*"([^"]+)"', section, flags=pyre.MULTILINE,
+        r'^([\w-]+)\s*=\s*"([^"]+)"',
+        section,
+        flags=pyre.MULTILINE,
     )
     # ⚑⚑ THE TWO SIDES MUST BE READ WITH THE SAME REACH. This read once matched only
     # `mikemol-hook-…` in BUILD while the pyproject read takes every script, so the first
     # console script that is NOT a hook (`mikemol-shellcheck`, 2026-09-22) was reported "declared
     # only" while it sat in both files — an arm that could never admit a non-hook script.
     wpairs: list[tuple[str, str]] = pyre.findall(
-        r'"(mikemol-[\w-]+)":\s*"([\w.]+:\w+)"', build,
+        r'"(mikemol-[\w-]+)":\s*"([\w.]+:\w+)"',
+        build,
     )
     declared: dict[str, str] = dict(dpairs)
     wired: dict[str, str] = dict(wpairs)
@@ -6558,8 +6677,9 @@ def test_the_unrunnable_warrant_evidence_names_members_not_a_count() -> None:
     """
     tree = pyast.parse(_THIS.read_text(encoding="utf-8"))
     target = "test_every_warrant_names_a_test_that_exists"
-    fn = next((n for n in pyast.walk(tree)
-               if isinstance(n, pyast.FunctionDef) and n.name == target), None)
+    fn = next(
+        (n for n in pyast.walk(tree) if isinstance(n, pyast.FunctionDef) and n.name == target), None
+    )
     assert fn is not None, (
         f"{target} is not in this file — the arm whose evidence this measures has been renamed or "
         f"removed, and this arm would silently assert nothing"
@@ -6576,9 +6696,11 @@ def test_the_unrunnable_warrant_evidence_names_members_not_a_count() -> None:
     # ⚑ THE ASSERTION IS FOUND BY ITS SUBJECT, not by position. An index into the body would break
     # on any edit that adds a statement, and break SILENTLY into measuring a different assertion.
     claim = "asserts a claim nothing can run"
-    msgs = [pyast.unparse(n.msg) for n in pyast.walk(fn)
-            if isinstance(n, pyast.Assert) and n.msg is not None
-            and claim in pyast.unparse(n.msg)]
+    msgs = [
+        pyast.unparse(n.msg)
+        for n in pyast.walk(fn)
+        if isinstance(n, pyast.Assert) and n.msg is not None and claim in pyast.unparse(n.msg)
+    ]
     assert len(msgs) == 1, (
         f"expected exactly one assertion in {target} whose message carries {claim!r}, found "
         f"{len(msgs)} — this arm cannot say which message it is measuring"
@@ -6722,14 +6844,18 @@ def test_two_walks_agree_on_every_population_shaped_negative_by_name() -> None:
     assert not only_backward, (
         "the ASSERT→BINDING walk (`_population_negatives`) has NARROWED — it misses members the "
         "binding→assert walk still finds. The floor arm may still pass, which is why this exists:\n"
-        f"  missed by assert→binding ({len(only_backward)}):\n    " + "\n    ".join(only_backward)
-        + f"\n  agreed ({len(forward & backward)}):\n    " + agreed
+        f"  missed by assert→binding ({len(only_backward)}):\n    "
+        + "\n    ".join(only_backward)
+        + f"\n  agreed ({len(forward & backward)}):\n    "
+        + agreed
     )
     assert not only_forward, (
         "the BINDING→ASSERT walk (`_population_negatives_by_binding`) has NARROWED — it misses "
         "members the assert→binding walk still finds:\n"
-        f"  missed by binding→assert ({len(only_forward)}):\n    " + "\n    ".join(only_forward)
-        + f"\n  agreed ({len(forward & backward)}):\n    " + agreed
+        f"  missed by binding→assert ({len(only_forward)}):\n    "
+        + "\n    ".join(only_forward)
+        + f"\n  agreed ({len(forward & backward)}):\n    "
+        + agreed
     )
 
 
@@ -6756,8 +6882,11 @@ def _launches(script: Path) -> list[tuple[int, str]]:
 
     """
     lines = script.read_text(encoding="utf-8").splitlines()
-    return [(n, s) for n, raw in enumerate(lines, 1)
-            if _LAUNCH.search(s := raw.strip()) and not s.startswith(_NOT_A_LAUNCH)]
+    return [
+        (n, s)
+        for n, raw in enumerate(lines, 1)
+        if _LAUNCH.search(s := raw.strip()) and not s.startswith(_NOT_A_LAUNCH)
+    ]
 
 
 def test_every_test_the_gate_launches_runs_without_the_hooks_git_env() -> None:
@@ -6785,16 +6914,25 @@ def test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names(
     # GIT_INDEX_FILE are aimed at it as a hook aims them at the real repo, the fixture
     # commits through `git_scrubbed`, and the decoy's refs are printed — empty when scrubbed.
     proc = subprocess.run(
-        ["/bin/bash", "-euc",
-         ('. "$SCRUB_SH"\n'
-          "env -u GIT_DIR -u GIT_INDEX_FILE git init -q decoy\n"
-          'export GIT_DIR="$PWD/decoy/.git" GIT_INDEX_FILE="$PWD/decoy/.git/index"\n'
-          "git_scrubbed git init -q fixture\n"
-          "git_scrubbed git -c user.name=f -c user.email=f@invalid -C fixture"
-          " commit -q --allow-empty -m f\n"
-          "env -u GIT_DIR -u GIT_INDEX_FILE git -C decoy for-each-ref\n")],
-        cwd=tmp_path, capture_output=True, text=True, check=False,
-        env={**clean, "SCRUB_SH": str(_SCRUB_SH)})
+        [
+            "/bin/bash",
+            "-euc",
+            (
+                '. "$SCRUB_SH"\n'
+                "env -u GIT_DIR -u GIT_INDEX_FILE git init -q decoy\n"
+                'export GIT_DIR="$PWD/decoy/.git" GIT_INDEX_FILE="$PWD/decoy/.git/index"\n'
+                "git_scrubbed git init -q fixture\n"
+                "git_scrubbed git -c user.name=f -c user.email=f@invalid -C fixture"
+                " commit -q --allow-empty -m f\n"
+                "env -u GIT_DIR -u GIT_INDEX_FILE git -C decoy for-each-ref\n"
+            ),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+        env={**clean, "SCRUB_SH": str(_SCRUB_SH)},
+    )
     assert proc.returncode == 0, f"{_SCRUB_SH.name}: {proc.stderr.strip()}"
     assert not proc.stdout, f"{_SCRUB_SH.name}: a fixture commit reached the decoy:\n{proc.stdout}"
 
@@ -6808,8 +6946,12 @@ def test_the_scrub_with_no_git_env_set_is_plain_env(tmp_path: Path) -> None:
     clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     proc = subprocess.run(
         ["/bin/bash", "-euc", '. "$SCRUB_SH"\ngit_scrubbed printenv SCRUB_MARKER\n'],
-        cwd=tmp_path, capture_output=True, text=True, check=False,
-        env={**clean, "SCRUB_SH": str(_SCRUB_SH), _KEPT_NAME: _KEPT_VALUE})
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+        env={**clean, "SCRUB_SH": str(_SCRUB_SH), _KEPT_NAME: _KEPT_VALUE},
+    )
     assert proc.returncode == 0, proc.stderr.strip()
     assert proc.stdout.strip() == _KEPT_VALUE, "the scrub dropped a variable that is not GIT_*"
 
@@ -6818,16 +6960,18 @@ def test_every_launcher_sources_the_one_scrub() -> None:
     """Each launcher sources `git_env.sh`; one that stopped would launch with GIT_* intact."""
     assert _SCRUB_SH.is_file(), f"{_SCRUB_SH} is absent — there is nothing to source"
     assert all(s.is_file() for s in _LAUNCHERS), "a launcher this arm reads is absent"
-    unsourced = [s.name for s in _LAUNCHERS
-                 if not _SOURCES_SCRUB.search(s.read_text(encoding="utf-8"))]
+    unsourced = [
+        s.name for s in _LAUNCHERS if not _SOURCES_SCRUB.search(s.read_text(encoding="utf-8"))
+    ]
     assert not unsourced, f"no `. ./git_env.sh` in: {unsourced}"
 
 
 def test_the_scrub_is_defined_exactly_once() -> None:
     """Only `git_env.sh` defines `git_scrubbed`; a second copy in any root shell file is refused."""
     shells = {p for g in _SHELL_GLOBS for p in _DIST.parent.glob(g) if p.is_file()}
-    definers = sorted(p.name for p in shells
-                      if _SCRUB_FN.search(p.read_text(encoding="utf-8", errors="replace")))
+    definers = sorted(
+        p.name for p in shells if _SCRUB_FN.search(p.read_text(encoding="utf-8", errors="replace"))
+    )
     assert definers == [_SCRUB_SH.name], f"`{_SCRUB}` is defined in {definers}"
 
 
@@ -6850,9 +6994,15 @@ def _pairing(dist: Path) -> subprocess.CompletedProcess[str]:
     clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     return subprocess.run(
         ["/bin/bash", "-euc", 'exec "$PAIRING_PY" "$PAIRING_COUNTER" --pairing "$PAIRING_DIST"'],
-        capture_output=True, text=True, check=False,
-        env={**clean, "PAIRING_PY": sys.executable, "PAIRING_COUNTER": str(_COUNTER),
-             "PAIRING_DIST": str(dist)},
+        capture_output=True,
+        text=True,
+        check=False,
+        env={
+            **clean,
+            "PAIRING_PY": sys.executable,
+            "PAIRING_COUNTER": str(_COUNTER),
+            "PAIRING_DIST": str(dist),
+        },
     )
 
 

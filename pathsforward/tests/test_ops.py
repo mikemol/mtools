@@ -30,9 +30,16 @@ def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
         the waypoint.
 
     """
-    w: Rec = {"symbol": sym, "title": sym, "status": status, "blocked_on": [],
-              "blocked_kind": None, "next_bounded_step": "step", "evidence": "",
-              "ticks_blocked": 0}
+    w: Rec = {
+        "symbol": sym,
+        "title": sym,
+        "status": status,
+        "blocked_on": [],
+        "blocked_kind": None,
+        "next_bounded_step": "step",
+        "evidence": "",
+        "ticks_blocked": 0,
+    }
     w.update(extra)
     return w
 
@@ -54,9 +61,14 @@ def _state(*waypoints: Rec) -> State:
         the state.
 
     """
-    return validate({"counter": _COUNTER, "heartbeat": "h0",
-                     "waypoints": list(waypoints) or [_wp("W1"), _wp("W2")],
-                     "residue": [{"symbol": "W3", "reason": "why", "dropped_at": "d"}]})
+    return validate(
+        {
+            "counter": _COUNTER,
+            "heartbeat": "h0",
+            "waypoints": list(waypoints) or [_wp("W1"), _wp("W2")],
+            "residue": [{"symbol": "W3", "reason": "why", "dropped_at": "d"}],
+        }
+    )
 
 
 def test_find_resolves_a_live_symbol() -> None:
@@ -76,8 +88,10 @@ def test_find_refuses_an_unissued_symbol() -> None:
         ops.find(_state(), "W9")
 
 
-@pytest.mark.parametrize("upd", [ops.Update(status="bogus"), ops.Update(blocked_kind="robot"),
-                                 ops.Update(ticks_blocked=-1)])
+@pytest.mark.parametrize(
+    "upd",
+    [ops.Update(status="bogus"), ops.Update(blocked_kind="robot"), ops.Update(ticks_blocked=-1)],
+)
 def test_an_out_of_enum_update_is_refused_and_changes_nothing(upd: ops.Update) -> None:
     """`status=bogus` (el-openglo accepted it) and its kin are refused, and nothing changes."""
     state = _state()
@@ -151,7 +165,10 @@ def test_add_mints_the_next_symbol() -> None:
     state = _state()
     sym = ops.add(state, ops.Draft("new", "first step", ("W1",), ("tag",)), _NOW)
     assert (sym, state.doc["counter"], state.waypoints[-1]["enables"]) == (
-        f"W{_MINTED}", _MINTED, ["W1"])
+        f"W{_MINTED}",
+        _MINTED,
+        ["W1"],
+    )
 
 
 @pytest.mark.parametrize("draft", [ops.Draft("  "), ops.Draft("t", enables=("mikemol",))])
@@ -161,7 +178,9 @@ def test_a_refused_add_mints_nothing(draft: ops.Draft) -> None:
     with pytest.raises(ops.RefusedError, match="nothing minted"):
         ops.add(state, draft, _NOW)
     assert (state.doc["counter"], [w["symbol"] for w in state.waypoints]) == (
-        _COUNTER, ["W1", "W2"])
+        _COUNTER,
+        ["W1", "W2"],
+    )
 
 
 def test_drop_moves_to_residue_with_the_reason() -> None:
@@ -169,7 +188,9 @@ def test_drop_moves_to_residue_with_the_reason() -> None:
     state = _state()
     ops.drop(state, "W1", "superseded", _NOW)
     assert ([w["symbol"] for w in state.waypoints], state.residue[-1]["reason"]) == (
-        ["W2"], "superseded")
+        ["W2"],
+        "superseded",
+    )
 
 
 def test_drop_refuses_a_blank_reason() -> None:
@@ -205,9 +226,10 @@ def test_bump_counts_only_blocked_and_not_excluded() -> None:
     """Bumping counts every blocked waypoint not excluded, and nothing else."""
     state = _state(_blocked("W1"), _blocked("W2"), _wp("W4"))
     nudges = ops.bump_blocked(state, frozenset({"W2"}))
-    assert ([(n.symbol, n.ticks, n.action) for n in nudges],
-            [w["ticks_blocked"] for w in state.waypoints]) == (
-        [("W1", 1, ops.Action.NUDGE)], [1, 0, 0])
+    assert (
+        [(n.symbol, n.ticks, n.action) for n in nudges],
+        [w["ticks_blocked"] for w in state.waypoints],
+    ) == ([("W1", 1, ops.Action.NUDGE)], [1, 0, 0])
 
 
 def test_bump_does_not_touch_the_heartbeat() -> None:

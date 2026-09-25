@@ -75,9 +75,11 @@ def headers(path: Path) -> list[tuple[int, str]]:
         `[(level, text)]` — the section skeleton, structurally.
 
     """
-    return [(element.level, panflute.stringify(element).strip())
-            for element in document(path).content
-            if isinstance(element, panflute.Header)]
+    return [
+        (element.level, panflute.stringify(element).strip())
+        for element in document(path).content
+        if isinstance(element, panflute.Header)
+    ]
 
 
 def render_headings(raw_lines: list[str]) -> list[str]:

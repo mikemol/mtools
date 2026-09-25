@@ -290,7 +290,8 @@ def test_a_state_declared_as_a_schema_still_classifies(vocabulary_doc: Path) -> 
     without inventing a pattern language.
     """
     groups = tables.classify(
-        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE)
+        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE
+    )
     assert len(groups["filed (rev n)"]) == _FILED_ROWS
 
 
@@ -307,7 +308,8 @@ def test_an_undeclared_state_lands_in_the_residue_not_in_its_prefix(vocabulary_d
     vocabulary does not contain, and **that row is the only evidence such a state exists.**
     """
     groups = tables.classify(
-        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE)
+        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE
+    )
     assert len(groups[""]) == 1
     assert "elsewhere" in groups[""][0].cells[1]
 
@@ -321,7 +323,8 @@ def test_the_residue_is_returned_rather_than_dropped(vocabulary_doc: Path) -> No
     unscoped table walk and an unhandled schema — neither of which any count would have shown.
     """
     groups = tables.classify(
-        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE)
+        vocabulary_doc, tables.vocabulary(vocabulary_doc), position=_STATUS_TABLE
+    )
     seen = sum(len(rows) for rows in groups.values())
     assert seen == len(tables.table_rows(vocabulary_doc, position=_STATUS_TABLE))
 

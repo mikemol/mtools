@@ -42,8 +42,10 @@ def mirror(state: State, state_path: Path) -> str:
         DERIVED,
         f"# paths-forward \u2014 {state_path}",
         "",
-        (f"counter {state.counter} \u00b7 heartbeat {text(state.doc, 'heartbeat') or '-'} "
-        f"\u00b7 job `{text(state.doc, 'job_id') or '-'}` \u00b7 hash `{v2(state.waypoints)}`"),
+        (
+            f"counter {state.counter} \u00b7 heartbeat {text(state.doc, 'heartbeat') or '-'} "
+            f"\u00b7 job `{text(state.doc, 'job_id') or '-'}` \u00b7 hash `{v2(state.waypoints)}`"
+        ),
         "",
         "| # | symbol | status | title | blocked on | next bounded step |",
         "|---|---|---|---|---|---|",

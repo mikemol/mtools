@@ -141,7 +141,7 @@ def _all_rows(skill: Path) -> list[tuple[str, list[str]]]:
         if first in {"artifact", RETIRED_HEADER}:
             header = first
             continue
-        if set(cells[0]) <= set("-: "):        # the header separator row
+        if set(cells[0]) <= set("-: "):  # the header separator row
             continue
         rows.append((header, cells))
     return rows

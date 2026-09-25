@@ -17,5 +17,8 @@ def test_every_arm_holds() -> None:
 def test_the_hash_arms_are_present() -> None:
     """The two hash arms (summit's) are among the arms, so a pass is not a pass over nothing."""
     labels = [label for label, _ in selftest.arms()]
-    assert ("a heartbeat change does not move the hash" in labels,
-            "a waypoint change moves the hash" in labels, len(labels)) == (True, True, _ARMS)
+    assert (
+        "a heartbeat change does not move the hash" in labels,
+        "a waypoint change moves the hash" in labels,
+        len(labels),
+    ) == (True, True, _ARMS)

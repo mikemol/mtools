@@ -68,8 +68,8 @@ def load(path: Path) -> State:
 def write_atomic(path: Path, body: str) -> None:
     """Write `body` to a temp file beside `path`, fsync it, and replace `path` with it."""
     with tempfile.NamedTemporaryFile(
-            "w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.",
-            suffix=".tmp", delete=False) as fh:
+        "w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False
+    ) as fh:
         fh.write(body)
         fh.flush()
         os.fsync(fh.fileno())

@@ -69,9 +69,13 @@ _REFUSED = 2
 _CLI_SOURCE = Path(str(_cli_module.__file__))
 
 
-def _run(doc: Path, *args: str, mode: str = "rows",
-         extra: list[str] | None = None,
-         terminator: bool = False) -> subprocess.CompletedProcess[str]:
+def _run(
+    doc: Path,
+    *args: str,
+    mode: str = "rows",
+    extra: list[str] | None = None,
+    terminator: bool = False,
+) -> subprocess.CompletedProcess[str]:
     """Invoke the CLI as a caller does, as a subprocess rather than in-process.
 
     ⚑ A SUBPROCESS IS THE SUBJECT HERE, NOT A CONVENIENCE. These arms are about what a mode does
@@ -98,10 +102,12 @@ def _run(doc: Path, *args: str, mode: str = "rows",
     head = [sys.executable, "-m", "mikemol.mdstruct.cli", mode]
     # ⚑ `grep` TAKES ITS PATTERN BEFORE THE PATH and every other mode takes the path first, which
     # is the tool's own argument order — so the helper follows it rather than imposing one shape.
-    lead = [*(["--"] if terminator else []), *args, str(doc)] if mode == "grep" \
-        else [str(doc), *args]
-    return subprocess.run([*head, *lead, *(extra or [])],
-                          check=False, capture_output=True, text=True)
+    lead = (
+        [*(["--"] if terminator else []), *args, str(doc)] if mode == "grep" else [str(doc), *args]
+    )
+    return subprocess.run(
+        [*head, *lead, *(extra or [])], check=False, capture_output=True, text=True
+    )
 
 
 def test_rows_scoped_to_one_table_returns_only_that_tables_rows(doc: Path) -> None:
@@ -220,11 +226,15 @@ def test_the_usage_text_names_every_registered_mode() -> None:
     """
     banner = subprocess.run(
         [sys.executable, "-m", "mikemol.mdstruct.cli"],
-        capture_output=True, text=True, check=False,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     refusal = subprocess.run(
         [sys.executable, "-m", "mikemol.mdstruct.cli", "nosuchmode", "x.md"],
-        capture_output=True, text=True, check=False,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     declared = refusal.stderr.split("known modes are", 1)[-1].strip().rstrip(".")
     dispatchable = {m.strip() for m in declared.split(",") if m.strip()}
@@ -243,8 +253,9 @@ def test_the_usage_text_names_every_registered_mode() -> None:
     # about the banner, which had both lines. A reader's pattern is a third spelling of the mode
     # set, one layer below the two this arm compares, and it drifted the moment the naming
     # convention widened.
-    documented = {m.group(1) for m in
-                  re.finditer(r"^    mdstruct ([\w-]+) ", banner.stderr, re.MULTILINE)}
+    documented = {
+        m.group(1) for m in re.finditer(r"^    mdstruct ([\w-]+) ", banner.stderr, re.MULTILINE)
+    }
     assert documented, (
         f"the usage banner named no modes — with an empty set this arm's containment check is "
         f"vacuously true in one direction; stderr was {banner.stderr!r}"
@@ -373,8 +384,7 @@ def _string_literals(node: ast.AST) -> set[str]:
 
     """
     return {
-        e.value for e in ast.walk(node)
-        if isinstance(e, ast.Constant) and isinstance(e.value, str)
+        e.value for e in ast.walk(node) if isinstance(e, ast.Constant) and isinstance(e.value, str)
     }
 
 
@@ -407,8 +417,9 @@ def _dict_literal(tree: ast.Module, name: str, consts: dict[str, str]) -> dict[s
     return {}
 
 
-def _flags_reachable(funcs: dict[str, ast.FunctionDef], name: str,
-                     seen: set[str] | None = None) -> set[str]:
+def _flags_reachable(
+    funcs: dict[str, ast.FunctionDef], name: str, seen: set[str] | None = None
+) -> set[str]:
     """Return every dash-leading literal reachable from `name`, following local calls.
 
     ⚑ FOLLOWING CALLS IS WHAT MAKES THIS MEASURE THE MODE rather than its adapter. Each registry
@@ -594,8 +605,7 @@ def test_a_registered_mode_answers_when_run_as_a_program(doc: Path, mode: str) -
     doc.write_text(_FIXTURE, encoding="utf-8")
     result = _run(doc, mode=mode)
     assert result.returncode == 0, (
-        f"`{mode}` refused a well-formed document: rc={result.returncode}, "
-        f"stderr={result.stderr!r}"
+        f"`{mode}` refused a well-formed document: rc={result.returncode}, stderr={result.stderr!r}"
     )
     assert result.stdout.strip(), (
         f"`{mode}` exited 0 and printed NOTHING — a mode that answers silently is "
@@ -650,7 +660,7 @@ def test_lint_reads_every_path_it_is_given_and_attributes_findings_to_each(
     assert first_denominator < md033_at < second_denominator, (
         "the second file's finding is not under the second file"
     )
-    assert "MD013" not in "\n".join(lines[first_denominator + 1:]), (
+    assert "MD013" not in "\n".join(lines[first_denominator + 1 :]), (
         "the first file's finding was repeated under the second"
     )
 

@@ -29,7 +29,10 @@ from mikemol.mdstruct import labels
 def test_the_ascii_shape_matches() -> None:
     """The established short codes are found, in order."""
     assert labels.labels_in("see T13 and R7b-APPLY and A4-FNF here") == [
-        "T13", "R7b-APPLY", "A4-FNF"]
+        "T13",
+        "R7b-APPLY",
+        "A4-FNF",
+    ]
 
 
 @pytest.mark.parametrize("glyph", ["Ⓐ", "Ⓕ", "Ⓖ", "ⓐ", "⑳"])

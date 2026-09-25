@@ -39,9 +39,16 @@ def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
         the waypoint.
 
     """
-    w: Rec = {"symbol": sym, "title": f"t{sym}", "status": status, "blocked_on": [],
-              "blocked_kind": None, "next_bounded_step": "s", "evidence": "",
-              "ticks_blocked": 0}
+    w: Rec = {
+        "symbol": sym,
+        "title": f"t{sym}",
+        "status": status,
+        "blocked_on": [],
+        "blocked_kind": None,
+        "next_bounded_step": "s",
+        "evidence": "",
+        "ticks_blocked": 0,
+    }
     w.update(extra)
     return w
 
@@ -53,10 +60,13 @@ def _file(tmp_path: Path, waypoints: list[Rec] | None = None, **top: object) -> 
         the state path.
 
     """
-    doc: Rec = {"counter": _COUNTER, "project_root": str(tmp_path),
-                "state_path": "/elsewhere/live/paths-forward.json",
-                "waypoints": [_wp("W1"), _wp("W2")] if waypoints is None else waypoints,
-                "residue": [{"symbol": "W3", "reason": "why"}]}
+    doc: Rec = {
+        "counter": _COUNTER,
+        "project_root": str(tmp_path),
+        "state_path": "/elsewhere/live/paths-forward.json",
+        "waypoints": [_wp("W1"), _wp("W2")] if waypoints is None else waypoints,
+        "residue": [{"symbol": "W3", "reason": "why"}],
+    }
     doc.update(top)
     path = tmp_path / "paths-forward.json"
     path.write_text(json.dumps(doc), encoding="utf-8")
@@ -123,21 +133,30 @@ def test_there_is_no_default_root(capsys: pytest.CaptureFixture[str]) -> None:
 def test_no_module_hardcodes_a_home_path() -> None:
     """No module's string literals name /home/; the scanner finds one planted (positive control)."""
     package = Path(pathsforward.__file__).parent
-    found = [lit for mod in sorted(package.glob("*.py"))
-             for lit in _home_literals(mod.read_text(encoding="utf-8"))]
+    found = [
+        lit
+        for mod in sorted(package.glob("*.py"))
+        for lit in _home_literals(mod.read_text(encoding="utf-8"))
+    ]
     assert (found, _home_literals('ROOT = "/home/mikemol/github/x"')) == (
-        [], ['"/home/mikemol/github/x"'])
+        [],
+        ['"/home/mikemol/github/x"'],
+    )
 
 
 def test_the_bare_call_reads_and_writes_nothing(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """The bare call prints a summary and leaves the directory byte-for-byte as it was."""
     path = _file(tmp_path)
     before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
     code = _run(path)
     after = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
     assert (code, after == before, f"counter={_COUNTER}" in capsys.readouterr().out) == (
-        _OK, True, True)
+        _OK,
+        True,
+        True,
+    )
 
 
 def test_selftest_needs_no_state(capsys: pytest.CaptureFixture[str]) -> None:
@@ -170,7 +189,9 @@ def test_verify_diverges_on_a_foreign_hash(tmp_path: Path) -> None:
     """A foreign hash exits 4 and is ledgered as a divergence the file wins."""
     path = _file(tmp_path)
     assert (_run(path, "--verify", "f" * _LEGACY_WIDTH), "FILE wins" in _ledger(path)) == (
-        _DIVERGED, True)
+        _DIVERGED,
+        True,
+    )
 
 
 def test_verify_refuses_a_malformed_hash(tmp_path: Path) -> None:
@@ -194,7 +215,8 @@ def test_payload_names_the_copy(tmp_path: Path, capsys: pytest.CaptureFixture[st
 
 
 def test_an_oversize_payload_exits_1_and_prints_nothing(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """An oversize payload is refused: exit 1, nothing on stdout, the reason on stderr."""
     path = _file(tmp_path, [_wp("W1", next_bounded_step="x" * _HUGE_STEP), _wp("W2")])
     code = _run(path, "--payload")
@@ -219,7 +241,8 @@ def test_check_refuses_a_malformed_symbol_without_crashing(tmp_path: Path) -> No
 
 
 def test_check_admits_a_historical_residue_name_and_show_resolves_it(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     """A residue `W50b` with a reason passes --check, and --show resolves it with its reason."""
     residue = [{"symbol": "W3", "reason": "why"}, {"symbol": "W50b", "reason": "historical"}]
     path = _file(tmp_path, residue=residue)
@@ -251,7 +274,10 @@ def test_a_takeover_is_ledgered(tmp_path: Path) -> None:
     code = _run(path, "--lock", "B")
     held = _doc(path)["lock"]
     assert (code, "takeover" in _ledger(path), isinstance(held, dict) and held["holder"]) == (
-        _OK, True, "B")
+        _OK,
+        True,
+        "B",
+    )
 
 
 def test_unlock_by_the_holder_and_not_by_another(tmp_path: Path) -> None:
@@ -259,7 +285,10 @@ def test_unlock_by_the_holder_and_not_by_another(tmp_path: Path) -> None:
     path = _file(tmp_path)
     _run(path, "--lock", "A")
     assert (_run(path, "--unlock", "B"), _run(path, "--unlock", "A"), _doc(path)["lock"]) == (
-        _LOCKED, _OK, None)
+        _LOCKED,
+        _OK,
+        None,
+    )
 
 
 def test_armed_records_the_job(tmp_path: Path) -> None:
@@ -280,9 +309,23 @@ def test_a_bogus_status_is_refused_before_anything_is_read(tmp_path: Path) -> No
 def test_update_sets_typed_fields(tmp_path: Path) -> None:
     """--update blocks a waypoint with a party and a kind."""
     path = _file(tmp_path)
-    code = _run(path, "--update", "W1", "--status", "blocked", "--blocked-on", "mikemol",
-                "--blocked-kind", "human", "--next", "n", "--evidence-append", "e",
-                "--ticks-blocked", "0")
+    code = _run(
+        path,
+        "--update",
+        "W1",
+        "--status",
+        "blocked",
+        "--blocked-on",
+        "mikemol",
+        "--blocked-kind",
+        "human",
+        "--next",
+        "n",
+        "--evidence-append",
+        "e",
+        "--ticks-blocked",
+        "0",
+    )
     assert (code, _first(path)["blocked_on"]) == (_OK, ["mikemol"])
 
 
@@ -291,7 +334,9 @@ def test_a_refused_update_exits_2_and_saves_nothing(tmp_path: Path) -> None:
     path = _file(tmp_path)
     before = path.read_bytes()
     assert (_run(path, "--update", "W1", "--status", "blocked"), path.read_bytes() == before) == (
-        _REFUSED, True)
+        _REFUSED,
+        True,
+    )
 
 
 def _code(path: Path, *args: str) -> int:
@@ -313,12 +358,17 @@ def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
     code = _code(path, "--update", "W1", "--title", _NEW_TITLE)
     w = _first(path)
     assert (code, w["title"], w["next_bounded_step"], "last_worked" in w) == (
-        _OK, _NEW_TITLE, "s", True)
+        _OK,
+        _NEW_TITLE,
+        "s",
+        True,
+    )
 
 
 @pytest.mark.parametrize("title", _BAD_TITLES)
 def test_a_blank_or_multiline_title_is_refused(
-        tmp_path: Path, capsys: pytest.CaptureFixture[str], title: str) -> None:
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], title: str
+) -> None:
     """A blank or multi-line --title is refused by the tool, naming the title; nothing is saved."""
     path = _file(tmp_path)
     before = path.read_bytes()
@@ -340,8 +390,10 @@ def test_drop_moves_to_residue(tmp_path: Path) -> None:
     residue = _doc(path)["residue"]
     code = _run(path, "--drop", "W1", "superseded")
     after = _doc(path)["residue"]
-    assert (code, isinstance(after, list) and isinstance(residue, list)
-            and len(after) - len(residue)) == (_OK, 1)
+    assert (
+        code,
+        isinstance(after, list) and isinstance(residue, list) and len(after) - len(residue),
+    ) == (_OK, 1)
 
 
 def test_drop_without_a_reason_is_refused(tmp_path: Path) -> None:
@@ -356,7 +408,10 @@ def test_bump_blocked_says_who_is_owed(tmp_path: Path, capsys: pytest.CaptureFix
     code = _run(path, "--bump-blocked", "--except", "W2")
     out = capsys.readouterr().out
     assert (code, "W1 ticks_blocked=1 on=agent-2(agent)  NUDGE" in out, "W2" in out) == (
-        _OK, True, False)
+        _OK,
+        True,
+        False,
+    )
 
 
 def test_ledger_appends_a_structured_line(tmp_path: Path) -> None:
@@ -375,7 +430,10 @@ def test_show_resolves_live_and_residue(tmp_path: Path) -> None:
     """--show resolves a live symbol and a residue one, and refuses an unissued one."""
     path = _file(tmp_path)
     assert (_run(path, "--show", "W1"), _run(path, "--show", "W3"), _run(path, "--show", "W9")) == (
-        _OK, _OK, _REFUSED)
+        _OK,
+        _OK,
+        _REFUSED,
+    )
 
 
 def test_the_preamble_is_set_and_cleared(tmp_path: Path) -> None:
@@ -385,7 +443,10 @@ def test_the_preamble_is_set_and_cleared(tmp_path: Path) -> None:
     rules.write_text("rule one\nrule two\n", encoding="utf-8")
     first = (_run(path, "--preamble-set", str(rules)), _doc(path).get("preamble"))
     assert (first, _run(path, "--preamble-clear"), "preamble" in _doc(path)) == (
-        (_OK, ["rule one", "rule two"]), _OK, False)
+        (_OK, ["rule one", "rule two"]),
+        _OK,
+        False,
+    )
 
 
 def test_a_blank_preamble_file_is_refused(tmp_path: Path) -> None:

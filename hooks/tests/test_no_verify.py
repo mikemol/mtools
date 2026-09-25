@@ -117,8 +117,12 @@ def test_the_installed_console_script_denies_when_armed() -> None:
         pytest.skip(f"console script not installed at {_BIN}")
     payload = json.dumps(_PAYLOAD)
     result = subprocess.run(
-        [str(_BIN)], input=payload, capture_output=True, text=True,
-        env={"PATH": "/usr/bin:/bin", "NOVERIFY_HOOK_BLOCK": "1"}, check=False,
+        [str(_BIN)],
+        input=payload,
+        capture_output=True,
+        text=True,
+        env={"PATH": "/usr/bin:/bin", "NOVERIFY_HOOK_BLOCK": "1"},
+        check=False,
     )
     assert result.returncode == 0, "a hook must exit 0 and decide via its payload"
     # ⚑ `isinstance(x, dict)` NARROWS TO `dict[Any, Any]`, NOT TO A TYPED MAPPING, so indexing it
@@ -144,8 +148,12 @@ def test_the_installed_console_script_is_silent_when_unarmed() -> None:
         pytest.skip(f"console script not installed at {_BIN}")
     payload = json.dumps(_PAYLOAD)
     result = subprocess.run(
-        [str(_BIN)], input=payload, capture_output=True, text=True,
-        env={"PATH": "/usr/bin:/bin"}, check=False,
+        [str(_BIN)],
+        input=payload,
+        capture_output=True,
+        text=True,
+        env={"PATH": "/usr/bin:/bin"},
+        check=False,
     )
     assert result.returncode == 0
     assert not result.stdout.strip(), (

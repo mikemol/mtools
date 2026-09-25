@@ -78,7 +78,7 @@ def wiki_targets(text: str) -> list[str]:
     """
     # ⚑ SLICED, NOT `group(1)`: typeshed types `Match.group` as `str | Any`, which the strict bar
     # refuses; the span is a pair of ints and the slice is a `str`.
-    return [text[found.start(1):found.end(1)].strip() for found in _WIKI_RE.finditer(text)]
+    return [text[found.start(1) : found.end(1)].strip() for found in _WIKI_RE.finditer(text)]
 
 
 def _own_blocks(item: panflute.ListItem) -> list[panflute.Block]:
@@ -109,8 +109,9 @@ def _links_in(blocks: Sequence[panflute.Block]) -> list[str]:
     return found
 
 
-def _collect(blocks: Sequence[panflute.Block], depth: int,
-             out: list[tuple[int, str, tuple[str, ...]]]) -> None:
+def _collect(
+    blocks: Sequence[panflute.Block], depth: int, out: list[tuple[int, str, tuple[str, ...]]]
+) -> None:
     for block in blocks:
         if isinstance(block, _List):
             for item in block.content:
@@ -167,8 +168,11 @@ def items(path: Path) -> list[Item]:
     lines = path.read_text(encoding="utf-8").split("\n")
     candidates = [(i, ln) for i, ln in enumerate(lines) if _MARKER_RE.match(ln)]
     rendered = _render_candidates([ln for _i, ln in candidates])
-    keyed = [(i, ast.anchor_key(text))
-             for (i, _ln), text in zip(candidates, rendered, strict=True) if text]
+    keyed = [
+        (i, ast.anchor_key(text))
+        for (i, _ln), text in zip(candidates, rendered, strict=True)
+        if text
+    ]
 
     out: list[Item] = []
     cursor = 0

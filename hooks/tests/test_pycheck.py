@@ -48,9 +48,7 @@ def _project(tmp_path: Path, *, venv: bool = True, select: str = '["F"]') -> Pat
     return tmp_path
 
 
-def _main(
-    monkeypatch: pytest.MonkeyPatch, record: dict[str, object], *, own: str
-) -> None:
+def _main(monkeypatch: pytest.MonkeyPatch, record: dict[str, object], *, own: str) -> None:
     """Run `main()` over one payload with this hook's switch set as given."""
     monkeypatch.setenv(pycheck.OWN_SWITCH, own)
     monkeypatch.setenv("STRUCT_HOOK_BLOCK", "0")
@@ -70,6 +68,7 @@ def _write(path: Path, content: str) -> dict[str, object]:
 
 
 # --- the fold, pure ---
+
 
 def test_a_finding_beside_a_could_not_run_refuses_and_states_the_blindness() -> None:
     """Mixed roster: the finding survives, and the coverage note names what did not run."""
@@ -96,6 +95,7 @@ def test_an_empty_roster_is_unknown() -> None:
 
 # --- syntax, pure ---
 
+
 def test_unparseable_content_names_its_error() -> None:
     """A truncated def is a reason; parseable source is the empty string."""
     assert pycheck.syntax_error("def broken(\n", "a.py")
@@ -108,6 +108,7 @@ def test_a_nul_byte_refuses() -> None:
 
 
 # --- the message, pure ---
+
 
 def test_an_unused_import_names_the_one_write_grain() -> None:
     """Both ruff spellings trip the grain note; an unrelated rule is the control."""
@@ -136,6 +137,7 @@ def test_the_refusal_is_bounded_and_says_so() -> None:
 
 
 # --- the hook, through main() ---
+
 
 def test_a_non_python_write_is_not_judged(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path

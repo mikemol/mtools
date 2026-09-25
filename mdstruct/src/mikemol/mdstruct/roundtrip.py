@@ -88,9 +88,11 @@ def diff(before: str, after: str, limit: int = _SAMPLE) -> tuple[int, tuple[str,
         how many lines changed, and a bounded sample of them.
 
     """
-    lines = [line for line in difflib.unified_diff(
-        before.split("\n"), after.split("\n"), lineterm="", n=0)
-        if line.startswith(("+", "-")) and not line.startswith(("+++", "---"))]
+    lines = [
+        line
+        for line in difflib.unified_diff(before.split("\n"), after.split("\n"), lineterm="", n=0)
+        if line.startswith(("+", "-")) and not line.startswith(("+++", "---"))
+    ]
     return len(lines), tuple(lines[:limit])
 
 
@@ -152,8 +154,7 @@ def fixpoint(path: Path, opts: str | None = None, rounds: int | None = None) -> 
         if previous is not None and changed == previous:
             flat += 1
             if flat >= FLAT_BUDGET:
-                return Fixpoint(converged=False, deltas=tuple(deltas),
-                                sample=sample, text=current)
+                return Fixpoint(converged=False, deltas=tuple(deltas), sample=sample, text=current)
         else:
             flat = 0
         previous = changed
