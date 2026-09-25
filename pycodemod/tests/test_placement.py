@@ -204,6 +204,77 @@ def test_the_entry_test_is_exactly_the_comparison(cond: str, *, want: bool) -> N
     assert pl.is_entry_test(cond) is want
 
 
+_MAIN = 'if __name__ == "__main__":\n'
+
+
+def _kinds(tmp_path: Path, name: str, body: str) -> list[tuple[str, str | None]]:
+    path = tmp_path / name
+    path.write_text(_MAIN + body, encoding="utf-8")
+    rows = pl.disagreement([str(path)]).rows
+    return [(r.kind, r.snapshot.verdict if r.snapshot else None) for r in rows]
+
+
+@pytest.mark.parametrize(
+    ("body", "kind", "snapshot"),
+    [
+        ("    require_explicit_mutation()\n    _snapshot_once(p)\n", "SPLIT", "first-write"),
+        ("    require_explicit_mutation()\n    guard(p)\n", "bound", "entry"),
+        ("    require_at_entry(paths=ps)\n", "bound", "entry"),
+        ("    require_at_entry()\n", "bound-nopaths", "entry-nopaths"),
+        ("    require_at_entry(**kw)\n", "bound-unknown", "entry-splat"),
+        ("    require_explicit_mutation()\n", "intent-only", None),
+        ("    _snapshot_once(p)\n", "snapshot-only", "first-write"),
+        ("    if mode:\n        require_explicit_mutation()\n", "unbound", None),
+    ],
+)
+def test_the_relation_between_intent_and_snapshot(
+    tmp_path: Path, body: str, kind: str, snapshot: str | None
+) -> None:
+    """⚑⚑⚑ Each tool reads the relation between its intent gate and its snapshot.
+
+    guard at entry is bound; the origin graded every snapshot form first-write and called it
+    SPLIT. A mapping splat may carry paths, so it is bound-unknown, not bound-nopaths.
+    """
+    assert _kinds(tmp_path, "tool.py", body) == [(kind, snapshot)]
+
+
+def test_the_authority_is_not_its_own_adopter(tmp_path: Path) -> None:
+    """A binding call inside edit_snapshot.py does not count as a tool binding its snapshot."""
+    assert _kinds(tmp_path, "edit_snapshot.py", "    require_at_entry(paths=ps)\n") == [
+        ("intent-only", None)
+    ]
+
+
+def test_a_store_writer_reads_store_whatever_its_snapshot(tmp_path: Path) -> None:
+    """⚑⚑ A live store write makes the kind `store`: a snapshot cannot protect the store."""
+    path = tmp_path / "tool.py"
+    path.write_text(_MAIN + "    require_explicit_mutation()\n    upsert(row)\n", encoding="utf-8")
+    rows = pl.disagreement([str(path)]).rows
+    assert [(r.kind, r.store) for r in rows] == [("store", pl.StoreWrite("upsert", 3))]
+
+
+def test_a_selftest_store_call_is_not_a_write_path(tmp_path: Path) -> None:
+    """A store call inside a selftest scope is a fixture, not a write path."""
+    path = tmp_path / "tool.py"
+    path.write_text("def run_selftest():\n    upsert(1)\n    commit()\n", encoding="utf-8")
+    assert pl.writes_store([str(path)]) == {}
+
+
+def test_the_first_store_write_is_the_witness(tmp_path: Path) -> None:
+    """Of several live store writes, the earliest line is the witness."""
+    path = tmp_path / "tool.py"
+    path.write_text("commit()\nupsert(1)\n", encoding="utf-8")
+    assert pl.writes_store([str(path)]) == {str(path): pl.StoreWrite("commit", 1)}
+
+
+def test_the_strongest_bound_form_wins(tmp_path: Path) -> None:
+    """A tool binding with paths anywhere is bound, even if another call omits them."""
+    path = tmp_path / "tool.py"
+    path.write_text("require_at_entry()\nrequire_at_entry(paths=p)\n", encoding="utf-8")
+    got = pl.binds_snapshot_at_entry([str(path)])
+    assert (got[str(path)].verdict, got[str(path)].line) == ("entry", 2)
+
+
 def test_an_unreadable_file_is_skipped_and_the_limits_are_returned(tmp_path: Path) -> None:
     """⚑ A file the scan could not read is skipped; what cannot be decided rides every result."""
     path = tmp_path / "bad.py"

@@ -998,3 +998,48 @@
   claim  = { A file the scan could not read is skipped; what cannot be decided rides every result.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_an_unreadable_file_is_skipped_and_the_limits_are_returned},
 }
+
+@misc{pycodemod-placement-relation-between-intent-and-snapshot,
+  section = {placement},
+  title  = {⚑⚑⚑ Each tool reads the relation between its intent gate and its snapshot},
+  claim  = { Each tool reads the relation between its intent gate and its snapshot. guard at entry
+            is bound; the origin graded every snapshot form first-write and called it
+            SPLIT. A mapping splat may carry paths, so it is bound-unknown, not bound-
+            nopaths.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_relation_between_intent_and_snapshot},
+}
+
+@misc{pycodemod-placement-authority-is-not-its-own-adopter,
+  section = {placement},
+  title  = {A binding call inside edit_snapshot.py does not count as a tool binding its snapshot},
+  claim  = {A binding call inside edit_snapshot.py does not count as a tool binding its snapshot.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_authority_is_not_its_own_adopter},
+}
+
+@misc{pycodemod-placement-store-writer-reads-store-whatever-its-snapshot,
+  section = {placement},
+  title  = {⚑⚑ A live store write makes the kind `store`: a snapshot cannot protect the store},
+  claim  = { A live store write makes the kind `store`: a snapshot cannot protect the store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_store_writer_reads_store_whatever_its_snapshot},
+}
+
+@misc{pycodemod-placement-selftest-store-call-is-not-a-write-path,
+  section = {placement},
+  title  = {A store call inside a selftest scope is a fixture, not a write path},
+  claim  = {A store call inside a selftest scope is a fixture, not a write path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_selftest_store_call_is_not_a_write_path},
+}
+
+@misc{pycodemod-placement-first-store-write-is-the-witness,
+  section = {placement},
+  title  = {Of several live store writes, the earliest line is the witness},
+  claim  = {Of several live store writes, the earliest line is the witness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_first_store_write_is_the_witness},
+}
+
+@misc{pycodemod-placement-strongest-bound-form-wins,
+  section = {placement},
+  title  = {A tool binding with paths anywhere is bound, even if another call omits them},
+  claim  = {A tool binding with paths anywhere is bound, even if another call omits them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_strongest_bound_form_wins},
+}

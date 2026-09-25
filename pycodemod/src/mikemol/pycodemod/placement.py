@@ -37,6 +37,19 @@ its one-hop check refused for want of a span: `def main(): require_at_entry(); m
 
 ⚑ A FILE THE SCAN COULD NOT READ is returned in `skipped`. The origin read each file a second time
 for its span and dropped one that failed.
+
+`disagreement` (with `writes_store` and `binds_snapshot_at_entry`) reads the RELATION between a
+tool's intent gate and its snapshot, which neither census alone can see:
+
+⚑⚑⚑ `guard` IS GRADED BY WHERE IT RUNS. The origin passed every snapshot form as a first-write form,
+so `guard()` called at entry read `first-write`, and a tool that states intent and snapshots at
+entry read SPLIT, the dangerous shape. Only `_snapshot_once` is first-write by construction.
+
+⚑⚑ A `**mapping` PASSED TO `require_at_entry` MAY CARRY `paths`: `entry-splat` / `bound-unknown`.
+The origin read the keyword set as closed and called it `entry-nopaths`.
+
+⚑ AN UNREADABLE FILE IS NOT "NOT A STORE WRITER". The origin's `writes_store` returned False for
+it; the scan's `skipped` now carries it.
 """
 
 from __future__ import annotations
@@ -61,6 +74,41 @@ FIRST_WRITE = "first-write"
 _RANK = {ENTRY: 3, DISPATCHED: 2, FIRST_WRITE: 1}
 _MAIN_NAME = "__name__"
 _MAIN_VALUE = "__main__"
+
+# ⚑ THE SNAPSHOT FORMS ARE GRADED BY WHERE THEY RUN: `guard` called at entry is `entry`. Only
+# `_snapshot_once` is first-write by construction.
+SNAPSHOT_FORMS = ("guard",)
+STORE_WRITE_FORMS = ("upsert", "executemany", "commit", "reclaim", "drop_relation")
+ENTRY_NOPATHS = "entry-nopaths"
+ENTRY_SPLAT = "entry-splat"
+ABSENT = "absent"
+SPLIT = "SPLIT"
+STORE = "store"
+BOUND = "bound"
+BOUND_NOPATHS = "bound-nopaths"
+BOUND_UNKNOWN = "bound-unknown"
+INTENT_ONLY = "intent-only"
+SNAPSHOT_ONLY = "snapshot-only"
+UNBOUND = "unbound"
+STORE_SUBSTITUTE = (
+    "snapshot NOT APPLICABLE (writes land in the store, not the filesystem): its protection is "
+    "--dry-run plus the transaction boundary, not a file copy"
+)
+STORE_UNDECIDABLE = (
+    "whether a tool that writes BOTH files and the store has its file writes covered: it reads "
+    "`store`, the stronger warning"
+)
+_WITH_INTENT = {
+    ENTRY: BOUND,
+    ENTRY_NOPATHS: BOUND_NOPATHS,
+    ENTRY_SPLAT: BOUND_UNKNOWN,
+    ABSENT: INTENT_ONLY,
+}
+_BOUND_RANK = {ENTRY: 3, ENTRY_SPLAT: 2, ENTRY_NOPATHS: 1}
+_BINDER = "require_at_entry"
+_AUTHORITY = "edit_snapshot.py"
+_PATHS = "paths"
+_SELFTEST = "selftest"
 
 UNDECIDABLE = (
     (
@@ -212,3 +260,121 @@ def placement(
         skipped.update(sites.skipped)
         _collect(sites, form, best, first_write=form in first_write_forms)
     return Placements(rows=sorted(best.values()), skipped=sorted(skipped))
+
+
+@dataclass(frozen=True, slots=True, order=True)
+class StoreWrite:
+    """The first live call that sends a tool's writes to the store, not the filesystem."""
+
+    form: str
+    line: int
+
+
+@dataclass(frozen=True, slots=True, order=True)
+class Disagreement:
+    """One tool's relation between its intent gate and its snapshot, and its store writes."""
+
+    path: str
+    kind: str
+    intent: Placement | None
+    snapshot: Placement | None
+    store: StoreWrite | None
+
+
+@dataclass(frozen=True, slots=True)
+class Disagreements:
+    """Each tool's relation, the files that could not be read, and what cannot be decided."""
+
+    rows: list[Disagreement] = field(default_factory=list)
+    skipped: list[Skip] = field(default_factory=list)
+    undecidable: tuple[str, ...] = (*UNDECIDABLE, STORE_UNDECIDABLE)
+
+
+def writes_store(paths: Sequence[str]) -> dict[str, StoreWrite]:
+    """Return, per file, the first live store-write call: a STRUCTURAL fact, not a filename.
+
+    ⚑ A FIXTURE CALL IS NOT A WRITE PATH: a call whose scope names a selftest is not live.
+
+    Returns:
+        each store-writing file's first live store-write call.
+
+    """
+    out: dict[str, StoreWrite] = {}
+    for form in STORE_WRITE_FORMS:
+        for key, facts in scan(paths, form).facts.items():
+            if _SELFTEST in facts.context.lower():
+                continue
+            path, found = key[0], StoreWrite(form, key[1])
+            if path not in out or found.line < out[path].line:
+                out[path] = found
+    return out
+
+
+def binds_snapshot_at_entry(paths: Sequence[str]) -> dict[str, Placement]:
+    """Return, per tool, the BOUND form: `require_at_entry(paths=...)` takes the snapshot itself.
+
+    ⚑⚑ `paths=` DECIDES IT. Without it the delegated snapshot covers tracked content only, so the
+    call is `entry-nopaths`. ⚑ A `**mapping` may or may not carry `paths`: `entry-splat`, never
+    folded into either. The authority's own file (`edit_snapshot.py`) is not its own adopter.
+
+    Returns:
+        each binding tool's strongest bound form.
+
+    """
+    out: dict[str, Placement] = {}
+    for key, facts in scan(paths, _BINDER).facts.items():
+        path, line = key[0], key[1]
+        if Path(path).name == _AUTHORITY:
+            continue
+        if _PATHS in facts.keywords:
+            verdict = ENTRY
+        elif facts.splat:
+            verdict = ENTRY_SPLAT
+        else:
+            verdict = ENTRY_NOPATHS
+        found = Placement(path, verdict, _BINDER, line)
+        prev = out.get(path)
+        if prev is None or _BOUND_RANK[verdict] > _BOUND_RANK[prev.verdict]:
+            out[path] = found
+    return out
+
+
+def _kind(intent: Placement | None, snap: Placement | None, *, store: bool) -> str:
+    if store:
+        return STORE
+    i = intent.verdict if intent else ABSENT
+    s = snap.verdict if snap else ABSENT
+    if i == ENTRY:
+        return _WITH_INTENT.get(s, SPLIT)
+    return SNAPSHOT_ONLY if s != ABSENT else UNBOUND
+
+
+def disagreement(paths: Sequence[str]) -> Disagreements:
+    """Return each tool's relation between its intent gate and its snapshot.
+
+    ⚑⚑⚑ SPLIT IS THE DANGEROUS SHAPE: intent stated at entry, snapshot taken only later, so a
+    read-only mode or a restoring dry run is unprotected while the intent census reads green. For
+    a STORE writer a snapshot protects nothing either way, so it reads `store`, never SPLIT.
+
+    Returns:
+        each tool's kind, with its intent and snapshot placements and any store write.
+
+    """
+    intent = placement(paths, ENTRY_FORMS, ())
+    snap = placement(paths, SNAPSHOT_FORMS, FIRST_WRITE_FORMS)
+    bound = binds_snapshot_at_entry(paths)
+    store = writes_store(paths)
+    intents = {p.path: p for p in intent.rows}
+    snaps = {p.path: p for p in snap.rows} | bound
+    rows = [
+        Disagreement(
+            path,
+            _kind(intents.get(path), snaps.get(path), store=path in store),
+            intents.get(path),
+            snaps.get(path),
+            store.get(path),
+        )
+        for path in sorted(set(intents) | set(snaps))
+    ]
+    skipped = sorted(set(intent.skipped) | set(snap.skipped))
+    return Disagreements(rows=rows, skipped=skipped)
