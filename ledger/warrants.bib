@@ -322,3 +322,45 @@
   claim  = {An unknown key does not resolve, and is named as a possible roster/record disagreement.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_resolve.py -k test_an_unknown_key_is_its_own_outcome},
 }
+
+@misc{ledger-finding-bibkeys-no-bibs-is-empty-not-unreadable,
+  section = {finding_bibkeys},
+  title  = {A directory with no bibs, and an absent one, are EMPTY — nothing ran, so nothing failed},
+  claim  = {A directory with no bibs, and an absent one, are EMPTY — nothing ran, so nothing failed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_no_bibs_is_empty_not_unreadable},
+}
+
+@misc{ledger-finding-bibkeys-listing-is-bib-only-and-sorted,
+  section = {finding_bibkeys},
+  title  = {Only `.bib` files are listed, sorted rather than in filesystem order},
+  claim  = {Only `.bib` files are listed, sorted rather than in filesystem order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_the_listing_is_bib_only_and_sorted},
+}
+
+@misc{ledger-finding-bibkeys-keys-are-read-and-the-non-key-rows-are-not,
+  section = {finding_bibkeys},
+  title  = {The lister's keys are read; its denominator and warning rows are never interned as keys},
+  claim  = {The lister's keys are read; its denominator and warning rows are never interned as keys.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_the_keys_are_read_and_the_non_key_rows_are_not},
+}
+
+@misc{ledger-finding-bibkeys-lister-is-handed-every-bib-in-order,
+  section = {finding_bibkeys},
+  title  = {The bib paths are appended to the caller's lister argv, in the sorted read order},
+  claim  = {The bib paths are appended to the caller's lister argv, in the sorted read order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_the_lister_is_handed_every_bib_in_order},
+}
+
+@misc{ledger-finding-bibkeys-failing-lister-is-unreadable-never-empty,
+  section = {finding_bibkeys},
+  title  = {A lister exiting non-zero yields `None`: THE THIRD OUTCOME, never smoothed into `set()`},
+  claim  = {A lister exiting non-zero yields `None`: THE THIRD OUTCOME, never smoothed into `set()`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_a_failing_lister_is_unreadable_never_empty},
+}
+
+@misc{ledger-finding-bibkeys-lister-that-never-started-is-unreadable,
+  section = {finding_bibkeys},
+  title  = {A lister that does not exist never ran, which is unreadable — not empty, not a crash},
+  claim  = {A lister that does not exist never ran, which is unreadable — not empty, not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_a_lister_that_never_started_is_unreadable},
+}
