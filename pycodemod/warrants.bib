@@ -593,3 +593,45 @@
   claim  = {`visit_Call` satisfies the libcst contract; a bare `on_` satisfies nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_a_framework_prefix_needs_a_name_after_it},
 }
+
+@misc{pycodemod-imports-dotted-module-is-found-with-every-form,
+  section = {imports},
+  title  = {⚑⚑⚑ `pkg.sub` matches itself, its submodules and its parent's import — not `pkg.subtle`},
+  claim  = { `pkg.sub` matches itself, its submodules and its parent's import — not `pkg.subtle`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_a_dotted_module_is_found_with_every_form},
+}
+
+@misc{pycodemod-imports-top-level-module-reports-the-names-each-import-takes,
+  section = {imports},
+  title  = {`import a.b` binds `a`; a from-import reports every name it selects},
+  claim  = {`import a.b` binds `a`; a from-import reports every name it selects.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_a_top_level_module_reports_the_names_each_import_takes},
+}
+
+@misc{pycodemod-imports-names-module-is-a-segment-boundary-not-a-prefix,
+  section = {imports},
+  title  = {`pkg.subtle` is not a submodule of `pkg.sub`},
+  claim  = {`pkg.subtle` is not a submodule of `pkg.sub`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_names_module_is_a_segment_boundary_not_a_prefix},
+}
+
+@misc{pycodemod-imports-attribute-read-is-found-on-any-receiver-with-its-scope,
+  section = {imports},
+  title  = {⚑ `.name` matches every receiver — spaced, expression, or `self` — each with its scope},
+  claim  = { `.name` matches every receiver — spaced, expression, or `self` — each with its scope.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_an_attribute_read_is_found_on_any_receiver_with_its_scope},
+}
+
+@misc{pycodemod-imports-dotted-receiver-reads-every-attribute-off-it,
+  section = {imports},
+  title  = {⚑ `pkg.mod.*` is exact: it reads `run` and `other` off `pkg.mod`, never `pkg.run`},
+  claim  = { `pkg.mod.*` is exact: it reads `run` and `other` off `pkg.mod`, never `pkg.run`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_a_dotted_receiver_reads_every_attribute_off_it},
+}
+
+@misc{pycodemod-imports-both-readers-report-every-file-they-could-not-read,
+  section = {imports},
+  title  = {⚑⚑ An unread file is a skip, never an empty result},
+  claim  = { An unread file is a skip, never an empty result.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_both_readers_report_every_file_they_could_not_read},
+}
