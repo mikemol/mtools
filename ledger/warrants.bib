@@ -364,3 +364,53 @@
   claim  = {A lister that does not exist never ran, which is unreadable — not empty, not a crash.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_a_lister_that_never_started_is_unreadable},
 }
+
+@misc{ledger-finding-polarity-refuses-command-exiting-zero-is-refused-naming-both-causes,
+  section = {finding_polarity},
+  title  = {A `refuses:` command exiting 0 is REFUSED: it would read GONE; both causes are named},
+  claim  = {A `refuses:` command exiting 0 is REFUSED: it would read GONE; both causes are named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_a_refuses_command_exiting_zero_is_refused_naming_both_causes},
+}
+
+@misc{ledger-finding-polarity-selftest-command-exiting-nonzero-is-refused,
+  section = {finding_polarity},
+  title  = {A `selftest:` command exiting non-zero is REFUSED: the witness would be born OPEN},
+  claim  = {A `selftest:` command exiting non-zero is REFUSED: the witness would be born OPEN.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_a_selftest_command_exiting_nonzero_is_refused},
+}
+
+@misc{ledger-finding-polarity-correct-registration-is-accepted,
+  section = {finding_polarity},
+  title  = {A refusal that DOES refuse and a selftest that DOES pass are accepted: A GATE, NOT A WALL},
+  claim  = {A refusal that DOES refuse and a selftest that DOES pass are accepted: A GATE, NOT A
+            WALL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_a_correct_registration_is_accepted},
+}
+
+@misc{ledger-finding-polarity-commandless-kinds-are-never-probed,
+  section = {finding_polarity},
+  title  = {`standing` and `unwitnessed` run no command, so they are never refused},
+  claim  = {`standing` and `unwitnessed` run no command, so they are never refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_the_commandless_kinds_are_never_probed},
+}
+
+@misc{ledger-finding-polarity-absent-instrument-is-refused-for-every-probed-kind,
+  section = {finding_polarity},
+  title  = {An unstartable command is refused for EVERY probed kind, saying it did not run and why},
+  claim  = {An unstartable command is refused for EVERY probed kind, saying it did not run and why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_an_absent_instrument_is_refused_for_every_probed_kind},
+}
+
+@misc{ledger-finding-polarity-mode-witness-reporting-documented-is-refused,
+  section = {finding_polarity},
+  title  = {A `mode:` witness reporting DOCUMENTED is refused, saying why the arm is unambiguous},
+  claim  = {A `mode:` witness reporting DOCUMENTED is refused, saying why the arm is unambiguous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_a_mode_witness_reporting_documented_is_refused},
+}
+
+@misc{ledger-finding-polarity-mode-witness-reporting-undocumented-is-accepted,
+  section = {finding_polarity},
+  title  = {A correct `mode:` filing still passes: the arm is a gate, not a wall},
+  claim  = {A correct `mode:` filing still passes: the arm is a gate, not a wall.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_a_mode_witness_reporting_undocumented_is_accepted},
+}
