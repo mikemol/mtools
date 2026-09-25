@@ -740,3 +740,39 @@
   claim  = { An unread file is a skip in each census, never an empty result.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ordering.py -k test_both_censuses_report_every_file_they_could_not_read},
 }
+
+@misc{pycodemod-strings-key-is-read-written-deleted-or-declared,
+  section = {strings},
+  title  = {⚑⚑ Each use by kind: a write and a delete are not reads; a dict display declares},
+  claim  = { Each use by kind: a write and a delete are not reads; a dict display declares.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strings.py -k test_a_key_is_read_written_deleted_or_declared},
+}
+
+@misc{pycodemod-strings-key-spelled-with-an-escape-is-found,
+  section = {strings},
+  title  = {⚑ The prefilter must not reject a file whose literal spells the key with an escape},
+  claim  = { The prefilter must not reject a file whose literal spells the key with an escape.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strings.py -k test_a_key_spelled_with_an_escape_is_found},
+}
+
+@misc{pycodemod-strings-may-hold-rejects-only-what-cannot-be-there,
+  section = {strings},
+  title  = {A plain value must appear verbatim; any other value might be escaped, so is not rejected},
+  claim  = {A plain value must appear verbatim; any other value might be escaped, so is not
+            rejected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strings.py -k test_may_hold_rejects_only_what_cannot_be_there},
+}
+
+@misc{pycodemod-strings-literal-is-classified-by-the-role-it-plays,
+  section = {strings},
+  title  = {⚑⚑ f-string text and an async def's docstring are seen; each role is the enclosing one},
+  claim  = { f-string text and an async def's docstring are seen; each role is the enclosing one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strings.py -k test_a_literal_is_classified_by_the_role_it_plays},
+}
+
+@misc{pycodemod-strings-both-readers-report-every-file-they-could-not-read,
+  section = {strings},
+  title  = {⚑⚑ The origin's bare `except Exception: continue` dropped these; each is now a skip},
+  claim  = { The origin's bare `except Exception: continue` dropped these; each is now a skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strings.py -k test_both_readers_report_every_file_they_could_not_read},
+}
