@@ -345,3 +345,53 @@
   claim  = {The census states its blind spots rather than reading a zero as a fact.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_known_misses_are_declared},
 }
+
+@misc{pycodemod-ambient-subtrees-are-discovered-from-the-tree-alone,
+  section = {ambient},
+  title  = {⚑⚑ Visible directories only; no frozen fallback; an unlistable tree is empty},
+  claim  = { Visible directories only; no frozen fallback; an unlistable tree is empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_subtrees_are_discovered_from_the_tree_alone},
+}
+
+@misc{pycodemod-ambient-census-classifies-every-unanchored-call,
+  section = {ambient},
+  title  = {⚑⚑⚑ SCOPED, REPO, UNKNOWN and MUTATES, with `getcwd` a row of its own},
+  claim  = { SCOPED, REPO, UNKNOWN and MUTATES, with `getcwd` a row of its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_the_census_classifies_every_unanchored_call},
+}
+
+@misc{pycodemod-ambient-census-reports-what-it-could-not-read,
+  section = {ambient},
+  title  = {⚑⚑ Undecodable, unreadable and unparseable are skips; the population counts them all},
+  claim  = { Undecodable, unreadable and unparseable are skips; the population counts them all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_the_census_reports_what_it_could_not_read},
+}
+
+@misc{pycodemod-ambient-anchoring-follows-the-head-of-the-expression,
+  section = {ambient},
+  title  = {⚑ A join, a sum and an f-string are anchored by their HEAD; `__file__` anchors anywhere},
+  claim  = { A join, a sum and an f-string are anchored by their HEAD; `__file__` anchors anywhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_anchoring_follows_the_head_of_the_expression},
+}
+
+@misc{pycodemod-ambient-path-arg-reads-the-argv-head-and-the-path-keywords,
+  section = {ambient},
+  title  = {⚑⚑ A subprocess argv's head is the path; an empty argv and no path argument give None},
+  claim  = { A subprocess argv's head is the path; an empty argv and no path argument give None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_path_arg_reads_the_argv_head_and_the_path_keywords},
+}
+
+@misc{pycodemod-ambient-callee-name-is-unqualified,
+  section = {ambient},
+  title  = {`os.path.exists` and `exists` both name `exists`; a call through an expression names none},
+  claim  = {`os.path.exists` and `exists` both name `exists`; a call through an expression names
+            none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_callee_name_is_unqualified},
+}
+
+@misc{pycodemod-ambient-known-misses-are-declared,
+  section = {ambient},
+  title  = {The census states its blind spots, keyed, rather than reading a zero as a fact},
+  claim  = {The census states its blind spots, keyed, rather than reading a zero as a fact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_known_misses_are_declared},
+}
