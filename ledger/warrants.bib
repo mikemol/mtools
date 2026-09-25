@@ -153,3 +153,45 @@
   claim  = {Slug keys pass; an empty key, a colon and a space are refused, saying why.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_the_key_alphabet_is_a_contract_with_the_resolver},
 }
+
+@misc{ledger-finding-restem-stem-pairs-with-its-descriptive-spelling-and-not-a-longer-sibling,
+  section = {finding_restem},
+  title  = {`aa-F1` pairs with its tail, and `aa-F10-…` is NOT consumed: THE HYPHEN ARM},
+  claim  = {`aa-F1` pairs with its tail, and `aa-F10-…` is NOT consumed: THE HYPHEN ARM.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_restem.py -k test_a_stem_pairs_with_its_descriptive_spelling_and_not_a_longer_sibling},
+}
+
+@misc{ledger-finding-restem-ambiguous-stem-stays-honest,
+  section = {finding_restem},
+  title  = {A stem with two candidates does not pair; it and both candidates stay unpaired},
+  claim  = {A stem with two candidates does not pair; it and both candidates stay unpaired.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_restem.py -k test_an_ambiguous_stem_stays_honest},
+}
+
+@misc{ledger-finding-restem-unmatched-keys-stay-on-their-own-side,
+  section = {finding_restem},
+  title  = {A bib key matching nothing stays bib-only; an unmatched witness stays witness-only},
+  claim  = {A bib key matching nothing stays bib-only; an unmatched witness stays witness-only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_restem.py -k test_unmatched_keys_stay_on_their_own_side},
+}
+
+@misc{ledger-finding-restem-pair-is-consumed-from-both-sides,
+  section = {finding_restem},
+  title  = {A paired key leaves both remainder lists, or the same finding is reported twice},
+  claim  = {A paired key leaves both remainder lists, or the same finding is reported twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_restem.py -k test_a_pair_is_consumed_from_both_sides},
+}
+
+@misc{ledger-finding-restem-pair-counts-once-and-the-reduction-is-visible,
+  section = {finding_restem},
+  title  = {The raw rows exceed the true drift, by exactly one per pair},
+  claim  = {The raw rows exceed the true drift, by exactly one per pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_restem.py -k test_a_pair_counts_once_and_the_reduction_is_visible},
+}
+
+@misc{ledger-finding-restem-empty-read-is-a-fact-about-the-input,
+  section = {finding_restem},
+  title  = {No input yields no pairs, no remainders, and zero drift},
+  claim  = {No input yields no pairs, no remainders, and zero drift.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_restem.py -k test_an_empty_read_is_a_fact_about_the_input},
+}

@@ -87,3 +87,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/ledger/finding_kinds.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_finding_kinds.py" = ["assert"]
 "tests/test_finding_kindspec.py" = ["assert"]
+"tests/test_finding_restem.py" = ["assert"]
