@@ -395,3 +395,82 @@
   claim  = {The census states its blind spots, keyed, rather than reading a zero as a fact.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_known_misses_are_declared},
 }
+
+@misc{pycodemod-sites-dotted-target-matches-the-whole-receiver-exactly,
+  section = {sites},
+  title  = {⚑⚑ `store.connect` is not `sqlite3.connect` on the same line, nor `x.store.connect`},
+  claim  = { `store.connect` is not `sqlite3.connect` on the same line, nor `x.store.connect`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_a_dotted_target_matches_the_whole_receiver_exactly},
+}
+
+@misc{pycodemod-sites-two-calls-on-one-line-keep-their-own-facts,
+  section = {sites},
+  title  = {⚑⚑ Facts are keyed by span: the sqlite call keeps its receiver and its argument},
+  claim  = { Facts are keyed by span: the sqlite call keeps its receiver and its argument.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_two_calls_on_one_line_keep_their_own_facts},
+}
+
+@misc{pycodemod-sites-nested-calls-sharing-a-start-keep-their-own-facts,
+  section = {sites},
+  title  = {⚑⚑ `a().b()`: inner and outer start at one column; the span tells them apart},
+  claim  = { `a().b()`: inner and outer start at one column; the span tells them apart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_nested_calls_sharing_a_start_keep_their_own_facts},
+}
+
+@misc{pycodemod-sites-called-attribute-is-not-also-a-reference,
+  section = {sites},
+  title  = {⚑⚑ Five calls of `connect`, and not one of them doubles as a ref},
+  claim  = { Five calls of `connect`, and not one of them doubles as a ref.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_a_called_attribute_is_not_also_a_reference},
+}
+
+@misc{pycodemod-sites-else-is-guarded-by-the-negated-test,
+  section = {sites},
+  title  = {⚑⚑ The body carries the test, the else carries `not (test)`, and an elif chain composes},
+  claim  = { The body carries the test, the else carries `not (test)`, and an elif chain composes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_an_else_is_guarded_by_the_negated_test},
+}
+
+@misc{pycodemod-sites-context-is-the-qualified-enclosing-scope,
+  section = {sites},
+  title  = {⚑ A method reads `K.m`, a nested def `K.m.inner`, module level `<module>`},
+  claim  = { A method reads `K.m`, a nested def `K.m.inner`, module level `<module>`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_the_context_is_the_qualified_enclosing_scope},
+}
+
+@misc{pycodemod-sites-bindings-and-labels-are-not-uses,
+  section = {sites},
+  title  = {⚑ A parameter and a keyword label are not refs},
+  claim  = { A parameter and a keyword label are not refs. A value use, an attribute read and a
+            decorator registration are.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_bindings_and_labels_are_not_uses},
+}
+
+@misc{pycodemod-sites-call-facts-carry-every-reading,
+  section = {sites},
+  title  = {Keywords, shapes, constants, positional values and their source text, from one walk},
+  claim  = {Keywords, shapes, constants, positional values and their source text, from one walk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_call_facts_carry_every_reading},
+}
+
+@misc{pycodemod-sites-result-carries-its-query-and-reports-every-skip,
+  section = {sites},
+  title  = {⚑⚑⚑ Target and population ride the result; unread files are skips},
+  claim  = { Target and population ride the result; unread files are skips. A file without the name
+            is excluded, not skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_the_result_carries_its_query_and_reports_every_skip},
+}
+
+@misc{pycodemod-sites-visitor-bug-raises-rather-than-emptying-the-query,
+  section = {sites},
+  title  = {⚑⚑⚑ A defect in the walk is a property of the QUERY: it must raise, never read as a skip},
+  claim  = { A defect in the walk is a property of the QUERY: it must raise, never read as a skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_a_visitor_bug_raises_rather_than_emptying_the_query},
+}
+
+@misc{pycodemod-sites-dotted-spells-only-name-and-attribute-chains,
+  section = {sites},
+  title  = {`a.b.c` is spelled; anything with a call or subscript in the chain is not},
+  claim  = {`a.b.c` is spelled; anything with a call or subscript in the chain is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_dotted_spells_only_name_and_attribute_chains},
+}
