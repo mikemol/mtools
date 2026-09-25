@@ -1043,3 +1043,63 @@
   claim  = {A tool binding with paths anywhere is bound, even if another call omits them.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_strongest_bound_form_wins},
 }
+
+@misc{pycodemod-size-only-code-lines-are-code,
+  section = {size},
+  title  = {⚑ Docstrings, comments, string-only lines and lone brackets are not code},
+  claim  = { Docstrings, comments, string-only lines and lone brackets are not code. An escaped
+            quote in a string-only line is still string-only; the origin's regex left a
+            stray quote and counted the line as code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_only_code_lines_are_code},
+}
+
+@misc{pycodemod-size-docstring-does-not-count-against-the-cap,
+  section = {size},
+  title  = {⚑⚑⚑ Three docstring lines and two code lines count as two; physical carries all five},
+  claim  = { Three docstring lines and two code lines count as two; physical carries all five. The
+            origin's module_size_all counted every non-blank non-comment line,
+            docstrings included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_a_docstring_does_not_count_against_the_cap},
+}
+
+@misc{pycodemod-size-over-the-cap-says-why,
+  section = {size},
+  title  = {A file over its cap carries the reason, and `over` keeps only such rows},
+  claim  = {A file over its cap carries the reason, and `over` keeps only such rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_over_the_cap_says_why},
+}
+
+@misc{pycodemod-size-recorded-incident-halves-the-cap-on-the-path-suffix,
+  section = {size},
+  title  = {⚑ The incident map is the caller's, matched on the path suffix; each incident halves it},
+  claim  = { The incident map is the caller's, matched on the path suffix; each incident halves it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_a_recorded_incident_halves_the_cap_on_the_path_suffix},
+}
+
+@misc{pycodemod-size-halving-is-named-when-over,
+  section = {size},
+  title  = {An over-cap file with incidents says the cap was halved},
+  claim  = {An over-cap file with incidents says the cap was halved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_the_halving_is_named_when_over},
+}
+
+@misc{pycodemod-size-second-main-guard-is-reported-at-any-size,
+  section = {size},
+  title  = {⚑ Two exact `__main__` guards are reported; a test merely containing the text is not},
+  claim  = { Two exact `__main__` guards are reported; a test merely containing the text is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_a_second_main_guard_is_reported_at_any_size},
+}
+
+@misc{pycodemod-size-defs-count-functions-async-functions-and-classes,
+  section = {size},
+  title  = {A def, an async def and a class are three defs},
+  claim  = {A def, an async def and a class are three defs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_defs_count_functions_async_functions_and_classes},
+}
+
+@misc{pycodemod-size-unread-file-is-reported,
+  section = {size},
+  title  = {⚑⚑ An unreadable or unparseable file is skipped with its reason, never silently dropped},
+  claim  = { An unreadable or unparseable file is skipped with its reason, never silently dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_size.py -k test_an_unread_file_is_reported},
+}
