@@ -195,3 +195,52 @@
   claim  = {No input yields no pairs, no remainders, and zero drift.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_restem.py -k test_an_empty_read_is_a_fact_about_the_input},
 }
+
+@misc{ledger-finding-keys-there-is-no-default-ledger,
+  section = {finding_keys},
+  title  = {No module root and no default path: a reader without a ledger is a TypeError},
+  claim  = {No module root and no default path: a reader without a ledger is a TypeError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_there_is_no_default_ledger},
+}
+
+@misc{ledger-finding-keys-every-ordinal-is-indexed-by-family,
+  section = {finding_keys},
+  title  = {Every ordinal is indexed, and a different family is kept apart},
+  claim  = {Every ordinal is indexed, and a different family is kept apart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_every_ordinal_is_indexed_by_family},
+}
+
+@misc{ledger-finding-keys-unslugged-key-still-holds-its-ordinal,
+  section = {finding_keys},
+  title  = {A bare `gate-O12` is indexed and reads as taken: THE LOAD-BEARING ARM},
+  claim  = {A bare `gate-O12` is indexed and reads as taken: THE LOAD-BEARING ARM.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_an_unslugged_key_still_holds_its_ordinal},
+}
+
+@misc{ledger-finding-keys-taken-set-is-per-series,
+  section = {finding_keys},
+  title  = {The taken set covers one family-and-letter series and excludes another family's},
+  claim  = {The taken set covers one family-and-letter series and excludes another family's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_the_taken_set_is_per_series},
+}
+
+@misc{ledger-finding-keys-shared-ordinal-is-a-collision-naming-every-slug,
+  section = {finding_keys},
+  title  = {A shared ordinal is reported with all its slugs; a single occupant is not a collision},
+  claim  = {A shared ordinal is reported with all its slugs; a single occupant is not a collision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_a_shared_ordinal_is_a_collision_naming_every_slug},
+}
+
+@misc{ledger-finding-keys-deliberate-supersession-still-reports,
+  section = {finding_keys},
+  title  = {A `-reframe` pair collides on purpose and is reported, never silently erased},
+  claim  = {A `-reframe` pair collides on purpose and is reported, never silently erased.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_a_deliberate_supersession_still_reports},
+}
+
+@misc{ledger-finding-keys-render-states-its-own-scope,
+  section = {finding_keys},
+  title  = {The render reports the count, refuses to suggest a next number, and says nothing broke},
+  claim  = {The render reports the count, refuses to suggest a next number, and says nothing broke.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_the_render_states_its_own_scope},
+}
