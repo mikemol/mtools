@@ -207,3 +207,21 @@ def test_every_line_of_a_file_yields_exactly_one_record(tmp_path: Path) -> None:
         UnknownRecord,
         AssistantRecord,
     ]
+
+
+def test_an_undecodable_line_is_reported_not_replaced(tmp_path: Path) -> None:
+    """A line of invalid UTF-8 is a MalformedLine naming the byte; its neighbours still decode.
+
+    ⚑⚑ TS1-d: replacement characters would parse into a silently altered record reading as
+    genuine. Reported per line, so one torn line does not cost the file.
+    """
+    good = _line({"type": "user", "message": {"role": "user", "content": "hi"}}).encode()
+    torn = b'{"type": "user", "text": "caf\xe9"}'
+    path = tmp_path / "t.jsonl"
+    path.write_bytes(b"\n".join([good, torn, good]) + b"\n")
+    records = list(read_path(path))
+    assert [type(r) for r in records] == [UserRecord, MalformedLine, UserRecord]
+    torn_record = records[1]
+    assert isinstance(torn_record, MalformedLine)
+    assert torn_record.line == _TORN_AT
+    assert "invalid UTF-8 at byte" in torn_record.error

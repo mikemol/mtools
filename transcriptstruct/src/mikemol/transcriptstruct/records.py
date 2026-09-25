@@ -77,7 +77,7 @@ class UnknownRecord:
 
 @dataclass(frozen=True, slots=True)
 class MalformedLine:
-    """A line that is not JSON. It is a population to count, never a line to skip."""
+    """A line that is not JSON, or not UTF-8. A population to count, never a line to skip."""
 
     line: int
     text: str
@@ -224,9 +224,24 @@ def parse_lines(lines: Iterable[str]) -> Iterator[Record]:
 def read_path(path: Path) -> Iterator[Record]:
     """Yield the records of a transcript file, one per line.
 
+    ⚑⚑ INVALID UTF-8 IS REPORTED, PER LINE, NEVER REPLACED (TS1-d). Decoding with replacement
+    characters turns an undecodable line into a record that still parses — its text silently
+    altered, reading as genuine; `witness.raw_bib` refuses a mangled bib for the same reason. A
+    transcript is line-grained, so the refusal is too: the one line becomes a `MalformedLine`
+    naming the byte, and its neighbours still decode, rather than one torn line costing a whole
+    file of records.
+
     Yields:
         the records, in file order.
 
     """
-    with path.open(encoding="utf-8", errors="replace") as handle:
-        yield from parse_lines(handle)
+    with path.open("rb") as handle:
+        for number, raw in enumerate(handle, start=1):
+            try:
+                text = raw.decode("utf-8")
+            except UnicodeDecodeError as exc:
+                shown = raw.decode("utf-8", errors="replace").rstrip("\n")
+                why = f"invalid UTF-8 at byte {exc.start}: {exc.reason}"
+                yield MalformedLine(number, shown, why)
+                continue
+            yield parse_line(text.rstrip("\n"), number)

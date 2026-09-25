@@ -423,3 +423,13 @@
             left unread.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_tool_reference_decodes_to_its_tool_name},
 }
+
+@misc{transcriptstruct-records-undecodable-line-is-reported-not-replaced,
+  section = {records},
+  title  = {A line of invalid UTF-8 is a MalformedLine naming the byte; its neighbours still decode},
+  claim  = {A line of invalid UTF-8 is a MalformedLine naming the byte; its neighbours still decode.
+            TS1-d: replacement characters would parse into a silently altered record
+            reading as genuine. Reported per line, so one torn line does not cost the
+            file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_an_undecodable_line_is_reported_not_replaced},
+}
