@@ -635,3 +635,38 @@
   claim  = { An unread file is a skip, never an empty result.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_both_readers_report_every_file_they_could_not_read},
 }
+
+@misc{pycodemod-swallows-every-kind-and-every-silent-exit-is-found,
+  section = {swallows},
+  title  = {⚑⚑ A tuple holding `Exception` is broad; a dotted BaseException is base; five exits},
+  claim  = { A tuple holding `Exception` is broad; a dotted BaseException is base; five exits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_swallows.py -k test_every_kind_and_every_silent_exit_is_found},
+}
+
+@misc{pycodemod-swallows-feeds-is-a-later-read-in-the-same-scope,
+  section = {swallows},
+  title  = {⚑⚑ An accumulator and a later-read target feed; output, scaffolding, other scopes do not},
+  claim  = { An accumulator and a later-read target feed; output, scaffolding, other scopes do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_swallows.py -k test_feeds_is_a_later_read_in_the_same_scope},
+}
+
+@misc{pycodemod-swallows-handler-that-does-anything-else-is-not-a-swallow,
+  section = {swallows},
+  title  = {`log(); pass` accounts for the failure: that module-level handler is not reported},
+  claim  = {`log(); pass` accounts for the failure: that module-level handler is not reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_swallows.py -k test_a_handler_that_does_anything_else_is_not_a_swallow},
+}
+
+@misc{pycodemod-swallows-except-star-handler-is-read,
+  section = {swallows},
+  title  = {An exception-group handler discards as silently as a plain one},
+  claim  = {An exception-group handler discards as silently as a plain one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_swallows.py -k test_an_except_star_handler_is_read},
+}
+
+@misc{pycodemod-swallows-census-reports-every-file-it-could-not-read,
+  section = {swallows},
+  title  = {⚑⚑⚑ The census of silent swallows must not swallow: undecodable, unparseable, unreadable},
+  claim  = { The census of silent swallows must not swallow: undecodable, unparseable, unreadable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_swallows.py -k test_the_census_reports_every_file_it_could_not_read},
+}
