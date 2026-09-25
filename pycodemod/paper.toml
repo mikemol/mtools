@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.pycodemod: structural queries over Python that say what they could not see"
+subtitle = "Cleanroomed from substrate. Every query distinguishes found-none from could-not-look; the tree it reads is an operand, never a root derived from where the package was installed."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "PYCODEMOD.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

@@ -1,0 +1,142 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ MIRRORS //ledger:BUILD.bazel TARGET FOR TARGET. The one difference: the library DEPENDS on
+# libcst through the shipping hub, because libcst is required here, not optional (see pyproject).
+# A library only, for now: the driver and its console script arrive last in the port.
+load("@pycodemod_deps//:requirements.bzl", "requirement")
+load("@pycodemod_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("//:venv.bzl", "venv_from_hub")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+exports_files([
+    # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
+    "pyproject.toml",
+    "requirements.txt",
+    "requirements-dev.txt",
+    "uv.lock",
+])
+
+py_library(
+    name = "pycodemod",
+    srcs = glob(["src/mikemol/pycodemod/**/*.py"]),
+    data = glob(["src/mikemol/pycodemod/py.typed"], allow_empty = True),
+    imports = ["src"],
+    deps = [
+        requirement("libcst"),
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. All fixtures are synthetic and inline,
+# under `tmp_path`, never this tree.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "//:pytest_main.py",
+        args = [
+            "$(location " + src + ")",
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-o",
+            "faulthandler_timeout=60",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"],
+        size = "small",
+        deps = [
+            ":pycodemod",
+            dev_requirement("pytest"),
+        ],
+        imports = ["src"],
+    )
+    for src in glob(["tests/test_*.py"])
+]
+
+exports_files(["BUILD.bazel"])
+
+sh_test(
+    name = "ruff",
+    srcs = ["//:ruff_check.sh"],
+    args = [
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ THE BASELINE WAS MINTED EMPTY: the distribution enters clean under preview, so the ratchet
+# can only hold it there.
+sh_test(
+    name = "ratchet",
+    srcs = ["//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+sh_test(
+    name = "mutants",
+    srcs = ["//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location //:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
+py_binary(
+    name = "mypy_runner",
+    srcs = ["//:mypy_runner.py"],
+    main = "//:mypy_runner.py",
+    deps = [
+        dev_requirement("libcst"),
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ],
+)
+
+sh_test(
+    name = "mypy",
+    srcs = ["//:mypy_check.sh"],
+    args = [
+        "$(location :mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":mypy_runner",
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
+    size = "small",
+    # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24), as every sibling's mypy target.
+    timeout = "long",
+)
+
+venv_from_hub(
+    name = ".venv",
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    srcs = glob(["src/mikemol/pycodemod/**"]),
+)

@@ -1,0 +1,3 @@
+# rubric.tsv — the sections of the pycodemod warrant set, one per test module, in document order.
+# key <TAB> heading title
+core	The Core: `--` Ends the Flags, an Unread File Reported Beside What Was Found, and UNKNOWN Never a Guess

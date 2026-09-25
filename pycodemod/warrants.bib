@@ -1,0 +1,136 @@
+% warrants.bib — one claim PER TEST CASE in the pycodemod suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: pycodemod-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+@misc{pycodemod-core-double-dash-ends-flag-recognition,
+  section = {core},
+  title  = {⚑⚑ `--literal -- --selftest` must NOT see `--selftest` as a flag: THE ORIGIN'S DEFECT},
+  claim  = { `--literal -- --selftest` must NOT see `--selftest` as a flag: THE ORIGIN'S DEFECT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_double_dash_ends_flag_recognition},
+}
+
+@misc{pycodemod-core-without-double-dash-every-token-is-flag-side,
+  section = {core},
+  title  = {With no `--`, the whole tail is flag-side and there are no operands after it},
+  claim  = {With no `--`, the whole tail is flag-side and there are no operands after it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_without_double_dash_every_token_is_flag_side},
+}
+
+@misc{pycodemod-core-invalid-escape-is-found-and-an-unreadable-file-is-reported,
+  section = {core},
+  title  = {⚑ The found escape and the unread files are returned TOGETHER: an empty `found` is a fact},
+  claim  = { The found escape and the unread files are returned TOGETHER: an empty `found` is a
+            fact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_invalid_escape_is_found_and_an_unreadable_file_is_reported},
+}
+
+@misc{pycodemod-core-clean-file-yields-nothing-and-is-read,
+  section = {core},
+  title  = {A file with valid escapes only is neither found nor unread},
+  claim  = {A file with valid escapes only is neither found nor unread.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_clean_file_yields_nothing_and_is_read},
+}
+
+@misc{pycodemod-core-escape-seq-names-the-sequence-or-a-question-mark,
+  section = {core},
+  title  = {The escape is read out of the warning text; a text naming none reads "?"},
+  claim  = {The escape is read out of the warning text; a text naming none reads "?".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_escape_seq_names_the_sequence_or_a_question_mark},
+}
+
+@misc{pycodemod-core-package-resolves-to-its-directory,
+  section = {core},
+  title  = {⚑ A package is its DIRECTORY, not its `__init__.py`},
+  claim  = { A package is its DIRECTORY, not its `__init__.py`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_package_resolves_to_its_directory},
+}
+
+@misc{pycodemod-core-plain-module-resolves-to-its-file,
+  section = {core},
+  title  = {A single-file module resolves to its own source file},
+  claim  = {A single-file module resolves to its own source file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_plain_module_resolves_to_its_file},
+}
+
+@misc{pycodemod-core-absent-or-sourceless-module-says-why,
+  section = {core},
+  title  = {No such module, a malformed name and a built-in each return None WITH a reason},
+  claim  = {No such module, a malformed name and a built-in each return None WITH a reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_absent_or_sourceless_module_says_why},
+}
+
+@misc{pycodemod-core-roundtrip-reports-identity-and-each-failure,
+  section = {core},
+  title  = {Identical source round-trips; unreadable and unparseable files say which they were},
+  claim  = {Identical source round-trips; unreadable and unparseable files say which they were.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_roundtrip_reports_identity_and_each_failure},
+}
+
+@misc{pycodemod-core-unknown-renders-as-a-word,
+  section = {core},
+  title  = {The sentinel prints as UNKNOWN, never as data},
+  claim  = {The sentinel prints as UNKNOWN, never as data.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_unknown_renders_as_a_word},
+}
+
+@misc{pycodemod-core-value-of-a-constant,
+  section = {core},
+  title  = {A constant expression returns its value, and its shape is "literal"},
+  claim  = {A constant expression returns its value, and its shape is "literal".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_value_of_a_constant},
+}
+
+@misc{pycodemod-core-value-of-a-computed-expression-is-unknown,
+  section = {core},
+  title  = {⚑ Anything that is not a scalar constant is UNKNOWN — including `-"abc"`, which parses},
+  claim  = { Anything that is not a scalar constant is UNKNOWN — including `-"abc"`, which parses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_value_of_a_computed_expression_is_unknown},
+}
+
+@misc{pycodemod-core-src-of-collapses-whitespace-and-marks-truncation,
+  section = {core},
+  title  = {⚑ The grouping key is bounded, and a clipped key says it was clipped},
+  claim  = { The grouping key is bounded, and a clipped key says it was clipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_src_of_collapses_whitespace_and_marks_truncation},
+}
+
+@misc{pycodemod-core-src-of-empty-text-is-unknown,
+  section = {core},
+  title  = {A node that renders to no text is UNKNOWN, not an empty key},
+  claim  = {A node that renders to no text is UNKNOWN, not an empty key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_src_of_empty_text_is_unknown},
+}
+
+@misc{pycodemod-core-corpus-yields-a-directory-itself,
+  section = {core},
+  title  = {A directory is its own tree: yielded absolute, and left in place afterwards},
+  claim  = {A directory is its own tree: yielded absolute, and left in place afterwards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_corpus_yields_a_directory_itself},
+}
+
+@misc{pycodemod-core-corpus-extracts-an-archive-safely-and-removes-it,
+  section = {core},
+  title  = {⚑ `..` and absolute members are dropped; the temp tree is gone after the scope},
+  claim  = { `..` and absolute members are dropped; the temp tree is gone after the scope.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_corpus_extracts_an_archive_safely_and_removes_it},
+}
+
+@misc{pycodemod-core-corpus-removes-the-tree-on-the-error-path,
+  section = {core},
+  title  = {The temp tree is removed when the body fails, too},
+  claim  = {The temp tree is removed when the body fails, too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_corpus_removes_the_tree_on_the_error_path},
+}
+
+@misc{pycodemod-core-per-file-keeps-file-order-serially-and-pooled,
+  section = {core},
+  title  = {Below and above the pool threshold, every row arrives in file order},
+  claim  = {Below and above the pool threshold, every row arrives in file order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_per_file_keeps_file_order_serially_and_pooled},
+}

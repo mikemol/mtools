@@ -212,8 +212,22 @@ pip.parse(
     python_version = "3.13",
     uv_lock = "//ledger:uv.lock",
 )
+# mikemol-pycodemod: cleanroomed from substrate's scratch/pycodemod.py (W43). Its shipping hub is
+# NOT empty — libcst is required, not optional, so a missing library cannot read as "found none".
+pip.parse(
+    hub_name = "pycodemod_deps",
+    python_version = "3.13",
+    requirements_lock = "//pycodemod:requirements.txt",
+)
+pip.parse(
+    hub_name = "pycodemod_dev",
+    python_version = "3.13",
+    uv_lock = "//pycodemod:uv.lock",
+)
 use_repo(
     pip,
+    "pycodemod_deps",
+    "pycodemod_dev",
     "ledger_deps",
     "ledger_dev",
     "witness_deps",
