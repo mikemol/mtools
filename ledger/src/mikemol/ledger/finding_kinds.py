@@ -26,7 +26,11 @@ import subprocess
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
     from pathlib import Path
+
+    # A lens runner: one argv in, `(rc, output)` out, with `rc is None` when it never started.
+    Runner = Callable[[Sequence[str]], tuple[int | None, str]]
 
 # How long one witness command may take before it is reported as not having run.
 TIMEOUT = 300
@@ -72,6 +76,23 @@ def run(*argv: str, cwd: Path) -> tuple[int | None, str]:
     except (OSError, subprocess.SubprocessError) as exc:
         return None, str(exc)
     return done.returncode, (done.stdout or "") + (done.stderr or "")
+
+
+def runner_in(cwd: Path) -> Runner:
+    """Return a lens `Runner` that runs each argv it is handed in `cwd`, through `run`.
+
+    ⚑ AN ADAPTER, NOT A PROTOCOL STUB: a `Runner` takes the argv as one sequence, so it needs no
+    variadic `__call__` declaration whose empty body nothing could ever exercise.
+
+    Returns:
+        the runner.
+
+    """
+
+    def run_there(cmd: Sequence[str]) -> tuple[int | None, str]:
+        return run(*cmd, cwd=cwd)
+
+    return run_there
 
 
 def failing_case(out: str) -> str:

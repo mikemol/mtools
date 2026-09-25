@@ -414,3 +414,61 @@
   claim  = {A correct `mode:` filing still passes: the arm is a gate, not a wall.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_polarity.py -k test_a_mode_witness_reporting_undocumented_is_accepted},
 }
+
+@misc{ledger-finding-mode-divergence-reader-finds-rows-however-they-are-spaced,
+  section = {finding_mode},
+  title  = {Widely and narrowly spaced UNDOCUMENTED rows are found; a mode in no row is absent},
+  claim  = {Widely and narrowly spaced UNDOCUMENTED rows are found; a mode in no row is absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_the_divergence_reader_finds_rows_however_they_are_spaced},
+}
+
+@misc{ledger-finding-mode-row-under-another-tool-does-not-answer-for-this-one,
+  section = {finding_mode},
+  title  = {The block structure is load-bearing: `--sync` belongs to toolmodes.py, not mdstruct.py},
+  claim  = {The block structure is load-bearing: `--sync` belongs to toolmodes.py, not mdstruct.py.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_a_row_under_another_tool_does_not_answer_for_this_one},
+}
+
+@misc{ledger-finding-mode-declaration-reader-resolves-this-tools-source,
+  section = {finding_mode},
+  title  = {A declaration by THIS tool resolves to its source; a sourceless row says so},
+  claim  = {A declaration by THIS tool resolves to its source; a sourceless row says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_the_declaration_reader_resolves_this_tools_source},
+}
+
+@misc{ledger-finding-mode-tool-named-only-in-the-not-on-line-is-not-a-declarer,
+  section = {finding_mode},
+  title  = {THE NEGATIVE-LIST ARM: `mdstruct.py` in `NOT on:` is not a declaration by it},
+  claim  = {THE NEGATIVE-LIST ARM: `mdstruct.py` in `NOT on:` is not a declaration by it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_a_tool_named_only_in_the_not_on_line_is_not_a_declarer},
+}
+
+@misc{ledger-finding-mode-each-outcome-and-exactly-one-green-path,
+  section = {finding_mode},
+  title  = {Dispatching and GONE are OPEN and distinct; declared is CLOSED; a dead lens is UNRUNNABLE},
+  claim  = {Dispatching and GONE are OPEN and distinct; declared is CLOSED; a dead lens is
+            UNRUNNABLE. EXACTLY ONE DRIVEN OUTCOME IS CLOSED — the property the polarity
+            probe rests on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_each_outcome_and_exactly_one_green_path},
+}
+
+@misc{ledger-finding-mode-lenses-are-the-callers-with-no-default,
+  section = {finding_mode},
+  title  = {No substrate lens remains, and a call without lenses is a TypeError: THE LETTER'S §3.2},
+  claim  = {No substrate lens remains, and a call without lenses is a TypeError: THE LETTER'S §3.2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_the_lenses_are_the_callers_with_no_default},
+}
+
+@misc{ledger-finding-mode-callers-lens-argvs-are-what-run,
+  section = {finding_mode},
+  title  = {The divergence argv runs as given, and the find argv runs with the mode appended},
+  claim  = {The divergence argv runs as given, and the find argv runs with the mode appended.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_the_callers_lens_argvs_are_what_run},
+}
+
+@misc{ledger-finding-mode-ledgers-own-runner-composes-with-a-real-lens,
+  section = {finding_mode},
+  title  = {`finding_kinds.runner_in(cwd)` drives a real lens script to a DOCUMENTED verdict},
+  claim  = {`finding_kinds.runner_in(cwd)` drives a real lens script to a DOCUMENTED verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_the_ledgers_own_runner_composes_with_a_real_lens},
+}
