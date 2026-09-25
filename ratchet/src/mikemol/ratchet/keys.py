@@ -23,12 +23,18 @@ site the gate actually reaches. A new schema is one more entry in `SCHEMAS`.
 declares seven gates; the entries below re-express its `sep`, `path_field` and `arity` so this
 distribution keeps its zero runtime dependencies. Baseline file names and nouns are the peer's
 concern and are not carried.
+
+⚑ TWO READS FROM THE PEER'S RETIRING `key_spec` (N-a row 7, `inbox/2026-09-24-substrate-key-spec-
+answer.md`): `spec_for`, a gate module's filename to its declared schema NAME, and `kind_of`, the
+trailing KIND of a parsed key. The rest of `key_spec` duplicates what is here; it retires rather
+than moving.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import partial
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -105,6 +111,9 @@ _TRIPLE = 3
 
 RUFF = "ruff"
 
+# The prefix naming the peer's gate schemas, whose short names a gate's module filename carries.
+GATE_PREFIX = "substrate:"
+
 
 def _substrate(path_field: int, arity: int) -> KeySchema:
     """Bind one of the peer's `::` shapes.
@@ -156,3 +165,53 @@ def parse_all(schema: KeySchema, keys: frozenset[str]) -> dict[str, ParsedKey]:
 
     """
     return {key: schema(key) for key in keys}
+
+
+def _short(name: str) -> str:
+    """Return a gate schema's short name as a filename spells it: hyphens become underscores.
+
+    Returns:
+        the short name.
+
+    """
+    return name.removeprefix(GATE_PREFIX).replace("-", "_")
+
+
+def spec_for(filename: str) -> str | None:
+    """Return the schema NAME a gate module's filename declares, or None when it declares none.
+
+    `check_ban_ratchet.py` → `substrate:ban`; pass the result to `schema_named`.
+
+    ⚑⚑ AN UNDECLARED GATE IS None, NEVER A DEFAULT: six of ten of the peer's baselines lacked an
+    entry, so a default would mis-partition exactly the population most in need of a right answer.
+    ⚑ AND A FILENAME MATCHING TWO SCHEMAS IS REFUSED, not resolved by table order — the peer's copy
+    took the first match, which is a guess dressed as a lookup.
+
+    Returns:
+        the declared schema name, or None.
+
+    Raises:
+        UnknownSchemaError: when the filename names more than one gate schema.
+
+    """
+    stem = Path(filename).name.replace("-", "_")
+    hits = [n for n in SCHEMA_NAMES if n.startswith(GATE_PREFIX) and _short(n) in stem]
+    if len(hits) > 1:
+        msg = f"UnknownSchemaError: {filename!r} names several gate schemas: {hits}"
+        raise UnknownSchemaError(msg)
+    return hits[0] if hits else None
+
+
+def kind_of(parsed: ParsedKey) -> str | None:
+    """Return a parsed key's KIND — its trailing identity field — or None when it has none.
+
+    ⚑⚑ A KEY WITH ONE IDENTITY FIELD HAS NO KIND, WHICH IS NOT THE SAME AS ONE KIND. A pair's lone
+    identity is the key's own NAME; reporting it as a kind lists every key as "its own kind, x1".
+    For the peer's path-first triples (`path::name::kind`) the trailing field is the kind.
+    ⚑ IT TAKES A `ParsedKey`, so the schema has already refused any key of the wrong shape.
+
+    Returns:
+        the trailing identity field when there are several, else None.
+
+    """
+    return parsed.identity[-1] if len(parsed.identity) > 1 else None

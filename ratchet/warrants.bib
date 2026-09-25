@@ -710,3 +710,45 @@
   claim  = {`emit` writes every line, in order, to one stream: stdout by default, or the one given.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_emit_writes_one_narrative_to_the_stream_given},
 }
+
+@misc{ratchet-key-lookup-gate-filename-resolves-to-its-declared-schema,
+  section = {key_lookup},
+  title  = {`check_ban_ratchet.py` names the ban schema, which `schema_named` then serves},
+  claim  = {`check_ban_ratchet.py` names the ban schema, which `schema_named` then serves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_key_lookup.py -k test_a_gate_filename_resolves_to_its_declared_schema},
+}
+
+@misc{ratchet-key-lookup-undeclared-gate-is-none-never-a-default,
+  section = {key_lookup},
+  title  = {A gate no schema declares reads None: THE LOAD-BEARING ARM},
+  claim  = {A gate no schema declares reads None: THE LOAD-BEARING ARM.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_key_lookup.py -k test_an_undeclared_gate_is_none_never_a_default},
+}
+
+@misc{ratchet-key-lookup-hyphenated-schema-matches-its-underscored-filename,
+  section = {key_lookup},
+  title  = {`carrier-locality` is found in `check_carrier_locality.py`},
+  claim  = {`carrier-locality` is found in `check_carrier_locality.py`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_key_lookup.py -k test_a_hyphenated_schema_matches_its_underscored_filename},
+}
+
+@misc{ratchet-key-lookup-filename-naming-two-schemas-is-refused,
+  section = {key_lookup},
+  title  = {A filename carrying two gate names is refused, not resolved by table order},
+  claim  = {A filename carrying two gate names is refused, not resolved by table order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_key_lookup.py -k test_a_filename_naming_two_schemas_is_refused},
+}
+
+@misc{ratchet-key-lookup-triple-has-a-kind-and-a-pair-does-not,
+  section = {key_lookup},
+  title  = {A path-first triple's trailing field is its kind; a pair's lone field is not a kind},
+  claim  = {A path-first triple's trailing field is its kind; a pair's lone field is not a kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_key_lookup.py -k test_a_triple_has_a_kind_and_a_pair_does_not},
+}
+
+@misc{ratchet-key-lookup-reversed-pair-and-a-ruff-key-have-no-kind,
+  section = {key_lookup},
+  title  = {The reversed `discharge` pair, which the retiring module would mis-read, has no kind},
+  claim  = {The reversed `discharge` pair, which the retiring module would mis-read, has no kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_key_lookup.py -k test_a_reversed_pair_and_a_ruff_key_have_no_kind},
+}
