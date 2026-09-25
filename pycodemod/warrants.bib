@@ -909,3 +909,92 @@
   claim  = { A file that cannot be read or parsed is skipped, with its reason, by both queries.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rivals.py -k test_an_unread_file_is_skipped_by_both},
 }
+
+@misc{pycodemod-placement-guard-in-the-entry-block-fires-at-entry,
+  section = {placement},
+  title  = {A guard at module scope inside the `__main__` block is `entry`},
+  claim  = {A guard at module scope inside the `__main__` block is `entry`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_guard_in_the_entry_block_fires_at_entry},
+}
+
+@misc{pycodemod-placement-guard-under-a-dispatch-condition-is-dispatched,
+  section = {placement},
+  title  = {A guard under a mode test inside the block is `dispatched`: written, not fired},
+  claim  = {A guard under a mode test inside the block is `dispatched`: written, not fired.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_guard_under_a_dispatch_condition_is_dispatched},
+}
+
+@misc{pycodemod-placement-comment-at-column-zero-does-not-end-the-block,
+  section = {placement},
+  title  = {⚑⚑⚑ The entry block is the `if` itself, not an indentation span},
+  claim  = { The entry block is the `if` itself, not an indentation span. The origin ended the span
+            at the column-0 comment, so this guard read `dispatched`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_comment_at_column_zero_does_not_end_the_block},
+}
+
+@misc{pycodemod-placement-one-hop-follows-the-callers-scope,
+  section = {placement},
+  title  = {⚑⚑ A guard in a def is `entry` only if the block calls that def at module scope, unguarded},
+  claim  = { A guard in a def is `entry` only if the block calls that def at module scope,
+            unguarded. A helper DEFINED in the block runs nothing; the origin matched it
+            by line range.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_one_hop_follows_the_callers_scope},
+}
+
+@misc{pycodemod-placement-script-with-no-main-block-runs-at-entry,
+  section = {placement},
+  title  = {⚑⚑ With no `__main__` block, module scope IS the entry, for a direct call and one hop},
+  claim  = { With no `__main__` block, module scope IS the entry, for a direct call and one hop. The
+            origin's one-hop check refused a def called from module scope for want of a
+            span.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_script_with_no_main_block_runs_at_entry},
+}
+
+@misc{pycodemod-placement-else-of-the-main-block-is-dispatched,
+  section = {placement},
+  title  = {An `else` of the entry test runs on import, never on invocation: `dispatched`},
+  claim  = {An `else` of the entry test runs on import, never on invocation: `dispatched`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_else_of_the_main_block_is_dispatched},
+}
+
+@misc{pycodemod-placement-either-operand-order-and-quote-is-the-entry-test,
+  section = {placement},
+  title  = {`'__main__' == __name__` is the entry test as much as the usual spelling},
+  claim  = {`'__main__' == __name__` is the entry test as much as the usual spelling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_either_operand_order_and_quote_is_the_entry_test},
+}
+
+@misc{pycodemod-placement-method-or-async-def-reached-from-the-block-is-entry,
+  section = {placement},
+  title  = {⚑ A method's scope is qualified by its class; the block calls it by its own name},
+  claim  = { A method's scope is qualified by its class; the block calls it by its own name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_method_or_async_def_reached_from_the_block_is_entry},
+}
+
+@misc{pycodemod-placement-first-write-form-is-first-write-and-entry-outranks-it,
+  section = {placement},
+  title  = {`_snapshot_once` is `first-write`; a file that also guards at entry earns `entry`},
+  claim  = {`_snapshot_once` is `first-write`; a file that also guards at entry earns `entry`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_a_first_write_form_is_first_write_and_entry_outranks_it},
+}
+
+@misc{pycodemod-placement-first-write-forms-are-the-callers,
+  section = {placement},
+  title  = {Forms passed as first-write are graded first-write, whatever their name},
+  claim  = {Forms passed as first-write are graded first-write, whatever their name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_first_write_forms_are_the_callers},
+}
+
+@misc{pycodemod-placement-entry-test-is-exactly-the-comparison,
+  section = {placement},
+  title  = {Only `__name__ == "__main__"`, in either order, is the entry test},
+  claim  = {Only `__name__ == "__main__"`, in either order, is the entry test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_the_entry_test_is_exactly_the_comparison},
+}
+
+@misc{pycodemod-placement-unreadable-file-is-skipped-and-the-limits-are-returned,
+  section = {placement},
+  title  = {⚑ A file the scan could not read is skipped; what cannot be decided rides every result},
+  claim  = { A file the scan could not read is skipped; what cannot be decided rides every result.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_an_unreadable_file_is_skipped_and_the_limits_are_returned},
+}

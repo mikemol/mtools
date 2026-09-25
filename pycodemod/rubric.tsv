@@ -15,3 +15,4 @@ strings	The String Readers: A Write Is Not a Read, f-String Text Is a Literal, a
 definitions	The Definition Readers: A Failure Is Never a Binding, Each Name Live Over Its Own Scope, and a Source With Its Decorators
 funcnames	The func Census: Asked of SQLAlchemy Not Listed, Case-Insensitive as Core Is, and Refusing When It Cannot Ask
 rivals	The Rival Censuses: A Wrapper Delegates, an Awaited Call Too, Collisions in One Pass, and an Unread File Reported
+placement	The Placement Census: When a Guard Fires Not Where It Is Written, the Entry Block Read From the Scan, and One Hop by Scope
