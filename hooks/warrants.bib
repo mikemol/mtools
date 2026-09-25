@@ -4191,3 +4191,56 @@
             the exemption from widening.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_writing_a_missing_package_marker_is_admitted},
 }
+
+@misc{hooks-refusal-log-none-label-is-unknown-not-the-string-none,
+  section = {refusal-log},
+  title  = {`stream_tool(None)` is "unknown": `str(None)` is the truthy string "None"},
+  claim  = {`stream_tool(None)` is "unknown": `str(None)` is the truthy string "None".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_a_none_label_is_unknown_not_the_string_none},
+}
+
+@misc{hooks-refusal-log-label-is-bounded-to-its-tools-basename,
+  section = {refusal-log},
+  title  = {An invocation label keeps only its first word's basename: the stream stays bounded},
+  claim  = {An invocation label keeps only its first word's basename: the stream stays bounded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_a_label_is_bounded_to_its_tools_basename},
+}
+
+@misc{hooks-refusal-log-no-destination-is-reported-and-starts-nothing,
+  section = {refusal-log},
+  title  = {With no destination, NOT emitted is reported and curl is never started},
+  claim  = {With no destination, NOT emitted is reported and curl is never started. THE LETTER'S
+            §3.1: substrate's copy fell back to a written-down address, which went stale
+            once and swallowed every event silently. There is nothing to fall back to
+            here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_no_destination_is_reported_and_starts_nothing},
+}
+
+@misc{hooks-refusal-log-destination-emits-one-jsonline-to-it,
+  section = {refusal-log},
+  title  = {The positive control: with a destination, curl gets it as a word and the event on stdin},
+  claim  = {The positive control: with a destination, curl gets it as a word and the event on stdin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_a_destination_emits_one_jsonline_to_it},
+}
+
+@misc{hooks-refusal-log-failing-curl-is-reported-with-its-code,
+  section = {refusal-log},
+  title  = {A dead store is reported as NOT emitted with curl's code, never mistaken for a quiet one},
+  claim  = {A dead store is reported as NOT emitted with curl's code, never mistaken for a quiet
+            one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_a_failing_curl_is_reported_with_its_code},
+}
+
+@misc{hooks-refusal-log-no-curl-is-reported,
+  section = {refusal-log},
+  title  = {With no curl on PATH, NOT emitted is reported, naming why},
+  claim  = {With no curl on PATH, NOT emitted is reported, naming why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_no_curl_is_reported},
+}
+
+@misc{hooks-refusal-log-junk-arguments-never-raise,
+  section = {refusal-log},
+  title  = {Junk in every slot still emits: a gate that cannot log must still gate},
+  claim  = {Junk in every slot still emits: a gate that cannot log must still gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_junk_arguments_never_raise},
+}

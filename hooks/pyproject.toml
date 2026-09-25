@@ -302,6 +302,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_pre_push.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ THE REFUSAL LOG: handing one event to `curl` IS its responsibility. MEASURED: curl is resolved
+# by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the
+# caller's destination URL, as ONE word; the untrusted payload is the JSON on STDIN, never a word
+# in the command. Never through a shell.
+"src/mikemol/hooks/refusal_log.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑⚑ THE THIRD NAMED FILE, AND THE SAME REASON AS THE SECOND. `test_no_verify.py`'s subject is
 # what the INSTALLED console script decides — a hook can have a correct predicate and a broken
 # entry point, and only running the installed binary can tell those apart. So invoking it is the

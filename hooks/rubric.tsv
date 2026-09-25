@@ -18,3 +18,4 @@ shellcheck-cli	The Shell Hook by Hand: One File, One Tree, One Command, and Coul
 pycheck	The Python Edit Gate: The Post-Edit File Checked, a Tree Exclusion Honoured, and No Check Means No Pass
 adopt-launcher	The Consumer Launcher: Another Repo Running This Venv, Failing Closed, With the Repair Reachable
 githook-pre-push	The Shared Pre-Push: An Operation in Flight Refused, and a Repo's Own Hook Given the Same Stdin
+refusal-log	The Refusal Log: A Refused Invocation Recorded Where Its Caller Says, and Not-Sent Reported, Never Swallowed
