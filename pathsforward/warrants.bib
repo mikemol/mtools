@@ -1311,3 +1311,33 @@
   claim  = { A line whose stamp is not a whole UTC second reads back `Unparsed`, naming the stamp.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_line_with_a_bad_stamp_reads_back_unparsed},
 }
+
+@misc{pathsforward-cli-update-sets-enables,
+  section = {cli},
+  title  = {⚑⚑ --update --enables replaces the edges; it exited 0 and left them unchanged},
+  claim  = { --update --enables replaces the edges; it exited 0 and left them unchanged. Measured by
+            nemik on a scratch copy at 2293751: el-openglo's comma-joined edges had no
+            repair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_sets_enables},
+}
+
+@misc{pathsforward-cli-update-refuses-a-malformed-edge,
+  section = {cli},
+  title  = {A comma-joined or non-W symbol in --update --enables is refused, as --add refuses it},
+  claim  = {A comma-joined or non-W symbol in --update --enables is refused, as --add refuses it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_refuses_a_malformed_edge},
+}
+
+@misc{pathsforward-cli-flag-the-mode-does-not-apply-is-refused,
+  section = {cli},
+  title  = {⚑⚑ A flag the mode never reads exits 2 and saves nothing; it was accepted in silence},
+  claim  = { A flag the mode never reads exits 2 and saves nothing; it was accepted in silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_flag_the_mode_does_not_apply_is_refused},
+}
+
+@misc{pathsforward-cli-ledger-kind-still-defaults-to-tick,
+  section = {cli},
+  title  = {A ledger line with no --kind is a tick line, and --kind still names another kind},
+  claim  = {A ledger line with no --kind is a tick line, and --kind still names another kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_ledger_kind_still_defaults_to_tick},
+}

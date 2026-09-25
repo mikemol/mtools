@@ -67,6 +67,59 @@ _VALUED = (
     "preamble_set",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
+_DEFAULT_KIND = "tick"
+
+# ⚑⚑ EACH MODE NAMES THE FIELD FLAGS IT READS, AND ANY OTHER IS REFUSED (nemik, 2026-09-25).
+# `--update W49 --enables W46 W35` exited 0 and printed "W49 updated" while never reading enables:
+# a flag accepted in silence is a write the caller believes happened. A mode absent here reads
+# no field flag at all.
+_FIELDS = (
+    "status",
+    "blocked_on",
+    "blocked_kind",
+    "next",
+    "title",
+    "evidence_append",
+    "ticks_blocked",
+    "enables",
+    "touches",
+    "caused_by",
+    "exclude",
+    "kind",
+    "evidence",
+)
+_APPLIES: dict[str, frozenset[str]] = {
+    "update": frozenset(
+        {
+            "status",
+            "blocked_on",
+            "blocked_kind",
+            "next",
+            "title",
+            "evidence_append",
+            "ticks_blocked",
+            "enables",
+        }
+    ),
+    "add": frozenset({"next", "enables", "touches", "caused_by"}),
+    "bump_blocked": frozenset({"exclude"}),
+    "ledger": frozenset({"kind", "evidence"}),
+}
+
+
+def stray_flags(mode: str, opts: dict[str, object]) -> list[str]:
+    """Name the field flags given that `mode` does not read.
+
+    Returns:
+        each such flag, spelled as typed (`--enables`).
+
+    """
+    applies = _APPLIES.get(mode, frozenset())
+    return [
+        "--" + f.replace("_", "-").replace("exclude", "except")
+        for f in _FIELDS
+        if opts.get(f) is not None and f not in applies
+    ]
 
 
 @dataclass(frozen=True)
@@ -166,7 +219,7 @@ def _parser() -> argparse.ArgumentParser:
     ap.add_argument("--touches", nargs="+", metavar="TAG")
     ap.add_argument("--caused-by", metavar="REF", help="--add: letter path, peer, operator, W<n>")
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
-    ap.add_argument("--kind", default="tick", help="the ledger line's kind column")
+    ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
     return ap
 
@@ -415,6 +468,7 @@ def _update(ctx: Ctx) -> int:
         evidence_append=ctx.get("evidence_append"),
         ticks_blocked=ctx.number("ticks_blocked"),
         title=ctx.get("title"),
+        enables=ctx.many("enables"),
     )
 
     def edit(state: State) -> int:
@@ -492,7 +546,8 @@ def _ledger_mode(ctx: Ctx) -> int:
 
     """
     sym, outcome, mechanism, note = ctx.many("ledger") or ("", "", "", "")
-    entry = Entry(ctx.get("kind") or "", sym, outcome, mechanism, note, ctx.get("evidence") or "")
+    kind = ctx.get("kind") or _DEFAULT_KIND
+    entry = Entry(kind, sym, outcome, mechanism, note, ctx.get("evidence") or "")
     text_line = line(entry, ctx.stamp())
     append(store.sibling(ctx.path, store.LEDGER), text_line)
     _say(text_line)
@@ -593,6 +648,10 @@ def main(argv: list[str] | None = None) -> int:
     """
     opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
     mode = mode_of(opts)
+    stray = stray_flags(mode, opts)
+    if stray:
+        _warn(f"REFUSED: {', '.join(stray)} does not apply to --{mode.replace('_', '-')}")
+        return EXIT_REFUSED
     if mode == "selftest":
         return _selftest()
     state = opts.get("state")

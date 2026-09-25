@@ -76,6 +76,9 @@ class Update:
     evidence_append: str | None = None
     ticks_blocked: int | None = None
     title: str | None = None
+    # ⚑ SET, NOT MERGED: `--update --enables` states the whole edge list, so a comma-joined edge
+    # (el-openglo W49, measured by nemik 2026-09-25) has a repair path.
+    enables: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -146,6 +149,10 @@ def _refuse_enums(upd: Update) -> None:
     if upd.ticks_blocked is not None and upd.ticks_blocked < 0:
         msg = f"ticks_blocked {upd.ticks_blocked} is negative"
         raise RefusedError(msg)
+    bad = [e for e in upd.enables or () if symbol_number(e) is None]
+    if bad:
+        msg = f"enables {bad} are not W<n> symbols"
+        raise RefusedError(msg)
     _refuse_title(upd.title)
 
 
@@ -176,6 +183,7 @@ def _set_given(new: Json, upd: Update) -> None:
         "blocked_kind": upd.blocked_kind,
         "next_bounded_step": upd.next_step,
         "title": upd.title,
+        "enables": None if upd.enables is None else list(upd.enables),
     }
     new.update({key: value for key, value in given.items() if value is not None})
 

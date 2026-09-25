@@ -352,6 +352,53 @@ def _code(path: Path, *args: str) -> int:
         return exc.code if isinstance(exc.code, int) else _REFUSED
 
 
+def test_update_sets_enables(tmp_path: Path) -> None:
+    """⚑⚑ --update --enables replaces the edges; it exited 0 and left them unchanged.
+
+    Measured by nemik on a scratch copy at 2293751: el-openglo's comma-joined edges had no repair.
+    """
+    path = _file(tmp_path)
+    assert (_code(path, "--update", "W1", "--enables", "W2", "W3"), _first(path)["enables"]) == (
+        _OK,
+        ["W2", "W3"],
+    )
+
+
+def test_update_refuses_a_malformed_edge(tmp_path: Path) -> None:
+    """A comma-joined or non-W symbol in --update --enables is refused, as --add refuses it."""
+    path = _file(tmp_path)
+    before = path.read_bytes()
+    code = _code(path, "--update", "W1", "--enables", "W46,W35")
+    assert (code, path.read_bytes() == before) == (_REFUSED, True)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ("--update", "W1", "--touches", "x"),
+        ("--update", "W1", "--caused-by", "nemik"),
+        ("--add", "t", "--status", "done"),
+        ("--hash", "--next", "n"),
+        ("--drop", "W1", "why", "--enables", "W2"),
+        ("--ledger", "W1", "idle", "sweep", "n", "--except", "W1"),
+    ],
+)
+def test_a_flag_the_mode_does_not_apply_is_refused(tmp_path: Path, args: tuple[str, ...]) -> None:
+    """⚑⚑ A flag the mode never reads exits 2 and saves nothing; it was accepted in silence."""
+    path = _file(tmp_path)
+    before = path.read_bytes()
+    assert (_code(path, *args), path.read_bytes() == before) == (_REFUSED, True)
+
+
+def test_the_ledger_kind_still_defaults_to_tick(tmp_path: Path) -> None:
+    """A ledger line with no --kind is a tick line, and --kind still names another kind."""
+    path = _file(tmp_path)
+    assert _code(path, "--ledger", "W1", "idle", "sweep", "n") == _OK
+    assert _code(path, "--ledger", "W1", "idle", "sweep", "n", "--kind", "note") == _OK
+    kinds = [ln.split()[1] for ln in (tmp_path / "paths-forward.ledger").read_text().splitlines()]
+    assert kinds == ["tick", "note"]
+
+
 def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
     """--update --title replaces the title, stamps last_worked, and leaves the step alone."""
     path = _file(tmp_path)
