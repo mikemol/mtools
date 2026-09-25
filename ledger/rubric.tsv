@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the ledger warrant set, one per test module, in document order.
 # key <TAB> heading title
 finding_kinds	The Kinds: Three Outcomes Kept Apart, the Exit Code Deciding, and a Witness Run Where Its Caller Says
+finding_kindspec	The Kind Parser: A Refusal Menu That Names the Falsifiable Kinds First, and a Key Alphabet That Is a Contract

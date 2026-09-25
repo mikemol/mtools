@@ -98,3 +98,58 @@
   claim  = {No refusal word, an empty read, and a score with no FAIL line each admit the gap.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_a_citation_miss_is_flagged_never_passed_off},
 }
+
+@misc{ledger-finding-kindspec-unknown-kind-is-refused-with-every-kind-named,
+  section = {finding_kindspec},
+  title  = {An unknown kind is refused, and the menu names all five kinds},
+  claim  = {An unknown kind is refused, and the menu names all five kinds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_an_unknown_kind_is_refused_with_every_kind_named},
+}
+
+@misc{ledger-finding-kindspec-falsifiable-kinds-come-before-standing-with-its-condition,
+  section = {finding_kindspec},
+  title  = {The falsifiable kinds are listed BEFORE `standing`, which carries its condition},
+  claim  = {The falsifiable kinds are listed BEFORE `standing`, which carries its condition. ORDER,
+            NOT JUST MEMBERSHIP: `standing` last, with its condition attached, is what
+            makes choosing it a decision rather than the residue of a short list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_the_falsifiable_kinds_come_before_standing_with_its_condition},
+}
+
+@misc{ledger-finding-kindspec-both-command-spellings-parse-identically-to-their-builders,
+  section = {finding_kindspec},
+  title  = {A quoted and a comma-separated command agree; each verb picks its own builder},
+  claim  = {A quoted and a comma-separated command agree; each verb picks its own builder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_both_command_spellings_parse_identically_to_their_builders},
+}
+
+@misc{ledger-finding-kindspec-empty-command-is-refused-naming-both-fixes,
+  section = {finding_kindspec},
+  title  = {An empty command is REFUSED rather than registered bare, naming quoting and commas},
+  claim  = {An empty command is REFUSED rather than registered bare, naming quoting and commas. THE
+            MEASURED HAZARD: an unquoted space donates the command to the note, leaving
+            the kind bare — which ran a tool with no arguments and exited 2 on its
+            usage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_an_empty_command_is_refused_naming_both_fixes},
+}
+
+@misc{ledger-finding-kindspec-mode-kind-needs-all-three-parts,
+  section = {finding_kindspec},
+  title  = {A well-formed mode kind parses; a two-part one and an empty-flag one are refused},
+  claim  = {A well-formed mode kind parses; a two-part one and an empty-flag one are refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_a_mode_kind_needs_all_three_parts},
+}
+
+@misc{ledger-finding-kindspec-bare-kinds-parse-and-probed-is-the-one-rule,
+  section = {finding_kindspec},
+  title  = {Bare kinds carry no polarity; command kinds do; `mode:` is probed though it has no argv},
+  claim  = {Bare kinds carry no polarity; command kinds do; `mode:` is probed though it has no argv.
+            `probed` EXISTS SO A CALLER NEVER RE-TESTS THE KIND NAME.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_the_bare_kinds_parse_and_probed_is_the_one_rule},
+}
+
+@misc{ledger-finding-kindspec-key-alphabet-is-a-contract-with-the-resolver,
+  section = {finding_kindspec},
+  title  = {Slug keys pass; an empty key, a colon and a space are refused, saying why},
+  claim  = {Slug keys pass; an empty key, a colon and a space are refused, saying why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kindspec.py -k test_the_key_alphabet_is_a_contract_with_the_resolver},
+}
