@@ -1,0 +1,88 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑⚑ MOVED FROM substrate (N-a row 6, inbox/2026-09-24-substrate-findings-letter.md): the
+# `finding_*` cluster, twelve modules closed in both directions — a findings ledger whose rows
+# are witnessed by commands, each reporting OPEN, CLOSED or UNRUNNABLE.
+# ⚑ NAMED `mikemol-ledger`, NOT the letter's `mikemol-findings` (operator, 2026-09-25): this repo
+# already has a tracked `findings/` corpus, and a distribution's directory is its name's suffix.
+name = "mikemol-ledger"
+version = "0.1.0"
+description = "A findings ledger whose rows are witnessed by commands: each finding OPEN, CLOSED or UNRUNNABLE, stdlib only."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["findings", "witness", "verification", "ledger"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+
+# ⚑ NO RUNTIME DEPENDENCIES: the cluster imports only the standard library (the letter, §2).
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml).
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py` — PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.ledger" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB: each line is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+# ⚑ RUNNING A WITNESS COMMAND IS finding_kinds' ONE RESPONSIBILITY. MEASURED: the argv is the
+# ledger's own declared command, run with a caller-supplied cwd and never through a shell.
+"src/mikemol/ledger/finding_kinds.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_finding_kinds.py" = ["assert"]

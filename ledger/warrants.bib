@@ -1,0 +1,100 @@
+% warrants.bib — one claim PER TEST CASE in the ledger suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, whose flagged
+% paragraphs already argue the defect the case prevents.  Where a docstring is a bare
+% one-liner the claim is correspondingly plain; that thinness is a fact about the case
+% rather than something invented over.
+%
+% Keying convention: ledger-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+
+@misc{ledger-finding-kinds-package-exposes-no-root,
+  section = {finding_kinds},
+  title  = {There is no module-level root: THE LETTER'S §3.1},
+  claim  = {There is no module-level root: THE LETTER'S §3.1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_the_package_exposes_no_root},
+}
+
+@misc{ledger-finding-kinds-run-without-a-cwd-is-a-type-error,
+  section = {finding_kinds},
+  title  = {A `run` without `cwd` refuses to guess a directory},
+  claim  = {A `run` without `cwd` refuses to guess a directory. Installed, a guessed root is
+            `site-packages`, and every relative witness reads UNRUNNABLE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_run_without_a_cwd_is_a_type_error},
+}
+
+@misc{ledger-finding-kinds-run-runs-in-the-directory-it-is-given,
+  section = {finding_kinds},
+  title  = {A relative command resolves against the caller's `cwd`, not the package's location},
+  claim  = {A relative command resolves against the caller's `cwd`, not the package's location.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_run_runs_in_the_directory_it_is_given},
+}
+
+@misc{ledger-finding-kinds-process-that-never-started-is-none-not-a-number,
+  section = {finding_kinds},
+  title  = {The exit code is None when the process never started — never collapsed into a number},
+  claim  = {The exit code is None when the process never started — never collapsed into a number.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_a_process_that_never_started_is_none_not_a_number},
+}
+
+@misc{ledger-finding-kinds-unstartable-command-is-unrunnable-under-both-kinds,
+  section = {finding_kinds},
+  title  = {UNRUNNABLE under selftest AND refuses — NOT closed, which "non-zero means refusing" gives},
+  claim  = {UNRUNNABLE under selftest AND refuses — NOT closed, which "non-zero means refusing"
+            gives.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_an_unstartable_command_is_unrunnable_under_both_kinds},
+}
+
+@misc{ledger-finding-kinds-command-that-ran-and-failed-is-a-refusal,
+  section = {finding_kinds},
+  title  = {The other direction: a command that RAN and exited non-zero IS a refusal, not UNRUNNABLE},
+  claim  = {The other direction: a command that RAN and exited non-zero IS a refusal, not
+            UNRUNNABLE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_a_command_that_ran_and_failed_is_a_refusal},
+}
+
+@misc{ledger-finding-kinds-selftest-and-refuses-are-exact-duals,
+  section = {finding_kinds},
+  title  = {The two kinds are inverses: selftest closes on 0; refuses closes otherwise, and says GONE},
+  claim  = {The two kinds are inverses: selftest closes on 0; refuses closes otherwise, and says
+            GONE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_selftest_and_refuses_are_exact_duals},
+}
+
+@misc{ledger-finding-kinds-three-outcomes-stay-distinct,
+  section = {finding_kinds},
+  title  = {CLOSED, OPEN and UNRUNNABLE are three different integers},
+  claim  = {CLOSED, OPEN and UNRUNNABLE are three different integers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_the_three_outcomes_stay_distinct},
+}
+
+@misc{ledger-finding-kinds-vacuous-kinds-are-honest-and-name-themselves,
+  section = {finding_kinds},
+  title  = {A standing fact always holds; an unwitnessed one is always UNRUNNABLE; each names itself},
+  claim  = {A standing fact always holds; an unwitnessed one is always UNRUNNABLE; each names
+            itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_the_vacuous_kinds_are_honest_and_name_themselves},
+}
+
+@misc{ledger-finding-kinds-failing-case-is-quoted-with-its-score-and-count,
+  section = {finding_kinds},
+  title  = {The FAIL line is quoted, not the score; the score rides alongside; further failures count},
+  claim  = {The FAIL line is quoted, not the score; the score rides alongside; further failures
+            count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_the_failing_case_is_quoted_with_its_score_and_count},
+}
+
+@misc{ledger-finding-kinds-refusal-line-is-quoted-not-the-trailing-hint,
+  section = {finding_kinds},
+  title  = {The announcing line is quoted, and the incidental last line is not},
+  claim  = {The announcing line is quoted, and the incidental last line is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_the_refusal_line_is_quoted_not_the_trailing_hint},
+}
+
+@misc{ledger-finding-kinds-citation-miss-is-flagged-never-passed-off,
+  section = {finding_kinds},
+  title  = {No refusal word, an empty read, and a score with no FAIL line each admit the gap},
+  claim  = {No refusal word, an empty read, and a score with no FAIL line each admit the gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_kinds.py -k test_a_citation_miss_is_flagged_never_passed_off},
+}

@@ -131,6 +131,15 @@ pip.parse(
     requirements_lock = "//witness:requirements.txt",
 )
 
+# ⚑ `mikemol-ledger` — substrate's `finding_*` cluster, a findings ledger witnessed by commands
+# (N-a row 6, 2026-09-25). Named `ledger`, not the letter's `findings`, because `//findings` is
+# this repo's tracked findings corpus (operator). Empty shipping hub: stdlib only.
+pip.parse(
+    hub_name = "ledger_deps",
+    python_version = "3.13",
+    requirements_lock = "//ledger:requirements.txt",
+)
+
 # ⚑⚑⚑ A SECOND LOCK PER DISTRIBUTION, FOR THE WITNESS ACTIONS ONLY. The shipping lock above
 # excludes the dev group, so it cannot supply pytest — and the thesis at the top of this file is
 # that A PYTEST CASE AND A PAPERKIT WITNESS ARE THE SAME OBJECT, which means the action staging a
@@ -198,8 +207,15 @@ pip.parse(
     python_version = "3.13",
     uv_lock = "//witness:uv.lock",
 )
+pip.parse(
+    hub_name = "ledger_dev",
+    python_version = "3.13",
+    uv_lock = "//ledger:uv.lock",
+)
 use_repo(
     pip,
+    "ledger_deps",
+    "ledger_dev",
     "witness_deps",
     "witness_dev",
     "corpus_deps",

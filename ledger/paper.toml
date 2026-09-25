@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.ledger: a findings ledger whose rows are witnessed by commands"
+subtitle = "Moved from substrate. Each finding is OPEN, CLOSED or UNRUNNABLE, kept distinct; a witness runs where its caller says, never from wherever the package was installed."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "LEDGER.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
