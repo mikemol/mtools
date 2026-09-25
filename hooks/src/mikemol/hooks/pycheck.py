@@ -24,6 +24,11 @@ lands on the REFUSING side: the checkers are fine, the file is broken, and the n
 it. A truncated write under ENOSPC is exactly this shape. And the roster is FOLDED
 (`compose`), never first-hit: a finding beside a could-not-run refuses AND states the blindness.
 
+⚑⚑ AN ADDED SUPPRESSION IS A FINDING (`suppressions`). ruff honours `# noqa` and mypy honours
+`# type: ignore`, so an edit carrying one used to pass while the refusal text promised "no
+line-scoped suppression". The file before the edit is compared with the file after, and only a
+directive the edit ADDS refuses — existing debt never blocks an unrelated edit.
+
 ⚑⚑ THE GRAIN IS ONE WRITE. Every write is judged whole, so an import and its first use split
 across two edits are refused twice (F401, then F821). That is correct and is kept; the refusal
 names it (`pycheck_message.grain_note`).
@@ -47,7 +52,14 @@ import sys
 import tempfile
 from pathlib import Path
 
-from mikemol.hooks import checker_context, checkers, payload, project_root, shellcheck
+from mikemol.hooks import (
+    checker_context,
+    checkers,
+    payload,
+    project_root,
+    shellcheck,
+    suppressions,
+)
 from mikemol.hooks.pycheck_message import render
 from mikemol.hooks.verdict import Verdict, run_checker
 
@@ -111,6 +123,22 @@ def compose(outcomes: list[tuple[str, Verdict]]) -> Verdict:
     return True, ""
 
 
+def before_edit(path: str) -> str:
+    """Return the file's text as it stands before the edit, or "" for a file that does not exist.
+
+    ⚑ AN UNREADABLE FILE COUNTS AS EMPTY, so every directive in the edit reads as added — the
+    conservative side for a gate whose failure mode is letting a suppression through.
+
+    Returns:
+        the pre-edit text.
+
+    """
+    try:
+        return Path(path).read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return ""
+
+
 def analyze(content: str, path: str) -> Verdict:
     """Return the verdict for post-edit `.py` content at `path`, under ITS project's bar.
 
@@ -141,6 +169,9 @@ def analyze(content: str, path: str) -> Verdict:
             if ok is False:
                 report = report.replace(str(tmp), path).replace(tmp.name, path)
             outcomes.append((name, (ok, report)))
+        new = suppressions.added(before_edit(path), content)
+        if new:
+            outcomes.append(("suppression", (False, suppressions.report(path, new))))
         return compose(outcomes)
     finally:
         with contextlib.suppress(OSError):

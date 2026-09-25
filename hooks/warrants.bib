@@ -4297,3 +4297,59 @@
   claim  = {Neither flag stated emits the choice's reason, so each contract is its own census.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_flag_contract.py -k test_an_unstated_choice_emits_its_own_reason},
 }
+
+@misc{hooks-suppressions-added-noqa-is-reported,
+  section = {suppressions},
+  title  = {A `# noqa` the edit introduces is reported, with its rule},
+  claim  = {A `# noqa` the edit introduces is reported, with its rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_an_added_noqa_is_reported},
+}
+
+@misc{hooks-suppressions-added-type-ignore-is-reported,
+  section = {suppressions},
+  title  = {A `# type: ignore` the edit introduces is reported too},
+  claim  = {A `# type: ignore` the edit introduces is reported too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_an_added_type_ignore_is_reported},
+}
+
+@misc{hooks-suppressions-existing-debt-does-not-block-an-unrelated-edit,
+  section = {suppressions},
+  title  = {A directive present before the edit and after it is not an addition: THE DEBT ARM},
+  claim  = {A directive present before the edit and after it is not an addition: THE DEBT ARM.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_existing_debt_does_not_block_an_unrelated_edit},
+}
+
+@misc{hooks-suppressions-moving-a-directive-is-not-adding-one,
+  section = {suppressions},
+  title  = {The same directive on a different line is counted once before and once after},
+  claim  = {The same directive on a different line is counted once before and once after.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_moving_a_directive_is_not_adding_one},
+}
+
+@misc{hooks-suppressions-second-copy-of-an-existing-directive-is-an-addition,
+  section = {suppressions},
+  title  = {A count that grows is reported, one entry per extra occurrence},
+  claim  = {A count that grows is reported, one entry per extra occurrence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_a_second_copy_of_an_existing_directive_is_an_addition},
+}
+
+@misc{hooks-suppressions-word-in-a-string-is-not-a-directive,
+  section = {suppressions},
+  title  = {`noqa` inside a string literal is not a comment: the tokenizer, not a regex, decides},
+  claim  = {`noqa` inside a string literal is not a comment: the tokenizer, not a regex, decides.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_the_word_in_a_string_is_not_a_directive},
+}
+
+@misc{hooks-suppressions-file-level-and-other-checker-directives-are-seen,
+  section = {suppressions},
+  title  = {`ruff: noqa` and `pyright: ignore` are directives as well},
+  claim  = {`ruff: noqa` and `pyright: ignore` are directives as well.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_file_level_and_other_checker_directives_are_seen},
+}
+
+@misc{hooks-suppressions-report-names-the-directive-and-the-relief,
+  section = {suppressions},
+  title  = {The refusal names each added directive and the per-file relief},
+  claim  = {The refusal names each added directive and the per-file relief.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_the_report_names_the_directive_and_the_relief},
+}
