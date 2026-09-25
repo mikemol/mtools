@@ -28,6 +28,13 @@ module sizes from that module's own ledger; any other from its label's. Bash's l
 `label_lease` its default only, so `AGDA_MB_MAX` never reached it (A1 of the label-lease letter);
 here both variables reach the one sizing rule, and a clamp says so on stderr.
 
+⚑⚑ `hold N [LABEL] -- CMD` IS THE LEDGER WITHOUT THE FENCE, for a resource no cap can enforce —
+CUDA contexts, a device's memory, any count the parties agree on. Its units are whatever the
+ledger's TOTAL counts; it admits, waits and exits as `run` does, but never fences, climbs or
+records, and says on every admission that nothing enforces its number. A separate VERB rather
+than a flag on `run`, so a VRAM-sized lease cannot become a host-memory cap by a mistyped flag
+(filed by amr-skills, whose GPU was measured to fail on CONTEXT COUNT, not bytes).
+
 ⚑ A SCRIPT OF ITS OWN, NOT A MODE OF `mikemol-fence`, for the reason `peaks` gives: that command
 fences whatever follows its flags, so it cannot take a subcommand.
 
@@ -89,10 +96,22 @@ _AUTO = "auto"
 _SEPARATOR = "--"
 _RESET = "--reset"
 _RESET_ARGS = 2
+_RUN = "run"
+_HOLD = "hold"
+
+# A signal's exit code as a shell reports it: 128 + the signal's number.
+_SIGNAL_BASE = 128
+
+# What `hold` says on every admission, because the failure it names — a green ledger beside an
+# exhausted device — is met in a terminal, not in a README.
+HOLD_NOTICE = (
+    "ACCOUNTING ONLY. Nothing enforces this number. "
+    "The ledger holds only if every consumer of the resource holds on it."
+)
 
 USAGE = (
-    "usage: mikemol-membudget {run MB|auto [LABEL] -- CMD... | init [MB] | init --reset MB"
-    " | status | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
+    "usage: mikemol-membudget {run MB|auto [LABEL] -- CMD... | hold N [LABEL] -- CMD..."
+    " | init [MB] | init --reset MB | status | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
     " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n"
 )
 
@@ -309,11 +328,11 @@ class RunArgs:
     command: tuple[str, ...]
 
     @classmethod
-    def parse(cls, args: Sequence[str]) -> RunArgs:
-        """Read `MB|auto [LABEL] -- CMD...`.
+    def parse(cls, args: Sequence[str], *, verb: str = _RUN) -> RunArgs:
+        """Read `MB|auto [LABEL] -- CMD...`, naming `verb` in any complaint.
 
-        ⚑ A ZERO LEASE IS ALLOWED: a claim needs no capacity (`admit.decide`) — but it is also a
-        zero memory cap, as bash's `MemoryMax=0M` is, so its command cannot run.
+        ⚑ A ZERO LEASE IS ALLOWED: a claim needs no capacity (`admit.decide`) — but under `run` it
+        is also a zero memory cap, as bash's `MemoryMax=0M` is, so its command cannot run.
 
         Returns:
             the operands.
@@ -323,12 +342,12 @@ class RunArgs:
 
         """
         if _SEPARATOR not in args:
-            msg = "run needs `--` before the command"
+            msg = f"{verb} needs `--` before the command"
             raise UsageError(msg)
         cut = list(args).index(_SEPARATOR)
         head, command = args[:cut], tuple(args[cut + 1 :])
         if not command or len(head) not in {1, 2}:
-            msg = "run takes MB [LABEL] -- CMD..."
+            msg = f"{verb} takes N [LABEL] -- CMD..."
             raise UsageError(msg)
         label = head[1] if len(head) > 1 else ""
         mb = None if head[0] == _AUTO else megabytes(head[0], zero_ok=True)
@@ -483,6 +502,70 @@ def cmd_run(args: Sequence[str], ctx: Context) -> int:
     return core.EXIT_HARNESS if result.exit_code is None else result.exit_code
 
 
+def own_parent(store: admit.Store, env: Mapping[str, str]) -> str:
+    """Return the inherited parent lease when it lives in THIS ledger, else no parent.
+
+    ⚑⚑ TWO LEDGERS OVER ONE RESOURCE — one counting contexts, one counting bytes — with a process
+    holding on both, nested. `MEMBUDGET_PARENT` then names the OUTER ledger's lease, which this
+    ledger has never seen; nesting under it would hand cascade-gc a parent it cannot find.
+
+    Returns:
+        the parent's lease id, or `admit.NO_PARENT`.
+
+    """
+    parent = admit.inherited_parent(env)
+    if parent == admit.NO_PARENT:
+        return parent
+    ids = {lease.lease_id for lease in store.read().leases}
+    return parent if parent in ids else admit.NO_PARENT
+
+
+def spawn(command: Sequence[str], env: Mapping[str, str]) -> int:
+    """Run `command` in `env` with NO fence, and wait for it.
+
+    Returns:
+        its exit code as a shell reports it — 128 + N for a signal, 127 when it does not exist.
+
+    """
+    try:
+        pid = os.posix_spawnp(command[0], list(command), dict(env))
+    except FileNotFoundError:
+        return core.EXIT_NOT_FOUND
+    code = os.waitstatus_to_exitcode(os.waitpid(pid, 0)[1])
+    return _SIGNAL_BASE - code if code < 0 else code
+
+
+def cmd_hold(args: Sequence[str], ctx: Context) -> int:
+    """`hold N [LABEL] -- CMD...`: admit N units of whatever the ledger counts, run, release.
+
+    ⚑⚑ ACCOUNTING ONLY — NO FENCE, NO CLIMB, NO RECORD. The units are whatever the ledger's TOTAL
+    counts (contexts, slots, MiB of a device), so a host-memory cap at N would kill the process the
+    lease admits. Admission, waiting and exit codes are `run`'s, and the lease is released on any
+    exit as `run`'s is. Nothing measures the resource, so there is no history for `auto` to learn
+    from and no kill to climb on.
+
+    Returns:
+        the command's exit code; 3 or 4 when admission refuses.
+
+    Raises:
+        UsageError: `auto` for N, or a malformed invocation.
+
+    """
+    call = RunArgs.parse(args, verb=_HOLD)
+    if call.mb is None:
+        msg = "hold takes a number, not auto: nothing measures a held resource"
+        raise UsageError(msg)
+    store = store_of(ctx.env)
+    admit.ensure(store, ctx.host.default_total())
+    try:
+        request = admit.Request(call.mb, call.label, own_parent(store, ctx.env))
+    except ValueError as exc:
+        raise UsageError(str(exc)) from exc
+    with admit.admit(store, request, waiting_of(ctx.env), ctx.host) as lease:
+        _say(f"hold {call.mb} [{call.label}] id={lease.lease_id} — {HOLD_NOTICE}")
+        return spawn(call.command, {**ctx.env, admit.ENV_PARENT: lease.lease_id})
+
+
 def cmd_status(args: Sequence[str], ctx: Context) -> int:
     """`status`: create the ledger if absent, reap the dead, and report.
 
@@ -558,6 +641,7 @@ def cmd_deadline(args: Sequence[str], _ctx: Context) -> int:
 
 VERBS: dict[str, Callable[[Sequence[str], Context], int]] = {
     "run": cmd_run,
+    "hold": cmd_hold,
     "init": cmd_init,
     "status": cmd_status,
     "lease": cmd_lease,

@@ -605,6 +605,131 @@ def test_the_cap_is_the_lease_with_swap_forbidden(
     assert seen == [core.Caps(mem=f"{_CAP_MB}M", swap="0")]
 
 
+# --- hold: the ledger without the fence, for a resource no cap can enforce ---
+
+# A child that reports the PARENT field of the lease it runs under, as its own ledger records it.
+_PARENT_PROBE = (
+    "import os, pathlib, sys\n"
+    "lid = os.environ['MEMBUDGET_PARENT']\n"
+    "text = pathlib.Path(os.environ['MEMBUDGET_FILE']).read_text()\n"
+    "for line in text.splitlines():\n"
+    "    f = line.split()\n"
+    "    if f[:2] == ['LEASE', lid]:\n"
+    "        pathlib.Path(sys.argv[1]).write_text(f[5])\n"
+)
+
+
+def _touch(marker: Path) -> list[str]:
+    """Return a command that creates `marker`, so a test can tell whether it ran.
+
+    Returns:
+        the argv.
+
+    """
+    return [sys.executable, "-c", f"open({str(marker)!r}, 'w')"]
+
+
+def test_hold_never_fences(ledger: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """`hold` runs its command with no fence at all: a fencer that raises is never reached.
+
+    ⚑⚑ THE UNITS ARE WHATEVER THE LEDGER'S TOTAL COUNTS — contexts, slots, MiB of a device — and a
+    host-memory cap at that number would kill the very process the lease admits. So the fence is
+    never consulted, not merely lenient.
+    """
+
+    def unavailable(*_args: object) -> core.Result:
+        raise FenceUnavailableError(_WHY or "no delegated cgroup")
+
+    monkeypatch.setattr(core, "run_once", unavailable)
+    marker = ledger.parent / "ran"
+    assert _cli(["hold", "1", "slot", "--", *_touch(marker)], _ctx(ledger)) == _EXIT_OK
+    assert marker.exists()
+
+
+def test_hold_lets_a_payload_exceed_its_number(ledger: Path) -> None:
+    """A 256MB payload under `hold 64` completes with 0: the number is accounting, never a cap."""
+    argv = ["hold", str(_CAP_MB), "slot", "--", *_hog(_HOG_OVER_MB)]
+    assert _cli(argv, _ctx(ledger)) == _EXIT_OK
+
+
+def test_hold_holds_its_lease_while_the_command_runs(ledger: Path, tmp_path: Path) -> None:
+    """The child sees MEMBUDGET_PARENT naming a lease in the ledger; its code is returned."""
+    seen = tmp_path / "seen"
+    argv = ["hold", "1", "slot", "--", sys.executable, "-c", _PROBE, str(seen), str(_CHILD_CODE)]
+    assert _cli(argv, _ctx(ledger)) == _CHILD_CODE
+    lease_id, present = seen.read_text(encoding="utf-8").split(" ")
+    assert lease_id
+    assert present == "True"
+
+
+def test_hold_releases_and_says_nothing_enforces_it(
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """After `hold` the ledger holds no lease, and stderr says the number is accounting only.
+
+    ⚑ The failure this names is a green ledger beside an exhausted device; whoever meets it reads
+    the terminal, not the README.
+    """
+    assert _cli(["hold", "1", "--", "true"], _ctx(ledger)) == _EXIT_OK
+    assert _ids(ledger) == (_DEFAULT_TOTAL, [])
+    assert "ACCOUNTING ONLY. Nothing enforces this number." in capsys.readouterr().err
+
+
+def test_hold_blocks_by_count_as_run_does(ledger: Path) -> None:
+    """With 2 of 2 slots held, NOBLOCK `hold 1` exits 3 unrun; the control, one slot free, runs.
+
+    ⚑ A COUNT, NOT BYTES: two contexts fit and a third breaks the device, whatever memory is free.
+    """
+    _write(ledger, f"TOTAL_MB 2\nLEASE a 1 {_me()} 0 - walker\nLEASE b 1 {_me()} 0 - walker\n")
+    marker = ledger.parent / "ran"
+    ctx = _ctx(ledger, MEMBUDGET_NOBLOCK="1")
+    assert _cli(["hold", "1", "--", *_touch(marker)], ctx) == _EXIT_REFUSED
+    assert not marker.exists()
+    _write(ledger, f"TOTAL_MB 2\nLEASE a 1 {_me()} 0 - walker\n")
+    assert _cli(["hold", "1", "--", *_touch(marker)], ctx) == _EXIT_OK
+    assert marker.exists()
+
+
+def test_hold_reports_a_signal_and_a_missing_command_as_a_shell_does(ledger: Path) -> None:
+    """A SIGTERM child exits 143; a missing command exits 127 and its lease is still released."""
+    kill = [sys.executable, "-c", "import os, signal; os.kill(os.getpid(), signal.SIGTERM)"]
+    assert _cli(["hold", "1", "--", *kill], _ctx(ledger)) == _SIGNAL_BASE + signal.SIGTERM
+    missing = ["hold", "1", "--", str(ledger.parent / "nope")]
+    assert _cli(missing, _ctx(ledger)) == _EXIT_NOT_FOUND
+    assert _ids(ledger) == (_DEFAULT_TOTAL, [])
+
+
+def test_hold_refuses_auto(ledger: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """`hold auto` is a usage error: nothing measures a held resource, so there is no history."""
+    assert _cli(["hold", "auto", "--", "true"], _ctx(ledger)) == _EXIT_USAGE
+    assert "hold" in capsys.readouterr().err
+
+
+def test_a_hold_on_another_ledger_nests_under_nothing(ledger: Path, tmp_path: Path) -> None:
+    """A parent lease named by the environment but living in ANOTHER ledger is not this lease's.
+
+    ⚑⚑ TWO LEDGERS OVER ONE DEVICE — contexts and MiB — with one walker holding on both, nested.
+    `MEMBUDGET_PARENT` names the outer lease, which is not in the inner ledger; nesting under it
+    would hand cascade-gc a parent the inner ledger can never see.
+    """
+    _write(ledger, f"TOTAL_MB {_TOTAL}\nLEASE outer 1 {_me()} 0 - walker\n")
+    contexts = tmp_path / "contexts.cotype"
+    seen = tmp_path / "parent"
+    argv = ["hold", "1", "slot", "--", sys.executable, "-c", _PARENT_PROBE, str(seen)]
+    ctx = membudget_cli.Context(env=_env(contexts, MEMBUDGET_PARENT="outer"), host=_host())
+    assert _cli(argv, ctx) == _EXIT_OK
+    assert seen.read_text(encoding="utf-8") == admit.NO_PARENT
+
+
+def test_a_hold_on_its_parents_ledger_nests_under_it(ledger: Path, tmp_path: Path) -> None:
+    """The control: a parent lease in the SAME ledger is still this lease's parent."""
+    _write(ledger, f"TOTAL_MB {_TOTAL}\nLEASE outer 1 {_me()} 0 - walker\n")
+    seen = tmp_path / "parent"
+    argv = ["hold", "1", "slot", "--", sys.executable, "-c", _PARENT_PROBE, str(seen)]
+    assert _cli(argv, _ctx(ledger, MEMBUDGET_PARENT="outer")) == _EXIT_OK
+    assert seen.read_text(encoding="utf-8") == "outer"
+
+
 # --- the run ledger, and `auto` sized from it (R2) ---
 
 
