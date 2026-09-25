@@ -670,3 +670,52 @@
   claim  = { The census of silent swallows must not swallow: undecodable, unparseable, unreadable.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_swallows.py -k test_the_census_reports_every_file_it_could_not_read},
 }
+
+@misc{pycodemod-graph-caller-is-its-file-and-qualified-scope,
+  section = {graph},
+  title  = {⚑⚑⚑ Same-stem files and same-named methods are distinct callers},
+  claim  = { Same-stem files and same-named methods are distinct callers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_caller_is_its_file_and_qualified_scope},
+}
+
+@misc{pycodemod-graph-reach-follows-same-file-hops-to-a-target,
+  section = {graph},
+  title  = {`f` reaches `write` through `g` and `h`, and the walk finished inside the bound},
+  claim  = {`f` reaches `write` through `g` and `h`, and the walk finished inside the bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_reach_follows_same_file_hops_to_a_target},
+}
+
+@misc{pycodemod-graph-reach-says-when-the-bound-stopped-it,
+  section = {graph},
+  title  = {⚑⚑ At depth 1 `write` is not found AND the walk says it stopped — not "unreachable"},
+  claim  = { At depth 1 `write` is not found AND the walk says it stopped — not "unreachable".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_reach_says_when_the_bound_stopped_it},
+}
+
+@misc{pycodemod-graph-unknown-start-is-not-a-start-that-reaches-nothing,
+  section = {graph},
+  title  = {⚑⚑ The origin returned an empty dict for both; the reach says which},
+  claim  = { The origin returned an empty dict for both; the reach says which.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_an_unknown_start_is_not_a_start_that_reaches_nothing},
+}
+
+@misc{pycodemod-graph-callgraph-refuses-a-narrowed-scan,
+  section = {graph},
+  title  = {A graph over one name's calls would omit every other edge},
+  claim  = {A graph over one name's calls would omit every other edge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_callgraph_refuses_a_narrowed_scan},
+}
+
+@misc{pycodemod-graph-verdict-returners-keep-every-file-and-read-exit-codes,
+  section = {graph},
+  title  = {⚑⚑ 0/1 and -1 are verdicts; data and one return are not; a name in two files stays twice},
+  claim  = { 0/1 and -1 are verdicts; data and one return are not; a name in two files stays twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_verdict_returners_keep_every_file_and_read_exit_codes},
+}
+
+@misc{pycodemod-graph-verdict-returners-report-every-file-they-could-not-read,
+  section = {graph},
+  title  = {⚑⚑ The origin's `except Exception: continue` dropped these; each is now a skip},
+  claim  = { The origin's `except Exception: continue` dropped these; each is now a skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_verdict_returners_report_every_file_they_could_not_read},
+}
