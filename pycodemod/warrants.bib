@@ -134,3 +134,101 @@
   claim  = {Below and above the pool threshold, every row arrives in file order.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_per_file_keeps_file_order_serially_and_pooled},
 }
+
+@misc{pycodemod-commentary-mark-is-bounded-only-where-it-is-alphanumeric,
+  section = {commentary},
+  title  = {⚑⚑ `NB` must not fire inside "UNBALANCED"; `⚑` must still fire with no word boundary},
+  claim  = { `NB` must not fire inside "UNBALANCED"; `` must still fire with no word boundary.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_a_mark_is_bounded_only_where_it_is_alphanumeric},
+}
+
+@misc{pycodemod-commentary-key-is-the-sentence-not-the-bytes,
+  section = {commentary},
+  title  = {A re-indented, re-commented line keys to the same sentence},
+  claim  = {A re-indented, re-commented line keys to the same sentence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_the_key_is_the_sentence_not_the_bytes},
+}
+
+@misc{pycodemod-commentary-census-counts-every-marked-line-and-reports-the-unread,
+  section = {commentary},
+  title  = {⚑ Marked lines in comments, docstrings and printed strings all count; unread is named},
+  claim  = { Marked lines in comments, docstrings and printed strings all count; unread is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_the_census_counts_every_marked_line_and_reports_the_unread},
+}
+
+@misc{pycodemod-commentary-census-honours-a-widened-mark-set,
+  section = {commentary},
+  title  = {A caller's marks replace the default; the default alone does not see them},
+  claim  = {A caller's marks replace the default; the default alone does not see them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_the_census_honours_a_widened_mark_set},
+}
+
+@misc{pycodemod-commentary-kinds-file-each-mark-where-it-lives,
+  section = {commentary},
+  title  = {⚑⚑ Docstrings of module, class and def are documentation; an if-body string is payload},
+  claim  = { Docstrings of module, class and def are documentation; an if-body string is payload.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_kinds_file_each_mark_where_it_lives},
+}
+
+@misc{pycodemod-commentary-kinds-file-an-untokenizable-source-as-unparsed,
+  section = {commentary},
+  title  = {A file the tokenizer refuses keeps its marks, under `unparsed`},
+  claim  = {A file the tokenizer refuses keeps its marks, under `unparsed`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_kinds_file_an_untokenizable_source_as_unparsed},
+}
+
+@misc{pycodemod-commentary-kinds-skip-a-file-with-no-marks,
+  section = {commentary},
+  title  = {An unmarked file, even an untokenizable one, contributes nothing to any kind},
+  claim  = {An unmarked file, even an untokenizable one, contributes nothing to any kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_kinds_skip_a_file_with_no_marks},
+}
+
+@misc{pycodemod-commentary-scope-index-names-the-innermost-owner,
+  section = {commentary},
+  title  = {Nested defs are qualified and win over their parents; module lines have no owner},
+  claim  = {Nested defs are qualified and win over their parents; module lines have no owner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_scope_index_names_the_innermost_owner},
+}
+
+@misc{pycodemod-commentary-cited-symbols-are-backticked-flags-and-names,
+  section = {commentary},
+  title  = {Backticks cite; bare capitals are emphasis},
+  claim  = {Backticks cite; bare capitals are emphasis.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_cited_symbols_are_backticked_flags_and_names},
+}
+
+@misc{pycodemod-commentary-block-runs-to-a-blank-a-quote-or-the-next-mark,
+  section = {commentary},
+  title  = {⚑⚑⚑ A paragraph is one incident, carrying its owner and its citations},
+  claim  = { A paragraph is one incident, carrying its owner and its citations.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_a_block_runs_to_a_blank_a_quote_or_the_next_mark},
+}
+
+@misc{pycodemod-commentary-consecutive-marks-are-separate-blocks,
+  section = {commentary},
+  title  = {A marked line ends the block before it; an unparseable file still yields blocks},
+  claim  = {A marked line ends the block before it; an unparseable file still yields blocks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_consecutive_marks_are_separate_blocks},
+}
+
+@misc{pycodemod-commentary-gate-names-what-a-split-lost-and-where-it-came-from,
+  section = {commentary},
+  title  = {⚑ A set difference across a revision; an absent path is listed, not an error},
+  claim  = { A set difference across a revision; an absent path is listed, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_the_gate_names_what_a_split_lost_and_where_it_came_from},
+}
+
+@misc{pycodemod-commentary-gate-matches-both-sides-with-one-matcher,
+  section = {commentary},
+  title  = {⚑⚑ With mark `NB`, "UNBALANCED" is not a mark before OR after: nothing is lost},
+  claim  = { With mark `NB`, "UNBALANCED" is not a mark before OR after: nothing is lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_the_gate_matches_both_sides_with_one_matcher},
+}
+
+@misc{pycodemod-commentary-gate-reports-an-unreadable-file,
+  section = {commentary},
+  title  = {A file unreadable NOW is reported, not read as having lost everything silently},
+  claim  = {A file unreadable NOW is reported, not read as having lost everything silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_the_gate_reports_an_unreadable_file},
+}
