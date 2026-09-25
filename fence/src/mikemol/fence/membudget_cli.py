@@ -102,6 +102,12 @@ _HOLD = "hold"
 # A signal's exit code as a shell reports it: 128 + the signal's number.
 _SIGNAL_BASE = 128
 
+# The ledger line declaring what its TOTAL counts, and what a ledger without one counts.
+UNIT = "UNIT"
+DEFAULT_UNIT = "MB"
+_UNIT_FIELDS = 2
+_UNIT_FLAG = "--unit"
+
 # What `hold` says on every admission, because the failure it names — a green ledger beside an
 # exhausted device — is met in a terminal, not in a README.
 HOLD_NOTICE = (
@@ -111,7 +117,8 @@ HOLD_NOTICE = (
 
 USAGE = (
     "usage: mikemol-membudget {run MB|auto [LABEL] -- CMD... | hold N [LABEL] -- CMD..."
-    " | init [MB] | init --reset MB | status | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
+    " | init [MB] [--unit W] | init --reset MB [--unit W] | status"
+    " | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
     " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n"
 )
 
@@ -377,17 +384,28 @@ def render_status(snap: admit.Ledger) -> str:
     parse both clients; nested leases still draw from the pool (`Ledger.used`), and admission counts
     them.
 
+    ⚑ IN THE LEDGER'S OWN UNIT: a ledger declaring `UNIT contexts` reads `TOTAL=2 contexts`, since
+    the wrong unit is the one place a report asserts something false to whoever reads it at 2am. A
+    ledger with no UNIT line renders byte-for-byte as bash does.
+
     Returns:
         the report.
 
     """
+    unit = unit_of(snap)
     top = sum(lease.mb for lease in snap.leases if lease.parent == admit.NO_PARENT)
     total = "" if snap.total_mb is None else str(snap.total_mb)
     free = (snap.total_mb or 0) - top
-    lines = [f"membudget: TOTAL={total}MB top-level-leased={top}MB global-free={free}MB"]
+    size = f"{total}{DEFAULT_UNIT}" if unit == DEFAULT_UNIT else f"{total} {unit}"
+    head = (
+        f"membudget: TOTAL={size} top-level-leased={amount(top, unit)} "
+        f"global-free={amount(free, unit)}"
+    )
+    lines = [head]
     for lease in snap.leases:
         where = "top" if lease.parent == admit.NO_PARENT else f"under {lease.parent}"
-        lines.append(f"  [{lease.lease_id}] {lease.mb}MB pid={lease.owner} ({where}) {lease.label}")
+        held = amount(lease.mb, unit)
+        lines.append(f"  [{lease.lease_id}] {held} pid={lease.owner} ({where}) {lease.label}")
     if not snap.leases:
         lines.append("  (no active leases)")
     return "".join(f"{line}\n" for line in lines)
@@ -418,6 +436,66 @@ def resize(store: admit.Store, total_mb: int) -> admit.Ledger:
         sized = replace(snap, total_mb=total_mb, total_lines=1)
         store.rewrite(sized)
         return sized
+
+
+class UnitError(ValueError):
+    """The ledger declares its unit more than once, or declares a malformed one."""
+
+
+def unit_of(snap: admit.Ledger) -> str:
+    """Return what the ledger's TOTAL counts: its `UNIT` line's word, or MB when it has none.
+
+    ⚑⚑ THE UNIT RIDES AS A NON-LEASE LINE, which both clients already keep: bash's gc copies every
+    such line verbatim, release removes only its own lease, and `init --reset` passes the rest
+    through; `admit.parse` carries it in `extra`. So a contexts ledger reads "2 contexts" here
+    without either client's format changing — and a ledger with no UNIT line is MB, as always.
+
+    Returns:
+        the unit word.
+
+    Raises:
+        UnitError: two UNIT lines (refused, never chosen between, as two totals are), or a
+            malformed one.
+
+    """
+    declared = [words for words in (line.split(" ") for line in snap.extra) if words[0] == UNIT]
+    if not declared:
+        return DEFAULT_UNIT
+    if len(declared) > 1:
+        msg = f"the ledger declares its unit {len(declared)} times — refusing to choose one"
+        raise UnitError(msg)
+    words = declared[0]
+    if len(words) != _UNIT_FIELDS or not words[1]:
+        msg = f"malformed unit line {' '.join(words)!r} — expected `{UNIT} <word>`"
+        raise UnitError(msg)
+    return words[1]
+
+
+def amount(n: int, unit: str) -> str:
+    """Render `n` in `unit`: `12MB` as bash prints it, else `2 contexts`.
+
+    Returns:
+        the rendered amount.
+
+    """
+    return f"{n}{DEFAULT_UNIT}" if unit == DEFAULT_UNIT else f"{n} {unit}"
+
+
+def set_unit(store: admit.Store, unit: str) -> None:
+    """Declare what the ledger's TOTAL counts, under the lock, keeping every lease and total.
+
+    Raises:
+        UsageError: an empty unit, or one holding whitespace, which one ledger word cannot carry.
+
+    """
+    if not unit or any(c.isspace() for c in unit):
+        msg = f"a unit is one word, e.g. --unit contexts; got {unit!r}"
+        raise UsageError(msg)
+    with store.locked():
+        snap = store.read()
+        unit_of(snap)
+        kept = tuple(line for line in snap.extra if line.split(" ")[0] != UNIT)
+        store.rewrite(replace(snap, extra=(*kept, f"{UNIT} {unit}")))
 
 
 # --- the effectful half: one function per verb ---
@@ -478,10 +556,24 @@ def cmd_run(args: Sequence[str], ctx: Context) -> int:
     ⚑ ONLY A CLEAN RUN IS RECORDED (`ledger.row_of`): a killed run's peak is the cap it hit — so
     of a climb, only the rung that finished can earn a row.
 
+    ⚑⚑ A LEDGER COUNTING SOMETHING OTHER THAN MB IS REFUSED BEFORE ANY LEASE. `run` caps HOST
+    memory at its lease in MB, so `run 1` on a ledger of CUDA contexts would set `MemoryMax=1M` and
+    kill the very command it admitted — the hazard `hold` exists to avoid. The refusal names `hold`.
+
     Returns:
         the last rung's exit code — 137 when the cap killed it; 3 when no cap could be applied.
 
+    Raises:
+        UnitError: the ledger declares a unit other than MB.
+
     """
+    unit = unit_of(store_of(ctx.env).read())
+    if unit != DEFAULT_UNIT:
+        msg = (
+            f"this ledger counts {unit}, and run caps HOST memory in MB — a lease of N {unit} "
+            "would kill its own command. Use `hold` for a resource no cap can enforce"
+        )
+        raise UnitError(msg)
     call = RunArgs.parse(args)
     history = History.of(call.command, call.label, ctx.env)
     auto = AutoSize.of(ctx.env)
@@ -557,12 +649,14 @@ def cmd_hold(args: Sequence[str], ctx: Context) -> int:
         raise UsageError(msg)
     store = store_of(ctx.env)
     admit.ensure(store, ctx.host.default_total())
+    unit = unit_of(store.read())
     try:
         request = admit.Request(call.mb, call.label, own_parent(store, ctx.env))
     except ValueError as exc:
         raise UsageError(str(exc)) from exc
     with admit.admit(store, request, waiting_of(ctx.env), ctx.host) as lease:
-        _say(f"hold {call.mb} [{call.label}] id={lease.lease_id} — {HOLD_NOTICE}")
+        held = amount(call.mb, unit)
+        _say(f"hold {held} [{call.label}] id={lease.lease_id} — {HOLD_NOTICE}")
         return spawn(call.command, {**ctx.env, admit.ENV_PARENT: lease.lease_id})
 
 
@@ -585,37 +679,63 @@ def cmd_status(args: Sequence[str], ctx: Context) -> int:
     return 0
 
 
+def _unit_operand(args: Sequence[str]) -> tuple[str | None, list[str]]:
+    """Separate `--unit WORD` from `init`'s other operands.
+
+    Returns:
+        the unit (None if not given) and the remaining operands.
+
+    Raises:
+        UsageError: `--unit` with no word after it.
+
+    """
+    rest = list(args)
+    if _UNIT_FLAG not in rest:
+        return None, rest
+    at = rest.index(_UNIT_FLAG)
+    if at + 1 >= len(rest):
+        msg = "--unit needs a word, e.g. --unit contexts"
+        raise UsageError(msg)
+    return rest[at + 1], rest[:at] + rest[at + 2 :]
+
+
 def cmd_init(args: Sequence[str], ctx: Context) -> int:
     """`init [MB]` declares a missing total and changes nothing else; `init --reset MB` resizes.
+
+    Either takes `--unit WORD`, declaring what the TOTAL counts (contexts, slots, …) for `hold`;
+    without one a ledger counts MB, as bash's does.
 
     Returns:
         `status`'s code.
 
     Raises:
-        UsageError: a wrong operand count, or a bad MB.
+        UsageError: a wrong operand count, or a bad MB or unit.
 
     """
     store = store_of(ctx.env)
-    if args[:1] == [_RESET]:
-        if len(args) != _RESET_ARGS:
+    unit, operands = _unit_operand(args)
+    if operands[:1] == [_RESET]:
+        if len(operands) != _RESET_ARGS:
             msg = "init --reset needs a positive MB, e.g. init --reset 8192"
             raise UsageError(msg)
-        sized = resize(store, megabytes(args[1], zero_ok=False))
+        sized = resize(store, megabytes(operands[1], zero_ok=False))
         if sized.used > (sized.total_mb or 0):
             _say(
                 f"total {sized.total_mb}MB is below the {sized.used}MB leased — over-subscribed "
                 "until leases drain; admission blocks meanwhile"
             )
     else:
-        if len(args) > 1:
+        if len(operands) > 1:
             msg = "init takes at most one MB"
             raise UsageError(msg)
-        total = megabytes(args[0], zero_ok=False) if args else ctx.host.default_total()
+        total = megabytes(operands[0], zero_ok=False) if operands else ctx.host.default_total()
         if not admit.init(store, total):
             sys.stdout.write(
                 "membudget: ledger exists with a total — init changes nothing (to "
                 "resize, keeping live leases: membudget init --reset N)\n"
             )
+    if unit is not None:
+        set_unit(store, unit)
     return cmd_status([], ctx)
 
 
@@ -670,6 +790,9 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     except admit.RefusedError as exc:
         _say(f"REFUSED — {exc}")
         return exc.code
+    except UnitError as exc:
+        _say(f"REFUSED — {exc}")
+        return admit.EXIT_LEDGER
     except admit.LockTimeoutError as exc:
         _say(f"lock busy — {exc}")
         return EXIT_LOCK

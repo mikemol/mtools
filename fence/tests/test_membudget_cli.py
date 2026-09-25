@@ -730,6 +730,85 @@ def test_a_hold_on_its_parents_ledger_nests_under_it(ledger: Path, tmp_path: Pat
     assert seen.read_text(encoding="utf-8") == "outer"
 
 
+# --- the ledger's unit: what its TOTAL counts ---
+
+
+def _unit_lines(ledger: Path) -> list[str]:
+    """Return the ledger's UNIT lines.
+
+    Returns:
+        every line beginning `UNIT `.
+
+    """
+    return [ln for ln in ledger.read_text(encoding="utf-8").splitlines() if ln.startswith("UNIT ")]
+
+
+def test_init_unit_is_declared_and_status_speaks_it(
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`init 2 --unit contexts` writes one UNIT line, and status reads `TOTAL=2 contexts`."""
+    assert _cli(["init", "2", "--unit", "contexts"], _ctx(ledger)) == _EXIT_OK
+    assert _unit_lines(ledger) == ["UNIT contexts"]
+    out = capsys.readouterr().out
+    assert "TOTAL=2 contexts top-level-leased=0 contexts global-free=2 contexts" in out
+
+
+def test_a_ledger_without_a_unit_still_reads_mb(
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """No UNIT line is MB, rendered byte-for-byte as bash does: the control."""
+    assert _cli(["init", str(_TOTAL)], _ctx(ledger)) == _EXIT_OK
+    out = capsys.readouterr().out
+    assert f"TOTAL={_TOTAL}MB top-level-leased=0MB global-free={_TOTAL}MB" in out
+
+
+def test_hold_speaks_the_unit_and_its_release_keeps_it(
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`hold 1` on a contexts ledger says `1 contexts`, and the UNIT line survives the release."""
+    _write(ledger, "TOTAL_MB 2\nUNIT contexts\n")
+    assert _cli(["hold", "1", "walker", "--", "true"], _ctx(ledger)) == _EXIT_OK
+    assert "hold 1 contexts [walker]" in capsys.readouterr().err
+    assert _unit_lines(ledger) == ["UNIT contexts"]
+
+
+def test_run_refuses_a_ledger_that_does_not_count_mb(
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`run` on a contexts ledger refuses (4) before any lease, naming `hold`; nothing runs.
+
+    ⚑⚑ `run 1` there would cap HOST memory at 1M and kill the command it admitted.
+    """
+    _write(ledger, "TOTAL_MB 2\nUNIT contexts\n")
+    marker = ledger.parent / "ran"
+    touch = [sys.executable, "-c", f"open({str(marker)!r}, 'w')"]
+    assert _cli(["run", "1", "--", *touch], _ctx(ledger)) == _EXIT_LEDGER
+    assert "use `hold`" in capsys.readouterr().err.lower()
+    assert not marker.exists()
+    assert _ids(ledger) == (2, [])
+
+
+def test_two_unit_lines_are_refused(ledger: Path) -> None:
+    """A ledger declaring its unit twice is refused (4), never chosen between."""
+    _write(ledger, "TOTAL_MB 2\nUNIT contexts\nUNIT slots\n")
+    assert _cli(["status"], _ctx(ledger)) == _EXIT_LEDGER
+
+
+def test_a_malformed_unit_operand_is_a_usage_error(ledger: Path) -> None:
+    """`--unit` with no word, or a word holding whitespace, exits 2 and writes nothing."""
+    assert _cli(["init", "2", "--unit"], _ctx(ledger)) == _EXIT_USAGE
+    assert _cli(["init", "2", "--unit", "two words"], _ctx(ledger)) == _EXIT_USAGE
+    assert not _unit_lines(ledger)
+
+
+def test_reset_keeps_the_unit_and_a_live_lease(ledger: Path) -> None:
+    """`init --reset` resizes a contexts ledger in place, keeping its UNIT line and its lease."""
+    _write(ledger, f"TOTAL_MB 2\nUNIT contexts\nLEASE a 1 {_me()} 0 - walker\n")
+    assert _cli(["init", "--reset", "3"], _ctx(ledger)) == _EXIT_OK
+    assert _unit_lines(ledger) == ["UNIT contexts"]
+    assert _ids(ledger) == (3, ["a"])
+
+
 # --- the run ledger, and `auto` sized from it (R2) ---
 
 

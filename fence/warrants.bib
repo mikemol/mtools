@@ -1585,3 +1585,53 @@
   claim  = {The control: a parent lease in the SAME ledger is still this lease's parent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_hold_on_its_parents_ledger_nests_under_it},
 }
+
+@misc{fence-membudget-cli-init-unit-is-declared-and-status-speaks-it,
+  section = {membudget_cli},
+  title  = {`init 2 --unit contexts` writes one UNIT line, and status reads `TOTAL=2 contexts`},
+  claim  = {`init 2 --unit contexts` writes one UNIT line, and status reads `TOTAL=2 contexts`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_init_unit_is_declared_and_status_speaks_it},
+}
+
+@misc{fence-membudget-cli-ledger-without-a-unit-still-reads-mb,
+  section = {membudget_cli},
+  title  = {No UNIT line is MB, rendered byte-for-byte as bash does: the control},
+  claim  = {No UNIT line is MB, rendered byte-for-byte as bash does: the control.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_ledger_without_a_unit_still_reads_mb},
+}
+
+@misc{fence-membudget-cli-hold-speaks-the-unit-and-its-release-keeps-it,
+  section = {membudget_cli},
+  title  = {`hold 1` on a contexts ledger says `1 contexts`, and the UNIT line survives the release},
+  claim  = {`hold 1` on a contexts ledger says `1 contexts`, and the UNIT line survives the release.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_hold_speaks_the_unit_and_its_release_keeps_it},
+}
+
+@misc{fence-membudget-cli-run-refuses-a-ledger-that-does-not-count-mb,
+  section = {membudget_cli},
+  title  = {`run` on a contexts ledger refuses (4) before any lease, naming `hold`; nothing runs},
+  claim  = {`run` on a contexts ledger refuses (4) before any lease, naming `hold`; nothing runs.
+            `run 1` there would cap HOST memory at 1M and kill the command it admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_run_refuses_a_ledger_that_does_not_count_mb},
+}
+
+@misc{fence-membudget-cli-two-unit-lines-are-refused,
+  section = {membudget_cli},
+  title  = {A ledger declaring its unit twice is refused (4), never chosen between},
+  claim  = {A ledger declaring its unit twice is refused (4), never chosen between.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_two_unit_lines_are_refused},
+}
+
+@misc{fence-membudget-cli-malformed-unit-operand-is-a-usage-error,
+  section = {membudget_cli},
+  title  = {`--unit` with no word, or a word holding whitespace, exits 2 and writes nothing},
+  claim  = {`--unit` with no word, or a word holding whitespace, exits 2 and writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_malformed_unit_operand_is_a_usage_error},
+}
+
+@misc{fence-membudget-cli-reset-keeps-the-unit-and-a-live-lease,
+  section = {membudget_cli},
+  title  = {`init --reset` resizes a contexts ledger in place, keeping its UNIT line and its lease},
+  claim  = {`init --reset` resizes a contexts ledger in place, keeping its UNIT line and its lease.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_reset_keeps_the_unit_and_a_live_lease},
+}
