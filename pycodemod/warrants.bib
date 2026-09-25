@@ -776,3 +776,24 @@
   claim  = { The origin's bare `except Exception: continue` dropped these; each is now a skip.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_strings.py -k test_both_readers_report_every_file_they_could_not_read},
 }
+
+@misc{pycodemod-definitions-every-binding-is-live-over-its-own-scope,
+  section = {definitions},
+  title  = {⚑⚑ Comprehension, global and def each live where Python binds them; except and match bind},
+  claim  = { Comprehension, global and def each live where Python binds them; except and match bind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_definitions.py -k test_every_binding_is_live_over_its_own_scope},
+}
+
+@misc{pycodemod-definitions-source-starts-at-the-first-decorator,
+  section = {definitions},
+  title  = {⚑ A decorated def's source includes its decorators; a method carries its class},
+  claim  = { A decorated def's source includes its decorators; a method carries its class.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_definitions.py -k test_source_starts_at_the_first_decorator},
+}
+
+@misc{pycodemod-definitions-failure-is-a-skip-never-a-row,
+  section = {definitions},
+  title  = {⚑⚑⚑ The origin returned failures AS bindings; here each is a skip and no row appears},
+  claim  = { The origin returned failures AS bindings; here each is a skip and no row appears.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_definitions.py -k test_a_failure_is_a_skip_never_a_row},
+}
