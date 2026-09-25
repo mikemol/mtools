@@ -1635,3 +1635,19 @@
   claim  = {`init --reset` resizes a contexts ledger in place, keeping its UNIT line and its lease.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_reset_keeps_the_unit_and_a_live_lease},
 }
+
+@misc{fence-membudget-cli-run-on-another-ledger-nests-under-nothing,
+  section = {membudget_cli},
+  title  = {`run`, like `hold`, does not nest under an inherited parent living in ANOTHER ledger},
+  claim  = {`run`, like `hold`, does not nest under an inherited parent living in ANOTHER ledger.
+            Ruled by the operator (2026-09-25): bash's cascade-gc would reap a lease
+            whose parent its own ledger never held, as "parent vanished", mid-run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_run_on_another_ledger_nests_under_nothing},
+}
+
+@misc{fence-membudget-cli-run-on-its-parents-ledger-nests-under-it,
+  section = {membudget_cli},
+  title  = {The control: a parent lease in the SAME ledger is still `run`'s parent},
+  claim  = {The control: a parent lease in the SAME ledger is still `run`'s parent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_run_on_its_parents_ledger_nests_under_it},
+}

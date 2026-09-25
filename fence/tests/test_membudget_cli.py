@@ -730,6 +730,30 @@ def test_a_hold_on_its_parents_ledger_nests_under_it(ledger: Path, tmp_path: Pat
     assert seen.read_text(encoding="utf-8") == "outer"
 
 
+def test_a_run_on_another_ledger_nests_under_nothing(ledger: Path, tmp_path: Path) -> None:
+    """`run`, like `hold`, does not nest under an inherited parent living in ANOTHER ledger.
+
+    ⚑⚑ Ruled by the operator (2026-09-25): bash's cascade-gc would reap a lease whose parent its
+    own ledger never held, as "parent vanished", mid-run.
+    """
+    _write(ledger, f"TOTAL_MB {_TOTAL}\nLEASE outer 1 {_me()} 0 - walker\n")
+    other = tmp_path / "other.cotype"
+    seen = tmp_path / "parent"
+    argv = ["run", str(_TINY), "job", "--", sys.executable, "-c", _PARENT_PROBE, str(seen)]
+    ctx = membudget_cli.Context(env=_env(other, MEMBUDGET_PARENT="outer"), host=_host())
+    assert _cli(argv, ctx) == _EXIT_OK
+    assert seen.read_text(encoding="utf-8") == admit.NO_PARENT
+
+
+def test_a_run_on_its_parents_ledger_nests_under_it(ledger: Path, tmp_path: Path) -> None:
+    """The control: a parent lease in the SAME ledger is still `run`'s parent."""
+    _write(ledger, f"TOTAL_MB {_TOTAL}\nLEASE outer 1 {_me()} 0 - walker\n")
+    seen = tmp_path / "parent"
+    argv = ["run", str(_TINY), "job", "--", sys.executable, "-c", _PARENT_PROBE, str(seen)]
+    assert _cli(argv, _ctx(ledger, MEMBUDGET_PARENT="outer")) == _EXIT_OK
+    assert seen.read_text(encoding="utf-8") == "outer"
+
+
 # --- the ledger's unit: what its TOTAL counts ---
 
 

@@ -361,8 +361,13 @@ class RunArgs:
         return cls(mb, label, command)
 
 
-def request_of(call: RunArgs, env: Mapping[str, str]) -> admit.Request:
-    """Return the admission request for a sized call, nested under the lease the env names.
+def request_of(
+    call: RunArgs, env: Mapping[str, str], *, parent: str | None = None
+) -> admit.Request:
+    """Return the admission request for a sized call, nested under `parent` or the env's lease.
+
+    `parent`, when given, is the lease to nest under — `own_parent`'s answer, which drops an
+    inherited parent that lives in another ledger; without it the env's inherited parent is used.
 
     Returns:
         the request.
@@ -371,8 +376,9 @@ def request_of(call: RunArgs, env: Mapping[str, str]) -> admit.Request:
         UsageError: the label holds whitespace, which the shared ledger cannot carry.
 
     """
+    nest = admit.inherited_parent(env) if parent is None else parent
     try:
-        return admit.Request(call.mb or 0, call.label, admit.inherited_parent(env))
+        return admit.Request(call.mb or 0, call.label, nest)
     except ValueError as exc:
         raise UsageError(str(exc)) from exc
 
@@ -567,7 +573,8 @@ def cmd_run(args: Sequence[str], ctx: Context) -> int:
         UnitError: the ledger declares a unit other than MB.
 
     """
-    unit = unit_of(store_of(ctx.env).read())
+    store = store_of(ctx.env)
+    unit = unit_of(store.read())
     if unit != DEFAULT_UNIT:
         msg = (
             f"this ledger counts {unit}, and run caps HOST memory in MB — a lease of N {unit} "
@@ -578,13 +585,15 @@ def cmd_run(args: Sequence[str], ctx: Context) -> int:
     history = History.of(call.command, call.label, ctx.env)
     auto = AutoSize.of(ctx.env)
     call = sized_call(call, history, auto)
-    request = request_of(call, ctx.env)
+    # ⚑ NESTED ONLY UNDER A PARENT IN THIS LEDGER (operator, 2026-09-25), as `hold` is: an outer
+    #   lease from another ledger is one this ledger's cascade-gc can never find.
+    request = request_of(call, ctx.env, parent=own_parent(store, ctx.env))
     plan = autosize.Plan(
         request.mb, auto.cap, retry=bool(ctx.env.get(ENV_RETRY_OOM)), request=request
     )
     rig = autosize.Rig(waiting_of(ctx.env), ctx.host, ctx.env, ctx.fence, _announcer(call.label))
     try:
-        results = autosize.climb(store_of(ctx.env), call.command, plan, rig)
+        results = autosize.climb(store, call.command, plan, rig)
     except FenceUnavailableError as exc:
         _say(f"REFUSED [{call.label}] — no memory cap can be applied: {exc}")
         return EXIT_NO_CAP
