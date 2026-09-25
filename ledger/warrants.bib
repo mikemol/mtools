@@ -294,3 +294,31 @@
   claim  = {Every declared kind appears at zero, and both totals answer rather than raise.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_an_empty_ledger_reports_every_kind_at_zero},
 }
+
+@misc{ledger-finding-resolve-exact-key-wins-though-it-prefixes-longer-keys,
+  section = {finding_resolve},
+  title  = {`aa-F1` resolves to itself and runs, though it also prefixes aa-F10 and aa-F11},
+  claim  = {`aa-F1` resolves to itself and runs, though it also prefixes aa-F10 and aa-F11.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_resolve.py -k test_an_exact_key_wins_though_it_prefixes_longer_keys},
+}
+
+@misc{ledger-finding-resolve-unique-prefix-resolves-to-its-full-key,
+  section = {finding_resolve},
+  title  = {A unique prefix resolves to the full key and carries that key's witness},
+  claim  = {A unique prefix resolves to the full key and carries that key's witness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_resolve.py -k test_a_unique_prefix_resolves_to_its_full_key},
+}
+
+@misc{ledger-finding-resolve-ambiguous-prefix-refuses-naming-every-candidate,
+  section = {finding_resolve},
+  title  = {An ambiguous prefix REFUSES rather than picking, names its candidates, and says why},
+  claim  = {An ambiguous prefix REFUSES rather than picking, names its candidates, and says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_resolve.py -k test_an_ambiguous_prefix_refuses_naming_every_candidate},
+}
+
+@misc{ledger-finding-resolve-unknown-key-is-its-own-outcome,
+  section = {finding_resolve},
+  title  = {An unknown key does not resolve, and is named as a possible roster/record disagreement},
+  claim  = {An unknown key does not resolve, and is named as a possible roster/record disagreement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_resolve.py -k test_an_unknown_key_is_its_own_outcome},
+}
