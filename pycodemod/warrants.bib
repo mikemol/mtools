@@ -864,3 +864,48 @@
             dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_an_unread_file_is_reported_as_skipped},
 }
+
+@misc{pycodemod-rivals-one-line-wrapper-delegates-and-a-body-reimplements,
+  section = {rivals},
+  title  = {⚑⚑ A def whose only statement returns a call DELEGATES; any other body REIMPLEMENTS},
+  claim  = { A def whose only statement returns a call DELEGATES; any other body REIMPLEMENTS. The
+            docstring is prose and does not count as a statement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rivals.py -k test_a_one_line_wrapper_delegates_and_a_body_reimplements},
+}
+
+@misc{pycodemod-rivals-awaited-call-delegates,
+  section = {rivals},
+  title  = {⚑⚑ `return await f(...)` delegates; the origin read an async wrapper as reimplementing},
+  claim  = { `return await f(...)` delegates; the origin read an async wrapper as reimplementing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rivals.py -k test_an_awaited_call_delegates},
+}
+
+@misc{pycodemod-rivals-def-with-two-spaces-is-still-found,
+  section = {rivals},
+  title  = {⚑ The origin's substring prefilter missed `def  spaced`; the parse does not},
+  claim  = { The origin's substring prefilter missed `def spaced`; the parse does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rivals.py -k test_a_def_with_two_spaces_is_still_found},
+}
+
+@misc{pycodemod-rivals-prose-only-body-reimplements-with-no-statements,
+  section = {rivals},
+  title  = {A def holding only a docstring adds no delegation: REIMPLEMENTS, zero statements},
+  claim  = {A def holding only a docstring adds no delegation: REIMPLEMENTS, zero statements.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rivals.py -k test_a_prose_only_body_reimplements_with_no_statements},
+}
+
+@misc{pycodemod-rivals-collisions-are-public-names-with-two-reimplementing-bodies,
+  section = {rivals},
+  title  = {⚑⚑ Delegating defs and private names do not collide; two real bodies under one name do},
+  claim  = { Delegating defs and private names do not collide; two real bodies under one name do.
+            files has one reimplementing body and two wrappers, so it does not collide;
+            fetch has two bodies once the third file is added; _private is private.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rivals.py -k test_collisions_are_public_names_with_two_reimplementing_bodies},
+}
+
+@misc{pycodemod-rivals-unread-file-is-skipped-by-both,
+  section = {rivals},
+  title  = {⚑⚑⚑ A file that cannot be read or parsed is skipped, with its reason, by both queries},
+  claim  = { A file that cannot be read or parsed is skipped, with its reason, by both queries.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rivals.py -k test_an_unread_file_is_skipped_by_both},
+}
