@@ -27,12 +27,21 @@ classifiers = [
 # A missing libcst is now an install-time failure.
 dependencies = ["libcst"]
 
+# ⚑⚑ SQLALCHEMY IS AN OPTIONAL EXTRA, NOT A DEPENDENCY (operator ruling, 2026-09-25). Only
+# `funcnames` needs it, to ASK SQLAlchemy which `func.<name>` calls it translates per dialect; a
+# roster here would go stale on an upgrade. Without the extra, `funcnames` REFUSES — it never
+# grades every call `verbatim`, which would read as a finding and be the instrument being blind.
+[project.optional-dependencies]
+sqlalchemy = ["sqlalchemy"]
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml).
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ PLUS sqlalchemy, so `funcnames` is type-checked and tested against the real registry: the dev
+# hub (pycodemod_dev) is built from uv.lock's dev group, not from the extra.
+dev = ["pytest", "mypy", "ruff==0.16.6", "sqlalchemy"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -91,6 +100,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_dead.py" = ["assert"]
 "tests/test_definitions.py" = ["assert"]
 "tests/test_exit.py" = ["assert"]
+"tests/test_funcnames.py" = ["assert"]
+# ⚑ ONE FILE, ONE RESPONSIBILITY: funcnames exists to ASK SQLAlchemy's private `_registry` which
+# names Core translates (no public API answers it, and a roster here would go stale). The private
+# read is the module's job, and an empty or moved registry refuses loudly (RegistryMovedError).
+"src/mikemol/pycodemod/funcnames.py" = ["import-private-name"]
 "tests/test_graph.py" = ["assert"]
 "tests/test_imports.py" = ["assert"]
 "tests/test_ordering.py" = ["assert"]

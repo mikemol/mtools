@@ -797,3 +797,70 @@
   claim  = { The origin returned failures AS bindings; here each is a skip and no row appears.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_definitions.py -k test_a_failure_is_a_skip_never_a_row},
 }
+
+@misc{pycodemod-funcnames-each-func-call-is-graded-by-the-real-registry,
+  section = {funcnames},
+  title  = {⚑⚑ A registry name is generic and anything else verbatim, asked of the installed SQLAlchemy},
+  claim  = { A registry name is generic and anything else verbatim, asked of the installed
+            SQLAlchemy. Measured on the origin: string_agg and an invented name share
+            one bucket, verbatim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_each_func_call_is_graded_by_the_real_registry},
+}
+
+@misc{pycodemod-funcnames-lookup-ignores-case-as-sqlalchemy-does,
+  section = {funcnames},
+  title  = {⚑⚑ COUNT and Coalesce are generic: SQLAlchemy 2.1.1 builds the generic class for them},
+  claim  = { COUNT and Coalesce are generic: SQLAlchemy 2.1.1 builds the generic class for them. The
+            origin compared the exact spelling and graded both verbatim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_the_lookup_ignores_case_as_sqlalchemy_does},
+}
+
+@misc{pycodemod-funcnames-async-def-is-its-own-caller,
+  section = {funcnames},
+  title  = {⚑ A call inside an async def is attributed to it, not to an outer function or the module},
+  claim  = { A call inside an async def is attributed to it, not to an outer function or the module.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_an_async_def_is_its_own_caller},
+}
+
+@misc{pycodemod-funcnames-only-the-name-func-is-a-receiver,
+  section = {funcnames},
+  title  = {⚑ `node.func(...)` and `sa.func.count(...)` are not SQLAlchemy's bare `func` receiver},
+  claim  = { `node.func(...)` and `sa.func.count(...)` are not SQLAlchemy's bare `func` receiver.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_only_the_name_func_is_a_receiver},
+}
+
+@misc{pycodemod-funcnames-given-registry-is-used-instead-of-asking,
+  section = {funcnames},
+  title  = {A caller may pass the generic names; then only those are generic},
+  claim  = {A caller may pass the generic names; then only those are generic.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_a_given_registry_is_used_instead_of_asking},
+}
+
+@misc{pycodemod-funcnames-empty-or-moved-registry-refuses,
+  section = {funcnames},
+  title  = {⚑⚑ No generic names refuses loudly; it never grades every call verbatim},
+  claim  = { No generic names refuses loudly; it never grades every call verbatim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_an_empty_or_moved_registry_refuses},
+}
+
+@misc{pycodemod-funcnames-generic-names-are-lowercased,
+  section = {funcnames},
+  title  = {The asked names are lowercased so the lookup is case-insensitive},
+  claim  = {The asked names are lowercased so the lookup is case-insensitive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_the_generic_names_are_lowercased},
+}
+
+@misc{pycodemod-funcnames-without-sqlalchemy-the-module-refuses-at-import,
+  section = {funcnames},
+  title  = {⚑⚑⚑ Without the optional extra, importing funcnames raises ImportError naming the extra},
+  claim  = { Without the optional extra, importing funcnames raises ImportError naming the extra.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_without_sqlalchemy_the_module_refuses_at_import},
+}
+
+@misc{pycodemod-funcnames-unread-file-is-reported-as-skipped,
+  section = {funcnames},
+  title  = {⚑ A file that cannot be read or parsed is skipped with its reason, never silently dropped},
+  claim  = { A file that cannot be read or parsed is skipped with its reason, never silently
+            dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_funcnames.py -k test_an_unread_file_is_reported_as_skipped},
+}

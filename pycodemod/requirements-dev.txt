@@ -24,5 +24,9 @@ pyyaml==6.0.3
     # via libcst
 ruff==0.16.6
     # via mikemol-pycodemod (pyproject.toml:dev)
+sqlalchemy==2.1.1
+    # via mikemol-pycodemod (pyproject.toml:dev)
 typing-extensions==4.16.0
-    # via mypy
+    # via
+    #   mypy
+    #   sqlalchemy
