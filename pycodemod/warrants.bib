@@ -232,3 +232,116 @@
   claim  = {A file unreadable NOW is reported, not read as having lost everything silently.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commentary.py -k test_the_gate_reports_an_unreadable_file},
 }
+
+@misc{pycodemod-exit-parse-all-names-every-file-it-could-not-read,
+  section = {exit},
+  title  = {⚑⚑ Unreadable, undecodable and unparseable are each a SKIP with its reason},
+  claim  = { Unreadable, undecodable and unparseable are each a SKIP with its reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_parse_all_names_every_file_it_could_not_read},
+}
+
+@misc{pycodemod-exit-every-census-returns-its-own-skips,
+  section = {exit},
+  title  = {⚑⚑ Skips do not accumulate across calls: the origin's list grew for ever},
+  claim  = { Skips do not accumulate across calls: the origin's list grew for ever.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_every_census_returns_its_own_skips},
+}
+
+@misc{pycodemod-exit-module-name-is-the-flat-stem,
+  section = {exit},
+  title  = {A `.py` file is its stem; anything else has no module name},
+  claim  = {A `.py` file is its stem; anything else has no module name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_module_name_is_the_flat_stem},
+}
+
+@misc{pycodemod-exit-main-guard-is-equality-in-either-quote,
+  section = {exit},
+  title  = {⚑⚑ `!=` is not the guard; `==` is, in either quote style},
+  claim  = { `!=` is not the guard; `==` is, in either quote style.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_the_main_guard_is_equality_in_either_quote},
+}
+
+@misc{pycodemod-exit-exit-sites-find-every-spelling-with-its-owner,
+  section = {exit},
+  title  = {⚑ `raise SystemExit` is an exit; only the guard's BODY is guarded, not its else},
+  claim  = { `raise SystemExit` is an exit; only the guard's BODY is guarded, not its else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_exit_sites_find_every_spelling_with_its_owner},
+}
+
+@misc{pycodemod-exit-non-exits-are-not-sites,
+  section = {exit},
+  title  = {A raise of another class, a bare re-raise, and calls through expressions are not exits},
+  claim  = {A raise of another class, a bare re-raise, and calls through expressions are not exits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_non_exits_are_not_sites},
+}
+
+@misc{pycodemod-exit-innermost-def-owns-and-async-defs-count,
+  section = {exit},
+  title  = {A nested def owns its exit over its parent; an async def is a def},
+  claim  = {A nested def owns its exit over its parent; an async def is a def.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_the_innermost_def_owns_and_async_defs_count},
+}
+
+@misc{pycodemod-exit-reached-names-are-what-other-files-spell,
+  section = {exit},
+  title  = {⚑⚑⚑ `import m` reaches only what is then SPELLED; `from m import` and aliases count},
+  claim  = { `import m` reaches only what is then SPELLED; `from m import` and aliases count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_reached_names_are_what_other_files_spell},
+}
+
+@misc{pycodemod-exit-imported-modules-record-first-segments,
+  section = {exit},
+  title  = {A dotted import is recorded under its first segment; a relative one is not recorded},
+  claim  = {A dotted import is recorded under its first segment; a relative one is not recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_imported_modules_record_first_segments},
+}
+
+@misc{pycodemod-exit-callee-is-the-bare-name-or-none,
+  section = {exit},
+  title  = {`f()` and `x.f()` both name `f`; a call through an expression names nothing},
+  claim  = {`f()` and `x.f()` both name `f`; a call through an expression names nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_callee_is_the_bare_name_or_none},
+}
+
+@misc{pycodemod-exit-exits-classify-every-site-by-reach,
+  section = {exit},
+  title  = {⚑⚑⚑ A def another file reaches is LIBRARY, two hops down included; the rest are not},
+  claim  = { A def another file reaches is LIBRARY, two hops down included; the rest are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_exits_classify_every_site_by_reach},
+}
+
+@misc{pycodemod-exit-self-import-is-not-an-importer,
+  section = {exit},
+  title  = {A module-level exit in a file only IT imports is its own process: main-only},
+  claim  = {A module-level exit in a file only IT imports is its own process: main-only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_a_self_import_is_not_an_importer},
+}
+
+@misc{pycodemod-exit-catchers-are-found-by-type-with-silence-and-reraise,
+  section = {exit},
+  title  = {⚑⚑⚑ The handler's TYPE decides; `silent` is a bare discard; a re-raise is never silent},
+  claim  = { The handler's TYPE decides; `silent` is a bare discard; a re-raise is never silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_catchers_are_found_by_type_with_silence_and_reraise},
+}
+
+@misc{pycodemod-exit-interlock-finds-the-defended-looking-site,
+  section = {exit},
+  title  = {⚑⚑⚑ `except Exception` around an exiting call; not an unrelated call, not a re-raise},
+  claim  = { `except Exception` around an exiting call; not an unrelated call, not a re-raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_interlock_finds_the_defended_looking_site},
+}
+
+@misc{pycodemod-exit-interlock-sees-an-exit-within-its-own-module,
+  section = {exit},
+  title  = {A same-module exiting def is visible without any import; a guarded exit makes no def exit},
+  claim  = {A same-module exiting def is visible without any import; a guarded exit makes no def
+            exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_interlock_sees_an_exit_within_its_own_module},
+}
+
+@misc{pycodemod-exit-known-misses-are-declared,
+  section = {exit},
+  title  = {The census states its blind spots rather than reading a zero as a fact},
+  claim  = {The census states its blind spots rather than reading a zero as a fact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit.py -k test_known_misses_are_declared},
+}
