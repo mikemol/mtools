@@ -529,3 +529,59 @@
   claim  = {No module anchor remains, and a splice without one is a TypeError.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_the_anchor_is_the_callers_with_no_default},
 }
+
+@misc{ledger-finding-keys-show-census-names-the-collided-ordinal,
+  section = {finding_keys_show},
+  title  = {With no ordinal, the census prints the collision and exits 0},
+  claim  = {With no ordinal, the census prints the collision and exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_the_census_names_the_collided_ordinal},
+}
+
+@misc{ledger-finding-keys-show-free-ordinal-exits-zero,
+  section = {finding_keys_show},
+  title  = {An ordinal nobody holds is FREE, exit 0 — safe to file},
+  claim  = {An ordinal nobody holds is FREE, exit 0 — safe to file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_a_free_ordinal_exits_zero},
+}
+
+@misc{ledger-finding-keys-show-taken-ordinal-exits-one-naming-its-holders,
+  section = {finding_keys_show},
+  title  = {A held ordinal is TAKEN, exit 1, listing every slug filed under it},
+  claim  = {A held ordinal is TAKEN, exit 1, listing every slug filed under it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_a_taken_ordinal_exits_one_naming_its_holders},
+}
+
+@misc{ledger-finding-keys-show-unslugged-holder-is-still-a-holder,
+  section = {finding_keys_show},
+  title  = {`gate-O12`, held by an unslugged key, is TAKEN — never reported FREE},
+  claim  = {`gate-O12`, held by an unslugged key, is TAKEN — never reported FREE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_an_unslugged_holder_is_still_a_holder},
+}
+
+@misc{ledger-finding-keys-show-ledger-is-required-and-never-derived,
+  section = {finding_keys_show},
+  title  = {No `--ledger`, or a dangling one, refuses with exit 2 and says why},
+  claim  = {No `--ledger`, or a dangling one, refuses with exit 2 and says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_the_ledger_is_required_and_never_derived},
+}
+
+@misc{ledger-finding-keys-show-ledger-that-is-not-a-file-refuses,
+  section = {finding_keys_show},
+  title  = {A missing ledger refuses with exit 2 rather than tracing back},
+  claim  = {A missing ledger refuses with exit 2 rather than tracing back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_a_ledger_that_is_not_a_file_refuses},
+}
+
+@misc{ledger-finding-keys-show-malformed-or-extra-ordinal-refuses,
+  section = {finding_keys_show},
+  title  = {A malformed ordinal, and two ordinals at once, each refuse with exit 2},
+  claim  = {A malformed ordinal, and two ordinals at once, each refuse with exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_a_malformed_or_extra_ordinal_refuses},
+}
+
+@misc{ledger-finding-keys-show-help-prints-usage-and-exits-zero,
+  section = {finding_keys_show},
+  title  = {`--help` prints the usage, which says no next number is offered},
+  claim  = {`--help` prints the usage, which says no next number is offered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_help_prints_usage_and_exits_zero},
+}
