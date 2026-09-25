@@ -1248,3 +1248,34 @@
             residue minted a live W6, a symbol both live and in residue.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_add_never_re_mints_a_claimed_symbol},
 }
+
+@misc{pathsforward-ledger-backslash-in-the-note-is-escaped,
+  section = {ledger},
+  title  = {⚑ A note ending in a backslash would make its closing quote read as escaped},
+  claim  = { A note ending in a backslash would make its closing quote read as escaped. Measured on
+            HEAD 2026-09-25: the note was written with a single trailing backslash
+            before the closing quote, which no reader can tell from an escaped quote.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_backslash_in_the_note_is_escaped},
+}
+
+@misc{pathsforward-ledger-parse-reads-back-exactly-what-line-wrote,
+  section = {ledger},
+  title  = {⚑⚑ `parse` inverts `line`: quotes, backslashes and spaced evidence round-trip exactly},
+  claim  = { `parse` inverts `line`: quotes, backslashes and spaced evidence round-trip exactly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_parse_reads_back_exactly_what_line_wrote},
+}
+
+@misc{pathsforward-ledger-line-that-is-not-an-entry-comes-back-unparsed,
+  section = {ledger},
+  title  = {⚑ A legacy or malformed line comes back whole as `Unparsed` with its reason, never raised},
+  claim  = { A legacy or malformed line comes back whole as `Unparsed` with its reason, never
+            raised.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_line_that_is_not_an_entry_comes_back_unparsed},
+}
+
+@misc{pathsforward-ledger-read-parses-every-line-in-order,
+  section = {ledger},
+  title  = {A whole ledger reads line by line, blank lines skipped, legacy lines kept as `Unparsed`},
+  claim  = {A whole ledger reads line by line, blank lines skipped, legacy lines kept as `Unparsed`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_read_parses_every_line_in_order},
+}

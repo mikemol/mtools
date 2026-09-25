@@ -8,12 +8,28 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line
+from mikemol.pathsforward.ledger import (
+    Entry,
+    MalformedEntryError,
+    Parsed,
+    Unparsed,
+    append,
+    line,
+    parse,
+    read,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 _STAMP = "2026-09-23T12:00:00Z"
+
+# The first line of mtools' own ledger, verbatim but for a shortened note: the pre-structured
+# shape, `state_hash=` where `evidence=` now goes.
+_LEGACY = (
+    '2026-09-19T00:00:00Z  tick  --  migrated  --        "hand-rolled loop 2ddc3876 → '
+    'paths-forward-loop skill"  state_hash=0ddc037d2b6bd02a'
+)
 
 
 def test_a_line_carries_the_mechanism_column() -> None:
@@ -33,6 +49,15 @@ def test_a_quote_in_the_note_is_escaped() -> None:
     assert line(Entry("tick", "--", "idle", "--", 'say "hi"'), _STAMP).endswith('"say \\"hi\\""')
 
 
+def test_a_backslash_in_the_note_is_escaped() -> None:
+    """⚑ A note ending in a backslash would make its closing quote read as escaped.
+
+    Measured on HEAD 2026-09-25: the note was written with a single trailing backslash before
+    the closing quote, which no reader can tell from an escaped quote.
+    """
+    assert line(Entry("tick", "--", "idle", "--", "a\\"), _STAMP).endswith('"a\\\\"')
+
+
 @pytest.mark.parametrize(
     "entry",
     [
@@ -46,6 +71,46 @@ def test_an_entry_that_would_shift_columns_is_refused(entry: Entry) -> None:
     """A spaced or empty column, a malformed symbol, or a multi-line note is refused."""
     with pytest.raises(MalformedEntryError, match="ledger"):
         line(entry, _STAMP)
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        Entry("tick", "W7", "advanced", "unblock", "skeleton written"),
+        Entry("tick", "--", "idle", "--", 'say "hi"'),
+        Entry("tick", "--", "idle", "--", "a\\"),
+        Entry("note", "W12", "peer", "--", "n", "commit abc; two words of evidence"),
+    ],
+)
+def test_parse_reads_back_exactly_what_line_wrote(entry: Entry) -> None:
+    """⚑⚑ `parse` inverts `line`: quotes, backslashes and spaced evidence round-trip exactly."""
+    assert parse(line(entry, _STAMP)) == Parsed(_STAMP, entry)
+
+
+@pytest.mark.parametrize(
+    ("text", "why"),
+    [
+        (_LEGACY, "not stamp"),
+        ('2026-09-19T00:00:00Z  tick  W50b  done  sweep  "historical"', "neither"),
+        ("free text a human typed", "not stamp"),
+    ],
+)
+def test_a_line_that_is_not_an_entry_comes_back_unparsed(text: str, why: str) -> None:
+    """⚑ A legacy or malformed line comes back whole as `Unparsed` with its reason, never raised."""
+    got = parse(text)
+    assert isinstance(got, Unparsed)
+    assert got.raw == text
+    assert why in got.why
+
+
+def test_read_parses_every_line_in_order(tmp_path: Path) -> None:
+    """A whole ledger reads line by line, blank lines skipped, legacy lines kept as `Unparsed`."""
+    path = tmp_path / "paths-forward.ledger"
+    entry = Entry("tick", "W7", "advanced", "unblock", "n")
+    path.write_text(f"{_LEGACY}\n\n{line(entry, _STAMP)}\n", encoding="utf-8")
+    got = read(path)
+    assert [type(g).__name__ for g in got] == ["Unparsed", "Parsed"]
+    assert got[1] == Parsed(_STAMP, entry)
 
 
 def test_append_only_appends(tmp_path: Path) -> None:
