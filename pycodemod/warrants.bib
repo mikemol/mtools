@@ -719,3 +719,24 @@
   claim  = { The origin's `except Exception: continue` dropped these; each is now a skip.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_verdict_returners_report_every_file_they_could_not_read},
 }
+
+@misc{pycodemod-ordering-reifies-finds-every-shape-and-not-an-integer-counter,
+  section = {ordering},
+  title  = {⚑⚑ Literals, comprehensions, builders and accumulators are found; `n += 1` is not one},
+  claim  = { Literals, comprehensions, builders and accumulators are found; `n += 1` is not one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ordering.py -k test_reifies_finds_every_shape_and_not_an_integer_counter},
+}
+
+@misc{pycodemod-ordering-resorts-pair-a-consumer-with-its-producer,
+  section = {ordering},
+  title  = {⚑⚑ A redundant re-sort, a rekeyed one, and neither for an unknown producer — each located},
+  claim  = { A redundant re-sort, a rekeyed one, and neither for an unknown producer — each located.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ordering.py -k test_resorts_pair_a_consumer_with_its_producer},
+}
+
+@misc{pycodemod-ordering-both-censuses-report-every-file-they-could-not-read,
+  section = {ordering},
+  title  = {⚑ An unread file is a skip in each census, never an empty result},
+  claim  = { An unread file is a skip in each census, never an empty result.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ordering.py -k test_both_censuses_report_every_file_they_could_not_read},
+}
