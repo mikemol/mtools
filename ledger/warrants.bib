@@ -585,3 +585,66 @@
   claim  = {`--help` prints the usage, which says no next number is offered.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys_show.py -k test_help_prints_usage_and_exits_zero},
 }
+
+@misc{ledger-finding-cli-exact-key-runs-its-witness,
+  section = {finding_cli},
+  title  = {An exact key runs its witness; the line carries the note and the witness's own code},
+  claim  = {An exact key runs its witness; the line carries the note and the witness's own code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_an_exact_key_runs_its_witness},
+}
+
+@misc{ledger-finding-cli-unique-prefix-returns-the-witness-verdict,
+  section = {finding_cli},
+  title  = {A unique prefix resolves to its full key and returns its KIND's code, not the router's},
+  claim  = {A unique prefix resolves to its full key and returns its KIND's code, not the router's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_a_unique_prefix_returns_the_witness_verdict},
+}
+
+@misc{ledger-finding-cli-ambiguous-or-unknown-key-is-refused,
+  section = {finding_cli},
+  title  = {An ambiguous prefix and an unknown key are REFUSED, each saying which it is},
+  claim  = {An ambiguous prefix and an unknown key are REFUSED, each saying which it is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_an_ambiguous_or_unknown_key_is_refused},
+}
+
+@misc{ledger-finding-cli-kinds-reports-the-zero-row-and-the-totals,
+  section = {finding_cli},
+  title  = {`--kinds` answers with a row for an unused kind, and the behavioural total},
+  claim  = {`--kinds` answers with a row for an unused kind, and the behavioural total.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_kinds_reports_the_zero_row_and_the_totals},
+}
+
+@misc{ledger-finding-cli-kinds-honours-the-callers-order,
+  section = {finding_cli},
+  title  = {A caller's own kind order reaches the census: its roster-only kind gets a zero row},
+  claim  = {A caller's own kind order reaches the census: its roster-only kind gets a zero row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_kinds_honours_the_callers_order},
+}
+
+@misc{ledger-finding-cli-bare-invocation-prints-usage,
+  section = {finding_cli},
+  title  = {No arguments print the usage, naming the modes, rather than guessing},
+  claim  = {No arguments print the usage, naming the modes, rather than guessing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_a_bare_invocation_prints_usage},
+}
+
+@misc{ledger-finding-cli-unknown-flag-is-refused-as-a-flag-not-a-key,
+  section = {finding_cli},
+  title  = {An unknown flag is refused naming the flag, and NOT as a roster/record disagreement},
+  claim  = {An unknown flag is refused naming the flag, and NOT as a roster/record disagreement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_an_unknown_flag_is_refused_as_a_flag_not_a_key},
+}
+
+@misc{ledger-finding-cli-no-declared-mode-reaches-the-unknown-mode-refusal,
+  section = {finding_cli},
+  title  = {Every declared mode is reachable: none falls through to the unknown-mode refusal},
+  claim  = {Every declared mode is reachable: none falls through to the unknown-mode refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_no_declared_mode_reaches_the_unknown_mode_refusal},
+}
+
+@misc{ledger-finding-cli-router-never-normalises-a-verdict,
+  section = {finding_cli},
+  title  = {CLOSED stays CLOSED and UNRUNNABLE stays UNRUNNABLE — never collapsed into OPEN},
+  claim  = {CLOSED stays CLOSED and UNRUNNABLE stays UNRUNNABLE — never collapsed into OPEN.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_the_router_never_normalises_a_verdict},
+}
