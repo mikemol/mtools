@@ -544,3 +544,52 @@
   claim  = {The not-passed sentinel renders as a word, never as data.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_arguments.py -k test_missing_renders_as_a_word},
 }
+
+@misc{pycodemod-dead-prose-mention-does-not-excuse-a-dead-def,
+  section = {dead},
+  title  = {⚑⚑ A name quoted in a docstring or comment is not a dispatch: `ghost`, `ghost2` are dead},
+  claim  = { A name quoted in a docstring or comment is not a dispatch: `ghost`, `ghost2` are dead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_a_prose_mention_does_not_excuse_a_dead_def},
+}
+
+@misc{pycodemod-dead-every-exemption-is-reported-with-its-reason,
+  section = {dead},
+  title  = {⚑⚑⚑ An excused def is a visible row naming its rule — a single-quoted dispatch included},
+  claim  = { An excused def is a visible row naming its rule — a single-quoted dispatch included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_every_exemption_is_reported_with_its_reason},
+}
+
+@misc{pycodemod-dead-call-or-a-use-as-value-is-a-use,
+  section = {dead},
+  title  = {`live()` is a call and `callbacks=[cb]` a use as a value: neither def is dead or exempt},
+  claim  = {`live()` is a call and `callbacks=[cb]` a use as a value: neither def is dead or exempt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_a_call_or_a_use_as_value_is_a_use},
+}
+
+@misc{pycodemod-dead-narrowed-scan-is-refused,
+  section = {dead},
+  title  = {⚑⚑ "No caller in this population" over one name reads live code as dead},
+  claim  = { "No caller in this population" over one name reads live code as dead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_a_narrowed_scan_is_refused},
+}
+
+@misc{pycodemod-dead-unread-file-is-reported-once,
+  section = {dead},
+  title  = {A file both readers refuse is one skip, not two},
+  claim  = {A file both readers refuse is one skip, not two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_an_unread_file_is_reported_once},
+}
+
+@misc{pycodemod-dead-string-constants-exclude-docstrings-and-report-unread,
+  section = {dead},
+  title  = {Code strings are collected; docstrings are prose; an unreadable file is a skip},
+  claim  = {Code strings are collected; docstrings are prose; an unreadable file is a skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_string_constants_exclude_docstrings_and_report_unread},
+}
+
+@misc{pycodemod-dead-framework-prefix-needs-a-name-after-it,
+  section = {dead},
+  title  = {`visit_Call` satisfies the libcst contract; a bare `on_` satisfies nothing},
+  claim  = {`visit_Call` satisfies the libcst contract; a bare `on_` satisfies nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_a_framework_prefix_needs_a_name_after_it},
+}
