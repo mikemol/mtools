@@ -244,3 +244,53 @@
   claim  = {The render reports the count, refuses to suggest a next number, and says nothing broke.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_keys.py -k test_the_render_states_its_own_scope},
 }
+
+@misc{ledger-finding-census-absent-declared-kind-gets-a-zero-row,
+  section = {finding_census},
+  title  = {`refuses` is absent from the input and still reported, at zero: THE LOAD-BEARING ARM},
+  claim  = {`refuses` is absent from the input and still reported, at zero: THE LOAD-BEARING ARM.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_an_absent_declared_kind_gets_a_zero_row},
+}
+
+@misc{ledger-finding-census-surplus-kind-is-reported-after-the-declared-rows,
+  section = {finding_census},
+  title  = {A kind no declaration names is reported, never dropped; the declared rows lead},
+  claim  = {A kind no declaration names is reported, never dropped; the declared rows lead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_a_surplus_kind_is_reported_after_the_declared_rows},
+}
+
+@misc{ledger-finding-census-behavioural-is-the-prefix-before-mode-undocumented,
+  section = {finding_census},
+  title  = {The behavioural kinds are a PREFIX of the order, cut at `mode_undocumented`},
+  claim  = {The behavioural kinds are a PREFIX of the order, cut at `mode_undocumented`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_behavioural_is_the_prefix_before_mode_undocumented},
+}
+
+@misc{ledger-finding-census-callers-longer-order-keeps-the-derivation,
+  section = {finding_census},
+  title  = {Substrate's order, with its roster-only kinds, derives its own behavioural prefix},
+  claim  = {Substrate's order, with its roster-only kinds, derives its own behavioural prefix.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_a_callers_longer_order_keeps_the_derivation},
+}
+
+@misc{ledger-finding-census-order-without-the-cut-point-is-refused,
+  section = {finding_census},
+  title  = {An order that never declares `mode_undocumented` has no cut, and is refused, not guessed},
+  claim  = {An order that never declares `mode_undocumented` has no cut, and is refused, not
+            guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_an_order_without_the_cut_point_is_refused},
+}
+
+@misc{ledger-finding-census-two-totals-keep-the-honest-gap-apart,
+  section = {finding_census},
+  title  = {Behavioural counts flippable witnesses; vacuous counts standing; unwitnessed is neither},
+  claim  = {Behavioural counts flippable witnesses; vacuous counts standing; unwitnessed is neither.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_the_two_totals_keep_the_honest_gap_apart},
+}
+
+@misc{ledger-finding-census-empty-ledger-reports-every-kind-at-zero,
+  section = {finding_census},
+  title  = {Every declared kind appears at zero, and both totals answer rather than raise},
+  claim  = {Every declared kind appears at zero, and both totals answer rather than raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_census.py -k test_an_empty_ledger_reports_every_kind_at_zero},
+}
