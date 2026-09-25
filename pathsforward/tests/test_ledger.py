@@ -87,6 +87,27 @@ def test_parse_reads_back_exactly_what_line_wrote(entry: Entry) -> None:
     assert parse(line(entry, _STAMP)) == Parsed(_STAMP, entry)
 
 
+_BAD_STAMPS = ("2026-09-24T", "2026-09-24", "2026-09-24T12:00:00", "2026-09-24T12:00:00+02:00")
+
+
+@pytest.mark.parametrize("stamp", _BAD_STAMPS)
+def test_a_stamp_that_is_not_a_whole_utc_second_is_refused(stamp: str) -> None:
+    """⚑ The writer refuses a truncated, naive or offset stamp; nothing is written.
+
+    nemik, 2026-09-25: a stamp column read `2026-09-24T`, one token, so it split as structured.
+    """
+    with pytest.raises(MalformedEntryError, match="stamp"):
+        line(Entry("tick", "W7", "advanced", "unblock", "n"), stamp)
+
+
+@pytest.mark.parametrize("stamp", _BAD_STAMPS)
+def test_a_line_with_a_bad_stamp_reads_back_unparsed(stamp: str) -> None:
+    """⚑ A line whose stamp is not a whole UTC second reads back `Unparsed`, naming the stamp."""
+    got = parse(f'{stamp}  tick  W7  advanced  unblock  "n"')
+    assert isinstance(got, Unparsed)
+    assert stamp in got.why
+
+
 @pytest.mark.parametrize(
     ("text", "why"),
     [

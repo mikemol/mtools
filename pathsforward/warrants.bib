@@ -1295,3 +1295,19 @@
   claim  = { The optional cause is recorded on the minted waypoint; absent, it is null.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_add_records_caused_by},
 }
+
+@misc{pathsforward-ledger-stamp-that-is-not-a-whole-utc-second-is-refused,
+  section = {ledger},
+  title  = {⚑ The writer refuses a truncated, naive or offset stamp; nothing is written},
+  claim  = { The writer refuses a truncated, naive or offset stamp; nothing is written. nemik,
+            2026-09-25: a stamp column read `2026-09-24T`, one token, so it split as
+            structured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_stamp_that_is_not_a_whole_utc_second_is_refused},
+}
+
+@misc{pathsforward-ledger-line-with-a-bad-stamp-reads-back-unparsed,
+  section = {ledger},
+  title  = {⚑ A line whose stamp is not a whole UTC second reads back `Unparsed`, naming the stamp},
+  claim  = { A line whose stamp is not a whole UTC second reads back `Unparsed`, naming the stamp.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_line_with_a_bad_stamp_reads_back_unparsed},
+}

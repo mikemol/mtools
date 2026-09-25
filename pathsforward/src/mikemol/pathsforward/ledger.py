@@ -19,6 +19,7 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from mikemol.pathsforward import lock
 from mikemol.pathsforward.model import NO_SYMBOL, symbol_number
 
 if TYPE_CHECKING:
@@ -27,6 +28,21 @@ if TYPE_CHECKING:
 
 class MalformedEntryError(ValueError):
     """A ledger entry that would not parse back into its columns."""
+
+
+def is_stamp(stamp: str) -> bool:
+    """Say whether a stamp is exactly what `lock.stamp` writes: a whole ISO-UTC second.
+
+    ⚑ nemik (2026-09-25) measured `2026-09-24T` in a stamp column: one token, so the column split
+    held and the line read as structured with an instant nobody can order. A stamp is accepted
+    only if it parses as an aware time AND writes back byte-identical.
+
+    Returns:
+        True for `YYYY-MM-DDTHH:MM:SSZ` naming a real instant.
+
+    """
+    parsed = lock.parse_time(stamp)
+    return parsed is not None and lock.stamp(parsed) == stamp
 
 
 @dataclass(frozen=True)
@@ -52,6 +68,9 @@ def line(entry: Entry, stamp: str) -> str:
             `--` nor `W<n>`, or a multi-line note.
 
     """
+    if not is_stamp(stamp):
+        msg = f"ledger stamp {stamp!r} is not YYYY-MM-DDTHH:MM:SSZ"
+        raise MalformedEntryError(msg)
     columns = (entry.kind, entry.symbol, entry.outcome, entry.mechanism)
     if any(not c or any(ch.isspace() for ch in c) for c in columns):
         msg = f"ledger columns must be non-empty single tokens: {columns}"
@@ -122,6 +141,9 @@ def parse(text: str) -> Parsed | Unparsed:
     match = _LINE.match(raw)
     if match is None:
         return Unparsed(raw, "not stamp, four columns, a quoted note and optional evidence=")
+    stamp = _group(match, "stamp")
+    if not is_stamp(stamp):
+        return Unparsed(raw, f"stamp {stamp!r} is not YYYY-MM-DDTHH:MM:SSZ")
     symbol = _group(match, "symbol")
     if symbol != NO_SYMBOL and symbol_number(symbol) is None:
         return Unparsed(raw, f"symbol {symbol!r} is neither {NO_SYMBOL} nor W<n>")
@@ -133,7 +155,7 @@ def parse(text: str) -> Parsed | Unparsed:
         _ESCAPE.sub(r"\1", _group(match, "note")),
         _group(match, "evidence"),
     )
-    return Parsed(_group(match, "stamp"), entry)
+    return Parsed(stamp, entry)
 
 
 def read(path: Path) -> list[Parsed | Unparsed]:
