@@ -472,3 +472,60 @@
   claim  = {`finding_kinds.runner_in(cwd)` drives a real lens script to a DOCUMENTED verdict.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_mode.py -k test_the_ledgers_own_runner_composes_with_a_real_lens},
 }
+
+@misc{ledger-finding-entry-key-is-double-quoted-never-single,
+  section = {finding_entry},
+  title  = {The key is DOUBLE-quoted, which the resolver regex requires, and never `repr`-quoted},
+  claim  = {The key is DOUBLE-quoted, which the resolver regex requires, and never `repr`-quoted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_the_key_is_double_quoted_never_single},
+}
+
+@misc{ledger-finding-entry-each-kind-renders-its-own-builder-and-arguments,
+  section = {finding_entry},
+  title  = {A bare kind renders its builder; a command kind its argv; a mode kind tool, flag, no note},
+  claim  = {A bare kind renders its builder; a command kind its argv; a mode kind tool, flag, no
+            note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_each_kind_renders_its_own_builder_and_arguments},
+}
+
+@misc{ledger-finding-entry-long-note-wraps-and-rejoins,
+  section = {finding_entry},
+  title  = {A long note breaks across literals that concatenate back to it; a short one does not},
+  claim  = {A long note breaks across literals that concatenate back to it; a short one does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_a_long_note_wraps_and_rejoins},
+}
+
+@misc{ledger-finding-entry-hostile-note-survives-the-round-trip,
+  section = {finding_entry},
+  title  = {Quotes and a backslash survive: an unquoted emit would write a file that does not parse},
+  claim  = {Quotes and a backslash survive: an unquoted emit would write a file that does not parse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_a_hostile_note_survives_the_round_trip},
+}
+
+@misc{ledger-finding-entry-empty-note-still-emits-a-literal,
+  section = {finding_entry},
+  title  = {An empty note emits `''`: emitting nothing, as the original did, splices a syntax error},
+  claim  = {An empty note emits `''`: emitting nothing, as the original did, splices a syntax error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_an_empty_note_still_emits_a_literal},
+}
+
+@misc{ledger-finding-entry-unique-anchor-splices-the-entry-ahead-of-it,
+  section = {finding_entry},
+  title  = {The entry lands before the terminator, and the original content survives},
+  claim  = {The entry lands before the terminator, and the original content survives.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_a_unique_anchor_splices_the_entry_ahead_of_it},
+}
+
+@misc{ledger-finding-entry-missing-or-duplicated-anchor-refuses,
+  section = {finding_entry},
+  title  = {Zero or two anchors REFUSE, saying how many and why a guess is unsafe},
+  claim  = {Zero or two anchors REFUSE, saying how many and why a guess is unsafe.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_a_missing_or_duplicated_anchor_refuses},
+}
+
+@misc{ledger-finding-entry-anchor-is-the-callers-with-no-default,
+  section = {finding_entry},
+  title  = {No module anchor remains, and a splice without one is a TypeError},
+  claim  = {No module anchor remains, and a splice without one is a TypeError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_entry.py -k test_the_anchor_is_the_callers_with_no_default},
+}
