@@ -1480,3 +1480,13 @@
   claim  = { An unreadable file is skipped with its reason, not answered as no write call.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-imports-reported-from-import-shapes-are-importers,
+  section = {imports},
+  title  = {⚑⚑ Both from-forms the origin's retired spelling missed are importers; a mention is not},
+  claim  = { Both from-forms the origin's retired spelling missed are importers; a mention is not.
+            Reported 2026-09-26 by summit (from scripts.askstate import ask_state) and
+            substrate (from substrate import key_spec), each read 0 by the origin. The
+            control only names the module.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_the_reported_from_import_shapes_are_importers},
+}

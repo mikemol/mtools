@@ -62,6 +62,25 @@ def test_a_dotted_module_is_found_with_every_form(tmp_path: Path) -> None:
     ]
 
 
+def test_the_reported_from_import_shapes_are_importers(tmp_path: Path) -> None:
+    """⚑⚑ Both from-forms the origin's retired spelling missed are importers; a mention is not.
+
+    Reported 2026-09-26 by summit (from scripts.askstate import ask_state) and substrate (from
+    substrate import key_spec), each read 0 by the origin. The control only names the module.
+    """
+    name_form = _write(tmp_path, "a.py", "from scripts.askstate import ask_state\n")
+    module_form = _write(tmp_path, "b.py", "from substrate import key_spec\n")
+    control = _write(tmp_path, "c.py", 'NOTE = "substrate.key_spec"  # scripts.askstate\n')
+    got = (
+        imports.importers([name_form, control], "scripts.askstate").rows,
+        imports.importers([module_form, control], "substrate.key_spec").rows,
+    )
+    assert [[(r.path, r.form, r.names) for r in rows] for rows in got] == [
+        [(name_form, "from", ("ask_state",))],
+        [(module_form, "from-parent", ("key_spec",))],
+    ]
+
+
 def test_a_top_level_module_reports_the_names_each_import_takes(tmp_path: Path) -> None:
     """`import a.b` binds `a`; a from-import reports every name it selects."""
     path = _write(tmp_path, "c.py", _CONSUMER)
