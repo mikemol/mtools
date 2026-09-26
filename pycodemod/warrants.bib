@@ -1533,3 +1533,33 @@
   claim  = { A file that cannot be read or parsed is skipped with its reason, on neither side.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_discards.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-layout-every-top-level-group-is-a-row-in-source-order,
+  section = {layout},
+  title  = {Each top-level statement is one row: first and last line, kind, name, code lines},
+  claim  = {Each top-level statement is one row: first and last line, kind, name, code lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_every_top_level_group_is_a_row_in_source_order},
+}
+
+@misc{pycodemod-layout-if-is-named-by-its-test,
+  section = {layout},
+  title  = {⚑⚑⚑ `if TYPE_CHECKING:` is not a `__main__` guard; the origin labelled every `if` one},
+  claim  = { `if TYPE_CHECKING:` is not a `__main__` guard; the origin labelled every `if` one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_an_if_is_named_by_its_test},
+}
+
+@misc{pycodemod-layout-docstring-is-not-a-code-line,
+  section = {layout},
+  title  = {⚑⚑ A decorated def with a three-line docstring holds three code lines, not six},
+  claim  = { A decorated def with a three-line docstring holds three code lines, not six. The
+            decorator, the def line and the return count; the origin counted the
+            docstring too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_a_docstring_is_not_a_code_line},
+}
+
+@misc{pycodemod-layout-unread-file-is-reported,
+  section = {layout},
+  title  = {⚑ An unparseable file is skipped with its reason; the origin raised},
+  claim  = { An unparseable file is skipped with its reason; the origin raised.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_an_unread_file_is_reported},
+}
