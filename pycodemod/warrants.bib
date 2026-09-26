@@ -1614,3 +1614,39 @@
   claim  = {Nothing edited, WORKING: the change is empty, and no refusal is raised.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_a_clean_tree_is_an_empty_change_not_a_refusal},
 }
+
+@misc{pycodemod-report-nothing-skipped-reports-no-banner,
+  section = {report},
+  title  = {No skips means no banner and exit 0 — the common, unremarkable case},
+  claim  = {No skips means no banner and exit 0 — the common, unremarkable case.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_nothing_skipped_reports_no_banner},
+}
+
+@misc{pycodemod-report-fully-skipped-population-is-a-broken-query-not-a-zero,
+  section = {report},
+  title  = {The letter's own fixture: one unparseable file, the only file, must not read as a clean 0},
+  claim  = {The letter's own fixture: one unparseable file, the only file, must not read as a clean
+            0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_a_fully_skipped_population_is_a_broken_query_not_a_zero},
+}
+
+@misc{pycodemod-report-partial-skip-reports-the-read-count-and-exits-zero,
+  section = {report},
+  title  = {A population with at least one readable file is a real result, not a broken query},
+  claim  = {A population with at least one readable file is a real result, not a broken query.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_a_partial_skip_reports_the_read_count_and_exits_zero},
+}
+
+@misc{pycodemod-report-two-reasons-each-get-their-own-counted-line,
+  section = {report},
+  title  = {Skips grouped by reason, not merged into one undifferentiated count},
+  claim  = {Skips grouped by reason, not merged into one undifferentiated count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_two_reasons_each_get_their_own_counted_line},
+}
+
+@misc{pycodemod-report-one-reason-with-two-error-types-joins-them,
+  section = {report},
+  title  = {One reason, two distinct error types: both named rather than one silently dropped},
+  claim  = {One reason, two distinct error types: both named rather than one silently dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_one_reason_with_two_error_types_joins_them},
+}
