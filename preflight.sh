@@ -77,6 +77,26 @@ else
     exit 2
 fi
 
+# ⚑⚑⚑ A CHECK THAT READS AN ARTIFACT BUILDS IT FIRST, OR IT IS READING A LEFTOVER. `hooks`' suite
+# runs `tests/test_venv_artifact.py`, which reads EVERY distribution's `bazel-bin/<dist>/.venv`, and
+# the gate predicted below needs `ratchet_cli`'s runfiles. Nothing here built them: they were
+# whatever an earlier build left behind. MEASURED 2026-09-26, twice: once on the fresh output root
+# at 019119e and once after a reboot emptied the zram root. Both times this script failed 40-45
+# venv cases with "no built venv interpreter", and each cleared once the venvs were built by hand.
+# ⚑ BUILT OVER THE DERIVED POPULATION, NOT `$dists`: a one-distribution run still reaches hooks'
+# suite only if hooks is named, but the venvs it reads are every distribution's, so a narrower build
+# would be the same leftover defect at a smaller scale.
+# ⚑ A FAILED BUILD REFUSES. Skipping it would let the pytest below report the absence as a finding
+# about the tree, when the truth is that the checks could not be set up.
+_venvs=()
+for _d in $_derived; do
+    _venvs+=("//$_d:.venv")
+done
+if ! git_scrubbed bazel build "${_venvs[@]}" //ratchet:ratchet_cli --noshow_progress; then
+    say "could not build the venvs and ratchet_cli the checks read — refusing to predict the gate"
+    exit 1
+fi
+
 for dist in $dists; do
     [ -d "$dist" ] || { say "no such distribution: $dist"; exit 2; }
 
