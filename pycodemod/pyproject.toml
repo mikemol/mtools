@@ -102,6 +102,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_definitions.py" = ["assert"]
 "tests/test_exit.py" = ["assert"]
 "tests/test_funcnames.py" = ["assert"]
+"tests/test_hints.py" = ["assert"]
 # ⚑ ONE FILE, ONE RESPONSIBILITY: funcnames exists to ASK SQLAlchemy's private `_registry` which
 # names Core translates (no public API answers it, and a roster here would go stale). The private
 # read is the module's job, and an empty or moved registry refuses loudly (RegistryMovedError).

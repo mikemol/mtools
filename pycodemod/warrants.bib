@@ -1155,3 +1155,54 @@
   claim  = { An unreadable or unparseable file is skipped with its reason, never silently dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_aliases.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-hints-module-imported-under-an-alias-is-hinted,
+  section = {hints},
+  title  = {`import store as _s` then `_s.tenant(1)`: the site, its alias and module are named},
+  claim  = {`import store as _s` then `_s.tenant(1)`: the site, its alias and module are named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_a_module_imported_under_an_alias_is_hinted},
+}
+
+@misc{pycodemod-hints-renamed-name-is-hinted-at-its-calls,
+  section = {hints},
+  title  = {⚑⚑⚑ `from store import tenant as _t` then `_t(1)`: found through the alias's own calls},
+  claim  = { `from store import tenant as _t` then `_t(1)`: found through the alias's own calls.
+            Measured on the origin with libcst present: it returned nothing for this
+            file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_a_renamed_name_is_hinted_at_its_calls},
+}
+
+@misc{pycodemod-hints-dotted-module-matches-on-any-segment,
+  section = {hints},
+  title  = {⚑ `import pkg.store as ps` matches a `store` defining module; the origin tested the head},
+  claim  = { `import pkg.store as ps` matches a `store` defining module; the origin tested the head.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_a_dotted_module_matches_on_any_segment},
+}
+
+@misc{pycodemod-hints-module-selected-from-a-package-under-an-alias-is-hinted,
+  section = {hints},
+  title  = {`from pkg import store as st` is a module alias, narrowed by attribute reads},
+  claim  = {`from pkg import store as st` is a module alias, narrowed by attribute reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_a_module_selected_from_a_package_under_an_alias_is_hinted},
+}
+
+@misc{pycodemod-hints-bare-import-or-an-unrelated-alias-is-not-hinted,
+  section = {hints},
+  title  = {`import store` is visible to the census; an alias of another module is not a blind spot},
+  claim  = {`import store` is visible to the census; an alias of another module is not a blind spot.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_a_bare_import_or_an_unrelated_alias_is_not_hinted},
+}
+
+@misc{pycodemod-hints-no-defining-module-hints-nothing,
+  section = {hints},
+  title  = {With no defining module there is nothing to be blind to},
+  claim  = {With no defining module there is nothing to be blind to.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_no_defining_module_hints_nothing},
+}
+
+@misc{pycodemod-hints-unread-file-is-reported,
+  section = {hints},
+  title  = {⚑ A file that cannot be read is skipped with its reason, never silently dropped},
+  claim  = { A file that cannot be read is skipped with its reason, never silently dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_an_unread_file_is_reported},
+}
