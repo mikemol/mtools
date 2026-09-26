@@ -1650,3 +1650,66 @@
   claim  = {One reason, two distinct error types: both named rather than one silently dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_one_reason_with_two_error_types_joins_them},
 }
+
+@misc{pycodemod-cli-calls-reports-a-def-and-its-call,
+  section = {cli},
+  title  = {`calls --target NAME` finds a def and a call of that name, denominator included},
+  claim  = {`calls --target NAME` finds a def and a call of that name, denominator included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_calls_reports_a_def_and_its_call},
+}
+
+@misc{pycodemod-cli-calls-with-no-target-reports-every-name,
+  section = {cli},
+  title  = {`calls` with no `--target` reports defs, calls and refs of every name},
+  claim  = {`calls` with no `--target` reports defs, calls and refs of every name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_calls_with_no_target_reports_every_name},
+}
+
+@misc{pycodemod-cli-calls-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `calls` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `calls` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_calls_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-owes-reports-an-untouched-caller,
+  section = {cli},
+  title  = {`owes` names a caller of `name` that the given revision's diff did not touch},
+  claim  = {`owes` names a caller of `name` that the given revision's diff did not touch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_owes_reports_an_untouched_caller},
+}
+
+@misc{pycodemod-cli-owes-refuses-a-bad-revision-with-exit-2,
+  section = {cli},
+  title  = {A revision git refuses makes `owes` print git's own words and exit 2},
+  claim  = {A revision git refuses makes `owes` print git's own words and exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_owes_refuses_a_bad_revision_with_exit_2},
+}
+
+@misc{pycodemod-cli-dead-reports-an-unused-def,
+  section = {cli},
+  title  = {`dead` names a def nothing in the corpus calls or uses},
+  claim  = {`dead` names a def nothing in the corpus calls or uses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_dead_reports_an_unused_def},
+}
+
+@misc{pycodemod-cli-retired-spelling-refuses-naming-its-successor,
+  section = {cli},
+  title  = {Every retired origin flag parses and refuses, exit 2, naming its successor mode},
+  claim  = {Every retired origin flag parses and refuses, exit 2, naming its successor mode.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_retired_spelling_refuses_naming_its_successor},
+}
+
+@misc{pycodemod-cli-do-not-port-spelling-refuses-naming-where-it-lives,
+  section = {cli},
+  title  = {Every DO-NOT-PORT origin flag parses and refuses, exit 2, naming substrate's copy},
+  claim  = {Every DO-NOT-PORT origin flag parses and refuses, exit 2, naming substrate's copy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_do_not_port_spelling_refuses_naming_where_it_lives},
+}
+
+@misc{pycodemod-cli-console-runs-main-over-sys-argv,
+  section = {cli},
+  title  = {`_console` drives `main` over the real `sys.argv`, as the console-script entry point},
+  claim  = {`_console` drives `main` over the real `sys.argv`, as the console-script entry point.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_console_runs_main_over_sys_argv},
+}

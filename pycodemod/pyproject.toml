@@ -37,6 +37,9 @@ sqlalchemy = ["sqlalchemy"]
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
+[project.scripts]
+mikemol-pycodemod = "mikemol.pycodemod.cli:_console"
+
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml).
 # ⚑ PLUS sqlalchemy, so `funcnames` is type-checked and tested against the real registry: the dev
@@ -96,6 +99,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_aliases.py" = ["assert"]
 "tests/test_ambient.py" = ["assert"]
 "tests/test_arguments.py" = ["assert"]
+"tests/test_cli.py" = ["assert", "private-member-access", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commentary.py" = ["assert"]
 "tests/test_core.py" = ["assert"]
 "tests/test_crossings.py" = ["assert"]

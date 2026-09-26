@@ -1,0 +1,108 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""Witnesses for `mikemol.pycodemod.cli`: the driver's first three modes and its redirects.
+
+W33 (pycodemod driver slice 1). Every arm drives `main()` in-process, never a subprocess: the
+DECOY-repo discipline for `owes` already lives in `test_owes.py`, and this suite reuses it.
+"""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from typing import TYPE_CHECKING
+
+import pytest
+
+from mikemol.pycodemod import cli
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+_GIT = "git"
+_REFUSED = 2
+
+
+def test_calls_reports_a_def_and_its_call(tmp_path: Path) -> None:
+    """`calls --target NAME` finds a def and a call of that name, denominator included."""
+    target = tmp_path / "m.py"
+    target.write_text("def greet():\n    return 1\n\ngreet()\n", encoding="utf-8")
+    code = cli.main(["calls", "--target", "greet", str(target)])
+    assert code == 0
+
+
+def test_calls_with_no_target_reports_every_name(tmp_path: Path) -> None:
+    """`calls` with no `--target` reports defs, calls and refs of every name."""
+    target = tmp_path / "m.py"
+    target.write_text("def f():\n    pass\n\nf()\n", encoding="utf-8")
+    code = cli.main(["calls", str(target)])
+    assert code == 0
+
+
+def test_calls_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `calls` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["calls", str(target)])
+    assert code == 1
+
+
+def _decoy_repo(tmp_path: Path) -> Path:
+    repo = tmp_path / "decoy"
+    repo.mkdir()
+    subprocess.run([_GIT, "init", "-q"], cwd=repo, check=True, env={"PATH": "/usr/bin:/bin"})
+    subprocess.run([_GIT, "config", "user.email", "t@example.com"], cwd=repo, check=True)
+    subprocess.run([_GIT, "config", "user.name", "t"], cwd=repo, check=True)
+    return repo
+
+
+def test_owes_reports_an_untouched_caller(tmp_path: Path) -> None:
+    """`owes` names a caller of `name` that the given revision's diff did not touch."""
+    repo = _decoy_repo(tmp_path)
+    caller = repo / "caller.py"
+    caller.write_text("def use():\n    target()\n", encoding="utf-8")
+    subprocess.run([_GIT, "add", "."], cwd=repo, check=True)
+    subprocess.run([_GIT, "commit", "-q", "-m", "first"], cwd=repo, check=True)
+    code = cli.main(["owes", "target", "--rev", "HEAD", "--root", str(repo), str(caller)])
+    assert code == 0
+
+
+def test_owes_refuses_a_bad_revision_with_exit_2(tmp_path: Path) -> None:
+    """A revision git refuses makes `owes` print git's own words and exit 2."""
+    repo = _decoy_repo(tmp_path)
+    caller = repo / "caller.py"
+    caller.write_text("target()\n", encoding="utf-8")
+    args = ["owes", "target", "--rev", "not-a-real-rev", "--root", str(repo), str(caller)]
+    code = cli.main(args)
+    assert code == _REFUSED
+
+
+def test_dead_reports_an_unused_def(tmp_path: Path) -> None:
+    """`dead` names a def nothing in the corpus calls or uses."""
+    target = tmp_path / "m.py"
+    target.write_text("def unused():\n    pass\n", encoding="utf-8")
+    code = cli.main(["dead", str(target)])
+    assert code == 0
+
+
+@pytest.mark.parametrize("name", sorted(cli.RETIRED))
+def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
+    """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""
+    code = cli.main([name])
+    assert code == _REFUSED
+
+
+@pytest.mark.parametrize("name", sorted(cli.DO_NOT_PORT))
+def test_a_do_not_port_spelling_refuses_naming_where_it_lives(name: str) -> None:
+    """Every DO-NOT-PORT origin flag parses and refuses, exit 2, naming substrate's copy."""
+    code = cli.main([name])
+    assert code == _REFUSED
+
+
+def test_console_runs_main_over_sys_argv(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """`_console` drives `main` over the real `sys.argv`, as the console-script entry point."""
+    target = tmp_path / "m.py"
+    target.write_text("def f():\n    pass\n", encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["mikemol-pycodemod", "dead", str(target)])
+    code = cli._console()
+    assert code == 0
