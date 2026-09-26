@@ -21,3 +21,4 @@ aliases	The Alias Census: Every Import Graded by Form, a Class Body Its Own Scop
 hints	The Alias Hint: Where a Call Census Is Blind, a Renamed Name Found at Its Calls, and Never a Proof
 shapes	The Shape Scan: A Line Regex Located in Code Only, No Anchor False Zero, and No Mojibake Match
 deps	The Import Census: Every Import Graded Against a Manifest That Must Be Read, Case-Insensitive, Stdlib Exact
+crossings	The Crossing Census: A Function Is Its Own Body, an Annotated Local Is Built, and Recursion Through self Unfolds

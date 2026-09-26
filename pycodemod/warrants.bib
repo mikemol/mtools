@@ -1294,3 +1294,61 @@
   claim  = { An unreadable, undecodable or unparseable file is skipped with its reason.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_deps.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-crossings-each-function-is-classed-by-what-sizes-its-container,
+  section = {crossings},
+  title  = {⚑⚑ corpus, derived, unfold, unattr and yields, each by what the container is built from},
+  claim  = { corpus, derived, unfold, unattr and yields, each by what the container is built from.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_each_function_is_classed_by_what_sizes_its_container},
+}
+
+@misc{pycodemod-crossings-annotated-local-is-built,
+  section = {crossings},
+  title  = {⚑⚑ `out: list[str] = []` crosses; the origin read only plain assignments and missed it},
+  claim  = { `out: list[str] = []` crosses; the origin read only plain assignments and missed it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_an_annotated_local_is_built},
+}
+
+@misc{pycodemod-crossings-nested-generator-is-not-its-parents,
+  section = {crossings},
+  title  = {⚑⚑⚑ A nested generator is its own row; the outer function still returns its list},
+  claim  = { A nested generator is its own row; the outer function still returns its list. Measured
+            on the origin: the outer function read as a generator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_a_nested_generator_is_not_its_parents},
+}
+
+@misc{pycodemod-crossings-method-calling-itself-through-self-unfolds,
+  section = {crossings},
+  title  = {⚑⚑ `self.walk_nodes(k)` inside `walk_nodes` is recursion; the origin read it as derived},
+  claim  = { `self.walk_nodes(k)` inside `walk_nodes` is recursion; the origin read it as derived.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_a_method_calling_itself_through_self_unfolds},
+}
+
+@misc{pycodemod-crossings-tuple-return-keeps-its-written-order,
+  section = {crossings},
+  title  = {A comprehension and a constructor both build, and `return disk, deps` keeps that order},
+  claim  = {A comprehension and a constructor both build, and `return disk, deps` keeps that order.
+            The comprehension iterates its argument, so the class is derived.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_a_tuple_return_keeps_its_written_order},
+}
+
+@misc{pycodemod-crossings-wrapper-does-not-hide-the-crossing,
+  section = {crossings},
+  title  = {`return sorted(out)` still hands `out` over},
+  claim  = {`return sorted(out)` still hands `out` over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_a_wrapper_does_not_hide_the_crossing},
+}
+
+@misc{pycodemod-crossings-corpus-authorities-are-the-callers-to-extend,
+  section = {crossings},
+  title  = {⚑ A repo's own enumeration authority is an operand, not built in},
+  claim  = { A repo's own enumeration authority is an operand, not built in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_the_corpus_authorities_are_the_callers_to_extend},
+}
+
+@misc{pycodemod-crossings-unread-file-is-reported,
+  section = {crossings},
+  title  = {⚑ An undecodable file is skipped; the origin raised and aborted the whole census},
+  claim  = { An undecodable file is skipped; the origin raised and aborted the whole census.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_an_unread_file_is_reported},
+}
