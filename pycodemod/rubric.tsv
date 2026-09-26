@@ -20,3 +20,4 @@ size	The Size Census: Code Against a Per-File Cap, a Docstring Never Counted, an
 aliases	The Alias Census: Every Import Graded by Form, a Class Body Its Own Scope, and Locality Read From the Neighbourhood
 hints	The Alias Hint: Where a Call Census Is Blind, a Renamed Name Found at Its Calls, and Never a Proof
 shapes	The Shape Scan: A Line Regex Located in Code Only, No Anchor False Zero, and No Mojibake Match
+deps	The Import Census: Every Import Graded Against a Manifest That Must Be Read, Case-Insensitive, Stdlib Exact

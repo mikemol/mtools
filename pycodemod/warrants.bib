@@ -1250,3 +1250,47 @@
   claim  = { An undecodable file is skipped, not matched as mojibake; so is one that won't tokenize.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shapes.py -k test_an_unread_file_is_skipped_not_matched},
 }
+
+@misc{pycodemod-deps-each-import-gets-one-verdict,
+  section = {deps},
+  title  = {⚑⚑ Stdlib, declared (base and extras), undeclared, missing and first-party, each named},
+  claim  = { Stdlib, declared (base and extras), undeclared, missing and first-party, each named.
+            undeclared_pkg is importable (put on the path here) and in no manifest:
+            UNDECLARED. A relative import names no package and is not counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deps.py -k test_each_import_gets_one_verdict},
+}
+
+@misc{pycodemod-deps-vendored-is-the-callers-path-fragment,
+  section = {deps},
+  title  = {⚑ A first-party module used under a caller-named vendored path is VENDORED},
+  claim  = { A first-party module used under a caller-named vendored path is VENDORED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deps.py -k test_vendored_is_the_callers_path_fragment},
+}
+
+@misc{pycodemod-deps-row-counts-files-and-names-one,
+  section = {deps},
+  title  = {Each row carries how many files import the module and the first of them},
+  claim  = {Each row carries how many files import the module and the first of them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deps.py -k test_a_row_counts_files_and_names_one},
+}
+
+@misc{pycodemod-deps-declared-match-ignores-case,
+  section = {deps},
+  title  = {⚑⚑ A capitalised import matches its lowercase declaration; the origin compared as written},
+  claim  = { A capitalised import matches its lowercase declaration; the origin compared as written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deps.py -k test_the_declared_match_ignores_case},
+}
+
+@misc{pycodemod-deps-unreadable-manifest-refuses,
+  section = {deps},
+  title  = {⚑⚑⚑ A missing, invalid or undecodable manifest raises; it never reads as no declarations},
+  claim  = { A missing, invalid or undecodable manifest raises; it never reads as no declarations.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deps.py -k test_an_unreadable_manifest_refuses},
+}
+
+@misc{pycodemod-deps-unread-file-is-reported,
+  section = {deps},
+  title  = {⚑ An unreadable, undecodable or unparseable file is skipped with its reason},
+  claim  = { An unreadable, undecodable or unparseable file is skipped with its reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deps.py -k test_an_unread_file_is_reported},
+}
