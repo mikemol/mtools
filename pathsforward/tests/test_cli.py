@@ -519,6 +519,26 @@ def test_an_unreadable_state_is_refused(tmp_path: Path) -> None:
     assert _run(tmp_path / "absent.json", "--hash") == _REFUSED
 
 
+def test_init_creates_an_empty_state_file(tmp_path: Path) -> None:
+    """--init over a missing path writes a fresh, valid, empty state."""
+    path = tmp_path / "paths-forward.json"
+    assert (_run(path, "--init"), _doc(path)["counter"]) == (_OK, 0)
+    assert _doc(path)["waypoints"] == []
+
+
+def test_init_never_overwrites_a_live_state(tmp_path: Path) -> None:
+    """--init over an existing state file is refused, and the file is untouched."""
+    path = _file(tmp_path)
+    before = path.read_bytes()
+    assert (_run(path, "--init"), path.read_bytes() == before) == (_REFUSED, True)
+
+
+def test_init_refuses_a_field_flag(tmp_path: Path) -> None:
+    """--init reads no field flags at all: even --status is a stray."""
+    path = tmp_path / "paths-forward.json"
+    assert (_run(path, "--init", "--status", "ready"), path.exists()) == (_REFUSED, False)
+
+
 def test_an_unknown_flag_is_refused(tmp_path: Path) -> None:
     """An unknown flag beside a valid mode exits 2, not run."""
     with pytest.raises(SystemExit) as exc:

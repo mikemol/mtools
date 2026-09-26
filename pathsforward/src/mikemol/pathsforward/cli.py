@@ -53,6 +53,7 @@ _FLAGS = (
     "selftest",
     "bump_blocked",
     "preamble_clear",
+    "init",
 )
 _VALUED = (
     "verify",
@@ -607,6 +608,34 @@ def _preamble_clear(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _init(ctx: Ctx) -> int:
+    """Create a fresh, empty state file at `ctx.path` — refused if one already exists.
+
+    ⚑⚑ REFUSED, NEVER OVERWRITTEN: an existing state file is a repo's live queue, and a second
+    `--init` over it would silently reset the counter and drop every waypoint. Reported
+    independently by nemik and rosettapkg (2026-09-26): both had hand-written their first state
+    for want of this mode, the pattern that later broke substrate's and aeternum's counters.
+
+    Returns:
+        EXIT_OK, or EXIT_REFUSED when a state file is already there.
+
+    """
+    with store.exclusive(ctx.path):
+        if ctx.path.exists():
+            _warn(f"REFUSED: {ctx.path} already exists; --init never overwrites a live state")
+            return EXIT_REFUSED
+        doc: Json = {
+            "version": 1,
+            "project_root": str(ctx.path.parent.parent),
+            "counter": 0,
+            "waypoints": [],
+            "residue": [],
+        }
+        store.write_atomic(ctx.path, json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
+    _say(f"initialized {ctx.path}; counter=0")
+    return EXIT_OK
+
+
 _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     _SUMMARY: _summary,
     "hash": _hash,
@@ -627,6 +656,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "show": _show,
     "preamble_set": _preamble_set,
     "preamble_clear": _preamble_clear,
+    "init": _init,
 }
 
 
