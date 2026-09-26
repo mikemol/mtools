@@ -15,14 +15,11 @@ from __future__ import annotations
 import io
 import json
 import sys
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 
 from mikemol.hooks import shellcheck
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 _NO_LINTER = shellcheck.linter() is None
 _needs_linter = pytest.mark.skipif(_NO_LINTER, reason="no shellcheck on PATH or at the mise shim")
@@ -172,6 +169,27 @@ def test_an_unparseable_pyproject_waives_nothing(tmp_path: Path) -> None:
     assert shellcheck.exclude_for(str(tmp_path / "run.sh")) == frozenset()
 
 
+# --- where `-x` resolves a source from ---
+
+
+def test_cwd_for_a_governed_path_is_the_project_root(tmp_path: Path) -> None:
+    """A path under a pyproject.toml resolves to that project's root, not its own directory."""
+    (tmp_path / "pyproject.toml").write_text("[project]\n", encoding="utf-8")
+    nested = tmp_path / "scripts"
+    nested.mkdir()
+    assert shellcheck.cwd_for(str(nested / "run.sh")) == str(tmp_path)
+
+
+def test_cwd_for_an_ungoverned_path_is_its_own_directory(tmp_path: Path) -> None:
+    """A path under no pyproject.toml resolves to its own directory."""
+    assert shellcheck.cwd_for(str(tmp_path / "run.sh")) == str(tmp_path)
+
+
+def test_cwd_for_no_path_is_the_process_cwd() -> None:
+    """An empty anchor (a Bash command with no cwd in the payload) falls back to the process cwd."""
+    assert shellcheck.cwd_for("") == str(Path.cwd())
+
+
 # --- the linter's output, narrowed ---
 
 
@@ -305,6 +323,29 @@ def test_a_trap_handler_before_an_exit_fires_with_no_waiver() -> None:
 def test_a_trap_handler_before_an_exit_passes_with_its_waiver() -> None:
     """With SC2329 waived, the same script is clean — the waiver reaches the linter's verdict."""
     assert shellcheck.analyze_file("x.sh", _TRAP, frozenset({"SC2329"})) == []
+
+
+@pytest.mark.needs_shellcheck
+@_needs_linter
+def test_sourcing_a_present_sibling_is_clean(tmp_path: Path) -> None:
+    """`-x` follows a relative source into a real sibling file: no SC1091 (W41).
+
+    tmp_path carries no pyproject.toml, so `cwd_for` falls back to the script's own directory,
+    where `lib.sh` sits.
+    """
+    (tmp_path / "lib.sh").write_text("greet() { echo hi; }\n", encoding="utf-8")
+    body = '#!/usr/bin/env bash\n. "./lib.sh"\ngreet\n'
+    script = tmp_path / "run.sh"
+    script.write_text(body, encoding="utf-8")
+    assert "SC1091" not in _codes(shellcheck.analyze_file(str(script), body))
+
+
+@pytest.mark.needs_shellcheck
+@_needs_linter
+def test_sourcing_a_missing_sibling_still_fires() -> None:
+    """A source pointing at nothing on disk is a REAL finding, not swallowed by `-x` (W41)."""
+    body = '#!/usr/bin/env bash\n. "./absent.sh"\n'
+    assert "SC1091" in _codes(shellcheck.analyze_file("run.sh", body))
 
 
 @pytest.mark.needs_shellcheck

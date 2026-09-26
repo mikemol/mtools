@@ -54,7 +54,10 @@ def check_file(target: Path) -> int:
     if dialect is None:
         sys.stdout.write(f"NOT SHELL — the hook would not lint {target}\n")
         return 0
-    found = shellcheck.analyze_file(str(target), body, shellcheck.exclude_for(str(target)))
+    anchor = str(target)
+    found = shellcheck.analyze_file(
+        anchor, body, shellcheck.exclude_for(anchor), shellcheck.cwd_for(anchor)
+    )
     if found is None:
         sys.stdout.write(_UNKNOWN)
         return 2
@@ -87,7 +90,10 @@ def check_tree(root: Path) -> int:
             if shellcheck.shell_dialect(str(path), body) is None:
                 continue
             n_shell += 1
-            found = shellcheck.analyze_file(str(path), body, shellcheck.exclude_for(str(path)))
+            anchor = str(path)
+            found = shellcheck.analyze_file(
+                anchor, body, shellcheck.exclude_for(anchor), shellcheck.cwd_for(anchor)
+            )
             if found is None:
                 sys.stdout.write(f"{path}  {_UNKNOWN}")
                 return 2
@@ -106,7 +112,10 @@ def explain(command: str) -> int:
         0 clean, 1 findings, 2 UNKNOWN.
 
     """
-    found = shellcheck.analyze_command(command, shellcheck.exclude_for(str(Path.cwd())))
+    anchor = str(Path.cwd())
+    found = shellcheck.analyze_command(
+        command, shellcheck.exclude_for(anchor), shellcheck.cwd_for(anchor)
+    )
     if found is None:
         sys.stdout.write(_UNKNOWN)
         return 2

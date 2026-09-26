@@ -4353,3 +4353,41 @@
   claim  = {The refusal names each added directive and the per-file relief.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppressions.py -k test_the_report_names_the_directive_and_the_relief},
 }
+
+@misc{hooks-shellcheck-cwd-for-a-governed-path-is-the-project-root,
+  section = {shellcheck},
+  title  = {A path under a pyproject.toml resolves to that project's root, not its own directory},
+  claim  = {A path under a pyproject.toml resolves to that project's root, not its own directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_cwd_for_a_governed_path_is_the_project_root},
+}
+
+@misc{hooks-shellcheck-cwd-for-an-ungoverned-path-is-its-own-directory,
+  section = {shellcheck},
+  title  = {A path under no pyproject.toml resolves to its own directory},
+  claim  = {A path under no pyproject.toml resolves to its own directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_cwd_for_an_ungoverned_path_is_its_own_directory},
+}
+
+@misc{hooks-shellcheck-cwd-for-no-path-is-the-process-cwd,
+  section = {shellcheck},
+  title  = {An empty anchor (a Bash command with no cwd in the payload) falls back to the process cwd},
+  claim  = {An empty anchor (a Bash command with no cwd in the payload) falls back to the process
+            cwd.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_cwd_for_no_path_is_the_process_cwd},
+}
+
+@misc{hooks-shellcheck-sourcing-a-present-sibling-is-clean,
+  section = {shellcheck},
+  title  = {`-x` follows a relative source into a real sibling file: no SC1091 (W41)},
+  claim  = {`-x` follows a relative source into a real sibling file: no SC1091 (W41). tmp_path
+            carries no pyproject.toml, so `cwd_for` falls back to the script's own
+            directory, where `lib.sh` sits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_sourcing_a_present_sibling_is_clean},
+}
+
+@misc{hooks-shellcheck-sourcing-a-missing-sibling-still-fires,
+  section = {shellcheck},
+  title  = {A source pointing at nothing on disk is a REAL finding, not swallowed by `-x` (W41)},
+  claim  = {A source pointing at nothing on disk is a REAL finding, not swallowed by `-x` (W41).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_sourcing_a_missing_sibling_still_fires},
+}

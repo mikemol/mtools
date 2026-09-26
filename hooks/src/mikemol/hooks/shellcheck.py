@@ -169,13 +169,37 @@ def findings_of(raw: object, exclude: frozenset[str] = EXCLUDE) -> list[Finding]
     return out
 
 
+def cwd_for(anchor: str) -> str:
+    """Return the directory `-x` should resolve a sourced path from, for `anchor`.
+
+    ⚑⚑⚑ THE PROJECT ROOT, NOT THE ANCHOR'S OWN DIRECTORY. `.githooks/pre-commit` sources
+    `$(git rev-parse --show-toplevel)/refusal_record.sh` — a dynamic expression shellcheck cannot
+    evaluate, so it falls back to a leaf-name guess (`./refusal_record.sh`) and resolves THAT guess
+    against the process's own cwd, not the sourcing file's directory. MEASURED 2026-09-26: run from
+    `.githooks/`, `-x` still reports SC1091; run from the repo root, both `.githooks/pre-commit`
+    and `commit-msg` are clean, as files AND over stdin. A project root is the right guess for the
+    same reason a Bazel-style repo puts its own scripts' shared helpers at its own top.
+
+    Returns:
+        the governing project's root, the anchor's own parent, or the process cwd.
+
+    """
+    if not anchor:
+        return str(Path.cwd())
+    cfg = project_root.config_for(anchor)
+    if cfg is not None:
+        return str(cfg.parent)
+    return str(Path(anchor).parent)
+
+
 def run(
-    script: str, shell: str = "bash", exclude: frozenset[str] = EXCLUDE
+    script: str, shell: str = "bash", exclude: frozenset[str] = EXCLUDE, cwd: str | None = None
 ) -> list[Finding] | None:
     """Return shellcheck's findings over one script body, or None for UNKNOWN.
 
-    ⚑ THE BODY TRAVELS ON STDIN, so a sourced file is never followed (SC1091) — the price of
-    judging content that does not exist on disk yet, which is the point of a PreToolUse gate.
+    ⚑ THE BODY TRAVELS ON STDIN, so a sourced file is FOLLOWED (`-x`) only by a path guess resolved
+    against `cwd` — shellcheck cannot see a file that does not exist on disk yet, which is the
+    price of judging one that a PreToolUse gate has not written.
 
     Returns:
         findings (`[]` is measured-clean), or None when the linter could not render a verdict.
@@ -186,12 +210,13 @@ def run(
         return None
     try:
         proc = subprocess.run(
-            [binary, f"--shell={shell}", "--format=json1", "-"],
+            [binary, f"--shell={shell}", "-x", "--format=json1", "-"],
             input=script,
             capture_output=True,
             text=True,
             timeout=_TIMEOUT_S,
             check=False,
+            cwd=cwd,
         )
     except (OSError, subprocess.SubprocessError):
         return None
@@ -222,7 +247,9 @@ def neutralize_heredoc_bodies(cmd: str) -> str:
     return _HEREDOC_TAG.sub(_quote_tag, cmd)
 
 
-def analyze_command(cmd: str, exclude: frozenset[str] = EXCLUDE) -> list[Finding] | None:
+def analyze_command(
+    cmd: str, exclude: frozenset[str] = EXCLUDE, cwd: str | None = None
+) -> list[Finding] | None:
     """Return findings over a Bash-tool command, in the operator's line numbers, or None.
 
     ⚑ A HEREDOC BODY IS DATA. Every multi-line commit message goes through one, and a `$word` or
@@ -235,7 +262,7 @@ def analyze_command(cmd: str, exclude: frozenset[str] = EXCLUDE) -> list[Finding
     """
     if not cmd.strip():
         return []
-    found = run(_PREAMBLE + neutralize_heredoc_bodies(cmd), exclude=exclude)
+    found = run(_PREAMBLE + neutralize_heredoc_bodies(cmd), exclude=exclude, cwd=cwd)
     if found is None:
         return None
     return [(code, max(1, line - _PREAMBLE_LINES), msg) for code, line, msg in found]
@@ -265,7 +292,7 @@ def shell_dialect(path: str, content: str) -> str | None:
 
 
 def analyze_file(
-    path: str, content: str, exclude: frozenset[str] = EXCLUDE
+    path: str, content: str, exclude: frozenset[str] = EXCLUDE, cwd: str | None = None
 ) -> list[Finding] | None:
     """Return findings over post-edit content; `[]` when it is not shell; None for UNKNOWN.
 
@@ -279,7 +306,7 @@ def analyze_file(
     dialect = shell_dialect(path, content)
     if dialect is None:
         return []
-    return run(content, shell=dialect, exclude=exclude)
+    return run(content, shell=dialect, exclude=exclude, cwd=cwd or cwd_for(path))
 
 
 def post_edit_content(tool: str, tool_input: dict[str, object]) -> tuple[str, str | None]:
@@ -344,7 +371,10 @@ def render(findings: list[Finding], subject: str) -> str:
 
 
 def verdict(
-    tool: str, tool_input: dict[str, object], exclude: frozenset[str] = EXCLUDE
+    tool: str,
+    tool_input: dict[str, object],
+    exclude: frozenset[str] = EXCLUDE,
+    cwd: str | None = None,
 ) -> tuple[str, list[Finding] | None]:
     """Return (subject, findings) for one tool call; ("", []) when out of scope.
 
@@ -353,12 +383,13 @@ def verdict(
 
     """
     if tool == "Bash":
-        return "command", analyze_command(payload.text_of(tool_input.get("command")), exclude)
+        found = analyze_command(payload.text_of(tool_input.get("command")), exclude, cwd)
+        return "command", found
     if tool in {"Write", "Edit"}:
         path, content = post_edit_content(tool, tool_input)
         if content is None:
             return "", []
-        return "shell file", analyze_file(path, content, exclude)
+        return "shell file", analyze_file(path, content, exclude, cwd or cwd_for(path))
     return "", []
 
 
@@ -393,7 +424,7 @@ def main() -> int:
     # ⚑ THE WAIVERS ARE THOSE OF THE TREE BEING TOUCHED: the edited file's project, or for a Bash
     # command the session's working directory.
     anchor = payload.text_of(tool_input.get("file_path")) or payload.text_of(record.get("cwd"))
-    subject, findings = verdict(tool, tool_input, exclude_for(anchor))
+    subject, findings = verdict(tool, tool_input, exclude_for(anchor), cwd_for(anchor))
     armed = payload.armed(OWN_SWITCH)
     if findings is None:
         # ⚑⚑ THE REPAIR IS ADMITTED AND ANNOUNCED — a hook that quietly permits one shape is a hole
