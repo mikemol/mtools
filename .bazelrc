@@ -102,7 +102,30 @@ build --sandbox_add_mount_pair=/lib
 build --sandbox_add_mount_pair=/lib64
 build --sandbox_add_mount_pair=/etc
 
-build --disk_cache=~/.cache/bazel-disk/mtools
+# ⚑⚑⚑ THE OUTPUT ROOT AND THE DISK CACHE LIVE ON THE ZRAM AT /var/tmp, NOT ON md0 — operator
+# ruling 2026-09-26, standing for every Bazel repo, relayed by luthen-observability and confirmed by
+# the operator in this session. MEASURED BY LUTHEN before the change: this repository's two
+# servers, bazel(mtools) and the gate's bazel(mtools-staged), were the top leaf writers on md0, at
+# ~91 write ops/s and ~54 read ops/s from one session scope over 5 minutes, on a RAID6 already 94%
+# busy. Both output bases and `~/.cache/bazel-disk/mtools` sat under /home, which is md0.
+# ⚑ A LITERAL PATH, because .bazelrc does not expand `$USER`; it names this host's one user.
+# ⚑ The disk cache MOVES rather than disappearing: the paragraph below still holds, and a cold
+# output base still rebuilds from it, only now without touching the array.
+startup --output_user_root=/var/tmp/bazel-mikemol
+build --disk_cache=/var/tmp/bazel-disk/mtools
+
+# ⚑⚑ BUILD WITHOUT THE BYTES IS THE DEFAULT ("declare what you need", same ruling). Outputs stay in
+# the remote cache unless something asks for them. A target whose files a host process reads (the
+# `.venv` the pycheck hook runs) must ask; that is a declaration, not a reason to download everything.
+build --remote_download_minimal
+# ⚑ THE OUTPUTS A HOST PROCESS READS, DECLARED: the pre-commit gate runs the ratchet CLI from
+# `bazel-bin/ratchet/ratchet_cli.runfiles` (and refuses if that tree is absent), and EVERY
+# distribution's `//<dist>:.venv` is a host artifact by design (the pycheck hook runs from hooks',
+# and hooks/tests/test_venv_artifact.py runs each one's interpreter and suite). ⚑ MEASURED: a first
+# cut declared only hooks' venv, and the preflight refused 45 cases across all nine distributions,
+# each "has no built venv interpreter at bazel-bin/<dist>/.venv/bin/python3". Everything else stays
+# remote.
+build --remote_download_regex=.*/ratchet/ratchet_cli.*|.*/\.venv/.*
 
 # ⚑⚑⚑ AND THE DISK CACHE IS WHAT MAKES A PURGE CHEAP, WHICH IS WORTH KNOWING BEFORE ONE IS ORDERED.
 # An operator directive to reclaim disk had this repository stop its server and delete THREE output
