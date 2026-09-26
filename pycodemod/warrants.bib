@@ -1352,3 +1352,68 @@
   claim  = { An undecodable file is skipped; the origin raised and aborted the whole census.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_crossings.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-modstate-annotated-container-is-state,
+  section = {modstate},
+  title  = {⚑⚑ An annotated empty dict at module level is state; the origin read only plain ones},
+  claim  = { An annotated empty dict at module level is state; the origin read only plain ones.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_an_annotated_container_is_state},
+}
+
+@misc{pycodemod-modstate-same-named-local-is-not-the-modules,
+  section = {modstate},
+  title  = {⚑⚑⚑ A function's own TABLE never touches the module's TABLE, which stays a const},
+  claim  = { A function's own TABLE never touches the module's TABLE, which stays a const. Measured
+            on the origin: TABLE was reported cache, mutated by a local that shared its
+            name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_a_same_named_local_is_not_the_modules},
+}
+
+@misc{pycodemod-modstate-parameter-shadows-too,
+  section = {modstate},
+  title  = {A parameter named like the module container is the function's own},
+  claim  = {A parameter named like the module container is the function's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_a_parameter_shadows_too},
+}
+
+@misc{pycodemod-modstate-delete-is-a-mutation,
+  section = {modstate},
+  title  = {⚑⚑ `del DELETED[k]` mutates, and an `in` test inside a function reads: cache},
+  claim  = { `del DELETED[k]` mutates, and an `in` test inside a function reads: cache.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_a_delete_is_a_mutation},
+}
+
+@misc{pycodemod-modstate-module-level-mutation-never-read-in-a-function-is-an-accumulator,
+  section = {modstate},
+  title  = {ACC is appended at module scope and read in no function: accum},
+  claim  = {ACC is appended at module scope and read in no function: accum.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_module_level_mutation_never_read_in_a_function_is_an_accumulator},
+}
+
+@misc{pycodemod-modstate-in-place-op-under-global-is-a-mutation,
+  section = {modstate},
+  title  = {`global SEEN; SEEN |= ...` rebinds the module name in place},
+  claim  = {`global SEEN; SEEN |= ...` rebinds the module name in place.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_an_in_place_op_under_global_is_a_mutation},
+}
+
+@misc{pycodemod-modstate-async-function-and-a-method-are-function-scopes,
+  section = {modstate},
+  title  = {A write and a read inside an async def, or a method, make a cache},
+  claim  = {A write and a read inside an async def, or a method, make a cache.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_an_async_function_and_a_method_are_function_scopes},
+}
+
+@misc{pycodemod-modstate-non-container-is-not-a-candidate,
+  section = {modstate},
+  title  = {A module-level number is not a container and has no row},
+  claim  = {A module-level number is not a container and has no row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_a_non_container_is_not_a_candidate},
+}
+
+@misc{pycodemod-modstate-unread-file-is-reported,
+  section = {modstate},
+  title  = {⚑ An undecodable file is skipped; the origin raised and aborted the census},
+  claim  = { An undecodable file is skipped; the origin raised and aborted the census.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_an_unread_file_is_reported},
+}

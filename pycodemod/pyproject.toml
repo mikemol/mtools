@@ -111,6 +111,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/pycodemod/funcnames.py" = ["import-private-name"]
 "tests/test_graph.py" = ["assert"]
 "tests/test_imports.py" = ["assert"]
+"tests/test_modstate.py" = ["assert"]
 "tests/test_ordering.py" = ["assert"]
 "tests/test_placement.py" = ["assert"]
 "tests/test_rivals.py" = ["assert"]
