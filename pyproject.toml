@@ -63,14 +63,6 @@ fixture-parentheses = true
 [tool.ruff.lint.flake8-copyright]
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
-[tool.mikemol-hooks.shellcheck.exclude]
-# ⚑ THE ROOT GOVERNS THE ROOT'S SHELL NOW, so the shellcheck edit hook reads its policy from here.
-# One waiver, and it is a genuine contradiction, not a finding to pay: SC1091 is *"not following
-# ./refusal_record.sh"*, because the hook runs shellcheck on one file without `-x`. The file it will
-# not follow is itself a root `.sh`, checked in full by `//:shellcheck_githooks`, which globs every
-# root script. So following it here would only check the same file twice.
-SC1091 = "2026-09-23: .githooks/pre-commit sources refusal_record.sh; that file is checked by //:shellcheck_githooks (glob *.sh). Measured: with this root pyproject present and no waiver, every edit to the gate was refused on this info-level note."
-
 [tool.ruff.lint.per-file-ignores]
 # ⚑ RELIEF IS PER FILE AND PER RESPONSIBILITY, the shape `ratchet/pyproject.toml` records: an entry
 # naming a directory would grant it to every script in order to cover one call.

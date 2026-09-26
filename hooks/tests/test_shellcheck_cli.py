@@ -125,15 +125,15 @@ def test_a_tree_census_counts_its_population(
 
 @pytest.mark.needs_shellcheck
 @_needs_linter
-def test_a_file_honours_its_trees_waiver(tmp_path: Path) -> None:
-    """A dated waiver in the governing pyproject clears the file — the mode reads the tree's set."""
+def test_a_declared_table_no_longer_clears_a_file(tmp_path: Path) -> None:
+    """A table in the governing pyproject has no effect any more: the mode still reports it."""
     path = _script(tmp_path, "run.sh", "#!/bin/bash\necho $1\n")
     (tmp_path / "tree" / "pyproject.toml").write_text(
         '[project]\nname = "fixture"\n\n[tool.mikemol-hooks.shellcheck.exclude]\n'
         'SC2086 = "word splitting is intended at this site, measured 2026-09-22"\n',
         encoding="utf-8",
     )
-    assert shellcheck_cli.main(["--check-file", str(path)]) == 0
+    assert shellcheck_cli.main(["--check-file", str(path)]) == 1
 
 
 @pytest.mark.needs_shellcheck

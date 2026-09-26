@@ -2,9 +2,9 @@
 # Copyright (c) 2026 Mike Mol
 """The shell hook: which files are shell, what the linter says, and what an absent linter does.
 
-⚑ PORTED FROM substrate's in-file selftest (letter 2026-09-22), one case per function. The trap
-case is INVERTED into a pair: substrate's passed only because of an SC2329 waiver this package does
-not inherit, so the pair asserts the waiver mechanism instead of one tree's waiver.
+⚑ PORTED FROM substrate's in-file selftest (letter 2026-09-22). The trap case, INVERTED from the
+origin, where it passed only because of an SC2329 waiver this package no longer has any mechanism
+for at all (operator ruling 2026-09-26: mtools carries NO WAIVERS).
 
 ⚑ THE LINTER ARMS ARE MARKED AND SKIP WITH A REASON when no shellcheck is found — a skip is visible
 in the run, a silent pass is not.
@@ -99,74 +99,37 @@ def test_a_non_shell_file_is_not_linted() -> None:
     assert shellcheck.analyze_file("x.py", "import os\nprint(os.getcwd())") == []
 
 
-# --- the tree's waivers ---
+# --- no waivers, ever (operator ruling 2026-09-26) ---
 
 
-def _tree(tmp_path: Path, table: str) -> str:
-    """Write a pyproject carrying `table` and return a shell path it governs.
+def test_a_declared_table_of_any_shape_refuses(tmp_path: Path) -> None:
+    """A governing pyproject that still declares the table is refused, whatever its shape.
 
-    Returns:
-        the path of a script under the fixture project.
-
+    ⚑ ONE ARM COVERS EVERY SHAPE THE RETIRED READER USED TO DISTINGUISH — dated, undated, a bare
+    list — because none of them matters any more: the table's mere presence is the violation.
     """
-    (tmp_path / "pyproject.toml").write_text(
-        f'[project]\nname = "fixture"\n\n[tool.mikemol-hooks.shellcheck.exclude]\n{table}\n',
-        encoding="utf-8",
-    )
-    return str(tmp_path / "run.sh")
-
-
-def test_a_dated_warrant_waives_its_code(tmp_path: Path) -> None:
-    """A code with a dated warrant longer than the minimum is in the governing set."""
-    path = _tree(tmp_path, 'SC2016 = "single-quoted bash -c bodies, measured 4 sites 2026-09-22"')
-    assert shellcheck.exclude_for(path) == frozenset({"SC2016"})
-
-
-def test_an_undated_warrant_waives_nothing(tmp_path: Path) -> None:
-    """A warrant naming no year is suppression, not relief: the code is not waived.
-
-    ⚑ THE POSITIVE CONTROL SITS IN THE SAME FIXTURE: a dated sibling IS waived, so an empty
-    reader cannot pass this arm.
-    """
-    path = _tree(
-        tmp_path,
-        'SC2016 = "single quotes are intended in the generated scripts here"\n'
-        'SC2086 = "word splitting is the intent at these sites, measured 2026-09-22"',
-    )
-    waived = shellcheck.exclude_for(path)
-    assert "SC2086" in waived
-    assert "SC2016" not in waived
-
-
-def test_a_short_warrant_waives_nothing(tmp_path: Path) -> None:
-    """A dated warrant too short to say what was measured waives nothing."""
-    path = _tree(
-        tmp_path,
-        'SC2016 = "ok 2026"\nSC2086 = "word splitting is the intent at these sites, measured 2026"',
-    )
-    waived = shellcheck.exclude_for(path)
-    assert "SC2086" in waived
-    assert "SC2016" not in waived
-
-
-def test_a_list_of_bare_codes_waives_nothing(tmp_path: Path) -> None:
-    """A list is not the table's shape; it waives nothing rather than everything it names."""
     (tmp_path / "pyproject.toml").write_text(
         '[project]\nname = "fixture"\n\n[tool.mikemol-hooks.shellcheck]\nexclude = ["SC2016"]\n',
         encoding="utf-8",
     )
-    assert shellcheck.exclude_for(str(tmp_path / "run.sh")) == frozenset()
+    assert shellcheck.declared_waiver(str(tmp_path)) == tmp_path / "pyproject.toml"
 
 
-def test_no_governing_project_waives_nothing() -> None:
-    """With no path there is no project, and the package set — empty — applies."""
-    assert shellcheck.exclude_for("") == frozenset()
+def test_no_governing_project_declares_nothing() -> None:
+    """With no path there is no project, and nothing is declared."""
+    assert shellcheck.declared_waiver("") is None
 
 
-def test_an_unparseable_pyproject_waives_nothing(tmp_path: Path) -> None:
-    """A pyproject that is not TOML yields the package set, not a crash."""
+def test_an_unparseable_pyproject_declares_nothing(tmp_path: Path) -> None:
+    """A pyproject that is not TOML is read as declaring nothing, not a crash."""
     (tmp_path / "pyproject.toml").write_text("[project\n", encoding="utf-8")
-    assert shellcheck.exclude_for(str(tmp_path / "run.sh")) == frozenset()
+    assert shellcheck.declared_waiver(str(tmp_path)) is None
+
+
+def test_a_pyproject_with_no_shellcheck_table_declares_nothing(tmp_path: Path) -> None:
+    """A governed tree that never carried the table is unaffected."""
+    (tmp_path / "pyproject.toml").write_text('[project]\nname = "fixture"\n', encoding="utf-8")
+    assert shellcheck.declared_waiver(str(tmp_path)) is None
 
 
 # --- where `-x` resolves a source from ---
@@ -197,17 +160,6 @@ def test_a_json1_comment_becomes_a_finding() -> None:
     """A well-formed comment becomes (code, line, message)."""
     raw = {"comments": [{"code": 2086, "line": 3, "message": " Double quote. "}]}
     assert shellcheck.findings_of(raw) == [("SC2086", 3, "Double quote.")]
-
-
-def test_a_waived_code_is_dropped_and_its_neighbour_kept() -> None:
-    """The exclude set drops its codes and only its codes."""
-    raw = {
-        "comments": [
-            {"code": 2086, "line": 1, "message": "a"},
-            {"code": 2016, "line": 2, "message": "b"},
-        ]
-    }
-    assert _codes(shellcheck.findings_of(raw, frozenset({"SC2016"}))) == ["SC2086"]
 
 
 def test_a_non_mapping_output_yields_no_findings() -> None:
@@ -310,19 +262,12 @@ def test_a_clean_file_passes() -> None:
 
 @pytest.mark.needs_shellcheck
 @_needs_linter
-def test_a_trap_handler_before_an_exit_fires_with_no_waiver() -> None:
-    """With an empty exclude set, SC2329 fires on a trap handler before `exit 0`.
+def test_a_trap_handler_before_an_exit_fires() -> None:
+    """SC2329 fires on a trap handler before `exit 0` — nothing waives it any more.
 
     ⚑ INVERTED FROM THE ORIGIN, where this passed only because the origin waived SC2329.
     """
     assert "SC2329" in _codes(shellcheck.analyze_file("x.sh", _TRAP))
-
-
-@pytest.mark.needs_shellcheck
-@_needs_linter
-def test_a_trap_handler_before_an_exit_passes_with_its_waiver() -> None:
-    """With SC2329 waived, the same script is clean — the waiver reaches the linter's verdict."""
-    assert shellcheck.analyze_file("x.sh", _TRAP, frozenset({"SC2329"})) == []
 
 
 @pytest.mark.needs_shellcheck
@@ -516,12 +461,12 @@ def test_the_shared_switch_arms_when_the_own_one_is_unset(
 def test_an_armed_hook_denies_a_finding_and_names_the_rule(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """Armed, a linted defect is a deny naming the rule and the pyproject waiver table."""
+    """Armed, a linted defect is a deny naming the rule and pointing at mtools, not a waiver."""
     record: dict[str, object] = {"tool_name": "Bash", "tool_input": {"command": "[ $x = y ]"}}
     _main(monkeypatch, record, own="1", shared="0")
     out = capsys.readouterr().out
     assert "SC2086" in out
-    assert "tool.mikemol-hooks.shellcheck.exclude" in out
+    assert "NO WAIVERS" in out
 
 
 @pytest.mark.needs_shellcheck
@@ -533,6 +478,31 @@ def test_an_armed_hook_allows_clean_shell(
     record: dict[str, object] = {"tool_name": "Bash", "tool_input": {"command": 'echo "hi"'}}
     _main(monkeypatch, record, own="1", shared="0")
     assert not capsys.readouterr().out
+
+
+def test_an_armed_hook_refuses_a_declared_waiver_table_before_the_linter(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """A tree that still declares the table is refused, even over an otherwise-clean command.
+
+    ⚑ NO `@_needs_linter`: `_verdict_bash` returns the pseudo-finding BEFORE the linter would ever
+    run, so this arm holds even where shellcheck itself is absent — the table is refused on sight.
+    """
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\nname = "fixture"\n\n[tool.mikemol-hooks.shellcheck.exclude]\n'
+        'SC2086 = "measured 2026-09-22"\n',
+        encoding="utf-8",
+    )
+    record: dict[str, object] = {
+        "tool_name": "Bash",
+        "tool_input": {"command": 'echo "hi"'},
+        "cwd": str(tmp_path),
+    }
+    _main(monkeypatch, record, own="1", shared="0")
+    out = capsys.readouterr().out
+    assert '"deny"' in out
+    assert "NO WAIVERS" in out
+    assert str(tmp_path / "pyproject.toml") in out
 
 
 def test_a_malformed_payload_denies_nothing(

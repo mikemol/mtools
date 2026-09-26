@@ -3202,62 +3202,11 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_non_shell_file_is_not_linted},
 }
 
-@misc{hooks-shellcheck-dated-warrant-waives-its-code,
-  section = {shellcheck},
-  title  = {A code with a dated warrant longer than the minimum is in the governing set},
-  claim  = {A code with a dated warrant longer than the minimum is in the governing set.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_dated_warrant_waives_its_code},
-}
-
-@misc{hooks-shellcheck-undated-warrant-waives-nothing,
-  section = {shellcheck},
-  title  = {A warrant naming no year is suppression, not relief: the code is not waived},
-  claim  = {A warrant naming no year is suppression, not relief: the code is not waived. THE
-            POSITIVE CONTROL SITS IN THE SAME FIXTURE: a dated sibling IS waived, so an
-            empty reader cannot pass this arm.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_undated_warrant_waives_nothing},
-}
-
-@misc{hooks-shellcheck-short-warrant-waives-nothing,
-  section = {shellcheck},
-  title  = {A dated warrant too short to say what was measured waives nothing},
-  claim  = {A dated warrant too short to say what was measured waives nothing.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_short_warrant_waives_nothing},
-}
-
-@misc{hooks-shellcheck-list-of-bare-codes-waives-nothing,
-  section = {shellcheck},
-  title  = {A list is not the table's shape; it waives nothing rather than everything it names},
-  claim  = {A list is not the table's shape; it waives nothing rather than everything it names.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_list_of_bare_codes_waives_nothing},
-}
-
-@misc{hooks-shellcheck-no-governing-project-waives-nothing,
-  section = {shellcheck},
-  title  = {With no path there is no project, and the package set — empty — applies},
-  claim  = {With no path there is no project, and the package set — empty — applies.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_no_governing_project_waives_nothing},
-}
-
-@misc{hooks-shellcheck-unparseable-pyproject-waives-nothing,
-  section = {shellcheck},
-  title  = {A pyproject that is not TOML yields the package set, not a crash},
-  claim  = {A pyproject that is not TOML yields the package set, not a crash.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_unparseable_pyproject_waives_nothing},
-}
-
 @misc{hooks-shellcheck-json1-comment-becomes-a-finding,
   section = {shellcheck},
   title  = {A well-formed comment becomes (code, line, message)},
   claim  = {A well-formed comment becomes (code, line, message).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_json1_comment_becomes_a_finding},
-}
-
-@misc{hooks-shellcheck-waived-code-is-dropped-and-its-neighbour-kept,
-  section = {shellcheck},
-  title  = {The exclude set drops its codes and only its codes},
-  claim  = {The exclude set drops its codes and only its codes.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_waived_code_is_dropped_and_its_neighbour_kept},
 }
 
 @misc{hooks-shellcheck-non-mapping-output-yields-no-findings,
@@ -3351,19 +3300,12 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_clean_file_passes},
 }
 
-@misc{hooks-shellcheck-trap-handler-before-an-exit-fires-with-no-waiver,
+@misc{hooks-shellcheck-trap-handler-before-an-exit-fires,
   section = {shellcheck},
-  title  = {With an empty exclude set, SC2329 fires on a trap handler before `exit 0`},
-  claim  = {With an empty exclude set, SC2329 fires on a trap handler before `exit 0`. INVERTED FROM
-            THE ORIGIN, where this passed only because the origin waived SC2329.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_trap_handler_before_an_exit_fires_with_no_waiver},
-}
-
-@misc{hooks-shellcheck-trap-handler-before-an-exit-passes-with-its-waiver,
-  section = {shellcheck},
-  title  = {With SC2329 waived, the same script is clean — the waiver reaches the linter's verdict},
-  claim  = {With SC2329 waived, the same script is clean — the waiver reaches the linter's verdict.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_trap_handler_before_an_exit_passes_with_its_waiver},
+  title  = {SC2329 fires on a trap handler before `exit 0` — nothing waives it any more},
+  claim  = {SC2329 fires on a trap handler before `exit 0` — nothing waives it any more. INVERTED
+            FROM THE ORIGIN, where this passed only because the origin waived SC2329.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_trap_handler_before_an_exit_fires},
 }
 
 @misc{hooks-shellcheck-finding-on-the-first-line-reports-line-one,
@@ -3462,8 +3404,8 @@
 
 @misc{hooks-shellcheck-armed-hook-denies-a-finding-and-names-the-rule,
   section = {shellcheck},
-  title  = {Armed, a linted defect is a deny naming the rule and the pyproject waiver table},
-  claim  = {Armed, a linted defect is a deny naming the rule and the pyproject waiver table.},
+  title  = {Armed, a linted defect is a deny naming the rule and pointing at mtools, not a waiver},
+  claim  = {Armed, a linted defect is a deny naming the rule and pointing at mtools, not a waiver.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_denies_a_finding_and_names_the_rule},
 }
 
@@ -3544,12 +3486,11 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_tree_census_counts_its_population},
 }
 
-@misc{hooks-shellcheck-cli-file-honours-its-trees-waiver,
+@misc{hooks-shellcheck-cli-declared-table-no-longer-clears-a-file,
   section = {shellcheck-cli},
-  title  = {A dated waiver in the governing pyproject clears the file — the mode reads the tree's set},
-  claim  = {A dated waiver in the governing pyproject clears the file — the mode reads the tree's
-            set.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_file_honours_its_trees_waiver},
+  title  = {A table in the governing pyproject has no effect any more: the mode still reports it},
+  claim  = {A table in the governing pyproject has no effect any more: the mode still reports it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_cli.py -k test_a_declared_table_no_longer_clears_a_file},
 }
 
 @misc{hooks-shellcheck-cli-explain-reports-a-finding-and-exits-one,
@@ -4390,4 +4331,45 @@
   title  = {A source pointing at nothing on disk is a REAL finding, not swallowed by `-x` (W41)},
   claim  = {A source pointing at nothing on disk is a REAL finding, not swallowed by `-x` (W41).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_sourcing_a_missing_sibling_still_fires},
+}
+
+@misc{hooks-shellcheck-declared-table-of-any-shape-refuses,
+  section = {shellcheck},
+  title  = {A governing pyproject that still declares the table is refused, whatever its shape},
+  claim  = {A governing pyproject that still declares the table is refused, whatever its shape. ONE
+            ARM COVERS EVERY SHAPE THE RETIRED READER USED TO DISTINGUISH — dated,
+            undated, a bare list — because none of them matters any more: the table's
+            mere presence is the violation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_declared_table_of_any_shape_refuses},
+}
+
+@misc{hooks-shellcheck-no-governing-project-declares-nothing,
+  section = {shellcheck},
+  title  = {With no path there is no project, and nothing is declared},
+  claim  = {With no path there is no project, and nothing is declared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_no_governing_project_declares_nothing},
+}
+
+@misc{hooks-shellcheck-unparseable-pyproject-declares-nothing,
+  section = {shellcheck},
+  title  = {A pyproject that is not TOML is read as declaring nothing, not a crash},
+  claim  = {A pyproject that is not TOML is read as declaring nothing, not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_unparseable_pyproject_declares_nothing},
+}
+
+@misc{hooks-shellcheck-pyproject-with-no-shellcheck-table-declares-nothing,
+  section = {shellcheck},
+  title  = {A governed tree that never carried the table is unaffected},
+  claim  = {A governed tree that never carried the table is unaffected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_pyproject_with_no_shellcheck_table_declares_nothing},
+}
+
+@misc{hooks-shellcheck-armed-hook-refuses-a-declared-waiver-table-before-the-linter,
+  section = {shellcheck},
+  title  = {A tree that still declares the table is refused, even over an otherwise-clean command},
+  claim  = {A tree that still declares the table is refused, even over an otherwise-clean command.
+            NO `@_needs_linter`: `_verdict_bash` returns the pseudo-finding BEFORE the
+            linter would ever run, so this arm holds even where shellcheck itself is
+            absent — the table is refused on sight.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_refuses_a_declared_waiver_table_before_the_linter},
 }

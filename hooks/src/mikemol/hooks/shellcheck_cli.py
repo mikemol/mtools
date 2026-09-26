@@ -55,9 +55,7 @@ def check_file(target: Path) -> int:
         sys.stdout.write(f"NOT SHELL — the hook would not lint {target}\n")
         return 0
     anchor = str(target)
-    found = shellcheck.analyze_file(
-        anchor, body, shellcheck.exclude_for(anchor), shellcheck.cwd_for(anchor)
-    )
+    found = shellcheck.analyze_file(anchor, body, shellcheck.cwd_for(anchor))
     if found is None:
         sys.stdout.write(_UNKNOWN)
         return 2
@@ -91,9 +89,7 @@ def check_tree(root: Path) -> int:
                 continue
             n_shell += 1
             anchor = str(path)
-            found = shellcheck.analyze_file(
-                anchor, body, shellcheck.exclude_for(anchor), shellcheck.cwd_for(anchor)
-            )
+            found = shellcheck.analyze_file(anchor, body, shellcheck.cwd_for(anchor))
             if found is None:
                 sys.stdout.write(f"{path}  {_UNKNOWN}")
                 return 2
@@ -106,16 +102,14 @@ def check_tree(root: Path) -> int:
 
 
 def explain(command: str) -> int:
-    """Report what the hook would say about one Bash-tool command, under this tree's waivers.
+    """Report what the hook would say about one Bash-tool command.
 
     Returns:
         0 clean, 1 findings, 2 UNKNOWN.
 
     """
     anchor = str(Path.cwd())
-    found = shellcheck.analyze_command(
-        command, shellcheck.exclude_for(anchor), shellcheck.cwd_for(anchor)
-    )
+    found = shellcheck.analyze_command(command, shellcheck.cwd_for(anchor))
     if found is None:
         sys.stdout.write(_UNKNOWN)
         return 2
