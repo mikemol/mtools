@@ -1563,3 +1563,54 @@
   claim  = { An unparseable file is skipped with its reason; the origin raised.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-owes-uncommitted-widening-owes-every-untouched-caller,
+  section = {owes},
+  title  = {Only the def file edited, WORKING: both callers and the key= handoff are owed},
+  claim  = {Only the def file edited, WORKING: both callers and the key= handoff are owed. The
+            import line is owed too: a name imported is a name used, and a rename breaks
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_an_uncommitted_widening_owes_every_untouched_caller},
+}
+
+@misc{pycodemod-owes-caller-the-change-also-touched-is-covered-not-owed,
+  section = {owes},
+  title  = {The def and caller_a both edited: caller_a is counted as covered, never listed},
+  claim  = {The def and caller_a both edited: caller_a is counted as covered, never listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_a_caller_the_change_also_touched_is_covered_not_owed},
+}
+
+@misc{pycodemod-owes-committed-range-is-read-from-git,
+  section = {owes},
+  title  = {The widening committed, then asked for as HEAD~1: the same callers are owed},
+  claim  = {The widening committed, then asked for as HEAD~1: the same callers are owed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_a_committed_range_is_read_from_git},
+}
+
+@misc{pycodemod-owes-change-without-the-def-has-no-referent,
+  section = {owes},
+  title  = {Only caller_a edited: no def of the name is in the change, and defs_changed says so},
+  claim  = {Only caller_a edited: no def of the name is in the change, and defs_changed says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_a_change_without_the_def_has_no_referent},
+}
+
+@misc{pycodemod-owes-bad-revision-raises-with-gits-words-not-an-empty-change,
+  section = {owes},
+  title  = {An unknown revision is git's refusal, raised; it never reads as a change that is clean},
+  claim  = {An unknown revision is git's refusal, raised; it never reads as a change that is clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_a_bad_revision_raises_with_gits_words_not_an_empty_change},
+}
+
+@misc{pycodemod-owes-revision-shaped-like-an-option-is-refused,
+  section = {owes},
+  title  = {A revision starting with a dash never reaches git, where it would be read as an option},
+  claim  = {A revision starting with a dash never reaches git, where it would be read as an option.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_a_revision_shaped_like_an_option_is_refused},
+}
+
+@misc{pycodemod-owes-clean-tree-is-an-empty-change-not-a-refusal,
+  section = {owes},
+  title  = {Nothing edited, WORKING: the change is empty, and no refusal is raised},
+  claim  = {Nothing edited, WORKING: the change is empty, and no refusal is raised.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_a_clean_tree_is_an_empty_change_not_a_refusal},
+}

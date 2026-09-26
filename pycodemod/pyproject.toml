@@ -110,6 +110,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # names Core translates (no public API answers it, and a roster here would go stale). The private
 # read is the module's job, and an empty or moved registry refuses loudly (RegistryMovedError).
 "src/mikemol/pycodemod/funcnames.py" = ["import-private-name"]
+# ⚑ ONE FILE, ONE RESPONSIBILITY: owes exists to ASK GIT which files a change touched. The argv is
+# fixed apart from the revision, which is refused when it starts with `-` and is followed by `--`,
+# and git is resolved on PATH once.
+"src/mikemol/pycodemod/owes.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_owes.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_graph.py" = ["assert"]
 "tests/test_imports.py" = ["assert"]
 "tests/test_layout.py" = ["assert"]
