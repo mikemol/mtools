@@ -23,3 +23,4 @@ shapes	The Shape Scan: A Line Regex Located in Code Only, No Anchor False Zero, 
 deps	The Import Census: Every Import Graded Against a Manifest That Must Be Read, Case-Insensitive, Stdlib Exact
 crossings	The Crossing Census: A Function Is Its Own Body, an Annotated Local Is Built, and Recursion Through self Unfolds
 modstate	The Module State Census: A Name Resolved in Its Scope, Annotated State Seen, and a Delete a Mutation
+writes	The Write Census: Could a Bare Run Write, Read From the Tree, With a Gate Only in Code

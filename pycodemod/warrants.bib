@@ -1417,3 +1417,66 @@
   claim  = { An undecodable file is skipped; the origin raised and aborted the census.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_modstate.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-writes-write-through-a-joined-path-is-a-write,
+  section = {writes},
+  title  = {⚑⚑⚑ `open(os.path.join(x, y), "w")` writes; the origin's line regex saw no write call},
+  claim  = { `open(os.path.join(x, y), "w")` writes; the origin's line regex saw no write call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_write_through_a_joined_path_is_a_write},
+}
+
+@misc{pycodemod-writes-path-method-write-is-a-write,
+  section = {writes},
+  title  = {⚑⚑ `Path.write_text` and `Path.open(mode="a")` write; the origin saw neither},
+  claim  = { `Path.write_text` and `Path.open(mode="a")` write; the origin saw neither.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_path_method_write_is_a_write},
+}
+
+@misc{pycodemod-writes-read-is-not-a-write,
+  section = {writes},
+  title  = {An `open` with no mode or a read mode writes nothing},
+  claim  = {An `open` with no mode or a read mode writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_read_is_not_a_write},
+}
+
+@misc{pycodemod-writes-mode-that-is-not-a-literal-is-a-write,
+  section = {writes},
+  title  = {⚑ Conservative: a mode this cannot read counts as a write},
+  claim  = { Conservative: a mode this cannot read counts as a write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_mode_that_is_not_a_literal_is_a_write},
+}
+
+@misc{pycodemod-writes-tempfile-target-is-inert-through-its-bindings,
+  section = {writes},
+  title  = {A path bound from mkdtemp, even through a join, is a tempfile: inert},
+  claim  = {A path bound from mkdtemp, even through a join, is a tempfile: inert.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_tempfile_target_is_inert_through_its_bindings},
+}
+
+@misc{pycodemod-writes-fixture-function-is-the-callers-to-name,
+  section = {writes},
+  title  = {⚑ A write inside a named fixture function is inert; unnamed, it is a live write},
+  claim  = { A write inside a named fixture function is inert; unnamed, it is a live write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_fixture_function_is_the_callers_to_name},
+}
+
+@misc{pycodemod-writes-gate-mentioned-in-a-docstring-does-not-gate,
+  section = {writes},
+  title  = {⚑⚑ A gate flag in a docstring is prose; the origin read it as gating the write},
+  claim  = { A gate flag in a docstring is prose; the origin read it as gating the write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_gate_mentioned_in_a_docstring_does_not_gate},
+}
+
+@misc{pycodemod-writes-gate-flag-in-code-gates,
+  section = {writes},
+  title  = {A gate flag tested in code gates the file; with no gate flags given, nothing gates},
+  claim  = {A gate flag tested in code gates the file; with no gate flags given, nothing gates.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_a_gate_flag_in_code_gates},
+}
+
+@misc{pycodemod-writes-unread-file-is-reported,
+  section = {writes},
+  title  = {⚑ An unreadable file is skipped with its reason, not answered as no write call},
+  claim  = { An unreadable file is skipped with its reason, not answered as no write call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writes.py -k test_an_unread_file_is_reported},
+}
