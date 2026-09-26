@@ -68,6 +68,11 @@ _VALUED = (
     "preamble_set",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
+# ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
+# `--` as its own end-of-options marker before nargs ever sees it as a value — "expected 4
+# arguments" (nemik AND rosettapkg, 2026-09-26, both hit this live). `-` is not argparse-special
+# and is translated to NO_SYMBOL in `_ledger_mode`, so the ledger's own format never changes.
+_QUEUE_SYMBOL = "-"
 _DEFAULT_KIND = "tick"
 
 # ⚑⚑ EACH MODE NAMES THE FIELD FLAGS IT READS, AND ANY OTHER IS REFUSED (nemik, 2026-09-25).
@@ -206,7 +211,13 @@ def _parser() -> argparse.ArgumentParser:
     mode.add_argument("--update", metavar="SYMBOL", help="set typed fields on a waypoint")
     mode.add_argument("--add", metavar="TITLE", help="mint the next W<n> as ready")
     mode.add_argument("--drop", nargs=2, metavar=("SYMBOL", "REASON"), help="move to residue")
-    mode.add_argument("--ledger", nargs=len(_LEDGER_ARGS), metavar=_LEDGER_ARGS)
+    mode.add_argument(
+        "--ledger",
+        nargs=len(_LEDGER_ARGS),
+        metavar=_LEDGER_ARGS,
+        help=f"SYMBOL is a waypoint, or {_QUEUE_SYMBOL!r} for a queue-level line (not a bare --,"
+        " which argparse consumes as end-of-options)",
+    )
     mode.add_argument("--show", metavar="SYMBOL", help="what is W<n>")
     mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
     ap.add_argument("--status", choices=STATUSES)
@@ -550,6 +561,8 @@ def _ledger_mode(ctx: Ctx) -> int:
 
     """
     sym, outcome, mechanism, note = ctx.many("ledger") or ("", "", "", "")
+    if sym == _QUEUE_SYMBOL:
+        sym = NO_SYMBOL
     kind = ctx.get("kind") or _DEFAULT_KIND
     entry = Entry(kind, sym, outcome, mechanism, note, ctx.get("evidence") or "")
     text_line = line(entry, ctx.stamp())

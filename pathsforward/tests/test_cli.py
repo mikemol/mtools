@@ -484,6 +484,17 @@ def test_a_malformed_ledger_line_is_refused(tmp_path: Path) -> None:
     assert _run(_file(tmp_path), "--ledger", "W1", "two words", "sweep", "n") == _REFUSED
 
 
+def test_ledger_dash_writes_the_queue_level_symbol(tmp_path: Path) -> None:
+    """`-` is accepted where a bare `--` cannot be (argparse eats it as end-of-options).
+
+    ⚑ THE STORED LINE STILL READS `--`, unchanged: `-` is a CLI-only alias for NO_SYMBOL,
+    translated before the ledger's own format ever sees it (nemik AND rosettapkg, 2026-09-26).
+    """
+    path = _file(tmp_path)
+    code = _run(path, "--ledger", "-", "swept", "sweep", "queue note")
+    assert (code, "  --   " in _ledger(path)) == (_OK, True)
+
+
 def test_show_resolves_live_and_residue(tmp_path: Path) -> None:
     """--show resolves a live symbol and a residue one, and refuses an unissued one."""
     path = _file(tmp_path)

@@ -1408,3 +1408,13 @@
   claim  = {--init reads no field flags at all: even --status is a stray.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_init_refuses_a_field_flag},
 }
+
+@misc{pathsforward-cli-ledger-dash-writes-the-queue-level-symbol,
+  section = {cli},
+  title  = {`-` is accepted where a bare `--` cannot be (argparse eats it as end-of-options)},
+  claim  = {`-` is accepted where a bare `--` cannot be (argparse eats it as end-of-options). THE
+            STORED LINE STILL READS `--`, unchanged: `-` is a CLI-only alias for
+            NO_SYMBOL, translated before the ledger's own format ever sees it (nemik AND
+            rosettapkg, 2026-09-26).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_ledger_dash_writes_the_queue_level_symbol},
+}
