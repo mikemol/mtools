@@ -1490,3 +1490,46 @@
             control only names the module.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_the_reported_from_import_shapes_are_importers},
 }
+
+@misc{pycodemod-discards-dotted-query-finds-its-discards,
+  section = {discards},
+  title  = {⚑⚑⚑ A bare `ratchet.check_argv(1)` discards; the origin reported it as using},
+  claim  = { A bare `ratchet.check_argv(1)` discards; the origin reported it as using. Measured on
+            the origin: the dotted query's discarded list was empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_discards.py -k test_a_dotted_query_finds_its_discards},
+}
+
+@misc{pycodemod-discards-awaited-bare-call-discards,
+  section = {discards},
+  title  = {⚑⚑ `await check(3)` as a statement drops the value; `x = await check(4)` uses it},
+  claim  = { `await check(3)` as a statement drops the value; `x = await check(4)` uses it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_discards.py -k test_an_awaited_bare_call_discards},
+}
+
+@misc{pycodemod-discards-two-calls-on-one-line-are-two-calls,
+  section = {discards},
+  title  = {⚑⚑ In `check(5); y = check(6)` one discards and one uses; the origin lost the using one},
+  claim  = { In `check(5); y = check(6)` one discards and one uses; the origin lost the using one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_discards.py -k test_two_calls_on_one_line_are_two_calls},
+}
+
+@misc{pycodemod-discards-tested-or-passed-value-is-used,
+  section = {discards},
+  title  = {A value tested by `if` or passed to another call is used},
+  claim  = {A value tested by `if` or passed to another call is used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_discards.py -k test_a_tested_or_passed_value_is_used},
+}
+
+@misc{pycodemod-discards-every-call-lands-on-exactly-one-side,
+  section = {discards},
+  title  = {Both sides together are the whole population: four uses and two drops of `check`},
+  claim  = {Both sides together are the whole population: four uses and two drops of `check`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_discards.py -k test_every_call_lands_on_exactly_one_side},
+}
+
+@misc{pycodemod-discards-unread-file-is-reported,
+  section = {discards},
+  title  = {⚑ A file that cannot be read or parsed is skipped with its reason, on neither side},
+  claim  = { A file that cannot be read or parsed is skipped with its reason, on neither side.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_discards.py -k test_an_unread_file_is_reported},
+}
