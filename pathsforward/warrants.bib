@@ -1377,3 +1377,13 @@
   claim  = { Another repo's `repo:W<n>` is never read as a local symbol, so it never dangles here.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_foreign_edge_is_not_dangling},
 }
+
+@misc{pathsforward-cli-update-clears-enables,
+  section = {cli},
+  title  = {--update --enables, with no symbols, empties the edge list (nemik AND mtools, 2026-09-26)},
+  claim  = {--update --enables, with no symbols, empties the edge list (nemik AND mtools,
+            2026-09-26). `+` refused the bare flag before this fix; `*` lets it mean
+            CLEAR, distinct from omitting `--enables` entirely, which still leaves the
+            field untouched (test_update_sets_typed_fields).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_clears_enables},
+}

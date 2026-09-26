@@ -364,6 +364,17 @@ def test_update_sets_enables(tmp_path: Path) -> None:
     )
 
 
+def test_update_clears_enables(tmp_path: Path) -> None:
+    """--update --enables, with no symbols, empties the edge list (nemik AND mtools, 2026-09-26).
+
+    `+` refused the bare flag before this fix; `*` lets it mean CLEAR, distinct from omitting
+    `--enables` entirely, which still leaves the field untouched (test_update_sets_typed_fields).
+    """
+    path = _file(tmp_path)
+    _run(path, "--update", "W1", "--enables", "W2", "W3")
+    assert (_run(path, "--update", "W1", "--enables"), _first(path)["enables"]) == (_OK, [])
+
+
 def test_update_refuses_a_malformed_edge(tmp_path: Path) -> None:
     """A comma-joined or non-W symbol in --update --enables is refused, as --add refuses it."""
     path = _file(tmp_path)
