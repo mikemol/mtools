@@ -112,6 +112,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_ordering.py" = ["assert"]
 "tests/test_placement.py" = ["assert"]
 "tests/test_rivals.py" = ["assert"]
+"tests/test_shapes.py" = ["assert"]
 "tests/test_sites.py" = ["assert"]
 "tests/test_size.py" = ["assert"]
 "tests/test_strings.py" = ["assert"]

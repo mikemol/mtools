@@ -1206,3 +1206,47 @@
   claim  = { A file that cannot be read is skipped with its reason, never silently dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hints.py -k test_an_unread_file_is_reported},
 }
+
+@misc{pycodemod-shapes-only-code-lines-match-by-default,
+  section = {shapes},
+  title  = {⚑⚑ Prose describing a shape does not match; the code line with a trailing note does},
+  claim  = { Prose describing a shape does not match; the code line with a trailing note does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shapes.py -k test_only_code_lines_match_by_default},
+}
+
+@misc{pycodemod-shapes-prose-matches-when-asked,
+  section = {shapes},
+  title  = {With in_code_only off, every mention is reported, docstring and comment included},
+  claim  = {With in_code_only off, every mention is reported, docstring and comment included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shapes.py -k test_prose_matches_when_asked},
+}
+
+@misc{pycodemod-shapes-anchored-pattern-is-never-a-false-zero,
+  section = {shapes},
+  title  = {⚑⚑⚑ The start-of-string, caret and dollar anchors each anchor a LINE},
+  claim  = { The start-of-string, caret and dollar anchors each anchor a LINE. Measured on the
+            origin: its whole-file pre-filter made the start-of-string anchor return
+            nothing over this file, whose import is on line 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shapes.py -k test_an_anchored_pattern_is_never_a_false_zero},
+}
+
+@misc{pycodemod-shapes-row-carries-the-stripped-text,
+  section = {shapes},
+  title  = {Each row is path, line and the stripped line text},
+  claim  = {Each row is path, line and the stripped line text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shapes.py -k test_a_row_carries_the_stripped_text},
+}
+
+@misc{pycodemod-shapes-file-with-no-match-is-neither-a-row-nor-a-skip,
+  section = {shapes},
+  title  = {A clean file yields nothing, and is not tokenized at all},
+  claim  = {A clean file yields nothing, and is not tokenized at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shapes.py -k test_a_file_with_no_match_is_neither_a_row_nor_a_skip},
+}
+
+@misc{pycodemod-shapes-unread-file-is-skipped-not-matched,
+  section = {shapes},
+  title  = {⚑⚑ An undecodable file is skipped, not matched as mojibake; so is one that won't tokenize},
+  claim  = { An undecodable file is skipped, not matched as mojibake; so is one that won't tokenize.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shapes.py -k test_an_unread_file_is_skipped_not_matched},
+}
