@@ -1741,3 +1741,31 @@
   claim  = {A file that fails to parse makes `importers` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_importers_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-swallows-reports-a-discarding-except,
+  section = {cli},
+  title  = {`swallows` finds an except whose whole body discards, with its denominator},
+  claim  = {`swallows` finds an except whose whole body discards, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_swallows_reports_a_discarding_except},
+}
+
+@misc{pycodemod-cli-swallows-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `swallows` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `swallows` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_swallows_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-exits-reports-a-process-exit-site,
+  section = {cli},
+  title  = {`exits` classifies a process-exit site and reports it with its denominator},
+  claim  = {`exits` classifies a process-exit site and reports it with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_exits_reports_a_process_exit_site},
+}
+
+@misc{pycodemod-cli-exits-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `exits` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `exits` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_exits_over_an_unparseable_file_reports_incomplete},
+}

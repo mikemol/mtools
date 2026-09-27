@@ -4,10 +4,9 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `attr-reads` (`imports.attr_reads`) and `importers` (`imports.importers`) — the two
-retired-spelling successors named in the DRIVER MODE MAP (W34) — alongside the three modes already
-wired: `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`) and `dead` (`dead.dead`). `attr` and
-`importers` therefore leave `RETIRED`, since they are real modes now, not redirects.
+slice adds `swallows` (`swallows.swallows`) and `exits` (`exit.exits`) to the five modes already
+wired: `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`),
+`attr-reads` (`imports.attr_reads`) and `importers` (`imports.importers`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -30,15 +29,19 @@ from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
 from mikemol.pycodemod.dead import dead as run_dead
+from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
 from mikemol.pycodemod.sites import Site, scan
+from mikemol.pycodemod.swallows import swallows as run_swallows
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from mikemol.pycodemod.exit import ExitRow
     from mikemol.pycodemod.imports import AttrRead, ImportRow
+    from mikemol.pycodemod.swallows import Swallow
 
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
@@ -105,6 +108,16 @@ def _write_attr_read(row: AttrRead) -> None:
 
 def _write_import_row(row: ImportRow) -> None:
     sys.stdout.write(f"{row.form} {','.join(row.names)} {row.path}:{row.line}\n")
+
+
+def _write_swallow(row: Swallow) -> None:
+    sys.stdout.write(
+        f"swallow {row.kind} exit={row.exit} feeds={row.feeds} {row.path}:{row.line}\n"
+    )
+
+
+def _write_exit_row(row: ExitRow) -> None:
+    sys.stdout.write(f"exit {row.verdict} {row.spelling} {row.path}:{row.line} ({row.why})\n")
 
 
 def _write_lines(lines: list[str]) -> None:
@@ -179,12 +192,34 @@ def _handle_importers(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_swallows(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_swallows(paths)
+    for row in result.rows:
+        _write_swallow(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
+def _handle_exits(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_exits(paths)
+    for row in result.rows:
+        _write_exit_row(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 MODES = {
     "calls": _handle_calls,
     "owes": _handle_owes,
     "dead": _handle_dead,
     "attr-reads": _handle_attr_reads,
     "importers": _handle_importers,
+    "swallows": _handle_swallows,
+    "exits": _handle_exits,
 }
 
 
@@ -212,6 +247,12 @@ def _build_parser() -> argparse.ArgumentParser:
     importers_p = sub.add_parser("importers", help="every import of `module`, and the names taken")
     importers_p.add_argument("module")
     importers_p.add_argument("paths", nargs="+")
+
+    swallows_p = sub.add_parser("swallows", help="an except whose whole body discards, triaged")
+    swallows_p.add_argument("paths", nargs="+")
+
+    exits_p = sub.add_parser("exits", help="a process-exit site, classified main/dispatch/library")
+    exits_p.add_argument("paths", nargs="+")
 
     for name in RETIRED:
         redirect = sub.add_parser(name)
