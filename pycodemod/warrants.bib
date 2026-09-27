@@ -2162,3 +2162,10 @@
   claim  = {A file that fails to parse makes `discards` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_discards_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-fix-owes-callers-redirects-to-owes,
+  section = {cli},
+  title  = {The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor},
+  claim  = {The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fix_owes_callers_redirects_to_owes},
+}

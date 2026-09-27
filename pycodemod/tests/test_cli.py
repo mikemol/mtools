@@ -631,6 +631,13 @@ def test_discards_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert cli.main(["discards", "f", str(target)]) == 1
 
 
+def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
+    """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
+    code = cli.main(["fix-owes-callers"])
+    assert code == _REFUSED
+    assert "`owes " in capsys.readouterr().out
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

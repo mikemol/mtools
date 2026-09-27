@@ -106,8 +106,15 @@ except ImportError as _missing:
 _UNREAD = ("unread", "unreadable, undecodable or uncompilable")
 
 # ⚑ `--attr` and `--importers` are WIRED, as `attr-reads` and `importers` (W34): they stop being
-# redirects and become real modes. Nothing else here is retired yet.
-RETIRED: dict[str, str] = {}
+# redirects and become real modes. ⚑ The origin's `--fix-owes-callers` IS RETIRED UNDER A NEW NAME
+# (W72): its port is the `owes` mode, so the old spelling refuses naming it rather than failing as
+# an unknown subcommand that names nothing.
+RETIRED: dict[str, str] = {
+    "fix-owes-callers": (
+        "retired: `fix-owes-callers` is now `owes NAME --rev REV --root ROOT PATHS`"
+        " (owes.fix_owes_callers)"
+    ),
+}
 
 # ⚑ A DO-NOT-PORT SPELLING NAMES WHERE IT STILL LIVES. These are substrate's own instruments
 # (queue.md PYCODEMOD CENSUS/SQL/CONTROL/FINGERPRINT SURVEY), never ported here.
