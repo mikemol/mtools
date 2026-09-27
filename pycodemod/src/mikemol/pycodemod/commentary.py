@@ -37,6 +37,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.pycodemod.sites import Skip
+
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
@@ -168,11 +170,13 @@ def _marked(line: str, marks: Sequence[str]) -> bool:
     return any(mark_hit(m, line) for m in marks)
 
 
-def _read(path: str) -> str | None:
+def _read(path: str) -> str | Skip:
     try:
         return Path(path).read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
-        return None
+    except UnicodeDecodeError as exc:
+        return Skip(path, "undecodable", type(exc).__name__)
+    except OSError as exc:
+        return Skip(path, "unreadable", type(exc).__name__)
 
 
 def commentary_census(paths: Sequence[str], marks: Sequence[str] = COMMENTARY_MARKS) -> Census:
@@ -189,8 +193,8 @@ def commentary_census(paths: Sequence[str], marks: Sequence[str] = COMMENTARY_MA
     out = Census(nfiles=len(paths))
     for path in paths:
         src = _read(path)
-        if src is None:
-            out.unread.append(path)
+        if isinstance(src, Skip):
+            out.unread.append(src.path)
             continue
         count, seen = 0, set[str]()
         for number, line in enumerate(src.splitlines(), 1):
@@ -248,8 +252,8 @@ def commentary_kinds(paths: Sequence[str], marks: Sequence[str] = COMMENTARY_MAR
     out = Kinds()
     for path in paths:
         src = _read(path)
-        if src is None:
-            out.unread.append(path)
+        if isinstance(src, Skip):
+            out.unread.append(src.path)
             continue
         hits = [
             Hit(path, number, commentary_key(line))
@@ -340,8 +344,8 @@ def commentary_blocks(paths: Sequence[str], marks: Sequence[str] = COMMENTARY_MA
     out = Blocks()
     for path in paths:
         src = _read(path)
-        if src is None:
-            out.unread.append(path)
+        if isinstance(src, Skip):
+            out.unread.append(src.path)
             continue
         lines = src.splitlines()
         owners = scope_index(src)
