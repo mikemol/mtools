@@ -74,6 +74,7 @@ include = ["mikemol.*"]
 environments = ["sys_platform == 'linux'"]
 
 [tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
 testpaths = ["tests"]
 addopts = "--strict-markers --strict-config"
 # ⚑ ONE MARKER, AND IT NAMES A REAL HOST REQUIREMENT. Unlike the sibling ratchet distribution

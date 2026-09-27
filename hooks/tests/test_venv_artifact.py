@@ -50,6 +50,21 @@ _NEEDS_BUILT_VENV = pytest.mark.skipif(
 # root carried a pyproject.toml it matched this glob (measured, 5 phantom failures here).
 _DISTS = sorted(p.parent.name for p in _REPO.glob("*/pyproject.toml") if not p.parent.is_symlink())
 
+
+# ⚑⚑ AN EMPTY POPULATION IS A STATED SKIP, NEVER AN EMPTY PARAMETRIZE. Every distribution runs
+# pytest with `empty_parameter_set_mark = fail_at_collect` (W88), so `parametrize(x, [])` is a
+# collection ERROR. Measured: inside the hermetic bazel action there is no source tree and no
+# bazel-bin, both derived populations here are empty, and collection stopped. Before W88 the same
+# emptiness read as a silent skip. The one case below SAYS why it is empty, and the positive control
+# `test_the_repository_has_distributions_to_check` still fails a checkout whose glob finds nothing.
+def _or_stated_skip(population: list[str], why: str) -> list[object]:
+    if population:
+        return list(population)
+    return [pytest.param("<empty>", marks=pytest.mark.skip(reason=why))]
+
+
+_DIST_CASES = _or_stated_skip(_DISTS, "no pyproject.toml is reachable from here (hermetic action?)")
+
 # ⚑ TWO IS THE SMALLEST POPULATION THAT CAN TEST A TEMPLATE. One distribution cannot distinguish
 # "the same everywhere" from "the only one there is", so the control below requires at least a
 # pair — named rather than written inline, because the number IS the argument.
@@ -81,7 +96,7 @@ def test_the_repository_has_distributions_to_check() -> None:
 
 
 @_NEEDS_BUILT_VENV
-@pytest.mark.parametrize("dist", _DISTS)
+@pytest.mark.parametrize("dist", _DIST_CASES)
 def test_every_distribution_builds_a_venv(dist: str) -> None:
     """⚑⚑ THE TEMPLATIZABILITY CLAIM, AS AN ARM OVER THE DERIVED POPULATION.
 
@@ -96,7 +111,7 @@ def test_every_distribution_builds_a_venv(dist: str) -> None:
 
 
 @_NEEDS_BUILT_VENV
-@pytest.mark.parametrize("dist", _DISTS)
+@pytest.mark.parametrize("dist", _DIST_CASES)
 def test_the_interpreter_link_is_depth_independent(dist: str) -> None:
     """⚑⚑⚑ RELOCATABILITY, RE-MEASURED: THE LINK IS ABSOLUTE, BY OPERATOR RULING 2026-09-19.
 
@@ -134,7 +149,7 @@ def test_the_interpreter_link_is_depth_independent(dist: str) -> None:
 
 
 @_NEEDS_BUILT_VENV
-@pytest.mark.parametrize("dist", _DISTS)
+@pytest.mark.parametrize("dist", _DIST_CASES)
 def test_the_built_interpreter_actually_runs(dist: str) -> None:
     """⚑⚑ A SYMLINK THAT RESOLVES TO NOTHING IS WELL-FORMED AND USELESS, AND THAT SHIPPED ONCE.
 
@@ -157,7 +172,7 @@ def test_the_built_interpreter_actually_runs(dist: str) -> None:
 
 
 @_NEEDS_BUILT_VENV
-@pytest.mark.parametrize("dist", _DISTS)
+@pytest.mark.parametrize("dist", _DIST_CASES)
 def test_the_venv_imports_the_distributions_own_package(dist: str) -> None:
     """⚑⚑⚑ THE EDITABLE-INSTALL STEP, REPLACED BY A DECLARED INPUT.
 
@@ -228,6 +243,8 @@ _ENTRIES = sorted(
     if p.name != "python3" and not p.is_symlink()
 )
 
+_ENTRY_CASES = _or_stated_skip(_ENTRIES, "no built venv entry is reachable (hermetic action?)")
+
 # ⚑ Bounded, because a direct run that reached the shell or the wrong interpreter must fail the arm,
 # not hang it; the hooks read one JSON payload from stdin and exit well inside this.
 _ENTRY_TIMEOUT_S = 60
@@ -235,7 +252,7 @@ _ENTRY_TIMEOUT_S = 60
 
 @_NEEDS_BUILT_VENV
 @pytest.mark.parametrize("depth", ["bazel-bin", "symlink-elsewhere"])
-@pytest.mark.parametrize("entry", _ENTRIES)
+@pytest.mark.parametrize("entry", _ENTRY_CASES)
 def test_a_console_script_runs_directly_under_the_venvs_python(
     entry: str,
     depth: str,
@@ -284,7 +301,7 @@ def test_a_console_script_runs_directly_under_the_venvs_python(
 
 
 @_NEEDS_BUILT_VENV
-@pytest.mark.parametrize("dist", _DISTS)
+@pytest.mark.parametrize("dist", _DIST_CASES)
 def test_the_venv_runs_the_distributions_own_suite(dist: str) -> None:
     """⚑⚑⚑ THE END-TO-END CLAIM: this venv can do the job the host venv does.
 

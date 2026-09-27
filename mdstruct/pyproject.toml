@@ -85,6 +85,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
 testpaths = ["tests"]
 # ⚑ `--strict-markers` MAKES A TYPO IN A MARKER AN ERROR rather than a silently unregistered
 # one — the same class as a lint rule nobody declared: a test that claims a property nothing
