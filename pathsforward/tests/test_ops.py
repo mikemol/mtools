@@ -111,6 +111,14 @@ def test_blocking_without_a_party_is_refused_whole() -> None:
     assert state.waypoints[0]["next_bounded_step"] == "step"
 
 
+def test_the_blocked_refusal_names_the_umbrella_spelling() -> None:
+    """After an ATOMIZE split the parent waits on its children; the refusal says how to write it."""
+    with pytest.raises(
+        ops.RefusedError, match="umbrella split into children: --blocked-on W<child>"
+    ):
+        ops.update(_state(), "W1", ops.Update(status="blocked"), _NOW)
+
+
 def test_ready_clears_the_block() -> None:
     """Moving to ready clears blocked_on and blocked_kind, and resets the count."""
     w = ops.update(_state(_blocked("W1", _OLD_TICKS)), "W1", ops.Update(status="ready"), _NOW)

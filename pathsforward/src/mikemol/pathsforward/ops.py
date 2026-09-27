@@ -268,7 +268,12 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
     if text(new, "status") == "blocked" and (
         not strlist(new, "blocked_on") or text(new, "blocked_kind") not in BLOCKED_KINDS
     ):
-        msg = f"{sym}: blocked needs --blocked-on and --blocked-kind agent|human"
+        # ⚑ THE UMBRELLA IS NAMED IN THE REFUSAL (W111, nemik): after an ATOMIZE split, the parent
+        # waits on its own children, and "blocked on whom?" has an answer the refusal can give.
+        msg = (
+            f"{sym}: blocked needs --blocked-on and --blocked-kind agent|human"
+            f" (an umbrella split into children: --blocked-on W<child> ... --blocked-kind agent)"
+        )
         raise RefusedError(msg)
     w.clear()
     w.update(new)
