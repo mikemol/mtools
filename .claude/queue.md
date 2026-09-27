@@ -791,3 +791,11 @@ W54 LANDED (2026-09-27): `reifies` (ordering.reifies) wired, paths-only, one _PA
 2 tests, 2 warrants, rubric "Thirteen" to "Fourteen Modes". 338 pytest pass, clean. Noticed, not
 fixed: ordering.py's module docstring says `funcnames` is NOT PORTED, but funcnames.py exists and
 W65 wires it -- a stale sentence for whoever lands W65 to correct.
+
+W55 LANDED (2026-09-27): `escapes` (core.escapes) wired, paths-only. core.Escapes has a different
+shape (found + unread: list[str], NO per-file reason), so the handler passes one merged reason,
+"unread (unreadable, undecodable or uncompilable)", to report.incomplete rather than invent a finer
+one. Residue: core.escapes should carry a Skip per file like every other census; minted as its own
+waypoint. Also measured: report.incomplete exits 1 only when EVERY file was skipped (read == 0), not
+when any was -- a mixed population with skips exits 0 with the banner. 2 tests, 2 warrants, rubric
+"Fourteen" to "Fifteen Modes". 340 pytest pass, clean.

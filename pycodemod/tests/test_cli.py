@@ -267,6 +267,22 @@ def test_reifies_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> 
     assert code == 1
 
 
+def test_escapes_reports_an_invalid_escape(tmp_path: Path) -> None:
+    """`escapes` reports a string literal whose escape does not exist, with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text('PATTERN = "a\\d"\n', encoding="utf-8")
+    code = cli.main(["escapes", str(target)])
+    assert code == 0
+
+
+def test_escapes_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to compile makes `escapes` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["escapes", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

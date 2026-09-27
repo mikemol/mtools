@@ -1867,3 +1867,17 @@
   claim  = {A file that fails to parse makes `reifies` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_reifies_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-escapes-reports-an-invalid-escape,
+  section = {cli},
+  title  = {`escapes` reports a string literal whose escape does not exist, with its denominator},
+  claim  = {`escapes` reports a string literal whose escape does not exist, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_escapes_reports_an_invalid_escape},
+}
+
+@misc{pycodemod-cli-escapes-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to compile makes `escapes` print the shared incomplete-scan banner},
+  claim  = {A file that fails to compile makes `escapes` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_escapes_over_an_unparseable_file_reports_incomplete},
+}

@@ -4,13 +4,13 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `reifies` (`ordering.reifies`) to the thirteen modes already wired: `calls`
+slice adds `escapes` (`core.escapes`) to the fourteen modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
 (`placement.disagreement`), `placement` (`placement.placement`, default forms) and
-`modstate` (`modstate.module_state`), `layout` (`layout.layout`) and `collisions`
-(`rivals.collisions`).
+`modstate` (`modstate.module_state`), `layout` (`layout.layout`), `collisions`
+(`rivals.collisions`) and `reifies` (`ordering.reifies`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -32,6 +32,7 @@ import sys
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
+from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.graph import verdict_returners
@@ -50,6 +51,7 @@ from mikemol.pycodemod.swallows import swallows as run_swallows
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from mikemol.pycodemod.core import Escape
     from mikemol.pycodemod.exit import ExitRow
     from mikemol.pycodemod.graph import VerdictDef
     from mikemol.pycodemod.imports import AttrRead, ImportRow
@@ -63,6 +65,7 @@ if TYPE_CHECKING:
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
+_UNREAD = ("unread", "unreadable, undecodable or uncompilable")
 
 # ⚑ `--attr` and `--importers` are WIRED, as `attr-reads` and `importers` (W34): they stop being
 # redirects and become real modes. Nothing else here is retired yet.
@@ -140,6 +143,10 @@ def _write_exit_row(row: ExitRow) -> None:
 
 def _write_verdict(row: VerdictDef) -> None:
     sys.stdout.write(f"verdict {row.name} {','.join(row.kinds)} {row.path}:{row.line}\n")
+
+
+def _write_escape(row: Escape) -> None:
+    sys.stdout.write(f"escape {row.seq!r} {row.path}:{row.line} {row.text}\n")
 
 
 def _write_reification(row: Reification) -> None:
@@ -279,6 +286,16 @@ def _handle_verdicts(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_escapes(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_escapes(paths)
+    for row in result.found:
+        _write_escape(row)
+    lines, code = report.incomplete([_UNREAD for _ in result.unread], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_reifies(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_reifies(paths)
@@ -354,6 +371,7 @@ MODES = {
     "layout": _handle_layout,
     "collisions": _handle_collisions,
     "reifies": _handle_reifies,
+    "escapes": _handle_escapes,
 }
 
 
@@ -367,6 +385,7 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
     ("layout", "every top-level statement group, in source order, with its code lines"),
     ("collisions", "every public name with two or more reimplementing defs"),
     ("reifies", "every def return that hands back a materialized collection"),
+    ("escapes", "string literals whose escape sequence does not exist"),
 )
 
 
