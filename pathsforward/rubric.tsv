@@ -1,6 +1,7 @@
 # rubric.tsv — the sections of the pathsforward warrant set, one per test module, in document order.
 # key <TAB> heading title
 model	The Model: A Malformed Document Is Refused, a Malformed Symbol Never Crashes
+tags	The Tag Grammar: A Declared Grain, a Write Suffix, and Only Artifact Writes Lease
 digest	The Hash: One Tagged Form Emitted, Four Legacy Forms Accepted as a Transition
 check	The Check: Every Property Fires on Its Defect, and a Clean State Fires None
 payload	The Payload: Budgeted With the Marker Counted, Refused When Nothing Fits

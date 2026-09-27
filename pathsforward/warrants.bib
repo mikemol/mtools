@@ -1751,3 +1751,45 @@
   claim  = {Two live items sharing a touches tag put an OVERLAP line in the header (W123).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_header_carries_one_overlap_line_per_shared_tag},
 }
+
+@misc{pathsforward-tags-unprefixed-tag-is-a-topic-read,
+  section = {tags},
+  title  = {A tag written before the grammar keeps its meaning: a topic, read, never leasable},
+  claim  = {A tag written before the grammar keeps its meaning: a topic, read, never leasable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_an_unprefixed_tag_is_a_topic_read},
+}
+
+@misc{pathsforward-tags-file-tag-normalises-its-path-without-the-filesystem,
+  section = {tags},
+  title  = {A `file:` tag drops a leading ./ and a trailing /, so two spellings compare equal},
+  claim  = {A `file:` tag drops a leading ./ and a trailing /, so two spellings compare equal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_a_file_tag_normalises_its_path_without_the_filesystem},
+}
+
+@misc{pathsforward-tags-write-suffix-is-stripped-and-recorded,
+  section = {tags},
+  title  = {`!w` is not part of the name; it sets `write`, and the raw text is kept as stored},
+  claim  = {`!w` is not part of the name; it sets `write`, and the raw text is kept as stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_the_write_suffix_is_stripped_and_recorded},
+}
+
+@misc{pathsforward-tags-only-an-artifact-write-is-leasable,
+  section = {tags},
+  title  = {file: and mod: writes lease; a read, a party: tag and a topic never do (W120 point 3)},
+  claim  = {file: and mod: writes lease; a read, a party: tag and a topic never do (W120 point 3).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_only_an_artifact_write_is_leasable},
+}
+
+@misc{pathsforward-tags-unknown-prefix-is-unknown-not-a-topic,
+  section = {tags},
+  title  = {`path:` is not a grain, so it parses as unknown for --check to report, never as a topic},
+  claim  = {`path:` is not a grain, so it parses as unknown for --check to report, never as a topic.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_an_unknown_prefix_is_unknown_not_a_topic},
+}
+
+@misc{pathsforward-tags-party-tag-keeps-its-name,
+  section = {tags},
+  title  = {`party:summit` is an external party named summit, byte-compared},
+  claim  = {`party:summit` is an external party named summit, byte-compared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_a_party_tag_keeps_its_name},
+}
