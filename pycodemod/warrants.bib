@@ -2007,3 +2007,17 @@
   claim  = {A file that fails to parse makes `guarded` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_guarded_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-key-reads-reports-a-subscript-read,
+  section = {cli},
+  title  = {`key-reads KEY` reports a use of the string key, with its denominator},
+  claim  = {`key-reads KEY` reports a use of the string key, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_key_reads_reports_a_subscript_read},
+}
+
+@misc{pycodemod-cli-key-reads-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `key-reads` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `key-reads` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_key_reads_over_an_unparseable_file_reports_incomplete},
+}

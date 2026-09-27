@@ -835,3 +835,7 @@ W61 LANDED (2026-09-27): `guarded [--target NAME] paths...` wired; rows `under <
 outermost first, " / "-joined>` and `top <p:l:c>`. --target added beyond the waypoint's literal
 spec (mirrors `calls`; unset = every call). 2 tests, 2 warrants, rubric "Twenty-Two Modes". 358
 pass, clean.
+
+W62 LANDED (2026-09-27): `key-reads KEY paths...` wired; row `key <kind> <path>:<line>
+(<context>)`, skips through report.incomplete over len(paths). 2 tests, 2 warrants, rubric
+"Twenty-Three Modes". 360 pass, clean.
