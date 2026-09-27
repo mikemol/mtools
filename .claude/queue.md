@@ -839,3 +839,7 @@ pass, clean.
 W62 LANDED (2026-09-27): `key-reads KEY paths...` wired; row `key <kind> <path>:<line>
 (<context>)`, skips through report.incomplete over len(paths). 2 tests, 2 warrants, rubric
 "Twenty-Three Modes". 360 pass, clean.
+
+W63 LANDED (2026-09-27): `bindings NAME paths...` wired; row `binding <kind> <qualname>
+<path>:<line> live=<first>-<last>`. 2 tests, 2 warrants, rubric "Twenty-Four Modes". 362 pass,
+clean.

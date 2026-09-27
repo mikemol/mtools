@@ -4,7 +4,8 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `key-reads` (`strings.key_reads`) to the twenty-two modes already wired: `calls`
+slice adds `bindings` (`definitions.bindings`) to the twenty-three modes already wired:
+`calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -13,8 +14,8 @@ slice adds `key-reads` (`strings.key_reads`) to the twenty-two modes already wir
 (`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`),
 `catchers` (`exit.catchers`), `interlock` (`exit.interlock`) and `commentary-lost`
 (`commentary.commentary_lost` over `owes.git_show`), `ambient` (`ambient.ambient`) and
-`callgraph` (`graph.callgraph`), `reaches` (`graph.reaches`) and `guarded`
-(`arguments.guarded`).
+`callgraph` (`graph.callgraph`), `reaches` (`graph.reaches`), `guarded`
+(`arguments.guarded`) and `key-reads` (`strings.key_reads`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -42,6 +43,7 @@ from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.dead import dead as run_dead
+from mikemol.pycodemod.definitions import bindings as run_bindings
 from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
@@ -294,6 +296,19 @@ def _handle_key_reads(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_bindings(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_bindings(paths, _str(ns, "name"))
+    for row in result.rows:
+        first, last = row.live
+        sys.stdout.write(
+            f"binding {row.kind} {row.qualname} {row.path}:{row.line} live={first}-{last}\n"
+        )
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_owes(ns: argparse.Namespace) -> int:
     name = _str(ns, "name")
     rev = _str(ns, "rev")
@@ -526,6 +541,7 @@ MODES = {
     "reaches": _handle_reaches,
     "guarded": _handle_guarded,
     "key-reads": _handle_key_reads,
+    "bindings": _handle_bindings,
 }
 
 
@@ -559,6 +575,9 @@ def _build_parser() -> argparse.ArgumentParser:
     kr = sub.add_parser("key-reads", help="every read and write of one string key")
     kr.add_argument("key")
     kr.add_argument("paths", nargs="+")
+    bnd = sub.add_parser("bindings", help="every binding of a name, with the lines it is live")
+    bnd.add_argument("name")
+    bnd.add_argument("paths", nargs="+")
 
     owes = sub.add_parser("owes", help="uses of a name in files a revision did not touch")
     owes.add_argument("name")

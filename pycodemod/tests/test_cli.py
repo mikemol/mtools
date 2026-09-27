@@ -440,6 +440,23 @@ def test_key_reads_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -
     assert code == 1
 
 
+def test_bindings_reports_a_def_binding(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """`bindings NAME` reports where the name is bound, with its live span."""
+    target = tmp_path / "m.py"
+    target.write_text("def work():\n    pass\n", encoding="utf-8")
+    code = cli.main(["bindings", "work", str(target)])
+    assert code == 0
+    assert f"work {target}:1 live=" in capsys.readouterr().out
+
+
+def test_bindings_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `bindings` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n    work = 1\n", encoding="utf-8")
+    code = cli.main(["bindings", "work", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

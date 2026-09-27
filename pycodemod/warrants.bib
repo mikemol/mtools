@@ -2021,3 +2021,17 @@
   claim  = {A file that fails to parse makes `key-reads` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_key_reads_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-bindings-reports-a-def-binding,
+  section = {cli},
+  title  = {`bindings NAME` reports where the name is bound, with its live span},
+  claim  = {`bindings NAME` reports where the name is bound, with its live span.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bindings_reports_a_def_binding},
+}
+
+@misc{pycodemod-cli-bindings-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `bindings` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `bindings` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bindings_over_an_unparseable_file_reports_incomplete},
+}
