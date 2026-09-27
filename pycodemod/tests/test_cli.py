@@ -283,6 +283,22 @@ def test_escapes_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> 
     assert code == 1
 
 
+def test_catchers_reports_a_systemexit_handler(tmp_path: Path) -> None:
+    """`catchers` reports a handler that catches SystemExit, with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text("try:\n    run()\nexcept SystemExit:\n    pass\n", encoding="utf-8")
+    code = cli.main(["catchers", str(target)])
+    assert code == 0
+
+
+def test_catchers_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `catchers` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["catchers", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

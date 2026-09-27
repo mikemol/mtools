@@ -799,3 +799,6 @@ one. Residue: core.escapes should carry a Skip per file like every other census;
 waypoint. Also measured: report.incomplete exits 1 only when EVERY file was skipped (read == 0), not
 when any was -- a mixed population with skips exits 0 with the banner. 2 tests, 2 warrants, rubric
 "Fourteen" to "Fifteen Modes". 340 pytest pass, clean.
+
+W56 LANDED (2026-09-27): `catchers` (exit.catchers) wired, paths-only, one _PATHS_ONLY row. 2
+tests, 2 warrants, rubric "Fifteen" to "Sixteen Modes". 342 pytest pass, clean.
