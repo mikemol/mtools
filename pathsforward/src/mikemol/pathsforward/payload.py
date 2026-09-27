@@ -93,6 +93,7 @@ class Request:
     generated_at: str
     budget: int = PAYLOAD_BUDGET
     command: str = field(default_factory=script_command)
+    atomize: str | None = None
 
 
 @dataclass(frozen=True)
@@ -142,6 +143,9 @@ def header(req: Request) -> list[str]:
             f"{_binding(state, 'SCHEDULE_DELETE')} the predecessor "
             f"(job_id={text(state.doc, 'job_id') or '-'})."
         ),
+        # ⚑ THE ATOMIZE LINE IS HEADER, NOT A RUNG: it tells the tick what its unit of work IS
+        # (a split, not more of the same), so no budget pressure may drop it.
+        *([req.atomize] if req.atomize else []),
     ]
 
 

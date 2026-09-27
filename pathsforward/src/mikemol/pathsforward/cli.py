@@ -25,9 +25,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward import lock, ops, render, selftest, store
+from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings
 from mikemol.pathsforward.digest import Outcome, v2, verify
-from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line
+from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
 from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 
@@ -244,6 +245,19 @@ def _ledger(ctx: Ctx, entry: Entry) -> None:
     append(store.sibling(ctx.path, store.LEDGER), line(entry, ctx.stamp()))
 
 
+def _atomize_line(ctx: Ctx, state: State) -> str | None:
+    """Read the ledger beside the state file and name a top waypoint that is owed a split.
+
+    ⚑ AN ABSENT LEDGER IS AN EMPTY ONE: a fresh `--init` has advanced nothing, so nothing is owed.
+
+    Returns:
+        the `ATOMIZE W<n> ...` line, or None.
+
+    """
+    path = store.sibling(ctx.path, store.LEDGER)
+    return atomize(state.waypoints, read(path) if path.is_file() else [])
+
+
 def _mutate(ctx: Ctx, edit: Callable[[State], int]) -> int:
     """Run one read-modify-write under the flock, saving only when the edit succeeded.
 
@@ -335,7 +349,9 @@ def _payload(ctx: Ctx) -> int:
 
     """
     try:
-        _say(build(Request(store.load(ctx.path), ctx.path, ctx.stamp())))
+        state = store.load(ctx.path)
+        owed = _atomize_line(ctx, state)
+        _say(build(Request(state, ctx.path, ctx.stamp(), atomize=owed)))
     except PayloadOverBudgetError as exc:
         _warn(f"PayloadOverBudget: {exc}")
         return EXIT_FAILED
@@ -353,11 +369,15 @@ def _queue(ctx: Ctx) -> int:
     return EXIT_OK
 
 
-def _report(state: State, findings: list[str]) -> int:
-    """Print a check's findings.
+def _report(state: State, findings: list[str], owed: str | None = None) -> int:
+    """Print a check's findings, then the ATOMIZE line when one is owed.
+
+    ⚑ ATOMIZE IS ADVICE, NOT A FINDING: a coarse top waypoint is a fact about the WORK, not a
+    defect in the file, so it never changes the exit code. It prints last, on its own line, so
+    `grep ^ATOMIZE` finds it whatever the check said.
 
     Returns:
-        EXIT_OK when there are none, else EXIT_REFUSED.
+        EXIT_OK when there are no findings, else EXIT_REFUSED.
 
     """
     if not findings:
@@ -365,10 +385,14 @@ def _report(state: State, findings: list[str]) -> int:
             f"check: OK — {state.counter} of {state.counter} symbols resolve; "
             f"state_hash={v2(state.waypoints)}"
         )
+        if owed:
+            _say(owed)
         return EXIT_OK
     _say(f"check: REFUSED — {len(findings)} finding(s):")
     for finding in findings:
         _say(f"    {finding}")
+    if owed:
+        _say(owed)
     return EXIT_REFUSED
 
 
@@ -380,7 +404,7 @@ def _check(ctx: Ctx) -> int:
 
     """
     state = store.load(ctx.path)
-    return _report(state, check(state))
+    return _report(state, check(state), _atomize_line(ctx, state))
 
 
 def _check_evidence(ctx: Ctx) -> int:
@@ -391,7 +415,7 @@ def _check_evidence(ctx: Ctx) -> int:
 
     """
     state = store.load(ctx.path)
-    return _report(state, check(state) + evidence_findings(state))
+    return _report(state, check(state) + evidence_findings(state), _atomize_line(ctx, state))
 
 
 def _selftest() -> int:

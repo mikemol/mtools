@@ -567,3 +567,49 @@ def test_the_mode_defaults_to_the_summary() -> None:
     """With no mode the summary is selected; a flag or a value selects its mode."""
     got = (cli.mode_of({}), cli.mode_of({"hash": True}), cli.mode_of({"verify": "x"}))
     assert got == ("summary", "hash", "verify")
+
+
+_ADVANCED = '2026-09-27T12:00:00Z  tick  W1   advanced  unblock   "step one"\n'
+_OWED = "ATOMIZE W1 (top for 2 ticks)"
+
+
+def _advanced(tmp_path: Path) -> Path:
+    """Write a state copy whose top waypoint W1 one earlier tick already advanced.
+
+    Returns:
+        the state path.
+
+    """
+    path = _file(tmp_path)
+    path.with_suffix(".ledger").write_text(_ADVANCED, encoding="utf-8")
+    return path
+
+
+def test_check_prints_atomize_for_an_advanced_top(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """--check names the owed split on its own line, and the exit code stays the check's own."""
+    assert _run(_advanced(tmp_path), "--check") == _OK
+    assert _OWED in capsys.readouterr().out.splitlines()
+
+
+def test_check_evidence_prints_atomize_too(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The evidence check is the same report, so it carries the same advisory."""
+    _run(_advanced(tmp_path), "--check-evidence")
+    assert _OWED in capsys.readouterr().out.splitlines()
+
+
+def test_payload_carries_atomize(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """The payload a tick reads first names the split, so the tick's unit is the split."""
+    assert _run(_advanced(tmp_path), "--payload") == _OK
+    assert _OWED in capsys.readouterr().out
+
+
+def test_no_ledger_means_no_atomize(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """An absent ledger is an empty one: a fresh file owes no split, and nothing is printed."""
+    path = _file(tmp_path)
+    _run(path, "--check")
+    _run(path, "--payload")
+    assert "ATOMIZE" not in capsys.readouterr().out

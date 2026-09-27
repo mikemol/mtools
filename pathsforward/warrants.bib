@@ -1516,3 +1516,31 @@
   claim  = {A line as `--ledger` writes it parses and counts: the witness is the on-disk format.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_it_reads_a_real_ledger_line},
 }
+
+@misc{pathsforward-cli-check-prints-atomize-for-an-advanced-top,
+  section = {cli},
+  title  = {--check names the owed split on its own line, and the exit code stays the check's own},
+  claim  = {--check names the owed split on its own line, and the exit code stays the check's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_prints_atomize_for_an_advanced_top},
+}
+
+@misc{pathsforward-cli-check-evidence-prints-atomize-too,
+  section = {cli},
+  title  = {The evidence check is the same report, so it carries the same advisory},
+  claim  = {The evidence check is the same report, so it carries the same advisory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_evidence_prints_atomize_too},
+}
+
+@misc{pathsforward-cli-payload-carries-atomize,
+  section = {cli},
+  title  = {The payload a tick reads first names the split, so the tick's unit is the split},
+  claim  = {The payload a tick reads first names the split, so the tick's unit is the split.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_payload_carries_atomize},
+}
+
+@misc{pathsforward-cli-no-ledger-means-no-atomize,
+  section = {cli},
+  title  = {An absent ledger is an empty one: a fresh file owes no split, and nothing is printed},
+  claim  = {An absent ledger is an empty one: a fresh file owes no split, and nothing is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_no_ledger_means_no_atomize},
+}
