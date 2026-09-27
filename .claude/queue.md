@@ -737,3 +737,13 @@ deferred from this slice as more complex than paths-only), graph's callgraph/rea
 arguments' three flags, strings' two, definitions' two, aliases, rivals, funcnames, ordering, size,
 deps, crossings, modstate, shapes, commentary's four spellings, discards, layout, owes'
 fix-owes-callers-successor naming clash to check.
+
+W34 SLICE 4 LANDED (2026-09-27): `verdicts` (graph.verdict_returners) wired into cli.MODES --
+simple paths-only shape like swallows/exits. graph's other two functions (callgraph, reaches)
+stay deferred: callgraph needs a Sites object from sites.scan, reaches needs a graph+start+targets
+triple, both more plumbing than a paths-only mode. 2 new tests, 2 warrants (pycodemod-cli-verdicts-*),
+rubric's cli heading updated from "Seven Modes" to "Eight Modes". 326 pytest/ruff/mypy clean on the
+host venv. NEXT for W34: ambient still needs a --root flag design; still unwired: placement,
+arguments' three flags, strings' two, definitions' two, aliases, rivals, funcnames, ordering, size,
+deps, crossings, modstate, shapes, commentary's four spellings, discards, layout, owes'
+fix-owes-callers-successor naming clash to check.

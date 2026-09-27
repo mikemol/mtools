@@ -4,9 +4,10 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `swallows` (`swallows.swallows`) and `exits` (`exit.exits`) to the five modes already
-wired: `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`),
-`attr-reads` (`imports.attr_reads`) and `importers` (`imports.importers`).
+slice adds `verdicts` (`graph.verdict_returners`) to the seven modes already wired: `calls`
+(`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
+(`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`) and
+`exits` (`exit.exits`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -30,6 +31,7 @@ from typing import TYPE_CHECKING
 from mikemol.pycodemod import report
 from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.exit import exits as run_exits
+from mikemol.pycodemod.graph import verdict_returners
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
@@ -40,6 +42,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from mikemol.pycodemod.exit import ExitRow
+    from mikemol.pycodemod.graph import VerdictDef
     from mikemol.pycodemod.imports import AttrRead, ImportRow
     from mikemol.pycodemod.swallows import Swallow
 
@@ -118,6 +121,10 @@ def _write_swallow(row: Swallow) -> None:
 
 def _write_exit_row(row: ExitRow) -> None:
     sys.stdout.write(f"exit {row.verdict} {row.spelling} {row.path}:{row.line} ({row.why})\n")
+
+
+def _write_verdict(row: VerdictDef) -> None:
+    sys.stdout.write(f"verdict {row.name} {','.join(row.kinds)} {row.path}:{row.line}\n")
 
 
 def _write_lines(lines: list[str]) -> None:
@@ -212,6 +219,16 @@ def _handle_exits(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_verdicts(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = verdict_returners(paths)
+    for row in result.rows:
+        _write_verdict(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 MODES = {
     "calls": _handle_calls,
     "owes": _handle_owes,
@@ -220,6 +237,7 @@ MODES = {
     "importers": _handle_importers,
     "swallows": _handle_swallows,
     "exits": _handle_exits,
+    "verdicts": _handle_verdicts,
 }
 
 
@@ -253,6 +271,11 @@ def _build_parser() -> argparse.ArgumentParser:
 
     exits_p = sub.add_parser("exits", help="a process-exit site, classified main/dispatch/library")
     exits_p.add_argument("paths", nargs="+")
+
+    verdicts_p = sub.add_parser(
+        "verdicts", help="a def whose returns mix an all-clear with a signal"
+    )
+    verdicts_p.add_argument("paths", nargs="+")
 
     for name in RETIRED:
         redirect = sub.add_parser(name)

@@ -1769,3 +1769,17 @@
   claim  = {A file that fails to parse makes `exits` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_exits_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-verdicts-reports-a-verdict-returning-def,
+  section = {cli},
+  title  = {`verdicts` finds a def mixing an all-clear return with a signal, with its denominator},
+  claim  = {`verdicts` finds a def mixing an all-clear return with a signal, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_verdicts_reports_a_verdict_returning_def},
+}
+
+@misc{pycodemod-cli-verdicts-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `verdicts` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `verdicts` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_verdicts_over_an_unparseable_file_reports_incomplete},
+}

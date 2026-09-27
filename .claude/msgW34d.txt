@@ -1,0 +1,21 @@
+pycodemod: cli.py — verdicts wired, driver now eight modes
+
+W34 (pycodemod driver slice 4). Wires `verdicts` over `graph.verdict_returners`, the same
+paths-only shape as swallows/exits: printer helper, handler over `report.incomplete`, new MODES
+entry, new subparser.
+
+graph's other two functions stay deferred: `callgraph` needs a `Sites` object from `sites.scan`,
+`reaches` needs a graph+start+targets triple — both more plumbing than a paths-only mode warrants
+in one slice.
+
+2 new tests in test_cli.py (a verdict-returning def found, one unparseable-file arm). 2 warrants
+(pycodemod-cli-verdicts-*); rubric's `cli` heading corrected from "Seven Modes" to "Eight Modes".
+326 pytest, ruff and mypy (58 files) all clean on the host venv.
+
+`.claude/queue.md` notes what's still unwired: ambient (needs a --root flag design), placement,
+arguments' three flags, strings' two, definitions' two, aliases, rivals, funcnames, ordering,
+size, deps, crossings, modstate, shapes, commentary's four spellings, plus the small TO-WRITE
+modes (discards, layout, owes' fix-owes-callers-successor naming clash to check). Next tick
+continues the wiring.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
