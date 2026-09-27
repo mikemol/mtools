@@ -1610,3 +1610,38 @@
   claim  = {A weight, title, edge or counter write is not work: luthen's 49/49 sync rewrote it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_metadata_update_leaves_last_worked_alone},
 }
+
+@misc{pathsforward-ops-malformed-weights-file-is-refused,
+  section = {ops},
+  title  = {A non-list, a bad record or a repeated symbol refuses the whole file, naming why},
+  claim  = {A non-list, a bad record or a repeated symbol refuses the whole file, naming why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_malformed_weights_file_is_refused},
+}
+
+@misc{pathsforward-ops-set-weights-writes-nothing-when-one-symbol-is-unknown,
+  section = {ops},
+  title  = {An unknown symbol anywhere refuses before the first write: W1 keeps no weight},
+  claim  = {An unknown symbol anywhere refuses before the first write: W1 keeps no weight.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_set_weights_writes_nothing_when_one_symbol_is_unknown},
+}
+
+@misc{pathsforward-ops-set-weights-stores-every-weight-and-is-not-work,
+  section = {ops},
+  title  = {Every named waypoint gets its weight, and none is stamped as worked (W117)},
+  claim  = {Every named waypoint gets its weight, and none is stamped as worked (W117).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_set_weights_stores_every_weight_and_is_not_work},
+}
+
+@misc{pathsforward-cli-weights-from-sets-them-in-one-call,
+  section = {cli},
+  title  = {--weights-from stores each weight, so W2 then sorts first},
+  claim  = {--weights-from stores each weight, so W2 then sorts first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_weights_from_sets_them_in_one_call},
+}
+
+@misc{pathsforward-cli-refused-weights-file-leaves-the-state-byte-identical,
+  section = {cli},
+  title  = {An unknown symbol or a non-JSON file refuses the whole call, and nothing is written},
+  claim  = {An unknown symbol or a non-JSON file refuses the whole call, and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_refused_weights_file_leaves_the_state_byte_identical},
+}

@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import copy
+import re
 
 import pytest
 
@@ -21,6 +22,7 @@ _OLD_TICKS = 5
 _SET_TICKS = 9
 _ESCALATE = 16
 _QUIET = (3, 5, 15, 17, 32)
+_TWO_WEIGHTS = 2
 
 
 def _wp(sym: str, status: str = "ready", **extra: object) -> Rec:
@@ -379,3 +381,40 @@ def test_a_malformed_foreign_edge_is_refused(edge: str) -> None:
     """An empty repo, a missing or zero symbol, a space, or a comma-joined pair is refused."""
     with pytest.raises(ops.RefusedError, match="not W<n>"):
         ops.update(_state(), "W1", ops.Update(enables=(edge,)), _NOW)
+
+
+@pytest.mark.parametrize(
+    ("raw", "why"),
+    [
+        ({"W1": 1}, "a JSON list"),
+        (["W1"], "weights[0] is not an object"),
+        ([{"weight": 1}], "weights[0] has no string symbol"),
+        ([{"symbol": "W1", "weight": "1"}], "weights[0] W1: weight '1' is not an integer"),
+        ([{"symbol": "W1", "weight": True}], "weights[0] W1: weight True is not an integer"),
+        (
+            [{"symbol": "W1", "weight": 1}, {"symbol": "W1", "weight": 2}],
+            "weights name W1 more than once",
+        ),
+    ],
+)
+def test_a_malformed_weights_file_is_refused(raw: object, why: str) -> None:
+    """A non-list, a bad record or a repeated symbol refuses the whole file, naming why."""
+    with pytest.raises(ops.RefusedError, match=re.escape(why)):
+        ops.weights_from(raw)
+
+
+def test_set_weights_writes_nothing_when_one_symbol_is_unknown() -> None:
+    """An unknown symbol anywhere refuses before the first write: W1 keeps no weight."""
+    state = _state()
+    before = copy.deepcopy(state.waypoints)
+    with pytest.raises(ops.RefusedError, match="W9"):
+        ops.set_weights(state, [("W1", 5), ("W9", 1)], _NOW)
+    assert state.waypoints == before
+
+
+def test_set_weights_stores_every_weight_and_is_not_work() -> None:
+    """Every named waypoint gets its weight, and none is stamped as worked (W117)."""
+    state = _state()
+    assert ops.set_weights(state, [("W1", 5), ("W2", -1)], _NOW) == _TWO_WEIGHTS
+    stored = {str(w["symbol"]): (w.get("weight"), "last_worked" in w) for w in state.waypoints}
+    assert stored == {"W1": (5, False), "W2": (-1, False)}

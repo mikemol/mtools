@@ -21,7 +21,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import TYPE_CHECKING
+from itertools import starmap
+from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward import lock
 from mikemol.pathsforward.model import (
@@ -272,6 +273,83 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
     w.clear()
     w.update(new)
     return w
+
+
+def _pair(i: int, rec: object) -> tuple[str, int]:
+    """Read one `{symbol, weight}` record of a weights file.
+
+    Returns:
+        the (symbol, weight) pair.
+
+    Raises:
+        RefusedError: naming the record's index, on any other shape.
+
+    """
+    if not isinstance(rec, dict):
+        msg = f"weights[{i}] is not an object"
+        raise RefusedError(msg)
+    fields = cast("dict[str, object]", rec)
+    sym, value = fields.get("symbol"), fields.get("weight")
+    if not isinstance(sym, str) or not sym:
+        msg = f"weights[{i}] has no string symbol"
+        raise RefusedError(msg)
+    if not isinstance(value, int) or isinstance(value, bool):
+        msg = f"weights[{i}] {sym}: weight {value!r} is not an integer"
+        raise RefusedError(msg)
+    return sym, value
+
+
+def weights_from(raw: object) -> list[tuple[str, int]]:
+    """Parse a weights file's document: a list of `{symbol, weight}` objects.
+
+    ⚑ A SYMBOL NAMED TWICE IS REFUSED: which of two weights the file meant is not ours to guess,
+    and last-one-wins would make the file's order a silent input.
+
+    Returns:
+        the (symbol, weight) pairs in file order.
+
+    Raises:
+        RefusedError: on a non-list, a malformed record, or a repeated symbol.
+
+    """
+    if not isinstance(raw, list):
+        msg = "a weights file is a JSON list of {symbol, weight} objects"
+        raise RefusedError(msg)
+    pairs = list(starmap(_pair, enumerate(cast("list[object]", raw))))
+    syms = [sym for sym, _ in pairs]
+    repeated = sorted({sym for sym in syms if syms.count(sym) > 1})
+    if repeated:
+        msg = f"weights name {', '.join(repeated)} more than once"
+        raise RefusedError(msg)
+    return pairs
+
+
+def set_weights(state: State, pairs: list[tuple[str, int]], now: str) -> int:
+    """Store every weight, or none: each symbol is resolved before the first write.
+
+    ⚑ ALL OR NOTHING (nemik:W43): a sync that wrote half its weights and then hit an unknown
+    symbol leaves a queue ordered by two different rankings at once, with nothing to say so.
+    Weights are metadata, so `last_worked` is untouched (W117).
+
+    Returns:
+        how many waypoints were written.
+
+    Raises:
+        RefusedError: naming every symbol that is not live, before anything is written.
+
+    """
+    unknown: list[str] = []
+    for sym, _ in pairs:
+        try:
+            find(state, sym)
+        except RefusedError:
+            unknown.append(sym)
+    if unknown:
+        msg = f"weights name {', '.join(unknown)}, which are not live waypoints; nothing written"
+        raise RefusedError(msg)
+    for sym, value in pairs:
+        update(state, sym, Update(weight=value), now)
+    return len(pairs)
 
 
 def add(state: State, draft: Draft, now: str) -> str:

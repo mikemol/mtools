@@ -67,6 +67,7 @@ _VALUED = (
     "ledger",
     "show",
     "preamble_set",
+    "weights_from",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -223,6 +224,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     mode.add_argument("--show", metavar="SYMBOL", help="what is W<n>")
     mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
+    mode.add_argument(
+        "--weights-from",
+        metavar="FILE",
+        help="store [{symbol, weight}] from a JSON file, all or nothing",
+    )
     ap.add_argument("--status", choices=STATUSES)
     ap.add_argument("--blocked-on", nargs="*", metavar="WHO")
     ap.add_argument("--blocked-kind", choices=BLOCKED_KINDS)
@@ -636,6 +642,35 @@ def _preamble_set(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _weights_from(ctx: Ctx) -> int:
+    """Store a file's weights in one write, or refuse the whole file.
+
+    ⚑ PARSED BEFORE THE LOCK, APPLIED UNDER IT: a malformed file is refused without ever
+    touching the state, and a well-formed one is still judged whole against the live queue.
+
+    Returns:
+        EXIT_OK.
+
+    Raises:
+        RefusedError: on a file that is not JSON (the other refusals come from `ops`).
+
+    """
+    source = Path(ctx.get("weights_from") or "")
+    try:
+        raw = cast("object", json.loads(source.read_text(encoding="utf-8")))
+    except json.JSONDecodeError as exc:
+        msg = f"{source}: not JSON ({exc.msg}, line {exc.lineno})"
+        raise ops.RefusedError(msg) from exc
+    pairs = ops.weights_from(raw)
+
+    def edit(state: State) -> int:
+        count = ops.set_weights(state, pairs, ctx.stamp())
+        _say(f"weights set: {count}; state_hash={v2(state.waypoints)}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _preamble_clear(ctx: Ctx) -> int:
     """Remove the preamble.
 
@@ -700,6 +735,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "preamble_set": _preamble_set,
     "preamble_clear": _preamble_clear,
     "init": _init,
+    "weights_from": _weights_from,
 }
 
 

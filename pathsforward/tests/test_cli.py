@@ -632,3 +632,25 @@ def test_update_weight_stores_it_and_reorders_the_queue(
 def test_weight_is_refused_outside_update(tmp_path: Path) -> None:
     """--weight on --add is a stray flag: accepted in silence it would be a write that never was."""
     assert _run(_file(tmp_path), "--add", "t", "--weight", "1") != _OK
+
+
+def test_weights_from_sets_them_in_one_call(tmp_path: Path) -> None:
+    """--weights-from stores each weight, so W2 then sorts first."""
+    path = _file(tmp_path)
+    src = tmp_path / "w.json"
+    src.write_text('[{"symbol": "W2", "weight": 3}, {"symbol": "W1", "weight": 1}]')
+    assert _run(path, "--weights-from", str(src)) == _OK
+    assert [w.get("weight") for w in cast("list[Rec]", _doc(path)["waypoints"])] == [1, 3]
+
+
+@pytest.mark.parametrize(
+    "body", ['[{"symbol": "W1", "weight": 2}, {"symbol": "W9", "weight": 1}]', "not json"]
+)
+def test_a_refused_weights_file_leaves_the_state_byte_identical(tmp_path: Path, body: str) -> None:
+    """An unknown symbol or a non-JSON file refuses the whole call, and nothing is written."""
+    path = _file(tmp_path)
+    before = path.read_bytes()
+    src = tmp_path / "w.json"
+    src.write_text(body)
+    assert _run(path, "--weights-from", str(src)) == _REFUSED
+    assert path.read_bytes() == before
