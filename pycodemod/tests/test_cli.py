@@ -611,6 +611,26 @@ def test_commentary_over_an_unreadable_file_reports_incomplete(tmp_path: Path) -
     assert code == 1
 
 
+def test_discards_splits_a_bare_call_from_a_used_one(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`discards` reports a bare-statement call as dropped and an assigned one as used."""
+    target = tmp_path / "m.py"
+    target.write_text("def f():\n    return 1\n\n\nf()\nx = f()\n", encoding="utf-8")
+    code = cli.main(["discards", "f", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "discards dropped " in out
+    assert "1 dropped, 1 used" in out
+
+
+def test_discards_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `discards` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    assert cli.main(["discards", "f", str(target)]) == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

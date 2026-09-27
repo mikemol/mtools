@@ -2148,3 +2148,17 @@
   claim  = {A file that cannot be read makes `commentary` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_over_an_unreadable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-discards-splits-a-bare-call-from-a-used-one,
+  section = {cli},
+  title  = {`discards` reports a bare-statement call as dropped and an assigned one as used},
+  claim  = {`discards` reports a bare-statement call as dropped and an assigned one as used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_discards_splits_a_bare_call_from_a_used_one},
+}
+
+@misc{pycodemod-cli-discards-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `discards` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `discards` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_discards_over_an_unparseable_file_reports_incomplete},
+}

@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `commentary` (`commentary.commentary_census`) to the thirty modes already wired:
+slice adds `discards` (`discards.discards`) to the thirty-one modes already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -17,7 +17,8 @@ slice adds `commentary` (`commentary.commentary_census`) to the thirty modes alr
 (`arguments.guarded`), `key-reads` (`strings.key_reads`), `bindings`
 (`definitions.bindings`), `aliases` (`aliases.aliases`), `funcnames`
 (`funcnames.funcnames`), `size` (`size.module_sizes`), `deps` (`deps.import_census`), `crossings`
-(`crossings.crossings`) and `shapes` (`shapes.shape_sites`).
+(`crossings.crossings`), `shapes` (`shapes.shape_sites`) and `commentary`
+(`commentary.commentary_census`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -55,6 +56,7 @@ from mikemol.pycodemod.crossings import crossings as run_crossings
 from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.definitions import bindings as run_bindings
 from mikemol.pycodemod.deps import ManifestError, import_census
+from mikemol.pycodemod.discards import discards as run_discards
 from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
@@ -394,6 +396,18 @@ def _handle_size(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_discards(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_discards(_str(ns, "name"), paths)
+    for label, rows in (("dropped", result.dropped), ("used", result.using)):
+        for path, line, col in rows:
+            sys.stdout.write(f"discards {label} {path}:{line}:{col}\n")
+    sys.stdout.write(f"discards: {len(result.dropped)} dropped, {len(result.using)} used\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_commentary(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     marks = _opt_str_list(ns, "mark") or COMMENTARY_MARKS
@@ -688,6 +702,7 @@ MODES = {
     "crossings": _handle_crossings,
     "shapes": _handle_shapes,
     "commentary": _handle_commentary,
+    "discards": _handle_discards,
 }
 
 
@@ -740,6 +755,9 @@ def _add_named_modes(make: _Make) -> None:
     imp = make("importers", "every import of `module`, and the names taken")
     imp.add_argument("module")
     imp.add_argument("paths", nargs="+")
+    dis = make("discards", "every call of a name, split by whether its value is dropped")
+    dis.add_argument("name")
+    dis.add_argument("paths", nargs="+")
     shp = make("shapes", "every code line matching a regex (comments and docstrings excluded)")
     shp.add_argument("--anywhere", action="store_true", help="match comments and docstrings too")
     shp.add_argument("pattern")
