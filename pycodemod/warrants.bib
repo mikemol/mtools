@@ -2268,3 +2268,17 @@
   claim  = {A file that fails to parse makes `source-of` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_source_of_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-alias-hint-finds-a-renamed-import-call,
+  section = {cli},
+  title  = {`alias-hint` reports a call that reaches a name only through `from lib import f as g`},
+  claim  = {`alias-hint` reports a call that reaches a name only through `from lib import f as g`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_alias_hint_finds_a_renamed_import_call},
+}
+
+@misc{pycodemod-cli-alias-hint-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unparseable population file is one skip: the later passes only read what parsed},
+  claim  = {An unparseable population file is one skip: the later passes only read what parsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_alias_hint_over_an_unparseable_file_reports_incomplete},
+}

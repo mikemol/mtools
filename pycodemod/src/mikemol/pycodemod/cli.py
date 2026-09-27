@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `source-of` (`definitions.source_of`) to the thirty-eight modes already wired:
+slice adds `alias-hint` (`hints.alias_hint`) to the thirty-nine modes already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -21,7 +21,8 @@ slice adds `source-of` (`definitions.source_of`) to the thirty-eight modes alrea
 (`commentary.commentary_census`), `discards` (`discards.discards`), `forwards`
 (`arguments.forwards`), `asserted` (`arguments.asserted`), `values`
 (`arguments.values`), `literals` (`strings.literal_sites`), `commentary-kinds`
-(`commentary.commentary_kinds`) and `commentary-blocks` (`commentary.commentary_blocks`).
+(`commentary.commentary_kinds`), `commentary-blocks` (`commentary.commentary_blocks`) and
+`source-of` (`definitions.source_of`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -73,6 +74,7 @@ from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
 from mikemol.pycodemod.graph import DEPTH, callgraph, reaches, verdict_returners
+from mikemol.pycodemod.hints import alias_hint
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.layout import layout as run_layout
@@ -419,6 +421,19 @@ def _handle_key_reads(ns: argparse.Namespace) -> int:
     result = key_reads(paths, _str(ns, "key"))
     for row in result.rows:
         sys.stdout.write(f"key {row.kind} {row.path}:{row.line} ({row.context})\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
+def _handle_alias_hint(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = alias_hint(_str(ns, "name"), _str_list(ns, "defs"), paths)
+    for row in result.rows:
+        aliases = ",".join(row.aliases)
+        modules = ",".join(row.modules)
+        sys.stdout.write(f"alias-hint {row.path}:{row.line} via={aliases} from={modules}\n")
+    sys.stdout.write(f"alias-hint sites={len(result.rows)}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -837,6 +852,7 @@ MODES = {
     "literals": _handle_literals,
     "bindings": _handle_bindings,
     "source-of": _handle_source_of,
+    "alias-hint": _handle_alias_hint,
     "aliases": _handle_aliases,
     "funcnames": _handle_funcnames,
     "size": _handle_size,
@@ -911,6 +927,16 @@ def _add_named_modes(make: _Make) -> None:
     src = make("source-of", "the source of every def or class with a bare name, decorators on")
     src.add_argument("name")
     src.add_argument("paths", nargs="+")
+    hnt = make("alias-hint", "sites that reach a name through an aliased import")
+    hnt.add_argument("name")
+    hnt.add_argument(
+        "--def",
+        dest="defs",
+        action="append",
+        required=True,
+        help="a file defining the name (repeatable)",
+    )
+    hnt.add_argument("paths", nargs="+")
     attr = make("attr-reads", "reads of `.name`, or `Recv.*` off `Recv`")
     attr.add_argument("query", help="`name`, or `Recv.*` for every attribute off Recv")
     attr.add_argument("paths", nargs="+")

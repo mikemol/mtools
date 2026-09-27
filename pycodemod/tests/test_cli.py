@@ -805,6 +805,36 @@ def test_source_of_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -
     assert code == 1
 
 
+def test_alias_hint_finds_a_renamed_import_call(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`alias-hint` reports a call that reaches a name only through `from lib import f as g`."""
+    lib = tmp_path / "lib.py"
+    lib.write_text("def f():\n    return 1\n", encoding="utf-8")
+    use = tmp_path / "use.py"
+    use.write_text("from lib import f as g\n\ng()\n", encoding="utf-8")
+    code = cli.main(["alias-hint", "f", "--def", str(lib), str(use)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"alias-hint {use}:3 via=f as g from=lib" in out
+    assert "alias-hint sites=1" in out
+
+
+def test_alias_hint_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unparseable population file is one skip: the later passes only read what parsed."""
+    lib = tmp_path / "lib.py"
+    lib.write_text("def f():\n    return 1\n", encoding="utf-8")
+    bad = tmp_path / "bad.py"
+    bad.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["alias-hint", "f", "--def", str(lib), str(bad)])
+    captured = capsys.readouterr()
+    banner = captured.out + captured.err
+    assert code == 1
+    assert "read 0 of 1 file(s); 1 skipped" in banner
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])
