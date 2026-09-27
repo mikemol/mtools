@@ -817,3 +817,7 @@ W82 LANDED (2026-09-27): `commentary-lost --rev R --root ROOT paths...` wired ov
 rows `lost <origins> <text>`, `gained <text>`, `absent-before <rel>`, then a before=/after= count.
 Bad rev exits 2 like owes; unread files use the merged _UNREAD reason (escapes' residue, W86's
 shape). 2 tests, 2 warrants, rubric "Eighteen Modes". 350 pass, clean.
+
+W58 LANDED (2026-09-27): `ambient --root ROOT paths...` wired; row `ambient <verdict> <kind>
+<path>:<line> <shown> (<context>)`, skips and population through report.incomplete. 2 tests, 2
+warrants, rubric "Nineteen Modes". 352 pass, clean.

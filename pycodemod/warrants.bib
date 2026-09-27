@@ -1951,3 +1951,17 @@
   claim  = {A bad revision is refused, never read as a baseline where every file is new.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_lost_refuses_a_bad_revision_with_exit_2},
 }
+
+@misc{pycodemod-cli-ambient-reports-an-unanchored-open,
+  section = {cli},
+  title  = {`ambient --root` reports a relative open() against the root, with its denominator},
+  claim  = {`ambient --root` reports a relative open() against the root, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_ambient_reports_an_unanchored_open},
+}
+
+@misc{pycodemod-cli-ambient-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `ambient` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `ambient` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_ambient_over_an_unparseable_file_reports_incomplete},
+}

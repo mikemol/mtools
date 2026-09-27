@@ -4,15 +4,15 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `commentary-lost` (`commentary.commentary_lost` over `owes.git_show`) to the
-seventeen modes already wired: `calls`
+slice adds `ambient` (`ambient.ambient`) to the eighteen modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
 (`placement.disagreement`), `placement` (`placement.placement`, default forms) and
 `modstate` (`modstate.module_state`), `layout` (`layout.layout`), `collisions`
 (`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`),
-`catchers` (`exit.catchers`) and `interlock` (`exit.interlock`).
+`catchers` (`exit.catchers`), `interlock` (`exit.interlock`) and `commentary-lost`
+(`commentary.commentary_lost` over `owes.git_show`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
+from mikemol.pycodemod.ambient import ambient as run_ambient
 from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.dead import dead as run_dead
@@ -260,6 +261,18 @@ def _handle_commentary_lost(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_ambient(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_ambient(paths, Path(_str(ns, "root")))
+    for row in result.rows:
+        sys.stdout.write(
+            f"ambient {row.verdict} {row.kind} {row.path}:{row.line} {row.shown} ({row.context})\n"
+        )
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], result.population)
+    _write_lines(lines)
+    return code
+
+
 def _handle_dead(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     sites = scan(paths)
@@ -436,6 +449,7 @@ MODES = {
     "catchers": _handle_catchers,
     "interlock": _handle_interlock,
     "commentary-lost": _handle_commentary_lost,
+    "ambient": _handle_ambient,
 }
 
 
@@ -472,6 +486,9 @@ def _build_parser() -> argparse.ArgumentParser:
     lost.add_argument("--rev", required=True, help="the baseline git revision")
     lost.add_argument("--root", required=True, help="the repo root the paths are under")
     lost.add_argument("paths", nargs="+")
+    amb = sub.add_parser("ambient", help="filesystem-resolving calls not anchored to a root")
+    amb.add_argument("--root", required=True, help="the tree whose subtrees anchor paths")
+    amb.add_argument("paths", nargs="+")
 
     dead = sub.add_parser("dead", help="defs nothing in the corpus calls or uses")
     dead.add_argument("paths", nargs="+")

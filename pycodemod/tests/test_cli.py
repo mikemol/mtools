@@ -343,6 +343,22 @@ def test_commentary_lost_refuses_a_bad_revision_with_exit_2(tmp_path: Path) -> N
     assert cli.main(args) == _REFUSED
 
 
+def test_ambient_reports_an_unanchored_open(tmp_path: Path) -> None:
+    """`ambient --root` reports a relative open() against the root, with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text('open("data.txt")\n', encoding="utf-8")
+    code = cli.main(["ambient", "--root", str(tmp_path), str(target)])
+    assert code == 0
+
+
+def test_ambient_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `ambient` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["ambient", "--root", str(tmp_path), str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""
