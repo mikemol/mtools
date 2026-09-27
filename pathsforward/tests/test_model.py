@@ -9,8 +9,11 @@ import pytest
 from mikemol.pathsforward.model import (
     MalformedStateError,
     State,
+    describe_rank,
     foreign_symbol,
     is_reference,
+    leverage,
+    ordered,
     strlist,
     symbol_number,
     text,
@@ -21,6 +24,51 @@ from mikemol.pathsforward.model import (
 _SEVEN = 7
 _THREE = 3
 _FIFTY_FIVE = 55
+_THREE_LEVERAGE = 3
+
+
+def test_leverage_counts_enables_plus_in_degree_of_blocked_on() -> None:
+    """A waypoint's leverage is its own `enables` count plus who names it in `blocked_on`."""
+    w1: dict[str, object] = {"symbol": "W1", "blocked_on": ["W2"]}
+    w2: dict[str, object] = {"symbol": "W2", "enables": ["nemik:W20"]}
+    w3: dict[str, object] = {"symbol": "W3", "blocked_on": ["W2"]}
+    waypoints = [w1, w2, w3]
+    assert leverage(w2, waypoints) == _THREE_LEVERAGE
+
+
+def test_leverage_is_zero_with_no_enables_or_blockers() -> None:
+    """A waypoint nobody names and that names nothing itself scores zero."""
+    w1: dict[str, object] = {"symbol": "W1"}
+    assert leverage(w1, [w1]) == 0
+
+
+def test_describe_rank_names_unblocks_and_enables() -> None:
+    """A waypoint that unblocks another and enables a third names both, never overwriting."""
+    w1: dict[str, object] = {"symbol": "W1", "blocked_on": ["W2"]}
+    w2: dict[str, object] = {"symbol": "W2", "enables": ["nemik:W20"]}
+    waypoints = [w1, w2]
+    assert describe_rank(w2, waypoints) == "unblocks W1; enables nemik:W20"
+
+
+def test_describe_rank_is_sweep_with_no_edges() -> None:
+    """A waypoint with no `enables` and no one blocked on it reads as a sweep item."""
+    w1: dict[str, object] = {"symbol": "W1"}
+    reason = describe_rank(w1, [w1])
+    assert reason == "sweep: enables nothing, unblocks nothing"
+
+
+def test_ordered_ranks_higher_leverage_first_within_a_bucket() -> None:
+    """Within one status bucket, the waypoint with more leverage sorts first, not file order."""
+    low: dict[str, object] = {"symbol": "W1", "status": "ready"}
+    high: dict[str, object] = {"symbol": "W2", "status": "ready", "enables": ["W3"]}
+    assert [text(w, "symbol") for w in ordered([low, high])] == ["W2", "W1"]
+
+
+def test_ordered_preserves_file_order_when_leverage_ties() -> None:
+    """Zero-leverage waypoints in the same bucket keep their file order (stable sort)."""
+    a: dict[str, object] = {"symbol": "W1", "status": "ready"}
+    b: dict[str, object] = {"symbol": "W2", "status": "ready"}
+    assert [text(w, "symbol") for w in ordered([a, b])] == ["W1", "W2"]
 
 
 def test_a_foreign_symbol_parses_to_its_repo_and_number() -> None:

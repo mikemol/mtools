@@ -1418,3 +1418,45 @@
             rosettapkg, 2026-09-26).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_ledger_dash_writes_the_queue_level_symbol},
 }
+
+@misc{pathsforward-model-leverage-counts-enables-plus-in-degree-of-blocked-on,
+  section = {model},
+  title  = {A waypoint's leverage is its own `enables` count plus who names it in `blocked_on`},
+  claim  = {A waypoint's leverage is its own `enables` count plus who names it in `blocked_on`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_leverage_counts_enables_plus_in_degree_of_blocked_on},
+}
+
+@misc{pathsforward-model-leverage-is-zero-with-no-enables-or-blockers,
+  section = {model},
+  title  = {A waypoint nobody names and that names nothing itself scores zero},
+  claim  = {A waypoint nobody names and that names nothing itself scores zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_leverage_is_zero_with_no_enables_or_blockers},
+}
+
+@misc{pathsforward-model-describe-rank-names-unblocks-and-enables,
+  section = {model},
+  title  = {A waypoint that unblocks another and enables a third names both, never overwriting},
+  claim  = {A waypoint that unblocks another and enables a third names both, never overwriting.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_describe_rank_names_unblocks_and_enables},
+}
+
+@misc{pathsforward-model-describe-rank-is-sweep-with-no-edges,
+  section = {model},
+  title  = {A waypoint with no `enables` and no one blocked on it reads as a sweep item},
+  claim  = {A waypoint with no `enables` and no one blocked on it reads as a sweep item.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_describe_rank_is_sweep_with_no_edges},
+}
+
+@misc{pathsforward-model-ordered-ranks-higher-leverage-first-within-a-bucket,
+  section = {model},
+  title  = {Within one status bucket, the waypoint with more leverage sorts first, not file order},
+  claim  = {Within one status bucket, the waypoint with more leverage sorts first, not file order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_ordered_ranks_higher_leverage_first_within_a_bucket},
+}
+
+@misc{pathsforward-model-ordered-preserves-file-order-when-leverage-ties,
+  section = {model},
+  title  = {Zero-leverage waypoints in the same bucket keep their file order (stable sort)},
+  claim  = {Zero-leverage waypoints in the same bucket keep their file order (stable sort).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_ordered_preserves_file_order_when_leverage_ties},
+}

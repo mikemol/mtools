@@ -177,18 +177,84 @@ def _rank(w: Json) -> int:
     return _RANK.get(text(w, "status"), len(_RANK))
 
 
+def _blockers_of(sym: str, waypoints: list[Json]) -> list[str]:
+    """Find every other waypoint whose `blocked_on` names `sym`.
+
+    Returns:
+        the blocked waypoints' own symbols, in file order.
+
+    """
+    return [
+        text(other, "symbol") for other in waypoints if sym and sym in strlist(other, "blocked_on")
+    ]
+
+
+def leverage(w: Json, waypoints: list[Json]) -> int:
+    """Score a waypoint's structural leverage: what it enables, plus who it unblocks.
+
+    ⚑ OUT-DEGREE OF `enables` PLUS IN-DEGREE OF `blocked_on` (skill section 3's starting shape).
+    A foreign `enables` target (`repo:W<n>`) counts exactly like a local one — a waypoint that
+    unblocks another repo is not less of a lever for the edge being cross-repo.
+
+    Returns:
+        the leverage score; higher sorts earlier within a status bucket.
+
+    """
+    sym = text(w, "symbol")
+    return len(strlist(w, "enables")) + len(_blockers_of(sym, waypoints))
+
+
+def describe_rank(w: Json, waypoints: list[Json]) -> str:
+    """State one waypoint's leverage in the skill's own vocabulary (collapse/unblock/sweep).
+
+    ⚑ THIS NEVER WRITES `rank_reason` — a manually-set value in the state file is left alone by
+    every view that only reads it. This is a pure, on-demand description for a view that has none
+    stored, not a recomputation of one that does.
+
+    Returns:
+        "unblocks ...", "enables ...", both joined, or "sweep: ..." when neither applies.
+
+    """
+    sym = text(w, "symbol")
+    enables = strlist(w, "enables")
+    unblocks = _blockers_of(sym, waypoints)
+    parts = []
+    if unblocks:
+        parts.append(f"unblocks {', '.join(unblocks)}")
+    if enables:
+        parts.append(f"enables {', '.join(enables)}")
+    return "; ".join(parts) if parts else "sweep: enables nothing, unblocks nothing"
+
+
 def ordered(waypoints: list[Json]) -> list[Json]:
-    """Order waypoints working, ready, blocked, then any other status; each group in file order.
+    """Order waypoints working, ready, blocked, then any other status.
 
     ⚑ ONE ORDER FOR EVERY VIEW: the payload, `--queue` and the mirror all call this, so the three
     cannot disagree about what comes first. A blocked W22 listed above a ready W24 put a tick's
     attention on the item it cannot work. The payload then hides `done`; the views keep it last.
 
+    ⚑ WITHIN A STATUS BUCKET, higher `leverage` sorts first (skill section 3: unblock/collapse
+    over sweep). Ties — the common case, since most waypoints touch no local `enables`/
+    `blocked_on` edge — fall back to file order: the index is folded into the key itself, since
+    two waypoints (plain `dict`s) are not otherwise orderable once their keys tie.
+
     Returns:
-        the waypoints, stably sorted by status rank.
+        the waypoints, stably sorted by (status rank, -leverage, file order).
 
     """
-    return sorted(waypoints, key=_rank)
+    keyed = [((_rank(w), -leverage(w, waypoints), i), w) for i, w in enumerate(waypoints)]
+    keyed.sort(key=_first)
+    return [w for _, w in keyed]
+
+
+def _first(pair: tuple[tuple[int, int, int], Json]) -> tuple[int, int, int]:
+    """Read a `(key, waypoint)` pair's key, for `list.sort`.
+
+    Returns:
+        the key.
+
+    """
+    return pair[0]
 
 
 def ticks(rec: Json) -> int:
