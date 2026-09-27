@@ -2092,3 +2092,17 @@
   claim  = {A file that cannot be read makes `size` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_size_over_an_unreadable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-deps-grades-an-import-against-the-manifest,
+  section = {cli},
+  title  = {`deps --manifest` grades each top-level import, with its denominator},
+  claim  = {`deps --manifest` grades each top-level import, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_deps_grades_an_import_against_the_manifest},
+}
+
+@misc{pycodemod-cli-deps-refuses-an-unreadable-manifest,
+  section = {cli},
+  title  = {A manifest that cannot be read refuses with exit 2; nothing is graded against a guess},
+  claim  = {A manifest that cannot be read refuses with exit 2; nothing is graded against a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_deps_refuses_an_unreadable_manifest},
+}

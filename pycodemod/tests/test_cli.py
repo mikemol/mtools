@@ -533,6 +533,27 @@ def test_size_over_an_unreadable_file_reports_incomplete(tmp_path: Path) -> None
     assert code == 1
 
 
+def test_deps_grades_an_import_against_the_manifest(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`deps --manifest` grades each top-level import, with its denominator."""
+    manifest = tmp_path / "pyproject.toml"
+    manifest.write_text('[project]\nname = "x"\ndependencies = []\n', encoding="utf-8")
+    target = tmp_path / "m.py"
+    target.write_text("import os\n", encoding="utf-8")
+    code = cli.main(["deps", "--manifest", str(manifest), str(target)])
+    assert code == 0
+    assert "dep " in capsys.readouterr().out
+
+
+def test_deps_refuses_an_unreadable_manifest(tmp_path: Path) -> None:
+    """A manifest that cannot be read refuses with exit 2; nothing is graded against a guess."""
+    target = tmp_path / "m.py"
+    target.write_text("import os\n", encoding="utf-8")
+    code = cli.main(["deps", "--manifest", str(tmp_path / "absent.toml"), str(target)])
+    assert code == _REFUSED
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

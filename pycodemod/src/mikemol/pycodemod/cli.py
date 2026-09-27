@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `size` (`size.module_sizes`) to the twenty-six modes already wired: `calls`
+slice adds `deps` (`deps.import_census`) to the twenty-seven modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -15,8 +15,8 @@ slice adds `size` (`size.module_sizes`) to the twenty-six modes already wired: `
 (`commentary.commentary_lost` over `owes.git_show`), `ambient` (`ambient.ambient`) and
 `callgraph` (`graph.callgraph`), `reaches` (`graph.reaches`), `guarded`
 (`arguments.guarded`), `key-reads` (`strings.key_reads`), `bindings`
-(`definitions.bindings`), `aliases` (`aliases.aliases`) and `funcnames`
-(`funcnames.funcnames`).
+(`definitions.bindings`), `aliases` (`aliases.aliases`), `funcnames`
+(`funcnames.funcnames`) and `size` (`size.module_sizes`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -50,6 +50,7 @@ from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.definitions import bindings as run_bindings
+from mikemol.pycodemod.deps import ManifestError, import_census
 from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
@@ -388,6 +389,20 @@ def _handle_size(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_deps(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    try:
+        result = import_census(paths, Path(_str(ns, "manifest")), _opt_str_list(ns, "vendored"))
+    except ManifestError as exc:
+        sys.stdout.write(f"refused: {exc}\n")
+        return _REFUSED
+    for row in result.rows:
+        sys.stdout.write(f"dep {row.verdict} {row.module} files={row.files} e.g. {row.example}\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_owes(ns: argparse.Namespace) -> int:
     name = _str(ns, "name")
     rev = _str(ns, "rev")
@@ -624,6 +639,7 @@ MODES = {
     "aliases": _handle_aliases,
     "funcnames": _handle_funcnames,
     "size": _handle_size,
+    "deps": _handle_deps,
 }
 
 
@@ -686,6 +702,10 @@ def _add_flagged_modes(make: _Make) -> None:
     siz = make("size", "every module's code lines against its cap")
     siz.add_argument("--base", type=int, default=OVERLARGE_LINES, help="the base cap")
     siz.add_argument("paths", nargs="+")
+    dep = make("deps", "every top-level import, graded against a pyproject manifest")
+    dep.add_argument("--manifest", required=True, help="the pyproject.toml to grade against")
+    dep.add_argument("--vendored", action="append", help="a path fragment marking vendored")
+    dep.add_argument("paths", nargs="+")
 
 
 def _add_rooted_modes(make: _Make) -> None:
