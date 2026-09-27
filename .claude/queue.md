@@ -850,3 +850,11 @@ W64 LANDED (2026-09-27): `aliases [--all-modules] [--local HEAD]... paths...` wi
 a list default types as list[Any] under disallow_any_expr -- so --local defaults to None and
 _opt_str_list reads None as empty. 3 tests (one exercises --local), 3 warrants, rubric
 "Twenty-Five Modes". 365 pass, clean.
+
+W65 LANDED (2026-09-27): `funcnames paths...` wired (paths-only row); row `funcname <kind> <name>
+<caller> <path>:<line>`. funcnames is imported under a try/except ImportError in cli.py so the
+driver runs without the sqlalchemy extra; absent, the mode prints the ImportError's words and
+exits 2, and RegistryMovedError also exits 2. ordering.py's stale "NOT PORTED HERE: funcnames"
+docstring corrected (W54's residue). 3 tests, 3 warrants, rubric "Twenty-Six Modes". 368 pass.
+⚑ Residue: the missing-extra test monkeypatches `_run_funcnames`; the real import-failure path in
+cli.py is not exercised (the dev venv always has sqlalchemy).

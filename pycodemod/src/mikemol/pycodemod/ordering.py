@@ -21,9 +21,8 @@ mapping union) counts; `lst += more` is missed, and that under-report is stated.
 ⚑ A BUILDER MAY BE QUALIFIED (`collections.Counter(...)`); contexts are class-qualified; a
 visitor bug raises instead of reading as a skipped file.
 
-⚑ NOT PORTED HERE: `funcnames`, which grades SQLAlchemy `func.<name>` calls against SQLAlchemy's
-private registry — that would make SQLAlchemy a runtime dependency of a general Python tool. It
-waits on that decision (.claude/queue.md).
+⚑ `funcnames` IS NOT HERE: it lives in its own module (`funcnames.py`) behind the optional
+`sqlalchemy` extra, so SQLAlchemy never becomes a runtime dependency of this one.
 """
 
 from __future__ import annotations

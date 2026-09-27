@@ -4,7 +4,8 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `aliases` (`aliases.aliases`) to the twenty-four modes already wired: `calls`
+slice adds `funcnames` (`funcnames.funcnames`) to the twenty-five modes already wired:
+`calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -14,8 +15,12 @@ slice adds `aliases` (`aliases.aliases`) to the twenty-four modes already wired:
 `catchers` (`exit.catchers`), `interlock` (`exit.interlock`) and `commentary-lost`
 (`commentary.commentary_lost` over `owes.git_show`), `ambient` (`ambient.ambient`) and
 `callgraph` (`graph.callgraph`), `reaches` (`graph.reaches`), `guarded`
-(`arguments.guarded`), `key-reads` (`strings.key_reads`) and `bindings`
-(`definitions.bindings`).
+(`arguments.guarded`), `key-reads` (`strings.key_reads`), `bindings`
+(`definitions.bindings`) and `aliases` (`aliases.aliases`).
+
+⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
+driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
+import error's own words and exit 2 — never an empty census.
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -63,10 +68,11 @@ from mikemol.pycodemod.strings import key_reads
 from mikemol.pycodemod.swallows import swallows as run_swallows
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
 
     from mikemol.pycodemod.core import Escape
     from mikemol.pycodemod.exit import Catcher, ExitRow, Interlock
+    from mikemol.pycodemod.funcnames import FuncCalls
     from mikemol.pycodemod.graph import VerdictDef
     from mikemol.pycodemod.imports import AttrRead, ImportRow
     from mikemol.pycodemod.layout import Group
@@ -79,6 +85,15 @@ if TYPE_CHECKING:
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
+
+_run_funcnames: Callable[[Sequence[str]], FuncCalls] | None
+_moved: type[Exception]
+try:
+    from mikemol.pycodemod.funcnames import RegistryMovedError, funcnames
+
+    _run_funcnames, _moved, _NO_EXTRA = funcnames, RegistryMovedError, ""
+except ImportError as _missing:
+    _run_funcnames, _moved, _NO_EXTRA = None, RuntimeError, str(_missing)
 _UNREAD = ("unread", "unreadable, undecodable or uncompilable")
 
 # ⚑ `--attr` and `--importers` are WIRED, as `attr-reads` and `importers` (W34): they stop being
@@ -340,6 +355,23 @@ def _handle_aliases(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_funcnames(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    if _run_funcnames is None:
+        sys.stdout.write(f"refused: {_NO_EXTRA}\n")
+        return _REFUSED
+    try:
+        result = _run_funcnames(paths)
+    except _moved as exc:
+        sys.stdout.write(f"refused: {exc}\n")
+        return _REFUSED
+    for row in result.rows:
+        sys.stdout.write(f"funcname {row.kind} {row.name} {row.caller} {row.path}:{row.line}\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_owes(ns: argparse.Namespace) -> int:
     name = _str(ns, "name")
     rev = _str(ns, "rev")
@@ -574,6 +606,7 @@ MODES = {
     "key-reads": _handle_key_reads,
     "bindings": _handle_bindings,
     "aliases": _handle_aliases,
+    "funcnames": _handle_funcnames,
 }
 
 
@@ -590,6 +623,7 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
     ("escapes", "string literals whose escape sequence does not exist"),
     ("catchers", "every handler that catches SystemExit, silent or re-raising"),
     ("callgraph", "every caller (file, scope) to each callee name it calls"),
+    ("funcnames", "every func.<name>() call, graded generic or verbatim by SQLAlchemy"),
     ("interlock", "every except Exception whose try body calls a name that can exit"),
 )
 

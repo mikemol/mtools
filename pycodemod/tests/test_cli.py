@@ -487,6 +487,33 @@ def test_aliases_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> 
     assert code == 1
 
 
+def test_funcnames_grades_a_func_call(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """`funcnames` grades a `func.count()` call generic, with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text("from sqlalchemy import func\nq = func.count()\n", encoding="utf-8")
+    code = cli.main(["funcnames", str(target)])
+    assert code == 0
+    assert "funcname generic count" in capsys.readouterr().out
+
+
+def test_funcnames_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `funcnames` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["funcnames", str(target)])
+    assert code == 1
+
+
+def test_funcnames_without_the_extra_refuses(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """With the sqlalchemy extra absent, `funcnames` refuses with exit 2, never an empty census."""
+    monkeypatch.setattr(cli, "_run_funcnames", None)
+    target = tmp_path / "m.py"
+    target.write_text("q = func.count()\n", encoding="utf-8")
+    assert cli.main(["funcnames", str(target)]) == _REFUSED
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""
