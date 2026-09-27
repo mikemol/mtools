@@ -500,13 +500,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_evidence_is_appended_with_its_date},
 }
 
-@misc{pathsforward-ops-update-stamps-last-worked,
-  section = {ops},
-  title  = {Every update stamps last_worked},
-  claim  = {Every update stamps last_worked.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_update_stamps_last_worked},
-}
-
 @misc{pathsforward-ops-add-mints-the-next-symbol,
   section = {ops},
   title  = {Adding mints W<counter+1> as ready and advances the counter},
@@ -1227,8 +1220,8 @@
 
 @misc{pathsforward-cli-update-replaces-a-stale-title,
   section = {cli},
-  title  = {--update --title replaces the title, stamps last_worked, and leaves the step alone},
-  claim  = {--update --title replaces the title, stamps last_worked, and leaves the step alone.},
+  title  = {--update --title replaces the title, leaves the step alone, and is not work},
+  claim  = {--update --title replaces the title, leaves the step alone, and is not work.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_replaces_a_stale_title},
 }
 
@@ -1602,4 +1595,18 @@
   claim  = {--weight on --add is a stray flag: accepted in silence it would be a write that never
             was.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_weight_is_refused_outside_update},
+}
+
+@misc{pathsforward-ops-work-update-stamps-last-worked,
+  section = {ops},
+  title  = {Status, blockers, the next step or evidence record work, so they stamp last_worked},
+  claim  = {Status, blockers, the next step or evidence record work, so they stamp last_worked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_work_update_stamps_last_worked},
+}
+
+@misc{pathsforward-ops-metadata-update-leaves-last-worked-alone,
+  section = {ops},
+  title  = {A weight, title, edge or counter write is not work: luthen's 49/49 sync rewrote it},
+  claim  = {A weight, title, edge or counter write is not work: luthen's 49/49 sync rewrote it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_metadata_update_leaves_last_worked_alone},
 }

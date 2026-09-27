@@ -155,9 +155,33 @@ def test_evidence_is_appended_with_its_date() -> None:
     assert w["evidence"] == f"{_DATE}: a | {_DATE}: b"
 
 
-def test_an_update_stamps_last_worked() -> None:
-    """Every update stamps last_worked."""
-    assert ops.update(_state(), "W1", ops.Update(), _NOW)["last_worked"] == _NOW
+@pytest.mark.parametrize(
+    "upd",
+    [
+        ops.Update(status="ready"),
+        ops.Update(next_step="n"),
+        ops.Update(evidence_append="e"),
+        ops.Update(blocked_on=("x",), blocked_kind="agent", status="blocked"),
+    ],
+)
+def test_a_work_update_stamps_last_worked(upd: ops.Update) -> None:
+    """Status, blockers, the next step or evidence record work, so they stamp last_worked."""
+    assert ops.update(_state(), "W1", upd, _NOW)["last_worked"] == _NOW
+
+
+@pytest.mark.parametrize(
+    "upd",
+    [
+        ops.Update(weight=3),
+        ops.Update(title="t"),
+        ops.Update(enables=()),
+        ops.Update(ticks_blocked=2),
+        ops.Update(),
+    ],
+)
+def test_a_metadata_update_leaves_last_worked_alone(upd: ops.Update) -> None:
+    """A weight, title, edge or counter write is not work: luthen's 49/49 sync rewrote it."""
+    assert "last_worked" not in ops.update(_state(), "W1", upd, _NOW)
 
 
 def test_add_mints_the_next_symbol() -> None:

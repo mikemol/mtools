@@ -203,6 +203,23 @@ def _set_given(new: Json, upd: Update) -> None:
     new.update({key: value for key, value in given.items() if value is not None})
 
 
+def _is_work(upd: Update) -> bool:
+    """Say whether an update records WORK on the item, as opposed to metadata about it.
+
+    ⚑ A METADATA WRITE IS NOT WORK (luthen via nemik, 2026-09-27): a per-tick `--weight` sync
+    rewrote `last_worked` on 49 of 49 items, erasing the age-since-worked that the loop and the
+    nudge backoff read. So `weight`, `title`, `enables` and `ticks_blocked` (bookkeeping the loop
+    itself keeps) leave the stamp alone. Status, blockers, the next step and evidence are the
+    fields a tick writes BECAUSE it worked the item.
+
+    Returns:
+        True when any work field is given.
+
+    """
+    given = (upd.status, upd.blocked_on, upd.blocked_kind, upd.next_step, upd.evidence_append)
+    return any(value is not None for value in given)
+
+
 def _applied(w: Json, upd: Update, now: str) -> Json:
     """Compute the waypoint an update produces, without touching the original.
 
@@ -229,7 +246,8 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         new["ticks_blocked"] = 0
     if upd.ticks_blocked is not None:
         new["ticks_blocked"] = upd.ticks_blocked
-    new["last_worked"] = now
+    if _is_work(upd):
+        new["last_worked"] = now
     return new
 
 

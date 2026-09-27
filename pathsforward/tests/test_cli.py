@@ -412,7 +412,7 @@ def test_the_ledger_kind_still_defaults_to_tick(tmp_path: Path) -> None:
 
 
 def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
-    """--update --title replaces the title, stamps last_worked, and leaves the step alone."""
+    """--update --title replaces the title, leaves the step alone, and is not work."""
     path = _file(tmp_path)
     code = _code(path, "--update", "W1", "--title", _NEW_TITLE)
     w = _first(path)
@@ -420,7 +420,7 @@ def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
         _OK,
         _NEW_TITLE,
         "s",
-        True,
+        False,
     )
 
 
