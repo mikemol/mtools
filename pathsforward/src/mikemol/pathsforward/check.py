@@ -212,6 +212,25 @@ def weights(state: State) -> list[str]:
     ]
 
 
+def witnessed_live(state: State) -> list[str]:
+    """Report a witnessed waypoint whose status says a mind should work it.
+
+    ⚑ A WITNESS DECIDES IT, NOT A TICK (nemik:W59, nemik:W64, 2026-09-27): its evaluator
+    (nemik-witnesses --apply) only ever moves it to done, so `ready` would make the loop pick it
+    and `working` claims a mind is on it. Convention: blocked, kind agent, on nemik-witnesses.
+
+    Returns:
+        one finding per witnessed waypoint that is ready or working.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: witnessed but {text(w, 'status')}; a witness, not a tick, "
+        "marks it done (block it on nemik-witnesses)"
+        for w in state.waypoints
+        if text(w, "witness") and text(w, "status") in {"ready", "working"}
+    ]
+
+
 def root(state: State) -> list[str]:
     """Report a `project_root` that is not an absolute, existing directory.
 
@@ -244,6 +263,7 @@ def check(state: State) -> list[str]:
         *blocked(state),
         *field_types(state),
         *weights(state),
+        *witnessed_live(state),
         *root(state),
     ]
 

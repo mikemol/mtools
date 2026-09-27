@@ -1723,3 +1723,10 @@
   claim  = {A witnessed waypoint shows its query line; an unwitnessed one is unchanged (W131).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_stanza_carries_the_witness_only_when_set},
 }
+
+@misc{pathsforward-check-witnessed-ready-or-working-item-is-found,
+  section = {check},
+  title  = {Ready or working with a witness is a finding; blocked or unwitnessed is not (W132)},
+  claim  = {Ready or working with a witness is a finding; blocked or unwitnessed is not (W132).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_witnessed_ready_or_working_item_is_found},
+}

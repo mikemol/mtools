@@ -271,3 +271,16 @@ def test_an_integer_or_absent_weight_is_not_found(tmp_path: Path) -> None:
     """A negative integer is a weight too, and an absent one is the default."""
     state = _state(tmp_path, waypoints=[_wp("W1", weight=-2), _wp("W2")])
     assert chk.weights(state) == []
+
+
+def test_a_witnessed_ready_or_working_item_is_found(tmp_path: Path) -> None:
+    """Ready or working with a witness is a finding; blocked or unwitnessed is not (W132)."""
+    q = "input.merged"
+    wps = [
+        _wp("W1", witness=q),
+        _wp("W2", "working", witness=q),
+        _wp("W4", "blocked", witness=q, blocked_on=["nemik-witnesses"], blocked_kind="agent"),
+        _wp("W5"),
+    ]
+    found = chk.witnessed_live(_state(tmp_path, waypoints=wps))
+    assert [f.split(":")[0] for f in found] == ["W1", "W2"]
