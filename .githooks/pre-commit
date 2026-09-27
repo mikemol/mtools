@@ -438,10 +438,28 @@ fi
 # `No module named 'mikemol.pathsforward.tags'` — the built venv predated the module — and passed
 # only after `bazel build //pathsforward:.venv` by hand. So every `//<dist>:.venv` is built here too,
 # from the same `$_dists` population the loop below walks; a cache hit when nothing changed.
+# ⚑⚑ THE VERDICT IS BAZEL'S AFFIRMATIVE LINE, NOT ITS EXIT STATUS — the suite stage's three-row
+# table below, applied here (W183). MEASURED 2026-09-27: with the BuildBuddy BES sink refusing TCP,
+# this build printed `INFO: Build completed successfully` and exited 38, and the old `if !` refused
+# every commit on infrastructure that has nothing to do with the tree. ⚑ POSITIVE, NOT "BEP upload
+# failed" PRESENT: a dead sink plus a broken target carries that line too, and fails here because
+# `bazel build` prints `Build completed successfully` only when EVERY requested target built.
+# There is no test tally in a build, so the success line is the whole conjunction; its negative
+# spelling `Build did NOT complete successfully` does not contain it (`complete`, not `completed`).
 _prebuild=(//ratchet:ratchet_cli)
 for _d in $_dists; do _prebuild+=("//$_d:.venv"); done
-if ! ( cd "$root" && git_scrubbed bazel build "${_prebuild[@]}" ) \
+if ( cd "$root" && git_scrubbed bazel build "${_prebuild[@]}" ) \
     >"$staged/.ratchet_cli.log" 2>&1; then
+  _prebuild_rc=0
+else
+  _prebuild_rc=$?
+fi
+if [ "$_prebuild_rc" -ne 0 ] && grep -q 'Build completed successfully' "$staged/.ratchet_cli.log"; then
+  say "⚑ bazel build exited $_prebuild_rc and reported SUCCESS — the build did not fail, something after it did"
+  sed -n 's/^ERROR: \(.*\)/    bazel said: \1/p' "$staged/.ratchet_cli.log" | head -2
+  _prebuild_rc=0
+fi
+if [ "$_prebuild_rc" -ne 0 ]; then
   say "bazel build ${_prebuild[*]} FAILED — the hooks suite would run a dead binary or a stale venv, commit refused"
   sed 's/^/    /' "$staged/.ratchet_cli.log" | tail -20
   record_refusal pre-commit " - //ratchet:ratchet_cli did not build"
