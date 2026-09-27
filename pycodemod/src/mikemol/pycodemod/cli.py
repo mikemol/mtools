@@ -4,9 +4,10 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice wires the first three modes — `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`) and
-`dead` (`dead.dead`) — plus every retired and DO-NOT-PORT origin flag as a subcommand that refuses
-instead of silently accepting an argv the tool no longer answers, or never answered.
+slice adds `attr-reads` (`imports.attr_reads`) and `importers` (`imports.importers`) — the two
+retired-spelling successors named in the DRIVER MODE MAP (W34) — alongside the three modes already
+wired: `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`) and `dead` (`dead.dead`). `attr` and
+`importers` therefore leave `RETIRED`, since they are real modes now, not redirects.
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -29,21 +30,22 @@ from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
 from mikemol.pycodemod.dead import dead as run_dead
+from mikemol.pycodemod.imports import attr_reads
+from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
 from mikemol.pycodemod.sites import Site, scan
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from mikemol.pycodemod.imports import AttrRead, ImportRow
+
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 
-# ⚑ A RETIRED SPELLING NAMES ITS SUCCESSOR MODE. Neither is wired yet in this slice (W34); the
-# redirect is honest about that rather than silent about the flag's disappearance.
-RETIRED = {
-    "attr": "retired — the successor is `imports attr_reads` (not yet wired; W34)",
-    "importers": "retired — the successor is `imports importers` (not yet wired; W34)",
-}
+# ⚑ `--attr` and `--importers` are WIRED, as `attr-reads` and `importers` (W34): they stop being
+# redirects and become real modes. Nothing else here is retired yet.
+RETIRED: dict[str, str] = {}
 
 # ⚑ A DO-NOT-PORT SPELLING NAMES WHERE IT STILL LIVES. These are substrate's own instruments
 # (queue.md PYCODEMOD CENSUS/SQL/CONTROL/FINGERPRINT SURVEY), never ported here.
@@ -93,6 +95,16 @@ def _str_list(ns: argparse.Namespace, name: str) -> list[str]:
 
 def _write_site(site: Site) -> None:
     sys.stdout.write(f"{site.kind} {site.name} {site.path}:{site.line}:{site.column}\n")
+
+
+def _write_attr_read(row: AttrRead) -> None:
+    sys.stdout.write(
+        f"attr {row.receiver}.{row.attr} {row.path}:{row.line}:{row.column} ({row.context})\n"
+    )
+
+
+def _write_import_row(row: ImportRow) -> None:
+    sys.stdout.write(f"{row.form} {','.join(row.names)} {row.path}:{row.line}\n")
 
 
 def _write_lines(lines: list[str]) -> None:
@@ -145,10 +157,34 @@ def _handle_dead(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_attr_reads(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    query = _str(ns, "query")
+    result = attr_reads(paths, query)
+    for row in result.rows:
+        _write_attr_read(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
+def _handle_importers(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    module = _str(ns, "module")
+    result = run_importers(paths, module)
+    for row in result.rows:
+        _write_import_row(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 MODES = {
     "calls": _handle_calls,
     "owes": _handle_owes,
     "dead": _handle_dead,
+    "attr-reads": _handle_attr_reads,
+    "importers": _handle_importers,
 }
 
 
@@ -168,6 +204,14 @@ def _build_parser() -> argparse.ArgumentParser:
 
     dead = sub.add_parser("dead", help="defs nothing in the corpus calls or uses")
     dead.add_argument("paths", nargs="+")
+
+    attr_reads_p = sub.add_parser("attr-reads", help="reads of `.name`, or `Recv.*` off `Recv`")
+    attr_reads_p.add_argument("query", help="`name`, or `Recv.*` for every attribute off Recv")
+    attr_reads_p.add_argument("paths", nargs="+")
+
+    importers_p = sub.add_parser("importers", help="every import of `module`, and the names taken")
+    importers_p.add_argument("module")
+    importers_p.add_argument("paths", nargs="+")
 
     for name in RETIRED:
         redirect = sub.add_parser(name)

@@ -85,6 +85,38 @@ def test_dead_reports_an_unused_def(tmp_path: Path) -> None:
     assert code == 0
 
 
+def test_attr_reads_reports_a_dotted_read(tmp_path: Path) -> None:
+    """`attr-reads` finds a `.name` read and reports it with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text("obj.name\n", encoding="utf-8")
+    code = cli.main(["attr-reads", "name", str(target)])
+    assert code == 0
+
+
+def test_attr_reads_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `attr-reads` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n    name\n", encoding="utf-8")
+    code = cli.main(["attr-reads", "name", str(target)])
+    assert code == 1
+
+
+def test_importers_reports_an_import_of_the_named_module(tmp_path: Path) -> None:
+    """`importers` finds an import of the named module and reports it with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text("import pkg.sub\n", encoding="utf-8")
+    code = cli.main(["importers", "pkg.sub", str(target)])
+    assert code == 0
+
+
+def test_importers_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `importers` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["importers", "pkg", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""
