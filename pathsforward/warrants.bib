@@ -1793,3 +1793,12 @@
   claim  = {`party:summit` is an external party named summit, byte-compared.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_a_party_tag_keeps_its_name},
 }
+
+@misc{pathsforward-check-tag-the-grammar-refuses-is-found,
+  section = {check},
+  title  = {An unknown prefix, !w on a topic or party, and an escaping file: path are each found (W175)},
+  claim  = {An unknown prefix, !w on a topic or party, and an escaping file: path are each found
+            (W175). Well-formed tags of every grain, read or write, are not, and neither
+            is a done waypoint's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_tag_the_grammar_refuses_is_found},
+}

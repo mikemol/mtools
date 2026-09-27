@@ -280,6 +280,18 @@ def test_a_comma_joined_touches_tag_is_found(tmp_path: Path) -> None:
     assert (len(found), found[0].startswith("W1: touches tag 'adapter,cleanup'")) == (1, True)
 
 
+def test_a_tag_the_grammar_refuses_is_found(tmp_path: Path) -> None:
+    """An unknown prefix, !w on a topic or party, and an escaping file: path are each found (W175).
+
+    Well-formed tags of every grain, read or write, are not, and neither is a done waypoint's.
+    """
+    bad = ["path:a.py", "gate!w", "party:summit!w", "file:/etc/x", "file:a/../b"]
+    good = ["gate", "file:a/b.py!w", "mod:x!w", "party:summit", "file:a..b"]
+    wps = [_wp("W1", touches=bad + good), _wp("W2", "done", touches=["gcalculus:x.md"])]
+    found = chk.tag_grammar(_state(tmp_path, waypoints=wps))
+    assert [f.split("'")[1] for f in found] == bad
+
+
 def test_a_witnessed_ready_or_working_item_is_found(tmp_path: Path) -> None:
     """Ready or working with a witness is a finding; blocked or unwitnessed is not (W132)."""
     q = "input.merged"

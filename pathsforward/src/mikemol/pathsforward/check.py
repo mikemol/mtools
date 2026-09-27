@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.pathsforward.model import BLOCKED_KINDS, STATUSES, strlist, symbol_number, text
+from mikemol.pathsforward.tags import ARTIFACT_GRAINS, parse_tag
 
 if TYPE_CHECKING:
     from mikemol.pathsforward.model import Json, State
@@ -230,6 +231,46 @@ def comma_tags(state: State) -> list[str]:
     ]
 
 
+def _grammar_fault(raw: str) -> str | None:
+    """Name what is wrong with one tag under the W120 grammar.
+
+    Returns:
+        the fault, or None for a well-formed tag.
+
+    """
+    tag = parse_tag(raw)
+    if tag.grain == "unknown":
+        return "has an unknown prefix (file:, mod: or party:, or none for a topic)"
+    if tag.write and tag.grain not in ARTIFACT_GRAINS:
+        return "marks a write on a tag that names no bytes (!w is for file: and mod:)"
+    if tag.grain == "file" and (tag.name.startswith("/") or ".." in tag.name.split("/")):
+        return "is not a repo-relative path (a leading / or a .. segment)"
+    return None
+
+
+def tag_grammar(state: State) -> list[str]:
+    """Report a touches[] tag the W120 grammar refuses.
+
+    ⚑ THREE FAULTS, each a tag that would compare wrongly once leases read the grammar: an
+    unknown prefix (`path:` is not `file:`, and is never quietly a topic), `!w` on a topic or
+    `party:` tag (no bytes to exclude over), and a `file:` path that escapes the repo.
+
+    ⚑ A DONE WAYPOINT IS NOT JUDGED: it can never be leased, and its tags are history written
+    before the grammar existed (W18's `gcalculus:proceedings/...`, measured when this landed).
+
+    Returns:
+        one finding per faulty tag on a waypoint that is not done.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: touches tag {tag!r} {fault}"
+        for w in state.waypoints
+        if text(w, "status") != "done"
+        for tag in strlist(w, "touches")
+        if (fault := _grammar_fault(tag)) is not None
+    ]
+
+
 def witnessed_live(state: State) -> list[str]:
     """Report a witnessed waypoint whose status says a mind should work it.
 
@@ -282,6 +323,7 @@ def check(state: State) -> list[str]:
         *field_types(state),
         *weights(state),
         *comma_tags(state),
+        *tag_grammar(state),
         *witnessed_live(state),
         *root(state),
     ]
