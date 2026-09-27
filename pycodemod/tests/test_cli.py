@@ -202,6 +202,22 @@ def test_placement_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -
     assert code == 1
 
 
+def test_modstate_reports_a_mutated_module_container(tmp_path: Path) -> None:
+    """`modstate` reports a module-level container a function mutates, with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text("CACHE = {}\n\n\ndef put(k):\n    CACHE[k] = 1\n", encoding="utf-8")
+    code = cli.main(["modstate", str(target)])
+    assert code == 0
+
+
+def test_modstate_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `modstate` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["modstate", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

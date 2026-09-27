@@ -768,3 +768,10 @@ unparseable fixture carries `require_at_entry` (scan's needle prefilter, per sli
 for W34: ambient (--root), callgraph/reaches, arguments' three flags, strings' two, definitions'
 two, aliases, rivals, funcnames, ordering, size, deps, crossings, modstate, shapes, commentary's
 four spellings, discards, layout, owes' successor naming clash.
+
+W34 SLICE 7 LANDED (2026-09-27): `modstate` (modstate.module_state) wired, paths-only; no needle
+prefilter in modstate, so the bare `def (:` fixture reaches the parse. 2 tests, 2 warrants, rubric
+"Ten Modes" to "Eleven Modes". 332 pytest pass, ruff/format/mypy clean. Remaining paths-only
+library entry points (measured by grepping `def <name>(paths: Sequence[str])`): layout.layout,
+rivals.collisions, ordering.reifies, core.escapes, exit.catchers, exit.interlock. NEXT for W34:
+those, then ambient (--root), callgraph/reaches, and the flag-taking modes.

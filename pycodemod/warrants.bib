@@ -1811,3 +1811,17 @@
   claim  = {A file that fails to parse makes `placement` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-modstate-reports-a-mutated-module-container,
+  section = {cli},
+  title  = {`modstate` reports a module-level container a function mutates, with its denominator},
+  claim  = {`modstate` reports a module-level container a function mutates, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_modstate_reports_a_mutated_module_container},
+}
+
+@misc{pycodemod-cli-modstate-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `modstate` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `modstate` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_modstate_over_an_unparseable_file_reports_incomplete},
+}
