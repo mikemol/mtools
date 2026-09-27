@@ -4,12 +4,12 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `layout` (`layout.layout`) to the eleven modes already wired: `calls`
+slice adds `collisions` (`rivals.collisions`) to the twelve modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
 (`placement.disagreement`), `placement` (`placement.placement`, default forms) and
-`modstate` (`modstate.module_state`).
+`modstate` (`modstate.module_state`) and `layout` (`layout.layout`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -41,6 +41,7 @@ from mikemol.pycodemod.modstate import module_state
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
+from mikemol.pycodemod.rivals import collisions as run_collisions
 from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.swallows import swallows as run_swallows
 
@@ -53,6 +54,7 @@ if TYPE_CHECKING:
     from mikemol.pycodemod.layout import Group
     from mikemol.pycodemod.modstate import ModuleState
     from mikemol.pycodemod.placement import Disagreement, Placement
+    from mikemol.pycodemod.rivals import Collision
     from mikemol.pycodemod.swallows import Swallow
 
 _REFUSED = 2
@@ -135,6 +137,11 @@ def _write_exit_row(row: ExitRow) -> None:
 
 def _write_verdict(row: VerdictDef) -> None:
     sys.stdout.write(f"verdict {row.name} {','.join(row.kinds)} {row.path}:{row.line}\n")
+
+
+def _write_collision(row: Collision) -> None:
+    sites = ",".join(f"{path}:{line}" for path, line in row.sites)
+    sys.stdout.write(f"collision {row.name} {sites}\n")
 
 
 def _write_group(row: Group) -> None:
@@ -265,6 +272,16 @@ def _handle_verdicts(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_collisions(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_collisions(paths)
+    for row in result.rows:
+        _write_collision(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_layout(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_layout(paths)
@@ -318,7 +335,20 @@ MODES = {
     "placement": _handle_placement,
     "modstate": _handle_modstate,
     "layout": _handle_layout,
+    "collisions": _handle_collisions,
 }
+
+
+_PATHS_ONLY: tuple[tuple[str, str], ...] = (
+    ("swallows", "an except whose whole body discards, triaged"),
+    ("exits", "a process-exit site, classified main/dispatch/library"),
+    ("verdicts", "a def whose returns mix an all-clear with a signal"),
+    ("disagreement", "a tool's relation between its intent gate, snapshot and store writes"),
+    ("placement", "each guarded file strongest intent-gate verdict and its witness"),
+    ("modstate", "every module-level dict, set or list, classed by who writes it"),
+    ("layout", "every top-level statement group, in source order, with its code lines"),
+    ("collisions", "every public name with two or more reimplementing defs"),
+)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -346,33 +376,8 @@ def _build_parser() -> argparse.ArgumentParser:
     importers_p.add_argument("module")
     importers_p.add_argument("paths", nargs="+")
 
-    swallows_p = sub.add_parser("swallows", help="an except whose whole body discards, triaged")
-    swallows_p.add_argument("paths", nargs="+")
-
-    exits_p = sub.add_parser("exits", help="a process-exit site, classified main/dispatch/library")
-    exits_p.add_argument("paths", nargs="+")
-
-    verdicts_p = sub.add_parser(
-        "verdicts", help="a def whose returns mix an all-clear with a signal"
-    )
-    verdicts_p.add_argument("paths", nargs="+")
-
-    disagreement_p = sub.add_parser(
-        "disagreement", help="a tool's relation between its intent gate, snapshot and store writes"
-    )
-    disagreement_p.add_argument("paths", nargs="+")
-    placement_p = sub.add_parser(
-        "placement", help="each guarded file strongest intent-gate verdict and its witness"
-    )
-    placement_p.add_argument("paths", nargs="+")
-    modstate_p = sub.add_parser(
-        "modstate", help="every module-level dict, set or list, classed by who writes it"
-    )
-    modstate_p.add_argument("paths", nargs="+")
-    layout_p = sub.add_parser(
-        "layout", help="every top-level statement group, in source order, with its code lines"
-    )
-    layout_p.add_argument("paths", nargs="+")
+    for name, text in _PATHS_ONLY:
+        sub.add_parser(name, help=text).add_argument("paths", nargs="+")
 
     for name in RETIRED:
         redirect = sub.add_parser(name)

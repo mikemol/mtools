@@ -1839,3 +1839,17 @@
   claim  = {A file that fails to parse makes `layout` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_layout_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-collisions-reports-a-name-defined-twice,
+  section = {cli},
+  title  = {`collisions` names a public def reimplemented in two files, with its denominator},
+  claim  = {`collisions` names a public def reimplemented in two files, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_collisions_reports_a_name_defined_twice},
+}
+
+@misc{pycodemod-cli-collisions-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `collisions` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `collisions` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_collisions_over_an_unparseable_file_reports_incomplete},
+}

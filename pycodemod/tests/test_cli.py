@@ -234,6 +234,23 @@ def test_layout_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> N
     assert code == 1
 
 
+def test_collisions_reports_a_name_defined_twice(tmp_path: Path) -> None:
+    """`collisions` names a public def reimplemented in two files, with its denominator."""
+    first, second = tmp_path / "a.py", tmp_path / "b.py"
+    first.write_text("def work():\n    return 1\n", encoding="utf-8")
+    second.write_text("def work():\n    return 2\n", encoding="utf-8")
+    code = cli.main(["collisions", str(first), str(second)])
+    assert code == 0
+
+
+def test_collisions_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `collisions` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["collisions", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

@@ -781,3 +781,8 @@ W34 as a blocked umbrella; see .claude/paths-forward.md. Per-mode notes continue
 
 W52 LANDED (2026-09-27): `layout` (layout.layout) wired, paths-only, no needle prefilter. 2 tests,
 2 warrants, rubric "Eleven Modes" to "Twelve Modes". 334 pytest pass, ruff/format/mypy clean.
+
+W53 LANDED (2026-09-27): `collisions` (rivals.collisions) wired, paths-only. Adding it tripped
+ruff PLR0914 (16 locals > 15) in _build_parser, so every paths-only subparser now comes from one
+_PATHS_ONLY (name, help) table -- the remaining paths-only waypoints (W54-W57) add a table row, not
+a local. 2 tests, 2 warrants, rubric "Twelve" to "Thirteen Modes". 336 pytest pass, clean.
