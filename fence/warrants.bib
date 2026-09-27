@@ -1651,3 +1651,33 @@
   claim  = {The control: a parent lease in the SAME ledger is still `run`'s parent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_a_run_on_its_parents_ledger_nests_under_it},
 }
+
+@misc{fence-admit-waiter-round-trips-after-the-leases,
+  section = {admit},
+  title  = {A WAIT line parses as a waiter, not an extra, and renders back after the leases},
+  claim  = {A WAIT line parses as a waiter, not an extra, and renders back after the leases. THE
+            CONTROL IS `extra == ()`: a WAIT line kept verbatim as an unknown kind would
+            also round-trip, and would leave head-of-line admission nothing to read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_waiter_round_trips_after_the_leases},
+}
+
+@misc{fence-admit-waiter-reserves-no-budget,
+  section = {admit},
+  title  = {A waiter is in line, not holding: `used` counts leases only},
+  claim  = {A waiter is in line, not holding: `used` counts leases only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_waiter_reserves_no_budget},
+}
+
+@misc{fence-admit-gc-drops-a-dead-waiter-and-keeps-a-live-one,
+  section = {admit},
+  title  = {A dead owner's WAIT line goes, so it cannot hold the head of the line forever},
+  claim  = {A dead owner's WAIT line goes, so it cannot hold the head of the line forever.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_gc_drops_a_dead_waiter_and_keeps_a_live_one},
+}
+
+@misc{fence-admit-gc-with-only-a-dead-waiter-is-a-new-snapshot,
+  section = {admit},
+  title  = {A dropped waiter alone is a change — the caller must rewrite, or the dead line stays},
+  claim  = {A dropped waiter alone is a change — the caller must rewrite, or the dead line stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_gc_with_only_a_dead_waiter_is_a_new_snapshot},
+}

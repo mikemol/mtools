@@ -80,6 +80,25 @@ def test_a_ledger_round_trips_through_its_text() -> None:
     assert admit.parse(snap.render()) == snap
 
 
+def test_a_waiter_round_trips_after_the_leases() -> None:
+    """A WAIT line parses as a waiter, not an extra, and renders back after the leases.
+
+    ⚑ THE CONTROL IS `extra == ()`: a WAIT line kept verbatim as an unknown kind would also
+    round-trip, and would leave head-of-line admission nothing to read.
+    """
+    text = "TOTAL_MB 512\nWAIT t1 64 2:2 5 - claim:x y\nLEASE a 10 1:1 0 - run\n"
+    snap = admit.parse(text)
+    assert snap.waiters == (admit.Waiter("t1", 64, "2:2", 5, admit.NO_PARENT, "claim:x y"),)
+    assert snap.extra == ()
+    assert snap.render() == "TOTAL_MB 512\nLEASE a 10 1:1 0 - run\nWAIT t1 64 2:2 5 - claim:x y\n"
+
+
+def test_a_waiter_reserves_no_budget() -> None:
+    """A waiter is in line, not holding: `used` counts leases only."""
+    snap = admit.parse("TOTAL_MB 512\nWAIT t1 400 2:2 5 - run\nLEASE a 10 1:1 0 - run\n")
+    assert snap.used == snap.leases[0].mb
+
+
 def test_a_torn_line_is_skipped_not_fatal() -> None:
     """A malformed lease reads as absent; its well-formed neighbour is kept.
 
@@ -187,6 +206,20 @@ def test_gc_with_nothing_dead_returns_the_same_snapshot() -> None:
     snap = _ledger(_lease("a", 10, owner="l:1"))
     assert admit.gc(snap, lambda _owner: True) is snap
     assert admit.gc(snap, lambda _owner: False) is not snap
+
+
+def test_gc_drops_a_dead_waiter_and_keeps_a_live_one() -> None:
+    """A dead owner's WAIT line goes, so it cannot hold the head of the line forever."""
+    snap = admit.parse("WAIT dead 10 d:1 0 - run\nWAIT live 10 l:1 1 - run\n")
+    kept = admit.gc(snap, lambda owner: owner == "l:1")
+    assert [waiter.ticket for waiter in kept.waiters] == ["live"]
+
+
+def test_gc_with_only_a_dead_waiter_is_a_new_snapshot() -> None:
+    """A dropped waiter alone is a change — the caller must rewrite, or the dead line stays."""
+    snap = admit.parse("WAIT dead 10 d:1 0 - run\n")
+    assert admit.gc(snap, lambda _owner: False) is not snap
+    assert admit.gc(snap, lambda _owner: True) is snap
 
 
 # --- owner liveness ---

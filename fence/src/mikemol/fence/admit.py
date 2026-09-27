@@ -50,12 +50,15 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator, Mapping
 
-# The ledger's two line kinds, and each one's word count (a lease's label may hold spaces, so its
-# count is a minimum).
+# The ledger's three line kinds, and each one's word count (a lease's or waiter's label may hold
+# spaces, so its count is a minimum). ⚑ A WAITER HAS A LEASE'S SHAPE, ticket in the id's place, so
+# one record reader serves both.
 _TOTAL = "TOTAL_MB"
 _TOTAL_FIELDS = 2
 _LEASE = "LEASE"
 _LEASE_FIELDS = 7
+_WAIT = "WAIT"
+_RECORDS = frozenset({_LEASE, _WAIT})
 
 # `/proc/<pid>/stat` field 22 (starttime), as an index into the fields AFTER the comm's `)` —
 # which begin at field 3.
@@ -109,6 +112,33 @@ class Lease:
 
 
 @dataclass(frozen=True, slots=True)
+class Waiter:
+    """One blocked request holding its place in line: nothing reserved, only its arrival recorded.
+
+    ⚑ A WAITER RESERVES NO BUDGET. It exists so admission can be strict head-of-line — a smaller
+    later request must not pass an earlier larger one merely because it fits now (W30, W47).
+    """
+
+    ticket: str
+    mb: int
+    owner: str
+    epoch: int
+    parent: str
+    label: str
+
+    def line(self) -> str:
+        """Render this waiter as its ledger line.
+
+        Returns:
+            the `WAIT …` line, without a newline.
+
+        """
+        return " ".join(
+            (_WAIT, self.ticket, str(self.mb), self.owner, str(self.epoch), self.parent, self.label)
+        )
+
+
+@dataclass(frozen=True, slots=True)
 class Ledger:
     """A snapshot of the shared ledger: the total, if declared, and the live leases."""
 
@@ -121,6 +151,8 @@ class Ledger:
     # Every line of neither kind — bash's `#` header, a kind this reader does not know — verbatim.
     # ⚑ KEPT, NOT PARSED: a rewrite that dropped them would delete what another client wrote.
     extra: tuple[str, ...] = ()
+    # Requests blocked in line, in ledger order — which is arrival order, since each is appended.
+    waiters: tuple[Waiter, ...] = ()
 
     @property
     def ambiguous(self) -> bool:
@@ -145,7 +177,12 @@ class Ledger:
 
         """
         head = [] if self.total_mb is None else [f"{_TOTAL} {self.total_mb}"]
-        lines = [*self.extra, *head, *(lease.line() for lease in self.leases)]
+        lines = [
+            *self.extra,
+            *head,
+            *(lease.line() for lease in self.leases),
+            *(waiter.line() for waiter in self.waiters),
+        ]
         return "".join(f"{line}\n" for line in lines)
 
 
@@ -166,6 +203,7 @@ def parse(text: str) -> Ledger:
     total: int | None = None
     total_lines = 0
     leases: list[Lease] = []
+    waiters: list[Waiter] = []
     extra: list[str] = []
     for raw in text.splitlines():
         words = raw.split(" ")
@@ -175,14 +213,18 @@ def parse(text: str) -> Ledger:
             total_lines += 1
             if len(words) == _TOTAL_FIELDS and words[1].isdigit():
                 total = int(words[1])
-        elif words[0] == _LEASE and len(words) >= _LEASE_FIELDS:
-            _kind, lease_id, mb, owner, epoch, parent = words[:6]
+        elif words[0] in _RECORDS and len(words) >= _LEASE_FIELDS:
+            kind, key, mb, owner, epoch, parent = words[:6]
             if mb.isdigit() and epoch.isdigit():
                 label = " ".join(words[6:])
-                leases.append(Lease(lease_id, int(mb), owner, int(epoch), parent, label))
-        elif words[0] != _LEASE:
+                record = (key, int(mb), owner, int(epoch), parent, label)
+                if kind == _LEASE:
+                    leases.append(Lease(*record))
+                else:
+                    waiters.append(Waiter(*record))
+        elif words[0] not in _RECORDS:
             extra.append(raw)
-    return Ledger(total, tuple(leases), total_lines, tuple(extra))
+    return Ledger(total, tuple(leases), total_lines, tuple(extra), tuple(waiters))
 
 
 def starttime(pid: int, proc: str = "/proc") -> str | None:
@@ -226,6 +268,10 @@ def alive(owner: str, proc: str = "/proc") -> bool:
 def gc(ledger: Ledger, is_alive: Callable[[str], bool]) -> Ledger:
     """Drop dead-owned leases, then orphans of dropped parents, to a fixpoint, on ONE snapshot.
 
+    Dead-owned waiters go too, by the same liveness answer. ⚑ NO CASCADE FOR A WAITER: it has no
+    children, and a waiter whose parent is gone is refused PARENT_GONE by its own loop, which
+    removes its own line.
+
     ⚑ LIVENESS IS ASKED ONCE PER OWNER, before the cascade — a process that dies mid-gc is
     somebody's next gc, not a reason for this one to disagree with itself.
 
@@ -234,7 +280,9 @@ def gc(ledger: Ledger, is_alive: Callable[[str], bool]) -> Ledger:
         skip the rewrite (an unconditional rewrite woke every waiter into a churn storm).
 
     """
-    live = {owner: is_alive(owner) for owner in {lease.owner for lease in ledger.leases}}
+    owners = {lease.owner for lease in ledger.leases} | {w.owner for w in ledger.waiters}
+    live = {owner: is_alive(owner) for owner in owners}
+    waiters = tuple(waiter for waiter in ledger.waiters if live[waiter.owner])
     kept = [lease for lease in ledger.leases if live[lease.owner]]
     while True:
         ids = {lease.lease_id for lease in kept}
@@ -242,9 +290,9 @@ def gc(ledger: Ledger, is_alive: Callable[[str], bool]) -> Ledger:
         if not orphans:
             break
         kept = [lease for lease in kept if lease not in orphans]
-    if len(kept) == len(ledger.leases):
+    if len(kept) == len(ledger.leases) and len(waiters) == len(ledger.waiters):
         return ledger
-    return replace(ledger, leases=tuple(kept))
+    return replace(ledger, leases=tuple(kept), waiters=waiters)
 
 
 class Verdict(enum.Enum):
