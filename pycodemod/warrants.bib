@@ -2310,3 +2310,17 @@
   claim  = {An unparseable file is ONE skip, though both the producer and consumer passes read it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_resorts_counts_an_unparseable_file_once},
 }
+
+@misc{pycodemod-cli-writes-takes-repeatable-fixtures-and-gates,
+  section = {cli},
+  title  = {`writes` reads a named gate and a named fixture as inert, and a bare write as WRITES},
+  claim  = {`writes` reads a named gate and a named fixture as inert, and a bare write as WRITES.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_writes_takes_repeatable_fixtures_and_gates},
+}
+
+@misc{pycodemod-cli-writes-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unparseable file is a skip in the banner, never a clean "no write call"},
+  claim  = {An unparseable file is a skip in the banner, never a clean "no write call".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_writes_over_an_unparseable_file_reports_incomplete},
+}

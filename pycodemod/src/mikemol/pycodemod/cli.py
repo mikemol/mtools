@@ -4,8 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `resorts` (`ordering.resorts` over `ordering.reifies`) to the forty-one modes
-already wired:
+slice adds `writes` (`writes.writes_by_default`) to the forty-two modes already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -23,8 +22,8 @@ already wired:
 (`arguments.forwards`), `asserted` (`arguments.asserted`), `values`
 (`arguments.values`), `literals` (`strings.literal_sites`), `commentary-kinds`
 (`commentary.commentary_kinds`), `commentary-blocks` (`commentary.commentary_blocks`),
-`source-of` (`definitions.source_of`), `alias-hint` (`hints.alias_hint`) and `rivals`
-(`rivals.rivals`).
+`source-of` (`definitions.source_of`), `alias-hint` (`hints.alias_hint`), `rivals`
+(`rivals.rivals`) and `resorts` (`ordering.resorts` over `ordering.reifies`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -93,6 +92,7 @@ from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
 from mikemol.pycodemod.strings import key_reads, literal_sites
 from mikemol.pycodemod.swallows import swallows as run_swallows
+from mikemol.pycodemod.writes import writes_by_default
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -807,6 +807,19 @@ def _handle_resorts(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_writes(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = writes_by_default(paths, _opt_str_list(ns, "fixture"), _opt_str_list(ns, "gate"))
+    for row in result.rows:
+        verdict = "WRITES" if row.writes else "inert"
+        sys.stdout.write(f"writes {row.path}:{row.line} {verdict} {row.why}\n")
+    writing = sum(row.writes for row in result.rows)
+    sys.stdout.write(f"writes files={len(result.rows)} writing={writing}\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_collisions(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_collisions(paths)
@@ -890,6 +903,7 @@ MODES = {
     "alias-hint": _handle_alias_hint,
     "rivals": _handle_rivals,
     "resorts": _handle_resorts,
+    "writes": _handle_writes,
     "aliases": _handle_aliases,
     "funcnames": _handle_funcnames,
     "size": _handle_size,
@@ -979,6 +993,10 @@ def _add_named_modes(make: _Make) -> None:
     riv.add_argument("paths", nargs="+")
     rso = make("resorts", "sorted(f(...)) where f already returns a sorted collection")
     rso.add_argument("paths", nargs="+")
+    wrt = make("writes", "whether a bare run of each file could write a real file")
+    wrt.add_argument("--fixture", action="append", help="an inert function name (repeatable)")
+    wrt.add_argument("--gate", action="append", help="a flag that gates writes (repeatable)")
+    wrt.add_argument("paths", nargs="+")
     attr = make("attr-reads", "reads of `.name`, or `Recv.*` off `Recv`")
     attr.add_argument("query", help="`name`, or `Recv.*` for every attribute off Recv")
     attr.add_argument("paths", nargs="+")

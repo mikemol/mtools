@@ -893,6 +893,38 @@ def test_resorts_counts_an_unparseable_file_once(
     assert "read 0 of 1 file(s); 1 skipped" in captured.out + captured.err
 
 
+def test_writes_takes_repeatable_fixtures_and_gates(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`writes` reads a named gate and a named fixture as inert, and a bare write as WRITES."""
+    bare = tmp_path / "bare.py"
+    bare.write_text('open("out.txt", "w")\n', encoding="utf-8")
+    gated = tmp_path / "gated.py"
+    gated.write_text('FLAG = "--apply"\nopen("out.txt", "w")\n', encoding="utf-8")
+    fixture = tmp_path / "fixture.py"
+    fixture.write_text('def _selftest():\n    open("out.txt", "w")\n', encoding="utf-8")
+    argv = ["writes", "--gate=--apply", "--gate=--go", "--fixture", "_selftest"]
+    code = cli.main([*argv, str(bare), str(gated), str(fixture)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"writes {bare}:1 WRITES unguarded write at line 1" in out
+    assert f"writes {gated}:2 inert gated on --apply" in out
+    assert f"writes {fixture}:0 inert writes only fixtures or tempfiles" in out
+    assert "writes files=3 writing=1" in out
+
+
+def test_writes_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unparseable file is a skip in the banner, never a clean "no write call"."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    code = cli.main(["writes", str(bad)])
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "read 0 of 1 file(s); 1 skipped" in captured.out + captured.err
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])
