@@ -1802,3 +1802,25 @@
             is a done waypoint's.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_tag_the_grammar_refuses_is_found},
 }
+
+@misc{pathsforward-overlap-two-spellings-of-one-file-share-a-line,
+  section = {overlap},
+  title  = {`file:./a.py` and `file:a.py!w` name one artifact, so they are one line (W176)},
+  claim  = {`file:./a.py` and `file:a.py!w` name one artifact, so they are one line (W176).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_overlap.py -k test_two_spellings_of_one_file_share_a_line},
+}
+
+@misc{pathsforward-overlap-only-two-artifact-writers-mark-a-lease,
+  section = {overlap},
+  title  = {Two `!w` holders of one file mark [lease]; a write and a read, or a topic, do not},
+  claim  = {Two `!w` holders of one file mark [lease]; a write and a read, or a topic, do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_overlap.py -k test_only_two_artifact_writers_mark_a_lease},
+}
+
+@misc{pathsforward-overlap-module-and-its-file-are-a-cross-grain-line,
+  section = {overlap},
+  title  = {`mod:display_types` and `file:x/display_types.py` never merge; they get an OVERLAP? line},
+  claim  = {`mod:display_types` and `file:x/display_types.py` never merge; they get an OVERLAP?
+            line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_overlap.py -k test_a_module_and_its_file_are_a_cross_grain_line},
+}

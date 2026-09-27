@@ -32,3 +32,28 @@ def test_lines_sort_by_tag_and_a_repeated_tag_counts_once() -> None:
     """Tags print in order, and one item naming a tag twice is still one holder."""
     ws = [_w("W1", "ready", "z", "m", "m"), _w("W2", "ready", "m", "z")]
     assert overlaps(ws) == ["OVERLAP m: W1,W2", "OVERLAP z: W1,W2"]
+
+
+def test_two_spellings_of_one_file_share_a_line() -> None:
+    """`file:./a.py` and `file:a.py!w` name one artifact, so they are one line (W176)."""
+    ws = [_w("W1", "ready", "file:./a.py"), _w("W2", "ready", "file:a.py!w")]
+    assert overlaps(ws) == ["OVERLAP file:a.py: W1,W2"]
+
+
+def test_only_two_artifact_writers_mark_a_lease() -> None:
+    """Two `!w` holders of one file mark [lease]; a write and a read, or a topic, do not."""
+    ws = [
+        _w("W1", "ready", "file:a.py!w", "mod:m!w", "gate"),
+        _w("W2", "working", "file:a.py!w", "mod:m", "gate"),
+    ]
+    assert overlaps(ws) == [
+        "OVERLAP file:a.py: W1,W2 [lease]",
+        "OVERLAP gate: W1,W2",
+        "OVERLAP mod:m: W1,W2",
+    ]
+
+
+def test_a_module_and_its_file_are_a_cross_grain_line() -> None:
+    """`mod:display_types` and `file:x/display_types.py` never merge; they get an OVERLAP? line."""
+    ws = [_w("W1", "ready", "mod:display_types!w"), _w("W2", "ready", "file:x/display_types.py!w")]
+    assert overlaps(ws) == ["OVERLAP? mod:display_types ~ file:x/display_types.py: W1,W2"]
