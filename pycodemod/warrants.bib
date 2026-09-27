@@ -1937,3 +1937,17 @@
   claim  = {A dash-leading revision never reaches git.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_git_show_refuses_a_revision_shaped_like_an_option},
 }
+
+@misc{pycodemod-cli-commentary-lost-names-a-dropped-note,
+  section = {cli},
+  title  = {`commentary-lost` names a marked sentence the working tree dropped since the revision},
+  claim  = {`commentary-lost` names a marked sentence the working tree dropped since the revision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_lost_names_a_dropped_note},
+}
+
+@misc{pycodemod-cli-commentary-lost-refuses-a-bad-revision-with-exit-2,
+  section = {cli},
+  title  = {A bad revision is refused, never read as a baseline where every file is new},
+  claim  = {A bad revision is refused, never read as a baseline where every file is new.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_lost_refuses_a_bad_revision_with_exit_2},
+}

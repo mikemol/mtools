@@ -4,14 +4,15 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `interlock` (`exit.interlock`) to the sixteen modes already wired: `calls`
+slice adds `commentary-lost` (`commentary.commentary_lost` over `owes.git_show`) to the
+seventeen modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
 (`placement.disagreement`), `placement` (`placement.placement`, default forms) and
 `modstate` (`modstate.module_state`), `layout` (`layout.layout`), `collisions`
-(`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`) and
-`catchers` (`exit.catchers`).
+(`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`),
+`catchers` (`exit.catchers`) and `interlock` (`exit.interlock`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -30,9 +31,11 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
+from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.exit import catchers as run_catchers
@@ -44,7 +47,7 @@ from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.layout import layout as run_layout
 from mikemol.pycodemod.modstate import module_state
 from mikemol.pycodemod.ordering import reifies as run_reifies
-from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
+from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers, git_show
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
 from mikemol.pycodemod.rivals import collisions as run_collisions
@@ -235,6 +238,28 @@ def _handle_owes(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_commentary_lost(ns: argparse.Namespace) -> int:
+    rev = _str(ns, "rev")
+    root = _str(ns, "root")
+    paths = _str_list(ns, "paths")
+    try:
+        show = git_show(rev, root)
+    except GitRefusedError as exc:
+        sys.stdout.write(f"{exc}\n")
+        return _REFUSED
+    result = run_commentary_lost(paths, Path(root), show)
+    for text in result.lost:
+        sys.stdout.write(f"lost {','.join(result.origins[text])} {text}\n")
+    for text in result.gained:
+        sys.stdout.write(f"gained {text}\n")
+    for rel in result.absent_before:
+        sys.stdout.write(f"absent-before {rel}\n")
+    sys.stdout.write(f"commentary-lost before={result.n_before} after={result.n_after}\n")
+    lines, code = report.incomplete([_UNREAD for _ in result.unread], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_dead(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     sites = scan(paths)
@@ -410,6 +435,7 @@ MODES = {
     "escapes": _handle_escapes,
     "catchers": _handle_catchers,
     "interlock": _handle_interlock,
+    "commentary-lost": _handle_commentary_lost,
 }
 
 
@@ -442,6 +468,10 @@ def _build_parser() -> argparse.ArgumentParser:
     owes.add_argument("--rev", required=True, help="a git revision, or WORKING for the diff")
     owes.add_argument("--root", required=True, help="the repo root git resolves the revision in")
     owes.add_argument("paths", nargs="+")
+    lost = sub.add_parser("commentary-lost", help="marked sentences a split dropped")
+    lost.add_argument("--rev", required=True, help="the baseline git revision")
+    lost.add_argument("--root", required=True, help="the repo root the paths are under")
+    lost.add_argument("paths", nargs="+")
 
     dead = sub.add_parser("dead", help="defs nothing in the corpus calls or uses")
     dead.add_argument("paths", nargs="+")

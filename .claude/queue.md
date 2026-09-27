@@ -812,3 +812,8 @@ verified once (rev-parse --verify <rev>^{commit}) so a bad rev raises GitRefused
 reading as a baseline where every file is new; a path absent at a good rev is None. owes' git
 refusals factored into _git_for/_run, shared with changed_files. 4 tests, 4 warrants. 348 pass.
 W82 unblocked.
+
+W82 LANDED (2026-09-27): `commentary-lost --rev R --root ROOT paths...` wired over owes.git_show;
+rows `lost <origins> <text>`, `gained <text>`, `absent-before <rel>`, then a before=/after= count.
+Bad rev exits 2 like owes; unread files use the merged _UNREAD reason (escapes' residue, W86's
+shape). 2 tests, 2 warrants, rubric "Eighteen Modes". 350 pass, clean.

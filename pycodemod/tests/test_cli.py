@@ -319,6 +319,30 @@ def test_interlock_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -
     assert code == 1
 
 
+def test_commentary_lost_names_a_dropped_note(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`commentary-lost` names a marked sentence the working tree dropped since the revision."""
+    repo = _decoy_repo(tmp_path)
+    target = repo / "m.py"
+    target.write_text("# \u2691 keep this note\nx = 1\n", encoding="utf-8")
+    subprocess.run([_GIT, "add", "."], cwd=repo, check=True)
+    subprocess.run([_GIT, "commit", "-q", "-m", "first"], cwd=repo, check=True)
+    target.write_text("x = 1\n", encoding="utf-8")
+    code = cli.main(["commentary-lost", "--rev", "HEAD", "--root", str(repo), str(target)])
+    assert code == 0
+    assert "lost m.py" in capsys.readouterr().out
+
+
+def test_commentary_lost_refuses_a_bad_revision_with_exit_2(tmp_path: Path) -> None:
+    """A bad revision is refused, never read as a baseline where every file is new."""
+    repo = _decoy_repo(tmp_path)
+    target = repo / "m.py"
+    target.write_text("x = 1\n", encoding="utf-8")
+    args = ["commentary-lost", "--rev", "not-a-real-rev", "--root", str(repo), str(target)]
+    assert cli.main(args) == _REFUSED
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""
