@@ -457,6 +457,36 @@ def test_bindings_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert code == 1
 
 
+def test_aliases_all_modules_reports_a_stdlib_import(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`aliases --all-modules` grades an import of a non-local module too."""
+    target = tmp_path / "m.py"
+    target.write_text("import os.path as osp\n", encoding="utf-8")
+    code = cli.main(["aliases", "--all-modules", str(target)])
+    assert code == 0
+    assert f"{target}:1" in capsys.readouterr().out
+
+
+def test_aliases_local_admits_a_named_head(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`aliases --local HEAD` counts that head as local, so its import is graded."""
+    target = tmp_path / "m.py"
+    target.write_text("import vendored.sub as vs\n", encoding="utf-8")
+    code = cli.main(["aliases", "--local", "vendored", str(target)])
+    assert code == 0
+    assert "vendored" in capsys.readouterr().out
+
+
+def test_aliases_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `aliases` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["aliases", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

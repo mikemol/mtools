@@ -2035,3 +2035,24 @@
   claim  = {A file that fails to parse makes `bindings` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bindings_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-aliases-all-modules-reports-a-stdlib-import,
+  section = {cli},
+  title  = {`aliases --all-modules` grades an import of a non-local module too},
+  claim  = {`aliases --all-modules` grades an import of a non-local module too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_aliases_all_modules_reports_a_stdlib_import},
+}
+
+@misc{pycodemod-cli-aliases-local-admits-a-named-head,
+  section = {cli},
+  title  = {`aliases --local HEAD` counts that head as local, so its import is graded},
+  claim  = {`aliases --local HEAD` counts that head as local, so its import is graded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_aliases_local_admits_a_named_head},
+}
+
+@misc{pycodemod-cli-aliases-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `aliases` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `aliases` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_aliases_over_an_unparseable_file_reports_incomplete},
+}

@@ -843,3 +843,10 @@ W62 LANDED (2026-09-27): `key-reads KEY paths...` wired; row `key <kind> <path>:
 W63 LANDED (2026-09-27): `bindings NAME paths...` wired; row `binding <kind> <qualname>
 <path>:<line> live=<first>-<last>`. 2 tests, 2 warrants, rubric "Twenty-Four Modes". 362 pass,
 clean.
+
+W64 LANDED (2026-09-27): `aliases [--all-modules] [--local HEAD]... paths...` wired; row `alias
+<form> <module> bound=<names|-> <scope> <path>:<line>`. New `_flag` and `_opt_str_list` helpers.
+⚑ argparse `append` with a TUPLE default crashes on first use (copy keeps a tuple, then .append);
+a list default types as list[Any] under disallow_any_expr -- so --local defaults to None and
+_opt_str_list reads None as empty. 3 tests (one exercises --local), 3 warrants, rubric
+"Twenty-Five Modes". 365 pass, clean.
