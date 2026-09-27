@@ -147,7 +147,8 @@ def test_a_block_runs_to_a_blank_a_quote_or_the_next_mark(tmp_path: Path) -> Non
     ]
     assert got.found[0].text == "⚑ A MODULE NOTE continues here."
     assert got.found[2].cited == ["--flag", "inner"]
-    assert got.unread == [str(tmp_path / "latin.py")]
+    latin = str(tmp_path / "latin.py")
+    assert got.skipped == [Skip(latin, "undecodable", "UnicodeDecodeError")]
 
 
 def test_consecutive_marks_are_separate_blocks(tmp_path: Path) -> None:

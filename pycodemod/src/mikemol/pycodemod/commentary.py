@@ -10,7 +10,8 @@ What moved and what did not:
 
 ⚑⚑ AN UNREADABLE FILE IS REPORTED, NEVER SKIPPED. The origin read with `errors="replace"` and
 passed over an `OSError`, so a file it could not read contributed a silent zero to the census —
-the census whose purpose is to prove nothing went missing. Every reader here returns `unread`.
+the census whose purpose is to prove nothing went missing. Every reader here returns `skipped`,
+each Skip naming its reason.
 
 ⚑⚑ ONE MATCHER ON BOTH SIDES OF THE GATE. The origin's `commentary_lost` matched the BEFORE side
 with a bare substring test and the AFTER side with the bounded `mark_hit`, so a widened mark such
@@ -112,7 +113,7 @@ class Blocks:
     """The incident blocks found, and the files that could not be read."""
 
     found: list[Block] = field(default_factory=list)
-    unread: list[str] = field(default_factory=list)
+    skipped: list[Skip] = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
@@ -345,7 +346,7 @@ def commentary_blocks(paths: Sequence[str], marks: Sequence[str] = COMMENTARY_MA
     for path in paths:
         src = _read(path)
         if isinstance(src, Skip):
-            out.unread.append(src.path)
+            out.skipped.append(src)
             continue
         lines = src.splitlines()
         owners = scope_index(src)
