@@ -108,7 +108,6 @@ try:
     _run_funcnames, _moved, _NO_EXTRA = funcnames, RegistryMovedError, ""
 except ImportError as _missing:
     _run_funcnames, _moved, _NO_EXTRA = None, RuntimeError, str(_missing)
-_UNREAD = ("unread", "unreadable, undecodable or uncompilable")
 
 # ⚑ `--attr` and `--importers` are WIRED, as `attr-reads` and `importers` (W34): they stop being
 # redirects and become real modes. ⚑ The origin's `--fix-owes-callers` IS RETIRED UNDER A NEW NAME
