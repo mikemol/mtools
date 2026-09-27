@@ -597,10 +597,10 @@ class Store:
         except FileNotFoundError:
             return Ledger(None, ())
 
-    def append(self, lease: Lease) -> None:
-        """Append one lease line. Call only under the lock."""
+    def append(self, record: Lease | Waiter) -> None:
+        """Append one lease or waiter line. Call only under the lock."""
         with self.path.open("a", encoding="utf-8") as handle:
-            handle.write(lease.line() + "\n")
+            handle.write(record.line() + "\n")
 
     def rewrite(self, ledger: Ledger) -> None:
         """Replace the ledger atomically: write a sibling, rename it. Under the lock only.
@@ -725,6 +725,76 @@ WAIT = Waiting()
 HOST = Host()
 
 
+def head_ticket(ledger: Ledger) -> str | None:
+    """Return the oldest waiter's ticket — the only one head-of-line admission lets through.
+
+    Returns:
+        the head ticket, or None when nobody waits.
+
+    """
+    return ledger.waiters[0].ticket if ledger.waiters else None
+
+
+def queued(request: Request) -> bool:
+    """Report whether `request` takes part in head-of-line order at all.
+
+    ⚑⚑ A NESTED REQUEST IS NOT QUEUED (W182, beyond W30's design). Its parent already holds budget,
+    and a head waiter may be waiting for exactly that budget; ordering the child behind the head
+    makes each wait on the other — a deadlock the strict FIFO would build out of two live
+    processes. Letting inner work through finishes the parent sooner, which is what frees the head.
+    ⚑ A ZERO-MB REQUEST IS NOT QUEUED: it takes nothing any waiter needs, so passing one starves
+    nobody.
+
+    Returns:
+        True only for a top-level request that needs budget.
+
+    """
+    return request.parent == NO_PARENT and request.mb > 0
+
+
+def _my_turn(snap: Ledger, request: Request, ticket: str | None) -> bool:
+    """Report whether head-of-line order lets `request` (holding `ticket`, if any) through now.
+
+    Returns:
+        True when the request is not queued, nobody waits, or its own ticket is the head.
+
+    """
+    head = head_ticket(snap)
+    return not queued(request) or head is None or head == ticket
+
+
+def _enqueue(store: Store, request: Request) -> str:
+    """Under the lock, append this request's WAIT line and return its ticket.
+
+    Returns:
+        the new ticket.
+
+    """
+    ticket = uuid.uuid4().hex[:12]
+    waiter = Waiter(
+        ticket, request.mb, owner_of(os.getpid()), int(time.time()), request.parent, request.label
+    )
+    with store.locked():
+        store.append(waiter)
+    return ticket
+
+
+def _dequeue(store: Store, ticket: str) -> None:
+    """Under the lock, drop `ticket`'s WAIT line. If the lock cannot be taken, leave it for gc.
+
+    ⚑ GIVING UP IS SAFE ONLY ONCE THIS PROCESS EXITS — until then a stale line holds the head. The
+    lock's own bound makes that window as short as the wait for it.
+    """
+    try:
+        with store.locked():
+            snap = store.read()
+            kept = tuple(waiter for waiter in snap.waiters if waiter.ticket != ticket)
+            if len(kept) != len(snap.waiters):
+                store.rewrite(replace(snap, waiters=kept))
+    except LockTimeoutError:
+        return
+
+
 def _terminal_message(verdict: Verdict, request: Request, snap: Ledger) -> str:
     """Say why a verdict waiting cannot change is a refusal.
 
@@ -744,8 +814,11 @@ def _terminal_message(verdict: Verdict, request: Request, snap: Ledger) -> str:
     return messages.get(verdict, verdict.name)
 
 
-def _claim(store: Store, request: Request, host: Host) -> Lease | None:
-    """Under the lock: gc, re-decide, and append the lease only if it STILL fits.
+def _claim(store: Store, request: Request, host: Host, ticket: str | None) -> Lease | None:
+    """Under the lock: gc, re-decide, and append the lease only if it STILL fits and it is its turn.
+
+    ⚑ A WAITER'S TRANSITION IS ONE WRITE: its WAIT line leaves in the same rewrite that adds its
+    LEASE, so no reader ever sees it both queued and holding, or neither.
 
     ⚑⚑ THE RE-CHECK UNDER THE LOCK IS WHAT MAKES A RACE HAVE ONE WINNER. Two contenders can both
     pass the lock-free check; only the one that re-decides ADMIT against the locked snapshot writes.
@@ -759,7 +832,7 @@ def _claim(store: Store, request: Request, host: Host) -> Lease | None:
         snap = gc(raw, host.is_alive)
         if snap is not raw:
             store.rewrite(snap)
-        if decide(request, snap) is not Verdict.ADMIT:
+        if decide(request, snap) is not Verdict.ADMIT or not _my_turn(snap, request, ticket):
             return None
         lease = Lease(
             uuid.uuid4().hex[:12],
@@ -769,8 +842,25 @@ def _claim(store: Store, request: Request, host: Host) -> Lease | None:
             request.parent,
             request.label,
         )
-        store.append(lease)
+        if ticket is None:
+            store.append(lease)
+        else:
+            waiters = tuple(waiter for waiter in snap.waiters if waiter.ticket != ticket)
+            store.rewrite(replace(snap, leases=(*snap.leases, lease), waiters=waiters))
         return lease
+
+
+def _give_up_if_done(verdict: Verdict, why: str, waiting: Waiting, waited_s: float) -> None:
+    """Refuse a request that would wait when it may not: NOBLOCK, or past its timeout.
+
+    Raises:
+        RefusedError: with EXIT_REFUSED, naming why it would have waited.
+
+    """
+    if waiting.noblock:
+        raise RefusedError(verdict, EXIT_REFUSED, f"would wait ({why}); noblock set")
+    if waiting.timeout_s is not None and waited_s >= waiting.timeout_s:
+        raise RefusedError(verdict, EXIT_REFUSED, f"gave up after {waiting.timeout_s}s")
 
 
 def acquire(store: Store, request: Request, waiting: Waiting = WAIT, host: Host = HOST) -> Lease:
@@ -778,6 +868,10 @@ def acquire(store: Store, request: Request, waiting: Waiting = WAIT, host: Host 
 
     ⚑⚑ A DEAD HOLDER IS REAPED BEFORE IT IS BELIEVED: every pass that would BLOCK first gcs, so a
     budget held by a killed process is freed by the next contender rather than waited on forever.
+    ⚑⚑ STRICT HEAD-OF-LINE (W30): a queued request that first BLOCKs on capacity appends a WAIT
+    line, and from then on nothing queued is admitted ahead of the oldest live waiter — a later
+    smaller request that fits right now still waits. The line leaves with the lease, or in the
+    `finally` on every other way out, a refusal, NOBLOCK, a timeout or an interrupt alike.
 
     Returns:
         the lease, live until `release`.
@@ -793,35 +887,46 @@ def acquire(store: Store, request: Request, waiting: Waiting = WAIT, host: Host 
     poll = waiting.poll_start_s
     announced = False
     last_gc = float("-inf")
-    while True:
-        snap = store.read()
-        now = host.clock()
-        if now - last_gc >= waiting.gc_interval_s or not announced:
-            snap = reap(store, host.is_alive)
-            last_gc = now
-        verdict = decide(request, snap)
-        if verdict not in {Verdict.ADMIT, Verdict.BLOCK, Verdict.CLAIMED}:
-            code = exit_code(verdict) or EXIT_REFUSED
-            raise RefusedError(verdict, code, _terminal_message(verdict, request, snap))
-        load_fits = load_ok(host.loadavg(), host.nproc, waiting.maxload)
-        if verdict is Verdict.ADMIT and load_fits:
-            lease = _claim(store, request, host)
-            if lease is not None:
-                return lease
-            continue
-        if waiting.noblock:
-            raise RefusedError(verdict, EXIT_REFUSED, f"would wait ({verdict.name}); noblock set")
-        if waiting.timeout_s is not None and now - started >= waiting.timeout_s:
-            raise RefusedError(verdict, EXIT_REFUSED, f"gave up after {waiting.timeout_s}s")
-        if not announced:
-            free = (snap.total_mb or 0) - snap.used
-            host.announce(
-                f"fence.admit: waiting ({verdict.name}, load ok={load_fits}): "
-                f"need {request.mb} MB, free {free} MB of {snap.total_mb} MB"
-            )
-            announced = True
-        host.sleep(poll)
-        poll = min(poll * _BACKOFF, waiting.poll_max_s)
+    ticket: str | None = None
+    try:
+        while True:
+            snap = store.read()
+            now = host.clock()
+            if now - last_gc >= waiting.gc_interval_s or not announced:
+                snap = reap(store, host.is_alive)
+                last_gc = now
+            verdict = decide(request, snap)
+            if verdict not in {Verdict.ADMIT, Verdict.BLOCK, Verdict.CLAIMED}:
+                code = exit_code(verdict) or EXIT_REFUSED
+                raise RefusedError(verdict, code, _terminal_message(verdict, request, snap))
+            load_fits = load_ok(host.loadavg(), host.nproc, waiting.maxload)
+            turn = _my_turn(snap, request, ticket)
+            if verdict is Verdict.ADMIT and load_fits and turn:
+                lease = _claim(store, request, host, ticket)
+                if lease is not None:
+                    ticket = None
+                    return lease
+                continue
+            why = verdict.name if turn else "QUEUED"
+            _give_up_if_done(verdict, why, waiting, now - started)
+            # ⚑ ONLY A CAPACITY WAIT QUEUES — or one already behind a head. A held claim or a high
+            # load is not a place in line; a request queued for either would hold the head against
+            # every other request's budget while it waits on a thing budget cannot buy.
+            if ticket is None and queued(request) and (verdict is Verdict.BLOCK or not turn):
+                ticket = _enqueue(store, request)
+            if not announced:
+                free = (snap.total_mb or 0) - snap.used
+                host.announce(
+                    f"fence.admit: waiting ({why}, "
+                    f"load ok={load_fits}): need {request.mb} MB, free {free} MB of "
+                    f"{snap.total_mb} MB"
+                )
+                announced = True
+            host.sleep(poll)
+            poll = min(poll * _BACKOFF, waiting.poll_max_s)
+    finally:
+        if ticket is not None:
+            _dequeue(store, ticket)
 
 
 def release(store: Store, lease: Lease) -> None:

@@ -1681,3 +1681,38 @@
   claim  = {A dropped waiter alone is a change — the caller must rewrite, or the dead line stays.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_gc_with_only_a_dead_waiter_is_a_new_snapshot},
 }
+
+@misc{fence-admit-later-smaller-request-waits-behind-an-earlier-larger-one,
+  section = {admit},
+  title  = {With a live waiter queued, a request that fits right now is still refused under NOBLOCK},
+  claim  = {With a live waiter queued, a request that fits right now is still refused under NOBLOCK.
+            THE CONTROL: the same request, once the waiter's line is gone, is admitted —
+            so the refusal is the queue's, not the budget's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_later_smaller_request_waits_behind_an_earlier_larger_one},
+}
+
+@misc{fence-admit-nested-request-is-not-held-behind-the-head,
+  section = {admit},
+  title  = {A request under a live parent lease passes a queued head: holding it back would deadlock},
+  claim  = {A request under a live parent lease passes a queued head: holding it back would
+            deadlock. THE CONTROL is the top-level arm above: the same queue refuses a
+            request with no parent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_nested_request_is_not_held_behind_the_head},
+}
+
+@misc{fence-admit-waiter-s-line-leaves-in-the-same-write-as-its-lease,
+  section = {admit},
+  title  = {A blocked request queues a WAIT line while it waits, and holds a lease with no line after},
+  claim  = {A blocked request queues a WAIT line while it waits, and holds a lease with no line
+            after. THE LINE IS ASSERTED DURING THE WAIT, in the injected sleep, so an
+            implementation that never queued cannot pass by leaving nothing behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_waiter_s_line_leaves_in_the_same_write_as_its_lease},
+}
+
+@misc{fence-admit-timeout-removes-its-own-wait-line,
+  section = {admit},
+  title  = {A request that gives up leaves no WAIT line — a stale one would hold the head forever},
+  claim  = {A request that gives up leaves no WAIT line — a stale one would hold the head forever.
+            THE CONTROL: the line existed while it waited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_timeout_removes_its_own_wait_line},
+}

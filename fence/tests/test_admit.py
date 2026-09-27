@@ -446,6 +446,89 @@ def test_a_blocked_request_proceeds_after_the_holder_releases(tmp_path: Path) ->
     assert [item.lease_id for item in store.read().leases] == [lease.lease_id]
 
 
+_HEAD_MB = 100
+
+
+def _plant_live_waiter(store: admit.Store, mb: int = _HEAD_MB) -> None:
+    """Append a WAIT line owned by THIS process, so gc believes it — a live earlier arrival."""
+    owner = admit.owner_of(os.getpid())
+    with store.locked():
+        store.append(admit.Waiter("head", mb, owner, 0, admit.NO_PARENT, "earlier"))
+
+
+def test_a_later_smaller_request_waits_behind_an_earlier_larger_one(tmp_path: Path) -> None:
+    """With a live waiter queued, a request that fits right now is still refused under NOBLOCK.
+
+    ⚑ THE CONTROL: the same request, once the waiter's line is gone, is admitted — so the refusal
+    is the queue's, not the budget's.
+    """
+    store = _store(tmp_path)
+    _plant_live_waiter(store)
+    with pytest.raises(admit.RefusedError) as err:
+        admit.acquire(store, admit.Request(5), _NOBLOCK, host=_QUIET)
+    assert "QUEUED" in str(err.value)
+    admit.reap(store, lambda _owner: False)
+    admit.release(store, admit.acquire(store, admit.Request(5), _NOBLOCK, host=_QUIET))
+
+
+def test_a_nested_request_is_not_held_behind_the_head(tmp_path: Path) -> None:
+    """A request under a live parent lease passes a queued head: holding it back would deadlock.
+
+    ⚑ THE CONTROL is the top-level arm above: the same queue refuses a request with no parent.
+    """
+    store = _store(tmp_path)
+    parent = admit.acquire(store, admit.Request(10, parent=admit.NO_PARENT), host=_QUIET)
+    _plant_live_waiter(store)
+    child = admit.acquire(store, admit.Request(5, parent=parent.lease_id), _NOBLOCK, host=_QUIET)
+    assert child.parent == parent.lease_id
+
+
+def test_a_waiter_s_line_leaves_in_the_same_write_as_its_lease(tmp_path: Path) -> None:
+    """A blocked request queues a WAIT line while it waits, and holds a lease with no line after.
+
+    ⚑ THE LINE IS ASSERTED DURING THE WAIT, in the injected sleep, so an implementation that
+    never queued cannot pass by leaving nothing behind.
+    """
+    store = _store(tmp_path)
+    holder = admit.acquire(store, admit.Request(_TOTAL - 10), host=_QUIET)
+    seen: list[int] = []
+
+    def look_then_release(_seconds: float) -> None:
+        seen.append(len(store.read().waiters))
+        admit.release(store, holder)
+
+    host = admit.Host(loadavg=_QUIET.loadavg, sleep=look_then_release, announce=lambda _msg: None)
+    lease = admit.acquire(store, admit.Request(20), host=host)
+    assert seen == [1]
+    snap = store.read()
+    assert snap.waiters == ()
+    assert [item.lease_id for item in snap.leases] == [lease.lease_id]
+
+
+def test_a_timeout_removes_its_own_wait_line(tmp_path: Path) -> None:
+    """A request that gives up leaves no WAIT line — a stale one would hold the head forever.
+
+    ⚑ THE CONTROL: the line existed while it waited.
+    """
+    store = _store(tmp_path)
+    seen: list[int] = []
+
+    def look(seconds: float) -> None:
+        seen.append(len(store.read().waiters))
+        time.sleep(seconds)
+
+    host = admit.Host(loadavg=_QUIET.loadavg, sleep=look, announce=lambda _msg: None)
+    waiting = admit.Waiting(timeout_s=0.2, poll_start_s=0.05, poll_max_s=0.05)
+    # ⚑ `acquire`, NOT `admit`: `admit` exports its lease as MEMBUDGET_PARENT, which would make the
+    # waiter NESTED — and a nested request never queues. Measured: the first draft saw no WAIT line.
+    admit.acquire(store, admit.Request(_TOTAL), host=_QUIET)
+    with pytest.raises(admit.RefusedError):
+        admit.acquire(store, admit.Request(1, parent=admit.NO_PARENT), waiting, host=host)
+    assert seen
+    assert set(seen) == {1}
+    assert store.read().waiters == ()
+
+
 def test_a_high_load_holds_a_start_back_and_zero_maxload_lets_it_through(tmp_path: Path) -> None:
     """Load over the ceiling with NOBLOCK is 3; the same load with `maxload=0` is admitted."""
     store = _store(tmp_path)
