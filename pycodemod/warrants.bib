@@ -2296,3 +2296,17 @@
   claim  = {An unparseable file is a skip in the banner, not a silent zero.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_rivals_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-resorts-names-the-producer-of-an-already-sorted-list,
+  section = {cli},
+  title  = {`resorts` joins a `sorted(f())` consumer to the `f` that already returns sorted},
+  claim  = {`resorts` joins a `sorted(f())` consumer to the `f` that already returns sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_resorts_names_the_producer_of_an_already_sorted_list},
+}
+
+@misc{pycodemod-cli-resorts-counts-an-unparseable-file-once,
+  section = {cli},
+  title  = {An unparseable file is ONE skip, though both the producer and consumer passes read it},
+  claim  = {An unparseable file is ONE skip, though both the producer and consumer passes read it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_resorts_counts_an_unparseable_file_once},
+}

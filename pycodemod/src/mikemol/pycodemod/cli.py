@@ -4,7 +4,8 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `rivals` (`rivals.rivals`) to the forty modes already wired:
+slice adds `resorts` (`ordering.resorts` over `ordering.reifies`) to the forty-one modes
+already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -22,7 +23,8 @@ slice adds `rivals` (`rivals.rivals`) to the forty modes already wired:
 (`arguments.forwards`), `asserted` (`arguments.asserted`), `values`
 (`arguments.values`), `literals` (`strings.literal_sites`), `commentary-kinds`
 (`commentary.commentary_kinds`), `commentary-blocks` (`commentary.commentary_blocks`),
-`source-of` (`definitions.source_of`) and `alias-hint` (`hints.alias_hint`).
+`source-of` (`definitions.source_of`), `alias-hint` (`hints.alias_hint`) and `rivals`
+(`rivals.rivals`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -80,6 +82,7 @@ from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.layout import layout as run_layout
 from mikemol.pycodemod.modstate import module_state
 from mikemol.pycodemod.ordering import reifies as run_reifies
+from mikemol.pycodemod.ordering import resorts as run_resorts
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers, git_show
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
@@ -787,6 +790,23 @@ def _handle_reifies(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_resorts(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_resorts(paths, run_reifies(paths))
+    for row in result.rows:
+        producers = ",".join(f"{path}:{line}" for path, line in row.producers)
+        sys.stdout.write(
+            f"resorts {row.path}:{row.line} {row.why} {row.caller} -> {row.callee} "
+            f"producers={producers}\n"
+        )
+    sys.stdout.write(f"resorts sites={len(result.rows)}\n")
+    # Both passes read the same paths, so the consumer pass's skips are the producer's:
+    # reporting both would count each unreadable file twice.
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_collisions(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_collisions(paths)
@@ -869,6 +889,7 @@ MODES = {
     "source-of": _handle_source_of,
     "alias-hint": _handle_alias_hint,
     "rivals": _handle_rivals,
+    "resorts": _handle_resorts,
     "aliases": _handle_aliases,
     "funcnames": _handle_funcnames,
     "size": _handle_size,
@@ -956,6 +977,8 @@ def _add_named_modes(make: _Make) -> None:
     riv = make("rivals", "each `def NAME`: whether it delegates or reimplements")
     riv.add_argument("name")
     riv.add_argument("paths", nargs="+")
+    rso = make("resorts", "sorted(f(...)) where f already returns a sorted collection")
+    rso.add_argument("paths", nargs="+")
     attr = make("attr-reads", "reads of `.name`, or `Recv.*` off `Recv`")
     attr.add_argument("query", help="`name`, or `Recv.*` for every attribute off Recv")
     attr.add_argument("paths", nargs="+")

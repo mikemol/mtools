@@ -865,6 +865,34 @@ def test_rivals_over_an_unparseable_file_reports_incomplete(
     assert "read 0 of 1 file(s); 1 skipped" in captured.out + captured.err
 
 
+def test_resorts_names_the_producer_of_an_already_sorted_list(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`resorts` joins a `sorted(f())` consumer to the `f` that already returns sorted."""
+    src = tmp_path / "m.py"
+    src.write_text(
+        "def f(xs):\n    return sorted(xs)\n\n\ndef g(xs):\n    return sorted(f(xs))\n",
+        encoding="utf-8",
+    )
+    code = cli.main(["resorts", str(src)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"resorts {src}:6 resort-of-sorted g -> f producers={src}:2" in out
+    assert "resorts sites=1" in out
+
+
+def test_resorts_counts_an_unparseable_file_once(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unparseable file is ONE skip, though both the producer and consumer passes read it."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    code = cli.main(["resorts", str(bad)])
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "read 0 of 1 file(s); 1 skipped" in captured.out + captured.err
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])
