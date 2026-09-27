@@ -1993,3 +1993,17 @@
   claim  = {A start the graph lacks is refused, never reported as reaching nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_reaches_refuses_an_unknown_start},
 }
+
+@misc{pycodemod-cli-guarded-splits-a-call-under-an-if-from-one-at-the-top,
+  section = {cli},
+  title  = {`guarded --target` names the test a call sits under, and a call with none as top},
+  claim  = {`guarded --target` names the test a call sits under, and a call with none as top.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_guarded_splits_a_call_under_an_if_from_one_at_the_top},
+}
+
+@misc{pycodemod-cli-guarded-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `guarded` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `guarded` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_guarded_over_an_unparseable_file_reports_incomplete},
+}

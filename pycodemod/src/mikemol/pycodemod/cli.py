@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `reaches` (`graph.reaches`) to the twenty modes already wired: `calls`
+slice adds `guarded` (`arguments.guarded`) to the twenty-one modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -13,7 +13,7 @@ slice adds `reaches` (`graph.reaches`) to the twenty modes already wired: `calls
 (`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`),
 `catchers` (`exit.catchers`), `interlock` (`exit.interlock`) and `commentary-lost`
 (`commentary.commentary_lost` over `owes.git_show`), `ambient` (`ambient.ambient`) and
-`callgraph` (`graph.callgraph`).
+`callgraph` (`graph.callgraph`) and `reaches` (`graph.reaches`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -37,6 +37,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
 from mikemol.pycodemod.ambient import ambient as run_ambient
+from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.dead import dead as run_dead
@@ -258,6 +259,22 @@ def _handle_reaches(ns: argparse.Namespace) -> int:
         sys.stdout.write(f"reaches {target} via {' -> '.join(trail)}\n")
     if reach.exhausted:
         sys.stdout.write(f"depth {depth} cut the walk short: an absent target is unknown\n")
+    lines, code = report.incomplete(
+        [(s.why, s.error) for s in sites.skipped], len(sites.population)
+    )
+    _write_lines(lines)
+    return code
+
+
+def _handle_guarded(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    sites = scan(paths, _opt_str(ns, "target"))
+    result = run_guarded(sites)
+    for where, conds in result.under:
+        tests = " / ".join(str(c) for c in conds)
+        sys.stdout.write(f"under {where.path}:{where.line}:{where.column} if {tests}\n")
+    for where in result.top:
+        sys.stdout.write(f"top {where.path}:{where.line}:{where.column}\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -495,6 +512,7 @@ MODES = {
     "ambient": _handle_ambient,
     "callgraph": _handle_callgraph,
     "reaches": _handle_reaches,
+    "guarded": _handle_guarded,
 }
 
 
@@ -522,6 +540,9 @@ def _build_parser() -> argparse.ArgumentParser:
     calls = sub.add_parser("calls", help="where a name is defined, called and used as a value")
     calls.add_argument("--target", default=None, help="a bare or dotted name; every name if unset")
     calls.add_argument("paths", nargs="+")
+    grd = sub.add_parser("guarded", help="calls under an if (with its tests) vs at the top")
+    grd.add_argument("--target", default=None, help="a bare or dotted name; every name if unset")
+    grd.add_argument("paths", nargs="+")
 
     owes = sub.add_parser("owes", help="uses of a name in files a revision did not touch")
     owes.add_argument("name")

@@ -830,3 +830,8 @@ W60 LANDED (2026-09-27): `reaches --start PATH:SCOPE --target NAME... [--depth N
 `reaches <target> via <trail>`. An unknown start exits 2 (refused, not an empty reach); a
 depth-exhausted walk says an absent target is unknown. New `_int` namespace helper (mypy
 disallow_any_expr). 2 tests, 2 warrants, rubric "Twenty-One Modes". 356 pass, clean.
+
+W61 LANDED (2026-09-27): `guarded [--target NAME] paths...` wired; rows `under <p:l:c> if <tests,
+outermost first, " / "-joined>` and `top <p:l:c>`. --target added beyond the waypoint's literal
+spec (mirrors `calls`; unset = every call). 2 tests, 2 warrants, rubric "Twenty-Two Modes". 358
+pass, clean.

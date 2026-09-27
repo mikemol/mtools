@@ -399,6 +399,28 @@ def test_reaches_refuses_an_unknown_start(tmp_path: Path) -> None:
     assert code == _REFUSED
 
 
+def test_guarded_splits_a_call_under_an_if_from_one_at_the_top(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`guarded --target` names the test a call sits under, and a call with none as top."""
+    target = tmp_path / "m.py"
+    target.write_text("if apply:\n    write()\nwrite()\n", encoding="utf-8")
+    code = cli.main(["guarded", "--target", "write", str(target)])
+    assert code == 0
+    out = capsys.readouterr().out
+    assert f"under {target}:2:" in out
+    assert "if apply" in out
+    assert f"top {target}:3:" in out
+
+
+def test_guarded_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `guarded` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n    write()\n", encoding="utf-8")
+    code = cli.main(["guarded", "--target", "write", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""
