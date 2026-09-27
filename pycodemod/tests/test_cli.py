@@ -275,12 +275,18 @@ def test_escapes_reports_an_invalid_escape(tmp_path: Path) -> None:
     assert code == 0
 
 
-def test_escapes_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
-    """A file that fails to compile makes `escapes` print the shared incomplete-scan banner."""
+def test_escapes_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A file that fails to compile is banner line `uncompilable`, apart from an absent file."""
     target = tmp_path / "m.py"
     target.write_text("def (:\n", encoding="utf-8")
-    code = cli.main(["escapes", str(target)])
+    code = cli.main(["escapes", str(target), str(tmp_path / "absent.py")])
+    captured = capsys.readouterr()
+    banner = captured.out + captured.err
     assert code == 1
+    assert "uncompilable: 1 (SyntaxError)" in banner
+    assert "unreadable: 1 (FileNotFoundError)" in banner
 
 
 def test_catchers_reports_a_systemexit_handler(tmp_path: Path) -> None:

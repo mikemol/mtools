@@ -72,7 +72,11 @@ def test_an_invalid_escape_is_found_and_an_unreadable_file_is_reported(tmp_path:
     missing = str(tmp_path / "absent.py")
     got = core.escapes([str(good), str(latin), str(broken), missing])
     assert got.found == [core.Escape(str(good), 2, 'x = "a\\ b"', "\\ ")]
-    assert got.unread == [str(latin), str(broken), missing]
+    assert got.skipped == [
+        core.Skip(str(latin), "undecodable", "UnicodeDecodeError"),
+        core.Skip(str(broken), "uncompilable", "SyntaxError"),
+        core.Skip(missing, "unreadable", "FileNotFoundError"),
+    ]
 
 
 def test_a_clean_file_yields_nothing_and_is_read(tmp_path: Path) -> None:

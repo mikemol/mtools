@@ -103,12 +103,13 @@ class Skip:
 class Escapes:
     """The invalid escapes found, and the files that could not be read — never one alone.
 
-    ⚑⚑ THE UNREAD LIST IS WHAT MAKES AN EMPTY `found` A FACT: a census whose unread files were
-    dropped reports their contents as absent.
+    ⚑⚑ THE SKIPPED LIST IS WHAT MAKES AN EMPTY `found` A FACT: a census whose unread files were
+    dropped reports their contents as absent. Each skip names its reason apart —
+    `unreadable`, `undecodable`, `uncompilable` — with the exception.
     """
 
     found: list[Escape] = field(default_factory=list)
-    unread: list[str] = field(default_factory=list)
+    skipped: list[Skip] = field(default_factory=list)
 
 
 def escape_seq(message: str) -> str:
@@ -138,15 +139,18 @@ def escapes(paths: Sequence[str]) -> Escapes:
     for path in paths:
         try:
             src = Path(path).read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
-            out.unread.append(path)
+        except UnicodeDecodeError as exc:
+            out.skipped.append(Skip(path, "undecodable", type(exc).__name__))
+            continue
+        except OSError as exc:
+            out.skipped.append(Skip(path, "unreadable", type(exc).__name__))
             continue
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always", SyntaxWarning)
             try:
                 compile(src, path, "exec")
-            except SyntaxError:
-                out.unread.append(path)
+            except SyntaxError as exc:
+                out.skipped.append(Skip(path, "uncompilable", type(exc).__name__))
                 continue
         lines = src.splitlines()
         for warned in caught:

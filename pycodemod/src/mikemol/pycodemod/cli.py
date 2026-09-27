@@ -687,7 +687,7 @@ def _handle_escapes(ns: argparse.Namespace) -> int:
     result = run_escapes(paths)
     for row in result.found:
         _write_escape(row)
-    lines, code = report.incomplete([_UNREAD for _ in result.unread], len(paths))
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
 
