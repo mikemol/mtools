@@ -378,6 +378,27 @@ def test_callgraph_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -
     assert code == 1
 
 
+def test_reaches_prints_the_call_path_to_a_target(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`reaches` prints the same-file call path from the start to a target."""
+    target = tmp_path / "m.py"
+    target.write_text(
+        "def h():\n    pass\n\n\ndef g():\n    h()\n\n\ndef f():\n    g()\n", encoding="utf-8"
+    )
+    code = cli.main(["reaches", "--start", f"{target}:f", "--target", "h", str(target)])
+    assert code == 0
+    assert "reaches h via f -> g -> h" in capsys.readouterr().out
+
+
+def test_reaches_refuses_an_unknown_start(tmp_path: Path) -> None:
+    """A start the graph lacks is refused, never reported as reaching nothing."""
+    target = tmp_path / "m.py"
+    target.write_text("def f():\n    g()\n", encoding="utf-8")
+    code = cli.main(["reaches", "--start", f"{target}:nope", "--target", "g", str(target)])
+    assert code == _REFUSED
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

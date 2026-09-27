@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `callgraph` (`graph.callgraph`) to the nineteen modes already wired: `calls`
+slice adds `reaches` (`graph.reaches`) to the twenty modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -12,7 +12,8 @@ slice adds `callgraph` (`graph.callgraph`) to the nineteen modes already wired: 
 `modstate` (`modstate.module_state`), `layout` (`layout.layout`), `collisions`
 (`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`),
 `catchers` (`exit.catchers`), `interlock` (`exit.interlock`) and `commentary-lost`
-(`commentary.commentary_lost` over `owes.git_show`) and `ambient` (`ambient.ambient`).
+(`commentary.commentary_lost` over `owes.git_show`), `ambient` (`ambient.ambient`) and
+`callgraph` (`graph.callgraph`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -42,7 +43,7 @@ from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
-from mikemol.pycodemod.graph import callgraph, verdict_returners
+from mikemol.pycodemod.graph import DEPTH, callgraph, reaches, verdict_returners
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.layout import layout as run_layout
@@ -114,6 +115,14 @@ def _opt_str(ns: argparse.Namespace, name: str) -> str | None:
         return raw
     msg = f"{_INTERNAL} a string {name}"
     raise TypeError(msg)
+
+
+def _int(ns: argparse.Namespace, name: str) -> int:
+    raw: object = getattr(ns, name, None)
+    if not isinstance(raw, int):
+        msg = f"{_INTERNAL} {name} int"
+        raise TypeError(msg)
+    return raw
 
 
 def _str_list(ns: argparse.Namespace, name: str) -> list[str]:
@@ -229,6 +238,26 @@ def _handle_callgraph(ns: argparse.Namespace) -> int:
     for (path, scope), callees in sorted(graph.items()):
         for callee in sorted(callees):
             sys.stdout.write(f"edge {path}:{scope} -> {callee}\n")
+    lines, code = report.incomplete(
+        [(s.why, s.error) for s in sites.skipped], len(sites.population)
+    )
+    _write_lines(lines)
+    return code
+
+
+def _handle_reaches(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    path, _, scope = _str(ns, "start").rpartition(":")
+    depth = _int(ns, "depth")
+    sites = scan(paths)
+    reach = reaches(callgraph(sites), (path, scope), set(_str_list(ns, "target")), depth)
+    if not reach.known_start:
+        sys.stdout.write(f"refused: no caller {path}:{scope} in the scanned graph\n")
+        return _REFUSED
+    for target, trail in sorted(reach.found.items()):
+        sys.stdout.write(f"reaches {target} via {' -> '.join(trail)}\n")
+    if reach.exhausted:
+        sys.stdout.write(f"depth {depth} cut the walk short: an absent target is unknown\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -465,6 +494,7 @@ MODES = {
     "commentary-lost": _handle_commentary_lost,
     "ambient": _handle_ambient,
     "callgraph": _handle_callgraph,
+    "reaches": _handle_reaches,
 }
 
 
@@ -505,6 +535,11 @@ def _build_parser() -> argparse.ArgumentParser:
     amb = sub.add_parser("ambient", help="filesystem-resolving calls not anchored to a root")
     amb.add_argument("--root", required=True, help="the tree whose subtrees anchor paths")
     amb.add_argument("paths", nargs="+")
+    rch = sub.add_parser("reaches", help="target names reachable from a caller, same-file")
+    rch.add_argument("--start", required=True, help="the caller, as PATH:SCOPE")
+    rch.add_argument("--target", required=True, action="append", help="repeatable")
+    rch.add_argument("--depth", type=int, default=DEPTH, help="hops to expand")
+    rch.add_argument("paths", nargs="+")
 
     dead = sub.add_parser("dead", help="defs nothing in the corpus calls or uses")
     dead.add_argument("paths", nargs="+")

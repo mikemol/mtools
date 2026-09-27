@@ -825,3 +825,8 @@ warrants, rubric "Nineteen Modes". 352 pass, clean.
 W59 LANDED (2026-09-27): `callgraph paths...` wired (paths-only row) over an unnarrowed scan;
 row `edge <path>:<scope> -> <callee>`, sorted. 2 tests, 2 warrants, rubric "Twenty Modes". 354
 pass, clean.
+
+W60 LANDED (2026-09-27): `reaches --start PATH:SCOPE --target NAME... [--depth N]` wired; row
+`reaches <target> via <trail>`. An unknown start exits 2 (refused, not an empty reach); a
+depth-exhausted walk says an absent target is unknown. New `_int` namespace helper (mypy
+disallow_any_expr). 2 tests, 2 warrants, rubric "Twenty-One Modes". 356 pass, clean.

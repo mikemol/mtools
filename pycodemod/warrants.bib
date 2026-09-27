@@ -1979,3 +1979,17 @@
   claim  = {A file that fails to parse makes `callgraph` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_callgraph_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-reaches-prints-the-call-path-to-a-target,
+  section = {cli},
+  title  = {`reaches` prints the same-file call path from the start to a target},
+  claim  = {`reaches` prints the same-file call path from the start to a target.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_reaches_prints_the_call_path_to_a_target},
+}
+
+@misc{pycodemod-cli-reaches-refuses-an-unknown-start,
+  section = {cli},
+  title  = {A start the graph lacks is refused, never reported as reaching nothing},
+  claim  = {A start the graph lacks is refused, never reported as reaching nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_reaches_refuses_an_unknown_start},
+}
