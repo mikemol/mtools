@@ -258,3 +258,16 @@ def test_the_bare_check_does_not_read_evidence(tmp_path: Path) -> None:
     """The bare check is cheap: a missing evidence path is not one of its findings."""
     state = _state(tmp_path, waypoints=[_wp("W1", evidence=f"{tmp_path}/gone"), _wp("W2")])
     assert chk.check(state) == []
+
+
+@pytest.mark.parametrize("bad", ["3", 1.5, True])
+def test_a_non_integer_weight_is_found(tmp_path: Path, bad: object) -> None:
+    """A weight that is not an integer is a finding; a bool is not an integer here."""
+    state = _state(tmp_path, waypoints=[_wp("W1", weight=bad), _wp("W2")])
+    assert chk.weights(state) == [f"W1: weight {bad!r} is not an integer"]
+
+
+def test_an_integer_or_absent_weight_is_not_found(tmp_path: Path) -> None:
+    """A negative integer is a weight too, and an absent one is the default."""
+    state = _state(tmp_path, waypoints=[_wp("W1", weight=-2), _wp("W2")])
+    assert chk.weights(state) == []

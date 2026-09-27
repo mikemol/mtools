@@ -19,6 +19,7 @@ from mikemol.pathsforward.model import (
     text,
     ticks,
     validate,
+    weight,
 )
 
 _SEVEN = 7
@@ -177,3 +178,35 @@ def test_ticks_reads_only_an_integer() -> None:
     """ticks_blocked reads an int, and a bool or an absence as 0."""
     got = (ticks({"ticks_blocked": _THREE}), ticks({"ticks_blocked": True}), ticks({}))
     assert got == (_THREE, 0, 0)
+
+
+def test_ordered_puts_a_heavier_weight_above_higher_leverage() -> None:
+    """A stored weight outranks leverage inside a bucket: it is the judgment the graph lacks."""
+    lever: dict[str, object] = {"symbol": "W1", "status": "ready", "enables": ["W3", "W4"]}
+    heavy: dict[str, object] = {"symbol": "W2", "status": "ready", "weight": 1}
+    assert [text(w, "symbol") for w in ordered([lever, heavy])] == ["W2", "W1"]
+
+
+def test_a_weight_never_lifts_an_item_out_of_its_status_bucket() -> None:
+    """A heavy blocked waypoint still sorts below a ready one: weight cannot make it workable."""
+    ready: dict[str, object] = {"symbol": "W1", "status": "ready"}
+    heavy: dict[str, object] = {"symbol": "W2", "status": "blocked", "weight": 99}
+    assert [text(w, "symbol") for w in ordered([heavy, ready])] == ["W1", "W2"]
+
+
+def test_an_unweighted_queue_keeps_its_order() -> None:
+    """No weight anywhere reads as all zero: an unweighted repo's order is byte-for-byte today's."""
+    waypoints: list[dict[str, object]] = [
+        {"symbol": "W1", "status": "ready"},
+        {"symbol": "W2", "status": "ready", "enables": ["W1"]},
+        {"symbol": "W3", "status": "blocked"},
+    ]
+    zeroed = [{**w, "weight": 0} for w in waypoints]
+    assert [text(w, "symbol") for w in ordered(waypoints)] == ["W2", "W1", "W3"]
+    assert [text(w, "symbol") for w in ordered(zeroed)] == ["W2", "W1", "W3"]
+
+
+@pytest.mark.parametrize("bad", ["3", 1.5, True, None])
+def test_a_malformed_weight_sorts_as_zero(bad: object) -> None:
+    """A string, float, bool or null weight reads as 0: check reports it, the sort never crashes."""
+    assert weight({"symbol": "W1", "weight": bad}) == 0

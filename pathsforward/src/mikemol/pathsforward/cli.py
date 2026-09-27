@@ -94,6 +94,7 @@ _FIELDS = (
     "exclude",
     "kind",
     "evidence",
+    "weight",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -106,6 +107,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "evidence_append",
             "ticks_blocked",
             "enables",
+            "weight",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by"}),
@@ -228,6 +230,9 @@ def _parser() -> argparse.ArgumentParser:
     ap.add_argument("--title", metavar="TEXT", help="--update: replace a stale one-line title")
     ap.add_argument("--evidence-append", metavar="TEXT")
     ap.add_argument("--ticks-blocked", type=int, metavar="N")
+    ap.add_argument(
+        "--weight", type=int, metavar="N", help="--update: store a priority; higher sorts first"
+    )
     # ⚑ `nargs="*"`, LIKE `--blocked-on` (nemik AND mtools, 2026-09-26): the bare flag now means
     # CLEAR. `ctx.many` already returns `None` only when the flag is absent, and `Update.enables` /
     # `_set_given` already treat `()` as "set to empty"; `+` was the one thing blocking it.
@@ -508,6 +513,7 @@ def _update(ctx: Ctx) -> int:
         ticks_blocked=ctx.number("ticks_blocked"),
         title=ctx.get("title"),
         enables=ctx.many("enables"),
+        weight=ctx.number("weight"),
     )
 
     def edit(state: State) -> int:

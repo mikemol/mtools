@@ -204,6 +204,21 @@ def leverage(w: Json, waypoints: list[Json]) -> int:
     return len(strlist(w, "enables")) + len(_blockers_of(sym, waypoints))
 
 
+def weight(w: Json) -> int:
+    """Read a waypoint's stored weight: an operator's or an agent's explicit priority.
+
+    ⚑ MISSING IS 0, AND SO IS MALFORMED: a repo that never sets a weight keeps today's order
+    byte-for-byte, and a non-integer is `check`'s to report, not the sort's to crash on. A bool is
+    not a weight even though Python calls it an int.
+
+    Returns:
+        the integer weight, or 0.
+
+    """
+    value = w.get("weight")
+    return value if isinstance(value, int) and not isinstance(value, bool) else 0
+
+
 def describe_rank(w: Json, waypoints: list[Json]) -> str:
     """State one waypoint's leverage in the skill's own vocabulary (collapse/unblock/sweep).
 
@@ -238,16 +253,22 @@ def ordered(waypoints: list[Json]) -> list[Json]:
     `blocked_on` edge — fall back to file order: the index is folded into the key itself, since
     two waypoints (plain `dict`s) are not otherwise orderable once their keys tie.
 
+    ⚑ A STORED `weight` OUTRANKS LEVERAGE (nemik:W43): leverage is what the graph can see, a weight
+    is a judgment the graph cannot, and the skill says make that judgment rather than defer it to a
+    formula. Only a status bucket outranks it — a heavy blocked item is still not workable.
+
     Returns:
-        the waypoints, stably sorted by (status rank, -leverage, file order).
+        the waypoints, stably sorted by (status rank, -weight, -leverage, file order).
 
     """
-    keyed = [((_rank(w), -leverage(w, waypoints), i), w) for i, w in enumerate(waypoints)]
+    keyed = [
+        ((_rank(w), -weight(w), -leverage(w, waypoints), i), w) for i, w in enumerate(waypoints)
+    ]
     keyed.sort(key=_first)
     return [w for _, w in keyed]
 
 
-def _first(pair: tuple[tuple[int, int, int], Json]) -> tuple[int, int, int]:
+def _first(pair: tuple[tuple[int, int, int, int], Json]) -> tuple[int, int, int, int]:
     """Read a `(key, waypoint)` pair's key, for `list.sort`.
 
     Returns:

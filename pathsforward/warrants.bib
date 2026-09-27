@@ -1544,3 +1544,62 @@
   claim  = {An absent ledger is an empty one: a fresh file owes no split, and nothing is printed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_no_ledger_means_no_atomize},
 }
+
+@misc{pathsforward-model-ordered-puts-a-heavier-weight-above-higher-leverage,
+  section = {model},
+  title  = {A stored weight outranks leverage inside a bucket: it is the judgment the graph lacks},
+  claim  = {A stored weight outranks leverage inside a bucket: it is the judgment the graph lacks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_ordered_puts_a_heavier_weight_above_higher_leverage},
+}
+
+@misc{pathsforward-model-weight-never-lifts-an-item-out-of-its-status-bucket,
+  section = {model},
+  title  = {A heavy blocked waypoint still sorts below a ready one: weight cannot make it workable},
+  claim  = {A heavy blocked waypoint still sorts below a ready one: weight cannot make it workable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_weight_never_lifts_an_item_out_of_its_status_bucket},
+}
+
+@misc{pathsforward-model-unweighted-queue-keeps-its-order,
+  section = {model},
+  title  = {No weight anywhere reads as all zero: an unweighted repo's order is byte-for-byte today's},
+  claim  = {No weight anywhere reads as all zero: an unweighted repo's order is byte-for-byte
+            today's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_an_unweighted_queue_keeps_its_order},
+}
+
+@misc{pathsforward-model-malformed-weight-sorts-as-zero,
+  section = {model},
+  title  = {A string, float, bool or null weight reads as 0: check reports it, the sort never crashes},
+  claim  = {A string, float, bool or null weight reads as 0: check reports it, the sort never
+            crashes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_malformed_weight_sorts_as_zero},
+}
+
+@misc{pathsforward-check-non-integer-weight-is-found,
+  section = {check},
+  title  = {A weight that is not an integer is a finding; a bool is not an integer here},
+  claim  = {A weight that is not an integer is a finding; a bool is not an integer here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_non_integer_weight_is_found},
+}
+
+@misc{pathsforward-check-integer-or-absent-weight-is-not-found,
+  section = {check},
+  title  = {A negative integer is a weight too, and an absent one is the default},
+  claim  = {A negative integer is a weight too, and an absent one is the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_an_integer_or_absent_weight_is_not_found},
+}
+
+@misc{pathsforward-cli-update-weight-stores-it-and-reorders-the-queue,
+  section = {cli},
+  title  = {--update W2 --weight 5 stores the integer, and --queue then lists W2 above W1},
+  claim  = {--update W2 --weight 5 stores the integer, and --queue then lists W2 above W1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_weight_stores_it_and_reorders_the_queue},
+}
+
+@misc{pathsforward-cli-weight-is-refused-outside-update,
+  section = {cli},
+  title  = {--weight on --add is a stray flag: accepted in silence it would be a write that never was},
+  claim  = {--weight on --add is a stray flag: accepted in silence it would be a write that never
+            was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_weight_is_refused_outside_update},
+}

@@ -19,6 +19,7 @@ from mikemol.pathsforward.digest import legacy_digests, v2
 Rec = dict[str, object]
 
 _OK = cli.EXIT_OK
+_FIVE = 5
 _FAILED = cli.EXIT_FAILED
 _REFUSED = cli.EXIT_REFUSED
 _LOCKED = cli.EXIT_LOCKED
@@ -613,3 +614,21 @@ def test_no_ledger_means_no_atomize(tmp_path: Path, capsys: pytest.CaptureFixtur
     _run(path, "--check")
     _run(path, "--payload")
     assert "ATOMIZE" not in capsys.readouterr().out
+
+
+def test_update_weight_stores_it_and_reorders_the_queue(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """--update W2 --weight 5 stores the integer, and --queue then lists W2 above W1."""
+    path = _file(tmp_path)
+    assert _run(path, "--update", "W2", "--weight", "5") == _OK
+    assert cast("list[Rec]", _doc(path)["waypoints"])[1]["weight"] == _FIVE
+    capsys.readouterr()
+    _run(path, "--queue")
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].split()[1] == "W2"
+
+
+def test_weight_is_refused_outside_update(tmp_path: Path) -> None:
+    """--weight on --add is a stray flag: accepted in silence it would be a write that never was."""
+    assert _run(_file(tmp_path), "--add", "t", "--weight", "1") != _OK

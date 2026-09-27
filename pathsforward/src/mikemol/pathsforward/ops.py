@@ -92,6 +92,7 @@ class Update:
     # ⚑ SET, NOT MERGED: `--update --enables` states the whole edge list, so a comma-joined edge
     # (el-openglo W49, measured by nemik 2026-09-25) has a repair path.
     enables: tuple[str, ...] | None = None
+    weight: int | None = None
 
 
 @dataclass(frozen=True)
@@ -197,6 +198,7 @@ def _set_given(new: Json, upd: Update) -> None:
         "next_bounded_step": upd.next_step,
         "title": upd.title,
         "enables": None if upd.enables is None else list(upd.enables),
+        "weight": upd.weight,
     }
     new.update({key: value for key, value in given.items() if value is not None})
 

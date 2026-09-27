@@ -197,6 +197,21 @@ def field_types(state: State) -> list[str]:
     ]
 
 
+def weights(state: State) -> list[str]:
+    """Report a stored weight that is not an integer (a bool is not one).
+
+    Returns:
+        one finding per malformed weight; an absent weight is fine.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: weight {w.get('weight')!r} is not an integer"
+        for w in state.waypoints
+        if "weight" in w
+        and (not isinstance(w.get("weight"), int) or isinstance(w.get("weight"), bool))
+    ]
+
+
 def root(state: State) -> list[str]:
     """Report a `project_root` that is not an absolute, existing directory.
 
@@ -228,6 +243,7 @@ def check(state: State) -> list[str]:
         *statuses(state),
         *blocked(state),
         *field_types(state),
+        *weights(state),
         *root(state),
     ]
 
