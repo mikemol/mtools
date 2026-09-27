@@ -500,7 +500,7 @@ def _handle_commentary(ns: argparse.Namespace) -> int:
         if len(places) > 1:
             where = " ".join(f"{path}:{line}" for path, line in places)
             sys.stdout.write(f"repeated x{len(places)} {key!r} {where}\n")
-    lines, code = report.incomplete([_UNREAD for _ in result.unread], len(paths))
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
 

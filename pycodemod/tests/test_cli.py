@@ -605,10 +605,18 @@ def test_commentary_counts_marks_and_reports_a_repeat(
     assert "repeated x2" in out
 
 
-def test_commentary_over_an_unreadable_file_reports_incomplete(tmp_path: Path) -> None:
-    """A file that cannot be read makes `commentary` print the shared incomplete-scan banner."""
-    code = cli.main(["commentary", str(tmp_path / "absent.py")])
+def test_commentary_over_an_unreadable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unreadable and an undecodable file are banner lines APART, each naming its exception."""
+    latin = tmp_path / "latin.py"
+    latin.write_bytes(b"# \xe9\n")
+    code = cli.main(["commentary", str(tmp_path / "absent.py"), str(latin)])
+    captured = capsys.readouterr()
+    banner = captured.out + captured.err
     assert code == 1
+    assert "unreadable: 1 (FileNotFoundError)" in banner
+    assert "undecodable: 1 (UnicodeDecodeError)" in banner
 
 
 def test_discards_splits_a_bare_call_from_a_used_one(

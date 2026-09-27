@@ -11,6 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import commentary
+from mikemol.pycodemod.sites import Skip
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -79,7 +80,7 @@ def test_the_census_counts_every_marked_line_and_reports_the_unread(tmp_path: Pa
     assert got.rows == [commentary.CensusRow(one, 3, 2)]
     assert got.texts == {"⚑ same": [(one, 1), (one, 3)], "print('⚑ other')": [(one, 4)]}
     assert got.nfiles == len(paths)
-    assert got.unread == [latin]
+    assert got.skipped == [Skip(latin, "undecodable", "UnicodeDecodeError")]
 
 
 def test_the_census_honours_a_widened_mark_set(tmp_path: Path) -> None:

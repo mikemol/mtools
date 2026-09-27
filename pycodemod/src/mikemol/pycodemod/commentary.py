@@ -81,7 +81,7 @@ class Census:
     rows: list[CensusRow] = field(default_factory=list)
     texts: dict[str, list[Place]] = field(default_factory=dict)
     nfiles: int = 0
-    unread: list[str] = field(default_factory=list)
+    skipped: list[Skip] = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
@@ -194,7 +194,7 @@ def commentary_census(paths: Sequence[str], marks: Sequence[str] = COMMENTARY_MA
     for path in paths:
         src = _read(path)
         if isinstance(src, Skip):
-            out.unread.append(src.path)
+            out.skipped.append(src)
             continue
         count, seen = 0, set[str]()
         for number, line in enumerate(src.splitlines(), 1):
@@ -400,5 +400,5 @@ def commentary_lost(
         n_after=sum(len(v) for v in after.texts.values()),
         origins=before,
         absent_before=absent,
-        unread=after.unread,
+        unread=[skip.path for skip in after.skipped],
     )
