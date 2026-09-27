@@ -650,6 +650,25 @@ def test_forwards_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert cli.main(["forwards", "--target", "f", "root", str(target)]) == 1
 
 
+def test_asserted_splits_literal_from_computed(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`asserted` counts literal and computed values apart; a lacking call is neither."""
+    target = tmp_path / "m.py"
+    target.write_text("f(size=1)\nf(size=len(xs))\nf()\n", encoding="utf-8")
+    code = cli.main(["asserted", "--target", "f", "size", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "asserted: 1 literal, 1 computed" in out
+
+
+def test_asserted_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `asserted` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("f(:\n", encoding="utf-8")
+    assert cli.main(["asserted", "--target", "f", "size", str(target)]) == 1
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])

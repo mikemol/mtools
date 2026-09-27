@@ -2183,3 +2183,17 @@
   claim  = {A file that fails to parse makes `forwards` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_forwards_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-asserted-splits-literal-from-computed,
+  section = {cli},
+  title  = {`asserted` counts literal and computed values apart; a lacking call is neither},
+  claim  = {`asserted` counts literal and computed values apart; a lacking call is neither.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_asserted_splits_literal_from_computed},
+}
+
+@misc{pycodemod-cli-asserted-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `asserted` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `asserted` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_asserted_over_an_unparseable_file_reports_incomplete},
+}
