@@ -359,6 +359,25 @@ def test_ambient_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> 
     assert code == 1
 
 
+def test_callgraph_prints_a_caller_to_callee_edge(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`callgraph` prints an edge from the calling scope to the callee name."""
+    target = tmp_path / "m.py"
+    target.write_text("def g():\n    pass\n\n\ndef f():\n    g()\n", encoding="utf-8")
+    code = cli.main(["callgraph", str(target)])
+    assert code == 0
+    assert f"edge {target}:f -> g" in capsys.readouterr().out
+
+
+def test_callgraph_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `callgraph` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["callgraph", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

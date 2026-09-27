@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `ambient` (`ambient.ambient`) to the eighteen modes already wired: `calls`
+slice adds `callgraph` (`graph.callgraph`) to the nineteen modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -12,7 +12,7 @@ slice adds `ambient` (`ambient.ambient`) to the eighteen modes already wired: `c
 `modstate` (`modstate.module_state`), `layout` (`layout.layout`), `collisions`
 (`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`),
 `catchers` (`exit.catchers`), `interlock` (`exit.interlock`) and `commentary-lost`
-(`commentary.commentary_lost` over `owes.git_show`).
+(`commentary.commentary_lost` over `owes.git_show`) and `ambient` (`ambient.ambient`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -42,7 +42,7 @@ from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
-from mikemol.pycodemod.graph import verdict_returners
+from mikemol.pycodemod.graph import callgraph, verdict_returners
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.layout import layout as run_layout
@@ -215,6 +215,20 @@ def _handle_calls(ns: argparse.Namespace) -> int:
     sites = scan(paths, target)
     for site in sites.rows:
         _write_site(site)
+    lines, code = report.incomplete(
+        [(s.why, s.error) for s in sites.skipped], len(sites.population)
+    )
+    _write_lines(lines)
+    return code
+
+
+def _handle_callgraph(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    sites = scan(paths)
+    graph = callgraph(sites)
+    for (path, scope), callees in sorted(graph.items()):
+        for callee in sorted(callees):
+            sys.stdout.write(f"edge {path}:{scope} -> {callee}\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -450,6 +464,7 @@ MODES = {
     "interlock": _handle_interlock,
     "commentary-lost": _handle_commentary_lost,
     "ambient": _handle_ambient,
+    "callgraph": _handle_callgraph,
 }
 
 
@@ -465,6 +480,7 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
     ("reifies", "every def return that hands back a materialized collection"),
     ("escapes", "string literals whose escape sequence does not exist"),
     ("catchers", "every handler that catches SystemExit, silent or re-raising"),
+    ("callgraph", "every caller (file, scope) to each callee name it calls"),
     ("interlock", "every except Exception whose try body calls a name that can exit"),
 )
 

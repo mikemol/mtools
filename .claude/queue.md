@@ -821,3 +821,7 @@ shape). 2 tests, 2 warrants, rubric "Eighteen Modes". 350 pass, clean.
 W58 LANDED (2026-09-27): `ambient --root ROOT paths...` wired; row `ambient <verdict> <kind>
 <path>:<line> <shown> (<context>)`, skips and population through report.incomplete. 2 tests, 2
 warrants, rubric "Nineteen Modes". 352 pass, clean.
+
+W59 LANDED (2026-09-27): `callgraph paths...` wired (paths-only row) over an unnarrowed scan;
+row `edge <path>:<scope> -> <callee>`, sorted. 2 tests, 2 warrants, rubric "Twenty Modes". 354
+pass, clean.

@@ -1965,3 +1965,17 @@
   claim  = {A file that fails to parse makes `ambient` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_ambient_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-callgraph-prints-a-caller-to-callee-edge,
+  section = {cli},
+  title  = {`callgraph` prints an edge from the calling scope to the callee name},
+  claim  = {`callgraph` prints an edge from the calling scope to the callee name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_callgraph_prints_a_caller_to_callee_edge},
+}
+
+@misc{pycodemod-cli-callgraph-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `callgraph` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `callgraph` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_callgraph_over_an_unparseable_file_reports_incomplete},
+}
