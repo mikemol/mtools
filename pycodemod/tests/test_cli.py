@@ -631,6 +631,25 @@ def test_discards_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert cli.main(["discards", "f", str(target)]) == 1
 
 
+def test_forwards_splits_calls_by_keyword(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`forwards` puts a call passing the keyword, one lacking it, a `**` call apart."""
+    target = tmp_path / "m.py"
+    target.write_text("f(x, root=r)\nf(x)\nf(x, **kw)\n", encoding="utf-8")
+    code = cli.main(["forwards", "--target", "f", "root", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "forwards: 1 passes, 1 lacks, 1 cannot-tell" in out
+
+
+def test_forwards_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `forwards` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("f(:\n", encoding="utf-8")
+    assert cli.main(["forwards", "--target", "f", "root", str(target)]) == 1
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])

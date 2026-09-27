@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `discards` (`discards.discards`) to the thirty-one modes already wired:
+slice adds `forwards` (`arguments.forwards`) to the thirty-two modes already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -17,8 +17,8 @@ slice adds `discards` (`discards.discards`) to the thirty-one modes already wire
 (`arguments.guarded`), `key-reads` (`strings.key_reads`), `bindings`
 (`definitions.bindings`), `aliases` (`aliases.aliases`), `funcnames`
 (`funcnames.funcnames`), `size` (`size.module_sizes`), `deps` (`deps.import_census`), `crossings`
-(`crossings.crossings`), `shapes` (`shapes.shape_sites`) and `commentary`
-(`commentary.commentary_census`).
+(`crossings.crossings`), `shapes` (`shapes.shape_sites`), `commentary`
+(`commentary.commentary_census`) and `discards` (`discards.discards`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -48,6 +48,7 @@ from typing import TYPE_CHECKING
 from mikemol.pycodemod import report
 from mikemol.pycodemod.aliases import aliases as run_aliases
 from mikemol.pycodemod.ambient import ambient as run_ambient
+from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.commentary import COMMENTARY_MARKS, commentary_census
 from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
@@ -310,6 +311,27 @@ def _handle_reaches(ns: argparse.Namespace) -> int:
         sys.stdout.write(f"reaches {target} via {' -> '.join(trail)}\n")
     if reach.exhausted:
         sys.stdout.write(f"depth {depth} cut the walk short: an absent target is unknown\n")
+    lines, code = report.incomplete(
+        [(s.why, s.error) for s in sites.skipped], len(sites.population)
+    )
+    _write_lines(lines)
+    return code
+
+
+def _handle_forwards(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    sites = scan(paths, _opt_str(ns, "target"))
+    result = run_forwards(sites, _str(ns, "keyword"))
+    buckets = (
+        ("passes", result.passes),
+        ("lacks", result.lacks),
+        ("cannot-tell", result.cannot_tell),
+    )
+    for label, rows in buckets:
+        for where in rows:
+            sys.stdout.write(f"{label} {where.path}:{where.line}:{where.column}\n")
+    counts = ", ".join(f"{len(rows)} {label}" for label, rows in buckets)
+    sys.stdout.write(f"forwards: {counts}\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -700,6 +722,7 @@ MODES = {
     "callgraph": _handle_callgraph,
     "reaches": _handle_reaches,
     "guarded": _handle_guarded,
+    "forwards": _handle_forwards,
     "key-reads": _handle_key_reads,
     "bindings": _handle_bindings,
     "aliases": _handle_aliases,
@@ -741,6 +764,10 @@ def _add_scan_modes(make: _Make) -> None:
     grd = make("guarded", "calls under an if (with its tests) vs at the top")
     grd.add_argument("--target", default=None, help="a bare or dotted name; every name if unset")
     grd.add_argument("paths", nargs="+")
+    fwd = make("forwards", "calls split by whether they pass a keyword, lack it, or hide it in **")
+    fwd.add_argument("--target", default=None, help="a bare or dotted name; every name if unset")
+    fwd.add_argument("keyword")
+    fwd.add_argument("paths", nargs="+")
     make("dead", "defs nothing in the corpus calls or uses").add_argument("paths", nargs="+")
     rch = make("reaches", "target names reachable from a caller, same-file")
     rch.add_argument("--start", required=True, help="the caller, as PATH:SCOPE")

@@ -2169,3 +2169,17 @@
   claim  = {The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fix_owes_callers_redirects_to_owes},
 }
+
+@misc{pycodemod-cli-forwards-splits-calls-by-keyword,
+  section = {cli},
+  title  = {`forwards` puts a call passing the keyword, one lacking it, a `**` call apart},
+  claim  = {`forwards` puts a call passing the keyword, one lacking it, a `**` call apart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_forwards_splits_calls_by_keyword},
+}
+
+@misc{pycodemod-cli-forwards-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `forwards` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `forwards` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_forwards_over_an_unparseable_file_reports_incomplete},
+}
