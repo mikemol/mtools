@@ -130,7 +130,7 @@ class Lost:
     n_after: int
     origins: dict[str, list[str]]
     absent_before: list[str]
-    unread: list[str]
+    skipped: list[Skip]
 
 
 def mark_hit(mark: str, line: str) -> bool:
@@ -400,5 +400,5 @@ def commentary_lost(
         n_after=sum(len(v) for v in after.texts.values()),
         origins=before,
         absent_before=absent,
-        unread=[skip.path for skip in after.skipped],
+        skipped=after.skipped,
     )

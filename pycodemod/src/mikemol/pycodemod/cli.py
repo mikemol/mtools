@@ -578,7 +578,7 @@ def _handle_commentary_lost(ns: argparse.Namespace) -> int:
     for rel in result.absent_before:
         sys.stdout.write(f"absent-before {rel}\n")
     sys.stdout.write(f"commentary-lost before={result.n_before} after={result.n_after}\n")
-    lines, code = report.incomplete([_UNREAD for _ in result.unread], len(paths))
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
 

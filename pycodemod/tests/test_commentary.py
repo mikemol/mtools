@@ -168,7 +168,7 @@ def test_the_gate_names_what_a_split_lost_and_where_it_came_from(tmp_path: Path)
     assert (got.n_before, got.n_after) == (3, 3)
     assert got.origins["⚑ dropped"] == ["kept.py"]
     assert got.absent_before == ["sibling.py"]
-    assert got.unread == []
+    assert got.skipped == []
 
 
 def test_the_gate_matches_both_sides_with_one_matcher(tmp_path: Path) -> None:
@@ -184,5 +184,5 @@ def test_the_gate_reports_an_unreadable_file(tmp_path: Path) -> None:
     """A file unreadable NOW is reported, not read as having lost everything silently."""
     latin = _unreadable(tmp_path)
     got = commentary.commentary_lost([latin], tmp_path, {"latin.py": "# ⚑ was\n"}.get)
-    assert got.unread == [latin]
+    assert got.skipped == [Skip(latin, "undecodable", "UnicodeDecodeError")]
     assert got.lost == ["⚑ was"]
