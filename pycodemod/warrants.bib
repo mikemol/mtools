@@ -2106,3 +2106,17 @@
   claim  = {A manifest that cannot be read refuses with exit 2; nothing is graded against a guess.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_deps_refuses_an_unreadable_manifest},
 }
+
+@misc{pycodemod-cli-crossings-over-a-plain-def-exits-zero,
+  section = {cli},
+  title  = {`crossings --authority` reads every file and exits zero when all were read},
+  claim  = {`crossings --authority` reads every file and exits zero when all were read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_crossings_over_a_plain_def_exits_zero},
+}
+
+@misc{pycodemod-cli-crossings-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `crossings` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `crossings` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_crossings_over_an_unparseable_file_reports_incomplete},
+}
