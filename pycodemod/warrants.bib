@@ -1825,3 +1825,17 @@
   claim  = {A file that fails to parse makes `modstate` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_modstate_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-layout-reports-each-top-level-group,
+  section = {cli},
+  title  = {`layout` reports every top-level statement group in source order, with its denominator},
+  claim  = {`layout` reports every top-level statement group in source order, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_layout_reports_each_top_level_group},
+}
+
+@misc{pycodemod-cli-layout-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `layout` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `layout` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_layout_over_an_unparseable_file_reports_incomplete},
+}

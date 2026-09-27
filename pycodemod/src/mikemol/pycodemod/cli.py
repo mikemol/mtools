@@ -4,11 +4,12 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `modstate` (`modstate.module_state`) to the ten modes already wired: `calls`
+slice adds `layout` (`layout.layout`) to the eleven modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
-(`placement.disagreement`) and `placement` (`placement.placement`, default forms).
+(`placement.disagreement`), `placement` (`placement.placement`, default forms) and
+`modstate` (`modstate.module_state`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -35,6 +36,7 @@ from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.graph import verdict_returners
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
+from mikemol.pycodemod.layout import layout as run_layout
 from mikemol.pycodemod.modstate import module_state
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
 from mikemol.pycodemod.placement import disagreement as run_disagreement
@@ -48,6 +50,7 @@ if TYPE_CHECKING:
     from mikemol.pycodemod.exit import ExitRow
     from mikemol.pycodemod.graph import VerdictDef
     from mikemol.pycodemod.imports import AttrRead, ImportRow
+    from mikemol.pycodemod.layout import Group
     from mikemol.pycodemod.modstate import ModuleState
     from mikemol.pycodemod.placement import Disagreement, Placement
     from mikemol.pycodemod.swallows import Swallow
@@ -132,6 +135,12 @@ def _write_exit_row(row: ExitRow) -> None:
 
 def _write_verdict(row: VerdictDef) -> None:
     sys.stdout.write(f"verdict {row.name} {','.join(row.kinds)} {row.path}:{row.line}\n")
+
+
+def _write_group(row: Group) -> None:
+    sys.stdout.write(
+        f"layout {row.kind} {row.name} code={row.code} {row.path}:{row.first}-{row.last}\n"
+    )
 
 
 def _write_module_state(row: ModuleState) -> None:
@@ -256,6 +265,16 @@ def _handle_verdicts(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_layout(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_layout(paths)
+    for row in result.rows:
+        _write_group(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_modstate(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = module_state(paths)
@@ -298,6 +317,7 @@ MODES = {
     "disagreement": _handle_disagreement,
     "placement": _handle_placement,
     "modstate": _handle_modstate,
+    "layout": _handle_layout,
 }
 
 
@@ -349,6 +369,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "modstate", help="every module-level dict, set or list, classed by who writes it"
     )
     modstate_p.add_argument("paths", nargs="+")
+    layout_p = sub.add_parser(
+        "layout", help="every top-level statement group, in source order, with its code lines"
+    )
+    layout_p.add_argument("paths", nargs="+")
 
     for name in RETIRED:
         redirect = sub.add_parser(name)

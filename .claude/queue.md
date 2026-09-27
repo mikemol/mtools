@@ -775,3 +775,9 @@ prefilter in modstate, so the bare `def (:` fixture reaches the parse. 2 tests, 
 library entry points (measured by grepping `def <name>(paths: Sequence[str])`): layout.layout,
 rivals.collisions, ordering.reifies, core.escapes, exit.catchers, exit.interlock. NEXT for W34:
 those, then ambient (--root), callgraph/reaches, and the flag-taking modes.
+
+W34 ATOMIZED (2026-09-27, operator): the remaining modes are now one waypoint each, W52-W85, under
+W34 as a blocked umbrella; see .claude/paths-forward.md. Per-mode notes continue below by symbol.
+
+W52 LANDED (2026-09-27): `layout` (layout.layout) wired, paths-only, no needle prefilter. 2 tests,
+2 warrants, rubric "Eleven Modes" to "Twelve Modes". 334 pytest pass, ruff/format/mypy clean.
