@@ -572,6 +572,26 @@ def test_crossings_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -
     assert code == 1
 
 
+def test_shapes_reports_code_but_not_a_comment(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`shapes` matches the code line and skips the comment naming the same shape."""
+    target = tmp_path / "m.py"
+    target.write_text("# x or None\ny = x or None\n", encoding="utf-8")
+    code = cli.main(["shapes", "or None", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert ":2 " in out
+    assert ":1 " not in out
+
+
+def test_shapes_refuses_a_bad_pattern(tmp_path: Path) -> None:
+    """A regex that will not compile refuses with exit 2 rather than matching nothing."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 1\n", encoding="utf-8")
+    assert cli.main(["shapes", "(", str(target)]) == _REFUSED
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

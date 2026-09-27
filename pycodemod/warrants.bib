@@ -2120,3 +2120,17 @@
   claim  = {A file that fails to parse makes `crossings` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_crossings_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-shapes-reports-code-but-not-a-comment,
+  section = {cli},
+  title  = {`shapes` matches the code line and skips the comment naming the same shape},
+  claim  = {`shapes` matches the code line and skips the comment naming the same shape.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_shapes_reports_code_but_not_a_comment},
+}
+
+@misc{pycodemod-cli-shapes-refuses-a-bad-pattern,
+  section = {cli},
+  title  = {A regex that will not compile refuses with exit 2 rather than matching nothing},
+  claim  = {A regex that will not compile refuses with exit 2 rather than matching nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_shapes_refuses_a_bad_pattern},
+}

@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `crossings` (`crossings.crossings`) to the twenty-eight modes already wired: `calls`
+slice adds `shapes` (`shapes.shape_sites`) to the twenty-nine modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -16,7 +16,8 @@ slice adds `crossings` (`crossings.crossings`) to the twenty-eight modes already
 `callgraph` (`graph.callgraph`), `reaches` (`graph.reaches`), `guarded`
 (`arguments.guarded`), `key-reads` (`strings.key_reads`), `bindings`
 (`definitions.bindings`), `aliases` (`aliases.aliases`), `funcnames`
-(`funcnames.funcnames`), `size` (`size.module_sizes`) and `deps` (`deps.import_census`).
+(`funcnames.funcnames`), `size` (`size.module_sizes`), `deps` (`deps.import_census`) and `crossings`
+(`crossings.crossings`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -38,6 +39,7 @@ untyped.
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -65,6 +67,7 @@ from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers, git_show
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
 from mikemol.pycodemod.rivals import collisions as run_collisions
+from mikemol.pycodemod.shapes import shape_sites
 from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
 from mikemol.pycodemod.strings import key_reads
@@ -390,6 +393,20 @@ def _handle_size(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_shapes(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    try:
+        result = shape_sites(_str(ns, "pattern"), paths, in_code_only=not _flag(ns, "anywhere"))
+    except re.error as exc:
+        sys.stdout.write(f"refused: bad pattern: {exc}\n")
+        return _REFUSED
+    for row in result.rows:
+        sys.stdout.write(f"shape {row.path}:{row.line} {row.text}\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_crossings(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_crossings(paths, _opt_str_list(ns, "authority"))
@@ -653,6 +670,7 @@ MODES = {
     "size": _handle_size,
     "deps": _handle_deps,
     "crossings": _handle_crossings,
+    "shapes": _handle_shapes,
 }
 
 
@@ -705,6 +723,10 @@ def _add_named_modes(make: _Make) -> None:
     imp = make("importers", "every import of `module`, and the names taken")
     imp.add_argument("module")
     imp.add_argument("paths", nargs="+")
+    shp = make("shapes", "every code line matching a regex (comments and docstrings excluded)")
+    shp.add_argument("--anywhere", action="store_true", help="match comments and docstrings too")
+    shp.add_argument("pattern")
+    shp.add_argument("paths", nargs="+")
 
 
 def _add_flagged_modes(make: _Make) -> None:
