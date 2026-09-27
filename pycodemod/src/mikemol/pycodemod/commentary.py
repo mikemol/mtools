@@ -92,7 +92,7 @@ class Kinds:
     docstring: list[Hit] = field(default_factory=list)
     executable: list[Hit] = field(default_factory=list)
     unparsed: list[Hit] = field(default_factory=list)
-    unread: list[str] = field(default_factory=list)
+    skipped: list[Skip] = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
@@ -253,7 +253,7 @@ def commentary_kinds(paths: Sequence[str], marks: Sequence[str] = COMMENTARY_MAR
     for path in paths:
         src = _read(path)
         if isinstance(src, Skip):
-            out.unread.append(src.path)
+            out.skipped.append(src)
             continue
         hits = [
             Hit(path, number, commentary_key(line))

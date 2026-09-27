@@ -102,7 +102,7 @@ def test_kinds_file_each_mark_where_it_lives(tmp_path: Path) -> None:
         'print("⚑ PRINTED")',
     ]
     assert got.unparsed == []
-    assert got.unread == [str(tmp_path / "latin.py")]
+    assert got.skipped == [Skip(str(tmp_path / "latin.py"), "undecodable", "UnicodeDecodeError")]
 
 
 def test_kinds_file_an_untokenizable_source_as_unparsed(tmp_path: Path) -> None:
