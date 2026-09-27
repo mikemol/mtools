@@ -786,3 +786,8 @@ W53 LANDED (2026-09-27): `collisions` (rivals.collisions) wired, paths-only. Add
 ruff PLR0914 (16 locals > 15) in _build_parser, so every paths-only subparser now comes from one
 _PATHS_ONLY (name, help) table -- the remaining paths-only waypoints (W54-W57) add a table row, not
 a local. 2 tests, 2 warrants, rubric "Twelve" to "Thirteen Modes". 336 pytest pass, clean.
+
+W54 LANDED (2026-09-27): `reifies` (ordering.reifies) wired, paths-only, one _PATHS_ONLY row.
+2 tests, 2 warrants, rubric "Thirteen" to "Fourteen Modes". 338 pytest pass, clean. Noticed, not
+fixed: ordering.py's module docstring says `funcnames` is NOT PORTED, but funcnames.py exists and
+W65 wires it -- a stale sentence for whoever lands W65 to correct.

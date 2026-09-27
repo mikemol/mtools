@@ -1853,3 +1853,17 @@
   claim  = {A file that fails to parse makes `collisions` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_collisions_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-reifies-reports-a-sorted-return,
+  section = {cli},
+  title  = {`reifies` reports a def returning a sorted collection, with its denominator},
+  claim  = {`reifies` reports a def returning a sorted collection, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_reifies_reports_a_sorted_return},
+}
+
+@misc{pycodemod-cli-reifies-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `reifies` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `reifies` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_reifies_over_an_unparseable_file_reports_incomplete},
+}

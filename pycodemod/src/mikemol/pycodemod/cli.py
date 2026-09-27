@@ -4,12 +4,13 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `collisions` (`rivals.collisions`) to the twelve modes already wired: `calls`
+slice adds `reifies` (`ordering.reifies`) to the thirteen modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
 (`placement.disagreement`), `placement` (`placement.placement`, default forms) and
-`modstate` (`modstate.module_state`) and `layout` (`layout.layout`).
+`modstate` (`modstate.module_state`), `layout` (`layout.layout`) and `collisions`
+(`rivals.collisions`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -38,6 +39,7 @@ from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.layout import layout as run_layout
 from mikemol.pycodemod.modstate import module_state
+from mikemol.pycodemod.ordering import reifies as run_reifies
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
@@ -53,6 +55,7 @@ if TYPE_CHECKING:
     from mikemol.pycodemod.imports import AttrRead, ImportRow
     from mikemol.pycodemod.layout import Group
     from mikemol.pycodemod.modstate import ModuleState
+    from mikemol.pycodemod.ordering import Reification
     from mikemol.pycodemod.placement import Disagreement, Placement
     from mikemol.pycodemod.rivals import Collision
     from mikemol.pycodemod.swallows import Swallow
@@ -137,6 +140,10 @@ def _write_exit_row(row: ExitRow) -> None:
 
 def _write_verdict(row: VerdictDef) -> None:
     sys.stdout.write(f"verdict {row.name} {','.join(row.kinds)} {row.path}:{row.line}\n")
+
+
+def _write_reification(row: Reification) -> None:
+    sys.stdout.write(f"reifies {row.why} {row.kind} {row.name} {row.path}:{row.line}\n")
 
 
 def _write_collision(row: Collision) -> None:
@@ -272,6 +279,16 @@ def _handle_verdicts(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_reifies(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_reifies(paths)
+    for row in result.rows:
+        _write_reification(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_collisions(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_collisions(paths)
@@ -336,6 +353,7 @@ MODES = {
     "modstate": _handle_modstate,
     "layout": _handle_layout,
     "collisions": _handle_collisions,
+    "reifies": _handle_reifies,
 }
 
 
@@ -348,6 +366,7 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
     ("modstate", "every module-level dict, set or list, classed by who writes it"),
     ("layout", "every top-level statement group, in source order, with its code lines"),
     ("collisions", "every public name with two or more reimplementing defs"),
+    ("reifies", "every def return that hands back a materialized collection"),
 )
 
 
