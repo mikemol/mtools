@@ -4,13 +4,14 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `catchers` (`exit.catchers`) to the fifteen modes already wired: `calls`
+slice adds `interlock` (`exit.interlock`) to the sixteen modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
 (`placement.disagreement`), `placement` (`placement.placement`, default forms) and
 `modstate` (`modstate.module_state`), `layout` (`layout.layout`), `collisions`
-(`rivals.collisions`), `reifies` (`ordering.reifies`) and `escapes` (`core.escapes`).
+(`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`) and
+`catchers` (`exit.catchers`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -36,6 +37,7 @@ from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.dead import dead as run_dead
 from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
+from mikemol.pycodemod.exit import interlock as run_interlock
 from mikemol.pycodemod.graph import verdict_returners
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
@@ -53,7 +55,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from mikemol.pycodemod.core import Escape
-    from mikemol.pycodemod.exit import Catcher, ExitRow
+    from mikemol.pycodemod.exit import Catcher, ExitRow, Interlock
     from mikemol.pycodemod.graph import VerdictDef
     from mikemol.pycodemod.imports import AttrRead, ImportRow
     from mikemol.pycodemod.layout import Group
@@ -144,6 +146,11 @@ def _write_exit_row(row: ExitRow) -> None:
 
 def _write_verdict(row: VerdictDef) -> None:
     sys.stdout.write(f"verdict {row.name} {','.join(row.kinds)} {row.path}:{row.line}\n")
+
+
+def _write_interlock(row: Interlock) -> None:
+    owner = row.defname or _ABSENT
+    sys.stdout.write(f"interlock {row.callee} {owner} {row.path}:{row.line}\n")
 
 
 def _write_catcher(row: Catcher) -> None:
@@ -295,6 +302,16 @@ def _handle_verdicts(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_interlock(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_interlock(paths)
+    for row in result.rows:
+        _write_interlock(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_catchers(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_catchers(paths)
@@ -392,6 +409,7 @@ MODES = {
     "reifies": _handle_reifies,
     "escapes": _handle_escapes,
     "catchers": _handle_catchers,
+    "interlock": _handle_interlock,
 }
 
 
@@ -407,6 +425,7 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
     ("reifies", "every def return that hands back a materialized collection"),
     ("escapes", "string literals whose escape sequence does not exist"),
     ("catchers", "every handler that catches SystemExit, silent or re-raising"),
+    ("interlock", "every except Exception whose try body calls a name that can exit"),
 )
 
 

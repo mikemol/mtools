@@ -1895,3 +1895,17 @@
   claim  = {A file that fails to parse makes `catchers` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_catchers_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-interlock-reports-a-broad-handler-over-an-exiting-call,
+  section = {cli},
+  title  = {`interlock` reports an `except Exception` around a call that can exit},
+  claim  = {`interlock` reports an `except Exception` around a call that can exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_interlock_reports_a_broad_handler_over_an_exiting_call},
+}
+
+@misc{pycodemod-cli-interlock-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `interlock` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `interlock` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_interlock_over_an_unparseable_file_reports_incomplete},
+}

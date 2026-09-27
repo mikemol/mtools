@@ -802,3 +802,7 @@ when any was -- a mixed population with skips exits 0 with the banner. 2 tests, 
 
 W56 LANDED (2026-09-27): `catchers` (exit.catchers) wired, paths-only, one _PATHS_ONLY row. 2
 tests, 2 warrants, rubric "Fifteen" to "Sixteen Modes". 342 pytest pass, clean.
+
+W57 LANDED (2026-09-27): `interlock` (exit.interlock) wired, paths-only, one _PATHS_ONLY row; row is
+`interlock <callee> <defname|-> <path>:<line>`. 2 tests, 2 warrants, rubric "Sixteen" to "Seventeen
+Modes". 344 pytest pass, clean.

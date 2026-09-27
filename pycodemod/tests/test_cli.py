@@ -299,6 +299,26 @@ def test_catchers_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert code == 1
 
 
+def test_interlock_reports_a_broad_handler_over_an_exiting_call(tmp_path: Path) -> None:
+    """`interlock` reports an `except Exception` around a call that can exit."""
+    target = tmp_path / "m.py"
+    target.write_text(
+        "import sys\n\n\ndef stop():\n    sys.exit(1)\n\n\n"
+        "def run():\n    try:\n        stop()\n    except Exception:\n        pass\n",
+        encoding="utf-8",
+    )
+    code = cli.main(["interlock", str(target)])
+    assert code == 0
+
+
+def test_interlock_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `interlock` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["interlock", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""
