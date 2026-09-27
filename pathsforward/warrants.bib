@@ -1744,3 +1744,10 @@
   claim  = {A tag holding a comma is a finding naming it; clean tags are not (W121).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_comma_joined_touches_tag_is_found},
 }
+
+@misc{pathsforward-payload-header-carries-one-overlap-line-per-shared-tag,
+  section = {payload},
+  title  = {Two live items sharing a touches tag put an OVERLAP line in the header (W123)},
+  claim  = {Two live items sharing a touches tag put an OVERLAP line in the header (W123).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_header_carries_one_overlap_line_per_shared_tag},
+}

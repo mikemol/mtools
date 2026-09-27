@@ -46,6 +46,7 @@ from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward.digest import v2
 from mikemol.pathsforward.model import ordered, strlist, text, ticks
+from mikemol.pathsforward.overlap import overlaps
 
 if TYPE_CHECKING:
     from mikemol.pathsforward.model import Json, State
@@ -146,6 +147,10 @@ def header(req: Request) -> list[str]:
         # ⚑ THE ATOMIZE LINE IS HEADER, NOT A RUNG: it tells the tick what its unit of work IS
         # (a split, not more of the same), so no budget pressure may drop it.
         *([req.atomize] if req.atomize else []),
+        # ⚑ OVERLAP LINES RIDE THE HEADER TOO (W123): a shared touches tag between two live
+        # items is the advance declaration of a collision (the operator: "that's why we have
+        # touches"), so the tick must see it before choosing, not after a clash.
+        *overlaps(state.waypoints),
     ]
 
 

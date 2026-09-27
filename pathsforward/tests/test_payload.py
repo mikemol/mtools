@@ -321,6 +321,13 @@ def test_the_reconcile_command_is_absolute_when_run_otherwise(
     assert (first.is_absolute(), first.name == _PROG or command.endswith(_MODULE)) == (True, True)
 
 
+def test_header_carries_one_overlap_line_per_shared_tag() -> None:
+    """Two live items sharing a touches tag put an OVERLAP line in the header (W123)."""
+    state = _state([_wp("W1", touches=["t"]), _wp("W2", touches=["t"]), _wp("W3", touches=["u"])])
+    lines = pl.header(pl.Request(state, _COPY, _NOW))
+    assert [ln for ln in lines if ln.startswith("OVERLAP")] == ["OVERLAP t: W1,W2"]
+
+
 def test_stanza_carries_the_witness_only_when_set() -> None:
     """A witnessed waypoint shows its query line; an unwitnessed one is unchanged (W131)."""
     query = 'data.nemik.merged["W5"]'
