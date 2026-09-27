@@ -20,12 +20,22 @@ from mikemol.pathsforward.model import (
     ticks,
     validate,
     weight,
+    workable,
 )
 
 _SEVEN = 7
 _THREE = 3
 _FIFTY_FIVE = 55
 _THREE_LEVERAGE = 3
+
+
+def test_a_witnessed_ready_item_never_tops_the_queue() -> None:
+    """A witnessed ready item sorts with blocked, below an unwitnessed ready one (W133)."""
+    heavy: dict[str, object] = {"symbol": "W1", "status": "ready", "witness": "q", "weight": 9}
+    plain: dict[str, object] = {"symbol": "W2", "status": "ready"}
+    stuck: dict[str, object] = {"symbol": "W3", "status": "blocked"}
+    order = [text(w, "symbol") for w in ordered([heavy, stuck, plain])]
+    assert (order, workable(heavy), workable(plain)) == (["W2", "W1", "W3"], False, True)
 
 
 def test_leverage_counts_enables_plus_in_degree_of_blocked_on() -> None:

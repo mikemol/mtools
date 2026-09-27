@@ -252,7 +252,10 @@ def _pinned(live: list[Json]) -> int:
         its index, or 0 when none is ready (the top stanza is always kept).
 
     """
-    return next((i for i, w in enumerate(live) if text(w, "status") == _READY), 0)
+    return next(
+        (i for i, w in enumerate(live) if text(w, "status") == _READY and not text(w, "witness")),
+        0,
+    )
 
 
 def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:

@@ -167,13 +167,31 @@ def strlist(rec: Json, key: str) -> list[str]:
     return [str(value)]
 
 
+def workable(w: Json) -> bool:
+    """Say whether a tick may pick this waypoint: working or ready, and carrying no witness.
+
+    ⚑ A WITNESSED ITEM IS NEVER WORKABLE (nemik:W64, 2026-09-27): its evaluator, not a mind,
+    marks it done, so even one wrongly left `ready` must not top the queue or keep a loop live.
+    `--check` still reports that status (W132); this keeps the loop safe until it is fixed.
+
+    Returns:
+        True when a tick may work it.
+
+    """
+    return text(w, "status") in {"working", "ready"} and not text(w, "witness")
+
+
 def _rank(w: Json) -> int:
     """Rank a waypoint's status: working, ready, blocked, then anything else.
+
+    A witnessed working/ready item ranks with blocked: nothing a tick can do advances it.
 
     Returns:
         the rank.
 
     """
+    if text(w, "witness") and not workable(w) and text(w, "status") in _RANK:
+        return max(_RANK[text(w, "status")], _RANK["blocked"])
     return _RANK.get(text(w, "status"), len(_RANK))
 
 

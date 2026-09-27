@@ -20,13 +20,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from mikemol.pathsforward.ledger import Parsed
-from mikemol.pathsforward.model import ordered, text
+from mikemol.pathsforward.model import ordered, text, workable
 
 if TYPE_CHECKING:
     from mikemol.pathsforward.ledger import Unparsed
     from mikemol.pathsforward.model import Json
 
-_WORKABLE = ("working", "ready")
 _TICK_KINDS = ("tick", "interrupt")
 _NOT_AN_ADVANCE = ("minted",)
 
@@ -57,7 +56,7 @@ def atomize(waypoints: list[Json], entries: list[Parsed | Unparsed]) -> str | No
 
     """
     queue = ordered(waypoints)
-    if not queue or text(queue[0], "status") not in _WORKABLE:
+    if not queue or not workable(queue[0]):
         return None
     top = text(queue[0], "symbol")
     prior = advances(top, entries)

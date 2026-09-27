@@ -1730,3 +1730,10 @@
   claim  = {Ready or working with a witness is a finding; blocked or unwitnessed is not (W132).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_witnessed_ready_or_working_item_is_found},
 }
+
+@misc{pathsforward-model-witnessed-ready-item-never-tops-the-queue,
+  section = {model},
+  title  = {A witnessed ready item sorts with blocked, below an unwitnessed ready one (W133)},
+  claim  = {A witnessed ready item sorts with blocked, below an unwitnessed ready one (W133).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_witnessed_ready_item_never_tops_the_queue},
+}
