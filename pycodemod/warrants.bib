@@ -1783,3 +1783,17 @@
   claim  = {A file that fails to parse makes `verdicts` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_verdicts_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-disagreement-reports-a-store-writer,
+  section = {cli},
+  title  = {`disagreement` classifies a tool's intent/snapshot/store relation, with its denominator},
+  claim  = {`disagreement` classifies a tool's intent/snapshot/store relation, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_disagreement_reports_a_store_writer},
+}
+
+@misc{pycodemod-cli-disagreement-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `disagreement` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `disagreement` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_disagreement_over_an_unparseable_file_reports_incomplete},
+}

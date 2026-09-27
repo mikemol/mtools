@@ -167,6 +167,25 @@ def test_verdicts_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert code == 1
 
 
+def test_disagreement_reports_a_store_writer(tmp_path: Path) -> None:
+    """`disagreement` classifies a tool's intent/snapshot/store relation, with its denominator."""
+    target = tmp_path / "m.py"
+    target.write_text(
+        "def run():\n    require_at_entry(paths=['x'])\n    store.write('x')\n",
+        encoding="utf-8",
+    )
+    code = cli.main(["disagreement", str(target)])
+    assert code == 0
+
+
+def test_disagreement_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `disagreement` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n    require_at_entry\n", encoding="utf-8")
+    code = cli.main(["disagreement", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

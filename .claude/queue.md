@@ -747,3 +747,15 @@ host venv. NEXT for W34: ambient still needs a --root flag design; still unwired
 arguments' three flags, strings' two, definitions' two, aliases, rivals, funcnames, ordering, size,
 deps, crossings, modstate, shapes, commentary's four spellings, discards, layout, owes'
 fix-owes-callers-successor naming clash to check.
+
+W34 SLICE 5 LANDED (2026-09-27): `disagreement` (placement.disagreement) wired into cli.MODES,
+paths-only. The unparseable-file test first failed: sites.scan's documented needle prefilter
+("a file whose text does not contain the bare name is excluded soundly ... and is not a skip")
+excludes a bare `def (:` before parsing, so the fixture carries `require_at_entry` to reach the
+parse — the same fixture correction attr-reads needed. NOT a sites.py defect. Carried residue:
+placement.writes_store and binds_snapshot_at_entry track NO skips at all, so disagreement's
+skipped set covers only the two placement() passes; a file unparseable that holds only a
+store-write needle (e.g. `upsert`) and no entry/snapshot needle is invisible to the banner.
+Unmeasured whether that is reachable in practice. 2 new tests, 2 warrants, rubric "Eight Modes"
+to "Nine Modes". 328 pytest pass, ruff/mypy clean. NEXT for W34: placement() itself (forms
+args), ambient (--root), callgraph/reaches, and the rest listed above.
