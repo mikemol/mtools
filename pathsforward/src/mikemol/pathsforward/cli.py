@@ -597,6 +597,8 @@ def _bump_blocked(ctx: Ctx) -> int:
     exclude = frozenset(ctx.many("exclude") or ())
 
     def edit(state: State) -> int:
+        for sym in ops.prune_done(state):
+            _say(f"UNBLOCKED {sym} (every local blocker is done)")
         for n in ops.bump_blocked(state, exclude):
             owed = "" if n.action is ops.Action.QUIET else f"  {n.action}"
             _say(f"{n.symbol} ticks_blocked={n.ticks} on={','.join(n.blocked_on)}({n.kind}){owed}")

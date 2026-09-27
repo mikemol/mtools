@@ -1688,3 +1688,17 @@
   claim  = {--overlaps prints one grep-stable line per shared tag, and an overlap is not a failure.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_overlaps_prints_shared_tags_and_exits_ok},
 }
+
+@misc{pathsforward-ops-prune-done-frees-a-parent-whose-local-blockers-are-all-done,
+  section = {ops},
+  title  = {Every local blocker done: the item returns to ready (W125, nemik:W55)},
+  claim  = {Every local blocker done: the item returns to ready (W125, nemik:W55).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_prune_done_frees_a_parent_whose_local_blockers_are_all_done},
+}
+
+@misc{pathsforward-ops-prune-done-keeps-live-foreign-and-agent-blockers,
+  section = {ops},
+  title  = {Only a done LOCAL symbol is pruned; the rest keep the item blocked (W125)},
+  claim  = {Only a done LOCAL symbol is pruned; the rest keep the item blocked (W125).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_prune_done_keeps_live_foreign_and_agent_blockers},
+}

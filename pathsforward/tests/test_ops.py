@@ -427,3 +427,28 @@ def test_set_weights_stores_every_weight_and_is_not_work() -> None:
     assert ops.set_weights(state, [("W1", 5), ("W2", -1)], _NOW) == _TWO_WEIGHTS
     stored = {str(w["symbol"]): (w.get("weight"), "last_worked" in w) for w in state.waypoints}
     assert stored == {"W1": (5, False), "W2": (-1, False)}
+
+
+def test_prune_done_frees_a_parent_whose_local_blockers_are_all_done() -> None:
+    """Every local blocker done: the item returns to ready (W125, nemik:W55)."""
+    state = _state(
+        _wp("W4", "done"),
+        _wp("W5", "blocked", blocked_on=["W4"], blocked_kind="agent", ticks_blocked=_OLD_TICKS),
+    )
+    assert ops.prune_done(state) == ["W5"]
+    w5 = state.waypoints[-1]
+    assert (w5["status"], w5["blocked_on"], w5["blocked_kind"], w5["ticks_blocked"]) == (
+        "ready",
+        [],
+        None,
+        0,
+    )
+
+
+def test_prune_done_keeps_live_foreign_and_agent_blockers() -> None:
+    """Only a done LOCAL symbol is pruned; the rest keep the item blocked (W125)."""
+    on = ["W1", "W4", "nemik:W4", "nemik-45"]
+    state = _state(_wp("W4", "done"), _wp("W5", "blocked", blocked_on=on, blocked_kind="agent"))
+    assert ops.prune_done(state) == []
+    w5 = state.waypoints[-1]
+    assert (w5["status"], w5["blocked_on"]) == ("blocked", ["W1", "nemik:W4", "nemik-45"])

@@ -455,6 +455,32 @@ def action_for(count: int) -> Action:
     return Action.NUDGE if count in NUDGE_TICKS else Action.QUIET
 
 
+def prune_done(state: State) -> list[str]:
+    """Drop blockers that are this queue's own waypoints and are now done.
+
+    ⚑ A PARENT BLOCKED ON FINISHED CHILDREN READS AS STUCK (nemik:W55, 2026-09-27): after an
+    atomize, nemik W17 stayed blocked on [W45 done, W46 done, W47]. Only a LOCAL symbol can be
+    checked here, so a foreign `repo:W<n>` or an agent name is kept. A list that empties returns
+    the item to ready; a list that only shrinks restarts its blocked count, as `--update` does.
+
+    Returns:
+        the symbols returned to ready, in queue order.
+
+    """
+    done = {text(w, "symbol") for w in state.waypoints if text(w, "status") == "done"}
+    freed: list[str] = []
+    for w in state.waypoints:
+        on = strlist(w, "blocked_on")
+        kept = [b for b in on if b not in done]
+        if text(w, "status") != "blocked" or kept == on:
+            continue
+        w["blocked_on"], w["ticks_blocked"] = kept, 0
+        if not kept:
+            w["status"], w["blocked_kind"] = "ready", None
+            freed.append(text(w, "symbol"))
+    return freed
+
+
 def bump_blocked(state: State, exclude: frozenset[str]) -> list[Nudge]:
     """Count one more blocked tick on every blocked waypoint not excluded.
 
