@@ -30,6 +30,7 @@ from mikemol.pathsforward.check import check, evidence_findings
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
 from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
+from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 
 if TYPE_CHECKING:
@@ -55,6 +56,7 @@ _FLAGS = (
     "bump_blocked",
     "preamble_clear",
     "init",
+    "overlaps",
 )
 _VALUED = (
     "verify",
@@ -310,6 +312,18 @@ def _hash(ctx: Ctx) -> int:
 
     """
     _say(v2(store.load(ctx.path).waypoints))
+    return EXIT_OK
+
+
+def _overlaps(ctx: Ctx) -> int:
+    """Print one OVERLAP line per tag two or more live waypoints declare; advisory.
+
+    Returns:
+        EXIT_OK, with or without lines.
+
+    """
+    for found in overlaps(store.load(ctx.path).waypoints):
+        _say(found)
     return EXIT_OK
 
 
@@ -738,6 +752,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "preamble_clear": _preamble_clear,
     "init": _init,
     "weights_from": _weights_from,
+    "overlaps": _overlaps,
 }
 
 

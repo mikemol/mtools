@@ -424,6 +424,15 @@ def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
     )
 
 
+def test_overlaps_prints_shared_tags_and_exits_ok(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """--overlaps prints one grep-stable line per shared tag, and an overlap is not a failure."""
+    path = _file(tmp_path, [_wp("W1", touches=["a"]), _wp("W2", touches=["a", "b"])])
+    code = _run(path, "--overlaps")
+    assert (code, capsys.readouterr().out.splitlines()) == (_OK, ["OVERLAP a: W1,W2"])
+
+
 def test_update_replaces_touches_whole(tmp_path: Path) -> None:
     """--update --touches sets the whole tag list, so a comma-joined tag can be split."""
     path = _file(tmp_path)
