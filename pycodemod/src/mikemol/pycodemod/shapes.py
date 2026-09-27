@@ -34,7 +34,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.sites import Skip
+from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.size import code_lines
 
 if TYPE_CHECKING:

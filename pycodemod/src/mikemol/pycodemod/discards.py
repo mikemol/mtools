@@ -39,10 +39,12 @@ from typing import TYPE_CHECKING, override
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 
-from mikemol.pycodemod.sites import Skip, scan
+from mikemol.pycodemod.sites import scan
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+    from mikemol.pycodemod.core import Skip
 
 type Where = tuple[str, int, int]
 

@@ -14,7 +14,7 @@ skip reasons and the population size and returns the banner lines plus the exit 
 should use — zero when reads happened, non-zero when every file in the population was skipped,
 because a result with no readable input is a broken query, not an empty one.
 
-⚑ TAKES `(why, error)` PAIRS, NOT `Skip` OBJECTS: `sites.Skip` and `exit.Skip` are two distinct
+⚑ TAKES `(why, error)` PAIRS, NOT `Skip` OBJECTS: `core.Skip` and `exit.Skip` are two distinct
 dataclasses (never unified — W46 is one shared reporter, not a skip-type merger), and a structural
 `Protocol` over their shared shape leaves `why`/`error` as accessor stubs no caller ever reaches,
 which the mutation grid rightly reports as SURVIVED — code nothing exercises. A plain tuple has no

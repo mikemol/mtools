@@ -175,9 +175,9 @@ def test_the_result_carries_its_query_and_reports_every_skip(tmp_path: Path) -> 
     got = sites.scan(paths, "f")
     assert (got.target, got.population) == ("f", tuple(paths))
     assert got.skipped == [
-        sites.Skip(str(latin), "undecodable", "UnicodeDecodeError"),
-        sites.Skip(bad, "unparseable", "ParserSyntaxError"),
-        sites.Skip(missing, "unreadable", "FileNotFoundError"),
+        core.Skip(str(latin), "undecodable", "UnicodeDecodeError"),
+        core.Skip(bad, "unparseable", "ParserSyntaxError"),
+        core.Skip(missing, "unreadable", "FileNotFoundError"),
     ]
     assert got.rows == []
 

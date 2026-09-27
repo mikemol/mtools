@@ -28,8 +28,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.placement import is_entry_test
-from mikemol.pycodemod.sites import Skip
 from mikemol.pycodemod.size import code_lines
 
 if TYPE_CHECKING:

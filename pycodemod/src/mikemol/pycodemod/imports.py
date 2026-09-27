@@ -36,7 +36,8 @@ from typing import TYPE_CHECKING, override
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 
-from mikemol.pycodemod.sites import MODULE, Skip, dotted
+from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.sites import MODULE, dotted
 
 if TYPE_CHECKING:
     from collections.abc import Sequence

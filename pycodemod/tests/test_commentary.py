@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import commentary
-from mikemol.pycodemod.sites import Skip
+from mikemol.pycodemod.core import Skip
 
 if TYPE_CHECKING:
     from pathlib import Path

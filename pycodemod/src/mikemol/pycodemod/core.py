@@ -90,6 +90,15 @@ class Escape:
     seq: str
 
 
+@dataclass(frozen=True, slots=True, order=True)
+class Skip:
+    """A file the scan could not read, and why."""
+
+    path: str
+    why: str
+    error: str
+
+
 @dataclass(frozen=True, slots=True)
 class Escapes:
     """The invalid escapes found, and the files that could not be read — never one alone.

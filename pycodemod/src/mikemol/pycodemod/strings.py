@@ -35,7 +35,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.sites import MODULE, Skip
+from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.sites import MODULE
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence

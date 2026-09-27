@@ -48,7 +48,7 @@ from typing import TYPE_CHECKING, override
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 
-from mikemol.pycodemod.core import Value, shape_of, src_of, value_of
+from mikemol.pycodemod.core import Skip, Value, shape_of, src_of, value_of
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -90,15 +90,6 @@ class CallFacts:
     possrc: dict[int, Text]
     context: str
     conds: tuple[Text, ...]
-
-
-@dataclass(frozen=True, slots=True, order=True)
-class Skip:
-    """A file the scan could not read, and why."""
-
-    path: str
-    why: str
-    error: str
 
 
 @dataclass(frozen=True, slots=True)

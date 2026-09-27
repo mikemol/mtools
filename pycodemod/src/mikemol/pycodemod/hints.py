@@ -34,12 +34,13 @@ from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.aliases import AS_MOD, FROM_AS, aliases
 from mikemol.pycodemod.imports import attr_reads
-from mikemol.pycodemod.sites import Skip, scan
+from mikemol.pycodemod.sites import scan
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from mikemol.pycodemod.aliases import Alias
+    from mikemol.pycodemod.core import Skip
 
 _AS = " as "
 _CALL = "call"

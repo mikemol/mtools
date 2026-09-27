@@ -59,11 +59,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.sites import MODULE, Skip, scan
+from mikemol.pycodemod.sites import MODULE, scan
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from mikemol.pycodemod.core import Skip
     from mikemol.pycodemod.sites import CallFacts, Sites, Text
 
 ENTRY_FORMS = ("require_at_entry", "require_explicit_mutation")

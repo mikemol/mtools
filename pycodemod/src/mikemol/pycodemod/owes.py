@@ -42,10 +42,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.hints import AliasHint, alias_hint
-from mikemol.pycodemod.sites import Site, Skip, scan
+from mikemol.pycodemod.sites import Site, scan
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
+
+    from mikemol.pycodemod.core import Skip
 
 WORKING = "WORKING"
 _USES = frozenset({"call", "ref"})
