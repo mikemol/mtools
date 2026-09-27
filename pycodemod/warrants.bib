@@ -2254,3 +2254,17 @@
   claim  = {An undecodable file is the banner line `undecodable`, naming its exception.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_blocks_over_an_undecodable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-source-of-prints-a-method-from-its-decorator,
+  section = {cli},
+  title  = {`source-of` prints a method's qualname, its extent from the decorator, and its text},
+  claim  = {`source-of` prints a method's qualname, its extent from the decorator, and its text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_source_of_prints_a_method_from_its_decorator},
+}
+
+@misc{pycodemod-cli-source-of-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `source-of` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `source-of` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_source_of_over_an_unparseable_file_reports_incomplete},
+}

@@ -779,6 +779,32 @@ def test_commentary_blocks_over_an_undecodable_file_reports_incomplete(
     assert "undecodable: 1 (UnicodeDecodeError)" in captured.out + captured.err
 
 
+def test_source_of_prints_a_method_from_its_decorator(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`source-of` prints a method's qualname, its extent from the decorator, and its text."""
+    target = tmp_path / "m.py"
+    target.write_text(
+        "class Box:\n    @staticmethod\n    def run():\n        return 1\n\n\n"
+        "def other():\n    pass\n",
+        encoding="utf-8",
+    )
+    code = cli.main(["source-of", "run", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"source-of Box.run {target}:2-4\n    @staticmethod\n" in out
+    assert "other" not in out
+    assert "source-of definitions=1" in out
+
+
+def test_source_of_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that fails to parse makes `source-of` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("def (:\n", encoding="utf-8")
+    code = cli.main(["source-of", "run", str(target)])
+    assert code == 1
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])
