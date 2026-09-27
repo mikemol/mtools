@@ -98,6 +98,7 @@ _FIELDS = (
     "kind",
     "evidence",
     "weight",
+    "witness",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -112,9 +113,10 @@ _APPLIES: dict[str, frozenset[str]] = {
             "enables",
             "weight",
             "touches",
+            "witness",
         }
     ),
-    "add": frozenset({"next", "enables", "touches", "caused_by"}),
+    "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
     "bump_blocked": frozenset({"exclude"}),
     "ledger": frozenset({"kind", "evidence"}),
 }
@@ -247,6 +249,9 @@ def _parser() -> argparse.ArgumentParser:
     # `_set_given` already treat `()` as "set to empty"; `+` was the one thing blocking it.
     ap.add_argument("--enables", nargs="*", metavar="SYMBOL")
     ap.add_argument("--touches", nargs="+", metavar="TAG")
+    ap.add_argument(
+        "--witness", metavar="QUERY", help="--add/--update: a one-line Rego query, stored unread"
+    )
     ap.add_argument("--caused-by", metavar="REF", help="--add: letter path, peer, operator, W<n>")
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
@@ -536,6 +541,7 @@ def _update(ctx: Ctx) -> int:
         enables=ctx.many("enables"),
         weight=ctx.number("weight"),
         touches=ctx.many("touches"),
+        witness=ctx.get("witness"),
     )
 
     def edit(state: State) -> int:
@@ -560,6 +566,7 @@ def _add(ctx: Ctx) -> int:
         ctx.many("enables") or (),
         ctx.many("touches") or (),
         ctx.get("caused_by") or "",
+        ctx.get("witness") or "",
     )
 
     def edit(state: State) -> int:

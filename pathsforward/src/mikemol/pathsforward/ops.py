@@ -97,6 +97,10 @@ class Update:
     # ⚑ SET, NOT MERGED, like `enables` (nemik:W50, 2026-09-27): three comma-joined tags
     # ("adapter,cleanup") were accepted at --add and had no repair path until --update took it.
     touches: tuple[str, ...] | None = None
+    # ⚑ A WITNESS IS DATA, NEVER RUN HERE (nemik:W59 rev 3, 2026-09-27): a single-line Rego query
+    # over nemik-observed input. nemik's observers and `opa eval` decide it; this tool neither
+    # parses nor validates the Rego, and only refuses a query that is empty or not one line.
+    witness: str | None = None
 
 
 @dataclass(frozen=True)
@@ -108,6 +112,7 @@ class Draft:
     enables: tuple[str, ...] = ()
     touches: tuple[str, ...] = ()
     caused_by: str = ""
+    witness: str = ""
 
 
 def minted_during(state: State, now: str) -> str:
@@ -172,6 +177,24 @@ def _refuse_enums(upd: Update) -> None:
         msg = f"enables {bad} are not W<n> or repo:W<n> symbols"
         raise RefusedError(msg)
     _refuse_title(upd.title)
+    _refuse_witness(upd.witness)
+
+
+def _refuse_witness(query: str | None) -> None:
+    """Refuse a witness that is blank or spans lines; its Rego is never read here.
+
+    Raises:
+        RefusedError: on a blank query, or one carrying a line break.
+
+    """
+    if query is None:
+        return
+    if not query.strip():
+        msg = "witness is empty"
+        raise RefusedError(msg)
+    if "\n" in query or "\r" in query:
+        msg = f"witness {query!r} is not a single line"
+        raise RefusedError(msg)
 
 
 def _refuse_title(title: str | None) -> None:
@@ -204,6 +227,7 @@ def _set_given(new: Json, upd: Update) -> None:
         "enables": None if upd.enables is None else list(upd.enables),
         "weight": upd.weight,
         "touches": None if upd.touches is None else list(upd.touches),
+        "witness": upd.witness,
     }
     new.update({key: value for key, value in given.items() if value is not None})
 
@@ -213,7 +237,7 @@ def _is_work(upd: Update) -> bool:
 
     ⚑ A METADATA WRITE IS NOT WORK (luthen via nemik, 2026-09-27): a per-tick `--weight` sync
     rewrote `last_worked` on 49 of 49 items, erasing the age-since-worked that the loop and the
-    nudge backoff read. So `weight`, `title`, `enables`, `touches` and `ticks_blocked`
+    nudge backoff read. So `weight`, `title`, `enables`, `touches`, `witness` and `ticks_blocked`
     (bookkeeping the loop itself keeps) leave the stamp alone. Status, blockers, the next step
     and evidence are the fields a tick writes BECAUSE it worked the item.
 
@@ -396,6 +420,7 @@ def add(state: State, draft: Draft, now: str) -> str:
     if any(ch.isspace() for ch in draft.caused_by):
         msg = f"add refused, nothing minted: caused_by {draft.caused_by!r} is not one token"
         raise RefusedError(msg)
+    _refuse_witness(draft.witness or None)
     counter = state.counter + 1
     sym = f"W{counter}"
     state.doc["counter"] = counter
@@ -415,6 +440,7 @@ def add(state: State, draft: Draft, now: str) -> str:
             "caused_by": draft.caused_by or None,
             "last_worked": None,
             "ticks_blocked": 0,
+            **({"witness": draft.witness} if draft.witness else {}),
         }
     )
     return sym

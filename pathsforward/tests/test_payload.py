@@ -319,3 +319,10 @@ def test_the_reconcile_command_is_absolute_when_run_otherwise(
     command = line.split("`")[1].split(" --state ")[0]
     first = Path(command.split()[0])
     assert (first.is_absolute(), first.name == _PROG or command.endswith(_MODULE)) == (True, True)
+
+
+def test_stanza_carries_the_witness_only_when_set() -> None:
+    """A witnessed waypoint shows its query line; an unwitnessed one is unchanged (W131)."""
+    query = 'data.nemik.merged["W5"]'
+    lines = pl.stanza(_wp("W5", witness=query)).splitlines()
+    assert (lines[2], len(pl.stanza(_wp("W5")).splitlines())) == (f"      witness: {query}", 3)

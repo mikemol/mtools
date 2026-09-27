@@ -1702,3 +1702,24 @@
   claim  = {Only a done LOCAL symbol is pruned; the rest keep the item blocked (W125).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_prune_done_keeps_live_foreign_and_agent_blockers},
 }
+
+@misc{pathsforward-ops-witness-is-stored-verbatim-and-is-not-work,
+  section = {ops},
+  title  = {--add and --update store the query unread; the update leaves last_worked alone (W131)},
+  claim  = {--add and --update store the query unread; the update leaves last_worked alone (W131).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_witness_is_stored_verbatim_and_is_not_work},
+}
+
+@misc{pathsforward-ops-witness-refuses-blank-or-multiline,
+  section = {ops},
+  title  = {A witness is one non-blank line; the Rego inside it is never parsed (W131)},
+  claim  = {A witness is one non-blank line; the Rego inside it is never parsed (W131).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_witness_refuses_blank_or_multiline},
+}
+
+@misc{pathsforward-payload-stanza-carries-the-witness-only-when-set,
+  section = {payload},
+  title  = {A witnessed waypoint shows its query line; an unwitnessed one is unchanged (W131)},
+  claim  = {A witnessed waypoint shows its query line; an unwitnessed one is unchanged (W131).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_stanza_carries_the_witness_only_when_set},
+}

@@ -452,3 +452,21 @@ def test_prune_done_keeps_live_foreign_and_agent_blockers() -> None:
     assert ops.prune_done(state) == []
     w5 = state.waypoints[-1]
     assert (w5["status"], w5["blocked_on"]) == ("blocked", ["W1", "nemik:W4", "nemik-45"])
+
+
+def test_witness_is_stored_verbatim_and_is_not_work() -> None:
+    """--add and --update store the query unread; the update leaves last_worked alone (W131)."""
+    query = 'input.pr.merged == true; input.pr.repo == "nemik"'
+    state = _state()
+    sym = ops.add(state, ops.Draft("t", witness=query), _NOW)
+    ops.update(state, "W1", ops.Update(witness=query), _NOW)
+    added, w1 = ops.find(state, sym), ops.find(state, "W1")
+    assert (added["witness"], w1["witness"], "last_worked" in w1) == (query, query, False)
+
+
+@pytest.mark.parametrize("query", ["", "  ", "a\nb"])
+def test_witness_refuses_blank_or_multiline(query: str) -> None:
+    """A witness is one non-blank line; the Rego inside it is never parsed (W131)."""
+    state = _state()
+    with pytest.raises(ops.RefusedError, match="witness"):
+        ops.update(state, "W1", ops.Update(witness=query), _NOW)
