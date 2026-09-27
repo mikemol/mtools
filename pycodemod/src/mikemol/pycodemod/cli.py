@@ -4,10 +4,11 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `disagreement` (`placement.disagreement`) to the eight modes already wired: `calls`
-(`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
+slice adds `placement` (`placement.placement`, default forms) to the nine modes already wired:
+`calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
-`exits` (`exit.exits`) and `verdicts` (`graph.verdict_returners`).
+`exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`) and `disagreement`
+(`placement.disagreement`).
 
 ⚑⚑ EVERY PRINTER PRINTS ITS DENOMINATOR. `report.incomplete` is the one shared reporter (W46): a
 mode that skipped files says how many, and how many were read, rather than a bare row count that
@@ -36,6 +37,7 @@ from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers
 from mikemol.pycodemod.placement import disagreement as run_disagreement
+from mikemol.pycodemod.placement import placement as run_placement
 from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.swallows import swallows as run_swallows
 
@@ -45,7 +47,7 @@ if TYPE_CHECKING:
     from mikemol.pycodemod.exit import ExitRow
     from mikemol.pycodemod.graph import VerdictDef
     from mikemol.pycodemod.imports import AttrRead, ImportRow
-    from mikemol.pycodemod.placement import Disagreement
+    from mikemol.pycodemod.placement import Disagreement, Placement
     from mikemol.pycodemod.swallows import Swallow
 
 _REFUSED = 2
@@ -128,6 +130,10 @@ def _write_exit_row(row: ExitRow) -> None:
 
 def _write_verdict(row: VerdictDef) -> None:
     sys.stdout.write(f"verdict {row.name} {','.join(row.kinds)} {row.path}:{row.line}\n")
+
+
+def _write_placement(row: Placement) -> None:
+    sys.stdout.write(f"placement {row.verdict} {row.form} {row.path}:{row.line}\n")
 
 
 def _write_disagreement(row: Disagreement) -> None:
@@ -241,6 +247,16 @@ def _handle_verdicts(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_placement(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_placement(paths)
+    for row in result.rows:
+        _write_placement(row)
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_disagreement(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     result = run_disagreement(paths)
@@ -261,6 +277,7 @@ MODES = {
     "exits": _handle_exits,
     "verdicts": _handle_verdicts,
     "disagreement": _handle_disagreement,
+    "placement": _handle_placement,
 }
 
 
@@ -304,6 +321,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "disagreement", help="a tool's relation between its intent gate, snapshot and store writes"
     )
     disagreement_p.add_argument("paths", nargs="+")
+    placement_p = sub.add_parser(
+        "placement", help="each guarded file strongest intent-gate verdict and its witness"
+    )
+    placement_p.add_argument("paths", nargs="+")
 
     for name in RETIRED:
         redirect = sub.add_parser(name)

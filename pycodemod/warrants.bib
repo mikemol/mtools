@@ -1797,3 +1797,17 @@
   claim  = {A file that fails to parse makes `disagreement` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_disagreement_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-placement-reports-an-entry-gate,
+  section = {cli},
+  title  = {`placement` reports a file's strongest intent-gate verdict, with its denominator},
+  claim  = {`placement` reports a file's strongest intent-gate verdict, with its denominator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_reports_an_entry_gate},
+}
+
+@misc{pycodemod-cli-placement-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that fails to parse makes `placement` print the shared incomplete-scan banner},
+  claim  = {A file that fails to parse makes `placement` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_over_an_unparseable_file_reports_incomplete},
+}

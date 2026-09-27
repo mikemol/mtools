@@ -759,3 +759,12 @@ store-write needle (e.g. `upsert`) and no entry/snapshot needle is invisible to 
 Unmeasured whether that is reachable in practice. 2 new tests, 2 warrants, rubric "Eight Modes"
 to "Nine Modes". 328 pytest pass, ruff/mypy clean. NEXT for W34: placement() itself (forms
 args), ambient (--root), callgraph/reaches, and the rest listed above.
+
+W34 SLICE 6 LANDED (2026-09-27): `placement` (placement.placement) wired into cli.MODES over its
+DEFAULT forms (ENTRY_FORMS, FIRST_WRITE_FORMS) only. Declined for this slice: a `--form` flag to
+override them -- no caller has asked, and origin's spelling for it is unverified here. The
+unparseable fixture carries `require_at_entry` (scan's needle prefilter, per slice 5). 2 tests,
+2 warrants, rubric "Nine Modes" to "Ten Modes". 330 pytest pass, ruff/format/mypy clean. NEXT
+for W34: ambient (--root), callgraph/reaches, arguments' three flags, strings' two, definitions'
+two, aliases, rivals, funcnames, ordering, size, deps, crossings, modstate, shapes, commentary's
+four spellings, discards, layout, owes' successor naming clash.
