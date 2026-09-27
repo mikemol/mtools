@@ -692,6 +692,24 @@ def test_values_reads_an_all_digit_argument_as_a_position(
     assert "value 'a' " in capsys.readouterr().out
 
 
+def test_literals_reports_a_string_holding_the_text(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`literals` prints a row for a string literal that contains the searched text."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 'a needle here'\n", encoding="utf-8")
+    code = cli.main(["literals", "needle", str(target)])
+    assert code == 0
+    assert "literal " in capsys.readouterr().out
+
+
+def test_literals_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
+    """An unparseable file carrying the text makes `literals` print the incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 'needle'\ndef (:\n", encoding="utf-8")
+    assert cli.main(["literals", "needle", str(target)]) == 1
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])

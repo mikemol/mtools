@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `values` (`arguments.values`) to the thirty-four modes already wired:
+slice adds `literals` (`strings.literal_sites`) to the thirty-five modes already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -19,7 +19,8 @@ slice adds `values` (`arguments.values`) to the thirty-four modes already wired:
 (`funcnames.funcnames`), `size` (`size.module_sizes`), `deps` (`deps.import_census`), `crossings`
 (`crossings.crossings`), `shapes` (`shapes.shape_sites`), `commentary`
 (`commentary.commentary_census`), `discards` (`discards.discards`), `forwards`
-(`arguments.forwards`) and `asserted` (`arguments.asserted`).
+(`arguments.forwards`), `asserted` (`arguments.asserted`) and `values`
+(`arguments.values`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -77,7 +78,7 @@ from mikemol.pycodemod.rivals import collisions as run_collisions
 from mikemol.pycodemod.shapes import shape_sites
 from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
-from mikemol.pycodemod.strings import key_reads
+from mikemol.pycodemod.strings import key_reads, literal_sites
 from mikemol.pycodemod.swallows import swallows as run_swallows
 
 if TYPE_CHECKING:
@@ -391,6 +392,18 @@ def _handle_guarded(ns: argparse.Namespace) -> int:
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
+    _write_lines(lines)
+    return code
+
+
+def _handle_literals(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = literal_sites(paths, _str(ns, "text"))
+    for row in result.rows:
+        sys.stdout.write(
+            f"literal {row.role} {row.path}:{row.line} ({row.context}) {row.value!r}\n"
+        )
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
 
@@ -766,6 +779,7 @@ MODES = {
     "asserted": _handle_asserted,
     "values": _handle_values,
     "key-reads": _handle_key_reads,
+    "literals": _handle_literals,
     "bindings": _handle_bindings,
     "aliases": _handle_aliases,
     "funcnames": _handle_funcnames,
@@ -830,6 +844,9 @@ def _add_named_modes(make: _Make) -> None:
     kr = make("key-reads", "every read and write of one string key")
     kr.add_argument("key")
     kr.add_argument("paths", nargs="+")
+    lit = make("literals", "every string literal containing a text, with its role")
+    lit.add_argument("text")
+    lit.add_argument("paths", nargs="+")
     bnd = make("bindings", "every binding of a name, with the lines it is live")
     bnd.add_argument("name")
     bnd.add_argument("paths", nargs="+")

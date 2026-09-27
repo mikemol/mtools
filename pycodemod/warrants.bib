@@ -2212,3 +2212,17 @@
   claim  = {An all-digit argument is a positional ordinal, not a keyword named `0`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_values_reads_an_all_digit_argument_as_a_position},
 }
+
+@misc{pycodemod-cli-literals-reports-a-string-holding-the-text,
+  section = {cli},
+  title  = {`literals` prints a row for a string literal that contains the searched text},
+  claim  = {`literals` prints a row for a string literal that contains the searched text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_literals_reports_a_string_holding_the_text},
+}
+
+@misc{pycodemod-cli-literals-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unparseable file carrying the text makes `literals` print the incomplete-scan banner},
+  claim  = {An unparseable file carrying the text makes `literals` print the incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_literals_over_an_unparseable_file_reports_incomplete},
+}
