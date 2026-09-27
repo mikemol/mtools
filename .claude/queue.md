@@ -858,3 +858,10 @@ exits 2, and RegistryMovedError also exits 2. ordering.py's stale "NOT PORTED HE
 docstring corrected (W54's residue). 3 tests, 3 warrants, rubric "Twenty-Six Modes". 368 pass.
 ⚑ Residue: the missing-extra test monkeypatches `_run_funcnames`; the real import-failure path in
 cli.py is not exercised (the dev venv always has sqlalchemy).
+
+W66 LANDED (2026-09-27): `size [--base N] paths...` wired; row `size <over|under> code= cap=
+physical= defs= why= <path>` (no incidents map, per the waypoint). _build_parser hit ruff's
+PLR0915/PLR0914 (51 statements, 16 locals) -- split into four mode-family builders
+(_add_scan_modes, _add_named_modes, _add_flagged_modes, _add_rooted_modes) that take a
+`make(name, help)` closure, so no private argparse type is named. Next overflow: add a family.
+2 tests, 2 warrants, rubric "Twenty-Seven Modes". 370 pass, clean.

@@ -4,8 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `funcnames` (`funcnames.funcnames`) to the twenty-five modes already wired:
-`calls`
+slice adds `size` (`size.module_sizes`) to the twenty-six modes already wired: `calls`
 (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -16,7 +15,8 @@ slice adds `funcnames` (`funcnames.funcnames`) to the twenty-five modes already 
 (`commentary.commentary_lost` over `owes.git_show`), `ambient` (`ambient.ambient`) and
 `callgraph` (`graph.callgraph`), `reaches` (`graph.reaches`), `guarded`
 (`arguments.guarded`), `key-reads` (`strings.key_reads`), `bindings`
-(`definitions.bindings`) and `aliases` (`aliases.aliases`).
+(`definitions.bindings`), `aliases` (`aliases.aliases`) and `funcnames`
+(`funcnames.funcnames`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -64,6 +64,7 @@ from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
 from mikemol.pycodemod.rivals import collisions as run_collisions
 from mikemol.pycodemod.sites import Site, scan
+from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
 from mikemol.pycodemod.strings import key_reads
 from mikemol.pycodemod.swallows import swallows as run_swallows
 
@@ -372,6 +373,21 @@ def _handle_funcnames(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_size(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = module_sizes(paths, _int(ns, "base"))
+    for row in result.rows:
+        verdict = "over" if row.code > row.cap else "under"
+        why = ",".join(row.why) or _ABSENT
+        sys.stdout.write(
+            f"size {verdict} code={row.code} cap={row.cap} physical={row.physical} "
+            f"defs={row.defs} why={why} {row.path}\n"
+        )
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_owes(ns: argparse.Namespace) -> int:
     name = _str(ns, "name")
     rev = _str(ns, "rev")
@@ -607,6 +623,7 @@ MODES = {
     "bindings": _handle_bindings,
     "aliases": _handle_aliases,
     "funcnames": _handle_funcnames,
+    "size": _handle_size,
 }
 
 
@@ -628,66 +645,83 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
 )
 
 
-def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="mikemol-pycodemod")
-    sub = parser.add_subparsers(dest="mode", required=True)
+type _Make = Callable[[str, str], argparse.ArgumentParser]
 
-    calls = sub.add_parser("calls", help="where a name is defined, called and used as a value")
+
+def _add_scan_modes(make: _Make) -> None:
+    calls = make("calls", "where a name is defined, called and used as a value")
     calls.add_argument("--target", default=None, help="a bare or dotted name; every name if unset")
     calls.add_argument("paths", nargs="+")
-    grd = sub.add_parser("guarded", help="calls under an if (with its tests) vs at the top")
+    grd = make("guarded", "calls under an if (with its tests) vs at the top")
     grd.add_argument("--target", default=None, help="a bare or dotted name; every name if unset")
     grd.add_argument("paths", nargs="+")
-    kr = sub.add_parser("key-reads", help="every read and write of one string key")
-    kr.add_argument("key")
-    kr.add_argument("paths", nargs="+")
-    bnd = sub.add_parser("bindings", help="every binding of a name, with the lines it is live")
-    bnd.add_argument("name")
-    bnd.add_argument("paths", nargs="+")
-    als = sub.add_parser("aliases", help="every import, graded by form")
-    als.add_argument("--all-modules", action="store_true", help="not just local modules")
-    als.add_argument("--local", action="append", help="an extra local head (repeatable)")
-    als.add_argument("paths", nargs="+")
-
-    owes = sub.add_parser("owes", help="uses of a name in files a revision did not touch")
-    owes.add_argument("name")
-    owes.add_argument("--rev", required=True, help="a git revision, or WORKING for the diff")
-    owes.add_argument("--root", required=True, help="the repo root git resolves the revision in")
-    owes.add_argument("paths", nargs="+")
-    lost = sub.add_parser("commentary-lost", help="marked sentences a split dropped")
-    lost.add_argument("--rev", required=True, help="the baseline git revision")
-    lost.add_argument("--root", required=True, help="the repo root the paths are under")
-    lost.add_argument("paths", nargs="+")
-    amb = sub.add_parser("ambient", help="filesystem-resolving calls not anchored to a root")
-    amb.add_argument("--root", required=True, help="the tree whose subtrees anchor paths")
-    amb.add_argument("paths", nargs="+")
-    rch = sub.add_parser("reaches", help="target names reachable from a caller, same-file")
+    make("dead", "defs nothing in the corpus calls or uses").add_argument("paths", nargs="+")
+    rch = make("reaches", "target names reachable from a caller, same-file")
     rch.add_argument("--start", required=True, help="the caller, as PATH:SCOPE")
     rch.add_argument("--target", required=True, action="append", help="repeatable")
     rch.add_argument("--depth", type=int, default=DEPTH, help="hops to expand")
     rch.add_argument("paths", nargs="+")
 
-    dead = sub.add_parser("dead", help="defs nothing in the corpus calls or uses")
-    dead.add_argument("paths", nargs="+")
 
-    attr_reads_p = sub.add_parser("attr-reads", help="reads of `.name`, or `Recv.*` off `Recv`")
-    attr_reads_p.add_argument("query", help="`name`, or `Recv.*` for every attribute off Recv")
-    attr_reads_p.add_argument("paths", nargs="+")
+def _add_named_modes(make: _Make) -> None:
+    kr = make("key-reads", "every read and write of one string key")
+    kr.add_argument("key")
+    kr.add_argument("paths", nargs="+")
+    bnd = make("bindings", "every binding of a name, with the lines it is live")
+    bnd.add_argument("name")
+    bnd.add_argument("paths", nargs="+")
+    attr = make("attr-reads", "reads of `.name`, or `Recv.*` off `Recv`")
+    attr.add_argument("query", help="`name`, or `Recv.*` for every attribute off Recv")
+    attr.add_argument("paths", nargs="+")
+    imp = make("importers", "every import of `module`, and the names taken")
+    imp.add_argument("module")
+    imp.add_argument("paths", nargs="+")
 
-    importers_p = sub.add_parser("importers", help="every import of `module`, and the names taken")
-    importers_p.add_argument("module")
-    importers_p.add_argument("paths", nargs="+")
 
+def _add_flagged_modes(make: _Make) -> None:
+    als = make("aliases", "every import, graded by form")
+    als.add_argument("--all-modules", action="store_true", help="not just local modules")
+    als.add_argument("--local", action="append", help="an extra local head (repeatable)")
+    als.add_argument("paths", nargs="+")
+    siz = make("size", "every module's code lines against its cap")
+    siz.add_argument("--base", type=int, default=OVERLARGE_LINES, help="the base cap")
+    siz.add_argument("paths", nargs="+")
+
+
+def _add_rooted_modes(make: _Make) -> None:
+    owes = make("owes", "uses of a name in files a revision did not touch")
+    owes.add_argument("name")
+    owes.add_argument("--rev", required=True, help="a git revision, or WORKING for the diff")
+    owes.add_argument("--root", required=True, help="the repo root git resolves the revision in")
+    owes.add_argument("paths", nargs="+")
+    lost = make("commentary-lost", "marked sentences a split dropped")
+    lost.add_argument("--rev", required=True, help="the baseline git revision")
+    lost.add_argument("--root", required=True, help="the repo root the paths are under")
+    lost.add_argument("paths", nargs="+")
+    amb = make("ambient", "filesystem-resolving calls not anchored to a root")
+    amb.add_argument("--root", required=True, help="the tree whose subtrees anchor paths")
+    amb.add_argument("paths", nargs="+")
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    """Build the parser; each mode family adds its own subparsers, so no builder outgrows ruff.
+
+    Returns:
+        the parser.
+
+    """
+    parser = argparse.ArgumentParser(prog="mikemol-pycodemod")
+    sub = parser.add_subparsers(dest="mode", required=True)
+
+    def make(name: str, text: str) -> argparse.ArgumentParser:
+        return sub.add_parser(name, help=text)
+
+    for family in (_add_scan_modes, _add_named_modes, _add_flagged_modes, _add_rooted_modes):
+        family(make)
     for name, text in _PATHS_ONLY:
-        sub.add_parser(name, help=text).add_argument("paths", nargs="+")
-
-    for name in RETIRED:
-        redirect = sub.add_parser(name)
-        redirect.add_argument("rest", nargs=argparse.REMAINDER)
-    for name in DO_NOT_PORT:
-        redirect = sub.add_parser(name)
-        redirect.add_argument("rest", nargs=argparse.REMAINDER)
-
+        make(name, text).add_argument("paths", nargs="+")
+    for name in (*RETIRED, *DO_NOT_PORT):
+        sub.add_parser(name).add_argument("rest", nargs=argparse.REMAINDER)
     return parser
 
 

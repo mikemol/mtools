@@ -514,6 +514,25 @@ def test_funcnames_without_the_extra_refuses(
     assert cli.main(["funcnames", str(target)]) == _REFUSED
 
 
+def test_size_with_a_small_base_reports_a_module_over_its_cap(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`size --base N` reports a module whose code lines exceed the cap as over."""
+    target = tmp_path / "m.py"
+    target.write_text("a = 1\nb = 2\nc = 3\n", encoding="utf-8")
+    code = cli.main(["size", "--base", "1", str(target)])
+    assert code == 0
+    assert "size over code=3" in capsys.readouterr().out
+
+
+def test_size_over_an_unreadable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that cannot be read makes `size` print the shared incomplete-scan banner."""
+    target = tmp_path / "m.py"
+    target.write_bytes(b"\xff\xfe\x00")
+    code = cli.main(["size", str(target)])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

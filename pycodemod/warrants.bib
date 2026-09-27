@@ -2078,3 +2078,17 @@
             census.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_funcnames_without_the_extra_refuses},
 }
+
+@misc{pycodemod-cli-size-with-a-small-base-reports-a-module-over-its-cap,
+  section = {cli},
+  title  = {`size --base N` reports a module whose code lines exceed the cap as over},
+  claim  = {`size --base N` reports a module whose code lines exceed the cap as over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_size_with_a_small_base_reports_a_module_over_its_cap},
+}
+
+@misc{pycodemod-cli-size-over-an-unreadable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that cannot be read makes `size` print the shared incomplete-scan banner},
+  claim  = {A file that cannot be read makes `size` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_size_over_an_unreadable_file_reports_incomplete},
+}
