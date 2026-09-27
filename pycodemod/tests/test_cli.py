@@ -750,6 +750,35 @@ def test_commentary_kinds_over_an_undecodable_file_reports_incomplete(
     assert "undecodable: 1 (UnicodeDecodeError)" in captured.out + captured.err
 
 
+def test_commentary_blocks_names_the_owner_and_the_cited_symbol(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`commentary-blocks` prints a marked paragraph's extent, its def and the symbol it cites."""
+    target = tmp_path / "m.py"
+    target.write_text(
+        "def run():\n    # \u2691 calls `helper` here\n    # and continues\n\n    return 1\n",
+        encoding="utf-8",
+    )
+    code = cli.main(["commentary-blocks", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"commentary-blocks {target}:2-3 run cites=helper " in out
+    assert "return 1" not in out
+    assert "commentary-blocks blocks=1" in out
+
+
+def test_commentary_blocks_over_an_undecodable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An undecodable file is the banner line `undecodable`, naming its exception."""
+    latin = tmp_path / "latin.py"
+    latin.write_bytes(b"# \xe9\n")
+    code = cli.main(["commentary-blocks", str(latin)])
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "undecodable: 1 (UnicodeDecodeError)" in captured.out + captured.err
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])

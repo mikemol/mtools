@@ -4,8 +4,8 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `commentary-kinds` (`commentary.commentary_kinds`) to the thirty-six modes already
-wired:
+slice adds `commentary-blocks` (`commentary.commentary_blocks`) to the thirty-seven modes
+already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -21,7 +21,8 @@ wired:
 (`crossings.crossings`), `shapes` (`shapes.shape_sites`), `commentary`
 (`commentary.commentary_census`), `discards` (`discards.discards`), `forwards`
 (`arguments.forwards`), `asserted` (`arguments.asserted`), `values`
-(`arguments.values`) and `literals` (`strings.literal_sites`).
+(`arguments.values`), `literals` (`strings.literal_sites`) and `commentary-kinds`
+(`commentary.commentary_kinds`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -55,7 +56,12 @@ from mikemol.pycodemod.arguments import asserted as run_asserted
 from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
-from mikemol.pycodemod.commentary import COMMENTARY_MARKS, commentary_census, commentary_kinds
+from mikemol.pycodemod.commentary import (
+    COMMENTARY_MARKS,
+    commentary_blocks,
+    commentary_census,
+    commentary_kinds,
+)
 from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.crossings import crossings as run_crossings
@@ -525,6 +531,23 @@ def _handle_commentary_kinds(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_commentary_blocks(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    marks = _opt_str_list(ns, "mark") or COMMENTARY_MARKS
+    result = commentary_blocks(paths, marks)
+    for block in result.found:
+        owner = block.enclosing or _ABSENT
+        cites = ",".join(block.cited) or _ABSENT
+        sys.stdout.write(
+            f"commentary-blocks {block.path}:{block.start}-{block.end} {owner} "
+            f"cites={cites} {block.text}\n"
+        )
+    sys.stdout.write(f"commentary-blocks blocks={len(result.found)}\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_shapes(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     try:
@@ -809,6 +832,7 @@ MODES = {
     "shapes": _handle_shapes,
     "commentary": _handle_commentary,
     "commentary-kinds": _handle_commentary_kinds,
+    "commentary-blocks": _handle_commentary_blocks,
     "discards": _handle_discards,
 }
 
@@ -909,6 +933,9 @@ def _add_flagged_modes(make: _Make) -> None:
     kin = make("commentary-kinds", "each marked line as comment, docstring or executable")
     kin.add_argument("--mark", action="append", help="a commentary mark (repeatable; default ⚑)")
     kin.add_argument("paths", nargs="+")
+    blk = make("commentary-blocks", "each marked paragraph, its owner and what it cites")
+    blk.add_argument("--mark", action="append", help="a commentary mark (repeatable; default ⚑)")
+    blk.add_argument("paths", nargs="+")
 
 
 def _add_rooted_modes(make: _Make) -> None:

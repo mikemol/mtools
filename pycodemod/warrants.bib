@@ -2240,3 +2240,17 @@
   claim  = {An undecodable file is the banner line `undecodable`, naming its exception.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_kinds_over_an_undecodable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-commentary-blocks-names-the-owner-and-the-cited-symbol,
+  section = {cli},
+  title  = {`commentary-blocks` prints a marked paragraph's extent, its def and the symbol it cites},
+  claim  = {`commentary-blocks` prints a marked paragraph's extent, its def and the symbol it cites.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_blocks_names_the_owner_and_the_cited_symbol},
+}
+
+@misc{pycodemod-cli-commentary-blocks-over-an-undecodable-file-reports-incomplete,
+  section = {cli},
+  title  = {An undecodable file is the banner line `undecodable`, naming its exception},
+  claim  = {An undecodable file is the banner line `undecodable`, naming its exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_blocks_over_an_undecodable_file_reports_incomplete},
+}
