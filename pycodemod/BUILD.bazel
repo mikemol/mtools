@@ -139,6 +139,12 @@ sh_test(
 
 venv_from_hub(
     name = ".venv",
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as `//hooks:.venv` mirrors its own.
+    # Declared there since 1dcb200 and absent here until W35: the dist venv had no script,
+    # and `python -m mikemol.pycodemod.cli` prints nothing (no __main__ block).
+    console_scripts = {
+        "mikemol-pycodemod": "mikemol.pycodemod.cli:_console",
+    },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
