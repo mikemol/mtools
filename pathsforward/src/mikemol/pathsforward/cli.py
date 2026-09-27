@@ -109,6 +109,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "ticks_blocked",
             "enables",
             "weight",
+            "touches",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by"}),
@@ -520,6 +521,7 @@ def _update(ctx: Ctx) -> int:
         title=ctx.get("title"),
         enables=ctx.many("enables"),
         weight=ctx.number("weight"),
+        touches=ctx.many("touches"),
     )
 
     def edit(state: State) -> int:

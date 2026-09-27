@@ -94,6 +94,9 @@ class Update:
     # (el-openglo W49, measured by nemik 2026-09-25) has a repair path.
     enables: tuple[str, ...] | None = None
     weight: int | None = None
+    # ⚑ SET, NOT MERGED, like `enables` (nemik:W50, 2026-09-27): three comma-joined tags
+    # ("adapter,cleanup") were accepted at --add and had no repair path until --update took it.
+    touches: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -200,6 +203,7 @@ def _set_given(new: Json, upd: Update) -> None:
         "title": upd.title,
         "enables": None if upd.enables is None else list(upd.enables),
         "weight": upd.weight,
+        "touches": None if upd.touches is None else list(upd.touches),
     }
     new.update({key: value for key, value in given.items() if value is not None})
 
@@ -209,9 +213,9 @@ def _is_work(upd: Update) -> bool:
 
     ⚑ A METADATA WRITE IS NOT WORK (luthen via nemik, 2026-09-27): a per-tick `--weight` sync
     rewrote `last_worked` on 49 of 49 items, erasing the age-since-worked that the loop and the
-    nudge backoff read. So `weight`, `title`, `enables` and `ticks_blocked` (bookkeeping the loop
-    itself keeps) leave the stamp alone. Status, blockers, the next step and evidence are the
-    fields a tick writes BECAUSE it worked the item.
+    nudge backoff read. So `weight`, `title`, `enables`, `touches` and `ticks_blocked`
+    (bookkeeping the loop itself keeps) leave the stamp alone. Status, blockers, the next step
+    and evidence are the fields a tick writes BECAUSE it worked the item.
 
     Returns:
         True when any work field is given.

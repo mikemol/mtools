@@ -387,7 +387,7 @@ def test_update_refuses_a_malformed_edge(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     "args",
     [
-        ("--update", "W1", "--touches", "x"),
+        ("--update", "W1", "--except", "W2"),
         ("--update", "W1", "--caused-by", "nemik"),
         ("--add", "t", "--status", "done"),
         ("--hash", "--next", "n"),
@@ -422,6 +422,15 @@ def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
         "s",
         False,
     )
+
+
+def test_update_replaces_touches_whole(tmp_path: Path) -> None:
+    """--update --touches sets the whole tag list, so a comma-joined tag can be split."""
+    path = _file(tmp_path)
+    assert _code(path, "--update", "W1", "--touches", "adapter,cleanup") == _OK
+    code = _code(path, "--update", "W1", "--touches", "adapter", "cleanup")
+    w = _first(path)
+    assert (code, w["touches"], "last_worked" in w) == (_OK, ["adapter", "cleanup"], False)
 
 
 @pytest.mark.parametrize("title", _BAD_TITLES)

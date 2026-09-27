@@ -1653,3 +1653,10 @@
             it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_the_blocked_refusal_names_the_umbrella_spelling},
 }
+
+@misc{pathsforward-cli-update-replaces-touches-whole,
+  section = {cli},
+  title  = {--update --touches sets the whole tag list, so a comma-joined tag can be split},
+  claim  = {--update --touches sets the whole tag list, so a comma-joined tag can be split.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_replaces_touches_whole},
+}

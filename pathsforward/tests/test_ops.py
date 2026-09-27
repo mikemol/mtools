@@ -185,6 +185,7 @@ def test_a_work_update_stamps_last_worked(upd: ops.Update) -> None:
         ops.Update(weight=3),
         ops.Update(title="t"),
         ops.Update(enables=()),
+        ops.Update(touches=("a",)),
         ops.Update(ticks_blocked=2),
         ops.Update(),
     ],
