@@ -592,6 +592,25 @@ def test_shapes_refuses_a_bad_pattern(tmp_path: Path) -> None:
     assert cli.main(["shapes", "(", str(target)]) == _REFUSED
 
 
+def test_commentary_counts_marks_and_reports_a_repeat(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`commentary` counts marked lines per file and names a sentence written in two places."""
+    for name in ("a.py", "b.py"):
+        (tmp_path / name).write_text("# \u2691 keep this note\nx = 1\n", encoding="utf-8")
+    code = cli.main(["commentary", str(tmp_path / "a.py"), str(tmp_path / "b.py")])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "commentary lines=1 distinct=1" in out
+    assert "repeated x2" in out
+
+
+def test_commentary_over_an_unreadable_file_reports_incomplete(tmp_path: Path) -> None:
+    """A file that cannot be read makes `commentary` print the shared incomplete-scan banner."""
+    code = cli.main(["commentary", str(tmp_path / "absent.py")])
+    assert code == 1
+
+
 @pytest.mark.parametrize("name", sorted(cli.RETIRED))
 def test_a_retired_spelling_refuses_naming_its_successor(name: str) -> None:
     """Every retired origin flag parses and refuses, exit 2, naming its successor mode."""

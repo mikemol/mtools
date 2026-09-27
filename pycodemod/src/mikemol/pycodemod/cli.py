@@ -4,8 +4,8 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `shapes` (`shapes.shape_sites`) to the twenty-nine modes already wired: `calls`
-(`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
+slice adds `commentary` (`commentary.commentary_census`) to the thirty modes already wired:
+`calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
 (`placement.disagreement`), `placement` (`placement.placement`, default forms) and
@@ -16,8 +16,8 @@ slice adds `shapes` (`shapes.shape_sites`) to the twenty-nine modes already wire
 `callgraph` (`graph.callgraph`), `reaches` (`graph.reaches`), `guarded`
 (`arguments.guarded`), `key-reads` (`strings.key_reads`), `bindings`
 (`definitions.bindings`), `aliases` (`aliases.aliases`), `funcnames`
-(`funcnames.funcnames`), `size` (`size.module_sizes`), `deps` (`deps.import_census`) and `crossings`
-(`crossings.crossings`).
+(`funcnames.funcnames`), `size` (`size.module_sizes`), `deps` (`deps.import_census`), `crossings`
+(`crossings.crossings`) and `shapes` (`shapes.shape_sites`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -48,6 +48,7 @@ from mikemol.pycodemod import report
 from mikemol.pycodemod.aliases import aliases as run_aliases
 from mikemol.pycodemod.ambient import ambient as run_ambient
 from mikemol.pycodemod.arguments import guarded as run_guarded
+from mikemol.pycodemod.commentary import COMMENTARY_MARKS, commentary_census
 from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.crossings import crossings as run_crossings
@@ -393,6 +394,21 @@ def _handle_size(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_commentary(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    marks = _opt_str_list(ns, "mark") or COMMENTARY_MARKS
+    result = commentary_census(paths, marks)
+    for row in result.rows:
+        sys.stdout.write(f"commentary lines={row.lines} distinct={row.distinct} {row.path}\n")
+    for key, places in sorted(result.texts.items()):
+        if len(places) > 1:
+            where = " ".join(f"{path}:{line}" for path, line in places)
+            sys.stdout.write(f"repeated x{len(places)} {key!r} {where}\n")
+    lines, code = report.incomplete([_UNREAD for _ in result.unread], len(paths))
+    _write_lines(lines)
+    return code
+
+
 def _handle_shapes(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     try:
@@ -671,6 +687,7 @@ MODES = {
     "deps": _handle_deps,
     "crossings": _handle_crossings,
     "shapes": _handle_shapes,
+    "commentary": _handle_commentary,
 }
 
 
@@ -746,6 +763,9 @@ def _add_flagged_modes(make: _Make) -> None:
         "--authority", action="append", help="a call name that enumerates a corpus (repeatable)"
     )
     cro.add_argument("paths", nargs="+")
+    com = make("commentary", "marked lines per file, and every sentence found in two places")
+    com.add_argument("--mark", action="append", help="a commentary mark (repeatable; default ⚑)")
+    com.add_argument("paths", nargs="+")
 
 
 def _add_rooted_modes(make: _Make) -> None:

@@ -2134,3 +2134,17 @@
   claim  = {A regex that will not compile refuses with exit 2 rather than matching nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_shapes_refuses_a_bad_pattern},
 }
+
+@misc{pycodemod-cli-commentary-counts-marks-and-reports-a-repeat,
+  section = {cli},
+  title  = {`commentary` counts marked lines per file and names a sentence written in two places},
+  claim  = {`commentary` counts marked lines per file and names a sentence written in two places.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_counts_marks_and_reports_a_repeat},
+}
+
+@misc{pycodemod-cli-commentary-over-an-unreadable-file-reports-incomplete,
+  section = {cli},
+  title  = {A file that cannot be read makes `commentary` print the shared incomplete-scan banner},
+  claim  = {A file that cannot be read makes `commentary` print the shared incomplete-scan banner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_over_an_unreadable_file_reports_incomplete},
+}
