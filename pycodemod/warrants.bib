@@ -2226,3 +2226,17 @@
   claim  = {An unparseable file carrying the text makes `literals` print the incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_literals_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-commentary-kinds-files-a-comment-apart-from-a-printed-string,
+  section = {cli},
+  title  = {`commentary-kinds` files a `#` mark as comment and a printed mark as executable},
+  claim  = {`commentary-kinds` files a `#` mark as comment and a printed mark as executable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_kinds_files_a_comment_apart_from_a_printed_string},
+}
+
+@misc{pycodemod-cli-commentary-kinds-over-an-undecodable-file-reports-incomplete,
+  section = {cli},
+  title  = {An undecodable file is the banner line `undecodable`, naming its exception},
+  claim  = {An undecodable file is the banner line `undecodable`, naming its exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commentary_kinds_over_an_undecodable_file_reports_incomplete},
+}

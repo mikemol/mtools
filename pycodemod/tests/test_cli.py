@@ -724,6 +724,32 @@ def test_literals_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert cli.main(["literals", "needle", str(target)]) == 1
 
 
+def test_commentary_kinds_files_a_comment_apart_from_a_printed_string(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`commentary-kinds` files a `#` mark as comment and a printed mark as executable."""
+    target = tmp_path / "m.py"
+    target.write_text("# \u2691 a note\nprint('\u2691 said')\n", encoding="utf-8")
+    code = cli.main(["commentary-kinds", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"commentary-kinds comment {target}:1 " in out
+    assert f"commentary-kinds executable {target}:2 " in out
+    assert "commentary-kinds comment=1 docstring=0 executable=1 unparsed=0" in out
+
+
+def test_commentary_kinds_over_an_undecodable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An undecodable file is the banner line `undecodable`, naming its exception."""
+    latin = tmp_path / "latin.py"
+    latin.write_bytes(b"# \xe9\n")
+    code = cli.main(["commentary-kinds", str(latin)])
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "undecodable: 1 (UnicodeDecodeError)" in captured.out + captured.err
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])
