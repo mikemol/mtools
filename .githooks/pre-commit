@@ -432,9 +432,17 @@ if ! command -v bazel >/dev/null 2>&1; then
   record_refusal pre-commit " - bazel absent (before the per-distribution suites)"
   exit 1
 fi
-if ! ( cd "$root" && git_scrubbed bazel build //ratchet:ratchet_cli ) \
+# ⚑⚑ THE SAME TRAP, ONE ARTIFACT OVER (W179): the hooks suite's `test_venv_artifact.py` collects each
+# distribution's suite with `bazel-bin/<dist>/.venv/bin/python3`, and nothing here built that venv.
+# MEASURED 2026-09-27 at 82255d0: a commit adding `pathsforward/.../tags.py` was refused twice with
+# `No module named 'mikemol.pathsforward.tags'` — the built venv predated the module — and passed
+# only after `bazel build //pathsforward:.venv` by hand. So every `//<dist>:.venv` is built here too,
+# from the same `$_dists` population the loop below walks; a cache hit when nothing changed.
+_prebuild=(//ratchet:ratchet_cli)
+for _d in $_dists; do _prebuild+=("//$_d:.venv"); done
+if ! ( cd "$root" && git_scrubbed bazel build "${_prebuild[@]}" ) \
     >"$staged/.ratchet_cli.log" 2>&1; then
-  say "bazel build //ratchet:ratchet_cli FAILED — the hooks suite would run a dead binary, commit refused"
+  say "bazel build ${_prebuild[*]} FAILED — the hooks suite would run a dead binary or a stale venv, commit refused"
   sed 's/^/    /' "$staged/.ratchet_cli.log" | tail -20
   record_refusal pre-commit " - //ratchet:ratchet_cli did not build"
   exit 1
