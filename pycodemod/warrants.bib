@@ -2197,3 +2197,18 @@
   claim  = {A file that fails to parse makes `asserted` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_asserted_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-values-reports-each-value-over-the-call-total,
+  section = {cli},
+  title  = {`values` prints a constant, UNKNOWN for a name, and the total including the lacking call},
+  claim  = {`values` prints a constant, UNKNOWN for a name, and the total including the lacking
+            call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_values_reports_each_value_over_the_call_total},
+}
+
+@misc{pycodemod-cli-values-reads-an-all-digit-argument-as-a-position,
+  section = {cli},
+  title  = {An all-digit argument is a positional ordinal, not a keyword named `0`},
+  claim  = {An all-digit argument is a positional ordinal, not a keyword named `0`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_values_reads_an_all_digit_argument_as_a_position},
+}

@@ -669,6 +669,29 @@ def test_asserted_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert cli.main(["asserted", "--target", "f", "size", str(target)]) == 1
 
 
+def test_values_reports_each_value_over_the_call_total(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`values` prints a constant, UNKNOWN for a name, and the total including the lacking call."""
+    target = tmp_path / "m.py"
+    target.write_text("f(reset=True)\nf(reset=flag)\nf()\n", encoding="utf-8")
+    code = cli.main(["values", "f", "reset", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "value True " in out
+    assert "values: 2 of 3 calls pass it" in out
+
+
+def test_values_reads_an_all_digit_argument_as_a_position(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An all-digit argument is a positional ordinal, not a keyword named `0`."""
+    target = tmp_path / "m.py"
+    target.write_text("f('a')\n", encoding="utf-8")
+    assert cli.main(["values", "f", "0", str(target)]) == 0
+    assert "value 'a' " in capsys.readouterr().out
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])
