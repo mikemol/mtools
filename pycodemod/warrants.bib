@@ -1909,3 +1909,31 @@
   claim  = {A file that fails to parse makes `interlock` print the shared incomplete-scan banner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_interlock_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-owes-git-show-reads-a-path-at-the-revision,
+  section = {owes},
+  title  = {`git_show` returns a committed file's text at the revision, not the working copy's},
+  claim  = {`git_show` returns a committed file's text at the revision, not the working copy's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_git_show_reads_a_path_at_the_revision},
+}
+
+@misc{pycodemod-owes-git-show-answers-none-for-a-path-the-revision-lacks,
+  section = {owes},
+  title  = {A path absent at a good revision is None: a new sibling, not a refusal},
+  claim  = {A path absent at a good revision is None: a new sibling, not a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_git_show_answers_none_for_a_path_the_revision_lacks},
+}
+
+@misc{pycodemod-owes-git-show-refuses-a-bad-revision-up-front,
+  section = {owes},
+  title  = {A bad revision raises before any path is asked, so it cannot read as all-new files},
+  claim  = {A bad revision raises before any path is asked, so it cannot read as all-new files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_git_show_refuses_a_bad_revision_up_front},
+}
+
+@misc{pycodemod-owes-git-show-refuses-a-revision-shaped-like-an-option,
+  section = {owes},
+  title  = {A dash-leading revision never reaches git},
+  claim  = {A dash-leading revision never reaches git.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_owes.py -k test_git_show_refuses_a_revision_shaped_like_an_option},
+}

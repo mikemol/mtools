@@ -45,7 +45,7 @@ from mikemol.pycodemod.hints import AliasHint, alias_hint
 from mikemol.pycodemod.sites import Site, Skip, scan
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
 
 WORKING = "WORKING"
 _USES = frozenset({"call", "ref"})
@@ -85,6 +85,69 @@ class Owes:
     hints: list[AliasHint] = field(default_factory=list)
 
 
+def _git_for(rev: str) -> str:
+    """Return git's path, refusing an absent git and a revision git would read as an option.
+
+    Returns:
+        the git executable.
+
+    Raises:
+        GitRefusedError: git is absent, or `rev` starts with a dash.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        msg = "git is not on PATH"
+        raise GitRefusedError(msg)
+    if rev.startswith("-"):
+        msg = f"refused {rev!r}: a revision starting with '-' would reach git as an option"
+        raise GitRefusedError(msg)
+    return git
+
+
+def _run(git: str, args: Sequence[str], root: str) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(
+            [git, *args],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=_TIMEOUT,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        msg = f"git could not be run: {exc}"
+        raise GitRefusedError(msg) from exc
+
+
+def git_show(rev: str, root: str) -> Callable[[str], str | None]:
+    """Return a `show` for commentary_lost: a root-relative path's text at `rev`, or None.
+
+    ⚑ THE REVISION IS CHECKED ONCE, UP FRONT. A bad revision and a path absent at a good one both
+    make `git show` fail; only the second is None. The first is refused here, so it can never read
+    as a baseline in which every file was new.
+
+    Returns:
+        the callable; it answers None for a path the revision does not hold.
+
+    Raises:
+        GitRefusedError: git is absent, could not run, or refused the revision.
+
+    """
+    git = _git_for(rev)
+    proc = _run(git, ["rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"], root)
+    if proc.returncode != 0:
+        msg = f"git refused {rev!r}: {proc.stderr.strip() or 'not a commit'}"
+        raise GitRefusedError(msg)
+    commit = proc.stdout.strip()
+
+    def show(rel: str) -> str | None:
+        got = _run(git, ["show", f"{commit}:{rel}"], root)
+        return got.stdout if got.returncode == 0 else None
+
+    return show
+
+
 def changed_files(rev: str, root: str) -> Change:
     """Ask git which `.py` files `rev` touched under `root`.
 
@@ -95,30 +158,13 @@ def changed_files(rev: str, root: str) -> Change:
         GitRefusedError: git is absent, could not run, or refused the revision.
 
     """
-    git = shutil.which("git")
-    if git is None:
-        msg = "git is not on PATH"
-        raise GitRefusedError(msg)
-    if rev.startswith("-"):
-        msg = f"refused {rev!r}: a revision starting with '-' would reach git as an option"
-        raise GitRefusedError(msg)
+    git = _git_for(rev)
     against, desc = (
         ("HEAD", "the uncommitted working diff against HEAD")
         if rev == WORKING
         else (rev, f"git diff --name-only {rev}")
     )
-    try:
-        proc = subprocess.run(
-            [git, "diff", "--name-only", against, "--"],
-            cwd=root,
-            capture_output=True,
-            text=True,
-            timeout=_TIMEOUT,
-            check=False,
-        )
-    except (OSError, subprocess.SubprocessError) as exc:
-        msg = f"git could not be run: {exc}"
-        raise GitRefusedError(msg) from exc
+    proc = _run(git, ["diff", "--name-only", against, "--"], root)
     if proc.returncode != 0:
         msg = f"git refused {rev!r}: {proc.stderr.strip() or '(no message)'}"
         raise GitRefusedError(msg)

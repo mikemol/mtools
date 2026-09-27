@@ -134,3 +134,28 @@ def test_a_clean_tree_is_an_empty_change_not_a_refusal(decoy: Path) -> None:
     """Nothing edited, WORKING: the change is empty, and no refusal is raised."""
     got = owes.changed_files(owes.WORKING, str(decoy))
     assert got.files == frozenset()
+
+
+def test_git_show_reads_a_path_at_the_revision(decoy: Path) -> None:
+    """`git_show` returns a committed file's text at the revision, not the working copy's."""
+    _widen(decoy)
+    show = owes.git_show("HEAD", str(decoy))
+    assert show("store.py") == _FILES["store.py"]
+
+
+def test_git_show_answers_none_for_a_path_the_revision_lacks(decoy: Path) -> None:
+    """A path absent at a good revision is None: a new sibling, not a refusal."""
+    show = owes.git_show("HEAD", str(decoy))
+    assert show("new_sibling.py") is None
+
+
+def test_git_show_refuses_a_bad_revision_up_front(decoy: Path) -> None:
+    """A bad revision raises before any path is asked, so it cannot read as all-new files."""
+    with pytest.raises(owes.GitRefusedError, match="no-such-rev"):
+        owes.git_show("no-such-rev", str(decoy))
+
+
+def test_git_show_refuses_a_revision_shaped_like_an_option(decoy: Path) -> None:
+    """A dash-leading revision never reaches git."""
+    with pytest.raises(owes.GitRefusedError, match="as an option"):
+        owes.git_show("--output=x", str(decoy))

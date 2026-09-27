@@ -806,3 +806,9 @@ tests, 2 warrants, rubric "Fifteen" to "Sixteen Modes". 342 pytest pass, clean.
 W57 LANDED (2026-09-27): `interlock` (exit.interlock) wired, paths-only, one _PATHS_ONLY row; row is
 `interlock <callee> <defname|-> <path>:<line>`. 2 tests, 2 warrants, rubric "Sixteen" to "Seventeen
 Modes". 344 pytest pass, clean.
+
+W81 LANDED (2026-09-27): owes.git_show(rev, root) -> show(rel) for commentary_lost. The revision is
+verified once (rev-parse --verify <rev>^{commit}) so a bad rev raises GitRefusedError instead of
+reading as a baseline where every file is new; a path absent at a good rev is None. owes' git
+refusals factored into _git_for/_run, shared with changed_files. 4 tests, 4 warrants. 348 pass.
+W82 unblocked.
