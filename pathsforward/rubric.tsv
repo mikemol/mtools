@@ -8,6 +8,7 @@ ops	The Mutations: Typed, All or Nothing, and Honest About the Block Count
 lock	The Tick Lock: A Pure Decision, and One Holder Among Racing Processes
 store	The Store: Atomic Replace, a Flock That Excludes, and No Torn Read
 ledger	The Ledger: Structured Columns, and a Refusal of Anything That Shifts Them
+atomize	The Atomize Signal: A Top Waypoint Already Advanced Is Flagged to Split
 render	The Mirror: Derived, Said So, and in Rank Order
 selftest	The Selftest: The Installed Tool Witnesses Itself
 cli	The CLI: No Default Root, the Bare Call Reads, and Every Exit Code

@@ -1460,3 +1460,59 @@
   claim  = {Zero-leverage waypoints in the same bucket keep their file order (stable sort).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_ordered_preserves_file_order_when_leverage_ties},
 }
+
+@misc{pathsforward-atomize-top-waypoint-advanced-last-tick-is-flagged,
+  section = {atomize},
+  title  = {The ready top waypoint, advanced by one earlier tick, reads ATOMIZE; k counts this tick},
+  claim  = {The ready top waypoint, advanced by one earlier tick, reads ATOMIZE; k counts this tick.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_top_waypoint_advanced_last_tick_is_flagged},
+}
+
+@misc{pathsforward-atomize-top-waypoint-never-advanced-is-not-flagged,
+  section = {atomize},
+  title  = {A fresh top waypoint owes work, not a split: no line},
+  claim  = {A fresh top waypoint owes work, not a split: no line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_top_waypoint_never_advanced_is_not_flagged},
+}
+
+@misc{pathsforward-atomize-mint-is-not-an-advance,
+  section = {atomize},
+  title  = {The `minted` line --add writes does not count, or every new waypoint would flag at once},
+  claim  = {The `minted` line --add writes does not count, or every new waypoint would flag at once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_mint_is_not_an_advance},
+}
+
+@misc{pathsforward-atomize-interrupt-counts-like-a-tick,
+  section = {atomize},
+  title  = {Work done out of band on a symbol invocation advanced the item just the same},
+  claim  = {Work done out of band on a symbol invocation advanced the item just the same.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_an_interrupt_counts_like_a_tick},
+}
+
+@misc{pathsforward-atomize-other-kinds-and-unparsed-lines-never-count,
+  section = {atomize},
+  title  = {A hash or lock line, and a legacy line the reader could not parse, advance nothing},
+  claim  = {A hash or lock line, and a legacy line the reader could not parse, advance nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_other_kinds_and_unparsed_lines_never_count},
+}
+
+@misc{pathsforward-atomize-only-the-top-is-judged,
+  section = {atomize},
+  title  = {A waypoint below the top is not flagged even when it was advanced: one split per tick},
+  claim  = {A waypoint below the top is not flagged even when it was advanced: one split per tick.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_only_the_top_is_judged},
+}
+
+@misc{pathsforward-atomize-nothing-workable-means-no-line,
+  section = {atomize},
+  title  = {With every waypoint blocked there is no top to split; the idle path owes nudges instead},
+  claim  = {With every waypoint blocked there is no top to split; the idle path owes nudges instead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_nothing_workable_means_no_line},
+}
+
+@misc{pathsforward-atomize-it-reads-a-real-ledger-line,
+  section = {atomize},
+  title  = {A line as `--ledger` writes it parses and counts: the witness is the on-disk format},
+  claim  = {A line as `--ledger` writes it parses and counts: the witness is the on-disk format.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_it_reads_a_real_ledger_line},
+}
