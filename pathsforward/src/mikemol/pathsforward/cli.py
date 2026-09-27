@@ -32,6 +32,7 @@ from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line
 from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
+from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -70,6 +71,7 @@ _VALUED = (
     "show",
     "preamble_set",
     "weights_from",
+    "scan_literal",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -90,6 +92,8 @@ _FIELDS = (
     "next",
     "title",
     "evidence_append",
+    "evidence_redact",
+    "replacement",
     "ticks_blocked",
     "enables",
     "touches",
@@ -109,6 +113,8 @@ _APPLIES: dict[str, frozenset[str]] = {
             "next",
             "title",
             "evidence_append",
+            "evidence_redact",
+            "replacement",
             "ticks_blocked",
             "enables",
             "weight",
@@ -228,6 +234,11 @@ def _parser() -> argparse.ArgumentParser:
         " which argparse consumes as end-of-options)",
     )
     mode.add_argument("--show", metavar="SYMBOL", help="what is W<n>")
+    mode.add_argument(
+        "--scan-literal",
+        metavar="PATTERN",
+        help="where a literal still appears: waypoints, residue, ledger, mirror (exit 1 on a hit)",
+    )
     mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
     mode.add_argument(
         "--weights-from",
@@ -240,6 +251,14 @@ def _parser() -> argparse.ArgumentParser:
     ap.add_argument("--next", metavar="TEXT")
     ap.add_argument("--title", metavar="TEXT", help="--update: replace a stale one-line title")
     ap.add_argument("--evidence-append", metavar="TEXT")
+    ap.add_argument(
+        "--evidence-redact",
+        metavar="PATTERN",
+        help="--update: replace a literal in evidence, next and title; ledgered by hash",
+    )
+    ap.add_argument(
+        "--replacement", metavar="TEXT", help=f"--evidence-redact's (default {REDACTED})"
+    )
     ap.add_argument("--ticks-blocked", type=int, metavar="N")
     ap.add_argument(
         "--weight", type=int, metavar="N", help="--update: store a priority; higher sorts first"
@@ -524,12 +543,14 @@ def _armed(ctx: Ctx) -> int:
 
 
 def _update(ctx: Ctx) -> int:
-    """Set typed fields on a waypoint.
+    """Set typed fields on a waypoint, or redact a literal from it.
 
     Returns:
         EXIT_OK.
 
     """
+    if ctx.get("evidence_redact") is not None or ctx.get("replacement") is not None:
+        return _redact(ctx)
     upd = ops.Update(
         status=ctx.get("status"),
         blocked_on=ctx.many("blocked_on"),
@@ -551,6 +572,71 @@ def _update(ctx: Ctx) -> int:
         return EXIT_OK
 
     return _mutate(ctx, edit)
+
+
+def _redact(ctx: Ctx) -> int:
+    """Replace a literal in one waypoint's free text, then ledger it by the pattern's hash.
+
+    ⚑ A REDACTION IS ITS OWN WRITE: combined with other fields, a refusal of either would leave the
+    caller unsure which half landed. ⚑ THE LEDGER LINE IS WRITTEN ONLY AFTER THE SAVE, so the
+    ledger never records a redaction the state does not hold.
+
+    Returns:
+        EXIT_OK, or EXIT_REFUSED when combined with another field or given `--replacement` alone.
+
+    """
+    sym = ctx.get("update") or ""
+    pattern = ctx.get("evidence_redact")
+    if pattern is None:
+        _warn("REFUSED: --replacement needs --evidence-redact PATTERN")
+        return EXIT_REFUSED
+    others = [f for f in _APPLIES["update"] - {"evidence_redact", "replacement"} if ctx.opts.get(f)]
+    if others:
+        _warn(f"REFUSED: --evidence-redact is its own write; drop {', '.join(sorted(others))}")
+        return EXIT_REFUSED
+    replacement = ctx.get("replacement")
+    counted: list[int] = []
+
+    def edit(state: State) -> int:
+        counted.append(
+            redact(ops.find(state, sym), pattern, REDACTED if replacement is None else replacement)
+        )
+        return EXIT_OK
+
+    code = _mutate(ctx, edit)
+    if code == EXIT_OK:
+        note = f"{digest(pattern)} n={counted[0]}"
+        _ledger(ctx, Entry("redact", sym, "redacted", NO_SYMBOL, note))
+        _say(f"{sym} redacted {note}; run --render, then --scan-literal to confirm")
+    return code
+
+
+def _scan_literal(ctx: Ctx) -> int:
+    """Report every place a literal still appears, never the literal itself.
+
+    Returns:
+        EXIT_OK when it appears nowhere, EXIT_FAILED on any hit, EXIT_REFUSED on an empty pattern.
+
+    """
+    pattern = ctx.get("scan_literal") or ""
+    if not pattern:
+        _warn("REFUSED: --scan-literal needs a non-empty pattern")
+        return EXIT_REFUSED
+    state = store.load(ctx.path)
+    ledger_path = store.sibling(ctx.path, store.LEDGER)
+    mirror_path = store.sibling(ctx.path, store.MIRROR)
+    ledger_lines = (
+        ledger_path.read_text(encoding="utf-8").splitlines() if ledger_path.is_file() else []
+    )
+    hits = scan([*state.waypoints, *state.residue], ledger_lines, pattern)
+    if mirror_path.is_file():
+        for i, raw in enumerate(mirror_path.read_text(encoding="utf-8").splitlines(), 1):
+            if pattern in raw:
+                hits.append(f"mirror line {i} n={raw.count(pattern)}")
+    for hit in hits:
+        _say(f"  {hit}")
+    _say(f"scan-literal: {digest(pattern)} {len(hits)} hit(s)")
+    return EXIT_FAILED if hits else EXIT_OK
 
 
 def _add(ctx: Ctx) -> int:
@@ -757,6 +843,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "bump_blocked": _bump_blocked,
     "ledger": _ledger_mode,
     "show": _show,
+    "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,
     "preamble_clear": _preamble_clear,
     "init": _init,

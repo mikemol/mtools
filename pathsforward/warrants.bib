@@ -1824,3 +1824,63 @@
             line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_overlap.py -k test_a_module_and_its_file_are_a_cross_grain_line},
 }
+
+@misc{pathsforward-redact-redact-replaces-every-occurrence-across-the-free-text-fields,
+  section = {redact},
+  title  = {Both occurrences leave, one in evidence and one in the next step, and the count says two},
+  claim  = {Both occurrences leave, one in evidence and one in the next step, and the count says
+            two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_redact_replaces_every_occurrence_across_the_free_text_fields},
+}
+
+@misc{pathsforward-redact-pattern-that-matches-nothing-is-refused-and-changes-nothing,
+  section = {redact},
+  title  = {A typo is a refusal, not a silent no-op},
+  claim  = {A typo is a refusal, not a silent no-op. THE CONTROL: the record is byte-identical
+            after.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_a_pattern_that_matches_nothing_is_refused_and_changes_nothing},
+}
+
+@misc{pathsforward-redact-replacement-holding-the-pattern-is-refused,
+  section = {redact},
+  title  = {A replacement that contains the pattern would leave it in place; refused, not accepted},
+  claim  = {A replacement that contains the pattern would leave it in place; refused, not accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_a_replacement_holding_the_pattern_is_refused},
+}
+
+@misc{pathsforward-redact-refusal-names-the-pattern-by-hash-never-by-value,
+  section = {redact},
+  title  = {The pattern is the disclosure: a refusal message carries its digest, not its text},
+  claim  = {The pattern is the disclosure: a refusal message carries its digest, not its text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_the_refusal_names_the_pattern_by_hash_never_by_value},
+}
+
+@misc{pathsforward-redact-scan-reports-where-and-how-many-across-records-and-ledger,
+  section = {redact},
+  title  = {A hit in a record field, a list field and a ledger line each shows; clean input none},
+  claim  = {A hit in a record field, a list field and a ledger line each shows; clean input none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_scan_reports_where_and_how_many_across_records_and_ledger},
+}
+
+@misc{pathsforward-redact-cli-redacts-ledgers-the-hash-and-the-scan-then-comes-back-clean,
+  section = {redact},
+  title  = {Scan exits 1 on a hit; redact; the ledger holds the hash and count; render; scan exits 0},
+  claim  = {Scan exits 1 on a hit; redact; the ledger holds the hash and count; render; scan exits
+            0. BOTH ARMS OF THE SCAN ARE RUN, so a scan that always says clean cannot
+            pass this.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_the_cli_redacts_ledgers_the_hash_and_the_scan_then_comes_back_clean},
+}
+
+@misc{pathsforward-redact-refused-redaction-writes-neither-state-nor-ledger,
+  section = {redact},
+  title  = {A zero-match pattern exits refused, and the state file and ledger are untouched},
+  claim  = {A zero-match pattern exits refused, and the state file and ledger are untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_a_refused_redaction_writes_neither_state_nor_ledger},
+}
+
+@misc{pathsforward-redact-redaction-is-its-own-write,
+  section = {redact},
+  title  = {Combined with another field, or given only a replacement, the update is refused whole},
+  claim  = {Combined with another field, or given only a replacement, the update is refused whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_a_redaction_is_its_own_write},
+}
