@@ -835,6 +835,36 @@ def test_alias_hint_over_an_unparseable_file_reports_incomplete(
     assert "read 0 of 1 file(s); 1 skipped" in banner
 
 
+def test_rivals_tells_a_wrapper_from_a_reimplementation(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`rivals` marks a one-line `return` of a call DELEGATES and a real body REIMPLEMENTS."""
+    src = tmp_path / "m.py"
+    src.write_text(
+        "def f(x):\n    return g(x)\n\n\nclass C:\n    def f(self):\n"
+        "        y = 1\n        return y\n",
+        encoding="utf-8",
+    )
+    code = cli.main(["rivals", "f", str(src)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"rivals {src}:1 DELEGATES callee=g statements=1" in out
+    assert f"rivals {src}:6 REIMPLEMENTS callee=- statements=2" in out
+    assert "rivals defs=2" in out
+
+
+def test_rivals_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unparseable file is a skip in the banner, not a silent zero."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    code = cli.main(["rivals", "f", str(bad)])
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "read 0 of 1 file(s); 1 skipped" in captured.out + captured.err
+
+
 def test_fix_owes_callers_redirects_to_owes(capsys: pytest.CaptureFixture[str]) -> None:
     """The origin's `fix-owes-callers` refuses, exit 2, and names `owes` as its successor."""
     code = cli.main(["fix-owes-callers"])

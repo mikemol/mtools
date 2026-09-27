@@ -4,7 +4,7 @@ r"""The driver: one `MODES` map over the ported library, plus refusing redirects
 
 Every retired or DO-NOT-PORT origin spelling gets one too. Cleanroomed against substrate's
 `scratch/pycodemod.py` MODES table (W43; the DRIVER MODE MAP drafted in `.claude/queue.md`). This
-slice adds `alias-hint` (`hints.alias_hint`) to the thirty-nine modes already wired:
+slice adds `rivals` (`rivals.rivals`) to the forty modes already wired:
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
@@ -21,8 +21,8 @@ slice adds `alias-hint` (`hints.alias_hint`) to the thirty-nine modes already wi
 (`commentary.commentary_census`), `discards` (`discards.discards`), `forwards`
 (`arguments.forwards`), `asserted` (`arguments.asserted`), `values`
 (`arguments.values`), `literals` (`strings.literal_sites`), `commentary-kinds`
-(`commentary.commentary_kinds`), `commentary-blocks` (`commentary.commentary_blocks`) and
-`source-of` (`definitions.source_of`).
+(`commentary.commentary_kinds`), `commentary-blocks` (`commentary.commentary_blocks`),
+`source-of` (`definitions.source_of`) and `alias-hint` (`hints.alias_hint`).
 
 ⚑⚑ `funcnames` NEEDS THE OPTIONAL `sqlalchemy` EXTRA, SO IT IS IMPORTED UNDER A GUARD: the
 driver must still run every other mode without it. Absent, `funcnames` REFUSES with the
@@ -84,6 +84,7 @@ from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers, git_show
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
 from mikemol.pycodemod.rivals import collisions as run_collisions
+from mikemol.pycodemod.rivals import rivals as run_rivals
 from mikemol.pycodemod.shapes import shape_sites
 from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
@@ -434,6 +435,20 @@ def _handle_alias_hint(ns: argparse.Namespace) -> int:
         modules = ",".join(row.modules)
         sys.stdout.write(f"alias-hint {row.path}:{row.line} via={aliases} from={modules}\n")
     sys.stdout.write(f"alias-hint sites={len(result.rows)}\n")
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
+def _handle_rivals(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = run_rivals(_str(ns, "name"), paths)
+    for row in result.rows:
+        sys.stdout.write(
+            f"rivals {row.path}:{row.line} {row.verdict} "
+            f"callee={row.callee or _ABSENT} statements={row.statements}\n"
+        )
+    sys.stdout.write(f"rivals defs={len(result.rows)}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -853,6 +868,7 @@ MODES = {
     "bindings": _handle_bindings,
     "source-of": _handle_source_of,
     "alias-hint": _handle_alias_hint,
+    "rivals": _handle_rivals,
     "aliases": _handle_aliases,
     "funcnames": _handle_funcnames,
     "size": _handle_size,
@@ -937,6 +953,9 @@ def _add_named_modes(make: _Make) -> None:
         help="a file defining the name (repeatable)",
     )
     hnt.add_argument("paths", nargs="+")
+    riv = make("rivals", "each `def NAME`: whether it delegates or reimplements")
+    riv.add_argument("name")
+    riv.add_argument("paths", nargs="+")
     attr = make("attr-reads", "reads of `.name`, or `Recv.*` off `Recv`")
     attr.add_argument("query", help="`name`, or `Recv.*` for every attribute off Recv")
     attr.add_argument("paths", nargs="+")

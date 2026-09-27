@@ -2282,3 +2282,17 @@
   claim  = {An unparseable population file is one skip: the later passes only read what parsed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_alias_hint_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-rivals-tells-a-wrapper-from-a-reimplementation,
+  section = {cli},
+  title  = {`rivals` marks a one-line `return` of a call DELEGATES and a real body REIMPLEMENTS},
+  claim  = {`rivals` marks a one-line `return` of a call DELEGATES and a real body REIMPLEMENTS.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_rivals_tells_a_wrapper_from_a_reimplementation},
+}
+
+@misc{pycodemod-cli-rivals-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unparseable file is a skip in the banner, not a silent zero},
+  claim  = {An unparseable file is a skip in the banner, not a silent zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_rivals_over_an_unparseable_file_reports_incomplete},
+}
