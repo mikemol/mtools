@@ -1737,3 +1737,10 @@
   claim  = {A witnessed ready item sorts with blocked, below an unwitnessed ready one (W133).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_model.py -k test_a_witnessed_ready_item_never_tops_the_queue},
 }
+
+@misc{pathsforward-check-comma-joined-touches-tag-is-found,
+  section = {check},
+  title  = {A tag holding a comma is a finding naming it; clean tags are not (W121)},
+  claim  = {A tag holding a comma is a finding naming it; clean tags are not (W121).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_comma_joined_touches_tag_is_found},
+}

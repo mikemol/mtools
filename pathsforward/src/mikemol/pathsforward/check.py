@@ -212,6 +212,24 @@ def weights(state: State) -> list[str]:
     ]
 
 
+def comma_tags(state: State) -> list[str]:
+    """Report a touches[] tag that carries a comma: several tags joined into one.
+
+    ⚑ MEASURED (nemik-45, 2026-09-27): three nemik tags such as 'adapter,cleanup' were accepted as
+    one tag, so an overlap on 'adapter' could never match them. `--update --touches` repairs it.
+
+    Returns:
+        one finding per comma-joined tag.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: touches tag {tag!r} holds a comma; split it with --update --touches"
+        for w in state.waypoints
+        for tag in strlist(w, "touches")
+        if "," in tag
+    ]
+
+
 def witnessed_live(state: State) -> list[str]:
     """Report a witnessed waypoint whose status says a mind should work it.
 
@@ -263,6 +281,7 @@ def check(state: State) -> list[str]:
         *blocked(state),
         *field_types(state),
         *weights(state),
+        *comma_tags(state),
         *witnessed_live(state),
         *root(state),
     ]

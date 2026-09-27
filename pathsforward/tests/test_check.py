@@ -273,6 +273,13 @@ def test_an_integer_or_absent_weight_is_not_found(tmp_path: Path) -> None:
     assert chk.weights(state) == []
 
 
+def test_a_comma_joined_touches_tag_is_found(tmp_path: Path) -> None:
+    """A tag holding a comma is a finding naming it; clean tags are not (W121)."""
+    wps = [_wp("W1", touches=["adapter,cleanup", "ok"]), _wp("W2", touches=["fine"])]
+    found = chk.comma_tags(_state(tmp_path, waypoints=wps))
+    assert (len(found), found[0].startswith("W1: touches tag 'adapter,cleanup'")) == (1, True)
+
+
 def test_a_witnessed_ready_or_working_item_is_found(tmp_path: Path) -> None:
     """Ready or working with a witness is a finding; blocked or unwitnessed is not (W132)."""
     q = "input.merged"
