@@ -8,8 +8,8 @@ anything it was not given. life asked for it (life:W12), to replace a one-off sc
 segment with no timing as `[00:00]` and one with no speaker as `UNKNOWN`. The design is in
 `.claude/design/W255-audiostruct.md`.
 
-Only **stage 1, `records`**, exists so far. The three-stage GPU runner, its memory admission
-through `mikemol-membudget hold`, and the `mikemol-audio` command come later.
+The pure layer exists so far: **`records`** and **`render`**. The three-stage GPU runner, its
+memory admission through `mikemol-membudget hold`, and the `mikemol-audio` command come later.
 
 ## `mikemol.audiostruct.records`
 
@@ -27,5 +27,12 @@ for rec in normalize("call label", result["segments"]):
 
 There is exactly one record per input segment, in order, and `index` is its position, so a count
 over the output is a count over the input.
+
+## `mikemol.audiostruct.render`
+
+`markdown(title, records)` returns the readable transcript: a heading, then one line per record.
+A `Segment` is `**[m:ss] SPEAKER:** text` (with hours from one hour on), and its speaker is
+`unattributed` when there is none. An `Unplaced` segment is `**[! unplaced segment N]** reason`,
+with no timestamp, because it has no time.
 
 Keep the tests synthetic: no audio and no real transcript enters this tree.

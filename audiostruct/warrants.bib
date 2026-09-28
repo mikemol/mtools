@@ -47,3 +47,40 @@
   claim  = {`raw` is the segment's JSON with keys sorted, so it parses back to exactly the input.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_unplaced_raw_is_the_segment_verbatim},
 }
+
+@misc{audiostruct-render-segment-line-carries-time-speaker-and-text,
+  section = {render},
+  title  = {A segment is its start, its speaker and its text, stripped of WhisperX's leading space},
+  claim  = {A segment is its start, its speaker and its text, stripped of WhisperX's leading space.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_segment_line_carries_time_speaker_and_text},
+}
+
+@misc{audiostruct-render-unattributed-segment-is-not-a-stand-in-speaker,
+  section = {render},
+  title  = {A segment with no speaker says `unattributed`, never UNKNOWN, which reads as a speaker},
+  claim  = {A segment with no speaker says `unattributed`, never UNKNOWN, which reads as a speaker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_unattributed_segment_is_not_a_stand_in_speaker},
+}
+
+@misc{audiostruct-render-unplaced-segment-is-marked-and-has-no-time,
+  section = {render},
+  title  = {An unplaced segment is a `!` line naming its position and reason, with no `[0:00]`},
+  claim  = {An unplaced segment is a `!` line naming its position and reason, with no `[0:00]`. The
+            baseline printed a segment with no timing as `[00:00]`, exactly like a real
+            one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_unplaced_segment_is_marked_and_has_no_time},
+}
+
+@misc{audiostruct-render-transcript-has-one-line-per-record-in-order,
+  section = {render},
+  title  = {The body under the heading is exactly one line per record, so it counts the input},
+  claim  = {The body under the heading is exactly one line per record, so it counts the input.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_transcript_has_one_line_per_record_in_order},
+}
+
+@misc{audiostruct-render-stamp-truncates-and-grows-hours,
+  section = {render},
+  title  = {Offsets truncate to the second and gain an hours field from one hour on},
+  claim  = {Offsets truncate to the second and gain an hours field from one hour on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_stamp_truncates_and_grows_hours},
+}

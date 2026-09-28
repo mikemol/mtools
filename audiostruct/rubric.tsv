@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the audiostruct warrant set, one per test module, in document order.
 # key <TAB> heading title
 records	The Record Layer: Every Segment in Exactly One Record, Nothing Defaulted, Unplaceable Segments Carried
+render	The Transcript: One Line per Record, a Gap Marked as a Gap, No Stand-In Speaker
