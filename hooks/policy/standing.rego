@@ -39,6 +39,11 @@ deny contains "standing 14: warrants.bib is appended from gen_warrants.py output
 	endswith(edited, "/warrants.bib")
 }
 
+# rule 15: a commit message is a file (-F <scratchpad>), never an inline -m/--message
+deny contains "standing 15: write the commit message to a scratchpad file and use git commit -F <file>" if {
+	regex.match(`(^|[\s/;&|])git\s(.*\s)?commit(\s.*)?\s(-[a-zA-Z]*m[a-zA-Z]*|--message)(\s|=|$)`, unquoted)
+}
+
 # rule 11: the render script is retired; the state tool is mikemol-paths-forward
 deny contains "standing 11: paths_forward_render.py is retired; use mikemol-paths-forward" if {
 	# in command position (optionally behind an interpreter), not as another program's argument

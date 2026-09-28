@@ -34,6 +34,20 @@ test_14_control if not denies(edit("/home/mikemol/github/mtools/hooks/rubric.tsv
 
 test_14_append_control if not denies(bash("python3 .claude/gen_warrants.py hooks cmdparse=X >> hooks/warrants.bib"), 14)
 
+test_15_witness if denies(bash("git commit -m \"subject\""), 15)
+
+test_15_bundled_witness if denies(bash("git -C /r commit -am \"subject\""), 15)
+
+test_15_long_witness if denies(bash("git commit --message=subject"), 15)
+
+test_15_control if not denies(bash("git -C /r commit -F /tmp/msg.txt"), 15)
+
+test_15_amend_control if not denies(bash("git commit --amend -F /tmp/msg.txt"), 15)
+
+test_15_quoted_control if not denies(note("git commit -m is refused"), 15)
+
+test_15_other_subcommand_control if not denies(bash("git tag -m x v1"), 15)
+
 test_11_witness if denies(bash("python3 .claude/paths_forward_render.py"), 11)
 
 test_11_control if not denies(bash("pathsforward/.venv/bin/mikemol-paths-forward --render"), 11)
