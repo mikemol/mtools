@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.icsstruct: an iCalendar reader for which nothing silently vanishes"
+subtitle = "No iCalendar library is lossless: a strict parser raises on a malformed line and a lenient one skips it, so neither output can be counted against its input. Each stage here is written with the witness that would catch that, starting with every physical line landing in exactly one record."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "ICSSTRUCT.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

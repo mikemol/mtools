@@ -115,6 +115,15 @@ pip.parse(
     requirements_lock = "//transcriptstruct:requirements.txt",
 )
 
+# ⚑ `mikemol-icsstruct` — a lossless iCalendar reader asked for by life (life:W13, W247).
+# Empty shipping hub for now (`dependencies = []`): the lexical stage is stdlib only, and
+# the recurrence expander arrives with the expansion stage.
+pip.parse(
+    hub_name = "icsstruct_deps",
+    python_version = "3.13",
+    requirements_lock = "//icsstruct:requirements.txt",
+)
+
 # ⚑ `mikemol-corpus` — substrate's six out-degree-0 analysis leaves (N-a row 2, 2026-09-24).
 # Empty shipping hub on purpose (`dependencies = []`): all six are stdlib only.
 pip.parse(
@@ -198,6 +207,11 @@ pip.parse(
     uv_lock = "//transcriptstruct:uv.lock",
 )
 pip.parse(
+    hub_name = "icsstruct_dev",
+    python_version = "3.13",
+    uv_lock = "//icsstruct:uv.lock",
+)
+pip.parse(
     hub_name = "corpus_dev",
     python_version = "3.13",
     uv_lock = "//corpus:uv.lock",
@@ -252,6 +266,8 @@ use_repo(
     "fence_dev",
     "hooks_deps",
     "hooks_dev",
+    "icsstruct_deps",
+    "icsstruct_dev",
     "mdstruct_deps",
     "mdstruct_dev",
     "pathsforward_deps",

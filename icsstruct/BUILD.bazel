@@ -1,0 +1,142 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ MIRRORS //transcriptstruct:BUILD.bazel TARGET FOR TARGET, which mirrors //pathsforward and
+# //ratchet. The rationale for each shape lives there; this file says only where it differs.
+# `@icsstruct_dev` is declared in MODULE.bazel beside this distribution's birth (W254).
+load("@icsstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("//:venv.bzl", "venv_from_hub")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+exports_files([
+    # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
+    "pyproject.toml",
+    "requirements.txt",
+    "requirements-dev.txt",
+    "uv.lock",
+])
+
+py_library(
+    name = "icsstruct",
+    srcs = glob(["src/mikemol/icsstruct/**/*.py"]),
+    data = glob(["src/mikemol/icsstruct/py.typed"], allow_empty = True),
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
+# ⚑ DIFFERS FROM transcriptstruct: THE FIXTURES ARE FILES, NOT INLINE. They are life's synthetic
+# set (life 4a652ec), kept byte-for-byte with their CRLF terminators, so they are declared data.
+# An undeclared fixture would be absent in the sandbox and the glob in the test would see none —
+# which `test_fixture_set_is_the_six_life_sent` refuses rather than reading as an empty pass.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "//:pytest_main.py",
+        args = [
+            "$(location " + src + ")",
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-o",
+            "faulthandler_timeout=60",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"] + glob(["tests/fixtures/*.ics"]),
+        size = "small",
+        deps = [
+            ":icsstruct",
+            dev_requirement("pytest"),
+        ],
+        imports = ["src"],
+    )
+    for src in glob(["tests/test_*.py"])
+]
+
+exports_files(["BUILD.bazel"])
+
+sh_test(
+    name = "ruff",
+    srcs = ["//:ruff_check.sh"],
+    args = [
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ THE BASELINE WAS MINTED EMPTY: the distribution enters clean under preview, so the ratchet
+# can only hold it there.
+sh_test(
+    name = "ratchet",
+    srcs = ["//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+sh_test(
+    name = "mutants",
+    srcs = ["//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location //:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py", "tests/fixtures/*.ics"]),
+    size = "medium",
+)
+
+py_binary(
+    name = "mypy_runner",
+    srcs = ["//:mypy_runner.py"],
+    main = "//:mypy_runner.py",
+    deps = [
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ],
+)
+
+sh_test(
+    name = "mypy",
+    srcs = ["//:mypy_check.sh"],
+    args = [
+        "$(location :mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":mypy_runner",
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
+    size = "small",
+    # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
+    # things"). See //transcriptstruct:mypy for the measurement.
+    timeout = "long",
+)
+
+# ⚑ NO console_scripts YET: stage 1 has no CLI. `mikemol-ics` arrives with the expansion stage.
+venv_from_hub(
+    name = ".venv",
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    srcs = glob(["src/mikemol/icsstruct/**"]),
+)

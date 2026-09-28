@@ -1,0 +1,83 @@
+% warrants.bib — one claim PER TEST FUNCTION in the icsstruct suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, which argues the
+% defect the case prevents. Where a docstring is a bare one-liner the claim is correspondingly
+% plain; that thinness is a fact about the case rather than something invented over.
+%
+% Keying convention: icsstruct-<section>-<test name minus its `test_` prefix, hyphenated, with
+% leading articles dropped>. Each check runs that one test function.
+
+
+@misc{icsstruct-lexical-fixture-set-is-the-six-life-sent,
+  section = {lexical},
+  title  = {The fixture glob sees all six files, so a parametrize over it cannot pass empty},
+  claim  = {The fixture glob sees all six files, so a parametrize over it cannot pass empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_fixture_set_is_the_six_life_sent},
+}
+
+@misc{icsstruct-lexical-every-physical-line-is-in-exactly-one-record,
+  section = {lexical},
+  title  = {Record spans partition the physical lines in order: no gap, no overlap, nothing dropped},
+  claim  = {Record spans partition the physical lines in order: no gap, no overlap, nothing dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_every_physical_line_is_in_exactly_one_record},
+}
+
+@misc{icsstruct-lexical-well-formed-fixture-yields-no-malformed-record,
+  section = {lexical},
+  title  = {The positive control: the reader does not report damage where there is none},
+  claim  = {The positive control: the reader does not report damage where there is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_a_well_formed_fixture_yields_no_malformed_record},
+}
+
+@misc{icsstruct-lexical-malformed-fixture-yields-exactly-its-three-defects,
+  section = {lexical},
+  title  = {Fixture 06: a stray END, a line with no colon, and a VEVENT an outer END closes over},
+  claim  = {Fixture 06: a stray END, a line with no colon, and a VEVENT an outer END closes over.
+            `END:VCALENDAR` over an open VEVENT closes the VCALENDAR and reports the
+            VEVENT unclosed. Treating it as a stray instead would report the calendar
+            unclosed too — a fourth defect the file does not have.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_the_malformed_fixture_yields_exactly_its_three_defects},
+}
+
+@misc{icsstruct-lexical-crlf-and-bare-lf-lex-identically,
+  section = {lexical},
+  title  = {A hand-edited LF file yields the same records as the CRLF export it came from},
+  claim  = {A hand-edited LF file yields the same records as the CRLF export it came from.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_crlf_and_bare_lf_lex_identically},
+}
+
+@misc{icsstruct-lexical-folded-line-unfolds-into-one-record-spanning-both-lines,
+  section = {lexical},
+  title  = {A continuation's one leading blank is removed and the rest joins the line before it},
+  claim  = {A continuation's one leading blank is removed and the rest joins the line before it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_a_folded_line_unfolds_into_one_record_spanning_both_lines},
+}
+
+@misc{icsstruct-lexical-colon-inside-a-quoted-parameter-is-not-the-split,
+  section = {lexical},
+  title  = {The split is the first colon OUTSIDE quotes; a naive `partition(':')` cuts the CN},
+  claim  = {The split is the first colon OUTSIDE quotes; a naive `partition(':')` cuts the CN.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_a_colon_inside_a_quoted_parameter_is_not_the_split},
+}
+
+@misc{icsstruct-lexical-sibling-components-are-told-apart-by-ordinal,
+  section = {lexical},
+  title  = {Two VEVENTs in one calendar give their properties distinct paths},
+  claim  = {Two VEVENTs in one calendar give their properties distinct paths.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_sibling_components_are_told_apart_by_ordinal},
+}
+
+@misc{icsstruct-lexical-orphan-continuation-and-an-empty-line-are-records,
+  section = {lexical},
+  title  = {An orphan continuation and an empty line cannot be content lines, and neither is dropped},
+  claim  = {An orphan continuation and an empty line cannot be content lines, and neither is
+            dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_an_orphan_continuation_and_an_empty_line_are_records},
+}
+
+@misc{icsstruct-lexical-form-feed-inside-a-value-does-not-split-the-line,
+  section = {lexical},
+  title  = {`str.splitlines` would split here and invent a physical line; the reader does not},
+  claim  = {`str.splitlines` would split here and invent a physical line; the reader does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_a_form_feed_inside_a_value_does_not_split_the_line},
+}

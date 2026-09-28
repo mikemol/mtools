@@ -1,0 +1,12 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//life//synthetic fixtures//EN
+X-WR-CALNAME:Synthetic Floating
+BEGIN:VEVENT
+UID:fixture-05-floating@life.invalid
+DTSTAMP:20260901T120000Z
+DTSTART:20261005T080000
+DTEND:20261005T083000
+SUMMARY:Synthetic floating-time reminder (local wall clock, no zone)
+END:VEVENT
+END:VCALENDAR
