@@ -23,3 +23,16 @@ Status (W194, split into W198/W199/W200):
 A spec must define a `deny` rule. A package document with no `deny` is withheld, never
 admitted: a spec with no rules would otherwise pass every case, which is what happened before
 W200 fixed it.
+
+## Dispositions (W201)
+
+A case may declare a `disposition`, with a `reason` it must give:
+
+| disposition | outcome |
+|---|---|
+| `do-not-port` | deselected; pytest's `deselected` count reports it |
+| `unmeasured` | xfail(strict): never a pass, and a pass FAILS until the declaration is removed |
+| `port-fix` | runs normally; `pairs_with` must name the case that pins the origin's row |
+
+A withheld verdict with no declaration is still a plain failure. An unknown disposition, a
+missing reason, or an unpaired port-fix is a collection error.

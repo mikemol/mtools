@@ -96,3 +96,56 @@ def judge(verdict: Verdict) -> str | None:
     if verdict.withheld:
         return "UNMEASURED (withheld, not passed): " + "; ".join(verdict.withheld)
     return None
+
+
+# ⚑⚑ A DISPOSITION IS A DECLARATION, AND EVERY ONE MUST ARGUE ITSELF WITH A `reason` (W201).
+#   do-not-port  the origin behaviour is deliberately not carried; the case is not run, and is
+#                COUNTED in the collection report, so a deselection is never silent.
+#   unmeasured   the author declares the case cannot be measured yet: xfail(strict). It never
+#                reads as a pass, and if it starts passing the run FAILS until the declaration
+#                is removed. An UNDECLARED withheld verdict stays a plain FAIL (W199).
+#   port-fix     the port deliberately corrects the origin: the case must name the case that
+#                pins the origin's row (`pairs_with`), so both sides stay pinned.
+DO_NOT_PORT = "do-not-port"
+UNMEASURED = "unmeasured"
+PORT_FIX = "port-fix"
+DISPOSITIONS = (DO_NOT_PORT, UNMEASURED, PORT_FIX)
+
+
+@dataclass(frozen=True)
+class Disposition:
+    """A case's declared disposition, its reason, and (for port-fix) its paired case."""
+
+    kind: str
+    reason: str
+    pairs_with: str | None = None
+
+
+def disposition_of(name: str, case: Case, names: frozenset[str]) -> Disposition | None:
+    """Read and validate a case's declared disposition.
+
+    Returns:
+        the Disposition, or None when the case declares none.
+
+    Raises:
+        SpecDataError: an unknown disposition, a missing `reason`, or a port-fix whose
+            `pairs_with` names no other case in the same spec.
+
+    """
+    kind = case.get("disposition")
+    if kind is None:
+        return None
+    if not isinstance(kind, str) or kind not in DISPOSITIONS:
+        msg = f"case {name}: disposition {kind!r} is not one of {', '.join(DISPOSITIONS)}"
+        raise SpecDataError(msg)
+    reason = case.get("reason")
+    if not isinstance(reason, str) or not reason.strip():
+        msg = f"case {name}: a {kind} disposition needs a `reason`"
+        raise SpecDataError(msg)
+    if kind != PORT_FIX:
+        return Disposition(kind, reason)
+    pair = case.get("pairs_with")
+    if not isinstance(pair, str) or pair == name or pair not in names:
+        msg = f"case {name}: port-fix `pairs_with` must name another case in this spec"
+        raise SpecDataError(msg)
+    return Disposition(kind, reason, pair)

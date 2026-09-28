@@ -7,6 +7,7 @@
 
 
 
+
 @misc{pytestspec-spec-cases-sit-beside-the-spec,
   section = {spec},
   title  = {`guarded.rego` reads `guarded.cases.json` in the same directory},
@@ -183,4 +184,25 @@
   title  = {A lone `_test.rego` (opa's own unit test) collects no items},
   claim  = {A lone `_test.rego` (opa's own unit test) collects no items.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_opa_test_file_collects_nothing},
+}
+
+@misc{pytestspec-plugin-dispositions-map-to-their-outcomes,
+  section = {plugin},
+  title  = {do-not-port is deselected and counted; declared unmeasured is xfail; port-fix runs},
+  claim  = {do-not-port is deselected and counted; declared unmeasured is xfail; port-fix runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_dispositions_map_to_their_outcomes},
+}
+
+@misc{pytestspec-plugin-declared-unmeasured-that-passes-fails,
+  section = {plugin},
+  title  = {A declared unmeasured case that is admitted FAILS (strict): the declaration is stale},
+  claim  = {A declared unmeasured case that is admitted FAILS (strict): the declaration is stale.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_declared_unmeasured_that_passes_fails},
+}
+
+@misc{pytestspec-plugin-malformed-disposition-is-a-collection-error,
+  section = {plugin},
+  title  = {An unknown kind, a missing reason, or an unpaired port-fix ERRORS at collection},
+  claim  = {An unknown kind, a missing reason, or an unpaired port-fix ERRORS at collection.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_malformed_disposition_is_a_collection_error},
 }

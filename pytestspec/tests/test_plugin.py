@@ -125,3 +125,52 @@ def test_opa_test_file_collects_nothing(pytester: pytest.Pytester) -> None:
     pytester.makefile(".rego", spec_test="package s_test\n")
     result = pytester.runpytest(*_LOAD)
     assert result.ret == pytest.ExitCode.NO_TESTS_COLLECTED
+
+
+_DISPOSED = """[
+  {"case": "good"},
+  {"case": "dropped", "disposition": "do-not-port", "reason": "origin quirk", "deny": ["x"]},
+  {"case": "pending", "disposition": "unmeasured", "reason": "no rule yet", "withheld": ["w"]},
+  {"case": "origin-row", "deny": ["origin negates"]},
+  {"case": "port-row", "disposition": "port-fix", "reason": "fixed", "pairs_with": "origin-row"}
+]"""
+
+
+def test_dispositions_map_to_their_outcomes(pytester: pytest.Pytester) -> None:
+    """do-not-port is deselected and counted; declared unmeasured is xfail; port-fix runs."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_DISPOSED)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(passed=2, failed=1, xfailed=1, deselected=1)
+    result.stdout.fnmatch_lines(["*origin-row: DENIED: origin negates*"])
+
+
+def test_declared_unmeasured_that_passes_fails(pytester: pytest.Pytester) -> None:
+    """A declared unmeasured case that is admitted FAILS (strict): the declaration is stale."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    cases = '[{"case": "c", "disposition": "unmeasured", "reason": "r"}]'
+    pytester.makefile(".cases.json", spec=cases)
+    result = pytester.runpytest(*_LOAD)
+    result.assert_outcomes(failed=1)
+
+
+@pytest.mark.parametrize(
+    ("case", "message"),
+    [
+        ('{"case": "c", "disposition": "skip", "reason": "r"}', "*is not one of*"),
+        ('{"case": "c", "disposition": "do-not-port"}', "*needs a `reason`*"),
+        ('{"case": "c", "disposition": "port-fix", "reason": "r"}', "*`pairs_with` must name*"),
+    ],
+)
+def test_malformed_disposition_is_a_collection_error(
+    pytester: pytest.Pytester, case: str, message: str
+) -> None:
+    """An unknown kind, a missing reason, or an unpaired port-fix ERRORS at collection."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=f"[{case}]")
+    result = pytester.runpytest(*_LOAD)
+    result.assert_outcomes(errors=1)
+    result.stdout.fnmatch_lines([message])

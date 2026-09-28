@@ -6,6 +6,10 @@
 evaluator (W200) is installed on first use. A case that could not be evaluated — opa absent,
 the wrong version, or an eval error — FAILS as UNMEASURED: it measured nothing, and that must
 not read as a pass or a skip.
+
+⚑ A case's declared disposition (W201, see `spec.DISPOSITIONS`) changes its outcome: a
+do-not-port case is DESELECTED, and pytest counts it in the run's summary line; a declared
+unmeasured case is xfail(strict), so it can never read as a pass.
 """
 
 from pathlib import Path
@@ -13,7 +17,17 @@ from pathlib import Path
 import pytest
 
 from mikemol.pytestspec import opa
-from mikemol.pytestspec.spec import Case, Evaluator, SpecDataError, judge, load_cases
+from mikemol.pytestspec.spec import (
+    DO_NOT_PORT,
+    UNMEASURED,
+    Case,
+    Disposition,
+    Evaluator,
+    SpecDataError,
+    disposition_of,
+    judge,
+    load_cases,
+)
 
 SPEC_SUFFIX = ".rego"
 # ⚑ A `_test.rego` FILE IS OPA'S OWN UNIT TEST OF A SPEC, run by `opa test`; it is not a spec.
@@ -39,10 +53,20 @@ class SpecFailedError(Exception):
 class SpecItem(pytest.Item):
     """One case of one spec."""
 
-    def __init__(self, *, name: str, parent: pytest.Collector, case: Case) -> None:
-        """Hold the case this item evaluates."""
+    def __init__(
+        self,
+        *,
+        name: str,
+        parent: pytest.Collector,
+        case: Case,
+        disposition: Disposition | None,
+    ) -> None:
+        """Hold the case this item evaluates, and mark a declared unmeasured case xfail."""
         super().__init__(name=name, parent=parent)
         self.case = case
+        self.disposition = disposition
+        if disposition is not None and disposition.kind == UNMEASURED:
+            self.add_marker(pytest.mark.xfail(reason=disposition.reason, strict=True))
 
     def _evaluator(self) -> Evaluator:
         """Return the configured evaluator, installing the pinned opa one if none is set.
@@ -108,8 +132,8 @@ class SpecFile(pytest.File):
     def collect(self) -> list[SpecItem]:
         """Yield one item per case.
 
-        ⚑ Absent or malformed case data is a collection ERROR, not zero items, so a spec with no
-        data is never a clean run.
+        ⚑ Absent or malformed case data — including a malformed disposition — is a collection
+        ERROR, not zero items, so a spec with bad data is never a clean run.
 
         Returns:
             the items, in case-data order.
@@ -117,9 +141,14 @@ class SpecFile(pytest.File):
         """
         try:
             cases = load_cases(self.path)
+            names = frozenset(name for name, _ in cases)
+            declared = [(name, case, disposition_of(name, case, names)) for name, case in cases]
         except SpecDataError as exc:
             raise self.CollectError(str(exc)) from exc
-        return [SpecItem.from_parent(self, name=name, case=case) for name, case in cases]
+        return [
+            SpecItem.from_parent(self, name=name, case=case, disposition=disposition)
+            for name, case, disposition in declared
+        ]
 
 
 def pytest_collect_file(file_path: Path, parent: pytest.Collector) -> SpecFile | None:
@@ -132,3 +161,25 @@ def pytest_collect_file(file_path: Path, parent: pytest.Collector) -> SpecFile |
     if claims(file_path):
         return SpecFile.from_parent(parent, path=file_path)
     return None
+
+
+def _not_ported(item: pytest.Item) -> bool:
+    """Decide whether an item is a declared do-not-port case.
+
+    Returns:
+        True for a SpecItem whose disposition is do-not-port.
+
+    """
+    return (
+        isinstance(item, SpecItem)
+        and item.disposition is not None
+        and item.disposition.kind == DO_NOT_PORT
+    )
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Deselect every do-not-port case; pytest's `deselected` count reports them."""
+    dropped = [item for item in items if _not_ported(item)]
+    if dropped:
+        config.hook.pytest_deselected(items=dropped)
+        items[:] = [item for item in items if not _not_ported(item)]
