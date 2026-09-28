@@ -13,10 +13,11 @@ unmeasured case is xfail(strict), so it can never read as a pass.
 """
 
 from pathlib import Path
+from typing import cast
 
 import pytest
 
-from mikemol.pytestspec import opa
+from mikemol.pytestspec import adapters, opa
 from mikemol.pytestspec.spec import (
     DO_NOT_PORT,
     UNMEASURED,
@@ -81,6 +82,19 @@ class SpecItem(pytest.Item):
             self.config.stash[EVALUATOR] = found
         return found
 
+    def _filled(self) -> Case:
+        """Fill the case's `result` from the `--impl` implementation, if one was chosen.
+
+        Returns:
+            the case as written without `--impl`; otherwise a copy carrying the chosen
+            implementation's result.
+
+        """
+        name = cast("object", self.config.getoption("impl"))
+        if not isinstance(name, str):
+            return self.case
+        return adapters.fill(self.case, name, adapters.registered(self.config))
+
     def runtest(self) -> None:
         """Evaluate the case and fail unless it is admitted.
 
@@ -89,7 +103,7 @@ class SpecItem(pytest.Item):
 
         """
         try:
-            verdict = self._evaluator()(self.path, self.case)
+            verdict = self._evaluator()(self.path, self._filled())
         except (opa.OpaUnavailableError, SpecDataError) as exc:
             msg = f"UNMEASURED (not evaluated, not passed): {exc}"
             raise SpecFailedError(msg) from exc
@@ -183,3 +197,22 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     if dropped:
         config.hook.pytest_deselected(items=dropped)
         items[:] = [item for item in items if not _not_ported(item)]
+
+
+def pytest_addhooks(pluginmanager: pytest.PytestPluginManager) -> None:
+    """Declare `pytest_spec_implementations`, so a conftest can offer adapters (W202)."""
+    pluginmanager.add_hookspecs(adapters)
+
+
+def pytest_addoption(parser: pytest.Parser) -> None:
+    """Add `--impl NAME`: which offered implementation fills each case's `result`."""
+    parser.addoption(
+        "--impl",
+        default=None,
+        help="fill each case's result by running this implementation on its fixture",
+    )
+
+
+# ⚑ THE HOOKSPEC IS ALSO THIS PLUGIN'S OWN IMPLEMENTATION: it offers no adapters, so the hook
+# always answers, and its body is exercised on every `--impl` run rather than never called.
+pytest_spec_implementations = adapters.pytest_spec_implementations

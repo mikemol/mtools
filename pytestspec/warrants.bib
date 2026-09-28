@@ -8,6 +8,7 @@
 
 
 
+
 @misc{pytestspec-spec-cases-sit-beside-the-spec,
   section = {spec},
   title  = {`guarded.rego` reads `guarded.cases.json` in the same directory},
@@ -205,4 +206,39 @@
   title  = {An unknown kind, a missing reason, or an unpaired port-fix ERRORS at collection},
   claim  = {An unknown kind, a missing reason, or an unpaired port-fix ERRORS at collection.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_malformed_disposition_is_a_collection_error},
+}
+
+@misc{pytestspec-adapters-reference-impl-is-admitted,
+  section = {adapters},
+  title  = {`--impl reference` runs the origin on the fixture; its result is admitted},
+  claim  = {`--impl reference` runs the origin on the fixture; its result is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adapters.py -k test_reference_impl_is_admitted},
+}
+
+@misc{pytestspec-adapters-subject-impl-is-denied,
+  section = {adapters},
+  title  = {`--impl subject` runs the port on the same fixture; its negated result is denied},
+  claim  = {`--impl subject` runs the port on the same fixture; its negated result is denied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adapters.py -k test_subject_impl_is_denied},
+}
+
+@misc{pytestspec-adapters-unknown-impl-fails-as-unmeasured,
+  section = {adapters},
+  title  = {An `--impl` no plugin offers FAILS each case as UNMEASURED and names what is offered},
+  claim  = {An `--impl` no plugin offers FAILS each case as UNMEASURED and names what is offered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adapters.py -k test_unknown_impl_fails_as_unmeasured},
+}
+
+@misc{pytestspec-adapters-case-without-fixture-fails-under-impl,
+  section = {adapters},
+  title  = {Under `--impl`, a case with no fixture has nothing to run, and FAILS as UNMEASURED},
+  claim  = {Under `--impl`, a case with no fixture has nothing to run, and FAILS as UNMEASURED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adapters.py -k test_case_without_fixture_fails_under_impl},
+}
+
+@misc{pytestspec-adapters-precomputed-result-without-impl-still-works,
+  section = {adapters},
+  title  = {Without `--impl`, a case is evaluated as written (W200 back-compat)},
+  claim  = {Without `--impl`, a case is evaluated as written (W200 back-compat).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adapters.py -k test_precomputed_result_without_impl_still_works},
 }

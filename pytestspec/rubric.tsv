@@ -3,3 +3,4 @@
 spec	The Judgment: Only Admitted Passes, Withheld Is Unmeasured, and No Data Is an Error
 opa	The Evaluator: A Pinned opa, Refused When Absent or Wrong, and No Rules Admit Nothing
 plugin	The Plugin: A .rego File Collects One Item per Case, and Unevaluated Is Not Passed
+adapters	The Adapters: --impl Runs an Implementation on the Fixture, So One Spec Judges Origin and Port

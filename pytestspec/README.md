@@ -36,3 +36,12 @@ A case may declare a `disposition`, with a `reason` it must give:
 
 A withheld verdict with no declaration is still a plain failure. An unknown disposition, a
 missing reason, or an unpaired port-fix is a collection error.
+
+## Implementation adapters (W202)
+
+A conftest or plugin offers implementations through the `pytest_spec_implementations` hook,
+as `{name: adapter}`, where an adapter is `adapter(fixture, operands) -> result`. With
+`--impl NAME`, each case's `result` comes from running that implementation on the case's
+`fixture` and `operands`, so one spec judges the origin (`--impl reference`) and the port
+(`--impl subject`) on the same data. An unknown name, a name offered twice, or a case with no
+`fixture` fails as UNMEASURED. Without `--impl`, a case is evaluated as written.
