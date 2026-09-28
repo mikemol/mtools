@@ -1908,3 +1908,68 @@
   claim  = {The reset is per symbol: W8's split leaves W7's advances standing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_another_symbols_split_does_not_reset_this_one},
 }
+
+@misc{pathsforward-lease-only-artifact-writes-are-leased,
+  section = {lease},
+  title  = {A read, a topic and a party tag lease nothing; the `!w` artifact tag is leased},
+  claim  = {A read, a topic and a party tag lease nothing; the `!w` artifact tag is leased.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_only_artifact_writes_are_leased},
+}
+
+@misc{pathsforward-lease-second-waypoint-writing-the-same-artifact-is-refused-whole,
+  section = {lease},
+  title  = {W2 wants ops.py (held) and a free tag: it gets neither, and the conflict names W1},
+  claim  = {W2 wants ops.py (held) and a free tag: it gets neither, and the conflict names W1. BOTH
+            ARMS: W1's lease is taken first (the control), and W2's refusal writes
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_a_second_waypoint_writing_the_same_artifact_is_refused_whole},
+}
+
+@misc{pathsforward-lease-read-of-a-leased-artifact-is-not-refused,
+  section = {lease},
+  title  = {Two reads never collide, and a read never meets a write in the lease table},
+  claim  = {Two reads never collide, and a read never meets a write in the lease table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_a_read_of_a_leased_artifact_is_not_refused},
+}
+
+@misc{pathsforward-lease-expired-lease-never-blocks,
+  section = {lease},
+  title  = {Past its TTL, W1's lease no longer excludes W2},
+  claim  = {Past its TTL, W1's lease no longer excludes W2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_an_expired_lease_never_blocks},
+}
+
+@misc{pathsforward-lease-retaking-renews-rather-than-duplicating,
+  section = {lease},
+  title  = {The same waypoint taking again holds one lease per tag, stamped anew},
+  claim  = {The same waypoint taking again holds one lease per tag, stamped anew.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_retaking_renews_rather_than_duplicating},
+}
+
+@misc{pathsforward-lease-release-drops-only-that-waypoints-leases,
+  section = {lease},
+  title  = {Leaving `working` releases W1's leases and leaves W2's standing},
+  claim  = {Leaving `working` releases W1's leases and leaves W2's standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_release_drops_only_that_waypoints_leases},
+}
+
+@misc{pathsforward-lease-renew-extends-the-holders-leases-and-reports-a-moved-tree,
+  section = {lease},
+  title  = {Renewal pushes expiry out for this holder only, and names tags whose base is not HEAD},
+  claim  = {Renewal pushes expiry out for this holder only, and names tags whose base is not HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_renew_extends_the_holders_leases_and_reports_a_moved_tree},
+}
+
+@misc{pathsforward-lease-lapsed-lists-what-passed-its-expiry,
+  section = {lease},
+  title  = {Nothing lapses inside the TTL; past it, the lease is listed for the caller to ledger},
+  claim  = {Nothing lapses inside the TTL; past it, the lease is listed for the caller to ledger.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_lapsed_lists_what_passed_its_expiry},
+}
+
+@misc{pathsforward-lease-absent-or-malformed-field-reads-as-no-leases,
+  section = {lease},
+  title  = {A state written before W177, or with a non-list field, has no leases and does not crash},
+  claim  = {A state written before W177, or with a non-list field, has no leases and does not crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_an_absent_or_malformed_field_reads_as_no_leases},
+}
