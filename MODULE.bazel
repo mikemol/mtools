@@ -133,6 +133,15 @@ pip.parse(
     requirements_lock = "//audiostruct:requirements.txt",
 )
 
+# ⚑ The `[gpu]` extra's lock (W267, design note O2): bare whisperx, which resolves from plain PyPI
+# to 118 packages, with torch 2.8.0 bringing its own CUDA 12.8 runtime wheels. The host supplies
+# only the driver. Its own hub, so the shipping hub stays free of torch.
+pip.parse(
+    hub_name = "audiostruct_gpu",
+    python_version = "3.13",
+    requirements_lock = "//audiostruct:requirements-gpu.txt",
+)
+
 # ⚑ `mikemol-corpus` — substrate's six out-degree-0 analysis leaves (N-a row 2, 2026-09-24).
 # Empty shipping hub on purpose (`dependencies = []`): all six are stdlib only.
 pip.parse(
@@ -268,6 +277,7 @@ use_repo(
     pip,
     "audiostruct_deps",
     "audiostruct_dev",
+    "audiostruct_gpu",
     "pytestspec_deps",
     "pytestspec_dev",
     "pycodemod_deps",
