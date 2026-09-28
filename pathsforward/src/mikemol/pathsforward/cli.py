@@ -565,6 +565,28 @@ def _selftest() -> int:
     return EXIT_FAILED if missed else EXIT_OK
 
 
+_LAPSE_LEDGERED = "lapse_ledgered"
+
+
+def _tend_leases(ctx: Ctx, state: State, holder: str) -> None:
+    """Renew `holder`'s leases, then ledger each lapsed lease exactly once (W119 points 5-6).
+
+    ⚑ NEVER A SILENT RELEASE: a lapsed lease stays in the file, so --check keeps printing its
+    `LAPSED` line until its waypoint leaves `working`; the ledger line is written once, marked on
+    the record, so a stuck lapse does not repeat every tick. A `MOVED` line names each renewed
+    tag whose base commit is no longer HEAD: reported, never refused.
+    """
+    root = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+    for tag in lease.renew(state, holder, _head_sha(root), ctx.now):
+        _say(f"MOVED {tag}: base is not HEAD; re-read before writing")
+    for x in lease.lapsed(state, ctx.now):
+        if x.get(_LAPSE_LEDGERED) is True:
+            continue
+        note = f"lease on {text(x, 'tag')} held by {text(x, 'holder')} lapsed unrenewed"
+        _ledger(ctx, Entry("lease", text(x, "waypoint"), "lapsed", NO_SYMBOL, note))
+        x[_LAPSE_LEDGERED] = True
+
+
 def _lock(ctx: Ctx) -> int:
     """Take the tick lock, ledgering a takeover.
 
@@ -585,6 +607,7 @@ def _lock(ctx: Ctx) -> int:
             )
             _ledger(ctx, Entry("lock", NO_SYMBOL, "takeover", NO_SYMBOL, note))
         _say(f"{result.outcome} by {result.holder}")
+        _tend_leases(ctx, state, result.holder)
         return EXIT_OK
 
     return _mutate(ctx, edit)

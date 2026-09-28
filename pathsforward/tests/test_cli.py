@@ -750,3 +750,40 @@ def test_check_lists_a_lapsed_lease(tmp_path: Path, capsys: pytest.CaptureFixtur
     path = _file(tmp_path, leases=[gone])
     assert _run(path, "--check") == _OK
     assert f"LAPSED W1 {_LEASED} holder=dead-tick base=abc" in capsys.readouterr().out
+
+
+def _gone(holder: str = "dead-tick") -> Rec:
+    """Build a lease that expired long ago.
+
+    Returns:
+        the lease record.
+
+    """
+    return {
+        "tag": _LEASED,
+        "holder": holder,
+        "waypoint": "W1",
+        "base_sha": "abc",
+        "taken_at": "2026-01-01T00:00:00Z",
+        "renewed_at": "2026-01-01T00:00:00Z",
+        "expires_at": "2026-01-01T00:30:00Z",
+    }
+
+
+def test_lock_ledgers_a_lapse_once_and_keeps_the_lease(tmp_path: Path) -> None:
+    """A lapse is ledgered on the first --lock only; the record stays: never a silent release."""
+    path = _file(tmp_path, leases=[_gone()])
+    _run(path, "--lock", "A")
+    _run(path, "--unlock", "A")
+    _run(path, "--lock", "A")
+    assert (len(_ledger(path).splitlines()), len(_leases(path))) == (1, 1)
+
+
+def test_lock_renews_the_holders_lease_and_reports_a_moved_tree(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The holder's own lapsed lease is renewed, and a base that is not HEAD prints MOVED."""
+    path = _file(tmp_path, leases=[_gone("A")])
+    assert _run(path, "--lock", "A") == _OK
+    assert f"MOVED {_LEASED}" in capsys.readouterr().out
+    assert (_leases(path)[0]["renewed_at"] != "2026-01-01T00:00:00Z", _ledger(path)) == (True, "")

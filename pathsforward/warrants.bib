@@ -2009,3 +2009,17 @@
   claim  = {An expired lease prints one grep-stable LAPSED line; it is advisory, not a failure.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_lists_a_lapsed_lease},
 }
+
+@misc{pathsforward-cli-lock-ledgers-a-lapse-once-and-keeps-the-lease,
+  section = {cli},
+  title  = {A lapse is ledgered on the first --lock only; the record stays: never a silent release},
+  claim  = {A lapse is ledgered on the first --lock only; the record stays: never a silent release.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_lock_ledgers_a_lapse_once_and_keeps_the_lease},
+}
+
+@misc{pathsforward-cli-lock-renews-the-holders-lease-and-reports-a-moved-tree,
+  section = {cli},
+  title  = {The holder's own lapsed lease is renewed, and a base that is not HEAD prints MOVED},
+  claim  = {The holder's own lapsed lease is renewed, and a base that is not HEAD prints MOVED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_lock_renews_the_holders_lease_and_reports_a_moved_tree},
+}
