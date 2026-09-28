@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑⚑⚑ THE BASELINE SUBSTITUTED DEFAULTS. life's WhisperX one-off read a segment with
+# `seg.get("start", 0.0)` and `seg.get("speaker", "UNKNOWN")`, so a segment with no timing printed
+# as `[00:00]` beside real ones (.claude/design/W255-audiostruct.md). Asked for by life (life:W12).
+# Stage 1 is `records`: every segment lands in exactly one record, and nothing is defaulted.
+name = "mikemol-audiostruct"
+version = "0.1.0"
+description = "Transcription and diarization read so that nothing is defaulted: every WhisperX segment in exactly one record, unplaceable segments carried with a reason."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["whisperx", "transcription", "diarization", "lossless"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Typing :: Typed",
+]
+
+# ⚑ EMPTY ON PURPOSE: the record layer is plain parsed JSON and the standard library. torch and
+# whisperx arrive with the stage runner (W263/W264) as an optional extra, never here.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml): mypy and
+# pytest are staged by the bazel mypy action, and `.githooks/pre-commit` refuses without ruff.
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py` — PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.audiostruct" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+# ⚑ NO MARKERS. Every input is synthetic and inline; nothing needs a host, a GPU or a skip.
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+# A TOML literal string: in a basic string `\.` is an invalid escape.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
+# nobody chose for it; each line below is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+"tests/test_records.py" = ["assert"]

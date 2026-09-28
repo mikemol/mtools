@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.audiostruct: a transcript reader that never fills in what it was not given"
+subtitle = "The WhisperX one-off this replaces read a segment with no timing as [00:00] and one with no speaker as UNKNOWN, so a gap printed exactly like a result. Each stage here is written with the witness that would catch that, starting with every segment landing in exactly one record."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "AUDIOSTRUCT.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

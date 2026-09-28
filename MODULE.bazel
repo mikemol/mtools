@@ -124,6 +124,15 @@ pip.parse(
     requirements_lock = "//icsstruct:requirements.txt",
 )
 
+# ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
+# (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
+# only, and torch/whisperx arrive as an optional extra with the stage runner.
+pip.parse(
+    hub_name = "audiostruct_deps",
+    python_version = "3.13",
+    requirements_lock = "//audiostruct:requirements.txt",
+)
+
 # ⚑ `mikemol-corpus` — substrate's six out-degree-0 analysis leaves (N-a row 2, 2026-09-24).
 # Empty shipping hub on purpose (`dependencies = []`): all six are stdlib only.
 pip.parse(
@@ -212,6 +221,11 @@ pip.parse(
     uv_lock = "//icsstruct:uv.lock",
 )
 pip.parse(
+    hub_name = "audiostruct_dev",
+    python_version = "3.13",
+    uv_lock = "//audiostruct:uv.lock",
+)
+pip.parse(
     hub_name = "corpus_dev",
     python_version = "3.13",
     uv_lock = "//corpus:uv.lock",
@@ -252,6 +266,8 @@ pip.parse(
 )
 use_repo(
     pip,
+    "audiostruct_deps",
+    "audiostruct_dev",
     "pytestspec_deps",
     "pytestspec_dev",
     "pycodemod_deps",

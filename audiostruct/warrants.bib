@@ -1,0 +1,49 @@
+% warrants.bib — one claim PER TEST FUNCTION in the audiostruct suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, which argues the
+% defect the case prevents. Where a docstring is a bare one-liner the claim is correspondingly
+% plain; that thinness is a fact about the case rather than something invented over.
+%
+% Keying convention: audiostruct-<section>-<test name minus its `test_` prefix, hyphenated, with
+% leading articles dropped>. Each check runs that one test function.
+
+
+@misc{audiostruct-records-one-record-per-segment-in-order,
+  section = {records},
+  title  = {A list mixing good and bad segments yields exactly one record each, `index` its position},
+  claim  = {A list mixing good and bad segments yields exactly one record each, `index` its
+            position. The count invariant: Segment + Unplaced == len(input), so a count
+            over the output is a count over the input.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_one_record_per_segment_in_order},
+}
+
+@misc{audiostruct-records-well-formed-segment-keeps-every-field,
+  section = {records},
+  title  = {Timing, text verbatim, speaker and words all come through; an untimed word is None, not 0.0},
+  claim  = {Timing, text verbatim, speaker and words all come through; an untimed word is None, not
+            0.0. WhisperX's aligner leaves digits and symbols untimed; the baseline
+            would have read 0.0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_well_formed_segment_keeps_every_field},
+}
+
+@misc{audiostruct-records-undiarized-segment-has-no-speaker,
+  section = {records},
+  title  = {A segment diarization assigned no one is `speaker=None`, never a stand-in like UNKNOWN},
+  claim  = {A segment diarization assigned no one is `speaker=None`, never a stand-in like UNKNOWN.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_undiarized_segment_has_no_speaker},
+}
+
+@misc{audiostruct-records-unplaceable-segment-is-carried-with-its-reason,
+  section = {records},
+  title  = {Each shape the baseline would have defaulted is an `Unplaced` record naming what is wrong},
+  claim  = {Each shape the baseline would have defaulted is an `Unplaced` record naming what is
+            wrong.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_unplaceable_segment_is_carried_with_its_reason},
+}
+
+@misc{audiostruct-records-unplaced-raw-is-the-segment-verbatim,
+  section = {records},
+  title  = {`raw` is the segment's JSON with keys sorted, so it parses back to exactly the input},
+  claim  = {`raw` is the segment's JSON with keys sorted, so it parses back to exactly the input.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_unplaced_raw_is_the_segment_verbatim},
+}
