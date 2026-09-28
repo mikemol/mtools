@@ -140,3 +140,22 @@
             label.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_result_without_segments_is_a_stage_error},
 }
+
+@misc{audiostruct-stub-authority-stubs-match-whisperx,
+  section = {stub_authority},
+  title  = {Run stubtest over the four submodule stubs, with the curated allowlist},
+  claim  = {Run stubtest over the four submodule stubs, with the curated allowlist. cwd is a
+            writable temporary directory because stubtest writes its cache relative to
+            cwd and a sandbox stages the distribution read-only (measured in mdstruct).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_the_stubs_match_whisperx},
+}
+
+@misc{audiostruct-stub-authority-every-allowlist-entry-is-a-constructor,
+  section = {stub_authority},
+  title  = {Each allowed divergence is an `__init__` or `__new__`, never a called function},
+  claim  = {Each allowed divergence is an `__init__` or `__new__`, never a called function. THIS
+            KEEPS THE ALLOWLIST FROM BECOMING A SUPPRESSION LIST, as in icsstruct. Any
+            other entry would hide a real divergence in something the stage factories
+            call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_every_allowlist_entry_is_a_constructor},
+}

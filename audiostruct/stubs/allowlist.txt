@@ -1,0 +1,5 @@
+# ⚑⚑ CONSTRUCTORS ONLY, AND tests/test_stub_authority.py REFUSES ANY OTHER ENTRY. Curated from
+# stubtest's own report (W274), never generated. audiostruct never builds a FasterWhisperPipeline
+# itself: `load_model` does. So its nine-parameter constructor is surface the stubs decline to
+# model.
+whisperx.asr.FasterWhisperPipeline.__init__

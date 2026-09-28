@@ -5,7 +5,12 @@
 # makes. The result is WhisperX's TypedDict at runtime; it is `dict[str, object]` here because
 # records.normalize narrows every field itself and trusts none of them.
 
-class FasterWhisperPipeline:
+from abc import ABC
+
+# ⚑ ABC because the runtime class inherits transformers' Pipeline, whose metaclass is ABCMeta
+# (stubtest: "metaclass differs", W274). Pipeline itself is not declared: audiostruct only
+# calls `transcribe`.
+class FasterWhisperPipeline(ABC):
     def transcribe(
         self,
         audio: object,

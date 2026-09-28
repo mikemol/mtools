@@ -31,7 +31,12 @@ dependencies = []
 # bases on the zram /var/tmp (measured: `bazel query deps(//audiostruct:.venv)` listed
 # @audiostruct_dev//torch). The cost: `pip install mikemol-audiostruct[gpu]` is not offered;
 # the GPU set installs from requirements-gpu.txt, whose header records how it was compiled.
-# whisperx 3.7.0 through 3.8.6 require Python <3.14, so that lock is for py3.13.
+# whisperx 3.7.0 through 3.8.6 require Python <3.14, so that lock is for py3.13, and so is
+# this distribution's .venv (.python-version).
+# ⚑⚑ THE HOST .venv CARRIES THE GPU SET OUT OF BAND (W274, operator 2026-09-28), because
+# tests/test_stub_authority.py runs in pre-commit's host pytest leg and needs whisperx importable.
+# `uv sync` PRUNES IT: after any sync, run `uv pip install -r requirements-gpu.txt`, or the
+# witness goes red (by design; it never skips). uv's cache is on /home, not the zram /var/tmp.
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -100,6 +105,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_records.py" = ["assert"]
 "tests/test_render.py" = ["assert"]
 "tests/test_stages.py" = ["assert"]
+"tests/test_stub_authority.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ stages.py's RESPONSIBILITY is catching every library error: any one it let through could print
 # the Hugging Face token, so each is rewritten as StageError `from None` (design note D4).
 "src/mikemol/audiostruct/stages.py" = ["blind-except"]

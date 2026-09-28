@@ -50,8 +50,35 @@ py_library(
         ],
         imports = ["src"],
     )
-    for src in glob(["tests/test_*.py"])
+    for src in glob(["tests/test_*.py"], exclude = ["tests/test_stub_authority.py"])
 ]
+
+# ⚑⚑ THE ONE TEST THAT STAGES THE GPU HUB (W274). stubtest imports whisperx's submodules, which
+# import torch, so this target alone depends on `@audiostruct_gpu` (about 8G, operator-approved
+# under luthen's reaper, 2026-09-28). Every other target stays light. A missing whisperx is a red,
+# never a skip.
+py_test(
+    name = "test_stub_authority",
+    srcs = ["tests/test_stub_authority.py", "//:pytest_main.py"],
+    main = "//:pytest_main.py",
+    args = [
+        "$(location tests/test_stub_authority.py)",
+        "-q",
+        "--strict-markers",
+        "--strict-config",
+        "-o",
+        "faulthandler_timeout=60",
+        "-c",
+        "$(location pyproject.toml)",
+    ],
+    data = ["pyproject.toml"] + glob(["stubs/**"]),
+    size = "medium",
+    deps = [
+        "@audiostruct_gpu//whisperx",
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ],
+)
 
 exports_files(["BUILD.bazel"])
 
