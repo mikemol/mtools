@@ -1,0 +1,27 @@
+% warrants.bib — one claim PER TEST CASE in the pytestspec suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring.
+%
+% Keying convention: pytestspec-<section>-<test name minus its `test_` prefix, hyphenated,
+% with leading articles dropped>.  Each check runs that one test function.
+
+@misc{pytestspec-plugin-rego-file-is-claimed,
+  section = {plugin},
+  title  = {A `.rego` file is a spec the plugin claims},
+  claim  = {A `.rego` file is a spec the plugin claims.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_a_rego_file_is_claimed},
+}
+
+@misc{pytestspec-plugin-opa-test-file-is-not-claimed,
+  section = {plugin},
+  title  = {A `_test.rego` file is opa's own unit test, run by `opa test`, not a spec},
+  claim  = {A `_test.rego` file is opa's own unit test, run by `opa test`, not a spec.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_opa_test_file_is_not_claimed},
+}
+
+@misc{pytestspec-plugin-python-file-is-not-claimed,
+  section = {plugin},
+  title  = {A `.py` file is left to pytest's own collector},
+  claim  = {A `.py` file is left to pytest's own collector.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_python_file_is_not_claimed},
+}

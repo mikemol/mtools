@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑⚑ A SPEC IS REGO, AND A TEST RUNNER RUNS IT (W108). The origin's selftest checks were Python
+# predicates over a mode's output; a port could satisfy them by sharing the predicate's bug. A
+# Rego spec is written against the ORIGIN's output and evaluated by opa, a checker neither side
+# wrote. This plugin makes each spec a pytest item, so a spec suite is one `pytest` away.
+name = "mikemol-pytestspec"
+version = "0.1.0"
+description = "A pytest plugin that collects Rego specs and runs them through a pinned opa, where an unmeasured case fails rather than skips."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["pytest", "rego", "opa", "spec", "differential"]
+classifiers = [
+    "Framework :: Pytest",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+    "Typing :: Typed",
+]
+
+# ⚑ PYTEST IS A RUNTIME DEPENDENCY HERE, NOT A DEV ONE: a pytest plugin is loaded BY pytest.
+# opa is NOT a Python dependency; it is a pinned host binary, checked at evaluation (W200).
+dependencies = ["pytest"]
+
+[project.entry-points.pytest11]
+pytestspec = "mikemol.pytestspec.plugin"
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py` — PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.pytestspec" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS (W88)
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB.
+[tool.ruff.lint.per-file-ignores]
+"tests/test_plugin.py" = ["assert"]

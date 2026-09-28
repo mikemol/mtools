@@ -224,8 +224,22 @@ pip.parse(
     python_version = "3.13",
     uv_lock = "//pycodemod:uv.lock",
 )
+# mikemol-pytestspec: the pytest plugin that runs Rego specs (W194/W198). Its shipping hub is NOT
+# empty — pytest is a RUNTIME dependency of a pytest plugin, which pytest itself loads.
+pip.parse(
+    hub_name = "pytestspec_deps",
+    python_version = "3.13",
+    requirements_lock = "//pytestspec:requirements.txt",
+)
+pip.parse(
+    hub_name = "pytestspec_dev",
+    python_version = "3.13",
+    uv_lock = "//pytestspec:uv.lock",
+)
 use_repo(
     pip,
+    "pytestspec_deps",
+    "pytestspec_dev",
     "pycodemod_deps",
     "pycodemod_dev",
     "ledger_deps",

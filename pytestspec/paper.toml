@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.pytestspec: a Rego spec as a pytest item, where unmeasured is a failure"
+subtitle = "A spec written against the origin's output and evaluated by a checker neither side wrote; every case is admitted, denied, or withheld, and only admitted passes."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "PYTESTSPEC.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
