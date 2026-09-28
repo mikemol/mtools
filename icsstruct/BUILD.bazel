@@ -113,6 +113,16 @@ sh_test(
     size = "medium",
 )
 
+# ⚑ A py_binary SO life AND nemik CAN RUN `mikemol-ics` AS A DECLARED TOOL, as //transcriptstruct.
+py_binary(
+    name = "icsstruct_cli",
+    srcs = ["src/mikemol/icsstruct/cli.py"],
+    main = "src/mikemol/icsstruct/cli.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":icsstruct"],
+)
+
 py_binary(
     name = "mypy_runner",
     srcs = ["//:mypy_runner.py"],
@@ -140,9 +150,12 @@ sh_test(
     timeout = "long",
 )
 
-# ⚑ NO console_scripts YET: stage 1 has no CLI. `mikemol-ics` arrives with the expansion stage.
 venv_from_hub(
     name = ".venv",
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as //transcriptstruct:.venv mirrors its own.
+    console_scripts = {
+        "mikemol-ics": "mikemol.icsstruct.cli:main",
+    },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",

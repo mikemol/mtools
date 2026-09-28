@@ -26,6 +26,9 @@ classifiers = [
 # `stubs/` (W258), because one carries `Any` and the other ships no py.typed.
 dependencies = ["icalendar", "recurring-ical-events"]
 
+[project.scripts]
+mikemol-ics = "mikemol.icsstruct.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
@@ -93,4 +96,5 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_lexical.py" = ["assert"]
 "tests/test_expand.py" = ["assert"]
 "tests/test_source.py" = ["assert"]
+"tests/test_cli.py" = ["assert"]
 "tests/test_stub_authority.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

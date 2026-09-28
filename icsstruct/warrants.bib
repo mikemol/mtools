@@ -225,3 +225,40 @@
   claim  = {A path is not a credential: it labels itself unless the calendar names itself.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_path_source_is_read_and_labelled},
 }
+
+@misc{icsstruct-cli-text-prints-one-line-per-occurrence-by-label,
+  section = {cli},
+  title  = {Fixture 01 over September to November: five tab-separated lines, each labelled},
+  claim  = {Fixture 01 over September to November: five tab-separated lines, each labelled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_text_prints_one_line_per_occurrence_by_label},
+}
+
+@misc{icsstruct-cli-json-carries-every-defect-beside-the-occurrence,
+  section = {cli},
+  title  = {Fixture 06 as `--json`: stage 1's three defects and the one well-formed occurrence},
+  claim  = {Fixture 06 as `--json`: stage 1's three defects and the one well-formed occurrence.
+            Nothing the reader found is left out: each defect is a record with its
+            reason and span.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_json_carries_every_defect_beside_the_occurrence},
+}
+
+@misc{icsstruct-cli-text-marks-defects-with-a-bang,
+  section = {cli},
+  title  = {In text mode each defect is a `!malformed` line naming its lines and reason},
+  claim  = {In text mode each defect is a `!malformed` line naming its lines and reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_text_marks_defects_with_a_bang},
+}
+
+@misc{icsstruct-cli-unreadable-source-is-reported-and-the-rest-still-print,
+  section = {cli},
+  title  = {A missing path is one stderr line and exit 1; the readable source still prints},
+  claim  = {A missing path is one stderr line and exit 1; the readable source still prints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_unreadable_source_is_reported_and_the_rest_still_print},
+}
+
+@misc{icsstruct-cli-bad-window-is-refused,
+  section = {cli},
+  title  = {A window that is not a positive count of days is refused by argparse, exit 2},
+  claim  = {A window that is not a positive count of days is refused by argparse, exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bad_window_is_refused},
+}
