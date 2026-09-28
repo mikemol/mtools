@@ -24,7 +24,15 @@ from collections import Counter
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pathsforward.model import BLOCKED_KINDS, STATUSES, strlist, symbol_number, text
+from mikemol.pathsforward import vector
+from mikemol.pathsforward.model import (
+    BLOCKED_KINDS,
+    STATUSES,
+    RefusedError,
+    strlist,
+    symbol_number,
+    text,
+)
 from mikemol.pathsforward.tags import ARTIFACT_GRAINS, parse_tag
 
 if TYPE_CHECKING:
@@ -290,6 +298,39 @@ def witnessed_live(state: State) -> list[str]:
     ]
 
 
+def vectors(state: State) -> list[str]:
+    """Report a stored vector outside the WV:1 grammar, or one without a valid source (W257).
+
+    ⚑ THE WRITER REFUSES AT WRITE TIME, THIS CATCHES THE REST: a hand edit, a merge, or a file
+    written by an older tool. nemik reads the stored string, so a bad one must not sit silently.
+
+    Returns:
+        one finding per bad vector.
+
+    """
+    found: list[str] = []
+    for w in state.waypoints:
+        vec, source = text(w, "vector"), text(w, "vector_source")
+        if not vec and not source:
+            continue
+        try:
+            vector.parse(vec)
+            vector.refuse_source(source)
+        except RefusedError as err:
+            found.append(f"{text(w, 'symbol')}: {err}")
+    return found
+
+
+def unscored(state: State) -> int:
+    """Count the live waypoints with no vector; unscored is a census, never a finding (W257).
+
+    Returns:
+        the count.
+
+    """
+    return sum(1 for w in state.waypoints if text(w, "status") != "done" and not text(w, "vector"))
+
+
 def root(state: State) -> list[str]:
     """Report a `project_root` that is not an absolute, existing directory.
 
@@ -325,6 +366,7 @@ def check(state: State) -> list[str]:
         *comma_tags(state),
         *tag_grammar(state),
         *witnessed_live(state),
+        *vectors(state),
         *root(state),
     ]
 

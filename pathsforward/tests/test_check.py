@@ -292,6 +292,33 @@ def test_a_tag_the_grammar_refuses_is_found(tmp_path: Path) -> None:
     assert [f.split("'")[1] for f in found] == bad
 
 
+_VEC = "WV:1/R:H/E:N/C:H/I:H/A:N/X:N/S:C/F:K/W:N"
+
+
+def test_a_stored_bad_vector_is_found(tmp_path: Path) -> None:
+    """A hand-planted malformed or unsourced vector is a finding naming its symbol (W257)."""
+    wps = [
+        _wp("W1", vector=_VEC, vector_source="agent"),
+        _wp("W2", vector="CVSS:4.0/AV:N", vector_source="agent"),
+        _wp("W4", vector=_VEC),
+        _wp("W5", vector=_VEC, vector_source="human"),
+        _wp("W6"),
+    ]
+    found = chk.check(_state(tmp_path, waypoints=wps))
+    assert sorted({f.split(":")[0] for f in found if "vector" in f}) == ["W2", "W4", "W5"]
+
+
+def test_unscored_counts_live_waypoints_without_a_vector(tmp_path: Path) -> None:
+    """Live waypoints with no vector are counted; done ones and scored ones are not (W257)."""
+    wps = [
+        _wp("W1", vector=_VEC, vector_source="agent"),
+        _wp("W2"),
+        _wp("W4", "blocked", blocked_on=["x"], blocked_kind="agent"),
+        _wp("W5", "done"),
+    ]
+    assert chk.unscored(_state(tmp_path, waypoints=wps)) == len(["W2", "W4"])
+
+
 def test_a_witnessed_ready_or_working_item_is_found(tmp_path: Path) -> None:
     """Ready or working with a witness is a finding; blocked or unwitnessed is not (W132)."""
     q = "input.merged"

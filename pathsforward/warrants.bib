@@ -2131,3 +2131,17 @@
   claim  = {A malformed --vector exits refused and leaves the file without a vector.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_vector_refuses_a_malformed_one_and_writes_nothing},
 }
+
+@misc{pathsforward-check-stored-bad-vector-is-found,
+  section = {check},
+  title  = {A hand-planted malformed or unsourced vector is a finding naming its symbol (W257)},
+  claim  = {A hand-planted malformed or unsourced vector is a finding naming its symbol (W257).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_stored_bad_vector_is_found},
+}
+
+@misc{pathsforward-check-unscored-counts-live-waypoints-without-a-vector,
+  section = {check},
+  title  = {Live waypoints with no vector are counted; done ones and scored ones are not (W257)},
+  claim  = {Live waypoints with no vector are counted; done ones and scored ones are not (W257).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_unscored_counts_live_waypoints_without_a_vector},
+}

@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward import lease, lock, ops, render, selftest, store
 from mikemol.pathsforward.atomize import atomize
-from mikemol.pathsforward.check import check, evidence_findings
+from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
 from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
@@ -526,6 +526,9 @@ def _report(state: State, findings: list[str], owed: str | None = None) -> int:
             f"check: OK — {state.counter} of {state.counter} symbols resolve; "
             f"state_hash={v2(state.waypoints)}"
         )
+        # ⚑ A CENSUS, NOT A FINDING (W257): unscored waypoints never change the exit code;
+        # the line is grep-stable so nemik and luthen can count them.
+        _say(f"UNSCORED {unscored(state)}")
         if owed:
             _say(owed)
         return EXIT_OK
