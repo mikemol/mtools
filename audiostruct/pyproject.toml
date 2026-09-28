@@ -28,11 +28,13 @@ dependencies = []
 # ⚑ The stage runner's real models (W267, design note O2). Locked in requirements-gpu.txt by
 # `uv pip compile` for py3.13 x86_64-manylinux_2_28 with hashes: 118 packages from plain PyPI,
 # torch 2.8.0 bringing its own CUDA 12.8 runtime. Bazel stages it as the `audiostruct_gpu` hub.
-# ⚑ BELOW 3.15 ONLY, measured: `uv lock` with bare whisperx fails for python >= 3.15 because
-# ctranslate2 publishes no Linux wheel there. So the extra is declared unavailable there, rather
-# than capping the whole distribution's requires-python for one optional dependency.
+# ⚑ BELOW 3.14 ONLY: every whisperx release from 3.7.0 through 3.8.6 declares
+# Requires-Python <3.14. (Measured by `pip download whisperx==3.8.6` without --python-version on
+# 3.14.) The extra is declared unavailable there, rather than capping the whole distribution's
+# requires-python for one optional dependency. 204eae8 wrote 3.15 and blamed ctranslate2; that
+# was the first refusal uv printed, not the binding cap.
 [project.optional-dependencies]
-gpu = ["whisperx; python_version < '3.15'"]
+gpu = ["whisperx; python_version < '3.14'"]
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
