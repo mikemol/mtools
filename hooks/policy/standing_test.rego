@@ -26,6 +26,14 @@ test_7_witness if denies(edit("/home/mikemol/github/mtools/findings/CENSUS-paper
 
 test_7_control if not denies(edit("/home/mikemol/github/mtools/findings/CENSUS-other.md"), 7)
 
+test_14_witness if denies(edit("/home/mikemol/github/mtools/hooks/warrants.bib"), 14)
+
+test_14_write_witness if denies({"tool_name": "Write", "tool_input": {"file_path": "/home/mikemol/github/mtools/mdstruct/warrants.bib"}}, 14)
+
+test_14_control if not denies(edit("/home/mikemol/github/mtools/hooks/rubric.tsv"), 14)
+
+test_14_append_control if not denies(bash("python3 .claude/gen_warrants.py hooks cmdparse=X >> hooks/warrants.bib"), 14)
+
 test_11_witness if denies(bash("python3 .claude/paths_forward_render.py"), 11)
 
 test_11_control if not denies(bash("pathsforward/.venv/bin/mikemol-paths-forward --render"), 11)

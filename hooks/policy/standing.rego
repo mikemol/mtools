@@ -34,6 +34,11 @@ deny contains "standing 7: findings/CENSUS-paperkit-use.md is rosettapkg-db's; f
 	endswith(edited, "findings/CENSUS-paperkit-use.md")
 }
 
+# rule 14: warrants are transcribed by gen_warrants.py and appended with `>>`, never hand-edited
+deny contains "standing 14: warrants.bib is appended from gen_warrants.py output (`>> <dist>/warrants.bib`), not edited" if {
+	endswith(edited, "/warrants.bib")
+}
+
 # rule 11: the render script is retired; the state tool is mikemol-paths-forward
 deny contains "standing 11: paths_forward_render.py is retired; use mikemol-paths-forward" if {
 	# in command position (optionally behind an interpreter), not as another program's argument
