@@ -33,6 +33,17 @@ _CASES = """[
   {"case": "unknown", "withheld": ["no rule for case"]}
 ]"""
 
+# A miniature of W196's `guarded` else-body rule, evaluated by the real opa.
+_LIVE_SPEC = """package live
+import rego.v1
+deny contains "else-body is negated" if input.result == "not (c)"
+"""
+
+_LIVE_CASES = """[
+  {"case": "origin", "result": "c"},
+  {"case": "negated", "result": "not (c)"}
+]"""
+
 
 def test_a_rego_file_is_claimed() -> None:
     """A `.rego` file is a spec the plugin claims."""
@@ -64,13 +75,40 @@ def test_each_verdict_maps_to_its_outcome(pytester: pytest.Pytester) -> None:
     )
 
 
-def test_no_evaluator_fails_every_case(pytester: pytest.Pytester) -> None:
-    """With no evaluator configured, a case FAILS; it is neither passed nor skipped."""
+def test_absent_opa_fails_every_case(
+    pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """With no evaluator set and no opa on PATH, a case FAILS as UNMEASURED; it never skips."""
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec='[{"case": "good"}]')
+    monkeypatch.setenv("PATH", str(pytester.path))
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(failed=1)
+    result.stdout.fnmatch_lines(["*UNMEASURED (not evaluated, not passed): opa not found*"])
+
+
+def test_pinned_opa_admits_and_denies(pytester: pytest.Pytester) -> None:
+    """The default evaluator runs the host's pinned opa: a compliant case passes, a bad one fails.
+
+    ⚑ This is the live P-arm, and it needs opa on the host. Absent, it FAILS, as every case does.
+    """
+    pytester.makefile(".rego", spec=_LIVE_SPEC)
+    pytester.makefile(".cases.json", spec=_LIVE_CASES)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(passed=1, failed=1)
+    result.stdout.fnmatch_lines(["*negated: DENIED: else-body is negated*"])
+
+
+def test_ruleless_spec_admits_nothing(pytester: pytest.Pytester) -> None:
+    """A spec with no rules FAILS every case; it must not admit what it never judged.
+
+    ⚑ MEASURED: before W200's fix, `package s` alone passed its case through the real opa.
+    """
     pytester.makefile(".rego", spec="package s\n")
     pytester.makefile(".cases.json", spec='[{"case": "good"}]')
     result = pytester.runpytest(*_LOAD, "-rf")
     result.assert_outcomes(failed=1)
-    result.stdout.fnmatch_lines(["*NO EVALUATOR configured*"])
+    result.stdout.fnmatch_lines(["*UNMEASURED*no `deny` rule*"])
 
 
 def test_spec_without_case_data_is_a_collection_error(pytester: pytest.Pytester) -> None:

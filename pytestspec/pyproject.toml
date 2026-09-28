@@ -90,3 +90,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/test_plugin.py" = ["assert"]
 "tests/test_spec.py" = ["assert"]
+"tests/test_opa.py" = ["assert"]
+# ⚑ THE ONE MODULE THAT SHELLS OUT: opa is resolved to an absolute path by `shutil.which` first,
+# and called with an argv list — never a shell, never an untrusted program name.
+"src/mikemol/pytestspec/opa.py" = [
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+]

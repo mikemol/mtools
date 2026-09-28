@@ -6,6 +6,7 @@
 % with leading articles dropped>.  Each check runs that one test function.
 
 
+
 @misc{pytestspec-spec-cases-sit-beside-the-spec,
   section = {spec},
   title  = {`guarded.rego` reads `guarded.cases.json` in the same directory},
@@ -55,6 +56,69 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_bad_case_data_is_refused},
 }
 
+@misc{pytestspec-opa-admitted-result-carries-no-deny-or-withheld,
+  section = {opa},
+  title  = {Empty `deny` and `withheld` sets parse to the admitted verdict},
+  claim  = {Empty `deny` and `withheld` sets parse to the admitted verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_an_admitted_result_carries_no_deny_or_withheld},
+}
+
+@misc{pytestspec-opa-deny-messages-parse-sorted,
+  section = {opa},
+  title  = {A Rego set has no order, so its messages are sorted before comparison},
+  claim  = {A Rego set has no order, so its messages are sorted before comparison.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_deny_messages_parse_sorted},
+}
+
+@misc{pytestspec-opa-empty-result-is-withheld-not-admitted,
+  section = {opa},
+  title  = {An empty result object (the package is undefined) is WITHHELD: nothing was measured},
+  claim  = {An empty result object (the package is undefined) is WITHHELD: nothing was measured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_empty_result_is_withheld_not_admitted},
+}
+
+@misc{pytestspec-opa-package-without-deny-is-withheld,
+  section = {opa},
+  title  = {A package document with no `deny` key (no rule could deny) is WITHHELD, not admitted},
+  claim  = {A package document with no `deny` key (no rule could deny) is WITHHELD, not admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_a_package_without_deny_is_withheld},
+}
+
+@misc{pytestspec-opa-package-is-read-from-the-spec,
+  section = {opa},
+  title  = {The query path is the spec's own `package` line},
+  claim  = {The query path is the spec's own `package` line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_package_is_read_from_the_spec},
+}
+
+@misc{pytestspec-opa-spec-without-package-is-refused,
+  section = {opa},
+  title  = {A spec with no `package` line cannot be queried, and says so},
+  claim  = {A spec with no `package` line cannot be queried, and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_spec_without_package_is_refused},
+}
+
+@misc{pytestspec-opa-absent-opa-is-refused,
+  section = {opa},
+  title  = {With no opa on PATH, resolution FAILS; it never falls through to a skip},
+  claim  = {With no opa on PATH, resolution FAILS; it never falls through to a skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_absent_opa_is_refused},
+}
+
+@misc{pytestspec-opa-wrong-version-opa-is-refused,
+  section = {opa},
+  title  = {An opa that is not the pinned version is a different checker, and is refused},
+  claim  = {An opa that is not the pinned version is a different checker, and is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_wrong_version_opa_is_refused},
+}
+
+@misc{pytestspec-opa-pinned-version-opa-is-accepted,
+  section = {opa},
+  title  = {The pinned version resolves to its absolute path (the P-arm of the version check)},
+  claim  = {The pinned version resolves to its absolute path (the P-arm of the version check).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_pinned_version_opa_is_accepted},
+}
+
 @misc{pytestspec-plugin-rego-file-is-claimed,
   section = {plugin},
   title  = {A `.rego` file is a spec the plugin claims},
@@ -83,11 +147,28 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_each_verdict_maps_to_its_outcome},
 }
 
-@misc{pytestspec-plugin-no-evaluator-fails-every-case,
+@misc{pytestspec-plugin-absent-opa-fails-every-case,
   section = {plugin},
-  title  = {With no evaluator configured, a case FAILS; it is neither passed nor skipped},
-  claim  = {With no evaluator configured, a case FAILS; it is neither passed nor skipped.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_no_evaluator_fails_every_case},
+  title  = {With no evaluator set and no opa on PATH, a case FAILS as UNMEASURED; it never skips},
+  claim  = {With no evaluator set and no opa on PATH, a case FAILS as UNMEASURED; it never skips.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_absent_opa_fails_every_case},
+}
+
+@misc{pytestspec-plugin-pinned-opa-admits-and-denies,
+  section = {plugin},
+  title  = {The default evaluator runs the host's pinned opa: a compliant case passes, a bad one fails},
+  claim  = {The default evaluator runs the host's pinned opa: a compliant case passes, a bad one
+            fails. This is the live P-arm, and it needs opa on the host. Absent, it
+            FAILS, as every case does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_pinned_opa_admits_and_denies},
+}
+
+@misc{pytestspec-plugin-ruleless-spec-admits-nothing,
+  section = {plugin},
+  title  = {A spec with no rules FAILS every case; it must not admit what it never judged},
+  claim  = {A spec with no rules FAILS every case; it must not admit what it never judged. MEASURED:
+            before W200's fix, `package s` alone passed its case through the real opa.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_ruleless_spec_admits_nothing},
 }
 
 @misc{pytestspec-plugin-spec-without-case-data-is-a-collection-error,

@@ -2,15 +2,17 @@
 # Copyright (c) 2026 Mike Mol
 """The pytest11 entry point: a `.rego` spec collects one item per case in its case data.
 
-⚑ THE EVALUATOR IS READ FROM `config.stash[EVALUATOR]` (W199). With none configured, every item
-FAILS: a spec that cannot be evaluated has measured nothing, and that must not read as a pass or
-a skip. W200 installs the pinned opa evaluator as the default.
+⚑ THE EVALUATOR IS READ FROM `config.stash[EVALUATOR]`; when nothing set it, the pinned opa
+evaluator (W200) is installed on first use. A case that could not be evaluated — opa absent,
+the wrong version, or an eval error — FAILS as UNMEASURED: it measured nothing, and that must
+not read as a pass or a skip.
 """
 
 from pathlib import Path
 
 import pytest
 
+from mikemol.pytestspec import opa
 from mikemol.pytestspec.spec import Case, Evaluator, SpecDataError, judge, load_cases
 
 SPEC_SUFFIX = ".rego"
@@ -42,18 +44,32 @@ class SpecItem(pytest.Item):
         super().__init__(name=name, parent=parent)
         self.case = case
 
+    def _evaluator(self) -> Evaluator:
+        """Return the configured evaluator, installing the pinned opa one if none is set.
+
+        Returns:
+            the session's evaluator.
+
+        """
+        found = self.config.stash.get(EVALUATOR, None)
+        if found is None:
+            found = opa.evaluator()
+            self.config.stash[EVALUATOR] = found
+        return found
+
     def runtest(self) -> None:
         """Evaluate the case and fail unless it is admitted.
 
         Raises:
-            SpecFailedError: no evaluator is configured, or the verdict is not admitted.
+            SpecFailedError: the case could not be evaluated, or its verdict is not admitted.
 
         """
-        evaluator = self.config.stash.get(EVALUATOR, None)
-        if evaluator is None:
-            msg = "NO EVALUATOR configured: the case was not evaluated, so it is not passed"
-            raise SpecFailedError(msg)
-        failure = judge(evaluator(self.path, self.case))
+        try:
+            verdict = self._evaluator()(self.path, self.case)
+        except (opa.OpaUnavailableError, SpecDataError) as exc:
+            msg = f"UNMEASURED (not evaluated, not passed): {exc}"
+            raise SpecFailedError(msg) from exc
+        failure = judge(verdict)
         if failure is not None:
             raise SpecFailedError(failure)
 

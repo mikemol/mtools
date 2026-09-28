@@ -16,5 +16,10 @@ Status (W194, split into W198/W199/W200):
 
 - W198, this shell: it declares which files are specs (`plugin.claims`). A `.rego` file counts;
   opa's own `_test.rego` does not.
-- W199: collection and the verdict mapping, over an injected evaluator.
-- W200: the pinned `opa eval` evaluator.
+- W199: collection and the verdict mapping. Cases live in `<spec>.cases.json` beside the spec.
+- W200: the default evaluator is `opa eval` over the spec's `package`, with opa pinned to
+  1.20.2 (`opa.PINNED`). A test can replace it through `config.stash[plugin.EVALUATOR]`.
+
+A spec must define a `deny` rule. A package document with no `deny` is withheld, never
+admitted: a spec with no rules would otherwise pass every case, which is what happened before
+W200 fixed it.
