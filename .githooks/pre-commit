@@ -448,7 +448,7 @@ fi
 # spelling `Build did NOT complete successfully` does not contain it (`complete`, not `completed`).
 _prebuild=(//ratchet:ratchet_cli)
 for _d in $_dists; do _prebuild+=("//$_d:.venv"); done
-if ( cd "$root" && git_scrubbed bazel build "${_prebuild[@]}" ) \
+if ( cd "$root" && git_scrubbed bazel build --nokeep_going "${_prebuild[@]}" ) \
     >"$staged/.ratchet_cli.log" 2>&1; then
   _prebuild_rc=0
 else
@@ -714,7 +714,7 @@ fi
 # ⚑ THE SECOND WRONG FORM IS THE INSTRUCTIVE ONE: it looks like it captures the status and the
 # assignment happens in a subshell that exits before the parent reads it. Reasoning about shell
 # scoping produced two wrong answers in a row here; running four candidates produced the right one.
-if ( cd "$staged" && git_scrubbed bazel test //... --test_output=errors ) 2>&1 \
+if ( cd "$staged" && git_scrubbed bazel test --nokeep_going //... --test_output=errors ) 2>&1 \
     | tee "$staged/.suite.log"; then
     _suite_rc=0
 else
