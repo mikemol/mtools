@@ -21,20 +21,17 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ EMPTY ON PURPOSE: the record layer is plain parsed JSON and the standard library. torch and
-# whisperx arrive with the stage runner (W263/W264) as an optional extra, never here.
+# ⚑ EMPTY ON PURPOSE: the record layer is plain parsed JSON and the standard library.
 dependencies = []
 
-# ⚑ The stage runner's real models (W267, design note O2). Locked in requirements-gpu.txt by
-# `uv pip compile` for py3.13 x86_64-manylinux_2_28 with hashes: 118 packages from plain PyPI,
-# torch 2.8.0 bringing its own CUDA 12.8 runtime. Bazel stages it as the `audiostruct_gpu` hub.
-# ⚑ BELOW 3.14 ONLY: every whisperx release from 3.7.0 through 3.8.6 declares
-# Requires-Python <3.14. (Measured by `pip download whisperx==3.8.6` without --python-version on
-# 3.14.) The extra is declared unavailable there, rather than capping the whole distribution's
-# requires-python for one optional dependency. 204eae8 wrote 3.15 and blamed ctranslate2; that
-# was the first refusal uv printed, not the binding cap.
-[project.optional-dependencies]
-gpu = ["whisperx; python_version < '3.14'"]
+# ⚑⚑ NO `[gpu]` EXTRA, ON PURPOSE (W275, operator 2026-09-28). The stage runner's real models are
+# locked ONLY in requirements-gpu.txt, staged as the `audiostruct_gpu` bazel hub (W267). An extra
+# here would land in uv.lock, and `@audiostruct_dev` is built from uv.lock, so the mutants
+# .venv staged torch, whisperx and CUDA (about 8G) in every audiostruct build, in both output
+# bases on the zram /var/tmp (measured: `bazel query deps(//audiostruct:.venv)` listed
+# @audiostruct_dev//torch). The cost: `pip install mikemol-audiostruct[gpu]` is not offered;
+# the GPU set installs from requirements-gpu.txt, whose header records how it was compiled.
+# whisperx 3.7.0 through 3.8.6 require Python <3.14, so that lock is for py3.13.
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
