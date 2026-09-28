@@ -2040,3 +2040,59 @@
   claim  = {Clearing the step without closing the waypoint is the same absence.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_empty_next_on_a_live_waypoint_is_null},
 }
+
+@misc{pathsforward-vector-complete-vector-parses-in-order,
+  section = {vector},
+  title  = {The W218 example parses to every metric, in the grammar's fixed order},
+  claim  = {The W218 example parses to every metric, in the grammar's fixed order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_a_complete_vector_parses_in_order},
+}
+
+@misc{pathsforward-vector-cvss-prefix-is-refused,
+  section = {vector},
+  title  = {A CVSS 4.0 prefix is refused: a waypoint vector must never read as a CVSS score},
+  claim  = {A CVSS 4.0 prefix is refused: a waypoint vector must never read as a CVSS score.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_a_cvss_prefix_is_refused},
+}
+
+@misc{pathsforward-vector-missing-metric-is-refused,
+  section = {vector},
+  title  = {A vector without one metric is refused, so the ranker never fills in a silent default},
+  claim  = {A vector without one metric is refused, so the ranker never fills in a silent default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_a_missing_metric_is_refused},
+}
+
+@misc{pathsforward-vector-swapped-metrics-are-refused,
+  section = {vector},
+  title  = {Two metrics out of the fixed order are refused, naming the one found out of place},
+  claim  = {Two metrics out of the fixed order are refused, naming the one found out of place.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_swapped_metrics_are_refused},
+}
+
+@misc{pathsforward-vector-egress-is-no-longer-a-reach-value,
+  section = {vector},
+  title  = {R:E, reach as egress in the first proposal, is refused since W218 split egress out},
+  claim  = {R:E, reach as egress in the first proposal, is refused since W218 split egress out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_egress_is_no_longer_a_reach_value},
+}
+
+@misc{pathsforward-vector-metric-without-a-colon-is-refused,
+  section = {vector},
+  title  = {A bare metric name is refused as out of place, not read as an empty value},
+  claim  = {A bare metric name is refused as out of place, not read as an empty value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_a_metric_without_a_colon_is_refused},
+}
+
+@misc{pathsforward-vector-each-declared-source-is-accepted,
+  section = {vector},
+  title  = {Each declared vector_source is accepted},
+  claim  = {Each declared vector_source is accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_each_declared_source_is_accepted},
+}
+
+@misc{pathsforward-vector-undeclared-source-is-refused,
+  section = {vector},
+  title  = {A vector_source outside the declared three is refused},
+  claim  = {A vector_source outside the declared three is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_an_undeclared_source_is_refused},
+}
