@@ -2096,3 +2096,38 @@
   claim  = {A vector_source outside the declared three is refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vector.py -k test_an_undeclared_source_is_refused},
 }
+
+@misc{pathsforward-ops-vector-and-its-source-are-stored-as-plain-fields,
+  section = {ops},
+  title  = {A valid vector and its source land as plain fields a reader loads directly (nemik:W107)},
+  claim  = {A valid vector and its source land as plain fields a reader loads directly (nemik:W107).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_vector_and_its_source_are_stored_as_plain_fields},
+}
+
+@misc{pathsforward-ops-malformed-vector-is-refused-and-nothing-changes,
+  section = {ops},
+  title  = {A vector outside the grammar is refused at write time, and the waypoint is untouched},
+  claim  = {A vector outside the grammar is refused at write time, and the waypoint is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_malformed_vector_is_refused_and_nothing_changes},
+}
+
+@misc{pathsforward-ops-vector-without-its-source-is-refused,
+  section = {ops},
+  title  = {A vector is written with its provenance or not at all, so every score can be audited},
+  claim  = {A vector is written with its provenance or not at all, so every score can be audited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_vector_without_its_source_is_refused},
+}
+
+@misc{pathsforward-cli-update-vector-lands-in-the-state-a-reader-loads,
+  section = {cli},
+  title  = {--update --vector with --vector-source writes both fields to the file (nemik:W107)},
+  claim  = {--update --vector with --vector-source writes both fields to the file (nemik:W107).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_vector_lands_in_the_state_a_reader_loads},
+}
+
+@misc{pathsforward-cli-update-vector-refuses-a-malformed-one-and-writes-nothing,
+  section = {cli},
+  title  = {A malformed --vector exits refused and leaves the file without a vector},
+  claim  = {A malformed --vector exits refused and leaves the file without a vector.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_vector_refuses_a_malformed_one_and_writes_nothing},
+}

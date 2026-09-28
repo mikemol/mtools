@@ -32,6 +32,11 @@ class MalformedStateError(ValueError):
     """The document is not a paths-forward state; it is refused, never guessed at."""
 
 
+# Lives here, not in ops, so a validator ops calls (vector, W256) can raise it without a cycle.
+class RefusedError(ValueError):
+    """A mutation that would leave the file wrong; nothing was changed."""
+
+
 @dataclass(frozen=True)
 class State:
     """A validated state document, with its two record lists bound to the document itself.

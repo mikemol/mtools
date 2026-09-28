@@ -141,6 +141,29 @@ def test_empty_next_is_null() -> None:
     assert w["next_bounded_step"] is None
 
 
+_VECTOR = "WV:1/R:T/E:Y/C:H/I:N/A:N/X:N/S:C/F:K/W:N"
+
+
+def test_a_vector_and_its_source_are_stored_as_plain_fields() -> None:
+    """A valid vector and its source land as plain fields a reader loads directly (nemik:W107)."""
+    w = ops.update(_state(), "W1", ops.Update(vector=_VECTOR, vector_source="agent"), _NOW)
+    assert (w.get("vector"), w.get("vector_source")) == (_VECTOR, "agent")
+
+
+def test_a_malformed_vector_is_refused_and_nothing_changes() -> None:
+    """A vector outside the grammar is refused at write time, and the waypoint is untouched."""
+    state = _state()
+    with pytest.raises(ops.RefusedError, match="must start with WV:1"):
+        ops.update(state, "W1", ops.Update(vector="CVSS:4.0/AV:N", vector_source="agent"), _NOW)
+    assert "vector" not in state.waypoints[0]
+
+
+def test_a_vector_without_its_source_is_refused() -> None:
+    """A vector is written with its provenance or not at all, so every score can be audited."""
+    with pytest.raises(ops.RefusedError, match="together"):
+        ops.update(_state(), "W1", ops.Update(vector=_VECTOR), _NOW)
+
+
 def test_empty_next_on_a_live_waypoint_is_null() -> None:
     """Clearing the step without closing the waypoint is the same absence."""
     w = ops.update(_state(), "W1", ops.Update(next_step=""), _NOW)

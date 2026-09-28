@@ -103,6 +103,8 @@ _FIELDS = (
     "evidence",
     "weight",
     "witness",
+    "vector",
+    "vector_source",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -120,6 +122,8 @@ _APPLIES: dict[str, frozenset[str]] = {
             "weight",
             "touches",
             "witness",
+            "vector",
+            "vector_source",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -270,6 +274,14 @@ def _parser() -> argparse.ArgumentParser:
     ap.add_argument("--touches", nargs="+", metavar="TAG")
     ap.add_argument(
         "--witness", metavar="QUERY", help="--add/--update: a one-line Rego query, stored unread"
+    )
+    ap.add_argument(
+        "--vector", metavar="WV", help="--update: a WV:1 vector (W248); with --vector-source"
+    )
+    ap.add_argument(
+        "--vector-source",
+        choices=("default", "signal", "agent"),
+        help="--update: who set the vector; required with --vector",
     )
     ap.add_argument("--caused-by", metavar="REF", help="--add: letter path, peer, operator, W<n>")
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
@@ -669,6 +681,8 @@ def _update(ctx: Ctx) -> int:
         weight=ctx.number("weight"),
         touches=ctx.many("touches"),
         witness=ctx.get("witness"),
+        vector=ctx.get("vector"),
+        vector_source=ctx.get("vector_source"),
     )
 
     def edit(state: State) -> int:

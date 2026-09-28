@@ -424,6 +424,22 @@ def test_update_replaces_a_stale_title(tmp_path: Path) -> None:
     )
 
 
+def test_update_vector_lands_in_the_state_a_reader_loads(tmp_path: Path) -> None:
+    """--update --vector with --vector-source writes both fields to the file (nemik:W107)."""
+    path = _file(tmp_path)
+    vec = "WV:1/R:C/E:N/C:L/I:L/A:N/X:P/S:U/F:K/W:Y"
+    code = _code(path, "--update", "W1", "--vector", vec, "--vector-source", "signal")
+    w = _first(path)
+    assert (code, w.get("vector"), w.get("vector_source")) == (_OK, vec, "signal")
+
+
+def test_update_vector_refuses_a_malformed_one_and_writes_nothing(tmp_path: Path) -> None:
+    """A malformed --vector exits refused and leaves the file without a vector."""
+    path = _file(tmp_path)
+    code = _code(path, "--update", "W1", "--vector", "WV:1/R:H", "--vector-source", "agent")
+    assert (code, "vector" in _first(path)) == (_REFUSED, False)
+
+
 def test_overlaps_prints_shared_tags_and_exits_ok(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

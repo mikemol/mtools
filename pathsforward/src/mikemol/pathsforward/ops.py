@@ -24,10 +24,11 @@ from enum import StrEnum
 from itertools import starmap
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lock
+from mikemol.pathsforward import lock, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
+    RefusedError,
     is_reference,
     strlist,
     symbol_number,
@@ -39,6 +40,9 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from mikemol.pathsforward.model import Json, State
+
+# RefusedError moved to model (W256) and is re-exported here for every existing importer.
+__all__ = ["RefusedError"]
 
 NUDGE_TICKS: tuple[int, ...] = (1, 2, 4, 8)
 ESCALATE_TICK = 16
@@ -54,10 +58,6 @@ def _bad_edges(edges: Iterable[str]) -> list[str]:
 
     """
     return [e for e in edges if not is_reference(e)]
-
-
-class RefusedError(ValueError):
-    """A mutation that would leave the file wrong; nothing was changed."""
 
 
 class Action(StrEnum):
@@ -101,6 +101,10 @@ class Update:
     # over nemik-observed input. nemik's observers and `opa eval` decide it; this tool neither
     # parses nor validates the Rego, and only refuses a query that is empty or not one line.
     witness: str | None = None
+    # ⚑ A VECTOR IS CHECKED, NEVER SCORED HERE (W248, W256): vector.parse refuses one outside the
+    # WV:1 grammar; nemik reads the stored string and owns the band.
+    vector: str | None = None
+    vector_source: str | None = None
 
 
 @dataclass(frozen=True)
@@ -178,6 +182,26 @@ def _refuse_enums(upd: Update) -> None:
         raise RefusedError(msg)
     _refuse_title(upd.title)
     _refuse_witness(upd.witness)
+    _refuse_vector(upd.vector, upd.vector_source)
+
+
+def _refuse_vector(vec: str | None, source: str | None) -> None:
+    """Refuse a vector outside the WV:1 grammar, or one written without its provenance.
+
+    ⚑ BOTH OR NEITHER (W256): a vector with no source is a score nobody can audit, and a
+    source with no vector describes nothing.
+
+    Raises:
+        RefusedError: on a malformed vector or source, or only one of the pair.
+
+    """
+    if vec is None and source is None:
+        return
+    if vec is None or source is None:
+        msg = "vector and vector_source are written together"
+        raise RefusedError(msg)
+    vector.parse(vec)
+    vector.refuse_source(source)
 
 
 def _refuse_witness(query: str | None) -> None:
@@ -228,6 +252,8 @@ def _set_given(new: Json, upd: Update) -> None:
         "weight": upd.weight,
         "touches": None if upd.touches is None else list(upd.touches),
         "witness": upd.witness,
+        "vector": upd.vector,
+        "vector_source": upd.vector_source,
     }
     new.update({key: value for key, value in given.items() if value is not None})
 
