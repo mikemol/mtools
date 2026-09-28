@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the pytestspec warrant set, one per test module, in document order.
 # key <TAB> heading title
-plugin	The Claim: A Spec Is a .rego File, and opa's Own Tests Are Not Specs
+spec	The Judgment: Only Admitted Passes, Withheld Is Unmeasured, and No Data Is an Error
+plugin	The Plugin: A .rego File Collects One Item per Case, and No Evaluator Fails

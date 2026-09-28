@@ -1,10 +1,37 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""The plugin's claim: which files are specs."""
+"""The plugin: which files are specs, and how each case's verdict becomes a pytest outcome.
+
+⚑ THE INNER SESSIONS LOAD THE PLUGIN BY MODULE, with its entry-point name blocked, so the run
+is the same whether or not the distribution is installed (the local venv installs it; bazel
+does not).
+"""
 
 from pathlib import Path
 
+import pytest
+
 from mikemol.pytestspec import plugin
+
+_LOAD = ("-p", "no:pytestspec", "-p", "mikemol.pytestspec.plugin")
+
+# The stub evaluator returns the verdict the case's own data names.
+_STUB = """
+from mikemol.pytestspec.plugin import EVALUATOR
+from mikemol.pytestspec.spec import Verdict
+
+def _stub(spec, case):
+    return Verdict(deny=tuple(case.get("deny", ())), withheld=tuple(case.get("withheld", ())))
+
+def pytest_configure(config):
+    config.stash[EVALUATOR] = _stub
+"""
+
+_CASES = """[
+  {"case": "good"},
+  {"case": "bad", "deny": ["line 11 negated"]},
+  {"case": "unknown", "withheld": ["no rule for case"]}
+]"""
 
 
 def test_a_rego_file_is_claimed() -> None:
@@ -20,3 +47,43 @@ def test_opa_test_file_is_not_claimed() -> None:
 def test_python_file_is_not_claimed() -> None:
     """A `.py` file is left to pytest's own collector."""
     assert not plugin.claims(Path("tests/test_plugin.py"))
+
+
+def test_each_verdict_maps_to_its_outcome(pytester: pytest.Pytester) -> None:
+    """Admitted passes; a deny fails with its message; a withheld case fails as UNMEASURED."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_CASES)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(passed=1, failed=2)
+    result.stdout.fnmatch_lines(
+        [
+            "*bad: DENIED: line 11 negated*",
+            "*unknown: UNMEASURED (withheld, not passed): no rule for case*",
+        ]
+    )
+
+
+def test_no_evaluator_fails_every_case(pytester: pytest.Pytester) -> None:
+    """With no evaluator configured, a case FAILS; it is neither passed nor skipped."""
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec='[{"case": "good"}]')
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(failed=1)
+    result.stdout.fnmatch_lines(["*NO EVALUATOR configured*"])
+
+
+def test_spec_without_case_data_is_a_collection_error(pytester: pytest.Pytester) -> None:
+    """A spec with no `.cases.json` ERRORS at collection; it never collects as zero cases."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    result = pytester.runpytest(*_LOAD)
+    result.assert_outcomes(errors=1)
+    result.stdout.fnmatch_lines(["*no case data at spec.cases.json*"])
+
+
+def test_opa_test_file_collects_nothing(pytester: pytest.Pytester) -> None:
+    """A lone `_test.rego` (opa's own unit test) collects no items."""
+    pytester.makefile(".rego", spec_test="package s_test\n")
+    result = pytester.runpytest(*_LOAD)
+    assert result.ret == pytest.ExitCode.NO_TESTS_COLLECTED

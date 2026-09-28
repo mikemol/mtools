@@ -5,6 +5,56 @@
 % Keying convention: pytestspec-<section>-<test name minus its `test_` prefix, hyphenated,
 % with leading articles dropped>.  Each check runs that one test function.
 
+
+@misc{pytestspec-spec-cases-sit-beside-the-spec,
+  section = {spec},
+  title  = {`guarded.rego` reads `guarded.cases.json` in the same directory},
+  claim  = {`guarded.rego` reads `guarded.cases.json` in the same directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_cases_sit_beside_the_spec},
+}
+
+@misc{pytestspec-spec-admitted-verdict-passes,
+  section = {spec},
+  title  = {Nothing denied and nothing withheld is the only verdict that passes},
+  claim  = {Nothing denied and nothing withheld is the only verdict that passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_admitted_verdict_passes},
+}
+
+@misc{pytestspec-spec-deny-fails-with-its-messages,
+  section = {spec},
+  title  = {A deny fails, carrying every deny message},
+  claim  = {A deny fails, carrying every deny message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_deny_fails_with_its_messages},
+}
+
+@misc{pytestspec-spec-withheld-fails-as-unmeasured,
+  section = {spec},
+  title  = {A withheld case FAILS as UNMEASURED; it is never a pass},
+  claim  = {A withheld case FAILS as UNMEASURED; it is never a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_withheld_fails_as_unmeasured},
+}
+
+@misc{pytestspec-spec-deny-is-reported-before-withheld,
+  section = {spec},
+  title  = {A case both denied and withheld reports the deny, which is the finding},
+  claim  = {A case both denied and withheld reports the deny, which is the finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_deny_is_reported_before_withheld},
+}
+
+@misc{pytestspec-spec-cases-load-in-file-order,
+  section = {spec},
+  title  = {Each record's `case` names it, and file order is kept},
+  claim  = {Each record's `case` names it, and file order is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_cases_load_in_file_order},
+}
+
+@misc{pytestspec-spec-bad-case-data-is-refused,
+  section = {spec},
+  title  = {Absent, non-JSON, empty, or unnamed case data raises; it never loads as zero cases},
+  claim  = {Absent, non-JSON, empty, or unnamed case data raises; it never loads as zero cases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_bad_case_data_is_refused},
+}
+
 @misc{pytestspec-plugin-rego-file-is-claimed,
   section = {plugin},
   title  = {A `.rego` file is a spec the plugin claims},
@@ -24,4 +74,32 @@
   title  = {A `.py` file is left to pytest's own collector},
   claim  = {A `.py` file is left to pytest's own collector.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_python_file_is_not_claimed},
+}
+
+@misc{pytestspec-plugin-each-verdict-maps-to-its-outcome,
+  section = {plugin},
+  title  = {Admitted passes; a deny fails with its message; a withheld case fails as UNMEASURED},
+  claim  = {Admitted passes; a deny fails with its message; a withheld case fails as UNMEASURED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_each_verdict_maps_to_its_outcome},
+}
+
+@misc{pytestspec-plugin-no-evaluator-fails-every-case,
+  section = {plugin},
+  title  = {With no evaluator configured, a case FAILS; it is neither passed nor skipped},
+  claim  = {With no evaluator configured, a case FAILS; it is neither passed nor skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_no_evaluator_fails_every_case},
+}
+
+@misc{pytestspec-plugin-spec-without-case-data-is-a-collection-error,
+  section = {plugin},
+  title  = {A spec with no `.cases.json` ERRORS at collection; it never collects as zero cases},
+  claim  = {A spec with no `.cases.json` ERRORS at collection; it never collects as zero cases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_spec_without_case_data_is_a_collection_error},
+}
+
+@misc{pytestspec-plugin-opa-test-file-collects-nothing,
+  section = {plugin},
+  title  = {A lone `_test.rego` (opa's own unit test) collects no items},
+  claim  = {A lone `_test.rego` (opa's own unit test) collects no items.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_opa_test_file_collects_nothing},
 }
