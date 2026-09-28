@@ -72,6 +72,21 @@ startswith_any(s, prefixes) if {
 	startswith(s, p)
 }
 
+# rule 13: every direct pytest run is bounded — `timeout N` kills a hang, and faulthandler_timeout
+# dumps the stacks first, so a hang reads as a hang and never as a red. Operator ruling 2026-09-28
+# widened this from "arm runs", which the command cannot distinguish, to every pytest run.
+pytest_run if regex.match(`(^|[\s/;&|])(pytest|py\.test)(\s|$)`, unquoted)
+
+deny contains "standing 13: run pytest as `timeout 120 <python> -m pytest ... -o faulthandler_timeout=60`" if {
+	pytest_run
+	not regex.match(`(^|[\s;&|])timeout\s`, unquoted)
+}
+
+deny contains "standing 13: run pytest as `timeout 120 <python> -m pytest ... -o faulthandler_timeout=60`" if {
+	pytest_run
+	not contains(unquoted, "faulthandler_timeout=")
+}
+
 # rule 11: the render script is retired; the state tool is mikemol-paths-forward
 deny contains "standing 11: paths_forward_render.py is retired; use mikemol-paths-forward" if {
 	# in command position (optionally behind an interpreter), not as another program's argument

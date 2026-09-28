@@ -66,6 +66,20 @@ test_12_quoted_note_control if not denies(note("live env GIT_DIR=/home/mikemol/g
 
 test_12_substring_control if not denies(bash("MYGIT_DIR=/home/x true"), 12)
 
+test_13_bare_witness if denies(bash("env -C hooks .venv/bin/python -m pytest -q tests"), 13)
+
+test_13_no_faulthandler_witness if denies(bash("timeout 120 .venv/bin/python -m pytest -q"), 13)
+
+test_13_no_timeout_witness if denies(bash(".venv/bin/pytest -q -o faulthandler_timeout=60"), 13)
+
+test_13_control if not denies(bash("timeout 120 .venv/bin/python -m pytest -q -o faulthandler_timeout=60"), 13)
+
+test_13_bazel_control if not denies(bash("bazel test //hooks:pytest"), 13)
+
+test_13_quoted_control if not denies(note("ran pytest -q, all green"), 13)
+
+test_13_path_word_control if not denies(bash("cat hooks/tests/pytest.ini"), 13)
+
 test_11_witness if denies(bash("python3 .claude/paths_forward_render.py"), 11)
 
 test_11_control if not denies(bash("pathsforward/.venv/bin/mikemol-paths-forward --render"), 11)
