@@ -50,10 +50,15 @@ deny contains "standing 15: write the commit message to a scratchpad file and us
 git_location_values contains m[2] if {
 	some m in regex.find_all_string_submatch_n(
 		`(?:^|[\s;&|])(GIT_DIR|GIT_WORK_TREE|GIT_INDEX_FILE|GIT_COMMON_DIR|GIT_OBJECT_DIRECTORY)=["']?([^"'\s;&|]*)`,
-		command,
+		assigned,
 		-1,
 	)
 }
+
+# The command with every quoted span removed EXCEPT one that is an assignment's value
+# (GIT_DIR="/x"): a note that quotes an assignment is not one, but a quoted value still is.
+# Measured live: rule 12 first read `command` and refused a ledger note quoting `env GIT_DIR=...`.
+assigned := regex.replace(command, `([^=]|^)("[^"]*"|'[^']*')`, "${1} ")
 
 decoy_roots := {"/var/tmp/", "/tmp/"}
 

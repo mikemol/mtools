@@ -62,6 +62,8 @@ test_12_quoted_decoy_control if not denies(bash("GIT_INDEX_FILE='/tmp/decoy/inde
 
 test_12_plain_git_control if not denies(bash("git -C /home/mikemol/github/mtools status"), 12)
 
+test_12_quoted_note_control if not denies(note("live env GIT_DIR=/home/mikemol/github/mtools/.git refused"), 12)
+
 test_12_substring_control if not denies(bash("MYGIT_DIR=/home/x true"), 12)
 
 test_11_witness if denies(bash("python3 .claude/paths_forward_render.py"), 11)
