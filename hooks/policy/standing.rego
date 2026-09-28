@@ -44,6 +44,29 @@ deny contains "standing 15: write the commit message to a scratchpad file and us
 	regex.match(`(^|[\s/;&|])git\s(.*\s)?commit(\s.*)?\s(-[a-zA-Z]*m[a-zA-Z]*|--message)(\s|=|$)`, unquoted)
 }
 
+# rule 12: a git-location variable may point only at a decoy under a temp root. An allowlist of
+# decoy roots, not a list of real repos: a new real repo is refused without anyone updating a list.
+# Relative values are refused too — they resolve against a cwd the policy cannot see.
+git_location_values contains m[2] if {
+	some m in regex.find_all_string_submatch_n(
+		`(?:^|[\s;&|])(GIT_DIR|GIT_WORK_TREE|GIT_INDEX_FILE|GIT_COMMON_DIR|GIT_OBJECT_DIRECTORY)=["']?([^"'\s;&|]*)`,
+		command,
+		-1,
+	)
+}
+
+decoy_roots := {"/var/tmp/", "/tmp/"}
+
+deny contains "standing 12: point GIT_* location variables only at a decoy repo under /var/tmp/ or /tmp/, never the real one" if {
+	some v in git_location_values
+	not startswith_any(v, decoy_roots)
+}
+
+startswith_any(s, prefixes) if {
+	some p in prefixes
+	startswith(s, p)
+}
+
 # rule 11: the render script is retired; the state tool is mikemol-paths-forward
 deny contains "standing 11: paths_forward_render.py is retired; use mikemol-paths-forward" if {
 	# in command position (optionally behind an interpreter), not as another program's argument

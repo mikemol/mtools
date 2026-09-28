@@ -48,6 +48,22 @@ test_15_quoted_control if not denies(note("git commit -m is refused"), 15)
 
 test_15_other_subcommand_control if not denies(bash("git tag -m x v1"), 15)
 
+test_12_witness if denies(bash("GIT_DIR=/home/mikemol/github/mtools/.git git log"), 12)
+
+test_12_env_witness if denies(bash("env GIT_WORK_TREE=/home/mikemol/github/mtools git status"), 12)
+
+test_12_quoted_value_witness if denies(bash("GIT_DIR=\"/home/mikemol/github/x/.git\" git log"), 12)
+
+test_12_relative_witness if denies(bash("GIT_DIR=.git git log"), 12)
+
+test_12_decoy_control if not denies(bash("GIT_DIR=/var/tmp/claude-1000/s/decoy/.git git log"), 12)
+
+test_12_quoted_decoy_control if not denies(bash("GIT_INDEX_FILE='/tmp/decoy/index' git add x"), 12)
+
+test_12_plain_git_control if not denies(bash("git -C /home/mikemol/github/mtools status"), 12)
+
+test_12_substring_control if not denies(bash("MYGIT_DIR=/home/x true"), 12)
+
 test_11_witness if denies(bash("python3 .claude/paths_forward_render.py"), 11)
 
 test_11_control if not denies(bash("pathsforward/.venv/bin/mikemol-paths-forward --render"), 11)
