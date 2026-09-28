@@ -102,3 +102,75 @@
             something icsstruct calls.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_every_allowlist_entry_is_a_constructor},
 }
+
+@misc{icsstruct-expand-weekly-series-skips-its-exdate,
+  section = {expand},
+  title  = {Fixture 01: six Mondays with 21 September excluded yield five zoned occurrences},
+  claim  = {Fixture 01: six Mondays with 21 September excluded yield five zoned occurrences. Each
+            occurrence points at the one VEVENT's lines, and each start is aware.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_weekly_series_skips_its_exdate},
+}
+
+@misc{icsstruct-expand-override-replaces-its-instance-and-points-at-its-own-lines,
+  section = {expand},
+  title  = {Fixture 02: the 16 September class moves to 17 September, retitled},
+  claim  = {Fixture 02: the 16 September class moves to 17 September, retitled. The moved instance
+            carries its RECURRENCE-ID and the override VEVENT's span; the other three
+            carry the master's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_override_replaces_its_instance_and_points_at_its_own_lines},
+}
+
+@misc{icsstruct-expand-all-day-span-that-starts-before-the-window-overlaps-it,
+  section = {expand},
+  title  = {Fixture 03: a window opening 1 October holds both events, the span starting 30 September},
+  claim  = {Fixture 03: a window opening 1 October holds both events, the span starting 30
+            September. Overlap is life's ruling. The negative control: a window opening
+            on the span's DTEND (exclusive) holds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_all_day_span_that_starts_before_the_window_overlaps_it},
+}
+
+@misc{icsstruct-expand-zoned-series-keeps-its-wall-clock-across-dst,
+  section = {expand},
+  title  = {Fixture 04: both evening classes start at 16:30 local, one in EDT and one in EST},
+  claim  = {Fixture 04: both evening classes start at 16:30 local, one in EDT and one in EST.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_zoned_series_keeps_its_wall_clock_across_dst},
+}
+
+@misc{icsstruct-expand-floating-time-stays-naive,
+  section = {expand},
+  title  = {Fixture 05: no Z and no TZID is a naive datetime, not a date and not a guessed zone},
+  claim  = {Fixture 05: no Z and no TZID is a naive datetime, not a date and not a guessed zone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_floating_time_stays_naive},
+}
+
+@misc{icsstruct-expand-malformed-file-expands-only-its-closed-event,
+  section = {expand},
+  title  = {Fixture 06: the well-formed event expands; the unclosed one stays stage 1's record},
+  claim  = {Fixture 06: the well-formed event expands; the unclosed one stays stage 1's record. Its
+            BEGIN is `Malformed`, so it is no component here, and expansion adds nothing
+            for it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_malformed_file_expands_only_its_closed_event},
+}
+
+@misc{icsstruct-expand-closed-event-with-a-malformed-line-is-unexpandable,
+  section = {expand},
+  title  = {A closed VEVENT holding a no-colon line is one record with its lines and a reason},
+  claim  = {A closed VEVENT holding a no-colon line is one record with its lines and a reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_closed_event_with_a_malformed_line_is_unexpandable},
+}
+
+@misc{icsstruct-expand-series-the-expander-raises-on-is-carried-and-isolated,
+  section = {expand},
+  title  = {A series the library raises on is one `Unexpandable` naming the exception},
+  claim  = {A series the library raises on is one `Unexpandable` naming the exception. Each series
+            expands alone, so the well-formed series beside it still yields its
+            occurrence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_series_the_expander_raises_on_is_carried_and_isolated},
+}
+
+@misc{icsstruct-expand-events-without-a-uid-expand-separately,
+  section = {expand},
+  title  = {Two VEVENTs with no UID are two series, not one; each yields its own occurrence},
+  claim  = {Two VEVENTs with no UID are two series, not one; each yields its own occurrence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_events_without_a_uid_expand_separately},
+}

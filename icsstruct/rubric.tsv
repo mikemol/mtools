@@ -2,3 +2,4 @@
 # key <TAB> heading title
 lexical	The Lexical Layer: Every Physical Line in Exactly One Record, Malformed Lines Carried With a Reason
 stub_authority	The Stubs: Checked Against the Libraries They Describe, Constructors the Only Allowed Divergence
+expand	The Expansion Layer: One Occurrence per Instance in an Overlapping Window, Unexpandable Events Carried
