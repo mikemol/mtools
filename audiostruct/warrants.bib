@@ -84,3 +84,59 @@
   claim  = {Offsets truncate to the second and gain an hours field from one hour on.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_stamp_truncates_and_grows_hours},
 }
+
+@misc{audiostruct-stages-stages-run-in-order-one-model-at-a-time,
+  section = {stages},
+  title  = {Each stage loads, runs over every file, and is released before the next stage loads},
+  claim  = {Each stage loads, runs over every file, and is released before the next stage loads. The
+            baseline's measured shape: holding all three models at once ran out of GPU
+            memory. The token is read only once the diarize stage begins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_stages_run_in_order_one_model_at_a_time},
+}
+
+@misc{audiostruct-stages-release-follows-the-drop-of-the-last-reference,
+  section = {stages},
+  title  = {At every release no model is still referenced, so the memory release frees something},
+  claim  = {At every release no model is still referenced, so the memory release frees something. A
+            release called while the runner still holds its model frees nothing on the
+            GPU.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_release_follows_the_drop_of_the_last_reference},
+}
+
+@misc{audiostruct-stages-every-source-comes-back-as-records-in-order,
+  section = {stages},
+  title  = {Each label returns with one record per diarized segment, the untimed one Unplaced},
+  claim  = {Each label returns with one record per diarized segment, the untimed one Unplaced.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_every_source_comes_back_as_records_in_order},
+}
+
+@misc{audiostruct-stages-failing-step-names-stage-and-label-and-stops,
+  section = {stages},
+  title  = {A failing step is a StageError naming stage, label and type; nothing runs after it},
+  claim  = {A failing step is a StageError naming stage, label and type; nothing runs after it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_failing_step_names_stage_and_label_and_stops},
+}
+
+@misc{audiostruct-stages-planted-token-reaches-no-error-text,
+  section = {stages},
+  title  = {A step whose message embeds the token raises a StageError that prints nothing of it},
+  claim  = {A step whose message embeds the token raises a StageError that prints nothing of it.
+            Raised `from None`: the original is neither `__cause__` nor printed context,
+            so a traceback of the StageError cannot show the library's message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_planted_token_reaches_no_error_text},
+}
+
+@misc{audiostruct-stages-model-that-fails-to-load-is-named-for-every-source,
+  section = {stages},
+  title  = {A factory that fails is a StageError for every source, and the token is not in it},
+  claim  = {A factory that fails is a StageError for every source, and the token is not in it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_model_that_fails_to_load_is_named_for_every_source},
+}
+
+@misc{audiostruct-stages-result-without-segments-is-a-stage-error,
+  section = {stages},
+  title  = {A stage result that is not an object with a segments list fails the next reader by label},
+  claim  = {A stage result that is not an object with a segments list fails the next reader by
+            label.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_result_without_segments_is_a_stage_error},
+}
