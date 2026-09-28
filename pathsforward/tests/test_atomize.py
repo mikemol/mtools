@@ -16,9 +16,9 @@ def _tick(symbol: str, outcome: str = "advanced", kind: str = "tick") -> Parsed:
 
 
 def test_a_top_waypoint_advanced_last_tick_is_flagged() -> None:
-    """The ready top waypoint, advanced by one earlier tick, reads ATOMIZE; k counts this tick."""
+    """The ready top waypoint, advanced by one earlier tick, is flagged; k is that one advance."""
     waypoints: list[dict[str, object]] = [{"symbol": "W7", "status": "ready"}]
-    assert atomize(waypoints, [_tick("W7")]) == "ATOMIZE W7 (top for 2 ticks)"
+    assert atomize(waypoints, [_tick("W7")]) == "ATOMIZE W7 (advanced 1 times without landing)"
 
 
 def test_a_top_waypoint_never_advanced_is_not_flagged() -> None:
@@ -66,4 +66,38 @@ def test_it_reads_a_real_ledger_line() -> None:
     """A line as `--ledger` writes it parses and counts: the witness is the on-disk format."""
     raw = f'{_STAMP}  tick  W7   advanced  unblock   "step one"'
     waypoints: list[dict[str, object]] = [{"symbol": "W7", "status": "working"}]
-    assert atomize(waypoints, [parse(raw)]) == "ATOMIZE W7 (top for 2 ticks)"
+    assert atomize(waypoints, [parse(raw)]) == "ATOMIZE W7 (advanced 1 times without landing)"
+
+
+def test_k_counts_advances_not_ticks_spent_on_top() -> None:
+    """W112's shape: four advances spread between other work read four, not six (W188 defect 1)."""
+    entries: list[Parsed | Unparsed] = [
+        _tick("W112"),
+        _tick("W3"),
+        _tick("W112"),
+        _tick("W5"),
+        _tick("W112"),
+        _tick("W112"),
+    ]
+    waypoints: list[dict[str, object]] = [{"symbol": "W112", "status": "working"}]
+    assert atomize(waypoints, entries) == "ATOMIZE W112 (advanced 4 times without landing)"
+
+
+def test_performing_the_split_resets_the_count() -> None:
+    """An `atomized` line is not an advance and zeroes what came before (W188 defect 2).
+
+    ⚑ BOTH ARMS: right after the split there is no line; one more advance brings it back at 1.
+    """
+    waypoints: list[dict[str, object]] = [{"symbol": "W7", "status": "ready"}]
+    split: list[Parsed | Unparsed] = [_tick("W7"), _tick("W7"), _tick("W7", outcome="atomized")]
+    assert advances("W7", split) == 0
+    assert atomize(waypoints, split) is None
+    assert (
+        atomize(waypoints, [*split, _tick("W7")]) == "ATOMIZE W7 (advanced 1 times without landing)"
+    )
+
+
+def test_another_symbols_split_does_not_reset_this_one() -> None:
+    """The reset is per symbol: W8's split leaves W7's advances standing."""
+    entries: list[Parsed | Unparsed] = [_tick("W7"), _tick("W8", outcome="atomized"), _tick("W7")]
+    assert advances("W7", entries) == _TWO

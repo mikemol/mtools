@@ -589,7 +589,7 @@ def test_the_mode_defaults_to_the_summary() -> None:
 
 
 _ADVANCED = '2026-09-27T12:00:00Z  tick  W1   advanced  unblock   "step one"\n'
-_OWED = "ATOMIZE W1 (top for 2 ticks)"
+_OWED = "ATOMIZE W1 (advanced 1 times without landing)"
 
 
 def _advanced(tmp_path: Path) -> Path:

@@ -13,6 +13,12 @@ it without parsing prose. The parenthetical count is for the reader.
 
 ⚑ A MINT IS NOT AN ADVANCE. `--add` ledgers `minted` under the new symbol; counting it would flag
 every waypoint the tick after it was created, before anyone worked it.
+
+⚑ A SPLIT RESETS THE COUNT (W188, reported by luthen-observability). The count was every
+advance over the symbol's lifetime, so W112 -- four advances spread over five hours between
+other work -- read `top for 6 ticks`, and ledgering `atomized` for the split the signal asked
+for RAISED it. Now only advances after the symbol's most recent `atomized` line count, the
+split itself is not one, and the label says what k is: advances without landing, not ticks.
 """
 
 from __future__ import annotations
@@ -27,32 +33,37 @@ if TYPE_CHECKING:
     from mikemol.pathsforward.model import Json
 
 _TICK_KINDS = ("tick", "interrupt")
-_NOT_AN_ADVANCE = ("minted",)
+_SPLIT = "atomized"
+_NOT_AN_ADVANCE = ("minted", _SPLIT)
 
 
 def advances(symbol: str, entries: list[Parsed | Unparsed]) -> int:
-    """Count the ledger lines in which a tick or interrupt worked `symbol`.
+    """Count the ledger lines in which a tick or interrupt worked `symbol` since its last split.
 
     Returns:
-        how many; an unparsed line never counts, and neither does a mint.
+        how many after the most recent `atomized` line for `symbol` (all of them if there is none);
+        an unparsed line never counts, and neither does a mint or the split itself.
 
     """
-    return sum(
-        1
-        for e in entries
-        if isinstance(e, Parsed)
-        and e.entry.kind in _TICK_KINDS
-        and e.entry.symbol == symbol
-        and e.entry.outcome not in _NOT_AN_ADVANCE
-    )
+    count = 0
+    for e in entries:
+        if not isinstance(e, Parsed) or e.entry.kind not in _TICK_KINDS:
+            continue
+        if e.entry.symbol != symbol:
+            continue
+        if e.entry.outcome == _SPLIT:
+            count = 0
+        elif e.entry.outcome not in _NOT_AN_ADVANCE:
+            count += 1
+    return count
 
 
 def atomize(waypoints: list[Json], entries: list[Parsed | Unparsed]) -> str | None:
     """Name the top workable waypoint if an earlier tick already advanced it.
 
     Returns:
-        `ATOMIZE W<n> (top for k ticks)`, with k counting this tick, or None when the top was never
-        advanced or nothing is workable.
+        `ATOMIZE W<n> (advanced k times without landing)`, or None when the top has no advance
+        since its last split or nothing is workable.
 
     """
     queue = ordered(waypoints)
@@ -62,4 +73,4 @@ def atomize(waypoints: list[Json], entries: list[Parsed | Unparsed]) -> str | No
     prior = advances(top, entries)
     if prior == 0:
         return None
-    return f"ATOMIZE {top} (top for {prior + 1} ticks)"
+    return f"ATOMIZE {top} (advanced {prior} times without landing)"

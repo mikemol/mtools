@@ -1884,3 +1884,27 @@
   claim  = {Combined with another field, or given only a replacement, the update is refused whole.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_a_redaction_is_its_own_write},
 }
+
+@misc{pathsforward-atomize-k-counts-advances-not-ticks-spent-on-top,
+  section = {atomize},
+  title  = {W112's shape: four advances spread between other work read four, not six (W188 defect 1)},
+  claim  = {W112's shape: four advances spread between other work read four, not six (W188 defect
+            1).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_k_counts_advances_not_ticks_spent_on_top},
+}
+
+@misc{pathsforward-atomize-performing-the-split-resets-the-count,
+  section = {atomize},
+  title  = {An `atomized` line is not an advance and zeroes what came before (W188 defect 2)},
+  claim  = {An `atomized` line is not an advance and zeroes what came before (W188 defect 2). BOTH
+            ARMS: right after the split there is no line; one more advance brings it
+            back at 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_performing_the_split_resets_the_count},
+}
+
+@misc{pathsforward-atomize-another-symbols-split-does-not-reset-this-one,
+  section = {atomize},
+  title  = {The reset is per symbol: W8's split leaves W7's advances standing},
+  claim  = {The reset is per symbol: W8's split leaves W7's advances standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_another_symbols_split_does_not_reset_this_one},
+}
