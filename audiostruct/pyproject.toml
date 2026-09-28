@@ -75,7 +75,8 @@ warn_unused_ignores = true
 warn_unreachable = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 files = ["src", "tests"]
-mypy_path = "src"
+# ⚑ `stubs` carries whisperx's typed surface (W268): whisperx ships no py.typed.
+mypy_path = "src:stubs"
 explicit_package_bases = true
 
 [tool.ruff]
