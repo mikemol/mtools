@@ -9,6 +9,7 @@
 
 
 
+
 @misc{pytestspec-spec-cases-sit-beside-the-spec,
   section = {spec},
   title  = {`guarded.rego` reads `guarded.cases.json` in the same directory},
@@ -206,6 +207,13 @@
   title  = {An unknown kind, a missing reason, or an unpaired port-fix ERRORS at collection},
   claim  = {An unknown kind, a missing reason, or an unpaired port-fix ERRORS at collection.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_malformed_disposition_is_a_collection_error},
+}
+
+@misc{pytestspec-plugin-differential-line-counts-each-case-once,
+  section = {plugin},
+  title  = {One row per spec states every column; `-rf` must not count a failure twice},
+  claim  = {One row per spec states every column; `-rf` must not count a failure twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_differential_line_counts_each_case_once},
 }
 
 @misc{pytestspec-adapters-reference-impl-is-admitted,

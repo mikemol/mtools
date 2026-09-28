@@ -20,6 +20,7 @@ import pytest
 from mikemol.pytestspec import adapters, opa
 from mikemol.pytestspec.spec import (
     DO_NOT_PORT,
+    PORT_FIX,
     UNMEASURED,
     Case,
     Disposition,
@@ -193,6 +194,7 @@ def _not_ported(item: pytest.Item) -> bool:
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Deselect every do-not-port case; pytest's `deselected` count reports them."""
+    _count_declarations(config, items)
     dropped = [item for item in items if _not_ported(item)]
     if dropped:
         config.hook.pytest_deselected(items=dropped)
@@ -216,3 +218,81 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 # ⚑ THE HOOKSPEC IS ALSO THIS PLUGIN'S OWN IMPLEMENTATION: it offers no adapters, so the hook
 # always answers, and its body is exercised on every `--impl` run rather than never called.
 pytest_spec_implementations = adapters.pytest_spec_implementations
+
+
+# ⚑ THE DIFFERENTIAL LINE (W203): one row per spec, every column always printed, so a run's
+# differential is a single greppable line and a zero is stated rather than implied.
+COLUMNS = ("admitted", "denied", "unmeasured", DO_NOT_PORT, PORT_FIX)
+TALLY = pytest.StashKey[dict[str, dict[str, int]]]()
+
+
+def _tally(config: pytest.Config, nodeid: str) -> dict[str, int] | None:
+    """Find the counts of the spec a node belongs to.
+
+    Returns:
+        the spec's counts, or None for a node that is not a spec case.
+
+    """
+    return config.stash.get(TALLY, {}).get(nodeid.split("::", 1)[0])
+
+
+def _count_declarations(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Open a tally for every collected spec and count its declared dispositions."""
+    tallies = config.stash.setdefault(TALLY, {})
+    for item in items:
+        if not isinstance(item, SpecItem):
+            continue
+        counts = tallies.setdefault(item.nodeid.split("::", 1)[0], dict.fromkeys(COLUMNS, 0))
+        kind = item.disposition.kind if item.disposition is not None else None
+        if kind in {DO_NOT_PORT, PORT_FIX}:
+            counts[kind] += 1
+
+
+def _outcome(report: pytest.TestReport) -> str | None:
+    """Classify one report of a spec case.
+
+    Returns:
+        admitted, denied or unmeasured; None for a phase that decides nothing.
+
+    """
+    if report.when != "call" and report.passed:
+        return None
+    if report.passed:
+        return "admitted"
+    if report.skipped:
+        # A declared unmeasured case reports as xfail, which pytest files under skipped.
+        return "unmeasured"
+    return "denied" if "DENIED" in report.longreprtext else "unmeasured"
+
+
+class _Differential:
+    """Count each spec case's outcome, then print one differential line per spec.
+
+    ⚑ A PLUGIN OBJECT, NOT A MODULE HOOK: `pytest_runtest_logreport` is not handed the config,
+    and `pytest_report_teststatus` (which is) runs again for each `-r` summary line, so counting
+    there would count a failure twice.
+    """
+
+    def __init__(self, config: pytest.Config) -> None:
+        """Hold the session config, whose stash carries the tallies."""
+        self.config = config
+
+    def pytest_runtest_logreport(self, report: pytest.TestReport) -> None:
+        """Count one report into its spec's tally."""
+        counts = _tally(self.config, report.nodeid)
+        outcome = _outcome(report)
+        if counts is not None and outcome is not None:
+            counts[outcome] += 1
+
+    def pytest_terminal_summary(self, terminalreporter: pytest.TerminalReporter) -> None:
+        """Print the differential line for every spec that collected a case."""
+        impl = cast("object", self.config.getoption("impl"))
+        shown = impl if isinstance(impl, str) else "as-written"
+        for spec, counts in sorted(self.config.stash.get(TALLY, {}).items()):
+            cells = " ".join(f"{column}={counts[column]}" for column in COLUMNS)
+            terminalreporter.write_line(f"pytestspec: {spec} impl={shown} {cells}")
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    """Register the differential counter for this session."""
+    config.pluginmanager.register(_Differential(config), "pytestspec-differential")

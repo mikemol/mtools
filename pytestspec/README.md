@@ -45,3 +45,12 @@ as `{name: adapter}`, where an adapter is `adapter(fixture, operands) -> result`
 `fixture` and `operands`, so one spec judges the origin (`--impl reference`) and the port
 (`--impl subject`) on the same data. An unknown name, a name offered twice, or a case with no
 `fixture` fails as UNMEASURED. Without `--impl`, a case is evaluated as written.
+
+## The differential line (W203)
+
+Every run ends with one line per spec, every column always printed:
+
+    pytestspec: spec.rego impl=subject admitted=2 denied=1 unmeasured=1 do-not-port=1 port-fix=1
+
+`impl` is the `--impl` in force, or `as-written`. A declared-unmeasured case (xfail) counts as
+unmeasured; do-not-port and port-fix count declarations, whatever their outcome.

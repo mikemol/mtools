@@ -174,3 +174,19 @@ def test_malformed_disposition_is_a_collection_error(
     result = pytester.runpytest(*_LOAD)
     result.assert_outcomes(errors=1)
     result.stdout.fnmatch_lines([message])
+
+
+def test_differential_line_counts_each_case_once(pytester: pytest.Pytester) -> None:
+    """One row per spec states every column; `-rf` must not count a failure twice."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_DISPOSED)
+    result = pytester.runpytest(*_LOAD, "-rfx")
+    result.stdout.fnmatch_lines(
+        [
+            (
+                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 unmeasured=1"
+                " do-not-port=1 port-fix=1"
+            )
+        ]
+    )
