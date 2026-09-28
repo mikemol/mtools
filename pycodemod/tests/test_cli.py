@@ -549,7 +549,7 @@ def test_deps_grades_an_import_against_the_manifest(
     target.write_text("import os\n", encoding="utf-8")
     code = cli.main(["deps", "--manifest", str(manifest), str(target)])
     assert code == 0
-    assert "dep " in capsys.readouterr().out
+    assert "dep STDLIB os files=1 " in capsys.readouterr().out
 
 
 def test_deps_refuses_an_unreadable_manifest(tmp_path: Path) -> None:
@@ -560,14 +560,21 @@ def test_deps_refuses_an_unreadable_manifest(tmp_path: Path) -> None:
     assert code == _REFUSED
 
 
-def test_crossings_over_a_plain_def_exits_zero(tmp_path: Path) -> None:
-    """`crossings --authority` reads every file and exits zero when all were read."""
+def test_crossings_over_a_plain_def_exits_zero(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`crossings --authority` reads every file and exits zero when all were read.
+
+    ⚑ W87: the row's CLASS is pinned; a local append-accumulator that no authority names grades
+    `unattr`, with its def and binding.
+    """
     target = tmp_path / "m.py"
     target.write_text(
         "def f():\n    out = []\n    out.append(1)\n    return out\n", encoding="utf-8"
     )
     code = cli.main(["crossings", "--authority", "registry", str(target)])
     assert code == 0
+    assert f"crossing unattr f out {target}:1" in capsys.readouterr().out
 
 
 def test_crossings_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
@@ -714,7 +721,7 @@ def test_literals_reports_a_string_holding_the_text(
     target.write_text("x = 'a needle here'\n", encoding="utf-8")
     code = cli.main(["literals", "needle", str(target)])
     assert code == 0
-    assert "literal " in capsys.readouterr().out
+    assert f"literal other {target}:1 (<module>) 'a needle here'" in capsys.readouterr().out
 
 
 def test_literals_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
