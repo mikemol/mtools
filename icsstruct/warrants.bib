@@ -174,3 +174,54 @@
   claim  = {Two VEVENTs with no UID are two series, not one; each yields its own occurrence.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_expand.py -k test_events_without_a_uid_expand_separately},
 }
+
+@misc{icsstruct-source-remote-source-is-labelled-by-its-calname-and-holds-no-url,
+  section = {source},
+  title  = {A real GET of the private URL yields the text, labelled `Synthetic Weekly`},
+  claim  = {A real GET of the private URL yields the text, labelled `Synthetic Weekly`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_remote_source_is_labelled_by_its_calname_and_holds_no_url},
+}
+
+@misc{icsstruct-source-remote-source-without-a-calname-is-labelled-by-hash,
+  section = {source},
+  title  = {With no X-WR-CALNAME the label is `url:` and 12 hex digits, and not the URL},
+  claim  = {With no X-WR-CALNAME the label is `url:` and 12 hex digits, and not the URL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_remote_source_without_a_calname_is_labelled_by_hash},
+}
+
+@misc{icsstruct-source-http-status-error-names-the-label-not-the-url,
+  section = {source},
+  title  = {A 404 from the server is a `SourceError` carrying the label and the status only},
+  claim  = {A 404 from the server is a `SourceError` carrying the label and the status only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_http_status_error_names_the_label_not_the_url},
+}
+
+@misc{icsstruct-source-transport-error-text-is-not-propagated,
+  section = {source},
+  title  = {A transport error that embeds the URL is rewritten, and its text is not chained},
+  claim  = {A transport error that embeds the URL is rewritten, and its text is not chained. Raised
+            `from None`: neither `__cause__` nor the printed context carries the
+            original.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_transport_error_text_is_not_propagated},
+}
+
+@misc{icsstruct-source-webcal-is-fetched-as-https-and-labelled-by-what-was-given,
+  section = {source},
+  title  = {`webcal://` goes out as `https://`; the label hashes the location the caller gave},
+  claim  = {`webcal://` goes out as `https://`; the label hashes the location the caller gave.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_webcal_is_fetched_as_https_and_labelled_by_what_was_given},
+}
+
+@misc{icsstruct-source-non-utf8-source-is-refused-by-label,
+  section = {source},
+  title  = {RFC 5545 requires UTF-8; other bytes are a `SourceError`, not a lossy decode},
+  claim  = {RFC 5545 requires UTF-8; other bytes are a `SourceError`, not a lossy decode.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_non_utf8_source_is_refused_by_label},
+}
+
+@misc{icsstruct-source-path-source-is-read-and-labelled,
+  section = {source},
+  title  = {A path is not a credential: it labels itself unless the calendar names itself},
+  claim  = {A path is not a credential: it labels itself unless the calendar names itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_path_source_is_read_and_labelled},
+}
