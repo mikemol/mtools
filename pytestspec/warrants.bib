@@ -250,3 +250,24 @@
   claim  = {Without `--impl`, a case is evaluated as written (W200 back-compat).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_adapters.py -k test_precomputed_result_without_impl_still_works},
 }
+
+@misc{pytestspec-plugin-skip-declared-spares-a-stale-declaration,
+  section = {plugin},
+  title  = {Under --skip-declared a declared unmeasured case is not evaluated, and is counted so},
+  claim  = {Under --skip-declared a declared unmeasured case is not evaluated, and is counted so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_skip_declared_spares_a_stale_declaration},
+}
+
+@misc{pytestspec-plugin-declared-case-runs-its-adapter-by-default,
+  section = {plugin},
+  title  = {By default a declared unmeasured case is evaluated, so its adapter runs (W227 (a))},
+  claim  = {By default a declared unmeasured case is evaluated, so its adapter runs (W227 (a)).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_declared_case_runs_its_adapter_by_default},
+}
+
+@misc{pytestspec-plugin-skip-declared-never-runs-the-adapter,
+  section = {plugin},
+  title  = {Under --skip-declared a declared unmeasured case never reaches its adapter},
+  claim  = {Under --skip-declared a declared unmeasured case never reaches its adapter.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_skip_declared_never_runs_the_adapter},
+}

@@ -186,7 +186,63 @@ def test_differential_line_counts_each_case_once(pytester: pytest.Pytester) -> N
         [
             (
                 "pytestspec: spec.rego impl=as-written admitted=2 denied=1 unmeasured=1"
-                " do-not-port=1 port-fix=1"
+                " do-not-port=1 port-fix=1 declared-skipped=0"
             )
         ]
     )
+
+
+def test_skip_declared_spares_a_stale_declaration(pytester: pytest.Pytester) -> None:
+    """Under --skip-declared a declared unmeasured case is not evaluated, and is counted so."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    cases = '[{"case": "c", "disposition": "unmeasured", "reason": "r"}]'
+    pytester.makefile(".cases.json", spec=cases)
+    result = pytester.runpytest(*_LOAD, "--skip-declared")
+    result.assert_outcomes(xfailed=1)
+    result.stdout.fnmatch_lines(["*unmeasured=1 do-not-port=0 port-fix=0 declared-skipped=1"])
+
+
+# The adapter leaves a mark in the run's directory, so a test can see whether it ran at all.
+_MARKING = """
+from pathlib import Path
+
+from mikemol.pytestspec.plugin import EVALUATOR
+from mikemol.pytestspec.spec import Verdict
+
+def _mark(fixture, operands):
+    Path("adapter-ran").touch()
+    return fixture
+
+def pytest_configure(config):
+    config.stash[EVALUATOR] = lambda spec, case: Verdict()
+
+def pytest_spec_implementations():
+    return {"reference": _mark}
+"""
+
+_DECLARED = '[{"case": "d", "fixture": "c", "disposition": "unmeasured", "reason": "r"}]'
+
+
+def _marked(pytester: pytest.Pytester, *flags: str) -> bool:
+    """Run a declared unmeasured case under `--impl reference` plus `flags`.
+
+    Returns:
+        whether the adapter ran.
+
+    """
+    pytester.makeconftest(_MARKING)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_DECLARED)
+    pytester.runpytest(*_LOAD, "--impl", "reference", *flags)
+    return (pytester.path / "adapter-ran").exists()
+
+
+def test_declared_case_runs_its_adapter_by_default(pytester: pytest.Pytester) -> None:
+    """By default a declared unmeasured case is evaluated, so its adapter runs (W227 (a))."""
+    assert _marked(pytester)
+
+
+def test_skip_declared_never_runs_the_adapter(pytester: pytest.Pytester) -> None:
+    """Under --skip-declared a declared unmeasured case never reaches its adapter."""
+    assert not _marked(pytester, "--skip-declared")

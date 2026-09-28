@@ -10,6 +10,12 @@ not read as a pass or a skip.
 ⚑ A case's declared disposition (W201, see `spec.DISPOSITIONS`) changes its outcome: a
 do-not-port case is DESELECTED, and pytest counts it in the run's summary line; a declared
 unmeasured case is xfail(strict), so it can never read as a pass.
+
+⚑ A DECLARED UNMEASURED CASE IS STILL EVALUATED BY DEFAULT (W227, operator ruling (a)): strict
+xfail over a real evaluation is the only thing that notices a declaration gone stale. The opt-in
+`--skip-declared` skips the evaluation, and with it any `--impl` run, for a fast pass, and the
+differential line counts each skipped case as `declared-skipped` so a declaration that was not
+re-checked is never read as one that was.
 """
 
 from pathlib import Path
@@ -46,6 +52,17 @@ def claims(path: Path) -> bool:
 
     """
     return path.name.endswith(SPEC_SUFFIX) and not path.name.endswith(OPA_TEST_SUFFIX)
+
+
+def _skips(config: pytest.Config, disposition: Disposition | None) -> bool:
+    """Decide whether `--skip-declared` spares this case its evaluation.
+
+    Returns:
+        True for a declared unmeasured case under `--skip-declared`.
+
+    """
+    chosen = cast("object", config.getoption("skip_declared")) is True
+    return chosen and disposition is not None and disposition.kind == UNMEASURED
 
 
 class SpecFailedError(Exception):
@@ -100,9 +117,13 @@ class SpecItem(pytest.Item):
         """Evaluate the case and fail unless it is admitted.
 
         Raises:
-            SpecFailedError: the case could not be evaluated, or its verdict is not admitted.
+            SpecFailedError: the case could not be evaluated, or its verdict is not admitted,
+                or `--skip-declared` skipped a declared unmeasured case.
 
         """
+        if _skips(self.config, self.disposition):
+            msg = "DECLARED-SKIPPED (not evaluated): --skip-declared"
+            raise SpecFailedError(msg)
         try:
             verdict = self._evaluator()(self.path, self._filled())
         except (opa.OpaUnavailableError, SpecDataError) as exc:
@@ -213,6 +234,11 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=None,
         help="fill each case's result by running this implementation on its fixture",
     )
+    parser.addoption(
+        "--skip-declared",
+        action="store_true",
+        help="do not evaluate a declared unmeasured case (counted as declared-skipped)",
+    )
 
 
 # ⚑ THE HOOKSPEC IS ALSO THIS PLUGIN'S OWN IMPLEMENTATION: it offers no adapters, so the hook
@@ -222,7 +248,8 @@ pytest_spec_implementations = adapters.pytest_spec_implementations
 
 # ⚑ THE DIFFERENTIAL LINE (W203): one row per spec, every column always printed, so a run's
 # differential is a single greppable line and a zero is stated rather than implied.
-COLUMNS = ("admitted", "denied", "unmeasured", DO_NOT_PORT, PORT_FIX)
+DECLARED_SKIPPED = "declared-skipped"
+COLUMNS = ("admitted", "denied", "unmeasured", DO_NOT_PORT, PORT_FIX, DECLARED_SKIPPED)
 TALLY = pytest.StashKey[dict[str, dict[str, int]]]()
 
 
@@ -246,6 +273,8 @@ def _count_declarations(config: pytest.Config, items: list[pytest.Item]) -> None
         kind = item.disposition.kind if item.disposition is not None else None
         if kind in {DO_NOT_PORT, PORT_FIX}:
             counts[kind] += 1
+        if _skips(config, item.disposition):
+            counts[DECLARED_SKIPPED] += 1
 
 
 def _outcome(report: pytest.TestReport) -> str | None:
