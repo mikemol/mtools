@@ -186,7 +186,7 @@ def test_differential_line_counts_each_case_once(pytester: pytest.Pytester) -> N
         [
             (
                 "pytestspec: spec.rego impl=as-written admitted=2 denied=1 unmeasured=1"
-                " do-not-port=1 port-fix=1 declared-skipped=0"
+                " do-not-port=1 port-fix=1 declared-skipped=0 cached=0"
             )
         ]
     )
@@ -200,7 +200,9 @@ def test_skip_declared_spares_a_stale_declaration(pytester: pytest.Pytester) -> 
     pytester.makefile(".cases.json", spec=cases)
     result = pytester.runpytest(*_LOAD, "--skip-declared")
     result.assert_outcomes(xfailed=1)
-    result.stdout.fnmatch_lines(["*unmeasured=1 do-not-port=0 port-fix=0 declared-skipped=1"])
+    result.stdout.fnmatch_lines(
+        ["*unmeasured=1 do-not-port=0 port-fix=0 declared-skipped=1 cached=0"]
+    )
 
 
 # The adapter leaves a mark in the run's directory, so a test can see whether it ran at all.
@@ -246,3 +248,47 @@ def test_declared_case_runs_its_adapter_by_default(pytester: pytest.Pytester) ->
 def test_skip_declared_never_runs_the_adapter(pytester: pytest.Pytester) -> None:
     """Under --skip-declared a declared unmeasured case never reaches its adapter."""
     assert not _marked(pytester, "--skip-declared")
+
+
+# The conftest vouches that a case's name is everything the adapter reads.
+_KEYED = (
+    _MARKING
+    + """
+def pytest_spec_cache_key(impl, case):
+    return case["case"]
+"""
+)
+
+_PLAIN = '[{"case": "p", "fixture": "c"}]'
+
+
+def _run_twice(pytester: pytest.Pytester, conftest: str) -> tuple[bool, pytest.RunResult]:
+    """Run one case under `--impl reference --result-cache`, clear the mark, then run it again.
+
+    Returns:
+        whether the adapter ran the second time, and the second run's result.
+
+    """
+    pytester.makeconftest(conftest)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_PLAIN)
+    flags = ("--impl", "reference", "--result-cache", str(pytester.path / "results"))
+    pytester.runpytest(*_LOAD, *flags)
+    (pytester.path / "adapter-ran").unlink()
+    result = pytester.runpytest(*_LOAD, *flags)
+    return (pytester.path / "adapter-ran").exists(), result
+
+
+def test_a_keyed_result_is_reused_and_counted(pytester: pytest.Pytester) -> None:
+    """Under a conftest's key the second run reuses the result, and says so as `cached=1`."""
+    ran, result = _run_twice(pytester, _KEYED)
+    assert not ran
+    result.assert_outcomes(passed=1)
+    result.stdout.fnmatch_lines(["*admitted=1 *cached=1"])
+
+
+def test_an_unkeyed_result_is_never_reused(pytester: pytest.Pytester) -> None:
+    """With no conftest key, `--result-cache` caches nothing: the adapter runs every time."""
+    ran, result = _run_twice(pytester, _MARKING)
+    assert ran
+    result.stdout.fnmatch_lines(["*cached=0"])

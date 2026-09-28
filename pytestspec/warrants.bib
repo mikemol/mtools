@@ -271,3 +271,17 @@
   claim  = {Under --skip-declared a declared unmeasured case never reaches its adapter.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_skip_declared_never_runs_the_adapter},
 }
+
+@misc{pytestspec-plugin-keyed-result-is-reused-and-counted,
+  section = {plugin},
+  title  = {Under a conftest's key the second run reuses the result, and says so as `cached=1`},
+  claim  = {Under a conftest's key the second run reuses the result, and says so as `cached=1`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_a_keyed_result_is_reused_and_counted},
+}
+
+@misc{pytestspec-plugin-unkeyed-result-is-never-reused,
+  section = {plugin},
+  title  = {With no conftest key, `--result-cache` caches nothing: the adapter runs every time},
+  claim  = {With no conftest key, `--result-cache` caches nothing: the adapter runs every time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_an_unkeyed_result_is_never_reused},
+}
