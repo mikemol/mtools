@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W231: enforce the operator's standing rules (hooks/policy/standing.rego) at PreToolUse.
+# The payload on stdin is the OPA input; `decision` is the harness's deny JSON, or undefined.
+#
+# ⚑ FAIL CLOSED: if opa is absent or the eval errors, DENY with the reason. A hook that cannot
+# run exits 0 with no decision, which the harness reads as ALLOW (see mikemol-hook-no-verify).
+set -euo pipefail
+
+root="${CLAUDE_PROJECT_DIR:?CLAUDE_PROJECT_DIR is unset — the harness did not supply a project}"
+policy="$root/hooks/policy/standing.rego"
+
+refuse() {
+    printf '{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "standing-rule hook could not run (%s); refusing rather than failing open"}}\n' "$1"
+    exit 0
+}
+
+command -v opa >/dev/null || refuse "opa not on PATH"
+[ -f "$policy" ] || refuse "no policy at hooks/policy/standing.rego"
+
+if ! out="$(opa eval --stdin-input --format raw --data "$policy" 'data.mtools.hook.decision')"; then
+    refuse "opa eval failed"
+fi
+printf '%s' "$out"
