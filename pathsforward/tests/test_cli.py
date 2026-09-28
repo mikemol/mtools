@@ -672,3 +672,81 @@ def test_a_refused_weights_file_leaves_the_state_byte_identical(tmp_path: Path, 
     src.write_text(body)
     assert _run(path, "--weights-from", str(src)) == _REFUSED
     assert path.read_bytes() == before
+
+
+_LEASED = "file:a.py!w"
+
+
+def _leasing(tmp_path: Path) -> Path:
+    """Write a copy where W1 and W2 both declare a write to the same file.
+
+    Returns:
+        the state path.
+
+    """
+    return _file(tmp_path, [_wp("W1", touches=[_LEASED]), _wp("W2", touches=[_LEASED])])
+
+
+def _leases(path: Path) -> list[Rec]:
+    """Read the lease records back.
+
+    Returns:
+        the leases, or [] when none.
+
+    """
+    return cast("list[Rec]", _doc(path).get("leases", []))
+
+
+def test_working_takes_a_lease_naming_the_lock_holder(tmp_path: Path) -> None:
+    """--status working leases each `!w` tag; the holder is the lock's, the base comes from .git."""
+    path = _leasing(tmp_path)
+    (tmp_path / ".git" / "refs" / "heads").mkdir(parents=True)
+    (tmp_path / ".git" / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
+    (tmp_path / ".git" / "refs" / "heads" / "main").write_text("abc123\n", encoding="utf-8")
+    _run(path, "--lock", "tick-a")
+    assert _run(path, "--update", "W1", "--status", "working") == _OK
+    got = [(x["tag"], x["waypoint"], x["holder"], x["base_sha"]) for x in _leases(path)]
+    assert got == [(_LEASED, "W1", "tick-a", "abc123")]
+
+
+def test_a_conflicting_lease_refuses_and_saves_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2 cannot go working while W1 holds its file: exit 2, the holder named, bytes unchanged."""
+    path = _leasing(tmp_path)
+    assert _run(path, "--update", "W1", "--status", "working") == _OK
+    before = path.read_bytes()
+    assert _run(path, "--update", "W2", "--status", "working") == _REFUSED
+    assert "W1 holds it" in capsys.readouterr().err
+    assert path.read_bytes() == before
+
+
+def test_leaving_working_releases_the_lease(tmp_path: Path) -> None:
+    """Any other status drops the waypoint's leases, so the next taker is admitted."""
+    path = _leasing(tmp_path)
+    _run(path, "--update", "W1", "--status", "working")
+    assert _run(path, "--update", "W1", "--status", "ready") == _OK
+    assert (_leases(path), _run(path, "--update", "W2", "--status", "working")) == ([], _OK)
+
+
+def test_no_git_reads_as_unknown(tmp_path: Path) -> None:
+    """Without a readable HEAD the base is `unknown`, never a guess."""
+    path = _leasing(tmp_path)
+    _run(path, "--update", "W1", "--status", "working")
+    assert _leases(path)[0]["base_sha"] == "unknown"
+
+
+def test_check_lists_a_lapsed_lease(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """An expired lease prints one grep-stable LAPSED line; it is advisory, not a failure."""
+    gone = {
+        "tag": _LEASED,
+        "holder": "dead-tick",
+        "waypoint": "W1",
+        "base_sha": "abc",
+        "taken_at": "2026-01-01T00:00:00Z",
+        "renewed_at": "2026-01-01T00:00:00Z",
+        "expires_at": "2026-01-01T00:30:00Z",
+    }
+    path = _file(tmp_path, leases=[gone])
+    assert _run(path, "--check") == _OK
+    assert f"LAPSED W1 {_LEASED} holder=dead-tick base=abc" in capsys.readouterr().out

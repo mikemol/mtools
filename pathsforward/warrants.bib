@@ -1973,3 +1973,39 @@
   claim  = {A state written before W177, or with a non-list field, has no leases and does not crash.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lease.py -k test_an_absent_or_malformed_field_reads_as_no_leases},
 }
+
+@misc{pathsforward-cli-working-takes-a-lease-naming-the-lock-holder,
+  section = {cli},
+  title  = {--status working leases each `!w` tag; the holder is the lock's, the base comes from .git},
+  claim  = {--status working leases each `!w` tag; the holder is the lock's, the base comes from
+            .git.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_working_takes_a_lease_naming_the_lock_holder},
+}
+
+@misc{pathsforward-cli-conflicting-lease-refuses-and-saves-nothing,
+  section = {cli},
+  title  = {W2 cannot go working while W1 holds its file: exit 2, the holder named, bytes unchanged},
+  claim  = {W2 cannot go working while W1 holds its file: exit 2, the holder named, bytes unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_conflicting_lease_refuses_and_saves_nothing},
+}
+
+@misc{pathsforward-cli-leaving-working-releases-the-lease,
+  section = {cli},
+  title  = {Any other status drops the waypoint's leases, so the next taker is admitted},
+  claim  = {Any other status drops the waypoint's leases, so the next taker is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_leaving_working_releases_the_lease},
+}
+
+@misc{pathsforward-cli-no-git-reads-as-unknown,
+  section = {cli},
+  title  = {Without a readable HEAD the base is `unknown`, never a guess},
+  claim  = {Without a readable HEAD the base is `unknown`, never a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_no_git_reads_as_unknown},
+}
+
+@misc{pathsforward-cli-check-lists-a-lapsed-lease,
+  section = {cli},
+  title  = {An expired lease prints one grep-stable LAPSED line; it is advisory, not a failure},
+  claim  = {An expired lease prints one grep-stable LAPSED line; it is advisory, not a failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_check_lists_a_lapsed_lease},
+}

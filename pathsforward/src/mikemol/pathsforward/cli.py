@@ -24,7 +24,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lock, ops, render, selftest, store
+from mikemol.pathsforward import lease, lock, ops, render, selftest, store
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings
 from mikemol.pathsforward.digest import Outcome, v2, verify
@@ -296,6 +296,85 @@ def _atomize_line(ctx: Ctx, state: State) -> str | None:
     return atomize(state.waypoints, read(path) if path.is_file() else [])
 
 
+_UNLOCKED = "(unlocked)"
+_NO_SHA = "unknown"
+_WORKING = "working"
+
+
+def _head_sha(root: Path) -> str:
+    """Read HEAD's commit from `.git` files, without running git.
+
+    ⚑ NO SUBPROCESS: the CLI stays a file reader. A worktree (`.git` is a file), a detached or
+    packed ref the reader cannot resolve, and a missing repo all read as `unknown`, which renew()
+    then reports as a moved tree rather than hiding.
+
+    Returns:
+        the 40-hex sha, or `unknown`.
+
+    """
+    git = root / ".git"
+    head = git / "HEAD"
+    if not head.is_file():
+        return _NO_SHA
+    ref = head.read_text(encoding="utf-8").strip()
+    if not ref.startswith("ref: "):
+        return ref or _NO_SHA
+    name = ref.removeprefix("ref: ")
+    loose = git / name
+    if loose.is_file():
+        return loose.read_text(encoding="utf-8").strip() or _NO_SHA
+    packed = git / "packed-refs"
+    if packed.is_file():
+        for row in packed.read_text(encoding="utf-8").splitlines():
+            sha, _, refname = row.partition(" ")
+            if refname == name:
+                return sha
+    return _NO_SHA
+
+
+def _claimant(ctx: Ctx, state: State) -> lease.Claimant:
+    """Name who is taking a lease: the lock's holder, the project's HEAD, and now.
+
+    Returns:
+        the Claimant.
+
+    """
+    held = lock.current(state)
+    root = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+    return lease.Claimant(held[0] if held else _UNLOCKED, _head_sha(root), ctx.now)
+
+
+def _lease_for_status(ctx: Ctx, state: State, sym: str, status: str | None) -> int:
+    """Take leases when a waypoint becomes `working`; release them when it becomes anything else.
+
+    Returns:
+        EXIT_OK, or EXIT_REFUSED naming each conflict (the caller then saves nothing).
+
+    """
+    if status is None:
+        return EXIT_OK
+    if status != _WORKING:
+        dropped = lease.release(state, sym)
+        if dropped:
+            _say(f"{sym} released {dropped} lease(s)")
+        return EXIT_OK
+    touches = ops.find(state, sym).get("touches")
+    tags = [str(t) for t in cast("list[object]", touches)] if isinstance(touches, list) else []
+    conflicts = lease.take(state, sym, tags, _claimant(ctx, state))
+    for c in conflicts:
+        _warn(f"REFUSED: {sym} cannot lease {c.tag}: {c.waypoint} holds it (holder={c.holder})")
+    return EXIT_REFUSED if conflicts else EXIT_OK
+
+
+def _lapsed_lines(ctx: Ctx, state: State) -> None:
+    """Print one grep-stable `LAPSED` line per lease past its expiry (W119 point 6); advisory."""
+    for x in lease.lapsed(state, ctx.now):
+        _say(
+            f"LAPSED {text(x, 'waypoint')} {text(x, 'tag')} "
+            f"holder={text(x, 'holder')} base={text(x, 'base_sha')}"
+        )
+
+
 def _mutate(ctx: Ctx, edit: Callable[[State], int]) -> int:
     """Run one read-modify-write under the flock, saving only when the edit succeeded.
 
@@ -454,7 +533,9 @@ def _check(ctx: Ctx) -> int:
 
     """
     state = store.load(ctx.path)
-    return _report(state, check(state), _atomize_line(ctx, state))
+    code = _report(state, check(state), _atomize_line(ctx, state))
+    _lapsed_lines(ctx, state)
+    return code
 
 
 def _check_evidence(ctx: Ctx) -> int:
@@ -465,7 +546,9 @@ def _check_evidence(ctx: Ctx) -> int:
 
     """
     state = store.load(ctx.path)
-    return _report(state, check(state) + evidence_findings(state), _atomize_line(ctx, state))
+    code = _report(state, check(state) + evidence_findings(state), _atomize_line(ctx, state))
+    _lapsed_lines(ctx, state)
+    return code
 
 
 def _selftest() -> int:
@@ -568,8 +651,10 @@ def _update(ctx: Ctx) -> int:
     def edit(state: State) -> int:
         sym = ctx.get("update") or ""
         ops.update(state, sym, upd, ctx.stamp())
-        _say(f"{sym} updated; state_hash={v2(state.waypoints)}")
-        return EXIT_OK
+        code = _lease_for_status(ctx, state, sym, upd.status)
+        if code == EXIT_OK:
+            _say(f"{sym} updated; state_hash={v2(state.waypoints)}")
+        return code
 
     return _mutate(ctx, edit)
 
