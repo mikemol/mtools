@@ -126,9 +126,25 @@ def test_ready_clears_the_block() -> None:
 
 
 def test_done_clears_the_next_step() -> None:
-    """Moving to done clears the next step."""
+    """Moving to done clears the next step to null, the absence a reader can test for."""
     w = ops.update(_state(), "W1", ops.Update(status="done"), _NOW)
-    assert (w["status"], w["next_bounded_step"]) == ("done", "")
+    assert (w["status"], w["next_bounded_step"]) == ("done", None)
+
+
+def test_empty_next_is_null() -> None:
+    """An empty --next clears the step to null (linux-sources, 2026-09-26: W64, W69-W71).
+
+    Closing with `--status done --next ""` wrote "", which linux-sources' reconcile check
+    refuses on a done waypoint; each occurrence was patched by hand in the JSON.
+    """
+    w = ops.update(_state(), "W1", ops.Update(status="done", next_step=""), _NOW)
+    assert w["next_bounded_step"] is None
+
+
+def test_empty_next_on_a_live_waypoint_is_null() -> None:
+    """Clearing the step without closing the waypoint is the same absence."""
+    w = ops.update(_state(), "W1", ops.Update(next_step=""), _NOW)
+    assert (w["status"], w["next_bounded_step"]) == ("ready", None)
 
 
 def test_blocking_resets_the_count() -> None:

@@ -262,8 +262,12 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         if upd.status in _UNBLOCKING:
             new["blocked_on"], new["blocked_kind"] = [], None
         if upd.status == "done":
-            new["next_bounded_step"] = ""
+            new["next_bounded_step"] = None
     _set_given(new, upd)
+    # A blank --next is no next step: null, not "" (linux-sources' reconcile check refuses ""
+    # on a done waypoint, and patched it by hand four times, W64 W69 W70 W71, 2026-09-26).
+    if upd.next_step is not None and not upd.next_step.strip():
+        new["next_bounded_step"] = None
     if upd.evidence_append is not None:
         old = text(w, "evidence")
         entry = f"{now[:_DATE]}: {upd.evidence_append}"

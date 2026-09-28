@@ -2023,3 +2023,20 @@
   claim  = {The holder's own lapsed lease is renewed, and a base that is not HEAD prints MOVED.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_lock_renews_the_holders_lease_and_reports_a_moved_tree},
 }
+
+@misc{pathsforward-ops-empty-next-is-null,
+  section = {ops},
+  title  = {An empty --next clears the step to null (linux-sources, 2026-09-26: W64, W69-W71)},
+  claim  = {An empty --next clears the step to null (linux-sources, 2026-09-26: W64, W69-W71).
+            Closing with `--status done --next ""` wrote "", which linux-sources'
+            reconcile check refuses on a done waypoint; each occurrence was patched by
+            hand in the JSON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_empty_next_is_null},
+}
+
+@misc{pathsforward-ops-empty-next-on-a-live-waypoint-is-null,
+  section = {ops},
+  title  = {Clearing the step without closing the waypoint is the same absence},
+  claim  = {Clearing the step without closing the waypoint is the same absence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_empty_next_on_a_live_waypoint_is_null},
+}
