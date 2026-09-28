@@ -21,10 +21,10 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCIES YET. The lexical layer is RFC 5545 §3.1 and the standard library.
-# The recurrence expander (`icalendar` + `recurring-ical-events`) arrives with the expansion stage,
-# and only well-formed VEVENTs reach it.
-dependencies = []
+# ⚑ THE LEXICAL LAYER NEEDS NEITHER: it is RFC 5545 §3.1 and the standard library. These two are
+# the recurrence expander, and only well-formed VEVENTs reach them. Both are typed through
+# `stubs/` (W258), because one carries `Any` and the other ships no py.typed.
+dependencies = ["icalendar", "recurring-ical-events"]
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -66,7 +66,7 @@ warn_unused_ignores = true
 warn_unreachable = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 files = ["src", "tests"]
-mypy_path = "src"
+mypy_path = "src:stubs"
 explicit_package_bases = true
 
 [tool.ruff]
@@ -91,3 +91,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/test_lexical.py" = ["assert"]
+"tests/test_stub_authority.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

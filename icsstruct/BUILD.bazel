@@ -4,6 +4,7 @@
 # ⚑ MIRRORS //transcriptstruct:BUILD.bazel TARGET FOR TARGET, which mirrors //pathsforward and
 # //ratchet. The rationale for each shape lives there; this file says only where it differs.
 # `@icsstruct_dev` is declared in MODULE.bazel beside this distribution's birth (W254).
+load("@icsstruct_deps//:requirements.bzl", "requirement")
 load("@icsstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
@@ -22,6 +23,11 @@ py_library(
     data = glob(["src/mikemol/icsstruct/py.typed"], allow_empty = True),
     imports = ["src"],
     visibility = ["//visibility:public"],
+    # ⚑ FROM THE SHIPPING HUB, as //mdstruct takes panflute: these are runtime dependencies.
+    deps = [
+        requirement("icalendar"),
+        requirement("recurring-ical-events"),
+    ],
 )
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
@@ -44,11 +50,13 @@ py_library(
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"] + glob(["tests/fixtures/*.ics"]),
+        # ⚑ `stubs/**` IS DATA FOR test_stub_authority, which runs stubtest over it (W258).
+        data = ["pyproject.toml"] + glob(["tests/fixtures/*.ics", "stubs/**"]),
         size = "small",
         deps = [
             ":icsstruct",
             dev_requirement("pytest"),
+            dev_requirement("mypy"),
         ],
         imports = ["src"],
     )

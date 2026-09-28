@@ -116,8 +116,8 @@ pip.parse(
 )
 
 # ⚑ `mikemol-icsstruct` — a lossless iCalendar reader asked for by life (life:W13, W247).
-# Empty shipping hub for now (`dependencies = []`): the lexical stage is stdlib only, and
-# the recurrence expander arrives with the expansion stage.
+# The shipping hub carries the recurrence expander, icalendar + recurring-ical-events (W258);
+# the lexical stage stays stdlib only.
 pip.parse(
     hub_name = "icsstruct_deps",
     python_version = "3.13",

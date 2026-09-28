@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the icsstruct warrant set, one per test module, in document order.
 # key <TAB> heading title
 lexical	The Lexical Layer: Every Physical Line in Exactly One Record, Malformed Lines Carried With a Reason
+stub_authority	The Stubs: Checked Against the Libraries They Describe, Constructors the Only Allowed Divergence

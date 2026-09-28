@@ -81,3 +81,24 @@
   claim  = {`str.splitlines` would split here and invent a physical line; the reader does not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_a_form_feed_inside_a_value_does_not_split_the_line},
 }
+
+@misc{icsstruct-stub-authority-stubs-match-the-libraries-they-describe,
+  section = {stub_authority},
+  title  = {Run stubtest over both stubs, with the curated allowlist},
+  claim  = {Run stubtest over both stubs, with the curated allowlist. cwd is a writable temporary
+            directory because stubtest writes its cache relative to cwd and a sandbox
+            stages the distribution read-only (measured in mdstruct). The parent
+            environment is inherited so the staged mypy stays importable under bazel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_the_stubs_match_the_libraries_they_describe},
+}
+
+@misc{icsstruct-stub-authority-every-allowlist-entry-is-a-constructor,
+  section = {stub_authority},
+  title  = {Each allowed divergence is an `__init__` or `__new__`, never a called function},
+  claim  = {Each allowed divergence is an `__init__` or `__new__`, never a called function. THIS IS
+            WHAT KEEPS THE ALLOWLIST FROM BECOMING A SUPPRESSION LIST. icsstruct builds
+            no Component and no CalendarQuery itself, so a constructor entry is surface
+            the stubs decline to model. Any other entry would hide a real divergence in
+            something icsstruct calls.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_every_allowlist_entry_is_a_constructor},
+}

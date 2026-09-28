@@ -1,0 +1,6 @@
+# ⚑⚑ CONSTRUCTORS ONLY, AND tests/test_stub_authority.py REFUSES ANY OTHER ENTRY. icsstruct never
+# builds a Component or a CalendarQuery itself: `from_ical` and `of` build them. So a constructor
+# entry is surface the stubs decline to model, and anything else here would hide a real divergence
+# in something icsstruct calls. Curated from stubtest's own report (W258), not generated.
+icalendar.Component.__init__
+recurring_ical_events.CalendarQuery.__init__
