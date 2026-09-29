@@ -24,7 +24,13 @@ _DIST = (Path.cwd() / Path(__file__).parent.parent).absolute()
 _ALLOWLIST = _DIST / "stubs" / "allowlist.txt"
 
 # The submodules the stubs declare. The package itself is `(*args, **kwargs)` wrappers.
-_MODULES = ("whisperx.audio", "whisperx.asr", "whisperx.alignment", "whisperx.diarize")
+_MODULES = (
+    "whisperx.audio",
+    "whisperx.asr",
+    "whisperx.alignment",
+    "whisperx.diarize",
+    "torch.cuda",
+)
 
 
 def test_the_stubs_match_whisperx(tmp_path: Path) -> None:

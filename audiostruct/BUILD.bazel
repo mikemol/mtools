@@ -5,6 +5,7 @@
 # rationale for each shape lives there; this file says only where it differs.
 # `@audiostruct_dev` is declared in MODULE.bazel beside this distribution's birth (W262).
 load("@audiostruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@audiostruct_gpu//:requirements.bzl", gpu_all_requirements = "all_requirements")
 load("//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
@@ -50,7 +51,10 @@ py_library(
         ],
         imports = ["src"],
     )
-    for src in glob(["tests/test_*.py"], exclude = ["tests/test_stub_authority.py"])
+    for src in glob(
+        ["tests/test_*.py"],
+        exclude = ["tests/test_stub_authority.py", "tests/test_whisperx_site.py"],
+    )
 ]
 
 # ⚑⚑ THE ONE TEST THAT STAGES THE GPU HUB (W274). stubtest imports whisperx's submodules, which
@@ -78,6 +82,31 @@ py_test(
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
+)
+
+# ⚑ The one import site's witness (W284) imports whisperx and torch, so it too takes the gpu hub.
+py_test(
+    name = "test_whisperx_site",
+    srcs = ["tests/test_whisperx_site.py", "//:pytest_main.py"],
+    main = "//:pytest_main.py",
+    args = [
+        "$(location tests/test_whisperx_site.py)",
+        "-q",
+        "--strict-markers",
+        "--strict-config",
+        "-o",
+        "faulthandler_timeout=120",
+        "-c",
+        "$(location pyproject.toml)",
+    ],
+    data = ["pyproject.toml"],
+    size = "medium",
+    deps = [
+        ":audiostruct",
+        "@audiostruct_gpu//whisperx",
+        dev_requirement("pytest"),
+    ],
+    imports = ["src"],
 )
 
 exports_files(["BUILD.bazel"])
@@ -160,7 +189,13 @@ sh_test(
 # ⚑ NO console_scripts YET: stage 1 has no CLI. `mikemol-audio` arrives with W265.
 venv_from_hub(
     name = ".venv",
-    hub_requirements = dev_all_requirements,
+    # ⚑⚑ DEV PLUS GPU (W284, operator 2026-09-29): src/.../whisperx_site.py is the one module that
+    # imports whisperx, and the mutation grid mutates every src module in THIS venv, so the venv must
+    # import it or that site reads ERRORED and the grid refuses. The dev entries come first, and
+    # venv_from_hub keeps the first file per site-packages path. The three packages in both hubs
+    # are identical versions (packaging 26.3, pygments 2.21.0, typing-extensions 4.16.0, measured
+    # 2026-09-29). About 8G, on the nvme since luthen:W236.
+    hub_requirements = dev_all_requirements + gpu_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
     srcs = glob(["src/mikemol/audiostruct/**"]),

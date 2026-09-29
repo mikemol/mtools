@@ -107,6 +107,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_stages.py" = ["assert"]
 "tests/test_gpu.py" = ["assert"]
 "tests/test_cli.py" = ["assert"]
+"tests/test_whisperx_site.py" = ["assert"]
 "tests/test_stub_authority.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ stages.py's RESPONSIBILITY is catching every library error: any one it let through could print
 # the Hugging Face token, so each is rewritten as StageError `from None` (design note D4).
