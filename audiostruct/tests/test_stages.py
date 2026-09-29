@@ -244,6 +244,31 @@ def test_model_that_fails_to_load_is_named_for_every_source() -> None:
     assert _PLANTED not in "".join(traceback.format_exception(caught.value))
 
 
+def test_a_missing_file_is_named_and_the_message_still_is_not() -> None:
+    """A FileNotFoundError names its file, and its message, with the token in it, is still dropped.
+
+    ⚑ Measured: diarize failed at load as `FileNotFoundError` with no file named, which left the
+    failure undiagnosable. The file is the library's own attribute, apart from the message.
+    """
+
+    def missing(token: str) -> Callable[[object, object], object]:
+        raise FileNotFoundError(2, f"no config, token {token}", "/models/config.yaml")
+
+    pipeline = _Harness().pipeline()
+    broken = Pipeline(
+        pipeline.load_audio,
+        pipeline.transcriber,
+        pipeline.aligner,
+        missing,
+        pipeline.token,
+        pipeline.release,
+    )
+    with pytest.raises(StageError) as caught:
+        run(broken, _SOURCES)
+    assert str(caught.value) == "diarize: every source: FileNotFoundError '/models/config.yaml'"
+    assert _PLANTED not in "".join(traceback.format_exception(caught.value))
+
+
 def test_result_without_segments_is_a_stage_error() -> None:
     """A stage result that is not an object with a segments list fails the next reader by label."""
     pipeline = _Harness().pipeline()

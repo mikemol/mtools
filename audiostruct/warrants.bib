@@ -284,3 +284,13 @@
   claim  = {LABEL=PATH pairs come back in order, a path's own '=' kept.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_sources_keep_their_order_and_their_labels},
 }
+
+@misc{audiostruct-stages-missing-file-is-named-and-the-message-still-is-not,
+  section = {stages},
+  title  = {A FileNotFoundError names its file, and its message, with the token in it, is still dropped},
+  claim  = {A FileNotFoundError names its file, and its message, with the token in it, is still
+            dropped. Measured: diarize failed at load as `FileNotFoundError` with no
+            file named, which left the failure undiagnosable. The file is the library's
+            own attribute, apart from the message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_a_missing_file_is_named_and_the_message_still_is_not},
+}

@@ -82,11 +82,21 @@ def _segments(result: object) -> list[object]:
 def _message(stage: str, label: str, exc: BaseException) -> str:
     """Rewrite a stage's error so that nothing from its message survives.
 
+    ⚑ AN OSError ALSO NAMES ITS FILE (W293). Measured: diarize failed at load as
+    `diarize: every source: FileNotFoundError`, and nothing said which file. `.filename` is the
+    path the library tried to open, a separate attribute from the message, so it carries no
+    token. The message text is still dropped.
+
     Returns:
-        the stage, the label and the error's type name.
+        the stage, the label and the error's type name, plus the file for an OSError that has one.
 
     """
-    return f"{stage}: {label}: {type(exc).__name__}"
+    text = f"{stage}: {label}: {type(exc).__name__}"
+    if isinstance(exc, OSError):
+        filename = cast("str | bytes | int | None", exc.filename)
+        if filename is not None:
+            text += f" {filename!r}"
+    return text
 
 
 _EVERY = "every source"
