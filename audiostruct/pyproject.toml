@@ -38,6 +38,9 @@ dependencies = []
 # `uv sync` PRUNES IT: after any sync, run `uv pip install -r requirements-gpu.txt`, or the
 # witness goes red (by design; it never skips). uv's cache is on /home, not the zram /var/tmp.
 
+[project.scripts]
+mikemol-audio = "mikemol.audiostruct.main:main"
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
@@ -108,6 +111,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_gpu.py" = ["assert"]
 "tests/test_cli.py" = ["assert"]
 "tests/test_whisperx_site.py" = ["assert"]
+"tests/test_main.py" = ["assert"]
+# ⚑ main.py's RESPONSIBILITY is starting each stage as a process (design note D3/O1); its argv is
+# built by cli.child_argv from parsed arguments, never a shell string.
+"src/mikemol/audiostruct/main.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stub_authority.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ stages.py's RESPONSIBILITY is catching every library error: any one it let through could print
 # the Hugging Face token, so each is rewritten as StageError `from None` (design note D4).

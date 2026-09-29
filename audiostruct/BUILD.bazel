@@ -53,7 +53,11 @@ py_library(
     )
     for src in glob(
         ["tests/test_*.py"],
-        exclude = ["tests/test_stub_authority.py", "tests/test_whisperx_site.py"],
+        exclude = [
+            "tests/test_main.py",
+            "tests/test_stub_authority.py",
+            "tests/test_whisperx_site.py",
+        ],
     )
 ]
 
@@ -82,6 +86,31 @@ py_test(
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
+)
+
+# ⚑ The entry point's witness (W286) imports main, which imports whisperx_site: the gpu hub too.
+py_test(
+    name = "test_main",
+    srcs = ["tests/test_main.py", "//:pytest_main.py"],
+    main = "//:pytest_main.py",
+    args = [
+        "$(location tests/test_main.py)",
+        "-q",
+        "--strict-markers",
+        "--strict-config",
+        "-o",
+        "faulthandler_timeout=120",
+        "-c",
+        "$(location pyproject.toml)",
+    ],
+    data = ["pyproject.toml"],
+    size = "medium",
+    deps = [
+        ":audiostruct",
+        "@audiostruct_gpu//whisperx",
+        dev_requirement("pytest"),
+    ],
+    imports = ["src"],
 )
 
 # ⚑ The one import site's witness (W284) imports whisperx and torch, so it too takes the gpu hub.
@@ -189,6 +218,10 @@ sh_test(
 # ⚑ NO console_scripts YET: stage 1 has no CLI. `mikemol-audio` arrives with W265.
 venv_from_hub(
     name = ".venv",
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as //icsstruct:.venv mirrors its own.
+    console_scripts = {
+        "mikemol-audio": "mikemol.audiostruct.main:main",
+    },
     # ⚑⚑ DEV PLUS GPU (W284, operator 2026-09-29): src/.../whisperx_site.py is the one module that
     # imports whisperx, and the mutation grid mutates every src module in THIS venv, so the venv must
     # import it or that site reads ERRORED and the grid refuses. The dev entries come first, and

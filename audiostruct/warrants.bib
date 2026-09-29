@@ -256,3 +256,31 @@
   claim  = {token() reads the file's stripped contents at call time, not at build time.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_whisperx_site.py -k test_the_token_is_read_from_its_file_only_when_asked},
 }
+
+@misc{audiostruct-main-parent-runs-three-children-and-writes-one-transcript-per-label,
+  section = {main},
+  title  = {Each stage runs as a child under membudget; the handoffs chain; each label gets its .md},
+  claim  = {Each stage runs as a child under membudget; the handoffs chain; each label gets its .md.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_the_parent_runs_three_children_and_writes_one_transcript_per_label},
+}
+
+@misc{audiostruct-main-failing-stage-writes-no-transcript,
+  section = {main},
+  title  = {A refused lease returns membudget's code, and the parent renders nothing},
+  claim  = {A refused lease returns membudget's code, and the parent renders nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_a_failing_stage_writes_no_transcript},
+}
+
+@misc{audiostruct-main-bad-sources-exit-2-before-any-stage,
+  section = {main},
+  title  = {A source with no label, or a label given twice, stops the run before anything starts},
+  claim  = {A source with no label, or a label given twice, stops the run before anything starts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_bad_sources_exit_2_before_any_stage},
+}
+
+@misc{audiostruct-main-sources-keep-their-order-and-their-labels,
+  section = {main},
+  title  = {LABEL=PATH pairs come back in order, a path's own '=' kept},
+  claim  = {LABEL=PATH pairs come back in order, a path's own '=' kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_sources_keep_their_order_and_their_labels},
+}

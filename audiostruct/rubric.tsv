@@ -7,3 +7,4 @@ stub_authority	The Stub Authority: stubtest Holds the whisperx Stubs to the Pack
 gpu	The whisperx Bindings: Every Library Call Bound as the Runner Expects, the Token Only to the Builder
 cli	The Orchestrator: One Process per Stage, Each Holding One Context on the Shared GPU Ledger
 whisperx_site	The Import Site: Each Seam Reaches Its Real whisperx Call, and Building Loads Nothing
+main	The Command: Parent and Children End to End, Handoffs Chained, One Transcript per Label
