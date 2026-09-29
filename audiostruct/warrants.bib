@@ -214,3 +214,21 @@
   claim  = {Transcribe takes no previous results, the others need them, and no other stage exists.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_run_stage_refuses_results_that_do_not_fit_the_stage},
 }
+
+@misc{audiostruct-cli-each-stage-holds-one-context-on-the-named-ledger,
+  section = {cli},
+  title  = {Three children, in stage order, each wrapped in `membudget hold 1` with its stage's label},
+  claim  = {Three children, in stage order, each wrapped in `membudget hold 1` with its stage's
+            label. Every child gets the named ledger as MEMBUDGET_FILE and the load gate
+            off, as the ledger's other user runs it. Without MEMBUDGET_FILE, membudget
+            holds on its host-memory default and never contends with the GPU's other
+            users.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_each_stage_holds_one_context_on_the_named_ledger},
+}
+
+@misc{audiostruct-cli-first-failing-stage-stops-the-run,
+  section = {cli},
+  title  = {A refused lease or a crashed stage returns its code, and no later stage starts},
+  claim  = {A refused lease or a crashed stage returns its code, and no later stage starts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_first_failing_stage_stops_the_run},
+}
