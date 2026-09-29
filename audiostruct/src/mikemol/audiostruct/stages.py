@@ -162,41 +162,86 @@ def _read(result: object, _: object) -> object:
     return _segments(result)
 
 
-def run(pipeline: Pipeline, sources: Sequence[tuple[str, str]]) -> list[tuple[str, list[Record]]]:
-    """Transcribe, align and diarize every source, one stage at a time.
+STAGES = ("transcribe", "align", "diarize")
+
+
+def run_stage(
+    stage: str, pipeline: Pipeline, sources: Sequence[tuple[str, str]], previous: Sequence[object]
+) -> list[object]:
+    """Run ONE stage over every source, then release its model.
+
+    ⚑ EACH CALL LOADS ITS OWN AUDIO AND TAKES THE PREVIOUS STAGE'S RESULTS AS PLAIN DATA, so a stage
+    can run in a process of its own under its own GPU lease (design note D3/O1, W281). whisperx's
+    results are JSON objects, so `previous` survives a round-trip through a handoff file.
 
     A stage that fails raises `StageError`, and the model it was running is not released first.
 
     Args:
+        stage: one of STAGES.
         pipeline: the injected effects.
         sources: `(label, path)` pairs; the label is what records and errors carry.
+        previous: the prior stage's results, one per source; empty for transcribe.
+
+    Returns:
+        one result per source, in the order given.
+
+    Raises:
+        ValueError: for an unknown stage, or `previous` of the wrong length for the stage.
+
+    """
+    if stage not in STAGES:
+        msg = f"unknown stage {stage!r}"
+        raise ValueError(msg)
+    if (stage == "transcribe") != (not previous):
+        msg = f"{stage}: previous results do not fit this stage"
+        raise ValueError(msg)
+    labels = [label for label, _ in sources]
+    paths: list[tuple[object, object]] = [(path, None) for _, path in sources]
+    clips = _each("load", labels, paths, partial(_load_audio, pipeline))
+
+    if stage == "transcribe":
+        results = _stage(
+            stage, labels, [(c, None) for c in clips], pipeline.transcriber, _transcribe
+        )
+    elif stage == "align":
+        results = _stage(
+            stage, labels, list(zip(clips, previous, strict=True)), pipeline.aligner, _align
+        )
+    else:
+        # ⚑ THE TOKEN IS READ HERE AND NOWHERE ELSE, and only the factory ever holds it.
+        def diarizer() -> Diarizer:
+            return pipeline.diarizer(pipeline.token())
+
+        results = _stage(stage, labels, list(zip(clips, previous, strict=True)), diarizer, _diarize)
+    pipeline.release()
+    return results
+
+
+def records(
+    sources: Sequence[tuple[str, str]], results: Sequence[object]
+) -> list[tuple[str, list[Record]]]:
+    """Read the last stage's results into records, per source.
 
     Returns:
         each label with its records, in the order given.
 
     """
     labels = [label for label, _ in sources]
-    paths: list[tuple[object, object]] = [(path, None) for _, path in sources]
-    clips = _each("load", labels, paths, partial(_load_audio, pipeline))
-
-    results = _stage(
-        "transcribe", labels, [(c, None) for c in clips], pipeline.transcriber, _transcribe
-    )
-    pipeline.release()
-    results = _stage(
-        "align", labels, list(zip(clips, results, strict=True)), pipeline.aligner, _align
-    )
-    pipeline.release()
-
-    # ⚑ THE TOKEN IS READ HERE AND NOWHERE ELSE, and only the factory ever holds it.
-    def diarizer() -> Diarizer:
-        return pipeline.diarizer(pipeline.token())
-
-    results = _stage("diarize", labels, list(zip(clips, results, strict=True)), diarizer, _diarize)
-    pipeline.release()
-
     read = _each("read", labels, [(r, None) for r in results], _read)
     return [
         (label, normalize(label, cast("list[object]", segments)))
         for label, segments in zip(labels, read, strict=True)
     ]
+
+
+def run(pipeline: Pipeline, sources: Sequence[tuple[str, str]]) -> list[tuple[str, list[Record]]]:
+    """Transcribe, align and diarize every source, one stage at a time, in this process.
+
+    Returns:
+        each label with its records, in the order given.
+
+    """
+    results: list[object] = []
+    for stage in STAGES:
+        results = run_stage(stage, pipeline, sources, results)
+    return records(sources, results)

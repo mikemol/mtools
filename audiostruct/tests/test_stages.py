@@ -8,14 +8,15 @@ Every model is a fake that logs what it is asked to do. No torch, no whisperx, n
 from __future__ import annotations
 
 import gc
+import json
 import traceback
 import weakref
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
 from mikemol.audiostruct.records import Segment, Unplaced
-from mikemol.audiostruct.stages import Pipeline, StageError, run
+from mikemol.audiostruct.stages import STAGES, Pipeline, StageError, records, run, run_stage
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -182,9 +183,9 @@ def test_every_source_comes_back_as_records_in_order() -> None:
     """Each label returns with one record per diarized segment, the untimed one Unplaced."""
     labelled = run(_Harness().pipeline(), _SOURCES)
     assert [label for label, _ in labelled] == ["call a", "call b"]
-    for label, records in labelled:
-        assert [type(r) for r in records] == [Segment, Unplaced]
-        assert {r.source for r in records} == {label}
+    for label, found in labelled:
+        assert [type(r) for r in found] == [Segment, Unplaced]
+        assert {r.source for r in found} == {label}
 
 
 @pytest.mark.parametrize(
@@ -271,3 +272,38 @@ def test_result_without_segments_is_a_stage_error() -> None:
     with pytest.raises(StageError) as caught:
         run(broken, _SOURCES)
     assert str(caught.value) == "align: call a: TypeError"
+
+
+def test_stages_chained_through_json_equal_the_in_process_run() -> None:
+    """Each stage in its own call, its results round-tripped through JSON, gives run()'s records.
+
+    ⚑ This is what lets the CLI run each stage in a process of its own under its own lease: the
+    handoff between stages is plain data, and nothing survives in memory from one to the next.
+    """
+    expected = run(_Harness().pipeline(), _SOURCES)
+    harness = _Harness()
+    results: list[object] = []
+    for stage in STAGES:
+        handoff = json.dumps(run_stage(stage, harness.pipeline(), _SOURCES, results))
+        results = cast("list[object]", json.loads(handoff))
+    assert records(_SOURCES, results) == expected
+    assert harness.alive_at_release == [False, False, False]
+
+
+@pytest.mark.parametrize(
+    ("stage", "previous"),
+    [
+        ("transcribe", [{"segments": []}, {"segments": []}]),
+        ("align", []),
+        ("diarize", []),
+        ("summarize", []),
+    ],
+)
+def test_run_stage_refuses_results_that_do_not_fit_the_stage(
+    stage: str, previous: list[object]
+) -> None:
+    """Transcribe takes no previous results, the others need them, and no other stage exists."""
+    harness = _Harness()
+    with pytest.raises(ValueError, match=stage):
+        run_stage(stage, harness.pipeline(), _SOURCES, previous)
+    assert harness.log == []
