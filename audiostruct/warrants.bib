@@ -159,3 +159,41 @@
             call.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_every_allowlist_entry_is_a_constructor},
 }
+
+@misc{audiostruct-gpu-transcriber-loads-once-and-passes-the-batch-size,
+  section = {gpu},
+  title  = {The model loads when the factory runs, and every call carries the bound batch size},
+  claim  = {The model loads when the factory runs, and every call carries the bound batch size.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gpu.py -k test_transcriber_loads_once_and_passes_the_batch_size},
+}
+
+@misc{audiostruct-gpu-aligner-binds-model-metadata-and-device-into-every-call,
+  section = {gpu},
+  title  = {The aligner hands align the loaded model, its metadata and the device on every call},
+  claim  = {The aligner hands align the loaded model, its metadata and the device on every call. The
+            runner calls the aligner with (segments, audio) alone, so a binding that
+            dropped any of the three would pass the runner's witnesses and fail on the
+            first real file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gpu.py -k test_aligner_binds_model_metadata_and_device_into_every_call},
+}
+
+@misc{audiostruct-gpu-diarizer-hands-the-token-to-the-builder-and-runs-both-calls-in-order,
+  section = {gpu},
+  title  = {The token reaches only the builder; each call makes the table, then assigns speakers},
+  claim  = {The token reaches only the builder; each call makes the table, then assigns speakers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gpu.py -k test_diarizer_hands_the_token_to_the_builder_and_runs_both_calls_in_order},
+}
+
+@misc{audiostruct-gpu-diarizer-refuses-an-aligned-result-that-is-not-an-object,
+  section = {gpu},
+  title  = {assign_word_speakers reads keys, so a non-object result is a TypeError before any call},
+  claim  = {assign_word_speakers reads keys, so a non-object result is a TypeError before any call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gpu.py -k test_diarizer_refuses_an_aligned_result_that_is_not_an_object},
+}
+
+@misc{audiostruct-gpu-release-collects-before-emptying-the-cache,
+  section = {gpu},
+  title  = {Garbage is collected first, so the cache empties blocks a cycle was still holding},
+  claim  = {Garbage is collected first, so the cache empties blocks a cycle was still holding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gpu.py -k test_release_collects_before_emptying_the_cache},
+}
