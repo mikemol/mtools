@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""One Gmail `users.messages.get` response narrowed into exactly one record (W333).
+"""Gmail API responses narrowed into records: messages (W333), list pages (W334), MIME parts (W335).
 
 ⚑⚑ A MESSAGE THE NARROWING CANNOT READ IS A RECORD, NEVER A SKIP. `message` returns `Unreadable`
 with a reason where a lenient reader would drop the message or fill a field in, so a count over
@@ -19,6 +19,8 @@ holds. Every other field is required, and a present field of the wrong type is a
 
 from __future__ import annotations
 
+import base64
+import binascii
 from dataclasses import dataclass
 from typing import cast
 
@@ -194,4 +196,94 @@ def pages(values: list[object]) -> list[Listed | Unreadable]:
             out.append(Unreadable(id=None, reason=str(err)))
             continue
         out.extend(_entry(item, page_no, ordinal) for ordinal, item in enumerate(items))
+    return out
+
+
+@dataclass(frozen=True)
+class Part:
+    """One node of a `format=full` MIME tree: `path` is its child indices from the root."""
+
+    path: tuple[int, ...]
+    part_id: str
+    mime_type: str
+    filename: str
+    data: bytes | None
+    attachment_id: str | None
+
+
+def _where(path: tuple[int, ...]) -> str:
+    return "part " + (".".join(str(i) for i in path) if path else "root")
+
+
+def _decode(text: str) -> bytes:
+    try:
+        return base64.b64decode(text + "=" * (-len(text) % 4), altchars=b"-_", validate=True)
+    except binascii.Error as err:
+        msg = f"body.data is not base64url: {err}"
+        raise _RefusedError(msg) from err
+
+
+def _optional_text(rec: dict[str, object], key: str) -> str | None:
+    return _text(rec, key) if key in rec else None
+
+
+def _part(node: dict[str, object], path: tuple[int, ...]) -> Part:
+    body = _record(node.get("body"))
+    if body is None:
+        msg = "body is missing or not an object"
+        raise _RefusedError(msg)
+    data = _optional_text(body, "data")
+    return Part(
+        path=path,
+        part_id=_text(node, "partId"),
+        mime_type=_text(node, "mimeType"),
+        filename=_text(node, "filename"),
+        data=None if data is None else _decode(data),
+        attachment_id=_optional_text(body, "attachmentId"),
+    )
+
+
+def _walk(
+    value: object, path: tuple[int, ...], msg_id: str | None, out: list[Part | Unreadable]
+) -> None:
+    node = _record(value)
+    if node is None:
+        out.append(Unreadable(id=msg_id, reason=f"{_where(path)} is not an object"))
+        return
+    try:
+        out.append(_part(node, path))
+    except _RefusedError as err:
+        out.append(Unreadable(id=msg_id, reason=f"{_where(path)}: {err}"))
+    if "parts" not in node:
+        return
+    try:
+        children = _items(node["parts"], "parts")
+    except _RefusedError as err:
+        out.append(Unreadable(id=msg_id, reason=f"{_where(path)}: {err}"))
+        return
+    for index, child in enumerate(children):
+        _walk(child, (*path, index), msg_id, out)
+
+
+def parts(value: object) -> list[Part | Unreadable]:
+    """Narrow one `users.messages.get` response (`format=full`) into one record per MIME part.
+
+    ⚑ EVERY NODE OF THE TREE IS A RECORD, containers included, in depth-first order. A node out of
+    shape is an `Unreadable` naming its path, and its children are still walked, so one bad part
+    does not hide its siblings or descendants. `body.data` is decoded from base64url; text that
+    does not decode is `Unreadable`, never passed on as it stands.
+
+    Returns:
+        `Part` per readable node, `Unreadable` per node out of shape, in tree order.
+
+    """
+    rec = _record(value)
+    if rec is None:
+        return [Unreadable(id=None, reason="response is not a JSON object")]
+    raw_id = rec.get("id")
+    msg_id = raw_id if isinstance(raw_id, str) else None
+    if "payload" not in rec:
+        return [Unreadable(id=msg_id, reason="payload is missing")]
+    out: list[Part | Unreadable] = []
+    _walk(rec["payload"], (), msg_id, out)
     return out

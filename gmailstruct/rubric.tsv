@@ -2,3 +2,4 @@
 # key <TAB> heading title
 records	The Record Layer: Every Message in Exactly One Record, Unreadable Ones Carried With a Reason
 pages	Listing Pages: Every Listed Id in Exactly One Record, and a Truncated Run Said So
+parts	MIME Parts: Every Node of the Tree in Exactly One Record, Bodies Decoded or Refused

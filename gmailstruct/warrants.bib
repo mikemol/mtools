@@ -105,3 +105,38 @@
   claim  = {A page that is not an object, or whose messages is no list, is one record, never a skip.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_unreadable_page_is_one_record},
 }
+
+@misc{gmailstruct-parts-every-node-is-one-record-in-tree-order,
+  section = {parts},
+  title  = {The positive control: five nodes, five Parts, depth first, containers included},
+  claim  = {The positive control: five nodes, five Parts, depth first, containers included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parts.py -k test_every_node_is_one_record_in_tree_order},
+}
+
+@misc{gmailstruct-parts-bad-base64url-is-unreadable-naming-the-part,
+  section = {parts},
+  title  = {Body text that does not decode is Unreadable at its path, never passed on as it stands},
+  claim  = {Body text that does not decode is Unreadable at its path, never passed on as it stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parts.py -k test_bad_base64url_is_unreadable_naming_the_part},
+}
+
+@misc{gmailstruct-parts-bad-part-does-not-hide-its-children,
+  section = {parts},
+  title  = {A node out of shape is one Unreadable, and its children are still walked and counted},
+  claim  = {A node out of shape is one Unreadable, and its children are still walked and counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parts.py -k test_bad_part_does_not_hide_its_children},
+}
+
+@misc{gmailstruct-parts-non-object-child-is-unreadable-and-siblings-stay,
+  section = {parts},
+  title  = {A child that is not an object is one record at its path; the next sibling still reads},
+  claim  = {A child that is not an object is one record at its path; the next sibling still reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parts.py -k test_non_object_child_is_unreadable_and_siblings_stay},
+}
+
+@misc{gmailstruct-parts-response-without-payload-is-one-record,
+  section = {parts},
+  title  = {A response with no payload, or no object at all, is still exactly one record},
+  claim  = {A response with no payload, or no object at all, is still exactly one record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parts.py -k test_response_without_payload_is_one_record},
+}
