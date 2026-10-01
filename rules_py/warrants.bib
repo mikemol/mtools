@@ -60,3 +60,33 @@
   claim   = {Too few arguments is a usage error, never a pass.},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_usage_error_is_exit_2}
 }
+
+@misc{rules-py-suite-check-good-distribution-has-no-findings,
+  section = {suite_check},
+  claim   = {The positive control: pytest as main, no resolve, and prose naming the defect is fine.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_good_distribution_has_no_findings}
+}
+
+@misc{rules-py-suite-check-module-as-main-is-named,
+  section = {suite_check},
+  claim   = {A py_test running its own module as main is a finding, and so is pytest's main missing.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_module_as_main_is_named}
+}
+
+@misc{rules-py-suite-check-missing-build-is-named,
+  section = {suite_check},
+  claim   = {A distribution with no BUILD is one finding, not a silent pass.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_missing_build_is_named}
+}
+
+@misc{rules-py-suite-check-resolving-file-is-named-with-its-line,
+  section = {suite_check},
+  claim   = {A test calling resolve() on a __file__ path is named, with its module and line.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_resolving_file_is_named_with_its_line}
+}
+
+@misc{rules-py-suite-check-main-reports-exit-codes,
+  section = {suite_check},
+  claim   = {0 on a good distribution, 1 on findings, 2 on a usage error.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_main_reports_exit_codes}
+}

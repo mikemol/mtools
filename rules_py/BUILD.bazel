@@ -5,9 +5,13 @@
 # `@mikemol_rules_py//:pytest_main.py` as a py_test's main and in its srcs.
 # W341: `venv_check.py` checks one distribution's built `.venv`; each distribution runs it over its
 # own (W342). Its test is run by the root's //:test_venv_check until the atom has a gate.
+# W362: `suite_check.py` checks one distribution's suite is run by pytest and never resolves
+# `__file__` out of the sandbox; its test is run by the root's //:test_suite_check.
 exports_files([
     "mypy.ini",
     "pytest_main.py",
+    "suite_check.py",
+    "test_suite_check.py",
     "test_venv_check.py",
     "venv.bzl",
     "venv_check.py",
