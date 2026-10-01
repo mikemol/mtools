@@ -44,7 +44,9 @@ py_library(
         deps = [
             ":pytestspec",
             dev_requirement("pytest"),
-        ],
+            # ⚑ test_plugin runs a real `-n 2` inner session (W316): the one target that needs
+            # pytest-xdist, measured missing when bazel first ran it.
+        ] + ([dev_requirement("pytest-xdist")] if src == "tests/test_plugin.py" else []),
         imports = ["src"],
     )
     for src in glob(["tests/test_*.py"])

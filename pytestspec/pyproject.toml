@@ -33,8 +33,9 @@ pytestspec = "mikemol.pytestspec.plugin"
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
-# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml), plus pytest-xdist: the
+# differential line's parallel witness runs a real `-n 2` session (W316, el-openglo:W139).
+dev = ["pytest", "mypy", "ruff==0.16.6", "pytest-xdist"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -192,6 +192,27 @@ def test_differential_line_counts_each_case_once(pytester: pytest.Pytester) -> N
     )
 
 
+def test_differential_line_survives_a_parallel_run(pytester: pytest.Pytester) -> None:
+    """⚑ Under `-n 2` the controller prints the SAME line as a serial run (W316, el-openglo:W139).
+
+    Measured before the fix: outcomes were right, and the line was silently absent, because each
+    spec's tally opened at collection, which only the workers do. Declarations are counted once
+    (every worker collects them all); outcomes are summed (each case runs on one worker).
+    """
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_DISPOSED)
+    result = pytester.runpytest_subprocess(*_LOAD, "-n", "2", "-p", "xdist")
+    result.stdout.fnmatch_lines(
+        [
+            (
+                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 unmeasured=1"
+                " do-not-port=1 port-fix=1 declared-skipped=0 cached=0"
+            )
+        ]
+    )
+
+
 def test_skip_declared_spares_a_stale_declaration(pytester: pytest.Pytester) -> None:
     """Under --skip-declared a declared unmeasured case is not evaluated, and is counted so."""
     pytester.makeconftest(_STUB)

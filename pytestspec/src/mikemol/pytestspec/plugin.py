@@ -292,6 +292,10 @@ DECLARED_SKIPPED = "declared-skipped"
 CACHED = "cached"
 COLUMNS = ("admitted", "denied", "unmeasured", DO_NOT_PORT, PORT_FIX, DECLARED_SKIPPED, CACHED)
 TALLY = pytest.StashKey[dict[str, dict[str, int]]]()
+# ⚑ UNDER pytest-xdist (W316), every worker collects EVERY case, so a declaration is counted on
+# each worker alike and is taken ONCE; a case runs on ONE worker, so outcomes are SUMMED.
+_DECLARED = frozenset({DO_NOT_PORT, PORT_FIX, DECLARED_SKIPPED})
+_WORKER_OUTPUT = "pytestspec-tally"
 
 
 def _tally(config: pytest.Config, nodeid: str) -> dict[str, int] | None:
@@ -348,11 +352,26 @@ class _Differential:
         self.config = config
 
     def pytest_runtest_logreport(self, report: pytest.TestReport) -> None:
-        """Count one report into its spec's tally."""
+        """Count one report into its spec's tally, where the case ran.
+
+        ⚑ A report a worker FORWARDED to the xdist controller carries `node`. The worker counted
+        it already and hands its tally over at `pytest_testnodedown`, so the controller counting
+        it too would double it once the first worker's tally has opened that spec's row.
+        """
         counts = _tally(self.config, report.nodeid)
         outcome = _outcome(report)
-        if counts is not None and outcome is not None:
+        forwarded = cast("object", getattr(report, "node", None)) is not None
+        if counts is not None and outcome is not None and not forwarded:
             counts[outcome] += 1
+
+    def pytest_sessionfinish(self) -> None:
+        """On an xdist worker, hand this worker's tallies to the controller."""
+        output = cast("object", getattr(self.config, "workeroutput", None))
+        if isinstance(output, dict):
+            tallies = self.config.stash.get(TALLY, {})
+            cast("dict[str, object]", output)[_WORKER_OUTPUT] = {
+                spec: dict(counts) for spec, counts in tallies.items()
+            }
 
     def pytest_terminal_summary(self, terminalreporter: pytest.TerminalReporter) -> None:
         """Print the differential line for every spec that collected a case."""
@@ -363,6 +382,39 @@ class _Differential:
             terminalreporter.write_line(f"pytestspec: {spec} impl={shown} {cells}")
 
 
+class _XdistMerge:
+    """Merge each finished worker's tallies on the xdist controller (W316).
+
+    ⚑ ITS OWN PLUGIN, REGISTERED ONLY WHEN xdist IS LOADED: `pytest_testnodedown` is xdist's
+    hook, and a plugin implementing a hook with no spec is a pytest error without it.
+    """
+
+    def __init__(self, config: pytest.Config) -> None:
+        """Hold the controller's config, whose stash the merged tallies go into."""
+        self.config = config
+
+    def pytest_testnodedown(self, node: object) -> None:
+        """Merge one worker: declarations taken once (each worker saw them all), outcomes summed."""
+        output = cast("object", getattr(node, "workeroutput", None))
+        received = (
+            cast("dict[str, object]", output).get(_WORKER_OUTPUT)
+            if isinstance(output, dict)
+            else None
+        )
+        if not isinstance(received, dict):
+            return
+        tallies = self.config.stash.setdefault(TALLY, {})
+        for spec, counts in cast("dict[str, dict[str, int]]", received).items():
+            mine = tallies.setdefault(spec, dict.fromkeys(COLUMNS, 0))
+            for column in COLUMNS:
+                if column in _DECLARED:
+                    mine[column] = max(mine[column], counts.get(column, 0))
+                else:
+                    mine[column] += counts.get(column, 0)
+
+
 def pytest_configure(config: pytest.Config) -> None:
-    """Register the differential counter for this session."""
+    """Register the differential counter, and the worker merge when xdist runs this session."""
     config.pluginmanager.register(_Differential(config), "pytestspec-differential")
+    if config.pluginmanager.hasplugin("xdist"):
+        config.pluginmanager.register(_XdistMerge(config), "pytestspec-xdist-merge")

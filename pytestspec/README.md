@@ -54,3 +54,12 @@ Every run ends with one line per spec, every column always printed:
 
 `impl` is the `--impl` in force, or `as-written`. A declared-unmeasured case (xfail) counts as
 unmeasured; do-not-port and port-fix count declarations, whatever their outcome.
+
+## Parallel runs (W316)
+
+Each case is an ordinary pytest item, so pytest-xdist (`-n N`) runs them in parallel with the
+same outcomes as a serial run. The differential line is printed by the controller, from the
+tallies each worker hands over when it finishes. Declarations are taken once, because every
+worker collects every case. Outcomes are summed, because each case runs on exactly one worker.
+xdist does not cap memory: put the cap around the whole run (for example
+`systemd-run --user -p MemoryMax=8G -- pytest -n N`).

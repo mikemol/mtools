@@ -2,6 +2,8 @@
 #    uv pip compile pyproject.toml --group dev --output-file requirements-dev.txt
 ast-serialize==0.11.2
     # via mypy
+execnet==2.1.2
+    # via pytest-xdist
 iniconfig==2.3.0
     # via pytest
 librt==0.15.0
@@ -22,6 +24,9 @@ pytest==9.1.1
     # via
     #   mikemol-pytestspec (pyproject.toml)
     #   mikemol-pytestspec (pyproject.toml:dev)
+    #   pytest-xdist
+pytest-xdist==3.8.0
+    # via mikemol-pytestspec (pyproject.toml:dev)
 ruff==0.16.6
     # via mikemol-pytestspec (pyproject.toml:dev)
 typing-extensions==4.16.0
