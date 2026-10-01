@@ -119,6 +119,16 @@ sh_test(
     size = "small",
 )
 
+# W365: the suite check (W362) over this distribution's own BUILD and tests.
+py_test(
+    name = "suite",
+    srcs = ["@mikemol_rules_py//:suite_check.py"],
+    main = "@mikemol_rules_py//:suite_check.py",
+    args = ["gmailstruct"],
+    data = ["BUILD.bazel"] + glob(["tests/test_*.py"]),
+    size = "small",
+)
+
 py_binary(
     name = "mypy_runner",
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
