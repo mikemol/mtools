@@ -333,3 +333,12 @@ def test_stanza_carries_the_witness_only_when_set() -> None:
     query = 'data.nemik.merged["W5"]'
     lines = pl.stanza(_wp("W5", witness=query)).splitlines()
     assert (lines[2], len(pl.stanza(_wp("W5")).splitlines())) == (f"      witness: {query}", 3)
+
+
+def test_stanza_carries_the_rfc5545_times_only_when_set() -> None:
+    """A dated waypoint shows a when line for the next tick; an undated one is unchanged (W300)."""
+    lines = pl.stanza(_wp("W5", dtstart="20261001T203000Z", due="20261002")).splitlines()
+    assert (lines[2], len(pl.stanza(_wp("W5")).splitlines())) == (
+        "      when: dtstart=20261001T203000Z due=20261002",
+        3,
+    )

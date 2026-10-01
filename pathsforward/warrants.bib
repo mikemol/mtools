@@ -2199,3 +2199,27 @@
             on another host.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_value_that_does_not_name_one_instant_or_day_is_refused},
 }
+
+@misc{pathsforward-ops-update-stores-rfc5545-times-as-written-and-clears-them,
+  section = {ops},
+  title  = {DTSTART and DUE are stored verbatim once timevalue accepts them; "" clears (W300)},
+  claim  = {DTSTART and DUE are stored verbatim once timevalue accepts them; "" clears (W300).
+            life's W9 is a fixed time and its W12 a due day: the two shapes this exists
+            for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_update_stores_rfc5545_times_as_written_and_clears_them},
+}
+
+@misc{pathsforward-ops-update-refuses-a-floating-time-and-stores-nothing,
+  section = {ops},
+  title  = {⚑ A time with no Z and no TZID is refused, naming the field; the waypoint is unchanged},
+  claim  = { A time with no Z and no TZID is refused, naming the field; the waypoint is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_update_refuses_a_floating_time_and_stores_nothing},
+}
+
+@misc{pathsforward-payload-stanza-carries-the-rfc5545-times-only-when-set,
+  section = {payload},
+  title  = {A dated waypoint shows a when line for the next tick; an undated one is unchanged (W300)},
+  claim  = {A dated waypoint shows a when line for the next tick; an undated one is unchanged
+            (W300).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_stanza_carries_the_rfc5545_times_only_when_set},
+}

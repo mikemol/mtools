@@ -24,7 +24,7 @@ from enum import StrEnum
 from itertools import starmap
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lock, vector
+from mikemol.pathsforward import lock, timevalue, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -110,6 +110,10 @@ class Update:
     # luthen-observability:) could be repaired only by drop and re-add, which re-mints the symbol
     # and breaks every citation of it. "" clears the field.
     caused_by: str | None = None
+    # ⚑ RFC 5545 TIME, STORED AS WRITTEN (W300, life:W23): DTSTART and DUE, each checked by
+    # timevalue.parse, so a floating time is refused before it is stored. "" clears the field.
+    dtstart: str | None = None
+    due: str | None = None
 
 
 @dataclass(frozen=True)
@@ -263,6 +267,9 @@ def _set_given(new: Json, upd: Update) -> None:
     new.update({key: value for key, value in given.items() if value is not None})
     if upd.caused_by is not None:
         new["caused_by"] = upd.caused_by or None
+    for key, value in (("dtstart", upd.dtstart), ("due", upd.due)):
+        if value is not None:
+            new[key] = value or None
 
 
 def _is_work(upd: Update) -> bool:
@@ -333,6 +340,13 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
         # The same one-token rule --add applies, so the two routes cannot disagree.
         msg = f"{sym}: caused_by {upd.caused_by!r} is not one token"
         raise RefusedError(msg)
+    for name, value in (("dtstart", upd.dtstart), ("due", upd.due)):
+        if value:
+            try:
+                timevalue.parse(value)
+            except RefusedError as exc:
+                msg = f"{sym}: {name} {exc}"
+                raise RefusedError(msg) from None
     w = find(state, sym)
     new = _applied(w, upd, now)
     if text(new, "status") == "blocked" and (

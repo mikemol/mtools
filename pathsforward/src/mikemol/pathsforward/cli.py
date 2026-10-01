@@ -105,6 +105,8 @@ _FIELDS = (
     "witness",
     "vector",
     "vector_source",
+    "dtstart",
+    "due",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -125,6 +127,8 @@ _APPLIES: dict[str, frozenset[str]] = {
             "vector",
             "vector_source",
             "caused_by",
+            "dtstart",
+            "due",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -288,6 +292,16 @@ def _parser() -> argparse.ArgumentParser:
         "--caused-by",
         metavar="REF",
         help="--add/--update: letter path, peer, operator, W<n>; '' clears on --update",
+    )
+    ap.add_argument(
+        "--dtstart",
+        metavar="RFC5545",
+        help="--update: 20261001, 20261001T203000Z or TZID=Zone/Name:20261001T163000; '' clears",
+    )
+    ap.add_argument(
+        "--due",
+        metavar="RFC5545",
+        help="--update: as --dtstart; a floating time (no Z, no TZID) is refused; '' clears",
     )
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
@@ -692,6 +706,8 @@ def _update(ctx: Ctx) -> int:
         vector=ctx.get("vector"),
         vector_source=ctx.get("vector_source"),
         caused_by=ctx.get("caused_by"),
+        dtstart=ctx.get("dtstart"),
+        due=ctx.get("due"),
     )
 
     def edit(state: State) -> int:

@@ -212,7 +212,8 @@ def stanza(w: Json) -> str:
     """Render one live waypoint in full.
 
     Returns:
-        identity, next step, the witness query when one is set (W131), first line of evidence.
+        identity, next step, the witness query when one is set (W131), the RFC 5545 times when
+        set (W300), first line of evidence.
 
     """
     on = strlist(w, "blocked_on")
@@ -220,11 +221,13 @@ def stanza(w: Json) -> str:
     blocked = f" blocked_on={','.join(on)}({kind})" if on else ""
     evidence = text(w, "evidence").splitlines()
     witness = text(w, "witness")
+    times = " ".join(f"{key}={text(w, key)}" for key in ("dtstart", "due") if text(w, key))
     return (
         f"  {text(w, 'symbol')} [{text(w, 'status')}]{blocked} ticks_blocked={ticks(w)} :: "
         f"{text(w, 'title')}\n"
         f"      next: {text(w, 'next_bounded_step')}\n"
         + (f"      witness: {witness}\n" if witness else "")
+        + (f"      when: {times}\n" if times else "")
         + f"{_EVIDENCE} {evidence[0] if evidence else '-'}"
     )
 

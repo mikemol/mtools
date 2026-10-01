@@ -314,6 +314,35 @@ def test_correcting_caused_by_is_not_work() -> None:
     assert state.waypoints[-1]["last_worked"] is None
 
 
+def test_update_stores_rfc5545_times_as_written_and_clears_them() -> None:
+    """DTSTART and DUE are stored verbatim once timevalue accepts them; "" clears (W300).
+
+    life's W9 is a fixed time and its W12 a due day: the two shapes this exists for.
+    """
+    state = _state()
+    at = "TZID=America/New_York:20261001T163000"
+    ops.update(state, "W1", ops.Update(dtstart=at, due="20261001"), _NOW)
+    assert (state.waypoints[0]["dtstart"], state.waypoints[0]["due"]) == (at, "20261001")
+    ops.update(state, "W1", ops.Update(dtstart="", due=""), _NOW)
+    assert (state.waypoints[0]["dtstart"], state.waypoints[0]["due"]) == (None, None)
+
+
+@pytest.mark.parametrize(
+    ("field", "upd"),
+    [
+        ("dtstart", ops.Update(dtstart="20261001T163000")),
+        ("due", ops.Update(due="20261001T163000")),
+    ],
+)
+def test_update_refuses_a_floating_time_and_stores_nothing(field: str, upd: ops.Update) -> None:
+    """⚑ A time with no Z and no TZID is refused, naming the field; the waypoint is unchanged."""
+    state = _state()
+    before = dict(state.waypoints[0])
+    with pytest.raises(ops.RefusedError, match=f"{field} .*floating time"):
+        ops.update(state, "W1", upd, _NOW)
+    assert state.waypoints[0] == before
+
+
 @pytest.mark.parametrize(
     "draft",
     [
