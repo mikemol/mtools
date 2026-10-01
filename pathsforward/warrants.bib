@@ -2347,3 +2347,33 @@
   claim  = {Clearing the RRULE would orphan the completions, so it is refused until they reopen.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_rule_with_completed_occurrences_cannot_be_cleared},
 }
+
+@misc{pathsforward-ics-escaping-reads-back-as-the-original,
+  section = {ics},
+  title  = {Commas, semicolons, backslashes and newlines escape and read back unchanged (3.3.11)},
+  claim  = {Commas, semicolons, backslashes and newlines escape and read back unchanged (3.3.11).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ics.py -k test_escaping_reads_back_as_the_original},
+}
+
+@misc{pathsforward-ics-folded-lines-are-75-octets-and-unfold-to-the-original,
+  section = {ics},
+  title  = {⚑ No physical line over 75 OCTETS, no split UTF-8 sequence, and unfolding restores it (3.1)},
+  claim  = { No physical line over 75 OCTETS, no split UTF-8 sequence, and unfolding restores it
+            (3.1). A fold counts octets, not characters: "é" is two and "€" is three.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ics.py -k test_folded_lines_are_75_octets_and_unfold_to_the_original},
+}
+
+@misc{pathsforward-ics-content-line-carries-its-params-and-leaves-the-value-alone,
+  section = {ics},
+  title  = {Params are joined as ;KEY=VALUE, and a value is not escaped here: an RRULE keeps its ';'},
+  claim  = {Params are joined as ;KEY=VALUE, and a value is not escaped here: an RRULE keeps its
+            ';'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ics.py -k test_a_content_line_carries_its_params_and_leaves_the_value_alone},
+}
+
+@misc{pathsforward-ics-serialize-ends-every-physical-line-in-crlf,
+  section = {ics},
+  title  = {Every line, including the last and every continuation, ends in CRLF and nothing else},
+  claim  = {Every line, including the last and every continuation, ends in CRLF and nothing else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ics.py -k test_serialize_ends_every_physical_line_in_crlf},
+}

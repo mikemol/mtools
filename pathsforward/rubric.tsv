@@ -19,3 +19,4 @@ selftest	The Selftest: The Installed Tool Witnesses Itself
 cli	The CLI: No Default Root, the Bare Call Reads, and Every Exit Code
 timevalue	The Time Reader: An RFC 5545 Date or Instant, Never a Floating Time
 recurrence	The Recurrence Grammar: An RFC 5545 RRULE a Reader Can Expand, Checked Without Expanding It
+ics	The iCalendar Writer: Escaped, Folded at 75 Octets, and Ended in CRLF
