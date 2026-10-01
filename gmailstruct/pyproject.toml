@@ -90,3 +90,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_records.py" = ["assert"]
 "tests/test_pages.py" = ["assert"]
 "tests/test_parts.py" = ["assert"]
+# ⚑ THE PLANTED TOKEN IS THE TEST'S SUBJECT: a synthetic value, planted so each arm can show it
+# is absent from every traceback. It is a hard-coded "password" by construction, and authenticates
+# nothing.
+"tests/test_auth.py" = ["assert", "hardcoded-password-string"]

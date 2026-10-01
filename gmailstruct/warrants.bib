@@ -140,3 +140,39 @@
   claim  = {A response with no payload, or no object at all, is still exactly one record.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_parts.py -k test_response_without_payload_is_one_record},
 }
+
+@misc{gmailstruct-auth-token-is-returned-from-ages-stdout,
+  section = {auth},
+  title  = {The positive control: age's stdout, stripped, is the token, asked for with this argv},
+  claim  = {The positive control: age's stdout, stripped, is the token, asked for with this argv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_token_is_returned_from_ages_stdout},
+}
+
+@misc{gmailstruct-auth-failed-decrypt-names-the-file-and-never-the-output,
+  section = {auth},
+  title  = {A failing age is an error naming the file; its stdout, even a token, is in no traceback},
+  claim  = {A failing age is an error naming the file; its stdout, even a token, is in no traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_failed_decrypt_names_the_file_and_never_the_output},
+}
+
+@misc{gmailstruct-auth-empty-output-is-an-error-not-an-empty-token,
+  section = {auth},
+  title  = {An age run succeeding with nothing on stdout is refused, never returned as a blank token},
+  claim  = {An age run succeeding with nothing on stdout is refused, never returned as a blank
+            token.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_empty_output_is_an_error_not_an_empty_token},
+}
+
+@misc{gmailstruct-auth-non-utf8-output-is-an-error-carrying-none-of-it,
+  section = {auth},
+  title  = {Undecodable plaintext is refused, and the error chain does not carry the bytes},
+  claim  = {Undecodable plaintext is refused, and the error chain does not carry the bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_non_utf8_output_is_an_error_carrying_none_of_it},
+}
+
+@misc{gmailstruct-auth-decrypt-writes-no-file,
+  section = {auth},
+  title  = {The token reaches memory only: decrypting leaves the working directory empty},
+  claim  = {The token reaches memory only: decrypting leaves the working directory empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_decrypt_writes_no_file},
+}
