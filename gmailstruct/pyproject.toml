@@ -112,3 +112,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ AND THE CLI'S EFFECTS: a planted client secret, code and refresh token, run through a fake age,
 # a local listener and a local token endpoint.
 "tests/test_cli.py" = ["assert", "hardcoded-password-string"]
+"tests/test_fetch.py" = ["assert"]

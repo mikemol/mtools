@@ -333,3 +333,45 @@
   claim  = {The URL is printed, so it can be opened by hand, and handed to the default browser.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_open_browser_prints_the_url_and_opens_it},
 }
+
+@misc{gmailstruct-fetch-search-walks-pages-until-no-next-token,
+  section = {fetch},
+  title  = {Two pages, the second asked for with the first's token, give one record per listed id},
+  claim  = {Two pages, the second asked for with the first's token, give one record per listed id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_search_walks_pages_until_no_next_token},
+}
+
+@misc{gmailstruct-fetch-search-stopped-by-max-pages-reports-truncation,
+  section = {fetch},
+  title  = {A run cut off at --max-pages while Google offers a next page says it is truncated},
+  claim  = {A run cut off at --max-pages while Google offers a next page says it is truncated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_search_stopped_by_max_pages_reports_truncation},
+}
+
+@misc{gmailstruct-fetch-failed-page-is-an-error-not-a-shorter-listing,
+  section = {fetch},
+  title  = {A page that fails after one that succeeded raises, rather than returning page one alone},
+  claim  = {A page that fails after one that succeeded raises, rather than returning page one alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_failed_page_is_an_error_not_a_shorter_listing},
+}
+
+@misc{gmailstruct-fetch-show-fetches-metadata-for-one-message,
+  section = {fetch},
+  title  = {One GET to messages/<id> with format=metadata, narrowed by records.message},
+  claim  = {One GET to messages/<id> with format=metadata, narrowed by records.message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_show_fetches_metadata_for_one_message},
+}
+
+@misc{gmailstruct-fetch-show-refuses-an-id-that-is-not-an-identifier,
+  section = {fetch},
+  title  = {An id that could alter the URL is refused before any request is made},
+  claim  = {An id that could alter the URL is refused before any request is made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_show_refuses_an_id_that_is_not_an_identifier},
+}
+
+@misc{gmailstruct-fetch-failed-show-names-the-status,
+  section = {fetch},
+  title  = {A message that cannot be fetched is an error naming the id and the status},
+  claim  = {A message that cannot be fetched is an error naming the id and the status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_failed_show_names_the_status},
+}

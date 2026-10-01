@@ -7,3 +7,4 @@ auth	The Refresh Token: Decrypted Into Memory Only, and Absent From Every Failur
 exchange	The Access Token: Exchanged In Memory, With Only Status and OAuth Code in a Failure
 consent	The Consent Run: The Refresh Token Reaches Only the Encryptor, Behind PKCE and State
 cli	The Command: Each Real Effect Run Against a Local Stand-In, and Consent End to End
+fetch	The Reads: Gmail Pages and Messages Into Records, a Failed Request an Error
