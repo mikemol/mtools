@@ -85,6 +85,23 @@ struct-tools/SKILL.md` briefly claimed `.bib` for `bibstruct`, which is not on `
 dependency of anything — so the gate refused a read and named a route the author could not take.
 A block without a route is worse than no block.
 
+## A trap only a repo ADOPTING this shape walks into
+
+⚑⚑ **SHIP `tests/` IN THE SAME COMMIT AS THE PYTEST CONFIG.** With `testpaths = ["tests"]` and no
+`tests/` directory, pytest ignores testpaths and collects from the rootdir. Measured by linux-sources
+while moving off in-file `--selftest` (linux-sources:W91): it walked the `bazel-linux-sources`
+symlink and collected libcst's vendored suite as its own, then walked `.claude/worktrees/` into
+substrate's failing tests. Every distribution here ships `tests/`, so testpaths always binds and
+this tree never showed the fallback. With `tests/` present but empty, a run exits 5 ("no tests
+collected"), which is an honest result.
+
+⚑ **AND THE BACKSTOP, WHICH EVERY DISTRIBUTION HERE NOW CARRIES** (mtools:W297):
+
+    norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache__"]
+
+in `[tool.pytest.ini_options]`. If `tests/` is ever absent, the rootdir fallback still cannot walk
+into a bazel symlink, a venv or a worktree.
+
 
 ---
 

@@ -44,6 +44,7 @@ environments = ["sys_platform == 'linux'"]
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
 testpaths = ["tests"]
+norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache__"]  # backstop: with tests/ absent the runner falls back to rootdir and walks these (measured by linux-sources, W297)
 addopts = "--strict-markers --strict-config"
 markers = []
 
