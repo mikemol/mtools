@@ -153,3 +153,13 @@ sh_test(
     ] + glob(["tests/**/*.py"]),
     size = "small",
 )
+
+# W370: the suite check (W362) over this distribution's own BUILD and tests.
+py_test(
+    name = "suite",
+    srcs = ["@mikemol_rules_py//:suite_check.py"],
+    main = "@mikemol_rules_py//:suite_check.py",
+    args = ["pytestspec"],
+    data = ["BUILD.bazel"] + glob(["tests/test_*.py"]),
+    size = "small",
+)
