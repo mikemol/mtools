@@ -343,6 +343,17 @@ def test_update_refuses_a_floating_time_and_stores_nothing(field: str, upd: ops.
     assert state.waypoints[0] == before
 
 
+def test_done_stamps_completed_once_and_reopening_clears_it() -> None:
+    """COMPLETED is a UTC DATE-TIME stamped at the transition to done, never rewritten (W301)."""
+    state = _state()
+    ops.update(state, "W1", ops.Update(status="done"), _NOW)
+    assert state.waypoints[0]["completed"] == "20260923T120000Z"
+    ops.update(state, "W1", ops.Update(status="done"), "2026-09-24T08:00:00Z")
+    assert state.waypoints[0]["completed"] == "20260923T120000Z"
+    ops.update(state, "W1", ops.Update(status="ready"), _NOW)
+    assert state.waypoints[0]["completed"] is None
+
+
 def test_update_sets_the_whole_alarm_list_and_a_bare_flag_clears_it() -> None:
     """Alarms are SET, not merged: each update states the list; () clears it (W279, life:W23)."""
     state = _state()

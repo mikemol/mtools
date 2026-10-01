@@ -324,6 +324,21 @@ def _is_work(upd: Update) -> bool:
     return any(value is not None for value in given)
 
 
+def _completed(w: Json, status: str, now: str) -> str | None:
+    """Compute the COMPLETED stamp a status change leaves (RFC 5545 3.8.2.1, W301).
+
+    ⚑ Stamped ONCE, at the transition to done, from the injected clock: a second done keeps the
+    first stamp, and reopening clears it.
+
+    Returns:
+        the UTC DATE-TIME, or None for a waypoint that is not done.
+
+    """
+    if status != "done":
+        return None
+    return text(w, "completed") or now.replace("-", "").replace(":", "")
+
+
 def _applied(w: Json, upd: Update, now: str) -> Json:
     """Compute the waypoint an update produces, without touching the original.
 
@@ -338,6 +353,7 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
             new["blocked_on"], new["blocked_kind"] = [], None
         if upd.status == "done":
             new["next_bounded_step"] = None
+        new["completed"] = _completed(w, upd.status, now)
     _set_given(new, upd)
     # A blank --next is no next step: null, not "" (linux-sources' reconcile check refuses ""
     # on a done waypoint, and patched it by hand four times, W64 W69 W70 W71, 2026-09-26).

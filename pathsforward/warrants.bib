@@ -2289,3 +2289,10 @@
   claim  = {A hand-edited queue can hold an unanchored alarm; it resolves to None, not a guess.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_relative_trigger_without_its_anchor_fires_nowhere},
 }
+
+@misc{pathsforward-ops-done-stamps-completed-once-and-reopening-clears-it,
+  section = {ops},
+  title  = {COMPLETED is a UTC DATE-TIME stamped at the transition to done, never rewritten (W301)},
+  claim  = {COMPLETED is a UTC DATE-TIME stamped at the transition to done, never rewritten (W301).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_done_stamps_completed_once_and_reopening_clears_it},
+}
