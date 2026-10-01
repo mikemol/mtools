@@ -99,6 +99,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB: each line is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/test_aliases.py" = ["assert"]
+"tests/test_header.py" = ["assert"]
 "tests/test_ambient.py" = ["assert"]
 "tests/test_arguments.py" = ["assert"]
 "tests/test_cli.py" = ["assert", "private-member-access", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

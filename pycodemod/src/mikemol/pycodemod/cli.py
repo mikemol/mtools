@@ -75,6 +75,8 @@ from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
 from mikemol.pycodemod.graph import DEPTH, callgraph, reaches, verdict_returners
+from mikemol.pycodemod.header import COMPLETE, WRONG
+from mikemol.pycodemod.header import plan as header_plan
 from mikemol.pycodemod.hints import alias_hint
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
@@ -870,7 +872,47 @@ def _handle_disagreement(ns: argparse.Namespace) -> int:
     return code
 
 
+def _handle_header(ns: argparse.Namespace) -> int:
+    """Check, or with --write complete, each file's licence header (W306).
+
+    One tab-separated line per file that is not complete: state, path, detail. With --write, a
+    missing or partial header is written and a wrong one is refused; then one `shebang` line per
+    rewritten file that carries a shebang (EXE001 is the filesystem's to answer).
+
+    Returns:
+        0 when every file ends complete; 1 when one does not (unwritten, or a wrong id refused);
+        2 when a file could not be read.
+
+    """
+    write = _flag(ns, "write")
+    holder = _opt_str(ns, "holder")
+    paths = _str_list(ns, "paths")
+    skipped: list[tuple[str, str]] = []
+    unfinished = 0
+    for path in paths:
+        try:
+            text = Path(path).read_text(encoding="utf-8", newline="")
+        except (OSError, UnicodeDecodeError) as exc:
+            skipped.append(("unreadable", type(exc).__name__))
+            continue
+        result = header_plan(text, spdx=_str(ns, "spdx"), holder=holder, year=_int(ns, "year"))
+        if result.state == COMPLETE:
+            continue
+        if write and result.state != WRONG:
+            Path(path).write_text(result.text, encoding="utf-8", newline="")
+            sys.stdout.write(f"wrote\t{path}\t{result.detail}\n")
+            if result.shebang:
+                sys.stdout.write(f"shebang\t{path}\n")
+            continue
+        unfinished += 1
+        sys.stdout.write(f"{result.state}\t{path}\t{result.detail}\n")
+    lines, code = report.incomplete(skipped, len(paths))
+    _write_lines(lines)
+    return code or (1 if unfinished else 0)
+
+
 MODES = {
+    "header": _handle_header,
     "calls": _handle_calls,
     "owes": _handle_owes,
     "dead": _handle_dead,
@@ -1006,6 +1048,12 @@ def _add_named_modes(make: _Make) -> None:
     dis = make("discards", "every call of a name, split by whether its value is dropped")
     dis.add_argument("name")
     dis.add_argument("paths", nargs="+")
+    hdr = make("header", "check the SPDX/copyright header, or --write the missing lines")
+    hdr.add_argument("--spdx", required=True, help="the SPDX id every file must declare")
+    hdr.add_argument("--holder", default=None, help="write a copyright line for this holder")
+    hdr.add_argument("--year", type=int, required=True, help="the year a new copyright line states")
+    hdr.add_argument("--write", action="store_true", help="write missing lines; refuse wrong ids")
+    hdr.add_argument("paths", nargs="+")
     shp = make("shapes", "every code line matching a regex (comments and docstrings excluded)")
     shp.add_argument("--anywhere", action="store_true", help="match comments and docstrings too")
     shp.add_argument("pattern")
