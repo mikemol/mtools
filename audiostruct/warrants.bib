@@ -315,3 +315,12 @@
             is under test here, so the truncation loses nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_a_real_whisperx_segment_is_placed},
 }
+
+@misc{audiostruct-main-default-program-is-this-process-by-absolute-path,
+  section = {main},
+  title  = {With no `program`, the children re-invoke sys.argv[0] made absolute, so no PATH is needed},
+  claim  = {With no `program`, the children re-invoke sys.argv[0] made absolute, so no PATH is
+            needed. Measured (W295): a bare `mikemol-audio` is on no PATH here, so the
+            first real GPU runs needed audiostruct/.venv/bin put on PATH by hand.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_the_default_program_is_this_process_by_absolute_path},
+}

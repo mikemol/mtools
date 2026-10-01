@@ -151,8 +151,13 @@ def main(
     argv: Sequence[str] | None = None,
     run: Callable[[list[str], Mapping[str, str]], int] = _run,
     make: Callable[[Settings], Pipeline] = pipeline,
+    program: str | None = None,
 ) -> int:
     """Run the parent or one child, as `--stage` says.
+
+    ⚑ THE PARENT RE-INVOKES ITSELF BY ITS OWN ABSOLUTE PATH (W295), `program` or else this
+    process's `sys.argv[0]`. Measured: a bare `mikemol-audio` is on no PATH here, so the children
+    were reachable only with audiostruct/.venv/bin put on PATH by hand.
 
     Returns:
         0, the first failing stage's exit code, or 2 for bad sources.
@@ -177,7 +182,7 @@ def main(
     plan = Plan(
         membudget=membudget,
         ledger=str(values["ledger"]),
-        program=["mikemol-audio", *_passthrough(args)],
+        program=[str(Path(program or sys.argv[0]).absolute()), *_passthrough(args)],
         workdir=workdir,
         sources=[f"{label}={path}" for label, path in sources],
     )

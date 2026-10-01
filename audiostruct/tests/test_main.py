@@ -10,6 +10,7 @@ no model, GPU or membudget is touched.
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.audiostruct.main import main, parse_sources
@@ -17,7 +18,6 @@ from mikemol.audiostruct.stages import Pipeline
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from pathlib import Path
 
     from mikemol.audiostruct.whisperx_site import Settings
 
@@ -85,14 +85,19 @@ def test_the_parent_runs_three_children_and_writes_one_transcript_per_label(
     """Each stage runs as a child under membudget; the handoffs chain; each label gets its .md."""
     (tmp_path / "work").mkdir()
     held: list[str] = []
+    programs: list[str] = []
 
     def run(argv: list[str], _env: Mapping[str, str]) -> int:
         assert argv[:3] == [_MEMBUDGET, "hold", "1"]
         held.append(argv[3])
+        programs.append(argv[5])
         return main(argv[6:], make=_fake)
 
-    assert main(_argv(tmp_path, "call a=a.wav", "call b=b.wav"), run=run, make=_fake) == 0
+    argv = _argv(tmp_path, "call a=a.wav", "call b=b.wav")
+    assert main(argv, run=run, make=_fake, program="/opt/audio/bin/mikemol-audio") == 0
     assert held == ["audiostruct-transcribe", "audiostruct-align", "audiostruct-diarize"]
+    # ⚑ W295: every child is the parent's own program by absolute path, never a bare name.
+    assert programs == ["/opt/audio/bin/mikemol-audio"] * 3
     assert sorted(p.name for p in (tmp_path / "work").iterdir()) == [
         "align.json",
         "diarize.json",
@@ -103,6 +108,24 @@ def test_the_parent_runs_three_children_and_writes_one_transcript_per_label(
         assert text.startswith(f"# Transcript: {label}\n")
         assert "SPEAKER_00" in text
         assert "hello" in text
+
+
+def test_the_default_program_is_this_process_by_absolute_path(tmp_path: Path) -> None:
+    """With no `program`, the children re-invoke sys.argv[0] made absolute, so no PATH is needed.
+
+    ⚑ Measured (W295): a bare `mikemol-audio` is on no PATH here, so the first real GPU runs
+    needed audiostruct/.venv/bin put on PATH by hand.
+    """
+    (tmp_path / "work").mkdir()
+    programs: list[str] = []
+
+    def run(argv: list[str], _env: Mapping[str, str]) -> int:
+        programs.append(argv[5])
+        return main(argv[6:], make=_fake)
+
+    assert main(_argv(tmp_path, "a=a.wav"), run=run, make=_fake) == 0
+    assert programs
+    assert all(Path(p).is_absolute() and p == programs[0] for p in programs)
 
 
 def test_a_failing_stage_writes_no_transcript(tmp_path: Path) -> None:
