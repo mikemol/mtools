@@ -1,0 +1,124 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""RFC 5545 time values for a waypoint's DTSTART and DUE: checked here, projected elsewhere (W299).
+
+Three shapes are accepted, written as iCalendar writes them:
+
+    20261001                              DATE (RFC 5545 3.3.4): a day with no time of day
+    20261001T203000Z                      DATE-TIME in UTC (3.3.5, form 2)
+    TZID=America/New_York:20261001T163000 DATE-TIME with a time zone (3.3.5, form 3)
+
+⚑⚑ A FLOATING TIME IS REFUSED (3.3.5, form 1: `20261001T163000` with no Z and no TZID). It means
+"16:30 wherever the reader is". A waypoint read on another host, or after a time zone change,
+would silently move. life asked for exactly this refusal (life:W23).
+
+⚑ STANDARD LIBRARY ONLY (decided at W299, 2026-10-01). pathsforward has no runtime dependencies,
+and every queue in the fleet vendors it. A TZID is checked against the system time zone database
+through `zoneinfo`, so a misspelled zone is refused, not stored. Expanding recurrences (W278) is
+the projection's job, not the writer's.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from datetime import UTC, date, datetime
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+from mikemol.pathsforward.model import RefusedError
+
+_DATE = re.compile(r"(\d{4})(\d{2})(\d{2})")
+_TIME = re.compile(r"(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)")
+_TZID = "TZID="
+
+
+@dataclass(frozen=True, slots=True)
+class TimeValue:
+    """One accepted value: the text as stored, and the instant or day it names."""
+
+    text: str
+    when: date | datetime
+
+
+def _day(match: re.Match[str]) -> date:
+    """Build the day a DATE names.
+
+    Returns:
+        the day.
+
+    Raises:
+        RefusedError: if it is not a real calendar day.
+
+    """
+    try:
+        return date(int(match[1]), int(match[2]), int(match[3]))
+    except ValueError:
+        msg = f"{match[0]!r} is not a calendar day"
+        raise RefusedError(msg) from None
+
+
+def _instant(match: re.Match[str], zone: ZoneInfo) -> datetime:
+    """Build the instant a DATE-TIME names, in its zone.
+
+    Returns:
+        the zone-aware instant.
+
+    Raises:
+        RefusedError: if it is not a real time.
+
+    """
+    try:
+        return datetime(
+            int(match[1]),
+            int(match[2]),
+            int(match[3]),
+            int(match[4]),
+            int(match[5]),
+            int(match[6]),
+            tzinfo=zone,
+        )
+    except ValueError:
+        msg = f"{match[0]!r} is not a valid date and time"
+        raise RefusedError(msg) from None
+
+
+def parse(text: str) -> TimeValue:
+    """Read one RFC 5545 DATE or DATE-TIME, refusing a floating time.
+
+    Returns:
+        the value, its text unchanged.
+
+    Raises:
+        RefusedError: for a floating DATE-TIME, an unknown TZID, a malformed value, or a day or time
+            that does not exist.
+
+    """
+    if text.startswith(_TZID):
+        zone_name, sep, stamp = text.removeprefix(_TZID).partition(":")
+        if not (sep and zone_name):
+            msg = f"{text!r}: expected TZID=Zone/Name:YYYYMMDDTHHMMSS"
+            raise RefusedError(msg)
+        try:
+            zone = ZoneInfo(zone_name)
+        except (ZoneInfoNotFoundError, ValueError):
+            msg = f"{text!r}: unknown time zone {zone_name!r}"
+            raise RefusedError(msg) from None
+        timed = _TIME.fullmatch(stamp)
+        if timed is None or timed[7]:
+            msg = f"{text!r}: after TZID, expected a local YYYYMMDDTHHMMSS (no Z)"
+            raise RefusedError(msg)
+        return TimeValue(text, _instant(timed, zone))
+    timed = _TIME.fullmatch(text)
+    if timed is not None:
+        if not timed[7]:
+            msg = (
+                f"{text!r} is a floating time: add Z for UTC, or write TZID=Zone/Name:{text}, "
+                "so it means the same instant on every host"
+            )
+            raise RefusedError(msg)
+        return TimeValue(text, _instant(timed, ZoneInfo("UTC")).astimezone(UTC))
+    day = _DATE.fullmatch(text)
+    if day is not None:
+        return TimeValue(text, _day(day))
+    msg = f"{text!r} is not an RFC 5545 DATE or DATE-TIME"
+    raise RefusedError(msg)

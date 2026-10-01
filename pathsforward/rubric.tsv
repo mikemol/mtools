@@ -17,3 +17,4 @@ overlap	The Overlap Report: One Line per Tag That Two Live Waypoints Declare
 render	The Mirror: Derived, Said So, and in Rank Order
 selftest	The Selftest: The Installed Tool Witnesses Itself
 cli	The CLI: No Default Root, the Bare Call Reads, and Every Exit Code
+timevalue	The Time Reader: An RFC 5545 Date or Instant, Never a Floating Time

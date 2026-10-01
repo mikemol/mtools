@@ -2169,3 +2169,33 @@
   claim  = {A citation fix is metadata, like --enables: it leaves last_worked alone.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_correcting_caused_by_is_not_work},
 }
+
+@misc{pathsforward-timevalue-date-is-a-day-with-no-time,
+  section = {timevalue},
+  title  = {`20261001` is the day itself, with no time of day attached},
+  claim  = {`20261001` is the day itself, with no time of day attached.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_date_is_a_day_with_no_time},
+}
+
+@misc{pathsforward-timevalue-utc-time-is-an-instant-in-utc,
+  section = {timevalue},
+  title  = {`...Z` is one instant, read in UTC},
+  claim  = {`...Z` is one instant, read in UTC.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_utc_time_is_an_instant_in_utc},
+}
+
+@misc{pathsforward-timevalue-tzid-time-is-the-same-instant-on-every-host,
+  section = {timevalue},
+  title  = {The life:W9 time (Thu 2026-10-01, 4:30 PM Eastern) is 20:30 UTC, wherever it is read},
+  claim  = {The life:W9 time (Thu 2026-10-01, 4:30 PM Eastern) is 20:30 UTC, wherever it is read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_tzid_time_is_the_same_instant_on_every_host},
+}
+
+@misc{pathsforward-timevalue-value-that-does-not-name-one-instant-or-day-is-refused,
+  section = {timevalue},
+  title  = {⚑ A floating time, an unknown zone, or a malformed value is refused, never stored},
+  claim  = { A floating time, an unknown zone, or a malformed value is refused, never stored. The
+            floating time is life's case (life:W23): it would mean a different instant
+            on another host.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_value_that_does_not_name_one_instant_or_day_is_refused},
+}
