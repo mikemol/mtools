@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.gmailstruct: a Gmail message reader for which nothing silently vanishes"
+subtitle = "A message the narrowing cannot read is a record with a reason, never a skip, so a count over the output is a count over the input."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "GMAILSTRUCT.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

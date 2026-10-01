@@ -174,6 +174,15 @@ pip.parse(
     requirements_lock = "//ledger:requirements.txt",
 )
 
+# ⚑ `mikemol-gmailstruct` — a record layer over Gmail API message JSON, asked for by life
+# (life:W27, W287). Empty shipping hub: the record layer is stdlib only. Auth (W288) and the
+# HTTP client arrive later, and none of them reaches this layer.
+pip.parse(
+    hub_name = "gmailstruct_deps",
+    python_version = "3.13",
+    requirements_lock = "//gmailstruct:requirements.txt",
+)
+
 # ⚑⚑⚑ A SECOND LOCK PER DISTRIBUTION, FOR THE WITNESS ACTIONS ONLY. The shipping lock above
 # excludes the dev group, so it cannot supply pytest — and the thesis at the top of this file is
 # that A PYTEST CASE AND A PAPERKIT WITNESS ARE THE SAME OBJECT, which means the action staging a
@@ -256,6 +265,11 @@ pip.parse(
     python_version = "3.13",
     uv_lock = "//ledger:uv.lock",
 )
+pip.parse(
+    hub_name = "gmailstruct_dev",
+    python_version = "3.13",
+    uv_lock = "//gmailstruct:uv.lock",
+)
 # mikemol-pycodemod: cleanroomed from substrate's scratch/pycodemod.py (W43). Its shipping hub is
 # NOT empty — libcst is required, not optional, so a missing library cannot read as "found none".
 pip.parse(
@@ -297,6 +311,8 @@ use_repo(
     "corpus_dev",
     "fence_deps",
     "fence_dev",
+    "gmailstruct_deps",
+    "gmailstruct_dev",
     "hooks_deps",
     "hooks_dev",
     "icsstruct_deps",

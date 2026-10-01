@@ -1,0 +1,58 @@
+% warrants.bib — one claim PER TEST FUNCTION in the gmailstruct suite.
+%
+% The claim text is TRANSCRIBED from each test function's own docstring, which argues the
+% defect the case prevents. Where a docstring is a bare one-liner the claim is correspondingly
+% plain; that thinness is a fact about the case rather than something invented over.
+%
+% Keying convention: gmailstruct-<section>-<test name minus its `test_` prefix, hyphenated, with
+% leading articles dropped>. Each check runs that one test function.
+
+
+@misc{gmailstruct-records-well-formed-response-reads-in-full,
+  section = {records},
+  title  = {The positive control: no damage reported where there is none, and no field lost},
+  claim  = {The positive control: no damage reported where there is none, and no field lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_well_formed_response_reads_in_full},
+}
+
+@misc{gmailstruct-records-headers-keep-their-order-and-repeats,
+  section = {records},
+  title  = {Headers are ordered pairs: a mapping would keep one Received header and lose the other},
+  claim  = {Headers are ordered pairs: a mapping would keep one Received header and lose the other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_headers_keep_their_order_and_repeats},
+}
+
+@misc{gmailstruct-records-absent-labels-and-snippet-read-as-empty,
+  section = {records},
+  title  = {The API omits labelIds and snippet when there are none; that absence is what it holds},
+  claim  = {The API omits labelIds and snippet when there are none; that absence is what it holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_absent_labels_and_snippet_read_as_empty},
+}
+
+@misc{gmailstruct-records-missing-required-field-is-unreadable-with-its-id,
+  section = {records},
+  title  = {An absent required field makes the message Unreadable, never a skip, and keeps its id},
+  claim  = {An absent required field makes the message Unreadable, never a skip, and keeps its id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_missing_required_field_is_unreadable_with_its_id},
+}
+
+@misc{gmailstruct-records-wrongly-typed-field-is-unreadable-never-coerced,
+  section = {records},
+  title  = {A present field of the wrong type is Unreadable naming it; nothing is converted to fit},
+  claim  = {A present field of the wrong type is Unreadable naming it; nothing is converted to fit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_wrongly_typed_field_is_unreadable_never_coerced},
+}
+
+@misc{gmailstruct-records-non-object-response-is-unreadable-without-id,
+  section = {records},
+  title  = {A response that is not a JSON object still yields one record, with no id to carry},
+  claim  = {A response that is not a JSON object still yields one record, with no id to carry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_non_object_response_is_unreadable_without_id},
+}
+
+@misc{gmailstruct-records-every-response-yields-exactly-one-record,
+  section = {records},
+  title  = {A count over the output is a count over the input, readable and unreadable alike},
+  claim  = {A count over the output is a count over the input, readable and unreadable alike.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_every_response_yields_exactly_one_record},
+}
