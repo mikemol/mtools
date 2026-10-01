@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The ruff check atom (mtools:W324): the script, and the pinned binary as `:bin`.
+exports_files(["ruff_check.sh"])
+
+alias(
+    name = "bin",
+    actual = "@ruff//:bin",
+    visibility = ["//visibility:public"],
+)

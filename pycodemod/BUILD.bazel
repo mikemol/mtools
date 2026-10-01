@@ -63,14 +63,14 @@ exports_files(["BUILD.bazel"])
 
 sh_test(
     name = "ruff",
-    srcs = ["//:ruff_check.sh"],
+    srcs = ["@mikemol_check_ruff//:ruff_check.sh"],
     args = [
-        "$(location @ruff//:bin)",
+        "$(location @mikemol_check_ruff//:bin)",
         "$(location :pyproject.toml)",
     ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
     data = [
         "pyproject.toml",
-        "@ruff//:bin",
+        "@mikemol_check_ruff//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "small",
 )
@@ -82,14 +82,14 @@ sh_test(
     srcs = ["//:ratchet_check.sh"],
     args = [
         "$(location //ratchet:ratchet_cli)",
-        "$(location @ruff//:bin)",
+        "$(location @mikemol_check_ruff//:bin)",
         "$(location :pyproject.toml)",
     ],
     data = [
         "pyproject.toml",
         "ratchet-preview.txt",
         "//ratchet:ratchet_cli",
-        "@ruff//:bin",
+        "@mikemol_check_ruff//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "small",
 )

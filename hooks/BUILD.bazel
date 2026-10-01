@@ -193,7 +193,7 @@ py_library(
             "//mdstruct:pyproject.toml",
             "//ratchet:BUILD.bazel",
             "//ratchet:pyproject.toml",
-            "@ruff//:bin",
+            "@mikemol_check_ruff//:bin",
             # ⚑⚑⚑ THE SIBLING TEST MODULES, because three arms sweep the whole SUITE rather
             # than this file: the warrant ledger's 1:1 against every test NAME, the
             # module-consumer check, and the harness-wide figure arm. In the sandbox they saw
@@ -205,7 +205,7 @@ py_library(
             # and a list would go stale the next time one is added — the reified population
             # this suite exists to refuse.
         ] + glob(["tests/test_*.py"]),
-        env = {"RUFF_BIN": "$(location @ruff//:bin)"},
+        env = {"RUFF_BIN": "$(location @mikemol_check_ruff//:bin)"},
 
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,
         # and bazel's default of `medium` reserves a timeout budget nothing uses. An honest
@@ -230,14 +230,14 @@ py_library(
 # an imported module changes mypy's verdict on the importer and leaves ruff's unchanged).
 sh_test(
     name = "ruff",
-    srcs = ["//:ruff_check.sh"],
+    srcs = ["@mikemol_check_ruff//:ruff_check.sh"],
     args = [
-        "$(location @ruff//:bin)",
+        "$(location @mikemol_check_ruff//:bin)",
         "$(location :pyproject.toml)",
     ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
     data = [
         "pyproject.toml",
-        "@ruff//:bin",
+        "@mikemol_check_ruff//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "small",
 )
@@ -252,14 +252,14 @@ sh_test(
     srcs = ["//:ratchet_check.sh"],
     args = [
         "$(location //ratchet:ratchet_cli)",
-        "$(location @ruff//:bin)",
+        "$(location @mikemol_check_ruff//:bin)",
         "$(location :pyproject.toml)",
     ],
     data = [
         "pyproject.toml",
         "ratchet-preview.txt",
         "//ratchet:ratchet_cli",
-        "@ruff//:bin",
+        "@mikemol_check_ruff//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "small",
 )

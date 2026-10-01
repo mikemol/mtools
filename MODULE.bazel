@@ -419,30 +419,19 @@ filegroup(
 #     otherwise be executed; it is a refactor with no measured gain when the tool already runs.
 #   · EMPTY and bin/ is a compiled artifact -> http_archive is correct. MEASURED for ruff:
 #     `entry_points == []` and `file .venv/bin/ruff` reports an ELF executable. There is no
-#     entry point to regenerate, which is why the archive below is the right instrument rather
-#     than a workaround for not knowing the other one.
+#     entry point to regenerate, which is why an http_archive is the right instrument rather
+#     than a workaround for not knowing the other one. (The archive itself now lives in the ruff
+#     check atom, check_ruff/MODULE.bazel, W324.)
 #
 # ⚑ A PAIRED TRAP, RECORDED BEFORE IT IS HIT: a console-script binary must be consumed through
 # `ctx.actions.run_shell(tools = ...)`, never `inputs = ...`. Its launcher looks for a
 # `<bin>.runfiles/` tree beside the executable; `inputs` stages the flat files without that tree
 # and the launcher raises "Cannot find .runfiles directory".
 #
-# ⚑⚑ THE VERSION IS THE ONE THE LOCK PINS (0.16.6), and `test_bar_fires` asserts that equality.
-# Two sources for one tool is a place they can drift; the assertion is what makes a drift a
-# finding rather than a silent divergence between what the gate runs and what a developer runs.
-http_archive(
-    name = "ruff",
-    build_file_content = """exports_files(["ruff"])
-filegroup(
-    name = "bin",
-    srcs = ["ruff"],
-    visibility = ["//visibility:public"],
-)
-""",
-    sha256 = "0696335ef16615d8c7445ad438750eb0f55b3da6f153df21265a7c6d5750254f",
-    strip_prefix = "ruff-x86_64-unknown-linux-gnu",
-    url = "https://github.com/astral-sh/ruff/releases/download/0.16.6/ruff-x86_64-unknown-linux-gnu.tar.gz",
-)
+# ⚑⚑ THE RUFF ARCHIVE MOVED INTO THE RUFF CHECK ATOM (W324): `@mikemol_check_ruff//:bin`, the
+# same URL and sha256, now beside the script that runs it. One pin, owned by the check.
+bazel_dep(name = "mikemol_check_ruff", version = "0.1.0")
+local_path_override(module_name = "mikemol_check_ruff", path = "check_ruff")
 
 # ⚑⚑⚑ ⟡mtools-mypy-in-the-graph — MYPY IS NOT AN ACTION HERE, AND THE COST IS INVALIDATION, NOT
 # SPEED. `.githooks/pre-commit` runs `mypy` once per distribution over the whole tree, outside
