@@ -4,13 +4,54 @@
 
 from __future__ import annotations
 
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import pytest
 
 from mikemol.pathsforward.model import RefusedError
-from mikemol.pathsforward.timevalue import Trigger, parse, parse_trigger
+from mikemol.pathsforward.timevalue import Trigger, duration, fires_at, parse, parse_trigger
+
+_DETROIT = ZoneInfo("America/Detroit")
+
+
+@pytest.mark.parametrize(
+    ("text", "span"),
+    [
+        ("-PT15M", -timedelta(minutes=15)),
+        ("+P1W", timedelta(weeks=1)),
+        ("P1DT2H3M4S", timedelta(days=1, hours=2, minutes=3, seconds=4)),
+        ("-P2D", -timedelta(days=2)),
+    ],
+)
+def test_a_duration_is_a_signed_span(text: str, span: timedelta) -> None:
+    """A dur-value reads as its signed span; "M" after T is minutes (W308)."""
+    assert duration(text) == span
+
+
+@pytest.mark.parametrize(
+    ("trigger", "dtstart", "due", "fires"),
+    [
+        # life's W9: 4:30 PM Detroit is 20:30 UTC, and an hour before is 19:30 UTC.
+        ("-PT1H", "TZID=America/Detroit:20261001T163000", "", "2026-10-01T19:30:00+00:00"),
+        ("RELATED=END:-PT2H", "", "20261002T120000Z", "2026-10-02T10:00:00+00:00"),
+        # ⚑ an all-day due counts from midnight in the zone the caller names: 04:00 UTC in Detroit.
+        ("RELATED=END:-P1D", "", "20261002", "2026-10-01T04:00:00+00:00"),
+        ("VALUE=DATE-TIME:20261001T130000Z", "", "", "2026-10-01T13:00:00+00:00"),
+    ],
+)
+def test_a_trigger_fires_at_one_utc_instant(
+    trigger: str, dtstart: str, due: str, fires: str
+) -> None:
+    """Every alarm resolves to one UTC instant; nemik:W146 drops its own arithmetic for this."""
+    when = fires_at(trigger, dtstart, due, day_zone=_DETROIT)
+    assert when is not None
+    assert when.isoformat() == fires
+
+
+def test_a_relative_trigger_without_its_anchor_fires_nowhere() -> None:
+    """A hand-edited queue can hold an unanchored alarm; it resolves to None, not a guess."""
+    assert fires_at("RELATED=END:-PT1H", "20261001T000000Z", "", day_zone=_DETROIT) is None
 
 
 @pytest.mark.parametrize(

@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta, tzinfo
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from mikemol.pathsforward.model import RefusedError
@@ -136,6 +136,71 @@ def parse_trigger(text: str) -> Trigger:
         )
         raise RefusedError(msg)
     return Trigger(text, related)
+
+
+_DUR_PART = re.compile(r"(\d+)([WDHMS])")
+_DUR_UNIT = {
+    "W": timedelta(weeks=1),
+    "D": timedelta(days=1),
+    "H": timedelta(hours=1),
+    "M": timedelta(minutes=1),
+    "S": timedelta(seconds=1),
+}
+
+
+def duration(text: str) -> timedelta:
+    """Read an RFC 5545 dur-value (3.3.6) as a signed timedelta (W308).
+
+    Returns:
+        the span; negative for a leading "-".
+
+    Raises:
+        RefusedError: if it is not a dur-value.
+
+    """
+    if _DURATION.fullmatch(text) is None:
+        msg = f"{text!r} is not an RFC 5545 duration"
+        raise RefusedError(msg)
+    span = sum(
+        (int(part[1]) * _DUR_UNIT[part[2]] for part in _DUR_PART.finditer(text)),
+        timedelta(),
+    )
+    return -span if text.startswith("-") else span
+
+
+def _anchor_instant(value: str, day_zone: tzinfo) -> datetime:
+    """Read DTSTART or DUE as an instant; a DATE counts from midnight in `day_zone`.
+
+    Returns:
+        the zone-aware instant.
+
+    """
+    when = parse(value).when
+    if isinstance(when, datetime):
+        return when
+    return datetime(when.year, when.month, when.day, tzinfo=day_zone)
+
+
+def fires_at(trigger: str, dtstart: str, due: str, *, day_zone: tzinfo) -> datetime | None:
+    """Resolve one TRIGGER to the UTC instant it fires (W308, nemik:W146).
+
+    ⚑ `day_zone` IS REQUIRED, NOT THE HOST'S: an all-day (DATE) anchor has no instant of its own.
+    A calendar counts it from local midnight, so the caller names whose midnight. nemik passes the
+    operator's zone. An absolute trigger ignores both anchors.
+
+    Returns:
+        the UTC instant, or None when a relative trigger's anchor is unset (refused at write, but a
+        hand-edited queue can still carry one).
+
+    """
+    parsed = parse_trigger(trigger)
+    if parsed.related is None:
+        return _anchor_instant(trigger.removeprefix(_ABSOLUTE), UTC).astimezone(UTC)
+    anchor = dtstart if parsed.related == "START" else due
+    if not anchor:
+        return None
+    offset = trigger.partition(":")[2] if trigger.startswith("RELATED=") else trigger
+    return (_anchor_instant(anchor, day_zone) + duration(offset)).astimezone(UTC)
 
 
 def parse(text: str) -> TimeValue:

@@ -2268,3 +2268,24 @@
             still clears.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_alarm_takes_a_before_duration_as_written},
 }
+
+@misc{pathsforward-timevalue-duration-is-a-signed-span,
+  section = {timevalue},
+  title  = {A dur-value reads as its signed span; "M" after T is minutes (W308)},
+  claim  = {A dur-value reads as its signed span; "M" after T is minutes (W308).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_duration_is_a_signed_span},
+}
+
+@misc{pathsforward-timevalue-trigger-fires-at-one-utc-instant,
+  section = {timevalue},
+  title  = {Every alarm resolves to one UTC instant; nemik:W146 drops its own arithmetic for this},
+  claim  = {Every alarm resolves to one UTC instant; nemik:W146 drops its own arithmetic for this.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_trigger_fires_at_one_utc_instant},
+}
+
+@misc{pathsforward-timevalue-relative-trigger-without-its-anchor-fires-nowhere,
+  section = {timevalue},
+  title  = {A hand-edited queue can hold an unanchored alarm; it resolves to None, not a guess},
+  claim  = {A hand-edited queue can hold an unanchored alarm; it resolves to None, not a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_relative_trigger_without_its_anchor_fires_nowhere},
+}
