@@ -18,6 +18,7 @@ _ATOM_SH = [
     "@mikemol_check_ruff//:ruff_check.sh",
     "@mikemol_check_mypy//:mypy_check.sh",
     "@mikemol_check_mutants//:mutate_check.sh",
+    "@mikemol_check_ratchet//:ratchet_check.sh",
 ]
 
 # ⚑⚑⚑ THE GATE'S OWN SHELL IS A TEST TARGET, because it was previously checked by nothing. This

@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑ THE RATCHET CHECK ATOM (mtools:W327, plan .claude/design/W317-split-plan.md): ratchet_check.sh,
+# the check every module composes to run the preview-rule ratchet over its own tree. It is apart
+# from the ratchet DISTRIBUTION (mikemol-ratchet, the tool the check runs), as each check atom is
+# apart from its tool: ruff's binary, mypy's hub, and the mutation runner each live separately too.
+#
+# A module repo composes it into its gate:
+#     sh_test(name = "ratchet_gate", srcs = ["@mikemol_check_ratchet//:ratchet_check.sh"], ...)
+module(name = "mikemol_check_ratchet", version = "0.1.0")

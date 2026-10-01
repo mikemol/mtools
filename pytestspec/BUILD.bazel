@@ -71,7 +71,7 @@ sh_test(
 # ⚑ THE BASELINE WAS MINTED EMPTY: the distribution enters clean under preview.
 sh_test(
     name = "ratchet",
-    srcs = ["//:ratchet_check.sh"],
+    srcs = ["@mikemol_check_ratchet//:ratchet_check.sh"],
     args = [
         "$(location //ratchet:ratchet_cli)",
         "$(location @mikemol_check_ruff//:bin)",

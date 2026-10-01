@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The ratchet check atom (mtools:W327).
+exports_files(["ratchet_check.sh"])

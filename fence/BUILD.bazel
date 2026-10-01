@@ -276,7 +276,7 @@ py_binary(
 # no gate noticing.
 sh_test(
     name = "ratchet",
-    srcs = ["//:ratchet_check.sh"],
+    srcs = ["@mikemol_check_ratchet//:ratchet_check.sh"],
     args = [
         "$(location //ratchet:ratchet_cli)",
         "$(location @mikemol_check_ruff//:bin)",

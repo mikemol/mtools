@@ -101,7 +101,7 @@ sh_test(
     # ⚑ NAMED `ratchet_gate`, NOT `ratchet`: this package already has a py_library by that name.
     # Sibling distributions call theirs `ratchet` because they have no such collision.
     name = "ratchet_gate",
-    srcs = ["//:ratchet_check.sh"],
+    srcs = ["@mikemol_check_ratchet//:ratchet_check.sh"],
     args = [
         "$(location //ratchet:ratchet_cli)",
         "$(location @mikemol_check_ruff//:bin)",
