@@ -2258,3 +2258,13 @@
   claim  = { A bad duration, or an absolute trigger that is not UTC, is refused, never stored.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_malformed_trigger_is_refused},
 }
+
+@misc{pathsforward-cli-alarm-takes-a-before-duration-as-written,
+  section = {cli},
+  title  = {⚑ `--alarm -PT1H` is a value, not an option (life-21, 2026-10-01, W307)},
+  claim  = { `--alarm -PT1H` is a value, not an option (life-21, 2026-10-01, W307). "Before" is the
+            common alarm and every one starts with "-"; argparse alone read it as an
+            unknown option. The run stops at the next real flag, and a bare `--alarm`
+            still clears.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_alarm_takes_a_before_duration_as_written},
+}

@@ -307,6 +307,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     ap.add_argument(
         "--alarm",
+        action="extend",
         nargs="*",
         metavar="TRIGGER",
         help="--update: the whole VALARM list, e.g. -PT15M RELATED=END:-PT2H "
@@ -1021,6 +1022,35 @@ def mode_of(opts: dict[str, object]) -> str:
     return chosen[0] if chosen else _SUMMARY
 
 
+_ALARM = "--alarm"
+
+
+def bind_alarms(argv: list[str]) -> list[str]:
+    """Spell each value after `--alarm` as `--alarm=VALUE`, so `-PT1H` is not read as an option.
+
+    ⚑ "Before" is the common alarm, and every one starts with "-" (life-21, 2026-10-01: the first
+    natural spelling, `--alarm -PT1H`, failed). A value runs until the next argument that starts
+    with "-" and is not a duration ("-P..."); `--alarm` uses action="extend", so the rewrite is the
+    same list, and a bare `--alarm` still clears.
+
+    Returns:
+        argv with every alarm value bound to its own `--alarm=`.
+
+    """
+    out: list[str] = []
+    in_alarms = False
+    for arg in argv:
+        if arg == _ALARM:
+            in_alarms = True
+            out.append(arg)
+        elif in_alarms and (not arg.startswith("-") or arg.startswith("-P")):
+            out.append(f"{_ALARM}={arg}")
+        else:
+            in_alarms = False
+            out.append(arg)
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run one invocation.
 
@@ -1028,7 +1058,8 @@ def main(argv: list[str] | None = None) -> int:
         the exit code (see the module docstring).
 
     """
-    opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
+    args = bind_alarms(sys.argv[1:] if argv is None else argv)
+    opts: dict[str, object] = vars(_parser().parse_args(args))
     mode = mode_of(opts)
     stray = stray_flags(mode, opts)
     if stray:

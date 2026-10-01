@@ -376,6 +376,21 @@ def test_update_clears_enables(tmp_path: Path) -> None:
     assert (_run(path, "--update", "W1", "--enables"), _first(path)["enables"]) == (_OK, [])
 
 
+def test_alarm_takes_a_before_duration_as_written(tmp_path: Path) -> None:
+    """⚑ `--alarm -PT1H` is a value, not an option (life-21, 2026-10-01, W307).
+
+    "Before" is the common alarm and every one starts with "-"; argparse alone read it as an
+    unknown option. The run stops at the next real flag, and a bare `--alarm` still clears.
+    """
+    path = _file(tmp_path)
+    alarms = ("-PT1H", "RELATED=END:-PT2H", "-P1D")
+    code = _run(
+        path, "--update", "W1", "--alarm", *alarms, "--due", "20261002", "--dtstart", "20261001"
+    )
+    assert (code, _first(path)["alarms"]) == (_OK, list(alarms))
+    assert (_run(path, "--update", "W1", "--alarm"), _first(path)["alarms"]) == (_OK, None)
+
+
 def test_update_refuses_a_malformed_edge(tmp_path: Path) -> None:
     """A comma-joined or non-W symbol in --update --enables is refused, as --add refuses it."""
     path = _file(tmp_path)
