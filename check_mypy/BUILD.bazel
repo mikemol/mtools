@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The mypy check atom (mtools:W325). mypy.ini is exported so the atom's own runner is
+# type-checked under the house config (the root's //:mypy_check_mypy).
+exports_files([
+    "mypy.ini",
+    "mypy_check.sh",
+    "mypy_runner.py",
+])

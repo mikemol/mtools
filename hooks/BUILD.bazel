@@ -270,8 +270,8 @@ sh_test(
 # mypy's startup dominates at this scale and each per-file run re-analyses the same closure.
 py_binary(
     name = "mypy_runner",
-    srcs = ["//:mypy_runner.py"],
-    main = "//:mypy_runner.py",
+    srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
+    main = "@mikemol_check_mypy//:mypy_runner.py",
     # ⚑⚑ VISIBLE TO THE ROOT, WHICH BORROWS THIS RUNNER RATHER THAN DECLARING ITS OWN. A py_binary
     # in the root package writes its generated `_<name>_stage2_bootstrap.py` into `_main/` — the
     # directory `//:mypy` checks with `files = ["*.py"]`. MEASURED: a root-owned runner made
@@ -290,7 +290,7 @@ py_binary(
 
 sh_test(
     name = "mypy",
-    srcs = ["//:mypy_check.sh"],
+    srcs = ["@mikemol_check_mypy//:mypy_check.sh"],
     args = [
         "$(location :mypy_runner)",
         "$(location :pyproject.toml)",

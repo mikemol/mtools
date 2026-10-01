@@ -190,8 +190,8 @@ sh_test(
 
 py_binary(
     name = "mypy_runner",
-    srcs = ["//:mypy_runner.py"],
-    main = "//:mypy_runner.py",
+    srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
+    main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
         dev_requirement("mypy"),
         dev_requirement("pytest"),
@@ -200,7 +200,7 @@ py_binary(
 
 sh_test(
     name = "mypy",
-    srcs = ["//:mypy_check.sh"],
+    srcs = ["@mikemol_check_mypy//:mypy_check.sh"],
     args = [
         "$(location :mypy_runner)",
         "$(location :pyproject.toml)",

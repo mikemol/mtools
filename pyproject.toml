@@ -51,7 +51,7 @@ extend-exclude = ["bazel-*", "inbox", "findings", "patches", "rbe", ".claude"]
 # `pytest_main.py` is a top-level script there, not a member of a package missing its __init__.py.
 # DECLARED, as the distributions declare theirs (INP001 is answered by namespace-packages, never
 # ignored). It leaves with the atom when the atom moves to its own repo.
-namespace-packages = ["rules_py"]
+namespace-packages = ["rules_py", "check_mypy"]
 
 [tool.ruff.lint]
 preview = true

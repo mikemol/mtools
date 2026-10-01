@@ -240,7 +240,7 @@ sh_test(
 # this scale and each per-file run re-analyses the same closure.
 sh_test(
     name = "mypy",
-    srcs = ["//:mypy_check.sh"],
+    srcs = ["@mikemol_check_mypy//:mypy_check.sh"],
     args = [
         "$(location :mypy_runner)",
         "$(location :pyproject.toml)",
@@ -259,8 +259,8 @@ sh_test(
 
 py_binary(
     name = "mypy_runner",
-    srcs = ["//:mypy_runner.py"],
-    main = "//:mypy_runner.py",
+    srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
+    main = "@mikemol_check_mypy//:mypy_runner.py",
     # ⚑ pytest IS A DEP OF THE CHECKER, NOT JUST OF THE TESTS. mypy checks `files = ["src",
     # "tests"]`, and a test module imports pytest — so without it staged, mypy reports
     # `Cannot find implementation or library stub` and every fixture degrades to Any.

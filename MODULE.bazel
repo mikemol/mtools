@@ -433,6 +433,11 @@ filegroup(
 bazel_dep(name = "mikemol_check_ruff", version = "0.1.0")
 local_path_override(module_name = "mikemol_check_ruff", path = "check_ruff")
 
+# ⚑ THE MYPY CHECK ATOM (W325): mypy_check.sh and mypy_runner.py. mypy itself stays each module's
+# own, from its dev hub.
+bazel_dep(name = "mikemol_check_mypy", version = "0.1.0")
+local_path_override(module_name = "mikemol_check_mypy", path = "check_mypy")
+
 # ⚑⚑⚑ ⟡mtools-mypy-in-the-graph — MYPY IS NOT AN ACTION HERE, AND THE COST IS INVALIDATION, NOT
 # SPEED. `.githooks/pre-commit` runs `mypy` once per distribution over the whole tree, outside
 # bazel, so its verdict is keyed on NOTHING: it re-runs in full every commit and no result is ever

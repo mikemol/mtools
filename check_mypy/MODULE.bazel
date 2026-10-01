@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑ THE MYPY CHECK ATOM (mtools:W325, plan .claude/design/W317-split-plan.md): the check script and
+# the runner a module wraps as a py_binary. Unlike the ruff atom it carries NO tool binary: mypy
+# comes from each module's own dev hub, so its version is that module's lock, not this atom's.
+#
+# A module repo composes it into its gate:
+#     py_binary(name = "mypy_runner", srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
+#               main = "@mikemol_check_mypy//:mypy_runner.py", deps = [<its dev hub's mypy>])
+#     sh_test(name = "mypy", srcs = ["@mikemol_check_mypy//:mypy_check.sh"],
+#             args = ["$(location :mypy_runner)", "$(location :pyproject.toml)"], ...)
+module(name = "mikemol_check_mypy", version = "0.1.0")

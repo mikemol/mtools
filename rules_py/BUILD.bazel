@@ -4,6 +4,7 @@
 # The python rules atom (mtools:W323): load `@mikemol_rules_py//:venv.bzl`, and name
 # `@mikemol_rules_py//:pytest_main.py` as a py_test's main and in its srcs.
 exports_files([
+    "mypy.ini",
     "pytest_main.py",
     "venv.bzl",
 ])
