@@ -303,3 +303,15 @@
             first stage. The parent now refuses up front, naming the path it was given.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_a_membudget_that_cannot_run_is_refused_before_any_stage},
 }
+
+@misc{audiostruct-records-real-whisperx-segment-is-placed,
+  section = {records},
+  title  = {A segment in the shape WhisperX really emits becomes a Segment, its words keyed by "word"},
+  claim  = {A segment in the shape WhisperX really emits becomes a Segment, its words keyed by
+            "word". CUT FROM A REAL RUN, NOT GUESSED (W296): the first diarized segment
+            of the public-domain jfk.flac (whisper's test clip) from the 2026-09-30 GPU
+            run, words truncated to three. The synthetic fixtures had keyed word text as
+            "text", and that run's transcript came out wholly Unplaced. Only the shape
+            is under test here, so the truncation loses nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_a_real_whisperx_segment_is_placed},
+}

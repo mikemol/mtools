@@ -24,8 +24,8 @@ _GOOD: dict[str, object] = {
     "text": " Synthetic hello.",
     "speaker": "SPEAKER_00",
     "words": [
-        {"word": "x", "text": "Synthetic", "start": 1.5, "end": 2.0, "score": 0.9},
-        {"text": "42", "speaker": "SPEAKER_00"},
+        {"word": "Synthetic", "start": 1.5, "end": 2.0, "score": 0.9},
+        {"word": "42", "speaker": "SPEAKER_00"},
     ],
 }
 
@@ -67,6 +67,31 @@ def test_well_formed_segment_keeps_every_field() -> None:
     )
 
 
+def test_a_real_whisperx_segment_is_placed() -> None:
+    """A segment in the shape WhisperX really emits becomes a Segment, its words keyed by "word".
+
+    ⚑⚑ CUT FROM A REAL RUN, NOT GUESSED (W296): the first diarized segment of the public-domain
+    jfk.flac (whisper's test clip) from the 2026-09-30 GPU run, words truncated to three. The
+    synthetic fixtures had keyed word text as "text", and that run's transcript came out wholly
+    Unplaced. Only the shape is under test here, so the truncation loses nothing.
+    """
+    real: dict[str, object] = {
+        "start": 0.421,
+        "end": 7.456,
+        "text": " And so, my fellow Americans, ask not what your country can do for you.",
+        "words": [
+            {"word": "And", "start": 0.421, "end": 0.541, "score": 0.646, "speaker": "SPEAKER_00"},
+            {"word": "so,", "start": 0.642, "end": 0.962, "score": 0.94, "speaker": "SPEAKER_00"},
+            {"word": "my", "start": 1.022, "end": 1.243, "score": 0.983, "speaker": "SPEAKER_00"},
+        ],
+        "speaker": "SPEAKER_00",
+    }
+    (record,) = normalize("jfk", [real])
+    assert isinstance(record, Segment)
+    assert [w.text for w in record.words] == ["And", "so,", "my"]
+    assert record.speaker == "SPEAKER_00"
+
+
 def test_undiarized_segment_has_no_speaker() -> None:
     """A segment diarization assigned no one is `speaker=None`, never a stand-in like UNKNOWN."""
     (record,) = normalize(_SOURCE, [{"start": 0, "end": 1, "text": "x"}])
@@ -87,12 +112,16 @@ def test_undiarized_segment_has_no_speaker() -> None:
         ({"start": 0.0, "end": 1.0, "text": "x", "speaker": 3}, "speaker is not a string"),
         ({"start": 0.0, "end": 1.0, "text": "x", "words": {}}, "words is not a list"),
         (
-            {"start": 0.0, "end": 1.0, "text": "x", "words": [{"text": "a"}, {}]},
-            "word 1: text is absent or not a string",
+            {"start": 0.0, "end": 1.0, "text": "x", "words": [{"word": "a"}, {}]},
+            "word 1: word is absent or not a string",
+        ),
+        (
+            {"start": 0.0, "end": 1.0, "text": "x", "words": [{"text": "a"}]},
+            "word 0: word is absent or not a string",
         ),
         ({"start": 0.0, "end": 1.0, "text": "x", "words": ["a"]}, "word 0: it is not an object"),
         (
-            {"start": 0.0, "end": 1.0, "text": "x", "words": [{"text": "a", "score": "high"}]},
+            {"start": 0.0, "end": 1.0, "text": "x", "words": [{"word": "a", "score": "high"}]},
             "word 0: score is not a finite number",
         ),
         ("a bare string", "segment is not an object"),

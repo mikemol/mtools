@@ -136,8 +136,13 @@ def _speaker(body: Json) -> str | None:
     raise _ShapeError(msg)
 
 
-def _text(body: Json) -> str:
-    """Read the required text.
+def _text(body: Json, key: str) -> str:
+    """Read the required text under `key`.
+
+    ⚑⚑ A SEGMENT'S TEXT IS "text", A WORD'S IS "word" (W296). Measured on the first real run
+    (2026-09-30, jfk.flac): WhisperX's aligned words are {"word", "start", "end", "score"}. The
+    synthetic fixtures had guessed "text", so every real segment landed Unplaced. There is no
+    fallback from one key to the other: a word without "word" is Unplaced with that reason.
 
     Returns:
         the text, verbatim.
@@ -146,9 +151,9 @@ def _text(body: Json) -> str:
         _ShapeError: if it is absent or not a string.
 
     """
-    value = body.get("text")
+    value = body.get(key)
     if not isinstance(value, str):
-        msg = "text is absent or not a string"
+        msg = f"{key} is absent or not a string"
         raise _ShapeError(msg)
     return value
 
@@ -189,7 +194,7 @@ def _words(body: Json) -> tuple[Word, ...]:
             word = _object(entry, "it")
             words.append(
                 Word(
-                    text=_text(word),
+                    text=_text(word, "word"),
                     start=_optional(word, "start"),
                     end=_optional(word, "end"),
                     score=_optional(word, "score"),
@@ -217,7 +222,7 @@ def _segment(source: str, index: int, value: object) -> Segment:
     if end < start:
         msg = "end is before start"
         raise _ShapeError(msg)
-    return Segment(source, index, start, end, _speaker(body), _text(body), _words(body))
+    return Segment(source, index, start, end, _speaker(body), _text(body, "text"), _words(body))
 
 
 def normalize(source: str, segments: Sequence[object]) -> list[Record]:
