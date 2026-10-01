@@ -2296,3 +2296,31 @@
   claim  = {COMPLETED is a UTC DATE-TIME stamped at the transition to done, never rewritten (W301).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_done_stamps_completed_once_and_reopening_clears_it},
 }
+
+@misc{pathsforward-recurrence-rule-a-reader-can-expand-is-accepted-unchanged,
+  section = {recurrence},
+  title  = {Monthly, weekly, ending by UNTIL or COUNT, and BY* parts all pass as written (W309)},
+  claim  = {Monthly, weekly, ending by UNTIL or COUNT, and BY* parts all pass as written (W309).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recurrence.py -k test_a_rule_a_reader_can_expand_is_accepted_unchanged},
+}
+
+@misc{pathsforward-recurrence-rule-no-reader-could-expand-is-refused,
+  section = {recurrence},
+  title  = {⚑ No FREQ, UNTIL with COUNT, an out-of-range or unknown part: refused, naming why},
+  claim  = { No FREQ, UNTIL with COUNT, an out-of-range or unknown part: refused, naming why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recurrence.py -k test_a_rule_no_reader_could_expand_is_refused},
+}
+
+@misc{pathsforward-ops-update-stores-a-recurrence-as-written-and-clears-it,
+  section = {ops},
+  title  = {An RRULE and its EXDATEs are stored verbatim; '' and () clear them (W309, life:W23)},
+  claim  = {An RRULE and its EXDATEs are stored verbatim; '' and () clear them (W309, life:W23).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_update_stores_a_recurrence_as_written_and_clears_it},
+}
+
+@misc{pathsforward-ops-recurrence-the-waypoint-cannot-expand-is-refused,
+  section = {ops},
+  title  = {⚑ An RRULE needs a DTSTART, an EXDATE an RRULE, and both must parse; nothing changes},
+  claim  = { An RRULE needs a DTSTART, an EXDATE an RRULE, and both must parse; nothing changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_recurrence_the_waypoint_cannot_expand_is_refused},
+}

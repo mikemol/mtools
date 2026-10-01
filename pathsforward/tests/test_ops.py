@@ -343,6 +343,44 @@ def test_update_refuses_a_floating_time_and_stores_nothing(field: str, upd: ops.
     assert state.waypoints[0] == before
 
 
+def test_update_stores_a_recurrence_as_written_and_clears_it() -> None:
+    """An RRULE and its EXDATEs are stored verbatim; '' and () clear them (W309, life:W23)."""
+    state = _state()
+    rule = "FREQ=MONTHLY;BYMONTHDAY=1"
+    upd = ops.Update(dtstart="20261101", rrule=rule, exdates=("20261201",))
+    ops.update(state, "W1", upd, _NOW)
+    assert (state.waypoints[0]["rrule"], state.waypoints[0]["exdates"]) == (rule, ["20261201"])
+    ops.update(state, "W1", ops.Update(rrule="", exdates=()), _NOW)
+    assert (state.waypoints[0]["rrule"], state.waypoints[0]["exdates"]) == (None, None)
+
+
+@pytest.mark.parametrize(
+    ("setup", "upd", "why"),
+    [
+        (ops.Update(), ops.Update(rrule="FREQ=DAILY"), "rrule needs a DTSTART"),
+        # ⚑ checked on the RESULT: clearing the DTSTART a rule counts from is refused too.
+        (ops.Update(dtstart="20261101", rrule="FREQ=DAILY"), ops.Update(dtstart=""), "needs a"),
+        (ops.Update(dtstart="20261101"), ops.Update(exdates=("20261102",)), "set --rrule first"),
+        (ops.Update(dtstart="20261101"), ops.Update(rrule="FREQ=DAILY;COUNT=0"), "COUNT must"),
+        (
+            ops.Update(dtstart="20261101", rrule="FREQ=DAILY"),
+            ops.Update(exdates=("20261102T000000",)),
+            "floating time",
+        ),
+    ],
+)
+def test_a_recurrence_the_waypoint_cannot_expand_is_refused(
+    setup: ops.Update, upd: ops.Update, why: str
+) -> None:
+    """⚑ An RRULE needs a DTSTART, an EXDATE an RRULE, and both must parse; nothing changes."""
+    state = _state()
+    ops.update(state, "W1", setup, _NOW)
+    before = dict(state.waypoints[0])
+    with pytest.raises(ops.RefusedError, match=f"W1: .*{why}"):
+        ops.update(state, "W1", upd, _NOW)
+    assert state.waypoints[0] == before
+
+
 def test_done_stamps_completed_once_and_reopening_clears_it() -> None:
     """COMPLETED is a UTC DATE-TIME stamped at the transition to done, never rewritten (W301)."""
     state = _state()

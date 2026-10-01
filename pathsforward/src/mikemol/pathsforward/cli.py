@@ -108,6 +108,8 @@ _FIELDS = (
     "dtstart",
     "due",
     "alarm",
+    "rrule",
+    "exdate",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -131,6 +133,8 @@ _APPLIES: dict[str, frozenset[str]] = {
             "dtstart",
             "due",
             "alarm",
+            "rrule",
+            "exdate",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -312,6 +316,18 @@ def _parser() -> argparse.ArgumentParser:
         metavar="TRIGGER",
         help="--update: the whole VALARM list, e.g. -PT15M RELATED=END:-PT2H "
         "VALUE=DATE-TIME:20261001T200000Z; bare --alarm clears",
+    )
+    ap.add_argument(
+        "--rrule",
+        metavar="RRULE",
+        help="--update: an RFC 5545 RRULE, e.g. FREQ=MONTHLY;BYMONTHDAY=1 (quote it); needs a "
+        "DTSTART; '' clears",
+    )
+    ap.add_argument(
+        "--exdate",
+        nargs="*",
+        metavar="RFC5545",
+        help="--update: the whole EXDATE list, each as --dtstart; needs an RRULE; bare clears",
     )
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
@@ -719,6 +735,8 @@ def _update(ctx: Ctx) -> int:
         dtstart=ctx.get("dtstart"),
         due=ctx.get("due"),
         alarms=ctx.many("alarm"),
+        rrule=ctx.get("rrule"),
+        exdates=ctx.many("exdate"),
     )
 
     def edit(state: State) -> int:

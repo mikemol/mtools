@@ -24,7 +24,7 @@ from enum import StrEnum
 from itertools import starmap
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lock, timevalue, vector
+from mikemol.pathsforward import lock, recurrence, timevalue, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -118,6 +118,10 @@ class Update:
     # list, and `--alarm` with no values clears it. Stored and projected here. Firing them is
     # nemik-wake's job (nemik:W129), never this tool's.
     alarms: tuple[str, ...] | None = None
+    # ⚑ RECURRENCE (W309, life:W23, nemik:W145): an RRULE ('' clears) and its EXDATEs (SET, not
+    # merged; () clears), stored as written. Expanding them is the reader's job, never this tool's.
+    rrule: str | None = None
+    exdates: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -283,6 +287,37 @@ def _refuse_unanchored(sym: str, new: Json) -> None:
             raise RefusedError(msg)
 
 
+def _refuse_bad_recurrence(sym: str, new: Json) -> None:
+    """Refuse a recurrence the resulting waypoint cannot expand (W309).
+
+    ⚑ CHECKED ON THE RESULT, like the alarms: an RRULE counts from DTSTART (RFC 5545 3.8.5.3), so
+    both an RRULE without one and clearing a DTSTART a rule still counts from are refused. EXDATE
+    only removes occurrences, so it needs an RRULE to remove them from.
+
+    Raises:
+        RefusedError: on a malformed RRULE or EXDATE, an RRULE with no DTSTART, or an EXDATE with
+            no RRULE.
+
+    """
+    rule = text(new, "rrule")
+    reason = ""
+    if rule and not text(new, "dtstart"):
+        reason = "rrule needs a DTSTART to count from: set --dtstart first"
+    elif strlist(new, "exdates") and not rule:
+        reason = "exdate removes occurrences of an rrule, and there is none: set --rrule first"
+    if reason:
+        msg = f"{sym}: {reason}"
+        raise RefusedError(msg)
+    try:
+        if rule:
+            recurrence.check(rule)
+        for exdate in strlist(new, "exdates"):
+            timevalue.parse(exdate)
+    except RefusedError as exc:
+        msg = f"{sym}: {exc}"
+        raise RefusedError(msg) from None
+
+
 def _set_given(new: Json, upd: Update) -> None:
     """Set each plain field the update gives, over whatever the status change implied."""
     given: dict[str, object | None] = {
@@ -305,6 +340,10 @@ def _set_given(new: Json, upd: Update) -> None:
             new[key] = value or None
     if upd.alarms is not None:
         new["alarms"] = list(upd.alarms) or None
+    if upd.rrule is not None:
+        new["rrule"] = upd.rrule or None
+    if upd.exdates is not None:
+        new["exdates"] = list(upd.exdates) or None
 
 
 def _is_work(upd: Update) -> bool:
@@ -401,6 +440,7 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
     w = find(state, sym)
     new = _applied(w, upd, now)
     _refuse_unanchored(sym, new)
+    _refuse_bad_recurrence(sym, new)
     if text(new, "status") == "blocked" and (
         not strlist(new, "blocked_on") or text(new, "blocked_kind") not in BLOCKED_KINDS
     ):

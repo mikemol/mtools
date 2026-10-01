@@ -222,7 +222,8 @@ def stanza(w: Json) -> str:
     evidence = text(w, "evidence").splitlines()
     witness = text(w, "witness")
     times = " ".join(
-        [f"{key}={text(w, key)}" for key in ("dtstart", "due") if text(w, key)]
+        [f"{key}={text(w, key)}" for key in ("dtstart", "due", "rrule") if text(w, key)]
+        + [f"exdate={exdate}" for exdate in strlist(w, "exdates")]
         + [f"alarm={alarm}" for alarm in strlist(w, "alarms")]
     )
     return (

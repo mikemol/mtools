@@ -110,6 +110,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_cli.py" = ["assert"]
 "tests/test_vector.py" = ["assert"]
 "tests/test_timevalue.py" = ["assert"]
+"tests/test_recurrence.py" = ["assert"]
 # ⚑ THE STORE AND CLI WITNESSES RUN REAL PROCESSES, because the defects they close were races
 # between processes: argv lists built from `sys.executable`, never a shell, never untrusted input.
 "tests/test_store.py" = [
