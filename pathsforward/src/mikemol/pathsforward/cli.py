@@ -107,6 +107,7 @@ _FIELDS = (
     "vector_source",
     "dtstart",
     "due",
+    "alarm",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -129,6 +130,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "caused_by",
             "dtstart",
             "due",
+            "alarm",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -302,6 +304,13 @@ def _parser() -> argparse.ArgumentParser:
         "--due",
         metavar="RFC5545",
         help="--update: as --dtstart; a floating time (no Z, no TZID) is refused; '' clears",
+    )
+    ap.add_argument(
+        "--alarm",
+        nargs="*",
+        metavar="TRIGGER",
+        help="--update: the whole VALARM list, e.g. -PT15M RELATED=END:-PT2H "
+        "VALUE=DATE-TIME:20261001T200000Z; bare --alarm clears",
     )
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
@@ -708,6 +717,7 @@ def _update(ctx: Ctx) -> int:
         caused_by=ctx.get("caused_by"),
         dtstart=ctx.get("dtstart"),
         due=ctx.get("due"),
+        alarms=ctx.many("alarm"),
     )
 
     def edit(state: State) -> int:

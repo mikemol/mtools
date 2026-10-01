@@ -10,7 +10,38 @@ from zoneinfo import ZoneInfo
 import pytest
 
 from mikemol.pathsforward.model import RefusedError
-from mikemol.pathsforward.timevalue import parse
+from mikemol.pathsforward.timevalue import Trigger, parse, parse_trigger
+
+
+@pytest.mark.parametrize(
+    ("text", "related"),
+    [
+        ("-PT15M", "START"),
+        ("RELATED=START:-P1D", "START"),
+        ("RELATED=END:-PT2H30M", "END"),
+        ("+P1W", "START"),
+        ("VALUE=DATE-TIME:20261001T200000Z", None),
+    ],
+)
+def test_a_trigger_names_its_anchor(text: str, related: str | None) -> None:
+    """A relative TRIGGER counts from DTSTART by default, or DUE under RELATED=END (W279)."""
+    assert parse_trigger(text) == Trigger(text, related)
+
+
+@pytest.mark.parametrize(
+    ("text", "reason"),
+    [
+        ("-15M", "not an RFC 5545 TRIGGER"),
+        ("-PT", "not an RFC 5545 TRIGGER"),
+        ("RELATED=END:", "not an RFC 5545 TRIGGER"),
+        ("VALUE=DATE-TIME:20261001T200000", "must be a UTC DATE-TIME"),
+        ("VALUE=DATE-TIME:20261001T256000Z", "not a valid date and time"),
+    ],
+)
+def test_a_malformed_trigger_is_refused(text: str, reason: str) -> None:
+    """⚑ A bad duration, or an absolute trigger that is not UTC, is refused, never stored."""
+    with pytest.raises(RefusedError, match=reason):
+        parse_trigger(text)
 
 
 def test_a_date_is_a_day_with_no_time() -> None:

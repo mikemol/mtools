@@ -342,3 +342,11 @@ def test_stanza_carries_the_rfc5545_times_only_when_set() -> None:
         "      when: dtstart=20261001T203000Z due=20261002",
         3,
     )
+
+
+def test_stanza_carries_each_alarm_on_the_when_line() -> None:
+    """The next tick sees every alarm beside the time it counts from (W279)."""
+    w = _wp("W5", due="20261002", alarms=["RELATED=END:-PT2H", "VALUE=DATE-TIME:20261001T190000Z"])
+    assert pl.stanza(w).splitlines()[2] == (
+        "      when: due=20261002 alarm=RELATED=END:-PT2H alarm=VALUE=DATE-TIME:20261001T190000Z"
+    )

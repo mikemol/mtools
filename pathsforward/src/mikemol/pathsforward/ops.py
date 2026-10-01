@@ -114,6 +114,10 @@ class Update:
     # timevalue.parse, so a floating time is refused before it is stored. "" clears the field.
     dtstart: str | None = None
     due: str | None = None
+    # ⚑ VALARM TRIGGERS, SET NOT MERGED (W279, life:W23, nemik:W129): `--alarm` states the whole
+    # list, and `--alarm` with no values clears it. Stored and projected here. Firing them is
+    # nemik-wake's job (nemik:W129), never this tool's.
+    alarms: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -250,6 +254,35 @@ def _refuse_title(title: str | None) -> None:
         raise RefusedError(msg)
 
 
+_ANCHOR = {"START": "dtstart", "END": "due"}
+
+
+def _refuse_unanchored(sym: str, new: Json) -> None:
+    """Refuse an alarm the resulting waypoint cannot place.
+
+    ⚑ CHECKED ON THE RESULT, NOT THE REQUEST: a relative TRIGGER needs DTSTART (RELATED=START) or
+    DUE (RELATED=END) on the waypoint as it will be saved, so clearing a time that an alarm still
+    counts from is refused as well as adding the alarm without one.
+
+    Raises:
+        RefusedError: on a malformed TRIGGER, or a relative one whose anchor field is unset.
+
+    """
+    for alarm in strlist(new, "alarms"):
+        try:
+            trigger = timevalue.parse_trigger(alarm)
+        except RefusedError as exc:
+            msg = f"{sym}: alarm {exc}"
+            raise RefusedError(msg) from None
+        anchor = _ANCHOR.get(trigger.related or "")
+        if anchor is not None and not text(new, anchor):
+            msg = (
+                f"{sym}: alarm {alarm!r} is relative to {anchor.upper()}, which is unset: "
+                f"set --{anchor} first, or use VALUE=DATE-TIME:...Z"
+            )
+            raise RefusedError(msg)
+
+
 def _set_given(new: Json, upd: Update) -> None:
     """Set each plain field the update gives, over whatever the status change implied."""
     given: dict[str, object | None] = {
@@ -270,6 +303,8 @@ def _set_given(new: Json, upd: Update) -> None:
     for key, value in (("dtstart", upd.dtstart), ("due", upd.due)):
         if value is not None:
             new[key] = value or None
+    if upd.alarms is not None:
+        new["alarms"] = list(upd.alarms) or None
 
 
 def _is_work(upd: Update) -> bool:
@@ -349,6 +384,7 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
                 raise RefusedError(msg) from None
     w = find(state, sym)
     new = _applied(w, upd, now)
+    _refuse_unanchored(sym, new)
     if text(new, "status") == "blocked" and (
         not strlist(new, "blocked_on") or text(new, "blocked_kind") not in BLOCKED_KINDS
     ):

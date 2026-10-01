@@ -221,7 +221,10 @@ def stanza(w: Json) -> str:
     blocked = f" blocked_on={','.join(on)}({kind})" if on else ""
     evidence = text(w, "evidence").splitlines()
     witness = text(w, "witness")
-    times = " ".join(f"{key}={text(w, key)}" for key in ("dtstart", "due") if text(w, key))
+    times = " ".join(
+        [f"{key}={text(w, key)}" for key in ("dtstart", "due") if text(w, key)]
+        + [f"alarm={alarm}" for alarm in strlist(w, "alarms")]
+    )
     return (
         f"  {text(w, 'symbol')} [{text(w, 'status')}]{blocked} ticks_blocked={ticks(w)} :: "
         f"{text(w, 'title')}\n"

@@ -343,6 +343,45 @@ def test_update_refuses_a_floating_time_and_stores_nothing(field: str, upd: ops.
     assert state.waypoints[0] == before
 
 
+def test_update_sets_the_whole_alarm_list_and_a_bare_flag_clears_it() -> None:
+    """Alarms are SET, not merged: each update states the list; () clears it (W279, life:W23)."""
+    state = _state()
+    both = ("-PT15M", "RELATED=END:-PT2H")
+    timed = ops.Update(dtstart="20261001T200000Z", due="20261001", alarms=both)
+    ops.update(state, "W1", timed, _NOW)
+    assert state.waypoints[0]["alarms"] == list(both)
+    ops.update(state, "W1", ops.Update(alarms=("VALUE=DATE-TIME:20261001T190000Z",)), _NOW)
+    assert state.waypoints[0]["alarms"] == ["VALUE=DATE-TIME:20261001T190000Z"]
+    ops.update(state, "W1", ops.Update(alarms=()), _NOW)
+    assert state.waypoints[0]["alarms"] is None
+
+
+@pytest.mark.parametrize(
+    ("setup", "upd", "why"),
+    [
+        (ops.Update(), ops.Update(alarms=("-PT15M",)), "relative to DTSTART, which is unset"),
+        (ops.Update(), ops.Update(alarms=("RELATED=END:-PT1H",)), "relative to DUE, which is"),
+        # ⚑ checked on the RESULT: clearing the time an alarm counts from is refused too.
+        (
+            ops.Update(dtstart="20261001", alarms=("-PT15M",)),
+            ops.Update(dtstart=""),
+            "relative to DTSTART",
+        ),
+        (ops.Update(), ops.Update(alarms=("-15M",)), "not an RFC 5545 TRIGGER"),
+    ],
+)
+def test_an_alarm_the_waypoint_cannot_place_is_refused(
+    setup: ops.Update, upd: ops.Update, why: str
+) -> None:
+    """⚑ A relative TRIGGER needs its anchor on the saved waypoint; refusal changes nothing."""
+    state = _state()
+    ops.update(state, "W1", setup, _NOW)
+    before = dict(state.waypoints[0])
+    with pytest.raises(ops.RefusedError, match=f"W1: alarm .*{why}"):
+        ops.update(state, "W1", upd, _NOW)
+    assert state.waypoints[0] == before
+
+
 @pytest.mark.parametrize(
     "draft",
     [

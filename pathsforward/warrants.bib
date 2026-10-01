@@ -2223,3 +2223,38 @@
             (W300).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_stanza_carries_the_rfc5545_times_only_when_set},
 }
+
+@misc{pathsforward-ops-update-sets-the-whole-alarm-list-and-a-bare-flag-clears-it,
+  section = {ops},
+  title  = {Alarms are SET, not merged: each update states the list; () clears it (W279, life:W23)},
+  claim  = {Alarms are SET, not merged: each update states the list; () clears it (W279, life:W23).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_update_sets_the_whole_alarm_list_and_a_bare_flag_clears_it},
+}
+
+@misc{pathsforward-ops-alarm-the-waypoint-cannot-place-is-refused,
+  section = {ops},
+  title  = {⚑ A relative TRIGGER needs its anchor on the saved waypoint; refusal changes nothing},
+  claim  = { A relative TRIGGER needs its anchor on the saved waypoint; refusal changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_alarm_the_waypoint_cannot_place_is_refused},
+}
+
+@misc{pathsforward-payload-stanza-carries-each-alarm-on-the-when-line,
+  section = {payload},
+  title  = {The next tick sees every alarm beside the time it counts from (W279)},
+  claim  = {The next tick sees every alarm beside the time it counts from (W279).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_stanza_carries_each_alarm_on_the_when_line},
+}
+
+@misc{pathsforward-timevalue-trigger-names-its-anchor,
+  section = {timevalue},
+  title  = {A relative TRIGGER counts from DTSTART by default, or DUE under RELATED=END (W279)},
+  claim  = {A relative TRIGGER counts from DTSTART by default, or DUE under RELATED=END (W279).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_trigger_names_its_anchor},
+}
+
+@misc{pathsforward-timevalue-malformed-trigger-is-refused,
+  section = {timevalue},
+  title  = {⚑ A bad duration, or an absolute trigger that is not UTC, is refused, never stored},
+  claim  = { A bad duration, or an absolute trigger that is not UTC, is refused, never stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timevalue.py -k test_a_malformed_trigger_is_refused},
+}

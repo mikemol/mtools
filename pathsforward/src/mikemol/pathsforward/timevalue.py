@@ -82,6 +82,62 @@ def _instant(match: re.Match[str], zone: ZoneInfo) -> datetime:
         raise RefusedError(msg) from None
 
 
+# RFC 5545 3.3.6 dur-value: a week count, or days with an optional time part, or a time part alone.
+_DUR_TIME = r"T(?:\d+H(?:\d+M(?:\d+S)?)?|\d+M(?:\d+S)?|\d+S)"
+_DURATION = re.compile(rf"[+-]?P(?:\d+W|\d+D(?:{_DUR_TIME})?|{_DUR_TIME})")
+_RELATED = ("RELATED=START:", "RELATED=END:")
+_ABSOLUTE = "VALUE=DATE-TIME:"
+
+
+@dataclass(frozen=True, slots=True)
+class Trigger:
+    """One VALARM TRIGGER: relative to DTSTART or DUE, or an absolute UTC instant."""
+
+    text: str
+    # "START" or "END" for a relative trigger (RFC 5545 3.2.14), None for an absolute one.
+    related: str | None
+
+
+def parse_trigger(text: str) -> Trigger:
+    """Read one RFC 5545 TRIGGER value (W279).
+
+    ⚑ Accepted, as iCalendar writes them:
+
+        -PT15M                          15 minutes before DTSTART (RELATED=START is the default)
+        RELATED=START:-PT15M            the same, said explicitly
+        RELATED=END:-PT2H               2 hours before DUE (a VTODO's END is its DUE)
+        VALUE=DATE-TIME:20261001T200000Z  an absolute instant, UTC only (RFC 5545 3.8.6.3)
+
+    Returns:
+        the trigger, its text unchanged.
+
+    Raises:
+        RefusedError: for a malformed duration, an absolute time that is not UTC, or anything else.
+
+    """
+    if text.startswith(_ABSOLUTE):
+        stamp = text.removeprefix(_ABSOLUTE)
+        timed = _TIME.fullmatch(stamp)
+        if timed is None or not timed[7]:
+            msg = f"{text!r}: an absolute TRIGGER must be a UTC DATE-TIME, YYYYMMDDTHHMMSSZ"
+            raise RefusedError(msg)
+        _instant(timed, ZoneInfo("UTC"))
+        return Trigger(text, None)
+    related, duration = "START", text
+    for prefix in _RELATED:
+        if text.startswith(prefix):
+            related, duration = (
+                prefix.removeprefix("RELATED=").rstrip(":"),
+                text.removeprefix(prefix),
+            )
+    if _DURATION.fullmatch(duration) is None:
+        msg = (
+            f"{text!r} is not an RFC 5545 TRIGGER (a duration like -PT15M, or VALUE=DATE-TIME:...Z)"
+        )
+        raise RefusedError(msg)
+    return Trigger(text, related)
+
+
 def parse(text: str) -> TimeValue:
     """Read one RFC 5545 DATE or DATE-TIME, refusing a floating time.
 
