@@ -161,3 +161,20 @@ venv_from_hub(
     python_version_short = "3.13",
     srcs = glob(["src/mikemol/icsstruct/**"]),
 )
+
+# W349: this distribution's built venv, checked by @mikemol_rules_py's venv_check, as
+# //gmailstruct:venv. The tests are staged too, because the check collects the suite with the venv.
+sh_test(
+    name = "venv",
+    srcs = ["@mikemol_rules_py//:venv_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location @mikemol_rules_py//:venv_check.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "@mikemol_rules_py//:venv_check.py",
+    ] + glob(["tests/**/*.py", "tests/fixtures/*.ics", "stubs/**"]),
+    size = "small",
+)
