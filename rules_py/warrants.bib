@@ -1,0 +1,62 @@
+% warrants.bib — one claim PER TEST FUNCTION in the python rules atom's suite (W341).
+%
+% The atom's one test module, `test_venv_check.py`, sits beside `venv_check.py`, the check each
+% distribution runs over its own built `.venv`. The claims are transcribed from the test
+% docstrings. The checks run with the hooks venv's interpreter, which carries the same pytest pin
+% the `//:test_venv_check` target stages.
+%
+% Keying convention: rules-py-<section>-<test name minus its `test_` prefix, hyphenated>.
+
+@misc{rules-py-venv-check-good-venv-has-no-findings,
+  section = {venv_check},
+  claim   = {The positive control: a venv with every property reports nothing.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_good_venv_has_no_findings}
+}
+
+@misc{rules-py-venv-check-missing-interpreter-is-named,
+  section = {venv_check},
+  claim   = {A venv with no bin/python3 is one finding, before anything tries to run it.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_missing_interpreter_is_named}
+}
+
+@misc{rules-py-venv-check-relative-link-is-named,
+  section = {venv_check},
+  claim   = {A relative link is valid at one depth only, so it is a finding even where it resolves.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_relative_link_is_named}
+}
+
+@misc{rules-py-venv-check-missing-pythonhome-note-is-named,
+  section = {venv_check},
+  claim   = {Without pythonhome.runfiles a sandboxed run has no PYTHONHOME, so the note is required.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_missing_pythonhome_note_is_named}
+}
+
+@misc{rules-py-venv-check-note-naming-another-repo-is-named,
+  section = {venv_check},
+  claim   = {The link and the note are two answers to one question, and they must agree.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_note_naming_another_repo_is_named}
+}
+
+@misc{rules-py-venv-check-hardlinked-interpreter-is-accepted,
+  section = {venv_check},
+  claim   = {Under a sandbox bazel stages a regular file, not a link; the note still decides.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_hardlinked_interpreter_is_accepted}
+}
+
+@misc{rules-py-venv-check-missing-own-package-is-named,
+  section = {venv_check},
+  claim   = {A venv that runs but cannot import mikemol.<dist> is missing its srcs.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_missing_own_package_is_named}
+}
+
+@misc{rules-py-venv-check-shell-run-entry-is-named,
+  section = {venv_check},
+  claim   = {A console script with no shebang is run by the shell, and that is a finding.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_shell_run_entry_is_named}
+}
+
+@misc{rules-py-venv-check-usage-error-is-exit-2,
+  section = {venv_check},
+  claim   = {Too few arguments is a usage error, never a pass.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_usage_error_is_exit_2}
+}

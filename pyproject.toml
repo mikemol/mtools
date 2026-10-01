@@ -84,6 +84,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+# ⚑ RUNNING THE VENV IS THE VENV CHECK'S WHOLE JOB (W341): it starts the interpreter, imports the
+# package, and runs each console script through /bin/sh, with argv lists built from paths.
+"venv_check.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ ITS TEST ASSERTS, and builds venvs from the interpreter running it; no subprocess of its own.
+"test_venv_check.py" = ["assert"]
 # ⚑ A TEST MODULE ASSERTS; that is what pytest reads. And its GIT_* witness builds a real decoy
 # repository, because the hazard under test is git following an exported GIT_DIR — `git` is
 # resolved from PATH as `ratchet/tests/test_remap.py` resolves it, for the same reason.

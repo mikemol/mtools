@@ -132,6 +132,26 @@ py_test(
     deps = [root_dev_requirement("pytest")],
 )
 
+# W341: the venv check, tested beside it the same way. Its fixtures build venvs in tmp_path from
+# the interpreter running the test, so it needs no built distribution.
+py_test(
+    name = "test_venv_check",
+    srcs = [
+        "@mikemol_rules_py//:test_venv_check.py",
+        "@mikemol_rules_py//:venv_check.py",
+        "@mikemol_rules_py//:pytest_main.py",
+    ],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location @mikemol_rules_py//:test_venv_check.py)",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ],
+    size = "small",
+    deps = [root_dev_requirement("pytest")],
+)
+
 # ⚑⚑⚑ THE ROOT SCRIPTS MEET THE DISTRIBUTIONS' BAR, AND UNTIL THESE TARGETS NOTHING HELD THEM TO
 # ANY. Each distribution's `//<dist>:ruff` and `//<dist>:mypy` stop at its own `pyproject.toml`, so
 # `mutate_runner.py`, `pytest_main.py`, `mypy_runner.py`, `bep_probe.py`, `count_test_functions.py`
@@ -150,6 +170,8 @@ _ROOT_PY = glob(["*.py"], allow_empty = False)
 # mypy target below.
 _ATOM_PY = [
     "@mikemol_rules_py//:pytest_main.py",
+    "@mikemol_rules_py//:venv_check.py",
+    "@mikemol_rules_py//:test_venv_check.py",
     "@mikemol_check_mypy//:mypy_runner.py",
     "@mikemol_check_mutants//:mutate_runner.py",
     "@mikemol_check_mutants//:test_mutate_runner.py",
@@ -202,7 +224,7 @@ sh_test(
         timeout = "long",
     )
     for atom, scripts in [
-        ("rules_py", ["pytest_main.py"]),
+        ("rules_py", ["pytest_main.py", "venv_check.py", "test_venv_check.py"]),
         ("check_mypy", ["mypy_runner.py"]),
         ("check_mutants", ["mutate_runner.py", "test_mutate_runner.py"]),
     ]

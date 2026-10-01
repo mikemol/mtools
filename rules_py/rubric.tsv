@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the python rules atom's warrant set, in document order (W341).
+# The gate diffs this file's first column against every `section = {…}` in this atom's
+# `warrants.bib`, exactly as it does for each distribution.
+# key <TAB> heading title
+venv_check	The Venv Check: Every Property venv.bzl Promises, Run on One Distribution's Built Venv

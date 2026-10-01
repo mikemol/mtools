@@ -3,8 +3,12 @@
 #
 # The python rules atom (mtools:W323): load `@mikemol_rules_py//:venv.bzl`, and name
 # `@mikemol_rules_py//:pytest_main.py` as a py_test's main and in its srcs.
+# W341: `venv_check.py` checks one distribution's built `.venv`; each distribution runs it over its
+# own (W342). Its test is run by the root's //:test_venv_check until the atom has a gate.
 exports_files([
     "mypy.ini",
     "pytest_main.py",
+    "test_venv_check.py",
     "venv.bzl",
+    "venv_check.py",
 ])
