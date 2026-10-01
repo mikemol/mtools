@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import base64
 import http.client
 import json
 import threading
@@ -316,3 +317,31 @@ def test_failed_read_is_exit_1_naming_the_status_and_no_token(
     assert "HTTP 403" in printed.err
     for planted in (_REFRESH, _ACCESS, _SECRET):
         assert planted not in printed.out + printed.err
+
+
+_EML = b"From: a@example.invalid\r\nSubject: s\r\n\r\nbody\r\n"
+_OWNER_ONLY = 0o600
+
+
+def _raw_get(url: str, access: str) -> tuple[int, bytes]:
+    del url, access
+    encoded = base64.urlsafe_b64encode(_EML).rstrip(b"=").decode()
+    return _OK, _dumps({"raw": encoded}).encode()
+
+
+def test_raw_writes_the_exact_bytes_owner_only(tmp_path: Path) -> None:
+    """The .eml holds Gmail's bytes exactly and is readable by its owner alone."""
+    out = tmp_path / "m.eml"
+    argv = [*_read_argv(tmp_path, "raw", "a1"), "--out", str(out)]
+    assert cli.main(argv, post=_exchanged, get=_raw_get, runner=_decrypted) == 0
+    assert out.read_bytes() == _EML
+    assert out.stat().st_mode & 0o777 == _OWNER_ONLY
+
+
+def test_raw_never_overwrites_an_existing_file(tmp_path: Path) -> None:
+    """An existing --out is refused with exit 1 and left as it was."""
+    out = tmp_path / "m.eml"
+    out.write_bytes(b"old")
+    argv = [*_read_argv(tmp_path, "raw", "a1"), "--out", str(out)]
+    assert cli.main(argv, post=_exchanged, get=_raw_get, runner=_decrypted) == 1
+    assert out.read_bytes() == b"old"

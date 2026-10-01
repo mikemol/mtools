@@ -410,3 +410,48 @@
   claim  = {A refused request ends the run with exit 1 and its status, and leaks no token.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_failed_read_is_exit_1_naming_the_status_and_no_token},
 }
+
+@misc{gmailstruct-fetch-raw-returns-the-exact-bytes-gmail-holds,
+  section = {fetch},
+  title  = {The .eml is the decoded raw field byte for byte, so its SHA-256 is Gmail's message's},
+  claim  = {The .eml is the decoded raw field byte for byte, so its SHA-256 is Gmail's message's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_raw_returns_the_exact_bytes_gmail_holds},
+}
+
+@misc{gmailstruct-fetch-raw-parses-as-an-rfc-822-message-with-its-headers,
+  section = {fetch},
+  title  = {The bytes parse as RFC 822 with headers intact, folded Subject included},
+  claim  = {The bytes parse as RFC 822 with headers intact, folded Subject included. life's
+            scripts/eml_summary.py parses with email.policy.default, whose stubs strict
+            mypy reads as Any; the byte-identity test above is the stronger claim, since
+            that script then receives exactly Gmail's bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_raw_parses_as_an_rfc_822_message_with_its_headers},
+}
+
+@misc{gmailstruct-fetch-raw-that-is-not-base64url-is-refused-unquoted,
+  section = {fetch},
+  title  = {A raw field that does not decode strictly is an error that does not quote the field},
+  claim  = {A raw field that does not decode strictly is an error that does not quote the field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_raw_that_is_not_base64url_is_refused_unquoted},
+}
+
+@misc{gmailstruct-fetch-response-without-raw-is-refused,
+  section = {fetch},
+  title  = {A 200 with no raw field is an error, never an empty .eml},
+  claim  = {A 200 with no raw field is an error, never an empty .eml.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_response_without_raw_is_refused},
+}
+
+@misc{gmailstruct-cli-raw-writes-the-exact-bytes-owner-only,
+  section = {cli},
+  title  = {The .eml holds Gmail's bytes exactly and is readable by its owner alone},
+  claim  = {The .eml holds Gmail's bytes exactly and is readable by its owner alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_raw_writes_the_exact_bytes_owner_only},
+}
+
+@misc{gmailstruct-cli-raw-never-overwrites-an-existing-file,
+  section = {cli},
+  title  = {An existing --out is refused with exit 1 and left as it was},
+  claim  = {An existing --out is refused with exit 1 and left as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_raw_never_overwrites_an_existing_file},
+}

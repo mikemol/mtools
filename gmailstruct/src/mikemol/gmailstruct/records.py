@@ -215,12 +215,17 @@ def _where(path: tuple[int, ...]) -> str:
     return "part " + (".".join(str(i) for i in path) if path else "root")
 
 
-def _decode(text: str) -> bytes:
-    try:
-        return base64.b64decode(text + "=" * (-len(text) % 4), altchars=b"-_", validate=True)
-    except binascii.Error as err:
-        msg = f"body.data is not base64url: {err}"
-        raise _RefusedError(msg) from err
+def decode_base64url(text: str) -> bytes:
+    """Decode Gmail's base64url strictly, padding or not (W335, shared with fetch.raw in W358).
+
+    Text a lenient decoder would quietly repair is refused, never passed on in a changed form:
+    binascii.Error (a ValueError) propagates from the strict decode.
+
+    Returns:
+        the decoded bytes.
+
+    """
+    return base64.b64decode(text + "=" * (-len(text) % 4), altchars=b"-_", validate=True)
 
 
 def _optional_text(rec: dict[str, object], key: str) -> str | None:
@@ -233,12 +238,17 @@ def _part(node: dict[str, object], path: tuple[int, ...]) -> Part:
         msg = "body is missing or not an object"
         raise _RefusedError(msg)
     data = _optional_text(body, "data")
+    try:
+        decoded = None if data is None else decode_base64url(data)
+    except binascii.Error as err:
+        msg = f"body.data is not base64url: {err}"
+        raise _RefusedError(msg) from err
     return Part(
         path=path,
         part_id=_text(node, "partId"),
         mime_type=_text(node, "mimeType"),
         filename=_text(node, "filename"),
-        data=None if data is None else _decode(data),
+        data=decoded,
         attachment_id=_optional_text(body, "attachmentId"),
     )
 

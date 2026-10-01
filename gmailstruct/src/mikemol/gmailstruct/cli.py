@@ -34,7 +34,7 @@ from urllib.parse import parse_qs, urlencode, urlsplit
 
 from mikemol.gmailstruct.auth import DecryptError, ExchangeError, decrypt, exchange
 from mikemol.gmailstruct.consent import ConsentError, consent, read_client
-from mikemol.gmailstruct.fetch import FetchError, search, show
+from mikemol.gmailstruct.fetch import FetchError, raw, search, show
 from mikemol.gmailstruct.records import Listed, Message, Unreadable
 
 if TYPE_CHECKING:
@@ -200,15 +200,28 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("--port", type=int, default=0, help="loopback port (0: any free one)")
     run.add_argument("--timeout", type=float, default=300.0, help="seconds to wait for consent")
     run.add_argument("--age", default="age", help="the age binary")
-    for name, what in (("search", "QUERY"), ("show", "ID")):
-        read = sub.add_parser(name, help=f"{name} by {what}; one JSON record per line")
+    for name, what in (("search", "QUERY"), ("show", "ID"), ("raw", "ID")):
+        read = sub.add_parser(name, help=f"{name} by {what}")
         read.add_argument("target", metavar=what)
         read.add_argument("--client", required=True, help="Google installed-client JSON")
         read.add_argument("--token", required=True, help="the .age refresh token from consent")
         read.add_argument("--identity", required=True, help="the YubiKey age identity stub")
         read.add_argument("--age", default="age", help="the age binary")
-        read.add_argument("--max-pages", type=int, default=10, help="search: pages at most")
+        if name == "search":
+            read.add_argument("--max-pages", type=int, default=10, help="pages at most")
+        if name == "raw":
+            read.add_argument("--out", required=True, help="the .eml file to create (mode 600)")
     return parser
+
+
+def _write_new(out: Path, data: bytes) -> None:
+    """Create `out` owner-only and write `data`; an existing file is refused, never overwritten.
+
+    O_EXCL makes the refusal and the creation one step, so nothing can appear in between.
+    """
+    descriptor = os.open(out, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "wb") as handle:
+        handle.write(data)
 
 
 def _consent(opts: dict[str, object], browser: Browser, post: Poster) -> int:
@@ -260,6 +273,11 @@ def _read(opts: dict[str, object], effects: tuple[Runner, Poster, Getter]) -> in
     client_id, secret = read_client(Path(str(opts["client"])).read_text(encoding="utf-8"))
     access, _expires = exchange(refresh, client_id, secret, post)
     target = str(opts["target"])
+    if opts["command"] == "raw":
+        out = Path(str(opts["out"]))
+        _write_new(out, raw(target, access, get))
+        sys.stderr.write(f"mikemol-gmail: wrote {out}\n")
+        return 0
     records: list[Listed | Message | Unreadable]
     if opts["command"] == "show":
         records = [show(target, access, get)]

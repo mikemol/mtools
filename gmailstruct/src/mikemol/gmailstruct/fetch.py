@@ -15,12 +15,20 @@ else is refused before a request is made.
 
 from __future__ import annotations
 
+import binascii
 import json
 from collections.abc import Callable
 from typing import cast
 from urllib.parse import urlencode
 
-from mikemol.gmailstruct.records import Listed, Message, Unreadable, message, pages
+from mikemol.gmailstruct.records import (
+    Listed,
+    Message,
+    Unreadable,
+    decode_base64url,
+    message,
+    pages,
+)
 
 API = "https://gmail.googleapis.com/gmail/v1/users/me/messages"
 _OK = 200
@@ -87,3 +95,39 @@ def show(msg_id: str, access: str, get: Getter) -> Message | Unreadable:
         msg = f"fetching message {msg_id} failed: HTTP {status}"
         raise FetchError(msg)
     return message(_json(body))
+
+
+def raw(msg_id: str, access: str, get: Getter) -> bytes:
+    """Fetch one message as the exact RFC 822 bytes Gmail holds (format=raw).
+
+    ⚑ THE BYTES ARE EVIDENCE. life's scripts/eml_summary.py hashes the .eml (W358), so nothing
+    here normalizes, re-encodes or re-wraps them: they are the base64url Gmail returned, decoded
+    strictly, and nothing else.
+
+    Returns:
+        the message bytes.
+
+    Raises:
+        FetchError: when the id is not a plain identifier, the request returns anything but 200,
+            or the response has no `raw` field that decodes as base64url. No message quotes the
+            body.
+
+    """
+    if not msg_id.isascii() or not msg_id.isalnum():
+        msg = "a message id is letters and digits only"
+        raise FetchError(msg)
+    status, body = get(f"{API}/{msg_id}?{urlencode({'format': 'raw'})}", access)
+    if status != _OK:
+        msg = f"fetching message {msg_id} failed: HTTP {status}"
+        raise FetchError(msg)
+    value = _json(body)
+    fields = cast("dict[str, object]", value) if isinstance(value, dict) else {}
+    text = fields.get("raw")
+    if not isinstance(text, str) or not text:
+        msg = f"message {msg_id} came back with no raw field"
+        raise FetchError(msg)
+    try:
+        return decode_base64url(text)
+    except binascii.Error:
+        msg = f"message {msg_id}'s raw field is not base64url"
+        raise FetchError(msg) from None
