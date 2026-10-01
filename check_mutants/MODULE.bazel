@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑ THE MUTATION CHECK ATOM (mtools:W326, plan .claude/design/W317-split-plan.md): mutate_check.sh
+# and mutate_runner.py, with the runner's own test and its warrant ledger (warrants.bib,
+# rubric.tsv). That ledger was the root's whole ledger: 5 warrants for test_mutate_runner's 5
+# functions. The commit gate counts it here because W328 made atoms members.
+#
+# A module repo composes it into its gate:
+#     sh_test(name = "mutants", srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
+#             args = [..., "$(location @mikemol_check_mutants//:mutate_runner.py)", ...],
+#             data = ["@mikemol_check_mutants//:mutate_runner.py", ...])
+module(name = "mikemol_check_mutants", version = "0.1.0")

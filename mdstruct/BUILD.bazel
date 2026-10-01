@@ -173,15 +173,15 @@ sh_test(
 # pytest target above already carries this pair; a sibling that reads the same conftest must too.
 sh_test(
     name = "mutants",
-    srcs = ["//:mutate_check.sh"],
+    srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
-        "$(location //:mutate_runner.py)",
+        "$(location @mikemol_check_mutants//:mutate_runner.py)",
     ],
     data = [
         "pyproject.toml",
         ":.venv",
-        "//:mutate_runner.py",
+        "@mikemol_check_mutants//:mutate_runner.py",
         "@pandoc//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     env = {"PANDOC_BIN": "$(location @pandoc//:bin)"},

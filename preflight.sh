@@ -240,8 +240,15 @@ case "$_rc" in
     3) fail=1; say "root: ruff/mypy — the gate will refuse this" ;;
     *) fail=1; say "root: bazel EXITED $_rc — the checks did not run; this is not a clean tree" ;;
 esac
-"$root/count_test_functions.py" --pairing "$root" \
-    || { fail=1; say "root: warrant pairing — the gate will refuse this"; }
+# ⚑ THE ROOT AND THE ATOMS ARE PAIRED WHEN THEY CARRY A LEDGER, as the gate pairs them (W328,
+# W326). The root's ledger moved to check_mutants with the test it warranted.
+for _f in "$root"/*/MODULE.bazel "$root/MODULE.bazel"; do
+    _m="$(dirname "$_f")"
+    [ -L "$_m" ] && continue
+    [ -f "$_m/warrants.bib" ] || continue
+    "$root/count_test_functions.py" --pairing "$_m" \
+        || { fail=1; say "$_m: warrant pairing — the gate will refuse this"; }
+done
 
 if [ "$fail" -ne 0 ]; then
     say "⚑ the gate WOULD REFUSE, and it stops at the FIRST failing check — fix all of the above."

@@ -655,12 +655,14 @@ done
 # its verdict, and `run_checked` replays them under the refusal.
 # ⚑ THE SAME PARSE THE COUNT USES (`count_test_functions.py`), so the two figures cannot drift.
 _pairing=()
-for dist in $_dists .; do
+for dist in $_dists; do
   if [ -d "$staged/$dist" ]; then _pairing+=("$staged/$dist"); fi
 done
-# ⚑ ATOMS THAT CARRY A LEDGER ARE PAIRED TOO (W328). One without a ledger has no tests, or the
-# 1:1 loop above has already refused it.
-for dist in $_atoms; do
+# ⚑ THE ROOT AND THE ATOMS ARE PAIRED WHEN THEY CARRY A LEDGER (W328, W326). The root's whole
+# ledger moved to check_mutants with the test it warranted, so the root now has neither; the
+# pairing refuses a member with no test functions by design, so a ledger-less member is left out.
+# One without a ledger has no tests, or the 1:1 loop above has already refused it.
+for dist in . $_atoms; do
   if [ -f "$staged/$dist/warrants.bib" ]; then _pairing+=("$staged/$dist"); fi
 done
 run_checked "every warrant check names a test that exists, and every test is named" \

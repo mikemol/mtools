@@ -2,3 +2,4 @@ audiostruct/.venv
 rules_py
 check_ruff
 check_mypy
+check_mutants

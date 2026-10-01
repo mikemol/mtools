@@ -95,15 +95,15 @@ sh_test(
 # ⚑ MEASURED BEFORE PROPOSING: 104 def-sites, 104 KILLED, 0 SURVIVED, 0 ERRORED.
 sh_test(
     name = "mutants",
-    srcs = ["//:mutate_check.sh"],
+    srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
-        "$(location //:mutate_runner.py)",
+        "$(location @mikemol_check_mutants//:mutate_runner.py)",
     ],
     data = [
         "pyproject.toml",
         ":.venv",
-        "//:mutate_runner.py",
+        "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
 )

@@ -301,15 +301,15 @@ sh_test(
 # bare interpreter and cannot detect a wrong-interpreter defect.
 sh_test(
     name = "mutants",
-    srcs = ["//:mutate_check.sh"],
+    srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
-        "$(location //:mutate_runner.py)",
+        "$(location @mikemol_check_mutants//:mutate_runner.py)",
     ],
     data = [
         "pyproject.toml",
         ":.venv",
-        "//:mutate_runner.py",
+        "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
 )

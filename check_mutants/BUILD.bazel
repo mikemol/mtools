@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The mutation check atom (mtools:W326). The runner's test is run by the root's
+# //:test_mutate_runner, by these labels, until the atom carries its own pytest.
+exports_files([
+    "mutate_check.sh",
+    "mutate_runner.py",
+    "mypy.ini",
+    "test_mutate_runner.py",
+])

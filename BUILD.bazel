@@ -17,6 +17,7 @@
 _ATOM_SH = [
     "@mikemol_check_ruff//:ruff_check.sh",
     "@mikemol_check_mypy//:mypy_check.sh",
+    "@mikemol_check_mutants//:mutate_check.sh",
 ]
 
 # ⚑⚑⚑ THE GATE'S OWN SHELL IS A TEST TARGET, because it was previously checked by nothing. This
@@ -77,7 +78,6 @@ exports_files(glob(
     allow_empty = False,
 ) + [
     ".bazelrc",
-    "mutate_runner.py",
     "count_test_functions.py",
     ".claude/settings.json",
     ".claude/skills/struct-tools/SKILL.md",
@@ -110,11 +110,23 @@ exports_files(["BUILD.bazel"])
 load("@hooks_dev//:requirements.bzl", root_dev_requirement = "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 
+# ⚑ THE RUNNER AND ITS TEST NOW LIVE IN THE MUTATION ATOM (W326); this target still runs them, by
+# label. pytest's default `prepend` import mode puts the test file's own directory on sys.path, so
+# `import mutate_runner` still resolves beside it, in the atom's runfiles directory.
 py_test(
     name = "test_mutate_runner",
-    srcs = ["test_mutate_runner.py", "mutate_runner.py", "@mikemol_rules_py//:pytest_main.py"],
+    srcs = [
+        "@mikemol_check_mutants//:test_mutate_runner.py",
+        "@mikemol_check_mutants//:mutate_runner.py",
+        "@mikemol_rules_py//:pytest_main.py",
+    ],
     main = "@mikemol_rules_py//:pytest_main.py",
-    args = ["$(location test_mutate_runner.py)", "-q", "-p", "no:cacheprovider"],
+    args = [
+        "$(location @mikemol_check_mutants//:test_mutate_runner.py)",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ],
     size = "small",
     deps = [root_dev_requirement("pytest")],
 )
@@ -138,6 +150,8 @@ _ROOT_PY = glob(["*.py"], allow_empty = False)
 _ATOM_PY = [
     "@mikemol_rules_py//:pytest_main.py",
     "@mikemol_check_mypy//:mypy_runner.py",
+    "@mikemol_check_mutants//:mutate_runner.py",
+    "@mikemol_check_mutants//:test_mutate_runner.py",
 ]
 
 sh_test(
@@ -181,14 +195,14 @@ sh_test(
         ],
         data = [
             "@mikemol_%s//:mypy.ini" % atom,
-            "@mikemol_%s//:%s" % (atom, script),
             "//hooks:mypy_runner",
-        ],
+        ] + ["@mikemol_%s//:%s" % (atom, script) for script in scripts],
         size = "small",
         timeout = "long",
     )
-    for atom, script in [
-        ("rules_py", "pytest_main.py"),
-        ("check_mypy", "mypy_runner.py"),
+    for atom, scripts in [
+        ("rules_py", ["pytest_main.py"]),
+        ("check_mypy", ["mypy_runner.py"]),
+        ("check_mutants", ["mutate_runner.py", "test_mutate_runner.py"]),
     ]
 ]

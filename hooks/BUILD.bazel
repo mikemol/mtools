@@ -34,6 +34,11 @@ py_library(
     visibility = ["//visibility:public"],
 )
 
+# ⚑ THE TEST MODULES THAT SPAWN NESTED PYTEST PROCESSES, sized `medium` below (W329). Each is
+# listed with its measurement: test_grade, 21 cases in 5.3 s alone, and a 60 s TIMEOUT after 7
+# cases under a full //... run, twice on 2026-10-01.
+_SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
+
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. The thesis in MODULE.bazel is that a
 # pytest case and a paperkit witness are the same object; this is where that stops being prose. A
 # failing module names itself rather than collapsing into one red suite target.
@@ -207,10 +212,17 @@ py_library(
         ] + glob(["tests/test_*.py"]),
         env = {"RUFF_BIN": "$(location @mikemol_check_ruff//:bin)"},
 
-        # ⚑ SMALL IS A DECLARATION, NOT A GUESS: every module here runs in under two seconds,
-        # and bazel's default of `medium` reserves a timeout budget nothing uses. An honest
-        # size is what lets a genuinely slow witness stand out later instead of blending in.
-        size = "small",
+        # ⚑ SMALL IS A DECLARATION, NOT A GUESS: bazel's default of `medium` reserves a timeout
+        # budget nothing uses, and an honest size is what lets a genuinely slow witness stand
+        # out instead of blending in.
+        # ⚑⚑ AND IT HAD STOPPED BEING TRUE FOR ONE MODULE (W329). The note here said "every module
+        # runs in under two seconds". test_grade runs 21 cases in 5.3 s ALONE, because each
+        # sandbox case grades arms by spawning nested pytest processes. In a full `//...` run
+        # (W326's gate, 2026-10-01) the mutation grids saturate all 24 cores, and it timed out at
+        # small's 60 s after 7 cases, twice. Not a hang: slower startup for every nested process.
+        # A module that spawns nested pytest gets `medium` (300 s). The operator's rule: no
+        # wall-clock-sensitive tests.
+        size = "medium" if src in _SPAWNS_NESTED_PYTEST else "small",
         deps = [
             ":hooks",
             dev_requirement("pytest"),
@@ -311,15 +323,15 @@ sh_test(
 # rationale; //mdstruct:mutants is the F-arm (real deps).
 sh_test(
     name = "mutants",
-    srcs = ["//:mutate_check.sh"],
+    srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
-        "$(location //:mutate_runner.py)",
+        "$(location @mikemol_check_mutants//:mutate_runner.py)",
     ],
     data = [
         "pyproject.toml",
         ":.venv",
-        "//:mutate_runner.py",
+        "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
 )
