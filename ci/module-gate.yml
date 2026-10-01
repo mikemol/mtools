@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑ DRAFT, NOT WIRED, NOT YET VALIDATED (mtools:W331). The reusable gate workflow every module repo
+# under mikemol-tools will call. It lives at ci/ deliberately: GitHub acts only on
+# .github/workflows/, and the self-hosted runner it names does not exist yet (luthen-observability
+# W257). It moves to the workflows atom's repo with the icsstruct pilot (W317). actionlint is not
+# installed here, so this file has not been checked by it: W332 puts it under actionlint first.
+#
+# A module repo's own workflow composes it:
+#     jobs:
+#       gate:
+#         uses: mikemol-tools/workflows/.github/workflows/module-gate.yml@<sha>
+#         with: {runner-class: default}
+#
+# ⚑⚑ EVERY JOB IS TOLD ITS SIZE: bazel, and anything sizing itself from os.cpu_count(), sees the
+# HOST's cores and RAM inside a pod, never the cgroup's. Measured on the 24-core host:
+# - W330: audiostruct with `--jobs=8` alone still peaked at 17.11 GiB anon and 8.8G swap, because
+#   check_mutants' runner sizes its pool from os.cpu_count() (24) unless MUTATE_JOBS is set.
+#   Adding MUTATE_JOBS=8: 9.00 GiB anon, swap 0, 2m01s worst case (nothing reused).
+# - W320: icsstruct, uncapped: 1.48 GiB anon cold.
+# Classes (luthen-observability W257, 2026-10-01):
+# - large: 12 GiB limit (9.0 measured plus about a third), at least 20 GiB scratch (the output base
+#   is 13G), one job at a time;
+# - default: 4 GiB limit.
+#
+# ⚑ CACHE FENCE (luthen's fifth fence): a pull request READS the shared cache and never writes
+# it. Only pushes to stage and main write, into their own remote_instance_name.
+
+name: module-gate
+
+on:
+  workflow_call:
+    inputs:
+      runner-class:
+        description: "default (4 GiB) or large (12 GiB, one at a time); see the header"
+        type: string
+        default: default
+      targets:
+        description: "bazel target pattern for the module's gate"
+        type: string
+        default: "//..."
+      cache-endpoint:
+        description: "the cluster cache (grpc[s]://...), from luthen-observability W257"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    # ⚑ The labels are luthen-observability's to name (W257). These are placeholders until then.
+    runs-on: [self-hosted, mikemol-tools, "${{ inputs.runner-class }}"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # ⚑⚑ NO `${{ }}` INSIDE A `run:` BLOCK. Expressions are pasted into the script before the
+      # shell parses it, so an input or a branch name carrying shell syntax would run as code
+      # (GitHub's documented script-injection pattern). Every value reaches the shell through `env:`
+      # and is quoted there.
+      - name: gate
+        env:
+          RUNNER_CLASS: ${{ inputs.runner-class }}
+          TARGETS: ${{ inputs.targets }}
+          CACHE_ENDPOINT: ${{ inputs.cache-endpoint }}
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+        # ⚑ One place sets every cap, so a class cannot pass bazel's and forget the runner's.
+        # default: unmeasured beyond icsstruct (1.48 GiB uncapped). These are a safe fraction of
+        # 4 GiB, to be re-measured per module as each one moves (W317).
+        # ⚑ A pull request reads the cache and never uploads. stage and main write into their own
+        # instance. Downloads go through the cluster's remote asset cache, so a fresh pod's cold
+        # fetch hits the cluster, not the internet (W322: audiostruct's hub alone is 7.9G).
+        run: |
+          case "$RUNNER_CLASS" in
+            large)   caps=(--jobs=8 --local_resources=cpu=8 --local_resources=memory=8192 --test_env=MUTATE_JOBS=8) ;;
+            default) caps=(--jobs=4 --local_resources=cpu=4 --local_resources=memory=3072 --test_env=MUTATE_JOBS=4) ;;
+            *) echo "unknown runner-class '$RUNNER_CLASS': refusing rather than running uncapped" >&2; exit 1 ;;
+          esac
+          if [ "$EVENT" = "pull_request" ]; then
+            cache=(--remote_cache="$CACHE_ENDPOINT" --noremote_upload_local_results --remote_instance_name=pr)
+          else
+            cache=(--remote_cache="$CACHE_ENDPOINT" --remote_instance_name="$REF_NAME")
+          fi
+          bazel test "$TARGETS" "${caps[@]}" "${cache[@]}" \
+            --experimental_remote_downloader="$CACHE_ENDPOINT" \
+            --experimental_remote_downloader_local_fallback
