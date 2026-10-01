@@ -248,6 +248,16 @@ done
 # ⚑ AND IT REFUSES AN EMPTY DERIVATION RATHER THAN LOOPING ZERO TIMES. A glob that matched
 # nothing would make every check below a no-op and the gate would pass having examined nothing —
 # green over an empty population, which is the shape this whole file exists to refuse.
+# ⚑⚑ ATOMS ARE MEMBERS TOO (W328), DERIVED THE SAME WAY: a real directory carrying a MODULE.bazel.
+# The repo split moves shared machinery into Bazel modules (rules_py, check_ruff, check_mypy, ...),
+# which deliberately carry no pyproject.toml, so `$_dists` cannot see them. Without this, a test
+# moved into an atom (W326's test_mutate_runner.py) would leave the 1:1 ledger below checking
+# NOTHING for it: the root would hold warrants for tests that left, and the atom tests nobody counts.
+_atoms=""
+for _f in */MODULE.bazel; do
+  _d="${_f%/MODULE.bazel}"
+  [ -L "$_d" ] || _atoms="$_atoms$_d "
+done
 case "$_dists" in
   ''|'* ')
     say "no distribution found by */pyproject.toml — cannot run the gate, commit refused"
@@ -557,8 +567,21 @@ done
 # the root's lint-only `pyproject.toml` does not match, so no loop here ever saw it. The root keeps
 # its own `warrants.bib` and `rubric.tsv`, and `count_test_functions.py` reads `test_*.py` at the
 # top of whatever it is handed — so the checks below apply to it unchanged.
-for dist in $_dists .; do
+for dist in $_dists . $_atoms; do
   [ -d "$staged/$dist" ] || continue
+  # ⚑⚑ AN ATOM WITH NO LEDGER IS FINE ONLY IF IT HAS NO TESTS (W328). Most atoms carry none
+  # (rules_py, check_ruff, check_mypy). One that grows a test without a warrants.bib is refused
+  # here, rather than skipped: a test with no ledger is the unwarranted test this loop exists for.
+  if [ ! -f "$staged/$dist/warrants.bib" ]; then
+    t=$("$root/count_test_functions.py" "$staged/$dist")
+    if [ "$t" -ne 0 ]; then
+      say "$dist: $t test functions and no warrants.bib — every test must arrive warranted"
+      _wlog="$_witness_logs/warrant-ledger-$dist.log"
+      printf '%s test functions, no warrants.bib\n' "$t" > "$_wlog"
+      fail=1; note_failure "$dist: warrant ledger missing" "$_wlog"
+    fi
+    continue
+  fi
   # ⚑⚑⚑ ANCHORED, BECAUSE AN UNANCHORED `@misc{` COUNTS A QUOTATION AS A WARRANT. This is a corpus
   # whose `claim` fields QUOTE CODE, so a warrant claiming something about bibtex syntax puts the
   # entry delimiter inside a field and the ledger reads 177 against 176. ⚑ MEASURED on a fixture:
@@ -634,6 +657,11 @@ done
 _pairing=()
 for dist in $_dists .; do
   if [ -d "$staged/$dist" ]; then _pairing+=("$staged/$dist"); fi
+done
+# ⚑ ATOMS THAT CARRY A LEDGER ARE PAIRED TOO (W328). One without a ledger has no tests, or the
+# 1:1 loop above has already refused it.
+for dist in $_atoms; do
+  if [ -f "$staged/$dist/warrants.bib" ]; then _pairing+=("$staged/$dist"); fi
 done
 run_checked "every warrant check names a test that exists, and every test is named" \
   "$root/count_test_functions.py" --pairing "${_pairing[@]}"
