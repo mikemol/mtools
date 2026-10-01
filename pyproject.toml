@@ -47,6 +47,11 @@ target-version = "py313"
 # ⚑ THE ROOT'S RUFF STOPS AT THE ROOT. Each distribution already has its own config, and ruff picks
 # the nearest one per file, so this line matters only for directories that carry none.
 extend-exclude = ["bazel-*", "inbox", "findings", "patches", "rbe", ".claude"]
+# ⚑ rules_py/ IS THE ROOT OF ITS OWN BAZEL MODULE (`mikemol_rules_py`, W323), so its
+# `pytest_main.py` is a top-level script there, not a member of a package missing its __init__.py.
+# DECLARED, as the distributions declare theirs (INP001 is answered by namespace-packages, never
+# ignored). It leaves with the atom when the atom moves to its own repo.
+namespace-packages = ["rules_py"]
 
 [tool.ruff.lint]
 preview = true

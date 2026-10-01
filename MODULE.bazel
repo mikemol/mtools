@@ -34,6 +34,13 @@ that patch retires: ⟡mtools-drop-mypypath.
 
 module(name = "mtools", version = "0.1")
 
+# ⚑ THE PYTHON RULES ARE AN ATOM NOW (W323): `venv.bzl` and `pytest_main.py` live in the
+# `mikemol_rules_py` module under rules_py/, and every distribution loads them by that module's
+# name. Inside mtools a local_path_override serves it. When the atom moves to its own repo under
+# mikemol-tools (W317), this becomes a git_override pinned at a commit, and no BUILD changes.
+bazel_dep(name = "mikemol_rules_py", version = "0.1.0")
+local_path_override(module_name = "mikemol_rules_py", path = "rules_py")
+
 # ⚑ A HERMETIC PYTHON — "which python" is Bazel's, not the host's. Same version the distributions
 # declare (`requires-python = ">=3.13"`), so the interpreter that runs a witness is the interpreter
 # the package claims to support rather than whatever the caller's shell resolved.

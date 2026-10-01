@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑ THE FIRST ATOM OF THE SPLIT (mtools:W323, plan .claude/design/W317-split-plan.md): the bazel
+# python rules every module repo composes. `venv_from_hub` builds a distribution's venv from its
+# pip hub, and `pytest_main.py` is the entry point every per-module py_test runs, so pytest
+# collects rather than the module running as a script.
+#
+# It lives inside mtools for now, pulled in by the root module's `local_path_override`. When it
+# moves to its own repo under mikemol-tools, that override becomes a `git_override` pinned at a
+# commit, and no module's BUILD changes: they already load it by this module's name.
+module(name = "mikemol_rules_py", version = "0.1.0")
+
+# ⚑ venv.bzl NAMES rules_python's toolchain type (`@rules_python//python:toolchain_type`), and a
+# label resolves from the module that wrote it. MEASURED: without this, every distribution's
+# `.venv` failed analysis with "No repository visible as '@rules_python' from
+# '@@mikemol_rules_py+'". The version matches the root's pin, and the root's single_version_override
+# and patches still decide the one rules_python every module gets.
+bazel_dep(name = "rules_python", version = "2.3.3")

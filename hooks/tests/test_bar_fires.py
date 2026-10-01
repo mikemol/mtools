@@ -479,7 +479,7 @@ def test_the_bazel_test_rule_runs_pytest_rather_than_the_module() -> None:
     # is the point — an omission that happens to be harmless is still an omission.
     for name in _distributions():
         build = (root / name / "BUILD.bazel").read_text(encoding="utf-8")
-        assert 'main = "//:pytest_main.py"' in build, name
+        assert 'main = "@mikemol_rules_py//:pytest_main.py"' in build, name
         assert "main = src," not in build, name
 
 

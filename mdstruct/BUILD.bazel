@@ -5,7 +5,7 @@
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
 load("@mdstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
-load("//:venv.bzl", "venv_from_hub")
+load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@mdstruct_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
@@ -40,8 +40,8 @@ py_library(
 [
     py_test(
         name = src.removeprefix("tests/").removesuffix(".py"),
-        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
-        main = "//:pytest_main.py",
+        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "@mikemol_rules_py//:pytest_main.py",
         args = [
             "$(location " + src + ")",
             "-q",

@@ -8,7 +8,7 @@
 # not found". MEASURED: that failure names a file that EXISTS, so the missing package marker is
 # the blocker rather than the missing lock, which inverts the ordering assumed at first.
 
-exports_files(["pytest_main.py"])
+# ⚑ `pytest_main.py` moved to the python rules atom (W323): `@mikemol_rules_py//:pytest_main.py`.
 
 # ⚑⚑⚑ THE GATE'S OWN SHELL IS A TEST TARGET, because it was previously checked by nothing. This
 # file's `.githooks/pre-commit` runs ruff, mypy, pytest, the warrant ledger, the hermetic suite,
@@ -104,8 +104,8 @@ load("@rules_python//python:defs.bzl", "py_test")
 
 py_test(
     name = "test_mutate_runner",
-    srcs = ["test_mutate_runner.py", "mutate_runner.py", "pytest_main.py"],
-    main = "pytest_main.py",
+    srcs = ["test_mutate_runner.py", "mutate_runner.py", "@mikemol_rules_py//:pytest_main.py"],
+    main = "@mikemol_rules_py//:pytest_main.py",
     args = ["$(location test_mutate_runner.py)", "-q", "-p", "no:cacheprovider"],
     size = "small",
     deps = [root_dev_requirement("pytest")],
@@ -123,14 +123,20 @@ py_test(
 # the moment it exists, and `allow_empty = False` refuses a green over nothing.
 _ROOT_PY = glob(["*.py"], allow_empty = False)
 
+# ⚑ THE PYTHON RULES ATOM'S ONE SCRIPT IS STILL LINTED HERE (W323). It moved out of the root glob
+# into `@mikemol_rules_py`, which has no gate of its own until the ruff and mypy atoms exist
+# (W324, W325). Ruff takes files as arguments, so it keeps covering it. mypy reads its file list
+# from this pyproject and cannot: that gap is W325's to close, and it is named there.
+_ATOM_PY = ["@mikemol_rules_py//:pytest_main.py"]
+
 sh_test(
     name = "ruff",
     srcs = ["ruff_check.sh"],
     args = [
         "$(location @ruff//:bin)",
         "$(location :pyproject.toml)",
-    ] + ["$(location %s)" % f for f in _ROOT_PY],
-    data = ["pyproject.toml", "@ruff//:bin"] + _ROOT_PY,
+    ] + ["$(location %s)" % f for f in _ROOT_PY + _ATOM_PY],
+    data = ["pyproject.toml", "@ruff//:bin"] + _ROOT_PY + _ATOM_PY,
     size = "small",
 )
 

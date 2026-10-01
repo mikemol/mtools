@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The python rules atom (mtools:W323): load `@mikemol_rules_py//:venv.bzl`, and name
+# `@mikemol_rules_py//:pytest_main.py` as a py_test's main and in its srcs.
+exports_files([
+    "pytest_main.py",
+    "venv.bzl",
+])

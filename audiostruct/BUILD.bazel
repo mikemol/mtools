@@ -6,7 +6,7 @@
 # `@audiostruct_dev` is declared in MODULE.bazel beside this distribution's birth (W262).
 load("@audiostruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@audiostruct_gpu//:requirements.bzl", gpu_all_requirements = "all_requirements")
-load("//:venv.bzl", "venv_from_hub")
+load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 exports_files([
@@ -31,8 +31,8 @@ py_library(
 [
     py_test(
         name = src.removeprefix("tests/").removesuffix(".py"),
-        srcs = [src, "//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
-        main = "//:pytest_main.py",
+        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "@mikemol_rules_py//:pytest_main.py",
         args = [
             "$(location " + src + ")",
             "-q",
@@ -67,8 +67,8 @@ py_library(
 # never a skip.
 py_test(
     name = "test_stub_authority",
-    srcs = ["tests/test_stub_authority.py", "//:pytest_main.py"],
-    main = "//:pytest_main.py",
+    srcs = ["tests/test_stub_authority.py", "@mikemol_rules_py//:pytest_main.py"],
+    main = "@mikemol_rules_py//:pytest_main.py",
     args = [
         "$(location tests/test_stub_authority.py)",
         "-q",
@@ -91,8 +91,8 @@ py_test(
 # ⚑ The entry point's witness (W286) imports main, which imports whisperx_site: the gpu hub too.
 py_test(
     name = "test_main",
-    srcs = ["tests/test_main.py", "//:pytest_main.py"],
-    main = "//:pytest_main.py",
+    srcs = ["tests/test_main.py", "@mikemol_rules_py//:pytest_main.py"],
+    main = "@mikemol_rules_py//:pytest_main.py",
     args = [
         "$(location tests/test_main.py)",
         "-q",
@@ -116,8 +116,8 @@ py_test(
 # ⚑ The one import site's witness (W284) imports whisperx and torch, so it too takes the gpu hub.
 py_test(
     name = "test_whisperx_site",
-    srcs = ["tests/test_whisperx_site.py", "//:pytest_main.py"],
-    main = "//:pytest_main.py",
+    srcs = ["tests/test_whisperx_site.py", "@mikemol_rules_py//:pytest_main.py"],
+    main = "@mikemol_rules_py//:pytest_main.py",
     args = [
         "$(location tests/test_whisperx_site.py)",
         "-q",
