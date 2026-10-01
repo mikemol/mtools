@@ -176,3 +176,46 @@
   claim  = {The token reaches memory only: decrypting leaves the working directory empty.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_decrypt_writes_no_file},
 }
+
+@misc{gmailstruct-exchange-access-token-is-returned-with-its-lifetime,
+  section = {exchange},
+  title  = {The positive control: a 200 with both fields gives the token and its lifetime, in memory},
+  claim  = {The positive control: a 200 with both fields gives the token and its lifetime, in
+            memory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_access_token_is_returned_with_its_lifetime},
+}
+
+@misc{gmailstruct-exchange-request-is-the-refresh-grant-to-googles-endpoint,
+  section = {exchange},
+  title  = {One POST to the token endpoint, carrying the refresh-token grant and the client pair},
+  claim  = {One POST to the token endpoint, carrying the refresh-token grant and the client pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_request_is_the_refresh_grant_to_googles_endpoint},
+}
+
+@misc{gmailstruct-exchange-refused-grant-names-the-oauth-error-and-no-secret,
+  section = {exchange},
+  title  = {A 400 names its status and OAuth code; an echoed body never reaches the traceback},
+  claim  = {A 400 names its status and OAuth code; an echoed body never reaches the traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_refused_grant_names_the_oauth_error_and_no_secret},
+}
+
+@misc{gmailstruct-exchange-error-code-that-is-not-an-identifier-is-not-quoted,
+  section = {exchange},
+  title  = {Only a plain code is quoted; an error field carrying anything else reads as unreadable},
+  claim  = {Only a plain code is quoted; an error field carrying anything else reads as unreadable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_error_code_that_is_not_an_identifier_is_not_quoted},
+}
+
+@misc{gmailstruct-exchange-success-without-both-fields-is-an-error,
+  section = {exchange},
+  title  = {A 200 lacking access_token or expires_in is refused, never returned half-formed},
+  claim  = {A 200 lacking access_token or expires_in is refused, never returned half-formed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_success_without_both_fields_is_an_error},
+}
+
+@misc{gmailstruct-exchange-non-json-success-is-an-error-carrying-none-of-it,
+  section = {exchange},
+  title  = {A 200 whose body is not JSON is refused, and the decode error is not chained},
+  claim  = {A 200 whose body is not JSON is refused, and the decode error is not chained.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_non_json_success_is_an_error_carrying_none_of_it},
+}

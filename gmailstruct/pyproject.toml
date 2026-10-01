@@ -94,3 +94,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # is absent from every traceback. It is a hard-coded "password" by construction, and authenticates
 # nothing.
 "tests/test_auth.py" = ["assert", "hardcoded-password-string"]
+# ⚑ THE SAME FOR THE EXCHANGE: its planted refresh token, client secret and access token exist so
+# each arm can show none of them reaches a traceback.
+"tests/test_exchange.py" = ["assert", "hardcoded-password-string"]
