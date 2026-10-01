@@ -4373,3 +4373,55 @@
             absent — the table is refused on sight.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_an_armed_hook_refuses_a_declared_waiver_table_before_the_linter},
 }
+
+@misc{hooks-gate-ledger-what-record-writes-report-reads,
+  section = {gate-ledger},
+  title  = {⚑ el-openglo:W140: the hook and the report name ONE path, so a recorded outcome is seen},
+  claim  = { el-openglo:W140: the hook and the report name ONE path, so a recorded outcome is seen.
+            The original derived its own path and reported "no outcomes" over a ledger
+            filling for days.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_what_record_writes_report_reads},
+}
+
+@misc{hooks-gate-ledger-order-is-worst-first-then-cheapest,
+  section = {gate-ledger},
+  title  = {Failure rate ranks first; between equal rates, the cheaper gate runs first},
+  claim  = {Failure rate ranks first; between equal rates, the cheaper gate runs first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_the_order_is_worst_first_then_cheapest},
+}
+
+@misc{hooks-gate-ledger-fixed-gate-stops-ranking-once-its-window-is-clean,
+  section = {gate-ledger},
+  title  = {Rates are over the last K runs: K passes after old failures read as 0%},
+  claim  = {Rates are over the last K runs: K passes after old failures read as 0%.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_a_fixed_gate_stops_ranking_once_its_window_is_clean},
+}
+
+@misc{hooks-gate-ledger-recording-never-raises-where-it-cannot-write,
+  section = {gate-ledger},
+  title  = {⚑ The instrument must not become a failure mode of the gate it measures},
+  claim  = { The instrument must not become a failure mode of the gate it measures.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_recording_never_raises_where_it_cannot_write},
+}
+
+@misc{hooks-gate-ledger-short-rows-are-skipped-and-a-bad-time-reads-zero,
+  section = {gate-ledger},
+  title  = {A torn line does not break the report, and an unparsable time is 0 seconds},
+  claim  = {A torn line does not break the report, and an unparsable time is 0 seconds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_short_rows_are_skipped_and_a_bad_time_reads_zero},
+}
+
+@misc{hooks-gate-ledger-empty-ledger-says-which-file-it-read,
+  section = {gate-ledger},
+  title  = {The empty report names the path, so a wrong path is visible at once},
+  claim  = {The empty report names the path, so a wrong path is visible at once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_an_empty_ledger_says_which_file_it_read},
+}
+
+@misc{hooks-gate-ledger-no-ledger-a-typo-or-two-modes-is-refused,
+  section = {gate-ledger},
+  title  = {⚑ --ledger is required, and a misspelled or doubled mode is a usage error, never --report},
+  claim  = { --ledger is required, and a misspelled or doubled mode is a usage error, never
+            --report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_no_ledger_a_typo_or_two_modes_is_refused},
+}

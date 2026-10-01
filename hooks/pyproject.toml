@@ -67,6 +67,8 @@ mikemol-hook-no-chaining = "mikemol.hooks.no_chaining:main"
 # package*, with the tests passing.
 mikemol-hook-no-verify = "mikemol.hooks.no_verify:main"
 mikemol-hook-shellcheck = "mikemol.hooks.shellcheck:main"
+# ⚑ Ported from substrate for el-openglo (W303, el-openglo:W140); wired in the same commit.
+mikemol-gate-ledger = "mikemol.hooks.gate_ledger:main"
 mikemol-hook-pycheck = "mikemol.hooks.pycheck:main"
 # ⚑ THE SAME LINTER BY HAND — one file, one tree, one command — and deliberately NOT named
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that

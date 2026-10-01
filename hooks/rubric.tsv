@@ -21,3 +21,4 @@ githook-pre-push	The Shared Pre-Push: An Operation in Flight Refused, and a Repo
 refusal-log	The Refusal Log: A Refused Invocation Recorded Where Its Caller Says, and Not-Sent Reported, Never Swallowed
 flag-contract	The Flag Contract: An Unknown Flag Refused by Name, and an Unstated Choice Between Two Refused
 suppressions	The Suppression Gate: A Line-Scoped Directive an Edit Adds Is Refused, and Existing Debt Never Blocks
+gate-ledger	The Gate Ledger: One Path for Writer and Reader, and the Fail-Fast Order
