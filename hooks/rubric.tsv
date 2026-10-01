@@ -11,7 +11,7 @@ no_chaining	No Chaining: The Composition Refused, and the Exit Status a Pipe Dis
 no_verify	No Verify: The Gate Bypass Refused Before It Runs, and Detected After
 grade	Grading: Falsifiability Proven by Mutation, Not Presence Proven by Reading
 exec-env	Execution Environment: What a Witness Can Actually Reach, Measured in Both Modes
-venv-artifact	The Venv as a Build Artifact: Relocatable, Closed, and the Same in Every Distribution
+venv-artifact	The Venv as a Build Artifact: Closed to What Its Closure Does Not Declare
 reader-guard	The Reader Guard: Runnability Tested by Executing, Not Presence Tested by Stat
 shellcheck	The Shell Hook: What the Linter Says, and What an Absent Linter Does
 shellcheck-cli	The Shell Hook by Hand: One File, One Tree, One Command, and Could-Not-Look Is Never Clean
