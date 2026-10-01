@@ -148,7 +148,10 @@ sh_test(
 
 venv_from_hub(
     name = ".venv",
-    console_scripts = {},
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts] (W356).
+    console_scripts = {
+        "mikemol-gmail": "mikemol.gmailstruct.cli:main",
+    },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",

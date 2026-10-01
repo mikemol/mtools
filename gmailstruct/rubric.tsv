@@ -6,3 +6,4 @@ parts	MIME Parts: Every Node of the Tree in Exactly One Record, Bodies Decoded o
 auth	The Refresh Token: Decrypted Into Memory Only, and Absent From Every Failure
 exchange	The Access Token: Exchanged In Memory, With Only Status and OAuth Code in a Failure
 consent	The Consent Run: The Refresh Token Reaches Only the Encryptor, Behind PKCE and State
+cli	The Command: Each Real Effect Run Against a Local Stand-In, and Consent End to End

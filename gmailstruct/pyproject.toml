@@ -23,6 +23,9 @@ classifiers = [
 # ⚑ THE RECORD LAYER IS STDLIB ONLY. Auth (W288) and the HTTP client never reach it.
 dependencies = []
 
+[project.scripts]
+mikemol-gmail = "mikemol.gmailstruct.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
@@ -84,9 +87,15 @@ fixture-parentheses = true
 [tool.ruff.lint.flake8-copyright]
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
+# ⚑ RUNNING `age` IS ONE OF THE CLI'S EFFECTS (W356): an argv list built from the operator's own
+# flags, no shell, the token on stdin. The record and auth modules start no process.
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"src/mikemol/gmailstruct/cli.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
 "tests/test_records.py" = ["assert"]
 "tests/test_pages.py" = ["assert"]
 "tests/test_parts.py" = ["assert"]
@@ -100,3 +109,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ AND THE CONSENT RUN: its planted client secret, code and refresh token exist so each arm can
 # show the token reaches only `encrypt` and nothing reaches a traceback.
 "tests/test_consent.py" = ["assert", "hardcoded-password-string"]
+# ⚑ AND THE CLI'S EFFECTS: a planted client secret, code and refresh token, run through a fake age,
+# a local listener and a local token endpoint.
+"tests/test_cli.py" = ["assert", "hardcoded-password-string"]

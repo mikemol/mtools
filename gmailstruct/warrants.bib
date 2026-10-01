@@ -270,3 +270,66 @@
   claim  = {The verifier is 32 random bytes as unpadded base64url; the challenge is its SHA-256.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_pkce_pair_is_unpadded_base64url_and_s256},
 }
+
+@misc{gmailstruct-cli-age-encrypt-pipes-the-token-to-age,
+  section = {cli},
+  title  = {The token reaches age on stdin with the recipient and output it was given},
+  claim  = {The token reaches age on stdin with the recipient and output it was given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_age_encrypt_pipes_the_token_to_age},
+}
+
+@misc{gmailstruct-cli-failed-age-is-an-error-carrying-no-token,
+  section = {cli},
+  title  = {When age fails, the error names the output and the exit status, never the token},
+  claim  = {When age fails, the error names the output and the exit status, never the token.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_failed_age_is_an_error_carrying_no_token},
+}
+
+@misc{gmailstruct-cli-listener-returns-the-redirects-code-and-state,
+  section = {cli},
+  title  = {One request to the loopback redirect yields its code and state, and nothing is logged},
+  claim  = {One request to the loopback redirect yields its code and state, and nothing is logged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_listener_returns_the_redirects_code_and_state},
+}
+
+@misc{gmailstruct-cli-abandoned-consent-ends-the-wait-instead-of-hanging,
+  section = {cli},
+  title  = {With no redirect in time the wait returns empty code and state, which consent refuses},
+  claim  = {With no redirect in time the wait returns empty code and state, which consent refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_abandoned_consent_ends_the_wait_instead_of_hanging},
+}
+
+@misc{gmailstruct-cli-post-form-returns-status-and-body-of-an-error,
+  section = {cli},
+  title  = {A 400 comes back as (400, body) rather than raising, so consent can name the status},
+  claim  = {A 400 comes back as (400, body) rather than raising, so consent can name the status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_post_form_returns_status_and_body_of_an_error},
+}
+
+@misc{gmailstruct-cli-post-form-refuses-anything-but-https-or-loopback-http,
+  section = {cli},
+  title  = {Plain HTTP is allowed only to 127.0.0.1; other schemes and hosts are refused unsent},
+  claim  = {Plain HTTP is allowed only to 127.0.0.1; other schemes and hosts are refused unsent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_post_form_refuses_anything_but_https_or_loopback_http},
+}
+
+@misc{gmailstruct-cli-consent-command-writes-the-token-only-through-age,
+  section = {cli},
+  title  = {End to end: the token is handed to age for --out, and never printed},
+  claim  = {End to end: the token is handed to age for --out, and never printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_consent_command_writes_the_token_only_through_age},
+}
+
+@misc{gmailstruct-cli-existing-out-is-refused-before-anything-runs,
+  section = {cli},
+  title  = {A token file already present is never overwritten; no browser opens},
+  claim  = {A token file already present is never overwritten; no browser opens.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_existing_out_is_refused_before_anything_runs},
+}
+
+@misc{gmailstruct-cli-open-browser-prints-the-url-and-opens-it,
+  section = {cli},
+  title  = {The URL is printed, so it can be opened by hand, and handed to the default browser},
+  claim  = {The URL is printed, so it can be opened by hand, and handed to the default browser.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_open_browser_prints_the_url_and_opens_it},
+}
