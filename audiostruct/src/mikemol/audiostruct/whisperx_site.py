@@ -18,15 +18,27 @@ begins (stages.run_stage), so a transcribe-only or align-only process never hold
 from __future__ import annotations
 
 import gc
+import warnings
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
 
-from torch.cuda import empty_cache
-from whisperx import alignment, asr, audio, diarize
-
 from mikemol.audiostruct.gpu import TranscribeFn, aligner, diarizer, release, transcriber
 from mikemol.audiostruct.stages import Pipeline
+
+# ⚑⚑ ONE WARNING, MATCHED EXACTLY, ONLY FOR THIS IMPORT (W298, reported by life after adoption).
+# pyannote warns at import that torchcodec cannot load this host's FFmpeg: the host has FFmpeg
+# 8.1.3 (libavutil.so.60), and torchcodec 0.7 (pinned under torch 2.8) supports 4 through 7. The
+# warning names a decode path audiostruct never takes, because diarize is handed audio
+# whisperx.audio already decoded through the ffmpeg CLI. It printed in the parent and in every
+# stage child. `catch_warnings` restores the global filters when the block ends, so no other
+# warning, from pyannote or anything else, is silenced. tests/test_whisperx_site.py checks both.
+with warnings.catch_warnings():
+    warnings.filterwarnings(
+        "ignore", message=r"\s*torchcodec is not installed correctly", category=UserWarning
+    )
+    from torch.cuda import empty_cache
+    from whisperx import alignment, asr, audio, diarize
 
 
 @dataclass(frozen=True, slots=True)

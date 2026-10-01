@@ -9,12 +9,22 @@ reaches and WHAT it is handed.
 
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
+import warnings
 from typing import TYPE_CHECKING
-
-from whisperx import alignment, asr, audio, diarize
 
 from mikemol.audiostruct import whisperx_site
 from mikemol.audiostruct.whisperx_site import Settings, pipeline
+
+# ⚑ The same scoped filter as the site's own import (W298): this module imports whisperx directly
+# to patch its loaders, so without it the test run itself would print the torchcodec warning.
+with warnings.catch_warnings():
+    warnings.filterwarnings(
+        "ignore", message=r"\s*torchcodec is not installed correctly", category=UserWarning
+    )
+    from whisperx import alignment, asr, audio, diarize
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -115,3 +125,31 @@ def test_the_token_is_read_from_its_file_only_when_asked(tmp_path: Path) -> None
     token_file.write_text("  hf_later \n", encoding="utf-8")
     assert built.token() == "hf_later"
     assert whisperx_site.Settings is Settings
+
+
+# A fresh interpreter imports the site (this process has it cached), then raises an unrelated
+# UserWarning, so both halves of the claim are observed on stderr.
+_PROBE = (
+    "import warnings\n"
+    "import mikemol.audiostruct.whisperx_site\n"
+    "warnings.warn('w298-probe-still-prints', UserWarning, stacklevel=1)\n"
+)
+
+
+def test_importing_the_site_prints_no_torchcodec_warning_and_silences_nothing_else() -> None:
+    """The torchcodec/FFmpeg warning is gone at import, and a later UserWarning still prints.
+
+    ⚑ Reported by life after adoption (W298): the warning printed once per process, three or four
+    times a run, for a decode path audiostruct never takes. The filter is scoped to the import by
+    `catch_warnings`, so the probe after it must still reach stderr.
+    """
+    proc = subprocess.run(
+        [sys.executable, "-c", _PROBE],
+        capture_output=True,
+        text=True,
+        check=False,
+        env={**os.environ, "PYTHONPATH": os.pathsep.join(sys.path)},
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "torchcodec" not in proc.stderr
+    assert "w298-probe-still-prints" in proc.stderr

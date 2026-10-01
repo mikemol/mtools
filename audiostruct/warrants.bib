@@ -324,3 +324,14 @@
             first real GPU runs needed audiostruct/.venv/bin put on PATH by hand.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_the_default_program_is_this_process_by_absolute_path},
 }
+
+@misc{audiostruct-whisperx-site-importing-the-site-prints-no-torchcodec-warning-and-silences-nothing-else,
+  section = {whisperx_site},
+  title  = {The torchcodec/FFmpeg warning is gone at import, and a later UserWarning still prints},
+  claim  = {The torchcodec/FFmpeg warning is gone at import, and a later UserWarning still prints.
+            Reported by life after adoption (W298): the warning printed once per
+            process, three or four times a run, for a decode path audiostruct never
+            takes. The filter is scoped to the import by `catch_warnings`, so the probe
+            after it must still reach stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_whisperx_site.py -k test_importing_the_site_prints_no_torchcodec_warning_and_silences_nothing_else},
+}
