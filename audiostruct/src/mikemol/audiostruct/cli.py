@@ -40,38 +40,42 @@ MAXLOAD_ENV = "MEMBUDGET_MAXLOAD"
 CONTEXTS_PER_STAGE = 1
 
 
-def child_argv(
-    stage: str, program: Sequence[str], workdir: str, sources: Sequence[str]
-) -> list[str]:
-    """Build the command that runs one stage holding one GPU context.
-
-    Returns:
-        `mikemol-membudget hold 1 audiostruct-STAGE -- PROGRAM --stage STAGE --workdir DIR SRC...`.
-
-    """
-    return [
-        "mikemol-membudget",
-        "hold",
-        str(CONTEXTS_PER_STAGE),
-        f"audiostruct-{stage}",
-        "--",
-        *program,
-        "--stage",
-        stage,
-        "--workdir",
-        workdir,
-        *sources,
-    ]
-
-
 @dataclass(frozen=True, slots=True)
 class Plan:
-    """One run: the ledger to hold on, the program to re-invoke, and its inputs."""
+    """One run: membudget and its ledger, the program to re-invoke, and its inputs.
 
+    ⚑ `membudget` IS A PATH THE CALLER STATES (W292), like the ledger. Measured on the real GPU:
+    a bare `mikemol-membudget` is on no PATH here (mtools' own is bazel-bin/fence/.venv/bin/), so
+    the first stage died with exit 127 after the run had begun.
+    """
+
+    membudget: str
     ledger: str
     program: Sequence[str]
     workdir: str
     sources: Sequence[str]
+
+
+def child_argv(stage: str, plan: Plan) -> list[str]:
+    """Build the command that runs one stage holding one GPU context.
+
+    Returns:
+        `MEMBUDGET hold 1 audiostruct-STAGE -- PROGRAM --stage STAGE --workdir DIR SRC...`.
+
+    """
+    return [
+        plan.membudget,
+        "hold",
+        str(CONTEXTS_PER_STAGE),
+        f"audiostruct-{stage}",
+        "--",
+        *plan.program,
+        "--stage",
+        stage,
+        "--workdir",
+        plan.workdir,
+        *plan.sources,
+    ]
 
 
 def orchestrate(plan: Plan, run: Callable[[list[str], Mapping[str, str]], int]) -> int:
@@ -86,7 +90,7 @@ def orchestrate(plan: Plan, run: Callable[[list[str], Mapping[str, str]], int]) 
     """
     env = {LEDGER_ENV: plan.ledger, MAXLOAD_ENV: "0"}
     for stage in STAGES:
-        code = run(child_argv(stage, plan.program, plan.workdir, plan.sources), env)
+        code = run(child_argv(stage, plan), env)
         if code != 0:
             return code
     return 0

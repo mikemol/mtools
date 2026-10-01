@@ -294,3 +294,12 @@
             own attribute, apart from the message.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_a_missing_file_is_named_and_the_message_still_is_not},
 }
+
+@misc{audiostruct-main-membudget-that-cannot-run-is-refused-before-any-stage,
+  section = {main},
+  title  = {A missing or non-executable membudget exits 2 with no stage started},
+  claim  = {A missing or non-executable membudget exits 2 with no stage started. Measured on the
+            real GPU: a bare `mikemol-membudget` on no PATH died as exit 127 inside the
+            first stage. The parent now refuses up front, naming the path it was given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_a_membudget_that_cannot_run_is_refused_before_any_stage},
+}

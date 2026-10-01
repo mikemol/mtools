@@ -47,6 +47,7 @@ _SETTINGS = ("model", "device", "compute_type", "batch_size", "language", "token
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mikemol-audio", description=__doc__.split("\n")[0])
     parser.add_argument("--stage", choices=STAGES)
+    parser.add_argument("--membudget", help="the mikemol-membudget binary; required by the parent")
     parser.add_argument("--ledger", required=True, help="the shared GPU context ledger")
     parser.add_argument("--workdir", required=True, help="where the stages hand off JSON")
     parser.add_argument("--out", required=True, help="where the markdown transcripts go")
@@ -167,8 +168,14 @@ def main(
     stage = values["stage"]
     if isinstance(stage, str):
         return _child(stage, args, sources, make)
+    membudget = values["membudget"]
+    if not (isinstance(membudget, str) and os.access(membudget, os.X_OK)):
+        # ⚑ REFUSED BEFORE ANY STAGE (W292): the alternative, measured, is exit 127 mid-run.
+        sys.stderr.write(f"mikemol-audio: --membudget {membudget!r} is not an executable\n")
+        return 2
     workdir = str(values["workdir"])
     plan = Plan(
+        membudget=membudget,
         ledger=str(values["ledger"]),
         program=["mikemol-audio", *_passthrough(args)],
         workdir=workdir,

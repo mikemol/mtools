@@ -15,7 +15,13 @@ from mikemol.audiostruct.cli import LEDGER_ENV, MAXLOAD_ENV, Plan, orchestrate
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-_PLAN = Plan(ledger="/gpu.ledger", program=["mikemol-audio"], workdir="/work", sources=["a.wav"])
+_PLAN = Plan(
+    membudget="/opt/fence/bin/mikemol-membudget",
+    ledger="/gpu.ledger",
+    program=["mikemol-audio"],
+    workdir="/work",
+    sources=["a.wav"],
+)
 # membudget's exit code when admission refuses a lease.
 _REFUSED = 3
 
@@ -36,7 +42,7 @@ def test_each_stage_holds_one_context_on_the_named_ledger() -> None:
     assert orchestrate(_PLAN, run) == 0
     assert [argv for argv, _ in ran] == [
         [
-            "mikemol-membudget",
+            "/opt/fence/bin/mikemol-membudget",
             "hold",
             "1",
             f"audiostruct-{stage}",

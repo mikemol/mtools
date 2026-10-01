@@ -9,6 +9,7 @@ no model, GPU or membudget is touched.
 
 from __future__ import annotations
 
+import sys
 from typing import TYPE_CHECKING
 
 from mikemol.audiostruct.main import main, parse_sources
@@ -26,6 +27,8 @@ _REFUSED = 3
 # main's exit code for bad sources, argparse's usage code.
 _USAGE = 2
 _BATCH = 4
+# Any executable stands in for membudget: the fake runner never runs it.
+_MEMBUDGET = sys.executable
 
 
 def _result(_clip: object, *_rest: object) -> dict[str, object]:
@@ -50,8 +53,10 @@ def _fake(settings: Settings) -> Pipeline:
     )
 
 
-def _argv(tmp_path: Path, *sources: str) -> list[str]:
+def _argv(tmp_path: Path, *sources: str, membudget: str = _MEMBUDGET) -> list[str]:
     return [
+        "--membudget",
+        membudget,
         "--ledger",
         str(tmp_path / "gpu.ledger"),
         "--workdir",
@@ -82,7 +87,7 @@ def test_the_parent_runs_three_children_and_writes_one_transcript_per_label(
     held: list[str] = []
 
     def run(argv: list[str], _env: Mapping[str, str]) -> int:
-        assert argv[:3] == ["mikemol-membudget", "hold", "1"]
+        assert argv[:3] == [_MEMBUDGET, "hold", "1"]
         held.append(argv[3])
         return main(argv[6:], make=_fake)
 
@@ -121,6 +126,23 @@ def test_bad_sources_exit_2_before_any_stage(tmp_path: Path) -> None:
 
     assert main(_argv(tmp_path, "a.wav"), run=run, make=_fake) == _USAGE
     assert main(_argv(tmp_path, "x=a.wav", "x=b.wav"), run=run, make=_fake) == _USAGE
+    assert ran == []
+
+
+def test_a_membudget_that_cannot_run_is_refused_before_any_stage(tmp_path: Path) -> None:
+    """A missing or non-executable membudget exits 2 with no stage started.
+
+    ⚑ Measured on the real GPU: a bare `mikemol-membudget` on no PATH died as exit 127 inside
+    the first stage. The parent now refuses up front, naming the path it was given.
+    """
+    ran: list[list[str]] = []
+
+    def run(argv: list[str], _env: Mapping[str, str]) -> int:
+        ran.append(argv)
+        return 0
+
+    absent = str(tmp_path / "no-such-membudget")
+    assert main(_argv(tmp_path, "a=a.wav", membudget=absent), run=run, make=_fake) == _USAGE
     assert ran == []
 
 
