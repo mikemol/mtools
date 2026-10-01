@@ -18,13 +18,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import socket
 import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lease, lock, ops, render, selftest, store
+from mikemol.pathsforward import lease, lock, ops, render, selftest, store, vtodo
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.digest import Outcome, v2, verify
@@ -58,6 +59,7 @@ _FLAGS = (
     "preamble_clear",
     "init",
     "overlaps",
+    "ics",
 )
 _VALUED = (
     "verify",
@@ -569,6 +571,23 @@ def _queue(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _ics(ctx: Ctx) -> int:
+    """Print the queue as an iCalendar file, one VTODO per waypoint (W313).
+
+    ⚑ READ-ONLY: nothing is written, and no lock is taken. The repo in each UID is the state's
+    project_root directory name, the name nemik cites it by; the host makes the UID unique.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    state = store.load(ctx.path)
+    repo = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent)).name
+    stamp = ctx.stamp().replace("-", "").replace(":", "")
+    sys.stdout.write(vtodo.calendar(state, repo=repo, host=socket.gethostname(), stamp=stamp))
+    return EXIT_OK
+
+
 def _report(state: State, findings: list[str], owed: str | None = None) -> int:
     """Print a check's findings, then the ATOMIZE line when one is owed.
 
@@ -1041,6 +1060,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "init": _init,
     "weights_from": _weights_from,
     "overlaps": _overlaps,
+    "ics": _ics,
 }
 
 

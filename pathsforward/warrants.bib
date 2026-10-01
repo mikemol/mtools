@@ -2377,3 +2377,52 @@
   claim  = {Every line, including the last and every continuation, ends in CRLF and nothing else.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ics.py -k test_serialize_ends_every_physical_line_in_crlf},
 }
+
+@misc{pathsforward-vtodo-dated-waypoint-carries-its-uid-status-and-times-as-stored,
+  section = {vtodo},
+  title  = {Life's W9 and W12: a TZID start and an all-day due, each in the form it needs (W300)},
+  claim  = {Life's W9 and W12: a TZID start and an all-day due, each in the form it needs (W300).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_a_dated_waypoint_carries_its_uid_status_and_times_as_stored},
+}
+
+@misc{pathsforward-vtodo-operator-ask-is-categorized-and-says-what-it-waits-on,
+  section = {vtodo},
+  title  = {⚑ "operator: decide ..." becomes CATEGORIES:decide (nemik rule 4); the kind is marked},
+  claim  = { "operator: decide ..." becomes CATEGORIES:decide (nemik rule 4); the kind is marked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_an_operator_ask_is_categorized_and_says_what_it_waits_on},
+}
+
+@misc{pathsforward-vtodo-blocker-that-is-a-waypoint-becomes-a-depends-on-relation,
+  section = {vtodo},
+  title  = {Local and foreign waypoints become RELATED-TO DEPENDS-ON (RFC 9253); prose does not},
+  claim  = {Local and foreign waypoints become RELATED-TO DEPENDS-ON (RFC 9253); prose does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_a_blocker_that_is_a_waypoint_becomes_a_depends_on_relation},
+}
+
+@misc{pathsforward-vtodo-each-status-maps-to-its-vtodo-status,
+  section = {vtodo},
+  title  = {Ready and blocked need action, working is in process, and done is completed},
+  claim  = {Ready and blocked need action, working is in process, and done is completed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_each_status_maps_to_its_vtodo_status},
+}
+
+@misc{pathsforward-vtodo-done-waypoint-carries-its-completed-stamp,
+  section = {vtodo},
+  title  = {COMPLETED is the stamp W301 recorded, as stored},
+  claim  = {COMPLETED is the stamp W301 recorded, as stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_a_done_waypoint_carries_its_completed_stamp},
+}
+
+@misc{pathsforward-vtodo-calendar-wraps-every-waypoint-and-omits-residue,
+  section = {vtodo},
+  title  = {One VCALENDAR, one VTODO per waypoint, nothing for the dropped W3, CRLF throughout},
+  claim  = {One VCALENDAR, one VTODO per waypoint, nothing for the dropped W3, CRLF throughout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_the_calendar_wraps_every_waypoint_and_omits_residue},
+}
+
+@misc{pathsforward-vtodo-ics-mode-prints-the-calendar-and-writes-nothing,
+  section = {vtodo},
+  title  = {⚑ --ics is READ-ONLY: the state file is byte-identical after it runs},
+  claim  = { --ics is READ-ONLY: the state file is byte-identical after it runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_ics_mode_prints_the_calendar_and_writes_nothing},
+}
