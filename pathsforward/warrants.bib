@@ -2324,3 +2324,26 @@
   claim  = { An RRULE needs a DTSTART, an EXDATE an RRULE, and both must parse; nothing changes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_recurrence_the_waypoint_cannot_expand_is_refused},
 }
+
+@misc{pathsforward-ops-completing-one-occurrence-records-it-and-the-missed-one-stays-absent,
+  section = {ops},
+  title  = {Life's model (W310): December done, November missed; the map holds December alone},
+  claim  = {Life's model (W310): December done, November missed; the map holds December alone. A
+            second completion keeps the first stamp, the waypoint stays live, and
+            reopening removes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_completing_one_occurrence_records_it_and_the_missed_one_stays_absent},
+}
+
+@misc{pathsforward-ops-occurrence-no-expansion-could-produce-is-refused,
+  section = {ops},
+  title  = {⚑ Before DTSTART, the wrong kind of value, an EXDATE, or unparseable: refused, unchanged},
+  claim  = { Before DTSTART, the wrong kind of value, an EXDATE, or unparseable: refused, unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_an_occurrence_no_expansion_could_produce_is_refused},
+}
+
+@misc{pathsforward-ops-rule-with-completed-occurrences-cannot-be-cleared,
+  section = {ops},
+  title  = {Clearing the RRULE would orphan the completions, so it is refused until they reopen},
+  claim  = {Clearing the RRULE would orphan the completions, so it is refused until they reopen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_rule_with_completed_occurrences_cannot_be_cleared},
+}

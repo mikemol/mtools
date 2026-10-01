@@ -17,6 +17,7 @@ unknown part, a part given twice, or a value out of its range.
 from __future__ import annotations
 
 import re
+from datetime import datetime
 
 from mikemol.pathsforward import timevalue
 from mikemol.pathsforward.model import RefusedError
@@ -152,3 +153,49 @@ def check(rule: str) -> str:
     if reasons:
         raise RefusedError(_why(rule, reasons[0]))
     return rule
+
+
+def _occurrence_error(rid: str, dtstart: str, rule: str, exdates: list[str]) -> str:
+    """Find what makes `rid` no occurrence of this waypoint's recurrence.
+
+    Returns:
+        what is wrong, or "" when it is accepted.
+
+    """
+    if not rule:
+        return "the waypoint has no rrule, so it has no occurrences: set --rrule first"
+    try:
+        when = timevalue.parse(rid).when
+    except RefusedError as exc:
+        return str(exc)
+    start = timevalue.parse(dtstart).when
+    reason = ""
+    if isinstance(when, datetime) != isinstance(start, datetime):
+        reason = f"is not the same kind of value as DTSTART {dtstart!r} (a DATE or a DATE-TIME)"
+    elif when < start:
+        reason = f"is before DTSTART {dtstart!r}, where the recurrence begins"
+    elif rid in exdates:
+        reason = "is an EXDATE, so it is not an occurrence"
+    return f"{rid!r} {reason}" if reason else ""
+
+
+def check_occurrence(rid: str, dtstart: str, rule: str, exdates: list[str]) -> str:
+    """Accept a RECURRENCE-ID for this waypoint, unchanged, or refuse it (W310).
+
+    ⚑ WHAT IS NOT CHECKED, AND WHY: whether the rule actually GENERATES `rid` needs expansion,
+    which is the reader's (W309's decision, standard library only). What is refused here is what
+    no expansion could produce: no rule, a value that does not parse, a DATE where DTSTART is a
+    DATE-TIME (or the reverse), a time before DTSTART, or an EXDATE.
+
+    Returns:
+        the RECURRENCE-ID as given.
+
+    Raises:
+        RefusedError: for a value that cannot be an occurrence of this recurrence.
+
+    """
+    reason = _occurrence_error(rid, dtstart, rule, exdates)
+    if reason:
+        msg = f"occurrence {reason}"
+        raise RefusedError(msg)
+    return rid

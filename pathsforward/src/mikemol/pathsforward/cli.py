@@ -110,6 +110,8 @@ _FIELDS = (
     "alarm",
     "rrule",
     "exdate",
+    "complete_occurrence",
+    "reopen_occurrence",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -135,6 +137,8 @@ _APPLIES: dict[str, frozenset[str]] = {
             "alarm",
             "rrule",
             "exdate",
+            "complete_occurrence",
+            "reopen_occurrence",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -328,6 +332,16 @@ def _parser() -> argparse.ArgumentParser:
         nargs="*",
         metavar="RFC5545",
         help="--update: the whole EXDATE list, each as --dtstart; needs an RRULE; bare clears",
+    )
+    ap.add_argument(
+        "--complete-occurrence",
+        metavar="RECURRENCE-ID",
+        help="--update: stamp one occurrence of the RRULE COMPLETED (same form as DTSTART)",
+    )
+    ap.add_argument(
+        "--reopen-occurrence",
+        metavar="RECURRENCE-ID",
+        help="--update: remove one completed occurrence's stamp",
     )
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
@@ -737,6 +751,8 @@ def _update(ctx: Ctx) -> int:
         alarms=ctx.many("alarm"),
         rrule=ctx.get("rrule"),
         exdates=ctx.many("exdate"),
+        complete_occurrence=ctx.get("complete_occurrence"),
+        reopen_occurrence=ctx.get("reopen_occurrence"),
     )
 
     def edit(state: State) -> int:

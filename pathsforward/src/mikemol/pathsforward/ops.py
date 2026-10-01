@@ -31,6 +31,7 @@ from mikemol.pathsforward.model import (
     RefusedError,
     is_reference,
     strlist,
+    strmap,
     symbol_number,
     text,
     ticks,
@@ -122,6 +123,10 @@ class Update:
     # merged; () clears), stored as written. Expanding them is the reader's job, never this tool's.
     rrule: str | None = None
     exdates: tuple[str, ...] | None = None
+    # ⚑ ONE OCCURRENCE AT A TIME (W310, life's model, nemik:W145): completing stamps
+    # occurrences[RECURRENCE-ID] with COMPLETED; reopening removes it. The waypoint stays live.
+    complete_occurrence: str | None = None
+    reopen_occurrence: str | None = None
 
 
 @dataclass(frozen=True)
@@ -287,6 +292,36 @@ def _refuse_unanchored(sym: str, new: Json) -> None:
             raise RefusedError(msg)
 
 
+def _apply_occurrence(sym: str, new: Json, upd: Update, now: str) -> None:
+    """Complete or reopen one occurrence on the resulting waypoint (W310).
+
+    ⚑ STAMPED ONCE, like COMPLETED (W301): completing an occurrence already complete keeps its
+    first stamp. Reopening one that is not complete is refused, not ignored: it names the wrong id.
+
+    Raises:
+        RefusedError: for an id that cannot be an occurrence, or a reopen of one not complete.
+
+    """
+    done = strmap(new, "occurrences")
+    rid = upd.complete_occurrence
+    if rid is not None:
+        try:
+            recurrence.check_occurrence(
+                rid, text(new, "dtstart"), text(new, "rrule"), strlist(new, "exdates")
+            )
+        except RefusedError as exc:
+            msg = f"{sym}: {exc}"
+            raise RefusedError(msg) from None
+        done.setdefault(rid, now.replace("-", "").replace(":", ""))
+    reopen = upd.reopen_occurrence
+    if reopen is not None:
+        if reopen not in done:
+            msg = f"{sym}: occurrence {reopen!r} is not complete, so it cannot reopen"
+            raise RefusedError(msg)
+        del done[reopen]
+    new["occurrences"] = dict(sorted(done.items())) or None
+
+
 def _refuse_bad_recurrence(sym: str, new: Json) -> None:
     """Refuse a recurrence the resulting waypoint cannot expand (W309).
 
@@ -305,6 +340,8 @@ def _refuse_bad_recurrence(sym: str, new: Json) -> None:
         reason = "rrule needs a DTSTART to count from: set --dtstart first"
     elif strlist(new, "exdates") and not rule:
         reason = "exdate removes occurrences of an rrule, and there is none: set --rrule first"
+    elif strmap(new, "occurrences") and not rule:
+        reason = "completed occurrences need their rrule: reopen them before clearing it"
     if reason:
         msg = f"{sym}: {reason}"
         raise RefusedError(msg)
@@ -439,6 +476,8 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
                 raise RefusedError(msg) from None
     w = find(state, sym)
     new = _applied(w, upd, now)
+    if upd.complete_occurrence is not None or upd.reopen_occurrence is not None:
+        _apply_occurrence(sym, new, upd, now)
     _refuse_unanchored(sym, new)
     _refuse_bad_recurrence(sym, new)
     if text(new, "status") == "blocked" and (

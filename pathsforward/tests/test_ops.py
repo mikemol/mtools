@@ -381,6 +381,60 @@ def test_a_recurrence_the_waypoint_cannot_expand_is_refused(
     assert state.waypoints[0] == before
 
 
+def _monthly() -> State:
+    """Build a state whose W1 recurs on the first of each month from 2026-11-01.
+
+    Returns:
+        the state.
+
+    """
+    state = _state()
+    upd = ops.Update(dtstart="20261101", rrule="FREQ=MONTHLY;BYMONTHDAY=1", exdates=("20270101",))
+    ops.update(state, "W1", upd, _NOW)
+    return state
+
+
+def test_completing_one_occurrence_records_it_and_the_missed_one_stays_absent() -> None:
+    """Life's model (W310): December done, November missed; the map holds December alone.
+
+    A second completion keeps the first stamp, the waypoint stays live, and reopening removes it.
+    """
+    state = _monthly()
+    ops.update(state, "W1", ops.Update(complete_occurrence="20261201"), _NOW)
+    ops.update(state, "W1", ops.Update(complete_occurrence="20261201"), "2026-12-02T09:00:00Z")
+    w = state.waypoints[0]
+    assert (w["occurrences"], w["status"]) == ({"20261201": "20260923T120000Z"}, "ready")
+    ops.update(state, "W1", ops.Update(reopen_occurrence="20261201"), _NOW)
+    assert state.waypoints[0]["occurrences"] is None
+
+
+@pytest.mark.parametrize(
+    ("upd", "why"),
+    [
+        (ops.Update(complete_occurrence="20261001"), "is before DTSTART"),
+        (ops.Update(complete_occurrence="20261201T000000Z"), "not the same kind of value"),
+        (ops.Update(complete_occurrence="20270101"), "is an EXDATE"),
+        (ops.Update(complete_occurrence="20261201T000000"), "floating time"),
+        (ops.Update(reopen_occurrence="20261201"), "is not complete, so it cannot reopen"),
+    ],
+)
+def test_an_occurrence_no_expansion_could_produce_is_refused(upd: ops.Update, why: str) -> None:
+    """⚑ Before DTSTART, the wrong kind of value, an EXDATE, or unparseable: refused, unchanged."""
+    state = _monthly()
+    before = dict(state.waypoints[0])
+    with pytest.raises(ops.RefusedError, match=f"W1: occurrence .*{why}"):
+        ops.update(state, "W1", upd, _NOW)
+    assert state.waypoints[0] == before
+
+
+def test_a_rule_with_completed_occurrences_cannot_be_cleared() -> None:
+    """Clearing the RRULE would orphan the completions, so it is refused until they reopen."""
+    state = _monthly()
+    ops.update(state, "W1", ops.Update(complete_occurrence="20261201"), _NOW)
+    with pytest.raises(ops.RefusedError, match="reopen them before clearing it"):
+        ops.update(state, "W1", ops.Update(rrule="", exdates=()), _NOW)
+
+
 def test_done_stamps_completed_once_and_reopening_clears_it() -> None:
     """COMPLETED is a UTC DATE-TIME stamped at the transition to done, never rewritten (W301)."""
     state = _state()

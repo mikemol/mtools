@@ -172,6 +172,19 @@ def strlist(rec: Json, key: str) -> list[str]:
     return [str(value)]
 
 
+def strmap(rec: Json, key: str) -> dict[str, str]:
+    """Read a map field of strings, such as completed occurrences (W310).
+
+    Returns:
+        the entries as strings; {} when absent or not a map.
+
+    """
+    value = rec.get(key)
+    if not isinstance(value, dict):
+        return {}
+    return {str(k): str(v) for k, v in cast("dict[object, object]", value).items()}
+
+
 def workable(w: Json) -> bool:
     """Say whether a tick may pick this waypoint: working or ready, and carrying no witness.
 
