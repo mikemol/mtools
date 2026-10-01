@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import http.client
+import json
 import os
 import subprocess
 import sys
@@ -31,13 +32,19 @@ from pathlib import Path
 from typing import TYPE_CHECKING, override
 from urllib.parse import parse_qs, urlencode, urlsplit
 
-from mikemol.gmailstruct.consent import ConsentError, consent
+from mikemol.gmailstruct.auth import DecryptError, ExchangeError, decrypt, exchange
+from mikemol.gmailstruct.consent import ConsentError, consent, read_client
+from mikemol.gmailstruct.fetch import FetchError, search, show
+from mikemol.gmailstruct.records import Listed, Message, Unreadable
 
 if TYPE_CHECKING:
-    from mikemol.gmailstruct.auth import Poster
+    from mikemol.gmailstruct.auth import Poster, Runner
     from mikemol.gmailstruct.consent import AwaitCode, Browser, Encrypt
+    from mikemol.gmailstruct.fetch import Getter
 
 _TIMEOUT_S = 30
+# A YubiKey decrypt waits for a touch, so it gets longer than a network call.
+_TOUCH_S = 120
 _CLOSE_PAGE = b"Consent received. You can close this tab."
 _LOOPBACK = "127.0.0.1"
 
@@ -88,29 +95,54 @@ def listen(port: int, timeout: float) -> tuple[str, AwaitCode]:
     return redirect, await_code
 
 
+def _connect(url: str) -> tuple[http.client.HTTPConnection, str]:
+    """Open a connection for `url`: https anywhere, plain http only to 127.0.0.1.
+
+    Returns:
+        (the connection, the path and query to request).
+
+    Raises:
+        ConsentError: for any other scheme or host; nothing is sent.
+
+    """
+    parts = urlsplit(url)
+    host = parts.hostname or ""
+    target = f"{parts.path or '/'}{'?' + parts.query if parts.query else ''}"
+    if parts.scheme == "https":
+        return http.client.HTTPSConnection(host, parts.port, timeout=_TIMEOUT_S), target
+    if parts.scheme == "http" and host == _LOOPBACK:
+        return http.client.HTTPConnection(host, parts.port, timeout=_TIMEOUT_S), target
+    msg = f"refusing to connect to a {parts.scheme or 'schemeless'} URL"
+    raise ConsentError(msg)
+
+
 def post_form(url: str, form: dict[str, str]) -> tuple[int, bytes]:
     """POST a form and return (status, body), an error status's included.
 
     Returns:
         the response status and body.
 
-    Raises:
-        ConsentError: for any scheme but https, or http to anywhere but 127.0.0.1.
-
     """
-    parts = urlsplit(url)
-    host = parts.hostname or ""
-    conn: http.client.HTTPConnection
-    if parts.scheme == "https":
-        conn = http.client.HTTPSConnection(host, parts.port, timeout=_TIMEOUT_S)
-    elif parts.scheme == "http" and host == _LOOPBACK:
-        conn = http.client.HTTPConnection(host, parts.port, timeout=_TIMEOUT_S)
-    else:
-        msg = f"refusing to POST to a {parts.scheme or 'schemeless'} URL"
-        raise ConsentError(msg)
+    conn, target = _connect(url)
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     try:
-        conn.request("POST", parts.path or "/", urlencode(form), headers)
+        conn.request("POST", target, urlencode(form), headers)
+        response = conn.getresponse()
+        return response.status, response.read()
+    finally:
+        conn.close()
+
+
+def get_bearer(url: str, access: str) -> tuple[int, bytes]:
+    """GET with the access token as a Bearer header; return (status, body), errors included.
+
+    Returns:
+        the response status and body.
+
+    """
+    conn, target = _connect(url)
+    try:
+        conn.request("GET", target, headers={"Authorization": f"Bearer {access}"})
         response = conn.getresponse()
         return response.status, response.read()
     finally:
@@ -140,6 +172,24 @@ def age_encrypt(recipient: str, out: Path, binary: str = "age") -> Encrypt:
     return encrypt
 
 
+def age_runner(binary: str = "age") -> Runner:
+    """Make auth.decrypt's runner: run the argv it builds with `binary` in place of `age`.
+
+    Returns:
+        a runner returning (exit status, stdout, stderr). Decryption waits for a YubiKey touch,
+        so it is given longer than a network call.
+
+    """
+
+    def run(argv: list[str]) -> tuple[int, bytes, bytes]:
+        proc = subprocess.run(
+            [binary, *argv[1:]], capture_output=True, check=False, timeout=_TOUCH_S
+        )
+        return proc.returncode, proc.stdout, proc.stderr
+
+    return run
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mikemol-gmail")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -150,22 +200,18 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("--port", type=int, default=0, help="loopback port (0: any free one)")
     run.add_argument("--timeout", type=float, default=300.0, help="seconds to wait for consent")
     run.add_argument("--age", default="age", help="the age binary")
+    for name, what in (("search", "QUERY"), ("show", "ID")):
+        read = sub.add_parser(name, help=f"{name} by {what}; one JSON record per line")
+        read.add_argument("target", metavar=what)
+        read.add_argument("--client", required=True, help="Google installed-client JSON")
+        read.add_argument("--token", required=True, help="the .age refresh token from consent")
+        read.add_argument("--identity", required=True, help="the YubiKey age identity stub")
+        read.add_argument("--age", default="age", help="the age binary")
+        read.add_argument("--max-pages", type=int, default=10, help="search: pages at most")
     return parser
 
 
-def main(
-    argv: list[str] | None = None,
-    *,
-    browser: Browser = open_browser,
-    post: Poster = post_form,
-) -> int:
-    """Run `mikemol-gmail`. Only `consent` exists so far (W357 adds search and show).
-
-    Returns:
-        0 on success, 1 on a refused or failed run. argparse exits 2 on a usage error.
-
-    """
-    opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
+def _consent(opts: dict[str, object], browser: Browser, post: Poster) -> int:
     out = Path(str(opts["out"]))
     if out.exists():
         sys.stderr.write(f"mikemol-gmail: {out} exists; remove it first to re-consent\n")
@@ -174,14 +220,80 @@ def main(
     wait = opts["timeout"]
     redirect, await_code = listen(port if isinstance(port, int) else 0, float(str(wait)))
     encrypt = age_encrypt(str(opts["recipient"]), out, str(opts["age"]))
-    try:
-        client = Path(str(opts["client"])).read_text(encoding="utf-8")
-        consent(client, redirect, (os.urandom, browser, await_code, post, encrypt))
-    except (ConsentError, OSError) as err:
-        sys.stderr.write(f"mikemol-gmail: {err}\n")
-        return 1
+    client = Path(str(opts["client"])).read_text(encoding="utf-8")
+    consent(client, redirect, (os.urandom, browser, await_code, post, encrypt))
     sys.stderr.write(f"mikemol-gmail: wrote {out}\n")
     return 0
+
+
+def _row(rec: Listed | Message | Unreadable) -> dict[str, object]:
+    """Name every field that goes out, per record kind; nothing is serialized by reflection.
+
+    Returns:
+        the record as a JSON object, with its kind.
+
+    """
+    if isinstance(rec, Listed):
+        return {
+            "kind": "Listed",
+            "id": rec.id,
+            "thread_id": rec.thread_id,
+            "page": rec.page,
+            "ordinal": rec.ordinal,
+        }
+    if isinstance(rec, Message):
+        return {
+            "kind": "Message",
+            "id": rec.id,
+            "thread_id": rec.thread_id,
+            "labels": list(rec.labels),
+            "snippet": rec.snippet,
+            "internal_date_ms": rec.internal_date_ms,
+            "headers": [list(pair) for pair in rec.headers],
+        }
+    return {"kind": "Unreadable", "id": rec.id, "reason": rec.reason}
+
+
+def _read(opts: dict[str, object], effects: tuple[Runner, Poster, Getter]) -> int:
+    runner, post, get = effects
+    refresh = decrypt(Path(str(opts["token"])), Path(str(opts["identity"])), runner)
+    client_id, secret = read_client(Path(str(opts["client"])).read_text(encoding="utf-8"))
+    access, _expires = exchange(refresh, client_id, secret, post)
+    target = str(opts["target"])
+    records: list[Listed | Message | Unreadable]
+    if opts["command"] == "show":
+        records = [show(target, access, get)]
+    else:
+        pages_at_most = opts["max_pages"]
+        cap = pages_at_most if isinstance(pages_at_most, int) else 1
+        records = list(search(target, access, get, cap))
+    for rec in records:
+        sys.stdout.write(json.dumps(_row(rec)) + "\n")
+    return 0
+
+
+def main(
+    argv: list[str] | None = None,
+    *,
+    browser: Browser = open_browser,
+    post: Poster = post_form,
+    get: Getter = get_bearer,
+    runner: Runner | None = None,
+) -> int:
+    """Run `mikemol-gmail consent`, `search` or `show`.
+
+    Returns:
+        0 on success, 1 on a refused or failed run. argparse exits 2 on a usage error.
+
+    """
+    opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
+    try:
+        if opts["command"] == "consent":
+            return _consent(opts, browser, post)
+        return _read(opts, (runner or age_runner(str(opts["age"])), post, get))
+    except (ConsentError, DecryptError, ExchangeError, FetchError, OSError) as err:
+        sys.stderr.write(f"mikemol-gmail: {err}\n")
+        return 1
 
 
 if __name__ == "__main__":

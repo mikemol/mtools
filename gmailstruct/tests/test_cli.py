@@ -190,3 +190,129 @@ def test_existing_out_is_refused_before_anything_runs(tmp_path: Path) -> None:
     assert cli.main(argv, browser=opened.append, post=_issue) == 1
     assert opened == []
     assert out.read_text(encoding="utf-8") == "old"
+
+
+def test_age_runner_runs_the_given_binary_in_place_of_age(tmp_path: Path) -> None:
+    """The decrypt argv's `age` becomes --age; the other arguments and the output are kept."""
+    script = tmp_path / "age"
+    script.write_text('#!/bin/sh\necho "$@"\n', encoding="utf-8")
+    script.chmod(0o755)
+    assert cli.age_runner(str(script))(["age", "--decrypt", "x.age"]) == (
+        0,
+        b"--decrypt x.age\n",
+        b"",
+    )
+
+
+class _Bearer(BaseHTTPRequestHandler):
+    """A local API: answers 200 with the Authorization header it was sent."""
+
+    def do_GET(self) -> None:
+        body = _dumps({"auth": self.headers.get("Authorization", "")}).encode()
+        self.send_response(_OK)
+        self.end_headers()
+        self.wfile.write(body)
+
+    @override
+    def log_message(self, fmt: str, *args: object) -> None:
+        del fmt, args
+
+
+def test_get_bearer_sends_the_access_token_as_a_bearer_header() -> None:
+    """The access token travels in the Authorization header, never in the URL."""
+    server = HTTPServer(("127.0.0.1", 0), _Bearer)
+    serving = _spawn(server.handle_request)
+    status, body = cli.get_bearer(f"http://127.0.0.1:{server.server_address[1]}/m?q=x", "ya29.a")
+    serving.join(_JOIN_S)
+    server.server_close()
+    assert (status, body) == (_OK, b'{"auth": "Bearer ya29.a"}')
+
+
+_ACCESS = "ya29.planted-access-token-91be"
+
+
+def _decrypted(argv: list[str]) -> tuple[int, bytes, bytes]:
+    del argv
+    return 0, _REFRESH.encode(), b""
+
+
+def _exchanged(url: str, form: dict[str, str]) -> tuple[int, bytes]:
+    del url
+    assert form["refresh_token"] == _REFRESH
+    return _OK, _dumps({"access_token": _ACCESS, "expires_in": 3599}).encode()
+
+
+def _read_argv(tmp_path: Path, *head: str) -> list[str]:
+    files = ["--client", str(_client(tmp_path)), "--token", "t.age", "--identity", "id.txt"]
+    return [*head, *files]
+
+
+def test_search_prints_one_json_record_per_listed_message(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Search decrypts, exchanges and lists, printing one JSON line per record; no token out."""
+    page = _dumps({"messages": [{"id": "a1", "threadId": "t1"}]}).encode()
+    seen: list[tuple[str, str]] = []
+
+    def get(url: str, access: str) -> tuple[int, bytes]:
+        seen.append((url, access))
+        return _OK, page
+
+    argv = _read_argv(tmp_path, "search", "from:ada")
+    assert cli.main(argv, post=_exchanged, get=get, runner=_decrypted) == 0
+    printed = capsys.readouterr()
+    listed = {"kind": "Listed", "id": "a1", "thread_id": "t1", "page": 0, "ordinal": 0}
+    assert printed.out == _dumps(listed) + "\n"
+    assert [access for _, access in seen] == [_ACCESS]
+    for planted in (_REFRESH, _ACCESS, _SECRET):
+        assert planted not in printed.out + printed.err
+
+
+def test_show_prints_the_message_record(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """Show prints one Message record with its headers in order."""
+    body = {
+        "id": "a1",
+        "threadId": "t1",
+        "labelIds": ["INBOX"],
+        "snippet": "hi",
+        "internalDate": "5",
+        "payload": {"headers": [{"name": "Subject", "value": "Hi"}]},
+    }
+
+    def get(url: str, access: str) -> tuple[int, bytes]:
+        del url, access
+        return _OK, _dumps(body).encode()
+
+    assert (
+        cli.main(_read_argv(tmp_path, "show", "a1"), post=_exchanged, get=get, runner=_decrypted)
+        == 0
+    )
+    expected = {
+        "kind": "Message",
+        "id": "a1",
+        "thread_id": "t1",
+        "labels": ["INBOX"],
+        "snippet": "hi",
+        "internal_date_ms": 5,
+        "headers": [["Subject", "Hi"]],
+    }
+    assert capsys.readouterr().out == _dumps(expected) + "\n"
+
+
+def test_failed_read_is_exit_1_naming_the_status_and_no_token(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A refused request ends the run with exit 1 and its status, and leaks no token."""
+
+    def get(url: str, access: str) -> tuple[int, bytes]:
+        del url, access
+        return 403, b""
+
+    assert (
+        cli.main(_read_argv(tmp_path, "show", "a1"), post=_exchanged, get=get, runner=_decrypted)
+        == 1
+    )
+    printed = capsys.readouterr()
+    assert "HTTP 403" in printed.err
+    for planted in (_REFRESH, _ACCESS, _SECRET):
+        assert planted not in printed.out + printed.err

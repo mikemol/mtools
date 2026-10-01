@@ -375,3 +375,38 @@
   claim  = {A message that cannot be fetched is an error naming the id and the status.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_failed_show_names_the_status},
 }
+
+@misc{gmailstruct-cli-age-runner-runs-the-given-binary-in-place-of-age,
+  section = {cli},
+  title  = {The decrypt argv's `age` becomes --age; the other arguments and the output are kept},
+  claim  = {The decrypt argv's `age` becomes --age; the other arguments and the output are kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_age_runner_runs_the_given_binary_in_place_of_age},
+}
+
+@misc{gmailstruct-cli-get-bearer-sends-the-access-token-as-a-bearer-header,
+  section = {cli},
+  title  = {The access token travels in the Authorization header, never in the URL},
+  claim  = {The access token travels in the Authorization header, never in the URL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_get_bearer_sends_the_access_token_as_a_bearer_header},
+}
+
+@misc{gmailstruct-cli-search-prints-one-json-record-per-listed-message,
+  section = {cli},
+  title  = {Search decrypts, exchanges and lists, printing one JSON line per record; no token out},
+  claim  = {Search decrypts, exchanges and lists, printing one JSON line per record; no token out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_search_prints_one_json_record_per_listed_message},
+}
+
+@misc{gmailstruct-cli-show-prints-the-message-record,
+  section = {cli},
+  title  = {Show prints one Message record with its headers in order},
+  claim  = {Show prints one Message record with its headers in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_show_prints_the_message_record},
+}
+
+@misc{gmailstruct-cli-failed-read-is-exit-1-naming-the-status-and-no-token,
+  section = {cli},
+  title  = {A refused request ends the run with exit 1 and its status, and leaks no token},
+  claim  = {A refused request ends the run with exit 1 and its status, and leaks no token.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_failed_read_is_exit_1_naming_the_status_and_no_token},
+}
