@@ -296,3 +296,60 @@
             them all); outcomes are summed (each case runs on one worker).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_differential_line_survives_a_parallel_run},
 }
+
+@misc{pytestspec-spec-expected-deny-passes-when-exactly-those-rules-deny,
+  section = {spec},
+  title  = {With expect, a deny from exactly the expected rule ids passes, matched before the `:`},
+  claim  = {With expect, a deny from exactly the expected rule ids passes, matched before the `:`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_expected_deny_passes_when_exactly_those_rules_deny},
+}
+
+@misc{pytestspec-spec-expected-deny-fails-when-the-case-is-admitted,
+  section = {spec},
+  title  = {An expected deny that never fires fails, naming the rule that did not refuse},
+  claim  = {An expected deny that never fires fails, naming the rule that did not refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_expected_deny_fails_when_the_case_is_admitted},
+}
+
+@misc{pytestspec-spec-expected-deny-fails-on-an-extra-rule,
+  section = {spec},
+  title  = {A deny from a rule not expected fails; the id is exact, so S10 is not S1},
+  claim  = {A deny from a rule not expected fails; the id is exact, so S10 is not S1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_expected_deny_fails_on_an_extra_rule},
+}
+
+@misc{pytestspec-spec-withheld-never-satisfies-an-expected-deny,
+  section = {spec},
+  title  = {A withheld case fails though a deny is expected: a rule that did not run did not refuse},
+  claim  = {A withheld case fails though a deny is expected: a rule that did not run did not refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_withheld_never_satisfies_an_expected_deny},
+}
+
+@misc{pytestspec-spec-expect-is-read-from-the-case,
+  section = {spec},
+  title  = {`expect.deny` is the set of rule ids; a case without `expect` is admitted-only},
+  claim  = {`expect.deny` is the set of rule ids; a case without `expect` is admitted-only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_expect_is_read_from_the_case},
+}
+
+@misc{pytestspec-spec-malformed-expect-is-a-data-error,
+  section = {spec},
+  title  = {A bare "denied", an empty list, or a non-id entry is refused, never read as admitted-only},
+  claim  = {A bare "denied", an empty list, or a non-id entry is refused, never read as admitted-
+            only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_malformed_expect_is_a_data_error},
+}
+
+@misc{pytestspec-plugin-expected-deny-maps-to-its-outcome,
+  section = {plugin},
+  title  = {A refusing fixture passes on its expected rule; another rule, or none, fails (W372)},
+  claim  = {A refusing fixture passes on its expected rule; another rule, or none, fails (W372).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_expected_deny_maps_to_its_outcome},
+}
+
+@misc{pytestspec-plugin-malformed-expect-is-a-collection-error,
+  section = {plugin},
+  title  = {A bare `"expect": "denied"` ERRORS at collection rather than running admitted-only},
+  claim  = {A bare `"expect": "denied"` ERRORS at collection rather than running admitted-only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_malformed_expect_is_a_collection_error},
+}

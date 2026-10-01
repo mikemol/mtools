@@ -37,6 +37,7 @@ from mikemol.pytestspec.spec import (
     Evaluator,
     SpecDataError,
     disposition_of,
+    expected_denies,
     judge,
     load_cases,
 )
@@ -162,9 +163,12 @@ class SpecItem(pytest.Item):
         except (opa.OpaUnavailableError, SpecDataError) as exc:
             msg = f"UNMEASURED (not evaluated, not passed): {exc}"
             raise SpecFailedError(msg) from exc
-        failure = judge(verdict)
+        expect = expected_denies(self.name, self.case)
+        failure = judge(verdict, expect)
         if failure is not None:
             raise SpecFailedError(failure)
+        if expect is not None:
+            self.user_properties.append((REFUSED, True))
 
     def repr_failure(
         self,
@@ -212,6 +216,8 @@ class SpecFile(pytest.File):
             cases = load_cases(self.path)
             names = frozenset(name for name, _ in cases)
             declared = [(name, case, disposition_of(name, case, names)) for name, case in cases]
+            for name, case in cases:
+                expected_denies(name, case)
         except SpecDataError as exc:
             raise self.CollectError(str(exc)) from exc
         return [
@@ -290,7 +296,19 @@ pytest_spec_cache_key = cache.pytest_spec_cache_key
 # differential is a single greppable line and a zero is stated rather than implied.
 DECLARED_SKIPPED = "declared-skipped"
 CACHED = "cached"
-COLUMNS = ("admitted", "denied", "unmeasured", DO_NOT_PORT, PORT_FIX, DECLARED_SKIPPED, CACHED)
+# ⚑ `refused` (W372): a case whose `expect` named exactly the rules that denied it. It passed, but
+# it was not admitted, and folding it into `admitted` would hide the refusing half of the record.
+REFUSED = "refused"
+COLUMNS = (
+    "admitted",
+    "denied",
+    REFUSED,
+    "unmeasured",
+    DO_NOT_PORT,
+    PORT_FIX,
+    DECLARED_SKIPPED,
+    CACHED,
+)
 TALLY = pytest.StashKey[dict[str, dict[str, int]]]()
 # ⚑ UNDER pytest-xdist (W316), every worker collects EVERY case, so a declaration is counted on
 # each worker alike and is taken ONCE; a case runs on ONE worker, so outcomes are SUMMED.
@@ -332,11 +350,12 @@ def _outcome(report: pytest.TestReport) -> str | None:
     if report.when != "call" and report.passed:
         return None
     if report.passed:
-        return "admitted"
+        return REFUSED if (REFUSED, True) in report.user_properties else "admitted"
     if report.skipped:
         # A declared unmeasured case reports as xfail, which pytest files under skipped.
         return "unmeasured"
-    return "denied" if "DENIED" in report.longreprtext else "unmeasured"
+    text = report.longreprtext
+    return "denied" if "DENIED" in text or "DENY MISMATCH" in text else "unmeasured"
 
 
 class _Differential:

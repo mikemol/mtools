@@ -6,7 +6,55 @@ from pathlib import Path
 
 import pytest
 
-from mikemol.pytestspec.spec import SpecDataError, Verdict, cases_path, judge, load_cases
+from mikemol.pytestspec.spec import (
+    SpecDataError,
+    Verdict,
+    cases_path,
+    expected_denies,
+    judge,
+    load_cases,
+)
+
+_S0 = frozenset({"S0"})
+
+
+def test_expected_deny_passes_when_exactly_those_rules_deny() -> None:
+    """With expect, a deny from exactly the expected rule ids passes, matched before the `:`."""
+    assert judge(Verdict(deny=("S0: refused", "S0: again")), _S0) is None
+
+
+def test_expected_deny_fails_when_the_case_is_admitted() -> None:
+    """An expected deny that never fires fails, naming the rule that did not refuse."""
+    assert judge(Verdict(), _S0) == "DENY MISMATCH: missing S0; unexpected none"
+
+
+def test_expected_deny_fails_on_an_extra_rule() -> None:
+    """A deny from a rule not expected fails; the id is exact, so S10 is not S1."""
+    failure = judge(Verdict(deny=("S1: a", "S10: b")), frozenset({"S1"}))
+    assert failure == "DENY MISMATCH: missing none; unexpected S10"
+
+
+def test_withheld_never_satisfies_an_expected_deny() -> None:
+    """A withheld case fails though a deny is expected: a rule that did not run did not refuse."""
+    failure = judge(Verdict(deny=("S0: x",), withheld=("no rule",)), _S0)
+    assert failure is not None
+    assert failure.startswith("UNMEASURED")
+
+
+def test_expect_is_read_from_the_case() -> None:
+    """`expect.deny` is the set of rule ids; a case without `expect` is admitted-only."""
+    read = expected_denies("c", {"case": "c", "expect": {"deny": ["S0", " L2 "]}})
+    assert read == frozenset({"S0", "L2"})
+    assert expected_denies("c", {"case": "c"}) is None
+
+
+@pytest.mark.parametrize(
+    "expect", ["denied", {"deny": []}, {"deny": "S0"}, {"deny": [""]}, {"admit": ["S0"]}]
+)
+def test_malformed_expect_is_a_data_error(expect: object) -> None:
+    """A bare "denied", an empty list, or a non-id entry is refused, never read as admitted-only."""
+    with pytest.raises(SpecDataError, match="case c: "):
+        expected_denies("c", {"case": "c", "expect": expect})
 
 
 def test_cases_sit_beside_the_spec() -> None:

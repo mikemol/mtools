@@ -111,6 +111,39 @@ def test_ruleless_spec_admits_nothing(pytester: pytest.Pytester) -> None:
     result.stdout.fnmatch_lines(["*UNMEASURED*no `deny` rule*"])
 
 
+_EXPECTING = """[
+  {"case": "refused", "deny": ["S0: must refuse"], "expect": {"deny": ["S0"]}},
+  {"case": "wrong-rule", "deny": ["S1: other"], "expect": {"deny": ["S0"]}},
+  {"case": "slipped", "expect": {"deny": ["S0"]}}
+]"""
+
+
+def test_expected_deny_maps_to_its_outcome(pytester: pytest.Pytester) -> None:
+    """A refusing fixture passes on its expected rule; another rule, or none, fails (W372)."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_EXPECTING)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(passed=1, failed=2)
+    result.stdout.fnmatch_lines(
+        [
+            "*wrong-rule: DENY MISMATCH: missing S0; unexpected S1*",
+            "*slipped: DENY MISMATCH: missing S0; unexpected none*",
+            "pytestspec: spec.rego impl=as-written admitted=0 denied=2 refused=1 unmeasured=0*",
+        ]
+    )
+
+
+def test_malformed_expect_is_a_collection_error(pytester: pytest.Pytester) -> None:
+    """A bare `"expect": "denied"` ERRORS at collection rather than running admitted-only."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec='[{"case": "c", "expect": "denied"}]')
+    result = pytester.runpytest(*_LOAD)
+    result.assert_outcomes(errors=1)
+    result.stdout.fnmatch_lines(["*case c: expect must be*"])
+
+
 def test_spec_without_case_data_is_a_collection_error(pytester: pytest.Pytester) -> None:
     """A spec with no `.cases.json` ERRORS at collection; it never collects as zero cases."""
     pytester.makeconftest(_STUB)
@@ -185,7 +218,7 @@ def test_differential_line_counts_each_case_once(pytester: pytest.Pytester) -> N
     result.stdout.fnmatch_lines(
         [
             (
-                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 unmeasured=1"
+                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 refused=0 unmeasured=1"
                 " do-not-port=1 port-fix=1 declared-skipped=0 cached=0"
             )
         ]
@@ -206,7 +239,7 @@ def test_differential_line_survives_a_parallel_run(pytester: pytest.Pytester) ->
     result.stdout.fnmatch_lines(
         [
             (
-                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 unmeasured=1"
+                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 refused=0 unmeasured=1"
                 " do-not-port=1 port-fix=1 declared-skipped=0 cached=0"
             )
         ]
