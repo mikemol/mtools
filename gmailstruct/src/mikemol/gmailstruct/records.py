@@ -135,3 +135,63 @@ def message(value: object) -> Message | Unreadable:
         )
     except _RefusedError as err:
         return Unreadable(id=msg_id, reason=str(err))
+
+
+@dataclass(frozen=True)
+class Listed:
+    """One entry of a `users.messages.list` page, with where it was listed."""
+
+    id: str
+    thread_id: str
+    page: int
+    ordinal: int
+
+
+def _entry(item: object, page: int, ordinal: int) -> Listed | Unreadable:
+    where = f"page {page} messages[{ordinal}]"
+    entry = _record(item)
+    if entry is None:
+        return Unreadable(id=None, reason=f"{where} is not an object")
+    raw_id = entry.get("id")
+    try:
+        return Listed(_text(entry, "id"), _text(entry, "threadId"), page, ordinal)
+    except _RefusedError as err:
+        return Unreadable(id=raw_id if isinstance(raw_id, str) else None, reason=f"{where}: {err}")
+
+
+def pages(values: list[object]) -> list[Listed | Unreadable]:
+    """Narrow a run of `users.messages.list` responses, in fetch order, into records.
+
+    ⚑ ONE RECORD PER LISTED ENTRY, AND ONE PER PAGE THAT CANNOT BE READ. `resultSizeEstimate` is
+    the API's estimate and is never read as the count: the count is the number of records. An
+    empty page omits `messages`, and reads as no entries.
+
+    ⚑ A TRUNCATED LISTING IS A RECORD TOO. Every page but the last must carry `nextPageToken`, and
+    the last must not; otherwise the run is not the whole listing, and an `Unreadable` says so
+    rather than letting a partial count read as complete.
+
+    Returns:
+        `Listed` per entry in order, with `Unreadable` for each page or entry out of shape.
+
+    """
+    out: list[Listed | Unreadable] = []
+    last = len(values) - 1
+    for page_no, value in enumerate(values):
+        page = _record(value)
+        if page is None:
+            out.append(Unreadable(id=None, reason=f"page {page_no} is not a JSON object"))
+            continue
+        has_next = isinstance(page.get("nextPageToken"), str)
+        if has_next == (page_no == last):
+            state = "has" if has_next else "lacks"
+            why = f"page {page_no} {state} nextPageToken: listing truncated"
+            out.append(Unreadable(id=None, reason=why))
+        if "messages" not in page:
+            continue
+        try:
+            items = _items(page["messages"], f"page {page_no} messages")
+        except _RefusedError as err:
+            out.append(Unreadable(id=None, reason=str(err)))
+            continue
+        out.extend(_entry(item, page_no, ordinal) for ordinal, item in enumerate(items))
+    return out

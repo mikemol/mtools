@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the gmailstruct warrant set, one per test module, in document order.
 # key <TAB> heading title
 records	The Record Layer: Every Message in Exactly One Record, Unreadable Ones Carried With a Reason
+pages	Listing Pages: Every Listed Id in Exactly One Record, and a Truncated Run Said So

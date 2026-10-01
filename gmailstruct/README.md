@@ -8,8 +8,8 @@ mtools:W287). A message the reader cannot narrow becomes an `Unreadable` record 
 count over the output is a count over the input.
 
 The package is being built in stages: **`records.message`** (one `users.messages.get` response,
-`format=metadata`) exists so far. Listing pages (W334) and `format=full` MIME parts (W335) come
-next. Auth (W288) and the CLI (W289) are separate, and neither reaches this layer.
+`format=metadata`) and **`records.pages`** (a run of `users.messages.list` responses) exist so
+far. `format=full` MIME parts (W335) come next. Auth (W288) and the CLI (W289) are separate, and neither reaches this layer.
 
 ## `mikemol.gmailstruct.records`
 
@@ -23,5 +23,11 @@ rec = message(json.loads(body))  # Message | Unreadable
 |---|---|
 | `Message` | `id`, `thread_id`, `labels`, `snippet`, `internal_date_ms`, and the `headers` as ordered (name, value) pairs, repeats kept |
 | `Unreadable` | the response is not an object, or a field is missing or the wrong type. It carries the `id` when one could be read, and the `reason`. |
+
+`records.pages(values)` takes the list responses in fetch order and returns one `Listed` (`id`,
+`thread_id`, `page`, `ordinal`) per entry, with an `Unreadable` for each page or entry out of
+shape. `resultSizeEstimate` is never read as the count. If the pages do not chain (a page before
+the last without `nextPageToken`, or a last page that still has one), an `Unreadable` says the
+listing is truncated, so a partial count cannot read as complete.
 
 The tests are synthetic (`@example.invalid`). Keep them so: no real mail enters this tree.

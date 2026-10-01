@@ -56,3 +56,52 @@
   claim  = {A count over the output is a count over the input, readable and unreadable alike.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_every_response_yields_exactly_one_record},
 }
+
+@misc{gmailstruct-pages-two-pages-list-each-entry-once-in-order,
+  section = {pages},
+  title  = {The positive control: two whole pages give one Listed per entry, in fetch order},
+  claim  = {The positive control: two whole pages give one Listed per entry, in fetch order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_two_pages_list_each_entry_once_in_order},
+}
+
+@misc{gmailstruct-pages-estimate-is-never-the-count,
+  section = {pages},
+  title  = {The estimate says 201; three entries were listed, and three records come out},
+  claim  = {The estimate says 201; three entries were listed, and three records come out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_estimate_is_never_the_count},
+}
+
+@misc{gmailstruct-pages-empty-listing-has-no-messages-key-and-no-records,
+  section = {pages},
+  title  = {The API omits messages on an empty page; that reads as no entries, not as damage},
+  claim  = {The API omits messages on an empty page; that reads as no entries, not as damage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_empty_listing_has_no_messages_key_and_no_records},
+}
+
+@misc{gmailstruct-pages-truncated-run-is-a-record,
+  section = {pages},
+  title  = {A last page still carrying nextPageToken means the run stopped early; a record says so},
+  claim  = {A last page still carrying nextPageToken means the run stopped early; a record says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_truncated_run_is_a_record},
+}
+
+@misc{gmailstruct-pages-missing-middle-token-is-a-record,
+  section = {pages},
+  title  = {A page before the last without nextPageToken means pages were joined that do not chain},
+  claim  = {A page before the last without nextPageToken means pages were joined that do not chain.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_missing_middle_token_is_a_record},
+}
+
+@misc{gmailstruct-pages-bad-entry-is-unreadable-and-keeps-its-place,
+  section = {pages},
+  title  = {An entry out of shape is one Unreadable naming its page and position; its siblings stay},
+  claim  = {An entry out of shape is one Unreadable naming its page and position; its siblings stay.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_bad_entry_is_unreadable_and_keeps_its_place},
+}
+
+@misc{gmailstruct-pages-unreadable-page-is-one-record,
+  section = {pages},
+  title  = {A page that is not an object, or whose messages is no list, is one record, never a skip},
+  claim  = {A page that is not an object, or whose messages is no list, is one record, never a skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_unreadable_page_is_one_record},
+}
