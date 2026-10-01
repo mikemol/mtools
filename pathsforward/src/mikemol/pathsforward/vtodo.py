@@ -26,6 +26,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.pathsforward.ics import content_line, escape, serialize
 from mikemol.pathsforward.model import foreign_symbol, strlist, symbol_number, text
+from mikemol.pathsforward.vtimezone import vtimezone
 
 if TYPE_CHECKING:
     from mikemol.pathsforward.model import Json, State
@@ -132,6 +133,23 @@ def todo(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
     return lines
 
 
+def _zones(state: State) -> dict[str, list[int]]:
+    """Collect every TZID the waypoints use, with the years each appears in.
+
+    Returns:
+        zone name -> the years of its values, in waypoint order.
+
+    """
+    zones: dict[str, list[int]] = {}
+    for w in state.waypoints:
+        for name in ("dtstart", "due"):
+            value = text(w, name)
+            if value.startswith(_TZID):
+                zone, _, local = value.removeprefix(_TZID).partition(":")
+                zones.setdefault(zone, []).append(int(local[:4]))
+    return zones
+
+
 def calendar(state: State, *, repo: str, host: str, stamp: str) -> str:
     """Project a whole queue as one VCALENDAR, residue omitted.
 
@@ -146,6 +164,10 @@ def calendar(state: State, *, repo: str, host: str, stamp: str) -> str:
         "VERSION:2.0",
         content_line("PRODID", f"-//mikemol//pathsforward {escape(repo)}//EN"),
     ]
+    # ⚑ ONE VTIMEZONE PER TZID USED (RFC 5545 3.2.19, W315), exact from a year before its earliest
+    # value to two after its latest, so a recurrence's near future is covered too.
+    for zone, years in sorted(_zones(state).items()):
+        lines.extend(vtimezone(zone, min(years) - 1, max(years) + 2))
     for w in state.waypoints:
         lines.extend(todo(w, repo=repo, host=host, stamp=stamp))
     lines.append("END:VCALENDAR")

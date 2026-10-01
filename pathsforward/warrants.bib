@@ -2426,3 +2426,31 @@
   claim  = { --ics is READ-ONLY: the state file is byte-identical after it runs.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_ics_mode_prints_the_calendar_and_writes_nothing},
 }
+
+@misc{pathsforward-vtimezone-detroit-2026-has-two-transitions-at-the-published-instants,
+  section = {vtimezone},
+  title  = {US rules: DST starts 2026-03-08 02:00 local (07:00Z) and ends 2026-11-01 02:00 (06:00Z)},
+  claim  = {US rules: DST starts 2026-03-08 02:00 local (07:00Z) and ends 2026-11-01 02:00 (06:00Z).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtimezone.py -k test_detroit_2026_has_two_transitions_at_the_published_instants},
+}
+
+@misc{pathsforward-vtimezone-each-observance-starts-at-the-local-time-in-the-old-offset,
+  section = {vtimezone},
+  title  = {⚑ DTSTART is the wall clock as the change happens, read in TZOFFSETFROM (RFC 5545 3.6.5)},
+  claim  = { DTSTART is the wall clock as the change happens, read in TZOFFSETFROM (RFC 5545 3.6.5).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtimezone.py -k test_each_observance_starts_at_the_local_time_in_the_old_offset},
+}
+
+@misc{pathsforward-vtimezone-zone-without-transitions-gets-one-standard-observance,
+  section = {vtimezone},
+  title  = {Kolkata has kept +05:30 since 1945: one STANDARD, its half-hour offset written +0530},
+  claim  = {Kolkata has kept +05:30 since 1945: one STANDARD, its half-hour offset written +0530.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtimezone.py -k test_a_zone_without_transitions_gets_one_standard_observance},
+}
+
+@misc{pathsforward-vtimezone-calendar-carries-one-vtimezone-per-tzid-used,
+  section = {vtimezone},
+  title  = {Two Detroit waypoints and one UTC: exactly one VTIMEZONE, for Detroit, before the TODOs},
+  claim  = {Two Detroit waypoints and one UTC: exactly one VTIMEZONE, for Detroit, before the TODOs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtimezone.py -k test_the_calendar_carries_one_vtimezone_per_tzid_used},
+}
