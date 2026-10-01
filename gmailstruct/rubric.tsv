@@ -5,3 +5,4 @@ pages	Listing Pages: Every Listed Id in Exactly One Record, and a Truncated Run 
 parts	MIME Parts: Every Node of the Tree in Exactly One Record, Bodies Decoded or Refused
 auth	The Refresh Token: Decrypted Into Memory Only, and Absent From Every Failure
 exchange	The Access Token: Exchanged In Memory, With Only Status and OAuth Code in a Failure
+consent	The Consent Run: The Refresh Token Reaches Only the Encryptor, Behind PKCE and State

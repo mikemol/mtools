@@ -219,3 +219,54 @@
   claim  = {A 200 whose body is not JSON is refused, and the decode error is not chained.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_non_json_success_is_an_error_carrying_none_of_it},
 }
+
+@misc{gmailstruct-consent-refresh-token-reaches-only-encrypt,
+  section = {consent},
+  title  = {The positive control: one consent page, one code POST, and the token handed to encrypt},
+  claim  = {The positive control: one consent page, one code POST, and the token handed to encrypt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_refresh_token_reaches_only_encrypt},
+}
+
+@misc{gmailstruct-consent-consent-page-asks-for-readonly-offline-access-with-pkce,
+  section = {consent},
+  title  = {The page asks read-only Gmail, offline access and a fresh prompt, with an S256 challenge},
+  claim  = {The page asks read-only Gmail, offline access and a fresh prompt, with an S256
+            challenge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_consent_page_asks_for_readonly_offline_access_with_pkce},
+}
+
+@misc{gmailstruct-consent-state-mismatch-is-refused-before-the-code-is-used,
+  section = {consent},
+  title  = {A redirect whose state differs is refused; nothing is POSTed and nothing is encrypted},
+  claim  = {A redirect whose state differs is refused; nothing is POSTed and nothing is encrypted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_state_mismatch_is_refused_before_the_code_is_used},
+}
+
+@misc{gmailstruct-consent-refused-exchange-carries-no-secret,
+  section = {consent},
+  title  = {A 400 echoing the secret and the code names its status only; encrypt is never called},
+  claim  = {A 400 echoing the secret and the code names its status only; encrypt is never called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_refused_exchange_carries_no_secret},
+}
+
+@misc{gmailstruct-consent-response-without-refresh-token-is-refused,
+  section = {consent},
+  title  = {A 200 with no refresh_token is an error, not a silent success with nothing encrypted},
+  claim  = {A 200 with no refresh_token is an error, not a silent success with nothing encrypted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_response_without_refresh_token_is_refused},
+}
+
+@misc{gmailstruct-consent-unreadable-client-json-is-refused-without-quoting-it,
+  section = {consent},
+  title  = {A client JSON that will not parse, or lacks its fields, is refused; its text is unquoted},
+  claim  = {A client JSON that will not parse, or lacks its fields, is refused; its text is
+            unquoted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_unreadable_client_json_is_refused_without_quoting_it},
+}
+
+@misc{gmailstruct-consent-pkce-pair-is-unpadded-base64url-and-s256,
+  section = {consent},
+  title  = {The verifier is 32 random bytes as unpadded base64url; the challenge is its SHA-256},
+  claim  = {The verifier is 32 random bytes as unpadded base64url; the challenge is its SHA-256.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_consent.py -k test_pkce_pair_is_unpadded_base64url_and_s256},
+}
