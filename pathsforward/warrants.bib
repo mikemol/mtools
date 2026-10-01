@@ -2454,3 +2454,26 @@
   claim  = {Two Detroit waypoints and one UTC: exactly one VTIMEZONE, for Detroit, before the TODOs.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtimezone.py -k test_the_calendar_carries_one_vtimezone_per_tzid_used},
 }
+
+@misc{pathsforward-vtodo-recurring-waypoint-carries-its-rule-and-exdates-as-stored,
+  section = {vtodo},
+  title  = {⚑ The RRULE is written verbatim, its ';' unescaped; an EXDATE takes DTSTART's form (W309)},
+  claim  = { The RRULE is written verbatim, its ';' unescaped; an EXDATE takes DTSTART's form
+            (W309).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_a_recurring_waypoint_carries_its_rule_and_exdates_as_stored},
+}
+
+@misc{pathsforward-vtodo-each-alarm-is-a-display-valarm-with-its-trigger,
+  section = {vtodo},
+  title  = {A stored TRIGGER's RELATED or VALUE becomes the TRIGGER's param (RFC 5545 3.8.6.3, W279)},
+  claim  = {A stored TRIGGER's RELATED or VALUE becomes the TRIGGER's param (RFC 5545 3.8.6.3,
+            W279).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_each_alarm_is_a_display_valarm_with_its_trigger},
+}
+
+@misc{pathsforward-vtodo-completed-occurrence-is-an-override-and-a-missed-one-is-absent,
+  section = {vtodo},
+  title  = {Life's model (W310): December done, November missed, so ONE override, keyed by its RID},
+  claim  = {Life's model (W310): December done, November missed, so ONE override, keyed by its RID.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_a_completed_occurrence_is_an_override_and_a_missed_one_is_absent},
+}

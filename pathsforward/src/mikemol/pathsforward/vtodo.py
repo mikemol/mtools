@@ -25,7 +25,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from mikemol.pathsforward.ics import content_line, escape, serialize
-from mikemol.pathsforward.model import foreign_symbol, strlist, symbol_number, text
+from mikemol.pathsforward.model import foreign_symbol, strlist, strmap, symbol_number, text
 from mikemol.pathsforward.vtimezone import vtimezone
 
 if TYPE_CHECKING:
@@ -38,6 +38,8 @@ _STATUS = {
     "done": "COMPLETED",
 }
 _TZID = "TZID="
+_RELATED = "RELATED="
+_ABSOLUTE = "VALUE=DATE-TIME:"
 _DATE_LENGTH = 8  # YYYYMMDD: an RFC 5545 DATE (3.3.4)
 
 
@@ -98,6 +100,72 @@ def _description(w: Json) -> str:
     return escape("\n".join(parts))
 
 
+def _trigger(trigger: str) -> str:
+    """Write one stored TRIGGER (W279) as its content line, its RELATED or VALUE as a param.
+
+    Returns:
+        the TRIGGER line.
+
+    """
+    if trigger.startswith(_RELATED):
+        related, _, duration = trigger.removeprefix(_RELATED).partition(":")
+        return content_line("TRIGGER", duration, [("RELATED", related)])
+    if trigger.startswith(_ABSOLUTE):
+        return content_line("TRIGGER", trigger.removeprefix(_ABSOLUTE), [("VALUE", "DATE-TIME")])
+    return content_line("TRIGGER", trigger)
+
+
+def _repeats_and_alarms(w: Json) -> list[str]:
+    """Write a waypoint's RRULE and EXDATEs (W309), then one DISPLAY VALARM per alarm (W279).
+
+    ⚑ An RRULE is written as stored, never escaped: its ";" and "," are its grammar.
+
+    Returns:
+        the lines, in that order.
+
+    """
+    lines = [content_line("RRULE", text(w, "rrule"))] if text(w, "rrule") else []
+    lines.extend(_time("EXDATE", exdate) for exdate in strlist(w, "exdates"))
+    for alarm in strlist(w, "alarms"):
+        lines += [
+            "BEGIN:VALARM",
+            "ACTION:DISPLAY",
+            content_line("DESCRIPTION", escape(f"{text(w, 'symbol')} {text(w, 'title')}")),
+            _trigger(alarm),
+            "END:VALARM",
+        ]
+    return lines
+
+
+def overrides(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
+    """Write one COMPLETED VTODO per completed occurrence of a recurring waypoint (W310).
+
+    ⚑ LIFE'S MODEL (the Akonadi and Google Tasks one): an override shares the series' UID, is keyed
+    by RECURRENCE-ID, and carries STATUS:COMPLETED with its stamp. A missed occurrence has none.
+
+    Returns:
+        the override VTODOs' lines, oldest occurrence first.
+
+    """
+    sym = text(w, "symbol")
+    lines: list[str] = []
+    for rid, completed in sorted(strmap(w, "occurrences").items()):
+        lines += [
+            "BEGIN:VTODO",
+            content_line("UID", _uid(repo, sym, host)),
+            content_line("DTSTAMP", stamp),
+            _time("RECURRENCE-ID", rid),
+            # ⚑ The override's own DTSTART is its occurrence: without it a reader places the
+            # completed occurrence nowhere (recurring_ical_events put it at 1970-01-01, W314).
+            _time("DTSTART", rid),
+            content_line("SUMMARY", escape(f"{sym} {text(w, 'title')}")),
+            "STATUS:COMPLETED",
+            content_line("COMPLETED", completed),
+            "END:VTODO",
+        ]
+    return lines
+
+
 def todo(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
     """Project one waypoint as a VTODO.
 
@@ -129,6 +197,7 @@ def todo(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
     lines.extend(_time(name.upper(), text(w, name)) for name in ("dtstart", "due") if text(w, name))
     if text(w, "completed"):
         lines.append(content_line("COMPLETED", text(w, "completed")))
+    lines.extend(_repeats_and_alarms(w))
     lines.append("END:VTODO")
     return lines
 
@@ -142,8 +211,9 @@ def _zones(state: State) -> dict[str, list[int]]:
     """
     zones: dict[str, list[int]] = {}
     for w in state.waypoints:
-        for name in ("dtstart", "due"):
-            value = text(w, name)
+        values = [text(w, "dtstart"), text(w, "due"), *strlist(w, "exdates")]
+        values += strmap(w, "occurrences").keys()
+        for value in values:
             if value.startswith(_TZID):
                 zone, _, local = value.removeprefix(_TZID).partition(":")
                 zones.setdefault(zone, []).append(int(local[:4]))
@@ -170,5 +240,6 @@ def calendar(state: State, *, repo: str, host: str, stamp: str) -> str:
         lines.extend(vtimezone(zone, min(years) - 1, max(years) + 2))
     for w in state.waypoints:
         lines.extend(todo(w, repo=repo, host=host, stamp=stamp))
+        lines.extend(overrides(w, repo=repo, host=host, stamp=stamp))
     lines.append("END:VCALENDAR")
     return serialize(lines)
