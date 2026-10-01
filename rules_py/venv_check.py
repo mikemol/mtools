@@ -14,6 +14,7 @@ claims, because venv.bzl's first draft built a well-formed link to nothing and t
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -109,14 +110,16 @@ def check_entries(venv: Path, dist: str) -> list[str]:
 
     """
     findings = []
+    env = {"PATH": "/usr/bin:/bin", "PYTHONPROFILEIMPORTTIME": "1"}
+    # ⚑ Under a sandbox the interpreter is a hardlink that finds its stdlib only through
+    # PYTHONHOME, which venv_check.sh sets (W342). The minimal env must carry it, or every entry
+    # fails for a reason that is the harness's, not the venv's.
+    if "PYTHONHOME" in os.environ:
+        env["PYTHONHOME"] = os.environ["PYTHONHOME"]
     for script in sorted((venv / "bin").glob("*")):
         if script.name == "python3" or script.is_symlink():
             continue
-        proc = _run(
-            ["/bin/sh", "-c", 'exec "$0"', str(script)],
-            stdin="{}",
-            env={"PATH": "/usr/bin:/bin", "PYTHONPROFILEIMPORTTIME": "1"},
-        )
+        proc = _run(["/bin/sh", "-c", 'exec "$0"', str(script)], stdin="{}", env=env)
         if "command not found" in proc.stderr or "import time:" not in proc.stderr:
             findings.append(f"{script}: no Python interpreter ran it: {proc.stderr.strip()[:200]}")
         elif f"mikemol.{dist}" not in proc.stderr:
@@ -170,8 +173,11 @@ def main(argv: list[str]) -> int:
     if not _MIN_ARGS <= len(argv) <= _MAX_ARGS:
         sys.stderr.write(_USAGE + "\n")
         return 2
-    suite = Path(argv[2]) if len(argv) == _MAX_ARGS else None
-    findings = check(Path(argv[0]), argv[1], suite)
+    suite = Path(argv[2]).absolute() if len(argv) == _MAX_ARGS else None
+    # ⚑ ABSOLUTE, NEVER RESOLVED. check_suite runs with cwd=SUITE_DIR, where a relative venv path
+    # names nothing (measured W342: `gmailstruct/.venv/bin/python3` not found). resolve() would
+    # instead follow the interpreter link to the base python and lose the venv.
+    findings = check(Path(argv[0]).absolute(), argv[1], suite)
     for finding in findings:
         sys.stderr.write(finding + "\n")
     return 1 if findings else 0

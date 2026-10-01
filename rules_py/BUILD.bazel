@@ -11,4 +11,5 @@ exports_files([
     "test_venv_check.py",
     "venv.bzl",
     "venv_check.py",
+    "venv_check.sh",
 ])

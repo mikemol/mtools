@@ -102,6 +102,23 @@ sh_test(
     size = "medium",
 )
 
+# W342: this distribution's built venv, checked by @mikemol_rules_py's venv_check. The tests are
+# staged too, because the check collects the distribution's own suite with the venv.
+sh_test(
+    name = "venv",
+    srcs = ["@mikemol_rules_py//:venv_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location @mikemol_rules_py//:venv_check.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "@mikemol_rules_py//:venv_check.py",
+    ] + glob(["tests/**/*.py"]),
+    size = "small",
+)
+
 py_binary(
     name = "mypy_runner",
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
