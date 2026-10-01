@@ -2145,3 +2145,27 @@
   claim  = {Live waypoints with no vector are counted; done ones and scored ones are not (W257).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_unscored_counts_live_waypoints_without_a_vector},
 }
+
+@misc{pathsforward-ops-update-corrects-caused-by-in-place,
+  section = {ops},
+  title  = {⚑ A mis-cited cause is fixed on the same symbol; "" clears it (W305, nemik:W136)},
+  claim  = { A mis-cited cause is fixed on the same symbol; "" clears it (W305, nemik:W136). Before,
+            caused_by was settable only at --add, so a wrong repo prefix could be
+            repaired only by drop and re-add, which re-mints the symbol and breaks every
+            citation of the old one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_update_corrects_caused_by_in_place},
+}
+
+@misc{pathsforward-ops-update-refuses-a-caused-by-that-is-not-one-token,
+  section = {ops},
+  title  = {The same one-token rule as --add; a refused update leaves the waypoint as it was},
+  claim  = {The same one-token rule as --add; a refused update leaves the waypoint as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_update_refuses_a_caused_by_that_is_not_one_token},
+}
+
+@misc{pathsforward-ops-correcting-caused-by-is-not-work,
+  section = {ops},
+  title  = {A citation fix is metadata, like --enables: it leaves last_worked alone},
+  claim  = {A citation fix is metadata, like --enables: it leaves last_worked alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_correcting_caused_by_is_not_work},
+}

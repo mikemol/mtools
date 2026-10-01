@@ -278,6 +278,43 @@ def test_add_records_caused_by(ref: str, stored: str | None) -> None:
 
 
 @pytest.mark.parametrize(
+    ("ref", "stored"), [("luthen-observability:W185", "luthen-observability:W185"), ("", None)]
+)
+def test_update_corrects_caused_by_in_place(ref: str, stored: str | None) -> None:
+    """⚑ A mis-cited cause is fixed on the same symbol; "" clears it (W305, nemik:W136).
+
+    Before, caused_by was settable only at --add, so a wrong repo prefix could be repaired only by
+    drop and re-add, which re-mints the symbol and breaks every citation of the old one.
+    """
+    state = _state()
+    ops.add(state, ops.Draft("new", caused_by="luthen:W185"), _NOW)
+    sym = state.waypoints[-1]["symbol"]
+    ops.update(state, str(sym), ops.Update(caused_by=ref), _NOW)
+    assert (state.waypoints[-1]["symbol"], state.waypoints[-1]["caused_by"]) == (sym, stored)
+
+
+def test_update_refuses_a_caused_by_that_is_not_one_token() -> None:
+    """The same one-token rule as --add; a refused update leaves the waypoint as it was."""
+    state = _state()
+    ops.add(state, ops.Draft("new", caused_by="W1"), _NOW)
+    before = dict(state.waypoints[-1])
+    with pytest.raises(ops.RefusedError, match="not one token"):
+        ops.update(state, str(before["symbol"]), ops.Update(caused_by="two words"), _NOW)
+    assert state.waypoints[-1] == before
+
+
+def test_correcting_caused_by_is_not_work() -> None:
+    """A citation fix is metadata, like --enables: it leaves last_worked alone."""
+    state = _state()
+    ops.add(state, ops.Draft("new", caused_by="luthen:W185"), _NOW)
+    sym = str(state.waypoints[-1]["symbol"])
+    ops.update(
+        state, sym, ops.Update(caused_by="luthen-observability:W185"), "2026-10-01T00:00:00Z"
+    )
+    assert state.waypoints[-1]["last_worked"] is None
+
+
+@pytest.mark.parametrize(
     "draft",
     [
         ops.Draft("  "),

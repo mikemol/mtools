@@ -388,7 +388,8 @@ def test_update_refuses_a_malformed_edge(tmp_path: Path) -> None:
     "args",
     [
         ("--update", "W1", "--except", "W2"),
-        ("--update", "W1", "--caused-by", "nemik"),
+        # --caused-by left this list at W305 (nemik:W136): --update now reads it.
+        ("--update", "W1", "--kind", "redact"),
         ("--add", "t", "--status", "done"),
         ("--hash", "--next", "n"),
         ("--drop", "W1", "why", "--enables", "W2"),

@@ -124,6 +124,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "witness",
             "vector",
             "vector_source",
+            "caused_by",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -283,7 +284,11 @@ def _parser() -> argparse.ArgumentParser:
         choices=("default", "signal", "agent"),
         help="--update: who set the vector; required with --vector",
     )
-    ap.add_argument("--caused-by", metavar="REF", help="--add: letter path, peer, operator, W<n>")
+    ap.add_argument(
+        "--caused-by",
+        metavar="REF",
+        help="--add/--update: letter path, peer, operator, W<n>; '' clears on --update",
+    )
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
@@ -686,6 +691,7 @@ def _update(ctx: Ctx) -> int:
         witness=ctx.get("witness"),
         vector=ctx.get("vector"),
         vector_source=ctx.get("vector_source"),
+        caused_by=ctx.get("caused_by"),
     )
 
     def edit(state: State) -> int:

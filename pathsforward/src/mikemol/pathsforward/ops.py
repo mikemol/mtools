@@ -105,6 +105,11 @@ class Update:
     # WV:1 grammar; nemik reads the stored string and owns the band.
     vector: str | None = None
     vector_source: str | None = None
+    # ⚑ A MIS-CITED CAUSE IS FIXED IN PLACE (W305, nemik:W136, 2026-10-01): caused_by could be set
+    # only at --add, so a wrong repo prefix (nemik W105/W107 cited luthen:, not
+    # luthen-observability:) could be repaired only by drop and re-add, which re-mints the symbol
+    # and breaks every citation of it. "" clears the field.
+    caused_by: str | None = None
 
 
 @dataclass(frozen=True)
@@ -256,6 +261,8 @@ def _set_given(new: Json, upd: Update) -> None:
         "vector_source": upd.vector_source,
     }
     new.update({key: value for key, value in given.items() if value is not None})
+    if upd.caused_by is not None:
+        new["caused_by"] = upd.caused_by or None
 
 
 def _is_work(upd: Update) -> bool:
@@ -317,10 +324,15 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
         the updated waypoint.
 
     Raises:
-        RefusedError: on an enum violation, or a result blocked without a party and a kind.
+        RefusedError: on an enum violation, a caused_by that is not one token, or a result blocked
+            without a party and a kind.
 
     """
     _refuse_enums(upd)
+    if upd.caused_by is not None and any(ch.isspace() for ch in upd.caused_by):
+        # The same one-token rule --add applies, so the two routes cannot disagree.
+        msg = f"{sym}: caused_by {upd.caused_by!r} is not one token"
+        raise RefusedError(msg)
     w = find(state, sym)
     new = _applied(w, upd, now)
     if text(new, "status") == "blocked" and (
