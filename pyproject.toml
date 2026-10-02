@@ -92,6 +92,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 ]
 # ⚑ ITS TEST ASSERTS, and builds venvs from the interpreter running it; no subprocess of its own.
 "test_venv_check.py" = ["assert"]
+# ⚑ ITS TEST ASSERTS (W233), over requirements files and locks it writes into tmp_path.
+"test_reqs_check.py" = ["assert"]
 # ⚑ A TEST MODULE ASSERTS; that is what pytest reads. And its GIT_* witness builds a real decoy
 # repository, because the hazard under test is git following an exported GIT_DIR — `git` is
 # resolved from PATH as `ratchet/tests/test_remap.py` resolves it, for the same reason.

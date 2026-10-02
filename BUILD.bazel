@@ -210,6 +210,25 @@ py_test(
     deps = [root_dev_requirement("pytest")],
 )
 
+# W233: the requirements/uv.lock sync check, tested the same way over hand-built distributions.
+py_test(
+    name = "test_reqs_check",
+    srcs = [
+        "@mikemol_rules_py//:test_reqs_check.py",
+        "@mikemol_rules_py//:reqs_check.py",
+        "@mikemol_rules_py//:pytest_main.py",
+    ],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location @mikemol_rules_py//:test_reqs_check.py)",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ],
+    size = "small",
+    deps = [root_dev_requirement("pytest")],
+)
+
 # W362: the suite check, tested the same way. Its fixtures are hand-built distributions in tmp_path.
 py_test(
     name = "test_suite_check",
@@ -251,6 +270,8 @@ _ATOM_PY = [
     "@mikemol_rules_py//:test_venv_check.py",
     "@mikemol_rules_py//:suite_check.py",
     "@mikemol_rules_py//:test_suite_check.py",
+    "@mikemol_rules_py//:reqs_check.py",
+    "@mikemol_rules_py//:test_reqs_check.py",
     "@mikemol_check_mypy//:mypy_runner.py",
     "@mikemol_check_mutants//:mutate_runner.py",
     "@mikemol_check_mutants//:test_mutate_runner.py",
@@ -315,6 +336,8 @@ sh_test(
             "test_venv_check.py",
             "suite_check.py",
             "test_suite_check.py",
+            "reqs_check.py",
+            "test_reqs_check.py",
         ]),
         ("check_mypy", ["mypy_runner.py"]),
         ("check_mutants", ["mutate_runner.py", "test_mutate_runner.py"]),

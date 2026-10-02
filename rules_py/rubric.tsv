@@ -4,3 +4,4 @@
 # key <TAB> heading title
 venv_check	The Venv Check: Every Property venv.bzl Promises, Run on One Distribution's Built Venv
 suite_check	The Suite Check: One Distribution's Tests Run Under Pytest and Stay in Their Sandbox
+reqs_check	The Requirements Check: One Distribution's requirements.txt Pins Agree With Its uv.lock

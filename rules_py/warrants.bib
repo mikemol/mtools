@@ -114,3 +114,45 @@
   claim   = {A suite that fails to collect is named with pytest's own words, not only its exit code.},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_collection_failure_names_its_cause}
 }
+
+@misc{rules-py-reqs-check-agreeing-pins-have-no-findings,
+  section = {reqs_check},
+  claim   = {The positive control: every pin matches the lock, with names compared PEP 503 normalized.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_agreeing_pins_have_no_findings}
+}
+
+@misc{rules-py-reqs-check-a-header-only-requirements-file-agrees,
+  section = {reqs_check},
+  claim   = {A distribution with no runtime pins has nothing to disagree about, given a non-empty lock.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_a_header_only_requirements_file_agrees}
+}
+
+@misc{rules-py-reqs-check-a-disagreeing-pin-is-named-with-both-versions,
+  section = {reqs_check},
+  claim   = {The W234 drift: a requirements pin behind the lock is one finding naming both versions.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_a_disagreeing_pin_is_named_with_both_versions}
+}
+
+@misc{rules-py-reqs-check-a-pin-the-lock-lacks-is-named,
+  section = {reqs_check},
+  claim   = {A pin with no package of that name in the lock is a finding, not skipped as unknown.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_a_pin_the_lock_lacks_is_named}
+}
+
+@misc{rules-py-reqs-check-a-missing-file-is-named,
+  section = {reqs_check},
+  claim   = {A distribution lacking either file is a finding per file, never a silent pass.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_a_missing_file_is_named}
+}
+
+@misc{rules-py-reqs-check-an-empty-lock-is-refused-as-vacuous,
+  section = {reqs_check},
+  claim   = {A lock recording no package means the comparison never ran, so it is a finding.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_an_empty_lock_is_refused_as_vacuous}
+}
+
+@misc{rules-py-reqs-check-main-reports-exit-codes,
+  section = {reqs_check},
+  claim   = {0 on agreement, 1 on drift, 2 on a usage error.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_main_reports_exit_codes}
+}

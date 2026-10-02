@@ -89,6 +89,18 @@ def dist_checks(venv_data = []):
         size = "small",
     )
 
+    # W233: every requirements.txt pin (the `_deps` hub's input) agrees with uv.lock (the host
+    # venv's and the `_dev` hub's), so the two resolvers cannot drift silently. W232 found hooks'
+    # ast-serialize at 0.9.0 against 0.11.1 by hand; this makes that a red target.
+    py_test(
+        name = "reqs",
+        srcs = ["@mikemol_rules_py//:reqs_check.py"],
+        main = "@mikemol_rules_py//:reqs_check.py",
+        args = [dist],
+        data = ["requirements.txt", "uv.lock"],
+        size = "small",
+    )
+
     # W362: the BUILD names pytest as every py_test's main, and no test resolves __file__ out of
     # the sandbox.
     py_test(
