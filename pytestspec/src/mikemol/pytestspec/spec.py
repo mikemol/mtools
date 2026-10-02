@@ -92,54 +92,92 @@ def rule_id(message: str) -> str:
     return message.split(":", 1)[0].strip()
 
 
-def expected_denies(name: str, case: Case) -> frozenset[str] | None:
-    """Read a case's `expect`: the rule ids that must deny it, and no others (W372).
+@dataclass(frozen=True)
+class Expect:
+    """The rule ids that must deny a case, and those that must withhold it; no others (W381)."""
 
-    el-openglo:W139 asked for this: a refusing fixture is half of each rule's falsifiability
-    record, and without it only the admitting half could be ported.
+    deny: frozenset[str] = frozenset()
+    withheld: frozenset[str] = frozenset()
+
+
+_EXPECT_KEYS = ("deny", "withheld")
+
+
+def _ids(name: str, key: str, raw: object) -> frozenset[str]:
+    if not isinstance(raw, list) or not all(
+        isinstance(i, str) and i.strip() for i in cast("list[object]", raw)
+    ):
+        msg = f"case {name}: every expected {key} must be a non-empty rule id"
+        raise SpecDataError(msg)
+    return frozenset(str(i).strip() for i in cast("list[object]", raw))
+
+
+def expectation(name: str, case: Case) -> Expect | None:
+    """Read a case's `expect`: the rule ids that must deny it and must withhold it (W372, W381).
+
+    el-openglo asked for both halves: a refusing fixture (W139) and a could-not-measure fixture
+    (W211) are each half of a rule's falsifiability record. ⚑ AN OMITTED KEY MEANS THAT SET MUST
+    BE EMPTY, so `{"withheld": ["X"]}` fails on any deny, and `{"deny": ["S0"]}` fails on any
+    withheld (a rule that did not run did not refuse).
 
     Returns:
-        the expected rule ids, or None when the case declares no `expect` (admitted-only).
+        the Expect, or None when the case declares no `expect` (admitted-only).
 
     Raises:
-        SpecDataError: `expect` is not `{"deny": [non-empty strings, at least one]}`. ⚑ No
-            bare `"denied"`: a case denied by the wrong rule would pass it.
+        SpecDataError: `expect` is not an object of `deny` and/or `withheld` id lists naming at
+            least one id between them. ⚑ No bare `"denied"`: a case denied by the wrong rule
+            would pass it.
 
     """
     expect = case.get("expect")
     if expect is None:
         return None
-    deny = cast("dict[str, object]", expect).get("deny") if isinstance(expect, dict) else None
-    if not isinstance(deny, list) or not deny:
-        msg = f'case {name}: expect must be {{"deny": [rule ids]}} with at least one id'
+    if not isinstance(expect, dict):
+        msg = f'case {name}: expect must be {{"deny": [...], "withheld": [...]}}'
         raise SpecDataError(msg)
-    ids = cast("list[object]", deny)
-    if not all(isinstance(i, str) and i.strip() for i in ids):
-        msg = f"case {name}: every expected deny must be a non-empty rule id"
+    fields = cast("dict[str, object]", expect)
+    unknown = sorted(set(fields) - set(_EXPECT_KEYS))
+    if unknown:
+        msg = f"case {name}: expect has unknown keys {', '.join(unknown)}"
         raise SpecDataError(msg)
-    return frozenset(str(i).strip() for i in ids)
+    got = {key: _ids(name, key, fields[key]) for key in _EXPECT_KEYS if key in fields}
+    found = Expect(**got)
+    if not found.deny and not found.withheld:
+        msg = f"case {name}: expect names no rule id; omit it for an admitted-only case"
+        raise SpecDataError(msg)
+    return found
 
 
-def judge(verdict: Verdict, expect: frozenset[str] | None = None) -> str | None:
+def _mismatch(label: str, want: frozenset[str], messages: tuple[str, ...]) -> str | None:
+    got = frozenset(rule_id(m) for m in messages)
+    if got == want:
+        return None
+    missing = ", ".join(sorted(want - got)) or "none"
+    extra = ", ".join(sorted(got - want)) or "none"
+    return f"{label} MISMATCH: missing {missing}; unexpected {extra}"
+
+
+def judge(verdict: Verdict, expect: Expect | None = None) -> str | None:
     """Map a verdict to a pytest outcome.
 
     Returns:
         None when the case is admitted (nothing denied, nothing withheld), or, with `expect`,
-        when exactly the expected rule ids deny it; otherwise the failure text. Withheld never
-        satisfies an expected deny: a rule that did not run did not refuse. Without `expect`,
-        deny is reported before withheld: a case both denied and withheld is a failure either
-        way, and the deny is the finding.
+        when the denying ids and the withholding ids each equal the expected sets; otherwise
+        the failure text, naming each mismatched set. Without `expect`, deny is reported before
+        withheld: a case both denied and withheld is a failure either way, and the deny is the
+        finding.
 
     """
     if expect is not None:
-        if verdict.withheld:
-            return "UNMEASURED (withheld, not denied): " + "; ".join(verdict.withheld)
-        got = frozenset(rule_id(m) for m in verdict.deny)
-        if got == expect:
-            return None
-        missing = ", ".join(sorted(expect - got)) or "none"
-        extra = ", ".join(sorted(got - expect)) or "none"
-        return f"DENY MISMATCH: missing {missing}; unexpected {extra}"
+        parts = [
+            m
+            for m in (
+                _mismatch("DENY", expect.deny, verdict.deny),
+                _mismatch("WITHHELD", expect.withheld, verdict.withheld),
+            )
+            if m is not None
+        ]
+        return " | ".join(parts) or None
     if verdict.deny:
         return "DENIED: " + "; ".join(verdict.deny)
     if verdict.withheld:

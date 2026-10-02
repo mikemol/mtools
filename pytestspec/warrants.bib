@@ -327,16 +327,15 @@
 
 @misc{pytestspec-spec-expect-is-read-from-the-case,
   section = {spec},
-  title  = {`expect.deny` is the set of rule ids; a case without `expect` is admitted-only},
-  claim  = {`expect.deny` is the set of rule ids; a case without `expect` is admitted-only.},
+  title  = {`expect` holds deny and withheld id sets; a case without `expect` is admitted-only},
+  claim  = {`expect` holds deny and withheld id sets; a case without `expect` is admitted-only.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_expect_is_read_from_the_case},
 }
 
 @misc{pytestspec-spec-malformed-expect-is-a-data-error,
   section = {spec},
-  title  = {A bare "denied", an empty list, or a non-id entry is refused, never read as admitted-only},
-  claim  = {A bare "denied", an empty list, or a non-id entry is refused, never read as admitted-
-            only.},
+  title  = {A bare "denied", no id at all, an unknown key, or a non-id entry is refused},
+  claim  = {A bare "denied", no id at all, an unknown key, or a non-id entry is refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_malformed_expect_is_a_data_error},
 }
 
@@ -380,4 +379,32 @@
   title  = {A declared path that is missing ERRORS at collection, naming the key},
   claim  = {A declared path that is missing ERRORS at collection, naming the key.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_declared_data_that_does_not_exist_is_a_collection_error},
+}
+
+@misc{pytestspec-spec-expected-withhold-passes-when-exactly-those-rules-withhold,
+  section = {spec},
+  title  = {W381: a could-not-measure arm passes on exactly its withheld ids, with no deny},
+  claim  = {W381: a could-not-measure arm passes on exactly its withheld ids, with no deny.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_expected_withhold_passes_when_exactly_those_rules_withhold},
+}
+
+@misc{pytestspec-spec-deny-fails-a-case-expecting-only-a-withhold,
+  section = {spec},
+  title  = {An omitted `deny` means none: a deny beside the expected withhold fails, naming it},
+  claim  = {An omitted `deny` means none: a deny beside the expected withhold fails, naming it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_a_deny_fails_a_case_expecting_only_a_withhold},
+}
+
+@misc{pytestspec-spec-both-sets-mismatched-name-both,
+  section = {spec},
+  title  = {When deny and withheld both differ, the failure names each, so neither is hidden},
+  claim  = {When deny and withheld both differ, the failure names each, so neither is hidden.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_both_sets_mismatched_name_both},
+}
+
+@misc{pytestspec-plugin-expected-withhold-maps-to-its-own-column,
+  section = {plugin},
+  title  = {W381: an expected withhold passes and counts as withheld-expected, never as admitted},
+  claim  = {W381: an expected withhold passes and counts as withheld-expected, never as admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_expected_withhold_maps_to_its_own_column},
 }

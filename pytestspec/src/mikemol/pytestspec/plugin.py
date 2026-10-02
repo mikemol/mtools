@@ -37,7 +37,7 @@ from mikemol.pytestspec.spec import (
     Evaluator,
     SpecDataError,
     disposition_of,
-    expected_denies,
+    expectation,
     judge,
     load_cases,
 )
@@ -202,12 +202,15 @@ class SpecItem(pytest.Item):
         except (opa.OpaUnavailableError, SpecDataError) as exc:
             msg = f"UNMEASURED (not evaluated, not passed): {exc}"
             raise SpecFailedError(msg) from exc
-        expect = expected_denies(self.name, self.case)
+        expect = expectation(self.name, self.case)
         failure = judge(verdict, expect)
         if failure is not None:
             raise SpecFailedError(failure)
         if expect is not None:
-            self.user_properties.append((REFUSED, True))
+            # ⚑ A PASS THAT RESTED ON AN EXPECTATION IS NOT AN ADMISSION, and which kind it
+            # was is recorded so the differential line can say so (W372, W381).
+            column = REFUSED if expect.deny else WITHHELD_EXPECTED
+            self.user_properties.append((OUTCOME, column))
 
     def repr_failure(
         self,
@@ -257,7 +260,7 @@ class SpecFile(pytest.File):
             names = frozenset(name for name, _ in cases)
             declared = [(name, case, disposition_of(name, case, names)) for name, case in cases]
             for name, case in cases:
-                expected_denies(name, case)
+                expectation(name, case)
         except SpecDataError as exc:
             raise self.CollectError(str(exc)) from exc
         return [
@@ -351,10 +354,16 @@ CACHED = "cached"
 # ⚑ `refused` (W372): a case whose `expect` named exactly the rules that denied it. It passed, but
 # it was not admitted, and folding it into `admitted` would hide the refusing half of the record.
 REFUSED = "refused"
+# ⚑ `withheld-expected` (W381): a case whose `expect` named exactly the rules that withheld it,
+# and no deny. A could-not-measure arm that held, so neither an admission nor a refusal.
+WITHHELD_EXPECTED = "withheld-expected"
+# The user_properties key under which a passing expectation records its column.
+OUTCOME = "pytestspec-outcome"
 COLUMNS = (
     "admitted",
     "denied",
     REFUSED,
+    WITHHELD_EXPECTED,
     "unmeasured",
     DO_NOT_PORT,
     PORT_FIX,
@@ -402,7 +411,9 @@ def _outcome(report: pytest.TestReport) -> str | None:
     if report.when != "call" and report.passed:
         return None
     if report.passed:
-        return REFUSED if (REFUSED, True) in report.user_properties else "admitted"
+        recorded = dict(report.user_properties)
+        column = recorded.get(OUTCOME)
+        return column if isinstance(column, str) else "admitted"
     if report.skipped:
         # A declared unmeasured case reports as xfail, which pytest files under skipped.
         return "unmeasured"

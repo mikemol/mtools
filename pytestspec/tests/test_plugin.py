@@ -191,7 +191,37 @@ def test_expected_deny_maps_to_its_outcome(pytester: pytest.Pytester) -> None:
         [
             "*wrong-rule: DENY MISMATCH: missing S0; unexpected S1*",
             "*slipped: DENY MISMATCH: missing S0; unexpected none*",
-            "pytestspec: spec.rego impl=as-written admitted=0 denied=2 refused=1 unmeasured=0*",
+            (
+                "pytestspec: spec.rego impl=as-written admitted=0 denied=2 refused=1"
+                " withheld-expected=0 unmeasured=0*"
+            ),
+        ]
+    )
+
+
+_WITHHOLDING = """[
+  {"case": "null-lint", "withheld": ["W: qmllint is null"], "expect": {"withheld": ["W"]}},
+  {"case": "also-denied", "deny": ["L2: x"], "withheld": ["W: y"],
+   "expect": {"withheld": ["W"]}},
+  {"case": "measured", "expect": {"withheld": ["W"]}}
+]"""
+
+
+def test_expected_withhold_maps_to_its_own_column(pytester: pytest.Pytester) -> None:
+    """W381: an expected withhold passes and counts as withheld-expected, never as admitted."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_WITHHOLDING)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(passed=1, failed=2)
+    result.stdout.fnmatch_lines(
+        [
+            "*also-denied: DENY MISMATCH: missing none; unexpected L2*",
+            "*measured: WITHHELD MISMATCH: missing W; unexpected none*",
+            (
+                "pytestspec: spec.rego impl=as-written admitted=0 denied=1 refused=0"
+                " withheld-expected=1 unmeasured=1*"
+            ),
         ]
     )
 
@@ -280,7 +310,8 @@ def test_differential_line_counts_each_case_once(pytester: pytest.Pytester) -> N
     result.stdout.fnmatch_lines(
         [
             (
-                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 refused=0 unmeasured=1"
+                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 refused=0"
+                " withheld-expected=0 unmeasured=1"
                 " do-not-port=1 port-fix=1 declared-skipped=0 cached=0"
             )
         ]
@@ -301,7 +332,8 @@ def test_differential_line_survives_a_parallel_run(pytester: pytest.Pytester) ->
     result.stdout.fnmatch_lines(
         [
             (
-                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 refused=0 unmeasured=1"
+                "pytestspec: spec.rego impl=as-written admitted=2 denied=1 refused=0"
+                " withheld-expected=0 unmeasured=1"
                 " do-not-port=1 port-fix=1 declared-skipped=0 cached=0"
             )
         ]

@@ -7,15 +7,17 @@ from pathlib import Path
 import pytest
 
 from mikemol.pytestspec.spec import (
+    Expect,
     SpecDataError,
     Verdict,
     cases_path,
-    expected_denies,
+    expectation,
     judge,
     load_cases,
 )
 
-_S0 = frozenset({"S0"})
+_S0 = Expect(deny=frozenset({"S0"}))
+_W = Expect(withheld=frozenset({"W"}))
 
 
 def test_expected_deny_passes_when_exactly_those_rules_deny() -> None:
@@ -30,31 +32,59 @@ def test_expected_deny_fails_when_the_case_is_admitted() -> None:
 
 def test_expected_deny_fails_on_an_extra_rule() -> None:
     """A deny from a rule not expected fails; the id is exact, so S10 is not S1."""
-    failure = judge(Verdict(deny=("S1: a", "S10: b")), frozenset({"S1"}))
+    failure = judge(Verdict(deny=("S1: a", "S10: b")), Expect(deny=frozenset({"S1"})))
     assert failure == "DENY MISMATCH: missing none; unexpected S10"
 
 
 def test_withheld_never_satisfies_an_expected_deny() -> None:
     """A withheld case fails though a deny is expected: a rule that did not run did not refuse."""
-    failure = judge(Verdict(deny=("S0: x",), withheld=("no rule",)), _S0)
-    assert failure is not None
-    assert failure.startswith("UNMEASURED")
+    failure = judge(Verdict(deny=("S0: x",), withheld=("W: no input",)), _S0)
+    assert failure == "WITHHELD MISMATCH: missing none; unexpected W"
+
+
+def test_expected_withhold_passes_when_exactly_those_rules_withhold() -> None:
+    """W381: a could-not-measure arm passes on exactly its withheld ids, with no deny."""
+    assert judge(Verdict(withheld=("W: qmllint is null",)), _W) is None
+
+
+def test_a_deny_fails_a_case_expecting_only_a_withhold() -> None:
+    """An omitted `deny` means none: a deny beside the expected withhold fails, naming it."""
+    failure = judge(Verdict(deny=("L2: x",), withheld=("W: y",)), _W)
+    assert failure == "DENY MISMATCH: missing none; unexpected L2"
+
+
+def test_both_sets_mismatched_name_both() -> None:
+    """When deny and withheld both differ, the failure names each, so neither is hidden."""
+    failure = judge(Verdict(deny=("L2: x",)), _W)
+    assert failure == (
+        "DENY MISMATCH: missing none; unexpected L2 | WITHHELD MISMATCH: missing W; unexpected none"
+    )
 
 
 def test_expect_is_read_from_the_case() -> None:
-    """`expect.deny` is the set of rule ids; a case without `expect` is admitted-only."""
-    read = expected_denies("c", {"case": "c", "expect": {"deny": ["S0", " L2 "]}})
-    assert read == frozenset({"S0", "L2"})
-    assert expected_denies("c", {"case": "c"}) is None
+    """`expect` holds deny and withheld id sets; a case without `expect` is admitted-only."""
+    read = expectation("c", {"case": "c", "expect": {"deny": ["S0", " L2 "], "withheld": ["W"]}})
+    assert read == Expect(deny=frozenset({"S0", "L2"}), withheld=frozenset({"W"}))
+    assert expectation("c", {"case": "c", "expect": {"withheld": ["W"]}}) == _W
+    assert expectation("c", {"case": "c"}) is None
 
 
 @pytest.mark.parametrize(
-    "expect", ["denied", {"deny": []}, {"deny": "S0"}, {"deny": [""]}, {"admit": ["S0"]}]
+    "expect",
+    [
+        "denied",
+        {"deny": []},
+        {"deny": "S0"},
+        {"deny": [""]},
+        {"admit": ["S0"]},
+        {"withheld": []},
+        {"deny": [], "withheld": []},
+    ],
 )
 def test_malformed_expect_is_a_data_error(expect: object) -> None:
-    """A bare "denied", an empty list, or a non-id entry is refused, never read as admitted-only."""
+    """A bare "denied", no id at all, an unknown key, or a non-id entry is refused."""
     with pytest.raises(SpecDataError, match="case c: "):
-        expected_denies("c", {"case": "c", "expect": expect})
+        expectation("c", {"case": "c", "expect": expect})
 
 
 def test_cases_sit_beside_the_spec() -> None:

@@ -37,20 +37,24 @@ A case may declare a `disposition`, with a `reason` it must give:
 A withheld verdict with no declaration is still a plain failure. An unknown disposition, a
 missing reason, or an unpaired port-fix is a collection error.
 
-## Expected denies (W372)
+## Expected outcomes (W372, W381)
 
-A refusing fixture declares the rules that must deny it:
+A refusing fixture declares the rules that must deny it, and a could-not-measure fixture the
+rules that must withhold it:
 
     {"case": "s0-refuses", "expect": {"deny": ["S0"]}, ...}
+    {"case": "null-lint", "expect": {"withheld": ["W"]}, ...}
 
-Each deny message's rule id is the text before its first `:`, so `S0: refused` has the id `S0`.
-Ids match exactly, so `S1` never matches `S10`. The case passes only when the set of ids that
-denied it equals `expect.deny`. A missing id or an extra one fails as `DENY MISMATCH`, naming
-both. A withheld verdict never satisfies an expected deny, because a rule that did not run did
-not refuse. Without `expect`, a case is admitted-only, as before. A bare `"expect": "denied"`,
-an empty list or a non-string id is a collection error: a case denied by the wrong rule would
-otherwise pass. Asked for by el-openglo:W139, whose rule tests carry both a refusing and an
-admitting fixture for every rule.
+Each message's rule id is the text before its first `:`, so `S0: refused` has the id `S0`. Ids
+match exactly, so `S1` never matches `S10`. The case passes only when the denying ids equal
+`expect.deny` AND the withholding ids equal `expect.withheld`. **An omitted key means that set
+must be empty**, so a deny fails a case expecting only a withhold, and a withhold fails a case
+expecting only a deny (a rule that did not run did not refuse). A mismatch fails as `DENY
+MISMATCH` and/or `WITHHELD MISMATCH`, each naming its missing and unexpected ids. Without
+`expect`, a case is admitted-only, as before. A bare `"expect": "denied"`, an `expect` naming no
+id, an unknown key or a non-string id is a collection error. Asked for by el-openglo (W139 for
+denies, W211 for withholds), whose rule tests carry refusing, admitting and could-not-measure
+fixtures.
 
 ## Shared libraries (W380)
 
@@ -79,12 +83,13 @@ as `{name: adapter}`, where an adapter is `adapter(fixture, operands) -> result`
 
 Every run ends with one line per spec, every column always printed:
 
-    pytestspec: spec.rego impl=subject admitted=2 denied=1 refused=1 unmeasured=1 do-not-port=1 port-fix=1 declared-skipped=0 cached=0
+    pytestspec: spec.rego impl=subject admitted=2 denied=1 refused=1 withheld-expected=1 unmeasured=1 do-not-port=1 port-fix=1 declared-skipped=0 cached=0
 
 `impl` is the `--impl` in force, or `as-written`. A declared-unmeasured case (xfail) counts as
-unmeasured; do-not-port and port-fix count declarations, whatever their outcome. `refused`
-counts cases that passed because exactly their expected rules denied them, and a `DENY
-MISMATCH` counts as denied.
+unmeasured; do-not-port and port-fix count declarations, whatever their outcome. Every passing
+case lands in exactly one column: `admitted` (no `expect`), `refused` (an `expect` naming a
+deny, met), or `withheld-expected` (an `expect` naming only withholds, met). A `DENY MISMATCH`
+counts as denied, and a `WITHHELD MISMATCH` alone as unmeasured.
 
 ## Parallel runs (W316)
 
