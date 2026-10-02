@@ -386,6 +386,8 @@ SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
     "_pycodemod_census.py:crossings": ("conftest", "port_crossings", _same),
     "_pycodemod_census.py:importers": ("mikemol.pycodemod.imports", "importers", _rows),
     "_pycodemod_census.py:aliases": ("mikemol.pycodemod.aliases", "aliases", _rows),
+    "_pycodemod_query.py:swallows": ("mikemol.pycodemod.swallows", "swallows", _rows),
+    "_pycodemod_census.py:writes_by_default": ("conftest", "port_writes_by_default", _same),
 }
 
 
@@ -728,12 +730,57 @@ def port_crossings(paths: list[str]) -> JSON:
     return out
 
 
+class HasVerdicts(Protocol):
+    """The port's `WriteVerdicts`: one (path, writes, why, line) row per readable file."""
+
+    rows: list[object]
+    skipped: list[object]
+
+
+# W463: the origin's two repo conventions, which the port takes as operands.
+ORIGIN_FIXTURES = ("_selftest",)
+ORIGIN_GATES = ("--apply",)
+
+
+def port_writes_by_default(path: str) -> JSON:
+    """Compose the port's `writes_by_default([path], fixtures, gates)` into the origin's pair.
+
+    The origin took one path and hard-wired `_selftest` as the fixture function and `--apply` as
+    the gate; the port takes paths and both conventions as operands, so they are passed here, not
+    reshaped away. The port's `why` wording and its `line` column are its own; the origin's pair
+    is (writes, why).
+
+    Returns:
+        [writes, why]; an unreadable file is [False, its skip reason], as the origin's was.
+
+    """
+    got = cast(
+        "HasVerdicts",
+        _port("mikemol.pycodemod.writes", "writes_by_default")(
+            [path], ORIGIN_FIXTURES, ORIGIN_GATES
+        ),
+    )
+    if not got.rows:
+        skip = cast(
+            "tuple[object, ...]", dataclasses.astuple(cast("DataclassInstance", got.skipped[0]))
+        )
+        return [False, normal(skip[1], "")]
+    _where, writes, why, _line = cast(
+        "tuple[object, object, object, object]",
+        dataclasses.astuple(cast("DataclassInstance", got.rows[0])),
+    )
+    return [normal(writes, ""), normal(why, "")]
+
+
 # W435: origin callees the port deliberately does not carry, with the reason. A capture can hold
 # such a call beside the one its spec reads; it yields a visible marker in its slot, so a rule that
 # does read it denies rather than passing. pytestspec's do-not-port deselects a whole CASE, which is
 # the wrong grain when the case's own call is ported.
 NOT_PORTED: dict[str, str] = {
     "_pycodemod_sql.py:pg_probe_status": "a live postgres reachability probe, not a code query",
+    "_pycodemod_census.py:build_artifact_readers": (
+        "backs the origin's artifacts mode, which pycodemod cli.py lists in _DO_NOT_PORT_NAMES"
+    ),
 }
 
 

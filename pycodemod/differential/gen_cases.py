@@ -145,6 +145,13 @@ _NO_PORTABLE = (
     "(portable_sites is substrate's raw-SQL EXPLAIN survey)"
 )
 DO_NOT_PORT |= dict.fromkeys(range(396, 399), _NO_PORTABLE)
+# W450: the port has no corpus enumerator; every mode takes explicit paths, and the
+# default-corpus walk with its generated-tree skip (py_files/_roots) is substrate's own.
+_NO_PY_FILES = (
+    "the port has no corpus enumerator: every mode takes explicit paths, and the "
+    "default-corpus walk with its generated-tree skip (py_files/_roots) is substrate's own"
+)
+DO_NOT_PORT |= dict.fromkeys(range(107, 111), _NO_PY_FILES)
 
 
 class CaptureError(ValueError):

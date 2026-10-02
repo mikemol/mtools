@@ -21,7 +21,9 @@
    "/var/tmp/tmpsmw9y_5t//bazel-out/k8-fastbuild/m.py": "def references():\n    return 1\n",
    "/var/tmp/tmpsmw9y_5t//build/lib/m.py": "def references():\n    return 1\n",
    "/var/tmp/tmpsmw9y_5t//src/m.py": "def references():\n    return 1\n"
-  }
+  },
+  "disposition": "do-not-port",
+  "reason": "the port has no corpus enumerator: every mode takes explicit paths, and the default-corpus walk with its generated-tree skip (py_files/_roots) is substrate's own"
  },
  {
   "case": "108-naming-a-generated-tree-explicitly-still-reaches-it",
@@ -40,7 +42,9 @@
   ],
   "fixture": {
    "/var/tmp/tmpsmw9y_5t/bazel-bin//mutants/m.py": "def references():\n    return 1\n"
-  }
+  },
+  "disposition": "do-not-port",
+  "reason": "the port has no corpus enumerator: every mode takes explicit paths, and the default-corpus walk with its generated-tree skip (py_files/_roots) is substrate's own"
  },
  {
   "case": "109-roots-drops-generated-trees-that-are-top-level-entries",
@@ -65,7 +69,9 @@
    "/var/tmp/tmpsmw9y_5t//bazel-out/k8-fastbuild/m.py": "def references():\n    return 1\n",
    "/var/tmp/tmpsmw9y_5t//build/lib/m.py": "def references():\n    return 1\n",
    "/var/tmp/tmpsmw9y_5t//src/m.py": "def references():\n    return 1\n"
-  }
+  },
+  "disposition": "do-not-port",
+  "reason": "the port has no corpus enumerator: every mode takes explicit paths, and the default-corpus walk with its generated-tree skip (py_files/_roots) is substrate's own"
  },
  {
   "case": "110-a-bazel-workspace-convenience-symlink-is-dropped-by-prefix",
@@ -90,6 +96,8 @@
    "/var/tmp/tmpsmw9y_5t//bazel-out/k8-fastbuild/m.py": "def references():\n    return 1\n",
    "/var/tmp/tmpsmw9y_5t//build/lib/m.py": "def references():\n    return 1\n",
    "/var/tmp/tmpsmw9y_5t//src/m.py": "def references():\n    return 1\n"
-  }
+  },
+  "disposition": "do-not-port",
+  "reason": "the port has no corpus enumerator: every mode takes explicit paths, and the default-corpus walk with its generated-tree skip (py_files/_roots) is substrate's own"
  }
 ]
