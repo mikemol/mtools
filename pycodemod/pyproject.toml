@@ -83,7 +83,7 @@ explicit_package_bases = true
 [tool.ruff]
 line-length = 100
 target-version = "py313"
-namespace-packages = ["src/mikemol", "tests"]
+namespace-packages = ["src/mikemol", "tests", "differential"]
 
 [tool.ruff.lint]
 preview = true
