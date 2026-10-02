@@ -138,6 +138,20 @@ sh_test(
     timeout = "long",
 )
 
+# W478: the differential Rego specs' own _test.rego, run by a pinned opa (@opa, MODULE.bazel).
+# The pin string matches pytestspec's `opa.PINNED`.
+sh_test(
+    name = "opa_test",
+    srcs = ["opa_test.sh"],
+    args = [
+        "$(location @opa//file)",
+        "1.20.2",
+        "$(location differential/f5.rego)",
+    ],
+    data = ["@opa//file"] + glob(["differential/*.rego"]),
+    size = "small",
+)
+
 venv_from_hub(
     name = ".venv",
     # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as `//hooks:.venv` mirrors its own.

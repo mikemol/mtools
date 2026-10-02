@@ -385,6 +385,18 @@ filegroup(
     url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz",
 )
 
+# ⚑⚑ opa ENTERS THE GRAPH FOR //pycodemod:opa_test (W478). Same version as pytestspec's
+# `opa.PINNED` (1.20.2): a different opa is a different checker. The upstream static binary,
+# fetched by hash; the sha256 is upstream's published `.sha256`, re-measured on download.
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+http_file(
+    name = "opa",
+    downloaded_file_path = "opa",
+    executable = True,
+    sha256 = "69da5179ee403d10fa11bab6cfb4ffb0d23dba5f9b682fa977db772a1da5670f",
+    url = "https://github.com/open-policy-agent/opa/releases/download/v1.20.2/opa_linux_amd64_static",
+)
+
 # ⚑⚑⚑ ruff IS AN http_archive AND NOT A pip DEPENDENCY, AND THE REASON RECORDED HERE WENT STALE.
 #
 # ⚑⚑ THE WITHDRAWN PREMISE, KEPT VISIBLE BECAUSE A READER WILL HAVE SPENT IT: this said
