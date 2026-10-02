@@ -68,11 +68,11 @@ sh_test(
     args = [
         "$(location @mikemol_check_ruff//:bin)",
         "$(location :pyproject.toml)",
-    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"])],
     data = [
         "pyproject.toml",
         "@mikemol_check_ruff//:bin",
-    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"]),
     size = "small",
 )
 
@@ -91,7 +91,7 @@ sh_test(
         "ratchet-preview.txt",
         "//ratchet:ratchet_cli",
         "@mikemol_check_ruff//:bin",
-    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"]),
     size = "small",
 )
 
@@ -132,7 +132,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":mypy_runner",
-    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py", "stubs/**"], allow_empty = True),
     size = "small",
     # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24), as every sibling's mypy target.
     timeout = "long",

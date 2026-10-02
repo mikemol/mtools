@@ -76,7 +76,7 @@ python_version = "3.13"
 warn_unused_ignores = true
 warn_unreachable = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
-files = ["src", "tests"]
+files = ["src", "tests", "differential"]
 mypy_path = "src"
 explicit_package_bases = true
 
