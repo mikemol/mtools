@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the ruff check atom's warrant set, in document order (W384).
+# The gate diffs this file's first column against every `section = {…}` in this atom's
+# `warrants.bib`, exactly as it does for each distribution.
+# key <TAB> heading title
+selector_check	The Selector Check: A Comment Never Cites a Code Its Selector Now Names by Rule Name

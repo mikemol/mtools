@@ -1,0 +1,38 @@
+% warrants.bib — one claim PER TEST FUNCTION in the ruff check atom's suite (W384).
+%
+% The atom's test module, `test_selector_check.py`, sits beside `selector_check.py`, the check each
+% distribution runs over its own pyproject.toml. The claims are transcribed from the test
+% docstrings. The checks run with the hooks venv's interpreter, which carries the same pytest pin
+% the `//:test_selector_check` target stages.
+%
+% Keying convention: check-ruff-<section>-<test name minus its `test_` prefix, hyphenated>.
+
+@misc{check-ruff-selector-check-a-comment-citing-the-renamed-code-is-named,
+  section = {selector_check},
+  claim   = {The selector says the rule's name while the comment above still cites its code.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_selector_check.py -k test_a_comment_citing_the_renamed_code_is_named}
+}
+
+@misc{check-ruff-selector-check-a-comment-and-selector-in-the-same-spelling-agree,
+  section = {selector_check},
+  claim   = {A code in the prose and the same code in the selector is agreement, not a finding.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_selector_check.py -k test_a_comment_and_selector_in_the_same_spelling_agree}
+}
+
+@misc{check-ruff-selector-check-a-comment-naming-a-different-rule-is-not-a-finding,
+  section = {selector_check},
+  claim   = {Prose citing another rule to explain the entry is normal, so it is never flagged.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_selector_check.py -k test_a_comment_naming_a_different_rule_is_not_a_finding}
+}
+
+@misc{check-ruff-selector-check-an-unknown-code-is-never-a-finding,
+  section = {selector_check},
+  claim   = {A code ruff does not know cannot contradict anything, so it is passed over.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_selector_check.py -k test_an_unknown_code_is_never_a_finding}
+}
+
+@misc{check-ruff-selector-check-main-reports-exit-codes,
+  section = {selector_check},
+  claim   = {0 on an agreeing config, 1 on a missing one, 2 on a usage error (no ruff is run).},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_selector_check.py -k test_main_reports_exit_codes}
+}
