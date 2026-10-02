@@ -1716,3 +1716,17 @@
             THE CONTROL: the line existed while it waited.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_timeout_removes_its_own_wait_line},
 }
+
+@misc{fence-membudget-cli-peaks-reads-the-run-ledger-beside-the-budget,
+  section = {membudget_cli},
+  title  = {`peaks PREFIX` reports the label ledger `run` writes, with no path named (W427)},
+  claim  = {`peaks PREFIX` reports the label ledger `run` writes, with no path named (W427).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_peaks_reads_the_run_ledger_beside_the_budget},
+}
+
+@misc{fence-membudget-cli-peaks-with-no-run-ledger-refuses,
+  section = {membudget_cli},
+  title  = {With nothing recorded, `peaks` answers 1 rather than an empty success (W427)},
+  claim  = {With nothing recorded, `peaks` answers 1 rather than an empty success (W427).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_peaks_with_no_run_ledger_refuses},
+}

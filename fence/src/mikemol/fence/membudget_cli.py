@@ -51,7 +51,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.fence import admit, autosize, core, label_lease, ledger
+from mikemol.fence import admit, autosize, core, label_lease, ledger, peaks
 from mikemol.fence.cgroup import FenceUnavailableError
 
 if TYPE_CHECKING:
@@ -758,6 +758,20 @@ def cmd_lease(args: Sequence[str], _ctx: Context) -> int:
     return label_lease.main(["lease", *args])
 
 
+def cmd_peaks(args: Sequence[str], ctx: Context) -> int:
+    """`peaks [PREFIX]`: the run ledger's report, from the ledger bash would read (W427).
+
+    Bash's `membudget peaks [label]` never names its ledger; it reads `$MEMBUDGET_LABEL_LEDGER`,
+    else `labels.tsv` beside the budget. `label_ledger_of` is that resolution, so this verb and
+    `run` (which writes the rows) can never read two different files.
+
+    Returns:
+        `peaks.main`'s code: 0 with a report, 1 with no ledger or no matching row, 2 on usage.
+
+    """
+    return peaks.main([str(label_ledger_of(ctx.env)), *args])
+
+
 def cmd_deadline(args: Sequence[str], _ctx: Context) -> int:
     """`deadline LEDGER LABEL DEFAULT_S CEILING_S`, answered by `label_lease`.
 
@@ -775,6 +789,7 @@ VERBS: dict[str, Callable[[Sequence[str], Context], int]] = {
     "status": cmd_status,
     "lease": cmd_lease,
     "deadline": cmd_deadline,
+    "peaks": cmd_peaks,
 }
 
 

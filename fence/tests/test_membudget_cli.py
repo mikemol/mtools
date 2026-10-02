@@ -939,6 +939,22 @@ def test_lease_and_deadline_answer_through_label_lease(
     assert _cli(["lease", runs], ctx) == _EXIT_USAGE
 
 
+def test_peaks_reads_the_run_ledger_beside_the_budget(
+    ledger: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`peaks PREFIX` reports the label ledger `run` writes, with no path named (W427)."""
+    _seed(ledger, "gate:x", 50, 90)
+    assert _cli(["peaks", "gate:"], _ctx(ledger)) == _EXIT_OK
+    rows = capsys.readouterr().out.splitlines()
+    # the positive control: the row is the seeded label with both runs, not an empty header
+    assert [r.split("\t")[:3] for r in rows[1:-1]] == [["gate:x", "2", "90"]]
+
+
+def test_peaks_with_no_run_ledger_refuses(ledger: Path) -> None:
+    """With nothing recorded, `peaks` answers 1 rather than an empty success (W427)."""
+    assert _cli(["peaks"], _ctx(ledger)) == 1
+
+
 # --- retry-on-OOM (R3) and the per-module `.agda` key (R5), through the fence seam ---
 
 # The climb: a start rung, the rung above it, a payload that needs the upper one, and one that
