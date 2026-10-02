@@ -373,6 +373,7 @@ SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
     "_pycodemod_query.py:reifies": ("mikemol.pycodemod.ordering", "reifies", _rows),
     "_pycodemod_ambient.py:ambient": ("conftest", "port_ambient", _rows),
     "_pycodemod_query.py:bindings": ("conftest", "port_bindings", _same),
+    "_pycodemod_query.py:_cached_defs": ("conftest", "port_cached_defs", _same),
     "_pycodemod_query.py:funcnames": ("mikemol.pycodemod.funcnames", "funcnames", _rows),
     "_pycodemod_query.py:_generic_func_names": (
         "mikemol.pycodemod.funcnames",
@@ -638,6 +639,35 @@ def port_bindings(name: str, path: str) -> JSON:
         )
         out.append([kind, qualname, line, live[0], live[1]])
     return out
+
+
+def port_cached_defs(path: str) -> JSON:
+    """Derive the origin's `_cached_defs(path)` rows, [name, line, delegates], from the port (W480).
+
+    ⚑ AN EQUIVALENT, NOT A NOT-PORTED CALL. The origin memoised a per-file def scan on disk keyed
+    by content and deriver hash; its answer is a pure function of the file's bytes. The port keeps
+    the answer and drops the memo by declared design (rivals.py: "this port does not [memoise],
+    because an `ast` parse is the cheap part ... and the driver owns any cache"). So the cases
+    that judge the cache (stable on re-read, changed on edit) are judged here against an uncached
+    derivation, which satisfies them by construction. `delegates` is the port's `callee_of`, so an
+    awaited wrapper delegates here where the origin said it reimplements (a declared divergence).
+    An unreadable or unparseable file is the origin's empty list.
+
+    Returns:
+        [[name, line, delegates], ...] in source order.
+
+    """
+    try:
+        tree = ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
+    except (OSError, UnicodeDecodeError, SyntaxError):
+        return []
+    callee_of = _port("mikemol.pycodemod.rivals", "callee_of")
+    defs = sorted(
+        (node.lineno, node.col_offset, node.name, callee_of(node) is not None)
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    )
+    return [[name, line, delegates] for line, _col, name, delegates in defs]
 
 
 def _fields(row: object) -> tuple[object, ...]:
