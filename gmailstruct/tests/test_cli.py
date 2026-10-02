@@ -205,6 +205,23 @@ def test_age_runner_runs_the_given_binary_in_place_of_age(tmp_path: Path) -> Non
     )
 
 
+def test_age_runner_lets_ages_prompts_reach_the_terminal(
+    tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    """The YubiKey PIN and touch prompts on age's stderr reach the terminal, not a buffer.
+
+    W382, measured on the first live decrypt: captured, the operator saw no prompt and the run
+    failed naming no cause. stdout, which carries the token, is still captured.
+    """
+    script = tmp_path / "age"
+    script.write_text('#!/bin/sh\necho "touch your YubiKey" >&2\necho token\n', encoding="utf-8")
+    script.chmod(0o755)
+    assert cli.age_runner(str(script))(["age", "--decrypt", "x.age"]) == (0, b"token\n", b"")
+    seen = capfd.readouterr()
+    assert "touch your YubiKey" in seen.err
+    assert "token" not in seen.out
+
+
 class _Bearer(BaseHTTPRequestHandler):
     """A local API: answers 200 with the Authorization header it was sent."""
 

@@ -455,3 +455,27 @@
   claim  = {An existing --out is refused with exit 1 and left as it was.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_raw_never_overwrites_an_existing_file},
 }
+
+@misc{gmailstruct-auth-failed-decrypt-quotes-ages-own-error,
+  section = {auth},
+  title  = {The error quotes age's stderr (W382); a failed decrypt made no plaintext to leak},
+  claim  = {The error quotes age's stderr (W382); a failed decrypt made no plaintext to leak.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_failed_decrypt_quotes_ages_own_error},
+}
+
+@misc{gmailstruct-auth-failed-decrypt-with-stderr-on-the-terminal-says-where-the-cause-went,
+  section = {auth},
+  title  = {A runner that let stderr through returns none; the error points at the terminal},
+  claim  = {A runner that let stderr through returns none; the error points at the terminal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_failed_decrypt_with_stderr_on_the_terminal_says_where_the_cause_went},
+}
+
+@misc{gmailstruct-cli-age-runner-lets-ages-prompts-reach-the-terminal,
+  section = {cli},
+  title  = {The YubiKey PIN and touch prompts on age's stderr reach the terminal, not a buffer},
+  claim  = {The YubiKey PIN and touch prompts on age's stderr reach the terminal, not a buffer.
+            W382, measured on the first live decrypt: captured, the operator saw no
+            prompt and the run failed naming no cause. stdout, which carries the token,
+            is still captured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_age_runner_lets_ages_prompts_reach_the_terminal},
+}

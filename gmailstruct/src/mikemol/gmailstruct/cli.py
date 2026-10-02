@@ -175,17 +175,23 @@ def age_encrypt(recipient: str, out: Path, binary: str = "age") -> Encrypt:
 def age_runner(binary: str = "age") -> Runner:
     """Make auth.decrypt's runner: run the argv it builds with `binary` in place of `age`.
 
+    ⚑ STDERR IS NOT CAPTURED, ONLY STDOUT (W382). age-plugin-yubikey asks for the PIN and says
+    "touch your YubiKey" through age's stderr; captured, the operator saw neither, and the run
+    failed as `age could not decrypt ... (exit 1)` naming no cause (measured 2026-10-02, first
+    live decrypt). Inherited, the prompts and any error reach the terminal. stdout, which carries
+    the token, is still captured and never printed.
+
     Returns:
-        a runner returning (exit status, stdout, stderr). Decryption waits for a YubiKey touch,
-        so it is given longer than a network call.
+        a runner returning (exit status, stdout, b""): stderr went to the terminal. Decryption
+        waits for a YubiKey touch, so it is given longer than a network call.
 
     """
 
     def run(argv: list[str]) -> tuple[int, bytes, bytes]:
         proc = subprocess.run(
-            [binary, *argv[1:]], capture_output=True, check=False, timeout=_TOUCH_S
+            [binary, *argv[1:]], stdout=subprocess.PIPE, check=False, timeout=_TOUCH_S
         )
-        return proc.returncode, proc.stdout, proc.stderr
+        return proc.returncode, proc.stdout, b""
 
     return run
 

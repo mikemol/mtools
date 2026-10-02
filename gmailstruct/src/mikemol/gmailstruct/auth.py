@@ -41,9 +41,14 @@ def decrypt(path: Path, identity: Path, runner: Runner) -> str:
         DecryptError: when age fails, or yields no token. The message names the file only.
 
     """
-    status, out, _err = runner(["age", "--decrypt", "--identity", str(identity), str(path)])
+    status, out, err = runner(["age", "--decrypt", "--identity", str(identity), str(path)])
     if status != 0:
-        msg = f"age could not decrypt {path} (exit {status})"
+        # ⚑ age's own words name the cause (a wrong identity, a PIN, no touch), and a failed
+        # decrypt has produced no plaintext, so they are safe to quote. A runner that let stderr
+        # through to the terminal returns none; then the cause was printed above this line.
+        said = " ".join(err.decode("utf-8", "replace").split())[:300]
+        cause = f": {said}" if said else "; age's own message is printed above"
+        msg = f"age could not decrypt {path} (exit {status}){cause}"
         raise DecryptError(msg)
     try:
         token = out.decode("utf-8").strip()

@@ -53,6 +53,19 @@ def test_failed_decrypt_names_the_file_and_never_the_output() -> None:
     assert _TOKEN not in _rendered(caught.value)
 
 
+def test_failed_decrypt_quotes_ages_own_error() -> None:
+    """The error quotes age's stderr (W382); a failed decrypt made no plaintext to leak."""
+    fake = _Fake(1, b"", b"age: error: no identity matched\n")
+    with pytest.raises(DecryptError, match=r"\(exit 1\): age: error: no identity matched$"):
+        _decrypt(fake)
+
+
+def test_failed_decrypt_with_stderr_on_the_terminal_says_where_the_cause_went() -> None:
+    """A runner that let stderr through returns none; the error points at the terminal."""
+    with pytest.raises(DecryptError, match="age's own message is printed above"):
+        _decrypt(_Fake(1, b"", b""))
+
+
 def test_empty_output_is_an_error_not_an_empty_token() -> None:
     """An age run succeeding with nothing on stdout is refused, never returned as a blank token."""
     with pytest.raises(DecryptError, match="to nothing"):
