@@ -14,8 +14,14 @@ W370's first draft passed a literal `{dist}` to all nine suite checks.
 
 load("@rules_python//python:defs.bzl", "py_test")
 
-def dist_checks():
-    """Declare `:venv` and `:suite` for the calling distribution's package."""
+def dist_checks(venv_data = []):
+    """Declare `:venv` and `:suite` for the calling distribution's package.
+
+    Args:
+        venv_data: files the suite needs beyond tests/**/*.py when venv_check collects it (icsstruct
+            stages its .ics fixtures and stubs). Declared here, so a difference stays visible in
+            the caller's BUILD and is never normalised away (W376).
+    """
     dist = native.package_name()
 
     # W342: the built venv, checked by venv_check. The tests are staged too, because the check
@@ -31,7 +37,7 @@ def dist_checks():
             "pyproject.toml",
             ":.venv",
             "@mikemol_rules_py//:venv_check.py",
-        ] + native.glob(["tests/**/*.py"]),
+        ] + native.glob(["tests/**/*.py"]) + venv_data,
         size = "small",
     )
 

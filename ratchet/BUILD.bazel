@@ -5,6 +5,7 @@
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
 load("@ratchet_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
@@ -196,29 +197,6 @@ venv_from_hub(
     srcs = glob(["src/mikemol/ratchet/**"]),
 )
 
-# W349: this distribution's built venv, checked by @mikemol_rules_py's venv_check, as
-# //gmailstruct:venv. The tests are staged too, because the check collects the suite with the venv.
-sh_test(
-    name = "venv",
-    srcs = ["@mikemol_rules_py//:venv_check.sh"],
-    args = [
-        "$(location :pyproject.toml)",
-        "$(location @mikemol_rules_py//:venv_check.py)",
-    ],
-    data = [
-        "pyproject.toml",
-        ":.venv",
-        "@mikemol_rules_py//:venv_check.py",
-    ] + glob(["tests/**/*.py"]),
-    size = "small",
-)
+# W376: this distribution's :venv (W342) and :suite (W362), declared together.
+dist_checks()
 
-# W368: the suite check (W362) over this distribution's own BUILD and tests.
-py_test(
-    name = "suite",
-    srcs = ["@mikemol_rules_py//:suite_check.py"],
-    main = "@mikemol_rules_py//:suite_check.py",
-    args = ["ratchet"],
-    data = ["BUILD.bazel"] + glob(["tests/test_*.py"]),
-    size = "small",
-)
