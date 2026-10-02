@@ -24,8 +24,9 @@
 #   is 13G), one job at a time;
 # - default: 4 GiB limit.
 #
-# ⚑ CACHE FENCE (luthen's fifth fence): a pull request READS the shared cache and never writes
-# it. Only pushes to stage and main write, into their own remote_instance_name.
+# ⚑ CACHE FENCE (luthen's fifth fence; W487): only refs/heads/stage and refs/heads/main write the
+# shared cache, into their own remote_instance_name. Every other ref (pull requests, other
+# branches, tags) READS it and never writes.
 
 name: module-gate
 
@@ -67,12 +68,12 @@ jobs:
           RUNNER_CLASS: ${{ inputs.runner-class }}
           TARGETS: ${{ inputs.targets }}
           CACHE_ENDPOINT: ${{ inputs.cache-endpoint }}
-          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
           REF_NAME: ${{ github.ref_name }}
         # ⚑ One place sets every cap, so a class cannot pass bazel's and forget the runner's.
         # default: unmeasured beyond icsstruct (1.48 GiB uncapped). These are a safe fraction of
         # 4 GiB, to be re-measured per module as each one moves (W317).
-        # ⚑ A pull request reads the cache and never uploads. stage and main write into their own
+        # ⚑ Only stage and main upload; any other ref reads the cache only. They write into their own
         # instance. Downloads go through the cluster's remote asset cache, so a fresh pod's cold
         # fetch hits the cluster, not the internet (W322: audiostruct's hub alone is 7.9G).
         run: |
@@ -81,11 +82,14 @@ jobs:
             default) caps=(--jobs=4 --local_resources=cpu=4 --local_resources=memory=3072 --test_env=MUTATE_JOBS=4) ;;
             *) echo "unknown runner-class '$RUNNER_CLASS': refusing rather than running uncapped" >&2; exit 1 ;;
           esac
-          if [ "$EVENT" = "pull_request" ]; then
-            cache=(--remote_cache="$CACHE_ENDPOINT" --noremote_upload_local_results --remote_instance_name=pr)
-          else
-            cache=(--remote_cache="$CACHE_ENDPOINT" --remote_instance_name="$REF_NAME")
-          fi
+          # W487 (operator ruling 2026-10-02): only refs/heads/stage and refs/heads/main upload.
+          # Every other ref (pull requests, other branches, tags) reads the cache only.
+          case "$REF" in
+            refs/heads/stage|refs/heads/main)
+              cache=(--remote_cache="$CACHE_ENDPOINT" --remote_instance_name="$REF_NAME") ;;
+            *)
+              cache=(--remote_cache="$CACHE_ENDPOINT" --noremote_upload_local_results --remote_instance_name=pr) ;;
+          esac
           bazel test "$TARGETS" "${caps[@]}" "${cache[@]}" \
             --experimental_remote_downloader="$CACHE_ENDPOINT" \
             --experimental_remote_downloader_local_fallback
