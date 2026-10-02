@@ -68,6 +68,27 @@ def dist_checks(venv_data = []):
         size = "small",
     )
 
+    # W389: the ratchet atom's refusal check (W388): a copy of this distribution with a planted
+    # finding must be REFUSED by name by the ratchet, so a lowered baseline is never a deletion
+    # wearing a paydown's name. It was a test_bar_fires arm walking every distribution.
+    py_test(
+        name = "ratchet_refusal",
+        srcs = ["@mikemol_check_ratchet//:refusal_check.py"],
+        main = "@mikemol_check_ratchet//:refusal_check.py",
+        args = [
+            "$(location //ratchet:ratchet_cli)",
+            "$(location @mikemol_check_ruff//:bin)",
+            "$(location :pyproject.toml)",
+        ],
+        data = [
+            "pyproject.toml",
+            "ratchet-preview.txt",
+            "//ratchet:ratchet_cli",
+            "@mikemol_check_ruff//:bin",
+        ] + native.glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
+        size = "small",
+    )
+
     # W362: the BUILD names pytest as every py_test's main, and no test resolves __file__ out of
     # the sandbox.
     py_test(
