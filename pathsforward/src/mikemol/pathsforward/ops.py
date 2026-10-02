@@ -572,6 +572,115 @@ def set_weights(state: State, pairs: list[tuple[str, int]], now: str) -> int:
     return len(pairs)
 
 
+def _vector_record(i: int, rec: object) -> tuple[str, str, str]:
+    """Read one `{symbol, vector, vector_source}` record of a vectors file, checked.
+
+    Returns:
+        the (symbol, vector, source) triple.
+
+    Raises:
+        RefusedError: naming the record's index, on any other shape or a malformed vector.
+
+    """
+    if not isinstance(rec, dict):
+        msg = f"vectors[{i}] is not an object"
+        raise RefusedError(msg)
+    fields = cast("dict[str, object]", rec)
+    sym, vec, source = fields.get("symbol"), fields.get("vector"), fields.get("vector_source")
+    if not isinstance(sym, str) or not sym:
+        msg = f"vectors[{i}] has no string symbol"
+        raise RefusedError(msg)
+    if not isinstance(vec, str) or not isinstance(source, str):
+        msg = f"vectors[{i}] {sym}: vector and vector_source are both strings, written together"
+        raise RefusedError(msg)
+    try:
+        _refuse_vector(vec, source)
+    except RefusedError as exc:
+        msg = f"vectors[{i}] {sym}: {exc}"
+        raise RefusedError(msg) from None
+    return sym, vec, source
+
+
+def vectors_from(raw: object) -> list[tuple[str, str, str]]:
+    """Parse a vectors file's document: a list of `{symbol, vector, vector_source}` objects.
+
+    ⚑ EVERY VECTOR IS CHECKED HERE, BEFORE THE LOCK (W354): a malformed vector anywhere in the
+    file refuses the whole file, as a repeated symbol does (the same rule `weights_from` keeps).
+
+    Returns:
+        the (symbol, vector, source) triples in file order.
+
+    Raises:
+        RefusedError: on a non-list, a malformed record, or a repeated symbol.
+
+    """
+    if not isinstance(raw, list):
+        msg = "a vectors file is a JSON list of {symbol, vector, vector_source} objects"
+        raise RefusedError(msg)
+    triples = list(starmap(_vector_record, enumerate(cast("list[object]", raw))))
+    syms = [sym for sym, _, _ in triples]
+    repeated = sorted({sym for sym in syms if syms.count(sym) > 1})
+    if repeated:
+        msg = f"vectors name {', '.join(repeated)} more than once"
+        raise RefusedError(msg)
+    return triples
+
+
+def set_vectors(state: State, triples: list[tuple[str, str, str]], now: str) -> int:
+    """Store every vector with its source, or none: each symbol is resolved before the first write.
+
+    ⚑ ALL OR NOTHING (W354), as `set_weights`: a half-written sync would leave a queue scored by
+    two vector sets at once.
+
+    Returns:
+        how many waypoints were written.
+
+    Raises:
+        RefusedError: naming every symbol that is not live, before anything is written.
+
+    """
+    unknown: list[str] = []
+    for sym, _, _ in triples:
+        try:
+            find(state, sym)
+        except RefusedError:
+            unknown.append(sym)
+    if unknown:
+        msg = f"vectors name {', '.join(unknown)}, which are not live waypoints; nothing written"
+        raise RefusedError(msg)
+    for sym, vec, source in triples:
+        update(state, sym, Update(vector=vec, vector_source=source), now)
+    return len(triples)
+
+
+def repair_counter(state: State) -> tuple[int, int]:
+    """Raise a counter that lags a claimed symbol to the highest one claimed, and never lower it.
+
+    ⚑⚑ RAISE-ONLY (W355): `add` refuses on a lagging counter (D8) and names it; this is the
+    recorded repair that replaces the hand edit. Lowering would re-issue a burned symbol, so a
+    counter that lags nothing is refused rather than "repaired" to anything.
+
+    Returns:
+        the (old, new) counter.
+
+    Raises:
+        RefusedError: when no claimed symbol is above the counter.
+
+    """
+    claimed = [
+        n
+        for rec in (*state.waypoints, *state.residue)
+        if (n := symbol_number(text(rec, "symbol"))) is not None
+    ]
+    top = max(claimed, default=0)
+    old = state.counter
+    if top <= old:
+        msg = f"repair refused, nothing written: counter={old} lags no claimed symbol"
+        raise RefusedError(msg)
+    state.doc["counter"] = top
+    return old, top
+
+
 def add(state: State, draft: Draft, now: str) -> str:
     """Mint the next symbol as a ready waypoint, validating first.
 
@@ -592,7 +701,7 @@ def add(state: State, draft: Draft, now: str) -> str:
     # ⚑⚑ A SYMBOL IS NEVER ISSUED TWICE (skill section 2). A counter that lags a claimed symbol
     # would re-mint it: measured 2026-09-25 (nemik: rosettapkg W6), counter=5 with W6 in residue
     # minted a LIVE W6. Refused, not skipped past: a lagging counter is a finding for the file's
-    # owner, which `--check` names; this tool reports and does not repair (D8).
+    # owner, which `--check` names; `add` never repairs it (D8), `--repair-counter` does (W355).
     claimed = [
         n
         for rec in (*state.waypoints, *state.residue)
@@ -601,7 +710,7 @@ def add(state: State, draft: Draft, now: str) -> str:
     if claimed:
         msg = (
             f"add refused, nothing minted: counter={state.counter} lags claimed "
-            f"W{max(claimed)}; run --check"
+            f"W{max(claimed)}; run --check, then --repair-counter REASON"
         )
         raise RefusedError(msg)
     if any(ch.isspace() for ch in draft.caused_by):

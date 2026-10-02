@@ -706,6 +706,108 @@ def test_a_refused_weights_file_leaves_the_state_byte_identical(tmp_path: Path, 
     assert path.read_bytes() == before
 
 
+_VEC_A = "WV:1/R:H/E:N/C:H/I:H/A:N/X:N/S:C/F:K/W:N"
+_VEC_B = "WV:1/R:C/E:N/C:L/I:L/A:N/X:P/S:U/F:K/W:Y"
+_CLAIMED = 7
+
+
+def _vec(sym: str, vec: str, source: str | None = "agent") -> Rec:
+    """Build one vectors-file record, with no source when `source` is None.
+
+    Returns:
+        the record.
+
+    """
+    rec: Rec = {"symbol": sym, "vector": vec}
+    if source is not None:
+        rec["vector_source"] = source
+    return rec
+
+
+def _vecs(*recs: Rec) -> str:
+    """Serialize vectors-file records as a JSON list.
+
+    Returns:
+        the file body.
+
+    """
+    body: list[Rec] = list(recs)
+    return json.dumps(body)
+
+
+def test_vectors_from_sets_each_vector_and_source_in_one_call(tmp_path: Path) -> None:
+    """--vectors-from stores each waypoint's WV:1 vector with its source, as --weights-from does.
+
+    ⚑ W354: a sync of many vectors was one --update per waypoint, each its own write.
+    """
+    path = _file(tmp_path)
+    src = tmp_path / "v.json"
+    src.write_text(_vecs(_vec("W1", _VEC_A), _vec("W2", _VEC_B, "signal")))
+    assert _run(path, "--vectors-from", str(src)) == _OK
+    got = [
+        (w.get("vector"), w.get("vector_source"))
+        for w in cast("list[Rec]", _doc(path)["waypoints"])
+    ]
+    assert got == [(_VEC_A, "agent"), (_VEC_B, "signal")]
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        _vecs(_vec("W1", _VEC_A), _vec("W9", _VEC_B)),
+        _vecs(_vec("W1", _VEC_A), _vec("W2", "WV:1/R:H")),
+        _vecs(_vec("W1", _VEC_A), _vec("W2", _VEC_B, None)),
+        _vecs(_vec("W1", _VEC_A), _vec("W1", _VEC_B)),
+        '{"W1": "x"}',
+        "not json",
+    ],
+)
+def test_a_refused_vectors_file_leaves_the_state_byte_identical(tmp_path: Path, body: str) -> None:
+    """An unknown symbol, a bad vector, a missing source, a repeat or a non-list refuses it all.
+
+    ⚑ ALL OR NOTHING (W354): the first record is good in every case, so a writer that applied
+    records one at a time would have changed W1 before refusing.
+    """
+    path = _file(tmp_path)
+    before = path.read_bytes()
+    src = tmp_path / "v.json"
+    src.write_text(body)
+    assert _run(path, "--vectors-from", str(src)) == _REFUSED
+    assert path.read_bytes() == before
+
+
+def test_repair_counter_raises_a_lagging_counter_and_ledgers_it(tmp_path: Path) -> None:
+    """--repair-counter raises a counter lagging a claimed symbol to it, and records the repair.
+
+    ⚑ W355: after a D8 recovery the only fix was a hand edit, which left no trace. The repair
+    raises to the highest claimed symbol, so the next --add mints past it, and a ledger line
+    names the old and new counter and the reason.
+    """
+    residue = [{"symbol": "W3", "reason": "r"}, {"symbol": f"W{_CLAIMED}", "reason": "r"}]
+    path = _file(tmp_path, residue=residue)
+    assert _run(path, "--add", "x") == _REFUSED
+    assert _run(path, "--repair-counter", "D8 recovery") == _OK
+    assert _doc(path)["counter"] == _CLAIMED
+    ledger = path.with_suffix(".ledger").read_text(encoding="utf-8")
+    assert f"{_COUNTER}->{_CLAIMED}" in ledger
+    assert "D8 recovery" in ledger
+    assert _run(path, "--add", "x") == _OK
+    assert _doc(path)["counter"] == _CLAIMED + 1
+
+
+def test_repair_counter_never_lowers_and_refuses_when_nothing_lags(tmp_path: Path) -> None:
+    """A counter that lags nothing is refused byte-identical: the repair only ever raises.
+
+    ⚑ RAISE-ONLY (W355): a counter above every claimed symbol stays where it is, since lowering
+    it would re-issue a burned symbol, and no ledger line is written for a repair not made.
+    """
+    path = _file(tmp_path, counter=_CLAIMED + 2)
+    before = path.read_bytes()
+    assert _run(path, "--repair-counter", "why") == _REFUSED
+    assert path.read_bytes() == before
+    assert not path.with_suffix(".ledger").exists()
+
+
 _LEASED = "file:a.py!w"
 
 

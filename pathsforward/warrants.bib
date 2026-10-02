@@ -2484,3 +2484,43 @@
   claim  = {A done list that alone overruns the budget is cut to its count, never refused (W377).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_long_done_list_drops_its_symbols_and_keeps_its_count},
 }
+
+@misc{pathsforward-cli-vectors-from-sets-each-vector-and-source-in-one-call,
+  section = {cli},
+  title  = {--vectors-from stores each waypoint's WV:1 vector with its source, as --weights-from does},
+  claim  = {--vectors-from stores each waypoint's WV:1 vector with its source, as --weights-from
+            does. W354: a sync of many vectors was one --update per waypoint, each its
+            own write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_vectors_from_sets_each_vector_and_source_in_one_call},
+}
+
+@misc{pathsforward-cli-refused-vectors-file-leaves-the-state-byte-identical,
+  section = {cli},
+  title  = {An unknown symbol, a bad vector, a missing source, a repeat or a non-list refuses it all},
+  claim  = {An unknown symbol, a bad vector, a missing source, a repeat or a non-list refuses it
+            all. ALL OR NOTHING (W354): the first record is good in every case, so a
+            writer that applied records one at a time would have changed W1 before
+            refusing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_refused_vectors_file_leaves_the_state_byte_identical},
+}
+
+@misc{pathsforward-cli-repair-counter-raises-a-lagging-counter-and-ledgers-it,
+  section = {cli},
+  title  = {--repair-counter raises a counter lagging a claimed symbol to it, and records the repair},
+  claim  = {--repair-counter raises a counter lagging a claimed symbol to it, and records the
+            repair. W355: after a D8 recovery the only fix was a hand edit, which left
+            no trace. The repair raises to the highest claimed symbol, so the next --add
+            mints past it, and a ledger line names the old and new counter and the
+            reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_repair_counter_raises_a_lagging_counter_and_ledgers_it},
+}
+
+@misc{pathsforward-cli-repair-counter-never-lowers-and-refuses-when-nothing-lags,
+  section = {cli},
+  title  = {A counter that lags nothing is refused byte-identical: the repair only ever raises},
+  claim  = {A counter that lags nothing is refused byte-identical: the repair only ever raises.
+            RAISE-ONLY (W355): a counter above every claimed symbol stays where it is,
+            since lowering it would re-issue a burned symbol, and no ledger line is
+            written for a repair not made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_repair_counter_never_lowers_and_refuses_when_nothing_lags},
+}

@@ -73,6 +73,8 @@ _VALUED = (
     "show",
     "preamble_set",
     "weights_from",
+    "vectors_from",
+    "repair_counter",
     "scan_literal",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
@@ -265,6 +267,16 @@ def _parser() -> argparse.ArgumentParser:
         "--weights-from",
         metavar="FILE",
         help="store [{symbol, weight}] from a JSON file, all or nothing",
+    )
+    mode.add_argument(
+        "--vectors-from",
+        metavar="FILE",
+        help="store [{symbol, vector, vector_source}] from a JSON file, all or nothing",
+    )
+    mode.add_argument(
+        "--repair-counter",
+        metavar="REASON",
+        help="raise a counter lagging a claimed symbol up to it (never lower); ledgered",
     )
     ap.add_argument("--status", choices=STATUSES)
     ap.add_argument("--blocked-on", nargs="*", metavar="WHO")
@@ -964,6 +976,62 @@ def _preamble_set(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _json_file(source: Path) -> object:
+    """Read a JSON file a bulk mode applies.
+
+    Returns:
+        the parsed document, unchecked.
+
+    Raises:
+        RefusedError: on a file that is not JSON.
+
+    """
+    try:
+        return cast("object", json.loads(source.read_text(encoding="utf-8")))
+    except json.JSONDecodeError as exc:
+        msg = f"{source}: not JSON ({exc.msg}, line {exc.lineno})"
+        raise ops.RefusedError(msg) from exc
+
+
+def _vectors_from(ctx: Ctx) -> int:
+    """Store a file's WV:1 vectors in one write, or refuse the whole file (W354).
+
+    ⚑ PARSED AND CHECKED BEFORE THE LOCK, as `--weights-from`: every vector's grammar and source
+    are judged before the state is opened, and the symbols against the live queue under it.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    triples = ops.vectors_from(_json_file(Path(ctx.get("vectors_from") or "")))
+
+    def edit(state: State) -> int:
+        count = ops.set_vectors(state, triples, ctx.stamp())
+        _say(f"vectors set: {count}; state_hash={v2(state.waypoints)}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
+def _repair_counter(ctx: Ctx) -> int:
+    """Raise a lagging counter to the highest claimed symbol, and ledger the repair (W355).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    reason = ctx.get("repair_counter") or ""
+
+    def edit(state: State) -> int:
+        old, new = ops.repair_counter(state)
+        note = f"counter {old}->{new}: {reason}"
+        _ledger(ctx, Entry("repair", f"W{new}", "counter", "raised", note))
+        _say(f"counter repaired: {old}->{new}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _weights_from(ctx: Ctx) -> int:
     """Store a file's weights in one write, or refuse the whole file.
 
@@ -973,17 +1041,8 @@ def _weights_from(ctx: Ctx) -> int:
     Returns:
         EXIT_OK.
 
-    Raises:
-        RefusedError: on a file that is not JSON (the other refusals come from `ops`).
-
     """
-    source = Path(ctx.get("weights_from") or "")
-    try:
-        raw = cast("object", json.loads(source.read_text(encoding="utf-8")))
-    except json.JSONDecodeError as exc:
-        msg = f"{source}: not JSON ({exc.msg}, line {exc.lineno})"
-        raise ops.RefusedError(msg) from exc
-    pairs = ops.weights_from(raw)
+    pairs = ops.weights_from(_json_file(Path(ctx.get("weights_from") or "")))
 
     def edit(state: State) -> int:
         count = ops.set_weights(state, pairs, ctx.stamp())
@@ -1059,6 +1118,8 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "preamble_clear": _preamble_clear,
     "init": _init,
     "weights_from": _weights_from,
+    "vectors_from": _vectors_from,
+    "repair_counter": _repair_counter,
     "overlaps": _overlaps,
     "ics": _ics,
 }
