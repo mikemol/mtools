@@ -1,0 +1,254 @@
+[
+ {
+  "case": "371-a-returned-set-literal-is-a-set-reification",
+  "origin": {
+   "check": "a returned set literal is a set reification",
+   "line": 2828,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "372-a-returned-dict-literal-is-a-dict-reification",
+  "origin": {
+   "check": "a returned dict literal is a dict reification",
+   "line": 2830,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "373-a-returned-set-comprehension-counts-the-corpus-shaped-builde",
+  "origin": {
+   "check": "a returned set COMPREHENSION counts (the corpus-shaped builder)",
+   "line": 2832,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "374-a-returned-dict-comprehension-counts",
+  "origin": {
+   "check": "a returned dict comprehension counts",
+   "line": 2834,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "375-return-set-xs-is-a-call-built-reification",
+  "origin": {
+   "check": "`return set(xs)` is a call-built reification",
+   "line": 2836,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "376-return-sorted-xs-gets-its-own-why-not-returns-call",
+  "origin": {
+   "check": "`return sorted(xs)` gets its OWN why, not returns-call",
+   "line": 2843,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "377-a-name-grown-by-append-and-returned-is-an-accumulator",
+  "origin": {
+   "check": "a name grown by .append and returned is an accumulator",
+   "line": 2845,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "378-a-dict-grown-by-subscript-assign-and-returned-is-an-accumula",
+  "origin": {
+   "check": "a dict grown by subscript-assign and returned is an accumulator",
+   "line": 2847,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "379-a-generator-is-not-a-reification-it-is-the-target-shape",
+  "origin": {
+   "check": "a generator is NOT a reification (it is the target shape)",
+   "line": 2854,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "380-a-returned-scalar-is-not-a-reification",
+  "origin": {
+   "check": "a returned scalar is NOT a reification",
+   "line": 2856,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "381-returning-an-argument-unchanged-is-not-a-reification",
+  "origin": {
+   "check": "returning an argument unchanged is NOT a reification",
+   "line": 2857,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  }
+ },
+ {
+  "case": "382-reifies-reports-the-population-it-actually-read",
+  "origin": {
+   "check": "reifies() reports the population it actually read",
+   "line": 2863,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/reify_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads reifies.population/.skipped, attributes reifies() stamps on itself; the capture keeps only the return value (W399)"
+ },
+ {
+  "case": "383-an-unparseable-file-is-counted-as-skipped-never-silently-dro",
+  "origin": {
+   "check": "an unparseable file is COUNTED as skipped, never silently dropped",
+   "line": 2869,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reifies",
+    "args": {
+     "paths": "['/var/tmp/tmpugajloov/broken.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpugajloov/broken.py": "def f(:\n",
+   "/var/tmp/tmpugajloov/reify_case.py": "\ndef lit_set():\n    return {\"a\", \"b\"}\n\ndef lit_dict():\n    return {\"k\": 1}\n\ndef comp_set(xs):\n    return {x for x in xs}\n\ndef comp_dict(xs):\n    return {x: 1 for x in xs}\n\ndef call_set(xs):\n    return set(xs)\n\ndef call_sorted(xs):\n    return sorted(xs)\n\ndef accum(xs):\n    out = []\n    for x in xs:\n        out.append(x)\n    return out\n\ndef accum_dict(xs):\n    d = {}\n    for x in xs:\n        d[x] = 1\n    return d\n\ndef streams(xs):\n    for x in xs:\n        yield x\n\ndef scalar(xs):\n    return len(xs)\n\ndef passthrough(xs):\n    return xs\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads reifies.population/.skipped, attributes reifies() stamps on itself; the capture keeps only the return value (W399)"
+ }
+]

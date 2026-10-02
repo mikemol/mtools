@@ -1,0 +1,156 @@
+[
+ {
+  "case": "111-projects-finds-a-project-per-paper-toml",
+  "origin": {
+   "check": "--projects finds a project per paper.toml",
+   "line": 984,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:paperkit_projects",
+    "args": {
+     "root": "/var/tmp/tmpj7vmh632"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpj7vmh632//paper.toml": "[paper]\ntitle = \"Root\"\nwarrants = [\"warrants.bib\", \"//child:owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//child/paper.toml": "[paper]\ntitle = \"Child\"\nwarrants = [\"owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//importer/paper.toml": "[paper]\ntitle = \"Importer\"\nwarrants = [\"warrants.bib\", \"../shared/common.bib\", \"//local:own.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//solo/paper.toml": "[paper]\ntitle = \"Solo\"\nwarrants = [\"warrants.bib\"]\n"
+  }
+ },
+ {
+  "case": "112-a-project-with-only-a-local-bib-has-no-foreign-import",
+  "origin": {
+   "check": "a project with only a local bib has NO foreign import",
+   "line": 986,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:paperkit_projects",
+    "args": {
+     "root": "/var/tmp/tmpj7vmh632"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpj7vmh632//paper.toml": "[paper]\ntitle = \"Root\"\nwarrants = [\"warrants.bib\", \"//child:owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//child/paper.toml": "[paper]\ntitle = \"Child\"\nwarrants = [\"owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//importer/paper.toml": "[paper]\ntitle = \"Importer\"\nwarrants = [\"warrants.bib\", \"../shared/common.bib\", \"//local:own.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//solo/paper.toml": "[paper]\ntitle = \"Solo\"\nwarrants = [\"warrants.bib\"]\n"
+  }
+ },
+ {
+  "case": "113-a-token-that-escapes-the-project-dir-is-foreign",
+  "origin": {
+   "check": "a `../` token that ESCAPES the project dir IS foreign",
+   "line": 989,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:paperkit_projects",
+    "args": {
+     "root": "/var/tmp/tmpj7vmh632"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpj7vmh632//paper.toml": "[paper]\ntitle = \"Root\"\nwarrants = [\"warrants.bib\", \"//child:owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//child/paper.toml": "[paper]\ntitle = \"Child\"\nwarrants = [\"owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//importer/paper.toml": "[paper]\ntitle = \"Importer\"\nwarrants = [\"warrants.bib\", \"../shared/common.bib\", \"//local:own.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//solo/paper.toml": "[paper]\ntitle = \"Solo\"\nwarrants = [\"warrants.bib\"]\n"
+  }
+ },
+ {
+  "case": "114-a-label-resolving-inside-the-project-is-not-foreign",
+  "origin": {
+   "check": "a label resolving INSIDE the project is NOT foreign",
+   "line": 991,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:paperkit_projects",
+    "args": {
+     "root": "/var/tmp/tmpj7vmh632"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpj7vmh632//paper.toml": "[paper]\ntitle = \"Root\"\nwarrants = [\"warrants.bib\", \"//child:owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//child/paper.toml": "[paper]\ntitle = \"Child\"\nwarrants = [\"owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//importer/paper.toml": "[paper]\ntitle = \"Importer\"\nwarrants = [\"warrants.bib\", \"../shared/common.bib\", \"//local:own.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//solo/paper.toml": "[paper]\ntitle = \"Solo\"\nwarrants = [\"warrants.bib\"]\n"
+  }
+ },
+ {
+  "case": "115-the-foreign-row-names-the-resolved-corpus-relative-destinati",
+  "origin": {
+   "check": "the foreign row names the RESOLVED corpus-relative destination",
+   "line": 993,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:paperkit_projects",
+    "args": {
+     "root": "/var/tmp/tmpj7vmh632"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpj7vmh632//paper.toml": "[paper]\ntitle = \"Root\"\nwarrants = [\"warrants.bib\", \"//child:owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//child/paper.toml": "[paper]\ntitle = \"Child\"\nwarrants = [\"owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//importer/paper.toml": "[paper]\ntitle = \"Importer\"\nwarrants = [\"warrants.bib\", \"../shared/common.bib\", \"//local:own.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//solo/paper.toml": "[paper]\ntitle = \"Solo\"\nwarrants = [\"warrants.bib\"]\n"
+  }
+ },
+ {
+  "case": "116-a-nested-child-project-s-bib-is-foreign-to-its-parent-owners",
+  "origin": {
+   "check": "a NESTED child project's bib is FOREIGN to its parent (ownership, not containment)",
+   "line": 996,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:paperkit_projects",
+    "args": {
+     "root": "/var/tmp/tmpj7vmh632"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpj7vmh632//paper.toml": "[paper]\ntitle = \"Root\"\nwarrants = [\"warrants.bib\", \"//child:owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//child/paper.toml": "[paper]\ntitle = \"Child\"\nwarrants = [\"owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//importer/paper.toml": "[paper]\ntitle = \"Importer\"\nwarrants = [\"warrants.bib\", \"../shared/common.bib\", \"//local:own.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//solo/paper.toml": "[paper]\ntitle = \"Solo\"\nwarrants = [\"warrants.bib\"]\n"
+  }
+ },
+ {
+  "case": "117-the-child-still-owns-its-own-bib-locally",
+  "origin": {
+   "check": "the child still owns its own bib locally",
+   "line": 999,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:paperkit_projects",
+    "args": {
+     "root": "/var/tmp/tmpj7vmh632"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpj7vmh632//paper.toml": "[paper]\ntitle = \"Root\"\nwarrants = [\"warrants.bib\", \"//child:owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//child/paper.toml": "[paper]\ntitle = \"Child\"\nwarrants = [\"owned.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//importer/paper.toml": "[paper]\ntitle = \"Importer\"\nwarrants = [\"warrants.bib\", \"../shared/common.bib\", \"//local:own.bib\"]\n",
+   "/var/tmp/tmpj7vmh632//solo/paper.toml": "[paper]\ntitle = \"Solo\"\nwarrants = [\"warrants.bib\"]\n"
+  }
+ }
+]

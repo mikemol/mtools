@@ -1,0 +1,95 @@
+[
+ {
+  "case": "107-py-files-skips-bazel-generated-cache-trees-keeping-only-sour",
+  "origin": {
+   "check": "py_files() skips bazel/generated/cache trees, keeping only source",
+   "line": 924,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:py_files",
+    "args": {
+     "roots": "('/var/tmp/tmpsmw9y_5t',)"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpsmw9y_5t//.mypy_cache/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//.tox/py311/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//bazel-bin/mutants/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//bazel-out/k8-fastbuild/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//build/lib/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//src/m.py": "def references():\n    return 1\n"
+  }
+ },
+ {
+  "case": "108-naming-a-generated-tree-explicitly-still-reaches-it",
+  "origin": {
+   "check": "naming a generated tree explicitly still reaches it",
+   "line": 929,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:py_files",
+    "args": {
+     "roots": "('/var/tmp/tmpsmw9y_5t/bazel-bin',)"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpsmw9y_5t/bazel-bin//mutants/m.py": "def references():\n    return 1\n"
+  }
+ },
+ {
+  "case": "109-roots-drops-generated-trees-that-are-top-level-entries",
+  "origin": {
+   "check": "_roots() drops generated trees that are TOP-LEVEL entries",
+   "line": 947,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:py_files",
+    "args": {
+     "roots": "()",
+     "<global ROOT>": "/var/tmp/tmpsmw9y_5t"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpsmw9y_5t//.mypy_cache/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//.tox/py311/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//bazel-bin/mutants/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//bazel-out/k8-fastbuild/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//build/lib/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//src/m.py": "def references():\n    return 1\n"
+  }
+ },
+ {
+  "case": "110-a-bazel-workspace-convenience-symlink-is-dropped-by-prefix",
+  "origin": {
+   "check": "a bazel-<workspace> convenience symlink is dropped by prefix",
+   "line": 951,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:py_files",
+    "args": {
+     "roots": "()",
+     "<global ROOT>": "/var/tmp/tmpsmw9y_5t"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpsmw9y_5t//.mypy_cache/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//.tox/py311/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//bazel-bin/mutants/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//bazel-out/k8-fastbuild/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//build/lib/m.py": "def references():\n    return 1\n",
+   "/var/tmp/tmpsmw9y_5t//src/m.py": "def references():\n    return 1\n"
+  }
+ }
+]

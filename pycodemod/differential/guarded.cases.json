@@ -1,0 +1,86 @@
+[
+ {
+  "case": "005-guarded-an-unconditional-call-is-top",
+  "origin": {
+   "check": "guarded: an unconditional call is `top`",
+   "line": 142,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:guarded",
+    "args": {
+     "name": "g",
+     "paths": "['/var/tmp/tmpi1it7p01/g.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ },
+ {
+  "case": "006-guarded-a-call-under-if-carries-its-test",
+  "origin": {
+   "check": "guarded: a call under `if` carries its test",
+   "line": 143,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:guarded",
+    "args": {
+     "name": "g",
+     "paths": "['/var/tmp/tmpi1it7p01/g.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ },
+ {
+  "case": "007-guarded-nested-conditions-are-outermost-first",
+  "origin": {
+   "check": "guarded: nested conditions are outermost-first",
+   "line": 145,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:guarded",
+    "args": {
+     "name": "g",
+     "paths": "['/var/tmp/tmpi1it7p01/g.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ },
+ {
+  "case": "008-guarded-else-body-over-reported-under-its-if-never-negated",
+  "origin": {
+   "check": "guarded: else-body over-reported under its if, never negated",
+   "line": 150,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:guarded",
+    "args": {
+     "name": "g",
+     "paths": "['/var/tmp/tmpi1it7p01/g.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ }
+]

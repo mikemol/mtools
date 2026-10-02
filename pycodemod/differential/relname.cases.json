@@ -1,0 +1,525 @@
+[
+ {
+  "case": "250-a-from-target-is-a-relation",
+  "origin": {
+   "check": "a FROM target is a relation",
+   "line": 2183,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT * FROM node WHERE x=1"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "251-and-a-longer-name-containing-it-is-not",
+  "origin": {
+   "check": "...and a LONGER name containing it is NOT",
+   "line": 2185,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT * FROM node_child"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "252-nor-is-an-alias-spelled-like-a-relation",
+  "origin": {
+   "check": "...nor is an ALIAS spelled like a relation",
+   "line": 2190,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT node.id FROM obs_node node"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "253-a-join-target-is-a-relation",
+  "origin": {
+   "check": "a JOIN target is a relation",
+   "line": 2192,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT 1 FROM a JOIN b ON b.i=a.i"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "254-a-recursive-cte-name-is-not-a-relation-its-base-table-is",
+  "origin": {
+   "check": "a recursive CTE name is NOT a relation, its base table is",
+   "line": 2197,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "WITH RECURSIVE reach(n) AS (SELECT 1 UNION SELECT nc.child_id FROM node_child nc JOIN reach r ON nc.node_id=r.n) SELECT n FROM reach"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "255-a-relation-inside-a-derived-table-is-found",
+  "origin": {
+   "check": "a relation inside a DERIVED TABLE is found",
+   "line": 2204,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT count(*) FROM (SELECT n.core_id FROM obs_node n) d"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "256-extract-from-x-names-no-relation",
+  "origin": {
+   "check": "EXTRACT(\u2026 FROM x) names no relation",
+   "line": 2212,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT extract(epoch FROM ts) FROM event"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "257-is-not-distinct-from-names-no-relation",
+  "origin": {
+   "check": "IS NOT DISTINCT FROM names no relation",
+   "line": 2219,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT 1 FROM core_decoded c WHERE c.dec IS NOT DISTINCT FROM s.dec"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "258-and-the-plain-distinct-from-spelling-likewise",
+  "origin": {
+   "check": "...and the plain DISTINCT FROM spelling likewise",
+   "line": 2222,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT 1 FROM obs o WHERE o.v IS DISTINCT FROM p.v"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "259-but-select-distinct-from-t-is-still-a-relation",
+  "origin": {
+   "check": "...but SELECT DISTINCT \u2026 FROM t is still a relation",
+   "line": 2224,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT DISTINCT x FROM t"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "260-but-a-subquery-nested-in-an-expression-still-counts",
+  "origin": {
+   "check": "...but a subquery nested in an expression still counts",
+   "line": 2226,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT coalesce((SELECT max(x) FROM t), 0) FROM u"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "261-a-table-function-is-not-a-stored-relation",
+  "origin": {
+   "check": "a table FUNCTION is not a stored relation",
+   "line": 2228,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "SELECT * FROM generate_series(1,3) g"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "262-insert-into-update-drop-table-name-their-target",
+  "origin": {
+   "check": "INSERT INTO / UPDATE / DROP TABLE name their target",
+   "line": 2230,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "INSERT INTO terms (a) VALUES (1)"
+    }
+   },
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "UPDATE core_fp SET mtime=1"
+    }
+   },
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "DROP TABLE IF EXISTS obs_node"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "263-a-delete-target-is-a-write",
+  "origin": {
+   "check": "a DELETE target is a WRITE",
+   "line": 2247,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "DELETE FROM core_decoded c WHERE EXISTS (SELECT 1 FROM core_decoded_shadow s WHERE s.core_id = c.core_id)"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "264-and-is-not-also-read",
+  "origin": {
+   "check": "...and is NOT also read",
+   "line": 2248,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "DELETE FROM core_decoded c WHERE EXISTS (SELECT 1 FROM core_decoded_shadow s WHERE s.core_id = c.core_id)"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "265-an-insert-target-is-a-write",
+  "origin": {
+   "check": "an INSERT target is a WRITE",
+   "line": 2254,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "INSERT INTO dec_val (id, v) SELECT n.id, n.v FROM dec_node n WHERE NOT EXISTS (SELECT 1 FROM dec_val v WHERE v.id = n.id)"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "266-and-the-same-name-is-also-a-read-when-the-sql-reads-it",
+  "origin": {
+   "check": "...and the SAME name is also a read when the SQL reads it",
+   "line": 2255,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "INSERT INTO dec_val (id, v) SELECT n.id, n.v FROM dec_node n WHERE NOT EXISTS (SELECT 1 FROM dec_val v WHERE v.id = n.id)"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "267-an-update-target-is-a-write-its-from-is-a-read",
+  "origin": {
+   "check": "an UPDATE target is a WRITE, its FROM is a read",
+   "line": 2258,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "UPDATE core_fp SET mtime = o.mtime FROM obs o WHERE o.id = core_fp.id"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "268-a-plain-select-writes-nothing",
+  "origin": {
+   "check": "a plain SELECT writes nothing",
+   "line": 2260,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "SELECT 1 FROM event e JOIN obs o ON o.id = e.id"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "269-drop-table-is-a-write",
+  "origin": {
+   "check": "DROP TABLE is a write",
+   "line": 2263,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "DROP TABLE IF EXISTS obs_node"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "270-writes-reads-sql-relnames-exactly",
+  "origin": {
+   "check": "writes | reads == sql_relnames, exactly",
+   "line": 2273,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "WITH r AS (SELECT 1 AS id) INSERT INTO dec_root (root) SELECT r.id FROM r JOIN dec_node n ON n.id = r.id JOIN dec_ref f ON f.head = n.head JOIN core_decoded c ON c.core_id = f.core_id"
+    }
+   },
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "WITH r AS (SELECT 1 AS id) INSERT INTO dec_root (root) SELECT r.id FROM r JOIN dec_node n ON n.id = r.id JOIN dec_ref f ON f.head = n.head JOIN core_decoded c ON c.core_id = f.core_id"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "271-a-cte-is-in-neither-set",
+  "origin": {
+   "check": "a CTE is in neither set",
+   "line": 2274,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rw",
+    "args": {
+     "sql": "WITH r AS (SELECT 1 AS id) INSERT INTO dec_root (root) SELECT r.id FROM r JOIN dec_node n ON n.id = r.id JOIN dec_ref f ON f.head = n.head JOIN core_decoded c ON c.core_id = f.core_id"
+    }
+   },
+   {
+    "fn": "_pycodemod_sql.py:sql_relnames",
+    "args": {
+     "sql": "WITH r AS (SELECT 1 AS id) INSERT INTO dec_root (root) SELECT r.id FROM r JOIN dec_node n ON n.id = r.id JOIN dec_ref f ON f.head = n.head JOIN core_decoded c ON c.core_id = f.core_id"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "272-a-leading-cte-does-not-hide-the-insert-head",
+  "origin": {
+   "check": "a leading CTE does not hide the INSERT head",
+   "line": 2278,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_kind",
+    "args": {
+     "sql": "WITH r AS (SELECT 1) INSERT INTO dec_root (root) SELECT 1 FROM r"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "273-a-delete-with-a-subquery-is-still-a-delete",
+  "origin": {
+   "check": "a DELETE with a subquery is still a delete",
+   "line": 2281,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_kind",
+    "args": {
+     "sql": "DELETE FROM core_decoded c WHERE EXISTS (SELECT 1 FROM s)"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "274-a-column-list-does-not-hide-the-insert-head",
+  "origin": {
+   "check": "a column list does not hide the INSERT head",
+   "line": 2283,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_kind",
+    "args": {
+     "sql": "INSERT INTO dec_val (id, v) SELECT 1, 2"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "275-a-plain-query-heads-select",
+  "origin": {
+   "check": "a plain query heads SELECT",
+   "line": 2285,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_kind",
+    "args": {
+     "sql": "SELECT 1 FROM event"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "276-the-roles-view-agrees-with-the-split",
+  "origin": {
+   "check": "the roles view agrees with the split",
+   "line": 2286,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_rel_roles",
+    "args": {
+     "sql": "WITH r AS (SELECT 1 AS id) INSERT INTO dec_root (root) SELECT r.id FROM r JOIN dec_node n ON n.id = r.id JOIN dec_ref f ON f.head = n.head JOIN core_decoded c ON c.core_id = f.core_id"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "277-the-shim-spelling-is-found-as-role-name",
+  "origin": {
+   "check": "the shim spelling is found as role `name`",
+   "line": 2301,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relname_sites",
+    "args": {
+     "name": "node",
+     "path": "/var/tmp/tmp4y4e_10_/relname_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp4y4e_10_/relname_case.py": "X = _T(\"node\", \"node_id\")\nY = \"node precedes node_atom\"\nZ = [\"node_child\"]\n"
+  }
+ },
+ {
+  "case": "278-and-prose-merely-containing-the-name-is-not",
+  "origin": {
+   "check": "...and prose merely CONTAINING the name is not",
+   "line": 2303,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relname_sites",
+    "args": {
+     "name": "node",
+     "path": "/var/tmp/tmp4y4e_10_/relname_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp4y4e_10_/relname_case.py": "X = _T(\"node\", \"node_id\")\nY = \"node precedes node_atom\"\nZ = [\"node_child\"]\n"
+  }
+ }
+]

@@ -1,0 +1,1198 @@
+[
+ {
+  "case": "074-values-a-literal-true-is-reported-with-its-value",
+  "origin": {
+   "check": "values(): a literal True is reported WITH its value",
+   "line": 697,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "075-values-a-literal-false-is-reported-with-its-value",
+  "origin": {
+   "check": "values(): a literal False is reported WITH its value",
+   "line": 699,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "076-values-a-literal-none-is-a-value-not-the-unknown-marker",
+  "origin": {
+   "check": "values(): a literal None is a VALUE, not the unknown marker",
+   "line": 705,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "077-values-a-literal-string-is-reported-with-its-value",
+  "origin": {
+   "check": "values(): a literal string is reported with its value",
+   "line": 707,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "078-values-a-bare-name-is-unknown-never-guessed",
+  "origin": {
+   "check": "values(): a bare name is UNKNOWN, never guessed",
+   "line": 713,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "079-values-an-interpolated-f-string-is-unknown",
+  "origin": {
+   "check": "values(): an interpolated f-string is UNKNOWN",
+   "line": 715,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "080-values-a-conditional-expression-is-unknown",
+  "origin": {
+   "check": "values(): a conditional expression is UNKNOWN",
+   "line": 717,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "081-values-a-call-not-passing-the-keyword-is-not-a-row",
+  "origin": {
+   "check": "values(): a call NOT passing the keyword is not a row",
+   "line": 719,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "082-values-reports-n-of-m-over-the-call-population",
+  "origin": {
+   "check": "values(): reports n of m over the CALL population",
+   "line": 723,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "083-values-a-call-inside-a-def-reports-that-def-as-its-context",
+  "origin": {
+   "check": "values(): a call inside a def reports that def as its context",
+   "line": 740,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6c.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "084-values-a-module-scope-fixture-call-reports-module",
+  "origin": {
+   "check": "values(): a module-scope fixture call reports <module>",
+   "line": 742,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6c.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "085-values-ordinal-reads-the-positional-argument-at-that-index",
+  "origin": {
+   "check": "values(<ordinal>): reads the positional argument at that index",
+   "line": 758,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "up",
+     "kw": "1",
+     "paths": "['/var/tmp/tmpi1it7p01/t6p.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "086-and-a-computed-positional-reports-unknown-rather-than-a-gues",
+  "origin": {
+   "check": "...and a computed positional reports UNKNOWN rather than a guess",
+   "line": 763,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "up",
+     "kw": "1",
+     "paths": "['/var/tmp/tmpi1it7p01/t6p.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "087-and-a-site-with-no-such-position-is-absent-not-unknown",
+  "origin": {
+   "check": "...and a site with no such position is ABSENT, not UNKNOWN",
+   "line": 770,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "up",
+     "kw": "1",
+     "paths": "['/var/tmp/tmpi1it7p01/t6p.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "088-over-the-full-call-population-as-the-denominator",
+  "origin": {
+   "check": "...over the full call population as the denominator",
+   "line": 771,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "up",
+     "kw": "1",
+     "paths": "['/var/tmp/tmpi1it7p01/t6p.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "089-and-a-decimal-string-selects-the-same-position-as-the-int",
+  "origin": {
+   "check": "...and a decimal STRING selects the same position as the int",
+   "line": 774,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:values",
+    "args": {
+     "name": "up",
+     "kw": "1",
+     "paths": "['/var/tmp/tmpi1it7p01/t6p.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "090-callgraph-attributes-calls-to-their-enclosing-def",
+  "origin": {
+   "check": "callgraph attributes calls to their ENCLOSING def",
+   "line": 795,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:callgraph",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/cga.py', '/var/tmp/tmpi1it7p01/cgb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "091-which-calls-cannot-do-it-has-no-scope-tracking",
+  "origin": {
+   "check": "...which `--calls` cannot do (it has no scope tracking)",
+   "line": 797,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:callgraph",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/cga.py', '/var/tmp/tmpi1it7p01/cgb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "092-reaches-follows-a-multi-hop-chain-within-a-module",
+  "origin": {
+   "check": "reaches follows a multi-hop chain within a module",
+   "line": 799,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reaches",
+    "args": {
+     "callgraph_": "{'cga.leaf': {'sink'}, 'cga.mid': {'leaf'}, 'cga.top': {'mid'}, 'cga.other': {'run'}, 'cgb.run': {'sink'}}",
+     "start": "cga.top",
+     "targets": "{'sink'}",
+     "depth": "6",
+     "callgraph_.cga.leaf": "{'sink'}",
+     "callgraph_.cga.mid": "{'leaf'}",
+     "callgraph_.cga.top": "{'mid'}",
+     "callgraph_.cga.other": "{'run'}",
+     "callgraph_.cgb.run": "{'sink'}"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "093-and-does-not-bridge-modules-on-a-shared-callee-spelling",
+  "origin": {
+   "check": "...and does NOT bridge modules on a shared callee spelling",
+   "line": 805,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reaches",
+    "args": {
+     "callgraph_": "{'cga.leaf': {'sink'}, 'cga.mid': {'leaf'}, 'cga.top': {'mid'}, 'cga.other': {'run'}, 'cgb.run': {'sink'}}",
+     "start": "cga.other",
+     "targets": "{'sink'}",
+     "depth": "6",
+     "callgraph_.cga.leaf": "{'sink'}",
+     "callgraph_.cga.mid": "{'leaf'}",
+     "callgraph_.cga.top": "{'mid'}",
+     "callgraph_.cga.other": "{'run'}",
+     "callgraph_.cgb.run": "{'sink'}"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "094-a-target-beyond-the-depth-bound-is-absent-not-falsely-report",
+  "origin": {
+   "check": "a target beyond the depth bound is absent, not falsely reported",
+   "line": 809,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:reaches",
+    "args": {
+     "callgraph_": "{'cga.leaf': {'sink'}, 'cga.mid': {'leaf'}, 'cga.top': {'mid'}, 'cga.other': {'run'}, 'cgb.run': {'sink'}}",
+     "start": "cga.top",
+     "targets": "{'sink'}",
+     "depth": "1",
+     "callgraph_.cga.leaf": "{'sink'}",
+     "callgraph_.cga.mid": "{'leaf'}",
+     "callgraph_.cga.top": "{'mid'}",
+     "callgraph_.cga.other": "{'run'}",
+     "callgraph_.cgb.run": "{'sink'}"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "095-values-partitions-exactly-as-asserted-does",
+  "origin": {
+   "check": "values() partitions exactly as asserted() does",
+   "line": 813,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:asserted",
+    "args": {
+     "name": "q",
+     "kw": "reset",
+     "paths": "['/var/tmp/tmpi1it7p01/t6v.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "096-forwards-only-the-keyword-passing-call-counts-as-migrated",
+  "origin": {
+   "check": "forwards(): only the keyword-passing call counts as migrated",
+   "line": 831,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:forwards",
+    "args": {
+     "name": "r",
+     "kw": "quiet",
+     "paths": "['/var/tmp/tmpi1it7p01/t4.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "097-forwards-positional-and-other-keyword-calls-are-missing",
+  "origin": {
+   "check": "forwards(): positional and other-keyword calls are MISSING",
+   "line": 833,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:forwards",
+    "args": {
+     "name": "r",
+     "kw": "quiet",
+     "paths": "['/var/tmp/tmpi1it7p01/t4.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "098-kwseen-does-not-leak-between-scans",
+  "origin": {
+   "check": "kwseen does not leak between scans",
+   "line": 842,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:__init__",
+    "args": {
+     "self": "{}",
+     "target": "None",
+     "population": "None"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:__init__",
+    "args": {
+     "self": "{}",
+     "target": "None",
+     "population": "None"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t4.py']",
+     "target": "r",
+     "kwseen": "{}"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t2.py']",
+     "target": "f",
+     "kwseen": "{}"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "099-a-matched-context-reads-the-guard-is-not-refuse-everything",
+  "origin": {
+   "check": "a matched context READS (the guard is not refuse-everything)",
+   "line": 855,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:check",
+    "args": {
+     "self": "{('/var/tmp/tmpi1it7p01/t4.py', 3): {'quiet'}, ('/var/tmp/tmpi1it7p01/t4.py', 4): set(), ('/var/tmp/tmpi1it7p01/t4.py', 5): {'noun'}}",
+     "target": "r",
+     "population": "['/var/tmp/tmpi1it7p01/t4.py']",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 3)": "{'quiet'}",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 4)": "set()",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 5)": "{'noun'}"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "100-a-different-target-is-refused",
+  "origin": {
+   "check": "a different TARGET is refused",
+   "line": 857,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:check",
+    "args": {
+     "self": "{('/var/tmp/tmpi1it7p01/t4.py', 3): {'quiet'}, ('/var/tmp/tmpi1it7p01/t4.py', 4): set(), ('/var/tmp/tmpi1it7p01/t4.py', 5): {'noun'}}",
+     "target": "f",
+     "population": "['/var/tmp/tmpi1it7p01/t4.py']",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 3)": "{'quiet'}",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 4)": "set()",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 5)": "{'noun'}"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "101-a-different-population-is-refused",
+  "origin": {
+   "check": "a different POPULATION is refused",
+   "line": 859,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:check",
+    "args": {
+     "self": "{('/var/tmp/tmpi1it7p01/t4.py', 3): {'quiet'}, ('/var/tmp/tmpi1it7p01/t4.py', 4): set(), ('/var/tmp/tmpi1it7p01/t4.py', 5): {'noun'}}",
+     "target": "r",
+     "population": "['/var/tmp/tmpi1it7p01/t4.py', '/var/tmp/tmpi1it7p01/t2.py']",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 3)": "{'quiet'}",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 4)": "set()",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 5)": "{'noun'}"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "102-population-order-does-not-change-the-context",
+  "origin": {
+   "check": "population order does not change the context",
+   "line": 864,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:__init__",
+    "args": {
+     "self": "{}",
+     "target": "None",
+     "population": "None"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t4.py', '/var/tmp/tmpi1it7p01/t2.py']",
+     "target": "r",
+     "kwseen": "{}"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:check",
+    "args": {
+     "self": "{('/var/tmp/tmpi1it7p01/t4.py', 3): {'quiet'}, ('/var/tmp/tmpi1it7p01/t4.py', 4): set(), ('/var/tmp/tmpi1it7p01/t4.py', 5): {'noun'}}",
+     "target": "r",
+     "population": "['/var/tmp/tmpi1it7p01/t2.py', '/var/tmp/tmpi1it7p01/t4.py']",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 3)": "{'quiet'}",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 4)": "set()",
+     "self.('/var/tmp/tmpi1it7p01/t4.py', 5)": "{'noun'}"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "103-an-unguarded-write-is-write-default",
+  "origin": {
+   "check": "an unguarded write is write-default",
+   "line": 881,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:writes_by_default",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/w.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n"
+  }
+ },
+ {
+  "case": "104-an-apply-gated-write-is-not-write-default",
+  "origin": {
+   "check": "an --apply-gated write is NOT write-default",
+   "line": 888,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:writes_by_default",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/g.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "105-writing-a-tempfile-is-not-write-default",
+  "origin": {
+   "check": "writing a tempfile is NOT write-default",
+   "line": 896,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:writes_by_default",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/tf.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "106-a-write-inside-selftest-is-not-a-write-path",
+  "origin": {
+   "check": "a write inside _selftest is not a write path",
+   "line": 905,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:writes_by_default",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/s.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ }
+]

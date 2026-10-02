@@ -1,0 +1,82 @@
+[
+ {
+  "case": "227-a-prose-label-starting-with-a-sql-keyword-is-not-a-site",
+  "origin": {
+   "check": "a prose label starting with a SQL keyword is NOT a site",
+   "line": 1875,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_sites",
+    "args": {
+     "ident": "RECURSIVE",
+     "path": "/var/tmp/tmpm_0iwavv/sqlfix.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpm_0iwavv/sqlfix.py": "\n_SCHEMA = \"\"\"CREATE TABLE _module_edges (src_pid TEXT, dst_pid TEXT)\"\"\"\nLABEL = \"WITH RECURSIVE +\"\nNOTE = \"WITH RECURSIVE (UNION)\"\ndef go(con, m):\n    con.execute(\"SELECT dst FROM module_edges WHERE src = ?\", (m,))\n    return QB.run(con, \"modedges\")\ndef drain(con, sub):\n    con.execute(\"DELETE FROM drainq WHERE core_id IN (%s)\" % sub)\n    execute(con, \"SELECT count(*) FROM drainq WHERE core_id = %s\" % ph(), (1,))\n    con.execute(\"DELETE FROM evq e WHERE e.n = 1\")\n"
+  }
+ },
+ {
+  "case": "228-a-real-statement-is-a-site-and-carries-its-style",
+  "origin": {
+   "check": "a real statement IS a site, and carries its style",
+   "line": 1883,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_sites",
+    "args": {
+     "ident": "module_edges",
+     "path": "/var/tmp/tmpm_0iwavv/sqlfix.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpm_0iwavv/sqlfix.py": "\n_SCHEMA = \"\"\"CREATE TABLE _module_edges (src_pid TEXT, dst_pid TEXT)\"\"\"\nLABEL = \"WITH RECURSIVE +\"\nNOTE = \"WITH RECURSIVE (UNION)\"\ndef go(con, m):\n    con.execute(\"SELECT dst FROM module_edges WHERE src = ?\", (m,))\n    return QB.run(con, \"modedges\")\ndef drain(con, sub):\n    con.execute(\"DELETE FROM drainq WHERE core_id IN (%s)\" % sub)\n    execute(con, \"SELECT count(*) FROM drainq WHERE core_id = %s\" % ph(), (1,))\n    con.execute(\"DELETE FROM evq e WHERE e.n = 1\")\n"
+  }
+ },
+ {
+  "case": "229-a-builder-call-is-not-counted-as-a-raw-sql-literal",
+  "origin": {
+   "check": "a builder call is not counted as a raw SQL literal",
+   "line": 1890,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_sites",
+    "args": {
+     "ident": "modedges",
+     "path": "/var/tmp/tmpm_0iwavv/sqlfix.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpm_0iwavv/sqlfix.py": "\n_SCHEMA = \"\"\"CREATE TABLE _module_edges (src_pid TEXT, dst_pid TEXT)\"\"\"\nLABEL = \"WITH RECURSIVE +\"\nNOTE = \"WITH RECURSIVE (UNION)\"\ndef go(con, m):\n    con.execute(\"SELECT dst FROM module_edges WHERE src = ?\", (m,))\n    return QB.run(con, \"modedges\")\ndef drain(con, sub):\n    con.execute(\"DELETE FROM drainq WHERE core_id IN (%s)\" % sub)\n    execute(con, \"SELECT count(*) FROM drainq WHERE core_id = %s\" % ph(), (1,))\n    con.execute(\"DELETE FROM evq e WHERE e.n = 1\")\n"
+  }
+ },
+ {
+  "case": "230-a-s-parameterised-statement-is-a-site-and-is-raw-the-ph-idio",
+  "origin": {
+   "check": "a %s-parameterised statement IS a site, and is RAW (the ph() idiom)",
+   "line": 1906,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:sql_sites",
+    "args": {
+     "ident": "drainq",
+     "path": "/var/tmp/tmpm_0iwavv/sqlfix.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpm_0iwavv/sqlfix.py": "\n_SCHEMA = \"\"\"CREATE TABLE _module_edges (src_pid TEXT, dst_pid TEXT)\"\"\"\nLABEL = \"WITH RECURSIVE +\"\nNOTE = \"WITH RECURSIVE (UNION)\"\ndef go(con, m):\n    con.execute(\"SELECT dst FROM module_edges WHERE src = ?\", (m,))\n    return QB.run(con, \"modedges\")\ndef drain(con, sub):\n    con.execute(\"DELETE FROM drainq WHERE core_id IN (%s)\" % sub)\n    execute(con, \"SELECT count(*) FROM drainq WHERE core_id = %s\" % ph(), (1,))\n    con.execute(\"DELETE FROM evq e WHERE e.n = 1\")\n"
+  }
+ }
+]

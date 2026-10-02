@@ -1,0 +1,152 @@
+[
+ {
+  "case": "220-a-dict-read-inside-a-function-is-a-cache",
+  "origin": {
+   "check": "a dict read INSIDE a function is a cache",
+   "line": 1802,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:module_state",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/state/c.py', '/var/tmp/tmpi1it7p01/state/a.py', '/var/tmp/tmpi1it7p01/state/k.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/state/c.py": "_C = {}\ndef get(k):\n    if k in _C:\n        return _C[k]\n    _C[k] = k * 2\n    return _C[k]\n",
+   "/var/tmp/tmpi1it7p01/state/a.py": "bad = []\nfor x in range(3):\n    bad.append(x)\nprint(len(bad))\n",
+   "/var/tmp/tmpi1it7p01/state/k.py": "TABLE = {'a': 1}\ndef look(k):\n    return TABLE[k]\n"
+  }
+ },
+ {
+  "case": "221-an-accumulator-mutated-only-at-module-scope-is-not-a-cache",
+  "origin": {
+   "check": "an accumulator mutated only at module scope is NOT a cache",
+   "line": 1806,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:module_state",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/state/c.py', '/var/tmp/tmpi1it7p01/state/a.py', '/var/tmp/tmpi1it7p01/state/k.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/state/c.py": "_C = {}\ndef get(k):\n    if k in _C:\n        return _C[k]\n    _C[k] = k * 2\n    return _C[k]\n",
+   "/var/tmp/tmpi1it7p01/state/a.py": "bad = []\nfor x in range(3):\n    bad.append(x)\nprint(len(bad))\n",
+   "/var/tmp/tmpi1it7p01/state/k.py": "TABLE = {'a': 1}\ndef look(k):\n    return TABLE[k]\n"
+  }
+ },
+ {
+  "case": "222-an-unmutated-table-is-const-not-a-cache",
+  "origin": {
+   "check": "an unmutated table is const, not a cache",
+   "line": 1808,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:module_state",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/state/c.py', '/var/tmp/tmpi1it7p01/state/a.py', '/var/tmp/tmpi1it7p01/state/k.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/state/c.py": "_C = {}\ndef get(k):\n    if k in _C:\n        return _C[k]\n    _C[k] = k * 2\n    return _C[k]\n",
+   "/var/tmp/tmpi1it7p01/state/a.py": "bad = []\nfor x in range(3):\n    bad.append(x)\nprint(len(bad))\n",
+   "/var/tmp/tmpi1it7p01/state/k.py": "TABLE = {'a': 1}\ndef look(k):\n    return TABLE[k]\n"
+  }
+ },
+ {
+  "case": "223-every-candidate-is-classified-none-silently-dropped",
+  "origin": {
+   "check": "every candidate is classified, none silently dropped",
+   "line": 1811,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:module_state",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/state/c.py', '/var/tmp/tmpi1it7p01/state/a.py', '/var/tmp/tmpi1it7p01/state/k.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/state/c.py": "_C = {}\ndef get(k):\n    if k in _C:\n        return _C[k]\n    _C[k] = k * 2\n    return _C[k]\n",
+   "/var/tmp/tmpi1it7p01/state/a.py": "bad = []\nfor x in range(3):\n    bad.append(x)\nprint(len(bad))\n",
+   "/var/tmp/tmpi1it7p01/state/k.py": "TABLE = {'a': 1}\ndef look(k):\n    return TABLE[k]\n"
+  }
+ },
+ {
+  "case": "224-the-file-denominator-is-the-scope-not-the-matches",
+  "origin": {
+   "check": "the file denominator is the scope, not the matches",
+   "line": 1813,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:module_state",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/state/c.py', '/var/tmp/tmpi1it7p01/state/a.py', '/var/tmp/tmpi1it7p01/state/k.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/state/c.py": "_C = {}\ndef get(k):\n    if k in _C:\n        return _C[k]\n    _C[k] = k * 2\n    return _C[k]\n",
+   "/var/tmp/tmpi1it7p01/state/a.py": "bad = []\nfor x in range(3):\n    bad.append(x)\nprint(len(bad))\n",
+   "/var/tmp/tmpi1it7p01/state/k.py": "TABLE = {'a': 1}\ndef look(k):\n    return TABLE[k]\n"
+  }
+ },
+ {
+  "case": "225-a-live-hand-rolled-memo-classifies-as-a-cache",
+  "origin": {
+   "check": "a live hand-rolled memo classifies as a cache",
+   "line": 1844,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:module_state",
+    "args": {
+     "paths": "['/home/mikemol/github/substrate/scratch/split_census.py', '/home/mikemol/github/substrate/scratch/split_upstream.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/home/mikemol/github/substrate/scratch/split_census.py": "#!/usr/bin/env python3\n# SPDX-License-Identifier: Apache-2.0\n# Copyright (c) 2026 Mike Mol\n\"\"\"split_census - the READ side of the split pipeline, now a shim over the package.\n\nTHIS FILE IS ADAPTORS (W4 file 4 swap, tick 49). Every mechanism it once held lives in\n`substrate/` and is witnessed there: the import DAG is `agda_dag.parse`; the blocked cone and\nthe leverage verdict are `import_cone`; the log index and the freshness predicate are\n`log_freshness`; the error classifier and its remedy table are `agda_error_class`; the build\ncensus and the stale split are `agda_build_census`; the one-command census is\n`agda_run_census`; the content stamp and the split-leaf population are `agda_tree_state`.\nWhat stays here is the SHAPE sixteen bare consumer sites reach through `split_pipeline`:\n\n- `_import_dag()` returns the `(disk, deps, rdeps, src_to_mod)` TUPLE and memoises it in the\n  module-level `_DAG` dict under the origin's keys, because a consumer pre-fills that dict to\n  drive the readers over a fixture graph (`import_cone_selftest` does exactly this).\n- `leverage(...)` returns the origin's `Leverage` - a 3-tuple subclass carrying `.exclusive`\n  and `.members` - because three sites unpack `n_cone, n_seeds, top = leverage(...)` and a\n  fourth reads the attributes. The package's `Leverage` is a dataclass; this class is the\n  adaptor and its only reason to exist, so it retires with the last positional unpack.\n- `run_census(...)` returns the log path on success and the integer 2 on a straddled tree -\n  the origin's forked return shape, kept for `split_pipeline --census`.\n- `root` defaults to `\"agda\"` everywhere, as the origin's did.\n\nThe origin's docstrings were the record of why each reader exists; each package module\ncarries its own now, and this file does not repeat them.\n\"\"\"\n\nfrom __future__ import annotations\n\nfrom pathlib import Path\nfrom typing import TYPE_CHECKING, Self\n\nfrom substrate import (\n    agda_build_census,\n    agda_dag,\n    agda_error_class,\n    agda_run_census,\n    agda_tree_state,\n    import_cone,\n    log_freshness,\n)\nfrom substrate.agda_error_class import CLASS_REMEDY, is_other, other_kind\n\nif TYPE_CHECKING:\n    from collections.abc import Iterable, Sequence\n\n__all__ = [\n    \"CLASS_REMEDY\",\n    \"_DAG\",\n    \"_LOG_INDEX\",\n    \"Leverage\",\n    \"_blast_radius\",\n    \"_classify\",\n    \"_import_dag\",\n    \"_log_index\",\n    \"census_from_build\",\n    \"is_other\",\n    \"leaves\",\n    \"leverage\",\n    \"log_is_fresh\",\n    \"other_kind\",\n    \"run_census\",\n    \"stale_why\",\n    \"tree_stamp\",\n]\n\nROOT = str(Path(__file__).resolve().parent.parent)\nAG = \"agda\"\n# How many ranked seeds the origin's leverage carried in its tuple - a display cap, kept here\n# only because the tuple shape is the adaptor's contract.\n_TOP_CAP = 5\n\nDagTuple = tuple[dict[str, str], dict[str, set[str]], dict[str, set[str]], dict[str, str]]\n\n# The memo, under the origin's keys. Pre-fill it to run the readers over a fixture graph.\n_DAG: dict[str, object] = {}\n_LOG_INDEX: dict[str, dict[str, str]] = {}\n\n\ndef _import_dag() -> DagTuple:\n    \"\"\"Return (disk, deps, rdeps, src_to_mod), parsed once per process and memoised in `_DAG`.\"\"\"\n    if not _DAG:\n        dag = agda_dag.parse()\n        _DAG.update(disk=dict(dag.disk), deps={m: set(v) for m, v in dag.deps.items()},\n                    rdeps={m: set(v) for m, v in dag.rdeps.items()},\n                    src_to_mod=dict(dag.src_to_mod))\n    disk = _DAG[\"disk\"]\n    deps = _DAG[\"deps\"]\n    rdeps = _DAG[\"rdeps\"]\n    s2m = _DAG[\"src_to_mod\"]\n    if not (isinstance(disk, dict) and isinstance(deps, dict) and isinstance(rdeps, dict)\n            and isinstance(s2m, dict)):\n        msg = \"_DAG memo holds something other than the four maps\"\n        raise TypeError(msg)\n    return disk, deps, rdeps, s2m\n\n\ndef _dag() -> agda_dag.Dag:\n    \"\"\"Return the memoised graph as the package's own type.\"\"\"\n    disk, deps, _rdeps, _s2m = _import_dag()\n    return agda_dag.Dag(disk=disk, deps={m: frozenset(v) for m, v in deps.items()})\n\n\ndef _blast",
+   "/home/mikemol/github/substrate/scratch/split_upstream.py": "# SPDX-License-Identifier:Apache-2.0\n# Copyright 2026 Mike Mol\nimport re,sys,os,subprocess,glob\nsys.path.insert(0,\"scratch\")\nimport split_lemmas as SL\nimport agda_lex\nimport os as _os, sys as _sys\nfrom agda_imports import importable as _importable  # THE self-import predicate (never re-derive)\n_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))\n\nimport os as _o, sys as _s\n_s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__)))\nfrom agda_imports import _span_end   # THE statement-span authority (agda_lex-backed); never re-derive\n\n_SNAPPED = []\n\n\ndef _snapshot_once(path):\n    \"\"\"Arm edit_snapshot on the FIRST write of a run; a no-op thereafter.\n\n    \u2691 This tool rewrites files it read \u2014 the shape that made 33 files\n    unrecoverable (Coxeter/Core.agda 76 lines -> 3).  The write is inside a loop,\n    so a per-file `guard` would arm only the first file AND shell out to `git\n    stash create` on every iteration; arming once per run is both correct and\n    cheap.  Recovery is per-file and MANUAL by design \u2014 edit_snapshot never\n    restores anything itself.\n    \"\"\"\n    if _SNAPPED:\n        return\n    _SNAPPED.append(True)\n    try:\n        import edit_snapshot\n        edit_snapshot.guard('split_upstream', [path])\n    except Exception as e:\n        print(f\"   \\u26a0 snapshot unavailable ({e}) \\u2014 recover via git if needed\")\n\n\nUSAGE = \"\"\"\\\nsplit_upstream.py <Module> --apply    # SPLIT an upstream module into definition-per-file\n                                      # leaves AND REWIRE every consumer, in one pass.\n\n\u2691\u2691\u2691 THIS TOOL WRITES. It calls `split_lemmas.split(..., apply=True)` unconditionally and\nthen rewrites every importer of <Module>. There is NO dry run: the split and the rewire are\none act, and a preview would have to simulate the whole rewire to be honest about it.\n\n\u2691\u2691 IT USED TO RUN FROM A BARE POSITIONAL AND CRASH WITH `IndexError` WHEN GIVEN NONE\n(\u27e1tools-cannot-self-describe, 2026-08-22). That is the worst of both: the repo's standing\ninstruction is *\"run the tool bare and read its mode list \u2014 THAT output is the authority\"*,\nand a bare run here produced a traceback, so the tool that rewires the whole tree was the\none a reader could not ask what it does. Four tools shared the defect; two of them,\nincluding this one, write unconditionally.\n\n\u2691 `--apply` IS NOW REQUIRED, and it is not a dry-run/apply pair \u2014 it is a CONFIRMATION.\nNothing here can preview, so the flag exists to make the write STATED rather than implied by\na positional. Same reasoning as the mutation-intent contract everywhere else in this toolkit\n(no default-dry, no default-apply \u2014 state one), applied to a tool that can only apply.\n\n  RECOVERY IS MANUAL AND PER-FILE. `edit_snapshot.guard` is armed on the first write; it\n  records, it never restores. `git checkout <snapshot> -- <path>`.\n\n  Pipeline context: `.claude/skills/agda-ban-decompose/SKILL.md` step 1-2, and\n  `narrow_leaf_imports.py` is its usual follow-on.\n\"\"\"\n\nif len(sys.argv) < 2 or sys.argv[1].startswith(\"-\"):\n    print(USAGE, file=sys.stderr)\n    sys.exit(2)\nif \"--apply\" not in sys.argv:\n    print(USAGE, file=sys.stderr)\n    print(\"REFUSED: this tool has no dry run \u2014 it splits AND rewires. State --apply.\",\n          file=sys.stderr)\n    sys.exit(2)\n\nMOD=sys.argv[1]                      # e.g. Substrate.Foundation.Fin\npath=\"agda/\"+MOD.replace(\".\",\"/\")+\".agda\"\n# \u2691 ONE ACT: the contract consulted at the DECISION, with the snapshot bound to it.\n# \u2691\u2691\u2691 AND THE SNAPSHOT WAS TAKEN TOO LATE BY A WHOLE STAGE.  `SL.split(path,\n# apply=True)` on the next line DESTROYS THE MONOLITH \u2014 it is stage one of two \u2014\n# and `_snapshot_once` did not fire until the REWIRE loop below (:104), i.e. after\n# the split had already landed. So the one file whose prior content this tool\n# destroys first was the one file the snapshot could not recover. That is not a\n# placement preference; it is the recorded incident's own shape (a monolith rewritten\n# to something shorter, unrecoverably) reproduced in the tool t"
+  },
+  "expect": {
+   "deny": [
+    "225"
+   ]
+  }
+ },
+ {
+  "case": "226-the-snapped-once-flag-does-not",
+  "origin": {
+   "check": "the _SNAPPED once-flag does NOT",
+   "line": 1846,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:module_state",
+    "args": {
+     "paths": "['/home/mikemol/github/substrate/scratch/split_census.py', '/home/mikemol/github/substrate/scratch/split_upstream.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/home/mikemol/github/substrate/scratch/split_census.py": "#!/usr/bin/env python3\n# SPDX-License-Identifier: Apache-2.0\n# Copyright (c) 2026 Mike Mol\n\"\"\"split_census - the READ side of the split pipeline, now a shim over the package.\n\nTHIS FILE IS ADAPTORS (W4 file 4 swap, tick 49). Every mechanism it once held lives in\n`substrate/` and is witnessed there: the import DAG is `agda_dag.parse`; the blocked cone and\nthe leverage verdict are `import_cone`; the log index and the freshness predicate are\n`log_freshness`; the error classifier and its remedy table are `agda_error_class`; the build\ncensus and the stale split are `agda_build_census`; the one-command census is\n`agda_run_census`; the content stamp and the split-leaf population are `agda_tree_state`.\nWhat stays here is the SHAPE sixteen bare consumer sites reach through `split_pipeline`:\n\n- `_import_dag()` returns the `(disk, deps, rdeps, src_to_mod)` TUPLE and memoises it in the\n  module-level `_DAG` dict under the origin's keys, because a consumer pre-fills that dict to\n  drive the readers over a fixture graph (`import_cone_selftest` does exactly this).\n- `leverage(...)` returns the origin's `Leverage` - a 3-tuple subclass carrying `.exclusive`\n  and `.members` - because three sites unpack `n_cone, n_seeds, top = leverage(...)` and a\n  fourth reads the attributes. The package's `Leverage` is a dataclass; this class is the\n  adaptor and its only reason to exist, so it retires with the last positional unpack.\n- `run_census(...)` returns the log path on success and the integer 2 on a straddled tree -\n  the origin's forked return shape, kept for `split_pipeline --census`.\n- `root` defaults to `\"agda\"` everywhere, as the origin's did.\n\nThe origin's docstrings were the record of why each reader exists; each package module\ncarries its own now, and this file does not repeat them.\n\"\"\"\n\nfrom __future__ import annotations\n\nfrom pathlib import Path\nfrom typing import TYPE_CHECKING, Self\n\nfrom substrate import (\n    agda_build_census,\n    agda_dag,\n    agda_error_class,\n    agda_run_census,\n    agda_tree_state,\n    import_cone,\n    log_freshness,\n)\nfrom substrate.agda_error_class import CLASS_REMEDY, is_other, other_kind\n\nif TYPE_CHECKING:\n    from collections.abc import Iterable, Sequence\n\n__all__ = [\n    \"CLASS_REMEDY\",\n    \"_DAG\",\n    \"_LOG_INDEX\",\n    \"Leverage\",\n    \"_blast_radius\",\n    \"_classify\",\n    \"_import_dag\",\n    \"_log_index\",\n    \"census_from_build\",\n    \"is_other\",\n    \"leaves\",\n    \"leverage\",\n    \"log_is_fresh\",\n    \"other_kind\",\n    \"run_census\",\n    \"stale_why\",\n    \"tree_stamp\",\n]\n\nROOT = str(Path(__file__).resolve().parent.parent)\nAG = \"agda\"\n# How many ranked seeds the origin's leverage carried in its tuple - a display cap, kept here\n# only because the tuple shape is the adaptor's contract.\n_TOP_CAP = 5\n\nDagTuple = tuple[dict[str, str], dict[str, set[str]], dict[str, set[str]], dict[str, str]]\n\n# The memo, under the origin's keys. Pre-fill it to run the readers over a fixture graph.\n_DAG: dict[str, object] = {}\n_LOG_INDEX: dict[str, dict[str, str]] = {}\n\n\ndef _import_dag() -> DagTuple:\n    \"\"\"Return (disk, deps, rdeps, src_to_mod), parsed once per process and memoised in `_DAG`.\"\"\"\n    if not _DAG:\n        dag = agda_dag.parse()\n        _DAG.update(disk=dict(dag.disk), deps={m: set(v) for m, v in dag.deps.items()},\n                    rdeps={m: set(v) for m, v in dag.rdeps.items()},\n                    src_to_mod=dict(dag.src_to_mod))\n    disk = _DAG[\"disk\"]\n    deps = _DAG[\"deps\"]\n    rdeps = _DAG[\"rdeps\"]\n    s2m = _DAG[\"src_to_mod\"]\n    if not (isinstance(disk, dict) and isinstance(deps, dict) and isinstance(rdeps, dict)\n            and isinstance(s2m, dict)):\n        msg = \"_DAG memo holds something other than the four maps\"\n        raise TypeError(msg)\n    return disk, deps, rdeps, s2m\n\n\ndef _dag() -> agda_dag.Dag:\n    \"\"\"Return the memoised graph as the package's own type.\"\"\"\n    disk, deps, _rdeps, _s2m = _import_dag()\n    return agda_dag.Dag(disk=disk, deps={m: frozenset(v) for m, v in deps.items()})\n\n\ndef _blast",
+   "/home/mikemol/github/substrate/scratch/split_upstream.py": "# SPDX-License-Identifier:Apache-2.0\n# Copyright 2026 Mike Mol\nimport re,sys,os,subprocess,glob\nsys.path.insert(0,\"scratch\")\nimport split_lemmas as SL\nimport agda_lex\nimport os as _os, sys as _sys\nfrom agda_imports import importable as _importable  # THE self-import predicate (never re-derive)\n_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))\n\nimport os as _o, sys as _s\n_s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__)))\nfrom agda_imports import _span_end   # THE statement-span authority (agda_lex-backed); never re-derive\n\n_SNAPPED = []\n\n\ndef _snapshot_once(path):\n    \"\"\"Arm edit_snapshot on the FIRST write of a run; a no-op thereafter.\n\n    \u2691 This tool rewrites files it read \u2014 the shape that made 33 files\n    unrecoverable (Coxeter/Core.agda 76 lines -> 3).  The write is inside a loop,\n    so a per-file `guard` would arm only the first file AND shell out to `git\n    stash create` on every iteration; arming once per run is both correct and\n    cheap.  Recovery is per-file and MANUAL by design \u2014 edit_snapshot never\n    restores anything itself.\n    \"\"\"\n    if _SNAPPED:\n        return\n    _SNAPPED.append(True)\n    try:\n        import edit_snapshot\n        edit_snapshot.guard('split_upstream', [path])\n    except Exception as e:\n        print(f\"   \\u26a0 snapshot unavailable ({e}) \\u2014 recover via git if needed\")\n\n\nUSAGE = \"\"\"\\\nsplit_upstream.py <Module> --apply    # SPLIT an upstream module into definition-per-file\n                                      # leaves AND REWIRE every consumer, in one pass.\n\n\u2691\u2691\u2691 THIS TOOL WRITES. It calls `split_lemmas.split(..., apply=True)` unconditionally and\nthen rewrites every importer of <Module>. There is NO dry run: the split and the rewire are\none act, and a preview would have to simulate the whole rewire to be honest about it.\n\n\u2691\u2691 IT USED TO RUN FROM A BARE POSITIONAL AND CRASH WITH `IndexError` WHEN GIVEN NONE\n(\u27e1tools-cannot-self-describe, 2026-08-22). That is the worst of both: the repo's standing\ninstruction is *\"run the tool bare and read its mode list \u2014 THAT output is the authority\"*,\nand a bare run here produced a traceback, so the tool that rewires the whole tree was the\none a reader could not ask what it does. Four tools shared the defect; two of them,\nincluding this one, write unconditionally.\n\n\u2691 `--apply` IS NOW REQUIRED, and it is not a dry-run/apply pair \u2014 it is a CONFIRMATION.\nNothing here can preview, so the flag exists to make the write STATED rather than implied by\na positional. Same reasoning as the mutation-intent contract everywhere else in this toolkit\n(no default-dry, no default-apply \u2014 state one), applied to a tool that can only apply.\n\n  RECOVERY IS MANUAL AND PER-FILE. `edit_snapshot.guard` is armed on the first write; it\n  records, it never restores. `git checkout <snapshot> -- <path>`.\n\n  Pipeline context: `.claude/skills/agda-ban-decompose/SKILL.md` step 1-2, and\n  `narrow_leaf_imports.py` is its usual follow-on.\n\"\"\"\n\nif len(sys.argv) < 2 or sys.argv[1].startswith(\"-\"):\n    print(USAGE, file=sys.stderr)\n    sys.exit(2)\nif \"--apply\" not in sys.argv:\n    print(USAGE, file=sys.stderr)\n    print(\"REFUSED: this tool has no dry run \u2014 it splits AND rewires. State --apply.\",\n          file=sys.stderr)\n    sys.exit(2)\n\nMOD=sys.argv[1]                      # e.g. Substrate.Foundation.Fin\npath=\"agda/\"+MOD.replace(\".\",\"/\")+\".agda\"\n# \u2691 ONE ACT: the contract consulted at the DECISION, with the snapshot bound to it.\n# \u2691\u2691\u2691 AND THE SNAPSHOT WAS TAKEN TOO LATE BY A WHOLE STAGE.  `SL.split(path,\n# apply=True)` on the next line DESTROYS THE MONOLITH \u2014 it is stage one of two \u2014\n# and `_snapshot_once` did not fire until the REWIRE loop below (:104), i.e. after\n# the split had already landed. So the one file whose prior content this tool\n# destroys first was the one file the snapshot could not recover. That is not a\n# placement preference; it is the recorded incident's own shape (a monolith rewritten\n# to something shorter, unrecoverably) reproduced in the tool t"
+  }
+ }
+]

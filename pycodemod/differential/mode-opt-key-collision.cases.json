@@ -1,0 +1,115 @@
+[
+ {
+  "case": "018-the-collision-population-is-derived-not-a-quoted-roster-know",
+  "origin": {
+   "check": "the collision population is derived (not a quoted roster; known: --sites/--kinds/--lines/--blocks)",
+   "line": 333,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "None"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "019-and-a-nullary-nullary-collision-is-benign",
+  "origin": {
+   "check": "...and a nullary/nullary collision is BENIGN",
+   "line": 339,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "None"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "020-and-the-live-roster-has-no-harmful-collision",
+  "origin": {
+   "check": "...and the live roster has NO harmful collision",
+   "line": 340,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "None"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "021-an-operand-taking-mode-colliding-with-a-bare-opt-is-harmful",
+  "origin": {
+   "check": "an operand-taking mode colliding with a bare opt is HARMFUL",
+   "line": 352,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--target',)), '--target': Mode(operand='name')}",
+     "roster.--host": "Mode(opts=('--target',))",
+     "roster.--target": "Mode(operand='name')"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "022-and-the-repair-it-names-is-a-rename",
+  "origin": {
+   "check": "...and the repair it names is a rename",
+   "line": 354,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--target',)), '--target': Mode(operand='name')}",
+     "roster.--host": "Mode(opts=('--target',))",
+     "roster.--target": "Mode(operand='name')"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "023-an-opt-that-is-not-also-a-mode-key-is-no-collision",
+  "origin": {
+   "check": "an opt that is not also a mode key is no collision",
+   "line": 358,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--quiet',))}",
+     "roster.--host": "Mode(opts=('--quiet',))"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ }
+]

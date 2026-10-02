@@ -1,0 +1,399 @@
+[
+ {
+  "case": "009-swallows-finds-all-three-discards",
+  "origin": {
+   "check": "swallows: finds all three discards",
+   "line": 189,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_placement.py:_cases",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-at-module-scope",
+     "src": "if __name__ == \"__main__\":\n    require_at_entry(\"t\")\n    go()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "first-write-helper",
+     "src": "def _snapshot_once(p):\n    pass\ndef go():\n    _snapshot_once(\"x\")\n",
+     "want": "first-write"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "dispatched-under-mode",
+     "src": "if __name__ == \"__main__\":\n    if \"--apply\" in sys.argv:\n        require_at_entry(\"t\")\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-one-hop",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    main()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "no-main-block-module-scope",
+     "src": "import sys\nrequire_at_entry(\"t\")\npath = sys.argv[1]\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "hop-under-condition",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    if x:\n        main()\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/s.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "010-swallows-a-mutated-receiver-read-later-feeds-a-verdict",
+  "origin": {
+   "check": "swallows: a mutated RECEIVER read later feeds a verdict",
+   "line": 192,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_placement.py:_cases",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-at-module-scope",
+     "src": "if __name__ == \"__main__\":\n    require_at_entry(\"t\")\n    go()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "first-write-helper",
+     "src": "def _snapshot_once(p):\n    pass\ndef go():\n    _snapshot_once(\"x\")\n",
+     "want": "first-write"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "dispatched-under-mode",
+     "src": "if __name__ == \"__main__\":\n    if \"--apply\" in sys.argv:\n        require_at_entry(\"t\")\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-one-hop",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    main()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "no-main-block-module-scope",
+     "src": "import sys\nrequire_at_entry(\"t\")\npath = sys.argv[1]\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "hop-under-condition",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    if x:\n        main()\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/s.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "011-swallows-assigned-and-consumed-in-block-is-output-only",
+  "origin": {
+   "check": "swallows: assigned-and-consumed-in-block is output-only",
+   "line": 195,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_placement.py:_cases",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-at-module-scope",
+     "src": "if __name__ == \"__main__\":\n    require_at_entry(\"t\")\n    go()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "first-write-helper",
+     "src": "def _snapshot_once(p):\n    pass\ndef go():\n    _snapshot_once(\"x\")\n",
+     "want": "first-write"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "dispatched-under-mode",
+     "src": "if __name__ == \"__main__\":\n    if \"--apply\" in sys.argv:\n        require_at_entry(\"t\")\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-one-hop",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    main()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "no-main-block-module-scope",
+     "src": "import sys\nrequire_at_entry(\"t\")\npath = sys.argv[1]\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "hop-under-condition",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    if x:\n        main()\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/s.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "012-swallows-an-accumulator-append-feeds-a-verdict",
+  "origin": {
+   "check": "swallows: an accumulator .append feeds a verdict",
+   "line": 197,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_placement.py:_cases",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-at-module-scope",
+     "src": "if __name__ == \"__main__\":\n    require_at_entry(\"t\")\n    go()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "first-write-helper",
+     "src": "def _snapshot_once(p):\n    pass\ndef go():\n    _snapshot_once(\"x\")\n",
+     "want": "first-write"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "dispatched-under-mode",
+     "src": "if __name__ == \"__main__\":\n    if \"--apply\" in sys.argv:\n        require_at_entry(\"t\")\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-one-hop",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    main()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "no-main-block-module-scope",
+     "src": "import sys\nrequire_at_entry(\"t\")\npath = sys.argv[1]\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "hop-under-condition",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    if x:\n        main()\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/s.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "013-swallows-handler-breadth-is-classified",
+  "origin": {
+   "check": "swallows: handler breadth is classified",
+   "line": 198,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_placement.py:_cases",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-at-module-scope",
+     "src": "if __name__ == \"__main__\":\n    require_at_entry(\"t\")\n    go()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "first-write-helper",
+     "src": "def _snapshot_once(p):\n    pass\ndef go():\n    _snapshot_once(\"x\")\n",
+     "want": "first-write"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "dispatched-under-mode",
+     "src": "if __name__ == \"__main__\":\n    if \"--apply\" in sys.argv:\n        require_at_entry(\"t\")\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "entry-one-hop",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    main()\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "no-main-block-module-scope",
+     "src": "import sys\nrequire_at_entry(\"t\")\npath = sys.argv[1]\n",
+     "want": "entry"
+    }
+   },
+   {
+    "fn": "_pycodemod_placement.py:case",
+    "args": {
+     "name": "hop-under-condition",
+     "src": "def main():\n    require_at_entry(\"t\")\nif __name__ == \"__main__\":\n    if x:\n        main()\n",
+     "want": "dispatched"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/s.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "014-swallows-a-name-built-above-and-consumed-inside-is-not-an-es",
+  "origin": {
+   "check": "swallows: a name built above and consumed inside is NOT an escape",
+   "line": 222,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/w.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ }
+]

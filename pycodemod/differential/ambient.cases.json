@@ -1,0 +1,196 @@
+[
+ {
+  "case": "399-a-join-onto-root-is-anchored-no-row",
+  "origin": {
+   "check": "a join onto ROOT is ANCHORED \u2014 no row",
+   "line": 3054,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "400-abspath-file-is-anchored-no-row",
+  "origin": {
+   "check": "`abspath(__file__)` is ANCHORED \u2014 no row",
+   "line": 3060,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "401-a-path-that-is-the-function-s-own-parameter-is-scoped-the-fe",
+  "origin": {
+   "check": "a path that is the function's own PARAMETER is SCOPED (the feature)",
+   "line": 3063,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "402-a-repo-relative-literal-is-repo-the-defect-class",
+  "origin": {
+   "check": "a repo-relative literal is REPO (the defect class)",
+   "line": 3065,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "403-a-bare-command-name-is-path-resolved-not-cwd-relative-no-row",
+  "origin": {
+   "check": "a bare command name is PATH-resolved, not cwd-relative \u2014 no row",
+   "line": 3073,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "404-but-a-relative-script-path-in-argv-0-still-reports",
+  "origin": {
+   "check": "but a relative SCRIPT path in argv[0] still reports",
+   "line": 3075,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "405-an-explicit-source-argument-makes-the-call-scoped",
+  "origin": {
+   "check": "an explicit source argument makes the call SCOPED",
+   "line": 3081,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "406-os-chdir-is-its-own-verdict-it-mutates-the-thing-under-study",
+  "origin": {
+   "check": "`os.chdir` is its own verdict \u2014 it MUTATES the thing under study",
+   "line": 3083,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  }
+ },
+ {
+  "case": "407-the-reader-declares-what-it-cannot-see",
+  "origin": {
+   "check": "the reader declares what it cannot see",
+   "line": 3090,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads the module constant _amb.KNOWN_MISSES; no call returns it (W399)"
+ },
+ {
+  "case": "408-and-the-population-is-reported-so-a-zero-is-distinguishable",
+  "origin": {
+   "check": "and the population is reported, so a zero is distinguishable",
+   "line": 3091,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_ambient.py:ambient",
+    "args": {
+     "paths": "['/var/tmp/tmp5oknk3an/amb.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp5oknk3an/amb.py": "import os, glob, subprocess, shutil\nROOT = os.path.dirname(os.path.abspath(__file__))\ndef anchored():\n    return os.path.exists(os.path.join(ROOT, 'x.agda'))\ndef anchored_file():\n    return os.path.abspath(__file__)\ndef scoped(path):\n    return open(path).read()\ndef repo_relative():\n    return glob.glob('agda/Substrate/**/*.agda')\ndef command():\n    return subprocess.run(['agda', '--version'])\ndef rel_script():\n    return subprocess.run(['scratch/prune_imports.py'])\ndef explicit_source(pattern, src):\n    return os.listdir(pattern, src)\ndef mutate():\n    os.chdir('agda')\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads ambient.population, an attribute ambient() stamps on itself; the capture keeps only the return value (W399)"
+ }
+]

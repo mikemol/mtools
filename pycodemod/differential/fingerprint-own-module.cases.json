@@ -1,0 +1,1158 @@
+[
+ {
+  "case": "335-registry-accepts-any-non-empty-key-no-taxonomy",
+  "origin": {
+   "check": "registry accepts ANY non-empty key (no taxonomy)",
+   "line": 713,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:_cases",
+    "args": {
+     "check": "<function _selftest.<locals>.check at 0x75b40855ec40>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>",
+     "key": "if"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>",
+     "key": "3"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>",
+     "key": "\u03b6"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>",
+     "key": "core_id"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>",
+     "key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "a downstream effect of a repr'd registry operand (W212)"
+ },
+ {
+  "case": "336-registry-is-idempotent-on-a-repeated-key",
+  "origin": {
+   "check": "registry is idempotent on a repeated key",
+   "line": 716,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>",
+     "key": "core_id"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "337-an-empty-key-is-refused-the-one-validation",
+  "origin": {
+   "check": "an EMPTY key is refused \u2014 the one validation",
+   "line": 723,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406d90c20>",
+     "key": ""
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "338-distinct-keys-distinct-primes",
+  "origin": {
+   "check": "distinct keys \u2192 distinct primes",
+   "line": 727,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>",
+     "key": "a"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>",
+     "key": "b"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>",
+     "key": "c"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>",
+     "key": "d"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>",
+     "key": "e"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:get_or_assign",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>",
+     "key": "f"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "339-fingerprint-is-squarefree-a-repeat-adds-no-factor",
+  "origin": {
+   "check": "fingerprint is SQUAREFREE \u2014 a repeat adds no factor",
+   "line": 729,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['a', 'b', 'a', 'a']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['a', 'b']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da1f90>"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "340-decode-is-exact-understood-remainder-fingerprint",
+  "origin": {
+   "check": "decode is EXACT: understood \u00d7 remainder == fingerprint",
+   "line": 740,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['core_id', 'relpath', 'wobble', 'flange']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "only": "{'relpath', 'core_id'}"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode_with_remainder",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'core_id'), (5, 'relpath')]"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:prime_for",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "key": "core_id"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:prime_for",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "key": "relpath"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "341-decode-returns-the-understood-keys",
+  "origin": {
+   "check": "decode returns the understood keys",
+   "line": 741,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['core_id', 'relpath', 'wobble', 'flange']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "only": "{'relpath', 'core_id'}"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode_with_remainder",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'core_id'), (5, 'relpath')]"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:prime_for",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "key": "core_id"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:prime_for",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "key": "relpath"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "342-the-remainder-is-the-unmodelled-product",
+  "origin": {
+   "check": "the remainder is the UNMODELLED product",
+   "line": 742,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:prime_for",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "key": "wobble"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:prime_for",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "key": "flange"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "343-strict-false-the-default-returns-keys-and-swallows-the-remai",
+  "origin": {
+   "check": "strict=False (the default) returns keys and swallows the remainder",
+   "line": 755,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:decode",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'core_id'), (5, 'relpath')]",
+     "strict": "False"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "344-strict-true-raises-on-an-unknown-remainder-off-by-default",
+  "origin": {
+   "check": "strict=True raises on an unknown remainder \u2014 off by default",
+   "line": 762,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:decode",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'core_id'), (5, 'relpath')]",
+     "strict": "True"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "a downstream effect of a repr'd registry operand (W212)"
+ },
+ {
+  "case": "345-strict-true-with-a-complete-registry-does-not-raise",
+  "origin": {
+   "check": "strict=True with a COMPLETE registry does not raise",
+   "line": 765,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406da2210>",
+     "only": "None"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'core_id'), (3, 'flange'), (5, 'relpath'), (7, 'wobble')]",
+     "strict": "True"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "346-gcd-is-the-shared-referent-product",
+  "origin": {
+   "check": "gcd IS the shared referent product",
+   "line": 773,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de15b0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['p', 'q', 'r']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de15b0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['q', 'r', 's']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de15b0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fp_shared",
+    "args": {
+     "a": "30",
+     "b": "105"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['q', 'r']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de15b0>"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "347-containment-is-one-modulo-subset",
+  "origin": {
+   "check": "containment is ONE modulo \u2014 subset",
+   "line": 775,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['p', 'q']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de15b0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fp_contains",
+    "args": {
+     "container": "30",
+     "part": "6"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "348-containment-is-one-modulo-non-subset",
+  "origin": {
+   "check": "containment is ONE modulo \u2014 non-subset",
+   "line": 777,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['p', 's']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de15b0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fp_contains",
+    "args": {
+     "container": "30",
+     "part": "14"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "349-structural-difference-drops-the-shared-part",
+  "origin": {
+   "check": "structural difference drops the shared part",
+   "line": 779,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:fp_difference",
+    "args": {
+     "a": "30",
+     "b": "105"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['p', 's']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de15b0>"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "350-a-larger-modelled-set-gives-a-remainder-that-divides-the-sma",
+  "origin": {
+   "check": "a LARGER modelled set gives a remainder that DIVIDES the smaller one",
+   "line": 787,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['aa', 'bb', 'cc', 'dd']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>",
+     "only": "{'aa'}"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode_with_remainder",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'aa')]"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>",
+     "only": "{'aa', 'bb', 'cc'}"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode_with_remainder",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'aa'), (3, 'bb'), (5, 'cc')]"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "351-the-remainder-cannot-rise-as-the-modelled-set-grows",
+  "origin": {
+   "check": "the remainder cannot RISE as the modelled set grows",
+   "line": 789,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['aa', 'bb', 'cc', 'dd']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>",
+     "only": "{'aa'}"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode_with_remainder",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'aa')]"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>",
+     "only": "{'aa', 'bb', 'cc'}"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode_with_remainder",
+    "args": {
+     "fp": "210",
+     "rev": "[(2, 'aa'), (3, 'bb'), (5, 'cc')]"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "352-remainder-cannot-rise-either",
+  "origin": {
+   "check": "\u03a9(remainder) cannot rise either",
+   "line": 791,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:omega_against",
+    "args": {
+     "n": "7",
+     "primes": "[2, 3, 5, 7]"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:omega_against",
+    "args": {
+     "n": "105",
+     "primes": "[2, 3, 5, 7]"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "353-an-empty-modelled-set-leaves-the-whole-fingerprint-as-remain",
+  "origin": {
+   "check": "an EMPTY modelled set leaves the whole fingerprint as remainder",
+   "line": 795,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:reverse_index",
+    "args": {
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406de16e0>",
+     "only": "set()"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:decode_with_remainder",
+    "args": {
+     "fp": "210",
+     "rev": "[]"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "354-referents-names-attributes-keywords-and-identifier-strings",
+  "origin": {
+   "check": "referents: names, attributes, keywords and identifier strings",
+   "line": 801,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:referents",
+    "args": {
+     "nodes": "Module(body=[Expr(value=BoolOp(op=Or(...), values=[Call(...), Constant(...)]))], type_ignores=[])"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "355-a-numeric-constant-is-not-a-referent",
+  "origin": {
+   "check": "a NUMERIC constant is not a referent",
+   "line": 803,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:referents",
+    "args": {
+     "nodes": "Module(body=[Expr(value=BoolOp(op=Or(...), values=[Call(...), Constant(...)]))], type_ignores=[])"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "356-a-non-identifier-string-is-not-a-referent",
+  "origin": {
+   "check": "a non-identifier string is not a referent",
+   "line": 804,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:referents",
+    "args": {
+     "nodes": "Module(body=[Expr(value=Call(func=Name(...), args=[Constant(...)], keywords=[]))], type_ignores=[])"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "357-a-dotted-string-contributes-each-part",
+  "origin": {
+   "check": "a dotted string contributes each part",
+   "line": 806,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:referents",
+    "args": {
+     "nodes": "Module(body=[Expr(value=Call(func=Name(...), args=[Constant(...)], keywords=[]))], type_ignores=[])"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "358-an-over-long-token-is-dropped-shape-bound-both-sides",
+  "origin": {
+   "check": "an over-long token is dropped (shape bound, both sides)",
+   "line": 808,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:token_parts",
+    "args": {
+     "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "359-terms-as-a-string-and-as-an-attribute-are-the-same-referent",
+  "origin": {
+   "check": "`terms` as a string and as an attribute are the SAME referent",
+   "line": 812,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:referents",
+    "args": {
+     "nodes": "Module(body=[Expr(value=Call(func=Name(...), args=[Constant(...)], keywords=[]))], type_ignores=[])"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:referents",
+    "args": {
+     "nodes": "Module(body=[Expr(value=Attribute(value=Name(...), attr='terms', ctx=Load(...)))], type_ignores=[])"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "360-a-for-site-carries-its-iterable-as-a-referent",
+  "origin": {
+   "check": "a `for` site carries its ITERABLE as a referent",
+   "line": 827,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:site_referents",
+    "args": {
+     "path": "fp_fixture.py",
+     "src": "def f(rows, lim):\n    for r in rows:\n        if r['core_id'] and lim:\n            return r\n"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "361-an-if-site-carries-the-column-string-as-a-referent",
+  "origin": {
+   "check": "an `if` site carries the column string as a referent",
+   "line": 829,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:site_referents",
+    "args": {
+     "path": "fp_fixture.py",
+     "src": "def f(rows, lim):\n    for r in rows:\n        if r['core_id'] and lim:\n            return r\n"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "362-the-if-site-also-carries-its-bound-names",
+  "origin": {
+   "check": "the `if` site also carries its bound names",
+   "line": 831,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:site_referents",
+    "args": {
+     "path": "fp_fixture.py",
+     "src": "def f(rows, lim):\n    for r in rows:\n        if r['core_id'] and lim:\n            return r\n"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "363-a-wider-seed-lowers-the-total-remainder",
+  "origin": {
+   "check": "a WIDER seed lowers the total remainder \u03a9",
+   "line": 853,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:collect",
+    "args": {
+     "paths": "['/var/tmp/tmpx79vf6pp/fp_fixture.py']",
+     "from_entries": "()",
+     "kind": "None"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406d90d70>",
+     "files": "['/var/tmp/tmpx79vf6pp/fp_fixture.py']",
+     "sites": "[('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 2, 'for', 'unclassified', 'f', 'for r in rows', frozenset({'rows'})), ('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 3, 'and', 'mode-branch', 'f', \"r['core_id'] and lim\", frozenset({'r', 'lim', 'core_id'})), ('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 3, 'if', 'mode-branch', 'f', \"r['core_id'] and lim\", frozenset({'r', 'lim', 'core_id'})), ('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 4, 'return-in-loop', 'early-exit', 'f', 'return r', frozenset({'r', 'lim', 'core_id'}))]",
+     "seed": "['/var/tmp/tmpx79vf6pp/seed_a.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406da2350>",
+     "files": "['/var/tmp/tmpx79vf6pp/fp_fixture.py']",
+     "sites": "[('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 2, 'for', 'unclassified', 'f', 'for r in rows', frozenset({'rows'})), ('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 3, 'and', 'mode-branch', 'f', \"r['core_id'] and lim\", frozenset({'r', 'lim', 'core_id'})), ('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 3, 'if', 'mode-branch', 'f', \"r['core_id'] and lim\", frozenset({'r', 'lim', 'core_id'})), ('../../../../var/tmp/tmpx79vf6pp/fp_fixture.py', 4, 'return-in-loop', 'early-exit', 'f', 'return r', frozenset({'r', 'lim', 'core_id'}))]",
+     "seed": "['/var/tmp/tmpx79vf6pp/seed_b.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:total_remainder_omega",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406da2350>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:total_remainder_omega",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406d90d70>"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpx79vf6pp/fp_fixture.py": "def f(rows, lim):\n    for r in rows:\n        if r['core_id'] and lim:\n            return r\n",
+   "/var/tmp/tmpx79vf6pp/seed_a.py": "T = \"core_id\"\n",
+   "/var/tmp/tmpx79vf6pp/seed_b.py": "T = \"core_id\"\nU = \"rows\"\nV = \"lim\"\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "364-a-wider-seed-lowers-the-total-remainder-bits",
+  "origin": {
+   "check": "a WIDER seed lowers the total remainder bits",
+   "line": 855,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:total_remainder_bits",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406da2350>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:total_remainder_bits",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406d90d70>"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "365-a-wider-seed-explains-at-least-as-many-sites-fully",
+  "origin": {
+   "check": "a WIDER seed explains at least as many sites fully",
+   "line": 857,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:explained_sites",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406da2350>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:explained_sites",
+    "args": {
+     "self": "<_pycodemod_fingerprint.Census object at 0x75b406d90d70>"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "366-every-site-s-remainder-divides-its-narrower-seed-remainder",
+  "origin": {
+   "check": "every site's remainder DIVIDES its narrower-seed remainder",
+   "line": 859,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<zip object at 0x75b406fd0ec0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<zip object at 0x75b406fd0ec0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<zip object at 0x75b406fd0ec0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<zip object at 0x75b406fd0ec0>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<zip object at 0x75b406fd0ec0>"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "367-local-closure-follows-a-transitive-local-import-two-hops",
+  "origin": {
+   "check": "local_closure follows a TRANSITIVE local import (two hops)",
+   "line": 882,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:local_closure",
+    "args": {
+     "entries": "['/var/tmp/tmpx79vf6pp/pkg/fp_m1.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpx79vf6pp/pkg/fp_m1.py": "import fp_m2\n",
+   "/var/tmp/tmpx79vf6pp/pkg/fp_m2.py": "from fp_m3 import z\n",
+   "/var/tmp/tmpx79vf6pp/pkg/fp_m3.py": "z = 1\n",
+   "/var/tmp/tmpx79vf6pp/pkg/fp_m4.py": "# imported by nothing\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "368-local-closure-does-not-drag-in-an-unimported-sibling",
+  "origin": {
+   "check": "local_closure does not drag in an unimported sibling",
+   "line": 885,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:<genexpr>",
+    "args": {
+     ".0": "<list_iterator object at 0x75b406fb2c20>"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee is a method, a selftest-local helper or a <genexpr>, not a module-level function, so the replay cannot find it (W212)"
+ },
+ {
+  "case": "369-two-sites-sharing-two-unknown-referents-have-a-gcd-of-2",
+  "origin": {
+   "check": "two sites sharing two unknown referents have a gcd of \u03a9=2",
+   "line": 895,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:__init__",
+    "args": {
+     "self": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406f51590>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['u', 'v', 'w']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406f51590>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['u', 'v', 'z']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406f51590>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fingerprint",
+    "args": {
+     "keys": "['q']",
+     "reg": "<_pycodemod_fingerprint.PrimeRegistry object at 0x75b406f51590>"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:fp_shared",
+    "args": {
+     "a": "30",
+     "b": "42"
+    }
+   },
+   {
+    "fn": "_pycodemod_fingerprint.py:omega_against",
+    "args": {
+     "n": "6",
+     "primes": "[2, 3, 5, 7, 11]"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the recorded callee resolves to the module type itself, not a function (W212)"
+ },
+ {
+  "case": "370-a-third-site-sharing-nothing-is-not-in-the-class",
+  "origin": {
+   "check": "a third site sharing nothing is NOT in the class",
+   "line": 897,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_fingerprint.py:fp_contains",
+    "args": {
+     "container": "11",
+     "part": "6"
+    }
+   }
+  ],
+  "fixture": {}
+ }
+]

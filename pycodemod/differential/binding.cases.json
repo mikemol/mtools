@@ -1,0 +1,969 @@
+[
+ {
+  "case": "199-binding-finds-assignment-loop-target-and-parameter",
+  "origin": {
+   "check": "--binding finds assignment, loop target and parameter",
+   "line": 1672,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:bindings",
+    "args": {
+     "name": "total",
+     "path": "/var/tmp/tmpi1it7p01/b.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "200-binding-reports-the-defining-line",
+  "origin": {
+   "check": "--binding reports the defining LINE",
+   "line": 1674,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:bindings",
+    "args": {
+     "name": "total",
+     "path": "/var/tmp/tmpi1it7p01/b.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "201-binding-scopes-a-parameter-to-its-own-function",
+  "origin": {
+   "check": "--binding scopes a parameter to its own function",
+   "line": 1679,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:bindings",
+    "args": {
+     "name": "total",
+     "path": "/var/tmp/tmpi1it7p01/b.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "202-binding-sees-an-import-as-a-binding",
+  "origin": {
+   "check": "--binding sees an import as a binding",
+   "line": 1680,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:bindings",
+    "args": {
+     "name": "os",
+     "path": "/var/tmp/tmpi1it7p01/b.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "203-binding-on-an-unbound-name-is-empty-not-an-error",
+  "origin": {
+   "check": "--binding on an unbound name is empty, not an error",
+   "line": 1682,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:bindings",
+    "args": {
+     "name": "nowhere",
+     "path": "/var/tmp/tmpi1it7p01/b.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "204-binding-reports-a-syntax-error-as-a-verdict",
+  "origin": {
+   "check": "--binding reports a syntax error as a verdict",
+   "line": 1684,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:bindings",
+    "args": {
+     "name": "x",
+     "path": "/var/tmp/tmpi1it7p01/bad.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "205-rivals-calls-a-one-line-wrapper-delegates",
+  "origin": {
+   "check": "--rivals calls a one-line wrapper DELEGATES",
+   "line": 1701,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:rivals",
+    "args": {
+     "name": "f",
+     "paths": "['/var/tmp/tmpi1it7p01/riv.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "206-rivals-names-the-callee-so-the-operator-can-read-it",
+  "origin": {
+   "check": "--rivals names the callee, so the operator can read it",
+   "line": 1703,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:rivals",
+    "args": {
+     "name": "f",
+     "paths": "['/var/tmp/tmpi1it7p01/riv.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "207-rivals-does-not-count-a-docstring-as-a-body",
+  "origin": {
+   "check": "--rivals does not count a docstring as a body",
+   "line": 1709,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:rivals",
+    "args": {
+     "name": "f",
+     "paths": "['/var/tmp/tmpi1it7p01/riv.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "208-rivals-calls-a-real-body-reimplements",
+  "origin": {
+   "check": "--rivals calls a real body REIMPLEMENTS",
+   "line": 1711,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:rivals",
+    "args": {
+     "name": "g",
+     "paths": "['/var/tmp/tmpi1it7p01/riv.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "209-a-cached-parse-is-stable-when-content-is-unchanged",
+  "origin": {
+   "check": "a cached parse is stable when content is unchanged",
+   "line": 1728,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cache_probe.py": "def f():\n    return g()\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "210-the-parse-reports-delegation",
+  "origin": {
+   "check": "the parse reports delegation",
+   "line": 1730,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cache_probe.py": "def f():\n    return g()\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "211-editing-a-file-changes-its-cached-answer",
+  "origin": {
+   "check": "editing a file changes its cached answer",
+   "line": 1733,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cache_probe.py": "def f():\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "212-the-deriver-tag-names-the-library-and-the-schema",
+  "origin": {
+   "check": "the deriver tag names the library and the schema",
+   "line": 1744,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cache_probe.py": "def f():\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "213-the-deriver-tag-is-never-empty-versioned",
+  "origin": {
+   "check": "the deriver tag is never empty-versioned",
+   "line": 1750,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cache_probe.py": "def f():\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "214-a-different-deriver-yields-a-different-key",
+  "origin": {
+   "check": "a different deriver yields a different key",
+   "line": 1752,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cache_probe.py": "def f():\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "215-the-same-deriver-and-bytes-yield-the-same-key-still-a-cache",
+  "origin": {
+   "check": "the same deriver and bytes yield the SAME key (still a cache)",
+   "line": 1755,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_cached_defs",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/cache_probe.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/cache_probe.py": "def f():\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/aliasuser.py": "import target\nimport target as _t\nfrom target import pub\nfrom target import pub as p2\nfrom target import *\nfrom . import sibling\nimport os\nfrom typing import Optional\n# from target import ghost\nS = \"from target import ghost\"\ndef f():\n    import target\n    from target import deferred\n",
+   "/var/tmp/tmpi1it7p01/anchor.py": "import os\ndef f():\n    import sys\nif __name__ == '__main__':\n    f()\n",
+   "/var/tmp/tmpi1it7p01/art_both.py": "def go(p):\n    a = open(p + \".agdai.log\").read()\n    b = open(p + \".agda-times.tsv\").read()\n    return a, b\n",
+   "/var/tmp/tmpi1it7p01/art_fail.py": "LOG = \".agdai.log\"\ndef read(p):\n    return open(p + LOG).read()\n",
+   "/var/tmp/tmpi1it7p01/art_ok.py": "CORE = \".agdai\"\ndef cores(d):\n    return [f for f in d if f.endswith(CORE)]\n",
+   "/var/tmp/tmpi1it7p01/art_prose.py": "\"\"\"This tool never reads a .agdai.log \u2014 it only talks about one.\"\"\"\n# another mention of .agdai.log in a comment\ndef f():\n    return 1\n",
+   "/var/tmp/tmpi1it7p01/art_times.py": "LEDGER = \".agda-times.tsv\"\ndef peaks(p):\n    return open(p + LEDGER).read()\n",
+   "/var/tmp/tmpi1it7p01/b.py": "import os\ndef outer():\n    total = 1\n    for total in range(3):\n        pass\ndef inner(total):\n    return total\n",
+   "/var/tmp/tmpi1it7p01/bad.py": "def (:\n",
+   "/var/tmp/tmpi1it7p01/cga.py": "def leaf():\n    sink()\n\ndef mid():\n    leaf()\n\ndef top():\n    mid()\n\ndef other():\n    run()\n",
+   "/var/tmp/tmpi1it7p01/cgb.py": "def run():\n    sink()\n",
+   "/var/tmp/tmpi1it7p01/consumer.py": "import target as _alias\nfrom target import pub, _priv\nfrom target.sub import deep\nfrom other import unrelated\n# target is named in a comment\nS = \"from target import ghost\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "import sys\nif \"--apply\" in sys.argv:\n    open(p, \"w\").write(t)\n",
+   "/var/tmp/tmpi1it7p01/k.py": "\"\"\"prose naming _src and rests-on, which are NOT reads.\"\"\"\n_SCALAR = (\"title\", \"link\")\ndef project(f):\n    a = f[\"_src\"]\n    b = f.get(\"_src\", \"?\")\n    if \"_src\" in f:\n        pass\n    c = f.get(\"link\")\n    return a, b, c\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/riv.py": "def f():\n    '''doc'''\n    return _auth(ROOT)\ndef g():\n    out = []\n    for x in walk():\n        out.append(x)\n    return out\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def _selftest():\n    open(p, \"w\").write(\"fixture\")\n",
+   "/var/tmp/tmpi1it7p01/shape.py": "\"\"\"A docstring mentioning foo or None, which is PROSE.\"\"\"\n# a comment mentioning foo or None too\nx = foo(a) or None\ny = 1  # foo or None in a trailing comment on a CODE line\n",
+   "/var/tmp/tmpi1it7p01/src.py": "def before():\n    return 0\ndef target(x):\n    # \u2691 a comment inside the body\n    return x + 1\ndef after():\n    return 2\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t4.py": "# \u2691 a comment mentioning quiet=True, which is NOT a call\n\"\"\"...and a docstring saying quiet as well.\"\"\"\nr(cur, base, quiet=True)\nr(cur, base)\nr(cur, base, noun=\"x\")\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def w(msg, size=0):\n    return size\nw(\"a\", size=1)\nw(\"b\", size=len(rows))\nw(\"c\", size=-1)\nw(\"d\", size=n)\nw(\"e\")\nw(\"f\", size=f\"{n}\")\nw(\"g\", size=f\"none\")\n",
+   "/var/tmp/tmpi1it7p01/t6c.py": "def wrap():\n    return q(\"i\", reset=True)\nq(\"j\", reset=False)\n",
+   "/var/tmp/tmpi1it7p01/t6p.py": "up(con, \"obs\", rows)\nup(con, \"edge\", rows)\nup(con, name, rows)\nup(con, table=\"kw\", rows=rows)\n",
+   "/var/tmp/tmpi1it7p01/t6v.py": "def q(msg, reset=False):\n    return reset\nq(\"a\", reset=True)\nq(\"b\", reset=False)\nq(\"c\", reset=None)\nq(\"d\", reset=flag)\nq(\"e\", reset=f\"{x}\")\nq(\"f\", reset=a if b else c)\nq(\"g\")\nq(\"h\", reset=\"yes\")\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/target.py": "pub = 1\n_priv = 2\n",
+   "/var/tmp/tmpi1it7p01/tf.py": "import tempfile, os\ntf = os.path.join(tempfile.mkdtemp(), \"n.md\")\nopen(tf, \"w\").write(norm)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "import sys\nout = \"x\"\nif \"--check\" in sys.argv:\n    sys.exit(0)\nopen(DOC, \"w\").write(out)\n"
+  }
+ },
+ {
+  "case": "216-the-corpus-discovers-catalog",
+  "origin": {
+   "check": "the corpus discovers catalog/",
+   "line": 1760,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:_roots",
+    "args": {}
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "217-the-corpus-discovers-scratch-and-scripts",
+  "origin": {
+   "check": "the corpus discovers scratch/ and scripts/",
+   "line": 1761,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:_roots",
+    "args": {}
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "218-the-corpus-excludes-the-agda-tree",
+  "origin": {
+   "check": "the corpus excludes the Agda tree",
+   "line": 1763,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:_roots",
+    "args": {}
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "219-the-corpus-excludes-dotdirs",
+  "origin": {
+   "check": "the corpus excludes dotdirs",
+   "line": 1764,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:_roots",
+    "args": {}
+   }
+  ],
+  "fixture": {}
+ }
+]

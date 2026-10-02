@@ -1,0 +1,247 @@
+[
+ {
+  "case": "238-a-comprehension-counts-and-the-order-is-the-source-s",
+  "origin": {
+   "check": "a comprehension counts, and the order is the source's",
+   "line": 2065,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp6_548iip/xing.py": "\ndef parse_tree():\n    disk = {}\n    for dp, _, fns in os.walk(SRC):\n        disk[dp] = fns\n    deps = {m: set() for m in disk}\n    return disk, deps\n\ndef reach(root):\n    seen, stack = set(), [root]\n    while stack:\n        n = stack.pop()\n        seen.add(n)\n    return seen\n\ndef rows(src):\n    out = []\n    for r in src.items():\n        out.append(r)\n    return out\n\ndef parse(text):\n    rec = {}\n    rec[\"a\"] = text\n    return rec\n\ndef walk_it(xs):\n    for x in xs:\n        yield x\n"
+  }
+ },
+ {
+  "case": "239-a-while-driven-closure-is-an-unfold-not-a-plain-loop",
+  "origin": {
+   "check": "a while-driven closure is an unfold, not a plain loop",
+   "line": 2073,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp6_548iip/xing.py": "\ndef parse_tree():\n    disk = {}\n    for dp, _, fns in os.walk(SRC):\n        disk[dp] = fns\n    deps = {m: set() for m in disk}\n    return disk, deps\n\ndef reach(root):\n    seen, stack = set(), [root]\n    while stack:\n        n = stack.pop()\n        seen.add(n)\n    return seen\n\ndef rows(src):\n    out = []\n    for r in src.items():\n        out.append(r)\n    return out\n\ndef parse(text):\n    rec = {}\n    rec[\"a\"] = text\n    return rec\n\ndef walk_it(xs):\n    for x in xs:\n        yield x\n"
+  }
+ },
+ {
+  "case": "240-iterating-a-container-is-derived-not-corpus",
+  "origin": {
+   "check": "iterating a container is derived, not corpus",
+   "line": 2079,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp6_548iip/xing.py": "\ndef parse_tree():\n    disk = {}\n    for dp, _, fns in os.walk(SRC):\n        disk[dp] = fns\n    deps = {m: set() for m in disk}\n    return disk, deps\n\ndef reach(root):\n    seen, stack = set(), [root]\n    while stack:\n        n = stack.pop()\n        seen.add(n)\n    return seen\n\ndef rows(src):\n    out = []\n    for r in src.items():\n        out.append(r)\n    return out\n\ndef parse(text):\n    rec = {}\n    rec[\"a\"] = text\n    return rec\n\ndef walk_it(xs):\n    for x in xs:\n        yield x\n"
+  }
+ },
+ {
+  "case": "241-a-container-built-with-no-visible-bound-is-unattr",
+  "origin": {
+   "check": "a container built with no visible bound is unattr",
+   "line": 2086,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp6_548iip/xing.py": "\ndef parse_tree():\n    disk = {}\n    for dp, _, fns in os.walk(SRC):\n        disk[dp] = fns\n    deps = {m: set() for m in disk}\n    return disk, deps\n\ndef reach(root):\n    seen, stack = set(), [root]\n    while stack:\n        n = stack.pop()\n        seen.add(n)\n    return seen\n\ndef rows(src):\n    out = []\n    for r in src.items():\n        out.append(r)\n    return out\n\ndef parse(text):\n    rec = {}\n    rec[\"a\"] = text\n    return rec\n\ndef walk_it(xs):\n    for x in xs:\n        yield x\n"
+  }
+ },
+ {
+  "case": "242-a-generator-is-reported-as-paid-not-omitted",
+  "origin": {
+   "check": "a generator is reported as paid, not omitted",
+   "line": 2092,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_census.py:crossings",
+    "args": {
+     "paths": "['/var/tmp/tmp6_548iip/xing.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp6_548iip/xing.py": "\ndef parse_tree():\n    disk = {}\n    for dp, _, fns in os.walk(SRC):\n        disk[dp] = fns\n    deps = {m: set() for m in disk}\n    return disk, deps\n\ndef reach(root):\n    seen, stack = set(), [root]\n    while stack:\n        n = stack.pop()\n        seen.add(n)\n    return seen\n\ndef rows(src):\n    out = []\n    for r in src.items():\n        out.append(r)\n    return out\n\ndef parse(text):\n    rec = {}\n    rec[\"a\"] = text\n    return rec\n\ndef walk_it(xs):\n    for x in xs:\n        yield x\n"
+  }
+ }
+]

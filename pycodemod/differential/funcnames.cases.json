@@ -1,0 +1,155 @@
+[
+ {
+  "case": "391-a-genericfunction-name-is-graded-generic-sqlalchemy-owns-the",
+  "origin": {
+   "check": "a GenericFunction name is graded generic (SQLAlchemy owns the spelling)",
+   "line": 2966,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:funcnames",
+    "args": {
+     "paths": "['/var/tmp/tmpqtc60jzn/func_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
+  }
+ },
+ {
+  "case": "392-a-valid-but-dialect-specific-name-is-verbatim-not-an-error",
+  "origin": {
+   "check": "a valid-but-dialect-specific name is verbatim, NOT an error",
+   "line": 2976,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:funcnames",
+    "args": {
+     "paths": "['/var/tmp/tmpqtc60jzn/func_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
+  }
+ },
+ {
+  "case": "393-the-sqlite-ism-that-made-a-capability-dark-is-in-the-verbati",
+  "origin": {
+   "check": "the sqlite-ism that made a capability dark is in the verbatim population",
+   "line": 2979,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:funcnames",
+    "args": {
+     "paths": "['/var/tmp/tmpqtc60jzn/func_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
+  }
+ },
+ {
+  "case": "394-libcst-s-node-func-is-not-a-sqlalchemy-func-call",
+  "origin": {
+   "check": "libcst's `node.func` is NOT a SQLAlchemy func call",
+   "line": 2986,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:funcnames",
+    "args": {
+     "paths": "['/var/tmp/tmpqtc60jzn/func_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
+  }
+ },
+ {
+  "case": "395-the-generic-set-comes-from-sqlalchemy-s-own-registry-and-is-",
+  "origin": {
+   "check": "the generic set comes from SQLAlchemy's own registry and is non-empty",
+   "line": 2991,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:_generic_func_names",
+    "args": {}
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "396-a-core-only-file-still-has-no-literal-blockers-the-zero-was-",
+  "origin": {
+   "check": "a Core-only file still has NO literal blockers (the zero was never wrong)",
+   "line": 3002,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:portable_sites",
+    "args": {
+     "path": "/var/tmp/tmpqtc60jzn/func_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
+  }
+ },
+ {
+  "case": "397-but-the-core-built-sql-it-could-not-judge-is-now-recorded-no",
+  "origin": {
+   "check": "but the Core-built SQL it could not judge is now RECORDED, not dropped",
+   "line": 3004,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:portable_sites",
+    "args": {
+     "path": "/var/tmp/tmpqtc60jzn/func_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads portable_sites.core_built, an attribute portable_sites() stamps on itself; the capture keeps only the return value (W399)"
+ },
+ {
+  "case": "398-a-file-with-no-core-sql-clears-the-attribute-no-carry-over",
+  "origin": {
+   "check": "a file with no Core SQL CLEARS the attribute (no carry-over)",
+   "line": 3016,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:portable_sites",
+    "args": {
+     "path": "/var/tmp/tmpqtc60jzn/plain.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpqtc60jzn/plain.py": "def f():\n    return 1\n",
+   "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads portable_sites.core_built, an attribute portable_sites() stamps on itself; the capture keeps only the return value (W399)"
+ }
+]

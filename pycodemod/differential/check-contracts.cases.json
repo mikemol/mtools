@@ -1,0 +1,63 @@
+[
+ {
+  "case": "015-check-contracts-reports-dispatched-but-undeclared-modes",
+  "origin": {
+   "check": "check-contracts reports dispatched-but-undeclared modes",
+   "line": 303,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/w.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ },
+ {
+  "case": "016-and-names-the-runtime-print-only-usage-as-the-reason",
+  "origin": {
+   "check": "...and names the runtime-print-only usage as the reason",
+   "line": 305,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:swallows",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/w.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ },
+ {
+  "case": "017-an-owned-modifier-is-not-reported-as-an-undeclared-mode",
+  "origin": {
+   "check": "an OWNED modifier is not reported as an undeclared mode",
+   "line": 311,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:scan_contract",
+    "args": {
+     "path": "None"
+    }
+   }
+  ],
+  "fixture": {}
+ }
+]

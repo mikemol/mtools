@@ -1,0 +1,136 @@
+[
+ {
+  "case": "024-mode-writes-defaults-to-a-pure-read",
+  "origin": {
+   "check": "Mode.writes defaults to a pure read",
+   "line": 366,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--quiet',))}",
+     "roster.--host": "Mode(opts=('--quiet',))"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "025-and-mutates-projects-it",
+  "origin": {
+   "check": "...and mutates projects it",
+   "line": 367,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--quiet',))}",
+     "roster.--host": "Mode(opts=('--quiet',))"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "026-mode-writes-carries-the-artifact-kinds",
+  "origin": {
+   "check": "Mode.writes carries the artifact kinds",
+   "line": 368,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--quiet',))}",
+     "roster.--host": "Mode(opts=('--quiet',))"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "027-and-mutates-is-true-when-it-writes",
+  "origin": {
+   "check": "...and mutates is True when it writes",
+   "line": 369,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--quiet',))}",
+     "roster.--host": "Mode(opts=('--quiet',))"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "028-mutates-is-derived-never-settable-no-second-spelling-to-drif",
+  "origin": {
+   "check": "\u2691 mutates is DERIVED, never settable \u2014 no second spelling to drift",
+   "line": 372,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:opt_key_collisions",
+    "args": {
+     "roster": "{'--host': Mode(opts=('--quiet',))}",
+     "roster.--host": "Mode(opts=('--quiet',))"
+    }
+   }
+  ],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "the capture stored a non-literal operand (an AST node, a registry, a mode table) as its repr, so the replay hands the callee a str (W212)"
+ },
+ {
+  "case": "029-a-mode-dispatched-outside-dispatch-is-not-a-phantom-declarat",
+  "origin": {
+   "check": "\u2691 a mode dispatched OUTSIDE _dispatch is not a phantom declaration",
+   "line": 388,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:scan_contract",
+    "args": {
+     "path": "None"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "030-and-a-declared-mode-that-is-dispatched-stays-silent",
+  "origin": {
+   "check": "...and a declared mode that IS dispatched stays silent",
+   "line": 390,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "pycodemod.py:scan_contract",
+    "args": {
+     "path": "None"
+    }
+   }
+  ],
+  "fixture": {}
+ }
+]

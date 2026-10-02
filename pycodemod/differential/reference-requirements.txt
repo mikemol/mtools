@@ -1,0 +1,13 @@
+# W206-cases reference venv (.venv beside this file; git-ignored by the repo's `.venv/` rule).
+# Rebuilt here after luthen's scratchpad reaper evicted the scratch venv's pyvenv.cfg and
+# editable .pth finders (2026-10-02): a reference venv must not live in reapable scratch.
+# Pins match substrate's own venv, so the reference runs as the origin does:
+#   libcst 1.9.0 (W347/W348: without it rivals/scan/dead return [] blind)
+#   sqlalchemy 2.0.51 (W403: funcnames imports it)
+# Build: uv venv --python 3.14 .venv ; uv pip install --python .venv/bin/python -r this file
+# Run:   env PYTHONPATH=<substrate>/scratch .venv/bin/python -m pytest <spec>.rego --impl reference
+--editable /home/mikemol/github/mtools/pytestspec
+--editable /home/mikemol/github/mtools/pycodemod
+pytest
+libcst==1.9.0
+sqlalchemy==2.0.51

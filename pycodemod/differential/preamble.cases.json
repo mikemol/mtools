@@ -1,0 +1,75 @@
+[
+ {
+  "case": "001-libcst-round-trips-comments-and-blank-lines",
+  "origin": {
+   "check": "libcst round-trips comments and blank lines",
+   "line": 110,
+   "class": "none"
+  },
+  "operands": [],
+  "fixture": {},
+  "disposition": "unmeasured",
+  "reason": "no call captured (capture class none, W187)"
+ },
+ {
+  "case": "002-roundtrip-accepts-a-well-formed-file",
+  "origin": {
+   "check": "roundtrip() accepts a well-formed file",
+   "line": 117,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:roundtrip",
+    "args": {
+     "path": "/var/tmp/tmpi1it7p01/t.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ },
+ {
+  "case": "003-a-def-is-found",
+  "origin": {
+   "check": "a def is found",
+   "line": 120,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t.py']",
+     "target": "f",
+     "kwseen": "None"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ },
+ {
+  "case": "004-a-call-is-found",
+  "origin": {
+   "check": "a call is found",
+   "line": 121,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t.py']",
+     "target": "f",
+     "kwseen": "None"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n"
+  }
+ }
+]

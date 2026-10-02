@@ -1,0 +1,97 @@
+[
+ {
+  "case": "279-two-reads-in-one-expression-is-composed",
+  "origin": {
+   "check": "two reads in ONE expression is COMPOSED",
+   "line": 2344,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:snapshot_sites",
+    "args": {
+     "path": "/var/tmp/tmpkwc6tjxu/snapshot_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpkwc6tjxu/snapshot_case.py": "\ndef four_snapshots(con):\n    return (con.scalar(\"SELECT count(*) FROM a\"),\n            con.scalar(\"SELECT count(*) FROM b\"))\n\ndef one_trip(con):\n    return con.execute(\"SELECT a FROM t\").fetchall()\n\ndef branch_is_one_trip(con, p):\n    return con.execute(\"S\", p) if p else con.execute(\"S\")\n\ndef per_key(con):\n    return {t: con.execute(\"SELECT count(*) FROM %s\" % t).fetchone() for t in (\"a\", \"b\")}\n\ndef loop_is_fine(con, cores):\n    out = []\n    for c in cores:\n        out.append(con.execute(\"SELECT a FROM t WHERE c=%s\", (c,)).fetchall())\n    return out\n"
+  }
+ },
+ {
+  "case": "280-a-chained-fetch-is-one-trip-not-two",
+  "origin": {
+   "check": "a CHAINED fetch is ONE trip, not two",
+   "line": 2349,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:snapshot_sites",
+    "args": {
+     "path": "/var/tmp/tmpkwc6tjxu/snapshot_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpkwc6tjxu/snapshot_case.py": "\ndef four_snapshots(con):\n    return (con.scalar(\"SELECT count(*) FROM a\"),\n            con.scalar(\"SELECT count(*) FROM b\"))\n\ndef one_trip(con):\n    return con.execute(\"SELECT a FROM t\").fetchall()\n\ndef branch_is_one_trip(con, p):\n    return con.execute(\"S\", p) if p else con.execute(\"S\")\n\ndef per_key(con):\n    return {t: con.execute(\"SELECT count(*) FROM %s\" % t).fetchone() for t in (\"a\", \"b\")}\n\ndef loop_is_fine(con, cores):\n    out = []\n    for c in cores:\n        out.append(con.execute(\"SELECT a FROM t WHERE c=%s\", (c,)).fetchall())\n    return out\n"
+  }
+ },
+ {
+  "case": "281-a-conditional-between-two-spellings-is-one-trip",
+  "origin": {
+   "check": "a conditional between two spellings is ONE trip",
+   "line": 2354,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:snapshot_sites",
+    "args": {
+     "path": "/var/tmp/tmpkwc6tjxu/snapshot_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpkwc6tjxu/snapshot_case.py": "\ndef four_snapshots(con):\n    return (con.scalar(\"SELECT count(*) FROM a\"),\n            con.scalar(\"SELECT count(*) FROM b\"))\n\ndef one_trip(con):\n    return con.execute(\"SELECT a FROM t\").fetchall()\n\ndef branch_is_one_trip(con, p):\n    return con.execute(\"S\", p) if p else con.execute(\"S\")\n\ndef per_key(con):\n    return {t: con.execute(\"SELECT count(*) FROM %s\" % t).fetchone() for t in (\"a\", \"b\")}\n\ndef loop_is_fine(con, cores):\n    out = []\n    for c in cores:\n        out.append(con.execute(\"SELECT a FROM t WHERE c=%s\", (c,)).fetchall())\n    return out\n"
+  }
+ },
+ {
+  "case": "282-a-read-inside-a-comprehension-is-iterated",
+  "origin": {
+   "check": "a read inside a comprehension is ITERATED",
+   "line": 2359,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:snapshot_sites",
+    "args": {
+     "path": "/var/tmp/tmpkwc6tjxu/snapshot_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpkwc6tjxu/snapshot_case.py": "\ndef four_snapshots(con):\n    return (con.scalar(\"SELECT count(*) FROM a\"),\n            con.scalar(\"SELECT count(*) FROM b\"))\n\ndef one_trip(con):\n    return con.execute(\"SELECT a FROM t\").fetchall()\n\ndef branch_is_one_trip(con, p):\n    return con.execute(\"S\", p) if p else con.execute(\"S\")\n\ndef per_key(con):\n    return {t: con.execute(\"SELECT count(*) FROM %s\" % t).fetchone() for t in (\"a\", \"b\")}\n\ndef loop_is_fine(con, cores):\n    out = []\n    for c in cores:\n        out.append(con.execute(\"SELECT a FROM t WHERE c=%s\", (c,)).fetchall())\n    return out\n"
+  }
+ },
+ {
+  "case": "283-a-per-item-loop-read-is-not-composed",
+  "origin": {
+   "check": "a per-item loop read is not COMPOSED",
+   "line": 2363,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:snapshot_sites",
+    "args": {
+     "path": "/var/tmp/tmpkwc6tjxu/snapshot_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpkwc6tjxu/snapshot_case.py": "\ndef four_snapshots(con):\n    return (con.scalar(\"SELECT count(*) FROM a\"),\n            con.scalar(\"SELECT count(*) FROM b\"))\n\ndef one_trip(con):\n    return con.execute(\"SELECT a FROM t\").fetchall()\n\ndef branch_is_one_trip(con, p):\n    return con.execute(\"S\", p) if p else con.execute(\"S\")\n\ndef per_key(con):\n    return {t: con.execute(\"SELECT count(*) FROM %s\" % t).fetchone() for t in (\"a\", \"b\")}\n\ndef loop_is_fine(con, cores):\n    out = []\n    for c in cores:\n        out.append(con.execute(\"SELECT a FROM t WHERE c=%s\", (c,)).fetchall())\n    return out\n"
+  }
+ }
+]

@@ -1,0 +1,142 @@
+[
+ {
+  "case": "384-sorting-a-callee-that-already-sorted-is-the-redundant-row",
+  "origin": {
+   "check": "sorting a callee that already sorted is the redundant row",
+   "line": 2902,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:resorts",
+    "args": {
+     "paths": "['/var/tmp/tmp2eb5r248/resort_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp2eb5r248/resort_case.py": "\ndef upstream(xs):\n    return sorted(xs)\n\ndef redundant(xs):\n    return sorted(upstream(xs))\n\ndef rekeyed(xs):\n    return sorted(upstream(xs), key=len)\n\ndef reversed_too(xs):\n    return sorted(upstream(xs), reverse=True)\n\ndef unrelated(xs):\n    return sorted(plain(xs))\n\ndef plain(xs):\n    return list(xs)\n"
+  }
+ },
+ {
+  "case": "385-a-re-keyed-sort-is-reported-separately-never-as-redundant",
+  "origin": {
+   "check": "a re-keyed sort is reported SEPARATELY, never as redundant",
+   "line": 2909,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:resorts",
+    "args": {
+     "paths": "['/var/tmp/tmp2eb5r248/resort_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp2eb5r248/resort_case.py": "\ndef upstream(xs):\n    return sorted(xs)\n\ndef redundant(xs):\n    return sorted(upstream(xs))\n\ndef rekeyed(xs):\n    return sorted(upstream(xs), key=len)\n\ndef reversed_too(xs):\n    return sorted(upstream(xs), reverse=True)\n\ndef unrelated(xs):\n    return sorted(plain(xs))\n\ndef plain(xs):\n    return list(xs)\n"
+  }
+ },
+ {
+  "case": "386-reverse-counts-as-a-re-key-too",
+  "origin": {
+   "check": "`reverse=` counts as a re-key too",
+   "line": 2911,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:resorts",
+    "args": {
+     "paths": "['/var/tmp/tmp2eb5r248/resort_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp2eb5r248/resort_case.py": "\ndef upstream(xs):\n    return sorted(xs)\n\ndef redundant(xs):\n    return sorted(upstream(xs))\n\ndef rekeyed(xs):\n    return sorted(upstream(xs), key=len)\n\ndef reversed_too(xs):\n    return sorted(upstream(xs), reverse=True)\n\ndef unrelated(xs):\n    return sorted(plain(xs))\n\ndef plain(xs):\n    return list(xs)\n"
+  }
+ },
+ {
+  "case": "387-sorting-a-callee-that-did-not-sort-is-not-a-re-sort-at-all",
+  "origin": {
+   "check": "sorting a callee that did NOT sort is not a re-sort at all",
+   "line": 2913,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:resorts",
+    "args": {
+     "paths": "['/var/tmp/tmp2eb5r248/resort_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp2eb5r248/resort_case.py": "\ndef upstream(xs):\n    return sorted(xs)\n\ndef redundant(xs):\n    return sorted(upstream(xs))\n\ndef rekeyed(xs):\n    return sorted(upstream(xs), key=len)\n\ndef reversed_too(xs):\n    return sorted(upstream(xs), reverse=True)\n\ndef unrelated(xs):\n    return sorted(plain(xs))\n\ndef plain(xs):\n    return list(xs)\n"
+  }
+ },
+ {
+  "case": "388-the-consumer-walk-owns-its-own-population-scoped-to-paths",
+  "origin": {
+   "check": "the consumer walk owns its own population, scoped to paths",
+   "line": 2923,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:resorts",
+    "args": {
+     "paths": "['/var/tmp/tmp2eb5r248/resort_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp2eb5r248/resort_case.py": "\ndef upstream(xs):\n    return sorted(xs)\n\ndef redundant(xs):\n    return sorted(upstream(xs))\n\ndef rekeyed(xs):\n    return sorted(upstream(xs), key=len)\n\ndef reversed_too(xs):\n    return sorted(upstream(xs), reverse=True)\n\ndef unrelated(xs):\n    return sorted(plain(xs))\n\ndef plain(xs):\n    return list(xs)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads function attributes resorts() stamps on itself (population, skipped, producer_population); the capture keeps only the return value (W226)"
+ },
+ {
+  "case": "389-the-producer-population-is-wider-than-the-walk-and-separatel",
+  "origin": {
+   "check": "the producer population is WIDER than the walk, and separately named",
+   "line": 2925,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:resorts",
+    "args": {
+     "paths": "['/var/tmp/tmp2eb5r248/resort_case.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp2eb5r248/resort_case.py": "\ndef upstream(xs):\n    return sorted(xs)\n\ndef redundant(xs):\n    return sorted(upstream(xs))\n\ndef rekeyed(xs):\n    return sorted(upstream(xs), key=len)\n\ndef reversed_too(xs):\n    return sorted(upstream(xs), reverse=True)\n\ndef unrelated(xs):\n    return sorted(plain(xs))\n\ndef plain(xs):\n    return list(xs)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads function attributes resorts() stamps on itself (population, skipped, producer_population); the capture keeps only the return value (W226)"
+ },
+ {
+  "case": "390-a-clean-file-yields-no-rows-but-still-exposes-the-producer-b",
+  "origin": {
+   "check": "a clean file yields no rows but still exposes the producer basis",
+   "line": 2937,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:resorts",
+    "args": {
+     "paths": "['/var/tmp/tmp2eb5r248/clean.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp2eb5r248/clean.py": "def f(xs):\n    return list(xs)\n",
+   "/var/tmp/tmp2eb5r248/resort_case.py": "\ndef upstream(xs):\n    return sorted(xs)\n\ndef redundant(xs):\n    return sorted(upstream(xs))\n\ndef rekeyed(xs):\n    return sorted(upstream(xs), key=len)\n\ndef reversed_too(xs):\n    return sorted(upstream(xs), reverse=True)\n\ndef unrelated(xs):\n    return sorted(plain(xs))\n\ndef plain(xs):\n    return list(xs)\n"
+  },
+  "disposition": "unmeasured",
+  "reason": "the check reads function attributes resorts() stamps on itself (population, skipped, producer_population); the capture keeps only the return value (W226)"
+ }
+]

@@ -1,0 +1,922 @@
+[
+ {
+  "case": "031-rivals-both-bodies-read-reimplements",
+  "origin": {
+   "check": "rivals: both bodies read REIMPLEMENTS",
+   "line": 407,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:rivals",
+    "args": {
+     "name": "go",
+     "paths": "['/var/tmp/tmpi1it7p01/r1.py', '/var/tmp/tmpi1it7p01/r2.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "032-rivals-disjoint-signatures-are-distinguishable",
+  "origin": {
+   "check": "rivals: disjoint signatures are distinguishable",
+   "line": 416,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:rivals",
+    "args": {
+     "name": "go",
+     "paths": "['/var/tmp/tmpi1it7p01/r1.py', '/var/tmp/tmpi1it7p01/r2.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "033-a-name-in-a-docstring-comment-is-not-a-call",
+  "origin": {
+   "check": "a name in a docstring/comment is NOT a call",
+   "line": 424,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t2.py']",
+     "target": "f",
+     "kwseen": "None"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "034-a-def-with-no-caller-is-reported-dead",
+  "origin": {
+   "check": "a def with no caller is reported dead",
+   "line": 428,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t2.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "035-calls-is-blind-to-a-string-invoked-query-the-false-positive",
+  "origin": {
+   "check": "--calls is blind to a string-invoked query (the false positive)",
+   "line": 443,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/tq.py']",
+     "target": "q_thing",
+     "kwseen": "None"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "036-sqlname-finds-the-q-prefixed-definition",
+  "origin": {
+   "check": "--sqlname finds the `q_`-prefixed DEFINITION",
+   "line": 445,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:sqlnames",
+    "args": {
+     "name": "thing",
+     "paths": "['/var/tmp/tmpi1it7p01/tq.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "do-not-port",
+  "reason": "the port carries no sqlname: pycodemod cli.py lists it in _DO_NOT_PORT_NAMES (the store's q_ query bridge stays with substrate)"
+ },
+ {
+  "case": "037-and-the-string-reference-calls-cannot-see",
+  "origin": {
+   "check": "...and the STRING reference `--calls` cannot see",
+   "line": 448,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:sqlnames",
+    "args": {
+     "name": "thing",
+     "paths": "['/var/tmp/tmpi1it7p01/tq.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "do-not-port",
+  "reason": "the port carries no sqlname: pycodemod cli.py lists it in _DO_NOT_PORT_NAMES (the store's q_ query bridge stays with substrate)"
+ },
+ {
+  "case": "038-sqlname-accepts-the-defined-spelling-too",
+  "origin": {
+   "check": "--sqlname accepts the DEFINED spelling too",
+   "line": 453,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:sqlnames",
+    "args": {
+     "name": "q_thing",
+     "paths": "['/var/tmp/tmpi1it7p01/tq.py']"
+    }
+   },
+   {
+    "fn": "_pycodemod_query.py:sqlnames",
+    "args": {
+     "name": "thing",
+     "paths": "['/var/tmp/tmpi1it7p01/tq.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "do-not-port",
+  "reason": "the port carries no sqlname: pycodemod cli.py lists it in _DO_NOT_PORT_NAMES (the store's q_ query bridge stays with substrate)"
+ },
+ {
+  "case": "039-a-string-reference-is-reported-as-ref-not-call",
+  "origin": {
+   "check": "a string reference is reported as `ref`, not `call`",
+   "line": 458,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:sqlnames",
+    "args": {
+     "name": "thing",
+     "paths": "['/var/tmp/tmpi1it7p01/tq.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "do-not-port",
+  "reason": "the port carries no sqlname: pycodemod cli.py lists it in _DO_NOT_PORT_NAMES (the store's q_ query bridge stays with substrate)"
+ },
+ {
+  "case": "040-a-query-defined-and-never-referenced-has-0-refs",
+  "origin": {
+   "check": "a query defined and never referenced has 0 refs",
+   "line": 465,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:sqlnames",
+    "args": {
+     "name": "unwired",
+     "paths": "['/var/tmp/tmpi1it7p01/tq2.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  },
+  "disposition": "do-not-port",
+  "reason": "the port carries no sqlname: pycodemod cli.py lists it in _DO_NOT_PORT_NAMES (the store's q_ query bridge stays with substrate)"
+ },
+ {
+  "case": "041-a-callback-passed-in-a-list-is-not-dead-the-otlp-shape",
+  "origin": {
+   "check": "a callback passed in a list is NOT dead (the OTLP shape)",
+   "line": 491,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t5.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "042-a-function-stored-in-a-registry-dict-is-not-dead",
+  "origin": {
+   "check": "a function stored in a registry dict is NOT dead",
+   "line": 493,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t5.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "043-a-closure-returned-by-a-factory-is-not-dead",
+  "origin": {
+   "check": "a closure RETURNED by a factory is NOT dead",
+   "line": 495,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t5.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "044-a-function-passed-as-key-is-not-dead",
+  "origin": {
+   "check": "a function passed as key= is NOT dead",
+   "line": 497,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t5.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "045-a-def-that-is-neither-called-nor-referenced-is-still-dead",
+  "origin": {
+   "check": "a def that is neither called nor referenced is STILL dead",
+   "line": 502,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t5.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "046-a-bare-decorated-def-is-not-dead-reg-the-registry-shape",
+  "origin": {
+   "check": "a BARE-decorated def is NOT dead (@reg \u2014 the registry shape)",
+   "line": 531,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t6.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "047-a-called-decorator-def-is-not-dead-paramd-x",
+  "origin": {
+   "check": "a CALLED-decorator def is NOT dead (@paramd('x'))",
+   "line": 536,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t6.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "048-a-dotted-decorator-def-is-not-dead-mod-attr",
+  "origin": {
+   "check": "a DOTTED-decorator def is NOT dead (@mod.attr)",
+   "line": 538,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t6.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "049-an-undecorated-def-with-no-caller-is-still-dead",
+  "origin": {
+   "check": "an UNDECORATED def with no caller is STILL dead",
+   "line": 544,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t6.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "050-the-registrar-is-reached-as-a-value-by-each-decoration",
+  "origin": {
+   "check": "the REGISTRAR is reached as a value by each decoration",
+   "line": 548,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t6.py']",
+     "target": "reg",
+     "kwseen": "None"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "051-a-libcst-visit-method-is-not-dead-framework-dispatched",
+  "origin": {
+   "check": "a libcst visit_* method is NOT dead (framework-dispatched)",
+   "line": 571,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t7.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "052-a-libcst-leave-method-is-not-dead",
+  "origin": {
+   "check": "a libcst leave_* method is NOT dead",
+   "line": 573,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t7.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "053-a-textual-action-method-is-not-dead-binding-table-string",
+  "origin": {
+   "check": "a Textual action_* method is NOT dead (Binding-table string)",
+   "line": 575,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t7.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "054-a-textual-on-handler-is-not-dead-message-class-name",
+  "origin": {
+   "check": "a Textual on_* handler is NOT dead (message-class name)",
+   "line": 577,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t7.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "055-an-ordinary-unused-method-in-the-same-class-is-still-dead",
+  "origin": {
+   "check": "an ordinary unused method in the SAME class is STILL dead",
+   "line": 581,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:dead",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t7.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "056-a-bare-prefix-with-no-suffix-is-not-a-framework-contract",
+  "origin": {
+   "check": "a bare prefix with no suffix is NOT a framework contract",
+   "line": 585,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:framework_dispatch",
+    "args": {
+     "name": "on_"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "057-the-exemption-reports-which-contract-not-merely-that-there-i",
+  "origin": {
+   "check": "the exemption reports WHICH contract, not merely that there is one",
+   "line": 589,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:framework_dispatch",
+    "args": {
+     "name": "visit_Call"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "058-ends-the-flags-a-later-token-is-not-seen-as-a-flag",
+  "origin": {
+   "check": "`--` ends the flags: a later token is NOT seen as a flag",
+   "line": 603,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:flagged_argv",
+    "args": {
+     "argv": "['pycodemod.py', '--literal', '--', '--selftest']"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "059-and-is-delivered-as-an-operand-flag-shaped-and-all",
+  "origin": {
+   "check": "...and IS delivered as an operand, flag-shaped and all",
+   "line": 605,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:operand_tail",
+    "args": {
+     "argv": "['pycodemod.py', '--literal', '--', '--selftest']"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "060-the-mode-before-is-still-recognised",
+  "origin": {
+   "check": "the mode BEFORE `--` is still recognised",
+   "line": 607,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:flagged_argv",
+    "args": {
+     "argv": "['pycodemod.py', '--literal', '--', '--selftest']"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "061-with-no-every-token-remains-flag-visible",
+  "origin": {
+   "check": "with no `--`, every token remains flag-visible",
+   "line": 612,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:flagged_argv",
+    "args": {
+     "argv": "['pycodemod.py', '--calls', 'foo']"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "062-with-no-the-operand-tail-is-empty",
+  "origin": {
+   "check": "with no `--`, the operand tail is empty",
+   "line": 614,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:operand_tail",
+    "args": {
+     "argv": "['pycodemod.py', '--calls', 'foo']"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "063-a-at-argv-0-is-not-read-as-the-marker",
+  "origin": {
+   "check": "a `--` at argv[0] is not read as the marker",
+   "line": 618,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_core.py:flagged_argv",
+    "args": {
+     "argv": "['--', '--calls', 'foo']"
+    }
+   }
+  ],
+  "fixture": {}
+ },
+ {
+  "case": "064-ref-is-a-distinct-kind-not-folded-into-call",
+  "origin": {
+   "check": "`ref` is a distinct kind, not folded into `call`",
+   "line": 620,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t5.py']",
+     "target": "hb_cb",
+     "kwseen": "None"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ },
+ {
+  "case": "065-the-value-use-is-recorded-as-a-ref-at-its-line",
+  "origin": {
+   "check": "the value-use IS recorded as a ref at its line",
+   "line": 622,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_query.py:scan",
+    "args": {
+     "paths": "['/var/tmp/tmpi1it7p01/t5.py']",
+     "target": "hb_cb",
+     "kwseen": "None"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmpi1it7p01/t5.py": "def hb_cb(options):\n    return 1\ndef deco(fn):\n    return fn\ndef inner():\n    return 2\ndef factory():\n    return inner\ndef keyfn(x):\n    return x\ndef truly_dead():\n    return 3\nmeter.create_observable_gauge(\"m\", callbacks=[hb_cb])\nREGISTRY = {\"d\": deco}\nitems.sort(key=keyfn)\n",
+   "/var/tmp/tmpi1it7p01/g.py": "def m(apply):\n    g()\n    if apply:\n        g()\n    if a:\n        if b:\n            g()\n    if c:\n        pass\n    else:\n        g()\n",
+   "/var/tmp/tmpi1it7p01/r1.py": "def go(paths, target):\n    x = 1\n    return x\n",
+   "/var/tmp/tmpi1it7p01/r2.py": "def go(idx, root):\n    y = 2\n    return y\n",
+   "/var/tmp/tmpi1it7p01/s.py": "def a(fs, C):\n    for f in fs:\n        try:\n            C.add_file(f)\n        except Exception:\n            continue\n    return len(C.units)\ndef b(S):\n    try:\n        rows = S.stats()\n        print(rows)\n    except Exception:\n        pass\ndef c(xs, out):\n    try:\n        out.append(xs)\n    except OSError:\n        pass\n",
+   "/var/tmp/tmpi1it7p01/t.py": "# leading\ndef f(x):\n    # \u2691 why\n    return x  # trailing\n\n\ny = f(1)\n",
+   "/var/tmp/tmpi1it7p01/t2.py": "\"\"\"mentions f(1) in prose.\"\"\"\n# also f(2) here\ndef g():\n    pass\n",
+   "/var/tmp/tmpi1it7p01/t6.py": "def reg(fn):\n    TESTS.append(fn)\n    return fn\ndef paramd(arg):\n    return lambda fn: fn\n@reg\ndef registered_bare():\n    return 1\n@paramd(\"x\")\ndef registered_called():\n    return 2\n@mod.attr\ndef registered_dotted():\n    return 3\ndef undecorated_dead():\n    return 4\n",
+   "/var/tmp/tmpi1it7p01/t7.py": "class V:\n    def visit_Call(self, node):\n        return 1\n    def leave_FunctionDef(self, node):\n        return 2\n    def action_reset(self):\n        return 3\n    def on_mount(self):\n        return 4\n    def helper_never_used(self):\n        return 5\n",
+   "/var/tmp/tmpi1it7p01/tq.py": "def q_thing(con):\n    return \"SELECT 1\"\ndef other(con, QB):\n    return QB.run(con, \"thing\", core_id=1)\n",
+   "/var/tmp/tmpi1it7p01/tq2.py": "def q_unwired(con):\n    return \"SELECT 2\"\n",
+   "/var/tmp/tmpi1it7p01/w.py": "def w(p, n):\n    row = str(n)\n    try:\n        with open(p, 'a') as f:\n            f.write(row)\n    except OSError:\n        pass\n"
+  }
+ }
+]

@@ -1,0 +1,170 @@
+[
+ {
+  "case": "231-a-comparison-operand-is-role-compare",
+  "origin": {
+   "check": "a comparison operand is role=compare",
+   "line": 1975,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:pg_probe_status",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_query.py:literal_sites",
+    "args": {
+     "text": "sqlite",
+     "paths": "['/var/tmp/tmp27n7k478/litfix.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp27n7k478/litfix.py": "\"\"\"A module about sqlite and how it is retired.\"\"\"\nBACKENDS = (\"sqlite\", \"postgres\")\nDEFAULT = \"sqlite\"\n\ndef ph(n, back):\n    # sqlite takes ? and psycopg takes %s \u2014 a comment, NOT a site\n    if back == \"sqlite\":\n        return \"?\" * n\n    return \"%s\" * n\n\ndef go():\n    return ph(1, \"sqlite\")\n"
+  }
+ },
+ {
+  "case": "232-a-call-argument-is-role-arg",
+  "origin": {
+   "check": "a call argument is role=arg",
+   "line": 1980,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:pg_probe_status",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_query.py:literal_sites",
+    "args": {
+     "text": "sqlite",
+     "paths": "['/var/tmp/tmp27n7k478/litfix.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp27n7k478/litfix.py": "\"\"\"A module about sqlite and how it is retired.\"\"\"\nBACKENDS = (\"sqlite\", \"postgres\")\nDEFAULT = \"sqlite\"\n\ndef ph(n, back):\n    # sqlite takes ? and psycopg takes %s \u2014 a comment, NOT a site\n    if back == \"sqlite\":\n        return \"?\" * n\n    return \"%s\" * n\n\ndef go():\n    return ph(1, \"sqlite\")\n"
+  }
+ },
+ {
+  "case": "233-a-collection-element-is-role-decl",
+  "origin": {
+   "check": "a collection element is role=decl",
+   "line": 1984,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:pg_probe_status",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_query.py:literal_sites",
+    "args": {
+     "text": "sqlite",
+     "paths": "['/var/tmp/tmp27n7k478/litfix.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp27n7k478/litfix.py": "\"\"\"A module about sqlite and how it is retired.\"\"\"\nBACKENDS = (\"sqlite\", \"postgres\")\nDEFAULT = \"sqlite\"\n\ndef ph(n, back):\n    # sqlite takes ? and psycopg takes %s \u2014 a comment, NOT a site\n    if back == \"sqlite\":\n        return \"?\" * n\n    return \"%s\" * n\n\ndef go():\n    return ph(1, \"sqlite\")\n"
+  }
+ },
+ {
+  "case": "234-a-docstring-mention-is-role-doc-not-role-other",
+  "origin": {
+   "check": "a docstring mention is role=doc, not role=other",
+   "line": 1990,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:pg_probe_status",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_query.py:literal_sites",
+    "args": {
+     "text": "sqlite",
+     "paths": "['/var/tmp/tmp27n7k478/litfix.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp27n7k478/litfix.py": "\"\"\"A module about sqlite and how it is retired.\"\"\"\nBACKENDS = (\"sqlite\", \"postgres\")\nDEFAULT = \"sqlite\"\n\ndef ph(n, back):\n    # sqlite takes ? and psycopg takes %s \u2014 a comment, NOT a site\n    if back == \"sqlite\":\n        return \"?\" * n\n    return \"%s\" * n\n\ndef go():\n    return ph(1, \"sqlite\")\n"
+  }
+ },
+ {
+  "case": "235-a-mention-in-a-comment-is-not-a-literal-site",
+  "origin": {
+   "check": "a mention in a COMMENT is not a literal site",
+   "line": 1997,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:pg_probe_status",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_query.py:literal_sites",
+    "args": {
+     "text": "sqlite",
+     "paths": "['/var/tmp/tmp27n7k478/litfix.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp27n7k478/litfix.py": "\"\"\"A module about sqlite and how it is retired.\"\"\"\nBACKENDS = (\"sqlite\", \"postgres\")\nDEFAULT = \"sqlite\"\n\ndef ph(n, back):\n    # sqlite takes ? and psycopg takes %s \u2014 a comment, NOT a site\n    if back == \"sqlite\":\n        return \"?\" * n\n    return \"%s\" * n\n\ndef go():\n    return ph(1, \"sqlite\")\n"
+  }
+ },
+ {
+  "case": "236-a-plain-assignment-rhs-is-role-other",
+  "origin": {
+   "check": "a plain assignment RHS is role=other",
+   "line": 2005,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:pg_probe_status",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_query.py:literal_sites",
+    "args": {
+     "text": "sqlite",
+     "paths": "['/var/tmp/tmp27n7k478/litfix.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp27n7k478/litfix.py": "\"\"\"A module about sqlite and how it is retired.\"\"\"\nBACKENDS = (\"sqlite\", \"postgres\")\nDEFAULT = \"sqlite\"\n\ndef ph(n, back):\n    # sqlite takes ? and psycopg takes %s \u2014 a comment, NOT a site\n    if back == \"sqlite\":\n        return \"?\" * n\n    return \"%s\" * n\n\ndef go():\n    return ph(1, \"sqlite\")\n"
+  }
+ },
+ {
+  "case": "237-every-site-is-found-exactly-once-one-role-each",
+  "origin": {
+   "check": "every site is found exactly once, one role each",
+   "line": 2012,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:pg_probe_status",
+    "args": {}
+   },
+   {
+    "fn": "_pycodemod_query.py:literal_sites",
+    "args": {
+     "text": "sqlite",
+     "paths": "['/var/tmp/tmp27n7k478/litfix.py']"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp27n7k478/litfix.py": "\"\"\"A module about sqlite and how it is retired.\"\"\"\nBACKENDS = (\"sqlite\", \"postgres\")\nDEFAULT = \"sqlite\"\n\ndef ph(n, back):\n    # sqlite takes ? and psycopg takes %s \u2014 a comment, NOT a site\n    if back == \"sqlite\":\n        return \"?\" * n\n    return \"%s\" * n\n\ndef go():\n    return ph(1, \"sqlite\")\n"
+  }
+ }
+]

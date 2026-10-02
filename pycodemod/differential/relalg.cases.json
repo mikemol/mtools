@@ -1,0 +1,135 @@
+[
+ {
+  "case": "243-a-dict-keyed-off-rows-then-probed-by-a-second-query-is-a-joi",
+  "origin": {
+   "check": "a dict keyed off rows then probed by a second query is a JOIN",
+   "line": 2144,
+   "class": "fresh"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relalg_sites",
+    "args": {
+     "path": "/var/tmp/tmp58uinlhl/relalg_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp58uinlhl/relalg_case.py": "\ndef withheld(con):\n    left = {}\n    for a, b in con.execute(\"SELECT a, b FROM t\"):\n        left[a] = b\n    out = []\n    for a, c in con.execute(\"SELECT a, c FROM u\"):\n        if c is None:\n            continue\n        out.append((left[a], c))\n    return sorted(out)\n\ndef counted(con):\n    n = {}\n    for k, in con.execute(\"SELECT k FROM t\"):\n        n[k] = n.get(k, 0) + 1\n    return n\n\ndef deduped(con):\n    return set(r[0] for r in con.execute(\"SELECT a FROM t\"))\n\ndef rebuilt(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM t\")}\n\ndef stored(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM u\")}\n\ndef reflects(con):\n    return rebuilt(con) - stored(con)\n\ndef pure_helper(xs):\n    d = {}\n    for a, b in xs:\n        d[a] = b\n    return sorted(d.items())\n"
+  }
+ },
+ {
+  "case": "244-a-guard-continue-over-query-rows-is-a-withheld-where",
+  "origin": {
+   "check": "a guard-continue over query rows is a withheld WHERE",
+   "line": 2147,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relalg_sites",
+    "args": {
+     "path": "/var/tmp/tmp58uinlhl/relalg_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp58uinlhl/relalg_case.py": "\ndef withheld(con):\n    left = {}\n    for a, b in con.execute(\"SELECT a, b FROM t\"):\n        left[a] = b\n    out = []\n    for a, c in con.execute(\"SELECT a, c FROM u\"):\n        if c is None:\n            continue\n        out.append((left[a], c))\n    return sorted(out)\n\ndef counted(con):\n    n = {}\n    for k, in con.execute(\"SELECT k FROM t\"):\n        n[k] = n.get(k, 0) + 1\n    return n\n\ndef deduped(con):\n    return set(r[0] for r in con.execute(\"SELECT a FROM t\"))\n\ndef rebuilt(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM t\")}\n\ndef stored(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM u\")}\n\ndef reflects(con):\n    return rebuilt(con) - stored(con)\n\ndef pure_helper(xs):\n    d = {}\n    for a, b in xs:\n        d[a] = b\n    return sorted(d.items())\n"
+  }
+ },
+ {
+  "case": "245-sorted-over-row-derived-rows-is-a-withheld-order-by",
+  "origin": {
+   "check": "sorted() over row-derived rows is a withheld ORDER BY",
+   "line": 2149,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relalg_sites",
+    "args": {
+     "path": "/var/tmp/tmp58uinlhl/relalg_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp58uinlhl/relalg_case.py": "\ndef withheld(con):\n    left = {}\n    for a, b in con.execute(\"SELECT a, b FROM t\"):\n        left[a] = b\n    out = []\n    for a, c in con.execute(\"SELECT a, c FROM u\"):\n        if c is None:\n            continue\n        out.append((left[a], c))\n    return sorted(out)\n\ndef counted(con):\n    n = {}\n    for k, in con.execute(\"SELECT k FROM t\"):\n        n[k] = n.get(k, 0) + 1\n    return n\n\ndef deduped(con):\n    return set(r[0] for r in con.execute(\"SELECT a FROM t\"))\n\ndef rebuilt(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM t\")}\n\ndef stored(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM u\")}\n\ndef reflects(con):\n    return rebuilt(con) - stored(con)\n\ndef pure_helper(xs):\n    d = {}\n    for a, b in xs:\n        d[a] = b\n    return sorted(d.items())\n"
+  }
+ },
+ {
+  "case": "246-per-key-accumulation-is-group-by-not-a-join",
+  "origin": {
+   "check": "per-key accumulation is GROUP BY, not a join",
+   "line": 2153,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relalg_sites",
+    "args": {
+     "path": "/var/tmp/tmp58uinlhl/relalg_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp58uinlhl/relalg_case.py": "\ndef withheld(con):\n    left = {}\n    for a, b in con.execute(\"SELECT a, b FROM t\"):\n        left[a] = b\n    out = []\n    for a, c in con.execute(\"SELECT a, c FROM u\"):\n        if c is None:\n            continue\n        out.append((left[a], c))\n    return sorted(out)\n\ndef counted(con):\n    n = {}\n    for k, in con.execute(\"SELECT k FROM t\"):\n        n[k] = n.get(k, 0) + 1\n    return n\n\ndef deduped(con):\n    return set(r[0] for r in con.execute(\"SELECT a FROM t\"))\n\ndef rebuilt(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM t\")}\n\ndef stored(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM u\")}\n\ndef reflects(con):\n    return rebuilt(con) - stored(con)\n\ndef pure_helper(xs):\n    d = {}\n    for a, b in xs:\n        d[a] = b\n    return sorted(d.items())\n"
+  }
+ },
+ {
+  "case": "247-a-set-built-purely-to-dedupe-rows-is-a-withheld-distinct",
+  "origin": {
+   "check": "a set() built purely to dedupe rows is a withheld DISTINCT",
+   "line": 2155,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relalg_sites",
+    "args": {
+     "path": "/var/tmp/tmp58uinlhl/relalg_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp58uinlhl/relalg_case.py": "\ndef withheld(con):\n    left = {}\n    for a, b in con.execute(\"SELECT a, b FROM t\"):\n        left[a] = b\n    out = []\n    for a, c in con.execute(\"SELECT a, c FROM u\"):\n        if c is None:\n            continue\n        out.append((left[a], c))\n    return sorted(out)\n\ndef counted(con):\n    n = {}\n    for k, in con.execute(\"SELECT k FROM t\"):\n        n[k] = n.get(k, 0) + 1\n    return n\n\ndef deduped(con):\n    return set(r[0] for r in con.execute(\"SELECT a FROM t\"))\n\ndef rebuilt(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM t\")}\n\ndef stored(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM u\")}\n\ndef reflects(con):\n    return rebuilt(con) - stored(con)\n\ndef pure_helper(xs):\n    d = {}\n    for a, b in xs:\n        d[a] = b\n    return sorted(d.items())\n"
+  }
+ },
+ {
+  "case": "248-a-set-difference-between-two-store-reading-helpers-is-a-set-",
+  "origin": {
+   "check": "a set difference between two store-reading helpers is a set-op",
+   "line": 2163,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relalg_sites",
+    "args": {
+     "path": "/var/tmp/tmp58uinlhl/relalg_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp58uinlhl/relalg_case.py": "\ndef withheld(con):\n    left = {}\n    for a, b in con.execute(\"SELECT a, b FROM t\"):\n        left[a] = b\n    out = []\n    for a, c in con.execute(\"SELECT a, c FROM u\"):\n        if c is None:\n            continue\n        out.append((left[a], c))\n    return sorted(out)\n\ndef counted(con):\n    n = {}\n    for k, in con.execute(\"SELECT k FROM t\"):\n        n[k] = n.get(k, 0) + 1\n    return n\n\ndef deduped(con):\n    return set(r[0] for r in con.execute(\"SELECT a FROM t\"))\n\ndef rebuilt(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM t\")}\n\ndef stored(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM u\")}\n\ndef reflects(con):\n    return rebuilt(con) - stored(con)\n\ndef pure_helper(xs):\n    d = {}\n    for a, b in xs:\n        d[a] = b\n    return sorted(d.items())\n"
+  }
+ },
+ {
+  "case": "249-identical-algebra-over-a-non-store-argument-is-not-reported",
+  "origin": {
+   "check": "identical algebra over a non-store argument is NOT reported",
+   "line": 2170,
+   "class": "sticky"
+  },
+  "operands": [
+   {
+    "fn": "_pycodemod_sql.py:relalg_sites",
+    "args": {
+     "path": "/var/tmp/tmp58uinlhl/relalg_case.py"
+    }
+   }
+  ],
+  "fixture": {
+   "/var/tmp/tmp58uinlhl/relalg_case.py": "\ndef withheld(con):\n    left = {}\n    for a, b in con.execute(\"SELECT a, b FROM t\"):\n        left[a] = b\n    out = []\n    for a, c in con.execute(\"SELECT a, c FROM u\"):\n        if c is None:\n            continue\n        out.append((left[a], c))\n    return sorted(out)\n\ndef counted(con):\n    n = {}\n    for k, in con.execute(\"SELECT k FROM t\"):\n        n[k] = n.get(k, 0) + 1\n    return n\n\ndef deduped(con):\n    return set(r[0] for r in con.execute(\"SELECT a FROM t\"))\n\ndef rebuilt(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM t\")}\n\ndef stored(con):\n    return {r[0] for r in con.execute(\"SELECT a FROM u\")}\n\ndef reflects(con):\n    return rebuilt(con) - stored(con)\n\ndef pure_helper(xs):\n    d = {}\n    for a, b in xs:\n        d[a] = b\n    return sorted(d.items())\n"
+  }
+ }
+]
