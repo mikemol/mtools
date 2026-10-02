@@ -422,3 +422,38 @@
   claim  = {Under any implementation but the origin, a do-not-port case is deselected and counted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_do_not_port_is_deselected_for_a_port},
 }
+
+@misc{pytestspec-plugin-failing-column-is-declared-not-read-from-the-text,
+  section = {plugin},
+  title  = {W374: a withheld case whose message says DENIED is unmeasured; the text decides nothing},
+  claim  = {W374: a withheld case whose message says DENIED is unmeasured; the text decides nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_a_failing_column_is_declared_not_read_from_the_text},
+}
+
+@misc{pytestspec-outcomes-declared-map-is-total-and-functional,
+  section = {plugin},
+  title  = {Every verdict x expect x disposition cell lands in exactly one known column},
+  claim  = {Every verdict x expect x disposition cell lands in exactly one known column.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_the_declared_map_is_total_and_functional},
+}
+
+@misc{pytestspec-outcomes-gap-is-reported,
+  section = {plugin},
+  title  = {Dropping a rule leaves cells in no column, and the check names them},
+  claim  = {Dropping a rule leaves cells in no column, and the check names them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_a_gap_is_reported},
+}
+
+@misc{pytestspec-outcomes-overlap-is-reported,
+  section = {plugin},
+  title  = {A rule duplicated under another column puts its cells in two, and the check names them},
+  claim  = {A rule duplicated under another column puts its cells in two, and the check names them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_an_overlap_is_reported},
+}
+
+@misc{pytestspec-outcomes-unknown-column-is-reported,
+  section = {plugin},
+  title  = {A rule naming a column the line does not print is refused},
+  claim  = {A rule naming a column the line does not print is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_an_unknown_column_is_reported},
+}

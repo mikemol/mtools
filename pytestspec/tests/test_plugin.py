@@ -226,6 +226,29 @@ def test_expected_withhold_maps_to_its_own_column(pytester: pytest.Pytester) -> 
     )
 
 
+_TEXT_SAYS_DENIED = """[
+  {"case": "withheld", "withheld": ["W: upstream DENIED access"]},
+  {"case": "unmet", "withheld": ["W: DENY MISMATCH in log"], "expect": {"withheld": ["X"]}}
+]"""
+
+
+def test_a_failing_column_is_declared_not_read_from_the_text(pytester: pytest.Pytester) -> None:
+    """W374: a withheld case whose message says DENIED is unmeasured; the text decides nothing."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_TEXT_SAYS_DENIED)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(failed=2)
+    result.stdout.fnmatch_lines(
+        [
+            (
+                "pytestspec: spec.rego impl=as-written admitted=0 denied=0 refused=0"
+                " withheld-expected=0 unmeasured=2*"
+            ),
+        ]
+    )
+
+
 def test_malformed_expect_is_a_collection_error(pytester: pytest.Pytester) -> None:
     """A bare `"expect": "denied"` ERRORS at collection rather than running admitted-only."""
     pytester.makeconftest(_STUB)

@@ -28,7 +28,7 @@ from typing import cast
 
 import pytest
 
-from mikemol.pytestspec import adapters, cache, opa
+from mikemol.pytestspec import adapters, cache, opa, outcomes
 from mikemol.pytestspec.spec import (
     DO_NOT_PORT,
     PORT_FIX,
@@ -36,7 +36,9 @@ from mikemol.pytestspec.spec import (
     Case,
     Disposition,
     Evaluator,
+    Expect,
     SpecDataError,
+    Verdict,
     disposition_of,
     expectation,
     judge,
@@ -195,23 +197,35 @@ class SpecItem(pytest.Item):
                 or `--skip-declared` skipped a declared unmeasured case.
 
         """
+        expect = expectation(self.name, self.case)
         if _skips(self.config, self.disposition):
+            self._record(None, expect)
             msg = "DECLARED-SKIPPED (not evaluated): --skip-declared"
             raise SpecFailedError(msg)
         try:
             verdict = self._evaluator()(self.path, self._filled())
         except (opa.OpaUnavailableError, SpecDataError) as exc:
+            self._record(None, expect)
             msg = f"UNMEASURED (not evaluated, not passed): {exc}"
             raise SpecFailedError(msg) from exc
-        expect = expectation(self.name, self.case)
+        self._record(verdict, expect)
         failure = judge(verdict, expect)
         if failure is not None:
             raise SpecFailedError(failure)
-        if expect is not None:
-            # ⚑ A PASS THAT RESTED ON AN EXPECTATION IS NOT AN ADMISSION, and which kind it
-            # was is recorded so the differential line can say so (W372, W381).
-            column = REFUSED if expect.deny else WITHHELD_EXPECTED
-            self.user_properties.append((OUTCOME, column))
+
+    def _record(self, verdict: Verdict | None, expect: Expect | None) -> None:
+        """Record the column the declared map (W374) sends this case to, pass or fail.
+
+        ⚑ THE COLUMN IS DECIDED HERE, FROM THE VERDICT ITSELF, never afterwards from the failure
+        text: a withheld message that happens to say DENIED is still a withhold. A pass that
+        rested on an expectation is not an admission (W372, W381); the map says which it was.
+        """
+        landed = outcomes.column(
+            outcomes.verdict_kind(verdict),
+            outcomes.expect_kind(verdict, expect),
+            outcomes.disposition_kind(self.disposition),
+        )
+        self.user_properties.append((OUTCOME, landed))
 
     def repr_failure(
         self,
@@ -356,18 +370,14 @@ DECLARED_SKIPPED = "declared-skipped"
 CACHED = "cached"
 # ⚑ `refused` (W372): a case whose `expect` named exactly the rules that denied it. It passed, but
 # it was not admitted, and folding it into `admitted` would hide the refusing half of the record.
-REFUSED = "refused"
+REFUSED = outcomes.REFUSED
 # ⚑ `withheld-expected` (W381): a case whose `expect` named exactly the rules that withheld it,
 # and no deny. A could-not-measure arm that held, so neither an admission nor a refusal.
-WITHHELD_EXPECTED = "withheld-expected"
-# The user_properties key under which a passing expectation records its column.
+WITHHELD_EXPECTED = outcomes.WITHHELD_EXPECTED
+# The user_properties key under which every evaluated call records its column (W374).
 OUTCOME = "pytestspec-outcome"
 COLUMNS = (
-    "admitted",
-    "denied",
-    REFUSED,
-    WITHHELD_EXPECTED,
-    "unmeasured",
+    *outcomes.OUTCOME_COLUMNS,
     DO_NOT_PORT,
     PORT_FIX,
     DECLARED_SKIPPED,
@@ -413,15 +423,11 @@ def _outcome(report: pytest.TestReport) -> str | None:
     """
     if report.when != "call" and report.passed:
         return None
-    if report.passed:
-        recorded = dict(report.user_properties)
-        column = recorded.get(OUTCOME)
-        return column if isinstance(column, str) else "admitted"
-    if report.skipped:
-        # A declared unmeasured case reports as xfail, which pytest files under skipped.
-        return "unmeasured"
-    text = report.longreprtext
-    return "denied" if "DENIED" in text or "DENY MISMATCH" in text else "unmeasured"
+    # ⚑ THE CALL RECORDED ITS COLUMN FROM THE DECLARED MAP (W374). A report with none never
+    # reached a verdict (a setup or teardown error), and measured nothing.
+    recorded: dict[str, object] = dict(report.user_properties) if report.when == "call" else {}
+    column = recorded.get(OUTCOME)
+    return column if isinstance(column, str) else outcomes.UNMEASURED_COLUMN
 
 
 class _Differential:
