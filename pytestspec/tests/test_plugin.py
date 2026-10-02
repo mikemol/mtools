@@ -398,6 +398,57 @@ def test_skip_declared_never_runs_the_adapter(pytester: pytest.Pytester) -> None
     assert not _marked(pytester, "--skip-declared")
 
 
+# Both an origin and a port, each leaving its own mark.
+_BOTH = """
+from pathlib import Path
+
+from mikemol.pytestspec.plugin import EVALUATOR
+from mikemol.pytestspec.spec import Verdict
+
+def _mark(name):
+    def run(fixture, operands):
+        Path(f"{name}-ran").touch()
+        return fixture
+    return run
+
+def pytest_configure(config):
+    config.stash[EVALUATOR] = lambda spec, case: Verdict()
+
+def pytest_spec_implementations():
+    return {"reference": _mark("reference"), "subject": _mark("subject")}
+"""
+
+_NOT_PORTED = '[{"case": "d", "fixture": "c", "disposition": "do-not-port", "reason": "r"}]'
+
+
+def _not_ported_under(pytester: pytest.Pytester, impl: str) -> tuple[bool, pytest.RunResult]:
+    """Run a do-not-port case under `--impl impl`.
+
+    Returns:
+        whether that implementation's adapter ran, and the run.
+
+    """
+    pytester.makeconftest(_BOTH)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_NOT_PORTED)
+    result = pytester.runpytest(*_LOAD, "--impl", impl)
+    return (pytester.path / f"{impl}-ran").exists(), result
+
+
+def test_do_not_port_still_measures_the_origin(pytester: pytest.Pytester) -> None:
+    """A do-not-port case is a decision about the PORT: the origin is still run (W459)."""
+    ran, result = _not_ported_under(pytester, "reference")
+    assert ran
+    result.assert_outcomes(passed=1)
+
+
+def test_do_not_port_is_deselected_for_a_port(pytester: pytest.Pytester) -> None:
+    """Under any implementation but the origin, a do-not-port case is deselected and counted."""
+    ran, result = _not_ported_under(pytester, "subject")
+    assert not ran
+    result.assert_outcomes(deselected=1)
+
+
 # The conftest vouches that a case's name is everything the adapter reads.
 _KEYED = (
     _MARKING

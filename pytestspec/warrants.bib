@@ -408,3 +408,17 @@
   claim  = {W381: an expected withhold passes and counts as withheld-expected, never as admitted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_expected_withhold_maps_to_its_own_column},
 }
+
+@misc{pytestspec-plugin-do-not-port-still-measures-the-origin,
+  section = {plugin},
+  title  = {A do-not-port case is a decision about the PORT: the origin is still run (W459)},
+  claim  = {A do-not-port case is a decision about the PORT: the origin is still run (W459).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_do_not_port_still_measures_the_origin},
+}
+
+@misc{pytestspec-plugin-do-not-port-is-deselected-for-a-port,
+  section = {plugin},
+  title  = {Under any implementation but the origin, a do-not-port case is deselected and counted},
+  claim  = {Under any implementation but the origin, a do-not-port case is deselected and counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_do_not_port_is_deselected_for_a_port},
+}

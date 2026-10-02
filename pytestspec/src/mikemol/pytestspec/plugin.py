@@ -8,7 +8,8 @@ the wrong version, or an eval error — FAILS as UNMEASURED: it measured nothing
 not read as a pass or a skip.
 
 ⚑ A case's declared disposition (W201, see `spec.DISPOSITIONS`) changes its outcome: a
-do-not-port case is DESELECTED, and pytest counts it in the run's summary line; a declared
+do-not-port case is DESELECTED under every implementation but the origin (`adapters.ORIGIN`,
+W459), and pytest counts it in the run's summary line; a declared
 unmeasured case is xfail(strict), so it can never read as a pass.
 
 ⚑ A DECLARED UNMEASURED CASE IS STILL EVALUATED BY DEFAULT (W227, operator ruling (a)): strict
@@ -286,27 +287,29 @@ def pytest_collect_file(file_path: Path, parent: pytest.Collector) -> SpecFile |
     return None
 
 
-def _not_ported(item: pytest.Item) -> bool:
-    """Decide whether an item is a declared do-not-port case.
+def _not_ported(item: pytest.Item, impl: object) -> bool:
+    """Decide whether an item is a declared do-not-port case to deselect under `impl`.
 
     Returns:
-        True for a SpecItem whose disposition is do-not-port.
+        True for a SpecItem whose disposition is do-not-port, unless `impl` is the origin.
 
     """
     return (
-        isinstance(item, SpecItem)
+        impl != adapters.ORIGIN
+        and isinstance(item, SpecItem)
         and item.disposition is not None
         and item.disposition.kind == DO_NOT_PORT
     )
 
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
-    """Deselect every do-not-port case; pytest's `deselected` count reports them."""
+    """Deselect every do-not-port case but under the origin; `deselected` counts them."""
     _count_declarations(config, items)
-    dropped = [item for item in items if _not_ported(item)]
+    impl = cast("object", config.getoption("impl"))
+    dropped = [item for item in items if _not_ported(item, impl)]
     if dropped:
         config.hook.pytest_deselected(items=dropped)
-        items[:] = [item for item in items if not _not_ported(item)]
+        items[:] = [item for item in items if not _not_ported(item, impl)]
 
 
 def pytest_addhooks(pluginmanager: pytest.PytestPluginManager) -> None:
