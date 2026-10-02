@@ -152,6 +152,11 @@ def get_bearer(url: str, access: str) -> tuple[int, bytes]:
 def age_encrypt(recipient: str, out: Path, binary: str = "age") -> Encrypt:
     """Make the `encrypt` effect: the token goes to age on stdin, and out as ciphertext.
 
+    ⚑ AGE WRITES TO STDOUT, AND THIS WRITES THE FILE OWNER-ONLY (W383). With `--output`, age
+    created the file under the umask: measured 644 on the first live consent (2026-10-02).
+    The ciphertext now goes through `_write_new`, so the file is created 0600 in one O_EXCL step,
+    and a failed age writes no file at all.
+
     Returns:
         a function taking the token.
 
@@ -159,7 +164,7 @@ def age_encrypt(recipient: str, out: Path, binary: str = "age") -> Encrypt:
 
     def encrypt(token: str) -> None:
         proc = subprocess.run(
-            [binary, "--encrypt", "--recipient", recipient, "--output", str(out)],
+            [binary, "--encrypt", "--recipient", recipient],
             input=token.encode(),
             capture_output=True,
             check=False,
@@ -168,6 +173,7 @@ def age_encrypt(recipient: str, out: Path, binary: str = "age") -> Encrypt:
         if proc.returncode != 0:
             msg = f"age could not encrypt to {out} (exit {proc.returncode})"
             raise ConsentError(msg)
+        _write_new(out, proc.stdout)
 
     return encrypt
 

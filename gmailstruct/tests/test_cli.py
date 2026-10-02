@@ -44,16 +44,35 @@ def _spawn(target: Callable[[], object]) -> threading.Thread:
 
 
 def _fake_age(tmp_path: Path, status: int = 0) -> str:
-    """Write an `age` stand-in that copies stdin to its --output argument and exits `status`.
+    """Write an `age` stand-in that copies stdin to stdout and exits `status`.
 
     Returns:
-        the stand-in's path. Its argv is `--encrypt --recipient R --output OUT`, so OUT is $5.
+        the stand-in's path. Its argv is `--encrypt --recipient R`; the caller writes the file.
 
     """
     script = tmp_path / "age"
-    script.write_text(f'#!/bin/sh\ncat > "$5"\nexit {status}\n', encoding="utf-8")
+    script.write_text(f"#!/bin/sh\ncat\nexit {status}\n", encoding="utf-8")
     script.chmod(0o755)
     return str(script)
+
+
+def test_encrypted_token_is_owner_only(tmp_path: Path) -> None:
+    """W383: the .age file is created 0600; age's own --output made it 644 under the umask.
+
+    The file is created with mode 0o600, which a umask can only narrow, never widen, so this holds
+    under any umask; the old path produced 666 less the umask, 644 on the operator's host.
+    """
+    out = tmp_path / "token.age"
+    cli.age_encrypt("age1recipient", out, _fake_age(tmp_path))(_REFRESH)
+    assert out.stat().st_mode & 0o777 == _OWNER_ONLY
+
+
+def test_failed_age_writes_no_file(tmp_path: Path) -> None:
+    """A failing age leaves no .age behind, so a retry is not refused by a half-written file."""
+    out = tmp_path / "token.age"
+    with pytest.raises(ConsentError):
+        cli.age_encrypt("age1recipient", out, _fake_age(tmp_path, 3))(_REFRESH)
+    assert not out.exists()
 
 
 def _get(url: str) -> bytes:
@@ -67,7 +86,7 @@ def _get(url: str) -> bytes:
 
 
 def test_age_encrypt_pipes_the_token_to_age(tmp_path: Path) -> None:
-    """The token reaches age on stdin with the recipient and output it was given."""
+    """The token reaches age on stdin, and its stdout lands at the output it was given."""
     out = tmp_path / "token.age"
     cli.age_encrypt("age1recipient", out, _fake_age(tmp_path))(_REFRESH)
     assert out.read_text(encoding="utf-8") == _REFRESH

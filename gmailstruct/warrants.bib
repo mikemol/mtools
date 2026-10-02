@@ -273,8 +273,8 @@
 
 @misc{gmailstruct-cli-age-encrypt-pipes-the-token-to-age,
   section = {cli},
-  title  = {The token reaches age on stdin with the recipient and output it was given},
-  claim  = {The token reaches age on stdin with the recipient and output it was given.},
+  title  = {The token reaches age on stdin, and its stdout lands at the output it was given},
+  claim  = {The token reaches age on stdin, and its stdout lands at the output it was given.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_age_encrypt_pipes_the_token_to_age},
 }
 
@@ -478,4 +478,21 @@
             prompt and the run failed naming no cause. stdout, which carries the token,
             is still captured.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_age_runner_lets_ages_prompts_reach_the_terminal},
+}
+
+@misc{gmailstruct-cli-encrypted-token-is-owner-only,
+  section = {cli},
+  title  = {W383: the .age file is created 0600; age's own --output made it 644 under the umask},
+  claim  = {W383: the .age file is created 0600; age's own --output made it 644 under the umask. The
+            file is created with mode 0o600, which a umask can only narrow, never widen,
+            so this holds under any umask; the old path produced 666 less the umask, 644
+            on the operator's host.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_encrypted_token_is_owner_only},
+}
+
+@misc{gmailstruct-cli-failed-age-writes-no-file,
+  section = {cli},
+  title  = {A failing age leaves no .age behind, so a retry is not refused by a half-written file},
+  claim  = {A failing age leaves no .age behind, so a retry is not refused by a half-written file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_failed_age_writes_no_file},
 }
