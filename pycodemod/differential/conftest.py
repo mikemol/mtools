@@ -380,6 +380,12 @@ SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
         _same,
     ),
     "_pycodemod_query.py:source_of": ("mikemol.pycodemod.definitions", "source_of", _source),
+    "_pycodemod_census.py:module_size": ("conftest", "port_module_size", _same),
+    "_pycodemod_census.py:module_size_all": ("conftest", "port_module_size_all", _same),
+    "_pycodemod_census.py:module_state": ("conftest", "port_module_state", _same),
+    "_pycodemod_census.py:crossings": ("conftest", "port_crossings", _same),
+    "_pycodemod_census.py:importers": ("mikemol.pycodemod.imports", "importers", _rows),
+    "_pycodemod_census.py:aliases": ("mikemol.pycodemod.aliases", "aliases", _rows),
 }
 
 
@@ -629,6 +635,96 @@ def port_bindings(name: str, path: str) -> JSON:
             dataclasses.astuple(cast("DataclassInstance", row)),
         )
         out.append([kind, qualname, line, live[0], live[1]])
+    return out
+
+
+def _fields(row: object) -> tuple[object, ...]:
+    return cast("tuple[object, ...]", dataclasses.astuple(cast("DataclassInstance", row)))
+
+
+def port_module_size_all(paths: list[str], threshold: int) -> JSON:
+    """Compose the port's `module_sizes(paths, threshold)` into the origin's (rows, n).
+
+    The port's `Size` is (path, code, physical, defs, entrypoints, cap, incidents, why); the
+    origin's row is (path, code, defs, len(entrypoints), "; ".join(why), cap, incidents,
+    physical). The incident map is the caller's in the port; the origin's own map names only
+    substrate files, which no fixture path matches, so none is passed. n is every path given,
+    the origin's len(files) (an unread file is counted there, and a `skipped` row here).
+
+    Returns:
+        [[row, ...], n].
+
+    """
+    got = cast("HasRows", _port("mikemol.pycodemod.size", "module_sizes")(paths, threshold))
+    rows: list[JSON] = []
+    for row in got.rows:
+        path, code, physical, defs, entry, cap, hits, why = _fields(row)
+        reason = "; ".join(cast("tuple[str, ...]", why))
+        size = len(cast("tuple[int, ...]", entry))
+        rows.append([normal(v, "") for v in (path, code, defs, size, reason, cap, hits, physical)])
+    return [rows, len(paths)]
+
+
+def port_module_size(paths: list[str], threshold: int) -> JSON:
+    """Filter `port_module_size_all` as the origin's `module_size` does: rows with a why, r[:5].
+
+    Returns:
+        [[row[:5], ...], n].
+
+    """
+    every = cast("list[list[JSON]]", port_module_size_all(paths, threshold))
+    rows = cast("list[list[JSON]]", every[0])
+    return [[row[:5] for row in rows if row[4]], every[1]]
+
+
+def port_module_state(paths: list[str]) -> JSON:
+    """Reorder the port's `ModuleState` rows to the origin's (path, name, line, ...) order.
+
+    The origin sorted its tuples, so by (path, name); n is every path given (origin len(files)).
+    Rows are sorted on (path, name, port position): the position is unique, so the comparison
+    never reaches the row itself, and ties keep the port's line order.
+
+    Returns:
+        [[[path, name, line, class, mutators, kind], ...], n].
+
+    """
+    got = cast("HasRows", _port("mikemol.pycodemod.modstate", "module_state")(paths))
+    keyed: list[tuple[str, str, int, JSON]] = []
+    for i, row in enumerate(got.rows):
+        path, line, name, klass, muts, kind = _fields(row)
+        keyed.append(
+            (
+                str(path),
+                str(name),
+                i,
+                [normal(v, "") for v in (path, name, line, klass, muts, kind)],
+            )
+        )
+    return [[r for _p, _n, _i, r in sorted(keyed)], len(paths)]
+
+
+# the origin's own corpus authorities beyond the port's generic CORPUS_AUTHORITIES
+# (an operand in the port)
+ORIGIN_AUTHORITIES = ("agda_files", "py_files")
+
+
+def port_crossings(paths: list[str]) -> JSON:
+    """Reorder the port's `Crossing` (path, line, function, klass, what) to the origin's row.
+
+    The origin yielded (path, def, line, klass, ", ".join(what)).
+
+    Returns:
+        one [path, def, line, klass, what] per crossing.
+
+    """
+    got = cast(
+        "HasRows", _port("mikemol.pycodemod.crossings", "crossings")(paths, ORIGIN_AUTHORITIES)
+    )
+    out: list[JSON] = []
+    for row in got.rows:
+        path, line, function, klass, what = _fields(row)
+        joined = ", ".join(cast("tuple[str, ...]", what))
+        out.append([normal(v, "") for v in (path, function, line, klass, joined)])
     return out
 
 
