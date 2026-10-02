@@ -2477,3 +2477,10 @@
   claim  = {Life's model (W310): December done, November missed, so ONE override, keyed by its RID.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_a_completed_occurrence_is_an_override_and_a_missed_one_is_absent},
 }
+
+@misc{pathsforward-payload-long-done-list-drops-its-symbols-and-keeps-its-count,
+  section = {payload},
+  title  = {A done list that alone overruns the budget is cut to its count, never refused (W377)},
+  claim  = {A done list that alone overruns the budget is cut to its count, never refused (W377).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_long_done_list_drops_its_symbols_and_keeps_its_count},
+}

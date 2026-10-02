@@ -36,6 +36,8 @@ _MODULE = "-m mikemol.pathsforward"
 _SENTINEL = "never point GIT_* at the real repo"
 _STANDING_LINES = 25
 _HOST_OS = "host-os-sentinel"
+_MANY_DONE = 1500
+_NO_BUDGET = 10**6
 _LAST_RUNG_TAIL = (
     "dropped=residue,evidence,host,steps-below-1,collapsed - read state_path for the rest."
 )
@@ -261,15 +263,34 @@ def test_a_short_line_is_kept() -> None:
 
 
 def test_the_ladder_adds_the_host_rung_only_with_a_host() -> None:
-    """The host rung exists only with a host block; every ladder ends by dropping collapsed."""
+    """The host rung exists only with a host block; every ladder ends collapsed, then done-list."""
     with_host = pl.ladder(1, has_host=True)
     without = pl.ladder(1, has_host=False)
     assert (
         len(with_host) - len(without),
         "host" in with_host[-1].dropped,
         "host" in without[-1].dropped,
+        without[-2].dropped[-1],
         without[-1].dropped[-1],
-    ) == (1, True, False, "collapsed")
+        without[-1].done_list,
+    ) == (1, True, False, "collapsed", "done-list", False)
+
+
+def test_a_long_done_list_drops_its_symbols_and_keeps_its_count() -> None:
+    """A done list that alone overruns the budget is cut to its count, never refused (W377)."""
+    done = [_wp(f"W{i}", "done") for i in range(2, _MANY_DONE + 2)]
+    state = _state([_wp("W1"), *done])
+    whole = _build(state, _NO_BUDGET)
+    text = _build(state)
+    last = f"W{_MANY_DONE + 1}"
+    # the positive control: the whole list carries the symbols and does not fit the budget.
+    assert (
+        last in whole,
+        len(whole) > pl.PAYLOAD_BUDGET,
+        last in text,
+        f"  done ({_MANY_DONE}): symbols in state_path" in text,
+        text.endswith("collapsed,done-list - read state_path for the rest."),
+    ) == (True, True, False, True, True)
 
 
 def test_a_ready_waypoint_is_listed_above_a_blocked_one() -> None:

@@ -107,6 +107,9 @@ class _Rung:
     host: bool
     collapsed: bool
     dropped: tuple[str, ...]
+    # the done list grows by one symbol per finished waypoint and is never acted on; a rung
+    # that kept it forever would put every ladder over budget eventually (W377, 6043/6000)
+    done_list: bool = True
 
 
 def _binding(state: State, capability: str) -> str:
@@ -321,6 +324,17 @@ def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
             dropped=(*trimmed, f"steps-below-{last}", "collapsed"),
         )
     )
+    rungs.append(
+        _Rung(
+            last,
+            evidence=False,
+            residue=False,
+            host=False,
+            collapsed=False,
+            dropped=(*trimmed, f"steps-below-{last}", "collapsed", "done-list"),
+            done_list=False,
+        )
+    )
     return rungs
 
 
@@ -356,7 +370,8 @@ def _compose(req: Request, rung: _Rung) -> str:
     lines.append("waypoints:")
     lines += _waypoint_lines(_shown(state), rung)
     if done:
-        lines.append(f"  done ({len(done)}): {', '.join(done)}")
+        listed = ", ".join(done) if rung.done_list else "symbols in state_path"
+        lines.append(f"  done ({len(done)}): {listed}")
     if rung.residue and state.residue:
         lines += [
             "residue:",
