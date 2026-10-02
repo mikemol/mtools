@@ -23,7 +23,14 @@ deny contains "145: two __main__ guards are not exactly one row" if {
 
 deny contains "146: the reason does not name the two guards" if {
 	input.case == "146-and-the-reason-names-them"
-	not contains(rows[0][4], "2 __main__ guards")
+	not names_two_guards
+}
+
+# W481: quantified over rows, so an EMPTY result is undefined here and the deny above fires;
+# reading rows[0][4] directly was undefined on [] and the negation never fired
+names_two_guards if {
+	some row in rows
+	contains(row[4], "2 __main__ guards")
 }
 
 empty := {

@@ -29,6 +29,12 @@ test_guard_defects_denied if {
 	count(sz.deny) == 1 with input as {"case": "146-and-the-reason-names-them", "result": [[[["<root>/two_entries.py", 7, 1, 2, "too large"]], 1]]}
 }
 
+# W481: a port that reports NO row has not named the guards; an undefined rows[0] must not admit
+test_no_row_does_not_name_the_guards if {
+	count(sz.deny) == 1 with input as {"case": "146-and-the-reason-names-them", "result": [[[], 1]]}
+	not sz.admitted with input as {"case": "146-and-the-reason-names-them", "result": [[[], 1]]}
+}
+
 test_flooded_census_denied if {
 	every c in sz.empty {
 		count(sz.deny) == 1 with input as {"case": c, "result": [[[["<root>/x.py", 501, 0, 0, "501 > 100"]], 1]]}
