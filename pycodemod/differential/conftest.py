@@ -348,6 +348,10 @@ SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
     "_pycodemod_core.py:flagged_argv": ("mikemol.pycodemod.core", "flagged_argv", _same),
     "_pycodemod_core.py:operand_tail": ("mikemol.pycodemod.core", "operand_tail", _same),
     "_pycodemod_query.py:values": ("conftest", "port_values", _same),
+    "_pycodemod_query.py:callgraph": ("conftest", "port_callgraph", _same),
+    "_pycodemod_query.py:reaches": ("conftest", "port_reaches", _same),
+    "_pycodemod_query.py:forwards": ("conftest", "port_forwards", _same),
+    "_pycodemod_query.py:asserted": ("conftest", "port_asserted", _same),
 }
 
 
@@ -409,6 +413,139 @@ def port_dead(paths: list[str]) -> JSON:
         fields = cast("tuple[object, ...]", dataclasses.astuple(cast("DataclassInstance", row)))
         out.append([normal(f, "") for f in fields])
     return out
+
+
+class CallgraphCollisionError(ValueError):
+    """Two port callers fold onto one origin `stem.scope` key; merging them would hide the split."""
+
+
+def port_callgraph(paths: list[str]) -> JSON:
+    """Compose the port's `callgraph(scan(paths))` into the origin's {"stem.scope": [callees]}.
+
+    The port keys a caller by (file, qualified scope); the origin by basename stem and innermost
+    def. The scope is kept as the port spells it (a method reads `K.m`, not `m`), and two files
+    sharing a stem REFUSE rather than merge, so the port's finer split is never folded away.
+
+    Returns:
+        caller key to sorted callee names.
+
+    Raises:
+        CallgraphCollisionError: two port callers map to one origin key.
+
+    """
+    graph = cast(
+        "dict[tuple[str, str], set[str]]",
+        _port("mikemol.pycodemod.graph", "callgraph")(
+            _port("mikemol.pycodemod.sites", "scan")(paths)
+        ),
+    )
+    out: dict[str, JSON] = {}
+    for (path, scope), callees in sorted(graph.items()):
+        key = f"{Path(path).stem}.{scope}"
+        if key in out:
+            raise CallgraphCollisionError(key)
+        out[key] = [normal(c, "") for c in sorted(callees)]
+    return out
+
+
+class HasReach(Protocol):
+    """The port's `Reach`: paths found, plus whether the bound cut the walk and the start exists."""
+
+    found: dict[str, list[str]]
+    exhausted: bool
+    known_start: bool
+
+
+def port_reaches(
+    callgraph_: dict[str, set[str]], start: str, targets: set[str], depth: int = 6
+) -> JSON:
+    """Run the port's `reaches` over the origin's {"mod.fn": callees} graph, as the origin's paths.
+
+    The origin splits a caller key at its LAST dot into (module, def); the port's caller is
+    (file, scope) and same-file is the hop test, so the module stands in for the file. The port's
+    trail spells each hop bare (all hops are same-file); the origin module-qualifies every hop but
+    the final target, so the module is put back on those. `exhausted` and `known_start` are
+    port-only columns the origin never returned, dropped as `_sites` drops `column`.
+
+    Returns:
+        {target: [qualified hops..., target]}.
+
+    """
+    graph = {tuple(key.rsplit(".", 1)): callees for key, callees in callgraph_.items()}
+    mod, fn = start.rsplit(".", 1)
+    got = cast(
+        "HasReach", _port("mikemol.pycodemod.graph", "reaches")(graph, (mod, fn), targets, depth)
+    )
+    out: dict[str, JSON] = {}
+    for target, trail in got.found.items():
+        hops: list[JSON] = [f"{mod}.{hop}" for hop in trail[:-1]]
+        hops.append(trail[-1])
+        out[target] = hops
+    return out
+
+
+class HasWhere(Protocol):
+    """A port `Where`: a call site's path, line and column."""
+
+    path: str
+    line: int
+    column: int
+
+
+def _wheres(rows: list[HasWhere]) -> JSON:
+    """Drop the port-only column from each site, leaving the origin's [path, line].
+
+    Returns:
+        one [path, line] per site, in the port's (sorted) order.
+
+    """
+    out: list[JSON] = []
+    for w in rows:
+        site: list[JSON] = [w.path, w.line]
+        out.append(site)
+    return out
+
+
+class HasForwards(Protocol):
+    """The port's `Forwards`: passers, lackers, and the `**` calls that cannot tell."""
+
+    passes: list[HasWhere]
+    lacks: list[HasWhere]
+    cannot_tell: list[HasWhere]
+
+
+def port_forwards(name: str, kw: str, paths: list[str]) -> JSON:
+    """Compose the port's `forwards(scan(paths, name), kw)` into the origin's (has, lacks).
+
+    ⚑ The port's third side, `cannot_tell` (a `**` splat), is the origin's `lacks` misfiled; it
+    is APPENDED as a third element, never folded back into `lacks`, so a splat case diverges.
+
+    Returns:
+        [has, lacks, cannot_tell], each a list of [path, line].
+
+    """
+    sites = _port("mikemol.pycodemod.sites", "scan")(paths, name)
+    got = cast("HasForwards", _port("mikemol.pycodemod.arguments", "forwards")(sites, kw))
+    return [_wheres(got.passes), _wheres(got.lacks), _wheres(got.cannot_tell)]
+
+
+class HasAsserted(Protocol):
+    """The port's `Asserted`: calls passing the keyword as a literal or a computed value."""
+
+    literal: list[HasWhere]
+    computed: list[HasWhere]
+
+
+def port_asserted(name: str, kw: str, paths: list[str]) -> JSON:
+    """Compose the port's `asserted(scan(paths, name), kw)` into the origin's (literal, computed).
+
+    Returns:
+        [literal, computed], each a list of [path, line].
+
+    """
+    sites = _port("mikemol.pycodemod.sites", "scan")(paths, name)
+    got = cast("HasAsserted", _port("mikemol.pycodemod.arguments", "asserted")(sites, kw))
+    return [_wheres(got.literal), _wheres(got.computed)]
 
 
 # W435: origin callees the port deliberately does not carry, with the reason. A capture can hold
