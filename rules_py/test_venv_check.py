@@ -100,6 +100,25 @@ def test_shell_run_entry_is_named(venv: Path) -> None:
     assert "mikemol-fake" in finding
 
 
+def test_collection_failure_names_its_cause(
+    venv: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A suite that fails to collect is named with pytest's own words, not only its exit code."""
+    # The fake venv's interpreter is the base one; it reaches pytest through THIS interpreter's
+    # whole path. Not pytest's directory alone: under bazel each package is its own runfiles
+    # root, so pytest's parent lacks pluggy and the suite died on that, never reaching the
+    # import this test plants.
+    reach = [str(tmp_path / "site"), *(p for p in sys.path if p)]
+    monkeypatch.setenv("PYTHONPATH", ":".join(reach))
+    suite = tmp_path / "suite"
+    (suite / "tests").mkdir(parents=True)
+    (suite / "tests" / "test_broken.py").write_text(
+        "import no_such_module_w350\n", encoding="utf-8"
+    )
+    [finding] = venv_check.check_suite(venv, suite)
+    assert "no_such_module_w350" in finding
+
+
 def test_usage_error_is_exit_2(capsys: pytest.CaptureFixture[str]) -> None:
     """Too few arguments is a usage error, never a pass."""
     assert venv_check.main([]) == 2

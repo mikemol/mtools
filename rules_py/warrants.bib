@@ -108,3 +108,9 @@
   claim   = {A declared verdict call and a literal collection are not population-shaped negatives.},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_verdict_calls_and_literals_are_not_populations}
 }
+
+@misc{rules-py-venv-check-collection-failure-names-its-cause,
+  section = {venv_check},
+  claim   = {A suite that fails to collect is named with pytest's own words, not only its exit code.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_collection_failure_names_its_cause}
+}

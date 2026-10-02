@@ -24,6 +24,9 @@ _TIMEOUT_S = 60
 _USAGE = "usage: venv_check.py VENV DIST [SUITE_DIR]"
 _MIN_ARGS = 2
 _MAX_ARGS = 3
+# W350: a collection failure carries this many lines of pytest's own output, so the finding names
+# its cause (an ImportError, a syntax error) instead of only `rc=2`.
+_TAIL_LINES = 8
 
 
 def _run(
@@ -140,7 +143,11 @@ def check_suite(venv: Path, suite: Path) -> list[str]:
         cwd=suite,
     )
     if proc.returncode != 0 or "tests collected" not in proc.stdout:
-        return [f"{py}: could not collect {suite}/tests (rc={proc.returncode})"]
+        tail = (proc.stdout + proc.stderr).strip().splitlines()[-_TAIL_LINES:]
+        return [
+            f"{py}: could not collect {suite}/tests (rc={proc.returncode}):\n  "
+            + "\n  ".join(tail)
+        ]
     return []
 
 
