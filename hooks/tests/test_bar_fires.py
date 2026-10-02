@@ -461,26 +461,33 @@ def test_the_mypy_path_pair_is_present_and_both_halves_are_set() -> None:
     assert "explicit_package_bases = true" in text
 
 
-def test_the_bazel_test_rule_runs_pytest_rather_than_the_module() -> None:
-    """Every py_test names the pytest entry point as `main`, not the test module.
+def test_every_distribution_calls_dist_checks() -> None:
+    """Every distribution's BUILD calls `dist_checks()`, so each runs its own :venv and :suite.
 
-    ⚑⚑⚑ `main = <the test module>` RUNS THAT MODULE AS A SCRIPT. Import-time code executes,
-    pytest never collects, and the process exits 0 — so every target reported GREEN OVER ZERO
-    ASSERTIONS. Measured: a module whose only statement was `raise AssertionError` PASSED
-    under bazel, across all 23 targets, for the life of the rule.
+    ⚑⚑ THIS REPLACES TWO SWEEPS THAT EACH WALKED EVERY DISTRIBUTION (W371). One read each BUILD for
+    `main = <the test module>`, which runs the module as a script and passes over zero assertions;
+    the other AST-walked every test for `Path(__file__).resolve()`, which escapes the sandbox into
+    the live tree. Both now live in `@mikemol_rules_py//:suite_check.py`, run by each
+    distribution's own `:suite` (W362), which `dist_checks()` declares beside `:venv` (W375).
 
-    ⚑⚑ IT IS ASSERTED HERE RATHER THAN LEFT TO THE SUITE BECAUSE THE SUITE CANNOT SEE IT. A
-    broken runner reports success, so no witness inside it can fail — the defect is invisible
-    from exactly the place one would look for it, and only a probe designed to fail could
-    reveal it. This reads the BUILD files instead.
+    ⚑ WHAT IS LEFT HERE IS THE BOUNDARY, NOT THE PROPERTY. The model is `_distributions()`: a
+    directory carrying a pyproject.toml. A per-distribution check cannot see a distribution that
+    never calls it, so this asserts the two sets meet: every distribution calls the macro. W370
+    measured why it is needed: a hand-picked list counted six distributions where there were 14.
     """
     root = _DIST.parent
-    # ⚑ DERIVED: `fence` landed and this arm never checked its BUILD file. It passes today, which
-    # is the point — an omission that happens to be harmless is still an omission.
-    for name in _distributions():
-        build = (root / name / "BUILD.bazel").read_text(encoding="utf-8")
-        assert 'main = "@mikemol_rules_py//:pytest_main.py"' in build, name
-        assert "main = src," not in build, name
+    names = _distributions()
+    assert len(names) >= _MIN_DISTRIBUTIONS, names
+    # ⚑ A CALL AT THE START OF A LINE, so a commented-out `# dist_checks()` is not a call.
+    missing = [
+        name
+        for name in names
+        if not any(
+            line.startswith("dist_checks(")
+            for line in (root / name / "BUILD.bazel").read_text(encoding="utf-8").splitlines()
+        )
+    ]
+    assert missing == [], f"distributions with no dist_checks() call: {missing}"
 
 
 def test_the_gates_own_shell_is_checked() -> None:
@@ -523,42 +530,6 @@ def test_the_gates_own_shell_is_checked() -> None:
         "the shellcheck target must glob its population, not enumerate it"
     )
     assert '"@shellcheck//:bin"' in build, "the checker binary must be staged"
-
-
-def test_no_witness_reads_a_developer_venv() -> None:
-    """No test resolves a path into `.venv`, which is not part of the repository.
-
-    ⚑⚑⚑ THIS FILE DID EXACTLY THAT, AND IT PASSED. It read `.venv/bin/ruff` and used
-    `Path(__file__).resolve()`, which follows bazel's runfiles symlinks OUT of the sandbox and
-    back into the live working tree — so a hermetic action was reading a developer venv that no
-    clone contains. Measured two ways: a probe inside the sandbox reported
-    `venv.is_file() == True` resolving to `/home/mikemol/github/mtools/hooks/.venv/bin/ruff`,
-    and a fresh `git clone` with no venvs failed this one target out of 25.
-
-    ⚑⚑ THAT IS THE EDITABLE-INSTALL ESCAPE MODULE.bazel REFUSES, REPRODUCED IN A TEST. A
-    sandbox that can reach the source tree is not a sandbox, and a suite that passes only where
-    its author's machine is set up a particular way says nothing about the repository.
-    """
-    # ⚑⚑ THE CHECK PARSES THE MODULE RATHER THAN GREPPING IT, and both weaker cuts are why. A
-    # `.venv` under `tmp_path` is a FIXTURE building a fake tree — legitimate, and a substring
-    # search flagged three of them. Stripping `#` comments then flagged this very docstring,
-    # which DESCRIBES the defect. Only an AST walk distinguishes an expression from prose about
-    # an expression, and a witness that cannot make that distinction cannot live in a file that
-    # documents what it forbids.
-    for dist in _distributions():
-        for module in sorted((_DIST.parent / dist).glob("tests/test_*.py")):
-            tree = pyast.parse(module.read_text(encoding="utf-8"))
-            for node in pyast.walk(tree):
-                if not isinstance(node, pyast.Call):
-                    continue
-                func = node.func
-                if not isinstance(func, pyast.Attribute) or func.attr != "resolve":
-                    continue
-                inner = func.value
-                names = {n.id for n in pyast.walk(inner) if isinstance(n, pyast.Name)}
-                assert "__file__" not in names, (
-                    f"{dist}/{module.name}:{node.lineno} resolves out of the runfiles tree"
-                )
 
 
 def test_the_hermetic_sandbox_is_a_default_not_a_config() -> None:

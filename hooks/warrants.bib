@@ -528,22 +528,16 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_mypy_path_pair_is_present_and_both_halves_are_set}
 }
 
-@misc{hooks-bar-bazel-runs-pytest-not-the-module,
+@misc{hooks-bar-every-distribution-calls-dist-checks,
   section = {bar-fires},
-  claim   = {Every py_test names the pytest entry point as `main`, not the test module. `main = <the test module>` RUNS THAT MODULE AS A SCRIPT --- import-time code executes, pytest never collects, and the process exits 0, so every target reported GREEN OVER ZERO ASSERTIONS. Measured: a module whose only statement was `raise AssertionError` PASSED under bazel, across all 23 targets, for the life of the rule. It is asserted by READING THE BUILD FILES rather than from inside the suite, because the suite cannot see it: a broken runner reports success, so no witness inside it can fail --- the defect is invisible from exactly the place one would look for it, and only a probe designed to fail could reveal it},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_bazel_test_rule_runs_pytest_rather_than_the_module}
+  claim   = {Every distribution's BUILD calls `dist_checks()`, so each runs its own :venv and :suite. THIS REPLACES TWO SWEEPS that each walked every distribution: the pytest-main check (a module run as `main` passes over zero assertions) and the `Path(__file__).resolve()` AST walk (a test escaping the sandbox into the live tree). Both now run per distribution in `suite_check.py`, declared by `dist_checks()` beside `:venv`. What is left here is the BOUNDARY: a per-distribution check cannot see a distribution that never calls it, so this asserts that every directory carrying a pyproject.toml calls the macro. A hand-picked list once counted six distributions where there were 14},
+  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_distribution_calls_dist_checks}
 }
 
 @misc{hooks-bar-gates-own-shell-is-checked,
   section = {bar-fires},
   claim   = {`.githooks/pre-commit` and the checker script are BOTH in a shellcheck target. THE SHELL THAT RUNS EVERY OTHER CHECK WAS ITSELF CHECKED BY NOTHING --- it was clean only because its author ran shellcheck by hand after each edit, a convention held in one person's memory, guarding the file that guards everything else. AND THE CHECKER'S OWN SCRIPT IS IN THE SAME LIST, because a gate that checks every shell file except itself leaves exactly the one nobody would think to look at, for the same reason nobody checked the hook. Both are asserted rather than assumed from the BUILD file being present, because a `data` entry that is not also an `args` entry stages a file the checker never opens. The binary is a hash-pinned http_archive at the host's own version, and the script REFUSES when either the binary or a target is unstaged rather than skipping --- a skip there would report green over a check that never ran},
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_gates_own_shell_is_checked}
-}
-
-@misc{hooks-bar-no-witness-reads-a-developer-venv,
-  section = {bar-fires},
-  claim   = {No test resolves a path out of the runfiles tree. THIS FILE DID EXACTLY THAT AND PASSED: it read `.venv/bin/ruff` and used `Path(__file__).resolve()`, which follows bazel's runfiles SYMLINKS out of the sandbox and back into the live working tree --- so a hermetic action was reading a developer venv that no clone contains. Measured two ways: a probe inside the sandbox reported the venv present and resolving to the author's own checkout, and a fresh `git clone` with no venvs failed this one target out of 25. That is the editable-install escape MODULE.bazel refuses, reproduced in a test --- a sandbox that can reach the source tree is not a sandbox, and a suite that passes only where its author's machine is set up a particular way says nothing about the repository. THE CHECK PARSES THE MODULE RATHER THAN GREPPING IT, because both weaker cuts failed: a substring search flagged three legitimate fixtures building fake venvs under tmp_path, and stripping comments then flagged the docstring that DESCRIBES the defect. Only an AST walk distinguishes an expression from prose about an expression},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_no_witness_reads_a_developer_venv}
 }
 
 @misc{hooks-bar-hermetic-sandbox-is-a-default,
