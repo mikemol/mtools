@@ -2401,3 +2401,21 @@
   claim  = {Without --write nothing is written, and a missing header is a finding (exit 1).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_header.py -k test_check_reports_a_missing_header_and_exits_one},
 }
+
+@misc{pycodemod-capture-symlink-in-a-snapshotted-tree-is-refused-not-followed,
+  section = {capture},
+  title  = {A link to a file or to a directory under a walked tree is recorded as REFUSED, unread},
+  claim  = {A link to a file or to a directory under a walked tree is recorded as REFUSED, unread.
+            Before W193 a file link was read through (its target's text recorded as its
+            own) and a directory link was dropped silently, so case 110's link vanished
+            and the case passed vacuously.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_capture.py -k test_a_symlink_in_a_snapshotted_tree_is_refused_not_followed},
+}
+
+@misc{pycodemod-capture-symlink-named-as-an-operand-is-refused-not-read,
+  section = {capture},
+  title  = {A link passed directly as a file operand is recorded as REFUSED, not as its target's text},
+  claim  = {A link passed directly as a file operand is recorded as REFUSED, not as its target's
+            text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_capture.py -k test_a_symlink_named_as_an_operand_is_refused_not_read},
+}

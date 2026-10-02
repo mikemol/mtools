@@ -21,8 +21,15 @@ expected := {
 	"107-py-files-skips-bazel-generated-cache-trees-keeping-only-sour": source_only,
 	# the top-level case that bit: an unfiltered _roots() made bazel-bin its own root
 	"109-roots-drops-generated-trees-that-are-top-level-entries": source_only,
-	# a per-workspace bazel symlink cannot be enumerated by name, so it is dropped by prefix
-	"110-a-bazel-workspace-convenience-symlink-is-dropped-by-prefix": source_only,
+}
+
+# ⚑ W193, operator ruling 2026-10-02: symlinks are inherently unsafe and unwanted, so the harness
+# never builds one. 110 tests that a bazel-<workspace> LINK is dropped; replayed without the link
+# it would pass vacuously, so it is withheld under every implementation, never admitted.
+no_symlinks := "110-a-bazel-workspace-convenience-symlink-is-dropped-by-prefix"
+
+withheld contains "110: its fixture is a symlink, and the harness builds none (W193)" if {
+	input.case == no_symlinks
 }
 
 deny contains sprintf("%v: found %v, not %v", [substring(input.case, 0, 3), input.result[0], want]) if {
@@ -37,7 +44,7 @@ deny contains sprintf("108: basenames are %v, not [m.py]", [names]) if {
 	names != ["m.py"]
 }
 
-judged := {c | some c, _ in expected} | {"108-naming-a-generated-tree-explicitly-still-reaches-it"}
+judged := {c | some c, _ in expected} | {"108-naming-a-generated-tree-explicitly-still-reaches-it", no_symlinks}
 
 withheld contains sprintf("no rule yet for case %v", [input.case]) if {
 	not input.case in judged

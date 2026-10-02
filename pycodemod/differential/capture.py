@@ -85,6 +85,14 @@ def _paths(val: object) -> list[str]:
     return out
 
 
+# ⚑⚑ A SYMLINK IS REFUSED, NEVER FOLLOWED (W193; operator ruling 2026-10-02: symlinks are
+# inherently unsafe and unwanted). Reading through a link reads whatever it points at, inside the
+# temp tree or not, and the harness never recreates one. The snapshot records this marker in place
+# of any content or target, so a case whose fixture held a link is visible as such and is
+# withheld by its spec rather than replayed without the link and passed vacuously (#110).
+REFUSED = "@refused:symlink"
+
+
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")[:MAX]
 
@@ -98,7 +106,7 @@ def _siblings(path: Path, out: dict[str, str]) -> None:
     for n, sib in enumerate(sorted(path.parent.glob("*.py"))):
         if n >= DIRCAP:
             break
-        out.setdefault(str(sib), _read(sib))
+        out.setdefault(str(sib), REFUSED if sib.is_symlink() else _read(sib))
 
 
 def _tree(root: str, out: dict[str, str]) -> None:
@@ -106,20 +114,25 @@ def _tree(root: str, out: dict[str, str]) -> None:
 
     ⚑ Only a check's own temp tree is walked: v1 walked every directory operand before the cap
     applied, and an operand naming the substrate root (.venv and all) ran 30 CPU-minutes.
+
+    ⚑ A link to a file or a directory is recorded as REFUSED and neither read nor descended.
     """
     n = 0
     base = Path(root)
     for dirpath, dirnames, filenames in os.walk(base):
-        dirnames[:] = sorted(d for d in dirnames if d != "__pycache__")
-        for name in sorted(filenames):
+        here = Path(dirpath)
+        links = sorted(d for d in dirnames if (here / d).is_symlink())
+        dirnames[:] = sorted(d for d in dirnames if d != "__pycache__" and d not in links)
+        for name in sorted([*filenames, *links]):
             if n >= DIRCAP:
                 break
-            f = Path(dirpath) / name
-            out[f"{root}//{f.relative_to(base).as_posix()}"] = _read(f)
+            f = here / name
+            key = f"{root}//{f.relative_to(base).as_posix()}"
+            out[key] = REFUSED if f.is_symlink() else _read(f)
             n += 1
 
 
-def _files(val: object) -> dict[str, str]:
+def snapshot(val: object) -> dict[str, str]:
     """Read every existing-file argument; a directory argument inside a temp tree is walked.
 
     Returns:
@@ -129,7 +142,9 @@ def _files(val: object) -> dict[str, str]:
     out: dict[str, str] = {}
     for item in _paths(val):
         path = Path(item)
-        if path.is_file():
+        if path.is_symlink():
+            out[item] = REFUSED
+        elif path.is_file():
             out[item] = _read(path)
             if _in_tmp(path.parent):
                 _siblings(path, out)
@@ -168,7 +183,7 @@ def _record_call(frame: FrameType, code: CodeType) -> None:
     args = _operands(frame, code)
     fixtures: dict[str, str] = {}
     for v in args.values():
-        fixtures.update(_files(v))
+        fixtures.update(snapshot(v))
     pending.append(
         {
             "fn": f"{Path(code.co_filename).name}:{code.co_name}",

@@ -41,3 +41,9 @@ test_explicit_generated_root_admitted_and_its_skip_denied if {
 test_unruled_case_is_withheld_not_admitted if {
 	not pf.admitted with input as {"case": "106-not-a-py-files-case", "result": [[]]}
 }
+
+# W193: the symlink case is withheld even when its replay returns exactly the source-only answer
+test_symlink_case_is_withheld_not_admitted if {
+	not pf.admitted with input as {"case": pf.no_symlinks, "result": [["<root>/src/m.py"]]}
+	count(pf.withheld) == 1 with input as {"case": pf.no_symlinks, "result": [["<root>/src/m.py"]]}
+}

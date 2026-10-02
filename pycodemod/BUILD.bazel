@@ -34,7 +34,10 @@ py_library(
 [
     py_test(
         name = src.removeprefix("tests/").removesuffix(".py"),
-        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True) + (
+            # W193: test_capture reads the capture tracer itself; tests/conftest.py puts it on sys.path.
+            ["differential/capture.py"] if src == "tests/test_capture.py" else []
+        ),
         main = "@mikemol_rules_py//:pytest_main.py",
         args = [
             "$(location " + src + ")",
@@ -106,6 +109,7 @@ sh_test(
         "pyproject.toml",
         ":.venv",
         "@mikemol_check_mutants//:mutate_runner.py",
+        "differential/capture.py",  # W193: tests/test_capture.py imports it
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
 )
@@ -167,5 +171,5 @@ venv_from_hub(
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
-dist_checks()
+dist_checks(venv_data = ["differential/capture.py"])  # W193: tests/test_capture.py imports it
 
