@@ -14,6 +14,8 @@ exports_files([
     "requirements.txt",
     "requirements-dev.txt",
     "uv.lock",
+    # ⚑ EXPORTED FOR `//:opa_pin` (W488), which reads `PINNED` against the other two opa sites.
+    "src/mikemol/pytestspec/opa.py",
 ])
 
 py_library(

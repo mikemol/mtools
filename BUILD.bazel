@@ -52,6 +52,24 @@ sh_test(
     size = "small",
 )
 
+# W488: the opa version's three sites (pytestspec opa.PINNED, @opa's url, //pycodemod:opa_test's
+# arg) agree, or this is red.
+sh_test(
+    name = "opa_pin",
+    srcs = ["opa_pin_test.sh"],
+    args = [
+        "$(location //pytestspec:src/mikemol/pytestspec/opa.py)",
+        "$(location MODULE.bazel)",
+        "$(location //pycodemod:BUILD.bazel)",
+    ],
+    data = [
+        "MODULE.bazel",
+        "//pycodemod:BUILD.bazel",
+        "//pytestspec:src/mikemol/pytestspec/opa.py",
+    ],
+    size = "small",
+)
+
 # W332: the reusable gate workflow under the pinned actionlint, its `run:` scripts shellchecked by
 # the declared shellcheck. Globbed like the shell above, so a workflow added to ci/ is covered.
 _CI_WORKFLOWS = glob(["ci/*.yml"], allow_empty = False)
