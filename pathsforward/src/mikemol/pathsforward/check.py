@@ -191,6 +191,36 @@ def blocked(state: State) -> list[str]:
     ]
 
 
+def stale_blockers(state: State) -> list[str]:
+    """Report a blocked waypoint whose blocker is a LOCAL symbol that is done or dropped (W246).
+
+    ⚑ OPERATOR 2026-10-02: pathsforward holds what does not need nemik. A local symbol's status is
+    in this queue, so the writer can say a block can no longer land; a foreign `repo:W<n>` or a
+    party is not a local symbol (`symbol_number` refuses it) and stays nemik's to judge.
+    `--bump-blocked` prunes a done blocker; a dropped one needs a decision, so it is only named.
+
+    Returns:
+        one finding per stale blocker, in queue order.
+
+    """
+    done = {text(w, "symbol") for w in state.waypoints if text(w, "status") == "done"}
+    dropped = {text(r, "symbol") for r in state.residue}
+    found: list[str] = []
+    for w in state.waypoints:
+        if text(w, "status") != "blocked":
+            continue
+        for b in strlist(w, "blocked_on"):
+            if symbol_number(b) is None:
+                continue
+            if b in done:
+                found.append(
+                    f"{text(w, 'symbol')}: blocked on {b}, which is done; run --bump-blocked"
+                )
+            elif b in dropped:
+                found.append(f"{text(w, 'symbol')}: blocked on {b}, which is dropped (residue)")
+    return found
+
+
 def field_types(state: State) -> list[str]:
     """Report a list field stored as something other than a list.
 
@@ -361,6 +391,7 @@ def check(state: State) -> list[str]:
         *edges(state),
         *statuses(state),
         *blocked(state),
+        *stale_blockers(state),
         *field_types(state),
         *weights(state),
         *comma_tags(state),

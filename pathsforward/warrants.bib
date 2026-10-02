@@ -2524,3 +2524,27 @@
             written for a repair not made.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_repair_counter_never_lowers_and_refuses_when_nothing_lags},
 }
+
+@misc{pathsforward-check-blocker-that-is-a-done-local-waypoint-is-stale,
+  section = {check},
+  title  = {W246: blocked on a local symbol that is done reads as stuck; --check names it},
+  claim  = {W246: blocked on a local symbol that is done reads as stuck; --check names it. Operator
+            2026-10-02: pathsforward holds what does not need nemik. A local symbol's
+            status is in this queue, so this check is the writer's; a foreign
+            `repo:W<n>` stays nemik's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_blocker_that_is_a_done_local_waypoint_is_stale},
+}
+
+@misc{pathsforward-check-blocker-in-residue-is-stale,
+  section = {check},
+  title  = {A local blocker that was dropped to residue can never land; --check names it},
+  claim  = {A local blocker that was dropped to residue can never land; --check names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_blocker_in_residue_is_stale},
+}
+
+@misc{pathsforward-check-live-foreign-or-party-blocker-is-not-stale,
+  section = {check},
+  title  = {The control: a live local blocker, another repo's symbol and a party are all silent},
+  claim  = {The control: a live local blocker, another repo's symbol and a party are all silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_live_foreign_or_party_blocker_is_not_stale},
+}

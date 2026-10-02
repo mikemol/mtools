@@ -145,6 +145,31 @@ def test_a_party_in_blocked_on_is_not_an_edge(tmp_path: Path) -> None:
     assert chk.edges(_state(tmp_path, waypoints=[w1, _wp("W2")])) == []
 
 
+def test_a_blocker_that_is_a_done_local_waypoint_is_stale(tmp_path: Path) -> None:
+    """W246: blocked on a local symbol that is done reads as stuck; --check names it.
+
+    ⚑ Operator 2026-10-02: pathsforward holds what does not need nemik. A local symbol's status is
+    in this queue, so this check is the writer's; a foreign `repo:W<n>` stays nemik's.
+    """
+    w1 = _wp("W1", "blocked", blocked_on=["W2"], blocked_kind="agent")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2", "done")]))
+    assert "W1: blocked on W2, which is done; run --bump-blocked" in found
+
+
+def test_a_blocker_in_residue_is_stale(tmp_path: Path) -> None:
+    """A local blocker that was dropped to residue can never land; --check names it."""
+    w1 = _wp("W1", "blocked", blocked_on=["W3"], blocked_kind="agent")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")]))
+    assert "W1: blocked on W3, which is dropped (residue)" in found
+
+
+def test_a_live_foreign_or_party_blocker_is_not_stale(tmp_path: Path) -> None:
+    """The control: a live local blocker, another repo's symbol and a party are all silent."""
+    on = ["W2", "nemik:W2", "mikemol"]
+    w1 = _wp("W1", "blocked", blocked_on=on, blocked_kind="agent")
+    assert chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")])) == []
+
+
 def test_a_bogus_status_is_found(tmp_path: Path) -> None:
     """`status=bogus` is outside the enum and found."""
     state = _state(tmp_path, waypoints=[_wp("W1", "bogus"), _wp("W2")])
