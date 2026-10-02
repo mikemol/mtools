@@ -24,12 +24,13 @@ if TYPE_CHECKING:
 
 
 def checker_argv(
-    tmp: Path, path: str, venv_py: Path, pyproject: Path
+    tmp: Path, path: str, venv_py: Path, pyproject: Path, mypy_config: Path | None = None
 ) -> tuple[tuple[str, list[str], bool], ...]:
     """Return `(name, argv, reads_stdin)` for each checker, naming `path` as the subject.
 
     ⚑ TWO MECHANISMS, BECAUSE THE TWO CHECKERS SPELL THIS DIFFERENTLY, and the third tuple
-    element is what keeps the caller from having to know which is which.
+    element is what keeps the caller from having to know which is which. `mypy_config`, when
+    given, replaces `pyproject` for mypy alone (W482: an atom's own `mypy.ini`).
 
     Returns:
         `(name, argv, reads_stdin)` for each checker, naming `path` as the subject.
@@ -138,7 +139,7 @@ def checker_argv(
                 "-m",
                 "mypy",
                 "--config-file",
-                str(pyproject),
+                str(mypy_config or pyproject),
                 "--no-error-summary",
                 "--no-color-output",
                 "--pretty",

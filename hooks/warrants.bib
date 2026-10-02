@@ -4316,3 +4316,17 @@
   claim  = {In the per-distribution loop, the clear comes before the host pytest it protects.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_host_pytest_runs_after_the_bytecode_is_cleared},
 }
+
+@misc{hooks-pycheck-atom-mypy-ini-governs-its-own-files,
+  section = {pycheck},
+  title  = {W482: mypy runs under the atom's own `mypy.ini`, from its directory, as the gate does},
+  claim  = {W482: mypy runs under the atom's own `mypy.ini`, from its directory, as the gate does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_an_atom_mypy_ini_governs_its_own_files},
+}
+
+@misc{hooks-pycheck-atom-file-with-a-real-type-error-is-still-refused,
+  section = {pycheck},
+  title  = {W482's other arm: under the atom's config a real mypy finding still refuses},
+  claim  = {W482's other arm: under the atom's config a real mypy finding still refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_an_atom_file_with_a_real_type_error_is_still_refused},
+}

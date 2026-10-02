@@ -60,6 +60,11 @@ from pathlib import Path
 # The file whose presence declares a directory a project root.
 MARKER = "pyproject.toml"
 
+# ⚑⚑ W482: AN ATOM'S OWN mypy CONFIG. A directory below a project root may carry a `mypy.ini`
+# (rules_py does: an atom is not a distribution, so it has no pyproject of its own), and the gate's
+# mypy target runs FROM that directory UNDER that file. The hook must apply the same bar.
+MYPY_INI = "mypy.ini"
+
 
 def project_for(path: str | Path) -> Path | None:
     """Return the nearest directory at or above `path` holding a `pyproject.toml`.
@@ -109,3 +114,26 @@ def venv_python_for(path: str | Path) -> Path | None:
         return None
     candidate = root / ".venv" / "bin" / "python3"
     return candidate if candidate.exists() else None
+
+
+def mypy_config_for(path: str | Path) -> Path | None:
+    """Return the nearest `mypy.ini` at or above `path`, stopping at its governing project root.
+
+    ⚑ BOUNDED BY THE PROJECT: a `mypy.ini` above the root belongs to some other tree, and the
+    pyproject that governs the file is the answer there.
+
+    Returns:
+        the `mypy.ini` governing `path`, or None when the project's pyproject governs it.
+
+    """
+    root = project_for(path)
+    if root is None:
+        return None
+    start = Path(path).absolute()
+    here = start if start.is_dir() else start.parent
+    for candidate in (here, *here.parents):
+        if (candidate / MYPY_INI).is_file():
+            return candidate / MYPY_INI
+        if candidate == root:
+            break
+    return None

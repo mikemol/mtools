@@ -163,8 +163,13 @@ def analyze(content: str, path: str) -> Verdict:
         tmp.chmod(_MODE_SCRIPT if content.startswith("#!") else _MODE_MODULE)
         outcomes: list[tuple[str, Verdict]] = []
         cfg = root / project_root.MARKER
-        for name, argv, reads_stdin in checkers.checker_argv(tmp, path, venv_py, cfg):
-            with checker_context.in_project(root):
+        mypy_cfg = project_root.mypy_config_for(path)
+        roster = checkers.checker_argv(tmp, path, venv_py, cfg, mypy_cfg)
+        for name, argv, reads_stdin in roster:
+            # ⚑ W482: mypy under an atom's `mypy.ini` runs FROM the atom, as the gate's target
+            # does, so its sibling imports resolve; ruff keeps the project root.
+            cwd = mypy_cfg.parent if name == "mypy" and mypy_cfg is not None else root
+            with checker_context.in_project(cwd):
                 ok, report = run_checker(name, argv, content if reads_stdin else None)
             if ok is False:
                 report = report.replace(str(tmp), path).replace(tmp.name, path)

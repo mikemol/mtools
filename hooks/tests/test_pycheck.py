@@ -211,6 +211,45 @@ def test_import_and_use_in_one_write_is_admitted(
     assert not capsys.readouterr().out
 
 
+def _atom(root: Path) -> Path:
+    """Give `root` an atom directory carrying its own `mypy.ini` and a sibling module.
+
+    Returns:
+        the atom directory.
+
+    """
+    atom = root / "atom"
+    atom.mkdir()
+    (atom / "mypy.ini").write_text("[mypy]\nstrict = True\n", encoding="utf-8")
+    sib = '"""Sibling."""\n\n\ndef f() -> int:\n    """One."""\n    return 1\n'
+    (atom / "sib.py").write_text(sib, encoding="utf-8")
+    return atom
+
+
+@_needs_checkers
+def test_an_atom_mypy_ini_governs_its_own_files(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """W482: mypy runs under the atom's own `mypy.ini`, from its directory, as the gate does."""
+    atom = _atom(_project(tmp_path))
+    good = '"""User."""\n\nimport sib\n\nX: int = sib.f()\n'
+    _main(monkeypatch, _write(atom / "user.py", good), own="1")
+    assert not capsys.readouterr().out
+
+
+@_needs_checkers
+def test_an_atom_file_with_a_real_type_error_is_still_refused(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """W482's other arm: under the atom's config a real mypy finding still refuses."""
+    atom = _atom(_project(tmp_path))
+    bad = '"""User."""\n\nimport sib\n\nX: str = sib.f()\n'
+    _main(monkeypatch, _write(atom / "user.py", bad), own="1")
+    out = capsys.readouterr().out
+    assert "[assignment]" in out
+    assert "import-not-found" not in out
+
+
 @_needs_checkers
 def test_extend_exclude_reaches_an_in_flight_edit(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
