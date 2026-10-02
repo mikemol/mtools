@@ -41,6 +41,33 @@ def dist_checks(venv_data = []):
         size = "small",
     )
 
+    # W386: the ruff atom's two config checks (W384, W385), run over this distribution with the
+    # pinned ruff. They were test_bar_fires arms walking every distribution from the root, and
+    # the suppression arm read hooks/tests alone.
+    py_test(
+        name = "ruff_selector",
+        srcs = ["@mikemol_check_ruff//:selector_check.py"],
+        main = "@mikemol_check_ruff//:selector_check.py",
+        args = [
+            "$(location @mikemol_check_ruff//:bin)",
+            "$(location :pyproject.toml)",
+        ],
+        data = ["pyproject.toml", "@mikemol_check_ruff//:bin"],
+        size = "small",
+    )
+    py_test(
+        name = "ruff_suppression",
+        srcs = ["@mikemol_check_ruff//:suppression_check.py"],
+        main = "@mikemol_check_ruff//:suppression_check.py",
+        args = ["$(location @mikemol_check_ruff//:bin)", dist],
+        # ⚑ src/ AND tests/, never `**`: a source-tree `.venv` would be swept as the package.
+        data = [
+            "pyproject.toml",
+            "@mikemol_check_ruff//:bin",
+        ] + native.glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
+        size = "small",
+    )
+
     # W362: the BUILD names pytest as every py_test's main, and no test resolves __file__ out of
     # the sandbox.
     py_test(

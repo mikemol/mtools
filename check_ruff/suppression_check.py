@@ -139,7 +139,9 @@ def main(argv: list[str]) -> int:
     if not (dist / "pyproject.toml").is_file():
         sys.stderr.write(f"suppression_check: {dist}/pyproject.toml was not staged; refusing\n")
         return 1
-    findings = check(dist, ruff_runner(argv[0]))
+    # ⚑ ABSOLUTE, because ruff runs from DIST_DIR: under bazel the path arrives relative to the
+    # runfiles root, and from inside the distribution it would name nothing (W386).
+    findings = check(dist, ruff_runner(str(Path(argv[0]).absolute())))
     for finding in findings:
         sys.stderr.write(f"a directive claims to suppress this, and ruff reports it: {finding}\n")
     return 1 if findings else 0
