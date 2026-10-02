@@ -144,14 +144,20 @@ def verdict_from(output: str) -> Verdict:
     return Verdict(deny=_strings(_key(value, "deny")), withheld=_strings(_key(value, "withheld")))
 
 
-def evaluator(opa: str = "opa") -> Evaluator:
+def evaluator(opa: str = "opa", data: tuple[Path, ...] = ()) -> Evaluator:
     """Build the default evaluator; opa is resolved and version-checked on first use.
+
+    Args:
+        opa: the opa executable to resolve.
+        data: extra rego paths loaded beside each spec, so a spec can import shared helpers
+            (W380, el-openglo:W211). Declared by the caller; nothing beside the spec is implied.
 
     Returns:
         a callable that evaluates one case against one spec.
 
     """
     resolved: list[str] = []
+    extra = [arg for path in data for arg in ("--data", str(path))]
 
     def evaluate(spec: Path, case: Case) -> Verdict:
         if not resolved:
@@ -165,6 +171,7 @@ def evaluator(opa: str = "opa") -> Evaluator:
                 "--stdin-input",
                 "--data",
                 str(spec),
+                *extra,
                 f"data.{package_of(spec)}",
             ],
             input=json.dumps(case),
@@ -174,7 +181,12 @@ def evaluator(opa: str = "opa") -> Evaluator:
             timeout=_TIMEOUT,
         )
         if proc.returncode != 0:
-            msg = f"opa eval exit {proc.returncode}: {proc.stderr.strip()[:500]}"
+            # ⚑ opa reports a compile error (an undefined imported function, W380) on STDOUT,
+            # and stderr is empty: measured, the message read `exit 2: ` with no cause. So the
+            # failure carries whichever stream said something, on one line so the cause is in
+            # the failure's header and not after it.
+            said = " ".join((proc.stderr.strip() or proc.stdout).split())
+            msg = f"opa eval exit {proc.returncode}: {said[:500]}"
             raise OpaUnavailableError(msg)
         return verdict_from(proc.stdout)
 

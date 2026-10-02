@@ -39,6 +39,68 @@ import rego.v1
 deny contains "else-body is negated" if input.result == "not (c)"
 """
 
+# W380: a spec importing a shared helper, the shape el-openglo's policies use.
+_LIB = """package lib.truth
+import rego.v1
+negated(r) if r == "not (c)"
+"""
+
+_IMPORTING_SPEC = """package importing
+import rego.v1
+import data.lib.truth
+deny contains "L1: else-body is negated" if truth.negated(input.result)
+"""
+
+
+def _importing(pytester: pytest.Pytester) -> None:
+    pytester.makefile(".rego", spec=_IMPORTING_SPEC)
+    pytester.makefile(".cases.json", spec=_LIVE_CASES)
+    lib = pytester.path / "lib"
+    lib.mkdir()
+    (lib / "truth.rego").write_text(_LIB, encoding="utf-8")
+
+
+def test_declared_data_lets_a_spec_import_a_shared_helper(pytester: pytest.Pytester) -> None:
+    """With `pytestspec_data = lib`, the import compiles and the live opa judges both cases."""
+    _importing(pytester)
+    pytester.makeini("[pytest]\npytestspec_data = lib\n")
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(passed=1, failed=1)
+    result.stdout.fnmatch_lines(["*negated: DENIED: L1: else-body is negated*"])
+
+
+def test_undeclared_helper_is_an_error_not_guessed(pytester: pytest.Pytester) -> None:
+    """Without the key, lib/ is neither loaded nor exempt: it errors as a spec with no cases."""
+    _importing(pytester)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(errors=1)
+    result.stdout.fnmatch_lines(["*truth.rego: no case data at truth.cases.json*"])
+
+
+def test_undeclared_helper_outside_the_tree_is_unmeasured(pytester: pytest.Pytester) -> None:
+    """A spec whose import nothing loads fails UNMEASURED; no sibling directory is guessed."""
+    pytester.makefile(".rego", spec=_IMPORTING_SPEC)
+    pytester.makefile(".cases.json", spec=_LIVE_CASES)
+    result = pytester.runpytest(*_LOAD, "-rf")
+    result.assert_outcomes(failed=2)
+    result.stdout.fnmatch_lines(
+        ["*UNMEASURED (not evaluated, not passed): opa eval exit*rego_type_error*"]
+    )
+
+
+def test_declared_data_that_does_not_exist_is_a_collection_error(
+    pytester: pytest.Pytester,
+) -> None:
+    """A declared path that is missing ERRORS at collection, naming the key."""
+    pytester.makeconftest(_STUB)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec='[{"case": "c"}]')
+    pytester.makeini("[pytest]\npytestspec_data = nowhere\n")
+    result = pytester.runpytest(*_LOAD)
+    result.assert_outcomes(errors=1)
+    result.stdout.fnmatch_lines(["*pytestspec_data names a path that does not exist*nowhere*"])
+
+
 _LIVE_CASES = """[
   {"case": "origin", "result": "c"},
   {"case": "negated", "result": "not (c)"}

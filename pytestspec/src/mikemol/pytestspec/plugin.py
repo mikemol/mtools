@@ -81,6 +81,45 @@ def _cache_root(config: pytest.Config) -> Path | None:
     return Path(root) if isinstance(root, str) else None
 
 
+DATA_INI = "pytestspec_data"
+
+
+def _declared_data(config: pytest.Config) -> tuple[Path, ...]:
+    """Read the `pytestspec_data` ini key as declared, without checking the paths exist.
+
+    Returns:
+        the declared paths, resolved against the ini file's directory by pytest.
+
+    """
+    raw = cast("object", config.getini(DATA_INI))
+    if not isinstance(raw, list):
+        return ()
+    return tuple(p for p in cast("list[object]", raw) if isinstance(p, Path))
+
+
+def data_paths(config: pytest.Config) -> tuple[Path, ...]:
+    """Read the `pytestspec_data` ini key: extra rego paths loaded beside every spec (W380).
+
+    ⚑ EXPLICIT ONLY. A spec importing a shared helper (`data.el.truth`) fails to compile unless
+    the helper is loaded too, and guessing at sibling directories would load whatever happens to
+    sit there. A declared path that does not exist is an error, never a silent skip: a missing
+    library would otherwise surface as every case failing to compile, far from its cause.
+
+    Returns:
+        the declared paths, resolved against the ini file's directory by pytest.
+
+    Raises:
+        SpecDataError: a declared path does not exist.
+
+    """
+    paths = _declared_data(config)
+    missing = [str(p) for p in paths if not p.exists()]
+    if missing:
+        msg = f"{DATA_INI} names a path that does not exist: {', '.join(missing)}"
+        raise SpecDataError(msg)
+    return paths
+
+
 class SpecFailedError(Exception):
     """One case was denied, withheld, or could not be evaluated."""
 
@@ -112,7 +151,7 @@ class SpecItem(pytest.Item):
         """
         found = self.config.stash.get(EVALUATOR, None)
         if found is None:
-            found = opa.evaluator()
+            found = opa.evaluator(data=data_paths(self.config))
             self.config.stash[EVALUATOR] = found
         return found
 
@@ -213,6 +252,7 @@ class SpecFile(pytest.File):
 
         """
         try:
+            data_paths(self.config)
             cases = load_cases(self.path)
             names = frozenset(name for name, _ in cases)
             declared = [(name, case, disposition_of(name, case, names)) for name, case in cases]
@@ -229,11 +269,16 @@ class SpecFile(pytest.File):
 def pytest_collect_file(file_path: Path, parent: pytest.Collector) -> SpecFile | None:
     """Claim a `.rego` spec for collection.
 
+    ⚑ A FILE UNDER A DECLARED `pytestspec_data` PATH IS A LIBRARY, NOT A SPEC (W380). Measured:
+    without this, a helper package under the collected tree was claimed and ERRORED for having no
+    case data, so declaring the library broke the run it was declared to fix.
+
     Returns:
         a SpecFile for a claimed path, else None (pytest's own collectors decide).
 
     """
-    if claims(file_path):
+    library = any(file_path.is_relative_to(p) for p in _declared_data(parent.config))
+    if claims(file_path) and not library:
         return SpecFile.from_parent(parent, path=file_path)
     return None
 
@@ -283,6 +328,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         "--result-cache",
         default=None,
         help="reuse --impl results stored here under a conftest's key (counted as cached)",
+    )
+    # ⚑ NO `default=`: an empty list literal reads as list[Any] under strict mypy, and the
+    # `paths` type already defaults to an empty list.
+    parser.addini(
+        DATA_INI,
+        type="paths",
+        help="extra rego paths loaded beside every spec, for shared helper packages (W380)",
     )
 
 

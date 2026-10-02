@@ -353,3 +353,31 @@
   claim  = {A bare `"expect": "denied"` ERRORS at collection rather than running admitted-only.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_malformed_expect_is_a_collection_error},
 }
+
+@misc{pytestspec-plugin-declared-data-lets-a-spec-import-a-shared-helper,
+  section = {plugin},
+  title  = {With `pytestspec_data = lib`, the import compiles and the live opa judges both cases},
+  claim  = {With `pytestspec_data = lib`, the import compiles and the live opa judges both cases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_declared_data_lets_a_spec_import_a_shared_helper},
+}
+
+@misc{pytestspec-plugin-undeclared-helper-is-an-error-not-guessed,
+  section = {plugin},
+  title  = {Without the key, lib/ is neither loaded nor exempt: it errors as a spec with no cases},
+  claim  = {Without the key, lib/ is neither loaded nor exempt: it errors as a spec with no cases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_undeclared_helper_is_an_error_not_guessed},
+}
+
+@misc{pytestspec-plugin-undeclared-helper-outside-the-tree-is-unmeasured,
+  section = {plugin},
+  title  = {A spec whose import nothing loads fails UNMEASURED; no sibling directory is guessed},
+  claim  = {A spec whose import nothing loads fails UNMEASURED; no sibling directory is guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_undeclared_helper_outside_the_tree_is_unmeasured},
+}
+
+@misc{pytestspec-plugin-declared-data-that-does-not-exist-is-a-collection-error,
+  section = {plugin},
+  title  = {A declared path that is missing ERRORS at collection, naming the key},
+  claim  = {A declared path that is missing ERRORS at collection, naming the key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_declared_data_that_does_not_exist_is_a_collection_error},
+}

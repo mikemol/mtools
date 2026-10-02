@@ -52,6 +52,20 @@ an empty list or a non-string id is a collection error: a case denied by the wro
 otherwise pass. Asked for by el-openglo:W139, whose rule tests carry both a refusing and an
 admitting fixture for every rule.
 
+## Shared libraries (W380)
+
+A spec that imports a helper package (`import data.el.truth`) compiles only if the helper is
+loaded too. Declare the helper paths in the pytest config:
+
+    [pytest]
+    pytestspec_data = policy/lib
+
+Each path is passed to `opa eval` as an extra `--data`, beside the spec. Nothing is loaded
+implicitly: a sibling directory that is not declared is never guessed. A declared path that does
+not exist is a collection error. A `.rego` file under a declared path is a library, not a spec,
+so it is not collected. A spec whose import nothing loads fails as UNMEASURED, and the failure
+names opa's compile error.
+
 ## Implementation adapters (W202)
 
 A conftest or plugin offers implementations through the `pytest_spec_implementations` hook,
