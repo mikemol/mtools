@@ -1,0 +1,44 @@
+% warrants.bib — one claim PER TEST FUNCTION in the ratchet check atom's suite (W388).
+%
+% The atom's test module, `test_refusal_check.py`, sits beside `refusal_check.py`, the check each
+% distribution runs: its ratchet must refuse a planted finding. The claims are transcribed from the
+% test docstrings. The checks run with the hooks venv's interpreter, which carries the same pytest
+% pin the `//:test_refusal_check` target stages.
+%
+% Keying convention: check-ratchet-<section>-<test name minus its `test_` prefix, hyphenated>.
+
+@misc{check-ratchet-refusal-check-a-refusal-naming-the-plant-passes,
+  section = {refusal_check},
+  claim   = {The ratchet exits nonzero and names the planted module: the baseline refuses.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_refusal_check.py -k test_a_refusal_naming_the_plant_passes}
+}
+
+@misc{check-ratchet-refusal-check-a-tolerated-plant-is-named,
+  section = {refusal_check},
+  claim   = {Exit 0 over a planted finding means the baseline refuses nothing; that is the finding.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_refusal_check.py -k test_a_tolerated_plant_is_named}
+}
+
+@misc{check-ratchet-refusal-check-the-plant-lands-in-a-copy-without-build-residue,
+  section = {refusal_check},
+  claim   = {The plant is in the copy, build/ is not copied, and the real tree is untouched.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_refusal_check.py -k test_the_plant_lands_in_a_copy_without_build_residue}
+}
+
+@misc{check-ratchet-refusal-check-a-dist-without-one-package-is-named,
+  section = {refusal_check},
+  claim   = {No single package under src/mikemol means nothing to plant in; that is reported, not passed.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_refusal_check.py -k test_a_dist_without_one_package_is_named}
+}
+
+@misc{check-ratchet-refusal-check-main-reports-exit-codes,
+  section = {refusal_check},
+  claim   = {1 with no pyproject.toml, 2 on a usage error (no ratchet is run).},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_refusal_check.py -k test_main_reports_exit_codes}
+}
+
+@misc{check-ratchet-refusal-check-a-refusal-that-does-not-name-the-plant-is-named,
+  section = {refusal_check},
+  claim   = {A nonzero exit for some OTHER finding (build residue, say) is not a refusal of the plant.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_refusal_check.py -k test_a_refusal_that_does_not_name_the_plant_is_named}
+}

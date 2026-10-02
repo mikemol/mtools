@@ -152,6 +152,25 @@ py_test(
     deps = [root_dev_requirement("pytest")],
 )
 
+# W388: the ratchet atom's refusal check, tested the same way with a fake ratchet.
+py_test(
+    name = "test_refusal_check",
+    srcs = [
+        "@mikemol_check_ratchet//:test_refusal_check.py",
+        "@mikemol_check_ratchet//:refusal_check.py",
+        "@mikemol_rules_py//:pytest_main.py",
+    ],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location @mikemol_check_ratchet//:test_refusal_check.py)",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ],
+    size = "small",
+    deps = [root_dev_requirement("pytest")],
+)
+
 # W385: the ruff atom's suppression check, tested the same way with a fake ruff.
 py_test(
     name = "test_suppression_check",
@@ -239,6 +258,8 @@ _ATOM_PY = [
     "@mikemol_check_ruff//:test_selector_check.py",
     "@mikemol_check_ruff//:suppression_check.py",
     "@mikemol_check_ruff//:test_suppression_check.py",
+    "@mikemol_check_ratchet//:refusal_check.py",
+    "@mikemol_check_ratchet//:test_refusal_check.py",
 ]
 
 sh_test(
@@ -303,5 +324,6 @@ sh_test(
             "suppression_check.py",
             "test_suppression_check.py",
         ]),
+        ("check_ratchet", ["refusal_check.py", "test_refusal_check.py"]),
     ]
 ]
