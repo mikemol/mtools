@@ -1,0 +1,408 @@
+1	(before first section)	PASS	_pycodemod_selftest.py	110
+2	(before first section)	PASS	_pycodemod_selftest.py	117
+3	(before first section)	PASS	_pycodemod_selftest.py	120
+4	(before first section)	PASS	_pycodemod_selftest.py	121
+5	--guarded	PASS	_pycodemod_selftest.py	142
+6	--guarded	PASS	_pycodemod_selftest.py	143
+7	--guarded	PASS	_pycodemod_selftest.py	145
+8	--guarded	PASS	_pycodemod_selftest.py	150
+9	--swallows	PASS	_pycodemod_selftest.py	189
+10	--swallows	PASS	_pycodemod_selftest.py	192
+11	--swallows	PASS	_pycodemod_selftest.py	195
+12	--swallows	PASS	_pycodemod_selftest.py	197
+13	--swallows	PASS	_pycodemod_selftest.py	198
+14	--swallows	PASS	_pycodemod_selftest.py	222
+15	--check-contracts	PASS	_pycodemod_selftest.py	303
+16	--check-contracts	PASS	_pycodemod_selftest.py	305
+17	--check-contracts	PASS	_pycodemod_selftest.py	311
+18	⟡mode-opt-key-collision	PASS	_pycodemod_selftest.py	333
+19	⟡mode-opt-key-collision	PASS	_pycodemod_selftest.py	339
+20	⟡mode-opt-key-collision	PASS	_pycodemod_selftest.py	340
+21	⟡mode-opt-key-collision	PASS	_pycodemod_selftest.py	352
+22	⟡mode-opt-key-collision	PASS	_pycodemod_selftest.py	354
+23	⟡mode-opt-key-collision	PASS	_pycodemod_selftest.py	358
+24	Mode.writes	PASS	_pycodemod_selftest.py	366
+25	Mode.writes	PASS	_pycodemod_selftest.py	367
+26	Mode.writes	PASS	_pycodemod_selftest.py	368
+27	Mode.writes	PASS	_pycodemod_selftest.py	369
+28	Mode.writes	PASS	_pycodemod_selftest.py	372
+29	Mode.writes	PASS	_pycodemod_selftest.py	388
+30	Mode.writes	PASS	_pycodemod_selftest.py	390
+31	--rivals	PASS	_pycodemod_selftest.py	407
+32	--rivals	PASS	_pycodemod_selftest.py	416
+33	--rivals	PASS	_pycodemod_selftest.py	424
+34	--rivals	PASS	_pycodemod_selftest.py	428
+35	--rivals	PASS	_pycodemod_selftest.py	443
+36	--rivals	PASS	_pycodemod_selftest.py	445
+37	--rivals	PASS	_pycodemod_selftest.py	448
+38	--rivals	PASS	_pycodemod_selftest.py	453
+39	--rivals	PASS	_pycodemod_selftest.py	458
+40	--rivals	PASS	_pycodemod_selftest.py	465
+41	--rivals	PASS	_pycodemod_selftest.py	491
+42	--rivals	PASS	_pycodemod_selftest.py	493
+43	--rivals	PASS	_pycodemod_selftest.py	495
+44	--rivals	PASS	_pycodemod_selftest.py	497
+45	--rivals	PASS	_pycodemod_selftest.py	502
+46	--rivals	PASS	_pycodemod_selftest.py	531
+47	--rivals	PASS	_pycodemod_selftest.py	536
+48	--rivals	PASS	_pycodemod_selftest.py	538
+49	--rivals	PASS	_pycodemod_selftest.py	544
+50	--rivals	PASS	_pycodemod_selftest.py	548
+51	--rivals	PASS	_pycodemod_selftest.py	571
+52	--rivals	PASS	_pycodemod_selftest.py	573
+53	--rivals	PASS	_pycodemod_selftest.py	575
+54	--rivals	PASS	_pycodemod_selftest.py	577
+55	--rivals	PASS	_pycodemod_selftest.py	581
+56	--rivals	PASS	_pycodemod_selftest.py	585
+57	--rivals	PASS	_pycodemod_selftest.py	589
+58	--rivals	PASS	_pycodemod_selftest.py	603
+59	--rivals	PASS	_pycodemod_selftest.py	605
+60	--rivals	PASS	_pycodemod_selftest.py	607
+61	--rivals	PASS	_pycodemod_selftest.py	612
+62	--rivals	PASS	_pycodemod_selftest.py	614
+63	--rivals	PASS	_pycodemod_selftest.py	618
+64	--rivals	PASS	_pycodemod_selftest.py	620
+65	--rivals	PASS	_pycodemod_selftest.py	622
+66	asserted()	PASS	_pycodemod_selftest.py	641
+67	asserted()	PASS	_pycodemod_selftest.py	643
+68	asserted()	PASS	_pycodemod_selftest.py	648
+69	asserted()	PASS	_pycodemod_selftest.py	650
+70	asserted()	PASS	_pycodemod_selftest.py	654
+71	asserted()	PASS	_pycodemod_selftest.py	656
+72	asserted()	PASS	_pycodemod_selftest.py	658
+73	asserted()	PASS	_pycodemod_selftest.py	667
+74	values()	PASS	_pycodemod_selftest.py	697
+75	values()	PASS	_pycodemod_selftest.py	699
+76	values()	PASS	_pycodemod_selftest.py	705
+77	values()	PASS	_pycodemod_selftest.py	707
+78	values()	PASS	_pycodemod_selftest.py	713
+79	values()	PASS	_pycodemod_selftest.py	715
+80	values()	PASS	_pycodemod_selftest.py	717
+81	values()	PASS	_pycodemod_selftest.py	719
+82	values()	PASS	_pycodemod_selftest.py	723
+83	values()	PASS	_pycodemod_selftest.py	740
+84	values()	PASS	_pycodemod_selftest.py	742
+85	values()	PASS	_pycodemod_selftest.py	758
+86	values()	PASS	_pycodemod_selftest.py	763
+87	values()	PASS	_pycodemod_selftest.py	770
+88	values()	PASS	_pycodemod_selftest.py	771
+89	values()	PASS	_pycodemod_selftest.py	774
+90	values()	PASS	_pycodemod_selftest.py	795
+91	values()	PASS	_pycodemod_selftest.py	797
+92	values()	PASS	_pycodemod_selftest.py	799
+93	values()	PASS	_pycodemod_selftest.py	805
+94	values()	PASS	_pycodemod_selftest.py	809
+95	values()	PASS	_pycodemod_selftest.py	813
+96	values()	PASS	_pycodemod_selftest.py	831
+97	values()	PASS	_pycodemod_selftest.py	833
+98	values()	PASS	_pycodemod_selftest.py	842
+99	values()	PASS	_pycodemod_selftest.py	855
+100	values()	PASS	_pycodemod_selftest.py	857
+101	values()	PASS	_pycodemod_selftest.py	859
+102	values()	PASS	_pycodemod_selftest.py	864
+103	values()	PASS	_pycodemod_selftest.py	881
+104	values()	PASS	_pycodemod_selftest.py	888
+105	values()	PASS	_pycodemod_selftest.py	896
+106	values()	PASS	_pycodemod_selftest.py	905
+107	py_files()	PASS	_pycodemod_selftest.py	924
+108	py_files()	PASS	_pycodemod_selftest.py	929
+109	py_files()	PASS	_pycodemod_selftest.py	947
+110	py_files()	PASS	_pycodemod_selftest.py	951
+111	--projects	PASS	_pycodemod_selftest.py	984
+112	--projects	PASS	_pycodemod_selftest.py	986
+113	--projects	PASS	_pycodemod_selftest.py	989
+114	--projects	PASS	_pycodemod_selftest.py	991
+115	--projects	PASS	_pycodemod_selftest.py	993
+116	--projects	PASS	_pycodemod_selftest.py	996
+117	--projects	PASS	_pycodemod_selftest.py	999
+118	--source	PASS	_pycodemod_selftest.py	1017
+119	--source	PASS	_pycodemod_selftest.py	1019
+120	--source	PASS	_pycodemod_selftest.py	1021
+121	--source	PASS	_pycodemod_selftest.py	1023
+122	--key	PASS	_pycodemod_selftest.py	1045
+123	--key	PASS	_pycodemod_selftest.py	1047
+124	--key	PASS	_pycodemod_selftest.py	1051
+125	--key	PASS	_pycodemod_selftest.py	1057
+126	--key	PASS	_pycodemod_selftest.py	1059
+127	--artifacts	PASS	_pycodemod_selftest.py	1075
+128	--artifacts	PASS	_pycodemod_selftest.py	1084
+129	--artifacts	PASS	_pycodemod_selftest.py	1096
+130	--artifacts	PASS	_pycodemod_selftest.py	1108
+131	--artifacts	PASS	_pycodemod_selftest.py	1115
+132	--artifacts	PASS	_pycodemod_selftest.py	1127
+133	F5	PASS	_pycodemod_selftest.py	1173
+134	--importers	PASS	_pycodemod_selftest.py	1192
+135	--importers	PASS	_pycodemod_selftest.py	1197
+136	--importers	PASS	_pycodemod_selftest.py	1205
+137	--importers	PASS	_pycodemod_selftest.py	1206
+138	--aliases	PASS	_pycodemod_selftest.py	1241
+139	--aliases	PASS	_pycodemod_selftest.py	1248
+140	--aliases	PASS	_pycodemod_selftest.py	1250
+141	--aliases	PASS	_pycodemod_selftest.py	1265
+142	--aliases	PASS	_pycodemod_selftest.py	1267
+143	--aliases	PASS	_pycodemod_selftest.py	1272
+144	--aliases	PASS	_pycodemod_selftest.py	1277
+145	--size	PASS	_pycodemod_selftest.py	1299
+146	--size	PASS	_pycodemod_selftest.py	1300
+147	--size	PASS	_pycodemod_selftest.py	1305
+148	--size	PASS	_pycodemod_selftest.py	1310
+149	--size	PASS	_pycodemod_selftest.py	1319
+150	--size	PASS	_pycodemod_selftest.py	1320
+151	--size	PASS	_pycodemod_selftest.py	1324
+152	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1342
+153	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1356
+154	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1358
+155	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1371
+156	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1374
+157	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1398
+158	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1403
+159	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1411
+160	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1413
+161	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1430
+162	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1433
+163	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1435
+164	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1441
+165	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1456
+166	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1466
+167	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1473
+168	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1489
+169	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1490
+170	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1495
+171	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1518
+172	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1520
+173	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1525
+174	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1529
+175	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1541
+176	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1543
+177	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1549
+178	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1550
+179	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1551
+180	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1561
+181	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1562
+182	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1566
+183	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1574
+184	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1575
+185	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1576
+186	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1580
+187	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1587
+188	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1593
+189	the ⚑ COMMENTARY census	PASS	_pycodemod_selftest.py	1597
+190	--shape	PASS	_pycodemod_selftest.py	1613
+191	--shape	PASS	_pycodemod_selftest.py	1618
+192	--shape	PASS	_pycodemod_selftest.py	1620
+193	--shape	PASS	_pycodemod_selftest.py	1626
+194	--shape	PASS	_pycodemod_selftest.py	1629
+195	--shape	PASS	_pycodemod_selftest.py	1643
+196	--shape	PASS	_pycodemod_selftest.py	1646
+197	--shape	PASS	_pycodemod_selftest.py	1648
+198	--shape	PASS	_pycodemod_selftest.py	1653
+199	--binding	PASS	_pycodemod_selftest.py	1672
+200	--binding	PASS	_pycodemod_selftest.py	1674
+201	--binding	PASS	_pycodemod_selftest.py	1679
+202	--binding	PASS	_pycodemod_selftest.py	1680
+203	--binding	PASS	_pycodemod_selftest.py	1682
+204	--binding	PASS	_pycodemod_selftest.py	1684
+205	--binding	PASS	_pycodemod_selftest.py	1701
+206	--binding	PASS	_pycodemod_selftest.py	1703
+207	--binding	PASS	_pycodemod_selftest.py	1709
+208	--binding	PASS	_pycodemod_selftest.py	1711
+209	--binding	PASS	_pycodemod_selftest.py	1728
+210	--binding	PASS	_pycodemod_selftest.py	1730
+211	--binding	PASS	_pycodemod_selftest.py	1733
+212	--binding	PASS	_pycodemod_selftest.py	1744
+213	--binding	PASS	_pycodemod_selftest.py	1750
+214	--binding	PASS	_pycodemod_selftest.py	1752
+215	--binding	PASS	_pycodemod_selftest.py	1755
+216	--binding	PASS	_pycodemod_selftest.py	1760
+217	--binding	PASS	_pycodemod_selftest.py	1761
+218	--binding	PASS	_pycodemod_selftest.py	1763
+219	--binding	PASS	_pycodemod_selftest.py	1764
+220	--state	PASS	_pycodemod_selftest.py	1802
+221	--state	PASS	_pycodemod_selftest.py	1806
+222	--state	PASS	_pycodemod_selftest.py	1808
+223	--state	PASS	_pycodemod_selftest.py	1811
+224	--state	PASS	_pycodemod_selftest.py	1813
+225	--state	FAIL	_pycodemod_selftest.py	1844
+226	--state	PASS	_pycodemod_selftest.py	1846
+227	--sql	PASS	_pycodemod_selftest.py	1875
+228	--sql	PASS	_pycodemod_selftest.py	1883
+229	--sql	PASS	_pycodemod_selftest.py	1890
+230	--sql	PASS	_pycodemod_selftest.py	1906
+231	--literal	PASS	_pycodemod_selftest.py	1975
+232	--literal	PASS	_pycodemod_selftest.py	1980
+233	--literal	PASS	_pycodemod_selftest.py	1984
+234	--literal	PASS	_pycodemod_selftest.py	1990
+235	--literal	PASS	_pycodemod_selftest.py	1997
+236	--literal	PASS	_pycodemod_selftest.py	2005
+237	--literal	PASS	_pycodemod_selftest.py	2012
+238	--crossings	PASS	_pycodemod_selftest.py	2065
+239	--crossings	PASS	_pycodemod_selftest.py	2073
+240	--crossings	PASS	_pycodemod_selftest.py	2079
+241	--crossings	PASS	_pycodemod_selftest.py	2086
+242	--crossings	PASS	_pycodemod_selftest.py	2092
+243	--relalg	PASS	_pycodemod_selftest.py	2144
+244	--relalg	PASS	_pycodemod_selftest.py	2147
+245	--relalg	PASS	_pycodemod_selftest.py	2149
+246	--relalg	PASS	_pycodemod_selftest.py	2153
+247	--relalg	PASS	_pycodemod_selftest.py	2155
+248	--relalg	PASS	_pycodemod_selftest.py	2163
+249	--relalg	PASS	_pycodemod_selftest.py	2170
+250	--relname	PASS	_pycodemod_selftest.py	2183
+251	--relname	PASS	_pycodemod_selftest.py	2185
+252	--relname	PASS	_pycodemod_selftest.py	2190
+253	--relname	PASS	_pycodemod_selftest.py	2192
+254	--relname	PASS	_pycodemod_selftest.py	2197
+255	--relname	PASS	_pycodemod_selftest.py	2204
+256	--relname	PASS	_pycodemod_selftest.py	2212
+257	--relname	PASS	_pycodemod_selftest.py	2219
+258	--relname	PASS	_pycodemod_selftest.py	2222
+259	--relname	PASS	_pycodemod_selftest.py	2224
+260	--relname	PASS	_pycodemod_selftest.py	2226
+261	--relname	PASS	_pycodemod_selftest.py	2228
+262	--relname	PASS	_pycodemod_selftest.py	2230
+263	--relname	PASS	_pycodemod_selftest.py	2247
+264	--relname	PASS	_pycodemod_selftest.py	2248
+265	--relname	PASS	_pycodemod_selftest.py	2254
+266	--relname	PASS	_pycodemod_selftest.py	2255
+267	--relname	PASS	_pycodemod_selftest.py	2258
+268	--relname	PASS	_pycodemod_selftest.py	2260
+269	--relname	PASS	_pycodemod_selftest.py	2263
+270	--relname	PASS	_pycodemod_selftest.py	2273
+271	--relname	PASS	_pycodemod_selftest.py	2274
+272	--relname	PASS	_pycodemod_selftest.py	2278
+273	--relname	PASS	_pycodemod_selftest.py	2281
+274	--relname	PASS	_pycodemod_selftest.py	2283
+275	--relname	PASS	_pycodemod_selftest.py	2285
+276	--relname	PASS	_pycodemod_selftest.py	2286
+277	--relname	PASS	_pycodemod_selftest.py	2301
+278	--relname	PASS	_pycodemod_selftest.py	2303
+279	--snapshots	PASS	_pycodemod_selftest.py	2344
+280	--snapshots	PASS	_pycodemod_selftest.py	2349
+281	--snapshots	PASS	_pycodemod_selftest.py	2354
+282	--snapshots	PASS	_pycodemod_selftest.py	2359
+283	--snapshots	PASS	_pycodemod_selftest.py	2363
+284	--control	PASS	_pycodemod_selftest.py	2475
+285	--control	PASS	_pycodemod_selftest.py	2477
+286	--control	PASS	_pycodemod_selftest.py	2479
+287	--control	PASS	_pycodemod_selftest.py	2485
+288	--control	PASS	_pycodemod_selftest.py	2487
+289	--control	PASS	_pycodemod_selftest.py	2489
+290	--control	PASS	_pycodemod_selftest.py	2491
+291	--control	PASS	_pycodemod_selftest.py	2493
+292	--control	PASS	_pycodemod_selftest.py	2495
+293	--control	PASS	_pycodemod_selftest.py	2501
+294	--control	PASS	_pycodemod_selftest.py	2503
+295	--control	PASS	_pycodemod_selftest.py	2505
+296	--control	PASS	_pycodemod_selftest.py	2511
+297	--control	PASS	_pycodemod_selftest.py	2516
+298	--control	PASS	_pycodemod_selftest.py	2520
+299	--control	PASS	_pycodemod_selftest.py	2526
+300	--control	PASS	_pycodemod_selftest.py	2538
+301	--control	PASS	_pycodemod_selftest.py	2545
+302	--control	PASS	_pycodemod_selftest.py	2548
+303	--control	PASS	_pycodemod_selftest.py	2568
+304	--control	PASS	_pycodemod_selftest.py	2570
+305	--control	PASS	_pycodemod_selftest.py	2574
+306	--control	PASS	_pycodemod_selftest.py	2584
+307	--split	PASS	_pycodemod_selftest.py	2608
+308	--split	PASS	_pycodemod_selftest.py	2610
+309	--split	PASS	_pycodemod_selftest.py	2626
+310	--split	PASS	_pycodemod_selftest.py	2627
+311	--split	PASS	_pycodemod_selftest.py	2628
+312	--split	PASS	_pycodemod_selftest.py	2631
+313	--split	PASS	_pycodemod_selftest.py	2648
+314	--split	PASS	_pycodemod_selftest.py	2650
+315	--split	PASS	_pycodemod_selftest.py	2652
+316	--split	PASS	_pycodemod_selftest.py	2676
+317	--split	PASS	_pycodemod_selftest.py	2677
+318	--split	PASS	_pycodemod_selftest.py	2679
+319	--split	PASS	_pycodemod_selftest.py	2681
+320	--split	PASS	_pycodemod_selftest.py	2682
+321	--split	PASS	_pycodemod_selftest.py	2683
+322	--split	PASS	_pycodemod_selftest.py	2689
+323	--split	PASS	_pycodemod_selftest.py	2703
+324	--split	PASS	_pycodemod_selftest.py	2713
+325	--split	PASS	_pycodemod_selftest.py	2719
+326	--split	PASS	_pycodemod_selftest.py	2729
+327	--split	PASS	_pycodemod_selftest.py	2730
+328	--split	PASS	_pycodemod_selftest.py	2744
+329	--split	PASS	_pycodemod_selftest.py	2746
+330	--split	PASS	_pycodemod_selftest.py	2749
+331	--split	PASS	_pycodemod_selftest.py	2751
+332	--split	PASS	_pycodemod_selftest.py	2755
+333	--split	PASS	_pycodemod_selftest.py	2757
+334	--split	PASS	_pycodemod_selftest.py	2766
+335	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	713
+336	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	716
+337	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	723
+338	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	727
+339	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	729
+340	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	740
+341	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	741
+342	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	742
+343	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	755
+344	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	762
+345	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	765
+346	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	773
+347	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	775
+348	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	777
+349	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	779
+350	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	787
+351	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	789
+352	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	791
+353	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	795
+354	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	801
+355	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	803
+356	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	804
+357	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	806
+358	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	808
+359	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	812
+360	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	827
+361	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	829
+362	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	831
+363	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	853
+364	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	855
+365	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	857
+366	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	859
+367	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	882
+368	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	885
+369	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	895
+370	--fingerprint (own module)	PASS	_pycodemod_fingerprint.py	897
+371	--reifies	PASS	_pycodemod_selftest.py	2828
+372	--reifies	PASS	_pycodemod_selftest.py	2830
+373	--reifies	PASS	_pycodemod_selftest.py	2832
+374	--reifies	PASS	_pycodemod_selftest.py	2834
+375	--reifies	PASS	_pycodemod_selftest.py	2836
+376	--reifies	PASS	_pycodemod_selftest.py	2843
+377	--reifies	PASS	_pycodemod_selftest.py	2845
+378	--reifies	PASS	_pycodemod_selftest.py	2847
+379	--reifies	PASS	_pycodemod_selftest.py	2854
+380	--reifies	PASS	_pycodemod_selftest.py	2856
+381	--reifies	PASS	_pycodemod_selftest.py	2857
+382	--reifies	PASS	_pycodemod_selftest.py	2863
+383	--reifies	PASS	_pycodemod_selftest.py	2869
+384	--resorts	PASS	_pycodemod_selftest.py	2902
+385	--resorts	PASS	_pycodemod_selftest.py	2909
+386	--resorts	PASS	_pycodemod_selftest.py	2911
+387	--resorts	PASS	_pycodemod_selftest.py	2913
+388	--resorts	PASS	_pycodemod_selftest.py	2923
+389	--resorts	PASS	_pycodemod_selftest.py	2925
+390	--resorts	PASS	_pycodemod_selftest.py	2937
+391	--funcnames	PASS	_pycodemod_selftest.py	2966
+392	--funcnames	PASS	_pycodemod_selftest.py	2976
+393	--funcnames	PASS	_pycodemod_selftest.py	2979
+394	--funcnames	PASS	_pycodemod_selftest.py	2986
+395	--funcnames	PASS	_pycodemod_selftest.py	2991
+396	--funcnames	PASS	_pycodemod_selftest.py	3002
+397	--funcnames	PASS	_pycodemod_selftest.py	3004
+398	--funcnames	PASS	_pycodemod_selftest.py	3016
+399	--ambient	PASS	_pycodemod_selftest.py	3054
+400	--ambient	PASS	_pycodemod_selftest.py	3060
+401	--ambient	PASS	_pycodemod_selftest.py	3063
+402	--ambient	PASS	_pycodemod_selftest.py	3065
+403	--ambient	PASS	_pycodemod_selftest.py	3073
+404	--ambient	PASS	_pycodemod_selftest.py	3075
+405	--ambient	PASS	_pycodemod_selftest.py	3081
+406	--ambient	PASS	_pycodemod_selftest.py	3083
+407	--ambient	PASS	_pycodemod_selftest.py	3090
+408	--ambient	PASS	_pycodemod_selftest.py	3091

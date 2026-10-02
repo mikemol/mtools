@@ -400,9 +400,10 @@ def port_dead(paths: list[str]) -> JSON:
         origin's `dead` result, so it is not carried here.
 
     """
-    report = cast("HasDead", _port("mikemol.pycodemod.dead", "dead")(
-        _port("mikemol.pycodemod.sites", "scan")(paths)
-    ))
+    report = cast(
+        "HasDead",
+        _port("mikemol.pycodemod.dead", "dead")(_port("mikemol.pycodemod.sites", "scan")(paths)),
+    )
     out: list[JSON] = []
     for row in report.dead:
         fields = cast("tuple[object, ...]", dataclasses.astuple(cast("DataclassInstance", row)))
