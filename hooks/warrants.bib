@@ -4288,3 +4288,31 @@
             `cmd || X=$?` never matches the bare form.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_exit_status_read_survives_set_e},
 }
+
+@misc{hooks-gate-suite-suite-refusal-naming-no-target-reaches-the-record,
+  section = {bar-fires},
+  title  = {A red suite whose log names no `//target` (0 tests executed) survives to record_refusal},
+  claim  = {A red suite whose log names no `//target` (0 tests executed) survives to record_refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_suite_refusal_naming_no_target_reaches_the_record},
+}
+
+@misc{hooks-gate-suite-suite-refusal-still-names-its-failing-target,
+  section = {bar-fires},
+  title  = {The other arm: a log naming `//pkg:t FAILED` still yields that label for the refusal},
+  claim  = {The other arm: a log naming `//pkg:t FAILED` still yields that label for the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_suite_refusal_still_names_its_failing_target},
+}
+
+@misc{hooks-gate-suite-bytecode-is-cleared-and-the-venv-is-kept,
+  section = {bar-fires},
+  title  = {clear_bytecode removes a distribution's __pycache__ and leaves its .venv's alone},
+  claim  = {clear_bytecode removes a distribution's __pycache__ and leaves its .venv's alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_bytecode_is_cleared_and_the_venv_is_kept},
+}
+
+@misc{hooks-gate-suite-host-pytest-runs-after-the-bytecode-is-cleared,
+  section = {bar-fires},
+  title  = {In the per-distribution loop, the clear comes before the host pytest it protects},
+  claim  = {In the per-distribution loop, the clear comes before the host pytest it protects.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_host_pytest_runs_after_the_bytecode_is_cleared},
+}

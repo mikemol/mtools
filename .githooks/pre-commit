@@ -128,6 +128,14 @@ $(sed 's/^/      /' "$2")"
     fi
 }
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
+# ⚑⚑ W361: A DISTRIBUTION'S `__pycache__` IS CLEARED BEFORE ITS HOST PYTEST. CPython trusts a
+# `.pyc` whose recorded source size and mtime (whole seconds) match, so an F-arm that plants a
+# same-length defect and restores it within one second leaves the PLANTED bytecode in force: the
+# host pytest then tests bytes that are in no file (W358). The `.venv` is pruned — its bytecode is
+# the installed dependencies', which no F-arm touches.
+clear_bytecode() {
+    find "$1" -path "$1/.venv" -prune -o -type d -name __pycache__ -prune -exec rm -rf {} +
+}
 
 # ⚑⚑⚑ EVERY TEST AND BUILD THIS GATE LAUNCHES RUNS WITHOUT `GIT_*`; THE GATE ITSELF KEEPS THEM.
 # git exports `GIT_DIR` and `GIT_INDEX_FILE` into this hook, naming the REAL repository — and under
@@ -545,6 +553,7 @@ for dist in $_dists; do
   # one thing this run has that bazel does not: the developer venv, where a missing dependency
   # surfaces as an import error rather than as a sandbox that never had it. The honest statement
   # is that this line is a DEVELOPER-TREE smoke check and the hermetic verdict is bazel's.
+  clear_bytecode "$root/$dist"
   run_checked "$dist: pytest — every case passes" \
     git_scrubbed env -C "$root/$dist" .venv/bin/python3 -m pytest -q
 done
@@ -788,7 +797,12 @@ if [ "$_suite_rc" -ne 0 ] && [ "$_suite_green" -eq 1 ]; then
     _suite_rc=0
 fi
 if [ "$_suite_rc" -ne 0 ]; then
-    failed_targets=$(grep -oE '^//[^ ]+' "$staged/.suite.log" 2>/dev/null | sort -u | tr '\n' ' ')
+    # ⚑⚑ W184: A LOG NAMING NO `//target` (0 tests executed, an analysis error) MADE THIS LINE
+    # KILL THE GATE. Under `pipefail` grep's no-match status became the assignment's, `set -e`
+    # exited 1, and the refusal reached neither the summary nor `record_refusal` — a refused commit
+    # with no row. MEASURED: `REFUSALS.tsv`'s last row predated a 2026-09-27 refusal. An empty
+    # label is then the fallback `note_failure` text below, not a dead gate.
+    failed_targets=$(grep -oE '^//[^ ]+' "$staged/.suite.log" 2>/dev/null | sort -u | tr '\n' ' ') || failed_targets=""
     fail=1
     # ⚑⚑⚑ THE LABEL ONLY, AND THE LOG IS DELIBERATELY *NOT* PASSED — OPERATOR RULING 2026-09-11,
     # MADE TWICE BECAUSE THE FIRST RULING RESTED ON A FIGURE I GAVE WRONG BY 47×. `note_failure`'s

@@ -329,6 +329,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # explicit env and a `json.dumps` payload on stdin. Never through a shell.
 "tests/test_adopt_launcher.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ W184/W361: `test_gate_suite.py`'s subject is a piece of `.githooks/pre-commit` RUN under the
+# gate's own `set -euo pipefail`, so launching bash is the case. The script is text lifted from the
+# tracked gate plus literals; the cwd is `tmp_path` and the env is PATH alone.
+"tests/test_gate_suite.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑⚑⚑ THE FOURTH NAMED FILE, AND RUNNING A SUBPROCESS IS THE WHOLE MEASUREMENT. `grade.py` awards
 # `behavioral` only when a mutation makes a check go red, and a check cannot go red without being
 # RUN. ⚑ It must be a fresh process rather than an import: Python caches a module's source at
