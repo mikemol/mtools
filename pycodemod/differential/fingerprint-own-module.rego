@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Mike Mol
 #
 # W336: fingerprint-own-module (_pycodemod_fingerprint.py's selftest, origin lines 713-897).
-# 36 cases; 29 are declared unmeasured in W206-gen (a method callee, or an operand the capture
+# 36 cases; 29 are declared unmeasured in gen_cases.py (a method callee, or an operand the capture
 # kept only as a repr: an AST node or a registry), so they never reach a rule. The seven below are
 # judged. site_referents rows are [line, kind, class, function, text, referents]; the adapter
 # writes the referent frozenset as a sorted list.

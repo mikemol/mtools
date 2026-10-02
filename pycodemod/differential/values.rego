@@ -12,7 +12,7 @@
 # Withheld, not ruled:
 #   084 judges the t6v call's contexts, but the capture attributes it to the later t6c call
 #       (sticky), so `result` is not what the check reads.
-#   098-102 are declared unmeasured in W206-gen (W222: module() and absent-callee buckets).
+#   098-102 are declared unmeasured in gen_cases.py (W222: module() and absent-callee buckets).
 #
 # input = {case, fixture, operands, result}; result = [one value per origin call].
 package pycodemod.values

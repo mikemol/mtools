@@ -7,7 +7,7 @@
 # Withheld, not ruled:
 #   382, 383 judge reifies.population and reifies.skipped, attributes the function stamps on
 #            itself; the capture never keeps them (the class W226 declared for resorts 388-390,
-#            not yet declared for these two in W206-gen's _FN_ATTRS).
+#            not yet declared for these two in gen_cases.py's _FN_ATTRS).
 #
 # input = {case, fixture, operands, result}; result = [one value per origin call].
 package pycodemod.reifies

@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Mike Mol
 #
 # W410: swallows (_pycodemod_selftest.py:189-223). One case is measurable; 009-013 are declared
-# unmeasured in W206-gen (W222, "callee not in module": their recorded callee is the selftest's
+# unmeasured in gen_cases.py (W222, "callee not in module": their recorded callee is the selftest's
 # local `case` helper, which resolves to nothing in _pycodemod_placement).
 #   swallows rows: [path, line, breadth, handler, feeds_verdict]
 #

@@ -4,7 +4,7 @@
 # W226: resorts (_pycodemod_selftest.py:2900-2938). resorts(paths) returns rows
 # [path, line, caller, callee, why]; the origin keys them by caller -> (callee, why).
 # 388-390 read attributes resorts() stamps on itself, which the capture does not keep, so they
-# are declared unmeasured in W206-gen and never reach a rule. Cost: one cold corpus walk per
+# are declared unmeasured in gen_cases.py and never reach a rule. Cost: one cold corpus walk per
 # distinct fixture (~290s, W225), so run this with a 15-min budget.
 #
 # input = {case, fixture, operands, result}; result = [one value per origin call].

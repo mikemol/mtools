@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Mike Mol
 #
 # W419: the losslessness preamble (_pycodemod_selftest.py:108-121), the cases before the first
-# `# ──` mode header. 001 is declared unmeasured in W206-gen (capture class `none`: it calls
+# `# ──` mode header. 001 is declared unmeasured in gen_cases.py (capture class `none`: it calls
 # libcst directly, no pycodemod mode). Each other rule states the origin's own check.
 #   roundtrip result: [identical, reason]
 #   scan rows:        [path, kind, name, line]
