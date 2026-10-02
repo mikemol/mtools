@@ -84,4 +84,24 @@ while IFS= read -r -d '' _py; do
     fi
 done < <(find . -name '*.py' -perm -u+x -print0)
 
-exec "$ruff" check --no-cache --config "$config" .
+# ⚑⚑⚑ W477: FORMATTING IS PART OF THE BAR, AND UNTIL HERE NOTHING IN THE GRAPH CHECKED IT. This
+# ran `ruff check` alone, so `ruff format --check` rested on the edit-time pycheck hook — and a
+# file that reached the tree any other way (a sed, a cp, a generator) was never measured: 2737143
+# committed an unformatted conftest and nothing refused it. Measured before arming: all 14
+# distributions pass `format --check` (positive control: the same invocation flags a probe file).
+# ⚑ BOTH RUN, AND EACH STATUS IS READ IN AN `else`, so one refusal never hides the other and a
+# refusing checker cannot end the script before its status is read (W474's class).
+if "$ruff" check --no-cache --config "$config" .; then
+    _check_rc=0
+else
+    _check_rc=$?
+fi
+if "$ruff" format --check --no-cache --config "$config" .; then
+    _format_rc=0
+else
+    _format_rc=$?
+fi
+if [ "$_check_rc" -ne 0 ] || [ "$_format_rc" -ne 0 ]; then
+    echo "ruff_check: ruff check rc=$_check_rc, ruff format --check rc=$_format_rc" >&2
+    exit 1
+fi
