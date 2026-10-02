@@ -90,3 +90,21 @@
   claim   = {0 on a good distribution, 1 on findings, 2 on a usage error.},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_main_reports_exit_codes}
 }
+
+@misc{rules-py-suite-check-unguarded-population-negative-is-named,
+  section = {suite_check},
+  claim   = {`assert not` over a derived population, with nothing truthy beside it, is a finding.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_unguarded_population_negative_is_named}
+}
+
+@misc{rules-py-suite-check-guard-below-the-negative-counts,
+  section = {suite_check},
+  claim   = {A truthy assertion after the negative guards it; the whole function is walked.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_guard_below_the_negative_counts}
+}
+
+@misc{rules-py-suite-check-verdict-calls-and-literals-are-not-populations,
+  section = {suite_check},
+  claim   = {A declared verdict call and a literal collection are not population-shaped negatives.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suite_check.py -k test_verdict_calls_and_literals_are_not_populations}
+}

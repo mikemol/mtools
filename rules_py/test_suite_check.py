@@ -59,3 +59,41 @@ def test_main_reports_exit_codes(tmp_path: Path) -> None:
     _dist(bad, _GOOD_BUILD, _RESOLVING_TEST)
     codes = [suite_check.main([str(good)]), suite_check.main([str(bad)]), suite_check.main([])]
     assert codes == [0, 1, 2]
+
+
+_UNGUARDED = (
+    "def test_x() -> None:\n"
+    "    offenders = [p for p in range(3) if p > 5]\n"
+    "    assert not offenders\n"
+)
+_GUARDED_BELOW = (
+    "def test_x() -> None:\n"
+    "    swept = list(range(3))\n"
+    "    offenders = [p for p in swept if p > 5]\n"
+    "    assert not offenders\n"
+    "    assert len(swept) >= 3\n"
+)
+_VERDICT_AND_LITERAL = (
+    "def test_x() -> None:\n"
+    "    fired = analyze('ls')\n"
+    "    assert not fired\n"
+    "    empty = []\n"
+    "    assert not empty\n"
+)
+
+
+def test_unguarded_population_negative_is_named(tmp_path: Path) -> None:
+    """`assert not` over a derived population, with nothing truthy beside it, is a finding."""
+    [finding] = suite_check.check(_dist(tmp_path, _GOOD_BUILD, _UNGUARDED))
+    assert finding.endswith("test_a.py:3: test_x asserts `not offenders` and nothing truthy")
+
+
+def test_guard_below_the_negative_counts(tmp_path: Path) -> None:
+    """A truthy assertion after the negative guards it; the whole function is walked."""
+    assert suite_check.check(_dist(tmp_path, _GOOD_BUILD, _GUARDED_BELOW)) == []
+
+
+def test_verdict_calls_and_literals_are_not_populations(tmp_path: Path) -> None:
+    """A declared verdict call and a literal collection are not population-shaped negatives."""
+    assert suite_check.check(_dist(tmp_path, _GOOD_BUILD, _VERDICT_AND_LITERAL)) == []
+    assert "analyze" in suite_check.VERDICT_CALLS
