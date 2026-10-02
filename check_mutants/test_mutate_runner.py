@@ -18,6 +18,7 @@ import os
 import pathlib
 import subprocess
 import sys
+import threading
 from typing import TYPE_CHECKING
 
 import mutate_runner
@@ -190,3 +191,54 @@ def test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names(
     refs = _git("-C", str(decoy), "for-each-ref", env=clean).stdout
     assert not refs, f"the suite committed into the decoy: {refs.strip()}"
     assert [k for k in seen[0] if k.startswith("GIT_")] == [], "a GIT_* variable reached the suite"
+
+
+# ⚑ THE SUITE WAITS FOR `f` TO SUCCEED: unmutated it passes at once, mutated it retries far past
+# the runner's limit. That is the shape that hung //gmailstruct:mutants (W356).
+# ⚑ ITS OWN 120s BOUND IS CLEANUP ONLY: a runner without the limit still fails the 30s join below
+# by assertion, and the orphaned suite then exits instead of spinning forever (measured
+# 2026-10-02: the unbounded form left three orphans behind F-arm runs).
+_WAITING_SUITE = """\
+import time
+
+import mod
+
+
+def test_waits_for_f() -> None:
+    deadline = time.monotonic() + 120
+    while time.monotonic() < deadline:
+        try:
+            assert mod.f() == 1
+        except AssertionError:
+            time.sleep(0.05)
+        else:
+            return
+    raise AssertionError("f never returned 1")
+"""
+
+
+def test_a_mutant_that_makes_a_wait_unbounded_is_killed_by_the_time_limit(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A mutant whose suite never ends is recorded as KILLED once `MUTATE_TIMEOUT` expires.
+
+    ⚑⚑ RUN ON A WORKER THREAD AND JOINED WITH A BOUND, so a runner without the limit fails this
+    test by ASSERTION (the verdict never arrives) rather than hanging the suite that tests it.
+    """
+    dist = tmp_path / "dist"
+    (dist / "src").mkdir(parents=True)
+    (dist / "tests").mkdir()
+    (dist / "src" / "mod.py").write_text(_SITE_SOURCE, encoding="utf-8")
+    (dist / "tests" / "test_wait.py").write_text(_WAITING_SUITE, encoding="utf-8")
+    (dist / "pyproject.toml").write_text("", encoding="utf-8")
+    monkeypatch.setenv("MUTATE_TIMEOUT", "2")
+    grid = mutate_runner.Grid(pathlib.Path(sys.executable), dist, dist / "pyproject.toml")
+    mutant = mutate_runner.Mutant(pathlib.Path("src/mod.py"), _SITE_SOURCE, _SITE)
+    got: list[str] = []
+    worker = threading.Thread(
+        target=lambda: got.append(mutate_runner.run(grid, mutant)), daemon=True
+    )
+    worker.start()
+    worker.join(timeout=30)
+    assert got == ["killed"], "the unbounded mutant produced no verdict within 30s"

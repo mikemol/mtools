@@ -36,6 +36,7 @@ import fnmatch
 import os
 import pathlib
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -90,21 +91,61 @@ class Mutant:
     name: str
 
 
+# ⚑⚑ THE PER-MUTANT TIME LIMIT (W359), in seconds of WALL time. A mutant that turns a bounded wait
+# into an unbounded one (a retry loop around the raised `AssertionError`) never ends its suite, and
+# without a limit ONE such cell held the whole grid until bazel's own ceiling killed it — measured
+# as //gmailstruct:mutants TIMEOUT 300s (W356), a grid that reported nothing about any site.
+_DEFAULT_TIMEOUT_S = 60.0
+
+
+def mutant_timeout() -> float:
+    """Read the per-mutant wall-time limit from `MUTATE_TIMEOUT`, defaulting to 60s.
+
+    Returns:
+        the limit in seconds of wall time.
+
+    """
+    return float(os.environ.get("MUTATE_TIMEOUT", "") or _DEFAULT_TIMEOUT_S)
+
+
 def launch(
     argv: list[str],
     cwd: pathlib.Path,
     env: dict[str, str],
 ) -> subprocess.CompletedProcess[str]:
-    """Run one mutant's suite: argv only, no shell, output captured as text.
+    """Run one mutant's suite: argv only, no shell, output captured as text, bounded in time.
 
     ⚑ ONE SEAM FOR THE ONE SUBPROCESS, so a test replaces THIS rather than `subprocess.run` for the
     whole interpreter — which also replaced the git its own fixture needed.
 
+    ⚑⚑ THE SUITE RUNS IN ITS OWN SESSION AND THE WHOLE GROUP IS KILLED AT THE LIMIT. Killing only
+    the direct child would leave any grandchild holding the output pipes, and the read would wait
+    on it — the hang moved one level down rather than removed.
+
     Returns:
         the completed process; its status is read by `verdict`, never raised.
 
+    Raises:
+        subprocess.TimeoutExpired: when the suite outlives `mutant_timeout()`; the group is dead.
+
     """
-    return subprocess.run(argv, cwd=cwd, capture_output=True, text=True, check=False, env=env)
+    limit = mutant_timeout()
+    with subprocess.Popen(
+        argv,
+        cwd=cwd,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    ) as proc:
+        try:
+            out, err = proc.communicate(timeout=limit)
+        except subprocess.TimeoutExpired:
+            os.killpg(proc.pid, signal.SIGKILL)
+            proc.communicate()
+            raise
+        return subprocess.CompletedProcess(argv, proc.returncode, out, err)
 
 
 def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | None]]:
@@ -363,26 +404,45 @@ def run(grid: Grid, mutant: Mutant, *, debug: bool = False) -> str:
         # RULED OUT alongside what it found.
         # ⚑ `shutil.copytree` ALREADY BRINGS `pyproject.toml` ACROSS, so this names the copy
         # rather than adding a file: the fix is which path is passed, not what exists.
-        proc = launch(
-            [
-                str(grid.py),
-                "-m",
-                "pytest",
-                "-x",
-                "-q",
-                "--no-header",
-                "-p",
-                "no:cacheprovider",
-                "-c",
-                str(work / grid.config.name),
-                "tests",
-            ],
-            work,
-            env,
-        )
+        # ⚑⚑ A SUITE THAT OUTLIVES THE LIMIT IS A KILL: it did not pass, and the only code that
+        # differs from a clean run is the mutant, so the mutant is what it noticed.
+        try:
+            proc = _launch_suite(grid, work, env)
+        except subprocess.TimeoutExpired:
+            if debug:
+                sys.stdout.write(f"      timed out after {mutant_timeout()}s\n")
+            return "killed"
         if debug:
             _report_debug(proc)
         return verdict(proc.returncode, proc.stdout)
+
+
+def _launch_suite(
+    grid: Grid, work: pathlib.Path, env: dict[str, str]
+) -> subprocess.CompletedProcess[str]:
+    """Run the distribution's suite inside the mutant's temp tree.
+
+    Returns:
+        the completed suite process.
+
+    """
+    return launch(
+        [
+            str(grid.py),
+            "-m",
+            "pytest",
+            "-x",
+            "-q",
+            "--no-header",
+            "-p",
+            "no:cacheprovider",
+            "-c",
+            str(work / grid.config.name),
+            "tests",
+        ],
+        work,
+        env,
+    )
 
 
 def _plan(

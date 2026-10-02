@@ -38,3 +38,9 @@
   claim   = {A mutant's suite committing in its own directory lands there and not in the repository an exported GIT_DIR names. Measured 2026-09-23: a fixture under a pre-commit hook wrote nine commits into the calling repo. Armed against a decoy, never the real repository},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names}
 }
+
+@misc{root-mutate-runner-a-mutant-that-makes-a-wait-unbounded-is-killed-by-the-time-limit,
+  section = {mutate_runner},
+  claim   = {A mutant whose suite never ends (a retry loop around the raised mutant) is recorded as KILLED once MUTATE_TIMEOUT expires, its process group killed, instead of holding the grid until bazel's ceiling: W356 measured //gmailstruct:mutants TIMEOUT 300s},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_that_makes_a_wait_unbounded_is_killed_by_the_time_limit}
+}
