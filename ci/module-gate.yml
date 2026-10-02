@@ -53,7 +53,8 @@ jobs:
     # ⚑ The labels are luthen-observability's to name (W257). These are placeholders until then.
     runs-on: [self-hosted, mikemol-tools, "${{ inputs.runner-class }}"]
     steps:
-      - uses: actions/checkout@v4
+      # Pinned by commit (W489): a tag can be moved; this SHA is what refs/tags/v4 named on 2026-10-02.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 (= v4.4.0)
         with:
           persist-credentials: false
 
