@@ -3,3 +3,4 @@
 # `warrants.bib`, exactly as it does for each distribution.
 # key <TAB> heading title
 selector_check	The Selector Check: A Comment Never Cites a Code Its Selector Now Names by Rule Name
+suppression_check	The Suppression Check: Every ruff: ignore Directive Is Honoured by the Gate's Ruff

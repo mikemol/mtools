@@ -4,11 +4,15 @@
 # The ruff check atom (mtools:W324): the script, and the pinned binary as `:bin`.
 # W384: `selector_check.py` checks one distribution's ruff selectors agree with their comments;
 # its test is run by the root's //:test_selector_check until the atom has a gate.
+# W385: `suppression_check.py` checks every `ruff: ignore` directive in one distribution is
+# honoured by the gate's ruff; tested by the root's //:test_suppression_check.
 exports_files([
     "mypy.ini",
     "ruff_check.sh",
     "selector_check.py",
+    "suppression_check.py",
     "test_selector_check.py",
+    "test_suppression_check.py",
 ])
 
 alias(

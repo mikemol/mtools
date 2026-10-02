@@ -36,3 +36,39 @@
   claim   = {0 on an agreeing config, 1 on a missing one, 2 on a usage error (no ruff is run).},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_selector_check.py -k test_main_reports_exit_codes}
 }
+
+@misc{check-ruff-suppression-check-an-honoured-directive-passes,
+  section = {suppression_check},
+  claim   = {ruff reports nothing for the claimed rule, so the directive holds; src is swept too.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suppression_check.py -k test_an_honoured_directive_passes}
+}
+
+@misc{check-ruff-suppression-check-a-resurfaced-finding-for-a-claimed-rule-is-named,
+  section = {suppression_check},
+  claim   = {A finding for the rule a directive names means the directive died; it is reported.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suppression_check.py -k test_a_resurfaced_finding_for_a_claimed_rule_is_named}
+}
+
+@misc{check-ruff-suppression-check-a-finding-for-an-unclaimed-rule-is-not-this-checks-business,
+  section = {suppression_check},
+  claim   = {Another rule's finding belongs to the ruff target, so a red here is only about suppression.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suppression_check.py -k test_a_finding_for_an_unclaimed_rule_is_not_this_checks_business}
+}
+
+@misc{check-ruff-suppression-check-an-invalid-directive-is-always-claimed,
+  section = {suppression_check},
+  claim   = {ruff's own invalid-rule report is claimed even when no directive names it.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suppression_check.py -k test_an_invalid_directive_is_always_claimed}
+}
+
+@misc{check-ruff-suppression-check-a-distribution-without-directives-runs-no-ruff,
+  section = {suppression_check},
+  claim   = {With nothing to check, ruff is not run and the result is empty, never a guess.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suppression_check.py -k test_a_distribution_without_directives_runs_no_ruff}
+}
+
+@misc{check-ruff-suppression-check-main-reports-exit-codes,
+  section = {suppression_check},
+  claim   = {0 with no directives, 1 with no pyproject.toml, 2 on a usage error (no ruff is run).},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_suppression_check.py -k test_main_reports_exit_codes}
+}
