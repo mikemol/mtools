@@ -1664,6 +1664,27 @@ def test_the_ratchet_check_captures_its_own_output() -> None:
     assert "no new keys" in block, "the new-key refusal is still named"
 
 
+def test_every_exit_status_read_survives_set_e() -> None:
+    """⚑⚑⚑ A STATUS READ BEHIND A BARE COMMAND IS UNREACHABLE EXACTLY WHEN IT MATTERS (W474).
+
+    The gate runs under `set -euo pipefail`, so a bare failing command ends the script before the
+    next line reads `$?`. Measured on the ratchet loop: a refusal over 19 new keys exited 1 with
+    no `note_failure` and no REFUSED verdict — the silence the refusal record exists to prevent.
+    The file had already recorded this hazard and its remedy for the shape linter; **a recorded
+    lesson is not an applied one**, so this asserts the CLASS: every bare `X=$?` sits in the
+    `else` of an `if` (the form `set -e` exempts), and `cmd || X=$?` never matches the bare form.
+    """
+    lines = _GATE.read_text(encoding="utf-8").splitlines()
+    bare: list[int] = []
+    for i, line in enumerate(lines):
+        if not pyre.fullmatch(r"\s*\w+=\$\?\s*", line):
+            continue
+        code = [s.strip() for s in lines[:i] if s.strip() and not s.strip().startswith("#")]
+        if not code or code[-1] != "else":
+            bare.append(i + 1)
+    assert bare == [], f"status reads a failing command never reaches, at gate lines {bare}"
+
+
 # --- four repairs from two ticks, each armed by hand once and none gated ------------------------
 #
 # ⚑⚑⚑ A COMMENT NAMING A CLASS IS EVIDENCE THE CLASS WAS SEEN ONCE, AND IS ROUTINELY READ AS

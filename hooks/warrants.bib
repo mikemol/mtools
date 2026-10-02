@@ -4273,3 +4273,18 @@
             --report.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger.py -k test_no_ledger_a_typo_or_two_modes_is_refused},
 }
+
+@misc{hooks-bar-fires-every-exit-status-read-survives-set-e,
+  section = {bar-fires},
+  title  = {⚑⚑⚑ A STATUS READ BEHIND A BARE COMMAND IS UNREACHABLE EXACTLY WHEN IT MATTERS (W474)},
+  claim  = { A STATUS READ BEHIND A BARE COMMAND IS UNREACHABLE EXACTLY WHEN IT MATTERS (W474). The
+            gate runs under `set -euo pipefail`, so a bare failing command ends the
+            script before the next line reads `$?`. Measured on the ratchet loop: a
+            refusal over 19 new keys exited 1 with no `note_failure` and no REFUSED
+            verdict — the silence the refusal record exists to prevent. The file had
+            already recorded this hazard and its remedy for the shape linter; **a
+            recorded lesson is not an applied one**, so this asserts the CLASS: every
+            bare `X=$?` sits in the `else` of an `if` (the form `set -e` exempts), and
+            `cmd || X=$?` never matches the bare form.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_exit_status_read_survives_set_e},
+}

@@ -988,8 +988,15 @@ run_checked "stubtest — the panflute stub still matches its module" \
 _RATCHET_CANNOT_CENSUS=2
 for dist in $_dists; do
   rlog="$staged/.ratchet-$dist.log"
-  git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1
-  _rc=$?
+  # ⚑⚑⚑ W474: TESTED BY AN `if`, BECAUSE A BARE CALL NEVER REACHED `_rc=$?` WHEN IT MATTERED.
+  # Under `set -e` a refusing ratchet ended the script on this line: 19 new keys, exit 1, no
+  # note_failure and no REFUSED verdict. The shape linter below records the same hazard; the class
+  # is asserted by test_every_exit_status_read_survives_set_e.
+  if git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
+    _rc=0
+  else
+    _rc=$?
+  fi
   cat "$rlog" >&2
   if [ "$_rc" -eq "$_RATCHET_CANNOT_CENSUS" ]; then
       fail=1; note_failure "$dist: ratchet — COULD NOT CENSUS (no ruff to run); not a new key" "$rlog"
