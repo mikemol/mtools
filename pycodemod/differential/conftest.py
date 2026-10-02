@@ -330,6 +330,24 @@ def _sites(value: object) -> JSON:
     return out
 
 
+def _source(value: object) -> JSON:
+    """Reshape port `Source` rows to the origin's [path, start, end, text], dropping `qualname`.
+
+    The port added the qualified name; the origin never had it (W448).
+
+    Returns:
+        one four-field list per row.
+
+    """
+    out: list[JSON] = []
+    for row in cast("HasRows", value).rows:
+        path, start, end, _qualname, text = cast(
+            "tuple[str, int, int, str, str]", dataclasses.astuple(cast("DataclassInstance", row))
+        )
+        out.append([path, start, end, text])
+    return out
+
+
 # W432: origin callee -> (port module, port function, reshape into the origin's result shape).
 # One entry per mode as its translator lands (W208); an unlisted callee raises SubjectGapError.
 SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
@@ -354,6 +372,14 @@ SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
     "_pycodemod_query.py:asserted": ("conftest", "port_asserted", _same),
     "_pycodemod_query.py:reifies": ("mikemol.pycodemod.ordering", "reifies", _rows),
     "_pycodemod_ambient.py:ambient": ("conftest", "port_ambient", _rows),
+    "_pycodemod_query.py:bindings": ("conftest", "port_bindings", _same),
+    "_pycodemod_query.py:funcnames": ("mikemol.pycodemod.funcnames", "funcnames", _rows),
+    "_pycodemod_query.py:_generic_func_names": (
+        "mikemol.pycodemod.funcnames",
+        "generic_names",
+        _same,
+    ),
+    "_pycodemod_query.py:source_of": ("mikemol.pycodemod.definitions", "source_of", _source),
 }
 
 
@@ -564,6 +590,46 @@ def port_ambient(paths: list[str]) -> object:
     """
     root = Path(str(cast("Rooted", importlib.import_module("_pycodemod_core")).ROOT))
     return _port("mikemol.pycodemod.ambient", "ambient")(paths, root)
+
+
+class HasSkipped(Protocol):
+    """A port `Found`: its rows, and the files it could not read as `Skip(path, why, error)`."""
+
+    rows: list[object]
+    skipped: list[object]
+
+
+# W439: the port's Skip.why -> the origin's verdict kind, for a file the origin returned as a row.
+_VERDICT = {"unparseable": "<syntax-error>", "unreadable": "<unreadable>"}
+
+
+def port_bindings(name: str, path: str) -> JSON:
+    """Compose the port's `bindings([path], name)` into the origin's per-file rows (W439).
+
+    The origin took one path and returned [kind, qualname, line, live_start, live_end]; the port
+    takes paths and returns Binding(path, line, kind, qualname, live). ⚑ A file the origin could
+    not read or parse came back as ONE verdict row; the port reports it in `skipped` (a failure is
+    not a binding). The skip is carried AS that verdict row, its kind from `why` and its error
+    text kept, so the failure is relocated to where the origin's spec reads it, never dropped.
+
+    Returns:
+        the origin's rows, or its single verdict row for a skipped file.
+
+    """
+    found = cast("HasSkipped", _port("mikemol.pycodemod.definitions", "bindings")([path], name))
+    out: list[JSON] = []
+    for skip in found.skipped:
+        _where, why, error = cast(
+            "tuple[str, str, str]", dataclasses.astuple(cast("DataclassInstance", skip))
+        )
+        out.append([_VERDICT.get(why, f"<{why}>"), error, 0, 0, 0])
+    for row in found.rows:
+        _where, line, kind, qualname, live = cast(
+            "tuple[str, int, str, str, tuple[int, int]]",
+            dataclasses.astuple(cast("DataclassInstance", row)),
+        )
+        out.append([kind, qualname, line, live[0], live[1]])
+    return out
 
 
 # W435: origin callees the port deliberately does not carry, with the reason. A capture can hold

@@ -138,6 +138,13 @@ _NO_SQLNAME = (
     "q_ query bridge stays with substrate)"
 )
 DO_NOT_PORT: dict[int, str] = dict.fromkeys(range(36, 41), _NO_SQLNAME)
+# W443: portable_sites backs the `portable` mode, which the port declares do-not-port; a case
+# already declared unmeasured keeps that (397, 398), since unmeasured is assigned first.
+_NO_PORTABLE = (
+    "the port carries no portable mode: pycodemod cli.py lists it in _DO_NOT_PORT_NAMES "
+    "(portable_sites is substrate's raw-SQL EXPLAIN survey)"
+)
+DO_NOT_PORT |= dict.fromkeys(range(396, 399), _NO_PORTABLE)
 
 
 class CaptureError(ValueError):

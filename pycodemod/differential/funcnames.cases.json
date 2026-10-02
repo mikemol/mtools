@@ -107,7 +107,9 @@
   ],
   "fixture": {
    "/var/tmp/tmpqtc60jzn/func_case.py": "\nfrom sqlalchemy import func, select\n\ndef portable(c):\n    return select(func.count(c), func.max(c), func.coalesce(c, 0))\n\ndef dialect_specific(c):\n    return select(func.string_agg(c, ','), func.jsonb_agg(c))\n\ndef sqlite_ism(c):\n    return select(func.group_concat(c))\n\ndef not_sqlalchemy(node):\n    return node.func.attr.value          # libcst's `.func` \u2014 an unrelated spelling\n"
-  }
+  },
+  "disposition": "do-not-port",
+  "reason": "the port carries no portable mode: pycodemod cli.py lists it in _DO_NOT_PORT_NAMES (portable_sites is substrate's raw-SQL EXPLAIN survey)"
  },
  {
   "case": "397-but-the-core-built-sql-it-could-not-judge-is-now-recorded-no",
