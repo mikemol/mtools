@@ -352,6 +352,8 @@ SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
     "_pycodemod_query.py:reaches": ("conftest", "port_reaches", _same),
     "_pycodemod_query.py:forwards": ("conftest", "port_forwards", _same),
     "_pycodemod_query.py:asserted": ("conftest", "port_asserted", _same),
+    "_pycodemod_query.py:reifies": ("mikemol.pycodemod.ordering", "reifies", _rows),
+    "_pycodemod_ambient.py:ambient": ("conftest", "port_ambient", _rows),
 }
 
 
@@ -546,6 +548,22 @@ def port_asserted(name: str, kw: str, paths: list[str]) -> JSON:
     sites = _port("mikemol.pycodemod.sites", "scan")(paths, name)
     got = cast("HasAsserted", _port("mikemol.pycodemod.arguments", "asserted")(sites, kw))
     return [_wheres(got.literal), _wheres(got.computed)]
+
+
+def port_ambient(paths: list[str]) -> object:
+    """Call the port's `ambient(paths, root)` with the root the origin read ambiently (W441).
+
+    The origin resolved its repo subtrees from `_pycodemod_core.ROOT`; the port takes the root as
+    a parameter, so the shim passes that same root rather than inventing one. ⚑ The origin also
+    unions a hardcoded `_REPO_SUBTREE_FALLBACK` (Substrate, agda, ...) that the port drops on
+    purpose as substrate-specific; no case exercises it, so no reshape covers it.
+
+    Returns:
+        the port's `Ambient`, whose `rows` are [path, line, kind, verdict, shown, context].
+
+    """
+    root = Path(str(cast("Rooted", importlib.import_module("_pycodemod_core")).ROOT))
+    return _port("mikemol.pycodemod.ambient", "ambient")(paths, root)
 
 
 # W435: origin callees the port deliberately does not carry, with the reason. A capture can hold
