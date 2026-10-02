@@ -7,7 +7,9 @@
 # own (W342). Its test is run by the root's //:test_venv_check until the atom has a gate.
 # W362: `suite_check.py` checks one distribution's suite is run by pytest and never resolves
 # `__file__` out of the sandbox; its test is run by the root's //:test_suite_check.
+# W375: `dist.bzl`'s dist_checks() declares a distribution's :venv and :suite together.
 exports_files([
+    "dist.bzl",
     "mypy.ini",
     "pytest_main.py",
     "suite_check.py",

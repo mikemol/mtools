@@ -5,6 +5,7 @@
 # shipping dependency, no stubs, no CLI (W289). The rationale for each shape lives in
 # //transcriptstruct; this file says only where it differs.
 load("@gmailstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
@@ -102,32 +103,8 @@ sh_test(
     size = "medium",
 )
 
-# W342: this distribution's built venv, checked by @mikemol_rules_py's venv_check. The tests are
-# staged too, because the check collects the distribution's own suite with the venv.
-sh_test(
-    name = "venv",
-    srcs = ["@mikemol_rules_py//:venv_check.sh"],
-    args = [
-        "$(location :pyproject.toml)",
-        "$(location @mikemol_rules_py//:venv_check.py)",
-    ],
-    data = [
-        "pyproject.toml",
-        ":.venv",
-        "@mikemol_rules_py//:venv_check.py",
-    ] + glob(["tests/**/*.py"]),
-    size = "small",
-)
-
-# W365: the suite check (W362) over this distribution's own BUILD and tests.
-py_test(
-    name = "suite",
-    srcs = ["@mikemol_rules_py//:suite_check.py"],
-    main = "@mikemol_rules_py//:suite_check.py",
-    args = ["gmailstruct"],
-    data = ["BUILD.bazel"] + glob(["tests/test_*.py"]),
-    size = "small",
-)
+# W375: this distribution's :venv (W342) and :suite (W362), declared together.
+dist_checks()
 
 py_binary(
     name = "mypy_runner",
