@@ -52,6 +52,22 @@ sh_test(
     size = "small",
 )
 
+# W332: the reusable gate workflow under the pinned actionlint, its `run:` scripts shellchecked by
+# the declared shellcheck. Globbed like the shell above, so a workflow added to ci/ is covered.
+_CI_WORKFLOWS = glob(["ci/*.yml"], allow_empty = False)
+
+sh_test(
+    name = "actionlint_ci",
+    srcs = ["actionlint_test.sh"],
+    args = [
+        "$(location @actionlint//:bin)",
+        "$(location @shellcheck//:bin)",
+        "$(location ci/actionlint.yaml)",
+    ] + ["$(location %s)" % f for f in _CI_WORKFLOWS],
+    data = ["@actionlint//:bin", "@shellcheck//:bin", "ci/actionlint.yaml"] + _CI_WORKFLOWS,
+    size = "small",
+)
+
 # ⚑⚑ THIS LIST HAD DRIFTED TO 8 OF 13 and the failure mode reads as a permissions problem rather
 # than a declaration one: a label for an unexported source resolves and is then REFUSED with a
 # *Visibility error*, so the natural reading is "I may not depend on that" instead of "nobody

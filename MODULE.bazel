@@ -397,6 +397,23 @@ http_file(
     url = "https://github.com/open-policy-agent/opa/releases/download/v1.20.2/opa_linux_amd64_static",
 )
 
+# ⚑⚑ actionlint CHECKS THE REUSABLE GATE WORKFLOW (W332), pinned like shellcheck and ruff. The
+# sha256 is the one rhysd/actionlint publishes in actionlint_1.7.7_checksums.txt for linux_amd64,
+# and the downloaded archive matched it. //:actionlint_ci runs it with the declared
+# shellcheck above, so the workflow's `run:` scripts are shellchecked by the same version.
+http_archive(
+    name = "actionlint",
+    build_file_content = """exports_files(["actionlint"])
+filegroup(
+    name = "bin",
+    srcs = ["actionlint"],
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757",
+    url = "https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz",
+)
+
 # ⚑⚑⚑ ruff IS AN http_archive AND NOT A pip DEPENDENCY, AND THE REASON RECORDED HERE WENT STALE.
 #
 # ⚑⚑ THE WITHDRAWN PREMISE, KEPT VISIBLE BECAUSE A READER WILL HAVE SPENT IT: this said

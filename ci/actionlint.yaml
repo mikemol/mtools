@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# actionlint's config for ci/ (W332). The self-hosted runner labels are DECLARED here so an
+# unknown label stays a finding: actionlint rejects any label it was not told about, which is how
+# it first flagged `mikemol-tools` in module-gate.yml. The labels are placeholders owned by
+# luthen-observability W257; when that names the real ones, this list changes with the workflow.
+self-hosted-runner:
+  labels:
+    - mikemol-tools
+    - default
+    - large

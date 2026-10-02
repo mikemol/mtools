@@ -4,8 +4,8 @@
 # ⚑ DRAFT, NOT WIRED, NOT YET VALIDATED (mtools:W331). The reusable gate workflow every module repo
 # under mikemol-tools will call. It lives at ci/ deliberately: GitHub acts only on
 # .github/workflows/, and the self-hosted runner it names does not exist yet (luthen-observability
-# W257). It moves to the workflows atom's repo with the icsstruct pilot (W317). actionlint is not
-# installed here, so this file has not been checked by it: W332 puts it under actionlint first.
+# W257). It moves to the workflows atom's repo with the icsstruct pilot (W317). Checked by a pinned
+# actionlint (W332): `bazel test //:actionlint_ci`, labels declared in ci/actionlint.yaml.
 #
 # A module repo's own workflow composes it:
 #     jobs:
