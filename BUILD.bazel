@@ -86,6 +86,16 @@ sh_test(
     size = "small",
 )
 
+# W499: run module-gate.yml's own cache-scope `case "$REF"` over sample refs; only stage and main
+# may produce an uploading cache array.
+sh_test(
+    name = "cache_scope_ci",
+    srcs = ["cache_scope_test.sh"],
+    args = ["$(location ci/module-gate.yml)"],
+    data = ["ci/module-gate.yml"],
+    size = "small",
+)
+
 # ⚑⚑ THIS LIST HAD DRIFTED TO 8 OF 13 and the failure mode reads as a permissions problem rather
 # than a declaration one: a label for an unexported source resolves and is then REFUSED with a
 # *Visibility error*, so the natural reading is "I may not depend on that" instead of "nobody
