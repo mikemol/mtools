@@ -55,6 +55,7 @@ py_library(
     for src in glob(
         ["tests/test_*.py"],
         exclude = [
+            "tests/test_gpu_set.py",
             "tests/test_main.py",
             "tests/test_stub_authority.py",
             "tests/test_whisperx_site.py",
@@ -167,6 +168,32 @@ py_test(
         dev_requirement("pytest"),
     ],
     imports = ["src"],
+)
+
+# ⚑ THE GPU SET'S OWN WITNESS (W519): it reads torch's cuda-toolkit extras from the staged
+# metadata and checks each wheel they require is staged, so the hand-written list above cannot
+# fall behind a torch move silently.
+py_test(
+    name = "test_gpu_set",
+    srcs = ["tests/test_gpu_set.py", "@mikemol_rules_py//:pytest_main.py"],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location tests/test_gpu_set.py)",
+        "-q",
+        "--strict-markers",
+        "--strict-config",
+        "-o",
+        "faulthandler_timeout=60",
+        "-c",
+        "$(location pyproject.toml)",
+    ],
+    data = ["pyproject.toml"],
+    size = "medium",
+    tags = ["exclusive"],  # W518: GPU set; serial to fit /dev/shm quota
+    deps = [
+        ":gpu_set",
+        dev_requirement("pytest"),
+    ],
 )
 
 exports_files(["BUILD.bazel"])

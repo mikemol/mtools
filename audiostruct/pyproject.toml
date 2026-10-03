@@ -115,6 +115,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_cli.py" = ["assert"]
 "tests/test_whisperx_site.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_main.py" = ["assert"]
+"tests/test_gpu_set.py" = ["assert"]
 # ⚑ main.py's RESPONSIBILITY is starting each stage as a process (design note D3/O1); its argv is
 # built by cli.child_argv from parsed arguments, never a shell string.
 "src/mikemol/audiostruct/main.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

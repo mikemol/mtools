@@ -350,3 +350,17 @@
             (W271).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_whisperx_site.py -k test_importing_the_site_makes_cublas12_resolvable_by_soname},
 }
+
+@misc{audiostruct-gpu-set-every-wheel-torch-cuda-extras-require-is-staged,
+  section = {gpu_set},
+  title  = {Each wheel torch's cuda-toolkit extras require is an installed distribution here},
+  claim  = {Each wheel torch's cuda-toolkit extras require is an installed distribution here. THE
+            LIST IN BUILD.bazel IS HAND-WRITTEN (W271, W519): rules_python drops the
+            extras, so the eleven wheels were copied from torch 2.14's Requires-Dist.
+            When torch's pin moves this reads the new requirement, so an extra the list
+            lacks fails here, named, instead of torch's import failing on a missing
+            libcuda*.so. F-armed by deleting `nvidia_curand` from gpu_set. An empty
+            extras set or an empty wheel set would make the check vacuous, so both must
+            be held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gpu_set.py -k test_every_wheel_torch_cuda_extras_require_is_staged},
+}
