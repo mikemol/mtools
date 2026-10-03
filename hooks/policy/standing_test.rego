@@ -34,7 +34,8 @@ test_14_control if not denies(edit("/home/mikemol/github/mtools/hooks/rubric.tsv
 
 test_14_append_control if not denies(bash("mikemol-gen-warrants hooks cmdparse=X >> hooks/warrants.bib"), 14)
 
-test_14_legacy_append_control if not denies(bash("python3 .claude/gen_warrants.py hooks cmdparse=X >> hooks/warrants.bib"), 14)
+# the module form, which a venv without the console script uses (W501)
+test_14_module_append_control if not denies(bash("hooks/.venv/bin/python3 -m mikemol.hooks.gen_warrants hooks cmdparse=X >> hooks/warrants.bib"), 14)
 
 test_15_witness if denies(bash("git commit -m \"subject\""), 15)
 
