@@ -2717,3 +2717,32 @@
             (W280).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo.py -k test_a_weight_is_never_guessed_into_a_priority},
 }
+
+@misc{pathsforward-cli-embargo-records-a-path-with-its-reason-and-ledgers-it,
+  section = {cli},
+  title  = {W511: --embargo PATH REASON stores path, reason and since under `embargoes`, ledgered},
+  claim  = {W511: --embargo PATH REASON stores path, reason and since under `embargoes`, ledgered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_embargo_records_a_path_with_its_reason_and_ledgers_it},
+}
+
+@misc{pathsforward-cli-lift-embargo-removes-the-record-and-the-last-lift-removes-the-field,
+  section = {cli},
+  title  = {W511: --lift-embargo PATH removes it; with none left the field is gone, not empty},
+  claim  = {W511: --lift-embargo PATH removes it; with none left the field is gone, not empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_lift_embargo_removes_the_record_and_the_last_lift_removes_the_field},
+}
+
+@misc{pathsforward-cli-malformed-embargo-or-lift-is-refused-and-saves-nothing,
+  section = {cli},
+  title  = {W511: blank reason, absolute or escaping path, unknown lift, stray flag: exit 2, unsaved},
+  claim  = {W511: blank reason, absolute or escaping path, unknown lift, stray flag: exit 2,
+            unsaved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_malformed_embargo_or_lift_is_refused_and_saves_nothing},
+}
+
+@misc{pathsforward-cli-second-embargo-on-one-path-is-refused,
+  section = {cli},
+  title  = {W511: one record per path; re-embargoing is refused rather than silently replaced},
+  claim  = {W511: one record per path; re-embargoing is refused rather than silently replaced.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_second_embargo_on_one_path_is_refused},
+}

@@ -25,7 +25,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lease, lock, ops, render, selftest, store, vtodo
+from mikemol.pathsforward import embargo, lease, lock, ops, render, selftest, store, vtodo
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.commitmsg import draft
@@ -78,6 +78,8 @@ _VALUED = (
     "repair_counter",
     "scan_literal",
     "commit_message",
+    "embargo",
+    "lift_embargo",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -257,6 +259,13 @@ def _parser() -> argparse.ArgumentParser:
     mode.add_argument("--update", metavar="SYMBOL", help="set typed fields on a waypoint")
     mode.add_argument("--add", metavar="TITLE", help="mint the next W<n> as ready")
     mode.add_argument("--drop", nargs=2, metavar=("SYMBOL", "REASON"), help="move to residue")
+    mode.add_argument(
+        "--embargo",
+        nargs=2,
+        metavar=("PATH", "REASON"),
+        help="W511: forbid edits to a project-relative PATH while a freeze holds (rule 6)",
+    )
+    mode.add_argument("--lift-embargo", metavar="PATH", help="W511: remove PATH's embargo")
     mode.add_argument(
         "--ledger",
         nargs=len(_LEDGER_ARGS),
@@ -923,6 +932,42 @@ def _drop(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _embargo(ctx: Ctx) -> int:
+    """Record one embargoed path (W511), and ledger it.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    path, reason = ctx.many("embargo") or ("", "")
+
+    def edit(state: State) -> int:
+        rel = embargo.embargo(state, path, reason, ctx.stamp())
+        _ledger(ctx, Entry("embargo", NO_SYMBOL, "set", "embargo", f"{rel}: {reason}"))
+        _say(f"embargoed {rel}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
+def _lift_embargo(ctx: Ctx) -> int:
+    """Remove one embargo record (W511), and ledger it.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    path = ctx.get("lift_embargo") or ""
+
+    def edit(state: State) -> int:
+        rel = embargo.lift(state, path)
+        _ledger(ctx, Entry("embargo", NO_SYMBOL, "lifted", "embargo", rel))
+        _say(f"embargo lifted: {rel}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _bump_blocked(ctx: Ctx) -> int:
     """Count a blocked tick on every blocked waypoint and say who is owed a nudge.
 
@@ -1141,6 +1186,8 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "update": _update,
     "add": _add,
     "drop": _drop,
+    "embargo": _embargo,
+    "lift_embargo": _lift_embargo,
     "bump_blocked": _bump_blocked,
     "ledger": _ledger_mode,
     "show": _show,

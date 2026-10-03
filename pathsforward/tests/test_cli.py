@@ -992,3 +992,53 @@ def test_commit_message_names_each_missing_l2_field(
 def test_commit_message_refuses_an_unknown_symbol(tmp_path: Path) -> None:
     """W493: a symbol that is not live is refused, and nothing is printed as a draft."""
     assert _run(_file(tmp_path), "--commit-message", "W9") == _REFUSED
+
+
+_EMBARGOED = "findings/CENSUS-deps-build-ANALYSIS.md"
+
+
+def test_embargo_records_a_path_with_its_reason_and_ledgers_it(tmp_path: Path) -> None:
+    """W511: --embargo PATH REASON stores path, reason and since under `embargoes`, ledgered."""
+    path = _file(tmp_path)
+    assert _run(path, "--embargo", _EMBARGOED, "paperkit-use freeze held") == _OK
+    rows = cast("list[Rec]", _doc(path)["embargoes"])
+    assert [(r["path"], r["reason"], bool(r["since"])) for r in rows] == [
+        (_EMBARGOED, "paperkit-use freeze held", True)
+    ]
+    assert _EMBARGOED in _ledger(path)
+
+
+def test_lift_embargo_removes_the_record_and_the_last_lift_removes_the_field(
+    tmp_path: Path,
+) -> None:
+    """W511: --lift-embargo PATH removes it; with none left the field is gone, not empty."""
+    path = _file(tmp_path)
+    _run(path, "--embargo", _EMBARGOED, "held")
+    assert (_run(path, "--lift-embargo", _EMBARGOED), "embargoes" in _doc(path)) == (_OK, False)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ("--embargo", _EMBARGOED, "   "),
+        ("--embargo", "/abs/x.md", "held"),
+        ("--embargo", "../x.md", "held"),
+        ("--embargo", "", "held"),
+        ("--lift-embargo", "never/embargoed.md"),
+        ("--embargo", _EMBARGOED, "held", "--next", "n"),
+    ],
+)
+def test_a_malformed_embargo_or_lift_is_refused_and_saves_nothing(
+    tmp_path: Path, args: tuple[str, ...]
+) -> None:
+    """W511: blank reason, absolute or escaping path, unknown lift, stray flag: exit 2, unsaved."""
+    path = _file(tmp_path)
+    before = path.read_bytes()
+    assert (_code(path, *args), path.read_bytes() == before) == (_REFUSED, True)
+
+
+def test_a_second_embargo_on_one_path_is_refused(tmp_path: Path) -> None:
+    """W511: one record per path; re-embargoing is refused rather than silently replaced."""
+    path = _file(tmp_path)
+    _run(path, "--embargo", _EMBARGOED, "held")
+    assert _code(path, "--embargo", _EMBARGOED, "again") == _REFUSED
