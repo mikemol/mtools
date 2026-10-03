@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W513: standing rule 8 at Stop. A card set blocked_kind human this turn must be asked via
+# AskUserQuestion this turn; mikemol.transcriptstruct.standing_stop reads the transcript and
+# prints {"decision": "block", ...} naming each unpaired card. The module lives in the transcript
+# reader's own distribution (its docstring says why); this launcher stays with the hook launchers.
+#
+# ⚑ CLOSED ONCE PER TURN (operator ruling 2026-10-03). When the check cannot run, BLOCK with the
+# reason if stop_hook_active is not true, so the failure surfaces; if it IS true, print the note
+# on stderr and exit 0, so a broken hook cannot trap the turn. stop_hook_active is read HERE, from
+# the raw payload, without Python — the module may be the broken part. Only an exact
+# `"stop_hook_active": true` or `"stop_hook_active":true` counts as active; anything else,
+# unparseable input included, is not active.
+# STANDING_PYTHON names the interpreter (default: transcriptstruct's venv python), so the
+# witnesses can run this launcher in a sandbox.
+set -uo pipefail
+
+payload="$(cat)"
+active=0
+if [[ "$payload" == *'"stop_hook_active": true'* ]]; then
+    active=1
+elif [[ "$payload" == *'"stop_hook_active":true'* ]]; then
+    active=1
+fi
+
+cannot() {
+    local why="standing-stop (rule 8) could not run: $1; not checked"
+    if [ "$active" -eq 1 ]; then
+        printf '%s\n' "$why" >&2
+    else
+        printf '{"decision": "block", "reason": "%s"}\n' "$why"
+    fi
+    exit 0
+}
+
+root="${CLAUDE_PROJECT_DIR:-}"
+[ -n "$root" ] || cannot "CLAUDE_PROJECT_DIR is unset"
+python="${STANDING_PYTHON:-$root/transcriptstruct/.venv/bin/python3}"
+[ -x "$python" ] || cannot "no interpreter at $python"
+
+export PYTHONPATH="$root/transcriptstruct/src${PYTHONPATH:+:$PYTHONPATH}"
+if ! out="$(printf '%s' "$payload" | "$python" -m mikemol.transcriptstruct.standing_stop)"; then
+    cannot "the module failed"
+fi
+printf '%s' "$out"

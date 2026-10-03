@@ -101,6 +101,10 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
             "bin/mikemol-hook-standing",
             "policy/standing.rego",
+            # W513: the rule-8 Stop launcher, EXECUTED by test_standing_stop_launcher, and the
+            # transcript reader it runs (as a subprocess on PYTHONPATH, never imported here).
+            "bin/mikemol-hook-standing-stop",
+            "//transcriptstruct",
             "@opa//file",
             # ⚑ THE CONSUMER LAUNCHER, EXECUTED rather than read by `test_adopt_launcher.py` —
             # the same lesson as the three above: tracked is not staged until named here.

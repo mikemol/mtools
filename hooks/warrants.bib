@@ -4597,3 +4597,24 @@
   claim  = {W511 end to end: the queue's embargo reaches rule 6; another file is not denied.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_launcher_denies_an_edit_to_an_embargoed_path},
 }
+
+@misc{hooks-standing-stop-launcher-launcher-blocks-an-unpaired-hold-end-to-end,
+  section = {bar-fires},
+  title  = {The launcher, run on a payload, prints the harness's block JSON naming the card},
+  claim  = {The launcher, run on a payload, prints the harness's block JSON naming the card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop_launcher.py -k test_the_launcher_blocks_an_unpaired_hold_end_to_end},
+}
+
+@misc{hooks-standing-stop-launcher-launcher-that-cannot-run-blocks-once,
+  section = {bar-fires},
+  title  = {No interpreter, not yet active: the launcher alone blocks, naming why},
+  claim  = {No interpreter, not yet active: the launcher alone blocks, naming why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop_launcher.py -k test_a_launcher_that_cannot_run_blocks_once},
+}
+
+@misc{hooks-standing-stop-launcher-launcher-that-cannot-run-when-active-ends-the-turn,
+  section = {bar-fires},
+  title  = {No interpreter while already continuing: exit 0, no decision, the reason on stderr},
+  claim  = {No interpreter while already continuing: exit 0, no decision, the reason on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop_launcher.py -k test_a_launcher_that_cannot_run_when_active_ends_the_turn},
+}

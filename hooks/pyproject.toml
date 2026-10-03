@@ -323,6 +323,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # repositories under tmp_path and execute the launcher, which is the case: the same reason.
 "src/mikemol/hooks/standing_facts.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_standing_facts.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# W513: the rule-8 Stop launcher's witnesses execute it end to end, the same reason.
+"tests/test_standing_stop_launcher.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE REFUSAL LOG: handing one event to `curl` IS its responsibility. MEASURED: curl is resolved
 # by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the

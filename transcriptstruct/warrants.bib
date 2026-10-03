@@ -433,3 +433,73 @@
             file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_an_undecodable_line_is_reported_not_replaced},
 }
+
+@misc{transcriptstruct-standing-stop-unpaired-hold-blocks-naming-the-card,
+  section = {standing-stop},
+  title  = {A human hold with no AskUserQuestion since the user spoke blocks, naming W7},
+  claim  = {A human hold with no AskUserQuestion since the user spoke blocks, naming W7.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_an_unpaired_hold_blocks_naming_the_card},
+}
+
+@misc{transcriptstruct-standing-stop-paired-hold-does-not-block,
+  section = {standing-stop},
+  title  = {A hold followed by an AskUserQuestion naming the card is paired},
+  claim  = {A hold followed by an AskUserQuestion naming the card is paired.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_paired_hold_does_not_block},
+}
+
+@misc{transcriptstruct-standing-stop-question-naming-another-card-does-not-pair,
+  section = {standing-stop},
+  title  = {An AskUserQuestion about W8 leaves the W7 hold unpaired},
+  claim  = {An AskUserQuestion about W8 leaves the W7 hold unpaired.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_question_naming_another_card_does_not_pair},
+}
+
+@misc{transcriptstruct-standing-stop-hold-before-the-last-user-message-does-not-count,
+  section = {standing-stop},
+  title  = {A hold set in an earlier turn is outside the span; tool results do not end the span},
+  claim  = {A hold set in an earlier turn is outside the span; tool results do not end the span.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_hold_before_the_last_user_message_does_not_count},
+}
+
+@misc{transcriptstruct-standing-stop-non-human-hold-does-not-count,
+  section = {standing-stop},
+  title  = {An agent-kind hold is not rule 8's subject},
+  claim  = {An agent-kind hold is not rule 8's subject.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_non_human_hold_does_not_count},
+}
+
+@misc{transcriptstruct-standing-stop-stop-hook-active-never-blocks,
+  section = {standing-stop},
+  title  = {When Claude is already continuing from a Stop block, the hook does not block again},
+  claim  = {When Claude is already continuing from a Stop block, the hook does not block again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_stop_hook_active_never_blocks},
+}
+
+@misc{transcriptstruct-standing-stop-missing-transcript-path-blocks-once-naming-why,
+  section = {standing-stop},
+  title  = {No transcript_path, not yet active: block with the reason so the failure surfaces},
+  claim  = {No transcript_path, not yet active: block with the reason so the failure surfaces.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_missing_transcript_path_blocks_once_naming_why},
+}
+
+@misc{transcriptstruct-standing-stop-missing-transcript-path-when-active-ends-the-turn-with-a-note,
+  section = {standing-stop},
+  title  = {No transcript_path while already continuing: no block, the reason as a note},
+  claim  = {No transcript_path while already continuing: no block, the reason as a note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_missing_transcript_path_when_active_ends_the_turn_with_a_note},
+}
+
+@misc{transcriptstruct-standing-stop-main-prints-the-block-json-on-stdout,
+  section = {standing-stop},
+  title  = {main() reads the payload from stdin and prints the harness's block decision},
+  claim  = {main() reads the payload from stdin and prints the harness's block decision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_main_prints_the_block_json_on_stdout},
+}
+
+@misc{transcriptstruct-standing-stop-main-blocks-once-on-a-payload-that-is-not-json,
+  section = {standing-stop},
+  title  = {A payload that is not JSON counts as not active, so it blocks naming why},
+  claim  = {A payload that is not JSON counts as not active, so it blocks naming why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_main_blocks_once_on_a_payload_that_is_not_json},
+}
