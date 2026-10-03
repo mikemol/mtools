@@ -2590,3 +2590,94 @@
             draft is printed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commit_message_refuses_an_unknown_symbol},
 }
+
+@misc{pathsforward-check-blank-title-is-found,
+  section = {check},
+  title  = {WaypointShape's title minLength: a live waypoint with no title is found},
+  claim  = {WaypointShape's title minLength: a live waypoint with no title is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_blank_title_is_found},
+}
+
+@misc{pathsforward-check-titled-waypoint-is-not-found,
+  section = {check},
+  title  = {The control: the clean state's titled waypoints raise no title finding},
+  claim  = {The control: the clean state's titled waypoints raise no title finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_titled_waypoint_is_not_found},
+}
+
+@misc{pathsforward-check-unresolved-local-cause-is-found,
+  section = {check},
+  title  = {CausedByResolvesShape, local half: caused_by W9 that is nowhere here is found},
+  claim  = {CausedByResolvesShape, local half: caused_by W9 that is nowhere here is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_an_unresolved_local_cause_is_found},
+}
+
+@misc{pathsforward-check-resolving-or-foreign-cause-is-not-found,
+  section = {check},
+  title  = {The control: a live, a residue and a foreign cause are silent (the foreign is nemik's)},
+  claim  = {The control: a live, a residue and a foreign cause are silent (the foreign is nemik's).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_resolving_or_foreign_cause_is_not_found},
+}
+
+@misc{pathsforward-check-edge-into-residue-is-found,
+  section = {check},
+  title  = {EdgeIntoDroppedShape, local half: enables into a dropped symbol is stale},
+  claim  = {EdgeIntoDroppedShape, local half: enables into a dropped symbol is stale.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_an_edge_into_residue_is_found},
+}
+
+@misc{pathsforward-check-edge-into-live-work-is-not-stale,
+  section = {check},
+  title  = {The control: enables into a live waypoint is silent},
+  claim  = {The control: enables into a live waypoint is silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_an_edge_into_live_work_is_not_stale},
+}
+
+@misc{pathsforward-check-block-whose-every-blocker-landed-is-found,
+  section = {check},
+  title  = {LandedBlockerShape's allBlockersLanded, local half: every blocker landed reads as ready},
+  claim  = {LandedBlockerShape's allBlockersLanded, local half: every blocker landed reads as ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_block_whose_every_blocker_landed_is_found},
+}
+
+@misc{pathsforward-check-block-with-a-live-or-foreign-blocker-is-not-all-landed,
+  section = {check},
+  title  = {The control: one blocker landed beside a foreign one is not every blocker landed},
+  claim  = {The control: one blocker landed beside a foreign one is not every blocker landed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_block_with_a_live_or_foreign_blocker_is_not_all_landed},
+}
+
+@misc{pathsforward-check-symbol-with-prose-in-blocked-on-is-found,
+  section = {check},
+  title  = {MalformedBlockerShape: 'W2 (both rewrite the lock)' draws no edge, so it never lands},
+  claim  = {MalformedBlockerShape: 'W2 (both rewrite the lock)' draws no edge, so it never lands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_symbol_with_prose_in_blocked_on_is_found},
+}
+
+@misc{pathsforward-check-clean-symbol-or-party-blocker-is-not-malformed,
+  section = {check},
+  title  = {The control: W2, nemik:W2 and a party are all well formed},
+  claim  = {The control: W2, nemik:W2 and a party are all well formed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_clean_symbol_or_party_blocker_is_not_malformed},
+}
+
+@misc{pathsforward-check-operator-block-without-a-live-ask-is-found,
+  section = {check},
+  title  = {OperatorAskShape: a human block that asks nothing, or that is already answered},
+  claim  = {OperatorAskShape: a human block that asks nothing, or that is already answered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_an_operator_block_without_a_live_ask_is_found},
+}
+
+@misc{pathsforward-check-operator-block-with-a-stated-ask-is-not-found,
+  section = {check},
+  title  = {The control: the explicit form, and a bare party whose title carries the ask},
+  claim  = {The control: the explicit form, and a bare party whose title carries the ask.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_an_operator_block_with_a_stated_ask_is_not_found},
+}
+
+@misc{pathsforward-check-bare-party-beside-an-answer-reads-as-unstated,
+  section = {check},
+  title  = {Nemik's precedence: unstated outranks answered across several blocked_on entries},
+  claim  = {Nemik's precedence: unstated outranks answered across several blocked_on entries.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_bare_party_beside_an_answer_reads_as_unstated},
+}

@@ -355,3 +355,113 @@ def test_a_witnessed_ready_or_working_item_is_found(tmp_path: Path) -> None:
     ]
     found = chk.witnessed_live(_state(tmp_path, waypoints=wps))
     assert [f.split(":")[0] for f in found] == ["W1", "W2"]
+
+
+# ---- W479: nemik-check shapes that need only this queue ---------------------------------------
+# ⚑ Each witness goes through `chk.check`, so on a tree without the property it is red by
+# behaviour (the finding is absent), not by a missing name.
+
+
+def test_a_blank_title_is_found(tmp_path: Path) -> None:
+    """WaypointShape's title minLength: a live waypoint with no title is found."""
+    found = chk.check(_state(tmp_path, waypoints=[_wp("W1", title="  "), _wp("W2")]))
+    assert "W1: blank title" in found
+
+
+def test_a_titled_waypoint_is_not_found(tmp_path: Path) -> None:
+    """The control: the clean state's titled waypoints raise no title finding."""
+    assert not [f for f in chk.check(_state(tmp_path)) if "title" in f]
+
+
+def test_an_unresolved_local_cause_is_found(tmp_path: Path) -> None:
+    """CausedByResolvesShape, local half: caused_by W9 that is nowhere here is found."""
+    w1 = _wp("W1", caused_by="W9")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")]))
+    assert "W1: caused_by W9 resolves to neither a waypoint nor residue" in found
+
+
+def test_a_resolving_or_foreign_cause_is_not_found(tmp_path: Path) -> None:
+    """The control: a live, a residue and a foreign cause are silent (the foreign is nemik's)."""
+    wps = [_wp("W1", caused_by="W2"), _wp("W2", caused_by="W3"), _wp("W4", caused_by="nemik:W9")]
+    state = validate(
+        {"counter": 4, "project_root": str(tmp_path), "waypoints": wps, "residue": [_res("W3")]}
+    )
+    assert chk.check(state) == []
+
+
+def test_an_edge_into_residue_is_found(tmp_path: Path) -> None:
+    """EdgeIntoDroppedShape, local half: enables into a dropped symbol is stale."""
+    found = chk.check(_state(tmp_path, waypoints=[_wp("W1", enables=["W3"]), _wp("W2")]))
+    assert "W1 -> W3: enables a dropped item (stale edge)" in found
+
+
+def test_an_edge_into_live_work_is_not_stale(tmp_path: Path) -> None:
+    """The control: enables into a live waypoint is silent."""
+    assert chk.check(_state(tmp_path, waypoints=[_wp("W1", enables=["W2"]), _wp("W2")])) == []
+
+
+def test_a_block_whose_every_blocker_landed_is_found(tmp_path: Path) -> None:
+    """LandedBlockerShape's allBlockersLanded, local half: every blocker landed reads as ready."""
+    w1 = _wp("W1", "blocked", blocked_on=["W2", "W3"], blocked_kind="agent")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2", "done")]))
+    assert "W1: every blocker has landed; it is ready, not blocked" in found
+
+
+def test_a_block_with_a_live_or_foreign_blocker_is_not_all_landed(tmp_path: Path) -> None:
+    """The control: one blocker landed beside a foreign one is not every blocker landed."""
+    w1 = _wp("W1", "blocked", blocked_on=["W2", "nemik:W2"], blocked_kind="agent")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2", "done")]))
+    assert not [f for f in found if "every blocker" in f]
+
+
+def test_a_symbol_with_prose_in_blocked_on_is_found(tmp_path: Path) -> None:
+    """MalformedBlockerShape: 'W2 (both rewrite the lock)' draws no edge, so it never lands."""
+    w1 = _wp("W1", "blocked", blocked_on=["W2 (both rewrite the lock)"], blocked_kind="agent")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")]))
+    assert "W1: blocked_on 'W2 (both rewrite the lock)' is a symbol with prose attached" in found
+
+
+def test_a_clean_symbol_or_party_blocker_is_not_malformed(tmp_path: Path) -> None:
+    """The control: W2, nemik:W2 and a party are all well formed."""
+    on = ["W2", "nemik:W2", "summit"]
+    w1 = _wp("W1", "blocked", blocked_on=on, blocked_kind="agent")
+    assert chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")])) == []
+
+
+@pytest.mark.parametrize(
+    ("ask", "fault"),
+    [
+        ("operator", "states no ask"),
+        ("mikemol: ruled keep holding", "records the operator's answer already"),
+    ],
+)
+def test_an_operator_block_without_a_live_ask_is_found(
+    tmp_path: Path, ask: str, fault: str
+) -> None:
+    """OperatorAskShape: a human block that asks nothing, or that is already answered."""
+    w1 = _wp("W1", "blocked", blocked_on=[ask], blocked_kind="human")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")]))
+    assert f"W1: blocked on the operator but {fault}" in found
+
+
+@pytest.mark.parametrize(
+    ("ask", "title"),
+    [
+        ("operator: decide whether to split the lock", "W1"),
+        ("operator", "OPERATOR: approve the push to main"),
+    ],
+)
+def test_an_operator_block_with_a_stated_ask_is_not_found(
+    tmp_path: Path, ask: str, title: str
+) -> None:
+    """The control: the explicit form, and a bare party whose title carries the ask."""
+    w1 = _wp("W1", "blocked", blocked_on=[ask], blocked_kind="human", title=title)
+    assert chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")])) == []
+
+
+def test_a_bare_party_beside_an_answer_reads_as_unstated(tmp_path: Path) -> None:
+    """Nemik's precedence: unstated outranks answered across several blocked_on entries."""
+    on = ["operator", "mikemol: approved"]
+    w1 = _wp("W1", "blocked", blocked_on=on, blocked_kind="human")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")]))
+    assert "W1: blocked on the operator but states no ask" in found

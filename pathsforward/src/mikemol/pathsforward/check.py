@@ -46,6 +46,16 @@ _SENTENCE_END = (".", ",", ";", ":", ")")
 # ⚑ A BAZEL LABEL IS NOT A PATH: `//pkg:f`, `@repo//pkg:f`, `@@//pkg:f`. summit's W37 evidence
 # names `//paperkit:components.bzl`, which `--check-evidence` reported missing.
 _LABEL = re.compile(r"@{0,2}[\w.~+-]*//")
+# nemik's MalformedBlockerShape: an entry that STARTS as a symbol but is not one whole.
+_SYMBOLISH = re.compile(r"^([A-Za-z0-9_.-]+:)?W\d+\b")
+_CLEAN_SYMBOL = re.compile(r"([A-Za-z0-9_.-]+:)?W\d+")
+# nemik's OperatorAskShape readings (nemik/blocks.py, operator_category), the two it warns on.
+_EXPLICIT_ASK = re.compile(r"^\s*operator\s*:\s*(decide|act)\b", re.IGNORECASE)
+_ANSWERED = re.compile(r"\b(ruled|keep holding|approved|go-ahead given|decided)\b", re.IGNORECASE)
+_BARE_PARTY = re.compile(
+    r"^\s*(the\s+)?(operator|user|mikemol|mike|human)\s*(\(\w+\))?\s*$", re.IGNORECASE
+)
+_ASK_TITLE = re.compile(r"^\s*operator\b[^:]{0,60}:", re.IGNORECASE)
 
 
 def _claimed(state: State) -> list[str]:
@@ -221,6 +231,131 @@ def stale_blockers(state: State) -> list[str]:
     return found
 
 
+def all_landed(state: State) -> list[str]:
+    """Report a block whose every blocker is a local symbol that has landed (W479).
+
+    ⚑ nemik's allBlockersLanded, local half: a foreign `repo:W<n>` or a party's state is not in
+    this queue, so a block naming one is never judged here.
+
+    Returns:
+        one finding per waypoint that is ready, not blocked.
+
+    """
+    landed = {text(w, "symbol") for w in state.waypoints if text(w, "status") == "done"}
+    landed |= {text(r, "symbol") for r in state.residue}
+    return [
+        f"{text(w, 'symbol')}: every blocker has landed; it is ready, not blocked"
+        for w in state.waypoints
+        if text(w, "status") == "blocked"
+        and (on := strlist(w, "blocked_on"))
+        and all(b in landed for b in on)
+    ]
+
+
+def malformed_blockers(state: State) -> list[str]:
+    """Report a blocked_on entry that is a symbol with prose run on (nemik MalformedBlocker).
+
+    It draws no edge, so it can never be seen to land; the reason belongs in evidence.
+
+    Returns:
+        one finding per such entry.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: blocked_on {b!r} is a symbol with prose attached"
+        for w in state.waypoints
+        for b in strlist(w, "blocked_on")
+        if _SYMBOLISH.match(b.strip()) and not _CLEAN_SYMBOL.fullmatch(b.strip())
+    ]
+
+
+def _operator_fault(texts: list[str], title: str) -> str | None:
+    """Read a human block's asks the way nemik's operator_category does, for its two warnings.
+
+    Returns:
+        the fault, or None when some entry states a live ask or names a condition.
+
+    """
+    if all(_BARE_PARTY.match(t) for t in texts) and _ASK_TITLE.match(title):
+        texts = [title]
+    # nemik's precedence: a live ask (or a condition) wins, then a bare party, then answered.
+    if any(
+        _EXPLICIT_ASK.match(t) or not (_BARE_PARTY.match(t) or _ANSWERED.search(t)) for t in texts
+    ):
+        return None
+    if any(_BARE_PARTY.match(t) for t in texts):
+        return "states no ask"
+    return "records the operator's answer already"
+
+
+def operator_asks(state: State) -> list[str]:
+    """Report a human block that asks the operator nothing, or that is already answered (W479).
+
+    ⚑ nemik's OperatorAskShape on this queue alone; nemik also groups the same ask across
+    repos, which stays nemik's. Write `operator: decide ...` or `operator: act ...`.
+
+    Returns:
+        one finding per such block.
+
+    """
+    found: list[str] = []
+    for w in state.waypoints:
+        if text(w, "status") != "blocked" or text(w, "blocked_kind") != "human":
+            continue
+        on = strlist(w, "blocked_on")
+        if on and (fault := _operator_fault(on, text(w, "title"))) is not None:
+            found.append(f"{text(w, 'symbol')}: blocked on the operator but {fault}")
+    return found
+
+
+def titles(state: State) -> list[str]:
+    """Report a live waypoint with a blank title (nemik WaypointShape's title minLength, W479).
+
+    ⚑ nemik's BundledTitleShape is NOT here: it is advice (a Warning with a measured ~12% false
+    positive rate), and every finding here refuses `--check`; it waits on a warning tier.
+
+    Returns:
+        one finding per blank title.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: blank title" for w in state.waypoints if not text(w, "title").strip()
+    ]
+
+
+def causes(state: State) -> list[str]:
+    """Report a local caused_by that resolves nowhere here (nemik CausedByResolves, W479).
+
+    A foreign `repo:W<n>` is not a local symbol and stays nemik's to resolve.
+
+    Returns:
+        one finding per unresolved local cause.
+
+    """
+    claimed = set(_claimed(state))
+    return [
+        f"{text(w, 'symbol')}: caused_by {cause} resolves to neither a waypoint nor residue"
+        for w in state.waypoints
+        if symbol_number(cause := text(w, "caused_by").strip()) is not None and cause not in claimed
+    ]
+
+
+def edges_into_dropped(state: State) -> list[str]:
+    """Report an `enables` into a residue symbol: it resolves, but nothing can enable it (W479).
+
+    Returns:
+        one finding per stale edge.
+
+    """
+    dropped = {text(r, "symbol") for r in state.residue}
+    return [
+        f"{text(w, 'symbol')} -> {target}: enables a dropped item (stale edge)"
+        for w in state.waypoints
+        for target in strlist(w, "enables")
+        if target in dropped
+    ]
+
+
 def field_types(state: State) -> list[str]:
     """Report a list field stored as something other than a list.
 
@@ -392,6 +527,12 @@ def check(state: State) -> list[str]:
         *statuses(state),
         *blocked(state),
         *stale_blockers(state),
+        *all_landed(state),
+        *malformed_blockers(state),
+        *operator_asks(state),
+        *titles(state),
+        *causes(state),
+        *edges_into_dropped(state),
         *field_types(state),
         *weights(state),
         *comma_tags(state),
