@@ -32,7 +32,9 @@ test_14_write_witness if denies({"tool_name": "Write", "tool_input": {"file_path
 
 test_14_control if not denies(edit("/home/mikemol/github/mtools/hooks/rubric.tsv"), 14)
 
-test_14_append_control if not denies(bash("python3 .claude/gen_warrants.py hooks cmdparse=X >> hooks/warrants.bib"), 14)
+test_14_append_control if not denies(bash("mikemol-gen-warrants hooks cmdparse=X >> hooks/warrants.bib"), 14)
+
+test_14_legacy_append_control if not denies(bash("python3 .claude/gen_warrants.py hooks cmdparse=X >> hooks/warrants.bib"), 14)
 
 test_15_witness if denies(bash("git commit -m \"subject\""), 15)
 

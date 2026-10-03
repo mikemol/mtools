@@ -74,6 +74,10 @@ mikemol-hook-pycheck = "mikemol.hooks.pycheck:main"
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that
 # requires every hook script to be invoked keys on that prefix.
 mikemol-shellcheck = "mikemol.hooks.shellcheck_cli:main"
+# ⚑ ALSO NOT `mikemol-hook-…`, for the same reason: a maintainer runs it to transcribe warrants
+# (`>> <dist>/warrants.bib`); no harness wires it, and the every-hook-is-invoked arm keys on that
+# prefix. It replaces `.claude/gen_warrants.py`, whose root came from `__file__` (W180).
+mikemol-gen-warrants = "mikemol.hooks.gen_warrants:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
 mikemol-githook-pre-push = "mikemol.hooks.githook_pre_push:main"

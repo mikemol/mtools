@@ -34,8 +34,8 @@ deny contains "standing 7: findings/CENSUS-paperkit-use.md is rosettapkg-db's; f
 	endswith(edited, "findings/CENSUS-paperkit-use.md")
 }
 
-# rule 14: warrants are transcribed by gen_warrants.py and appended with `>>`, never hand-edited
-deny contains "standing 14: warrants.bib is appended from gen_warrants.py output (`>> <dist>/warrants.bib`), not edited" if {
+# rule 14: warrants are transcribed by mikemol-gen-warrants (formerly .claude/gen_warrants.py) and appended with `>>`, never hand-edited
+deny contains "standing 14: warrants.bib is appended from mikemol-gen-warrants output (`>> <dist>/warrants.bib`), not edited" if {
 	endswith(edited, "/warrants.bib")
 }
 

@@ -4330,3 +4330,60 @@
   claim  = {W482's other arm: under the atom's config a real mypy finding still refuses.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_an_atom_file_with_a_real_type_error_is_still_refused},
 }
+
+@misc{hooks-gen-warrants-new-function-is-emitted,
+  section = {gen-warrants},
+  title  = {A test with no warrant yields one entry carrying its section, title and check},
+  claim  = {A test with no warrant yields one entry carrying its section, title and check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_a_new_function_is_emitted},
+}
+
+@misc{hooks-gen-warrants-function-already-checked-by-file-and-name-is-skipped,
+  section = {gen-warrants},
+  title  = {A check line naming this file and this function suppresses the entry},
+  claim  = {A check line naming this file and this function suppresses the entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_a_function_already_checked_by_file_and_name_is_skipped},
+}
+
+@misc{hooks-gen-warrants-same-named-test-in-another-module-is-not-skipped,
+  section = {gen-warrants},
+  title  = {A check naming the function in a DIFFERENT file does not suppress this one},
+  claim  = {A check naming the function in a DIFFERENT file does not suppress this one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_a_same_named_test_in_another_module_is_not_skipped},
+}
+
+@misc{hooks-gen-warrants-article-keyed-legacy-entry-is-skipped,
+  section = {gen-warrants},
+  title  = {An older entry keyed with the leading article and no check still counts as present},
+  claim  = {An older entry keyed with the leading article and no check still counts as present.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_an_article_keyed_legacy_entry_is_skipped},
+}
+
+@misc{hooks-gen-warrants-leading-article-is-stripped-from-the-key,
+  section = {gen-warrants},
+  title  = {`test_the_thing_holds` is keyed `d-m-thing-holds`, without the article},
+  claim  = {`test_the_thing_holds` is keyed `d-m-thing-holds`, without the article.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_a_leading_article_is_stripped_from_the_key},
+}
+
+@misc{hooks-gen-warrants-brace-in-a-docstring-is-refused-with-exit-two,
+  section = {gen-warrants},
+  title  = {A docstring with a brace would corrupt the bib entry, so main exits 2 and writes nothing},
+  claim  = {A docstring with a brace would corrupt the bib entry, so main exits 2 and writes
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_a_brace_in_a_docstring_is_refused_with_exit_two},
+}
+
+@misc{hooks-gen-warrants-several-pairs-emit-in-the-order-given,
+  section = {gen-warrants},
+  title  = {Pairs emit in argument order, not module-name order},
+  claim  = {Pairs emit in argument order, not module-name order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_several_pairs_emit_in_the_order_given},
+}
+
+@misc{hooks-gen-warrants-nothing-but-the-count-is-printed-when-all-are-present,
+  section = {gen-warrants},
+  title  = {With every function warranted, stdout is empty and stderr carries only the count},
+  claim  = {With every function warranted, stdout is empty and stderr carries only the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_nothing_but_the_count_is_printed_when_all_are_present},
+}

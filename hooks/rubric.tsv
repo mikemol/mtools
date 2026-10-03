@@ -22,3 +22,4 @@ refusal-log	The Refusal Log: A Refused Invocation Recorded Where Its Caller Says
 flag-contract	The Flag Contract: An Unknown Flag Refused by Name, and an Unstated Choice Between Two Refused
 suppressions	The Suppression Gate: A Line-Scoped Directive an Edit Adds Is Refused, and Existing Debt Never Blocks
 gate-ledger	The Gate Ledger: One Path for Writer and Reader, and the Fail-Fast Order
+gen-warrants	The Warrant Transcriber: One Entry per Unwarranted Test, Keyed by File and Name, and a Brace Refused
