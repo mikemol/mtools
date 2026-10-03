@@ -81,8 +81,16 @@ def ruff_runner(ruff: str) -> Runner:
 
     def run(files: list[str], dist: Path) -> str:
         proc = subprocess.run(
-            [ruff, "check", "--no-cache", "--config", "pyproject.toml"]
-            + ["--output-format", "concise", *files],
+            [
+                ruff,
+                "check",
+                "--no-cache",
+                "--config",
+                "pyproject.toml",
+                "--output-format",
+                "concise",
+                *files,
+            ],
             capture_output=True,
             text=True,
             check=False,

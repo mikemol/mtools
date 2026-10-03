@@ -145,8 +145,7 @@ def check_suite(venv: Path, suite: Path) -> list[str]:
     if proc.returncode != 0 or "tests collected" not in proc.stdout:
         tail = (proc.stdout + proc.stderr).strip().splitlines()[-_TAIL_LINES:]
         return [
-            f"{py}: could not collect {suite}/tests (rc={proc.returncode}):\n  "
-            + "\n  ".join(tail)
+            f"{py}: could not collect {suite}/tests (rc={proc.returncode}):\n  " + "\n  ".join(tail)
         ]
     return []
 

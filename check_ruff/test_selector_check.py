@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""selector_check against hand-written configs and a fake ruff: agreement passes, a rename is named."""
+"""Exercise selector_check against hand-written configs and a fake ruff.
+
+Agreement passes; a rename is named.
+"""
 
 from __future__ import annotations
 

@@ -30,6 +30,22 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
+# ⚑⚑⚑ W485: THE DOMAIN IS THE FILES PASSED, NOT THE DIRECTORY THE CONFIG SITS IN. This ran over
+# `.` after the cd below, so a file staged from ANOTHER bazel repository — the root passes
+# `@mikemol_rules_py//:venv_check.py` and the other atoms' scripts, which land at
+# `../mikemol_rules_py/...` in the runfiles — was declared, staged, and never read: measured, 14
+# ruff findings and 2 unformatted files in rules_py/ that `//:ruff` reported green over. Each path
+# is made absolute HERE, before the cd, so it names the same staged file from the dist directory.
+# ⚑ NOT `realpath`: the staged entry is the path the config's patterns are anchored against;
+# resolving it would leave the runfiles tree and lose every `per-file-ignores` match.
+files=()
+for _f in "$@"; do
+    case "$_f" in
+        /*) files+=("$_f") ;;
+        *) files+=("$PWD/$_f") ;;
+    esac
+done
+
 # ⚑⚑ RUN FROM THE DISTRIBUTION DIRECTORY, NOT THE RUNFILES ROOT. `per-file-ignores` patterns like
 # `tests/*` are resolved RELATIVE TO THE CONFIG, so from the runfiles root the paths arrive as
 # `ratchet/tests/...` and match nothing — measured, 47 findings that the host run does not report.
@@ -78,11 +94,12 @@ cd "$dist" || exit 1
 # executable in git reads as executable, so `EXE001` cannot fire there. Locally the sandbox links
 # the source, the mode is git's, and `EXE001` is exact. The alternative — stripping a shebang
 # file's bit — is wrong on every executor, not just the remote one.
-while IFS= read -r -d '' _py; do
-    if [ "$(head -c 2 "$_py")" != '#!' ]; then
+# ⚑ W485: OVER THE FILES PASSED, the same population the checkers below read.
+for _py in "${files[@]}"; do
+    if [ -x "$_py" ] && [ "$(head -c 2 "$_py")" != '#!' ]; then
         chmod u-x,g-x,o-x "$_py" 2>/dev/null || true
     fi
-done < <(find . -name '*.py' -perm -u+x -print0)
+done
 
 # ⚑⚑⚑ W477: FORMATTING IS PART OF THE BAR, AND UNTIL HERE NOTHING IN THE GRAPH CHECKED IT. This
 # ran `ruff check` alone, so `ruff format --check` rested on the edit-time pycheck hook — and a
@@ -91,12 +108,15 @@ done < <(find . -name '*.py' -perm -u+x -print0)
 # distributions pass `format --check` (positive control: the same invocation flags a probe file).
 # ⚑ BOTH RUN, AND EACH STATUS IS READ IN AN `else`, so one refusal never hides the other and a
 # refusing checker cannot end the script before its status is read (W474's class).
-if "$ruff" check --no-cache --config "$config" .; then
+# ⚑ NO `--force-exclude`: measured, the root's `extend-exclude = ["bazel-*"]` matches the
+# sandbox's own `bazel-out/` prefix and dropped 16 of 18 passed files. The BUILD's list IS the
+# domain; the config's excludes govern discovery on the host, which passes directories.
+if "$ruff" check --no-cache --config "$config" -- "${files[@]}"; then
     _check_rc=0
 else
     _check_rc=$?
 fi
-if "$ruff" format --check --no-cache --config "$config" .; then
+if "$ruff" format --check --no-cache --config "$config" -- "${files[@]}"; then
     _format_rc=0
 else
     _format_rc=$?

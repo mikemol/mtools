@@ -77,7 +77,7 @@ def test_the_plant_lands_in_a_copy_without_build_residue(tmp_path: Path) -> None
 
 
 def test_a_dist_without_one_package_is_named(tmp_path: Path) -> None:
-    """No single package under src/mikemol means nothing to plant in; that is reported, not passed."""
+    """No single package under src/mikemol means nothing to plant in; reported, not passed."""
     dist = tmp_path / "bare"
     (dist / "src" / "mikemol").mkdir(parents=True)
     [finding] = refusal_check.check(dist, _ratchet(1, []))

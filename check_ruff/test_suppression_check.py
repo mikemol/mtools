@@ -31,7 +31,7 @@ def _ruff(output: str, seen: list[list[str]]) -> suppression_check.Runner:
 
 
 def test_an_honoured_directive_passes(tmp_path: Path) -> None:
-    """ruff reports nothing for the claimed rule, so the directive holds; src is swept too."""
+    """Ruff reports nothing for the claimed rule, so the directive holds; src is swept too."""
     seen: list[list[str]] = []
     assert suppression_check.check(_dist(tmp_path, _DIRECTIVE), _ruff("", seen)) == []
     assert seen == [["src/m.py"]]
@@ -45,13 +45,13 @@ def test_a_resurfaced_finding_for_a_claimed_rule_is_named(tmp_path: Path) -> Non
 
 
 def test_a_finding_for_an_unclaimed_rule_is_not_this_checks_business(tmp_path: Path) -> None:
-    """Another rule's finding belongs to the ruff target, so a red here is only about suppression."""
+    """Another rule's finding belongs to the ruff target; a red here is only about suppression."""
     out = "src/m.py:1:1: D100 undocumented-public-module\n"
     assert suppression_check.check(_dist(tmp_path, _DIRECTIVE), _ruff(out, [])) == []
 
 
 def test_an_invalid_directive_is_always_claimed() -> None:
-    """ruff's own invalid-rule report is claimed even when no directive names it."""
+    """Ruff's own invalid-rule report is claimed even when no directive names it."""
     rules = suppression_check.claimed(["x = 1  # ruff: ignore[a, b]\n"])
     assert rules >= {"a", "b", "RUF102", "invalid-rule-code"}
 

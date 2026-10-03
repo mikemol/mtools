@@ -10,6 +10,13 @@ load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
+# ⚑⚑ NOT SOURCE (W485): differential/.venv is the git-ignored REFERENCE venv the differential runs
+# substrate's origin in. A bazel glob does not read .gitignore, so `differential/**/*.py` matched
+# its whole site-packages: measured, //pycodemod:ruff handed ~every installed module, 540s and
+# 1.5 GB of output, once ruff_check.sh linted exactly the files passed instead of `.` (whose
+# built-in exclude had hidden it). Every glob that reaches into differential/ excludes it.
+_NOT_SOURCE = ["differential/.venv/**"]
+
 exports_files([
     # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
     "pyproject.toml",
@@ -71,11 +78,11 @@ sh_test(
     args = [
         "$(location @mikemol_check_ruff//:bin)",
         "$(location :pyproject.toml)",
-    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"])],
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"], exclude = _NOT_SOURCE)],
     data = [
         "pyproject.toml",
         "@mikemol_check_ruff//:bin",
-    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"]),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"], exclude = _NOT_SOURCE),
     size = "small",
 )
 
@@ -94,7 +101,7 @@ sh_test(
         "ratchet-preview.txt",
         "//ratchet:ratchet_cli",
         "@mikemol_check_ruff//:bin",
-    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"]),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py"], exclude = _NOT_SOURCE),
     size = "small",
 )
 
@@ -136,7 +143,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":mypy_runner",
-    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py", "stubs/**"], allow_empty = True),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "differential/**/*.py", "stubs/**"], allow_empty = True, exclude = _NOT_SOURCE),
     size = "small",
     # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24), as every sibling's mypy target.
     timeout = "long",

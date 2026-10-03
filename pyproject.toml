@@ -51,7 +51,23 @@ extend-exclude = ["bazel-*", "inbox", "findings", "patches", "rbe", ".claude"]
 # `pytest_main.py` is a top-level script there, not a member of a package missing its __init__.py.
 # DECLARED, as the distributions declare theirs (INP001 is answered by namespace-packages, never
 # ignored). It leaves with the atom when the atom moves to its own repo.
-namespace-packages = ["rules_py", "check_mypy", "check_mutants"]
+# ⚑⚑ W485: EACH ATOM TWICE — ONCE WHERE A DEVELOPER READS IT, ONCE WHERE `//:ruff` READS IT. In
+# the test's runfiles an external module's files sit at `../<canonical name>/`, a sibling of
+# `_main`, so the checkout spelling matches nothing there; measured, INP001 on every atom file
+# under `//:ruff` and on none of them on the host. The staged spelling is bzlmod's canonical
+# repository name: if bazel renames it, `//:ruff` goes RED on INP001, never silently green.
+namespace-packages = [
+    "rules_py",
+    "check_mypy",
+    "check_mutants",
+    "check_ruff",
+    "check_ratchet",
+    "../mikemol_rules_py+",
+    "../mikemol_check_mypy+",
+    "../mikemol_check_mutants+",
+    "../mikemol_check_ruff+",
+    "../mikemol_check_ratchet+",
+]
 
 [tool.ruff.lint]
 preview = true
@@ -94,6 +110,32 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "test_venv_check.py" = ["assert"]
 # ⚑ ITS TEST ASSERTS (W233), over requirements files and locks it writes into tmp_path.
 "test_reqs_check.py" = ["assert"]
+# ⚑⚑ W485: THE ENTRIES BELOW ARRIVED WHEN `//:ruff` FIRST READ THE ATOMS IT WAS PASSED. Before,
+# it ran over `.` in `_main` and never opened an external module's file.
+# ⚑ ITS TEST ASSERTS (W362, W363), over BUILD and test files it writes into tmp_path.
+"test_suite_check.py" = ["assert"]
+# ⚑ RUNNING THE RATCHET IS THE REFUSAL CHECK'S WHOLE JOB (W388): one argv list, no shell, the
+# ratchet path the gate passes and a temporary copy of the distribution.
+"refusal_check.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ ITS TEST ASSERTS, over a fake ratchet; no subprocess of its own.
+"test_refusal_check.py" = ["assert"]
+# ⚑ RUNNING RUFF IS THE SELECTOR CHECK'S WHOLE JOB (W384): the declared ruff, an argv list, no shell.
+"selector_check.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ ITS TEST ASSERTS, over hand-written configs and a fake ruff.
+"test_selector_check.py" = ["assert"]
+# ⚑ RUNNING RUFF IS THE SUPPRESSION CHECK'S WHOLE JOB (W385): the declared ruff, an argv list.
+"suppression_check.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ ITS TEST ASSERTS, over planted directives and the gate's ruff.
+"test_suppression_check.py" = ["assert"]
 # ⚑ A TEST MODULE ASSERTS; that is what pytest reads. And its GIT_* witness builds a real decoy
 # repository, because the hazard under test is git following an exported GIT_DIR — `git` is
 # resolved from PATH as `ratchet/tests/test_remap.py` resolves it, for the same reason.

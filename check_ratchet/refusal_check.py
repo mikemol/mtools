@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""Check one distribution's ratchet REFUSES a new finding: a lowering that refuses nothing is a
-deletion wearing a paydown's name.
+"""Check one distribution's ratchet REFUSES a new finding.
+
+A lowering that refuses nothing is a deletion wearing a paydown's name.
 
 W388, ported from hooks/tests/test_bar_fires.py's test_every_emptied_baseline_arms_a_refusal,
 which looped over every distribution from the repo root. A copy of the distribution gets a planted
@@ -90,8 +91,11 @@ def check(dist: Path, run: Ratchet) -> list[str]:
         status, output = run(probe)
     if status == 0 or _PROBE not in output:
         return [
-            f"{dist}: the ratchet TOLERATED a planted finding (rc={status}); a baseline that "
-            f"refuses nothing is a deletion wearing a paydown's name: {output.strip()[:300]}"
+            (
+                f"{dist}: the ratchet TOLERATED a planted finding (rc={status}); a baseline "
+                f"that refuses nothing is a deletion wearing a paydown's name: "
+                f"{output.strip()[:300]}"
+            )
         ]
     return []
 

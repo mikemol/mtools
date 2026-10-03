@@ -12,7 +12,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 _GOOD_BUILD = 'py_test(\n    name = "t",\n    main = "@mikemol_rules_py//:pytest_main.py",\n)\n'
-_GOOD_TEST = '"""Prose may say Path(__file__).resolve() freely."""\n\ndef test_x() -> None:\n    pass\n'
+_GOOD_TEST = (
+    '"""Prose may say Path(__file__).resolve() freely."""\n\ndef test_x() -> None:\n    pass\n'
+)
 _RESOLVING_TEST = "from pathlib import Path\n\nHERE = Path(__file__).resolve().parent\n"
 
 
@@ -30,7 +32,7 @@ def test_good_distribution_has_no_findings(tmp_path: Path) -> None:
 
 def test_module_as_main_is_named(tmp_path: Path) -> None:
     """A py_test running its own module as main is a finding, and so is pytest's main missing."""
-    dist = _dist(tmp_path, 'py_test(\n    main = src,\n)\n', _GOOD_TEST)
+    dist = _dist(tmp_path, "py_test(\n    main = src,\n)\n", _GOOD_TEST)
     missing, as_module = suite_check.check(dist)
     assert "no py_test names" in missing
     assert "pytest never collects" in as_module

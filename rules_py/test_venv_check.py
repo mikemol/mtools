@@ -13,10 +13,10 @@ import sys
 from pathlib import Path
 
 import pytest
-
 import venv_check
 
 _DIST = "fakedist"
+_USAGE_EXIT = 2
 _REPO = "fake_toolchain"
 
 
@@ -121,5 +121,5 @@ def test_collection_failure_names_its_cause(
 
 def test_usage_error_is_exit_2(capsys: pytest.CaptureFixture[str]) -> None:
     """Too few arguments is a usage error, never a pass."""
-    assert venv_check.main([]) == 2
+    assert venv_check.main([]) == _USAGE_EXIT
     assert "usage" in capsys.readouterr().err
