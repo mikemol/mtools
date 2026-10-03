@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from mikemol.pytestspec.spec import (
+    Case,
     Expect,
     SpecDataError,
     Verdict,
@@ -79,12 +80,33 @@ def test_expect_is_read_from_the_case() -> None:
         {"admit": ["S0"]},
         {"withheld": []},
         {"deny": [], "withheld": []},
+        {"deny": ["S0"], "impl": []},
+        {"deny": ["S0"], "impl": "reference"},
+        {"deny": ["S0"], "impl": [""]},
+        {"impl": ["reference"]},
     ],
 )
 def test_malformed_expect_is_a_data_error(expect: object) -> None:
     """A bare "denied", no id at all, an unknown key, or a non-id entry is refused."""
     with pytest.raises(SpecDataError, match="case c: "):
         expectation("c", {"case": "c", "expect": expect})
+
+
+_SCOPED: Case = {"case": "c", "expect": {"deny": ["S0"], "impl": ["reference"]}}
+
+
+def test_scoped_expect_holds_only_under_its_impl() -> None:
+    """W508: an expect scoped by `impl` applies under a named impl only; elsewhere it is absent."""
+    assert expectation("c", _SCOPED, "reference") == _S0
+    assert expectation("c", _SCOPED, "subject") is None
+    assert expectation("c", _SCOPED) is None
+
+
+def test_unscoped_expect_holds_under_every_impl() -> None:
+    """An expect with no `impl` binds as-written and under every implementation alike."""
+    case: Case = {"case": "c", "expect": {"deny": ["S0"]}}
+    assert expectation("c", case, "subject") == _S0
+    assert expectation("c", case) == _S0
 
 
 def test_cases_sit_beside_the_spec() -> None:

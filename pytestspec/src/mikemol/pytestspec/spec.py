@@ -101,6 +101,8 @@ class Expect:
 
 
 _EXPECT_KEYS = ("deny", "withheld")
+# W508: the implementations an expect binds under; omitted, it binds under every one.
+_IMPL_KEY = "impl"
 
 
 def _ids(name: str, key: str, raw: object) -> frozenset[str]:
@@ -112,7 +114,7 @@ def _ids(name: str, key: str, raw: object) -> frozenset[str]:
     return frozenset(str(i).strip() for i in cast("list[object]", raw))
 
 
-def expectation(name: str, case: Case) -> Expect | None:
+def expectation(name: str, case: Case, impl: str | None = None) -> Expect | None:
     """Read a case's `expect`: the rule ids that must deny it and must withhold it (W372, W381).
 
     el-openglo asked for both halves: a refusing fixture (W139) and a could-not-measure fixture
@@ -120,8 +122,14 @@ def expectation(name: str, case: Case) -> Expect | None:
     BE EMPTY, so `{"withheld": ["X"]}` fails on any deny, and `{"deny": ["S0"]}` fails on any
     withheld (a rule that did not run did not refuse).
 
+    ⚑ AN `impl` LIST SCOPES THE EXPECT (W508): it binds only when `impl` (the `--impl` run) is
+    named there, and is otherwise ABSENT, so the case is judged plainly. A known defect of the
+    origin is refused under the origin while every port must admit the same case. The outcome
+    map is untouched: scoping decides which Expect reaches it, not where a cell lands.
+
     Returns:
-        the Expect, or None when the case declares no `expect` (admitted-only).
+        the Expect, or None when the case declares no `expect` (admitted-only) or the expect
+        is scoped to implementations that do not include `impl` (as-written included).
 
     Raises:
         SpecDataError: `expect` is not an object of `deny` and/or `withheld` id lists naming at
@@ -136,7 +144,7 @@ def expectation(name: str, case: Case) -> Expect | None:
         msg = f'case {name}: expect must be {{"deny": [...], "withheld": [...]}}'
         raise SpecDataError(msg)
     fields = cast("dict[str, object]", expect)
-    unknown = sorted(set(fields) - set(_EXPECT_KEYS))
+    unknown = sorted(set(fields) - {*_EXPECT_KEYS, _IMPL_KEY})
     if unknown:
         msg = f"case {name}: expect has unknown keys {', '.join(unknown)}"
         raise SpecDataError(msg)
@@ -145,7 +153,13 @@ def expectation(name: str, case: Case) -> Expect | None:
     if not found.deny and not found.withheld:
         msg = f"case {name}: expect names no rule id; omit it for an admitted-only case"
         raise SpecDataError(msg)
-    return found
+    if _IMPL_KEY not in fields:
+        return found
+    scope = _ids(name, _IMPL_KEY, fields[_IMPL_KEY])
+    if not scope:
+        msg = f"case {name}: expect `impl` names no implementation; omit it to bind under all"
+        raise SpecDataError(msg)
+    return found if impl in scope else None
 
 
 def _mismatch(label: str, want: frozenset[str], messages: tuple[str, ...]) -> str | None:

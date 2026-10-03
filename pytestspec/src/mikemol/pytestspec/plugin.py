@@ -197,7 +197,8 @@ class SpecItem(pytest.Item):
                 or `--skip-declared` skipped a declared unmeasured case.
 
         """
-        expect = expectation(self.name, self.case)
+        impl = cast("object", self.config.getoption("impl"))
+        expect = expectation(self.name, self.case, impl if isinstance(impl, str) else None)
         if _skips(self.config, self.disposition):
             self._record(None, expect)
             msg = "DECLARED-SKIPPED (not evaluated): --skip-declared"

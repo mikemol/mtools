@@ -514,3 +514,49 @@ def test_an_unkeyed_result_is_never_reused(pytester: pytest.Pytester) -> None:
     ran, result = _run_twice(pytester, _MARKING)
     assert ran
     result.stdout.fnmatch_lines(["*cached=0"])
+
+
+# W508: a known origin defect is refused under the origin only; a port is judged plainly.
+_SCOPED = """[
+  {"case": "known", "fixture": "c", "deny": ["008: un-negated else"],
+   "expect": {"deny": ["008"], "impl": ["reference"]}}
+]"""
+
+_DENYING_BOTH = _BOTH.replace(
+    "lambda spec, case: Verdict()",
+    "lambda spec, case: Verdict(deny=tuple(case.get('deny', ())))",
+)
+
+
+def _scoped_under(pytester: pytest.Pytester, impl: str) -> pytest.RunResult:
+    """Run the scoped-expect case under `--impl impl`.
+
+    Returns:
+        the run.
+
+    """
+    pytester.makeconftest(_DENYING_BOTH)
+    pytester.makefile(".rego", spec="package s\n")
+    pytester.makefile(".cases.json", spec=_SCOPED)
+    return pytester.runpytest(*_LOAD, "-rf", "--impl", impl)
+
+
+def test_scoped_expect_refuses_under_its_impl(pytester: pytest.Pytester) -> None:
+    """Under the named impl the expected deny passes and counts as refused, not denied."""
+    result = _scoped_under(pytester, "reference")
+    result.assert_outcomes(passed=1)
+    result.stdout.fnmatch_lines(
+        ["pytestspec: spec.rego impl=reference admitted=0 denied=0 refused=1*"]
+    )
+
+
+def test_scoped_expect_is_absent_under_another_impl(pytester: pytest.Pytester) -> None:
+    """Under any other impl the case is judged plainly: the same deny is a failure."""
+    result = _scoped_under(pytester, "subject")
+    result.assert_outcomes(failed=1)
+    result.stdout.fnmatch_lines(
+        [
+            "*known: DENIED: 008: un-negated else*",
+            "pytestspec: spec.rego impl=subject admitted=0 denied=1 refused=0*",
+        ]
+    )

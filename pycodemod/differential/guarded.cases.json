@@ -64,6 +64,14 @@
  },
  {
   "case": "008-guarded-else-body-over-reported-under-its-if-never-negated",
+  "expect": {
+   "deny": [
+    "008"
+   ],
+   "impl": [
+    "reference"
+   ]
+  },
   "origin": {
    "check": "guarded: else-body over-reported under its if, never negated",
    "line": 150,

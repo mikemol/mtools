@@ -457,3 +457,32 @@
   claim  = {A rule naming a column the line does not print is refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_an_unknown_column_is_reported},
 }
+
+@misc{pytestspec-spec-scoped-expect-holds-only-under-its-impl,
+  section = {spec},
+  title  = {W508: an expect scoped by `impl` applies under a named impl only; elsewhere it is absent},
+  claim  = {W508: an expect scoped by `impl` applies under a named impl only; elsewhere it is
+            absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_scoped_expect_holds_only_under_its_impl},
+}
+
+@misc{pytestspec-spec-unscoped-expect-holds-under-every-impl,
+  section = {spec},
+  title  = {An expect with no `impl` binds as-written and under every implementation alike},
+  claim  = {An expect with no `impl` binds as-written and under every implementation alike.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec.py -k test_unscoped_expect_holds_under_every_impl},
+}
+
+@misc{pytestspec-plugin-scoped-expect-refuses-under-its-impl,
+  section = {plugin},
+  title  = {Under the named impl the expected deny passes and counts as refused, not denied},
+  claim  = {Under the named impl the expected deny passes and counts as refused, not denied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_scoped_expect_refuses_under_its_impl},
+}
+
+@misc{pytestspec-plugin-scoped-expect-is-absent-under-another-impl,
+  section = {plugin},
+  title  = {Under any other impl the case is judged plainly: the same deny is a failure},
+  claim  = {Under any other impl the case is judged plainly: the same deny is a failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_scoped_expect_is_absent_under_another_impl},
+}
