@@ -181,6 +181,13 @@ else
     exit 1
 fi
 mkdir -p "$_witness_logs"
+# ⚑⚑ THE WITNESSES RUN IN `$staged` (W528), WHICH IS NOT INSIDE A REPOSITORY, so git's discovery
+# fails there. MEASURED on the first try: every victim refused as "not tracked". Their git calls
+# need the repository and the commit's index named ABSOLUTELY. git does not export GIT_DIR to this
+# hook, and GIT_INDEX_FILE may be relative to `$root`, which is the cwd here.
+_wgit_dir="$(git rev-parse --absolute-git-dir)"
+_windex="${GIT_INDEX_FILE:-$_wgit_dir/index}"
+case "$_windex" in /*) ;; *) _windex="$root/$_windex" ;; esac
 
 witness() {  # label, then domain_witness.sh's own arguments
     _wlabel="$1"; shift
@@ -201,7 +208,13 @@ witness() {  # label, then domain_witness.sh's own arguments
     # the scratch tree the refusal was about.** Moving the wipe would fix this ordering and leave
     # the next reordering free to break it again.
     _wlog="$_witness_logs/witness-$(printf '%s' "$_wlabel" | tr -c 'a-zA-Z0-9' '_').log"
-    if ./domain_witness.sh "$@" >"$_wlog" 2>&1; then
+    # ⚑⚑ RUN FROM THE STAGED TREE (W528). From `$root`, every arm planted its probe in the MAIN
+    # working tree, and a concurrent bazel run there read it: //hooks:ruff failed on the live probe
+    # in cmdparse.py (2026-10-03). The staged copy is the workspace being committed, so the domain
+    # proved is the committed one. GIT_WORK_TREE makes the witness's own git calls (tracked,
+    # unstaged, checkout-restore) act on the staged copy against the commit's index.
+    if GIT_DIR="$_wgit_dir" GIT_INDEX_FILE="$_windex" GIT_WORK_TREE="$staged" \
+        "$staged/domain_witness.sh" "$@" >"$_wlog" 2>&1; then
         cat "$_wlog" >&2
     else
         cat "$_wlog" >&2
@@ -912,7 +925,8 @@ witness "hooks: ruff domain reaches a transitive import" hooks    //hooks:ruff  
 # ⚑ THE WITNESS THAT REFUSED A PEER WITH NO ACCOUNT. Its arms go to stderr and vanish into a
 # 35-target bazel run; captured here so the refusal carries them.
 wlog="$staged/.witness-shellcheck.log"
-if ! ./domain_witness.sh . //:shellcheck_githooks blockers.sh shellcheck >"$wlog" 2>&1; then
+if ! GIT_DIR="$_wgit_dir" GIT_INDEX_FILE="$_windex" GIT_WORK_TREE="$staged" \
+    "$staged/domain_witness.sh" . //:shellcheck_githooks blockers.sh shellcheck >"$wlog" 2>&1; then
     cat "$wlog" >&2
     fail=1; note_failure "shellcheck domain reaches every shell file" "$wlog"
 else

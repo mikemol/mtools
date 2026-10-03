@@ -159,6 +159,14 @@ fi
 # ⚑ THE SABOTAGE STAYS IN THE REAL FILE. A witness over a copy proves the COPY's domain, which is
 # the whole reason arm 2 mutates the tracked file. So the repair is not to move the mutation; it is
 # to make the restore VERIFIABLE independent of everything else in the tree.
+# ⚑⚑ AND THE GATE NOW RUNS THIS FROM THE STAGED TREE (W528). The pre-commit gate invokes
+# `"$staged/domain_witness.sh"` with GIT_WORK_TREE="$staged": the cwd below is the staged copy, a
+# whole workspace holding exactly the bytes being committed. That is not "a copy of the victim".
+# It is the domain being committed, and the git calls here are unchanged: `ls-files` reads the
+# commit's index, `diff` compares the index to the staged file, and `checkout` restores into the
+# staged file. MEASURED 2026-10-03: run against the main tree, a concurrent `bazel test //hooks/...`
+# read this witness's live probe in cmdparse.py and failed //hooks:ruff on it. Run by hand from
+# the main tree, it still mutates the main tree, as before.
 before_image="$(git hash-object "$victim" 2>/dev/null)"
 
 # ⚑⚑⚑ `git checkout`'s OWN STATUS IS REPORTED SEPARATELY FROM THE DIRTINESS RE-READ, AND

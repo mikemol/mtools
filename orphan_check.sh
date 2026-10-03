@@ -18,7 +18,7 @@
 # COMMENT. A false positive and a false negative, from one loop, in one run.
 #
 # ⚑ SO: the invocation sites are ENUMERATED, and the match is an INVOCATION SHAPE (`./x.sh`,
-# `$repo/x.sh`, `$mtools/x.sh`, or a bazel label) rather than a mention. A name appearing in prose
+# `$repo/x.sh`, `$mtools/x.sh`, `$staged/x.sh`, or a bazel label) rather than a mention. A name appearing in prose
 # is not a call.
 set -uo pipefail
 
@@ -68,7 +68,9 @@ for f in *.sh; do
     inv=""
     for site in "${sites[@]}"; do
         [ -f "$site" ] || continue
-        grep -qE "(\./|\\\$repo/|\\\$mtools/)$f" "$site" && { inv="yes"; break; }
+        # ⚑ `$staged/x.sh` IS AN INVOCATION TOO (W528): the gate runs `domain_witness.sh` from the
+        # staged tree, and this checker called it an undeclared orphan when that shape was missing.
+        grep -qE "(\./|\\\$repo/|\\\$mtools/|\\\$staged/)$f" "$site" && { inv="yes"; break; }
     done
     # ⚑⚑⚑ AN `exports_files` ENTRY IS NOT AN INVOCATION, AND TREATING IT AS ONE SILENCED A REAL
     # WAIVER. The first cut matched any quoted mention of the filename in `BUILD.bazel`; the
