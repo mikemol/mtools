@@ -37,6 +37,28 @@ test_14_append_control if not denies(bash("mikemol-gen-warrants hooks cmdparse=X
 # the module form, which a venv without the console script uses (W501)
 test_14_module_append_control if not denies(bash("hooks/.venv/bin/python3 -m mikemol.hooks.gen_warrants hooks cmdparse=X >> hooks/warrants.bib"), 14)
 
+test_16_py_witness if denies(edit("/home/mikemol/github/mtools/.claude/design/probe.py"), 16)
+
+test_16_write_rego_witness if denies({"tool_name": "Write", "tool_input": {"file_path": "/home/mikemol/github/mtools/.claude/x.rego"}}, 16)
+
+test_16_relative_sh_witness if denies(edit(".claude/swarm3/run.sh"), 16)
+
+# a worktree's own .claude/ is still .claude/
+test_16_worktree_claude_witness if denies(edit("/r/.claude/worktrees/wf_1/.claude/tool.py"), 16)
+
+test_16_worktree_control if not denies(edit("/home/mikemol/github/mtools/.claude/worktrees/wf_1/hooks/src/x.py"), 16)
+
+test_16_notes_control if not denies(edit("/home/mikemol/github/mtools/.claude/design/notes.md"), 16)
+
+test_16_outside_control if not denies(edit("/home/mikemol/github/mtools/hooks/src/claude.py"), 16)
+
+test_16_lookalike_control if not denies(edit("/home/mikemol/github/mtools/not.claude/x.py"), 16)
+
+# the user's ~/.claude/ is Claude Code's own (skills ship Python), not a repo's load-bearing code
+test_16_home_claude_control if not denies(edit("/home/mikemol/.claude/skills/x/scripts/helper.py"), 16)
+
+test_16_root_claude_control if not denies(edit("/root/.claude/skills/x/run.sh"), 16)
+
 test_15_witness if denies(bash("git commit -m \"subject\""), 15)
 
 test_15_bundled_witness if denies(bash("git -C /r commit -am \"subject\""), 15)

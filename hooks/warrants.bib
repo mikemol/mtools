@@ -4430,3 +4430,60 @@
   claim  = {W507: an ERROR line naming `//t` with no FAILED summary row still names `//t`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_suite_refusal_names_the_target_of_an_error_line},
 }
+
+@misc{hooks-claude-code-census-untracked-python-under-claude-is-an-offender,
+  section = {bar-fires},
+  title  = {An untracked `.claude/design/probe.py` is reported},
+  claim  = {An untracked `.claude/design/probe.py` is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_untracked_python_under_claude_is_an_offender},
+}
+
+@misc{hooks-claude-code-census-untracked-rego-and-shell-under-claude-are-offenders,
+  section = {bar-fires},
+  title  = {`.rego` and `.sh` under `.claude/` are code too},
+  claim  = {`.rego` and `.sh` under `.claude/` are code too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_untracked_rego_and_shell_under_claude_are_offenders},
+}
+
+@misc{hooks-claude-code-census-worktree-checkout-is-not-an-offender,
+  section = {bar-fires},
+  title  = {The harness's `.claude/worktrees/<name>/` is a checkout of the repo, not `.claude/` code},
+  claim  = {The harness's `.claude/worktrees/<name>/` is a checkout of the repo, not `.claude/`
+            code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_a_worktree_checkout_is_not_an_offender},
+}
+
+@misc{hooks-claude-code-census-worktrees-own-claude-dir-is-an-offender,
+  section = {bar-fires},
+  title  = {A worktree's own `.claude/tool.py` is still code under `.claude/`},
+  claim  = {A worktree's own `.claude/tool.py` is still code under `.claude/`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_a_worktrees_own_claude_dir_is_an_offender},
+}
+
+@misc{hooks-claude-code-census-notes-and-code-outside-claude-are-not-offenders,
+  section = {bar-fires},
+  title  = {Notes under `.claude/` and code elsewhere pass},
+  claim  = {Notes under `.claude/` and code elsewhere pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_notes_and_code_outside_claude_are_not_offenders},
+}
+
+@misc{hooks-claude-code-census-report-refuses-and-names-each-offender,
+  section = {bar-fires},
+  title  = {The report exits 1 and names the offender, not the note beside it},
+  claim  = {The report exits 1 and names the offender, not the note beside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_report_refuses_and_names_each_offender},
+}
+
+@misc{hooks-claude-code-census-report-passes-on-a-clean-census,
+  section = {bar-fires},
+  title  = {The report exits 0 when nothing under `.claude/` is code},
+  claim  = {The report exits 0 when nothing under `.claude/` is code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_report_passes_on_a_clean_census},
+}
+
+@misc{hooks-claude-code-census-untracked-lists-ignored-and-unignored-files-but-not-tracked-ones,
+  section = {bar-fires},
+  title  = {The census population is every untracked `.claude/` file, gitignored or not},
+  claim  = {The census population is every untracked `.claude/` file, gitignored or not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_untracked_lists_ignored_and_unignored_files_but_not_tracked_ones},
+}

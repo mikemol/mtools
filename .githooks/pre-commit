@@ -957,6 +957,14 @@ say "orphan check: is every shell checker invoked, or declared as parked?"
 # *some checker is unaccounted for* and the reader must re-run the script to learn which.
 run_checked "every shell checker is invoked or declared parked" ./orphan_check.sh
 
+# W464: no untracked executable code (.py .rego .sh) under .claude/ — load-bearing code is tracked
+# and under the bar from its first write. Standing rule 16 refuses the Write/Edit; this census
+# catches a file that arrived any other way. .claude/worktrees/<name>/ (the harness's checkouts)
+# is excluded by the predicate, not by the population, so a worktree's own .claude/ still counts.
+say "claude-code census: is any untracked code living under .claude/?"
+run_checked "no untracked code (.py .rego .sh) under .claude/" \
+  hooks/.venv/bin/python3 -m mikemol.hooks.claude_code_census .
+
 # ⚑⚑ THE ROSTER IS THE ONE POPULATION IN THIS REPOSITORY THAT CANNOT BE ENUMERATED, measured
 # rather than assumed: PATH yields 2,843 executables and flagging all of it is useless; an
 # `apropos` search for "text" returns 86 hits and MISSES all six readers added by hand, because

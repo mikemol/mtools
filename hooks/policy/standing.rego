@@ -93,6 +93,25 @@ deny contains "standing 11: paths_forward_render.py is retired; use mikemol-path
 	regex.match(`(^\s*|[;&|]\s*)(\S*python3?\s+)?\S*paths_forward_render\.py(\s|$)`, command)
 }
 
+# rule 16 (W464): no load-bearing code under .claude/ — evidence-producing code is tracked and under
+# the bar from its first write. .claude/worktrees/<name>/ is the workflow harness's checkout of the
+# repo, so its prefix is stripped (greedily, to the innermost one) before the .claude/ test: a
+# worktree's hooks/x.py is ordinary tracked code, while a worktree's own .claude/x.py is not.
+claude_code_ext := `\.(py|rego|sh)$`
+
+edited_in_repo := regex.replace(edited, `^.*/\.claude/worktrees/[^/]+/`, "")
+
+# ⚑ A REPO's .claude/, NEVER THE USER's ~/.claude/: that one holds Claude Code's own skills, whose
+# scripts are legitimately Python (measured: ~/.claude/skills/synced/.../sheets_helper.py), and is
+# no repository's load-bearing code.
+home_claude := `^/(home/[^/]+|root)/\.claude/`
+
+deny contains "standing 16: no executable code (.py .rego .sh) under .claude/; put it in a tracked package under the bar" if {
+	regex.match(`(^|/)\.claude/`, edited_in_repo)
+	not regex.match(home_claude, edited)
+	regex.match(claude_code_ext, edited_in_repo)
+}
+
 # The harness's own deny shape; undefined (no output) when nothing is denied.
 decision := {"hookSpecificOutput": {
 	"hookEventName": "PreToolUse",

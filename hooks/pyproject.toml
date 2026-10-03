@@ -310,6 +310,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_pre_push.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ THE `.claude/` CODE CENSUS (W464): asking git for the untracked files IS its responsibility.
+# git is resolved by `shutil.which` (absent → refuse, exit 2); the argv is module constants plus
+# the caller's repository root as ONE word. Never through a shell. Its witness builds a decoy
+# repository with `git init` under tmp_path: the same reason.
+"src/mikemol/hooks/claude_code_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_claude_code_census.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑ THE REFUSAL LOG: handing one event to `curl` IS its responsibility. MEASURED: curl is resolved
 # by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the
 # caller's destination URL, as ONE word; the untrusted payload is the JSON on STDIN, never a word
