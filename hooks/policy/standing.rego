@@ -233,6 +233,28 @@ deny contains rule_4 if {
 	nonblank(object.get(input.tool_input, "content", "")) > object.get(input, ["facts", "target_lines"], -1)
 }
 
+# rule 6 (W511): a paperkit freeze's embargo. The record is the queue field `embargoes`
+# (operator ruling 2026-10-03), written with `mikemol-paths-forward --embargo PATH REASON` and
+# lifted with `--lift-embargo PATH`; facts.embargoes carries each as {path (absolute), rel,
+# reason}, so the rule lifts the moment the record does. An Edit or Write is denied on the
+# project's file itself or on a swarm worktree's copy of it (which lands on integration).
+# Residue: a Bash write (sed -i, >) to the path is not seen here, as with rule 7.
+embargo_hits contains e if {
+	some e in input.facts.embargoes
+	edited
+	resolve(edited) == e.path
+}
+
+embargo_hits contains e if {
+	some e in input.facts.embargoes
+	startswith(edited, concat("", [trim_suffix(e.path, e.rel), ".claude/worktrees/"]))
+	edited_in_repo == e.rel
+}
+
+deny contains sprintf("standing 6: %s is embargoed (%s); lift it with mikemol-paths-forward --lift-embargo, an operator decision", [e.rel, e.reason]) if {
+	some e in embargo_hits
+}
+
 # The harness's own deny shape; undefined (no output) when nothing is denied.
 decision := {"hookSpecificOutput": {
 	"hookEventName": "PreToolUse",

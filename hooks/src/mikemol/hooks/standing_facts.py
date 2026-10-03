@@ -16,6 +16,9 @@ Facts:
     queue:  {path, held}: the project's queue file and the symbols blocked on a human there.
     target_lines: for a Write to the ratchet baseline, its current non-blank line count (0 when
             it does not exist yet); rule 4 compares the Write's content against it.
+    embargoes: [{path, rel, reason}]: the queue's `embargoes` field (W511, rule 6), each path
+            made absolute against the project; [] when the queue holds none, absent when the
+            queue or the field cannot be read.
 """
 
 from __future__ import annotations
@@ -68,11 +71,11 @@ def staged_paths(cwd: Path) -> list[str] | None:
     return sorted(f"{root}/{name}" for name in names.split("\0") if name)
 
 
-def held_symbols(state: Path) -> list[str] | None:
-    """Return the symbols blocked on a human in a queue file, or None when it cannot be read.
+def _queue_doc(state: Path) -> dict[str, object] | None:
+    """Return a queue file's top-level record, or None when it cannot be read as JSON.
 
     Returns:
-        the held symbols, sorted; None for a missing or malformed queue.
+        the record; None for a missing or malformed file.
 
     """
     try:
@@ -80,7 +83,20 @@ def held_symbols(state: Path) -> list[str] | None:
             raw: object = json.load(handle)
     except (OSError, ValueError):
         return None
-    rows = as_record(raw).get("waypoints")
+    return as_record(raw)
+
+
+def held_symbols(state: Path) -> list[str] | None:
+    """Return the symbols blocked on a human in a queue file, or None when it cannot be read.
+
+    Returns:
+        the held symbols, sorted; None for a missing or malformed queue.
+
+    """
+    doc = _queue_doc(state)
+    if doc is None:
+        return None
+    rows = doc.get("waypoints")
     if not isinstance(rows, list):
         return None
     held: list[str] = []
@@ -89,6 +105,33 @@ def held_symbols(state: Path) -> list[str] | None:
         if row.get("status") == "blocked" and row.get("blocked_kind") == "human":
             held.append(text_of(row.get("symbol")))
     return sorted(held)
+
+
+def embargoes(state: Path, project: Path) -> list[dict[str, str]] | None:
+    """Return the queue's embargo records with absolute paths (W511, rule 6).
+
+    ⚑ ONE MALFORMED RECORD VOIDS THE FACT: dropping it would read as "that path is free", the
+    very reading that did not happen, so a field that is not a list of {path, reason} is None.
+
+    Returns:
+        [{path, rel, reason}] in stored order; [] when the field is absent; None when the queue or
+        the field cannot be read.
+
+    """
+    doc = _queue_doc(state)
+    if doc is None:
+        return None
+    raw = doc.get("embargoes", [])
+    if not isinstance(raw, list):
+        return None
+    found: list[dict[str, str]] = []
+    for item in raw:
+        row = as_record(item)
+        rel = text_of(row.get("path"))
+        if not rel:
+            return None
+        found.append({"path": str(project / rel), "rel": rel, "reason": text_of(row.get("reason"))})
+    return found
 
 
 def baseline_lines(path: Path) -> int | None:
@@ -123,6 +166,9 @@ def gather(payload: dict[str, object], project: Path) -> dict[str, object]:
     held = held_symbols(state)
     if held is not None:
         facts["queue"] = {"path": str(state), "held": held}
+    embargoed = embargoes(state, project)
+    if embargoed is not None:
+        facts["embargoes"] = embargoed
     target = text_of(as_record(payload.get("tool_input")).get("file_path"))
     if payload.get("tool_name") == "Write" and Path(target).name == BASELINE:
         lines = baseline_lines(Path(cwd) / target)

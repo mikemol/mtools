@@ -18,7 +18,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import standing_facts
-from mikemol.hooks.standing_facts import baseline_lines, gather, held_symbols, staged_paths
+from mikemol.hooks.standing_facts import (
+    baseline_lines,
+    embargoes,
+    gather,
+    held_symbols,
+    staged_paths,
+)
 
 if TYPE_CHECKING:
     import pytest
@@ -180,3 +186,54 @@ def test_launcher_refuses_when_facts_cannot_be_gathered(tmp_path: Path) -> None:
     out = _launch("not json", _project(tmp_path))
     assert '"permissionDecision": "deny"' in out
     assert "facts" in out
+
+
+_EMBARGOED = "findings/CENSUS-deps-build-ANALYSIS.md"
+
+
+def _embargo_queue(project: Path, embargoes: object) -> Path:
+    state = project / ".claude" / "paths-forward.json"
+    state.parent.mkdir(parents=True, exist_ok=True)
+    doc: dict[str, object] = {"waypoints": [], "embargoes": embargoes}
+    state.write_text(json.dumps(doc), encoding="utf-8")
+    return state
+
+
+def test_embargoes_are_read_from_the_queue_field_as_absolute_paths(tmp_path: Path) -> None:
+    """W511: each `embargoes` record reaches the facts with its path made absolute."""
+    _embargo_queue(tmp_path, [{"path": _EMBARGOED, "reason": "freeze held", "since": "t"}])
+    assert gather({"cwd": str(tmp_path)}, tmp_path)["embargoes"] == [
+        {"path": f"{tmp_path}/{_EMBARGOED}", "rel": _EMBARGOED, "reason": "freeze held"}
+    ]
+
+
+def test_a_queue_without_the_field_reads_as_no_embargo(tmp_path: Path) -> None:
+    """W511: a readable queue with no `embargoes` is a reading of none: an empty list."""
+    _queue(tmp_path / ".claude" / "paths-forward.json", [])
+    assert embargoes(tmp_path / ".claude" / "paths-forward.json", tmp_path) == []
+
+
+def test_an_unreadable_queue_or_malformed_field_is_no_embargo_fact(tmp_path: Path) -> None:
+    """W511: a missing queue, or a field that is not a list of records, is absent, not empty."""
+    assert "embargoes" not in gather({"cwd": str(tmp_path)}, tmp_path)
+    state = _embargo_queue(tmp_path, "findings/x.md")
+    assert embargoes(state, tmp_path) is None
+    _embargo_queue(tmp_path, [{"path": "", "reason": "r"}])
+    assert embargoes(state, tmp_path) is None
+
+
+def test_launcher_denies_an_edit_to_an_embargoed_path(tmp_path: Path) -> None:
+    """W511 end to end: the queue's embargo reaches rule 6; another file is not denied."""
+    project = _project(tmp_path)
+    _embargo_queue(project, [{"path": _EMBARGOED, "reason": "freeze held", "since": "t"}])
+
+    def edit(name: str) -> str:
+        payload: dict[str, object] = {
+            "tool_name": "Edit",
+            "tool_input": {"file_path": str(project / name)},
+            "cwd": str(project),
+        }
+        return json.dumps(payload)
+
+    assert "standing 6:" in _launch(edit(_EMBARGOED), project)
+    assert "standing 6:" not in _launch(edit("findings/other.md"), project)

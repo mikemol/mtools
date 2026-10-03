@@ -4569,3 +4569,31 @@
   claim  = {W509: a staged-red test made green only in the working tree refuses, and is named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_a_tracked_test_with_unstaged_edits_refuses_the_commit},
 }
+
+@misc{hooks-standing-facts-embargoes-are-read-from-the-queue-field-as-absolute-paths,
+  section = {bar-fires},
+  title  = {W511: each `embargoes` record reaches the facts with its path made absolute},
+  claim  = {W511: each `embargoes` record reaches the facts with its path made absolute.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_embargoes_are_read_from_the_queue_field_as_absolute_paths},
+}
+
+@misc{hooks-standing-facts-queue-without-the-field-reads-as-no-embargo,
+  section = {bar-fires},
+  title  = {W511: a readable queue with no `embargoes` is a reading of none: an empty list},
+  claim  = {W511: a readable queue with no `embargoes` is a reading of none: an empty list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_a_queue_without_the_field_reads_as_no_embargo},
+}
+
+@misc{hooks-standing-facts-unreadable-queue-or-malformed-field-is-no-embargo-fact,
+  section = {bar-fires},
+  title  = {W511: a missing queue, or a field that is not a list of records, is absent, not empty},
+  claim  = {W511: a missing queue, or a field that is not a list of records, is absent, not empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_an_unreadable_queue_or_malformed_field_is_no_embargo_fact},
+}
+
+@misc{hooks-standing-facts-launcher-denies-an-edit-to-an-embargoed-path,
+  section = {bar-fires},
+  title  = {W511 end to end: the queue's embargo reaches rule 6; another file is not denied},
+  claim  = {W511 end to end: the queue's embargo reaches rule 6; another file is not denied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_launcher_denies_an_edit_to_an_embargoed_path},
+}

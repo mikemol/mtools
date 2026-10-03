@@ -252,3 +252,59 @@ test_4_write_same_control if not denies(baseline_write("a:1\nb:2\n", {"target_li
 test_read_is_never_denied if {
 	count(hook.deny) == 0 with input as {"tool_name": "Read", "tool_input": {"file_path": "findings/CENSUS-paperkit-use.md"}}
 }
+
+# W511 rule 6: an embargoed path (queue field `embargoes`, read into facts.embargoes) is not
+# edited while the record stands; the rule lifts with the record.
+embargo_fact := [{
+	"path": "/r/findings/CENSUS-deps-build-ANALYSIS.md",
+	"rel": "findings/CENSUS-deps-build-ANALYSIS.md",
+	"reason": "paperkit-use freeze held",
+}]
+
+embargoed_edit(tool, path, cwd) := {
+	"tool_name": tool,
+	"tool_input": {"file_path": path},
+	"cwd": cwd,
+	"facts": {"embargoes": embargo_fact},
+}
+
+test_6_edit_witness if denies(embargoed_edit("Edit", "/r/findings/CENSUS-deps-build-ANALYSIS.md", "/r"), 6)
+
+test_6_write_witness if denies(embargoed_edit("Write", "/r/findings/CENSUS-deps-build-ANALYSIS.md", "/r"), 6)
+
+test_6_relative_witness if denies(embargoed_edit("Edit", "findings/CENSUS-deps-build-ANALYSIS.md", "/r"), 6)
+
+# a swarm worktree's copy lands in the project on integration
+test_6_worktree_witness if denies(embargoed_edit("Edit", "/r/.claude/worktrees/wf_1/findings/CENSUS-deps-build-ANALYSIS.md", "/r/.claude/worktrees/wf_1"), 6)
+
+test_6_reason_is_shown if {
+	some msg in hook.deny with input as embargoed_edit("Edit", "/r/findings/CENSUS-deps-build-ANALYSIS.md", "/r")
+	contains(msg, "paperkit-use freeze held")
+}
+
+test_6_other_file_control if not denies(embargoed_edit("Edit", "/r/findings/CENSUS-other.md", "/r"), 6)
+
+test_6_other_project_control if not denies(embargoed_edit("Edit", "/elsewhere/findings/CENSUS-deps-build-ANALYSIS.md", "/elsewhere"), 6)
+
+# the record lifted: the queue was read and holds no embargo
+test_6_lifted_control if not denies(
+	{
+		"tool_name": "Edit",
+		"tool_input": {"file_path": "/r/findings/CENSUS-deps-build-ANALYSIS.md"},
+		"cwd": "/r",
+		"facts": {"embargoes": []},
+	},
+	6,
+)
+
+test_6_no_fact_control if not denies(edit("/r/findings/CENSUS-deps-build-ANALYSIS.md"), 6)
+
+test_6_read_control if not denies(
+	{
+		"tool_name": "Read",
+		"tool_input": {"file_path": "/r/findings/CENSUS-deps-build-ANALYSIS.md"},
+		"cwd": "/r",
+		"facts": {"embargoes": embargo_fact},
+	},
+	6,
+)
