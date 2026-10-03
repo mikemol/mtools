@@ -163,6 +163,27 @@ def test_a_done_waypoint_carries_its_completed_stamp() -> None:
     assert "COMPLETED:20261001T074234Z" in lines
 
 
+def test_a_done_waypoint_is_one_hundred_percent_complete() -> None:
+    """⚑ done is the one status with a clean PERCENT-COMPLETE (RFC 5545 3.8.1.8): 100 (W280)."""
+    lines = _lines(_wp("W1", "done"))
+    status = lines.index("STATUS:COMPLETED")
+    assert lines[status + 1] == "PERCENT-COMPLETE:100"
+
+
+@pytest.mark.parametrize("status", ["ready", "blocked", "working"])
+def test_an_unfinished_waypoint_claims_no_percentage(status: str) -> None:
+    """ready, blocked and working carry no measure of progress, so none is invented (W280)."""
+    lines = _lines(_wp("W1", status))
+    assert not [line for line in lines if line.startswith("PERCENT-COMPLETE")]
+
+
+@pytest.mark.parametrize("weight", [0, 1, 9, 58])
+def test_a_weight_is_never_guessed_into_a_priority(weight: int) -> None:
+    """⚑ weight is an unbounded relative rank (0-58 across the fleet), not RFC 5545's 1-9 (W280)."""
+    lines = _lines(_wp("W1", weight=weight))
+    assert not [line for line in lines if line.startswith("PRIORITY")]
+
+
 def _state() -> State:
     """Build a state with two waypoints and one residue entry.
 

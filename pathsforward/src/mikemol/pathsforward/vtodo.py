@@ -10,6 +10,10 @@ The mapping (life accepted it 2026-09-28, W277):
     UID          <repo>:W<n>@<host>, stable across runs on one host
     SUMMARY      the title
     STATUS       ready, blocked: NEEDS-ACTION · working: IN-PROCESS · done: COMPLETED
+    PERCENT-COMPLETE  100 on a done waypoint only (W280); no other status measures progress,
+                 so none is invented
+    PRIORITY     never (W280): weight is an unbounded relative rank (0-58 across the fleet,
+                 2026-10-02), with no fixed scale to map monotonically onto RFC 5545's 1-9
     X-PATHS-FORWARD-BLOCKED   the blocked_kind, on a blocked waypoint only
     DESCRIPTION  the next step, then what it is blocked on
     RELATED-TO   RELTYPE=DEPENDS-ON (RFC 9253), one per blocker that is a waypoint
@@ -181,6 +185,8 @@ def todo(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
         content_line("SUMMARY", escape(f"{sym} {text(w, 'title')}")),
         content_line("STATUS", _STATUS.get(text(w, "status"), "NEEDS-ACTION")),
     ]
+    if text(w, "status") == "done":
+        lines.append("PERCENT-COMPLETE:100")
     if text(w, "status") == "blocked":
         lines.append(content_line("X-PATHS-FORWARD-BLOCKED", text(w, "blocked_kind")))
     description = _description(w)
