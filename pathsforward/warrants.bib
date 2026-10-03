@@ -2746,3 +2746,14 @@
   claim  = {W511: one record per path; re-embargoing is refused rather than silently replaced.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_second_embargo_on_one_path_is_refused},
 }
+
+@misc{pathsforward-payload-last-rung-still-names-every-live-waypoint,
+  section = {payload},
+  title  = {At the titles rung every live waypoint is still named, by symbol and status},
+  claim  = {At the titles rung every live waypoint is still named, by symbol and status. el-
+            openglo:W97 (mtools:W524): the last rungs once left the lower waypoints out
+            entirely, so a payload-only tick believed live ready work did not exist (el-
+            openglo's W188 and W200; mtools' W520 on 2026-10-03). The positive control
+            is that this IS the titles rung.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_last_rung_still_names_every_live_waypoint},
+}

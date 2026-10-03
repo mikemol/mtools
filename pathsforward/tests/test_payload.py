@@ -39,7 +39,7 @@ _HOST_OS = "host-os-sentinel"
 _MANY_DONE = 1500
 _NO_BUDGET = 10**6
 _LAST_RUNG_TAIL = (
-    "dropped=residue,evidence,host,steps-below-1,collapsed - read state_path for the rest."
+    "dropped=residue,evidence,host,steps-below-1,titles - read state_path for the rest."
 )
 
 
@@ -273,7 +273,7 @@ def test_the_ladder_adds_the_host_rung_only_with_a_host() -> None:
         without[-2].dropped[-1],
         without[-1].dropped[-1],
         without[-1].done_list,
-    ) == (1, True, False, "collapsed", "done-list", False)
+    ) == (1, True, False, "titles", "done-list", False)
 
 
 def test_a_long_done_list_drops_its_symbols_and_keeps_its_count() -> None:
@@ -289,7 +289,7 @@ def test_a_long_done_list_drops_its_symbols_and_keeps_its_count() -> None:
         len(whole) > pl.PAYLOAD_BUDGET,
         last in text,
         f"  done ({_MANY_DONE}): symbols in state_path" in text,
-        text.endswith("collapsed,done-list - read state_path for the rest."),
+        text.endswith("titles,done-list - read state_path for the rest."),
     ) == (True, True, False, True, True)
 
 
@@ -311,6 +311,24 @@ def test_the_first_ready_step_survives_steps_below_1() -> None:
     ws[2]["next_bounded_step"] = _UNIT
     text = _build(_state(ws))
     assert ("steps-below-1" in text, f"next: {_UNIT}" in text) == (True, True)
+
+
+def test_the_last_rung_still_names_every_live_waypoint() -> None:
+    """At the titles rung every live waypoint is still named, by symbol and status.
+
+    ⚑⚑ el-openglo:W97 (mtools:W524): the last rungs once left the lower waypoints out entirely,
+    so a payload-only tick believed live ready work did not exist (el-openglo's W188 and W200;
+    mtools' W520 on 2026-10-03). The positive control is that this IS the titles rung.
+    """
+    standing = [f"{_SENTINEL} {i} " + "x" * _PRE_WIDTH for i in range(_STANDING_LINES)]
+    state = _state(_big().waypoints, standing=standing)
+    text = _build(state)
+    missing = [
+        str(w["symbol"])
+        for w in state.waypoints
+        if f"  {w['symbol']} [" not in text and f"{w['symbol']}[ready]" not in text
+    ]
+    assert ("steps-below-1,titles" in text, missing) == (True, [])
 
 
 def test_a_first_ready_step_that_cannot_fit_is_refused() -> None:

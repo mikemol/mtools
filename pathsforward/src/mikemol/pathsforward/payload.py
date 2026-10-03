@@ -3,10 +3,10 @@
 """The scheduler payload: the queue forced into the tick's context, budgeted, or refused.
 
 ⚑⚑ OPERATOR RULING D4: A PAYLOAD THAT CANNOT FIT IS REFUSED, NEVER TRIMMED SILENTLY. The ladder
-drops residue, then evidence, then `host`, then the steps below the top 5/2/1, then the collapsed
-lower waypoints, and `PayloadOverBudgetError` is raised when even the last rung is over. The
-survey measured the alternatives: mtools emitted 56159 characters under a 12000 budget with
-`TRUNCATED:` attached.
+drops residue, then evidence, then `host`, then the steps below the top 5/2/1, then the titles of
+the lower waypoints (each stays named by symbol and status), and `PayloadOverBudgetError` is
+raised when even the last rung is over. The survey measured the alternatives: mtools emitted
+56159 characters under a 12000 budget with `TRUNCATED:` attached.
 
 ⚑⚑ TWO THINGS ARE NEVER A RUNG (coordinator ruling, 2026-09-23): the STANDING RULES (`preamble`
 and `standing`) and the FIRST READY WAYPOINT'S STEP. The rules are the guardrails — among them
@@ -321,7 +321,7 @@ def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
             residue=False,
             host=False,
             collapsed=False,
-            dropped=(*trimmed, f"steps-below-{last}", "collapsed"),
+            dropped=(*trimmed, f"steps-below-{last}", "titles"),
         )
     )
     rungs.append(
@@ -331,7 +331,7 @@ def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
             residue=False,
             host=False,
             collapsed=False,
-            dropped=(*trimmed, f"steps-below-{last}", "collapsed", "done-list"),
+            dropped=(*trimmed, f"steps-below-{last}", "titles", "done-list"),
             done_list=False,
         )
     )
@@ -341,17 +341,27 @@ def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
 def _waypoint_lines(live: list[Json], rung: _Rung) -> list[str]:
     """Render the live waypoints one rung keeps: the top and the first ready whole.
 
+    ⚑⚑ NO RUNG DROPS A LIVE WAYPOINT (el-openglo:W97, mtools:W524). The last rungs once left out
+    every waypoint below the pinned one, so a payload-only tick believed ready work did not
+    exist (el-openglo's W188, W200..., mtools' W520 on 2026-10-03). Those rungs now drop the
+    TITLES: each remaining live waypoint is still named, as `symbol[status]` on one line.
+
     Returns:
-        the lines; a collapsed waypoint is one clipped line, or absent on the last rung.
+        the lines; a collapsed waypoint is one clipped line, or a symbol on the last rungs.
 
     """
     keep = _pinned(live)
     out: list[str] = []
+    named: list[str] = []
     for i, w in enumerate(live):
         if i < rung.steps or i == keep:
             out.append(stanza(w))
         elif rung.collapsed:
             out.append(clip(stanza(w)))
+        else:
+            named.append(f"{text(w, 'symbol')}[{text(w, 'status')}]")
+    if named:
+        out.append(f"  also live: {', '.join(named)}")
     return out
 
 
