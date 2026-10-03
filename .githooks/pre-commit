@@ -557,8 +557,20 @@ for dist in $_dists; do
   # ⚑⚑ W502: A TEST FILE THE INDEX DOES NOT HOLD DOES NOT DECIDE THE COMMIT. MEASURED: an untracked
   # `hooks/tests/test_waypoint_trailer.py`, staged nowhere, refused a commit from this line. Every
   # untracked `test_*.py` under the distribution is passed to pytest as `--ignore`, and NAMED, so
-  # leaving it out is visible rather than silent. ⚑ What stays open is the narrower population:
-  # a TRACKED test with unstaged edits still runs as the working tree has it.
+  # leaving it out is visible rather than silent.
+  #
+  # ⚑⚑ W509: A TRACKED TEST WITH UNSTAGED EDITS IS REFUSED, NOT RUN. The host pytest imports
+  # through the editable install rooted at `$root/$dist/src`, so running it over `$staged` is not
+  # direct; instead the population is made EQUAL: a test file whose working-tree bytes differ from
+  # the index would answer for code the commit does not carry (a staged-red test made green on disk
+  # passed). Each is named; stage or stash it.
+  _dirty_tests=()
+  while IFS= read -r -d '' _dt; do
+    _dirty_tests+=("$_dt")
+    say "$dist: $_dt has unstaged edits in a test the commit does not include; stage or stash them"
+  done < <(git -C "$root" diff -z --name-only -- \
+             ":(glob)$dist/**/test_*.py" ":(glob)$dist/**/*_test.py")
+  run_checked "$dist: no tracked test differs from the index" test "${#_dirty_tests[@]}" -eq 0
   _untracked_tests=()
   while IFS= read -r -d '' _ut; do
     _untracked_tests+=("--ignore=$root/$_ut")

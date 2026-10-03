@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""The pre-commit gate's suite paths, run in bash rather than read: W184, W361 and W502.
+"""The pre-commit gate's suite paths, run in bash rather than read: W184, W361, W502, W509.
 
 Each arm lifts one piece out of `.githooks/pre-commit` by name and RUNS it under the gate's own
 `set -euo pipefail`, because both defects were invisible to reading: the W184 line looked like an
@@ -162,3 +162,33 @@ def test_an_untracked_test_file_does_not_decide_the_commit(tmp_path: Path) -> No
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout == "fail=0", f"an untracked test decided the commit: {proc.stderr}"
     assert "d/tests/test_untracked.py" in proc.stderr, "the left-out file was not named"
+
+
+def test_a_tracked_test_with_unstaged_edits_refuses_the_commit(tmp_path: Path) -> None:
+    """W509: a staged-red test made green only in the working tree refuses, and is named."""
+    gate = _GATE.read_text(encoding="utf-8")
+    fn = _CLEAR_FN.search(gate)
+    block = _HOST_BLOCK.search(gate)
+    assert fn, f"{_GATE.name}: no clear_bytecode() function"
+    assert block, f"{_GATE.name}: no host-pytest block from the clear to its loop's end"
+    tests = tmp_path / "d" / "tests"
+    tests.mkdir(parents=True)
+    edited = tests / "test_edited.py"
+    edited.write_text("def test_red() -> None:\n    raise AssertionError\n", encoding="utf-8")
+    venv_py = tmp_path / "d" / ".venv" / "bin" / "python3"
+    venv_py.parent.mkdir(parents=True)
+    venv_py.write_text(_FAKE_PYTEST, encoding="utf-8")
+    venv_py.chmod(0o755)
+    git = shutil.which("git")
+    assert git, "no git on PATH"
+    for argv in (["init", "-q"], ["add", "d/tests/test_edited.py"]):
+        subprocess.run([git, *argv], cwd=tmp_path, check=True, capture_output=True)
+    edited.write_text("def test_ok() -> None:\n    pass\n", encoding="utf-8")
+    script = (
+        f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ndist=d\n{block.group(0)}'
+        'printf "fail=%s" "$fail"\n'
+    )
+    proc = _bash(script, tmp_path)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "fail=1", f"the working tree's copy decided the commit: {proc.stderr}"
+    assert "d/tests/test_edited.py" in proc.stderr, "the unstaged test was not named"

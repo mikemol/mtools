@@ -4562,3 +4562,10 @@
   claim  = {A payload the facts step cannot parse is refused, never allowed by an empty decision.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_launcher_refuses_when_facts_cannot_be_gathered},
 }
+
+@misc{hooks-gate-suite-tracked-test-with-unstaged-edits-refuses-the-commit,
+  section = {bar-fires},
+  title  = {W509: a staged-red test made green only in the working tree refuses, and is named},
+  claim  = {W509: a staged-red test made green only in the working tree refuses, and is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_a_tracked_test_with_unstaged_edits_refuses_the_commit},
+}
