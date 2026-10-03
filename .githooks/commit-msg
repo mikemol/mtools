@@ -54,6 +54,20 @@ fi
     exit 1
 }
 
+# ⚑ W491: EVERY MESSAGE NAMES ITS WAYPOINT — a `Waypoint: W<n>` or `Waypoint: none` trailer.
+# The check lives in the hooks package (`mikemol.hooks.waypoint_trailer`) so pytest witnesses it.
+# ⚑ An absent interpreter REFUSES, same as an absent checker script above.
+_hooks_py="$repo/hooks/.venv/bin/python3"
+if [ ! -x "$_hooks_py" ]; then
+    say "hooks/.venv/bin/python3 is missing — cannot verify the Waypoint trailer, commit refused"
+    record_refusal commit-msg " - hooks venv absent for the Waypoint trailer check"
+    exit 1
+fi
+"$_hooks_py" -m mikemol.hooks.waypoint_trailer "$1" || {
+    record_refusal commit-msg " - message lacks a valid Waypoint trailer"
+    exit 1
+}
+
 "$repo/rule_citations.sh" "$1" || {
     say "REFUSED"
     record_refusal commit-msg " - message cites a rule that does not exist"

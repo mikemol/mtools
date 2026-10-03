@@ -4387,3 +4387,38 @@
   claim  = {With every function warranted, stdout is empty and stderr carries only the count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_nothing_but_the_count_is_printed_when_all_are_present},
 }
+
+@misc{hooks-waypoint-trailer-message-without-the-trailer-is-refused,
+  section = {bar-fires},
+  title  = {A message with no `Waypoint:` line is refused},
+  claim  = {A message with no `Waypoint:` line is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waypoint_trailer.py -k test_a_message_without_the_trailer_is_refused},
+}
+
+@misc{hooks-waypoint-trailer-waypoint-number-trailer-is-accepted,
+  section = {bar-fires},
+  title  = {`Waypoint: W174` is accepted},
+  claim  = {`Waypoint: W174` is accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waypoint_trailer.py -k test_a_waypoint_number_trailer_is_accepted},
+}
+
+@misc{hooks-waypoint-trailer-waypoint-none-trailer-is-accepted,
+  section = {bar-fires},
+  title  = {`Waypoint: none` is accepted},
+  claim  = {`Waypoint: none` is accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waypoint_trailer.py -k test_a_waypoint_none_trailer_is_accepted},
+}
+
+@misc{hooks-waypoint-trailer-malformed-waypoint-trailer-is-refused,
+  section = {bar-fires},
+  title  = {`Waypoint: 174` (no `W`) is refused},
+  claim  = {`Waypoint: 174` (no `W`) is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waypoint_trailer.py -k test_a_malformed_waypoint_trailer_is_refused},
+}
+
+@misc{hooks-waypoint-trailer-trailer-only-in-a-git-comment-line-is-refused,
+  section = {bar-fires},
+  title  = {A `# Waypoint:` line git will strip does not count},
+  claim  = {A `# Waypoint:` line git will strip does not count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waypoint_trailer.py -k test_a_trailer_only_in_a_git_comment_line_is_refused},
+}
