@@ -131,7 +131,8 @@ deny contains "174: the handler row is not seven-wide" if {
 
 # W220: the class-scan over the tool's own source (the fixture is pycodemod.py) finds no
 # defective spelling. Empty is compliant HERE because the fixture carries the scanned file,
-# and a live scan of the current file also finds 0 rows (W220-peek.py). The origin filters
+# and a live scan of the current file also found 0 rows (W220, a one-shot probe retired under
+# W466; re-measure with differential/peek.py). The origin filters
 # rows through _in_dispatch, a selftest-local helper, so the spec demands that no row remains.
 deny contains "186: a row-derived file count remains in the tool's source" if {
 	input.case == "186-no-mode-derives-its-denominator-from-matched-rows"
