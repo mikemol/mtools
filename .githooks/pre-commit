@@ -813,7 +813,13 @@ if [ "$_suite_rc" -ne 0 ]; then
     # exited 1, and the refusal reached neither the summary nor `record_refusal` — a refused commit
     # with no row. MEASURED: `REFUSALS.tsv`'s last row predated a 2026-09-27 refusal. An empty
     # label is then the fallback `note_failure` text below, not a dead gate.
-    failed_targets=$(grep -oE '^//[^ ]+' "$staged/.suite.log" 2>/dev/null | sort -u | tr '\n' ' ') || failed_targets=""
+    # ⚑⚑ W507: AN ACTION THAT DIES OUTSIDE THE TEST (an I/O exception in the sandbox) PRINTS NO
+    # `//t FAILED` SUMMARY ROW — only `ERROR: <file>:<l>:<c>: Testing //t failed: ...`. The sed arm
+    # names the target from that line so the refusal is not "no target named".
+    failed_targets=$( { grep -oE '^//[^ ]+' "$staged/.suite.log"; sed -nE 's#^ERROR: .*: [A-Za-z ]+ (//[^ ]+) failed: .*#\1#p' "$staged/.suite.log"; } 2>/dev/null | sort -u | tr '\n' ' ') || failed_targets=""
+    # ⚑ An input modified mid-action is the host racing the sandbox (an editor, a peer worktree's
+    # write), not the code under test: labelled so a committer retries rather than debugs.
+    suite_infra=$(grep -q 'was modified during execution' "$staged/.suite.log" 2>/dev/null && printf ' [infrastructure fault: an input was modified during execution — retry the commit]') || suite_infra=""
     fail=1
     # ⚑⚑⚑ THE LABEL ONLY, AND THE LOG IS DELIBERATELY *NOT* PASSED — OPERATOR RULING 2026-09-11,
     # MADE TWICE BECAUSE THE FIRST RULING RESTED ON A FIGURE I GAVE WRONG BY 47×. `note_failure`'s
@@ -836,7 +842,7 @@ if [ "$_suite_rc" -ne 0 ]; then
     # FAILURE. That sentence is now CORRECT rather than an accusation: this branch genuinely does
     # not capture an account into the summary, by decision, and the log path is named in the
     # fallback label so a reader knows where the account is.
-    note_failure "the hermetic suite: ${failed_targets:-no target named — see the log above}"
+    note_failure "the hermetic suite: ${failed_targets:-no target named — see the log above}${suite_infra}"
 fi
 
 # ⚑⚑⚑ THE DOMAIN WITNESS RUNS HERE AND NOT AS A BAZEL ACTION, DELIBERATELY. It probes whether a

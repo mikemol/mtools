@@ -18,6 +18,7 @@ from pathlib import Path
 _DIST = Path(__file__).parent.parent
 _GATE = _DIST.parent / ".githooks" / "pre-commit"
 _TARGETS_LINE = re.compile(r"^\s*(failed_targets=\$\(.*)$", re.MULTILINE)
+_INFRA_LINE = re.compile(r"^\s*(suite_infra=\$\(.*)$", re.MULTILINE)
 _CLEAR_FN = re.compile(r"^clear_bytecode\(\) \{.*?^\}\n", re.DOTALL | re.MULTILINE)
 _HOST_PYTEST = re.compile(
     r"^\s*git_scrubbed env -C \"\$root/\$dist\" .*-m pytest -q( .*)?$", re.MULTILINE
@@ -79,6 +80,31 @@ def test_suite_refusal_still_names_its_failing_target(tmp_path: Path) -> None:
     proc = _bash(script, tmp_path)
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout.strip() == "//pkg:t"
+
+
+_IO_LOG = (
+    "ERROR: /x/hooks/BUILD.bazel:47:12: Testing //hooks:test_cmdparse failed: I/O exception "
+    "during sandboxed execution: input dependency /x/y.py was modified during execution\n"
+    "ERROR: Build did NOT complete successfully\n"
+    "Executed 3 out of 4 tests: 3 tests pass.\n"
+)
+
+
+def test_suite_refusal_names_the_target_of_an_error_line(tmp_path: Path) -> None:
+    """W507: an ERROR line naming `//t` with no FAILED summary row still names `//t`."""
+    (tmp_path / ".suite.log").write_text(_IO_LOG, encoding="utf-8")
+    match = _INFRA_LINE.search(_GATE.read_text(encoding="utf-8"))
+    assert match, f"{_GATE.name}: no `suite_infra=$(...)` line in the suite refusal"
+    script = (
+        f'staged="$PWD"\n{_targets_line()}\n{match.group(1)}\n'
+        'printf "%s|%s" "$failed_targets" "$suite_infra"\n'
+    )
+    proc = _bash(script, tmp_path)
+    assert proc.returncode == 0, proc.stderr
+    targets, infra = proc.stdout.split("|")
+    assert targets.strip() == "//hooks:test_cmdparse"
+    assert "infrastructure fault" in infra
+    assert "retry" in infra
 
 
 def test_bytecode_is_cleared_and_the_venv_is_kept(tmp_path: Path) -> None:

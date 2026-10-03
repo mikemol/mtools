@@ -4429,3 +4429,10 @@
   claim  = {W502: the host pytest leaves out a test file the index does not hold, and names it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_an_untracked_test_file_does_not_decide_the_commit},
 }
+
+@misc{hooks-gate-suite-suite-refusal-names-the-target-of-an-error-line,
+  section = {bar-fires},
+  title  = {W507: an ERROR line naming `//t` with no FAILED summary row still names `//t`},
+  claim  = {W507: an ERROR line naming `//t` with no FAILED summary row still names `//t`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_suite_refusal_names_the_target_of_an_error_line},
+}
