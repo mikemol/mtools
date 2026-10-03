@@ -169,6 +169,22 @@ def test_a_membudget_that_cannot_run_is_refused_before_any_stage(tmp_path: Path)
     assert ran == []
 
 
+def test_a_missing_workdir_is_created_before_any_stage(tmp_path: Path) -> None:
+    """A --workdir that does not exist yet is created by the parent, so the first handoff lands.
+
+    ⚑ Measured on the real GPU (W522): with the directory absent, transcribe ran to the end and
+    then died with FileNotFoundError writing transcribe.json. Every other test here creates the
+    workdir first, which is how the defect went unseen.
+    """
+
+    def run(argv: list[str], _env: Mapping[str, str]) -> int:
+        return main(argv[6:], make=_fake)
+
+    assert not (tmp_path / "work").exists()
+    assert main(_argv(tmp_path, "a=a.wav"), run=run, make=_fake) == 0
+    assert (tmp_path / "work" / "diarize.json").is_file()
+
+
 def test_sources_keep_their_order_and_their_labels() -> None:
     """LABEL=PATH pairs come back in order, a path's own '=' kept."""
     assert parse_sources(["b=2.wav", "a=x=y.wav"]) == [("b", "2.wav"), ("a", "x=y.wav")]

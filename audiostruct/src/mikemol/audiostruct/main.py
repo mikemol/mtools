@@ -179,6 +179,9 @@ def main(
         sys.stderr.write(f"mikemol-audio: --membudget {membudget!r} is not an executable\n")
         return 2
     workdir = str(values["workdir"])
+    # ⚑ CREATED BEFORE ANY STAGE, AS --out IS (W522). Measured on the real GPU: a missing workdir
+    # let the transcribe child load its model and transcribe, then die writing its handoff.
+    Path(workdir).mkdir(parents=True, exist_ok=True)
     plan = Plan(
         membudget=membudget,
         ledger=str(values["ledger"]),

@@ -364,3 +364,14 @@
             be held.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gpu_set.py -k test_every_wheel_torch_cuda_extras_require_is_staged},
 }
+
+@misc{audiostruct-main-missing-workdir-is-created-before-any-stage,
+  section = {main},
+  title  = {A --workdir that does not exist yet is created by the parent, so the first handoff lands},
+  claim  = {A --workdir that does not exist yet is created by the parent, so the first handoff
+            lands. Measured on the real GPU (W522): with the directory absent,
+            transcribe ran to the end and then died with FileNotFoundError writing
+            transcribe.json. Every other test here creates the workdir first, which is
+            how the defect went unseen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_a_missing_workdir_is_created_before_any_stage},
+}
