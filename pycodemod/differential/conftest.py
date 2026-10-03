@@ -370,6 +370,7 @@ SUBJECT: dict[str, tuple[str, str, Callable[[object], JSON]]] = {
     "_pycodemod_query.py:reaches": ("conftest", "port_reaches", _same),
     "_pycodemod_query.py:forwards": ("conftest", "port_forwards", _same),
     "_pycodemod_query.py:asserted": ("conftest", "port_asserted", _same),
+    "_pycodemod_query.py:guarded": ("conftest", "port_guarded", _same),
     "_pycodemod_query.py:reifies": ("mikemol.pycodemod.ordering", "reifies", _rows),
     "_pycodemod_ambient.py:ambient": ("conftest", "port_ambient", _rows),
     "_pycodemod_query.py:bindings": ("conftest", "port_bindings", _same),
@@ -541,6 +542,32 @@ def _wheres(rows: list[HasWhere]) -> JSON:
         site: list[JSON] = [w.path, w.line]
         out.append(site)
     return out
+
+
+class HasGuarded(Protocol):
+    """The port's `Guarded`: calls under a test with their conditions, and calls at the top."""
+
+    under: list[tuple[HasWhere, tuple[object, ...]]]
+    top: list[HasWhere]
+
+
+def port_guarded(name: str, paths: list[str]) -> JSON:
+    """Compose the port's `guarded(scan(paths, name))` into the origin's (under, top).
+
+    The origin took (name, paths); the port takes a scan narrowed to `name`. Each port `Where`
+    carries a column the origin never had, dropped as `_wheres` drops it. ⚑ An `else` row keeps
+    the port's NEGATED test (W197 port-fix); it is never rewritten back to the origin's.
+
+    Returns:
+        [[[path, line, [cond, ...]], ...], [[path, line], ...]].
+
+    """
+    sites = _port("mikemol.pycodemod.sites", "scan")(paths, name)
+    got = cast("HasGuarded", _port("mikemol.pycodemod.arguments", "guarded")(sites))
+    under: list[JSON] = []
+    for where, conds in got.under:
+        under.append([where.path, where.line, [normal(c, "") for c in conds]])
+    return [under, _wheres(got.top)]
 
 
 class HasForwards(Protocol):
