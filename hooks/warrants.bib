@@ -4618,3 +4618,54 @@
   claim  = {No interpreter while already continuing: exit 0, no decision, the reason on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop_launcher.py -k test_a_launcher_that_cannot_run_when_active_ends_the_turn},
 }
+
+@misc{hooks-hook-argv-no-arguments-runs-the-hook,
+  section = {hook-argv},
+  title  = {With no arguments the contract steps aside: the hook reads its payload as before},
+  claim  = {With no arguments the contract steps aside: the hook reads its payload as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_no_arguments_runs_the_hook},
+}
+
+@misc{hooks-hook-argv-unknown-flag-is-refused-by-name,
+  section = {hook-argv},
+  title  = {`--help` is refused with exit 2, naming the argument and saying a hook reads stdin},
+  claim  = {`--help` is refused with exit 2, naming the argument and saying a hook reads stdin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_an_unknown_flag_is_refused_by_name},
+}
+
+@misc{hooks-hook-argv-bare-word-is-refused-too,
+  section = {hook-argv},
+  title  = {A positional is refused: a hook has no operands, so a word can only be a mistake},
+  claim  = {A positional is refused: a hook has no operands, so a word can only be a mistake.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_a_bare_word_is_refused_too},
+}
+
+@misc{hooks-hook-argv-declared-mode-is-returned-and-named-in-refusals,
+  section = {hook-argv},
+  title  = {A declared mode alone is returned; with anything else it is refused, the modes offered},
+  claim  = {A declared mode alone is returned; with anything else it is refused, the modes offered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_a_declared_mode_is_returned_and_named_in_refusals},
+}
+
+@misc{hooks-hook-argv-every-hook-entry-refuses-an-argument-before-reading-stdin,
+  section = {hook-argv},
+  title  = {Each `mikemol-hook-*` entry returns 2 on `--help` and never touches stdin},
+  claim  = {Each `mikemol-hook-*` entry returns 2 on `--help` and never touches stdin. THE DEFECT
+            el-openglo:W99 MEASURED: each hook read an empty stdin, allowed, and exited
+            0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_every_hook_entry_refuses_an_argument_before_reading_stdin},
+}
+
+@misc{hooks-hook-argv-routes-prints-the-table-the-hook-reads,
+  section = {hook-argv},
+  title  = {`--routes` prints `artifact<TAB>tool` rows from `routing_table.routes`, exit 0},
+  claim  = {`--routes` prints `artifact<TAB>tool` rows from `routing_table.routes`, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_routes_prints_the_table_the_hook_reads},
+}
+
+@misc{hooks-hook-argv-routes-with-no-table-says-so-and-fails,
+  section = {hook-argv},
+  title  = {With no table, `--routes` exits 1 and says where it looked: never a blank pass},
+  claim  = {With no table, `--routes` exits 1 and says where it looked: never a blank pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_routes_with_no_table_says_so_and_fails},
+}

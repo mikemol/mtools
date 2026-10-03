@@ -55,21 +55,23 @@ dependencies = ["ruff>=0.16.6", "mypy"]
 # `__file__` defect this package exists to end. The name is spelled out rather than abbreviated
 # because it appears in a config file a human reads, not on a command line anyone types twice.
 [project.scripts]
-mikemol-hook-structural-query = "mikemol.hooks.structural_query:main"
+# ⚑ EVERY `mikemol-hook-*` ENTERS THROUGH `entry` (W526, el-openglo:W99): each hook refuses an
+# argument by name before reading stdin; structural-query alone takes `--routes`.
+mikemol-hook-structural-query = "mikemol.hooks.entry:structural_query_main"
 # ⚑⚑⚑ SHIPPED, WARRANTED 52:52, AND INVOKED BY NOTHING. `no_chaining` carried a rubric section,
 # 52 tests and 52 warrants, and was the one PreToolUse hook this repo's own plan listed as adopted
 # while `settings.json` wired only its sibling. Its module docstring says so in the first
 # paragraph. ⚑ A component with full coverage and no entry point is *the packager is not a user of
 # its own package* — this repository's named defect — with the tests passing.
-mikemol-hook-no-chaining = "mikemol.hooks.no_chaining:main"
+mikemol-hook-no-chaining = "mikemol.hooks.entry:no_chaining_main"
 # ⚑ WIRED IN THE SAME COMMIT THAT SHIPS IT, because the comment above records what happens
 # otherwise: a hook with full coverage and no entry point is *the packager is not a user of its own
 # package*, with the tests passing.
-mikemol-hook-no-verify = "mikemol.hooks.no_verify:main"
-mikemol-hook-shellcheck = "mikemol.hooks.shellcheck:main"
+mikemol-hook-no-verify = "mikemol.hooks.entry:no_verify_main"
+mikemol-hook-shellcheck = "mikemol.hooks.entry:shellcheck_main"
 # ⚑ Ported from substrate for el-openglo (W303, el-openglo:W140); wired in the same commit.
 mikemol-gate-ledger = "mikemol.hooks.gate_ledger:main"
-mikemol-hook-pycheck = "mikemol.hooks.pycheck:main"
+mikemol-hook-pycheck = "mikemol.hooks.entry:pycheck_main"
 # ⚑ THE SAME LINTER BY HAND — one file, one tree, one command — and deliberately NOT named
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that
 # requires every hook script to be invoked keys on that prefix.

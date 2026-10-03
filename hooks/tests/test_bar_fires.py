@@ -3046,8 +3046,12 @@ def test_a_module_with_no_local_caller_declares_who_consumes_it() -> None:
     orphans: list[str] = []
     for mod in modules:
         name = mod.stem
+        # ⚑ A PARENTHESIZED IMPORT SPANS LINES (W526): `entry` imports six hook modules in one
+        # `from mikemol.hooks import (...)`, and a one-line read called `no_verify` an orphan.
         imported = any(
-            pyre.search(rf"^\s*from\s+[\w.]+\s+import\s+[^\n]*\b{name}\b", src, pyre.MULTILINE)
+            pyre.search(
+                rf"^\s*from\s+[\w.]+\s+import\s+(?:\([^)]*|[^\n]*)\b{name}\b", src, pyre.MULTILINE
+            )
             for src in sources
         )
         if imported:

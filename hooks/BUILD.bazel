@@ -387,11 +387,12 @@ sh_test(
 venv_from_hub(
     name = ".venv",
     console_scripts = {
-        "mikemol-hook-structural-query": "mikemol.hooks.structural_query:main",
-        "mikemol-hook-no-chaining": "mikemol.hooks.no_chaining:main",
-        "mikemol-hook-no-verify": "mikemol.hooks.no_verify:main",
-        "mikemol-hook-shellcheck": "mikemol.hooks.shellcheck:main",
-        "mikemol-hook-pycheck": "mikemol.hooks.pycheck:main",
+        # W526: every hook enters through `entry`, which refuses an argument before stdin.
+        "mikemol-hook-structural-query": "mikemol.hooks.entry:structural_query_main",
+        "mikemol-hook-no-chaining": "mikemol.hooks.entry:no_chaining_main",
+        "mikemol-hook-no-verify": "mikemol.hooks.entry:no_verify_main",
+        "mikemol-hook-shellcheck": "mikemol.hooks.entry:shellcheck_main",
+        "mikemol-hook-pycheck": "mikemol.hooks.entry:pycheck_main",
         "mikemol-shellcheck": "mikemol.hooks.shellcheck_cli:main",
         "mikemol-githook-pre-push": "mikemol.hooks.githook_pre_push:main",
         "mikemol-gate-ledger": "mikemol.hooks.gate_ledger:main",
