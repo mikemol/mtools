@@ -9,6 +9,7 @@ reaches and WHAT it is handed.
 
 from __future__ import annotations
 
+import ctypes
 import os
 import subprocess
 import sys
@@ -125,6 +126,22 @@ def test_the_token_is_read_from_its_file_only_when_asked(tmp_path: Path) -> None
     token_file.write_text("  hf_later \n", encoding="utf-8")
     assert built.token() == "hf_later"
     assert whisperx_site.Settings is Settings
+
+
+def test_importing_the_site_makes_cublas12_resolvable_by_soname() -> None:
+    """After the import, a bare-soname dlopen of each CUDA 12 cuBLAS library finds it loaded.
+
+    ⚑⚑ THIS IS ctranslate2's OWN LOOKUP (W271). It dlopens `libcublas.so.12` by soname at its
+    first GEMM; torch's cu13 wheels ship none, and the default search path has none, so without
+    the nvidia-cublas-cu12 wheel the decode fails. RTLD_NOLOAD only succeeds for a library already
+    in the process (otherwise CDLL raises OSError), so the check needs no GPU. F-armed by
+    uninstalling that wheel (the import itself then refuses); removing only the preload call
+    stays green, because torch 2.14's loader maps the wheel too (W271).
+    """
+    loaded = [
+        ctypes.CDLL(name, mode=os.RTLD_NOLOAD | os.RTLD_GLOBAL) for name in whisperx_site.CUBLAS12
+    ]
+    assert len(loaded) == len(whisperx_site.CUBLAS12)
 
 
 # A fresh interpreter imports the site (this process has it cached), then raises an unrelated

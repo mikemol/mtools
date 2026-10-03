@@ -1,0 +1,11 @@
+# The GPU set's inputs (W267, W271). requirements-gpu.txt is compiled from this file and
+# requirements-gpu-overrides.txt, from inside audiostruct/, by the command its header records:
+#   uv pip compile requirements-gpu.in --override requirements-gpu-overrides.txt
+#     --python-version 3.13 --python-platform x86_64-manylinux_2_28 --generate-hashes
+#     -o requirements-gpu.txt
+whisperx==3.8.6
+# ⚑⚑ CUDA 12 cuBLAS BESIDE THE CUDA 13 SET (W271, operator 2026-10-03). ctranslate2 4.8.2, the
+# newest, is a CUDA 12 build: at the first GEMM it dlopens libcublas.so.12, and torch's cu13
+# wheels ship only libcublas.so.13. whisperx_site preloads this wheel's library. Retire it when
+# ctranslate2 publishes a CUDA 13 wheel.
+nvidia-cublas-cu12==12.8.4.1

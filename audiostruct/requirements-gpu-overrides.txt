@@ -1,0 +1,13 @@
+# uv overrides for the GPU set (W271, operator 2026-10-03: port forward to CUDA 13).
+# ⚑⚑ EVERY LINE HERE OVERRIDES A PIN WHISPERX DECLARES. whisperx 3.8.0 through 3.8.7rc1 declare
+# torch~=2.8.0, torchaudio~=2.8.0, torchvision~=0.23.0 and torchcodec>=0.6,<0.8; torch 2.8 ships
+# CUDA 12.8. The host runs CUDA 13, so these replace whisperx's pins with torch 2.14's family.
+# Gate passed 2026-10-03 on the RTX 3070 Ti: transcribe, align and diarize of a spoken clip.
+# Retire this whole file when a whisperx release loosens torch~=2.8.
+torch==2.14.1
+# torchaudio's newest release; it lags torch.
+torchaudio==2.11.0
+# the torchvision paired with torch 2.14 (it declares torch>=2.14.0).
+torchvision==0.29.1
+# whisperx caps torchcodec below 0.8, the torch 2.8 pairing.
+torchcodec==0.17.0

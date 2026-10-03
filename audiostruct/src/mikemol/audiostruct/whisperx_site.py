@@ -17,7 +17,9 @@ begins (stages.run_stage), so a transcribe-only or align-only process never hold
 
 from __future__ import annotations
 
+import ctypes
 import gc
+import importlib.util
 import warnings
 from dataclasses import dataclass
 from functools import partial
@@ -26,13 +28,46 @@ from pathlib import Path
 from mikemol.audiostruct.gpu import TranscribeFn, aligner, diarizer, release, transcriber
 from mikemol.audiostruct.stages import Pipeline
 
+# ⚑⚑ CUDA 12 cuBLAS, PRELOADED, BECAUSE ctranslate2 IS A CUDA 12 BUILD (W271, operator
+# 2026-10-03). torch runs on CUDA 13 (requirements-gpu-overrides.txt), and its wheels ship only
+# libcublas.so.13. ctranslate2 4.8.2 dlopens libcublas.so.12 by soname at its first GEMM, which
+# finds nothing on the default search path: without the nvidia-cublas-cu12 wheel the decode fails
+# with "Library libcublas.so.12 is not found" (measured 2026-10-03). Loading that wheel's two
+# libraries RTLD_GLOBAL first makes the dlopen find them already in the process. ⚑ torch 2.14's
+# own import-time loader ALSO maps nvidia/cublas/lib when the wheel is present (measured: the
+# gate decoded with this call removed), so the load-bearing part is the wheel; this call keeps
+# the guarantee from resting on that torch internal, and fails loudly at import when the wheel is
+# missing instead of at the first GEMM. Both cuBLAS versions coexist (torch and faster-whisper
+# both ran on the GPU in one process). Retire this when ctranslate2 ships CUDA 13.
+CUBLAS12 = ("libcublasLt.so.12", "libcublas.so.12")
+
+
+def _preload_cublas12() -> None:
+    """Load the nvidia-cublas-cu12 wheel's libraries into the process, globally.
+
+    Raises:
+        ModuleNotFoundError: if the wheel is not installed; the decode would fail later without it.
+
+    """
+    spec = importlib.util.find_spec("nvidia.cublas")
+    if spec is None or not spec.submodule_search_locations:
+        msg = "nvidia-cublas-cu12 is not installed; ctranslate2 needs libcublas.so.12"
+        raise ModuleNotFoundError(msg)
+    libdir = Path(next(iter(spec.submodule_search_locations))) / "lib"
+    for name in CUBLAS12:
+        ctypes.CDLL(str(libdir / name), mode=ctypes.RTLD_GLOBAL)
+
+
+_preload_cublas12()
+
 # ⚑⚑ ONE WARNING, MATCHED EXACTLY, ONLY FOR THIS IMPORT (W298, reported by life after adoption).
-# pyannote warns at import that torchcodec cannot load this host's FFmpeg: the host has FFmpeg
-# 8.1.3 (libavutil.so.60), and torchcodec 0.7 (pinned under torch 2.8) supports 4 through 7. The
-# warning names a decode path audiostruct never takes, because diarize is handed audio
-# whisperx.audio already decoded through the ffmpeg CLI. It printed in the parent and in every
-# stage child. `catch_warnings` restores the global filters when the block ends, so no other
-# warning, from pyannote or anything else, is silenced. tests/test_whisperx_site.py checks both.
+# pyannote warned at import that torchcodec could not load this host's FFmpeg 8.1.3
+# (libavutil.so.60): torchcodec 0.7, pinned under torch 2.8, supported 4 through 7. torchcodec
+# 0.17 (W271) loaded it without the warning in the 2026-10-03 gate; the filter stays so that a
+# torchcodec/FFmpeg drift cannot reopen it. The warning names a decode path audiostruct never
+# takes, because diarize is handed audio whisperx.audio already decoded through the ffmpeg CLI.
+# `catch_warnings` restores the global filters when the block ends, so no other warning, from
+# pyannote or anything else, is silenced. tests/test_whisperx_site.py checks both.
 with warnings.catch_warnings():
     warnings.filterwarnings(
         "ignore", message=r"\s*torchcodec is not installed correctly", category=UserWarning

@@ -335,3 +335,18 @@
             after it must still reach stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_whisperx_site.py -k test_importing_the_site_prints_no_torchcodec_warning_and_silences_nothing_else},
 }
+
+@misc{audiostruct-whisperx-site-importing-the-site-makes-cublas12-resolvable-by-soname,
+  section = {whisperx_site},
+  title  = {After the import, a bare-soname dlopen of each CUDA 12 cuBLAS library finds it loaded},
+  claim  = {After the import, a bare-soname dlopen of each CUDA 12 cuBLAS library finds it loaded.
+            THIS IS ctranslate2's OWN LOOKUP (W271). It dlopens `libcublas.so.12` by
+            soname at its first GEMM; torch's cu13 wheels ship none, and the default
+            search path has none, so without the nvidia-cublas-cu12 wheel the decode
+            fails. RTLD_NOLOAD only succeeds for a library already in the process
+            (otherwise CDLL raises OSError), so the check needs no GPU. F-armed by
+            uninstalling that wheel (the import itself then refuses); removing only the
+            preload call stays green, because torch 2.14's loader maps the wheel too
+            (W271).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_whisperx_site.py -k test_importing_the_site_makes_cublas12_resolvable_by_soname},
+}

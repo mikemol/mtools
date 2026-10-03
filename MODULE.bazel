@@ -140,9 +140,11 @@ pip.parse(
     requirements_lock = "//audiostruct:requirements.txt",
 )
 
-# ⚑ The `[gpu]` extra's lock (W267, design note O2): bare whisperx, which resolves from plain PyPI
-# to 118 packages, with torch 2.8.0 bringing its own CUDA 12.8 runtime wheels. The host supplies
-# only the driver. Its own hub, so the shipping hub stays free of torch.
+# ⚑ The GPU set's lock (W267, design note O2; no extra since W275): whisperx 3.8.6 with torch
+# 2.14.1 on CUDA 13 by uv override (W271, operator 2026-10-03), plus nvidia-cublas-cu12 for
+# ctranslate2's CUDA 12 build; 123 packages from plain PyPI, inputs in audiostruct/
+# requirements-gpu.in and requirements-gpu-overrides.txt. The host supplies only the driver.
+# Its own hub, so the shipping hub stays free of torch.
 pip.parse(
     hub_name = "audiostruct_gpu",
     python_version = "3.13",

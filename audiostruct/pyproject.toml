@@ -35,8 +35,10 @@ dependencies = []
 # this distribution's .venv (.python-version).
 # ⚑⚑ THE HOST .venv CARRIES THE GPU SET OUT OF BAND (W274, operator 2026-09-28), because
 # tests/test_stub_authority.py runs in pre-commit's host pytest leg and needs whisperx importable.
-# `uv sync` PRUNES IT: after any sync, run `uv pip install -r requirements-gpu.txt`, or the
-# witness goes red (by design; it never skips). uv's cache is on /home, not the zram /var/tmp.
+# `uv sync` PRUNES IT: after any sync, run `uv pip install --no-deps -r requirements-gpu.txt`, or
+# the witness goes red (by design; it never skips). uv's cache is on /home, not the zram /var/tmp.
+# `--no-deps` because the lock overrides whisperx's torch pins (W271, CUDA 13): re-resolving it
+# without requirements-gpu-overrides.txt is unsatisfiable by construction.
 
 [project.scripts]
 mikemol-audio = "mikemol.audiostruct.main:main"

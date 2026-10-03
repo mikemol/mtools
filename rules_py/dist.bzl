@@ -14,13 +14,15 @@ W370's first draft passed a literal `{dist}` to all nine suite checks.
 
 load("@rules_python//python:defs.bzl", "py_test")
 
-def dist_checks(venv_data = []):
+def dist_checks(venv_data = [], venv_tags = []):
     """Declare `:venv` and `:suite` for the calling distribution's package.
 
     Args:
         venv_data: files the suite needs beyond tests/**/*.py when venv_check collects it (icsstruct
             stages its .ics fixtures and stubs). Declared here, so a difference stays visible in
             the caller's BUILD and is never normalised away (W376).
+        venv_tags: tags for the `:venv` check. audiostruct passes ["exclusive"]: its venv holds
+            the multi-GB GPU set, and concurrent sandbox copies overran /dev/shm's quota (W518).
     """
     dist = native.package_name()
 
@@ -39,6 +41,7 @@ def dist_checks(venv_data = []):
             "@mikemol_rules_py//:venv_check.py",
         ] + native.glob(["tests/**/*.py"]) + venv_data,
         size = "small",
+        tags = venv_tags,
     )
 
     # W386: the ruff atom's two config checks (W384, W385), run over this distribution with the

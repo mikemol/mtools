@@ -62,6 +62,33 @@ py_library(
     )
 ]
 
+# ⚑⚑ THE GPU SET AS THE GPU TESTS STAGE IT (W271, CUDA 13). torch 2.14 takes its CUDA 13 runtime
+# through `cuda-toolkit[cublas,cudart,...]`, and rules_python stages cuda-toolkit WITHOUT those
+# extras (measured: `deps(torch)` lists cuda_toolkit and no nvidia_cuda_runtime), so torch's
+# import failed with "libcudart.so.13: cannot open shared object file". The eleven wheels the
+# extras name are listed here by hand; when torch's pin moves, re-read its Requires-Dist.
+# nvidia_cublas_cu12 is not a whisperx dependency at all: whisperx_site preloads it for
+# ctranslate2's CUDA 12 build and refuses to import without it.
+py_library(
+    name = "gpu_set",
+    deps = [
+        "@audiostruct_gpu//nvidia_cublas",
+        "@audiostruct_gpu//nvidia_cublas_cu12",
+        "@audiostruct_gpu//nvidia_cuda_cupti",
+        "@audiostruct_gpu//nvidia_cuda_nvrtc",
+        "@audiostruct_gpu//nvidia_cuda_runtime",
+        "@audiostruct_gpu//nvidia_cufft",
+        "@audiostruct_gpu//nvidia_cufile",
+        "@audiostruct_gpu//nvidia_curand",
+        "@audiostruct_gpu//nvidia_cusolver",
+        "@audiostruct_gpu//nvidia_cusparse",
+        "@audiostruct_gpu//nvidia_nvjitlink",
+        "@audiostruct_gpu//nvidia_nvtx",
+        "@audiostruct_gpu//whisperx",
+    ],
+    testonly = True,
+)
+
 # ⚑⚑ THE ONE TEST THAT STAGES THE GPU HUB (W274). stubtest imports whisperx's submodules, which
 # import torch, so this target alone depends on `@audiostruct_gpu` (about 8G, operator-approved
 # under luthen's reaper, 2026-09-28). Every other target stays light. A missing whisperx is a red,
@@ -82,8 +109,9 @@ py_test(
     ],
     data = ["pyproject.toml"] + glob(["stubs/**"]),
     size = "medium",
+    tags = ["exclusive"],  # W518: GPU set; serial to fit /dev/shm quota
     deps = [
-        "@audiostruct_gpu//whisperx",
+        ":gpu_set",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -106,9 +134,10 @@ py_test(
     ],
     data = ["pyproject.toml"],
     size = "medium",
+    tags = ["exclusive"],  # W518: GPU set; serial to fit /dev/shm quota
     deps = [
         ":audiostruct",
-        "@audiostruct_gpu//whisperx",
+        ":gpu_set",
         dev_requirement("pytest"),
     ],
     imports = ["src"],
@@ -131,9 +160,10 @@ py_test(
     ],
     data = ["pyproject.toml"],
     size = "medium",
+    tags = ["exclusive"],  # W518: GPU set; serial to fit /dev/shm quota
     deps = [
         ":audiostruct",
-        "@audiostruct_gpu//whisperx",
+        ":gpu_set",
         dev_requirement("pytest"),
     ],
     imports = ["src"],
@@ -187,6 +217,7 @@ sh_test(
         "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
+    tags = ["exclusive"],  # W518: GPU set; serial to fit /dev/shm quota
 )
 
 py_binary(
@@ -236,5 +267,5 @@ venv_from_hub(
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
-dist_checks()
+dist_checks(venv_tags = ["exclusive"])
 
