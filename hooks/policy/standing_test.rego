@@ -128,6 +128,127 @@ test_3_flag_after_target if denies(bash("bazel test //hooks/... --nocache_test_r
 
 test_11_direct_exec if denies(bash(".claude/paths_forward_render.py --render"), 11)
 
+# W238: rules that read input.facts, gathered by mikemol.hooks.standing_facts before opa runs.
+in_repo(cmd, staged) := {
+	"tool_name": "Bash",
+	"tool_input": {"command": cmd},
+	"cwd": "/r/sub",
+	"facts": {"staged": staged},
+}
+
+test_9_witness if denies(in_repo("git checkout -- plant.py", ["/r/sub/plant.py"]), 9)
+
+test_9_absolute_witness if denies(in_repo("git checkout -- /r/sub/plant.py", ["/r/sub/plant.py"]), 9)
+
+test_9_dot_slash_witness if denies(in_repo("git checkout HEAD -- ./plant.py", ["/r/sub/plant.py"]), 9)
+
+test_9_directory_witness if denies(in_repo("git checkout -- .", ["/r/sub/deep/plant.py"]), 9)
+
+test_9_restore_witness if denies(in_repo("git restore plant.py", ["/r/sub/plant.py"]), 9)
+
+test_9_unstaged_control if not denies(in_repo("git checkout -- other.py", ["/r/sub/plant.py"]), 9)
+
+test_9_prefix_control if not denies(in_repo("git checkout -- plant", ["/r/sub/plant.py"]), 9)
+
+test_9_branch_control if not denies(in_repo("git checkout main", ["/r/sub/main"]), 9)
+
+test_9_restore_staged_control if not denies(in_repo("git restore --staged plant.py", ["/r/sub/plant.py"]), 9)
+
+test_9_no_fact_control if not denies(bash("git checkout -- plant.py"), 9)
+
+test_9_quoted_control if not denies(in_repo("mikemol-paths-forward --ledger W1 x y \"git checkout -- plant.py\"", ["/r/sub/plant.py"]), 9)
+
+queue_path := "/p/.claude/paths-forward.json"
+
+pf(args) := {
+	"tool_name": "Bash",
+	"tool_input": {"command": sprintf("mikemol-paths-forward --state %s %s", [queue_path, args])},
+	"cwd": "/p",
+	"facts": {"queue": {"path": queue_path, "held": ["W7"]}},
+}
+
+test_5_status_witness if denies(pf("--update W7 --status ready"), 5)
+
+test_5_status_equals_witness if denies(pf("--update W7 --status=working"), 5)
+
+test_5_kind_witness if denies(pf("--update W7 --blocked-kind agent"), 5)
+
+test_5_empty_blocked_on_witness if denies(pf("--update W7 --blocked-on \"\""), 5)
+
+test_5_bare_blocked_on_witness if denies(pf("--update W7 --blocked-on --next x"), 5)
+
+test_5_drop_witness if denies(pf("--drop W7 superseded"), 5)
+
+test_5_relative_state_witness if denies(
+	{
+		"tool_name": "Bash",
+		"tool_input": {"command": "mikemol-paths-forward --state .claude/paths-forward.json --update W7 --status ready"},
+		"cwd": "/p",
+		"facts": {"queue": {"path": queue_path, "held": ["W7"]}},
+	},
+	5,
+)
+
+test_5_unheld_control if not denies(pf("--update W8 --status ready"), 5)
+
+test_5_evidence_control if not denies(pf("--update W7 --evidence-append \"asked again\""), 5)
+
+test_5_keeps_hold_control if not denies(pf("--update W7 --blocked-on operator --next x"), 5)
+
+test_5_symbol_prefix_control if not denies(pf("--update W70 --status ready"), 5)
+
+test_5_other_queue_control if not denies(
+	{
+		"tool_name": "Bash",
+		"tool_input": {"command": "mikemol-paths-forward --state /q/other.json --update W7 --status ready"},
+		"cwd": "/p",
+		"facts": {"queue": {"path": queue_path, "held": ["W7"]}},
+	},
+	5,
+)
+
+test_5_no_fact_control if not denies(bash(sprintf("mikemol-paths-forward --state %s --update W7 --status ready", [queue_path])), 5)
+
+baseline_edit(old, new) := {"tool_name": "Edit", "tool_input": {
+	"file_path": "/r/hooks/ratchet-preview.txt",
+	"old_string": old,
+	"new_string": new,
+}}
+
+test_4_grow_witness if denies(baseline_edit("a:1\n", "a:1\nb:2\n"), 4)
+
+test_4_from_empty_witness if denies(baseline_edit("", "b:2\n"), 4)
+
+test_4_shrink_control if not denies(baseline_edit("a:1\nb:2\n", "a:1\n"), 4)
+
+test_4_same_count_control if not denies(baseline_edit("a:1\n", "a:2\n"), 4)
+
+test_4_blank_line_control if not denies(baseline_edit("a:1\n", "a:1\n\n"), 4)
+
+test_4_other_file_control if not denies(
+	{"tool_name": "Edit", "tool_input": {
+		"file_path": "/r/hooks/rubric.tsv",
+		"old_string": "",
+		"new_string": "b:2\n",
+	}},
+	4,
+)
+
+baseline_write(content, facts) := {
+	"tool_name": "Write",
+	"tool_input": {"file_path": "/r/hooks/ratchet-preview.txt", "content": content},
+	"facts": facts,
+}
+
+test_4_write_witness if denies(baseline_write("a:1\nb:2\n", {"target_lines": 1}), 4)
+
+# a Write over a baseline whose current size could not be read is refused (fail closed)
+test_4_write_unread_witness if denies(baseline_write("a:1\n", {}), 4)
+
+test_4_write_lower_control if not denies(baseline_write("a:1\n", {"target_lines": 2}), 4)
+
+test_4_write_same_control if not denies(baseline_write("a:1\nb:2\n", {"target_lines": 2}), 4)
+
 test_read_is_never_denied if {
 	count(hook.deny) == 0 with input as {"tool_name": "Read", "tool_input": {"file_path": "findings/CENSUS-paperkit-use.md"}}
 }

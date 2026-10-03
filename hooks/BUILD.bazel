@@ -97,6 +97,11 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             "bin/mikemol-hook-structural-query",
             "bin/mikemol-hook-no-chaining",
             "bin/mikemol-hook-no-verify",
+            # ⚑ W238: the standing launcher and its policy, EXECUTED by test_standing_facts with
+            # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
+            "bin/mikemol-hook-standing",
+            "policy/standing.rego",
+            "@opa//file",
             # ⚑ THE CONSUMER LAUNCHER, EXECUTED rather than read by `test_adopt_launcher.py` —
             # the same lesson as the three above: tracked is not staged until named here.
             "adopt/tools-hook",
@@ -211,7 +216,10 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             # and a list would go stale the next time one is added — the reified population
             # this suite exists to refuse.
         ] + glob(["tests/test_*.py"]),
-        env = {"RUFF_BIN": "$(location @mikemol_check_ruff//:bin)"},
+        env = {
+            "RUFF_BIN": "$(location @mikemol_check_ruff//:bin)",
+            "OPA_BIN": "$(location @opa//file)",
+        },
 
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: bazel's default of `medium` reserves a timeout
         # budget nothing uses, and an honest size is what lets a genuinely slow witness stand
@@ -236,6 +244,19 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
     )
     for src in glob(["tests/test_*.py"])
 ]
+
+# W238: the standing policy's own witnesses and controls (policy/standing_test.rego), run by the
+# pinned opa. Before this target they ran only when someone typed `opa test` by hand.
+sh_test(
+    name = "policy_test",
+    srcs = ["policy_test.sh"],
+    args = [
+        "$(location @opa//file)",
+        "$(location policy/standing.rego)",
+    ],
+    data = ["@opa//file"] + glob(["policy/*.rego"]),
+    size = "small",
+)
 
 # ⚑⚑ ruff IN THE GRAPH. Outside it, ruff had no key at all — full re-execution every commit,
 # nothing reused. Its domain is the sources, the config and the binary, all declared below, and

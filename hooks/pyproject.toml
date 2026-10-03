@@ -317,6 +317,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/claude_code_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_claude_code_census.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ THE STANDING POLICY'S FACTS (W238): asking git for the index IS its responsibility. git is
+# resolved by `shutil.which` (absent → the fact is left out); the argv is module constants plus the
+# payload's cwd as ONE word after `-C`. Never through a shell. Its witnesses build decoy
+# repositories under tmp_path and execute the launcher, which is the case: the same reason.
+"src/mikemol/hooks/standing_facts.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_standing_facts.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑ THE REFUSAL LOG: handing one event to `curl` IS its responsibility. MEASURED: curl is resolved
 # by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the
 # caller's destination URL, as ONE word; the untrusted payload is the JSON on STDIN, never a word

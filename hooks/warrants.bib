@@ -4499,3 +4499,66 @@
             source path as well.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_source_directive_naming_a_sibling_under_a_governed_root_is_clean},
 }
+
+@misc{hooks-standing-facts-held-symbols-are-the-blocked-human-rows,
+  section = {bar-fires},
+  title  = {Only a row blocked on a human is held; agent-blocked and ready rows are not},
+  claim  = {Only a row blocked on a human is held; agent-blocked and ready rows are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_held_symbols_are_the_blocked_human_rows},
+}
+
+@misc{hooks-standing-facts-unreadable-queue-is-no-fact,
+  section = {bar-fires},
+  title  = {A missing or malformed queue yields no fact rather than an empty hold list},
+  claim  = {A missing or malformed queue yields no fact rather than an empty hold list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_an_unreadable_queue_is_no_fact},
+}
+
+@misc{hooks-standing-facts-staged-paths-are-absolute-and-exclude-unstaged-files,
+  section = {bar-fires},
+  title  = {The staged fact names the index's files as absolute paths, and not an untracked one},
+  claim  = {The staged fact names the index's files as absolute paths, and not an untracked one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_staged_paths_are_absolute_and_exclude_unstaged_files},
+}
+
+@misc{hooks-standing-facts-outside-a-repository-there-is-no-staged-fact,
+  section = {bar-fires},
+  title  = {A cwd in no git repository yields no staged fact, not an empty one},
+  claim  = {A cwd in no git repository yields no staged fact, not an empty one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_outside_a_repository_there_is_no_staged_fact},
+}
+
+@misc{hooks-standing-facts-gather-reads-the-payload-cwd-and-the-project-queue,
+  section = {bar-fires},
+  title  = {Facts come from the payload's cwd (git) and the project's own queue file},
+  claim  = {Facts come from the payload's cwd (git) and the project's own queue file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_gather_reads_the_payload_cwd_and_the_project_queue},
+}
+
+@misc{hooks-standing-facts-baseline-write-carries-the-files-current-size,
+  section = {bar-fires},
+  title  = {A Write to the ratchet baseline gathers its non-blank line count; another file does not},
+  claim  = {A Write to the ratchet baseline gathers its non-blank line count; another file does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_a_baseline_write_carries_the_files_current_size},
+}
+
+@misc{hooks-standing-facts-unwritten-baseline-has-size-zero,
+  section = {bar-fires},
+  title  = {A baseline that does not exist yet measures 0, so any first content is growth},
+  claim  = {A baseline that does not exist yet measures 0, so any first content is growth.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_an_unwritten_baseline_has_size_zero},
+}
+
+@misc{hooks-standing-facts-launcher-feeds-gathered-facts-to-the-policy,
+  section = {bar-fires},
+  title  = {End to end: a staged file's checkout is denied, an unstaged file's is not},
+  claim  = {End to end: a staged file's checkout is denied, an unstaged file's is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_launcher_feeds_gathered_facts_to_the_policy},
+}
+
+@misc{hooks-standing-facts-launcher-refuses-when-facts-cannot-be-gathered,
+  section = {bar-fires},
+  title  = {A payload the facts step cannot parse is refused, never allowed by an empty decision},
+  claim  = {A payload the facts step cannot parse is refused, never allowed by an empty decision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_launcher_refuses_when_facts_cannot_be_gathered},
+}
