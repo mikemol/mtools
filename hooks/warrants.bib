@@ -4422,3 +4422,10 @@
   claim  = {A `# Waypoint:` line git will strip does not count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_waypoint_trailer.py -k test_a_trailer_only_in_a_git_comment_line_is_refused},
 }
+
+@misc{hooks-gate-suite-untracked-test-file-does-not-decide-the-commit,
+  section = {bar-fires},
+  title  = {W502: the host pytest leaves out a test file the index does not hold, and names it},
+  claim  = {W502: the host pytest leaves out a test file the index does not hold, and names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_suite.py -k test_an_untracked_test_file_does_not_decide_the_commit},
+}

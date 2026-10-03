@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""The pre-commit gate's suite paths, run in bash rather than read: W184 and W361.
+"""The pre-commit gate's suite paths, run in bash rather than read: W184, W361 and W502.
 
 Each arm lifts one piece out of `.githooks/pre-commit` by name and RUNS it under the gate's own
 `set -euo pipefail`, because both defects were invisible to reading: the W184 line looked like an
@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -19,9 +20,27 @@ _GATE = _DIST.parent / ".githooks" / "pre-commit"
 _TARGETS_LINE = re.compile(r"^\s*(failed_targets=\$\(.*)$", re.MULTILINE)
 _CLEAR_FN = re.compile(r"^clear_bytecode\(\) \{.*?^\}\n", re.DOTALL | re.MULTILINE)
 _HOST_PYTEST = re.compile(
-    r"^\s*git_scrubbed env -C \"\$root/\$dist\" .*-m pytest -q$", re.MULTILINE
+    r"^\s*git_scrubbed env -C \"\$root/\$dist\" .*-m pytest -q( .*)?$", re.MULTILINE
 )
 _CLEAR_CALL = 'clear_bytecode "$root/$dist"'
+# A stand-in for `.venv/bin/python3 -m pytest`: it collects `tests/test_*.py` less every
+# `--ignore=`, and is red when a collected file raises. Hermetic under bazel, where the
+# sandbox's interpreter has no pytest to hand a child process.
+_FAKE_PYTEST = (
+    "#!/bin/sh\n"
+    "for f in tests/test_*.py; do\n"
+    '  case " $* " in *"/d/$f "*) continue ;; esac\n'
+    '  if grep -q AssertionError "$f"; then echo "FAILED $f"; exit 1; fi\n'
+    "done\n"
+)
+_HOST_BLOCK = re.compile(
+    r'^[ ]*clear_bytecode "\$root/\$dist"\n.*?(?=^done$)', re.DOTALL | re.MULTILINE
+)
+_STUBS = (
+    "say() { printf '%s\\n' \"$1\" >&2; }\n"
+    'git_scrubbed() { "$@"; }\n'
+    'run_checked() { shift; if "$@" >&2; then :; else fail=1; fi; }\n'
+)
 _SURVIVED = "survived"
 
 
@@ -86,3 +105,34 @@ def test_host_pytest_runs_after_the_bytecode_is_cleared() -> None:
     assert clear != -1, f"no `{_CLEAR_CALL}` before the host pytest"
     loop = gate.rfind("\nfor dist in ", 0, launch.start())
     assert loop < clear, "the clear is outside the loop that runs the host pytest"
+
+
+def test_an_untracked_test_file_does_not_decide_the_commit(tmp_path: Path) -> None:
+    """W502: the host pytest leaves out a test file the index does not hold, and names it."""
+    gate = _GATE.read_text(encoding="utf-8")
+    fn = _CLEAR_FN.search(gate)
+    block = _HOST_BLOCK.search(gate)
+    assert fn, f"{_GATE.name}: no clear_bytecode() function"
+    assert block, f"{_GATE.name}: no host-pytest block from the clear to its loop's end"
+    tests = tmp_path / "d" / "tests"
+    tests.mkdir(parents=True)
+    (tests / "test_staged.py").write_text("def test_ok() -> None:\n    pass\n", encoding="utf-8")
+    (tests / "test_untracked.py").write_text(
+        "def test_red() -> None:\n    raise AssertionError\n", encoding="utf-8"
+    )
+    venv_py = tmp_path / "d" / ".venv" / "bin" / "python3"
+    venv_py.parent.mkdir(parents=True)
+    venv_py.write_text(_FAKE_PYTEST, encoding="utf-8")
+    venv_py.chmod(0o755)
+    git = shutil.which("git")
+    assert git, "no git on PATH"
+    for argv in (["init", "-q"], ["add", "d/tests/test_staged.py"]):
+        subprocess.run([git, *argv], cwd=tmp_path, check=True, capture_output=True)
+    script = (
+        f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ndist=d\n{block.group(0)}'
+        'printf "fail=%s" "$fail"\n'
+    )
+    proc = _bash(script, tmp_path)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "fail=0", f"an untracked test decided the commit: {proc.stderr}"
+    assert "d/tests/test_untracked.py" in proc.stderr, "the left-out file was not named"

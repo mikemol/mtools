@@ -554,8 +554,19 @@ for dist in $_dists; do
   # surfaces as an import error rather than as a sandbox that never had it. The honest statement
   # is that this line is a DEVELOPER-TREE smoke check and the hermetic verdict is bazel's.
   clear_bytecode "$root/$dist"
+  # ⚑⚑ W502: A TEST FILE THE INDEX DOES NOT HOLD DOES NOT DECIDE THE COMMIT. MEASURED: an untracked
+  # `hooks/tests/test_waypoint_trailer.py`, staged nowhere, refused a commit from this line. Every
+  # untracked `test_*.py` under the distribution is passed to pytest as `--ignore`, and NAMED, so
+  # leaving it out is visible rather than silent. ⚑ What stays open is the narrower population:
+  # a TRACKED test with unstaged edits still runs as the working tree has it.
+  _untracked_tests=()
+  while IFS= read -r -d '' _ut; do
+    _untracked_tests+=("--ignore=$root/$_ut")
+    say "$dist: leaving out untracked $_ut — the index does not hold it"
+  done < <(git -C "$root" ls-files -z --others --exclude-standard -- \
+             ":(glob)$dist/**/test_*.py" ":(glob)$dist/**/*_test.py")
   run_checked "$dist: pytest — every case passes" \
-    git_scrubbed env -C "$root/$dist" .venv/bin/python3 -m pytest -q
+    git_scrubbed env -C "$root/$dist" .venv/bin/python3 -m pytest -q ${_untracked_tests[@]+"${_untracked_tests[@]}"}
 done
 
 # ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership
