@@ -127,6 +127,12 @@ class Update:
     # occurrences[RECURRENCE-ID] with COMPLETED; reopening removes it. The waypoint stays live.
     complete_occurrence: str | None = None
     reopen_occurrence: str | None = None
+    # ⚑ L2 FIELDS ARE TYPED LISTS, EACH APPENDED, NEVER FREE TEXT (W492): what the work left
+    # unchanged, what it rejected, and who consumes it. Evidence stays free text; these three are
+    # what --commit-message (W493) reads, so a missing one is named rather than guessed.
+    unchanged: str | None = None
+    rejected: str | None = None
+    consumers: str | None = None
 
 
 @dataclass(frozen=True)
@@ -381,6 +387,13 @@ def _set_given(new: Json, upd: Update) -> None:
         new["rrule"] = upd.rrule or None
     if upd.exdates is not None:
         new["exdates"] = list(upd.exdates) or None
+    for key, item in (
+        ("unchanged", upd.unchanged),
+        ("rejected", upd.rejected),
+        ("consumers", upd.consumers),
+    ):
+        if item is not None:
+            new[key] = [*strlist(new, key), item]
 
 
 def _is_work(upd: Update) -> bool:

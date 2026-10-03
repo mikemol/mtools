@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, cast
 from mikemol.pathsforward import lease, lock, ops, render, selftest, store, vtodo
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
+from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
 from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
@@ -76,6 +77,7 @@ _VALUED = (
     "vectors_from",
     "repair_counter",
     "scan_literal",
+    "commit_message",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -116,6 +118,9 @@ _FIELDS = (
     "exdate",
     "complete_occurrence",
     "reopen_occurrence",
+    "unchanged",
+    "rejected",
+    "consumers",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -143,6 +148,9 @@ _APPLIES: dict[str, frozenset[str]] = {
             "exdate",
             "complete_occurrence",
             "reopen_occurrence",
+            "unchanged",
+            "rejected",
+            "consumers",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -258,6 +266,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     mode.add_argument("--show", metavar="SYMBOL", help="what is W<n>")
     mode.add_argument(
+        "--commit-message",
+        metavar="SYMBOL",
+        help="print a draft commit message for a live waypoint (W493); writes nothing",
+    )
+    mode.add_argument(
         "--scan-literal",
         metavar="PATTERN",
         help="where a literal still appears: waypoints, residue, ledger, mirror (exit 1 on a hit)",
@@ -357,6 +370,10 @@ def _parser() -> argparse.ArgumentParser:
         metavar="RECURRENCE-ID",
         help="--update: remove one completed occurrence's stamp",
     )
+    for l2 in ("unchanged", "rejected", "consumers"):
+        ap.add_argument(
+            f"--{l2}", metavar="TEXT", help=f"--update: append one entry to the {l2} list"
+        )
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
@@ -784,6 +801,9 @@ def _update(ctx: Ctx) -> int:
         exdates=ctx.many("exdate"),
         complete_occurrence=ctx.get("complete_occurrence"),
         reopen_occurrence=ctx.get("reopen_occurrence"),
+        unchanged=ctx.get("unchanged"),
+        rejected=ctx.get("rejected"),
+        consumers=ctx.get("consumers"),
     )
 
     def edit(state: State) -> int:
@@ -959,6 +979,17 @@ def _show(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _commit_message(ctx: Ctx) -> int:
+    """Print a draft commit message for one live waypoint; the state is only read.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    sys.stdout.write(draft(ops.find(store.load(ctx.path), ctx.get("commit_message") or "")))
+    return EXIT_OK
+
+
 def _preamble_set(ctx: Ctx) -> int:
     """Store a file's lines as the preamble.
 
@@ -1113,6 +1144,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "bump_blocked": _bump_blocked,
     "ledger": _ledger_mode,
     "show": _show,
+    "commit_message": _commit_message,
     "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,
     "preamble_clear": _preamble_clear,

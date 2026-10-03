@@ -921,3 +921,74 @@ def test_lock_renews_the_holders_lease_and_reports_a_moved_tree(
     assert _run(path, "--lock", "A") == _OK
     assert f"MOVED {_LEASED}" in capsys.readouterr().out
     assert (_leases(path)[0]["renewed_at"] != "2026-01-01T00:00:00Z", _ledger(path)) == (True, "")
+
+
+def test_update_appends_the_l2_fields_and_show_prints_them(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W492: --unchanged, --rejected and --consumers each append to a list; --show prints them."""
+    path = _file(tmp_path)
+    for flag, value in (
+        ("--unchanged", "the ledger format"),
+        ("--rejected", "a free-text section in evidence"),
+        ("--consumers", "nemik"),
+        ("--consumers", "the commit hook"),
+    ):
+        assert _run(path, "--update", "W1", flag, value) == _OK
+    first = _first(path)
+    assert (first["unchanged"], first["rejected"], first["consumers"], first["evidence"]) == (
+        ["the ledger format"],
+        ["a free-text section in evidence"],
+        ["nemik", "the commit hook"],
+        "",
+    )
+    capsys.readouterr()
+    assert _run(path, "--show", "W1") == _OK
+    shown = cast("Rec", json.loads(capsys.readouterr().out))
+    assert shown["consumers"] == ["nemik", "the commit hook"]
+
+
+def test_the_l2_flags_are_refused_outside_update(tmp_path: Path) -> None:
+    """W492: --add does not read --rejected, so it is refused rather than dropped in silence."""
+    assert _run(_file(tmp_path), "--add", "x", "--rejected", "r") == _REFUSED
+
+
+def test_commit_message_drafts_from_the_waypoint(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W493: subject, caused_by, the latest evidence entry, the L2 fields, and the trailer."""
+    fixture = _wp(
+        "W7",
+        title="pathsforward: the subject line",
+        caused_by="nemik:W12",
+        evidence="2026-10-01: older | 2026-10-02: the latest entry",
+        unchanged=["the ledger"],
+        rejected=["a second flag"],
+        consumers=["nemik"],
+    )
+    path = _file(tmp_path, [fixture])
+    assert _run(path, "--commit-message", "W7") == _OK
+    out = capsys.readouterr().out
+    lines = out.splitlines()
+    assert (lines[0], lines[1], lines[-1]) == ("pathsforward: the subject line", "", "Waypoint: W7")
+    for want in ("nemik:W12", "the latest entry", "the ledger", "a second flag", "nemik"):
+        assert want in out
+    assert ("older" in out, "# thin" in out) == (False, False)
+
+
+def test_commit_message_names_each_missing_l2_field(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W493: a waypoint with no L2 fields prints one '# thin: no <field>' line for each."""
+    path = _file(tmp_path, [_wp("W1", unchanged=["kept"])])
+    assert _run(path, "--commit-message", "W1") == _OK
+    out = capsys.readouterr().out.splitlines()
+    assert [ln for ln in out if ln.startswith("# thin")] == [
+        "# thin: no rejected",
+        "# thin: no consumers",
+    ]
+
+
+def test_commit_message_refuses_an_unknown_symbol(tmp_path: Path) -> None:
+    """W493: a symbol that is not live is refused, and nothing is printed as a draft."""
+    assert _run(_file(tmp_path), "--commit-message", "W9") == _REFUSED

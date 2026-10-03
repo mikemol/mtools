@@ -2548,3 +2548,45 @@
   claim  = {The control: a live local blocker, another repo's symbol and a party are all silent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_live_foreign_or_party_blocker_is_not_stale},
 }
+
+@misc{pathsforward-cli-update-appends-the-l2-fields-and-show-prints-them,
+  section = {cli},
+  title  = {W492: --unchanged, --rejected and --consumers each append to a list; --show prints them},
+  claim  = {W492: --unchanged, --rejected and --consumers each append one entry to a typed list on
+            the waypoint, evidence stays free text and untouched, and --show prints
+            the lists back: the round trip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_update_appends_the_l2_fields_and_show_prints_them},
+}
+
+@misc{pathsforward-cli-the-l2-flags-are-refused-outside-update,
+  section = {cli},
+  title  = {W492: an L2 flag outside --update is refused, never dropped in silence},
+  claim  = {W492: an L2 flag outside --update is refused, never dropped in silence. --add does
+            not read --rejected, so a caller who believed it landed is told.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_l2_flags_are_refused_outside_update},
+}
+
+@misc{pathsforward-cli-commit-message-drafts-from-the-waypoint,
+  section = {cli},
+  title  = {W493: --commit-message drafts subject, cause, latest evidence, L2 fields and a trailer},
+  claim  = {W493: --commit-message drafts the subject from the title, a body from caused_by,
+            the latest evidence entry only and the L2 fields, and ends in a
+            'Waypoint: W<n>' trailer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commit_message_drafts_from_the_waypoint},
+}
+
+@misc{pathsforward-cli-commit-message-names-each-missing-l2-field,
+  section = {cli},
+  title  = {W493: each missing L2 field prints '# thin: no <field>'},
+  claim  = {W493: each missing L2 field prints '# thin: no <field>', so a thin waypoint is
+            named in the draft rather than hidden; git strips the line on commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commit_message_names_each_missing_l2_field},
+}
+
+@misc{pathsforward-cli-commit-message-refuses-an-unknown-symbol,
+  section = {cli},
+  title  = {W493: --commit-message on a symbol that is not live is refused},
+  claim  = {W493: --commit-message on a symbol that is not live is refused with exit 2, and no
+            draft is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commit_message_refuses_an_unknown_symbol},
+}
