@@ -2681,3 +2681,17 @@
   claim  = {Nemik's precedence: unstated outranks answered across several blocked_on entries.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_bare_party_beside_an_answer_reads_as_unstated},
 }
+
+@misc{pathsforward-check-bundled-open-title-is-found,
+  section = {check},
+  title  = {BundledTitleShape: an open title over 150 chars naming several clauses is found},
+  claim  = {BundledTitleShape: an open title over 150 chars naming several clauses is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_bundled_open_title_is_found},
+}
+
+@misc{pathsforward-check-done-atomic-or-short-title-is-not-bundled,
+  section = {check},
+  title  = {The control: done, one-clause, or 150-char titles raise no bundled finding},
+  claim  = {The control: done, one-clause, or 150-char titles raise no bundled finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_done_atomic_or_short_title_is_not_bundled},
+}

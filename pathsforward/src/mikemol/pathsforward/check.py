@@ -58,6 +58,10 @@ _BARE_PARTY = re.compile(
 _ASK_TITLE = re.compile(r"^\s*operator\b[^:]{0,60}:", re.IGNORECASE)
 
 
+_TITLE_MAX = 150
+_CLAUSE_SEPARATORS = (";", "\u2014", " -- ")
+
+
 def _claimed(state: State) -> list[str]:
     """List every symbol a record claims, live first, in file order.
 
@@ -311,15 +315,33 @@ def operator_asks(state: State) -> list[str]:
 def titles(state: State) -> list[str]:
     """Report a live waypoint with a blank title (nemik WaypointShape's title minLength, W479).
 
-    ⚑ nemik's BundledTitleShape is NOT here: it is advice (a Warning with a measured ~12% false
-    positive rate), and every finding here refuses `--check`; it waits on a warning tier.
-
     Returns:
         one finding per blank title.
 
     """
     return [
         f"{text(w, 'symbol')}: blank title" for w in state.waypoints if not text(w, "title").strip()
+    ]
+
+
+def bundled_titles(state: State) -> list[str]:
+    """Report an open waypoint whose title bundles several clauses (nemik BundledTitleShape, W505).
+
+    nemik's pattern: over 150 chars AND a ';', an em dash or ' -- '. nemik warns; here it
+    refuses (operator ruling 2026-10-03: a bundled title is a defect, fixed by atomizing or by
+    moving material to evidence; the measured false-positive rate is no exemption). A done
+    waypoint is exempt, as in nemik: splitting finished work is noise.
+
+    Returns:
+        one finding per bundled open title.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: bundled title (over 150 chars with several clauses); atomize it"
+        for w in state.waypoints
+        if text(w, "status") != "done"
+        and len(title := text(w, "title")) > _TITLE_MAX
+        and any(sep in title for sep in _CLAUSE_SEPARATORS)
     ]
 
 
@@ -531,6 +553,7 @@ def check(state: State) -> list[str]:
         *malformed_blockers(state),
         *operator_asks(state),
         *titles(state),
+        *bundled_titles(state),
         *causes(state),
         *edges_into_dropped(state),
         *field_types(state),

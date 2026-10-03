@@ -373,6 +373,33 @@ def test_a_titled_waypoint_is_not_found(tmp_path: Path) -> None:
     assert not [f for f in chk.check(_state(tmp_path)) if "title" in f]
 
 
+_LONG = "x" * 151
+
+
+@pytest.mark.parametrize("sep", [";", "\u2014", " -- "])
+def test_a_bundled_open_title_is_found(tmp_path: Path, sep: str) -> None:
+    """BundledTitleShape: an open title over 150 chars naming several clauses is found."""
+    found = chk.check(_state(tmp_path, waypoints=[_wp("W1", title=f"a{sep}{_LONG}"), _wp("W2")]))
+    assert "W1: bundled title (over 150 chars with several clauses); atomize it" in found
+
+
+@pytest.mark.parametrize(
+    ("status", "title"),
+    [
+        ("done", f"a; {_LONG}"),
+        ("ready", _LONG),
+        ("ready", "a; b"),
+        ("ready", "a; " + "x" * 147),
+    ],
+)
+def test_a_done_atomic_or_short_title_is_not_bundled(
+    tmp_path: Path, status: str, title: str
+) -> None:
+    """The control: done, one-clause, or 150-char titles raise no bundled finding."""
+    w1 = _wp("W1", status, title=title)
+    assert not [f for f in chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")])) if "bundled" in f]
+
+
 def test_an_unresolved_local_cause_is_found(tmp_path: Path) -> None:
     """CausedByResolvesShape, local half: caused_by W9 that is nowhere here is found."""
     w1 = _wp("W1", caused_by="W9")
