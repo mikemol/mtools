@@ -156,3 +156,15 @@
   claim   = {0 on agreement, 1 on drift, 2 on a usage error.},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_reqs_check.py -k test_main_reports_exit_codes}
 }
+
+@misc{rules-py-vacuity-floor-negatives-are-counted-over-the-union,
+  section = {vacuity_floor},
+  claim   = {Every module named is swept and each population negative is named by module and line; a declared verdict call is not one.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_vacuity_floor.py -k test_negatives_are_counted_over_the_union}
+}
+
+@misc{rules-py-vacuity-floor-floor-at-the-count-passes-and-above-it-fails,
+  section = {vacuity_floor},
+  claim   = {0 when the union of every distribution's negatives clears the floor, 1 below it, 2 on a usage error.},
+  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_vacuity_floor.py -k test_floor_at_the_count_passes_and_above_it_fails}
+}

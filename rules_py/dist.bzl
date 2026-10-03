@@ -101,6 +101,15 @@ def dist_checks(venv_data = []):
         size = "small",
     )
 
+    # W503: this distribution's test modules, for the root's //:vacuity_floor, which counts
+    # population negatives over the union of every distribution (most hold none, so the floor
+    # means nothing per distribution).
+    native.filegroup(
+        name = "test_modules",
+        srcs = native.glob(["tests/test_*.py"], allow_empty = True),
+        visibility = ["//:__pkg__"],
+    )
+
     # W362: the BUILD names pytest as every py_test's main, and no test resolves __file__ out of
     # the sandbox.
     py_test(

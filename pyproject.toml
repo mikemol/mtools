@@ -114,6 +114,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # it ran over `.` in `_main` and never opened an external module's file.
 # ⚑ ITS TEST ASSERTS (W362, W363), over BUILD and test files it writes into tmp_path.
 "test_suite_check.py" = ["assert"]
+# ⚑ ITS TEST ASSERTS (W503), over test modules it writes into tmp_path.
+"test_vacuity_floor.py" = ["assert"]
 # ⚑ RUNNING THE RATCHET IS THE REFUSAL CHECK'S WHOLE JOB (W388): one argv list, no shell, the
 # ratchet path the gate passes and a temporary copy of the distribution.
 "refusal_check.py" = [

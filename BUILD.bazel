@@ -292,6 +292,26 @@ py_test(
     deps = [root_dev_requirement("pytest")],
 )
 
+# W503: the vacuity floor, tested the same way over hand-built test modules.
+py_test(
+    name = "test_vacuity_floor",
+    srcs = [
+        "@mikemol_rules_py//:test_vacuity_floor.py",
+        "@mikemol_rules_py//:vacuity_floor.py",
+        "@mikemol_rules_py//:suite_check.py",
+        "@mikemol_rules_py//:pytest_main.py",
+    ],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location @mikemol_rules_py//:test_vacuity_floor.py)",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ],
+    size = "small",
+    deps = [root_dev_requirement("pytest")],
+)
+
 # ⚑⚑⚑ THE ROOT SCRIPTS MEET THE DISTRIBUTIONS' BAR, AND UNTIL THESE TARGETS NOTHING HELD THEM TO
 # ANY. Each distribution's `//<dist>:ruff` and `//<dist>:mypy` stop at its own `pyproject.toml`, so
 # `mutate_runner.py`, `pytest_main.py`, `mypy_runner.py`, `bep_probe.py`, `count_test_functions.py`
@@ -314,6 +334,8 @@ _ATOM_PY = [
     "@mikemol_rules_py//:test_venv_check.py",
     "@mikemol_rules_py//:suite_check.py",
     "@mikemol_rules_py//:test_suite_check.py",
+    "@mikemol_rules_py//:vacuity_floor.py",
+    "@mikemol_rules_py//:test_vacuity_floor.py",
     "@mikemol_rules_py//:reqs_check.py",
     "@mikemol_rules_py//:test_reqs_check.py",
     "@mikemol_check_mypy//:mypy_runner.py",
@@ -358,6 +380,31 @@ sh_test(
 
 # ⚑⚑ ONE MYPY TARGET PER ATOM CARRYING PYTHON (W325), under the atom's own mypy.ini. It closes the
 # gap W323 named: pytest_main.py fell out of the root's `files = ["*.py"]` when it moved.
+# ⚑ THE ATOMS AND THEIR PYTHON, named once: the mypy targets below and //:vacuity_floor's
+# exclusion of the atoms from the root's subpackages both read it.
+_ATOM_SCRIPTS = [
+    ("rules_py", [
+        "pytest_main.py",
+        "venv_check.py",
+        "test_venv_check.py",
+        "suite_check.py",
+        "test_suite_check.py",
+        "vacuity_floor.py",
+        "test_vacuity_floor.py",
+        "reqs_check.py",
+        "test_reqs_check.py",
+    ]),
+    ("check_mypy", ["mypy_runner.py"]),
+    ("check_mutants", ["mutate_runner.py", "test_mutate_runner.py"]),
+    ("check_ruff", [
+        "selector_check.py",
+        "test_selector_check.py",
+        "suppression_check.py",
+        "test_suppression_check.py",
+    ]),
+    ("check_ratchet", ["refusal_check.py", "test_refusal_check.py"]),
+]
+
 [
     sh_test(
         name = "mypy_" + atom,
@@ -373,24 +420,43 @@ sh_test(
         size = "small",
         timeout = "long",
     )
-    for atom, scripts in [
-        ("rules_py", [
-            "pytest_main.py",
-            "venv_check.py",
-            "test_venv_check.py",
-            "suite_check.py",
-            "test_suite_check.py",
-            "reqs_check.py",
-            "test_reqs_check.py",
-        ]),
-        ("check_mypy", ["mypy_runner.py"]),
-        ("check_mutants", ["mutate_runner.py", "test_mutate_runner.py"]),
-        ("check_ruff", [
-            "selector_check.py",
-            "test_selector_check.py",
-            "suppression_check.py",
-            "test_suppression_check.py",
-        ]),
-        ("check_ratchet", ["refusal_check.py", "test_refusal_check.py"]),
-    ]
+    for atom, scripts in _ATOM_SCRIPTS
 ]
+
+# W503: the floor on population negatives, over the UNION of every distribution's suite. Each
+# distribution's :suite refuses an unguarded negative (W363), and that refusal is vacuously true if
+# the classifier stops recognising the shape; this floor catches that. Measured 2026-10-02 (W363):
+# 21, in hooks (17), mdstruct (3) and ledger (1) — 11 of 14 hold none, so only the union can carry
+# it. Measured by this target when it landed: 19 (hooks 15), the fleet sweep it replaced among
+# those removed. Every member is printed on a green run.
+# ⚑ THE DISTRIBUTIONS ARE `subpackages()`, NOT A LIST: each is a package calling dist_checks(),
+# which declares :test_modules, so a new distribution is counted the moment it exists. The atoms
+# are subpackages too (local_path_override modules, so bazel deletes them as packages) and are
+# excluded by _ATOM_SCRIPTS. The other packages that are not distributions are named below. Both
+# lists name NON-members, so they fail CLOSED: a package missing from them has no :test_modules and
+# fails analysis loudly, while a new distribution is never silently left out.
+_VACUITY_FLOOR = 10
+
+# ⚑ `bazel-*` is bazel's own convenience link to the output base, named after the checkout's
+# directory, so a worktree's differs from the main checkout's; it is never a distribution.
+_NOT_DISTRIBUTIONS = ["bazel-*", "patches", "rbe"]
+
+_DIST_TESTS = [
+    "//%s:test_modules" % d
+    for d in subpackages(
+        include = ["*"],
+        exclude = [a for a, _ in _ATOM_SCRIPTS] + _NOT_DISTRIBUTIONS,
+    )
+]
+
+py_test(
+    name = "vacuity_floor",
+    srcs = [
+        "@mikemol_rules_py//:vacuity_floor.py",
+        "@mikemol_rules_py//:suite_check.py",
+    ],
+    main = "@mikemol_rules_py//:vacuity_floor.py",
+    args = [str(_VACUITY_FLOOR)] + ["$(locations %s)" % t for t in _DIST_TESTS],
+    data = _DIST_TESTS,
+    size = "small",
+)

@@ -1187,12 +1187,6 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_string_asserting_arm_resolves_to_a_file_it_reads}
 }
 
-@misc{hooks-bar-fires-every-population-shaped-negative-is-guarded-against-being-empty,
-  section = {bar-fires},
-  claim   = {An assertion about what did NOT happen is satisfied by never happening: `assert not offenders` is true when the sweep found nothing and true when it was never populated, and the assertion cannot tell those apart. So the arm asserts the GUARD rather than the emptiness — every population-shaped negative across all four distributions must sit in a function that also asserts something truthy. Two idioms from paperkit-82, who returned 1-in-10 precision against this shape's 1-in-4: a VERDICT is not a POPULATION, so verdict-returning calls are declared and excluded rather than inferred; and the guard may sit AFTER the negative, so the whole function is walked. Measured 12 population-shaped, 0 unguarded, printed by name on a green run. Re-measuring the narrowing limit CHANGED the recorded claim: the plant that once passed at 12-of-13 admitted now REDS at 2-of-10, because this corpus's negatives are overwhelmingly comprehensions — the floor's reach is a fact about the corpus, not about the floor},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_population_shaped_negative_is_guarded_against_being_empty}
-}
-
 @misc{hooks-bar-fires-two-walks-agree-on-every-population-shaped-negative-by-name,
   section = {bar-fires},
   claim   = {A floor over a derived population catches a classifier that recognises NOTHING and tolerates one that NARROWS: re-measured on this corpus, a plant dropping two of thirteen members cleared the floor of ten and the arm PASSED. The floor's reach is a fact about the corpus, not about the floor. The stronger check is a SECOND INSTRUMENT, not a bigger assertion — a walk from binding to assert-use beside the existing walk from assert to binding — and this arm asserts the two agree on MEMBERSHIP, naming what either side holds alone. F-armed both directions with a plant chosen by measurement (the shape holding exactly two members): the floor arm passes and this arm reds, naming the two dropped and which walk dropped them. Its predecessor was a scratchpad instrument erased by a directory move; a second instrument outside the tree is a second instrument until the first boundary},
