@@ -4,4 +4,3 @@ check_ruff
 check_mypy
 check_mutants
 check_ratchet
-.claude
