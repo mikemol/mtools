@@ -287,6 +287,28 @@ def test_sourcing_a_present_sibling_is_clean(tmp_path: Path) -> None:
 
 @pytest.mark.needs_shellcheck
 @_needs_linter
+def test_a_source_directive_naming_a_sibling_under_a_governed_root_is_clean(
+    tmp_path: Path,
+) -> None:
+    """A `# shellcheck source=<leaf>` naming the script's OWN sibling resolves (W430).
+
+    ⚑ MEASURED ON substrate's `scripts/membudget`: the hook runs from the project ROOT (so
+    `.githooks/` can find a root helper), and shellcheck resolves a relative `source=` against the
+    process cwd, so the sibling `scripts/membudget-ledger` read as SC1091 although present. The
+    script's own directory must be on the source path as well.
+    """
+    (tmp_path / "pyproject.toml").write_text("[project]\n", encoding="utf-8")
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    (scripts / "lib").write_text("greet() { echo hi; }\n", encoding="utf-8")
+    body = '#!/usr/bin/env bash\n# shellcheck source=lib\n. "$SELFDIR/lib"\ngreet\n'
+    script = scripts / "run"
+    script.write_text(body, encoding="utf-8")
+    assert "SC1091" not in _codes(shellcheck.analyze_file(str(script), body))
+
+
+@pytest.mark.needs_shellcheck
+@_needs_linter
 def test_sourcing_a_missing_sibling_still_fires() -> None:
     """A source pointing at nothing on disk is a REAL finding, not swallowed by `-x` (W41)."""
     body = '#!/usr/bin/env bash\n. "./absent.sh"\n'

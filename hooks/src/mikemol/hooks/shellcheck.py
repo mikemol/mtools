@@ -204,12 +204,20 @@ def cwd_for(anchor: str) -> str:
     return str(Path(anchor).parent)
 
 
-def run(script: str, shell: str = "bash", cwd: str | None = None) -> list[Finding] | None:
+def run(
+    script: str, shell: str = "bash", cwd: str | None = None, source_dir: str | None = None
+) -> list[Finding] | None:
     """Return shellcheck's findings over one script body, or None for UNKNOWN.
 
     ⚑ THE BODY TRAVELS ON STDIN, so a sourced file is FOLLOWED (`-x`) only by a path guess resolved
     against `cwd` — shellcheck cannot see a file that does not exist on disk yet, which is the
     price of judging one that a PreToolUse gate has not written.
+
+    ⚑⚑ `source_dir` IS THE SCRIPT'S OWN DIRECTORY, put on the source path (`-P`) BESIDE the
+    root cwd (W430). A relative `# shellcheck source=<leaf>` resolves against the cwd and the
+    `-P` paths only — `SCRIPTDIR` means nothing on stdin — so from the root, substrate's
+    `scripts/membudget` naming its sibling `membudget-ledger` read SC1091 with the file present.
+    Both are kept: the root answers `.githooks/`'s leaf guess, the directory answers a sibling.
 
     Returns:
         findings (`[]` is measured-clean), or None when the linter could not render a verdict.
@@ -218,9 +226,10 @@ def run(script: str, shell: str = "bash", cwd: str | None = None) -> list[Findin
     binary = linter()
     if binary is None:
         return None
+    source_path = [f"--source-path={source_dir}"] if source_dir else []
     try:
         proc = subprocess.run(
-            [binary, f"--shell={shell}", "-x", "--format=json1", "-"],
+            [binary, f"--shell={shell}", "-x", *source_path, "--format=json1", "-"],
             input=script,
             capture_output=True,
             text=True,
@@ -312,7 +321,8 @@ def analyze_file(path: str, content: str, cwd: str | None = None) -> list[Findin
     dialect = shell_dialect(path, content)
     if dialect is None:
         return []
-    return run(content, shell=dialect, cwd=cwd or cwd_for(path))
+    source_dir = str(Path(path).parent) if path else None
+    return run(content, shell=dialect, cwd=cwd or cwd_for(path), source_dir=source_dir)
 
 
 def post_edit_content(tool: str, tool_input: dict[str, object]) -> tuple[str, str | None]:

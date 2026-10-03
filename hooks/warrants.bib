@@ -4487,3 +4487,15 @@
   claim  = {The census population is every untracked `.claude/` file, gitignored or not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_untracked_lists_ignored_and_unignored_files_but_not_tracked_ones},
 }
+
+@misc{hooks-shellcheck-source-directive-naming-a-sibling-under-a-governed-root-is-clean,
+  section = {shellcheck},
+  title  = {A `# shellcheck source=<leaf>` naming the script's OWN sibling resolves (W430)},
+  claim  = {A `# shellcheck source=<leaf>` naming the script's OWN sibling resolves (W430). MEASURED
+            ON substrate's `scripts/membudget`: the hook runs from the project ROOT (so
+            `.githooks/` can find a root helper), and shellcheck resolves a relative
+            `source=` against the process cwd, so the sibling `scripts/membudget-ledger`
+            read as SC1091 although present. The script's own directory must be on the
+            source path as well.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_source_directive_naming_a_sibling_under_a_governed_root_is_clean},
+}
