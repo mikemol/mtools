@@ -25,7 +25,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import embargo, lease, lock, ops, render, selftest, store, vtodo
+from mikemol.pathsforward import embargo, lease, lock, ops, outcomes, render, selftest, store, vtodo
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.commitmsg import draft
@@ -60,6 +60,7 @@ _FLAGS = (
     "bump_blocked",
     "prune_landed",
     "preamble_clear",
+    "outcomes_clear",
     "init",
     "overlaps",
     "ics",
@@ -83,6 +84,7 @@ _VALUED = (
     "commit_message",
     "embargo",
     "lift_embargo",
+    "outcomes_set",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -269,6 +271,12 @@ def _parser() -> argparse.ArgumentParser:
         help="W511: forbid edits to a project-relative PATH while a freeze holds (rule 6)",
     )
     mode.add_argument("--lift-embargo", metavar="PATH", help="W511: remove PATH's embargo")
+    mode.add_argument(
+        "--outcomes-set",
+        nargs=2,
+        metavar=("ADVANCE_CSV", "OTHER_CSV"),
+        help="W533: declare the OUTCOME words --ledger accepts on tick/interrupt lines",
+    )
     mode.add_argument(
         "--ledger",
         nargs=len(_LEDGER_ARGS),
@@ -998,6 +1006,41 @@ def _lift_embargo(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _outcomes_set(ctx: Ctx) -> int:
+    """Declare the ledger outcome sets (W533), and ledger it.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    advance, other = ctx.many("outcomes_set") or ("", "")
+
+    def edit(state: State) -> int:
+        outcomes.set_sets(state, advance, other)
+        _ledger(ctx, Entry("outcomes", NO_SYMBOL, "set", "outcomes", f"{advance} | {other}"))
+        _say("ledger outcomes declared")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
+def _outcomes_clear(ctx: Ctx) -> int:
+    """Remove the ledger outcome sets (W533), and ledger it.
+
+    Returns:
+        EXIT_OK.
+
+    """
+
+    def edit(state: State) -> int:
+        outcomes.clear(state)
+        _ledger(ctx, Entry("outcomes", NO_SYMBOL, "cleared", "outcomes", "ledger_outcomes"))
+        _say("ledger outcomes cleared")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _prune_landed(ctx: Ctx) -> int:
     """Drop landed local blockers and say which waypoints that frees, counting nothing.
 
@@ -1040,16 +1083,22 @@ def _bump_blocked(ctx: Ctx) -> int:
 
 
 def _ledger_mode(ctx: Ctx) -> int:
-    """Append a structured ledger line.
+    """Append a structured ledger line; a declared outcome set (W533) refuses an unlisted word.
 
     Returns:
         EXIT_OK.
+
+    Raises:
+        RefusedError: on a tick/interrupt OUTCOME in neither declared set.
 
     """
     sym, outcome, mechanism, note = ctx.many("ledger") or ("", "", "", "")
     if sym == _QUEUE_SYMBOL:
         sym = NO_SYMBOL
     kind = ctx.get("kind") or _DEFAULT_KIND
+    refused = outcomes.refusal(store.load(ctx.path), kind, outcome)
+    if refused:
+        raise ops.RefusedError(refused)
     entry = Entry(kind, sym, outcome, mechanism, note, ctx.get("evidence") or "")
     text_line = line(entry, ctx.stamp())
     append(store.sibling(ctx.path, store.LEDGER), text_line)
@@ -1239,6 +1288,8 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "drop": _drop,
     "embargo": _embargo,
     "lift_embargo": _lift_embargo,
+    "outcomes_set": _outcomes_set,
+    "outcomes_clear": _outcomes_clear,
     "bump_blocked": _bump_blocked,
     "prune_landed": _prune_landed,
     "ledger": _ledger_mode,

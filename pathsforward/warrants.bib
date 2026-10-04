@@ -2908,3 +2908,80 @@
   claim  = {`--unlinked --enables W1` reads no field flag, so it is refused before any read.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_unlinked.py -k test_a_stray_field_flag_is_refused},
 }
+
+@misc{pathsforward-outcomes-unlisted-tick-word-refused-naming-both-sets,
+  section = {outcomes},
+  title  = {A declared queue refuses an unlisted tick OUTCOME and names both sets},
+  claim  = {A declared queue refuses an unlisted tick OUTCOME and names both sets.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_unlisted_tick_word_refused_naming_both_sets},
+}
+
+@misc{pathsforward-outcomes-listed-words-accepted,
+  section = {outcomes},
+  title  = {A listed advance word and a listed other word are both written},
+  claim  = {A listed advance word and a listed other word are both written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_listed_words_accepted},
+}
+
+@misc{pathsforward-outcomes-interrupt-kind-is-gated-too,
+  section = {outcomes},
+  title  = {An interrupt line with an unlisted word is refused},
+  claim  = {An interrupt line with an unlisted word is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_interrupt_kind_is_gated_too},
+}
+
+@misc{pathsforward-outcomes-other-kinds-stay-free,
+  section = {outcomes},
+  title  = {A non-tick kind accepts an unlisted word even when sets are declared},
+  claim  = {A non-tick kind accepts an unlisted word even when sets are declared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_other_kinds_stay_free},
+}
+
+@misc{pathsforward-outcomes-no-field-means-any-word-accepted,
+  section = {outcomes},
+  title  = {Without the field any tick word is accepted and the state is untouched},
+  claim  = {Without the field any tick word is accepted and the state is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_no_field_means_any_word_accepted},
+}
+
+@misc{pathsforward-outcomes-refused-ledger-leaves-file-byte-identical,
+  section = {outcomes},
+  title  = {A refused --ledger writes nothing: ledger and state bytes are unchanged},
+  claim  = {A refused --ledger writes nothing: ledger and state bytes are unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_refused_ledger_leaves_file_byte_identical},
+}
+
+@misc{pathsforward-outcomes-outcomes-set-stores-and-ledgers,
+  section = {outcomes},
+  title  = {--outcomes-set stores the field and ledgers its own action},
+  claim  = {--outcomes-set stores the field and ledgers its own action.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_outcomes_set_stores_and_ledgers},
+}
+
+@misc{pathsforward-outcomes-outcomes-set-refusals,
+  section = {outcomes},
+  title  = {--outcomes-set refuses a whitespace word, an empty advance set and an overlap},
+  claim  = {--outcomes-set refuses a whitespace word, an empty advance set and an overlap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_outcomes_set_refusals},
+}
+
+@misc{pathsforward-outcomes-outcomes-clear-removes-the-field,
+  section = {outcomes},
+  title  = {--outcomes-clear removes the field entirely, never leaving an empty object},
+  claim  = {--outcomes-clear removes the field entirely, never leaving an empty object.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_outcomes_clear_removes_the_field},
+}
+
+@misc{pathsforward-outcomes-problems-name-each-malformed-shape,
+  section = {outcomes},
+  title  = {A non-object, non-list, whitespace-word and overlapping field each yield a finding},
+  claim  = {A non-object, non-list, whitespace-word and overlapping field each yield a finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_problems_name_each_malformed_shape},
+}
+
+@misc{pathsforward-outcomes-check-mode-names-a-malformed-field,
+  section = {outcomes},
+  title  = {The --check mode exits refused and names ledger_outcomes for a malformed field},
+  claim  = {The --check mode exits refused and names ledger_outcomes for a malformed field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_check_mode_names_a_malformed_field},
+}

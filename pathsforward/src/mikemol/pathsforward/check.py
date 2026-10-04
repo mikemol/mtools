@@ -24,7 +24,7 @@ from collections import Counter
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pathsforward import vector
+from mikemol.pathsforward import outcomes, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -563,6 +563,7 @@ def check(state: State) -> list[str]:
         *witnessed_live(state),
         *vectors(state),
         *root(state),
+        *outcomes.findings(state),
     ]
 
 

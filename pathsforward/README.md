@@ -34,6 +34,10 @@ mikemol-paths-forward --state S --drop W7 REASON
 mikemol-paths-forward --state S --bump-blocked [--except W…]   prune landed blockers, then count a tick: NUDGE at 1,2,4,8 · ESCALATE at 16
 mikemol-paths-forward --state S --prune-landed   only the prune: idempotent, no counter, safe from a hook
 mikemol-paths-forward --state S --ledger SYM OUTCOME MECHANISM NOTE [--kind K] [--evidence E]
+mikemol-paths-forward --state S --outcomes-set ADVANCE_CSV OTHER_CSV   W533: declare the OUTCOME words
+                                            tick/interrupt --ledger lines may carry (off until set;
+                                            an unlisted word is refused, exit 2, naming both sets)
+mikemol-paths-forward --state S --outcomes-clear               remove the field (absent, never {})
 mikemol-paths-forward --state S --show W7
 mikemol-paths-forward --state S --preamble-set FILE | --preamble-clear
 mikemol-paths-forward --selftest
