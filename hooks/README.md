@@ -101,6 +101,38 @@ venv lacks it gets a missing-command error in the transcript and no context.
 ]
 ```
 
+### Checking the wiring with `--check`
+
+`mikemol-hook-inbound-asks --check` asks whether a project has everything the hook needs. It takes no
+stdin payload. Run it from the project (the project is `CLAUDE_PROJECT_DIR`, else the working
+directory):
+
+```console
+$ .venv/bin/mikemol-hook-inbound-asks --check
+```
+
+The `hooks/bin/mikemol-hook-inbound-asks` launcher does not forward its arguments, so it cannot run
+the check. In mtools itself, run the built entry with the venv's `python3`, as the examples above do:
+`CLAUDE_PROJECT_DIR=$PWD bazel-bin/hooks/.venv/bin/python3 bazel-bin/hooks/.venv/bin/mikemol-hook-inbound-asks --check`.
+It prints three lines, one per piece, each starting `OK <piece>:` or `MISSING <piece>:`:
+
+- `reader`: `mikemol-paths-forward` is in `<project>/.venv/bin` or on `PATH`, and its `--help` names
+  `--inbound`. MISSING means either there is no reader (install `mikemol-pathsforward`, as
+  [adopting-a-hook.md](../docs/adopting-a-hook.md) says), or the reader is too old, or its
+  `--help` probe timed out or could not start (move the pin to a newer sha).
+- `queue`: `<project>/.claude/paths-forward.json` exists. MISSING means the repo has no queue, so the
+  hook would stay silent; create one with the reader.
+- `settings`: `<project>/.claude/settings.json` names `mikemol-hook-inbound-asks` under both
+  `SessionStart` and `UserPromptSubmit`. MISSING says why: the file could not be read, is not valid
+  JSON, or lacks the hook for the named event or events. Add the blocks shown above.
+
+The exit status is 0 only when all three are `OK`, 1 otherwise, and 2 for any other argument. The
+only thing it runs is one bounded `<reader> --help` probe (20 s, no shell). It never denies and
+writes nothing.
+
+A green `--check` shows the pieces are present. It does not show that the model sees the context:
+the envelope is confirmed live only at `UserPromptSubmit`.
+
 ## Nemik check (SessionStart and UserPromptSubmit)
 
 `mikemol-hook-nemik-check` is the sibling of the inbound-asks hook. It runs the fleet reader

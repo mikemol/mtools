@@ -137,6 +137,35 @@ def test_roundtrip_reports_identity_and_each_failure(tmp_path: Path) -> None:
     assert why.startswith("unreadable: ")
 
 
+def test_parse_file_returns_the_tree_of_a_good_file(tmp_path: Path) -> None:
+    """A readable Python file comes back as its module, not a Skip."""
+    good = tmp_path / "good.py"
+    good.write_text("x = 1\n", encoding="utf-8")
+    tree = core.parse_file(str(good))
+    assert not isinstance(tree, core.Skip)
+    assert len(tree.body) == 1
+
+
+def test_parse_file_skips_an_undecodable_file(tmp_path: Path) -> None:
+    """Bytes that are not UTF-8 are an `undecodable` skip naming the exception."""
+    path = tmp_path / "latin.py"
+    path.write_bytes(b"x = '\xff'\n")
+    assert core.parse_file(str(path)) == core.Skip(str(path), "undecodable", "UnicodeDecodeError")
+
+
+def test_parse_file_skips_an_unreadable_file(tmp_path: Path) -> None:
+    """A missing file is an `unreadable` skip naming the OS error."""
+    path = str(tmp_path / "absent.py")
+    assert core.parse_file(path) == core.Skip(path, "unreadable", "FileNotFoundError")
+
+
+def test_parse_file_skips_an_unparseable_file(tmp_path: Path) -> None:
+    """Text that is not Python is an `unparseable` skip naming the syntax error."""
+    path = tmp_path / "bad.py"
+    path.write_text("def (:\n", encoding="utf-8")
+    assert core.parse_file(str(path)) == core.Skip(str(path), "unparseable", "SyntaxError")
+
+
 def test_unknown_renders_as_a_word() -> None:
     """The sentinel prints as UNKNOWN, never as data."""
     assert repr(core.UNKNOWN) == "UNKNOWN"

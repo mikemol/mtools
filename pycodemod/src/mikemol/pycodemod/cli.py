@@ -89,6 +89,7 @@ from mikemol.pycodemod.ordering import resorts as run_resorts
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers, git_show
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
+from mikemol.pycodemod.relations import relname_sites
 from mikemol.pycodemod.rivals import collisions as run_collisions
 from mikemol.pycodemod.rivals import rivals as run_rivals
 from mikemol.pycodemod.shapes import shape_sites
@@ -418,6 +419,18 @@ def _handle_literals(ns: argparse.Namespace) -> int:
     for row in result.rows:
         sys.stdout.write(
             f"literal {row.role} {row.path}:{row.line} ({row.context}) {row.value!r}\n"
+        )
+    lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
+    _write_lines(lines)
+    return code
+
+
+def _handle_relname(ns: argparse.Namespace) -> int:
+    paths = _str_list(ns, "paths")
+    result = relname_sites(paths, _str(ns, "name"))
+    for row in result.rows:
+        sys.stdout.write(
+            f"relname {row.kind} {row.role} {row.path}:{row.line} ({row.context}) {row.value!r}\n"
         )
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
@@ -942,6 +955,7 @@ MODES = {
     "values": _handle_values,
     "key-reads": _handle_key_reads,
     "literals": _handle_literals,
+    "relname": _handle_relname,
     "bindings": _handle_bindings,
     "source-of": _handle_source_of,
     "alias-hint": _handle_alias_hint,
@@ -1016,6 +1030,9 @@ def _add_named_modes(make: _Make) -> None:
     lit = make("literals", "every string literal containing a text, with its role")
     lit.add_argument("text")
     lit.add_argument("paths", nargs="+")
+    rel = make("relname", "every use of a name as a relation: a SQL literal or an exact string")
+    rel.add_argument("name")
+    rel.add_argument("paths", nargs="+")
     bnd = make("bindings", "every binding of a name, with the lines it is live")
     bnd.add_argument("name")
     bnd.add_argument("paths", nargs="+")

@@ -779,6 +779,49 @@ def test_literals_over_an_unparseable_file_reports_incomplete(tmp_path: Path) ->
     assert cli.main(["literals", "needle", str(target)]) == 1
 
 
+def test_relname_reports_a_sql_literal_and_an_exact_name(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`relname` prints a `sql` row for a relation position and a `name` row for an exact string."""
+    target = tmp_path / "m.py"
+    target.write_text("q = 'SELECT a FROM node'\nt = 'node'\n", encoding="utf-8")
+    code = cli.main(["relname", "node", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"relname sql other {target}:1 (<module>) " in out
+    assert f"relname name other {target}:2 (<module>) 'node'" in out
+
+
+def test_relname_prints_no_rows_for_a_name_that_is_only_a_substring(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A name that appears only inside another relation name is a miss: no rows, exit 0."""
+    target = tmp_path / "m.py"
+    target.write_text("q = 'SELECT a FROM node_child'\n", encoding="utf-8")
+    code = cli.main(["relname", "node", str(target)])
+    assert code == 0
+    assert "relname" not in capsys.readouterr().out
+
+
+def test_relname_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unparseable file makes `relname` print the incomplete-scan banner and exit 1."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 'node'\ndef (:\n", encoding="utf-8")
+    code = cli.main(["relname", "node", str(target)])
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "read 0 of 1 file(s); 1 skipped" in captured.out + captured.err
+
+
+def test_relname_without_a_path_is_a_usage_error() -> None:
+    """`relname NAME` with no paths is argparse's usage error, exit 2."""
+    with pytest.raises(SystemExit) as raised:
+        cli.main(["relname", "node"])
+    assert raised.value.code == _REFUSED
+
+
 def test_commentary_kinds_files_a_comment_apart_from_a_printed_string(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

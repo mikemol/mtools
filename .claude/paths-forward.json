@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 634,
+  "counter": 641,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-04T21:59:14Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 49,
+      "ticks_blocked": 50,
       "completed": null
     },
     {
@@ -6171,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 47,
+      "ticks_blocked": 48,
       "completed": null
     },
     {
@@ -10054,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -11483,7 +11486,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -11800,7 +11803,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -12053,20 +12056,21 @@
     {
       "symbol": "W606",
       "title": "pycodemod: control_roster.py, the control-flow construct roster, SQL_FORM table and Boundary operand, tested",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Commit 1 of 4 per .claude/swarm/W606-control-port.md: roster module with RowSource as an explicit operand; then provenance, census class, report plus CLI",
-      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W606-control-port.md): PORT, generalized in four modules; the only substrate-specific part is is_store_read, which becomes a RowSource operand, so the 09-26 decline does not hold on merit. Open check before commit 1: swallows.py uses stdlib ast, confirm in core.py whether libcst-required applies to a read-only census. Depends on W609 for the store predicates. | 2026-10-04: 2026-10-04 W609 landed in storeflow.py: the control port must import StoreVocab, is_store_read, is_store_read2, store_reader_fns, row_names, derived_names, touches, has_read from mikemol.pycodemod.storeflow; every predicate except touches and derived_names now takes vocab: StoreVocab (store_reader_fns(tree, vocab); is_store_read2, has_read and row_names take (..., rfns, vocab)), so the control census takes a StoreVocab as its own operand.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W606-control-port.md): PORT, generalized in four modules; the only substrate-specific part is is_store_read, which becomes a RowSource operand, so the 09-26 decline does not hold on merit. Open check before commit 1: swallows.py uses stdlib ast, confirm in core.py whether libcst-required applies to a read-only census. Depends on W609 for the store predicates. | 2026-10-04: 2026-10-04 W609 landed in storeflow.py: the control port must import StoreVocab, is_store_read, is_store_read2, store_reader_fns, row_names, derived_names, touches, has_read from mikemol.pycodemod.storeflow; every predicate except touches and derived_names now takes vocab: StoreVocab (store_reader_fns(tree, vocab); is_store_read2, has_read and row_names take (..., rfns, vocab)), so the control census takes a StoreVocab as its own operand. | 2026-10-04: first unit: control_roster.py (CONTROL_KINDS, the 36-construct roster, SQL_FORM, sql_form, a frozen Boundary operand with all fields required, PYTHON_BOUNDARY, is_row_loop over a StoreVocab); stdlib ast per the sibling convention (core.py's libcst-required rule is about rewriting paths); the plan's 41 constructs is 36 in the origin roster and the test pins 36; the origin's unicode ellipsis and dash in the form strings became ... and -; 13 tests, 13 warrants under rubric key control_roster; F-arm: the return-in-loop form changed to LIMIT 2, test_an_early_break_over_rows_is_limit_one_exists red; commits 2-4 minted as W637, W638, W639; committed under W606",
       "issued_at": "2026-10-04T19:25:21Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:20:32Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:58:08Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T215808Z"
     },
     {
       "symbol": "W607",
@@ -12399,38 +12403,40 @@
     {
       "symbol": "W624",
       "title": "pycodemod: the fingerprint Census arithmetic over sites plus an explicit modelled set, with modelled_keys(paths) taking no default seed",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per .claude/swarm/W607-fingerprint-port.md step 3, after referents.py: the arm is a wider seed lowering Omega and bits, explaining at least as many sites, with per-site divisibility",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: census_fp.py: FpSite, Row, GcdClass, Modelled, modelled_keys(paths) with NO default seed (unread seed files returned as Skip), Census(sites, modelled) assigning primes by descending frequency then key; parses with ast directly rather than sites.scan (needs ClassDef names and ast nodes); 21 tests (5 transcribed, 16 authored), 21 warrants under rubric key census_fp; F-arm: primes by ascending frequency, test_primes_are_assigned_by_descending_frequency_then_key red; follow-ups W640 (site walk) and W641 (--fingerprint mode); committed under W624",
       "issued_at": "2026-10-04T21:09:31Z",
       "minted_during": "interrupt",
       "caused_by": "W607",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:58:08Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T215808Z"
     },
     {
       "symbol": "W625",
       "title": "Document the inbound-asks hook's --check mode in hooks/README.md and docs/adopting-a-hook.md, which still say it is not built",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add the --check section with the three OK or MISSING lines and the exit codes, and remove the 'not built' sentences; lint with mdstruct",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: hooks/README.md gains a --check subsection (three OK or MISSING lines with the repair for each, exit codes 0, 1, 2, one bounded 20 s --help probe, never denies or writes, a green check is not proof the model sees the context) and docs/adopting-a-hook.md drops the 'not built' text and runs --check as step 3 of shape (a); both lint clean; the fixer found the hooks/bin launcher drops its arguments, so the docs say the launcher cannot run --check (W635 fixes that); committed under W625",
       "issued_at": "2026-10-04T21:09:31Z",
       "minted_during": "interrupt",
       "caused_by": "W621",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:58:08Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T215808Z"
     },
     {
       "symbol": "W626",
@@ -12473,7 +12479,7 @@
     {
       "symbol": "W628",
       "title": "mutation: a regex: grammar entry for emit_mutant so mutantcell can name a RegexSpec in its claim data, without a JSON load under disallow_any_expr",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation",
@@ -12481,13 +12487,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Design a safely parsed one-string grammar for name, pattern, replacement and scope; red arms for each field and for a malformed string refused not guessed",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: parse_regex_spec and the regex: grammar in emit_mutant: regex:<name>|<pattern>|<replacement>|<scope> with exactly four fields, scope empty, def=<qualname> or lines=<a>-<b>, %7C and %25 as the only escapes (a backslash was rejected because regexes are full of them), every malformed string refused with ValueError, a miss stays UnappliedError; regexop and mutate now import each other at module level (ruff refuses a local import); 4 tests, 4 warrants under rubric key regexop; F-arm: a bad escape decoding to nothing, test_parse_regex_spec_refuses_every_malformed_string red; committed under W628",
       "issued_at": "2026-10-04T21:30:44Z",
       "minted_during": "interrupt",
       "caused_by": "W615",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:58:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T215809Z"
     },
     {
       "symbol": "W629",
@@ -12510,20 +12517,21 @@
     {
       "symbol": "W630",
       "title": "pycodemod cli: wire the --relname mode over relations.relname_sites",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add the mode with a row printer and report.incomplete for skips; tests for a hit, a miss and an unread file; update the rubric heading's mode count",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: cli: relname NAME paths... over relations.relname_sites, row 'relname <kind> <role> <path>:<line> (<context>) <value!r>', skips through report.incomplete; 4 tests, 4 warrants under rubric key cli; the rubric heading now says Forty-Five Modes (MODES had 44 entries before this, header was never counted); F-arm: the row's line number off by one, test_relname_reports_a_sql_literal_and_an_exact_name red (the usage-error test passes on HEAD for the wrong reason, which is a known weak arm); the cli.py module docstring still says forty-two modes (a historical slice note); committed under W630",
       "issued_at": "2026-10-04T21:30:44Z",
       "minted_during": "interrupt",
       "caused_by": "W594",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:58:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T215809Z"
     },
     {
       "symbol": "W631",
@@ -12563,21 +12571,22 @@
     },
     {
       "symbol": "W633",
-      "title": "pycodemod: one public parse in core, replacing the private _parse copies in storeflow, snapshots and relalg",
-      "status": "ready",
+      "title": "pycodemod: one public parse_file in core, adopted by snapshots.py and relalg.py (storeflow and the other copies are W636)",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add a public parse to core returning the tree or a Skip, switch the three modules to it, keep every existing test green; red arm: a Skip reason from the shared parse",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: core.parse_file(path) -> ast.Module | Skip with the reasons undecodable, unreadable, unparseable and the exception name; snapshots.py and relalg.py switched and their private copies deleted; 4 tests in test_core.py, 4 warrants under rubric key core; F-arm: the unparseable reason misspelt, test_parse_file_skips_an_unparseable_file red; PARTIAL: the classifier denied deleting storeflow.py's private _parse, so that switch and the ten other same-signature copies are W636; committed under W633",
       "issued_at": "2026-10-04T21:39:28Z",
       "minted_during": "interrupt",
       "caused_by": "W627",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:58:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T215809Z"
     },
     {
       "symbol": "W634",
@@ -12594,6 +12603,132 @@
       "issued_at": "2026-10-04T21:39:28Z",
       "minted_during": "interrupt",
       "caused_by": "W609",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W635",
+      "title": "hooks/bin launchers drop their arguments: pass \"$@\" through in mikemol-hook-inbound-asks (and check its siblings) so --check can run through the launcher",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read every hooks/bin launcher's final exec line; add a test that --check reaches the entry through the launcher; this is a LIVE hook (deps first, live file last, recovery is checkout HEAD --)",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:53:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W625",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W636",
+      "title": "pycodemod: finish the shared parse: switch storeflow.py to core.parse_file, then check the ten same-signature _parse copies for byte-identity",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "storeflow.py: delete its private _parse, import parse_file, drop the unused Path import; then diff graph, modstate, writes, crossings, swallows, rivals, funcnames, deps, ordering and aliases _parse against parse_file and switch only the identical ones; strings, definitions, layout and reads return different types and stay",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:54:26Z",
+      "minted_during": "interrupt",
+      "caused_by": "W633",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W637",
+      "title": "pycodemod: control provenance helpers (ext_names, external_expr, mode_expr, scopes, own_walk, module_consts, params) taking the Boundary as an operand",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Commit 2 of 4 per .claude/swarm/W606-control-port.md, on control_roster.Boundary and PYTHON_BOUNDARY, ALWAYS_EXTERNAL, LOOP_CONSTRUCTS, EARLY_EXIT_CONSTRUCTS and is_row_loop; the origin read module globals, so every one takes the boundary; no RowSource (StoreVocab already covers it)",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:57:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W606",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W638",
+      "title": "pycodemod: the control census class and control_sites, returning Skip for files it cannot read, over a StoreVocab and a Boundary",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Commit 3 of 4 per .claude/swarm/W606-control-port.md, after the provenance helpers: the census over the planted fixture with the origin's kind arms and completeness-in-both-directions arms, plus the skipped-file arm that belongs here",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:57:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W606",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W639",
+      "title": "pycodemod: the control report printers and the --control and --constructs CLI modes, the construct count stated as 36",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Commit 4 of 4 per .claude/swarm/W606-control-port.md, after the census; the plan says 41 constructs but the origin roster sums to 36 (6+5+1+8+5+5+4+2), so the text and tests say 36",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:57:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W606",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W640",
+      "title": "pycodemod: the fingerprint site walk (site_referents and the census subclass) emitting FpSite objects over the control census, keeping the desync AssertionError",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Blocked on the control census (the W606 commit 3 card): emit FpSite(path, line, construct, kind, scope, snippet, refs) with refs = frozenset(referents(governing_expr)) per .claude/swarm/W607-fingerprint-port.md step 4",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:57:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W624",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W641",
+      "title": "pycodemod cli: the --fingerprint mode with --seed, --groups, --keys and --monotone, printing the skipped seed files",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After the site walk: seed paths are the caller's (modelled_keys(seed_paths)); --monotone builds the ladder by calling Census once per rung and checking a.rem % b.rem == 0 row by row; print Modelled.skipped so a typo in a seed path is visible",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:57:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W624",
       "last_worked": null,
       "ticks_blocked": 0
     }

@@ -25,6 +25,12 @@ PRESENCE between the actual source and a nearby counterfactual: drop the present
     import-:<name>    DROP `import <name>` or `from <name> import ...` (present becomes absent).
     import+:<name>    INJECT `import <name>` (absent becomes present), the NEGATIVE polarity that
                       falsifies a "module does NOT import X" assertion.
+    regex:<name>|<pattern>|<replacement>|<scope>
+                      the OPEN operator of `mikemol.mutation.regexop`, as one string. `|` separates
+                      the four fields (all four always present); inside a field `%7C` is a literal
+                      `|` and `%25` a literal `%`, any other `%` is REFUSED. <scope> is empty (whole
+                      file), `def=<qualname>` or `lines=<a>-<b>`. A regex matching nothing is an
+                      UnappliedError (a KeyError).
 
 The mechanical AST surgery ONLY, not the sensitivity interpretation. A spec that names no such
 element is LOUD (a KeyError): a real miss is never a silent no-op. CLI:
@@ -37,6 +43,8 @@ import ast
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Protocol
+
+from mikemol.mutation import regexop
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -836,7 +844,18 @@ def _inject_import(text: str, name: str) -> str:
     return "".join(lines)
 
 
+def _apply_regex_spec(text: str, arg: str) -> str:
+    """Apply the `regex:` operator: parse its one-string spec and rewrite the source.
+
+    Returns:
+        The perturbed source.
+
+    """
+    return regexop.apply_regex(text, regexop.parse_regex_spec(arg))
+
+
 _OPS: dict[str, Callable[[str, str], str]] = {
+    "regex": _apply_regex_spec,
     "def": _drop_def,
     "branch": _mutate_branch,
     "flip": _op_flip,

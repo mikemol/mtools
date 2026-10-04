@@ -3618,3 +3618,298 @@
   claim  = {AUTHORED FRESH. The origin returned [] for these, which reads as 'no withheld algebra'.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_every_unreadable_file_is_skipped_not_silently_empty},
 }
+
+@misc{pycodemod-census-fp-wider-seed-lowers-total-remainder-omega,
+  section = {census_fp},
+  title  = {A wider modelled set leaves fewer unmodelled referent-incidences},
+  claim  = {A wider modelled set leaves fewer unmodelled referent-incidences.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_wider_seed_lowers_total_remainder_omega},
+}
+
+@misc{pycodemod-census-fp-wider-seed-lowers-total-remainder-bits,
+  section = {census_fp},
+  title  = {A wider modelled set leaves a smaller total bit length},
+  claim  = {A wider modelled set leaves a smaller total bit length.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_wider_seed_lowers_total_remainder_bits},
+}
+
+@misc{pycodemod-census-fp-wider-seed-explains-at-least-as-many-sites,
+  section = {census_fp},
+  title  = {Growing the seed never un-explains a site; here it explains one more},
+  claim  = {Growing the seed never un-explains a site; here it explains one more.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_wider_seed_explains_at_least_as_many_sites},
+}
+
+@misc{pycodemod-census-fp-every-remainder-divides-its-narrower-seed-remainder,
+  section = {census_fp},
+  title  = {The law is per site: the wider remainder divides the narrower one, row by row},
+  claim  = {The law is per site: the wider remainder divides the narrower one, row by row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_every_remainder_divides_its_narrower_seed_remainder},
+}
+
+@misc{pycodemod-census-fp-decode-is-exact-on-every-row,
+  section = {census_fp},
+  title  = {AUTHORED: the understood primes times the remainder recover each fingerprint},
+  claim  = {AUTHORED: the understood primes times the remainder recover each fingerprint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_decode_is_exact_on_every_row},
+}
+
+@misc{pycodemod-census-fp-empty-modelled-set-explains-nothing-and-leaves-whole-fingerprints,
+  section = {census_fp},
+  title  = {AUTHORED: with nothing modelled every remainder is its fingerprint},
+  claim  = {AUTHORED: with nothing modelled every remainder is its fingerprint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_empty_modelled_set_explains_nothing_and_leaves_whole_fingerprints},
+}
+
+@misc{pycodemod-census-fp-empty-site-list-is-a-census-of-nothing,
+  section = {census_fp},
+  title  = {AUTHORED: no sites give zero metrics and a maximum fingerprint of 1},
+  claim  = {AUTHORED: no sites give zero metrics and a maximum fingerprint of 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_empty_site_list_is_a_census_of_nothing},
+}
+
+@misc{pycodemod-census-fp-primes-are-assigned-by-descending-frequency-then-key,
+  section = {census_fp},
+  title  = {AUTHORED: the commonest referent gets 2; a tie falls to key order},
+  claim  = {AUTHORED: the commonest referent gets 2; a tie falls to key order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_primes_are_assigned_by_descending_frequency_then_key},
+}
+
+@misc{pycodemod-census-fp-referent-incidences-and-max-fingerprint-count-the-site-refs,
+  section = {census_fp},
+  title  = {AUTHORED: incidences repeat across sites; the maximum is the largest product},
+  claim  = {AUTHORED: incidences repeat across sites; the maximum is the largest product.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_referent_incidences_and_max_fingerprint_count_the_site_refs},
+}
+
+@misc{pycodemod-census-fp-residual-order-puts-the-largest-remainder-first-and-ties-by-position,
+  section = {census_fp},
+  title  = {AUTHORED: more unmodelled referents sort first; equal remainders sort by path then line},
+  claim  = {AUTHORED: more unmodelled referents sort first; equal remainders sort by path then line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_residual_order_puts_the_largest_remainder_first_and_ties_by_position},
+}
+
+@misc{pycodemod-census-fp-residual-order-truncates-to-n,
+  section = {census_fp},
+  title  = {AUTHORED: only the first n rows are returned},
+  claim  = {AUTHORED: only the first n rows are returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_residual_order_truncates_to_n},
+}
+
+@misc{pycodemod-census-fp-explaining-keys-count-sites-per-modelled-key,
+  section = {census_fp},
+  title  = {AUTHORED: a key is credited once per site it decodes in; order is count then key},
+  claim  = {AUTHORED: a key is credited once per site it decodes in; order is count then key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_explaining_keys_count_sites_per_modelled_key},
+}
+
+@misc{pycodemod-census-fp-explaining-keys-truncates-to-n,
+  section = {census_fp},
+  title  = {AUTHORED: n bounds the table},
+  claim  = {AUTHORED: n bounds the table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_explaining_keys_truncates_to_n},
+}
+
+@misc{pycodemod-census-fp-two-sites-sharing-two-unknown-referents-form-a-class-of-omega-two,
+  section = {census_fp},
+  title  = {Two sites sharing two unknown referents are one class of Omega 2; the others are out},
+  claim  = {Two sites sharing two unknown referents are one class of Omega 2; the others are out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_two_sites_sharing_two_unknown_referents_form_a_class_of_omega_two},
+}
+
+@misc{pycodemod-census-fp-gcd-classes-with-a-lower-floor-rank-by-membership-then-omega,
+  section = {census_fp},
+  title  = {AUTHORED: min_omega 1 admits single shared referents; the biggest class ranks first},
+  claim  = {AUTHORED: min_omega 1 admits single shared referents; the biggest class ranks first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_gcd_classes_with_a_lower_floor_rank_by_membership_then_omega},
+}
+
+@misc{pycodemod-census-fp-gcd-classes-truncate-to-top,
+  section = {census_fp},
+  title  = {AUTHORED: top bounds the classes while the candidate count stays whole},
+  claim  = {AUTHORED: top bounds the classes while the candidate count stays whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_gcd_classes_truncate_to_top},
+}
+
+@misc{pycodemod-census-fp-fully-modelled-sites-form-no-class,
+  section = {census_fp},
+  title  = {AUTHORED: a site with remainder 1 shares no unknown structure},
+  claim  = {AUTHORED: a site with remainder 1 shares no unknown structure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_fully_modelled_sites_form_no_class},
+}
+
+@misc{pycodemod-census-fp-modelled-keys-reads-referents-and-declared-names,
+  section = {census_fp},
+  title  = {AUTHORED: strings, names, attributes, def and class names all join; SQL blobs do not},
+  claim  = {AUTHORED: strings, names, attributes, def and class names all join; SQL blobs do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_modelled_keys_reads_referents_and_declared_names},
+}
+
+@misc{pycodemod-census-fp-modelled-keys-has-no-default-seed,
+  section = {census_fp},
+  title  = {AUTHORED: no paths model nothing},
+  claim  = {AUTHORED: no paths model nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_modelled_keys_has_no_default_seed},
+}
+
+@misc{pycodemod-census-fp-modelled-keys-returns-skipped-files,
+  section = {census_fp},
+  title  = {AUTHORED: a missing, an unparseable and an undecodable seed are returned, not swallowed},
+  claim  = {AUTHORED: a missing, an unparseable and an undecodable seed are returned, not swallowed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_modelled_keys_returns_skipped_files},
+}
+
+@misc{pycodemod-census-fp-modelled-keys-drops-an-over-long-declared-name,
+  section = {census_fp},
+  title  = {AUTHORED: a def name past MAX_TOKEN is prose and is dropped from the modelled set},
+  claim  = {AUTHORED: a def name past MAX_TOKEN is prose and is dropped from the modelled set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_fp.py -k test_modelled_keys_drops_an_over_long_declared_name},
+}
+
+@misc{pycodemod-cli-relname-reports-a-sql-literal-and-an-exact-name,
+  section = {cli},
+  title  = {`relname` prints a `sql` row for a relation position and a `name` row for an exact string},
+  claim  = {`relname` prints a `sql` row for a relation position and a `name` row for an exact
+            string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_relname_reports_a_sql_literal_and_an_exact_name},
+}
+
+@misc{pycodemod-cli-relname-prints-no-rows-for-a-name-that-is-only-a-substring,
+  section = {cli},
+  title  = {A name that appears only inside another relation name is a miss: no rows, exit 0},
+  claim  = {A name that appears only inside another relation name is a miss: no rows, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_relname_prints_no_rows_for_a_name_that_is_only_a_substring},
+}
+
+@misc{pycodemod-cli-relname-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unparseable file makes `relname` print the incomplete-scan banner and exit 1},
+  claim  = {An unparseable file makes `relname` print the incomplete-scan banner and exit 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_relname_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-relname-without-a-path-is-a-usage-error,
+  section = {cli},
+  title  = {`relname NAME` with no paths is argparse's usage error, exit 2},
+  claim  = {`relname NAME` with no paths is argparse's usage error, exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_relname_without_a_path_is_a_usage_error},
+}
+
+@misc{pycodemod-core-parse-file-returns-the-tree-of-a-good-file,
+  section = {core},
+  title  = {A readable Python file comes back as its module, not a Skip},
+  claim  = {A readable Python file comes back as its module, not a Skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_parse_file_returns_the_tree_of_a_good_file},
+}
+
+@misc{pycodemod-core-parse-file-skips-an-undecodable-file,
+  section = {core},
+  title  = {Bytes that are not UTF-8 are an `undecodable` skip naming the exception},
+  claim  = {Bytes that are not UTF-8 are an `undecodable` skip naming the exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_parse_file_skips_an_undecodable_file},
+}
+
+@misc{pycodemod-core-parse-file-skips-an-unreadable-file,
+  section = {core},
+  title  = {A missing file is an `unreadable` skip naming the OS error},
+  claim  = {A missing file is an `unreadable` skip naming the OS error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_parse_file_skips_an_unreadable_file},
+}
+
+@misc{pycodemod-core-parse-file-skips-an-unparseable-file,
+  section = {core},
+  title  = {Text that is not Python is an `unparseable` skip naming the syntax error},
+  claim  = {Text that is not Python is an `unparseable` skip naming the syntax error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_parse_file_skips_an_unparseable_file},
+}
+
+@misc{pycodemod-control-roster-all-eight-construct-groups-are-represented,
+  section = {control_roster},
+  title  = {The roster is reported in eight groups a reader can subtract},
+  claim  = {The roster is reported in eight groups a reader can subtract.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_all_eight_construct_groups_are_represented},
+}
+
+@misc{pycodemod-control-roster-roster-holds-thirty-six-constructs-with-no-duplicate,
+  section = {control_roster},
+  title  = {AUTHORED: the headline count (the plan said 41; the origin's roster sums to 36)},
+  claim  = {AUTHORED: the headline count (the plan said 41; the origin's roster sums to 36).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_the_roster_holds_thirty_six_constructs_with_no_duplicate},
+}
+
+@misc{pycodemod-control-roster-every-sql-form-key-names-a-roster-construct-and-a-declared-kind,
+  section = {control_roster},
+  title  = {AUTHORED: a table key outside the roster is a form no census can ever emit},
+  claim  = {AUTHORED: a table key outside the roster is a form no census can ever emit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_every_sql_form_key_names_a_roster_construct_and_a_declared_kind},
+}
+
+@misc{pycodemod-control-roster-unclassified-site-never-claims-a-relational-form,
+  section = {control_roster},
+  title  = {A guess in the form column is noise; the unknowns are the finding},
+  claim  = {A guess in the form column is noise; the unknowns are the finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_an_unclassified_site_never_claims_a_relational_form},
+}
+
+@misc{pycodemod-control-roster-early-break-over-rows-is-limit-one-exists,
+  section = {control_roster},
+  title  = {The three early exits each carry a form when the loop iterates rows},
+  claim  = {The three early exits each carry a form when the loop iterates rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_an_early_break_over_rows_is_limit_one_exists},
+}
+
+@misc{pycodemod-control-roster-early-exit-outside-a-row-loop-is-unknown,
+  section = {control_roster},
+  title  = {AUTHORED: the loop's provenance is part of the key, not a property of the exit},
+  claim  = {AUTHORED: the loop's provenance is part of the key, not a property of the exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_an_early_exit_outside_a_row_loop_is_unknown},
+}
+
+@misc{pycodemod-control-roster-external-and-mode-kinds-carry-their-fixed-forms-whatever-the-construct,
+  section = {control_roster},
+  title  = {AUTHORED: those two kinds are decided by kind alone},
+  claim  = {AUTHORED: those two kinds are decided by kind alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_external_and_mode_kinds_carry_their_fixed_forms_whatever_the_construct},
+}
+
+@misc{pycodemod-control-roster-row-branch-and-a-row-iteration-take-their-table-forms,
+  section = {control_roster},
+  title  = {A pair in the table gets its form; a pair outside it is unknown},
+  claim  = {A pair in the table gets its form; a pair outside it is unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_a_row_branch_and_a_row_iteration_take_their_table_forms},
+}
+
+@misc{pycodemod-control-roster-python-boundary-keeps-os-environ-as-configuration,
+  section = {control_roster},
+  title  = {AUTHORED: `os` is an external root, and `os.environ` is still configuration},
+  claim  = {AUTHORED: `os` is an external root, and `os.environ` is still configuration.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_the_python_boundary_keeps_os_environ_as_configuration},
+}
+
+@misc{pycodemod-control-roster-content-addressing-is-not-an-external-root,
+  section = {control_roster},
+  title  = {AUTHORED: external is a claim about reachability, not purity},
+  claim  = {AUTHORED: external is a claim about reachability, not purity.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_content_addressing_is_not_an_external_root},
+}
+
+@misc{pycodemod-control-roster-boundary-is-an-explicit-operand-that-can-be-empty,
+  section = {control_roster},
+  title  = {AUTHORED: nothing names a default; an empty boundary recognises nothing},
+  claim  = {AUTHORED: nothing names a default; an empty boundary recognises nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_a_boundary_is_an_explicit_operand_that_can_be_empty},
+}
+
+@misc{pycodemod-control-roster-loop-over-a-store-read-is-a-row-loop,
+  section = {control_roster},
+  title  = {A direct read, a row name and a one-hop helper each make the iterable rows},
+  claim  = {A direct read, a row name and a one-hop helper each make the iterable rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_a_loop_over_a_store_read_is_a_row_loop},
+}
+
+@misc{pycodemod-control-roster-empty-vocabulary-makes-no-loop-a-row-loop-and-every-early-exit-unknown,
+  section = {control_roster},
+  title  = {AUTHORED: the degenerate census claims no row kinds, and says so as `unknown`},
+  claim  = {AUTHORED: the degenerate census claims no row kinds, and says so as `unknown`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_an_empty_vocabulary_makes_no_loop_a_row_loop_and_every_early_exit_unknown},
+}

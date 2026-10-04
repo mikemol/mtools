@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import pytest
 
-from mikemol.mutation import regexop
+from mikemol.mutation import mutate, regexop
 
 SRC = """\
 def key(code, rel):
@@ -98,3 +98,53 @@ def test_judge_demands_a_passing_positive_control() -> None:
     assert regexop.judge(broken, spec, _pins_key_format) is regexop.Verdict.CONTROL_FAILED
     miss = regexop.RegexSpec("m", "nothing-here", "x")
     assert regexop.judge(broken, miss, _pins_key_format) is regexop.Verdict.CONTROL_FAILED
+
+
+def test_parse_regex_spec_round_trips_every_field_and_scope_form() -> None:
+    """Name, pattern and replacement survive; the scope is empty, a def or a line range."""
+    whole = regexop.parse_regex_spec("n|a.b|c d|")
+    assert whole == regexop.RegexSpec("n", "a.b", "c d")
+    scoped = regexop.parse_regex_spec("n|p|r|def=Cls.meth")
+    assert scoped == regexop.RegexSpec("n", "p", "r", def_name="Cls.meth")
+    ranged = regexop.parse_regex_spec("n|p|r|lines=3-9")
+    assert ranged == regexop.RegexSpec("n", "p", "r", lines=(3, 9))
+
+
+def test_parse_regex_spec_decodes_the_escaped_delimiter_and_percent() -> None:
+    """`%7C` is a literal pipe and `%25` a literal percent, in pattern and in replacement."""
+    spec = regexop.parse_regex_spec("n|a%7Cb%25|x%7C%7Cy%25%7C|")
+    assert spec.pattern == "a|b%"
+    assert spec.replacement == "x||y%|"
+
+
+def test_parse_regex_spec_refuses_every_malformed_string() -> None:
+    """A missing or extra field, empty name, bad escape, bad scope or bad range raises."""
+    bad = [
+        "n|p|r",
+        "n|p|r|def=x|extra",
+        "|p|r|",
+        "n|p%|r|",
+        "n|p%zz|r|",
+        "n|p|r|def=",
+        "n|p|r|file=x",
+        "n|p|r|lines=3",
+        "n|p|r|lines=a-b",
+        "n|p|r|lines=3-x",
+        "n|p|r|lines=-3",
+        "n|p|r|lines=9-3",
+        "n|p|r|lines=0-3",
+    ]
+    for text in bad:
+        with pytest.raises(ValueError, match="regex spec"):
+            regexop.parse_regex_spec(text)
+
+
+def test_emit_mutant_applies_a_regex_spec_end_to_end() -> None:
+    """`regex:<...>` rewrites inside its scope; a miss stays UnappliedError; others unchanged."""
+    spec = r'gains-line|f"\{code\}::\{rel\}"|f"{code}%7C{rel}"|def=key'
+    out = mutate.emit_mutant(SRC, "regex:" + spec)
+    assert out == SRC.replace(LITERAL, 'f"{code}|{rel}"', 1)
+    with pytest.raises(regexop.UnappliedError):
+        mutate.emit_mutant(SRC, "regex:m|nothing-here|x|")
+    with pytest.raises(ValueError, match="regex spec"):
+        mutate.emit_mutant(SRC, "regex:only-a-name")

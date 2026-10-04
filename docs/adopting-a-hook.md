@@ -10,6 +10,7 @@ wired the same way but take an arming variable; see [hooks/README.md](../hooks/R
 
 Three shapes have been considered. One is built and measured, one is built and run from a checkout, and
 one is not built.
+Wherever the hook is wired, `mikemol-hook-inbound-asks --check` tells you whether its pieces are present.
 
 ## What each hook does
 
@@ -93,7 +94,19 @@ that is checked in this repository; the luthen-observability commit was reported
    }
    ```
 
-3. Move the pin by editing every spec to one new sha. A new hook shipped in mtools does not reach the repo
+3. Run the check from the repo root once the wiring is in place:
+
+   ```console
+   $ .venv/bin/mikemol-hook-inbound-asks --check
+   ```
+
+   It prints `OK` or `MISSING` for the reader, the queue file and the settings wiring, and exits 0 only
+   when all three are `OK`. Its `MISSING` lines name the repair; see the `--check` section of
+   [hooks/README.md](../hooks/README.md). It covers `mikemol-hook-inbound-asks` only. A green result is
+   not proof that the model sees the context: the envelope is confirmed live only at
+   `UserPromptSubmit`, so confirm by watching for the context on a real prompt.
+
+4. Move the pin by editing every spec to one new sha. A new hook shipped in mtools does not reach the repo
    until the pin moves.
 
 ## Shape (b): one user-level entry using an MTOOLS_ROOT launcher
@@ -152,8 +165,5 @@ shape (a).
 
 ## What is not built
 
-- **A `--check` mode of the hook.** The remainder of waypoint W579: a way for an adopting repo to ask
-  whether its hook wiring is complete and correct. No command for this exists; check your
-  `.claude/settings.json` by reading it.
 - **The user-level route.** Shape (b), waypoint W580.
 - **A `SessionStart` confirmation.** See the known limits above.

@@ -20,7 +20,7 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from mikemol.mutation.mutate import def_sites
+from mikemol.mutation import mutate
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -73,6 +73,82 @@ class RegexSpec:
             raise ValueError(msg)
 
 
+_FIELDS = 4
+_PERCENT_ESCAPES = {"7C": "|", "25": "%"}
+
+
+def _unescape(field: str) -> str:
+    """Decode one field: `%7C` is `|`, `%25` is `%`, any other `%` is refused.
+
+    Returns:
+        The field with its escapes decoded.
+
+    Raises:
+        ValueError: on a `%` that is not one of the two escapes.
+
+    """
+    parts = field.split("%")
+    out = [parts[0]]
+    for part in parts[1:]:
+        decoded = _PERCENT_ESCAPES.get(part[:2])
+        if decoded is None:
+            msg = f"regex spec: bad escape '%{part[:2]}' (only %7C and %25 exist)"
+            raise ValueError(msg)
+        out.append(decoded + part[2:])
+    return "".join(out)
+
+
+def _parse_scope(scope: str) -> tuple[str | None, tuple[int, int] | None]:
+    """Parse the scope field: empty, `def=<qualname>` or `lines=<a>-<b>`.
+
+    Returns:
+        The def name and the line range, at most one of them set.
+
+    Raises:
+        ValueError: on any other form or a range that is not two decimal integers.
+
+    """
+    text = _unescape(scope)
+    if not text:
+        return None, None
+    key, _, value = text.partition("=")
+    if key == "def" and value:
+        return value, None
+    first, dash, last = value.partition("-")
+    digits = dash and first.isascii() and first.isdecimal() and last.isascii() and last.isdecimal()
+    if key == "lines" and digits:
+        return None, (int(first), int(last))
+    msg = f"regex spec: bad scope '{text}' (want empty, def=<qualname> or lines=<a>-<b>)"
+    raise ValueError(msg)
+
+
+def parse_regex_spec(text: str) -> RegexSpec:
+    """Parse `<name>|<pattern>|<replacement>|<scope>` into a RegexSpec, refusing anything else.
+
+    `|` separates exactly four fields; within a field `%7C` is a literal `|` and `%25` a literal
+    `%`. The scope is empty, `def=<qualname>` or `lines=<a>-<b>`. Nothing is guessed.
+
+    Returns:
+        The spec.
+
+    Raises:
+        ValueError: on a wrong field count, an empty name, a bad escape, scope or range.
+
+    """
+    fields = text.split("|")
+    if len(fields) != _FIELDS:
+        msg = f"regex spec: want {_FIELDS} fields separated by '|', got {len(fields)}"
+        raise ValueError(msg)
+    name, pattern, replacement, scope = fields
+    if not name:
+        msg = "regex spec: the name is empty"
+        raise ValueError(msg)
+    def_name, lines = _parse_scope(scope)
+    return RegexSpec(
+        _unescape(name), _unescape(pattern), _unescape(replacement), def_name=def_name, lines=lines
+    )
+
+
 def _scope_span(text: str, spec: RegexSpec, total: int) -> tuple[int, int]:
     """Return the 1-based inclusive line span a regex spec is confined to.
 
@@ -84,7 +160,7 @@ def _scope_span(text: str, spec: RegexSpec, total: int) -> tuple[int, int]:
 
     """
     if spec.def_name is not None:
-        for qn, node in def_sites(text):
+        for qn, node in mutate.def_sites(text):
             if qn == spec.def_name:
                 return node.lineno, node.end_lineno or node.lineno
         msg = f"mutant: regex '{spec.name}' names '{spec.def_name}', not a def-site in the module"

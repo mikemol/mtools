@@ -24,10 +24,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 from mikemol.pycodemod.storeflow import is_store_read
 
 if TYPE_CHECKING:
@@ -150,17 +149,6 @@ def _sites_in(path: str, tree: ast.Module, vocab: StoreVocab) -> list[SnapshotSi
     return out
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def snapshot_sites(paths: Sequence[str], vocab: StoreVocab) -> Snapshots:
     """Return values composed across several store round trips, and the files not read.
 
@@ -172,7 +160,7 @@ def snapshot_sites(paths: Sequence[str], vocab: StoreVocab) -> Snapshots:
     """
     out = Snapshots()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

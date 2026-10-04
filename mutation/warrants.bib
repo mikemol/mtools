@@ -202,3 +202,31 @@
   claim  = {When the unmutated source fails the suite, nothing is concluded, even for a miss.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_judge_demands_a_passing_positive_control},
 }
+
+@misc{mutation-regexop-parse-regex-spec-round-trips-every-field-and-scope-form,
+  section = {regexop},
+  title  = {Name, pattern and replacement survive; the scope is empty, a def or a line range},
+  claim  = {Name, pattern and replacement survive; the scope is empty, a def or a line range.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_parse_regex_spec_round_trips_every_field_and_scope_form},
+}
+
+@misc{mutation-regexop-parse-regex-spec-decodes-the-escaped-delimiter-and-percent,
+  section = {regexop},
+  title  = {`%7C` is a literal pipe and `%25` a literal percent, in pattern and in replacement},
+  claim  = {`%7C` is a literal pipe and `%25` a literal percent, in pattern and in replacement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_parse_regex_spec_decodes_the_escaped_delimiter_and_percent},
+}
+
+@misc{mutation-regexop-parse-regex-spec-refuses-every-malformed-string,
+  section = {regexop},
+  title  = {A missing or extra field, empty name, bad escape, bad scope or bad range raises},
+  claim  = {A missing or extra field, empty name, bad escape, bad scope or bad range raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_parse_regex_spec_refuses_every_malformed_string},
+}
+
+@misc{mutation-regexop-emit-mutant-applies-a-regex-spec-end-to-end,
+  section = {regexop},
+  title  = {`regex:<...>` rewrites inside its scope; a miss stays UnappliedError; others unchanged},
+  claim  = {`regex:<...>` rewrites inside its scope; a miss stays UnappliedError; others unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_emit_mutant_applies_a_regex_spec_end_to_end},
+}

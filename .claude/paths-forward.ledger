@@ -1036,3 +1036,12 @@
 2026-10-04T21:30:45Z  interrupt W632 minted    -         "pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and portable, each vocabulary a required flag"  evidence=W612
 2026-10-04T21:39:28Z  interrupt W633 minted    -         "pycodemod: one public parse in core, replacing the private _parse copies in storeflow, snapshots and relalg"  evidence=W627
 2026-10-04T21:39:28Z  interrupt W634 minted    -         "pycodemod cli: wire --rawreads, --snapshots and --relalg over storeflow, snapshots and relalg, the StoreVocab and kinds from required flags"  evidence=W609
+2026-10-04T21:53:21Z  interrupt W635 minted    -         "hooks/bin launchers drop their arguments: pass \"$@\" through in mikemol-hook-inbound-asks (and check its siblings) so --check can run through the launcher"  evidence=W625
+2026-10-04T21:54:26Z  interrupt W636 minted    -         "pycodemod: finish the shared parse: switch storeflow.py to core.parse_file, then check the ten same-signature _parse copies for byte-identity"  evidence=W633
+2026-10-04T21:57:53Z  interrupt W637 minted    -         "pycodemod: control provenance helpers (ext_names, external_expr, mode_expr, scopes, own_walk, module_consts, params) taking the Boundary as an operand"  evidence=W606
+2026-10-04T21:57:53Z  interrupt W638 minted    -         "pycodemod: the control census class and control_sites, returning Skip for files it cannot read, over a StoreVocab and a Boundary"  evidence=W606
+2026-10-04T21:57:53Z  interrupt W639 minted    -         "pycodemod: the control report printers and the --control and --constructs CLI modes, the construct count stated as 36"  evidence=W606
+2026-10-04T21:57:54Z  interrupt W640 minted    -         "pycodemod: the fingerprint site walk (site_referents and the census subclass) emitting FpSite objects over the control census, keeping the desync AssertionError"  evidence=W624
+2026-10-04T21:57:54Z  interrupt W641 minted    -         "pycodemod cli: the --fingerprint mode with --seed, --groups, --keys and --monotone, printing the skipped seed files"  evidence=W624
+2026-10-04T21:59:20Z  hash  --   diverged  --        "divergence: payload v2:67f70f92df5df46b, file v2:4b3a8e34b3b3bfbb; the FILE wins"
+2026-10-04T22:03:21Z  tick  W606 advanced  sweep     "batch 5: control roster, fingerprint Census, parse_file, regex: mutant grammar, --relname, --check docs; follow-ups W635-W641 minted; nudged substrate by letter (W592)"  evidence=pycodemod 637, mutation 33

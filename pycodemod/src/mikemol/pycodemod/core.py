@@ -163,6 +163,26 @@ def escapes(paths: Sequence[str]) -> Escapes:
     return out
 
 
+def parse_file(path: str) -> ast.Module | Skip:
+    """Return the file's `ast` tree, or the `Skip` that says why it could not be had.
+
+    ⚑ ONE REASON PER FAILURE: `undecodable` (not UTF-8), `unreadable` (the OS refused) and
+    `unparseable` (not Python) stay apart, each with the exception's name.
+
+    Returns:
+        the parsed module, or the skip.
+
+    """
+    try:
+        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
+    except UnicodeDecodeError as exc:
+        return Skip(path, "undecodable", type(exc).__name__)
+    except OSError as exc:
+        return Skip(path, "unreadable", type(exc).__name__)
+    except SyntaxError as exc:
+        return Skip(path, "unparseable", type(exc).__name__)
+
+
 def package_root(modname: str) -> tuple[str | None, str]:
     """Return where an INSTALLED module's source lives, or (None, why).
 
