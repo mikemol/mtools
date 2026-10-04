@@ -5205,3 +5205,115 @@
   claim  = {Heredoc data, a quoted newline and a later command's flags are not `git`'s arguments.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_text_outside_the_git_command_is_not_read_as_its_arguments},
 }
+
+@misc{hooks-githook-post-commit-commit-gains-the-marker-and-the-header,
+  section = {githook-post-commit},
+  title  = {After a commit, main amends the tip so its message carries the marker, and prints it},
+  claim  = {After a commit, main amends the tip so its message carries the marker, and prints it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_commit_gains_the_marker_and_the_header},
+}
+
+@misc{hooks-githook-post-commit-local-hooks-output-is-folded-into-the-message,
+  section = {githook-post-commit},
+  title  = {post-commit.local's stdout becomes the advisory body beneath the marker},
+  claim  = {post-commit.local's stdout becomes the advisory body beneath the marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_the_local_hooks_output_is_folded_into_the_message},
+}
+
+@misc{hooks-githook-post-commit-failing-local-hook-is-recorded-not-hidden,
+  section = {githook-post-commit},
+  title  = {A post-commit.local that exits 4 still gets the marker, and the advisory says it failed},
+  claim  = {A post-commit.local that exits 4 still gets the marker, and the advisory says it failed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_failing_local_hook_is_recorded_not_hidden},
+}
+
+@misc{hooks-githook-post-commit-second-run-does-not-append-twice,
+  section = {githook-post-commit},
+  title  = {Idempotent: a tip that already carries the marker is left alone},
+  claim  = {Idempotent: a tip that already carries the marker is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_second_run_does_not_append_twice},
+}
+
+@misc{hooks-githook-post-commit-operation-in-flight-prints-but-does-not-amend,
+  section = {githook-post-commit},
+  title  = {With MERGE_HEAD present, the advisory prints and the commit is not rewritten},
+  claim  = {With MERGE_HEAD present, the advisory prints and the commit is not rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_an_operation_in_flight_prints_but_does_not_amend},
+}
+
+@misc{hooks-githook-post-commit-amends-own-refire-does-nothing,
+  section = {githook-post-commit},
+  title  = {With the guard variable set, main prints nothing and writes nothing},
+  claim  = {With the guard variable set, main prints nothing and writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_the_amends_own_refire_does_nothing},
+}
+
+@misc{hooks-githook-post-commit-outside-a-repository-nothing-is-written,
+  section = {githook-post-commit},
+  title  = {Not in a repository: exit 1, the reason on stderr, nothing on stdout, no file created},
+  claim  = {Not in a repository: exit 1, the reason on stderr, nothing on stdout, no file created.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_outside_a_repository_nothing_is_written},
+}
+
+@misc{hooks-githook-post-commit-failed-amend-is-reported-not-swallowed,
+  section = {githook-post-commit},
+  title  = {An index.lock makes git refuse the amend: exit 1, the failure on stderr, no marker},
+  claim  = {An index.lock makes git refuse the amend: exit 1, the failure on stderr, no marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_failed_amend_is_reported_not_swallowed},
+}
+
+@misc{hooks-githook-post-commit-no-git-on-path-is-reported,
+  section = {githook-post-commit},
+  title  = {Without git on PATH, main exits 1 and says why, rather than skipping silently},
+  claim  = {Without git on PATH, main exits 1 and says why, rather than skipping silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_no_git_on_path_is_reported},
+}
+
+@misc{hooks-githook-post-commit-run-git-returns-a-result-and-raises-without-git,
+  section = {githook-post-commit},
+  title  = {run_git returns the result whatever its status, and raises when git is absent},
+  claim  = {run_git returns the result whatever its status, and raises when git is absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_run_git_returns_a_result_and_raises_without_git},
+}
+
+@misc{hooks-githook-post-commit-hook-never-pushes,
+  section = {githook-post-commit},
+  title  = {With a remote configured, a post-commit run leaves the remote without any ref},
+  claim  = {With a remote configured, a post-commit run leaves the remote without any ref.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_the_hook_never_pushes},
+}
+
+@misc{hooks-githook-post-commit-in-flight-names-the-first-marker,
+  section = {githook-post-commit},
+  title  = {in_flight is None for a clean git dir and names a present marker otherwise},
+  claim  = {in_flight is None for a clean git dir and names a present marker otherwise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_in_flight_names_the_first_marker},
+}
+
+@misc{hooks-githook-post-commit-index-lock-is-not-an-in-flight-marker,
+  section = {githook-post-commit},
+  title  = {Unlike pre-push, post-commit does not treat index.lock as in flight (the shell did not)},
+  claim  = {Unlike pre-push, post-commit does not treat index.lock as in flight (the shell did not).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_index_lock_is_not_an_in_flight_marker},
+}
+
+@misc{hooks-githook-post-commit-advisory-is-the-header-alone-without-a-local-hook,
+  section = {githook-post-commit},
+  title  = {With no post-commit.local, or a non-executable one, the advisory is just the header},
+  claim  = {With no post-commit.local, or a non-executable one, the advisory is just the header.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_advisory_is_the_header_alone_without_a_local_hook},
+}
+
+@misc{hooks-githook-post-commit-advisory-appends-the-local-hooks-stdout,
+  section = {githook-post-commit},
+  title  = {An executable post-commit.local's stdout follows the header, trailing newlines trimmed},
+  claim  = {An executable post-commit.local's stdout follows the header, trailing newlines trimmed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_advisory_appends_the_local_hooks_stdout},
+}
+
+@misc{hooks-githook-post-commit-folded-indents-the-advisory-under-the-marker,
+  section = {githook-post-commit},
+  title  = {The marker follows the message after a blank line, and each advisory line is indented},
+  claim  = {The marker follows the message after a blank line, and each advisory line is indented.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_folded_indents_the_advisory_under_the_marker},
+}

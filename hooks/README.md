@@ -129,6 +129,30 @@ nemik's shapes, to fix them (the remedy is in each row), and that a Warning is n
 To arm it, add the same two blocks as for inbound-asks to the repo's `.claude/settings.json`, naming
 `mikemol-hook-nemik-check`. No arming variable is needed, because the hook has no deny mode.
 
+## Git hooks (not harness hooks)
+
+`mikemol-githook-pre-push` and `mikemol-githook-post-commit` are run by git, not by the harness.
+They have no `mikemol-hook-` prefix, so no `settings.json` wiring is needed. A repo installs each as
+a one-line stub, for example `.githooks/post-commit`: `exec <venv>/bin/mikemol-githook-post-commit`.
+
+`mikemol-githook-post-commit` is the shared form of substrate's post-commit. It prints an advisory
+and amends the commit just made so its message carries `post-commit advisory (auto-captured)` and
+the advisory beneath it. That text is the marker that substrate's `pre-push.local` checks, and
+el-openglo's own post-commit writes the same one.
+
+- **The repo's advisory** comes from `<toplevel>/.githooks/post-commit.local`, when it is
+  executable. Its stdout is the advisory body, its stderr passes through, and a non-zero exit is
+  recorded in the advisory. Without one, the advisory is the header line alone and the marker is
+  still written.
+- **Skipped, with the advisory still printed:** while a rebase, merge, cherry-pick or revert is in
+  flight, and when the message already carries the marker. The amend sets `_POST_COMMIT_AMENDING`,
+  so the hook it re-fires does nothing.
+- **A failure is reported.** The shell version ended its amend in `|| true`. Here a failed amend, a
+  missing git and a run outside a repository each write a reason to stderr and exit 1. Git ignores
+  a post-commit status, so no commit is harmed.
+- **It never pushes.** Auto-push is repo policy and belongs in the repo's own stub, after the
+  `mikemol-githook-post-commit` call returns.
+
 ## Adopting
 
 Install from git by subdirectory, pinned to a sha. See the repo-root [INSTALL.md](../INSTALL.md):

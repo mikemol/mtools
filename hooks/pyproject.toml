@@ -87,6 +87,9 @@ mikemol-gen-warrants = "mikemol.hooks.gen_warrants:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
 mikemol-githook-pre-push = "mikemol.hooks.githook_pre_push:main"
+# ⚑ ALSO A GIT HOOK: a repo's `.githooks/post-commit` stub execs it. It writes the commit marker
+# that substrate's pre-push.local checks, and NEVER pushes (auto-push is each repo's own policy).
+mikemol-githook-post-commit = "mikemol.hooks.githook_post_commit:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -315,6 +318,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/githook_pre_push.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_pre_push.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ THE SHARED GIT POST-COMMIT: the same two responsibilities. Git is resolved by `shutil.which`
+# (absent → reported, exit 1) and run with constant subcommands; the repo's post-commit.local is a
+# path built as `<git toplevel>/.githooks/post-commit.local`, run only when executable. Never
+# through a shell.
+"src/mikemol/hooks/githook_post_commit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
+"tests/test_githook_post_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE WORKTREE FALLBACK (W553): asking git where a linked worktree's main tree is IS its one
 # responsibility. git is resolved by `shutil.which` (absent → no fallback, the refusal stands); the
