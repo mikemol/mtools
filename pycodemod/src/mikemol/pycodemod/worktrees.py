@@ -15,6 +15,11 @@ return the 27x count with a clean face.
 the root's own tree, and the driver prints it (`skipped N registered worktrees`) for every
 directory operand, zero included, and `--include-worktrees` included.
 
+⚑⚑ A VIRTUAL ENVIRONMENT IS PRUNED AND COUNTED (mtools:W559). A directory holding `pyvenv.cfg`
+directly is a venv whatever its name (a directory merely NAMED `.venv` is walked), because its
+third-party files would read as false importers. `Expansion.virtualenvs` is the count, printed as
+`skipped N virtualenvs`, `--include-worktrees` included: a venv is not a worktree.
+
 ⚑ SYMLINKS ARE REFUSED AS DATA, never followed: a link to a file or a directory is counted in
 `Expansion.links` and neither read nor descended. ⚑ HIDDEN DIRECTORIES ARE WALKED, because the
 worktrees live in `.claude/` and `.tree-writes/` and the registered-path check is what skips them;
@@ -38,6 +43,7 @@ _TIMEOUT = 60
 _PREFIX = "worktree "
 _GIT_DIR = ".git"
 _SUFFIX = ".py"
+_VENV_MARK = "pyvenv.cfg"
 
 
 class WorktreeRefusedError(RuntimeError):
@@ -52,6 +58,7 @@ class Expansion:
     worktrees: int = 0
     links: int = 0
     directories: int = 0
+    virtualenvs: int = 0
 
 
 def registered(root: Path) -> list[Path]:
@@ -112,15 +119,21 @@ def other_worktrees(root: Path) -> list[Path]:
     return [tree for tree in trees if tree != own]
 
 
-def _walk(root: Path, skip: frozenset[Path]) -> tuple[list[str], int]:
+def _is_venv(sub: Path) -> bool:
+    return Path(sub, _VENV_MARK).is_file()
+
+
+def _walk(root: Path, skip: frozenset[Path]) -> tuple[list[str], int, int]:
     files: list[str] = []
-    links = 0
+    links = venvs = 0
     for top, dirs, names in os.walk(root, followlinks=False):
         keep: list[str] = []
         for name in sorted(dirs):
             sub = Path(top, name)
             if sub.is_symlink():
                 links += 1
+            elif _is_venv(sub):
+                venvs += 1
             elif name != _GIT_DIR and sub.resolve() not in skip:
                 keep.append(name)
         dirs[:] = keep
@@ -131,7 +144,7 @@ def _walk(root: Path, skip: frozenset[Path]) -> tuple[list[str], int]:
                 links += 1
             else:
                 files.append(str(Path(top, name)))
-    return files, links
+    return files, links, venvs
 
 
 def expand(operands: Sequence[str], *, include_worktrees: bool) -> Expansion:
@@ -139,14 +152,14 @@ def expand(operands: Sequence[str], *, include_worktrees: bool) -> Expansion:
 
     Returns:
         the files, and the counts a driver must print: registered worktrees skipped, symlinks
-        refused, and directory operands expanded.
+        refused, directory operands expanded, and virtual environments pruned.
 
     Raises:
         WorktreeRefusedError: a directory operand is a symlink, or git could not list worktrees.
 
     """
     files: list[str] = []
-    worktrees = links = directories = 0
+    worktrees = links = directories = venvs = 0
     for operand in operands:
         path = Path(operand)
         if path.is_symlink() and path.is_dir():
@@ -158,7 +171,8 @@ def expand(operands: Sequence[str], *, include_worktrees: bool) -> Expansion:
         directories += 1
         others = frozenset[Path]() if include_worktrees else frozenset(other_worktrees(path))
         worktrees += len(others)
-        found, refused = _walk(path, others)
+        found, refused, pruned = _walk(path, others)
         files.extend(found)
         links += refused
-    return Expansion(files, worktrees, links, directories)
+        venvs += pruned
+    return Expansion(files, worktrees, links, directories, venvs)

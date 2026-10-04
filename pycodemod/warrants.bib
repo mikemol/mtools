@@ -2484,3 +2484,38 @@
   claim  = {Explicit files are read as given, with no skip line and no git call.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_file_operands_behave_as_before},
 }
+
+@misc{pycodemod-virtualenvs-venv-is-pruned-counted-and-its-importer-not-found,
+  section = {virtualenvs},
+  title  = {A directory holding pyvenv.cfg is not walked, and the count says one},
+  claim  = {A directory holding pyvenv.cfg is not walked, and the count says one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_venv_is_pruned_counted_and_its_importer_not_found},
+}
+
+@misc{pycodemod-virtualenvs-dir-named-dot-venv-without-the-cfg-is-walked,
+  section = {virtualenvs},
+  title  = {Detection is by the file, so a bare directory named .venv is walked and counts zero},
+  claim  = {Detection is by the file, so a bare directory named .venv is walked and counts zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_dir_named_dot_venv_without_the_cfg_is_walked},
+}
+
+@misc{pycodemod-virtualenvs-venv-with-another-name-is-pruned,
+  section = {virtualenvs},
+  title  = {A venv named anything is pruned: the name is not the test},
+  claim  = {A venv named anything is pruned: the name is not the test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_venv_with_another_name_is_pruned},
+}
+
+@misc{pycodemod-virtualenvs-line-prints-zero-when-there-is-none,
+  section = {virtualenvs},
+  title  = {A directory operand with no venv still prints the line, with 0},
+  claim  = {A directory operand with no venv still prints the line, with 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_the_line_prints_zero_when_there_is_none},
+}
+
+@misc{pycodemod-virtualenvs-count-survives-include-worktrees,
+  section = {virtualenvs},
+  title  = {A venv is not a worktree: --include-worktrees still prunes and counts it},
+  claim  = {A venv is not a worktree: --include-worktrees still prunes and counts it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_the_count_survives_include_worktrees},
+}

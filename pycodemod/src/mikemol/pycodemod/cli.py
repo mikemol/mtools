@@ -1150,6 +1150,7 @@ def _expand_operands(ns: argparse.Namespace) -> int | None:
         return _REFUSED
     if got.directories:
         sys.stdout.write(f"skipped {got.worktrees} registered worktrees\n")
+        sys.stdout.write(f"skipped {got.virtualenvs} virtualenvs\n")
         sys.stdout.write(f"refused {got.links} symlinks (not followed)\n")
         ns.paths = got.files
     return None

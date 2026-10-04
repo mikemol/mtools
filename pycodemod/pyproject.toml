@@ -126,6 +126,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ ONE FILE, ONE RESPONSIBILITY: worktrees exists to ASK GIT which paths are registered worktrees.
 # The argv is fixed, the root is a path operand after `-C`, and git is resolved on PATH once.
 "src/mikemol/pycodemod/worktrees.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_virtualenvs.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_worktrees.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_graph.py" = ["assert"]
 "tests/test_imports.py" = ["assert"]
