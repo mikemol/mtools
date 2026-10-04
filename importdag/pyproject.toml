@@ -19,8 +19,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCY: standard library only (ast, subprocess, pathlib, dataclasses).
-dependencies = []
+# ⚑ THE FIRST DIST-TO-DIST EDGE (mtools:W562, ruled A+B by the operator 2026-10-04): the sibling write helper,
+# resolved by uv as a NON-editable path source (an editable install installs a finder hook that mypy cannot
+# resolve). Bazel carries the same edge as a py_library dependency in BUILD.bazel; the pip hubs do not
+# resolve it, and requirements.txt is deliberately NOT regenerated (a path source writes a bare relative line
+# that breaks the pip extension for every dist). The two declarations are kept in step by hand.
+dependencies = ["mikemol-atomicwrite"]
 
 [project.scripts]
 mikemol-dagnames = "mikemol.importdag.dagnames:main"
@@ -43,6 +47,9 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-atomicwrite = { path = "../atomicwrite" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -88,6 +95,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/test_sibling_edge.py" = ["assert"]
 "tests/test_dagderive.py" = ["assert"]
 # ⚑ ITS WITNESSES RUN THE CENSUS AS `python -m` IN A CHILD: the exit code is the contract.
 "tests/test_closure_census.py" = [

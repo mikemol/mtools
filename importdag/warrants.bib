@@ -433,3 +433,17 @@
   claim  = {`python -m mikemol.importdag.closure_census` exits with `main`'s code.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_runs_as_a_module},
 }
+
+@misc{importdag-sibling-edge-sibling-write-helper-is-importable-beside-this-distribution,
+  section = {sibling_edge},
+  title  = {Both namespace roots resolve and the sibling's helper writes a file atomically},
+  claim  = {Both namespace roots resolve and the sibling's helper writes a file atomically.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_sibling_write_helper_is_importable_beside_this_distribution},
+}
+
+@misc{importdag-sibling-edge-this-distribution-still-resolves-beside-its-sibling,
+  section = {sibling_edge},
+  title  = {The namespace package merges: importing the sibling does not shadow mikemol.importdag},
+  claim  = {The namespace package merges: importing the sibling does not shadow mikemol.importdag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_sibling},
+}
