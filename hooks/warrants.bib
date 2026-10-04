@@ -5317,3 +5317,52 @@
   claim  = {The marker follows the message after a blank line, and each advisory line is indented.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_folded_indents_the_advisory_under_the_marker},
 }
+
+@misc{hooks-inbound-asks-reader-knows-inbound-reads-the-help-once,
+  section = {inbound-asks},
+  title  = {A help naming --inbound passes; an old one, a slow one and an unstartable one say why},
+  claim  = {A help naming --inbound passes; an old one, a slow one and an unstartable one say why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_reader_knows_inbound_reads_the_help_once},
+}
+
+@misc{hooks-inbound-asks-commands-of-collects-commands-and-ignores-other-shapes,
+  section = {inbound-asks},
+  title  = {Only string commands inside list-shaped hook entries are collected},
+  claim  = {Only string commands inside list-shaped hook entries are collected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_commands_of_collects_commands_and_ignores_other_shapes},
+}
+
+@misc{hooks-inbound-asks-settings-problem-accepts-a-wired-file-and-names-each-defect,
+  section = {inbound-asks},
+  title  = {Wired is None; one event short, no hooks key, bad JSON, absent and unreadable are said},
+  claim  = {Wired is None; one event short, no hooks key, bad JSON, absent and unreadable are said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_settings_problem_accepts_a_wired_file_and_names_each_defect},
+}
+
+@misc{hooks-inbound-asks-check-report-all-present-is-ok-per-piece,
+  section = {inbound-asks},
+  title  = {Three OK lines and True when reader, queue and settings are all there},
+  claim  = {Three OK lines and True when reader, queue and settings are all there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_check_report_all_present_is_ok_per_piece},
+}
+
+@misc{hooks-inbound-asks-check-report-names-each-missing-piece-alone,
+  section = {inbound-asks},
+  title  = {Each piece absent on its own yields exactly one MISSING line for that piece},
+  claim  = {Each piece absent on its own yields exactly one MISSING line for that piece.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_check_report_names_each_missing_piece_alone},
+}
+
+@misc{hooks-inbound-asks-check-main-exit-codes-and-no-writes,
+  section = {inbound-asks},
+  title  = {0 and three OK lines when complete; 1 when a piece is missing; nothing is written},
+  claim  = {0 and three OK lines when complete; 1 when a piece is missing; nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_check_main_exit_codes_and_no_writes},
+}
+
+@misc{hooks-inbound-asks-console-entry-declares-check-and-refuses-other-arguments,
+  section = {inbound-asks},
+  title  = {--check reports without a payload; any other argument is refused with exit 2},
+  claim  = {--check reports without a payload; any other argument is refused with exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_the_console_entry_declares_check_and_refuses_other_arguments},
+}

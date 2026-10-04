@@ -119,13 +119,19 @@ def pycheck_main() -> int:
 
 
 def inbound_asks_main() -> int:
-    """Run `mikemol-hook-inbound-asks` behind the argv contract.
+    """Run `mikemol-hook-inbound-asks`, or its `--check` report, behind the argv contract.
 
     Returns:
         the exit code.
 
     """
-    return _guarded("mikemol-hook-inbound-asks", inbound_asks.main)
+    prog = "mikemol-hook-inbound-asks"
+    got = hook_argv.mode(prog, sys.argv, (inbound_asks.CHECK_MODE,))
+    if got == inbound_asks.CHECK_MODE:
+        return inbound_asks.check_main()
+    if isinstance(got, int):
+        return got
+    return inbound_asks.main()
 
 
 def nemik_check_main() -> int:

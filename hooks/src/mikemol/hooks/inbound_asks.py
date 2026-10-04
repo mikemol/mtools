@@ -25,6 +25,15 @@ with no queue file has no census to run and stays silent; so does a reader that 
 emits what it finds; UserPromptSubmit emits only when the text differs from the last emission, so a
 failure notice is also said once. The cost is one reader spawn per prompt, bounded by the timeout,
 and one small file write per change. A payload without a usable session id emits every time.
+
+⚑ `--check` IS THE ONE DECLARED MODE (`mikemol-hook-inbound-asks --check`, no stdin payload). For
+the current project (CLAUDE_PROJECT_DIR, else the working directory) it prints one line per piece,
+`OK <piece>: ...` or `MISSING <piece>: why`: (1) the reader, in .venv/bin or on PATH and new
+enough that its `--help` names --inbound (the one probe, bounded, no shell); (2) the queue file
+.claude/paths-forward.json; (3) .claude/settings.json naming this hook for SessionStart and
+UserPromptSubmit (a missing, unreadable or unparseable file is reported, never read as fine).
+Exit 0 only when all three are present, 1 otherwise, 2 for any other argument. It never denies
+and writes nothing.
 """
 
 from __future__ import annotations
@@ -44,6 +53,10 @@ from mikemol.hooks.payload import as_record, text_of
 READER = "mikemol-paths-forward"
 STATE_RELATIVE = Path(".claude") / "paths-forward.json"
 EVENTS = ("SessionStart", "UserPromptSubmit")
+CHECK_MODE = "--check"
+HOOK_NAME = "mikemol-hook-inbound-asks"
+INBOUND_FLAG = "--inbound"
+SETTINGS_RELATIVE = Path(".claude") / "settings.json"
 READER_TIMEOUT = 20.0
 PROJECT_DIR_ENV = "CLAUDE_PROJECT_DIR"
 _SESSION_ID = re.compile(r"[A-Za-z0-9_-]{1,128}")
@@ -243,6 +256,119 @@ def main(timeout: float = READER_TIMEOUT) -> int:
     }
     sys.stdout.write(json.dumps(out))
     return 0
+
+
+def reader_knows_inbound(reader: str, timeout: float) -> tuple[bool, str]:
+    """Probe `<reader> --help` once, bounded, and look for the --inbound flag.
+
+    Returns:
+        (True, "") when the help names --inbound; (False, why) otherwise.
+
+    """
+    try:
+        done = subprocess.run(
+            [reader, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
+    except subprocess.TimeoutExpired:
+        return False, f"`{reader} --help` timed out after {timeout:g} s"
+    except OSError as err:
+        return False, f"`{reader} --help` could not start: {err}"
+    if INBOUND_FLAG in done.stdout + done.stderr:
+        return True, ""
+    return False, f"{reader} is too old: its --help does not name {INBOUND_FLAG}"
+
+
+def commands_of(entries: object) -> list[str]:
+    """Collect the command strings of one event's matcher entries.
+
+    Returns:
+        every `command` text found, empty for a shape that holds none.
+
+    """
+    found: list[str] = []
+    if not isinstance(entries, list):
+        return found
+    for entry in entries:
+        inner = entry.get("hooks") if isinstance(entry, dict) else None
+        if isinstance(inner, list):
+            found.extend(
+                hook["command"]
+                for hook in inner
+                if isinstance(hook, dict) and isinstance(hook.get("command"), str)
+            )
+    return found
+
+
+def settings_problem(project: Path) -> str | None:
+    """Say why the project's settings.json does not wire the hook for both events.
+
+    Returns:
+        None when SessionStart and UserPromptSubmit each name the hook, else one sentence.
+
+    """
+    path = project / SETTINGS_RELATIVE
+    try:
+        parsed: object = json.loads(path.read_text(encoding="utf-8"))
+    except OSError as err:
+        return f"{SETTINGS_RELATIVE} could not be read: {err.strerror or err}"
+    except ValueError as err:
+        return f"{SETTINGS_RELATIVE} is not valid JSON: {err}"
+    hooks = parsed.get("hooks") if isinstance(parsed, dict) else None
+    missing = [
+        event
+        for event in EVENTS
+        if not any(
+            HOOK_NAME in command
+            for command in commands_of(hooks.get(event) if isinstance(hooks, dict) else None)
+        )
+    ]
+    if missing:
+        return f"{SETTINGS_RELATIVE} does not name {HOOK_NAME} for {' and '.join(missing)}"
+    return None
+
+
+def check_report(project: Path, timeout: float) -> tuple[list[str], bool]:
+    """Report which of the three pieces the project has, one line each.
+
+    Returns:
+        (lines, all_present).
+
+    """
+    lines: list[str] = []
+    reader = find_reader(project)
+    if reader is None:
+        lines.append(f"MISSING reader: {READER} is neither in .venv/bin nor on PATH")
+    else:
+        knows, why = reader_knows_inbound(reader, timeout)
+        lines.append(f"OK reader: {reader}" if knows else f"MISSING reader: {why}")
+    if (project / STATE_RELATIVE).is_file():
+        lines.append(f"OK queue: {STATE_RELATIVE}")
+    else:
+        lines.append(f"MISSING queue: no {STATE_RELATIVE}")
+    problem = settings_problem(project)
+    lines.append(
+        f"OK settings: {HOOK_NAME} on {' and '.join(EVENTS)}"
+        if problem is None
+        else f"MISSING settings: {problem}"
+    )
+    return lines, all(line.startswith("OK ") for line in lines)
+
+
+def check_main(timeout: float = READER_TIMEOUT) -> int:
+    """Run `--check`: print the report for the current project, write nothing, never deny.
+
+    Returns:
+        0 when all three pieces are present, 1 otherwise.
+
+    """
+    lines, ok = check_report(project_dir(), timeout)
+    sys.stdout.write("".join(f"{line}\n" for line in lines))
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

@@ -126,3 +126,61 @@ def test_a_tool_reference_decodes_to_its_tool_name() -> None:
     (block,) = blocks(parse_line(_user([{"type": "tool_result", "content": parts}]), 1))
     where = (*_CONTENT, 0, "content", 0, "tool_name")
     assert block == Block("tool_result:tool_reference", "CronCreate", where, decoded=True)
+
+
+def _reference_beside_good(bad: dict[str, object]) -> tuple[Block, Block]:
+    """Decode a content list holding `bad` and then a well-formed tool_reference.
+
+    Returns:
+        the blocks for the bad part and for the neighbouring good part.
+
+    """
+    good = {"type": "tool_reference", "tool_name": "CronCreate"}
+    content = [{"type": "tool_result", "content": [bad, good]}]
+    first, second = blocks(parse_line(_user(content), 1))
+    return first, second
+
+
+def _assert_good_neighbour_decodes(good: Block) -> None:
+    """Assert the well-formed neighbour decoded to its tool name, untouched by the bad part."""
+    where = (*_CONTENT, 0, "content", 1, "tool_name")
+    assert good == Block("tool_result:tool_reference", "CronCreate", where, decoded=True)
+
+
+def test_a_tool_reference_without_a_tool_name_is_undecoded_and_kept_whole() -> None:
+    """A tool_reference with no `tool_name` is undecoded and keeps its whole JSON."""
+    bad: dict[str, object] = {"type": "tool_reference", "other": "x"}
+    first, good = _reference_beside_good(bad)
+    assert first == Block(
+        "tool_result:tool_reference",
+        json.dumps(bad),
+        (*_CONTENT, 0, "content", 0),
+        decoded=False,
+    )
+    _assert_good_neighbour_decodes(good)
+
+
+def test_a_tool_reference_with_a_numeric_tool_name_is_undecoded_and_kept_whole() -> None:
+    """A tool_reference whose `tool_name` is a number is undecoded with its whole JSON."""
+    bad: dict[str, object] = {"type": "tool_reference", "tool_name": 7}
+    first, good = _reference_beside_good(bad)
+    assert first == Block(
+        "tool_result:tool_reference",
+        json.dumps(bad),
+        (*_CONTENT, 0, "content", 0),
+        decoded=False,
+    )
+    _assert_good_neighbour_decodes(good)
+
+
+def test_a_tool_reference_with_an_empty_tool_name_decodes_as_an_empty_string() -> None:
+    """An empty-string `tool_name` is still a string, so it decodes (to ""), unlike the others.
+
+    The guard is `isinstance(text, str)`, not truthiness; this pins that the empty name is read
+    as read, with nothing left unread, and does not disturb its neighbour.
+    """
+    bad: dict[str, object] = {"type": "tool_reference", "tool_name": ""}
+    first, good = _reference_beside_good(bad)
+    where = (*_CONTENT, 0, "content", 0, "tool_name")
+    assert first == Block("tool_result:tool_reference", "", where, decoded=True)
+    _assert_good_neighbour_decodes(good)

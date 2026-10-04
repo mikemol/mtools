@@ -2679,3 +2679,199 @@
   claim  = {The degenerate inputs give the empty answer from every public reader.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_an_empty_statement_references_nothing},
 }
+
+@misc{pycodemod-artifacts-failure-artifact-read-is-failure,
+  section = {artifacts},
+  title  = {A file reading `.agdai.log` is FAILURE},
+  claim  = {A file reading `.agdai.log` is FAILURE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_a_failure_artifact_read_is_failure},
+}
+
+@misc{pycodemod-artifacts-core-read-is-success-not-failure,
+  section = {artifacts},
+  title  = {⚑⚑ `.agdai` is a prefix of `.agdai.log`; reading cores alone is SUCCESS},
+  claim  = { `.agdai` is a prefix of `.agdai.log`; reading cores alone is SUCCESS.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_a_core_read_is_success_not_failure},
+}
+
+@misc{pycodemod-artifacts-failure-literal-is-subtracted-from-the-success-pass,
+  section = {artifacts},
+  title  = {⚑⚑ The `.agdai.log` literal contains `.agdai` but must not make the file BOTH},
+  claim  = { The `.agdai.log` literal contains `.agdai` but must not make the file BOTH.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_a_failure_literal_is_subtracted_from_the_success_pass},
+}
+
+@misc{pycodemod-artifacts-timings-read-is-success,
+  section = {artifacts},
+  title  = {A file reading `.agda-times.tsv` is SUCCESS},
+  claim  = {A file reading `.agda-times.tsv` is SUCCESS.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_a_timings_read_is_success},
+}
+
+@misc{pycodemod-artifacts-reading-both-is-both-in-fail-then-succ-order,
+  section = {artifacts},
+  title  = {A file reading both names both artifacts, failure ones first},
+  claim  = {A file reading both names both artifacts, failure ones first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_reading_both_is_both_in_fail_then_succ_order},
+}
+
+@misc{pycodemod-artifacts-file-reading-nothing-has-no-row,
+  section = {artifacts},
+  title  = {There is no third verdict: no artifact, no row},
+  claim  = {There is no third verdict: no artifact, no row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_a_file_reading_nothing_has_no_row},
+}
+
+@misc{pycodemod-artifacts-prose-is-not-a-read,
+  section = {artifacts},
+  title  = {⚑⚑ A docstring, a comment and a long or multi-line literal are not reads},
+  claim  = { A docstring, a comment and a long or multi-line literal are not reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_prose_is_not_a_read},
+}
+
+@misc{pycodemod-artifacts-matching-is-exact-on-both-sides,
+  section = {artifacts},
+  title  = {⚑ The origin folded case for success only; both sides are exact here},
+  claim  = { The origin folded case for success only; both sides are exact here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_matching_is_exact_on_both_sides},
+}
+
+@misc{pycodemod-artifacts-unread-file-is-reported,
+  section = {artifacts},
+  title  = {⚑⚑ An unreadable or unparseable file is a Skip with its reason, never silently dropped},
+  claim  = { An unreadable or unparseable file is a Skip with its reason, never silently dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_an_unread_file_is_reported},
+}
+
+@misc{pycodemod-artifacts-empty-vocabulary-is-refused,
+  section = {artifacts},
+  title  = {⚑ An empty vocabulary measures nothing and must not read as a clean census},
+  claim  = { An empty vocabulary measures nothing and must not read as a clean census.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_artifacts.py -k test_an_empty_vocabulary_is_refused},
+}
+
+@misc{pycodemod-fingerprint-registry-accepts-any-nonempty-key-and-assigns-ascending-primes,
+  section = {fingerprint},
+  title  = {Any non-empty spelling gets the next prime, skipping composites},
+  claim  = {Any non-empty spelling gets the next prime, skipping composites.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_registry_accepts_any_nonempty_key_and_assigns_ascending_primes},
+}
+
+@misc{pycodemod-fingerprint-registry-is-idempotent-and-reports-the-prime-for-a-key,
+  section = {fingerprint},
+  title  = {A repeated key keeps its prime; an unassigned key has none},
+  claim  = {A repeated key keeps its prime; an unassigned key has none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_registry_is_idempotent_and_reports_the_prime_for_a_key},
+}
+
+@misc{pycodemod-fingerprint-registry-refuses-an-empty-key-and-nothing-else,
+  section = {fingerprint},
+  title  = {The one validation is non-empty},
+  claim  = {The one validation is non-empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_registry_refuses_an_empty_key_and_nothing_else},
+}
+
+@misc{pycodemod-fingerprint-registry-resumes-from-a-negative-candidate-at-the-first-prime,
+  section = {fingerprint},
+  title  = {A candidate below 2 is clamped, never read as prime},
+  claim  = {A candidate below 2 is clamped, never read as prime.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_registry_resumes_from_a_negative_candidate_at_the_first_prime},
+}
+
+@misc{pycodemod-fingerprint-distinct-keys-get-distinct-primes,
+  section = {fingerprint},
+  title  = {Six keys, six primes},
+  claim  = {Six keys, six primes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_distinct_keys_get_distinct_primes},
+}
+
+@misc{pycodemod-fingerprint-fingerprint-is-squarefree-a-repeat-adds-no-factor,
+  section = {fingerprint},
+  title  = {The product runs over the distinct set},
+  claim  = {The product runs over the distinct set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_fingerprint_is_squarefree_a_repeat_adds_no_factor},
+}
+
+@misc{pycodemod-fingerprint-decode-is-exact-understood-times-remainder-is-the-fingerprint,
+  section = {fingerprint},
+  title  = {Multiplying the understood primes back by the remainder recovers the fingerprint},
+  claim  = {Multiplying the understood primes back by the remainder recovers the fingerprint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_decode_is_exact_understood_times_remainder_is_the_fingerprint},
+}
+
+@misc{pycodemod-fingerprint-decode-returns-the-understood-keys-and-the-unmodelled-product,
+  section = {fingerprint},
+  title  = {The keys are the modelled ones; the remainder is the rest multiplied},
+  claim  = {The keys are the modelled ones; the remainder is the rest multiplied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_decode_returns_the_understood_keys_and_the_unmodelled_product},
+}
+
+@misc{pycodemod-fingerprint-decode-of-one-is-nothing-understood-and-remainder-one,
+  section = {fingerprint},
+  title  = {The empty product decodes to no keys},
+  claim  = {The empty product decodes to no keys.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_decode_of_one_is_nothing_understood_and_remainder_one},
+}
+
+@misc{pycodemod-fingerprint-decode-default-is-lax-and-swallows-the-remainder,
+  section = {fingerprint},
+  title  = {The default returns keys rather than raising on an unknown remainder},
+  claim  = {The default returns keys rather than raising on an unknown remainder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_decode_default_is_lax_and_swallows_the_remainder},
+}
+
+@misc{pycodemod-fingerprint-decode-strict-raises-on-an-unknown-remainder,
+  section = {fingerprint},
+  title  = {The rigid mode is one keyword away},
+  claim  = {The rigid mode is one keyword away.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_decode_strict_raises_on_an_unknown_remainder},
+}
+
+@misc{pycodemod-fingerprint-decode-strict-with-a-complete-registry-does-not-raise,
+  section = {fingerprint},
+  title  = {Strict raises only when something is left over},
+  claim  = {Strict raises only when something is left over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_decode_strict_with_a_complete_registry_does_not_raise},
+}
+
+@misc{pycodemod-fingerprint-gcd-is-the-shared-referent-product,
+  section = {fingerprint},
+  title  = {The gcd of two fingerprints is the product of what they share},
+  claim  = {The gcd of two fingerprints is the product of what they share.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_gcd_is_the_shared_referent_product},
+}
+
+@misc{pycodemod-fingerprint-containment-is-one-modulo-subset-and-non-subset,
+  section = {fingerprint},
+  title  = {A subset divides; a non-subset and zero do not},
+  claim  = {A subset divides; a non-subset and zero do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_containment_is_one_modulo_subset_and_non_subset},
+}
+
+@misc{pycodemod-fingerprint-difference-drops-the-shared-part,
+  section = {fingerprint},
+  title  = {What remains is each side's own referents},
+  claim  = {What remains is each side's own referents.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_difference_drops_the_shared_part},
+}
+
+@misc{pycodemod-fingerprint-larger-modelled-set-gives-a-remainder-that-divides-and-never-rises,
+  section = {fingerprint},
+  title  = {Growing the modelled set removes factors: divisibility, value and omega all hold},
+  claim  = {Growing the modelled set removes factors: divisibility, value and omega all hold.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_a_larger_modelled_set_gives_a_remainder_that_divides_and_never_rises},
+}
+
+@misc{pycodemod-fingerprint-empty-modelled-set-leaves-the-whole-fingerprint,
+  section = {fingerprint},
+  title  = {Nothing understood means everything remains},
+  claim  = {Nothing understood means everything remains.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_an_empty_modelled_set_leaves_the_whole_fingerprint},
+}
+
+@misc{pycodemod-fingerprint-sites-sharing-two-referents-have-gcd-omega-two-and-a-third-is-outside,
+  section = {fingerprint},
+  title  = {The class gcd counts two referents and excludes a site sharing none},
+  claim  = {The class gcd counts two referents and excludes a site sharing none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_sites_sharing_two_referents_have_gcd_omega_two_and_a_third_is_outside},
+}

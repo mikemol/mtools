@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 622,
+  "counter": 625,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -12071,20 +12071,21 @@
     {
       "symbol": "W607",
       "title": "pycodemod: port the census-free prime-fingerprint algebra (registry, decode, gcd lattice) with its cases",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port the roughly 40-line algebra as mtools' own copy per .claude/swarm/W607-fingerprint-port.md; seeds become an argument; record the divergence from gabion under B4; follow-ups: referents extractor, Census arithmetic, CLI",
-      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W607-fingerprint-port.md): PORT as mtools' own copy with NO gabion dependency (gabion would add seven runtime dependencies and its alpha API differs: the substrate copy assigns primes in frequency order). The site_referents walk subclasses _Census and is blocked on the control port (W606).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W607-fingerprint-port.md): PORT as mtools' own copy with NO gabion dependency (gabion would add seven runtime dependencies and its alpha API differs: the substrate copy assigns primes in frequency order). The site_referents walk subclasses _Census and is blocked on the control port (W606). | 2026-10-04: first unit: fingerprint.py, the census-free prime-fingerprint algebra (PrimeRegistry, fingerprint, reverse_index, decode, fp_shared, fp_contains, fp_difference, omega_against), no gabion dependency, primes in frequency order recorded under B4; 18 test functions, 18 warrants under rubric key fingerprint; F-arm: gcd replaced by lcm, 2 arms red; follow-ups W623 (referents.py) and W624 (Census arithmetic); the site_referents walk waits on the control port W606; committed under W607",
       "issued_at": "2026-10-04T19:25:22Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:00:55Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:09:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T210940Z"
     },
     {
       "symbol": "W608",
@@ -12163,20 +12164,21 @@
     {
       "symbol": "W612",
       "title": "pycodemod: artifacts.py, which tools read a failure-bearing build artifact, vocabulary supplied by the caller",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port per .claude/swarm/W612-W614-census-modes.md: both vocabulary tuples become required operands, prefix-subtraction logic and the 7 selftest arms carry over, case-sensitivity mismatch and silent skips become reported Skips",
-      "evidence": "2026-10-04: 2026-10-04 drafter: PORT.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT. | 2026-10-04: pycodemod artifacts.py ported: artifact_readers(paths, failure, success) with both vocabularies required operands, exact matching on both sides (the origin's case mismatch fixed), skipped files returned; 10 test functions (17 cases), 10 warrants under rubric key artifacts; F-arm: subtraction inverted, 5 arms red; CLI wiring not part of this card; committed under W612",
       "issued_at": "2026-10-04T19:25:25Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:01:07Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:09:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T210939Z"
     },
     {
       "symbol": "W613",
@@ -12316,38 +12318,40 @@
     {
       "symbol": "W620",
       "title": "transcriptstruct: pin the malformed tool_reference case, a missing or non-string tool_name, as reported undecoded and never guessed",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "transcriptstruct"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add a test with a tool_reference lacking tool_name and one with a numeric tool_name; assert decoded=False and the whole JSON as text; red by deleting the guard",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 3 tests pin the malformed tool_reference cases (missing tool_name and numeric tool_name undecoded with the whole JSON as text; an empty tool_name decodes to an empty string, current behaviour pinned); blocks.py unchanged; F-arm: the string guard removed, 2 arms red; committed under W620",
       "issued_at": "2026-10-04T20:22:49Z",
       "minted_during": "interrupt",
       "caused_by": "W591",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:09:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T210939Z"
     },
     {
       "symbol": "W621",
       "title": "Add a --check mode to mikemol-hook-inbound-asks that says which piece a repo lacks: reader absent or too old, no queue, or hook not in settings",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Write the mode with a decoy-project test per missing piece; measure the tools-hook route for a context hook; document it in docs/adopting-a-hook.md",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: mikemol-hook-inbound-asks --check prints OK or MISSING for reader, queue and settings, exit 0 only when all present, one --help probe only, never denies or writes; 7 tests, 7 warrants; F-arm: check exit status always 0, test_check_main_exit_codes_and_no_writes red; committed under W621. Docs for it: W625.",
       "issued_at": "2026-10-04T21:01:15Z",
       "minted_during": "interrupt",
       "caused_by": "W579",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:09:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T210939Z"
     },
     {
       "symbol": "W622",
@@ -12365,6 +12369,60 @@
       "issued_at": "2026-10-04T21:01:15Z",
       "minted_during": "interrupt",
       "caused_by": "W579",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W623",
+      "title": "pycodemod: referents.py, token_parts, referents and MAX_TOKEN for the fingerprint, with a tiny inlined as_list and no import of control",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Per .claude/swarm/W607-fingerprint-port.md step 2: names, attributes, keywords and identifier strings; numeric and non-identifier strings excluded; a dotted string contributes each part; an over-long token dropped",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:09:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "W607",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W624",
+      "title": "pycodemod: the fingerprint Census arithmetic over sites plus an explicit modelled set, with modelled_keys(paths) taking no default seed",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Per .claude/swarm/W607-fingerprint-port.md step 3, after referents.py: the arm is a wider seed lowering Omega and bits, explaining at least as many sites, with per-site divisibility",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:09:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "W607",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W625",
+      "title": "Document the inbound-asks hook's --check mode in hooks/README.md and docs/adopting-a-hook.md, which still say it is not built",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the --check section with the three OK or MISSING lines and the exit codes, and remove the 'not built' sentences; lint with mdstruct",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:09:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "W621",
       "last_worked": null,
       "ticks_blocked": 0
     }

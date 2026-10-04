@@ -503,3 +503,27 @@
   claim  = {A payload that is not JSON counts as not active, so it blocks naming why.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_main_blocks_once_on_a_payload_that_is_not_json},
 }
+
+@misc{transcriptstruct-blocks-tool-reference-without-a-tool-name-is-undecoded-and-kept-whole,
+  section = {blocks},
+  title  = {A tool_reference with no `tool_name` is undecoded and keeps its whole JSON},
+  claim  = {A tool_reference with no `tool_name` is undecoded and keeps its whole JSON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_tool_reference_without_a_tool_name_is_undecoded_and_kept_whole},
+}
+
+@misc{transcriptstruct-blocks-tool-reference-with-a-numeric-tool-name-is-undecoded-and-kept-whole,
+  section = {blocks},
+  title  = {A tool_reference whose `tool_name` is a number is undecoded with its whole JSON},
+  claim  = {A tool_reference whose `tool_name` is a number is undecoded with its whole JSON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_tool_reference_with_a_numeric_tool_name_is_undecoded_and_kept_whole},
+}
+
+@misc{transcriptstruct-blocks-tool-reference-with-an-empty-tool-name-decodes-as-an-empty-string,
+  section = {blocks},
+  title  = {An empty-string `tool_name` is still a string, so it decodes (to ""), unlike the others},
+  claim  = {An empty-string `tool_name` is still a string, so it decodes (to ""), unlike the others.
+            The guard is `isinstance(text, str)`, not truthiness; this pins that the
+            empty name is read as read, with nothing left unread, and does not disturb
+            its neighbour.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_tool_reference_with_an_empty_tool_name_decodes_as_an_empty_string},
+}

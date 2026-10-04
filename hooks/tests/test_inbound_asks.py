@@ -391,3 +391,142 @@ def test_the_console_entry_refuses_an_argument_and_runs_without_one(
     monkeypatch.setattr(sys, "stdin", io.StringIO('{"hook_event_name": "SessionStart"}'))
     assert entry.inbound_asks_main() == 0
     assert ROW in _context(capsys.readouterr().out)
+
+
+HELP_NEW = 'echo "usage: mikemol-paths-forward [--inbound]"\n'
+HELP_OLD = 'echo "usage: mikemol-paths-forward [--add]"\n'
+WIRED: dict[str, dict[str, list[dict[str, list[dict[str, str]]]]]] = {
+    "hooks": {
+        "SessionStart": [
+            {"hooks": [{"type": "command", "command": "hooks/bin/mikemol-hook-inbound-asks"}]}
+        ],
+        "UserPromptSubmit": [
+            {"hooks": [{"type": "command", "command": "mikemol-hook-inbound-asks"}]}
+        ],
+    }
+}
+
+
+def _settings(project: Path, record: object) -> None:
+    """Write the project's settings.json."""
+    (project / ".claude" / "settings.json").write_text(json.dumps(record), encoding="utf-8")
+
+
+def _ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, help_body: str = HELP_NEW) -> Path:
+    """Build a project with all three pieces present and point the hook at it.
+
+    Returns:
+        the project directory.
+
+    """
+    project = _project(tmp_path, help_body)
+    _settings(project, WIRED)
+    _env(tmp_path, monkeypatch, project)
+    return project
+
+
+def test_reader_knows_inbound_reads_the_help_once(tmp_path: Path) -> None:
+    """A help naming --inbound passes; an old one, a slow one and an unstartable one say why."""
+    new = _reader_of(_project(tmp_path / "new", HELP_NEW))
+    assert inbound_asks.reader_knows_inbound(str(new), TIMEOUT) == (True, "")
+    old = _reader_of(_project(tmp_path / "old", HELP_OLD))
+    knows, why = inbound_asks.reader_knows_inbound(str(old), TIMEOUT)
+    assert not knows
+    assert "too old" in why
+    slow = _reader_of(_project(tmp_path / "slow", "exec /bin/sleep 30\n"))
+    assert inbound_asks.reader_knows_inbound(str(slow), SHORT)[1].endswith("timed out after 0.3 s")
+    missing = inbound_asks.reader_knows_inbound(str(tmp_path / "no-such"), TIMEOUT)
+    assert not missing[0]
+    assert "could not start" in missing[1]
+
+
+def test_commands_of_collects_commands_and_ignores_other_shapes() -> None:
+    """Only string commands inside list-shaped hook entries are collected."""
+    entries = [{"hooks": [{"command": "a"}, {"command": 3}, "x"]}, "y", {"hooks": "z"}]
+    assert inbound_asks.commands_of(entries) == ["a"]
+    assert inbound_asks.commands_of({"hooks": []}) == []
+    assert inbound_asks.commands_of(None) == []
+
+
+def test_settings_problem_accepts_a_wired_file_and_names_each_defect(tmp_path: Path) -> None:
+    """Wired is None; one event short, no hooks key, bad JSON, absent and unreadable are said."""
+    project = _project(tmp_path, None)
+    assert "could not be read" in str(inbound_asks.settings_problem(project))
+    _settings(project, WIRED)
+    assert inbound_asks.settings_problem(project) is None
+    _settings(project, {"hooks": {"SessionStart": WIRED["hooks"]["SessionStart"]}})
+    assert "for UserPromptSubmit" in str(inbound_asks.settings_problem(project))
+    _settings(project, {"other": 1})
+    assert "SessionStart and UserPromptSubmit" in str(inbound_asks.settings_problem(project))
+    _settings(project, [1])
+    assert inbound_asks.settings_problem(project) is not None
+    settings = project / ".claude" / "settings.json"
+    settings.write_text("{", encoding="utf-8")
+    assert "not valid JSON" in str(inbound_asks.settings_problem(project))
+    settings.unlink()
+    settings.mkdir()
+    assert "could not be read" in str(inbound_asks.settings_problem(project))
+
+
+def test_check_report_all_present_is_ok_per_piece(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Three OK lines and True when reader, queue and settings are all there."""
+    project = _ready(tmp_path, monkeypatch)
+    lines, ok = inbound_asks.check_report(project, TIMEOUT)
+    assert ok
+    assert [line.split(":")[0] for line in lines] == ["OK reader", "OK queue", "OK settings"]
+
+
+def test_check_report_names_each_missing_piece_alone(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Each piece absent on its own yields exactly one MISSING line for that piece."""
+    no_reader = _ready(tmp_path / "a", monkeypatch)
+    _reader_of(no_reader).unlink()
+    lines, ok = inbound_asks.check_report(no_reader, TIMEOUT)
+    assert not ok
+    assert [line.startswith("MISSING reader") for line in lines] == [True, False, False]
+    old = _ready(tmp_path / "b", monkeypatch, HELP_OLD)
+    lines, ok = inbound_asks.check_report(old, TIMEOUT)
+    assert not ok
+    assert [line.startswith("MISSING reader") for line in lines] == [True, False, False]
+    assert "too old" in lines[0]
+    no_queue = _ready(tmp_path / "c", monkeypatch)
+    (no_queue / ".claude" / "paths-forward.json").unlink()
+    lines, ok = inbound_asks.check_report(no_queue, TIMEOUT)
+    assert not ok
+    assert [line.startswith("MISSING queue") for line in lines] == [False, True, False]
+    no_settings = _ready(tmp_path / "d", monkeypatch)
+    (no_settings / ".claude" / "settings.json").write_text("{", encoding="utf-8")
+    lines, ok = inbound_asks.check_report(no_settings, TIMEOUT)
+    assert not ok
+    assert [line.startswith("MISSING settings") for line in lines] == [False, False, True]
+
+
+def test_check_main_exit_codes_and_no_writes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """0 and three OK lines when complete; 1 when a piece is missing; nothing is written."""
+    project = _ready(tmp_path, monkeypatch)
+    before = sorted(tmp_path.rglob("*"))
+    assert inbound_asks.check_main() == 0
+    assert capsys.readouterr().out.count("OK ") == len(inbound_asks.EVENTS) + 1
+    assert sorted(tmp_path.rglob("*")) == before
+    (project / ".claude" / "paths-forward.json").unlink()
+    assert inbound_asks.check_main() == 1
+    assert "MISSING queue" in capsys.readouterr().out
+
+
+def test_the_console_entry_declares_check_and_refuses_other_arguments(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """--check reports without a payload; any other argument is refused with exit 2."""
+    _ready(tmp_path, monkeypatch)
+    monkeypatch.setattr(sys, "argv", ["mikemol-hook-inbound-asks", "--check"])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(""))
+    assert entry.inbound_asks_main() == 0
+    assert "OK reader" in capsys.readouterr().out
+    monkeypatch.setattr(sys, "argv", ["mikemol-hook-inbound-asks", "--help"])
+    assert entry.inbound_asks_main() == hook_argv.EXIT_REFUSED
+    assert "its modes are --check" in capsys.readouterr().err

@@ -115,6 +115,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/test_capture.py" = ["assert"]
 "tests/test_aliases.py" = ["assert"]
+"tests/test_artifacts.py" = ["assert"]
 "tests/test_header.py" = ["assert"]
 "tests/test_ambient.py" = ["assert"]
 "tests/test_arguments.py" = ["assert"]
@@ -127,6 +128,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_definitions.py" = ["assert"]
 "tests/test_deps.py" = ["assert"]
 "tests/test_exit.py" = ["assert"]
+"tests/test_fingerprint.py" = ["assert"]
 "tests/test_funcnames.py" = ["assert"]
 "tests/test_hints.py" = ["assert"]
 # ⚑ ONE FILE, ONE RESPONSIBILITY: funcnames exists to ASK SQLAlchemy's private `_registry` which
