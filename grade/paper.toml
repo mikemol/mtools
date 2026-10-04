@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.grade: the falsifiability ladder, the clamp and the grade a flip-set earns"
+subtitle = "The pure half of paperkit's grader, moved with the witness that would catch each rung, order and clamp drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "GRADE.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

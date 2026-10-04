@@ -1,0 +1,315 @@
+
+@misc{grade-ladder-ladder-ranks-are-the-documented-total-order,
+  section = {ladder},
+  title  = {RANK_C lists the six rungs in strictly ascending rank and GRADE_C inverts it},
+  claim  = {RANK_C lists the six rungs in strictly ascending rank and GRADE_C inverts it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_the_ladder_ranks_are_the_documented_total_order},
+}
+
+@misc{grade-ladder-orthogonal-axes-hold-their-documented-values,
+  section = {ladder},
+  title  = {Corroboration, decisions, resolution and baseline are separate ordered axes},
+  claim  = {Corroboration, decisions, resolution and baseline are separate ordered axes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_the_orthogonal_axes_hold_their_documented_values},
+}
+
+@misc{grade-ladder-scopes-moved-from-bib-keep-their-values-and-order,
+  section = {ladder},
+  title  = {SCOPES is paperkit's `bib._SCOPES` verbatim and SCOPE_C ranks it fragment < full},
+  claim  = {SCOPES is paperkit's `bib._SCOPES` verbatim and SCOPE_C ranks it fragment < full.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_scopes_moved_from_bib_keep_their_values_and_order},
+}
+
+@misc{grade-ladder-rungs-is-the-ladder-in-display-order,
+  section = {ladder},
+  title  = {Descending by default, ascending on request},
+  claim  = {Descending by default, ascending on request.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_rungs_is_the_ladder_in_display_order},
+}
+
+@misc{grade-ladder-below-is-exactly-the-rungs-ranked-under-the-floor,
+  section = {ladder},
+  title  = {For every floor the failing set is the strictly lower rungs, lowest first},
+  claim  = {For every floor the failing set is the strictly lower rungs, lowest first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_below_is_exactly_the_rungs_ranked_under_the_floor},
+}
+
+@misc{grade-ladder-below-refuses-a-floor-that-is-not-a-rung,
+  section = {ladder},
+  title  = {A typo'd floor raises instead of grading everything green},
+  claim  = {A typo'd floor raises instead of grading everything green.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_below_refuses_a_floor_that_is_not_a_rung},
+}
+
+@misc{grade-ladder-failing-baseline-is-broken-and-refuted,
+  section = {ladder},
+  title  = {A check that does not pass in a pristine sandbox grades broken, baseline refuted},
+  claim  = {A check that does not pass in a pristine sandbox grades broken, baseline refuted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_a_failing_baseline_is_broken_and_refuted},
+}
+
+@misc{grade-ladder-unreachable-baseline-is-broken-but-does-not-claim-the-repo-is-red,
+  section = {ladder},
+  title  = {The same grade, a different axis value, and a why that names the toolchain},
+  claim  = {The same grade, a different axis value, and a why that names the toolchain.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_an_unreachable_baseline_is_broken_but_does_not_claim_the_repo_is_red},
+}
+
+@misc{grade-ladder-flip-set-grades-behavioral-and-keeps-the-flipped-tests,
+  section = {ladder},
+  title  = {Some mutation flipping the check proves it falsifiable},
+  claim  = {Some mutation flipping the check proves it falsifiable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_a_flip_set_grades_behavioral_and_keeps_the_flipped_tests},
+}
+
+@misc{grade-ladder-empty-flip-set-grades-indeterminate-without-a-baseline-value,
+  section = {ladder},
+  title  = {No mutation flips it: indeterminate, no tests, and the record names no baseline},
+  claim  = {No mutation flips it: indeterminate, no tests, and the record names no baseline.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_an_empty_flip_set_grades_indeterminate_without_a_baseline_value},
+}
+
+@misc{grade-ladder-reachability-does-not-move-the-rung,
+  section = {ladder},
+  title  = {Reachable or not, a passing baseline grades the same},
+  claim  = {Reachable or not, a passing baseline grades the same.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_reachability_does_not_move_the_rung},
+}
+
+@misc{grade-ladder-content-sensitivity-marks-only-behavioral-records-flipped-by-content,
+  section = {ladder},
+  title  = {A behavioral check flipped by the document's own file is content sensitive},
+  claim  = {A behavioral check flipped by the document's own file is content sensitive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_content_sensitivity_marks_only_behavioral_records_flipped_by_content},
+}
+
+@misc{grade-ladder-content-sensitivity-of-a-record-without-a-test-list-is-false,
+  section = {ladder},
+  title  = {A tests value that is not a list holds no test files},
+  claim  = {A tests value that is not a list holds no test files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ladder.py -k test_content_sensitivity_of_a_record_without_a_test_list_is_false},
+}
+
+@misc{grade-clamp-claim-is-clamped-to-the-weakest-premise-it-rests-on,
+  section = {clamp},
+  title  = {A behavioral claim resting on a vacuous one is effectively vacuous, pinned by it},
+  claim  = {A behavioral claim resting on a vacuous one is effectively vacuous, pinned by it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_claim_is_clamped_to_the_weakest_premise_it_rests_on},
+}
+
+@misc{grade-clamp-clamp-is-transitive-and-carries-the-whole-chain,
+  section = {clamp},
+  title  = {Claim a rests on b rests on c: a is pinned by b but its path runs on to c},
+  claim  = {Claim a rests on b rests on c: a is pinned by b but its path runs on to c.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_the_clamp_is_transitive_and_carries_the_whole_chain},
+}
+
+@misc{grade-clamp-weakest-of-several-premises-pins-the-claim,
+  section = {clamp},
+  title  = {The minimum over all rests-on edges wins, not the first},
+  claim  = {The minimum over all rests-on edges wins, not the first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_the_weakest_of_several_premises_pins_the_claim},
+}
+
+@misc{grade-clamp-stronger-premise-does-not-raise-a-claim,
+  section = {clamp},
+  title  = {The clamp only lowers: an existence claim on a behavioral premise stays existence},
+  claim  = {The clamp only lowers: an existence claim on a behavioral premise stays existence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_stronger_premise_does_not_raise_a_claim},
+}
+
+@misc{grade-clamp-cycle-and-a-self-edge-terminate-without-clamping,
+  section = {clamp},
+  title  = {Grounding edges that loop back are skipped on the stack},
+  claim  = {Grounding edges that loop back are skipped on the stack.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_cycle_and_a_self_edge_terminate_without_clamping},
+}
+
+@misc{grade-clamp-unknown-grade-ranks-as-vacuous,
+  section = {clamp},
+  title  = {An unrecognised grade string reads as rank 0},
+  claim  = {An unrecognised grade string reads as rank 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_an_unknown_grade_ranks_as_vacuous},
+}
+
+@misc{grade-clamp-empty-record-list-clamps-to-itself,
+  section = {clamp},
+  title  = {Nothing to grade, nothing returned},
+  claim  = {Nothing to grade, nothing returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_an_empty_record_list_clamps_to_itself},
+}
+
+@misc{grade-clamp-scope-defaults-to-full-and-discloses-a-declared-fragment,
+  section = {clamp},
+  title  = {`entails` is carried through as `scope`; its absence reads as full},
+  claim  = {`entails` is carried through as `scope`; its absence reads as full.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_scope_defaults_to_full_and_discloses_a_declared_fragment},
+}
+
+@misc{grade-clamp-premise-with-no-record-imposes-no-constraint-and-is-not-truncation,
+  section = {clamp},
+  title  = {Without the bib's key set, a missing premise reads as outside this argument},
+  claim  = {Without the bib's key set, a missing premise reads as outside this argument.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_premise_with_no_record_imposes_no_constraint_and_is_not_truncation},
+}
+
+@misc{grade-clamp-premise-outside-the-key-set-is-still-outside-this-argument,
+  section = {clamp},
+  title  = {With keys supplied, a missing premise that is not in the bib is still no constraint},
+  claim  = {With keys supplied, a missing premise that is not in the bib is still no constraint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_premise_outside_the_key_set_is_still_outside_this_argument},
+}
+
+@misc{grade-clamp-premise-in-the-key-set-but-never-graded-is-a-truncated-unfold,
+  section = {clamp},
+  title  = {The claim stays optimistically behavioral but its interval widens to the floor},
+  claim  = {The claim stays optimistically behavioral but its interval widens to the floor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_premise_in_the_key_set_but_never_graded_is_a_truncated_unfold},
+}
+
+@misc{grade-clamp-unresolved-premise-is-appended-to-an-existing-unresolved-list,
+  section = {clamp},
+  title  = {Earlier unresolved entries are kept},
+  claim  = {Earlier unresolved entries are kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_an_unresolved_premise_is_appended_to_an_existing_unresolved_list},
+}
+
+@misc{grade-clamp-truncation-is-transitive-though-the-claim-own-edges-resolve,
+  section = {clamp},
+  title  = {A claim resting on a truncated premise reads truncated, with a wide interval},
+  claim  = {A claim resting on a truncated premise reads truncated, with a wide interval.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_truncation_is_transitive_though_the_claim_own_edges_resolve},
+}
+
+@misc{grade-clamp-truncation-walk-survives-a-cycle,
+  section = {clamp},
+  title  = {A loop of resolved claims is resolved, not an endless walk},
+  claim  = {A loop of resolved claims is resolved, not an endless walk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_truncation_walk_survives_a_cycle},
+}
+
+@misc{grade-clamp-delegation-clamps-to-the-owners-bare-grade,
+  section = {clamp},
+  title  = {A weak owner grade pulls an imported claim down and is carried for the reader},
+  claim  = {A weak owner grade pulls an imported claim down and is carried for the reader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_delegation_clamps_to_the_owners_bare_grade},
+}
+
+@misc{grade-clamp-delegation-reads-the-owners-effective-grade-and-continues-its-pin,
+  section = {clamp},
+  title  = {The owner's pair is bounded by its EFFECTIVE grade and its own pin extends the path},
+  claim  = {The owner's pair is bounded by its EFFECTIVE grade and its own pin extends the path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_delegation_reads_the_owners_effective_grade_and_continues_its_pin},
+}
+
+@misc{grade-clamp-delegation-pair-without-an-effective-grade-falls-back-to-its-grade,
+  section = {clamp},
+  title  = {Only `grade` present: that is the bound},
+  claim  = {Only `grade` present: that is the bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_delegation_pair_without_an_effective_grade_falls_back_to_its_grade},
+}
+
+@misc{grade-clamp-strong-owner-imposes-no-clamp,
+  section = {clamp},
+  title  = {An imported owner leaves an imported claim where it was},
+  claim  = {An imported owner leaves an imported claim where it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_strong_owner_imposes_no_clamp},
+}
+
+@misc{grade-clamp-delegation-with-no-owner-grade-is-unresolved-and-widens-the-interval,
+  section = {clamp},
+  title  = {The edge imposes nothing, says so by name, and the interval records the cost},
+  claim  = {The edge imposes nothing, says so by name, and the interval records the cost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_delegation_with_no_owner_grade_is_unresolved_and_widens_the_interval},
+}
+
+@misc{grade-clamp-half-named-delegation-cannot-be-looked-up-and-is-unresolved,
+  section = {clamp},
+  title  = {A delegation with no claim name is unresolved, named with None for the missing half},
+  claim  = {A delegation with no claim name is unresolved, named with None for the missing half.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_half_named_delegation_cannot_be_looked_up_and_is_unresolved},
+}
+
+@misc{grade-clamp-empty-or-non-mapping-delegation-is-no-delegation,
+  section = {clamp},
+  title  = {Neither an empty mapping nor a stray string delegates},
+  claim  = {Neither an empty mapping nor a stray string delegates.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_an_empty_or_non_mapping_delegation_is_no_delegation},
+}
+
+@misc{grade-clamp-non-string-rests-on-item-is-not-an-edge,
+  section = {clamp},
+  title  = {Only string premise keys are edges; a non-list rests-on holds none},
+  claim  = {Only string premise keys are edges; a non-list rests-on holds none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_clamp.py -k test_a_non_string_rests_on_item_is_not_an_edge},
+}
+
+@misc{grade-verify-hop-with-no-premises-is-its-own-grade,
+  section = {verify},
+  title  = {The base case: effective equals self},
+  claim  = {The base case: effective equals self.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_hop_with_no_premises_is_its_own_grade},
+}
+
+@misc{grade-verify-hop-is-pinned-by-its-weakest-premise,
+  section = {verify},
+  title  = {The hop recomputes to the lowest premise and names it},
+  claim  = {The hop recomputes to the lowest premise and names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_hop_is_pinned_by_its_weakest_premise},
+}
+
+@misc{grade-verify-stronger-premise-does-not-pin-the-hop,
+  section = {verify},
+  title  = {A premise above the self grade leaves the hop on itself},
+  claim  = {A premise above the self grade leaves the hop on itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_stronger_premise_does_not_pin_the_hop},
+}
+
+@misc{grade-verify-forged-hop-is-refuted-with-the-recomputed-grade,
+  section = {verify},
+  title  = {A record claiming more than its premises allow fails, saying what it recomputes to},
+  claim  = {A record claiming more than its premises allow fails, saying what it recomputes to.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_forged_hop_is_refuted_with_the_recomputed_grade},
+}
+
+@misc{grade-verify-hop-missing-its-effective-grade-is-refuted,
+  section = {verify},
+  title  = {No recorded effective grade reads as None and cannot match},
+  claim  = {No recorded effective grade reads as None and cannot match.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_hop_missing_its_effective_grade_is_refuted},
+}
+
+@misc{grade-verify-hop-with-an-unknown-self-grade-recomputes-from-rank-zero,
+  section = {verify},
+  title  = {An unrecognised grade ranks as vacuous},
+  claim  = {An unrecognised grade ranks as vacuous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_hop_with_an_unknown_self_grade_recomputes_from_rank_zero},
+}
+
+@misc{grade-verify-delegation-clamps-the-hop-to-the-owners-bare-grade,
+  section = {verify},
+  title  = {A weak owner grade pins the hop and the pin is named owner#claim},
+  claim  = {A weak owner grade pins the hop and the pin is named owner#claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_delegation_clamps_the_hop_to_the_owners_bare_grade},
+}
+
+@misc{grade-verify-delegation-reads-the-owners-effective-grade-then-its-grade,
+  section = {verify},
+  title  = {The owner's pair is read by its effective grade, falling back to its grade},
+  claim  = {The owner's pair is read by its effective grade, falling back to its grade.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_delegation_reads_the_owners_effective_grade_then_its_grade},
+}
+
+@misc{grade-verify-delegation-to-a-stronger-owner-or-to-nobody-leaves-the-hop-on-itself,
+  section = {verify},
+  title  = {Held-but-strong, absent and half-named owners all impose nothing},
+  claim  = {Held-but-strong, absent and half-named owners all impose nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_delegation_to_a_stronger_owner_or_to_nobody_leaves_the_hop_on_itself},
+}
+
+@misc{grade-verify-premise-pins-a-hop-past-its-delegation,
+  section = {verify},
+  title  = {The lowest of owner and premises wins, and the pin names the one that won},
+  claim  = {The lowest of owner and premises wins, and the pin names the one that won.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verify.py -k test_a_premise_pins_a_hop_past_its_delegation},
+}

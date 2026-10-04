@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the grade warrant set, one per test module, in document order.
+# key <TAB> heading title
+ladder	The Ladder: Rungs in Rank Order, a Floor That Fails Closed, a Flip-Set That Becomes a Grade
+clamp	The Clamp: No Claim Is Better Grounded Than the Weakest Premise It Rests On
+verify	The Hop: One Step of the Clamp Recomputed From Its Own Data Alone
