@@ -3086,3 +3086,192 @@
             false `ATOMIZE W98` the card exists to end.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_declared.py -k test_the_cli_wires_the_declared_set_into_the_atomize_line},
 }
+
+@misc{pathsforward-inbound-resolve-reads-each-blocked-on-shape,
+  section = {inbound},
+  title  = {A foreign card, a repo, a prose head and a session name resolve; the rest do not},
+  claim  = {A foreign card, a repo, a prose head and a session name resolve; the rest do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_resolve_reads_each_blocked_on_shape},
+}
+
+@misc{pathsforward-inbound-card-blocked-on-this-repo-with-no-claim-is-unclaimed,
+  section = {inbound},
+  title  = {A:W1 waits on the repo as a whole; with no local claim the row is UNCLAIMED},
+  claim  = {A:W1 waits on the repo as a whole; with no local claim the row is UNCLAIMED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_a_card_blocked_on_this_repo_with_no_claim_is_unclaimed},
+}
+
+@misc{pathsforward-inbound-local-waypoint-that-enables-the-peer-card-claims-it,
+  section = {inbound},
+  title  = {me:W1 enabling A:W1 claims the row; an enables of another card or a local W1 does not},
+  claim  = {me:W1 enabling A:W1 claims the row; an enables of another card or a local W1 does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_a_local_waypoint_that_enables_the_peer_card_claims_it},
+}
+
+@misc{pathsforward-inbound-caused-by-the-peer-card-also-claims-it,
+  section = {inbound},
+  title  = {A local waypoint whose caused_by is A:W1 claims the row, in any status},
+  claim  = {A local waypoint whose caused_by is A:W1 claims the row, in any status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_caused_by_the_peer_card_also_claims_it},
+}
+
+@misc{pathsforward-inbound-done-peer-card-is-ignored-and-a-ready-one-with-blockers-counts,
+  section = {inbound},
+  title  = {Only done leaves the census: a ready card still carrying blocked_on is waiting},
+  claim  = {Only done leaves the census: a ready card still carrying blocked_on is waiting.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_a_done_peer_card_is_ignored_and_a_ready_one_with_blockers_counts},
+}
+
+@misc{pathsforward-inbound-peer-blocked-on-a-different-repo-is-ignored,
+  section = {inbound},
+  title  = {A card blocked on B, on the operator, or on its own W1 says nothing about me},
+  claim  = {A card blocked on B, on the operator, or on its own W1 says nothing about me.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_a_peer_blocked_on_a_different_repo_is_ignored},
+}
+
+@misc{pathsforward-inbound-named-card-that-exists-claims-itself-and-one-that-does-not-is-skipped,
+  section = {inbound},
+  title  = {A:W1 names me:W1 (live), A:W2 names me:W7 (residue), A:W3 names me:W99 (nowhere)},
+  claim  = {A:W1 names me:W1 (live), A:W2 names me:W7 (residue), A:W3 names me:W99 (nowhere).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_a_named_card_that_exists_claims_itself_and_one_that_does_not_is_skipped},
+}
+
+@misc{pathsforward-inbound-two-entries-naming-the-same-target-make-one-row,
+  section = {inbound},
+  title  = {A repo named twice, or by its session name, is one row; a different card is another},
+  claim  = {A repo named twice, or by its session name, is one row; a different card is another.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_two_entries_naming_the_same_target_make_one_row},
+}
+
+@misc{pathsforward-inbound-this-repos-own-cards-are-not-its-inbound,
+  section = {inbound},
+  title  = {A card of the repo itself blocked on its own name is not a peer's ask},
+  claim  = {A card of the repo itself blocked on its own name is not a peer's ask.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_this_repos_own_cards_are_not_its_inbound},
+}
+
+@misc{pathsforward-inbound-unreadable-peer-is-named-with-its-reason,
+  section = {inbound},
+  title  = {A peer queue that is not JSON is listed by name; the readable peer still counts},
+  claim  = {A peer queue that is not JSON is listed by name; the readable peer still counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_an_unreadable_peer_is_named_with_its_reason},
+}
+
+@misc{pathsforward-inbound-escaping-name-and-a-link-are-refused-as-data,
+  section = {inbound},
+  title  = {A repo name holding `..` or a separator, and a linked repo, are named and never read},
+  claim  = {A repo name holding `..` or a separator, and a linked repo, are named and never read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_an_escaping_name_and_a_link_are_refused_as_data},
+}
+
+@misc{pathsforward-inbound-scan-lists-repos-with-a-queue-and-skips-dot-directories,
+  section = {inbound},
+  title  = {known_repos reads the directory listing: queue holders only, no dot-named worktree},
+  claim  = {known_repos reads the directory listing: queue holders only, no dot-named worktree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_the_scan_lists_repos_with_a_queue_and_skips_dot_directories},
+}
+
+@misc{pathsforward-inbound-census-does-not-write-a-peer-queue,
+  section = {inbound},
+  title  = {Scanning leaves the peer's bytes, and its directory, untouched},
+  claim  = {Scanning leaves the peer's bytes, and its directory, untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_the_census_does_not_write_a_peer_queue},
+}
+
+@misc{pathsforward-inbound-repo-name-and-ref-spell-the-citation,
+  section = {inbound},
+  title  = {The repo is the directory above .claude; a reference is repo:W<n>},
+  claim  = {The repo is the directory above .claude; a reference is repo:W<n>.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_repo_name_and_ref_spell_the_citation},
+}
+
+@misc{pathsforward-inbound-clip-keeps-the-first-line-to-the-limit,
+  section = {inbound},
+  title  = {A title is cut to TITLE_CLIP on its first line; an empty one stays empty},
+  claim  = {A title is cut to TITLE_CLIP on its first line; an empty one stays empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_clip_keeps_the_first_line_to_the_limit},
+}
+
+@misc{pathsforward-inbound-claim-command-cites-the-card-in-enables-and-caused-by,
+  section = {inbound},
+  title  = {The command is the exact --add that claims, with the title quoted for a shell},
+  claim  = {The command is the exact --add that claims, with the title quoted for a shell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_the_claim_command_cites_the_card_in_enables_and_caused_by},
+}
+
+@misc{pathsforward-inbound-ask-line-is-unclaimed-with-a-command-or-claimed-with-by-whom,
+  section = {inbound},
+  title  = {UNCLAIMED rows end in their claim command; CLAIMED rows say by which waypoint},
+  claim  = {UNCLAIMED rows end in their claim command; CLAIMED rows say by which waypoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_ask_line_is_unclaimed_with_a_command_or_claimed_with_by_whom},
+}
+
+@misc{pathsforward-inbound-payload-lines-are-empty-for-a-quiet-census-and-name-rows-and-unreadable,
+  section = {inbound},
+  title  = {Nothing to say gives (); rows and unreadable peers each get an indented line},
+  claim  = {Nothing to say gives (); rows and unreadable peers each get an indented line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_payload_lines_are_empty_for_a_quiet_census_and_name_rows_and_unreadable},
+}
+
+@misc{pathsforward-inbound-inbound-mode-prints-one-greppable-line-per-unclaimed-row,
+  section = {inbound},
+  title  = {--inbound prints UNCLAIMED rows only, with the claim command, and exits 0},
+  claim  = {--inbound prints UNCLAIMED rows only, with the claim command, and exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_inbound_mode_prints_one_greppable_line_per_unclaimed_row},
+}
+
+@misc{pathsforward-inbound-inbound-all-adds-the-claimed-rows,
+  section = {inbound},
+  title  = {--all prints the CLAIMED row as well, in census order},
+  claim  = {--all prints the CLAIMED row as well, in census order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_inbound_all_adds_the_claimed_rows},
+}
+
+@misc{pathsforward-inbound-inbound-mode-is-silent-and-exit-zero-when-everything-is-claimed,
+  section = {inbound},
+  title  = {A quiet repo prints nothing and still exits 0},
+  claim  = {A quiet repo prints nothing and still exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_inbound_mode_is_silent_and_exit_zero_when_everything_is_claimed},
+}
+
+@misc{pathsforward-inbound-inbound-mode-names-an-unreadable-peer,
+  section = {inbound},
+  title  = {A peer whose queue cannot be read is an UNREADABLE line, exit still 0},
+  claim  = {A peer whose queue cannot be read is an UNREADABLE line, exit still 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_inbound_mode_names_an_unreadable_peer},
+}
+
+@misc{pathsforward-inbound-all-is-refused-by-a-mode-that-does-not-read-it,
+  section = {inbound},
+  title  = {`--all` on --payload is a stray flag, refused rather than accepted in silence},
+  claim  = {`--all` on --payload is a stray flag, refused rather than accepted in silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_all_is_refused_by_a_mode_that_does_not_read_it},
+}
+
+@misc{pathsforward-inbound-quiet-repos-payload-is-byte-identical-to-the-payload-without-the-section,
+  section = {inbound},
+  title  = {With only claimed asks, the payload equals one built with no inbound lines at all},
+  claim  = {With only claimed asks, the payload equals one built with no inbound lines at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_a_quiet_repos_payload_is_byte_identical_to_the_payload_without_the_section},
+}
+
+@misc{pathsforward-inbound-payload-carries-the-unclaimed-rows-between-the-rules-and-the-waypoints,
+  section = {inbound},
+  title  = {The section is after the header and rules and before `waypoints:`, rows then unreadable},
+  claim  = {The section is after the header and rules and before `waypoints:`, rows then unreadable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_payload_carries_the_unclaimed_rows_between_the_rules_and_the_waypoints},
+}
+
+@misc{pathsforward-inbound-over-budget-payload-drops-the-inbound-rows-last-and-says-so,
+  section = {inbound},
+  title  = {Rows go only after the done list is gone; the heading stays, and the marker names it},
+  claim  = {Rows go only after the done list is gone; the heading stays, and the marker names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_an_over_budget_payload_drops_the_inbound_rows_last_and_says_so},
+}
+
+@misc{pathsforward-inbound-ladder-gains-an-inbound-rung-only-when-asked,
+  section = {inbound},
+  title  = {has_inbound appends one last rung that collapses the rows; without it nothing changes},
+  claim  = {has_inbound appends one last rung that collapses the rows; without it nothing changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_the_ladder_gains_an_inbound_rung_only_when_asked},
+}

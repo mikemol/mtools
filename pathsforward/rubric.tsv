@@ -28,3 +28,4 @@ unlinked	The Unlinked Count: n of m Live Waypoints Linked, an Edge Counted From 
 outcomes	The Declared Outcome Sets: A Queue May Close Its Tick Vocabulary, and Absent Means Unchanged
 foreign	The Foreign Blocker: A Peer Queue Is Read, Never Written, and Every Blocker That Stays Is Named
 atomize_declared	The Declared Advance Set: Atomize Counts What a Queue Names, and the Deny-List Otherwise
+inbound	The Inbound Census: Peer Cards Waiting on This Repo, Claimed or Not, Read Without Writing and Never Dropped in Silence

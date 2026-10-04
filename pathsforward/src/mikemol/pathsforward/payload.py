@@ -95,6 +95,7 @@ class Request:
     budget: int = PAYLOAD_BUDGET
     command: str = field(default_factory=script_command)
     atomize: str | None = None
+    inbound: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -110,6 +111,10 @@ class _Rung:
     # the done list grows by one symbol per finished waypoint and is never acted on; a rung
     # that kept it forever would put every ladder over budget eventually (W377, 6043/6000)
     done_list: bool = True
+    # ⚑ THE INBOUND ROWS ARE THE LAST THING ANY RUNG DROPS (W577): a peer's ask that nobody has
+    # claimed is what a tick must not miss. Only the rung after the done list collapses them to
+    # their heading, and that rung says so in `dropped`.
+    inbound: bool = True
 
 
 def _binding(state: State, capability: str) -> str:
@@ -273,11 +278,12 @@ def _pinned(live: list[Json]) -> int:
     )
 
 
-def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
+def ladder(n_live: int, *, has_host: bool, has_inbound: bool = False) -> list[_Rung]:
     """List the rungs in order, from everything to the least a tick can act on.
 
     Returns:
-        the rungs; the host rung exists only when there is a host block to drop.
+        the rungs; the host rung exists only when there is a host block to drop, and the
+        inbound rung (the very last) only when there is an inbound section to collapse.
 
     """
     rungs = [
@@ -324,6 +330,7 @@ def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
             dropped=(*trimmed, f"steps-below-{last}", "titles"),
         )
     )
+    bare = (*trimmed, f"steps-below-{last}", "titles", "done-list")
     rungs.append(
         _Rung(
             last,
@@ -331,10 +338,23 @@ def ladder(n_live: int, *, has_host: bool) -> list[_Rung]:
             residue=False,
             host=False,
             collapsed=False,
-            dropped=(*trimmed, f"steps-below-{last}", "titles", "done-list"),
+            dropped=bare,
             done_list=False,
         )
     )
+    if has_inbound:
+        rungs.append(
+            _Rung(
+                last,
+                evidence=False,
+                residue=False,
+                host=False,
+                collapsed=False,
+                dropped=(*bare, "inbound-rows"),
+                done_list=False,
+                inbound=False,
+            )
+        )
     return rungs
 
 
@@ -375,6 +395,9 @@ def _compose(req: Request, rung: _Rung) -> str:
     state = req.state
     done = [text(w, "symbol") for w in state.waypoints if text(w, "status") == "done"]
     lines = header(req) + guards(state)
+    # ⚑ THE INBOUND SECTION SITS RIGHT AFTER THE STANDING RULES, before any waypoint, and is the
+    # last thing the ladder gives up (see `_Rung.inbound`): the heading survives even then.
+    lines += list(req.inbound if rung.inbound else req.inbound[:1])
     if rung.host:
         lines += host_block(state)
     lines.append("waypoints:")
@@ -417,7 +440,11 @@ def build(req: Request) -> str:
         PayloadOverBudgetError: when no rung fits; it names both sizes no rung drops.
 
     """
-    rungs = ladder(len(_shown(req.state)), has_host=bool(host_block(req.state)))
+    rungs = ladder(
+        len(_shown(req.state)),
+        has_host=bool(host_block(req.state)),
+        has_inbound=len(req.inbound) > 1,
+    )
     size = 0
     for rung in rungs:
         body = _compose(req, rung)

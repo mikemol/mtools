@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, cast
 from mikemol.pathsforward import (
     embargo,
     foreign,
+    inbound,
     lease,
     lock,
     ops,
@@ -70,6 +71,7 @@ _FLAGS = (
     "selftest",
     "bump_blocked",
     "prune_landed",
+    "inbound",
     "preamble_clear",
     "outcomes_clear",
     "init",
@@ -140,6 +142,7 @@ _FIELDS = (
     "rejected",
     "consumers",
     "root",
+    "all",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -175,6 +178,8 @@ _APPLIES: dict[str, frozenset[str]] = {
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
     "bump_blocked": frozenset({"exclude"}),
     "prune_landed": frozenset({"root"}),
+    "inbound": frozenset({"root", "all"}),
+    "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
 }
 
@@ -264,7 +269,14 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
     ap.add_argument(
         "--root",
         metavar="PATH",
-        help="--prune-landed: the directory holding the repos (default: ~/github)",
+        help="--prune-landed, --inbound, --payload: the directory holding the repos "
+        "(default: ~/github)",
+    )
+    ap.add_argument(
+        "--all",
+        action="store_true",
+        default=None,
+        help="--inbound: also print the CLAIMED rows (default: only the UNCLAIMED ones)",
     )
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
@@ -650,7 +662,9 @@ def _payload(ctx: Ctx) -> int:
     try:
         state = store.load(ctx.path)
         owed = _atomize_line(ctx, state)
-        _say(build(Request(state, ctx.path, ctx.stamp(), atomize=owed)))
+        found = inbound.census(_root(ctx), inbound.repo_name(ctx.path), state)
+        lines = inbound.payload_lines(found)
+        _say(build(Request(state, ctx.path, ctx.stamp(), atomize=owed, inbound=lines)))
     except PayloadOverBudgetError as exc:
         _warn(f"PayloadOverBudget: {exc}")
         return EXIT_FAILED
@@ -1072,6 +1086,16 @@ def _outcomes_clear(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _root(ctx: Ctx) -> Path:
+    """Name the directory holding the repos: `--root`, or `~/github`.
+
+    Returns:
+        the root.
+
+    """
+    return Path(ctx.get("root") or foreign.default_root())
+
+
 def _prune_landed(ctx: Ctx) -> int:
     """Drop landed local blockers and say which waypoints that frees, counting nothing.
 
@@ -1085,7 +1109,7 @@ def _prune_landed(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    root = Path(ctx.get("root") or foreign.default_root())
+    root = _root(ctx)
 
     def edit(state: State) -> int:
         for sym in ops.prune_done(state):
@@ -1098,6 +1122,26 @@ def _prune_landed(ctx: Ctx) -> int:
         return EXIT_OK
 
     return _mutate(ctx, edit)
+
+
+def _inbound(ctx: Ctx) -> int:
+    """Print the peer cards blocked on this repo that no local waypoint claims, read-only.
+
+    ⚑ ONE LINE PER UNCLAIMED ROW, `UNCLAIMED <peer>:W<n> :: <title> :: <claim command>`, and
+    nothing for a claimed one unless `--all` asks (then `CLAIMED ... by ...`). A peer queue that
+    cannot be read is named on an `UNREADABLE` line. The exit is 0 either way (W577).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    found = inbound.census(_root(ctx), inbound.repo_name(ctx.path), store.load(ctx.path))
+    for ask in found.asks:
+        if not ask.claimed_by or ctx.opts.get("all"):
+            _say(inbound.ask_line(ctx.path, ask))
+    for entry in found.unreadable:
+        _say(f"UNREADABLE {entry}")
+    return EXIT_OK
 
 
 def _bump_blocked(ctx: Ctx) -> int:
@@ -1330,6 +1374,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "outcomes_clear": _outcomes_clear,
     "bump_blocked": _bump_blocked,
     "prune_landed": _prune_landed,
+    "inbound": _inbound,
     "ledger": _ledger_mode,
     "show": _show,
     "commit_message": _commit_message,

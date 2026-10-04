@@ -82,7 +82,10 @@ def _run(path: Path, *args: str) -> int:
         the exit code.
 
     """
-    return cli.main(["--state", str(path), *args])
+    # ⚑ `--payload` scans the repos under `--root` for inbound asks (W577): aim it at a directory
+    # that holds none, so no test reads the real ~/github.
+    root = ["--root", str(path.parent / "no-repos")] if "--payload" in args else []
+    return cli.main(["--state", str(path), *args, *root])
 
 
 def _doc(path: Path) -> Rec:

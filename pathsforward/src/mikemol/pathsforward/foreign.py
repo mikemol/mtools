@@ -75,7 +75,7 @@ def _escapes(repo: str) -> bool:
     return any(bad in repo for bad in _ESCAPES)
 
 
-def _peer(root: Path, repo: str) -> tuple[State | None, Path, str]:
+def peer(root: Path, repo: str) -> tuple[State | None, Path, str]:
     """Read a peer's queue, or say why it cannot be.
 
     Returns:
@@ -103,14 +103,14 @@ def landed(root: Path, repo: str, sym: str) -> tuple[bool, str]:
         (True, why) when it is done or in residue; (False, why-kept) otherwise.
 
     """
-    peer, path, why = _peer(root, repo)
-    if peer is None:
+    theirs, path, why = peer(root, repo)
+    if theirs is None:
         return False, why
-    for w in peer.waypoints:
+    for w in theirs.waypoints:
         if text(w, "symbol") == sym:
             status = text(w, "status")
             return status == _DONE, f"{sym} is {status} in {path}"
-    if any(text(r, "symbol") == sym for r in peer.residue):
+    if any(text(r, "symbol") == sym for r in theirs.residue):
         return True, f"{sym} is residue in {path}"
     return False, f"{sym} is not in {path}"
 
