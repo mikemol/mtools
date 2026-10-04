@@ -1,0 +1,10 @@
+# rubric.tsv — the sections of the memres warrant set, one per test module, in document order.
+# key <TAB> heading title
+mem_learn	The Manifest: Observed Peaks Bucketed to Powers of Two, Delta-Encoded Against the Resolution Default
+mem_db	The Store: A Real Sqlite File That Raises a Peak but Never Lowers It, Queried Back as a Manifest
+mem_project	The Projection: The Store Rendered to mem.json, With Drift Named and Absence Left Alone
+mem_harvest	The Harvest: Peaks Found Under an Output Tree Folded Into the Store, Worst Cell Kept
+mem_converge	The Convergence Check: Which Grid Projects Still Run on the Floor, Read From a Planted Tree
+sweep_budget	The Sweep Budget: The Operator Override, Else Forty Percent of a Planted MemTotal
+cpuweight	The CPU Weight: A Planted cgroup Host Weighted, Joined and Verified, With the Server Moved In
+zswap_probe	The Zswap Probe: One Planted cgroup Sampled in a Pass, Every Field Labelled, the Selftest Honest

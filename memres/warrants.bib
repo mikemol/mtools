@@ -1,0 +1,586 @@
+
+@misc{memres-mem-learn-pow2-rounds-up-to-the-next-power-of-two-inside-four-to-4096,
+  section = {mem_learn},
+  title  = {The bucket is the smallest power of two from 4 holding the reading, never above 4096},
+  claim  = {The bucket is the smallest power of two from 4 holding the reading, never above 4096.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_learn.py -k test_pow2_rounds_up_to_the_next_power_of_two_inside_four_to_4096},
+}
+
+@misc{memres-mem-learn-resolution-names-the-resolution-and-claim-of-a-peak-stem,
+  section = {mem_learn},
+  title  = {A dcalc stem or a grid cell is DEF, a calc stem is FILE, anything else is not ours},
+  claim  = {A dcalc stem or a grid cell is DEF, a calc stem is FILE, anything else is not ours.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_learn.py -k test_resolution_names_the_resolution_and_claim_of_a_peak_stem},
+}
+
+@misc{memres-mem-learn-read-peaks-keeps-measurements-and-names-unavailable-ones,
+  section = {mem_learn},
+  title  = {Zero, oversize and foreign files are dropped; `unavailable:*` is counted, not zeroed},
+  claim  = {Zero, oversize and foreign files are dropped; `unavailable:*` is counted, not zeroed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_learn.py -k test_read_peaks_keeps_measurements_and_names_unavailable_ones},
+}
+
+@misc{memres-mem-learn-build-manifest-records-the-default-and-only-the-overrides,
+  section = {mem_learn},
+  title  = {Each resolution carries its pow2 max; `claims` holds only claims off that default},
+  claim  = {Each resolution carries its pow2 max; `claims` holds only claims off that default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_learn.py -k test_build_manifest_records_the_default_and_only_the_overrides},
+}
+
+@misc{memres-mem-learn-build-manifest-of-no-peaks-is-an-empty-claims-manifest,
+  section = {mem_learn},
+  title  = {With no measurement the manifest is exactly a claims object that is itself empty},
+  claim  = {With no measurement the manifest is exactly a claims object that is itself empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_learn.py -k test_build_manifest_of_no_peaks_is_an_empty_claims_manifest},
+}
+
+@misc{memres-mem-learn-main-prints-the-manifest-json-and-reports-unavailable-claims-on-stderr,
+  section = {mem_learn},
+  title  = {The manifest is printed sorted; stderr names the count, reason and the first four claims},
+  claim  = {The manifest is printed sorted; stderr names the count, reason and the first four
+            claims.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_learn.py -k test_main_prints_the_manifest_json_and_reports_unavailable_claims_on_stderr},
+}
+
+@misc{memres-mem-learn-main-is-silent-on-stderr-without-unavailable-claims-and-shows-few-in-full,
+  section = {mem_learn},
+  title  = {A clean run writes nothing to stderr; four or fewer unavailable claims show no ellipsis},
+  claim  = {A clean run writes nothing to stderr; four or fewer unavailable claims show no ellipsis.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_learn.py -k test_main_is_silent_on_stderr_without_unavailable_claims_and_shows_few_in_full},
+}
+
+@misc{memres-mem-db-connect-creates-the-directory-the-schema-and-wal-mode,
+  section = {mem_db},
+  title  = {The store appears with its `peak` table, in WAL mode, under a directory made on demand},
+  claim  = {The store appears with its `peak` table, in WAL mode, under a directory made on demand.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_connect_creates_the_directory_the_schema_and_wal_mode},
+}
+
+@misc{memres-mem-db-record-returns-the-rows-offered-and-stores-them,
+  section = {mem_db},
+  title  = {The count is the rows offered; each lands under its project, resolution, claim and cell},
+  claim  = {The count is the rows offered; each lands under its project, resolution, claim and cell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_record_returns_the_rows_offered_and_stores_them},
+}
+
+@misc{memres-mem-db-record-raises-a-peak-but-never-lowers-it,
+  section = {mem_db},
+  title  = {A re-measure that is higher replaces the peak and its run; a lower one changes nothing},
+  claim  = {A re-measure that is higher replaces the peak and its run; a lower one changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_record_raises_a_peak_but_never_lowers_it},
+}
+
+@misc{memres-mem-db-manifest-is-the-pow2-default-per-resolution-plus-the-overrides,
+  section = {mem_db},
+  title  = {A claim's worst cell is its number; the resolution default is the max over its claims},
+  claim  = {A claim's worst cell is its number; the resolution default is the max over its claims.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_manifest_is_the_pow2_default_per_resolution_plus_the_overrides},
+}
+
+@misc{memres-mem-db-manifest-of-a-project-with-no-observations-has-empty-claims,
+  section = {mem_db},
+  title  = {No rows means exactly a claims object that is itself empty},
+  claim  = {No rows means exactly a claims object that is itself empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_manifest_of_a_project_with_no_observations_has_empty_claims},
+}
+
+@misc{memres-mem-db-provenance-says-what-the-bucket-rests-on,
+  section = {mem_db},
+  title  = {Cell count, extremes in MB, latest time and distinct runs are reported},
+  claim  = {Cell count, extremes in MB, latest time and distinct runs are reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_provenance_says_what_the_bucket_rests_on},
+}
+
+@misc{memres-mem-db-provenance-of-an-unknown-project-is-all-zero-and-unmeasured,
+  section = {mem_db},
+  title  = {With no rows the counts are 0 and `measured_at` is None, never a fabricated time},
+  claim  = {With no rows the counts are 0 and `measured_at` is None, never a fabricated time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_provenance_of_an_unknown_project_is_all_zero_and_unmeasured},
+}
+
+@misc{memres-mem-db-main-prints-the-manifest-or-the-provenance-as-sorted-json,
+  section = {mem_db},
+  title  = {`manifest` prints the manifest; any other verb prints the provenance},
+  claim  = {`manifest` prints the manifest; any other verb prints the provenance.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_main_prints_the_manifest_or_the_provenance_as_sorted_json},
+}
+
+@misc{memres-mem-db-main-refuses-too-few-arguments-with-a-usage-line,
+  section = {mem_db},
+  title  = {Fewer than `<db> <verb> <project>` is exit 2 with usage on stderr and nothing on stdout},
+  claim  = {Fewer than `<db> <verb> <project>` is exit 2 with usage on stderr and nothing on stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_main_refuses_too_few_arguments_with_a_usage_line},
+}
+
+@misc{memres-mem-project-render-is-the-sorted-manifest-json-with-a-trailing-newline,
+  section = {mem_project},
+  title  = {The projection is exactly the manifest, two-space indented, keys sorted},
+  claim  = {The projection is exactly the manifest, two-space indented, keys sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_project.py -k test_render_is_the_sorted_manifest_json_with_a_trailing_newline},
+}
+
+@misc{memres-mem-project-render-of-a-project-with-no-observations-is-empty-not-a-false-manifest,
+  section = {mem_project},
+  title  = {No observations render as the empty string, never an empty object},
+  claim  = {No observations render as the empty string, never an empty object.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_project.py -k test_render_of_a_project_with_no_observations_is_empty_not_a_false_manifest},
+}
+
+@misc{memres-mem-project-main-writes-the-projection-and-says-what-it-projected,
+  section = {mem_project},
+  title  = {The file holds the projection; stderr names the project, target and resolution defaults},
+  claim  = {The file holds the projection; stderr names the project, target and resolution defaults.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_project.py -k test_main_writes_the_projection_and_says_what_it_projected},
+}
+
+@misc{memres-mem-project-main-check-passes-on-a-fresh-projection-and-writes-nothing,
+  section = {mem_project},
+  title  = {With `--check` a matching file is exit 0 and the file is left byte-identical},
+  claim  = {With `--check` a matching file is exit 0 and the file is left byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_project.py -k test_main_check_passes_on_a_fresh_projection_and_writes_nothing},
+}
+
+@misc{memres-mem-project-main-check-names-a-stale-or-missing-projection-and-exits-one,
+  section = {mem_project},
+  title  = {A differing or absent file is exit 1 with the regenerate command, and is not rewritten},
+  claim  = {A differing or absent file is exit 1 with the regenerate command, and is not rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_project.py -k test_main_check_names_a_stale_or_missing_projection_and_exits_one},
+}
+
+@misc{memres-mem-project-main-leaves-the-output-alone-when-there-are-no-observations,
+  section = {mem_project},
+  title  = {With nothing to project, an existing `mem.json` survives and the exit is 0},
+  claim  = {With nothing to project, an existing `mem.json` survives and the exit is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_project.py -k test_main_leaves_the_output_alone_when_there_are_no_observations},
+}
+
+@misc{memres-mem-project-main-refuses-too-few-arguments-with-a-usage-line,
+  section = {mem_project},
+  title  = {Fewer than `<db> <project> <out.json>` is exit 2 with usage on stderr},
+  claim  = {Fewer than `<db> <project> <out.json>` is exit 2 with usage on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_project.py -k test_main_refuses_too_few_arguments_with_a_usage_line},
+}
+
+@misc{memres-mem-harvest-peaks-for-reads-only-this-projects-readable-measurements,
+  section = {mem_harvest},
+  title  = {Other projects, foreign stems, `unavailable:*`, zero and unreadable files are skipped},
+  claim  = {Other projects, foreign stems, `unavailable:*`, zero and unreadable files are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_peaks_for_reads_only_this_projects_readable_measurements},
+}
+
+@misc{memres-mem-harvest-peaks-for-keeps-the-worst-reading-of-one-cell,
+  section = {mem_harvest},
+  title  = {A cell seen twice reports its MAX, not its last or its mean},
+  claim  = {A cell seen twice reports its MAX, not its last or its mean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_peaks_for_keeps_the_worst_reading_of_one_cell},
+}
+
+@misc{memres-mem-harvest-deposit-records-observations-and-never-lowers-a-stored-peak,
+  section = {mem_harvest},
+  title  = {The store gets one row per cell, tagged with the run; a smaller later deposit is a no-op},
+  claim  = {The store gets one row per cell, tagged with the run; a smaller later deposit is a no-
+            op.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_deposit_records_observations_and_never_lowers_a_stored_peak},
+}
+
+@misc{memres-mem-harvest-main-harvests-into-the-default-store-and-reports-what-it-deposited,
+  section = {mem_harvest},
+  title  = {With only a project dir, the tree and store are siblings of it; the run id defaults to ''},
+  claim  = {With only a project dir, the tree and store are siblings of it; the run id defaults to
+            ''.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_main_harvests_into_the_default_store_and_reports_what_it_deposited},
+}
+
+@misc{memres-mem-harvest-main-takes-the-tree-store-and-run-from-its-options,
+  section = {mem_harvest},
+  title  = {`--bazel-out`, `--db` and `--run` override the defaults},
+  claim  = {`--bazel-out`, `--db` and `--run` override the defaults.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_main_takes_the_tree_store_and_run_from_its_options},
+}
+
+@misc{memres-mem-harvest-main-ignores-an-option-given-without-a-value,
+  section = {mem_harvest},
+  title  = {A trailing `--bazel-out` with no value falls back to the default tree},
+  claim  = {A trailing `--bazel-out` with no value falls back to the default tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_main_ignores_an_option_given_without_a_value},
+}
+
+@misc{memres-mem-harvest-main-names-the-paperkit-directory-root-and-harvests-beside-itself,
+  section = {mem_harvest},
+  title  = {A project dir named `paperkit` is project `root`, with the tree and store inside it},
+  claim  = {A project dir named `paperkit` is project `root`, with the tree and store inside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_main_names_the_paperkit_directory_root_and_harvests_beside_itself},
+}
+
+@misc{memres-mem-harvest-main-without-a-tree-or-without-peaks-is-not-an-error,
+  section = {mem_harvest},
+  title  = {Absent measurement exits 0 and says why, and writes no store},
+  claim  = {Absent measurement exits 0 and says why, and writes no store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_main_without_a_tree_or_without_peaks_is_not_an_error},
+}
+
+@misc{memres-mem-harvest-main-refuses-no-project-dir-with-a-usage-line,
+  section = {mem_harvest},
+  title  = {No arguments is exit 2 with usage on stderr},
+  claim  = {No arguments is exit 2 with usage on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_harvest.py -k test_main_refuses_no_project_dir_with_a_usage_line},
+}
+
+@misc{memres-mem-converge-survey-counts-cells-floor-cells-and-the-def-bucket,
+  section = {mem_converge},
+  title  = {A site string holding `)` still reaches its `mem` attr; mem 0 and no mem are at the floor},
+  claim  = {A site string holding `)` still reaches its `mem` attr; mem 0 and no mem are at the
+            floor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_survey_counts_cells_floor_cells_and_the_def_bucket},
+}
+
+@misc{memres-mem-converge-survey-skips-repos-without-a-build-file-or-without-a-grid,
+  section = {mem_converge},
+  title  = {Eligibility first: no BUILD.bazel, or a BUILD with no pk_eval cell, owes no def bucket},
+  claim  = {Eligibility first: no BUILD.bazel, or a BUILD with no pk_eval cell, owes no def bucket.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_survey_skips_repos_without_a_build_file_or_without_a_grid},
+}
+
+@misc{memres-mem-converge-survey-reads-no-bucket-from-a-missing-broken-or-non-integer-manifest,
+  section = {mem_converge},
+  title  = {The def bucket is None unless the manifest is JSON holding an integer `def`},
+  claim  = {The def bucket is None unless the manifest is JSON holding an integer `def`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_survey_reads_no_bucket_from_a_missing_broken_or_non_integer_manifest},
+}
+
+@misc{memres-mem-converge-survey-puts-the-root-project-manifest-at-the-roots-own-mem-json,
+  section = {mem_converge},
+  title  = {MODULE.bazel's `project = "."` is the root's `mem.json`, not `./mem.json` under a name},
+  claim  = {MODULE.bazel's `project = "."` is the root's `mem.json`, not `./mem.json` under a name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_survey_puts_the_root_project_manifest_at_the_roots_own_mem_json},
+}
+
+@misc{memres-mem-converge-survey-names-an-undeclared-project-and-falls-back-to-its-name-as-a-path,
+  section = {mem_converge},
+  title  = {An undeclared project is a finding about the owner: warned on stderr, name used as path},
+  claim  = {An undeclared project is a finding about the owner: warned on stderr, name used as path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_survey_names_an_undeclared_project_and_falls_back_to_its_name_as_a_path},
+}
+
+@misc{memres-mem-converge-main-reports-a-converged-project-and-exits-zero,
+  section = {mem_converge},
+  title  = {A def bucket and no floor cell reads converged; `--check` is accepted and ignored},
+  claim  = {A def bucket and no floor cell reads converged; `--check` is accepted and ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_main_reports_a_converged_project_and_exits_zero},
+}
+
+@misc{memres-mem-converge-main-names-the-projects-that-have-not-converged-and-exits-one,
+  section = {mem_converge},
+  title  = {A floor cell or a missing def bucket is NOT CONVERGED, with the remedy on stderr},
+  claim  = {A floor cell or a missing def bucket is NOT CONVERGED, with the remedy on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_main_names_the_projects_that_have_not_converged_and_exits_one},
+}
+
+@misc{memres-mem-converge-main-exits-two-when-nothing-was-asked-or-nothing-has-a-grid,
+  section = {mem_converge},
+  title  = {No directory prints usage; a directory with no grid says there is nothing to converge},
+  claim  = {No directory prints usage; a directory with no grid says there is nothing to converge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_converge.py -k test_main_exits_two_when_nothing_was_asked_or_nothing_has_a_grid},
+}
+
+@misc{memres-sweep-budget-default-budget-is-forty-percent-of-memtotal-in-mb,
+  section = {sweep_budget},
+  title  = {16384000 kB is 16000 MB, and 0.4 of it is 6400 MB},
+  claim  = {16384000 kB is 16000 MB, and 0.4 of it is 6400 MB.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sweep_budget.py -k test_the_default_budget_is_forty_percent_of_memtotal_in_mb},
+}
+
+@misc{memres-sweep-budget-operator-override-wins-over-the-derived-floor,
+  section = {sweep_budget},
+  title  = {`PAPERKIT_SWEEP_RAM_MB` is returned as given, whatever MemTotal says},
+  claim  = {`PAPERKIT_SWEEP_RAM_MB` is returned as given, whatever MemTotal says.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sweep_budget.py -k test_the_operator_override_wins_over_the_derived_floor},
+}
+
+@misc{memres-sweep-budget-empty-override-falls-back-to-the-derived-floor,
+  section = {sweep_budget},
+  title  = {An override set to the empty string is no override},
+  claim  = {An override set to the empty string is no override.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sweep_budget.py -k test_an_empty_override_falls_back_to_the_derived_floor},
+}
+
+@misc{memres-sweep-budget-meminfo-without-memtotal-derives-a-zero-budget,
+  section = {sweep_budget},
+  title  = {With no `MemTotal` line the backward measurement is 0 and so is the floor},
+  claim  = {With no `MemTotal` line the backward measurement is 0 and so is the floor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sweep_budget.py -k test_a_meminfo_without_memtotal_derives_a_zero_budget},
+}
+
+@misc{memres-sweep-budget-main-prints-the-budget-from-the-process-environment,
+  section = {sweep_budget},
+  title  = {The console script prints the resolved budget, read from `os.environ` by default},
+  claim  = {The console script prints the resolved budget, read from `os.environ` by default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sweep_budget.py -k test_main_prints_the_budget_from_the_process_environment},
+}
+
+@misc{memres-cpuweight-build-cgroup-reuses-the-scope-under-our-app-slice-when-cpu-is-delegated,
+  section = {cpuweight},
+  title  = {The scope is `<our app.slice>/paperkit-build.scope`; its path is both results},
+  claim  = {The scope is `<our app.slice>/paperkit-build.scope`; its path is both results.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_build_cgroup_reuses_the_scope_under_our_app_slice_when_cpu_is_delegated},
+}
+
+@misc{memres-cpuweight-build-cgroup-without-a-cgroup-of-our-own-is-unweighted,
+  section = {cpuweight},
+  title  = {A host with no unified cgroup line has no hierarchy to build under},
+  claim  = {A host with no unified cgroup line has no hierarchy to build under.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_build_cgroup_without_a_cgroup_of_our_own_is_unweighted},
+}
+
+@misc{memres-cpuweight-build-cgroup-names-a-scope-it-cannot-create,
+  section = {cpuweight},
+  title  = {When the slice directory is absent the mkdir fails and the reason is returned},
+  claim  = {When the slice directory is absent the mkdir fails and the reason is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_build_cgroup_names_a_scope_it_cannot_create},
+}
+
+@misc{memres-cpuweight-build-cgroup-names-a-cpu-controller-that-is-not-delegated,
+  section = {cpuweight},
+  title  = {A scope with no `cpu.weight` file means `cpu` was not delegated to the parent},
+  claim  = {A scope with no `cpu.weight` file means `cpu` was not delegated to the parent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_build_cgroup_names_a_cpu_controller_that_is_not_delegated},
+}
+
+@misc{memres-cpuweight-build-cgroup-falls-back-to-the-whole-cgroup-when-there-is-no-app-slice,
+  section = {cpuweight},
+  title  = {Our own cgroup path is the parent when it never passes through `app.slice`},
+  claim  = {Our own cgroup path is the parent when it never passes through `app.slice`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_build_cgroup_falls_back_to_the_whole_cgroup_when_there_is_no_app_slice},
+}
+
+@misc{memres-cpuweight-apply-sets-the-weight-once-and-then-reports-it-already-set,
+  section = {cpuweight},
+  title  = {The first apply rewrites `100 -> 20`; the second finds it already there},
+  claim  = {The first apply rewrites `100 -> 20`; the second finds it already there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_apply_sets_the_weight_once_and_then_reports_it_already_set},
+}
+
+@misc{memres-cpuweight-apply-takes-an-explicit-weight-and-an-explicit-pid,
+  section = {cpuweight},
+  title  = {With a pid, that process's own cgroup is weighted, not the build scope},
+  claim  = {With a pid, that process's own cgroup is weighted, not the build scope.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_apply_takes_an_explicit_weight_and_an_explicit_pid},
+}
+
+@misc{memres-cpuweight-apply-reports-a-pid-with-no-cgroup-and-a-cgroup-with-no-weight-file,
+  section = {cpuweight},
+  title  = {No unified cgroup, or no writable `cpu.weight`, is unweighted rather than an error},
+  claim  = {No unified cgroup, or no writable `cpu.weight`, is unweighted rather than an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_apply_reports_a_pid_with_no_cgroup_and_a_cgroup_with_no_weight_file},
+}
+
+@misc{memres-cpuweight-apply-returns-the-build-cgroup-reason-when-there-is-no-build-cgroup,
+  section = {cpuweight},
+  title  = {Without an explicit pid, a failed `build_cgroup` is the answer},
+  claim  = {Without an explicit pid, a failed `build_cgroup` is the answer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_apply_returns_the_build_cgroup_reason_when_there_is_no_build_cgroup},
+}
+
+@misc{memres-cpuweight-join-writes-the-pid-to-cgroup-procs-and-self-means-this-process,
+  section = {cpuweight},
+  title  = {A pid, or `self` for our own, is written to the scope's `cgroup.procs`},
+  claim  = {A pid, or `self` for our own, is written to the scope's `cgroup.procs`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_join_writes_the_pid_to_cgroup_procs_and_self_means_this_process},
+}
+
+@misc{memres-cpuweight-join-names-a-cgroup-it-cannot-write,
+  section = {cpuweight},
+  title  = {A cgroup directory that does not exist cannot be joined, and the reason says so},
+  claim  = {A cgroup directory that does not exist cannot be joined, and the reason says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_join_names_a_cgroup_it_cannot_write},
+}
+
+@misc{memres-cpuweight-build-servers-lists-only-processes-that-announce-a-bazel-server,
+  section = {cpuweight},
+  title  = {The server's command line has `bazel(<workspace>)`; the client's and strangers' do not},
+  claim  = {The server's command line has `bazel(<workspace>)`; the client's and strangers' do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_build_servers_lists_only_processes_that_announce_a_bazel_server},
+}
+
+@misc{memres-cpuweight-is-cell-matches-the-executable-names-of-a-sandbox-and-its-wrapper,
+  section = {cpuweight},
+  title  = {Only `linux-sandbox` and `process-wrapper` are cells; a shell running pgrep is not},
+  claim  = {Only `linux-sandbox` and `process-wrapper` are cells; a shell running pgrep is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_is_cell_matches_the_executable_names_of_a_sandbox_and_its_wrapper},
+}
+
+@misc{memres-cpuweight-verify-with-no-cells-has-nothing-to-verify,
+  section = {cpuweight},
+  title  = {No cell processes at all is vacuously fine, and says so},
+  claim  = {No cell processes at all is vacuously fine, and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_verify_with_no_cells_has_nothing_to_verify},
+}
+
+@misc{memres-cpuweight-verify-passes-when-every-cell-is-inside-the-scope,
+  section = {cpuweight},
+  title  = {All cells in `cg` is true, counted by COMM},
+  claim  = {All cells in `cg` is true, counted by COMM.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_verify_passes_when_every_cell_is_inside_the_scope},
+}
+
+@misc{memres-cpuweight-verify-fails-naming-the-cells-outside-the-scope,
+  section = {cpuweight},
+  title  = {A cell outside means the weight is inert, with the inside and outside counts},
+  claim  = {A cell outside means the weight is inert, with the inside and outside counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_verify_fails_naming_the_cells_outside_the_scope},
+}
+
+@misc{memres-cpuweight-runnable-ratio-is-procs-running-per-core-and-procs-blocked,
+  section = {cpuweight},
+  title  = {Both counters are read from the host's `stat`; the ratio divides by the core count},
+  claim  = {Both counters are read from the host's `stat`; the ratio divides by the core count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_runnable_ratio_is_procs_running_per_core_and_procs_blocked},
+}
+
+@misc{memres-cpuweight-main-report-prints-the-box-reading-and-touches-no-cgroup,
+  section = {cpuweight},
+  title  = {`--report` is one stdout line and leaves the weight untouched},
+  claim  = {`--report` is one stdout line and leaves the weight untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_main_report_prints_the_box_reading_and_touches_no_cgroup},
+}
+
+@misc{memres-cpuweight-main-weights-the-scope-joins-it-and-moves-the-servers-in,
+  section = {cpuweight},
+  title  = {Bare invocation sets the weight, joins, moves the server and reports on stderr},
+  claim  = {Bare invocation sets the weight, joins, moves the server and reports on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_main_weights_the_scope_joins_it_and_moves_the_servers_in},
+}
+
+@misc{memres-cpuweight-main-takes-the-last-weight-given-in-either-spelling,
+  section = {cpuweight},
+  title  = {`--weight N` and `--weight=N` both set it, and the later wins},
+  claim  = {`--weight N` and `--weight=N` both set it, and the later wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_main_takes_the_last_weight_given_in_either_spelling},
+}
+
+@misc{memres-cpuweight-main-is-a-quiet-no-op-without-a-cgroup-and-never-fails-the-build,
+  section = {cpuweight},
+  title  = {With no cgroup-v2 the reason goes to stderr and the exit is still 0},
+  claim  = {With no cgroup-v2 the reason goes to stderr and the exit is still 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_main_is_a_quiet_no_op_without_a_cgroup_and_never_fails_the_build},
+}
+
+@misc{memres-cpuweight-main-verify-exits-by-whether-the-cells-are-inside-the-scope,
+  section = {cpuweight},
+  title  = {`--verify` is 0 with the cells inside and 1 with one outside, and 1 with no scope},
+  claim  = {`--verify` is 0 with the cells inside and 1 with one outside, and 1 with no scope.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_main_verify_exits_by_whether_the_cells_are_inside_the_scope},
+}
+
+@misc{memres-cpuweight-main-exec-runs-the-command-after-joining-and-refuses-an-empty-one,
+  section = {cpuweight},
+  title  = {`--exec CMD...` hands CMD to execvp; `--exec` alone is exit 2},
+  claim  = {`--exec CMD...` hands CMD to execvp; `--exec` alone is exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpuweight.py -k test_main_exec_runs_the_command_after_joining_and_refuses_an_empty_one},
+}
+
+@misc{memres-zswap-probe-cg-dir-joins-the-path-after-the-last-double-colon-under-the-root,
+  section = {zswap_probe},
+  title  = {The cgroup directory is the root plus the unified-hierarchy path, leading slash dropped},
+  claim  = {The cgroup directory is the root plus the unified-hierarchy path, leading slash dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_cg_dir_joins_the_path_after_the_last_double_colon_under_the_root},
+}
+
+@misc{memres-zswap-probe-read-gives-the-value-or-a-named-reason-never-a-zero,
+  section = {zswap_probe},
+  title  = {A file reads stripped; an absent one and an unreadable one say why they have no value},
+  claim  = {A file reads stripped; an absent one and an unreadable one say why they have no value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_read_gives_the_value_or_a_named_reason_never_a_zero},
+}
+
+@misc{memres-zswap-probe-stat-keys-picks-integers-and-names-what-is-missing,
+  section = {zswap_probe},
+  title  = {Each key is an int when present, `key-absent` when not, and the file's reason if no file},
+  claim  = {Each key is an int when present, `key-absent` when not, and the file's reason if no
+            file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_stat_keys_picks_integers_and_names_what_is_missing},
+}
+
+@misc{memres-zswap-probe-zswap-bound-finds-the-nearest-ancestor-that-can-refuse-a-store,
+  section = {zswap_probe},
+  title  = {A parent's bound binds a child whose own file reads `max`; levels run leaf to root},
+  claim  = {A parent's bound binds a child whose own file reads `max`; levels run leaf to root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_zswap_bound_finds_the_nearest_ancestor_that_can_refuse_a_store},
+}
+
+@misc{memres-zswap-probe-zswap-bound-with-no-bound-anywhere-is-unbounded-to-the-root,
+  section = {zswap_probe},
+  title  = {Every level reading `max` leaves the pool unbounded},
+  claim  = {Every level reading `max` leaves the pool unbounded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_zswap_bound_with_no_bound_anywhere_is_unbounded_to_the_root},
+}
+
+@misc{memres-zswap-probe-zswap-bound-stops-at-the-filesystem-root-for-a-leaf-outside-the-given-root,
+  section = {zswap_probe},
+  title  = {A leaf not under `root` ends at `/` instead of walking forever},
+  claim  = {A leaf not under `root` ends at `/` instead of walking forever.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_zswap_bound_stops_at_the_filesystem_root_for_a_leaf_outside_the_given_root},
+}
+
+@misc{memres-zswap-probe-pinned-separates-a-saturated-pair-from-an-unsaturated-one,
+  section = {zswap_probe},
+  title  = {A charge within the tolerance of its ceiling is pinned; far under it is not},
+  claim  = {A charge within the tolerance of its ceiling is pinned; far under it is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_pinned_separates_a_saturated_pair_from_an_unsaturated_one},
+}
+
+@misc{memres-zswap-probe-pinned-honours-its-tolerance-and-sign-knobs,
+  section = {zswap_probe},
+  title  = {The gap is `max - current`; a wider tolerance admits more, a flipped sign inverts it},
+  claim  = {The gap is `max - current`; a wider tolerance admits more, a flipped sign inverts it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_pinned_honours_its_tolerance_and_sign_knobs},
+}
+
+@misc{memres-zswap-probe-sample-reads-one-unbounded-pinned-cgroup-and-labels-every-field,
+  section = {zswap_probe},
+  title  = {The reading carries counters, ratio, pinned bit, conditions, hierarchy and validity},
+  claim  = {The reading carries counters, ratio, pinned bit, conditions, hierarchy and validity.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_sample_reads_one_unbounded_pinned_cgroup_and_labels_every_field},
+}
+
+@misc{memres-zswap-probe-sample-says-eviction-churn-when-an-ancestor-binds-the-pool,
+  section = {zswap_probe},
+  title  = {The same ratio means eviction churn once any ancestor bounds zswap},
+  claim  = {The same ratio means eviction churn once any ancestor bounds zswap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_sample_says_eviction_churn_when_an_ancestor_binds_the_pool},
+}
+
+@misc{memres-zswap-probe-sample-of-an-unmeasurable-scope-leaf-with-children-omits-the-ratio,
+  section = {zswap_probe},
+  title  = {No stat means no ratio; a `.scope` with a populated child is neither own nor a leaf},
+  claim  = {No stat means no ratio; a `.scope` with a populated child is neither own nor a leaf.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_sample_of_an_unmeasurable_scope_leaf_with_children_omits_the_ratio},
+}
+
+@misc{memres-zswap-probe-sample-of-the-root-cgroup-says-it-is-the-root,
+  section = {zswap_probe},
+  title  = {A cgroup file naming `/` samples the root itself},
+  claim  = {A cgroup file naming `/` samples the root itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_sample_of_the_root_cgroup_says_it_is_the_root},
+}
+
+@misc{memres-zswap-probe-main-prints-one-sample-as-json,
+  section = {zswap_probe},
+  title  = {With no flag the sample of the planted cgroup is printed as indented JSON},
+  claim  = {With no flag the sample of the planted cgroup is printed as indented JSON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_main_prints_one_sample_as_json},
+}
+
+@misc{memres-zswap-probe-main-selftest-passes-with-the-intact-predicate-and-three-caught-mutants,
+  section = {zswap_probe},
+  title  = {`--selftest` is exit 0, PASS on stdout and silence on stderr},
+  claim  = {`--selftest` is exit 0, PASS on stdout and silence on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_main_selftest_passes_with_the_intact_predicate_and_three_caught_mutants},
+}
+
+@misc{memres-zswap-probe-main-selftest-fails-naming-each-mutant-a-deaf-predicate-lets-survive,
+  section = {zswap_probe},
+  title  = {A predicate that ignores its knobs separates P but lets all three mutants survive},
+  claim  = {A predicate that ignores its knobs separates P but lets all three mutants survive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_main_selftest_fails_naming_each_mutant_a_deaf_predicate_lets_survive},
+}

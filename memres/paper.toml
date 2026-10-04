@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.memres: the memory-reservation tools, as installed tools"
+subtitle = "The observation store of cell peaks, its projection, the harvest, the build-host sizing helpers and the zswap probe, ported from paperkit's tools/ with the witness that would catch each one drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "MEMRES.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
