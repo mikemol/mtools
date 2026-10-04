@@ -50,6 +50,8 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.pathwalk.walk import WorktreeRefusedError, expand
+
 from mikemol.pycodemod import report
 from mikemol.pycodemod.aliases import aliases as run_aliases
 from mikemol.pycodemod.ambient import ambient as run_ambient
@@ -94,7 +96,6 @@ from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
 from mikemol.pycodemod.strings import key_reads, literal_sites
 from mikemol.pycodemod.swallows import swallows as run_swallows
-from mikemol.pycodemod.worktrees import WorktreeRefusedError, expand
 from mikemol.pycodemod.writes import writes_by_default
 
 if TYPE_CHECKING:

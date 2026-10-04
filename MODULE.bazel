@@ -240,6 +240,15 @@ pip.parse(
     requirements_lock = "//gradekit:requirements.txt",
 )
 
+# ⚑ `mikemol-pathwalk` — the directory-operand walk (registered-worktree skip, virtualenv prune, refused
+# symlinks) extracted from mikemol-pycodemod so a light tool (mdstruct) can reuse it without libcst
+# (mtools:W573; pycodemod now depends on it, A+B per mtools:W562). Empty shipping hub: standard library only.
+pip.parse(
+    hub_name = "pathwalk_deps",
+    python_version = "3.13",
+    requirements_lock = "//pathwalk:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -417,6 +426,11 @@ pip.parse(
     uv_lock = "//gradekit:uv.lock",
 )
 pip.parse(
+    hub_name = "pathwalk_dev",
+    python_version = "3.13",
+    uv_lock = "//pathwalk:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -480,6 +494,8 @@ use_repo(
     "importdag_dev",
     "gradekit_deps",
     "gradekit_dev",
+    "pathwalk_deps",
+    "pathwalk_dev",
     "treeio_deps",
     "treeio_dev",
     "pytestspec_deps",

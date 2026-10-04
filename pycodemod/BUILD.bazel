@@ -30,7 +30,11 @@ py_library(
     srcs = glob(["src/mikemol/pycodemod/**/*.py"]),
     data = glob(["src/mikemol/pycodemod/py.typed"], allow_empty = True),
     imports = ["src"],
+    # ⚑ THE SIBLING EDGE (mtools:W562, ruled A+B; mtools:W573): mikemol-pathwalk is declared in
+    # pyproject.toml for uv and carried here as a Bazel dependency on the sibling's py_library; the
+    # pip hubs do not resolve it. The two must be kept in step by hand.
     deps = [
+        "//pathwalk:pathwalk",
         requirement("libcst"),
     ],
     visibility = ["//visibility:public"],
@@ -62,10 +66,15 @@ py_library(
         # asks, and without it that module refuses at import (measured: this target, 2026-09-25).
         deps = [
             ":pycodemod",
+            "//pathwalk:pathwalk",
             dev_requirement("pytest"),
             dev_requirement("sqlalchemy"),
         ],
         imports = ["src"],
+        # ⚑ With two source roots on sys.path (this dist and its sibling), legacy implicit `__init__.py`
+        # creation would turn `mikemol` into a regular package from the first root and shadow the
+        # namespace: every test would fail with `No module named 'mikemol.pycodemod'` (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -126,6 +135,8 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        # ⚑ How mypy sees the sibling inside the sandbox (the runner cannot see pip-installed siblings).
+        "//pathwalk:pathwalk",
         dev_requirement("libcst"),
         dev_requirement("mypy"),
         dev_requirement("pytest"),
@@ -174,7 +185,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/pycodemod/**"]),
+    srcs = glob(["src/mikemol/pycodemod/**"]) + ["//pathwalk:pathwalk"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

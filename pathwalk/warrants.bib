@@ -1,0 +1,107 @@
+
+@misc{pathwalk-walk-directory-operand-skips-a-registered-worktree-and-counts-it,
+  section = {walk},
+  title  = {Default: the importer outside the worktree is found, the one inside is not, skip counted},
+  claim  = {Default: the importer outside the worktree is found, the one inside is not, skip
+            counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_a_directory_operand_skips_a_registered_worktree_and_counts_it},
+}
+
+@misc{pathwalk-walk-include-worktrees-reads-the-worktree-and-counts-zero-skipped,
+  section = {walk},
+  title  = {With include_worktrees both importers are found and the skip count is zero},
+  claim  = {With include_worktrees both importers are found and the skip count is zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_include_worktrees_reads_the_worktree_and_counts_zero_skipped},
+}
+
+@misc{pathwalk-walk-hidden-directories-are-walked-not-pruned,
+  section = {walk},
+  title  = {Hidden directories are included, so the registered-path check is what skips the worktree},
+  claim  = {Hidden directories are included, so the registered-path check is what skips the
+            worktree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_hidden_directories_are_walked_not_pruned},
+}
+
+@misc{pathwalk-walk-root-own-tree-is-read-when-run-from-a-linked-worktree,
+  section = {walk},
+  title  = {A query rooted in a linked worktree reads that worktree and counts the other tree},
+  claim  = {A query rooted in a linked worktree reads that worktree and counts the other tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_the_root_own_tree_is_read_when_run_from_a_linked_worktree},
+}
+
+@misc{pathwalk-walk-registered-lists-both-trees-and-other-worktrees-drops-the-own,
+  section = {walk},
+  title  = {Registered names both trees, resolved; other_worktrees leaves only the other one},
+  claim  = {Registered names both trees, resolved; other_worktrees leaves only the other one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_registered_lists_both_trees_and_other_worktrees_drops_the_own},
+}
+
+@misc{pathwalk-walk-absent-git-refuses-by-name,
+  section = {walk},
+  title  = {With git off PATH a directory operand refuses, never reading as no worktrees},
+  claim  = {With git off PATH a directory operand refuses, never reading as no worktrees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_an_absent_git_refuses_by_name},
+}
+
+@misc{pathwalk-walk-failing-git-refuses-by-name,
+  section = {walk},
+  title  = {A directory that is no git repository refuses, never reading as no worktrees},
+  claim  = {A directory that is no git repository refuses, never reading as no worktrees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_a_failing_git_refuses_by_name},
+}
+
+@misc{pathwalk-walk-symlink-is-refused-as-data-and-counted,
+  section = {walk},
+  title  = {A linked file and a linked directory are counted, not followed, and not read},
+  claim  = {A linked file and a linked directory are counted, not followed, and not read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_a_symlink_is_refused_as_data_and_counted},
+}
+
+@misc{pathwalk-walk-directory-operand-that-is-a-symlink-refuses,
+  section = {walk},
+  title  = {A symlink given AS the directory operand refuses rather than being walked},
+  claim  = {A symlink given AS the directory operand refuses rather than being walked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_a_directory_operand_that_is_a_symlink_refuses},
+}
+
+@misc{pathwalk-walk-file-operands-behave-as-before,
+  section = {walk},
+  title  = {Explicit files pass through as given, with no directory counted and no git call},
+  claim  = {Explicit files pass through as given, with no directory counted and no git call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_walk.py -k test_file_operands_behave_as_before},
+}
+
+@misc{pathwalk-virtualenvs-venv-is-pruned-counted-and-its-importer-not-found,
+  section = {virtualenvs},
+  title  = {A directory holding pyvenv.cfg is not walked, and the count says one},
+  claim  = {A directory holding pyvenv.cfg is not walked, and the count says one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_venv_is_pruned_counted_and_its_importer_not_found},
+}
+
+@misc{pathwalk-virtualenvs-dir-named-dot-venv-without-the-cfg-is-walked,
+  section = {virtualenvs},
+  title  = {Detection is by the file, so a bare directory named .venv is walked and counts zero},
+  claim  = {Detection is by the file, so a bare directory named .venv is walked and counts zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_dir_named_dot_venv_without_the_cfg_is_walked},
+}
+
+@misc{pathwalk-virtualenvs-venv-with-another-name-is-pruned,
+  section = {virtualenvs},
+  title  = {A venv named anything is pruned: the name is not the test},
+  claim  = {A venv named anything is pruned: the name is not the test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_venv_with_another_name_is_pruned},
+}
+
+@misc{pathwalk-virtualenvs-count-is-zero-when-there-is-none,
+  section = {virtualenvs},
+  title  = {A directory operand with no venv counts 0},
+  claim  = {A directory operand with no venv counts 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_the_count_is_zero_when_there_is_none},
+}
+
+@misc{pathwalk-virtualenvs-count-survives-include-worktrees,
+  section = {virtualenvs},
+  title  = {A venv is not a worktree: include_worktrees still prunes and counts it},
+  claim  = {A venv is not a worktree: include_worktrees still prunes and counts it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_the_count_survives_include_worktrees},
+}

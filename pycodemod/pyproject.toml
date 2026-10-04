@@ -25,7 +25,12 @@ classifiers = [
 # ⚑⚑ libcst IS REQUIRED, NOT OPTIONAL. The origin imported it under try/except and every CST mode
 # returned [] without it — a zero reading as an absence, the defect class this port exists to end.
 # A missing libcst is now an install-time failure.
-dependencies = ["libcst"]
+#
+# ⚑ THE DIRECTORY-OPERAND WALK LIVES IN mikemol-pathwalk (mtools:W573), a stdlib-only sibling,
+# so mdstruct can reuse it without libcst. The A+B sibling edge (mtools:W562): uv resolves it as a
+# NON-editable path source; Bazel carries it as a py_library dependency in BUILD.bazel; the pip hubs
+# do not resolve it and requirements.txt is deliberately NOT regenerated. Kept in step by hand.
+dependencies = ["libcst", "mikemol-pathwalk"]
 
 # ⚑⚑ SQLALCHEMY IS AN OPTIONAL EXTRA, NOT A DEPENDENCY (operator ruling, 2026-09-25). Only
 # `funcnames` needs it, to ASK SQLAlchemy which `func.<name>` calls it translates per dialect; a
@@ -56,6 +61,9 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-pathwalk = { path = "../pathwalk" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -90,6 +98,13 @@ preview = true
 select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
+# ⚑ THE SIBLING IS ANOTHER DISTRIBUTION, SO IT SORTS AS THIRD PARTY IN EVERY ENVIRONMENT. Left to
+# detection, ruff classified `mikemol.pathwalk` first-party on a host checkout (where `src` holds
+# the namespace) and third-party in the bazel sandbox (where only this dist's sources are staged):
+# the same import block was sorted in one and unsorted in the other (measured, //pycodemod:ratchet).
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.pathwalk"]
+
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
 
@@ -123,11 +138,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # and git is resolved on PATH once.
 "src/mikemol/pycodemod/owes.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_owes.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-# ⚑ ONE FILE, ONE RESPONSIBILITY: worktrees exists to ASK GIT which paths are registered worktrees.
-# The argv is fixed, the root is a path operand after `-C`, and git is resolved on PATH once.
-"src/mikemol/pycodemod/worktrees.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_virtualenvs.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_worktrees.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# ⚑ THE OPERAND PRINTS RUN `git init` AND `git worktree add` IN A DECOY REPOSITORY under tmp_path: the
+# argv is fixed and git is resolved on PATH once. The walk itself is mikemol-pathwalk's.
+"tests/test_operands.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_sibling_edge.py" = ["assert"]
 "tests/test_graph.py" = ["assert"]
 "tests/test_imports.py" = ["assert"]
 "tests/test_layout.py" = ["assert"]

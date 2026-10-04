@@ -2420,102 +2420,59 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_capture.py -k test_a_symlink_named_as_an_operand_is_refused_not_read},
 }
 
-@misc{pycodemod-worktrees-directory-operand-skips-a-registered-worktree-and-says-so,
-  section = {worktrees},
+@misc{pycodemod-operands-directory-operand-skips-a-registered-worktree-and-says-so,
+  section = {operands},
   title  = {Default: the importer outside the worktree is found, the one inside is not, skip printed},
   claim  = {Default: the importer outside the worktree is found, the one inside is not, skip
             printed.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_directory_operand_skips_a_registered_worktree_and_says_so},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_a_directory_operand_skips_a_registered_worktree_and_says_so},
 }
 
-@misc{pycodemod-worktrees-include-worktrees-reads-the-worktree-and-reports-zero-skipped,
-  section = {worktrees},
+@misc{pycodemod-operands-include-worktrees-reads-the-worktree-and-reports-zero-skipped,
+  section = {operands},
   title  = {With --include-worktrees both importers are found and the skip line says zero},
   claim  = {With --include-worktrees both importers are found and the skip line says zero.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_include_worktrees_reads_the_worktree_and_reports_zero_skipped},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_include_worktrees_reads_the_worktree_and_reports_zero_skipped},
 }
 
-@misc{pycodemod-worktrees-hidden-directories-are-walked-not-pruned,
-  section = {worktrees},
-  title  = {Hidden directories are included, so the registered-path check is what skips the worktree},
-  claim  = {Hidden directories are included, so the registered-path check is what skips the
-            worktree.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_hidden_directories_are_walked_not_pruned},
+@misc{pycodemod-operands-venv-is-pruned-and-printed,
+  section = {operands},
+  title  = {A directory holding pyvenv.cfg is not walked, and the driver prints the count},
+  claim  = {A directory holding pyvenv.cfg is not walked, and the driver prints the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_a_venv_is_pruned_and_printed},
 }
 
-@misc{pycodemod-worktrees-root-own-tree-is-read-when-run-from-a-linked-worktree,
-  section = {worktrees},
-  title  = {A query rooted in a linked worktree reads that worktree and counts the other tree},
-  claim  = {A query rooted in a linked worktree reads that worktree and counts the other tree.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_the_root_own_tree_is_read_when_run_from_a_linked_worktree},
+@misc{pycodemod-operands-symlink-is-counted-and-printed,
+  section = {operands},
+  title  = {A linked file is not read, and the driver prints the refused count},
+  claim  = {A linked file is not read, and the driver prints the refused count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_a_symlink_is_counted_and_printed},
 }
 
-@misc{pycodemod-worktrees-absent-git-refuses-by-name,
-  section = {worktrees},
-  title  = {With git off PATH a directory operand refuses (exit 2), never reading as no worktrees},
-  claim  = {With git off PATH a directory operand refuses (exit 2), never reading as no worktrees.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_an_absent_git_refuses_by_name},
+@misc{pycodemod-operands-refused-walk-exits-two-and-names-why,
+  section = {operands},
+  title  = {A symlink given AS the directory operand refuses (exit 2) with the walk's message},
+  claim  = {A symlink given AS the directory operand refuses (exit 2) with the walk's message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_a_refused_walk_exits_two_and_names_why},
 }
 
-@misc{pycodemod-worktrees-failing-git-refuses-by-name,
-  section = {worktrees},
-  title  = {A directory that is no git repository refuses (exit 2), never reading as no worktrees},
-  claim  = {A directory that is no git repository refuses (exit 2), never reading as no worktrees.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_failing_git_refuses_by_name},
+@misc{pycodemod-operands-file-operands-print-no-skip-line,
+  section = {operands},
+  title  = {Explicit files are read as given, with no skip line},
+  claim  = {Explicit files are read as given, with no skip line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_file_operands_print_no_skip_line},
 }
 
-@misc{pycodemod-worktrees-symlink-is-refused-as-data-and-counted,
-  section = {worktrees},
-  title  = {A linked file and a linked directory are counted, not followed, and not read},
-  claim  = {A linked file and a linked directory are counted, not followed, and not read.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_symlink_is_refused_as_data_and_counted},
+@misc{pycodemod-sibling-edge-sibling-walk-is-importable-beside-this-distribution,
+  section = {sibling_edge},
+  title  = {Both namespace roots resolve and the sibling's walk expands a directory operand},
+  claim  = {Both namespace roots resolve and the sibling's walk expands a directory operand.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_sibling_walk_is_importable_beside_this_distribution},
 }
 
-@misc{pycodemod-worktrees-directory-operand-that-is-a-symlink-refuses,
-  section = {worktrees},
-  title  = {A symlink given AS the directory operand refuses (exit 2) rather than being walked},
-  claim  = {A symlink given AS the directory operand refuses (exit 2) rather than being walked.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_directory_operand_that_is_a_symlink_refuses},
-}
-
-@misc{pycodemod-worktrees-file-operands-behave-as-before,
-  section = {worktrees},
-  title  = {Explicit files are read as given, with no skip line and no git call},
-  claim  = {Explicit files are read as given, with no skip line and no git call.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_file_operands_behave_as_before},
-}
-
-@misc{pycodemod-virtualenvs-venv-is-pruned-counted-and-its-importer-not-found,
-  section = {virtualenvs},
-  title  = {A directory holding pyvenv.cfg is not walked, and the count says one},
-  claim  = {A directory holding pyvenv.cfg is not walked, and the count says one.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_venv_is_pruned_counted_and_its_importer_not_found},
-}
-
-@misc{pycodemod-virtualenvs-dir-named-dot-venv-without-the-cfg-is-walked,
-  section = {virtualenvs},
-  title  = {Detection is by the file, so a bare directory named .venv is walked and counts zero},
-  claim  = {Detection is by the file, so a bare directory named .venv is walked and counts zero.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_dir_named_dot_venv_without_the_cfg_is_walked},
-}
-
-@misc{pycodemod-virtualenvs-venv-with-another-name-is-pruned,
-  section = {virtualenvs},
-  title  = {A venv named anything is pruned: the name is not the test},
-  claim  = {A venv named anything is pruned: the name is not the test.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_a_venv_with_another_name_is_pruned},
-}
-
-@misc{pycodemod-virtualenvs-line-prints-zero-when-there-is-none,
-  section = {virtualenvs},
-  title  = {A directory operand with no venv still prints the line, with 0},
-  claim  = {A directory operand with no venv still prints the line, with 0.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_the_line_prints_zero_when_there_is_none},
-}
-
-@misc{pycodemod-virtualenvs-count-survives-include-worktrees,
-  section = {virtualenvs},
-  title  = {A venv is not a worktree: --include-worktrees still prunes and counts it},
-  claim  = {A venv is not a worktree: --include-worktrees still prunes and counts it.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_the_count_survives_include_worktrees},
+@misc{pycodemod-sibling-edge-this-distribution-still-resolves-beside-its-sibling,
+  section = {sibling_edge},
+  title  = {The namespace package merges: importing the sibling does not shadow mikemol.pycodemod},
+  claim  = {The namespace package merges: importing the sibling does not shadow mikemol.pycodemod.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_sibling},
 }

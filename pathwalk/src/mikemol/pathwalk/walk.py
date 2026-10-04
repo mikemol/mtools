@@ -5,6 +5,8 @@ r"""Directory operands: the `*.py` files beneath a root, minus every registered 
 Asked for by el-openglo (W138, mtools:W536): a caller's glob over a repo root also read every
 `.claude/worktrees/agent-*` and `.tree-writes/*/tree` checkout, so one real importer read as about
 27. Neither this tool nor a shell glob knew which directories were COPIES of the tree.
+Extracted from mikemol-pycodemod as a stdlib-only distribution (mtools:W573), so a caller without
+libcst can reuse it.
 
 ⚑⚑ GIT IS ASKED, NEVER GUESSED, AND ITS ABSENCE REFUSES. `git worktree list --porcelain` is the one
 authority on which paths are checkouts. Git absent, or the command failing, raises

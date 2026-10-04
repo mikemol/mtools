@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.pycodemod import cli
+from mikemol.pathwalk.walk import expand
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -54,54 +54,39 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return root
 
 
-def _run(capsys: pytest.CaptureFixture[str], *argv: str) -> str:
-    code = cli.main(["importers", "target_mod", *argv])
-    assert code == 0
-    return capsys.readouterr().out
-
-
-def test_a_venv_is_pruned_counted_and_its_importer_not_found(
-    repo: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_a_venv_is_pruned_counted_and_its_importer_not_found(repo: Path) -> None:
     """A directory holding pyvenv.cfg is not walked, and the count says one."""
     _plant(repo / ".venv", cfg=True)
-    out = _run(capsys, str(repo))
-    assert f"{repo / _MAIN}:1" in out
-    assert _THIRD_PARTY not in out
-    assert "skipped 1 virtualenvs" in out
+    got = expand([str(repo)], include_worktrees=False)
+    assert got.files == [str(repo / _MAIN)]
+    assert got.virtualenvs == 1
 
 
-def test_a_dir_named_dot_venv_without_the_cfg_is_walked(
-    repo: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_a_dir_named_dot_venv_without_the_cfg_is_walked(repo: Path) -> None:
     """Detection is by the file, so a bare directory named .venv is walked and counts zero."""
     _plant(repo / ".venv", cfg=False)
-    out = _run(capsys, str(repo))
-    assert f"{repo / '.venv' / _THIRD_PARTY}:1" in out
-    assert "skipped 0 virtualenvs" in out
+    got = expand([str(repo)], include_worktrees=False)
+    assert str(repo / ".venv" / _THIRD_PARTY) in got.files
+    assert got.virtualenvs == 0
 
 
-def test_a_venv_with_another_name_is_pruned(repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_a_venv_with_another_name_is_pruned(repo: Path) -> None:
     """A venv named anything is pruned: the name is not the test."""
     _plant(repo / "env-of-mine" / "nested", cfg=True)
-    out = _run(capsys, str(repo))
-    assert _THIRD_PARTY not in out
-    assert "skipped 1 virtualenvs" in out
+    got = expand([str(repo)], include_worktrees=False)
+    assert got.files == [str(repo / _MAIN)]
+    assert got.virtualenvs == 1
 
 
-def test_the_line_prints_zero_when_there_is_none(
-    repo: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """A directory operand with no venv still prints the line, with 0."""
-    out = _run(capsys, str(repo))
-    assert "skipped 0 virtualenvs" in out
+def test_the_count_is_zero_when_there_is_none(repo: Path) -> None:
+    """A directory operand with no venv counts 0."""
+    got = expand([str(repo)], include_worktrees=False)
+    assert got.virtualenvs == 0
 
 
-def test_the_count_survives_include_worktrees(
-    repo: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """A venv is not a worktree: --include-worktrees still prunes and counts it."""
+def test_the_count_survives_include_worktrees(repo: Path) -> None:
+    """A venv is not a worktree: include_worktrees still prunes and counts it."""
     _plant(repo / ".venv", cfg=True)
-    out = _run(capsys, "--include-worktrees", str(repo))
-    assert _THIRD_PARTY not in out
-    assert "skipped 1 virtualenvs" in out
+    got = expand([str(repo)], include_worktrees=True)
+    assert got.files == [str(repo / _MAIN)]
+    assert got.virtualenvs == 1

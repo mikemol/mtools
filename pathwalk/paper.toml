@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.pathwalk: the directory-operand walk, skipping registered worktrees and virtual environments"
+subtitle = "The stdlib-only walk extracted from pycodemod, with the witness that would catch each skip drifting into silence."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "PATHWALK.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
