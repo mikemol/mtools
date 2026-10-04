@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 # ⚑ THE MUTANT-CELL TOOLS of paperkit's tools/, migrated into mtools (mtools:W545, paperkit:W142,
 # umbrella mtools:W531). `eval` runs one cell of the def-sweep (one check against one counterfactual
 # engine); `cellargs`, `cellcgroup` and `cellstage` are its three siblings; `sens`, `decisions` and
-# `def_sites` read or enumerate the grid. Standard library only. `sites` is NOT here: it imports
-# paperkit's engine module `mutate`, which moves in its own package first.
+# `def_sites` read or enumerate the grid; `sites` enumerates every perturbation site of an engine
+# and reads the sibling distributions mikemol-mutation and mikemol-importdag.
 name = "mikemol-mutantcell"
 version = "0.1.0"
 description = "The def-sweep's cell: run one check against one counterfactual, aggregate the cells' records."
@@ -21,15 +21,22 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCY: argparse, ast, ctypes, json, resource and subprocess are the standard
-# library.
-dependencies = []
+# ⚑ THE SIBLING EDGES (mtools:W562, ruled A+B): `sites` reads mikemol-mutation for the site
+# enumerators and mikemol-importdag for the flat-import reader (which brings mikemol-atomicwrite
+# transitively through its own source entry). BUILD.bazel carries the same edges.
+dependencies = ["mikemol-mutation", "mikemol-importdag"]
 
 [project.scripts]
 mikemol-eval = "mikemol.mutantcell.eval:main"
+mikemol-sites = "mikemol.mutantcell.sites:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
+
+# ⚑ NOT EDITABLE: an editable install puts a finder hook on the path that mypy cannot resolve (W566).
+[tool.uv.sources]
+mikemol-mutation = { path = "../mutation" }
+mikemol-importdag = { path = "../importdag" }
 
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
@@ -79,6 +86,9 @@ preview = true
 select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.mutation", "mikemol.importdag"]
+
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
 
@@ -99,3 +109,5 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_def_sites.py" = ["assert"]
 "tests/test_eval.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_sens.py" = ["assert"]
+"tests/test_sibling_edge.py" = ["assert"]
+"tests/test_sites.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

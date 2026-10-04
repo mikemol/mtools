@@ -616,3 +616,81 @@
   claim  = {The `-m` path: `main()` takes its operands from `sys.argv[1:]`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sens.py -k test_main_reads_sys_argv_when_given_no_argument},
 }
+
+@misc{mutantcell-sites-every-kind-of-site-is-emitted-in-the-documented-order,
+  section = {sites},
+  title  = {Def, branch, flip, data and import-inject specs come out in that order},
+  claim  = {Def, branch, flip, data and import-inject specs come out in that order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_every_kind_of_site_is_emitted_in_the_documented_order},
+}
+
+@misc{mutantcell-sites-set-element-has-a-drop-but-no-value-perturbation,
+  section = {sites},
+  title  = {A set contributes a data- spec per element and no dflip},
+  claim  = {A set contributes a data- spec per element and no dflip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_a_set_element_has_a_drop_but_no_value_perturbation},
+}
+
+@misc{mutantcell-sites-already-imported-module-and-the-module-itself-are-not-injected,
+  section = {sites},
+  title  = {Only the engine modules neither imported flat nor equal to the target are injected},
+  claim  = {Only the engine modules neither imported flat nor equal to the target are injected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_an_already_imported_module_and_the_module_itself_are_not_injected},
+}
+
+@misc{mutantcell-sites-module-that-does-not-parse-yields-only-the-injects,
+  section = {sites},
+  title  = {No site can be read from a broken source; every other engine name is still injectable},
+  claim  = {No site can be read from a broken source; every other engine name is still injectable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_a_module_that_does_not_parse_yields_only_the_injects},
+}
+
+@misc{mutantcell-sites-main-prints-one-tab-separated-line-per-site,
+  section = {sites},
+  title  = {The line is the path as named, a tab, then the spec; the names are the files' stems},
+  claim  = {The line is the path as named, a tab, then the spec; the names are the files' stems.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_main_prints_one_tab_separated_line_per_site},
+}
+
+@misc{mutantcell-sites-main-reads-the-process-arguments-when-none-are-given,
+  section = {sites},
+  title  = {Without an argv the command line of the process is the input},
+  claim  = {Without an argv the command line of the process is the input.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_main_reads_the_process_arguments_when_none_are_given},
+}
+
+@misc{mutantcell-sites-module-runs-as-a-real-child-and-its-specs-drive-the-mutator,
+  section = {sites},
+  title  = {A child interpreter prints the specs, and the sibling mutator accepts one by module path},
+  claim  = {A child interpreter prints the specs, and the sibling mutator accepts one by module
+            path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_the_module_runs_as_a_real_child_and_its_specs_drive_the_mutator},
+}
+
+@misc{mutantcell-sibling-edge-mutation-sibling-resolves-beside-this-distribution,
+  section = {sibling_edge},
+  title  = {The mutator's enumerators import and read a source},
+  claim  = {The mutator's enumerators import and read a source.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_mutation_sibling_resolves_beside_this_distribution},
+}
+
+@misc{mutantcell-sibling-edge-importdag-sibling-resolves-beside-this-distribution,
+  section = {sibling_edge},
+  title  = {The flat-import reader imports and reads a source},
+  claim  = {The flat-import reader imports and reads a source.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_importdag_sibling_resolves_beside_this_distribution},
+}
+
+@misc{mutantcell-sibling-edge-transitive-atomicwrite-resolves-through-importdag,
+  section = {sibling_edge},
+  title  = {The sibling of the sibling is declared nowhere here, yet it writes a file},
+  claim  = {The sibling of the sibling is declared nowhere here, yet it writes a file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_transitive_atomicwrite_resolves_through_importdag},
+}
+
+@misc{mutantcell-sibling-edge-this-distribution-still-resolves-beside-its-siblings,
+  section = {sibling_edge},
+  title  = {The namespace package merges: importing the siblings does not shadow mikemol.mutantcell},
+  claim  = {The namespace package merges: importing the siblings does not shadow mikemol.mutantcell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_siblings},
+}

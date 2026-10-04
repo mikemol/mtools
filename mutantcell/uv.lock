@@ -129,9 +129,45 @@ wheels = [
 ]
 
 [[package]]
+name = "mikemol-atomicwrite"
+version = "0.1.0"
+source = { directory = "../atomicwrite" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
+name = "mikemol-importdag"
+version = "0.1.0"
+source = { directory = "../importdag" }
+dependencies = [
+    { name = "mikemol-atomicwrite" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mikemol-atomicwrite", directory = "../atomicwrite" }]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
 name = "mikemol-mutantcell"
 version = "0.1.0"
 source = { editable = "." }
+dependencies = [
+    { name = "mikemol-importdag" },
+    { name = "mikemol-mutation" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -139,6 +175,24 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
 ]
+
+[package.metadata]
+requires-dist = [
+    { name = "mikemol-importdag", directory = "../importdag" },
+    { name = "mikemol-mutation", directory = "../mutation" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
+name = "mikemol-mutation"
+version = "0.1.0"
+source = { directory = "../mutation" }
 
 [package.metadata]
 

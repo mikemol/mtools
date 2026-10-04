@@ -14,16 +14,22 @@ paperkit's; the entry points are a console script and `python -m` modules instea
 | `mikemol.mutantcell.cellstage` | library | places the engine's bytecode and delivers one counterfactual (module swap, file inject or drop, content toggle) |
 | `mikemol.mutantcell.sens` | `-m` only | folds per-site cell records into a claim's sensitivity set; fails loud on a flipped baseline or a leaked non-monotone cell |
 | `mikemol.mutantcell.decisions` | `-m` only | decision-coverage aggregator: the reached-but-unasserted decisions of a claim, or a project summary |
+| `mikemol.mutantcell.sites` | `mikemol-sites`, `-m mikemol.mutantcell.sites` | prints `module<TAB>spec` for every perturbation site of the named engine modules: def-drops, branch and condition sites, data key-drops and value-perturbs, and absent-import injects |
 | `mikemol.mutantcell.def_sites` | `-m` only | enumerates a source's def-sites (the mutation surface), or with `--lines` where each sits |
 
 `cellargs`, `cellcgroup` and `cellstage` do nothing at import time: they define names and nothing
 else, so they are libraries and carry no script role (paperkit's shebangs on them were stray).
 
-## Not here: `sites`
+## `sites` and the sibling edges
 
-paperkit's `tools/sites.py` imports the engine module `mutate`, which moves in its own package
-first. When it lands, `sites` needs `mikemol.mutantcell.def_sites.def_sites(text)` (the def-drop
-specs, one qualname per def-site, unchanged in order) and nothing else from this package.
+paperkit's `tools/sites.py` imported the engine modules `mutate` and `imports`. Both are
+distributions of this repository now, so `sites` reads them as siblings (mtools:W562, option A+B):
+`mikemol.mutation.mutate` for `branch_sites`, `data_sites` and `flip_sites`, and
+`mikemol.importdag.dagderive.flat_imports` for the flat-import reader. `mikemol-importdag` brings
+`mikemol-atomicwrite` with it. The edges are declared in `pyproject.toml` (for uv) and in
+`BUILD.bazel` (for Bazel); `tests/test_sibling_edge.py` checks they resolve. The paperkit layout
+assumption (`Path(__file__).parents[1]`) is gone: the files named on the command line are the
+engine, and the module never launches the mutator, so it chooses no interpreter path.
 
 ## Seams the tests drive
 

@@ -18,13 +18,20 @@ exports_files([
     "uv.lock",
 ])
 
-# ⚑ NO `deps`: the shipping hub is empty on purpose. Every import is the standard library.
+# ⚑ THE SIBLING EDGES (mtools:W562, ruled A+B 2026-10-04): the shipping hub stays empty, because a pip
+# hub cannot resolve a path source. The dependencies on `mikemol-mutation` and `mikemol-importdag` are
+# declared in pyproject.toml for uv and carried here as Bazel dependencies on the siblings'
+# py_library targets. The two must be kept in step by hand.
 py_library(
     name = "mutantcell",
     srcs = glob(["src/mikemol/mutantcell/**/*.py"]),
     data = glob(["src/mikemol/mutantcell/py.typed"], allow_empty = True),
     imports = ["src"],
     visibility = ["//visibility:public"],
+    deps = [
+        "//importdag:importdag",
+        "//mutation:mutation",
+    ],
 )
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. test_eval spawns `python -m
@@ -49,10 +56,16 @@ py_library(
         size = "small",
         deps = [
             ":mutantcell",
+            "//importdag:importdag",
+            "//mutation:mutation",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
         imports = ["src"],
+        # ⚑ With several source roots on sys.path (this dist and its siblings), legacy implicit
+        # `__init__.py` creation would turn `mikemol` into a regular package from the first root and
+        # shadow the namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -124,6 +137,20 @@ py_binary(
     imports = ["src"],
     visibility = ["//visibility:public"],
     deps = [":mutantcell"],
+    # ⚑ The siblings' source roots sit beside this one in the runfiles (see the py_test above); without
+    # this `bazel run //mutantcell:eval` fails with `No module named 'mikemol.mutantcell'` (measured).
+    legacy_create_init = 0,
+)
+
+# ⚑ `sites` imports both siblings, so it too needs `legacy_create_init = 0`.
+py_binary(
+    name = "sites",
+    srcs = ["src/mikemol/mutantcell/sites.py"],
+    main = "src/mikemol/mutantcell/sites.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":mutantcell"],
+    legacy_create_init = 0,
 )
 
 py_binary(
@@ -131,6 +158,9 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        # ⚑ How mypy sees the siblings inside the sandbox (the runner cannot see pip-installed siblings).
+        "//importdag:importdag",
+        "//mutation:mutation",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -158,11 +188,18 @@ venv_from_hub(
     # ⚑ THE SAME ENTRIES AS pyproject's [project.scripts].
     console_scripts = {
         "mikemol-eval": "mikemol.mutantcell.eval:main",
+        "mikemol-sites": "mikemol.mutantcell.sites:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/mutantcell/**"]),
+    # ⚑ THE TRANSITIVE CLOSURE: venv_from_hub takes each named target's own files, not its deps, so
+    # importdag's own sibling (atomicwrite) is listed too (W566).
+    srcs = glob(["src/mikemol/mutantcell/**"]) + [
+        "//atomicwrite:atomicwrite",
+        "//importdag:importdag",
+        "//mutation:mutation",
+    ],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

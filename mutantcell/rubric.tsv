@@ -7,3 +7,5 @@ decisions	The Decision Coverage: Reached-but-Unasserted Conditions and Data Valu
 def_sites	The Mutation Surface: Every Body-Isolable Def, and Where Each Sits
 eval	The Cell: A Check Run Against a Counterfactual Under Bounds, Its Flip Recorded
 sens	The Sensitivity Set: Flipped Sites Folded, a Leaked Non-Monotone Cell Refused
+sibling_edge	The Sibling Edges: mutantcell Resolves mikemol-mutation and mikemol-importdag Beside Its Own Namespace Package
+sites	The Perturbation Sites: Every Def, Branch, Condition and Data Site, and Each Absent Engine Import
