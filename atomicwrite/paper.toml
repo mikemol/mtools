@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.atomicwrite: the durable write, replacing the path and never the inode's contents"
+subtitle = "The write-a-sibling-then-rename primitive ported from paperkit, with the witness that would catch each of its four promises drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "ATOMICWRITE.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

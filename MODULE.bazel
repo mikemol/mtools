@@ -149,6 +149,15 @@ pip.parse(
     requirements_lock = "//gatecheck:requirements.txt",
 )
 
+# ⚑ `mikemol-atomicwrite` — paperkit's durable write (temp file, mode kept, rename), the third
+# package of the tools/ migration (mtools:W555, paperkit:W142). Empty shipping hub: standard
+# library only.
+pip.parse(
+    hub_name = "atomicwrite_deps",
+    python_version = "3.13",
+    requirements_lock = "//atomicwrite:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -276,6 +285,11 @@ pip.parse(
     uv_lock = "//gatecheck:uv.lock",
 )
 pip.parse(
+    hub_name = "atomicwrite_dev",
+    python_version = "3.13",
+    uv_lock = "//atomicwrite:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -326,6 +340,8 @@ pip.parse(
 )
 use_repo(
     pip,
+    "atomicwrite_deps",
+    "atomicwrite_dev",
     "audiostruct_deps",
     "audiostruct_dev",
     "audiostruct_gpu",
