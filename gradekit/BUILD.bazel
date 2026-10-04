@@ -1,0 +1,222 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ MIRRORS //importdag:BUILD.bazel (itself //pkgbuild TARGET FOR TARGET); the rationale for each
+# shape lives there, this file says only where it differs. FOUR TOOLS, one py_binary each.
+# `@gradekit_dev` and `@gradekit_deps` are declared in MODULE.bazel beside this distribution's
+# birth (mtools:W548).
+#
+# ⚑⚑ THIS DISTRIBUTION DEPENDS ON THREE SIBLING DISTRIBUTIONS (operator ruling mtools:W562,
+# mechanism A+B, measured in mtools:W566): pyproject.toml and uv.lock declare them (A), and the
+# Bazel targets below depend on their `py_library` (B). The pip hubs stay independent of them,
+# because a path source in requirements.txt breaks the pip extension for every distribution. Five
+# edits per sibling edge, each marked SIBLING below.
+load("@gradekit_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_rules_py//:dist.bzl", "dist_checks")
+load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+exports_files([
+    # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
+    "pyproject.toml",
+    "requirements.txt",
+    "requirements-dev.txt",
+    "uv.lock",
+])
+
+# ⚑ SIBLINGS = the three distributions this one imports. The shipping hub is empty on purpose.
+SIBLINGS = [
+    "//grade:grade",
+    "//bibparse:bibparse",
+    "//atomicwrite:atomicwrite",
+]
+
+# SIBLING (1): the library depends on them.
+py_library(
+    name = "gradekit",
+    srcs = glob(["src/mikemol/gradekit/**/*.py"]),
+    data = glob(["src/mikemol/gradekit/py.typed"], allow_empty = True),
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = SIBLINGS,
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "@mikemol_rules_py//:pytest_main.py",
+        args = [
+            "$(location " + src + ")",
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-o",
+            "faulthandler_timeout=60",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"],
+        size = "small",
+        # SIBLING (2): the test sees them.
+        deps = [
+            ":gradekit",
+            dev_requirement("pytest"),
+            dev_requirement("mypy"),
+        ] + SIBLINGS,
+        imports = ["src"],
+        # SIBLING (3): two source roots plus legacy implicit `__init__.py` files would turn
+        # `mikemol` into a regular package from the first root and shadow the namespace.
+        legacy_create_init = 0,
+    )
+    for src in glob(["tests/test_*.py"])
+]
+
+exports_files(["BUILD.bazel"])
+
+sh_test(
+    name = "ruff",
+    srcs = ["@mikemol_check_ruff//:ruff_check.sh"],
+    args = [
+        "$(location @mikemol_check_ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@mikemol_check_ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ THE BASELINE IS MINTED EMPTY: the distribution enters clean under preview, so the ratchet
+# can only hold it there.
+sh_test(
+    name = "ratchet",
+    srcs = ["@mikemol_check_ratchet//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @mikemol_check_ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@mikemol_check_ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ THE MUTATION GATE: every def-site body is mutated and the gate refuses if any survives, so
+# every function here is executed by a test whose assertion reads its result. The siblings' defs
+# are not mutated and not required to be covered.
+sh_test(
+    name = "mutants",
+    srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location @mikemol_check_mutants//:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "@mikemol_check_mutants//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
+py_binary(
+    name = "verdict",
+    srcs = ["src/mikemol/gradekit/verdict.py"],
+    main = "src/mikemol/gradekit/verdict.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":gradekit"] + SIBLINGS,
+    # SIBLING (3, binary): same namespace shadowing as the tests (measured: without it the
+    # binary dies with ModuleNotFoundError for mikemol.gradekit).
+    legacy_create_init = 0,
+)
+
+py_binary(
+    name = "grades_rec",
+    srcs = ["src/mikemol/gradekit/grades_rec.py"],
+    main = "src/mikemol/gradekit/grades_rec.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":gradekit"] + SIBLINGS,
+    # SIBLING (3, binary): same namespace shadowing as the tests (measured: without it the
+    # binary dies with ModuleNotFoundError for mikemol.gradekit).
+    legacy_create_init = 0,
+)
+
+py_binary(
+    name = "read_grade",
+    srcs = ["src/mikemol/gradekit/read_grade.py"],
+    main = "src/mikemol/gradekit/read_grade.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":gradekit"] + SIBLINGS,
+    # SIBLING (3, binary): same namespace shadowing as the tests (measured: without it the
+    # binary dies with ModuleNotFoundError for mikemol.gradekit).
+    legacy_create_init = 0,
+)
+
+py_binary(
+    name = "effective",
+    srcs = ["src/mikemol/gradekit/effective.py"],
+    main = "src/mikemol/gradekit/effective.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":gradekit"] + SIBLINGS,
+    # SIBLING (3, binary): same namespace shadowing as the tests (measured: without it the
+    # binary dies with ModuleNotFoundError for mikemol.gradekit).
+    legacy_create_init = 0,
+)
+
+py_binary(
+    name = "mypy_runner",
+    srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
+    main = "@mikemol_check_mypy//:mypy_runner.py",
+    # SIBLING (4): how mypy sees the siblings in the sandbox.
+    deps = [
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ] + SIBLINGS,
+)
+
+sh_test(
+    name = "mypy",
+    srcs = ["@mikemol_check_mypy//:mypy_check.sh"],
+    args = [
+        "$(location :mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":mypy_runner",
+    ] + glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
+    size = "small",
+    # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
+    # things"). See //transcriptstruct:mypy for the measurement.
+    timeout = "long",
+)
+
+venv_from_hub(
+    name = ".venv",
+    # ⚑ THE SAME ENTRIES AS pyproject's [project.scripts].
+    console_scripts = {
+        "mikemol-gradekit-verdict": "mikemol.gradekit.verdict:main",
+        "mikemol-grades-rec": "mikemol.gradekit.grades_rec:main",
+        "mikemol-read-grade": "mikemol.gradekit.read_grade:main",
+        "mikemol-effective": "mikemol.gradekit.effective:main",
+    },
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    # SIBLING (5): the dev venv carries them, so the mutation gate imports them.
+    srcs = glob(["src/mikemol/gradekit/**"]) + SIBLINGS,
+)
+
+# W376: this distribution's :venv (W342) and :suite (W362), declared together.
+dist_checks()

@@ -1,0 +1,8 @@
+# rubric.tsv — the sections of the gradekit warrant set, one per test module, in document order.
+# key <TAB> heading title
+jsonio	The Reading: A Record File Is Parsed Into the Ladder's Json Type or Refused by Name
+cli	The Options: Repeatable Options Are Taken and an Unknown or Valueless One Is a Usage Error
+verdict	The Verdict: One Compact Record Is Written Atomically and Every Aggregate Names Its Offenders
+read_grade	The Reading: A Calculation Record Becomes a Grade With Its Whole Justification
+grades_rec	The Table: Grade Records Join the Metadata and the Clamp Is Applied Over the Graded Claims
+effective	The Effective Grade: Edges From the Bibs Join the Grade Files and the Clamp Honours Owner Grades

@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.gradekit: the verdict record, the per-claim grade reading, the project grade table and the effective-grade clamp"
+subtitle = "One compact verdict record with every construction, a grade read from a calculation record without a re-measurement, a table assembled from the build graph's own grade records, and the effective grade clamped by what a claim rests on."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "GRADEKIT.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

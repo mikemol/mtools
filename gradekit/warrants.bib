@@ -1,0 +1,603 @@
+
+@misc{gradekit-jsonio-check-json-returns-every-allowed-type-unchanged,
+  section = {jsonio},
+  title  = {Strings, integers, booleans, null, lists and objects come back equal},
+  claim  = {Strings, integers, booleans, null, lists and objects come back equal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_check_json_returns_every_allowed_type_unchanged},
+}
+
+@misc{gradekit-jsonio-check-json-refuses-a-float-naming-the-path-to-it,
+  section = {jsonio},
+  title  = {A float deep in the value is refused with its location and type},
+  claim  = {A float deep in the value is refused with its location and type.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_check_json_refuses_a_float_naming_the_path_to_it},
+}
+
+@misc{gradekit-jsonio-check-json-refuses-a-non-string-key,
+  section = {jsonio},
+  title  = {An object key that is not a string is refused with the key shown},
+  claim  = {An object key that is not a string is refused with the key shown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_check_json_refuses_a_non_string_key},
+}
+
+@misc{gradekit-jsonio-read-json-reads-a-document,
+  section = {jsonio},
+  title  = {A valid file is read, as UTF-8, into its value},
+  claim  = {A valid file is read, as UTF-8, into its value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_read_json_reads_a_document},
+}
+
+@misc{gradekit-jsonio-read-json-names-the-file-when-the-json-is-invalid,
+  section = {jsonio},
+  title  = {A syntax error becomes a RecordError naming the file},
+  claim  = {A syntax error becomes a RecordError naming the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_read_json_names_the_file_when_the_json_is_invalid},
+}
+
+@misc{gradekit-jsonio-read-json-names-the-file-when-a-value-is-refused,
+  section = {jsonio},
+  title  = {A float in the file is refused with the file's path as the location root},
+  claim  = {A float in the file is refused with the file's path as the location root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_read_json_names_the_file_when_a_value_is_refused},
+}
+
+@misc{gradekit-jsonio-narrowing-helpers-return-the-value-or-name-the-mismatch,
+  section = {jsonio},
+  title  = {Each helper passes the right type through and refuses another by name and type},
+  claim  = {Each helper passes the right type through and refuses another by name and type.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_narrowing_helpers_return_the_value_or_name_the_mismatch},
+}
+
+@misc{gradekit-jsonio-field-returns-a-present-field-and-names-a-missing-one,
+  section = {jsonio},
+  title  = {A present field is returned even when falsy; an absent one is refused by name},
+  claim  = {A present field is returned even when falsy; an absent one is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_jsonio.py -k test_field_returns_a_present_field_and_names_a_missing_one},
+}
+
+@misc{gradekit-cli-positional-words-and-option-values-are-separated-in-order,
+  section = {cli},
+  title  = {Words keep their order and a repeated option keeps every value in order},
+  claim  = {Words keep their order and a repeated option keeps every value in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_positional_words_and_option_values_are_separated_in_order},
+}
+
+@misc{gradekit-cli-word-after-a-double-dash-is-positional-even-with-a-leading-dash,
+  section = {cli},
+  title  = {Everything after the bare double dash is positional, including dashed words},
+  claim  = {Everything after the bare double dash is positional, including dashed words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_word_after_a_double_dash_is_positional_even_with_a_leading_dash},
+}
+
+@misc{gradekit-cli-unknown-option-is-a-usage-error-naming-it,
+  section = {cli},
+  title  = {An option outside the allowed names is refused by name},
+  claim  = {An option outside the allowed names is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unknown_option_is_a_usage_error_naming_it},
+}
+
+@misc{gradekit-cli-option-without-a-value-is-a-usage-error-naming-it,
+  section = {cli},
+  title  = {An option at the end of the line has no value and is refused by name},
+  claim  = {An option at the end of the line has no value and is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_option_without_a_value_is_a_usage_error_naming_it},
+}
+
+@misc{gradekit-cli-report-prints-one-prefixed-line-and-returns-the-usage-status,
+  section = {cli},
+  title  = {The message goes to standard error as one line and the status is the usage status},
+  claim  = {The message goes to standard error as one line and the status is the usage status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_report_prints_one_prefixed_line_and_returns_the_usage_status},
+}
+
+@misc{gradekit-cli-no-arguments-gives-empty-results,
+  section = {cli},
+  title  = {An empty command line has no words and no options},
+  claim  = {An empty command line has no words and no options.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_no_arguments_gives_empty_results},
+}
+
+@misc{gradekit-verdict-verdict-word-names-a-boolean,
+  section = {verdict},
+  title  = {True is pass and False is fail},
+  claim  = {True is pass and False is fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_verdict_word_names_a_boolean},
+}
+
+@misc{gradekit-verdict-account-tail-keeps-the-last-forty-non-blank-lines,
+  section = {verdict},
+  title  = {Blank lines are dropped and only the last forty remain, in order},
+  claim  = {Blank lines are dropped and only the last forty remain, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_account_tail_keeps_the_last_forty_non_blank_lines},
+}
+
+@misc{gradekit-verdict-account-tail-of-a-missing-file-is-empty,
+  section = {verdict},
+  title  = {An unreadable account file contributes nothing and is not an error},
+  claim  = {An unreadable account file contributes nothing and is not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_account_tail_of_a_missing_file_is_empty},
+}
+
+@misc{gradekit-verdict-write-record-is-compact-and-ends-in-a-newline,
+  section = {verdict},
+  title  = {The bytes are the record with no spaces after separators, then one newline},
+  claim  = {The bytes are the record with no spaces after separators, then one newline.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_write_record_is_compact_and_ends_in_a_newline},
+}
+
+@misc{gradekit-verdict-write-record-carries-a-reason-only-when-there-is-one,
+  section = {verdict},
+  title  = {A reason is the third key; an empty one is absent},
+  claim  = {A reason is the third key; an empty one is absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_write_record_carries_a_reason_only_when_there_is_one},
+}
+
+@misc{gradekit-verdict-write-record-folds-the-error-tail-in-on-a-non-pass-only,
+  section = {verdict},
+  title  = {A failing record carries the account lines; a passing one never does},
+  claim  = {A failing record carries the account lines; a passing one never does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_write_record_folds_the_error_tail_in_on_a_non_pass_only},
+}
+
+@misc{gradekit-verdict-write-record-omits-the-account-when-there-is-nothing-to-fold,
+  section = {verdict},
+  title  = {An empty or unreadable account file leaves no account key},
+  claim  = {An empty or unreadable account file leaves no account key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_write_record_omits_the_account_when_there_is_nothing_to_fold},
+}
+
+@misc{gradekit-verdict-bad-set-is-a-lower-cased-comma-list,
+  section = {verdict},
+  title  = {A literal list names the failing values, compared lower-cased},
+  claim  = {A literal list names the failing values, compared lower-cased.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_bad_set_is_a_lower_cased_comma_list},
+}
+
+@misc{gradekit-verdict-bad-set-below-a-floor-is-derived-from-the-ladder,
+  section = {verdict},
+  title  = {The grades under the floor fail it; the floor itself and above do not},
+  claim  = {The grades under the floor fail it; the floor itself and above do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_bad_set_below_a_floor_is_derived_from_the_ladder},
+}
+
+@misc{gradekit-verdict-bad-set-refuses-a-floor-that-is-not-a-rung,
+  section = {verdict},
+  title  = {A typo in the floor must not grade everything green},
+  claim  = {A typo in the floor must not grade everything green.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_bad_set_refuses_a_floor_that_is_not_a_rung},
+}
+
+@misc{gradekit-verdict-field-value-is-the-lower-cased-text-of-the-field,
+  section = {verdict},
+  title  = {Strings are lower-cased, booleans read as their JSON-ish words, absent is none},
+  claim  = {Strings are lower-cased, booleans read as their JSON-ish words, absent is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_field_value_is_the_lower_cased_text_of_the_field},
+}
+
+@misc{gradekit-verdict-field-value-refuses-a-record-that-is-not-an-object,
+  section = {verdict},
+  title  = {A list is not a record and the refusal names the file},
+  claim  = {A list is not a record and the refusal names the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_field_value_refuses_a_record_that_is_not_an_object},
+}
+
+@misc{gradekit-verdict-cohere-word-keeps-cannot-run-apart-from-fail,
+  section = {verdict},
+  title  = {Zero passes, two cannot run, anything else fails},
+  claim  = {Zero passes, two cannot run, anything else fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_cohere_word_keeps_cannot_run_apart_from_fail},
+}
+
+@misc{gradekit-verdict-emit-records-the-three-verdict-words-and-fails-closed-on-any-other,
+  section = {verdict},
+  title  = {The caller's word is recorded verbatim when valid; anything else is a fail},
+  claim  = {The caller's word is recorded verbatim when valid; anything else is a fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_emit_records_the_three_verdict_words_and_fails_closed_on_any_other},
+}
+
+@misc{gradekit-verdict-emit-folds-in-the-account-file-named-last,
+  section = {verdict},
+  title  = {The check's own error tail rides a failing record; the last --account wins},
+  claim  = {The check's own error tail rides a failing record; the last --account wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_emit_folds_in_the_account_file_named_last},
+}
+
+@misc{gradekit-verdict-exists-passes-iff-the-path-is-present,
+  section = {verdict},
+  title  = {A present path passes and an absent one fails},
+  claim  = {A present path passes and an absent one fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_exists_passes_iff_the_path_is_present},
+}
+
+@misc{gradekit-verdict-agg-passes-when-no-record-has-the-bad-value,
+  section = {verdict},
+  title  = {Every record clear of the bad set passes, with no reason},
+  claim  = {Every record clear of the bad set passes, with no reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_agg_passes_when_no_record_has_the_bad_value},
+}
+
+@misc{gradekit-verdict-agg-names-every-offender-in-the-record,
+  section = {verdict},
+  title  = {A failing aggregate lists each offending record by file name and value},
+  claim  = {A failing aggregate lists each offending record by file name and value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_agg_names_every_offender_in_the_record},
+}
+
+@misc{gradekit-verdict-agg-caps-the-reason-at-four-hundred-characters,
+  section = {verdict},
+  title  = {A record is a verdict, not a transcript},
+  claim  = {A record is a verdict, not a transcript.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_agg_caps_the_reason_at_four_hundred_characters},
+}
+
+@misc{gradekit-verdict-agg-with-no-records-passes-and-a-floor-aggregates-over-the-ladder,
+  section = {verdict},
+  title  = {No records cannot offend; a below-floor aggregate fails a record under the floor},
+  claim  = {No records cannot offend; a below-floor aggregate fails a record under the floor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_agg_with_no_records_passes_and_a_floor_aggregates_over_the_ladder},
+}
+
+@misc{gradekit-verdict-agg-refuses-a-floor-that-is-not-a-rung,
+  section = {verdict},
+  title  = {The refusal comes before any record is judged green},
+  claim  = {The refusal comes before any record is judged green.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_agg_refuses_a_floor_that_is_not_a_rung},
+}
+
+@misc{gradekit-verdict-agree-passes-only-for-two-or-more-equal-outputs-none-failed,
+  section = {verdict},
+  title  = {Byte-equal whole documents agree; one output, differing outputs and a failure do not},
+  claim  = {Byte-equal whole documents agree; one output, differing outputs and a failure do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_agree_passes_only_for_two_or_more_equal_outputs_none_failed},
+}
+
+@misc{gradekit-verdict-calc-passes-iff-the-baseline-holds,
+  section = {verdict},
+  title  = {A truthy baseline passes; a false or absent one fails},
+  claim  = {A truthy baseline passes; a false or absent one fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_calc_passes_iff_the_baseline_holds},
+}
+
+@misc{gradekit-verdict-canary-passes-only-when-the-flip-flipped-and-the-identity-did-not,
+  section = {verdict},
+  title  = {Both directions are asserted, and a degraded harness is named on standard error},
+  claim  = {Both directions are asserted, and a degraded harness is named on standard error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_canary_passes_only_when_the_flip_flipped_and_the_identity_did_not},
+}
+
+@misc{gradekit-verdict-canary-treats-a-missing-flipped-field-as-degraded,
+  section = {verdict},
+  title  = {Only the boolean values count, not a truthy stand-in},
+  claim  = {Only the boolean values count, not a truthy stand-in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_canary_treats_a_missing_flipped_field_as_degraded},
+}
+
+@misc{gradekit-verdict-cohere-passes-a-zero-exit-and-lets-the-error-output-through,
+  section = {verdict},
+  title  = {Exit 0 is a pass with no reason; the child's standard error still reaches ours},
+  claim  = {Exit 0 is a pass with no reason; the child's standard error still reaches ours.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_cohere_passes_a_zero_exit_and_lets_the_error_output_through},
+}
+
+@misc{gradekit-verdict-cohere-carries-the-residual-in-the-record-and-keeps-cannot-run-apart,
+  section = {verdict},
+  title  = {Exit 1 is a fail and exit 2 is cannot-run; both carry the stripped residual as the reason},
+  claim  = {Exit 1 is a fail and exit 2 is cannot-run; both carry the stripped residual as the
+            reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_cohere_carries_the_residual_in_the_record_and_keeps_cannot_run_apart},
+}
+
+@misc{gradekit-verdict-cohere-keeps-the-last-two-thousand-characters-of-the-residual,
+  section = {verdict},
+  title  = {The diagnosis is at the end, so the cap keeps the tail},
+  claim  = {The diagnosis is at the end, so the cap keeps the tail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_cohere_keeps_the_last_two_thousand_characters_of_the_residual},
+}
+
+@misc{gradekit-verdict-cohere-defaults-to-the-paperkit-layout-under-the-working-directory,
+  section = {verdict},
+  title  = {Without --coherence the script is paperkit/coherence.py, relative to the cwd},
+  claim  = {Without --coherence the script is paperkit/coherence.py, relative to the cwd.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_cohere_defaults_to_the_paperkit_layout_under_the_working_directory},
+}
+
+@misc{gradekit-verdict-dispatch-refuses-a-missing-or-unknown-command,
+  section = {verdict},
+  title  = {The usage line lists the commands},
+  claim  = {The usage line lists the commands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_dispatch_refuses_a_missing_or_unknown_command},
+}
+
+@misc{gradekit-verdict-dispatch-checks-the-number-of-arguments-per-command,
+  section = {verdict},
+  title  = {Fixed-arity commands want exactly their count; variadic ones want at least theirs},
+  claim  = {Fixed-arity commands want exactly their count; variadic ones want at least theirs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_dispatch_checks_the_number_of_arguments_per_command},
+}
+
+@misc{gradekit-verdict-dispatch-allows-each-option-only-on-its-own-command,
+  section = {verdict},
+  title  = {--account belongs to emit and --coherence to cohere; elsewhere they are unknown},
+  claim  = {--account belongs to emit and --coherence to cohere; elsewhere they are unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_dispatch_allows_each_option_only_on_its_own_command},
+}
+
+@misc{gradekit-verdict-main-writes-the-record-and-returns-zero-whatever-the-verdict,
+  section = {verdict},
+  title  = {A failing verdict is data, not an exit status},
+  claim  = {A failing verdict is data, not an exit status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_main_writes_the_record_and_returns_zero_whatever_the_verdict},
+}
+
+@misc{gradekit-verdict-main-reports-expected-failures-as-one-line-and-status-two,
+  section = {verdict},
+  title  = {Usage, unreadable, malformed and unknown-floor inputs each end in one named line},
+  claim  = {Usage, unreadable, malformed and unknown-floor inputs each end in one named line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_main_reports_expected_failures_as_one_line_and_status_two},
+}
+
+@misc{gradekit-verdict-main-without-arguments-reads-sys-argv-and-the-guard-exits-with-it,
+  section = {verdict},
+  title  = {With no argv given main reads sys.argv; running the module as a script exits 0},
+  claim  = {With no argv given main reads sys.argv; running the module as a script exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_main_without_arguments_reads_sys_argv_and_the_guard_exits_with_it},
+}
+
+@misc{gradekit-verdict-record-is-replaced-atomically-leaving-no-temporary-beside-it,
+  section = {verdict},
+  title  = {Writing over an existing record replaces it and leaves only the record in the directory},
+  claim  = {Writing over an existing record replaces it and leaves only the record in the directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_the_record_is_replaced_atomically_leaving_no_temporary_beside_it},
+}
+
+@misc{gradekit-read-grade-flipped-baseline-reads-behavioral-and-carries-every-justification,
+  section = {read_grade},
+  title  = {The rung, the flipping tests, the baseline word and the reasons all travel},
+  claim  = {The rung, the flipping tests, the baseline word and the reasons all travel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_a_flipped_baseline_reads_behavioral_and_carries_every_justification},
+}
+
+@misc{gradekit-read-grade-baseline-that-holds-with-no-flip-reads-indeterminate-with-empty-baseline,
+  section = {read_grade},
+  title  = {The indeterminate branch has no baseline word, so it reads as empty text},
+  claim  = {The indeterminate branch has no baseline word, so it reads as empty text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_a_baseline_that_holds_with_no_flip_reads_indeterminate_with_empty_baseline},
+}
+
+@misc{gradekit-read-grade-failed-baseline-reads-broken-refuted-unless-it-was-unreachable,
+  section = {read_grade},
+  title  = {The reachable field turns a refuted baseline into an unreachable one},
+  claim  = {The reachable field turns a refuted baseline into an unreachable one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_a_failed_baseline_reads_broken_refuted_unless_it_was_unreachable},
+}
+
+@misc{gradekit-read-grade-record-missing-a-field-is-refused-by-name,
+  section = {read_grade},
+  title  = {Each of claim, baseline and sens is required and named when absent},
+  claim  = {Each of claim, baseline and sens is required and named when absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_a_record_missing_a_field_is_refused_by_name},
+}
+
+@misc{gradekit-read-grade-run-renders-one-line-of-default-spaced-json,
+  section = {read_grade},
+  title  = {The output is the record as one JSON line with the default separators},
+  claim  = {The output is the record as one JSON line with the default separators.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_run_renders_one_line_of_default_spaced_json},
+}
+
+@misc{gradekit-read-grade-run-wants-exactly-one-path,
+  section = {read_grade},
+  title  = {No path and two paths are both usage errors},
+  claim  = {No path and two paths are both usage errors.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_run_wants_exactly_one_path},
+}
+
+@misc{gradekit-read-grade-main-prints-the-record-and-returns-zero,
+  section = {read_grade},
+  title  = {A good file prints its grade record to standard output},
+  claim  = {A good file prints its grade record to standard output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_main_prints_the_record_and_returns_zero},
+}
+
+@misc{gradekit-read-grade-main-reports-each-expected-failure-as-one-line-and-status-two,
+  section = {read_grade},
+  title  = {A usage error, a missing file and a bad record each end in one line and status 2},
+  claim  = {A usage error, a missing file and a bad record each end in one line and status 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_main_reports_each_expected_failure_as_one_line_and_status_two},
+}
+
+@misc{gradekit-read-grade-main-without-arguments-reads-the-process-arguments-and-the-module-guard-runs-it,
+  section = {read_grade},
+  title  = {With no argv given, main reads sys.argv; running the module as a script exits with it},
+  claim  = {With no argv given, main reads sys.argv; running the module as a script exits with it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_grade.py -k test_main_without_arguments_reads_the_process_arguments_and_the_module_guard_runs_it},
+}
+
+@misc{gradekit-grades-rec-target-key-is-the-file-name-before-the-grade-marker,
+  section = {grades_rec},
+  title  = {The key comes from the file name, not from anything inside the record},
+  claim  = {The key comes from the file name, not from anything inside the record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_target_key_is_the_file_name_before_the_grade_marker},
+}
+
+@misc{gradekit-grades-rec-base-row-keeps-exactly-the-four-descriptive-fields-in-order,
+  section = {grades_rec},
+  title  = {A row starts as key, check, section and rests-on, whatever else the metadata holds},
+  claim  = {A row starts as key, check, section and rests-on, whatever else the metadata holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_base_row_keeps_exactly_the_four_descriptive_fields_in_order},
+}
+
+@misc{gradekit-grades-rec-grade-row-adds-the-reading-with-empty-defaults,
+  section = {grades_rec},
+  title  = {The grade and justification join the row; a record without them reads as empty},
+  claim  = {The grade and justification join the row; a record without them reads as empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_grade_row_adds_the_reading_with_empty_defaults},
+}
+
+@misc{gradekit-grades-rec-ungraded-row-says-why-in-terms-of-the-tier,
+  section = {grades_rec},
+  title  = {A row with no grade record is not graded, and the reason names its tier},
+  claim  = {A row with no grade record is not graded, and the reason names its tier.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_ungraded_row_says_why_in_terms_of_the_tier},
+}
+
+@misc{gradekit-grades-rec-table-clamps-graded-claims-by-what-they-rest-on,
+  section = {grades_rec},
+  title  = {A behavioral claim resting on a vacuous one is clamped to vacuous and names it},
+  claim  = {A behavioral claim resting on a vacuous one is clamped to vacuous and names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_table_clamps_graded_claims_by_what_they_rest_on},
+}
+
+@misc{gradekit-grades-rec-table-keeps-ungraded-claims-out-of-the-clamp-and-marks-them,
+  section = {grades_rec},
+  title  = {An ungraded claim has no effective grade, and an edge to it is an unresolved one},
+  claim  = {An ungraded claim has no effective grade, and an edge to it is an unresolved one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_table_keeps_ungraded_claims_out_of_the_clamp_and_marks_them},
+}
+
+@misc{gradekit-grades-rec-table-lists-the-other-claims-sharing-a-check,
+  section = {grades_rec},
+  title  = {Claims with the same check name each other and never themselves},
+  claim  = {Claims with the same check name each other and never themselves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_table_lists_the_other_claims_sharing_a_check},
+}
+
+@misc{gradekit-grades-rec-table-reads-the-tier-of-an-ungraded-claim-only,
+  section = {grades_rec},
+  title  = {The tier is read for an ungraded claim only, as the original did},
+  claim  = {The tier is read for an ungraded claim only, as the original did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_table_reads_the_tier_of_an_ungraded_claim_only},
+}
+
+@misc{gradekit-grades-rec-run-keys-records-by-file-name-and-prints-one-json-line,
+  section = {grades_rec},
+  title  = {The records are matched to the metadata by their file names},
+  claim  = {The records are matched to the metadata by their file names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_run_keys_records_by_file_name_and_prints_one_json_line},
+}
+
+@misc{gradekit-grades-rec-run-with-only-the-metadata-grades-nothing,
+  section = {grades_rec},
+  title  = {No grade file at all leaves every claim not graded},
+  claim  = {No grade file at all leaves every claim not graded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_run_with_only_the_metadata_grades_nothing},
+}
+
+@misc{gradekit-grades-rec-run-wants-a-metadata-file-and-a-list-in-it,
+  section = {grades_rec},
+  title  = {No arguments is a usage error and a metadata file that is not a list is refused},
+  claim  = {No arguments is a usage error and a metadata file that is not a list is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_run_wants_a_metadata_file_and_a_list_in_it},
+}
+
+@misc{gradekit-grades-rec-main-prints-the-table-and-reports-failures-as-status-two,
+  section = {grades_rec},
+  title  = {A good run prints the table; a usage error and a missing file each end in one line},
+  claim  = {A good run prints the table; a usage error and a missing file each end in one line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_main_prints_the_table_and_reports_failures_as_status_two},
+}
+
+@misc{gradekit-grades-rec-main-without-arguments-reads-sys-argv-and-the-guard-exits-with-it,
+  section = {grades_rec},
+  title  = {With no argv given main reads sys.argv; running the module as a script exits 0},
+  claim  = {With no argv given main reads sys.argv; running the module as a script exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_grades_rec.py -k test_main_without_arguments_reads_sys_argv_and_the_guard_exits_with_it},
+}
+
+@misc{gradekit-effective-delegation-reads-the-edge-a-crossing-check-names,
+  section = {effective},
+  title  = {A concept check delegates to the library, a result check to a project and claim},
+  claim  = {A concept check delegates to the library, a result check to a project and claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_delegation_reads_the_edge_a_crossing_check_names},
+}
+
+@misc{gradekit-effective-records-join-grade-files-to-the-edges-of-the-bibs,
+  section = {effective},
+  title  = {Rests-on and delegations come from the bib; the grade comes from the file},
+  claim  = {Rests-on and delegations come from the bib; the grade comes from the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_records_join_grade_files_to_the_edges_of_the_bibs},
+}
+
+@misc{gradekit-effective-records-keep-a-claim-the-bibs-do-not-name-resting-on-nothing,
+  section = {effective},
+  title  = {A grade file for an unknown claim is kept, with no edges and no delegation},
+  claim  = {A grade file for an unknown claim is kept, with no edges and no delegation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_records_keep_a_claim_the_bibs_do_not_name_resting_on_nothing},
+}
+
+@misc{gradekit-effective-owner-grades-carry-the-pair-and-what-clamped-it,
+  section = {effective},
+  title  = {Both the self grade and the effective grade cross, with the clamp's name},
+  claim  = {Both the self grade and the effective grade cross, with the clamp's name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_owner_grades_carry_the_pair_and_what_clamped_it},
+}
+
+@misc{gradekit-effective-owner-grades-refuse-a-spec-without-an-equals-sign-and-a-bad-file,
+  section = {effective},
+  title  = {A spec must be project=file, and its file must hold a claims list of full rows},
+  claim  = {A spec must be project=file, and its file must hold a claims list of full rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_owner_grades_refuse_a_spec_without_an_equals_sign_and_a_bad_file},
+}
+
+@misc{gradekit-effective-split-owners-cuts-at-the-first-option,
+  section = {effective},
+  title  = {Words before the option stay; everything after it is a spec},
+  claim  = {Words before the option stay; everything after it is a spec.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_split_owners_cuts_at_the_first_option},
+}
+
+@misc{gradekit-effective-key-of-reads-the-key-and-the-columns-are-the-documented-seven,
+  section = {effective},
+  title  = {The sort key is the record's key; the report prints seven named columns},
+  claim  = {The sort key is the record's key; the report prints seven named columns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_key_of_reads_the_key_and_the_columns_are_the_documented_seven},
+}
+
+@misc{gradekit-effective-run-clamps-each-claim-by-what-it-rests-on,
+  section = {effective},
+  title  = {The weakest premise along rests-on pins the claim and is named},
+  claim  = {The weakest premise along rests-on pins the claim and is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_run_clamps_each_claim_by_what_it_rests_on},
+}
+
+@misc{gradekit-effective-run-clamps-a-delegating-claim-by-the-owners-effective-grade,
+  section = {effective},
+  title  = {The owner's effective grade is the bound, not its self grade},
+  claim  = {The owner's effective grade is the bound, not its self grade.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_run_clamps_a_delegating_claim_by_the_owners_effective_grade},
+}
+
+@misc{gradekit-effective-run-names-the-current-directory-when-the-project-has-no-name,
+  section = {effective},
+  title  = {A project named by a bare dot reports that dot as its name},
+  claim  = {A project named by a bare dot reports that dot as its name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_run_names_the_current_directory_when_the_project_has_no_name},
+}
+
+@misc{gradekit-effective-run-wants-a-project-directory,
+  section = {effective},
+  title  = {No arguments, and only owner specs, are both usage errors},
+  claim  = {No arguments, and only owner specs, are both usage errors.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_run_wants_a_project_directory},
+}
+
+@misc{gradekit-effective-main-prints-the-report,
+  section = {effective},
+  title  = {A good run prints the report to standard output and nothing to standard error},
+  claim  = {A good run prints the report to standard output and nothing to standard error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_main_prints_the_report},
+}
+
+@misc{gradekit-effective-main-reports-the-bibparse-failures-and-bad-input-as-status-two,
+  section = {effective},
+  title  = {Each exception class from the bib layer ends in one named line, not a traceback},
+  claim  = {Each exception class from the bib layer ends in one named line, not a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_main_reports_the_bibparse_failures_and_bad_input_as_status_two},
+}
+
+@misc{gradekit-effective-main-without-arguments-reads-sys-argv-and-the-guard-exits-with-it,
+  section = {effective},
+  title  = {With no argv given main reads sys.argv; running the module as a script exits 0},
+  claim  = {With no argv given main reads sys.argv; running the module as a script exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_effective.py -k test_main_without_arguments_reads_sys_argv_and_the_guard_exits_with_it},
+}

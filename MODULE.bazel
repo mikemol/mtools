@@ -230,6 +230,16 @@ pip.parse(
     requirements_lock = "//treeio:requirements.txt",
 )
 
+# ⚑ `mikemol-gradekit` — paperkit's verdict, grades_rec, read_grade and effective, the first dist with
+# THREE sibling dependencies (mikemol-grade, mikemol-bibparse, mikemol-atomicwrite; mtools:W548, W562 ruled
+# A+B). The shipping hub is empty: a pip hub cannot resolve a path source, and the siblings reach Bazel as
+# py_library deps in BUILD.bazel.
+pip.parse(
+    hub_name = "gradekit_deps",
+    python_version = "3.13",
+    requirements_lock = "//gradekit:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -402,6 +412,11 @@ pip.parse(
     uv_lock = "//treeio:uv.lock",
 )
 pip.parse(
+    hub_name = "gradekit_dev",
+    python_version = "3.13",
+    uv_lock = "//gradekit:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -463,6 +478,8 @@ use_repo(
     "buildtel_dev",
     "importdag_deps",
     "importdag_dev",
+    "gradekit_deps",
+    "gradekit_dev",
     "treeio_deps",
     "treeio_dev",
     "pytestspec_deps",
