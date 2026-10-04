@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 620,
+  "counter": 622,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -11528,8 +11528,8 @@
     },
     {
       "symbol": "W579",
-      "title": "Adopting the inbound-asks hook needs no guessing: a current INSTALL.md, one adoption page, and a --check mode of the hook that tells a repo what it still lacks",
-      "status": "ready",
+      "title": "Write a current INSTALL.md and one adoption page for the mikemol-hooks context hooks, so a repo adopts them without guessing",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -11537,13 +11537,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Rewrite INSTALL.md to the current distribution list with the hooks plus pathsforward pairing and the sha rule; add an Adopting a hook page covering each of the three shapes with the exact settings lines; add a --check mode to mikemol-hook-inbound-asks that runs it for the current project and says which piece is missing (reader absent or too old, no queue, hook not in settings); measure the tools-hook route for a context hook; send each peer repo one letter with the steps (the bootstrap needs one letter per repo unless W580 chooses the user-level route)",
-      "evidence": "2026-10-04: operator, 2026-10-04: 'How do other repos even do this? There is no docs, and they have to kinda guess.' Measured: hooks/README.md (staged with W578) has an Inbound asks section with the settings.json lines and an Adopting section; INSTALL.md lists only five dists (hooks mdstruct fence ratchet pathsforward) though about 25 exist, says nothing about hooks needing a pinned reader, and the README lines assume the console script in the repo's .venv while its Adopting section describes the tools-hook launcher route (which hooks/adopt/tools-hook serves, and which answers an absent venv with a PreToolUse DENY, the wrong vocabulary for SessionStart; unmeasured). Gaps: (1) a repo needs BOTH mikemol-hooks at a sha containing the hook and mikemol-pathsforward at 863061d or later (its --inbound) in the same venv or on PATH, and no page says so; (2) nobody outside mtools reads mtools' README, so the doc is unreachable without a letter; (3) three adoption shapes exist in the fleet (venv console script, tools-hook, symlinks to substrate scripts) and the hook is documented for one | 2026-10-04: 2026-10-04 data on the install route: luthen-observability adopted mikemol-hook-nemik-check by vendoring wheels re-pinned to 03749d5 and wiring SessionStart and UserPromptSubmit in its own settings.json (its ec48c55), with no launcher change on mtools' side; the hook surfaced 5 real findings, 3 repaired. So the vendored-wheel route works for a context hook today; what is still guesswork is the per-repo steps, which this card documents.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: operator, 2026-10-04: 'How do other repos even do this? There is no docs, and they have to kinda guess.' Measured: hooks/README.md (staged with W578) has an Inbound asks section with the settings.json lines and an Adopting section; INSTALL.md lists only five dists (hooks mdstruct fence ratchet pathsforward) though about 25 exist, says nothing about hooks needing a pinned reader, and the README lines assume the console script in the repo's .venv while its Adopting section describes the tools-hook launcher route (which hooks/adopt/tools-hook serves, and which answers an absent venv with a PreToolUse DENY, the wrong vocabulary for SessionStart; unmeasured). Gaps: (1) a repo needs BOTH mikemol-hooks at a sha containing the hook and mikemol-pathsforward at 863061d or later (its --inbound) in the same venv or on PATH, and no page says so; (2) nobody outside mtools reads mtools' README, so the doc is unreachable without a letter; (3) three adoption shapes exist in the fleet (venv console script, tools-hook, symlinks to substrate scripts) and the hook is documented for one | 2026-10-04: 2026-10-04 data on the install route: luthen-observability adopted mikemol-hook-nemik-check by vendoring wheels re-pinned to 03749d5 and wiring SessionStart and UserPromptSubmit in its own settings.json (its ec48c55), with no launcher change on mtools' side; the hook surfaced 5 real findings, 3 repaired. So the vendored-wheel route works for a context hook today; what is still guesswork is the per-repo steps, which this card documents. | 2026-10-04: 2026-10-04 docs half landed: INSTALL.md lists all 27 distributions with console scripts and keeps every prior measurement; docs/adopting-a-hook.md covers shape (a) vendored wheels plus the repo's own settings (as luthen-observability did), (b) user-level (NOT BUILT, W580) and (c) hooks/bin launchers, with exact settings blocks and the known limits. Remainder minted: the --check mode and the peer letters.",
       "issued_at": "2026-10-04T18:50:14Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T19:59:38Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:01:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T210116Z"
     },
     {
       "symbol": "W580",
@@ -12033,24 +12034,25 @@
     {
       "symbol": "W605",
       "title": "Bring .claude/design/W36-differential.md to the markdown bar (68 findings, one ragged table row), then track it",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "mdstruct"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Fix the ragged table row and the long lines, then git add the note",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: the lint-clean copy (68 findings to 0; prose re-wrapped at 120, nine wide tables turned into bullet lists, indented code blocks fenced, a blank line before lists) replaces .claude/design/W36-differential.md; word multiset compared, only the table-to-list conversion differs; committed with W579",
       "issued_at": "2026-10-04T19:19:02Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:01:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T210140Z"
     },
     {
       "symbol": "W606",
-      "title": "pycodemod: reconsider porting _pycodemod_control (695 lines, the control-flow ladder census) now that substrate drains wholesale",
+      "title": "pycodemod: control_roster.py, the control-flow construct roster, SQL_FORM table and Boundary operand, tested",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12058,17 +12060,17 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Re-read the module at source; port as clean modules with a differential, or decline on merit with the reason recorded",
-      "evidence": "",
+      "next_bounded_step": "Commit 1 of 4 per .claude/swarm/W606-control-port.md: roster module with RowSource as an explicit operand; then provenance, census class, report plus CLI",
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W606-control-port.md): PORT, generalized in four modules; the only substrate-specific part is is_store_read, which becomes a RowSource operand, so the 09-26 decline does not hold on merit. Open check before commit 1: swallows.py uses stdlib ast, confirm in core.py whether libcst-required applies to a read-only census. Depends on W609 for the store predicates.",
       "issued_at": "2026-10-04T19:25:21Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:00:55Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W607",
-      "title": "pycodemod: reconsider porting _pycodemod_fingerprint (898 lines, prime-fingerprint algebra lifted from gabion) now that substrate drains wholesale",
+      "title": "pycodemod: port the census-free prime-fingerprint algebra (registry, decode, gcd lattice) with its cases",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12076,17 +12078,17 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Ask where gabion's algebra should live, then port against that owner or decline on merit with the reason recorded",
-      "evidence": "",
+      "next_bounded_step": "Port the roughly 40-line algebra as mtools' own copy per .claude/swarm/W607-fingerprint-port.md; seeds become an argument; record the divergence from gabion under B4; follow-ups: referents extractor, Census arithmetic, CLI",
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W607-fingerprint-port.md): PORT as mtools' own copy with NO gabion dependency (gabion would add seven runtime dependencies and its alpha API differs: the substrate copy assigns primes in frequency order). The site_referents walk subclasses _Census and is blocked on the control port (W606).",
       "issued_at": "2026-10-04T19:25:22Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:00:55Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W608",
-      "title": "pycodemod: reconsider porting the SQL portable_sites and _pg_* probe connections now that substrate drains wholesale",
+      "title": "pycodemod portable.py: portable_sites judges SQL literals via an injected Probe protocol, no database in tests",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12094,17 +12096,17 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Re-read at source; the live-postgres probes need an explicit connection operand, never a substrate tenant default",
-      "evidence": "",
+      "next_bounded_step": "After W610 and W609: port per .claude/swarm/W608-W610-sql-family.md with a FakeProbe of recorded verdicts and a FakeConnection raising SQLSTATE errors; keep store.sandbox_connect and the jea path insert out",
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W608-W610-sql-family.md): PORT behind a Probe protocol; order is W610, then W609, then W608.",
       "issued_at": "2026-10-04T19:25:23Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:00:55Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W609",
-      "title": "pycodemod: reconsider porting rawread_sites, snapshot_sites, relalg_sites and the is_store_read family, keyed on substrate's STORE_CONNS and STORE_READERS",
+      "title": "pycodemod storeflow.py: StoreVocab operand plus is_store_read, store_reader_fns, row_names, derived_names",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12112,17 +12114,17 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Re-read at source; make the store-name sets operands, then port with a differential",
-      "evidence": "",
+      "next_bounded_step": "Port per .claude/swarm/W608-W610-sql-family.md with no default vocabulary; the source has no rawread_sites arm so write about four; independent of W610; W606 needs these predicates",
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT. _pycodemod_control.py already imports five of these predicates.",
       "issued_at": "2026-10-04T19:25:23Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:00:55Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W610",
-      "title": "pycodemod: reconsider porting sql_sites' style grading, built on substrate's query_defs, query_sql and query_builders split",
+      "title": "pycodemod sql.py: sql_sites reads SQL literals and grades raw vs literal by a caller-supplied executor roster",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12130,18 +12132,18 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Re-read at source; make the split's names operands, then port with a differential",
-      "evidence": "",
+      "next_bounded_step": "Port per .claude/swarm/W608-W610-sql-family.md first of the three; fix or drop the dead builder style branch (keyed on Call ids, read on Constant ids, so its arm passes vacuously); relname_sites in relations.py needs this",
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT; the origin's builder style branch is dead (Call ids vs Constant ids), so the 'builder not counted' arm passes vacuously.",
       "issued_at": "2026-10-04T19:25:24Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:00:56Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W611",
       "title": "pycodemod: reconsider porting the census type_errors mode (mypy run, ratchet-keyed), weighing it against the pycheck hook and mikemol-ratchet",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod",
@@ -12149,17 +12151,18 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Compare with pycheck and ratchet at source; port, or decline as a rival body with that comparison recorded",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 DECLINED ON MERIT (.claude/swarm/W611-W615-rival-bodies.md): type_errors' only extra is a mypy ratchet tolerating existing debt, and every mtools dist is held at zero mypy errors so the baseline would be empty; it is also weaker than pycheck and //<dist>:mypy (cwd=ROOT, no project config, --ignore-missing-imports). Reversal: a drained dist that cannot reach zero mypy; the fix would then go in ratchet (a mypy census source plus a code::relpath key schema), not a pycodemod mode.",
       "issued_at": "2026-10-04T19:25:25Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:01:06Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T210106Z"
     },
     {
       "symbol": "W612",
-      "title": "pycodemod: reconsider porting build_artifact_readers (the Agda build vocabulary FAILURE_BEARING and SUCCESS_ONLY)",
+      "title": "pycodemod: artifacts.py, which tools read a failure-bearing build artifact, vocabulary supplied by the caller",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12167,17 +12170,17 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Re-read at source; make the vocabulary an operand, then port with a differential",
-      "evidence": "",
+      "next_bounded_step": "Port per .claude/swarm/W612-W614-census-modes.md: both vocabulary tuples become required operands, prefix-subtraction logic and the 7 selftest arms carry over, case-sensitivity mismatch and silent skips become reported Skips",
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT.",
       "issued_at": "2026-10-04T19:25:25Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:01:07Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W613",
-      "title": "pycodemod: reconsider porting the census touches mode, which defaults to substrate's catalog/library/items.py witness registry",
+      "title": "pycodemod: reads.py, the files and flags one named function reads, binding-followed, unresolved paths reported",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12185,17 +12188,17 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Re-read at source; make the registry path an operand, then port with a differential",
-      "evidence": "",
+      "next_bounded_step": "Port per .claude/swarm/W612-W614-census-modes.md: roots and module dirs are caller operands; substrate has no selftest arms for touches so author them fresh and say so; the roster reader and dagcone grouping stay out",
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT.",
       "issued_at": "2026-10-04T19:25:26Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:01:07Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W614",
-      "title": "pycodemod: reconsider porting paperkit_projects; ask summit whether paperkit already offers it before porting",
+      "title": "Ask paperkit via summit whether it will expose project enumeration plus foreign bibs, else port paperkit_projects with its resolver as an operand",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12204,17 +12207,17 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Ask summit and paperkit; port only if neither owns it",
-      "evidence": "",
+      "next_bounded_step": "summit ask --for paperkit: will paperkit expose project enumeration plus foreign bibs (its _nested_roots and _bibpath are private, roots.py measures a different fact)? If paperkit declines or does not answer, port per .claude/swarm/W612-W614-census-modes.md",
+      "evidence": "2026-10-04: 2026-10-04 drafter: no equivalent in paperkit or summit; ASK first, PORT on decline or silence.",
       "issued_at": "2026-10-04T19:25:26Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:01:07Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W615",
-      "title": "pycodemod: reconsider porting the census discriminates mode, which drives a module's _selftest under mutation, against the mutation grid",
+      "title": "mutation: add an open regex-operator spec so a suite can be asked whether it notices one named defect, not only a body-to-raise",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12223,12 +12226,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Compare with //<dist>:mutants at source; port with operands for the convention, or decline as a rival body with the comparison recorded",
-      "evidence": "",
+      "next_bounded_step": "Design the spec in mikemol-mutation per .claude/swarm/W611-W615-rival-bodies.md so the grid and mutantcell inherit it; do not port in-process _selftest loading, the mutant file beside the source or substrate's default mutators",
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT the open regex-operator capability only; the closed operators cannot ask whether a suite notices one named defect (e.g. an f-string key gaining :{1} inside a function body). Reversal: no drained dist declares a defect-class list, or flip/dflip already kill every regex mutator written for the drained families.",
       "issued_at": "2026-10-04T19:25:27Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": null,
+      "last_worked": "2026-10-04T21:01:07Z",
       "ticks_blocked": 0
     },
     {
@@ -12325,6 +12328,43 @@
       "issued_at": "2026-10-04T20:22:49Z",
       "minted_during": "interrupt",
       "caused_by": "W591",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W621",
+      "title": "Add a --check mode to mikemol-hook-inbound-asks that says which piece a repo lacks: reader absent or too old, no queue, or hook not in settings",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Write the mode with a decoy-project test per missing piece; measure the tools-hook route for a context hook; document it in docs/adopting-a-hook.md",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:01:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W579",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W622",
+      "title": "Send each peer repo one letter with the steps to adopt the inbound-asks and nemik-check hooks, citing docs/adopting-a-hook.md",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After W580 chooses user-level or per-repo wiring: one letter per repo that has a paths-forward.json and no hook, pointing at the adoption page",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:01:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W579",
       "last_worked": null,
       "ticks_blocked": 0
     }
