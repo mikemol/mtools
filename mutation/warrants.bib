@@ -1,0 +1,155 @@
+
+@misc{mutation-mutate-def-sites-name-every-multiline-def-in-source-order,
+  section = {mutate},
+  title  = {Methods, closures and async defs are named by qualname; a one-liner is skipped},
+  claim  = {Methods, closures and async defs are named by qualname; a one-liner is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_def_sites_name_every_multiline_def_in_source_order},
+}
+
+@misc{mutation-mutate-branch-sites-number-every-arm-per-def-in-source-order,
+  section = {mutate},
+  title  = {Each arm of if/elif/else, for, while, try, with and async forms gets a per-def index},
+  claim  = {Each arm of if/elif/else, for, while, try, with and async forms gets a per-def index.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_branch_sites_number_every_arm_per_def_in_source_order},
+}
+
+@misc{mutation-mutate-branch-sites-refuse-an-arm-a-base-exception-handler-would-swallow,
+  section = {mutate},
+  title  = {A try body under `except BaseException` or a bare `except:` is refused; handlers are not},
+  claim  = {A try body under `except BaseException` or a bare `except:` is refused; handlers are
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_branch_sites_refuse_an_arm_a_base_exception_handler_would_swallow},
+}
+
+@misc{mutation-mutate-flip-sites-number-every-if-and-while-condition-per-def,
+  section = {mutate},
+  title  = {The test expression of each if and while, in source order, per def},
+  claim  = {The test expression of each if and while, in source order, per def.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_flip_sites_number_every_if_and_while_condition_per_def},
+}
+
+@misc{mutation-mutate-data-sites-name-every-entry-of-a-module-level-literal,
+  section = {mutate},
+  title  = {Dict, list, tuple and set literals yield their entries; spreads and unpacks are skipped},
+  claim  = {Dict, list, tuple and set literals yield their entries; spreads and unpacks are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_data_sites_name_every_entry_of_a_module_level_literal},
+}
+
+@misc{mutation-mutate-data-sites-refuse-a-dict-whose-reads-swallow-a-dropped-key,
+  section = {mutate},
+  title  = {`.get(k, default)` and `except KeyError` hide a drop; a one-argument get does not},
+  claim  = {`.get(k, default)` and `except KeyError` hide a drop; a one-argument get does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_data_sites_refuse_a_dict_whose_reads_swallow_a_dropped_key},
+}
+
+@misc{mutation-mutate-empty-spec-is-the-identity,
+  section = {mutate},
+  title  = {The baseline point of the mutation set is the source, byte for byte},
+  claim  = {The baseline point of the mutation set is the source, byte for byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_the_empty_spec_is_the_identity},
+}
+
+@misc{mutation-mutate-def-spec-replaces-the-whole-body-with-an-uncatchable-raise,
+  section = {mutate},
+  title  = {`def:`, a bare qualname and the method and async forms all drop a body},
+  claim  = {`def:`, a bare qualname and the method and async forms all drop a body.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_def_spec_replaces_the_whole_body_with_an_uncatchable_raise},
+}
+
+@misc{mutation-mutate-branch-spec-replaces-one-arm-and-names-a-miss,
+  section = {mutate},
+  title  = {The arm's span becomes the raise at the arm's own indentation},
+  claim  = {The arm's span becomes the raise at the arm's own indentation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_branch_spec_replaces_one_arm_and_names_a_miss},
+}
+
+@misc{mutation-mutate-flip-spec-inverts-one-condition-and-names-a-miss,
+  section = {mutate},
+  title  = {`if C` becomes `if not (C)`, across lines too; a miss and a lost span are loud},
+  claim  = {`if C` becomes `if not (C)`, across lines too; a miss and a lost span are loud.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_flip_spec_inverts_one_condition_and_names_a_miss},
+}
+
+@misc{mutation-mutate-flip-whose-source-span-is-lost-is-loud,
+  section = {mutate},
+  title  = {With no recoverable segment the flip refuses rather than guess},
+  claim  = {With no recoverable segment the flip refuses rather than guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_flip_whose_source_span_is_lost_is_loud},
+}
+
+@misc{mutation-mutate-data-drop-rebuilds-only-the-affected-literal,
+  section = {mutate},
+  title  = {Each container keeps its type; the rest of the module is byte-identical},
+  claim  = {Each container keeps its type; the rest of the module is byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_data_drop_rebuilds_only_the_affected_literal},
+}
+
+@misc{mutation-mutate-data-drop-keeps-a-two-tuple-a-tuple,
+  section = {mutate},
+  title  = {Dropping from a 2-tuple leaves `('x',)`, never the parenthesised scalar},
+  claim  = {Dropping from a 2-tuple leaves `('x',)`, never the parenthesised scalar.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_data_drop_keeps_a_two_tuple_a_tuple},
+}
+
+@misc{mutation-mutate-drop-data-multi-applies-every-index-against-the-original-numbering,
+  section = {mutate},
+  title  = {Several indices of one literal, and several literals, land in one pass},
+  claim  = {Several indices of one literal, and several literals, land in one pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_drop_data_multi_applies_every_index_against_the_original_numbering},
+}
+
+@misc{mutation-mutate-data-perturb-swaps-one-value-for-a-counterfactual,
+  section = {mutate},
+  title  = {A string takes a same-position sibling, else a marker; other scalars shift or flip},
+  claim  = {A string takes a same-position sibling, else a marker; other scalars shift or flip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_data_perturb_swaps_one_value_for_a_counterfactual},
+}
+
+@misc{mutation-mutate-data-perturb-with-no-locatable-segment-marks-the-whole-value,
+  section = {mutate},
+  title  = {When the source segment cannot be found the value itself is replaced by the marker},
+  claim  = {When the source segment cannot be found the value itself is replaced by the marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_data_perturb_with_no_locatable_segment_marks_the_whole_value},
+}
+
+@misc{mutation-mutate-mutate-lines-collapses-nested-nodes-and-replaces-several-at-once,
+  section = {mutate},
+  title  = {An inner def inside an outer one is already gone; two disjoint defs both drop},
+  claim  = {An inner def inside an outer one is already gone; two disjoint defs both drop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_mutate_lines_collapses_nested_nodes_and_replaces_several_at_once},
+}
+
+@misc{mutation-mutate-mutate-lines-takes-any-node-with-a-body-and-an-end-line,
+  section = {mutate},
+  title  = {A branch arm presented as a pseudo-node replaces its span like a def body},
+  claim  = {A branch arm presented as a pseudo-node replaces its span like a def body.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_mutate_lines_takes_any_node_with_a_body_and_an_end_line},
+}
+
+@misc{mutation-mutate-import-drop-removes-every-matching-top-level-import,
+  section = {mutate},
+  title  = {Plain, aliased-list and from-forms of one module all go; a miss is loud},
+  claim  = {Plain, aliased-list and from-forms of one module all go; a miss is loud.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_an_import_drop_removes_every_matching_top_level_import},
+}
+
+@misc{mutation-mutate-import-injection-is-dead-code-after-the-docstring-and-future-imports,
+  section = {mutate},
+  title  = {`if False:` guards the import, placed after the docstring and any __future__ import},
+  claim  = {`if False:` guards the import, placed after the docstring and any __future__ import.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_an_import_injection_is_dead_code_after_the_docstring_and_future_imports},
+}
+
+@misc{mutation-mutate-unknown-operator-and-a-malformed-index-are-loud,
+  section = {mutate},
+  title  = {A spec the dispatcher cannot place raises; a miss is never a silent no-op},
+  claim  = {A spec the dispatcher cannot place raises; a miss is never a silent no-op.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_an_unknown_operator_and_a_malformed_index_are_loud},
+}
+
+@misc{mutation-mutate-command-line-prints-the-perturbed-module,
+  section = {mutate},
+  title  = {`main` reads the module and prints the mutant; a wrong argument count is usage, exit 2},
+  claim  = {`main` reads the module and prints the mutant; a wrong argument count is usage, exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_the_command_line_prints_the_perturbed_module},
+}

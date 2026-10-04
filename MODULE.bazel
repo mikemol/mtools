@@ -166,6 +166,15 @@ pip.parse(
     requirements_lock = "//grade:requirements.txt",
 )
 
+# ⚑ `mikemol-mutation` — paperkit's mutant emitters and site finders (def, branch, flip, data), an
+# engine module that moves into mtools (mtools:W556, paperkit:W142). Empty shipping hub: standard
+# library only.
+pip.parse(
+    hub_name = "mutation_deps",
+    python_version = "3.13",
+    requirements_lock = "//mutation:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -303,6 +312,11 @@ pip.parse(
     uv_lock = "//grade:uv.lock",
 )
 pip.parse(
+    hub_name = "mutation_dev",
+    python_version = "3.13",
+    uv_lock = "//mutation:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -374,6 +388,8 @@ use_repo(
     "gatecheck_dev",
     "grade_deps",
     "grade_dev",
+    "mutation_deps",
+    "mutation_dev",
     "gmailstruct_deps",
     "gmailstruct_dev",
     "hooks_deps",

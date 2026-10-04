@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.mutation: the perturbations a mutation sweep applies, as an installed module"
+subtitle = "The pure AST surgery of paperkit's engine, ported with the witness that would catch each mutation kind drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "MUTATION.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
