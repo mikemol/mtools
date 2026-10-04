@@ -1002,3 +1002,4 @@
 2026-10-04T19:07:30Z  interrupt W603 minted    -         "Commit the operator's .claude/settings.json: the permission grants and the rule-8 Stop hook wiring that HEAD lacks"  evidence=operator
 2026-10-04T19:19:02Z  interrupt W604 minted    -         "Make --render emit a mirror that passes the markdown bar (ragged table rows, MD013 line length, inline HTML), then track .claude/paths-forward.md"  evidence=operator
 2026-10-04T19:19:02Z  interrupt W605 minted    -         "Bring .claude/design/W36-differential.md to the markdown bar (68 findings, one ragged table row), then track it"  evidence=operator
+2026-10-04T19:24:23Z  hash  --   diverged  --        "divergence: payload v2:597e4c808e9e2692, file v2:b110e956ce370e55; the FILE wins"

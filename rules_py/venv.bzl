@@ -227,17 +227,6 @@ if __name__ == "__main__":
     sys.exit({function}())
 """
 
-def _relative_path(from_file, to_file):
-    """Path from `from_file`'s DIRECTORY to `to_file`, as `../` segments plus a tail."""
-    from_parts = from_file.split("/")[:-1]  # drop the filename: we walk from its directory
-    to_parts = to_file.split("/")
-    common = 0
-    for i in range(min(len(from_parts), len(to_parts) - 1)):
-        if from_parts[i] != to_parts[i]:
-            break
-        common += 1
-    return "/".join([".."] * (len(from_parts) - common) + to_parts[common:])
-
 venv = rule(
     implementation = _venv_impl,
     doc = "Assembles a relocatable venv from wheels bazel has already staged.",

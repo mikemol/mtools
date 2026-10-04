@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-04T19:24:23Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -6171,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 46,
+      "ticks_blocked": 47,
       "completed": null
     },
     {
@@ -10054,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 52,
       "completed": null
     },
     {
@@ -11483,7 +11486,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 21,
       "completed": null
     },
     {
@@ -11585,20 +11588,21 @@
     {
       "symbol": "W582",
       "title": "Commit the MODULE.bazel.lock refresh that treeio's pygit2 hub (cffi and pygit2 wheel pins) left uncommitted",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "bazel"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 8c4ed39 pushed to origin/main",
       "issued_at": "2026-10-04T18:58:09Z",
       "minted_during": "tick",
       "caused_by": "W550",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T19:24:32Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T192432Z"
     },
     {
       "symbol": "W583",
@@ -11622,7 +11626,7 @@
     {
       "symbol": "W584",
       "title": "Delete rules_py/venv.bzl _relative_path, which has no callers",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "bazel",
@@ -11630,13 +11634,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Remove the def at rules_py/venv.bzl:230 after re-grepping for callers; run the bazel gate",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: rules_py/venv.bzl _relative_path removed; grep finds no caller; committed under W584",
       "issued_at": "2026-10-04T19:06:05Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T19:24:47Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T192447Z"
     },
     {
       "symbol": "W585",
@@ -11789,7 +11794,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -11867,7 +11872,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:39Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
