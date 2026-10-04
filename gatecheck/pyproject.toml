@@ -20,8 +20,13 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCY: every module is standard library.
-dependencies = []
+# ⚑ A DIST-TO-DIST EDGE (mtools:W562, ruled A+B by the operator 2026-10-04): `witness_reach` runs
+# `mikemol.importdag.dagnames` in a fresh child interpreter. Resolved by uv as a NON-editable path
+# source (an editable install puts a finder hook on the path that mypy cannot resolve); importdag brings
+# its own sibling (mikemol-atomicwrite) transitively. Bazel carries the same edge as a py_library
+# dependency in BUILD.bazel; the pip hubs do not resolve it and requirements.txt is deliberately NOT
+# regenerated (a path source writes a bare relative line that breaks the pip extension for every dist).
+dependencies = ["mikemol-importdag"]
 
 [project.scripts]
 mikemol-hook-index = "mikemol.gatecheck.hook_index:cli"
@@ -46,6 +51,9 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-importdag = { path = "../importdag" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -101,3 +109,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_rungate.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_absence_audit.py" = ["assert"]
 "tests/test_lint_bzl.py" = ["assert"]
+"tests/test_sibling_edge.py" = ["assert"]

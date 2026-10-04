@@ -6,3 +6,4 @@ hook_grid	The Hook Grid: The Hand-Transcribed Member List Must Agree With the De
 rungate	The Gate Runner: The Budgeted Bazel Command Line, Printed and Run
 absence_audit	The Absence Audit: An Unverified Absence Claim Is Flagged, an Owning-Tool Run Clears It
 lint_bzl	The Bzl Lint: Program Logic and JSON Built in a Shell String Are Refused
+sibling_edge	The Sibling Edge: gatecheck Resolves mikemol-importdag, and atomicwrite Through It

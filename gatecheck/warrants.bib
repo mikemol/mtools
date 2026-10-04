@@ -541,3 +541,25 @@
   claim  = {With no argument the files come from `sys.argv[1:]`, as a console script runs.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_main_reads_the_process_argv_when_given_none},
 }
+
+@misc{gatecheck-sibling-edge-sibling-resolves-beside-this-distribution,
+  section = {sibling_edge},
+  title  = {The sibling's dagnames imports, and its namespace package merges with this one},
+  claim  = {The sibling's dagnames imports, and its namespace package merges with this one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_sibling_resolves_beside_this_distribution},
+}
+
+@misc{gatecheck-sibling-edge-siblings-dependency-resolves-transitively,
+  section = {sibling_edge},
+  title  = {The atomicwrite helper is not declared here: uv and Bazel both bring it through importdag},
+  claim  = {The atomicwrite helper is not declared here: uv and Bazel both bring it through
+            importdag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_siblings_dependency_resolves_transitively},
+}
+
+@misc{gatecheck-sibling-edge-this-distribution-still-resolves-beside-its-siblings,
+  section = {sibling_edge},
+  title  = {Importing the siblings does not shadow mikemol.gatecheck},
+  claim  = {Importing the siblings does not shadow mikemol.gatecheck.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_siblings},
+}
