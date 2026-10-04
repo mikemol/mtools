@@ -312,6 +312,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_pre_push.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ THE WORKTREE FALLBACK (W553): asking git where a linked worktree's main tree is IS its one
+# responsibility. git is resolved by `shutil.which` (absent → no fallback, the refusal stands); the
+# argv is module constants plus the governing project root as ONE word after `-C`; the environment
+# has every GIT_* variable removed and git's config off. Never through a shell. Its witnesses build
+# decoy repositories with `git init` and `git worktree add` under tmp_path: the same reason.
+"src/mikemol/hooks/worktree_venv.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_worktree_venv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑ THE `.claude/` CODE CENSUS (W464): asking git for the untracked files IS its responsibility.
 # git is resolved by `shutil.which` (absent → refuse, exit 2); the argv is module constants plus
 # the caller's repository root as ONE word. Never through a shell. Its witness builds a decoy

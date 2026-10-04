@@ -59,6 +59,7 @@ from mikemol.hooks import (
     project_root,
     shellcheck,
     suppressions,
+    worktree_venv,
 )
 from mikemol.hooks.pycheck_message import render
 from mikemol.hooks.verdict import Verdict, run_checker
@@ -149,7 +150,9 @@ def analyze(content: str, path: str) -> Verdict:
     root = project_root.project_for(path)
     if root is None:
         return True, ""
-    venv_py = project_root.venv_python_for(path)
+    # ⚑ W553: a linked worktree has no untracked `.venv`; the main tree's, for the SAME
+    # distribution, supplies the tools only. Staging, config and cwd stay the worktree's.
+    venv_py = project_root.venv_python_for(path) or worktree_venv.main_tree_venv_python(root)
     if venv_py is None:
         return None, f"{root} has no .venv/bin/python3 to run ruff and mypy from"
     broken = syntax_error(content, path)

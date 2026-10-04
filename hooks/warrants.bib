@@ -4679,3 +4679,45 @@
             one, which stays held.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_launcher_that_reads_an_arming_variable_must_be_armed_inline},
 }
+
+@misc{hooks-worktree-venv-worktree-without-a-venv-borrows-the-main-trees,
+  section = {worktree-venv},
+  title  = {A linked worktree with no venv resolves the main tree's interpreter for that dist},
+  claim  = {A linked worktree with no venv resolves the main tree's interpreter for that dist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_worktree_without_a_venv_borrows_the_main_trees},
+}
+
+@misc{hooks-worktree-venv-borrowed-tools-still-read-the-worktrees-file-and-config,
+  section = {worktree-venv},
+  title  = {Both checkers run FROM the worktree dist, under its pyproject, on a file staged there},
+  claim  = {Both checkers run FROM the worktree dist, under its pyproject, on a file staged there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_borrowed_tools_still_read_the_worktrees_file_and_config},
+}
+
+@misc{hooks-worktree-venv-neither-tree-having-a-venv-keeps-the-refusal,
+  section = {worktree-venv},
+  title  = {With no venv in the worktree or the main tree the existing refusal text stands},
+  claim  = {With no venv in the worktree or the main tree the existing refusal text stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_neither_tree_having_a_venv_keeps_the_refusal},
+}
+
+@misc{hooks-worktree-venv-worktrees-own-venv-wins,
+  section = {worktree-venv},
+  title  = {When the worktree has its own venv, it runs the checkers and the main tree's does not},
+  claim  = {When the worktree has its own venv, it runs the checkers and the main tree's does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_a_worktrees_own_venv_wins},
+}
+
+@misc{hooks-worktree-venv-non-worktree-repository-behaves-as-before,
+  section = {worktree-venv},
+  title  = {In the main tree itself there is nothing to borrow: its own venv or the refusal},
+  claim  = {In the main tree itself there is nothing to borrow: its own venv or the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_a_non_worktree_repository_behaves_as_before},
+}
+
+@misc{hooks-worktree-venv-directory-outside-any-repository-resolves-nothing,
+  section = {worktree-venv},
+  title  = {A plain directory, or a missing one, is not a worktree and yields None},
+  claim  = {A plain directory, or a missing one, is not a worktree and yields None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_a_directory_outside_any_repository_resolves_nothing},
+}
