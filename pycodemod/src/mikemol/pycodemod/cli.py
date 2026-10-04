@@ -94,6 +94,7 @@ from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
 from mikemol.pycodemod.strings import key_reads, literal_sites
 from mikemol.pycodemod.swallows import swallows as run_swallows
+from mikemol.pycodemod.worktrees import WorktreeRefusedError, expand
 from mikemol.pycodemod.writes import writes_by_default
 
 if TYPE_CHECKING:
@@ -1114,7 +1115,13 @@ def _build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="mode", required=True)
 
     def make(name: str, text: str) -> argparse.ArgumentParser:
-        return sub.add_parser(name, help=text)
+        parser = sub.add_parser(name, help=text)
+        parser.add_argument(
+            "--include-worktrees",
+            action="store_true",
+            help="with a directory operand, also read registered git worktrees (default: skip)",
+        )
+        return parser
 
     for family in (_add_scan_modes, _add_named_modes, _add_flagged_modes, _add_rooted_modes):
         family(make)
@@ -1123,6 +1130,29 @@ def _build_parser() -> argparse.ArgumentParser:
     for name in (*RETIRED, *DO_NOT_PORT):
         sub.add_parser(name).add_argument("rest", nargs=argparse.REMAINDER)
     return parser
+
+
+def _expand_operands(ns: argparse.Namespace) -> int | None:
+    """Expand directory operands to files, printing what the expansion left out.
+
+    ⚑ A DIRECTORY OPERAND PRINTS ITS SKIP, ZERO INCLUDED: "skipped N registered worktrees" counts
+    the registered git worktrees other than the root own tree (none, with --include-worktrees).
+    A refused symlink is counted, never followed. File operands are untouched.
+
+    Returns:
+        the refusal code when git could not list worktrees, else None.
+
+    """
+    try:
+        got = expand(_str_list(ns, "paths"), include_worktrees=_flag(ns, "include_worktrees"))
+    except WorktreeRefusedError as exc:
+        sys.stdout.write(f"{exc}\n")
+        return _REFUSED
+    if got.directories:
+        sys.stdout.write(f"skipped {got.worktrees} registered worktrees\n")
+        sys.stdout.write(f"refused {got.links} symlinks (not followed)\n")
+        ns.paths = got.files
+    return None
 
 
 def main(argv: Sequence[str]) -> int:
@@ -1143,6 +1173,9 @@ def main(argv: Sequence[str]) -> int:
             f"DO NOT PORT — still lives at substrate's scratch/pycodemod.py --{mode}\n"
         )
         return _REFUSED
+    refused = _expand_operands(ns)
+    if refused is not None:
+        return refused
     return MODES[mode](ns)
 
 

@@ -2419,3 +2419,68 @@
             text.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_capture.py -k test_a_symlink_named_as_an_operand_is_refused_not_read},
 }
+
+@misc{pycodemod-worktrees-directory-operand-skips-a-registered-worktree-and-says-so,
+  section = {worktrees},
+  title  = {Default: the importer outside the worktree is found, the one inside is not, skip printed},
+  claim  = {Default: the importer outside the worktree is found, the one inside is not, skip
+            printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_directory_operand_skips_a_registered_worktree_and_says_so},
+}
+
+@misc{pycodemod-worktrees-include-worktrees-reads-the-worktree-and-reports-zero-skipped,
+  section = {worktrees},
+  title  = {With --include-worktrees both importers are found and the skip line says zero},
+  claim  = {With --include-worktrees both importers are found and the skip line says zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_include_worktrees_reads_the_worktree_and_reports_zero_skipped},
+}
+
+@misc{pycodemod-worktrees-hidden-directories-are-walked-not-pruned,
+  section = {worktrees},
+  title  = {Hidden directories are included, so the registered-path check is what skips the worktree},
+  claim  = {Hidden directories are included, so the registered-path check is what skips the
+            worktree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_hidden_directories_are_walked_not_pruned},
+}
+
+@misc{pycodemod-worktrees-root-own-tree-is-read-when-run-from-a-linked-worktree,
+  section = {worktrees},
+  title  = {A query rooted in a linked worktree reads that worktree and counts the other tree},
+  claim  = {A query rooted in a linked worktree reads that worktree and counts the other tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_the_root_own_tree_is_read_when_run_from_a_linked_worktree},
+}
+
+@misc{pycodemod-worktrees-absent-git-refuses-by-name,
+  section = {worktrees},
+  title  = {With git off PATH a directory operand refuses (exit 2), never reading as no worktrees},
+  claim  = {With git off PATH a directory operand refuses (exit 2), never reading as no worktrees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_an_absent_git_refuses_by_name},
+}
+
+@misc{pycodemod-worktrees-failing-git-refuses-by-name,
+  section = {worktrees},
+  title  = {A directory that is no git repository refuses (exit 2), never reading as no worktrees},
+  claim  = {A directory that is no git repository refuses (exit 2), never reading as no worktrees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_failing_git_refuses_by_name},
+}
+
+@misc{pycodemod-worktrees-symlink-is-refused-as-data-and-counted,
+  section = {worktrees},
+  title  = {A linked file and a linked directory are counted, not followed, and not read},
+  claim  = {A linked file and a linked directory are counted, not followed, and not read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_symlink_is_refused_as_data_and_counted},
+}
+
+@misc{pycodemod-worktrees-directory-operand-that-is-a-symlink-refuses,
+  section = {worktrees},
+  title  = {A symlink given AS the directory operand refuses (exit 2) rather than being walked},
+  claim  = {A symlink given AS the directory operand refuses (exit 2) rather than being walked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_a_directory_operand_that_is_a_symlink_refuses},
+}
+
+@misc{pycodemod-worktrees-file-operands-behave-as-before,
+  section = {worktrees},
+  title  = {Explicit files are read as given, with no skip line and no git call},
+  claim  = {Explicit files are read as given, with no skip line and no git call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktrees.py -k test_file_operands_behave_as_before},
+}
