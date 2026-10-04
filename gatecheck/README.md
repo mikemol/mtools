@@ -15,6 +15,8 @@ paths, and a hard-coded repo root becomes the current directory (or `--root`).
 | `mikemol.gatecheck.rungate` | none (`-m` only) | runs a gate target under the repo's sweep budget |
 | `mikemol.gatecheck.absence_audit` | `mikemol-absence-audit` | flags an absence claim asserted without running the owning tool |
 | `mikemol.gatecheck.lint_bzl` | `mikemol-lint-bzl` | refuses program logic and JSON built in a `.bzl` shell string |
+| `mikemol.gatecheck.witness_reach` | `mikemol-witness-reach` | loads every project witness in a fresh child interpreter, the way the bib spells it, and names those that fail |
 
-`witness_reach` is NOT here: its child-interpreter code string imports `tools.dagnames`, which moves
-in a later package.
+`witness_reach` depends on the sibling `mikemol-importdag`: each child interpreter binds
+`mikemol.importdag.dagnames` and gets its import path from `dagnames.child_env` through
+`PYTHONPATH`, with no `sys.path` edit.

@@ -563,3 +563,108 @@
   claim  = {Importing the siblings does not shadow mikemol.gatecheck.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_siblings},
 }
+
+@misc{gatecheck-witness-reach-trees-finds-each-projects-checks-directory-sorted,
+  section = {witness_reach},
+  title  = {Only directories named checks directly inside a child of the root are found},
+  claim  = {Only directories named checks directly inside a child of the root are found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_trees_finds_each_projects_checks_directory_sorted},
+}
+
+@misc{gatecheck-witness-reach-child-environment-leads-with-the-checks-directory,
+  section = {witness_reach},
+  title  = {The checks directory comes first, then the roots that dagnames supplies},
+  claim  = {The checks directory comes first, then the roots that dagnames supplies.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_child_environment_leads_with_the_checks_directory},
+}
+
+@misc{gatecheck-witness-reach-probe-passes-a-witness-that-loads,
+  section = {witness_reach},
+  title  = {A loadable witness is return code zero with nothing to say},
+  claim  = {A loadable witness is return code zero with nothing to say.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_probe_passes_a_witness_that_loads},
+}
+
+@misc{gatecheck-witness-reach-probe-resolves-a-sibling-import-on-the-script-route,
+  section = {witness_reach},
+  title  = {A witness importing its neighbour loads, because the checks directory leads the path},
+  claim  = {A witness importing its neighbour loads, because the checks directory leads the path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_probe_resolves_a_sibling_import_on_the_script_route},
+}
+
+@misc{gatecheck-witness-reach-probe-reports-the-last-line-of-a-missing-module,
+  section = {witness_reach},
+  title  = {An unloadable witness is a nonzero code and the last line of the child's traceback},
+  claim  = {An unloadable witness is a nonzero code and the last line of the child's traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_probe_reports_the_last_line_of_a_missing_module},
+}
+
+@misc{gatecheck-witness-reach-probe-reports-empty-when-the-child-says-nothing,
+  section = {witness_reach},
+  title  = {A silent failing child is its return code and an empty line},
+  claim  = {A silent failing child is its return code and an empty line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_probe_reports_empty_when_the_child_says_nothing},
+}
+
+@misc{gatecheck-witness-reach-probe-cuts-a-long-last-line,
+  section = {witness_reach},
+  title  = {The reported line is cut at the tail width},
+  claim  = {The reported line is cut at the tail width.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_probe_cuts_a_long_last_line},
+}
+
+@misc{gatecheck-witness-reach-probe-child-imports-through-the-dagnames-module,
+  section = {witness_reach},
+  title  = {The child has bound mikemol.importdag.dagnames before the witness runs},
+  claim  = {The child has bound mikemol.importdag.dagnames before the witness runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_probe_child_imports_through_the_dagnames_module},
+}
+
+@misc{gatecheck-witness-reach-parse-args-defaults-to-the-cwd-and-every-project,
+  section = {witness_reach},
+  title  = {With no arguments the root is the current directory and no project is selected},
+  claim  = {With no arguments the root is the current directory and no project is selected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_parse_args_defaults_to_the_cwd_and_every_project},
+}
+
+@misc{gatecheck-witness-reach-parse-args-reads-root-and-projects,
+  section = {witness_reach},
+  title  = {The root option and the positional project names are both read},
+  claim  = {The root option and the positional project names are both read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_parse_args_reads_root_and_projects},
+}
+
+@misc{gatecheck-witness-reach-main-reports-a-clean-tree-and-returns-zero,
+  section = {witness_reach},
+  title  = {Every witness loading is exit zero, with the count line and no failure marker},
+  claim  = {Every witness loading is exit zero, with the count line and no failure marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_main_reports_a_clean_tree_and_returns_zero},
+}
+
+@misc{gatecheck-witness-reach-main-names-each-failure-and-returns-one,
+  section = {witness_reach},
+  title  = {A failing witness is listed with its last line and the exit is one; init is skipped},
+  claim  = {A failing witness is listed with its last line and the exit is one; init is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_main_names_each_failure_and_returns_one},
+}
+
+@misc{gatecheck-witness-reach-main-selects-only-the-named-projects,
+  section = {witness_reach},
+  title  = {A named project is probed and the others are not, even when they would fail},
+  claim  = {A named project is probed and the others are not, even when they would fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_main_selects_only_the_named_projects},
+}
+
+@misc{gatecheck-witness-reach-main-defaults-to-the-cwd,
+  section = {witness_reach},
+  title  = {Without --root the repository is the current directory},
+  claim  = {Without --root the repository is the current directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_main_defaults_to_the_cwd},
+}
+
+@misc{gatecheck-witness-reach-module-runs-as-a-script-with-the-exit-code,
+  section = {witness_reach},
+  title  = {Run as a module, the exit status is the failure verdict},
+  claim  = {Run as a module, the exit status is the failure verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_module_runs_as_a_script_with_the_exit_code},
+}

@@ -152,6 +152,22 @@ py_binary(
     deps = [":gatecheck"],
 )
 
+# ⚑ THE SIBLING IS IN `deps` because this script imports `mikemol.importdag.dagnames`; the shared
+# `:gatecheck` library already carries that edge. `legacy_create_init = 0` keeps the `mikemol`
+# namespace from being shadowed by an implicit `__init__.py` across the three source roots (W566).
+py_binary(
+    name = "witness_reach",
+    srcs = ["src/mikemol/gatecheck/witness_reach.py"],
+    main = "src/mikemol/gatecheck/witness_reach.py",
+    imports = ["src"],
+    legacy_create_init = 0,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":gatecheck",
+        "//importdag:importdag",
+    ],
+)
+
 py_binary(
     name = "mypy_runner",
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
@@ -189,6 +205,7 @@ venv_from_hub(
         "mikemol-hook-grid": "mikemol.gatecheck.hook_grid:main",
         "mikemol-absence-audit": "mikemol.gatecheck.absence_audit:main",
         "mikemol-lint-bzl": "mikemol.gatecheck.lint_bzl:main",
+        "mikemol-witness-reach": "mikemol.gatecheck.witness_reach:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",

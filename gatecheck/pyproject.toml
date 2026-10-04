@@ -33,6 +33,7 @@ mikemol-hook-index = "mikemol.gatecheck.hook_index:cli"
 mikemol-hook-grid = "mikemol.gatecheck.hook_grid:main"
 mikemol-absence-audit = "mikemol.gatecheck.absence_audit:main"
 mikemol-lint-bzl = "mikemol.gatecheck.lint_bzl:main"
+mikemol-witness-reach = "mikemol.gatecheck.witness_reach:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -103,6 +104,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # and the partial-path check are all about argv the caller composed from its own constants.
 "src/mikemol/gatecheck/hook_index.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/gatecheck/rungate.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# witness_reach starts one child interpreter per witness, argv composed from its own constants.
+"src/mikemol/gatecheck/witness_reach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hook_index.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_indexdiverge.py" = ["assert"]
 "tests/test_hook_grid.py" = ["assert"]
@@ -110,3 +113,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_absence_audit.py" = ["assert"]
 "tests/test_lint_bzl.py" = ["assert"]
 "tests/test_sibling_edge.py" = ["assert"]
+"tests/test_witness_reach.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
