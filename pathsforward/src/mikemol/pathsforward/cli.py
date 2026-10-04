@@ -25,7 +25,18 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import embargo, lease, lock, ops, outcomes, render, selftest, store, vtodo
+from mikemol.pathsforward import (
+    embargo,
+    foreign,
+    lease,
+    lock,
+    ops,
+    outcomes,
+    render,
+    selftest,
+    store,
+    vtodo,
+)
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.commitmsg import draft
@@ -128,6 +139,7 @@ _FIELDS = (
     "unchanged",
     "rejected",
     "consumers",
+    "root",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -162,6 +174,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
     "bump_blocked": frozenset({"exclude"}),
+    "prune_landed": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
 }
 
@@ -239,6 +252,22 @@ def _say(message: str) -> None:
 def _warn(message: str) -> None:
     """Write one line to stderr."""
     sys.stderr.write(message + "\n")
+
+
+def _add_run_fields(ap: argparse.ArgumentParser) -> None:
+    """Add the flags that shape one run: `--except`, `--root` and the ledger columns.
+
+    ⚑ SPLIT OUT OF `_parser` (W538): that function sits at ruff's 50-statement limit, and the
+    fix for a parser that outgrew its budget is another function, never a waiver.
+    """
+    ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
+    ap.add_argument(
+        "--root",
+        metavar="PATH",
+        help="--prune-landed: the directory holding the repos (default: ~/github)",
+    )
+    ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
+    ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -394,9 +423,7 @@ def _parser() -> argparse.ArgumentParser:
         ap.add_argument(
             f"--{l2}", metavar="TEXT", help=f"--update: append one entry to the {l2} list"
         )
-    ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
-    ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
-    ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
+    _add_run_fields(ap)
     return ap
 
 
@@ -1047,16 +1074,23 @@ def _prune_landed(ctx: Ctx) -> int:
     ⚑ THE IDEMPOTENT HALF OF `--bump-blocked` (luthen-observability, mtools:W537). `--bump-blocked`
     also advances the nudge back-off counter, so run from a hook on every tool use it would drive
     every blocked card to ESCALATE_TICK in minutes. This only prunes, so running it twice changes
-    nothing, and it is safe from a hook.
+    nothing, and it is safe from a hook. A foreign `repo:W<n>` is resolved by reading that repo's
+    queue under `--root` (W538); one that stays is named, one line each.
 
     Returns:
         EXIT_OK.
 
     """
+    root = Path(ctx.get("root") or foreign.default_root())
 
     def edit(state: State) -> int:
         for sym in ops.prune_done(state):
             _say(f"UNBLOCKED {sym} (every local blocker is done)")
+        pruned = foreign.prune_foreign(state, root)
+        for sym in pruned.freed:
+            _say(f"UNBLOCKED {sym} (every blocker is done)")
+        for note in pruned.kept:
+            _say(note)
         return EXIT_OK
 
     return _mutate(ctx, edit)

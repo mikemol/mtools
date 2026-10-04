@@ -32,7 +32,10 @@ mikemol-paths-forward --state S --update W7 [--status S] [--blocked-on WHO…] [
 mikemol-paths-forward --state S --add TITLE [--next T] [--enables W…] [--touches TAG…]   ledgers `minted`
 mikemol-paths-forward --state S --drop W7 REASON
 mikemol-paths-forward --state S --bump-blocked [--except W…]   prune landed blockers, then count a tick: NUDGE at 1,2,4,8 · ESCALATE at 16
-mikemol-paths-forward --state S --prune-landed   only the prune: idempotent, no counter, safe from a hook
+mikemol-paths-forward --state S --prune-landed [--root R]   only the prune: idempotent, no counter, safe
+                                            from a hook; a foreign repo:W<n> blocker is resolved by
+                                            READING R/<repo>/.claude/paths-forward.json (default
+                                            ~/github), one KEPT line for each that stays
 mikemol-paths-forward --state S --ledger SYM OUTCOME MECHANISM NOTE [--kind K] [--evidence E]
 mikemol-paths-forward --state S --outcomes-set ADVANCE_CSV OTHER_CSV   W533: declare the OUTCOME words
                                             tick/interrupt --ledger lines may carry (off until set;

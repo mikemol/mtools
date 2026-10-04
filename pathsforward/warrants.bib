@@ -2985,3 +2985,59 @@
   claim  = {The --check mode exits refused and names ledger_outcomes for a malformed field.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcomes.py -k test_check_mode_names_a_malformed_field},
 }
+
+@misc{pathsforward-foreign-landed-foreign-blocker-frees-the-card-and-an-open-one-is-named,
+  section = {foreign},
+  title  = {B's card on a done A:W1 or a residue A:W3 goes ready; one on an open A:W2 stays, named},
+  claim  = {B's card on a done A:W1 or a residue A:W3 goes ready; one on an open A:W2 stays, named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_a_landed_foreign_blocker_frees_the_card_and_an_open_one_is_named},
+}
+
+@misc{pathsforward-foreign-shrinking-list-restarts-ticks-and-stays-blocked,
+  section = {foreign},
+  title  = {A card blocked on a landed and an open foreign symbol keeps the open one, ticks reset},
+  claim  = {A card blocked on a landed and an open foreign symbol keeps the open one, ticks reset.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_a_shrinking_list_restarts_ticks_and_stays_blocked},
+}
+
+@misc{pathsforward-foreign-peer-queue-is-not-written,
+  section = {foreign},
+  title  = {Reading A's queue leaves its bytes, and any lock sidecar, untouched},
+  claim  = {Reading A's queue leaves its bytes, and any lock sidecar, untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_the_peer_queue_is_not_written},
+}
+
+@misc{pathsforward-foreign-every-unresolvable-foreign-blocker-is-kept-and-named,
+  section = {foreign},
+  title  = {A missing repo, a non-JSON queue, an unknown symbol and an escaping name are all named},
+  claim  = {A missing repo, a non-JSON queue, an unknown symbol and an escaping name are all named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_every_unresolvable_foreign_blocker_is_kept_and_named},
+}
+
+@misc{pathsforward-foreign-linked-repo-is-refused-as-data,
+  section = {foreign},
+  title  = {A queue file reached through a link is not read; the check names it},
+  claim  = {A queue file reached through a link is not read; the check names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_a_linked_repo_is_refused_as_data},
+}
+
+@misc{pathsforward-foreign-with-no-foreign-blocker-nothing-changes,
+  section = {foreign},
+  title  = {A queue with only local blockers prunes as before, prints no KEPT line, ignores --root},
+  claim  = {A queue with only local blockers prunes as before, prints no KEPT line, ignores --root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_with_no_foreign_blocker_nothing_changes},
+}
+
+@misc{pathsforward-foreign-default-root-comes-from-the-home-directory,
+  section = {foreign},
+  title  = {With no --root the repos are read from ~/github, resolved at runtime},
+  claim  = {With no --root the repos are read from ~/github, resolved at runtime.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_the_default_root_comes_from_the_home_directory},
+}
+
+@misc{pathsforward-foreign-root-is-refused-by-a-mode-that-does-not-read-it,
+  section = {foreign},
+  title  = {`--root` on another mode is a stray flag, refused rather than accepted in silence},
+  claim  = {`--root` on another mode is a stray flag, refused rather than accepted in silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_root_is_refused_by_a_mode_that_does_not_read_it},
+}
