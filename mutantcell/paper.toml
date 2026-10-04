@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.mutantcell: one def-sweep cell, run under bounds, and the aggregators that read the grid"
+subtitle = "The cell that runs a check against one counterfactual engine and records whether it flipped, its argv, cgroup and staging siblings, and the sensitivity, decision-coverage and def-site readers, ported from paperkit's tools/ with the witness that would catch each one drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "MUTANTCELL.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

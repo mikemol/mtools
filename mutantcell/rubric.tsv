@@ -1,0 +1,9 @@
+# rubric.tsv — the sections of the mutantcell warrant set, one per test module, in document order.
+# key <TAB> heading title
+cellargs	The Cell's Arguments: A Typed Record, or a Typed Refusal Naming the Flag
+cellcgroup	The Cell's Own Cgroup: Its Peak and Its OOM Counts Read From a Planted Directory
+cellstage	The Staging: Bytecode Placed, and Exactly One Counterfactual Delivered
+decisions	The Decision Coverage: Reached-but-Unasserted Conditions and Data Values
+def_sites	The Mutation Surface: Every Body-Isolable Def, and Where Each Sits
+eval	The Cell: A Check Run Against a Counterfactual Under Bounds, Its Flip Recorded
+sens	The Sensitivity Set: Flipped Sites Folded, a Leaked Non-Monotone Cell Refused

@@ -1,0 +1,618 @@
+
+@misc{mutantcell-cellargs-five-required-flags-parse-and-the-six-optional-ones-read-empty,
+  section = {cellargs},
+  title  = {A minimal argv yields the five operands and the empty string for every optional one},
+  claim  = {A minimal argv yields the five operands and the empty string for every optional one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellargs.py -k test_the_five_required_flags_parse_and_the_six_optional_ones_read_empty},
+}
+
+@misc{mutantcell-cellargs-every-optional-flag-lands-in-its-own-field,
+  section = {cellargs},
+  title  = {Each of the six optional flags is read into the field of its name, none crossed},
+  claim  = {Each of the six optional flags is read into the field of its name, none crossed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellargs.py -k test_every_optional_flag_lands_in_its_own_field},
+}
+
+@misc{mutantcell-cellargs-missing-required-flag-is-a-usage-refusal-naming-it,
+  section = {cellargs},
+  title  = {Without `--claim` argparse exits 2 and says which flag is missing},
+  claim  = {Without `--claim` argparse exits 2 and says which flag is missing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellargs.py -k test_a_missing_required_flag_is_a_usage_refusal_naming_it},
+}
+
+@misc{mutantcell-cellargs-unknown-flag-is-a-typed-refusal-not-a-silent-no-op,
+  section = {cellargs},
+  title  = {A typo'd flag exits 2 naming it, instead of being ignored},
+  claim  = {A typo'd flag exits 2 naming it, instead of being ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellargs.py -k test_an_unknown_flag_is_a_typed_refusal_not_a_silent_no_op},
+}
+
+@misc{mutantcell-cellcgroup-own-cgroup-names-the-path-after-the-last-colon,
+  section = {cellcgroup},
+  title  = {The v2 line `0::/job` names `/job`},
+  claim  = {The v2 line `0::/job` names `/job`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_own_cgroup_names_the_path_after_the_last_colon},
+}
+
+@misc{mutantcell-cellcgroup-own-cgroup-is-none-where-the-file-is-unreadable,
+  section = {cellcgroup},
+  title  = {No cgroup file means no v2: None, never an exception},
+  claim  = {No cgroup file means no v2: None, never an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_own_cgroup_is_none_where_the_file_is_unreadable},
+}
+
+@misc{mutantcell-cellcgroup-real-host-answers-with-a-path-or-none-and-never-raises,
+  section = {cellcgroup},
+  title  = {The default `SELF` reads this process's real cgroup; whatever it finds, it is typed},
+  claim  = {The default `SELF` reads this process's real cgroup; whatever it finds, it is typed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_the_real_host_answers_with_a_path_or_none_and_never_raises},
+}
+
+@misc{mutantcell-cellcgroup-peak-bytes-reads-memory-peak-of-the-own-cgroup,
+  section = {cellcgroup},
+  title  = {The planted `memory.peak` of `/job` is the answer, newline and all},
+  claim  = {The planted `memory.peak` of `/job` is the answer, newline and all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_peak_bytes_reads_memory_peak_of_the_own_cgroup},
+}
+
+@misc{mutantcell-cellcgroup-peak-bytes-is-none-when-the-file-is-missing-malformed-or-v2-absent,
+  section = {cellcgroup},
+  title  = {Missing, non-numeric and no-cgroup all read None: the peak is unknown, not zero},
+  claim  = {Missing, non-numeric and no-cgroup all read None: the peak is unknown, not zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_peak_bytes_is_none_when_the_file_is_missing_malformed_or_v2_absent},
+}
+
+@misc{mutantcell-cellcgroup-write-peak-deposits-the-byte-count,
+  section = {cellcgroup},
+  title  = {The deposited file holds the peak as decimal bytes, the vocabulary mem_harvest parses},
+  claim  = {The deposited file holds the peak as decimal bytes, the vocabulary mem_harvest parses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_write_peak_deposits_the_byte_count},
+}
+
+@misc{mutantcell-cellcgroup-write-peak-says-unavailable-when-the-peak-cannot-be-read,
+  section = {cellcgroup},
+  title  = {An unreadable peak is recorded as `unavailable:unreadable`, never as a number},
+  claim  = {An unreadable peak is recorded as `unavailable:unreadable`, never as a number.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_write_peak_says_unavailable_when_the_peak_cannot_be_read},
+}
+
+@misc{mutantcell-cellcgroup-write-peak-with-an-empty-path-writes-nothing,
+  section = {cellcgroup},
+  title  = {The empty path means "not observing": no file appears anywhere},
+  claim  = {The empty path means "not observing": no file appears anywhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_write_peak_with_an_empty_path_writes_nothing},
+}
+
+@misc{mutantcell-cellcgroup-oom-counts-reads-oom-and-oom-kill-from-memory-events,
+  section = {cellcgroup},
+  title  = {The planted `memory.events` yields `(oom, oom_kill)`; other keys are ignored},
+  claim  = {The planted `memory.events` yields `(oom, oom_kill)`; other keys are ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_oom_counts_reads_oom_and_oom_kill_from_memory_events},
+}
+
+@misc{mutantcell-cellcgroup-oom-counts-reads-a-missing-key-as-zero,
+  section = {cellcgroup},
+  title  = {A kernel that lists only `oom_kill` reads `oom` as 0},
+  claim  = {A kernel that lists only `oom_kill` reads `oom` as 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_oom_counts_reads_a_missing_key_as_zero},
+}
+
+@misc{mutantcell-cellcgroup-oom-counts-is-none-when-unreadable-malformed-or-v2-absent,
+  section = {cellcgroup},
+  title  = {No events file, a non-numeric counter and no cgroup all read None},
+  claim  = {No events file, a non-numeric counter and no cgroup all read None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_oom_counts_is_none_when_unreadable_malformed_or_v2_absent},
+}
+
+@misc{mutantcell-cellcgroup-oom-happened-asks-only-whether-a-counter-incremented,
+  section = {cellcgroup},
+  title  = {Any rise of either counter is an OOM; a missing reading never is},
+  claim  = {Any rise of either counter is an OOM; a missing reading never is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellcgroup.py -k test_oom_happened_asks_only_whether_a_counter_incremented},
+}
+
+@misc{mutantcell-cellstage-cache-tag-is-this-runtimes-bytecode-tag,
+  section = {cellstage},
+  title  = {The tag is the running implementation's own `cache_tag`, e.g. `cpython-313`},
+  claim  = {The tag is the running implementation's own `cache_tag`, e.g. `cpython-313`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_cache_tag_is_this_runtimes_bytecode_tag},
+}
+
+@misc{mutantcell-cellstage-slot-names-the-pycache-file-and-makes-its-directory,
+  section = {cellstage},
+  title  = {`x/m.py` maps to `x/__pycache__/m.<tag>.pyc`; the directory exists, the file does not},
+  claim  = {`x/m.py` maps to `x/__pycache__/m.<tag>.pyc`; the directory exists, the file does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_slot_names_the_pycache_file_and_makes_its_directory},
+}
+
+@misc{mutantcell-cellstage-place-engine-moves-each-staged-pyc-to-its-import-slot,
+  section = {cellstage},
+  title  = {A staged `pkg/a.pyc` and `pkg/sub/b.pyc` move into their `__pycache__` slots},
+  claim  = {A staged `pkg/a.pyc` and `pkg/sub/b.pyc` move into their `__pycache__` slots.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_place_engine_moves_each_staged_pyc_to_its_import_slot},
+}
+
+@misc{mutantcell-cellstage-place-engine-leaves-bytecode-already-in-a-pycache-alone,
+  section = {cellstage},
+  title  = {A `.pyc` already under `__pycache__` is not moved again},
+  claim  = {A `.pyc` already under `__pycache__` is not moved again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_place_engine_leaves_bytecode_already_in_a_pycache_alone},
+}
+
+@misc{mutantcell-cellstage-file-plus-injects-an-absent-file-with-its-directories,
+  section = {cellstage},
+  title  = {`file+:` creates the file, empty, even under directories that do not yet exist},
+  claim  = {`file+:` creates the file, empty, even under directories that do not yet exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_file_plus_injects_an_absent_file_with_its_directories},
+}
+
+@misc{mutantcell-cellstage-file-minus-drops-a-present-file-and-tolerates-an-absent-one,
+  section = {cellstage},
+  title  = {`file-:` removes the file; running it again on the now-absent file is not an error},
+  claim  = {`file-:` removes the file; running it again on the now-absent file is not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_file_minus_drops_a_present_file_and_tolerates_an_absent_one},
+}
+
+@misc{mutantcell-cellstage-content-minus-removes-the-substring-from-the-staged-file,
+  section = {cellstage},
+  title  = {`content-` drops every occurrence of the text file's contents from the target},
+  claim  = {`content-` drops every occurrence of the text file's contents from the target.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_content_minus_removes_the_substring_from_the_staged_file},
+}
+
+@misc{mutantcell-cellstage-content-plus-appends-the-substring-to-the-staged-file,
+  section = {cellstage},
+  title  = {`content+` appends the text file's contents to the target},
+  claim  = {`content+` appends the text file's contents to the target.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_content_plus_appends_the_substring_to_the_staged_file},
+}
+
+@misc{mutantcell-cellstage-content-toggle-replaces-the-hardlink-and-never-writes-the-source-inode,
+  section = {cellstage},
+  title  = {Unlink-then-write: a hardlinked source keeps its content when the staged copy changes},
+  claim  = {Unlink-then-write: a hardlinked source keeps its content when the staged copy changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_content_toggle_replaces_the_hardlink_and_never_writes_the_source_inode},
+}
+
+@misc{mutantcell-cellstage-module-swap-delivers-source-and-bytecode-over-the-staged-module,
+  section = {cellstage},
+  title  = {A module cell replaces the `.py` AND writes the mutant `.pyc` into the import slot},
+  claim  = {A module cell replaces the `.py` AND writes the mutant `.pyc` into the import slot.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_a_module_swap_delivers_source_and_bytecode_over_the_staged_module},
+}
+
+@misc{mutantcell-cellstage-module-swap-creates-a-module-outside-the-staged-closure,
+  section = {cellstage},
+  title  = {A mutated module that was never staged is created, not required to exist},
+  claim  = {A mutated module that was never staged is created, not required to exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_a_module_swap_creates_a_module_outside_the_staged_closure},
+}
+
+@misc{mutantcell-cellstage-site-with-no-module-and-no-file-kind-is-a-no-op,
+  section = {cellstage},
+  title  = {An empty module must not reach `Path('.').unlink()`: nothing is touched at all},
+  claim  = {An empty module must not reach `Path('.').unlink()`: nothing is touched at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_a_site_with_no_module_and_no_file_kind_is_a_no_op},
+}
+
+@misc{mutantcell-decisions-unflipped-condition-with-both-arms-reached-is-an-unasserted-decision,
+  section = {decisions},
+  title  = {Both `branch` arms run and inverting the condition flips nothing: indifferent},
+  claim  = {Both `branch` arms run and inverting the condition flips nothing: indifferent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_an_unflipped_condition_with_both_arms_reached_is_an_unasserted_decision},
+}
+
+@misc{mutantcell-decisions-condition-the-check-asserts-on-is-not-a-gap,
+  section = {decisions},
+  title  = {When the inversion flips the check, the check asserts on that decision},
+  claim  = {When the inversion flips the check, the check asserts on that decision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_a_condition_the_check_asserts_on_is_not_a_gap},
+}
+
+@misc{mutantcell-decisions-condition-with-only-one-arm-reached-is-not-reported,
+  section = {decisions},
+  title  = {One unreached arm (or only one arm known) rules out the one-path-fixture false positive},
+  claim  = {One unreached arm (or only one arm known) rules out the one-path-fixture false positive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_a_condition_with_only_one_arm_reached_is_not_reported},
+}
+
+@misc{mutantcell-decisions-arms-of-another-function-do-not-vouch-for-a-condition,
+  section = {decisions},
+  title  = {The reach index is keyed by file, kind and qualname: a sibling's arms are not ours},
+  claim  = {The reach index is keyed by file, kind and qualname: a sibling's arms are not ours.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_arms_of_another_function_do_not_vouch_for_a_condition},
+}
+
+@misc{mutantcell-decisions-unperturbed-data-value-whose-key-is-read-is-unasserted,
+  section = {decisions},
+  title  = {The `data-` drop of the same (QN, n) is reached, yet the value perturb flips nothing},
+  claim  = {The `data-` drop of the same (QN, n) is reached, yet the value perturb flips nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_an_unperturbed_data_value_whose_key_is_read_is_unasserted},
+}
+
+@misc{mutantcell-decisions-data-value-is-not-reported-when-its-key-is-unread,
+  section = {decisions},
+  title  = {A drop that is not reached, or reached at another index, leaves the value unjudged},
+  claim  = {A drop that is not reached, or reached at another index, leaves the value unjudged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_a_data_value_is_not_reported_when_its_key_is_unread},
+}
+
+@misc{mutantcell-decisions-data-value-the-check-asserts-on-is-not-a-gap,
+  section = {decisions},
+  title  = {When the perturb flips the check, the value is asserted, however the key is read},
+  claim  = {When the perturb flips the check, the value is asserted, however the key is read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_a_data_value_the_check_asserts_on_is_not_a_gap},
+}
+
+@misc{mutantcell-decisions-site-without-a-numeric-index-matches-no-sibling,
+  section = {decisions},
+  title  = {`#x` is not an index: the dflip has no sibling, so nothing is reported},
+  claim  = {`#x` is not an index: the dflip has no sibling, so nothing is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_a_site_without_a_numeric_index_matches_no_sibling},
+}
+
+@misc{mutantcell-decisions-cell-of-an-unrelated-kind-is-never-reported,
+  section = {decisions},
+  title  = {Only `flip` and `dflip` cells can be unasserted decisions},
+  claim  = {Only `flip` and `dflip` cells can be unasserted decisions.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_a_cell_of_an_unrelated_kind_is_never_reported},
+}
+
+@misc{mutantcell-decisions-unasserted-labels-come-back-sorted,
+  section = {decisions},
+  title  = {Input order does not leak: the result is the sorted labels},
+  claim  = {Input order does not leak: the result is the sorted labels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_the_unasserted_labels_come_back_sorted},
+}
+
+@misc{mutantcell-decisions-summarize-unions-dedupes-and-counts-without-failing-on-a-nonzero-count,
+  section = {decisions},
+  title  = {The union of every claim's labels, sorted and counted; `pass` means well-formed},
+  claim  = {The union of every claim's labels, sorted and counted; `pass` means well-formed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_summarize_unions_dedupes_and_counts_without_failing_on_a_nonzero_count},
+}
+
+@misc{mutantcell-decisions-main-with-flips-and-reach-prints-the-unasserted-labels,
+  section = {decisions},
+  title  = {The record files are read and the labels printed as one JSON object},
+  claim  = {The record files are read and the labels printed as one JSON object.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_main_with_flips_and_reach_prints_the_unasserted_labels},
+}
+
+@misc{mutantcell-decisions-main-with-no-operands-prints-an-empty-list,
+  section = {decisions},
+  title  = {Neither flag given: nothing to judge, said as an empty list},
+  claim  = {Neither flag given: nothing to judge, said as an empty list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_main_with_no_operands_prints_an_empty_list},
+}
+
+@misc{mutantcell-decisions-main-summary-prints-compact-json-the-grep-can-match,
+  section = {decisions},
+  title  = {`--summary` prints with no spaces, so `"verdict":"pass"` matches byte for byte},
+  claim  = {`--summary` prints with no spaces, so `"verdict":"pass"` matches byte for byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_main_summary_prints_compact_json_the_grep_can_match},
+}
+
+@misc{mutantcell-decisions-main-summary-with-no-records-is-an-empty-pass,
+  section = {decisions},
+  title  = {A bare `--summary` folds zero records: a pass with count 0},
+  claim  = {A bare `--summary` folds zero records: a pass with count 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_main_summary_with_no_records_is_an_empty_pass},
+}
+
+@misc{mutantcell-decisions-main-reads-sys-argv-when-given-no-argument,
+  section = {decisions},
+  title  = {The `-m` path: `main()` takes its operands from `sys.argv[1:]`},
+  claim  = {The `-m` path: `main()` takes its operands from `sys.argv[1:]`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_decisions.py -k test_main_reads_sys_argv_when_given_no_argument},
+}
+
+@misc{mutantcell-def-sites-def-sites-lists-qualified-body-isolable-defs-in-source-order,
+  section = {def_sites},
+  title  = {Methods and nested defs are qualname-prefixed; the one-liner is not a site},
+  claim  = {Methods and nested defs are qualname-prefixed; the one-liner is not a site.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_def_sites_lists_qualified_body_isolable_defs_in_source_order},
+}
+
+@misc{mutantcell-def-sites-def-sites-walks-into-non-def-blocks,
+  section = {def_sites},
+  title  = {A def inside an `if` block still counts, under the enclosing prefix},
+  claim  = {A def inside an `if` block still counts, under the enclosing prefix.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_def_sites_walks_into_non_def_blocks},
+}
+
+@misc{mutantcell-def-sites-def-sites-of-unparseable-text-is-empty,
+  section = {def_sites},
+  title  = {A source that does not parse has no sites: the sweep skips it rather than failing},
+  claim  = {A source that does not parse has no sites: the sweep skips it rather than failing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_def_sites_of_unparseable_text_is_empty},
+}
+
+@misc{mutantcell-def-sites-def-lines-locates-every-def-and-class-including-one-liners,
+  section = {def_sites},
+  title  = {Classes and the one-liner appear, each as `(first_line, last_line)`},
+  claim  = {Classes and the one-liner appear, each as `(first_line, last_line)`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_def_lines_locates_every_def_and_class_including_one_liners},
+}
+
+@misc{mutantcell-def-sites-def-lines-of-unparseable-text-is-empty,
+  section = {def_sites},
+  title  = {An unparseable source has no locations},
+  claim  = {An unparseable source has no locations.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_def_lines_of_unparseable_text_is_empty},
+}
+
+@misc{mutantcell-def-sites-main-prints-relpath-tab-qualname-per-site,
+  section = {def_sites},
+  title  = {The bare output is `relpath<TAB>qualname`, one line per site, per file in order},
+  claim  = {The bare output is `relpath<TAB>qualname`, one line per site, per file in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_main_prints_relpath_tab_qualname_per_site},
+}
+
+@misc{mutantcell-def-sites-main-with-lines-adds-the-span-column-and-the-flag-is-not-a-file,
+  section = {def_sites},
+  title  = {`--lines` prints `relpath<TAB>qualname<TAB>first-last` for every def and class},
+  claim  = {`--lines` prints `relpath<TAB>qualname<TAB>first-last` for every def and class.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_main_with_lines_adds_the_span_column_and_the_flag_is_not_a_file},
+}
+
+@misc{mutantcell-def-sites-main-without-a-file-is-a-usage-refusal,
+  section = {def_sites},
+  title  = {No operand: usage on stderr, nothing on stdout, exit 2},
+  claim  = {No operand: usage on stderr, nothing on stdout, exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_main_without_a_file_is_a_usage_refusal},
+}
+
+@misc{mutantcell-def-sites-main-reads-sys-argv-when-given-no-argument,
+  section = {def_sites},
+  title  = {The console-script path: `main()` takes its operands from `sys.argv[1:]`},
+  claim  = {The console-script path: `main()` takes its operands from `sys.argv[1:]`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_def_sites.py -k test_main_reads_sys_argv_when_given_no_argument},
+}
+
+@misc{mutantcell-eval-env-int-reads-an-integer-knob-and-falls-back-to-the-default,
+  section = {eval},
+  title  = {Set reads; empty, garbage and unset all fall back to the default},
+  claim  = {Set reads; empty, garbage and unset all fall back to the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_env_int_reads_an_integer_knob_and_falls_back_to_the_default},
+}
+
+@misc{mutantcell-eval-last-line-is-the-final-non-empty-line-cut-to-the-why-limit,
+  section = {eval},
+  title  = {Blank trailing lines are skipped; a long line is cut; no output reads empty},
+  claim  = {Blank trailing lines are skipped; a long line is cut; no output reads empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_last_line_is_the_final_non_empty_line_cut_to_the_why_limit},
+}
+
+@misc{mutantcell-eval-last-line-replaces-undecodable-bytes-instead-of-raising,
+  section = {eval},
+  title  = {A check that wrote invalid UTF-8 still has its last line recorded},
+  claim  = {A check that wrote invalid UTF-8 still has its last line recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_last_line_replaces_undecodable_bytes_instead_of_raising},
+}
+
+@misc{mutantcell-eval-descendants-walks-ppid-counts-live-ones-and-skips-zombies,
+  section = {eval},
+  title  = {A planted /proc: children and grandchildren count; a zombie is walked, not counted},
+  claim  = {A planted /proc: children and grandchildren count; a zombie is walked, not counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_descendants_walks_ppid_counts_live_ones_and_skips_zombies},
+}
+
+@misc{mutantcell-eval-descendants-of-an-unlistable-proc-is-empty,
+  section = {eval},
+  title  = {A /proc that cannot be listed counts nothing, and does not raise},
+  claim  = {A /proc that cannot be listed counts nothing, and does not raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_descendants_of_an_unlistable_proc_is_empty},
+}
+
+@misc{mutantcell-eval-grandchild-orphaned-by-its-parents-exit-is-adopted-once-this-is-a-subreaper,
+  section = {eval},
+  title  = {After `become_subreaper`, a grandchild whose parent exited is OUR descendant},
+  claim  = {After `become_subreaper`, a grandchild whose parent exited is OUR descendant.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_grandchild_orphaned_by_its_parents_exit_is_adopted_once_this_is_a_subreaper},
+}
+
+@misc{mutantcell-eval-kill-tree-kills-and-reaps-every-descendant,
+  section = {eval},
+  title  = {A sleeping child is gone afterwards: no descendant survives, none is left a zombie},
+  claim  = {A sleeping child is gone afterwards: no descendant survives, none is left a zombie.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_kill_tree_kills_and_reaps_every_descendant},
+}
+
+@misc{mutantcell-eval-run-reports-a-passing-check-as-not-flipped-with-its-last-line,
+  section = {eval},
+  title  = {Exit 0: not flipped; `why` is the last line, and the claim reaches the check as argv[1]},
+  claim  = {Exit 0: not flipped; `why` is the last line, and the claim reaches the check as argv[1].},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_run_reports_a_passing_check_as_not_flipped_with_its_last_line},
+}
+
+@misc{mutantcell-eval-run-reports-a-failing-check-as-flipped-and-merges-stderr,
+  section = {eval},
+  title  = {Exit 1 is a flip; the last line comes from the merged stdout and stderr streams},
+  claim  = {Exit 1 is a flip; the last line comes from the merged stdout and stderr streams.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_run_reports_a_failing_check_as_flipped_and_merges_stderr},
+}
+
+@misc{mutantcell-eval-run-folds-a-kill-without-a-cpu-cap-into-a-flip-with-no-reason,
+  section = {eval},
+  title  = {A SIGKILLed check (an OOM kill looks the same) is flipped; the cap note stays silent},
+  claim  = {A SIGKILLed check (an OOM kill looks the same) is flipped; the cap note stays silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_run_folds_a_kill_without_a_cpu_cap_into_a_flip_with_no_reason},
+}
+
+@misc{mutantcell-eval-run-stops-a-check-that-outlives-the-wall-clock,
+  section = {eval},
+  title  = {A mutant that never answers HAS flipped the check: killed, with the reason recorded},
+  claim  = {A mutant that never answers HAS flipped the check: killed, with the reason recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_run_stops_a_check_that_outlives_the_wall_clock},
+}
+
+@misc{mutantcell-eval-run-stops-a-check-whose-process-tree-outgrows-its-bound,
+  section = {eval},
+  title  = {A check that forks past the tree bound is killed and read as a flip},
+  claim  = {A check that forks past the tree bound is killed and read as a flip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_run_stops_a_check_whose_process_tree_outgrows_its_bound},
+}
+
+@misc{mutantcell-eval-run-reads-a-check-that-cannot-be-spawned-as-a-flip,
+  section = {eval},
+  title  = {When the fork or exec itself fails, the harness says so instead of dying},
+  claim  = {When the fork or exec itself fails, the harness says so instead of dying.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_run_reads_a_check_that_cannot_be_spawned_as_a_flip},
+}
+
+@misc{mutantcell-eval-cap-note-is-silent-for-an-exit-that-was-not-a-cap-kill,
+  section = {eval},
+  title  = {Exit 0, an ordinary failure and an uncapped SIGKILL carry no cap note},
+  claim  = {Exit 0, an ordinary failure and an uncapped SIGKILL carry no cap note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_cap_note_is_silent_for_an_exit_that_was_not_a_cap_kill},
+}
+
+@misc{mutantcell-eval-passing-cell-writes-its-record-and-exits-zero,
+  section = {eval},
+  title  = {The record carries claim, site, flipped=false and the check's last line},
+  claim  = {The record carries claim, site, flipped=false and the check's last line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_passing_cell_writes_its_record_and_exits_zero},
+}
+
+@misc{mutantcell-eval-failing-cell-records-the-flip-and-why-and-still-exits-zero,
+  section = {eval},
+  title  = {A flip is a RESULT, not a harness failure: exit 0, flipped=true, quiet stderr},
+  claim  = {A flip is a RESULT, not a harness failure: exit 0, flipped=true, quiet stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_failing_cell_records_the_flip_and_why_and_still_exits_zero},
+}
+
+@misc{mutantcell-eval-flipped-baseline-says-so-on-stderr-but-still-records,
+  section = {eval},
+  title  = {The empty-set cell is the canary: its flip is named on the spot, with the check's reason},
+  claim  = {The empty-set cell is the canary: its flip is named on the spot, with the check's
+            reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_flipped_baseline_says_so_on_stderr_but_still_records},
+}
+
+@misc{mutantcell-eval-flipped-baseline-with-no-output-says-no-output,
+  section = {eval},
+  title  = {A canary that died silently is named as such},
+  claim  = {A canary that died silently is named as such.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_flipped_baseline_with_no_output_says_no_output},
+}
+
+@misc{mutantcell-eval-passing-baseline-is-silent,
+  section = {eval},
+  title  = {The canary only sings when it flips},
+  claim  = {The canary only sings when it flips.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_passing_baseline_is_silent},
+}
+
+@misc{mutantcell-eval-cell-stages-the-engine-bytecode-and-delivers-the-module-swap,
+  section = {eval},
+  title  = {The check sees the staged .pyc in its slot and the mutant source over the module},
+  claim  = {The check sees the staged .pyc in its slot and the mutant source over the module.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_cell_stages_the_engine_bytecode_and_delivers_the_module_swap},
+}
+
+@misc{mutantcell-eval-caps-are-applied-once-before-the-check-runs,
+  section = {eval},
+  title  = {`main` calls its `caps` exactly once, and before the check is spawned},
+  claim  = {`main` calls its `caps` exactly once, and before the check is spawned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_the_caps_are_applied_once_before_the_check_runs},
+}
+
+@misc{mutantcell-eval-main-reads-sys-argv-when-given-no-argument,
+  section = {eval},
+  title  = {The `-m` path: `main()` takes the cell's operands from `sys.argv[1:]`},
+  claim  = {The `-m` path: `main()` takes the cell's operands from `sys.argv[1:]`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_main_reads_sys_argv_when_given_no_argument},
+}
+
+@misc{mutantcell-eval-cell-asked-to-observe-deposits-the-peak-of-its-own-cgroup,
+  section = {eval},
+  title  = {With `--peak`, the in-scope peak lands at that path in the vocabulary mem_harvest parses},
+  claim  = {With `--peak`, the in-scope peak lands at that path in the vocabulary mem_harvest
+            parses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_cell_asked_to_observe_deposits_the_peak_of_its_own_cgroup},
+}
+
+@misc{mutantcell-eval-cell-not-asked-to-observe-writes-no-peak,
+  section = {eval},
+  title  = {Without `--peak`, nothing but the record is written},
+  claim  = {Without `--peak`, nothing but the record is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_cell_not_asked_to_observe_writes_no_peak},
+}
+
+@misc{mutantcell-eval-flip-that-coincides-with-an-oom-is-deferred-not-recorded,
+  section = {eval},
+  title  = {The kernel's OOM kill is a verdict about the HARNESS: exit CANNOT_RUN, no record},
+  claim  = {The kernel's OOM kill is a verdict about the HARNESS: exit CANNOT_RUN, no record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_flip_that_coincides_with_an_oom_is_deferred_not_recorded},
+}
+
+@misc{mutantcell-eval-oom-counter-rise-without-a-flip-is-not-a-deferral,
+  section = {eval},
+  title  = {A passing check that merely saw the counters rise is a result like any other},
+  claim  = {A passing check that merely saw the counters rise is a result like any other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_an_oom_counter_rise_without_a_flip_is_not_a_deferral},
+}
+
+@misc{mutantcell-eval-real-caps-bind-the-check-and-the-core-dump-is-off,
+  section = {eval},
+  title  = {The check inherits soft==hard CPU and address-space caps from the env knobs, core 0},
+  claim  = {The check inherits soft==hard CPU and address-space caps from the env knobs, core 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_the_real_caps_bind_the_check_and_the_core_dump_is_off},
+}
+
+@misc{mutantcell-eval-check-that-allocates-past-the-address-space-cap-is-a-flip,
+  section = {eval},
+  title  = {A runaway single-process allocation raises MemoryError under the cap: flipped},
+  claim  = {A runaway single-process allocation raises MemoryError under the cap: flipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_check_that_allocates_past_the_address_space_cap_is_a_flip},
+}
+
+@misc{mutantcell-eval-check-that-spins-is-killed-at-the-cpu-cap-and-the-note-says-so,
+  section = {eval},
+  title  = {The cap kill is a flip, and the recorded reason names the cap and the signal},
+  claim  = {The cap kill is a flip, and the recorded reason names the cap and the signal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_eval.py -k test_a_check_that_spins_is_killed_at_the_cpu_cap_and_the_note_says_so},
+}
+
+@misc{mutantcell-sens-sensitivity-set-is-the-flipped-sites-sorted-and-attempted-lists-every-site,
+  section = {sens},
+  title  = {Only flipped sites enter `sens`; every swept site, flipped or not, is `attempted`},
+  claim  = {Only flipped sites enter `sens`; every swept site, flipped or not, is `attempted`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sens.py -k test_the_sensitivity_set_is_the_flipped_sites_sorted_and_attempted_lists_every_site},
+}
+
+@misc{mutantcell-sens-flipped-baseline-reads-baseline-false-so-the-sens-is-not-trusted,
+  section = {sens},
+  title  = {The unmutated check failing is reported as `baseline: false`, not hidden},
+  claim  = {The unmutated check failing is reported as `baseline: false`, not hidden.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sens.py -k test_a_flipped_baseline_reads_baseline_false_so_the_sens_is_not_trusted},
+}
+
+@misc{mutantcell-sens-baseline-with-no-cells-yields-empty-lists,
+  section = {sens},
+  title  = {No records at all: an empty set swept, said plainly},
+  claim  = {No records at all: an empty set swept, said plainly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sens.py -k test_a_baseline_with_no_cells_yields_empty_lists},
+}
+
+@misc{mutantcell-sens-flip-cell-that-reached-the-sensitivity-set-fails-loud,
+  section = {sens},
+  title  = {A `::flip:` cell is non-monotone: it leaked the partition, so exit 1 naming it},
+  claim  = {A `::flip:` cell is non-monotone: it leaked the partition, so exit 1 naming it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sens.py -k test_a_flip_cell_that_reached_the_sensitivity_set_fails_loud},
+}
+
+@misc{mutantcell-sens-dflip-cell-is-refused-the-same-way,
+  section = {sens},
+  title  = {A `::dflip:` data-value perturb is non-monotone too},
+  claim  = {A `::dflip:` data-value perturb is non-monotone too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sens.py -k test_a_dflip_cell_is_refused_the_same_way},
+}
+
+@misc{mutantcell-sens-main-reads-sys-argv-when-given-no-argument,
+  section = {sens},
+  title  = {The `-m` path: `main()` takes its operands from `sys.argv[1:]`},
+  claim  = {The `-m` path: `main()` takes its operands from `sys.argv[1:]`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sens.py -k test_main_reads_sys_argv_when_given_no_argument},
+}

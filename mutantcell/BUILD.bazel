@@ -1,0 +1,169 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+
+# ⚑ MIRRORS //pkgbuild:BUILD.bazel (the first distribution of paperkit's tools/ migration) TARGET
+# FOR TARGET; the rationale for each shape lives there and in //corpus, this file says only where
+# it differs. `@mutantcell_dev` is declared in MODULE.bazel beside this distribution's birth
+# (mtools:W545, paperkit:W142).
+load("@mikemol_rules_py//:dist.bzl", "dist_checks")
+load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
+load("@mutantcell_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+exports_files([
+    # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
+    "pyproject.toml",
+    "requirements.txt",
+    "requirements-dev.txt",
+    "uv.lock",
+])
+
+# ⚑ NO `deps`: the shipping hub is empty on purpose. Every import is the standard library.
+py_library(
+    name = "mutantcell",
+    srcs = glob(["src/mikemol/mutantcell/**/*.py"]),
+    data = glob(["src/mikemol/mutantcell/py.typed"], allow_empty = True),
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+)
+
+# ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. test_eval spawns `python -m
+# mikemol.mutantcell.eval` for the cells whose caps are irreversible, resolving the package from
+# the `src` directory its own import found, so no extra data is declared for it.
+[
+    py_test(
+        name = src.removeprefix("tests/").removesuffix(".py"),
+        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        main = "@mikemol_rules_py//:pytest_main.py",
+        args = [
+            "$(location " + src + ")",
+            "-q",
+            "--strict-markers",
+            "--strict-config",
+            "-o",
+            "faulthandler_timeout=60",
+            "-c",
+            "$(location pyproject.toml)",
+        ],
+        data = ["pyproject.toml"],
+        size = "small",
+        deps = [
+            ":mutantcell",
+            dev_requirement("pytest"),
+            dev_requirement("mypy"),
+        ],
+        imports = ["src"],
+    )
+    for src in glob(["tests/test_*.py"])
+]
+
+exports_files(["BUILD.bazel"])
+
+sh_test(
+    name = "ruff",
+    srcs = ["@mikemol_check_ruff//:ruff_check.sh"],
+    args = [
+        "$(location @mikemol_check_ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ] + ["$(location " + f + ")" for f in glob(["src/**/*.py", "tests/**/*.py"])],
+    data = [
+        "pyproject.toml",
+        "@mikemol_check_ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+# ⚑ THE BASELINE IS MINTED EMPTY: the distribution enters clean under preview, so the ratchet
+# can only hold it there.
+sh_test(
+    name = "ratchet",
+    srcs = ["@mikemol_check_ratchet//:ratchet_check.sh"],
+    args = [
+        "$(location //ratchet:ratchet_cli)",
+        "$(location @mikemol_check_ruff//:bin)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        "ratchet-preview.txt",
+        "//ratchet:ratchet_cli",
+        "@mikemol_check_ruff//:bin",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "small",
+)
+
+sh_test(
+    name = "mutants",
+    srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
+    args = [
+        "$(location :pyproject.toml)",
+        "$(location @mikemol_check_mutants//:mutate_runner.py)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":.venv",
+        "@mikemol_check_mutants//:mutate_runner.py",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    size = "medium",
+)
+
+# ⚑ `eval` IS THE ONE SCRIPT ROLE, AND ITS SRCS ARE eval + ITS THREE SIBLINGS BY LABEL, exactly as
+# paperkit's tools/BUILD.bazel:56 built it (srcs eval.py, cellargs.py, cellcgroup.py, cellstage.py)
+# so `from mikemol.mutantcell import cellargs, ...` resolves BY LAYOUT in the sweep cell's runfiles,
+# with no sys.path mutation. `sens`, `decisions` and `def_sites` are `-m` only; `cellargs`,
+# `cellcgroup` and `cellstage` are library-only (nothing runs at their import).
+py_binary(
+    name = "eval",
+    srcs = [
+        "src/mikemol/mutantcell/eval.py",
+        "src/mikemol/mutantcell/cellargs.py",
+        "src/mikemol/mutantcell/cellcgroup.py",
+        "src/mikemol/mutantcell/cellstage.py",
+    ],
+    main = "src/mikemol/mutantcell/eval.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":mutantcell"],
+)
+
+py_binary(
+    name = "mypy_runner",
+    srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
+    main = "@mikemol_check_mypy//:mypy_runner.py",
+    deps = [
+        dev_requirement("mypy"),
+        dev_requirement("pytest"),
+    ],
+)
+
+sh_test(
+    name = "mypy",
+    srcs = ["@mikemol_check_mypy//:mypy_check.sh"],
+    args = [
+        "$(location :mypy_runner)",
+        "$(location :pyproject.toml)",
+    ],
+    data = [
+        "pyproject.toml",
+        ":mypy_runner",
+    ] + glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
+    size = "small",
+    # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
+    # things"). See //transcriptstruct:mypy for the measurement.
+    timeout = "long",
+)
+
+venv_from_hub(
+    name = ".venv",
+    # ⚑ THE SAME ENTRIES AS pyproject's [project.scripts].
+    console_scripts = {
+        "mikemol-eval": "mikemol.mutantcell.eval:main",
+    },
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    srcs = glob(["src/mikemol/mutantcell/**"]),
+)
+
+# W376: this distribution's :venv (W342) and :suite (W362), declared together.
+dist_checks()

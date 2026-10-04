@@ -184,6 +184,15 @@ pip.parse(
     requirements_lock = "//bibparse:requirements.txt",
 )
 
+# ⚑ `mikemol-mutantcell` — paperkit's mutant-cell staging, sensitivity and decision modules, the
+# mutation-grid half of the tools/ migration (mtools:W545, paperkit:W142). Empty shipping hub:
+# standard library only.
+pip.parse(
+    hub_name = "mutantcell_deps",
+    python_version = "3.13",
+    requirements_lock = "//mutantcell:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -331,6 +340,11 @@ pip.parse(
     uv_lock = "//bibparse:uv.lock",
 )
 pip.parse(
+    hub_name = "mutantcell_dev",
+    python_version = "3.13",
+    uv_lock = "//mutantcell:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -406,6 +420,8 @@ use_repo(
     "grade_dev",
     "mutation_deps",
     "mutation_dev",
+    "mutantcell_deps",
+    "mutantcell_dev",
     "gmailstruct_deps",
     "gmailstruct_dev",
     "hooks_deps",
