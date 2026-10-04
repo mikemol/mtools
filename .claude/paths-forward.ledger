@@ -1021,3 +1021,4 @@
 2026-10-04T19:42:05Z  tick  W583 advanced  sweep     "measured which dists' dev deps include mikemol-fence (only fence itself); minted W619 for the sibling-edge remedy; commits held because the W616 hook awaits the operator's settings patch"  evidence=grep over */pyproject.toml
 2026-10-04T19:59:38Z  tick  W585 advanced  sweep     "W585 decided Linux-only and recorded beside the preamble; luthen's live evidence recorded on W581 and W579"  evidence=328937d
 2026-10-04T20:08:55Z  tick  W586 advanced  sweep     "W586 closed as superseded (venv_check covers the console-script arm, bazel test //hooks:venv passes); W587 handed to a worktree fixer"  evidence=bazel test //hooks:venv ab9ee2e2
+2026-10-04T20:22:49Z  interrupt W620 minted    -         "transcriptstruct: pin the malformed tool_reference case, a missing or non-string tool_name, as reported undecoded and never guessed"  evidence=W591

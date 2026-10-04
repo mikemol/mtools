@@ -520,6 +520,54 @@ def test_funcnames_without_the_extra_refuses(
     assert cli.main(["funcnames", str(target)]) == _REFUSED
 
 
+def _child_env() -> dict[str, str]:
+    """Give a child the parent import path, so it imports the same code.
+
+    Returns:
+        an environment holding only `PYTHONPATH`.
+
+    """
+    return {"PYTHONPATH": ":".join(sys.path)}
+
+
+def test_module_entry_runs_main() -> None:
+    """`python -m mikemol.pycodemod.cli --help` prints the usage and exits 0, not silence."""
+    done = subprocess.run(
+        [sys.executable, "-m", "mikemol.pycodemod.cli", "--help"],
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_child_env(),
+        timeout=60,
+    )
+    assert done.returncode == 0
+    assert "usage" in done.stdout.lower()
+
+
+def test_funcnames_with_a_genuinely_failing_import_refuses(tmp_path: Path) -> None:
+    """With `import sqlalchemy` really failing at cli import, `funcnames` exits 2 naming it."""
+    runner = tmp_path / "runner.py"
+    runner.write_text(
+        "import runpy\nimport sys\n\nsys.modules['sqlalchemy'] = None\n"
+        "sys.argv = ['cli', 'funcnames', sys.argv[1]]\n"
+        "runpy.run_module('mikemol.pycodemod.cli', run_name='__main__')\n",
+        encoding="utf-8",
+    )
+    target = tmp_path / "m.py"
+    target.write_text("q = func.count()\n", encoding="utf-8")
+    done = subprocess.run(
+        [sys.executable, str(runner), str(target)],
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_child_env(),
+        timeout=60,
+    )
+    assert done.returncode == _REFUSED
+    assert "refused:" in done.stdout
+    assert "sqlalchemy" in done.stdout
+
+
 def test_size_with_a_small_base_reports_a_module_over_its_cap(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

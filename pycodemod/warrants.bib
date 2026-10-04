@@ -2476,3 +2476,17 @@
   claim  = {The namespace package merges: importing the sibling does not shadow mikemol.pycodemod.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_sibling},
 }
+
+@misc{pycodemod-cli-module-entry-runs-main,
+  section = {cli},
+  title  = {`python -m mikemol.pycodemod.cli --help` prints the usage and exits 0, not silence},
+  claim  = {`python -m mikemol.pycodemod.cli --help` prints the usage and exits 0, not silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_module_entry_runs_main},
+}
+
+@misc{pycodemod-cli-funcnames-with-a-genuinely-failing-import-refuses,
+  section = {cli},
+  title  = {With `import sqlalchemy` really failing at cli import, `funcnames` exits 2 naming it},
+  claim  = {With `import sqlalchemy` really failing at cli import, `funcnames` exits 2 naming it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_funcnames_with_a_genuinely_failing_import_refuses},
+}
