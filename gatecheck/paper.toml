@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.gatecheck: the pre-commit and gate helpers, as installed tools"
+subtitle = "The worktree-vs-index precondition, the hook grid drift check, the budgeted gate runner, the unverified-absence audit and the .bzl shell lint, ported from paperkit's tools/ with the witness that would catch each one drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "GATECHECK.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

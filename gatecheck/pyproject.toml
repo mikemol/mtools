@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑ PRE-COMMIT AND GATE HELPERS ported from paperkit's tools/ (mtools:W544, paperkit:W142,
+# umbrella mtools:W531): the worktree-vs-index precondition, the //:hook grid drift check, the
+# gate runner under a resource budget, the unverified-absence audit and the .bzl shell lint.
+# Standard library only.
+name = "mikemol-gatecheck"
+version = "0.1.0"
+description = "Pre-commit and gate helpers: worktree-vs-index, hook grid drift, gate runner, absence audit, .bzl lint."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["bazel", "pre-commit", "hook", "gate"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+
+# ⚑ NO RUNTIME DEPENDENCY: every module is standard library.
+dependencies = []
+
+[project.scripts]
+mikemol-hook-index = "mikemol.gatecheck.hook_index:cli"
+mikemol-hook-grid = "mikemol.gatecheck.hook_grid:main"
+mikemol-absence-audit = "mikemol.gatecheck.absence_audit:main"
+mikemol-lint-bzl = "mikemol.gatecheck.lint_bzl:main"
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py`: PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.gatecheck" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
+testpaths = ["tests"]
+norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache__"]  # backstop: with tests/ absent the runner falls back to rootdir and walks these (measured by linux-sources, W297)
+addopts = "--strict-markers --strict-config"
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+# A TOML literal string: in a basic string `\.` is an invalid escape.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB. Each line below is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+# ⚑ THE TWO MODULES WHOSE ONE RESPONSIBILITY IS A SUBPROCESS: hook_index runs `git status`,
+# rungate runs the sweep budget and the gate. The subprocess import, the untrusted-input check
+# and the partial-path check are all about argv the caller composed from its own constants.
+"src/mikemol/gatecheck/hook_index.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"src/mikemol/gatecheck/rungate.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_hook_index.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_indexdiverge.py" = ["assert"]
+"tests/test_hook_grid.py" = ["assert"]
+"tests/test_rungate.py" = ["assert", "suspicious-subprocess-import"]
+"tests/test_absence_audit.py" = ["assert"]
+"tests/test_lint_bzl.py" = ["assert"]

@@ -1,0 +1,543 @@
+
+@misc{gatecheck-indexdiverge-unstaged-and-untracked-paths-diverge-and-come-back-sorted,
+  section = {indexdiverge},
+  title  = {A live worktree column and a `??` entry are both divergent, returned in sorted order},
+  claim  = {A live worktree column and a `??` entry are both divergent, returned in sorted order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_indexdiverge.py -k test_unstaged_and_untracked_paths_diverge_and_come_back_sorted},
+}
+
+@misc{gatecheck-indexdiverge-fully-staged-path-does-not-diverge,
+  section = {indexdiverge},
+  title  = {`M ` and `A ` have a blank worktree column: the index already holds the bytes},
+  claim  = {`M ` and `A ` have a blank worktree column: the index already holds the bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_indexdiverge.py -k test_a_fully_staged_path_does_not_diverge},
+}
+
+@misc{gatecheck-indexdiverge-default-allowlist-excuses-cotype-and-nothing-else,
+  section = {indexdiverge},
+  title  = {A dirty path under `cotype/` is excused; the same dirt elsewhere is not},
+  claim  = {A dirty path under `cotype/` is excused; the same dirt elsewhere is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_indexdiverge.py -k test_the_default_allowlist_excuses_cotype_and_nothing_else},
+}
+
+@misc{gatecheck-indexdiverge-explicit-allowlist-replaces-the-default,
+  section = {indexdiverge},
+  title  = {The `allow` argument is the whole allowlist: the default does not stay in force},
+  claim  = {The `allow` argument is the whole allowlist: the default does not stay in force.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_indexdiverge.py -k test_an_explicit_allowlist_replaces_the_default},
+}
+
+@misc{gatecheck-indexdiverge-rename-origin-field-is-consumed-and-never-reported,
+  section = {indexdiverge},
+  title  = {A rename's NEW path lands; its origin field is skipped, not parsed as an entry},
+  claim  = {A rename's NEW path lands; its origin field is skipped, not parsed as an entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_indexdiverge.py -k test_a_rename_origin_field_is_consumed_and_never_reported},
+}
+
+@misc{gatecheck-indexdiverge-copy-origin-field-is-consumed-too,
+  section = {indexdiverge},
+  title  = {`C` carries an origin path exactly as `R` does},
+  claim  = {`C` carries an origin path exactly as `R` does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_indexdiverge.py -k test_a_copy_origin_field_is_consumed_too},
+}
+
+@misc{gatecheck-indexdiverge-short-fields-and-empty-input-are-ignored,
+  section = {indexdiverge},
+  title  = {The trailing empty field of a NUL-terminated transcript, and a field under 4 chars, skip},
+  claim  = {The trailing empty field of a NUL-terminated transcript, and a field under 4 chars,
+            skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_indexdiverge.py -k test_short_fields_and_empty_input_are_ignored},
+}
+
+@misc{gatecheck-hook-index-git-status-reads-the-live-porcelain-of-the-cwd,
+  section = {hook_index},
+  title  = {The default seam runs `git status --porcelain=v1 -z` where the process stands},
+  claim  = {The default seam runs `git status --porcelain=v1 -z` where the process stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_git_status_reads_the_live_porcelain_of_the_cwd},
+}
+
+@misc{gatecheck-hook-index-clean-tree-is-equivalent-and-passes,
+  section = {hook_index},
+  title  = {Nothing diverges: exit 0 and the hook's verdict is declared the commit's},
+  claim  = {Nothing diverges: exit 0 and the hook's verdict is declared the commit's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_a_clean_tree_is_equivalent_and_passes},
+}
+
+@misc{gatecheck-hook-index-untracked-and-an-unstaged-path-are-refused-by-name,
+  section = {hook_index},
+  title  = {Both dirt kinds make exit 1, each path is named, and both remedies are stated},
+  claim  = {Both dirt kinds make exit 1, each path is named, and both remedies are stated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_an_untracked_and_an_unstaged_path_are_refused_by_name},
+}
+
+@misc{gatecheck-hook-index-staged-change-is-not-a-divergence,
+  section = {hook_index},
+  title  = {A change staged in full leaves worktree == index, so the hook passes},
+  claim  = {A change staged in full leaves worktree == index, so the hook passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_a_staged_change_is_not_a_divergence},
+}
+
+@misc{gatecheck-hook-index-allow-dirty-downgrades-the-refusal-to-an-advisory,
+  section = {hook_index},
+  title  = {`PK_HOOK_ALLOW_DIRTY=1`: exit 0, still names the paths, no remedy line},
+  claim  = {`PK_HOOK_ALLOW_DIRTY=1`: exit 0, still names the paths, no remedy line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_allow_dirty_downgrades_the_refusal_to_an_advisory},
+}
+
+@misc{gatecheck-hook-index-only-the-value-one-selects-the-advisory,
+  section = {hook_index},
+  title  = {Any other value of the variable is still a refusal},
+  claim  = {Any other value of the variable is still a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_only_the_value_one_selects_the_advisory},
+}
+
+@misc{gatecheck-hook-index-failing-git-status-is-reported-and-refuses,
+  section = {hook_index},
+  title  = {A non-zero `git status` exits 1 and quotes git's own stderr},
+  claim  = {A non-zero `git status` exits 1 and quotes git's own stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_a_failing_git_status_is_reported_and_refuses},
+}
+
+@misc{gatecheck-hook-index-unsound-parser-refuses-before-reading-git,
+  section = {hook_index},
+  title  = {A parser that cannot refuse the synthetic dirty line is theater: exit 1, git untouched},
+  claim  = {A parser that cannot refuse the synthetic dirty line is theater: exit 1, git untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_an_unsound_parser_refuses_before_reading_git},
+}
+
+@misc{gatecheck-hook-index-argument-is-refused-by-name-before-git-is-read,
+  section = {hook_index},
+  title  = {Any argument exits 2 naming it, and git is never asked: a dropped flag reads as a pass},
+  claim  = {Any argument exits 2 naming it, and git is never asked: a dropped flag reads as a pass.
+            el-openglo:W99 measured the installed hook commands ignoring argv, so
+            `--help` exited 0 with no output. paperkit's `hook_index` ignored it too;
+            this one refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_an_argument_is_refused_by_name_before_git_is_read},
+}
+
+@misc{gatecheck-hook-index-console-entry-hands-main-the-real-argv,
+  section = {hook_index},
+  title  = {`cli` passes `sys.argv[1:]` to `main`, so a flag on the command line is refused},
+  claim  = {`cli` passes `sys.argv[1:]` to `main`, so a flag on the command line is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_index.py -k test_the_console_entry_hands_main_the_real_argv},
+}
+
+@misc{gatecheck-hook-grid-declared-derives-the-emitted-kinds-from-each-projects-flags,
+  section = {hook_grid},
+  title  = {`gate` is unconditional; `adequacy` and `emerge` add kinds; a nameless tag is skipped},
+  claim  = {`gate` is unconditional; `adequacy` and `emerge` add kinds; a nameless tag is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_declared_derives_the_emitted_kinds_from_each_projects_flags},
+}
+
+@misc{gatecheck-hook-grid-transcribed-counts-brackets-so-a-comment-ref-does-not-end-the-list,
+  section = {hook_grid},
+  title  = {A `]` inside a comment is not the end: every quoted label after it is still scraped},
+  claim  = {A `]` inside a comment is not the end: every quoted label after it is still scraped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_transcribed_counts_brackets_so_a_comment_ref_does_not_end_the_list},
+}
+
+@misc{gatecheck-hook-grid-transcribed-keeps-only-labels-and-only-the-hook-suite,
+  section = {hook_grid},
+  title  = {A quoted non-label is dropped, and a `tests = [` before the hook's own name is not read},
+  claim  = {A quoted non-label is dropped, and a `tests = [` before the hook's own name is not read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_transcribed_keeps_only_labels_and_only_the_hook_suite},
+}
+
+@misc{gatecheck-hook-grid-transcribed-is-empty-when-there-is-no-hook-list,
+  section = {hook_grid},
+  title  = {No `tests = [` after the hook's name: an empty set, which `check` reports},
+  claim  = {No `tests = [` after the hook's name: an empty set, which `check` reports.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_transcribed_is_empty_when_there_is_no_hook_list},
+}
+
+@misc{gatecheck-hook-grid-matching-grid-passes-and-summarises-with-its-exemptions,
+  section = {hook_grid},
+  title  = {Every emitted target is in the hook: exit 0, counts, and each exemption listed with why},
+  claim  = {Every emitted target is in the hook: exit 0, counts, and each exemption listed with why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_a_matching_grid_passes_and_summarises_with_its_exemptions},
+}
+
+@misc{gatecheck-hook-grid-target-the-generator-emits-but-the-hook-lacks-is-named-missing,
+  section = {hook_grid},
+  title  = {A dropped member is red, named, and the repair is said to be editing BUILD.bazel},
+  claim  = {A dropped member is red, named, and the repair is said to be editing BUILD.bazel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_a_target_the_generator_emits_but_the_hook_lacks_is_named_missing},
+}
+
+@misc{gatecheck-hook-grid-hook-member-no-declaration-emits-is-named-stale,
+  section = {hook_grid},
+  title  = {A member nothing emits is red: the stray-member case the set-equality exists for},
+  claim  = {A member nothing emits is red: the stray-member case the set-equality exists for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_a_hook_member_no_declaration_emits_is_named_stale},
+}
+
+@misc{gatecheck-hook-grid-canary-is-the-one-harness-member-and-its-absence-is-red,
+  section = {hook_grid},
+  title  = {`//canary:canary` is required: without it the hook is missing the positive control},
+  claim  = {`//canary:canary` is required: without it the hook is missing the positive control.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_the_canary_is_the_one_harness_member_and_its_absence_is_red},
+}
+
+@misc{gatecheck-hook-grid-exemption-that-nothing-emits-is-stale-even-when-the-grid-matches,
+  section = {hook_grid},
+  title  = {The policy outlived its subject: red, and named, before the grid is even compared},
+  claim  = {The policy outlived its subject: red, and named, before the grid is even compared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_an_exemption_that_nothing_emits_is_stale_even_when_the_grid_matches},
+}
+
+@misc{gatecheck-hook-grid-exemption-the-hook-also-runs-is-contradicted,
+  section = {hook_grid},
+  title  = {Excused AND run is incoherent: red, with the remedy to drop the exemption},
+  claim  = {Excused AND run is incoherent: red, with the remedy to drop the exemption.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_an_exemption_the_hook_also_runs_is_contradicted},
+}
+
+@misc{gatecheck-hook-grid-build-without-a-hook-list-is-reported,
+  section = {hook_grid},
+  title  = {No member list found is its own red, not a vacuous pass},
+  claim  = {No member list found is its own red, not a vacuous pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_a_build_without_a_hook_list_is_reported},
+}
+
+@misc{gatecheck-hook-grid-default-exemptions-are-the-three-paperkit-gates,
+  section = {hook_grid},
+  title  = {The declared policy is data: exactly these three, each carrying a reason},
+  claim  = {The declared policy is data: exactly these three, each carrying a reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_the_default_exemptions_are_the_three_paperkit_gates},
+}
+
+@misc{gatecheck-hook-grid-default-exemptions-apply-when-none-is-passed,
+  section = {hook_grid},
+  title  = {With no `exempt` argument the paperkit three are in force: this MODULE emits none},
+  claim  = {With no `exempt` argument the paperkit three are in force: this MODULE emits none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_the_default_exemptions_apply_when_none_is_passed},
+}
+
+@misc{gatecheck-hook-grid-main-reads-both-files-under-the-root-option,
+  section = {hook_grid},
+  title  = {`--root` names the directory holding MODULE.bazel and BUILD.bazel},
+  claim  = {`--root` names the directory holding MODULE.bazel and BUILD.bazel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_main_reads_both_files_under_the_root_option},
+}
+
+@misc{gatecheck-hook-grid-main-defaults-the-root-to-the-current-directory,
+  section = {hook_grid},
+  title  = {With no option the repo root is the cwd, as in the pre-commit hook},
+  claim  = {With no option the repo root is the cwd, as in the pre-commit hook.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_grid.py -k test_main_defaults_the_root_to_the_current_directory},
+}
+
+@misc{gatecheck-rungate-parse-reads-the-target-and-both-flags,
+  section = {rungate},
+  title  = {The record holds exactly what the command line said; the flags default to off},
+  claim  = {The record holds exactly what the command line said; the flags default to off.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_parse_reads_the_target_and_both_flags},
+}
+
+@misc{gatecheck-rungate-parse-requires-a-target,
+  section = {rungate},
+  title  = {No target is a usage error, not an empty gate},
+  claim  = {No target is a usage error, not an empty gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_parse_requires_a_target},
+}
+
+@misc{gatecheck-rungate-command-line-carries-the-budget-and-the-mutant-config,
+  section = {rungate},
+  title  = {The line is the pre-commit hook's: mise, bazel test, the config, the memory bound},
+  claim  = {The line is the pre-commit hook's: mise, bazel test, the config, the memory bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_the_command_line_carries_the_budget_and_the_mutant_config},
+}
+
+@misc{gatecheck-rungate-keep-going-flips-the-last-flag,
+  section = {rungate},
+  title  = {`--keep-going` is the only difference in the line},
+  claim  = {`--keep-going` is the only difference in the line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_keep_going_flips_the_last_flag},
+}
+
+@misc{gatecheck-rungate-capture-output-collects-stdout-as-text,
+  section = {rungate},
+  title  = {The real capture seam runs the command in `cwd` and returns its text and status},
+  claim  = {The real capture seam runs the command in `cwd` and returns its text and status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_capture_output_collects_stdout_as_text},
+}
+
+@misc{gatecheck-rungate-run-passthrough-returns-the-commands-exit-code,
+  section = {rungate},
+  title  = {The real run seam reports the child's status as the verdict, without raising},
+  claim  = {The real run seam reports the child's status as the verdict, without raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_run_passthrough_returns_the_commands_exit_code},
+}
+
+@misc{gatecheck-rungate-budget-runs-the-owner-under-the-root-and-strips-its-answer,
+  section = {rungate},
+  title  = {The owner is `tools/sweep_budget.py` under the root, run by this interpreter},
+  claim  = {The owner is `tools/sweep_budget.py` under the root, run by this interpreter.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_budget_runs_the_owner_under_the_root_and_strips_its_answer},
+}
+
+@misc{gatecheck-rungate-budget-names-the-command-it-ran,
+  section = {rungate},
+  title  = {The seam sees the interpreter, the owner's path, and the root as cwd},
+  claim  = {The seam sees the interpreter, the owner's path, and the root as cwd.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_budget_names_the_command_it_ran},
+}
+
+@misc{gatecheck-rungate-failing-owner-raises-rather-than-passing-an-empty-budget,
+  section = {rungate},
+  title  = {A budget query that fails must not become a gate run with no bound},
+  claim  = {A budget query that fails must not become a gate run with no bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_a_failing_owner_raises_rather_than_passing_an_empty_budget},
+}
+
+@misc{gatecheck-rungate-dry-run-prints-the-line-and-runs-nothing,
+  section = {rungate},
+  title  = {`--dry-run` shows budget and command, exits 0, and never calls the run seam},
+  claim  = {`--dry-run` shows budget and command, exits 0, and never calls the run seam.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_a_dry_run_prints_the_line_and_runs_nothing},
+}
+
+@misc{gatecheck-rungate-real-run-passes-the-gates-exit-code-through,
+  section = {rungate},
+  title  = {The gate runs once, in the root, with the budgeted line, and its code is returned},
+  claim  = {The gate runs once, in the root, with the budgeted line, and its code is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_a_real_run_passes_the_gates_exit_code_through},
+}
+
+@misc{gatecheck-rungate-main-defaults-to-argv-and-the-current-directory,
+  section = {rungate},
+  title  = {With no argument the process argv is parsed and the cwd is the repo root},
+  claim  = {With no argument the process argv is parsed and the cwd is the repo root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_main_defaults_to_argv_and_the_current_directory},
+}
+
+@misc{gatecheck-absence-audit-log-path-follows-the-environment-and-defaults-under-home,
+  section = {absence_audit},
+  title  = {`$ABSENCE_AUDIT_LOG` wins; without it the log is `~/.claude/absence-audit.log`},
+  claim  = {`$ABSENCE_AUDIT_LOG` wins; without it the log is `~/.claude/absence-audit.log`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_the_log_path_follows_the_environment_and_defaults_under_home},
+}
+
+@misc{gatecheck-absence-audit-rows-parses-non-blank-lines-and-reads-a-non-object-as-empty,
+  section = {absence_audit},
+  title  = {Blank lines are skipped; a JSON array or scalar row reads as an empty mapping},
+  claim  = {Blank lines are skipped; a JSON array or scalar row reads as an empty mapping.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_rows_parses_non_blank_lines_and_reads_a_non_object_as_empty},
+}
+
+@misc{gatecheck-absence-audit-user-row-is-recognised-by-type-or-by-message-role,
+  section = {absence_audit},
+  title  = {Either spelling marks a turn boundary; an assistant row or a malformed message does not},
+  claim  = {Either spelling marks a turn boundary; an assistant row or a malformed message does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_a_user_row_is_recognised_by_type_or_by_message_role},
+}
+
+@misc{gatecheck-absence-audit-last-turn-starts-at-the-last-user-row-or-keeps-everything,
+  section = {absence_audit},
+  title  = {The turn is the slice from the final user row; with none, every row},
+  claim  = {The turn is the slice from the final user row; with none, every row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_last_turn_starts_at_the_last_user_row_or_keeps_everything},
+}
+
+@misc{gatecheck-absence-audit-scan-turn-joins-assistant-text-and-ignores-thinking,
+  section = {absence_audit},
+  title  = {Text items are the claims; a thinking item and a non-list content are not read},
+  claim  = {Text items are the claims; a thinking item and a non-list content are not read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_scan_turn_joins_assistant_text_and_ignores_thinking},
+}
+
+@misc{gatecheck-absence-audit-scan-turn-reads-content-at-the-row-when-there-is-no-message,
+  section = {absence_audit},
+  title  = {A row carrying `content` directly is read the same way},
+  claim  = {A row carrying `content` directly is read the same way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_scan_turn_reads_content_at_the_row_when_there_is_no_message},
+}
+
+@misc{gatecheck-absence-audit-tool-call-to-the-owning-tool-counts-as-clearing-evidence,
+  section = {absence_audit},
+  title  = {`bazel test` in a tool call's input is a search; a bare recursive grep is not},
+  claim  = {`bazel test` in a tool call's input is a search; a bare recursive grep is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_a_tool_call_to_the_owning_tool_counts_as_clearing_evidence},
+}
+
+@misc{gatecheck-absence-audit-flags-in-reports-each-watchword-on-a-line-about-the-engine,
+  section = {absence_audit},
+  title  = {A watchword on a context line is a flag, as `(watchword, line)`, in order},
+  claim  = {A watchword on a context line is a flag, as `(watchword, line)`, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_flags_in_reports_each_watchword_on_a_line_about_the_engine},
+}
+
+@misc{gatecheck-absence-audit-line-that-says-unavailable-is-the-correct-form-and-is-not-flagged,
+  section = {absence_audit},
+  title  = {The remedy must not be flagged as the violation},
+  claim  = {The remedy must not be flagged as the violation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_a_line_that_says_unavailable_is_the_correct_form_and_is_not_flagged},
+}
+
+@misc{gatecheck-absence-audit-watchword-with-no-engine-context-is-not-flagged,
+  section = {absence_audit},
+  title  = {The context regex is what keeps ordinary prose out},
+  claim  = {The context regex is what keeps ordinary prose out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_a_watchword_with_no_engine_context_is_not_flagged},
+}
+
+@misc{gatecheck-absence-audit-flagged-line-is-clipped-for-the-report,
+  section = {absence_audit},
+  title  = {Only the first 140 characters of the stripped line are kept},
+  claim  = {Only the first 140 characters of the stripped line are kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_a_flagged_line_is_clipped_for_the_report},
+}
+
+@misc{gatecheck-absence-audit-report-appends-to-the-log-names-the-claims-and-returns-found,
+  section = {absence_audit},
+  title  = {The message goes to stderr and to the log (parent created, appended on a second call)},
+  claim  = {The message goes to stderr and to the log (parent created, appended on a second call).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_report_appends_to_the_log_names_the_claims_and_returns_found},
+}
+
+@misc{gatecheck-absence-audit-report-quotes-at-most-eight-flags,
+  section = {absence_audit},
+  title  = {A long list is cut after eight bullets},
+  claim  = {A long list is cut after eight bullets.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_report_quotes_at_most_eight_flags},
+}
+
+@misc{gatecheck-absence-audit-selftest-passes-every-arm,
+  section = {absence_audit},
+  title  = {Both T and F arms hold: exit 0 and the PASS line},
+  claim  = {Both T and F arms hold: exit 0 and the PASS line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_selftest_passes_every_arm},
+}
+
+@misc{gatecheck-absence-audit-selftest-fails-when-the-audit-cannot-see-what-it-looks-for,
+  section = {absence_audit},
+  title  = {An audit that flags nothing must read as FAIL, not as a clean tree},
+  claim  = {An audit that flags nothing must read as FAIL, not as a clean tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_selftest_fails_when_the_audit_cannot_see_what_it_looks_for},
+}
+
+@misc{gatecheck-absence-audit-files-mode-flags-a-file-and-skips-an-unreadable-one,
+  section = {absence_audit},
+  title  = {Each flagged line is prefixed by its file; a missing file is skipped; exit is 2},
+  claim  = {Each flagged line is prefixed by its file; a missing file is skipped; exit is 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_files_mode_flags_a_file_and_skips_an_unreadable_one},
+}
+
+@misc{gatecheck-absence-audit-files-mode-is-clean-when-no-file-holds-a-claim,
+  section = {absence_audit},
+  title  = {Nothing flagged: exit 0 and nothing is logged},
+  claim  = {Nothing flagged: exit 0 and nothing is logged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_files_mode_is_clean_when_no_file_holds_a_claim},
+}
+
+@misc{gatecheck-absence-audit-transcript-mode-fails-a-claim-made-without-running-the-owning-tool,
+  section = {absence_audit},
+  title  = {A claim in the last turn and no clearing tool call: exit 2, logged},
+  claim  = {A claim in the last turn and no clearing tool call: exit 2, logged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_transcript_mode_fails_a_claim_made_without_running_the_owning_tool},
+}
+
+@misc{gatecheck-absence-audit-transcript-mode-passes-when-the-owning-tool-was-run-in-the-turn,
+  section = {absence_audit},
+  title  = {The same claim after `bazel test` in the same turn is cleared: exit 0, nothing logged},
+  claim  = {The same claim after `bazel test` in the same turn is cleared: exit 0, nothing logged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_transcript_mode_passes_when_the_owning_tool_was_run_in_the_turn},
+}
+
+@misc{gatecheck-absence-audit-transcript-mode-only-reads-the-last-turn,
+  section = {absence_audit},
+  title  = {A claim in an earlier turn is not this turn's},
+  claim  = {A claim in an earlier turn is not this turn's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_transcript_mode_only_reads_the_last_turn},
+}
+
+@misc{gatecheck-absence-audit-missing-transcript-is-not-an-error,
+  section = {absence_audit},
+  title  = {No file to audit: exit 0},
+  claim  = {No file to audit: exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_a_missing_transcript_is_not_an_error},
+}
+
+@misc{gatecheck-absence-audit-hook-mode-logs-a-claim-but-never-fails-the-turn,
+  section = {absence_audit},
+  title  = {Stop-hook JSON on stdin: the transcript is audited, the claim logged, the exit still 0},
+  claim  = {Stop-hook JSON on stdin: the transcript is audited, the claim logged, the exit still 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_hook_mode_logs_a_claim_but_never_fails_the_turn},
+}
+
+@misc{gatecheck-absence-audit-hook-mode-ignores-a-payload-with-no-usable-transcript-path,
+  section = {absence_audit},
+  title  = {Bad JSON, a non-object, or a missing, empty or non-string path: exit 0, silently},
+  claim  = {Bad JSON, a non-object, or a missing, empty or non-string path: exit 0, silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_hook_mode_ignores_a_payload_with_no_usable_transcript_path},
+}
+
+@misc{gatecheck-absence-audit-main-reads-process-argv-and-stdin-by-default,
+  section = {absence_audit},
+  title  = {With no arguments the flags come from `sys.argv[1:]` and the hook JSON from `sys.stdin`},
+  claim  = {With no arguments the flags come from `sys.argv[1:]` and the hook JSON from `sys.stdin`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_absence_audit.py -k test_main_reads_process_argv_and_stdin_by_default},
+}
+
+@misc{gatecheck-lint-bzl-bare-python3-script-or-dash-c-is-found-with-its-line-number,
+  section = {lint_bzl},
+  title  = {`python3 <script>.py` and `python3 -c` are bare invocations, reported by 1-based line},
+  claim  = {`python3 <script>.py` and `python3 -c` are bare invocations, reported by 1-based line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_a_bare_python3_script_or_dash_c_is_found_with_its_line_number},
+}
+
+@misc{gatecheck-lint-bzl-command-v-resolution-is-not-flagged,
+  section = {lint_bzl},
+  title  = {`python3` followed by `)` is the sanctioned form},
+  claim  = {`python3` followed by `)` is the sanctioned form.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_the_command_v_resolution_is_not_flagged},
+}
+
+@misc{gatecheck-lint-bzl-printf-building-json-is-found,
+  section = {lint_bzl},
+  title  = {A JSON record built with printf is the data-construction-in-shell defect},
+  claim  = {A JSON record built with printf is the data-construction-in-shell defect.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_printf_building_json_is_found},
+}
+
+@misc{gatecheck-lint-bzl-grep-reading-a-json-field-is-found,
+  section = {lint_bzl},
+  title  = {A grep for a quoted JSON field name followed by a colon is fragile and is refused},
+  claim  = {A grep for a quoted JSON field name followed by a colon is fragile and is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_grep_reading_a_json_field_is_found},
+}
+
+@misc{gatecheck-lint-bzl-finding-carries-the-path-and-the-stripped-line,
+  section = {lint_bzl},
+  title  = {The record is `(path, line, pattern, stripped text)`},
+  claim  = {The record is `(path, line, pattern, stripped text)`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_a_finding_carries_the_path_and_the_stripped_line},
+}
+
+@misc{gatecheck-lint-bzl-several-files-are-scanned-in-argument-order,
+  section = {lint_bzl},
+  title  = {Findings come back file by file, in the order the paths were given},
+  claim  = {Findings come back file by file, in the order the paths were given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_several_files_are_scanned_in_argument_order},
+}
+
+@misc{gatecheck-lint-bzl-clean-file-exits-zero-and-says-nothing,
+  section = {lint_bzl},
+  title  = {No pattern: exit 0, no output},
+  claim  = {No pattern: exit 0, no output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_a_clean_file_exits_zero_and_says_nothing},
+}
+
+@misc{gatecheck-lint-bzl-dirty-file-exits-one-and-names-each-finding,
+  section = {lint_bzl},
+  title  = {Each finding is `path:line: Ξ·lint [name] text`, then a count and the remedy},
+  claim  = {Each finding is `path:line: Ξ·lint [name] text`, then a count and the remedy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_a_dirty_file_exits_one_and_names_each_finding},
+}
+
+@misc{gatecheck-lint-bzl-main-reads-the-process-argv-when-given-none,
+  section = {lint_bzl},
+  title  = {With no argument the files come from `sys.argv[1:]`, as a console script runs},
+  claim  = {With no argument the files come from `sys.argv[1:]`, as a console script runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint_bzl.py -k test_main_reads_the_process_argv_when_given_none},
+}
