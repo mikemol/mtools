@@ -2490,3 +2490,192 @@
   claim  = {With `import sqlalchemy` really failing at cli import, `funcnames` exits 2 naming it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_funcnames_with_a_genuinely_failing_import_refuses},
 }
+
+@misc{pycodemod-relations-from-target-is-a-relation-and-a-longer-name-is-not,
+  section = {relations},
+  title  = {The first discrimination: `node` is found in `FROM node` and not in `FROM node_child`},
+  claim  = {The first discrimination: `node` is found in `FROM node` and not in `FROM node_child`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_from_target_is_a_relation_and_a_longer_name_is_not},
+}
+
+@misc{pycodemod-relations-alias-spelled-like-a-relation-is-not-one,
+  section = {relations},
+  title  = {`FROM obs_node node` names `obs_node` once; a word-boundary regex reports `node` twice},
+  claim  = {`FROM obs_node node` names `obs_node` once; a word-boundary regex reports `node` twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_an_alias_spelled_like_a_relation_is_not_one},
+}
+
+@misc{pycodemod-relations-join-target-is-a-relation,
+  section = {relations},
+  title  = {A JOIN introduces one relation, beside the FROM's},
+  claim  = {A JOIN introduces one relation, beside the FROM's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_join_target_is_a_relation},
+}
+
+@misc{pycodemod-relations-recursive-cte-name-is-not-a-relation-but-its-base-table-is,
+  section = {relations},
+  title  = {The CTE name appears in a FROM position inside its own definition and is still excluded},
+  claim  = {The CTE name appears in a FROM position inside its own definition and is still excluded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_recursive_cte_name_is_not_a_relation_but_its_base_table_is},
+}
+
+@misc{pycodemod-relations-plain-and-column-listed-ctes-are-both-excluded,
+  section = {relations},
+  title  = {`X AS (` and `X (cols) AS (` are the only CTE signatures; the unbound `c` remains},
+  claim  = {`X AS (` and `X (cols) AS (` are the only CTE signatures; the unbound `c` remains.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_plain_and_column_listed_ctes_are_both_excluded},
+}
+
+@misc{pycodemod-relations-relation-inside-a-derived-table-is-found,
+  section = {relations},
+  title  = {A derived table is recursed into, not skipped wholesale},
+  claim  = {A derived table is recursed into, not skipped wholesale.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_relation_inside_a_derived_table_is_found},
+}
+
+@misc{pycodemod-relations-unbalanced-derived-table-is-closed-by-the-bound,
+  section = {relations},
+  title  = {A missing `)` ends the group at the end of the tokens instead of at a wrong paren},
+  claim  = {A missing `)` ends the group at the end of the tokens instead of at a wrong paren.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_an_unbalanced_derived_table_is_closed_by_the_bound},
+}
+
+@misc{pycodemod-relations-from-inside-an-expression-names-no-relation,
+  section = {relations},
+  title  = {`EXTRACT(EPOCH FROM ts)` is an expression scope; only the outer FROM is a relation},
+  claim  = {`EXTRACT(EPOCH FROM ts)` is an expression scope; only the outer FROM is a relation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_from_inside_an_expression_names_no_relation},
+}
+
+@misc{pycodemod-relations-is-distinct-from-names-no-relation,
+  section = {relations},
+  title  = {`IS [NOT] DISTINCT FROM` is not a relation introducer; `SELECT DISTINCT x FROM t` is},
+  claim  = {`IS [NOT] DISTINCT FROM` is not a relation introducer; `SELECT DISTINCT x FROM t` is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_is_distinct_from_names_no_relation},
+}
+
+@misc{pycodemod-relations-subquery-nested-in-an-expression-still-counts,
+  section = {relations},
+  title  = {The scope is decided per paren by its first token, so the nested SELECT re-enters it},
+  claim  = {The scope is decided per paren by its first token, so the nested SELECT re-enters it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_subquery_nested_in_an_expression_still_counts},
+}
+
+@misc{pycodemod-relations-table-function-is-not-a-stored-relation,
+  section = {relations},
+  title  = {The trailing `(` tells `generate_series(1,3)` from a relation in a FROM position},
+  claim  = {The trailing `(` tells `generate_series(1,3)` from a relation in a FROM position.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_table_function_is_not_a_stored_relation},
+}
+
+@misc{pycodemod-relations-write-positions-name-their-target,
+  section = {relations},
+  title  = {INSERT INTO (with a column list), UPDATE and DROP TABLE all name the relation they hit},
+  claim  = {INSERT INTO (with a column list), UPDATE and DROP TABLE all name the relation they hit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_write_positions_name_their_target},
+}
+
+@misc{pycodemod-relations-quoted-dotted-name-is-the-last-part-lowercased,
+  section = {relations},
+  title  = {`FROM "Main"."Node"` is the relation `node`, schema qualifier dropped},
+  claim  = {`FROM "Main"."Node"` is the relation `node`, schema qualifier dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_quoted_dotted_name_is_the_last_part_lowercased},
+}
+
+@misc{pycodemod-relations-doubled-quote-in-a-quoted-name-is-one-quote,
+  section = {relations},
+  title  = {The lexer keeps a quoted identifier whole and the name unquotes it},
+  claim  = {The lexer keeps a quoted identifier whole and the name unquotes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_doubled_quote_in_a_quoted_name_is_one_quote},
+}
+
+@misc{pycodemod-relations-comments-and-strings-hide-keywords-from-the-lexer,
+  section = {relations},
+  title  = {A comment hides a FROM; a string holds one without being read as it},
+  claim  = {A comment hides a FROM; a string holds one without being read as it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_comments_and_strings_hide_keywords_from_the_lexer},
+}
+
+@misc{pycodemod-relations-aliases-are-skipped-with-their-column-lists,
+  section = {relations},
+  title  = {`AS x (c1, c2)`, a bare alias, and a keyword that is no alias all leave the list intact},
+  claim  = {`AS x (c1, c2)`, a bare alias, and a keyword that is no alias all leave the list intact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_aliases_are_skipped_with_their_column_lists},
+}
+
+@misc{pycodemod-relations-delete-target-is-a-write-and-not-also-read,
+  section = {relations},
+  title  = {DELETE's target follows `FROM`, the token that introduces every read},
+  claim  = {DELETE's target follows `FROM`, the token that introduces every read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_delete_target_is_a_write_and_not_also_read},
+}
+
+@misc{pycodemod-relations-insert-target-may-also-be-read,
+  section = {relations},
+  title  = {The self-terminating rung idiom reads what it writes; the sets are not made disjoint},
+  claim  = {The self-terminating rung idiom reads what it writes; the sets are not made disjoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_an_insert_target_may_also_be_read},
+}
+
+@misc{pycodemod-relations-update-target-is-a-write-and-its-from-is-a-read,
+  section = {relations},
+  title  = {UPDATE ... FROM splits the two roles in one statement},
+  claim  = {UPDATE ... FROM splits the two roles in one statement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_an_update_target_is_a_write_and_its_from_is_a_read},
+}
+
+@misc{pycodemod-relations-plain-select-writes-nothing-and-drop-table-reads-nothing,
+  section = {relations},
+  title  = {The two empty halves},
+  claim  = {The two empty halves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_plain_select_writes_nothing_and_drop_table_reads_nothing},
+}
+
+@misc{pycodemod-relations-writes-and-reads-are-exactly-the-relnames-and-a-cte-is-in-neither,
+  section = {relations},
+  title  = {The projection identity: the three views cannot drift apart},
+  claim  = {The projection identity: the three views cannot drift apart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_writes_and_reads_are_exactly_the_relnames_and_a_cte_is_in_neither},
+}
+
+@misc{pycodemod-relations-head-is-depth-aware,
+  section = {relations},
+  title  = {A leading CTE or a column list does not hide the statement's own head},
+  claim  = {A leading CTE or a column list does not hide the statement's own head.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_the_head_is_depth_aware},
+}
+
+@misc{pycodemod-relations-is-sql-is-judged-by-a-parser-not-a-head-keyword,
+  section = {relations},
+  title  = {Prose that clears the head test fails to parse; an absent schema and a placeholder pass},
+  claim  = {Prose that clears the head test fails to parse; an absent schema and a placeholder pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_is_sql_is_judged_by_a_parser_not_a_head_keyword},
+}
+
+@misc{pycodemod-relations-shim-spelling-is-found-as-a-name-and-prose-containing-it-is-not,
+  section = {relations},
+  title  = {Exact equality, not substring: `node precedes node_atom` and `node_child` are not hits},
+  claim  = {Exact equality, not substring: `node precedes node_atom` and `node_child` are not hits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_the_shim_spelling_is_found_as_a_name_and_prose_containing_it_is_not},
+}
+
+@misc{pycodemod-relations-sql-literal-and-its-shim-spelling-are-both-sites,
+  section = {relations},
+  title  = {One question, two spellings; a docstring is never a site, and sites sort by line},
+  claim  = {One question, two spellings; a docstring is never a site, and sites sort by line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_a_sql_literal_and_its_shim_spelling_are_both_sites},
+}
+
+@misc{pycodemod-relations-relname-sites-reports-the-files-it-could-not-read,
+  section = {relations},
+  title  = {A skipped file is returned, not swallowed},
+  claim  = {A skipped file is returned, not swallowed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_relname_sites_reports_the_files_it_could_not_read},
+}
+
+@misc{pycodemod-relations-empty-statement-references-nothing,
+  section = {relations},
+  title  = {The degenerate inputs give the empty answer from every public reader},
+  claim  = {The degenerate inputs give the empty answer from every public reader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relations.py -k test_an_empty_statement_references_nothing},
+}
