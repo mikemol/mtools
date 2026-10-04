@@ -22,8 +22,10 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCIES: the cluster imports only the standard library (the letter, §2).
-dependencies = []
+# ⚑ ONE SIBLING DEPENDENCY: `finding_bibkeys` reads bib keys through `mikemol.witness.raw_bib`
+# (operator, 2026-10-04: substrate's D3 does not bind mtools). Declared a second time in
+# BUILD.bazel as a `py_library` edge; the path source below is for uv only (W566, variant c).
+dependencies = ["mikemol-witness"]
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -42,6 +44,10 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+# ⚑ NOT `editable = true`: the editable finder hook makes mypy report `import-not-found` (W566).
+[tool.uv.sources]
+mikemol-witness = { path = "../witness" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -75,6 +81,12 @@ namespace-packages = ["src/mikemol", "tests"]
 preview = true
 select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+# ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (as
+# importdag/pyproject.toml, mtools:W547): left to detection, a venv that has it installed and the
+# sandbox that does not would demand opposite import layouts of the same file.
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.witness"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true

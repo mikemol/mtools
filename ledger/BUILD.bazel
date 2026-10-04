@@ -23,6 +23,8 @@ py_library(
     srcs = glob(["src/mikemol/ledger/**/*.py"]),
     data = glob(["src/mikemol/ledger/py.typed"], allow_empty = True),
     imports = ["src"],
+    # ⚑ THE SIBLING EDGE (W566 variant c): declared in pyproject.toml for uv, carried here for Bazel.
+    deps = ["//witness:witness"],
     visibility = ["//visibility:public"],
 )
 
@@ -47,9 +49,13 @@ py_library(
         size = "small",
         deps = [
             ":ledger",
+            "//witness:witness",
             dev_requirement("pytest"),
         ],
         imports = ["src"],
+        # ⚑ TWO SOURCE ROOTS: legacy implicit `__init__.py` would make `mikemol` a regular package
+        # from the first root and shadow the namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -109,6 +115,7 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        "//witness:witness",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -136,7 +143,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/ledger/**"]),
+    srcs = glob(["src/mikemol/ledger/**"]) + ["//witness:witness"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

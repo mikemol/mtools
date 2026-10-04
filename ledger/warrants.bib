@@ -337,34 +337,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_the_listing_is_bib_only_and_sorted},
 }
 
-@misc{ledger-finding-bibkeys-keys-are-read-and-the-non-key-rows-are-not,
-  section = {finding_bibkeys},
-  title  = {The lister's keys are read; its denominator and warning rows are never interned as keys},
-  claim  = {The lister's keys are read; its denominator and warning rows are never interned as keys.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_the_keys_are_read_and_the_non_key_rows_are_not},
-}
-
-@misc{ledger-finding-bibkeys-lister-is-handed-every-bib-in-order,
-  section = {finding_bibkeys},
-  title  = {The bib paths are appended to the caller's lister argv, in the sorted read order},
-  claim  = {The bib paths are appended to the caller's lister argv, in the sorted read order.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_the_lister_is_handed_every_bib_in_order},
-}
-
-@misc{ledger-finding-bibkeys-failing-lister-is-unreadable-never-empty,
-  section = {finding_bibkeys},
-  title  = {A lister exiting non-zero yields `None`: THE THIRD OUTCOME, never smoothed into `set()`},
-  claim  = {A lister exiting non-zero yields `None`: THE THIRD OUTCOME, never smoothed into `set()`.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_a_failing_lister_is_unreadable_never_empty},
-}
-
-@misc{ledger-finding-bibkeys-lister-that-never-started-is-unreadable,
-  section = {finding_bibkeys},
-  title  = {A lister that does not exist never ran, which is unreadable — not empty, not a crash},
-  claim  = {A lister that does not exist never ran, which is unreadable — not empty, not a crash.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_a_lister_that_never_started_is_unreadable},
-}
-
 @misc{ledger-finding-polarity-refuses-command-exiting-zero-is-refused-naming-both-causes,
   section = {finding_polarity},
   title  = {A `refuses:` command exiting 0 is REFUSED: it would read GONE; both causes are named},
@@ -647,4 +619,25 @@
   title  = {CLOSED stays CLOSED and UNRUNNABLE stays UNRUNNABLE — never collapsed into OPEN},
   claim  = {CLOSED stays CLOSED and UNRUNNABLE stays UNRUNNABLE — never collapsed into OPEN.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_cli.py -k test_the_router_never_normalises_a_verdict},
+}
+
+@misc{ledger-finding-bibkeys-keys-are-read-through-raw-bib-and-the-non-key-rows-are-not,
+  section = {finding_bibkeys},
+  title  = {Each entry's key is read; a denominator row and a flag row are never interned as keys},
+  claim  = {Each entry's key is read; a denominator row and a flag row are never interned as keys.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_the_keys_are_read_through_raw_bib_and_the_non_key_rows_are_not},
+}
+
+@misc{ledger-finding-bibkeys-directory-named-like-a-bib-is-unreadable-never-empty,
+  section = {finding_bibkeys},
+  title  = {A `.bib` that is a directory yields `None`: THE THIRD OUTCOME, never `set()`},
+  claim  = {A `.bib` that is a directory yields `None`: THE THIRD OUTCOME, never `set()`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_a_directory_named_like_a_bib_is_unreadable_never_empty},
+}
+
+@misc{ledger-finding-bibkeys-bib-that-is-not-utf8-is-unreadable,
+  section = {finding_bibkeys},
+  title  = {A bib that cannot be decoded is BROKEN, which is unreadable — not empty, not a crash},
+  claim  = {A bib that cannot be decoded is BROKEN, which is unreadable — not empty, not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_finding_bibkeys.py -k test_a_bib_that_is_not_utf8_is_unreadable},
 }

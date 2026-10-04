@@ -132,6 +132,9 @@ wheels = [
 name = "mikemol-ledger"
 version = "0.1.0"
 source = { editable = "." }
+dependencies = [
+    { name = "mikemol-witness" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -139,6 +142,21 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
 ]
+
+[package.metadata]
+requires-dist = [{ name = "mikemol-witness", directory = "../witness" }]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
+name = "mikemol-witness"
+version = "0.1.0"
+source = { directory = "../witness" }
 
 [package.metadata]
 

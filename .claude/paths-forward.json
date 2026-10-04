@@ -11954,22 +11954,22 @@
     {
       "symbol": "W601",
       "title": "ledger bibkeys: call mikemol.witness raw_bib directly instead of a caller-supplied entries argv, depending on witness",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "ledger",
         "witness"
       ],
       "blocked_on": [],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Add the dist-to-dist dependency (A+B), red arm for bibkeys reading entries via raw_bib, drop the argv parameter and tell substrate",
-      "evidence": "2026-10-04: drained from queue.md 6.7 bibkeys DECISION (2026-09-25): caller-supplied argv chosen to keep D3's direction; revisit if D3 is ruled otherwise | 2026-10-04: operator 2026-10-04: D3 is a substrate-layout premise and does not bind mtools; ledger may depend on witness",
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: drained from queue.md 6.7 bibkeys DECISION (2026-09-25): caller-supplied argv chosen to keep D3's direction; revisit if D3 is ruled otherwise | 2026-10-04: operator 2026-10-04: D3 is a substrate-layout premise and does not bind mtools; ledger may depend on witness | 2026-10-04: ledger bib_keys now reads through mikemol.witness raw_bib; ledger depends on witness by the A+B sibling edge (W566 spike); 88 ledger tests; bazel test //ledger/... 22 of 22 (fixer); F-arm: BibError returned as set() instead of None, 2 unreadable arms red; committed under W601",
       "issued_at": "2026-10-04T19:06:26Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T19:12:48Z",
+      "last_worked": "2026-10-04T20:31:30Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261004T203130Z"
     },
     {
       "symbol": "W602",
