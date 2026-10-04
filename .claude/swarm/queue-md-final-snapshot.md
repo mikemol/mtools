@@ -865,3 +865,63 @@ PLR0915/PLR0914 (51 statements, 16 locals) -- split into four mode-family builde
 (_add_scan_modes, _add_named_modes, _add_flagged_modes, _add_rooted_modes) that take a
 `make(name, help)` closure, so no private argparse type is named. Next overflow: add a family.
 2 tests, 2 warrants, rubric "Twenty-Seven Modes". 370 pass, clean.
+
+W67 LANDED (2026-09-27): `deps --manifest PATH [--vendored FRAG]... paths...` wired; row
+`dep <verdict> <module> files=N e.g. <example>`. ManifestError (unreadable/unparseable
+manifest) refuses with exit 2 -- nothing is graded against a guessed manifest. Residue: the
+happy-path test asserts only that a row appears, not a specific verdict for `os`.
+2 tests, 2 warrants, rubric "Twenty-Eight Modes". 372 pass, clean.
+
+W68 LANDED (2026-09-27): `crossings [--authority NAME]... paths...` wired; row `crossing
+<class> <function> <what,...|-> <path>:<line>`. Residue: tests assert exit codes only, not a
+row's class; `python -m mikemol.pycodemod.cli` printed nothing (no __main__ -- W35's console
+script is the real entry point). 2 tests, 2 warrants, rubric "Twenty-Nine Modes". 374 pass, clean.
+
+W69 LANDED (2026-09-27): `shapes [--anywhere] PATTERN paths...` wired; row `shape
+<path>:<line> <text>`. Code lines only by default; --anywhere also matches comments and
+docstrings. A regex that will not compile refuses with exit 2 (re.error) instead of matching
+nothing. 2 tests (code-vs-comment row check, bad pattern), 2 warrants, rubric "Thirty Modes".
+376 pass, clean.
+
+W70 LANDED (2026-09-27): `commentary [--mark M]... paths...` wired (default marks
+COMMENTARY_MARKS); rows `commentary lines= distinct= <path>` per file with a mark, then
+`repeated xN '<key>' <path:line>...` for every sentence in two or more places (the census's
+`texts` index, which is what a split-loses-a-note check needs). Unread files go through the
+merged _UNREAD reason, like commentary-lost (W86 residue applies). 2 tests, 2 warrants,
+rubric "Thirty-One Modes". 378 pass, clean.
+
+W71 LANDED (2026-09-27): `discards NAME paths...` wired; rows `discards <dropped|used>
+<path>:<line>:<col>`, then a `discards: N dropped, M used` total. 2 tests (bare vs assigned
+call, unparseable file), 2 warrants, rubric "Thirty-Two Modes". 380 pass, clean.
+
+W72 CLOSED (2026-09-27), not as a new mode: the "fix-owes-callers successor naming clash" is
+that the origin spelled it `--fix-owes-callers` while the port is wired as `owes` (W33). No
+second mode is owed. The gap was that `fix-owes-callers` fell through as an argparse error naming
+nothing. It is now cli.RETIRED's first entry, a refusing redirect (exit 2) that names `owes NAME
+--rev REV --root ROOT PATHS`. ⚑ SIDE FINDING: with RETIRED empty, the parametrized
+`test_a_retired_spelling_refuses_naming_its_successor` ran ZERO cases and pytest reported it as
+the suite's lone "1 skipped" since W34 slice 2 -- a vacuous gate reading as a skip. It now runs one
+case; the suite reports 382 passed, 0 skipped. Rubric unchanged (no new mode). 1 test, 1 warrant.
+
+W73 LANDED (2026-09-27): `forwards [--target NAME] KEYWORD paths...` wired (scan family, like
+guarded); rows `<passes|lacks|cannot-tell> <path>:<line>:<col>`, then `forwards: N passes, N
+lacks, N cannot-tell`. `**` calls are cannot-tell, never lacks. 2 tests, 2 warrants, rubric
+"Thirty-Three Modes". 384 pass, clean.
+
+W74 LANDED (2026-09-27): `asserted [--target NAME] KEYWORD paths...` wired (scan family); rows
+`<literal|computed> <path>:<line>:<col>`, then `asserted: N literal, N computed`. Reports,
+never judges (a literal is not a defect); calls lacking the keyword are on neither side.
+2 tests, 2 warrants, rubric "Thirty-Four Modes". 386 pass, clean.
+
+W75 LANDED (2026-09-27): `values TARGET ARGUMENT paths...` wired (scan family, target
+required); rows `value <repr> <context> <path>:<line>:<col>`, then `values: N of M calls pass
+it` (the denominator includes calls that do not pass the argument). An all-digit ARGUMENT is a
+positional ordinal, anything else a keyword. Residue: a keyword literally named with digits is
+not addressable (not a legal Python identifier, so no loss). Non-constant values print UNKNOWN,
+never a guess. 2 tests, 2 warrants, rubric "Thirty-Five Modes". 388 pass, clean.
+
+W76 LANDED (2026-09-27): `literals TEXT paths...` wired (named family); rows `literal <role>
+<path>:<line> (<context>) <value repr>`. literal_sites prefilters on may_hold, so the
+unparseable-file fixture carries the needle (same lesson as disagreement, W34 slice 5).
+Residue: the happy test asserts a row appears, not its role. 2 tests, 2 warrants, rubric
+"Thirty-Six Modes". 390 pass, clean.

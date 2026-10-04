@@ -1,0 +1,38 @@
+entry	kind	status	evidence	one_line
+admit-gaps-proposed	dir	landed	13dce09	fence.admit closes five gaps with substrate bash (W1,W2,E1-E3 from cross-client.md)
+consumer-launcher-proposed	dir	landed	e85ba31	hooks/adopt/tools-hook adopter launcher with declared MTOOLS_ROOT
+git-scrub-proposed	dir	landed	e4a171b	runners scrub GIT_* before launching suites; later folded by b63b548 and interned as 401c4b5
+label-lease-proposed	dir	landed	9c1a1b1	fence/src/mikemol/fence/label_lease.py plus autosize amendment
+md041-proposed	dir	landed	39d81b1	mdstruct MD041 skips the leading SPDX comment header
+mdstruct-proposed	dir	landed	e54a66a	AST_READER markdown-smart (show as typed) and fenced-heading anchor fix S1
+membudget-proposed	dir	landed	b91641e	mikemol-membudget CLI (membudget_cli.py) over fence admission
+membudget-r1r2-proposed	dir	landed	26d717d	membudget run caps what it runs; run auto sizes lease from label history (R1,R2)
+membudget-r3r5-proposed	dir	landed	2cfbdf7	retry OOM-killed run at next bucket (R3) and per-module .agda key (R5)
+mutate-qualname-proposed	dir	landed	fca9db7	mutate_runner addresses def-sites by qualified path; adds test_mutate_runner.py
+n1-multiline-proposed	dir	landed	778acf7	no_chaining refuses a multi-line command as a sequence
+pathsforward-proposed	dir	landed	600745c	mikemol-pathsforward distribution interning the six paths-forward tools
+pf-fixes-proposed	dir	landed	000785b	six pathsforward fixes plus standing-rules amendment
+pf-small-proposed	dir	landed	01771e0	three 000785b leftovers: evidence punctuation trim, one queue order, --update title refusal
+pycheck-proposed	dir	landed	fd6e629	mikemol.hooks.pycheck port of substrate hook_pycheck; wired armed in e641c7e
+ratchet-keyparser-proposed	dir	landed	e7a0728	mikemol.ratchet.keys: baseline key parsed by declared schema
+ratchet-refuse-proposed	dir	landed	415d532	ratchet refuses by name when ruff cannot census (test_cannot_census.py); d55dbd6 follows
+readmes-proposed	dir	landed	fc8d399	README.md for hooks, mdstruct and ratchet
+root-lint-proposed	dir	landed	f7a4b80	root scripts meet the distributions' lint bar; gate refuses warrant with missing test
+scrub-fold-proposed	dir	landed	b63b548	git_scrubbed defined once in git_env.sh and sourced by every launcher
+shebang-proposed	dir	landed	e805eab	venv.bzl console scripts get a sh preamble re-running under the venv python
+sq-heredoc-proposed	dir	landed	4292dd4	structural-query reads a heredoc body as data, not shell
+sq-newline-proposed	dir	landed	274ed7e	cmdparse treats newline as bash does; no_chaining heredoc stripper removed
+transcriptstruct-r1-proposed	dir	landed	43b2615	transcriptstruct stage 1 (records); stages 2-6 followed in 9eeae60..e571b02
+apex-corrections.md	md	study	9950f88	rosettapkg's five apex corrections verified; applied to the two apexes in 9950f88 and 86ea628
+census-reconcile.md	md	study	e7a0728	substrate census vs mtools import graph; its section 5 key-schema finding became ratchet-keyparser; rest fed census-reply.md
+census-reply.md	md	study	.claude/paths-forward.ledger	reply sent to substrate-de 2026-09-23 as pointer to this file (ledger L182); batch landed 4f1afc2..f9f0789; still cited as evidence
+cross-client.md	md	study	13dce09	bash membudget vs fence.admit ledger audit; gaps W1,W2,E1-E3 landed via admit-gaps-proposed
+label-lease.md	md	study	9c1a1b1	port design for substrate label_lease (C1-C5, A1, A2); implemented via label-lease-proposed
+mdstruct-fixes.md	md	study	e54a66a	smart-punctuation false-miss and fenced-heading anchor analysis; implemented via mdstruct-proposed
+paths-forward-merge.md	md	study	600745c	three-way paths-forward tool merge survey; extended by paths-forward-merge-six.md, then interned
+paths-forward-merge-six.md	md	study	600745c	six-tool survey with D1-D4 rulings; fed pathsforward-proposed which landed as 600745c
+pycheck-port.md	md	study	fd6e629	port design substrate hook_pycheck to mikemol-hook-pycheck; implemented in fd6e629
+remap-guard-review.md	md	study	2e2b952	review of gabion W14_3 ratchet remap guard patch; landed with holes closed in 2e2b952
+remap-guard-rev2.md	md	study	2e2b952	rev-2 check of remap-guard patch (59 tests pass); landed as 2e2b952
+transcriptstruct-study.md	md	study	43b2615	verdict decompose-and-replace; realised as transcriptstruct stages 1-6 (43b2615..e571b02)
+w17-recovery.md	md	study	.claude/paths-forward.json	W17 never minted (counter off-by-one); residue entry recorded in the untracked state file (line 2516)

@@ -1,0 +1,69 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -rf /home/mikemol/github/mtools/*/src/mikemol/*/__pycache__)",
+      "Bash(/home/mikemol/github/mtools/audiostruct/.venv/bin/mikemol-audio *)"
+    ]
+  },
+  "env": {
+    "STRUCT_HOOK_BLOCK": "1",
+    "PYCHECK_HOOK_BLOCK": "1"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "STANDING_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-standing\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "STRUCT_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-structural-query\""
+          },
+          {
+            "type": "command",
+            "command": "NOCHAIN_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-no-chaining\""
+          },
+          {
+            "type": "command",
+            "command": "NOVERIFY_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-no-verify\""
+          },
+          {
+            "type": "command",
+            "command": "SHELLCHECK_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-shellcheck\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "SHELLCHECK_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-shellcheck\""
+          },
+          {
+            "type": "command",
+            "command": "PYCHECK_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-pycheck\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-standing-stop\""
+          }
+        ]
+      }
+    ]
+  }
+}

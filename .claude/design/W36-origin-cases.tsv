@@ -1,0 +1,408 @@
+1	PASS	_pycodemod_selftest.py	110	libcst round-trips comments and blank lines
+2	PASS	_pycodemod_selftest.py	117	roundtrip() accepts a well-formed file
+3	PASS	_pycodemod_selftest.py	120	a def is found
+4	PASS	_pycodemod_selftest.py	121	a call is found
+5	PASS	_pycodemod_selftest.py	142	guarded: an unconditional call is `top`
+6	PASS	_pycodemod_selftest.py	143	guarded: a call under `if` carries its test
+7	PASS	_pycodemod_selftest.py	145	guarded: nested conditions are outermost-first
+8	PASS	_pycodemod_selftest.py	150	guarded: else-body over-reported under its if, never negated
+9	PASS	_pycodemod_selftest.py	189	swallows: finds all three discards
+10	PASS	_pycodemod_selftest.py	192	swallows: a mutated RECEIVER read later feeds a verdict
+11	PASS	_pycodemod_selftest.py	195	swallows: assigned-and-consumed-in-block is output-only
+12	PASS	_pycodemod_selftest.py	197	swallows: an accumulator .append feeds a verdict
+13	PASS	_pycodemod_selftest.py	198	swallows: handler breadth is classified
+14	PASS	_pycodemod_selftest.py	222	swallows: a name built above and consumed inside is NOT an escape
+15	PASS	_pycodemod_selftest.py	303	check-contracts reports dispatched-but-undeclared modes
+16	PASS	_pycodemod_selftest.py	305	...and names the runtime-print-only usage as the reason
+17	PASS	_pycodemod_selftest.py	311	an OWNED modifier is not reported as an undeclared mode
+18	PASS	_pycodemod_selftest.py	333	the collision population is derived (not a quoted roster; known: --sites/--kinds/--lines/--blocks)
+19	PASS	_pycodemod_selftest.py	339	...and a nullary/nullary collision is BENIGN
+20	PASS	_pycodemod_selftest.py	340	...and the live roster has NO harmful collision
+21	PASS	_pycodemod_selftest.py	352	an operand-taking mode colliding with a bare opt is HARMFUL
+22	PASS	_pycodemod_selftest.py	354	...and the repair it names is a rename
+23	PASS	_pycodemod_selftest.py	358	an opt that is not also a mode key is no collision
+24	PASS	_pycodemod_selftest.py	366	Mode.writes defaults to a pure read
+25	PASS	_pycodemod_selftest.py	367	...and mutates projects it
+26	PASS	_pycodemod_selftest.py	368	Mode.writes carries the artifact kinds
+27	PASS	_pycodemod_selftest.py	369	...and mutates is True when it writes
+28	PASS	_pycodemod_selftest.py	372	⚑ mutates is DERIVED, never settable — no second spelling to drift
+29	PASS	_pycodemod_selftest.py	388	⚑ a mode dispatched OUTSIDE _dispatch is not a phantom declaration
+30	PASS	_pycodemod_selftest.py	390	...and a declared mode that IS dispatched stays silent
+31	PASS	_pycodemod_selftest.py	407	rivals: both bodies read REIMPLEMENTS
+32	PASS	_pycodemod_selftest.py	416	rivals: disjoint signatures are distinguishable
+33	PASS	_pycodemod_selftest.py	424	a name in a docstring/comment is NOT a call
+34	PASS	_pycodemod_selftest.py	428	a def with no caller is reported dead
+35	PASS	_pycodemod_selftest.py	443	--calls is blind to a string-invoked query (the false positive)
+36	PASS	_pycodemod_selftest.py	445	--sqlname finds the `q_`-prefixed DEFINITION
+37	PASS	_pycodemod_selftest.py	448	...and the STRING reference `--calls` cannot see
+38	PASS	_pycodemod_selftest.py	453	--sqlname accepts the DEFINED spelling too
+39	PASS	_pycodemod_selftest.py	458	a string reference is reported as `ref`, not `call`
+40	PASS	_pycodemod_selftest.py	465	a query defined and never referenced has 0 refs
+41	PASS	_pycodemod_selftest.py	491	a callback passed in a list is NOT dead (the OTLP shape)
+42	PASS	_pycodemod_selftest.py	493	a function stored in a registry dict is NOT dead
+43	PASS	_pycodemod_selftest.py	495	a closure RETURNED by a factory is NOT dead
+44	PASS	_pycodemod_selftest.py	497	a function passed as key= is NOT dead
+45	PASS	_pycodemod_selftest.py	502	a def that is neither called nor referenced is STILL dead
+46	PASS	_pycodemod_selftest.py	531	a BARE-decorated def is NOT dead (@reg — the registry shape)
+47	PASS	_pycodemod_selftest.py	536	a CALLED-decorator def is NOT dead (@paramd('x'))
+48	PASS	_pycodemod_selftest.py	538	a DOTTED-decorator def is NOT dead (@mod.attr)
+49	PASS	_pycodemod_selftest.py	544	an UNDECORATED def with no caller is STILL dead
+50	PASS	_pycodemod_selftest.py	548	the REGISTRAR is reached as a value by each decoration
+51	PASS	_pycodemod_selftest.py	571	a libcst visit_* method is NOT dead (framework-dispatched)
+52	PASS	_pycodemod_selftest.py	573	a libcst leave_* method is NOT dead
+53	PASS	_pycodemod_selftest.py	575	a Textual action_* method is NOT dead (Binding-table string)
+54	PASS	_pycodemod_selftest.py	577	a Textual on_* handler is NOT dead (message-class name)
+55	PASS	_pycodemod_selftest.py	581	an ordinary unused method in the SAME class is STILL dead
+56	PASS	_pycodemod_selftest.py	585	a bare prefix with no suffix is NOT a framework contract
+57	PASS	_pycodemod_selftest.py	589	the exemption reports WHICH contract, not merely that there is one
+58	PASS	_pycodemod_selftest.py	603	`--` ends the flags: a later token is NOT seen as a flag
+59	PASS	_pycodemod_selftest.py	605	...and IS delivered as an operand, flag-shaped and all
+60	PASS	_pycodemod_selftest.py	607	the mode BEFORE `--` is still recognised
+61	PASS	_pycodemod_selftest.py	612	with no `--`, every token remains flag-visible
+62	PASS	_pycodemod_selftest.py	614	with no `--`, the operand tail is empty
+63	PASS	_pycodemod_selftest.py	618	a `--` at argv[0] is not read as the marker
+64	PASS	_pycodemod_selftest.py	620	`ref` is a distinct kind, not folded into `call`
+65	PASS	_pycodemod_selftest.py	622	the value-use IS recorded as a ref at its line
+66	PASS	_pycodemod_selftest.py	641	asserted(): a bare integer is a LITERAL
+67	PASS	_pycodemod_selftest.py	643	asserted(): a call expression is COMPUTED
+68	PASS	_pycodemod_selftest.py	648	asserted(): a NEGATED literal is still a literal
+69	PASS	_pycodemod_selftest.py	650	asserted(): a bare name is COMPUTED
+70	PASS	_pycodemod_selftest.py	654	asserted(): a call NOT passing the keyword is in neither bucket
+71	PASS	_pycodemod_selftest.py	656	asserted(): an INTERPOLATED f-string is computed
+72	PASS	_pycodemod_selftest.py	658	asserted(): an f-string with nothing interpolated is literal
+73	PASS	_pycodemod_selftest.py	667	asserted() splits what forwards() reports as one bucket
+74	PASS	_pycodemod_selftest.py	697	values(): a literal True is reported WITH its value
+75	PASS	_pycodemod_selftest.py	699	values(): a literal False is reported WITH its value
+76	PASS	_pycodemod_selftest.py	705	values(): a literal None is a VALUE, not the unknown marker
+77	PASS	_pycodemod_selftest.py	707	values(): a literal string is reported with its value
+78	PASS	_pycodemod_selftest.py	713	values(): a bare name is UNKNOWN, never guessed
+79	PASS	_pycodemod_selftest.py	715	values(): an interpolated f-string is UNKNOWN
+80	PASS	_pycodemod_selftest.py	717	values(): a conditional expression is UNKNOWN
+81	PASS	_pycodemod_selftest.py	719	values(): a call NOT passing the keyword is not a row
+82	PASS	_pycodemod_selftest.py	723	values(): reports n of m over the CALL population
+83	PASS	_pycodemod_selftest.py	740	values(): a call inside a def reports that def as its context
+84	PASS	_pycodemod_selftest.py	742	values(): a module-scope fixture call reports <module>
+85	PASS	_pycodemod_selftest.py	758	values(<ordinal>): reads the positional argument at that index
+86	PASS	_pycodemod_selftest.py	763	...and a computed positional reports UNKNOWN rather than a guess
+87	PASS	_pycodemod_selftest.py	770	...and a site with no such position is ABSENT, not UNKNOWN
+88	PASS	_pycodemod_selftest.py	771	...over the full call population as the denominator
+89	PASS	_pycodemod_selftest.py	774	...and a decimal STRING selects the same position as the int
+90	PASS	_pycodemod_selftest.py	795	callgraph attributes calls to their ENCLOSING def
+91	PASS	_pycodemod_selftest.py	797	...which `--calls` cannot do (it has no scope tracking)
+92	PASS	_pycodemod_selftest.py	799	reaches follows a multi-hop chain within a module
+93	PASS	_pycodemod_selftest.py	805	...and does NOT bridge modules on a shared callee spelling
+94	PASS	_pycodemod_selftest.py	809	a target beyond the depth bound is absent, not falsely reported
+95	PASS	_pycodemod_selftest.py	813	values() partitions exactly as asserted() does
+96	PASS	_pycodemod_selftest.py	831	forwards(): only the keyword-passing call counts as migrated
+97	PASS	_pycodemod_selftest.py	833	forwards(): positional and other-keyword calls are MISSING
+98	PASS	_pycodemod_selftest.py	842	kwseen does not leak between scans
+99	PASS	_pycodemod_selftest.py	855	a matched context READS (the guard is not refuse-everything)
+100	PASS	_pycodemod_selftest.py	857	a different TARGET is refused
+101	PASS	_pycodemod_selftest.py	859	a different POPULATION is refused
+102	PASS	_pycodemod_selftest.py	864	population order does not change the context
+103	PASS	_pycodemod_selftest.py	881	an unguarded write is write-default
+104	PASS	_pycodemod_selftest.py	888	an --apply-gated write is NOT write-default
+105	PASS	_pycodemod_selftest.py	896	writing a tempfile is NOT write-default
+106	PASS	_pycodemod_selftest.py	905	a write inside _selftest is not a write path
+107	PASS	_pycodemod_selftest.py	924	py_files() skips bazel/generated/cache trees, keeping only source
+108	PASS	_pycodemod_selftest.py	929	naming a generated tree explicitly still reaches it
+109	PASS	_pycodemod_selftest.py	947	_roots() drops generated trees that are TOP-LEVEL entries
+110	PASS	_pycodemod_selftest.py	951	a bazel-<workspace> convenience symlink is dropped by prefix
+111	PASS	_pycodemod_selftest.py	984	--projects finds a project per paper.toml
+112	PASS	_pycodemod_selftest.py	986	a project with only a local bib has NO foreign import
+113	PASS	_pycodemod_selftest.py	989	a `../` token that ESCAPES the project dir IS foreign
+114	PASS	_pycodemod_selftest.py	991	a label resolving INSIDE the project is NOT foreign
+115	PASS	_pycodemod_selftest.py	993	the foreign row names the RESOLVED corpus-relative destination
+116	PASS	_pycodemod_selftest.py	996	a NESTED child project's bib is FOREIGN to its parent (ownership, not containment)
+117	PASS	_pycodemod_selftest.py	999	the child still owns its own bib locally
+118	PASS	_pycodemod_selftest.py	1017	--source returns exactly one def with its CST extent
+119	PASS	_pycodemod_selftest.py	1019	--source returns the BODY text, comments included
+120	PASS	_pycodemod_selftest.py	1021	--source does not swallow the following def
+121	PASS	_pycodemod_selftest.py	1023	--source finds a class as well as a function
+122	PASS	_pycodemod_selftest.py	1045	--key finds the subscript, the .get and the `in` test
+123	PASS	_pycodemod_selftest.py	1047	--key reports the enclosing function as context
+124	PASS	_pycodemod_selftest.py	1051	a key named in a docstring is NOT a read
+125	PASS	_pycodemod_selftest.py	1057	a literal in a schema tuple is a `decl`, not a `read`
+126	PASS	_pycodemod_selftest.py	1059	a declared-but-never-read field is visible as decl with no read
+127	PASS	_pycodemod_selftest.py	1075	a tool reading .agdai.log is FAILURE-bearing
+128	PASS	_pycodemod_selftest.py	1084	a tool reading .agdai CORES is SUCCESS-only, not FAILURE
+129	PASS	_pycodemod_selftest.py	1096	a timing/peak ledger reader is SUCCESS-only
+130	PASS	_pycodemod_selftest.py	1108	a tool reading both kinds is BOTH, and names them
+131	PASS	_pycodemod_selftest.py	1115	a tool reading no build artifact is not censused
+132	PASS	_pycodemod_selftest.py	1127	a build artifact named only in prose is NOT a read
+133	PASS	_pycodemod_selftest.py	1173	every dispatched mode appears in the docstring
+134	PASS	_pycodemod_selftest.py	1192	every import site of the module is found, and only those
+135	PASS	_pycodemod_selftest.py	1197	a module named in a comment or a string is NOT an import site
+136	PASS	_pycodemod_selftest.py	1205	a `_` name taken by `from` IS the re-export hazard
+137	PASS	_pycodemod_selftest.py	1206	...and a `_`-prefixed import ALIAS is not
+138	PASS	_pycodemod_selftest.py	1241	every import form is classified, and comments/strings are not imports
+139	PASS	_pycodemod_selftest.py	1248	a function body carries both a compliant and a violating import
+140	PASS	_pycodemod_selftest.py	1250	the func-scoped BARE import is COMPLIANT
+141	PASS	_pycodemod_selftest.py	1265	a single-file scope does not empty the locality set (the false zero)
+142	PASS	_pycodemod_selftest.py	1267	...and `os`/`typing` are still excluded as foreign
+143	PASS	_pycodemod_selftest.py	1272	a relative import is local by construction, never filtered out
+144	PASS	_pycodemod_selftest.py	1277	a star-import is a syntax node, not a string literal
+145	PASS	_pycodemod_selftest.py	1299	two __main__ guards are reported at ANY size
+146	PASS	_pycodemod_selftest.py	1300	...and the reason names them
+147	PASS	_pycodemod_selftest.py	1305	one __main__ guard is not a finding
+148	PASS	_pycodemod_selftest.py	1310	comment lines are not counted as bulk
+149	PASS	_pycodemod_selftest.py	1319	...but the PHYSICAL count is reported alongside
+150	PASS	_pycodemod_selftest.py	1320	...and the code count still excludes them
+151	PASS	_pycodemod_selftest.py	1324	...at the END of the row, so no existing index shifts
+152	PASS	_pycodemod_selftest.py	1342	every marked line is counted, in comments AND docstrings AND printed strings
+153	PASS	_pycodemod_selftest.py	1356	a ⚑ line lost ACROSS a split is visible in the group total
+154	PASS	_pycodemod_selftest.py	1358	...and the census NAMES the text that vanished
+155	PASS	_pycodemod_selftest.py	1371	the census carries the LINE TEXT, not only the count, for every mark
+156	PASS	_pycodemod_selftest.py	1374	...and each text names its site, so a listing can be printed
+157	PASS	_pycodemod_selftest.py	1398	⚑ every operand-taking flag the DERIVERS find is DECLARED in the table
+158	PASS	_pycodemod_selftest.py	1403	...and the named deriver-overfires all still over-fire (no stale exemption)
+159	PASS	_pycodemod_selftest.py	1411	the declared-mode census is stated, not assumed
+160	PASS	_pycodemod_selftest.py	1413	⚑ ...and every DECLARED mode is really dispatched (no invented shapes)
+161	PASS	_pycodemod_selftest.py	1430	⚑ a mark in a selftest NAME classifies as executable, not prose
+162	PASS	_pycodemod_selftest.py	1433	...a comment mark classifies as comment
+163	PASS	_pycodemod_selftest.py	1435	...and a module docstring mark classifies as docstring
+164	PASS	_pycodemod_selftest.py	1441	⚑ a file that will not tokenize is reported as unparsed
+165	PASS	_pycodemod_selftest.py	1456	⚑ a relative path resolves against the CALLER's cwd
+166	PASS	_pycodemod_selftest.py	1466	⚑ ...and a path in NEITHER tree raises, never falls back to the corpus
+167	PASS	_pycodemod_selftest.py	1473	...while a tool-tree-relative path still resolves from elsewhere
+168	PASS	_pycodemod_selftest.py	1489	⚑ a short mark does NOT fire inside a word (NB in UNBALANCED)
+169	PASS	_pycodemod_selftest.py	1490	...and it DOES fire as its own token
+170	PASS	_pycodemod_selftest.py	1495	⚑ ...while the GLYPH mark still matches, having no word boundary
+171	PASS	_pycodemod_selftest.py	1518	⚑ two byte-identical METHODS share a deep skeleton (the dedent)
+172	PASS	_pycodemod_selftest.py	1520	...and their hole count is 0, not None — IDENTICAL, not undecidable
+173	PASS	_pycodemod_selftest.py	1525	⚑ a single-def name yields NO row (absent ≠ scored zero)
+174	PASS	_pycodemod_selftest.py	1529	⚑ a row carries both rungs: (name, n, nskel, holes, labels, nspine, spine_shared)
+175	PASS	_pycodemod_selftest.py	1541	⚑ the stdlib road to modes() gives the SAME answer as the CST road
+176	PASS	_pycodemod_selftest.py	1543	...and it finds a real number of modes, not an empty dict
+177	PASS	_pycodemod_selftest.py	1549	--roundtrip is derived as needing a CST
+178	PASS	_pycodemod_selftest.py	1550	⚑ --size is NOT — it is ast + splitlines
+179	PASS	_pycodemod_selftest.py	1551	⚑ --commentary is NOT — it is splitlines only
+180	PASS	_pycodemod_selftest.py	1561	a re-indented ⚑ line is NOT reported as lost
+181	PASS	_pycodemod_selftest.py	1562	...and the group total is preserved
+182	PASS	_pycodemod_selftest.py	1566	a duplicated marker text is reported as multi-homed
+183	PASS	_pycodemod_selftest.py	1574	an unresolvable baseline reports LOST empty
+184	PASS	_pycodemod_selftest.py	1575	...and says so by reporting a ZERO baseline, not a pass
+185	PASS	_pycodemod_selftest.py	1576	...while still counting what is there now
+186	PASS	_pycodemod_selftest.py	1580	no mode derives its denominator from matched rows
+187	PASS	_pycodemod_selftest.py	1587	no mode turns an empty scope into the whole corpus
+188	PASS	_pycodemod_selftest.py	1593	the row-derived-count pattern matches its own defect
+189	PASS	_pycodemod_selftest.py	1597	the or-None pattern matches its own defect
+190	PASS	_pycodemod_selftest.py	1613	--shape locates the code site by line
+191	PASS	_pycodemod_selftest.py	1618	a docstring mention is not a site
+192	PASS	_pycodemod_selftest.py	1620	a comment mention is not a site
+193	PASS	_pycodemod_selftest.py	1626	--shape-all includes prose
+194	PASS	_pycodemod_selftest.py	1629	a code line with a trailing comment is not excluded
+195	PASS	_pycodemod_selftest.py	1643	a `^`-anchored pattern finds the column-0 site
+196	PASS	_pycodemod_selftest.py	1646	a `^`-anchored pattern excludes the indented site
+197	PASS	_pycodemod_selftest.py	1648	`^if __name__` locates the entry point
+198	PASS	_pycodemod_selftest.py	1653	a syntax error is a verdict, not a crash
+199	PASS	_pycodemod_selftest.py	1672	--binding finds assignment, loop target and parameter
+200	PASS	_pycodemod_selftest.py	1674	--binding reports the defining LINE
+201	PASS	_pycodemod_selftest.py	1679	--binding scopes a parameter to its own function
+202	PASS	_pycodemod_selftest.py	1680	--binding sees an import as a binding
+203	PASS	_pycodemod_selftest.py	1682	--binding on an unbound name is empty, not an error
+204	PASS	_pycodemod_selftest.py	1684	--binding reports a syntax error as a verdict
+205	PASS	_pycodemod_selftest.py	1701	--rivals calls a one-line wrapper DELEGATES
+206	PASS	_pycodemod_selftest.py	1703	--rivals names the callee, so the operator can read it
+207	PASS	_pycodemod_selftest.py	1709	--rivals does not count a docstring as a body
+208	PASS	_pycodemod_selftest.py	1711	--rivals calls a real body REIMPLEMENTS
+209	PASS	_pycodemod_selftest.py	1728	a cached parse is stable when content is unchanged
+210	PASS	_pycodemod_selftest.py	1730	the parse reports delegation
+211	PASS	_pycodemod_selftest.py	1733	editing a file changes its cached answer
+212	PASS	_pycodemod_selftest.py	1744	the deriver tag names the library and the schema
+213	PASS	_pycodemod_selftest.py	1750	the deriver tag is never empty-versioned
+214	PASS	_pycodemod_selftest.py	1752	a different deriver yields a different key
+215	PASS	_pycodemod_selftest.py	1755	the same deriver and bytes yield the SAME key (still a cache)
+216	PASS	_pycodemod_selftest.py	1760	the corpus discovers catalog/
+217	PASS	_pycodemod_selftest.py	1761	the corpus discovers scratch/ and scripts/
+218	PASS	_pycodemod_selftest.py	1763	the corpus excludes the Agda tree
+219	PASS	_pycodemod_selftest.py	1764	the corpus excludes dotdirs
+220	PASS	_pycodemod_selftest.py	1802	a dict read INSIDE a function is a cache
+221	PASS	_pycodemod_selftest.py	1806	an accumulator mutated only at module scope is NOT a cache
+222	PASS	_pycodemod_selftest.py	1808	an unmutated table is const, not a cache
+223	PASS	_pycodemod_selftest.py	1811	every candidate is classified, none silently dropped
+224	PASS	_pycodemod_selftest.py	1813	the file denominator is the scope, not the matches
+225	FAIL	_pycodemod_selftest.py	1844	a live hand-rolled memo classifies as a cache
+226	PASS	_pycodemod_selftest.py	1846	the _SNAPPED once-flag does NOT
+227	PASS	_pycodemod_selftest.py	1875	a prose label starting with a SQL keyword is NOT a site
+228	PASS	_pycodemod_selftest.py	1883	a real statement IS a site, and carries its style
+229	PASS	_pycodemod_selftest.py	1890	a builder call is not counted as a raw SQL literal
+230	PASS	_pycodemod_selftest.py	1906	a %s-parameterised statement IS a site, and is RAW (the ph() idiom)
+231	PASS	_pycodemod_selftest.py	1975	a comparison operand is role=compare
+232	PASS	_pycodemod_selftest.py	1980	a call argument is role=arg
+233	PASS	_pycodemod_selftest.py	1984	a collection element is role=decl
+234	PASS	_pycodemod_selftest.py	1990	a docstring mention is role=doc, not role=other
+235	PASS	_pycodemod_selftest.py	1997	a mention in a COMMENT is not a literal site
+236	PASS	_pycodemod_selftest.py	2005	a plain assignment RHS is role=other
+237	PASS	_pycodemod_selftest.py	2012	every site is found exactly once, one role each
+238	PASS	_pycodemod_selftest.py	2065	a comprehension counts, and the order is the source's
+239	PASS	_pycodemod_selftest.py	2073	a while-driven closure is an unfold, not a plain loop
+240	PASS	_pycodemod_selftest.py	2079	iterating a container is derived, not corpus
+241	PASS	_pycodemod_selftest.py	2086	a container built with no visible bound is unattr
+242	PASS	_pycodemod_selftest.py	2092	a generator is reported as paid, not omitted
+243	PASS	_pycodemod_selftest.py	2144	a dict keyed off rows then probed by a second query is a JOIN
+244	PASS	_pycodemod_selftest.py	2147	a guard-continue over query rows is a withheld WHERE
+245	PASS	_pycodemod_selftest.py	2149	sorted() over row-derived rows is a withheld ORDER BY
+246	PASS	_pycodemod_selftest.py	2153	per-key accumulation is GROUP BY, not a join
+247	PASS	_pycodemod_selftest.py	2155	a set() built purely to dedupe rows is a withheld DISTINCT
+248	PASS	_pycodemod_selftest.py	2163	a set difference between two store-reading helpers is a set-op
+249	PASS	_pycodemod_selftest.py	2170	identical algebra over a non-store argument is NOT reported
+250	PASS	_pycodemod_selftest.py	2183	a FROM target is a relation
+251	PASS	_pycodemod_selftest.py	2185	...and a LONGER name containing it is NOT
+252	PASS	_pycodemod_selftest.py	2190	...nor is an ALIAS spelled like a relation
+253	PASS	_pycodemod_selftest.py	2192	a JOIN target is a relation
+254	PASS	_pycodemod_selftest.py	2197	a recursive CTE name is NOT a relation, its base table is
+255	PASS	_pycodemod_selftest.py	2204	a relation inside a DERIVED TABLE is found
+256	PASS	_pycodemod_selftest.py	2212	EXTRACT(… FROM x) names no relation
+257	PASS	_pycodemod_selftest.py	2219	IS NOT DISTINCT FROM names no relation
+258	PASS	_pycodemod_selftest.py	2222	...and the plain DISTINCT FROM spelling likewise
+259	PASS	_pycodemod_selftest.py	2224	...but SELECT DISTINCT … FROM t is still a relation
+260	PASS	_pycodemod_selftest.py	2226	...but a subquery nested in an expression still counts
+261	PASS	_pycodemod_selftest.py	2228	a table FUNCTION is not a stored relation
+262	PASS	_pycodemod_selftest.py	2230	INSERT INTO / UPDATE / DROP TABLE name their target
+263	PASS	_pycodemod_selftest.py	2247	a DELETE target is a WRITE
+264	PASS	_pycodemod_selftest.py	2248	...and is NOT also read
+265	PASS	_pycodemod_selftest.py	2254	an INSERT target is a WRITE
+266	PASS	_pycodemod_selftest.py	2255	...and the SAME name is also a read when the SQL reads it
+267	PASS	_pycodemod_selftest.py	2258	an UPDATE target is a WRITE, its FROM is a read
+268	PASS	_pycodemod_selftest.py	2260	a plain SELECT writes nothing
+269	PASS	_pycodemod_selftest.py	2263	DROP TABLE is a write
+270	PASS	_pycodemod_selftest.py	2273	writes | reads == sql_relnames, exactly
+271	PASS	_pycodemod_selftest.py	2274	a CTE is in neither set
+272	PASS	_pycodemod_selftest.py	2278	a leading CTE does not hide the INSERT head
+273	PASS	_pycodemod_selftest.py	2281	a DELETE with a subquery is still a delete
+274	PASS	_pycodemod_selftest.py	2283	a column list does not hide the INSERT head
+275	PASS	_pycodemod_selftest.py	2285	a plain query heads SELECT
+276	PASS	_pycodemod_selftest.py	2286	the roles view agrees with the split
+277	PASS	_pycodemod_selftest.py	2301	the shim spelling is found as role `name`
+278	PASS	_pycodemod_selftest.py	2303	...and prose merely CONTAINING the name is not
+279	PASS	_pycodemod_selftest.py	2344	two reads in ONE expression is COMPOSED
+280	PASS	_pycodemod_selftest.py	2349	a CHAINED fetch is ONE trip, not two
+281	PASS	_pycodemod_selftest.py	2354	a conditional between two spellings is ONE trip
+282	PASS	_pycodemod_selftest.py	2359	a read inside a comprehension is ITERATED
+283	PASS	_pycodemod_selftest.py	2363	a per-item loop read is not COMPOSED
+284	PASS	_pycodemod_selftest.py	2475	every construct in the roster is found in the fixture
+285	PASS	_pycodemod_selftest.py	2477	the roster and the fixture agree in BOTH directions
+286	PASS	_pycodemod_selftest.py	2479	all eight construct groups are represented
+287	PASS	_pycodemod_selftest.py	2485	a loop over query rows is row-iteration
+288	PASS	_pycodemod_selftest.py	2487	a branch on ROW CONTENT is a WHERE
+289	PASS	_pycodemod_selftest.py	2489	a branch on an ARGUMENT is a mode-branch, in the same function
+290	PASS	_pycodemod_selftest.py	2491	a comprehension guard over rows is a WHERE
+291	PASS	_pycodemod_selftest.py	2493	a `with open(...)` is the ε boundary
+292	PASS	_pycodemod_selftest.py	2495	`except OSError` is external on the TYPE, not the body
+293	PASS	_pycodemod_selftest.py	2501	a branch on a value one hop from a subprocess is external
+294	PASS	_pycodemod_selftest.py	2503	`sys.exit` is ε, not work for the engine
+295	PASS	_pycodemod_selftest.py	2505	yielding query rows is row-iteration
+296	PASS	_pycodemod_selftest.py	2511	a comprehension over a plain argument is NOT a mode-branch
+297	PASS	_pycodemod_selftest.py	2516	break / continue / early return in a row loop are all early-exit
+298	PASS	_pycodemod_selftest.py	2520	an early break over rows is LIMIT 1 / EXISTS
+299	PASS	_pycodemod_selftest.py	2526	`--relalg` has NO construct for an early break; `--control` does
+300	PASS	_pycodemod_selftest.py	2538	removing the break removes exactly the break and its guard
+301	PASS	_pycodemod_selftest.py	2545	an unclassified site never claims a relational form
+302	PASS	_pycodemod_selftest.py	2548	every kind reported is in the declared roster
+303	PASS	_pycodemod_selftest.py	2568	a receiver-qualified query selects ONE of two same-named calls
+304	PASS	_pycodemod_selftest.py	2570	the other receiver selects the OTHER call
+305	PASS	_pycodemod_selftest.py	2574	the bare name still returns BOTH receivers
+306	PASS	_pycodemod_selftest.py	2584	an ALIASED receiver is a different key (text, not resolution)
+307	PASS	_pycodemod_selftest.py	2608	a shadowing LOCAL is not a module-level dependency
+308	PASS	_pycodemod_selftest.py	2610	a genuine module-level read IS a dependency
+309	PASS	_pycodemod_selftest.py	2626	a subscript assignment is IMPURE
+310	PASS	_pycodemod_selftest.py	2627	a prune-the-empties comprehension is IMPURE too
+311	PASS	_pycodemod_selftest.py	2628	an assignment to a bare name is PURE
+312	PASS	_pycodemod_selftest.py	2631	two impure statements keep their SOURCE order through the topological sort
+313	PASS	_pycodemod_selftest.py	2648	reading a SIBLING file through __file__.parent is not a hazard
+314	PASS	_pycodemod_selftest.py	2650	reading THIS file's own text through __file__ IS a hazard
+315	PASS	_pycodemod_selftest.py	2652	using __file__ as a location only is not a hazard
+316	PASS	_pycodemod_selftest.py	2676	a bound of 12 forces more than one part
+317	PASS	_pycodemod_selftest.py	2677	every part is UNDER the bound
+318	PASS	_pycodemod_selftest.py	2679	the split is byte-for-byte lossless
+319	PASS	_pycodemod_selftest.py	2681	the ⚑ comment survived the relocation
+320	PASS	_pycodemod_selftest.py	2682	the TRAILING comment survived too
+321	PASS	_pycodemod_selftest.py	2683	the module docstring stays with the ENTRY module
+322	PASS	_pycodemod_selftest.py	2689	the entry module references every part it created
+323	PASS	_pycodemod_selftest.py	2703	an acyclic fan-in table splits
+324	PASS	_pycodemod_selftest.py	2713	a backwards data dependency through a def is not a cycle by itself
+325	PASS	_pycodemod_selftest.py	2719	_size counts the trailing newline the way a size gate does
+326	PASS	_pycodemod_selftest.py	2729	an unsplittable statement is refused on BUDGET
+327	PASS	_pycodemod_selftest.py	2730	and the refusal names the statement
+328	PASS	_pycodemod_selftest.py	2744	six small defs are ONE part under a line bound alone
+329	PASS	_pycodemod_selftest.py	2746	the definition bound cuts what the line bound cannot see
+330	PASS	_pycodemod_selftest.py	2749	and no part it writes holds more definitions than the bound
+331	PASS	_pycodemod_selftest.py	2751	the definition-bounded split is still byte-for-byte lossless
+332	PASS	_pycodemod_selftest.py	2755	omitting the definition bound leaves the plan unchanged
+333	PASS	_pycodemod_selftest.py	2757	a definition bound never produces fewer parts than the line bound alone
+334	PASS	_pycodemod_selftest.py	2766	a generous def bound does not disable the line bound
+335	PASS	_pycodemod_fingerprint.py	713	registry accepts ANY non-empty key (no taxonomy)
+336	PASS	_pycodemod_fingerprint.py	716	registry is idempotent on a repeated key
+337	PASS	_pycodemod_fingerprint.py	723	an EMPTY key is refused — the one validation
+338	PASS	_pycodemod_fingerprint.py	727	distinct keys → distinct primes
+339	PASS	_pycodemod_fingerprint.py	729	fingerprint is SQUAREFREE — a repeat adds no factor
+340	PASS	_pycodemod_fingerprint.py	740	decode is EXACT: understood × remainder == fingerprint
+341	PASS	_pycodemod_fingerprint.py	741	decode returns the understood keys
+342	PASS	_pycodemod_fingerprint.py	742	the remainder is the UNMODELLED product
+343	PASS	_pycodemod_fingerprint.py	755	strict=False (the default) returns keys and swallows the remainder
+344	PASS	_pycodemod_fingerprint.py	762	strict=True raises on an unknown remainder — off by default
+345	PASS	_pycodemod_fingerprint.py	765	strict=True with a COMPLETE registry does not raise
+346	PASS	_pycodemod_fingerprint.py	773	gcd IS the shared referent product
+347	PASS	_pycodemod_fingerprint.py	775	containment is ONE modulo — subset
+348	PASS	_pycodemod_fingerprint.py	777	containment is ONE modulo — non-subset
+349	PASS	_pycodemod_fingerprint.py	779	structural difference drops the shared part
+350	PASS	_pycodemod_fingerprint.py	787	a LARGER modelled set gives a remainder that DIVIDES the smaller one
+351	PASS	_pycodemod_fingerprint.py	789	the remainder cannot RISE as the modelled set grows
+352	PASS	_pycodemod_fingerprint.py	791	Ω(remainder) cannot rise either
+353	PASS	_pycodemod_fingerprint.py	795	an EMPTY modelled set leaves the whole fingerprint as remainder
+354	PASS	_pycodemod_fingerprint.py	801	referents: names, attributes, keywords and identifier strings
+355	PASS	_pycodemod_fingerprint.py	803	a NUMERIC constant is not a referent
+356	PASS	_pycodemod_fingerprint.py	804	a non-identifier string is not a referent
+357	PASS	_pycodemod_fingerprint.py	806	a dotted string contributes each part
+358	PASS	_pycodemod_fingerprint.py	808	an over-long token is dropped (shape bound, both sides)
+359	PASS	_pycodemod_fingerprint.py	812	`terms` as a string and as an attribute are the SAME referent
+360	PASS	_pycodemod_fingerprint.py	827	a `for` site carries its ITERABLE as a referent
+361	PASS	_pycodemod_fingerprint.py	829	an `if` site carries the column string as a referent
+362	PASS	_pycodemod_fingerprint.py	831	the `if` site also carries its bound names
+363	PASS	_pycodemod_fingerprint.py	853	a WIDER seed lowers the total remainder Ω
+364	PASS	_pycodemod_fingerprint.py	855	a WIDER seed lowers the total remainder bits
+365	PASS	_pycodemod_fingerprint.py	857	a WIDER seed explains at least as many sites fully
+366	PASS	_pycodemod_fingerprint.py	859	every site's remainder DIVIDES its narrower-seed remainder
+367	PASS	_pycodemod_fingerprint.py	882	local_closure follows a TRANSITIVE local import (two hops)
+368	PASS	_pycodemod_fingerprint.py	885	local_closure does not drag in an unimported sibling
+369	PASS	_pycodemod_fingerprint.py	895	two sites sharing two unknown referents have a gcd of Ω=2
+370	PASS	_pycodemod_fingerprint.py	897	a third site sharing nothing is NOT in the class
+371	PASS	_pycodemod_selftest.py	2828	a returned set literal is a set reification
+372	PASS	_pycodemod_selftest.py	2830	a returned dict literal is a dict reification
+373	PASS	_pycodemod_selftest.py	2832	a returned set COMPREHENSION counts (the corpus-shaped builder)
+374	PASS	_pycodemod_selftest.py	2834	a returned dict comprehension counts
+375	PASS	_pycodemod_selftest.py	2836	`return set(xs)` is a call-built reification
+376	PASS	_pycodemod_selftest.py	2843	`return sorted(xs)` gets its OWN why, not returns-call
+377	PASS	_pycodemod_selftest.py	2845	a name grown by .append and returned is an accumulator
+378	PASS	_pycodemod_selftest.py	2847	a dict grown by subscript-assign and returned is an accumulator
+379	PASS	_pycodemod_selftest.py	2854	a generator is NOT a reification (it is the target shape)
+380	PASS	_pycodemod_selftest.py	2856	a returned scalar is NOT a reification
+381	PASS	_pycodemod_selftest.py	2857	returning an argument unchanged is NOT a reification
+382	PASS	_pycodemod_selftest.py	2863	reifies() reports the population it actually read
+383	PASS	_pycodemod_selftest.py	2869	an unparseable file is COUNTED as skipped, never silently dropped
+384	PASS	_pycodemod_selftest.py	2902	sorting a callee that already sorted is the redundant row
+385	PASS	_pycodemod_selftest.py	2909	a re-keyed sort is reported SEPARATELY, never as redundant
+386	PASS	_pycodemod_selftest.py	2911	`reverse=` counts as a re-key too
+387	PASS	_pycodemod_selftest.py	2913	sorting a callee that did NOT sort is not a re-sort at all
+388	PASS	_pycodemod_selftest.py	2923	the consumer walk owns its own population, scoped to paths
+389	PASS	_pycodemod_selftest.py	2925	the producer population is WIDER than the walk, and separately named
+390	PASS	_pycodemod_selftest.py	2937	a clean file yields no rows but still exposes the producer basis
+391	PASS	_pycodemod_selftest.py	2966	a GenericFunction name is graded generic (SQLAlchemy owns the spelling)
+392	PASS	_pycodemod_selftest.py	2976	a valid-but-dialect-specific name is verbatim, NOT an error
+393	PASS	_pycodemod_selftest.py	2979	the sqlite-ism that made a capability dark is in the verbatim population
+394	PASS	_pycodemod_selftest.py	2986	libcst's `node.func` is NOT a SQLAlchemy func call
+395	PASS	_pycodemod_selftest.py	2991	the generic set comes from SQLAlchemy's own registry and is non-empty
+396	PASS	_pycodemod_selftest.py	3002	a Core-only file still has NO literal blockers (the zero was never wrong)
+397	PASS	_pycodemod_selftest.py	3004	but the Core-built SQL it could not judge is now RECORDED, not dropped
+398	PASS	_pycodemod_selftest.py	3016	a file with no Core SQL CLEARS the attribute (no carry-over)
+399	PASS	_pycodemod_selftest.py	3054	a join onto ROOT is ANCHORED — no row
+400	PASS	_pycodemod_selftest.py	3060	`abspath(__file__)` is ANCHORED — no row
+401	PASS	_pycodemod_selftest.py	3063	a path that is the function's own PARAMETER is SCOPED (the feature)
+402	PASS	_pycodemod_selftest.py	3065	a repo-relative literal is REPO (the defect class)
+403	PASS	_pycodemod_selftest.py	3073	a bare command name is PATH-resolved, not cwd-relative — no row
+404	PASS	_pycodemod_selftest.py	3075	but a relative SCRIPT path in argv[0] still reports
+405	PASS	_pycodemod_selftest.py	3081	an explicit source argument makes the call SCOPED
+406	PASS	_pycodemod_selftest.py	3083	`os.chdir` is its own verdict — it MUTATES the thing under study
+407	PASS	_pycodemod_selftest.py	3090	the reader declares what it cannot see
+408	PASS	_pycodemod_selftest.py	3091	and the population is reported, so a zero is distinguishable

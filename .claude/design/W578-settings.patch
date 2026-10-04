@@ -1,0 +1,29 @@
+--- a/.claude/settings.json
++++ b/.claude/settings.json
+@@ -55,6 +55,26 @@
+         ]
+       }
+     ],
++    "SessionStart": [
++      {
++        "hooks": [
++          {
++            "type": "command",
++            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-inbound-asks\""
++          }
++        ]
++      }
++    ],
++    "UserPromptSubmit": [
++      {
++        "hooks": [
++          {
++            "type": "command",
++            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-inbound-asks\""
++          }
++        ]
++      }
++    ],
+     "Stop": [
+       {
+         "hooks": [
