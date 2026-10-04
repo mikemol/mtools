@@ -1,0 +1,33 @@
+--- a/.claude/settings.json
++++ b/.claude/settings.json
+@@ -58,20 +58,28 @@
+     "SessionStart": [
+       {
+         "hooks": [
+           {
+             "type": "command",
+             "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-inbound-asks\""
+-          }
++          },
++          {
++            "type": "command",
++            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-nemik-check\""
++          }
+         ]
+       }
+     ],
+     "UserPromptSubmit": [
+       {
+         "hooks": [
+           {
+             "type": "command",
+             "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-inbound-asks\""
+-          }
++          },
++          {
++            "type": "command",
++            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-nemik-check\""
++          }
+         ]
+       }
+     ],

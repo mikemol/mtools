@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING
 from mikemol.hooks import (
     hook_argv,
     inbound_asks,
+    nemik_check,
     no_chaining,
     no_verify,
     pycheck,
@@ -125,3 +126,13 @@ def inbound_asks_main() -> int:
 
     """
     return _guarded("mikemol-hook-inbound-asks", inbound_asks.main)
+
+
+def nemik_check_main() -> int:
+    """Run `mikemol-hook-nemik-check` behind the argv contract.
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-nemik-check", nemik_check.main)

@@ -101,6 +101,34 @@ venv lacks it gets a missing-command error in the transcript and no context.
 ]
 ```
 
+## Nemik check (SessionStart and UserPromptSubmit)
+
+`mikemol-hook-nemik-check` is the sibling of the inbound-asks hook. It runs the fleet reader
+`nemik-check --root <project parent>` and hands the model only this project's rows (the repo is the
+basename of `CLAUDE_PROJECT_DIR`) as `additionalContext`: the repo's `OK`/`VIOLATES` header line and
+the indented `Warning`/`VIOLATES` rows beneath it, quoted verbatim, with one line saying these are
+nemik's shapes, to fix them (the remedy is in each row), and that a Warning is not cosmetic.
+
+- **It never refuses and has no Stop behaviour.** It always exits 0, like inbound-asks.
+- **Events.** `SessionStart` and `UserPromptSubmit`; any other event, and a payload that is not
+  JSON, produces no output.
+- **Silent cases.** This repo's block has no indented rows, or the repo is absent from the output.
+- **The reader.** The executable named by `NEMIK_CHECK`, else `nemik-check` on `PATH`, else
+  `<project parent>/nemik/.venv/bin/nemik-check`. If none exists, it times out (60 s), or it exits
+  non-zero with no block for this repo, the hook says COULD NOT RUN in the context and on stderr and
+  does not claim the queue is clean. A non-zero exit that still prints this repo's block is read as
+  output. The argv is constants plus the root as one word, never through a shell.
+- **No flood.** One digest file per session, `<tmp>/mikemol-nemik-check/<session_id>`, with the
+  same rule as inbound-asks.
+- **Cost.** The reader took 12.3 s wall over 19 repos when measured, so `UserPromptSubmit` skips it
+  (silent, no spawn) when the project's `.claude/paths-forward.json` has the same sha256 as at the
+  last successful run, kept in `<session_id>.state` beside the emission digest. `SessionStart`
+  always runs it. A missing or unreadable queue file, no session id, an unwritable temp directory
+  or a failed last run means the reader runs; the skip is never taken on doubt.
+
+To arm it, add the same two blocks as for inbound-asks to the repo's `.claude/settings.json`, naming
+`mikemol-hook-nemik-check`. No arming variable is needed, because the hook has no deny mode.
+
 ## Adopting
 
 Install from git by subdirectory, pinned to a sha. See the repo-root [INSTALL.md](../INSTALL.md):

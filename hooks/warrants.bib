@@ -4908,3 +4908,286 @@
   claim  = {A script with no module of that name falls back to the strict reading, never to exempt.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_declared_script_whose_module_is_missing_is_judged_armed},
 }
+
+@misc{hooks-nemik-check-this-repos-rows-are-quoted-and-another-repos-rows-are-not,
+  section = {nemik-check},
+  title  = {The rows under this repo's header reach the model verbatim; neighbours' rows do not},
+  claim  = {The rows under this repo's header reach the model verbatim; neighbours' rows do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_this_repos_rows_are_quoted_and_another_repos_rows_are_not},
+}
+
+@misc{hooks-nemik-check-clean-repo-is-silent,
+  section = {nemik-check},
+  title  = {A header with no indented row beneath it produces no output},
+  claim  = {A header with no indented row beneath it produces no output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_clean_repo_is_silent},
+}
+
+@misc{hooks-nemik-check-repo-absent-from-the-output-is-silent,
+  section = {nemik-check},
+  title  = {A reader that does not mention this repo says nothing about it, and the hook is silent},
+  claim  = {A reader that does not mention this repo says nothing about it, and the hook is silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_repo_absent_from_the_output_is_silent},
+}
+
+@misc{hooks-nemik-check-violates-rows-and-header-are-quoted,
+  section = {nemik-check},
+  title  = {A VIOLATES header and VIOLATES rows are handed over like warnings},
+  claim  = {A VIOLATES header and VIOLATES rows are handed over like warnings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_violates_rows_and_header_are_quoted},
+}
+
+@misc{hooks-nemik-check-reader-is-run-with-the-fleet-root-as-one-word,
+  section = {nemik-check},
+  title  = {The reader receives `--root <project parent>`; the argv holds exactly that},
+  claim  = {The reader receives `--root <project parent>`; the argv holds exactly that.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_the_reader_is_run_with_the_fleet_root_as_one_word},
+}
+
+@misc{hooks-nemik-check-absent-reader-says-so-and-does-not-claim-the-queue-is-clean,
+  section = {nemik-check},
+  title  = {With no env reader, none on PATH and no sibling venv, the notice is said on both channels},
+  claim  = {With no env reader, none on PATH and no sibling venv, the notice is said on both
+            channels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_absent_reader_says_so_and_does_not_claim_the_queue_is_clean},
+}
+
+@misc{hooks-nemik-check-nonzero-reader-with-no-block-says-so-with-its-first-stderr-line,
+  section = {nemik-check},
+  title  = {A reader that exits non-zero and shows no block for this repo is a failure, not empty},
+  claim  = {A reader that exits non-zero and shows no block for this repo is a failure, not empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_nonzero_reader_with_no_block_says_so_with_its_first_stderr_line},
+}
+
+@misc{hooks-nemik-check-nonzero-reader-with-this-repos-block-is-still-output,
+  section = {nemik-check},
+  title  = {A reader that exits 1 because some repo violates still has this repo's rows read},
+  claim  = {A reader that exits 1 because some repo violates still has this repo's rows read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_nonzero_reader_with_this_repos_block_is_still_output},
+}
+
+@misc{hooks-nemik-check-timeout-says-so,
+  section = {nemik-check},
+  title  = {A reader that outlives the bound is killed and reported, never read as clean},
+  claim  = {A reader that outlives the bound is killed and reported, never read as clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_timeout_says_so},
+}
+
+@misc{hooks-nemik-check-event-filter-accepts-two-events-and-ignores-the-rest,
+  section = {nemik-check},
+  title  = {SessionStart and UserPromptSubmit emit; Stop, a tool event and no event are ignored},
+  claim  = {SessionStart and UserPromptSubmit emit; Stop, a tool event and no event are ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_the_event_filter_accepts_two_events_and_ignores_the_rest},
+}
+
+@misc{hooks-nemik-check-prompt-repeating-the-last-emission-is-silent-until-the-rows-change,
+  section = {nemik-check},
+  title  = {The flood guard: SessionStart emits, the next identical prompt does not, a change does},
+  claim  = {The flood guard: SessionStart emits, the next identical prompt does not, a change does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_prompt_repeating_the_last_emission_is_silent_until_the_rows_change},
+}
+
+@misc{hooks-nemik-check-failure-notice-is-said-once-per-session,
+  section = {nemik-check},
+  title  = {The same failure on the next prompt adds nothing; the stderr line is not repeated},
+  claim  = {The same failure on the next prompt adds nothing; the stderr line is not repeated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_failure_notice_is_said_once_per_session},
+}
+
+@misc{hooks-nemik-check-main-exits-zero-and-stays-silent-on-a-garbage-payload,
+  section = {nemik-check},
+  title  = {Unparseable and non-object payloads carry no event, so nothing is emitted},
+  claim  = {Unparseable and non-object payloads carry no event, so nothing is emitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_main_exits_zero_and_stays_silent_on_a_garbage_payload},
+}
+
+@misc{hooks-nemik-check-read-payload-returns-the-record-or-empty,
+  section = {nemik-check},
+  title  = {A JSON object is returned as a record; anything else is an empty record},
+  claim  = {A JSON object is returned as a record; anything else is an empty record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_read_payload_returns_the_record_or_empty},
+}
+
+@misc{hooks-nemik-check-project-dir-prefers-the-env-and-falls-back-to-cwd,
+  section = {nemik-check},
+  title  = {CLAUDE_PROJECT_DIR wins; without it the working directory is the project},
+  claim  = {CLAUDE_PROJECT_DIR wins; without it the working directory is the project.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_project_dir_prefers_the_env_and_falls_back_to_cwd},
+}
+
+@misc{hooks-nemik-check-is-runnable-wants-an-executable-file,
+  section = {nemik-check},
+  title  = {A file with the execute bit is runnable; a plain file and a directory are not},
+  claim  = {A file with the execute bit is runnable; a plain file and a directory are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_is_runnable_wants_an_executable_file},
+}
+
+@misc{hooks-nemik-check-find-reader-prefers-env-then-path-then-the-sibling-venv-then-none,
+  section = {nemik-check},
+  title  = {The three places in their order, and None when none holds a reader},
+  claim  = {The three places in their order, and None when none holds a reader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_find_reader_prefers_env_then_path_then_the_sibling_venv_then_none},
+}
+
+@misc{hooks-nemik-check-find-reader-skips-a-non-executable-env-file,
+  section = {nemik-check},
+  title  = {An env-named file without the execute bit is not a reader; the search goes on},
+  claim  = {An env-named file without the execute bit is not a reader; the search goes on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_find_reader_skips_a_non_executable_env_file},
+}
+
+@misc{hooks-nemik-check-reader-argv-is-constants-plus-the-root-as-one-word,
+  section = {nemik-check},
+  title  = {The argv is a list, the root is one element, and nothing is shell-joined},
+  claim  = {The argv is a list, the root is one element, and nothing is shell-joined.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_reader_argv_is_constants_plus_the_root_as_one_word},
+}
+
+@misc{hooks-nemik-check-run-reader-reports-ok-nonzero-timeout-and-unstartable,
+  section = {nemik-check},
+  title  = {The four outcomes of one bounded run; a non-zero exit still carries its stdout},
+  claim  = {The four outcomes of one bounded run; a non-zero exit still carries its stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_run_reader_reports_ok_nonzero_timeout_and_unstartable},
+}
+
+@misc{hooks-nemik-check-is-header-of-wants-a-status-word-and-exactly-the-repo,
+  section = {nemik-check},
+  title  = {OK and VIOLATES headers of the named repo match; other repos, words and blanks do not},
+  claim  = {OK and VIOLATES headers of the named repo match; other repos, words and blanks do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_is_header_of_wants_a_status_word_and_exactly_the_repo},
+}
+
+@misc{hooks-nemik-check-repo-block-takes-the-header-and-only-its-indented-rows,
+  section = {nemik-check},
+  title  = {The block ends at the next unindented line; an absent repo is None; headers are kept},
+  claim  = {The block ends at the next unindented line; an absent repo is None; headers are kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_repo_block_takes_the_header_and_only_its_indented_rows},
+}
+
+@misc{hooks-nemik-check-context-for-names-the-repo-quotes-the-rows-and-says-to-fix-them,
+  section = {nemik-check},
+  title  = {The heading, the header, the rows in order, then the one fix-them line; no rows is empty},
+  claim  = {The heading, the header, the rows in order, then the one fix-them line; no rows is
+            empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_context_for_names_the_repo_quotes_the_rows_and_says_to_fix_them},
+}
+
+@misc{hooks-nemik-check-failure-notice-names-the-reason-and-refuses-the-clean-reading,
+  section = {nemik-check},
+  title  = {The notice carries the reason, refuses the clean-queue reading and names the hand command},
+  claim  = {The notice carries the reason, refuses the clean-queue reading and names the hand
+            command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_failure_notice_names_the_reason_and_refuses_the_clean_reading},
+}
+
+@misc{hooks-nemik-check-build-context-distinguishes-silent-rows-and-failure,
+  section = {nemik-check},
+  title  = {A clean block is silent, rows are context, an unreadable run is a flagged notice},
+  claim  = {A clean block is silent, rows are context, an unreadable run is a flagged notice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_build_context_distinguishes_silent_rows_and_failure},
+}
+
+@misc{hooks-nemik-check-digest-path-is-per-session-and-refuses-an-unusable-id,
+  section = {nemik-check},
+  title  = {A safe id maps under the temp directory; empty or path-like ids map to nothing},
+  claim  = {A safe id maps under the temp directory; empty or path-like ids map to nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_digest_path_is_per_session_and_refuses_an_unusable_id},
+}
+
+@misc{hooks-nemik-check-digest-of-is-stable-and-distinguishes-text,
+  section = {nemik-check},
+  title  = {Equal text hashes equal; different text hashes differently},
+  claim  = {Equal text hashes equal; different text hashes differently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_digest_of_is_stable_and_distinguishes_text},
+}
+
+@misc{hooks-nemik-check-unchanged-since-last-records-and-compares,
+  section = {nemik-check},
+  title  = {The first sight is new, a repeat prompt is unchanged, a repeat SessionStart is not},
+  claim  = {The first sight is new, a repeat prompt is unchanged, a repeat SessionStart is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_unchanged_since_last_records_and_compares},
+}
+
+@misc{hooks-nemik-check-unchanged-since-last-survives-an-unwritable-temp-directory,
+  section = {nemik-check},
+  title  = {A temp directory that cannot be written means emit, never crash},
+  claim  = {A temp directory that cannot be written means emit, never crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_unchanged_since_last_survives_an_unwritable_temp_directory},
+}
+
+@misc{hooks-nemik-check-console-entry-refuses-an-argument-and-runs-without-one,
+  section = {nemik-check},
+  title  = {The entry point goes through the argv contract, then runs the hook},
+  claim  = {The entry point goes through the argv contract, then runs the hook.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_the_console_entry_refuses_an_argument_and_runs_without_one},
+}
+
+@misc{hooks-nemik-check-unchanged-queue-file-means-the-next-prompt-does-not-spawn-the-reader,
+  section = {nemik-check},
+  title  = {After a successful run, a prompt with a byte-identical queue file is silent, no spawn},
+  claim  = {After a successful run, a prompt with a byte-identical queue file is silent, no spawn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_an_unchanged_queue_file_means_the_next_prompt_does_not_spawn_the_reader},
+}
+
+@misc{hooks-nemik-check-changed-queue-file-means-the-next-prompt-spawns-the-reader,
+  section = {nemik-check},
+  title  = {A queue file that differs from the recorded one runs the reader again},
+  claim  = {A queue file that differs from the recorded one runs the reader again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_changed_queue_file_means_the_next_prompt_spawns_the_reader},
+}
+
+@misc{hooks-nemik-check-session-start-always-spawns-the-reader,
+  section = {nemik-check},
+  title  = {SessionStart ignores the recorded queue digest},
+  claim  = {SessionStart ignores the recorded queue digest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_session_start_always_spawns_the_reader},
+}
+
+@misc{hooks-nemik-check-missing-queue-file-never-skips-the-reader,
+  section = {nemik-check},
+  title  = {Without a readable queue file there is nothing to compare, so every prompt spawns},
+  claim  = {Without a readable queue file there is nothing to compare, so every prompt spawns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_missing_queue_file_never_skips_the_reader},
+}
+
+@misc{hooks-nemik-check-failed-run-records-no-queue-digest-so-the-next-prompt-retries,
+  section = {nemik-check},
+  title  = {A run that could not read this repo is not recorded; the same queue file spawns again},
+  claim  = {A run that could not read this repo is not recorded; the same queue file spawns again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_failed_run_records_no_queue_digest_so_the_next_prompt_retries},
+}
+
+@misc{hooks-nemik-check-unwritable-temp-directory-never-skips-the-reader,
+  section = {nemik-check},
+  title  = {If the digest cannot be recorded, every prompt spawns the reader},
+  claim  = {If the digest cannot be recorded, every prompt spawns the reader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_an_unwritable_temp_directory_never_skips_the_reader},
+}
+
+@misc{hooks-nemik-check-state-digest-hashes-the-queue-file-and-is-none-when-missing,
+  section = {nemik-check},
+  title  = {The digest is the sha256 of the bytes; a missing file is None, never an empty digest},
+  claim  = {The digest is the sha256 of the bytes; a missing file is None, never an empty digest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_state_digest_hashes_the_queue_file_and_is_none_when_missing},
+}
+
+@misc{hooks-nemik-check-state-digest-path-sits-beside-the-emission-digest,
+  section = {nemik-check},
+  title  = {A usable id maps to `<id>.state` under the same directory; an unusable id maps to None},
+  claim  = {A usable id maps to `<id>.state` under the same directory; an unusable id maps to None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_state_digest_path_sits_beside_the_emission_digest},
+}
+
+@misc{hooks-nemik-check-record-state-and-state-unchanged-round-trip,
+  section = {nemik-check},
+  title  = {Nothing is unchanged until recorded; then equal is unchanged, and different is not},
+  claim  = {Nothing is unchanged until recorded; then equal is unchanged, and different is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_record_state_and_state_unchanged_round_trip},
+}
+
+@misc{hooks-nemik-check-record-state-survives-an-unwritable-temp-directory,
+  section = {nemik-check},
+  title  = {A temp directory that cannot be written records nothing and does not crash},
+  claim  = {A temp directory that cannot be written records nothing and does not crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_record_state_survives_an_unwritable_temp_directory},
+}

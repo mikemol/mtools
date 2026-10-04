@@ -3073,12 +3073,15 @@ def test_the_blocking_hooks_stay_held_to_inline_arming_and_the_surfacing_hook_is
     ever stopped finding `_HOOK_BLOCK` in a blocking hook's module, that hook would silently stop
     being held to inline arming, which is the failure the arm exists to catch.
     """
-    scripts = [*_BLOCKING_HOOKS, "mikemol-hook-inbound-asks"]
+    surfacing_hooks = ("mikemol-hook-inbound-asks", "mikemol-hook-nemik-check")
+    scripts = [*_BLOCKING_HOOKS, *surfacing_hooks]
     held = [
         _needs_inline_arming(f'"$P/.venv/bin/{n}"', scripts, _DIST / "bin") for n in _BLOCKING_HOOKS
     ]
-    surfacing = _needs_inline_arming('"$P/.venv/bin/mikemol-hook-inbound-asks"', scripts, _DIST)
-    assert (held, surfacing) == ([True] * len(_BLOCKING_HOOKS), False)
+    surfacing = [
+        _needs_inline_arming(f'"$P/.venv/bin/{n}"', scripts, _DIST) for n in surfacing_hooks
+    ]
+    assert (held, surfacing) == ([True] * len(_BLOCKING_HOOKS), [False] * len(surfacing_hooks))
 
 
 def test_a_declared_script_whose_module_is_missing_is_judged_armed() -> None:

@@ -2,11 +2,11 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 605,
+  "counter": 619,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-04T09:35:29Z",
-  "job_id": "c6c8232c",
-  "predecessor_job_id": "54c51f72",
+  "heartbeat": "2026-10-04T19:29:41Z",
+  "job_id": "08811049",
+  "predecessor_job_id": "c6c8232c",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-04T19:24:23Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -11607,7 +11604,7 @@
     {
       "symbol": "W583",
       "title": "Measure whether every distribution's dev deps include mikemol-fence, since mutate_runner keeps a local git filter only because fence imports only in fence's venv",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation",
@@ -11615,13 +11612,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "List each dist's dev dependency group and say which lack mikemol-fence; if all have it, retire the local filter in mutate_runner",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 measured by grep over */pyproject.toml: no dist other than fence itself lists mikemol-fence as a dependency (memres, mdstruct, ratchet and hooks only mention fence in comments), so fence is importable only in fence's own venv and mutate_runner's local filter is still required today; the remedy now exists (the A+B sibling edge) and is minted as the next waypoint",
       "issued_at": "2026-10-04T19:05:53Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T19:42:00Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T194200Z"
     },
     {
       "symbol": "W584",
@@ -11856,23 +11854,21 @@
     },
     {
       "symbol": "W596",
-      "title": "pycodemod placement: add a flag overriding ENTRY_FORMS and FIRST_WRITE_FORMS once a caller asks and the origin's spelling is verified",
-      "status": "blocked",
+      "title": "pycodemod placement: add a flag overriding ENTRY_FORMS and FIRST_WRITE_FORMS, after verifying the origin's spelling at substrate",
+      "status": "ready",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
-      "blocked_on": [
-        "condition: a caller asks for a placement forms flag"
-      ],
+      "blocked_on": [],
       "blocked_kind": "agent",
-      "next_bounded_step": "Wait for a caller's ask; then verify the origin's spelling and add the flag with a red-on-HEAD arm",
-      "evidence": "2026-10-04: drained from queue.md slice 6 (L764-766): declined, no caller has asked and the origin's spelling is unverified",
+      "next_bounded_step": "Read the origin's spelling in substrate's scratch/pycodemod.py, add the flag with a red-on-HEAD arm",
+      "evidence": "2026-10-04: drained from queue.md slice 6 (L764-766): declined, no caller has asked and the origin's spelling is unverified | 2026-10-04: nemik-check warned the condition: blocked_on resolves to no party; substrate drains wholesale, so the origin's spelling is verifiable now and no caller ask is needed",
       "issued_at": "2026-10-04T19:06:25Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T19:06:39Z",
-      "ticks_blocked": 1,
+      "last_worked": "2026-10-04T19:30:34Z",
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -12039,6 +12035,268 @@
       "issued_at": "2026-10-04T19:19:02Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W606",
+      "title": "pycodemod: reconsider porting _pycodemod_control (695 lines, the control-flow ladder census) now that substrate drains wholesale",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Re-read the module at source; port as clean modules with a differential, or decline on merit with the reason recorded",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:21Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W607",
+      "title": "pycodemod: reconsider porting _pycodemod_fingerprint (898 lines, prime-fingerprint algebra lifted from gabion) now that substrate drains wholesale",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Ask where gabion's algebra should live, then port against that owner or decline on merit with the reason recorded",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:22Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W608",
+      "title": "pycodemod: reconsider porting the SQL portable_sites and _pg_* probe connections now that substrate drains wholesale",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Re-read at source; the live-postgres probes need an explicit connection operand, never a substrate tenant default",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:23Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W609",
+      "title": "pycodemod: reconsider porting rawread_sites, snapshot_sites, relalg_sites and the is_store_read family, keyed on substrate's STORE_CONNS and STORE_READERS",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Re-read at source; make the store-name sets operands, then port with a differential",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:23Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W610",
+      "title": "pycodemod: reconsider porting sql_sites' style grading, built on substrate's query_defs, query_sql and query_builders split",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Re-read at source; make the split's names operands, then port with a differential",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:24Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W611",
+      "title": "pycodemod: reconsider porting the census type_errors mode (mypy run, ratchet-keyed), weighing it against the pycheck hook and mikemol-ratchet",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod",
+        "ratchet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Compare with pycheck and ratchet at source; port, or decline as a rival body with that comparison recorded",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:25Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W612",
+      "title": "pycodemod: reconsider porting build_artifact_readers (the Agda build vocabulary FAILURE_BEARING and SUCCESS_ONLY)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Re-read at source; make the vocabulary an operand, then port with a differential",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:25Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W613",
+      "title": "pycodemod: reconsider porting the census touches mode, which defaults to substrate's catalog/library/items.py witness registry",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Re-read at source; make the registry path an operand, then port with a differential",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:26Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W614",
+      "title": "pycodemod: reconsider porting paperkit_projects; ask summit whether paperkit already offers it before porting",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod",
+        "paperkit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Ask summit and paperkit; port only if neither owns it",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:26Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W615",
+      "title": "pycodemod: reconsider porting the census discriminates mode, which drives a module's _selftest under mutation, against the mutation grid",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod",
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Compare with //<dist>:mutants at source; port with operands for the convention, or decline as a rival body with the comparison recorded",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:25:27Z",
+      "minted_during": "tick",
+      "caused_by": "operator",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W616",
+      "title": "Add a nemik-check context hook to mikemol-hooks that surfaces the current repo's Warning and VIOLATES rows at SessionStart and UserPromptSubmit, built as inbound-asks was",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: nemik-check hook landed in this commit: module, 40 tests, 40 warrants (rubric key nemik-check), launcher, entry, console script, BUILD, README; F-arms red then green",
+      "issued_at": "2026-10-04T19:30:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "operator",
+      "last_worked": "2026-10-04T19:43:08Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T194308Z"
+    },
+    {
+      "symbol": "W617",
+      "title": "Draft the settings.json patch wiring the nemik-check hook into SessionStart and UserPromptSubmit, and give the operator the command to apply it",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "settings",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: operator applied .claude/design/W617-settings.patch 2026-10-04; the two entries are committed with W616",
+      "issued_at": "2026-10-04T19:30:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "operator",
+      "last_worked": "2026-10-04T19:43:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T194309Z"
+    },
+    {
+      "symbol": "W618",
+      "title": "nemik-check hook: skip the 12 s fleet reader on a prompt when this repo's paths-forward.json is unchanged since the last run, and always run it at SessionStart",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: the skip-when-queue-unchanged guard landed with the W616 commit (state digest in the per-session temp dir; 10 arms)",
+      "issued_at": "2026-10-04T19:39:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "operator",
+      "last_worked": "2026-10-04T19:43:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T194309Z"
+    },
+    {
+      "symbol": "W619",
+      "title": "mutate_runner: import mikemol-fence through the dist-to-dist edge (A+B) and delete its local git-env filter, now that sibling edges exist",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation",
+        "fence"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read mutate_runner's local filter and fence's git-env scrubber; add the fence edge to each dist that runs :mutants, with a red arm that the two filters agree, then delete the local one",
+      "evidence": "",
+      "issued_at": "2026-10-04T19:42:00Z",
+      "minted_during": "tick",
+      "caused_by": "W583",
       "last_worked": null,
       "ticks_blocked": 0
     }

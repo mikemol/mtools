@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W616: the nemik-check hook. At SessionStart and on each prompt it surfaces nemik's rows (Warning
+# and VIOLATES) for THIS repository's queue as additional context, so a session learns of them
+# without running the reader. The module is mikemol.hooks.nemik_check; its reader is the fleet
+# checker `nemik-check`.
+#
+# ⚑ A TRACKED LAUNCHER AT A STABLE PATH, like its siblings, because `.claude/settings.json` names
+# this file and the built venv lives under `bazel-bin`, which `bazel clean` deletes.
+#
+# ⚑⚑ BUT THIS ONE NEVER DENIES. An absent venv is SAID on stderr (it reaches the transcript, not
+# the model) and the call proceeds; refusing every prompt because a context hook could not run
+# would be fail-shut. The module itself finds the reader (NEMIK_CHECK, PATH, then the sibling
+# nemik checkout's venv), so nothing is put on PATH here.
+set -uo pipefail
+
+root="${CLAUDE_PROJECT_DIR:-}"
+if [ -z "$root" ]; then
+    echo "nemik-check: CLAUDE_PROJECT_DIR is unset; the nemik rows were not checked" >&2
+    exit 0
+fi
+venv="$root/bazel-bin/hooks/.venv"
+entry="$(basename "$0")"
+
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    echo "nemik-check: the hook venv is not built (run \`bazel build //hooks:.venv\`); the nemik rows were not checked" >&2
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry"
