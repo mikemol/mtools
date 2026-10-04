@@ -3275,3 +3275,80 @@
   claim  = {has_inbound appends one last rung that collapses the rows; without it nothing changes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound.py -k test_the_ladder_gains_an_inbound_rung_only_when_asked},
 }
+
+@misc{pathsforward-render-pipe-in-a-cell-is-escaped,
+  section = {render},
+  title  = {The cell helper escapes a pipe and flattens a newline},
+  claim  = {The cell helper escapes a pipe and flattens a newline.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_a_pipe_in_a_cell_is_escaped},
+}
+
+@misc{pathsforward-render-empty-cell-is-a-dash,
+  section = {render},
+  title  = {An empty cell renders as an em dash},
+  claim  = {An empty cell renders as an em dash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_an_empty_cell_is_a_dash},
+}
+
+@misc{pathsforward-render-no-line-is-over-the-width,
+  section = {render},
+  title  = {Long title, next step, blocked-on and residue wrap at the width},
+  claim  = {Long title, next step, blocked-on and residue wrap at the width.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_no_line_is_over_the_width},
+}
+
+@misc{pathsforward-render-wrapping-drops-no-word,
+  section = {render},
+  title  = {Every word of a long title survives the wrap, in order},
+  claim  = {Every word of a long title survives the wrap, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_wrapping_drops_no_word},
+}
+
+@misc{pathsforward-render-no-raw-tag-outside-backticks,
+  section = {render},
+  title  = {A `<field>` word is backticked, so no raw `<` plus a letter remains outside code},
+  claim  = {A `<field>` word is backticked, so no raw `<` plus a letter remains outside code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_no_raw_tag_outside_backticks},
+}
+
+@misc{pathsforward-render-safe-leaves-a-code-span-alone,
+  section = {render},
+  title  = {A tag already inside backticks is not wrapped a second time},
+  claim  = {A tag already inside backticks is not wrapped a second time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_safe_leaves_a_code_span_alone},
+}
+
+@misc{pathsforward-render-continuation-that-opens-a-list-is-escaped,
+  section = {render},
+  title  = {A wrapped line must not begin with a list marker that would change the structure},
+  claim  = {A wrapped line must not begin with a list marker that would change the structure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_a_continuation_that_opens_a_list_is_escaped},
+}
+
+@misc{pathsforward-render-wrap-of-a-short-value-is-one-line,
+  section = {render},
+  title  = {A value that fits stays on its head line},
+  claim  = {A value that fits stays on its head line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_wrap_of_a_short_value_is_one_line},
+}
+
+@misc{pathsforward-render-table-rows-all-have-the-declared-cells,
+  section = {render},
+  title  = {Every table row has as many cells as the header declares},
+  claim  = {Every table row has as many cells as the header declares.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_table_rows_all_have_the_declared_cells},
+}
+
+@misc{pathsforward-render-hostile-mirror-still-says-it-is-derived,
+  section = {render},
+  title  = {The first line stays the derived marker},
+  claim  = {The first line stays the derived marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_hostile_mirror_still_says_it_is_derived},
+}
+
+@misc{pathsforward-render-hostile-mirror-keeps-the-pipe-title-text,
+  section = {render},
+  title  = {The pipe title is present in the detail list, unescaped},
+  claim  = {The pipe title is present in the detail list, unescaped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_hostile_mirror_keeps_the_pipe_title_text},
+}

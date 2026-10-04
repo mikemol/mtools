@@ -39,6 +39,3 @@ build/
 
 # The paths-forward tick lock: a per-checkout runtime file, never state.
 /.claude/paths-forward.flock
-
-# The rendered mirror is derived and its renderer does not yet pass the markdown bar (W604); the state JSON is the record.
-/.claude/paths-forward.md
