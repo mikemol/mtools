@@ -908,12 +908,22 @@ def _add(ctx: Ctx) -> int:
         ctx.get("witness") or "",
     )
 
-    def edit(state: State) -> int:
-        sym = ops.add(state, draft, ctx.stamp())
-        _say(f"{sym} added; state_hash={v2(state.waypoints)}")
-        return EXIT_OK
-
-    return _mutate(ctx, edit)
+    # ⚑ ORDER (W534): the line is FORMATTED before anything is saved, so a malformed one (a
+    # multi-line title) refuses with nothing minted; it is APPENDED only AFTER the state save, so
+    # a crash can lose a `minted` line but never leave one for a waypoint that was never saved.
+    with store.exclusive(ctx.path):
+        state = store.load(ctx.path)
+        now = ctx.stamp()
+        sym = ops.add(state, draft, now)
+        mint = state.waypoints[-1]
+        minted = line(
+            Entry(text(mint, "minted_during"), sym, "minted", "-", draft.title, draft.caused_by),
+            now,
+        )
+        store.save(ctx.path, state)
+        append(store.sibling(ctx.path, store.LEDGER), minted)
+    _say(f"{sym} added; state_hash={v2(state.waypoints)}")
+    return EXIT_OK
 
 
 def _drop(ctx: Ctx) -> int:

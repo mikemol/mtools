@@ -2782,3 +2782,31 @@
   claim  = {--prune-landed takes no --except: the counter it never touches has nothing to exclude.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_prune_landed_refuses_a_field_flag_it_does_not_read},
 }
+
+@misc{pathsforward-add-ledger-add-appends-exactly-one-minted-line,
+  section = {add_ledger},
+  title  = {--add writes exactly one ledger line, parsing back as `minted` for the new symbol},
+  claim  = {--add writes exactly one ledger line, parsing back as `minted` for the new symbol.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_ledger.py -k test_add_appends_exactly_one_minted_line},
+}
+
+@misc{pathsforward-add-ledger-minted-line-is-not-an-advance,
+  section = {add_ledger},
+  title  = {The atomize reader counts no advance for a symbol whose only ledger line is its mint},
+  claim  = {The atomize reader counts no advance for a symbol whose only ledger line is its mint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_ledger.py -k test_a_minted_line_is_not_an_advance},
+}
+
+@misc{pathsforward-add-ledger-multiline-title-is-refused-and-changes-nothing,
+  section = {add_ledger},
+  title  = {A title with a newline exits 2 and leaves the state file and the ledger untouched},
+  claim  = {A title with a newline exits 2 and leaves the state file and the ledger untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_ledger.py -k test_a_multiline_title_is_refused_and_changes_nothing},
+}
+
+@misc{pathsforward-add-ledger-kind-follows-minted-during,
+  section = {add_ledger},
+  title  = {An unlocked add ledgers kind `interrupt`; a locked one ledgers kind `tick`},
+  claim  = {An unlocked add ledgers kind `interrupt`; a locked one ledgers kind `tick`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_ledger.py -k test_the_kind_follows_minted_during},
+}

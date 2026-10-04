@@ -28,7 +28,7 @@ mikemol-paths-forward --state S --armed JOB_ID
 mikemol-paths-forward --state S --update W7 [--status S] [--blocked-on WHO…] [--blocked-kind K]
                                             [--next T] [--evidence-append T] [--ticks-blocked N]
                                             [--title T]   one non-blank line
-mikemol-paths-forward --state S --add TITLE [--next T] [--enables W…] [--touches TAG…]
+mikemol-paths-forward --state S --add TITLE [--next T] [--enables W…] [--touches TAG…]   ledgers `minted`
 mikemol-paths-forward --state S --drop W7 REASON
 mikemol-paths-forward --state S --bump-blocked [--except W…]   prune landed blockers, then count a tick: NUDGE at 1,2,4,8 · ESCALATE at 16
 mikemol-paths-forward --state S --prune-landed   only the prune: idempotent, no counter, safe from a hook
