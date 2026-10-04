@@ -1,0 +1,9 @@
+# rubric.tsv — the sections of the buildtel warrant set, one per test module, in document order.
+# key <TAB> heading title
+bb_records	The Execution Records: Pages Fold Into One Tally That States How Much of the Response It Covers
+buildpulse	The Build Pulse: A Windowed Action Rate, and Every Terminal State Named Instead of Silent
+logs_push	The Findings Push: A Hook Log's Failure Vocabulary Reaches the Sink, Tagged, and Nothing Else Does
+coord_sample	The Coordinator Sample: One Flushed Line per Interval Until the Process Is Gone
+image_digest	The Image Digest: What the Directory Answered, Else a Stable Absent
+probe	The Invalidation Probe: The Marker Lands, the Count Is Read From Bazel, and Nothing Is Stranded
+proc	The Child Process: A Real Child's Status and Output Become Exactly What the Callers Read

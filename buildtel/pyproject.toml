@@ -1,0 +1,111 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑ THE BUILD-TELEMETRY TOOLS of paperkit's `tools/`, ported here (mtools:W543, paperkit:W142,
+# umbrella mtools:W531): the readers and pushers a build or a commit hook runs to say what the
+# build did. Standard library only, at runtime and in the tests.
+name = "mikemol-buildtel"
+version = "0.1.0"
+description = "Build telemetry: BuildBuddy execution records, a build's windowed action rate, hook-log findings pushed to a log store, coordinator memory samples, executor image digests, invalidation probes."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["bazel", "telemetry", "buildbuddy", "hooks"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+
+# ⚑ NO RUNTIME DEPENDENCY: every network call is `http.client`, every probe of a process is the
+# standard library or `pgrep`.
+dependencies = []
+
+[project.scripts]
+mikemol-coord-sample = "mikemol.buildtel.coord_sample:main"
+mikemol-logs-push = "mikemol.buildtel.logs_push:main"
+mikemol-image-digest = "mikemol.buildtel.image_digest:main"
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py`: PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.buildtel" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
+testpaths = ["tests"]
+norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache__"]  # backstop: with tests/ absent the runner falls back to rootdir and walks these (measured by linux-sources, W297)
+addopts = "--strict-markers --strict-config"
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+# A TOML literal string: in a basic string `\.` is an invalid escape.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB. Each line below is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+"tests/test_bb_records.py" = ["assert", "invalid-function-name"]
+"tests/test_buildpulse.py" = ["assert"]
+"tests/test_logs_push.py" = ["assert", "invalid-function-name"]
+"tests/test_coord_sample.py" = ["assert"]
+"tests/test_image_digest.py" = ["assert"]
+"tests/test_probe.py" = ["assert"]
+# ⚑ RUNNING A CHILD PROCESS IS `proc`'S ONE RESPONSIBILITY, and the exemption is scoped to that
+# file: every other module reaches a subprocess through its two functions, taking them as a
+# parameter a test replaces. Every argv is built by the caller as a list: never a shell.
+"src/mikemol/buildtel/proc.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ ITS WITNESSES RUN REAL CHILDREN (`sys.executable` and literals), because what is under test is
+# what a child's exit status and stderr become.
+"tests/test_proc.py" = [
+    "assert",
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]

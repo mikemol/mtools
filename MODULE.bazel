@@ -202,6 +202,15 @@ pip.parse(
     requirements_lock = "//memres:requirements.txt",
 )
 
+# ⚑ `mikemol-buildtel` — paperkit's build telemetry (bb_records, buildpulse, logs_push, coord_sample,
+# image_digest, probe, proc), a package of the tools/ migration (mtools:W543, paperkit:W142). Empty
+# shipping hub: standard library only.
+pip.parse(
+    hub_name = "buildtel_deps",
+    python_version = "3.13",
+    requirements_lock = "//buildtel:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -359,6 +368,11 @@ pip.parse(
     uv_lock = "//memres:uv.lock",
 )
 pip.parse(
+    hub_name = "buildtel_dev",
+    python_version = "3.13",
+    uv_lock = "//buildtel:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -416,6 +430,8 @@ use_repo(
     "audiostruct_gpu",
     "bibparse_deps",
     "bibparse_dev",
+    "buildtel_deps",
+    "buildtel_dev",
     "pytestspec_deps",
     "pytestspec_dev",
     "pycodemod_deps",

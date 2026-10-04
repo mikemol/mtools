@@ -1,0 +1,687 @@
+
+@misc{buildtel-bb-records-post-sends-the-invocation-lookup-and-returns-the-parsed-page,
+  section = {bb_records},
+  title  = {The body names the invocation, the path is the RPC, and the answer comes back parsed},
+  claim  = {The body names the invocation, the path is the RPC, and the answer comes back parsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_post_sends_the_invocation_lookup_and_returns_the_parsed_page},
+}
+
+@misc{buildtel-bb-records-post-carries-the-page-token-only-when-there-is-one,
+  section = {bb_records},
+  title  = {A continuation page names its token in the body; a first page has no `pageToken` key},
+  claim  = {A continuation page names its token in the body; a first page has no `pageToken` key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_post_carries_the_page_token_only_when_there_is_one},
+}
+
+@misc{buildtel-bb-records-post-refuses-any-status-but-200,
+  section = {bb_records},
+  title  = {A 404 from the service is an OSError naming the status, never an empty page},
+  claim  = {A 404 from the service is an OSError naming the status, never an empty page.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_post_refuses_any_status_but_200},
+}
+
+@misc{buildtel-bb-records-command-is-the-text-inside-sh-dash-c-quotes,
+  section = {bb_records},
+  title  = {A record's check is what sits between `sh -c '` and the next quote},
+  claim  = {A record's check is what sits between `sh -c '` and the next quote.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_command_is_the_text_inside_sh_dash_c_quotes},
+}
+
+@misc{buildtel-bb-records-command-without-the-wrapper-is-the-head-of-the-snippet,
+  section = {bb_records},
+  title  = {With no `sh -c '` the first 60 characters stand for the command},
+  claim  = {With no `sh -c '` the first 60 characters stand for the command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_command_without_the_wrapper_is_the_head_of_the_snippet},
+}
+
+@misc{buildtel-bb-records-collect-walks-every-page-following-the-token,
+  section = {bb_records},
+  title  = {Page one's token is fed back; the walk ends at a page with none, and both fold in},
+  claim  = {Page one's token is fed back; the walk ends at a page with none, and both fold in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_collect_walks_every_page_following_the_token},
+}
+
+@misc{buildtel-bb-records-collect-sums-cpu-and-keeps-the-peak-memory-maximum,
+  section = {bb_records},
+  title  = {CPU nanoseconds add across records; peak memory is the largest one, not the sum},
+  claim  = {CPU nanoseconds add across records; peak memory is the largest one, not the sum.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_collect_sums_cpu_and_keeps_the_peak_memory_maximum},
+}
+
+@misc{buildtel-bb-records-record-it-cannot-read-is-counted-not-dropped,
+  section = {bb_records},
+  title  = {A non-object, a record without metadata and one without a snippet are each unreadable},
+  claim  = {A non-object, a record without metadata and one without a snippet are each unreadable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_a_record_it_cannot_read_is_counted_not_dropped},
+}
+
+@misc{buildtel-bb-records-non-numeric-usage-figure-and-a-missing-worker-read-as-zero-and-unknown,
+  section = {bb_records},
+  title  = {A usage figure that is not digits is 0; a worker that is not a string is `?`},
+  claim  = {A usage figure that is not digits is 0; a worker that is not a string is `?`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_a_non_numeric_usage_figure_and_a_missing_worker_read_as_zero_and_unknown},
+}
+
+@misc{buildtel-bb-records-page-that-is-not-an-object-ends-the-walk-unreadable,
+  section = {bb_records},
+  title  = {A JSON array where a page should be counts one unreadable and stops},
+  claim  = {A JSON array where a page should be counts one unreadable and stops.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_a_page_that_is_not_an_object_ends_the_walk_unreadable},
+}
+
+@misc{buildtel-bb-records-execution-field-that-is-not-an-array-contributes-nothing,
+  section = {bb_records},
+  title  = {`execution` as a string is no list of records: nothing folds in, nothing is unreadable},
+  claim  = {`execution` as a string is no list of records: nothing folds in, nothing is unreadable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_an_execution_field_that_is_not_an_array_contributes_nothing},
+}
+
+@misc{buildtel-bb-records-main-prints-the-tally-as-json,
+  section = {bb_records},
+  title  = {The report carries counts, CPU seconds, peak memory and the by-worker/by-command maps},
+  claim  = {The report carries counts, CPU seconds, peak memory and the by-worker/by-command maps.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_main_prints_the_tally_as_json},
+}
+
+@misc{buildtel-bb-records-main-refuses-anything-but-one-invocation-id,
+  section = {bb_records},
+  title  = {No operand, a flag, or two operands is a usage error: exit 2, the usage line, no fetch},
+  claim  = {No operand, a flag, or two operands is a usage error: exit 2, the usage line, no fetch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_main_refuses_anything_but_one_invocation_id},
+}
+
+@misc{buildtel-bb-records-main-reports-an-unreachable-service-with-exit-3,
+  section = {bb_records},
+  title  = {An OSError from the fetch is exit 3 naming the endpoint, never a traceback},
+  claim  = {An OSError from the fetch is exit 3 naming the endpoint, never a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_main_reports_an_unreachable_service_with_exit_3},
+}
+
+@misc{buildtel-buildpulse-read-progress-takes-the-last-counter-and-strips-the-commas,
+  section = {buildpulse},
+  title  = {The newest `[done / total]` wins, and `1,234` reads as 1234},
+  claim  = {The newest `[done / total]` wins, and `1,234` reads as 1234.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_read_progress_takes_the_last_counter_and_strips_the_commas},
+}
+
+@misc{buildtel-buildpulse-read-progress-is-zero-without-a-counter,
+  section = {buildpulse},
+  title  = {A log with no counter is `(0, 0)`, not an error},
+  claim  = {A log with no counter is `(0, 0)`, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_read_progress_is_zero_without_a_counter},
+}
+
+@misc{buildtel-buildpulse-read-progress-looks-only-at-the-tail,
+  section = {buildpulse},
+  title  = {A counter older than the tail window is not read: only the end of the file is},
+  claim  = {A counter older than the tail window is not read: only the end of the file is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_read_progress_looks_only_at_the_tail},
+}
+
+@misc{buildtel-buildpulse-read-trouble-names-each-failure-signature,
+  section = {buildpulse},
+  title  = {Every signature in the vocabulary is returned, and the clean lines before it are not},
+  claim  = {Every signature in the vocabulary is returned, and the clean lines before it are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_read_trouble_names_each_failure_signature},
+}
+
+@misc{buildtel-buildpulse-read-trouble-is-empty-for-a-clean-tail-and-clips-a-long-line,
+  section = {buildpulse},
+  title  = {No signature gives `""`; the newest matching line is clipped to 160 characters},
+  claim  = {No signature gives `""`; the newest matching line is clipped to 160 characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_read_trouble_is_empty_for_a_clean_tail_and_clips_a_long_line},
+}
+
+@misc{buildtel-buildpulse-read-trouble-ignores-a-signature-beyond-the-tail,
+  section = {buildpulse},
+  title  = {A failure older than the tail window is out of sight},
+  claim  = {A failure older than the tail window is out of sight.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_read_trouble_ignores_a_signature_beyond_the_tail},
+}
+
+@misc{buildtel-buildpulse-build-alive-asks-pgrep-for-the-executable-by-exact-name,
+  section = {buildpulse},
+  title  = {The probe is `pgrep -x bazel` (never `-f`, which would match the watcher itself)},
+  claim  = {The probe is `pgrep -x bazel` (never `-f`, which would match the watcher itself).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_build_alive_asks_pgrep_for_the_executable_by_exact_name},
+}
+
+@misc{buildtel-buildpulse-build-alive-is-false-when-pgrep-finds-nothing,
+  section = {buildpulse},
+  title  = {Exit 1 from pgrep is a build that is gone},
+  claim  = {Exit 1 from pgrep is a build that is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_build_alive_is_false_when_pgrep_finds_nothing},
+}
+
+@misc{buildtel-buildpulse-samples-round-trip-through-the-state-file,
+  section = {buildpulse},
+  title  = {What `append` writes, `load` reads back, in order},
+  claim  = {What `append` writes, `load` reads back, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_samples_round_trip_through_the_state_file},
+}
+
+@misc{buildtel-buildpulse-load-skips-every-line-that-is-not-a-sample,
+  section = {buildpulse},
+  title  = {Blank lines, broken JSON, non-objects, ints and missing keys are skipped, not fatal},
+  claim  = {Blank lines, broken JSON, non-objects, ints and missing keys are skipped, not fatal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_load_skips_every_line_that_is_not_a_sample},
+}
+
+@misc{buildtel-buildpulse-load-of-a-missing-state-is-empty,
+  section = {buildpulse},
+  title  = {No state file is no history},
+  claim  = {No state file is no history.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_load_of_a_missing_state_is_empty},
+}
+
+@misc{buildtel-buildpulse-rate-is-actions-per-minute-against-the-oldest-sample-in-the-window,
+  section = {buildpulse},
+  title  = {100 actions over 10 minutes is 10/min over a 10-minute span},
+  claim  = {100 actions over 10 minutes is 10/min over a 10-minute span.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_rate_is_actions_per_minute_against_the_oldest_sample_in_the_window},
+}
+
+@misc{buildtel-buildpulse-rate-ignores-samples-older-than-the-window-and-uses-the-oldest-inside,
+  section = {buildpulse},
+  title  = {A sample outside the window is no reference; the first one inside it is},
+  claim  = {A sample outside the window is no reference; the first one inside it is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_rate_ignores_samples_older_than_the_window_and_uses_the_oldest_inside},
+}
+
+@misc{buildtel-buildpulse-rate-is-withheld-with-no-earlier-sample-or-a-sample-from-the-future,
+  section = {buildpulse},
+  title  = {No history, or a reference not before now, is `(0, 0)`: not yet known, never a false zero},
+  claim  = {No history, or a reference not before now, is `(0, 0)`: not yet known, never a false
+            zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_rate_is_withheld_with_no_earlier_sample_or_a_sample_from_the_future},
+}
+
+@misc{buildtel-buildpulse-stalled-reports-minutes-frozen-once-past-the-threshold,
+  section = {buildpulse},
+  title  = {A counter unmoved for 40 minutes, with a 30-minute threshold, is 40 minutes frozen},
+  claim  = {A counter unmoved for 40 minutes, with a 30-minute threshold, is 40 minutes frozen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_stalled_reports_minutes_frozen_once_past_the_threshold},
+}
+
+@misc{buildtel-buildpulse-stalled-is-zero-below-the-threshold-and-with-no-history,
+  section = {buildpulse},
+  title  = {Ten frozen minutes is not yet a stall at 30; nothing to compare is not a stall},
+  claim  = {Ten frozen minutes is not yet a stall at 30; nothing to compare is not a stall.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_stalled_is_zero_below_the_threshold_and_with_no_history},
+}
+
+@misc{buildtel-buildpulse-stalled-is-cleared-by-one-action-and-counts-from-the-last-move,
+  section = {buildpulse},
+  title  = {One action of progress clears it; a freeze is measured from after the counter last moved},
+  claim  = {One action of progress clears it; a freeze is measured from after the counter last
+            moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_stalled_is_cleared_by_one_action_and_counts_from_the_last_move},
+}
+
+@misc{buildtel-buildpulse-eta-is-minutes-hours-or-nothing,
+  section = {buildpulse},
+  title  = {Under an hour renders minutes, over an hour hours; no rate or no work remaining is blank},
+  claim  = {Under an hour renders minutes, over an hour hours; no rate or no work remaining is
+            blank.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_eta_is_minutes_hours_or_nothing},
+}
+
+@misc{buildtel-buildpulse-parse-args-defaults-the-state-beside-the-log,
+  section = {buildpulse},
+  title  = {With no flags: no log, the default window and stall threshold, no selftest},
+  claim  = {With no flags: no log, the default window and stall threshold, no selftest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_parse_args_defaults_the_state_beside_the_log},
+}
+
+@misc{buildtel-buildpulse-parse-args-reads-every-flag,
+  section = {buildpulse},
+  title  = {`--state`, `--window`, `--stall-after` and `--selftest` are each honoured},
+  claim  = {`--state`, `--window`, `--stall-after` and `--selftest` are each honoured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_parse_args_reads_every_flag},
+}
+
+@misc{buildtel-buildpulse-parse-args-refuses-an-unknown-flag,
+  section = {buildpulse},
+  title  = {An unknown flag is argparse's usage error (exit 2), not a silent default},
+  claim  = {An unknown flag is argparse's usage error (exit 2), not a silent default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_parse_args_refuses_an_unknown_flag},
+}
+
+@misc{buildtel-buildpulse-selftest-passes-every-case-and-says-so,
+  section = {buildpulse},
+  title  = {Every arm fires on its synthetic input: exit 0, no `XX`, a full tally},
+  claim  = {Every arm fires on its synthetic input: exit 0, no `XX`, a full tally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_selftest_passes_every_case_and_says_so},
+}
+
+@misc{buildtel-buildpulse-selftest-fails-loudly-when-an-arm-cannot-fire,
+  section = {buildpulse},
+  title  = {With the stall predicate disabled, the selftest names the case it can no longer see},
+  claim  = {With the stall predicate disabled, the selftest names the case it can no longer see.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_selftest_fails_loudly_when_an_arm_cannot_fire},
+}
+
+@misc{buildtel-buildpulse-main-runs-the-selftest-on-request,
+  section = {buildpulse},
+  title  = {`--selftest` is the selftest, with no log needed},
+  claim  = {`--selftest` is the selftest, with no log needed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_runs_the_selftest_on_request},
+}
+
+@misc{buildtel-buildpulse-main-without-a-log-says-so-with-exit-2,
+  section = {buildpulse},
+  title  = {A missing log, or no `--log` at all, is exit 2 naming where it looked},
+  claim  = {A missing log, or no `--log` at all, is exit 2 naming where it looked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_without_a_log_says_so_with_exit_2},
+}
+
+@misc{buildtel-buildpulse-main-first-sample-reports-progress-and-records-it,
+  section = {buildpulse},
+  title  = {The first call prints counter and percentage, says the rate is unknown, writes state},
+  claim  = {The first call prints counter and percentage, says the rate is unknown, writes state.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_first_sample_reports_progress_and_records_it},
+}
+
+@misc{buildtel-buildpulse-main-reports-the-windowed-rate-and-an-eta,
+  section = {buildpulse},
+  title  = {Against a sample 10 minutes old, 100 more actions reads as 10/min, with a linear ETA},
+  claim  = {Against a sample 10 minutes old, 100 more actions reads as 10/min, with a linear ETA.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_reports_the_windowed_rate_and_an_eta},
+}
+
+@misc{buildtel-buildpulse-main-names-a-failure-signature-and-exits-1,
+  section = {buildpulse},
+  title  = {A failure line in the tail is reported first, even while the build is alive},
+  claim  = {A failure line in the tail is reported first, even while the build is alive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_names_a_failure_signature_and_exits_1},
+}
+
+@misc{buildtel-buildpulse-main-names-a-gone-build-and-exits-1,
+  section = {buildpulse},
+  title  = {A clean tail with no build process left is `GONE`, never a silent success},
+  claim  = {A clean tail with no build process left is `GONE`, never a silent success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_names_a_gone_build_and_exits_1},
+}
+
+@misc{buildtel-buildpulse-main-names-a-stall-and-exits-1,
+  section = {buildpulse},
+  title  = {An alive build whose counter has not moved for the threshold is a `STALL`, in minutes},
+  claim  = {An alive build whose counter has not moved for the threshold is a `STALL`, in minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_names_a_stall_and_exits_1},
+}
+
+@misc{buildtel-buildpulse-main-exits-0-for-an-alive-moving-build,
+  section = {buildpulse},
+  title  = {A counter that moved since the last sample, alive, with a clean tail, is exit 0},
+  claim  = {A counter that moved since the last sample, alive, with a clean tail, is exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_main_exits_0_for_an_alive_moving_build},
+}
+
+@misc{buildtel-logs-push-findings-names-each-kind-with-its-fields-and-log-line,
+  section = {logs_push},
+  title  = {Every vocabulary pattern is recognised, in order, with its groups and 1-based line},
+  claim  = {Every vocabulary pattern is recognised, in order, with its groups and 1-based line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_findings_names_each_kind_with_its_fields_and_log_line},
+}
+
+@misc{buildtel-logs-push-findings-drops-unrecognised-lines-and-clips-the-message,
+  section = {logs_push},
+  title  = {Chatter is not forwarded; a recognised line's `_msg` is capped at MSG_MAX characters},
+  claim  = {Chatter is not forwarded; a recognised line's `_msg` is capped at MSG_MAX characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_findings_drops_unrecognised_lines_and_clips_the_message},
+}
+
+@misc{buildtel-logs-push-findings-of-a-missing-log-is-empty,
+  section = {logs_push},
+  title  = {An unreadable log yields no findings rather than raising},
+  claim  = {An unreadable log yields no findings rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_findings_of_a_missing_log_is_empty},
+}
+
+@misc{buildtel-logs-push-finding-renders-the-common-fields-then-its-own,
+  section = {logs_push},
+  title  = {The record carries the run's common fields plus kind, fields, line and `_msg`},
+  claim  = {The record carries the run's common fields plus kind, fields, line and `_msg`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_a_finding_renders_the_common_fields_then_its_own},
+}
+
+@misc{buildtel-logs-push-push-posts-json-lines-with-the-stream-content-type,
+  section = {logs_push},
+  title  = {One POST carries one JSON line per finding, to the URL's path and query},
+  claim  = {One POST carries one JSON line per finding, to the URL's path and query.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_push_posts_json_lines_with_the_stream_content_type},
+}
+
+@misc{buildtel-logs-push-push-with-no-findings-sends-nothing,
+  section = {logs_push},
+  title  = {An empty list is a success that never reaches the network},
+  claim  = {An empty list is a success that never reaches the network.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_push_with_no_findings_sends_nothing},
+}
+
+@misc{buildtel-logs-push-push-reports-a-non-2xx-answer-as-not-ok,
+  section = {logs_push},
+  title  = {A 500 is `(False, '500 (1 events)')`},
+  claim  = {A 500 is `(False, '500 (1 events)')`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_push_reports_a_non_2xx_answer_as_not_ok},
+}
+
+@misc{buildtel-logs-push-push-refuses-an-unusable-sink-url,
+  section = {logs_push},
+  title  = {A non-http(s) scheme or a missing host is refused with the URL in the detail},
+  claim  = {A non-http(s) scheme or a missing host is refused with the URL in the detail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_push_refuses_an_unusable_sink_url},
+}
+
+@misc{buildtel-logs-push-push-returns-the-error-instead-of-raising-when-the-sink-is-down,
+  section = {logs_push},
+  title  = {A refused connection is `(False, 'ConnectionRefusedError: ...')`, never an exception},
+  claim  = {A refused connection is `(False, 'ConnectionRefusedError: ...')`, never an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_push_returns_the_error_instead_of_raising_when_the_sink_is_down},
+}
+
+@misc{buildtel-logs-push-parse-reads-the-log-and-the-flag-value-pairs,
+  section = {logs_push},
+  title  = {The first operand is the log; the rest are flag/value pairs},
+  claim  = {The first operand is the log; the rest are flag/value pairs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_parse_reads_the_log_and_the_flag_value_pairs},
+}
+
+@misc{buildtel-logs-push-parse-refuses-anything-but-the-documented-shape,
+  section = {logs_push},
+  title  = {No log, an odd tail, an unknown flag or a repeated flag is `None`},
+  claim  = {No log, an odd tail, an unknown flag or a repeated flag is `None`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_parse_refuses_anything_but_the_documented_shape},
+}
+
+@misc{buildtel-logs-push-main-pushes-a-red-runs-findings-with-run-identity,
+  section = {logs_push},
+  title  = {A failed run's findings arrive tagged red, with rc, seconds, host and the given run id},
+  claim  = {A failed run's findings arrive tagged red, with rc, seconds, host and the given run id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_main_pushes_a_red_runs_findings_with_run_identity},
+}
+
+@misc{buildtel-logs-push-main-tags-a-zero-rc-green-and-defaults-the-run-to-host-and-log-mtime,
+  section = {logs_push},
+  title  = {A zero rc is green with no extra fields; the run is `<host>-<mtime>`, or PK_RUN_ID if set},
+  claim  = {A zero rc is green with no extra fields; the run is `<host>-<mtime>`, or PK_RUN_ID if
+            set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_main_tags_a_zero_rc_green_and_defaults_the_run_to_host_and_log_mtime},
+}
+
+@misc{buildtel-logs-push-main-reads-the-sink-from-the-environment,
+  section = {logs_push},
+  title  = {With no --url, PAPERKIT_LOGS_URL names the sink},
+  claim  = {With no --url, PAPERKIT_LOGS_URL names the sink.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_main_reads_the_sink_from_the_environment},
+}
+
+@misc{buildtel-logs-push-main-without-a-sink-skips-quietly-with-exit-0,
+  section = {logs_push},
+  title  = {No --url and no PAPERKIT_LOGS_URL is a no-op that says so on stderr},
+  claim  = {No --url and no PAPERKIT_LOGS_URL is a no-op that says so on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_main_without_a_sink_skips_quietly_with_exit_0},
+}
+
+@misc{buildtel-logs-push-main-reports-a-failed-push-but-still-exits-0,
+  section = {logs_push},
+  title  = {Telemetry never fails a commit: a dead sink is `FAILED` on stderr and exit 0},
+  claim  = {Telemetry never fails a commit: a dead sink is `FAILED` on stderr and exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_main_reports_a_failed_push_but_still_exits_0},
+}
+
+@misc{buildtel-logs-push-main-refuses-a-bad-command-line-with-exit-2,
+  section = {logs_push},
+  title  = {A flag where the log should be is a usage error},
+  claim  = {A flag where the log should be is a usage error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs_push.py -k test_main_refuses_a_bad_command_line_with_exit_2},
+}
+
+@misc{buildtel-coord-sample-rss-is-the-statm-resident-field-times-the-page-size,
+  section = {coord_sample},
+  title  = {The second statm field is pages; the result is bytes},
+  claim  = {The second statm field is pages; the result is bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_rss_is_the_statm_resident_field_times_the_page_size},
+}
+
+@misc{buildtel-coord-sample-rss-is-none-for-a-pid-with-no-statm-or-a-garbled-one,
+  section = {coord_sample},
+  title  = {A missing file, a non-number and a short line are all `None`, never an exception},
+  claim  = {A missing file, a non-number and a short line are all `None`, never an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_rss_is_none_for_a_pid_with_no_statm_or_a_garbled_one},
+}
+
+@misc{buildtel-coord-sample-cgroup-current-follows-the-pids-own-cgroup-path,
+  section = {coord_sample},
+  title  = {The cgroup path is read from /proc/<pid>/cgroup, then memory.current under the root},
+  claim  = {The cgroup path is read from /proc/<pid>/cgroup, then memory.current under the root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_cgroup_current_follows_the_pids_own_cgroup_path},
+}
+
+@misc{buildtel-coord-sample-cgroup-current-is-none-where-v2-is-not-reachable,
+  section = {coord_sample},
+  title  = {No cgroup file, or a cgroup without memory.current, reads as `None`},
+  claim  = {No cgroup file, or a cgroup without memory.current, reads as `None`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_cgroup_current_is_none_where_v2_is_not_reachable},
+}
+
+@misc{buildtel-coord-sample-alive-is-true-for-this-process-and-false-for-a-pid-that-is-not-there,
+  section = {coord_sample},
+  title  = {Signal 0 reaches the running test and nothing at all for an impossible pid},
+  claim  = {Signal 0 reaches the running test and nothing at all for an impossible pid.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_alive_is_true_for_this_process_and_false_for_a_pid_that_is_not_there},
+}
+
+@misc{buildtel-coord-sample-parse-reads-pid-out-and-interval,
+  section = {coord_sample},
+  title  = {Two positionals and an optional `--interval=` give `(pid, out, interval)`},
+  claim  = {Two positionals and an optional `--interval=` give `(pid, out, interval)`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_parse_reads_pid_out_and_interval},
+}
+
+@misc{buildtel-coord-sample-parse-refuses-anything-but-the-documented-shape,
+  section = {coord_sample},
+  title  = {A wrong count, a non-numeric pid, an unknown flag or a bad interval is `None`},
+  claim  = {A wrong count, a non-numeric pid, an unknown flag or a bad interval is `None`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_parse_refuses_anything_but_the_documented_shape},
+}
+
+@misc{buildtel-coord-sample-main-appends-one-json-line-per-interval-until-the-pid-is-gone,
+  section = {coord_sample},
+  title  = {Two live ticks write two lines naming the pid and its rss; each tick sleeps the interval},
+  claim  = {Two live ticks write two lines naming the pid and its rss; each tick sleeps the
+            interval.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_main_appends_one_json_line_per_interval_until_the_pid_is_gone},
+}
+
+@misc{buildtel-coord-sample-main-appends-to-an-existing-file-rather-than-replacing-it,
+  section = {coord_sample},
+  title  = {A second run adds after what a first run left},
+  claim  = {A second run adds after what a first run left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_main_appends_to_an_existing_file_rather_than_replacing_it},
+}
+
+@misc{buildtel-coord-sample-main-stops-quietly-when-the-pid-is-unreadable,
+  section = {coord_sample},
+  title  = {A pid with neither statm nor cgroup (gone, or not ours) ends the run with nothing written},
+  claim  = {A pid with neither statm nor cgroup (gone, or not ours) ends the run with nothing
+            written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_main_stops_quietly_when_the_pid_is_unreadable},
+}
+
+@misc{buildtel-coord-sample-main-exits-zero-on-an-interrupt,
+  section = {coord_sample},
+  title  = {A SIGINT during the sleep is a clean stop, with the sample already flushed},
+  claim  = {A SIGINT during the sleep is a clean stop, with the sample already flushed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_main_exits_zero_on_an_interrupt},
+}
+
+@misc{buildtel-coord-sample-main-refuses-a-bad-command-line-with-exit-2,
+  section = {coord_sample},
+  title  = {An unknown flag is a usage error, and the path after it is not appended to},
+  claim  = {An unknown flag is a usage error, and the path after it is not appended to.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_coord_sample.py -k test_main_refuses_a_bad_command_line_with_exit_2},
+}
+
+@misc{buildtel-image-digest-digest-is-the-answered-digest-of-the-query-run-for-that-image,
+  section = {image_digest},
+  title  = {The query is `<directory .venv python> <directory query> <image>`, and its digest returns},
+  claim  = {The query is `<directory .venv python> <directory query> <image>`, and its digest
+            returns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_digest_is_the_answered_digest_of_the_query_run_for_that_image},
+}
+
+@misc{buildtel-image-digest-digest-is-absent-without-the-directory-and-never-runs-anything,
+  section = {image_digest},
+  title  = {With no query script or no interpreter the answer is `absent` and no child is started},
+  claim  = {With no query script or no interpreter the answer is `absent` and no child is started.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_digest_is_absent_without_the_directory_and_never_runs_anything},
+}
+
+@misc{buildtel-image-digest-digest-is-absent-unless-the-query-succeeds-and-answers,
+  section = {image_digest},
+  title  = {A failed query, silence, an unanswered state, or an empty/missing digest are `absent`},
+  claim  = {A failed query, silence, an unanswered state, or an empty/missing digest are `absent`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_digest_is_absent_unless_the_query_succeeds_and_answers},
+}
+
+@misc{buildtel-image-digest-digest-refuses-an-image-it-does-not-know,
+  section = {image_digest},
+  title  = {An unknown name exits with a message naming it and the known ones, before any lookup},
+  claim  = {An unknown name exits with a message naming it and the known ones, before any lookup.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_digest_refuses_an_image_it_does_not_know},
+}
+
+@misc{buildtel-image-digest-main-prints-the-digest-of-the-named-image,
+  section = {image_digest},
+  title  = {The first operand names the image; the digest is printed on its own line},
+  claim  = {The first operand names the image; the digest is printed on its own line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_main_prints_the_digest_of_the_named_image},
+}
+
+@misc{buildtel-image-digest-main-defaults-to-the-paperkit-executor,
+  section = {image_digest},
+  title  = {With no operand the image is `paperkit-executor`},
+  claim  = {With no operand the image is `paperkit-executor`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_main_defaults_to_the_paperkit_executor},
+}
+
+@misc{buildtel-probe-executed-counts-everything-that-is-not-a-cache-hit-or-internal,
+  section = {probe},
+  title  = {Of 100 cache hits, 5 internal and 15 sandboxed, the executed count is 15},
+  claim  = {Of 100 cache hits, 5 internal and 15 sandboxed, the executed count is 15.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_executed_counts_everything_that_is_not_a_cache_hit_or_internal},
+}
+
+@misc{buildtel-probe-executed-sums-every-executing-strategy,
+  section = {probe},
+  title  = {Two executing strategies add},
+  claim  = {Two executing strategies add.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_executed_sums_every_executing_strategy},
+}
+
+@misc{buildtel-probe-executed-is-none-for-a-line-that-is-not-the-processes-line,
+  section = {probe},
+  title  = {Anything else bazel prints, or nothing, has no count},
+  claim  = {Anything else bazel prints, or nothing, has no count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_executed_is_none_for_a_line_that_is_not_the_processes_line},
+}
+
+@misc{buildtel-probe-new-marker-is-a-one-line-comment-with-random-hex,
+  section = {probe},
+  title  = {The default marker is a comment line ending in a newline, tagged with 8 hex digits},
+  claim  = {The default marker is a comment line ending in a newline, tagged with 8 hex digits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_new_marker_is_a_one_line_comment_with_random_hex},
+}
+
+@misc{buildtel-probe-hook-streams-stderr-through-and-returns-status-and-the-last-processes-line,
+  section = {probe},
+  title  = {Every stderr line is echoed live; the answer is the LAST processes line, stripped},
+  claim  = {Every stderr line is echoed live; the answer is the LAST processes line, stripped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_hook_streams_stderr_through_and_returns_status_and_the_last_processes_line},
+}
+
+@misc{buildtel-probe-hook-with-no-processes-line-answers-empty,
+  section = {probe},
+  title  = {A bazel that printed no processes line gives `""`, not a stale or invented one},
+  claim  = {A bazel that printed no processes line gives `""`, not a stale or invented one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_hook_with_no_processes_line_answers_empty},
+}
+
+@misc{buildtel-probe-main-appends-a-verified-marker-for-the-hook-and-restores-the-file,
+  section = {probe},
+  title  = {During the build the file ends in the marker once; afterwards it is byte-identical},
+  claim  = {During the build the file ends in the marker once; afterwards it is byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_appends_a_verified_marker_for_the_hook_and_restores_the_file},
+}
+
+@misc{buildtel-probe-main-resyncs-the-build-state-after-the-revert-unless-told-not-to,
+  section = {probe},
+  title  = {The second hook run, on the restored file, is the resync; `--no-resync` skips it},
+  claim  = {The second hook run, on the restored file, is the resync; `--no-resync` skips it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_resyncs_the_build_state_after_the_revert_unless_told_not_to},
+}
+
+@misc{buildtel-probe-main-reports-an-unreadable-count-as-a-question-mark,
+  section = {probe},
+  title  = {With no processes line from bazel the count is `?`, never a guess},
+  claim  = {With no processes line from bazel the count is `?`, never a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_reports_an_unreadable_count_as_a_question_mark},
+}
+
+@misc{buildtel-probe-main-reverts-the-marker-even-when-the-build-crashes,
+  section = {probe},
+  title  = {An exception out of the hook still leaves the file as it was},
+  claim  = {An exception out of the hook still leaves the file as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_reverts_the_marker_even_when_the_build_crashes},
+}
+
+@misc{buildtel-probe-main-flags-a-red-probe-build-and-exits-1,
+  section = {probe},
+  title  = {A hook that fails under the marker says the count is not clean, and the exit is 1},
+  claim  = {A hook that fails under the marker says the count is not clean, and the exit is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_flags_a_red_probe_build_and_exits_1},
+}
+
+@misc{buildtel-probe-main-fails-when-the-resync-fails,
+  section = {probe},
+  title  = {A red resync is exit 1 naming its status: the build state is not back in sync},
+  claim  = {A red resync is exit 1 naming its status: the build state is not back in sync.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_fails_when_the_resync_fails},
+}
+
+@misc{buildtel-probe-main-aborts-and-restores-when-the-marker-did-not-land-exactly-once,
+  section = {probe},
+  title  = {A file that already holds the marker text cannot prove the edit landed: abort, no build},
+  claim  = {A file that already holds the marker text cannot prove the edit landed: abort, no build.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_aborts_and_restores_when_the_marker_did_not_land_exactly_once},
+}
+
+@misc{buildtel-probe-main-refuses-a-file-that-does-not-exist,
+  section = {probe},
+  title  = {A missing target is exit 2 naming it, before anything is run},
+  claim  = {A missing target is exit 2 naming it, before anything is run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_refuses_a_file_that_does_not_exist},
+}
+
+@misc{buildtel-proc-capture-returns-status-stdout-and-stderr-of-a-real-child,
+  section = {proc},
+  title  = {A child that prints on both streams and exits 3 yields all three, and nothing raises},
+  claim  = {A child that prints on both streams and exits 3 yields all three, and nothing raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_returns_status_stdout_and_stderr_of_a_real_child},
+}
+
+@misc{buildtel-proc-capture-of-a-clean-child-reports-status-zero,
+  section = {proc},
+  title  = {The status is the child's own: zero for a child that succeeds},
+  claim  = {The status is the child's own: zero for a child that succeeds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_of_a_clean_child_reports_status_zero},
+}
+
+@misc{buildtel-proc-stream-hands-over-each-stderr-line-and-returns-the-status,
+  section = {proc},
+  title  = {Every stderr line reaches the callback in order, stdout is not delivered, status returned},
+  claim  = {Every stderr line reaches the callback in order, stdout is not delivered, status
+            returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_stream_hands_over_each_stderr_line_and_returns_the_status},
+}

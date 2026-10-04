@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.buildtel: the build telemetry a hook and a build report, as installed tools"
+subtitle = "The BuildBuddy record reader, the build pulse, the hook-log pusher, the coordinator sampler, the executor image digest and the invalidation probe, ported from paperkit's tools/ with the witness that would catch each one drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "BUILDTEL.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
