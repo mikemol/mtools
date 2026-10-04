@@ -3041,3 +3041,48 @@
   claim  = {`--root` on another mode is a stray flag, refused rather than accepted in silence.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_foreign.py -k test_root_is_refused_by_a_mode_that_does_not_read_it},
 }
+
+@misc{pathsforward-atomize-declared-undeclared-queue-counts-any-word-but-the-deny-list,
+  section = {atomize_declared},
+  title  = {With no declared set, `filed` counts as an advance, exactly as before this change},
+  claim  = {With no declared set, `filed` counts as an advance, exactly as before this change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_declared.py -k test_an_undeclared_queue_counts_any_word_but_the_deny_list},
+}
+
+@misc{pathsforward-atomize-declared-declared-advance-set-ignores-a-word-outside-it,
+  section = {atomize_declared},
+  title  = {El-openglo's `tick W98 filed` read as an advance; under a declared set it does not},
+  claim  = {El-openglo's `tick W98 filed` read as an advance; under a declared set it does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_declared.py -k test_a_declared_advance_set_ignores_a_word_outside_it},
+}
+
+@misc{pathsforward-atomize-declared-declared-set-counts-only-what-it-names,
+  section = {atomize_declared},
+  title  = {A word in the declared advance set counts once per line, on tick and interrupt kinds},
+  claim  = {A word in the declared advance set counts once per line, on tick and interrupt kinds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_declared.py -k test_a_declared_set_counts_only_what_it_names},
+}
+
+@misc{pathsforward-atomize-declared-split-still-resets-the-count-under-a-declared-set,
+  section = {atomize_declared},
+  title  = {`atomized` zeroes the count whether or not the queue declared its sets},
+  claim  = {`atomized` zeroes the count whether or not the queue declared its sets.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_declared.py -k test_the_split_still_resets_the_count_under_a_declared_set},
+}
+
+@misc{pathsforward-atomize-declared-false-atomize-from-a-filed-line-disappears-under-a-declared-set,
+  section = {atomize_declared},
+  title  = {The top ready waypoint is flagged by a `filed` line only when the queue did not declare},
+  claim  = {The top ready waypoint is flagged by a `filed` line only when the queue did not declare.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_declared.py -k test_a_false_atomize_from_a_filed_line_disappears_under_a_declared_set},
+}
+
+@misc{pathsforward-atomize-declared-cli-wires-the-declared-set-into-the-atomize-line,
+  section = {atomize_declared},
+  title  = {`--check` prints ATOMIZE for a `filed` line on an undeclared queue and not on a declared one},
+  claim  = {`--check` prints ATOMIZE for a `filed` line on an undeclared queue and not on a declared
+            one. el-openglo:W106 (W539): the same ledger and the same top waypoint,
+            differing only in whether the queue declared `ledger_outcomes`. This is the
+            false `ATOMIZE W98` the card exists to end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_declared.py -k test_the_cli_wires_the_declared_set_into_the_atomize_line},
+}

@@ -37,8 +37,15 @@ _SPLIT = "atomized"
 _NOT_AN_ADVANCE = ("minted", _SPLIT)
 
 
-def advances(symbol: str, entries: list[Parsed | Unparsed]) -> int:
+def advances(
+    symbol: str, entries: list[Parsed | Unparsed], counted: frozenset[str] | None = None
+) -> int:
     """Count the ledger lines in which a tick or interrupt worked `symbol` since its last split.
+
+    ⚑ `counted` IS THE QUEUE'S DECLARED ADVANCE SET (W539, el-openglo:W106): when a queue declares
+    `ledger_outcomes`, ONLY those outcomes advance, so a hand-written `filed` can never read as an
+    advance and raise a false ATOMIZE. With no declaration (None) the deny-list below applies,
+    exactly as before, because fleet ledgers carry hundreds of undeclared outcome words.
 
     Returns:
         how many after the most recent `atomized` line for `symbol` (all of them if there is none);
@@ -53,12 +60,18 @@ def advances(symbol: str, entries: list[Parsed | Unparsed]) -> int:
             continue
         if e.entry.outcome == _SPLIT:
             count = 0
+        elif counted is not None:
+            count += e.entry.outcome in counted
         elif e.entry.outcome not in _NOT_AN_ADVANCE:
             count += 1
     return count
 
 
-def atomize(waypoints: list[Json], entries: list[Parsed | Unparsed]) -> str | None:
+def atomize(
+    waypoints: list[Json],
+    entries: list[Parsed | Unparsed],
+    counted: frozenset[str] | None = None,
+) -> str | None:
     """Name the top workable waypoint if an earlier tick already advanced it.
 
     Returns:
@@ -70,7 +83,7 @@ def atomize(waypoints: list[Json], entries: list[Parsed | Unparsed]) -> str | No
     if not queue or not workable(queue[0]):
         return None
     top = text(queue[0], "symbol")
-    prior = advances(top, entries)
+    prior = advances(top, entries, counted)
     if prior == 0:
         return None
     return f"ATOMIZE {top} (advanced {prior} times without landing)"

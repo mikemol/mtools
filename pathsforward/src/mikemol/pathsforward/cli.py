@@ -442,7 +442,11 @@ def _atomize_line(ctx: Ctx, state: State) -> str | None:
 
     """
     path = store.sibling(ctx.path, store.LEDGER)
-    return atomize(state.waypoints, read(path) if path.is_file() else [])
+    # ⚑ A queue that declared `ledger_outcomes` (W533) counts ONLY its advance set (W539); one that
+    # did not is counted by the deny-list, exactly as before.
+    sets = outcomes.declared(state)
+    counted = frozenset(sets[0]) if sets else None
+    return atomize(state.waypoints, read(path) if path.is_file() else [], counted)
 
 
 _UNLOCKED = "(unlocked)"
