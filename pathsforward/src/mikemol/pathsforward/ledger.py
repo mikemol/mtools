@@ -70,6 +70,22 @@ class Entry:
     evidence: str = ""
 
 
+def line_break(text: str) -> str | None:
+    """Find the first character `str.splitlines()` treats as a line boundary.
+
+    ⚑ DERIVED FROM PYTHON, NOT LISTED: the reader splits with `splitlines()`, so a character it
+    splits on must never be written inside a note, and asking `splitlines()` itself cannot drift.
+
+    Returns:
+        the first boundary character in `text`, or None when `text` is one line.
+
+    """
+    for ch in text:
+        if len(f"a{ch}b".splitlines()) > 1:
+            return ch
+    return None
+
+
 def line(entry: Entry, stamp: str) -> str:
     """Format one entry.
 
@@ -91,9 +107,11 @@ def line(entry: Entry, stamp: str) -> str:
     if not is_symbol(entry.symbol):
         msg = f"ledger symbol {entry.symbol!r} is neither {NO_SYMBOL}, W<n> nor repo:W<n>"
         raise MalformedEntryError(msg)
-    if "\n" in entry.note or "\n" in entry.evidence:
-        msg = "a ledger note is one line"
-        raise MalformedEntryError(msg)
+    for text in (entry.note, entry.evidence):
+        broken = line_break(text)
+        if broken is not None:
+            msg = f"a ledger note is one line: U+{ord(broken):04X} is a line boundary"
+            raise MalformedEntryError(msg)
     # ⚑ THE BACKSLASH IS ESCAPED FIRST: a note ending in one would otherwise make its closing
     # quote read as escaped (measured 2026-09-25), and no reader could recover the note.
     note = entry.note.replace("\\", "\\\\").replace('"', '\\"')

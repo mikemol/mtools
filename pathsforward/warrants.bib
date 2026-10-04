@@ -2810,3 +2810,45 @@
   claim  = {An unlocked add ledgers kind `interrupt`; a locked one ledgers kind `tick`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_ledger.py -k test_the_kind_follows_minted_during},
 }
+
+@misc{pathsforward-ledger-breaks-derived-set-has-positive-controls,
+  section = {ledger_breaks},
+  title  = {The derived boundary set is non-empty and holds at least CR and U+2028},
+  claim  = {The derived boundary set is non-empty and holds at least CR and U+2028.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_breaks.py -k test_derived_set_has_positive_controls},
+}
+
+@misc{pathsforward-ledger-breaks-note-refuses-every-boundary,
+  section = {ledger_breaks},
+  title  = {A note holding any splitlines boundary is refused, naming its code point},
+  claim  = {A note holding any splitlines boundary is refused, naming its code point.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_breaks.py -k test_note_refuses_every_boundary},
+}
+
+@misc{pathsforward-ledger-breaks-evidence-refuses-every-boundary,
+  section = {ledger_breaks},
+  title  = {Evidence holding any splitlines boundary is refused, naming its code point},
+  claim  = {Evidence holding any splitlines boundary is refused, naming its code point.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_breaks.py -k test_evidence_refuses_every_boundary},
+}
+
+@misc{pathsforward-ledger-breaks-token-columns-refuse-every-boundary,
+  section = {ledger_breaks},
+  title  = {Every boundary is whitespace to `isspace()`, so each token column already refuses it},
+  claim  = {Every boundary is whitespace to `isspace()`, so each token column already refuses it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_breaks.py -k test_token_columns_refuse_every_boundary},
+}
+
+@misc{pathsforward-ledger-breaks-tab-and-unicode-round-trip,
+  section = {ledger_breaks},
+  title  = {A note with a tab and unicode text but no boundary is accepted and parses back},
+  claim  = {A note with a tab and unicode text but no boundary is accepted and parses back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_breaks.py -k test_tab_and_unicode_round_trip},
+}
+
+@misc{pathsforward-ledger-breaks-trailing-backslash-round-trips,
+  section = {ledger_breaks},
+  title  = {A note ending in a backslash still round-trips},
+  claim  = {A note ending in a backslash still round-trips.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_breaks.py -k test_trailing_backslash_round_trips},
+}

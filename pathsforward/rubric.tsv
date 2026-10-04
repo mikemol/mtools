@@ -23,3 +23,4 @@ ics	The iCalendar Writer: Escaped, Folded at 75 Octets, and Ended in CRLF
 vtodo	The Calendar Projection: One VTODO per Waypoint, Read-Only, Residue Omitted
 vtimezone	The Time Zones: One VTIMEZONE per TZID Used, Its Transitions Found to the Second
 add_ledger	The Mint Line: --add Ledgers minted for the New Symbol, and Nothing Is Half-Written
+ledger_breaks	The Ledger Line Break: Every Character the Reader Splits On Is Refused in a Note, Derived From Python and Not Listed
