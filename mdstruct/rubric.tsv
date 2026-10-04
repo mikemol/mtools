@@ -18,3 +18,4 @@ cli-flags	CLI Flags: A Flag a Mode Does Not Implement Must Refuse
 verify	Verify: The Contract That Lint and Round-Trip Both Passed
 stub-authority	Stub Authority: The Claim a Stub Makes, and What Checks It
 sibling-edge	The Sibling Edge: mdstruct Resolves mikemol-pathwalk Beside Its Own Namespace Package
+directory-operand	Directory Operand: Registered Worktrees Skipped, Writes Refused, Counts on Stderr

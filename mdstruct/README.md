@@ -38,6 +38,41 @@ The paths have been shortened.
 
 Run `mdstruct --help` for the full synopsis.
 
+## Querying a whole tree
+
+Every read mode takes a directory where it takes a file: `mdstruct spans .`, `mdstruct grep
+PATTERN docs/`, `mdstruct lint .`. The directory expands to the `.md` files under it, in a stable
+order, and each file's result prints as it does for a single file, under its own path. A
+multi-file run exits with its worst code. `grep` is the exception: it exits 0 when any file
+matched, 1 when none did, and 2 when a file could not be read, as `grep -r` does.
+
+The walk is the one in the sibling package `mikemol-pathwalk`, so a query over a repo root does not
+read what is not the repo's own text:
+
+- **Registered git worktrees are skipped.** A checkout under `.claude/worktrees/` is another copy
+  of the same repo, and its files would answer the query a second time. Git is asked which paths
+  are worktrees; the tool does not guess. Pass `--include-worktrees` to read them anyway.
+- **Virtual environments are pruned.** A directory holding `pyvenv.cfg` is skipped whatever its
+  name, even with `--include-worktrees`.
+- **Symlinks are refused.** A linked file or directory is counted and never followed. A
+  directory operand that is itself a symlink exits 2.
+
+What was left out is reported on **stderr**, only when an operand was a directory, so stdout stays
+the answer:
+
+```text
+skipped 1 registered worktrees
+skipped 0 virtualenvs
+refused 0 symlinks (not followed)
+```
+
+If git cannot list worktrees (git is missing, or the directory is not in a repository), the run
+exits 2 with the reason on stderr. A silent empty list would read as "no worktrees to skip".
+
+The write modes refuse a directory with exit 2: `mdstruct: replace-section writes one document;
+DIR is a directory. A bounded write against many files is ambiguous. Name the file.` They do not
+take `--include-worktrees`. Naming a file is unchanged.
+
 ## Adopting
 
 Install from git by subdirectory, pinned to a sha. See the repo-root [INSTALL.md](../INSTALL.md):

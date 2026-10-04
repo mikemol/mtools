@@ -429,3 +429,10 @@ fixture-parentheses = true
 # the same argument the two entries above make, granted per FILE so a module that also parsed or
 # rendered would not inherit it.
 "tests/test_sections.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑⚑⚑ THE DIRECTORY-OPERAND ARMS RUN REAL `git init` AND `git worktree add` IN A REPOSITORY MADE
+# UNDER `tmp_path`, because the claim is that registered worktrees are skipped and only git can
+# register one. The argv is the resolved `git` executable plus fixed words and fixture paths this
+# module constructs; GIT_* variables are removed and global and system config switched off, so the
+# host repository is never touched. Granted per FILE, like the entries above.
+"tests/test_directory_operand.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

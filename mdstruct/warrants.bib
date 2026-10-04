@@ -1366,3 +1366,143 @@
   claim  = {The namespace package merges: importing the sibling does not shadow mikemol.mdstruct.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_sibling},
 }
+
+@misc{mdstruct-directory-operand-directory-skips-a-registered-worktree-and-says-so-on-stderr,
+  section = {directory-operand},
+  title  = {Default: the document outside the worktree is read, the one inside is not},
+  claim  = {Default: the document outside the worktree is read, the one inside is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_directory_skips_a_registered_worktree_and_says_so_on_stderr},
+}
+
+@misc{mdstruct-directory-operand-nothing-but-the-answer-reaches-stdout,
+  section = {directory-operand},
+  title  = {The three count lines are stderr only, however many files were read},
+  claim  = {The three count lines are stderr only, however many files were read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_nothing_but_the_answer_reaches_stdout},
+}
+
+@misc{mdstruct-directory-operand-include-worktrees-reads-the-worktree-and-reports-zero-skipped,
+  section = {directory-operand},
+  title  = {The switch reads the worktree's documents and the skip count is zero},
+  claim  = {The switch reads the worktree's documents and the skip count is zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_include_worktrees_reads_the_worktree_and_reports_zero_skipped},
+}
+
+@misc{mdstruct-directory-operand-virtualenv-is-pruned-even-with-the-worktree-switch,
+  section = {directory-operand},
+  title  = {A venv is not a worktree: its documents stay unread and it is counted},
+  claim  = {A venv is not a worktree: its documents stay unread and it is counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_virtualenv_is_pruned_even_with_the_worktree_switch},
+}
+
+@misc{mdstruct-directory-operand-file-operand-prints-no-count-lines,
+  section = {directory-operand},
+  title  = {Existing single-file output is unchanged: nothing on stderr},
+  claim  = {Existing single-file output is unchanged: nothing on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_file_operand_prints_no_count_lines},
+}
+
+@misc{mdstruct-directory-operand-every-read-mode-accepts-a-directory,
+  section = {directory-operand},
+  title  = {Each read mode expands the directory instead of failing in pandoc},
+  claim  = {Each read mode expands the directory instead of failing in pandoc.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_every_read_mode_accepts_a_directory},
+}
+
+@misc{mdstruct-directory-operand-grep-accepts-a-directory-and-keeps-its-pattern-slot,
+  section = {directory-operand},
+  title  = {The first operand stays the pattern; the directory after it is expanded},
+  claim  = {The first operand stays the pattern; the directory after it is expanded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_grep_accepts_a_directory_and_keeps_its_pattern_slot},
+}
+
+@misc{mdstruct-directory-operand-grep-over-a-directory-is-zero-when-any-file-matched,
+  section = {directory-operand},
+  title  = {A file that lacks the term does not make the corpus verdict nonzero},
+  claim  = {A file that lacks the term does not make the corpus verdict nonzero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_grep_over_a_directory_is_zero_when_any_file_matched},
+}
+
+@misc{mdstruct-directory-operand-grep-over-a-directory-is-one-when-no-file-matched,
+  section = {directory-operand},
+  title  = {No match anywhere keeps grep's own nonzero code},
+  claim  = {No match anywhere keeps grep's own nonzero code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_grep_over_a_directory_is_one_when_no_file_matched},
+}
+
+@misc{mdstruct-directory-operand-lint-over-a-directory-returns-the-worst-code,
+  section = {directory-operand},
+  title  = {One failing document makes the fold nonzero while the clean one still prints},
+  claim  = {One failing document makes the fold nonzero while the clean one still prints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_lint_over_a_directory_returns_the_worst_code},
+}
+
+@misc{mdstruct-directory-operand-missing-file-beside-a-directory-is-exit-two,
+  section = {directory-operand},
+  title  = {A file operand that does not exist is named, and the fold carries the 2},
+  claim  = {A file operand that does not exist is named, and the fold carries the 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_missing_file_beside_a_directory_is_exit_two},
+}
+
+@misc{mdstruct-directory-operand-empty-directory-reads-nothing-and-reports-zero-skipped,
+  section = {directory-operand},
+  title  = {A directory with no documents is a clean zero, with the count lines present},
+  claim  = {A directory with no documents is a clean zero, with the count lines present.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_an_empty_directory_reads_nothing_and_reports_zero_skipped},
+}
+
+@misc{mdstruct-directory-operand-git-unable-to-list-worktrees-refuses-with-exit-two,
+  section = {directory-operand},
+  title  = {Outside any repository the walk refuses, and the driver says so on stderr},
+  claim  = {Outside any repository the walk refuses, and the driver says so on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_git_unable_to_list_worktrees_refuses_with_exit_two},
+}
+
+@misc{mdstruct-directory-operand-write-mode-refuses-a-directory,
+  section = {directory-operand},
+  title  = {A bounded write against many files is ambiguous: exit 2 with the exact text},
+  claim  = {A bounded write against many files is ambiguous: exit 2 with the exact text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_write_mode_refuses_a_directory},
+}
+
+@misc{mdstruct-directory-operand-write-mode-does-not-take-the-worktree-switch,
+  section = {directory-operand},
+  title  = {The flag is owned by the directory-capable modes; a writer refuses it as unknown},
+  claim  = {The flag is owned by the directory-capable modes; a writer refuses it as unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_write_mode_does_not_take_the_worktree_switch},
+}
+
+@misc{mdstruct-directory-operand-resolve-reports-the-counts-only-for-a-directory,
+  section = {directory-operand},
+  title  = {The resolution carries the files and the three lines, and no refusal},
+  claim  = {The resolution carries the files and the three lines, and no refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_resolve_reports_the_counts_only_for_a_directory},
+}
+
+@misc{mdstruct-directory-operand-resolve-passes-a-file-through-with-no-notes,
+  section = {directory-operand},
+  title  = {A file operand is untouched and says nothing},
+  claim  = {A file operand is untouched and says nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_resolve_passes_a_file_through_with_no_notes},
+}
+
+@misc{mdstruct-directory-operand-resolve-turns-the-siblings-refusal-into-a-message,
+  section = {directory-operand},
+  title  = {A directory git cannot list yields the refusal text and no files},
+  claim  = {A directory git cannot list yields the refusal text and no files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_resolve_turns_the_siblings_refusal_into_a_message},
+}
+
+@misc{mdstruct-directory-operand-has-directory-tells-a-directory-from-a-file,
+  section = {directory-operand},
+  title  = {True for a directory operand, false for a file or a missing name},
+  claim  = {True for a directory operand, false for a file or a missing name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_has_directory_tells_a_directory_from_a_file},
+}
+
+@misc{mdstruct-directory-operand-write-refusal-is-none-for-a-file,
+  section = {directory-operand},
+  title  = {Only a directory is refused},
+  claim  = {Only a directory is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_write_refusal_is_none_for_a_file},
+}

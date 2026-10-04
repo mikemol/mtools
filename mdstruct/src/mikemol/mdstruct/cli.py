@@ -19,6 +19,13 @@
     mdstruct verify FILE.md                 # does EVERY source heading reach the section list
     mdstruct narrowest FILE.md              # the narrowest width this document satisfies
 
+  EVERY READ MODE ALSO TAKES A DIRECTORY in place of FILE.md, and reads the `.md` files under it
+  in the walk's stable order, each result printed as for a file. Registered git worktrees (other
+  checkouts of the same repo) are skipped, virtualenvs pruned, symlinks refused, and
+  `--include-worktrees` reads the worktrees too. The counts (`skipped N registered worktrees`,
+  `skipped N virtualenvs`, `refused N symlinks (not followed)`) go to stderr, and only when an
+  operand was a directory.
+
   the WRITE modes — heading before file, matching `grep`, and a DRY RUN unless `--apply`:
 
     mdstruct replace-section HEADING FILE.md --body-file B.md [--exact] [--apply]
@@ -57,6 +64,9 @@ from mikemol.mdstruct import (
     tables,
     verify,
 )
+from mikemol.mdstruct import (
+    operands as dir_operands,
+)
 
 # ⚑ THE SIGNATURE EVERY MODE PRESENTS, even where it uses one of the three arguments. Dispatching
 # on arity instead would put the branching back, one layer down and less visible.
@@ -67,6 +77,9 @@ _Mode = Callable[[str, Path, list[str]], int]
 
 # `<mode> <file>` at minimum; `grep` takes a pattern before the file.
 _MIN_ARGS = 2
+
+# The exit code for a file that could not be read or a walk that refused.
+_UNREADABLE = 2
 
 # ⚑ THE ONE MODE TAKING A PATTERN BEFORE ITS PATH, named so the argument-shape special case in
 # `main` cites this rather than spelling the string a second time.
@@ -82,6 +95,9 @@ _PATTERN_MODE = "grep"
 # prevent, arriving through the dispatcher instead of through the finder.
 _OPERAND_FIRST = frozenset({_PATTERN_MODE, "replace-section", "append-section"})
 
+# ⚑ THE MODES THAT REWRITE A DOCUMENT, which refuse a directory instead of expanding it.
+_WRITE_MODES = frozenset({"replace-section", "append-section"})
+
 # How many cells of a row to render before truncating, so one wide row cannot flood a terminal.
 _CELL_WIDTH = 40
 
@@ -93,10 +109,19 @@ _CELL_WIDTH = 40
 # the dataclass would buy a declaration with no enforcement. The enforcement is what matters here,
 # so the declaration is local and the refusal below is the thing that reads it.
 _MODE_OPTS: dict[str, frozenset[str]] = {
-    "grep": frozenset({"-i", "-E"}),
-    "rows": frozenset({"--where", "--starts", "--col", "--table"}),
-    "classify": frozenset({"--col", "--table"}),
-    "lint": frozenset({"--width"}),
+    "spans": frozenset({"--include-worktrees"}),
+    "budget": frozenset({"--include-worktrees"}),
+    "items": frozenset({"--include-worktrees"}),
+    "grep": frozenset({"-i", "-E", "--include-worktrees"}),
+    "tables": frozenset({"--include-worktrees"}),
+    "rows": frozenset({"--where", "--starts", "--col", "--table", "--include-worktrees"}),
+    "classify": frozenset({"--col", "--table", "--include-worktrees"}),
+    "labels": frozenset({"--include-worktrees"}),
+    "roundtrip": frozenset({"--include-worktrees"}),
+    "fixpoint": frozenset({"--include-worktrees"}),
+    "lint": frozenset({"--width", "--include-worktrees"}),
+    "verify": frozenset({"--include-worktrees"}),
+    "narrowest": frozenset({"--include-worktrees"}),
     "replace-section": frozenset({"--body-file", "--exact", "--apply", "--dry-run"}),
     "append-section": frozenset({"--body-file", "--exact", "--apply", "--dry-run"}),
 }
@@ -126,6 +151,7 @@ _OPT_ARITY: dict[str, bool] = {
     "--exact": False,
     "--apply": False,
     "--dry-run": False,
+    "--include-worktrees": False,
     "-h": False,
     "--help": False,
 }
@@ -591,7 +617,7 @@ def _narrowest(path: Path) -> int:
 # parameters carry no annotations, so each table entry would infer `Callable[[Any, Any, Any],
 # int]` — a typed-LOOKING table checked against nothing. A named function takes the annotation,
 # and the strict bar then verifies each adapter really is a `_Mode`.
-def _spans_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _spans_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the span listing to the uniform mode signature.
 
     Returns:
@@ -601,30 +627,30 @@ def _spans_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
         decided rather than routed.
 
     """
-    return _spans(path)
+    return _over_paths(path, argv, _spans)
 
 
-def _budget_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _budget_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the section budget to the uniform mode signature.
 
     Returns:
         The verb's exit code, forwarded unchanged — see `_spans_mode`.
 
     """
-    return _budget(path)
+    return _over_paths(path, argv, _budget)
 
 
-def _items_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _items_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the item listing to the uniform mode signature.
 
     Returns:
         The verb's exit code, forwarded unchanged — see `_spans_mode`.
 
     """
-    return _items(path)
+    return _over_paths(path, argv, _items)
 
 
-def _tables_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _tables_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the table listing to the uniform mode signature.
 
     Returns:
@@ -634,7 +660,7 @@ def _tables_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
         decided rather than routed.
 
     """
-    return _tables(path)
+    return _over_paths(path, argv, _tables)
 
 
 def _rows_mode(_pattern: str, path: Path, argv: list[str]) -> int:
@@ -647,10 +673,10 @@ def _rows_mode(_pattern: str, path: Path, argv: list[str]) -> int:
         decided rather than routed.
 
     """
-    return _rows(path, argv)
+    return _over_paths(path, argv, lambda p: _rows(p, argv))
 
 
-def _labels_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _labels_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the label census to the uniform mode signature.
 
     Returns:
@@ -660,10 +686,10 @@ def _labels_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
         decided rather than routed.
 
     """
-    return _labels(path)
+    return _over_paths(path, argv, _labels)
 
 
-def _roundtrip_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _roundtrip_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the one-pass drift report to the uniform mode signature.
 
     Returns:
@@ -673,10 +699,10 @@ def _roundtrip_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
         decided rather than routed.
 
     """
-    return _roundtrip(path)
+    return _over_paths(path, argv, _roundtrip)
 
 
-def _fixpoint_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _fixpoint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the convergence report to the uniform mode signature.
 
     Returns:
@@ -686,7 +712,7 @@ def _fixpoint_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
         decided rather than routed.
 
     """
-    return _fixpoint(path)
+    return _over_paths(path, argv, _fixpoint)
 
 
 def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
@@ -705,7 +731,7 @@ def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
         the per-file code is `_lint`'s own, folded with `max`.
 
     """
-    return _over_paths(path, argv, lambda p: _lint(p, argv))
+    return _over_paths(path, argv, lambda p: _lint(p, argv), many=True)
 
 
 def _write_section(path: Path, needle: str, argv: list[str], *, append: bool) -> int:
@@ -884,11 +910,59 @@ def _verify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
         the end — a caller learns the severest finding across the whole corpus in one run.
 
     """
-    return _over_paths(path, argv, _verify_one)
+    return _over_paths(path, argv, _verify_one, many=True)
 
 
-def _over_paths(path: Path, argv: list[str], one: Callable[[Path], int]) -> int:
-    """Run `one` over every path operand and return the WORST code.
+def _worst(codes: list[int]) -> int:
+    """Fold per-file codes the way every multi-file mode does.
+
+    Returns:
+        the largest code, or 0 when there were no files.
+
+    """
+    return max(codes, default=0)
+
+
+def _grep_verdict(codes: list[int]) -> int:
+    """Fold per-file `grep` codes the way real grep folds a recursive search.
+
+    ⚑ NOT THE WORST CODE, because a file with no match exits 1 and the worst of a corpus would
+    then be 1 whenever ANY file lacks the term, which answers a question nobody asked.
+
+    Returns:
+        2 when any file could not be read, else 0 when any file matched, else 1.
+
+    """
+    if _UNREADABLE in codes:
+        return _UNREADABLE
+    return 0 if 0 in codes else 1
+
+
+def _over_paths(
+    path: Path, argv: list[str], one: Callable[[Path], int], *, many: bool = False, skip: int = 0
+) -> int:
+    """Run `one` over every path operand and return the WORST code; see `_codes_over_paths`.
+
+    Returns:
+        the worst code over every path.
+
+    """
+    return _worst(_codes_over_paths(path, argv, one, many=many, skip=skip))
+
+
+def _codes_over_paths(
+    path: Path, argv: list[str], one: Callable[[Path], int], *, many: bool = False, skip: int = 0
+) -> list[int]:
+    """Run `one` over every path operand and return each file's code, in order.
+
+    ⚑⚑⚑ A DIRECTORY OPERAND EXPANDS (W561, mtools, answering el-openglo W138). When any file
+    operand is a directory, EVERY read mode comes through here: the operands expand to their
+    markdown files through the sibling walk (registered worktrees skipped unless the switch for
+    including them is given, virtualenvs pruned, symlinks refused), the verb runs on each file in
+    the walk's stable order, and the worst code is returned. The three count lines go to STDERR,
+    because nothing but the answer reaches stdout. With no directory operand nothing changes: a
+    `many` mode reads every operand and any other reads only the first, exactly as before.
+    A refusal from the walk (git cannot list worktrees, a symlinked directory) is exit 2.
 
     ⚑⚑⚑ THE OPERANDS COME FROM THE SAME PARSE `main` RAN, through `_mode_operands`, which returns
     them WITHOUT the mode word — so the whole list IS the path population, and `path` (already
@@ -911,29 +985,52 @@ def _over_paths(path: Path, argv: list[str], one: Callable[[Path], int]) -> int:
             no operands (it cannot, once `main` has run, but the loop must not be empty).
         argv: the full argument vector, re-parsed for the population.
         one: the per-file verb; its code is folded with `max`.
+        many: True for a mode that reads every file operand even without a directory.
+        skip: how many leading operands are not files (the pattern of `grep`).
 
     Returns:
-        The WORST code over every path: the verb's own codes, or 2 for a path that does not
-        exist. ⚑⚑ *A file I could not read* is not *a file that failed*, and collapsing them
+        Each path's code in order, which `_worst` folds: the verb's own code, or 2 for a path
+        that does not exist (a refused walk is the single code 2).
+        ⚑⚑ *A file I could not read* is not *a file that failed*, and collapsing them
         would let a typo'd path report as a clean document — the ABSENT/EMPTY distinction this
         repository draws everywhere else. `max` rather than first-failure is what makes visiting
         every path worth doing: a caller learns the severest finding across the corpus in one run.
 
     """
-    paths = [Path(p) for p in _mode_operands(argv)]
-    if not paths:
+    named = _mode_operands(argv)[skip:]
+    if dir_operands.has_directory(named):
+        got = dir_operands.resolve(named, include_worktrees="--include-worktrees" in argv)
+        if got.refusal is not None:
+            sys.stderr.write(got.refusal)
+            return [2]
+        sys.stderr.write(got.notes)
+        paths = [Path(f) for f in got.files]
+    elif many:
+        paths = [Path(p) for p in named] or [path]
+    else:
         paths = [path]
-    worst = 0
+    codes: list[int] = []
     for candidate in paths:
         if not candidate.exists():
             sys.stderr.write(f"mdstruct: no such file: {candidate}\n")
-            worst = max(worst, 2)
+            codes.append(2)
             continue
-        worst = max(worst, one(candidate))
-    return worst
+        codes.append(one(candidate))
+    return codes
 
 
-def _narrowest_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
+def _grep_mode(pattern: str, path: Path, argv: list[str]) -> int:
+    """Adapt the structural grep, whose pattern precedes its files, over a path population.
+
+    Returns:
+        0 when any file matched, 1 when none did, 2 when any could not be read or the walk
+        refused; see `_grep_verdict`.
+
+    """
+    return _grep_verdict(_codes_over_paths(path, argv, lambda p: _grep(pattern, p, argv), skip=1))
+
+
+def _narrowest_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     """Adapt the narrowest-width report to the uniform mode signature.
 
     Returns:
@@ -943,7 +1040,7 @@ def _narrowest_mode(_pattern: str, path: Path, _argv: list[str]) -> int:
         decided rather than routed.
 
     """
-    return _narrowest(path)
+    return _over_paths(path, argv, _narrowest)
 
 
 def _replace_section_mode(needle: str, path: Path, argv: list[str]) -> int:
@@ -1040,7 +1137,7 @@ def _classify_mode(_pattern: str, path: Path, argv: list[str]) -> int:
         the classifier's status.
 
     """
-    return _classify(path, argv)
+    return _over_paths(path, argv, lambda p: _classify(p, argv))
 
 
 # ⚑⚑⚑ THE MODE ROSTER IS DATA, NOT A BRANCH CHAIN. As nine `if mode == …` arms `main` sat over
@@ -1052,7 +1149,7 @@ _MODES: dict[str, _Mode] = {
     "spans": _spans_mode,
     "budget": _budget_mode,
     "items": _items_mode,
-    _PATTERN_MODE: _grep,
+    _PATTERN_MODE: _grep_mode,
     "tables": _tables_mode,
     "rows": _rows_mode,
     "classify": _classify_mode,
@@ -1185,8 +1282,13 @@ def main(argv: list[str] | None = None) -> int:
     else:
         pattern, path = "", Path(args[1])
 
-    if not path.exists():
-        sys.stderr.write(f"mdstruct: no such file: {path}\n")
+    # ⚑ A WRITE REFUSES A DIRECTORY BEFORE THE EXISTENCE CHECK: a directory exists, and a write
+    # against "many files" has no single target.
+    unreachable = (dir_operands.write_refusal(mode, path) if mode in _WRITE_MODES else None) or (
+        None if path.exists() else f"mdstruct: no such file: {path}\n"
+    )
+    if unreachable is not None:
+        sys.stderr.write(unreachable)
         return 2
 
     return run(pattern, path, argv)
