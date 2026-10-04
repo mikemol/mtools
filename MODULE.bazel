@@ -211,6 +211,16 @@ pip.parse(
     requirements_lock = "//buildtel:requirements.txt",
 )
 
+# ⚑ `mikemol-importdag` — paperkit's import-graph derivation (dagderive, dagnames, closure_census),
+# the first unit of the tools/ migration's importdag package (mtools:W563, paperkit:W142); imports,
+# closure and dagbzl wait on the sibling-dist ruling (mtools:W562). Empty shipping hub: standard
+# library only.
+pip.parse(
+    hub_name = "importdag_deps",
+    python_version = "3.13",
+    requirements_lock = "//importdag:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -373,6 +383,11 @@ pip.parse(
     uv_lock = "//buildtel:uv.lock",
 )
 pip.parse(
+    hub_name = "importdag_dev",
+    python_version = "3.13",
+    uv_lock = "//importdag:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -432,6 +447,8 @@ use_repo(
     "bibparse_dev",
     "buildtel_deps",
     "buildtel_dev",
+    "importdag_deps",
+    "importdag_dev",
     "pytestspec_deps",
     "pytestspec_dev",
     "pycodemod_deps",

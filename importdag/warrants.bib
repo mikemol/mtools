@@ -1,0 +1,435 @@
+
+@misc{importdag-dagderive-flat-import-is-an-edge,
+  section = {dagderive},
+  title  = {`import bib` yields the stem},
+  claim  = {`import bib` yields the stem.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_flat_import_is_an_edge},
+}
+
+@misc{importdag-dagderive-package-import-is-the-same-edge,
+  section = {dagderive},
+  title  = {`from paperkit import bibparse` yields the stem, not the package},
+  claim  = {`from paperkit import bibparse` yields the stem, not the package.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_package_import_is_the_same_edge},
+}
+
+@misc{importdag-dagderive-subpackage-import-is-the-same-edge,
+  section = {dagderive},
+  title  = {`from paperkit.tools import vfs` yields the stem},
+  claim  = {`from paperkit.tools import vfs` yields the stem.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_subpackage_import_is_the_same_edge},
+}
+
+@misc{importdag-dagderive-flat-from-import-is-an-edge,
+  section = {dagderive},
+  title  = {`from _fixture_model import fx` yields the module, not the imported name},
+  claim  = {`from _fixture_model import fx` yields the module, not the imported name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_flat_from_import_is_an_edge},
+}
+
+@misc{importdag-dagderive-names-restrict-the-result,
+  section = {dagderive},
+  title  = {A name outside `names` is not an edge, in either spelling},
+  claim  = {A name outside `names` is not an edge, in either spelling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_names_restrict_the_result},
+}
+
+@misc{importdag-dagderive-pkg-names-the-engine-package,
+  section = {dagderive},
+  title  = {A from-import of a package other than `pkg` is read only when it is an engine stem},
+  claim  = {A from-import of a package other than `pkg` is read only when it is an engine stem.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_pkg_names_the_engine_package},
+}
+
+@misc{importdag-dagderive-name-in-a-comment-or-string-is-not-an-edge,
+  section = {dagderive},
+  title  = {The syntax tree is read, not the text},
+  claim  = {The syntax tree is read, not the text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_a_name_in_a_comment_or_string_is_not_an_edge},
+}
+
+@misc{importdag-dagderive-unparseable-text-has-no-edges,
+  section = {dagderive},
+  title  = {A syntax error yields the empty set rather than raising},
+  claim  = {A syntax error yields the empty set rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_unparseable_text_has_no_edges},
+}
+
+@misc{importdag-dagderive-stem-index-maps-stem-to-path,
+  section = {dagderive},
+  title  = {Each stem names its one path},
+  claim  = {Each stem names its one path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_stem_index_maps_stem_to_path},
+}
+
+@misc{importdag-dagderive-stem-index-exempts-package-markers,
+  section = {dagderive},
+  title  = {Two `__init__.py` do not collide and are not indexed},
+  claim  = {Two `__init__.py` do not collide and are not indexed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_stem_index_exempts_package_markers},
+}
+
+@misc{importdag-dagderive-stem-index-refuses-an-ambiguous-stem,
+  section = {dagderive},
+  title  = {A repeated stem raises, and the message names the paths},
+  claim  = {A repeated stem raises, and the message names the paths.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_stem_index_refuses_an_ambiguous_stem},
+}
+
+@misc{importdag-dagderive-edges-record-paths-on-both-sides,
+  section = {dagderive},
+  title  = {An edge is the importer's path and the imported module's path},
+  claim  = {An edge is the importer's path and the imported module's path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_edges_record_paths_on_both_sides},
+}
+
+@misc{importdag-dagderive-edges-refuse-an-ambiguous-stem,
+  section = {dagderive},
+  title  = {The ambiguity refusal reaches the caller of `edges`},
+  claim  = {The ambiguity refusal reaches the caller of `edges`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_edges_refuse_an_ambiguous_stem},
+}
+
+@misc{importdag-dagderive-cone-is-transitive-and-includes-start,
+  section = {dagderive},
+  title  = {The walk follows every hop, handles a cycle, and returns the start},
+  claim  = {The walk follows every hop, handles a cycle, and returns the start.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_cone_is_transitive_and_includes_start},
+}
+
+@misc{importdag-dagderive-cone-of-an-unknown-module-is-itself,
+  section = {dagderive},
+  title  = {A module with no recorded edges has the cone of just itself},
+  claim  = {A module with no recorded edges has the cone of just itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_cone_of_an_unknown_module_is_itself},
+}
+
+@misc{importdag-dagnames-literal-reads-the-named-dict-only,
+  section = {dagnames},
+  title  = {The dict bound to the name is read, with a non-list value dropped},
+  claim  = {The dict bound to the name is read, with a non-list value dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_literal_reads_the_named_dict_only},
+}
+
+@misc{importdag-dagnames-literal-of-a-non-dict-is-empty,
+  section = {dagnames},
+  title  = {A binding that is not a dict yields an empty mapping},
+  claim  = {A binding that is not a dict yields an empty mapping.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_literal_of_a_non_dict_is_empty},
+}
+
+@misc{importdag-dagnames-to-module-dots-the-path,
+  section = {dagnames},
+  title  = {A path becomes the dotted name, `.py` removed},
+  claim  = {A path becomes the dotted name, `.py` removed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_to_module_dots_the_path},
+}
+
+@misc{importdag-dagnames-to-module-qualifies-a-subpackage-only,
+  section = {dagnames},
+  title  = {`pkg` qualifies a subpackage name and leaves a top-level name bare},
+  claim  = {`pkg` qualifies a subpackage name and leaves a top-level name bare.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_to_module_qualifies_a_subpackage_only},
+}
+
+@misc{importdag-dagnames-module-names-are-sorted-and-skippable,
+  section = {dagnames},
+  title  = {Every component's modules are named; `skip` drops whole components},
+  claim  = {Every component's modules are named; `skip` drops whole components.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_module_names_are_sorted_and_skippable},
+}
+
+@misc{importdag-dagnames-child-env-orders-the-roots,
+  section = {dagnames},
+  title  = {The engine, its parent and the package location come first, then the inherited path},
+  claim  = {The engine, its parent and the package location come first, then the inherited path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_child_env_orders_the_roots},
+}
+
+@misc{importdag-dagnames-child-env-without-an-inherited-path,
+  section = {dagnames},
+  title  = {With no inherited path the value is only the three roots; the rest is carried over},
+  claim  = {With no inherited path the value is only the three roots; the rest is carried over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_child_env_without_an_inherited_path},
+}
+
+@misc{importdag-dagnames-prelude-mutates-no-path,
+  section = {dagnames},
+  title  = {The child imports this module by its package name and edits no `sys.path`},
+  claim  = {The child imports this module by its package name and edits no `sys.path`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_prelude_mutates_no_path},
+}
+
+@misc{importdag-dagnames-unresolvable-passes-importable-names,
+  section = {dagnames},
+  title  = {Each real child imports its name, so nothing is reported},
+  claim  = {Each real child imports its name, so nothing is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_unresolvable_passes_importable_names},
+}
+
+@misc{importdag-dagnames-unresolvable-reports-the-failing-name-and-why,
+  section = {dagnames},
+  title  = {Only the name that does not import is reported, with its child's last line},
+  claim  = {Only the name that does not import is reported, with its child's last line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_unresolvable_reports_the_failing_name_and_why},
+}
+
+@misc{importdag-dagnames-unresolvable-cuts-the-reason-at-96-characters,
+  section = {dagnames},
+  title  = {A long failure line is cut to 96 characters},
+  claim  = {A long failure line is cut to 96 characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_unresolvable_cuts_the_reason_at_96_characters},
+}
+
+@misc{importdag-dagnames-unresolvable-reports-an-empty-reason-for-a-silent-exit,
+  section = {dagnames},
+  title  = {A child that exits non-zero without output is reported with an empty reason},
+  claim  = {A child that exits non-zero without output is reported with an empty reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_unresolvable_reports_an_empty_reason_for_a_silent_exit},
+}
+
+@misc{importdag-dagnames-child-binds-this-module-through-the-environment,
+  section = {dagnames},
+  title  = {In the child this module is already loaded, and PYTHONPATH carries the roots},
+  claim  = {In the child this module is already loaded, and PYTHONPATH carries the roots.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_child_binds_this_module_through_the_environment},
+}
+
+@misc{importdag-dagnames-unresolvable-runs-the-child-in-root,
+  section = {dagnames},
+  title  = {`root` is the child's working directory, and defaults to the engine's parent},
+  claim  = {`root` is the child's working directory, and defaults to the engine's parent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_unresolvable_runs_the_child_in_root},
+}
+
+@misc{importdag-dagnames-options-default-to-the-paperkit-engine,
+  section = {dagnames},
+  title  = {With nothing asked for, the engine is `paperkit`, nothing is skipped or verified},
+  claim  = {With nothing asked for, the engine is `paperkit`, nothing is skipped or verified.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_options_default_to_the_paperkit_engine},
+}
+
+@misc{importdag-dagnames-parse-args-reads-every-option,
+  section = {dagnames},
+  title  = {Each option takes the next word, and `--verify` is a flag},
+  claim  = {Each option takes the next word, and `--verify` is a flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_parse_args_reads_every_option},
+}
+
+@misc{importdag-dagnames-parse-args-stops-at-an-unknown-word,
+  section = {dagnames},
+  title  = {The first unknown word ends the options, and a dangling option is ignored},
+  claim  = {The first unknown word ends the options, and a dangling option is ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_parse_args_stops_at_an_unknown_word},
+}
+
+@misc{importdag-dagnames-main-prints-the-names,
+  section = {dagnames},
+  title  = {Without `--verify` the names are printed one per line and the exit code is 0},
+  claim  = {Without `--verify` the names are printed one per line and the exit code is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_main_prints_the_names},
+}
+
+@misc{importdag-dagnames-main-verify-counts-what-imports,
+  section = {dagnames},
+  title  = {With `--verify` and every name importable, the count line is printed and the code is 0},
+  claim  = {With `--verify` and every name importable, the count line is printed and the code is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_main_verify_counts_what_imports},
+}
+
+@misc{importdag-dagnames-main-verify-fails-on-a-bad-name,
+  section = {dagnames},
+  title  = {A name that does not import is listed, the warning is printed and the code is 1},
+  claim  = {A name that does not import is listed, the warning is printed and the code is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_main_verify_fails_on_a_bad_name},
+}
+
+@misc{importdag-dagnames-main-reads-sys-argv-when-not-given-argv,
+  section = {dagnames},
+  title  = {With no argv, the process arguments after the program name are used},
+  claim  = {With no argv, the process arguments after the program name are used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_main_reads_sys_argv_when_not_given_argv},
+}
+
+@misc{importdag-dagnames-module-path-import-from-a-fresh-interpreter,
+  section = {dagnames},
+  title  = {A fresh interpreter can import the name check by module path and run it},
+  claim  = {A fresh interpreter can import the name check by module path and run it. This is the
+            property a held-out gate witness needs: nothing but the installed package.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_module_path_import_from_a_fresh_interpreter},
+}
+
+@misc{importdag-dagnames-runs-as-a-module,
+  section = {dagnames},
+  title  = {`python -m mikemol.importdag.dagnames` exits with `main`'s code},
+  claim  = {`python -m mikemol.importdag.dagnames` exits with `main`'s code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_runs_as_a_module},
+}
+
+@misc{importdag-closure-census-default-tree-follows-the-paperkit-layout,
+  section = {closure_census},
+  title  = {The engine is `paperkit` and the closure script is `tools/closure.py`, under the root},
+  claim  = {The engine is `paperkit` and the closure script is `tools/closure.py`, under the root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_default_tree_follows_the_paperkit_layout},
+}
+
+@misc{importdag-closure-census-engine-modules-are-prefixed-and-sorted,
+  section = {closure_census},
+  title  = {Every component's paths, sorted, prefixed with the engine directory's name},
+  claim  = {Every component's paths, sorted, prefixed with the engine directory's name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_engine_modules_are_prefixed_and_sorted},
+}
+
+@misc{importdag-closure-census-declared-asks-the-closure-tool,
+  section = {closure_census},
+  title  = {Import rows become stems by claim; non-import rows and short rows are skipped},
+  claim  = {Import rows become stems by claim; non-import rows and short rows are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_declared_asks_the_closure_tool},
+}
+
+@misc{importdag-closure-census-dispatch-table-reads-the-registry,
+  section = {closure_census},
+  title  = {Only a registry dict with string keys and plain-name values is read},
+  claim  = {Only a registry dict with string keys and plain-name values is read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_dispatch_table_reads_the_registry},
+}
+
+@misc{importdag-closure-census-scripts-named-finds-sibling-basenames,
+  section = {closure_census},
+  title  = {A string constant naming a sibling by its last segment counts; others do not},
+  claim  = {A string constant naming a sibling by its last segment counts; others do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_scripts_named_finds_sibling_basenames},
+}
+
+@misc{importdag-closure-census-script-imports-reads-both-forms,
+  section = {closure_census},
+  title  = {A flat import and a flat from-import of an engine stem are the seed},
+  claim  = {A flat import and a flat from-import of an engine stem are the seed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_script_imports_reads_both_forms},
+}
+
+@misc{importdag-closure-census-script-imports-survive-an-unreadable-script,
+  section = {closure_census},
+  title  = {A missing file and a syntax error each yield the empty set},
+  claim  = {A missing file and a syntax error each yield the empty set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_script_imports_survive_an_unreadable_script},
+}
+
+@misc{importdag-closure-census-cone-expands-through-engine-edges,
+  section = {closure_census},
+  title  = {A seed brings in what it imports, transitively, and an unknown seed adds nothing},
+  claim  = {A seed brings in what it imports, transitively, and an unknown seed adds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_cone_expands_through_engine_edges},
+}
+
+@misc{importdag-closure-census-witness-modules-come-from-a-bib-and-the-toml,
+  section = {closure_census},
+  title  = {A script is a witness when a `.bib` or `paper.toml` names it and it exists},
+  claim  = {A script is a witness when a `.bib` or `paper.toml` names it and it exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_witness_modules_come_from_a_bib_and_the_toml},
+}
+
+@misc{importdag-closure-census-witness-modules-of-a-project-without-checks,
+  section = {closure_census},
+  title  = {No `checks` directory means no witnesses},
+  claim  = {No `checks` directory means no witnesses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_witness_modules_of_a_project_without_checks},
+}
+
+@misc{importdag-closure-census-audit-witness-flags-the-unstaged-cone,
+  section = {closure_census},
+  title  = {The script's cone minus the claim's declared roots is the gap},
+  claim  = {The script's cone minus the claim's declared roots is the gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_audit_witness_flags_the_unstaged_cone},
+}
+
+@misc{importdag-closure-census-audit-witness-passes-a-covered-cone,
+  section = {closure_census},
+  title  = {When the declared roots already hold the whole cone there is no gap},
+  claim  = {When the declared roots already hold the whole cone there is no gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_audit_witness_passes_a_covered_cone},
+}
+
+@misc{importdag-closure-census-audit-witness-without-siblings-has-no-gaps,
+  section = {closure_census},
+  title  = {A witness alone in its checks directory names no sibling script},
+  claim  = {A witness alone in its checks directory names no sibling script.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_audit_witness_without_siblings_has_no_gaps},
+}
+
+@misc{importdag-closure-census-audit-witness-outside-the-root-is-passed-absolute,
+  section = {closure_census},
+  title  = {A witness out of tree reaches the closure tool as an absolute path},
+  claim  = {A witness out of tree reaches the closure tool as an absolute path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_audit_witness_outside_the_root_is_passed_absolute},
+}
+
+@misc{importdag-closure-census-audit-collects-every-witness,
+  section = {closure_census},
+  title  = {The gaps of every witness module of the project are returned},
+  claim  = {The gaps of every witness module of the project are returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_audit_collects_every_witness},
+}
+
+@misc{importdag-closure-census-projects-of-includes-the-root-project,
+  section = {closure_census},
+  title  = {A subdirectory with checks is a project, and so is the root when it has its own},
+  claim  = {A subdirectory with checks is a project, and so is the root when it has its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_projects_of_includes_the_root_project},
+}
+
+@misc{importdag-closure-census-parse-args-defaults-to-the-current-directory,
+  section = {closure_census},
+  title  = {With no options the tree is the paperkit layout under the working directory},
+  claim  = {With no options the tree is the paperkit layout under the working directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_parse_args_defaults_to_the_current_directory},
+}
+
+@misc{importdag-closure-census-parse-args-reads-root-and-closure,
+  section = {closure_census},
+  title  = {`--root` and `--closure` take the next word, resolved; the rest are project labels},
+  claim  = {`--root` and `--closure` take the next word, resolved; the rest are project labels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_parse_args_reads_root_and_closure},
+}
+
+@misc{importdag-closure-census-parse-args-treats-a-dangling-option-as-a-label,
+  section = {closure_census},
+  title  = {An option with no value after it is a project label, not an option},
+  claim  = {An option with no value after it is a project label, not an option.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_parse_args_treats_a_dangling_option_as_a_label},
+}
+
+@misc{importdag-closure-census-main-reports-the-gap,
+  section = {closure_census},
+  title  = {A gap is printed with what was examined, and the exit code is 1},
+  claim  = {A gap is printed with what was examined, and the exit code is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_main_reports_the_gap},
+}
+
+@misc{importdag-closure-census-main-clean-and-filtered,
+  section = {closure_census},
+  title  = {A project filtered out is not examined: the count is 0 and the exit code is 0},
+  claim  = {A project filtered out is not examined: the count is 0 and the exit code is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_main_clean_and_filtered},
+}
+
+@misc{importdag-closure-census-main-names-a-project-without-a-witness,
+  section = {closure_census},
+  title  = {A project with a checks directory but no named witness is listed as skipped},
+  claim  = {A project with a checks directory but no named witness is listed as skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_main_names_a_project_without_a_witness},
+}
+
+@misc{importdag-closure-census-main-reads-sys-argv-when-not-given-argv,
+  section = {closure_census},
+  title  = {With no argv, the process arguments after the program name are used},
+  claim  = {With no argv, the process arguments after the program name are used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_main_reads_sys_argv_when_not_given_argv},
+}
+
+@misc{importdag-closure-census-runs-as-a-module,
+  section = {closure_census},
+  title  = {`python -m mikemol.importdag.closure_census` exits with `main`'s code},
+  claim  = {`python -m mikemol.importdag.closure_census` exits with `main`'s code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_runs_as_a_module},
+}

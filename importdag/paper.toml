@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.importdag: the engine import DAG, importable module names, and the witness closure census"
+subtitle = "Edges recorded by path with an ambiguous stem refused, names proven importable by a fresh child interpreter, and the census of witnesses whose subprocess script out-runs its declared closure."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "IMPORTDAG.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
