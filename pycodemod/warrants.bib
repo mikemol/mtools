@@ -2875,3 +2875,311 @@
   claim  = {The class gcd counts two referents and excludes a site sharing none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fingerprint.py -k test_sites_sharing_two_referents_have_gcd_omega_two_and_a_third_is_outside},
 }
+
+@misc{pycodemod-storeflow-roster-reader-on-a-roster-receiver-is-a-store-read,
+  section = {storeflow},
+  title  = {A reader name on a receiver name, both in the vocabulary, is a read; one half is not},
+  claim  = {A reader name on a receiver name, both in the vocabulary, is a read; one half is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_roster_reader_on_a_roster_receiver_is_a_store_read},
+}
+
+@misc{pycodemod-storeflow-reader-on-a-call-or-attribute-receiver-is-a-store-read,
+  section = {storeflow},
+  title  = {⚑ `QB.run(...)` has no plain receiver to look up, and a chained fetch is read on a call},
+  claim  = { `QB.run(...)` has no plain receiver to look up, and a chained fetch is read on a call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_reader_on_a_call_or_attribute_receiver_is_a_store_read},
+}
+
+@misc{pycodemod-storeflow-empty-vocabulary-recognises-no-store-read,
+  section = {storeflow},
+  title  = {⚑⚑⚑ NO DEFAULT: with nothing named, the substrate-shaped call is not a read either},
+  claim  = { NO DEFAULT: with nothing named, the substrate-shaped call is not a read either.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_an_empty_vocabulary_recognises_no_store_read},
+}
+
+@misc{pycodemod-storeflow-store-reader-fns-names-every-function-that-reads,
+  section = {storeflow},
+  title  = {A def whose body reads, async or not, is named; a def that only computes is not},
+  claim  = {A def whose body reads, async or not, is named; a def that only computes is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_store_reader_fns_names_every_function_that_reads},
+}
+
+@misc{pycodemod-storeflow-call-to-a-reader-helper-is-a-read-one-hop-out,
+  section = {storeflow},
+  title  = {⚑ The defect sits one hop from the cursor: a call by bare name to a reader counts},
+  claim  = { The defect sits one hop from the cursor: a call by bare name to a reader counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_call_to_a_reader_helper_is_a_read_one_hop_out},
+}
+
+@misc{pycodemod-storeflow-touches-asks-whether-an-expression-mentions-a-name,
+  section = {storeflow},
+  title  = {A Name anywhere in the expression counts; no expression touches nothing},
+  claim  = {A Name anywhere in the expression counts; no expression touches nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_touches_asks_whether_an_expression_mentions_a_name},
+}
+
+@misc{pycodemod-storeflow-has-read-finds-a-read-anywhere-in-an-expression,
+  section = {storeflow},
+  title  = {A read nested in a comprehension is found, direct or through a helper; no node has none},
+  claim  = {A read nested in a comprehension is found, direct or through a helper; no node has none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_has_read_finds_a_read_anywhere_in_an_expression},
+}
+
+@misc{pycodemod-storeflow-row-names-are-the-targets-bound-from-a-read,
+  section = {storeflow},
+  title  = {An assignment from a read and a loop over one both bind rows; other names do not},
+  claim  = {An assignment from a read and a loop over one both bind rows; other names do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_row_names_are_the_targets_bound_from_a_read},
+}
+
+@misc{pycodemod-storeflow-row-names-reads-only-the-nodes-it-is-handed,
+  section = {storeflow},
+  title  = {⚑ A scope census passes its own nodes: a name bound in a def it skips is not a row name},
+  claim  = { A scope census passes its own nodes: a name bound in a def it skips is not a row name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_row_names_reads_only_the_nodes_it_is_handed},
+}
+
+@misc{pycodemod-storeflow-derived-names-carry-row-data-exactly-one-hop,
+  section = {storeflow},
+  title  = {An accumulator fed a row and a name assigned from one derive; a second hop does not},
+  claim  = {An accumulator fed a row and a name assigned from one derive; a second hop does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_derived_names_carry_row_data_exactly_one_hop},
+}
+
+@misc{pycodemod-storeflow-loop-unpacking-an-execute-is-a-rawread,
+  section = {storeflow},
+  title  = {⚑ AUTHORED FRESH. A dict-row cursor unpacks KEYS, so a tuple target is `unpacked`},
+  claim  = { AUTHORED FRESH. A dict-row cursor unpacks KEYS, so a tuple target is `unpacked`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_loop_unpacking_an_execute_is_a_rawread},
+}
+
+@misc{pycodemod-storeflow-loop-binding-one-target-over-an-execute-is-iterated,
+  section = {storeflow},
+  title  = {⚑ AUTHORED FRESH. A single target is still a consumer of row shape: `iterated`},
+  claim  = { AUTHORED FRESH. A single target is still a consumer of row shape: `iterated`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_loop_binding_one_target_over_an_execute_is_iterated},
+}
+
+@misc{pycodemod-storeflow-comprehension-over-an-execute-is-a-rawread,
+  section = {storeflow},
+  title  = {⚑ AUTHORED FRESH. List, set, dict and generator comprehensions each read row shape},
+  claim  = { AUTHORED FRESH. List, set, dict and generator comprehensions each read row shape.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_comprehension_over_an_execute_is_a_rawread},
+}
+
+@misc{pycodemod-storeflow-builtin-materialising-an-execute-is-a-rawread,
+  section = {storeflow},
+  title  = {⚑ AUTHORED FRESH. `list(con.execute(..))` is named by its builtin, `list()`},
+  claim  = { AUTHORED FRESH. `list(con.execute(..))` is named by its builtin, `list()`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_builtin_materialising_an_execute_is_a_rawread},
+}
+
+@misc{pycodemod-storeflow-bare-execute-is-not-a-rawread,
+  section = {storeflow},
+  title  = {⚑ AUTHORED FRESH. Nothing reads the rows of `con.execute("DELETE ...")`},
+  claim  = { AUTHORED FRESH. Nothing reads the rows of `con.execute("DELETE ...")`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_a_bare_execute_is_not_a_rawread},
+}
+
+@misc{pycodemod-storeflow-connection-roster-is-an-operand,
+  section = {storeflow},
+  title  = {⚑ AUTHORED FRESH. A connection the vocabulary does not name is no rawread},
+  claim  = { AUTHORED FRESH. A connection the vocabulary does not name is no rawread.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_the_connection_roster_is_an_operand},
+}
+
+@misc{pycodemod-storeflow-rawread-sites-reports-every-file-it-could-not-read,
+  section = {storeflow},
+  title  = {⚑⚑⚑ The origin returned [] for a file it could not read; that reads as 'no unsafe read'},
+  claim  = { The origin returned [] for a file it could not read; that reads as 'no unsafe read'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_storeflow.py -k test_rawread_sites_reports_every_file_it_could_not_read},
+}
+
+@misc{pycodemod-sql-prose-label-starting-with-a-keyword-is-not-a-site,
+  section = {sql},
+  title  = {`WITH RECURSIVE +` clears a head test; the engine's parser is what rejects it},
+  claim  = {`WITH RECURSIVE +` clears a head test; the engine's parser is what rejects it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_prose_label_starting_with_a_keyword_is_not_a_site},
+}
+
+@misc{pycodemod-sql-real-statement-is-a-site-and-carries-its-style,
+  section = {sql},
+  title  = {A schema constant is `literal`; the same relation run by an executor is `raw`},
+  claim  = {A schema constant is `literal`; the same relation run by an executor is `raw`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_real_statement_is_a_site_and_carries_its_style},
+}
+
+@misc{pycodemod-sql-builder-call-holding-sql-is-graded-builder,
+  section = {sql},
+  title  = {The origin's builder arm asserted nothing (the call held no SQL); this literal is SQL},
+  claim  = {The origin's builder arm asserted nothing (the call held no SQL); this literal is SQL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_builder_call_holding_sql_is_graded_builder},
+}
+
+@misc{pycodemod-sql-builder-grade-needs-the-builder-roster,
+  section = {sql},
+  title  = {With no builders named the same call is a plain `literal`, so the grade is the roster's},
+  claim  = {With no builders named the same call is a plain `literal`, so the grade is the roster's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_builder_grade_needs_the_builder_roster},
+}
+
+@misc{pycodemod-sql-executor-nested-in-a-builder-wins,
+  section = {sql},
+  title  = {A statement handed to both a builder and an executor is run raw},
+  claim  = {A statement handed to both a builder and an executor is run raw.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_an_executor_nested_in_a_builder_wins},
+}
+
+@misc{pycodemod-sql-call-outside-both-rosters-leaves-a-literal,
+  section = {sql},
+  title  = {`other("SELECT ...")` is neither run raw nor built},
+  claim  = {`other("SELECT ...")` is neither run raw nor built.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_call_outside_both_rosters_leaves_a_literal},
+}
+
+@misc{pycodemod-sql-percent-parameterised-statement-is-a-site-and-raw,
+  section = {sql},
+  title  = {`"... %s" % ph()` is a BinOp inside the argument; `%` is not modulo, the literal is raw},
+  claim  = {`"... %s" % ph()` is a BinOp inside the argument; `%` is not modulo, the literal is raw.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_percent_parameterised_statement_is_a_site_and_raw},
+}
+
+@misc{pycodemod-sql-empty-roster-grades-everything-literal,
+  section = {sql},
+  title  = {The roster is an operand: no executors named means nothing is raw},
+  claim  = {The roster is an operand: no executors named means nothing is raw.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_an_empty_roster_grades_everything_literal},
+}
+
+@misc{pycodemod-sql-statement-sqlite-refuses-needs-a-caller-oracle,
+  section = {sql},
+  title  = {The second judge is supplied, asked only after sqlite refuses, and sees the NULL form},
+  claim  = {The second judge is supplied, asked only after sqlite refuses, and sees the NULL form.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_statement_sqlite_refuses_needs_a_caller_oracle},
+}
+
+@misc{pycodemod-sql-rejecting-oracle-changes-nothing,
+  section = {sql},
+  title  = {An oracle that says no leaves prose and invalid statements out},
+  claim  = {An oracle that says no leaves prose and invalid statements out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_a_rejecting_oracle_changes_nothing},
+}
+
+@misc{pycodemod-sql-statement-is-whole-and-whitespace-collapsed,
+  section = {sql},
+  title  = {The full text is kept, not an excerpt; a line break inside it is one space},
+  claim  = {The full text is kept, not an excerpt; a line break inside it is one space.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_the_statement_is_whole_and_whitespace_collapsed},
+}
+
+@misc{pycodemod-sql-unreadable-file-is-returned-not-dropped,
+  section = {sql},
+  title  = {A syntax error is reported as skipped beside the files that were read},
+  claim  = {A syntax error is reported as skipped beside the files that were read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_an_unreadable_file_is_returned_not_dropped},
+}
+
+@misc{pycodemod-sql-statement-text-offers-engines-the-placeholder-free-form,
+  section = {sql},
+  title  = {The shared normaliser: `%s` and `:name` become NULL, a non-head word yields None},
+  claim  = {The shared normaliser: `%s` and `:name` become NULL, a non-head word yields None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sql.py -k test_statement_text_offers_engines_the_placeholder_free_form},
+}
+
+@misc{pycodemod-reads-join-over-literals-is-a-file-with-root-skipped,
+  section = {reads},
+  title  = {`join(ROOT, "scripts", "a.py")` reads `scripts/a.py`; `ROOT` is named by the caller},
+  claim  = {`join(ROOT, "scripts", "a.py")` reads `scripts/a.py`; `ROOT` is named by the caller.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_join_over_literals_is_a_file_with_root_skipped},
+}
+
+@misc{pycodemod-reads-root-names-are-the-callers-not-a-suffix,
+  section = {reads},
+  title  = {A part not named in `root_names` is unresolved, even if it ends in ROOT},
+  claim  = {A part not named in `root_names` is unresolved, even if it ends in ROOT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_root_names_are_the_callers_not_a_suffix},
+}
+
+@misc{pycodemod-reads-assignment-binding-is-followed,
+  section = {reads},
+  title  = {`x = "a.py"` then `join(d, x)` follows the binding},
+  claim  = {`x = "a.py"` then `join(d, x)` follows the binding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_assignment_binding_is_followed},
+}
+
+@misc{pycodemod-reads-for-over-literal-tuple-yields-every-element,
+  section = {reads},
+  title  = {`for n in ("a.py", "b.py")` yields both files},
+  claim  = {`for n in ("a.py", "b.py")` yields both files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_for_over_literal_tuple_yields_every_element},
+}
+
+@misc{pycodemod-reads-import-resolves-to-a-file-in-module-dirs,
+  section = {reads},
+  title  = {`import m` is a read of `<dir>/m.py`; a stdlib import contributes no edge},
+  claim  = {`import m` is a read of `<dir>/m.py`; a stdlib import contributes no edge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_import_resolves_to_a_file_in_module_dirs},
+}
+
+@misc{pycodemod-reads-import-found-in-no-dir-is-no-edge,
+  section = {reads},
+  title  = {With no module dir holding it, an imported name is not invented as a file},
+  claim  = {With no module dir holding it, an imported name is not invented as a file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_import_found_in_no_dir_is_no_edge},
+}
+
+@misc{pycodemod-reads-non-literal-part-is-unresolved-and-partial-is-not-a-file,
+  section = {reads},
+  title  = {An unbound part reports the partial path as unresolved, never in `files`},
+  claim  = {An unbound part reports the partial path as unresolved, never in `files`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_non_literal_part_is_unresolved_and_partial_is_not_a_file},
+}
+
+@misc{pycodemod-reads-alternatives-over-the-cap-are-unresolved,
+  section = {reads},
+  title  = {A product past `MAX_ALTERNATIVES` is reported unresolved, not truncated into files},
+  claim  = {A product past `MAX_ALTERNATIVES` is reported unresolved, not truncated into files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_alternatives_over_the_cap_are_unresolved},
+}
+
+@misc{pycodemod-reads-bare-directory-is-not-a-read,
+  section = {reads},
+  title  = {`join(ROOT, "scratch")` has no suffix: import plumbing, not a file},
+  claim  = {`join(ROOT, "scratch")` has no suffix: import plumbing, not a file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_bare_directory_is_not_a_read},
+}
+
+@misc{pycodemod-reads-flag-literal-is-a-symbol-and-prose-is-not,
+  section = {reads},
+  title  = {`"--set"` is a symbol; a docstring sentence and a read file name are not},
+  claim  = {`"--set"` is a symbol; a docstring sentence and a read file name are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_flag_literal_is_a_symbol_and_prose_is_not},
+}
+
+@misc{pycodemod-reads-other-functions-are-not-read,
+  section = {reads},
+  title  = {A literal in a sibling function is neither a symbol nor a file},
+  claim  = {A literal in a sibling function is neither a symbol nor a file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_other_functions_are_not_read},
+}
+
+@misc{pycodemod-reads-absent-function-raises,
+  section = {reads},
+  title  = {A name defined nowhere is an error, not an empty "reads nothing"},
+  claim  = {A name defined nowhere is an error, not an empty "reads nothing".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_absent_function_raises},
+}
+
+@misc{pycodemod-reads-unparseable-file-is-a-skip,
+  section = {reads},
+  title  = {An unparseable file comes back empty with its skip, not as a clean census},
+  claim  = {An unparseable file comes back empty with its skip, not as a clean census.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_unparseable_file_is_a_skip},
+}
+
+@misc{pycodemod-reads-missing-file-is-a-skip,
+  section = {reads},
+  title  = {A path that does not exist is reported as unreadable},
+  claim  = {A path that does not exist is reported as unreadable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_missing_file_is_a_skip},
+}

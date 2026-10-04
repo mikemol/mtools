@@ -357,6 +357,23 @@ def sql_rw(sql: str) -> tuple[set[str], set[str]]:
     return ({n for n, k in roles if k == "w"}, {n for n, k in roles if k == "r"})
 
 
+def statement_text(text: str) -> str | None:
+    """Return `text` ready to offer a SQL engine, or None when its first word is no SQL head.
+
+    A format placeholder is a value, not syntax, so each is replaced by `NULL` (never `?`, which is
+    not every engine's marker); a leading `(` is dropped.
+
+    Returns:
+        the placeholder-free statement, or None.
+
+    """
+    stripped = text.strip().lstrip("(").strip()
+    words = stripped.split(None, 1)
+    if not words or words[0].lower().strip("(),;") not in _SQL_HEADS:
+        return None
+    return _PLACEHOLDER.sub("NULL", stripped)
+
+
 def is_sql(text: str) -> bool:
     """Report whether `text` is a SQL statement SQLite's parser accepts.
 
@@ -370,13 +387,12 @@ def is_sql(text: str) -> bool:
         whether the text parses as a statement.
 
     """
-    stripped = text.strip().lstrip("(").strip()
-    words = stripped.split(None, 1)
-    if not words or words[0].lower().strip("(),;") not in _SQL_HEADS:
+    candidate = statement_text(text)
+    if candidate is None:
         return False
     con = sqlite3.connect(":memory:")
     try:
-        con.execute("EXPLAIN " + _PLACEHOLDER.sub("NULL", stripped))
+        con.execute("EXPLAIN " + candidate)
     except sqlite3.OperationalError as exc:
         return "no such" in str(exc)
     except sqlite3.Error:

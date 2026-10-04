@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 625,
+  "counter": 627,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -12061,11 +12061,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Commit 1 of 4 per .claude/swarm/W606-control-port.md: roster module with RowSource as an explicit operand; then provenance, census class, report plus CLI",
-      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W606-control-port.md): PORT, generalized in four modules; the only substrate-specific part is is_store_read, which becomes a RowSource operand, so the 09-26 decline does not hold on merit. Open check before commit 1: swallows.py uses stdlib ast, confirm in core.py whether libcst-required applies to a read-only census. Depends on W609 for the store predicates.",
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W606-control-port.md): PORT, generalized in four modules; the only substrate-specific part is is_store_read, which becomes a RowSource operand, so the 09-26 decline does not hold on merit. Open check before commit 1: swallows.py uses stdlib ast, confirm in core.py whether libcst-required applies to a read-only census. Depends on W609 for the store predicates. | 2026-10-04: 2026-10-04 W609 landed in storeflow.py: the control port must import StoreVocab, is_store_read, is_store_read2, store_reader_fns, row_names, derived_names, touches, has_read from mikemol.pycodemod.storeflow; every predicate except touches and derived_names now takes vocab: StoreVocab (store_reader_fns(tree, vocab); is_store_read2, has_read and row_names take (..., rfns, vocab)), so the control census takes a StoreVocab as its own operand.",
       "issued_at": "2026-10-04T19:25:21Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:00:55Z",
+      "last_worked": "2026-10-04T21:20:32Z",
       "ticks_blocked": 0
     },
     {
@@ -12098,48 +12098,50 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After W610 and W609: port per .claude/swarm/W608-W610-sql-family.md with a FakeProbe of recorded verdicts and a FakeConnection raising SQLSTATE errors; keep store.sandbox_connect and the jea path insert out",
-      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W608-W610-sql-family.md): PORT behind a Probe protocol; order is W610, then W609, then W608.",
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W608-W610-sql-family.md): PORT behind a Probe protocol; order is W610, then W609, then W608. | 2026-10-04: 2026-10-04 its prerequisites W609 (storeflow.py) and W610 (sql.py) landed; W608 is now unblocked",
       "issued_at": "2026-10-04T19:25:23Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:00:55Z",
+      "last_worked": "2026-10-04T21:20:32Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W609",
       "title": "pycodemod storeflow.py: StoreVocab operand plus is_store_read, store_reader_fns, row_names, derived_names",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port per .claude/swarm/W608-W610-sql-family.md with no default vocabulary; the source has no rawread_sites arm so write about four; independent of W610; W606 needs these predicates",
-      "evidence": "2026-10-04: 2026-10-04 drafter: PORT. _pycodemod_control.py already imports five of these predicates.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT. _pycodemod_control.py already imports five of these predicates. | 2026-10-04: storeflow.py first unit: StoreVocab (required operand, no default), is_store_read, store_reader_fns, is_store_read2, touches, has_read, row_names, derived_names, rawread_sites (authored-fresh arms, files returned as Skip); 17 tests, 17 warrants under rubric key storeflow; F-arm: any Name receiver counted as a store read, 1 arm red; NOT ported: snapshot_sites (planned snapshots.py) and relalg_sites (planned relalg.py), tracked as W626 and W627; committed under W609",
       "issued_at": "2026-10-04T19:25:23Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:00:55Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:20:23Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T212023Z"
     },
     {
       "symbol": "W610",
       "title": "pycodemod sql.py: sql_sites reads SQL literals and grades raw vs literal by a caller-supplied executor roster",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port per .claude/swarm/W608-W610-sql-family.md first of the three; fix or drop the dead builder style branch (keyed on Call ids, read on Constant ids, so its arm passes vacuously); relname_sites in relations.py needs this",
-      "evidence": "2026-10-04: 2026-10-04 drafter: PORT; the origin's builder style branch is dead (Call ids vs Constant ids), so the 'builder not counted' arm passes vacuously.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT; the origin's builder style branch is dead (Call ids vs Constant ids), so the 'builder not counted' arm passes vacuously. | 2026-10-04: sql.py: SqlConfig(executors, builders, oracles), SqlSite, sql_sites graded raw, builder or literal by the caller's rosters; the origin's dead builder branch FIXED with real arms (precedence: an executor beats a builder); relations.statement_text made public; 13 tests, 13 warrants under rubric key sql; F-arm: builder test inverted, 4 arms red; known bounds: the file is parsed twice (literal_sites exposes no ancestry), a docstring that is SQL is reported as in the origin; committed under W610",
       "issued_at": "2026-10-04T19:25:24Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:00:56Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:20:23Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T212023Z"
     },
     {
       "symbol": "W611",
@@ -12183,20 +12185,21 @@
     {
       "symbol": "W613",
       "title": "pycodemod: reads.py, the files and flags one named function reads, binding-followed, unresolved paths reported",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port per .claude/swarm/W612-W614-census-modes.md: roots and module dirs are caller operands; substrate has no selftest arms for touches so author them fresh and say so; the roster reader and dagcone grouping stay out",
-      "evidence": "2026-10-04: 2026-10-04 drafter: PORT.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT. | 2026-10-04: reads.py: function_reads(path, function, root_names, module_dirs, base) -> Reads; root_names an exact caller operand (the origin matched endswith ROOT), over-cap joins reported unresolved not truncated, arms authored fresh and said so; 14 tests, 14 warrants under rubric key reads; F-arm: the alternatives cap effectively removed, test_alternatives_over_the_cap_are_unresolved red; known bounds: from-imports not followed, only SimpleString read, a nested function of the same name counts as the target, as in the origin; committed under W613",
       "issued_at": "2026-10-04T19:25:26Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:01:07Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:20:24Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T212024Z"
     },
     {
       "symbol": "W614",
@@ -12423,6 +12426,42 @@
       "issued_at": "2026-10-04T21:09:31Z",
       "minted_during": "interrupt",
       "caused_by": "W621",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W626",
+      "title": "pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab operand",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Per .claude/swarm/W608-W610-sql-family.md commit 3 for W609: port snapshot_sites using storeflow's StoreVocab predicates; transcribe the origin's arms as synthetic strings",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:20:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "W609",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W627",
+      "title": "pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Per .claude/swarm/W608-W610-sql-family.md commit 2 for W609: port relalg_sites with the kinds roster as an operand",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:20:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "W609",
       "last_worked": null,
       "ticks_blocked": 0
     }

@@ -1027,3 +1027,5 @@
 2026-10-04T21:09:31Z  interrupt W623 minted    -         "pycodemod: referents.py, token_parts, referents and MAX_TOKEN for the fingerprint, with a tiny inlined as_list and no import of control"  evidence=W607
 2026-10-04T21:09:31Z  interrupt W624 minted    -         "pycodemod: the fingerprint Census arithmetic over sites plus an explicit modelled set, with modelled_keys(paths) taking no default seed"  evidence=W607
 2026-10-04T21:09:31Z  interrupt W625 minted    -         "Document the inbound-asks hook's --check mode in hooks/README.md and docs/adopting-a-hook.md, which still say it is not built"  evidence=W621
+2026-10-04T21:20:31Z  interrupt W626 minted    -         "pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab operand"  evidence=W609
+2026-10-04T21:20:31Z  interrupt W627 minted    -         "pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand"  evidence=W609
