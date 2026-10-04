@@ -3402,3 +3402,219 @@
   claim  = { The report is deterministic whatever order the paths and literals arrive in.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_blockers_are_ordered_by_path_then_line},
 }
+
+@misc{pycodemod-snapshots-two-reads-in-one-expression-is-composed,
+  section = {snapshots},
+  title  = {Two round trips in one returned tuple are a composed site with two trips},
+  claim  = {Two round trips in one returned tuple are a composed site with two trips.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_two_reads_in_one_expression_is_composed},
+}
+
+@misc{pycodemod-snapshots-chained-fetch-is-one-trip,
+  section = {snapshots},
+  title  = {`execute(...).fetchall()` is one round trip, so it is not composed},
+  claim  = {`execute(...).fetchall()` is one round trip, so it is not composed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_a_chained_fetch_is_one_trip},
+}
+
+@misc{pycodemod-snapshots-conditional-between-two-spellings-is-one-trip,
+  section = {snapshots},
+  title  = {An `IfExp` runs one branch, so its branches are maxed rather than summed},
+  claim  = {An `IfExp` runs one branch, so its branches are maxed rather than summed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_a_conditional_between_two_spellings_is_one_trip},
+}
+
+@misc{pycodemod-snapshots-read-inside-a-comprehension-is-iterated,
+  section = {snapshots},
+  title  = {One call site run per key is its own kind, not composed},
+  claim  = {One call site run per key is its own kind, not composed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_a_read_inside_a_comprehension_is_iterated},
+}
+
+@misc{pycodemod-snapshots-per-item-loop-read-is-not-composed,
+  section = {snapshots},
+  title  = {A loop reading once per item is correct and is not reported as composed},
+  claim  = {A loop reading once per item is correct and is not reported as composed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_a_per_item_loop_read_is_not_composed},
+}
+
+@misc{pycodemod-snapshots-two-reads-in-different-statements-are-a-sequential-signal,
+  section = {snapshots},
+  title  = {Authored fresh: separate statements are sequential, never composed},
+  claim  = {Authored fresh: separate statements are sequential, never composed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_two_reads_in_different_statements_are_a_sequential_signal},
+}
+
+@misc{pycodemod-snapshots-read-in-a-nested-def-is-not-attributed-to-the-outer-function,
+  section = {snapshots},
+  title  = {Authored fresh: only direct reads count towards the outer function's sequential},
+  claim  = {Authored fresh: only direct reads count towards the outer function's sequential.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_a_read_in_a_nested_def_is_not_attributed_to_the_outer_function},
+}
+
+@misc{pycodemod-snapshots-branch-condition-is-an-evaluation-point-of-its-own,
+  section = {snapshots},
+  title  = {Authored fresh: two reads in an `if` test compose},
+  claim  = {Authored fresh: two reads in an `if` test compose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_a_branch_condition_is_an_evaluation_point_of_its_own},
+}
+
+@misc{pycodemod-snapshots-vocabulary-is-an-operand-and-empty-recognises-nothing,
+  section = {snapshots},
+  title  = {Authored fresh: no default vocabulary, so the fixture reports nothing},
+  claim  = {Authored fresh: no default vocabulary, so the fixture reports nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_the_vocabulary_is_an_operand_and_empty_recognises_nothing},
+}
+
+@misc{pycodemod-snapshots-unreadable-or-unparseable-file-is-returned-as-a-skip,
+  section = {snapshots},
+  title  = {Authored fresh: a bad file is a Skip beside the rows, not a silent zero},
+  claim  = {Authored fresh: a bad file is a Skip beside the rows, not a silent zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_an_unreadable_or_unparseable_file_is_returned_as_a_skip},
+}
+
+@misc{pycodemod-snapshots-rows-are-ordered-by-kind,
+  section = {snapshots},
+  title  = {Authored fresh: composed sorts before iterated},
+  claim  = {Authored fresh: composed sorts before iterated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshots.py -k test_rows_are_ordered_by_kind},
+}
+
+@misc{pycodemod-relalg-dict-keyed-off-rows-then-probed-is-a-join,
+  section = {relalg},
+  title  = {Origin arm. The dict-build side and the probe side are the two halves of one join},
+  claim  = {Origin arm. The dict-build side and the probe side are the two halves of one join.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_dict_keyed_off_rows_then_probed_is_a_join},
+}
+
+@misc{pycodemod-relalg-guard-continue-over-query-rows-is-a-withheld-where,
+  section = {relalg},
+  title  = {Origin arm. A guard-continue is a WHERE, the cheapest thing to migrate},
+  claim  = {Origin arm. A guard-continue is a WHERE, the cheapest thing to migrate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_guard_continue_over_query_rows_is_a_withheld_where},
+}
+
+@misc{pycodemod-relalg-sorted-over-row-derived-rows-is-a-withheld-order-by,
+  section = {relalg},
+  title  = {Origin arm. The rows reach `sorted` through an accumulator, one hop on},
+  claim  = {Origin arm. The rows reach `sorted` through an accumulator, one hop on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_sorted_over_row_derived_rows_is_a_withheld_order_by},
+}
+
+@misc{pycodemod-relalg-per-key-accumulation-is-group-by,
+  section = {relalg},
+  title  = {Origin arm. `d[k] = d.get(k, 0) + 1` aggregates the old value, so its line groups},
+  claim  = {Origin arm. `d[k] = d.get(k, 0) + 1` aggregates the old value, so its line groups. The
+            origin's arm title also says 'not a join', but it asserts only the group-by.
+            The `.get` on the same line is ALSO a probe of a row-keyed dict, so a join
+            is emitted beside it; that residue is kept, not asserted away.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_per_key_accumulation_is_group_by},
+}
+
+@misc{pycodemod-relalg-set-built-to-dedupe-rows-is-a-withheld-distinct,
+  section = {relalg},
+  title  = {Origin arm. A `set` over a comprehension that reads the store is a DISTINCT},
+  claim  = {Origin arm. A `set` over a comprehension that reads the store is a DISTINCT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_set_built_to_dedupe_rows_is_a_withheld_distinct},
+}
+
+@misc{pycodemod-relalg-set-difference-between-two-reading-helpers-is-a-set-op,
+  section = {relalg},
+  title  = {Origin arm. Both operands are plain calls to helpers that read; the defect is one hop out},
+  claim  = {Origin arm. Both operands are plain calls to helpers that read; the defect is one hop
+            out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_set_difference_between_two_reading_helpers_is_a_set_op},
+}
+
+@misc{pycodemod-relalg-algebra-over-a-non-store-argument-is-not-reported,
+  section = {relalg},
+  title  = {Origin arm. Identical algebra over an in-memory argument is withheld from no engine},
+  claim  = {Origin arm. Identical algebra over an in-memory argument is withheld from no engine.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_algebra_over_a_non_store_argument_is_not_reported},
+}
+
+@misc{pycodemod-relalg-kinds-operand-selects-what-is-reported,
+  section = {relalg},
+  title  = {AUTHORED FRESH. A kind outside the operand is not reported, and no kinds reports nothing},
+  claim  = {AUTHORED FRESH. A kind outside the operand is not reported, and no kinds reports
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_the_kinds_operand_selects_what_is_reported},
+}
+
+@misc{pycodemod-relalg-unknown-kind-is-refused-by-name,
+  section = {relalg},
+  title  = {AUTHORED FRESH. A misspelt kind would be a silent zero, so it raises and names the kind},
+  claim  = {AUTHORED FRESH. A misspelt kind would be a silent zero, so it raises and names the kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_an_unknown_kind_is_refused_by_name},
+}
+
+@misc{pycodemod-relalg-empty-vocabulary-finds-no-withheld-algebra,
+  section = {relalg},
+  title  = {AUTHORED FRESH. No default vocabulary: nothing named means nothing is a store read},
+  claim  = {AUTHORED FRESH. No default vocabulary: nothing named means nothing is a store read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_an_empty_vocabulary_finds_no_withheld_algebra},
+}
+
+@misc{pycodemod-relalg-receiver-the-vocabulary-does-not-name-is-not-a-store,
+  section = {relalg},
+  title  = {AUTHORED FRESH. The same source over `db` is silent until `db` is a named receiver},
+  claim  = {AUTHORED FRESH. The same source over `db` is silent until `db` is a named receiver.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_receiver_the_vocabulary_does_not_name_is_not_a_store},
+}
+
+@misc{pycodemod-relalg-async-function-that-reads-is-censused,
+  section = {relalg},
+  title  = {AUTHORED FRESH. An `async def` is a function that reads the store like any other},
+  claim  = {AUTHORED FRESH. An `async def` is a function that reads the store like any other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_an_async_function_that_reads_is_censused},
+}
+
+@misc{pycodemod-relalg-group-by-has-four-spellings,
+  section = {relalg},
+  title  = {AUTHORED FRESH. Augmented assign, `setdefault`, `Counter` and `defaultdict` all group},
+  claim  = {AUTHORED FRESH. Augmented assign, `setdefault`, `Counter` and `defaultdict` all group.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_group_by_has_four_spellings},
+}
+
+@misc{pycodemod-relalg-dict-get-probe-and-a-subscript-probe-are-the-join,
+  section = {relalg},
+  title  = {AUTHORED FRESH. Probing the row-keyed dict with `.get` is the probe side too},
+  claim  = {AUTHORED FRESH. Probing the row-keyed dict with `.get` is the probe side too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_dict_get_probe_and_a_subscript_probe_are_the_join},
+}
+
+@misc{pycodemod-relalg-set-method-and-a-set-comprehension-are-a-set-op-and-a-distinct,
+  section = {relalg},
+  title  = {AUTHORED FRESH. `.union` between row sets is a set-op; a set comprehension is a distinct},
+  claim  = {AUTHORED FRESH. `.union` between row sets is a set-op; a set comprehension is a
+            distinct.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_set_method_and_a_set_comprehension_are_a_set_op_and_a_distinct},
+}
+
+@misc{pycodemod-relalg-comprehension-condition-over-a-read-is-a-filter,
+  section = {relalg},
+  title  = {AUTHORED FRESH. The `if` of a comprehension over a store read is a WHERE},
+  claim  = {AUTHORED FRESH. The `if` of a comprehension over a store read is a WHERE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_comprehension_condition_over_a_read_is_a_filter},
+}
+
+@misc{pycodemod-relalg-list-sort-on-row-data-is-a-sort,
+  section = {relalg},
+  title  = {AUTHORED FRESH. `.sort()` on an accumulator of rows is an ORDER BY, like `sorted`},
+  claim  = {AUTHORED FRESH. `.sort()` on an accumulator of rows is an ORDER BY, like `sorted`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_a_list_sort_on_row_data_is_a_sort},
+}
+
+@misc{pycodemod-relalg-sites-carry-their-path-and-come-back-sorted,
+  section = {relalg},
+  title  = {AUTHORED FRESH. Sites from several files are ordered, and a long snippet is cut},
+  claim  = {AUTHORED FRESH. Sites from several files are ordered, and a long snippet is cut.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_sites_carry_their_path_and_come_back_sorted},
+}
+
+@misc{pycodemod-relalg-every-unreadable-file-is-skipped-not-silently-empty,
+  section = {relalg},
+  title  = {AUTHORED FRESH. The origin returned [] for these, which reads as 'no withheld algebra'},
+  claim  = {AUTHORED FRESH. The origin returned [] for these, which reads as 'no withheld algebra'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relalg.py -k test_every_unreadable_file_is_skipped_not_silently_empty},
+}

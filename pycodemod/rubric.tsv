@@ -41,3 +41,5 @@ sql	The SQL Sites: Literals Graded Raw, Builder or Literal by a Roster the Calle
 reads	The Reads: the Files and Flags One Function Reads, Binding-Followed, Roots Supplied by the Caller, and an Unresolved Part Reported Not Guessed
 referents	The Referent Tokens: Names, Attributes, Keywords and Identifier Strings, a Number or Prose Excluded, and One Referent per Spelling
 portable	The Portable Sites: SQL Literals Judged by a Probe the Caller Injects, SQLSTATE Classified, DDL Only on a Named Sandbox Handle, and No Database in Tests
+snapshots	The Snapshot Sites: One Value Composed Across Store Round Trips, Composed, Iterated or Sequential, Over a Vocabulary the Caller Supplies
+relalg	The Withheld Relational Algebra: Joins, Filters, Orderings, Groupings and Set Operations Done in Python on Store Rows, With the Vocabulary and the Kinds as Operands

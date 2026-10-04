@@ -1034,3 +1034,5 @@
 2026-10-04T21:30:44Z  interrupt W630 minted    -         "pycodemod cli: wire the --relname mode over relations.relname_sites"  evidence=W594
 2026-10-04T21:30:45Z  interrupt W631 minted    -         "pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as flags"  evidence=W610
 2026-10-04T21:30:45Z  interrupt W632 minted    -         "pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and portable, each vocabulary a required flag"  evidence=W612
+2026-10-04T21:39:28Z  interrupt W633 minted    -         "pycodemod: one public parse in core, replacing the private _parse copies in storeflow, snapshots and relalg"  evidence=W627
+2026-10-04T21:39:28Z  interrupt W634 minted    -         "pycodemod cli: wire --rawreads, --snapshots and --relalg over storeflow, snapshots and relalg, the StoreVocab and kinds from required flags"  evidence=W609

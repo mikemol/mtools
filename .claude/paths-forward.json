@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 632,
+  "counter": 634,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -12435,38 +12435,40 @@
     {
       "symbol": "W626",
       "title": "pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab operand",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per .claude/swarm/W608-W610-sql-family.md commit 3 for W609: port snapshot_sites using storeflow's StoreVocab predicates; transcribe the origin's arms as synthetic strings",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: snapshots.py: snapshot_sites(paths, vocab) -> Snapshots(rows, skipped), SnapshotSite(path, kind, fn, line, trips, snippet); 5 arms transcribed from the origin, 6 authored fresh (marked); the origin's per-function dict collapsed same-named functions, here rows are a list; composed and sequential are not exclusive (the origin fixture yields both); 11 tests, 11 warrants under rubric key snapshots; F-arm: the composed threshold >= MANY made > MANY, 3 arms red; committed under W626",
       "issued_at": "2026-10-04T21:20:31Z",
       "minted_during": "interrupt",
       "caused_by": "W609",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:39:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T213928Z"
     },
     {
       "symbol": "W627",
       "title": "pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per .claude/swarm/W608-W610-sql-family.md commit 2 for W609: port relalg_sites with the kinds roster as an operand",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: relalg.py: relalg_sites(paths, vocab, kinds) -> RelAlgSites(rows, skipped), RELALG_KINDS kept as the measure with an unknown-kind ValueError; 7 arms transcribed from the origin, 12 authored fresh (marked); the origin's 'per-key accumulation is GROUP BY, not a join' arm only asserts the group-by (in the origin code the .get also probes the row-keyed dict so a join is emitted too: kept as residue, not fixed); the break kind is not carried; 19 tests, 19 warrants under rubric key relalg; F-arm: the unknown-kind refusal disabled (if unknown -> if False), test_an_unknown_kind_is_refused_by_name red (my first plant hit the wrong line and changed nothing, caught because no arm failed, redone at the right line); committed under W627",
       "issued_at": "2026-10-04T21:20:31Z",
       "minted_during": "interrupt",
       "caused_by": "W609",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:39:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T213928Z"
     },
     {
       "symbol": "W628",
@@ -12556,6 +12558,42 @@
       "issued_at": "2026-10-04T21:30:45Z",
       "minted_during": "interrupt",
       "caused_by": "W612",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W633",
+      "title": "pycodemod: one public parse in core, replacing the private _parse copies in storeflow, snapshots and relalg",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add a public parse to core returning the tree or a Skip, switch the three modules to it, keep every existing test green; red arm: a Skip reason from the shared parse",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:39:28Z",
+      "minted_during": "interrupt",
+      "caused_by": "W627",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W634",
+      "title": "pycodemod cli: wire --rawreads, --snapshots and --relalg over storeflow, snapshots and relalg, the StoreVocab and kinds from required flags",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Required flags, no defaults; a row printer and report.incomplete per mode; one commit per mode if the parser budget allows; update the rubric heading's mode count",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:39:28Z",
+      "minted_during": "interrupt",
+      "caused_by": "W609",
       "last_worked": null,
       "ticks_blocked": 0
     }

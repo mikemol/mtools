@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 632 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:43385a308d14ae66`
+counter 634 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:3f312bbe358dfe2c`
 
 | # | symbol | status |
 |---|---|---|
@@ -22,13 +22,13 @@ counter 632 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:4338
 | 13 | W622 | ready |
 | 14 | W624 | ready |
 | 15 | W625 | ready |
-| 16 | W626 | ready |
-| 17 | W627 | ready |
-| 18 | W628 | ready |
-| 19 | W629 | ready |
-| 20 | W630 | ready |
-| 21 | W631 | ready |
-| 22 | W632 | ready |
+| 16 | W628 | ready |
+| 17 | W629 | ready |
+| 18 | W630 | ready |
+| 19 | W631 | ready |
+| 20 | W632 | ready |
+| 21 | W633 | ready |
+| 22 | W634 | ready |
 | 23 | W319 | blocked |
 | 24 | W317 | blocked |
 | 25 | W576 | blocked |
@@ -624,6 +624,8 @@ counter 632 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:4338
 | 615 | W620 | done |
 | 616 | W621 | done |
 | 617 | W623 | done |
+| 618 | W626 | done |
+| 619 | W627 | done |
 
 ## waypoints
 
@@ -680,32 +682,33 @@ counter 632 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:4338
    still say it is not built
    - next: Add the --check section with the three OK or MISSING lines and the exit codes, and remove the 'not built'
      sentences; lint with mdstruct
-16. **W626** (ready) pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab
-   operand
-   - next: Per .claude/swarm/W608-W610-sql-family.md commit 3 for W609: port snapshot_sites using storeflow's StoreVocab
-     predicates; transcribe the origin's arms as synthetic strings
-17. **W627** (ready) pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand
-   - next: Per .claude/swarm/W608-W610-sql-family.md commit 2 for W609: port relalg_sites with the kinds roster as an
-     operand
-18. **W628** (ready) mutation: a regex: grammar entry for emit_mutant so mutantcell can name a RegexSpec in its claim
+16. **W628** (ready) mutation: a regex: grammar entry for emit_mutant so mutantcell can name a RegexSpec in its claim
    data, without a JSON load under disallow_any_expr
    - next: Design a safely parsed one-string grammar for name, pattern, replacement and scope; red arms for each field
      and for a malformed string refused not guessed
-19. **W629** (ready) mutation: a per-dist :mutants operator-file knob so a dist can declare its defect-class RegexSpecs,
+17. **W629** (ready) mutation: a per-dist :mutants operator-file knob so a dist can declare its defect-class RegexSpecs,
    and declare them for the drained families
    - next: Read .claude/swarm/W611-W615-rival-bodies.md follow-ons; design the declaration file and wire :mutants to run
      judge over it; declare none by default
-20. **W630** (ready) pycodemod cli: wire the --relname mode over relations.relname_sites
+18. **W630** (ready) pycodemod cli: wire the --relname mode over relations.relname_sites
    - next: Add the mode with a row printer and report.incomplete for skips; tests for a hit, a miss and an unread file;
      update the rubric heading's mode count
-21. **W631** (ready) pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as
+19. **W631** (ready) pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as
    flags
    - next: Add the mode taking required roster flags (no defaults), a row printer, report.incomplete for skips; tests;
      update the rubric heading's mode count
-22. **W632** (ready) pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and
+20. **W632** (ready) pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and
    portable, each vocabulary a required flag
    - next: One mode per commit if the parser budget allows (cli.py splits mode-family builders at ruff's local limit);
      required flags, no defaults; tests per mode
+21. **W633** (ready) pycodemod: one public parse in core, replacing the private _parse copies in storeflow, snapshots
+   and relalg
+   - next: Add a public parse to core returning the tree or a Skip, switch the three modules to it, keep every existing
+     test green; red arm: a Skip reason from the shared parse
+22. **W634** (ready) pycodemod cli: wire --rawreads, --snapshots and --relalg over storeflow, snapshots and relalg, the
+   StoreVocab and kinds from required flags
+   - next: Required flags, no defaults; a row printer and report.incomplete per mode; one commit per mode if the parser
+     budget allows; update the rubric heading's mode count
 23. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257
@@ -1752,6 +1755,9 @@ counter 632 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:4338
    or too old, no queue, or hook not in settings
 617. **W623** (done) pycodemod: referents.py, token_parts, referents and MAX_TOKEN for the fingerprint, with a tiny
    inlined as_list and no import of control
+618. **W626** (done) pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab
+   operand
+619. **W627** (done) pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand
 
 ## residue
 
