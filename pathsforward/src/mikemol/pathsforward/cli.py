@@ -35,6 +35,7 @@ from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
+from mikemol.pathsforward.unlinked import report as unlinked_report
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -62,6 +63,7 @@ _FLAGS = (
     "init",
     "overlaps",
     "ics",
+    "unlinked",
 )
 _VALUED = (
     "verify",
@@ -538,6 +540,23 @@ def _overlaps(ctx: Ctx) -> int:
 
     """
     for found in overlaps(store.load(ctx.path).waypoints):
+        _say(found)
+    return EXIT_OK
+
+
+def _unlinked(ctx: Ctx) -> int:
+    """Print `n of m live waypoints linked`, then one UNLINKED line per isolated waypoint.
+
+    Returns:
+        EXIT_OK (unlinked waypoints are a reading, not a failure), or EXIT_REFUSED when no
+        waypoint is live.
+
+    """
+    lines = unlinked_report(store.load(ctx.path).waypoints)
+    if lines is None:
+        _warn("REFUSED: no live waypoint, so there is no linkage to report")
+        return EXIT_REFUSED
+    for found in lines:
         _say(found)
     return EXIT_OK
 
@@ -1234,6 +1253,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "repair_counter": _repair_counter,
     "overlaps": _overlaps,
     "ics": _ics,
+    "unlinked": _unlinked,
 }
 
 

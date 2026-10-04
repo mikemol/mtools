@@ -24,3 +24,4 @@ vtodo	The Calendar Projection: One VTODO per Waypoint, Read-Only, Residue Omitte
 vtimezone	The Time Zones: One VTIMEZONE per TZID Used, Its Transitions Found to the Second
 add_ledger	The Mint Line: --add Ledgers minted for the New Symbol, and Nothing Is Half-Written
 ledger_breaks	The Ledger Line Break: Every Character the Reader Splits On Is Refused in a Note, Derived From Python and Not Listed
+unlinked	The Unlinked Count: n of m Live Waypoints Linked, an Edge Counted From Either End, and Nothing Rewritten

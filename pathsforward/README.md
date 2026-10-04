@@ -22,6 +22,7 @@ mikemol-paths-forward --state S --render         write the derived mirror
 mikemol-paths-forward --state S --queue          one line per waypoint: working, ready, blocked, rest
 mikemol-paths-forward --state S --check          every mechanical charter property; exit 2 on a finding
 mikemol-paths-forward --state S --check-evidence --check, plus a stat of every evidence path (opt-in)
+mikemol-paths-forward --state S --unlinked       `n of m live waypoints linked`, then UNLINKED W<n> TITLE per isolated one; exit 2 if none live
 mikemol-paths-forward --state S --lock HOLDER    exit 3 if another holder took it under 30 min ago
 mikemol-paths-forward --state S --unlock HOLDER
 mikemol-paths-forward --state S --armed JOB_ID
