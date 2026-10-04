@@ -3183,3 +3183,222 @@
   claim  = {A path that does not exist is reported as unreadable.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_reads.py -k test_missing_file_is_a_skip},
 }
+
+@misc{pycodemod-referents-referents-names-attributes-keywords-and-identifier-strings,
+  section = {referents},
+  title  = {Names, attributes, keywords and identifier strings are all referents},
+  claim  = {Names, attributes, keywords and identifier strings are all referents.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_referents_names_attributes_keywords_and_identifier_strings},
+}
+
+@misc{pycodemod-referents-numeric-constant-is-not-a-referent,
+  section = {referents},
+  title  = {A numeric constant contributes nothing},
+  claim  = {A numeric constant contributes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_numeric_constant_is_not_a_referent},
+}
+
+@misc{pycodemod-referents-non-identifier-string-is-not-a-referent,
+  section = {referents},
+  title  = {A SQL blob contributes nothing; only the call name stays},
+  claim  = {A SQL blob contributes nothing; only the call name stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_non_identifier_string_is_not_a_referent},
+}
+
+@misc{pycodemod-referents-dotted-string-contributes-each-part,
+  section = {referents},
+  title  = {A dotted identifier string yields each part},
+  claim  = {A dotted identifier string yields each part.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_dotted_string_contributes_each_part},
+}
+
+@misc{pycodemod-referents-over-long-token-is-dropped,
+  section = {referents},
+  title  = {A token one past the bound spells nothing},
+  claim  = {A token one past the bound spells nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_over_long_token_is_dropped},
+}
+
+@misc{pycodemod-referents-string-and-attribute-are-one-referent,
+  section = {referents},
+  title  = {The string "terms" and the attribute .terms are the same referent},
+  claim  = {The string "terms" and the attribute .terms are the same referent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_string_and_attribute_are_one_referent},
+}
+
+@misc{pycodemod-referents-token-at-the-bound-is-kept,
+  section = {referents},
+  title  = {AUTHORED: the bound is inclusive, so a token of exactly MAX_TOKEN survives},
+  claim  = {AUTHORED: the bound is inclusive, so a token of exactly MAX_TOKEN survives.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_token_at_the_bound_is_kept},
+}
+
+@misc{pycodemod-referents-token-parts-refuses-non-strings-and-empty,
+  section = {referents},
+  title  = {AUTHORED: an int, None, bytes and the empty string spell nothing},
+  claim  = {AUTHORED: an int, None, bytes and the empty string spell nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_token_parts_refuses_non_strings_and_empty},
+}
+
+@misc{pycodemod-referents-token-parts-refuses-any-bad-dotted-part,
+  section = {referents},
+  title  = {AUTHORED: one non-identifier part voids the whole string},
+  claim  = {AUTHORED: one non-identifier part voids the whole string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_token_parts_refuses_any_bad_dotted_part},
+}
+
+@misc{pycodemod-referents-token-parts-splits-a-dotted-identifier,
+  section = {referents},
+  title  = {AUTHORED: the positive path returns the parts in order},
+  claim  = {AUTHORED: the positive path returns the parts in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_token_parts_splits_a_dotted_identifier},
+}
+
+@misc{pycodemod-referents-referents-accepts-a-sequence-of-nodes,
+  section = {referents},
+  title  = {AUTHORED: a list of nodes is unioned, and a repeated token is one referent},
+  claim  = {AUTHORED: a list of nodes is unioned, and a repeated token is one referent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_referents_accepts_a_sequence_of_nodes},
+}
+
+@misc{pycodemod-referents-keyword-unpacking-has-no-name,
+  section = {referents},
+  title  = {AUTHORED: `**kw` is a keyword with no arg, contributing only the name `kw`},
+  claim  = {AUTHORED: `**kw` is a keyword with no arg, contributing only the name `kw`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_keyword_unpacking_has_no_name},
+}
+
+@misc{pycodemod-portable-recorded-engine-verdicts-decide-the-blockers,
+  section = {portable},
+  title  = {⚑⚑ Syntax, undefined function and undefined column block; absent table and ok do not},
+  claim  = { Syntax, undefined function and undefined column block; absent table and ok do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_recorded_engine_verdicts_decide_the_blockers},
+}
+
+@misc{pycodemod-portable-engine-error-with-no-pattern-reports-a-stated-remedy,
+  section = {portable},
+  title  = {⚑ LIKELIHOOD matches no pattern, so the engine's verdict stands with an honest remedy},
+  claim  = { LIKELIHOOD matches no pattern, so the engine's verdict stands with an honest remedy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_an_engine_error_with_no_pattern_reports_a_stated_remedy},
+}
+
+@misc{pycodemod-portable-matching-pattern-supplies-the-remedy-for-an-engine-error,
+  section = {portable},
+  title  = {⚑ The engine decides that GROUP_CONCAT blocks; the pattern list only words the remedy},
+  claim  = { The engine decides that GROUP_CONCAT blocks; the pattern list only words the remedy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_the_matching_pattern_supplies_the_remedy_for_an_engine_error},
+}
+
+@misc{pycodemod-portable-object-existence-states-are-parsed-absent-and-the-rest-are-errors,
+  section = {portable},
+  title  = {⚑⚑ 42P01 is absent under EXPLAIN; 42P07 and 42710 are absent only for DDL; else error},
+  claim  = { 42P01 is absent under EXPLAIN; 42P07 and 42710 are absent only for DDL; else error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_object_existence_states_are_parsed_absent_and_the_rest_are_errors},
+}
+
+@misc{pycodemod-portable-each-explain-runs-in-its-own-transaction-so-one-error-cannot-poison-the-next,
+  section = {portable},
+  title  = {⚑⚑ A rejection inside one block leaves the next statement its own verdict},
+  claim  = { A rejection inside one block leaves the next statement its own verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_each_explain_runs_in_its_own_transaction_so_one_error_cannot_poison_the_next},
+}
+
+@misc{pycodemod-portable-undefined-table-under-explain-is-parsed-absent,
+  section = {portable},
+  title  = {⚑ A table the store lacks is a fact about the store, not the SQL},
+  claim  = { A table the store lacks is a fact about the store, not the SQL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_an_undefined_table_under_explain_is_parsed_absent},
+}
+
+@misc{pycodemod-portable-ddl-runs-on-the-named-sandbox-handle-and-never-on-the-explain-handle,
+  section = {portable},
+  title  = {⚑⚑ The EXPLAIN handle sees nothing; a duplicate table on the sandbox is success},
+  claim  = { The EXPLAIN handle sees nothing; a duplicate table on the sandbox is success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_ddl_runs_on_the_named_sandbox_handle_and_never_on_the_explain_handle},
+}
+
+@misc{pycodemod-portable-ddl-syntax-error-is-an-error-verdict,
+  section = {portable},
+  title  = {⚑ Only the object-existence states are forgiven for DDL},
+  claim  = { Only the object-existence states are forgiven for DDL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_a_ddl_syntax_error_is_an_error_verdict},
+}
+
+@misc{pycodemod-portable-without-a-named-sandbox-handle-no-ddl-judge-exists,
+  section = {portable},
+  title  = {⚑⚑ DDL execution is never defaulted on: no handle named, no judge, nothing run},
+  claim  = { DDL execution is never defaulted on: no handle named, no judge, nothing run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_without_a_named_sandbox_handle_no_ddl_judge_exists},
+}
+
+@misc{pycodemod-portable-error-with-no-sqlstate-is-reraised-not-classified,
+  section = {portable},
+  title  = {⚑ A dropped socket is not a verdict about the SQL, for EXPLAIN and DDL alike},
+  claim  = { A dropped socket is not a verdict about the SQL, for EXPLAIN and DDL alike.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_an_error_with_no_sqlstate_is_reraised_not_classified},
+}
+
+@misc{pycodemod-portable-ddl-literals-go-to-the-ddl-judge-and-dml-to-the-explain-judge,
+  section = {portable},
+  title  = {⚑ The head word picks the judge, case-insensitively},
+  claim  = { The head word picks the judge, case-insensitively.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_ddl_literals_go_to_the_ddl_judge_and_dml_to_the_explain_judge},
+}
+
+@misc{pycodemod-portable-no-probe-degrades-to-pattern-verdicts-and-names-its-reason,
+  section = {portable},
+  title  = {⚑⚑ The positive control: an unreachable probe says why, asserted unconditionally},
+  claim  = { The positive control: an unreachable probe says why, asserted unconditionally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_no_probe_degrades_to_pattern_verdicts_and_names_its_reason},
+}
+
+@misc{pycodemod-portable-reasonless-absent-probe-still-states-that-it-was-not-attempted,
+  section = {portable},
+  title  = {⚑ An absence never reads as a connected zero},
+  claim  = { An absence never reads as a connected zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_a_reasonless_absent_probe_still_states_that_it_was_not_attempted},
+}
+
+@misc{pycodemod-portable-ddl-with-no-sandbox-is-pattern-ddl-while-dml-is-still-judged,
+  section = {portable},
+  title  = {⚑ A probe that can EXPLAIN but not execute grades DDL by pattern and says `pattern/ddl`},
+  claim  = { A probe that can EXPLAIN but not execute grades DDL by pattern and says `pattern/ddl`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_ddl_with_no_sandbox_is_pattern_ddl_while_dml_is_still_judged},
+}
+
+@misc{pycodemod-portable-generated-file-is-listed-not-judged-and-not-silently-dropped,
+  section = {portable},
+  title  = {⚑ The marker in the first 400 bytes excludes the file from the census and reports it},
+  claim  = { The marker in the first 400 bytes excludes the file from the census and reports it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_a_generated_file_is_listed_not_judged_and_not_silently_dropped},
+}
+
+@misc{pycodemod-portable-core-func-calls-are-recorded-per-file-with-no-carry-over,
+  section = {portable},
+  title  = {⚑⚑ A Core-only file has no literal blockers and a recorded core_built; a plain one is []},
+  claim  = { A Core-only file has no literal blockers and a recorded core_built; a plain one is [].
+            The origin kept this on a function attribute, so a loop over files carried
+            one file's value into the next; here it is a field of the returned report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_core_func_calls_are_recorded_per_file_with_no_carry_over},
+}
+
+@misc{pycodemod-portable-unreadable-undecodable-and-unparseable-files-are-returned-as-skips,
+  section = {portable},
+  title  = {⚑⚑ Nothing is swallowed: each unjudged file comes back with its reason},
+  claim  = { Nothing is swallowed: each unjudged file comes back with its reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_unreadable_undecodable_and_unparseable_files_are_returned_as_skips},
+}
+
+@misc{pycodemod-portable-caller-remedies-and-generated-marker-replace-the-defaults,
+  section = {portable},
+  title  = {⚑ Remedy text and the generated marker are operands; the defaults do not leak in},
+  claim  = { Remedy text and the generated marker are operands; the defaults do not leak in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_caller_remedies_and_generated_marker_replace_the_defaults},
+}
+
+@misc{pycodemod-portable-blockers-are-ordered-by-path-then-line,
+  section = {portable},
+  title  = {⚑ The report is deterministic whatever order the paths and literals arrive in},
+  claim  = { The report is deterministic whatever order the paths and literals arrive in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_portable.py -k test_blockers_are_ordered_by_path_then_line},
+}

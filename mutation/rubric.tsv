@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the mutation warrant set, one per test module, in document order.
 # key <TAB> heading title
 mutate	The Mutations: Each Spec Perturbs Exactly Its Site of a Planted Source and Names a Miss Loudly
+regexop	The Regex Operator: a Named Defect Asked of a Suite, a Required Positive Control, and a Miss Reported Unapplied Never Killed or Survived

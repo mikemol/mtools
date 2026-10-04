@@ -39,3 +39,5 @@ fingerprint	The Prime-Fingerprint Algebra: a Prime per Distinct Referent, gcd as
 storeflow	The Store-Flow Predicates: A Vocabulary That Is an Operand, Rows One Hop From the Cursor, and a Census That Reports the Files It Could Not Read
 sql	The SQL Sites: Literals Graded Raw, Builder or Literal by a Roster the Caller Supplies, a Refused Statement Offered to a Caller Oracle, and Every Unread File Reported
 reads	The Reads: the Files and Flags One Function Reads, Binding-Followed, Roots Supplied by the Caller, and an Unresolved Part Reported Not Guessed
+referents	The Referent Tokens: Names, Attributes, Keywords and Identifier Strings, a Number or Prose Excluded, and One Referent per Spelling
+portable	The Portable Sites: SQL Literals Judged by a Probe the Caller Injects, SQLSTATE Classified, DDL Only on a Named Sandbox Handle, and No Database in Tests

@@ -1029,3 +1029,8 @@
 2026-10-04T21:09:31Z  interrupt W625 minted    -         "Document the inbound-asks hook's --check mode in hooks/README.md and docs/adopting-a-hook.md, which still say it is not built"  evidence=W621
 2026-10-04T21:20:31Z  interrupt W626 minted    -         "pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab operand"  evidence=W609
 2026-10-04T21:20:31Z  interrupt W627 minted    -         "pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand"  evidence=W609
+2026-10-04T21:30:44Z  interrupt W628 minted    -         "mutation: a regex: grammar entry for emit_mutant so mutantcell can name a RegexSpec in its claim data, without a JSON load under disallow_any_expr"  evidence=W615
+2026-10-04T21:30:44Z  interrupt W629 minted    -         "mutation: a per-dist :mutants operator-file knob so a dist can declare its defect-class RegexSpecs, and declare them for the drained families"  evidence=W615
+2026-10-04T21:30:44Z  interrupt W630 minted    -         "pycodemod cli: wire the --relname mode over relations.relname_sites"  evidence=W594
+2026-10-04T21:30:45Z  interrupt W631 minted    -         "pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as flags"  evidence=W610
+2026-10-04T21:30:45Z  interrupt W632 minted    -         "pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and portable, each vocabulary a required flag"  evidence=W612

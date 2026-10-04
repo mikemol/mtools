@@ -153,3 +153,52 @@
   claim  = {`main` reads the module and prints the mutant; a wrong argument count is usage, exit 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_the_command_line_prints_the_perturbed_module},
 }
+
+@misc{mutation-regexop-apply-regex-rewrites-only-inside-the-named-def,
+  section = {regexop},
+  title  = {The def scope confines the rewrite; the sibling def stays byte-identical},
+  claim  = {The def scope confines the rewrite; the sibling def stays byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_apply_regex_rewrites_only_inside_the_named_def},
+}
+
+@misc{mutation-regexop-apply-regex-confines-to-a-line-range-and-defaults-to-the-whole-file,
+  section = {regexop},
+  title  = {A range edits only its lines; with no scope every match in the file changes},
+  claim  = {A range edits only its lines; with no scope every match in the file changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_apply_regex_confines_to_a_line_range_and_defaults_to_the_whole_file},
+}
+
+@misc{mutation-regexop-miss-is-unapplied-and-a-missing-scope-is-loud,
+  section = {regexop},
+  title  = {No match is an UnappliedError (a KeyError); an absent def or range is a KeyError},
+  claim  = {No match is an UnappliedError (a KeyError); an absent def or range is a KeyError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_a_miss_is_unapplied_and_a_missing_scope_is_loud},
+}
+
+@misc{mutation-regexop-contradictory-scope-or-an-unparseable-rewrite-is-refused,
+  section = {regexop},
+  title  = {A def plus a range, an inverted range, and a rewrite that breaks the syntax all raise},
+  claim  = {A def plus a range, an inverted range, and a rewrite that breaks the syntax all raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_a_contradictory_scope_or_an_unparseable_rewrite_is_refused},
+}
+
+@misc{mutation-regexop-judge-kills-a-defect-the-suite-pins-and-spares-one-it-does-not,
+  section = {regexop},
+  title  = {The same defect is KILLED by a format-pinning suite and SURVIVES a reach-only suite},
+  claim  = {The same defect is KILLED by a format-pinning suite and SURVIVES a reach-only suite.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_judge_kills_a_defect_the_suite_pins_and_spares_one_it_does_not},
+}
+
+@misc{mutation-regexop-judge-reports-unapplied-never-killed-or-survived-for-a-miss,
+  section = {regexop},
+  title  = {A regex that matches nothing is UNAPPLIED whatever the suite says},
+  claim  = {A regex that matches nothing is UNAPPLIED whatever the suite says.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_judge_reports_unapplied_never_killed_or_survived_for_a_miss},
+}
+
+@misc{mutation-regexop-judge-demands-a-passing-positive-control,
+  section = {regexop},
+  title  = {When the unmutated source fails the suite, nothing is concluded, even for a miss},
+  claim  = {When the unmutated source fails the suite, nothing is concluded, even for a miss.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_judge_demands_a_passing_positive_control},
+}

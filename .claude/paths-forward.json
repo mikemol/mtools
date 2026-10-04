@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 627,
+  "counter": 632,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -12090,20 +12090,21 @@
     {
       "symbol": "W608",
       "title": "pycodemod portable.py: portable_sites judges SQL literals via an injected Probe protocol, no database in tests",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After W610 and W609: port per .claude/swarm/W608-W610-sql-family.md with a FakeProbe of recorded verdicts and a FakeConnection raising SQLSTATE errors; keep store.sandbox_connect and the jea path insert out",
-      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W608-W610-sql-family.md): PORT behind a Probe protocol; order is W610, then W609, then W608. | 2026-10-04: 2026-10-04 its prerequisites W609 (storeflow.py) and W610 (sql.py) landed; W608 is now unblocked",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter (.claude/swarm/W608-W610-sql-family.md): PORT behind a Probe protocol; order is W610, then W609, then W608. | 2026-10-04: 2026-10-04 its prerequisites W609 (storeflow.py) and W610 (sql.py) landed; W608 is now unblocked | 2026-10-04: portable.py: portable_sites(paths, literals, probe, config) judges SQL literals via an injected Probe (callable aliases plus a method-free dataclass, not a Protocol, so the mutation grid has no bodiless def-sites); SQLSTATE classified by pure classify_state (42P01 parsed-absent under EXPLAIN; 42P01, 42P07, 42710 for DDL); each EXPLAIN in its own transaction; DDL only on a caller-named sandbox handle; 19 tests, 19 warrants under rubric key portable; F-arm: 42P01 dropped from the absent set, 2 arms red; departure from the origin: only exceptions carrying a SQLSTATE become verdicts (ruff bans a blind except), others re-raise; no CLI --portable mode (later); committed under W608",
       "issued_at": "2026-10-04T19:25:23Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:20:32Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:30:34Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T213034Z"
     },
     {
       "symbol": "W609",
@@ -12223,7 +12224,7 @@
     {
       "symbol": "W615",
       "title": "mutation: add an open regex-operator spec so a suite can be asked whether it notices one named defect, not only a body-to-raise",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod",
@@ -12231,13 +12232,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Design the spec in mikemol-mutation per .claude/swarm/W611-W615-rival-bodies.md so the grid and mutantcell inherit it; do not port in-process _selftest loading, the mutant file beside the source or substrate's default mutators",
-      "evidence": "2026-10-04: 2026-10-04 drafter: PORT the open regex-operator capability only; the closed operators cannot ask whether a suite notices one named defect (e.g. an f-string key gaining :{1} inside a function body). Reversal: no drained dist declares a defect-class list, or flip/dflip already kill every regex mutator written for the drained families.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter: PORT the open regex-operator capability only; the closed operators cannot ask whether a suite notices one named defect (e.g. an f-string key gaining :{1} inside a function body). Reversal: no drained dist declares a defect-class list, or flip/dflip already kill every regex mutator written for the drained families. | 2026-10-04: mutation/regexop.py: RegexSpec(name, pattern, replacement, def_name, lines), apply_regex, UnappliedError, Verdict (killed, survived, unapplied, control-failed), judge(text, spec, passes) with a REQUIRED positive control; a miss is unapplied never killed or survived; new module, mutate.py and its closed operators untouched; 7 tests, 7 warrants under rubric key regexop; F-arm: a failed control returned survived, test_judge_demands_a_passing_positive_control red; follow-ons W628 and W629; committed under W615",
       "issued_at": "2026-10-04T19:25:27Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T21:01:07Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:30:35Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T213035Z"
     },
     {
       "symbol": "W616",
@@ -12378,20 +12380,21 @@
     {
       "symbol": "W623",
       "title": "pycodemod: referents.py, token_parts, referents and MAX_TOKEN for the fingerprint, with a tiny inlined as_list and no import of control",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per .claude/swarm/W607-fingerprint-port.md step 2: names, attributes, keywords and identifier strings; numeric and non-identifier strings excluded; a dotted string contributes each part; an over-long token dropped",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: referents.py: token_parts, referents, MAX_TOKEN, inlined _as_list, no control import; 6 arms transcribed from the origin selftest and 6 authored fresh (marked); 12 tests, 12 warrants under rubric key referents; F-arm: the length bound effectively removed, test_over_long_token_is_dropped red; committed under W623",
       "issued_at": "2026-10-04T21:09:31Z",
       "minted_during": "interrupt",
       "caused_by": "W607",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T21:30:34Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T213034Z"
     },
     {
       "symbol": "W624",
@@ -12462,6 +12465,97 @@
       "issued_at": "2026-10-04T21:20:31Z",
       "minted_during": "interrupt",
       "caused_by": "W609",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W628",
+      "title": "mutation: a regex: grammar entry for emit_mutant so mutantcell can name a RegexSpec in its claim data, without a JSON load under disallow_any_expr",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation",
+        "mutantcell"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Design a safely parsed one-string grammar for name, pattern, replacement and scope; red arms for each field and for a malformed string refused not guessed",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:30:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "W615",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W629",
+      "title": "mutation: a per-dist :mutants operator-file knob so a dist can declare its defect-class RegexSpecs, and declare them for the drained families",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read .claude/swarm/W611-W615-rival-bodies.md follow-ons; design the declaration file and wire :mutants to run judge over it; declare none by default",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:30:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "W615",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W630",
+      "title": "pycodemod cli: wire the --relname mode over relations.relname_sites",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the mode with a row printer and report.incomplete for skips; tests for a hit, a miss and an unread file; update the rubric heading's mode count",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:30:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "W594",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W631",
+      "title": "pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as flags",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the mode taking required roster flags (no defaults), a row printer, report.incomplete for skips; tests; update the rubric heading's mode count",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:30:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "W610",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W632",
+      "title": "pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and portable, each vocabulary a required flag",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "One mode per commit if the parser budget allows (cli.py splits mode-family builders at ruff's local limit); required flags, no defaults; tests per mode",
+      "evidence": "",
+      "issued_at": "2026-10-04T21:30:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "W612",
       "last_worked": null,
       "ticks_blocked": 0
     }
