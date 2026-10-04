@@ -163,7 +163,8 @@ To arm it, add the same two blocks as for inbound-asks to the repo's `.claude/se
 
 ## Git hooks (not harness hooks)
 
-`mikemol-githook-pre-push` and `mikemol-githook-post-commit` are run by git, not by the harness.
+`mikemol-githook-pre-push`, `mikemol-githook-post-commit` and
+`mikemol-githook-prepare-commit-msg` are run by git, not by the harness.
 They have no `mikemol-hook-` prefix, so no `settings.json` wiring is needed. A repo installs each as
 a one-line stub, for example `.githooks/post-commit`: `exec <venv>/bin/mikemol-githook-post-commit`.
 
@@ -184,6 +185,17 @@ el-openglo's own post-commit writes the same one.
   a post-commit status, so no commit is harmed.
 - **It never pushes.** Auto-push is repo policy and belongs in the repo's own stub, after the
   `mikemol-githook-post-commit` call returns.
+
+`mikemol-githook-prepare-commit-msg` is the shared form of substrate's prepare-commit-msg. Its
+argv is git's own, `<message-file> [<source>]`, so the stub must pass it on:
+`exec <venv>/bin/mikemol-githook-prepare-commit-msg "$@"`. It appends the pre-commit gate report
+(`<git dir>/precommit-report.txt`, minus `[N/total]` progress and blank lines, indented) to the
+message under `pre-commit gate report (auto-captured):` and deletes the report. A `merge` or
+`squash` source, or a message that already carries the marker, only deletes the report; no report
+is a quiet no-op. The shell version swallowed every failed step, and its `rm -f` consumed the report
+even when the append had failed. Here a missing argument, missing git, a non-repository, an
+unreadable report and an unwritable message each write a reason to stderr and exit 1, and a failed
+append keeps the report. Git aborts the commit on that exit.
 
 ## Adopting
 

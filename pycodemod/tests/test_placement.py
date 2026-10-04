@@ -257,14 +257,26 @@ def test_a_selftest_store_call_is_not_a_write_path(tmp_path: Path) -> None:
     """A store call inside a selftest scope is a fixture, not a write path."""
     path = tmp_path / "tool.py"
     path.write_text("def run_selftest():\n    upsert(1)\n    commit()\n", encoding="utf-8")
-    assert pl.writes_store([str(path)]) == {}
+    assert pl.writes_store([str(path)]) == ({}, [])
 
 
 def test_the_first_store_write_is_the_witness(tmp_path: Path) -> None:
     """Of several live store writes, the earliest line is the witness."""
     path = tmp_path / "tool.py"
     path.write_text("commit()\nupsert(1)\n", encoding="utf-8")
-    assert pl.writes_store([str(path)]) == {str(path): pl.StoreWrite("commit", 1)}
+    assert pl.writes_store([str(path)]) == ({str(path): pl.StoreWrite("commit", 1)}, [])
+
+
+def test_writes_store_returns_its_skips(tmp_path: Path) -> None:
+    """⚑ `writes_store` reports the files it could not parse beside the writers it found."""
+    good, bad = tmp_path / "good.py", tmp_path / "bad.py"
+    good.write_text("upsert(1)\n", encoding="utf-8")
+    bad.write_text("def (:\n    upsert(1)\n", encoding="utf-8")
+    found, skipped = pl.writes_store([str(good), str(bad)])
+    assert (found, [(s.path, s.why) for s in skipped]) == (
+        {str(good): pl.StoreWrite("upsert", 1)},
+        [(str(bad), "unparseable")],
+    )
 
 
 def test_the_strongest_bound_form_wins(tmp_path: Path) -> None:
@@ -282,3 +294,22 @@ def test_an_unreadable_file_is_skipped_and_the_limits_are_returned(tmp_path: Pat
     got = pl.placement([str(path)])
     whys: list[str] = [s.why for s in got.skipped]
     assert (len(got.rows), whys, got.undecidable) == (0, ["undecodable"], pl.UNDECIDABLE)
+
+
+@pytest.mark.parametrize("needle", ["upsert(row)", "guard(p)", "require_at_entry(paths=p)"])
+def test_an_unparseable_file_holding_one_needle_is_in_the_banner(
+    tmp_path: Path, needle: str
+) -> None:
+    """⚑ A file that cannot be parsed is skipped by `disagreement`, whichever needle it holds.
+
+    The store-write needle alone was invisible: only `writes_store` looked for it and it kept no
+    skips, so the banner read a clean population.
+    """
+    path = tmp_path / "broken.py"
+    path.write_text("def (:\n    " + needle + "\n", encoding="utf-8")
+    got = pl.disagreement([str(path)])
+    assert ([s.path for s in got.skipped], [s.why for s in got.skipped], got.rows) == (
+        [str(path)],
+        ["unparseable"],
+        [],
+    )

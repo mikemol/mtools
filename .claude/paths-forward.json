@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 641,
+  "counter": 643,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -11749,7 +11749,7 @@
     {
       "symbol": "W590",
       "title": "Port substrate's prepare-commit-msg git hook to mikemol-hooks as a console script",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "githooks",
@@ -11757,13 +11757,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read inbox/archive/2026-09-23-substrate-githooks-handover.md for the hook, port it with pytest arms in a tmp_path repo",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: mikemol-githook-prepare-commit-msg ported: folds the gate report (<git-dir>/precommit-report.txt) into the message once; every failure the shell original swallowed (2>/dev/null and || true: no git, an unreadable message, an unwritable message with the report deleted anyway) is now stderr plus exit 1, and the report is kept on a failed append; DELIBERATE POLICY CHANGE: a non-zero exit aborts the commit, which the original avoided; 16 test functions, 16 warrants under rubric key githook-prepare-commit-msg; F-arm: the marker guard disabled, test_a_message_already_carrying_the_marker_is_not_folded_twice red; substrate and el-openglo should be told before adopting it (W642); committed under W590",
       "issued_at": "2026-10-04T19:06:07Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T22:13:56Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T221356Z"
     },
     {
       "symbol": "W591",
@@ -11885,20 +11886,21 @@
     {
       "symbol": "W597",
       "title": "pycodemod placement: measure whether an unparseable store-write-only file reaches the disagreement banner, since writes_store reports no skips",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Probe an unparseable file holding only upsert; if the banner misses it, add a red arm and track skips",
-      "evidence": "2026-10-04: drained from queue.md slice 5 (L756-759): writes_store and binds_snapshot_at_entry track no skips; unmeasured whether reachable",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: drained from queue.md slice 5 (L756-759): writes_store and binds_snapshot_at_entry track no skips; unmeasured whether reachable | 2026-10-04: measured: an unparseable file whose only needle is upsert WAS invisible to placement.disagreement (skipped [] and rows [] on HEAD); the snapshot-only case did not miss (guard and require_at_entry are scanned by placement()). Fix: writes_store returns (dict, list[Skip]) and disagreement folds the store skips into its banner; 2 tests, 2 warrants under rubric key placement; the upsert arm red on HEAD; F-arm: the fold removed, the upsert arm red; committed under W597",
       "issued_at": "2026-10-04T19:06:25Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T19:06:45Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T22:13:55Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T221355Z"
     },
     {
       "symbol": "W598",
@@ -11941,20 +11943,21 @@
     {
       "symbol": "W600",
       "title": "pycodemod calls: re-measure the dotted-target zero (sys.path.insert) at the CLI layer and arm it if it still reads zero",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run calls sys.path.insert against a probe file at module level and in a function; red arm if zero",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: measured: the origin's dotted-target zero does NOT reproduce in this port. sys.path.insert matches at module level and in a function through sites.scan and through cli calls --target (rows 3:0 and 7:4), counted once (a call, never also a ref); path.insert returns nothing (the receiver must be spelled in full, now documented); a bare insert is receiver-blind (five calls, receiver in each row's facts, now documented). No behaviour change; 2 regression tests (sites and cli), 2 warrants; F-arm: the dotted receiver dropped from the scan, 2 arms red; the origin spelling --calls sys.path.insert could not be run (this port takes --target); committed under W600",
       "issued_at": "2026-10-04T19:06:26Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T22:13:55Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T221355Z"
     },
     {
       "symbol": "W601",
@@ -12645,20 +12648,21 @@
     {
       "symbol": "W637",
       "title": "pycodemod: control provenance helpers (ext_names, external_expr, mode_expr, scopes, own_walk, module_consts, params) taking the Boundary as an operand",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Commit 2 of 4 per .claude/swarm/W606-control-port.md, on control_roster.Boundary and PYTHON_BOUNDARY, ALWAYS_EXTERNAL, LOOP_CONSTRUCTS, EARLY_EXIT_CONSTRUCTS and is_row_loop; the origin read module globals, so every one takes the boundary; no RowSource (StoreVocab already covers it)",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: control_provenance.py (commit 2 of 4): external_expr, mode_expr and ext_names take the Boundary; scopes, own_walk, params and module_consts do not, since an unused operand would claim a false dependency; 18 tests, 18 warrants under rubric key control_provenance; F-arm: module_consts reading lower-case names, test_module_consts_are_all_caps_bindings_only red; commit 3 is W638; committed under W637",
       "issued_at": "2026-10-04T21:57:53Z",
       "minted_during": "interrupt",
       "caused_by": "W606",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T22:13:56Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T221356Z"
     },
     {
       "symbol": "W638",
@@ -12729,6 +12733,43 @@
       "issued_at": "2026-10-04T21:57:54Z",
       "minted_during": "interrupt",
       "caused_by": "W624",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W642",
+      "title": "Tell substrate and el-openglo that mikemol-githook-prepare-commit-msg now aborts the commit on a failure the shell original swallowed",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "githooks",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "One letter each, citing the stderr-and-exit-1 cases and that the report is kept on a failed append; they decide whether to adopt before they repoint their stub, which must pass \"$@\"",
+      "evidence": "",
+      "issued_at": "2026-10-04T22:14:02Z",
+      "minted_during": "tick",
+      "caused_by": "W590",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W643",
+      "title": "pycodemod census modes: state 'searched N files, found none' on an empty result, so a zero is never read as an absence",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure which modes print nothing on a miss (calls, literals, relname and siblings); decide one shared line through report.incomplete or a sibling; red arm per family; mind the operands rubric row which already prints what a directory walk left out",
+      "evidence": "",
+      "issued_at": "2026-10-04T22:14:02Z",
+      "minted_during": "tick",
+      "caused_by": "W600",
       "last_worked": null,
       "ticks_blocked": 0
     }

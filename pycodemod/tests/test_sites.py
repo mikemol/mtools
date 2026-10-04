@@ -75,6 +75,25 @@ def test_a_dotted_target_matches_the_whole_receiver_exactly(tmp_path: Path) -> N
     assert {s.kind for s in got.rows} == {"call"}
 
 
+def test_a_multi_link_dotted_target_matches_at_module_level_and_in_a_function(
+    tmp_path: Path,
+) -> None:
+    """⚑⚑ `sys.path.insert` reads once per call; `path.insert` is not it; bare is receiver-blind."""
+    src = (
+        "import sys\nsys.path.insert(0, 'x')\n\n\ndef f(items):\n"
+        "    sys.path.insert(0, 'y')\n    items.insert(1, 2)\n    return [].insert(0, 1)\n\n\n"
+        "insert(3)\n"
+    )
+    path = _write(tmp_path, "p.py", src)
+    full = sites.scan([path], "sys.path.insert")
+    assert [(s.kind, s.line) for s in full.rows] == [("call", 2), ("call", 6)]
+    assert [f.context for f in full.at(path, 6)] == ["f"]
+    assert sites.scan([path], "path.insert").rows == []
+    bare = sites.scan([path], "insert")
+    assert [(s.kind, s.line) for s in bare.rows] == [("call", n) for n in (2, 6, 7, 8, 11)]
+    assert {f.receiver for f in bare.facts.values()} == {"sys.path", "items", "[]", None}
+
+
 def test_two_calls_on_one_line_keep_their_own_facts(tmp_path: Path) -> None:
     """⚑⚑ Facts are keyed by span: the sqlite call keeps its receiver and its argument."""
     path = _write(tmp_path, "m.py", _PROBE)

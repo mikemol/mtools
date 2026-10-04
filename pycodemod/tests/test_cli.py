@@ -39,6 +39,30 @@ def test_calls_with_no_target_reports_every_name(tmp_path: Path) -> None:
     assert code == 0
 
 
+def test_calls_with_a_dotted_target_reads_each_full_dotted_call_once(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`calls --target sys.path.insert` prints the module-level and in-function call, once each."""
+    target = tmp_path / "m.py"
+    target.write_text(
+        "import sys\nsys.path.insert(0, 'x')\n\n\ndef f(items):\n"
+        "    sys.path.insert(0, 'y')\n    items.insert(1, 2)\n    insert(3)\n",
+        encoding="utf-8",
+    )
+    assert cli.main(["calls", "--target", "sys.path.insert", str(target)]) == 0
+    rows = [ln.rsplit(":", 2)[1:] for ln in capsys.readouterr().out.splitlines()]
+    assert rows == [["2", "0"], ["6", "4"]]
+    assert cli.main(["calls", "--target", "path.insert", str(target)]) == 0
+    assert not capsys.readouterr().out
+    assert cli.main(["calls", "--target", "insert", str(target)]) == 0
+    assert [ln.rsplit(":", 2)[1] for ln in capsys.readouterr().out.splitlines()] == [
+        "2",
+        "6",
+        "7",
+        "8",
+    ]
+
+
 def test_calls_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> None:
     """A file that fails to parse makes `calls` print the shared incomplete-scan banner."""
     target = tmp_path / "m.py"

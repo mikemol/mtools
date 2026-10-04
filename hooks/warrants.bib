@@ -5366,3 +5366,116 @@
   claim  = {--check reports without a payload; any other argument is refused with exit 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_the_console_entry_declares_check_and_refuses_other_arguments},
 }
+
+@misc{hooks-githook-prepare-commit-msg-source-that-is-not-merge-or-squash-gets-the-report-folded-in,
+  section = {githook-prepare-commit-msg},
+  title  = {For message, template, commit and no source, the filtered report is appended, consumed},
+  claim  = {For message, template, commit and no source, the filtered report is appended, consumed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_a_source_that_is_not_merge_or_squash_gets_the_report_folded_in},
+}
+
+@misc{hooks-githook-prepare-commit-msg-merge-or-squash-message-is-left-alone-and-the-report-consumed,
+  section = {githook-prepare-commit-msg},
+  title  = {Auto-generated merge and squash messages are not cluttered; the report is deleted},
+  claim  = {Auto-generated merge and squash messages are not cluttered; the report is deleted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_a_merge_or_squash_message_is_left_alone_and_the_report_consumed},
+}
+
+@misc{hooks-githook-prepare-commit-msg-no-report-is-a-quiet-no-op,
+  section = {githook-prepare-commit-msg},
+  title  = {A commit that wrote no report (e.g. --no-verify) leaves the message and stderr untouched},
+  claim  = {A commit that wrote no report (e.g. --no-verify) leaves the message and stderr
+            untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_no_report_is_a_quiet_no_op},
+}
+
+@misc{hooks-githook-prepare-commit-msg-message-already-carrying-the-marker-is-not-folded-twice,
+  section = {githook-prepare-commit-msg},
+  title  = {A manual --amend keeps its marker block: nothing is appended and the report is consumed},
+  claim  = {A manual --amend keeps its marker block: nothing is appended and the report is consumed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_a_message_already_carrying_the_marker_is_not_folded_twice},
+}
+
+@misc{hooks-githook-prepare-commit-msg-second-run-does-not-append-twice,
+  section = {githook-prepare-commit-msg},
+  title  = {The report is one-shot: after one fold, a rerun finds none and changes nothing},
+  claim  = {The report is one-shot: after one fold, a rerun finds none and changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_a_second_run_does_not_append_twice},
+}
+
+@misc{hooks-githook-prepare-commit-msg-missing-message-file-is-reported-and-the-report-kept,
+  section = {githook-prepare-commit-msg},
+  title  = {The shell `>>` swallowed this and still deleted the report; here: stderr, exit 1, kept},
+  claim  = {The shell `>>` swallowed this and still deleted the report; here: stderr, exit 1, kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_a_missing_message_file_is_reported_and_the_report_kept},
+}
+
+@misc{hooks-githook-prepare-commit-msg-unwritable-message-file-is-reported-and-the-report-kept,
+  section = {githook-prepare-commit-msg},
+  title  = {A read-only message file: the append fails loudly, and the report is not lost},
+  claim  = {A read-only message file: the append fails loudly, and the report is not lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_an_unwritable_message_file_is_reported_and_the_report_kept},
+}
+
+@misc{hooks-githook-prepare-commit-msg-no-message-argument-is-a-usage-error,
+  section = {githook-prepare-commit-msg},
+  title  = {The shell version exited 0 on an empty argument; here it is reported with exit 1},
+  claim  = {The shell version exited 0 on an empty argument; here it is reported with exit 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_no_message_argument_is_a_usage_error},
+}
+
+@misc{hooks-githook-prepare-commit-msg-main-reads-git-argv-by-default,
+  section = {githook-prepare-commit-msg},
+  title  = {With no argv given, main reads sys.argv[1:], which is how git calls the console script},
+  claim  = {With no argv given, main reads sys.argv[1:], which is how git calls the console script.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_main_reads_git_argv_by_default},
+}
+
+@misc{hooks-githook-prepare-commit-msg-outside-a-repository-is-reported-not-silent,
+  section = {githook-prepare-commit-msg},
+  title  = {The shell version built the path `/precommit-report.txt` and exited 0; here: exit 1},
+  claim  = {The shell version built the path `/precommit-report.txt` and exited 0; here: exit 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_outside_a_repository_is_reported_not_silent},
+}
+
+@misc{hooks-githook-prepare-commit-msg-no-git-on-path-is-reported,
+  section = {githook-prepare-commit-msg},
+  title  = {Without git on PATH, main exits 1 and says why, rather than skipping silently},
+  claim  = {Without git on PATH, main exits 1 and says why, rather than skipping silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_no_git_on_path_is_reported},
+}
+
+@misc{hooks-githook-prepare-commit-msg-run-git-returns-a-result-and-raises-without-git,
+  section = {githook-prepare-commit-msg},
+  title  = {The run_git helper returns the result whatever its status, and raises without git},
+  claim  = {The run_git helper returns the result whatever its status, and raises without git.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_run_git_returns_a_result_and_raises_without_git},
+}
+
+@misc{hooks-githook-prepare-commit-msg-report-path-is-in-the-absolute-git-dir,
+  section = {githook-prepare-commit-msg},
+  title  = {The report_path helper names the report under the git dir, and raises outside a repo},
+  claim  = {The report_path helper names the report under the git dir, and raises outside a repo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_report_path_is_in_the_absolute_git_dir},
+}
+
+@misc{hooks-githook-prepare-commit-msg-folded-drops-progress-and-blank-lines-and-indents,
+  section = {githook-prepare-commit-msg},
+  title  = {The block is a blank line, the marker, then the kept report lines indented four spaces},
+  claim  = {The block is a blank line, the marker, then the kept report lines indented four spaces.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_folded_drops_progress_and_blank_lines_and_indents},
+}
+
+@misc{hooks-githook-prepare-commit-msg-prepare-folds-the-report-into-the-message,
+  section = {githook-prepare-commit-msg},
+  title  = {The prepare function is the hook minus argv: it appends the block, consumes the report},
+  claim  = {The prepare function is the hook minus argv: it appends the block, consumes the report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_prepare_folds_the_report_into_the_message},
+}
+
+@misc{hooks-githook-prepare-commit-msg-prepare-raises-for-a-report-that-cannot-be-consumed,
+  section = {githook-prepare-commit-msg},
+  title  = {A report in a read-only git dir cannot be deleted: the failure is raised, not swallowed},
+  claim  = {A report in a read-only git dir cannot be deleted: the failure is raised, not swallowed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_prepare_raises_for_a_report_that_cannot_be_consumed},
+}

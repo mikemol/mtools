@@ -291,24 +291,29 @@ class Disagreements:
     undecidable: tuple[str, ...] = (*UNDECIDABLE, STORE_UNDECIDABLE)
 
 
-def writes_store(paths: Sequence[str]) -> dict[str, StoreWrite]:
+def writes_store(paths: Sequence[str]) -> tuple[dict[str, StoreWrite], list[Skip]]:
     """Return, per file, the first live store-write call: a STRUCTURAL fact, not a filename.
 
     ⚑ A FIXTURE CALL IS NOT A WRITE PATH: a call whose scope names a selftest is not live.
+    ⚑ A FILE HOLDING ONLY A STORE-WRITE NEEDLE IS SEEN ONLY HERE: the other scans prefilter it out,
+    so an unparseable one is reported by this scan or by none.
 
     Returns:
-        each store-writing file's first live store-write call.
+        each store-writing file's first live store-write call, and the files that were skipped.
 
     """
     out: dict[str, StoreWrite] = {}
+    skipped: set[Skip] = set()
     for form in STORE_WRITE_FORMS:
-        for key, facts in scan(paths, form).facts.items():
+        sites = scan(paths, form)
+        skipped.update(sites.skipped)
+        for key, facts in sites.facts.items():
             if _SELFTEST in facts.context.lower():
                 continue
             path, found = key[0], StoreWrite(form, key[1])
             if path not in out or found.line < out[path].line:
                 out[path] = found
-    return out
+    return out, sorted(skipped)
 
 
 def binds_snapshot_at_entry(paths: Sequence[str]) -> dict[str, Placement]:
@@ -364,7 +369,7 @@ def disagreement(paths: Sequence[str]) -> Disagreements:
     intent = placement(paths, ENTRY_FORMS, ())
     snap = placement(paths, SNAPSHOT_FORMS, FIRST_WRITE_FORMS)
     bound = binds_snapshot_at_entry(paths)
-    store = writes_store(paths)
+    store, store_skipped = writes_store(paths)
     intents = {p.path: p for p in intent.rows}
     snaps = {p.path: p for p in snap.rows} | bound
     rows = [
@@ -377,5 +382,5 @@ def disagreement(paths: Sequence[str]) -> Disagreements:
         )
         for path in sorted(set(intents) | set(snaps))
     ]
-    skipped = sorted(set(intent.skipped) | set(snap.skipped))
+    skipped = sorted(set(intent.skipped) | set(snap.skipped) | set(store_skipped))
     return Disagreements(rows=rows, skipped=skipped)

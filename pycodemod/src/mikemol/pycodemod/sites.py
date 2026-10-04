@@ -298,8 +298,10 @@ def scan(paths: Sequence[str], target: str | None = None) -> Sites:
     """Scan files for defs, calls and uses-as-value of `target` (every name when None).
 
     ⚑ A DOTTED TARGET (`store.connect`) selects CALLS whose receiver is SPELLED exactly so; defs
-    and refs carry no receiver and are not reported for it. ⚑ A file whose text does not contain
-    the bare name is excluded soundly — it cannot hold the name — and is not a skip.
+    and refs carry no receiver and are not reported for it (`path.insert` is NOT `sys.path.insert`:
+    zero rows, no banner). ⚑ A BARE target is receiver-blind: `insert` matches every `x.insert(..)`
+    and bare `insert(..)`; each row's facts carry the receiver. ⚑ A file whose text does not
+    contain the bare name is excluded soundly — it cannot hold the name — and is not a skip.
 
     Returns:
         the sites, with the target, the population and the skipped files.

@@ -28,3 +28,4 @@ inbound-asks	The Inbound-Asks Context Hook: Unclaimed Peer Asks Surfaced Once, a
 worktree-venv	The Worktree Venv Fallback: a Linked Worktree Borrows the Main Tree Venv for the Same Distribution, Tools Only
 nemik-check	The Nemik-Check Context Hook: This Repo's Shape Findings Surfaced Once, a Reader That Could Not Run Said and Never Read as Clean, and No Refusal
 githook-post-commit	The Shared Post-Commit: The Advisory Marker Written Into the Tip, a Failed Amend Reported, and No Push
+githook-prepare-commit-msg	The Shared Prepare-Commit-Msg: the Gate Report Folded Into the Message Once, Every Failure Reported Rather Than Swallowed, and No Push

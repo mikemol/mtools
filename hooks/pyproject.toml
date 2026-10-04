@@ -90,6 +90,10 @@ mikemol-githook-pre-push = "mikemol.hooks.githook_pre_push:main"
 # ⚑ ALSO A GIT HOOK: a repo's `.githooks/post-commit` stub execs it. It writes the commit marker
 # that substrate's pre-push.local checks, and NEVER pushes (auto-push is each repo's own policy).
 mikemol-githook-post-commit = "mikemol.hooks.githook_post_commit:main"
+# ⚑ ALSO A GIT HOOK, AND ITS ARGV IS THE CONTRACT (git passes the message file and the source): a
+# repo's `.githooks/prepare-commit-msg` stub execs it with "$@". It folds the pre-commit gate report
+# into the message, and reports what the shell version swallowed.
+mikemol-githook-prepare-commit-msg = "mikemol.hooks.githook_prepare_commit_msg:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -326,6 +330,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/githook_post_commit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_post_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ THE SHARED GIT PREPARE-COMMIT-MSG: asking git for `--absolute-git-dir` IS its one subprocess
+# responsibility. Git is resolved by `shutil.which` (absent → reported, exit 1) and run with
+# constant subcommands; the message file and report are paths, never argv to a process. Never
+# through a shell.
+"src/mikemol/hooks/githook_prepare_commit_msg.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
+"tests/test_githook_prepare_commit_msg.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE WORKTREE FALLBACK (W553): asking git where a linked worktree's main tree is IS its one
 # responsibility. git is resolved by `shutil.which` (absent → no fallback, the refusal stands); the

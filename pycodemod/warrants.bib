@@ -3913,3 +3913,161 @@
   claim  = {AUTHORED: the degenerate census claims no row kinds, and says so as `unknown`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_roster.py -k test_an_empty_vocabulary_makes_no_loop_a_row_loop_and_every_early_exit_unknown},
 }
+
+@misc{pycodemod-control-provenance-subprocess-hop-makes-the-result-external,
+  section = {control_provenance},
+  title  = {`p = subprocess.run(cmd)` carries the boundary into `p`; `p.returncode` alone does not},
+  claim  = {`p = subprocess.run(cmd)` carries the boundary into `p`; `p.returncode` alone does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_a_subprocess_hop_makes_the_result_external},
+}
+
+@misc{pycodemod-control-provenance-hop-is-iterated-to-a-fixpoint,
+  section = {control_provenance},
+  title  = {AUTHORED: `fh = open()`, `blob = fh.read()`, `blob2 = blob or b""`, `c = blob2` chain},
+  claim  = {AUTHORED: `fh = open()`, `blob = fh.read()`, `blob2 = blob or b""`, `c = blob2` chain.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_the_hop_is_iterated_to_a_fixpoint},
+}
+
+@misc{pycodemod-control-provenance-ext-names-reads-with-for-and-annotated-targets,
+  section = {control_provenance},
+  title  = {AUTHORED: `with open() as fh`, `for x in os.listdir()` and `y: int = input()` all bind},
+  claim  = {AUTHORED: `with open() as fh`, `for x in os.listdir()` and `y: int = input()` all bind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_ext_names_reads_with_for_and_annotated_targets},
+}
+
+@misc{pycodemod-control-provenance-pure-assignment-binds-no-external-name,
+  section = {control_provenance},
+  title  = {AUTHORED: arithmetic on locals reaches no boundary},
+  claim  = {AUTHORED: arithmetic on locals reaches no boundary.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_a_pure_assignment_binds_no_external_name},
+}
+
+@misc{pycodemod-control-provenance-open-and-attribute-calls-reach-the-boundary,
+  section = {control_provenance},
+  title  = {A bare `open`, a module root and a reading method are each external},
+  claim  = {A bare `open`, a module root and a reading method are each external.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_open_and_attribute_calls_reach_the_boundary},
+}
+
+@misc{pycodemod-control-provenance-pure-expression-is-not-external,
+  section = {control_provenance},
+  title  = {`len(xs) + 1` names nothing outside the program, and no expression at all is not either},
+  claim  = {`len(xs) + 1` names nothing outside the program, and no expression at all is not either.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_a_pure_expression_is_not_external},
+}
+
+@misc{pycodemod-control-provenance-external-expr-takes-a-list-of-nodes,
+  section = {control_provenance},
+  title  = {A governing expression may be several nodes; one external member suffices},
+  claim  = {A governing expression may be several nodes; one external member suffices.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_external_expr_takes_a_list_of_nodes},
+}
+
+@misc{pycodemod-control-provenance-os-environ-is-configuration-not-external,
+  section = {control_provenance},
+  title  = {The mode test runs before the root test: `os` is a root yet `os.environ` is configuration},
+  claim  = {The mode test runs before the root test: `os` is a root yet `os.environ` is
+            configuration.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_os_environ_is_configuration_not_external},
+}
+
+@misc{pycodemod-control-provenance-mode-expr-reads-parameters-constants-and-the-main-guard,
+  section = {control_provenance},
+  title  = {A parameter, an ALL-CAPS constant and `__name__` each make an expression a mode test},
+  claim  = {A parameter, an ALL-CAPS constant and `__name__` each make an expression a mode test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_mode_expr_reads_parameters_constants_and_the_main_guard},
+}
+
+@misc{pycodemod-control-provenance-empty-boundary-claims-nothing,
+  section = {control_provenance},
+  title  = {AUTHORED: with no tables, nothing is external and no bare mode name is configuration},
+  claim  = {AUTHORED: with no tables, nothing is external and no bare mode name is configuration.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_an_empty_boundary_claims_nothing},
+}
+
+@misc{pycodemod-control-provenance-empty-boundary-still-reads-parameters,
+  section = {control_provenance},
+  title  = {AUTHORED: parameters and constants are operands of the call, not boundary data},
+  claim  = {AUTHORED: parameters and constants are operands of the call, not boundary data.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_an_empty_boundary_still_reads_parameters},
+}
+
+@misc{pycodemod-control-provenance-custom-boundary-replaces-the-python-one,
+  section = {control_provenance},
+  title  = {AUTHORED: a boundary naming `db` as a root makes `db.fetch()` external, `os` no longer},
+  claim  = {AUTHORED: a boundary naming `db` as a root makes `db.fetch()` external, `os` no longer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_a_custom_boundary_replaces_the_python_one},
+}
+
+@misc{pycodemod-control-provenance-scopes-labels-module-defs-and-classes,
+  section = {control_provenance},
+  title  = {AUTHORED: the module, every def (nested too) and every class is its own scope},
+  claim  = {AUTHORED: the module, every def (nested too) and every class is its own scope.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_scopes_labels_module_defs_and_classes},
+}
+
+@misc{pycodemod-control-provenance-module-scope-does-not-inherit-function-locals,
+  section = {control_provenance},
+  title  = {The module walk stops at a def, so a function-local assignment is not a module one},
+  claim  = {The module walk stops at a def, so a function-local assignment is not a module one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_a_module_scope_does_not_inherit_function_locals},
+}
+
+@misc{pycodemod-control-provenance-own-walk-of-a-def-includes-defaults-and-decorators,
+  section = {control_provenance},
+  title  = {AUTHORED: a def's defaults and decorators are walked with the def},
+  claim  = {AUTHORED: a def's defaults and decorators are walked with the def.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_own_walk_of_a_def_includes_defaults_and_decorators},
+}
+
+@misc{pycodemod-control-provenance-params-cover-every-parameter-kind,
+  section = {control_provenance},
+  title  = {AUTHORED: positional-only, positional, keyword-only, `*args` and `**kwargs`},
+  claim  = {AUTHORED: positional-only, positional, keyword-only, `*args` and `**kwargs`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_params_cover_every_parameter_kind},
+}
+
+@misc{pycodemod-control-provenance-params-of-a-module-or-class-is-empty,
+  section = {control_provenance},
+  title  = {AUTHORED: only a def has parameters},
+  claim  = {AUTHORED: only a def has parameters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_params_of_a_module_or_class_is_empty},
+}
+
+@misc{pycodemod-control-provenance-module-consts-are-all-caps-bindings-only,
+  section = {control_provenance},
+  title  = {AUTHORED: `VERBOSE = 1` and `LIMIT: int = 2` count; `name`, `Mixed` and tuples do not},
+  claim  = {AUTHORED: `VERBOSE = 1` and `LIMIT: int = 2` count; `name`, `Mixed` and tuples do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_provenance.py -k test_module_consts_are_all_caps_bindings_only},
+}
+
+@misc{pycodemod-placement-writes-store-returns-its-skips,
+  section = {placement},
+  title  = {⚑ `writes_store` reports the files it could not parse beside the writers it found},
+  claim  = { `writes_store` reports the files it could not parse beside the writers it found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_writes_store_returns_its_skips},
+}
+
+@misc{pycodemod-placement-unparseable-file-holding-one-needle-is-in-the-banner,
+  section = {placement},
+  title  = {⚑ A file that cannot be parsed is skipped by `disagreement`, whichever needle it holds},
+  claim  = { A file that cannot be parsed is skipped by `disagreement`, whichever needle it holds.
+            The store-write needle alone was invisible: only `writes_store` looked for
+            it and it kept no skips, so the banner read a clean population.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_placement.py -k test_an_unparseable_file_holding_one_needle_is_in_the_banner},
+}
+
+@misc{pycodemod-sites-multi-link-dotted-target-matches-at-module-level-and-in-a-function,
+  section = {sites},
+  title  = {⚑⚑ `sys.path.insert` reads once per call; `path.insert` is not it; bare is receiver-blind},
+  claim  = { `sys.path.insert` reads once per call; `path.insert` is not it; bare is receiver-blind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites.py -k test_a_multi_link_dotted_target_matches_at_module_level_and_in_a_function},
+}
+
+@misc{pycodemod-cli-calls-with-a-dotted-target-reads-each-full-dotted-call-once,
+  section = {cli},
+  title  = {`calls --target sys.path.insert` prints the module-level and in-function call, once each},
+  claim  = {`calls --target sys.path.insert` prints the module-level and in-function call, once
+            each.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_calls_with_a_dotted_target_reads_each_full_dotted_call_once},
+}
