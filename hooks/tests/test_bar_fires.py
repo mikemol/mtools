@@ -3005,10 +3005,48 @@ def test_every_shipped_hook_is_actually_invoked() -> None:
     # ⚑ NARROWED AT THE BOUNDARY rather than trusting `json.loads`. This distribution ships
     # `payload.py` with nine warrants arguing exactly this: an untyped `Any` from a decoder is a
     # claim about a shape nothing checked.
-    commands: list[str] = pyre.findall(r'"command":\s*"([^"]+)"', settings)
+    # ⚑ A COMMAND'S QUOTES CAN BE ESCAPED (`\"$CLAUDE_PROJECT_DIR/...\"`), and `[^"]+` stopped at
+    # the first backslash-quote, so the Stop hook's command parsed as a lone `\` (W529).
+    commands: list[str] = pyre.findall(r'"command":\s*"((?:[^"\\]|\\.)*)"', settings)
     assert commands, "no hook commands parsed from settings"
-    for command in commands:
+    armed = [c for c in commands if _needs_inline_arming(c, scripts, _DIST / "bin")]
+    # ⚑ POSITIVE CONTROL: the exemption must not swallow every command, or this loop is vacuous.
+    assert armed, "no hook command needs arming; the exemption would be hiding all of them"
+    for command in armed:
         assert "_HOOK_BLOCK=1 " in command, f"hook armed only ambiently: {command}"
+
+
+def _needs_inline_arming(command: str, scripts: list[str], bin_dir: Path) -> bool:
+    """Say whether a settings hook command must carry an inline `*_HOOK_BLOCK=1`.
+
+    ⚑⚑ DERIVED, NOT LISTED (W529). The arm exists because a hook that reads an arming variable is
+    advisory until armed. A hook that reads none, such as the rule-8 Stop hook, has no advisory
+    mode, so a variable on its command would be decoration. A declared `mikemol-hook-*` console
+    script is always armed; any other launcher is judged by whether its own text reads one.
+
+    Returns:
+        True when the launcher is a declared hook script or its text reads `_HOOK_BLOCK`.
+
+    """
+    found = pyre.search(r"/(mikemol-hook-[a-z-]+)", command)
+    assert found, f"a hook command names no mikemol-hook launcher: {command}"
+    name = found.group(1)
+    if name in scripts:
+        return True
+    return "_HOOK_BLOCK" in (bin_dir / name).read_text(encoding="utf-8")
+
+
+def test_a_launcher_that_reads_an_arming_variable_must_be_armed_inline(tmp_path: Path) -> None:
+    """A launcher reading `_HOOK_BLOCK` needs arming and one that reads none does not.
+
+    ⚑ W529: the Stop hook launcher reads no arming variable, so requiring one of it was the old
+    arm asserting a decoration. The control is a launcher that does read one, which stays held.
+    """
+    (tmp_path / "mikemol-hook-armed").write_text('[ "${X_HOOK_BLOCK:-0}" = 1 ]\n', encoding="utf-8")
+    (tmp_path / "mikemol-hook-always").write_text("exec true\n", encoding="utf-8")
+    armed = _needs_inline_arming('"$P/hooks/bin/mikemol-hook-armed"', [], tmp_path)
+    always = _needs_inline_arming('"$P/hooks/bin/mikemol-hook-always"', [], tmp_path)
+    assert (armed, always) == (True, False)
 
 
 _PKG = _DIST / "src" / "mikemol" / "hooks"

@@ -4669,3 +4669,13 @@
   claim  = {With no table, `--routes` exits 1 and says where it looked: never a blank pass.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_argv.py -k test_routes_with_no_table_says_so_and_fails},
 }
+
+@misc{hooks-bar-fires-launcher-that-reads-an-arming-variable-must-be-armed-inline,
+  section = {bar-fires},
+  title  = {A launcher reading `_HOOK_BLOCK` needs arming and one that reads none does not},
+  claim  = {A launcher reading `_HOOK_BLOCK` needs arming and one that reads none does not. W529:
+            the Stop hook launcher reads no arming variable, so requiring one of it was
+            the old arm asserting a decoration. The control is a launcher that does read
+            one, which stays held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_launcher_that_reads_an_arming_variable_must_be_armed_inline},
+}
