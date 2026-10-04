@@ -2,8 +2,8 @@
 # Copyright (c) 2026 Mike Mol
 
 # ⚑ MIRRORS //pkgbuild:BUILD.bazel (itself //corpus and //icsstruct TARGET FOR TARGET); the
-# rationale for each shape lives there, this file says only where it differs. TWO TOOLS, one
-# py_binary each (dagnames, closure_census); dagderive is library-only. `@importdag_dev` and
+# rationale for each shape lives there, this file says only where it differs. FIVE TOOLS, one
+# py_binary each (dagnames, closure_census, closure, imports, dagbzl); dagderive is library-only. `@importdag_dev` and
 # `@importdag_deps` are declared in MODULE.bazel beside this distribution's birth (mtools:W563).
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -132,6 +132,40 @@ py_binary(
     imports = ["src"],
     visibility = ["//visibility:public"],
     deps = [":importdag"],
+    # ⚑ IMPORTS THE PACKAGE ITSELF, with the sibling's source root beside it in the runfiles: legacy
+    # `__init__.py` creation would make `mikemol` a regular package and hide `mikemol.importdag`
+    # (measured by mtools:W547: `ModuleNotFoundError` on a bare `bazel run`).
+    legacy_create_init = 0,
+)
+
+py_binary(
+    name = "closure",
+    srcs = ["src/mikemol/importdag/closure.py"],
+    main = "src/mikemol/importdag/closure.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":importdag"],
+    legacy_create_init = 0,  # as for closure_census above
+)
+
+py_binary(
+    name = "imports",
+    srcs = ["src/mikemol/importdag/imports.py"],
+    main = "src/mikemol/importdag/imports.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":importdag"],
+    legacy_create_init = 0,  # as for closure_census above
+)
+
+py_binary(
+    name = "dagbzl",
+    srcs = ["src/mikemol/importdag/dagbzl.py"],
+    main = "src/mikemol/importdag/dagbzl.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":importdag"],
+    legacy_create_init = 0,  # as for closure_census above
 )
 
 py_binary(
@@ -169,6 +203,9 @@ venv_from_hub(
     console_scripts = {
         "mikemol-dagnames": "mikemol.importdag.dagnames:main",
         "mikemol-closure-census": "mikemol.importdag.closure_census:main",
+        "mikemol-closure": "mikemol.importdag.closure:main",
+        "mikemol-imports": "mikemol.importdag.imports:main",
+        "mikemol-dagbzl": "mikemol.importdag.dagbzl:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",

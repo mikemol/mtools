@@ -14,9 +14,10 @@ is flagged when it names a sibling script that imports engine modules the claim'
 closure does not contain. That difference is the under-declaration, in modules, and it is what a
 build stages too few of.
 
-The closure tool is not part of this distribution, so the tree is described by a `Tree`: the
-repository root, the engine directory, and the closure script. The command line takes them as
-options, and the defaults are the paperkit layout.
+The closure tool is `mikemol.importdag.closure` in this distribution, run as a child interpreter
+with `-m`. The tree is described by a `Tree`: the repository root, the engine directory, and
+optionally a closure script that stands in for the module. The command line takes them as options,
+and the defaults are the paperkit layout with the module as the closure tool.
 
     python3 -m mikemol.importdag.closure_census                 # every project with checks
     python3 -m mikemol.importdag.closure_census paper           # one project
@@ -26,6 +27,7 @@ options, and the defaults are the paperkit layout.
 from __future__ import annotations
 
 import ast
+import os
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -40,11 +42,16 @@ PAIR = 2
 
 @dataclass(frozen=True)
 class Tree:
-    """Where the census looks: the repository root, the engine, and the closure script."""
+    """Where the census looks: the repository root, the engine, and the closure tool.
+
+    A `closure` of None means this distribution's own module, run with `-m`. A path replaces it
+    with a script run by path, which is how a test substitutes a fake and how a tree with its own
+    closure script is described.
+    """
 
     root: Path
     engine: Path
-    closure: Path
+    closure: Path | None = None
 
 
 @dataclass
@@ -60,11 +67,45 @@ def default_tree(root: Path) -> Tree:
     """Describe a tree laid out like paperkit's.
 
     Returns:
-        A `Tree` whose engine is `root/paperkit` and whose closure script is
-        `root/tools/closure.py`.
+        A `Tree` whose engine is `root/paperkit` and whose closure tool is this distribution's
+        own `closure` module.
 
     """
-    return Tree(root=root, engine=root / "paperkit", closure=root / "tools" / "closure.py")
+    return Tree(root=root, engine=root / "paperkit")
+
+
+def closure_command(tree: Tree) -> list[str]:
+    """Build the argument vector that starts the closure tool, before its own options.
+
+    Returns:
+        The running interpreter with `-m mikemol.importdag.closure` when the tree names no
+        script, else the interpreter and the script path.
+
+    """
+    exe = sys.executable or "python3"
+    if tree.closure is None:
+        return [exe, "-m", "mikemol.importdag.closure"]
+    return [exe, str(tree.closure)]
+
+
+def closure_env(tree: Tree) -> dict[str, str]:
+    """Build the environment the closure child runs under, which is deliberately minimal.
+
+    A script finds its sibling modules through the directory it sits in. The module needs this
+    package's location instead, passed in the environment so that no code edits `sys.path`, with
+    whatever the parent already had following it.
+
+    Returns:
+        `PYTHONPATH` and `PATH` only.
+
+    """
+    if tree.closure is not None:
+        return {"PYTHONPATH": str(tree.closure.parent), "PATH": "/usr/bin:/bin"}
+    roots = [str(dagnames.PACKAGE_ROOT)]
+    inherited = os.environ.get("PYTHONPATH")
+    if inherited:
+        roots.append(inherited)
+    return {"PYTHONPATH": os.pathsep.join(roots), "PATH": "/usr/bin:/bin"}
 
 
 def engine_modules(tree: Tree) -> list[str]:
@@ -91,12 +132,12 @@ def declared(check: str, mods: list[str], tree: Tree) -> dict[str, set[str]]:
 
     """
     r = subprocess.run(
-        [sys.executable or "python3", str(tree.closure), "--check", check, *mods],
+        [*closure_command(tree), "--check", check, *mods],
         cwd=tree.root,
         capture_output=True,
         text=True,
         check=False,
-        env={"PYTHONPATH": str(tree.closure.parent), "PATH": "/usr/bin:/bin"},
+        env=closure_env(tree),
     )
     out: dict[str, set[str]] = {}
     for ln in r.stdout.splitlines():
@@ -151,17 +192,11 @@ def script_imports(path: Path, names: set[str]) -> set[str]:
         cannot be read or parsed yields the empty set.
 
     """
-    out: set[str] = set()
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
     except (OSError, SyntaxError):
-        return out
-    for n in ast.walk(tree):
-        if isinstance(n, ast.Import):
-            out |= {a.name for a in n.names if a.name in names}
-        elif isinstance(n, ast.ImportFrom) and n.module in names:
-            out.add(str(n.module))
-    return out
+        return set()
+    return dagderive.node_imports(tree, names)
 
 
 def cone(seeds: set[str], mods: list[str], tree: Tree) -> set[str]:
@@ -285,8 +320,8 @@ def parse_args(argv: list[str]) -> tuple[Tree, set[str]]:
     """Read the command line.
 
     Returns:
-        The tree, from `--root` (default the current directory) and `--closure` (default the
-        paperkit layout), and the project labels named by the remaining words.
+        The tree, from `--root` (default the current directory) and `--closure` (default this
+        distribution's closure module), and the project labels named by the remaining words.
 
     """
     args = list(argv)

@@ -10,11 +10,14 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.importdag import dagnames
 from mikemol.importdag.closure_census import (
     Gap,
     Tree,
     audit,
     audit_witness,
+    closure_command,
+    closure_env,
     cone,
     declared,
     default_tree,
@@ -90,11 +93,50 @@ def _tree(tmp_path: Path) -> Tree:
 
 
 def test_default_tree_follows_the_paperkit_layout() -> None:
-    """The engine is `paperkit` and the closure script is `tools/closure.py`, under the root."""
+    """The engine is `paperkit` under the root, and the closure tool is this distribution's."""
     root = Path("r")
-    assert default_tree(root) == Tree(
-        root=root, engine=Path("r/paperkit"), closure=Path("r/tools/closure.py")
+    assert default_tree(root) == Tree(root=root, engine=Path("r/paperkit"), closure=None)
+
+
+def test_closure_command_runs_the_module_by_default() -> None:
+    """With no script named, the closure tool is `-m mikemol.importdag.closure`."""
+    tree = default_tree(Path("r"))
+    assert closure_command(tree) == [sys.executable, "-m", "mikemol.importdag.closure"]
+
+
+def test_closure_command_runs_a_named_script_by_path() -> None:
+    """A tree that names a closure script runs it by path, as before."""
+    tree = Tree(root=Path("r"), engine=Path("r/paperkit"), closure=Path("c/x.py"))
+    assert closure_command(tree) == [sys.executable, "c/x.py"]
+
+
+def test_closure_env_for_a_script_is_its_directory() -> None:
+    """A script finds its siblings through the directory it sits in, and nothing else leaks."""
+    tree = Tree(root=Path("r"), engine=Path("r/paperkit"), closure=Path("c/x.py"))
+    assert closure_env(tree) == {"PYTHONPATH": "c", "PATH": "/usr/bin:/bin"}
+
+
+def test_closure_env_for_the_module_is_this_package_then_the_inherited_path(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The module child gets this package's root first, then whatever the parent had."""
+    root = str(dagnames.PACKAGE_ROOT)
+    tree = default_tree(Path("r"))
+    monkeypatch.setenv("PYTHONPATH", "/inherited")
+    assert closure_env(tree) == {"PYTHONPATH": f"{root}:/inherited", "PATH": "/usr/bin:/bin"}
+    monkeypatch.delenv("PYTHONPATH")
+    assert closure_env(tree) == {"PYTHONPATH": root, "PATH": "/usr/bin:/bin"}
+
+
+def test_declared_runs_the_real_closure_module_by_default(tmp_path: Path) -> None:
+    """With no script, the census asks this distribution's own closure module, in a child."""
+    tree = _tree(tmp_path)
+    (tree.root / "proj" / "checks" / "witness.py").write_text(
+        "import bib\nCLAIMS = {'k1': one}\n\n\ndef one():\n    import gate\n", encoding="utf-8"
     )
+    default = default_tree(tree.root)
+    got = declared("proj/checks/witness.py", engine_modules(default), default)
+    assert got == {"k1": {"bib", "bibparse", "gate"}}
 
 
 def test_engine_modules_are_prefixed_and_sorted(tmp_path: Path) -> None:
@@ -185,7 +227,7 @@ def test_audit_witness_passes_a_covered_cone(tmp_path: Path) -> None:
     (proj / "checks" / "gen_x.py").write_text("import gate\n", encoding="utf-8")
     (tree.engine / "gate.py").write_text("VALUE = 2\n", encoding="utf-8")
     closure = "print('k1\\tpaperkit/gate.py')\n"
-    tree.closure.write_text(closure, encoding="utf-8")
+    (tree.root / "cl" / "closure.py").write_text(closure, encoding="utf-8")
     assert audit_witness(proj / "checks" / "witness.py", proj, engine_modules(tree), tree) == []
 
 
@@ -210,7 +252,7 @@ def test_audit_witness_outside_the_root_is_passed_absolute(tmp_path: Path) -> No
         "import os, sys\n"
         f"open({str(kind)!r}, 'w').write('abs' if os.path.isabs(sys.argv[2]) else 'rel')\n"
     )
-    tree.closure.write_text(closure, encoding="utf-8")
+    (tree.root / "cl" / "closure.py").write_text(closure, encoding="utf-8")
     got = audit_witness(outside / "checks" / "witness.py", outside, engine_modules(tree), tree)
     assert got == [Gap(claim="k1", script="elsewhere/checks/gen_x.py", missing=["bib", "bibparse"])]
     assert kind.read_text(encoding="utf-8") == "abs"
@@ -325,3 +367,14 @@ def test_runs_as_a_module(tmp_path: Path) -> None:
     )
     assert r.returncode == 1
     assert "1 under-declared witness(es)" in r.stdout
+
+
+def test_main_with_the_default_closure_module_finds_the_derived_edge_covered(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The real closure module derives the script edge, so the witness is not under-declared."""
+    tree = _tree(tmp_path)
+    assert main(["--root", str(tree.root)]) == 0
+    out = capsys.readouterr().out
+    assert out.endswith("\n0 under-declared witness(es)\n")
+    assert "    proj/checks/witness.py\n" in out

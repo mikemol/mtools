@@ -58,6 +58,45 @@ def imports(text: str, names: set[str], pkg: str = "paperkit") -> set[str]:
     return out
 
 
+def node_imports(node: ast.AST, names: set[str]) -> set[str]:
+    """Collect the module names under `node` that a flat import statement names, within `names`.
+
+    This is the FLAT reader, kept apart from `imports` on purpose. A flat reader sees only
+    `import x` and `from x import y` where `x` is an engine stem, so it misses the package
+    spelling `from paperkit import x`. The closure tool is defined over that narrower reading: a
+    witness's roots are the modules it names flat, and switching it to the package-qualified
+    reading would widen every cone it computes. Both readers therefore live here, under names that
+    say which one they are.
+
+    Returns:
+        The names in `names` that an import statement anywhere under `node` binds, by `import x`
+        or `from x import y`. A package-qualified from-import is not read.
+
+    """
+    out: set[str] = set()
+    for n in ast.walk(node):
+        if isinstance(n, ast.Import):
+            out |= {a.name for a in n.names if a.name in names}
+        elif isinstance(n, ast.ImportFrom) and n.module in names:
+            out.add(str(n.module))
+    return out
+
+
+def flat_imports(text: str, names: set[str]) -> set[str]:
+    """Collect the engine module names `text` imports by the flat spelling only.
+
+    Returns:
+        The names in `names` that `text` imports flat, as `node_imports` reads them. A text that
+        does not parse yields the empty set.
+
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return set()
+    return node_imports(tree, names)
+
+
 def stem_index(paths: list[str]) -> dict[str, str]:
     """Map each module's bare stem to its engine-relative path, refusing an ambiguous stem.
 

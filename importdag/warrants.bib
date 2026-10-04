@@ -447,3 +447,528 @@
   claim  = {The namespace package merges: importing the sibling does not shadow mikemol.importdag.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_sibling},
 }
+
+@misc{importdag-dagderive-flat-reader-misses-the-package-spelling-the-qualified-reader-reads,
+  section = {dagderive},
+  title  = {The two readers differ on exactly `from paperkit import x`, which is why both exist},
+  claim  = {The two readers differ on exactly `from paperkit import x`, which is why both exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_flat_reader_misses_the_package_spelling_the_qualified_reader_reads},
+}
+
+@misc{importdag-dagderive-flat-imports-of-unparseable-text-is-empty,
+  section = {dagderive},
+  title  = {A syntax error yields the empty set rather than raising},
+  claim  = {A syntax error yields the empty set rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_flat_imports_of_unparseable_text_is_empty},
+}
+
+@misc{importdag-dagderive-node-imports-reads-under-any-node-including-a-function-body,
+  section = {dagderive},
+  title  = {A lazy import inside a function counts, and a name outside `names` does not},
+  claim  = {A lazy import inside a function counts, and a name outside `names` does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagderive.py -k test_node_imports_reads_under_any_node_including_a_function_body},
+}
+
+@misc{importdag-dagnames-engine-srcs-is-every-component-path-sorted-and-not-a-glob,
+  section = {dagnames},
+  title  = {Every path of every component, sorted; an unplaced file on disk is not included},
+  claim  = {Every path of every component, sorted; an unplaced file on disk is not included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_engine_srcs_is_every_component_path_sorted_and_not_a_glob},
+}
+
+@misc{importdag-dagnames-split-engine-defaults-to-paperkit-and-keeps-the-rest,
+  section = {dagnames},
+  title  = {With no option the engine is `paperkit`, and every word stays in order},
+  claim  = {With no option the engine is `paperkit`, and every word stays in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_split_engine_defaults_to_paperkit_and_keeps_the_rest},
+}
+
+@misc{importdag-dagnames-split-engine-takes-the-option-from-anywhere-and-the-last-wins,
+  section = {dagnames},
+  title  = {`--engine DIR` is removed wherever it stands; a later one replaces an earlier one},
+  claim  = {`--engine DIR` is removed wherever it stands; a later one replaces an earlier one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_split_engine_takes_the_option_from_anywhere_and_the_last_wins},
+}
+
+@misc{importdag-dagnames-split-engine-leaves-a-dangling-option-for-the-caller,
+  section = {dagnames},
+  title  = {An `--engine` with no value after it is kept in the rest, not swallowed},
+  claim  = {An `--engine` with no value after it is kept in the rest, not swallowed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagnames.py -k test_split_engine_leaves_a_dangling_option_for_the_caller},
+}
+
+@misc{importdag-closure-census-closure-command-runs-the-module-by-default,
+  section = {closure_census},
+  title  = {With no script named, the closure tool is `-m mikemol.importdag.closure`},
+  claim  = {With no script named, the closure tool is `-m mikemol.importdag.closure`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_closure_command_runs_the_module_by_default},
+}
+
+@misc{importdag-closure-census-closure-command-runs-a-named-script-by-path,
+  section = {closure_census},
+  title  = {A tree that names a closure script runs it by path, as before},
+  claim  = {A tree that names a closure script runs it by path, as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_closure_command_runs_a_named_script_by_path},
+}
+
+@misc{importdag-closure-census-closure-env-for-a-script-is-its-directory,
+  section = {closure_census},
+  title  = {A script finds its siblings through the directory it sits in, and nothing else leaks},
+  claim  = {A script finds its siblings through the directory it sits in, and nothing else leaks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_closure_env_for_a_script_is_its_directory},
+}
+
+@misc{importdag-closure-census-closure-env-for-the-module-is-this-package-then-the-inherited-path,
+  section = {closure_census},
+  title  = {The module child gets this package's root first, then whatever the parent had},
+  claim  = {The module child gets this package's root first, then whatever the parent had.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_closure_env_for_the_module_is_this_package_then_the_inherited_path},
+}
+
+@misc{importdag-closure-census-declared-runs-the-real-closure-module-by-default,
+  section = {closure_census},
+  title  = {With no script, the census asks this distribution's own closure module, in a child},
+  claim  = {With no script, the census asks this distribution's own closure module, in a child.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_declared_runs_the_real_closure_module_by_default},
+}
+
+@misc{importdag-closure-census-main-with-the-default-closure-module-finds-the-derived-edge-covered,
+  section = {closure_census},
+  title  = {The real closure module derives the script edge, so the witness is not under-declared},
+  claim  = {The real closure module derives the script edge, so the witness is not under-declared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure_census.py -k test_main_with_the_default_closure_module_finds_the_derived_edge_covered},
+}
+
+@misc{importdag-closure-const-str-reads-only-string-constants,
+  section = {closure},
+  title  = {A string constant yields its text; any other node yields None},
+  claim  = {A string constant yields its text; any other node yields None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_const_str_reads_only_string_constants},
+}
+
+@misc{importdag-closure-const-int-reads-only-integer-constants,
+  section = {closure},
+  title  = {An integer constant yields its value; any other node yields None},
+  claim  = {An integer constant yields its value; any other node yields None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_const_int_reads_only_integer_constants},
+}
+
+@misc{importdag-closure-div-literal-splits-a-division-by-a-string,
+  section = {closure},
+  title  = {`LEFT / "text"` yields the left node and the text; other shapes yield None},
+  claim  = {`LEFT / "text"` yields the left node and the text; other shapes yield None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_div_literal_splits_a_division_by_a_string},
+}
+
+@misc{importdag-closure-reads-finds-py-constants-naming-an-engine-stem,
+  section = {closure},
+  title  = {Only a string ending in `.py` whose stem is an engine name counts, with any directory},
+  claim  = {Only a string ending in `.py` whose stem is an engine name counts, with any directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_reads_finds_py_constants_naming_an_engine_stem},
+}
+
+@misc{importdag-closure-parents-prefix-drops-n-plus-one-components,
+  section = {closure},
+  title  = {`parents[N]` of the check path drops N+1 trailing components},
+  claim  = {`parents[N]` of the check path drops N+1 trailing components.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_parents_prefix_drops_n_plus_one_components},
+}
+
+@misc{importdag-closure-parents-prefix-needs-file-and-a-constant-index,
+  section = {closure},
+  title  = {Without `__file__`, or with a non-constant index, or off a non-subscript: None},
+  claim  = {Without `__file__`, or with a non-constant index, or off a non-subscript: None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_parents_prefix_needs_file_and_a_constant_index},
+}
+
+@misc{importdag-closure-dir-consts-extends-known-prefixes-and-copies-its-input,
+  section = {closure},
+  title  = {A chain binds a prefix, `NAME / "sub"` extends it, and the given mapping is not mutated},
+  claim  = {A chain binds a prefix, `NAME / "sub"` extends it, and the given mapping is not mutated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_dir_consts_extends_known_prefixes_and_copies_its_input},
+}
+
+@misc{importdag-closure-dir-consts-without-a-starting-mapping,
+  section = {closure},
+  title  = {With no mapping given the result starts empty},
+  claim  = {With no mapping given the result starts empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_dir_consts_without_a_starting_mapping},
+}
+
+@misc{importdag-closure-resolve-path-handles-chains-names-and-nested-divisions,
+  section = {closure},
+  title  = {An inline chain, a known name and nested divisions resolve; anything else is None},
+  claim  = {An inline chain, a known name and nested divisions resolve; anything else is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_resolve_path_handles_chains_names_and_nested_divisions},
+}
+
+@misc{importdag-closure-exists-paths-collects-resolvable-exists-calls-only,
+  section = {closure},
+  title  = {Only `exists()` calls on a resolvable path count; `is_file()` and unknown bases do not},
+  claim  = {Only `exists()` calls on a resolvable path count; `is_file()` and unknown bases do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_exists_paths_collects_resolvable_exists_calls_only},
+}
+
+@misc{importdag-closure-read-text-target-returns-the-receiver,
+  section = {closure},
+  title  = {A `X.read_text()` call yields X; other calls and nodes yield None},
+  claim  = {A `X.read_text()` call yields X; other calls and nodes yield None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_read_text_target_returns_the_receiver},
+}
+
+@misc{importdag-closure-local-reads-binds-names-to-resolved-paths,
+  section = {closure},
+  title  = {A single-target assignment from `PATH.read_text()` binds the name to the path},
+  claim  = {A single-target assignment from `PATH.read_text()` binds the name to the path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_local_reads_binds_names_to_resolved_paths},
+}
+
+@misc{importdag-closure-membership-literal-reads-a-single-in-test,
+  section = {closure},
+  title  = {`"S" in X` yields S; other comparisons and non-literal lefts yield None},
+  claim  = {`"S" in X` yields S; other comparisons and non-literal lefts yield None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_membership_literal_reads_a_single_in_test},
+}
+
+@misc{importdag-closure-content-edges-resolves-inline-and-local-comparators,
+  section = {closure},
+  title  = {Both an inline `read_text()` comparator and a local bound to one give an edge},
+  claim  = {Both an inline `read_text()` comparator and a local bound to one give an edge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_content_edges_resolves_inline_and_local_comparators},
+}
+
+@misc{importdag-closure-engine-cone-is-transitive-and-includes-the-seed,
+  section = {closure},
+  title  = {The cone follows every hop, survives a cycle, and tolerates a stem with no edges},
+  claim  = {The cone follows every hop, survives a cycle, and tolerates a stem with no edges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_engine_cone_is_transitive_and_includes_the_seed},
+}
+
+@misc{importdag-closure-dispatch-claims-reads-any-of-the-table-spellings,
+  section = {closure},
+  title  = {Each spelling is read, a key becomes its text, and a non-name value is skipped},
+  claim  = {Each spelling is read, a key becomes its text, and a non-name value is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_dispatch_claims_reads_any_of_the_table_spellings},
+}
+
+@misc{importdag-closure-load-builds-names-graph-functions-and-claims,
+  section = {closure},
+  title  = {The witness holds stem to path, the flat import graph, the functions and the claims},
+  claim  = {The witness holds stem to path, the flat import graph, the functions and the claims.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_load_builds_names_graph_functions_and_claims},
+}
+
+@misc{importdag-closure-load-keeps-the-last-path-of-a-repeated-stem,
+  section = {closure},
+  title  = {A stem named twice resolves to its last path, unlike the refusing derivation},
+  claim  = {A stem named twice resolves to its last path, unlike the refusing derivation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_load_keeps_the_last_path_of_a_repeated_stem},
+}
+
+@misc{importdag-closure-module-roots-split-imports-from-reads,
+  section = {closure},
+  title  = {Top-level imports and `.py` reads are the shared roots; function bodies are not},
+  claim  = {Top-level imports and `.py` reads are the shared roots; function bodies are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_module_roots_split_imports_from_reads},
+}
+
+@misc{importdag-closure-roots-follow-local-calls,
+  section = {closure},
+  title  = {A witness inherits the imports of the local helper it calls},
+  claim  = {A witness inherits the imports of the local helper it calls.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_roots_follow_local_calls},
+}
+
+@misc{importdag-closure-roots-of-an-unknown-or-seen-function-are-empty,
+  section = {closure},
+  title  = {A name that is not a function, or one already walked, contributes nothing},
+  claim  = {A name that is not a function, or one already walked, contributes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_roots_of_an_unknown_or_seen_function_are_empty},
+}
+
+@misc{importdag-closure-roots-include-reads-and-terminate-on-mutual-calls,
+  section = {closure},
+  title  = {A pure read is its own root kind, and two helpers that call each other terminate},
+  claim  = {A pure read is its own root kind, and two helpers that call each other terminate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_roots_include_reads_and_terminate_on_mutual_calls},
+}
+
+@misc{importdag-closure-concept-keys-name-registered-claims-only,
+  section = {closure},
+  title  = {A `concept:` constant counts only when its key is a registered claim},
+  claim  = {A `concept:` constant counts only when its key is a registered claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_concept_keys_name_registered_claims_only},
+}
+
+@misc{importdag-closure-resolved-roots-follow-keys-transitively-and-stop-on-a-seen-key,
+  section = {closure},
+  title  = {A resolved key brings its witness's roots and those of the keys it resolves in turn},
+  claim  = {A resolved key brings its witness's roots and those of the keys it resolves in turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_resolved_roots_follow_keys_transitively_and_stop_on_a_seen_key},
+}
+
+@misc{importdag-closure-script-roots-read-sibling-scripts-and-skip-the-check-and-broken-ones,
+  section = {closure},
+  title  = {A named sibling script seeds its imports; the check itself and a syntax error do not},
+  claim  = {A named sibling script seeds its imports; the check itself and a syntax error do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_script_roots_read_sibling_scripts_and_skip_the_check_and_broken_ones},
+}
+
+@misc{importdag-closure-toggle-rows-decide-polarity-from-the-working-directory,
+  section = {closure},
+  title  = {An absent file is injected, a present one dropped, a directory skipped},
+  claim  = {An absent file is injected, a present one dropped, a directory skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_toggle_rows_decide_polarity_from_the_working_directory},
+}
+
+@misc{importdag-closure-toggle-rows-inject-a-substring-into-a-missing-file,
+  section = {closure},
+  title  = {A substring tested against a file that does not exist is an injection},
+  claim  = {A substring tested against a file that does not exist is an injection.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_toggle_rows_inject_a_substring_into_a_missing_file},
+}
+
+@misc{importdag-closure-claim-rows-emit-cone-reads-files-and-contents-in-order,
+  section = {closure},
+  title  = {The cone is expanded, a pure read follows it, then the file and content toggles},
+  claim  = {The cone is expanded, a pure read follows it, then the file and content toggles.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_claim_rows_emit_cone_reads_files_and_contents_in_order},
+}
+
+@misc{importdag-closure-import-wins-over-a-read-of-the-same-module,
+  section = {closure},
+  title  = {A module both imported and read is in the cone, so it is not also a read root},
+  claim  = {A module both imported and read is in the cone, so it is not also a read root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_an_import_wins_over_a_read_of_the_same_module},
+}
+
+@misc{importdag-closure-parse-args-types-the-namespace-and-defaults-relpath,
+  section = {closure},
+  title  = {The check, the engine paths and an empty default relpath are read},
+  claim  = {The check, the engine paths and an empty default relpath are read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_parse_args_types_the_namespace_and_defaults_relpath},
+}
+
+@misc{importdag-closure-parse-args-keeps-argparse-abbreviations-and-the-relpath-option,
+  section = {closure},
+  title  = {An unambiguous abbreviation of an option still works, as it did under argparse},
+  claim  = {An unambiguous abbreviation of an option still works, as it did under argparse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_parse_args_keeps_argparse_abbreviations_and_the_relpath_option},
+}
+
+@misc{importdag-closure-parse-args-requires-the-check-and-an-engine-module,
+  section = {closure},
+  title  = {A missing `--check` or an empty engine list is a usage error, exit 2},
+  claim  = {A missing `--check` or an empty engine list is a usage error, exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_parse_args_requires_the_check_and_an_engine_module},
+}
+
+@misc{importdag-closure-help-describes-the-tool,
+  section = {closure},
+  title  = {`--help` survives the move to a typed namespace: it prints the usage and exits 0},
+  claim  = {`--help` survives the move to a typed namespace: it prints the usage and exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_help_describes_the_tool},
+}
+
+@misc{importdag-closure-main-prints-every-claim-in-key-order,
+  section = {closure},
+  title  = {Rows come out claim by claim, sorted by key, one per line},
+  claim  = {Rows come out claim by claim, sorted by key, one per line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_main_prints_every_claim_in_key_order},
+}
+
+@misc{importdag-closure-main-uses-relpath-to-resolve-parents,
+  section = {closure},
+  title  = {The repository-relative path decides what `parents[N]` means, not the file's location},
+  claim  = {The repository-relative path decides what `parents[N]` means, not the file's location.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_main_uses_relpath_to_resolve_parents},
+}
+
+@misc{importdag-closure-main-reads-sys-argv-when-not-given-argv,
+  section = {closure},
+  title  = {With no argv the process arguments are used},
+  claim  = {With no argv the process arguments are used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_main_reads_sys_argv_when_not_given_argv},
+}
+
+@misc{importdag-closure-runs-as-a-module,
+  section = {closure},
+  title  = {`python -m mikemol.importdag.closure` prints the rows and exits 0},
+  claim  = {`python -m mikemol.importdag.closure` prints the rows and exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_runs_as_a_module},
+}
+
+@misc{importdag-imports-edges-are-importer-path-and-imported-stem,
+  section = {imports},
+  title  = {The value is a bare stem, a self-import is no edge, and edges follow the path order},
+  claim  = {The value is a bare stem, a self-import is no edge, and edges follow the path order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_edges_are_importer_path_and_imported_stem},
+}
+
+@misc{importdag-imports-render-is-the-header-then-the-stem-valued-dict,
+  section = {imports},
+  title  = {The file is the header and the dict; a repeated edge is written once},
+  claim  = {The file is the header and the dict; a repeated edge is written once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_render_is_the_header_then_the_stem_valued_dict},
+}
+
+@misc{importdag-imports-header-cites-this-module-and-not-the-paperkit-script,
+  section = {imports},
+  title  = {The generated header names the module that now owns the file, and says it is generated},
+  claim  = {The generated header names the module that now owns the file, and says it is generated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_header_cites_this_module_and_not_the_paperkit_script},
+}
+
+@misc{importdag-imports-run-mode-check-passes-a-fresh-file,
+  section = {imports},
+  title  = {A byte-equal file passes with exit 0},
+  claim  = {A byte-equal file passes with exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_run_mode_check_passes_a_fresh_file},
+}
+
+@misc{importdag-imports-run-mode-check-fails-a-stale-file,
+  section = {imports},
+  title  = {A different file fails with exit 1 and a message naming the repair},
+  claim  = {A different file fails with exit 1 and a message naming the repair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_run_mode_check_fails_a_stale_file},
+}
+
+@misc{importdag-imports-run-mode-write-regenerates-then-is-idempotent,
+  section = {imports},
+  title  = {The first write replaces the file, the second finds it fresh and leaves it},
+  claim  = {The first write replaces the file, the second finds it fresh and leaves it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_run_mode_write_regenerates_then_is_idempotent},
+}
+
+@misc{importdag-imports-write-is-atomic-so-a-hardlinked-twin-keeps-its-bytes,
+  section = {imports},
+  title  = {The sibling's atomic write replaces the path: a twin of the old inode is not rewritten},
+  claim  = {The sibling's atomic write replaces the path: a twin of the old inode is not rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_write_is_atomic_so_a_hardlinked_twin_keeps_its_bytes},
+}
+
+@misc{importdag-imports-write-preserves-the-files-permissions,
+  section = {imports},
+  title  = {The replace keeps the mode the file had, as the sibling's write promises},
+  claim  = {The replace keeps the mode the file had, as the sibling's write promises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_write_preserves_the_files_permissions},
+}
+
+@misc{importdag-imports-main-lists-edges-over-the-named-modules,
+  section = {imports},
+  title  = {Without a mode word, the edges over the given files are printed tab separated},
+  claim  = {Without a mode word, the edges over the given files are printed tab separated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_main_lists_edges_over_the_named_modules},
+}
+
+@misc{importdag-imports-main-takes-the-engine-option-for-a-mode,
+  section = {imports},
+  title  = {`--engine DIR` locates the engine, with the mode after it},
+  claim  = {`--engine DIR` locates the engine, with the mode after it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_main_takes_the_engine_option_for_a_mode},
+}
+
+@misc{importdag-imports-main-defaults-the-engine-to-paperkit-under-the-working-directory,
+  section = {imports},
+  title  = {With no option the engine directory is `paperkit` under the cwd},
+  claim  = {With no option the engine directory is `paperkit` under the cwd.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_main_defaults_the_engine_to_paperkit_under_the_working_directory},
+}
+
+@misc{importdag-imports-modes-are-write-and-check,
+  section = {imports},
+  title  = {The two mode words the command line recognises},
+  claim  = {The two mode words the command line recognises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_modes_are_write_and_check},
+}
+
+@misc{importdag-imports-two-writers-disagree-on-the-same-file,
+  section = {imports},
+  title  = {Running the legacy writer and the current one flips the file between two formats},
+  claim  = {Running the legacy writer and the current one flips the file between two formats.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_the_two_writers_disagree_on_the_same_file},
+}
+
+@misc{importdag-imports-runs-as-a-module,
+  section = {imports},
+  title  = {`python -m mikemol.importdag.imports` exits with `main`'s code},
+  claim  = {`python -m mikemol.importdag.imports` exits with `main`'s code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_imports.py -k test_runs_as_a_module},
+}
+
+@misc{importdag-dagbzl-render-with-sorts-and-deduplicates-under-the-given-header,
+  section = {dagbzl},
+  title  = {Modules and values are sorted, a repeated edge is written once, the header leads},
+  claim  = {Modules and values are sorted, a repeated edge is written once, the header leads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_render_with_sorts_and_deduplicates_under_the_given_header},
+}
+
+@misc{importdag-dagbzl-render-values-are-module-paths-under-the-dagbzl-header,
+  section = {dagbzl},
+  title  = {The current format: a path on both sides of an edge, after this module's header},
+  claim  = {The current format: a path on both sides of an edge, after this module's header.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_render_values_are_module_paths_under_the_dagbzl_header},
+}
+
+@misc{importdag-dagbzl-header-cites-this-module-and-not-the-paperkit-script,
+  section = {dagbzl},
+  title  = {The header names the modules that own the file and how to regenerate it},
+  claim  = {The header names the modules that own the file and how to regenerate it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_header_cites_this_module_and_not_the_paperkit_script},
+}
+
+@misc{importdag-dagbzl-check-passes-a-fresh-file-and-is-the-default-mode,
+  section = {dagbzl},
+  title  = {A byte-equal file passes; naming no mode means `--check`},
+  claim  = {A byte-equal file passes; naming no mode means `--check`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_check_passes_a_fresh_file_and_is_the_default_mode},
+}
+
+@misc{importdag-dagbzl-check-fails-a-stale-file,
+  section = {dagbzl},
+  title  = {A different file fails with exit 1 and a message naming the repair},
+  claim  = {A different file fails with exit 1 and a message naming the repair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_check_fails_a_stale_file},
+}
+
+@misc{importdag-dagbzl-write-regenerates-then-is-idempotent,
+  section = {dagbzl},
+  title  = {The first write replaces the file, the second finds it fresh},
+  claim  = {The first write replaces the file, the second finds it fresh.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_write_regenerates_then_is_idempotent},
+}
+
+@misc{importdag-dagbzl-write-is-atomic-so-a-hardlinked-twin-keeps-its-bytes,
+  section = {dagbzl},
+  title  = {The sibling's atomic write replaces the path: a twin of the old inode is not rewritten},
+  claim  = {The sibling's atomic write replaces the path: a twin of the old inode is not rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_write_is_atomic_so_a_hardlinked_twin_keeps_its_bytes},
+}
+
+@misc{importdag-dagbzl-write-preserves-the-files-permissions,
+  section = {dagbzl},
+  title  = {The replace keeps the mode the file had, as the sibling's write promises},
+  claim  = {The replace keeps the mode the file had, as the sibling's write promises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_write_preserves_the_files_permissions},
+}
+
+@misc{importdag-dagbzl-unknown-mode-is-refused-with-exit-2,
+  section = {dagbzl},
+  title  = {Neither mode word: exit 2 and a message naming it, with the file untouched},
+  claim  = {Neither mode word: exit 2 and a message naming it, with the file untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_an_unknown_mode_is_refused_with_exit_2},
+}
+
+@misc{importdag-dagbzl-engine-defaults-to-paperkit-under-the-working-directory,
+  section = {dagbzl},
+  title  = {With no option the engine is `paperkit` under the cwd, and argv comes from the process},
+  claim  = {With no option the engine is `paperkit` under the cwd, and argv comes from the process.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_the_engine_defaults_to_paperkit_under_the_working_directory},
+}
+
+@misc{importdag-dagbzl-runs-as-a-module,
+  section = {dagbzl},
+  title  = {`python -m mikemol.importdag.dagbzl` exits with `main`'s code},
+  claim  = {`python -m mikemol.importdag.dagbzl` exits with `main`'s code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_runs_as_a_module},
+}

@@ -3,9 +3,8 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# ⚑ paperkit's `dagderive`, `dagnames` and `closure_census`, moved together (mtools:W563, a cut of
-# W532). The other three importdag modules (imports, closure, dagbzl) are NOT here: they need a
-# sibling-distribution mechanism nobody has ruled on (mtools:W562).
+# ⚑ paperkit's `dagderive`, `dagnames` and `closure_census` moved first (mtools:W563, a cut of W532);
+# `imports`, `closure` and `dagbzl` followed (mtools:W547) once the sibling edge was ruled (W562).
 name = "mikemol-importdag"
 version = "0.1.0"
 description = "Derive a project's import DAG, name its modules importably, and census witnesses that reach the engine through a subprocess."
@@ -29,6 +28,9 @@ dependencies = ["mikemol-atomicwrite"]
 [project.scripts]
 mikemol-dagnames = "mikemol.importdag.dagnames:main"
 mikemol-closure-census = "mikemol.importdag.closure_census:main"
+mikemol-closure = "mikemol.importdag.closure:main"
+mikemol-imports = "mikemol.importdag.imports:main"
+mikemol-dagbzl = "mikemol.importdag.dagbzl:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -84,6 +86,13 @@ preview = true
 select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
+# ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike. Left to
+# detection, a venv that has the sibling installed classifies `mikemol.atomicwrite` with this
+# package's own imports, while the sandbox (no venv) puts it in its own block: the ratchet and the
+# per-edit hook then demand opposite layouts of the same file (mtools:W547).
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.atomicwrite"]
+
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
 
@@ -97,6 +106,23 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/test_sibling_edge.py" = ["assert"]
 "tests/test_dagderive.py" = ["assert"]
+# ⚑ THE THREE PORTED TOOLS (mtools:W547). `closure` is exercised as `python -m` in a child as well as
+# by calls; `imports` and `dagbzl` are the two DAG-file writers, and their exit codes are contracts.
+"tests/test_closure.py" = [
+    "assert",
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_imports.py" = [
+    "assert",
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_dagbzl.py" = [
+    "assert",
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
 # ⚑ ITS WITNESSES RUN THE CENSUS AS `python -m` IN A CHILD: the exit code is the contract.
 "tests/test_closure_census.py" = [
     "assert",
@@ -110,8 +136,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
-# ⚑ THE CENSUS ASKS closure.py (a sibling script outside this distribution) what roots a claim
-# gets, as a child process. Same argv shape: `sys.executable` and paths, no shell.
+# ⚑ THE CENSUS ASKS the closure tool (this distribution's `closure` module, or a script standing in
+# for it) what roots a claim gets, as a child process. Same argv shape: `sys.executable` and paths.
 "src/mikemol/importdag/closure_census.py" = [
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",

@@ -16,10 +16,12 @@ from mikemol.importdag.dagnames import (
     PACKAGE_ROOT,
     Options,
     child_env,
+    engine_srcs,
     literal,
     main,
     module_names,
     parse_args,
+    split_engine,
     to_module,
     unresolvable,
 )
@@ -60,6 +62,29 @@ def test_literal_reads_the_named_dict_only(tmp_path: Path) -> None:
     eng = _engine(tmp_path)
     got = literal(eng / "components.bzl", "COMPONENTS")
     assert got == {"core": ["a.py", "tools/sub.py"], "tests": ["t.py"]}
+
+
+def test_engine_srcs_is_every_component_path_sorted_and_not_a_glob(tmp_path: Path) -> None:
+    """Every path of every component, sorted; an unplaced file on disk is not included."""
+    eng = _engine(tmp_path)
+    (eng / "unplaced.py").write_text("VALUE = 1\n", encoding="utf-8")
+    assert engine_srcs(eng) == ["a.py", "t.py", "tools/sub.py"]
+
+
+def test_split_engine_defaults_to_paperkit_and_keeps_the_rest() -> None:
+    """With no option the engine is `paperkit`, and every word stays in order."""
+    assert split_engine(["--write", "x.py"]) == (Path("paperkit"), ["--write", "x.py"])
+
+
+def test_split_engine_takes_the_option_from_anywhere_and_the_last_wins() -> None:
+    """`--engine DIR` is removed wherever it stands; a later one replaces an earlier one."""
+    argv = ["--engine", "a", "--check", "--engine", "b/c"]
+    assert split_engine(argv) == (Path("b/c"), ["--check"])
+
+
+def test_split_engine_leaves_a_dangling_option_for_the_caller() -> None:
+    """An `--engine` with no value after it is kept in the rest, not swallowed."""
+    assert split_engine(["--write", "--engine"]) == (Path("paperkit"), ["--write", "--engine"])
 
 
 def test_literal_of_a_non_dict_is_empty(tmp_path: Path) -> None:

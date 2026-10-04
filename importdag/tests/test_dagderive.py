@@ -4,11 +4,19 @@
 
 from __future__ import annotations
 
+import ast
 from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.importdag.dagderive import cone, edges, imports, stem_index
+from mikemol.importdag.dagderive import (
+    cone,
+    edges,
+    flat_imports,
+    imports,
+    node_imports,
+    stem_index,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -56,6 +64,25 @@ def test_a_name_in_a_comment_or_string_is_not_an_edge() -> None:
 def test_unparseable_text_has_no_edges() -> None:
     """A syntax error yields the empty set rather than raising."""
     assert imports("def (:\n", NAMES) == set()
+
+
+def test_flat_reader_misses_the_package_spelling_the_qualified_reader_reads() -> None:
+    """The two readers differ on exactly `from paperkit import x`, which is why both exist."""
+    text = "from paperkit import bibparse\nimport bib\nfrom vfs import x\n"
+    assert flat_imports(text, NAMES) == {"bib", "vfs"}
+    assert imports(text, NAMES) == {"bib", "bibparse", "vfs"}
+
+
+def test_flat_imports_of_unparseable_text_is_empty() -> None:
+    """A syntax error yields the empty set rather than raising."""
+    assert flat_imports("def (:\n", NAMES) == set()
+
+
+def test_node_imports_reads_under_any_node_including_a_function_body() -> None:
+    """A lazy import inside a function counts, and a name outside `names` does not."""
+    tree = ast.parse("def f():\n    import bib\n    import os\n    from gate import y\n")
+    assert node_imports(tree, {"bib", "gate"}) == {"bib", "gate"}
+    assert node_imports(tree.body[0], {"bib"}) == {"bib"}
 
 
 def test_stem_index_maps_stem_to_path() -> None:

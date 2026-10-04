@@ -3,26 +3,46 @@
 
 # mikemol-importdag
 
-Three of paperkit's `tools/` modules moved together into mtools (mtools:W563, a cut of W532):
-`dagderive`, `dagnames` and `closure_census`. Standard library only, `dependencies = []`, and no
-dependency on any other mtools distribution.
+Six of paperkit's `tools/` modules moved into mtools (a cut of W532): `dagderive`, `dagnames` and
+`closure_census` first (mtools:W563), then `imports`, `closure` and `dagbzl` (mtools:W547). The one
+dependency is the sibling distribution `mikemol-atomicwrite`, for the atomic write of the generated
+DAG file (mechanism A+B, mtools:W562).
 
 | module | does |
 |---|---|
 | `mikemol.importdag.dagderive` | `imports(text, names, pkg)` reads an engine-internal import from the syntax tree in all its spellings; `stem_index(paths)` maps stem to path and refuses a duplicate stem; `edges(eng, paths)` records each edge as importer path and imported path; `cone(start, edges_by_mod)` is the transitive closure. A library: no script |
 | `mikemol.importdag.dagnames` | `module_names(eng, skip, pkg)` names every module of the `COMPONENTS` partition importably; `unresolvable(names, eng, root)` proves each name imports, one child interpreter per name; console script `mikemol-dagnames` |
 | `mikemol.importdag.closure_census` | flags a witness that shells out to a sibling script whose engine imports its declared closure does not hold; console script `mikemol-closure-census` |
+| `mikemol.importdag.closure` | a claim witness's engine closure roots plus its file and content toggle rows; console script `mikemol-closure` |
+| `mikemol.importdag.dagbzl` | owns the path-valued `dag.bzl`: `render`, and `--write` / `--check` through the sibling's `write_atomic`; console script `mikemol-dagbzl` |
+| `mikemol.importdag.imports` | the LEGACY stem-valued writer of the same file, plus the edge listing; console script `mikemol-imports` |
 
-## What is NOT here, and why
+## The two import readers, and the two writers
 
-`imports`, `closure` and `dagbzl` stay in paperkit's `tools/`. Each depends on a module in
-paperkit's engine or on a sibling mtools distribution (`atomicwrite`, via `paperkit.durable`), and
-a distribution depending on another is a mechanism the operator has not ruled on (mtools:W562).
-`closure_census` asks the closure tool what roots a claim gets, so it takes the closure script as
-an option (`--closure`, default `tools/closure.py` under the root) until `closure` is ported and
-that call can name a module.
+`dagderive.imports` reads every spelling of an import (flat and package-qualified);
+`dagderive.flat_imports` and `dagderive.node_imports` read only the flat spelling. The closure tool is defined over the
+flat reading, and the package-qualified one would widen every cone it computes, so both exist and
+are named for what they read. `imports --write` and `dagbzl --write` write different formats to
+the same `dag.bzl` (a stem per value against a module path per value): running one after the other
+flips the file. `dagbzl` is the current writer; `imports --write` is kept as ported and should have
+one owner of the file only.
 
-## What changed from paperkit
+## What changed from paperkit in the second move (mtools:W547)
+
+- The engine is `--engine DIR` (default `paperkit` under the working directory) for `imports`,
+  `dagbzl` and the helpers, not `Path(__file__).parents[1] / "paperkit"`.
+- The generated `dag.bzl` header names `mikemol.importdag.dagbzl` and `mikemol.importdag.dagderive`
+  (it named `tools/dagbzl.py`), so paperkit regenerates it once. The body is byte identical.
+- `closure` keeps argparse, with a typed namespace subclass, so `--help` and option abbreviations
+  survive. `closure_census` runs `python -m mikemol.importdag.closure` by default; `--closure
+  SCRIPT` still names a script.
+- `dagbzl.literal` is gone (it duplicated `dagnames.literal`), and `imports.engine_srcs` and
+  `dagbzl.engine_srcs` are one function, `dagnames.engine_srcs`. `imports.imports` became
+  `dagderive.flat_imports`, and `closure`'s private `_imports` became `dagderive.node_imports`.
+- `closure`'s private helpers are public (a private name cannot be imported by its witnesses).
+- `imports.render(eng, rows)` lost its unused `eng` parameter.
+
+## What changed from paperkit in the first move
 
 Every change is a consequence of leaving `tools/`, where the modules found the tree by their own
 file location.

@@ -112,6 +112,48 @@ def module_names(eng: Path, skip: tuple[str, ...] = (), pkg: str = "") -> list[s
     return sorted(to_module(f, pkg) for c, fs in comps.items() if c not in skip for f in fs)
 
 
+def engine_srcs(eng: Path) -> list[str]:
+    """Collect the module set the build consumes, from the component partition.
+
+    The set is derived from `COMPONENTS`, never from a glob. The engine's build lists its sources
+    explicitly and derives that list from the same partition, so reading the same literal keeps a
+    generator's input equal to the build's by construction rather than by a second enumeration
+    that agrees today. A separate check compares the partition with the real tree, which is where
+    a new file nobody placed is caught; this function does not also try to do that.
+
+    Returns:
+        Every engine-relative path of every component, sorted.
+
+    """
+    comps = literal(eng / "components.bzl", "COMPONENTS")
+    return sorted(f for fs in comps.values() for f in fs)
+
+
+def split_engine(argv: list[str]) -> tuple[Path, list[str]]:
+    """Separate the `--engine DIR` option from the rest of a command line.
+
+    The generator tools find the engine by option rather than by their own file location, which
+    no longer means anything once they live in an installed package. A dangling `--engine` with
+    no value after it is left in the rest, for the caller to refuse.
+
+    Returns:
+        The engine directory, `paperkit` under the working directory when no option was given
+        (the last one wins), and the remaining words in order.
+
+    """
+    eng = Path("paperkit")
+    rest: list[str] = []
+    i = 0
+    while i < len(argv):
+        if argv[i] == "--engine" and i + 1 < len(argv):
+            eng = Path(argv[i + 1])
+            i += PAIR
+        else:
+            rest.append(argv[i])
+            i += 1
+    return eng, rest
+
+
 def child_env(eng: Path) -> dict[str, str]:
     """Build the environment a name-check child runs under.
 
