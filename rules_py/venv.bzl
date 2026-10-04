@@ -206,6 +206,10 @@ def _venv_impl(ctx):
 # ⚑ The `sys.path` line makes the venv's own site-packages reachable when
 # the script is run by an interpreter that is not this venv's, which is what lets one launcher
 # serve a venv whose absolute location is only known at run time.
+# ⚑ LINUX-ONLY, DECLARED, NOT ASSUMED: the first line uses `readlink -f`, which is GNU coreutils. That
+# is consistent with the tree: every distribution carries `[tool.uv] environments = ["sys_platform ==
+# 'linux'"]`, so no portable form is owed until a non-Linux environment is declared; at that point
+# this preamble is the first thing to rewrite (W585).
 _CONSOLE_SCRIPT = """\
 #!/bin/sh
 '''exec' "$(dirname -- "$(readlink -f -- "$0")")/python3" "$(readlink -f -- "$0")" "$@"
