@@ -105,3 +105,39 @@
   claim  = {A venv is not a worktree: include_worktrees still prunes and counts it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_virtualenvs.py -k test_the_count_survives_include_worktrees},
 }
+
+@misc{pathwalk-suffix-markdown-suffix-yields-only-markdown-sorted-per-directory,
+  section = {suffix},
+  title  = {The `.md` files come back sorted within each directory, and the planted `.py` does not},
+  claim  = {The `.md` files come back sorted within each directory, and the planted `.py` does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suffix.py -k test_a_markdown_suffix_yields_only_markdown_sorted_per_directory},
+}
+
+@misc{pathwalk-suffix-default-suffix-is-python,
+  section = {suffix},
+  title  = {Without a suffix only the `.py` file is yielded, as before},
+  claim  = {Without a suffix only the `.py` file is yielded, as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suffix.py -k test_the_default_suffix_is_python},
+}
+
+@misc{pathwalk-suffix-file-operand-is-passed-through-whatever-its-suffix,
+  section = {suffix},
+  title  = {The suffix filters directory yields only; a named file is passed through as given},
+  claim  = {The suffix filters directory yields only; a named file is passed through as given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suffix.py -k test_a_file_operand_is_passed_through_whatever_its_suffix},
+}
+
+@misc{pathwalk-suffix-registered-worktree-markdown-is-skipped-and-counted,
+  section = {suffix},
+  title  = {A linked worktree's `.md` files are skipped and counted, and read with include_worktrees},
+  claim  = {A linked worktree's `.md` files are skipped and counted, and read with
+            include_worktrees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suffix.py -k test_a_registered_worktree_markdown_is_skipped_and_counted},
+}
+
+@misc{pathwalk-suffix-suffix-without-a-dot-and-a-character-refuses,
+  section = {suffix},
+  title  = {An empty suffix, a lone dot, and a dotless one refuse rather than matching silently},
+  claim  = {An empty suffix, a lone dot, and a dotless one refuse rather than matching silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suffix.py -k test_a_suffix_without_a_dot_and_a_character_refuses},
+}

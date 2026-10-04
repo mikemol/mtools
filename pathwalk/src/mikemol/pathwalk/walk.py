@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-r"""Directory operands: the `*.py` files beneath a root, minus every registered git worktree.
+r"""Directory operands: the files of a given suffix (`.py` by default), minus registered worktrees.
 
 Asked for by el-openglo (W138, mtools:W536): a caller's glob over a repo root also read every
 `.claude/worktrees/agent-*` and `.tree-writes/*/tree` checkout, so one real importer read as about
@@ -45,6 +45,7 @@ _TIMEOUT = 60
 _PREFIX = "worktree "
 _GIT_DIR = ".git"
 _SUFFIX = ".py"
+_DOT = "."
 _VENV_MARK = "pyvenv.cfg"
 
 
@@ -125,7 +126,7 @@ def _is_venv(sub: Path) -> bool:
     return Path(sub, _VENV_MARK).is_file()
 
 
-def _walk(root: Path, skip: frozenset[Path]) -> tuple[list[str], int, int]:
+def _walk(root: Path, skip: frozenset[Path], suffix: str) -> tuple[list[str], int, int]:
     files: list[str] = []
     links = venvs = 0
     for top, dirs, names in os.walk(root, followlinks=False):
@@ -140,7 +141,7 @@ def _walk(root: Path, skip: frozenset[Path]) -> tuple[list[str], int, int]:
                 keep.append(name)
         dirs[:] = keep
         for name in sorted(names):
-            if not name.endswith(_SUFFIX):
+            if not name.endswith(suffix):
                 continue
             if Path(top, name).is_symlink():
                 links += 1
@@ -149,8 +150,11 @@ def _walk(root: Path, skip: frozenset[Path]) -> tuple[list[str], int, int]:
     return files, links, venvs
 
 
-def expand(operands: Sequence[str], *, include_worktrees: bool) -> Expansion:
-    """Expand each directory operand to its `*.py` files; pass every other operand through.
+def expand(operands: Sequence[str], *, include_worktrees: bool, suffix: str = _SUFFIX) -> Expansion:
+    """Expand each directory operand to the files with the given suffix, `.py` by default.
+
+    Every other operand is passed through. The suffix filters only what a directory yields: a
+    file operand is passed through as named, whatever its suffix.
 
     Returns:
         the files, and the counts a driver must print: registered worktrees skipped, symlinks
@@ -158,8 +162,12 @@ def expand(operands: Sequence[str], *, include_worktrees: bool) -> Expansion:
 
     Raises:
         WorktreeRefusedError: a directory operand is a symlink, or git could not list worktrees.
+        ValueError: the suffix is not a dot followed by at least one more character.
 
     """
+    if not suffix.startswith(_DOT) or suffix == _DOT:
+        msg = f"refused: suffix {suffix!r} must start with a dot and have a character after it"
+        raise ValueError(msg)
     files: list[str] = []
     worktrees = links = directories = venvs = 0
     for operand in operands:
@@ -173,7 +181,7 @@ def expand(operands: Sequence[str], *, include_worktrees: bool) -> Expansion:
         directories += 1
         others = frozenset[Path]() if include_worktrees else frozenset(other_worktrees(path))
         worktrees += len(others)
-        found, refused, pruned = _walk(path, others)
+        found, refused, pruned = _walk(path, others, suffix)
         files.extend(found)
         links += refused
         venvs += pruned

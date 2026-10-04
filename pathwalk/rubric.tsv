@@ -2,3 +2,4 @@
 # key <TAB> heading title
 walk	The Worktree Skip: a Directory Operand Reads the Tree and Not Its Registered Checkouts, and Says What It Left Out
 virtualenvs	The Virtualenv Prune: a Directory Operand Skips a Venv by Its pyvenv.cfg and Says How Many
+suffix	The Suffix: a Directory Operand Yields the Files of the Given Suffix, Python by Default, and a Bad Suffix Refuses
