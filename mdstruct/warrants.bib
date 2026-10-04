@@ -1352,3 +1352,17 @@
             the prose before it is the first line the rule judges.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_comment_after_prose_does_not_hide_the_prose},
 }
+
+@misc{mdstruct-sibling-edge-sibling-walk-is-importable-beside-this-distribution,
+  section = {sibling-edge},
+  title  = {The sibling's walk module imports and exposes the directory-operand expansion},
+  claim  = {The sibling's walk module imports and exposes the directory-operand expansion.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_the_sibling_walk_is_importable_beside_this_distribution},
+}
+
+@misc{mdstruct-sibling-edge-this-distribution-still-resolves-beside-its-sibling,
+  section = {sibling-edge},
+  title  = {The namespace package merges: importing the sibling does not shadow mikemol.mdstruct},
+  claim  = {The namespace package merges: importing the sibling does not shadow mikemol.mdstruct.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_sibling},
+}

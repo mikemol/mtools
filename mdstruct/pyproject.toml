@@ -23,10 +23,17 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ THE PARSER IS THE ONLY RUNTIME DEPENDENCY. `pandoc` itself is a SYSTEM binary this package
-# invokes rather than a wheel it can require — declared in the README as a prerequisite, and
-# every suite that needs it reports a DECLARED SKIP when it is absent rather than a silent pass.
-dependencies = ["panflute"]
+# ⚑ THE PARSER AND ONE SIBLING. `pandoc` itself is a SYSTEM binary this package invokes rather than a
+# wheel it can require — declared in the README as a prerequisite, and every suite that needs it
+# reports a DECLARED SKIP when it is absent rather than a silent pass.
+#
+# ⚑ A DIST-TO-DIST EDGE (mtools:W562, ruled A+B by the operator 2026-10-04): `mikemol-pathwalk`, the
+# stdlib-only directory-operand walk (registered-worktree skip, virtualenv prune) that the directory
+# operand reuses (mtools:W561). Resolved by uv as a NON-editable path source (an editable install puts a
+# finder hook on the path that mypy cannot resolve); Bazel carries the same edge as a py_library
+# dependency in BUILD.bazel. The pip hubs do not resolve it and requirements.txt is deliberately NOT
+# regenerated (a path source writes a bare relative line that breaks the pip extension for every dist).
+dependencies = ["panflute", "mikemol-pathwalk"]
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -120,6 +127,9 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-pathwalk = { path = "../pathwalk" }
 
 # ⚑⚑⚑ THE BAR IS ADOPTED, NOT INVENTED. This ruleset is substrate's, which took it from
 # linux-sources' measured config. Copying a bar that two repos already run beats writing a third
