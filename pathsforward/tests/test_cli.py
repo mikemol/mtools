@@ -20,6 +20,7 @@ Rec = dict[str, object]
 
 _OK = cli.EXIT_OK
 _FIVE = 5
+_FOUR = 4
 _FAILED = cli.EXIT_FAILED
 _REFUSED = cli.EXIT_REFUSED
 _LOCKED = cli.EXIT_LOCKED
@@ -521,6 +522,45 @@ def test_bump_blocked_says_who_is_owed(tmp_path: Path, capsys: pytest.CaptureFix
         True,
         False,
     )
+
+
+def test_prune_landed_frees_a_card_and_counts_no_tick(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """--prune-landed frees a card whose local blocker is done and leaves every counter alone.
+
+    ⚑ luthen-observability (mtools:W537): `--bump-blocked` does both jobs, so run from a hook on
+    every tool use it would drive each blocked card to ESCALATE_TICK. The control is a card
+    blocked on an agent with ticks_blocked=4: pruning must not move it to 5.
+    """
+    counted = {"blocked_on": ["agent-2"], "blocked_kind": "agent", "ticks_blocked": _FOUR}
+    waiting = {"blocked_on": ["W3"], "blocked_kind": "agent"}
+    path = _file(
+        tmp_path,
+        [_wp("W1", "blocked", **waiting), _wp("W2", "blocked", **counted), _wp("W3", "done")],
+    )
+    code = _run(path, "--prune-landed")
+    cards = {str(w["symbol"]): w for w in cast("list[Rec]", _doc(path)["waypoints"])}
+    assert (
+        code,
+        "UNBLOCKED W1" in capsys.readouterr().out,
+        cards["W1"]["status"],
+        cards["W2"]["ticks_blocked"],
+    ) == (_OK, True, "ready", _FOUR)
+
+
+def test_prune_landed_twice_changes_nothing(tmp_path: Path) -> None:
+    """A second --prune-landed leaves the state file byte-identical: it is safe from a hook."""
+    waiting = {"blocked_on": ["W2"], "blocked_kind": "agent"}
+    path = _file(tmp_path, [_wp("W1", "blocked", **waiting), _wp("W2", "done")])
+    _run(path, "--prune-landed")
+    once = path.read_bytes()
+    assert (_run(path, "--prune-landed"), path.read_bytes() == once) == (_OK, True)
+
+
+def test_prune_landed_refuses_a_field_flag_it_does_not_read(tmp_path: Path) -> None:
+    """--prune-landed takes no --except: the counter it never touches has nothing to exclude."""
+    assert _run(_file(tmp_path), "--prune-landed", "--except", "W2") == _REFUSED
 
 
 def test_ledger_appends_a_structured_line(tmp_path: Path) -> None:

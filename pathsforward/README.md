@@ -30,7 +30,8 @@ mikemol-paths-forward --state S --update W7 [--status S] [--blocked-on WHO…] [
                                             [--title T]   one non-blank line
 mikemol-paths-forward --state S --add TITLE [--next T] [--enables W…] [--touches TAG…]
 mikemol-paths-forward --state S --drop W7 REASON
-mikemol-paths-forward --state S --bump-blocked [--except W…]   NUDGE at 1,2,4,8 · ESCALATE at 16
+mikemol-paths-forward --state S --bump-blocked [--except W…]   prune landed blockers, then count a tick: NUDGE at 1,2,4,8 · ESCALATE at 16
+mikemol-paths-forward --state S --prune-landed   only the prune: idempotent, no counter, safe from a hook
 mikemol-paths-forward --state S --ledger SYM OUTCOME MECHANISM NOTE [--kind K] [--evidence E]
 mikemol-paths-forward --state S --show W7
 mikemol-paths-forward --state S --preamble-set FILE | --preamble-clear

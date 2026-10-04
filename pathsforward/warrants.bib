@@ -2757,3 +2757,28 @@
             is that this IS the titles rung.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_last_rung_still_names_every_live_waypoint},
 }
+
+@misc{pathsforward-cli-prune-landed-frees-a-card-and-counts-no-tick,
+  section = {cli},
+  title  = {--prune-landed frees a card whose local blocker is done and leaves every counter alone},
+  claim  = {--prune-landed frees a card whose local blocker is done and leaves every counter alone.
+            luthen-observability (mtools:W537): `--bump-blocked` does both jobs, so run
+            from a hook on every tool use it would drive each blocked card to
+            ESCALATE_TICK. The control is a card blocked on an agent with
+            ticks_blocked=4: pruning must not move it to 5.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_prune_landed_frees_a_card_and_counts_no_tick},
+}
+
+@misc{pathsforward-cli-prune-landed-twice-changes-nothing,
+  section = {cli},
+  title  = {A second --prune-landed leaves the state file byte-identical: it is safe from a hook},
+  claim  = {A second --prune-landed leaves the state file byte-identical: it is safe from a hook.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_prune_landed_twice_changes_nothing},
+}
+
+@misc{pathsforward-cli-prune-landed-refuses-a-field-flag-it-does-not-read,
+  section = {cli},
+  title  = {--prune-landed takes no --except: the counter it never touches has nothing to exclude},
+  claim  = {--prune-landed takes no --except: the counter it never touches has nothing to exclude.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_prune_landed_refuses_a_field_flag_it_does_not_read},
+}

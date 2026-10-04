@@ -57,6 +57,7 @@ _FLAGS = (
     "check_evidence",
     "selftest",
     "bump_blocked",
+    "prune_landed",
     "preamble_clear",
     "init",
     "overlaps",
@@ -968,8 +969,29 @@ def _lift_embargo(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _prune_landed(ctx: Ctx) -> int:
+    """Drop landed local blockers and say which waypoints that frees, counting nothing.
+
+    ⚑ THE IDEMPOTENT HALF OF `--bump-blocked` (luthen-observability, mtools:W537). `--bump-blocked`
+    also advances the nudge back-off counter, so run from a hook on every tool use it would drive
+    every blocked card to ESCALATE_TICK in minutes. This only prunes, so running it twice changes
+    nothing, and it is safe from a hook.
+
+    Returns:
+        EXIT_OK.
+
+    """
+
+    def edit(state: State) -> int:
+        for sym in ops.prune_done(state):
+            _say(f"UNBLOCKED {sym} (every local blocker is done)")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _bump_blocked(ctx: Ctx) -> int:
-    """Count a blocked tick on every blocked waypoint and say who is owed a nudge.
+    """Prune landed blockers, then count a blocked tick on every blocked waypoint.
 
     Returns:
         EXIT_OK.
@@ -1189,6 +1211,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "embargo": _embargo,
     "lift_embargo": _lift_embargo,
     "bump_blocked": _bump_blocked,
+    "prune_landed": _prune_landed,
     "ledger": _ledger_mode,
     "show": _show,
     "commit_message": _commit_message,
