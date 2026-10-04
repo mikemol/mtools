@@ -26,9 +26,9 @@ redundancy — it is two different questions.
 ⚑⚑ PARSE, DO NOT SUBSTRING-MATCH — the false-positive surface IS the design, and this hook's
 sibling learned it first. `grep -n 'no-verify' file`, `echo "never --no-verify"` and a commit
 message quoting the policy all CONTAIN the banned text and none of them bypass anything. A guard
-whose first act is to break a working session trains its owner to disable it. So the token stream
-is split with `shlex` and the flag is recognised only where git would recognise it: as an argument
-to `commit` or `push`, never inside a quoted string.
+whose first act is to break a working session trains its owner to disable it. So the command is
+parsed by the shared `cmdparse` and the flag is recognised only where git would recognise it: as
+an argument to `commit` or `push`, never inside a quoted string or a heredoc body.
 
 ⚑ ARMED, NOT ADVISORY. `NOVERIFY_HOOK_BLOCK=0` stands it down; otherwise the shared
 `STRUCT_HOOK_BLOCK` governs. Advisory mode is SILENT TO THE AGENT — an unarmed hook exits 0 with no
@@ -40,8 +40,9 @@ from __future__ import annotations
 
 import json
 import os
-import shlex
 import sys
+
+from mikemol.hooks import cmdparse
 
 # ⚑⚑ THE FLAG SPELLINGS, AND ABBREVIATION IS WHY THIS IS NOT A SET LITERAL. `git` accepts any
 # unambiguous prefix of a long option, so `--no-ver` and `--no-verif` reach the same code path as
@@ -114,18 +115,14 @@ def findings(command: str) -> list[str]:
         One sentence per bypass shape found, empty when the command is ordinary work.
 
     """
-    try:
-        tokens = shlex.split(command)
-    except ValueError:
-        # ⚑ AN UNPARSEABLE COMMAND IS NOT A BYPASS. Unbalanced quotes mean the shell would refuse it
-        # too; reporting a policy violation here would be a statement about the parser.
-        return []
-
+    # ⚑ ONE PARSER DECIDES WHAT A COMMAND IS. `cmdparse.programs` cuts heredoc bodies, splits on
+    # newlines and operators, and sees through wrappers, so `rest` is exactly git's own arguments.
+    # An unparseable command yields no programs: unbalanced quotes are the shell's verdict, not a
+    # policy violation.
     found: list[str] = []
-    for i, word in enumerate(tokens):
-        if word != "git":
+    for program, rest in cmdparse.programs(command):
+        if program != "git":
             continue
-        rest = tokens[i + 1 :]
         # ⚑ THE CONFIG BYPASS IS REFUSED WHEREVER IT APPEARS AFTER `git`, because it precedes the
         # subcommand by construction — `git -c core.hooksPath=/dev/null commit` — so waiting to see
         # the subcommand first would look past it.

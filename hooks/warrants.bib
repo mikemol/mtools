@@ -5191,3 +5191,17 @@
   claim  = {A temp directory that cannot be written records nothing and does not crash.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_record_state_survives_an_unwritable_temp_directory},
 }
+
+@misc{hooks-no-verify-bypass-is-refused-wherever-the-shared-parser-finds-the-command,
+  section = {no_verify},
+  title  = {A bypass after a newline, a `;` or a continuation is still a bypass},
+  claim  = {A bypass after a newline, a `;` or a continuation is still a bypass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_a_bypass_is_refused_wherever_the_shared_parser_finds_the_command},
+}
+
+@misc{hooks-no-verify-text-outside-the-git-command-is-not-read-as-its-arguments,
+  section = {no_verify},
+  title  = {Heredoc data, a quoted newline and a later command's flags are not `git`'s arguments},
+  claim  = {Heredoc data, a quoted newline and a later command's flags are not `git`'s arguments.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_text_outside_the_git_command_is_not_read_as_its_arguments},
+}

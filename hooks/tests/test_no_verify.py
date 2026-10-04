@@ -95,6 +95,37 @@ def test_ordinary_commands_are_not_refused(command: str) -> None:
     assert not hits, f"{command!r} is ordinary work and was refused: {hits}"
 
 
+# ⚑ SHAPES WHERE THE HOOK'S OWN SPLIT AND THE SHARED PARSER DISAGREED ABOUT WHERE A GIT INVOCATION
+# IS: a newline or `;` ends a command, a continuation does not, and a heredoc body is data.
+_MUST_DENY_BY_COMMAND_BOUNDARY = [
+    "git status\ngit commit -n",
+    "echo hi;git commit --no-verify",
+    "git \\\ncommit --no-verify",
+    "env -u X git commit -n",
+    "echo a\ngit -c core.hooksPath=/dev/null commit -m x",
+]
+_MUST_ALLOW_BY_COMMAND_BOUNDARY = [
+    "cat <<'EOF'\ngit commit --no-verify\nEOF",
+    "git commit -m x && ls -n",
+    "git commit -m 'a\ngit commit -n'",
+    "git log | head -n 5",
+    "git status; ls -n",
+]
+
+
+@pytest.mark.parametrize("command", _MUST_DENY_BY_COMMAND_BOUNDARY)
+def test_a_bypass_is_refused_wherever_the_shared_parser_finds_the_command(command: str) -> None:
+    """A bypass after a newline, a `;` or a continuation is still a bypass."""
+    assert findings(command), f"{command!r} bypasses the gate and was not refused"
+
+
+@pytest.mark.parametrize("command", _MUST_ALLOW_BY_COMMAND_BOUNDARY)
+def test_text_outside_the_git_command_is_not_read_as_its_arguments(command: str) -> None:
+    """Heredoc data, a quoted newline and a later command's flags are not `git`'s arguments."""
+    hits = findings(command)
+    assert not hits, f"{command!r} is ordinary work and was refused: {hits}"
+
+
 def test_an_unparseable_command_is_not_a_bypass() -> None:
     """⚑ UNBALANCED QUOTES MEAN THE SHELL WOULD REFUSE IT TOO.
 

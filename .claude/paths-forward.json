@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-04T19:52:33Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -11541,11 +11538,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Rewrite INSTALL.md to the current distribution list with the hooks plus pathsforward pairing and the sha rule; add an Adopting a hook page covering each of the three shapes with the exact settings lines; add a --check mode to mikemol-hook-inbound-asks that runs it for the current project and says which piece is missing (reader absent or too old, no queue, hook not in settings); measure the tools-hook route for a context hook; send each peer repo one letter with the steps (the bootstrap needs one letter per repo unless W580 chooses the user-level route)",
-      "evidence": "2026-10-04: operator, 2026-10-04: 'How do other repos even do this? There is no docs, and they have to kinda guess.' Measured: hooks/README.md (staged with W578) has an Inbound asks section with the settings.json lines and an Adopting section; INSTALL.md lists only five dists (hooks mdstruct fence ratchet pathsforward) though about 25 exist, says nothing about hooks needing a pinned reader, and the README lines assume the console script in the repo's .venv while its Adopting section describes the tools-hook launcher route (which hooks/adopt/tools-hook serves, and which answers an absent venv with a PreToolUse DENY, the wrong vocabulary for SessionStart; unmeasured). Gaps: (1) a repo needs BOTH mikemol-hooks at a sha containing the hook and mikemol-pathsforward at 863061d or later (its --inbound) in the same venv or on PATH, and no page says so; (2) nobody outside mtools reads mtools' README, so the doc is unreachable without a letter; (3) three adoption shapes exist in the fleet (venv console script, tools-hook, symlinks to substrate scripts) and the hook is documented for one",
+      "evidence": "2026-10-04: operator, 2026-10-04: 'How do other repos even do this? There is no docs, and they have to kinda guess.' Measured: hooks/README.md (staged with W578) has an Inbound asks section with the settings.json lines and an Adopting section; INSTALL.md lists only five dists (hooks mdstruct fence ratchet pathsforward) though about 25 exist, says nothing about hooks needing a pinned reader, and the README lines assume the console script in the repo's .venv while its Adopting section describes the tools-hook launcher route (which hooks/adopt/tools-hook serves, and which answers an absent venv with a PreToolUse DENY, the wrong vocabulary for SessionStart; unmeasured). Gaps: (1) a repo needs BOTH mikemol-hooks at a sha containing the hook and mikemol-pathsforward at 863061d or later (its --inbound) in the same venv or on PATH, and no page says so; (2) nobody outside mtools reads mtools' README, so the doc is unreachable without a letter; (3) three adoption shapes exist in the fleet (venv console script, tools-hook, symlinks to substrate scripts) and the hook is documented for one | 2026-10-04: 2026-10-04 data on the install route: luthen-observability adopted mikemol-hook-nemik-check by vendoring wheels re-pinned to 03749d5 and wiring SessionStart and UserPromptSubmit in its own settings.json (its ec48c55), with no launcher change on mtools' side; the hook surfaced 5 real findings, 3 repaired. So the vendored-wheel route works for a context hook today; what is still guesswork is the per-repo steps, which this card documents.",
       "issued_at": "2026-10-04T18:50:14Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T18:50:35Z",
+      "last_worked": "2026-10-04T19:59:38Z",
       "ticks_blocked": 0
     },
     {
@@ -11570,7 +11567,7 @@
     {
       "symbol": "W581",
       "title": "Verify the inbound-asks hook's additionalContext shape in a fresh Claude Code session that has an UNCLAIMED row, and record what the model saw",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "hooks"
@@ -11578,11 +11575,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-04: 2026-10-04 PARTIAL, live: after 03749d5 (nemik-check hook, same hookSpecificOutput/additionalContext envelope as inbound-asks) this session's next UserPromptSubmit delivered the hook's text to the model verbatim ('nemik: the fleet reader reports on mtools: ... Warning -- no working card ...'). So the envelope for UserPromptSubmit reaches the model. Still unverified: inbound-asks itself with an UNCLAIMED row, and SessionStart.",
+      "evidence": "2026-10-04: 2026-10-04 PARTIAL, live: after 03749d5 (nemik-check hook, same hookSpecificOutput/additionalContext envelope as inbound-asks) this session's next UserPromptSubmit delivered the hook's text to the model verbatim ('nemik: the fleet reader reports on mtools: ... Warning -- no working card ...'). So the envelope for UserPromptSubmit reaches the model. Still unverified: inbound-asks itself with an UNCLAIMED row, and SessionStart. | 2026-10-04: 2026-10-04 second repo, independent: luthen-observability (pinned 03749d5, nemik-check hook wired, its commit ec48c55) saw a verbatim 'UserPromptSubmit hook additional context' block in the model's context on the message after its commit, picking up the settings change without a restart. Still unverified: SessionStart, and inbound-asks with an UNCLAIMED row (luthen claimed both rows before any prompt).",
       "issued_at": "2026-10-04T18:55:49Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W430",
-      "last_worked": "2026-10-04T19:48:17Z",
+      "last_worked": "2026-10-04T20:10:48Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -11668,7 +11665,7 @@
     {
       "symbol": "W586",
       "title": "venv.bzl console-script test arm skips under bazel: measure why and either arm it there or record the reason",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "bazel",
@@ -11676,18 +11673,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run the arm under bazel, read the skip reason, and arm it or write the reason beside the skip",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 OBSOLETE, measured: the console-script arm moved to rules_py venv_check (W337; hooks/tests/test_venv_artifact.py docstring), whose line 105 checks every console script runs under Python through a shell, with no skip in venv_check.py; bazel test //hooks:venv ran it and passed (1 test passes, invocation ab9ee2e2). The original residue was about an earlier in-test arm that no longer exists.",
       "issued_at": "2026-10-04T19:06:06Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T20:08:50Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T200850Z"
     },
     {
       "symbol": "W587",
       "title": "Move no_verify's own shlex split onto cmdparse so every hook shares one command parser",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -11695,13 +11693,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Write a test that fails on HEAD for a shape no_verify's split parses differently from cmdparse, then route it through cmdparse",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: no_verify.findings now iterates cmdparse.programs; 4 shapes were red on the old own-shlex split (echo hi;git commit --no-verify missed, backslash-newline continuation missed, heredoc body falsely refused, 'git commit -m x && ls -n' falsely refused); 10 new parametrized cases, 2 test functions, 2 warrants; committed under W587",
       "issued_at": "2026-10-04T19:06:06Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-04T20:11:55Z",
+      "ticks_blocked": 0,
+      "completed": "20261004T201155Z"
     },
     {
       "symbol": "W588",
