@@ -131,6 +131,15 @@ pip.parse(
     requirements_lock = "//icsstruct:requirements.txt",
 )
 
+# ⚑ `mikemol-pkgbuild` — the layout pathfinder for migrating paperkit's tools/ into mtools
+# (mtools:W542, paperkit:W142). Empty shipping hub (`dependencies = []`): wheel, pyc and pyinfo
+# are standard library; setuptools is a DEV dependency only (the wheel tests drive the backend).
+pip.parse(
+    hub_name = "pkgbuild_deps",
+    python_version = "3.13",
+    requirements_lock = "//pkgbuild:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -248,6 +257,11 @@ pip.parse(
     uv_lock = "//icsstruct:uv.lock",
 )
 pip.parse(
+    hub_name = "pkgbuild_dev",
+    python_version = "3.13",
+    uv_lock = "//pkgbuild:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -323,6 +337,8 @@ use_repo(
     "mdstruct_dev",
     "pathsforward_deps",
     "pathsforward_dev",
+    "pkgbuild_deps",
+    "pkgbuild_dev",
     "ratchet_deps",
     "ratchet_dev",
     "transcriptstruct_deps",

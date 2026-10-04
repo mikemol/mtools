@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the pkgbuild warrant set, one per test module, in document order.
+# key <TAB> heading title
+wheel	The Wheel: Built From a Planted Tree Naming Exactly Its Files, Installed by Extraction
+pyc	The Bytecode: One Source Compiled to a Hash-Checked-Never Artifact That Loads
+pyinfo	The Interpreter Probe: It Names the Python That Runs It

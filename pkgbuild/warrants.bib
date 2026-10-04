@@ -1,0 +1,98 @@
+
+@misc{pkgbuild-wheel-build-wheel-names-the-planted-package-and-its-dist-info,
+  section = {wheel},
+  title  = {The built wheel carries the declared package and one dist-info, and nothing else},
+  claim  = {The built wheel carries the declared package and one dist-info, and nothing else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_build_wheel_names_the_planted_package_and_its_dist_info},
+}
+
+@misc{pkgbuild-wheel-build-leaves-no-build-dir-and-restores-the-cwd,
+  section = {wheel},
+  title  = {The build removes setuptools' `build/` at both ends and puts the cwd back},
+  claim  = {The build removes setuptools' `build/` at both ends and puts the cwd back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_build_leaves_no_build_dir_and_restores_the_cwd},
+}
+
+@misc{pkgbuild-wheel-build-removes-a-stale-build-dir-so-a-removed-package-cannot-ride-along,
+  section = {wheel},
+  title  = {A `build/lib` left from an earlier build does not leak into the next wheel},
+  claim  = {A `build/lib` left from an earlier build does not leak into the next wheel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_build_removes_a_stale_build_dir_so_a_removed_package_cannot_ride_along},
+}
+
+@misc{pkgbuild-wheel-install-copies-the-wheel-into-a-venv-and-marks-it-complete,
+  section = {wheel},
+  title  = {Install extracts real files into site-packages and returns the venv's python path},
+  claim  = {Install extracts real files into site-packages and returns the venv's python path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_install_copies_the_wheel_into_a_venv_and_marks_it_complete},
+}
+
+@misc{pkgbuild-wheel-install-reuses-a-complete-venv-instead-of-rebuilding-it,
+  section = {wheel},
+  title  = {A second install over a complete venv leaves the first one's files untouched},
+  claim  = {A second install over a complete venv leaves the first one's files untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_install_reuses_a_complete_venv_instead_of_rebuilding_it},
+}
+
+@misc{pkgbuild-wheel-install-names-each-staged-dependency-root-once-in-a-pth,
+  section = {wheel},
+  title  = {Dependency paths under `/site-packages/` become one root each in `_pydeps.pth`},
+  claim  = {Dependency paths under `/site-packages/` become one root each in `_pydeps.pth`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_install_names_each_staged_dependency_root_once_in_a_pth},
+}
+
+@misc{pkgbuild-wheel-main-build-writes-the-wheel,
+  section = {wheel},
+  title  = {`main(["build", out, pyproject])` is the CLI spelling of `build` and returns 0},
+  claim  = {`main(["build", out, pyproject])` is the CLI spelling of `build` and returns 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_main_build_writes_the_wheel},
+}
+
+@misc{pkgbuild-wheel-main-install-prints-the-python-path,
+  section = {wheel},
+  title  = {`main(["install", ...])` writes the venv's python path and a newline to stdout},
+  claim  = {`main(["install", ...])` writes the venv's python path and a newline to stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_main_install_prints_the_python_path},
+}
+
+@misc{pkgbuild-wheel-main-refuses-arguments-that-fit-no-command,
+  section = {wheel},
+  title  = {Wrong or missing arguments end in SystemExit carrying the usage text},
+  claim  = {Wrong or missing arguments end in SystemExit carrying the usage text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_main_refuses_arguments_that_fit_no_command},
+}
+
+@misc{pkgbuild-pyc-compiled-pyc-loads-and-runs-the-planted-source,
+  section = {pyc},
+  title  = {The .pyc, loaded as a sourceless module, runs the code the source held},
+  claim  = {The .pyc, loaded as a sourceless module, runs the code the source held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyc.py -k test_compiled_pyc_loads_and_runs_the_planted_source},
+}
+
+@misc{pkgbuild-pyc-pyc-is-unchecked-hash-so-the-runtime-never-rechecks-the-source,
+  section = {pyc},
+  title  = {The header flags say hash-based with check_source clear (PEP 552 UNCHECKED_HASH)},
+  claim  = {The header flags say hash-based with check_source clear (PEP 552 UNCHECKED_HASH).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyc.py -k test_pyc_is_unchecked_hash_so_the_runtime_never_rechecks_the_source},
+}
+
+@misc{pkgbuild-pyc-pyc-is-byte-deterministic-across-a-source-mtime-change,
+  section = {pyc},
+  title  = {Same content, different mtime, same bytes: the artifact records a hash, not a time},
+  claim  = {Same content, different mtime, same bytes: the artifact records a hash, not a time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyc.py -k test_pyc_is_byte_deterministic_across_a_source_mtime_change},
+}
+
+@misc{pkgbuild-pyc-pyc-refuses-a-source-that-does-not-compile,
+  section = {pyc},
+  title  = {A syntax error raises instead of writing a half-artifact},
+  claim  = {A syntax error raises instead of writing a half-artifact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyc.py -k test_pyc_refuses_a_source_that_does_not_compile},
+}
+
+@misc{pkgbuild-pyinfo-pyinfo-prints-sys-executable-and-the-version-number,
+  section = {pyinfo},
+  title  = {Output is exactly the `executable:` and `version:` lines, paperkit's spelling},
+  claim  = {Output is exactly the `executable:` and `version:` lines, paperkit's spelling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyinfo.py -k test_pyinfo_prints_sys_executable_and_the_version_number},
+}

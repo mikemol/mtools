@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.pkgbuild: the packaging actions a Bazel build runs, as installed tools"
+subtitle = "The wheel builder and installer, the one-file bytecode compiler and the interpreter probe, ported from paperkit's tools/ with the witness that would catch each one drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "PKGBUILD.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
