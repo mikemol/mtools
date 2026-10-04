@@ -393,6 +393,7 @@ venv_from_hub(
         "mikemol-hook-no-verify": "mikemol.hooks.entry:no_verify_main",
         "mikemol-hook-shellcheck": "mikemol.hooks.entry:shellcheck_main",
         "mikemol-hook-pycheck": "mikemol.hooks.entry:pycheck_main",
+        "mikemol-hook-inbound-asks": "mikemol.hooks.entry:inbound_asks_main",
         "mikemol-shellcheck": "mikemol.hooks.shellcheck_cli:main",
         "mikemol-githook-pre-push": "mikemol.hooks.githook_pre_push:main",
         "mikemol-gate-ledger": "mikemol.hooks.gate_ledger:main",

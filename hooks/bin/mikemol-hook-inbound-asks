@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W578: the inbound-asks hook. At SessionStart and on each prompt it surfaces this repository's
+# UNCLAIMED inbound peer asks (peers' cards blocked on it with no local card enabling them) as
+# additional context, so a session learns of them without a peer's nudge. The module is
+# mikemol.hooks.inbound_asks; its reader is `mikemol-paths-forward --inbound` (W577).
+#
+# ⚑ A TRACKED LAUNCHER AT A STABLE PATH, like its siblings, because `.claude/settings.json` names
+# this file and the built venv lives under `bazel-bin`, which `bazel clean` deletes.
+#
+# ⚑⚑ BUT THIS ONE NEVER DENIES. The siblings answer an absent venv with an explicit DENY because a
+# missing gate fails open. This hook has no deny mode: it only adds context. So an absent venv is
+# SAID on stderr (it reaches the transcript, not the model) and the call proceeds; refusing every
+# prompt because a context hook could not run would be the fail-shut the pycheck launcher's
+# bootstrap note describes.
+#
+# ⚑ THE READER LIVES IN pathsforward/.venv HERE, NOT IN A ROOT .venv, so its bin directory is put
+# on PATH for the hook; the module looks in `<project>/.venv/bin` first and then on PATH.
+set -uo pipefail
+
+root="${CLAUDE_PROJECT_DIR:-}"
+if [ -z "$root" ]; then
+    echo "inbound-asks: CLAUDE_PROJECT_DIR is unset; the inbound asks were not checked" >&2
+    exit 0
+fi
+venv="$root/bazel-bin/hooks/.venv"
+entry="$(basename "$0")"
+
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    echo "inbound-asks: the hook venv is not built (run \`bazel build //hooks:.venv\`); the inbound asks were not checked" >&2
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+export PATH="$root/pathsforward/.venv/bin:$PATH"
+exec "$real/bin/python3" "$real/bin/$entry"

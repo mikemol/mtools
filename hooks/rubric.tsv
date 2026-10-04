@@ -24,4 +24,5 @@ suppressions	The Suppression Gate: A Line-Scoped Directive an Edit Adds Is Refus
 gate-ledger	The Gate Ledger: One Path for Writer and Reader, and the Fail-Fast Order
 gen-warrants	The Warrant Transcriber: One Entry per Unwarranted Test, Keyed by File and Name, and a Brace Refused
 hook-argv	The Hook Argv Contract: Any Argument Refused by Name Before the Payload Is Read, One Declared Mode
+inbound-asks	The Inbound-Asks Context Hook: Unclaimed Peer Asks Surfaced Once, a Tool That Could Not Run Said and Never Read as Nothing, and No Refusal
 worktree-venv	The Worktree Venv Fallback: a Linked Worktree Borrows the Main Tree Venv for the Same Distribution, Tools Only

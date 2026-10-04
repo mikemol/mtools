@@ -4721,3 +4721,190 @@
   claim  = {A plain directory, or a missing one, is not a worktree and yields None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_a_directory_outside_any_repository_resolves_nothing},
 }
+
+@misc{hooks-inbound-asks-rows-present-emit-context-with-the-rows-and-the-event-name,
+  section = {inbound-asks},
+  title  = {The reader's rows reach the model as additionalContext under the firing event's name},
+  claim  = {The reader's rows reach the model as additionalContext under the firing event's name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_rows_present_emit_context_with_the_rows_and_the_event_name},
+}
+
+@misc{hooks-inbound-asks-no-rows-is-silent,
+  section = {inbound-asks},
+  title  = {A reader that prints nothing produces no output and exit 0},
+  claim  = {A reader that prints nothing produces no output and exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_no_rows_is_silent},
+}
+
+@misc{hooks-inbound-asks-no-queue-file-is-silent-even-with-a-reader,
+  section = {inbound-asks},
+  title  = {A repo without a loop has no census to run, and the reader is never consulted},
+  claim  = {A repo without a loop has no census to run, and the reader is never consulted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_no_queue_file_is_silent_even_with_a_reader},
+}
+
+@misc{hooks-inbound-asks-absent-reader-says-so-and-does-not-claim-no-asks,
+  section = {inbound-asks},
+  title  = {With neither a venv reader nor one on PATH the notice names the absence on both channels},
+  claim  = {With neither a venv reader nor one on PATH the notice names the absence on both
+            channels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_absent_reader_says_so_and_does_not_claim_no_asks},
+}
+
+@misc{hooks-inbound-asks-nonzero-reader-says-so-with-its-first-stderr-line,
+  section = {inbound-asks},
+  title  = {A reader that exits non-zero is reported with its code and reason, not read as empty},
+  claim  = {A reader that exits non-zero is reported with its code and reason, not read as empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_nonzero_reader_says_so_with_its_first_stderr_line},
+}
+
+@misc{hooks-inbound-asks-timeout-says-so,
+  section = {inbound-asks},
+  title  = {A reader that outlives the bound is killed and reported, never read as empty},
+  claim  = {A reader that outlives the bound is killed and reported, never read as empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_timeout_says_so},
+}
+
+@misc{hooks-inbound-asks-event-filter-accepts-two-events-and-ignores-the-rest,
+  section = {inbound-asks},
+  title  = {SessionStart and UserPromptSubmit emit; Stop, a tool event and no event are ignored},
+  claim  = {SessionStart and UserPromptSubmit emit; Stop, a tool event and no event are ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_the_event_filter_accepts_two_events_and_ignores_the_rest},
+}
+
+@misc{hooks-inbound-asks-prompt-repeating-the-last-emission-is-silent-until-the-rows-change,
+  section = {inbound-asks},
+  title  = {The flood guard: SessionStart emits, the next identical prompt does not, a change does},
+  claim  = {The flood guard: SessionStart emits, the next identical prompt does not, a change does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_a_prompt_repeating_the_last_emission_is_silent_until_the_rows_change},
+}
+
+@misc{hooks-inbound-asks-failure-notice-is-said-once-per-session,
+  section = {inbound-asks},
+  title  = {The same failure on the next prompt adds nothing; the stderr line is not repeated},
+  claim  = {The same failure on the next prompt adds nothing; the stderr line is not repeated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_a_failure_notice_is_said_once_per_session},
+}
+
+@misc{hooks-inbound-asks-main-exits-zero-and-stays-silent-on-a-garbage-payload,
+  section = {inbound-asks},
+  title  = {Unparseable and non-object payloads carry no event, so nothing is emitted},
+  claim  = {Unparseable and non-object payloads carry no event, so nothing is emitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_main_exits_zero_and_stays_silent_on_a_garbage_payload},
+}
+
+@misc{hooks-inbound-asks-read-payload-returns-the-record-or-empty,
+  section = {inbound-asks},
+  title  = {A JSON object is returned as a record; anything else is an empty record},
+  claim  = {A JSON object is returned as a record; anything else is an empty record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_read_payload_returns_the_record_or_empty},
+}
+
+@misc{hooks-inbound-asks-project-dir-prefers-the-env-and-falls-back-to-cwd,
+  section = {inbound-asks},
+  title  = {CLAUDE_PROJECT_DIR wins; without it the working directory is the project},
+  claim  = {CLAUDE_PROJECT_DIR wins; without it the working directory is the project.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_project_dir_prefers_the_env_and_falls_back_to_cwd},
+}
+
+@misc{hooks-inbound-asks-find-reader-prefers-the-venv-then-path-then-none,
+  section = {inbound-asks},
+  title  = {The project's venv reader is chosen over PATH; PATH is the fallback; else None},
+  claim  = {The project's venv reader is chosen over PATH; PATH is the fallback; else None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_find_reader_prefers_the_venv_then_path_then_none},
+}
+
+@misc{hooks-inbound-asks-find-reader-skips-a-non-executable-venv-file,
+  section = {inbound-asks},
+  title  = {A venv file without the execute bit is not a reader},
+  claim  = {A venv file without the execute bit is not a reader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_find_reader_skips_a_non_executable_venv_file},
+}
+
+@misc{hooks-inbound-asks-reader-argv-is-constants-plus-the-state-as-one-word,
+  section = {inbound-asks},
+  title  = {The argv is a list, the state path is one element, and nothing is shell-joined},
+  claim  = {The argv is a list, the state path is one element, and nothing is shell-joined.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_reader_argv_is_constants_plus_the_state_as_one_word},
+}
+
+@misc{hooks-inbound-asks-run-reader-reports-ok-nonzero-timeout-and-unstartable,
+  section = {inbound-asks},
+  title  = {The four outcomes of one bounded run},
+  claim  = {The four outcomes of one bounded run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_run_reader_reports_ok_nonzero_timeout_and_unstartable},
+}
+
+@misc{hooks-inbound-asks-context-for-wraps-rows-and-drops-blank-lines,
+  section = {inbound-asks},
+  title  = {The heading, the non-blank rows in order, then the one claim-or-decline line},
+  claim  = {The heading, the non-blank rows in order, then the one claim-or-decline line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_context_for_wraps_rows_and_drops_blank_lines},
+}
+
+@misc{hooks-inbound-asks-failure-notice-names-the-reason-and-the-manual-command,
+  section = {inbound-asks},
+  title  = {The notice carries the reason, refuses the no-asks reading and names the hand command},
+  claim  = {The notice carries the reason, refuses the no-asks reading and names the hand command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_failure_notice_names_the_reason_and_the_manual_command},
+}
+
+@misc{hooks-inbound-asks-build-context-distinguishes-silent-rows-and-failure,
+  section = {inbound-asks},
+  title  = {No queue is silent, rows are context, a failing reader is a flagged notice},
+  claim  = {No queue is silent, rows are context, a failing reader is a flagged notice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_build_context_distinguishes_silent_rows_and_failure},
+}
+
+@misc{hooks-inbound-asks-digest-path-is-per-session-and-refuses-an-unusable-id,
+  section = {inbound-asks},
+  title  = {A safe id maps under the temp directory; empty or path-like ids map to nothing},
+  claim  = {A safe id maps under the temp directory; empty or path-like ids map to nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_digest_path_is_per_session_and_refuses_an_unusable_id},
+}
+
+@misc{hooks-inbound-asks-digest-of-is-stable-and-distinguishes-text,
+  section = {inbound-asks},
+  title  = {Equal text hashes equal; different text hashes differently},
+  claim  = {Equal text hashes equal; different text hashes differently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_digest_of_is_stable_and_distinguishes_text},
+}
+
+@misc{hooks-inbound-asks-unchanged-since-last-records-and-compares,
+  section = {inbound-asks},
+  title  = {The first sight is new, a repeat prompt is unchanged, a repeat SessionStart is not},
+  claim  = {The first sight is new, a repeat prompt is unchanged, a repeat SessionStart is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_unchanged_since_last_records_and_compares},
+}
+
+@misc{hooks-inbound-asks-unchanged-since-last-survives-an-unwritable-temp-directory,
+  section = {inbound-asks},
+  title  = {A temp directory that cannot be written means emit, never crash},
+  claim  = {A temp directory that cannot be written means emit, never crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_unchanged_since_last_survives_an_unwritable_temp_directory},
+}
+
+@misc{hooks-inbound-asks-console-entry-refuses-an-argument-and-runs-without-one,
+  section = {inbound-asks},
+  title  = {The entry point goes through the argv contract, then runs the hook},
+  claim  = {The entry point goes through the argv contract, then runs the hook.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_asks.py -k test_the_console_entry_refuses_an_argument_and_runs_without_one},
+}
+
+@misc{hooks-bar-fires-blocking-hooks-stay-held-to-inline-arming-and-the-surfacing-hook-is-not,
+  section = {bar-fires},
+  title  = {The five hooks with a deny mode are judged armed; the context-only hook is not},
+  claim  = {The five hooks with a deny mode are judged armed; the context-only hook is not. W578:
+            this is the positive control for deriving arming from the module. If the
+            derivation ever stopped finding `_HOOK_BLOCK` in a blocking hook's module,
+            that hook would silently stop being held to inline arming, which is the
+            failure the arm exists to catch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_blocking_hooks_stay_held_to_inline_arming_and_the_surfacing_hook_is_not},
+}
+
+@misc{hooks-bar-fires-declared-script-whose-module-is-missing-is-judged-armed,
+  section = {bar-fires},
+  title  = {A script with no module of that name falls back to the strict reading, never to exempt},
+  claim  = {A script with no module of that name falls back to the strict reading, never to exempt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_declared_script_whose_module_is_missing_is_judged_armed},
+}

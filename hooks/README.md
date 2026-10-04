@@ -56,6 +56,51 @@ Put the switch on the command line so it cannot drift from the hook it arms. `no
 `NOCHAIN_HOOK_BLOCK=0` as a stand-down. When the switch is unset, the shared `STRUCT_HOOK_BLOCK`
 governs (`no_chaining.py`).
 
+## Inbound asks (SessionStart and UserPromptSubmit)
+
+`mikemol-hook-inbound-asks` is the one hook here that is not a `PreToolUse` gate. It tells a session
+about the peer asks that wait on its repo, without a peer's nudge. It runs
+`mikemol-paths-forward --state <project>/.claude/paths-forward.json --inbound` and, when that
+prints rows, hands them to the model as `additionalContext`:
+
+```json
+{"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext":
+ "inbound: peer ask(s) wait on this repo with no claiming waypoint:\nUNCLAIMED peer:W3 :: ...\n
+  to claim a row, run its --add command; to decline, send the peer a letter ..."}}
+```
+
+- **It never refuses and has no Stop behaviour.** A Stop block on an unanswered row would trap a
+  session that cannot satisfy it: the ask may not be theirs, and declining is a letter, not a queue
+  state a hook can read. It always exits 0.
+- **Events.** `SessionStart` and `UserPromptSubmit` are served. Any other event, and a payload that
+  is not JSON, produces no output.
+- **Silent cases.** The project has no `.claude/paths-forward.json`, or the reader printed nothing.
+- **The reader.** `<project>/.venv/bin/mikemol-paths-forward` first, then `PATH`. If neither exists,
+  it exits non-zero, or it runs longer than 20 s, the hook says so in the context text and on
+  stderr and does not claim there are no asks. The argv is constants plus the state path as one
+  word, never through a shell.
+- **No flood.** One digest file per session, `<tmp>/mikemol-inbound-asks/<session_id>`.
+  `SessionStart` always emits what it finds. `UserPromptSubmit` emits only when the text differs
+  from the last emission, so a failure notice is also said once per session. The cost is one reader
+  run per prompt, bounded by the timeout, and one small file write per change.
+- **The project** is `CLAUDE_PROJECT_DIR`, else the working directory.
+
+To arm it, a repo owner adds the following to the repo's `.claude/settings.json`. No arming variable
+is needed, because the hook has no deny mode for a switch to select; a `*_HOOK_BLOCK=1` prefix
+would be decoration. The command is the installed console script, so it fails soft: a repo whose
+venv lacks it gets a missing-command error in the transcript and no context.
+
+```json
+"SessionStart": [
+  {"hooks": [{"type": "command",
+              "command": "\"$CLAUDE_PROJECT_DIR/.venv/bin/mikemol-hook-inbound-asks\""}]}
+],
+"UserPromptSubmit": [
+  {"hooks": [{"type": "command",
+              "command": "\"$CLAUDE_PROJECT_DIR/.venv/bin/mikemol-hook-inbound-asks\""}]}
+]
+```
+
 ## Adopting
 
 Install from git by subdirectory, pinned to a sha. See the repo-root [INSTALL.md](../INSTALL.md):

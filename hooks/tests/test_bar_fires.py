@@ -3019,21 +3019,71 @@ def test_every_shipped_hook_is_actually_invoked() -> None:
 def _needs_inline_arming(command: str, scripts: list[str], bin_dir: Path) -> bool:
     """Say whether a settings hook command must carry an inline `*_HOOK_BLOCK=1`.
 
-    ⚑⚑ DERIVED, NOT LISTED (W529). The arm exists because a hook that reads an arming variable is
-    advisory until armed. A hook that reads none, such as the rule-8 Stop hook, has no advisory
-    mode, so a variable on its command would be decoration. A declared `mikemol-hook-*` console
-    script is always armed; any other launcher is judged by whether its own text reads one.
+    ⚑⚑ DERIVED, NOT LISTED (W529, W578). The arm exists because a hook that reads an arming
+    variable is advisory until armed. A hook that reads none, such as the rule-8 Stop hook or the
+    inbound-asks hook (which only surfaces context and has no deny mode), has no advisory mode, so
+    a variable on its command would be decoration. A declared `mikemol-hook-*` console script is
+    judged by whether its module reads one (`_declared_script_reads_arming`); any other launcher
+    is judged by whether its own text reads one.
 
     Returns:
-        True when the launcher is a declared hook script or its text reads `_HOOK_BLOCK`.
+        True when the launcher's own text, or a declared script's module, reads `_HOOK_BLOCK`.
 
     """
     found = pyre.search(r"/(mikemol-hook-[a-z-]+)", command)
     assert found, f"a hook command names no mikemol-hook launcher: {command}"
     name = found.group(1)
     if name in scripts:
-        return True
+        return _declared_script_reads_arming(name)
     return "_HOOK_BLOCK" in (bin_dir / name).read_text(encoding="utf-8")
+
+
+def _declared_script_reads_arming(name: str) -> bool:
+    """Say whether a declared hook script's module reads an arming variable.
+
+    ⚑ THE MODULE IS FOUND BY NAME (`mikemol-hook-no-chaining` is `no_chaining.py`) AND A MODULE
+    THAT CANNOT BE FOUND IS JUDGED ARMED. The strict reading is the default: only a module that is
+    present and reads no `_HOOK_BLOCK` is exempt, so a script renamed away from its module falls
+    back to being held, never to being waved through.
+
+    Returns:
+        True when the module reads `_HOOK_BLOCK`, or cannot be found.
+
+    """
+    stem = name.removeprefix("mikemol-hook-").replace("-", "_")
+    source = _PKG / f"{stem}.py"
+    if not source.is_file():
+        return True
+    return "_HOOK_BLOCK" in source.read_text(encoding="utf-8")
+
+
+_BLOCKING_HOOKS = (
+    "mikemol-hook-structural-query",
+    "mikemol-hook-no-chaining",
+    "mikemol-hook-no-verify",
+    "mikemol-hook-shellcheck",
+    "mikemol-hook-pycheck",
+)
+
+
+def test_the_blocking_hooks_stay_held_to_inline_arming_and_the_surfacing_hook_is_not() -> None:
+    """The five hooks with a deny mode are judged armed; the context-only hook is not.
+
+    ⚑ W578: this is the positive control for deriving arming from the module. If the derivation
+    ever stopped finding `_HOOK_BLOCK` in a blocking hook's module, that hook would silently stop
+    being held to inline arming, which is the failure the arm exists to catch.
+    """
+    scripts = [*_BLOCKING_HOOKS, "mikemol-hook-inbound-asks"]
+    held = [
+        _needs_inline_arming(f'"$P/.venv/bin/{n}"', scripts, _DIST / "bin") for n in _BLOCKING_HOOKS
+    ]
+    surfacing = _needs_inline_arming('"$P/.venv/bin/mikemol-hook-inbound-asks"', scripts, _DIST)
+    assert (held, surfacing) == ([True] * len(_BLOCKING_HOOKS), False)
+
+
+def test_a_declared_script_whose_module_is_missing_is_judged_armed() -> None:
+    """A script with no module of that name falls back to the strict reading, never to exempt."""
+    assert _declared_script_reads_arming("mikemol-hook-no-such-module") is True
 
 
 def test_a_launcher_that_reads_an_arming_variable_must_be_armed_inline(tmp_path: Path) -> None:
