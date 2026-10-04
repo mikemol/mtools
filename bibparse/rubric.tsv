@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the bibparse warrant set, one per test module, in document order.
+# key <TAB> heading title
+bibparse	The Parser: A Malformed Bib Is a Syntax Error at a Position, and a Column-0 Brace Truncates Nothing
+resolve	The Resolver: A Project Directory Names Exactly the Bibs Its paper.toml Lists
+edges	The Edges: Each Claim Yields Its rests_on and check, and a Duplicate Key Is Refused

@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.bibparse: paperkit's strict bib parser, and the edges a clamp reads from it"
+subtitle = "The bib grammar that refuses a malformed entry by position, a project-to-bib resolver, and the duplicate-key refusal, each with the witness that would catch it drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "BIBPARSE.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

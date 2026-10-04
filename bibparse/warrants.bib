@@ -1,0 +1,239 @@
+
+@misc{bibparse-bibparse-malformed-input-raises-naming-its-message-and-position,
+  section = {bibparse},
+  title  = {Every refusal is a BibSyntaxError carrying its line and column, never a partial result},
+  claim  = {Every refusal is a BibSyntaxError carrying its line and column, never a partial result.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_malformed_input_raises_naming_its_message_and_position},
+}
+
+@misc{bibparse-bibparse-default-path-is-the-bib-placeholder,
+  section = {bibparse},
+  title  = {Without a path the position reads `<bib>`},
+  claim  = {Without a path the position reads `<bib>`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_default_path_is_the_bib_placeholder},
+}
+
+@misc{bibparse-bibparse-unterminated-value-names-the-opening-brace-and-quotes-nothing,
+  section = {bibparse},
+  title  = {The runaway case points at where the value OPENED and carries no excerpt line},
+  claim  = {The runaway case points at where the value OPENED and carries no excerpt line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_unterminated_value_names_the_opening_brace_and_quotes_nothing},
+}
+
+@misc{bibparse-bibparse-error-quotes-its-own-line-stripped,
+  section = {bibparse},
+  title  = {The excerpt is the offending line only, stripped, on its own indented line},
+  claim  = {The excerpt is the offending line only, stripped, on its own indented line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_error_quotes_its_own_line_stripped},
+}
+
+@misc{bibparse-bibparse-error-on-the-last-line-without-a-newline-quotes-it-whole,
+  section = {bibparse},
+  title  = {An error on an unterminated final line still quotes that line},
+  claim  = {An error on an unterminated final line still quotes that line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_error_on_the_last_line_without_a_newline_quotes_it_whole},
+}
+
+@misc{bibparse-bibparse-error-excerpt-is-cut-to-the-width,
+  section = {bibparse},
+  title  = {A long offending line is quoted only up to the width},
+  claim  = {A long offending line is quoted only up to the width.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_error_excerpt_is_cut_to_the_width},
+}
+
+@misc{bibparse-bibparse-syntax-error-built-directly-carries-its-position,
+  section = {bibparse},
+  title  = {With no excerpt the message is one line; an excerpt is appended stripped},
+  claim  = {With no excerpt the message is one line; an excerpt is appended stripped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_a_syntax_error_built_directly_carries_its_position},
+}
+
+@misc{bibparse-bibparse-column-zero-brace-inside-a-field-does-not-truncate-the-entry,
+  section = {bibparse},
+  title  = {The defect the parser exists to remove: a line-initial closing brace closes its own only},
+  claim  = {The defect the parser exists to remove: a line-initial closing brace closes its own
+            only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_a_column_zero_brace_inside_a_field_does_not_truncate_the_entry},
+}
+
+@misc{bibparse-bibparse-entry-records-type-key-fields-in-order-and-start-line,
+  section = {bibparse},
+  title  = {Types are lowercased, keys keep their punctuation, fields keep file order},
+  claim  = {Types are lowercased, keys keep their punctuation, fields keep file order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_entry_records_type_key_fields_in_order_and_start_line},
+}
+
+@misc{bibparse-bibparse-values-are-verbatim-and-a-trailing-comma-is-optional,
+  section = {bibparse},
+  title  = {A trailing space is meaningful, an empty value is empty, and the last comma is optional},
+  claim  = {A trailing space is meaningful, an empty value is empty, and the last comma is optional.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_values_are_verbatim_and_a_trailing_comma_is_optional},
+}
+
+@misc{bibparse-bibparse-percent-comments-are-skipped-between-and-inside-entries,
+  section = {bibparse},
+  title  = {A `%` comment is lexer trivia, even one holding a brace or a bare `@`},
+  claim  = {A `%` comment is lexer trivia, even one holding a brace or a bare `@`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_percent_comments_are_skipped_between_and_inside_entries},
+}
+
+@misc{bibparse-bibparse-nested-and-escaped-braces-are-counted-correctly,
+  section = {bibparse},
+  title  = {Nesting balances, an escaped brace does not count, an escaped backslash does not escape},
+  claim  = {Nesting balances, an escaped brace does not count, an escaped backslash does not escape.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_nested_and_escaped_braces_are_counted_correctly},
+}
+
+@misc{bibparse-bibparse-at-sign-inside-a-value-is-just-text,
+  section = {bibparse},
+  title  = {Only an `@` between entries starts one},
+  claim  = {Only an `@` between entries starts one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_an_at_sign_inside_a_value_is_just_text},
+}
+
+@misc{bibparse-bibparse-empty-and-comment-only-text-has-no-entries,
+  section = {bibparse},
+  title  = {No entries is a result, not an error},
+  claim  = {No entries is a result, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_empty_and_comment_only_text_has_no_entries},
+}
+
+@misc{bibparse-bibparse-entry-defaults-are-independent,
+  section = {bibparse},
+  title  = {A bare Entry has no fields and line zero, and two do not share a dict},
+  claim  = {A bare Entry has no fields and line zero, and two do not share a dict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bibparse.py -k test_entry_defaults_are_independent},
+}
+
+@misc{bibparse-resolve-default-warrants-is-the-one-conventional-name,
+  section = {resolve},
+  title  = {The default when `warrants` is absent is the single conventional name},
+  claim  = {The default when `warrants` is absent is the single conventional name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_default_warrants_is_the_one_conventional_name},
+}
+
+@misc{bibparse-resolve-absent-warrants-defaults-to-warrants-bib,
+  section = {resolve},
+  title  = {A paper.toml with a [paper] table but no `warrants` resolves to warrants.bib},
+  claim  = {A paper.toml with a [paper] table but no `warrants` resolves to warrants.bib.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_absent_warrants_defaults_to_warrants_bib},
+}
+
+@misc{bibparse-resolve-toml-without-a-paper-table-defaults-too,
+  section = {resolve},
+  title  = {No [paper] table at all is the same as no `warrants`},
+  claim  = {No [paper] table at all is the same as no `warrants`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_toml_without_a_paper_table_defaults_too},
+}
+
+@misc{bibparse-resolve-declared-warrants-keep-their-order,
+  section = {resolve},
+  title  = {The bibs come back in the order paper.toml lists them, not sorted},
+  claim  = {The bibs come back in the order paper.toml lists them, not sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_declared_warrants_keep_their_order},
+}
+
+@misc{bibparse-resolve-label-tokens-resolve-against-the-project-directory,
+  section = {resolve},
+  title  = {`//pkg:file`, `//:path/file` and `@repo//pkg:file` are project-relative `pkg/file`},
+  claim  = {`//pkg:file`, `//:path/file` and `@repo//pkg:file` are project-relative `pkg/file`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_label_tokens_resolve_against_the_project_directory},
+}
+
+@misc{bibparse-resolve-token-path-resolves-a-bare-name-and-a-label,
+  section = {resolve},
+  title  = {A bare token is project-relative; a label with a package names `pkg/file`},
+  claim  = {A bare token is project-relative; a label with a package names `pkg/file`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_token_path_resolves_a_bare_name_and_a_label},
+}
+
+@misc{bibparse-resolve-label-without-slashes-is-refused,
+  section = {resolve},
+  title  = {A colon token with no `//` names no package, so it is refused rather than guessed},
+  claim  = {A colon token with no `//` names no package, so it is refused rather than guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_label_without_slashes_is_refused},
+}
+
+@misc{bibparse-resolve-project-without-paper-toml-is-refused,
+  section = {resolve},
+  title  = {No silent fall back to warrants.bib: the project is not a project},
+  claim  = {No silent fall back to warrants.bib: the project is not a project.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_project_without_paper_toml_is_refused},
+}
+
+@misc{bibparse-resolve-named-bib-that-is-absent-is-refused,
+  section = {resolve},
+  title  = {A bib the toml names but the disk lacks would drop its edges silently, so it refuses},
+  claim  = {A bib the toml names but the disk lacks would drop its edges silently, so it refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_named_bib_that_is_absent_is_refused},
+}
+
+@misc{bibparse-resolve-malformed-warrants-are-refused,
+  section = {resolve},
+  title  = {A non-list, a non-string element, and unparsable toml each refuse naming paper.toml},
+  claim  = {A non-list, a non-string element, and unparsable toml each refuse naming paper.toml.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_malformed_warrants_are_refused},
+}
+
+@misc{bibparse-edges-split-list-splits-on-commas-and-whitespace-and-drops-empties,
+  section = {edges},
+  title  = {Commas, spaces, tabs and newlines all separate; stray separators leave no empties},
+  claim  = {Commas, spaces, tabs and newlines all separate; stray separators leave no empties.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_split_list_splits_on_commas_and_whitespace_and_drops_empties},
+}
+
+@misc{bibparse-edges-edges-carry-rests-on-and-check-per-claim,
+  section = {edges},
+  title  = {The shape effective.py consumes, with absent fields defaulting to empty},
+  claim  = {The shape effective.py consumes, with absent fields defaulting to empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_edges_carry_rests_on_and_check_per_claim},
+}
+
+@misc{bibparse-edges-column-zero-brace-does-not-drop-the-edges,
+  section = {edges},
+  title  = {The truncation defect, end to end: the entry keeps its rests-on and check},
+  claim  = {The truncation defect, end to end: the entry keeps its rests-on and check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_a_column_zero_brace_does_not_drop_the_edges},
+}
+
+@misc{bibparse-edges-collect-merges-bibs-in-order-and-keeps-the-entries,
+  section = {edges},
+  title  = {Keys from several files compose into one flat map, first file first},
+  claim  = {Keys from several files compose into one flat map, first file first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_collect_merges_bibs_in_order_and_keeps_the_entries},
+}
+
+@misc{bibparse-edges-key-defined-in-two-bibs-is-refused-naming-both-places,
+  section = {edges},
+  title  = {The second definition never wins silently: the refusal names the key and both lines},
+  claim  = {The second definition never wins silently: the refusal names the key and both lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_a_key_defined_in_two_bibs_is_refused_naming_both_places},
+}
+
+@misc{bibparse-edges-key-repeated-inside-one-bib-is-refused,
+  section = {edges},
+  title  = {A repeat in a single file refuses as well; paperkit let the later one win},
+  claim  = {A repeat in a single file refuses as well; paperkit let the later one win.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_a_key_repeated_inside_one_bib_is_refused},
+}
+
+@misc{bibparse-edges-malformed-bib-raises-its-syntax-error,
+  section = {edges},
+  title  = {A broken file is not a result: the parser's error propagates},
+  claim  = {A broken file is not a result: the parser's error propagates.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_a_malformed_bib_raises_its_syntax_error},
+}
+
+@misc{bibparse-edges-claim-edges-resolves-a-planted-project,
+  section = {edges},
+  title  = {From a project directory to edges: paper.toml names two bibs, both are read},
+  claim  = {From a project directory to edges: paper.toml names two bibs, both are read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_claim_edges_resolves_a_planted_project},
+}
+
+@misc{bibparse-edges-claim-edges-refuses-a-duplicate-across-the-projects-bibs,
+  section = {edges},
+  title  = {The refusal reaches the project-level entry point},
+  claim  = {The refusal reaches the project-level entry point.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_claim_edges_refuses_a_duplicate_across_the_projects_bibs},
+}

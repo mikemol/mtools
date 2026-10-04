@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑ paperkit's `bibparse` (the strict bib grammar), moved alone, plus the three things paperkit's
+# tools/effective.py needs and bib.parse_project supplied (mtools:W560, cut (b) of W558): a
+# project-directory-to-bib-list resolver, a duplicate-key refusal, and per-claim edges.
+name = "mikemol-bibparse"
+version = "0.1.0"
+description = "A strict parser for paperkit's bib grammar, a project-to-bib resolver, and per-claim rests-on/check edges."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["bibliography", "parser", "paperkit"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+
+# ⚑ NO RUNTIME DEPENDENCY: standard library only (tomllib, re, dataclasses, pathlib).
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py`: PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.bibparse" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
+testpaths = ["tests"]
+norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache__"]  # backstop: with tests/ absent the runner falls back to rootdir and walks these (measured by linux-sources, W297)
+addopts = "--strict-markers --strict-config"
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+# A TOML literal string: in a basic string `\.` is an invalid escape.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
+# nobody chose for it; each line below is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+"tests/test_bibparse.py" = ["assert"]
+"tests/test_resolve.py" = ["assert"]
+"tests/test_edges.py" = ["assert"]
