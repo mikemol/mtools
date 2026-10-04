@@ -1,0 +1,22 @@
+# rubric.tsv — the sections of the treeio warrant set, one per test module, in document order.
+# key <TAB> heading title
+presence	The Presence: A Read Is Present, Absent or Broken, and an Unknown Name Is Refused
+result	The Result: Truthy Only When Present, and Absent and Broken Raise Different Errors
+sources	The Sources: A Working Tree, and a Revision Resolved Eagerly and Separately From Any Path
+read	The Read: Raw Bytes From a Tree or a Revision, and a Bad Revision Is Never a Missing Path
+write	The Write: Atomic UTF-8 to the Working Tree, With a Refusal That Names Its Successor
+listing	The Listing: A Pattern That Means Two Things at Two Sources Is Refused
+census	The Census: Empty Is Told Apart From Absent, and the Matcher Asymmetry Is Re-Derived
+vfs	The vfs Facade: The Old One-Module Surface Re-Exports the Split Modules' Own Objects
+vfs_cli	The vfs Command Line: Exit Codes That Keep Present, Absent, Broken and Ambiguous Apart
+errors	The Errors: A Contract Refusal Is Not an Exception, So a Best-Effort Handler Cannot Swallow It
+ambient	The Ambient: A Write-Once Context Variable and a Scoped, Registered Override
+context	The Context: Intent, Tenant and the Per-Invocation Snapshot Record
+proc	The Process Seam: One Place a Child Is Started, Captured as Text and Never Through a Shell
+layout	The Layout: Where the Journal and the Untracked-Copy Store Live Under a Root
+gitrun	The Git Runner: Git Run Against a Root, and the Tracked-or-Not Question
+snapshot	The Snapshot: A Pinned Stash Commit, Untracked Copies, a Journal and a Recovery Notice
+restore	The Restore: Both Halves of a Snapshot, and a Restore That Reports Until Told to Apply
+contract	The Contract: State Apply or Dry-Run, Never a Default, and Snapshot in the Same Act
+snapshot_cli	The Snapshot Command Line: Which Snapshot Holds a Path, Newest First, and How to Restore It
+edit_snapshot	The edit_snapshot Facade: The Old One-Module Surface Re-Exports the Split Modules

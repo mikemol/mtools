@@ -1,0 +1,126 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑ paperkit's `tools/vfs.py` and `tools/edit_snapshot.py`, ported together (mtools:W550, operator
+# ruling 2026-10-04: port both; bibstruct stays in paperkit and pins this distribution).
+name = "mikemol-treeio"
+version = "0.1.0"
+description = "One read/write seam over a working tree and git history, and a recoverable snapshot for tools that rewrite tree files."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["git", "snapshot", "working-tree", "paperkit"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+
+# ⚑ ONE RUNTIME DEPENDENCY, pygit2, for reading a file at a git revision (`mikemol.treeio.rev`).
+# Everything else is the standard library; the snapshot half shells out to the `git` binary.
+dependencies = ["pygit2>=1.20"]
+
+[project.scripts]
+mikemol-vfs = "mikemol.treeio.vfs_cli:main"
+mikemol-edit-snapshot = "mikemol.treeio.snapshot_cli:main"
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py`: PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.treeio" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
+testpaths = ["tests"]
+norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache__"]  # backstop: with tests/ absent the runner falls back to rootdir and walks these (measured by linux-sources, W297)
+addopts = "--strict-markers --strict-config"
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+# ⚑ `stubs` IS THE THIRD-PARTY SURFACE (as in mdstruct): the bazel mypy runner cannot see runtime
+# dependencies, so pygit2 would otherwise be import-not-found and Any under disallow_any_expr.
+mypy_path = "src:stubs"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+# A TOML literal string: in a basic string `\.` is an invalid escape.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
+# nobody chose for it; each line below is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+"tests/test_presence.py" = ["assert"]
+"tests/test_result.py" = ["assert"]
+"tests/test_sources.py" = ["assert"]
+"tests/test_read.py" = ["assert"]
+"tests/test_write.py" = ["assert"]
+"tests/test_listing.py" = ["assert"]
+"tests/test_census.py" = ["assert"]
+"tests/test_vfs.py" = ["assert"]
+"tests/test_vfs_cli.py" = ["assert"]
+"tests/test_errors.py" = ["assert"]
+"tests/test_ambient.py" = ["assert"]
+"tests/test_context.py" = ["assert"]
+"tests/test_layout.py" = ["assert"]
+"tests/test_snapshot.py" = ["assert"]
+"tests/test_restore.py" = ["assert"]
+"tests/test_contract.py" = ["assert"]
+"tests/test_snapshot_cli.py" = ["assert"]
+# ⚑ THE WORKING-TREE BRANCH OF `listdir` IS `glob.glob`, ON PURPOSE: `Path.glob` reads `**`, hidden
+# files and symlinks differently, and this module's subject is exactly the disagreement between the
+# two matchers, so swapping the matcher would change the answer it exists to name.
+"src/mikemol/treeio/listing.py" = ["glob"]
+"tests/test_proc.py" = ["assert"]
+"tests/test_gitrun.py" = ["assert"]
+# ⚑ RUNNING A CHILD PROCESS IS `proc`'S ONE RESPONSIBILITY, and the exemption is scoped to that
+# file: every other module reaches a child through its one function. Every argv is built by the
+# caller as a sequence: never a shell.
+"src/mikemol/treeio/proc.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_edit_snapshot.py" = ["assert"]
+# ⚑ THE STUB MIRRORS pygit2's OWN NAMES: `Repository.TreeBuilder` and `pygit2.hash` are the real
+# spellings, so renaming them to satisfy a naming rule would make the stub lie about the library.
+"stubs/pygit2/__init__.pyi" = ["invalid-function-name", "builtin-variable-shadowing"]

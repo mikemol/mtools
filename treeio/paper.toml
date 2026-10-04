@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.treeio: one read/write seam over a tree and its history, and a snapshot before any rewrite"
+subtitle = "A three-valued read that never mistakes a bad revision for a missing file, an atomic UTF-8 write, a refusal of patterns that mean two things, and a stated-intent contract that snapshots on apply, each with the witness that would catch it drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "TREEIO.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

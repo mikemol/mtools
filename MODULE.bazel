@@ -221,6 +221,15 @@ pip.parse(
     requirements_lock = "//importdag:requirements.txt",
 )
 
+# ⚑ `mikemol-treeio` — paperkit's virtual file system and edit snapshot (vfs, edit_snapshot), split
+# into one module per responsibility (mtools:W550, paperkit:W142; operator ruling 2026-10-04: port,
+# bibstruct stays in paperkit and pins treeio). The one runtime dependency is pygit2.
+pip.parse(
+    hub_name = "treeio_deps",
+    python_version = "3.13",
+    requirements_lock = "//treeio:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -388,6 +397,11 @@ pip.parse(
     uv_lock = "//importdag:uv.lock",
 )
 pip.parse(
+    hub_name = "treeio_dev",
+    python_version = "3.13",
+    uv_lock = "//treeio:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -449,6 +463,8 @@ use_repo(
     "buildtel_dev",
     "importdag_deps",
     "importdag_dev",
+    "treeio_deps",
+    "treeio_dev",
     "pytestspec_deps",
     "pytestspec_dev",
     "pycodemod_deps",

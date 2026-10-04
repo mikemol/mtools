@@ -1,0 +1,1517 @@
+
+@misc{treeio-presence-roster-is-the-definition-in-declaration-order,
+  section = {presence},
+  title  = {The roster lists exactly PRESENT, ABSENT and BROKEN, so no member can be omitted},
+  claim  = {The roster lists exactly PRESENT, ABSENT and BROKEN, so no member can be omitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_the_roster_is_the_definition_in_declaration_order},
+}
+
+@misc{treeio-presence-only-broken-is-a-defect,
+  section = {presence},
+  title  = {A defect is a read that did not happen: BROKEN, and neither PRESENT nor ABSENT},
+  claim  = {A defect is a read that did not happen: BROKEN, and neither PRESENT nor ABSENT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_only_broken_is_a_defect},
+}
+
+@misc{treeio-presence-every-member-has-its-own-gloss,
+  section = {presence},
+  title  = {Each member explains itself, and the explanations differ},
+  claim  = {Each member explains itself, and the explanations differ.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_every_member_has_its_own_gloss},
+}
+
+@misc{treeio-presence-member-equals-its-name-as-a-string,
+  section = {presence},
+  title  = {A caller that has not migrated and compares to a bare name keeps working},
+  claim  = {A caller that has not migrated and compares to a bare name keeps working.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_a_member_equals_its_name_as_a_string},
+}
+
+@misc{treeio-presence-member-hashes-like-its-name,
+  section = {presence},
+  title  = {A member and its name land on the same dictionary key},
+  claim  = {A member and its name land on the same dictionary key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_a_member_hashes_like_its_name},
+}
+
+@misc{treeio-presence-members-order-by-name-against-members-and-strings,
+  section = {presence},
+  title  = {Sorting follows the names, whether the other side is a member or a string},
+  claim  = {Sorting follows the names, whether the other side is a member or a string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_members_order_by_name_against_members_and_strings},
+}
+
+@misc{treeio-presence-member-renders-as-its-name-and-reprs-as-a-constructor,
+  section = {presence},
+  title  = {The string form is the bare name and the repr names the type},
+  claim  = {The string form is the bare name and the repr names the type.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_a_member_renders_as_its_name_and_reprs_as_a_constructor},
+}
+
+@misc{treeio-presence-of-round-trips-every-member,
+  section = {presence},
+  title  = {Resolving a member's own name returns that member},
+  claim  = {Resolving a member's own name returns that member.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_of_round_trips_every_member},
+}
+
+@misc{treeio-presence-of-refuses-an-unknown-name-and-lists-the-known-ones,
+  section = {presence},
+  title  = {An unrecognised name raises rather than defaulting, and the message names the roster},
+  claim  = {An unrecognised name raises rather than defaulting, and the message names the roster.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presence.py -k test_of_refuses_an_unknown_name_and_lists_the_known_ones},
+}
+
+@misc{treeio-result-only-a-present-result-is-truthy,
+  section = {result},
+  title  = {An empty file is truthy as a read, and ABSENT and BROKEN are both falsy},
+  claim  = {An empty file is truthy as a read, and ABSENT and BROKEN are both falsy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_only_a_present_result_is_truthy},
+}
+
+@misc{treeio-result-repr-counts-bytes-and-dashes-when-there-is-no-data,
+  section = {result},
+  title  = {The repr names presence, size and path, with a dash standing for no data at all},
+  claim  = {The repr names presence, size and path, with a dash standing for no data at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_the_repr_counts_bytes_and_dashes_when_there_is_no_data},
+}
+
+@misc{treeio-result-require-returns-the-bytes-of-a-present-read,
+  section = {result},
+  title  = {A PRESENT read hands back its raw bytes untouched},
+  claim  = {A PRESENT read hands back its raw bytes untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_require_returns_the_bytes_of_a_present_read},
+}
+
+@misc{treeio-result-require-raises-file-not-found-for-absent-naming-path-and-source,
+  section = {result},
+  title  = {ABSENT raises FileNotFoundError whose message names the path and the source},
+  claim  = {ABSENT raises FileNotFoundError whose message names the path and the source.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_require_raises_file_not_found_for_absent_naming_path_and_source},
+}
+
+@misc{treeio-result-require-raises-the-recorded-cause-for-broken,
+  section = {result},
+  title  = {BROKEN raises its own error, which is not a FileNotFoundError},
+  claim  = {BROKEN raises its own error, which is not a FileNotFoundError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_require_raises_the_recorded_cause_for_broken},
+}
+
+@misc{treeio-result-require-raises-a-runtime-error-for-broken-without-a-cause,
+  section = {result},
+  title  = {A BROKEN result that lost its cause still raises, and says so},
+  claim  = {A BROKEN result that lost its cause still raises, and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_require_raises_a_runtime_error_for_broken_without_a_cause},
+}
+
+@misc{treeio-result-require-refuses-a-present-result-with-no-data,
+  section = {result},
+  title  = {A PRESENT result without bytes is malformed and raises rather than returning None},
+  claim  = {A PRESENT result without bytes is malformed and raises rather than returning None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_require_refuses_a_present_result_with_no_data},
+}
+
+@misc{treeio-result-text-decodes-utf8-and-leaves-replacement-to-the-caller,
+  section = {result},
+  title  = {Strict decoding is the default; errors=replace is the caller's explicit choice},
+  claim  = {Strict decoding is the default; errors=replace is the caller's explicit choice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_text_decodes_utf8_and_leaves_replacement_to_the_caller},
+}
+
+@misc{treeio-result-text-of-a-non-present-read-raises-like-require,
+  section = {result},
+  title  = {Asking an ABSENT read for text raises FileNotFoundError instead of returning a value},
+  claim  = {Asking an ABSENT read for text raises FileNotFoundError instead of returning a value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_result.py -k test_text_of_a_non_present_read_raises_like_require},
+}
+
+@misc{treeio-sources-working-tree-is-writable-and-names-its-absolute-root,
+  section = {sources},
+  title  = {The working tree is the only writable source and its root is absolute},
+  claim  = {The working tree is the only writable source and its root is absolute.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_working_tree_is_writable_and_names_its_absolute_root},
+}
+
+@misc{treeio-sources-working-tree-defaults-to-the-current-directory,
+  section = {sources},
+  title  = {Without a root the tree is wherever the process is standing},
+  claim  = {Without a root the tree is wherever the process is standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_working_tree_defaults_to_the_current_directory},
+}
+
+@misc{treeio-sources-working-tree-renders-its-root-and-its-plain-name,
+  section = {sources},
+  title  = {The repr carries the root for refusals; the string form is the phrase working tree},
+  claim  = {The repr carries the root for refusals; the string form is the phrase working tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_working_tree_renders_its_root_and_its_plain_name},
+}
+
+@misc{treeio-sources-rev-is-read-only-and-defaults-to-head,
+  section = {sources},
+  title  = {History is not writable, and an unnamed revision means HEAD},
+  claim  = {History is not writable, and an unnamed revision means HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_rev_is_read_only_and_defaults_to_head},
+}
+
+@misc{treeio-sources-rev-defaults-its-root-to-the-current-directory,
+  section = {sources},
+  title  = {Without a root the revision is looked up in the repository the process stands in},
+  claim  = {Without a root the revision is looked up in the repository the process stands in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_rev_defaults_its_root_to_the_current_directory},
+}
+
+@misc{treeio-sources-rev-renders-its-spelling-and-its-plain-name,
+  section = {sources},
+  title  = {The repr is a constructor; the string form is rev followed by the spelling},
+  claim  = {The repr is a constructor; the string form is rev followed by the spelling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_rev_renders_its_spelling_and_its_plain_name},
+}
+
+@misc{treeio-sources-good-revision-resolves-to-a-tree-and-no-error,
+  section = {sources},
+  title  = {The commit peels to its tree, which holds the committed blobs},
+  claim  = {The commit peels to its tree, which holds the committed blobs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_good_revision_resolves_to_a_tree_and_no_error},
+}
+
+@misc{treeio-sources-resolution-is-cached-so-the-same-tree-comes-back,
+  section = {sources},
+  title  = {A second resolve returns the first tree object rather than opening the repository again},
+  claim  = {A second resolve returns the first tree object rather than opening the repository again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_resolution_is_cached_so_the_same_tree_comes_back},
+}
+
+@misc{treeio-sources-bad-revision-is-a-value-error-naming-it,
+  section = {sources},
+  title  = {A mistyped sha is BROKEN with its own message and never a missing path},
+  claim  = {A mistyped sha is BROKEN with its own message and never a missing path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_bad_revision_is_a_value_error_naming_it},
+}
+
+@misc{treeio-sources-bad-revision-error-is-cached,
+  section = {sources},
+  title  = {The failure is remembered: the second resolve hands back the same exception object},
+  claim  = {The failure is remembered: the second resolve hands back the same exception object.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_bad_revision_error_is_cached},
+}
+
+@misc{treeio-sources-directory-that-is-not-a-repository-is-a-runtime-error,
+  section = {sources},
+  title  = {No repository at the root is BROKEN and says so},
+  claim  = {No repository at the root is BROKEN and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_directory_that_is_not_a_repository_is_a_runtime_error},
+}
+
+@misc{treeio-sources-unparseable-spelling-is-a-runtime-error,
+  section = {sources},
+  title  = {A spelling pygit2 cannot parse is BROKEN with a cannot-resolve message},
+  claim  = {A spelling pygit2 cannot parse is BROKEN with a cannot-resolve message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_an_unparseable_spelling_is_a_runtime_error},
+}
+
+@misc{treeio-sources-revision-naming-a-blob-does-not-name-a-tree,
+  section = {sources},
+  title  = {A blob cannot be peeled to a tree, and the refusal says the revision names no tree},
+  claim  = {A blob cannot be peeled to a tree, and the refusal says the revision names no tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sources.py -k test_a_revision_naming_a_blob_does_not_name_a_tree},
+}
+
+@misc{treeio-read-relpath-leaves-a-relative-path-and-relativises-an-absolute-one,
+  section = {read},
+  title  = {A tree is keyed by repository-relative paths, so an absolute one is made relative},
+  claim  = {A tree is keyed by repository-relative paths, so an absolute one is made relative.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_relpath_leaves_a_relative_path_and_relativises_an_absolute_one},
+}
+
+@misc{treeio-read-worktree-read-returns-raw-bytes-and-keeps-empty-apart-from-absent,
+  section = {read},
+  title  = {An empty file is PRESENT with b'' and a missing file is ABSENT: the load-bearing pair},
+  claim  = {An empty file is PRESENT with b'' and a missing file is ABSENT: the load-bearing pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_worktree_read_returns_raw_bytes_and_keeps_empty_apart_from_absent},
+}
+
+@misc{treeio-read-directory-is-broken-not-absent-and-carries-its-cause,
+  section = {read},
+  title  = {The path exists, so reporting ABSENT would tell the caller something false},
+  claim  = {The path exists, so reporting ABSENT would tell the caller something false.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_directory_is_broken_not_absent_and_carries_its_cause},
+}
+
+@misc{treeio-read-unreadable-file-is-broken-not-absent,
+  section = {read},
+  title  = {A permission refusal did not read the file, so it is BROKEN with the OS error},
+  claim  = {A permission refusal did not read the file, so it is BROKEN with the OS error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_an_unreadable_file_is_broken_not_absent},
+}
+
+@misc{treeio-read-worktree-read-accepts-an-absolute-path,
+  section = {read},
+  title  = {An absolute path is read where it points, not under the root},
+  claim  = {An absolute path is read where it points, not under the root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_worktree_read_accepts_an_absolute_path},
+}
+
+@misc{treeio-read-default-source-is-the-working-tree-at-the-current-directory,
+  section = {read},
+  title  = {With no source the read happens where the process is standing},
+  claim  = {With no source the read happens where the process is standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_the_default_source_is_the_working_tree_at_the_current_directory},
+}
+
+@misc{treeio-read-revision-read-returns-the-blob-bytes,
+  section = {read},
+  title  = {A path present in the revision reads as raw bytes, including from a subdirectory},
+  claim  = {A path present in the revision reads as raw bytes, including from a subdirectory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_revision_read_returns_the_blob_bytes},
+}
+
+@misc{treeio-read-revision-read-accepts-an-absolute-path-under-the-root,
+  section = {read},
+  title  = {An absolute path inside the repository is keyed relative to it},
+  claim  = {An absolute path inside the repository is keyed relative to it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_revision_read_accepts_an_absolute_path_under_the_root},
+}
+
+@misc{treeio-read-missing-path-at-a-revision-is-absent,
+  section = {read},
+  title  = {Once the revision is good, a lookup that fails means the path is not there},
+  claim  = {Once the revision is good, a lookup that fails means the path is not there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_missing_path_at_a_revision_is_absent},
+}
+
+@misc{treeio-read-bad-revision-is-broken-and-differs-from-a-missing-path,
+  section = {read},
+  title  = {The arm the inherited-split assumption would have got wrong: a typo is not ABSENT},
+  claim  = {The arm the inherited-split assumption would have got wrong: a typo is not ABSENT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_bad_revision_is_broken_and_differs_from_a_missing_path},
+}
+
+@misc{treeio-read-directory-that-is-not-a-repository-is-broken-at-a-revision,
+  section = {read},
+  title  = {With no repository there is no revision to read, and the cause says so},
+  claim  = {With no repository there is no revision to read, and the cause says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_directory_that_is_not_a_repository_is_broken_at_a_revision},
+}
+
+@misc{treeio-read-tree-at-a-revision-is-broken-not-a-blob,
+  section = {read},
+  title  = {A directory in the tree is not a blob, and the cause names what it is},
+  claim  = {A directory in the tree is not a blob, and the cause names what it is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_a_tree_at_a_revision_is_broken_not_a_blob},
+}
+
+@misc{treeio-read-path-traversal-is-absent-at-a-revision-not-a-read,
+  section = {read},
+  title  = {There is no filesystem path to escape from when reading out of a git tree},
+  claim  = {There is no filesystem path to escape from when reading out of a git tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_path_traversal_is_absent_at_a_revision_not_a_read},
+}
+
+@misc{treeio-read-require-keeps-absent-and-broken-apart-across-the-conversion,
+  section = {read},
+  title  = {An except clause for FileNotFoundError catches a missing path and never a bad revision},
+  claim  = {An except clause for FileNotFoundError catches a missing path and never a bad revision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_require_keeps_absent_and_broken_apart_across_the_conversion},
+}
+
+@misc{treeio-read-read-text-decodes-present-files-and-keeps-empty-apart-from-none,
+  section = {read},
+  title  = {An empty file reads as an empty string and a missing one as None},
+  claim  = {An empty file reads as an empty string and a missing one as None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_read_text_decodes_present_files_and_keeps_empty_apart_from_none},
+}
+
+@misc{treeio-read-read-text-raises-on-broken-and-on-undecodable-bytes,
+  section = {read},
+  title  = {BROKEN is never a silent miss, and a decode failure raises unless the caller relaxes it},
+  claim  = {BROKEN is never a silent miss, and a decode failure raises unless the caller relaxes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_read_text_raises_on_broken_and_on_undecodable_bytes},
+}
+
+@misc{treeio-read-read-text-reads-a-revision-too,
+  section = {read},
+  title  = {The text wrapper takes any source, and a bad revision raises rather than returning None},
+  claim  = {The text wrapper takes any source, and a bad revision raises rather than returning None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read.py -k test_read_text_reads_a_revision_too},
+}
+
+@misc{treeio-write-text-is-written-as-utf8-on-the-wire-and-round-trips,
+  section = {write},
+  title  = {The bytes on disk are UTF-8 whatever the locale, and the count is of bytes},
+  claim  = {The bytes on disk are UTF-8 whatever the locale, and the count is of bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_text_is_written_as_utf8_on_the_wire_and_round_trips},
+}
+
+@misc{treeio-write-bytes-and-bytearrays-are-written-as-given,
+  section = {write},
+  title  = {Raw bytes pass through untouched, including bytes that are not UTF-8},
+  claim  = {Raw bytes pass through untouched, including bytes that are not UTF-8.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_bytes_and_bytearrays_are_written_as_given},
+}
+
+@misc{treeio-write-write-over-an-existing-file-replaces-its-content,
+  section = {write},
+  title  = {The new content wins whole: no truncation window, no leftover tail of the old file},
+  claim  = {The new content wins whole: no truncation window, no leftover tail of the old file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_a_write_over_an_existing_file_replaces_its_content},
+}
+
+@misc{treeio-write-successful-write-leaves-no-temp-file,
+  section = {write},
+  title  = {The sibling temp is renamed away, so nothing carrying the temp marker survives},
+  claim  = {The sibling temp is renamed away, so nothing carrying the temp marker survives.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_a_successful_write_leaves_no_temp_file},
+}
+
+@misc{treeio-write-failed-write-removes-its-temp-and-raises-the-original-error,
+  section = {write},
+  title  = {A rename onto a directory fails; the temp is cleaned up and the OS error propagates},
+  claim  = {A rename onto a directory fails; the temp is cleaned up and the OS error propagates.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_a_failed_write_removes_its_temp_and_raises_the_original_error},
+}
+
+@misc{treeio-write-mkdirs-creates-the-parents-and-its-absence-refuses,
+  section = {write},
+  title  = {Without mkdirs a missing directory is an error; with it the parents are made},
+  claim  = {Without mkdirs a missing directory is an error; with it the parents are made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_mkdirs_creates_the_parents_and_its_absence_refuses},
+}
+
+@misc{treeio-write-absolute-path-is-written-where-it-points,
+  section = {write},
+  title  = {An absolute path ignores the root, as a read of one does},
+  claim  = {An absolute path ignores the root, as a read of one does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_an_absolute_path_is_written_where_it_points},
+}
+
+@misc{treeio-write-default-source-is-the-current-directory,
+  section = {write},
+  title  = {With no source the write lands where the process is standing},
+  claim  = {With no source the write lands where the process is standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_the_default_source_is_the_current_directory},
+}
+
+@misc{treeio-write-revision-is-refused-and-the-refusal-names-its-successor,
+  section = {write},
+  title  = {History is not writable, so the refusal says so and points at committing instead},
+  claim  = {History is not writable, so the refusal says so and points at committing instead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_a_revision_is_refused_and_the_refusal_names_its_successor},
+}
+
+@misc{treeio-write-anything-but-text-or-bytes-is-a-type-error,
+  section = {write},
+  title  = {An int is refused by name instead of being coerced or failing deep inside the write},
+  claim  = {An int is refused by name instead of being coerced or failing deep inside the write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_anything_but_text_or_bytes_is_a_type_error},
+}
+
+@misc{treeio-write-dry-run-refuses-the-write-and-leaves-the-file-untouched,
+  section = {write},
+  title  = {A set DRY_RUN stops the byte-level writer, and clearing it lets writes resume},
+  claim  = {A set DRY_RUN stops the byte-level writer, and clearing it lets writes resume.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_dry_run_refuses_the_write_and_leaves_the_file_untouched},
+}
+
+@misc{treeio-write-declare-accepts-apply-and-refuses-any-other-intent,
+  section = {write},
+  title  = {The seam's intent is fixed by its position, so anything but apply is refused by name},
+  claim  = {The seam's intent is fixed by its position, so anything but apply is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_declare_accepts_apply_and_refuses_any_other_intent},
+}
+
+@misc{treeio-listing-glued-double-star-is-ambiguous-and-named,
+  section = {listing},
+  title  = {A double star fused into a segment is a plain star to glob and nothing to fnmatch},
+  claim  = {A double star fused into a segment is a plain star to glob and nothing to fnmatch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_a_glued_double_star_is_ambiguous_and_named},
+}
+
+@misc{treeio-listing-double-star-followed-by-more-is-ambiguous-and-names-the-successor,
+  section = {listing},
+  title  = {The lossy form refuses and names the depth-agnostic spelling that means one thing},
+  claim  = {The lossy form refuses and names the depth-agnostic spelling that means one thing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_a_double_star_followed_by_more_is_ambiguous_and_names_the_successor},
+}
+
+@misc{treeio-listing-star-across-segments-is-ambiguous-and-names-the-successor,
+  section = {listing},
+  title  = {A bare star crosses a slash under fnmatch only, so a multi-segment pattern is refused},
+  claim  = {A bare star crosses a slash under fnmatch only, so a multi-segment pattern is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_a_star_across_segments_is_ambiguous_and_names_the_successor},
+}
+
+@misc{treeio-listing-patterns-both-matchers-agree-on-are-not-refused,
+  section = {listing},
+  title  = {An exact path, a trailing double star, and a single-segment star all pass},
+  claim  = {An exact path, a trailing double star, and a single-segment star all pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_patterns_both_matchers_agree_on_are_not_refused},
+}
+
+@misc{treeio-listing-refusal-is-a-value-error-with-a-compatible-alias,
+  section = {listing},
+  title  = {The renamed error is a ValueError and the old paperkit spelling is the same class},
+  claim  = {The renamed error is a ValueError and the old paperkit spelling is the same class.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_the_refusal_is_a_value_error_with_a_compatible_alias},
+}
+
+@misc{treeio-listing-listdir-refuses-an-ambiguous-pattern-at-both-sources-naming-it,
+  section = {listing},
+  title  = {The refusal fires on the working tree too, where the pattern happens to be exact},
+  claim  = {The refusal fires on the working tree too, where the pattern happens to be exact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_listdir_refuses_an_ambiguous_pattern_at_both_sources_naming_it},
+}
+
+@misc{treeio-listing-listdir-accepts-the-agreeing-form-and-returns-sorted-paths,
+  section = {listing},
+  title  = {The depth-agnostic form is not refused, and a revision lists only blobs, sorted},
+  claim  = {The depth-agnostic form is not refused, and a revision lists only blobs, sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_listdir_accepts_the_agreeing_form_and_returns_sorted_paths},
+}
+
+@misc{treeio-listing-working-tree-listing-includes-directories-and-is-sorted,
+  section = {listing},
+  title  = {The working-tree branch wraps glob, which also returns the directories it walked},
+  claim  = {The working-tree branch wraps glob, which also returns the directories it walked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_a_working_tree_listing_includes_directories_and_is_sorted},
+}
+
+@misc{treeio-listing-every-accepted-pattern-selects-the-same-files-at-both-sources,
+  section = {listing},
+  title  = {The invariant is a relation between the branches, not a pinned listing},
+  claim  = {The invariant is a relation between the branches, not a pinned listing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_every_accepted_pattern_selects_the_same_files_at_both_sources},
+}
+
+@misc{treeio-listing-comparison-reports-a-real-divergence-for-a-refused-pattern,
+  section = {listing},
+  title  = {The positive control: where the branches disagree, the same comparison goes red},
+  claim  = {The positive control: where the branches disagree, the same comparison goes red.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_the_comparison_reports_a_real_divergence_for_a_refused_pattern},
+}
+
+@misc{treeio-listing-lossy-form-at-a-revision-drops-exactly-the-depth-zero-members,
+  section = {listing},
+  title  = {The six-module drop in miniature: a double star followed by a suffix misses depth 0},
+  claim  = {The six-module drop in miniature: a double star followed by a suffix misses depth 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_the_lossy_form_at_a_revision_drops_exactly_the_depth_zero_members},
+}
+
+@misc{treeio-listing-broken-revision-raises-instead-of-listing-nothing,
+  section = {listing},
+  title  = {An empty list from a bad revision would read as no matches, so it raises},
+  claim  = {An empty list from a bad revision would read as no matches, so it raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_a_broken_revision_raises_instead_of_listing_nothing},
+}
+
+@misc{treeio-listing-default-source-is-the-working-tree-at-the-current-directory,
+  section = {listing},
+  title  = {With no source the listing happens where the process is standing},
+  claim  = {With no source the listing happens where the process is standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_the_default_source_is_the_working_tree_at_the_current_directory},
+}
+
+@misc{treeio-listing-listdir-order-is-named,
+  section = {listing},
+  title  = {The order is a constant a caller can cite instead of an incident of a sort call},
+  claim  = {The order is a constant a caller can cite instead of an incident of a sort call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_listdir_order_is_named},
+}
+
+@misc{treeio-listing-suffixed-filters-by-ending-and-an-empty-suffix-keeps-everything,
+  section = {listing},
+  title  = {A suffix keeps matching endings; an empty one is a no-op, and a miss reports none},
+  claim  = {A suffix keeps matching endings; an empty one is a no-op, and a miss reports none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_listing.py -k test_suffixed_filters_by_ending_and_an_empty_suffix_keeps_everything},
+}
+
+@misc{treeio-census-census-separates-empty-from-nonempty-and-counts-the-total,
+  section = {census},
+  title  = {The empty file is counted once and named; the total is the sum of the four cells},
+  claim  = {The empty file is counted once and named; the total is the sum of the four cells.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_census_separates_empty_from_nonempty_and_counts_the_total},
+}
+
+@misc{treeio-census-census-with-no-empty-member-reports-zero-in-that-cell,
+  section = {census},
+  title  = {The all-clear differs from the found-something above: it is shown to report zero},
+  claim  = {The all-clear differs from the found-something above: it is shown to report zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_census_with_no_empty_member_reports_zero_in_that_cell},
+}
+
+@misc{treeio-census-census-names-the-broken-members-with-their-cause,
+  section = {census},
+  title  = {A directory that a glob matched is BROKEN, and the census says which and why},
+  claim  = {A directory that a glob matched is BROKEN, and the census says which and why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_census_names_the_broken_members_with_their_cause},
+}
+
+@misc{treeio-census-census-counts-a-path-that-vanished-as-absent,
+  section = {census},
+  title  = {A path listed and then gone before the read is ABSENT, counted and not named},
+  claim  = {A path listed and then gone before the read is ABSENT, counted and not named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_census_counts_a_path_that_vanished_as_absent},
+}
+
+@misc{treeio-census-census-honours-the-suffix-filter,
+  section = {census},
+  title  = {A suffix selects within a depth-agnostic listing; no glob can express it},
+  claim  = {A suffix selects within a depth-agnostic listing; no glob can express it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_census_honours_the_suffix_filter},
+}
+
+@misc{treeio-census-census-reads-a-revision,
+  section = {census},
+  title  = {The census takes any source: at a revision it counts the committed blobs},
+  claim  = {The census takes any source: at a revision it counts the committed blobs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_a_census_reads_a_revision},
+}
+
+@misc{treeio-census-census-is-a-frozen-record,
+  section = {census},
+  title  = {The cells are values: two censuses with the same cells are equal},
+  claim  = {The cells are values: two censuses with the same cells are equal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_the_census_is_a_frozen_record},
+}
+
+@misc{treeio-census-control-is-the-wildcard-free-prefix-plus-a-double-star,
+  section = {census},
+  title  = {The control is derived from the segments, so a pattern with no double star gets one},
+  claim  = {The control is derived from the segments, so a pattern with no double star gets one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_the_control_is_the_wildcard_free_prefix_plus_a_double_star},
+}
+
+@misc{treeio-census-compare-measures-each-matcher-against-the-control,
+  section = {census},
+  title  = {The star form drops the nested members on disk and keeps every depth at a revision},
+  claim  = {The star form drops the nested members on disk and keeps every depth at a revision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_compare_measures_each_matcher_against_the_control},
+}
+
+@misc{treeio-census-compare-on-the-agreeing-form-reports-no-asymmetry,
+  section = {census},
+  title  = {The depth-agnostic pattern is its own control, so neither side misses or adds anything},
+  claim  = {The depth-agnostic pattern is its own control, so neither side misses or adds anything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_compare_on_the_agreeing_form_reports_no_asymmetry},
+}
+
+@misc{treeio-census-compare-defaults-to-the-current-directory,
+  section = {census},
+  title  = {Without a root both sources look where the process is standing},
+  claim  = {Without a root both sources look where the process is standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census.py -k test_compare_defaults_to_the_current_directory},
+}
+
+@misc{treeio-vfs-every-exported-name-is-the-split-modules-own-object,
+  section = {vfs},
+  title  = {A repointed caller gets the very objects, not copies, so isinstance checks agree},
+  claim  = {A repointed caller gets the very objects, not copies, so isinstance checks agree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs.py -k test_every_exported_name_is_the_split_modules_own_object},
+}
+
+@misc{treeio-vfs-all-lists-exactly-the-exported-names-and-omits-dry-run,
+  section = {vfs},
+  title  = {The public surface is the list, and DRY_RUN is absent so it cannot be assigned here},
+  claim  = {The public surface is the list, and DRY_RUN is absent so it cannot be assigned here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs.py -k test_all_lists_exactly_the_exported_names_and_omits_dry_run},
+}
+
+@misc{treeio-vfs-old-call-shape-works-end-to-end,
+  section = {vfs},
+  title  = {Write through the facade and read it back with the three-valued verdict},
+  claim  = {Write through the facade and read it back with the three-valued verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs.py -k test_the_old_call_shape_works_end_to_end},
+}
+
+@misc{treeio-vfs-cli-states-prints-the-roster-with-the-defect-marked,
+  section = {vfs_cli},
+  title  = {Each presence is listed with its gloss, and only BROKEN carries the defect marker},
+  claim  = {Each presence is listed with its gloss, and only BROKEN carries the defect marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_states_prints_the_roster_with_the_defect_marked},
+}
+
+@misc{treeio-vfs-cli-read-reports-present-with-exit-zero-and-the-byte-count,
+  section = {vfs_cli},
+  title  = {A present path prints its presence, source and size, and exits zero},
+  claim  = {A present path prints its presence, source and size, and exits zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_read_reports_present_with_exit_zero_and_the_byte_count},
+}
+
+@misc{treeio-vfs-cli-read-reports-absent-with-exit-one-and-the-cause,
+  section = {vfs_cli},
+  title  = {A missing path exits one, which is a legitimate answer and not an error},
+  claim  = {A missing path exits one, which is a legitimate answer and not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_read_reports_absent_with_exit_one_and_the_cause},
+}
+
+@misc{treeio-vfs-cli-read-reports-broken-with-exit-two,
+  section = {vfs_cli},
+  title  = {A directory is BROKEN, and the exit code says the read did not happen},
+  claim  = {A directory is BROKEN, and the exit code says the read did not happen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_read_reports_broken_with_exit_two},
+}
+
+@misc{treeio-vfs-cli-read-at-a-revision-and-a-bad-revision,
+  section = {vfs_cli},
+  title  = {The revision flag reads from history, and a bad revision is BROKEN rather than ABSENT},
+  claim  = {The revision flag reads from history, and a bad revision is BROKEN rather than ABSENT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_read_at_a_revision_and_a_bad_revision},
+}
+
+@misc{treeio-vfs-cli-list-prints-paths-and-honours-the-suffix,
+  section = {vfs_cli},
+  title  = {A depth-agnostic glob plus a suffix lists every depth, one path per line},
+  claim  = {A depth-agnostic glob plus a suffix lists every depth, one path per line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_list_prints_paths_and_honours_the_suffix},
+}
+
+@misc{treeio-vfs-cli-ambiguous-pattern-is-a-verdict-with-exit-three,
+  section = {vfs_cli},
+  title  = {The refusal names the pattern to use instead on stderr and exits three, not a traceback},
+  claim  = {The refusal names the pattern to use instead on stderr and exits three, not a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_an_ambiguous_pattern_is_a_verdict_with_exit_three},
+}
+
+@misc{treeio-vfs-cli-census-prints-the-cells-and-exits-two-on-a-broken-member,
+  section = {vfs_cli},
+  title  = {The census names the empty file, counts the cells, and exits two when one member broke},
+  claim  = {The census names the empty file, counts the cells, and exits two when one member broke.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_census_prints_the_cells_and_exits_two_on_a_broken_member},
+}
+
+@misc{treeio-vfs-cli-compare-prints-the-header-and-each-sources-misses,
+  section = {vfs_cli},
+  title  = {The comparison names what each matcher dropped relative to the depth-agnostic control},
+  claim  = {The comparison names what each matcher dropped relative to the depth-agnostic control.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_compare_prints_the_header_and_each_sources_misses},
+}
+
+@misc{treeio-vfs-cli-compare-names-extra-paths-and-takes-the-revision-from-at,
+  section = {vfs_cli},
+  title  = {A pattern selecting more than its control prints EXTRA lines, under the chosen revision},
+  claim  = {A pattern selecting more than its control prints EXTRA lines, under the chosen revision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_compare_names_extra_paths_and_takes_the_revision_from_at},
+}
+
+@misc{treeio-vfs-cli-no-mode-prints-the-usage-and-exits-zero,
+  section = {vfs_cli},
+  title  = {Without a mode the help is shown, naming the program},
+  claim  = {Without a mode the help is shown, naming the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_no_mode_prints_the_usage_and_exits_zero},
+}
+
+@misc{treeio-vfs-cli-main-reads-the-process-arguments-when-none-are-given,
+  section = {vfs_cli},
+  title  = {With no argv argument the command line is the process's own},
+  claim  = {With no argv argument the command line is the process's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vfs_cli.py -k test_main_reads_the_process_arguments_when_none_are_given},
+}
+
+@misc{treeio-errors-contract-refusal-is-not-an-exception,
+  section = {errors},
+  title  = {The base is BaseException, so no best-effort except clause for Exception contains it},
+  claim  = {The base is BaseException, so no best-effort except clause for Exception contains it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_errors.py -k test_a_contract_refusal_is_not_an_exception},
+}
+
+@misc{treeio-errors-vocabulary-refusal-stays-on-the-same-side-of-the-line,
+  section = {errors},
+  title  = {The vocab refusal joins the family and is not also a ValueError, which would be caught},
+  claim  = {The vocab refusal joins the family and is not also a ValueError, which would be caught.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_errors.py -k test_a_vocabulary_refusal_stays_on_the_same_side_of_the_line},
+}
+
+@misc{treeio-errors-best-effort-handler-passes-the-refusal-but-swallows-an-ordinary-error,
+  section = {errors},
+  title  = {The negative control: the same handler does swallow an ordinary exception},
+  claim  = {The negative control: the same handler does swallow an ordinary exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_errors.py -k test_a_best_effort_handler_passes_the_refusal_but_swallows_an_ordinary_error},
+}
+
+@misc{treeio-errors-refusal-can-be-contained-by-naming-it,
+  section = {errors},
+  title  = {Containment is available when it is stated: an except clause naming the class catches it},
+  claim  = {Containment is available when it is stated: an except clause naming the class catches
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_errors.py -k test_a_refusal_can_be_contained_by_naming_it},
+}
+
+@misc{treeio-ambient-new-ambient-is-unbound-and-keeps-its-declaration,
+  section = {ambient},
+  title  = {The declaration is kept as given, the vocabulary as a tuple, and nothing is bound},
+  claim  = {The declaration is kept as given, the vocabulary as a tuple, and nothing is bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_a_new_ambient_is_unbound_and_keeps_its_declaration},
+}
+
+@misc{treeio-ambient-first-write-binds-the-value-and-its-origin-in-one-act,
+  section = {ambient},
+  title  = {Both halves are set together, and the tokens of the two writes are returned},
+  claim  = {Both halves are set together, and the tokens of the two writes are returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_a_first_write_binds_the_value_and_its_origin_in_one_act},
+}
+
+@misc{treeio-ambient-value-outside-the-vocabulary-refuses-and-names-the-vocabulary,
+  section = {ambient},
+  title  = {An unrecognised value never passes: the refusal quotes what it wanted},
+  claim  = {An unrecognised value never passes: the refusal quotes what it wanted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_a_value_outside_the_vocabulary_refuses_and_names_the_vocabulary},
+}
+
+@misc{treeio-ambient-second-write-raises-and-names-who-bound-it-and-who-tried,
+  section = {ambient},
+  title  = {The positive control: write-once refuses the second binding, at the write},
+  claim  = {The positive control: write-once refuses the second binding, at the write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_a_second_write_raises_and_names_who_bound_it_and_who_tried},
+}
+
+@misc{treeio-ambient-second-write-of-the-same-value-is-still-a-defect,
+  section = {ambient},
+  title  = {Two sites each believing they decide is the shape; they agree today, by luck},
+  claim  = {Two sites each believing they decide is the shape; they agree today, by luck.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_a_second_write_of_the_same_value_is_still_a_defect},
+}
+
+@misc{treeio-ambient-conflict-message-names-its-successors-in-order,
+  section = {ambient},
+  title  = {A refusal that names no successor invites a local invention, so all three are named},
+  claim  = {A refusal that names no successor invites a local invention, so all three are named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_the_conflict_message_names_its_successors_in_order},
+}
+
+@misc{treeio-ambient-agreeing-resolve-passes-silently-and-a-disagreeing-one-raises,
+  section = {ambient},
+  title  = {The negative control and the positive control of resolution against a bound value},
+  claim  = {The negative control and the positive control of resolution against a bound value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_an_agreeing_resolve_passes_silently_and_a_disagreeing_one_raises},
+}
+
+@misc{treeio-ambient-resolve-binds-when-unbound-and-only-reads-when-nothing-is-stated,
+  section = {ambient},
+  title  = {An unbound resolve with a statement binds it, and a bare resolve reads whatever is bound},
+  claim  = {An unbound resolve with a statement binds it, and a bare resolve reads whatever is
+            bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_resolve_binds_when_unbound_and_only_reads_when_nothing_is_stated},
+}
+
+@misc{treeio-ambient-run-bound-runs-in-a-copied-context-and-leaves-the-outer-binding-alone,
+  section = {ambient},
+  title  = {The body sees the divergent value and origin; the caller afterwards sees its own},
+  claim  = {The body sees the divergent value and origin; the caller afterwards sees its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_run_bound_runs_in_a_copied_context_and_leaves_the_outer_binding_alone},
+}
+
+@misc{treeio-ambient-override-refuses-a-value-outside-the-vocabulary,
+  section = {ambient},
+  title  = {An override is at least as strict as the contract it diverges from},
+  claim  = {An override is at least as strict as the contract it diverges from.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_an_override_refuses_a_value_outside_the_vocabulary},
+}
+
+@misc{treeio-ambient-override-refuses-a-missing-or-blank-reason,
+  section = {ambient},
+  title  = {A reasonless override is a no-verify: it leaves no trace of why},
+  claim  = {A reasonless override is a no-verify: it leaves no trace of why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_an_override_refuses_a_missing_or_blank_reason},
+}
+
+@misc{treeio-ambient-unregistered-override-refuses-and-names-the-roster,
+  section = {ambient},
+  title  = {The refusal names the three successors and the roster to register in},
+  claim  = {The refusal names the three successors and the roster to register in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_an_unregistered_override_refuses_and_names_the_roster},
+}
+
+@misc{treeio-ambient-roster-has-its-one-registered-case-with-a-reason,
+  section = {ambient},
+  title  = {A roster with one member is the honest shape, and its reason says why it exists},
+  claim  = {A roster with one member is the honest shape, and its reason says why it exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_the_roster_has_its_one_registered_case_with_a_reason},
+}
+
+@misc{treeio-ambient-registered-override-runs-scoped-and-announces-what-it-displaced,
+  section = {ambient},
+  title  = {The body sees the override, the outer binding survives, and the divergence says why},
+  claim  = {The body sees the override, the outer binding survives, and the divergence says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_a_registered_override_runs_scoped_and_announces_what_it_displaced},
+}
+
+@misc{treeio-ambient-override-that-displaces-nothing-is-silent,
+  section = {ambient},
+  title  = {Unbound, or already equal to the divergent value, there is nothing to announce},
+  claim  = {Unbound, or already equal to the divergent value, there is nothing to announce.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_an_override_that_displaces_nothing_is_silent},
+}
+
+@misc{treeio-ambient-override-announces-to-stderr-by-default,
+  section = {ambient},
+  title  = {With no sink given the divergence is said on stderr, never silently},
+  claim  = {With no sink given the divergence is said on stderr, never silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_an_override_announces_to_stderr_by_default},
+}
+
+@misc{treeio-ambient-override-is-not-a-context-manager-and-names-the-callable-successor,
+  section = {ambient},
+  title  = {A with block would write then reset, the hole write-once closes, so it is refused},
+  claim  = {A with block would write then reset, the hole write-once closes, so it is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ambient.py -k test_an_override_is_not_a_context_manager_and_names_the_callable_successor},
+}
+
+@misc{treeio-context-intent-ambient-is-closed-to-apply-and-dry-run-and-names-its-two-readings,
+  section = {context},
+  title  = {Intent is write-once over two values, and a conflict says what the two readings are},
+  claim  = {Intent is write-once over two values, and a conflict says what the two readings are.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_the_intent_ambient_is_closed_to_apply_and_dry_run_and_names_its_two_readings},
+}
+
+@misc{treeio-context-tenant-ambient-is-closed-to-live-and-sandbox-and-says-why,
+  section = {context},
+  title  = {Tenant is write-once over two values, and a conflict says one report read two stores},
+  claim  = {Tenant is write-once over two values, and a conflict says one report read two stores.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_the_tenant_ambient_is_closed_to_live_and_sandbox_and_says_why},
+}
+
+@misc{treeio-context-bind-intent-binds-once-and-a-second-binding-raises,
+  section = {context},
+  title  = {Binding records the value and the origin, and a second binding names both sites},
+  claim  = {Binding records the value and the origin, and a second binding names both sites.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_bind_intent_binds_once_and_a_second_binding_raises},
+}
+
+@misc{treeio-context-resolve-intent-binds-when-unbound-agrees-silently-and-refuses-a-disagreement,
+  section = {context},
+  title  = {The three arms: bind, agree, and disagree},
+  claim  = {The three arms: bind, agree, and disagree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_resolve_intent_binds_when_unbound_agrees_silently_and_refuses_a_disagreement},
+}
+
+@misc{treeio-context-naming-tenant-returns-the-label-a-result-must-carry,
+  section = {context},
+  title  = {Binding the tenant hands back the bracketed label so a printed result names its store},
+  claim  = {Binding the tenant hands back the bracketed label so a printed result names its store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_naming_tenant_returns_the_label_a_result_must_carry},
+}
+
+@misc{treeio-context-two-independent-tenant-resolutions-in-one-invocation-raise-naming-the-first,
+  section = {context},
+  title  = {The wrong-store incident in miniature: two functions, one report, two answers},
+  claim  = {The wrong-store incident in miniature: two functions, one report, two answers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_two_independent_tenant_resolutions_in_one_invocation_raise_naming_the_first},
+}
+
+@misc{treeio-context-tenant-outside-the-vocabulary-is-refused,
+  section = {context},
+  title  = {An unrecognised tenant never binds: the refusal quotes the two it wanted},
+  claim  = {An unrecognised tenant never binds: the refusal quotes the two it wanted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_a_tenant_outside_the_vocabulary_is_refused},
+}
+
+@misc{treeio-context-snapshot-record-starts-unbound-and-its-copied-set-is-its-own,
+  section = {context},
+  title  = {No record exists before a snapshot, and two records never share one copied set},
+  claim  = {No record exists before a snapshot, and two records never share one copied set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_the_snapshot_record_starts_unbound_and_its_copied_set_is_its_own},
+}
+
+@misc{treeio-context-snapshot-copied-set-accumulates-and-a-latch-would-not,
+  section = {context},
+  title  = {The record keeps one sha and grows its copies, which a module-level latch cannot say},
+  claim  = {The record keeps one sha and grows its copies, which a module-level latch cannot say.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_the_snapshot_copied_set_accumulates_and_a_latch_would_not},
+}
+
+@misc{treeio-context-write-in-one-context-does-not-reach-a-sibling-context,
+  section = {context},
+  title  = {The latch's bug in miniature: sibling invocations must not share arming},
+  claim  = {The latch's bug in miniature: sibling invocations must not share arming.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_a_write_in_one_context_does_not_reach_a_sibling_context},
+}
+
+@misc{treeio-context-sanctioned-setters-are-enumerable-data-and-each-call-gets-its-own-copy,
+  section = {context},
+  title  = {A new binding site is a new key, so a gate can refuse it; the census is data},
+  claim  = {A new binding site is a new key, so a gate can refuse it; the census is data.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_the_sanctioned_setters_are_enumerable_data_and_each_call_gets_its_own_copy},
+}
+
+@misc{treeio-context-old-conflict-names-are-the-one-error-class,
+  section = {context},
+  title  = {Paperkit's earlier spellings stay importable and are the same class, not subclasses},
+  claim  = {Paperkit's earlier spellings stay importable and are the same class, not subclasses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_the_old_conflict_names_are_the_one_error_class},
+}
+
+@misc{treeio-context-unregistered-tenant-override-is-refused-through-the-shared-machinery,
+  section = {context},
+  title  = {The tenant ambient is the same mechanism as intent, so its override roster refuses too},
+  claim  = {The tenant ambient is the same mechanism as intent, so its override roster refuses too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_context.py -k test_an_unregistered_tenant_override_is_refused_through_the_shared_machinery},
+}
+
+@misc{treeio-proc-capture-returns-text-output-and-a-nonzero-status-without-raising,
+  section = {proc},
+  title  = {The return code, stdout and stderr all come back, and failure is a value},
+  claim  = {The return code, stdout and stderr all come back, and failure is a value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_returns_text_output_and_a_nonzero_status_without_raising},
+}
+
+@misc{treeio-proc-capture-runs-in-the-directory-it-is-given,
+  section = {proc},
+  title  = {The child's working directory is the one named, not the caller's},
+  claim  = {The child's working directory is the one named, not the caller's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_runs_in_the_directory_it_is_given},
+}
+
+@misc{treeio-proc-capture-gives-the-child-exactly-the-environment-it-is-given,
+  section = {proc},
+  title  = {The whole environment is the one passed, so a hermetic child sees nothing else},
+  claim  = {The whole environment is the one passed, so a hermetic child sees nothing else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_gives_the_child_exactly_the_environment_it_is_given},
+}
+
+@misc{treeio-proc-capture-never-interprets-an-argument-as-shell,
+  section = {proc},
+  title  = {A shell metacharacter in an argument reaches the child literally},
+  claim  = {A shell metacharacter in an argument reaches the child literally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_never_interprets_an_argument_as_shell},
+}
+
+@misc{treeio-layout-journal-and-the-store-live-under-the-roots-scratch-directory,
+  section = {layout},
+  title  = {Both places are fixed relative to the root, so a root names the whole layout},
+  claim  = {Both places are fixed relative to the root, so a root names the whole layout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_the_journal_and_the_store_live_under_the_roots_scratch_directory},
+}
+
+@misc{treeio-layout-rel-relativises-an-absolute-path-and-leaves-a-relative-one-alone,
+  section = {layout},
+  title  = {A path under the root is spelled relative to it; one already relative is untouched},
+  claim  = {A path under the root is spelled relative to it; one already relative is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_rel_relativises_an_absolute_path_and_leaves_a_relative_one_alone},
+}
+
+@misc{treeio-layout-layout-makes-the-root-absolute,
+  section = {layout},
+  title  = {A named root is made absolute, so a relative root cannot drift with the cwd},
+  claim  = {A named root is made absolute, so a relative root cannot drift with the cwd.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_layout_makes_the_root_absolute},
+}
+
+@misc{treeio-layout-layout-defaults-to-the-current-directory,
+  section = {layout},
+  title  = {Without a root the layout is wherever the process is standing},
+  claim  = {Without a root the layout is wherever the process is standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_layout_defaults_to_the_current_directory},
+}
+
+@misc{treeio-layout-layout-is-a-value,
+  section = {layout},
+  title  = {Two layouts over one root are equal and hashable, so one can key a cache},
+  claim  = {Two layouts over one root are equal and hashable, so one can key a cache.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_layout.py -k test_a_layout_is_a_value},
+}
+
+@misc{treeio-gitrun-git-runs-in-the-root-it-is-given,
+  section = {gitrun},
+  title  = {The command sees the root as its repository: init there, then ask where the top is},
+  claim  = {The command sees the root as its repository: init there, then ask where the top is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gitrun.py -k test_git_runs_in_the_root_it_is_given},
+}
+
+@misc{treeio-gitrun-git-failure-is-a-return-code-and-not-a-raise,
+  section = {gitrun},
+  title  = {Outside a repository git fails, and the caller reads that from the status},
+  claim  = {Outside a repository git fails, and the caller reads that from the status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gitrun.py -k test_a_git_failure_is_a_return_code_and_not_a_raise},
+}
+
+@misc{treeio-gitrun-is-tracked-is-true-only-for-a-path-in-the-index,
+  section = {gitrun},
+  title  = {A staged file is tracked; an untracked file and a missing one are not},
+  claim  = {A staged file is tracked; an untracked file and a missing one are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gitrun.py -k test_is_tracked_is_true_only_for_a_path_in_the_index},
+}
+
+@misc{treeio-snapshot-snapshot-is-a-real-commit-pinned-by-a-ref-that-leaves-the-worktree-alone,
+  section = {snapshot},
+  title  = {The sha resolves to a commit, a ref keeps it alive, and nothing is staged or reverted},
+  claim  = {The sha resolves to a commit, a ref keeps it alive, and nothing is staged or reverted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_snapshot_is_a_real_commit_pinned_by_a_ref_that_leaves_the_worktree_alone},
+}
+
+@misc{treeio-snapshot-dirty-worktree-snapshots-to-a-stash-commit-and-a-clean-one-to-head,
+  section = {snapshot},
+  title  = {With changes the sha is a new commit holding them; with none it is HEAD},
+  claim  = {With changes the sha is a new commit holding them; with none it is HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_dirty_worktree_snapshots_to_a_stash_commit_and_a_clean_one_to_head},
+}
+
+@misc{treeio-snapshot-there-is-no-snapshot-outside-a-repository-or-before-the-first-commit,
+  section = {snapshot},
+  title  = {A missing net returns None and never raises, and records nothing in the journal},
+  claim  = {A missing net returns None and never raises, and records nothing in the journal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_there_is_no_snapshot_outside_a_repository_or_before_the_first_commit},
+}
+
+@misc{treeio-snapshot-journal-gets-a-header-once-and-a-row-per-snapshot,
+  section = {snapshot},
+  title  = {Each row is sha, label, path count and paths; the three-line header is written only once},
+  claim  = {Each row is sha, label, path count and paths; the three-line header is written only
+            once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_the_journal_gets_a_header_once_and_a_row_per_snapshot},
+}
+
+@misc{treeio-snapshot-snapshot-survives-a-journal-it-cannot-write,
+  section = {snapshot},
+  title  = {Best-effort by construction: a file where the scratch directory belongs breaks nothing},
+  claim  = {Best-effort by construction: a file where the scratch directory belongs breaks nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_snapshot_survives_a_journal_it_cannot_write},
+}
+
+@misc{treeio-snapshot-record-writes-relative-paths-and-caps-the-row-at-forty,
+  section = {snapshot},
+  title  = {Absolute paths are journaled relative to the root, and only forty of them},
+  claim  = {Absolute paths are journaled relative to the root, and only forty of them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_record_writes_relative_paths_and_caps_the_row_at_forty},
+}
+
+@misc{treeio-snapshot-untracked-files-are-copied-aside-and-named-in-the-report,
+  section = {snapshot},
+  title  = {Git cannot hold them, so the copy is the recovery point, and the report says where it is},
+  claim  = {Git cannot hold them, so the copy is the recovery point, and the report says where it
+            is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_untracked_files_are_copied_aside_and_named_in_the_report},
+}
+
+@misc{treeio-snapshot-many-untracked-files-are-summarized-after-five,
+  section = {snapshot},
+  title  = {The report names the first five copies and counts the rest},
+  claim  = {The report names the first five copies and counts the rest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_many_untracked_files_are_summarized_after_five},
+}
+
+@misc{treeio-snapshot-copy-untracked-accepts-absolute-paths-and-skips-tracked-and-missing-ones,
+  section = {snapshot},
+  title  = {Only a file that exists and git does not track is copied},
+  claim  = {Only a file that exists and git does not track is copied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_copy_untracked_accepts_absolute_paths_and_skips_tracked_and_missing_ones},
+}
+
+@misc{treeio-snapshot-already-copied-file-is-not-overwritten-by-its-damaged-successor,
+  section = {snapshot},
+  title  = {The pre-write copy is the recovery point, so a second call must not replace it},
+  claim  = {The pre-write copy is the recovery point, so a second call must not replace it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_an_already_copied_file_is_not_overwritten_by_its_damaged_successor},
+}
+
+@misc{treeio-snapshot-copied-set-accumulates-across-calls-so-later-files-are-still-copied,
+  section = {snapshot},
+  title  = {A latch would copy file one and skip the rest; the record skips only what it saved},
+  claim  = {A latch would copy file one and skip the rest; the record skips only what it saved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_the_copied_set_accumulates_across_calls_so_later_files_are_still_copied},
+}
+
+@misc{treeio-snapshot-copy-that-fails-is-skipped-without-stopping-the-work,
+  section = {snapshot},
+  title  = {Best-effort: when the store cannot be created nothing is reported and nothing is raised},
+  claim  = {Best-effort: when the store cannot be created nothing is reported and nothing is raised.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_copy_that_fails_is_skipped_without_stopping_the_work},
+}
+
+@misc{treeio-snapshot-snapshot-establishes-the-per-invocation-record-when-none-exists,
+  section = {snapshot},
+  title  = {A direct caller still gets a record, labelled by its first snapshot, and keeps its own},
+  claim  = {A direct caller still gets a record, labelled by its first snapshot, and keeps its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_snapshot_establishes_the_per_invocation_record_when_none_exists},
+}
+
+@misc{treeio-snapshot-announce-says-how-to-recover-or-that-there-is-no-snapshot,
+  section = {snapshot},
+  title  = {The notice names the short sha and the checkout, or warns that edits are unrecoverable},
+  claim  = {The notice names the short sha and the checkout, or warns that edits are unrecoverable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_announce_says_how_to_recover_or_that_there_is_no_snapshot},
+}
+
+@misc{treeio-snapshot-announce-writes-to-stdout-by-default,
+  section = {snapshot},
+  title  = {With no sink given the notice goes to stdout, one line each},
+  claim  = {With no sink given the notice goes to stdout, one line each.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_announce_writes_to_stdout_by_default},
+}
+
+@misc{treeio-restore-contents-reports-both-halves-of-a-snapshot,
+  section = {restore},
+  title  = {The tracked half comes from the stash commit and the untracked half from the store},
+  claim  = {The tracked half comes from the stash commit and the untracked half from the store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_contents_reports_both_halves_of_a_snapshot},
+}
+
+@misc{treeio-restore-contents-of-an-unknown-sha-has-no-tracked-half-and-no-store-no-untracked-half,
+  section = {restore},
+  title  = {A sha git does not know yields nothing rather than raising, and an absent store is empty},
+  claim  = {A sha git does not know yields nothing rather than raising, and an absent store is
+            empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_contents_of_an_unknown_sha_has_no_tracked_half_and_no_store_no_untracked_half},
+}
+
+@misc{treeio-restore-dry-restore-reports-how-each-path-would-come-back-and-writes-nothing,
+  section = {restore},
+  title  = {Without apply the rows say tracked and untracked-latest, and the damage stays},
+  claim  = {Without apply the rows say tracked and untracked-latest, and the damage stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_a_dry_restore_reports_how_each_path_would_come_back_and_writes_nothing},
+}
+
+@misc{treeio-restore-applied-restore-brings-back-both-halves,
+  section = {restore},
+  title  = {The tracked file is checked out of the stash commit and the untracked one copied back},
+  claim  = {The tracked file is checked out of the stash commit and the untracked one copied back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_an_applied_restore_brings_back_both_halves},
+}
+
+@misc{treeio-restore-restore-can-be-limited-to-named-paths-relative-or-absolute,
+  section = {restore},
+  title  = {Only the named paths are touched; a path may be spelled either way},
+  claim  = {Only the named paths are touched; a path may be spelled either way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_a_restore_can_be_limited_to_named_paths_relative_or_absolute},
+}
+
+@misc{treeio-restore-tracked-checkout-that-git-refuses-is-reported-as-failed,
+  section = {restore},
+  title  = {With the index locked the checkout fails, and the row says so instead of claiming success},
+  claim  = {With the index locked the checkout fails, and the row says so instead of claiming
+            success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_a_tracked_checkout_that_git_refuses_is_reported_as_failed},
+}
+
+@misc{treeio-restore-untracked-copy-that-cannot-land-is-reported-as-failed-with-its-cause,
+  section = {restore},
+  title  = {A file where the directory belongs fails the copy, and the row carries the OS error},
+  claim  = {A file where the directory belongs fails the copy, and the row carries the OS error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_an_untracked_copy_that_cannot_land_is_reported_as_failed_with_its_cause},
+}
+
+@misc{treeio-contract-apply-alone-satisfies-the-contract-and-becomes-the-ambient-intent,
+  section = {contract},
+  title  = {The statement is read once from argv and every frame below asks the context},
+  claim  = {The statement is read once from argv and every frame below asks the context.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_apply_alone_satisfies_the_contract_and_becomes_the_ambient_intent},
+}
+
+@misc{treeio-contract-dry-run-alone-satisfies-the-contract-and-becomes-the-ambient-intent,
+  section = {contract},
+  title  = {The other flag binds the other value},
+  claim  = {The other flag binds the other value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_dry_run_alone_satisfies_the_contract_and_becomes_the_ambient_intent},
+}
+
+@misc{treeio-contract-argv-statement-does-not-rebind-an-intent-that-is-already-ambient,
+  section = {contract},
+  title  = {The first binding wins: a later statement in a nested frame leaves the ambient alone},
+  claim  = {The first binding wins: a later statement in a nested frame leaves the ambient alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_an_argv_statement_does_not_rebind_an_intent_that_is_already_ambient},
+}
+
+@misc{treeio-contract-both-flags-are-refused-even-when-the-switch-is-off,
+  section = {contract},
+  title  = {Two contradictory statements have no safe reading, so the off-switch does not help},
+  claim  = {Two contradictory statements have no safe reading, so the off-switch does not help.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_both_flags_are_refused_even_when_the_switch_is_off},
+}
+
+@misc{treeio-contract-neither-flag-is-refused-at-the-default-and-the-refusal-is-not-an-exception,
+  section = {contract},
+  title  = {A bare invocation refuses, states the two words, and cannot be swallowed by a handler},
+  claim  = {A bare invocation refuses, states the two words, and cannot be swallowed by a handler.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_neither_flag_is_refused_at_the_default_and_the_refusal_is_not_an_exception},
+}
+
+@misc{treeio-contract-off-switch-downgrades-to-an-advisory-that-says-it-is-unarmed,
+  section = {contract},
+  title  = {With the switch at 0 the run proceeds, and every such run announces itself},
+  claim  = {With the switch at 0 the run proceeds, and every such run announces itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_the_off_switch_downgrades_to_an_advisory_that_says_it_is_unarmed},
+}
+
+@misc{treeio-contract-any-other-switch-value-is-still-armed,
+  section = {contract},
+  title  = {Only the exact value 0 disarms the contract: one, empty and words all refuse},
+  claim  = {Only the exact value 0 disarms the contract: one, empty and words all refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_any_other_switch_value_is_still_armed},
+}
+
+@misc{treeio-contract-longer-flag-containing-apply-does-not-satisfy-the-contract,
+  section = {contract},
+  title  = {Reading apply-all as consent is the substring defect: it refuses and names the successor},
+  claim  = {Reading apply-all as consent is the substring defect: it refuses and names the
+            successor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_longer_flag_containing_apply_does_not_satisfy_the_contract},
+}
+
+@misc{treeio-contract-near-miss-is-refused-with-the-exact-substitution-and-never-blessed,
+  section = {contract},
+  title  = {Every recorded near miss is refused, the refusal leads with the substitution, all listed},
+  claim  = {Every recorded near miss is refused, the refusal leads with the substitution, all
+            listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_near_miss_is_refused_with_the_exact_substitution_and_never_blessed},
+}
+
+@misc{treeio-contract-stated-intent-satisfies-the-contract-without-touching-argv,
+  section = {contract},
+  title  = {A fixture says in code what it does: both values pass and bind, argv is not read},
+  claim  = {A fixture says in code what it does: both values pass and bind, argv is not read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_stated_intent_satisfies_the_contract_without_touching_argv},
+}
+
+@misc{treeio-contract-unrecognised-intent-refuses-and-a-disagreeing-one-conflicts,
+  section = {contract},
+  title  = {The escape is at least as strict as the contract it bypasses, and the ambient value wins},
+  claim  = {The escape is at least as strict as the contract it bypasses, and the ambient value
+            wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_an_unrecognised_intent_refuses_and_a_disagreeing_one_conflicts},
+}
+
+@misc{treeio-contract-argv-defaults-to-the-process-arguments,
+  section = {contract},
+  title  = {With no argv given the contract reads the process's own},
+  claim  = {With no argv given the contract reads the process's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_argv_defaults_to_the_process_arguments},
+}
+
+@misc{treeio-contract-guard-checks-the-contract-snapshots-and-announces,
+  section = {contract},
+  title  = {The one call a writer makes: it states intent, returns the sha, and says how to recover},
+  claim  = {The one call a writer makes: it states intent, returns the sha, and says how to recover.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_guard_checks_the_contract_snapshots_and_announces},
+}
+
+@misc{treeio-contract-guard-with-no-repository-warns-that-edits-are-unrecoverable,
+  section = {contract},
+  title  = {A missing net is announced, not hidden, and the caller gets None},
+  claim  = {A missing net is announced, not hidden, and the caller gets None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_guard_with_no_repository_warns_that_edits_are_unrecoverable},
+}
+
+@misc{treeio-contract-guard-refuses-before-snapshotting-when-the-contract-is-not-met,
+  section = {contract},
+  title  = {A refusal comes first: nothing is snapshotted and the journal is never created},
+  claim  = {A refusal comes first: nothing is snapshotted and the journal is never created.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_guard_refuses_before_snapshotting_when_the_contract_is_not_met},
+}
+
+@misc{treeio-contract-best-effort-handler-around-guard-does-not-swallow-a-refusal,
+  section = {contract},
+  title  = {The exact caller shape of the measured call sites: the refusal passes through it},
+  claim  = {The exact caller shape of the measured call sites: the refusal passes through it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_best_effort_handler_around_guard_does_not_swallow_a_refusal},
+}
+
+@misc{treeio-contract-library-frame-raises-and-never-exits-in-a-fresh-interpreter,
+  section = {contract},
+  title  = {At the real default the library arm raises a refusal that is not an Exception},
+  claim  = {At the real default the library arm raises a refusal that is not an Exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_the_library_frame_raises_and_never_exits_in_a_fresh_interpreter},
+}
+
+@misc{treeio-contract-command-line-boundary-renders-a-refusal-as-exit-two-in-a-fresh-interpreter,
+  section = {contract},
+  title  = {Through the boundary an unstated intent is exit 2 and the stderr names both words},
+  claim  = {Through the boundary an unstated intent is exit 2 and the stderr names both words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_the_command_line_boundary_renders_a_refusal_as_exit_two_in_a_fresh_interpreter},
+}
+
+@misc{treeio-contract-unrecognised-intent-through-the-boundary-names-the-vocabulary-it-wanted,
+  section = {contract},
+  title  = {The vocabulary refusal is exit 2 at the boundary and still names what it wanted},
+  claim  = {The vocabulary refusal is exit 2 at the boundary and still names what it wanted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_an_unrecognised_intent_through_the_boundary_names_the_vocabulary_it_wanted},
+}
+
+@misc{treeio-contract-snapshot-once-snapshots-once-but-copies-every-untracked-path,
+  section = {contract},
+  title  = {The latch's bug dissolved: one sha for the run, and the later file is still copied},
+  claim  = {The latch's bug dissolved: one sha for the run, and the later file is still copied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_snapshot_once_snapshots_once_but_copies_every_untracked_path},
+}
+
+@misc{treeio-contract-snapshot-once-checks-the-contract-before-it-snapshots,
+  section = {contract},
+  title  = {Consolidating the helpers must not delete the stated-intent check from the writers},
+  claim  = {Consolidating the helpers must not delete the stated-intent check from the writers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_snapshot_once_checks_the_contract_before_it_snapshots},
+}
+
+@misc{treeio-contract-snapshot-once-without-a-repository-returns-none-and-does-not-retry,
+  section = {contract},
+  title  = {No snapshot is available, which is said once, and a second call stays quiet},
+  claim  = {No snapshot is available, which is said once, and a second call stays quiet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_snapshot_once_without_a_repository_returns_none_and_does_not_retry},
+}
+
+@misc{treeio-contract-entry-with-apply-snapshots-in-the-same-act,
+  section = {contract},
+  title  = {Stating apply IS the snapshot: the binding the whole entry form turns on},
+  claim  = {Stating apply IS the snapshot: the binding the whole entry form turns on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_entry_with_apply_snapshots_in_the_same_act},
+}
+
+@misc{treeio-contract-entry-with-dry-run-takes-no-snapshot,
+  section = {contract},
+  title  = {A stated dry-run writes nothing, so there is nothing to snapshot and the log stays useful},
+  claim  = {A stated dry-run writes nothing, so there is nothing to snapshot and the log stays
+            useful.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_entry_with_dry_run_takes_no_snapshot},
+}
+
+@misc{treeio-contract-entry-selftest-carve-out-is-a-distinct-verdict-and-an-intent-still-wins,
+  section = {contract},
+  title  = {A selftest passes without a flag and says so; an explicit intent overrides the carve-out},
+  claim  = {A selftest passes without a flag and says so; an explicit intent overrides the carve-
+            out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_entry_selftest_carve_out_is_a_distinct_verdict_and_an_intent_still_wins},
+}
+
+@misc{treeio-contract-entry-for-a-store-tool-says-a-snapshot-is-not-applicable,
+  section = {contract},
+  title  = {A file copy cannot capture a store write, so the notice says so instead of claiming one},
+  claim  = {A file copy cannot capture a store write, so the notice says so instead of claiming one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_entry_for_a_store_tool_says_a_snapshot_is_not_applicable},
+}
+
+@misc{treeio-contract-bare-entry-renders-the-refusal-and-exits-two,
+  section = {contract},
+  title  = {The entry point owns the pid, so it renders the message and exits 2 instead of raising},
+  claim  = {The entry point owns the pid, so it renders the message and exits 2 instead of raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_bare_entry_renders_the_refusal_and_exits_two},
+}
+
+@misc{treeio-contract-near-miss-at-entry-exits-two-and-names-its-successor,
+  section = {contract},
+  title  = {The refusal at the entry point carries the substitution table, not a bare no},
+  claim  = {The refusal at the entry point carries the substitution table, not a bare no.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_near_miss_at_entry_exits_two_and_names_its_successor},
+}
+
+@misc{treeio-contract-advisory-at-entry-is-returned-as-the-verdict,
+  section = {contract},
+  title  = {Under the off-switch the run goes on, and the caller can see it was unarmed},
+  claim  = {Under the off-switch the run goes on, and the caller can see it was unarmed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_an_advisory_at_entry_is_returned_as_the_verdict},
+}
+
+@misc{treeio-contract-entry-defaults-its-argv-to-the-process-arguments,
+  section = {contract},
+  title  = {With no argv given the entry form reads the process's own},
+  claim  = {With no argv given the entry form reads the process's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_entry_defaults_its_argv_to_the_process_arguments},
+}
+
+@misc{treeio-contract-cli-main-returns-what-the-tool-returns,
+  section = {contract},
+  title  = {A tool that succeeds passes its status through, including None},
+  claim  = {A tool that succeeds passes its status through, including None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_cli_main_returns_what_the_tool_returns},
+}
+
+@misc{treeio-contract-cli-main-renders-a-contract-refusal-as-exit-two,
+  section = {contract},
+  title  = {Only this package's own stated refusals become a message and a status},
+  claim  = {Only this package's own stated refusals become a message and a status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_cli_main_renders_a_contract_refusal_as_exit_two},
+}
+
+@misc{treeio-contract-cli-main-lets-a-genuine-bug-surface-as-a-traceback,
+  section = {contract},
+  title  = {It catches the contract family and not Exception, so a defect in the body is not hidden},
+  claim  = {It catches the contract family and not Exception, so a defect in the body is not hidden.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_cli_main_lets_a_genuine_bug_surface_as_a_traceback},
+}
+
+@misc{treeio-snapshot-cli-holding-rows-are-newest-first-and-skip-comments-blanks-and-short-rows,
+  section = {snapshot_cli},
+  title  = {The journal is newest-last, so rows are reversed once, and malformed lines are skipped},
+  claim  = {The journal is newest-last, so rows are reversed once, and malformed lines are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_holding_rows_are_newest_first_and_skip_comments_blanks_and_short_rows},
+}
+
+@misc{treeio-snapshot-cli-holding-rows-of-a-missing-journal-is-empty,
+  section = {snapshot_cli},
+  title  = {No journal means no snapshot holds anything},
+  claim  = {No journal means no snapshot holds anything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_holding_rows_of_a_missing_journal_is_empty},
+}
+
+@misc{treeio-snapshot-cli-list-says-when-nothing-is-recorded-and-otherwise-dumps-the-journal,
+  section = {snapshot_cli},
+  title  = {The raw journal is shown verbatim, or a sentence when there is none},
+  claim  = {The raw journal is shown verbatim, or a sentence when there is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_list_says_when_nothing_is_recorded_and_otherwise_dumps_the_journal},
+}
+
+@misc{treeio-snapshot-cli-holding-leads-with-the-newest-and-the-restore-hint-names-that-same-one,
+  section = {snapshot_cli},
+  title  = {The orientation is pinned: the hint names the listing's first row, not the journal's},
+  claim  = {The orientation is pinned: the hint names the listing's first row, not the journal's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_holding_leads_with_the_newest_and_the_restore_hint_names_that_same_one},
+}
+
+@misc{treeio-snapshot-cli-holding-names-five-paths-and-counts-the-rest,
+  section = {snapshot_cli},
+  title  = {A snapshot with many matching paths shows five and summarizes the remainder},
+  claim  = {A snapshot with many matching paths shows five and summarizes the remainder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_holding_names_five_paths_and_counts_the_rest},
+}
+
+@misc{treeio-snapshot-cli-holding-with-no-match-says-so-and-offers-no-restore-command,
+  section = {snapshot_cli},
+  title  = {Nothing matched, so there is nothing to restore and no hint to print},
+  claim  = {Nothing matched, so there is nothing to restore and no hint to print.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_holding_with_no_match_says_so_and_offers_no_restore_command},
+}
+
+@misc{treeio-snapshot-cli-holding-without-a-fragment-prints-its-usage-and-exits-two,
+  section = {snapshot_cli},
+  title  = {The fragment is required, and the refusal says how to give one},
+  claim  = {The fragment is required, and the refusal says how to give one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_holding_without_a_fragment_prints_its_usage_and_exits_two},
+}
+
+@misc{treeio-snapshot-cli-from-snapshot-without-apply-reports-what-it-would-restore-and-writes-nothing,
+  section = {snapshot_cli},
+  title  = {A dry run lists each path, counts the halves, warns about the untracked copy, and is dry},
+  claim  = {A dry run lists each path, counts the halves, warns about the untracked copy, and is
+            dry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_from_snapshot_without_apply_reports_what_it_would_restore_and_writes_nothing},
+}
+
+@misc{treeio-snapshot-cli-from-snapshot-with-apply-restores-the-named-paths,
+  section = {snapshot_cli},
+  title  = {With apply the rows say RESTORED, only the named path comes back, and no dry-run note},
+  claim  = {With apply the rows say RESTORED, only the named path comes back, and no dry-run note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_from_snapshot_with_apply_restores_the_named_paths},
+}
+
+@misc{treeio-snapshot-cli-no-mode-or-an-empty-snapshot-names-prints-the-description-and-the-usage,
+  section = {snapshot_cli},
+  title  = {Without a mode the tool describes itself and shows all three forms},
+  claim  = {Without a mode the tool describes itself and shows all three forms.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_no_mode_or_an_empty_snapshot_names_prints_the_description_and_the_usage},
+}
+
+@misc{treeio-snapshot-cli-main-reads-the-process-arguments-when-none-are-given,
+  section = {snapshot_cli},
+  title  = {With no argv argument the command line is the process's own},
+  claim  = {With no argv argument the command line is the process's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot_cli.py -k test_main_reads_the_process_arguments_when_none_are_given},
+}
+
+@misc{treeio-edit-snapshot-every-exported-name-is-the-split-modules-own-object,
+  section = {edit_snapshot},
+  title  = {A repointed caller gets the very objects, not copies, so except clauses agree},
+  claim  = {A repointed caller gets the very objects, not copies, so except clauses agree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edit_snapshot.py -k test_every_exported_name_is_the_split_modules_own_object},
+}
+
+@misc{treeio-edit-snapshot-all-lists-exactly-the-exported-names,
+  section = {edit_snapshot},
+  title  = {The public surface is the list, with no stray helper in it},
+  claim  = {The public surface is the list, with no stray helper in it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_edit_snapshot.py -k test_all_lists_exactly_the_exported_names},
+}
