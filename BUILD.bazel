@@ -174,7 +174,11 @@ py_test(
         "no:cacheprovider",
     ],
     size = "small",
-    deps = [root_dev_requirement("pytest")],
+    # ⚑ THE FENCE SIBLING EDGE (mtools:W619): the runner imports `mikemol.fence.git_env`.
+    deps = [
+        "//fence:fence",
+        root_dev_requirement("pytest"),
+    ],
 )
 
 # W384: the ruff atom's selector check, tested the same way with a fake ruff.
@@ -416,7 +420,10 @@ _ATOM_SCRIPTS = [
         data = [
             "@mikemol_%s//:mypy.ini" % atom,
             "//hooks:mypy_runner",
-        ] + ["@mikemol_%s//:%s" % (atom, script) for script in scripts],
+        ] + ["@mikemol_%s//:%s" % (atom, script) for script in scripts] + (
+            # ⚑ THE FENCE SIBLING EDGE (mtools:W619): mypy reads `mikemol.fence.git_env` for the runner.
+            ["//fence:fence"] if atom == "check_mutants" else []
+        ),
         size = "small",
         timeout = "long",
     )

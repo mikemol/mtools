@@ -19,6 +19,15 @@
 
 set -uo pipefail
 
+# ⚑ W662: THE AMEND GUARD. mikemol-githook-post-commit amends the tip to write its marker and sets
+# _POST_COMMIT_AMENDING for that amend, which re-fires THIS hook. Without this exit the nested run
+# pushes the AMENDED sha (pre-push sees the marker), the outer push is then a no-op, pre-push runs a
+# second time on empty stdin, and the original sha is never pushed. The outer run pushes once,
+# after the amend has finished.
+if [ -n "${_POST_COMMIT_AMENDING:-}" ]; then
+    exit 0
+fi
+
 _git_dir=$(git rev-parse --git-dir)
 _witness="$_git_dir/mtools/gate-verified"
 # ⚑ QUOTED, because `HEAD^{tree}` reads as brace-expansion to a shell and shellcheck says so
@@ -54,13 +63,28 @@ fi
 # concurrent writer would rewrite history nobody asked it to touch, and it would do so inside a
 # hook whose output the caller may not read. `git push` refuses on divergence by itself; this
 # surfaces that refusal with the command to run rather than papering over it.
-if git push origin HEAD:main 2>&1; then
+# ⚑⚑ W661: THE CAUSE IS READ FROM THE PUSH, NOT ASSUMED. A failing pre-push abandons the push
+# before any transfer; git prints nothing of its own, so the old "the remote has moved" text
+# blamed a peer for what the local gate did. Only a ref the remote REJECTED (`[rejected]`,
+# `[remote rejected]`) is a moved remote; every other failure is reported as an abandoned push
+# with the push's own output, which is where pre-push's reason is.
+_push_out=$(git push origin HEAD:main 2>&1)
+_push_rc=$?
+if [ -n "$_push_out" ]; then
+    echo "$_push_out"
+fi
+if [ "$_push_rc" -eq 0 ]; then
     echo "post-commit: pushed $(git rev-parse --short HEAD) to origin/main"
-else
+elif printf '%s\n' "$_push_out" | grep -qE '\[(remote )?rejected\]'; then
     echo "post-commit: ⚑ PUSH REFUSED — the remote has moved. The commit is SAFE and LOCAL."
     echo "post-commit: a peer pushed first. Reconcile deliberately:"
     echo "post-commit:   git fetch origin && git rebase origin/main && git push origin HEAD:main"
     echo "post-commit: this hook does not rebase for you — that would rewrite history unasked."
+else
+    echo "post-commit: ⚑ PUSH ABANDONED (exit $_push_rc) — NOT because the remote moved."
+    echo "post-commit: the push failed before a ref was refused: a failing pre-push hook, or an"
+    echo "post-commit: unreachable remote. Its own output is above. The commit is SAFE and LOCAL."
+    echo "post-commit: fix the cause it names, then: git push origin HEAD:main"
 fi
 
 # ⚑ EXITS 0 IN EVERY BRANCH, DELIBERATELY. A post-commit's status cannot unmake the commit, and a

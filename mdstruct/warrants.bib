@@ -1506,3 +1506,73 @@
   claim  = {Only a directory is refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_write_refusal_is_none_for_a_file},
 }
+
+@misc{mdstruct-directory-operand-exclude-prunes-a-named-directory-and-counts-it,
+  section = {directory-operand},
+  title  = {Red on HEAD by a missing name: `--exclude` is refused as a flag no mode takes},
+  claim  = {Red on HEAD by a missing name: `--exclude` is refused as a flag no mode takes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_exclude_prunes_a_named_directory_and_counts_it},
+}
+
+@misc{mdstruct-directory-operand-without-exclude-nothing-is-pruned-and-the-count-is-zero,
+  section = {directory-operand},
+  title  = {No default list: a `build` directory is read, and the zero is printed},
+  claim  = {No default list: a `build` directory is read, and the zero is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_without_exclude_nothing_is_pruned_and_the_count_is_zero},
+}
+
+@misc{mdstruct-directory-operand-exclude-is-repeatable-takes-a-glob-and-binds-both-spellings,
+  section = {directory-operand},
+  title  = {Two entries, one spaced and one with `=`, prune `build` and `bazel-bin` (by glob)},
+  claim  = {Two entries, one spaced and one with `=`, prune `build` and `bazel-bin` (by glob).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_exclude_is_repeatable_takes_a_glob_and_binds_both_spellings},
+}
+
+@misc{mdstruct-directory-operand-exclude-counts-apply-to-every-read-mode-and-grep,
+  section = {directory-operand},
+  title  = {`grep` keeps its pattern slot and honours the flag the same way},
+  claim  = {`grep` keeps its pattern slot and honours the flag the same way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_exclude_counts_apply_to_every_read_mode_and_grep},
+}
+
+@misc{mdstruct-directory-operand-bad-exclude-entry-is-refused-by-name,
+  section = {directory-operand},
+  title  = {An empty or path-shaped entry is exit 2 and the refusal quotes the entry},
+  claim  = {An empty or path-shaped entry is exit 2 and the refusal quotes the entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_bad_exclude_entry_is_refused_by_name},
+}
+
+@misc{mdstruct-directory-operand-write-mode-does-not-take-exclude,
+  section = {directory-operand},
+  title  = {The flag belongs to the directory-capable modes; a writer refuses it as unknown},
+  claim  = {The flag belongs to the directory-capable modes; a writer refuses it as unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_a_write_mode_does_not_take_exclude},
+}
+
+@misc{mdstruct-directory-operand-exclude-with-a-file-operand-prints-no-count-lines,
+  section = {directory-operand},
+  title  = {Only a directory operand reports counts, whether or not the flag was given},
+  claim  = {Only a directory operand reports counts, whether or not the flag was given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_exclude_with_a_file_operand_prints_no_count_lines},
+}
+
+@misc{mdstruct-directory-operand-resolve-counts-the-excluded-directories-and-drops-their-files,
+  section = {directory-operand},
+  title  = {`exclude=` reaches the sibling walk and its count lands on the notes},
+  claim  = {`exclude=` reaches the sibling walk and its count lands on the notes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_resolve_counts_the_excluded_directories_and_drops_their_files},
+}
+
+@misc{mdstruct-directory-operand-resolve-with-an-empty-exclude-changes-nothing,
+  section = {directory-operand},
+  title  = {An empty sequence is the default: same files, same notes},
+  claim  = {An empty sequence is the default: same files, same notes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_resolve_with_an_empty_exclude_changes_nothing},
+}
+
+@misc{mdstruct-directory-operand-resolve-refuses-a-bad-exclude-entry-by-name,
+  section = {directory-operand},
+  title  = {A path-shaped entry yields the refusal text naming it, and no files},
+  claim  = {A path-shaped entry yields the refusal text naming it, and no files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_resolve_refuses_a_bad_exclude_entry_by_name},
+}

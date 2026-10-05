@@ -22,9 +22,11 @@
   EVERY READ MODE ALSO TAKES A DIRECTORY in place of FILE.md, and reads the `.md` files under it
   in the walk's stable order, each result printed as for a file. Registered git worktrees (other
   checkouts of the same repo) are skipped, virtualenvs pruned, symlinks refused, and
-  `--include-worktrees` reads the worktrees too. The counts (`skipped N registered worktrees`,
-  `skipped N virtualenvs`, `refused N symlinks (not followed)`) go to stderr, and only when an
-  operand was a directory.
+  `--include-worktrees` reads the worktrees too. `--exclude GLOB` (repeatable) also prunes any
+  directory whose own name matches the glob, such as `build` or `bazel-*`; there is no default
+  list, and an entry that is empty or holds a `/` is refused. The counts
+  (`skipped N registered worktrees`, `skipped N virtualenvs`, `skipped N excluded directories`,
+  `refused N symlinks (not followed)`) go to stderr, and only when an operand was a directory.
 
   the WRITE modes — heading before file, matching `grep`, and a DRY RUN unless `--apply`:
 
@@ -109,19 +111,21 @@ _CELL_WIDTH = 40
 # the dataclass would buy a declaration with no enforcement. The enforcement is what matters here,
 # so the declaration is local and the refusal below is the thing that reads it.
 _MODE_OPTS: dict[str, frozenset[str]] = {
-    "spans": frozenset({"--include-worktrees"}),
-    "budget": frozenset({"--include-worktrees"}),
-    "items": frozenset({"--include-worktrees"}),
-    "grep": frozenset({"-i", "-E", "--include-worktrees"}),
-    "tables": frozenset({"--include-worktrees"}),
-    "rows": frozenset({"--where", "--starts", "--col", "--table", "--include-worktrees"}),
-    "classify": frozenset({"--col", "--table", "--include-worktrees"}),
-    "labels": frozenset({"--include-worktrees"}),
-    "roundtrip": frozenset({"--include-worktrees"}),
-    "fixpoint": frozenset({"--include-worktrees"}),
-    "lint": frozenset({"--width", "--include-worktrees"}),
-    "verify": frozenset({"--include-worktrees"}),
-    "narrowest": frozenset({"--include-worktrees"}),
+    "spans": frozenset({"--include-worktrees", "--exclude"}),
+    "budget": frozenset({"--include-worktrees", "--exclude"}),
+    "items": frozenset({"--include-worktrees", "--exclude"}),
+    "grep": frozenset({"-i", "-E", "--include-worktrees", "--exclude"}),
+    "tables": frozenset({"--include-worktrees", "--exclude"}),
+    "rows": frozenset(
+        {"--where", "--starts", "--col", "--table", "--include-worktrees", "--exclude"}
+    ),
+    "classify": frozenset({"--col", "--table", "--include-worktrees", "--exclude"}),
+    "labels": frozenset({"--include-worktrees", "--exclude"}),
+    "roundtrip": frozenset({"--include-worktrees", "--exclude"}),
+    "fixpoint": frozenset({"--include-worktrees", "--exclude"}),
+    "lint": frozenset({"--width", "--include-worktrees", "--exclude"}),
+    "verify": frozenset({"--include-worktrees", "--exclude"}),
+    "narrowest": frozenset({"--include-worktrees", "--exclude"}),
     "replace-section": frozenset({"--body-file", "--exact", "--apply", "--dry-run"}),
     "append-section": frozenset({"--body-file", "--exact", "--apply", "--dry-run"}),
 }
@@ -152,9 +156,15 @@ _OPT_ARITY: dict[str, bool] = {
     "--apply": False,
     "--dry-run": False,
     "--include-worktrees": False,
+    "--exclude": True,
     "-h": False,
     "--help": False,
 }
+
+
+# ⚑ THE VALUE FLAGS THAT MAY BE GIVEN MORE THAN ONCE: `--exclude GLOB --exclude GLOB` names two
+# directory globs. Every value counts, so `_flag_all` reads them all where `_flag` reads the first.
+_REPEATABLE = frozenset({"--exclude"})
 
 
 def _locate_mode(argv: list[str]) -> int | None:
@@ -210,6 +220,25 @@ def _flag(argv: list[str], name: str) -> str | None:
     return None
 
 
+def _flag_all(argv: list[str], name: str) -> list[str]:
+    """Return every `--name value` or `--name=value` argument, in the order given.
+
+    ⚑ THE REPEATABLE COUNTERPART OF `_flag`, binding both spellings the same way. An empty list
+    means the flag was not given, which is not the same as given with an empty value (`""`).
+
+    Returns:
+        each value of the flag, first to last.
+
+    """
+    values: list[str] = []
+    for i, arg in enumerate(argv):
+        if arg == name and i + 1 < len(argv):
+            values.append(argv[i + 1])
+        elif arg.startswith(name + "="):
+            values.append(arg.split("=", 1)[1])
+    return values
+
+
 def argparse_parser(mode: str) -> argparse.ArgumentParser:
     """Build the `argparse` parser for one mode from `_MODE_OPTS`, `_GLOBAL_OPTS` and `_OPT_ARITY`.
 
@@ -247,7 +276,9 @@ def argparse_parser(mode: str) -> argparse.ArgumentParser:
         exit_on_error=False,
     )
     for opt in sorted(_MODE_OPTS.get(mode, frozenset()) | _GLOBAL_OPTS):
-        if _OPT_ARITY[opt]:
+        if opt in _REPEATABLE:
+            parser.add_argument(opt, dest=opt.lstrip("-").replace("-", "_"), action="append")
+        elif _OPT_ARITY[opt]:
             parser.add_argument(opt, dest=opt.lstrip("-").replace("-", "_"))
         else:
             parser.add_argument(opt, dest=opt.lstrip("-").replace("-", "_"), action="store_true")
@@ -958,8 +989,9 @@ def _codes_over_paths(
     ⚑⚑⚑ A DIRECTORY OPERAND EXPANDS (W561, mtools, answering el-openglo W138). When any file
     operand is a directory, EVERY read mode comes through here: the operands expand to their
     markdown files through the sibling walk (registered worktrees skipped unless the switch for
-    including them is given, virtualenvs pruned, symlinks refused), the verb runs on each file in
-    the walk's stable order, and the worst code is returned. The three count lines go to STDERR,
+    including them is given, virtualenvs pruned, directories named by `--exclude` pruned, symlinks
+    refused), the verb runs on each file in
+    the walk's stable order, and the worst code is returned. The four count lines go to STDERR,
     because nothing but the answer reaches stdout. With no directory operand nothing changes: a
     `many` mode reads every operand and any other reads only the first, exactly as before.
     A refusal from the walk (git cannot list worktrees, a symlinked directory) is exit 2.
@@ -999,7 +1031,11 @@ def _codes_over_paths(
     """
     named = _mode_operands(argv)[skip:]
     if dir_operands.has_directory(named):
-        got = dir_operands.resolve(named, include_worktrees="--include-worktrees" in argv)
+        got = dir_operands.resolve(
+            named,
+            include_worktrees="--include-worktrees" in argv,
+            exclude=_flag_all(argv, "--exclude"),
+        )
         if got.refusal is not None:
             sys.stderr.write(got.refusal)
             return [2]

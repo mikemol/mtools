@@ -266,7 +266,8 @@ def test_resolve_reports_the_counts_only_for_a_directory(repo: Path) -> None:
     assert got.refusal is None
     assert str(repo / _MAIN) in got.files
     assert got.notes == (
-        "skipped 1 registered worktrees\nskipped 1 virtualenvs\nrefused 0 symlinks (not followed)\n"
+        "skipped 1 registered worktrees\nskipped 1 virtualenvs\n"
+        "skipped 0 excluded directories\nrefused 0 symlinks (not followed)\n"
     )
 
 
@@ -295,6 +296,119 @@ def test_has_directory_tells_a_directory_from_a_file(repo: Path) -> None:
     """True for a directory operand, false for a file or a missing name."""
     assert operands.has_directory([str(repo / _MAIN), str(repo)])
     assert not operands.has_directory([str(repo / _MAIN), str(repo / "gone.md")])
+
+
+_GEN = "generated_doc.md"
+_EXCLUDED_ONE = "skipped 1 excluded directories"
+_EXCLUDED_TWO = "skipped 2 excluded directories"
+_EXCLUDED_ZERO = "skipped 0 excluded directories"
+
+
+def _generated(repo: Path, *names: str) -> None:
+    for name in names:
+        (repo / name).mkdir()
+        (repo / name / _GEN).write_text(_BODY, encoding="utf-8")
+
+
+def test_exclude_prunes_a_named_directory_and_counts_it(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by a missing name: `--exclude` is refused as a flag no mode takes."""
+    _generated(repo, "build", "builder")
+    code, out, err = _run(capsys, "spans", str(repo), "--exclude", "build")
+    assert code == 0
+    assert _MAIN in out
+    assert str(repo / "build" / _GEN) not in out
+    assert str(repo / "builder" / _GEN) in out
+    assert _EXCLUDED_ONE in err
+
+
+def test_without_exclude_nothing_is_pruned_and_the_count_is_zero(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """No default list: a `build` directory is read, and the zero is printed."""
+    _generated(repo, "build")
+    _, out, err = _run(capsys, "spans", str(repo))
+    assert str(repo / "build" / _GEN) in out
+    assert _EXCLUDED_ZERO in err
+
+
+def test_exclude_is_repeatable_takes_a_glob_and_binds_both_spellings(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Two entries, one spaced and one with `=`, prune `build` and `bazel-bin` (by glob)."""
+    _generated(repo, "build", "bazel-bin", "src")
+    code, out, err = _run(capsys, "spans", str(repo), "--exclude", "build", "--exclude=bazel-*")
+    assert code == 0
+    assert str(repo / "build" / _GEN) not in out
+    assert str(repo / "bazel-bin" / _GEN) not in out
+    assert str(repo / "src" / _GEN) in out
+    assert _EXCLUDED_TWO in err
+
+
+def test_exclude_counts_apply_to_every_read_mode_and_grep(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`grep` keeps its pattern slot and honours the flag the same way."""
+    _generated(repo, "build")
+    code, out, err = _run(capsys, "grep", "prose", str(repo), "--exclude", "build")
+    assert code == 0
+    assert str(repo / "build" / _GEN) not in out
+    assert _EXCLUDED_ONE in err
+
+
+@pytest.mark.parametrize("entry", ["", "a/b"])
+def test_a_bad_exclude_entry_is_refused_by_name(
+    entry: str, repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An empty or path-shaped entry is exit 2 and the refusal quotes the entry."""
+    code, out, err = _run(capsys, "spans", str(repo), "--exclude", entry)
+    assert code == _REFUSED
+    assert not out
+    assert err.startswith(f"mdstruct: refused: exclude {entry!r} must be a non-empty")
+
+
+def test_a_write_mode_does_not_take_exclude(repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """The flag belongs to the directory-capable modes; a writer refuses it as unknown."""
+    code, _, err = _run(capsys, "replace-section", "Heading", str(repo), "--exclude", "build")
+    assert code == _REFUSED
+    assert "mdstruct: replace-section does not take --exclude" in err
+
+
+def test_exclude_with_a_file_operand_prints_no_count_lines(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Only a directory operand reports counts, whether or not the flag was given."""
+    code, _, err = _run(capsys, "spans", str(repo / _MAIN), "--exclude", "build")
+    assert code == 0
+    assert not err
+
+
+def test_resolve_counts_the_excluded_directories_and_drops_their_files(repo: Path) -> None:
+    """`exclude=` reaches the sibling walk and its count lands on the notes."""
+    _generated(repo, "build")
+    got = operands.resolve([str(repo)], include_worktrees=False, exclude=["build"])
+    assert str(repo / "build" / _GEN) not in got.files
+    assert str(repo / _MAIN) in got.files
+    assert _EXCLUDED_ONE in got.notes
+
+
+def test_resolve_with_an_empty_exclude_changes_nothing(repo: Path) -> None:
+    """An empty sequence is the default: same files, same notes."""
+    _generated(repo, "build")
+    plain = operands.resolve([str(repo)], include_worktrees=False)
+    empty = operands.resolve([str(repo)], include_worktrees=False, exclude=[])
+    assert empty == plain
+    assert str(repo / "build" / _GEN) in empty.files
+    assert _EXCLUDED_ZERO in empty.notes
+
+
+def test_resolve_refuses_a_bad_exclude_entry_by_name(repo: Path) -> None:
+    """A path-shaped entry yields the refusal text naming it, and no files."""
+    got = operands.resolve([str(repo)], include_worktrees=False, exclude=["x/y"])
+    assert got.files == []
+    assert got.refusal is not None
+    assert "'x/y'" in got.refusal
 
 
 def test_write_refusal_is_none_for_a_file(repo: Path) -> None:

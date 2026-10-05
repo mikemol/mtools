@@ -1226,6 +1226,38 @@ def test_require_hits_leaves_an_incomplete_scan_and_a_refusal_alone(
     assert "found none" not in capsys.readouterr().out
 
 
+def test_require_hits_over_a_partial_scan_with_zero_rows_keeps_the_incomplete_exit(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """One file read, one skipped, no rows: the banner AND found-none print; only the flag fails.
+
+    The scan is partial (handler exit 0), so the empty-result rule applies: exit 0 by default,
+    1 under `--require-hits`, with the banner kept so the empty result is not read as clean.
+    """
+    good = _importing_file(tmp_path)
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    assert cli.main(["importers", "nobody", str(good), str(bad)]) == 0
+    capsys.readouterr()
+    assert cli.main(["importers", "--require-hits", "nobody", str(good), str(bad)]) == 1
+    captured = capsys.readouterr()
+    assert "read 1 of 2 file(s); 1 skipped" in captured.out + captured.err
+    assert "importers: searched 2 file(s), found none" in captured.out
+
+
+def test_control_with_zero_sites_says_found_none_and_fails_under_require_hits(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`control` over a file with no control flow is empty: exit 0 by default, 1 with the flag."""
+    empty = tmp_path / "e.py"
+    empty.write_text("x = 1\n", encoding="utf-8")
+    flags = ["control", *_CENSUS_FLAGS, "--boundary", "python"]
+    assert cli.main([*flags, str(empty)]) == 0
+    assert capsys.readouterr().out == "control: searched 1 file(s), found none\n"
+    assert cli.main([flags[0], "--require-hits", *flags[1:], str(empty)]) == 1
+    assert "control: searched 1 file(s), found none" in capsys.readouterr().out
+
+
 def test_a_summary_only_mode_still_reports_an_empty_result(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -1262,3 +1294,466 @@ def test_header_is_a_check_and_ignores_the_empty_result_rule(
     args = ["header", "--require-hits", "--spdx", "MIT", "--year", "2026", str(target)]
     assert cli.main(args) == 0
     assert not capsys.readouterr().out
+
+
+_REGISTERED_SOURCE = (
+    "def q_alpha():\n    pass\n\n\ndef q_beta():\n    pass\n\n\n"
+    "run(con, 'alpha')\nrun(con, 'gamma')\n"
+)
+
+
+def test_registered_joins_a_prefixed_def_to_the_literal_that_runs_it(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `registered` mode: a def, its key, its site, an unmatched lead."""
+    target = tmp_path / "m.py"
+    target.write_text(_REGISTERED_SOURCE, encoding="utf-8")
+    assert cli.main(["registered", "q_", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert f"registered {target}:1 q_alpha key=alpha sites=1 {target}:9\n" in out
+    assert f"registered {target}:5 q_beta key=beta sites=0 -\n" in out
+    assert f"unmatched {target}:10 'gamma' " in out
+
+
+def test_registered_with_no_prefixed_def_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A prefix matching no def and no literal prints the found-none line, exit 0."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 1\n", encoding="utf-8")
+    assert cli.main(["registered", "q_", str(target)]) == 0
+    assert capsys.readouterr().out == "registered: searched 1 file(s), found none\n"
+
+
+def test_registered_refuses_an_empty_prefix(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An empty PREFIX would register every def: it refuses, exit 2, naming the prefix."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 1\n", encoding="utf-8")
+    assert cli.main(["registered", "", str(target)]) == _REFUSED
+    assert "non-empty prefix" in capsys.readouterr().out
+
+
+def test_registered_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unread file is a skip in the banner, never a clean "no registered def"."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    assert cli.main(["registered", "q_", str(bad)]) == 1
+    assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out
+
+
+_SQL_SOURCE = "con.execute('SELECT a FROM t')\nbuild('SELECT b FROM u')\nx = 'SELECT c FROM v'\n"
+_SQL_FLAGS = ["--executors", "execute", "--builders", "build"]
+
+
+def test_sql_grades_a_statement_by_how_it_is_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `sql` mode: raw, builder and plain literal, by the rosters."""
+    target = tmp_path / "m.py"
+    target.write_text(_SQL_SOURCE, encoding="utf-8")
+    assert cli.main(["sql", *_SQL_FLAGS, "", str(target)]) == 0
+    rows = [ln.split(" ", 4)[1:] for ln in capsys.readouterr().out.splitlines()]
+    assert rows == [
+        ["raw", "SELECT", f"{target}:1", "SELECT a FROM t"],
+        ["builder", "SELECT", f"{target}:2", "SELECT b FROM u"],
+        ["literal", "SELECT", f"{target}:3", "SELECT c FROM v"],
+    ]
+
+
+def test_sql_with_no_matching_statement_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An ident no statement contains prints the found-none line, exit 0."""
+    target = tmp_path / "m.py"
+    target.write_text(_SQL_SOURCE, encoding="utf-8")
+    assert cli.main(["sql", *_SQL_FLAGS, "nowhere", str(target)]) == 0
+    assert capsys.readouterr().out == "sql: searched 1 file(s), found none\n"
+
+
+@pytest.mark.parametrize("missing", ["executors", "builders"])
+def test_sql_refuses_a_missing_roster_flag(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], missing: str
+) -> None:
+    """A roster flag left out refuses, exit 2, naming it: no executor is guessed."""
+    target = tmp_path / "m.py"
+    target.write_text(_SQL_SOURCE, encoding="utf-8")
+    given = {"executors": "execute", "builders": "build"}
+    argv = ["sql"]
+    for name, value in given.items():
+        if name != missing:
+            argv.extend([f"--{name}", value])
+    assert cli.main([*argv, "", str(target)]) == _REFUSED
+    assert f"--{missing} is required" in capsys.readouterr().out
+
+
+def test_sql_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unread file is a skip in the banner, never a clean "no SQL"."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    assert cli.main(["sql", *_SQL_FLAGS, "", str(bad)]) == 1
+    assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out
+
+
+def test_portable_reports_a_pattern_blocker_and_says_no_engine_ran(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `portable` mode: a pattern verdict, and the degraded line."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 'SELECT GROUP_CONCAT(a) FROM t'\n", encoding="utf-8")
+    assert cli.main(["portable", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith(f"portable pattern {target}:1 use string_agg | ")
+    assert "portable: degraded, no probe attached" in out
+    assert "no engine judged" in out
+
+
+def test_portable_with_no_blocker_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A portable statement prints the degraded line and the found-none line, exit 0."""
+    target = tmp_path / "m.py"
+    target.write_text("x = 'SELECT a FROM t'\n", encoding="utf-8")
+    assert cli.main(["portable", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert out.endswith("portable: searched 1 file(s), found none\n")
+    assert "no engine judged" in out
+
+
+def test_portable_names_a_generated_file_instead_of_dropping_it(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A file with the generated marker is listed as a row, never silently left out."""
+    target = tmp_path / "g.py"
+    target.write_text("# GENERATED\nx = 1\n", encoding="utf-8")
+    assert cli.main(["portable", str(target)]) == 0
+    assert f"generated {target}\n" in capsys.readouterr().out
+
+
+def test_portable_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unread file is a skip in the banner, never a clean "portable"."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    assert cli.main(["portable", str(bad)]) == 1
+    assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out
+
+
+_STORE_FLAGS = {"readers": "execute", "receivers": "con", "connections": "con"}
+_RAW_SOURCE = "for a, b in con.execute('q'):\n    pass\n"
+_SNAP_SOURCE = "x = con.execute('a').fetchall() + con.execute('b').fetchall()\n"
+_ALG_SOURCE = "def f(con):\n    rows = con.execute('q')\n    return sorted(rows)\n"
+
+
+def _store_argv(mode: str, *, omit: str = "") -> list[str]:
+    argv = [mode]
+    for name, value in _STORE_FLAGS.items():
+        if name != omit:
+            argv.extend([f"--{name}", value])
+    return argv
+
+
+def test_rawreads_reports_an_unpacked_connection_read(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `rawreads` mode: a tuple-unpacked `con.execute` loop."""
+    target = tmp_path / "m.py"
+    target.write_text(_RAW_SOURCE, encoding="utf-8")
+    assert cli.main(["rawreads", "--connections", "con", str(target)]) == 0
+    assert capsys.readouterr().out == f"rawreads unpacked {target}:1 con.execute('q')\n"
+
+
+def test_rawreads_with_no_such_read_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A connection name nothing uses prints the found-none line, exit 0."""
+    target = tmp_path / "m.py"
+    target.write_text(_RAW_SOURCE, encoding="utf-8")
+    assert cli.main(["rawreads", "--connections", "other", str(target)]) == 0
+    assert capsys.readouterr().out == "rawreads: searched 1 file(s), found none\n"
+
+
+def test_rawreads_refuses_a_missing_connections_flag(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """No `--connections` refuses, exit 2, naming it: no connection name is guessed."""
+    target = tmp_path / "m.py"
+    target.write_text(_RAW_SOURCE, encoding="utf-8")
+    assert cli.main(["rawreads", str(target)]) == _REFUSED
+    assert "--connections is required" in capsys.readouterr().out
+
+
+def test_snapshots_reports_a_value_composed_of_two_trips(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `snapshots` mode: two round trips in one expression."""
+    target = tmp_path / "m.py"
+    target.write_text(_SNAP_SOURCE, encoding="utf-8")
+    assert cli.main([*_store_argv("snapshots"), str(target)]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith(f"snapshots composed <module> trips=2 {target}:1 ")
+
+
+def test_snapshots_with_one_trip_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A single round trip is no snapshot: the found-none line, exit 0."""
+    target = tmp_path / "m.py"
+    target.write_text("x = con.execute('a')\n", encoding="utf-8")
+    assert cli.main([*_store_argv("snapshots"), str(target)]) == 0
+    assert capsys.readouterr().out == "snapshots: searched 1 file(s), found none\n"
+
+
+@pytest.mark.parametrize("missing", ["readers", "receivers", "connections"])
+@pytest.mark.parametrize("mode", ["snapshots", "relalg"])
+def test_a_store_mode_refuses_a_missing_vocabulary_flag(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], mode: str, missing: str
+) -> None:
+    """A vocabulary flag left out refuses, exit 2, naming it: no store vocabulary is defaulted."""
+    target = tmp_path / "m.py"
+    target.write_text(_ALG_SOURCE, encoding="utf-8")
+    argv = _store_argv(mode, omit=missing)
+    if mode == "relalg":
+        argv.extend(["--kinds", "sort"])
+    assert cli.main([*argv, str(target)]) == _REFUSED
+    assert f"--{missing} is required" in capsys.readouterr().out
+
+
+def test_relalg_reports_a_sort_done_on_store_rows(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `relalg` mode: `sorted` over rows a store read produced."""
+    target = tmp_path / "m.py"
+    target.write_text(_ALG_SOURCE, encoding="utf-8")
+    assert cli.main([*_store_argv("relalg"), "--kinds", "sort", str(target)]) == 0
+    assert capsys.readouterr().out == f"relalg sort f {target}:3 sorted(rows)\n"
+
+
+def test_relalg_with_another_kind_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Asking only for `join` over a sort-only file prints the found-none line, exit 0."""
+    target = tmp_path / "m.py"
+    target.write_text(_ALG_SOURCE, encoding="utf-8")
+    assert cli.main([*_store_argv("relalg"), "--kinds", "join", str(target)]) == 0
+    assert capsys.readouterr().out == "relalg: searched 1 file(s), found none\n"
+
+
+def test_relalg_refuses_a_missing_empty_or_unknown_kinds(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--kinds` has no default: absent, empty and unknown each refuse, exit 2, saying why."""
+    target = tmp_path / "m.py"
+    target.write_text(_ALG_SOURCE, encoding="utf-8")
+    assert cli.main([*_store_argv("relalg"), str(target)]) == _REFUSED
+    assert "--kinds is required" in capsys.readouterr().out
+    assert cli.main([*_store_argv("relalg"), "--kinds", "", str(target)]) == _REFUSED
+    assert "names no kind" in capsys.readouterr().out
+    assert cli.main([*_store_argv("relalg"), "--kinds", "nope", str(target)]) == _REFUSED
+    assert "unknown relalg kind(s): nope" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("mode", ["rawreads", "snapshots", "relalg"])
+def test_a_store_mode_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], mode: str
+) -> None:
+    """An unread file is a skip in the banner, never a clean "no store read"."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    argv = ["rawreads", "--connections", "con"] if mode == "rawreads" else _store_argv(mode)
+    if mode == "relalg":
+        argv.extend(["--kinds", "sort"])
+    assert cli.main([*argv, str(bad)]) == 1
+    assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out
+
+
+def _fp_argv(seeds: list[Path], *, omit: str = "") -> list[str]:
+    given = {**_STORE_FLAGS, "boundary": "python"}
+    argv = ["fingerprint"]
+    for name, value in given.items():
+        if name != omit:
+            argv.extend([f"--{name}", value])
+    if omit != "seed":
+        for seed in seeds:
+            argv.extend(["--seed", str(seed)])
+    return argv
+
+
+def _fp_files(tmp_path: Path) -> tuple[Path, Path, Path]:
+    target = tmp_path / "m.py"
+    target.write_text("def f(x):\n    if x:\n        return 1\n    return 2\n", encoding="utf-8")
+    other = tmp_path / "other.py"
+    other.write_text("y = 1\n", encoding="utf-8")
+    wide = tmp_path / "wide.py"
+    wide.write_text("x = 1\n", encoding="utf-8")
+    return target, other, wide
+
+
+def test_fingerprint_lists_the_unmodelled_remainder_of_a_site(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `fingerprint` mode: a residual row naming what the seed lacks."""
+    target, other, _wide = _fp_files(tmp_path)
+    assert cli.main([*_fp_argv([other]), str(target)]) == 0
+    out = capsys.readouterr().out
+    assert f"fingerprint residual {target}:2 if f omega=1 " in out
+    assert "unmodelled=x\n" in out
+    assert "fingerprint sites=" in out
+
+
+def test_fingerprint_with_a_seed_that_models_the_referent_leaves_no_remainder(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A wider seed explains the site: its residual row says `omega=0` and names nothing."""
+    target, _other, wide = _fp_files(tmp_path)
+    assert cli.main([*_fp_argv([wide]), str(target)]) == 0
+    out = capsys.readouterr().out
+    assert f"fingerprint residual {target}:2 if f omega=0 " in out
+    assert "fingerprint key x sites=2\n" in out
+
+
+def test_fingerprint_over_no_control_site_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A file with no control flow prints the totals as notes and the found-none line, exit 0."""
+    _target, other, _wide = _fp_files(tmp_path)
+    assert cli.main([*_fp_argv([other]), str(other)]) == 0
+    out = capsys.readouterr().out
+    assert out.endswith("fingerprint: searched 1 file(s), found none\n")
+    assert "fingerprint sites=0 " in out
+
+
+@pytest.mark.parametrize("missing", ["readers", "receivers", "connections", "boundary", "seed"])
+def test_fingerprint_refuses_a_missing_operand_flag(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], missing: str
+) -> None:
+    """A flag left out refuses, exit 2, naming it: no vocabulary, boundary or seed is defaulted."""
+    target, other, _wide = _fp_files(tmp_path)
+    assert cli.main([*_fp_argv([other], omit=missing), str(target)]) == _REFUSED
+    assert f"--{missing} is required" in capsys.readouterr().out
+
+
+def test_fingerprint_monotone_shows_the_remainder_cannot_rise(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--monotone` re-reads against the seed minus its last file and counts non-dividing sites."""
+    target, other, wide = _fp_files(tmp_path)
+    assert cli.main([*_fp_argv([other, wide]), "--monotone", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert "fingerprint monotone: seeds 1 -> 2: omega 2 -> 0, bits 4 -> 2, " in out
+    assert "sites whose remainder does not divide: 0\n" in out
+
+
+def test_fingerprint_reports_an_unreadable_seed_and_an_unreadable_corpus(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A seed that cannot be read says so and fails; so does a corpus that cannot be parsed."""
+    target, _other, _wide = _fp_files(tmp_path)
+    ghost = tmp_path / "ghost.py"
+    assert cli.main([*_fp_argv([ghost]), str(target)]) == 1
+    out = capsys.readouterr().out
+    assert "these --seed files could not be read; the modelled set shrank" in out
+    assert "read 0 of 1 file(s); 1 skipped" in out
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    assert cli.main([*_fp_argv([target]), str(bad)]) == 1
+    assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out
+
+
+_SPLIT_SOURCE = "def a():\n    return 1\n\n\ndef _b():\n    return 2\n"
+
+
+def _split_module(tmp_path: Path, source: str = _SPLIT_SOURCE) -> Path:
+    target = tmp_path / "m.py"
+    target.write_text(source, encoding="utf-8")
+    return target
+
+
+def test_split_dry_run_prints_the_plan_and_writes_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Red on HEAD by the missing `split` mode: parts and `would-write` rows, no file created."""
+    target = _split_module(tmp_path)
+    assert cli.main(["split", "--max-defs", "1", "--dry-run", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert "split part m_00.py names=a\n" in out
+    assert "split part m_01.py names=_b\n" in out
+    assert "split would-write m_00.py lines=" in out
+    assert not (tmp_path / "m_00.py").exists()
+    assert target.read_text(encoding="utf-8") == _SPLIT_SOURCE
+
+
+def test_split_apply_writes_the_siblings_and_the_entry(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--apply` is `apply(write=True)`: the siblings exist afterwards and the rows say `wrote`."""
+    target = _split_module(tmp_path)
+    assert cli.main(["split", "--max-defs", "1", "--apply", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert "split wrote m_00.py lines=" in out
+    assert (tmp_path / "m_00.py").exists()
+    assert (tmp_path / "m_01.py").exists()
+    assert "__all__" in target.read_text(encoding="utf-8")
+
+
+def test_split_names_a_caller_owed_an_edit_for_a_moved_private_name(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A caller importing a private moved name is an `owed` row: the entry re-exports public."""
+    target = _split_module(tmp_path)
+    caller = tmp_path / "use.py"
+    caller.write_text("from m import _b\n", encoding="utf-8")
+    argv = ["split", "--max-defs", "1", "--dry-run", str(target), str(caller)]
+    assert cli.main(argv) == 0
+    assert f"split owed {caller}:1 _b moved-to=m_01.py\n" in capsys.readouterr().out
+
+
+def test_split_of_a_module_with_nothing_to_move_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A module with no def to relocate plans no files: the found-none line, exit 0."""
+    target = _split_module(tmp_path, "x = 1\n")
+    assert cli.main(["split", "--dry-run", str(target)]) == 0
+    assert capsys.readouterr().out == "split: searched 1 file(s), found none\n"
+
+
+@pytest.mark.parametrize("choice", [[], ["--apply", "--dry-run"]])
+def test_split_refuses_neither_or_both_of_apply_and_dry_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], choice: list[str]
+) -> None:
+    """Writing is never a default: neither flag, or both, refuses (exit 2) and writes nothing."""
+    target = _split_module(tmp_path)
+    assert cli.main(["split", "--max-defs", "1", *choice, str(target)]) == _REFUSED
+    assert "exactly one of --apply and --dry-run is required" in capsys.readouterr().out
+    assert not (tmp_path / "m_00.py").exists()
+
+
+def test_split_refuses_a_module_that_declares_all(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A refused plan prints its kind and reason, exits 2, and is never applied."""
+    target = _split_module(tmp_path, '__all__ = ["a"]\n\n\ndef a():\n    return 1\n')
+    assert cli.main(["split", "--apply", str(target)]) == _REFUSED
+    assert "all-declared" in capsys.readouterr().out
+    assert not (tmp_path / "m_00.py").exists()
+
+
+def test_split_over_an_unreadable_module_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A module that cannot be read is a skip in the banner and exit 1, never a clean plan."""
+    ghost = tmp_path / "ghost.py"
+    assert cli.main(["split", "--dry-run", str(ghost)]) == 1
+    assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out
+
+
+def test_sqlname_is_retired_to_registered(capsys: pytest.CaptureFixture[str]) -> None:
+    """The origin's `sqlname` refuses, exit 2, and names `registered` as its successor."""
+    assert cli.main(["sqlname"]) == _REFUSED
+    assert "`registered PREFIX PATHS`" in capsys.readouterr().out

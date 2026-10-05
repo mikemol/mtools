@@ -5606,3 +5606,31 @@
   claim  = {A gate with no venv answers with an explicit deny, identical with and without args.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_an_absent_venv_denies_a_gate},
 }
+
+@misc{hooks-githook-post-commit-failing-pre-push-is-named-not-blamed-on-the-remote,
+  section = {githook-post-commit},
+  title  = {W661: the push abandoned by pre-push says so, quotes pre-push, and never says it moved},
+  claim  = {W661: the push abandoned by pre-push says so, quotes pre-push, and never says it moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_failing_pre_push_is_named_not_blamed_on_the_remote},
+}
+
+@misc{hooks-githook-post-commit-moved-remote-is-still-reported-as-moved,
+  section = {githook-post-commit},
+  title  = {W661: a ref the remote rejected keeps the reconcile advice, and is not 'abandoned'},
+  claim  = {W661: a ref the remote rejected keeps the reconcile advice, and is not 'abandoned'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_moved_remote_is_still_reported_as_moved},
+}
+
+@misc{hooks-githook-post-commit-clean-push-reports-the-sha-and-reaches-the-remote,
+  section = {githook-post-commit},
+  title  = {The unchanged path: a verified tip is pushed and the hook says so},
+  claim  = {The unchanged path: a verified tip is pushed and the hook says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_clean_push_reports_the_sha_and_reaches_the_remote},
+}
+
+@misc{hooks-githook-post-commit-amends-refire-does-not-push,
+  section = {githook-post-commit},
+  title  = {W662: with the guard set the hook exits 0 silently and nothing reaches the remote},
+  claim  = {W662: with the guard set the hook exits 0 silently and nothing reaches the remote.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_the_amends_refire_does_not_push},
+}

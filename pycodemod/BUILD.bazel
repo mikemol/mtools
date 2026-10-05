@@ -66,7 +66,10 @@ py_library(
         data = ["pyproject.toml"] + (
             ["differential/split.cases.json"] if src == "tests/test_split_differential.py" else []
         ),
-        size = "small",
+        # test_cli is the one module that grows with every CLI mode: 179 tests, 5.5s alone, and a
+        # TIMEOUT at the `small` 60s once the gate ran ~580 tests beside the 367s mutants grid
+        # (2026-10-05). `medium` is declared for it alone; the other modules stay `small`.
+        size = "medium" if src == "tests/test_cli.py" else "small",
         # ⚑ sqlalchemy FROM THE DEV HUB, NOT THE LIBRARY: it is the optional extra `funcnames`
         # asks, and without it that module refuses at import (measured: this target, 2026-09-25).
         deps = [
@@ -129,6 +132,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":.venv",
+        "//fence:fence",
         "@mikemol_check_mutants//:mutate_runner.py",
         "differential/capture.py",  # W193: tests/test_capture.py imports it
         # W645: tests/test_split_differential.py imports the adapter and reads the cases file; without
@@ -137,6 +141,10 @@ sh_test(
         "differential/split.cases.json",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
+    # Measured 2026-10-05: the grid took 366s once the control, fingerprint and split ports landed,
+    # over the 300s `medium` default (TIMEOUT, then a pass at --test_timeout=1200). It grows with
+    # every ported module, so the limit is declared rather than left to the size default.
+    timeout = "long",
 )
 
 py_binary(

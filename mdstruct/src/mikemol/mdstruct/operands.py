@@ -7,7 +7,7 @@ registered worktrees under `.claude/worktrees`, which are other checkouts of the
 the answer in duplicates. The walk itself is the sibling's and is not copied here: registered
 worktrees are skipped (git is asked, never guessed), virtual environments are pruned, symlinks are
 refused as data. This module is the markdown side of that contract: it asks for the `.md` suffix,
-turns the sibling's counts into the three report lines, and turns the sibling's refusal into a
+turns the sibling's counts into the four report lines, and turns the sibling's refusal into a
 message for stderr.
 
 ⚑ A WRITE NEVER EXPANDS. A bounded write against many files is ambiguous, so `write_refusal`
@@ -37,24 +37,31 @@ class Resolved:
     refusal: str | None = None
 
 
-def resolve(operands: Sequence[str], *, include_worktrees: bool) -> Resolved:
+def resolve(
+    operands: Sequence[str], *, include_worktrees: bool, exclude: Sequence[str] = ()
+) -> Resolved:
     """Expand each directory operand to its markdown files and say what the walk left out.
 
+    `exclude` is the caller's directory-name globs, handed to the sibling unchanged; there is no
+    default list, so an empty one prunes nothing.
+
     Returns:
-        the files in the walk's stable order (file operands pass through as named), the three
+        the files in the walk's stable order (file operands pass through as named), the four
         report lines when at least one operand was a directory, or the refusal text when the
-        sibling could not list worktrees or an operand is a symlink to a directory.
+        sibling could not list worktrees, an operand is a symlink to a directory, or an exclude
+        entry is empty or a path (the text names the entry).
 
     """
     try:
-        got = expand(operands, include_worktrees=include_worktrees, suffix=_SUFFIX)
-    except WorktreeRefusedError as exc:
+        got = expand(operands, include_worktrees=include_worktrees, suffix=_SUFFIX, exclude=exclude)
+    except (WorktreeRefusedError, ValueError) as exc:
         return Resolved(refusal=f"mdstruct: {exc}\n")
     notes = ""
     if got.directories:
         notes = (
             f"skipped {got.worktrees} registered worktrees\n"
             f"skipped {got.virtualenvs} virtualenvs\n"
+            f"skipped {got.excluded} excluded directories\n"
             f"refused {got.links} symlinks (not followed)\n"
         )
     return Resolved(files=got.files, notes=notes)

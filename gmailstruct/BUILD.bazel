@@ -98,6 +98,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":.venv",
+        "//fence:fence",
         "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",

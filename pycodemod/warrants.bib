@@ -4870,3 +4870,292 @@
   claim  = {The empty-result line states what was searched, in one fixed spelling.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_found_none_names_the_mode_and_the_file_count},
 }
+
+@misc{pycodemod-cli-require-hits-over-a-partial-scan-with-zero-rows-keeps-the-incomplete-exit,
+  section = {cli},
+  title  = {One file read, one skipped, no rows: the banner AND found-none print; only the flag fails},
+  claim  = {One file read, one skipped, no rows: the banner AND found-none print; only the flag
+            fails. The scan is partial (handler exit 0), so the empty-result rule
+            applies: exit 0 by default, 1 under `--require-hits`, with the banner kept
+            so the empty result is not read as clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_require_hits_over_a_partial_scan_with_zero_rows_keeps_the_incomplete_exit},
+}
+
+@misc{pycodemod-cli-control-with-zero-sites-says-found-none-and-fails-under-require-hits,
+  section = {cli},
+  title  = {`control` over a file with no control flow is empty: exit 0 by default, 1 with the flag},
+  claim  = {`control` over a file with no control flow is empty: exit 0 by default, 1 with the flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_control_with_zero_sites_says_found_none_and_fails_under_require_hits},
+}
+
+@misc{pycodemod-operands-require-hits-on-a-directory-counts-the-worktree-files-searched,
+  section = {operands},
+  title  = {An empty directory search exits 1; --include-worktrees widens the searched count},
+  claim  = {An empty directory search exits 1; --include-worktrees widens the searched count. The
+            skip lines are not rows, so they never turn an empty result into a hit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_require_hits_on_a_directory_counts_the_worktree_files_searched},
+}
+
+@misc{pycodemod-operands-require-hits-on-a-directory-with-a-worktree-hit-exits-zero,
+  section = {operands},
+  title  = {A hit found only through --include-worktrees is a hit: exit 0, no found-none line},
+  claim  = {A hit found only through --include-worktrees is a hit: exit 0, no found-none line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_require_hits_on_a_directory_with_a_worktree_hit_exits_zero},
+}
+
+@misc{pycodemod-cli-registered-joins-a-prefixed-def-to-the-literal-that-runs-it,
+  section = {cli},
+  title  = {Red on HEAD by the missing `registered` mode: a def, its key, its site, an unmatched lead},
+  claim  = {Red on HEAD by the missing `registered` mode: a def, its key, its site, an unmatched
+            lead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_registered_joins_a_prefixed_def_to_the_literal_that_runs_it},
+}
+
+@misc{pycodemod-cli-registered-with-no-prefixed-def-says-what-it-searched,
+  section = {cli},
+  title  = {A prefix matching no def and no literal prints the found-none line, exit 0},
+  claim  = {A prefix matching no def and no literal prints the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_registered_with_no_prefixed_def_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-registered-refuses-an-empty-prefix,
+  section = {cli},
+  title  = {An empty PREFIX would register every def: it refuses, exit 2, naming the prefix},
+  claim  = {An empty PREFIX would register every def: it refuses, exit 2, naming the prefix.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_registered_refuses_an_empty_prefix},
+}
+
+@misc{pycodemod-cli-registered-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unread file is a skip in the banner, never a clean "no registered def"},
+  claim  = {An unread file is a skip in the banner, never a clean "no registered def".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_registered_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-sql-grades-a-statement-by-how-it-is-run,
+  section = {cli},
+  title  = {Red on HEAD by the missing `sql` mode: raw, builder and plain literal, by the rosters},
+  claim  = {Red on HEAD by the missing `sql` mode: raw, builder and plain literal, by the rosters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_sql_grades_a_statement_by_how_it_is_run},
+}
+
+@misc{pycodemod-cli-sql-with-no-matching-statement-says-what-it-searched,
+  section = {cli},
+  title  = {An ident no statement contains prints the found-none line, exit 0},
+  claim  = {An ident no statement contains prints the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_sql_with_no_matching_statement_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-sql-refuses-a-missing-roster-flag,
+  section = {cli},
+  title  = {A roster flag left out refuses, exit 2, naming it: no executor is guessed},
+  claim  = {A roster flag left out refuses, exit 2, naming it: no executor is guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_sql_refuses_a_missing_roster_flag},
+}
+
+@misc{pycodemod-cli-sql-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unread file is a skip in the banner, never a clean "no SQL"},
+  claim  = {An unread file is a skip in the banner, never a clean "no SQL".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_sql_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-portable-reports-a-pattern-blocker-and-says-no-engine-ran,
+  section = {cli},
+  title  = {Red on HEAD by the missing `portable` mode: a pattern verdict, and the degraded line},
+  claim  = {Red on HEAD by the missing `portable` mode: a pattern verdict, and the degraded line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_portable_reports_a_pattern_blocker_and_says_no_engine_ran},
+}
+
+@misc{pycodemod-cli-portable-with-no-blocker-says-what-it-searched,
+  section = {cli},
+  title  = {A portable statement prints the degraded line and the found-none line, exit 0},
+  claim  = {A portable statement prints the degraded line and the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_portable_with_no_blocker_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-portable-names-a-generated-file-instead-of-dropping-it,
+  section = {cli},
+  title  = {A file with the generated marker is listed as a row, never silently left out},
+  claim  = {A file with the generated marker is listed as a row, never silently left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_portable_names_a_generated_file_instead_of_dropping_it},
+}
+
+@misc{pycodemod-cli-portable-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unread file is a skip in the banner, never a clean "portable"},
+  claim  = {An unread file is a skip in the banner, never a clean "portable".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_portable_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-rawreads-reports-an-unpacked-connection-read,
+  section = {cli},
+  title  = {Red on HEAD by the missing `rawreads` mode: a tuple-unpacked `con.execute` loop},
+  claim  = {Red on HEAD by the missing `rawreads` mode: a tuple-unpacked `con.execute` loop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_rawreads_reports_an_unpacked_connection_read},
+}
+
+@misc{pycodemod-cli-rawreads-with-no-such-read-says-what-it-searched,
+  section = {cli},
+  title  = {A connection name nothing uses prints the found-none line, exit 0},
+  claim  = {A connection name nothing uses prints the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_rawreads_with_no_such_read_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-rawreads-refuses-a-missing-connections-flag,
+  section = {cli},
+  title  = {No `--connections` refuses, exit 2, naming it: no connection name is guessed},
+  claim  = {No `--connections` refuses, exit 2, naming it: no connection name is guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_rawreads_refuses_a_missing_connections_flag},
+}
+
+@misc{pycodemod-cli-snapshots-reports-a-value-composed-of-two-trips,
+  section = {cli},
+  title  = {Red on HEAD by the missing `snapshots` mode: two round trips in one expression},
+  claim  = {Red on HEAD by the missing `snapshots` mode: two round trips in one expression.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_snapshots_reports_a_value_composed_of_two_trips},
+}
+
+@misc{pycodemod-cli-snapshots-with-one-trip-says-what-it-searched,
+  section = {cli},
+  title  = {A single round trip is no snapshot: the found-none line, exit 0},
+  claim  = {A single round trip is no snapshot: the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_snapshots_with_one_trip_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-store-mode-refuses-a-missing-vocabulary-flag,
+  section = {cli},
+  title  = {A vocabulary flag left out refuses, exit 2, naming it: no store vocabulary is defaulted},
+  claim  = {A vocabulary flag left out refuses, exit 2, naming it: no store vocabulary is defaulted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_store_mode_refuses_a_missing_vocabulary_flag},
+}
+
+@misc{pycodemod-cli-relalg-reports-a-sort-done-on-store-rows,
+  section = {cli},
+  title  = {Red on HEAD by the missing `relalg` mode: `sorted` over rows a store read produced},
+  claim  = {Red on HEAD by the missing `relalg` mode: `sorted` over rows a store read produced.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_relalg_reports_a_sort_done_on_store_rows},
+}
+
+@misc{pycodemod-cli-relalg-with-another-kind-says-what-it-searched,
+  section = {cli},
+  title  = {Asking only for `join` over a sort-only file prints the found-none line, exit 0},
+  claim  = {Asking only for `join` over a sort-only file prints the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_relalg_with_another_kind_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-relalg-refuses-a-missing-empty-or-unknown-kinds,
+  section = {cli},
+  title  = {`--kinds` has no default: absent, empty and unknown each refuse, exit 2, saying why},
+  claim  = {`--kinds` has no default: absent, empty and unknown each refuse, exit 2, saying why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_relalg_refuses_a_missing_empty_or_unknown_kinds},
+}
+
+@misc{pycodemod-cli-store-mode-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unread file is a skip in the banner, never a clean "no store read"},
+  claim  = {An unread file is a skip in the banner, never a clean "no store read".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_store_mode_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-fingerprint-lists-the-unmodelled-remainder-of-a-site,
+  section = {cli},
+  title  = {Red on HEAD by the missing `fingerprint` mode: a residual row naming what the seed lacks},
+  claim  = {Red on HEAD by the missing `fingerprint` mode: a residual row naming what the seed
+            lacks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fingerprint_lists_the_unmodelled_remainder_of_a_site},
+}
+
+@misc{pycodemod-cli-fingerprint-with-a-seed-that-models-the-referent-leaves-no-remainder,
+  section = {cli},
+  title  = {A wider seed explains the site: its residual row says `omega=0` and names nothing},
+  claim  = {A wider seed explains the site: its residual row says `omega=0` and names nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fingerprint_with_a_seed_that_models_the_referent_leaves_no_remainder},
+}
+
+@misc{pycodemod-cli-fingerprint-over-no-control-site-says-what-it-searched,
+  section = {cli},
+  title  = {A file with no control flow prints the totals as notes and the found-none line, exit 0},
+  claim  = {A file with no control flow prints the totals as notes and the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fingerprint_over_no_control_site_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-fingerprint-refuses-a-missing-operand-flag,
+  section = {cli},
+  title  = {A flag left out refuses, exit 2, naming it: no vocabulary, boundary or seed is defaulted},
+  claim  = {A flag left out refuses, exit 2, naming it: no vocabulary, boundary or seed is
+            defaulted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fingerprint_refuses_a_missing_operand_flag},
+}
+
+@misc{pycodemod-cli-fingerprint-monotone-shows-the-remainder-cannot-rise,
+  section = {cli},
+  title  = {`--monotone` re-reads against the seed minus its last file and counts non-dividing sites},
+  claim  = {`--monotone` re-reads against the seed minus its last file and counts non-dividing
+            sites.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fingerprint_monotone_shows_the_remainder_cannot_rise},
+}
+
+@misc{pycodemod-cli-fingerprint-reports-an-unreadable-seed-and-an-unreadable-corpus,
+  section = {cli},
+  title  = {A seed that cannot be read says so and fails; so does a corpus that cannot be parsed},
+  claim  = {A seed that cannot be read says so and fails; so does a corpus that cannot be parsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fingerprint_reports_an_unreadable_seed_and_an_unreadable_corpus},
+}
+
+@misc{pycodemod-cli-split-dry-run-prints-the-plan-and-writes-nothing,
+  section = {cli},
+  title  = {Red on HEAD by the missing `split` mode: parts and `would-write` rows, no file created},
+  claim  = {Red on HEAD by the missing `split` mode: parts and `would-write` rows, no file created.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_split_dry_run_prints_the_plan_and_writes_nothing},
+}
+
+@misc{pycodemod-cli-split-apply-writes-the-siblings-and-the-entry,
+  section = {cli},
+  title  = {`--apply` is `apply(write=True)`: the siblings exist afterwards and the rows say `wrote`},
+  claim  = {`--apply` is `apply(write=True)`: the siblings exist afterwards and the rows say
+            `wrote`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_split_apply_writes_the_siblings_and_the_entry},
+}
+
+@misc{pycodemod-cli-split-names-a-caller-owed-an-edit-for-a-moved-private-name,
+  section = {cli},
+  title  = {A caller importing a private moved name is an `owed` row: the entry re-exports public},
+  claim  = {A caller importing a private moved name is an `owed` row: the entry re-exports public.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_split_names_a_caller_owed_an_edit_for_a_moved_private_name},
+}
+
+@misc{pycodemod-cli-split-of-a-module-with-nothing-to-move-says-what-it-searched,
+  section = {cli},
+  title  = {A module with no def to relocate plans no files: the found-none line, exit 0},
+  claim  = {A module with no def to relocate plans no files: the found-none line, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_split_of_a_module_with_nothing_to_move_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-split-refuses-neither-or-both-of-apply-and-dry-run,
+  section = {cli},
+  title  = {Writing is never a default: neither flag, or both, refuses (exit 2) and writes nothing},
+  claim  = {Writing is never a default: neither flag, or both, refuses (exit 2) and writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_split_refuses_neither_or_both_of_apply_and_dry_run},
+}
+
+@misc{pycodemod-cli-split-refuses-a-module-that-declares-all,
+  section = {cli},
+  title  = {A refused plan prints its kind and reason, exits 2, and is never applied},
+  claim  = {A refused plan prints its kind and reason, exits 2, and is never applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_split_refuses_a_module_that_declares_all},
+}
+
+@misc{pycodemod-cli-split-over-an-unreadable-module-reports-incomplete,
+  section = {cli},
+  title  = {A module that cannot be read is a skip in the banner and exit 1, never a clean plan},
+  claim  = {A module that cannot be read is a skip in the banner and exit 1, never a clean plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_split_over_an_unreadable_module_reports_incomplete},
+}
+
+@misc{pycodemod-cli-sqlname-is-retired-to-registered,
+  section = {cli},
+  title  = {The origin's `sqlname` refuses, exit 2, and names `registered` as its successor},
+  claim  = {The origin's `sqlname` refuses, exit 2, and names `registered` as its successor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_sqlname_is_retired_to_registered},
+}

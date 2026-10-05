@@ -162,6 +162,8 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             # was not an input, and its non-empty control refused to pass vacuously (2026-09-22).
             "//:.claude/skills/struct-tools/SKILL.md",
             "//:.githooks/commit-msg",
+            # W661, W662: `.githooks/post-commit` EXECUTED by test_post_commit_hook in a decoy repo.
+            "//:.githooks/post-commit",
             "warrants.bib",
             "//:.claude/settings.json",
             "//:findings/CENSUS-BRIEF.md",
@@ -365,6 +367,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":.venv",
+        "//fence:fence",
         "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",

@@ -96,6 +96,41 @@ def test_include_worktrees_reads_the_worktree_and_reports_zero_skipped(
     assert "skipped 0 registered worktrees" in out
 
 
+def test_require_hits_on_a_directory_counts_the_worktree_files_searched(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An empty directory search exits 1; --include-worktrees widens the searched count.
+
+    The skip lines are not rows, so they never turn an empty result into a hit.
+    """
+    code = cli.main(["importers", "--require-hits", "nobody", str(repo)])
+    out = capsys.readouterr().out
+    assert code == 1
+    assert "skipped 1 registered worktrees" in out
+    assert "importers: searched 1 file(s), found none" in out
+    wide = ["importers", "--require-hits", "--include-worktrees", "nobody", str(repo)]
+    code = cli.main(wide)
+    out = capsys.readouterr().out
+    assert code == 1
+    assert "skipped 0 registered worktrees" in out
+    assert "importers: searched 3 file(s), found none" in out
+
+
+def test_require_hits_on_a_directory_with_a_worktree_hit_exits_zero(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A hit found only through --include-worktrees is a hit: exit 0, no found-none line."""
+    (repo / _MAIN).write_text("x = 1\n", encoding="utf-8")
+    code = cli.main(["importers", "--require-hits", "target_mod", str(repo)])
+    assert code == 1
+    assert "found none" in capsys.readouterr().out
+    code = cli.main(["importers", "--require-hits", "--include-worktrees", "target_mod", str(repo)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert _WT_ONLY in out
+    assert "found none" not in out
+
+
 def test_a_venv_is_pruned_and_printed(repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
     """A directory holding pyvenv.cfg is not walked, and the driver prints the count."""
     venv = repo / ".venv"

@@ -678,7 +678,7 @@ _SWITCH = "switch"
 
 
 def _is_flag_read(node: ast.AST) -> str | None:
-    """Return the flag a `_flag(argv, "--x")` call reads, or None.
+    """Return the flag a `_flag(argv, "--x")` or `_flag_all(argv, "--x")` call reads, or None.
 
     Returns:
         the flag literal, or None when `node` is not that call shape.
@@ -686,7 +686,7 @@ def _is_flag_read(node: ast.AST) -> str | None:
     """
     if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
         return None
-    if node.func.id != "_flag" or len(node.args) != _MIN_FLAG_ARGS:
+    if node.func.id not in {"_flag", "_flag_all"} or len(node.args) != _MIN_FLAG_ARGS:
         return None
     lit = node.args[1]
     return lit.value if isinstance(lit, ast.Constant) and isinstance(lit.value, str) else None

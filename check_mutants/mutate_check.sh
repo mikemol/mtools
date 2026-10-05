@@ -50,6 +50,14 @@ if [ ! -x "$py" ]; then
     exit 1
 fi
 
+# ⚑⚑ THE FENCE SIBLING EDGE (mtools:W619, A+B): the runner imports `mikemol.fence.git_env`, and only
+# fence's own `.venv` carries it. fence's source root is a sibling of every distribution, staged by
+# each `:mutants` target's `//fence:fence` data; the runner puts it on ITS OWN path from this name.
+# Not checked here: a missing sibling is the runner's ModuleNotFoundError, which the rc check below
+# refuses loudly.
+MUTATE_FENCE_SRC="$dist/../fence/src"
+export MUTATE_FENCE_SRC
+
 # ⚑⚑⚑ UNDER BAZEL'S SANDBOX THE INTERPRETER IS A HARDLINK, NOT A LINK, and it cannot find its own
 # stdlib: bazel resolves the venv's symlink at staging (printed from a kept sandbox, 2026-09-19),
 # so CPython has nothing to follow and `pyvenv.cfg`'s `home` names the venv's own `bin/`. The

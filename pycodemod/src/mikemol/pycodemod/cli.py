@@ -52,7 +52,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import WorktreeRefusedError, expand
 
-from mikemol.pycodemod import control_report, report
+from mikemol.pycodemod import cli_fp, cli_modes, cli_split, cli_store, control_report, report
 from mikemol.pycodemod.aliases import aliases as run_aliases
 from mikemol.pycodemod.ambient import ambient as run_ambient
 from mikemol.pycodemod.arguments import asserted as run_asserted
@@ -136,6 +136,71 @@ def _handle_constructs(ns: argparse.Namespace) -> int:
     return control_report.print_constructs(_str_list(ns, "paths"), _census_flags(ns))
 
 
+def _handle_split(ns: argparse.Namespace) -> int:
+    flags = cli_split.SplitFlags(
+        max_lines=_opt_int(ns, "max"),
+        max_defs=_opt_int(ns, "max_defs"),
+        prefix=_opt_str(ns, "prefix"),
+        keep=_opt_str_list(ns, "keep"),
+        export=_opt_str_list(ns, "export"),
+        apply=_flag(ns, "apply"),
+        dry_run=_flag(ns, "dry_run"),
+    )
+    return cli_split.print_split(_str_list(ns, "paths"), flags)
+
+
+def _handle_fingerprint(ns: argparse.Namespace) -> int:
+    flags = cli_fp.FpFlags(
+        census=_census_flags(ns),
+        seeds=_opt_str_list(ns, "seed"),
+        top=_int(ns, "top"),
+        groups=_int(ns, "groups"),
+        keys=_int(ns, "keys"),
+        monotone=_flag(ns, "monotone"),
+    )
+    return cli_fp.print_fingerprint(_str_list(ns, "paths"), flags)
+
+
+def _handle_rawreads(ns: argparse.Namespace) -> int:
+    return cli_store.print_rawreads(_str_list(ns, "paths"), _opt_str(ns, "connections"))
+
+
+def _handle_snapshots(ns: argparse.Namespace) -> int:
+    return cli_store.print_snapshots(
+        _str_list(ns, "paths"),
+        _opt_str(ns, "readers"),
+        _opt_str(ns, "receivers"),
+        _opt_str(ns, "connections"),
+    )
+
+
+def _handle_relalg(ns: argparse.Namespace) -> int:
+    return cli_store.print_relalg(
+        _str_list(ns, "paths"),
+        _opt_str(ns, "readers"),
+        _opt_str(ns, "receivers"),
+        _opt_str(ns, "connections"),
+        _opt_str(ns, "kinds"),
+    )
+
+
+def _handle_registered(ns: argparse.Namespace) -> int:
+    return cli_modes.print_registered(_str(ns, "prefix"), _str_list(ns, "paths"))
+
+
+def _handle_portable(ns: argparse.Namespace) -> int:
+    return cli_modes.print_portable(_str_list(ns, "paths"))
+
+
+def _handle_sql(ns: argparse.Namespace) -> int:
+    return cli_modes.print_sql(
+        _str(ns, "ident"),
+        _str_list(ns, "paths"),
+        _opt_str(ns, "executors"),
+        _opt_str(ns, "builders"),
+    )
+
+
 _run_funcnames: Callable[[Sequence[str]], FuncCalls] | None
 _moved: type[Exception]
 try:
@@ -154,6 +219,7 @@ RETIRED: dict[str, str] = {
         "retired: `fix-owes-callers` is now `owes NAME --rev REV --root ROOT PATHS`"
         " (owes.fix_owes_callers)"
     ),
+    "sqlname": ("retired: `sqlname` is now `registered PREFIX PATHS` (registered.registered_defs)"),
 }
 
 # ⚑ A DO-NOT-PORT SPELLING NAMES WHERE IT STILL LIVES. These are substrate's own instruments
@@ -164,14 +230,7 @@ _DO_NOT_PORT_NAMES = (
     "touches",
     "projects",
     "discriminates",
-    "fingerprint",
-    "portable",
-    "rawreads",
-    "relalg",
-    "snapshots",
-    "sql",
     "collision-apex",
-    "sqlname",
     "last",
 )
 DO_NOT_PORT = frozenset(_DO_NOT_PORT_NAMES)
@@ -199,6 +258,14 @@ def _int(ns: argparse.Namespace, name: str) -> int:
         msg = f"{_INTERNAL} {name} int"
         raise TypeError(msg)
     return raw
+
+
+def _opt_int(ns: argparse.Namespace, name: str) -> int | None:
+    raw: object = getattr(ns, name, None)
+    if raw is None or isinstance(raw, int):
+        return raw
+    msg = f"{_INTERNAL} an int {name}"
+    raise TypeError(msg)
 
 
 def _flag(ns: argparse.Namespace, name: str) -> bool:
@@ -991,6 +1058,14 @@ MODES = {
     "discards": _handle_discards,
     "control": _handle_control,
     "constructs": _handle_constructs,
+    "registered": _handle_registered,
+    "sql": _handle_sql,
+    "portable": _handle_portable,
+    "rawreads": _handle_rawreads,
+    "snapshots": _handle_snapshots,
+    "relalg": _handle_relalg,
+    "fingerprint": _handle_fingerprint,
+    "split": _handle_split,
 }
 
 
@@ -1154,12 +1229,72 @@ def _add_census_modes(make: _Make) -> None:
         cen.add_argument("paths", nargs="+")
 
 
+def _add_required_modes(make: _Make) -> None:
+    reg = make("registered", "each def with a PREFIX, joined to the string literals that run it")
+    reg.add_argument("prefix", help="the def-name prefix, e.g. q_ (required, never empty)")
+    reg.add_argument("paths", nargs="+")
+    sql = make("sql", "every SQL string literal, graded raw, builder or literal by two rosters")
+    sql.add_argument("--executors", default=None, help="comma list of executor names (required)")
+    sql.add_argument("--builders", default=None, help="comma list of builder names (required)")
+    sql.add_argument("ident", help="a case-insensitive substring of the statement; '' for all")
+    sql.add_argument("paths", nargs="+")
+    prt = make("portable", "SQL literals a dialect pattern rejects (no engine probe is attached)")
+    prt.add_argument("paths", nargs="+")
+
+
+def _add_store_modes(make: _Make) -> None:
+    raw = make("rawreads", "reads that consume a connection's rows by their shape")
+    raw.add_argument("--connections", default=None, help="comma list: connection names (required)")
+    raw.add_argument("paths", nargs="+")
+    for name, text in (
+        ("snapshots", "one value assembled from several store round trips"),
+        ("relalg", "relational algebra done in Python on rows read from a store"),
+    ):
+        cen = make(name, text)
+        cen.add_argument("--readers", default=None, help="comma list: row readers (required)")
+        cen.add_argument("--receivers", default=None, help="comma list: reader hosts (required)")
+        cen.add_argument("--connections", default=None, help="comma list: connections (required)")
+        if name == "relalg":
+            cen.add_argument("--kinds", default=None, help="comma list of relalg kinds (required)")
+        cen.add_argument("paths", nargs="+")
+
+
+def _add_fingerprint_mode(make: _Make) -> None:
+    fpr = make("fingerprint", "a prime per referent of each control site; the unmodelled remainder")
+    fpr.add_argument("--readers", default=None, help="comma list: methods that read rows")
+    fpr.add_argument("--receivers", default=None, help="comma list: names readers run on")
+    fpr.add_argument("--connections", default=None, help="comma list: connection names")
+    fpr.add_argument("--boundary", default=None, help="the boundary to type against: python")
+    fpr.add_argument("--seed", action="append", help="a declaration file to model (required)")
+    fpr.add_argument("--top", type=int, default=10, help="residual-order rows to list")
+    fpr.add_argument("--groups", type=int, default=10, help="gcd classes to list")
+    fpr.add_argument("--keys", type=int, default=10, help="explaining keys to list")
+    fpr.add_argument("--monotone", action="store_true", help="also re-read against seed minus last")
+    fpr.add_argument("paths", nargs="+")
+
+
+def _add_split_mode(make: _Make) -> None:
+    spl = make("split", "cut an oversized module into sibling modules: PATH then its CALLERS")
+    spl.add_argument("--max", type=int, default=None, help="max lines per part (default 1200)")
+    spl.add_argument("--max-defs", type=int, default=None, help="max defs per part")
+    spl.add_argument("--prefix", default=None, help="the sibling module prefix (default STEM_)")
+    spl.add_argument("--keep", action="append", help="a statement that stays in the entry")
+    spl.add_argument("--export", action="append", help="a private name the entry re-exports")
+    spl.add_argument("--apply", action="store_true", help="write the siblings and the entry")
+    spl.add_argument("--dry-run", action="store_true", help="plan and print, write nothing")
+    spl.add_argument("paths", nargs="+", help="the module to cut, then files scanned for callers")
+
+
 _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_scan_modes,
     _add_named_modes,
     _add_flagged_modes,
     _add_rooted_modes,
     _add_census_modes,
+    _add_required_modes,
+    _add_store_modes,
+    _add_fingerprint_mode,
+    _add_split_mode,
 )
 
 

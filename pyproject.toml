@@ -40,6 +40,9 @@ files = ["*.py"]
 # ⚑ With no `mypy_path`, the declared base is the directory mypy runs in — which is exactly the
 # claim: `mutate_runner.py` is module `mutate_runner`, and `test_mutate_runner` imports it so.
 explicit_package_bases = true
+# ⚑ THE FENCE SIBLING EDGE (mtools:W619): `mutate_runner` imports `mikemol.fence.git_env`, so mypy
+# reads fence's source root, a directory of this checkout.
+mypy_path = "fence/src"
 
 [tool.ruff]
 line-length = 100

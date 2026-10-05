@@ -12,7 +12,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 
@@ -28,8 +28,7 @@ from mikemol.hooks.githook_post_commit import (
     run_git,
 )
 
-if TYPE_CHECKING:
-    from pathlib import Path
+_REPO_HOOK = Path(__file__).parent.parent.parent / ".githooks" / "post-commit"
 
 
 def _g(*args: str) -> str:
@@ -244,3 +243,93 @@ def test_advisory_appends_the_local_hooks_stdout(tmp_path: Path) -> None:
 def test_folded_indents_the_advisory_under_the_marker() -> None:
     """The marker follows the message after a blank line, and each advisory line is indented."""
     assert folded("subject\n\n", "a\nb") == f"subject\n\n{MARKER}:\n    a\n    b\n"
+
+
+def _pushing_decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
+    """Build a decoy with a bare origin and a gate witness for its tip, for mtools' own hook.
+
+    Returns:
+        the repository and its bare remote.
+
+    """
+    repo = _decoy(tmp_path, monkeypatch)
+    remote = tmp_path / "remote.git"
+    _g("init", "--quiet", "--bare", "--initial-branch=main", str(remote))
+    _g("remote", "add", "origin", str(remote))
+    tree = _g("rev-parse", "HEAD^{tree}").strip()
+    (repo / ".git" / "mtools").mkdir()
+    (repo / ".git" / "mtools" / "gate-verified").write_text(tree + "\n", encoding="utf-8")
+    return repo, remote
+
+
+def _run_repo_hook(repo: Path, **env: str) -> subprocess.CompletedProcess[str]:
+    """Run mtools' `.githooks/post-commit` inside `repo`.
+
+    Returns:
+        the completed process, stdout and stderr captured.
+
+    """
+    bash = shutil.which("bash")
+    assert bash is not None
+    return subprocess.run(
+        [bash, str(_REPO_HOOK)],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        env={**os.environ, **env},
+    )
+
+
+def test_a_failing_pre_push_is_named_not_blamed_on_the_remote(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W661: the push abandoned by pre-push says so, quotes pre-push, and never says it moved."""
+    repo, remote = _pushing_decoy(tmp_path, monkeypatch)
+    hook = repo / ".git" / "hooks" / "pre-push"
+    hook.write_text("#!/usr/bin/env bash\necho 'pre-push: tip is not gated' >&2\nexit 1\n")
+    hook.chmod(0o755)
+    done = _run_repo_hook(repo)
+    assert done.returncode == 0
+    assert "PUSH ABANDONED" in done.stdout
+    assert "pre-push: tip is not gated" in done.stdout
+    assert "remote has moved" not in done.stdout
+    assert not _g("-C", str(remote), "for-each-ref")
+
+
+def test_a_moved_remote_is_still_reported_as_moved(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W661: a ref the remote rejected keeps the reconcile advice, and is not 'abandoned'."""
+    repo, remote = _pushing_decoy(tmp_path, monkeypatch)
+    peer = tmp_path / "peer"
+    _g("clone", "--quiet", str(remote), str(peer))
+    for key, value in (("user.name", "Peer"), ("user.email", "peer@example.invalid")):
+        _g("-C", str(peer), "config", key, value)
+    _g("-C", str(peer), "commit", "--quiet", "--allow-empty", "-m", "peer")
+    _g("-C", str(peer), "push", "--quiet", "origin", "HEAD:main")
+    done = _run_repo_hook(repo)
+    assert done.returncode == 0
+    assert "the remote has moved" in done.stdout
+    assert "PUSH ABANDONED" not in done.stdout
+
+
+def test_a_clean_push_reports_the_sha_and_reaches_the_remote(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The unchanged path: a verified tip is pushed and the hook says so."""
+    repo, remote = _pushing_decoy(tmp_path, monkeypatch)
+    done = _run_repo_hook(repo)
+    assert done.returncode == 0
+    assert "post-commit: pushed" in done.stdout
+    assert _g("-C", str(remote), "rev-parse", "main") == _g("rev-parse", "HEAD")
+
+
+def test_the_amends_refire_does_not_push(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """W662: with the guard set the hook exits 0 silently and nothing reaches the remote."""
+    repo, remote = _pushing_decoy(tmp_path, monkeypatch)
+    done = _run_repo_hook(repo, **{GUARD: "1"})
+    assert done.returncode == 0
+    assert not done.stdout
+    assert not done.stderr
+    assert not _g("-C", str(remote), "for-each-ref")

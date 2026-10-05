@@ -41,6 +41,15 @@ import subprocess
 import sys
 import tempfile
 
+# ⚑⚑ THE FENCE SIBLING EDGE (mtools:W619, ruled A+B 2026-10-04). This runs under each
+# distribution's own `.venv`, and only fence's carries `mikemol.fence`, so `mutate_check.sh` names
+# the sibling's source root in `MUTATE_FENCE_SRC` (staged by each `:mutants` target's
+# `//fence:fence` data) and it goes on THIS interpreter's path only; a suite receives the variable
+# inert. `sys.path.extend` is the one statement an import may follow.
+sys.path.extend(p for p in os.environ.get("MUTATE_FENCE_SRC", "").split(os.pathsep) if p)
+
+from mikemol.fence.git_env import clean_env
+
 # ⚑ THE SANDBOX STAGES ONLY WHAT IS DECLARED, so these are the trees a mutant must not carry into
 # its copy. `.venv` in particular is a directory of pointers at host absolute paths — the property
 # that makes it unfit as a bazel input makes it unfit to copy.
@@ -58,14 +67,6 @@ def _not_source(_directory: str, names: list[str]) -> set[str]:
 
     """
     return {n for n in names if any(fnmatch.fnmatch(n, p) for p in _NOT_SOURCE_PATTERNS)}
-
-
-# The prefix every per-invocation git variable carries; none reaches a mutant's suite.
-# ⚑⚑ RESTATED, NOT IMPORTED FROM `mikemol.fence.git_env.clean_env`, AND THAT IS MEASURED. This
-# runs under each distribution's own `.venv` (`mutate_check.sh`), and only fence's can import
-# `mikemol.fence` (2026-09-23: hooks, mdstruct, ratchet, pathsforward all ModuleNotFoundError);
-# `//:test_mutate_runner` depends on pytest alone. Importing it would break four of five grids.
-_GIT_PREFIX = "GIT_"
 
 
 _ENUM_BASES = frozenset(
@@ -386,9 +387,10 @@ def run(grid: Grid, mutant: Mutant, *, debug: bool = False) -> str:
         # and a fixture that runs `git init; git commit` in its temp dir follows them there — `cwd=`
         # does not override an exported `GIT_DIR`. Measured 2026-09-23: nine junk commits,
         # since recovered.
-        # ⚑ substrate's `git_env.clean_env()` rule, at the runner, so suites not yet written are
-        # covered too. A suite reading git state finds the repository from its `cwd` as before.
-        env = {k: v for k, v in os.environ.items() if not k.startswith(_GIT_PREFIX)}
+        # ⚑ fence's `git_env.clean_env()` rule (W619: imported), at the runner, so suites not yet
+        # written are covered too. A suite reading git state finds the repository from its `cwd`
+        # as before.
+        env = clean_env()
         existing = env.get("PYTHONPATH", "")
         src = str(work / "src")
         env["PYTHONPATH"] = f"{src}{os.pathsep}{existing}" if existing else src

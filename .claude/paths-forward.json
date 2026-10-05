@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 660,
+  "counter": 666,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-05T02:34:55Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6126,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 55,
       "completed": null
     },
     {
@@ -6174,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -10057,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -11486,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -11570,7 +11567,7 @@
     },
     {
       "symbol": "W581",
-      "title": "Verify the inbound-asks hook's additionalContext shape in a fresh Claude Code session that has an UNCLAIMED row, and record what the model saw",
+      "title": "Verify the inbound-asks and nemik-check hooks' additionalContext at SessionStart in a fresh Claude Code session, and record what the model saw",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -11578,12 +11575,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-04: 2026-10-04 PARTIAL, live: after 03749d5 (nemik-check hook, same hookSpecificOutput/additionalContext envelope as inbound-asks) this session's next UserPromptSubmit delivered the hook's text to the model verbatim ('nemik: the fleet reader reports on mtools: ... Warning -- no working card ...'). So the envelope for UserPromptSubmit reaches the model. Still unverified: inbound-asks itself with an UNCLAIMED row, and SessionStart. | 2026-10-04: 2026-10-04 second repo, independent: luthen-observability (pinned 03749d5, nemik-check hook wired, its commit ec48c55) saw a verbatim 'UserPromptSubmit hook additional context' block in the model's context on the message after its commit, picking up the settings change without a restart. Still unverified: SessionStart, and inbound-asks with an UNCLAIMED row (luthen claimed both rows before any prompt).",
+      "next_bounded_step": "Only SessionStart is unverified: UserPromptSubmit is confirmed with a real UNCLAIMED row (luthen) and with nemik-check rows (mtools, luthen); ask a peer, or start a fresh session here, with an UNCLAIMED row waiting and read the first message's context",
+      "evidence": "2026-10-04: 2026-10-04 PARTIAL, live: after 03749d5 (nemik-check hook, same hookSpecificOutput/additionalContext envelope as inbound-asks) this session's next UserPromptSubmit delivered the hook's text to the model verbatim ('nemik: the fleet reader reports on mtools: ... Warning -- no working card ...'). So the envelope for UserPromptSubmit reaches the model. Still unverified: inbound-asks itself with an UNCLAIMED row, and SessionStart. | 2026-10-04: 2026-10-04 second repo, independent: luthen-observability (pinned 03749d5, nemik-check hook wired, its commit ec48c55) saw a verbatim 'UserPromptSubmit hook additional context' block in the model's context on the message after its commit, picking up the settings change without a restart. Still unverified: SessionStart, and inbound-asks with an UNCLAIMED row (luthen claimed both rows before any prompt). | 2026-10-05: 2026-10-05 luthen-observability (second session): inbound-asks WITH a real UNCLAIMED row (summit:W122) was delivered verbatim to the model at UserPromptSubmit, the model ran the --add (luthen W445) and answered summit by letter; nemik-check did the same the day before. Confirmed at UserPromptSubmit in two repos for both hooks; SessionStart is the only shape not yet observed separately",
       "issued_at": "2026-10-04T18:55:49Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W430",
-      "last_worked": "2026-10-04T20:10:48Z",
+      "last_worked": "2026-10-05T03:00:07Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -11718,11 +11715,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Add a pre-push stub under .githooks, then measure a commit-and-push through post-commit on a scratch clone before enabling it here",
-      "evidence": "",
+      "evidence": "2026-10-05: 2026-10-05 measured in a scratch clone with a local bare remote (.claude/swarm/W588-pre-push-self-install.md): (a) the auto-push runs pre-push once per commit, real console script then pre-push.local, nothing re-enters; (b) a failing pre-push abandons the push before any transfer, the commit survives and git commit exits 0, post-commit wrongly says remote has moved (W661); (c) stdin is one line HEAD sha refs/heads/main remote-sha with argv origin url, empty when already up to date; (d) the marker amend re-fires post-commit which has no guard, the nested push sends the amended sha, the outer push is a no-op so pre-push runs again with empty stdin, the original sha is never pushed (W662); (e) core.hooksPath is a relative .githooks in per-clone .git/config, set by setup.sh. RECOMMENDATION: install the one-line stub exec hooks/.venv/bin/mikemol-githook-pre-push dollar-at as .githooks/pre-push mode 755, written LAST, after W661 and W662. Limit: hooks/.venv/bin lacked mikemol-githook-post-commit (the venv predates it; uv sync exposes it)",
       "issued_at": "2026-10-04T19:06:06Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-05T02:37:58Z",
+      "last_worked": "2026-10-05T03:03:19Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -11804,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -12311,7 +12308,7 @@
     {
       "symbol": "W619",
       "title": "mutate_runner: import mikemol-fence through the dist-to-dist edge (A+B) and delete its local git-env filter, now that sibling edges exist",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation",
@@ -12319,13 +12316,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read mutate_runner's local filter and fence's git-env scrubber; add the fence edge to each dist that runs :mutants, with a red arm that the two filters agree, then delete the local one",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 mutate_runner imports clean_env from mikemol.fence.git_env and its local _GIT_PREFIX filter is deleted. Deviation from the card: one bazel-side edge (MUTATE_FENCE_SRC exported by mutate_check.sh, //fence:fence in every dist's :mutants data, mypy_path in check_mutants/mypy.ini and the root pyproject) instead of a fence dependency in each dist's pyproject and venv; recorded because a host run of mutate_check.sh outside bazel now needs fence beside the dist. F-arm GIT_ -> GIX_ failed the decoy-repo test. bazel //... green",
       "issued_at": "2026-10-04T19:42:00Z",
       "minted_during": "tick",
       "caused_by": "W583",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:45:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034543Z"
     },
     {
       "symbol": "W620",
@@ -12539,38 +12537,40 @@
     {
       "symbol": "W631",
       "title": "pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as flags",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add the mode taking required roster flags (no defaults), a row printer, report.incomplete for skips; tests; update the rubric heading's mode count",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 sql IDENT paths --executors --builders (both required, empty allowed) in cli_modes.py; 4 tests incl. a parametrized missing-roster refusal; suite 855 passed, bazel //... green",
       "issued_at": "2026-10-04T21:30:45Z",
       "minted_during": "interrupt",
       "caused_by": "W610",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:45:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034539Z"
     },
     {
       "symbol": "W632",
       "title": "pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and portable, each vocabulary a required flag",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "One mode per commit if the parser budget allows (cli.py splits mode-family builders at ruff's local limit); required flags, no defaults; tests per mode",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 portable paths in cli_modes.py, run with no probe (the CLI opens no database) and says so on every run: portable: degraded, no probe attached; pattern verdicts and generated-file rows; 4 tests; suite 855 passed, bazel //... green",
       "issued_at": "2026-10-04T21:30:45Z",
       "minted_during": "interrupt",
       "caused_by": "W612",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:45:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034540Z"
     },
     {
       "symbol": "W633",
@@ -12594,20 +12594,21 @@
     {
       "symbol": "W634",
       "title": "pycodemod cli: wire --rawreads, --snapshots and --relalg over storeflow, snapshots and relalg, the StoreVocab and kinds from required flags",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Required flags, no defaults; a row printer and report.incomplete per mode; one commit per mode if the parser budget allows; update the rubric heading's mode count",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 rawreads, snapshots, relalg in cli_store.py; vocabulary flags required with no defaults (relalg --kinds absent, empty or unknown refuses exit 2); 10 tests; suite 855 passed, bazel //... green",
       "issued_at": "2026-10-04T21:39:28Z",
       "minted_during": "interrupt",
       "caused_by": "W609",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:45:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034540Z"
     },
     {
       "symbol": "W635",
@@ -12725,20 +12726,21 @@
     {
       "symbol": "W641",
       "title": "pycodemod cli: the --fingerprint mode with --seed, --groups, --keys and --monotone, printing the skipped seed files",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After the site walk: seed paths are the caller's (modelled_keys(seed_paths)); --monotone builds the ladder by calling Census once per rung and checking a.rem % b.rem == 0 row by row; print Modelled.skipped so a typo in a seed path is visible",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 fingerprint in cli_fp.py: --readers --receivers --connections --boundary --seed required, --top/--groups/--keys sizing, --monotone; unreadable seed and unreadable corpus each fail; 6 tests; suite 855 passed, bazel //... green",
       "issued_at": "2026-10-04T21:57:54Z",
       "minted_during": "interrupt",
       "caused_by": "W624",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:45:41Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034541Z"
     },
     {
       "symbol": "W642",
@@ -12771,31 +12773,32 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-05: every census mode now states what it searched on an empty result: a line 'MODE: searched N file(s), found none' printed last, N the file count after directory expansion; measured first via cli.main over a tmp file with no hit: 26 modes were silent on a miss (calls, guarded, dead, key-reads, literals, relname, bindings, attr-reads, importers, shapes, aliases, deps, crossings, commentary, ambient, swallows, exits, verdicts, disagreement, placement, modstate, collisions, reifies, escapes, catchers, callgraph, funcnames, interlock), others always printed a summary line; ONE shared place: main calls _run_mode, which counts the lines a handler writes through report.Tally (banners and summary counts go through report.note, which does not count), so none of the 47 handlers changed; header is exempt (a check, not a census); two existing assertions updated because an empty result now prints the line; 10 test functions (7 cli, 3 report), 10 warrants; F-arm with W648; gaps W660; committed under W643",
+      "evidence": "2026-10-05: every census mode now states what it searched on an empty result: a line 'MODE: searched N file(s), found none' printed last, N the file count after directory expansion; measured first via cli.main over a tmp file with no hit: 26 modes were silent on a miss (calls, guarded, dead, key-reads, literals, relname, bindings, attr-reads, importers, shapes, aliases, deps, crossings, commentary, ambient, swallows, exits, verdicts, disagreement, placement, modstate, collisions, reifies, escapes, catchers, callgraph, funcnames, interlock), others always printed a summary line; ONE shared place: main calls _run_mode, which counts the lines a handler writes through report.Tally (banners and summary counts go through report.note, which does not count), so none of the 47 handlers changed; header is exempt (a check, not a census); two existing assertions updated because an empty result now prints the line; 10 test functions (7 cli, 3 report), 10 warrants; F-arm with W648; gaps W660; committed under W643 | 2026-10-05: landed: 72436f1 pushed to origin/main with W648, W651 and W650",
       "issued_at": "2026-10-04T22:14:02Z",
       "minted_during": "tick",
       "caused_by": "W600",
-      "last_worked": "2026-10-05T02:48:07Z",
+      "last_worked": "2026-10-05T03:00:07Z",
       "ticks_blocked": 0,
       "completed": "20261005T024807Z"
     },
     {
       "symbol": "W644",
       "title": "pycodemod cli: wire the --split mode with --max, --max-defs, --prefix, --keep and --export, and an explicit --apply or --dry-run, neither given refused",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Map --apply to apply(write=True) and --dry-run to write=False; refuse neither and both like flag_contract.exactly_one; a printer for the refusal, owed callers, hazards and selfnamed; tests per flag and per refusal",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 split MODULE [CALLERS] --apply|--dry-run in cli_split.py; neither or both refuses exit 2 and writes nothing; a refused plan is never applied; 7 tests; suite 855 passed, bazel //... green",
       "issued_at": "2026-10-04T22:25:28Z",
       "minted_during": "tick",
       "caused_by": "W595",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:45:41Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034541Z"
     },
     {
       "symbol": "W645",
@@ -12989,20 +12992,21 @@
     {
       "symbol": "W655",
       "title": "pycodemod: compare the control census and fp_sites against substrate's originals over one corpus slice, naming each difference as declared or undeclared",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run the origin's census and the port on the same files (the origin's tuples have no path, so adapt); the control port and the fingerprint walk were verified only by synthetic arms and their own tests, never against the origin; record the table in a design note",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 measured, not reading-only (.claude/swarm/W655-control-fingerprint-differential.md): origin and port run over 6 real files (1376 sites) plus a 38-site probe for constructs the slice lacks; the origin in substrate's venv, the port with PYTHON_BOUNDARY and the requested StoreVocab and again with a vocab equal to the origin's wide one. Control census: 0 core differences; 306 differ only in the sqlform dash and ellipsis (declared, W606). Fingerprint walk: 1370 of 1376 rows the same, the other 6 are except-on-a-boundary-exception rows with refs {open} against {OSError} (declared, W638); census arithmetic and the static tables are identical apart from the dash. Totals: 7 DECLARED differences (3 measured, 4 reading-only), 6 UNDECLARED (1 measured: the for-else and case snippet ellipsis, W663; 5 reading-only: W664). Not exercised: skip behaviour, the desync assertion, an unreadable seed",
       "issued_at": "2026-10-05T02:15:54Z",
       "minted_during": "interrupt",
       "caused_by": "W640",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:05:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T030509Z"
     },
     {
       "symbol": "W656",
@@ -13025,20 +13029,21 @@
     {
       "symbol": "W657",
       "title": "pycodemod cli: wire the registered mode over registered_defs with the prefix a required operand",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add registered PREFIX paths with a row printer (def, line, key, invoking sites) and the unmatched literals as a lead, skips through report.incomplete; drop the sqlname DO_NOT_PORT redirect in the same commit (W652 checklist); tests; update the rubric heading's mode count",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 integrated with the CLI wiring batch: registered PREFIX paths (cli_modes.py), prefix required, empty refused exit 2; sqlname moved from DO_NOT_PORT to RETIRED naming registered (W666 reviews it); rubric heading now Fifty-Five Modes. pycodemod suite 855 passed; bazel test //... 580 pass, 2 pathsforward timeouts under load (60s) that pass alone in 9s",
       "issued_at": "2026-10-05T02:47:54Z",
       "minted_during": "tick",
       "caused_by": "W650",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:45:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034539Z"
     },
     {
       "symbol": "W658",
@@ -13062,7 +13067,7 @@
     {
       "symbol": "W659",
       "title": "mdstruct: pass a caller-named exclude list to pathwalk.expand, and document exclude and the virtualenv count in pathwalk's README",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "mdstruct",
@@ -13070,17 +13075,75 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Same flag and counts line as pycodemod's; mdstruct's help text names it; pathwalk's README gains an exclude section (the fixer could not read it) and the missing virtualenv-count entry; lint the README with mdstruct",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 integrated: mdstruct --exclude (repeatable, glob, both spellings, every read mode and grep; a write mode does not take it; a bad entry refused by name, exit 2) and the fourth report line 'skipped N excluded directories'; pathwalk README documents exclude. 10 new test functions, 10 warrants via mikemol-gen-warrants (section directory-operand). mdstruct suite 239 passed (was 228). F-arm: operands.py line 56 exclude=exclude -> exclude=(): 7 tests failed, restored by sed, __pycache__ deleted, suite green. bazel test //mdstruct/... //pathwalk/... //pycodemod/...: 105 of 106 pass; //pycodemod:mutants hit the 300s default timeout (not a failure), rerun with --test_timeout=1200 pending",
       "issued_at": "2026-10-05T02:47:55Z",
       "minted_during": "tick",
       "caused_by": "W651",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T03:13:32Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T031332Z"
     },
     {
       "symbol": "W660",
       "title": "pycodemod: test --require-hits over a partial scan with zero rows, over control with zero sites, and through directory expansion",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 4 tests (partial scan with zero rows, control with zero sites, directory expansion with and without --include-worktrees); F-arms: report.py found none wording, walk.py include_worktrees inversion, and cli._run_mode exit line 'return 1 if require_hits else 0' -> 'return 0' (7 tests failed, restored, suite 144 green). Follow-up W665: 'searched N' counts the skipped file on a partial scan",
+      "issued_at": "2026-10-05T02:47:55Z",
+      "minted_during": "tick",
+      "caused_by": "W648",
+      "last_worked": "2026-10-05T03:45:42Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034542Z"
+    },
+    {
+      "symbol": "W661",
+      "title": "mtools' .githooks/post-commit reports 'remote has moved' when the push was abandoned by a failing pre-push; name the real cause",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "githooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 .githooks/post-commit captures the push output and prints it; only a [rejected] or [remote rejected] line gets the remote-has-moved text, any other failure says PUSH ABANDONED (exit N) NOT because the remote moved. 20 tests in test_githook_post_commit.py, shellcheck 0; F-arm elif -> elif true failed the pre-push test. Live hook applied last; recovery is git checkout HEAD -- .githooks/post-commit",
+      "issued_at": "2026-10-05T03:03:18Z",
+      "minted_during": "tick",
+      "caused_by": "W588",
+      "last_worked": "2026-10-05T03:45:42Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034542Z"
+    },
+    {
+      "symbol": "W662",
+      "title": "mtools' .githooks/post-commit needs an amend guard before it calls mikemol-githook-post-commit, since the amend re-fires post-commit and the nested push sends the amended sha",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "githooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 the hook exits 0 at the top when _POST_COMMIT_AMENDING is set, so the amend's re-fire never pushes the amended sha; test_the_amends_refire_does_not_push; F-arm guard -n -> -z failed 4 tests, restored",
+      "issued_at": "2026-10-05T03:03:18Z",
+      "minted_during": "tick",
+      "caused_by": "W588",
+      "last_worked": "2026-10-05T03:45:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T034543Z"
+    },
+    {
+      "symbol": "W663",
+      "title": "Control and fingerprint ports: the for-else and case snippets use ASCII ... where the origin used the unicode ellipsis, and no commit declares it",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -13088,11 +13151,65 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "The fixer left three cases untested: a scan with skipped files and zero rows (found none printed and exit 1 under the flag), control over zero sites, and --include-worktrees directory expansion; one red arm each in tests/test_cli.py",
+      "next_bounded_step": "Measured only by the probe (the 6-file slice has no for-else or case): decide per .claude/swarm/W655-control-fingerprint-differential.md U1 whether to restore the ellipsis or declare the change next to W606's form-string note; one arm either way",
       "evidence": "",
-      "issued_at": "2026-10-05T02:47:55Z",
+      "issued_at": "2026-10-05T03:05:08Z",
       "minted_during": "tick",
-      "caused_by": "W648",
+      "caused_by": "W655",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W664",
+      "title": "Fingerprint and control ports: five small differences found by reading only (omega(n) dropped, three Census attributes dropped, referents(None) raises, getattr lineno fallbacks removed) need a declared-or-restored decision each",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Per .claude/swarm/W655-control-fingerprint-differential.md U2 to U6: confirm each by running the origin and the port on a case that exercises it, then declare in the module docstring with the reason or restore; each confirmed one gets a red arm",
+      "evidence": "",
+      "issued_at": "2026-10-05T03:05:09Z",
+      "minted_during": "tick",
+      "caused_by": "W655",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W665",
+      "title": "pycodemod --require-hits: a partial scan with zero rows prints 'searched N' counting the skipped file, though the banner above says fewer were read",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Decide in cli._run_mode whether 'searched N' should be the files read (the banner's count) or stay the files named; test_require_hits_over_a_partial_scan_with_zero_rows_keeps_the_incomplete_exit pins the current wording, so it changes with the answer. Wait for the cli.py wiring fixer to land first",
+      "evidence": "",
+      "issued_at": "2026-10-05T03:23:02Z",
+      "minted_during": "tick",
+      "caused_by": "W660",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W666",
+      "title": "pycodemod: review the sqlname spelling now refused as RETIRED naming registered, and retitle the githook-post-commit rubric row that still ends 'and No Push'",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Two one-line reviews: (1) cli.RETIRED sqlname -> registered keeps summit's census table honest, or restore sqlname as an alias; (2) hooks/rubric.tsv githook-post-commit title no longer true now the hook pushes (W661/W662 tests); each is a sed on one line plus a changed-title note",
+      "evidence": "",
+      "issued_at": "2026-10-05T03:29:22Z",
+      "minted_during": "tick",
+      "caused_by": "W657",
       "last_worked": null,
       "ticks_blocked": 0
     }
