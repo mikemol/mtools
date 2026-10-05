@@ -310,6 +310,41 @@ def test_a_caller_of_a_moved_private_name_is_owed(tmp_path: Path) -> None:
     assert not p.skipped
 
 
+_LIB = "def _hidden():\n    return 1\ndef shown():\n    return 2\n"
+
+
+def _owed_by(tmp_path: Path, caller_text: str) -> list[tuple[int, str, str]]:
+    path = _write(tmp_path, "lib.py", _LIB)
+    caller = _write(tmp_path, "use.py", caller_text)
+    p = split.plan(path, split.Options(max_defs=1), callers=[caller])
+    return [(o.line, o.name, o.file) for o in p.owed]
+
+
+def test_a_caller_reaching_a_moved_private_name_by_attribute_is_owed(tmp_path: Path) -> None:
+    """AUTHORED: `import lib` then `lib._hidden` is owed an edit, as `from lib import` is."""
+    assert _owed_by(tmp_path, "import lib\nx = lib._hidden()\n") == [(2, "_hidden", "lib_00.py")]
+
+
+def test_a_caller_reaching_a_moved_private_name_through_an_alias_is_owed(tmp_path: Path) -> None:
+    """AUTHORED: `import lib as L` then `L._hidden` is owed, and the alias is not the stem."""
+    got = _owed_by(tmp_path, "import lib as L\nx = L._hidden()\ny = lib._hidden()\n")
+    assert got == [(2, "_hidden", "lib_00.py")]
+
+
+def test_a_caller_importing_the_stem_from_a_package_is_owed_by_attribute(tmp_path: Path) -> None:
+    """AUTHORED: `from pkg import lib` binds the module, so `lib._hidden` is owed too."""
+    got = _owed_by(tmp_path, "from pkg import lib as m\nx = m._hidden()\n")
+    assert got == [(2, "_hidden", "lib_00.py")]
+
+
+def test_an_attribute_the_entry_still_exports_or_another_module_owns_is_not_owed(
+    tmp_path: Path,
+) -> None:
+    """AUTHORED: a public name, an unmoved name, or another module's attribute is never owed."""
+    text = "import lib\nimport other\na = lib.shown()\nb = lib.nowhere\nc = other._hidden\n"
+    assert _owed_by(tmp_path, text) == []
+
+
 def test_an_unreadable_caller_is_skipped_not_dropped(tmp_path: Path) -> None:
     """AUTHORED: a caller that cannot be parsed comes back as a Skip on the plan."""
     path = _write(tmp_path, "lib.py", "def a():\n    return 1\ndef b():\n    return 2\n")

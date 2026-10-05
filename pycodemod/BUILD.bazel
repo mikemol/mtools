@@ -48,6 +48,9 @@ py_library(
         srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True) + (
             # W193: test_capture reads the capture tracer itself; tests/conftest.py puts it on sys.path.
             ["differential/capture.py"] if src == "tests/test_capture.py" else []
+        ) + (
+            # W645: the split adapter reads split.cases.json beside itself.
+            ["differential/split_replay.py"] if src == "tests/test_split_differential.py" else []
         ),
         main = "@mikemol_rules_py//:pytest_main.py",
         args = [
@@ -60,7 +63,9 @@ py_library(
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"],
+        data = ["pyproject.toml"] + (
+            ["differential/split.cases.json"] if src == "tests/test_split_differential.py" else []
+        ),
         size = "small",
         # ⚑ sqlalchemy FROM THE DEV HUB, NOT THE LIBRARY: it is the optional extra `funcnames`
         # asks, and without it that module refuses at import (measured: this target, 2026-09-25).
@@ -126,6 +131,10 @@ sh_test(
         ":.venv",
         "@mikemol_check_mutants//:mutate_runner.py",
         "differential/capture.py",  # W193: tests/test_capture.py imports it
+        # W645: tests/test_split_differential.py imports the adapter and reads the cases file; without
+        # them the baseline suite errors, and EVERY mutant then reads ERRORED (603 of 603, measured).
+        "differential/split_replay.py",
+        "differential/split.cases.json",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
 )
@@ -189,5 +198,13 @@ venv_from_hub(
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
-dist_checks(venv_data = ["differential/capture.py"])  # W193: tests/test_capture.py imports it
+dist_checks(
+    venv_data = [
+        "differential/capture.py",  # W193: tests/test_capture.py imports it
+        # W645: the venv's suite-collecting check imports tests/test_split_differential.py, which
+        # imports the adapter and reads the cases file ("cannot import name split_replay").
+        "differential/split_replay.py",
+        "differential/split.cases.json",
+    ],
+)
 

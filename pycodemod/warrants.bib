@@ -4524,3 +4524,202 @@
   claim  = {AUTHORED: two files give the first file's sites first, each ordered by line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_sites_come_back_in_path_order_then_line_order},
 }
+
+@misc{pycodemod-fp-sites-for-site-carries-its-iterable-as-a-referent,
+  section = {fp_sites},
+  title  = {The `for` site's governing expression is its iterable},
+  claim  = {The `for` site's governing expression is its iterable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fp_sites.py -k test_a_for_site_carries_its_iterable_as_a_referent},
+}
+
+@misc{pycodemod-fp-sites-if-site-carries-the-column-string-as-a-referent,
+  section = {fp_sites},
+  title  = {An identifier-shaped string in the test is a referent},
+  claim  = {An identifier-shaped string in the test is a referent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fp_sites.py -k test_an_if_site_carries_the_column_string_as_a_referent},
+}
+
+@misc{pycodemod-fp-sites-if-site-also-carries-its-bound-names,
+  section = {fp_sites},
+  title  = {The names the test reads join the referents},
+  claim  = {The names the test reads join the referents.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fp_sites.py -k test_the_if_site_also_carries_its_bound_names},
+}
+
+@misc{pycodemod-fp-sites-authored-an-empty-governing-expression-gives-empty-refs,
+  section = {fp_sites},
+  title  = {AUTHORED: a `break` under no `if` has no governing node, so its refs are empty},
+  claim  = {AUTHORED: a `break` under no `if` has no governing node, so its refs are empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fp_sites.py -k test_authored_an_empty_governing_expression_gives_empty_refs},
+}
+
+@misc{pycodemod-fp-sites-authored-a-skipped-file-is-returned-not-dropped,
+  section = {fp_sites},
+  title  = {AUTHORED: an unparseable file lands in `skipped` while a good file still yields sites},
+  claim  = {AUTHORED: an unparseable file lands in `skipped` while a good file still yields sites.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fp_sites.py -k test_authored_a_skipped_file_is_returned_not_dropped},
+}
+
+@misc{pycodemod-fp-sites-authored-fpsite-refs-for-a-comparison-and-an-attribute,
+  section = {fp_sites},
+  title  = {AUTHORED: `sym == "x"` gives sym and x; an attribute gives its root and its member},
+  claim  = {AUTHORED: `sym == "x"` gives sym and x; an attribute gives its root and its member.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fp_sites.py -k test_authored_fpsite_refs_for_a_comparison_and_an_attribute},
+}
+
+@misc{pycodemod-fp-sites-authored-a-census-from-fp-sites-lowers-its-remainder-with-a-wider-seed,
+  section = {fp_sites},
+  title  = {AUTHORED: real control sites feed `Census`; a wider seed lowers Omega and bits},
+  claim  = {AUTHORED: real control sites feed `Census`; a wider seed lowers Omega and bits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fp_sites.py -k test_authored_a_census_from_fp_sites_lowers_its_remainder_with_a_wider_seed},
+}
+
+@misc{pycodemod-cli-control-prints-one-row-per-site,
+  section = {cli},
+  title  = {`control` prints path:line construct kind sqlform scope snippet, typed by the operands},
+  claim  = {`control` prints path:line construct kind sqlform scope snippet, typed by the operands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_control_prints_one_row_per_site},
+}
+
+@misc{pycodemod-cli-control-with-empty-vocabulary-names-no-row-site,
+  section = {cli},
+  title  = {An empty comma list is an operand, not an absent one: no site is then a row site},
+  claim  = {An empty comma list is an operand, not an absent one: no site is then a row site.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_control_with_empty_vocabulary_names_no_row_site},
+}
+
+@misc{pycodemod-cli-constructs-lists-all-thirty-six-with-zero-rows,
+  section = {cli},
+  title  = {`constructs` prints the 36-construct roster by group, a construct nobody wrote as 0},
+  claim  = {`constructs` prints the 36-construct roster by group, a construct nobody wrote as 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_constructs_lists_all_thirty_six_with_zero_rows},
+}
+
+@misc{pycodemod-cli-census-mode-refuses-a-missing-operand-flag,
+  section = {cli},
+  title  = {A flag left out refuses, exit 2, naming it: the census has no silent default},
+  claim  = {A flag left out refuses, exit 2, naming it: the census has no silent default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_census_mode_refuses_a_missing_operand_flag},
+}
+
+@misc{pycodemod-cli-census-mode-refuses-an-unknown-boundary,
+  section = {cli},
+  title  = {`--boundary` with a value naming no boundary refuses, exit 2, naming the value},
+  claim  = {`--boundary` with a value naming no boundary refuses, exit 2, naming the value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_census_mode_refuses_an_unknown_boundary},
+}
+
+@misc{pycodemod-cli-census-mode-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {An unread file is a skip in the banner, never a clean "no control flow"},
+  claim  = {An unread file is a skip in the banner, never a clean "no control flow".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_census_mode_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-control-and-constructs-are-modes-not-do-not-port,
+  section = {cli},
+  title  = {The ported spellings are wired in `MODES` and no longer refused as DO-NOT-PORT},
+  claim  = {The ported spellings are wired in `MODES` and no longer refused as DO-NOT-PORT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_control_and_constructs_are_modes_not_do_not_port},
+}
+
+@misc{pycodemod-split-caller-reaching-a-moved-private-name-by-attribute-is-owed,
+  section = {split},
+  title  = {AUTHORED: `import lib` then `lib._hidden` is owed an edit, as `from lib import` is},
+  claim  = {AUTHORED: `import lib` then `lib._hidden` is owed an edit, as `from lib import` is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_caller_reaching_a_moved_private_name_by_attribute_is_owed},
+}
+
+@misc{pycodemod-split-caller-reaching-a-moved-private-name-through-an-alias-is-owed,
+  section = {split},
+  title  = {AUTHORED: `import lib as L` then `L._hidden` is owed, and the alias is not the stem},
+  claim  = {AUTHORED: `import lib as L` then `L._hidden` is owed, and the alias is not the stem.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_caller_reaching_a_moved_private_name_through_an_alias_is_owed},
+}
+
+@misc{pycodemod-split-caller-importing-the-stem-from-a-package-is-owed-by-attribute,
+  section = {split},
+  title  = {AUTHORED: `from pkg import lib` binds the module, so `lib._hidden` is owed too},
+  claim  = {AUTHORED: `from pkg import lib` binds the module, so `lib._hidden` is owed too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_caller_importing_the_stem_from_a_package_is_owed_by_attribute},
+}
+
+@misc{pycodemod-split-attribute-the-entry-still-exports-or-another-module-owns-is-not-owed,
+  section = {split},
+  title  = {AUTHORED: a public name, an unmoved name, or another module's attribute is never owed},
+  claim  = {AUTHORED: a public name, an unmoved name, or another module's attribute is never owed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_attribute_the_entry_still_exports_or_another_module_owns_is_not_owed},
+}
+
+@misc{pycodemod-split-behaviour-split-entry-module-behaves-as-the-original-in-a-fresh-interpreter,
+  section = {split},
+  title  = {Apply a split, import the entry in a subprocess, and print what it computes},
+  claim  = {Apply a split, import the entry in a subprocess, and print what it computes. The
+            original and the split entry must print the same reprs, and every public
+            name must still be an attribute of the entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_behaviour.py -k test_a_split_entry_module_behaves_as_the_original_in_a_fresh_interpreter},
+}
+
+@misc{pycodemod-split-differential-cases-file-loads-every-origin-case,
+  section = {differential},
+  title  = {The adapter reads all 28 cases, each with a check text and at least one call},
+  claim  = {The adapter reads all 28 cases, each with a check text and at least one call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_the_cases_file_loads_every_origin_case},
+}
+
+@misc{pycodemod-split-differential-split-case-replays-without-an-undeclared-difference,
+  section = {differential},
+  title  = {Each case passes its origin check, and differs from the origin's plan only as declared},
+  claim  = {Each case passes its origin check, and differs from the origin's plan only as declared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_a_split_case_replays_without_an_undeclared_difference},
+}
+
+@misc{pycodemod-split-differential-replay-declares-the-part-00-and-the-noqa-on-the-cases-that-carry-a-plan,
+  section = {differential},
+  title  = {Exactly the cases whose operands record the origin's plan carry the two declared kinds},
+  claim  = {Exactly the cases whose operands record the origin's plan carry the two declared kinds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_the_replay_declares_the_part_00_and_the_noqa_on_the_cases_that_carry_a_plan},
+}
+
+@misc{pycodemod-split-differential-unlisted-difference-is-undeclared-and-fails-the-status,
+  section = {differential},
+  title  = {A partition the origin did not make is not declared, so the outcome reads `differs`},
+  claim  = {A partition the origin did not make is not declared, so the outcome reads `differs`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_an_unlisted_difference_is_undeclared_and_fails_the_status},
+}
+
+@misc{pycodemod-split-differential-imports-only-part-and-a-suppression-comment-are-declared,
+  section = {differential},
+  title  = {The origin's import-only part 00 and its noqa re-exports are the declared kinds},
+  claim  = {The origin's import-only part 00 and its noqa re-exports are the declared kinds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_an_imports_only_part_and_a_suppression_comment_are_declared},
+}
+
+@misc{pycodemod-split-differential-failed-check-makes-the-outcome-differ-even-without-a-difference,
+  section = {differential},
+  title  = {A failure of the origin's own check is `differs`; no failure and no difference is `pass`},
+  claim  = {A failure of the origin's own check is `differs`; no failure and no difference is
+            `pass`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_a_failed_check_makes_the_outcome_differ_even_without_a_difference},
+}
+
+@misc{pycodemod-split-differential-case-with-no-registered-check-is-refused,
+  section = {differential},
+  title  = {A case whose number has no check raises instead of passing vacuously},
+  claim  = {A case whose number has no check raises instead of passing vacuously.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_a_case_with_no_registered_check_is_refused},
+}
+
+@misc{pycodemod-split-differential-call-with-no-port-counterpart-is-refused,
+  section = {differential},
+  title  = {An origin function the adapter does not map raises instead of being skipped},
+  claim  = {An origin function the adapter does not map raises instead of being skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_a_call_with_no_port_counterpart_is_refused},
+}
+
+@misc{pycodemod-split-differential-malformed-cases-file-is-refused,
+  section = {differential},
+  title  = {A cases file that is not a list of case objects raises},
+  claim  = {A cases file that is not a list of case objects raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_a_malformed_cases_file_is_refused},
+}

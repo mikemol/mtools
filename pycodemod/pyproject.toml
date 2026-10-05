@@ -133,6 +133,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_deps.py" = ["assert"]
 "tests/test_exit.py" = ["assert"]
 "tests/test_fingerprint.py" = ["assert"]
+"tests/test_fp_sites.py" = ["assert"]
 "tests/test_funcnames.py" = ["assert"]
 "tests/test_hints.py" = ["assert"]
 # ⚑ ONE FILE, ONE RESPONSIBILITY: funcnames exists to ASK SQLAlchemy's private `_registry` which
@@ -166,6 +167,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_size.py" = ["assert"]
 "tests/test_snapshots.py" = ["assert"]
 "tests/test_split.py" = ["assert"]
+"tests/test_split_behaviour.py" = ["assert"]
+"tests/test_split_differential.py" = ["assert"]
 "tests/test_sql.py" = ["assert"]
 "tests/test_storeflow.py" = ["assert"]
 "tests/test_strings.py" = ["assert"]

@@ -52,7 +52,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import WorktreeRefusedError, expand
 
-from mikemol.pycodemod import report
+from mikemol.pycodemod import control_report, report
 from mikemol.pycodemod.aliases import aliases as run_aliases
 from mikemol.pycodemod.ambient import ambient as run_ambient
 from mikemol.pycodemod.arguments import asserted as run_asserted
@@ -118,6 +118,24 @@ _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
 
+
+def _census_flags(ns: argparse.Namespace) -> control_report.CensusFlags:
+    return control_report.CensusFlags(
+        readers=_opt_str(ns, "readers"),
+        receivers=_opt_str(ns, "receivers"),
+        connections=_opt_str(ns, "connections"),
+        boundary=_opt_str(ns, "boundary"),
+    )
+
+
+def _handle_control(ns: argparse.Namespace) -> int:
+    return control_report.print_control(_str_list(ns, "paths"), _census_flags(ns))
+
+
+def _handle_constructs(ns: argparse.Namespace) -> int:
+    return control_report.print_constructs(_str_list(ns, "paths"), _census_flags(ns))
+
+
 _run_funcnames: Callable[[Sequence[str]], FuncCalls] | None
 _moved: type[Exception]
 try:
@@ -146,7 +164,6 @@ _DO_NOT_PORT_NAMES = (
     "touches",
     "projects",
     "discriminates",
-    "control",
     "fingerprint",
     "portable",
     "rawreads",
@@ -972,6 +989,8 @@ MODES = {
     "commentary-kinds": _handle_commentary_kinds,
     "commentary-blocks": _handle_commentary_blocks,
     "discards": _handle_discards,
+    "control": _handle_control,
+    "constructs": _handle_constructs,
 }
 
 
@@ -1122,6 +1141,28 @@ def _add_rooted_modes(make: _Make) -> None:
     amb.add_argument("paths", nargs="+")
 
 
+def _add_census_modes(make: _Make) -> None:
+    for name, text in (
+        ("control", "every control-flow site, typed by what a declarative engine could take"),
+        ("constructs", "the control-flow roster tallied by group, zero rows shown"),
+    ):
+        cen = make(name, text)
+        cen.add_argument("--readers", default=None, help="comma list: methods that read rows")
+        cen.add_argument("--receivers", default=None, help="comma list: names readers run on")
+        cen.add_argument("--connections", default=None, help="comma list: connection names")
+        cen.add_argument("--boundary", default=None, help="the boundary to type against: python")
+        cen.add_argument("paths", nargs="+")
+
+
+_FAMILIES: tuple[Callable[[_Make], None], ...] = (
+    _add_scan_modes,
+    _add_named_modes,
+    _add_flagged_modes,
+    _add_rooted_modes,
+    _add_census_modes,
+)
+
+
 def _build_parser() -> argparse.ArgumentParser:
     """Build the parser; each mode family adds its own subparsers, so no builder outgrows ruff.
 
@@ -1141,7 +1182,7 @@ def _build_parser() -> argparse.ArgumentParser:
         )
         return parser
 
-    for family in (_add_scan_modes, _add_named_modes, _add_flagged_modes, _add_rooted_modes):
+    for family in _FAMILIES:
         family(make)
     for name, text in _PATHS_ONLY:
         make(name, text).add_argument("paths", nargs="+")

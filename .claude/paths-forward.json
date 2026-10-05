@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 649,
+  "counter": 655,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -12620,11 +12620,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-05: hooks/bin/mikemol-hook-inbound-asks, mikemol-hook-nemik-check and mikemol-hook-structural-query (the target of the no-chaining, no-verify, pycheck and shellcheck links) now end in exec with the arguments forwarded (dollar-at in quotes); the harness passes no arguments so behaviour is identical, and a stray argument now reaches the hook's refusal (W526) and is named. standing and standing-stop are different launchers and unchanged. Applied in dependency order with the live gate launcher last. 4 test functions (21 cases) against a fake venv with a stub python3, 4 warrants under rubric key adopt-launcher. F-arm: before the shared launcher changed the five gate-launcher argument arms were red, after it 21 pass. The README no longer says the launcher cannot run --check. Committed under W635.",
+      "evidence": "2026-10-05: hooks/bin/mikemol-hook-inbound-asks, mikemol-hook-nemik-check and mikemol-hook-structural-query (the target of the no-chaining, no-verify, pycheck and shellcheck links) now end in exec with the arguments forwarded (dollar-at in quotes); the harness passes no arguments so behaviour is identical, and a stray argument now reaches the hook's refusal (W526) and is named. standing and standing-stop are different launchers and unchanged. Applied in dependency order with the live gate launcher last. 4 test functions (21 cases) against a fake venv with a stub python3, 4 warrants under rubric key adopt-launcher. F-arm: before the shared launcher changed the five gate-launcher argument arms were red, after it 21 pass. The README no longer says the launcher cannot run --check. Committed under W635. | 2026-10-05: landed: c3ca6d2 pushed to origin/main. The first gate run was refused on //hooks:test_bin_launchers_argv: hooks/BUILD.bazel's test data named three launchers and the test executes seven; naming inbound-asks, nemik-check, pycheck and shellcheck fixed it (the fifth time that data-list lesson recurred; passes under plain pytest from the working tree)",
       "issued_at": "2026-10-04T21:53:21Z",
       "minted_during": "interrupt",
       "caused_by": "W625",
-      "last_worked": "2026-10-05T01:33:27Z",
+      "last_worked": "2026-10-05T02:00:21Z",
       "ticks_blocked": 0,
       "completed": "20261005T013327Z"
     },
@@ -12687,38 +12687,40 @@
     {
       "symbol": "W639",
       "title": "pycodemod: the control report printers and the --control and --constructs CLI modes, the construct count stated as 36",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Commit 4 of 4 per .claude/swarm/W606-control-port.md, after the census; the plan says 41 constructs but the origin roster sums to 36 (6+5+1+8+5+5+4+2), so the text and tests say 36",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: control_report.py and cli modes control and constructs (commit 4 of 4 of the control port): control prints one row per site (path:line construct kind sqlform scope snippet); constructs tallies the roster of 36 constructs (6+5+1+8+5+5+4+2; the plan said 41) by group with zero rows shown; required flags --readers, --receivers, --connections, --boundary python (a missing flag refuses exit 2 naming it, an unknown boundary refuses, no defaults); skipped files through report.incomplete; control removed from the DO_NOT_PORT redirect table (W652 checklist); MODES 45 to 47 and the rubric heading now says Forty-Seven Modes; 7 test functions (15 cases), 7 warrants under rubric key cli; F-arm: the missing-flag refusal disabled, 8 arms red; --connections is required but unread by the census (W654); committed under W639",
       "issued_at": "2026-10-04T21:57:53Z",
       "minted_during": "interrupt",
       "caused_by": "W606",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:16:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T021607Z"
     },
     {
       "symbol": "W640",
       "title": "pycodemod: the fingerprint site walk (site_referents and the census subclass) emitting FpSite objects over the control census, keeping the desync AssertionError",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Blocked on the control census (the W606 commit 3 card): emit FpSite(path, line, construct, kind, scope, snippet, refs) with refs = frozenset(referents(governing_expr)) per .claude/swarm/W607-fingerprint-port.md step 4",
-      "evidence": "2026-10-05: 2026-10-05 W638 landed: build FpSite(site.path, site.line, site.construct, site.kind, site.scope, site.snippet, refs=frozenset(referents(site.governing))); referents accepts the tuple of nodes and returns bare tokens (a.x > b gives a, x, b; string constants included); governing is empty for a break, continue or return under no if, and a raise under no test falls back to the exception node; control_roster.PYTHON_BOUNDARY is the only preset and there is no StoreVocab preset",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 W638 landed: build FpSite(site.path, site.line, site.construct, site.kind, site.scope, site.snippet, refs=frozenset(referents(site.governing))); referents accepts the tuple of nodes and returns bare tokens (a.x > b gives a, x, b; string constants included); governing is empty for a break, continue or return under no if, and a raise under no test falls back to the exception node; control_roster.PYTHON_BOUNDARY is the only preset and there is no StoreVocab preset | 2026-10-05: fp_sites.py: fp_sites(paths, vocab, boundary) -> FpSites(sites, skipped) builds FpSite(path, line, construct, kind, scope, snippet, refs=frozenset(referents(site.governing))) from control_census.control_sites; no subclass and no second walk, the origin's desync AssertionError is unnecessary and dropped, unreadable files returned in skipped (the origin swallowed them), paths only (the origin's src= option is gone), the census's order kept; 7 tests (3 transcribed, 4 authored, incl. one end to end into census_fp.Census), 7 warrants under rubric key fp_sites; F-arm: every site given empty refs, 5 arms red; NOT compared to the origin on a real corpus (W655); committed under W640",
       "issued_at": "2026-10-04T21:57:54Z",
       "minted_during": "interrupt",
       "caused_by": "W624",
-      "last_worked": "2026-10-05T01:33:17Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:16:06Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T021606Z"
     },
     {
       "symbol": "W641",
@@ -12741,7 +12743,7 @@
     {
       "symbol": "W642",
       "title": "Tell substrate and el-openglo that mikemol-githook-prepare-commit-msg now aborts the commit on a failure the shell original swallowed",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "githooks",
@@ -12749,13 +12751,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "One letter each, citing the stderr-and-exit-1 cases and that the report is kept on a failed append; they decide whether to adopt before they repoint their stub, which must pass \"$@\"",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: letters sent 2026-10-05 to substrate/inbox and el-openglo/inbox (2026-10-05-mtools-prepare-commit-msg-now-reports-failures.md) naming what the shell original swallowed, the abort-on-failure policy, the kept report on a failed append, and the argv pass-through; they decide whether to adopt, and may ask for a lenient mode",
       "issued_at": "2026-10-04T22:14:02Z",
       "minted_during": "tick",
       "caused_by": "W590",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:00:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T020020Z"
     },
     {
       "symbol": "W643",
@@ -12796,20 +12799,21 @@
     {
       "symbol": "W645",
       "title": "pycodemod split: run the existing differential/split.cases.json against plan(), and scan attribute-style callers (import stem, then stem.name) for owed",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read differential/split.cases.json and write the cases-versus-plan adapter; extend the owed scan to stem.name access; add a behavioural-equivalence check by import-and-compare that mypy's no-Any rule allows; note the origin emitted an empty part 00 which the port omits",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: three parts: (1) differential/split_replay.py replays differential/split.cases.json through split.plan, verify and splitscope.read: 28 of 28 cases pass their check, 0 differ undeclared, two DECLARED differences recorded with reasons on the six cases that carry the origin's plan (empty-part-00: the origin always emitted a part 00 of imports and the port omits it; noqa-to-all: the origin's noqa F401 became a generated __all__); case 327's refusal names the part file not the def, judged passing per the existing transcription; (2) split._owed now scans attribute-style callers (import stem, import stem as a, import pkg.stem as a, from pkg import stem) with 3 arms red on HEAD; (3) a split applied to a small module behaves as the original in a fresh interpreter (asyncio subprocess, no suppressions). 14 new test functions (9 differential, 4 split, 1 behaviour), 28 warrants under rubric keys differential and split. TWO BAZEL LESSONS at integration (the data-list lesson, again): test_split_behaviour failed hermetically because the safe-path bootstrap keeps the script's directory off sys.path (PYTHONPATH is now named in the subprocess env), and //pycodemod:mutants ERRORED 603 of 603 because its data lacked differential/split_replay.py and split.cases.json (now named); both validated by running the bazel targets directly; F-arm: attribute callers matched on the wrong aliases, 4 arms red; gaps W653; committed under W645",
       "issued_at": "2026-10-04T22:25:28Z",
       "minted_during": "tick",
       "caused_by": "W595",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:16:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T021607Z"
     },
     {
       "symbol": "W646",
@@ -12823,11 +12827,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-05: pycheck.is_python(path, content): a file is Python when it ends in .py OR its post-edit first line is a Python shebang (BOM stripped); OR-with-suffix, unlike shellcheck whose shebang outranks the suffix (a .py stays Python whatever its first line, a python shebang in a .sh file is linted as Python); ast.parse, the added-suppression refusal and the checker roster unchanged; 9 tests, 9 warrants under rubric key pycheck; F-arm: the shebang test dropped, 6 arms red; reply to linux-sources:W140 sent; committed under W646",
+      "evidence": "2026-10-05: pycheck.is_python(path, content): a file is Python when it ends in .py OR its post-edit first line is a Python shebang (BOM stripped); OR-with-suffix, unlike shellcheck whose shebang outranks the suffix (a .py stays Python whatever its first line, a python shebang in a .sh file is linted as Python); ast.parse, the added-suppression refusal and the checker roster unchanged; 9 tests, 9 warrants under rubric key pycheck; F-arm: the shebang test dropped, 6 arms red; reply to linux-sources:W140 sent; committed under W646 | 2026-10-05: landed: c3ca6d2 pushed to origin/main; reply sent to linux-sources/inbox/2026-10-05-mtools-pycheck-decides-python-by-shebang.md; their letter archived",
       "issued_at": "2026-10-05T01:23:11Z",
       "minted_during": "tick",
       "caused_by": "linux-sources:W140",
-      "last_worked": "2026-10-05T01:33:12Z",
+      "last_worked": "2026-10-05T02:00:16Z",
       "ticks_blocked": 0,
       "completed": "20261005T013312Z"
     },
@@ -12843,11 +12847,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-05: no_verify tests core.hooksPath only where git reads config: -c and --config-env pairs before the subcommand, and the key operand of git config; -m and -F text is never read; value rule: admitted only when the final path component is exactly .githooks; --unset, --unset-all and --config-env refused; also closes git -c user.name=x commit -n (was admitted: the old code took user.name=x as the subcommand) because global options -C, --git-dir, --work-tree, --namespace, --super-prefix now consume their operand; 5 test functions (36 cases), 5 warrants under rubric key no_verify; F-arm: the value rule always true, 20 arms red; open: env-based config (GIT_CONFIG_COUNT, GIT_CONFIG_PARAMETERS), a quoted subcommand word, --config-env abbreviations; reply to summit:W111 sent; committed under W647",
+      "evidence": "2026-10-05: no_verify tests core.hooksPath only where git reads config: -c and --config-env pairs before the subcommand, and the key operand of git config; -m and -F text is never read; value rule: admitted only when the final path component is exactly .githooks; --unset, --unset-all and --config-env refused; also closes git -c user.name=x commit -n (was admitted: the old code took user.name=x as the subcommand) because global options -C, --git-dir, --work-tree, --namespace, --super-prefix now consume their operand; 5 test functions (36 cases), 5 warrants under rubric key no_verify; F-arm: the value rule always true, 20 arms red; open: env-based config (GIT_CONFIG_COUNT, GIT_CONFIG_PARAMETERS), a quoted subcommand word, --config-env abbreviations; reply to summit:W111 sent; committed under W647 | 2026-10-05: landed: c3ca6d2 pushed to origin/main; reply sent to summit/inbox/2026-10-05-mtools-hookspath-fixed-and-two-asks-minted.md answering the friction and the two questions (W648, W649); their letter archived",
       "issued_at": "2026-10-05T01:23:16Z",
       "minted_during": "tick",
       "caused_by": "summit:W111",
-      "last_worked": "2026-10-05T01:33:13Z",
+      "last_worked": "2026-10-05T02:00:19Z",
       "ticks_blocked": 0,
       "completed": "20261005T013313Z"
     },
@@ -12872,6 +12876,25 @@
     {
       "symbol": "W649",
       "title": "pycodemod: reconsider the remaining DO-NOT-PORT driver modes (sqlname, last, collision-apex, py-files) now that substrate drains wholesale, and say which summit touches",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 drafter (.claude/swarm/W649-remaining-do-not-port-modes.md): --sqlname PORT (W650, registered.py); --last DECLINED ON MERIT (discards takes a callee and paths so the replayed sweep has no mtools shape; reverses if discards is measured over about a minute on a real corpus, or a second census wants the stale-predicate stamp); --collision-apex DECLINED, blocked on jea (it wraps jea_extrude_ir.templatize and jea_pyalg.head_spine and mtools has no body-skeleton function; reverses when jea's skeleton code lands in mtools); py-files DECLINED (the origin's enumerator, not a flag; pathwalk.expand replaces it; residue: pathwalk prunes no generated trees, W651). Uncovered cases: 13, matching summit's figure: declare-modes, check-contracts, banner, selftest, unbound-snapshot, roundtrip, imports, available, diagnose, kinds, lines, package, sites. Stale redirects: W652.",
+      "issued_at": "2026-10-05T01:23:18Z",
+      "minted_during": "tick",
+      "caused_by": "summit:W111",
+      "last_worked": "2026-10-05T02:03:46Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T020346Z"
+    },
+    {
+      "symbol": "W650",
+      "title": "pycodemod: registered.py, a prefixed def joined to the string literal that invokes it, prefix supplied by the caller, skipped files reported",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -12879,11 +12902,101 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read each at source in substrate; summit asks which of the 13 uncovered cases it uses (sqlname, portable and py-files named; portable's library landed, its CLI is W632); port, or decline on merit with the reason; reply to summit with the table",
+      "next_bounded_step": "Port the --sqlname mode per .claude/swarm/W649-remaining-do-not-port-modes.md: mtools dead._excuse only excuses a def whose own name is a string constant, so def q_x invoked as the string x is still reported dead; the prefix is an operand, no default; transcribe the origin arms",
       "evidence": "",
-      "issued_at": "2026-10-05T01:23:18Z",
-      "minted_during": "tick",
-      "caused_by": "summit:W111",
+      "issued_at": "2026-10-05T02:03:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "W649",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W651",
+      "title": "pathwalk: an --exclude operand so a walk can prune generated trees (bazel-*, dist, build) that it keeps today",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathwalk"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure what pathwalk.expand keeps that py-files pruned; add an explicit exclude operand with no default list; red arm per pruned shape; mdstruct and pycodemod then pass it through",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:03:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "W649",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W652",
+      "title": "pycodemod cli: drop each DO_NOT_PORT redirect whose library is ported (control, fingerprint, sql, portable and others) as its mode wires, and update the test that pins the redirects",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "List every cli.py DO_NOT_PORT and RETIRED spelling against the ported modules; the redirect is removed in the SAME commit that wires the mode (W639 control, W641 fingerprint, W631 sql, W632 portable, W634 relalg and snapshots), so this card is a checklist: verify none is left stale after those land",
+      "evidence": "2026-10-05: 2026-10-05 W639 removed control from DO_NOT_PORT in the same commit that wired the mode (the pattern this card checks); remaining redirects to drop as modes wire: fingerprint (W641), sql (W631), portable (W632), relalg and snapshots (W634)",
+      "issued_at": "2026-10-05T02:03:46Z",
+      "minted_during": "interrupt",
+      "caused_by": "W649",
+      "last_worked": "2026-10-05T02:16:07Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W653",
+      "title": "pycodemod split: owed callers miss alias rebinding, a bare import of a dotted stem without as, and a star-import followed by a bare name",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure each shape against split._aliases and _owed; the false negatives and positives the fixer listed but did not test; red arm per shape, or record the shape as unsupported with the reason",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:15:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W645",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W654",
+      "title": "pycodemod control: --connections is required for the StoreVocab but control_census never reads it, so either use it or stop requiring it for these modes",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read control_census and storeflow for where connections matters; if no control site depends on it, build the StoreVocab for these modes without a required flag the census ignores and say so in the docstring; test that a connections value changes a result, or that it is not asked for",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:15:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W639",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W655",
+      "title": "pycodemod: compare the control census and fp_sites against substrate's originals over one corpus slice, naming each difference as declared or undeclared",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Run the origin's census and the port on the same files (the origin's tuples have no path, so adapt); the control port and the fingerprint walk were verified only by synthetic arms and their own tests, never against the origin; record the table in a design note",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:15:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W640",
       "last_worked": null,
       "ticks_blocked": 0
     }

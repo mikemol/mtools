@@ -426,6 +426,26 @@ def _render_entry(
     return "".join(pieces), tuple(imports), surface
 
 
+def _aliases(tree: ast.AST, stem: str) -> set[str]:
+    """Name the local bindings of the module `stem` itself.
+
+    Those are `import stem [as a]`, `import pkg.stem as a` and `from pkg import stem [as a]`. A
+    dotted `import pkg.stem` with no alias binds `pkg`, not the module, so it names nothing.
+
+    Returns:
+        the names a caller may write before `.name` to reach the module.
+
+    """
+    names: set[str] = set()
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Import):
+            names.update(al.asname or al.name for al in n.names if al.name == stem)
+            names.update(al.asname for al in n.names if al.asname and al.name.endswith(f".{stem}"))
+        elif isinstance(n, ast.ImportFrom):
+            names.update(al.asname or al.name for al in n.names if al.name == stem)
+    return names
+
+
 def _owed(
     callers: Sequence[str], stem: str, moved: Mapping[str, str], surface: Collection[str]
 ) -> tuple[list[Owed], list[Skip]]:
@@ -437,6 +457,7 @@ def _owed(
         except (UnicodeDecodeError, OSError, SyntaxError) as exc:
             skipped.append(Skip(caller, "unreadable", type(exc).__name__))
             continue
+        modules = _aliases(tree, stem)
         for n in ast.walk(tree):
             if isinstance(n, ast.ImportFrom) and (n.module or "").rsplit(".", 1)[-1] == stem:
                 owed.extend(
@@ -444,6 +465,14 @@ def _owed(
                     for al in n.names
                     if al.name in moved and al.name not in surface
                 )
+            elif (
+                isinstance(n, ast.Attribute)
+                and isinstance(n.value, ast.Name)
+                and n.value.id in modules
+                and n.attr in moved
+                and n.attr not in surface
+            ):
+                owed.append(Owed(caller, n.lineno, n.attr, moved[n.attr]))
     return owed, skipped
 
 
@@ -556,8 +585,9 @@ def _plan_source(path: str, source: Source, opt: Options, callers: Sequence[str]
 def plan(path: str, options: Options | None = None, callers: Sequence[str] = ()) -> Plan:
     """Decide the cut of one module into siblings. WRITES NOTHING.
 
-    `callers` are other files scanned for `from <stem> import <moved private name>`: those are
-    OWED an edit, because the entry module re-exports public names only.
+    `callers` are other files scanned for `from <stem> import <moved private name>` and for
+    `<stem>.<name>` through `import <stem> [as a]` or `from p import <stem>`: those are OWED an
+    edit, because the entry module re-exports public names only.
 
     Returns:
         the plan: the parts, the rewritten entry, owed callers, hazards, and the refusal or the

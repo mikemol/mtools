@@ -1075,3 +1075,102 @@ def test_console_runs_main_over_sys_argv(tmp_path: Path, monkeypatch: pytest.Mon
     monkeypatch.setattr(sys, "argv", ["mikemol-pycodemod", "dead", str(target)])
     code = cli._console()
     assert code == 0
+
+
+_CENSUS_FLAGS = ["--readers", "execute", "--receivers", "con", "--connections", "con"]
+_CENSUS_SOURCE = (
+    "def f(x, con):\n    if x:\n        return 1\n    for r in con.execute('q'):\n"
+    "        pass\n    return 2\n"
+)
+
+
+def _census_file(tmp_path: Path) -> Path:
+    target = tmp_path / "m.py"
+    target.write_text(_CENSUS_SOURCE, encoding="utf-8")
+    return target
+
+
+def test_control_prints_one_row_per_site(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`control` prints path:line construct kind sqlform scope snippet, typed by the operands."""
+    target = _census_file(tmp_path)
+    code = cli.main(["control", *_CENSUS_FLAGS, "--boundary", "python", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"control {target}:2 if mode-branch " in out
+    assert f"control {target}:3 return-guard " in out
+    assert f"control {target}:4 for row-iteration " in out
+
+
+def test_control_with_empty_vocabulary_names_no_row_site(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An empty comma list is an operand, not an absent one: no site is then a row site."""
+    target = _census_file(tmp_path)
+    argv = ["control", "--readers", "", "--receivers", "", "--connections", "", "--boundary"]
+    code = cli.main([*argv, "python", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert f"control {target}:4 for unclassified " in out
+    assert "row-iteration" not in out
+
+
+def test_constructs_lists_all_thirty_six_with_zero_rows(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`constructs` prints the 36-construct roster by group, a construct nobody wrote as 0."""
+    target = _census_file(tmp_path)
+    code = cli.main(["constructs", *_CENSUS_FLAGS, "--boundary", "python", str(target)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "constructs branch if 1\n" in out
+    assert "constructs loop while 0\n" in out
+    assert "constructs roster=36 sites=3\n" in out
+    assert len([ln for ln in out.splitlines() if ln.startswith("constructs ")]) == 8 + 36 + 1
+
+
+@pytest.mark.parametrize("mode", ["control", "constructs"])
+@pytest.mark.parametrize("missing", ["readers", "receivers", "connections", "boundary"])
+def test_a_census_mode_refuses_a_missing_operand_flag(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], mode: str, missing: str
+) -> None:
+    """A flag left out refuses, exit 2, naming it: the census has no silent default."""
+    target = _census_file(tmp_path)
+    given = {"readers": "execute", "receivers": "con", "connections": "con", "boundary": "python"}
+    argv = [mode]
+    for name, value in given.items():
+        if name != missing:
+            argv.extend([f"--{name}", value])
+    code = cli.main([*argv, str(target)])
+    assert code == _REFUSED
+    assert f"--{missing} is required" in capsys.readouterr().out
+
+
+def test_a_census_mode_refuses_an_unknown_boundary(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--boundary` with a value naming no boundary refuses, exit 2, naming the value."""
+    target = _census_file(tmp_path)
+    code = cli.main(["control", *_CENSUS_FLAGS, "--boundary", "rust", str(target)])
+    assert code == _REFUSED
+    assert "'rust'" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("mode", ["control", "constructs"])
+def test_a_census_mode_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], mode: str
+) -> None:
+    """An unread file is a skip in the banner, never a clean "no control flow"."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    code = cli.main([mode, *_CENSUS_FLAGS, "--boundary", "python", str(bad)])
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "read 0 of 1 file(s); 1 skipped" in captured.out + captured.err
+
+
+def test_control_and_constructs_are_modes_not_do_not_port() -> None:
+    """The ported spellings are wired in `MODES` and no longer refused as DO-NOT-PORT."""
+    assert {"control", "constructs"} <= set(cli.MODES)
+    assert not {"control", "constructs"} & cli.DO_NOT_PORT
