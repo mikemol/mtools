@@ -1047,3 +1047,7 @@
 2026-10-04T22:03:21Z  tick  W606 advanced  sweep     "batch 5: control roster, fingerprint Census, parse_file, regex: mutant grammar, --relname, --check docs; follow-ups W635-W641 minted; nudged substrate by letter (W592)"  evidence=pycodemod 637, mutation 33
 2026-10-04T22:14:02Z  tick  W642 minted    -         "Tell substrate and el-openglo that mikemol-githook-prepare-commit-msg now aborts the commit on a failure the shell original swallowed"  evidence=W590
 2026-10-04T22:14:02Z  tick  W643 minted    -         "pycodemod census modes: state 'searched N files, found none' on an empty result, so a zero is never read as an absence"  evidence=W600
+2026-10-04T22:25:28Z  tick  W644 minted    -         "pycodemod cli: wire the --split mode with --max, --max-defs, --prefix, --keep and --export, and an explicit --apply or --dry-run, neither given refused"  evidence=W595
+2026-10-04T22:25:28Z  tick  W645 minted    -         "pycodemod split: run the existing differential/split.cases.json against plan(), and scan attribute-style callers (import stem, then stem.name) for owed"  evidence=W595
+2026-10-04T22:25:41Z  tick  W595 advanced  sweep     "batch 6 landed (W597 W600 W637 W590, ad85c24); W595 split writer integrated; W642-W645 minted"  evidence=ad85c24
+2026-10-05T01:06:36Z  tick  W595 advanced  sweep     "post-restart: W595 gate refusal fixed (two def-sites pinned), mutants run directly and green; recommitting"  evidence=bazel test //pycodemod:mutants 292d1374

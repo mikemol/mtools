@@ -46,3 +46,4 @@ relalg	The Withheld Relational Algebra: Joins, Filters, Orderings, Groupings and
 census_fp	The Fingerprint Census: Primes by Frequency Over an Explicit Seed, a Wider Seed Never Raising the Remainder, and Every Unread Seed File Returned
 control_roster	The Control Roster: the 36 Constructs, the Construct-and-Kind SQL Form Table, and a Boundary and StoreVocab That Are Operands Which Can Be Empty
 control_provenance	The Control Provenance: Where a Site's Value Came From, the Boundary and Configuration and Scope Helpers, and an Empty Boundary Claiming Nothing
+split	The Module Split: a Pure Plan Into Sibling Modules, Applied Only on an Explicit Write Operand, Lossless, Idempotent, and Never Overwriting a Different Sibling

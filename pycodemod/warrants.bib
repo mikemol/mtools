@@ -4071,3 +4071,204 @@
             each.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_calls_with_a_dotted_target_reads_each_full_dotted_call_once},
 }
+
+@misc{pycodemod-split-shadowing-local-is-not-a-module-level-dependency,
+  section = {split},
+  title  = {ORIGIN: a local that shadows a module-level name is not a dependency on it},
+  claim  = {ORIGIN: a local that shadows a module-level name is not a dependency on it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_shadowing_local_is_not_a_module_level_dependency},
+}
+
+@misc{pycodemod-split-impure-statements-keep-their-source-order,
+  section = {split},
+  title  = {ORIGIN: two impure statements reading one name stay in source order through the sort},
+  claim  = {ORIGIN: two impure statements reading one name stay in source order through the sort.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_impure_statements_keep_their_source_order},
+}
+
+@misc{pycodemod-split-file-as-a-location-is-not-a-hazard-but-as-source-is,
+  section = {split},
+  title  = {ORIGIN: reading a sibling through __file__.parent is safe; reading its own text is not},
+  claim  = {ORIGIN: reading a sibling through __file__.parent is safe; reading its own text is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_file_as_a_location_is_not_a_hazard_but_as_source_is},
+}
+
+@misc{pycodemod-split-bounded-split-is-lossless-and-keeps-every-comment,
+  section = {split},
+  title  = {ORIGIN: every part is under the bound, nothing is lost, comments and docstring survive},
+  claim  = {ORIGIN: every part is under the bound, nothing is lost, comments and docstring survive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_bounded_split_is_lossless_and_keeps_every_comment},
+}
+
+@misc{pycodemod-split-entry-module-imports-every-part,
+  section = {split},
+  title  = {ORIGIN: every part is imported, so a part's module-level effects still run},
+  claim  = {ORIGIN: every part is imported, so a part's module-level effects still run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_the_entry_module_imports_every_part},
+}
+
+@misc{pycodemod-split-cycle-through-a-def-is-colocated-not-refused,
+  section = {split},
+  title  = {ORIGIN: a fan-in table whose def reads it at call time splits; the cycle shares one part},
+  claim  = {ORIGIN: a fan-in table whose def reads it at call time splits; the cycle shares one
+            part.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_cycle_through_a_def_is_colocated_not_refused},
+}
+
+@misc{pycodemod-split-backwards-dependency-through-a-def-is-not-a-cycle-by-itself,
+  section = {split},
+  title  = {ORIGIN: a data dependency that runs through a def does not refuse the split},
+  claim  = {ORIGIN: a data dependency that runs through a def does not refuse the split.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_backwards_dependency_through_a_def_is_not_a_cycle_by_itself},
+}
+
+@misc{pycodemod-split-unsplittable-statement-is-refused-on-budget-and-named,
+  section = {split},
+  title  = {ORIGIN: one body over the bound is a refusal that names the part holding the statement},
+  claim  = {ORIGIN: one body over the bound is a refusal that names the part holding the statement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_unsplittable_statement_is_refused_on_budget_and_named},
+}
+
+@misc{pycodemod-split-definition-bound-cuts-what-the-line-bound-cannot-see,
+  section = {split},
+  title  = {ORIGIN: six tiny defs are one part under a line bound alone and three under max_defs=2},
+  claim  = {ORIGIN: six tiny defs are one part under a line bound alone and three under max_defs=2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_definition_bound_cuts_what_the_line_bound_cannot_see},
+}
+
+@misc{pycodemod-split-generous-definition-bound-does-not-disable-the-line-bound,
+  section = {split},
+  title  = {ORIGIN: the line bound still cuts when max_defs is generous; neither subsumes the other},
+  claim  = {ORIGIN: the line bound still cuts when max_defs is generous; neither subsumes the other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_generous_definition_bound_does_not_disable_the_line_bound},
+}
+
+@misc{pycodemod-split-plan-writes-nothing,
+  section = {split},
+  title  = {AUTHORED: planning leaves the directory byte-for-byte as it was},
+  claim  = {AUTHORED: planning leaves the directory byte-for-byte as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_plan_writes_nothing},
+}
+
+@misc{pycodemod-split-apply-refuses-without-the-explicit-operand,
+  section = {split},
+  title  = {AUTHORED: no write operand raises and touches nothing, whatever the environment says},
+  claim  = {AUTHORED: no write operand raises and touches nothing, whatever the environment says.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_apply_refuses_without_the_explicit_operand},
+}
+
+@misc{pycodemod-split-dry-run-reports-every-file-and-writes-none,
+  section = {split},
+  title  = {AUTHORED: write=False names the files it would write, entry last, and changes nothing},
+  claim  = {AUTHORED: write=False names the files it would write, entry last, and changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_dry_run_reports_every_file_and_writes_none},
+}
+
+@misc{pycodemod-split-apply-writes-the-parts-and-the-rewritten-entry,
+  section = {split},
+  title  = {AUTHORED: write=True lands every planned file exactly as planned, with no temp file left},
+  claim  = {AUTHORED: write=True lands every planned file exactly as planned, with no temp file
+            left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_apply_writes_the_parts_and_the_rewritten_entry},
+}
+
+@misc{pycodemod-split-apply-is-idempotent-on-a-second-run,
+  section = {split},
+  title  = {AUTHORED: re-planning the split module moves nothing, and applying that plan is a no-op},
+  claim  = {AUTHORED: re-planning the split module moves nothing, and applying that plan is a no-op.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_apply_is_idempotent_on_a_second_run},
+}
+
+@misc{pycodemod-split-name-that-cannot-move-is-refused-with-the-reason,
+  section = {split},
+  title  = {AUTHORED: a kept name referenced by a part-bound name refuses and names both},
+  claim  = {AUTHORED: a kept name referenced by a part-bound name refuses and names both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_name_that_cannot_move_is_refused_with_the_reason},
+}
+
+@misc{pycodemod-split-unparseable-file-is-a-skip-and-cannot-be-applied,
+  section = {split},
+  title  = {AUTHORED: a syntax error is returned as a Skip, never raised and never swallowed},
+  claim  = {AUTHORED: a syntax error is returned as a Skip, never raised and never swallowed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_unparseable_file_is_a_skip_and_cannot_be_applied},
+}
+
+@misc{pycodemod-split-missing-file-is-a-skip,
+  section = {split},
+  title  = {AUTHORED: an unreadable path is a Skip with the reason, not an exception},
+  claim  = {AUTHORED: an unreadable path is a Skip with the reason, not an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_missing_file_is_a_skip},
+}
+
+@misc{pycodemod-split-two-statements-on-one-line-are-refused,
+  section = {split},
+  title  = {AUTHORED: a `;`-joined line cannot be sliced byte-exactly, so the plan refuses it},
+  claim  = {AUTHORED: a `;`-joined line cannot be sliced byte-exactly, so the plan refuses it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_two_statements_on_one_line_are_refused},
+}
+
+@misc{pycodemod-split-module-that-declares-all-is-refused,
+  section = {split},
+  title  = {AUTHORED: an existing `__all__` would need merging by hand, so no plan is made},
+  claim  = {AUTHORED: an existing `__all__` would need merging by hand, so no plan is made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_module_that_declares_all_is_refused},
+}
+
+@misc{pycodemod-split-licence-header-stays-on-the-entry-and-opens-every-part,
+  section = {split},
+  title  = {AUTHORED: SPDX and copyright lines travel to each part; the entry keeps its own block},
+  claim  = {AUTHORED: SPDX and copyright lines travel to each part; the entry keeps its own block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_the_licence_header_stays_on_the_entry_and_opens_every_part},
+}
+
+@misc{pycodemod-split-no-suppression-comment-is-emitted,
+  section = {split},
+  title  = {AUTHORED: the generated files declare their re-exports in `__all__`, with no noqa},
+  claim  = {AUTHORED: the generated files declare their re-exports in `__all__`, with no noqa.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_no_suppression_comment_is_emitted},
+}
+
+@misc{pycodemod-split-caller-of-a-moved-private-name-is-owed,
+  section = {split},
+  title  = {AUTHORED: an importer of a private name the entry no longer re-exports is listed as owed},
+  claim  = {AUTHORED: an importer of a private name the entry no longer re-exports is listed as
+            owed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_caller_of_a_moved_private_name_is_owed},
+}
+
+@misc{pycodemod-split-unreadable-caller-is-skipped-not-dropped,
+  section = {split},
+  title  = {AUTHORED: a caller that cannot be parsed comes back as a Skip on the plan},
+  claim  = {AUTHORED: a caller that cannot be parsed comes back as a Skip on the plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_unreadable_caller_is_skipped_not_dropped},
+}
+
+@misc{pycodemod-split-apply-refuses-a-plan-whose-file-changed-since,
+  section = {split},
+  title  = {AUTHORED: editing the module between plan and apply is refused, and nothing is written},
+  claim  = {AUTHORED: editing the module between plan and apply is refused, and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_apply_refuses_a_plan_whose_file_changed_since},
+}
+
+@misc{pycodemod-split-apply-never-overwrites-a-different-sibling,
+  section = {split},
+  title  = {AUTHORED: a sibling already there with other content is refused before any write},
+  claim  = {AUTHORED: a sibling already there with other content is refused before any write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_apply_never_overwrites_a_different_sibling},
+}
+
+@misc{pycodemod-split-lambda-needs-its-default-and-its-body-names-but-not-its-parameters,
+  section = {split},
+  title  = {AUTHORED: a lambda's default is read where it is written and its body reads from outside},
+  claim  = {AUTHORED: a lambda's default is read where it is written and its body reads from
+            outside.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_lambda_needs_its_default_and_its_body_names_but_not_its_parameters},
+}
+
+@misc{pycodemod-split-class-needs-its-decorators-bases-keywords-and-body-names-but-not-its-own,
+  section = {split},
+  title  = {AUTHORED: a class reads its decorator, bases, keyword values and body from outside itself},
+  claim  = {AUTHORED: a class reads its decorator, bases, keyword values and body from outside
+            itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_class_needs_its_decorators_bases_keywords_and_body_names_but_not_its_own},
+}

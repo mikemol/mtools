@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 643,
+  "counter": 645,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -17,7 +17,7 @@
   },
   "lock": {
     "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-04T21:59:14Z"
+    "taken_at": "2026-10-05T00:58:36Z"
   },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
@@ -6126,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "completed": null
     },
     {
@@ -6174,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -10057,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -11486,7 +11486,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -11804,7 +11804,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -11848,21 +11848,21 @@
     {
       "symbol": "W595",
       "title": "pycodemod: port --split, the file-splitting codemod writer behind --apply, from substrate's scratch/pycodemod.py",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Survey the writer at source and cut it as one commit per function, with a decoy-repo arm for --apply",
-      "evidence": "2026-10-04: drained from queue.md (L710-711): deferred under the membership ruling; stays in substrate meanwhile | 2026-10-04: operator 2026-10-04: substrate is to be drained into mtools wholesale, so the second-consumer deferral no longer applies",
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: drained from queue.md (L710-711): deferred under the membership ruling; stays in substrate meanwhile | 2026-10-04: operator 2026-10-04: substrate is to be drained into mtools wholesale, so the second-consumer deferral no longer applies | 2026-10-04: split.py and splitscope.py: the --split writer ported whole. plan(path, Options, callers) is pure (parts, files, moves, imports, owed callers, hazards, selfnamed, twice, refusal, skipped); apply(plan, *, write) REQUIRES the choice (None raises ChoiceError, no env switch), refuses a refused, skipped, lossy or stale plan, never overwrites a sibling with different content, writes the entry last, and a second run is a no-op; tmp-file-and-replace write (pycodemod does not depend on atomicwrite); the origin's # noqa: F401 is replaced by a generated __all__ so no suppression comment is emitted; no libcst, statement text sliced by ast positions; 26 tests (10 origin arms, 16 authored), 26 warrants under rubric key split; the idempotence arm caught a real bug in the fixer's first version (the generated __all__ made a re-plan refuse); F-arm: the explicit-choice refusal disabled, test_apply_refuses_without_the_explicit_operand red; gaps minted as W644 and W645; committed under W595 | 2026-10-04: 2026-10-04 commit gate REFUSED: //pycodemod:mutants, 2 SURVIVED def-sites in splitscope.py (_Scope._class, _Scope._lambda); status moved from done back to ready; nothing else failed | 2026-10-05: 2026-10-04 after the restart: fixed the gate refusal by pinning _Scope._lambda and _Scope._class through two tests via split.plan (28 tests, 28 warrants); //pycodemod:mutants run directly passes (invocation 292d1374); pycodemod suite 689; F-arms on the two new tests red and restored; committed under W595",
       "issued_at": "2026-10-04T19:06:24Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T19:09:55Z",
+      "last_worked": "2026-10-05T01:06:35Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261005T010635Z"
     },
     {
       "symbol": "W596",
@@ -12770,6 +12770,42 @@
       "issued_at": "2026-10-04T22:14:02Z",
       "minted_during": "tick",
       "caused_by": "W600",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W644",
+      "title": "pycodemod cli: wire the --split mode with --max, --max-defs, --prefix, --keep and --export, and an explicit --apply or --dry-run, neither given refused",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Map --apply to apply(write=True) and --dry-run to write=False; refuse neither and both like flag_contract.exactly_one; a printer for the refusal, owed callers, hazards and selfnamed; tests per flag and per refusal",
+      "evidence": "",
+      "issued_at": "2026-10-04T22:25:28Z",
+      "minted_during": "tick",
+      "caused_by": "W595",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W645",
+      "title": "pycodemod split: run the existing differential/split.cases.json against plan(), and scan attribute-style callers (import stem, then stem.name) for owed",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read differential/split.cases.json and write the cases-versus-plan adapter; extend the owed scan to stem.name access; add a behavioural-equivalence check by import-and-compare that mypy's no-Any rule allows; note the origin emitted an empty part 00 which the port omits",
+      "evidence": "",
+      "issued_at": "2026-10-04T22:25:28Z",
+      "minted_during": "tick",
+      "caused_by": "W595",
       "last_worked": null,
       "ticks_blocked": 0
     }
