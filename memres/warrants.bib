@@ -584,3 +584,10 @@
   claim  = {A predicate that ignores its knobs separates P but lets all three mutants survive.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_zswap_probe.py -k test_main_selftest_fails_naming_each_mutant_a_deaf_predicate_lets_survive},
 }
+
+@misc{memres-mem-db-provenance-reports-the-latest-measurement-time-not-the-earliest,
+  section = {mem_db},
+  title  = {Two cells recorded at different times: `measured_at` is the later one},
+  claim  = {Two cells recorded at different times: `measured_at` is the later one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_provenance_reports_the_latest_measurement_time_not_the_earliest},
+}

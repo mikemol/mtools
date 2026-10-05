@@ -1,0 +1,67 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629, W670), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim mem_db.py's or sweep_budget.py's
+# own docstring makes about the observation store and the sweep's RAM budget, and none moves a def.
+
+# MONOTONE per cell: a re-measure may RAISE a peak, never lower it. The max in the upsert is that rule...
+src/mikemol/memres/mem_db.py|peak-takes-the-minimum|bytes = max\(bytes, excluded\.bytes\)|bytes = min(bytes, excluded.bytes)|def=record
+
+# ...and a smaller reading is not evidence, so it must not touch the run or the time either.
+src/mikemol/memres/mem_db.py|lower-reading-rewrites-the-run|"WHERE excluded\.bytes > peak\.bytes"|"WHERE 1"|def=record
+
+# `record` returns the rows OFFERED, not the number that changed a stored value.
+src/mikemol/memres/mem_db.py|record-count-is-zero|return len\(rows\)|return 0|def=record
+
+# Concurrent writers: the rows are committed, so a second connection sees them.
+src/mikemol/memres/mem_db.py|record-never-commits|conn\.commit\(\)|pass|def=record
+
+# The store opens in WAL mode so a harvest's readers do not block, creating its own directory.
+src/mikemol/memres/mem_db.py|journal-not-wal|PRAGMA journal_mode=WAL|PRAGMA journal_mode=DELETE|def=connect
+
+src/mikemol/memres/mem_db.py|connect-directory-not-created|db\.parent\.mkdir\(parents=True, exist_ok=True\)|pass|def=connect
+
+# A claim's reservation is the MAX over its cells: the worst cell is the number, not the typical one.
+src/mikemol/memres/mem_db.py|claim-reserves-the-smallest-cell|claim, max\(bytes\) FROM peak WHERE project=\?|claim, min(bytes) FROM peak WHERE project=?|def=manifest
+
+# The resolution's default is the largest bucket, and only claims that differ from it are listed.
+src/mikemol/memres/mem_db.py|default-is-the-smallest-bucket|defaults\[res\] = max\(bucket for _, bucket in rows\)|defaults[res] = min(bucket for _, bucket in rows)|def=manifest
+
+src/mikemol/memres/mem_db.py|every-claim-listed-not-only-the-exceptions|if bucket != defaults\[res\]|if True|def=manifest
+
+# A manifest is one project's: the query is scoped to it.
+src/mikemol/memres/mem_db.py|manifest-not-scoped-to-the-project|FROM peak WHERE project=\? "|FROM peak WHERE project!=? "|def=manifest
+
+# Provenance reports what a bucket RESTS ON: distinct runs, the latest time, and an empty project reads 0.
+src/mikemol/memres/mem_db.py|runs-counted-not-distinct|count\(DISTINCT run\)|count(run)|def=provenance
+
+src/mikemol/memres/mem_db.py|measured-at-is-the-earliest|max\(at\)|min(at)|def=provenance
+
+src/mikemol/memres/mem_db.py|empty-project-has-no-zero-floor|round\(\(low or 0\)|round(low|def=provenance
+
+# Fewer than `<db> <verb> <project>` is a usage error, exit 2.
+src/mikemol/memres/mem_db.py|usage-error-exits-one|return 2|return 1|def=main
+
+src/mikemol/memres/mem_db.py|two-arguments-accepted|_ARGC = 3|_ARGC = 2|
+
+src/mikemol/memres/mem_db.py|verb-inverted|if verb == "manifest" else|if verb == "provenance" else|def=main
+
+# The operator's override WINS, and an EMPTY override is no override.
+src/mikemol/memres/sweep_budget.py|override-ignored|if override:|if False:|def=budget_mb
+
+src/mikemol/memres/sweep_budget.py|empty-override-parsed|if override:|if override is not None:|def=budget_mb
+
+# Otherwise MemTotal times a conservative fraction (0.4), in MB from kB.
+src/mikemol/memres/sweep_budget.py|default-fraction-raised|_DEFAULT_FRACTION = 0\.4|_DEFAULT_FRACTION = 0.5|
+
+src/mikemol/memres/sweep_budget.py|kb-per-mb-decimal|_KB_PER_MB = 1024|_KB_PER_MB = 1000|
+
+# A meminfo with no MemTotal line reads 0, and only the MemTotal line counts.
+src/mikemol/memres/sweep_budget.py|missing-memtotal-reads-nonzero|return 0|return 100|def=_mem_total_mb
+
+src/mikemol/memres/sweep_budget.py|wrong-meminfo-line|line\.startswith\("MemTotal"\)|line.startswith("MemFree")|def=_mem_total_mb
+
+# With no environ passed, the process environment is read.
+src/mikemol/memres/sweep_budget.py|process-environment-not-read|os\.environ if environ is None else environ|{} if environ is None else environ|def=budget_mb

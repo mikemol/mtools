@@ -19,6 +19,8 @@ if TYPE_CHECKING:
 
 _MB = 1024 * 1024
 _USAGE = 2
+_EARLIER = 1000
+_LATER = 2000
 
 
 def _store(tmp_path: Path, rows: list[mem_db.Row], run: str = "") -> Path:
@@ -123,6 +125,19 @@ def test_provenance_says_what_the_bucket_rests_on(tmp_path: Path) -> None:
     assert before <= measured_at <= int(time.time())
 
 
+def test_provenance_reports_the_latest_measurement_time_not_the_earliest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Two cells recorded at different times: `measured_at` is the later one."""
+    db = tmp_path / "mem.sqlite"
+    with closing(mem_db.connect(db)) as conn:
+        monkeypatch.setattr(time, "time", lambda: float(_EARLIER))
+        mem_db.record(conn, [("p", "file", "a", "a__calc", _MB)])
+        monkeypatch.setattr(time, "time", lambda: float(_LATER))
+        mem_db.record(conn, [("p", "file", "b", "b__calc", _MB)])
+        assert mem_db.provenance(conn, "p")["measured_at"] == _LATER
+
+
 def test_provenance_of_an_unknown_project_is_all_zero_and_unmeasured(tmp_path: Path) -> None:
     """With no rows the counts are 0 and `measured_at` is None, never a fabricated time."""
     db = _store(tmp_path, [])
@@ -158,6 +173,7 @@ def test_main_refuses_too_few_arguments_with_a_usage_line(
     """Fewer than `<db> <verb> <project>` is exit 2 with usage on stderr and nothing on stdout."""
     assert mem_db.main([]) == _USAGE
     assert mem_db.main(["only-a-db"]) == _USAGE
+    assert mem_db.main(["a-db", "manifest"]) == _USAGE
     captured = capsys.readouterr()
     assert not captured.out
-    assert captured.err.count("usage: mem_db.py <db> {manifest|provenance} <project>") == _USAGE
+    assert captured.err.count("usage: mem_db.py <db> {manifest|provenance} <project>") == _USAGE + 1
