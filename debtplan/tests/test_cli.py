@@ -86,6 +86,7 @@ def test_plan_prints_the_rows_in_pay_down_order_as_json(
                 "ready": True,
                 "waits_on": [],
                 "waited_by": ["mid.py", "top.py"],
+                "unsettled": [],
             },
             {
                 "file": "mid.py",
@@ -93,6 +94,7 @@ def test_plan_prints_the_rows_in_pay_down_order_as_json(
                 "ready": False,
                 "waits_on": ["leaf.py"],
                 "waited_by": ["top.py"],
+                "unsettled": [],
             },
             {
                 "file": "top.py",
@@ -100,6 +102,7 @@ def test_plan_prints_the_rows_in_pay_down_order_as_json(
                 "ready": False,
                 "waits_on": ["leaf.py", "mid.py"],
                 "waited_by": [],
+                "unsettled": [],
             },
         ],
         "ambiguous": {},
@@ -253,6 +256,85 @@ def test_a_refused_mint_is_exit_2_and_says_why(
     args = ["mint", *_args(tmp_path, ledger, "--no-universe", "--prefix", "t: ")]
     assert main(args) == EXIT_CANNOT
     assert "cannot take the tick lock" in capsys.readouterr().err
+
+
+def _ambiguous(root: Path) -> Path:
+    """Plant a file whose `import a` has two candidates and no sibling, and its ledger.
+
+    Returns:
+        The ledger's path.
+
+    """
+    files = {"scripts/a.py": "", "tools/a.py": "", "other/c.py": "import a\n"}
+    return _repo(root, '{"other/c.py": 1}', files)
+
+
+def _shown(capsys: pytest.CaptureFixture[str]) -> dict[str, object]:
+    """Read the JSON a command printed.
+
+    Returns:
+        The document.
+
+    """
+    return cast("dict[str, object]", json.loads(capsys.readouterr().out))
+
+
+def test_plan_reports_an_unsettled_name_with_its_candidates_by_importer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The ambiguity lists who wrote the name and the files that could answer it."""
+    _no_worktrees(monkeypatch)
+    assert main(["plan", *_args(tmp_path, _ambiguous(tmp_path))]) == EXIT_OK
+    assert _shown(capsys)["ambiguous"] == {
+        "other/c.py": [{"name": "a", "candidates": ["scripts/a.py", "tools/a.py"]}]
+    }
+
+
+def test_a_resolutions_file_is_read_and_applied(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Without the declaration the name blocks the file; with it the file is ready."""
+    _no_worktrees(monkeypatch)
+    ledger = _ambiguous(tmp_path)
+    declared = tmp_path / "resolutions.json"
+    declared.write_text('{"a": "tools/a.py"}', encoding="utf-8")
+
+    def row_of(*extra: str) -> dict[str, object]:
+        main(["plan", *_args(tmp_path, ledger, *extra)])
+        rows = cast("list[dict[str, object]]", _shown(capsys)["rows"])
+        return rows[0]
+
+    held = row_of()
+    assert (held["ready"], held["unsettled"]) == (False, ["a"])
+    free = row_of("--resolutions", str(declared))
+    assert (free["ready"], free["unsettled"]) == (True, [])
+
+
+def test_a_malformed_resolutions_file_is_refused_with_exit_2(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A declaration the planner cannot read is a refusal naming the file, not an empty one."""
+    ledger = _ambiguous(tmp_path)
+    declared = tmp_path / "resolutions.json"
+    declared.write_text("[]", encoding="utf-8")
+    argv = ["plan", *_args(tmp_path, ledger, "--no-universe", "--resolutions", str(declared))]
+    assert main(argv) == EXIT_CANNOT
+    assert capsys.readouterr().err.startswith(f"mikemol-debtplan: {declared}: expected")
+
+
+def test_mint_makes_a_card_for_the_ambiguous_name(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The file's card waits on the name's card, and the summary counts both."""
+    _no_worktrees(monkeypatch)
+    ledger = _ambiguous(tmp_path)
+    (tmp_path / ".claude").mkdir()
+    queue = Queue(tmp_path / ".claude" / "paths-forward.json")
+    queue.run("--init")
+    assert main(["mint", *_args(tmp_path, ledger, "--prefix", "t: ")]) == EXIT_OK
+    assert "added 2, rewrote 2, retired 0" in capsys.readouterr().out
+    assert set(queue.cards("t ambiguity: ")) == {"a"}
+    assert queue.cards("t: ")["other/c.py"].status == "blocked"
 
 
 @pytest.mark.parametrize("argv", [["frobnicate"], [], ["plan"], ["mint", "--root", "r"]])

@@ -37,3 +37,24 @@ def test_equal_rows_sort_by_name() -> None:
     """With the same waits and dependents, the name decides."""
     rows = [Row("b.py", 1, (), ()), Row("a.py", 1, (), ())]
     assert [row.file for row in sorted(rows, key=order_key)] == ["a.py", "b.py"]
+
+
+def test_a_row_with_an_unsettled_name_is_not_ready_though_it_waits_on_no_file() -> None:
+    """An ambiguous import hides an edge, so the order behind it is unknown: not ready."""
+    assert not Row("a.py", 1, (), (), ("m",)).ready
+
+
+def test_a_row_with_no_unsettled_name_defaults_to_none() -> None:
+    """The unsettled names are empty unless a plan says otherwise."""
+    assert Row("a.py", 1, (), ()).unsettled == ()
+
+
+def test_an_unsettled_name_counts_as_a_wait_in_the_order_key() -> None:
+    """Two files waited on and one name unsettled is three waits."""
+    assert order_key(Row("a.py", 3, ("x.py", "y.py"), (), ("m",))) == (3, 0, "a.py")
+
+
+def test_a_row_held_by_an_unsettled_name_sorts_after_a_ready_one() -> None:
+    """The ready file leads, though the held one has more files waiting behind it."""
+    rows = [Row("held.py", 1, (), ("p.py", "q.py"), ("m",)), Row("free.py", 1, (), ())]
+    assert [row.file for row in sorted(rows, key=order_key)] == ["free.py", "held.py"]

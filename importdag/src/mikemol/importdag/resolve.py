@@ -17,13 +17,16 @@ dotted prefix first (`from .a import b` is `a/b.py`, else `a.py`), and `from . i
 to the package's own `__init__.py` when `x` is not a module. A level that climbs above the root
 resolves to nothing.
 
-⚑⚑ AN AMBIGUOUS ABSOLUTE NAME IS REPORTED, NEVER PICKED. Two files can answer one name
-(`scripts/a.py` and `tools/a.py` both answer `a`). `dagderive.stem_index` refuses that outright,
-which is right for an engine that must stage every module; a census over a foreign tree must go
-on. So a name with several candidates resolves to the one beside the importing file (Python's own
-reading of a bare sibling import) when exactly one is there, and otherwise lands in
-`Resolution.ambiguous` with no edge. The caller sees what was left unsettled and decides; a skipped
-edge loosens an order and can never make a cycle.
+⚑⚑ AN AMBIGUOUS ABSOLUTE NAME IS NEVER GUESSED, ONLY REPORTED, WITH ITS CANDIDATES. Two files can
+answer one name (`scripts/a.py` and `tools/a.py` both answer `a`; a package `gcalc/` and a module
+`gcalc.py` both answer `gcalc`). A name with several candidates resolves to the one beside the
+importing file (Python's own reading of a bare sibling import) when exactly one is there, and
+otherwise is returned as `Unsettled(name, candidates)` with no edge: the NAME is the dotted prefix
+that is ambiguous, so one decision settles every importer, and the candidates say what to choose
+between. The caller owns what an unsettled name means (a blocker to be resolved, not a skipped
+edge to be forgotten). A decision is data: `declared` maps a name to the file it is declared to
+mean, and it is honoured ONLY when that file is one of the candidates, so a stale declaration
+cannot pin a name to a file that no longer answers it.
 
 ⚑ THE TRANSITIVE CLOSURE IS `dagderive.cone`, NOT A SECOND WALK. This module derives edges only.
 """
@@ -66,11 +69,19 @@ class Index:
 
 
 @dataclass(frozen=True, slots=True)
+class Unsettled:
+    """A dotted name several files could answer, none beside the importer: not guessed."""
+
+    name: str
+    candidates: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class Resolution:
-    """The indexed files one module imports, and the import names it could not settle."""
+    """The indexed files one module imports, and the names it could not settle."""
 
     files: frozenset[str]
-    ambiguous: tuple[str, ...]
+    ambiguous: tuple[Unsettled, ...]
 
 
 def _from_references(node: ast.ImportFrom) -> set[Reference]:
@@ -158,22 +169,30 @@ def _settle(path: str, hits: frozenset[str]) -> frozenset[str] | None:
 
 
 def _absolute(
-    path: str, name: str, names: Mapping[str, frozenset[str]]
-) -> tuple[frozenset[str], bool]:
+    path: str, name: str, idx: Index, declared: Mapping[str, str]
+) -> tuple[frozenset[str], Unsettled | None]:
     """Resolve one absolute name at its longest dotted prefix that any file answers.
 
     Returns:
-        The files the name means, and whether it was left unsettled (several candidates, none
-        beside `path`). A file is never its own import.
+        The files the name means, and the `Unsettled` prefix when several files answer it and none
+        is beside `path` or declared. A declaration is honoured only when it names one of the
+        candidates. A file is never its own import.
 
     """
     parts = name.split(".")
     for cut in range(len(parts), 0, -1):
-        hits = names.get(".".join(parts[:cut]), frozenset()) - {path}
-        if hits:
-            settled = _settle(path, hits)
-            return (frozenset(), True) if settled is None else (settled, False)
-    return frozenset(), False
+        prefix = ".".join(parts[:cut])
+        hits = idx.names.get(prefix, frozenset()) - {path}
+        if not hits:
+            continue
+        settled = _settle(path, hits)
+        if settled is not None:
+            return settled, None
+        pinned = declared.get(prefix)
+        if pinned in hits:
+            return frozenset({pinned}), None
+        return frozenset(), Unsettled(prefix, tuple(sorted(hits)))
+    return frozenset(), None
 
 
 def _relative(path: str, ref: Reference, files: frozenset[str]) -> frozenset[str]:
@@ -202,7 +221,12 @@ def _relative(path: str, ref: Reference, files: frozenset[str]) -> frozenset[str
     return frozenset()
 
 
-def resolve(path: str, refs: Iterable[Reference], idx: Index) -> Resolution:
+def resolve(
+    path: str,
+    refs: Iterable[Reference],
+    idx: Index,
+    declared: Mapping[str, str] | None = None,
+) -> Resolution:
     """Resolve the references of the file `path` against an index.
 
     An absolute name is tried at its longest dotted prefix first, so `import a.b.c` finds
@@ -210,24 +234,27 @@ def resolve(path: str, refs: Iterable[Reference], idx: Index) -> Resolution:
     it. A relative reference is a direct lookup from the importer's directory.
 
     Returns:
-        The indexed files the references mean, and the absolute names that could mean several with
-        none beside `path`, sorted.
+        The indexed files the references mean, and the absolute names left unsettled, once each,
+        sorted by name. `declared` maps an ambiguous name to the candidate it is declared to mean.
 
     """
+    pins = declared or {}
     files: set[str] = set()
-    ambiguous: set[str] = set()
+    unsettled: dict[str, Unsettled] = {}
     for ref in refs:
         if ref.level:
             files |= _relative(path, ref, idx.files)
             continue
-        found, unsettled = _absolute(path, ref.name, idx.names)
+        found, left = _absolute(path, ref.name, idx, pins)
         files |= found
-        if unsettled:
-            ambiguous.add(ref.name)
-    return Resolution(frozenset(files), tuple(sorted(ambiguous)))
+        if left is not None:
+            unsettled[left.name] = left
+    return Resolution(frozenset(files), tuple(unsettled[name] for name in sorted(unsettled)))
 
 
-def derive(root: Path, paths: Sequence[str]) -> dict[str, Resolution]:
+def derive(
+    root: Path, paths: Sequence[str], declared: Mapping[str, str] | None = None
+) -> dict[str, Resolution]:
     """Derive every file's imports among `paths`, each path relative to `root`.
 
     A file that cannot be read raises from `read_text` (`OSError`, or `UnicodeDecodeError` for a
@@ -240,6 +267,6 @@ def derive(root: Path, paths: Sequence[str]) -> dict[str, Resolution]:
     """
     table = index(paths)
     return {
-        path: resolve(path, references((root / path).read_text(encoding="utf-8")), table)
+        path: resolve(path, references((root / path).read_text(encoding="utf-8")), table, declared)
         for path in paths
     }

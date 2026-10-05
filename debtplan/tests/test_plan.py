@@ -1,23 +1,33 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""The plan: waits follow the import closure, a cycle is one unit, and the unsettled is reported."""
+"""The plan: waits follow the import closure, a cycle is one unit, and the unsettled blocks."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.importdag.resolve import Resolution, Unsettled
 
-from mikemol.debtplan.plan import plan, waits_of
+from mikemol.debtplan.plan import Plan, candidates_of, plan, unsettled_of, waits_of
+from mikemol.debtplan.rows import Row
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Mapping
     from pathlib import Path
 
-    from mikemol.debtplan.rows import Row
-
 RING = 3
 """The files in the import ring the ring test builds."""
+
+AMBIGUOUS_TREE = {
+    "scripts/a.py": "",
+    "tools/a.py": "",
+    "other/c.py": "import a\n",
+    "other/d.py": "import c\n",
+}
+"""`import a` in other/c.py has two candidates and no sibling; other/d.py imports c, which does."""
+
+CANDIDATES = ("scripts/a.py", "tools/a.py")
 
 
 def _tree(root: Path, files: dict[str, str]) -> None:
@@ -116,14 +126,42 @@ def test_a_file_importing_itself_is_ready(tmp_path: Path) -> None:
     assert _rows({"a.py": 1}, tmp_path)["a.py"].ready
 
 
-def test_an_unsettled_name_is_reported_with_the_file_that_wrote_it(tmp_path: Path) -> None:
-    """Two files named a, none beside the importer: no wait, and the name is returned."""
-    _tree(
-        tmp_path,
-        {"scripts/a.py": "", "tools/a.py": "", "other/c.py": "import a\n"},
-    )
-    result = plan({"other/c.py": 1}, tmp_path, ("scripts/a.py", "tools/a.py"))
-    assert result.ambiguous == {"other/c.py": ("a",)}
+def test_an_unsettled_name_is_reported_with_its_candidates_by_the_importer(tmp_path: Path) -> None:
+    """Two files named a, none beside the importer: no edge, and the name returns with both."""
+    _tree(tmp_path, AMBIGUOUS_TREE)
+    result = plan({"other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))
+    assert result.ambiguous == {"other/c.py": (Unsettled("a", CANDIDATES),)}
+
+
+def test_a_file_importing_an_unsettled_name_is_not_ready(tmp_path: Path) -> None:
+    """The blocker is the name: the row lists it, and the file is held until it is settled."""
+    _tree(tmp_path, AMBIGUOUS_TREE)
+    row = _rows({"other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))["other/c.py"]
+    assert row.unsettled == ("a",)
+    assert not row.ready
+
+
+def test_a_file_whose_closure_imports_an_unsettled_name_is_held_too(tmp_path: Path) -> None:
+    """A file importing c, which imports the ambiguous a, is held though it names nothing."""
+    _tree(tmp_path, AMBIGUOUS_TREE)
+    by = _rows({"other/d.py": 1, "other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))
+    assert by["other/d.py"].unsettled == ("a",)
+    assert by["other/d.py"].waits_on == ("other/c.py",)
+
+
+def test_a_file_outside_the_unsettled_closure_is_not_held(tmp_path: Path) -> None:
+    """A file that does not reach the ambiguous import is unaffected by it."""
+    _tree(tmp_path, {**AMBIGUOUS_TREE, "free.py": "x = 1\n"})
+    by = _rows({"free.py": 1, "other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))
+    assert by["free.py"].ready
+    assert by["free.py"].unsettled == ()
+
+
+def test_a_declared_resolution_clears_the_blocker(tmp_path: Path) -> None:
+    """Declaring `a` as tools/a.py settles it: no unsettled name, and the file is ready."""
+    _tree(tmp_path, AMBIGUOUS_TREE)
+    result = plan({"other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE), {"a": "tools/a.py"})
+    assert result.ambiguous == {}
     assert result.rows[0].ready
 
 
@@ -131,6 +169,30 @@ def test_a_plan_with_nothing_unsettled_reports_nothing(tmp_path: Path) -> None:
     """The ambiguity report is empty when every name settled."""
     _tree(tmp_path, {"a.py": "import b\n", "b.py": ""})
     assert plan({"a.py": 1, "b.py": 1}, tmp_path).ambiguous == {}
+
+
+def test_the_unsettled_names_of_a_closure_include_the_file_itself() -> None:
+    """A file's own ambiguous import and those of its closure are collected, each once."""
+    ambiguous = (Unsettled("m", ("p/m.py", "q/m.py")),)
+    resolved = {
+        "a": Resolution(frozenset({"b"}), ambiguous),
+        "b": Resolution(frozenset(), (*ambiguous, Unsettled("n", ("p/n.py", "q/n.py")))),
+    }
+    reach = {"a": frozenset({"b"}), "b": frozenset[str]()}
+    assert unsettled_of(reach, resolved, {"a", "b"}) == {"a": ("m", "n"), "b": ("m", "n")}
+
+
+def test_the_candidates_are_those_of_the_names_that_hold_a_row_back() -> None:
+    """A name no row is held by is left out; the candidates of one name are unioned."""
+    held = Row("a.py", 1, (), (), ("m",))
+    planned = Plan(
+        (held,),
+        {
+            "a.py": (Unsettled("m", ("p/m.py", "q/m.py")), Unsettled("x", ("p/x.py", "q/x.py"))),
+            "q/m.py": (Unsettled("m", ("p/m.py", "r/m.py")),),
+        },
+    )
+    assert candidates_of(planned) == {"m": ("p/m.py", "q/m.py", "r/m.py")}
 
 
 def test_a_cyclic_wait_graph_is_refused(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

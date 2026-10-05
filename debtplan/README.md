@@ -16,14 +16,15 @@ debt file in its closure, and the files that nothing stands in front of come fir
 
 | module | does |
 |---|---|
-| `mikemol.debtplan.rows` | `Row`: a debt file's count, the debt files it waits on, and the ones that wait on it; `ready` when it waits on nothing. `order_key` sorts ready files first |
+| `mikemol.debtplan.rows` | `Row`: a debt file's count, the debt files it waits on, the ones that wait on it, and the ambiguous import names in its closure (`unsettled`); `ready` when it waits on nothing and nothing is unsettled. `order_key` sorts ready files first |
+| `mikemol.debtplan.resolutions` | `read_resolutions(path)` reads a JSON object of an ambiguous import name to the file it is declared to mean, and refuses everything else by name |
 | `mikemol.debtplan.cycle` | `find_cycle(waits)` returns one cycle in a wait graph, or none, so a plan that could block its own cards is refused |
 | `mikemol.debtplan.reduce` | `direct_waits(rows)` drops the waits another wait implies (the transitive reduction); the order is unchanged |
-| `mikemol.debtplan.plan` | `plan(ledger, root, universe)` derives the waits from the import closure through `importdag.resolve` and `importdag.dagderive.cone`, treats a cycle as one unit, and returns the rows with the import names it could not settle |
+| `mikemol.debtplan.plan` | `plan(ledger, root, universe)` derives the waits from the import closure through `importdag.resolve` and `importdag.dagderive.cone`, treats a cycle as one unit, holds back every file whose closure imports a name it could not settle, and returns the rows with those names and their candidates (`Plan.ambiguous`); `resolutions` declares what a name means |
 | `mikemol.debtplan.ledger` | `read_ledger(path)` reads a JSON object of file path to a positive integer count, and refuses everything else by name |
 | `mikemol.debtplan.universe` | `python_files(root, exclude)` walks the tree's Python files through `mikemol.pathwalk`, relative and sorted, with the worktrees, virtualenvs, symlinks and named directories it skipped counted |
 | `mikemol.debtplan.queue` | `Queue(state)` runs `mikemol-paths-forward` in this process (its `main`, captured) and reads the cards back; the runner is a parameter |
-| `mikemol.debtplan.mint` | `mint(plan, queue, style)` syncs the queue to the plan under the tick lock: add what is missing, rewrite every card with the direct waits only, retire what left; a card being worked keeps its status |
+| `mikemol.debtplan.mint` | `mint(plan, queue, style)` syncs the queue to the plan under the tick lock: add what is missing, rewrite every card with the direct waits only, retire what left; each unsettled import name is a card of its own (`<repo> debt ambiguity: <name>`) that the held files wait on; a card being worked keeps its status |
 | `mikemol.debtplan.cli` | `mikemol-debtplan plan` and `mint` |
 
 ## What changed from luthen-observability's `mypy_plan`
@@ -35,7 +36,12 @@ debt file in its closure, and the files that nothing stands in front of come fir
   origin derived edges among the ledger's own files only, which missed a file that reaches a debt file
   through a clean one; the gate sees that closure. With no universe the narrower reading remains
   available and is the default, so it is chosen and not stumbled into.
-- What could not be settled is returned (`Plan.ambiguous`), where the origin dropped it silently.
+- What could not be settled is a BLOCKER, not a guess. The origin dropped an ambiguous import
+  silently and its first rewrite here only returned it; now every debt file whose closure imports
+  such a name is not ready, and the mint gives the name its own card listing the candidates, which
+  the held files' cards wait on. It clears by a code change, or by a declaration
+  (`--resolutions FILE`, name to path) that names one of the candidates; a stale declaration
+  naming anything else is ignored and the name stays blocked.
 - The writer is `mikemol-paths-forward`'s own `main`, called in this process, not a child process and
   not a reimplementation through `ops`: that command is what also writes the ledger line, the
   mirror and the flock. A writer that refuses a card now stops the sync and is raised with its own

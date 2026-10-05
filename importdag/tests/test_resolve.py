@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""Resolve a file set's imports against each other: layout-free, relative exact, ambiguity named."""
+"""Resolve a file set's imports against each other: layout-free, relative exact, never guessed."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from mikemol.importdag.resolve import (
     Reference,
     Resolution,
+    Unsettled,
     derive,
     index,
     module_names,
@@ -116,10 +117,18 @@ def test_an_ambiguous_name_prefers_the_sibling() -> None:
     assert got == Resolution(frozenset({"scripts/a.py"}), ())
 
 
-def test_an_ambiguous_name_with_no_sibling_is_reported_and_gets_no_edge() -> None:
-    """Two candidates, none beside the importer: no edge, and the name is returned."""
+def test_an_ambiguous_name_with_no_sibling_is_reported_with_its_candidates() -> None:
+    """Two candidates, none beside the importer: no edge, and the name returns with both."""
     table = index(["scripts/a.py", "tools/a.py", "other/c.py"])
-    assert resolve("other/c.py", _abs("a"), table) == Resolution(frozenset(), ("a",))
+    got = resolve("other/c.py", _abs("a"), table)
+    assert got == Resolution(frozenset(), (Unsettled("a", ("scripts/a.py", "tools/a.py")),))
+
+
+def test_the_candidates_are_every_file_that_answers_and_are_sorted() -> None:
+    """Three files answer `a`; they are listed in sorted order whatever the index order."""
+    table = index(["r/a.py", "p/a.py", "q/a.py", "z/c.py"])
+    got = resolve("z/c.py", _abs("a"), table)
+    assert got.ambiguous == (Unsettled("a", ("p/a.py", "q/a.py", "r/a.py")),)
 
 
 def test_a_sibling_beats_a_deeper_file_of_the_same_stem() -> None:
@@ -128,11 +137,53 @@ def test_a_sibling_beats_a_deeper_file_of_the_same_stem() -> None:
     assert resolve("d/c.py", _abs("a"), table) == Resolution(frozenset({"d/a.py"}), ())
 
 
-def test_the_ambiguous_names_are_sorted() -> None:
+def test_the_unsettled_name_is_the_ambiguous_prefix_not_the_whole_import() -> None:
+    """`import a.thing` with two files `a` reports `a`, the name a decision must settle."""
+    table = index(["p/a.py", "q/a.py", "r/c.py"])
+    got = resolve("r/c.py", _abs("a.thing"), table)
+    assert got.ambiguous == (Unsettled("a", ("p/a.py", "q/a.py")),)
+
+
+def test_a_name_imported_in_several_forms_is_reported_once() -> None:
+    """`import a` and `from a import x` name `a` twice; the report holds it once."""
+    table = index(["p/a.py", "q/a.py", "r/c.py"])
+    got = resolve("r/c.py", references("import a\nfrom a import x\n"), table)
+    assert got.ambiguous == (Unsettled("a", ("p/a.py", "q/a.py")),)
+
+
+def test_the_unsettled_names_are_sorted() -> None:
     """The report is deterministic: names sorted, each once."""
     table = index(["p/a.py", "q/a.py", "p/b.py", "q/b.py", "r/c.py"])
     got = resolve("r/c.py", [*_abs("b", "a"), Reference(0, "b")], table)
-    assert got.ambiguous == ("a", "b")
+    assert [item.name for item in got.ambiguous] == ["a", "b"]
+
+
+def test_a_declared_resolution_settles_an_ambiguous_name() -> None:
+    """Declaring `a` means tools/a.py gives that edge and clears the report."""
+    table = index(["scripts/a.py", "tools/a.py", "other/c.py"])
+    got = resolve("other/c.py", _abs("a"), table, {"a": "tools/a.py"})
+    assert got == Resolution(frozenset({"tools/a.py"}), ())
+
+
+def test_a_declared_resolution_applies_to_the_prefix_of_a_longer_name() -> None:
+    """`import a.thing` with `a` declared resolves to the declared file."""
+    table = index(["p/a.py", "q/a.py", "r/c.py"])
+    got = resolve("r/c.py", _abs("a.thing"), table, {"a": "p/a.py"})
+    assert got == Resolution(frozenset({"p/a.py"}), ())
+
+
+def test_a_declaration_that_is_not_a_candidate_is_ignored() -> None:
+    """A stale declaration cannot pin a name to a file that no longer answers it."""
+    table = index(["scripts/a.py", "tools/a.py", "other/c.py"])
+    got = resolve("other/c.py", _abs("a"), table, {"a": "gone/a.py"})
+    assert got == Resolution(frozenset(), (Unsettled("a", ("scripts/a.py", "tools/a.py")),))
+
+
+def test_a_declaration_never_overrides_a_name_that_settles_without_it() -> None:
+    """The sibling still wins: a declaration settles ambiguity, it does not rewrite a name."""
+    table = index(["scripts/a.py", "tools/a.py", "scripts/b.py"])
+    got = resolve("scripts/b.py", _abs("a"), table, {"a": "tools/a.py"})
+    assert got == Resolution(frozenset({"scripts/a.py"}), ())
 
 
 def test_every_name_contributes_its_file() -> None:
@@ -228,3 +279,15 @@ def test_derive_reads_each_file_and_resolves_it(tmp_path: Path) -> None:
     assert got["a/y.py"] == Resolution(frozenset({"a/x.py"}), ())
     assert got["a/z.py"] == Resolution(frozenset({"a/x.py"}), ())
     assert got["a/x.py"] == Resolution(frozenset(), ())
+
+
+def test_derive_passes_the_declared_resolutions_through(tmp_path: Path) -> None:
+    """A declaration given to derive settles an ambiguous name; without it the name returns."""
+    for name in ("p/m.py", "q/m.py", "r/user.py"):
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("import m\n" if name == "r/user.py" else "x = 1\n", encoding="utf-8")
+    paths = ["p/m.py", "q/m.py", "r/user.py"]
+    assert derive(tmp_path, paths)["r/user.py"].ambiguous == (Unsettled("m", ("p/m.py", "q/m.py")),)
+    pinned = derive(tmp_path, paths, {"m": "q/m.py"})["r/user.py"]
+    assert pinned == Resolution(frozenset({"q/m.py"}), ())

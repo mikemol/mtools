@@ -5,7 +5,8 @@
     mikemol-debtplan plan --root REPO --ledger LEDGER.json [--exclude NAME ...] [--no-universe]
     mikemol-debtplan mint --root REPO --ledger LEDGER.json [--state STATE] [--prefix PREFIX]
 
-`plan` prints the rows (ready files first) and the import names it could not settle, as JSON. `mint`
+`plan` prints the rows (ready files first) and the import names it could not settle, as JSON; an
+unsettled name is a blocker, never a guess, and `--resolutions` declares what one means. `mint`
 syncs the repository's paths-forward queue to the plan through `mikemol-paths-forward`, under its
 tick lock. The closure runs through the whole tree's Python files (the universe) unless
 `--no-universe` asks for the narrower reading; what the walk skipped is printed, never silent.
@@ -27,6 +28,7 @@ from mikemol.debtplan.ledger import read_ledger
 from mikemol.debtplan.mint import HOW, TOUCHES, VECTOR, MintRefusedError, Style, mint
 from mikemol.debtplan.plan import Plan, plan
 from mikemol.debtplan.queue import Queue
+from mikemol.debtplan.resolutions import read_resolutions
 from mikemol.debtplan.universe import Universe, python_files
 
 if TYPE_CHECKING:
@@ -34,6 +36,16 @@ if TYPE_CHECKING:
 
 EXIT_OK = 0
 EXIT_CANNOT = 2
+
+
+def _declared(path: Path | None) -> dict[str, str] | None:
+    """Read the declared resolutions when a file names them.
+
+    Returns:
+        The declared name to path mapping, or None when no file was given.
+
+    """
+    return read_resolutions(path) if path else None
 
 
 class Args(argparse.Namespace):
@@ -48,6 +60,7 @@ class Args(argparse.Namespace):
     ledger: Path
     exclude: list[str] | None
     no_universe: bool
+    resolutions: Path | None
     state: Path | None
     prefix: str | None
     how: str
@@ -78,6 +91,12 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="derive imports among the ledger's own files only, not through clean modules",
     )
+    common.add_argument(
+        "--resolutions",
+        type=Path,
+        help="JSON object of an ambiguous import name to the file it means; honoured only when "
+        "that file is one of the name's candidates",
+    )
     parser = argparse.ArgumentParser(prog="mikemol-debtplan", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("plan", parents=[common], help="print the plan as JSON")
@@ -98,10 +117,11 @@ def _plan_for(args: Args) -> tuple[Plan, Universe | None]:
 
     """
     ledger = read_ledger(args.ledger)
+    declared = _declared(args.resolutions)
     if args.no_universe:
-        return plan(ledger, args.root), None
+        return plan(ledger, args.root, (), declared), None
     universe = python_files(args.root, args.exclude or ())
-    return plan(ledger, args.root, universe.files), universe
+    return plan(ledger, args.root, universe.files, declared), universe
 
 
 def _skipped(universe: Universe) -> str:
@@ -133,10 +153,14 @@ def _render(planned: Plan) -> str:
             "ready": row.ready,
             "waits_on": list(row.waits_on),
             "waited_by": list(row.waited_by),
+            "unsettled": list(row.unsettled),
         }
         for row in planned.rows
     ]
-    ambiguous = {path: list(names) for path, names in planned.ambiguous.items()}
+    ambiguous = {
+        path: [{"name": item.name, "candidates": list(item.candidates)} for item in items]
+        for path, items in planned.ambiguous.items()
+    }
     document: dict[str, object] = {"rows": rows, "ambiguous": ambiguous}
     return json.dumps(document, indent=1)
 

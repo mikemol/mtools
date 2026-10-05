@@ -1064,11 +1064,18 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_ambiguous_name_prefers_the_sibling},
 }
 
-@misc{importdag-resolve-an-ambiguous-name-with-no-sibling-is-reported-and-gets-no-edge,
+@misc{importdag-resolve-an-ambiguous-name-with-no-sibling-is-reported-with-its-candidates,
   section = {resolve},
-  title  = {Two candidates, none beside the importer: no edge, and the name is returned},
-  claim  = {Two candidates, none beside the importer: no edge, and the name is returned.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_ambiguous_name_with_no_sibling_is_reported_and_gets_no_edge},
+  title  = {Two candidates, none beside the importer: no edge, and the name returns with both},
+  claim  = {Two candidates, none beside the importer: no edge, and the name returns with both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_ambiguous_name_with_no_sibling_is_reported_with_its_candidates},
+}
+
+@misc{importdag-resolve-the-candidates-are-every-file-that-answers-and-are-sorted,
+  section = {resolve},
+  title  = {Three files answer `a`; they are listed in sorted order whatever the index order},
+  claim  = {Three files answer `a`; they are listed in sorted order whatever the index order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_the_candidates_are_every_file_that_answers_and_are_sorted},
 }
 
 @misc{importdag-resolve-a-sibling-beats-a-deeper-file-of-the-same-stem,
@@ -1078,11 +1085,53 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_sibling_beats_a_deeper_file_of_the_same_stem},
 }
 
-@misc{importdag-resolve-the-ambiguous-names-are-sorted,
+@misc{importdag-resolve-the-unsettled-name-is-the-ambiguous-prefix-not-the-whole-import,
+  section = {resolve},
+  title  = {`import a.thing` with two files `a` reports `a`, the name a decision must settle},
+  claim  = {`import a.thing` with two files `a` reports `a`, the name a decision must settle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_the_unsettled_name_is_the_ambiguous_prefix_not_the_whole_import},
+}
+
+@misc{importdag-resolve-a-name-imported-in-several-forms-is-reported-once,
+  section = {resolve},
+  title  = {`import a` and `from a import x` name `a` twice; the report holds it once},
+  claim  = {`import a` and `from a import x` name `a` twice; the report holds it once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_name_imported_in_several_forms_is_reported_once},
+}
+
+@misc{importdag-resolve-the-unsettled-names-are-sorted,
   section = {resolve},
   title  = {The report is deterministic: names sorted, each once},
   claim  = {The report is deterministic: names sorted, each once.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_the_ambiguous_names_are_sorted},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_the_unsettled_names_are_sorted},
+}
+
+@misc{importdag-resolve-a-declared-resolution-settles-an-ambiguous-name,
+  section = {resolve},
+  title  = {Declaring `a` means tools/a.py gives that edge and clears the report},
+  claim  = {Declaring `a` means tools/a.py gives that edge and clears the report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_declared_resolution_settles_an_ambiguous_name},
+}
+
+@misc{importdag-resolve-a-declared-resolution-applies-to-the-prefix-of-a-longer-name,
+  section = {resolve},
+  title  = {`import a.thing` with `a` declared resolves to the declared file},
+  claim  = {`import a.thing` with `a` declared resolves to the declared file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_declared_resolution_applies_to_the_prefix_of_a_longer_name},
+}
+
+@misc{importdag-resolve-a-declaration-that-is-not-a-candidate-is-ignored,
+  section = {resolve},
+  title  = {A stale declaration cannot pin a name to a file that no longer answers it},
+  claim  = {A stale declaration cannot pin a name to a file that no longer answers it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_declaration_that_is_not_a_candidate_is_ignored},
+}
+
+@misc{importdag-resolve-a-declaration-never-overrides-a-name-that-settles-without-it,
+  section = {resolve},
+  title  = {The sibling still wins: a declaration settles ambiguity, it does not rewrite a name},
+  claim  = {The sibling still wins: a declaration settles ambiguity, it does not rewrite a name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_declaration_never_overrides_a_name_that_settles_without_it},
 }
 
 @misc{importdag-resolve-every-name-contributes-its-file,
@@ -1174,4 +1223,11 @@
   title  = {The files are read from `root`, relative and absolute imports both resolve},
   claim  = {The files are read from `root`, relative and absolute imports both resolve.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_derive_reads_each_file_and_resolves_it},
+}
+
+@misc{importdag-resolve-derive-passes-the-declared-resolutions-through,
+  section = {resolve},
+  title  = {A declaration given to derive settles an ambiguous name; without it the name returns},
+  claim  = {A declaration given to derive settles an ambiguous name; without it the name returns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_derive_passes_the_declared_resolutions_through},
 }
