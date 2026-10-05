@@ -164,6 +164,8 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             "//:.githooks/commit-msg",
             # W661, W662: `.githooks/post-commit` EXECUTED by test_post_commit_hook in a decoy repo.
             "//:.githooks/post-commit",
+            # W588: `.githooks/pre-push` EXECUTED by test_githook_pre_push against a stand-in launcher.
+            "//:.githooks/pre-push",
             "warrants.bib",
             "//:.claude/settings.json",
             "//:findings/CENSUS-BRIEF.md",

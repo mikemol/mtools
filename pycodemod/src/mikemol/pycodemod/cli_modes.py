@@ -16,6 +16,7 @@ import sys
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
+from mikemol.pycodemod.placement import ENTRY_FORMS, FIRST_WRITE_FORMS
 from mikemol.pycodemod.portable import Probe, portable_sites
 from mikemol.pycodemod.registered import registered_defs
 from mikemol.pycodemod.sql import SqlConfig, sql_sites
@@ -28,6 +29,35 @@ if TYPE_CHECKING:
 REFUSED = 2
 _ABSENT = "-"
 _NO_PROBE = Probe(reason="no probe attached: the CLI opens no database")
+
+
+def _forms(flag: str, text: str | None, default: Sequence[str]) -> tuple[str, ...]:
+    if text is None:
+        return tuple(default)
+    names = tuple(sorted(part.strip() for part in text.split(",") if part.strip()))
+    if not names:
+        msg = f"--{flag} names no form; omit it to use the defaults"
+        raise ValueError(msg)
+    return names
+
+
+def placement_forms(
+    entry: str | None, first_write: str | None
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Resolve the two guard-form tables for `placement` (W596): the caller's list, else default.
+
+    The defaults are the library's own tables (substrate's guard names); a repo whose guards are
+    spelled differently names its own. An override that names no form is refused, because an empty
+    table would scan for nothing and print a clean-looking empty result.
+
+    Returns:
+        the entry forms and the first-write forms, each sorted when the caller named them.
+
+    """
+    return (
+        _forms("entry-forms", entry, ENTRY_FORMS),
+        _forms("first-write-forms", first_write, FIRST_WRITE_FORMS),
+    )
 
 
 def csv(text: str) -> frozenset[str]:
@@ -64,6 +94,20 @@ def denominator(skipped: Sequence[Skip], population: int) -> int:
     for line in lines:
         report.note(f"{line}\n")
     return code
+
+
+def registered_sites(prefix: str, paths: Sequence[str]) -> frozenset[tuple[str, int]]:
+    """Return the `(path, line)` of every prefixed def that a string literal invokes (W656).
+
+    `dead` takes this set to excuse a def it would otherwise report dead. A prefixed def no literal
+    invokes is NOT in it, so it stays dead. An empty prefix is refused by `registered_defs`.
+
+    Returns:
+        the invoked defs' positions.
+
+    """
+    rows = registered_defs(paths, prefix).rows
+    return frozenset((row.path, row.line) for row in rows if row.registered)
 
 
 def print_registered(prefix: str, paths: Sequence[str]) -> int:

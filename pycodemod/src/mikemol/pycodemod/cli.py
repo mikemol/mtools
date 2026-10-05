@@ -8,7 +8,7 @@ slice adds `writes` (`writes.writes_by_default`) to the forty-two modes already 
 `calls` (`sites.scan`), `owes` (`owes.fix_owes_callers`), `dead` (`dead.dead`), `attr-reads`
 (`imports.attr_reads`), `importers` (`imports.importers`), `swallows` (`swallows.swallows`),
 `exits` (`exit.exits`), `verdicts` (`graph.verdict_returners`), `disagreement`
-(`placement.disagreement`), `placement` (`placement.placement`, default forms) and
+(`placement.disagreement`), `placement` (`placement.placement`, forms overridable) and
 `modstate` (`modstate.module_state`), `layout` (`layout.layout`), `collisions`
 (`rivals.collisions`), `reifies` (`ordering.reifies`), `escapes` (`core.escapes`),
 `catchers` (`exit.catchers`), `interlock` (`exit.interlock`) and `commentary-lost`
@@ -787,7 +787,15 @@ def _handle_ambient(ns: argparse.Namespace) -> int:
 def _handle_dead(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
     sites = scan(paths)
-    result = run_dead(sites)
+    prefix = _opt_str(ns, "registered_prefix")
+    registered: frozenset[tuple[str, int]] = frozenset()
+    if prefix is not None:
+        try:
+            registered = cli_modes.registered_sites(prefix, paths)
+        except ValueError as exc:
+            sys.stdout.write(f"refused: {exc}\n")
+            return _REFUSED
+    result = run_dead(sites, registered)
     for row in result.dead:
         sys.stdout.write(f"dead {row.name} {row.path}:{row.line}\n")
     for exempt in result.exempt:
@@ -953,7 +961,14 @@ def _handle_modstate(ns: argparse.Namespace) -> int:
 
 def _handle_placement(ns: argparse.Namespace) -> int:
     paths = _str_list(ns, "paths")
-    result = run_placement(paths)
+    try:
+        entry, first_write = cli_modes.placement_forms(
+            _opt_str(ns, "entry_forms"), _opt_str(ns, "first_write_forms")
+        )
+    except ValueError as exc:
+        sys.stdout.write(f"refused: {exc}\n")
+        return _REFUSED
+    result = run_placement(paths, entry, first_write)
     for row in result.rows:
         _write_placement(row)
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
@@ -1074,7 +1089,6 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
     ("exits", "a process-exit site, classified main/dispatch/library"),
     ("verdicts", "a def whose returns mix an all-clear with a signal"),
     ("disagreement", "a tool's relation between its intent gate, snapshot and store writes"),
-    ("placement", "each guarded file strongest intent-gate verdict and its witness"),
     ("modstate", "every module-level dict, set or list, classed by who writes it"),
     ("layout", "every top-level statement group, in source order, with its code lines"),
     ("collisions", "every public name with two or more reimplementing defs"),
@@ -1109,7 +1123,31 @@ def _add_scan_modes(make: _Make) -> None:
     val.add_argument("target", help="a bare or dotted callee name")
     val.add_argument("argument", help="a keyword, or an all-digit positional ordinal")
     val.add_argument("paths", nargs="+")
-    make("dead", "defs nothing in the corpus calls or uses").add_argument("paths", nargs="+")
+    dead_ = make("dead", "defs nothing in the corpus calls or uses")
+    dead_.add_argument(
+        "--registered-prefix",
+        default=None,
+        metavar="PREFIX",
+        help="a def named PREFIX+KEY that a string literal KEY invokes is exempt, not dead; "
+        "no default (W656)",
+    )
+    dead_.add_argument("paths", nargs="+")
+    plc = make("placement", "each guarded file strongest intent-gate verdict and its witness")
+    plc.add_argument(
+        "--entry-forms",
+        default=None,
+        metavar="CSV",
+        help="comma list of entry guard forms, replacing the default table (W596); "
+        "an empty list is refused",
+    )
+    plc.add_argument(
+        "--first-write-forms",
+        default=None,
+        metavar="CSV",
+        help="comma list of first-write guard forms, replacing the default table (W596); "
+        "an empty list is refused",
+    )
+    plc.add_argument("paths", nargs="+")
     rch = make("reaches", "target names reachable from a caller, same-file")
     rch.add_argument("--start", required=True, help="the caller, as PATH:SCOPE")
     rch.add_argument("--target", required=True, action="append", help="repeatable")
@@ -1316,6 +1354,13 @@ def _build_parser() -> argparse.ArgumentParser:
             help="with a directory operand, also read registered git worktrees (default: skip)",
         )
         parser.add_argument(
+            "--exclude",
+            action="append",
+            metavar="GLOB",
+            help="with a directory operand, skip directories whose own name matches GLOB; "
+            "repeatable, no default list (W658)",
+        )
+        parser.add_argument(
             "--require-hits",
             action="store_true",
             help="exit 1 when a census mode that ran cleanly printed no rows (default: exit 0)",
@@ -1343,13 +1388,18 @@ def _expand_operands(ns: argparse.Namespace) -> int | None:
 
     """
     try:
-        got = expand(_str_list(ns, "paths"), include_worktrees=_flag(ns, "include_worktrees"))
-    except WorktreeRefusedError as exc:
+        got = expand(
+            _str_list(ns, "paths"),
+            include_worktrees=_flag(ns, "include_worktrees"),
+            exclude=_opt_str_list(ns, "exclude"),
+        )
+    except (WorktreeRefusedError, ValueError) as exc:
         sys.stdout.write(f"{exc}\n")
         return _REFUSED
     if got.directories:
         sys.stdout.write(f"skipped {got.worktrees} registered worktrees\n")
         sys.stdout.write(f"skipped {got.virtualenvs} virtualenvs\n")
+        sys.stdout.write(f"skipped {got.excluded} excluded directories\n")
         sys.stdout.write(f"refused {got.links} symlinks (not followed)\n")
         ns.paths = got.files
     return None

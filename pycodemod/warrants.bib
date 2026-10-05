@@ -5159,3 +5159,107 @@
   claim  = {The origin's `sqlname` refuses, exit 2, and names `registered` as its successor.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_sqlname_is_retired_to_registered},
 }
+
+@misc{pycodemod-operands-exclude-prunes-a-named-directory-and-counts-it,
+  section = {operands},
+  title  = {W658: `--exclude build` drops build/ by its name, keeps builder/, and prints the count},
+  claim  = {W658: `--exclude build` drops build/ by its name, keeps builder/, and prints the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_exclude_prunes_a_named_directory_and_counts_it},
+}
+
+@misc{pycodemod-operands-without-exclude-nothing-is-pruned-and-the-count-is-zero,
+  section = {operands},
+  title  = {W658: no default list: build/ is read unless the caller names it, and the count says zero},
+  claim  = {W658: no default list: build/ is read unless the caller names it, and the count says
+            zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_without_exclude_nothing_is_pruned_and_the_count_is_zero},
+}
+
+@misc{pycodemod-operands-exclude-is-repeatable-takes-a-glob-and-binds-both-spellings,
+  section = {operands},
+  title  = {W658: a spaced entry and an `=` entry both bind, and `bazel-*` prunes by glob},
+  claim  = {W658: a spaced entry and an `=` entry both bind, and `bazel-*` prunes by glob.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_exclude_is_repeatable_takes_a_glob_and_binds_both_spellings},
+}
+
+@misc{pycodemod-operands-bad-exclude-entry-is-refused-by-name,
+  section = {operands},
+  title  = {W658: an empty or path-shaped entry is exit 2 and the refusal quotes the entry},
+  claim  = {W658: an empty or path-shaped entry is exit 2 and the refusal quotes the entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_a_bad_exclude_entry_is_refused_by_name},
+}
+
+@misc{pycodemod-operands-exclude-with-a-file-operand-prints-no-count-line,
+  section = {operands},
+  title  = {W658: file operands are read as given; no directory was expanded, so no count line},
+  claim  = {W658: file operands are read as given; no directory was expanded, so no count line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_operands.py -k test_exclude_with_a_file_operand_prints_no_count_line},
+}
+
+@misc{pycodemod-dead-registered-def-is-exempt-by-position-and-an-orphan-stays-dead,
+  section = {dead},
+  title  = {W656: `q_x` is invoked by the literal "x" (position given), so it is exempt, not dead},
+  claim  = {W656: `q_x` is invoked by the literal "x" (position given), so it is exempt, not dead.
+            `q_orphan` is in no literal: it stays dead, which is the case the prefix
+            must not hide.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_a_registered_def_is_exempt_by_position_and_an_orphan_stays_dead},
+}
+
+@misc{pycodemod-dead-without-the-registered-operand-a-prefixed-def-is-still-dead,
+  section = {dead},
+  title  = {W656: the default excuses nothing, so `dead` over the same corpus is unchanged},
+  claim  = {W656: the default excuses nothing, so `dead` over the same corpus is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_without_the_registered_operand_a_prefixed_def_is_still_dead},
+}
+
+@misc{pycodemod-dead-registration-excuses-only-the-position-it-names,
+  section = {dead},
+  title  = {W656: two files each define `q_x`; excusing one position leaves the other dead},
+  claim  = {W656: two files each define `q_x`; excusing one position leaves the other dead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dead.py -k test_a_registration_excuses_only_the_position_it_names},
+}
+
+@misc{pycodemod-cli-dead-with-a-registered-prefix-exempts-the-def-a-literal-invokes,
+  section = {cli},
+  title  = {W656: `--registered-prefix q_` turns `q_x` (run by "x") from dead to exempt},
+  claim  = {W656: `--registered-prefix q_` turns `q_x` (run by "x") from dead to exempt. The orphan
+            stays dead. Without the flag the same corpus reports both dead, so the
+            operand is what changes the verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_dead_with_a_registered_prefix_exempts_the_def_a_literal_invokes},
+}
+
+@misc{pycodemod-cli-dead-refuses-an-empty-registered-prefix,
+  section = {cli},
+  title  = {W656: an empty prefix would register every def, so it refuses (exit 2) and prints no row},
+  claim  = {W656: an empty prefix would register every def, so it refuses (exit 2) and prints no
+            row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_dead_refuses_an_empty_registered_prefix},
+}
+
+@misc{pycodemod-cli-placement-with-no-override-does-not-know-a-repos-own-guard-names,
+  section = {cli},
+  title  = {W596: the default tables are substrate's names, so `my_guard` is no recognised form},
+  claim  = {W596: the default tables are substrate's names, so `my_guard` is no recognised form.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_with_no_override_does_not_know_a_repos_own_guard_names},
+}
+
+@misc{pycodemod-cli-placement-entry-forms-names-the-guards-a-repo-spells-differently,
+  section = {cli},
+  title  = {W596: `--entry-forms my_guard` makes the same file an `entry` row, witness `my_guard`},
+  claim  = {W596: `--entry-forms my_guard` makes the same file an `entry` row, witness `my_guard`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_entry_forms_names_the_guards_a_repo_spells_differently},
+}
+
+@misc{pycodemod-cli-placement-first-write-forms-overrides-the-second-table,
+  section = {cli},
+  title  = {W596: `--first-write-forms my_once` grades `my_once` first-write, independent of entry},
+  claim  = {W596: `--first-write-forms my_once` grades `my_once` first-write, independent of entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_first_write_forms_overrides_the_second_table},
+}
+
+@misc{pycodemod-cli-placement-refuses-an-override-that-names-no-form,
+  section = {cli},
+  title  = {W596: an empty list would scan for nothing and look clean: exit 2, naming the flag},
+  claim  = {W596: an empty list would scan for nothing and look clean: exit 2, naming the flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_refuses_an_override_that_names_no_form},
+}

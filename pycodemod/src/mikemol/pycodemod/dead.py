@@ -132,21 +132,28 @@ def string_constants(paths: Sequence[str]) -> tuple[set[str], list[Skip]]:
     return found, skipped
 
 
-def _excuse(name: str, constants: set[str]) -> str | None:
+def _excuse(name: str, constants: set[str], *, registered: bool) -> str | None:
     if name.startswith(_DUNDER) and name.endswith(_DUNDER):
         return "dunder — invoked by the runtime"
     if name in ENTRY_POINTS:
         return "entry point by convention"
     if name in constants:
         return "dispatch — named by a string constant"
+    if registered:
+        return "registered — invoked by a string literal under the caller's prefix"
     return framework_dispatch(name)
 
 
-def dead(sites: Sites) -> DeadReport:
+def dead(sites: Sites, registered: frozenset[tuple[str, int]] = frozenset()) -> DeadReport:
     """Return the defs nothing calls or uses, and the unused ones a rule excuses.
 
     ⚑⚑ A USE-AS-VALUE IS A USE: a callback handed to a gauge, a decorator target, a `key=fn` —
     each is a `ref` in the scan, and a def with one is live.
+
+    ⚑⚑ A REGISTERED DEF IS EXCUSED BY POSITION (W656): `registered` holds the `(path, line)` of
+    each def the caller's prefix names AND a string literal invokes. The default, the empty set,
+    excuses nothing, so `dead` without it is unchanged; a prefixed def no literal invokes is not
+    in it and stays dead.
 
     Returns:
         the dead defs, the exempted ones, and the skipped files.
@@ -168,7 +175,7 @@ def dead(sites: Sites) -> DeadReport:
     for site in sites.rows:
         if site.kind != "def" or site.name in used:
             continue
-        why = _excuse(site.name, constants)
+        why = _excuse(site.name, constants, registered=(site.path, site.line) in registered)
         if why is None:
             out.dead.append(Dead(site.path, site.name, site.line))
         else:

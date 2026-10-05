@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑ W588: THE PACKAGE IS A USER OF ITS OWN HOOK. `mikemol-githook-pre-push` blocks a push while a
+# rebase, merge or cherry-pick is in flight and runs `.githooks/pre-push.local` when one exists;
+# this repo ships it and, until now, did not run it. The post-commit auto-push goes through it once
+# per commit (measured in a scratch clone, .claude/swarm/W588-pre-push-self-install.md); it never
+# re-enters, because pre-push does not commit.
+#
+# ⚑ A FAILING PRE-PUSH ABANDONS THE PUSH, NEVER THE COMMIT: the commit survives locally and the next
+# commit's push carries both. post-commit says which of the two stopped it (W661).
+# ⚑ An absent launcher REFUSES, same as every other hook here: a stub that skips when its checker
+# is missing is armed while refusing nothing. Recovery if pushes lock out:
+# `git checkout HEAD -- .githooks/pre-push`, or remove the file; commits are never affected.
+set -uo pipefail
+
+repo="$(git rev-parse --show-toplevel)"
+launcher="$repo/hooks/.venv/bin/mikemol-githook-pre-push"
+if [ ! -x "$launcher" ]; then
+    printf 'pre-push: %s is missing or not executable - cannot run the hook, push refused\n' "$launcher" >&2
+    exit 1
+fi
+exec "$launcher" "$@"

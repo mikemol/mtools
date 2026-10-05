@@ -11706,7 +11706,7 @@
     {
       "symbol": "W588",
       "title": "Install mikemol-githook-pre-push in mtools' own .githooks and measure its interaction with the post-commit auto-push",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "githooks",
@@ -11714,14 +11714,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add a pre-push stub under .githooks, then measure a commit-and-push through post-commit on a scratch clone before enabling it here",
-      "evidence": "2026-10-05: 2026-10-05 measured in a scratch clone with a local bare remote (.claude/swarm/W588-pre-push-self-install.md): (a) the auto-push runs pre-push once per commit, real console script then pre-push.local, nothing re-enters; (b) a failing pre-push abandons the push before any transfer, the commit survives and git commit exits 0, post-commit wrongly says remote has moved (W661); (c) stdin is one line HEAD sha refs/heads/main remote-sha with argv origin url, empty when already up to date; (d) the marker amend re-fires post-commit which has no guard, the nested push sends the amended sha, the outer push is a no-op so pre-push runs again with empty stdin, the original sha is never pushed (W662); (e) core.hooksPath is a relative .githooks in per-clone .git/config, set by setup.sh. RECOMMENDATION: install the one-line stub exec hooks/.venv/bin/mikemol-githook-pre-push dollar-at as .githooks/pre-push mode 755, written LAST, after W661 and W662. Limit: hooks/.venv/bin lacked mikemol-githook-post-commit (the venv predates it; uv sync exposes it)",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 measured in a scratch clone with a local bare remote (.claude/swarm/W588-pre-push-self-install.md): (a) the auto-push runs pre-push once per commit, real console script then pre-push.local, nothing re-enters; (b) a failing pre-push abandons the push before any transfer, the commit survives and git commit exits 0, post-commit wrongly says remote has moved (W661); (c) stdin is one line HEAD sha refs/heads/main remote-sha with argv origin url, empty when already up to date; (d) the marker amend re-fires post-commit which has no guard, the nested push sends the amended sha, the outer push is a no-op so pre-push runs again with empty stdin, the original sha is never pushed (W662); (e) core.hooksPath is a relative .githooks in per-clone .git/config, set by setup.sh. RECOMMENDATION: install the one-line stub exec hooks/.venv/bin/mikemol-githook-pre-push dollar-at as .githooks/pre-push mode 755, written LAST, after W661 and W662. Limit: hooks/.venv/bin lacked mikemol-githook-post-commit (the venv predates it; uv sync exposes it) | 2026-10-05: 2026-10-05 .githooks/pre-push installed: shellcheck 0, mode 755, header comment, refuses when hooks/.venv/bin/mikemol-githook-pre-push is absent, else execs it with git's arguments and stdin. Written last, after W661 and W662 landed (4f6ee03). 2 stub tests in test_githook_pre_push.py (arguments, stdin and exit code forwarded; absent launcher refuses) with 2 warrants; F-arm dropping the forwarded arguments from the exec line failed the forwarding test, restored. hooks bazel targets 47 of 47 passed. Not measured: a real push from this clone through the stub on the first live commit",
       "issued_at": "2026-10-04T19:06:06Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-05T03:03:19Z",
+      "last_worked": "2026-10-05T04:19:22Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261005T041922Z"
     },
     {
       "symbol": "W589",
@@ -11864,21 +11864,21 @@
     {
       "symbol": "W596",
       "title": "pycodemod placement: add a flag overriding ENTRY_FORMS and FIRST_WRITE_FORMS, after verifying the origin's spelling at substrate",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Read the origin's spelling in substrate's scratch/pycodemod.py, add the flag with a red-on-HEAD arm",
-      "evidence": "2026-10-04: drained from queue.md slice 6 (L764-766): declined, no caller has asked and the origin's spelling is unverified | 2026-10-04: nemik-check warned the condition: blocked_on resolves to no party; substrate drains wholesale, so the origin's spelling is verifiable now and no caller ask is needed",
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: drained from queue.md slice 6 (L764-766): declined, no caller has asked and the origin's spelling is unverified | 2026-10-04: nemik-check warned the condition: blocked_on resolves to no party; substrate drains wholesale, so the origin's spelling is verifiable now and no caller ask is needed | 2026-10-05: 2026-10-05 the origin has NO such flag: substrate's print_placement(paths) takes only paths and the forms are module constants (read at scratch/pycodemod.py:3870 and _pycodemod_placement.py:415), so this is a new feature, not a port; mtools' placement() already took both tables as parameters. placement now takes --entry-forms CSV and --first-write-forms CSV (optional, replacing the default table; an override naming no form is refused exit 2 because an empty table prints a clean-looking empty result). 4 test functions, 4 warrants; F-arms: dropping the overrides at the handler failed 2, disabling the refusal failed 2; suite 871 passed",
       "issued_at": "2026-10-04T19:06:25Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T19:30:34Z",
+      "last_worked": "2026-10-05T04:19:24Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261005T041924Z"
     },
     {
       "symbol": "W597",
@@ -13011,20 +13011,21 @@
     {
       "symbol": "W656",
       "title": "pycodemod dead: an optional --registered-prefix operand so a def registered by a string literal is not reported dead, built on registered_defs",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add the operand to dead with no default: when given, call registered_defs once, build the set of (path, line) of rows with registered true, and have _excuse excuse a def in that set; rows with no invoking literal stay dead; without the operand dead is unchanged; red arm per case",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 dead --registered-prefix PREFIX (no default): cli_modes.registered_sites joins registered_defs to (path, line) pairs and dead() excuses a def at one of them as 'registered', by position, so a same-named def elsewhere stays dead; a prefixed def no literal invokes stays dead; without the flag dead is unchanged; an empty prefix refuses exit 2. 5 tests (3 library, 2 cli), 5 warrants; F-arms: excusing every def whenever any registration exists failed 3, dropping the set at the handler failed 1; suite 871 passed",
       "issued_at": "2026-10-05T02:47:53Z",
       "minted_during": "tick",
       "caused_by": "W650",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T04:19:24Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T041924Z"
     },
     {
       "symbol": "W657",
@@ -13048,7 +13049,7 @@
     {
       "symbol": "W658",
       "title": "pycodemod: pass a caller-named exclude list to pathwalk.expand and print skipped N excluded directories",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod",
@@ -13056,13 +13057,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add a flag taking directory-name globs with no default list, pass it as exclude= to expand, print the excluded count beside the virtualenv and worktree counts in the operands line; red arm per shape (bazel-*, build, dist, egg-info); the empty list changes nothing",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 pycodemod --exclude GLOB (repeatable, no default list, both spellings) on every mode through make(); _expand_operands passes it to pathwalk.expand, prints 'skipped N excluded directories' beside the virtualenv count, and a bad entry refuses exit 2 naming it. pycodemod venv held a stale pathwalk copy, reinstalled from the main checkout. 5 test functions in test_operands.py, 5 warrants; F-arm exclude=[] failed 4 tests, restored; suite 871 passed",
       "issued_at": "2026-10-05T02:47:54Z",
       "minted_during": "tick",
       "caused_by": "W651",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T04:19:23Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T041923Z"
     },
     {
       "symbol": "W659",

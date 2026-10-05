@@ -13,15 +13,15 @@ import io
 import os
 import shutil
 import subprocess
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks.githook_pre_push import main
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     import pytest
 
+_REPO_STUB = Path(__file__).parent.parent.parent / ".githooks" / "pre-push"
 _REFS = (
     b"refs/heads/main 1111111111111111111111111111111111111111 "
     b"refs/heads/main 0000000000000000000000000000000000000000\n"
@@ -104,3 +104,58 @@ def test_an_operation_in_flight_refuses_before_the_local_hook_runs(
     (repo / ".git" / "index.lock").touch()
     assert main(_ARGS, refs=io.BytesIO(_REFS)) == 1
     assert not ran.exists()
+
+
+_LAUNCHER_EXIT = 7
+
+
+def _run_stub(repo: Path, stdin: bytes) -> subprocess.CompletedProcess[bytes]:
+    """Run this repository's `.githooks/pre-push` stub from inside a decoy repository.
+
+    Returns:
+        the finished process, its streams captured.
+
+    """
+    bash = shutil.which("bash")
+    assert bash is not None
+    return subprocess.run(
+        [bash, str(_REPO_STUB), *_ARGS], input=stdin, cwd=repo, capture_output=True, check=False
+    )
+
+
+def test_the_repo_stub_hands_the_launcher_its_arguments_and_stdin(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W588: the stub execs the venv launcher with git's arguments and ref list; its exit stands.
+
+    ⚑ A stub that dropped `"$@"` or read stdin itself would hand the launcher an empty ref list,
+    and a hook looping over refs would then check nothing and pass.
+    """
+    repo = _decoy(tmp_path, monkeypatch)
+    launcher = repo / "hooks" / ".venv" / "bin" / "mikemol-githook-pre-push"
+    launcher.parent.mkdir(parents=True)
+    seen = tmp_path / "seen"
+    launcher.write_text(
+        f'#!/usr/bin/env bash\ncat >"{seen}.stdin"\nprintf "%s\\n" "$@" >"{seen}.args"\n'
+        f"exit {_LAUNCHER_EXIT}\n",
+        encoding="utf-8",
+    )
+    launcher.chmod(0o755)
+    done = _run_stub(repo, _REFS)
+    assert done.returncode == _LAUNCHER_EXIT
+    assert (tmp_path / "seen.stdin").read_bytes() == _REFS
+    assert (tmp_path / "seen.args").read_text(encoding="utf-8").split() == _ARGS
+
+
+def test_the_repo_stub_refuses_when_its_launcher_is_absent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W588: with no venv launcher the push is refused and the message names the missing file.
+
+    ⚑ A stub that skipped on an absent checker would be armed while refusing nothing.
+    """
+    repo = _decoy(tmp_path, monkeypatch)
+    done = _run_stub(repo, _REFS)
+    assert done.returncode == 1
+    assert b"mikemol-githook-pre-push is missing or not executable" in done.stderr
+    assert b"push refused" in done.stderr

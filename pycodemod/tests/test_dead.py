@@ -107,3 +107,38 @@ def test_a_framework_prefix_needs_a_name_after_it() -> None:
     assert dd.framework_dispatch("test_x") == "pytest — collected by prefix"
     assert dd.framework_dispatch("on_") is None
     assert dd.framework_dispatch("helper") is None
+
+
+_REGISTERED = 'def q_x():\n    pass\ndef q_orphan():\n    pass\nrun("x")\n'
+
+
+def test_a_registered_def_is_exempt_by_position_and_an_orphan_stays_dead(tmp_path: Path) -> None:
+    """W656: `q_x` is invoked by the literal "x" (position given), so it is exempt, not dead.
+
+    `q_orphan` is in no literal: it stays dead, which is the case the prefix must not hide.
+    """
+    path = tmp_path / "m.py"
+    path.write_text(_REGISTERED, encoding="utf-8")
+    got = dd.dead(sites.scan([str(path)]), frozenset({(str(path), 1)}))
+    assert [d.name for d in got.dead] == ["q_orphan"]
+    assert [(e.name, e.why.split(" — ")[0]) for e in got.exempt] == [("q_x", "registered")]
+
+
+def test_without_the_registered_operand_a_prefixed_def_is_still_dead(tmp_path: Path) -> None:
+    """W656: the default excuses nothing, so `dead` over the same corpus is unchanged."""
+    path = tmp_path / "m.py"
+    path.write_text(_REGISTERED, encoding="utf-8")
+    got = dd.dead(sites.scan([str(path)]))
+    assert [d.name for d in got.dead] == ["q_orphan", "q_x"]
+    assert got.exempt == []
+
+
+def test_a_registration_excuses_only_the_position_it_names(tmp_path: Path) -> None:
+    """W656: two files each define `q_x`; excusing one position leaves the other dead."""
+    first = tmp_path / "a.py"
+    second = tmp_path / "b.py"
+    first.write_text(_REGISTERED, encoding="utf-8")
+    second.write_text(_REGISTERED, encoding="utf-8")
+    got = dd.dead(sites.scan([str(first), str(second)]), frozenset({(str(first), 1)}))
+    assert [(d.path, d.name) for d in got.dead if d.name == "q_x"] == [(str(second), "q_x")]
+    assert [e.path for e in got.exempt] == [str(first)]

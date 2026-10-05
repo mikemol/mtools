@@ -5634,3 +5634,22 @@
   claim  = {W662: with the guard set the hook exits 0 silently and nothing reaches the remote.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_the_amends_refire_does_not_push},
 }
+
+@misc{hooks-githook-pre-push-repo-stub-hands-the-launcher-its-arguments-and-stdin,
+  section = {githook-pre-push},
+  title  = {W588: the stub execs the venv launcher with git's arguments and ref list; its exit stands},
+  claim  = {W588: the stub execs the venv launcher with git's arguments and ref list; its exit
+            stands. A stub that dropped `"$@"` or read stdin itself would hand the
+            launcher an empty ref list, and a hook looping over refs would then check
+            nothing and pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_the_repo_stub_hands_the_launcher_its_arguments_and_stdin},
+}
+
+@misc{hooks-githook-pre-push-repo-stub-refuses-when-its-launcher-is-absent,
+  section = {githook-pre-push},
+  title  = {W588: with no venv launcher the push is refused and the message names the missing file},
+  claim  = {W588: with no venv launcher the push is refused and the message names the missing file.
+            A stub that skipped on an absent checker would be armed while refusing
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_the_repo_stub_refuses_when_its_launcher_is_absent},
+}

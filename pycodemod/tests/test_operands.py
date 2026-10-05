@@ -169,3 +169,68 @@ def test_file_operands_print_no_skip_line(repo: Path, capsys: pytest.CaptureFixt
     assert code == 0
     assert f"{repo / _MAIN}:1" in out
     assert "skipped" not in out
+
+
+_GEN = "generated_importer.py"
+
+
+def _generated(repo: Path, *names: str) -> None:
+    """Give each named directory under the repo one importer file."""
+    for name in names:
+        (repo / name).mkdir()
+        (repo / name / _GEN).write_text(_IMPORTER, encoding="utf-8")
+
+
+def test_exclude_prunes_a_named_directory_and_counts_it(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W658: `--exclude build` drops build/ by its name, keeps builder/, and prints the count."""
+    _generated(repo, "build", "builder")
+    code, out = _run(capsys, "--exclude", "build", str(repo))
+    assert code == 0
+    assert str(repo / "build" / _GEN) not in out
+    assert str(repo / "builder" / _GEN) in out
+    assert "skipped 1 excluded directories" in out
+
+
+def test_without_exclude_nothing_is_pruned_and_the_count_is_zero(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W658: no default list: build/ is read unless the caller names it, and the count says zero."""
+    _generated(repo, "build")
+    code, out = _run(capsys, str(repo))
+    assert code == 0
+    assert str(repo / "build" / _GEN) in out
+    assert "skipped 0 excluded directories" in out
+
+
+def test_exclude_is_repeatable_takes_a_glob_and_binds_both_spellings(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W658: a spaced entry and an `=` entry both bind, and `bazel-*` prunes by glob."""
+    _generated(repo, "build", "bazel-bin", "src")
+    code, out = _run(capsys, "--exclude", "build", "--exclude=bazel-*", str(repo))
+    assert code == 0
+    assert str(repo / "build" / _GEN) not in out
+    assert str(repo / "bazel-bin" / _GEN) not in out
+    assert str(repo / "src" / _GEN) in out
+    assert "skipped 2 excluded directories" in out
+
+
+@pytest.mark.parametrize("entry", ["", "a/b"])
+def test_a_bad_exclude_entry_is_refused_by_name(
+    entry: str, repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W658: an empty or path-shaped entry is exit 2 and the refusal quotes the entry."""
+    code, out = _run(capsys, "--exclude", entry, str(repo))
+    assert code == _REFUSED
+    assert f"exclude {entry!r}" in out
+
+
+def test_exclude_with_a_file_operand_prints_no_count_line(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W658: file operands are read as given; no directory was expanded, so no count line."""
+    code, out = _run(capsys, "--exclude", "build", str(repo / _MAIN))
+    assert code == 0
+    assert "excluded directories" not in out

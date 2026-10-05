@@ -1757,3 +1757,84 @@ def test_sqlname_is_retired_to_registered(capsys: pytest.CaptureFixture[str]) ->
     """The origin's `sqlname` refuses, exit 2, and names `registered` as its successor."""
     assert cli.main(["sqlname"]) == _REFUSED
     assert "`registered PREFIX PATHS`" in capsys.readouterr().out
+
+
+_REGISTERED_CORPUS = 'def q_x():\n    pass\ndef q_orphan():\n    pass\nrun("x")\n'
+
+
+def test_dead_with_a_registered_prefix_exempts_the_def_a_literal_invokes(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W656: `--registered-prefix q_` turns `q_x` (run by "x") from dead to exempt.
+
+    The orphan stays dead. Without the flag the same corpus reports both dead, so the operand is
+    what changes the verdict.
+    """
+    target = tmp_path / "m.py"
+    target.write_text(_REGISTERED_CORPUS, encoding="utf-8")
+    assert cli.main(["dead", str(target)]) == 0
+    plain = capsys.readouterr().out
+    assert f"dead q_x {target}:1" in plain
+    assert cli.main(["dead", "--registered-prefix", "q_", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert f"dead q_x {target}:1" not in out
+    assert f"exempt q_x {target}:1 (registered" in out
+    assert f"dead q_orphan {target}:3" in out
+
+
+def test_dead_refuses_an_empty_registered_prefix(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W656: an empty prefix would register every def, so it refuses (exit 2) and prints no row."""
+    target = tmp_path / "m.py"
+    target.write_text("def f():\n    pass\n", encoding="utf-8")
+    assert cli.main(["dead", "--registered-prefix", "", str(target)]) == _REFUSED
+    out = capsys.readouterr().out
+    assert "non-empty prefix" in out
+    assert "dead f" not in out
+
+
+def _guarded(tmp_path: Path) -> Path:
+    target = tmp_path / "tool.py"
+    target.write_text("my_guard()\nmy_once()\n", encoding="utf-8")
+    return target
+
+
+def test_placement_with_no_override_does_not_know_a_repos_own_guard_names(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W596: the default tables are substrate's names, so `my_guard` is no recognised form."""
+    target = _guarded(tmp_path)
+    assert cli.main(["placement", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert "placement entry" not in out
+    assert "placement: searched 1 file(s), found none" in out
+
+
+def test_placement_entry_forms_names_the_guards_a_repo_spells_differently(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W596: `--entry-forms my_guard` makes the same file an `entry` row, witness `my_guard`."""
+    target = _guarded(tmp_path)
+    assert cli.main(["placement", "--entry-forms", "my_guard", str(target)]) == 0
+    assert f"placement entry my_guard {target}:1" in capsys.readouterr().out
+
+
+def test_placement_first_write_forms_overrides_the_second_table(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W596: `--first-write-forms my_once` grades `my_once` first-write, independent of entry."""
+    target = _guarded(tmp_path)
+    assert cli.main(["placement", "--first-write-forms", "my_once", str(target)]) == 0
+    assert f"placement first-write my_once {target}:2" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("flag", ["--entry-forms", "--first-write-forms"])
+def test_placement_refuses_an_override_that_names_no_form(
+    flag: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W596: an empty list would scan for nothing and look clean: exit 2, naming the flag."""
+    target = _guarded(tmp_path)
+    assert cli.main(["placement", flag, " , ", str(target)]) == _REFUSED
+    out = capsys.readouterr().out
+    assert f"{flag} names no form" in out
