@@ -973,18 +973,18 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_runs_as_a_module},
 }
 
-@misc{importdag-resolve-import-names-reads-plain-from-and-relative-forms,
+@misc{importdag-resolve-references-read-plain-from-and-relative-forms,
   section = {resolve},
-  title  = {`import a.b`, `from c import d` (c and c.d) and `from . import e` (bare e) name modules},
-  claim  = {`import a.b`, `from c import d` (c and c.d) and `from . import e` (bare e) name modules.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_import_names_reads_plain_from_and_relative_forms},
+  title  = {Each import keeps its level: absolute is 0, `from ..h import i` is level 2},
+  claim  = {Each import keeps its level: absolute is 0, `from ..h import i` is level 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_references_read_plain_from_and_relative_forms},
 }
 
-@misc{importdag-resolve-import-names-of-text-that-does-not-parse-is-empty,
+@misc{importdag-resolve-references-of-text-that-does-not-parse-is-empty,
   section = {resolve},
   title  = {A syntax error names nothing, as `dagderive.imports` reads it},
   claim  = {A syntax error names nothing, as `dagderive.imports` reads it.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_import_names_of_text_that_does_not_parse_is_empty},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_references_of_text_that_does_not_parse_is_empty},
 }
 
 @misc{importdag-resolve-module-names-lists-every-dotted-suffix-longest-first,
@@ -1013,6 +1013,13 @@
   title  = {Two files sharing a stem share its entry; a longer suffix keeps them apart},
   claim  = {Two files sharing a stem share its entry; a longer suffix keeps them apart.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_index_collects_every_file_a_suffix_could_name},
+}
+
+@misc{importdag-resolve-index-keeps-the-set-of-paths-even-from-a-one-shot-iterable,
+  section = {resolve},
+  title  = {The paths are listed once, so a generator indexes the names and the file set alike},
+  claim  = {The paths are listed once, so a generator indexes the names and the file set alike.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_index_keeps_the_set_of_paths_even_from_a_one_shot_iterable},
 }
 
 @misc{importdag-resolve-a-unique-import-resolves-to-its-file,
@@ -1085,9 +1092,86 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_every_name_contributes_its_file},
 }
 
+@misc{importdag-resolve-a-relative-import-names-the-file-beside-the-importer,
+  section = {resolve},
+  title  = {`from . import n` in pkg/m.py is pkg/n.py, not the other/n.py with the same name},
+  claim  = {`from . import n` in pkg/m.py is pkg/n.py, not the other/n.py with the same name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_relative_import_names_the_file_beside_the_importer},
+}
+
+@misc{importdag-resolve-two-dots-start-one-directory-up-and-are-never-ambiguous,
+  section = {resolve},
+  title  = {`from .. import streams` in pkg/sub/m.py is pkg/streams.py, and never ambiguous},
+  claim  = {`from .. import streams` in pkg/sub/m.py is pkg/streams.py, and never ambiguous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_two_dots_start_one_directory_up_and_are_never_ambiguous},
+}
+
+@misc{importdag-resolve-a-package-is-preferred-to-a-module-of-the-same-name,
+  section = {resolve},
+  title  = {Python's own precedence: `x/__init__.py` over `x.py` for `from . import x`},
+  claim  = {Python's own precedence: `x/__init__.py` over `x.py` for `from . import x`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_package_is_preferred_to_a_module_of_the_same_name},
+}
+
+@misc{importdag-resolve-a-relative-from-import-names-the-package-and-its-submodule,
+  section = {resolve},
+  title  = {`from .a import b` imports package a and submodule b, and the package shadows a.py},
+  claim  = {`from .a import b` imports package a and submodule b, and the package shadows a.py.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_relative_from_import_names_the_package_and_its_submodule},
+}
+
+@misc{importdag-resolve-a-relative-from-import-of-an-attribute-falls-back-to-the-module,
+  section = {resolve},
+  title  = {`from .a import thing` with no submodule `thing` is the module a.py},
+  claim  = {`from .a import thing` with no submodule `thing` is the module a.py.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_relative_from_import_of_an_attribute_falls_back_to_the_module},
+}
+
+@misc{importdag-resolve-a-dotted-relative-module-is-looked-up-by-its-path,
+  section = {resolve},
+  title  = {`from .a.b import c` is pkg/a/b.py},
+  claim  = {`from .a.b import c` is pkg/a/b.py.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_dotted_relative_module_is_looked_up_by_its_path},
+}
+
+@misc{importdag-resolve-importing-a-non-module-from-the-package-names-the-package-itself,
+  section = {resolve},
+  title  = {`from . import CONSTANT` imports pkg/__init__.py, where the constant lives},
+  claim  = {`from . import CONSTANT` imports pkg/__init__.py, where the constant lives.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_importing_a_non_module_from_the_package_names_the_package_itself},
+}
+
+@misc{importdag-resolve-a-relative-import-never-resolves-to-the-importer-itself,
+  section = {resolve},
+  title  = {`from . import m` inside m.py skips m.py and falls back to the package},
+  claim  = {`from . import m` inside m.py skips m.py and falls back to the package.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_relative_import_never_resolves_to_the_importer_itself},
+}
+
+@misc{importdag-resolve-a-relative-import-in-a-package-marker-starts-in-its-own-directory,
+  section = {resolve},
+  title  = {`from . import m` in pkg/__init__.py is pkg/m.py},
+  claim  = {`from . import m` in pkg/__init__.py is pkg/m.py.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_relative_import_in_a_package_marker_starts_in_its_own_directory},
+}
+
+@misc{importdag-resolve-a-relative-import-at-the-tree-root,
+  section = {resolve},
+  title  = {At the tree root there is no directory prefix: `from . import n` is n.py},
+  claim  = {At the tree root there is no directory prefix: `from . import n` is n.py.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_relative_import_at_the_tree_root},
+}
+
+@misc{importdag-resolve-a-level-that-reaches-the-root-resolves-but-one-above-it-does-not,
+  section = {resolve},
+  title  = {In a/m.py, level 2 is the root (x.py is found) and level 3 is above it (nothing)},
+  claim  = {In a/m.py, level 2 is the root (x.py is found) and level 3 is above it (nothing).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_level_that_reaches_the_root_resolves_but_one_above_it_does_not},
+}
+
 @misc{importdag-resolve-derive-reads-each-file-and-resolves-it,
   section = {resolve},
-  title  = {The files are read from `root`, and the result is in `paths` order},
-  claim  = {The files are read from `root`, and the result is in `paths` order.},
+  title  = {The files are read from `root`, relative and absolute imports both resolve},
+  claim  = {The files are read from `root`, relative and absolute imports both resolve.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_derive_reads_each_file_and_resolves_it},
 }

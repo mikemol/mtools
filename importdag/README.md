@@ -16,6 +16,7 @@ DAG file (mechanism A+B, mtools:W562).
 | `mikemol.importdag.closure` | a claim witness's engine closure roots plus its file and content toggle rows; console script `mikemol-closure` |
 | `mikemol.importdag.dagbzl` | owns the path-valued `dag.bzl`: `render`, and `--write` / `--check` through the sibling's `write_atomic`; console script `mikemol-dagbzl` |
 | `mikemol.importdag.imports` | the LEGACY stem-valued writer of the same file, plus the edge listing; console script `mikemol-imports` |
+| `mikemol.importdag.resolve` | `derive(root, paths)` resolves a file set's imports against each other for any layout (`src/` roots, several packages, flat scripts): each file is indexed by every dotted suffix of its path; an absolute name resolves at its longest dotted prefix, preferring the sibling and reporting a name it cannot settle in `Resolution.ambiguous`; a relative import is looked up exactly from its level (a package before a module). A library: no script |
 
 ## The two import readers, and the two writers
 
