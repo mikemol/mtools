@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 795,
+  "counter": 796,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T12:25:41Z",
   "job_id": "9c05fa85",
@@ -16284,6 +16284,31 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-05T23:39:27Z",
+      "ticks_blocked": 0,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W796",
+      "title": "Graduate the host katas into an mtools distribution to the house standards",
+      "status": "ready",
+      "enables": [
+        "W790"
+      ],
+      "touches": [
+        "katas",
+        "fleet",
+        "hostkit",
+        "standards"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Move ~/github/.claude/katas/katas.py (subcommands status, commit, typing, mypy, visit, tick) into its own mtools distribution (we atomize), with typed modules, tests, a warrants.bib entry per test, the mutation gate, uv.lock and BUILD.bazel. It replaces the session scratch scripts fleet_strict.py, fleet_debtplan.py and the ad hoc commit and tick sequences. Keep one command per kata",
+      "evidence": "",
+      "issued_at": "2026-10-05T23:50:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W790",
+      "last_worked": "2026-10-05T23:50:41Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
