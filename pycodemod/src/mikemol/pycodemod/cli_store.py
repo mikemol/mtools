@@ -5,8 +5,12 @@ r"""The printers for the store-flow censuses: `rawreads`, `snapshots` and `relal
 Each takes its `StoreVocab` from REQUIRED flags with no defaults, the way `control_report` does: an
 absent flag refuses, exit 2, naming it, so a census never measures a default vocabulary and reports
 a zero about it. `rawreads` reads only the connection names, so it asks for only `--connections`;
-`snapshots` and `relalg` ask for all three. `relalg` also requires `--kinds`, drawn from
-`relalg.RELALG_KINDS`.
+`snapshots` and `relalg` ask for `--readers` and `--receivers`. `relalg` also requires `--kinds`,
+drawn from `relalg.RELALG_KINDS`.
+
+⚑ ONLY `rawreads` ASKS FOR `--connections` (W654). `StoreVocab.connections` is read in one place,
+`storeflow._is_connection_execute`, which only `rawread_sites` reaches; `snapshots` and `relalg`
+build their vocabulary with an explicitly empty set rather than ask for a flag they never read.
 """
 
 from __future__ import annotations
@@ -25,13 +29,11 @@ if TYPE_CHECKING:
 _NONE = frozenset[str]()
 
 
-def _vocab(readers: str | None, receivers: str | None, connections: str | None) -> StoreVocab | str:
-    missing = refusal(
-        (("readers", readers), ("receivers", receivers), ("connections", connections))
-    )
+def _vocab(readers: str | None, receivers: str | None) -> StoreVocab | str:
+    missing = refusal((("readers", readers), ("receivers", receivers)))
     if missing:
         return missing
-    return StoreVocab(csv(readers or ""), csv(receivers or ""), csv(connections or ""))
+    return StoreVocab(csv(readers or ""), csv(receivers or ""), _NONE)
 
 
 def print_rawreads(paths: Sequence[str], connections: str | None) -> int:
@@ -52,16 +54,14 @@ def print_rawreads(paths: Sequence[str], connections: str | None) -> int:
     return denominator(result.skipped, len(paths))
 
 
-def print_snapshots(
-    paths: Sequence[str], readers: str | None, receivers: str | None, connections: str | None
-) -> int:
+def print_snapshots(paths: Sequence[str], readers: str | None, receivers: str | None) -> int:
     """Print each value composed across store round trips: `snapshots KIND fn trips path:line`.
 
     Returns:
         2 when a vocabulary flag is missing, else the shared incomplete-scan code.
 
     """
-    vocab = _vocab(readers, receivers, connections)
+    vocab = _vocab(readers, receivers)
     if isinstance(vocab, str):
         sys.stdout.write(f"{vocab}\n")
         return REFUSED
@@ -74,11 +74,7 @@ def print_snapshots(
 
 
 def print_relalg(
-    paths: Sequence[str],
-    readers: str | None,
-    receivers: str | None,
-    connections: str | None,
-    kinds: str | None,
+    paths: Sequence[str], readers: str | None, receivers: str | None, kinds: str | None
 ) -> int:
     """Print relational algebra done in Python on store rows: `relalg KIND fn path:line snippet`.
 
@@ -88,7 +84,7 @@ def print_relalg(
         2 when a flag is missing or `--kinds` is empty or unknown, else the incomplete-scan code.
 
     """
-    vocab = _vocab(readers, receivers, connections)
+    vocab = _vocab(readers, receivers)
     missing = refusal((("kinds", kinds),))
     if isinstance(vocab, str) or missing:
         sys.stdout.write(f"{missing or vocab}\n")

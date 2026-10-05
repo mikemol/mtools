@@ -1077,7 +1077,7 @@ def test_console_runs_main_over_sys_argv(tmp_path: Path, monkeypatch: pytest.Mon
     assert code == 0
 
 
-_CENSUS_FLAGS = ["--readers", "execute", "--receivers", "con", "--connections", "con"]
+_CENSUS_FLAGS = ["--readers", "execute", "--receivers", "con"]
 _CENSUS_SOURCE = (
     "def f(x, con):\n    if x:\n        return 1\n    for r in con.execute('q'):\n"
     "        pass\n    return 2\n"
@@ -1108,7 +1108,7 @@ def test_control_with_empty_vocabulary_names_no_row_site(
 ) -> None:
     """An empty comma list is an operand, not an absent one: no site is then a row site."""
     target = _census_file(tmp_path)
-    argv = ["control", "--readers", "", "--receivers", "", "--connections", "", "--boundary"]
+    argv = ["control", "--readers", "", "--receivers", "", "--boundary"]
     code = cli.main([*argv, "python", str(target)])
     out = capsys.readouterr().out
     assert code == 0
@@ -1131,13 +1131,13 @@ def test_constructs_lists_all_thirty_six_with_zero_rows(
 
 
 @pytest.mark.parametrize("mode", ["control", "constructs"])
-@pytest.mark.parametrize("missing", ["readers", "receivers", "connections", "boundary"])
+@pytest.mark.parametrize("missing", ["readers", "receivers", "boundary"])
 def test_a_census_mode_refuses_a_missing_operand_flag(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], mode: str, missing: str
 ) -> None:
     """A flag left out refuses, exit 2, naming it: the census has no silent default."""
     target = _census_file(tmp_path)
-    given = {"readers": "execute", "receivers": "con", "connections": "con", "boundary": "python"}
+    given = {"readers": "execute", "receivers": "con", "boundary": "python"}
     argv = [mode]
     for name, value in given.items():
         if name != missing:
@@ -1445,7 +1445,7 @@ def test_portable_over_an_unparseable_file_reports_incomplete(
     assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out
 
 
-_STORE_FLAGS = {"readers": "execute", "receivers": "con", "connections": "con"}
+_STORE_FLAGS = {"readers": "execute", "receivers": "con"}
 _RAW_SOURCE = "for a, b in con.execute('q'):\n    pass\n"
 _SNAP_SOURCE = "x = con.execute('a').fetchall() + con.execute('b').fetchall()\n"
 _ALG_SOURCE = "def f(con):\n    rows = con.execute('q')\n    return sorted(rows)\n"
@@ -1510,7 +1510,7 @@ def test_snapshots_with_one_trip_says_what_it_searched(
     assert capsys.readouterr().out == "snapshots: searched 1 file(s), found none\n"
 
 
-@pytest.mark.parametrize("missing", ["readers", "receivers", "connections"])
+@pytest.mark.parametrize("missing", ["readers", "receivers"])
 @pytest.mark.parametrize("mode", ["snapshots", "relalg"])
 def test_a_store_mode_refuses_a_missing_vocabulary_flag(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], mode: str, missing: str
@@ -1557,6 +1557,23 @@ def test_relalg_refuses_a_missing_empty_or_unknown_kinds(
     assert "names no kind" in capsys.readouterr().out
     assert cli.main([*_store_argv("relalg"), "--kinds", "nope", str(target)]) == _REFUSED
     assert "unknown relalg kind(s): nope" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("mode", ["control", "constructs", "fingerprint", "snapshots", "relalg"])
+def test_a_mode_that_never_reads_connections_does_not_take_the_flag(
+    mode: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W654: only `rawreads` consults the connection names, so these five refuse `--connections`.
+
+    ⚑ A flag the census ignores would let a caller think it changed the answer. argparse refuses it
+    as unrecognised (exit 2) before any file is read.
+    """
+    target = tmp_path / "m.py"
+    target.write_text(_ALG_SOURCE, encoding="utf-8")
+    with pytest.raises(SystemExit) as raised:
+        cli.main([mode, "--connections", "con", str(target)])
+    assert raised.value.code == _REFUSED
+    assert "unrecognized arguments: --connections" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("mode", ["rawreads", "snapshots", "relalg"])
@@ -1629,7 +1646,7 @@ def test_fingerprint_over_no_control_site_says_what_it_searched(
     assert "fingerprint sites=0 " in out
 
 
-@pytest.mark.parametrize("missing", ["readers", "receivers", "connections", "boundary", "seed"])
+@pytest.mark.parametrize("missing", ["readers", "receivers", "boundary", "seed"])
 def test_fingerprint_refuses_a_missing_operand_flag(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], missing: str
 ) -> None:

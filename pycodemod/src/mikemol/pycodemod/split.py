@@ -426,14 +426,32 @@ def _render_entry(
     return "".join(pieces), tuple(imports), surface
 
 
+def _dotted(node: ast.AST) -> str | None:
+    """Spell a chain of attribute reads on a bare name as `a.b.c`.
+
+    Returns:
+        the dotted spelling, or None when the chain does not start at a bare name.
+
+    """
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        head = _dotted(node.value)
+        return None if head is None else f"{head}.{node.attr}"
+    return None
+
+
 def _aliases(tree: ast.AST, stem: str) -> set[str]:
     """Name the local bindings of the module `stem` itself.
 
-    Those are `import stem [as a]`, `import pkg.stem as a` and `from pkg import stem [as a]`. A
-    dotted `import pkg.stem` with no alias binds `pkg`, not the module, so it names nothing.
+    Those are `import stem [as a]`, `import pkg.stem as a`, `from pkg import stem [as a]` and, with
+    no alias, the dotted spelling `pkg.stem` itself: `import pkg.stem` binds `pkg`, and the caller
+    reaches the module as the chain `pkg.stem`. ⚑ A name assigned from a binding (`m = a`) is one
+    too, FLOW-INSENSITIVELY: any such assignment in the file counts, so a name reused for something
+    else is a false positive, which costs a look; a missed one would cost a broken import.
 
     Returns:
-        the names a caller may write before `.name` to reach the module.
+        the names (dotted ones included) a caller may write before `.name` to reach the module.
 
     """
     names: set[str] = set()
@@ -441,8 +459,24 @@ def _aliases(tree: ast.AST, stem: str) -> set[str]:
         if isinstance(n, ast.Import):
             names.update(al.asname or al.name for al in n.names if al.name == stem)
             names.update(al.asname for al in n.names if al.asname and al.name.endswith(f".{stem}"))
+            names.update(
+                al.name for al in n.names if not al.asname and al.name.endswith(f".{stem}")
+            )
         elif isinstance(n, ast.ImportFrom):
             names.update(al.asname or al.name for al in n.names if al.name == stem)
+    grew = True
+    while grew:
+        grew = False
+        for n in ast.walk(tree):
+            if (
+                isinstance(n, ast.Assign)
+                and _dotted(n.value) in names
+                and len(n.targets) == 1
+                and isinstance(n.targets[0], ast.Name)
+                and n.targets[0].id not in names
+            ):
+                names.add(n.targets[0].id)
+                grew = True
     return names
 
 
@@ -467,8 +501,7 @@ def _owed(
                 )
             elif (
                 isinstance(n, ast.Attribute)
-                and isinstance(n.value, ast.Name)
-                and n.value.id in modules
+                and _dotted(n.value) in modules
                 and n.attr in moved
                 and n.attr not in surface
             ):

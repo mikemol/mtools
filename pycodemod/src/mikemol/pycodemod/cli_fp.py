@@ -3,8 +3,9 @@
 r"""The printer for `fingerprint`: the prime-fingerprint census of control sites (W641).
 
 The plan is `.claude/swarm/W607-fingerprint-port.md` step 5. The operands are the control census's
-(`--readers`, `--receivers`, `--connections`, `--boundary`, read by `control_report.operands`, no
-default) plus `--seed`, REQUIRED and repeatable: the files whose referents the declaration models.
+(`--readers`, `--receivers`, `--boundary`, read by `control_report.operands`, no default; there is
+no `--connections`, which no control site reads, W654) plus `--seed`, REQUIRED and repeatable: the
+files whose referents the declaration models.
 `--top`, `--groups` and `--keys` only size the three listings, so they carry a display default.
 `--monotone` re-reads the same sites against the seed minus its last file and prints the two totals
 and the per-site divisibility check that makes the total monotone.

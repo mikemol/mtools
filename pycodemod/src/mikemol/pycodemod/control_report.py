@@ -6,8 +6,8 @@ Cleanroomed from substrate's `scratch/_pycodemod_control.py` (W606, commit 4 of 
 itself is `control_census.control_sites`; this module reads its two operands from flags, runs it
 and prints.
 
-⚑⚑⚑ NO OPERAND HAS A DEFAULT. A `StoreVocab` (`--readers`, `--receivers`, `--connections`, each a
-comma list, possibly empty) and a `Boundary` (`--boundary python`) are REQUIRED. An absent flag
+⚑⚑⚑ NO OPERAND HAS A DEFAULT. A `StoreVocab` (`--readers`, `--receivers`, each a comma list,
+possibly empty) and a `Boundary` (`--boundary python`) are REQUIRED. An absent flag
 REFUSES, exit 2, naming it; a `--boundary` value naming no boundary refuses naming the value. A
 silent default would make the headline ratio a statement about the default and not the corpus.
 
@@ -43,11 +43,10 @@ BOUNDARIES = {"python": PYTHON_BOUNDARY}
 
 @dataclass(frozen=True, slots=True)
 class CensusFlags:
-    """The four operand flags exactly as given: `None` is a flag that was not passed."""
+    """The three operand flags exactly as given: `None` is a flag that was not passed."""
 
     readers: str | None
     receivers: str | None
-    connections: str | None
     boundary: str | None
 
 
@@ -58,6 +57,12 @@ def _csv(text: str) -> frozenset[str]:
 def operands(flags: CensusFlags) -> tuple[StoreVocab, Boundary] | str:
     """Read the census's two operands from the flags.
 
+    ⚑ `StoreVocab.connections` IS NOT ASKED FOR (W654). It is consulted in exactly one place,
+    `storeflow._is_connection_execute`, which only `rawread_sites` reaches; no control, fingerprint,
+    snapshot or relational-algebra site reads it. A flag the census ignores would let a caller think
+    it changed the answer, so the vocabulary is built with an explicitly empty set and `rawreads`
+    keeps its own required `--connections`.
+
     Returns:
         the store vocabulary and the boundary, or the refusal text naming the flag at fault.
 
@@ -65,7 +70,6 @@ def operands(flags: CensusFlags) -> tuple[StoreVocab, Boundary] | str:
     given = (
         ("readers", flags.readers),
         ("receivers", flags.receivers),
-        ("connections", flags.connections),
         ("boundary", flags.boundary),
     )
     for name, value in given:
@@ -77,7 +81,7 @@ def operands(flags: CensusFlags) -> tuple[StoreVocab, Boundary] | str:
     vocab = StoreVocab(
         readers=_csv(flags.readers or ""),
         receivers=_csv(flags.receivers or ""),
-        connections=_csv(flags.connections or ""),
+        connections=frozenset(),
     )
     return vocab, BOUNDARIES[named]
 

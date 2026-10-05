@@ -123,7 +123,6 @@ def _census_flags(ns: argparse.Namespace) -> control_report.CensusFlags:
     return control_report.CensusFlags(
         readers=_opt_str(ns, "readers"),
         receivers=_opt_str(ns, "receivers"),
-        connections=_opt_str(ns, "connections"),
         boundary=_opt_str(ns, "boundary"),
     )
 
@@ -167,10 +166,7 @@ def _handle_rawreads(ns: argparse.Namespace) -> int:
 
 def _handle_snapshots(ns: argparse.Namespace) -> int:
     return cli_store.print_snapshots(
-        _str_list(ns, "paths"),
-        _opt_str(ns, "readers"),
-        _opt_str(ns, "receivers"),
-        _opt_str(ns, "connections"),
+        _str_list(ns, "paths"), _opt_str(ns, "readers"), _opt_str(ns, "receivers")
     )
 
 
@@ -179,7 +175,6 @@ def _handle_relalg(ns: argparse.Namespace) -> int:
         _str_list(ns, "paths"),
         _opt_str(ns, "readers"),
         _opt_str(ns, "receivers"),
-        _opt_str(ns, "connections"),
         _opt_str(ns, "kinds"),
     )
 
@@ -1278,7 +1273,6 @@ def _add_census_modes(make: _Make) -> None:
         cen = make(name, text)
         cen.add_argument("--readers", default=None, help="comma list: methods that read rows")
         cen.add_argument("--receivers", default=None, help="comma list: names readers run on")
-        cen.add_argument("--connections", default=None, help="comma list: connection names")
         cen.add_argument("--boundary", default=None, help="the boundary to type against: python")
         cen.add_argument("paths", nargs="+")
 
@@ -1317,7 +1311,6 @@ def _add_store_modes(make: _Make) -> None:
         cen = make(name, text)
         cen.add_argument("--readers", default=None, help="comma list: row readers (required)")
         cen.add_argument("--receivers", default=None, help="comma list: reader hosts (required)")
-        cen.add_argument("--connections", default=None, help="comma list: connections (required)")
         if name == "relalg":
             cen.add_argument("--kinds", default=None, help="comma list of relalg kinds (required)")
         cen.add_argument("paths", nargs="+")
@@ -1327,7 +1320,6 @@ def _add_fingerprint_mode(make: _Make) -> None:
     fpr = make("fingerprint", "a prime per referent of each control site; the unmodelled remainder")
     fpr.add_argument("--readers", default=None, help="comma list: methods that read rows")
     fpr.add_argument("--receivers", default=None, help="comma list: names readers run on")
-    fpr.add_argument("--connections", default=None, help="comma list: connection names")
     fpr.add_argument("--boundary", default=None, help="the boundary to type against: python")
     fpr.add_argument("--seed", action="append", help="a declaration file to model (required)")
     fpr.add_argument("--top", type=int, default=10, help="residual-order rows to list")

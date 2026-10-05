@@ -5353,3 +5353,40 @@
   claim  = {W668: an unread file is a skip in the banner and exit 1, never a clean "reads nothing".},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_touches_over_an_unparseable_file_reports_incomplete},
 }
+
+@misc{pycodemod-cli-mode-that-never-reads-connections-does-not-take-the-flag,
+  section = {cli},
+  title  = {W654: only `rawreads` consults the connection names, so these five refuse `--connections`},
+  claim  = {W654: only `rawreads` consults the connection names, so these five refuse
+            `--connections`. A flag the census ignores would let a caller think it
+            changed the answer. argparse refuses it as unrecognised (exit 2) before any
+            file is read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_mode_that_never_reads_connections_does_not_take_the_flag},
+}
+
+@misc{pycodemod-split-dotted-import-with-no-alias-reaches-the-stem-by-the-chain,
+  section = {split},
+  title  = {W653: `import pkg.lib` binds `pkg`, and `pkg.lib._hidden` is owed an edit, which was missed},
+  claim  = {W653: `import pkg.lib` binds `pkg`, and `pkg.lib._hidden` is owed an edit, which was
+            missed. RED ON HEAD BY BEHAVIOUR: the old alias set named only `import X as
+            a`, so a caller writing the full dotted chain was never listed and its
+            import broke silently after the split.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_dotted_import_with_no_alias_reaches_the_stem_by_the_chain},
+}
+
+@misc{pycodemod-split-alias-rebound-to-another-name-is-followed,
+  section = {split},
+  title  = {W653: `M = L` after `import lib as L` makes `M._hidden` owed too, flow-insensitively},
+  claim  = {W653: `M = L` after `import lib as L` makes `M._hidden` owed too, flow-insensitively.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_alias_rebound_to_another_name_is_followed},
+}
+
+@misc{pycodemod-split-star-import-owes-nothing-because-it-never-binds-a-private-name,
+  section = {split},
+  title  = {W653: `from lib import *` binds public names, which the entry still re-exports},
+  claim  = {W653: `from lib import *` binds public names, which the entry still re-exports. A star
+            import never binds an underscore name, and a module declaring `__all__` is
+            refused, so a bare `_hidden` after it was never the lib's: no owed row is
+            the correct answer, pinned here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_star_import_owes_nothing_because_it_never_binds_a_private_name},
+}

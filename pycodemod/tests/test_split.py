@@ -337,6 +337,31 @@ def test_a_caller_importing_the_stem_from_a_package_is_owed_by_attribute(tmp_pat
     assert got == [(2, "_hidden", "lib_00.py")]
 
 
+def test_a_dotted_import_with_no_alias_reaches_the_stem_by_the_chain(tmp_path: Path) -> None:
+    """W653: `import pkg.lib` binds `pkg`, and `pkg.lib._hidden` is owed an edit, which was missed.
+
+    ⚑ RED ON HEAD BY BEHAVIOUR: the old alias set named only `import X as a`, so a caller writing
+    the full dotted chain was never listed and its import broke silently after the split.
+    """
+    got = _owed_by(tmp_path, "import pkg.lib\nx = pkg.lib._hidden()\n")
+    assert got == [(2, "_hidden", "lib_00.py")]
+
+
+def test_an_alias_rebound_to_another_name_is_followed(tmp_path: Path) -> None:
+    """W653: `M = L` after `import lib as L` makes `M._hidden` owed too, flow-insensitively."""
+    got = _owed_by(tmp_path, "import lib as L\nM = L\nx = M._hidden()\n")
+    assert got == [(3, "_hidden", "lib_00.py")]
+
+
+def test_a_star_import_owes_nothing_because_it_never_binds_a_private_name(tmp_path: Path) -> None:
+    """W653: `from lib import *` binds public names, which the entry still re-exports.
+
+    A star import never binds an underscore name, and a module declaring `__all__` is refused, so a
+    bare `_hidden` after it was never the lib's: no owed row is the correct answer, pinned here.
+    """
+    assert _owed_by(tmp_path, "from lib import *\nx = _hidden()\ny = shown()\n") == []
+
+
 def test_an_attribute_the_entry_still_exports_or_another_module_owns_is_not_owed(
     tmp_path: Path,
 ) -> None:

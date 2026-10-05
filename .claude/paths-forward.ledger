@@ -1081,3 +1081,5 @@
 2026-10-05T04:54:56Z  tick  W667 minted    -         "pycodemod cli: wire the artifacts mode over artifact_readers, both vocabularies required flags, and drop its DO_NOT_PORT spelling"  evidence=W652
 2026-10-05T04:54:57Z  tick  W668 minted    -         "pycodemod cli: wire the touches mode over reads.function_reads with root names and module dirs as required flags, and drop its DO_NOT_PORT spelling"  evidence=W652
 2026-10-05T05:06:55Z  tick  W652 advanced  sweep     "W652 checklist closed; W667 artifacts and W668 touches wired; W665 and W666 decided; W654 widened to five modes by measurement"  evidence=pycodemod 884 passed; bazel hooks and pycodemod green
+2026-10-05T05:17:26Z  hash  --   diverged  --        "divergence: payload v2:86d42372cf91c692, file v2:a6b7ba6f60f9a651; the FILE wins"
+2026-10-05T05:30:25Z  tick  W654 advanced  sweep     "W654 dropped the unused --connections from five modes; W653 split owed callers now follow a dotted import and a rebound alias, and a star import is pinned as owing nothing"  evidence=pycodemod 887 passed; bazel //pycodemod/... green incl mutants

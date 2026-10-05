@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 29,
+      "ticks_blocked": 30,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -12957,38 +12957,40 @@
     {
       "symbol": "W653",
       "title": "pycodemod split: owed callers miss alias rebinding, a bare import of a dotted stem without as, and a star-import followed by a bare name",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measure each shape against split._aliases and _owed; the false negatives and positives the fixer listed but did not test; red arm per shape, or record the shape as unsupported with the reason",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 measured each shape against split._aliases/_owed: (1) bare 'import pkg.lib' then pkg.lib._hidden() was a FALSE NEGATIVE (the docstring said it names nothing): fixed by binding the dotted spelling and reading an attribute CHAIN (_dotted); red on HEAD by behaviour, F-arm disabling the dotted binding gave an empty owed list. (2) alias rebinding 'M = L' after 'import lib as L' was a false negative: followed flow-insensitively to a fixpoint, so a name reused for something else is a false positive that costs a look, stated in the docstring; F-arm making the loop never run failed its test. (3) star import: not a defect: 'from lib import *' never binds an underscore name and a module declaring __all__ is refused, so no owed row is correct; pinned. 3 tests, 3 warrants; suite 887 passed",
       "issued_at": "2026-10-05T02:15:54Z",
       "minted_during": "interrupt",
       "caused_by": "W645",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T05:25:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T052516Z"
     },
     {
       "symbol": "W654",
       "title": "pycodemod control: --connections is required for the StoreVocab but control_census never reads it, so either use it or stop requiring it for these modes",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "MEASURED 2026-10-05: StoreVocab.connections is read in exactly one place, storeflow._is_connection_execute, reached only by rawread_sites (attr-reads connections over the package: that line plus control_report.operands). So FIVE modes require --connections and never read it: control, constructs, fingerprint, snapshots, relalg (rawreads is the one that uses it). Plan: those five build StoreVocab with connections=frozenset() and drop the flag (argparse then rejects it); control_report.operands, cli_store and cli_fp change, and about a dozen test_cli.py sites (_CENSUS_FLAGS, the missing-flag parametrizations for control/constructs/fingerprint/snapshots/relalg); docstring says why connections is not asked; keep rawreads' --connections; a test that a rawreads result changes with it",
-      "evidence": "2026-10-05: 2026-10-05 premise widened by measurement: not just control, five modes (see next)",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 premise widened by measurement: not just control, five modes (see next) | 2026-10-05: 2026-10-05 done by the measured plan: StoreVocab.connections is read only by rawread_sites, so control, constructs, fingerprint, snapshots and relalg no longer take --connections (argparse refuses it as unrecognised, exit 2) and build their StoreVocab with an explicitly empty set; rawreads keeps its required --connections, and its tests already show the result changes with it (con finds the read, other finds none). CensusFlags lost the field, control_report.operands, cli_store._vocab, the two handlers, three parser blocks and the fingerprint docstring changed; the dozen test sites were edited and test_a_mode_that_never_reads_connections_does_not_take_the_flag pins the refusal for all five modes. F-arm re-adding the flag to fingerprint failed it, removed. suite 887 passed",
       "issued_at": "2026-10-05T02:15:54Z",
       "minted_during": "interrupt",
       "caused_by": "W639",
-      "last_worked": "2026-10-05T04:58:56Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T05:25:15Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T052515Z"
     },
     {
       "symbol": "W655",
