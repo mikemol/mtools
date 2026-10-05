@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 789,
+  "counter": 793,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T12:25:41Z",
   "job_id": "9c05fa85",
@@ -13348,8 +13348,7 @@
         "W742"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13358,7 +13357,7 @@
       "issued_at": "2026-10-05T17:27:25Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:26Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13374,8 +13373,7 @@
         "W774"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13384,7 +13382,7 @@
       "issued_at": "2026-10-05T17:27:25Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:26Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13399,8 +13397,7 @@
         "W743"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13409,7 +13406,7 @@
       "issued_at": "2026-10-05T17:27:25Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:26Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13424,8 +13421,7 @@
         "W752"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13434,7 +13430,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13449,8 +13445,7 @@
         "W774"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13459,7 +13454,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13473,8 +13468,7 @@
         "W752"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13483,7 +13477,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13497,8 +13491,7 @@
         "W731"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13507,7 +13500,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13522,8 +13515,7 @@
         "W768"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13532,7 +13524,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13547,8 +13539,7 @@
         "W741"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13557,7 +13548,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13574,8 +13565,7 @@
         "W761"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13584,7 +13574,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13598,8 +13588,7 @@
         "W732"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13608,7 +13597,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:27Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13622,8 +13611,7 @@
         "W754"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13632,7 +13620,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13646,8 +13634,7 @@
         "W733"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13656,7 +13643,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13670,8 +13657,7 @@
         "W735"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13680,7 +13666,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13694,8 +13680,7 @@
         "W739"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13704,7 +13689,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13718,8 +13703,7 @@
         "W780"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13728,7 +13712,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13743,8 +13727,7 @@
         "W749"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13753,7 +13736,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13767,8 +13750,7 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13777,7 +13759,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13791,8 +13773,7 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13801,7 +13782,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13815,8 +13796,7 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13825,7 +13805,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:28Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13839,8 +13819,7 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13849,7 +13828,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:29Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13863,8 +13842,7 @@
         "W781"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13873,7 +13851,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:29Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13887,8 +13865,7 @@
         "W761"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13897,7 +13874,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:29Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13911,8 +13888,7 @@
         "W760"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13921,7 +13897,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:29Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13935,8 +13911,7 @@
         "W760"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13945,7 +13920,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:29Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13959,8 +13934,7 @@
         "W786"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13969,7 +13943,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:29Z",
+      "last_worked": "2026-10-05T21:27:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13983,8 +13957,7 @@
         "W786"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -13993,7 +13966,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:29Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14007,8 +13980,7 @@
         "W786"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14017,7 +13989,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14031,8 +14003,7 @@
         "W786"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14041,7 +14012,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14055,8 +14026,7 @@
         "W763"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14065,7 +14035,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14079,8 +14049,7 @@
         "W763"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14089,7 +14058,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14098,22 +14067,23 @@
     {
       "symbol": "W704",
       "title": "mtools typing: importdag/src/mikemol/importdag/dagbzl.py (17 findings)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W747"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
-      "blocked_on": [],
+      "blocked_on": [
+        "W729"
+      ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Whole-file Write clearing 17 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14127,8 +14097,7 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14137,7 +14106,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14151,8 +14120,7 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14161,7 +14129,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14175,8 +14143,7 @@
         "W777"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14185,7 +14152,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14199,8 +14166,7 @@
         "W777"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14209,7 +14175,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:30Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14223,8 +14189,7 @@
         "W777"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14233,7 +14198,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:31Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14247,8 +14212,7 @@
         "W777"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14257,7 +14221,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:31Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14271,8 +14235,7 @@
         "W750"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14281,7 +14244,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:31Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14293,8 +14256,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14303,7 +14265,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:31Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14315,8 +14277,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14325,7 +14286,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:31Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14337,8 +14298,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14347,7 +14307,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:31Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14359,8 +14319,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14369,7 +14328,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:31Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14378,20 +14337,21 @@
     {
       "symbol": "W716",
       "title": "mtools typing: gatecheck/src/mikemol/gatecheck/witness_reach.py (17 findings)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
-      "blocked_on": [],
+      "blocked_on": [
+        "W729"
+      ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Whole-file Write clearing 17 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14403,8 +14363,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14413,7 +14372,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14425,8 +14384,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14435,7 +14393,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14447,8 +14405,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14457,7 +14414,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14469,8 +14426,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14479,7 +14435,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14491,8 +14447,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14501,7 +14456,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14513,8 +14468,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14523,7 +14477,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14535,8 +14489,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14545,7 +14498,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:32Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14557,8 +14510,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14567,7 +14519,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14579,8 +14531,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14589,7 +14540,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14598,20 +14549,21 @@
     {
       "symbol": "W726",
       "title": "mtools typing: mutantcell/src/mikemol/mutantcell/sites.py (7 findings)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
-      "blocked_on": [],
+      "blocked_on": [
+        "W729"
+      ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Whole-file Write clearing 7 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14623,8 +14575,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14633,7 +14584,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14645,8 +14596,7 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [],
       "blocked_kind": "agent",
@@ -14655,7 +14605,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14667,26 +14617,28 @@
       "status": "blocked",
       "enables": [
         "W751",
+        "W704",
         "W757",
         "W758",
+        "W716",
         "W764",
         "W765",
+        "W726",
         "W780"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W673"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14700,19 +14652,18 @@
         "W753"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W675"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14726,19 +14677,18 @@
         "W774"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W679"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:33Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14753,19 +14703,18 @@
         "W780"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W683"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14779,19 +14728,18 @@
         "W778"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W685"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14805,19 +14753,18 @@
         "W755"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W674"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14831,19 +14778,18 @@
         "W768"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W686"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14857,19 +14803,18 @@
         "W756"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W681"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14883,19 +14828,18 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W674"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14909,19 +14853,18 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W676"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14935,19 +14878,18 @@
         "W759"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W687"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14962,19 +14904,18 @@
         "W784"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W680"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:34Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14988,19 +14929,18 @@
         "W781"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W681"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:35Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15014,19 +14954,18 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W673"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:35Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15040,19 +14979,18 @@
         "W785"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W675"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:35Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15064,19 +15002,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W682"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:35Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15088,19 +15025,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W682"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:35Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15112,19 +15048,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W682"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:35Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15136,19 +15071,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W704"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:35Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15160,19 +15094,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W689"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15184,19 +15117,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W689"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15208,19 +15140,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W711"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 1 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15237,19 +15168,18 @@
         "W772"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W729"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15264,20 +15194,19 @@
         "W783"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W676",
         "W678"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15291,19 +15220,18 @@
         "W767"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W730"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15317,20 +15245,19 @@
         "W783"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W684",
         "W677"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15344,19 +15271,18 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W734"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:36Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15370,19 +15296,18 @@
         "W781"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W736"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15396,19 +15321,18 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W729"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15422,19 +15346,18 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W729"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15448,19 +15371,18 @@
         "W773"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W739"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15472,20 +15394,19 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W696",
         "W697"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15497,20 +15418,19 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W695",
         "W682"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15522,19 +15442,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W732"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15546,20 +15465,19 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W702",
         "W703"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15571,19 +15489,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W729"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:37Z",
+      "last_worked": "2026-10-05T21:27:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15595,19 +15512,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W729"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15619,19 +15535,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W740"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 2 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15645,19 +15560,18 @@
         "W775"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W753"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15671,20 +15585,19 @@
         "W776"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W735",
         "W680"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15698,19 +15611,18 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W751"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15724,19 +15636,18 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W751"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15750,19 +15661,18 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W751"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15776,19 +15686,18 @@
         "W787"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W751"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:38Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15800,19 +15709,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W759"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 3 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:39Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15826,8 +15734,7 @@
         "W779"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W674",
@@ -15835,12 +15742,12 @@
         "W677"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 4 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:39Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15855,19 +15762,18 @@
         "W785"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W767"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 4 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:39Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15881,19 +15787,18 @@
         "W784"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W768"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 4 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:39Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15905,8 +15810,7 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W707",
@@ -15915,12 +15819,12 @@
         "W710"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 4 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:39Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15934,20 +15838,19 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W733",
         "W752"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 5 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:39Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15961,19 +15864,18 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W774"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 5 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:39Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15987,8 +15889,7 @@
         "W786"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W732",
@@ -15996,12 +15897,12 @@
         "W729"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 5 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16013,8 +15914,7 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W741",
@@ -16022,12 +15922,12 @@
         "W756"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 5 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16039,19 +15939,18 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W775"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 5 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16065,20 +15964,19 @@
         "W788"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W754",
         "W752"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 6 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 6 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16090,20 +15988,19 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W776",
         "W740"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 6 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 6 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16115,20 +16012,19 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W775",
         "W743"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 6 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 6 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16140,8 +16036,7 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W698",
@@ -16151,12 +16046,12 @@
         "W780"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 10 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 10 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16168,8 +16063,7 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W769",
@@ -16183,12 +16077,12 @@
         "W772"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 12 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 12 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:40Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16202,8 +16096,7 @@
         "W789"
       ],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W755",
@@ -16218,12 +16111,12 @@
         "W693"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 23 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 23 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:41Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16235,21 +16128,113 @@
       "status": "blocked",
       "enables": [],
       "touches": [
-        "typing",
-        "mypy"
+        "debt"
       ],
       "blocked_on": [
         "W788"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Waits on 24 debt file(s): clean those first",
+      "next_bounded_step": "Waits on 24 debt file(s) to clean first",
       "evidence": "",
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T18:03:41Z",
+      "last_worked": "2026-10-05T21:27:40Z",
       "ticks_blocked": 0,
       "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W790",
+      "title": "Drain luthen-observability's mypy_plan into mtools: the import resolver in importdag (resolve.py), then the planner as its own distribution over importdag.cone, with direct-waits reduction, cycle guard and mint",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "importdag",
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Second unit: the queue writer (mint, over mikemol-pathsforward, keeping a working card working) and the command line, as console scripts; then retire luthen's checks/mypy_plan.py and have the fleet consume mikemol-debtplan.",
+      "evidence": "2026-10-05: 2026-10-05: importdag.resolve landed 23ed678 (17 witnesses); mikemol-debtplan first unit landed c40652b (rows, cycle, reduce, plan; 29 witnesses; bazel test //debtplan/... 14 targets green). Origin: luthen-observability checks/mypy_plan (c7e6c7a..37a326e).",
+      "issued_at": "2026-10-05T18:45:17Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-10-05T19:06:32Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W791",
+      "title": "Make debtplan's per-repo inputs durable: exclude directories (build, .edit-snapshots, .ebuild-witness) and declared resolutions live in a file in each repo, not in host scratch flags",
+      "status": "ready",
+      "enables": [
+        "W790"
+      ],
+      "touches": [
+        "debtplan",
+        "fleet",
+        "config",
+        "resolutions"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Name the file in each repo (for example .claude/debtplan.json) that holds the exclude directories and declared resolutions, make mikemol-debtplan read it by default, and move the build, .edit-snapshots, .ebuild-witness exclusions and the gcalculus gcalc resolution into it",
+      "evidence": "",
+      "issued_at": "2026-10-05T22:39:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "W790",
+      "last_worked": "2026-10-05T22:39:46Z",
+      "ticks_blocked": 0,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W792",
+      "title": "AL: model parent packages' __init__.py edges in importdag.resolve (importing a.b.c also imports a/__init__.py and a/b/__init__.py)",
+      "status": "ready",
+      "enables": [
+        "W793"
+      ],
+      "touches": [
+        "importdag",
+        "debtplan",
+        "resolver",
+        "typing-order"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the parent-package files to an absolute reference's resolution; extend tests and warrants; re-plan the fleet to see which waits appear",
+      "evidence": "",
+      "issued_at": "2026-10-05T22:39:46Z",
+      "minted_during": "interrupt",
+      "caused_by": "W790",
+      "last_worked": "2026-10-05T22:39:46Z",
+      "ticks_blocked": 0,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W793",
+      "title": "AE: pilot consumer-constraint type inference: derive what a value must be from its uses (pycodemod sites.scan, importdag), reporting determined / ambiguous / underdetermined holes",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "typehole",
+        "importdag",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Pick one repo's Any/object boundary files; scan consumers of each hole; emit the constraint set per hole without editing",
+      "evidence": "",
+      "issued_at": "2026-10-05T22:39:46Z",
+      "minted_during": "interrupt",
+      "caused_by": "W790",
+      "last_worked": "2026-10-05T22:39:47Z",
+      "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
     }

@@ -1219,3 +1219,7 @@
 2026-10-05T17:27:40Z  tick  W787 minted    -         "mtools typing: mdstruct/src/mikemol/mdstruct/cli.py (103 findings)"
 2026-10-05T17:27:40Z  tick  W788 minted    -         "mtools typing: pathsforward/src/mikemol/pathsforward/cli.py (249 findings)"
 2026-10-05T17:27:40Z  tick  W789 minted    -         "mtools typing: pathsforward/src/mikemol/pathsforward/__main__.py (2 findings)"
+2026-10-05T18:45:17Z  interrupt W790 minted    -         "Drain luthen-observability's mypy_plan into mtools: the import resolver in importdag (resolve.py), then the planner as its own distribution over importdag.cone, with direct-waits reduction, cycle guard and mint"
+2026-10-05T22:39:34Z  interrupt W791 minted    -         "Make debtplan's per-repo inputs durable: exclude directories (build, .edit-snapshots, .ebuild-witness) and declared resolutions live in a file in each repo, not in host scratch flags"  evidence=operator
+2026-10-05T22:39:46Z  interrupt W792 minted    -         "AL: model parent packages' __init__.py edges in importdag.resolve (importing a.b.c also imports a/__init__.py and a/b/__init__.py)"  evidence=operator
+2026-10-05T22:39:46Z  interrupt W793 minted    -         "AE: pilot consumer-constraint type inference: derive what a value must be from its uses (pycodemod sites.scan, importdag), reporting determined / ambiguous / underdetermined holes"  evidence=operator
