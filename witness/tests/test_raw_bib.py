@@ -57,6 +57,20 @@ def test_every_entry_is_read(tmp_path: Path) -> None:
     assert len(raw_bib.read(_bib(tmp_path, "one.bib", _ONE)).entries) == _ENTRY_COUNT
 
 
+def test_the_same_bib_listed_twice_is_not_a_collision(tmp_path: Path) -> None:
+    """W670: a collision is a key in two DIFFERENT bibs; one bib named twice declares nothing twice.
+
+    ⚑ DECLARED DEFECT `same-bib-twice-is-a-collision`: the `seen[key] != one` guard is what keeps a
+    caller that lists a bib twice (a glob that overlaps a named path) from being told its own file
+    collides with itself. The control beside it is the real collision, two bibs, which is reported.
+    """
+    one = _bib(tmp_path, "one.bib", _ONE)
+    assert raw_bib.read([one, one]).collisions == ()
+    two = _bib(tmp_path, "two.bib", _TWO)
+    (collision,) = raw_bib.read([one, two]).collisions
+    assert collision.key == "BETA"
+
+
 def test_a_field_the_engine_drops_is_still_visible(tmp_path: Path) -> None:
     """The reader keeps a field the engine's whitelist would discard.
 

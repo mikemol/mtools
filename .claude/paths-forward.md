@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 671 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:4c6fd1652ca00d36`
+counter 672 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:cc526c39b1d740d1`
 
 | # | symbol | status |
 |---|---|---|
@@ -14,7 +14,7 @@ counter 671 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:4c6f
 | 5 | W622 | ready |
 | 6 | W636 | ready |
 | 7 | W670 | ready |
-| 8 | W671 | ready |
+| 8 | W672 | ready |
 | 9 | W319 | blocked |
 | 10 | W317 | blocked |
 | 11 | W576 | blocked |
@@ -663,6 +663,7 @@ counter 671 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:4c6f
 | 654 | W667 | done |
 | 655 | W668 | done |
 | 656 | W669 | done |
+| 657 | W671 | done |
 
 ## waypoints
 
@@ -694,16 +695,14 @@ counter 671 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:4c6f
      switch only the identical ones; strings, definitions, layout and reads return different types and stay
 7. **W670** (ready) mutation: declare defect classes (mutants.regex) for the remaining drained distributions from their
    recorded F-arm history
-   - next: Continue with the next dist by its own docstring claims: witness, atomicwrite, treeio, memres, importdag,
-     gatecheck, gradekit, mutantcell, buildtel, pkgbuild, bibparse, corpus, grade, gmailstruct, audiostruct, icsstruct,
-     pytestspec
-8. **W671** (ready) tests: find negated substring assertions whose text appears nowhere in what the code under test can
-   print, because they cannot fail
-   - next: Found by the first declared defect that survived: ratchet's test_fan_out_refusal_is_unconditional_not_a_mode
-     asserted 'moved' not in the report while the report says 'MOVED', so it guarded nothing. Measure the class: every
-     'assert LITERAL not in X' across the dists' tests, with LITERAL searched (case-sensitive) in the distribution's src
-     string literals and f-strings; a literal found nowhere is a candidate. Report as a census, then fix each by
-     asserting the real spelling plus a positive control that the real spelling appears in the case it should
+   - next: Continue with the remaining 15 by their docstring claims; a module with strong tests (atomicwrite) kills
+     every declaration, which is itself the answer
+8. **W672** (ready) Draft, as a patch in substrate's inbox, the repoint of Selftest.mk and its seven tmi_* tools to
+   mikemol-transcriptstruct and the deletion of scratch/transcriptstruct.py
+   - next: Draft in a scratch copy (never substrate's tree): rewrite load_units over records.read_path,
+     provenance.classify and blocks.blocks; run old and new over one real transcript and compare unit counts and the
+     human-unit set; the patch plus that comparison go in a letter to substrate. If the human sets differ, name each
+     difference rather than hiding it
 9. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257
@@ -725,7 +724,9 @@ counter 671 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:4c6f
    - blocked on: W317
 13. **W592** (blocked) Confirm substrate repointed Selftest.mk and its tmi_* tools to mikemol-transcriptstruct and
    deleted scratch/transcriptstruct.py
-   - blocked on: substrate:W33
+   - blocked on: operator: decide W592 has waited 16 ticks on substrate:W33 with no live substrate session and a letter
+     unanswered since 2026-10-04: (a) keep waiting, (b) mtools drafts the repoint of Selftest.mk and the seven tmi_*
+     tools as a patch in substrate's inbox for its next session, or (c) drop W592 as substrate's to do
    - next: Ask substrate for the repoint result; cite its card once it names one
 14. **W231** (done) Convert the 19 standing rules into hook-enforced OPA policy (with luthen-observability); each rule
    that becomes a hook leaves the payload, relieving W209
@@ -1853,6 +1854,8 @@ counter 671 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:4c6f
    required flags, and drop its DO_NOT_PORT spelling
 656. **W669** (done) hooks gen-warrants: support the root layout so check_mutants' runner tests can take generated
    warrants, then test run_declared's four outcomes
+657. **W671** (done) tests: find negated substring assertions whose text appears nowhere in what the code under test can
+   print, because they cannot fail
 
 ## residue
 

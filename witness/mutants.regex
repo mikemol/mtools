@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim raw_bib.py's docstring makes
+# about what a bib read is and is not, and none moves a def, so none is a body-to-raise.
+
+# ABSENT, BROKEN and MANGLED are three facts, and only absent is an answer. A non-UTF-8 bib read with
+# replacement characters parses plausible FICTIONAL entries, and an invented row corroborates itself.
+src/mikemol/witness/raw_bib.py|non-utf8-read-lossily|path\.read_text\(encoding="utf-8"\)|path.read_text(encoding="utf-8", errors="replace")|def=read_text
+
+# A key declared in two bibs is a COLLISION, reported beside the map; merged silently, twelve files
+# declaring 84 records reported as 77 distinct keys.
+src/mikemol/witness/raw_bib.py|collision-merged-silently|if key in seen and seen\[key\] != one:|if False:|def=read
+
+# ...and the same bib listed twice is not a collision between two files.
+src/mikemol/witness/raw_bib.py|same-bib-twice-is-a-collision|and seen\[key\] != one|and True|def=read
+
+# Last-write-wins is kept (a later bib layering an earlier one is how a composed projection works);
+# first-wins would invert the layering.
+src/mikemol/witness/raw_bib.py|first-declaration-wins|out\[key\] = fields|out.setdefault(key, fields)|def=read
+
+# A directory is a DIRECTORY, so the read did not happen; it is not an absent bib and not a failed read.
+src/mikemol/witness/raw_bib.py|directory-not-named|if path\.is_dir\(\):|if False:|def=read_text
+
+# An absent bib is named ABSENT, not the same as an empty bib and not the same as a failed read.
+src/mikemol/witness/raw_bib.py|absent-not-named|if not path\.exists\(\):|if False:|def=read_text
+
+# `accepted` comes from the ENGINE and an edge the engine accepts is not dropped; inverted, the
+# entries the engine KEPT are the ones reported.
+src/mikemol/witness/raw_bib.py|accepted-edge-reported-as-dropped|field not in accepted|field in accepted|def=entries_with_dropped_edges
+
+# The edge vocabulary is declared once: narrowed, an `enables` edge the engine drops is never seen.
+src/mikemol/witness/raw_bib.py|edge-vocabulary-narrowed|EDGE_FIELDS = \("from", "rests-on", "enables"\)|EDGE_FIELDS = ("from", "rests-on")|

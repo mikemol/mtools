@@ -504,3 +504,14 @@
             figure is a number nobody can audit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_bib.py -k test_an_unanchored_claim_is_refused},
 }
+
+@misc{witness-raw-bib-same-bib-listed-twice-is-not-a-collision,
+  section = {raw_bib},
+  title  = {W670: a collision is a key in two DIFFERENT bibs; one bib named twice declares nothing twice},
+  claim  = {W670: a collision is a key in two DIFFERENT bibs; one bib named twice declares nothing
+            twice. DECLARED DEFECT `same-bib-twice-is-a-collision`: the `seen[key] !=
+            one` guard is what keeps a caller that lists a bib twice (a glob that
+            overlaps a named path) from being told its own file collides with itself.
+            The control beside it is the real collision, two bibs, which is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_raw_bib.py -k test_the_same_bib_listed_twice_is_not_a_collision},
+}

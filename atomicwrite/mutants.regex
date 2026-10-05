@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim durable.py's docstring makes
+# about how a write commits bytes, and none moves a def, so none is a body-to-raise.
+
+# Replace the PATH, never the inode: a write THROUGH the inode shows the new bytes to every hardlinked
+# twin (a content-addressed dedup creates exactly that state), and a reader sees a torn file.
+src/mikemol/atomicwrite/durable.py|replace-becomes-write-through|tmp_path\.replace\(path\)|path.write_bytes(tmp_path.read_bytes())|def=write_atomic
+
+# The target's permissions are PRESERVED: mkstemp creates at 0600, so without the chmod a replace
+# silently NARROWS every file it touches.
+src/mikemol/atomicwrite/durable.py|permissions-narrowed-to-0600|tmp_path\.chmod\(keep\)|pass|def=write_atomic
+
+# A new file gets the process umask default, as open(path, "w") would; ignoring the umask opens it
+# wider than the caller's process allows.
+src/mikemol/atomicwrite/durable.py|new-file-ignores-the-umask|keep = _NEW_FILE_MODE & ~_umask\(\)|keep = _NEW_FILE_MODE|def=write_atomic
+
+# If anything fails the temp is removed; left behind, a failed write litters the directory it was
+# writing into.
+src/mikemol/atomicwrite/durable.py|failed-write-leaves-its-temp|tmp_path\.unlink\(\)|pass|def=write_atomic
+
+# ...and the original exception propagates: swallowed, the caller is told a failed write succeeded.
+src/mikemol/atomicwrite/durable.py|failed-write-swallowed|^        raise$|        pass|def=write_atomic
+
+# Reading the umask must not change it (there is no read-only syscall): left at 0, every file the
+# process creates afterwards is created world-writable.
+src/mikemol/atomicwrite/durable.py|umask-left-changed|    os\.umask\(current\)|    pass|def=_umask
+
+# Bytes are written as bytes: through the text branch they raise, or are mangled by an encoding.
+src/mikemol/atomicwrite/durable.py|bytes-written-as-text|if isinstance\(data, bytes\):|if False:|def=_fill

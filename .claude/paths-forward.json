@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 671,
+  "counter": 672,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T04:40:22Z",
   "job_id": "41bd4893",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 63,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 61,
+      "ticks_blocked": 62,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 67,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -11792,16 +11792,16 @@
         "substrate"
       ],
       "blocked_on": [
-        "substrate:W33"
+        "operator: decide W592 has waited 16 ticks on substrate:W33 with no live substrate session and a letter unanswered since 2026-10-04: (a) keep waiting, (b) mtools drafts the repoint of Selftest.mk and the seven tmi_* tools as a patch in substrate's inbox for its next session, or (c) drop W592 as substrate's to do"
       ],
-      "blocked_kind": "agent",
+      "blocked_kind": "human",
       "next_bounded_step": "Ask substrate for the repoint result; cite its card once it names one",
-      "evidence": "2026-10-04: drained from queue.md item 8 (2026-10-04): port e571b02; substrate's W33 owns the repoint; real consumers are 7 scratch tmi_* tools, tool_usage.py does not import it",
+      "evidence": "2026-10-04: drained from queue.md item 8 (2026-10-04): port e571b02; substrate's W33 owns the repoint; real consumers are 7 scratch tmi_* tools, tool_usage.py does not import it | 2026-10-05: 2026-10-05 ESCALATED after 16 blocked ticks (the loop's rule), once: the block on substrate:W33 is unchanged (letter 2026-10-04-mtools-transcriptstruct-repoint.md in substrate's inbox, no live substrate session in ListAgents), so it is re-filed as an operator decision with its three options, and nudging stops until something changes | 2026-10-05: 2026-10-05 OPERATOR RULED via AskUserQuestion: option 'Draft the patch' (mtools drafts the repoint as a ready-to-apply patch in substrate's inbox for its next session). The drafting is W672. This row's hold is the operator's to lift (standing rule 5): to release it, run  mikemol-paths-forward --state .claude/paths-forward.json --update W592 --status blocked --blocked-on W672 --blocked-kind agent",
       "issued_at": "2026-10-04T19:06:24Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 15,
+      "last_worked": "2026-10-05T11:22:52Z",
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -13291,18 +13291,18 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Continue with the next dist by its own docstring claims: witness, atomicwrite, treeio, memres, importdag, gatecheck, gradekit, mutantcell, buildtel, pkgbuild, bibparse, corpus, grade, gmailstruct, audiostruct, icsstruct, pytestspec",
-      "evidence": "2026-10-05: 2026-10-05 first slice: mdstruct (exclude-dropped-at-the-walk, from the W659 F-arm) and hooks (check-ignores-the-layout-runner, from the W669 F-arm) declared, each checked to plant before the runner. Remaining: ledger, transcriptstruct, mutation itself, fence, ratchet, witness and the rest, mined from their commits and swarm notes | 2026-10-05: 2026-10-05 second slice, each checked to plant and then run through the runner's own run_declared (all killed, none equivalent): pycodemod 10 in all (7 added from this session's F-arms: alias-rebinding-not-followed, every-prefixed-def-registered, artifact-vocabularies-swapped, touches-one-file-rule-never-fires, touches-root-names-dropped, placement-overrides-dropped, plus the 4 earlier), ledger 1 (unreadable-bib-smoothed-to-empty, W601), pathsforward 1 (wrap-never-breaks, W604), hooks 2 (adds program-filter-inverted, W587), mutation 4 (its own reader: climbing-module-allowed, duplicate-name-allowed, miss-no-longer-caught, miss-reads-as-applied). Declared so far: pathwalk 3, pycodemod 10, mdstruct 1, hooks 2, ledger 1, pathsforward 1, mutation 4. Still none: the other 19 distributions | 2026-10-05: CORRECTION to the count above: 27 distributions carry a :mutants target and 7 declare, so TWENTY remain, not 19 | 2026-10-05: 2026-10-05 third slice (6 declarations from F-arms recorded in commit bodies, each plant-checked then killed by run_declared; 22 of 22 across the five dists run): pycodemod shared-is-lcm-not-gcd (W607) and failure-not-subtracted-from-success (W612); hooks check-exit-never-fails (W621); pathsforward caused-by-no-longer-claims (W577); pathwalk suffix-validation-inverted (W575); transcriptstruct reference-name-type-unchecked (W620, the dist's first). Declared now: pathwalk 4, pycodemod 12, mdstruct 1, hooks 3, ledger 1, pathsforward 2, mutation 4, transcriptstruct 1 = 28 defects in 8 distributions; 19 distributions still declare none | 2026-10-05: 2026-10-05 fourth slice, FIRST SURVIVORS: ratchet declared 9 defects from core.py's own design comments (not from history); 4 SURVIVED and all 4 were real gaps, none equivalent. fan-out-absolved-as-a-move: the verdict test passed because the other arrival kept the exit code 1, and its report assertion was VACUOUS (it checked lowercase 'moved' against the report's 'MOVED', so it could never fail: fixed, and the class minted as W671). many-retired-absolved-as-a-move: no test for two retirements and one arrival. suspect-softens-the-verdict: Diff.grew had one reader (a test) and never with a suspect. readback-not-checked: the OSError path was untested. Added 3 tests in test_core.py and tests/test_write_landing.py (4 generated warrants), all 9 killed after. Declared now: 37 defects in 9 distributions; 18 declare none | 2026-10-05: 2026-10-05 fifth slice: fence declared 11 defects from git_env.py and label_lease.py's own docstring claims; 4 SURVIVED, all real test gaps: the default deadline returned raw (the fixture default 600 was already a whole minute above the floor, so a floored default looked identical), clamped at exact equality (no boundary test), module_of keeping the LAST .agda argument (no test with two), and a ledger that is not UTF-8 read lossily (no test with a bad byte). 4 tests, 4 generated warrants; all 11 killed after. Declared now: 48 defects in 10 distributions; 17 declare none. Two of the two dists run so far (ratchet, fence) had 4 survivors each out of 9 and 11 declared: the claims a module's own docstring makes are a rich source of missing tests | 2026-10-05: CORRECTION: the 2026-10-05T07:18 ledger line says 7 new tests; it is 8 (ratchet 3 in test_core.py plus 1 in test_write_landing.py, fence 4), plus one fixed assertion",
+      "next_bounded_step": "Continue with the remaining 15 by their docstring claims; a module with strong tests (atomicwrite) kills every declaration, which is itself the answer",
+      "evidence": "2026-10-05: 2026-10-05 first slice: mdstruct (exclude-dropped-at-the-walk, from the W659 F-arm) and hooks (check-ignores-the-layout-runner, from the W669 F-arm) declared, each checked to plant before the runner. Remaining: ledger, transcriptstruct, mutation itself, fence, ratchet, witness and the rest, mined from their commits and swarm notes | 2026-10-05: 2026-10-05 second slice, each checked to plant and then run through the runner's own run_declared (all killed, none equivalent): pycodemod 10 in all (7 added from this session's F-arms: alias-rebinding-not-followed, every-prefixed-def-registered, artifact-vocabularies-swapped, touches-one-file-rule-never-fires, touches-root-names-dropped, placement-overrides-dropped, plus the 4 earlier), ledger 1 (unreadable-bib-smoothed-to-empty, W601), pathsforward 1 (wrap-never-breaks, W604), hooks 2 (adds program-filter-inverted, W587), mutation 4 (its own reader: climbing-module-allowed, duplicate-name-allowed, miss-no-longer-caught, miss-reads-as-applied). Declared so far: pathwalk 3, pycodemod 10, mdstruct 1, hooks 2, ledger 1, pathsforward 1, mutation 4. Still none: the other 19 distributions | 2026-10-05: CORRECTION to the count above: 27 distributions carry a :mutants target and 7 declare, so TWENTY remain, not 19 | 2026-10-05: 2026-10-05 third slice (6 declarations from F-arms recorded in commit bodies, each plant-checked then killed by run_declared; 22 of 22 across the five dists run): pycodemod shared-is-lcm-not-gcd (W607) and failure-not-subtracted-from-success (W612); hooks check-exit-never-fails (W621); pathsforward caused-by-no-longer-claims (W577); pathwalk suffix-validation-inverted (W575); transcriptstruct reference-name-type-unchecked (W620, the dist's first). Declared now: pathwalk 4, pycodemod 12, mdstruct 1, hooks 3, ledger 1, pathsforward 2, mutation 4, transcriptstruct 1 = 28 defects in 8 distributions; 19 distributions still declare none | 2026-10-05: 2026-10-05 fourth slice, FIRST SURVIVORS: ratchet declared 9 defects from core.py's own design comments (not from history); 4 SURVIVED and all 4 were real gaps, none equivalent. fan-out-absolved-as-a-move: the verdict test passed because the other arrival kept the exit code 1, and its report assertion was VACUOUS (it checked lowercase 'moved' against the report's 'MOVED', so it could never fail: fixed, and the class minted as W671). many-retired-absolved-as-a-move: no test for two retirements and one arrival. suspect-softens-the-verdict: Diff.grew had one reader (a test) and never with a suspect. readback-not-checked: the OSError path was untested. Added 3 tests in test_core.py and tests/test_write_landing.py (4 generated warrants), all 9 killed after. Declared now: 37 defects in 9 distributions; 18 declare none | 2026-10-05: 2026-10-05 fifth slice: fence declared 11 defects from git_env.py and label_lease.py's own docstring claims; 4 SURVIVED, all real test gaps: the default deadline returned raw (the fixture default 600 was already a whole minute above the floor, so a floored default looked identical), clamped at exact equality (no boundary test), module_of keeping the LAST .agda argument (no test with two), and a ledger that is not UTF-8 read lossily (no test with a bad byte). 4 tests, 4 generated warrants; all 11 killed after. Declared now: 48 defects in 10 distributions; 17 declare none. Two of the two dists run so far (ratchet, fence) had 4 survivors each out of 9 and 11 declared: the claims a module's own docstring makes are a rich source of missing tests | 2026-10-05: CORRECTION: the 2026-10-05T07:18 ledger line says 7 new tests; it is 8 (ratchet 3 in test_core.py plus 1 in test_write_landing.py, fence 4), plus one fixed assertion | 2026-10-05: 2026-10-05 sixth slice: atomicwrite declared 7 from durable.py's docstring (write-through the inode, permissions narrowed to 0600, umask ignored, temp left behind, exception swallowed, umask left changed, bytes as text): ALL 7 KILLED, a genuinely well-tested module. witness declared 8 from raw_bib.py (lossy decode, collision merged silently, the same bib twice reported as a collision, first-wins, directory and absent not named, accepted edge reported as dropped, edge vocabulary narrowed): 1 SURVIVED, the same-bib-twice guard (seen[key] != one) had no test; added test_the_same_bib_listed_twice_is_not_a_collision with its real-collision control, 1 generated warrant, all 8 killed after. Declared now: 63 defects in 12 distributions; 15 declare none (importdag, gatecheck, gradekit, treeio, memres, buildtel, mutantcell, pkgbuild, bibparse, corpus, grade, gmailstruct, audiostruct, icsstruct, pytestspec). Survival rate by dist so far: ratchet 4 of 9, fence 4 of 11, witness 1 of 8, atomicwrite 0 of 7",
       "issued_at": "2026-10-05T05:48:13Z",
       "minted_during": "tick",
       "caused_by": "W629",
-      "last_worked": "2026-10-05T07:19:01Z",
+      "last_worked": "2026-10-05T07:29:42Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W671",
       "title": "tests: find negated substring assertions whose text appears nowhere in what the code under test can print, because they cannot fail",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod",
@@ -13310,12 +13310,32 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Found by the first declared defect that survived: ratchet's test_fan_out_refusal_is_unconditional_not_a_mode asserted 'moved' not in the report while the report says 'MOVED', so it guarded nothing. Measure the class: every 'assert LITERAL not in X' across the dists' tests, with LITERAL searched (case-sensitive) in the distribution's src string literals and f-strings; a literal found nowhere is a candidate. Report as a census, then fix each by asserting the real spelling plus a positive control that the real spelling appears in the case it should",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 MEASURED, with a positive control. A scratch census (ast over every dist's tests, scratchpad negations.py, not tracked: it is a one-off measurement and this card relies on its numbers, so the claim is bounded accordingly) found 155 'assert LITERAL not in X' across the 27 dists. A case-only mismatch against a string the code prints (the moved/MOVED shape): 3, all legitimate, each with a positive control beside it (audiostruct UNKNOWN, pycodemod Assign, pycodemod split TABLE). A literal in no non-docstring src string and nowhere else in its test file: 20. READ: 12 of those 20 plus my own 2 (gen_warrants 122, test_cli 1811), every one a valid negation with a positive control (line7 in err beside line8 not in err, [live] in out beside [dead] not in out, peer:W7 beside peer:W0, and the rest alike); NOT READ: 6, all in hooks/tests/test_bar_fires.py, which assert on shell-script text outside any python src corpus. The positive control: a miniature dist with 'moved' asserted absent and 'MOVED' in src is flagged A by the same script, so the instrument can see the shape. RESULT: the class has no other instance this census can find; the one real one (ratchet test_fan_out_refusal_is_unconditional_not_a_mode) was found and is fixed. The instrument that found it was a SURVIVING DECLARED DEFECT, not this census, and that is the recommendation: declared defects (W670) catch a vacuous negation by construction, because the planted mutant makes the real spelling appear and the test still passes",
       "issued_at": "2026-10-05T07:13:46Z",
       "minted_during": "tick",
       "caused_by": "W670",
-      "last_worked": null,
+      "last_worked": "2026-10-05T07:28:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T072819Z"
+    },
+    {
+      "symbol": "W672",
+      "title": "Draft, as a patch in substrate's inbox, the repoint of Selftest.mk and its seven tmi_* tools to mikemol-transcriptstruct and the deletion of scratch/transcriptstruct.py",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "transcriptstruct",
+        "substrate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Draft in a scratch copy (never substrate's tree): rewrite load_units over records.read_path, provenance.classify and blocks.blocks; run old and new over one real transcript and compare unit counts and the human-unit set; the patch plus that comparison go in a letter to substrate. If the human sets differ, name each difference rather than hiding it",
+      "evidence": "2026-10-05: 2026-10-05 MEASURED, substrate side (read only): (1) Selftest.mk is GENERATED ('do not edit; run the generator', substrate/gen_selftest_mk.py), so its part of the repoint is delete scratch/transcriptstruct.py and rerun the generator, which drops the rule at line 290-292, the all: entry (line 16) and the list: entry (line 2027). (2) The importers are 2, not 7: scratch/tmi_index.py:81 and scratch/tmi_status.py:50, both 'import transcriptstruct as T' behind sys.path hacks; tmi_subject.py and substrate/tmi_probes.py do not import it. tmi_index uses no T.name; tmi_status uses four, all in ONE function, load_units (lines 346-379): T.stream, T.envelope_role, T.human_text, T.blocks. (3) THE REPOINT IS NOT AN IMPORT SWAP: mikemol-transcriptstruct has no stream, envelope_role, human_text or messages. It has typed records (records.read_path, parse_lines), blocks.blocks (a typed Block, not the old (kind, text) tuples), and provenance.classify (a Provenance over a Record, richer than human_text and taking a caller's scheduled prefixes). The old module works on loose JSON dicts. So the patch is a REWRITE of load_units over the port, and its output can differ (what counts as human), which substrate must measure: the old human_text strips system-reminder, command wrappers and task-notification by regex; the port classifies by flags and origin",
+      "issued_at": "2026-10-05T11:22:51Z",
+      "minted_during": "interrupt",
+      "caused_by": "W592",
+      "last_worked": "2026-10-05T11:24:45Z",
       "ticks_blocked": 0
     }
   ],
