@@ -1,0 +1,50 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629, W670), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim grade.py's own comments make
+# about the ladder and its clamp, and none moves a def.
+
+# The clamp is a MIN over the premises: no claim is better grounded than its weakest premise. Taking
+# the strongest instead lets a weak premise be hidden behind a strong one.
+src/mikemol/grade/grade.py|clamp-takes-the-strongest-premise|if dg < best:|if dg > best:|def=_eff
+
+# `below` is STRICTLY under the floor, derived from the rank, so the adequacy gate fails closed: the
+# floor itself passes.
+src/mikemol/grade/grade.py|below-includes-the-floor|RANK_C\[g\] < RANK_C\[floor\]|RANK_C[g] <= RANK_C[floor]|def=below
+
+# The display order lists every rung, highest first when asked.
+src/mikemol/grade/grade.py|rungs-order-inverted|reverse=descending|reverse=not descending|def=rungs
+
+# A baseline that could not be REACHED is `unreachable` and one that FAILED is `refuted`; the axis
+# names why no grade was established, and swapped it says "repo is not green" about a green repo.
+src/mikemol/grade/grade.py|baseline-axis-swapped|"unreachable" if not reachable else "refuted"|"refuted" if not reachable else "unreachable"|def=grade_from_sens
+
+# A flip-set that is non-empty is `behavioral`; the rung is the claim that a mutation flips it.
+src/mikemol/grade/grade.py|flipped-check-graded-indeterminate|"grade": "behavioral",|"grade": "indeterminate",|def=grade_from_sens
+
+# `imported` sits at the TOP of RANK_C so a resolved delegation to a healthy owner imposes no clamp.
+src/mikemol/grade/grade.py|imported-below-behavioral|"imported": 4,|"imported": 2,|
+
+# A premise IN the bib's key set with no record is an unfold that stopped, and is marked unresolved.
+src/mikemol/grade/grade.py|stopped-unfold-not-noted|if d not in ctx\.rby and ctx\.keys is not None and d in ctx\.keys:|if False:|def=_eff
+
+# The bound that clamps is the owner's EFFECTIVE grade, not its self grade: reading `grade` truncates
+# the unfold at the boundary.
+src/mikemol/grade/grade.py|delegation-reads-the-self-grade|g = g\.get\("effective_grade", g\.get\("grade"\)\)|g = g.get("grade")|def=_delegated
+
+# Resolution is TRANSITIVE: a claim resting on a truncated premise has a truncated reading too.
+src/mikemol/grade/grade.py|truncation-not-transitive|_reaches_truncation\(_key\(r\), rby\)|False|def=clamp
+
+# The scope is disclosed beside the clamp and defaults to `full`.
+src/mikemol/grade/grade.py|scope-defaults-to-fragment|r\.get\("entails", "full"\)|r.get("entails", "fragment")|def=clamp
+
+# The pessimistic endpoint reads every unresolved premise at the ladder's FLOOR.
+src/mikemol/grade/grade.py|pessimistic-reading-not-floored|best = min\(best, _FLOOR\)|best = min(best, best)|def=_lo
+
+# A behavioral check is content-sensitive iff a flipped test is one of the document's content files.
+src/mikemol/grade/grade.py|content-sensitivity-inverted|Path\(t\)\.name in content|Path(t).name not in content|def=mark_content_sensitive
+
+# A hop that records a stronger effective grade than it recomputes to is refused.
+src/mikemol/grade/grade.py|hop-check-always-agrees|if got != expected:|if False:|def=verify_hop
