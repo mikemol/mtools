@@ -141,3 +141,59 @@
   claim  = {An empty suffix, a lone dot, and a dotless one refuse rather than matching silently.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_suffix.py -k test_a_suffix_without_a_dot_and_a_character_refuses},
 }
+
+@misc{pathwalk-exclude-excluded-directory-is-absent-and-a-sibling-present,
+  section = {exclude},
+  title  = {The named directory's files are not returned; a sibling's are},
+  claim  = {The named directory's files are not returned; a sibling's are.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_an_excluded_directory_is_absent_and_a_sibling_present},
+}
+
+@misc{pathwalk-exclude-name-matches-a-component-not-a-substring,
+  section = {exclude},
+  title  = {`build` prunes build/ at any depth but keeps builder/ and rebuild.py},
+  claim  = {`build` prunes build/ at any depth but keeps builder/ and rebuild.py.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_a_name_matches_a_component_not_a_substring},
+}
+
+@misc{pathwalk-exclude-glob-prunes-every-directory-it-matches,
+  section = {exclude},
+  title  = {`bazel-*` and `*.egg-info` prune the generated trees and nothing else},
+  claim  = {`bazel-*` and `*.egg-info` prune the generated trees and nothing else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_a_glob_prunes_every_directory_it_matches},
+}
+
+@misc{pathwalk-exclude-count-is-reported-per-pruned-directory,
+  section = {exclude},
+  title  = {A pruned directory counts once, however many files lie under it},
+  claim  = {A pruned directory counts once, however many files lie under it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_the_count_is_reported_per_pruned_directory},
+}
+
+@misc{pathwalk-exclude-empty-exclude-changes-nothing,
+  section = {exclude},
+  title  = {None and empty give exactly the default walk and count zero},
+  claim  = {None and empty give exactly the default walk and count zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_an_empty_exclude_changes_nothing},
+}
+
+@misc{pathwalk-exclude-venv-named-in-exclude-counts-as-a-venv-only,
+  section = {exclude},
+  title  = {A venv is counted once, as a venv, even when the exclude names it},
+  claim  = {A venv is counted once, as a venv, even when the exclude names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_a_venv_named_in_exclude_counts_as_a_venv_only},
+}
+
+@misc{pathwalk-exclude-exclude-holding-a-separator-is-refused,
+  section = {exclude},
+  title  = {An entry is a directory name: a path raises ValueError},
+  claim  = {An entry is a directory name: a path raises ValueError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_an_exclude_holding_a_separator_is_refused},
+}
+
+@misc{pathwalk-exclude-empty-exclude-entry-is-refused,
+  section = {exclude},
+  title  = {An empty string entry raises ValueError},
+  claim  = {An empty string entry raises ValueError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exclude.py -k test_an_empty_exclude_entry_is_refused},
+}

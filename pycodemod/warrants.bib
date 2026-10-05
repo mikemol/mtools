@@ -4723,3 +4723,150 @@
   claim  = {A cases file that is not a list of case objects raises.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_split_differential.py -k test_a_malformed_cases_file_is_refused},
 }
+
+@misc{pycodemod-registered-prefixed-def-found-at-its-line,
+  section = {registered},
+  title  = {The prefixed def is found at its line, with its def name and its key},
+  claim  = {The prefixed def is found at its line, with its def name and its key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_prefixed_def_found_at_its_line},
+}
+
+@misc{pycodemod-registered-string-reference-found-at-its-line,
+  section = {registered},
+  title  = {The string reference a name census cannot see is a site at its own line},
+  claim  = {The string reference a name census cannot see is a site at its own line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_string_reference_found_at_its_line},
+}
+
+@misc{pycodemod-registered-reference-is-a-site-never-a-def-row,
+  section = {registered},
+  title  = {A string reference is a site on the def, never a row of its own},
+  claim  = {A string reference is a site on the def, never a row of its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_reference_is_a_site_never_a_def_row},
+}
+
+@misc{pycodemod-registered-defined-and-never-referenced-has-no-sites,
+  section = {registered},
+  title  = {A prefixed def no literal invokes is reported unregistered},
+  claim  = {A prefixed def no literal invokes is reported unregistered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_defined_and_never_referenced_has_no_sites},
+}
+
+@misc{pycodemod-registered-authored-literal-naming-no-def-is-unmatched,
+  section = {registered},
+  title  = {AUTHORED: a literal invoking a def that does not exist is reported},
+  claim  = {AUTHORED: a literal invoking a def that does not exist is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_authored_literal_naming_no_def_is_unmatched},
+}
+
+@misc{pycodemod-registered-authored-matched-literal-is-not-unmatched,
+  section = {registered},
+  title  = {AUTHORED: a literal that finds its def is not also reported as unmatched},
+  claim  = {AUTHORED: a literal that finds its def is not also reported as unmatched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_authored_matched_literal_is_not_unmatched},
+}
+
+@misc{pycodemod-registered-authored-two-defs-one-literal,
+  section = {registered},
+  title  = {AUTHORED: the same key defined twice shares its one invoking literal},
+  claim  = {AUTHORED: the same key defined twice shares its one invoking literal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_authored_two_defs_one_literal},
+}
+
+@misc{pycodemod-registered-authored-prefix-is-a-prefix-not-a-substring,
+  section = {registered},
+  title  = {AUTHORED: `my_q_x` and a bare `q_` are not registered defs of prefix `q_`},
+  claim  = {AUTHORED: `my_q_x` and a bare `q_` are not registered defs of prefix `q_`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_authored_prefix_is_a_prefix_not_a_substring},
+}
+
+@misc{pycodemod-registered-authored-docstring-and-dict-key-do-not-invoke,
+  section = {registered},
+  title  = {AUTHORED: only an argument literal invokes; a docstring or a dict key does not},
+  claim  = {AUTHORED: only an argument literal invokes; a docstring or a dict key does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_authored_docstring_and_dict_key_do_not_invoke},
+}
+
+@misc{pycodemod-registered-authored-empty-prefix-refused,
+  section = {registered},
+  title  = {AUTHORED: an empty prefix would register every def, so it is refused},
+  claim  = {AUTHORED: an empty prefix would register every def, so it is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_authored_empty_prefix_refused},
+}
+
+@misc{pycodemod-registered-authored-skipped-files-reported,
+  section = {registered},
+  title  = {AUTHORED: an unparseable file lands in skipped and the rest still reads},
+  claim  = {AUTHORED: an unparseable file lands in skipped and the rest still reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_registered.py -k test_authored_skipped_files_reported},
+}
+
+@misc{pycodemod-cli-importers-of-a-module-nobody-imports-says-what-it-searched,
+  section = {cli},
+  title  = {An empty `importers` prints `searched N file(s), found none` and still exits 0},
+  claim  = {An empty `importers` prints `searched N file(s), found none` and still exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_importers_of_a_module_nobody_imports_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-require-hits-makes-an-empty-importers-exit-one,
+  section = {cli},
+  title  = {With `--require-hits` the same empty result fails, apart from refusal 2},
+  claim  = {With `--require-hits` the same empty result fails, apart from refusal 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_require_hits_makes_an_empty_importers_exit_one},
+}
+
+@misc{pycodemod-cli-mode-with-hits-is-unchanged-by-require-hits,
+  section = {cli},
+  title  = {Rows printed: no `found none` line, exit 0, flag or not},
+  claim  = {Rows printed: no `found none` line, exit 0, flag or not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_mode_with_hits_is_unchanged_by_require_hits},
+}
+
+@misc{pycodemod-cli-require-hits-leaves-an-incomplete-scan-and-a-refusal-alone,
+  section = {cli},
+  title  = {A fully skipped scan keeps its banner and exit 1; a refusal keeps exit 2, no found-none},
+  claim  = {A fully skipped scan keeps its banner and exit 1; a refusal keeps exit 2, no found-none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_require_hits_leaves_an_incomplete_scan_and_a_refusal_alone},
+}
+
+@misc{pycodemod-cli-summary-only-mode-still-reports-an-empty-result,
+  section = {cli},
+  title  = {`values` prints a count line even when empty; that line is not a row, so it fails too},
+  claim  = {`values` prints a count line even when empty; that line is not a row, so it fails too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_summary_only_mode_still_reports_an_empty_result},
+}
+
+@misc{pycodemod-cli-constructs-over-no-sites-is-empty-but-over-a-site-is-not,
+  section = {cli},
+  title  = {The roster prints zeros, yet `constructs` only counts as a hit when a site was found},
+  claim  = {The roster prints zeros, yet `constructs` only counts as a hit when a site was found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_constructs_over_no_sites_is_empty_but_over_a_site_is_not},
+}
+
+@misc{pycodemod-cli-header-is-a-check-and-ignores-the-empty-result-rule,
+  section = {cli},
+  title  = {A clean `header` run prints nothing and exits 0, even with `--require-hits`},
+  claim  = {A clean `header` run prints nothing and exits 0, even with `--require-hits`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_header_is_a_check_and_ignores_the_empty_result_rule},
+}
+
+@misc{pycodemod-report-tally-forwards-text-and-counts-lines-but-note-is-not-a-row,
+  section = {report},
+  title  = {`Tally` passes every write through and counts rows; `note` writes past the count},
+  claim  = {`Tally` passes every write through and counts rows; `note` writes past the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_tally_forwards_text_and_counts_lines_but_note_is_not_a_row},
+}
+
+@misc{pycodemod-report-note-writes-straight-through-when-stdout-is-not-a-tally,
+  section = {report},
+  title  = {Outside the dispatcher `note` is a plain stdout write},
+  claim  = {Outside the dispatcher `note` is a plain stdout write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_note_writes_straight_through_when_stdout_is_not_a_tally},
+}
+
+@misc{pycodemod-report-found-none-names-the-mode-and-the-file-count,
+  section = {report},
+  title  = {The empty-result line states what was searched, in one fixed spelling},
+  claim  = {The empty-result line states what was searched, in one fixed spelling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_report.py -k test_found_none_names_the_mode_and_the_file_count},
+}

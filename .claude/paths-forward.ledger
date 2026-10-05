@@ -1061,3 +1061,9 @@
 2026-10-05T02:15:54Z  interrupt W653 minted    -         "pycodemod split: owed callers miss alias rebinding, a bare import of a dotted stem without as, and a star-import followed by a bare name"  evidence=W645
 2026-10-05T02:15:54Z  interrupt W654 minted    -         "pycodemod control: --connections is required for the StoreVocab but control_census never reads it, so either use it or stop requiring it for these modes"  evidence=W639
 2026-10-05T02:15:54Z  interrupt W655 minted    -         "pycodemod: compare the control census and fp_sites against substrate's originals over one corpus slice, naming each difference as declared or undeclared"  evidence=W640
+2026-10-05T02:34:23Z  tick  W645 advanced  sweep     "batch 8 (c3ca6d2: W646 W647 W635 W638) and batch 9 (fea34ea: W640 W639 W645) landed; W642 and W649 closed, peer replies sent to linux-sources, summit, substrate, el-openglo; W650-W655 minted"  evidence=fea34ea
+2026-10-05T02:47:53Z  tick  W656 minted    -         "pycodemod dead: an optional --registered-prefix operand so a def registered by a string literal is not reported dead, built on registered_defs"  evidence=W650
+2026-10-05T02:47:54Z  tick  W657 minted    -         "pycodemod cli: wire the registered mode over registered_defs with the prefix a required operand"  evidence=W650
+2026-10-05T02:47:54Z  tick  W658 minted    -         "pycodemod: pass a caller-named exclude list to pathwalk.expand and print skipped N excluded directories"  evidence=W651
+2026-10-05T02:47:55Z  tick  W659 minted    -         "mdstruct: pass a caller-named exclude list to pathwalk.expand, and document exclude and the virtualenv count in pathwalk's README"  evidence=W651
+2026-10-05T02:47:55Z  tick  W660 minted    -         "pycodemod: test --require-hits over a partial scan with zero rows, over control with zero sites, and through directory expansion"  evidence=W648

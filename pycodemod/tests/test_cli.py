@@ -53,7 +53,7 @@ def test_calls_with_a_dotted_target_reads_each_full_dotted_call_once(
     rows = [ln.rsplit(":", 2)[1:] for ln in capsys.readouterr().out.splitlines()]
     assert rows == [["2", "0"], ["6", "4"]]
     assert cli.main(["calls", "--target", "path.insert", str(target)]) == 0
-    assert not capsys.readouterr().out
+    assert capsys.readouterr().out == "calls: searched 1 file(s), found none\n"
     assert cli.main(["calls", "--target", "insert", str(target)]) == 0
     assert [ln.rsplit(":", 2)[1] for ln in capsys.readouterr().out.splitlines()] == [
         "2",
@@ -824,7 +824,7 @@ def test_relname_prints_no_rows_for_a_name_that_is_only_a_substring(
     target.write_text("q = 'SELECT a FROM node_child'\n", encoding="utf-8")
     code = cli.main(["relname", "node", str(target)])
     assert code == 0
-    assert "relname" not in capsys.readouterr().out
+    assert capsys.readouterr().out == "relname: searched 1 file(s), found none\n"
 
 
 def test_relname_over_an_unparseable_file_reports_incomplete(
@@ -1174,3 +1174,91 @@ def test_control_and_constructs_are_modes_not_do_not_port() -> None:
     """The ported spellings are wired in `MODES` and no longer refused as DO-NOT-PORT."""
     assert {"control", "constructs"} <= set(cli.MODES)
     assert not {"control", "constructs"} & cli.DO_NOT_PORT
+
+
+def _importing_file(tmp_path: Path) -> Path:
+    target = tmp_path / "m.py"
+    target.write_text("import os\n", encoding="utf-8")
+    return target
+
+
+def test_importers_of_a_module_nobody_imports_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An empty `importers` prints `searched N file(s), found none` and still exits 0."""
+    target = _importing_file(tmp_path)
+    assert cli.main(["importers", "nobody", str(target)]) == 0
+    assert capsys.readouterr().out == "importers: searched 1 file(s), found none\n"
+
+
+def test_require_hits_makes_an_empty_importers_exit_one(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """With `--require-hits` the same empty result fails, apart from refusal 2."""
+    target = _importing_file(tmp_path)
+    assert cli.main(["importers", "--require-hits", "nobody", str(target)]) == 1
+    assert "found none" in capsys.readouterr().out
+
+
+def test_a_mode_with_hits_is_unchanged_by_require_hits(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Rows printed: no `found none` line, exit 0, flag or not."""
+    target = _importing_file(tmp_path)
+    assert cli.main(["importers", "--require-hits", "os", str(target)]) == 0
+    out = capsys.readouterr().out
+    assert "os" in out
+    assert "found none" not in out
+
+
+def test_require_hits_leaves_an_incomplete_scan_and_a_refusal_alone(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A fully skipped scan keeps its banner and exit 1; a refusal keeps exit 2, no found-none."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def f(:\n", encoding="utf-8")
+    assert cli.main(["importers", "--require-hits", "os", str(bad)]) == 1
+    out = capsys.readouterr().out
+    assert "INCOMPLETE SCAN" in out
+    assert "found none" not in out
+    code = cli.main(["control", "--require-hits", *_CENSUS_FLAGS, "--boundary", "rust", str(bad)])
+    assert code == _REFUSED
+    assert "found none" not in capsys.readouterr().out
+
+
+def test_a_summary_only_mode_still_reports_an_empty_result(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`values` prints a count line even when empty; that line is not a row, so it fails too."""
+    target = _importing_file(tmp_path)
+    assert cli.main(["values", "--require-hits", "nope", "kw", str(target)]) == 1
+    out = capsys.readouterr().out
+    assert "values: 0 of 0 calls pass it" in out
+    assert "values: searched 1 file(s), found none" in out
+
+
+def test_constructs_over_no_sites_is_empty_but_over_a_site_is_not(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The roster prints zeros, yet `constructs` only counts as a hit when a site was found."""
+    flags = [*_CENSUS_FLAGS, "--boundary", "python"]
+    empty = tmp_path / "e.py"
+    empty.write_text("x = 1\n", encoding="utf-8")
+    assert cli.main(["constructs", "--require-hits", *flags, str(empty)]) == 1
+    assert "constructs: searched 1 file(s), found none" in capsys.readouterr().out
+    full = _census_file(tmp_path)
+    assert cli.main(["constructs", "--require-hits", *flags, str(full)]) == 0
+    assert "found none" not in capsys.readouterr().out
+
+
+def test_header_is_a_check_and_ignores_the_empty_result_rule(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A clean `header` run prints nothing and exits 0, even with `--require-hits`."""
+    target = tmp_path / "h.py"
+    target.write_text(
+        "# SPDX-License-Identifier: MIT\n# Copyright (c) 2026 Me\nx = 1\n", encoding="utf-8"
+    )
+    args = ["header", "--require-hits", "--spdx", "MIT", "--year", "2026", str(target)]
+    assert cli.main(args) == 0
+    assert not capsys.readouterr().out

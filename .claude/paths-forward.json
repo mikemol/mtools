@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 655,
+  "counter": 660,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-04T19:29:41Z",
   "job_id": "08811049",
@@ -17,7 +17,7 @@
   },
   "lock": {
     "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-05T01:22:45Z"
+    "taken_at": "2026-10-05T02:34:55Z"
   },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
@@ -6126,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -6174,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "completed": null
     },
     {
@@ -10057,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -11486,7 +11486,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -11709,7 +11709,7 @@
     {
       "symbol": "W588",
       "title": "Install mikemol-githook-pre-push in mtools' own .githooks and measure its interaction with the post-commit auto-push",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "githooks",
@@ -11722,7 +11722,7 @@
       "issued_at": "2026-10-04T19:06:06Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T20:18:03Z",
+      "last_worked": "2026-10-05T02:37:58Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -11804,7 +11804,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -12763,20 +12763,21 @@
     {
       "symbol": "W643",
       "title": "pycodemod census modes: state 'searched N files, found none' on an empty result, so a zero is never read as an absence",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measure which modes print nothing on a miss (calls, literals, relname and siblings); decide one shared line through report.incomplete or a sibling; red arm per family; mind the operands rubric row which already prints what a directory walk left out",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: every census mode now states what it searched on an empty result: a line 'MODE: searched N file(s), found none' printed last, N the file count after directory expansion; measured first via cli.main over a tmp file with no hit: 26 modes were silent on a miss (calls, guarded, dead, key-reads, literals, relname, bindings, attr-reads, importers, shapes, aliases, deps, crossings, commentary, ambient, swallows, exits, verdicts, disagreement, placement, modstate, collisions, reifies, escapes, catchers, callgraph, funcnames, interlock), others always printed a summary line; ONE shared place: main calls _run_mode, which counts the lines a handler writes through report.Tally (banners and summary counts go through report.note, which does not count), so none of the 47 handlers changed; header is exempt (a check, not a census); two existing assertions updated because an empty result now prints the line; 10 test functions (7 cli, 3 report), 10 warrants; F-arm with W648; gaps W660; committed under W643",
       "issued_at": "2026-10-04T22:14:02Z",
       "minted_during": "tick",
       "caused_by": "W600",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:48:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T024807Z"
     },
     {
       "symbol": "W644",
@@ -12858,20 +12859,21 @@
     {
       "symbol": "W648",
       "title": "pycodemod importers: a flag that exits non-zero when nothing imports the module, so a capability check can fail on an empty result",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measure importers on a module nobody imports (summit: exit 0, only the skip counters); add the flag (name it after the census-wide convention W643 settles) with a red arm; decide whether every census mode takes it",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 summit's reply (inbox/2026-10-05-summit-which-pycodemod-modes-summit-uses.md): its capability record keeps saying the check proves the tool starts and nothing more until this lands; summit uses importers, calls and literals by hand; it moves its pins past c3ca6d2 in summit:W125. This is the card summit actually wants; do it with W643 (the empty-result line) | 2026-10-05: --require-hits on every census mode parser: an empty result exits 1 (the same code as an incomplete scan, distinct from exit 2 = refusal); without the flag the exit stays 0; a handler exit of 0 with zero rows is the only case treated as empty, so a refusal or an incomplete scan keeps its own banner; summit asked for this (inbox/2026-10-05-summit-which-pycodemod-modes-summit-uses.md) so its capability check can fail on an empty result; F-arm: the flag's exit forced to 0, 3 cli arms red; committed under W648",
       "issued_at": "2026-10-05T01:23:17Z",
       "minted_during": "tick",
       "caused_by": "summit:W95",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:48:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T024807Z"
     },
     {
       "symbol": "W649",
@@ -12895,38 +12897,40 @@
     {
       "symbol": "W650",
       "title": "pycodemod: registered.py, a prefixed def joined to the string literal that invokes it, prefix supplied by the caller, skipped files reported",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port the --sqlname mode per .claude/swarm/W649-remaining-do-not-port-modes.md: mtools dead._excuse only excuses a def whose own name is a string constant, so def q_x invoked as the string x is still reported dead; the prefix is an operand, no default; transcribe the origin arms",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 summit measured (literals over scripts, library, registries): 0 string literals naming sqlname, py-files, collision-apex or the binary; its answer is no consumer it can see (shell scripts, markdown and interactive sessions are invisible to literals). Per the substrate-drains-wholesale ruling this still ports, but it has no known consumer, so it ranks below W643 and W648 | 2026-10-05: registered.py: registered_defs(paths, prefix) -> Registered(rows, unmatched, skipped); RegisteredDef(path, line, name, key, sites) joins a def named prefix+KEY to the arg-role string literals equal to KEY (def and async def, nested included); the prefix is required, an empty one raises, matched at the START of the name, a bare prefix with no key is not a row; unmatched is a lead not a verdict (nearly every string argument is identifier-shaped); only arg-role literals count as an invocation, as in the origin; summit measured no consumer (0 literals in its Python); 11 tests (4 transcribed, 7 authored), 11 warrants under rubric key registered; bazel test //pycodemod/... passes; F-arm: prefix matched as a substring, test_authored_prefix_is_a_prefix_not_a_substring red; follow-ons W656 (dead) and W657 (CLI); committed under W650",
       "issued_at": "2026-10-05T02:03:45Z",
       "minted_during": "interrupt",
       "caused_by": "W649",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:48:08Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T024808Z"
     },
     {
       "symbol": "W651",
       "title": "pathwalk: an --exclude operand so a walk can prune generated trees (bazel-*, dist, build) that it keeps today",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pathwalk"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measure what pathwalk.expand keeps that py-files pruned; add an explicit exclude operand with no default list; red arm per pruned shape; mdstruct and pycodemod then pass it through",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: pathwalk.expand gains a keyword-only exclude (directory-name globs matched with fnmatchcase against one path component: build prunes build/ at any depth but not builder/ or rebuild.py; bazel-* and *.egg-info work; NO default list, None or empty is exactly today's behaviour; an empty entry or one containing / raises ValueError) and Expansion.excluded counts pruned directories; precedence symlink, venv, git or registered worktree, then exclude, so nothing counts twice; measured on HEAD: a tmp tree with bazel-bin, build/lib, dist, __pycache__ and an egg-info kept all 8 files; 8 test functions, 8 warrants under rubric key exclude; the fixer corrupted the suffix rubric row (its tab was lost) and I restored it; F-arm: exclude matched as a substring, 2 arms red; wiring W658 and W659; committed under W651",
       "issued_at": "2026-10-05T02:03:45Z",
       "minted_during": "interrupt",
       "caused_by": "W649",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T02:48:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T024807Z"
     },
     {
       "symbol": "W652",
@@ -12997,6 +13001,98 @@
       "issued_at": "2026-10-05T02:15:54Z",
       "minted_during": "interrupt",
       "caused_by": "W640",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W656",
+      "title": "pycodemod dead: an optional --registered-prefix operand so a def registered by a string literal is not reported dead, built on registered_defs",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the operand to dead with no default: when given, call registered_defs once, build the set of (path, line) of rows with registered true, and have _excuse excuse a def in that set; rows with no invoking literal stay dead; without the operand dead is unchanged; red arm per case",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:47:53Z",
+      "minted_during": "tick",
+      "caused_by": "W650",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W657",
+      "title": "pycodemod cli: wire the registered mode over registered_defs with the prefix a required operand",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add registered PREFIX paths with a row printer (def, line, key, invoking sites) and the unmatched literals as a lead, skips through report.incomplete; drop the sqlname DO_NOT_PORT redirect in the same commit (W652 checklist); tests; update the rubric heading's mode count",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:47:54Z",
+      "minted_during": "tick",
+      "caused_by": "W650",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W658",
+      "title": "pycodemod: pass a caller-named exclude list to pathwalk.expand and print skipped N excluded directories",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod",
+        "pathwalk"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add a flag taking directory-name globs with no default list, pass it as exclude= to expand, print the excluded count beside the virtualenv and worktree counts in the operands line; red arm per shape (bazel-*, build, dist, egg-info); the empty list changes nothing",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:47:54Z",
+      "minted_during": "tick",
+      "caused_by": "W651",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W659",
+      "title": "mdstruct: pass a caller-named exclude list to pathwalk.expand, and document exclude and the virtualenv count in pathwalk's README",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mdstruct",
+        "pathwalk"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Same flag and counts line as pycodemod's; mdstruct's help text names it; pathwalk's README gains an exclude section (the fixer could not read it) and the missing virtualenv-count entry; lint the README with mdstruct",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:47:55Z",
+      "minted_during": "tick",
+      "caused_by": "W651",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W660",
+      "title": "pycodemod: test --require-hits over a partial scan with zero rows, over control with zero sites, and through directory expansion",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "The fixer left three cases untested: a scan with skipped files and zero rows (found none printed and exit 1 under the flag), control over zero sites, and --include-worktrees directory expansion; one red arm each in tests/test_cli.py",
+      "evidence": "",
+      "issued_at": "2026-10-05T02:47:55Z",
+      "minted_during": "tick",
+      "caused_by": "W648",
       "last_worked": null,
       "ticks_blocked": 0
     }

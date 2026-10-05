@@ -9,7 +9,14 @@ mode's skip records are handed in, and a fully-skipped population must be a non-
 
 from __future__ import annotations
 
+import io
+import sys
+from typing import TYPE_CHECKING
+
 from mikemol.pycodemod import report
+
+if TYPE_CHECKING:
+    import pytest
 
 
 def test_nothing_skipped_reports_no_banner() -> None:
@@ -54,3 +61,33 @@ def test_one_reason_with_two_error_types_joins_them() -> None:
     lines, code = report.incomplete(skips, population=2)
     assert code == 1
     assert any("unparseable: 2 (AttributeError, SyntaxError)" in line for line in lines)
+
+
+def test_tally_forwards_text_and_counts_lines_but_note_is_not_a_row() -> None:
+    """`Tally` passes every write through and counts rows; `note` writes past the count."""
+    sink = io.StringIO()
+    tally = report.Tally(sink)
+    rows = ["row one\n", "row two\n"]
+    real = sys.stdout
+    sys.stdout = tally
+    try:
+        assert tally.write("".join(rows)) == len("".join(rows))
+        report.note("a banner\n")
+        tally.flush()
+    finally:
+        sys.stdout = real
+    assert tally.rows == len(rows)
+    assert sink.getvalue() == "row one\nrow two\na banner\n"
+
+
+def test_note_writes_straight_through_when_stdout_is_not_a_tally(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Outside the dispatcher `note` is a plain stdout write."""
+    report.note("plain\n")
+    assert capsys.readouterr().out == "plain\n"
+
+
+def test_found_none_names_the_mode_and_the_file_count() -> None:
+    """The empty-result line states what was searched, in one fixed spelling."""
+    assert report.found_none("importers", 3) == "importers: searched 3 file(s), found none"

@@ -306,7 +306,7 @@ def _write_disagreement(row: Disagreement) -> None:
 
 def _write_lines(lines: list[str]) -> None:
     for line in lines:
-        sys.stdout.write(f"{line}\n")
+        report.note(f"{line}\n")
 
 
 def _handle_calls(ns: argparse.Namespace) -> int:
@@ -348,7 +348,7 @@ def _handle_reaches(ns: argparse.Namespace) -> int:
     for target, trail in sorted(reach.found.items()):
         sys.stdout.write(f"reaches {target} via {' -> '.join(trail)}\n")
     if reach.exhausted:
-        sys.stdout.write(f"depth {depth} cut the walk short: an absent target is unknown\n")
+        report.note(f"depth {depth} cut the walk short: an absent target is unknown\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -370,7 +370,7 @@ def _handle_values(ns: argparse.Namespace) -> int:
         sys.stdout.write(
             f"value {row.value!r} {row.context} {where.path}:{where.line}:{where.column}\n"
         )
-    sys.stdout.write(f"values: {len(result.rows)} of {result.total} calls pass it\n")
+    report.note(f"values: {len(result.rows)} of {result.total} calls pass it\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -385,7 +385,7 @@ def _handle_asserted(ns: argparse.Namespace) -> int:
     for label, rows in (("literal", result.literal), ("computed", result.computed)):
         for where in rows:
             sys.stdout.write(f"{label} {where.path}:{where.line}:{where.column}\n")
-    sys.stdout.write(f"asserted: {len(result.literal)} literal, {len(result.computed)} computed\n")
+    report.note(f"asserted: {len(result.literal)} literal, {len(result.computed)} computed\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -406,7 +406,7 @@ def _handle_forwards(ns: argparse.Namespace) -> int:
         for where in rows:
             sys.stdout.write(f"{label} {where.path}:{where.line}:{where.column}\n")
     counts = ", ".join(f"{len(rows)} {label}" for label, rows in buckets)
-    sys.stdout.write(f"forwards: {counts}\n")
+    report.note(f"forwards: {counts}\n")
     lines, code = report.incomplete(
         [(s.why, s.error) for s in sites.skipped], len(sites.population)
     )
@@ -471,7 +471,7 @@ def _handle_alias_hint(ns: argparse.Namespace) -> int:
         aliases = ",".join(row.aliases)
         modules = ",".join(row.modules)
         sys.stdout.write(f"alias-hint {row.path}:{row.line} via={aliases} from={modules}\n")
-    sys.stdout.write(f"alias-hint sites={len(result.rows)}\n")
+    report.note(f"alias-hint sites={len(result.rows)}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -485,7 +485,7 @@ def _handle_rivals(ns: argparse.Namespace) -> int:
             f"rivals {row.path}:{row.line} {row.verdict} "
             f"callee={row.callee or _ABSENT} statements={row.statements}\n"
         )
-    sys.stdout.write(f"rivals defs={len(result.rows)}\n")
+    report.note(f"rivals defs={len(result.rows)}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -497,7 +497,7 @@ def _handle_source_of(ns: argparse.Namespace) -> int:
     for row in result.rows:
         sys.stdout.write(f"source-of {row.qualname} {row.path}:{row.start}-{row.end}\n")
         sys.stdout.write(f"{row.text}\n")
-    sys.stdout.write(f"source-of definitions={len(result.rows)}\n")
+    report.note(f"source-of definitions={len(result.rows)}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -569,7 +569,7 @@ def _handle_discards(ns: argparse.Namespace) -> int:
     for label, rows in (("dropped", result.dropped), ("used", result.using)):
         for path, line, col in rows:
             sys.stdout.write(f"discards {label} {path}:{line}:{col}\n")
-    sys.stdout.write(f"discards: {len(result.dropped)} dropped, {len(result.using)} used\n")
+    report.note(f"discards: {len(result.dropped)} dropped, {len(result.using)} used\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -604,7 +604,7 @@ def _handle_commentary_kinds(ns: argparse.Namespace) -> int:
         for hit in hits:
             sys.stdout.write(f"commentary-kinds {kind} {hit.path}:{hit.line} {hit.text}\n")
     counts = " ".join(f"{kind}={len(hits)}" for kind, hits in kinds)
-    sys.stdout.write(f"commentary-kinds {counts}\n")
+    report.note(f"commentary-kinds {counts}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -621,7 +621,7 @@ def _handle_commentary_blocks(ns: argparse.Namespace) -> int:
             f"commentary-blocks {block.path}:{block.start}-{block.end} {owner} "
             f"cites={cites} {block.text}\n"
         )
-    sys.stdout.write(f"commentary-blocks blocks={len(result.found)}\n")
+    report.note(f"commentary-blocks blocks={len(result.found)}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -699,7 +699,7 @@ def _handle_commentary_lost(ns: argparse.Namespace) -> int:
         sys.stdout.write(f"gained {text}\n")
     for rel in result.absent_before:
         sys.stdout.write(f"absent-before {rel}\n")
-    sys.stdout.write(f"commentary-lost before={result.n_before} after={result.n_after}\n")
+    report.note(f"commentary-lost before={result.n_before} after={result.n_after}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -833,7 +833,7 @@ def _handle_resorts(ns: argparse.Namespace) -> int:
             f"resorts {row.path}:{row.line} {row.why} {row.caller} -> {row.callee} "
             f"producers={producers}\n"
         )
-    sys.stdout.write(f"resorts sites={len(result.rows)}\n")
+    report.note(f"resorts sites={len(result.rows)}\n")
     # Both passes read the same paths, so the consumer pass's skips are the producer's:
     # reporting both would count each unreadable file twice.
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
@@ -848,7 +848,7 @@ def _handle_writes(ns: argparse.Namespace) -> int:
         verdict = "WRITES" if row.writes else "inert"
         sys.stdout.write(f"writes {row.path}:{row.line} {verdict} {row.why}\n")
     writing = sum(row.writes for row in result.rows)
-    sys.stdout.write(f"writes files={len(result.rows)} writing={writing}\n")
+    report.note(f"writes files={len(result.rows)} writing={writing}\n")
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], len(paths))
     _write_lines(lines)
     return code
@@ -1180,6 +1180,11 @@ def _build_parser() -> argparse.ArgumentParser:
             action="store_true",
             help="with a directory operand, also read registered git worktrees (default: skip)",
         )
+        parser.add_argument(
+            "--require-hits",
+            action="store_true",
+            help="exit 1 when a census mode that ran cleanly printed no rows (default: exit 0)",
+        )
         return parser
 
     for family in _FAMILIES:
@@ -1236,7 +1241,37 @@ def main(argv: Sequence[str]) -> int:
     refused = _expand_operands(ns)
     if refused is not None:
         return refused
-    return MODES[mode](ns)
+    return _run_mode(mode, ns)
+
+
+# ⚑ `header` IS A CHECK, NOT A CENSUS: its only rows are files that need a line, so a clean tree
+# prints nothing and exits 0 by design; `found none` and `--require-hits` would misread that.
+_NOT_A_CENSUS = frozenset({"header"})
+
+
+def _run_mode(mode: str, ns: argparse.Namespace) -> int:
+    """Run one mode; an empty result says what it searched (W643) and may fail (W648).
+
+    ⚑ ONE PLACE, NOT ONE EDIT PER HANDLER: stdout is swapped for a `report.Tally` around the
+    handler, which counts the lines it writes; a banner or summary line goes through `report.note`
+    and is not a row. A handler's own exit code (refusal 2, incomplete scan 1) is returned
+    untouched: only a clean exit with zero rows is an empty result.
+
+    Returns:
+        the handler's exit code, or 1 when `--require-hits` met an empty result.
+
+    """
+    real = sys.stdout
+    tally = report.Tally(real)
+    sys.stdout = tally
+    try:
+        code = MODES[mode](ns)
+    finally:
+        sys.stdout = real
+    if code != 0 or tally.rows or mode in _NOT_A_CENSUS:
+        return code
+    real.write(f"{report.found_none(mode, len(_str_list(ns, 'paths')))}\n")
+    return 1 if _flag(ns, "require_hits") else 0
 
 
 def _console() -> int:

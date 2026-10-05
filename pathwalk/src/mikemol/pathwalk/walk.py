@@ -22,6 +22,12 @@ directly is a venv whatever its name (a directory merely NAMED `.venv` is walked
 third-party files would read as false importers. `Expansion.virtualenvs` is the count, printed as
 `skipped N virtualenvs`, `--include-worktrees` included: a venv is not a worktree.
 
+⚑⚑ GENERATED TREES ARE PRUNED ONLY WHEN THE CALLER NAMES THEM (mtools:W651). `exclude=` is a
+sequence of globs matched against a directory's own name; there is NO default list, so a repo's
+`build/` is never silently dropped. `Expansion.excluded` is the count of directories pruned that
+way, printed as `skipped N excluded directories`. A venv or a registered worktree is counted as
+itself first and never again as excluded.
+
 ⚑ SYMLINKS ARE REFUSED AS DATA, never followed: a link to a file or a directory is counted in
 `Expansion.links` and neither read nor descended. ⚑ HIDDEN DIRECTORIES ARE WALKED, because the
 worktrees live in `.claude/` and `.tree-writes/` and the registered-path check is what skips them;
@@ -31,6 +37,7 @@ root or an ancestor of it, so a query run from inside a linked worktree still re
 
 from __future__ import annotations
 
+import fnmatch
 import os
 import shutil
 import subprocess
@@ -62,6 +69,7 @@ class Expansion:
     links: int = 0
     directories: int = 0
     virtualenvs: int = 0
+    excluded: int = 0
 
 
 def registered(root: Path) -> list[Path]:
@@ -126,9 +134,15 @@ def _is_venv(sub: Path) -> bool:
     return Path(sub, _VENV_MARK).is_file()
 
 
-def _walk(root: Path, skip: frozenset[Path], suffix: str) -> tuple[list[str], int, int]:
+def _is_excluded(name: str, exclude: Sequence[str]) -> bool:
+    return any(fnmatch.fnmatchcase(name, pattern) for pattern in exclude)
+
+
+def _walk(
+    root: Path, skip: frozenset[Path], suffix: str, exclude: Sequence[str]
+) -> tuple[list[str], int, int, int]:
     files: list[str] = []
-    links = venvs = 0
+    links = venvs = excluded = 0
     for top, dirs, names in os.walk(root, followlinks=False):
         keep: list[str] = []
         for name in sorted(dirs):
@@ -137,7 +151,11 @@ def _walk(root: Path, skip: frozenset[Path], suffix: str) -> tuple[list[str], in
                 links += 1
             elif _is_venv(sub):
                 venvs += 1
-            elif name != _GIT_DIR and sub.resolve() not in skip:
+            elif name == _GIT_DIR or sub.resolve() in skip:
+                continue
+            elif _is_excluded(name, exclude):
+                excluded += 1
+            else:
                 keep.append(name)
         dirs[:] = keep
         for name in sorted(names):
@@ -147,29 +165,48 @@ def _walk(root: Path, skip: frozenset[Path], suffix: str) -> tuple[list[str], in
                 links += 1
             else:
                 files.append(str(Path(top, name)))
-    return files, links, venvs
+    return files, links, venvs, excluded
 
 
-def expand(operands: Sequence[str], *, include_worktrees: bool, suffix: str = _SUFFIX) -> Expansion:
+def expand(
+    operands: Sequence[str],
+    *,
+    include_worktrees: bool,
+    suffix: str = _SUFFIX,
+    exclude: Sequence[str] | None = None,
+) -> Expansion:
     """Expand each directory operand to the files with the given suffix, `.py` by default.
 
     Every other operand is passed through. The suffix filters only what a directory yields: a
     file operand is passed through as named, whatever its suffix.
 
+    `exclude` names directories to prune; there is NO default list. Each entry is a glob
+    (`fnmatch`, case-sensitive) matched against a directory's own name, one path component, so
+    `build` prunes `build/` at any depth but not `builder/`, and `bazel-*` prunes `bazel-bin`.
+    None or empty prunes nothing. A venv or registered worktree is counted as itself first, so it
+    is never also counted as excluded.
+
     Returns:
         the files, and the counts a driver must print: registered worktrees skipped, symlinks
-        refused, directory operands expanded, and virtual environments pruned.
+        refused, directory operands expanded, virtual environments pruned, and directories
+        excluded by name.
 
     Raises:
         WorktreeRefusedError: a directory operand is a symlink, or git could not list worktrees.
-        ValueError: the suffix is not a dot followed by at least one more character.
+        ValueError: the suffix is not a dot followed by at least one more character, or an
+            exclude entry is empty or holds a path separator.
 
     """
     if not suffix.startswith(_DOT) or suffix == _DOT:
         msg = f"refused: suffix {suffix!r} must start with a dot and have a character after it"
         raise ValueError(msg)
+    patterns = tuple(exclude or ())
+    for pattern in patterns:
+        if not pattern or "/" in pattern:
+            msg = f"refused: exclude {pattern!r} must be a non-empty directory name, not a path"
+            raise ValueError(msg)
     files: list[str] = []
-    worktrees = links = directories = venvs = 0
+    worktrees = links = directories = venvs = excluded = 0
     for operand in operands:
         path = Path(operand)
         if path.is_symlink() and path.is_dir():
@@ -181,8 +218,9 @@ def expand(operands: Sequence[str], *, include_worktrees: bool, suffix: str = _S
         directories += 1
         others = frozenset[Path]() if include_worktrees else frozenset(other_worktrees(path))
         worktrees += len(others)
-        found, refused, pruned = _walk(path, others, suffix)
+        found, refused, pruned, named = _walk(path, others, suffix, patterns)
         files.extend(found)
         links += refused
         venvs += pruned
-    return Expansion(files, worktrees, links, directories, venvs)
+        excluded += named
+    return Expansion(files, worktrees, links, directories, venvs, excluded)

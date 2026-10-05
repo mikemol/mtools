@@ -19,14 +19,23 @@ dataclasses (never unified — W46 is one shared reporter, not a skip-type merge
 `Protocol` over their shared shape leaves `why`/`error` as accessor stubs no caller ever reaches,
 which the mutation grid rightly reports as SURVIVED — code nothing exercises. A plain tuple has no
 such stub.
+
+⚑ AN EMPTY RESULT SAYS WHAT IT SEARCHED (W643, W648). summit measured `importers` on a module
+nobody imports: exit 0 and only skip counters, so a capability check could not fail on an empty
+result and a zero read as an absence. `Tally` counts the ROW lines a handler writes, with no edit
+to any handler's loop; `note()` writes a line that is NOT a row (a banner, a summary count), so a
+mode that always prints a summary still counts as empty when it found nothing.
 """
 
 from __future__ import annotations
 
+import io
+import sys
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+    from typing import TextIO
 
 _BANNER = "\N{WARNING SIGN} INCOMPLETE SCAN"
 _BROKEN = (
@@ -64,3 +73,50 @@ def incomplete(skipped: Sequence[tuple[str, str]], population: int) -> tuple[lis
     if read == 0:
         lines.append(_BROKEN)
     return lines, (1 if read == 0 else 0)
+
+
+class Tally(io.TextIOBase):
+    """A stdout stand-in that forwards every write and counts the lines as rows.
+
+    `inner` receives the text unchanged; `rows` is the number of newline-terminated lines written
+    through `write`, so a handler's own `sys.stdout.write` of a line is counted without any edit.
+    """
+
+    def __init__(self, inner: TextIO) -> None:
+        """Wrap `inner`, with no rows counted yet."""
+        super().__init__()
+        self.inner = inner
+        self.rows = 0
+
+    def write(self, text: str, /) -> int:
+        """Forward `text` and count its lines as rows.
+
+        Returns:
+            the number of characters written.
+
+        """
+        self.rows += text.count("\n")
+        return self.inner.write(text)
+
+    def flush(self) -> None:
+        """Flush the wrapped stream."""
+        self.inner.flush()
+
+
+def note(text: str) -> None:
+    """Write `text` to stdout as a line that is not a row (a banner or a summary count)."""
+    out = sys.stdout
+    if isinstance(out, Tally):
+        out.inner.write(text)
+    else:
+        out.write(text)
+
+
+def found_none(mode: str, searched: int) -> str:
+    """Return the line an empty census prints: what it searched, and that it found none.
+
+    Returns:
+        `<mode>: searched N file(s), found none`.
+
+    """
+    return f"{mode}: searched {searched} file(s), found none"

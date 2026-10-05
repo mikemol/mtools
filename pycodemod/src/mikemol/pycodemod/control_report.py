@@ -92,7 +92,7 @@ def _run(paths: Sequence[str], flags: CensusFlags) -> ControlSites | str:
 def _denominator(result: ControlSites, population: int) -> int:
     lines, code = report.incomplete([(s.why, s.error) for s in result.skipped], population)
     for line in lines:
-        sys.stdout.write(f"{line}\n")
+        report.note(f"{line}\n")
     return code
 
 
@@ -128,11 +128,17 @@ def print_constructs(paths: Sequence[str], flags: CensusFlags) -> int:
         return REFUSED
     found = Counter(site.construct for site in result.sites)
     for group, members in CONSTRUCT_GROUPS.items():
-        sys.stdout.write(f"constructs {group} {sum(found[c] for c in members)}\n")
+        report.note(f"constructs {group} {sum(found[c] for c in members)}\n")
         for construct in members:
-            sys.stdout.write(f"constructs {group} {construct} {found[construct]}\n")
+            report.note(f"constructs {group} {construct} {found[construct]}\n")
     stray = sorted(set(found) - set(CONSTRUCTS))
     if stray:
-        sys.stdout.write(f"constructs outside the roster: {','.join(stray)}\n")
-    sys.stdout.write(f"constructs roster={len(CONSTRUCTS)} sites={len(result.sites)}\n")
+        report.note(f"constructs outside the roster: {','.join(stray)}\n")
+    total = f"constructs roster={len(CONSTRUCTS)} sites={len(result.sites)}\n"
+    # ⚑ THE ROSTER PRINTS ZEROS TOO, SO IT IS NEVER THE ROW: the total line counts as one only when
+    # a site was found, which is what lets an empty census say so.
+    if result.sites:
+        sys.stdout.write(total)
+    else:
+        report.note(total)
     return _denominator(result, len(paths))
