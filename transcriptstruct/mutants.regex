@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED.
+
+# W620: a tool_reference whose name is missing or not a string stays UNDECODED and carries the whole
+# JSON, never guessed; without the type check a numeric name decodes as text and is read as a name.
+src/mikemol/transcriptstruct/blocks.py|reference-name-type-unchecked|if known and isinstance\(text, str\):|if known:|def=_sub_block

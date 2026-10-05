@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 670 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:2d9b5d764360ae45`
+counter 670 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:5f7958abf54657c4`
 
 | # | symbol | status |
 |---|---|---|
@@ -693,8 +693,9 @@ counter 670 · heartbeat 2026-10-05T04:40:22Z · job `41bd4893` · hash `v2:2d9b
      switch only the identical ones; strings, definitions, layout and reads return different types and stay
 7. **W670** (ready) mutation: declare defect classes (mutants.regex) for the remaining drained distributions from their
    recorded F-arm history
-   - next: Mine the remaining dists' commit bodies for recorded F-arms (git log --grep F-arm); declare those a
-     body-to-raise cannot express, plant-check, run via run_declared, discard any equivalent mutant
+   - next: The remaining distributions are ports from paperkit and mostly carry no recorded F-arms in their messages:
+     for each, declare from its own code the defect classes a body-to-raise cannot express (an inverted predicate, a
+     dropped operand, a swapped pair), plant-check, run via run_declared, discard any equivalent mutant
 8. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257

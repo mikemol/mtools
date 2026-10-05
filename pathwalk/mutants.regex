@@ -17,3 +17,7 @@ src/mikemol/pathwalk/walk.py|worktree-switch-inverted|if include_worktrees else|
 # the only thing keeping it out (os.walk's own `followlinks=False` is redundant behind it, which a
 # `followlinks=True` declaration here measured as SURVIVED because that mutant is EQUIVALENT).
 src/mikemol/pathwalk/walk.py|symlinked-directory-not-refused|if sub\.is_symlink\(\):|if False:|def=_walk
+
+# W575: a suffix is a dot and at least one more character; inverted, `.md` is refused and `md` (which
+# matches every file ending in those letters) is accepted.
+src/mikemol/pathwalk/walk.py|suffix-validation-inverted|if not suffix\.startswith\(_DOT\) or suffix == _DOT:|if suffix.startswith(_DOT) or suffix == _DOT:|def=expand

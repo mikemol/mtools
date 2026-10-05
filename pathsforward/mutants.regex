@@ -8,3 +8,7 @@
 # W604: the rendered mirror must pass the markdown bar's 120 columns; a wrap whose break condition
 # never fires still renders every word and every table, and only a line-length check sees it.
 src/mikemol/pathsforward/render.py|wrap-never-breaks|> WIDTH and current|> WIDTH * 100 and current|def=wrap
+
+# W577: a local card claims a peer's ask by `enables` OR by `caused_by`; without the second, a card
+# minted from the ask reads as no claim and the ask stays UNCLAIMED after it was taken.
+src/mikemol/pathsforward/inbound.py|caused-by-no-longer-claims|, text\(w, "caused_by"\)\)|, "")|def=claims

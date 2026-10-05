@@ -45,3 +45,11 @@ src/mikemol/pycodemod/cli_modes.py|touches-root-names-dropped|roots = sorted\(cs
 # W596: the caller's guard forms must reach the census; dropped, the default (substrate's) tables are
 # asked and a repo's own guards read as no guard at all.
 src/mikemol/pycodemod/cli.py|placement-overrides-dropped|run_placement\(paths, entry, first_write\)|run_placement(paths)|def=_handle_placement
+
+# W607: the shared structure of two fingerprints is their GCD; the LCM is a larger number that still
+# looks like a fingerprint and shares nothing.
+src/mikemol/pycodemod/fingerprint.py|shared-is-lcm-not-gcd|math\.gcd\(a, b\)|math.lcm(a, b)|def=fp_shared
+
+# W612: a literal that matched a failure token is excluded from the success pass; inverted, the
+# success pass reads only the failure literals and every failure reader also reads as a success one.
+src/mikemol/pycodemod/artifacts.py|failure-not-subtracted-from-success|s not in matched|s in matched|def=_classify

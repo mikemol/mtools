@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 61,
+      "ticks_blocked": 62,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 59,
+      "ticks_blocked": 60,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 33,
+      "ticks_blocked": 34,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 13,
+      "ticks_blocked": 14,
       "completed": null
     },
     {
@@ -13291,12 +13291,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Mine the remaining dists' commit bodies for recorded F-arms (git log --grep F-arm); declare those a body-to-raise cannot express, plant-check, run via run_declared, discard any equivalent mutant",
-      "evidence": "2026-10-05: 2026-10-05 first slice: mdstruct (exclude-dropped-at-the-walk, from the W659 F-arm) and hooks (check-ignores-the-layout-runner, from the W669 F-arm) declared, each checked to plant before the runner. Remaining: ledger, transcriptstruct, mutation itself, fence, ratchet, witness and the rest, mined from their commits and swarm notes | 2026-10-05: 2026-10-05 second slice, each checked to plant and then run through the runner's own run_declared (all killed, none equivalent): pycodemod 10 in all (7 added from this session's F-arms: alias-rebinding-not-followed, every-prefixed-def-registered, artifact-vocabularies-swapped, touches-one-file-rule-never-fires, touches-root-names-dropped, placement-overrides-dropped, plus the 4 earlier), ledger 1 (unreadable-bib-smoothed-to-empty, W601), pathsforward 1 (wrap-never-breaks, W604), hooks 2 (adds program-filter-inverted, W587), mutation 4 (its own reader: climbing-module-allowed, duplicate-name-allowed, miss-no-longer-caught, miss-reads-as-applied). Declared so far: pathwalk 3, pycodemod 10, mdstruct 1, hooks 2, ledger 1, pathsforward 1, mutation 4. Still none: the other 19 distributions | 2026-10-05: CORRECTION to the count above: 27 distributions carry a :mutants target and 7 declare, so TWENTY remain, not 19",
+      "next_bounded_step": "The remaining distributions are ports from paperkit and mostly carry no recorded F-arms in their messages: for each, declare from its own code the defect classes a body-to-raise cannot express (an inverted predicate, a dropped operand, a swapped pair), plant-check, run via run_declared, discard any equivalent mutant",
+      "evidence": "2026-10-05: 2026-10-05 first slice: mdstruct (exclude-dropped-at-the-walk, from the W659 F-arm) and hooks (check-ignores-the-layout-runner, from the W669 F-arm) declared, each checked to plant before the runner. Remaining: ledger, transcriptstruct, mutation itself, fence, ratchet, witness and the rest, mined from their commits and swarm notes | 2026-10-05: 2026-10-05 second slice, each checked to plant and then run through the runner's own run_declared (all killed, none equivalent): pycodemod 10 in all (7 added from this session's F-arms: alias-rebinding-not-followed, every-prefixed-def-registered, artifact-vocabularies-swapped, touches-one-file-rule-never-fires, touches-root-names-dropped, placement-overrides-dropped, plus the 4 earlier), ledger 1 (unreadable-bib-smoothed-to-empty, W601), pathsforward 1 (wrap-never-breaks, W604), hooks 2 (adds program-filter-inverted, W587), mutation 4 (its own reader: climbing-module-allowed, duplicate-name-allowed, miss-no-longer-caught, miss-reads-as-applied). Declared so far: pathwalk 3, pycodemod 10, mdstruct 1, hooks 2, ledger 1, pathsforward 1, mutation 4. Still none: the other 19 distributions | 2026-10-05: CORRECTION to the count above: 27 distributions carry a :mutants target and 7 declare, so TWENTY remain, not 19 | 2026-10-05: 2026-10-05 third slice (6 declarations from F-arms recorded in commit bodies, each plant-checked then killed by run_declared; 22 of 22 across the five dists run): pycodemod shared-is-lcm-not-gcd (W607) and failure-not-subtracted-from-success (W612); hooks check-exit-never-fails (W621); pathsforward caused-by-no-longer-claims (W577); pathwalk suffix-validation-inverted (W575); transcriptstruct reference-name-type-unchecked (W620, the dist's first). Declared now: pathwalk 4, pycodemod 12, mdstruct 1, hooks 3, ledger 1, pathsforward 2, mutation 4, transcriptstruct 1 = 28 defects in 8 distributions; 19 distributions still declare none",
       "issued_at": "2026-10-05T05:48:13Z",
       "minted_during": "tick",
       "caused_by": "W629",
-      "last_worked": "2026-10-05T06:36:35Z",
+      "last_worked": "2026-10-05T06:53:00Z",
       "ticks_blocked": 0
     }
   ],
