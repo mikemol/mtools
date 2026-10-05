@@ -1101,3 +1101,4 @@
 2026-10-05T12:43:24Z  tick  W670 advanced  sweep     "mutantcell cellstage declares 16 defect classes; 2 survived (no-cache-tag branch, module-swap hardlink), 2 tests added"  evidence=mutantcell/mutants.regex
 2026-10-05T12:56:57Z  hash  --   diverged  --        "divergence: payload v2:756ad9ef1914f8c7, file v2:c6154a7dec8d752a; the FILE wins"
 2026-10-05T12:59:08Z  tick  W670 advanced  sweep     "memres mem_db and sweep_budget declare 23 defect classes; 2 real survivors closed, 2 equivalent re-aimed"  evidence=memres/mutants.regex
+2026-10-05T13:13:55Z  tick  W670 advanced  sweep     "gatecheck rungate declares 15 defect classes; 2 survived (the real subprocess seams), 2 tests added; W576 recorded the runner App and letter sent to luthen"  evidence=gatecheck/mutants.regex

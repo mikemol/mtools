@@ -83,6 +83,20 @@ def test_capture_output_collects_stdout_as_text(tmp_path: Path) -> None:
     assert proc.stdout == tmp_path.name + "\n"
 
 
+def test_capture_output_reads_a_failing_status_instead_of_raising(tmp_path: Path) -> None:
+    """A non-zero exit comes back as the status with its text; nothing raises."""
+    code = f"print('said'); raise SystemExit({_CHILD_EXIT})"
+    proc = rungate.capture_output([sys.executable, "-c", code], tmp_path)
+    assert proc.returncode == _CHILD_EXIT
+    assert proc.stdout == "said\n"
+
+
+def test_run_passthrough_leaves_the_childs_output_uncaptured(tmp_path: Path) -> None:
+    """The gate's output goes to the terminal, so the completed process holds none of it."""
+    proc = rungate.run_passthrough([sys.executable, "-c", "print('to the terminal')"], tmp_path)
+    assert not proc.stdout
+
+
 def test_run_passthrough_returns_the_commands_exit_code(tmp_path: Path) -> None:
     """The real run seam reports the child's status as the verdict, without raising."""
     code = f"raise SystemExit({_CHILD_EXIT})"

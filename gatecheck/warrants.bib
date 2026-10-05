@@ -668,3 +668,17 @@
   claim  = {Run as a module, the exit status is the failure verdict.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_reach.py -k test_module_runs_as_a_script_with_the_exit_code},
 }
+
+@misc{gatecheck-rungate-capture-output-reads-a-failing-status-instead-of-raising,
+  section = {rungate},
+  title  = {A non-zero exit comes back as the status with its text; nothing raises},
+  claim  = {A non-zero exit comes back as the status with its text; nothing raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_capture_output_reads_a_failing_status_instead_of_raising},
+}
+
+@misc{gatecheck-rungate-run-passthrough-leaves-the-childs-output-uncaptured,
+  section = {rungate},
+  title  = {The gate's output goes to the terminal, so the completed process holds none of it},
+  claim  = {The gate's output goes to the terminal, so the completed process holds none of it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_run_passthrough_leaves_the_childs_output_uncaptured},
+}
