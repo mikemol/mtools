@@ -9,3 +9,7 @@
 # `.venv` there writes a command that is wrong for the repository root, and every entry still looks
 # well formed.
 src/mikemol/hooks/gen_warrants.py|check-ignores-the-layout-runner|cmd:\{spec\.layout\.runner\}|cmd:.venv/bin/python3|def=_entry
+
+# W587: one parser decides what a command is, and only a `git` program is read for --no-verify. The
+# filter inverted refuses everything that is NOT git and lets every real bypass through.
+src/mikemol/hooks/no_verify.py|program-filter-inverted|if program != "git":|if program == "git":|def=findings

@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. This is the distribution that reads this very
+# file, so these are the mistakes an edit to the declaration reader could make without moving a def.
+
+# A declared module is inside the distribution: a path that climbs out with `..` would let a
+# declaration rewrite a file nobody declared.
+src/mikemol/mutation/declarations.py|climbing-module-allowed|or "\.\." in path\.parts|or False|def=_module
+
+# A name may repeat across modules and never within one; allowed, the second silently shadows the
+# first in the report.
+src/mikemol/mutation/declarations.py|duplicate-name-allowed|if key in seen:|if False:|def=read_declarations
+
+# A stale spec plants NOTHING: `plant` answers None. Letting the miss escape as an error would crash
+# the grid, and treating it as planted would read an unchanged source as a defect the suite survived.
+src/mikemol/mutation/declarations.py|miss-no-longer-caught|except KeyError:|except OSError:|def=plant
+
+# A regex that matches nothing is UNAPPLIED, never a silent no-op: without it the unchanged source is
+# handed back and the suite is asked about a defect that was never planted.
+src/mikemol/mutation/regexop.py|miss-reads-as-applied|if count == 0:|if count < 0:|def=apply_regex

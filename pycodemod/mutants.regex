@@ -22,3 +22,26 @@ src/mikemol/pycodemod/dead.py|registered-excuses-every-def|registered=\(site\.pa
 # W653: `import pkg.lib` binds the dotted spelling; without it a caller writing `pkg.lib._x` is never
 # listed as owed an edit and its import breaks silently after a split.
 src/mikemol/pycodemod/split.py|dotted-import-not-bound|if not al\.asname and|if False and|def=_aliases
+
+# W653: an alias rebound to another name (`M = L`) is followed to a fixpoint; a loop that never runs
+# misses `M._hidden`, and the first import form still reads fine.
+src/mikemol/pycodemod/split.py|alias-rebinding-not-followed|while grew:|while False:|def=_aliases
+
+# W656: only a def a string literal INVOKES is registered; reporting every prefixed def as registered
+# hides the orphan the prefix must not hide.
+src/mikemol/pycodemod/cli_modes.py|every-prefixed-def-registered|if row\.registered|if True|def=registered_sites
+
+# W667: the two vocabularies are different questions; swapped, FAILURE and SUCCESS read each other's.
+src/mikemol/pycodemod/cli.py|artifact-vocabularies-swapped|_opt_str\(ns, "failure"\), _opt_str\(ns, "success"\)|_opt_str(ns, "success"), _opt_str(ns, "failure")|def=_handle_artifacts
+
+# W668: a function is looked up in one file; the rule never firing reads the first path and ignores
+# the rest without a word.
+src/mikemol/pycodemod/cli_modes.py|touches-one-file-rule-never-fires|len\(paths\) != 1|len(paths) > 99|def=print_touches
+
+# W668: the root names are what make `os.path.join(ROOT, "a.py")` resolve; dropped, every join with a
+# root part reads unresolved.
+src/mikemol/pycodemod/cli_modes.py|touches-root-names-dropped|roots = sorted\(csv\(root_names or ""\)\)|roots: list[str] = []|def=print_touches
+
+# W596: the caller's guard forms must reach the census; dropped, the default (substrate's) tables are
+# asked and a repo's own guards read as no guard at all.
+src/mikemol/pycodemod/cli.py|placement-overrides-dropped|run_placement\(paths, entry, first_write\)|run_placement(paths)|def=_handle_placement

@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED.
+
+# W601: a bib that is a directory or not valid UTF-8 is UNREADABLE, a third outcome (None), never
+# smoothed into the empty set: a ledger that could not be read must not read as "no keys".
+src/mikemol/ledger/finding_bibkeys.py|unreadable-bib-smoothed-to-empty|return None, bibs|return set(), bibs|def=bib_keys
