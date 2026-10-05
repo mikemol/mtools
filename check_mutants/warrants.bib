@@ -44,3 +44,69 @@
   claim   = {A mutant whose suite never ends (a retry loop around the raised mutant) is recorded as KILLED once MUTATE_TIMEOUT expires, its process group killed, instead of holding the grid until bazel's ceiling: W356 measured //gmailstruct:mutants TIMEOUT 300s},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_that_makes_a_wait_unbounded_is_killed_by_the_time_limit}
 }
+
+@misc{root-mutate-runner-declared-defect-the-suite-fails-on-is-killed-and-the-planted-text-reached-it,
+  section = {mutate_runner},
+  title  = {W629: a failing suite KILLS the declared defect, and it ran against the rewritten module},
+  claim  = {W629: a failing suite KILLS the declared defect, and it ran against the rewritten
+            module.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_declared_defect_the_suite_fails_on_is_killed_and_the_planted_text_reached_it},
+}
+
+@misc{root-mutate-runner-declared-defect-the-suite-passes-on-survived,
+  section = {mutate_runner},
+  title  = {W629: a green suite over the planted defect is SURVIVED: it is blind to what was named},
+  claim  = {W629: a green suite over the planted defect is SURVIVED: it is blind to what was named.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_declared_defect_the_suite_passes_on_survived},
+}
+
+@misc{root-mutate-runner-stale-declaration-is-unapplied-and-no-suite-runs,
+  section = {mutate_runner},
+  title  = {W629: a pattern matching nothing plants nothing: UNAPPLIED, and the suite is never asked},
+  claim  = {W629: a pattern matching nothing plants nothing: UNAPPLIED, and the suite is never
+            asked.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_stale_declaration_is_unapplied_and_no_suite_runs},
+}
+
+@misc{root-mutate-runner-missing-module-or-a-rewrite-that-does-not-parse-is-errored-and-runs-nothing,
+  section = {mutate_runner},
+  title  = {W629: a declaration naming no file, or breaking the source, is ERRORED, never a green},
+  claim  = {W629: a declaration naming no file, or breaking the source, is ERRORED, never a green.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_missing_module_or_a_rewrite_that_does_not_parse_is_errored_and_runs_nothing},
+}
+
+@misc{root-mutate-runner-distribution-with-no-declaration-file-declares-nothing,
+  section = {mutate_runner},
+  title  = {W629: none by default: no `mutants.regex` is an empty list, not an error},
+  claim  = {W629: none by default: no `mutants.regex` is an empty list, not an error.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_distribution_with_no_declaration_file_declares_nothing},
+}
+
+@misc{root-mutate-runner-grid-reports-none-declared-and-passes-when-a-distribution-declares-nothing,
+  section = {mutate_runner},
+  title  = {W629: an empty REGEX section is NAMED, and a distribution with no file passes as before},
+  claim  = {W629: an empty REGEX section is NAMED, and a distribution with no file passes as before.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_grid_reports_none_declared_and_passes_when_a_distribution_declares_nothing},
+}
+
+@misc{root-mutate-runner-grid-passes-only-when-every-declared-defect-is-killed,
+  section = {mutate_runner},
+  title  = {W629: a killed declared defect passes (0); the same defect surviving fails the grid (1)},
+  claim  = {W629: a killed declared defect passes (0); the same defect surviving fails the grid (1).},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_grid_passes_only_when_every_declared_defect_is_killed},
+}
+
+@misc{root-mutate-runner-stale-declaration-fails-the-grid-as-unapplied,
+  section = {mutate_runner},
+  title  = {W629: a declaration the code moved away from FAILS, reading as a defect nobody can plant},
+  claim  = {W629: a declaration the code moved away from FAILS, reading as a defect nobody can
+            plant.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_stale_declaration_fails_the_grid_as_unapplied},
+}
+
+@misc{root-mutate-runner-malformed-declaration-file-refuses-the-whole-grid-naming-the-line,
+  section = {mutate_runner},
+  title  = {W629: a bad line is exit 1 with `mutants.regex: line 2`, never read as declared-nothing},
+  claim  = {W629: a bad line is exit 1 with `mutants.regex: line 2`, never read as declared-nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_malformed_declaration_file_refuses_the_whole_grid_naming_the_line},
+}

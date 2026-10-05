@@ -103,3 +103,45 @@ def test_nothing_but_the_count_is_printed_when_all_are_present(
     captured = capsys.readouterr()
     assert not captured.out
     assert captured.err == "0 warrants\n"
+
+
+def _atom(root: Path, bib: str, modules: dict[str, str]) -> None:
+    """Write the repository root's layout under `a`: a bib and test modules BESIDE the script."""
+    (root / "a").mkdir()
+    (root / "a" / "warrants.bib").write_text(bib, encoding="utf-8")
+    for module, body in modules.items():
+        (root / "a" / f"test_{module}.py").write_text(body, encoding="utf-8")
+
+
+def test_the_atom_layout_keys_by_root_and_checks_beside_the_script(tmp_path: Path) -> None:
+    """W669: a module beside its script is keyed `root-<module>-...` and run by the hooks venv."""
+    _atom(tmp_path, "", {"mutate_runner": _fn("test_a_site_is_addressed", "It is addressed.")})
+    (entry,) = gen_warrants.emit(tmp_path, "a", [("mutate_runner", "S")], gen_warrants.ATOM)
+    assert entry.startswith("@misc{root-mutate-runner-site-is-addressed,\n")
+    assert "cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k" in entry
+    assert "tests/test_mutate_runner.py" not in entry
+
+
+def test_the_atom_layout_skips_a_function_its_hand_written_bib_already_checks(
+    tmp_path: Path,
+) -> None:
+    """W669: the bib the root wrote by hand counts, so regenerating it adds only the new tests."""
+    bib = "@misc{x,\n  check = {cmd:hooks/.venv/bin/python3 -m pytest test_m.py -k test_one},\n}\n"
+    _atom(tmp_path, bib, {"m": _fn("test_one") + _fn("test_two")})
+    got = gen_warrants.emit(tmp_path, "a", [("m", "S")], gen_warrants.ATOM)
+    assert [e.split(",")[0] for e in got] == ["@misc{root-m-two"]
+
+
+def test_the_layout_flag_selects_the_atom_layout_and_the_default_stays_dist(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W669: `--layout atom` emits the root form; without it the same call reads `tests/`."""
+    _atom(tmp_path, "", {"m": _fn("test_works")})
+    assert gen_warrants.main(["--root", str(tmp_path), "--layout", "atom", "a", "m=S"]) == 0
+    assert "@misc{root-m-works," in capsys.readouterr().out
+    missed = False
+    try:
+        gen_warrants.main(["--root", str(tmp_path), "a", "m=S"])
+    except FileNotFoundError:
+        missed = True
+    assert missed

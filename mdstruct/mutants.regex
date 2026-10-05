@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED.
+
+# W659: the caller's --exclude must reach the sibling walk; an empty tuple handed on instead prunes
+# nothing, and the walk, its count line and every read mode would still run and read as fine.
+src/mikemol/mdstruct/operands.py|exclude-dropped-at-the-walk|exclude=exclude\)|exclude=())|def=resolve

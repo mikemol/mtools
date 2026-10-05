@@ -242,3 +242,164 @@ def test_a_mutant_that_makes_a_wait_unbounded_is_killed_by_the_time_limit(
     worker.start()
     worker.join(timeout=30)
     assert got == ["killed"], "the unbounded mutant produced no verdict within 30s"
+
+
+# ⚑ THE DECLARED-DEFECT PATH (W629, tests W669). A distribution declares a defect in `mutants.regex`
+# and the runner plants it through the SAME temp-copy and suite path as a def-site mutant, so these
+# replace the same one seam. What reaches the suite is read back from the temp tree, because a
+# runner that planted nothing would still hand the suite a green. Declarations are read through
+# `read_declared` from a written file, the runner's own path, so no test names a type it imports.
+_FAILED = "1 failed in 0.01s\n"
+_DECLARATION = "src/mod.py|returns-two|return 1|return 2|\n"
+
+
+def _declared_grid(tmp_path: pathlib.Path, declaration: str = "") -> mutate_runner.Grid:
+    dist = tmp_path / "dist"
+    (dist / "src").mkdir(parents=True)
+    (dist / "tests").mkdir()
+    (dist / "src" / "mod.py").write_text(_SITE_SOURCE, encoding="utf-8")
+    (dist / "pyproject.toml").write_text("", encoding="utf-8")
+    if declaration:
+        (dist / "mutants.regex").write_text(declaration, encoding="utf-8")
+    return mutate_runner.Grid(pathlib.Path(sys.executable), dist, dist / "pyproject.toml")
+
+
+def _seam(monkeypatch: pytest.MonkeyPatch, declared_rc: int, declared_out: str) -> list[str]:
+    """Replace `launch` with a suite that kills def-site mutants and answers a planted defect.
+
+    A module carrying the def-site raise is killed, as the real suite would; any other text is the
+    declared defect, answered with `declared_rc` and `declared_out`.
+
+    Returns:
+        the list each run's `src/mod.py` text is appended to.
+
+    """
+    seen: list[str] = []
+
+    def suite(
+        argv: list[str],
+        cwd: pathlib.Path,
+        _env: dict[str, str],
+    ) -> subprocess.CompletedProcess[str]:
+        text = (cwd / "src" / "mod.py").read_text(encoding="utf-8")
+        seen.append(text)
+        if "AssertionError" in text:
+            return subprocess.CompletedProcess(argv, 1, f"{_FAILED}AssertionError: mutant\n", "")
+        return subprocess.CompletedProcess(argv, declared_rc, declared_out, "")
+
+    monkeypatch.setattr(mutate_runner, "launch", suite)
+    return seen
+
+
+def test_a_declared_defect_the_suite_fails_on_is_killed_and_the_planted_text_reached_it(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W629: a failing suite KILLS the declared defect, and it ran against the rewritten module."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    seen = _seam(monkeypatch, 1, _FAILED)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "killed"
+    assert seen == ["def f():\n    return 2\n"]
+
+
+def test_a_declared_defect_the_suite_passes_on_survived(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W629: a green suite over the planted defect is SURVIVED: it is blind to what was named."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _seam(monkeypatch, 0, _PASSED)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "survived"
+
+
+def test_a_stale_declaration_is_unapplied_and_no_suite_runs(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W629: a pattern matching nothing plants nothing: UNAPPLIED, and the suite is never asked."""
+    grid = _declared_grid(tmp_path, "src/mod.py|stale|nothing-here|x|\n")
+    seen = _seam(monkeypatch, 0, _PASSED)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "unapplied"
+    assert seen == []
+
+
+def test_a_missing_module_or_a_rewrite_that_does_not_parse_is_errored_and_runs_nothing(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W629: a declaration naming no file, or breaking the source, is ERRORED, never a green."""
+    both = "src/ghost.py|returns-two|return 1|return 2|\nsrc/mod.py|breaks|return|return (|\n"
+    grid = _declared_grid(tmp_path, both)
+    seen = _seam(monkeypatch, 0, _PASSED)
+    ghost, broken = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, ghost) == "errored"
+    assert mutate_runner.run_declared(grid, broken) == "errored"
+    assert seen == []
+
+
+def test_a_distribution_with_no_declaration_file_declares_nothing(tmp_path: pathlib.Path) -> None:
+    """W629: none by default: no `mutants.regex` is an empty list, not an error."""
+    assert mutate_runner.read_declared(_declared_grid(tmp_path).dist) == []
+
+
+def _run_main(grid: mutate_runner.Grid) -> int:
+    return mutate_runner.main(["mutate_runner", str(grid.py), str(grid.config)])
+
+
+def test_the_grid_reports_none_declared_and_passes_when_a_distribution_declares_nothing(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W629: an empty REGEX section is NAMED, and a distribution with no file passes as before."""
+    grid = _declared_grid(tmp_path)
+    _seam(monkeypatch, 0, _PASSED)
+    assert _run_main(grid) == 0
+    out = capsys.readouterr().out
+    assert "REGEX (0)" in out
+    assert "none declared" in out
+
+
+def test_the_grid_passes_only_when_every_declared_defect_is_killed(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W629: a killed declared defect passes (0); the same defect surviving fails the grid (1)."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _seam(monkeypatch, 1, _FAILED)
+    assert _run_main(grid) == 0
+    assert "src/mod.py::returns-two -> killed" in capsys.readouterr().out
+    _seam(monkeypatch, 0, _PASSED)
+    assert _run_main(grid) == 1
+    captured = capsys.readouterr()
+    assert "src/mod.py::returns-two -> survived" in captured.out
+    assert "1 declared defect(s) NOT killed" in captured.err
+
+
+def test_a_stale_declaration_fails_the_grid_as_unapplied(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W629: a declaration the code moved away from FAILS, reading as a defect nobody can plant."""
+    grid = _declared_grid(tmp_path, "src/mod.py|stale|nothing-here|x|\n")
+    _seam(monkeypatch, 1, _FAILED)
+    assert _run_main(grid) == 1
+    assert "src/mod.py::stale -> unapplied" in capsys.readouterr().out
+
+
+def test_a_malformed_declaration_file_refuses_the_whole_grid_naming_the_line(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W629: a bad line is exit 1 with `mutants.regex: line 2`, never read as declared-nothing."""
+    grid = _declared_grid(tmp_path, "# ok\nnot-a-declaration\n")
+    seen = _seam(monkeypatch, 1, _FAILED)
+    assert _run_main(grid) == 1
+    assert "mutants.regex: line 2: " in capsys.readouterr().err
+    assert seen == []

@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 59,
+      "ticks_blocked": 60,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 63,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -13264,7 +13264,7 @@
     {
       "symbol": "W669",
       "title": "hooks gen-warrants: support the root layout so check_mutants' runner tests can take generated warrants, then test run_declared's four outcomes",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -13272,13 +13272,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "gen-warrants resolves <root>/<dist>/tests/test_<module>.py and keys <dist>-...; the root keeps test_mutate_runner.py beside the script with root-mutate-runner keys and a hooks/.venv check command. Add an option for that layout; then add runner tests over the launch seam for killed, survived, errored (module missing, rewrite unparseable) and unapplied, and for a malformed mutants.regex refusing the grid with its line",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 mikemol-gen-warrants gained --layout dist|atom (hooks/gen_warrants.py: a Layout value of test path, interpreter and key prefix; the default is unchanged). atom is the root's layout: the module beside its script, keys root-<module>-..., check run by hooks/.venv; pointed at the real root file and bib it recognised all 6 hand-written warrants and emitted 0, which is the evidence it matches the hand-written form. 3 tests in test_gen_warrants.py, 3 warrants; F-arm hardcoding the interpreter in the check failed the atom test. THEN the runner: 9 tests in check_mutants/test_mutate_runner.py over the launch seam (run_declared killed, survived, unapplied with no suite run, errored for a missing module and an unparseable rewrite; read_declared none and malformed-by-line; main end to end for none-declared, killed vs survived exit codes, stale unapplied, malformed file refusing the grid) and 9 GENERATED warrants appended with --layout atom; the rubric section title extended. F-arms: a stale declaration reported as survived failed 2, the report never failing failed 2. Not covered: the pool running the declared defects concurrently with def-sites (main's wiring is exercised, not its parallelism)",
       "issued_at": "2026-10-05T05:48:13Z",
       "minted_during": "tick",
       "caused_by": "W629",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T06:16:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T061643Z"
     },
     {
       "symbol": "W670",
@@ -13290,12 +13291,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Mine each dist's commit messages and swarm notes for the hand-planted F-arms that were red (ledger, hooks, mdstruct, transcriptstruct and the rest); declare the ones a body-to-raise cannot express; run each through check_decl first, then the runner; an EQUIVALENT mutant (like pathwalk's followlinks) is a bad declaration, replace it. pathwalk and pycodemod are declared",
-      "evidence": "",
+      "next_bounded_step": "Continue mining F-arm history for the dists still declaring none; check_decl-style plant check first (UNAPPLIED is a stale spec), then the runner; discard an equivalent mutant",
+      "evidence": "2026-10-05: 2026-10-05 first slice: mdstruct (exclude-dropped-at-the-walk, from the W659 F-arm) and hooks (check-ignores-the-layout-runner, from the W669 F-arm) declared, each checked to plant before the runner. Remaining: ledger, transcriptstruct, mutation itself, fence, ratchet, witness and the rest, mined from their commits and swarm notes",
       "issued_at": "2026-10-05T05:48:13Z",
       "minted_during": "tick",
       "caused_by": "W629",
-      "last_worked": null,
+      "last_worked": "2026-10-05T06:16:43Z",
       "ticks_blocked": 0
     }
   ],

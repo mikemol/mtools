@@ -5653,3 +5653,24 @@
             nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_pre_push.py -k test_the_repo_stub_refuses_when_its_launcher_is_absent},
 }
+
+@misc{hooks-gen-warrants-atom-layout-keys-by-root-and-checks-beside-the-script,
+  section = {gen-warrants},
+  title  = {W669: a module beside its script is keyed `root-<module>-...` and run by the hooks venv},
+  claim  = {W669: a module beside its script is keyed `root-<module>-...` and run by the hooks venv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_the_atom_layout_keys_by_root_and_checks_beside_the_script},
+}
+
+@misc{hooks-gen-warrants-atom-layout-skips-a-function-its-hand-written-bib-already-checks,
+  section = {gen-warrants},
+  title  = {W669: the bib the root wrote by hand counts, so regenerating it adds only the new tests},
+  claim  = {W669: the bib the root wrote by hand counts, so regenerating it adds only the new tests.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_the_atom_layout_skips_a_function_its_hand_written_bib_already_checks},
+}
+
+@misc{hooks-gen-warrants-layout-flag-selects-the-atom-layout-and-the-default-stays-dist,
+  section = {gen-warrants},
+  title  = {W669: `--layout atom` emits the root form; without it the same call reads `tests/`},
+  claim  = {W669: `--layout atom` emits the root form; without it the same call reads `tests/`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_the_layout_flag_selects_the_atom_layout_and_the_default_stays_dist},
+}

@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED.
+
+# W669: a warrant's check command names the LAYOUT's interpreter. Hardcoding the distribution's
+# `.venv` there writes a command that is wrong for the repository root, and every entry still looks
+# well formed.
+src/mikemol/hooks/gen_warrants.py|check-ignores-the-layout-runner|cmd:\{spec\.layout\.runner\}|cmd:.venv/bin/python3|def=_entry
