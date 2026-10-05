@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.debtplan: the order in which a per-file debt ledger can be paid down"
+subtitle = "Leaves first, each file waiting only on the files it directly imports, a cycle read as one unit, and a wait graph that could block its own cards refused before anything is written."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "DEBTPLAN.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

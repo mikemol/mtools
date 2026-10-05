@@ -221,6 +221,15 @@ pip.parse(
     requirements_lock = "//importdag:requirements.txt",
 )
 
+# ⚑ `mikemol-debtplan` — luthen-observability's `checks/mypy_plan`, drained and atomized (mtools:W790);
+# the import resolver went into importdag. First unit: the planning core. Empty shipping hub: standard
+# library plus the importdag sibling, which a pip hub cannot resolve (mtools:W562).
+pip.parse(
+    hub_name = "debtplan_deps",
+    python_version = "3.13",
+    requirements_lock = "//debtplan:requirements.txt",
+)
+
 # ⚑ `mikemol-treeio` — paperkit's virtual file system and edit snapshot (vfs, edit_snapshot), split
 # into one module per responsibility (mtools:W550, paperkit:W142; operator ruling 2026-10-04: port,
 # bibstruct stays in paperkit and pins treeio). The one runtime dependency is pygit2.
@@ -416,6 +425,11 @@ pip.parse(
     uv_lock = "//importdag:uv.lock",
 )
 pip.parse(
+    hub_name = "debtplan_dev",
+    python_version = "3.13",
+    uv_lock = "//debtplan:uv.lock",
+)
+pip.parse(
     hub_name = "treeio_dev",
     python_version = "3.13",
     uv_lock = "//treeio:uv.lock",
@@ -492,6 +506,8 @@ use_repo(
     "buildtel_dev",
     "importdag_deps",
     "importdag_dev",
+    "debtplan_deps",
+    "debtplan_dev",
     "gradekit_deps",
     "gradekit_dev",
     "pathwalk_deps",

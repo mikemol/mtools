@@ -1,0 +1,203 @@
+
+@misc{debtplan-rows-a-row-waiting-on-nothing-is-ready,
+  section = {rows},
+  title  = {A row with no waits can be edited now},
+  claim  = {A row with no waits can be edited now.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rows.py -k test_a_row_waiting_on_nothing_is_ready},
+}
+
+@misc{debtplan-rows-a-row-waiting-on-something-is-not-ready,
+  section = {rows},
+  title  = {A single wait makes a row not ready},
+  claim  = {A single wait makes a row not ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rows.py -k test_a_row_waiting_on_something_is_not_ready},
+}
+
+@misc{debtplan-rows-the-order-key-is-waits-then-negated-dependents-then-name,
+  section = {rows},
+  title  = {The key of a row with two waits, one dependent and a name is the triple of those},
+  claim  = {The key of a row with two waits, one dependent and a name is the triple of those.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rows.py -k test_the_order_key_is_waits_then_negated_dependents_then_name},
+}
+
+@misc{debtplan-rows-ready-rows-sort-first-and-the-most-depended-on-lead-them,
+  section = {rows},
+  title  = {Ready rows come before a waiting one, and among them the one most files wait behind},
+  claim  = {Ready rows come before a waiting one, and among them the one most files wait behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rows.py -k test_ready_rows_sort_first_and_the_most_depended_on_lead_them},
+}
+
+@misc{debtplan-rows-equal-rows-sort-by-name,
+  section = {rows},
+  title  = {With the same waits and dependents, the name decides},
+  claim  = {With the same waits and dependents, the name decides.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rows.py -k test_equal_rows_sort_by_name},
+}
+
+@misc{debtplan-cycle-an-empty-graph-has-no-cycle,
+  section = {cycle},
+  title  = {Nothing waits on anything},
+  claim  = {Nothing waits on anything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_an_empty_graph_has_no_cycle},
+}
+
+@misc{debtplan-cycle-a-diamond-is-not-a-cycle,
+  section = {cycle},
+  title  = {Two paths to one file are not a loop},
+  claim  = {Two paths to one file are not a loop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_a_diamond_is_not_a_cycle},
+}
+
+@misc{debtplan-cycle-a-wait-on-a-file-with-no-row-is-not-a-cycle,
+  section = {cycle},
+  title  = {A wait target absent from the graph has no waits of its own},
+  claim  = {A wait target absent from the graph has no waits of its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_a_wait_on_a_file_with_no_row_is_not_a_cycle},
+}
+
+@misc{debtplan-cycle-a-ring-is-found-and-ends-where-it-began,
+  section = {cycle},
+  title  = {The path names the files of the ring and repeats the first at the end},
+  claim  = {The path names the files of the ring and repeats the first at the end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_a_ring_is_found_and_ends_where_it_began},
+}
+
+@misc{debtplan-cycle-a-file-waiting-on-itself-is-a-cycle,
+  section = {cycle},
+  title  = {A file that waits on itself can never be edited},
+  claim  = {A file that waits on itself can never be edited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_a_file_waiting_on_itself_is_a_cycle},
+}
+
+@misc{debtplan-cycle-the-cycle-starts-at-the-repeated-file-not-at-the-walk-start,
+  section = {cycle},
+  title  = {Where a leads into the loop b, c, the cycle is b, c, b, without a},
+  claim  = {Where a leads into the loop b, c, the cycle is b, c, b, without a.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_the_cycle_starts_at_the_repeated_file_not_at_the_walk_start},
+}
+
+@misc{debtplan-cycle-a-cycle-is-found-from-a-later-start,
+  section = {cycle},
+  title  = {The walk covers every file, so a loop apart from the first file's component is found},
+  claim  = {The walk covers every file, so a loop apart from the first file's component is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_a_cycle_is_found_from_a_later_start},
+}
+
+@misc{debtplan-reduce-a-shortcut-wait-is-dropped,
+  section = {reduce},
+  title  = {A top that waits on mid and leaf, with mid waiting on leaf, waits on mid alone},
+  claim  = {A top that waits on mid and leaf, with mid waiting on leaf, waits on mid alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reduce.py -k test_a_shortcut_wait_is_dropped},
+}
+
+@misc{debtplan-reduce-independent-waits-are-both-kept,
+  section = {reduce},
+  title  = {Two leaves neither of which implies the other are both direct waits},
+  claim  = {Two leaves neither of which implies the other are both direct waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reduce.py -k test_independent_waits_are_both_kept},
+}
+
+@misc{debtplan-reduce-the-direct-waits-are-sorted,
+  section = {reduce},
+  title  = {The reduction is deterministic whatever order the waits arrived in},
+  claim  = {The reduction is deterministic whatever order the waits arrived in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reduce.py -k test_the_direct_waits_are_sorted},
+}
+
+@misc{debtplan-reduce-a-file-that-waits-on-nothing-has-no-direct-waits,
+  section = {reduce},
+  title  = {A leaf maps to the empty tuple, and a graph of no rows to the empty dict},
+  claim  = {A leaf maps to the empty tuple, and a graph of no rows to the empty dict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reduce.py -k test_a_file_that_waits_on_nothing_has_no_direct_waits},
+}
+
+@misc{debtplan-reduce-the-closure-of-the-reduction-is-the-original-waits,
+  section = {reduce},
+  title  = {No order is lost: walking the direct waits reaches exactly each file's full waits},
+  claim  = {No order is lost: walking the direct waits reaches exactly each file's full waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reduce.py -k test_the_closure_of_the_reduction_is_the_original_waits},
+}
+
+@misc{debtplan-plan-waits-come-from-the-closure-without-the-file-itself,
+  section = {plan},
+  title  = {A file waits on every debt file in its closure, and not on itself},
+  claim  = {A file waits on every debt file in its closure, and not on itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_waits_come_from_the_closure_without_the_file_itself},
+}
+
+@misc{debtplan-plan-mutual-importers-do-not-wait-on-each-other,
+  section = {plan},
+  title  = {Each reaches the other, so the wait between them is dropped on both sides},
+  claim  = {Each reaches the other, so the wait between them is dropped on both sides.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_mutual_importers_do_not_wait_on_each_other},
+}
+
+@misc{debtplan-plan-a-closure-member-that-is-not-debt-is-not-a-wait,
+  section = {plan},
+  title  = {Only debt files are waited on: a clean file in the closure is not},
+  claim  = {Only debt files are waited on: a clean file in the closure is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_closure_member_that_is_not_debt_is_not_a_wait},
+}
+
+@misc{debtplan-plan-a-chain-waits-transitively-and-lists-its-dependents,
+  section = {plan},
+  title  = {Top waits on mid and leaf; the leaf is waited on by both and comes first},
+  claim  = {Top waits on mid and leaf; the leaf is waited on by both and comes first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_chain_waits_transitively_and_lists_its_dependents},
+}
+
+@misc{debtplan-plan-a-file-importing-only-clean-modules-is-ready,
+  section = {plan},
+  title  = {With no universe, imports of files outside the ledger are not waits},
+  claim  = {With no universe, imports of files outside the ledger are not waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_file_importing_only_clean_modules_is_ready},
+}
+
+@misc{debtplan-plan-the-closure-runs-through-a-clean-module-given-the-universe,
+  section = {plan},
+  title  = {A imports clean, which imports the debt file: A waits on it once the universe names clean},
+  claim  = {A imports clean, which imports the debt file: A waits on it once the universe names clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_the_closure_runs_through_a_clean_module_given_the_universe},
+}
+
+@misc{debtplan-plan-mutual-importers-are-each-ready-but-wait-on-a-leaf-outside,
+  section = {plan},
+  title  = {Two files importing each other do not block on each other; each still waits on the leaf},
+  claim  = {Two files importing each other do not block on each other; each still waits on the leaf.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_mutual_importers_are_each_ready_but_wait_on_a_leaf_outside},
+}
+
+@misc{debtplan-plan-a-ring-of-imports-is-all-ready,
+  section = {plan},
+  title  = {Three files importing in a ring reach each other, so none waits on another},
+  claim  = {Three files importing in a ring reach each other, so none waits on another.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_ring_of_imports_is_all_ready},
+}
+
+@misc{debtplan-plan-a-file-importing-itself-is-ready,
+  section = {plan},
+  title  = {A self-import is not a wait},
+  claim  = {A self-import is not a wait.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_file_importing_itself_is_ready},
+}
+
+@misc{debtplan-plan-an-unsettled-name-is-reported-with-the-file-that-wrote-it,
+  section = {plan},
+  title  = {Two files named a, none beside the importer: no wait, and the name is returned},
+  claim  = {Two files named a, none beside the importer: no wait, and the name is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_an_unsettled_name_is_reported_with_the_file_that_wrote_it},
+}
+
+@misc{debtplan-plan-a-plan-with-nothing-unsettled-reports-nothing,
+  section = {plan},
+  title  = {The ambiguity report is empty when every name settled},
+  claim  = {The ambiguity report is empty when every name settled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_plan_with_nothing_unsettled_reports_nothing},
+}
+
+@misc{debtplan-plan-a-cyclic-wait-graph-is-refused,
+  section = {plan},
+  title  = {The check refuses a graph that could block its cards, naming the cycle},
+  claim  = {The check refuses a graph that could block its cards, naming the cycle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_cyclic_wait_graph_is_refused},
+}

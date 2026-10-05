@@ -1,0 +1,6 @@
+# rubric.tsv — the sections of the debtplan warrant set, one per test module, in document order.
+# key <TAB> heading title
+rows	The Rows: A File Is Ready When It Waits on Nothing, and Ready Files Sort First
+cycle	The Cycle Check: A Wait Graph That Could Block Its Own Cards Is Found and Named
+reduce	The Reduction: A Wait Another Wait Implies Is Dropped, and the Order Is Unchanged
+plan	The Plan: Waits Follow the Import Closure Strictly, a Cycle Is One Unit, and What Could Not Be Settled Is Reported

@@ -1,0 +1,107 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# ⚑ luthen-observability's `checks/mypy_plan`, drained into mtools (mtools:W790) and atomized: the
+# import resolver went into `mikemol-importdag` (`resolve`), and this distribution is the planning
+# core over it. First unit: rows, cycle check, reduction, plan. The queue writer and the command line
+# (which bring in `mikemol-pathsforward`) are the second unit.
+name = "mikemol-debtplan"
+version = "0.1.0"
+description = "Plan the pay-down of a per-file debt ledger: leaves first, direct waits only, a cycle refused rather than blocked on."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{name = "Mike Mol"}]
+license = "Apache-2.0"
+keywords = ["debt", "typing", "import-graph", "planning"]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+
+# ⚑ A DIST-TO-DIST EDGE (mtools:W562): the sibling, resolved by uv as a NON-editable path source (an
+# editable install installs a finder hook that mypy cannot resolve). `mikemol-atomicwrite` is
+# importdag's own dependency, listed under [tool.uv.sources] only: uv reads the sources of the root
+# project, not of a path dependency. Bazel carries the edges as py_library deps in BUILD.bazel; the pip
+# hubs do not resolve them, and requirements.txt is deliberately NOT regenerated. The declarations
+# are kept in step by hand.
+dependencies = ["mikemol-importdag"]
+
+[project.urls]
+Homepage = "https://github.com/mikemol/mtools"
+
+[dependency-groups]
+# ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
+dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# ⚑⚑ NO `src/mikemol/__init__.py`: PEP 420 implicit namespace, shared with the siblings.
+include = ["mikemol.*"]
+
+[tool.setuptools.package-data]
+"mikemol.debtplan" = ["py.typed"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-importdag = { path = "../importdag" }
+mikemol-atomicwrite = { path = "../atomicwrite" }
+
+[tool.pytest.ini_options]
+empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
+testpaths = ["tests"]
+norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache__"]  # backstop: with tests/ absent the runner falls back to rootdir and walks these (measured by linux-sources, W297)
+addopts = "--strict-markers --strict-config"
+markers = []
+
+# ⚑⚑ THE SIBLINGS' FULL STRICT BLOCK, unchanged. See ratchet/pyproject.toml for why each key.
+[tool.mypy]
+strict = true
+extra_checks = true
+strict_equality = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+python_version = "3.13"
+warn_unused_ignores = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+namespace-packages = ["src/mikemol", "tests"]
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+# ⚑ THE SIBLINGS ARE THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike. Left
+# to detection, a venv that has a sibling installed classifies it with this package's own imports,
+# while the sandbox (no venv) puts it in its own block: the ratchet and the per-edit hook then demand
+# opposite layouts of the same file (mtools:W547).
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.importdag", "mikemol.atomicwrite"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+# ⚑⚑ COPIED FROM ratchet/pyproject.toml, which carries the P/F arms this pattern was measured by.
+# A TOML literal string: in a basic string `\.` is an invalid escape.
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
+
+# ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
+# nobody chose for it; each line below is one module that needs it.
+[tool.ruff.lint.per-file-ignores]
+"tests/test_rows.py" = ["assert"]
+"tests/test_cycle.py" = ["assert"]
+"tests/test_reduce.py" = ["assert"]
+"tests/test_plan.py" = ["assert"]
