@@ -1838,3 +1838,150 @@ def test_placement_refuses_an_override_that_names_no_form(
     assert cli.main(["placement", flag, " , ", str(target)]) == _REFUSED
     out = capsys.readouterr().out
     assert f"{flag} names no form" in out
+
+
+def _artifact_files(tmp_path: Path) -> tuple[Path, Path, Path]:
+    failure = tmp_path / "f.py"
+    success = tmp_path / "s.py"
+    both = tmp_path / "b.py"
+    failure.write_text('p = "out.log"\n', encoding="utf-8")
+    success.write_text('p = "out.ok"\n', encoding="utf-8")
+    both.write_text('a = "out.log"\nb = "out.ok"\n', encoding="utf-8")
+    return failure, success, both
+
+
+_ARTIFACT_FLAGS = ["--failure", ".log", "--success", ".ok"]
+
+
+def test_artifacts_grades_each_file_failure_success_or_both(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W667: a file reading a failure artifact is FAILURE, a success-only one SUCCESS, both BOTH."""
+    failure, success, both = _artifact_files(tmp_path)
+    paths = [str(failure), str(success), str(both)]
+    assert cli.main(["artifacts", *_ARTIFACT_FLAGS, *paths]) == 0
+    out = capsys.readouterr().out
+    assert f"artifacts FAILURE {failure} .log\n" in out
+    assert f"artifacts SUCCESS {success} .ok\n" in out
+    assert f"artifacts BOTH {both} .log,.ok\n" in out
+
+
+def test_artifacts_with_no_artifact_says_what_it_searched(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W667: a file naming no artifact is no row, and the empty result says what was searched."""
+    plain = tmp_path / "plain.py"
+    plain.write_text("x = 1\n", encoding="utf-8")
+    assert cli.main(["artifacts", *_ARTIFACT_FLAGS, str(plain)]) == 0
+    assert "artifacts: searched 1 file(s), found none" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("flag", ["--failure", "--success"])
+def test_artifacts_refuses_a_missing_vocabulary_flag(
+    flag: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W667: a vocabulary left out refuses (exit 2), naming it; no artifact name is guessed."""
+    other = "--success" if flag == "--failure" else "--failure"
+    target = tmp_path / "x.py"
+    target.write_text("x = 1\n", encoding="utf-8")
+    assert cli.main(["artifacts", other, ".x", str(target)]) == _REFUSED
+    assert f"{flag[2:]} is required" in capsys.readouterr().out
+
+
+def test_artifacts_refuses_an_empty_vocabulary(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W667: an empty vocabulary measures nothing, so it refuses (exit 2) and reads no clean."""
+    target = tmp_path / "x.py"
+    target.write_text('p = "out.log"\n', encoding="utf-8")
+    code = cli.main(["artifacts", "--failure", " , ", "--success", ".ok", str(target)])
+    assert code == _REFUSED
+    out = capsys.readouterr().out
+    assert "non-empty" in out
+    assert "artifacts FAILURE" not in out
+
+
+def test_artifacts_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W667: an unread file is a skip in the banner, never a clean "no artifact reader"."""
+    failure, _success, _both = _artifact_files(tmp_path)
+    bad = tmp_path / "bad.py"
+    bad.write_text("def (:\n", encoding="utf-8")
+    assert cli.main(["artifacts", *_ARTIFACT_FLAGS, str(failure), str(bad)]) == 0
+    out = capsys.readouterr().out
+    assert "read 1 of 2 file(s); 1 skipped" in out
+    assert f"artifacts FAILURE {failure} .log" in out
+
+
+_TOUCHES_SOURCE = (
+    "import os.path\n\n\n"
+    "def witness(root, name):\n"
+    '    first = os.path.join(root, "scripts", "a.py")\n'
+    '    second = os.path.join(root, "scripts", name)\n'
+    '    flag = "--set"\n'
+    "    return first, second, flag\n"
+)
+
+
+def _touches(tmp_path: Path, *extra: str) -> list[str]:
+    target = tmp_path / "w.py"
+    target.write_text(_TOUCHES_SOURCE, encoding="utf-8")
+    flags = ["--root-names", "root", "--module-dirs", "", "--base", str(tmp_path)]
+    return ["touches", "witness", *flags, *extra, str(target)]
+
+
+def test_touches_names_the_files_symbols_and_unresolved_joins_a_function_reads(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W668: a literal join is a file, a flag literal a symbol, a non-literal join unresolved."""
+    assert cli.main(_touches(tmp_path)) == 0
+    out = capsys.readouterr().out
+    assert "touches file scripts/a.py\n" in out
+    assert "touches symbol --set\n" in out
+    assert "touches unresolved scripts\n" in out
+
+
+@pytest.mark.parametrize("flag", ["--root-names", "--module-dirs", "--base"])
+def test_touches_refuses_a_missing_operand_flag(
+    flag: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W668: a root, module dir or base left out refuses (exit 2), naming it; none is guessed."""
+    argv = _touches(tmp_path)
+    at = argv.index(flag)
+    del argv[at : at + 2]
+    assert cli.main(argv) == _REFUSED
+    assert f"{flag[2:]} is required" in capsys.readouterr().out
+
+
+def test_touches_of_a_function_the_file_does_not_define_refuses(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W668: a missing function is exit 2 naming it, never an empty "reads nothing"."""
+    argv = _touches(tmp_path)
+    argv[1] = "absent"
+    assert cli.main(argv) == _REFUSED
+    out = capsys.readouterr().out
+    assert "no function 'absent'" in out
+    assert "touches file" not in out
+
+
+def test_touches_reads_exactly_one_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """W668: a function is looked up in one file, so a second path refuses (exit 2)."""
+    other = tmp_path / "o.py"
+    other.write_text("x = 1\n", encoding="utf-8")
+    argv = _touches(tmp_path)
+    argv.insert(-1, str(other))
+    assert cli.main(argv) == _REFUSED
+    assert "exactly one file, got 2" in capsys.readouterr().out
+
+
+def test_touches_over_an_unparseable_file_reports_incomplete(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W668: an unread file is a skip in the banner and exit 1, never a clean "reads nothing"."""
+    bad = tmp_path / "bad.py"
+    bad.write_text("def (:\n", encoding="utf-8")
+    flags = ["--root-names", "", "--module-dirs", "", "--base", str(tmp_path)]
+    assert cli.main(["touches", "witness", *flags, str(bad)]) == 1
+    assert "read 0 of 1 file(s); 1 skipped" in capsys.readouterr().out

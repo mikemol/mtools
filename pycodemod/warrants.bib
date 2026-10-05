@@ -5282,3 +5282,74 @@
             nothing".},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_referents_of_none_raises_where_the_origin_returned_the_empty_set},
 }
+
+@misc{pycodemod-cli-artifacts-grades-each-file-failure-success-or-both,
+  section = {cli},
+  title  = {W667: a file reading a failure artifact is FAILURE, a success-only one SUCCESS, both BOTH},
+  claim  = {W667: a file reading a failure artifact is FAILURE, a success-only one SUCCESS, both
+            BOTH.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_artifacts_grades_each_file_failure_success_or_both},
+}
+
+@misc{pycodemod-cli-artifacts-with-no-artifact-says-what-it-searched,
+  section = {cli},
+  title  = {W667: a file naming no artifact is no row, and the empty result says what was searched},
+  claim  = {W667: a file naming no artifact is no row, and the empty result says what was searched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_artifacts_with_no_artifact_says_what_it_searched},
+}
+
+@misc{pycodemod-cli-artifacts-refuses-a-missing-vocabulary-flag,
+  section = {cli},
+  title  = {W667: a vocabulary left out refuses (exit 2), naming it; no artifact name is guessed},
+  claim  = {W667: a vocabulary left out refuses (exit 2), naming it; no artifact name is guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_artifacts_refuses_a_missing_vocabulary_flag},
+}
+
+@misc{pycodemod-cli-artifacts-refuses-an-empty-vocabulary,
+  section = {cli},
+  title  = {W667: an empty vocabulary measures nothing, so it refuses (exit 2) and reads no clean},
+  claim  = {W667: an empty vocabulary measures nothing, so it refuses (exit 2) and reads no clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_artifacts_refuses_an_empty_vocabulary},
+}
+
+@misc{pycodemod-cli-artifacts-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {W667: an unread file is a skip in the banner, never a clean "no artifact reader"},
+  claim  = {W667: an unread file is a skip in the banner, never a clean "no artifact reader".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_artifacts_over_an_unparseable_file_reports_incomplete},
+}
+
+@misc{pycodemod-cli-touches-names-the-files-symbols-and-unresolved-joins-a-function-reads,
+  section = {cli},
+  title  = {W668: a literal join is a file, a flag literal a symbol, a non-literal join unresolved},
+  claim  = {W668: a literal join is a file, a flag literal a symbol, a non-literal join unresolved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_touches_names_the_files_symbols_and_unresolved_joins_a_function_reads},
+}
+
+@misc{pycodemod-cli-touches-refuses-a-missing-operand-flag,
+  section = {cli},
+  title  = {W668: a root, module dir or base left out refuses (exit 2), naming it; none is guessed},
+  claim  = {W668: a root, module dir or base left out refuses (exit 2), naming it; none is guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_touches_refuses_a_missing_operand_flag},
+}
+
+@misc{pycodemod-cli-touches-of-a-function-the-file-does-not-define-refuses,
+  section = {cli},
+  title  = {W668: a missing function is exit 2 naming it, never an empty "reads nothing"},
+  claim  = {W668: a missing function is exit 2 naming it, never an empty "reads nothing".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_touches_of_a_function_the_file_does_not_define_refuses},
+}
+
+@misc{pycodemod-cli-touches-reads-exactly-one-file,
+  section = {cli},
+  title  = {W668: a function is looked up in one file, so a second path refuses (exit 2)},
+  claim  = {W668: a function is looked up in one file, so a second path refuses (exit 2).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_touches_reads_exactly_one_file},
+}
+
+@misc{pycodemod-cli-touches-over-an-unparseable-file-reports-incomplete,
+  section = {cli},
+  title  = {W668: an unread file is a skip in the banner and exit 1, never a clean "reads nothing"},
+  claim  = {W668: an unread file is a skip in the banner and exit 1, never a clean "reads nothing".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_touches_over_an_unparseable_file_reports_incomplete},
+}

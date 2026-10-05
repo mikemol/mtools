@@ -201,6 +201,22 @@ def _handle_sql(ns: argparse.Namespace) -> int:
     )
 
 
+def _handle_artifacts(ns: argparse.Namespace) -> int:
+    return cli_modes.print_artifacts(
+        _str_list(ns, "paths"), _opt_str(ns, "failure"), _opt_str(ns, "success")
+    )
+
+
+def _handle_touches(ns: argparse.Namespace) -> int:
+    return cli_modes.print_touches(
+        _str(ns, "function"),
+        _str_list(ns, "paths"),
+        _opt_str(ns, "root_names"),
+        _opt_str(ns, "module_dirs"),
+        _opt_str(ns, "base"),
+    )
+
+
 _run_funcnames: Callable[[Sequence[str]], FuncCalls] | None
 _moved: type[Exception]
 try:
@@ -226,8 +242,6 @@ RETIRED: dict[str, str] = {
 # (queue.md PYCODEMOD CENSUS/SQL/CONTROL/FINGERPRINT SURVEY), never ported here.
 _DO_NOT_PORT_NAMES = (
     "types",
-    "artifacts",
-    "touches",
     "projects",
     "discriminates",
     "collision-apex",
@@ -1076,6 +1090,8 @@ MODES = {
     "registered": _handle_registered,
     "sql": _handle_sql,
     "portable": _handle_portable,
+    "artifacts": _handle_artifacts,
+    "touches": _handle_touches,
     "rawreads": _handle_rawreads,
     "snapshots": _handle_snapshots,
     "relalg": _handle_relalg,
@@ -1278,6 +1294,16 @@ def _add_required_modes(make: _Make) -> None:
     sql.add_argument("paths", nargs="+")
     prt = make("portable", "SQL literals a dialect pattern rejects (no engine probe is attached)")
     prt.add_argument("paths", nargs="+")
+    art = make("artifacts", "which files read a failure-bearing or success-only build artifact")
+    art.add_argument("--failure", default=None, help="comma list: artifacts a failure can hold")
+    art.add_argument("--success", default=None, help="comma list: artifacts a failure cannot hold")
+    art.add_argument("paths", nargs="+")
+    tch = make("touches", "the files and flags one named function reads, binding-followed")
+    tch.add_argument("--root-names", default=None, help="comma list: join parts naming the root")
+    tch.add_argument("--module-dirs", default=None, help="comma list: dirs an import resolves in")
+    tch.add_argument("--base", default=None, help="the directory the module dirs sit under")
+    tch.add_argument("function", help="the function to read, defined in the one file given")
+    tch.add_argument("paths", nargs="+")
 
 
 def _add_store_modes(make: _Make) -> None:

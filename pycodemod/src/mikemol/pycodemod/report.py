@@ -115,6 +115,10 @@ def note(text: str) -> None:
 def found_none(mode: str, searched: int) -> str:
     """Return the line an empty census prints: what it searched, and that it found none.
 
+    ⚑ `searched N` COUNTS THE FILES NAMED, after directory expansion, a file that could not be read
+    included (W665). On a partial scan the incomplete banner printed above says how many were READ,
+    so the two lines together give both denominators and neither is the other's estimate.
+
     Returns:
         `<mode>: searched N file(s), found none`.
 

@@ -1078,3 +1078,6 @@
 2026-10-05T04:23:11Z  tick  W588 advanced  sweep     "second batch: W588 pre-push stub, W658 pycodemod --exclude, W656 dead --registered-prefix, W596 placement form overrides"  evidence=pycodemod 871 passed; bazel pycodemod hooks mdstruct pathwalk shellcheck_githooks 153 of 153
 2026-10-05T04:32:33Z  hash  --   diverged  --        "divergence: payload v2:67f70f92df5df46b, file v2:37282db7d9d93737; the FILE wins"
 2026-10-05T04:39:48Z  tick  W663 advanced  sweep     "W663 declared (ASCII snippets, pinned) and W664 declared (U2-U5 confirmed or argued); W592 nudge already covered by the inbox letter 2026-10-04-mtools-transcriptstruct-repoint"  evidence=pycodemod 873 passed; bazel //pycodemod/... green
+2026-10-05T04:54:56Z  tick  W667 minted    -         "pycodemod cli: wire the artifacts mode over artifact_readers, both vocabularies required flags, and drop its DO_NOT_PORT spelling"  evidence=W652
+2026-10-05T04:54:57Z  tick  W668 minted    -         "pycodemod cli: wire the touches mode over reads.function_reads with root names and module dirs as required flags, and drop its DO_NOT_PORT spelling"  evidence=W652
+2026-10-05T05:06:55Z  tick  W652 advanced  sweep     "W652 checklist closed; W667 artifacts and W668 touches wired; W665 and W666 decided; W654 widened to five modes by measurement"  evidence=pycodemod 884 passed; bazel hooks and pycodemod green

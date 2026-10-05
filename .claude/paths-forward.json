@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 666,
+  "counter": 668,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T04:40:22Z",
   "job_id": "41bd4893",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 54,
+      "ticks_blocked": 55,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 59,
+      "ticks_blocked": 60,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -12938,20 +12938,21 @@
     {
       "symbol": "W652",
       "title": "pycodemod cli: drop each DO_NOT_PORT redirect whose library is ported (control, fingerprint, sql, portable and others) as its mode wires, and update the test that pins the redirects",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "List every cli.py DO_NOT_PORT and RETIRED spelling against the ported modules; the redirect is removed in the SAME commit that wires the mode (W639 control, W641 fingerprint, W631 sql, W632 portable, W634 relalg and snapshots), so this card is a checklist: verify none is left stale after those land",
-      "evidence": "2026-10-05: 2026-10-05 W639 removed control from DO_NOT_PORT in the same commit that wired the mode (the pattern this card checks); remaining redirects to drop as modes wire: fingerprint (W641), sql (W631), portable (W632), relalg and snapshots (W634)",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 W639 removed control from DO_NOT_PORT in the same commit that wired the mode (the pattern this card checks); remaining redirects to drop as modes wire: fingerprint (W641), sql (W631), portable (W632), relalg and snapshots (W634) | 2026-10-05: 2026-10-05 checklist run against cli.py: RETIRED holds fix-owes-callers and sqlname (both name their successors); DO_NOT_PORT is now types, projects, discriminates, collision-apex and last, each with no ported library (W649: last and collision-apex declined on merit). Of the six this card named, control, fingerprint, sql, portable, relalg and snapshots were dropped by W639, W641, W631, W632 and W634 in the commits that wired them. Two it did not name had ported libraries and a stale redirect: artifacts (artifacts.py) and touches (reads.py); minted W667 and W668 and wired both in this commit. Rubric heading now Fifty-Seven Modes",
       "issued_at": "2026-10-05T02:03:46Z",
       "minted_during": "interrupt",
       "caused_by": "W649",
-      "last_worked": "2026-10-05T02:16:07Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T04:58:57Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T045857Z"
     },
     {
       "symbol": "W653",
@@ -12981,12 +12982,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read control_census and storeflow for where connections matters; if no control site depends on it, build the StoreVocab for these modes without a required flag the census ignores and say so in the docstring; test that a connections value changes a result, or that it is not asked for",
-      "evidence": "",
+      "next_bounded_step": "MEASURED 2026-10-05: StoreVocab.connections is read in exactly one place, storeflow._is_connection_execute, reached only by rawread_sites (attr-reads connections over the package: that line plus control_report.operands). So FIVE modes require --connections and never read it: control, constructs, fingerprint, snapshots, relalg (rawreads is the one that uses it). Plan: those five build StoreVocab with connections=frozenset() and drop the flag (argparse then rejects it); control_report.operands, cli_store and cli_fp change, and about a dozen test_cli.py sites (_CENSUS_FLAGS, the missing-flag parametrizations for control/constructs/fingerprint/snapshots/relalg); docstring says why connections is not asked; keep rawreads' --connections; a test that a rawreads result changes with it",
+      "evidence": "2026-10-05: 2026-10-05 premise widened by measurement: not just control, five modes (see next)",
       "issued_at": "2026-10-05T02:15:54Z",
       "minted_during": "interrupt",
       "caused_by": "W639",
-      "last_worked": null,
+      "last_worked": "2026-10-05T04:58:56Z",
       "ticks_blocked": 0
     },
     {
@@ -13184,38 +13185,78 @@
     {
       "symbol": "W665",
       "title": "pycodemod --require-hits: a partial scan with zero rows prints 'searched N' counting the skipped file, though the banner above says fewer were read",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Decide in cli._run_mode whether 'searched N' should be the files read (the banner's count) or stay the files named; test_require_hits_over_a_partial_scan_with_zero_rows_keeps_the_incomplete_exit pins the current wording, so it changes with the answer. Wait for the cli.py wiring fixer to land first",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 decided: KEEP the wording, state it. 'searched N' counts the files named after expansion, a file that could not be read included; the incomplete banner printed above it on a partial scan says how many were read, so the two lines give both denominators. Declared in report.found_none's docstring; test_require_hits_over_a_partial_scan_with_zero_rows_keeps_the_incomplete_exit already pins the wording",
       "issued_at": "2026-10-05T03:23:02Z",
       "minted_during": "tick",
       "caused_by": "W660",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T05:03:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T050319Z"
     },
     {
       "symbol": "W666",
       "title": "pycodemod: review the sqlname spelling now refused as RETIRED naming registered, and retitle the githook-post-commit rubric row that still ends 'and No Push'",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Two one-line reviews: (1) cli.RETIRED sqlname -> registered keeps summit's census table honest, or restore sqlname as an alias; (2) hooks/rubric.tsv githook-post-commit title no longer true now the hook pushes (W661/W662 tests); each is a sed on one line plus a changed-title note",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 (1) sqlname stays RETIRED naming registered: a named refusal tells a caller the successor where an unknown subcommand names nothing, and summit's table lists sqlname as the spelling it knew; no alias, since the operands differ (a required PREFIX the origin hard-coded). (2) hooks/rubric.tsv githook-post-commit retitled: the shared Python hook still never pushes, the repo's own shell hook does and now says why a push stopped, so the old title was true of half the section; the section title now says both",
       "issued_at": "2026-10-05T03:29:22Z",
       "minted_during": "tick",
       "caused_by": "W657",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T05:03:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T050320Z"
+    },
+    {
+      "symbol": "W667",
+      "title": "pycodemod cli: wire the artifacts mode over artifact_readers, both vocabularies required flags, and drop its DO_NOT_PORT spelling",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 artifacts PATHS --failure CSV --success CSV wired over artifact_readers (cli_modes.print_artifacts); both vocabularies required flags, a missing one refuses exit 2 naming it, an empty one refuses via the library's ValueError; rows 'artifacts BEARING path names'; DO_NOT_PORT spelling dropped. 5 test functions (6 cases), 5 warrants; F-arms: swapping the two vocabularies at the handler failed 4, making the empty-vocabulary refusal exit 0 failed 1; suite 884 passed",
+      "issued_at": "2026-10-05T04:54:56Z",
+      "minted_during": "tick",
+      "caused_by": "W652",
+      "last_worked": "2026-10-05T04:58:58Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T045858Z"
+    },
+    {
+      "symbol": "W668",
+      "title": "pycodemod cli: wire the touches mode over reads.function_reads with root names and module dirs as required flags, and drop its DO_NOT_PORT spelling",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 touches FUNCTION PATH --root-names CSV --module-dirs CSV --base DIR wired over reads.function_reads (cli_modes.print_touches); the three flags required (the two lists may be empty), exactly one file (a function is looked up in one), a function the file does not define refuses exit 2 naming it; rows touches file|symbol|unresolved; DO_NOT_PORT spelling dropped. 5 test functions (7 cases), 5 warrants; F-arms: the one-file rule never firing failed 1, dropping the root names failed 1; suite 884 passed",
+      "issued_at": "2026-10-05T04:54:57Z",
+      "minted_during": "tick",
+      "caused_by": "W652",
+      "last_worked": "2026-10-05T04:58:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T045859Z"
     }
   ],
   "residue": [

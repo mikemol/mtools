@@ -16,8 +16,10 @@ import sys
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
+from mikemol.pycodemod.artifacts import artifact_readers
 from mikemol.pycodemod.placement import ENTRY_FORMS, FIRST_WRITE_FORMS
 from mikemol.pycodemod.portable import Probe, portable_sites
+from mikemol.pycodemod.reads import function_reads
 from mikemol.pycodemod.registered import registered_defs
 from mikemol.pycodemod.sql import SqlConfig, sql_sites
 
@@ -29,6 +31,73 @@ if TYPE_CHECKING:
 REFUSED = 2
 _ABSENT = "-"
 _NO_PROBE = Probe(reason="no probe attached: the CLI opens no database")
+
+
+def print_touches(
+    function: str,
+    paths: Sequence[str],
+    root_names: str | None,
+    module_dirs: str | None,
+    base: str | None,
+) -> int:
+    """Print the files and flag symbols one function reads, and the joins it left unresolved (W668).
+
+    Rows: `touches file PATH`, `touches symbol NAME`, `touches unresolved JOIN`. A path is a
+    constant: a join with a non-literal part is `unresolved`, never approximated. The root names,
+    the module directories and the base are required flags (the first two may be empty lists); the
+    mode reads exactly one file, because a function is looked up in one.
+
+    Returns:
+        2 for a missing flag, a path count other than one, or a function not defined in the file;
+        else the shared incomplete-scan code.
+
+    """
+    missing = refusal((("root-names", root_names), ("module-dirs", module_dirs), ("base", base)))
+    if missing:
+        sys.stdout.write(f"{missing}\n")
+        return REFUSED
+    if len(paths) != 1:
+        sys.stdout.write(f"refused: touches reads exactly one file, got {len(paths)}\n")
+        return REFUSED
+    roots = sorted(csv(root_names or ""))
+    dirs = sorted(csv(module_dirs or ""))
+    try:
+        result = function_reads(paths[0], function, roots, dirs, base or "")
+    except LookupError as exc:
+        sys.stdout.write(f"refused: {exc}\n")
+        return REFUSED
+    for name in result.files:
+        sys.stdout.write(f"touches file {name}\n")
+    for name in result.symbols:
+        sys.stdout.write(f"touches symbol {name}\n")
+    for name in result.unresolved:
+        sys.stdout.write(f"touches unresolved {name}\n")
+    return denominator(result.skipped, len(paths))
+
+
+def print_artifacts(paths: Sequence[str], failure: str | None, success: str | None) -> int:
+    """Print each file that reads a build artifact, FAILURE, SUCCESS or BOTH (W667).
+
+    One `artifacts` row per file: `artifacts BEARING path names`, the failure names first. Both
+    vocabularies are required comma lists and an empty one is refused, because an empty vocabulary
+    measures nothing and must not read as a clean census.
+
+    Returns:
+        2 when a vocabulary is missing or empty, else the shared incomplete-scan code.
+
+    """
+    missing = refusal((("failure", failure), ("success", success)))
+    if missing:
+        sys.stdout.write(f"{missing}\n")
+        return REFUSED
+    try:
+        result = artifact_readers(paths, sorted(csv(failure or "")), sorted(csv(success or "")))
+    except ValueError as exc:
+        sys.stdout.write(f"refused: {exc}\n")
+        return REFUSED
+    for row in result.rows:
+        sys.stdout.write(f"artifacts {row.bearing} {row.path} {','.join(row.artifacts)}\n")
+    return denominator(result.skipped, len(paths))
 
 
 def _forms(flag: str, text: str | None, default: Sequence[str]) -> tuple[str, ...]:
