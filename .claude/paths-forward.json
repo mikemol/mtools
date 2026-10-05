@@ -13344,20 +13344,8 @@
       "title": "mtools typing: mdstruct/src/mikemol/mdstruct/pandoc.py (10 findings)",
       "status": "ready",
       "enables": [
-        "W786",
-        "W780",
-        "W764",
-        "W765",
         "W729",
-        "W769",
-        "W787",
-        "W770",
-        "W757",
-        "W742",
-        "W771",
-        "W751",
-        "W758",
-        "W772"
+        "W742"
       ],
       "touches": [
         "typing",
@@ -13370,7 +13358,7 @@
       "issued_at": "2026-10-05T17:27:25Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:40Z",
+      "last_worked": "2026-10-05T18:03:26Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13381,13 +13369,9 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/lock.py (9 findings)",
       "status": "ready",
       "enables": [
-        "W789",
-        "W755",
-        "W788",
-        "W737",
         "W734",
-        "W774",
-        "W779"
+        "W737",
+        "W774"
       ],
       "touches": [
         "typing",
@@ -13400,7 +13384,7 @@
       "issued_at": "2026-10-05T17:27:25Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:40Z",
+      "last_worked": "2026-10-05T18:03:26Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13411,12 +13395,7 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/sources.py (21 findings)",
       "status": "ready",
       "enables": [
-        "W775",
-        "W767",
-        "W753",
         "W730",
-        "W785",
-        "W782",
         "W743"
       ],
       "touches": [
@@ -13430,7 +13409,7 @@
       "issued_at": "2026-10-05T17:27:25Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:26Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13441,12 +13420,8 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/digest.py (6 findings)",
       "status": "ready",
       "enables": [
-        "W789",
-        "W788",
-        "W778",
-        "W752",
         "W738",
-        "W783"
+        "W752"
       ],
       "touches": [
         "typing",
@@ -13459,7 +13434,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13470,12 +13445,8 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/vector.py (6 findings)",
       "status": "ready",
       "enables": [
-        "W789",
         "W754",
-        "W788",
-        "W774",
-        "W779",
-        "W783"
+        "W774"
       ],
       "touches": [
         "typing",
@@ -13488,7 +13459,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13499,11 +13470,7 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/overlap.py (17 findings)",
       "status": "ready",
       "enables": [
-        "W789",
-        "W788",
-        "W778",
-        "W752",
-        "W783"
+        "W752"
       ],
       "touches": [
         "typing",
@@ -13516,7 +13483,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13527,11 +13494,7 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/timevalue.py (11 findings)",
       "status": "ready",
       "enables": [
-        "W789",
-        "W788",
-        "W774",
-        "W731",
-        "W779"
+        "W731"
       ],
       "touches": [
         "typing",
@@ -13544,7 +13507,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13555,11 +13518,8 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/gitrun.py (3 findings)",
       "status": "ready",
       "enables": [
-        "W776",
-        "W784",
         "W740",
-        "W768",
-        "W766"
+        "W768"
       ],
       "touches": [
         "typing",
@@ -13572,7 +13532,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13583,10 +13543,8 @@
       "title": "mtools typing: audiostruct/src/mikemol/audiostruct/stages.py (5 findings)",
       "status": "ready",
       "enables": [
-        "W741",
         "W736",
-        "W781",
-        "W756"
+        "W741"
       ],
       "touches": [
         "typing",
@@ -13599,7 +13557,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13610,10 +13568,10 @@
       "title": "mtools typing: gradekit/src/mikemol/gradekit/jsonio.py (18 findings)",
       "status": "ready",
       "enables": [
-        "W761",
         "W744",
         "W745",
-        "W746"
+        "W746",
+        "W761"
       ],
       "touches": [
         "typing",
@@ -13626,7 +13584,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:41Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13637,10 +13595,7 @@
       "title": "mtools typing: hooks/src/mikemol/hooks/structural_query.py (43 findings)",
       "status": "ready",
       "enables": [
-        "W786",
-        "W780",
-        "W732",
-        "W762"
+        "W732"
       ],
       "touches": [
         "typing",
@@ -13653,7 +13608,7 @@
       "issued_at": "2026-10-05T17:27:26Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13664,10 +13619,7 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/outcomes.py (12 findings)",
       "status": "ready",
       "enables": [
-        "W789",
-        "W754",
-        "W788",
-        "W783"
+        "W754"
       ],
       "touches": [
         "typing",
@@ -13680,7 +13632,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13691,10 +13643,7 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/store.py (8 findings)",
       "status": "ready",
       "enables": [
-        "W789",
-        "W788",
-        "W733",
-        "W778"
+        "W733"
       ],
       "touches": [
         "typing",
@@ -13707,7 +13656,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13718,10 +13667,7 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/ambient.py (3 findings)",
       "status": "ready",
       "enables": [
-        "W735",
-        "W776",
-        "W784",
-        "W768"
+        "W735"
       ],
       "touches": [
         "typing",
@@ -13734,7 +13680,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13745,9 +13691,7 @@
       "title": "mtools typing: transcriptstruct/src/mikemol/transcriptstruct/blocks.py (30 findings)",
       "status": "ready",
       "enables": [
-        "W773",
-        "W739",
-        "W759"
+        "W739"
       ],
       "touches": [
         "typing",
@@ -13760,7 +13704,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13771,7 +13715,6 @@
       "title": "mtools typing: hooks/src/mikemol/hooks/verdict.py (2 findings)",
       "status": "ready",
       "enables": [
-        "W786",
         "W780"
       ],
       "touches": [
@@ -13785,7 +13728,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13810,7 +13753,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13821,7 +13764,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/commitmsg.py (13 findings)",
       "status": "ready",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -13835,7 +13777,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13846,7 +13788,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/embargo.py (26 findings)",
       "status": "ready",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -13860,7 +13801,7 @@
       "issued_at": "2026-10-05T17:27:27Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:42Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13871,7 +13812,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/unlinked.py (20 findings)",
       "status": "ready",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -13885,7 +13825,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:28Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13896,7 +13836,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/vtodo.py (104 findings)",
       "status": "ready",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -13910,7 +13849,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13934,7 +13873,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13958,7 +13897,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -13982,7 +13921,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14006,7 +13945,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14030,7 +13969,7 @@
       "issued_at": "2026-10-05T17:27:28Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14054,7 +13993,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:43Z",
+      "last_worked": "2026-10-05T18:03:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14078,7 +14017,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14102,7 +14041,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14126,7 +14065,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14150,7 +14089,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14174,7 +14113,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14198,7 +14137,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14222,7 +14161,7 @@
       "issued_at": "2026-10-05T17:27:29Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14246,7 +14185,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14270,7 +14209,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:44Z",
+      "last_worked": "2026-10-05T18:03:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14294,7 +14233,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14318,7 +14257,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14342,7 +14281,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14364,7 +14303,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14386,7 +14325,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14408,7 +14347,7 @@
       "issued_at": "2026-10-05T17:27:30Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14430,7 +14369,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14452,7 +14391,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:45Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14474,7 +14413,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14496,7 +14435,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14518,7 +14457,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14540,7 +14479,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14562,7 +14501,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14584,7 +14523,7 @@
       "issued_at": "2026-10-05T17:27:31Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14606,7 +14545,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14628,7 +14567,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:46Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14650,7 +14589,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14672,7 +14611,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14694,7 +14633,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14716,7 +14655,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14727,18 +14666,12 @@
       "title": "mtools typing: mdstruct/src/mikemol/mdstruct/ast.py (20 findings)",
       "status": "blocked",
       "enables": [
-        "W786",
-        "W780",
+        "W751",
+        "W757",
+        "W758",
         "W764",
         "W765",
-        "W769",
-        "W787",
-        "W770",
-        "W757",
-        "W771",
-        "W751",
-        "W758",
-        "W772"
+        "W780"
       ],
       "touches": [
         "typing",
@@ -14753,7 +14686,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14764,11 +14697,7 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/result.py (8 findings)",
       "status": "blocked",
       "enables": [
-        "W775",
-        "W767",
-        "W753",
-        "W785",
-        "W782"
+        "W753"
       ],
       "touches": [
         "typing",
@@ -14783,7 +14712,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14794,10 +14723,7 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/recurrence.py (14 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
-        "W788",
-        "W774",
-        "W779"
+        "W774"
       ],
       "touches": [
         "typing",
@@ -14812,7 +14738,7 @@
       "issued_at": "2026-10-05T17:27:32Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:33Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14823,9 +14749,8 @@
       "title": "mtools typing: hooks/src/mikemol/hooks/shellcheck.py (49 findings)",
       "status": "blocked",
       "enables": [
-        "W786",
-        "W780",
-        "W762"
+        "W762",
+        "W780"
       ],
       "touches": [
         "typing",
@@ -14840,7 +14765,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14851,8 +14776,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/foreign.py (31 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
-        "W788",
         "W778"
       ],
       "touches": [
@@ -14868,7 +14791,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:47Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14879,9 +14802,7 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/ledger.py (9 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
-        "W755",
-        "W788"
+        "W755"
       ],
       "touches": [
         "typing",
@@ -14896,7 +14817,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14907,8 +14828,6 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/context.py (8 findings)",
       "status": "blocked",
       "enables": [
-        "W776",
-        "W784",
         "W768"
       ],
       "touches": [
@@ -14924,7 +14843,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14935,7 +14854,6 @@
       "title": "mtools typing: audiostruct/src/mikemol/audiostruct/gpu.py (1 findings)",
       "status": "blocked",
       "enables": [
-        "W781",
         "W756"
       ],
       "touches": [
@@ -14951,7 +14869,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14962,7 +14880,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/lease.py (57 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -14978,7 +14895,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -14989,7 +14906,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/render.py (33 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -15005,7 +14921,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15016,7 +14932,6 @@
       "title": "mtools typing: transcriptstruct/src/mikemol/transcriptstruct/provenance.py (19 findings)",
       "status": "blocked",
       "enables": [
-        "W773",
         "W759"
       ],
       "touches": [
@@ -15032,7 +14947,7 @@
       "issued_at": "2026-10-05T17:27:33Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15043,8 +14958,8 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/restore.py (23 findings)",
       "status": "blocked",
       "enables": [
-        "W784",
-        "W766"
+        "W766",
+        "W784"
       ],
       "touches": [
         "typing",
@@ -15059,7 +14974,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15085,7 +15000,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:48Z",
+      "last_worked": "2026-10-05T18:03:35Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15111,7 +15026,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:49Z",
+      "last_worked": "2026-10-05T18:03:35Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15137,7 +15052,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:49Z",
+      "last_worked": "2026-10-05T18:03:35Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15161,7 +15076,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:49Z",
+      "last_worked": "2026-10-05T18:03:35Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15185,7 +15100,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:49Z",
+      "last_worked": "2026-10-05T18:03:35Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15209,7 +15124,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:49Z",
+      "last_worked": "2026-10-05T18:03:35Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15233,7 +15148,7 @@
       "issued_at": "2026-10-05T17:27:34Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:49Z",
+      "last_worked": "2026-10-05T18:03:35Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15257,7 +15172,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:49Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15281,7 +15196,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15305,7 +15220,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15317,7 +15232,6 @@
       "status": "blocked",
       "enables": [
         "W769",
-        "W787",
         "W770",
         "W771",
         "W772"
@@ -15327,8 +15241,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673"
+        "W729"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15336,7 +15249,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15347,8 +15260,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/payload.py (85 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
-        "W788",
         "W778",
         "W783"
       ],
@@ -15366,7 +15277,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15377,18 +15288,14 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/read.py (28 findings)",
       "status": "blocked",
       "enables": [
-        "W775",
-        "W767",
-        "W785",
-        "W782"
+        "W767"
       ],
       "touches": [
         "typing",
         "mypy"
       ],
       "blocked_on": [
-        "W730",
-        "W675"
+        "W730"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15396,7 +15303,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15407,8 +15314,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/check.py (183 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
-        "W788",
         "W783"
       ],
       "touches": [
@@ -15425,7 +15330,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15436,7 +15341,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/atomize.py (17 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -15444,8 +15348,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W734",
-        "W674"
+        "W734"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15453,7 +15356,7 @@
       "issued_at": "2026-10-05T17:27:35Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15471,8 +15374,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W736",
-        "W681"
+        "W736"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15480,7 +15382,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15498,8 +15400,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673"
+        "W729"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15507,7 +15408,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15525,8 +15426,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673"
+        "W729"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15534,7 +15434,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:50Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15552,7 +15452,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W687",
         "W739"
       ],
       "blocked_kind": "agent",
@@ -15561,7 +15460,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:51Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15586,7 +15485,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:51Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15611,7 +15510,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:51Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15627,8 +15526,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W732",
-        "W683"
+        "W732"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15636,7 +15534,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:51Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15661,7 +15559,7 @@
       "issued_at": "2026-10-05T17:27:36Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:51Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15677,8 +15575,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673"
+        "W729"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15686,7 +15583,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:51Z",
+      "last_worked": "2026-10-05T18:03:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15702,8 +15599,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673"
+        "W729"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 2 debt file(s): clean those first",
@@ -15711,7 +15607,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:51Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15727,7 +15623,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W680",
         "W740"
       ],
       "blocked_kind": "agent",
@@ -15736,7 +15631,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15747,18 +15642,14 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/listing.py (23 findings)",
       "status": "blocked",
       "enables": [
-        "W775",
-        "W785",
-        "W782"
+        "W775"
       ],
       "touches": [
         "typing",
         "mypy"
       ],
       "blocked_on": [
-        "W753",
-        "W730",
-        "W675"
+        "W753"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 3 debt file(s): clean those first",
@@ -15766,7 +15657,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15777,15 +15668,13 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/snapshot.py (46 findings)",
       "status": "blocked",
       "enables": [
-        "W776",
-        "W784"
+        "W776"
       ],
       "touches": [
         "typing",
         "mypy"
       ],
       "blocked_on": [
-        "W686",
         "W735",
         "W680"
       ],
@@ -15795,7 +15684,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15813,8 +15702,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673",
         "W751"
       ],
       "blocked_kind": "agent",
@@ -15823,7 +15710,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15841,8 +15728,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673",
         "W751"
       ],
       "blocked_kind": "agent",
@@ -15851,7 +15736,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15869,8 +15754,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673",
         "W751"
       ],
       "blocked_kind": "agent",
@@ -15879,7 +15762,7 @@
       "issued_at": "2026-10-05T17:27:37Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15897,8 +15780,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
-        "W673",
         "W751"
       ],
       "blocked_kind": "agent",
@@ -15907,7 +15788,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15923,8 +15804,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W687",
-        "W739",
         "W759"
       ],
       "blocked_kind": "agent",
@@ -15933,7 +15812,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15944,8 +15823,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/ops.py (222 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
-        "W788",
         "W779"
       ],
       "touches": [
@@ -15955,7 +15832,6 @@
       "blocked_on": [
         "W674",
         "W731",
-        "W679",
         "W677"
       ],
       "blocked_kind": "agent",
@@ -15964,7 +15840,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -15975,18 +15851,15 @@
       "title": "mtools typing: treeio/src/mikemol/treeio/census.py (19 findings)",
       "status": "blocked",
       "enables": [
-        "W785",
-        "W782"
+        "W782",
+        "W785"
       ],
       "touches": [
         "typing",
         "mypy"
       ],
       "blocked_on": [
-        "W767",
-        "W753",
-        "W730",
-        "W675"
+        "W767"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 4 debt file(s): clean those first",
@@ -15994,7 +15867,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:52Z",
+      "last_worked": "2026-10-05T18:03:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16012,9 +15885,6 @@
         "mypy"
       ],
       "blocked_on": [
-        "W686",
-        "W735",
-        "W680",
         "W768"
       ],
       "blocked_kind": "agent",
@@ -16023,7 +15893,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:53Z",
+      "last_worked": "2026-10-05T18:03:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16050,7 +15920,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:53Z",
+      "last_worked": "2026-10-05T18:03:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16061,7 +15931,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/inbound.py (42 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -16069,11 +15938,8 @@
         "mypy"
       ],
       "blocked_on": [
-        "W676",
         "W733",
-        "W678",
-        "W752",
-        "W685"
+        "W752"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 5 debt file(s): clean those first",
@@ -16081,7 +15947,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:53Z",
+      "last_worked": "2026-10-05T18:03:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16092,7 +15958,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/redact.py (19 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -16100,11 +15965,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W674",
-        "W774",
-        "W731",
-        "W679",
-        "W677"
+        "W774"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 5 debt file(s): clean those first",
@@ -16112,7 +15973,7 @@
       "issued_at": "2026-10-05T17:27:38Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:53Z",
+      "last_worked": "2026-10-05T18:03:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16131,10 +15992,8 @@
       ],
       "blocked_on": [
         "W732",
-        "W683",
         "W688",
-        "W729",
-        "W673"
+        "W729"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 5 debt file(s): clean those first",
@@ -16142,7 +16001,7 @@
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:53Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16159,9 +16018,7 @@
       ],
       "blocked_on": [
         "W741",
-        "W736",
         "W694",
-        "W681",
         "W756"
       ],
       "blocked_kind": "agent",
@@ -16170,7 +16027,7 @@
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:53Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16186,11 +16043,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W775",
-        "W767",
-        "W753",
-        "W730",
-        "W675"
+        "W775"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 5 debt file(s): clean those first",
@@ -16198,7 +16051,7 @@
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:53Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16209,7 +16062,6 @@
       "title": "mtools typing: pathsforward/src/mikemol/pathsforward/selftest.py (18 findings)",
       "status": "blocked",
       "enables": [
-        "W789",
         "W788"
       ],
       "touches": [
@@ -16218,11 +16070,7 @@
       ],
       "blocked_on": [
         "W754",
-        "W676",
-        "W684",
-        "W678",
-        "W752",
-        "W677"
+        "W752"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 6 debt file(s): clean those first",
@@ -16230,7 +16078,7 @@
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:54Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16246,12 +16094,8 @@
         "mypy"
       ],
       "blocked_on": [
-        "W686",
-        "W735",
         "W776",
-        "W680",
-        "W740",
-        "W768"
+        "W740"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 6 debt file(s): clean those first",
@@ -16259,7 +16103,7 @@
       "issued_at": "2026-10-05T17:27:39Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:54Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16276,10 +16120,6 @@
       ],
       "blocked_on": [
         "W775",
-        "W767",
-        "W753",
-        "W730",
-        "W675",
         "W743"
       ],
       "blocked_kind": "agent",
@@ -16288,7 +16128,7 @@
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:54Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16308,12 +16148,7 @@
         "W699",
         "W700",
         "W701",
-        "W780",
-        "W732",
-        "W683",
-        "W688",
-        "W729",
-        "W673"
+        "W780"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 10 debt file(s): clean those first",
@@ -16321,7 +16156,7 @@
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:54Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16337,16 +16172,13 @@
         "mypy"
       ],
       "blocked_on": [
-        "W729",
         "W769",
         "W770",
         "W757",
         "W705",
         "W706",
-        "W673",
         "W742",
         "W771",
-        "W751",
         "W758",
         "W772"
       ],
@@ -16356,7 +16188,7 @@
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:54Z",
+      "last_worked": "2026-10-05T18:03:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16375,27 +16207,14 @@
       ],
       "blocked_on": [
         "W755",
-        "W754",
         "W690",
-        "W676",
         "W691",
-        "W733",
         "W778",
         "W737",
-        "W734",
-        "W674",
-        "W774",
-        "W684",
-        "W678",
-        "W752",
-        "W731",
         "W779",
         "W738",
         "W783",
-        "W685",
-        "W679",
         "W692",
-        "W677",
         "W693"
       ],
       "blocked_kind": "agent",
@@ -16404,7 +16223,7 @@
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:54Z",
+      "last_worked": "2026-10-05T18:03:41Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
@@ -16420,30 +16239,7 @@
         "mypy"
       ],
       "blocked_on": [
-        "W755",
-        "W754",
-        "W788",
-        "W690",
-        "W676",
-        "W691",
-        "W733",
-        "W778",
-        "W737",
-        "W734",
-        "W674",
-        "W774",
-        "W684",
-        "W678",
-        "W752",
-        "W731",
-        "W779",
-        "W738",
-        "W783",
-        "W685",
-        "W679",
-        "W692",
-        "W677",
-        "W693"
+        "W788"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Waits on 24 debt file(s): clean those first",
@@ -16451,7 +16247,7 @@
       "issued_at": "2026-10-05T17:27:40Z",
       "minted_during": "tick",
       "caused_by": null,
-      "last_worked": "2026-10-05T17:27:54Z",
+      "last_worked": "2026-10-05T18:03:41Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
