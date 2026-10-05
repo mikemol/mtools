@@ -58,6 +58,12 @@ fi
 MUTATE_FENCE_SRC="$dist/../fence/src"
 export MUTATE_FENCE_SRC
 
+# ⚑⚑ THE MUTATION SIBLING EDGE (mtools:W629), THE SAME MECHANISM: the runner reads a distribution's
+# `mutants.regex` and plants each declared defect through `mikemol.mutation.declarations`, a
+# standard-library module staged by each `:mutants` target's `//mutation:mutation` data.
+MUTATE_MUTATION_SRC="$dist/../mutation/src"
+export MUTATE_MUTATION_SRC
+
 # ⚑⚑⚑ UNDER BAZEL'S SANDBOX THE INTERPRETER IS A HARDLINK, NOT A LINK, and it cannot find its own
 # stdlib: bazel resolves the venv's symlink at staging (printed from a kept sandbox, 2026-09-19),
 # so CPython has nothing to follow and `pyvenv.cfg`'s `home` names the venv's own `bin/`. The

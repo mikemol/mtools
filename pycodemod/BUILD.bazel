@@ -131,8 +131,11 @@ sh_test(
     ],
     data = [
         "pyproject.toml",
+        # W629: the defect classes this distribution declares, planted one at a time by the runner.
+        "mutants.regex",
         ":.venv",
         "//fence:fence",
+        "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
         "differential/capture.py",  # W193: tests/test_capture.py imports it
         # W645: tests/test_split_differential.py imports the adapter and reads the cases file; without

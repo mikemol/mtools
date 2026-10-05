@@ -46,9 +46,65 @@ import tempfile
 # the sibling's source root in `MUTATE_FENCE_SRC` (staged by each `:mutants` target's
 # `//fence:fence` data) and it goes on THIS interpreter's path only; a suite receives the variable
 # inert. `sys.path.extend` is the one statement an import may follow.
-sys.path.extend(p for p in os.environ.get("MUTATE_FENCE_SRC", "").split(os.pathsep) if p)
+#
+# ⚑⚑ THE MUTATION SIBLING EDGE (mtools:W629), THE SAME MECHANISM: the declared-defect path reads and
+# plants through `mikemol.mutation.declarations`, its source root named in `MUTATE_MUTATION_SRC` and
+# staged by each `:mutants` target's `//mutation:mutation` data. Standard library only, so it adds
+# nothing to a distribution's own environment.
+sys.path.extend(
+    p
+    for var in ("MUTATE_FENCE_SRC", "MUTATE_MUTATION_SRC")
+    for p in os.environ.get(var, "").split(os.pathsep)
+    if p
+)
 
 from mikemol.fence.git_env import clean_env
+from mikemol.mutation.declarations import DECLARATION_FILE, Declared, plant, read_declarations
+
+
+def read_declared(dist: pathlib.Path) -> list[Declared]:
+    """Read the distribution's declared defect classes, none when it has no `mutants.regex`.
+
+    Returns:
+        the declarations in file order; empty when the file is absent.
+
+    Raises:
+        ValueError: when the file is malformed; the message names the file and the line.
+
+    """
+    path = dist / DECLARATION_FILE
+    if not path.is_file():
+        return []
+    try:
+        return read_declarations(path.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        msg = f"{DECLARATION_FILE}: {exc}"
+        raise ValueError(msg) from exc
+
+
+def run_declared(grid: Grid, declared: Declared, *, debug: bool = False) -> str:
+    """Plant one declared defect in a temp copy and run the distribution's suite against it.
+
+    ⚑⚑ FOUR OUTCOMES, NOT THREE: `killed` (the suite noticed), `survived` (it is blind to a defect
+    the distribution named), `errored` (the suite did not run, or the declaration is bad: a module
+    that is not there, a rewrite that no longer parses) and `unapplied` (the pattern matches
+    nothing, so no defect was planted and no question was asked: a STALE declaration).
+
+    Returns:
+        the outcome.
+
+    """
+    path = grid.dist / declared.module
+    if not path.is_file():
+        return "errored"
+    try:
+        mutant = plant(path.read_text(encoding="utf-8"), declared.spec)
+    except ValueError:
+        return "errored"
+    if mutant is None:
+        return "unapplied"
+    return _run_text(grid, pathlib.Path(declared.module), mutant, debug=debug)
+
 
 # ⚑ THE SANDBOX STAGES ONLY WHAT IS DECLARED, so these are the trees a mutant must not carry into
 # its copy. `.venv` in particular is a directory of pointers at host absolute paths — the property
@@ -351,10 +407,24 @@ def run(grid: Grid, mutant: Mutant, *, debug: bool = False) -> str:
         this mutant's verdict.
 
     """
+    return _run_text(grid, mutant.rel, mutate(mutant.source, mutant.name), debug=debug)
+
+
+def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) -> str:
+    """Write `text` over module `rel` in a temp copy of the distribution and run its suite there.
+
+    ⚑ ONE PLACE FOR BOTH OPERATORS: a def-site mutant (`run`) and a declared regex defect
+    (`run_declared`) differ only in the text they put on the module, so the isolation, the
+    environment and the time limit below are written once and cannot drift apart.
+
+    Returns:
+        this mutant's verdict.
+
+    """
     with tempfile.TemporaryDirectory() as tmp:
         work = pathlib.Path(tmp) / "dist"
         shutil.copytree(grid.dist, work, ignore=_not_source)
-        (work / mutant.rel).write_text(mutate(mutant.source, mutant.name), encoding="utf-8")
+        (work / rel).write_text(text, encoding="utf-8")
         # ⚑ THE SYNTHESIZED PACKAGE MARKERS GO, for the reason `mypy_check.sh` records: rules_python
         # writes an empty `__init__.py` at every runfiles level, including the `src/mikemol/` one
         # PEP 420 forbids here. Only the EMPTY ones — a hand-written package `__init__.py` has
@@ -520,6 +590,37 @@ def main(argv: list[str]) -> int:
     attempted, unreachable, jobs = _plan(grid.dist, modules)
     groups: dict[str, list[str]] = {"killed": [], "survived": [], "errored": []}
 
+    # ⚑⚑ A MALFORMED `mutants.regex` REFUSES THE WHOLE GRID, naming the line (W629), rather than
+    # being read as "declared nothing".
+    try:
+        declared = read_declared(grid.dist)
+    except ValueError as exc:
+        sys.stderr.write(f"mutate: {exc}\n")
+        return 1
+    verdicts, regex = _run_all(grid, [m for _site, m in jobs], declared, debug=debug)
+    for (site, _mutant), got in zip(jobs, verdicts, strict=True):
+        if debug:
+            sys.stdout.write(f"    {site} -> {got}\n")
+        groups[got].append(site)
+    code = _account(grid.dist.name, len(modules), attempted, unreachable, groups)
+    # ⚑ BOTH ARE COMPUTED BEFORE EITHER DECIDES THE EXIT: `code or _regex_section(...)` would skip
+    # printing the declared-defect section whenever the def-site grid had already failed.
+    regex_code = _regex_section(regex)
+    return 1 if code or regex_code else 0
+
+
+def _run_all(
+    grid: Grid, mutants: list[Mutant], declared: list[Declared], *, debug: bool
+) -> tuple[list[str], list[tuple[str, str]]]:
+    """Run every def-site mutant and every declared defect in one pool, results in input order.
+
+    ⚑⚑ THE DECLARED DEFECTS SHARE THE POOL (W629): a distribution that declares none pays nothing,
+    and one that declares some pays one suite run each, concurrently with the def-sites.
+
+    Returns:
+        the def-site verdicts, and each declared defect's `(label, outcome)`.
+
+    """
     # ⚑⚑ THE MUTANTS RUN CONCURRENTLY, BECAUSE SERIAL COST GREW PAST THE TARGET'S CEILING. Measured
     # 2026-09-23: adding `membudget_cli` (~30 def-sites) took //fence:mutants past 300s at a load of
     # ~33 — the grid, not the host, was the cost: one full `-x` suite per site, one after another.
@@ -529,13 +630,41 @@ def main(argv: list[str]) -> int:
     # `MUTATE_JOBS` bounds the pool; `1` restores the serial run.
     workers = int(os.environ.get("MUTATE_JOBS", "") or (os.cpu_count() or 1))
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        futures = [pool.submit(run, grid, mutant, debug=debug) for _site, mutant in jobs]
+        futures = [pool.submit(run, grid, mutant, debug=debug) for mutant in mutants]
+        planted = [pool.submit(run_declared, grid, d, debug=debug) for d in declared]
         verdicts = [f.result() for f in futures]
-    for (site, _mutant), got in zip(jobs, verdicts, strict=True):
-        if debug:
-            sys.stdout.write(f"    {site} -> {got}\n")
-        groups[got].append(site)
-    return _account(grid.dist.name, len(modules), attempted, unreachable, groups)
+        regex = [(d.label, f.result()) for d, f in zip(declared, planted, strict=True)]
+    return verdicts, regex
+
+
+def _regex_section(results: list[tuple[str, str]]) -> int:
+    """Print the declared-defect section and say what a declared defect that was not killed means.
+
+    ⚑ AN EMPTY SECTION IS NAMED, as the four before it are: `none declared` is a measurement and an
+    absent heading is a silence that cannot be told from a section that never ran.
+
+    ⚑⚑ ONLY `killed` PASSES. `survived` is a suite blind to a defect the distribution named,
+    `unapplied` a declaration the code has moved away from, and `errored` one that was never run.
+
+    Returns:
+        0 when every declared defect was killed (vacuously, when none are declared), else 1.
+
+    """
+    sys.stdout.write(
+        f"\nREGEX ({len(results)}) — defects the distribution DECLARED in {DECLARATION_FILE}, "
+        f"planted one at a time:\n"
+    )
+    if not results:
+        sys.stdout.write("    none declared\n")
+    for label, got in results:
+        sys.stdout.write(f"    {label} -> {got}\n")
+    bad = [label for label, got in results if got != "killed"]
+    if bad:
+        sys.stderr.write(
+            f"\nmutate: {len(bad)} declared defect(s) NOT killed: a suite blind to a named defect "
+            f"(survived), a stale declaration (unapplied) or one never run (errored)\n"
+        )
+    return 1 if bad else 0
 
 
 def _account(

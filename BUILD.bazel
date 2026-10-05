@@ -174,11 +174,18 @@ py_test(
         "no:cacheprovider",
     ],
     size = "small",
-    # ⚑ THE FENCE SIBLING EDGE (mtools:W619): the runner imports `mikemol.fence.git_env`.
+    # ⚑ THE FENCE SIBLING EDGE (mtools:W619): the runner imports `mikemol.fence.git_env`, and
+    # (W629) `mikemol.mutation.declarations` the same way.
     deps = [
         "//fence:fence",
+        "//mutation:mutation",
         root_dev_requirement("pytest"),
     ],
+    # ⚑ TWO SOURCE ROOTS UNDER ONE NAMESPACE (W566, W629): fence and mutation both contribute
+    # `mikemol.*`, and legacy implicit `__init__.py` creation would turn `mikemol` into a regular
+    # package from the first root and shadow the second. MEASURED: this target failed with
+    # `No module named 'mikemol.mutation'` the moment the second root was added.
+    legacy_create_init = 0,
 )
 
 # W384: the ruff atom's selector check, tested the same way with a fake ruff.
@@ -421,8 +428,9 @@ _ATOM_SCRIPTS = [
             "@mikemol_%s//:mypy.ini" % atom,
             "//hooks:mypy_runner",
         ] + ["@mikemol_%s//:%s" % (atom, script) for script in scripts] + (
-            # ⚑ THE FENCE SIBLING EDGE (mtools:W619): mypy reads `mikemol.fence.git_env` for the runner.
-            ["//fence:fence"] if atom == "check_mutants" else []
+            # ⚑ THE FENCE SIBLING EDGE (mtools:W619): mypy reads `mikemol.fence.git_env` for the runner,
+            # and (W629) `mikemol.mutation.declarations`.
+            ["//fence:fence", "//mutation:mutation"] if atom == "check_mutants" else []
         ),
         size = "small",
         timeout = "long",

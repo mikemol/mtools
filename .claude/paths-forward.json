@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 668,
+  "counter": 670,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T04:40:22Z",
   "job_id": "41bd4893",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 58,
+      "ticks_blocked": 59,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 61,
+      "ticks_blocked": 62,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 10,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -12500,20 +12500,21 @@
     {
       "symbol": "W629",
       "title": "mutation: a per-dist :mutants operator-file knob so a dist can declare its defect-class RegexSpecs, and declare them for the drained families",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read .claude/swarm/W611-W615-rival-bodies.md follow-ons; design the declaration file and wire :mutants to run judge over it; declare none by default",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 designed and wired. DECLARATION: <dist>/mutants.regex, one line <module>|<name>|<pattern>|<replacement>|<scope> (the four spec fields are regexop.parse_regex_spec's own), read by mikemol.mutation.declarations.read_declarations (new module, 9 tests, 9 warrants, rubric key declarations; malformed lines refused by number, a repeated name refused, a module outside the dist refused) and planted by plant() (None for a stale spec). RUNNER: check_mutants/mutate_runner.py runs each declared defect in the SAME pool and temp-copy path as a def-site mutant (run split into run + _run_text, one place for isolation and the time limit); outcomes killed, survived, errored, unapplied and ONLY killed passes; the REGEX section prints even when empty ('none declared'); a malformed file refuses the whole grid naming the line. EDGE: the runner imports mikemol.mutation from source via MUTATE_MUTATION_SRC (mutate_check.sh) the way W619 does fence, so every :mutants stages //mutation:mutation (27 BUILD files), root BUILD, check_mutants/mypy.ini and the root mypy_path follow, and //:test_mutate_runner needed legacy_create_init = 0 for two roots under one namespace (measured: ModuleNotFoundError). NONE BY DEFAULT. DECLARED: pathwalk (3: exclude-matches-by-substring, worktree-switch-inverted, symlinked-directory-not-refused) and pycodemod (4 from this session's F-arms: require-hits-never-fails, exclude-dropped-at-the-walk, registered-excuses-every-def, dotted-import-not-bound). MEASURED FIRST: the runner over pathwalk reported walk-follows-links SURVIVED, an EQUIVALENT mutant (the walk already drops a linked directory itself), replaced and recorded in the file and the README; all killed after. Follow-ups: W669 (runner tests need a gen-warrants root layout), W670 (declare the remaining dists). bazel //... 582 pass plus the root runner test and mypy atom after the fix",
       "issued_at": "2026-10-04T21:30:44Z",
       "minted_during": "interrupt",
       "caused_by": "W615",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T05:56:33Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T055633Z"
     },
     {
       "symbol": "W630",
@@ -13259,6 +13260,43 @@
       "last_worked": "2026-10-05T04:58:59Z",
       "ticks_blocked": 0,
       "completed": "20261005T045859Z"
+    },
+    {
+      "symbol": "W669",
+      "title": "hooks gen-warrants: support the root layout so check_mutants' runner tests can take generated warrants, then test run_declared's four outcomes",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "gen-warrants resolves <root>/<dist>/tests/test_<module>.py and keys <dist>-...; the root keeps test_mutate_runner.py beside the script with root-mutate-runner keys and a hooks/.venv check command. Add an option for that layout; then add runner tests over the launch seam for killed, survived, errored (module missing, rewrite unparseable) and unapplied, and for a malformed mutants.regex refusing the grid with its line",
+      "evidence": "",
+      "issued_at": "2026-10-05T05:48:13Z",
+      "minted_during": "tick",
+      "caused_by": "W629",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W670",
+      "title": "mutation: declare defect classes (mutants.regex) for the remaining drained distributions from their recorded F-arm history",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Mine each dist's commit messages and swarm notes for the hand-planted F-arms that were red (ledger, hooks, mdstruct, transcriptstruct and the rest); declare the ones a body-to-raise cannot express; run each through check_decl first, then the runner; an EQUIVALENT mutant (like pathwalk's followlinks) is a bad declaration, replace it. pathwalk and pycodemod are declared",
+      "evidence": "",
+      "issued_at": "2026-10-05T05:48:13Z",
+      "minted_during": "tick",
+      "caused_by": "W629",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

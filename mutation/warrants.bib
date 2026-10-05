@@ -230,3 +230,66 @@
   claim  = {`regex:<...>` rewrites inside its scope; a miss stays UnappliedError; others unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_emit_mutant_applies_a_regex_spec_end_to_end},
 }
+
+@misc{mutation-declarations-declaration-file-is-read-in-order-skipping-comments-and-blank-lines,
+  section = {declarations},
+  title  = {Two declarations come back in file order; the module and the four spec fields are split},
+  claim  = {Two declarations come back in file order; the module and the four spec fields are split.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_a_declaration_file_is_read_in_order_skipping_comments_and_blank_lines},
+}
+
+@misc{mutation-declarations-empty-or-comment-only-file-declares-nothing,
+  section = {declarations},
+  title  = {None by default: no text, or only comments, is no declaration and no error},
+  claim  = {None by default: no text, or only comments, is no declaration and no error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_an_empty_or_comment_only_file_declares_nothing},
+}
+
+@misc{mutation-declarations-line-without-a-module-field-is-refused-with-its-number,
+  section = {declarations},
+  title  = {A line that is not `<module>|...` is refused, naming the line, never skipped},
+  claim  = {A line that is not `<module>|...` is refused, naming the line, never skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_a_line_without_a_module_field_is_refused_with_its_number},
+}
+
+@misc{mutation-declarations-module-outside-the-distribution-or-not-python-is-refused,
+  section = {declarations},
+  title  = {An empty, absolute, climbing or non-`.py` module is refused by line number},
+  claim  = {An empty, absolute, climbing or non-`.py` module is refused by line number.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_a_module_outside_the_distribution_or_not_python_is_refused},
+}
+
+@misc{mutation-declarations-bad-spec-field-or-regex-is-refused-with-its-number,
+  section = {declarations},
+  title  = {A bad scope and an invalid regex each carry the line they were found on},
+  claim  = {A bad scope and an invalid regex each carry the line they were found on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_a_bad_spec_field_or_regex_is_refused_with_its_number},
+}
+
+@misc{mutation-declarations-name-declared-twice-for-one-module-is-refused,
+  section = {declarations},
+  title  = {The same name twice in one module is refused; the same name in another module is fine},
+  claim  = {The same name twice in one module is refused; the same name in another module is fine.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_a_name_declared_twice_for_one_module_is_refused},
+}
+
+@misc{mutation-declarations-plant-rewrites-the-source-where-the-pattern-matches,
+  section = {declarations},
+  title  = {A matching spec returns the perturbed source; the unmatched part stays byte-identical},
+  claim  = {A matching spec returns the perturbed source; the unmatched part stays byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_plant_rewrites_the_source_where_the_pattern_matches},
+}
+
+@misc{mutation-declarations-plant-answers-none-for-a-stale-spec-never-an-unchanged-source,
+  section = {declarations},
+  title  = {A pattern matching nothing, or a def the module lacks, plants nothing: None},
+  claim  = {A pattern matching nothing, or a def the module lacks, plants nothing: None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_plant_answers_none_for_a_stale_spec_never_an_unchanged_source},
+}
+
+@misc{mutation-declarations-plant-lets-a-rewrite-that-breaks-the-source-raise,
+  section = {declarations},
+  title  = {A rewrite leaving unparseable source is a bad declaration: the ValueError propagates},
+  claim  = {A rewrite leaving unparseable source is a bad declaration: the ValueError propagates.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_plant_lets_a_rewrite_that_breaks_the_source_raise},
+}

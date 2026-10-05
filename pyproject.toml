@@ -41,8 +41,9 @@ files = ["*.py"]
 # claim: `mutate_runner.py` is module `mutate_runner`, and `test_mutate_runner` imports it so.
 explicit_package_bases = true
 # ⚑ THE FENCE SIBLING EDGE (mtools:W619): `mutate_runner` imports `mikemol.fence.git_env`, so mypy
-# reads fence's source root, a directory of this checkout.
-mypy_path = "fence/src"
+# reads fence's source root, a directory of this checkout. ⚑ AND THE MUTATION ONE (mtools:W629): it
+# imports `mikemol.mutation.declarations` the same way, so the two roots are listed together.
+mypy_path = "fence/src:mutation/src"
 
 [tool.ruff]
 line-length = 100

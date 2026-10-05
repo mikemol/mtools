@@ -194,6 +194,7 @@ sh_test(
         "pyproject.toml",
         ":.venv",
         "//fence:fence",
+        "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
         "@pandoc//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),

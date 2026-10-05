@@ -28,6 +28,30 @@ underscore names (`_branch_sites`, `_data_sites`, `_flip_sites` imported by `too
 `_def_sites`, `_mutate_lines`, `_drop_data_multi`, `_flip_condition` imported by `grader.py` and
 `cache.py`), so repointing them is a rename at each import.
 
+## Declared defect classes
+
+The def-site grid asks whether a suite reaches a def. A distribution can also name the defects it fears, and the
+`:mutants` target plants each one and runs the distribution's own suite against it. The declaration is a
+`mutants.regex` file beside the distribution's `pyproject.toml`, one line per defect:
+
+```text
+<module>|<name>|<pattern>|<replacement>|<scope>
+```
+
+The module is a path relative to the distribution (`src/mikemol/x/walk.py`), the other four fields are
+`parse_regex_spec`'s own (`%7C` is a literal `|`, the scope is empty, `def=<qualname>` or `lines=<a>-<b>`), and a blank
+line or a line starting with `#` is ignored. `read_declarations` reads it, refusing a malformed line by its number, and
+`plant` applies one declared spec to a source.
+
+- **None by default.** A distribution with no file is asked nothing, and the report says `none declared`.
+- **Only `killed` passes.** `survived` is a suite blind to a defect the distribution named; `unapplied` is a stale
+  declaration, a pattern that matches nothing in its scope; `errored` is a declaration that was never run.
+- **A distribution that declares any adds the file to its `:mutants` data**, and every `:mutants` target stages
+  `//mutation:mutation`, which the runner imports from source (`MUTATE_MUTATION_SRC`).
+- **An equivalent mutant is a bad declaration, not a blind suite.** `followlinks=False` to `True` in pathwalk's walk
+  survived because the walk already drops a linked directory itself; the declaration was replaced with the check whose
+  removal does change behaviour.
+
 ## Command line
 
 `mikemol-mutate <module.py> <spec>` (or `python -m mikemol.mutation.mutate`) prints the perturbed
