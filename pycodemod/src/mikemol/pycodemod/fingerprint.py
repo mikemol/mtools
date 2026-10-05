@@ -25,6 +25,11 @@ taxonomy. Assigning a prime asserts only that a referent is distinct and countab
 fingerprint, and growing the modelled set can only remove factors from a remainder, so the new
 remainder divides the old one. Seeds are an argument of the caller (`reverse_index(only=...)`),
 never a constant here.
+
+⚑ THE ORIGIN'S `omega(n)` IS NOT PORTED (W664). It was a stub that always raised
+`NotImplementedError("use omega_against(n, primes)")` (confirmed by running the origin), and the
+origin's `Census` never called it. `omega_against` is the one count of prime factors, taken against
+a registry, so there is nothing for the stub to answer.
 """
 
 from __future__ import annotations

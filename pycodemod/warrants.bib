@@ -5263,3 +5263,22 @@
   claim  = {W596: an empty list would scan for nothing and look clean: exit 2, naming the flag.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_placement_refuses_an_override_that_names_no_form},
 }
+
+@misc{pycodemod-control-census-for-else-and-case-snippets-are-ascii,
+  section = {control_census},
+  title  = {W663: the origin's unicode ellipsis in these two snippets is the ASCII `...` here},
+  claim  = {W663: the origin's unicode ellipsis in these two snippets is the ASCII `...` here.
+            DECLARED, NOT ACCIDENTAL: the module docstring names the change, and this
+            pins it so the snippet text cannot drift back to a second alphabet unseen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_the_for_else_and_case_snippets_are_ascii},
+}
+
+@misc{pycodemod-referents-referents-of-none-raises-where-the-origin-returned-the-empty-set,
+  section = {referents},
+  title  = {W664 (declared): `referents(None)` is a `TypeError` here; the origin's was `set()`},
+  claim  = {W664 (declared): `referents(None)` is a `TypeError` here; the origin's was `set()`. A
+            caller passes the empty tuple for no expression, so `None` is a bug it
+            should see rather than an empty referent set that reads as "mentions
+            nothing".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_referents.py -k test_referents_of_none_raises_where_the_origin_returned_the_empty_set},
+}

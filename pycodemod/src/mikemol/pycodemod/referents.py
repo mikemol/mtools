@@ -17,6 +17,11 @@ extractor runs, not a judgement about which referents are interesting.
 
 ⚑ A TOKEN LONGER THAN `MAX_TOKEN` IS PROSE. It is a shape bound; the token's meaning is never
 consulted.
+
+⚑ `referents(None)` RAISES `TypeError` (W664). The origin's `as_list(None)` was `[]`, so
+`referents(None)` was the empty set (confirmed by running both). A caller here passes the empty
+tuple for no expression, as `fp_sites` does, so a `None` is a bug it should see rather than an empty
+referent set that reads as "mentions nothing".
 """
 
 from __future__ import annotations

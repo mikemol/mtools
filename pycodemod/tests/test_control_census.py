@@ -390,3 +390,18 @@ def test_sites_come_back_in_path_order_then_line_order(tmp_path: Path) -> None:
     two = _write(tmp_path, "if z:\n    pass\n", "two.py")
     sites = control_sites([one, two], _VOCAB, PYTHON_BOUNDARY).sites
     assert [(s.path, s.line) for s in sites] == [(one, 1), (one, 3), (two, 1)]
+
+
+def test_the_for_else_and_case_snippets_are_ascii(tmp_path: Path) -> None:
+    """W663: the origin's unicode ellipsis in these two snippets is the ASCII `...` here.
+
+    ⚑ DECLARED, NOT ACCIDENTAL: the module docstring names the change, and this pins it so the
+    snippet text cannot drift back to a second alphabet unseen.
+    """
+    src = "def f(xs, v):\n    for x in xs:\n        pass\n    else:\n        pass\n"
+    src += "    match v:\n        case 1:\n            pass\n"
+    sites = _sites(tmp_path, src)
+    by_construct = {s.construct: s.snippet for s in sites}
+    assert by_construct["for-else"] == "else of `for ... in xs`"
+    assert by_construct["case"] == "case ..."
+    assert all(s.snippet.isascii() for s in sites)

@@ -4,9 +4,9 @@
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
   "counter": 666,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-04T19:29:41Z",
-  "job_id": "08811049",
-  "predecessor_job_id": "c6c8232c",
+  "heartbeat": "2026-10-05T04:40:22Z",
+  "job_id": "41bd4893",
+  "predecessor_job_id": "08811049",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 58,
+      "ticks_blocked": 59,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 28,
       "completed": null
     },
     {
@@ -11715,11 +11715,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-05: 2026-10-05 measured in a scratch clone with a local bare remote (.claude/swarm/W588-pre-push-self-install.md): (a) the auto-push runs pre-push once per commit, real console script then pre-push.local, nothing re-enters; (b) a failing pre-push abandons the push before any transfer, the commit survives and git commit exits 0, post-commit wrongly says remote has moved (W661); (c) stdin is one line HEAD sha refs/heads/main remote-sha with argv origin url, empty when already up to date; (d) the marker amend re-fires post-commit which has no guard, the nested push sends the amended sha, the outer push is a no-op so pre-push runs again with empty stdin, the original sha is never pushed (W662); (e) core.hooksPath is a relative .githooks in per-clone .git/config, set by setup.sh. RECOMMENDATION: install the one-line stub exec hooks/.venv/bin/mikemol-githook-pre-push dollar-at as .githooks/pre-push mode 755, written LAST, after W661 and W662. Limit: hooks/.venv/bin lacked mikemol-githook-post-commit (the venv predates it; uv sync exposes it) | 2026-10-05: 2026-10-05 .githooks/pre-push installed: shellcheck 0, mode 755, header comment, refuses when hooks/.venv/bin/mikemol-githook-pre-push is absent, else execs it with git's arguments and stdin. Written last, after W661 and W662 landed (4f6ee03). 2 stub tests in test_githook_pre_push.py (arguments, stdin and exit code forwarded; absent launcher refuses) with 2 warrants; F-arm dropping the forwarded arguments from the exec line failed the forwarding test, restored. hooks bazel targets 47 of 47 passed. Not measured: a real push from this clone through the stub on the first live commit",
+      "evidence": "2026-10-05: 2026-10-05 measured in a scratch clone with a local bare remote (.claude/swarm/W588-pre-push-self-install.md): (a) the auto-push runs pre-push once per commit, real console script then pre-push.local, nothing re-enters; (b) a failing pre-push abandons the push before any transfer, the commit survives and git commit exits 0, post-commit wrongly says remote has moved (W661); (c) stdin is one line HEAD sha refs/heads/main remote-sha with argv origin url, empty when already up to date; (d) the marker amend re-fires post-commit which has no guard, the nested push sends the amended sha, the outer push is a no-op so pre-push runs again with empty stdin, the original sha is never pushed (W662); (e) core.hooksPath is a relative .githooks in per-clone .git/config, set by setup.sh. RECOMMENDATION: install the one-line stub exec hooks/.venv/bin/mikemol-githook-pre-push dollar-at as .githooks/pre-push mode 755, written LAST, after W661 and W662. Limit: hooks/.venv/bin lacked mikemol-githook-post-commit (the venv predates it; uv sync exposes it) | 2026-10-05: 2026-10-05 .githooks/pre-push installed: shellcheck 0, mode 755, header comment, refuses when hooks/.venv/bin/mikemol-githook-pre-push is absent, else execs it with git's arguments and stdin. Written last, after W661 and W662 landed (4f6ee03). 2 stub tests in test_githook_pre_push.py (arguments, stdin and exit code forwarded; absent launcher refuses) with 2 warrants; F-arm dropping the forwarded arguments from the exec line failed the forwarding test, restored. hooks bazel targets 47 of 47 passed. Not measured: a real push from this clone through the stub on the first live commit | 2026-10-05: 2026-10-05 measured live: the commit that installed the stub (384956e) was pushed by post-commit through it, 'post-commit: pushed 384956e to origin/main', exit 0, no lockout. The previously unmeasured first live push is now measured once; a failing pre-push on this clone is still only measured in the scratch clone",
       "issued_at": "2026-10-04T19:06:06Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-05T04:19:22Z",
+      "last_worked": "2026-10-05T04:31:53Z",
       "ticks_blocked": 0,
       "completed": "20261005T041922Z"
     },
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T19:06:32Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -13146,38 +13146,40 @@
     {
       "symbol": "W663",
       "title": "Control and fingerprint ports: the for-else and case snippets use ASCII ... where the origin used the unicode ellipsis, and no commit declares it",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measured only by the probe (the 6-file slice has no for-else or case): decide per .claude/swarm/W655-control-fingerprint-differential.md U1 whether to restore the ellipsis or declare the change next to W606's form-string note; one arm either way",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 decided: DECLARE, not restore. The for-else and case snippets use ASCII ... like every other string W606 ASCII-ised (D1); restoring only these would mix two alphabets in one census. Declared in control_census.py's docstring next to the W606 note, with the U1 measurement (3 control rows and 3 fingerprint rows on the probe, no other column differs). test_the_for_else_and_case_snippets_are_ascii pins the exact text and that no snippet has a non-ASCII character; F-arm putting the unicode ellipsis back in the case snippet failed it, restored; suite 873 passed",
       "issued_at": "2026-10-05T03:05:08Z",
       "minted_during": "tick",
       "caused_by": "W655",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T04:36:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T043607Z"
     },
     {
       "symbol": "W664",
       "title": "Fingerprint and control ports: five small differences found by reading only (omega(n) dropped, three Census attributes dropped, referents(None) raises, getattr lineno fallbacks removed) need a declared-or-restored decision each",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per .claude/swarm/W655-control-fingerprint-differential.md U2 to U6: confirm each by running the origin and the port on a case that exercises it, then declare in the module docstring with the reason or restore; each confirmed one gets a red arm",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 all five confirmed by running origin and port, then declared in the module docstrings: U2 origin omega(n) is a stub that only raises NotImplementedError('use omega_against(n, primes)'), so dropping it is neutral (fingerprint.py); U4 referents(None) is set() in the origin and a TypeError here, pinned by test_referents_of_none_raises_where_the_origin_returned_the_empty_set with an F-arm making _as_list tolerate None (referents.py); U3 the origin Census keeps 9 instance attributes and the port 5, the four dropped being files, seed, known_primes and modelled (census_fp.py; the W655 note said three); U5 the getattr lineno fallbacks never fire on a parsed tree (control_census.py). Only U4 changes behaviour. suite 873 passed | 2026-10-05: CORRECTION to the line above: four of the five were run (U2, U3, U4 here; U1 earlier in W655); U5 was ARGUED, not run: a parsed tree's case pattern, comprehension iterable and condition nodes all carry lineno, so the origin's getattr fallbacks cannot fire, and the W655 probe's case and comprehension lines matched. A hand-built tree would differ and the reader is never given one",
       "issued_at": "2026-10-05T03:05:09Z",
       "minted_during": "tick",
       "caused_by": "W655",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T04:36:14Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T043608Z"
     },
     {
       "symbol": "W665",
@@ -13329,8 +13331,8 @@
     }
   ],
   "preamble": [
-    "SWARM + BATCH (operator 2026-10-04, lifts NO SWARMING 2026-10-03: \"swarm anything actionable, fold as many waypoints per tick as you can, we're burning down our backlog\"): read-only drafters write into .claude/swarm/; worktree-isolated fixers for tracked packages; no agent commits; this session integrates one commit per card, each F-armed. Fixers never touch warrants.bib, rubric.tsv or paths-forward*; the integrator generates warrants (`hooks/.venv/bin/python3 -m mikemol.hooks.gen_warrants <dist> <module>=<RUBRIC KEY>` prints; append with `>>`). The operator flips swarming per phase: re-read this line each tick.",
-    "SWARM WORKTREES (W500): every bazel command inside .claude/worktrees carries --experimental_convenience_symlinks=ignore; main-tree recursive bazel uses `//... -//.claude/...`; harvest and remove worktrees before main-tree bazel.",
+    "NO SWARMING + BATCH (operator 2026-10-05, lifts SWARM + BATCH 2026-10-04: \"No more swarming. Still attempt to land as much per tick as possible.\"): no subagents, no worktree fixers; this session does the work itself and folds as many ready waypoints per tick as it can into one gated commit, each F-armed. The integrator generates warrants (`hooks/.venv/bin/mikemol-gen-warrants --root <repo> <dist> <module>=<RUBRIC KEY>` prints; append with `>>`). The operator flips swarming per phase: re-read this line each tick.",
+    "SWARM WORKTREES (W500, only if swarming is lifted again): every bazel command inside .claude/worktrees carries --experimental_convenience_symlinks=ignore; main-tree recursive bazel uses `//... -//.claude/...`; harvest and remove worktrees before main-tree bazel.",
     "NO WAIVERS (2026-09-26, 5de9d0e): never propose a declared waiver table.",
     "Enforced by tooling, not restated here: shell shapes (no-chaining hook), waypoint trailer (commit-msg), code under .claude (rule 16), symlinks (memory), peer-ask census (nemik-inbound)."
   ],

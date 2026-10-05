@@ -9,8 +9,24 @@ marked AUTHORED are fresh, covering branches the origin never exercised.
 from __future__ import annotations
 
 import ast
+from typing import cast
 
 from mikemol.pycodemod import referents as ref
+
+
+def test_referents_of_none_raises_where_the_origin_returned_the_empty_set() -> None:
+    """W664 (declared): `referents(None)` is a `TypeError` here; the origin's was `set()`.
+
+    A caller passes the empty tuple for no expression, so `None` is a bug it should see rather than
+    an empty referent set that reads as "mentions nothing".
+    """
+    raised = False
+    try:
+        ref.referents(cast("ast.AST", None))
+    except TypeError:
+        raised = True
+    assert raised
+    assert ref.referents(()) == set()
 
 
 def test_referents_names_attributes_keywords_and_identifier_strings() -> None:

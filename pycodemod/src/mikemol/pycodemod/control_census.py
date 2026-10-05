@@ -32,6 +32,21 @@ configuration, otherwise the guard inherits the iterable's parameter-ness and re
 ⚑ AN `else:` HAS NO NODE OF ITS OWN, so the line reported is its first statement; the same holds for
 `for-else`, `while-else`, `try-else` and `finally`. ⚑ The origin has no desync assertion, so none is
 ported.
+
+⚑⚑ THE CENSUS'S TEXT IS ASCII, SNIPPETS INCLUDED (W663). The origin wrote its unicode ellipsis and
+dash in its form strings (declared with W606) and in two SNIPPETS: the `for-else` row (`else of
+`for ... in X``) and the `case` row (`case ...`). Both snippets use ASCII `...` here, and a
+fingerprint row carries the same text in its `snippet` column, so one alphabet serves the whole
+census and a reader searching it needs one spelling of an ellipsis. Measured against the origin on
+a probe file (`.claude/swarm/W655-control-fingerprint-differential.md`, U1): 3 control rows and 3
+fingerprint rows, and no other column differs.
+
+⚑ THE ORIGIN'S `getattr(..., "lineno", fallback)` READS ARE PLAIN ATTRIBUTE READS HERE (W664, U5).
+The origin guarded a `case` pattern's line, a comprehension iterable's line and a condition's line
+with a `getattr` fallback, and an unparse fallback for a node it could not print. On a tree the
+parser produced each of those nodes carries `lineno` and unparses, so the fallback never fires and
+the two agree on every file compared (the probe's `case` and comprehension lines match). This is
+argued from the tree's shape, not run on a hand-built tree, which this reader is never given.
 """
 
 from __future__ import annotations

@@ -26,6 +26,13 @@ the commonest referent gets 2, so a large remainder means many unmodelled and RA
 ⚑ THE TOTAL REMAINDER IS MONOTONE BY CONSTRUCTION. For modelled sets M within M', each site's
 remainder under M' divides its remainder under M, hence Omega and bit length cannot rise; the
 witness is the per-site divisibility, not the totals.
+
+⚑ FOUR ORIGIN ATTRIBUTES ARE NOT KEPT (W664, confirmed by listing both classes' instance
+attributes): `files`, `seed`, `known_primes` and `modelled`. The origin's `Census` stored the seed
+paths it resolved, the files it read and the modelled set and its primes. Here the caller owns the
+seed and passes the modelled set in, so the `Census` keeps what it counts (`rows`, `counts`, `reg`,
+`all_primes`, `known_rev`) and a caller that wants the seed or the modelled keys already holds them.
+Nothing in the origin's own walk read the four back.
 """
 
 from __future__ import annotations
