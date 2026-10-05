@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 793,
+  "counter": 795,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T12:25:41Z",
   "job_id": "9c05fa85",
@@ -16206,11 +16206,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Add the parent-package files to an absolute reference's resolution; extend tests and warrants; re-plan the fleet to see which waits appear",
-      "evidence": "",
+      "evidence": "2026-10-05: 2026-10-05 (nemik typing W203): measured case. mikemol-debtplan called nemik's src/nemik/adapter.py ready (4 findings) while mypy's closure of adapter.py also reports src/nemik/__init__.py:23 (card W217, 1 finding): the package __init__.py is imported implicitly and is not modelled as an edge. Cleared both (nemik adapter.py via model.strmap, __init__.py narrowed). Without this edge the plan will keep calling a file ready that the gate still refuses.",
       "issued_at": "2026-10-05T22:39:46Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-05T22:39:46Z",
+      "last_worked": "2026-10-05T23:29:16Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -16234,6 +16234,56 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-05T22:39:47Z",
+      "ticks_blocked": 0,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W794",
+      "title": "Debt ledgers should come from the edit gate's own whole-file verdict (ruff, ruff-format and mypy, per repo config), not mypy alone, so a card's finding count is what actually refuses the edit",
+      "status": "ready",
+      "enables": [
+        "W790"
+      ],
+      "touches": [
+        "debtplan",
+        "pycheck",
+        "fleet",
+        "ledger"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add a ledger source that runs the repo's own edit-gate verdict per file (mikemol-pycheck --check-file, or its library) and writes {file: findings}; keep the mypy-only ledger as a named alternative. Measured case: amr-skills batch_policy.py and batch_controller.py carried ruff-format, EXE001 (shebang without executable bit) and RUF007 findings the mypy ledger never counted, so cards read ready but the gate still refused the first edit",
+      "evidence": "",
+      "issued_at": "2026-10-05T23:32:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "W790",
+      "last_worked": "2026-10-05T23:33:02Z",
+      "ticks_blocked": 0,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W795",
+      "title": "Audit old-style tests across the fleet (untyped or unformatted functions, --selftest or main-style scripts, asserts run outside a test runner) and mint conversion-to-pytest cards through debtplan",
+      "status": "ready",
+      "enables": [
+        "W790"
+      ],
+      "touches": [
+        "debtplan",
+        "pytestspec",
+        "tests",
+        "fleet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Define old-style from what the gate and the house standard can read: a test module with unannotated defs or a ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test runner, no warrants.bib entry per test. Write the audit as a debtplan ledger source (file: finding count) beside W794's gate verdict, run it over every repo's tests, and mint conversion cards. Measured example: amr-skills tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221)",
+      "evidence": "2026-10-05: 2026-10-05 operator: 'We need another planning integration for auditing for old-style tests and flagging them for conversion to pypy.' READ AS pytest (the earlier remark: the --selftest pattern is why everything is migrating); NOT confirmed. If pypy was meant literally, this waypoint's target changes: say so.",
+      "issued_at": "2026-10-05T23:39:00Z",
+      "minted_during": "interrupt",
+      "caused_by": "W790",
+      "last_worked": "2026-10-05T23:39:27Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
