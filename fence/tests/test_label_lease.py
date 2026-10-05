@@ -322,3 +322,67 @@ def test_the_cli_refuses_a_bad_invocation(capsys: pytest.CaptureFixture[str]) ->
     for argv in (["size", "l", _LABEL, "1", "2"], ["lease"], ["lease", "l", _LABEL, "x", "2"]):
         assert label_lease.main(argv) == usage_error
         assert "usage" in capsys.readouterr().err
+
+
+# --- W670: the claims the module's docstrings make, each pinned by a declared defect ---
+
+_ODD_DEFAULT_S = 45
+_AT_THE_CAP_S = 360
+_AT_THE_CAP_WALL = 180.0
+_PAST_THE_CAP_WALL = 181.0
+
+
+def test_a_default_below_the_floor_is_returned_raw() -> None:
+    """W670: the default is neither floored nor rounded: an operator who names 45 gets 45.
+
+    ⚑ DECLARED DEFECT `default-deadline-floored`: the fixture default (600) is already a whole
+    minute above the floor, so a floored default was indistinguishable from a raw one.
+    """
+    got = label_lease.deadline([], _LABEL, label_lease.Guard(_ODD_DEFAULT_S))
+    assert got.timeout_s == _ODD_DEFAULT_S
+    assert _ODD_DEFAULT_S < _FLOOR_S
+
+
+def test_a_guard_equal_to_the_cap_is_not_clamped_and_one_past_it_is() -> None:
+    """W670: `clamped` means the cap CUT the want; a want equal to the cap owes no warning.
+
+    ⚑ DECLARED DEFECT `clamped-at-equality`: warning there tells a reader an honest run may be
+    killed when the budget is exactly what it needs. The control one second past it clamps.
+    """
+    guard = label_lease.Guard(_LOW_DEFAULT_S, ceiling_s=_AT_THE_CAP_S)
+    exact = _deadline(_walled((_AT_THE_CAP_WALL,)), guard)
+    assert exact.timeout_s == _AT_THE_CAP_S
+    assert not exact.clamped
+    assert label_lease.deadline_warning(_LABEL, exact) is None
+    past = _deadline(_walled((_PAST_THE_CAP_WALL,)), guard)
+    assert past.clamped
+    assert label_lease.deadline_warning(_LABEL, past) is not None
+
+
+def test_the_module_is_the_last_agda_argument_and_its_ledger_sits_beside_it() -> None:
+    """W670: the module is the LAST `.agda` or `.agdai` argument, and its ledger is beside THAT one.
+
+    ⚑ DECLARED DEFECT `module-is-the-first-argument`: bash scans every word and keeps the last, so a
+    `.agdai` under `_build/` reads a ledger beside itself, not the source's. No argument naming a
+    module is None, never a guess.
+    """
+    module = label_lease.module_of(["agda", "-i", "src/First.agda", "_build/Last.agdai"])
+    assert module is not None
+    assert str(module) == "_build/Last.agdai"
+    assert str(label_lease.module_ledger(module)) == "_build/.agda-times.tsv"
+    assert label_lease.module_of(["ls", "-l"]) is None
+
+
+def test_a_ledger_that_is_not_utf8_is_read_lossily_and_keeps_its_valid_rows(
+    tmp_path: Path,
+) -> None:
+    """W670: an undecodable byte is read lossily, so the valid row still sizes the lease.
+
+    ⚑ DECLARED DEFECT `ledger-decoded-strictly`: a strict decode raises UnicodeDecodeError, which
+    is not the OSError the reader catches, so one bad byte would turn a ledger into a crash and the
+    label into no history.
+    """
+    path = tmp_path / "labels.tsv"
+    path.write_bytes(_row(_LABEL, peak=_TOP_PEAK).line().encode() + b"\n\xff\xfe\n")
+    rows = label_lease.read_rows(path)
+    assert label_lease.peaks_of(rows, _LABEL) == [_TOP_PEAK]

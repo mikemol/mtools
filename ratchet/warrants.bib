@@ -752,3 +752,48 @@
   claim  = {The reversed `discharge` pair, which the retiring module would mis-read, has no kind.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_key_lookup.py -k test_a_reversed_pair_and_a_ruff_key_have_no_kind},
 }
+
+@misc{ratchet-core-fan-out-pairs-no-move-and-refuses-every-arrival,
+  section = {membership},
+  title  = {W670: one retirement and two arrivals is churn PLUS growth, so no arrival is a move},
+  claim  = {W670: one retirement and two arrivals is churn PLUS growth, so no arrival is a move.
+            DECLARED DEFECT `fan-out-absolved-as-a-move`: pairing the first arrival with
+            the retirement left the other refused, so the exit code stayed 1 and the
+            verdict tests passed, while the report claimed a relocation that nothing can
+            evidence. The lowercase `moved` check beside this never matched the report's
+            `MOVED`, so the report was unguarded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_fan_out_pairs_no_move_and_refuses_every_arrival},
+}
+
+@misc{ratchet-core-two-retirements-and-one-arrival-pair-no-move,
+  section = {membership},
+  title  = {W670: a move is one-to-one on the retired side too: two retirements, one arrival, refused},
+  claim  = {W670: a move is one-to-one on the retired side too: two retirements, one arrival,
+            refused. DECLARED DEFECT `many-retired-absolved-as-a-move`: pairing the
+            first retirement with the arrival absolves the arrival and reads the other
+            retirement as plain paydown, so a new key passed. The census cannot say
+            which retirement moved, so the safe answer is the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_two_retirements_and_one_arrival_pair_no_move},
+}
+
+@misc{ratchet-core-ambiguous-refusal-still-counts-as-growth,
+  section = {membership},
+  title  = {W670: `Diff.grew` includes the suspect keys: `suspect` says WHY, never WHETHER},
+  claim  = {W670: `Diff.grew` includes the suspect keys: `suspect` says WHY, never WHETHER. DECLARED
+            DEFECT `suspect-softens-the-verdict`: `grew` read as `added - suspect` is
+            False for a fan-out, so a caller asking the Diff instead of the exit code
+            would be told nothing grew.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_an_ambiguous_refusal_still_counts_as_growth},
+}
+
+@misc{ratchet-write-landing-baseline-that-did-not-land-raises-instead-of-reading-as-written,
+  section = {write},
+  title  = {W670: a write whose readback differs is an OSError naming the counts, never silent},
+  claim  = {W670: a write whose readback differs is an OSError naming the counts, never silent.
+            DECLARED DEFECT `readback-not-checked`: a key that begins with `#` is
+            written and then read back as a COMMENT, so the baseline that landed is not
+            the baseline that was asked for. Without the check the write reports success
+            over a smaller set, which is how a baseline stops being the one nobody
+            chose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write_landing.py -k test_a_baseline_that_did_not_land_raises_instead_of_reading_as_written},
+}

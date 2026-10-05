@@ -253,7 +253,7 @@ def test_fan_out_refusal_is_unconditional_not_a_mode(tmp_path: Path) -> None:
     """
     path = _base(tmp_path, {"a.py:rule1"})
     assert ratchet({"b.py:rule1", "z.py:rule1"}, path, write=True)[0] == 1
-    assert "moved" not in " ".join(ratchet({"b.py:rule1", "z.py:rule1"}, path, write=False)[1])
+    assert "MOVED" not in " ".join(ratchet({"b.py:rule1", "z.py:rule1"}, path, write=False)[1])
 
 
 def test_an_ambiguous_refusal_is_marked_suspect() -> None:
@@ -324,3 +324,41 @@ def test_a_baseline_of_only_comments_reads_empty_not_ok(tmp_path: Path) -> None:
     state, keys = read_baseline(path)
     assert not keys
     assert state is BaselineState.EMPTY
+
+
+def test_a_fan_out_pairs_no_move_and_refuses_every_arrival() -> None:
+    """W670: one retirement and two arrivals is churn PLUS growth, so no arrival is a move.
+
+    ⚑ DECLARED DEFECT `fan-out-absolved-as-a-move`: pairing the first arrival with the retirement
+    left the other refused, so the exit code stayed 1 and the verdict tests passed, while the
+    report claimed a relocation that nothing can evidence. The lowercase `moved` check beside this
+    never matched the report's `MOVED`, so the report was unguarded.
+    """
+    diff = partition({"b.py:rule1", "z.py:rule1"}, {"a.py:rule1"})
+    assert diff.moved == frozenset()
+    assert diff.added == frozenset({"b.py:rule1", "z.py:rule1"})
+
+
+def test_two_retirements_and_one_arrival_pair_no_move(tmp_path: Path) -> None:
+    """W670: a move is one-to-one on the retired side too: two retirements, one arrival, refused.
+
+    ⚑ DECLARED DEFECT `many-retired-absolved-as-a-move`: pairing the first retirement with the
+    arrival absolves the arrival and reads the other retirement as plain paydown, so a new key
+    passed. The census cannot say which retirement moved, so the safe answer is the refusal.
+    """
+    path = _base(tmp_path, {"a.py:rule1", "b.py:rule1"})
+    code, lines = ratchet({"c.py:rule1"}, path, write=False)
+    assert code == 1
+    assert "MOVED" not in " ".join(lines)
+    assert partition({"c.py:rule1"}, {"a.py:rule1", "b.py:rule1"}).moved == frozenset()
+
+
+def test_an_ambiguous_refusal_still_counts_as_growth() -> None:
+    """W670: `Diff.grew` includes the suspect keys: `suspect` says WHY, never WHETHER.
+
+    ⚑ DECLARED DEFECT `suspect-softens-the-verdict`: `grew` read as `added - suspect` is False for
+    a fan-out, so a caller asking the Diff instead of the exit code would be told nothing grew.
+    """
+    diff = partition({"b.py:rule1", "z.py:rule1"}, {"a.py:rule1"})
+    assert diff.suspect == diff.added
+    assert diff.grew

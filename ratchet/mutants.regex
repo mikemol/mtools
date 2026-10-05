@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a mistake core.py's own comments record
+# the design as guarding against, and none moves a def, so none is a body-to-raise.
+
+# A move is ONE-TO-ONE: one retired key and one added key sharing an identity. A fan-out (one old,
+# many new) is churn plus growth; absolving one of the N launders real findings as relocation.
+src/mikemol/ratchet/core.py|fan-out-absolved-as-a-move|if len\(added_keys\) == 1|if len(added_keys) >= 1|def=partition
+
+# ...and the retired side is one-to-one too: two retirements sharing an identity with one addition.
+src/mikemol/ratchet/core.py|many-retired-absolved-as-a-move|len\(paid_keys := paid_by_identity\.get\(ident, \[\]\)\) == 1|len(paid_keys := paid_by_identity.get(ident, [])) >= 1|def=partition
+
+# A shared identity is NOT evidence of a move: path plausibility is the other half, and without it a
+# retirement of a.py absolves an unrelated z.py carrying the same rule.
+src/mikemol/ratchet/core.py|implausible-move-absolved|and _plausible_move\(parsed\[paid_keys\[0\]\]\.path, parsed\[added_keys\[0\]\]\.path\)|and True|def=partition
+
+# `suspect` says WHY a key was refused, never WHETHER: a verdict that subtracted it would let an
+# ambiguous fan-out through.
+src/mikemol/ratchet/core.py|suspect-softens-the-verdict|return bool\(self\.added\)|return bool(self.added - self.suspect)|def=Diff.grew
+
+# A `#` line is a comment, not a key; read as one it inflates the baseline and makes it un-annotatable.
+src/mikemol/ratchet/core.py|comment-read-as-a-key|and not stripped\.startswith\("#"\)|and True|def=read_baseline
+
+# An unreadable baseline is UNREAD, a fact about the reader; reported as EMPTY it is zero tolerance,
+# and reported as OK-and-empty it silently widens what the ratchet permits.
+src/mikemol/ratchet/core.py|unreadable-baseline-reads-empty|return BaselineState\.UNREAD, frozenset\(\)|return BaselineState.EMPTY, frozenset()|def=read_baseline
+
+# ABSENT exits 1: a gate with no baseline is green over nothing.
+src/mikemol/ratchet/core.py|absent-baseline-passes|if state\.is_defect:|if False:|def=ratchet
+
+# Growth exits 1; a ratchet that reports it and exits 0 is a report.
+src/mikemol/ratchet/core.py|growth-exits-zero|return 1, lines|return 0, lines|def=ratchet
+
+# A write that succeeds and a write that LANDS are different claims: the readback is the check.
+src/mikemol/ratchet/core.py|readback-not-checked|if landed != wanted:|if False:|def=write_baseline

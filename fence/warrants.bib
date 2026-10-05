@@ -1730,3 +1730,44 @@
   claim  = {With nothing recorded, `peaks` answers 1 rather than an empty success (W427).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_peaks_with_no_run_ledger_refuses},
 }
+
+@misc{fence-label-lease-default-below-the-floor-is-returned-raw,
+  section = {label_lease},
+  title  = {W670: the default is neither floored nor rounded: an operator who names 45 gets 45},
+  claim  = {W670: the default is neither floored nor rounded: an operator who names 45 gets 45.
+            DECLARED DEFECT `default-deadline-floored`: the fixture default (600) is
+            already a whole minute above the floor, so a floored default was
+            indistinguishable from a raw one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_default_below_the_floor_is_returned_raw},
+}
+
+@misc{fence-label-lease-guard-equal-to-the-cap-is-not-clamped-and-one-past-it-is,
+  section = {label_lease},
+  title  = {W670: `clamped` means the cap CUT the want; a want equal to the cap owes no warning},
+  claim  = {W670: `clamped` means the cap CUT the want; a want equal to the cap owes no warning.
+            DECLARED DEFECT `clamped-at-equality`: warning there tells a reader an
+            honest run may be killed when the budget is exactly what it needs. The
+            control one second past it clamps.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_guard_equal_to_the_cap_is_not_clamped_and_one_past_it_is},
+}
+
+@misc{fence-label-lease-module-is-the-last-agda-argument-and-its-ledger-sits-beside-it,
+  section = {label_lease},
+  title  = {W670: the module is the LAST `.agda` or `.agdai` argument, and its ledger is beside THAT one},
+  claim  = {W670: the module is the LAST `.agda` or `.agdai` argument, and its ledger is beside THAT
+            one. DECLARED DEFECT `module-is-the-first-argument`: bash scans every word
+            and keeps the last, so a `.agdai` under `_build/` reads a ledger beside
+            itself, not the source's. No argument naming a module is None, never a
+            guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_the_module_is_the_last_agda_argument_and_its_ledger_sits_beside_it},
+}
+
+@misc{fence-label-lease-ledger-that-is-not-utf8-is-read-lossily-and-keeps-its-valid-rows,
+  section = {label_lease},
+  title  = {W670: an undecodable byte is read lossily, so the valid row still sizes the lease},
+  claim  = {W670: an undecodable byte is read lossily, so the valid row still sizes the lease.
+            DECLARED DEFECT `ledger-decoded-strictly`: a strict decode raises
+            UnicodeDecodeError, which is not the OSError the reader catches, so one bad
+            byte would turn a ledger into a crash and the label into no history.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_ledger_that_is_not_utf8_is_read_lossily_and_keeps_its_valid_rows},
+}

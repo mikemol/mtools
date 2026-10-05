@@ -1,0 +1,46 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim a module's own docstring makes
+# about what it refuses or returns, and none moves a def, so none is a body-to-raise.
+
+# git_env: the rule is `GIT_*` and nothing is allowlisted. A misspelled prefix strips nothing and a
+# fixture's `git commit` lands in the CALLER's repository (nine commits, measured 2026-09-23).
+src/mikemol/fence/git_env.py|prefix-misspelled|PREFIX = "GIT_"|PREFIX = "GIX_"|
+
+# ...and the filter keeps what is NOT prefixed: inverted, it keeps only the git variables.
+src/mikemol/fence/git_env.py|filter-inverted|if not key\.startswith\(PREFIX\)|if key.startswith(PREFIX)|def=clean_env
+
+# ...and `base` is what is cleaned when given: ignoring it cleans this process's environment instead
+# and hands back variables the caller never passed.
+src/mikemol/fence/git_env.py|base-ignored|dict\(os\.environ\) if base is None else base|dict(os.environ)|def=clean_env
+
+# label_lease: half a measurement is no measurement. A row with user but no sys is not "user seconds
+# of CPU"; `and` for `or` reads it as a total and crashes, or worse, adds None as zero downstream.
+src/mikemol/fence/label_lease.py|half-a-cpu-reading-accepted|if row\.user_s is None or row\.sys_s is None:|if row.user_s is None and row.sys_s is None:|def=cpu_of
+
+# ...a label's peaks are that label's alone; the filter dropped, every label's history sizes it.
+src/mikemol/fence/label_lease.py|peaks-of-every-label|if row\.label == label and|if True and|def=peaks_of
+
+# ...WALL IS ONLY A HANG GUARD; CPU IS THE WORK: the guard is the larger of margin times the slowest
+# wall and hang_multiple times the slowest CPU, so a multi-threaded run (CPU above wall) survives.
+src/mikemol/fence/label_lease.py|guard-ignores-cpu|max\(slowest \* guard\.margin, by_cpu\)|slowest * guard.margin|def=deadline
+
+# ...a deadline rounds UP to a whole minute, never down: an honest run is never killed early.
+src/mikemol/fence/label_lease.py|minutes-round-down|math\.ceil\(secs / _MINUTE\)|math.floor(secs / _MINUTE)|def=minutes_up
+
+# ...the default is returned RAW, neither floored nor rounded: an operator who names one gets it.
+src/mikemol/fence/label_lease.py|default-deadline-floored|return Deadline\(guard\.default_s, cap\)|return Deadline(minutes_up(guard.default_s, guard.floor_s), cap)|def=deadline
+
+# ...`clamped` means the cap CUT the want; equal to the cap it did not, and a warning there tells a
+# reader an honest run may be killed when it will not.
+src/mikemol/fence/label_lease.py|clamped-at-equality|clamped=want > cap|clamped=want >= cap|def=deadline
+
+# ...the module is the LAST `.agda` argument anywhere in the command, and its ledger is beside THAT
+# argument; the first one reads another workload's history.
+src/mikemol/fence/label_lease.py|module-is-the-first-argument|return Path\(found\[-1\]\) if found else None|return Path(found[0]) if found else None|def=module_of
+
+# ...a ledger that is not valid UTF-8 is read lossily and is NO HISTORY, never an exception.
+src/mikemol/fence/label_lease.py|ledger-decoded-strictly|encoding="utf-8", errors="replace"\)\)|encoding="utf-8", errors="strict"))|def=read_rows
