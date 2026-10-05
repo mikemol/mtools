@@ -26,7 +26,10 @@ classifiers = [
 # project, not of a path dependency. Bazel carries the edges as py_library deps in BUILD.bazel; the pip
 # hubs do not resolve them, and requirements.txt is deliberately NOT regenerated. The declarations
 # are kept in step by hand.
-dependencies = ["mikemol-importdag"]
+dependencies = ["mikemol-importdag", "mikemol-pathsforward", "mikemol-pathwalk"]
+
+[project.scripts]
+mikemol-debtplan = "mikemol.debtplan.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -49,6 +52,8 @@ environments = ["sys_platform == 'linux'"]
 [tool.uv.sources]
 mikemol-importdag = { path = "../importdag" }
 mikemol-atomicwrite = { path = "../atomicwrite" }
+mikemol-pathsforward = { path = "../pathsforward" }
+mikemol-pathwalk = { path = "../pathwalk" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -88,7 +93,12 @@ ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line",
 # while the sandbox (no venv) puts it in its own block: the ratchet and the per-edit hook then demand
 # opposite layouts of the same file (mtools:W547).
 [tool.ruff.lint.isort]
-known-third-party = ["mikemol.importdag", "mikemol.atomicwrite"]
+known-third-party = [
+    "mikemol.importdag",
+    "mikemol.atomicwrite",
+    "mikemol.pathsforward",
+    "mikemol.pathwalk",
+]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
@@ -105,3 +115,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_cycle.py" = ["assert"]
 "tests/test_reduce.py" = ["assert"]
 "tests/test_plan.py" = ["assert"]
+"tests/test_ledger.py" = ["assert"]
+"tests/test_queue.py" = ["assert"]
+"tests/test_mint.py" = ["assert"]
+"tests/test_cli.py" = ["assert"]
+"tests/test_universe.py" = ["assert"]

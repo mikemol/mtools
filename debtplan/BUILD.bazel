@@ -2,9 +2,9 @@
 # Copyright (c) 2026 Mike Mol
 
 # ⚑ MIRRORS //importdag:BUILD.bazel TARGET FOR TARGET (itself //pkgbuild, //corpus and //icsstruct); the
-# rationale for each shape lives there, this file says only where it differs. A LIBRARY IN ITS FIRST
-# UNIT: no py_binary until the command line ports with the queue writer (mtools:W790). `@debtplan_dev`
-# and `@debtplan_deps` are declared in MODULE.bazel beside this distribution's birth.
+# rationale for each shape lives there, this file says only where it differs. ONE TOOL, one py_binary
+# (cli, `mikemol-debtplan`). `@debtplan_dev` and `@debtplan_deps` are declared in MODULE.bazel beside
+# this distribution's birth (mtools:W790).
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@debtplan_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
@@ -31,6 +31,8 @@ py_library(
     deps = [
         "//atomicwrite:atomicwrite",
         "//importdag:importdag",
+        "//pathsforward:pathsforward",
+        "//pathwalk:pathwalk",
     ],
 )
 
@@ -56,11 +58,13 @@ py_library(
             ":debtplan",
             "//atomicwrite:atomicwrite",
             "//importdag:importdag",
+            "//pathsforward:pathsforward",
+            "//pathwalk:pathwalk",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
         imports = ["src"],
-        # ⚑ With three source roots on sys.path (this dist and its two siblings), legacy implicit
+        # ⚑ With five source roots on sys.path (this dist and its four siblings), legacy implicit
         # `__init__.py` creation would turn `mikemol` into a regular package from the first root and
         # shadow the namespace: every test would fail with `No module named 'mikemol.debtplan'` (W566).
         legacy_create_init = 0,
@@ -123,6 +127,19 @@ sh_test(
 )
 
 py_binary(
+    name = "cli",
+    srcs = ["src/mikemol/debtplan/cli.py"],
+    main = "src/mikemol/debtplan/cli.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":debtplan"],
+    # ⚑ IMPORTS THE PACKAGE ITSELF, with the siblings' source roots beside it in the runfiles: legacy
+    # `__init__.py` creation would make `mikemol` a regular package and hide `mikemol.debtplan`
+    # (measured by mtools:W547: `ModuleNotFoundError` on a bare `bazel run`).
+    legacy_create_init = 0,
+)
+
+py_binary(
     name = "mypy_runner",
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
@@ -130,6 +147,8 @@ py_binary(
         # ⚑ How mypy sees the siblings inside the sandbox (the runner cannot see pip-installed siblings).
         "//atomicwrite:atomicwrite",
         "//importdag:importdag",
+        "//pathsforward:pathsforward",
+        "//pathwalk:pathwalk",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -154,14 +173,16 @@ sh_test(
 
 venv_from_hub(
     name = ".venv",
-    # ⚑ NO CONSOLE SCRIPTS in the first unit: the command line ports with the queue writer.
-    console_scripts = {},
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts].
+    console_scripts = {"mikemol-debtplan": "mikemol.debtplan.cli:main"},
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
     srcs = glob(["src/mikemol/debtplan/**"]) + [
         "//atomicwrite:atomicwrite",
         "//importdag:importdag",
+        "//pathsforward:pathsforward",
+        "//pathwalk:pathwalk",
     ],
 )
 

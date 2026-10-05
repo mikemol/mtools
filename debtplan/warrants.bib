@@ -201,3 +201,388 @@
   claim  = {The check refuses a graph that could block its cards, naming the cycle.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_cyclic_wait_graph_is_refused},
 }
+
+@misc{debtplan-ledger-a-ledger-of-file-to-count-is-read,
+  section = {ledger},
+  title  = {Each file path maps to its count of findings},
+  claim  = {Each file path maps to its count of findings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_ledger_of_file_to_count_is_read},
+}
+
+@misc{debtplan-ledger-an-empty-ledger-is-an-empty-plan-not-a-refusal,
+  section = {ledger},
+  title  = {An object with no rows is a repository with nothing to pay down},
+  claim  = {An object with no rows is a repository with nothing to pay down.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_an_empty_ledger_is_an_empty_plan_not_a_refusal},
+}
+
+@misc{debtplan-ledger-a-large-count-is-kept-exactly,
+  section = {ledger},
+  title  = {The count is an integer, not narrowed to a smaller type},
+  claim  = {The count is an integer, not narrowed to a smaller type.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_large_count_is_kept_exactly},
+}
+
+@misc{debtplan-ledger-text-that-is-not-json-is-refused-naming-the-source,
+  section = {ledger},
+  title  = {The refusal says which ledger and that it is not JSON},
+  claim  = {The refusal says which ledger and that it is not JSON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_text_that_is_not_json_is_refused_naming_the_source},
+}
+
+@misc{debtplan-ledger-a-json-array-is-refused,
+  section = {ledger},
+  title  = {A ledger is an object of rows, and an array is something else},
+  claim  = {A ledger is an object of rows, and an array is something else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_json_array_is_refused},
+}
+
+@misc{debtplan-ledger-a-count-that-is-not-a-positive-integer-is-refused-naming-the-row,
+  section = {ledger},
+  title  = {Zero, negative, float, boolean, string and null counts name the row they came in},
+  claim  = {Zero, negative, float, boolean, string and null counts name the row they came in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_count_that_is_not_a_positive_integer_is_refused_naming_the_row},
+}
+
+@misc{debtplan-ledger-the-refusal-quotes-the-value-it-refused,
+  section = {ledger},
+  title  = {The value is in the message, so the reader sees what was wrong},
+  claim  = {The value is in the message, so the reader sees what was wrong.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_the_refusal_quotes_the_value_it_refused},
+}
+
+@misc{debtplan-ledger-read-ledger-reads-the-file-at-the-path,
+  section = {ledger},
+  title  = {The file's text is parsed, and a refusal names the path},
+  claim  = {The file's text is parsed, and a refusal names the path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_read_ledger_reads_the_file_at_the_path},
+}
+
+@misc{debtplan-ledger-a-missing-ledger-file-is-an-error-not-an-empty-ledger,
+  section = {ledger},
+  title  = {An unreadable ledger must not read as nothing to pay down},
+  claim  = {An unreadable ledger must not read as nothing to pay down.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_missing_ledger_file_is_an_error_not_an_empty_ledger},
+}
+
+@misc{debtplan-universe-files-are-relative-sorted-and-use-forward-slashes,
+  section = {universe},
+  title  = {Whatever order the walk found them in, the paths come back relative to the root, sorted},
+  claim  = {Whatever order the walk found them in, the paths come back relative to the root, sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_universe.py -k test_files_are_relative_sorted_and_use_forward_slashes},
+}
+
+@misc{debtplan-universe-a-named-directory-is-left-out-and-counted,
+  section = {universe},
+  title  = {`exclude` prunes by directory name and the count says one directory went},
+  claim  = {`exclude` prunes by directory name and the count says one directory went.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_universe.py -k test_a_named_directory_is_left_out_and_counted},
+}
+
+@misc{debtplan-universe-no-exclude-prunes-nothing,
+  section = {universe},
+  title  = {There is no default list: `build/` is read unless the caller names it},
+  claim  = {There is no default list: `build/` is read unless the caller names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_universe.py -k test_no_exclude_prunes_nothing},
+}
+
+@misc{debtplan-universe-a-worktree-copy-of-the-tree-is-skipped-and-counted,
+  section = {universe},
+  title  = {A registered worktree is a copy, so its files are not a second importer},
+  claim  = {A registered worktree is a copy, so its files are not a second importer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_universe.py -k test_a_worktree_copy_of_the_tree_is_skipped_and_counted},
+}
+
+@misc{debtplan-universe-a-virtual-environment-is-pruned-and-counted,
+  section = {universe},
+  title  = {A directory holding pyvenv.cfg is a venv whatever its name; its files are not read},
+  claim  = {A directory holding pyvenv.cfg is a venv whatever its name; its files are not read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_universe.py -k test_a_virtual_environment_is_pruned_and_counted},
+}
+
+@misc{debtplan-universe-a-symlinked-directory-is-counted-and-not-followed,
+  section = {universe},
+  title  = {A link is data: it is counted, and the files behind it are read once, at their own path},
+  claim  = {A link is data: it is counted, and the files behind it are read once, at their own path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_universe.py -k test_a_symlinked_directory_is_counted_and_not_followed},
+}
+
+@misc{debtplan-universe-a-directory-git-cannot-describe-is-refused,
+  section = {universe},
+  title  = {Not a repository (or no git): the walk refuses and does not guess there are no worktrees},
+  claim  = {Not a repository (or no git): the walk refuses and does not guess there are no worktrees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_universe.py -k test_a_directory_git_cannot_describe_is_refused},
+}
+
+@misc{debtplan-queue-the-state-file-comes-first-then-the-arguments,
+  section = {queue},
+  title  = {The writer is handed `--state PATH` before whatever was asked},
+  claim  = {The writer is handed `--state PATH` before whatever was asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_the_state_file_comes_first_then_the_arguments},
+}
+
+@misc{debtplan-queue-the-writers-exit-code-is-returned,
+  section = {queue},
+  title  = {A non-zero code comes back as it was},
+  claim  = {A non-zero code comes back as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_the_writers_exit_code_is_returned},
+}
+
+@misc{debtplan-queue-standard-output-and-error-are-captured-together-in-order,
+  section = {queue},
+  title  = {Nothing the writer says reaches the terminal; it all comes back as one string},
+  claim  = {Nothing the writer says reaches the terminal; it all comes back as one string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_standard_output_and_error_are_captured_together_in_order},
+}
+
+@misc{debtplan-queue-a-system-exit-with-an-integer-code-is-that-code,
+  section = {queue},
+  title  = {A writer that exits through SystemExit(n) is read as n},
+  claim  = {A writer that exits through SystemExit(n) is read as n.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_a_system_exit_with_an_integer_code_is_that_code},
+}
+
+@misc{debtplan-queue-a-system-exit-without-an-integer-code-is-refused,
+  section = {queue},
+  title  = {None or a message is not a success, so it reads as refused},
+  claim  = {None or a message is not a success, so it reads as refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_a_system_exit_without_an_integer_code_is_refused},
+}
+
+@misc{debtplan-queue-cards-are-keyed-by-the-file-between-the-prefix-and-the-count,
+  section = {queue},
+  title  = {A title `<prefix><file> (<n> findings)` keys its card by file; other titles are ignored},
+  claim  = {A title `<prefix><file> (<n> findings)` keys its card by file; other titles are ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_cards_are_keyed_by_the_file_between_the_prefix_and_the_count},
+}
+
+@misc{debtplan-queue-a-title-with-no-count-keys-by-the-rest-of-the-title,
+  section = {queue},
+  title  = {With no ` (` the whole remainder is the file},
+  claim  = {With no ` (` the whole remainder is the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_a_title_with_no_count_keys_by_the_rest_of_the_title},
+}
+
+@misc{debtplan-queue-a-card-reads-back-its-current-status,
+  section = {queue},
+  title  = {The card carries the status the queue holds now},
+  claim  = {The card carries the status the queue holds now.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_a_card_reads_back_its_current_status},
+}
+
+@misc{debtplan-queue-no-card-matches-a-prefix-nothing-starts-with,
+  section = {queue},
+  title  = {An unmatched prefix reads no cards},
+  claim  = {An unmatched prefix reads no cards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_no_card_matches_a_prefix_nothing_starts_with},
+}
+
+@misc{debtplan-queue-an-unreadable-state-file-is-refused-not-read-as-no-cards,
+  section = {queue},
+  title  = {A missing queue is an error: no cards must not mean nothing to sync},
+  claim  = {A missing queue is an error: no cards must not mean nothing to sync.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue.py -k test_an_unreadable_state_file_is_refused_not_read_as_no_cards},
+}
+
+@misc{debtplan-mint-a-first-mint-adds-a-card-for-every-file-and-rewrites-each,
+  section = {mint},
+  title  = {Three files make three cards, each rewritten, none retired},
+  claim  = {Three files make three cards, each rewritten, none retired.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_first_mint_adds_a_card_for_every_file_and_rewrites_each},
+}
+
+@misc{debtplan-mint-a-card-carries-its-title-step-tags-and-vector,
+  section = {mint},
+  title  = {A ready file says to write it; a waiting one says what to clean first},
+  claim  = {A ready file says to write it; a waiting one says what to clean first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_carries_its_title_step_tags_and_vector},
+}
+
+@misc{debtplan-mint-edges-are-the-direct-waits-and-not-the-whole-closure,
+  section = {mint},
+  title  = {C waits on a through b, so c lists b alone and a lists only b as what it is in front of},
+  claim  = {C waits on a through b, so c lists b alone and a lists only b as what it is in front of.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_edges_are_the_direct_waits_and_not_the_whole_closure},
+}
+
+@misc{debtplan-mint-a-file-that-waits-is-blocked-and-one-that-does-not-is-ready,
+  section = {mint},
+  title  = {Status follows the direct waits},
+  claim  = {Status follows the direct waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_file_that_waits_is_blocked_and_one_that_does_not_is_ready},
+}
+
+@misc{debtplan-mint-minting-again-is-a-sync-not-a-duplicate,
+  section = {mint},
+  title  = {The second run adds nothing, rewrites each card, and leaves one card per file},
+  claim  = {The second run adds nothing, rewrites each card, and leaves one card per file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_minting_again_is_a_sync_not_a_duplicate},
+}
+
+@misc{debtplan-mint-a-card-being-worked-keeps-its-status-and-is-still-rewritten,
+  section = {mint},
+  title  = {A re-mint does not demote the card in hand, but its title and step follow the plan},
+  claim  = {A re-mint does not demote the card in hand, but its title and step follow the plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_being_worked_keeps_its_status_and_is_still_rewritten},
+}
+
+@misc{debtplan-mint-a-card-whose-file-left-the-plan-is-retired-once,
+  section = {mint},
+  title  = {The file's card is marked done with a reason, and a third run does not retire it again},
+  claim  = {The file's card is marked done with a reason, and a third run does not retire it again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_whose_file_left_the_plan_is_retired_once},
+}
+
+@misc{debtplan-mint-a-done-card-whose-file-returns-is-reopened,
+  section = {mint},
+  title  = {A file back in the ledger is work again: its done card is rewritten to ready or blocked},
+  claim  = {A file back in the ledger is work again: its done card is rewritten to ready or blocked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_done_card_whose_file_returns_is_reopened},
+}
+
+@misc{debtplan-mint-a-lock-held-by-another-refuses-the-mint-and-is-left-held,
+  section = {mint},
+  title  = {The mint does not take over a tick, and does not release a lock that is not its own},
+  claim  = {The mint does not take over a tick, and does not release a lock that is not its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_lock_held_by_another_refuses_the_mint_and_is_left_held},
+}
+
+@misc{debtplan-mint-the-lock-is-released-after-a-sync,
+  section = {mint},
+  title  = {After a mint the lock is free for the next holder},
+  claim  = {After a mint the lock is free for the next holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_lock_is_released_after_a_sync},
+}
+
+@misc{debtplan-mint-a-refused-step-stops-the-sync-names-it-and-releases-the-lock,
+  section = {mint},
+  title  = {The writer's own words are in the error, and the lock is free afterwards},
+  claim  = {The writer's own words are in the error, and the lock is free afterwards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_refused_step_stops_the_sync_names_it_and_releases_the_lock},
+}
+
+@misc{debtplan-mint-an-added-card-that-cannot-be-read-back-is-refused,
+  section = {mint},
+  title  = {A writer that says it added a card it did not add must not read as a queue in step},
+  claim  = {A writer that says it added a card it did not add must not read as a queue in step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_added_card_that_cannot_be_read_back_is_refused},
+}
+
+@misc{debtplan-mint-the-style-overrides-the-step-the-tags-and-the-vector,
+  section = {mint},
+  title  = {A caller's wording, tags and vector are what the card carries},
+  claim  = {A caller's wording, tags and vector are what the card carries.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_style_overrides_the_step_the_tags_and_the_vector},
+}
+
+@misc{debtplan-mint-the-title-and-step-for-a-ready-and-a-waiting-row,
+  section = {mint},
+  title  = {The title carries the count; the ready step names the count, the other the waits},
+  claim  = {The title carries the count; the ready step names the count, the other the waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_title_and_step_for_a_ready_and_a_waiting_row},
+}
+
+@misc{debtplan-cli-plan-prints-the-rows-in-pay-down-order-as-json,
+  section = {cli},
+  title  = {The leaf is first and ready; each later row waits on what it imports},
+  claim  = {The leaf is first and ready; each later row waits on what it imports.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_plan_prints_the_rows_in_pay_down_order_as_json},
+}
+
+@misc{debtplan-cli-a-plan-with-no-universe-prints-no-walk-line,
+  section = {cli},
+  title  = {Nothing was walked, so nothing is reported skipped},
+  claim  = {Nothing was walked, so nothing is reported skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_plan_with_no_universe_prints_no_walk_line},
+}
+
+@misc{debtplan-cli-the-universe-is-walked-by-default-and-what-it-skipped-is-printed,
+  section = {cli},
+  title  = {The walk reads the tree's files and says how many, and what it left out},
+  claim  = {The walk reads the tree's files and says how many, and what it left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_universe_is_walked_by_default_and_what_it_skipped_is_printed},
+}
+
+@misc{debtplan-cli-the-closure-runs-through-a-clean-module-unless-told-not-to,
+  section = {cli},
+  title  = {A reaches the debt file only through a clean module: the universe finds the wait},
+  claim  = {A reaches the debt file only through a clean module: the universe finds the wait.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_closure_runs_through_a_clean_module_unless_told_not_to},
+}
+
+@misc{debtplan-cli-a-named-directory-is-excluded-and-counted,
+  section = {cli},
+  title  = {`--exclude` may repeat, and each pruned directory is counted in the walk line},
+  claim  = {`--exclude` may repeat, and each pruned directory is counted in the walk line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_named_directory_is_excluded_and_counted},
+}
+
+@misc{debtplan-cli-the-arguments-default-to-the-process-command-line,
+  section = {cli},
+  title  = {With no argv given, the command line of the process is read},
+  claim  = {With no argv given, the command line of the process is read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_arguments_default_to_the_process_command_line},
+}
+
+@misc{debtplan-cli-a-malformed-ledger-is-refused-with-exit-2-and-names-the-ledger,
+  section = {cli},
+  title  = {The refusal goes to standard error, naming the ledger, and nothing is printed to stdout},
+  claim  = {The refusal goes to standard error, naming the ledger, and nothing is printed to stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_malformed_ledger_is_refused_with_exit_2_and_names_the_ledger},
+}
+
+@misc{debtplan-cli-a-missing-ledger-is-refused-with-exit-2,
+  section = {cli},
+  title  = {An unreadable ledger is a refusal and not an empty plan},
+  claim  = {An unreadable ledger is a refusal and not an empty plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_missing_ledger_is_refused_with_exit_2},
+}
+
+@misc{debtplan-cli-a-root-git-cannot-describe-is-refused-with-exit-2,
+  section = {cli},
+  title  = {With the universe on and no worktree answer, the refusal is reported and not guessed past},
+  claim  = {With the universe on and no worktree answer, the refusal is reported and not guessed past.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_root_git_cannot_describe_is_refused_with_exit_2},
+}
+
+@misc{debtplan-cli-mint-syncs-the-queue-and-says-what-changed,
+  section = {cli},
+  title  = {A first mint adds a card per file and reports the counts},
+  claim  = {A first mint adds a card per file and reports the counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_mint_syncs_the_queue_and_says_what_changed},
+}
+
+@misc{debtplan-cli-the-default-prefix-names-the-repository-and-the-default-state-is-its-queue,
+  section = {cli},
+  title  = {Without --prefix the title says `<repo> debt: `, and the queue is ROOT/.claude's},
+  claim  = {Without --prefix the title says `<repo> debt: `, and the queue is ROOT/.claude's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_default_prefix_names_the_repository_and_the_default_state_is_its_queue},
+}
+
+@misc{debtplan-cli-a-named-state-file-is-the-queue-that-is-synced,
+  section = {cli},
+  title  = {`--state` points the writer elsewhere than the default},
+  claim  = {`--state` points the writer elsewhere than the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_named_state_file_is_the_queue_that_is_synced},
+}
+
+@misc{debtplan-cli-mint-options-set-the-step-the-tags-and-the-vector,
+  section = {cli},
+  title  = {`--how`, `--touches` and `--vector` are what the cards carry},
+  claim  = {`--how`, `--touches` and `--vector` are what the cards carry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_mint_options_set_the_step_the_tags_and_the_vector},
+}
+
+@misc{debtplan-cli-a-refused-mint-is-exit-2-and-says-why,
+  section = {cli},
+  title  = {With no queue file the writer refuses to lock it, and the sync stops},
+  claim  = {With no queue file the writer refuses to lock it, and the sync stops.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_refused_mint_is_exit_2_and_says_why},
+}
+
+@misc{debtplan-cli-an-unknown-command-or-missing-operand-is-a-usage-error,
+  section = {cli},
+  title  = {Argparse refuses it with its own exit code 2},
+  claim  = {Argparse refuses it with its own exit code 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unknown_command_or_missing_operand_is_a_usage_error},
+}

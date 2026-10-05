@@ -4,3 +4,8 @@ rows	The Rows: A File Is Ready When It Waits on Nothing, and Ready Files Sort Fi
 cycle	The Cycle Check: A Wait Graph That Could Block Its Own Cards Is Found and Named
 reduce	The Reduction: A Wait Another Wait Implies Is Dropped, and the Order Is Unchanged
 plan	The Plan: Waits Follow the Import Closure Strictly, a Cycle Is One Unit, and What Could Not Be Settled Is Reported
+ledger	The Ledger: One Shape Is Read and Everything Else Is Refused by Name
+universe	The Universe: The Tree's Python Files, Relative and Sorted, With What the Walk Skipped Counted
+queue	The Queue: One Writer, Called in This Process, With Its Words Captured and Its Cards Read Back
+mint	The Mint: A Queue Kept in Step With a Plan, Direct Waits Only, a Working Card Kept Working, the Lock Always Released
+cli	The Command Line: Plan Prints JSON, Mint Syncs the Queue, and Every Refusal Is Exit 2
