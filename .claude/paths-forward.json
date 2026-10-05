@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 63,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 67,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-04T13:28:45Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T11:22:52Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -13322,7 +13322,7 @@
     {
       "symbol": "W672",
       "title": "Draft, as a patch in substrate's inbox, the repoint of Selftest.mk and its seven tmi_* tools to mikemol-transcriptstruct and the deletion of scratch/transcriptstruct.py",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "transcriptstruct",
@@ -13330,13 +13330,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Draft in a scratch copy (never substrate's tree): rewrite load_units over records.read_path, provenance.classify and blocks.blocks; run old and new over one real transcript and compare unit counts and the human-unit set; the patch plus that comparison go in a letter to substrate. If the human sets differ, name each difference rather than hiding it",
-      "evidence": "2026-10-05: 2026-10-05 MEASURED, substrate side (read only): (1) Selftest.mk is GENERATED ('do not edit; run the generator', substrate/gen_selftest_mk.py), so its part of the repoint is delete scratch/transcriptstruct.py and rerun the generator, which drops the rule at line 290-292, the all: entry (line 16) and the list: entry (line 2027). (2) The importers are 2, not 7: scratch/tmi_index.py:81 and scratch/tmi_status.py:50, both 'import transcriptstruct as T' behind sys.path hacks; tmi_subject.py and substrate/tmi_probes.py do not import it. tmi_index uses no T.name; tmi_status uses four, all in ONE function, load_units (lines 346-379): T.stream, T.envelope_role, T.human_text, T.blocks. (3) THE REPOINT IS NOT AN IMPORT SWAP: mikemol-transcriptstruct has no stream, envelope_role, human_text or messages. It has typed records (records.read_path, parse_lines), blocks.blocks (a typed Block, not the old (kind, text) tuples), and provenance.classify (a Provenance over a Record, richer than human_text and taking a caller's scheduled prefixes). The old module works on loose JSON dicts. So the patch is a REWRITE of load_units over the port, and its output can differ (what counts as human), which substrate must measure: the old human_text strips system-reminder, command wrappers and task-notification by regex; the port classifies by flags and origin",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05 MEASURED, substrate side (read only): (1) Selftest.mk is GENERATED ('do not edit; run the generator', substrate/gen_selftest_mk.py), so its part of the repoint is delete scratch/transcriptstruct.py and rerun the generator, which drops the rule at line 290-292, the all: entry (line 16) and the list: entry (line 2027). (2) The importers are 2, not 7: scratch/tmi_index.py:81 and scratch/tmi_status.py:50, both 'import transcriptstruct as T' behind sys.path hacks; tmi_subject.py and substrate/tmi_probes.py do not import it. tmi_index uses no T.name; tmi_status uses four, all in ONE function, load_units (lines 346-379): T.stream, T.envelope_role, T.human_text, T.blocks. (3) THE REPOINT IS NOT AN IMPORT SWAP: mikemol-transcriptstruct has no stream, envelope_role, human_text or messages. It has typed records (records.read_path, parse_lines), blocks.blocks (a typed Block, not the old (kind, text) tuples), and provenance.classify (a Provenance over a Record, richer than human_text and taking a caller's scheduled prefixes). The old module works on loose JSON dicts. So the patch is a REWRITE of load_units over the port, and its output can differ (what counts as human), which substrate must measure: the old human_text strips system-reminder, command wrappers and task-notification by regex; the port classifies by flags and origin | 2026-10-05: 2026-10-05 DRAFTED AND MEASURED: load_units rewrite over records.read_path/provenance.classify/blocks.blocks compared with the old load_units verbatim on two real transcript slices (20000 and 3001 envelopes): old units 10436 and 1557 all reproduced byte for byte once the port's tool_use text is re-encoded to the old ASCII-escaped spelling; no unit lost, no role changed; only additions, 57 and 15 human units from queued attachments (human 277 to 334, 9 to 24). Not exercised: peer-message handling. Patch and apply/verify steps are the letter substrate/inbox/2026-10-05-mtools-repoint-tmi-status-to-transcriptstruct.md (substrate:W33); substrate's tree untouched. The remaining act is substrate's.",
       "issued_at": "2026-10-05T11:22:51Z",
       "minted_during": "interrupt",
       "caused_by": "W592",
-      "last_worked": "2026-10-05T11:24:45Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-05T11:35:05Z",
+      "ticks_blocked": 0,
+      "completed": "20261005T113505Z"
     }
   ],
   "residue": [
