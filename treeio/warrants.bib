@@ -1515,3 +1515,24 @@
   claim  = {The public surface is the list, with no stray helper in it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_edit_snapshot.py -k test_all_lists_exactly_the_exported_names},
 }
+
+@misc{treeio-write-temp-is-flushed-to-disk-before-it-replaces-the-target,
+  section = {write},
+  title  = {The fsync happens once, on the temp, while the target still holds its old content},
+  claim  = {The fsync happens once, on the temp, while the target still holds its old content.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_the_temp_is_flushed_to_disk_before_it_replaces_the_target},
+}
+
+@misc{treeio-write-interrupt-mid-write-removes-the-temp-and-keeps-the-original,
+  section = {write},
+  title  = {A KeyboardInterrupt is not an Exception, and still must not leave its sibling behind},
+  claim  = {A KeyboardInterrupt is not an Exception, and still must not leave its sibling behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_an_interrupt_mid_write_removes_the_temp_and_keeps_the_original},
+}
+
+@misc{treeio-restore-untracked-half-is-listed-sorted-whatever-order-the-store-holds-it,
+  section = {restore},
+  title  = {Files saved in a scrambled order come back in path order, not in directory order},
+  claim  = {Files saved in a scrambled order come back in path order, not in directory order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_the_untracked_half_is_listed_sorted_whatever_order_the_store_holds_it},
+}

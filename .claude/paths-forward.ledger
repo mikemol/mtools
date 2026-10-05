@@ -1096,3 +1096,4 @@
 2026-10-05T11:35:08Z  tick  W672 advanced  collapse  "load_units repoint drafted and measured identical on two real slices; letter in substrate inbox, substrate tree untouched"  evidence=substrate/inbox/2026-10-05-mtools-repoint-tmi-status-to-transcriptstruct.md
 2026-10-05T11:43:24Z  tick  W670 advanced  sweep     "bibparse declares 11 defect classes from its docstrings; all killed, no test needed"  evidence=bibparse/mutants.regex
 2026-10-05T11:55:00Z  tick  W670 advanced  sweep     "grade declares 13 defect classes from its design comments; all killed, no test needed"  evidence=grade/mutants.regex
+2026-10-05T12:12:24Z  tick  W670 advanced  sweep     "treeio write and restore declare 18 defect classes; 3 survived (fsync, interrupt cleanup, sorted listing), 3 tests added"  evidence=treeio/mutants.regex

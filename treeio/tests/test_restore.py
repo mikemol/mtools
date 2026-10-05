@@ -72,6 +72,20 @@ def test_contents_reports_both_halves_of_a_snapshot(
     assert untracked == [("tool.py", tmp_path / "scratch" / ".edit-snapshots" / "tool.py")]
 
 
+def test_the_untracked_half_is_listed_sorted_whatever_order_the_store_holds_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Files saved in a scrambled order come back in path order, not in directory order."""
+    sha = _damaged_repo(tmp_path, monkeypatch)
+    store = tmp_path / "scratch" / ".edit-snapshots"
+    saved = ("m.py", "c.py", "x.py", "e.py", "a2.py", "q.py")
+    for name in saved:
+        (store / name).write_text("saved", encoding="utf-8")
+    _, untracked = contents(sha, tmp_path)
+    names = [rel for rel, _ in untracked]
+    assert names == sorted([*saved, "tool.py"])
+
+
 def test_contents_of_an_unknown_sha_has_no_tracked_half_and_no_store_no_untracked_half(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

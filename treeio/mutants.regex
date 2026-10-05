@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629, W670), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim write.py's or restore.py's own
+# docstring makes about a working-tree write and a snapshot restore, and none moves a def.
+
+# ATOMIC: write a sibling temp, then replace. A bare in-place write truncates before it writes, so a
+# crash mid-write destroys the source.
+src/mikemol/treeio/write.py|replace-becomes-an-in-place-write|tmp\.replace\(target\)|target.write_bytes(data)|def=_replace
+
+# Fsync before the replace: paperkit's behaviour, kept so a caller sees no change on the move.
+src/mikemol/treeio/write.py|fsync-dropped|os\.fsync\(fh\.fileno\(\)\)|fh.flush()|def=_replace
+
+# If anything fails the temp is removed; a failed write must not leave its sibling behind.
+src/mikemol/treeio/write.py|failed-write-leaves-its-temp|tmp\.unlink\(missing_ok=True\)|pass|def=_replace
+
+# ...on ANY failure, an interrupt included, not only an ordinary exception.
+src/mikemol/treeio/write.py|cleanup-only-on-exception|except BaseException:|except Exception:|def=_replace
+
+# The dry-run half is ENFORCED, not decoration: a set DRY_RUN stops the write.
+src/mikemol/treeio/write.py|dry-run-ignored|if DRY_RUN:|if False:|def=declare
+
+# The only intent is apply; anything else is refused.
+src/mikemol/treeio/write.py|unknown-intent-accepted|if intent != "apply":|if False:|def=declare
+
+# History is not writable: a revision source refuses, naming its successor.
+src/mikemol/treeio/write.py|history-writable|if not chosen\.writable:|if False:|def=write
+
+# ENCODING IS THE POINT: text is always UTF-8, never the locale default.
+src/mikemol/treeio/write.py|text-not-utf8|data\.encode\("utf-8"\)|data.encode("latin-1", errors="replace")|def=_encode
+
+# bytes pass through, a bytearray included; anything else is refused.
+src/mikemol/treeio/write.py|bytearray-refused|isinstance\(data, bytes \%7C bytearray\)|isinstance(data, bytes)|def=_encode
+
+# mkdirs creates the parents on request.
+src/mikemol/treeio/write.py|mkdirs-ignored|if mkdirs:|if False:|def=write
+
+# The count is the BYTES written, not the characters of the text.
+src/mikemol/treeio/write.py|count-is-characters-not-bytes|return len\(payload\)|return len(data)|def=write
+
+# Restoring is a deliberate act: without apply the call only reports what it would do (tracked half).
+src/mikemol/treeio/restore.py|tracked-restored-without-apply|if not apply:|if apply:|def=_restore_tracked
+
+# ...and the untracked half.
+src/mikemol/treeio/restore.py|untracked-restored-without-apply|if apply:|if True:|def=_restore_untracked
+
+# A checkout that failed is reported FAILED, not as restored.
+src/mikemol/treeio/restore.py|failed-checkout-reported-restored|"tracked" if ok else "FAILED"|"tracked"|def=_restore_tracked
+
+# Untracked rows are labelled `untracked-latest` so the verdict cannot be misread as per-sha.
+src/mikemol/treeio/restore.py|untracked-label-per-sha|return rel, "untracked-latest"|return rel, "untracked"|def=_restore_untracked
+
+# A failed copy is reported with its cause, not raised.
+src/mikemol/treeio/restore.py|copy-failure-raised|except OSError as e:|except KeyError as e:|def=_restore_untracked
+
+# Asked paths filter the rows; with none, everything is restored.
+src/mikemol/treeio/restore.py|path-filter-ignored|if not want or rel in want|if True|def=restore
+
+# The untracked half is listed sorted.
+src/mikemol/treeio/restore.py|saved-not-sorted|return tracked, sorted\(saved\)|return tracked, saved|def=contents

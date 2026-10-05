@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import os
 from typing import TYPE_CHECKING, cast
 
 import pytest
@@ -27,6 +28,41 @@ def _leftovers(root: Path) -> list[str]:
 
     """
     return [p.name for p in root.iterdir() if ".vfs-tmp" in p.name]
+
+
+def test_the_temp_is_flushed_to_disk_before_it_replaces_the_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The fsync happens once, on the temp, while the target still holds its old content."""
+    (tmp_path / "f.txt").write_text("old", encoding="utf-8")
+    seen: list[str] = []
+    real = os.fsync
+
+    def _recording(fd: int) -> None:
+        seen.append((tmp_path / "f.txt").read_text(encoding="utf-8"))
+        real(fd)
+
+    monkeypatch.setattr(os, "fsync", _recording)
+    write("f.txt", "new", WorkingTree(tmp_path))
+    assert seen == ["old"]
+    assert (tmp_path / "f.txt").read_text(encoding="utf-8") == "new"
+
+
+def test_an_interrupt_mid_write_removes_the_temp_and_keeps_the_original(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A KeyboardInterrupt is not an Exception, and still must not leave its sibling behind."""
+    (tmp_path / "f.txt").write_text("old", encoding="utf-8")
+
+    def _interrupted(fd: int) -> None:
+        del fd
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(os, "fsync", _interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        write("f.txt", "new", WorkingTree(tmp_path))
+    assert _leftovers(tmp_path) == []
+    assert (tmp_path / "f.txt").read_text(encoding="utf-8") == "old"
 
 
 def test_text_is_written_as_utf8_on_the_wire_and_round_trips(tmp_path: Path) -> None:
