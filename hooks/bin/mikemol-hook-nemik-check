@@ -30,4 +30,4 @@ if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
 fi
 
 real="$(realpath "$venv")"
-exec "$real/bin/python3" "$real/bin/$entry"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"

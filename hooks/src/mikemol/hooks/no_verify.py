@@ -22,6 +22,15 @@ redundancy — it is two different questions.
     git -c core.hooksPath=/dev/null …   points the hook path at nothing
     git -c core.hooksPath= …            the empty form does the same
     git --config-env=core.hooksPath=X   reads the path from an env var instead
+    git config core.hooksPath /tmp/x    the same move through the config subcommand
+    git config --unset core.hooksPath   removing the setting disarms too
+
+⚑ THE VALUE RULE, STATED PLAINLY. The key is tested only where git reads config: the `-c` and
+`--config-env` pairs before the subcommand, and the key operand of `git config`; never inside
+`-m`/`-F` text or any other option's value. A `core.hooksPath` value is admitted ONLY when its
+final path component (trailing slashes ignored) is exactly `.githooks` — that is arming the gate.
+Empty, `/dev/null`, any other path, `--unset` and `--unset-all` are bypasses; `--config-env` is
+always refused because its value is an env var this hook cannot see.
 
 ⚑⚑ PARSE, DO NOT SUBSTRING-MATCH — the false-positive surface IS the design, and this hook's
 sibling learned it first. `grep -n 'no-verify' file`, `echo "never --no-verify"` and a commit
@@ -58,8 +67,8 @@ _MIN_PREFIX = len("--no-v")
 
 # ⚑ THE CONFIG KEY THAT DISARMS THE HOOKS, in the two forms that reach it. `-c` sets it inline;
 # `--config-env` names an environment variable holding the value, which is the same bypass wearing
-# an indirection. Both are refused on the KEY, not on the value: `core.hooksPath=/dev/null` and
-# `core.hooksPath=` and `core.hooksPath=/tmp/empty` are one move.
+# an indirection. `--config-env` is refused on the KEY (its value is invisible); `-c` and
+# `git config` are judged by VALUE: only a final component of `.githooks` is admitted.
 _HOOKS_PATH_KEY = "core.hookspath"
 
 # ⚑ THE SUBCOMMANDS THIS POLICY COVERS. `commit` is the gate; `push` is the pre-push side and the
@@ -89,19 +98,176 @@ def _is_no_verify(arg: str) -> bool:
     return len(arg) >= _MIN_PREFIX and _LONG.startswith(arg)
 
 
-def _disarms_hooks(arg: str) -> bool:
-    """Report whether this argument points `core.hooksPath` away from the repo's hooks.
+_GATE_DIR = ".githooks"
 
-    ⚑ BOTH FORMS, ONE PREDICATE. `-c core.hooksPath=X` sets it inline; `--config-env=` names
-    an environment variable holding the value, which is the same bypass wearing an
-    indirection. The test is on the KEY rather than the value, because `/dev/null`, the empty
-    string and an empty directory are one move.
+# Global options that consume the NEXT argument, so it is not mistaken for the subcommand.
+_VALUE_GLOBALS = frozenset({"-C", "--git-dir", "--work-tree", "--namespace", "--super-prefix"})
+
+# `git config` options that consume the next argument (a file, a type, a default), so that
+# argument is not read as the key.
+_CONFIG_VALUE_OPTS = frozenset(
+    {"-f", "--file", "--blob", "--type", "--default", "--comment", "--url", "--fixed-value"}
+)
+_CONFIG_WORDS = frozenset({"set", "unset", "get", "list", "edit"})
+
+
+def _unquote(operand: str) -> str:
+    """Strip the quote characters `cmdparse` leaves on a word (its shlex is not POSIX mode).
 
     Returns:
-        True when this argument names `core.hooksPath` in either form.
+        The operand without surrounding single or double quotes.
 
     """
-    return _HOOKS_PATH_KEY in arg.lower()
+    return operand.strip("'\"")
+
+
+def _points_at_gate(value: str) -> bool:
+    """Report whether a `core.hooksPath` VALUE names the repo's own gate directory.
+
+    ⚑ THE VALUE RULE: a value is the gate when its final path component, ignoring trailing
+    slashes, is exactly `.githooks` — `.githooks`, `./.githooks`, `/abs/repo/.githooks`,
+    `$PWD/.githooks`. Everything else is a bypass: the empty string, `/dev/null`, `/tmp/x`,
+    `.githooks/..`, `.githooks-off`. Arming the gate points AT it, so that shape is admitted;
+    pointing anywhere else disarms it.
+
+    Returns:
+        True when the value's last component is `.githooks`.
+
+    """
+    return value.rstrip("/").rsplit("/", 1)[-1] == _GATE_DIR
+
+
+def _pair_disarms(pair: str) -> bool:
+    """Report whether a `-c` operand sets `core.hooksPath` to anything but the gate.
+
+    A bare key with no `=` is git's boolean-true spelling, which is no gate directory either.
+
+    Returns:
+        True when the key is `core.hooksPath` and the value is not the gate directory.
+
+    """
+    key, sep, value = pair.partition("=")
+    if key.lower() != _HOOKS_PATH_KEY:
+        return False
+    return not (sep and _points_at_gate(value))
+
+
+def _env_disarms(operand: str) -> bool:
+    """Report whether a `--config-env` operand names `core.hooksPath`.
+
+    ⚑ THE VALUE LIVES IN AN ENVIRONMENT VARIABLE this hook cannot see, so it cannot be judged
+    by value and every use of the key is refused.
+
+    Returns:
+        True when the key part of `key=ENVVAR` is `core.hooksPath`.
+
+    """
+    return operand.partition("=")[0].lower() == _HOOKS_PATH_KEY
+
+
+def _split_globals(rest: list[str]) -> tuple[list[str], list[str], list[str]]:
+    """Cut git's arguments into `-c` operands, `--config-env` operands and the tail.
+
+    ⚑ GIT READS CONFIG FROM THESE TWO GLOBAL OPTIONS ONLY WHILE THEY PRECEDE THE SUBCOMMAND, so
+    this walk stops at the first argument that is neither an option nor an option's value; the
+    tail starts at the subcommand. Option values (`-m` text, `-F` paths) are never inspected.
+
+    Returns:
+        The `-c` operands, the `--config-env` operands, and the arguments from the subcommand on.
+
+    """
+    pairs: list[str] = []
+    envs: list[str] = []
+    i = 0
+    while i < len(rest):
+        arg = rest[i]
+        if arg == "-c" and i + 1 < len(rest):
+            pairs.append(_unquote(rest[i + 1]))
+            i += 2
+        elif arg == "--config-env" and i + 1 < len(rest):
+            envs.append(_unquote(rest[i + 1]))
+            i += 2
+        elif arg.startswith("--config-env="):
+            envs.append(_unquote(arg.partition("=")[2]))
+            i += 1
+        elif arg in _VALUE_GLOBALS:
+            i += 2
+        elif arg.startswith("-"):
+            i += 1
+        else:
+            break
+    return pairs, envs, rest[i:]
+
+
+def _config_positionals(args: list[str]) -> list[str]:
+    """Return the non-option operands of `git config`, minus option values and the verb word.
+
+    Returns:
+        The key and optional value, in order.
+
+    """
+    out: list[str] = []
+    skip = False
+    for arg in args:
+        if skip:
+            skip = False
+        elif arg in _CONFIG_VALUE_OPTS:
+            skip = True
+        elif not arg.startswith("-"):
+            out.append(_unquote(arg))
+    return out[1:] if out and out[0] in _CONFIG_WORDS else out
+
+
+def _config_disarms(args: list[str]) -> bool:
+    """Report whether `git config <args>` writes `core.hooksPath` to anything but the gate.
+
+    ⚑ `--unset`, `--unset-all` (any abbreviation) and the `unset` verb remove the setting and so
+    disarm; a write is judged by its value; a lone key is a read and is admitted.
+
+    Returns:
+        True when the key operand is `core.hooksPath` and the call unsets or mis-points it.
+
+    """
+    positional = _config_positionals(args)
+    if not positional or positional[0].lower() != _HOOKS_PATH_KEY:
+        return False
+    if args[:1] == ["unset"] or any(a.startswith("--unset") for a in args):
+        return True
+    return len(positional) > 1 and not _points_at_gate(positional[1])
+
+
+def _config_findings(rest: list[str]) -> tuple[list[str], list[str]]:
+    """Return the config-bypass sentences for one git invocation and its subcommand tail.
+
+    ⚑ THE KEY IS TESTED ONLY WHERE GIT READS CONFIG: the `-c` / `--config-env` pairs before
+    the subcommand, and the key operand of `git config`. Text inside `-m`, `-F` or any other
+    option's value is data and is never inspected. Value rule: a `core.hooksPath` value is
+    admitted only when its final path component is `.githooks`; empty, `/dev/null`, any other
+    directory, `--unset` and `--unset-all` are bypasses; `--config-env` is always refused.
+
+    Returns:
+        The sentences, and the arguments from the subcommand on.
+
+    """
+    pairs, envs, tail = _split_globals(rest)
+    found = [
+        f"`-c {pair}` points core.hooksPath away from the repo's hooks — "
+        "that disarms the gate as surely as --no-verify"
+        for pair in pairs
+        if _pair_disarms(pair)
+    ]
+    found.extend(
+        f"`--config-env {env}` reads core.hooksPath from an env var — "
+        "that disarms the gate as surely as --no-verify"
+        for env in envs
+        if _env_disarms(env)
+    )
+    if tail[:1] == ["config"] and _config_disarms(tail[1:]):
+        found.append(
+            "`git config` points core.hooksPath away from the repo's .githooks "
+            "(or unsets it) — that disarms the gate as surely as --no-verify"
+        )
+    return found, tail
 
 
 def findings(command: str) -> list[str]:
@@ -123,22 +289,15 @@ def findings(command: str) -> list[str]:
     for program, rest in cmdparse.programs(command):
         if program != "git":
             continue
-        # ⚑ THE CONFIG BYPASS IS REFUSED WHEREVER IT APPEARS AFTER `git`, because it precedes the
-        # subcommand by construction — `git -c core.hooksPath=/dev/null commit` — so waiting to see
-        # the subcommand first would look past it.
-        found.extend(
-            f"`{arg}` points core.hooksPath away from the repo's hooks — "
-            "that disarms the gate as surely as --no-verify"
-            for arg in rest
-            if _disarms_hooks(arg)
-        )
-        sub = next((t for t in rest if not t.startswith("-")), None)
+        config_hits, tail = _config_findings(rest)
+        found.extend(config_hits)
+        sub = tail[0] if tail else None
         if sub not in _GATED:
             continue
         found.extend(
             f"`git {sub} {arg}` skips the gate — mtools policy is "
             "never --no-verify (operator, 2026-09-07)"
-            for arg in rest
+            for arg in tail[1:]
             if _is_no_verify(arg)
         )
     return found

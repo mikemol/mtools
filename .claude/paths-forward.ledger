@@ -1051,3 +1051,7 @@
 2026-10-04T22:25:28Z  tick  W645 minted    -         "pycodemod split: run the existing differential/split.cases.json against plan(), and scan attribute-style callers (import stem, then stem.name) for owed"  evidence=W595
 2026-10-04T22:25:41Z  tick  W595 advanced  sweep     "batch 6 landed (W597 W600 W637 W590, ad85c24); W595 split writer integrated; W642-W645 minted"  evidence=ad85c24
 2026-10-05T01:06:36Z  tick  W595 advanced  sweep     "post-restart: W595 gate refusal fixed (two def-sites pinned), mutants run directly and green; recommitting"  evidence=bazel test //pycodemod:mutants 292d1374
+2026-10-05T01:23:11Z  tick  W646 minted    -         "pycheck: treat a file as Python when its first line is a Python shebang as well as when it ends in .py, read from the post-edit content"  evidence=linux-sources:W140
+2026-10-05T01:23:16Z  tick  W647 minted    -         "no_verify: judge core.hooksPath by its value and only where git reads config, not by the key in any argument including the text of -m"  evidence=summit:W111
+2026-10-05T01:23:17Z  tick  W648 minted    -         "pycodemod importers: a flag that exits non-zero when nothing imports the module, so a capability check can fail on an empty result"  evidence=summit:W95
+2026-10-05T01:23:18Z  tick  W649 minted    -         "pycodemod: reconsider the remaining DO-NOT-PORT driver modes (sqlname, last, collision-apex, py-files) now that substrate drains wholesale, and say which summit touches"  evidence=summit:W111

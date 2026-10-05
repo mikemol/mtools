@@ -111,9 +111,9 @@ directory):
 $ .venv/bin/mikemol-hook-inbound-asks --check
 ```
 
-The `hooks/bin/mikemol-hook-inbound-asks` launcher does not forward its arguments, so it cannot run
-the check. In mtools itself, run the built entry with the venv's `python3`, as the examples above do:
-`CLAUDE_PROJECT_DIR=$PWD bazel-bin/hooks/.venv/bin/python3 bazel-bin/hooks/.venv/bin/mikemol-hook-inbound-asks --check`.
+The `hooks/bin/mikemol-hook-inbound-asks` launcher forwards its arguments (`"$@"`; it did not until
+W635), so in mtools itself the check runs through it:
+`CLAUDE_PROJECT_DIR=$PWD hooks/bin/mikemol-hook-inbound-asks --check`.
 It prints three lines, one per piece, each starting `OK <piece>:` or `MISSING <piece>:`:
 
 - `reader`: `mikemol-paths-forward` is in `<project>/.venv/bin` or on `PATH`, and its `--help` names

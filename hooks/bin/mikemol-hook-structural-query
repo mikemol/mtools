@@ -57,4 +57,4 @@ JSON
 fi
 
 real="$(realpath "$venv")"
-exec "$real/bin/python3" "$real/bin/$entry"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"

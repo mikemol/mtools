@@ -35,4 +35,4 @@ fi
 
 real="$(realpath "$venv")"
 export PATH="$root/pathsforward/.venv/bin:$PATH"
-exec "$real/bin/python3" "$real/bin/$entry"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"

@@ -4272,3 +4272,255 @@
             itself.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_class_needs_its_decorators_bases_keywords_and_body_names_but_not_its_own},
 }
+
+@misc{pycodemod-control-census-every-construct-in-the-roster-is-found-in-the-fixture,
+  section = {control_census},
+  title  = {The roster minus the constructs found is empty: the walker still sees every one},
+  claim  = {The roster minus the constructs found is empty: the walker still sees every one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_every_construct_in_the_roster_is_found_in_the_fixture},
+}
+
+@misc{pycodemod-control-census-roster-and-the-fixture-agree-in-both-directions,
+  section = {control_census},
+  title  = {The constructs found minus the roster is empty: the walker emits nothing unlisted},
+  claim  = {The constructs found minus the roster is empty: the walker emits nothing unlisted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_the_roster_and_the_fixture_agree_in_both_directions},
+}
+
+@misc{pycodemod-control-census-all-eight-construct-groups-are-represented,
+  section = {control_census},
+  title  = {The roster the fixture is checked against has eight groups},
+  claim  = {The roster the fixture is checked against has eight groups.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_all_eight_construct_groups_are_represented},
+}
+
+@misc{pycodemod-control-census-loop-over-query-rows-is-row-iteration,
+  section = {control_census},
+  title  = {`for cid, sym in con.execute(...)` is the SELECT itself},
+  claim  = {`for cid, sym in con.execute(...)` is the SELECT itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_loop_over_query_rows_is_row_iteration},
+}
+
+@misc{pycodemod-control-census-branch-on-row-content-is-a-where,
+  section = {control_census},
+  title  = {`if sym is None` reads a row name},
+  claim  = {`if sym is None` reads a row name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_branch_on_row_content_is_a_where},
+}
+
+@misc{pycodemod-control-census-branch-on-an-argument-is-a-mode-branch-in-the-same-function,
+  section = {control_census},
+  title  = {`if additive` is not SQL at all, beside the row branches of the same function},
+  claim  = {`if additive` is not SQL at all, beside the row branches of the same function.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_branch_on_an_argument_is_a_mode_branch_in_the_same_function},
+}
+
+@misc{pycodemod-control-census-comprehension-guard-over-rows-is-a-where,
+  section = {control_census},
+  title  = {`[r for r in rows if r[0] > 0]` filters rows},
+  claim  = {`[r for r in rows if r[0] > 0]` filters rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_comprehension_guard_over_rows_is_a_where},
+}
+
+@misc{pycodemod-control-census-with-open-is-the-external-boundary,
+  section = {control_census},
+  title  = {A `with open(...)` is the irreducible half},
+  claim  = {A `with open(...)` is the irreducible half.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_with_open_is_the_external_boundary},
+}
+
+@misc{pycodemod-control-census-except-oserror-is-external-on-the-type,
+  section = {control_census},
+  title  = {The handler body raises a `ValueError`, yet the clause is the boundary's on its type},
+  claim  = {The handler body raises a `ValueError`, yet the clause is the boundary's on its type.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_except_oserror_is_external_on_the_type},
+}
+
+@misc{pycodemod-control-census-branch-one-hop-from-a-subprocess-is-external,
+  section = {control_census},
+  title  = {`p = subprocess.run(...)` then `if p.returncode:` names no external module itself},
+  claim  = {`p = subprocess.run(...)` then `if p.returncode:` names no external module itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_branch_one_hop_from_a_subprocess_is_external},
+}
+
+@misc{pycodemod-control-census-sys-exit-is-external-not-work-for-the-engine,
+  section = {control_census},
+  title  = {`sys.exit(1)` is an exit construct and is filed external, never as a read},
+  claim  = {`sys.exit(1)` is an exit construct and is filed external, never as a read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_sys_exit_is_external_not_work_for_the_engine},
+}
+
+@misc{pycodemod-control-census-yielding-query-rows-is-row-iteration,
+  section = {control_census},
+  title  = {`yield r[0]` over a store cursor is the SELECT's own output},
+  claim  = {`yield r[0]` over a store cursor is the SELECT's own output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_yielding_query_rows_is_row_iteration},
+}
+
+@misc{pycodemod-control-census-comprehension-over-a-plain-argument-is-not-a-mode-branch,
+  section = {control_census},
+  title  = {`[x for x in xs if x]` stays honestly unclassified, in both the loop and the guard},
+  claim  = {`[x for x in xs if x]` stays honestly unclassified, in both the loop and the guard.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_comprehension_over_a_plain_argument_is_not_a_mode_branch},
+}
+
+@misc{pycodemod-control-census-early-exits-are-exactly-break-continue-and-return-in-loop,
+  section = {control_census},
+  title  = {Of the fixture, only those three constructs are early exits},
+  claim  = {Of the fixture, only those three constructs are early exits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_the_early_exits_are_exactly_break_continue_and_return_in_loop},
+}
+
+@misc{pycodemod-control-census-early-break-over-rows-is-limit-one-exists,
+  section = {control_census},
+  title  = {The exit's form depends on the enclosing loop iterating rows},
+  claim  = {The exit's form depends on the enclosing loop iterating rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_early_break_over_rows_is_limit_one_exists},
+}
+
+@misc{pycodemod-control-census-removing-the-break-removes-exactly-the-break-and-its-guard,
+  section = {control_census},
+  title  = {The count moves by two: the `break` and the `if` that guards it},
+  claim  = {The count moves by two: the `break` and the `if` that guards it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_removing_the_break_removes_exactly_the_break_and_its_guard},
+}
+
+@misc{pycodemod-control-census-unclassified-site-never-claims-a-relational-form,
+  section = {control_census},
+  title  = {The `unknown` column: a guess there would read like analysis},
+  claim  = {The `unknown` column: a guess there would read like analysis.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_unclassified_site_never_claims_a_relational_form},
+}
+
+@misc{pycodemod-control-census-every-kind-reported-is-in-the-declared-roster,
+  section = {control_census},
+  title  = {No site carries a kind outside `CONTROL_KINDS`},
+  claim  = {No site carries a kind outside `CONTROL_KINDS`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_every_kind_reported_is_in_the_declared_roster},
+}
+
+@misc{pycodemod-control-census-unparseable-file-comes-back-as-a-skip-not-an-empty-result,
+  section = {control_census},
+  title  = {AUTHORED: a syntax error is reported, and contributes no site},
+  claim  = {AUTHORED: a syntax error is reported, and contributes no site.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_unparseable_file_comes_back_as_a_skip_not_an_empty_result},
+}
+
+@misc{pycodemod-control-census-unreadable-file-comes-back-as-a-skip,
+  section = {control_census},
+  title  = {AUTHORED: a path that does not exist is reported with its reason},
+  claim  = {AUTHORED: a path that does not exist is reported with its reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_unreadable_file_comes_back_as_a_skip},
+}
+
+@misc{pycodemod-control-census-undecodable-file-comes-back-as-a-skip,
+  section = {control_census},
+  title  = {AUTHORED: bytes that are not UTF-8 are reported apart from an unparseable file},
+  claim  = {AUTHORED: bytes that are not UTF-8 are reported apart from an unparseable file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_undecodable_file_comes_back_as_a_skip},
+}
+
+@misc{pycodemod-control-census-skipped-file-does-not-hide-the-files-beside-it,
+  section = {control_census},
+  title  = {AUTHORED: the good file's sites and the bad file's skip arrive together},
+  claim  = {AUTHORED: the good file's sites and the bad file's skip arrive together.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_skipped_file_does_not_hide_the_files_beside_it},
+}
+
+@misc{pycodemod-control-census-empty-store-vocab-yields-no-row-kinds,
+  section = {control_census},
+  title  = {AUTHORED: with nothing named as a store read, no site is a row site},
+  claim  = {AUTHORED: with nothing named as a store read, no site is a row site.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_empty_store_vocab_yields_no_row_kinds},
+}
+
+@misc{pycodemod-control-census-empty-store-vocab-gives-an-early-exit-no-relational-form,
+  section = {control_census},
+  title  = {AUTHORED: no row loop is recognised, so a `break` is an early exit reporting `unknown`},
+  claim  = {AUTHORED: no row loop is recognised, so a `break` is an early exit reporting `unknown`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_empty_store_vocab_gives_an_early_exit_no_relational_form},
+}
+
+@misc{pycodemod-control-census-empty-boundary-claims-nothing-external-or-configurational,
+  section = {control_census},
+  title  = {AUTHORED: only `sys.exit` stays external; `if p.returncode` falls through, unclassified},
+  claim  = {AUTHORED: only `sys.exit` stays external; `if p.returncode` falls through, unclassified.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_empty_boundary_claims_nothing_external_or_configurational},
+}
+
+@misc{pycodemod-control-census-empty-boundary-leaves-except-oserror-unclassified,
+  section = {control_census},
+  title  = {AUTHORED: the exception type is the boundary's to name; an empty one names none},
+  claim  = {AUTHORED: the exception type is the boundary's to name; an empty one names none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_empty_boundary_leaves_except_oserror_unclassified},
+}
+
+@misc{pycodemod-control-census-site-carries-its-path-line-scope-and-snippet,
+  section = {control_census},
+  title  = {AUTHORED: the columns of one site, read off a small source},
+  claim  = {AUTHORED: the columns of one site, read off a small source.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_site_carries_its_path_line_scope_and_snippet},
+}
+
+@misc{pycodemod-control-census-governing-expression-of-an-if-is-its-test,
+  section = {control_census},
+  title  = {AUTHORED: a fingerprint census reads `referents(site.governing)`},
+  claim  = {AUTHORED: a fingerprint census reads `referents(site.governing)`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_the_governing_expression_of_an_if_is_its_test},
+}
+
+@misc{pycodemod-control-census-governing-expression-of-a-break-is-the-enclosing-test,
+  section = {control_census},
+  title  = {AUTHORED: an exit is governed by the `if` it sits under},
+  claim  = {AUTHORED: an exit is governed by the `if` it sits under.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_the_governing_expression_of_a_break_is_the_enclosing_test},
+}
+
+@misc{pycodemod-control-census-break-under-no-test-has-no-governing-expression,
+  section = {control_census},
+  title  = {AUTHORED: `for x in y: break` has nothing to read},
+  claim  = {AUTHORED: `for x in y: break` has nothing to read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_break_under_no_test_has_no_governing_expression},
+}
+
+@misc{pycodemod-control-census-external-except-keeps-its-real-type-as-governing,
+  section = {control_census},
+  title  = {AUTHORED: the verdict is forced external, the recorded expression is the handler's type},
+  claim  = {AUTHORED: the verdict is forced external, the recorded expression is the handler's type.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_external_except_keeps_its_real_type_as_governing},
+}
+
+@misc{pycodemod-control-census-governing-expression-does-not-enter-a-sites-equality,
+  section = {control_census},
+  title  = {AUTHORED: parsing the same source twice gives equal sites, though the nodes differ},
+  claim  = {AUTHORED: parsing the same source twice gives equal sites, though the nodes differ.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_the_governing_expression_does_not_enter_a_sites_equality},
+}
+
+@misc{pycodemod-control-census-trailing-return-is-not-control-flow,
+  section = {control_census},
+  title  = {AUTHORED: the function's last statement is excluded; an earlier return is a guard},
+  claim  = {AUTHORED: the function's last statement is excluded; an earlier return is a guard.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_a_trailing_return_is_not_control_flow},
+}
+
+@misc{pycodemod-control-census-else-is-reported-at-its-first-statement,
+  section = {control_census},
+  title  = {AUTHORED: an `else:` has no node of its own, so the line is the first statement's},
+  claim  = {AUTHORED: an `else:` has no node of its own, so the line is the first statement's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_else_is_reported_at_its_first_statement},
+}
+
+@misc{pycodemod-control-census-elif-is-named-as-an-elif,
+  section = {control_census},
+  title  = {AUTHORED: the chained `if` is an `elif`, not a second `if`},
+  claim  = {AUTHORED: the chained `if` is an `elif`, not a second `if`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_an_elif_is_named_as_an_elif},
+}
+
+@misc{pycodemod-control-census-sites-come-back-in-path-order-then-line-order,
+  section = {control_census},
+  title  = {AUTHORED: two files give the first file's sites first, each ordered by line},
+  claim  = {AUTHORED: two files give the first file's sites first, each ordered by line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_control_census.py -k test_sites_come_back_in_path_order_then_line_order},
+}

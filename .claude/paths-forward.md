@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 645 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:25060e8d1f46261c`
+counter 649 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:8a383649532d6bce`
 
 | # | symbol | status |
 |---|---|---|
@@ -19,16 +19,16 @@ counter 645 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:2506
 | 10 | W631 | ready |
 | 11 | W632 | ready |
 | 12 | W634 | ready |
-| 13 | W635 | ready |
-| 14 | W636 | ready |
-| 15 | W638 | ready |
-| 16 | W639 | ready |
-| 17 | W640 | ready |
-| 18 | W641 | ready |
-| 19 | W642 | ready |
-| 20 | W643 | ready |
-| 21 | W644 | ready |
-| 22 | W645 | ready |
+| 13 | W636 | ready |
+| 14 | W639 | ready |
+| 15 | W640 | ready |
+| 16 | W641 | ready |
+| 17 | W642 | ready |
+| 18 | W643 | ready |
+| 19 | W644 | ready |
+| 20 | W645 | ready |
+| 21 | W648 | ready |
+| 22 | W649 | ready |
 | 23 | W319 | blocked |
 | 24 | W317 | blocked |
 | 25 | W576 | blocked |
@@ -636,7 +636,11 @@ counter 645 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:2506
 | 627 | W628 | done |
 | 628 | W630 | done |
 | 629 | W633 | done |
-| 630 | W637 | done |
+| 630 | W635 | done |
+| 631 | W637 | done |
+| 632 | W638 | done |
+| 633 | W646 | done |
+| 634 | W647 | done |
 
 ## waypoints
 
@@ -652,15 +656,15 @@ counter 645 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:2506
    UNCLAIMED row, and record what the model saw
 4. **W593** (ready) Ask amr-skills whether the CUDA context limit also counts desktop compute apps (kwin, VS Code),
    which would make the contexts ledger TOTAL vary
-   - next: Send amr-skills the question citing fence hold b8b3e41; record its answer in evidence
+   - next: Wait for amr-skills' reply; when it cites a card, block this one on amr-skills:W`<n>`; if it has no
+     measurement, leave the contexts TOTAL declared as a consumer-owned number and say so in the fence docs
 5. **W596** (ready) pycodemod placement: add a flag overriding ENTRY_FORMS and FIRST_WRITE_FORMS, after verifying the
    origin's spelling at substrate
    - next: Read the origin's spelling in substrate's scratch/pycodemod.py, add the flag with a red-on-HEAD arm
 6. **W614** (ready) Ask paperkit via summit whether it will expose project enumeration plus foreign bibs, else port
    paperkit_projects with its resolver as an operand
-   - next: summit ask --for paperkit: will paperkit expose project enumeration plus foreign bibs (its _nested_roots and
-     _bibpath are private, roots.py measures a different fact)? If paperkit declines or does not answer, port per
-     .claude/swarm/W612-W614-census-modes.md
+   - next: Wait for paperkit's reply (cite it as paperkit:W`<n>`); if it declines or stays silent for several ticks,
+     port paperkit_projects per .claude/swarm/W612-W614-census-modes.md with the resolver as an operand
 7. **W619** (ready) mutate_runner: import mikemol-fence through the dist-to-dist edge (A+B) and delete its local git-env
    filter, now that sibling edges exist
    - next: Read mutate_runner's local filter and fence's git-env scrubber; add the fence edge to each dist that runs
@@ -685,52 +689,52 @@ counter 645 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:2506
    StoreVocab and kinds from required flags
    - next: Required flags, no defaults; a row printer and report.incomplete per mode; one commit per mode if the parser
      budget allows; update the rubric heading's mode count
-13. **W635** (ready) hooks/bin launchers drop their arguments: pass "$@" through in mikemol-hook-inbound-asks (and check
-   its siblings) so --check can run through the launcher
-   - next: Read every hooks/bin launcher's final exec line; add a test that --check reaches the entry through the
-     launcher; this is a LIVE hook (deps first, live file last, recovery is checkout HEAD --)
-14. **W636** (ready) pycodemod: finish the shared parse: switch storeflow.py to core.parse_file, then check the ten
+13. **W636** (ready) pycodemod: finish the shared parse: switch storeflow.py to core.parse_file, then check the ten
    same-signature _parse copies for byte-identity
    - next: storeflow.py: delete its private _parse, import parse_file, drop the unused Path import; then diff graph,
      modstate, writes, crossings, swallows, rivals, funcnames, deps, ordering and aliases _parse against parse_file and
      switch only the identical ones; strings, definitions, layout and reads return different types and stay
-15. **W638** (ready) pycodemod: the control census class and control_sites, returning Skip for files it cannot read,
-   over a StoreVocab and a Boundary
-   - next: Commit 3 of 4 per .claude/swarm/W606-control-port.md, after the provenance helpers: the census over the
-     planted fixture with the origin's kind arms and completeness-in-both-directions arms, plus the skipped-file arm
-     that belongs here
-16. **W639** (ready) pycodemod: the control report printers and the --control and --constructs CLI modes, the construct
+14. **W639** (ready) pycodemod: the control report printers and the --control and --constructs CLI modes, the construct
    count stated as 36
    - next: Commit 4 of 4 per .claude/swarm/W606-control-port.md, after the census; the plan says 41 constructs but the
      origin roster sums to 36 (6+5+1+8+5+5+4+2), so the text and tests say 36
-17. **W640** (ready) pycodemod: the fingerprint site walk (site_referents and the census subclass) emitting FpSite
+15. **W640** (ready) pycodemod: the fingerprint site walk (site_referents and the census subclass) emitting FpSite
    objects over the control census, keeping the desync AssertionError
    - next: Blocked on the control census (the W606 commit 3 card): emit FpSite(path, line, construct, kind, scope,
      snippet, refs) with refs = frozenset(referents(governing_expr)) per .claude/swarm/W607-fingerprint-port.md step 4
-18. **W641** (ready) pycodemod cli: the --fingerprint mode with --seed, --groups, --keys and --monotone, printing the
+16. **W641** (ready) pycodemod cli: the --fingerprint mode with --seed, --groups, --keys and --monotone, printing the
    skipped seed files
    - next: After the site walk: seed paths are the caller's (modelled_keys(seed_paths)); --monotone builds the ladder by
      calling Census once per rung and checking a.rem % b.rem == 0 row by row; print Modelled.skipped so a typo in a seed
      path is visible
-19. **W642** (ready) Tell substrate and el-openglo that mikemol-githook-prepare-commit-msg now aborts the commit on a
+17. **W642** (ready) Tell substrate and el-openglo that mikemol-githook-prepare-commit-msg now aborts the commit on a
    failure the shell original swallowed
    - next: One letter each, citing the stderr-and-exit-1 cases and that the report is kept on a failed append; they
      decide whether to adopt before they repoint their stub, which must pass "$@"
-20. **W643** (ready) pycodemod census modes: state 'searched N files, found none' on an empty result, so a zero is never
+18. **W643** (ready) pycodemod census modes: state 'searched N files, found none' on an empty result, so a zero is never
    read as an absence
    - next: Measure which modes print nothing on a miss (calls, literals, relname and siblings); decide one shared line
      through report.incomplete or a sibling; red arm per family; mind the operands rubric row which already prints what
      a directory walk left out
-21. **W644** (ready) pycodemod cli: wire the --split mode with --max, --max-defs, --prefix, --keep and --export, and an
+19. **W644** (ready) pycodemod cli: wire the --split mode with --max, --max-defs, --prefix, --keep and --export, and an
    explicit --apply or --dry-run, neither given refused
    - next: Map --apply to apply(write=True) and --dry-run to write=False; refuse neither and both like
      flag_contract.exactly_one; a printer for the refusal, owed callers, hazards and selfnamed; tests per flag and per
      refusal
-22. **W645** (ready) pycodemod split: run the existing differential/split.cases.json against plan(), and scan
+20. **W645** (ready) pycodemod split: run the existing differential/split.cases.json against plan(), and scan
    attribute-style callers (import stem, then stem.name) for owed
    - next: Read differential/split.cases.json and write the cases-versus-plan adapter; extend the owed scan to stem.name
      access; add a behavioural-equivalence check by import-and-compare that mypy's no-Any rule allows; note the origin
      emitted an empty part 00 which the port omits
+21. **W648** (ready) pycodemod importers: a flag that exits non-zero when nothing imports the module, so a capability
+   check can fail on an empty result
+   - next: Measure importers on a module nobody imports (summit: exit 0, only the skip counters); add the flag (name it
+     after the census-wide convention W643 settles) with a red arm; decide whether every census mode takes it
+22. **W649** (ready) pycodemod: reconsider the remaining DO-NOT-PORT driver modes (sqlname, last, collision-apex,
+   py-files) now that substrate drains wholesale, and say which summit touches
+   - next: Read each at source in substrate; summit asks which of the 13 uncovered cases it uses (sqlname, portable and
+     py-files named; portable's library landed, its CLI is W632); port, or decline on merit with the reason; reply to
+     summit with the table
 23. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257
@@ -1798,8 +1802,16 @@ counter 645 · heartbeat 2026-10-04T19:29:41Z · job `08811049` · hash `v2:2506
 628. **W630** (done) pycodemod cli: wire the --relname mode over relations.relname_sites
 629. **W633** (done) pycodemod: one public parse_file in core, adopted by snapshots.py and relalg.py (storeflow and the
    other copies are W636)
-630. **W637** (done) pycodemod: control provenance helpers (ext_names, external_expr, mode_expr, scopes, own_walk,
+630. **W635** (done) hooks/bin launchers drop their arguments: pass "$@" through in mikemol-hook-inbound-asks (and check
+   its siblings) so --check can run through the launcher
+631. **W637** (done) pycodemod: control provenance helpers (ext_names, external_expr, mode_expr, scopes, own_walk,
    module_consts, params) taking the Boundary as an operand
+632. **W638** (done) pycodemod: the control census class and control_sites, returning Skip for files it cannot read,
+   over a StoreVocab and a Boundary
+633. **W646** (done) pycheck: treat a file as Python when its first line is a Python shebang as well as when it ends in
+   .py, read from the post-edit content
+634. **W647** (done) no_verify: judge core.hooksPath by its value and only where git reads config, not by the key in any
+   argument including the text of -m
 
 ## residue
 

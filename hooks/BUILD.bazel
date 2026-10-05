@@ -97,6 +97,14 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             "bin/mikemol-hook-structural-query",
             "bin/mikemol-hook-no-chaining",
             "bin/mikemol-hook-no-verify",
+            # ⚑ THE FIFTH TIME, AND THIS ONE PASSED PLAIN PYTEST: `test_bin_launchers_argv` (W635)
+            # EXECUTES every launcher that forwards its arguments, and the four not named above
+            # failed hermetically with `FileNotFoundError` (12 of its 21 cases) while the same file
+            # passed from the working tree. The instrument that caught it was the commit gate.
+            "bin/mikemol-hook-inbound-asks",
+            "bin/mikemol-hook-nemik-check",
+            "bin/mikemol-hook-pycheck",
+            "bin/mikemol-hook-shellcheck",
             # ⚑ W238: the standing launcher and its policy, EXECUTED by test_standing_facts with
             # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
             "bin/mikemol-hook-standing",

@@ -126,6 +126,88 @@ def test_text_outside_the_git_command_is_not_read_as_its_arguments(command: str)
     assert not hits, f"{command!r} is ordinary work and was refused: {hits}"
 
 
+# ⚑ THE KEY IS TESTED WHERE GIT READS CONFIG, AND THE VALUE DECIDES. Arming the gate points AT it.
+_MUST_DENY_CONFIG = [
+    "git -c core.hooksPath=/dev/null commit -m x",
+    "git -c core.hooksPath= commit -m x",
+    "git -c core.hooksPath commit -m x",
+    "git -c core.hooksPath=/tmp/x commit -m x",
+    "git -c core.hooksPath=.githooks-off commit -m x",
+    "git -c user.name=x -c core.hooksPath=/dev/null commit -m y",
+    "git --config-env=core.hooksPath=EMPTY commit -m x",
+    "git --config-env core.hooksPath=EMPTY commit -m x",
+    "git config core.hooksPath /tmp/x",
+    "git config core.hooksPath ''",
+    "git config core.hooksPath /dev/null",
+    "git config --global core.hooksPath /tmp/x",
+    "git config --unset core.hooksPath",
+    "git config --unset-all core.hooksPath",
+    "git config --local --unset core.hooksPath",
+    "git config unset core.hooksPath",
+    "git -c user.name=x commit -n",
+    "git -c 'core.hooksPath=/dev/null' commit -m x",
+    'git -c "core.hooksPath=" commit -m x',
+    "git config 'core.hooksPath' '/tmp/x'",
+    "git config core.hooksPath ''",
+    "echo a\ngit config core.hooksPath /dev/null",
+]
+_MUST_ALLOW_CONFIG = [
+    "git config core.hooksPath .githooks",
+    "git config core.hooksPath ./.githooks",
+    "git config core.hooksPath /home/u/repo/.githooks",
+    "git config core.hooksPath '$PWD/.githooks'",
+    "git config --local core.hooksPath .githooks/",
+    "git config core.hooksPath",
+    "git config --get core.hooksPath",
+    "git config --file x.cfg user.name y",
+    "git -c core.hooksPath=.githooks commit -m x",
+    "git commit -m 'explains core.hooksPath in prose'",
+    "git commit -m 'git -c core.hooksPath=/dev/null is refused'",
+    "git commit -F core.hooksPath.txt",
+    "git -C core.hooksPath status",
+    "git log --grep=core.hooksPath",
+]
+
+
+@pytest.mark.parametrize("command", _MUST_DENY_CONFIG)
+def test_every_hookspath_bypass_is_refused_by_key_and_value(command: str) -> None:
+    """A `core.hooksPath` anywhere git reads config, not pointing at `.githooks`, is a bypass."""
+    assert findings(command), f"{command!r} disarms the gate and was not refused"
+
+
+@pytest.mark.parametrize("command", _MUST_ALLOW_CONFIG)
+def test_arming_the_gate_and_prose_naming_the_key_are_not_refused(command: str) -> None:
+    """Pointing AT `.githooks`, reading the key, or naming it inside option TEXT is ordinary."""
+    hits = findings(command)
+    assert not hits, f"{command!r} is ordinary work and was refused: {hits}"
+
+
+def test_the_value_rule_judges_only_the_final_path_component() -> None:
+    """Only a final component of exactly `.githooks` arms; lookalikes and parents do not."""
+    arm = "git config core.hooksPath {}"
+    assert not findings(arm.format("a/b/.githooks"))
+    assert not findings(arm.format("a/b/.githooks//"))
+    assert findings(arm.format(".githooks/.."))
+    assert findings(arm.format(".githooks/x"))
+    assert findings(arm.format("githooks"))
+    assert findings(arm.format("/"))
+
+
+def test_option_values_before_the_subcommand_do_not_hide_it() -> None:
+    """`-C dir` consumes its operand, so the subcommand after it is still found and gated."""
+    assert findings("git -C sub commit -n")
+    assert findings("git -C sub config core.hooksPath /tmp/x")
+    assert not findings("git -C sub commit -m x")
+
+
+def test_config_operands_skip_option_values_and_the_verb_word() -> None:
+    """`--file x` consumes `x`; the `set` verb is not the key."""
+    assert findings("git config --file x.cfg core.hooksPath /tmp/x")
+    assert findings("git config set core.hooksPath /tmp/x")
+    assert not findings("git config set core.hooksPath .githooks")
+    assert not findings("git config --file core.hooksPath user.name y")
+
+
 def test_an_unparseable_command_is_not_a_bypass() -> None:
     """⚑ UNBALANCED QUOTES MEAN THE SHELL WOULD REFUSE IT TOO.
 

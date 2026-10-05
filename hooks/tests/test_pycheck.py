@@ -303,3 +303,98 @@ def test_a_malformed_payload_denies_nothing(
     monkeypatch.setattr(sys, "stdin", io.StringIO("not json"))
     assert pycheck.main() == 0
     assert not capsys.readouterr().out
+
+
+# --- Python decided by shebang as well as suffix (linux-sources:W140) ---
+
+_PY_SCRIPT_DEFECT = "#!/usr/bin/env python3\n" + _IMPORT_ONLY
+_SH_SCRIPT = "#!/bin/sh\n" + _IMPORT_ONLY
+
+
+def test_is_python_ors_the_suffix_with_a_python_shebang() -> None:
+    """A `.py` name is Python whatever its first line; any other name needs the shebang."""
+    assert pycheck.is_python("a.py", "x = 1\n")
+    assert pycheck.is_python("a.py", "#!/bin/sh\n")
+    assert pycheck.is_python("tool", "#!/usr/bin/env python3\n")
+    assert pycheck.is_python("tool", "#!/usr/bin/python3.12 -u\n")
+    assert pycheck.is_python("tool", "#! python\n")
+    assert not pycheck.is_python("tool", "#!/bin/sh\n")
+    assert not pycheck.is_python("tool", "x = 1\n")
+    assert not pycheck.is_python("tool", "#!/usr/bin/env pythonic\n")
+
+
+def test_a_bom_before_the_shebang_is_stripped() -> None:
+    """The shebang is read past a byte-order mark, as shellcheck reads its own."""
+    assert pycheck.is_python("tool", "﻿#!/usr/bin/env python3\n")
+    assert not pycheck.is_python("tool", "﻿#!/bin/sh\n")
+
+
+def test_a_python_shebang_in_a_sh_file_is_python(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """The shebang declares it: a `.sh` name with a python shebang reaches this gate (pinned)."""
+    root = _project(tmp_path, venv=False)
+    assert pycheck.is_python("run.sh", "#!/usr/bin/env python3\n")
+    _main(monkeypatch, _write(root / "run.sh", _PY_SCRIPT_DEFECT), own="1")
+    assert "cannot render a verdict" in capsys.readouterr().out
+
+
+def test_a_bom_shebang_file_reaches_the_gate(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """A BOM-prefixed python shebang on an extensionless name is judged, not skipped."""
+    root = _project(tmp_path, venv=False)
+    _main(monkeypatch, _write(root / "tool", "﻿" + _PY_SCRIPT_DEFECT), own="1")
+    assert "cannot render a verdict" in capsys.readouterr().out
+
+
+def test_a_sh_shebang_file_is_not_checked_as_python(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """An extensionless `#!/bin/sh` file never reaches a checker, even armed with no venv."""
+    root = _project(tmp_path, venv=False)
+    _main(monkeypatch, _write(root / "tool", _SH_SCRIPT), own="1")
+    assert not capsys.readouterr().out
+
+
+@_needs_checkers
+def test_an_extensionless_python_shebang_defect_is_denied(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """A brand-new extensionless Write with a python shebang and an F401 is denied at once."""
+    root = _project(tmp_path)
+    assert not (root / "tool").exists()
+    _main(monkeypatch, _write(root / "tool", _PY_SCRIPT_DEFECT), own="1")
+    assert "F401" in capsys.readouterr().out
+
+
+@_needs_checkers
+def test_a_clean_extensionless_python_shebang_file_is_admitted(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """The not-deny arm: the same shebang over clean code passes."""
+    root = _project(tmp_path)
+    _main(monkeypatch, _write(root / "tool", "#!/usr/bin/env python3\n" + _CLEAN), own="1")
+    assert not capsys.readouterr().out
+
+
+@_needs_checkers
+def test_a_py_file_without_a_shebang_is_still_checked(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """The suffix still votes alone: a `.py` file with no shebang is refused for its defect."""
+    root = _project(tmp_path)
+    _main(monkeypatch, _write(root / "src" / "a.py", _IMPORT_ONLY), own="1")
+    assert "F401" in capsys.readouterr().out
+
+
+@_needs_checkers
+def test_a_suppression_in_a_shebang_file_is_still_refused(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """The suppression handling is unchanged for a shebang file: an added directive refuses."""
+    root = _project(tmp_path)
+    marker = "# no" + "qa: F401"
+    body = f"#!/usr/bin/env python3\n{_IMPORT_ONLY.replace('import os', f'import os  {marker}')}"
+    _main(monkeypatch, _write(root / "tool", body), own="1")
+    assert "suppression" in capsys.readouterr().out

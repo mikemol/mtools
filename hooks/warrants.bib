@@ -5479,3 +5479,130 @@
   claim  = {A report in a read-only git dir cannot be deleted: the failure is raised, not swallowed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_prepare_commit_msg.py -k test_prepare_raises_for_a_report_that_cannot_be_consumed},
 }
+
+@misc{hooks-pycheck-is-python-ors-the-suffix-with-a-python-shebang,
+  section = {pycheck},
+  title  = {A `.py` name is Python whatever its first line; any other name needs the shebang},
+  claim  = {A `.py` name is Python whatever its first line; any other name needs the shebang.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_is_python_ors_the_suffix_with_a_python_shebang},
+}
+
+@misc{hooks-pycheck-bom-before-the-shebang-is-stripped,
+  section = {pycheck},
+  title  = {The shebang is read past a byte-order mark, as shellcheck reads its own},
+  claim  = {The shebang is read past a byte-order mark, as shellcheck reads its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_bom_before_the_shebang_is_stripped},
+}
+
+@misc{hooks-pycheck-python-shebang-in-a-sh-file-is-python,
+  section = {pycheck},
+  title  = {The shebang declares it: a `.sh` name with a python shebang reaches this gate (pinned)},
+  claim  = {The shebang declares it: a `.sh` name with a python shebang reaches this gate (pinned).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_python_shebang_in_a_sh_file_is_python},
+}
+
+@misc{hooks-pycheck-bom-shebang-file-reaches-the-gate,
+  section = {pycheck},
+  title  = {A BOM-prefixed python shebang on an extensionless name is judged, not skipped},
+  claim  = {A BOM-prefixed python shebang on an extensionless name is judged, not skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_bom_shebang_file_reaches_the_gate},
+}
+
+@misc{hooks-pycheck-sh-shebang-file-is-not-checked-as-python,
+  section = {pycheck},
+  title  = {An extensionless `#!/bin/sh` file never reaches a checker, even armed with no venv},
+  claim  = {An extensionless `#!/bin/sh` file never reaches a checker, even armed with no venv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_sh_shebang_file_is_not_checked_as_python},
+}
+
+@misc{hooks-pycheck-extensionless-python-shebang-defect-is-denied,
+  section = {pycheck},
+  title  = {A brand-new extensionless Write with a python shebang and an F401 is denied at once},
+  claim  = {A brand-new extensionless Write with a python shebang and an F401 is denied at once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_an_extensionless_python_shebang_defect_is_denied},
+}
+
+@misc{hooks-pycheck-clean-extensionless-python-shebang-file-is-admitted,
+  section = {pycheck},
+  title  = {The not-deny arm: the same shebang over clean code passes},
+  claim  = {The not-deny arm: the same shebang over clean code passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_clean_extensionless_python_shebang_file_is_admitted},
+}
+
+@misc{hooks-pycheck-py-file-without-a-shebang-is-still-checked,
+  section = {pycheck},
+  title  = {The suffix still votes alone: a `.py` file with no shebang is refused for its defect},
+  claim  = {The suffix still votes alone: a `.py` file with no shebang is refused for its defect.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_py_file_without_a_shebang_is_still_checked},
+}
+
+@misc{hooks-pycheck-suppression-in-a-shebang-file-is-still-refused,
+  section = {pycheck},
+  title  = {The suppression handling is unchanged for a shebang file: an added directive refuses},
+  claim  = {The suppression handling is unchanged for a shebang file: an added directive refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_suppression_in_a_shebang_file_is_still_refused},
+}
+
+@misc{hooks-no-verify-every-hookspath-bypass-is-refused-by-key-and-value,
+  section = {no_verify},
+  title  = {A `core.hooksPath` anywhere git reads config, not pointing at `.githooks`, is a bypass},
+  claim  = {A `core.hooksPath` anywhere git reads config, not pointing at `.githooks`, is a bypass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_every_hookspath_bypass_is_refused_by_key_and_value},
+}
+
+@misc{hooks-no-verify-arming-the-gate-and-prose-naming-the-key-are-not-refused,
+  section = {no_verify},
+  title  = {Pointing AT `.githooks`, reading the key, or naming it inside option TEXT is ordinary},
+  claim  = {Pointing AT `.githooks`, reading the key, or naming it inside option TEXT is ordinary.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_arming_the_gate_and_prose_naming_the_key_are_not_refused},
+}
+
+@misc{hooks-no-verify-value-rule-judges-only-the-final-path-component,
+  section = {no_verify},
+  title  = {Only a final component of exactly `.githooks` arms; lookalikes and parents do not},
+  claim  = {Only a final component of exactly `.githooks` arms; lookalikes and parents do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_the_value_rule_judges_only_the_final_path_component},
+}
+
+@misc{hooks-no-verify-option-values-before-the-subcommand-do-not-hide-it,
+  section = {no_verify},
+  title  = {`-C dir` consumes its operand, so the subcommand after it is still found and gated},
+  claim  = {`-C dir` consumes its operand, so the subcommand after it is still found and gated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_option_values_before_the_subcommand_do_not_hide_it},
+}
+
+@misc{hooks-no-verify-config-operands-skip-option-values-and-the-verb-word,
+  section = {no_verify},
+  title  = {`--file x` consumes `x`; the `set` verb is not the key},
+  claim  = {`--file x` consumes `x`; the `set` verb is not the key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_no_verify.py -k test_config_operands_skip_option_values_and_the_verb_word},
+}
+
+@misc{hooks-bin-launchers-argv-no-arguments-reach-the-hook-when-the-harness-passes-none,
+  section = {adopt-launcher},
+  title  = {Called as the harness calls it, the exec'd hook receives no argument at all},
+  claim  = {Called as the harness calls it, the exec'd hook receives no argument at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_no_arguments_reach_the_hook_when_the_harness_passes_none},
+}
+
+@misc{hooks-bin-launchers-argv-argument-reaches-the-hook,
+  section = {adopt-launcher},
+  title  = {`--check` is passed through after the entry path, so the hook's own argv contract sees it},
+  claim  = {`--check` is passed through after the entry path, so the hook's own argv contract sees
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_an_argument_reaches_the_hook},
+}
+
+@misc{hooks-bin-launchers-argv-absent-venv-says-so-on-stderr-and-proceeds,
+  section = {adopt-launcher},
+  title  = {A context hook with no venv exits 0 and says so; it never denies, with or without args},
+  claim  = {A context hook with no venv exits 0 and says so; it never denies, with or without args.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_an_absent_venv_says_so_on_stderr_and_proceeds},
+}
+
+@misc{hooks-bin-launchers-argv-absent-venv-denies-a-gate,
+  section = {adopt-launcher},
+  title  = {A gate with no venv answers with an explicit deny, identical with and without args},
+  claim  = {A gate with no venv answers with an explicit deny, identical with and without args.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_an_absent_venv_denies_a_gate},
+}

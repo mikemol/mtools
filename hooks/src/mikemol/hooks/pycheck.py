@@ -48,6 +48,7 @@ import ast
 import contextlib
 import json
 import os
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -66,6 +67,30 @@ from mikemol.hooks.verdict import Verdict, run_checker
 
 # The switch this hook answers to; `payload.armed` falls back to the shared one when it is unset.
 OWN_SWITCH = "PYCHECK_HOOK_BLOCK"
+
+# ⚑ A PYTHON SHEBANG, as `shellcheck._SHEBANG` is the shell one: an extensionless entry point
+# (`#!/usr/bin/env python3`) is Python though no suffix says so (linux-sources:W140).
+_PY_SHEBANG = re.compile(r"^#!\s*(?:/usr/bin/env\s+)?(?:\S*/)?python[0-9.]*\b")
+_PY_SUFFIX = ".py"
+_BOM = "﻿"
+
+
+def is_python(path: str, content: str) -> bool:
+    """Report whether the post-edit `content` at `path` is Python this hook judges.
+
+    ⚑ OR-WITH-SUFFIX, NOT SHELLCHECK'S PRECEDENCE. `shellcheck.shell_dialect` lets any shebang
+    settle the question because the suffix there is a weak guess (`.sh`); here `.py` is a firm
+    declaration, so a `.py` file stays Python whatever its first line, and a file with any other
+    name (a `.sh` included) is Python iff its shebang says so. The shebang is read from the
+    POST-EDIT content with the BOM stripped, so a brand-new extensionless Write is judged the
+    first time.
+
+    Returns:
+        True for a `.py` path or a python shebang.
+
+    """
+    return path.endswith(_PY_SUFFIX) or _PY_SHEBANG.match(content.lstrip(_BOM)) is not None
+
 
 # The tools this hook gates. Anything else is out of scope and allowed.
 _EDIT_TOOLS = frozenset(("Write", "Edit"))
@@ -202,7 +227,7 @@ def main() -> int:
     if tool not in _EDIT_TOOLS:
         return 0
     path, content = shellcheck.post_edit_content(tool, payload.as_record(record.get("tool_input")))
-    if content is None or not path.endswith(".py"):
+    if content is None or not is_python(path, content):
         return 0
     ok, report = analyze(content, path)
     armed = payload.armed(OWN_SWITCH)
