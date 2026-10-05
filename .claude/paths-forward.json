@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 672,
+  "counter": 789,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T12:25:41Z",
   "job_id": "9c05fa85",
@@ -13338,6 +13338,3124 @@
       "last_worked": "2026-10-05T11:35:05Z",
       "ticks_blocked": 0,
       "completed": "20261005T113505Z"
+    },
+    {
+      "symbol": "W673",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/pandoc.py (10 findings)",
+      "status": "ready",
+      "enables": [
+        "W786",
+        "W780",
+        "W764",
+        "W765",
+        "W729",
+        "W769",
+        "W787",
+        "W770",
+        "W757",
+        "W742",
+        "W771",
+        "W751",
+        "W758",
+        "W772"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 10 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:25Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:40Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W674",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/lock.py (9 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W755",
+        "W788",
+        "W737",
+        "W734",
+        "W774",
+        "W779"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 9 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:25Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:40Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W675",
+      "title": "mtools typing: treeio/src/mikemol/treeio/sources.py (21 findings)",
+      "status": "ready",
+      "enables": [
+        "W775",
+        "W767",
+        "W753",
+        "W730",
+        "W785",
+        "W782",
+        "W743"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 21 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:25Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W676",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/digest.py (6 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788",
+        "W778",
+        "W752",
+        "W738",
+        "W783"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 6 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W677",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/vector.py (6 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W754",
+        "W788",
+        "W774",
+        "W779",
+        "W783"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 6 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W678",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/overlap.py (17 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788",
+        "W778",
+        "W752",
+        "W783"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 17 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W679",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/timevalue.py (11 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788",
+        "W774",
+        "W731",
+        "W779"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 11 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W680",
+      "title": "mtools typing: treeio/src/mikemol/treeio/gitrun.py (3 findings)",
+      "status": "ready",
+      "enables": [
+        "W776",
+        "W784",
+        "W740",
+        "W768",
+        "W766"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 3 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W681",
+      "title": "mtools typing: audiostruct/src/mikemol/audiostruct/stages.py (5 findings)",
+      "status": "ready",
+      "enables": [
+        "W741",
+        "W736",
+        "W781",
+        "W756"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 5 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W682",
+      "title": "mtools typing: gradekit/src/mikemol/gradekit/jsonio.py (18 findings)",
+      "status": "ready",
+      "enables": [
+        "W761",
+        "W744",
+        "W745",
+        "W746"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 18 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:41Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W683",
+      "title": "mtools typing: hooks/src/mikemol/hooks/structural_query.py (43 findings)",
+      "status": "ready",
+      "enables": [
+        "W786",
+        "W780",
+        "W732",
+        "W762"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 43 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:26Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W684",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/outcomes.py (12 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W754",
+        "W788",
+        "W783"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 12 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W685",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/store.py (8 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788",
+        "W733",
+        "W778"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 8 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W686",
+      "title": "mtools typing: treeio/src/mikemol/treeio/ambient.py (3 findings)",
+      "status": "ready",
+      "enables": [
+        "W735",
+        "W776",
+        "W784",
+        "W768"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 3 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W687",
+      "title": "mtools typing: transcriptstruct/src/mikemol/transcriptstruct/blocks.py (30 findings)",
+      "status": "ready",
+      "enables": [
+        "W773",
+        "W739",
+        "W759"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 30 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W688",
+      "title": "mtools typing: hooks/src/mikemol/hooks/verdict.py (2 findings)",
+      "status": "ready",
+      "enables": [
+        "W786",
+        "W780"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 2 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W689",
+      "title": "mtools typing: memres/src/mikemol/memres/mem_db.py (10 findings)",
+      "status": "ready",
+      "enables": [
+        "W748",
+        "W749"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 10 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W690",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/commitmsg.py (13 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 13 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W691",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/embargo.py (26 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 26 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:27Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:42Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W692",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/unlinked.py (20 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 20 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:28Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W693",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/vtodo.py (104 findings)",
+      "status": "ready",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 104 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:28Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W694",
+      "title": "mtools typing: audiostruct/src/mikemol/audiostruct/render.py (9 findings)",
+      "status": "ready",
+      "enables": [
+        "W781"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 9 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:28Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W695",
+      "title": "mtools typing: bibparse/src/mikemol/bibparse/edges.py (18 findings)",
+      "status": "ready",
+      "enables": [
+        "W761"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 18 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:28Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W696",
+      "title": "mtools typing: gmailstruct/src/mikemol/gmailstruct/consent.py (8 findings)",
+      "status": "ready",
+      "enables": [
+        "W760"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 8 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:28Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W697",
+      "title": "mtools typing: gmailstruct/src/mikemol/gmailstruct/fetch.py (6 findings)",
+      "status": "ready",
+      "enables": [
+        "W760"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 6 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:28Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W698",
+      "title": "mtools typing: hooks/src/mikemol/hooks/inbound_asks.py (8 findings)",
+      "status": "ready",
+      "enables": [
+        "W786"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 8 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:28Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W699",
+      "title": "mtools typing: hooks/src/mikemol/hooks/nemik_check.py (12 findings)",
+      "status": "ready",
+      "enables": [
+        "W786"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 12 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:43Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W700",
+      "title": "mtools typing: hooks/src/mikemol/hooks/no_chaining.py (10 findings)",
+      "status": "ready",
+      "enables": [
+        "W786"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 10 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W701",
+      "title": "mtools typing: hooks/src/mikemol/hooks/no_verify.py (4 findings)",
+      "status": "ready",
+      "enables": [
+        "W786"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 4 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W702",
+      "title": "mtools typing: icsstruct/src/mikemol/icsstruct/expand.py (77 findings)",
+      "status": "ready",
+      "enables": [
+        "W763"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 77 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W703",
+      "title": "mtools typing: icsstruct/src/mikemol/icsstruct/source.py (10 findings)",
+      "status": "ready",
+      "enables": [
+        "W763"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 10 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W704",
+      "title": "mtools typing: importdag/src/mikemol/importdag/dagbzl.py (17 findings)",
+      "status": "ready",
+      "enables": [
+        "W747"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 17 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W705",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/lint.py (27 findings)",
+      "status": "ready",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 27 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W706",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/operands.py (12 findings)",
+      "status": "ready",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 12 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:29Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W707",
+      "title": "mtools typing: pytestspec/src/mikemol/pytestspec/adapters.py (7 findings)",
+      "status": "ready",
+      "enables": [
+        "W777"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 7 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W708",
+      "title": "mtools typing: pytestspec/src/mikemol/pytestspec/cache.py (5 findings)",
+      "status": "ready",
+      "enables": [
+        "W777"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 5 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:44Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W709",
+      "title": "mtools typing: pytestspec/src/mikemol/pytestspec/opa.py (14 findings)",
+      "status": "ready",
+      "enables": [
+        "W777"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 14 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W710",
+      "title": "mtools typing: pytestspec/src/mikemol/pytestspec/outcomes.py (38 findings)",
+      "status": "ready",
+      "enables": [
+        "W777"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 38 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W711",
+      "title": "mtools typing: ratchet/src/mikemol/ratchet/core.py (25 findings)",
+      "status": "ready",
+      "enables": [
+        "W750"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 25 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W712",
+      "title": "mtools typing: buildtel/src/mikemol/buildtel/buildpulse.py (5 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 5 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W713",
+      "title": "mtools typing: buildtel/src/mikemol/buildtel/image_digest.py (6 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 6 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W714",
+      "title": "mtools typing: buildtel/src/mikemol/buildtel/probe.py (5 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 5 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:30Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W715",
+      "title": "mtools typing: gatecheck/src/mikemol/gatecheck/hook_index.py (9 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 9 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W716",
+      "title": "mtools typing: gatecheck/src/mikemol/gatecheck/witness_reach.py (17 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 17 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:45Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W717",
+      "title": "mtools typing: hooks/src/mikemol/hooks/flag_contract.py (4 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 4 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W718",
+      "title": "mtools typing: hooks/src/mikemol/hooks/standing_facts.py (21 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 21 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W719",
+      "title": "mtools typing: ledger/src/mikemol/ledger/finding_bibkeys.py (4 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 4 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W720",
+      "title": "mtools typing: ledger/src/mikemol/ledger/finding_cli.py (13 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 13 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W721",
+      "title": "mtools typing: ledger/src/mikemol/ledger/finding_entry.py (7 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 7 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W722",
+      "title": "mtools typing: ledger/src/mikemol/ledger/finding_keys_show.py (15 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 15 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:31Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W723",
+      "title": "mtools typing: ledger/src/mikemol/ledger/finding_mode.py (18 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 18 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W724",
+      "title": "mtools typing: ledger/src/mikemol/ledger/finding_polarity.py (16 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 16 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:46Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W725",
+      "title": "mtools typing: mutantcell/src/mikemol/mutantcell/eval.py (25 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 25 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W726",
+      "title": "mtools typing: mutantcell/src/mikemol/mutantcell/sites.py (7 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 7 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W727",
+      "title": "mtools typing: transcriptstruct/src/mikemol/transcriptstruct/standing_stop.py (19 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 19 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W728",
+      "title": "mtools typing: witness/src/mikemol/witness/warrant_integrity.py (28 findings)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Whole-file Write clearing 28 finding(s) so the edit gate stops refusing it, then lower the ledger row",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W729",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/ast.py (20 findings)",
+      "status": "blocked",
+      "enables": [
+        "W786",
+        "W780",
+        "W764",
+        "W765",
+        "W769",
+        "W787",
+        "W770",
+        "W757",
+        "W771",
+        "W751",
+        "W758",
+        "W772"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W730",
+      "title": "mtools typing: treeio/src/mikemol/treeio/result.py (8 findings)",
+      "status": "blocked",
+      "enables": [
+        "W775",
+        "W767",
+        "W753",
+        "W785",
+        "W782"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W675"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W731",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/recurrence.py (14 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788",
+        "W774",
+        "W779"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W679"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W732",
+      "title": "mtools typing: hooks/src/mikemol/hooks/shellcheck.py (49 findings)",
+      "status": "blocked",
+      "enables": [
+        "W786",
+        "W780",
+        "W762"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W683"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W733",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/foreign.py (31 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788",
+        "W778"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W685"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W734",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/ledger.py (9 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W755",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W674"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W735",
+      "title": "mtools typing: treeio/src/mikemol/treeio/context.py (8 findings)",
+      "status": "blocked",
+      "enables": [
+        "W776",
+        "W784",
+        "W768"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W686"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W736",
+      "title": "mtools typing: audiostruct/src/mikemol/audiostruct/gpu.py (1 findings)",
+      "status": "blocked",
+      "enables": [
+        "W781",
+        "W756"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W681"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W737",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/lease.py (57 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W674"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W738",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/render.py (33 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W676"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W739",
+      "title": "mtools typing: transcriptstruct/src/mikemol/transcriptstruct/provenance.py (19 findings)",
+      "status": "blocked",
+      "enables": [
+        "W773",
+        "W759"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W687"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:33Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W740",
+      "title": "mtools typing: treeio/src/mikemol/treeio/restore.py (23 findings)",
+      "status": "blocked",
+      "enables": [
+        "W784",
+        "W766"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W680"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W741",
+      "title": "mtools typing: audiostruct/src/mikemol/audiostruct/cli.py (3 findings)",
+      "status": "blocked",
+      "enables": [
+        "W781"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W681"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:48Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W742",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/roundtrip.py (12 findings)",
+      "status": "blocked",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:49Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W743",
+      "title": "mtools typing: treeio/src/mikemol/treeio/write.py (8 findings)",
+      "status": "blocked",
+      "enables": [
+        "W785"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W675"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:49Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W744",
+      "title": "mtools typing: gradekit/src/mikemol/gradekit/grades_rec.py (67 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W682"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:49Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W745",
+      "title": "mtools typing: gradekit/src/mikemol/gradekit/read_grade.py (31 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W682"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:49Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W746",
+      "title": "mtools typing: gradekit/src/mikemol/gradekit/verdict.py (30 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W682"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:49Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W747",
+      "title": "mtools typing: importdag/src/mikemol/importdag/imports.py (16 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W704"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:34Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:49Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W748",
+      "title": "mtools typing: memres/src/mikemol/memres/mem_harvest.py (15 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W689"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:49Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W749",
+      "title": "mtools typing: memres/src/mikemol/memres/mem_project.py (6 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W689"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W750",
+      "title": "mtools typing: ratchet/src/mikemol/ratchet/cli.py (29 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W711"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 1 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W751",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/spans.py (19 findings)",
+      "status": "blocked",
+      "enables": [
+        "W769",
+        "W787",
+        "W770",
+        "W771",
+        "W772"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W752",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/payload.py (85 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788",
+        "W778",
+        "W783"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W676",
+        "W678"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W753",
+      "title": "mtools typing: treeio/src/mikemol/treeio/read.py (28 findings)",
+      "status": "blocked",
+      "enables": [
+        "W775",
+        "W767",
+        "W785",
+        "W782"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W730",
+        "W675"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W754",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/check.py (183 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788",
+        "W783"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W684",
+        "W677"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W755",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/atomize.py (17 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W734",
+        "W674"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:35Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W756",
+      "title": "mtools typing: audiostruct/src/mikemol/audiostruct/whisperx_site.py (22 findings)",
+      "status": "blocked",
+      "enables": [
+        "W781"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W736",
+        "W681"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W757",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/items.py (41 findings)",
+      "status": "blocked",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W758",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/tables.py (36 findings)",
+      "status": "blocked",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:50Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W759",
+      "title": "mtools typing: transcriptstruct/src/mikemol/transcriptstruct/query.py (63 findings)",
+      "status": "blocked",
+      "enables": [
+        "W773"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W687",
+        "W739"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:51Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W760",
+      "title": "mtools typing: gmailstruct/src/mikemol/gmailstruct/cli.py (58 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W696",
+        "W697"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:51Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W761",
+      "title": "mtools typing: gradekit/src/mikemol/gradekit/effective.py (67 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W695",
+        "W682"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:51Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W762",
+      "title": "mtools typing: hooks/src/mikemol/hooks/shellcheck_cli.py (21 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W732",
+        "W683"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:51Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W763",
+      "title": "mtools typing: icsstruct/src/mikemol/icsstruct/cli.py (42 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W702",
+        "W703"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:36Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:51Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W764",
+      "title": "mtools typing: importdag/src/mikemol/importdag/closure.py (10 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:51Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W765",
+      "title": "mtools typing: importdag/src/mikemol/importdag/closure_census.py (9 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:51Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W766",
+      "title": "mtools typing: treeio/src/mikemol/treeio/snapshot_cli.py (14 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W680",
+        "W740"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 2 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W767",
+      "title": "mtools typing: treeio/src/mikemol/treeio/listing.py (23 findings)",
+      "status": "blocked",
+      "enables": [
+        "W775",
+        "W785",
+        "W782"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W753",
+        "W730",
+        "W675"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W768",
+      "title": "mtools typing: treeio/src/mikemol/treeio/snapshot.py (46 findings)",
+      "status": "blocked",
+      "enables": [
+        "W776",
+        "W784"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W686",
+        "W735",
+        "W680"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W769",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/budget.py (17 findings)",
+      "status": "blocked",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673",
+        "W751"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W770",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/grep.py (10 findings)",
+      "status": "blocked",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673",
+        "W751"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W771",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/sections.py (19 findings)",
+      "status": "blocked",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673",
+        "W751"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:37Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W772",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/verify.py (4 findings)",
+      "status": "blocked",
+      "enables": [
+        "W787"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W673",
+        "W751"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W773",
+      "title": "mtools typing: transcriptstruct/src/mikemol/transcriptstruct/cli.py (50 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W687",
+        "W739",
+        "W759"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 3 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W774",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/ops.py (222 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788",
+        "W779"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W674",
+        "W731",
+        "W679",
+        "W677"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W775",
+      "title": "mtools typing: treeio/src/mikemol/treeio/census.py (19 findings)",
+      "status": "blocked",
+      "enables": [
+        "W785",
+        "W782"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W767",
+        "W753",
+        "W730",
+        "W675"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:52Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W776",
+      "title": "mtools typing: treeio/src/mikemol/treeio/contract.py (27 findings)",
+      "status": "blocked",
+      "enables": [
+        "W784"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W686",
+        "W735",
+        "W680",
+        "W768"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:53Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W777",
+      "title": "mtools typing: pytestspec/src/mikemol/pytestspec/plugin.py (113 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W707",
+        "W708",
+        "W709",
+        "W710"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 4 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:53Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W778",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/inbound.py (42 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W676",
+        "W733",
+        "W678",
+        "W752",
+        "W685"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:53Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W779",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/redact.py (19 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W674",
+        "W774",
+        "W731",
+        "W679",
+        "W677"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:38Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:53Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W780",
+      "title": "mtools typing: hooks/src/mikemol/hooks/pycheck.py (61 findings)",
+      "status": "blocked",
+      "enables": [
+        "W786"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W732",
+        "W683",
+        "W688",
+        "W729",
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:39Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:53Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W781",
+      "title": "mtools typing: audiostruct/src/mikemol/audiostruct/main.py (20 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W741",
+        "W736",
+        "W694",
+        "W681",
+        "W756"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:39Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:53Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W782",
+      "title": "mtools typing: treeio/src/mikemol/treeio/vfs_cli.py (48 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W775",
+        "W767",
+        "W753",
+        "W730",
+        "W675"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 5 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:39Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:53Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W783",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/selftest.py (18 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789",
+        "W788"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W754",
+        "W676",
+        "W684",
+        "W678",
+        "W752",
+        "W677"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 6 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:39Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:54Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W784",
+      "title": "mtools typing: treeio/src/mikemol/treeio/edit_snapshot.py (6 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W686",
+        "W735",
+        "W776",
+        "W680",
+        "W740",
+        "W768"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 6 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:39Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:54Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W785",
+      "title": "mtools typing: treeio/src/mikemol/treeio/vfs.py (7 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W775",
+        "W767",
+        "W753",
+        "W730",
+        "W675",
+        "W743"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 6 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:40Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:54Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W786",
+      "title": "mtools typing: hooks/src/mikemol/hooks/entry.py (25 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W698",
+        "W699",
+        "W700",
+        "W701",
+        "W780",
+        "W732",
+        "W683",
+        "W688",
+        "W729",
+        "W673"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 10 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:40Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:54Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W787",
+      "title": "mtools typing: mdstruct/src/mikemol/mdstruct/cli.py (103 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W729",
+        "W769",
+        "W770",
+        "W757",
+        "W705",
+        "W706",
+        "W673",
+        "W742",
+        "W771",
+        "W751",
+        "W758",
+        "W772"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 12 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:40Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:54Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W788",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/cli.py (249 findings)",
+      "status": "blocked",
+      "enables": [
+        "W789"
+      ],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W755",
+        "W754",
+        "W690",
+        "W676",
+        "W691",
+        "W733",
+        "W778",
+        "W737",
+        "W734",
+        "W674",
+        "W774",
+        "W684",
+        "W678",
+        "W752",
+        "W731",
+        "W779",
+        "W738",
+        "W783",
+        "W685",
+        "W679",
+        "W692",
+        "W677",
+        "W693"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 23 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:40Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:54Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W789",
+      "title": "mtools typing: pathsforward/src/mikemol/pathsforward/__main__.py (2 findings)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "typing",
+        "mypy"
+      ],
+      "blocked_on": [
+        "W755",
+        "W754",
+        "W788",
+        "W690",
+        "W676",
+        "W691",
+        "W733",
+        "W778",
+        "W737",
+        "W734",
+        "W674",
+        "W774",
+        "W684",
+        "W678",
+        "W752",
+        "W731",
+        "W779",
+        "W738",
+        "W783",
+        "W685",
+        "W679",
+        "W692",
+        "W677",
+        "W693"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Waits on 24 debt file(s): clean those first",
+      "evidence": "",
+      "issued_at": "2026-10-05T17:27:40Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-05T17:27:54Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
     }
   ],
   "residue": [
