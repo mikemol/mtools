@@ -19,10 +19,13 @@ could block its own cards is refused before any card is written.
 
 ⚑⚑ AN AMBIGUOUS NAME IS A BLOCKER, NOT A GUESS. A name that several files could answer, with none
 beside the importer or declared, makes no edge (`mikemol.importdag.resolve`), and a missing edge
-would loosen an order silently. So every debt file whose closure (itself included) holds an
-unsettled name is not ready: the row lists the names, and the mint turns each into a card of its own
-that the file's card waits on. A decision clears it: a code change, or a declared resolution
-naming one of the candidates.
+would loosen an order silently. It hides at most one edge, and an edge can only add a wait, so the
+waits already known stay modelled and the name blocks only where it could matter: a name matters
+when some candidate is, or reaches, a debt file (`mattering`); otherwise every answer leaves the
+plan as it is. The row lists the mattering names in its closure, and the mint gives each a card of
+its own that the file's card waits on, once along a chain (`direct_unsettled`). A decision clears
+it, by a code change or a declared resolution naming one of the candidates, and the order is then
+recalculated by planning again.
 """
 
 from __future__ import annotations
@@ -90,6 +93,49 @@ def unsettled_of(
     return {file: _names(resolved, (file, *reach[file])) for file in debt}
 
 
+def mattering(
+    resolved: Mapping[str, Resolution], edges: dict[str, list[str]], debt: Collection[str]
+) -> frozenset[str]:
+    """Pick the unsettled names whose answer could change a wait.
+
+    A name matters when some candidate is a debt file or reaches one: only then can settling it add
+    a wait. When no candidate does, every answer leaves the plan as it is, so the name blocks
+    nothing.
+
+    Returns:
+        The names that matter.
+
+    """
+    return frozenset(
+        item.name
+        for found in resolved.values()
+        for item in found.ambiguous
+        if any({candidate, *cone(candidate, edges)} & set(debt) for candidate in item.candidates)
+    )
+
+
+def direct_unsettled(rows: Iterable[Row]) -> dict[str, tuple[str, ...]]:
+    """Keep, for each row, the unsettled names that no file it waits on already holds.
+
+    A file that waits on a file holding a name is blocked on that name transitively, so a second
+    edge would only repeat it; what is left is the names it must be blocked on itself.
+
+    Returns:
+        For each file, the names it is blocked on directly, in the row's order.
+
+    """
+    listed = list(rows)
+    by = {row.file: row for row in listed}
+    return {
+        row.file: tuple(
+            name
+            for name in row.unsettled
+            if not any(name in by[wait].unsettled for wait in row.waits_on)
+        )
+        for row in listed
+    }
+
+
 def candidates_of(planned: Plan) -> dict[str, tuple[str, ...]]:
     """Gather the candidates of each unsettled name that holds a debt row back.
 
@@ -136,7 +182,11 @@ def plan(
     if cycle:
         msg = "wait graph has a cycle: " + " -> ".join(cycle)
         raise ValueError(msg)
-    unsettled = unsettled_of(reach, resolved, ledger.keys())
+    live = mattering(resolved, edges, ledger.keys())
+    unsettled = {
+        file: tuple(name for name in names if name in live)
+        for file, names in unsettled_of(reach, resolved, ledger.keys()).items()
+    }
     rows = [
         Row(
             file,

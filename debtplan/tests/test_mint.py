@@ -274,7 +274,7 @@ def test_the_ambiguity_title_and_step_name_the_count_the_candidates_and_the_way_
     assert ambiguity_title("m", 2, BLOCKERS) == "p ambiguity: m (2 files)"
     assert ambiguity_step("m", CANDIDATES) == (
         "Decide which of p/m.py, q/m.py the import `m` means: change the importer, "
-        "or declare it in the resolutions file"
+        "or declare it in the resolutions file, then re-run the mint to recalculate the order"
     )
 
 
@@ -288,13 +288,13 @@ def test_an_unsettled_name_gets_a_card_of_its_own(tmp_path: Path) -> None:
 
 
 def test_the_file_cards_wait_on_the_ambiguity_card_and_it_enables_them(tmp_path: Path) -> None:
-    """X waits on the name; y waits on x and on the name; the name is in front of both."""
+    """X waits on the name; y waits on x alone, which already carries the name to it."""
     queue = _queue(tmp_path)
     mint(_held(), queue, Style(PREFIX))
     x, y, name = (_card(queue, f"W{n}") for n in (1, 2, THREE))
     assert strlist(x, "blocked_on") == ["W3"]
-    assert strlist(y, "blocked_on") == ["W1", "W3"]
-    assert strlist(name, "enables") == ["W1", "W2"]
+    assert strlist(y, "blocked_on") == ["W1"]
+    assert strlist(name, "enables") == ["W1"]
     assert (text(x, "status"), text(y, "status")) == ("blocked", "blocked")
     assert "ambiguous import(s) to settle" in text(x, "next_bounded_step")
 

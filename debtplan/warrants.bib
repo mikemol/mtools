@@ -328,6 +328,272 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rows.py -k test_a_row_held_by_an_unsettled_name_sorts_after_a_ready_one},
 }
 
+@misc{debtplan-resolutions-an-object-of-names-to-paths-is-read,
+  section = {resolutions},
+  title  = {Each declared name keeps the path it is declared to mean},
+  claim  = {Each declared name keeps the path it is declared to mean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_an_object_of_names_to_paths_is_read},
+}
+
+@misc{debtplan-resolutions-an-empty-object-declares-nothing,
+  section = {resolutions},
+  title  = {No declarations is a valid file},
+  claim  = {No declarations is a valid file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_an_empty_object_declares_nothing},
+}
+
+@misc{debtplan-resolutions-text-that-is-not-json-is-refused-naming-the-file,
+  section = {resolutions},
+  title  = {The refusal names where the text came from},
+  claim  = {The refusal names where the text came from.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_text_that_is_not_json_is_refused_naming_the_file},
+}
+
+@misc{debtplan-resolutions-json-that-is-not-an-object-is-refused-naming-its-type,
+  section = {resolutions},
+  title  = {A list is not a mapping of names to files},
+  claim  = {A list is not a mapping of names to files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_json_that_is_not_an_object_is_refused_naming_its_type},
+}
+
+@misc{debtplan-resolutions-a-value-that-is-not-a-path-string-is-refused-naming-the-name,
+  section = {resolutions},
+  title  = {A number where a path belongs names the offending key},
+  claim  = {A number where a path belongs names the offending key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_a_value_that_is_not_a_path_string_is_refused_naming_the_name},
+}
+
+@misc{debtplan-resolutions-a-file-is-read-and-parsed,
+  section = {resolutions},
+  title  = {The reader parses what is on disk, naming the file in a refusal},
+  claim  = {The reader parses what is on disk, naming the file in a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_a_file_is_read_and_parsed},
+}
+
+@misc{debtplan-resolutions-a-missing-file-raises-and-is-not-no-declarations,
+  section = {resolutions},
+  title  = {A declaration that vanished must not silently re-open what it settled},
+  claim  = {A declaration that vanished must not silently re-open what it settled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_a_missing_file_raises_and_is_not_no_declarations},
+}
+
+@misc{debtplan-blockers-a-name-matters-when-a-candidate-is-a-debt-file,
+  section = {blockers},
+  title  = {Settling it to that candidate would add a wait},
+  claim  = {Settling it to that candidate would add a wait.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockers.py -k test_a_name_matters_when_a_candidate_is_a_debt_file},
+}
+
+@misc{debtplan-blockers-a-name-matters-when-a-candidate-reaches-a-debt-file,
+  section = {blockers},
+  title  = {The wait would be through the candidate's own imports},
+  claim  = {The wait would be through the candidate's own imports.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockers.py -k test_a_name_matters_when_a_candidate_reaches_a_debt_file},
+}
+
+@misc{debtplan-blockers-a-name-whose-candidates-reach-no-debt-does-not-matter,
+  section = {blockers},
+  title  = {Every answer leaves the waits as they are, so nothing is blocked on it},
+  claim  = {Every answer leaves the waits as they are, so nothing is blocked on it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockers.py -k test_a_name_whose_candidates_reach_no_debt_does_not_matter},
+}
+
+@misc{debtplan-blockers-a-file-behind-a-holder-is-not-blocked-on-the-name-again,
+  section = {blockers},
+  title  = {Y waits on x, which holds m: y keeps its wait on x and names nothing of its own},
+  claim  = {Y waits on x, which holds m: y keeps its wait on x and names nothing of its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockers.py -k test_a_file_behind_a_holder_is_not_blocked_on_the_name_again},
+}
+
+@misc{debtplan-blockers-a-file-that-waits-on-a-file-without-the-name-keeps-it,
+  section = {blockers},
+  title  = {The wait does not hold the name, so the file is blocked on it directly},
+  claim  = {The wait does not hold the name, so the file is blocked on it directly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockers.py -k test_a_file_that_waits_on_a_file_without_the_name_keeps_it},
+}
+
+@misc{debtplan-blockers-an-unsettled-name-over-clean-candidates-blocks-nothing,
+  section = {blockers},
+  title  = {The name is still reported, but the file is ready: no answer could change its waits},
+  claim  = {The name is still reported, but the file is ready: no answer could change its waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockers.py -k test_an_unsettled_name_over_clean_candidates_blocks_nothing},
+}
+
+@misc{debtplan-blockers-a-candidate-reaching-debt-through-a-clean-module-blocks,
+  section = {blockers},
+  title  = {Tools/a imports a debt helper, so settling `a` to it would add a wait: the file is held},
+  claim  = {Tools/a imports a debt helper, so settling `a` to it would add a wait: the file is held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockers.py -k test_a_candidate_reaching_debt_through_a_clean_module_blocks},
+}
+
+@misc{debtplan-mint-a-first-mint-adds-a-card-for-every-file-and-rewrites-each,
+  section = {mint},
+  title  = {Three files make three cards, each rewritten, none retired},
+  claim  = {Three files make three cards, each rewritten, none retired.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_first_mint_adds_a_card_for_every_file_and_rewrites_each},
+}
+
+@misc{debtplan-mint-a-card-carries-its-title-step-tags-and-vector,
+  section = {mint},
+  title  = {A ready file says to write it; a waiting one says what to clean first},
+  claim  = {A ready file says to write it; a waiting one says what to clean first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_carries_its_title_step_tags_and_vector},
+}
+
+@misc{debtplan-mint-edges-are-the-direct-waits-and-not-the-whole-closure,
+  section = {mint},
+  title  = {C waits on a through b, so c lists b alone and a lists only b as what it is in front of},
+  claim  = {C waits on a through b, so c lists b alone and a lists only b as what it is in front of.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_edges_are_the_direct_waits_and_not_the_whole_closure},
+}
+
+@misc{debtplan-mint-a-file-that-waits-is-blocked-and-one-that-does-not-is-ready,
+  section = {mint},
+  title  = {Status follows the direct waits},
+  claim  = {Status follows the direct waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_file_that_waits_is_blocked_and_one_that_does_not_is_ready},
+}
+
+@misc{debtplan-mint-minting-again-is-a-sync-not-a-duplicate,
+  section = {mint},
+  title  = {The second run adds nothing, rewrites each card, and leaves one card per file},
+  claim  = {The second run adds nothing, rewrites each card, and leaves one card per file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_minting_again_is_a_sync_not_a_duplicate},
+}
+
+@misc{debtplan-mint-a-card-being-worked-keeps-its-status-and-is-still-rewritten,
+  section = {mint},
+  title  = {A re-mint does not demote the card in hand, but its title and step follow the plan},
+  claim  = {A re-mint does not demote the card in hand, but its title and step follow the plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_being_worked_keeps_its_status_and_is_still_rewritten},
+}
+
+@misc{debtplan-mint-a-card-whose-file-left-the-plan-is-retired-once,
+  section = {mint},
+  title  = {The file's card is marked done with a reason, and a third run does not retire it again},
+  claim  = {The file's card is marked done with a reason, and a third run does not retire it again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_whose_file_left_the_plan_is_retired_once},
+}
+
+@misc{debtplan-mint-a-done-card-whose-file-returns-is-reopened,
+  section = {mint},
+  title  = {A file back in the ledger is work again: its done card is rewritten to ready or blocked},
+  claim  = {A file back in the ledger is work again: its done card is rewritten to ready or blocked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_done_card_whose_file_returns_is_reopened},
+}
+
+@misc{debtplan-mint-a-lock-held-by-another-refuses-the-mint-and-is-left-held,
+  section = {mint},
+  title  = {The mint does not take over a tick, and does not release a lock that is not its own},
+  claim  = {The mint does not take over a tick, and does not release a lock that is not its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_lock_held_by_another_refuses_the_mint_and_is_left_held},
+}
+
+@misc{debtplan-mint-the-lock-is-released-after-a-sync,
+  section = {mint},
+  title  = {After a mint the lock is free for the next holder},
+  claim  = {After a mint the lock is free for the next holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_lock_is_released_after_a_sync},
+}
+
+@misc{debtplan-mint-a-refused-step-stops-the-sync-names-it-and-releases-the-lock,
+  section = {mint},
+  title  = {The writer's own words are in the error, and the lock is free afterwards},
+  claim  = {The writer's own words are in the error, and the lock is free afterwards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_refused_step_stops_the_sync_names_it_and_releases_the_lock},
+}
+
+@misc{debtplan-mint-an-added-card-that-cannot-be-read-back-is-refused,
+  section = {mint},
+  title  = {A writer that says it added a card it did not add must not read as a queue in step},
+  claim  = {A writer that says it added a card it did not add must not read as a queue in step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_added_card_that_cannot_be_read_back_is_refused},
+}
+
+@misc{debtplan-mint-the-style-overrides-the-step-the-tags-and-the-vector,
+  section = {mint},
+  title  = {A caller's wording, tags and vector are what the card carries},
+  claim  = {A caller's wording, tags and vector are what the card carries.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_style_overrides_the_step_the_tags_and_the_vector},
+}
+
+@misc{debtplan-mint-the-title-and-step-for-a-ready-and-a-waiting-row,
+  section = {mint},
+  title  = {The title carries the count; the ready step names the count, the other the waits},
+  claim  = {The title carries the count; the ready step names the count, the other the waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_title_and_step_for_a_ready_and_a_waiting_row},
+}
+
+@misc{debtplan-mint-the-step-for-a-row-held-by-an-unsettled-name-says-so,
+  section = {mint},
+  title  = {A name alone, and a name with files, each say what is to be settled},
+  claim  = {A name alone, and a name with files, each say what is to be settled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_step_for_a_row_held_by_an_unsettled_name_says_so},
+}
+
+@misc{debtplan-mint-the-ambiguity-title-and-step-name-the-count-the-candidates-and-the-way-out,
+  section = {mint},
+  title  = {The title counts the candidate files; the step lists them and the two ways to settle},
+  claim  = {The title counts the candidate files; the step lists them and the two ways to settle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_ambiguity_title_and_step_name_the_count_the_candidates_and_the_way_out},
+}
+
+@misc{debtplan-mint-an-unsettled-name-gets-a-card-of-its-own,
+  section = {mint},
+  title  = {Two file cards and one ambiguity card; the ambiguity prefix keys a separate set of cards},
+  claim  = {Two file cards and one ambiguity card; the ambiguity prefix keys a separate set of cards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_unsettled_name_gets_a_card_of_its_own},
+}
+
+@misc{debtplan-mint-the-file-cards-wait-on-the-ambiguity-card-and-it-enables-them,
+  section = {mint},
+  title  = {X waits on the name; y waits on x alone, which already carries the name to it},
+  claim  = {X waits on the name; y waits on x alone, which already carries the name to it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_file_cards_wait_on_the_ambiguity_card_and_it_enables_them},
+}
+
+@misc{debtplan-mint-the-ambiguity-card-is-ready-work-that-says-what-settles-it,
+  section = {mint},
+  title  = {Nothing blocks the decision: the card is ready, with the candidates and the tags},
+  claim  = {Nothing blocks the decision: the card is ready, with the candidates and the tags.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_ambiguity_card_is_ready_work_that_says_what_settles_it},
+}
+
+@misc{debtplan-mint-an-ambiguity-card-being-worked-keeps-its-status,
+  section = {mint},
+  title  = {A re-mint does not demote the decision in hand},
+  claim  = {A re-mint does not demote the decision in hand.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_ambiguity_card_being_worked_keeps_its_status},
+}
+
+@misc{debtplan-mint-a-name-that-is-settled-retires-its-card-once-and-frees-the-files,
+  section = {mint},
+  title  = {The card is marked done with a reason; the file it held becomes ready},
+  claim  = {The card is marked done with a reason; the file it held becomes ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_name_that_is_settled_retires_its_card_once_and_frees_the_files},
+}
+
+@misc{debtplan-mint-an-ambiguity-card-that-cannot-be-read-back-is-refused,
+  section = {mint},
+  title  = {A writer that says it added the decision card and did not must not read as in step},
+  claim  = {A writer that says it added the decision card and did not must not read as in step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_ambiguity_card_that_cannot_be_read_back_is_refused},
+}
+
+@misc{debtplan-mint-the-ambiguity-prefix-is-the-file-prefix-without-its-colon-then-ambiguity,
+  section = {mint},
+  title  = {`p: ` gives `p ambiguity: `, which neither starts with nor is started by the file prefix},
+  claim  = {`p: ` gives `p ambiguity: `, which neither starts with nor is started by the file prefix.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_ambiguity_prefix_is_the_file_prefix_without_its_colon_then_ambiguity},
+}
+
+@misc{debtplan-mint-a-prefix-that-would-swallow-its-ambiguity-prefix-is-refused,
+  section = {mint},
+  title  = {With no `: ` to strip, the ambiguity cards would be read as file cards and retired},
+  claim  = {With no `: ` to strip, the ambiguity cards would be read as file cards and retired.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_prefix_that_would_swallow_its_ambiguity_prefix_is_refused},
+}
+
 @misc{debtplan-plan-waits-come-from-the-closure-without-the-file-itself,
   section = {plan},
   title  = {A file waits on every debt file in its closure, and not on itself},
@@ -454,223 +720,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plan.py -k test_a_cyclic_wait_graph_is_refused},
 }
 
-@misc{debtplan-resolutions-an-object-of-names-to-paths-is-read,
-  section = {resolutions},
-  title  = {Each declared name keeps the path it is declared to mean},
-  claim  = {Each declared name keeps the path it is declared to mean.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_an_object_of_names_to_paths_is_read},
-}
-
-@misc{debtplan-resolutions-an-empty-object-declares-nothing,
-  section = {resolutions},
-  title  = {No declarations is a valid file},
-  claim  = {No declarations is a valid file.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_an_empty_object_declares_nothing},
-}
-
-@misc{debtplan-resolutions-text-that-is-not-json-is-refused-naming-the-file,
-  section = {resolutions},
-  title  = {The refusal names where the text came from},
-  claim  = {The refusal names where the text came from.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_text_that_is_not_json_is_refused_naming_the_file},
-}
-
-@misc{debtplan-resolutions-json-that-is-not-an-object-is-refused-naming-its-type,
-  section = {resolutions},
-  title  = {A list is not a mapping of names to files},
-  claim  = {A list is not a mapping of names to files.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_json_that_is_not_an_object_is_refused_naming_its_type},
-}
-
-@misc{debtplan-resolutions-a-value-that-is-not-a-path-string-is-refused-naming-the-name,
-  section = {resolutions},
-  title  = {A number where a path belongs names the offending key},
-  claim  = {A number where a path belongs names the offending key.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_a_value_that_is_not_a_path_string_is_refused_naming_the_name},
-}
-
-@misc{debtplan-resolutions-a-file-is-read-and-parsed,
-  section = {resolutions},
-  title  = {The reader parses what is on disk, naming the file in a refusal},
-  claim  = {The reader parses what is on disk, naming the file in a refusal.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_a_file_is_read_and_parsed},
-}
-
-@misc{debtplan-resolutions-a-missing-file-raises-and-is-not-no-declarations,
-  section = {resolutions},
-  title  = {A declaration that vanished must not silently re-open what it settled},
-  claim  = {A declaration that vanished must not silently re-open what it settled.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolutions.py -k test_a_missing_file_raises_and_is_not_no_declarations},
-}
-
-@misc{debtplan-mint-a-first-mint-adds-a-card-for-every-file-and-rewrites-each,
-  section = {mint},
-  title  = {Three files make three cards, each rewritten, none retired},
-  claim  = {Three files make three cards, each rewritten, none retired.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_first_mint_adds_a_card_for_every_file_and_rewrites_each},
-}
-
-@misc{debtplan-mint-a-card-carries-its-title-step-tags-and-vector,
-  section = {mint},
-  title  = {A ready file says to write it; a waiting one says what to clean first},
-  claim  = {A ready file says to write it; a waiting one says what to clean first.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_carries_its_title_step_tags_and_vector},
-}
-
-@misc{debtplan-mint-edges-are-the-direct-waits-and-not-the-whole-closure,
-  section = {mint},
-  title  = {C waits on a through b, so c lists b alone and a lists only b as what it is in front of},
-  claim  = {C waits on a through b, so c lists b alone and a lists only b as what it is in front of.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_edges_are_the_direct_waits_and_not_the_whole_closure},
-}
-
-@misc{debtplan-mint-a-file-that-waits-is-blocked-and-one-that-does-not-is-ready,
-  section = {mint},
-  title  = {Status follows the direct waits},
-  claim  = {Status follows the direct waits.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_file_that_waits_is_blocked_and_one_that_does_not_is_ready},
-}
-
-@misc{debtplan-mint-minting-again-is-a-sync-not-a-duplicate,
-  section = {mint},
-  title  = {The second run adds nothing, rewrites each card, and leaves one card per file},
-  claim  = {The second run adds nothing, rewrites each card, and leaves one card per file.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_minting_again_is_a_sync_not_a_duplicate},
-}
-
-@misc{debtplan-mint-a-card-being-worked-keeps-its-status-and-is-still-rewritten,
-  section = {mint},
-  title  = {A re-mint does not demote the card in hand, but its title and step follow the plan},
-  claim  = {A re-mint does not demote the card in hand, but its title and step follow the plan.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_being_worked_keeps_its_status_and_is_still_rewritten},
-}
-
-@misc{debtplan-mint-a-card-whose-file-left-the-plan-is-retired-once,
-  section = {mint},
-  title  = {The file's card is marked done with a reason, and a third run does not retire it again},
-  claim  = {The file's card is marked done with a reason, and a third run does not retire it again.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_card_whose_file_left_the_plan_is_retired_once},
-}
-
-@misc{debtplan-mint-a-done-card-whose-file-returns-is-reopened,
-  section = {mint},
-  title  = {A file back in the ledger is work again: its done card is rewritten to ready or blocked},
-  claim  = {A file back in the ledger is work again: its done card is rewritten to ready or blocked.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_done_card_whose_file_returns_is_reopened},
-}
-
-@misc{debtplan-mint-a-lock-held-by-another-refuses-the-mint-and-is-left-held,
-  section = {mint},
-  title  = {The mint does not take over a tick, and does not release a lock that is not its own},
-  claim  = {The mint does not take over a tick, and does not release a lock that is not its own.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_lock_held_by_another_refuses_the_mint_and_is_left_held},
-}
-
-@misc{debtplan-mint-the-lock-is-released-after-a-sync,
-  section = {mint},
-  title  = {After a mint the lock is free for the next holder},
-  claim  = {After a mint the lock is free for the next holder.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_lock_is_released_after_a_sync},
-}
-
-@misc{debtplan-mint-a-refused-step-stops-the-sync-names-it-and-releases-the-lock,
-  section = {mint},
-  title  = {The writer's own words are in the error, and the lock is free afterwards},
-  claim  = {The writer's own words are in the error, and the lock is free afterwards.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_refused_step_stops_the_sync_names_it_and_releases_the_lock},
-}
-
-@misc{debtplan-mint-an-added-card-that-cannot-be-read-back-is-refused,
-  section = {mint},
-  title  = {A writer that says it added a card it did not add must not read as a queue in step},
-  claim  = {A writer that says it added a card it did not add must not read as a queue in step.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_added_card_that_cannot_be_read_back_is_refused},
-}
-
-@misc{debtplan-mint-the-style-overrides-the-step-the-tags-and-the-vector,
-  section = {mint},
-  title  = {A caller's wording, tags and vector are what the card carries},
-  claim  = {A caller's wording, tags and vector are what the card carries.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_style_overrides_the_step_the_tags_and_the_vector},
-}
-
-@misc{debtplan-mint-the-title-and-step-for-a-ready-and-a-waiting-row,
-  section = {mint},
-  title  = {The title carries the count; the ready step names the count, the other the waits},
-  claim  = {The title carries the count; the ready step names the count, the other the waits.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_title_and_step_for_a_ready_and_a_waiting_row},
-}
-
-@misc{debtplan-mint-the-step-for-a-row-held-by-an-unsettled-name-says-so,
-  section = {mint},
-  title  = {A name alone, and a name with files, each say what is to be settled},
-  claim  = {A name alone, and a name with files, each say what is to be settled.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_step_for_a_row_held_by_an_unsettled_name_says_so},
-}
-
-@misc{debtplan-mint-the-ambiguity-title-and-step-name-the-count-the-candidates-and-the-way-out,
-  section = {mint},
-  title  = {The title counts the candidate files; the step lists them and the two ways to settle},
-  claim  = {The title counts the candidate files; the step lists them and the two ways to settle.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_ambiguity_title_and_step_name_the_count_the_candidates_and_the_way_out},
-}
-
-@misc{debtplan-mint-an-unsettled-name-gets-a-card-of-its-own,
-  section = {mint},
-  title  = {Two file cards and one ambiguity card; the ambiguity prefix keys a separate set of cards},
-  claim  = {Two file cards and one ambiguity card; the ambiguity prefix keys a separate set of cards.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_unsettled_name_gets_a_card_of_its_own},
-}
-
-@misc{debtplan-mint-the-file-cards-wait-on-the-ambiguity-card-and-it-enables-them,
-  section = {mint},
-  title  = {X waits on the name; y waits on x and on the name; the name is in front of both},
-  claim  = {X waits on the name; y waits on x and on the name; the name is in front of both.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_file_cards_wait_on_the_ambiguity_card_and_it_enables_them},
-}
-
-@misc{debtplan-mint-the-ambiguity-card-is-ready-work-that-says-what-settles-it,
-  section = {mint},
-  title  = {Nothing blocks the decision: the card is ready, with the candidates and the tags},
-  claim  = {Nothing blocks the decision: the card is ready, with the candidates and the tags.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_ambiguity_card_is_ready_work_that_says_what_settles_it},
-}
-
-@misc{debtplan-mint-an-ambiguity-card-being-worked-keeps-its-status,
-  section = {mint},
-  title  = {A re-mint does not demote the decision in hand},
-  claim  = {A re-mint does not demote the decision in hand.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_ambiguity_card_being_worked_keeps_its_status},
-}
-
-@misc{debtplan-mint-a-name-that-is-settled-retires-its-card-once-and-frees-the-files,
-  section = {mint},
-  title  = {The card is marked done with a reason; the file it held becomes ready},
-  claim  = {The card is marked done with a reason; the file it held becomes ready.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_name_that_is_settled_retires_its_card_once_and_frees_the_files},
-}
-
-@misc{debtplan-mint-an-ambiguity-card-that-cannot-be-read-back-is-refused,
-  section = {mint},
-  title  = {A writer that says it added the decision card and did not must not read as in step},
-  claim  = {A writer that says it added the decision card and did not must not read as in step.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_an_ambiguity_card_that_cannot_be_read_back_is_refused},
-}
-
-@misc{debtplan-mint-the-ambiguity-prefix-is-the-file-prefix-without-its-colon-then-ambiguity,
-  section = {mint},
-  title  = {`p: ` gives `p ambiguity: `, which neither starts with nor is started by the file prefix},
-  claim  = {`p: ` gives `p ambiguity: `, which neither starts with nor is started by the file prefix.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_the_ambiguity_prefix_is_the_file_prefix_without_its_colon_then_ambiguity},
-}
-
-@misc{debtplan-mint-a-prefix-that-would-swallow-its-ambiguity-prefix-is-refused,
-  section = {mint},
-  title  = {With no `: ` to strip, the ambiguity cards would be read as file cards and retired},
-  claim  = {With no `: ` to strip, the ambiguity cards would be read as file cards and retired.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint.py -k test_a_prefix_that_would_swallow_its_ambiguity_prefix_is_refused},
-}
-
 @misc{debtplan-cli-plan-prints-the-rows-in-pay-down-order-as-json,
   section = {cli},
   title  = {The leaf is first and ready; each later row waits on what it imports},
@@ -778,8 +827,8 @@
 
 @misc{debtplan-cli-a-resolutions-file-is-read-and-applied,
   section = {cli},
-  title  = {Without the declaration the name blocks the file; with it the file is ready},
-  claim  = {Without the declaration the name blocks the file; with it the file is ready.},
+  title  = {Without the declaration the name blocks the file; with it the order is recalculated},
+  claim  = {Without the declaration the name blocks the file; with it the order is recalculated.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_resolutions_file_is_read_and_applied},
 }
 

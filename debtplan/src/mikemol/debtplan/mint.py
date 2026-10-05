@@ -29,7 +29,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from mikemol.debtplan.plan import candidates_of
+from mikemol.debtplan.plan import candidates_of, direct_unsettled
 from mikemol.debtplan.reduce import direct_waits
 
 if TYPE_CHECKING:
@@ -38,6 +38,20 @@ if TYPE_CHECKING:
     from mikemol.debtplan.plan import Plan
     from mikemol.debtplan.queue import Card, Queue
     from mikemol.debtplan.rows import Row
+
+
+def _blocked_on_names(plan: Plan) -> dict[str, tuple[str, ...]]:
+    """Name, for each file, the ambiguous names its card waits on directly.
+
+    A file behind another file that holds the name is blocked on it through that file's card, so
+    only the names it holds itself, or reaches through clean modules, are edges of its own.
+
+    Returns:
+        For each file, its direct names.
+
+    """
+    return direct_unsettled(plan.rows)
+
 
 HOLDER = "mikemol-debtplan"
 """The name the tick lock is taken under, so a held lock says who holds it."""
@@ -144,7 +158,7 @@ def ambiguity_step(name: str, candidates: tuple[str, ...]) -> str:
     """
     return (
         f"Decide which of {', '.join(candidates)} the import `{name}` means: change the importer, "
-        "or declare it in the resolutions file"
+        "or declare it in the resolutions file, then re-run the mint to recalculate the order"
     )
 
 
@@ -207,6 +221,7 @@ def _rewrite(plan: Plan, queue: Queue, style: Style) -> None:
     have = queue.cards(style.prefix)
     blockers = queue.cards(style.ambiguity)
     direct = direct_waits(plan.rows)
+    named = _blocked_on_names(plan)
     for row in plan.rows:
         card = have.get(row.file)
         if card is None:
@@ -214,7 +229,7 @@ def _rewrite(plan: Plan, queue: Queue, style: Style) -> None:
             raise MintRefusedError(msg)
         enables = [have[g].symbol for g, waits in direct.items() if row.file in waits and g in have]
         waits = [have[g].symbol for g in direct[row.file] if g in have]
-        waits += [_blocker(blockers, name).symbol for name in row.unsettled]
+        waits += [_blocker(blockers, name).symbol for name in named[row.file]]
         # A card being worked keeps its status: a re-mint must not demote the one in hand.
         status = [] if card.status == "working" else ["--status", "blocked" if waits else "ready"]
         _call(
@@ -251,9 +266,10 @@ def _rewrite_ambiguity(plan: Plan, queue: Queue, style: Style) -> int:
     have = queue.cards(style.prefix)
     blockers = queue.cards(style.ambiguity)
     names = candidates_of(plan)
+    named = _blocked_on_names(plan)
     for name, candidates in names.items():
         card = _blocker(blockers, name)
-        held = [have[row.file].symbol for row in plan.rows if name in row.unsettled]
+        held = [have[file].symbol for file, held_by in named.items() if name in held_by]
         status = [] if card.status == "working" else ["--status", "ready"]
         _call(
             queue,

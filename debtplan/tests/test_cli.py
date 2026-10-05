@@ -266,7 +266,7 @@ def _ambiguous(root: Path) -> Path:
 
     """
     files = {"scripts/a.py": "", "tools/a.py": "", "other/c.py": "import a\n"}
-    return _repo(root, '{"other/c.py": 1}', files)
+    return _repo(root, '{"other/c.py": 1, "tools/a.py": 1}', files)
 
 
 def _shown(capsys: pytest.CaptureFixture[str]) -> dict[str, object]:
@@ -293,7 +293,7 @@ def test_plan_reports_an_unsettled_name_with_its_candidates_by_importer(
 def test_a_resolutions_file_is_read_and_applied(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """Without the declaration the name blocks the file; with it the file is ready."""
+    """Without the declaration the name blocks the file; with it the order is recalculated."""
     _no_worktrees(monkeypatch)
     ledger = _ambiguous(tmp_path)
     declared = tmp_path / "resolutions.json"
@@ -302,12 +302,12 @@ def test_a_resolutions_file_is_read_and_applied(
     def row_of(*extra: str) -> dict[str, object]:
         main(["plan", *_args(tmp_path, ledger, *extra)])
         rows = cast("list[dict[str, object]]", _shown(capsys)["rows"])
-        return rows[0]
+        return next(row for row in rows if row["file"] == "other/c.py")
 
     held = row_of()
-    assert (held["ready"], held["unsettled"]) == (False, ["a"])
+    assert (held["ready"], held["unsettled"], held["waits_on"]) == (False, ["a"], [])
     free = row_of("--resolutions", str(declared))
-    assert (free["ready"], free["unsettled"]) == (True, [])
+    assert (free["ready"], free["unsettled"], free["waits_on"]) == (False, [], ["tools/a.py"])
 
 
 def test_a_malformed_resolutions_file_is_refused_with_exit_2(
@@ -332,7 +332,7 @@ def test_mint_makes_a_card_for_the_ambiguous_name(
     queue = Queue(tmp_path / ".claude" / "paths-forward.json")
     queue.run("--init")
     assert main(["mint", *_args(tmp_path, ledger, "--prefix", "t: ")]) == EXIT_OK
-    assert "added 2, rewrote 2, retired 0" in capsys.readouterr().out
+    assert "added 3, rewrote 3, retired 0" in capsys.readouterr().out
     assert set(queue.cards("t ambiguity: ")) == {"a"}
     assert queue.cards("t: ")["other/c.py"].status == "blocked"
 

@@ -136,7 +136,7 @@ def test_an_unsettled_name_is_reported_with_its_candidates_by_the_importer(tmp_p
 def test_a_file_importing_an_unsettled_name_is_not_ready(tmp_path: Path) -> None:
     """The blocker is the name: the row lists it, and the file is held until it is settled."""
     _tree(tmp_path, AMBIGUOUS_TREE)
-    row = _rows({"other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))["other/c.py"]
+    row = _rows({"other/c.py": 1, "tools/a.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))["other/c.py"]
     assert row.unsettled == ("a",)
     assert not row.ready
 
@@ -144,7 +144,8 @@ def test_a_file_importing_an_unsettled_name_is_not_ready(tmp_path: Path) -> None
 def test_a_file_whose_closure_imports_an_unsettled_name_is_held_too(tmp_path: Path) -> None:
     """A file importing c, which imports the ambiguous a, is held though it names nothing."""
     _tree(tmp_path, AMBIGUOUS_TREE)
-    by = _rows({"other/d.py": 1, "other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))
+    ledger = {"other/d.py": 1, "other/c.py": 1, "tools/a.py": 1}
+    by = _rows(ledger, tmp_path, tuple(AMBIGUOUS_TREE))
     assert by["other/d.py"].unsettled == ("a",)
     assert by["other/d.py"].waits_on == ("other/c.py",)
 
@@ -152,7 +153,8 @@ def test_a_file_whose_closure_imports_an_unsettled_name_is_held_too(tmp_path: Pa
 def test_a_file_outside_the_unsettled_closure_is_not_held(tmp_path: Path) -> None:
     """A file that does not reach the ambiguous import is unaffected by it."""
     _tree(tmp_path, {**AMBIGUOUS_TREE, "free.py": "x = 1\n"})
-    by = _rows({"free.py": 1, "other/c.py": 1}, tmp_path, tuple(AMBIGUOUS_TREE))
+    ledger = {"free.py": 1, "other/c.py": 1, "tools/a.py": 1}
+    by = _rows(ledger, tmp_path, tuple(AMBIGUOUS_TREE))
     assert by["free.py"].ready
     assert by["free.py"].unsettled == ()
 

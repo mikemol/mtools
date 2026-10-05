@@ -36,10 +36,12 @@ debt file in its closure, and the files that nothing stands in front of come fir
   origin derived edges among the ledger's own files only, which missed a file that reaches a debt file
   through a clean one; the gate sees that closure. With no universe the narrower reading remains
   available and is the default, so it is chosen and not stumbled into.
-- What could not be settled is a BLOCKER, not a guess. The origin dropped an ambiguous import
-  silently and its first rewrite here only returned it; now every debt file whose closure imports
-  such a name is not ready, and the mint gives the name its own card listing the candidates, which
-  the held files' cards wait on. It clears by a code change, or by a declaration
+- What could not be settled is a BLOCKER, not a guess, and only where it could matter. The origin
+  dropped an ambiguous import silently. Here the waits already known stay modelled; a name blocks a
+  file only when one of its candidates is or reaches a debt file (otherwise every answer leaves the
+  plan as it is), and the mint gives such a name its own card listing the candidates, which the
+  held files wait on once along a chain, not at every file behind them. Settling it means planning
+  again, which recalculates the order. It clears by a code change, or by a declaration
   (`--resolutions FILE`, name to path) that names one of the candidates; a stale declaration
   naming anything else is ignored and the name stays blocked.
 - The writer is `mikemol-paths-forward`'s own `main`, called in this process, not a child process and
