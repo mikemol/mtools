@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629, W670), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim edges.py's or resolve.py's
+# docstring makes about what a project's bibs resolve to, and none moves a def.
+
+# A key may not be defined twice: a silent last-wins replaces a claim together with its own check.
+src/mikemol/bibparse/edges.py|duplicate-key-allowed|if entry\.key in entries:|if False:|def=collect
+
+# The list field splits on commas AND whitespace; on commas alone, "a b" is one key.
+src/mikemol/bibparse/edges.py|list-split-on-commas-only|\[,\\s\]\+|[,]+|
+
+# An absent check reads as the empty string, not as some check that passes.
+src/mikemol/bibparse/edges.py|absent-check-reads-as-a-value|entry\.fields\.get\("check", ""\)|entry.fields.get("check", "none")|def=edges_of
+
+# An absent rests-on reads as no edges, not as one invented edge.
+src/mikemol/bibparse/edges.py|absent-rests-on-reads-as-an-edge|entry\.fields\.get\("rests-on", ""\)|entry.fields.get("rests-on", "x")|def=edges_of
+
+# A named bib that does not exist raises: paperkit's silent {} drops every edge the bib held.
+src/mikemol/bibparse/resolve.py|missing-bib-skipped|if not path\.is_file\(\):|if False:|def=bib_paths
+
+# A label with no `//` names no package, so it is refused rather than guessed.
+src/mikemol/bibparse/resolve.py|label-without-slashes-guessed|if not sep:|if False:|def=token_path
+
+# A token with a colon is a label even without a leading `//` or `@`.
+src/mikemol/bibparse/resolve.py|colon-token-not-a-label| or ":" in token||def=token_path
+
+# A Bazel label `//pkg:file` resolves to `pkg/file` under the project, not to `file`.
+src/mikemol/bibparse/resolve.py|label-package-dropped|f"\{pkg\}/\{name\}" if pkg else name|name|def=token_path
+
+# A missing paper.toml raises, as paperkit exits.
+src/mikemol/bibparse/resolve.py|missing-paper-toml-defaulted|if not cfg\.is_file\(\):|if cfg.is_file() and False:|def=_declared
+
+# The default is warrants.bib.
+src/mikemol/bibparse/resolve.py|default-warrants-renamed|DEFAULT_WARRANTS = \("warrants\.bib",\)|DEFAULT_WARRANTS = ("warrant.bib",)|
+
+# `warrants` must be a list of strings; a list holding a non-string is refused, not filtered.
+src/mikemol/bibparse/resolve.py|non-string-warrants-accepted|or not all\(isinstance\(got, str\) for got in declared\)||def=_declared
