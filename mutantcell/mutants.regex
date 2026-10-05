@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629, W670), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED. Each is a claim cellstage.py's own docstrings
+# make about placing bytecode and delivering ONE counterfactual, and none moves a def.
+
+# The slot is `x/__pycache__/m.<tag>.pyc`, where the tag matches THIS runtime: without it Python
+# never reads the bytecode.
+src/mikemol/mutantcell/cellstage.py|slot-drops-the-cache-tag|py_path\.stem \+ "\." \+ tag \+ "\.pyc"|py_path.stem + ".pyc"|def=slot
+
+# ...and its directory is created.
+src/mikemol/mutantcell/cellstage.py|slot-directory-not-created|d\.mkdir\(parents=True, exist_ok=True\)|pass|def=slot
+
+# A runtime with no cache tag names the empty tag, not a made-up one.
+src/mikemol/mutantcell/cellstage.py|cache-tag-invented|sys\.implementation\.cache_tag or ""|sys.implementation.cache_tag or "none"|def=cache_tag
+
+# `place_engine` MOVES each staged .pyc to its real import location: a copy leaves the staged one.
+src/mikemol/mutantcell/cellstage.py|place-copies-instead-of-moving|shutil\.move\(|shutil.copy(|def=place_engine
+
+# A .pyc already under __pycache__ is placed, not moved again.
+src/mikemol/mutantcell/cellstage.py|place-moves-an-already-placed-pyc|if "__pycache__" in pyc\.parts:|if False:|def=place_engine
+
+# file+ INJECTS an absent file, and an EMPTY file suffices: its existence is the counterfactual.
+src/mikemol/mutantcell/cellstage.py|injected-file-not-empty|p\.write_text\("", encoding="utf-8"\)|p.write_text("x", encoding="utf-8")|def=_inject_file
+
+# The injected file's directory is created, so a site under an absent directory still lands.
+src/mikemol/mutantcell/cellstage.py|inject-parent-not-created|p\.parent\.mkdir\(parents=True, exist_ok=True\)|pass|def=_inject_file
+
+# file- DROPS a present file and an absent one is a no-op, not an error.
+src/mikemol/mutantcell/cellstage.py|drop-of-an-absent-file-raises|pathlib\.Path\(arg\)\.unlink\(missing_ok=True\)|pathlib.Path(arg).unlink()|def=_drop_file
+
+# Unlink-then-write removes the sandbox HARDLINK rather than the source inode: writing in place
+# would corrupt the real tree.
+src/mikemol/mutantcell/cellstage.py|content-toggle-writes-through-the-hardlink|f\.unlink\(missing_ok=True\)|pass|def=_toggle_content
+
+# content- REMOVES the substring and content+ APPENDS it; swapped, each is the other's counterfactual.
+src/mikemol/mutantcell/cellstage.py|content-toggle-swapped|if op == "content-" else|if op == "content+" else|def=_toggle_content
+
+# content+ appends to the original; replacing it discards the file.
+src/mikemol/mutantcell/cellstage.py|content-added-replaces-the-file|else orig \+ text|else text|def=_toggle_content
+
+# The mutated module is delivered on BOTH paths: the .pyc an import reads...
+src/mikemol/mutantcell/cellstage.py|swap-delivers-no-bytecode|shutil\.copyfile\(site\.mutant_pyc, slot\(mod, tag\)\)|pass|def=_swap_module
+
+# ...and the .py a main script reads, which never comes from __pycache__.
+src/mikemol/mutantcell/cellstage.py|swap-delivers-no-source|shutil\.copyfile\(site\.mutant_py, mod\)|pass|def=_swap_module
+
+# Unlink first: copying onto a hardlink would write through the inode into the real tree.
+src/mikemol/mutantcell/cellstage.py|swap-writes-through-the-hardlink|mod\.unlink\(missing_ok=True\)|pass|def=_swap_module
+
+# A site with nothing to swap is a legitimate no-op cell: unguarded, `Path("")` is `.`.
+src/mikemol/mutantcell/cellstage.py|empty-module-not-guarded|elif site\.module:|elif True:|def=deliver
+
+# Both content kinds reach the content toggle.
+src/mikemol/mutantcell/cellstage.py|content-plus-falls-through-to-a-swap|elif op in \{"content-", "content\+"\}:|elif op in {"content-"}:|def=deliver

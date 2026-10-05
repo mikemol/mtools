@@ -694,3 +694,17 @@
   claim  = {The namespace package merges: importing the siblings does not shadow mikemol.mutantcell.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sibling_edge.py -k test_this_distribution_still_resolves_beside_its_siblings},
 }
+
+@misc{mutantcell-cellstage-runtime-with-no-cache-tag-names-the-empty-tag,
+  section = {cellstage},
+  title  = {Where the implementation has no tag the answer is the empty string, not a made-up one},
+  claim  = {Where the implementation has no tag the answer is the empty string, not a made-up one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_a_runtime_with_no_cache_tag_names_the_empty_tag},
+}
+
+@misc{mutantcell-cellstage-module-swap-replaces-the-hardlink-and-never-writes-the-source-inode,
+  section = {cellstage},
+  title  = {Unlink first: a hardlinked source keeps its content when the staged module is swapped},
+  claim  = {Unlink first: a hardlinked source keeps its content when the staged module is swapped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cellstage.py -k test_a_module_swap_replaces_the_hardlink_and_never_writes_the_source_inode},
+}

@@ -36,6 +36,12 @@ def test_cache_tag_is_this_runtimes_bytecode_tag() -> None:
     assert cellstage.cache_tag().startswith("cpython-")
 
 
+def test_a_runtime_with_no_cache_tag_names_the_empty_tag(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Where the implementation has no tag the answer is the empty string, not a made-up one."""
+    monkeypatch.setattr(sys.implementation, "cache_tag", None)
+    assert not cellstage.cache_tag()
+
+
 def test_slot_names_the_pycache_file_and_makes_its_directory(tmp_path: Path) -> None:
     """`x/m.py` maps to `x/__pycache__/m.<tag>.pyc`; the directory exists, the file does not."""
     got = cellstage.slot(tmp_path / "x" / "m.py", _TAG)
@@ -132,6 +138,27 @@ def test_a_module_swap_delivers_source_and_bytecode_over_the_staged_module(
     assert module.read_text(encoding="utf-8") == "mutant source"
     placed = tmp_path / "pkg" / "__pycache__" / f"m.{_TAG}.pyc"
     assert placed.read_text(encoding="utf-8") == "mutant bytecode"
+
+
+def test_a_module_swap_replaces_the_hardlink_and_never_writes_the_source_inode(
+    tmp_path: Path,
+) -> None:
+    """Unlink first: a hardlinked source keeps its content when the staged module is swapped."""
+    source = _write(tmp_path / "source.py", "original")
+    module = tmp_path / "pkg" / "m.py"
+    module.parent.mkdir()
+    os.link(source, module)
+    mutant_py = _write(tmp_path / "mutant.py", "mutant source")
+    mutant_pyc = _write(tmp_path / "mutant.pyc", "mutant bytecode")
+    site = cellstage.Site(
+        "pkg/m.py::f",
+        module=str(module),
+        mutant_py=str(mutant_py),
+        mutant_pyc=str(mutant_pyc),
+    )
+    cellstage.deliver(site, _TAG)
+    assert module.read_text(encoding="utf-8") == "mutant source"
+    assert source.read_text(encoding="utf-8") == "original"
 
 
 def test_a_module_swap_creates_a_module_outside_the_staged_closure(tmp_path: Path) -> None:

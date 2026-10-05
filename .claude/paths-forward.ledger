@@ -1098,3 +1098,4 @@
 2026-10-05T11:55:00Z  tick  W670 advanced  sweep     "grade declares 13 defect classes from its design comments; all killed, no test needed"  evidence=grade/mutants.regex
 2026-10-05T12:12:24Z  tick  W670 advanced  sweep     "treeio write and restore declare 18 defect classes; 3 survived (fsync, interrupt cleanup, sorted listing), 3 tests added"  evidence=treeio/mutants.regex
 2026-10-05T12:25:45Z  tick  --   rearmed   -         "re-armed cron 41bd4893 to 9c05fa85 after several ticks on a stale payload; W592 patch applied in substrate (patch -p1) but unverified, rest awaits the operator"  evidence=CronList shows 9c05fa85
+2026-10-05T12:43:24Z  tick  W670 advanced  sweep     "mutantcell cellstage declares 16 defect classes; 2 survived (no-cache-tag branch, module-swap hardlink), 2 tests added"  evidence=mutantcell/mutants.regex

@@ -114,6 +114,8 @@ sh_test(
     ],
     data = [
         "pyproject.toml",
+        # W629: the defect classes this distribution declares, planted one at a time by the runner.
+        "mutants.regex",
         ":.venv",
         "//fence:fence",
         "//mutation:mutation",
