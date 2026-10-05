@@ -106,6 +106,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/test_sibling_edge.py" = ["assert"]
 "tests/test_dagderive.py" = ["assert"]
+# ⚑ THE RESOLVER'S WITNESSES ARE PLAIN ASSERTS OVER PURE FUNCTIONS (and one tmp_path read): no child
+# process, so `assert` is the only exemption it needs.
+"tests/test_resolve.py" = ["assert"]
 # ⚑ THE THREE PORTED TOOLS (mtools:W547). `closure` is exercised as `python -m` in a child as well as
 # by calls; `imports` and `dagbzl` are the two DAG-file writers, and their exit codes are contracts.
 "tests/test_closure.py" = [

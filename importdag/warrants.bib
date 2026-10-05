@@ -972,3 +972,122 @@
   claim  = {`python -m mikemol.importdag.dagbzl` exits with `main`'s code.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dagbzl.py -k test_runs_as_a_module},
 }
+
+@misc{importdag-resolve-import-names-reads-plain-from-and-relative-forms,
+  section = {resolve},
+  title  = {`import a.b`, `from c import d` (c and c.d) and `from . import e` (bare e) name modules},
+  claim  = {`import a.b`, `from c import d` (c and c.d) and `from . import e` (bare e) name modules.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_import_names_reads_plain_from_and_relative_forms},
+}
+
+@misc{importdag-resolve-import-names-of-text-that-does-not-parse-is-empty,
+  section = {resolve},
+  title  = {A syntax error names nothing, as `dagderive.imports` reads it},
+  claim  = {A syntax error names nothing, as `dagderive.imports` reads it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_import_names_of_text_that_does_not_parse_is_empty},
+}
+
+@misc{importdag-resolve-module-names-lists-every-dotted-suffix-longest-first,
+  section = {resolve},
+  title  = {A path under src roots is named by each suffix, so a short import still finds it},
+  claim  = {A path under src roots is named by each suffix, so a short import still finds it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_module_names_lists_every_dotted_suffix_longest_first},
+}
+
+@misc{importdag-resolve-a-package-marker-is-named-by-its-package,
+  section = {resolve},
+  title  = {`__init__` is dropped: it is reached as the package's own name},
+  claim  = {`__init__` is dropped: it is reached as the package's own name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_package_marker_is_named_by_its_package},
+}
+
+@misc{importdag-resolve-an-empty-path-has-no-names,
+  section = {resolve},
+  title  = {No path parts, no names, and no index error on the empty list},
+  claim  = {No path parts, no names, and no index error on the empty list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_empty_path_has_no_names},
+}
+
+@misc{importdag-resolve-index-collects-every-file-a-suffix-could-name,
+  section = {resolve},
+  title  = {Two files sharing a stem share its entry; a longer suffix keeps them apart},
+  claim  = {Two files sharing a stem share its entry; a longer suffix keeps them apart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_index_collects_every_file_a_suffix_could_name},
+}
+
+@misc{importdag-resolve-a-unique-import-resolves-to-its-file,
+  section = {resolve},
+  title  = {The plain case: one file answers the name},
+  claim  = {The plain case: one file answers the name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_unique_import_resolves_to_its_file},
+}
+
+@misc{importdag-resolve-the-longest-dotted-prefix-wins,
+  section = {resolve},
+  title  = {`a.b.c` is a/b/c.py, not the shorter `a` (a.py), which a prefix scan from one would pick},
+  claim  = {`a.b.c` is a/b/c.py, not the shorter `a` (a.py), which a prefix scan from one would pick.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_the_longest_dotted_prefix_wins},
+}
+
+@misc{importdag-resolve-an-attribute-falls-back-to-the-module-that-holds-it,
+  section = {resolve},
+  title  = {`a.b.thing` has no file `thing`, so the shorter prefix `a.b` is the module},
+  claim  = {`a.b.thing` has no file `thing`, so the shorter prefix `a.b` is the module.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_attribute_falls_back_to_the_module_that_holds_it},
+}
+
+@misc{importdag-resolve-a-file-does-not-import-itself,
+  section = {resolve},
+  title  = {The only file naming `x` is the importer: no edge, and nothing is ambiguous},
+  claim  = {The only file naming `x` is the importer: no edge, and nothing is ambiguous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_file_does_not_import_itself},
+}
+
+@misc{importdag-resolve-a-name-with-no-file-resolves-to-nothing,
+  section = {resolve},
+  title  = {A third-party or stdlib name matches no indexed file},
+  claim  = {A third-party or stdlib name matches no indexed file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_name_with_no_file_resolves_to_nothing},
+}
+
+@misc{importdag-resolve-an-ambiguous-name-prefers-the-sibling,
+  section = {resolve},
+  title  = {`import a` beside scripts/b.py is scripts/a.py, though tools/a.py has the same stem},
+  claim  = {`import a` beside scripts/b.py is scripts/a.py, though tools/a.py has the same stem.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_ambiguous_name_prefers_the_sibling},
+}
+
+@misc{importdag-resolve-an-ambiguous-name-with-no-sibling-is-reported-and-gets-no-edge,
+  section = {resolve},
+  title  = {Two candidates, none beside the importer: no edge, and the name is returned},
+  claim  = {Two candidates, none beside the importer: no edge, and the name is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_ambiguous_name_with_no_sibling_is_reported_and_gets_no_edge},
+}
+
+@misc{importdag-resolve-a-sibling-beats-a-deeper-file-of-the-same-stem,
+  section = {resolve},
+  title  = {Only `d/a.py` sits beside `d/c.py`; `d/x/a.py` is a different directory's `a`},
+  claim  = {Only `d/a.py` sits beside `d/c.py`; `d/x/a.py` is a different directory's `a`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_sibling_beats_a_deeper_file_of_the_same_stem},
+}
+
+@misc{importdag-resolve-the-ambiguous-names-are-sorted,
+  section = {resolve},
+  title  = {The report is deterministic: names sorted, each once},
+  claim  = {The report is deterministic: names sorted, each once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_the_ambiguous_names_are_sorted},
+}
+
+@misc{importdag-resolve-every-name-contributes-its-file,
+  section = {resolve},
+  title  = {Files from several names are unioned},
+  claim  = {Files from several names are unioned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_every_name_contributes_its_file},
+}
+
+@misc{importdag-resolve-derive-reads-each-file-and-resolves-it,
+  section = {resolve},
+  title  = {The files are read from `root`, and the result is in `paths` order},
+  claim  = {The files are read from `root`, and the result is in `paths` order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_derive_reads_each_file_and_resolves_it},
+}
