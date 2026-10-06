@@ -24,6 +24,7 @@ from mikemol.hooks import (
     no_chaining,
     no_verify,
     pycheck,
+    read_guard,
     routing_table,
     shellcheck,
     structural_query,
@@ -186,3 +187,13 @@ def tick_release_main() -> int:
 
     """
     return _guarded("mikemol-hook-tick-release", tick_release.main)
+
+
+def read_guard_main() -> int:
+    """Run `mikemol-hook-read-guard` behind the argv contract (W814).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-read-guard", read_guard.main)

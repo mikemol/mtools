@@ -6079,3 +6079,80 @@
   claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
 }
+
+@misc{hooks-read-guard-regular-file-is-sized-and-anything-else-is-not,
+  section = {read-guard},
+  title  = {A file reads its byte count; a missing path and a directory are None, never zero},
+  claim  = {A file reads its byte count; a missing path and a directory are None, never zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_a_regular_file_is_sized_and_anything_else_is_not},
+}
+
+@misc{hooks-read-guard-only-a-limit-or-a-pages-range-bounds-a-read,
+  section = {read-guard},
+  title  = {An integer limit and a pages range bound the read; a bool, a string and nothing do not},
+  claim  = {An integer limit and a pages range bound the read; a bool, a string and nothing do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_only_a_limit_or_a_pages_range_bounds_a_read},
+}
+
+@misc{hooks-read-guard-unbounded-read-of-an-oversized-file-is-refused-with-the-cheaper-reads,
+  section = {read-guard},
+  title  = {The reason names the file, its size and the two cheaper reads (offset and limit, grep)},
+  claim  = {The reason names the file, its size and the two cheaper reads (offset and limit, grep).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_an_unbounded_read_of_an_oversized_file_is_refused_with_the_cheaper_reads},
+}
+
+@misc{hooks-read-guard-file-at-the-cap-and-a-bounded-read-are-admitted,
+  section = {read-guard},
+  title  = {The cap is inclusive of its own size, and a limit or pages makes any size admissible},
+  claim  = {The cap is inclusive of its own size, and a limit or pages makes any size admissible.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_a_file_at_the_cap_and_a_bounded_read_are_admitted},
+}
+
+@misc{hooks-read-guard-rendered-type-a-missing-file-and-no-path-are-admitted,
+  section = {read-guard},
+  title  = {Rendered types, an unsizable file and a missing path are the tool's to handle},
+  claim  = {Rendered types, an unsizable file and a missing path are the tool's to handle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_a_rendered_type_a_missing_file_and_no_path_are_admitted},
+}
+
+@misc{hooks-read-guard-refused-read-prints-the-deny-decision,
+  section = {read-guard},
+  title  = {The denial goes to stdout as the harness's PreToolUse deny JSON, exit code zero},
+  claim  = {The denial goes to stdout as the harness's PreToolUse deny JSON, exit code zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_a_refused_read_prints_the_deny_decision},
+}
+
+@misc{hooks-read-guard-admitted-read-prints-nothing,
+  section = {read-guard},
+  title  = {A read that is fine says nothing at all},
+  claim  = {A read that is fine says nothing at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_an_admitted_read_prints_nothing},
+}
+
+@misc{hooks-read-guard-main-denies-a-real-oversized-file-when-armed,
+  section = {read-guard},
+  title  = {Through main, with the real size reader, an armed guard denies a file over the cap},
+  claim  = {Through main, with the real size reader, an armed guard denies a file over the cap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_main_denies_a_real_oversized_file_when_armed},
+}
+
+@misc{hooks-read-guard-main-is-silent-when-unarmed-or-stood-down,
+  section = {read-guard},
+  title  = {Unarmed says nothing, and the hook's own switch at 0 beats the shared switch at 1},
+  claim  = {Unarmed says nothing, and the hook's own switch at 0 beats the shared switch at 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_main_is_silent_when_unarmed_or_stood_down},
+}
+
+@misc{hooks-read-guard-main-says-nothing-for-an-unreadable-payload-even-when-armed,
+  section = {read-guard},
+  title  = {A malformed payload is not a read to judge, so an armed guard stays silent},
+  claim  = {A malformed payload is not a read to judge, so an armed guard stays silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_main_says_nothing_for_an_unreadable_payload_even_when_armed},
+}
+
+@misc{hooks-read-guard-console-entry-refuses-an-argument-before-reading-stdin,
+  section = {read-guard},
+  title  = {The argv contract: a hook takes no arguments, and the refusal names the program},
+  claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
+}

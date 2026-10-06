@@ -21,6 +21,15 @@
         ]
       },
       {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "READGUARD_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-read-guard\""
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
