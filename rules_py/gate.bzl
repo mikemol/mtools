@@ -30,7 +30,7 @@ to run. substrate:W300's hook is thirty-odd more of the same shape. This is that
 
 load("@rules_python//python:py_test.bzl", "py_test")
 
-def paperkit_gate(name, project, engine_repo, engine_files, data, flags = []):
+def paperkit_gate(name, project, engine_repo, engine_files, data, flags = [], env = {}):
     """Declare one test that runs the paperkit gate over `project` with the engine pinned (mtools:W843).
 
     The engine is the files of a `pinned_files` repository, so the verdict is about a recorded commit
@@ -49,6 +49,8 @@ def paperkit_gate(name, project, engine_repo, engine_files, data, flags = []):
         engine_files: the FILES list of that repository's manifest.bzl.
         data: the project's named files; `<project>/paper.toml` must be among them.
         flags: extra flags for `paperkit.gate` (for example `--safe`).
+        env: extra environment for the gate. paperkit's clean_env carries only `PAPERKIT_*` names into
+            a check, so a variable a check must see is spelled that way (`PAPERKIT_TIER = "commit"`).
 
     Returns:
         The test's label.
@@ -72,6 +74,7 @@ def paperkit_gate(name, project, engine_repo, engine_files, data, flags = []):
             "--project=$(rootpath %s)" % toml,
         ] + flags,
         data = data + ["@%s//:%s" % (engine_repo, p) for p in engine_files],
+        env = env,
         legacy_create_init = 0,
         main = "@mikemol_rules_py//:paperkit_gate_main.py",
     )
