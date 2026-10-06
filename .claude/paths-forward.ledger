@@ -1228,3 +1228,5 @@
 2026-10-05T23:50:15Z  interrupt W796 minted    -         "Graduate the host katas (status, commit, typing, mypy, visit, tick; now ~/github/.claude/katas/katas.py) into an mtools distribution to the house standards, with tests, warrants and the mutation gate, replacing the session scratch scripts"  evidence=W790
 2026-10-06T00:31:41Z  interrupt W797 minted    -         "Audit commit gates that read a sibling repo's live working tree and pin each to a recorded commit"  evidence=W790
 2026-10-06T01:48:39Z  interrupt W798 minted    -         "Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs captured by BuildBuddy"
+2026-10-06T02:02:46Z  interrupt W799 minted    -         "Starlark kata: tracked_files repo rule in mikemol_rules_py, file lists from the git index"  evidence=mtools:W798
+2026-10-06T02:02:47Z  interrupt W800 minted    -         "Script the bazel-conversion katas: katas.py bazelize scaffolds .bazelversion, .bazelrc, MODULE.bazel and the one-line hook"  evidence=mtools:W798
