@@ -658,54 +658,17 @@ for dist in $_dists . $_atoms; do
     fi
     continue
   fi
-  # ⚑⚑⚑ ANCHORED, BECAUSE AN UNANCHORED `@misc{` COUNTS A QUOTATION AS A WARRANT. This is a corpus
-  # whose `claim` fields QUOTE CODE, so a warrant claiming something about bibtex syntax puts the
-  # entry delimiter inside a field and the ledger reads 177 against 176. ⚑ MEASURED on a fixture:
-  # one entry whose claim contains the string `@misc{` counts as **2** unanchored and **1**
-  # anchored. The gate would then refuse every commit in the distribution with a bare arithmetic
-  # disagreement and NO POINTER to the quotation that caused it.
-  # ⚑⚑ IT AGREED WITH THE ANCHORED FORM AT 176 ON THE DAY IT WAS WRITTEN, which is exactly the
-  # property that made it invisible — `rosettapkg` named the mechanism (*a substring frequency
-  # offered as a count of kinds*) and it found this within minutes of being pointed at my gate.
-  w=$(grep -c '^@misc{' "$staged/$dist/warrants.bib")
-  # ⚑ `cat` then a single `grep -c`, NOT `grep -c` over the glob: -c counts PER FILE and would emit
-  # one number per test module rather than the suite's total. shellcheck's SC2126 suggests a swap
-  # that is wrong here — the aggregate is the point.
-  # ⚑⚑⚑ COUNTED PER FILE, NOT OVER A CONCATENATION. `cat a b | grep -c '^def test_'` welds `a`'s
-  # last line to `b`'s first, so a definition at the start of the next file stops matching the
-  # anchor. MEASURED on a two-file fixture where the first lacks its trailing newline: the
-  # per-file sum reads 3 and the concatenation reads 2.
-  # ⚑⚑ AND THE ERROR IS THE REFUSING DIRECTION — fewer test functions than exist, so a ledger that
-  # is genuinely 1:1 looks like it carries surplus warrants and the commit is refused, while
-  # `preflight.sh` (which already counts per file) predicts a clean tree.
-  # ⚑ ALL TEST MODULES END IN A NEWLINE TODAY, so the two agreed. That is the accident holding
-  # rather than the property being enforced. Per-file counting is correct independent of file
-  # endings; a lint rule forbidding the missing newline would fix the ACCIDENT and leave the
-  # reader wrong — a second thing to keep true instead of one thing that cannot go wrong.
-  # ⚑⚑⚑ PARSED, NOT MATCHED, AND A GREP COUNTED TEST SOURCE QUOTED AS DATA. This read
-  # `grep -h -cE '^(    )?def test_'`. `hooks/tests/test_grade.py` builds its fixture arms as an
-  # f-string containing `def test_behavioural()` — test source quoted so the grader under test
-  # has something to grade. MEASURED over that file: `ast.walk` 17, `pytest --collect-only` 17,
-  # the grep 20 — three lines inside a string literal. The ledger is 1:1, so those three could
-  # only ever be satisfied by warrants for things that do not exist.
-  # ⚑⚑ AND THE DISAGREEMENT IS CONFINED, which is what makes the diagnosis a diagnosis: parse
-  # and grep agree exactly on `fence` (33), `mdstruct` (100) and `ratchet` (39), and differ on
-  # `hooks` by precisely 3. A parse that disagreed everywhere would indicate a bug in the parse.
-  # ⚑ THIS IS THE `@misc{` DEFECT ONE FIELD OVER, already recorded above: an artifact that quotes
-  # its own subject cannot be measured by matching that subject's syntax.
-  t=$("$root/count_test_functions.py" "$staged/$dist")
-  if [ "$w" -ne "$t" ]; then
-    say "$dist: $w warrants against $t test functions — every test must arrive warranted"
-    # ⚑⚑ THE NUMBERS GO INTO THE RECORD, NOT ONLY ONTO stderr. `say` reaches a human at a
-    # terminal; `note_failure`'s LABEL is what the refusal summary and `REFUSALS.tsv` carry, and a
-    # bare label writes a row saying *the ledger disagreed* without saying by how much or which
-    # way. ⚑ The two counts already exist here — withholding them from the record was a choice
-    # nobody made deliberately.
-    _wlog="$_witness_logs/warrant-ledger-$dist.log"
-    printf '%s warrants against %s test functions (parametrize expands cases beyond functions)\n' \
-        "$w" "$t" > "$_wlog"
-    fail=1; note_failure "$dist: warrant ledger 1:1" "$_wlog"
-  fi
+  # ⚑⚑⚑ NO COUNT COMPARISON HERE (mtools:W839, operator 2026-10-06: "A \Delta B = \emptyset. not
+  # counts"). This loop compared the NUMBER of warrants with the number of test functions, which a
+  # wrong pairing passes (two warrants naming renamed-away tests balanced two unwarranted tests,
+  # measured 2026-09-23) and which says only "97 against 111", never WHICH tests. The one check is
+  # the set pairing below, `count_test_functions.py --pairing`: every warrant's check must name a
+  # test that exists and every test must be named, each finding printed by name. The old count's
+  # history, kept because each item was a real defect of counting and not of this file: an
+  # unanchored `@misc{` counted a quotation as a warrant (177 for 176); `cat | grep -c` welded two
+  # files' boundary lines; a grep for `def test_` counted three lines of quoted test source in
+  # hooks/tests/test_grade.py (17 by `ast.walk`, 20 by grep): an artifact that quotes its own
+  # subject cannot be measured by matching the subject's syntax.
   if ! diff -q \
       <(grep -o 'section = {[^}]*}' "$staged/$dist/warrants.bib" | sed 's/.*{\(.*\)}/\1/' | sort -u) \
       <(grep -v '^#' "$staged/$dist/rubric.tsv" | cut -f1 | sort -u) >/dev/null; then

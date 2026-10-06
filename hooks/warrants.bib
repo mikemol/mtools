@@ -1247,12 +1247,6 @@
   check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_poll_reports_more_than_one_roster_shaped_table}
 }
 
-@misc{hooks-bar-fires-warrant-count-is-anchored-against-a-quoted-delimiter,
-  section = {bar-fires},
-  claim   = {An unanchored entry-delimiter count reads a QUOTATION as a warrant: 2 unanchored, 1 anchored, measured on a fixture},
-  check   = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_warrant_count_is_anchored_against_a_quoted_delimiter}
-}
-
 @misc{hooks-bar-fires-gate-names-the-population-its-ledger-ranges-over,
   section = {bar-fires},
   claim   = {The 1:1 ledger ranges over test FUNCTIONS not CASES: 176 warranted, 248 collected, and a correct count over a mis-named population passes every arithmetic check},
@@ -6763,4 +6757,20 @@
   title  = {A class-based suite defines tests as methods: they are live and a prune keeps them},
   claim  = {A class-based suite defines tests as methods: they are live and a prune keeps them.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_prune_keeps_a_warrant_for_a_test_defined_as_a_class_method},
+}
+
+@misc{hooks-bar-fires-warrant-check-is-set-equality-and-no-count-comparison-remains,
+  section = {bar-fires},
+  title  = {⚑⚑⚑ THE WARRANT CHECK IS A SET PAIRING, NOT A COMPARISON OF COUNTS (W839)},
+  claim  = { THE WARRANT CHECK IS A SET PAIRING, NOT A COMPARISON OF COUNTS (W839). Operator,
+            2026-10-06: the symmetric difference of the two sets is empty, not counts.
+            The gate compared how many warrants there were with how many test functions,
+            which a wrong pairing passes and which names no test. The one check is
+            `count_test_functions.py --pairing`, run through `run_checked` so every
+            orphan warrant and every unwarranted test is printed by name and replayed
+            under the refusal. THE DEFECTS OF COUNTING THAT THE OLD ARM PINNED ARE KEPT
+            AS ABSENCES: an unanchored count of the entry delimiter inflates the ledger
+            when a claim quotes it (177 for 176), and no count comparison may come back,
+            since a count that agrees says nothing about WHICH tests are warranted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_warrant_check_is_set_equality_and_no_count_comparison_remains},
 }

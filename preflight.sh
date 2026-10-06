@@ -205,29 +205,10 @@ for dist in $dists; do
         fail=1; say "$dist: ratchet — a NEW KEY; the gate will refuse this"
     fi
 
-    # ⚑ THE WARRANT LEDGER IS 1:1 AND THE GATE ENFORCES IT, so a test added without a warrant is a
-    # refusal this script can predict for free. Counted the way the gate counts it.
-    if [ -f "$dist/warrants.bib" ]; then
-        # ⚑⚑⚑ ANCHORED, BECAUSE THE GATE ANCHORS AND THIS FILE EXISTS TO PREDICT THE GATE. It
-        # counted `@misc{` unanchored while `.githooks/pre-commit` and `message_counts.sh` both
-        # use `^@misc{`. MEASURED: 215 both ways today, because the ledger happens to carry ZERO
-        # lines with `@misc{` off column 0 — one quoted example inside a `note` field splits them.
-        # ⚑⚑ AN ARM ALREADY FORBADE THE UNANCHORED FORM and read only the gate, so the rule was
-        # stated, enforced, and violated in the same tree with every run green. The population was
-        # one file where the property is about a PAIR.
-        # ⚑ SAME DEFECT AS `01dc5e7` ONE FILE OVER: two instruments deriving one figure
-        # independently drift without either noticing, and agree until an accident stops holding.
-        w=$(grep -c '^@misc{' "$dist/warrants.bib")
-        # ⚑ PARSED, NOT MATCHED, AND THE SAME TOOL THE GATE CALLS — this script exists to
-        # PREDICT the gate, and two counters computing one figure two ways is exactly how they
-        # drift without either noticing. A grep here counted `def test_` inside a string literal
-        # in `test_grade.py`: 20 where the parse and pytest both say 17.
-        t=$("$root/count_test_functions.py" "$dist")
-        if [ "${w:-0}" -ne "${t:-0}" ]; then
-            fail=1
-            say "$dist: warrants ${w:-?} vs ${t:-?} test functions — the gate will refuse this"
-        fi
-    fi
+    # ⚑ NO COUNT OF WARRANTS AGAINST TESTS HERE (mtools:W839, operator 2026-10-06: the symmetric
+    # difference is empty, not counts). The gate's warrant check is the set pairing, which this
+    # script already runs for every distribution above (`count_test_functions.py --pairing`), so
+    # the prediction is the same check and names each orphan warrant and unwarranted test.
 done
 
 # ⚑⚑ THE ROOT'S OWN BAR, WHICH NO DISTRIBUTION'S LOOP REACHES. The root scripts are linted by

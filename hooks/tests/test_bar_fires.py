@@ -1271,10 +1271,11 @@ _MAX_SAME_QUERY = 11
 # mis-named population this repository has measured eight times, arriving in the arm that
 # enumerates the others.
 _SWEEP_COVERS_ARMS = 45
-# ⚑ A FLOOR ON THE COUNTING SITES, not a target. Three files count the warrant ledger --- the
-# gate, the preflight that predicts it, and the message checker. If a sweep finds fewer, the
-# pattern stopped matching and the anchoring arm passes by finding nothing to check.
-_MIN_WARRANT_COUNT_SITES = 3
+# ⚑ A FLOOR ON THE COUNTING SITES, not a target. Two sites still count the warrant ledger (W839
+# removed the gate's and the preflight's count comparisons, which the set pairing replaces). If a
+# sweep finds fewer, the pattern stopped matching and the anchoring arm passes by finding nothing
+# to check.
+_MIN_WARRANT_COUNT_SITES = 2
 # ⚑ A FLOOR ON THE HARNESS SCRIPT POPULATION, not a target. Sixteen shell scripts plus the
 # two git hooks were present when this shipped; a glob that stopped matching would make any
 # harness-wide arm pass by finding nothing to check, which is the direction that reads as
@@ -1805,25 +1806,27 @@ def test_the_gate_replays_detail_for_the_distribution_checks() -> None:
     )
 
 
-def test_the_warrant_count_is_anchored_against_a_quoted_delimiter() -> None:
-    """⚑⚑⚑ AN UNANCHORED `@misc{` COUNTS A QUOTATION AS A WARRANT.
+def test_the_warrant_check_is_set_equality_and_no_count_comparison_remains() -> None:
+    """⚑⚑⚑ THE WARRANT CHECK IS A SET PAIRING, NOT A COMPARISON OF COUNTS (W839).
 
-    This corpus's `claim` fields quote code, so a warrant claiming something about bibtex syntax
-    puts the entry delimiter inside a field and the ledger reads 177 against 176 — a bare
-    arithmetic refusal with **no pointer to the quotation that caused it**, blocking every commit
-    in the distribution until someone reads the diff closely enough to find it.
+    Operator, 2026-10-06: the symmetric difference of the two sets is empty, not counts. The gate
+    compared how many warrants there were with how many test functions, which a wrong pairing
+    passes and which names no test. The one check is `count_test_functions.py --pairing`, run
+    through `run_checked` so every orphan warrant and every unwarranted test is printed by name and
+    replayed under the refusal.
 
-    ⚑⚑ MEASURED on a fixture, both arms, before the gate was changed: one entry whose claim
-    contains the string `@misc{` counts as **2** unanchored and **1** anchored. ⚑ The unanchored
-    form agreed with the anchored one at 176 on the day it was written, which is exactly what made
-    it invisible — `rosettapkg` named the mechanism (*a substring frequency offered as a count of
-    kinds*) and it found this within minutes of being pointed at this gate.
+    ⚑⚑ THE DEFECTS OF COUNTING THAT THE OLD ARM PINNED ARE KEPT AS ABSENCES: an unanchored count
+    of the entry delimiter inflates the ledger when a claim quotes it (177 for 176), and no count
+    comparison may come back, since a count that agrees says nothing about WHICH tests are
+    warranted.
     """
     body = _GATE.read_text(encoding="utf-8")
-    assert "grep -c '^@misc{'" in body, "the warrant count must be anchored to line start"
     assert "grep -c '@misc{'" not in body, (
         "an unanchored count is the defect: a claim quoting the delimiter inflates the ledger"
     )
+    assert '[ "$w" -ne "$t" ]' not in body, "a count comparison is not a warrant check (W839)"
+    pairing = 'run_checked "every warrant check names a test that exists, and every test is named"'
+    assert pairing in body, "the set pairing must be the warrants check, run so findings are kept"
 
 
 def test_the_gate_names_the_population_its_ledger_ranges_over() -> None:
@@ -1977,8 +1980,8 @@ def test_every_refusal_site_carries_its_own_detail() -> None:
     has recorded four times.
     """
     body = _GATE.read_text(encoding="utf-8")
-    assert 'note_failure "$dist: warrant ledger 1:1" "$_wlog"' in body, (
-        "the two disagreeing counts exist at the site and must reach the record"
+    assert 'note_failure "$dist: warrant ledger 1:1" "$_wlog"' not in body, (
+        "the count comparison is gone (W839): the pairing names each finding instead"
     )
     assert 'note_failure "$dist: warrant sections vs rubric sections" "$_slog"' in body
     # ⚑ THE `diff -q` IN THE CONDITION IS CORRECT AND MUST STAY — it is the test. What was missing
