@@ -5482,3 +5482,52 @@
   claim  = { A consumer whose own directory holds a `bib` is ambiguous: that `bib` is not ours.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_module_of_the_same_name_beside_the_consumer_refuses_the_import},
 }
+
+@misc{pycodemod-atomize-drop-path-retires-the-bootstrap-the-rewrite-made-idle,
+  section = {atomize},
+  title  = {⚑⚑ With `--drop-path`, the insert that put the package directory on `sys.path` goes too},
+  claim  = { With `--drop-path`, the insert that put the package directory on `sys.path` goes too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_drop_path_retires_the_bootstrap_the_rewrite_made_idle},
+}
+
+@misc{pycodemod-pathdrop-matching-mutation-and-the-idle-sys-import-are-removed,
+  section = {pathdrop},
+  title  = {⚑ The only use of `sys` was the mutation, so both lines go and the rest is untouched},
+  claim  = { The only use of `sys` was the mutation, so both lines go and the rest is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathdrop.py -k test_a_matching_mutation_and_the_idle_sys_import_are_removed},
+}
+
+@misc{pycodemod-pathdrop-mutation-the-pattern-does-not-name-stays,
+  section = {pathdrop},
+  title  = {⚑⚑ A sibling-directory insert exists for another reason and is not guessed away},
+  claim  = { A sibling-directory insert exists for another reason and is not guessed away.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathdrop.py -k test_a_mutation_the_pattern_does_not_name_stays},
+}
+
+@misc{pycodemod-pathdrop-sys-stays-when-it-is-read-elsewhere,
+  section = {pathdrop},
+  title  = {⚑ `import sys` is removed only when every reference was inside a removed statement},
+  claim  = { `import sys` is removed only when every reference was inside a removed statement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathdrop.py -k test_sys_stays_when_it_is_read_elsewhere},
+}
+
+@misc{pycodemod-pathdrop-mutation-with-a-comment-line-stays,
+  section = {pathdrop},
+  title  = {⚑ Commentary is not tidied away: a commented mutation is kept, and so is its `sys`},
+  claim  = { Commentary is not tidied away: a commented mutation is kept, and so is its `sys`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathdrop.py -k test_a_mutation_with_a_comment_line_stays},
+}
+
+@misc{pycodemod-pathdrop-mutation-inside-a-block-stays,
+  section = {pathdrop},
+  title  = {⚑ Only a module-level statement is removed: an emptied block would not parse},
+  claim  = { Only a module-level statement is removed: an emptied block would not parse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathdrop.py -k test_a_mutation_inside_a_block_stays},
+}
+
+@misc{pycodemod-pathdrop-other-names-of-a-combined-import-are-kept,
+  section = {pathdrop},
+  title  = {⚑ `import os, sys` loses only `sys`, and the line ends without a dangling comma},
+  claim  = { `import os, sys` loses only `sys`, and the line ends without a dangling comma.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathdrop.py -k test_the_other_names_of_a_combined_import_are_kept},
+}

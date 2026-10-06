@@ -138,6 +138,20 @@ def test_a_write_leaves_only_what_was_refused(
     assert importers([path], "bib").rows == []
 
 
+def test_drop_path_retires_the_bootstrap_the_rewrite_made_idle(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """⚑⚑ With `--drop-path`, the insert that put the package directory on `sys.path` goes too."""
+    pkg = _package(tmp_path)
+    src = "import sys\n\nsys.path.insert(0, PKG)\nfrom bib import a\n\nprint(a)\n"
+    path = _consumer(tmp_path, src)
+    flags = cli_atomize.AtomizeFlags(package="pk", package_dir=pkg, write=True, drop_path="PKG")
+    assert cli_atomize.print_atomize([path], flags) == 0
+    assert "atomize dropped-path" in capsys.readouterr().out
+    got = (tmp_path / "pk" / "consumer.py").read_text(encoding="utf-8")
+    assert got == "\nimport pk.bib\n\nprint(pk.bib.a)\n"
+
+
 def test_a_write_is_refused_when_the_sets_disagree(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:

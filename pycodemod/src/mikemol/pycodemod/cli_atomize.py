@@ -10,12 +10,13 @@ taken again, and what remains must be exactly the sites the rewriter refused.
 
 from __future__ import annotations
 
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod import atomize, report
+from mikemol.pycodemod import atomize, pathdrop, report
 from mikemol.pycodemod.imports import importers
 
 if TYPE_CHECKING:
@@ -31,6 +32,7 @@ class AtomizeFlags:
     package: str
     package_dir: str
     write: bool
+    drop_path: str | None = None
 
 
 def _census(paths: Sequence[str], modules: Iterable[str]) -> set[_Key]:
@@ -39,6 +41,19 @@ def _census(paths: Sequence[str], modules: Iterable[str]) -> set[_Key]:
 
 def _say(line: str) -> None:
     sys.stdout.write(f"{line}\n")
+
+
+def _retire_paths(result: atomize.Atomized, pattern: re.Pattern[str]) -> None:
+    """Remove the named `sys.path` mutations from every file about to be written.
+
+    ⚑ LINES ARE THOSE OF THE REWRITTEN TEXT, which differs from the file on disk only where a
+    repeated import collapsed.
+    """
+    for path, text in sorted(result.texts.items()):
+        got = pathdrop.retire(text, pattern)
+        result.texts[path] = got.text
+        for line in got.lines:
+            _say(f"atomize dropped-path {path}:{line}")
 
 
 def print_atomize(paths: Sequence[str], flags: AtomizeFlags) -> int:
@@ -56,6 +71,8 @@ def print_atomize(paths: Sequence[str], flags: AtomizeFlags) -> int:
     for site in result.sites:
         why = f" {site.why}" if site.why else ""
         _say(f"atomize {site.verdict} {site.module} {site.path}:{site.line}{why}")
+    if flags.drop_path is not None:
+        _retire_paths(result, re.compile(flags.drop_path))
     planned = {(s.path, s.line, s.module) for s in result.sites}
     census = _census(paths, siblings.modules)
     delta = sorted(planned ^ census)

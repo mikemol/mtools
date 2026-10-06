@@ -161,6 +161,7 @@ def _handle_atomize(ns: argparse.Namespace) -> int:
         package=_str(ns, "package"),
         package_dir=_str(ns, "package_dir"),
         write=_flag(ns, "write"),
+        drop_path=_opt_str(ns, "drop_path"),
     )
     return cli_atomize.print_atomize(_str_list(ns, "paths"), flags)
 
@@ -1366,6 +1367,13 @@ def _add_atomize_mode(make: _Make) -> None:
     ato.add_argument("--package", required=True, help="the package name the siblings belong to")
     ato.add_argument("--package-dir", required=True, help="the directory holding the flat modules")
     ato.add_argument("--write", action="store_true", help="write the rewrite when the sets agree")
+    ato.add_argument(
+        "--drop-path",
+        default=None,
+        metavar="REGEX",
+        help="also remove module-level sys.path.insert/append calls whose argument matches REGEX "
+        "from each rewritten file, and the `import sys` they leave unused",
+    )
     ato.add_argument("paths", nargs="+", help="every file that may import a sibling flat")
 
 
