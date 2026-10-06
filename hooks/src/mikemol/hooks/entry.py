@@ -24,6 +24,7 @@ from mikemol.hooks import (
     no_chaining,
     no_verify,
     pycheck,
+    pycheck_advise,
     read_guard,
     routing_table,
     shellcheck,
@@ -121,6 +122,16 @@ def pycheck_main() -> int:
 
     """
     return _guarded("mikemol-hook-pycheck", pycheck.main)
+
+
+def pycheck_advise_main() -> int:
+    """Run `mikemol-hook-pycheck-advise` behind the argv contract (W818).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-pycheck-advise", pycheck_advise.main)
 
 
 def inbound_asks_main() -> int:

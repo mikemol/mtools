@@ -64,6 +64,17 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "DEBTPLAN_BIN=\"$CLAUDE_PROJECT_DIR/debtplan/.venv/bin/mikemol-debtplan\" \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-pycheck-advise\""
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

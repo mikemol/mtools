@@ -6247,3 +6247,87 @@
   claim  = {No file list is no ledger, never an empty one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_the_cli_census_writes_no_ledger_when_git_cannot_name_the_files},
 }
+
+@misc{hooks-pycheck-closure-planner-is-found-by-env-then-venv,
+  section = {pycheck-closure},
+  title  = {The env override wins, then the project's venv; none found is None},
+  claim  = {The env override wins, then the project's venv; none found is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_the_planner_is_found_by_env_then_venv},
+}
+
+@misc{hooks-pycheck-closure-ledger-is-a-flat-map-of-counts-and-nothing-else,
+  section = {pycheck-closure},
+  title  = {A missing ledger, bad JSON, a non-int count and a bool are all None, never partial},
+  claim  = {A missing ledger, bad JSON, a non-int count and a bool are all None, never partial.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_a_ledger_is_a_flat_map_of_counts_and_nothing_else},
+}
+
+@misc{hooks-pycheck-closure-frontier-asks-as-if-the-clean-file-had-one-finding,
+  section = {pycheck-closure},
+  title  = {The throwaway ledger adds the edited file with a count of 1; its waits_on come back},
+  claim  = {The throwaway ledger adds the edited file with a count of 1; its waits_on come back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_the_frontier_asks_as_if_the_clean_file_had_one_finding},
+}
+
+@misc{hooks-pycheck-closure-unreadable-plan-is-none-and-a-file-with-no-row-has-no-frontier,
+  section = {pycheck-closure},
+  title  = {A planner that failed or printed junk is None; a plan without the file's row is empty},
+  claim  = {A planner that failed or printed junk is None; a plan without the file's row is empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_an_unreadable_plan_is_none_and_a_file_with_no_row_has_no_frontier},
+}
+
+@misc{hooks-pycheck-closure-advice-names-each-unclean-import-with-its-findings,
+  section = {pycheck-closure},
+  title  = {The context text carries every file and its count, and says the gate judges one file},
+  claim  = {The context text carries every file and its count, and says the gate judges one file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_the_advice_names_each_unclean_import_with_its_findings},
+}
+
+@misc{hooks-pycheck-closure-context-is-said-only-when-there-is-debt-to-name,
+  section = {pycheck-closure},
+  title  = {No ledger, no debt among the imports: silence; a ledger and a frontier: the advice},
+  claim  = {No ledger, no debt among the imports: silence; a ledger and a frontier: the advice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_context_is_said_only_when_there_is_debt_to_name},
+}
+
+@misc{hooks-pycheck-closure-file-outside-the-project-is-never-advised,
+  section = {pycheck-closure},
+  title  = {A path that is not under the root says nothing},
+  claim  = {A path that is not under the root says nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_a_file_outside_the_project_is_never_advised},
+}
+
+@misc{hooks-pycheck-advise-edited-python-file-with-unclean-imports-gets-the-advisory,
+  section = {pycheck-advise},
+  title  = {The context goes out as PostToolUse additionalContext and the exit code is zero},
+  claim  = {The context goes out as PostToolUse additionalContext and the exit code is zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_advise.py -k test_an_edited_python_file_with_unclean_imports_gets_the_advisory},
+}
+
+@misc{hooks-pycheck-advise-anything-but-a-python-edit-says-nothing,
+  section = {pycheck-advise},
+  title  = {A read, a non-Python file and a missing file are silent},
+  claim  = {A read, a non-Python file and a missing file are silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_advise.py -k test_anything_but_a_python_edit_says_nothing},
+}
+
+@misc{hooks-pycheck-advise-file-in-no-project-says-nothing,
+  section = {pycheck-advise},
+  title  = {With no governing project upward there is no ledger to read},
+  claim  = {With no governing project upward there is no ledger to read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_advise.py -k test_a_file_in_no_project_says_nothing},
+}
+
+@misc{hooks-pycheck-advise-main-says-nothing-for-an-unreadable-payload,
+  section = {pycheck-advise},
+  title  = {A context hook has nothing to refuse, so junk on stdin is silence and exit zero},
+  claim  = {A context hook has nothing to refuse, so junk on stdin is silence and exit zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_advise.py -k test_main_says_nothing_for_an_unreadable_payload},
+}
+
+@misc{hooks-pycheck-advise-console-entry-refuses-an-argument-before-reading-stdin,
+  section = {pycheck-advise},
+  title  = {The argv contract: a hook takes no arguments, and the refusal names the program},
+  claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_advise.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
+}

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W818: PostToolUse(Edit|Write) adds the edited Python file's unclean imports as context. The logic is
+# mikemol.hooks.pycheck_advise; this launcher is the stable path the harness's settings name.
+#
+# ⚑ FAIL OPEN: the hook only ADDS context after an edit has landed, so an unbuilt venv is a note on
+# stderr and exit 0, never a block (a missing advisory costs a reminder; a refusal here would stop an
+# edit that already happened).
+#
+# ⚑ THE REAL PATH, NOT `bazel-bin`: CPython reached through the convenience symlink prints
+# "Could not find platform dependent libraries" on every call; the same venv by its real path is
+# silent (see mikemol-hook-no-verify).
+set -uo pipefail
+
+root="${CLAUDE_PROJECT_DIR:-}"
+entry="$(basename "$0")"
+if [ -z "$root" ]; then
+    echo "$entry: CLAUDE_PROJECT_DIR is unset; not checked" >&2
+    exit 0
+fi
+
+venv="$root/bazel-bin/hooks/.venv"
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    echo "$entry: the hook venv is not built (bazel build //hooks:.venv); not checked" >&2
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"
