@@ -41,6 +41,12 @@ def dist_checks(venv_data = [], venv_tags = []):
             "@mikemol_rules_py//:venv_check.py",
         ] + native.glob(["tests/**/*.py"]) + venv_data,
         size = "small",
+        # ⚑ A GENEROUS TIMEOUT, NOT THE 60 s A SMALL TEST GETS (W838; operator: "I hate
+        # wallclock-sensitive things"). This check COLLECTS the distribution's whole suite with the
+        # built venv, so its time grows with the suite and with the load the gate puts on the box:
+        # //hooks:venv timed out at 60.4 s while 24 actions ran beside it and refused a commit
+        # (2026-10-06), though it passes alone. The same ruling as //<dist>:mypy.
+        timeout = "long",
         tags = venv_tags,
     )
 

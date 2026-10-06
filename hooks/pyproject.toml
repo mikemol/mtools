@@ -381,7 +381,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # wrapper process sits above a build and holds its signals, IS the module's responsibility. MEASURED:
 # the argv is the real client's path (BAZEL_REAL, from bazel itself) and its own arguments, or
 # `mikemol-membudget run MB -- <real> <args>`; never a shell.
-"src/mikemol/hooks/bazel_admit.py" = ["start-process-with-no-shell"]
+"src/mikemol/hooks/bazel_admit.py" = [
+    "start-process-with-no-shell",
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+]
 "src/mikemol/hooks/commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

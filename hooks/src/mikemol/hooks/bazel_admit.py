@@ -9,15 +9,28 @@ the check belongs in bazel's own path. Bazel runs a workspace's `tools/bazel` wr
 client command, naming the real client in BAZEL_REAL; `mikemol-bazel-admit --install` writes that
 wrapper, and the wrapper runs this.
 
-⚑ ADMIT OR WAIT, NEVER GUESS. A light verb (`info`, `query`, `version`, `shutdown`, ...) runs at
-once. A heavy verb (`build`, `test`, `run`, `coverage`, `fetch`) waits while zram is at or above
-the refusal fraction (`host_facts.REFUSE_FRACTION`), saying so on stderr, and is REFUSED (exit 3)
-after a bounded wait rather than run into the limit. Then it runs under a `mikemol-membudget` lease
-for its estimated MB, which waits in turn while the host's other holders have spent the budget.
+⚑ THE WAIT IS MEMBUDGET'S (W837, operator 2026-10-06: "the point of using membudget for the zram
+case is that we can have membudget wait until zram is within a safe range again, not because we
+want it to take out a specific lease"). A light verb (`info`, `query`, `version`, `shutdown`, ...)
+runs at once. A heavy verb (`build`, `test`, `run`, `coverage`, `fetch`) runs under
+`mikemol-membudget hold`, with `MEMBUDGET_ZRAM_MAX` set to the host's refusal fraction and
+`MEMBUDGET_TIMEOUT` to the wait bound: membudget's own admission loop then holds the start while
+zram is at or above the ceiling (no separate poll loop here), refuses it with its own exit 3 once
+the bound is spent, and takes its place in the same ledger as every other holder. The lease's MB is
+incidental: a nominal weight, not a claim about what bazel will use.
 
-⚑ WHAT CANNOT BE READ BLOCKS NOTHING, AND SAYS SO: an unreadable zram admits with a note; a missing
-`mikemol-membudget` runs bazel with a note. The gate guards the host from a known failure, and a
-broken guard must not also stop all work. `BAZEL_ADMIT=0` bypasses it, stated on stderr.
+⚑ `hold`, NOT `run`: `run` caps the command's cgroup at its lease, and the bazel client that starts
+the server daemon would put the daemon, which outlives the command and does the real work, inside
+that cap for good (measured: `run 4096` printed MemoryMax=4096M). `hold` is accounting only.
+
+⚑ A GATE THAT IS NOT THERE IS SAID, NEVER ASSUMED: an older membudget ignores an environment
+variable it does not know, so the ceiling set against one would run the start ungated in silence.
+The found membudget is asked for its `capabilities` first, and one that does not list `zram-gate`
+is treated as absent.
+
+⚑ WHAT CANNOT BE FOUND BLOCKS NOTHING, AND SAYS SO: a missing or too-old `mikemol-membudget` runs
+bazel with a note and no zram gate (the gate lives in membudget). `BAZEL_ADMIT=0` bypasses it,
+stated on stderr. A value the caller already set for either variable is theirs and is kept.
 
 ⚑ THE WRAPPER FAILS OPEN WHEN THIS TOOL IS NOT BUILT: building this tool needs bazel, which would
 need the wrapper, which needs the tool.
@@ -29,28 +42,29 @@ from __future__ import annotations
 
 import os
 import shutil
+import subprocess
 import sys
-import time
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import host_facts, tool_path
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
     from typing import TextIO
 
 HEAVY_MB = {"build": 4096, "test": 4096, "coverage": 4096, "run": 2048, "fetch": 1024}
 MEMBUDGET = "mikemol-membudget"
 MEMBUDGET_ENV = "MEMBUDGET_BIN"
+CAPABILITY = "zram-gate"
+PROBE_TIMEOUT_S = 10
 LABEL = "bazel"
+ZRAM_MAX_ENV = "MEMBUDGET_ZRAM_MAX"
+TIMEOUT_ENV = "MEMBUDGET_TIMEOUT"
 BYPASS_ENV = "BAZEL_ADMIT"
 MAX_WAIT_ENV = "BAZEL_ADMIT_MAX_WAIT_S"
 TRACE_ENV = "BAZEL_ADMIT_TRACE"
 DEFAULT_MAX_WAIT_S = 3600.0
-POLL_S = 10.0
-SAY_EVERY_S = 60.0
 EXIT_REFUSED = 3
 EXIT_USAGE = 2
 SEPARATOR = "--"
@@ -74,8 +88,8 @@ done
 exec "$BAZEL_REAL" "$@"
 """
 
-Reader = Callable[[], host_facts.Headroom | None]
-Execute = Callable[[Sequence[str]], int]
+Execute = Callable[[Sequence[str], Mapping[str, str]], int]
+Probe = Callable[[Sequence[str]], str | None]
 
 
 def verb_of(args: Sequence[str]) -> str | None:
@@ -98,59 +112,51 @@ def estimate_mb(verb: str | None) -> int | None:
     return HEAVY_MB.get(verb) if verb is not None else None
 
 
-def wait_for_zram(
-    read: Reader,
-    sleep: Callable[[float], None],
-    clock: Callable[[], float],
-    say: Callable[[str], None],
-    max_wait_s: float,
-) -> bool:
-    """Wait until zram is below the refusal fraction, or the wait is spent.
+def run_probe(argv: Sequence[str]) -> str | None:
+    """Run a short query command and return its stdout.
 
     Returns:
-        True to admit (headroom, or zram unreadable), False when it stayed full too long.
+        stdout when it exited 0, None when it could not run, timed out or exited non-zero.
 
     """
-    started = clock()
-    last_said = started - SAY_EVERY_S
-    while True:
-        headroom = read()
-        if headroom is None:
-            say("bazel-admit: zram is unreadable; admitting without its headroom check")
-            return True
-        fraction = headroom.fraction()
-        if fraction < host_facts.REFUSE_FRACTION:
-            return True
-        now = clock()
-        if now - started >= max_wait_s:
-            return False
-        if now - last_said >= SAY_EVERY_S:
-            left = max_wait_s - (now - started)
-            say(
-                f"bazel-admit: waiting for zram headroom ({fraction:.0%} of its limit; admits "
-                f"below {host_facts.REFUSE_FRACTION:.0%}); giving up in {left:.0f}s"
-            )
-            last_said = now
-        sleep(POLL_S)
+    try:
+        done = subprocess.run(
+            list(argv),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=PROBE_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return done.stdout if done.returncode == 0 else None
 
 
 def plan(
-    real: str, args: Sequence[str], mb: int, env: Mapping[str, str], root: Path
-) -> tuple[list[str], str | None]:
-    """Build the command to run for an admitted heavy verb, under a lease when one is available.
+    real: str, args: Sequence[str], mb: int, env: Mapping[str, str], probe: Probe = run_probe
+) -> tuple[list[str], dict[str, str], str | None]:
+    """Build the command, its environment and a note, for an admitted heavy verb.
 
     Returns:
-        the argv, and a note to say when the lease could not be taken.
+        the argv (under a membudget hold when a membudget with the zram gate is found), the
+        environment to run it in (the zram ceiling and the wait bound added unless the caller set
+        them), and a note to say when no usable membudget was found.
 
     """
-    budget = tool_path.find(MEMBUDGET, MEMBUDGET_ENV, root, env)
+    budget = tool_path.find(MEMBUDGET, MEMBUDGET_ENV, Path.cwd(), env)
     if budget is None:
-        return [real, *args], f"bazel-admit: {MEMBUDGET} not found; running without a memory lease"
-    # ⚑ `hold`, NOT `run`: `run` caps the command's cgroup at its lease, and the bazel client that
-    # starts the server daemon would put the daemon, which outlives the command and does the real
-    # work, inside that cap for good (measured: `run 4096` printed MemoryMax=4096M). `hold` admits
-    # against the same ledger and releases when the client exits, with no cap.
-    return [str(budget), "hold", str(mb), LABEL, SEPARATOR, real, *args], None
+        note = f"bazel-admit: {MEMBUDGET} not found; running without admission or a zram gate"
+        return [real, *args], dict(env), note
+    if CAPABILITY not in (probe([str(budget), "capabilities"]) or "").split():
+        note = f"bazel-admit: {budget} has no {CAPABILITY} (too old); running without a zram gate"
+        return [real, *args], dict(env), note
+    limit = float(env.get(MAX_WAIT_ENV) or DEFAULT_MAX_WAIT_S)
+    gated = {
+        ZRAM_MAX_ENV: str(host_facts.REFUSE_FRACTION),
+        TIMEOUT_ENV: f"{limit:.0f}",
+        **env,
+    }
+    return [str(budget), "hold", str(mb), LABEL, SEPARATOR, real, *args], gated, None
 
 
 def admit(
@@ -158,12 +164,12 @@ def admit(
     env: Mapping[str, str],
     execute: Execute,
     err: TextIO,
-    read: Reader = host_facts.zram_headroom,
+    probe: Probe = run_probe,
 ) -> int:
     """Run `argv` (the real bazel and its arguments) after admitting it.
 
     Returns:
-        what `execute` returns for the command that ran, or EXIT_REFUSED when zram stayed full.
+        what `execute` returns for the command that ran.
 
     """
     real, args = argv[0], list(argv[1:])
@@ -171,28 +177,17 @@ def admit(
     mb = estimate_mb(verb)
     if env.get(BYPASS_ENV) == "0":
         err.write("bazel-admit: BAZEL_ADMIT=0, running without admission\n")
-        return execute([real, *args])
+        return execute([real, *args], env)
     if mb is None:
         if env.get(TRACE_ENV):
             err.write(f"bazel-admit: `{verb}` is light; running untouched\n")
-        return execute([real, *args])
-    limit = float(env.get(MAX_WAIT_ENV) or DEFAULT_MAX_WAIT_S)
-
-    def say(text: str) -> None:
-        err.write(f"{text}\n")
-
-    if not wait_for_zram(read, time.sleep, time.monotonic, say, limit):
-        err.write(
-            f"bazel-admit: zram stayed above {host_facts.REFUSE_FRACTION:.0%} for {limit:.0f}s; "
-            f"`bazel {verb}` refused ({BYPASS_ENV}=0 overrides)\n"
-        )
-        return EXIT_REFUSED
-    command, note = plan(real, args, mb, env, Path.cwd())
+        return execute([real, *args], env)
+    command, gated, note = plan(real, args, mb, env, probe)
     if note:
         err.write(f"{note}\n")
     if env.get(TRACE_ENV):
-        err.write(f"bazel-admit: admitted `{verb}` ({mb} MB): {' '.join(command)}\n")
-    return execute(command)
+        err.write(f"bazel-admit: admitting `{verb}` ({mb} MB nominal): {' '.join(command)}\n")
+    return execute(command, gated)
 
 
 def install(repo: Path) -> Path:
@@ -209,7 +204,7 @@ def install(repo: Path) -> Path:
     return target
 
 
-def _exec(argv: Sequence[str]) -> int:
+def _exec(argv: Sequence[str], env: Mapping[str, str]) -> int:
     """Replace this process with `argv`; it does not return unless the program is missing.
 
     Returns:
@@ -218,7 +213,7 @@ def _exec(argv: Sequence[str]) -> int:
     """
     program = shutil.which(argv[0]) or argv[0]
     try:
-        os.execv(program, list(argv))
+        os.execve(program, list(argv), dict(env))
     except OSError as problem:
         sys.stderr.write(f"bazel-admit: cannot run {argv[0]}: {problem}\n")
         return 127
@@ -228,7 +223,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-bazel-admit -- <real bazel> <args>`, or `--install DIR`.
 
     Returns:
-        the command's exit code, EXIT_REFUSED, or EXIT_USAGE.
+        the command's exit code (membudget's 3 when its wait is spent), or EXIT_USAGE.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)

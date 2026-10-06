@@ -695,6 +695,47 @@ def _announce(msg: str) -> None:
     sys.stderr.write(msg + "\n")
 
 
+# The zram gate (W837): the device whose compressed ceiling /tmp and /var/tmp live inside, and how
+# many leading `mm_stat` fields a reading needs (orig, compressed, used, limit).
+ZRAM_STAT = Path("/sys/block/zram1/mm_stat")
+_ZRAM_FIELDS = 4
+_ZRAM_USED = 2
+_ZRAM_LIMIT = 3
+
+
+def zram_fraction(stat: Path) -> float | None:
+    """Read how much of the zram device's compressed ceiling is in use.
+
+    ⚑ A `mem_limit` of 0 is no limit set, so there is no fraction to state: absent, not infinite.
+
+    Returns:
+        used over limit; None when the file is missing, short, not numbers, or sets no limit.
+
+    """
+    try:
+        fields = [int(value) for value in stat.read_text(encoding="utf-8").split()[:_ZRAM_FIELDS]]
+    except (OSError, ValueError):
+        return None
+    if len(fields) < _ZRAM_FIELDS or fields[_ZRAM_LIMIT] <= 0:
+        return None
+    return fields[_ZRAM_USED] / fields[_ZRAM_LIMIT]
+
+
+def zram_fits(fraction: float | None, ceiling: float | None) -> bool:
+    """Report whether the host's zram admits a new start. A `ceiling` of None or 0 disables it.
+
+    ⚑ WHAT CANNOT BE READ BLOCKS NOTHING: the gate guards the host from a known failure (zram1 full
+    remounts /var/tmp read-only and kills every shell), and a broken guard must not also stop work.
+
+    Returns:
+        whether a start may proceed.
+
+    """
+    if ceiling is None or ceiling <= 0 or fraction is None:
+        return True
+    return fraction < ceiling
+
+
 @dataclass(frozen=True, slots=True)
 class Waiting:
     """How a blocked request waits: whether it may, for how long, and against which load ceiling."""
@@ -705,6 +746,8 @@ class Waiting:
     poll_start_s: float = POLL_START_S
     poll_max_s: float = POLL_MAX_S
     gc_interval_s: float = GC_INTERVAL_S
+    zram_max: float | None = None
+    zram_stat: Path = ZRAM_STAT
 
 
 @dataclass(frozen=True, slots=True)
@@ -718,6 +761,7 @@ class Host:
     sleep: Callable[[float], None] = time.sleep
     announce: Callable[[str], None] = _announce
     default_total: Callable[[], int] = default_total_mb
+    read_zram: Callable[[Path], float | None] = zram_fraction
 
 
 # The defaults `acquire` and `admit` wait and read the host with, as singletons.
@@ -850,6 +894,26 @@ def _claim(store: Store, request: Request, host: Host, ticket: str | None) -> Le
         return lease
 
 
+def _zram_state(host: Host, waiting: Waiting) -> tuple[bool, str]:
+    """Read the zram gate: whether a start may proceed, and a note for the waiter when it may not.
+
+    ⚑ A REQUEST WAITING ON ZRAM IS NOT QUEUED, as one waiting on load is not: budget cannot buy it
+    headroom, and a queued request would hold the head against every other request's budget while
+    it waits on a thing the ledger does not count. The reading is skipped entirely when the gate is
+    off, so a caller that never set it never touches /sys.
+
+    Returns:
+        (fits, note): note is "" unless zram is what is holding the request back.
+
+    """
+    if not waiting.zram_max:
+        return True, ""
+    fraction = host.read_zram(waiting.zram_stat)
+    if zram_fits(fraction, waiting.zram_max) or fraction is None:
+        return True, ""
+    return False, f", zram {fraction:.0%} of its ceiling (admits below {waiting.zram_max:.0%})"
+
+
 def _give_up_if_done(verdict: Verdict, why: str, waiting: Waiting, waited_s: float) -> None:
     """Refuse a request that would wait when it may not: NOBLOCK, or past its timeout.
 
@@ -900,25 +964,27 @@ def acquire(store: Store, request: Request, waiting: Waiting = WAIT, host: Host 
                 code = exit_code(verdict) or EXIT_REFUSED
                 raise RefusedError(verdict, code, _terminal_message(verdict, request, snap))
             load_fits = load_ok(host.loadavg(), host.nproc, waiting.maxload)
+            zram = _zram_state(host, waiting)
             turn = _my_turn(snap, request, ticket)
-            if verdict is Verdict.ADMIT and load_fits and turn:
+            if verdict is Verdict.ADMIT and load_fits and zram[0] and turn:
                 lease = _claim(store, request, host, ticket)
                 if lease is not None:
                     ticket = None
                     return lease
                 continue
-            why = verdict.name if turn else "QUEUED"
+            why = "ZRAM" if not zram[0] else (verdict.name if turn else "QUEUED")
             _give_up_if_done(verdict, why, waiting, now - started)
-            # ⚑ ONLY A CAPACITY WAIT QUEUES — or one already behind a head. A held claim or a high
-            # load is not a place in line; a request queued for either would hold the head against
-            # every other request's budget while it waits on a thing budget cannot buy.
+            # ⚑ ONLY A CAPACITY WAIT QUEUES — or one already behind a head. A held claim, a high
+            # load or a full zram is not a place in line; a request queued for any of them would
+            # hold the head against every other request's budget while it waits on a thing budget
+            # cannot buy.
             if ticket is None and queued(request) and (verdict is Verdict.BLOCK or not turn):
                 ticket = _enqueue(store, request)
             if not announced:
                 free = (snap.total_mb or 0) - snap.used
                 host.announce(
                     f"fence.admit: waiting ({why}, "
-                    f"load ok={load_fits}): need {request.mb} MB, free {free} MB of "
+                    f"load ok={load_fits}{zram[1]}): need {request.mb} MB, free {free} MB of "
                     f"{snap.total_mb} MB"
                 )
                 announced = True

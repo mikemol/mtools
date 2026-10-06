@@ -73,6 +73,11 @@ ENV_POLL = "MEMBUDGET_POLL"
 ENV_POLL_MAX = "MEMBUDGET_POLL_MAX"
 ENV_GC_INTERVAL = "MEMBUDGET_GC_INTERVAL"
 
+# The zram gate (W837, operator 2026-10-06): a request waits while the zram device is at or above
+# this fraction of its compressed ceiling (unset or 0 = no gate), read from this mm_stat file.
+ENV_ZRAM_MAX = "MEMBUDGET_ZRAM_MAX"
+ENV_ZRAM_STAT = "MEMBUDGET_ZRAM_STAT"
+
 # The variables bash's `_auto_mb` and `_record_time` read: the size with no history, the ceiling on
 # an extrapolation from history, the run ledger's path, and the opt-out from recording to it.
 ENV_DEFAULT_MB = "AGDA_MB_DEFAULT"
@@ -210,6 +215,8 @@ def waiting_of(env: Mapping[str, str]) -> admit.Waiting:
         poll_start_s=_number(env, ENV_POLL, admit.POLL_START_S),
         poll_max_s=_number(env, ENV_POLL_MAX, admit.POLL_MAX_S),
         gc_interval_s=_number(env, ENV_GC_INTERVAL, admit.GC_INTERVAL_S),
+        zram_max=_number(env, ENV_ZRAM_MAX, 0.0) or None,
+        zram_stat=Path(env.get(ENV_ZRAM_STAT) or admit.ZRAM_STAT),
     )
 
 
@@ -782,7 +789,27 @@ def cmd_deadline(args: Sequence[str], _ctx: Context) -> int:
     return label_lease.main(["deadline", *args])
 
 
+CAPABILITIES = ("zram-gate",)
+
+
+def cmd_capabilities(_args: Sequence[str], _ctx: Context) -> int:
+    """`capabilities`: name what this membudget can do beyond bash's verbs, one per line.
+
+    ⚑ A CALLER THAT RELIES ON A FEATURE ASKS FIRST (W837). An older membudget ignores an
+    environment variable it does not know, so `MEMBUDGET_ZRAM_MAX` set against one would run the
+    start UNGATED with nothing said. An older membudget answers this verb with its usage and exit 2,
+    which is how a caller tells "too old" from "supported".
+
+    Returns:
+        0 after printing each capability.
+
+    """
+    sys.stdout.write("".join(f"{name}\n" for name in CAPABILITIES))
+    return 0
+
+
 VERBS: dict[str, Callable[[Sequence[str], Context], int]] = {
+    "capabilities": cmd_capabilities,
     "run": cmd_run,
     "hold": cmd_hold,
     "init": cmd_init,

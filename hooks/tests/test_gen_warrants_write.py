@@ -150,3 +150,87 @@ def test_rubric_keys_reads_both_formats_and_skips_comments(tmp_path: Path) -> No
     jsonl.write_text('{"key": "gamma", "title": "G"}\n\n{"key": "delta", "title": "D"}\n')
     assert gen_warrants.rubric_keys(tsv) == {"alpha", "beta"}
     assert gen_warrants.rubric_keys(jsonl) == {"gamma", "delta"}
+
+
+def _warrant(key: str, test_file: str, function: str) -> str:
+    """Render a warrant entry as the generator writes one.
+
+    Returns:
+        the entry text.
+
+    """
+    check = f"cmd:.venv/bin/python3 -m pytest {test_file} -k {function}"
+    return f"@misc{{{key},\n  section = {{old}},\n  claim  = {{c}},\n  check  = {{{check}}},\n}}\n"
+
+
+def _bib_with_stale_entries(base: Path) -> tuple[str, str, str]:
+    """Fill the bib with one live entry, one for a removed test, one for a removed module.
+
+    Returns:
+        the three entries, in that order.
+
+    """
+    live = _warrant("d-m-live", "tests/test_m.py", "test_it_does_a_thing")
+    gone = _warrant("d-m-gone", "tests/test_m.py", "test_renamed_away")
+    nomod = _warrant("d-x-orphan", "tests/test_removed.py", "test_whatever")
+    (base / "warrants.bib").write_text(f"{live}\n{gone}\n{nomod}", encoding="utf-8")
+    return live, gone, nomod
+
+
+def test_prune_drops_a_warrant_whose_test_or_module_is_gone_and_keeps_the_rest(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A renamed test and a deleted module leave claims about nothing; those go, live ones stay."""
+    base = _dist(tmp_path, TSV)
+    live, gone, nomod = _bib_with_stale_entries(base)
+    assert _run(tmp_path, "--write", "--prune", "d", "m=old") == 0
+    bib = _read(base, "warrants.bib")
+    assert live in bib
+    assert gone not in bib
+    assert nomod not in bib
+    assert "2 stale dropped" in capsys.readouterr().err
+
+
+def test_an_entry_with_no_check_is_kept_since_it_cannot_be_shown_stale(tmp_path: Path) -> None:
+    """What cannot be proved stale is not removed."""
+    base = _dist(tmp_path, TSV)
+    bare = "@misc{d-m-bare,\n  section = {old},\n  claim  = {c},\n}\n"
+    (base / "warrants.bib").write_text(bare, encoding="utf-8")
+    assert _run(tmp_path, "--write", "--prune", "d", "m=old") == 0
+    assert bare in _read(base, "warrants.bib")
+
+
+def test_prune_does_nothing_without_write_or_when_nothing_is_stale(tmp_path: Path) -> None:
+    """The stream form never edits the bib, and a clean bib is left byte for byte."""
+    base = _dist(tmp_path, TSV)
+    live, gone, nomod = _bib_with_stale_entries(base)
+    before = _read(base, "warrants.bib")
+    assert _run(tmp_path, "--prune", "d", "m=old") == 0
+    assert _read(base, "warrants.bib") == before
+    assert gone in before
+    assert nomod in before
+    (base / "warrants.bib").write_text(live, encoding="utf-8")
+    assert _run(tmp_path, "--write", "--prune", "d", "m=old") == 0
+    assert _read(base, "warrants.bib") == live
+
+
+def test_prune_keeps_a_warrant_for_a_test_defined_as_a_class_method(tmp_path: Path) -> None:
+    """A class-based suite defines tests as methods: they are live and a prune keeps them."""
+    base = _dist(tmp_path, TSV)
+    (base / "tests" / "test_k.py").write_text(
+        "class TestK:\n    def test_a_method(self) -> None:\n        pass\n", encoding="utf-8"
+    )
+    method = _warrant("d-k-a-method", "tests/test_k.py", "test_a_method")
+    gone = _warrant("d-k-gone", "tests/test_k.py", "test_not_a_method")
+    text, dropped = gen_warrants.prune(base, f"{method}\n{gone}")
+    assert dropped == 1
+    assert text == method
+
+
+def test_prune_counts_what_it_dropped_and_the_pruned_text_is_exact(tmp_path: Path) -> None:
+    """prune() returns the text without the stale entries, and how many it removed."""
+    base = _dist(tmp_path, TSV)
+    live, gone, nomod = _bib_with_stale_entries(base)
+    text, dropped = gen_warrants.prune(base, f"{live}\n{gone}\n{nomod}")
+    assert dropped == len([gone, nomod])
+    assert text == live

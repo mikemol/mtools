@@ -1771,3 +1771,80 @@
             byte would turn a ledger into a crash and the label into no history.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_label_lease.py -k test_a_ledger_that_is_not_utf8_is_read_lossily_and_keeps_its_valid_rows},
 }
+
+@misc{fence-admit-zram-fraction-is-used-over-limit-taken-from-the-right-fields,
+  section = {admit_zram},
+  title  = {Fields 3 and 4 (used, limit) decide it: distinct numbers show no other pair would do},
+  claim  = {Fields 3 and 4 (used, limit) decide it: distinct numbers show no other pair would do.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_the_fraction_is_used_over_limit_taken_from_the_right_fields},
+}
+
+@misc{fence-admit-zram-reading-that-cannot-be-trusted-is-none-never-a-fraction,
+  section = {admit_zram},
+  title  = {Missing, short, non-numeric, and a zero or negative limit each read as no reading},
+  claim  = {Missing, short, non-numeric, and a zero or negative limit each read as no reading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_a_reading_that_cannot_be_trusted_is_none_never_a_fraction},
+}
+
+@misc{fence-admit-zram-zram-admits-strictly-below-the-ceiling-and-a-disabled-gate-admits-all,
+  section = {admit_zram},
+  title  = {At the ceiling is refused; below passes; None or non-positive ceiling or reading admits},
+  claim  = {At the ceiling is refused; below passes; None or non-positive ceiling or reading admits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_zram_admits_strictly_below_the_ceiling_and_a_disabled_gate_admits_all},
+}
+
+@misc{fence-admit-zram-with-the-gate-off-zram-is-never-read,
+  section = {admit_zram},
+  title  = {A caller that never set the ceiling never touches /sys: the reader is not called},
+  claim  = {A caller that never set the ceiling never touches /sys: the reader is not called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_with_the_gate_off_zram_is_never_read},
+}
+
+@misc{fence-admit-zram-with-headroom-a-start-is-admitted-at-once-without-sleeping,
+  section = {admit_zram},
+  title  = {Below the ceiling nothing waits and nothing is said},
+  claim  = {Below the ceiling nothing waits and nothing is said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_with_headroom_a_start_is_admitted_at_once_without_sleeping},
+}
+
+@misc{fence-admit-zram-full-zram-makes-a-start-wait-until-it-drains-and-says-why-once,
+  section = {admit_zram},
+  title  = {The start sleeps while zram is at 95%, is admitted on the first reading below 85%},
+  claim  = {The start sleeps while zram is at 95%, is admitted on the first reading below 85%.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_a_full_zram_makes_a_start_wait_until_it_drains_and_says_why_once},
+}
+
+@misc{fence-admit-zram-zram-that-stays-full-refuses-after-the-timeout-and-never-takes-a-place-in-line,
+  section = {admit_zram},
+  title  = {Exit 3 once the wait is spent, and the ledger shows no waiter while it waited},
+  claim  = {Exit 3 once the wait is spent, and the ledger shows no waiter while it waited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_a_zram_that_stays_full_refuses_after_the_timeout_and_never_takes_a_place_in_line},
+}
+
+@misc{fence-admit-zram-unreadable-zram-admits-even-with-the-gate-on,
+  section = {admit_zram},
+  title  = {What cannot be read blocks nothing: the reader answers None and the start proceeds},
+  claim  = {What cannot be read blocks nothing: the reader answers None and the start proceeds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_an_unreadable_zram_admits_even_with_the_gate_on},
+}
+
+@misc{fence-admit-zram-environment-sets-the-ceiling-and-the-stat-file,
+  section = {admit_zram},
+  title  = {MEMBUDGET_ZRAM_MAX and MEMBUDGET_ZRAM_STAT reach the waiting policy; unset is off},
+  claim  = {MEMBUDGET_ZRAM_MAX and MEMBUDGET_ZRAM_STAT reach the waiting policy; unset is off.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_the_environment_sets_the_ceiling_and_the_stat_file},
+}
+
+@misc{fence-admit-zram-capabilities-verb-names-the-zram-gate-so-a-caller-can-ask-before-relying,
+  section = {admit_zram},
+  title  = {An older membudget has no such verb: asking is how 'too old' is told from 'supported'},
+  claim  = {An older membudget has no such verb: asking is how 'too old' is told from 'supported'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_the_capabilities_verb_names_the_zram_gate_so_a_caller_can_ask_before_relying},
+}
+
+@misc{fence-admit-zram-ceiling-that-is-not-a-number-is-a-usage-error,
+  section = {admit_zram},
+  title  = {A typo in the ceiling is refused by name, never read as off},
+  claim  = {A typo in the ceiling is refused by name, never read as off.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_a_ceiling_that_is_not_a_number_is_a_usage_error},
+}

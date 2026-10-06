@@ -5,7 +5,7 @@
 Usage: mikemol-gen-warrants [--root DIR] [--layout L] <dist> <module> <section>
            >> <dist>/warrants.bib
    or: mikemol-gen-warrants [--root DIR] [--layout L] <dist> <module>=<section> [...] >> ...
-   or: mikemol-gen-warrants --write [--title KEY=TITLE ...] <dist> <module>=<section> [...]
+   or: mikemol-gen-warrants --write [--prune] [--title KEY=TITLE ...] <dist> <module>=<section> ...
 
 where <root>/<dist>/tests/test_<module>.py is the file and <section> is the RUBRIC KEY verbatim. A
 function whose `-k <name>}` check already appears in warrants.bib is skipped, so re-running over a
@@ -19,6 +19,11 @@ trailing TAB broke the commit gate twice in one day. `--write` appends the entri
 `rubric.jsonl` or `rubric.tsv` it has (the format is moving), taking each new section's heading from
 `--title KEY=TITLE`. It never rewrites or reorders an existing row. A new section with no title is
 exit 2 BEFORE anything is written, so a half-update never exists.
+
+⚑ `--prune` REMOVES THE OTHER HALF OF A RENAME: a warrant whose check names a test function that no
+longer exists in its test module (or a module that no longer exists) is a claim about nothing, and
+renaming or deleting a test leaves one behind. It is dropped before the new entries are appended;
+entries whose test still exists are kept byte for byte. Only with `--write`.
 
 ⚑⚑ TWO LAYOUTS, BECAUSE THE ROOT IS NOT A DISTRIBUTION (W669). `--layout dist` (the default) is the
 layout above: the file under `tests/`, keys `<dist>-<module>-...`, checks run by the distribution's
@@ -43,6 +48,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import re
 import sys
 import textwrap
 from dataclasses import dataclass
@@ -54,6 +60,10 @@ _ARTICLES = ("a", "an", "the")
 _LEGACY_ARGC = 2
 RUBRIC_NAMES = ("rubric.jsonl", "rubric.tsv")
 EXIT_UNTRANSCRIBABLE = 2
+# One bib entry, from its `@misc{key,` line to the `}` that closes it on a line of its own, and the
+# test a warrant's check names: `-m pytest <file> -k <function>}`.
+_ENTRY = re.compile(r"\n?@misc\{[^,\n]+,\n.*?\n\}\n", re.DOTALL)
+_CHECKED_TEST = re.compile(r"-m pytest (\S+) -k (\w+)\}")
 
 
 class BraceError(ValueError):
@@ -102,6 +112,19 @@ class Spec:
     def key_prefix(self) -> str:
         """Name the prefix every key of this module starts with."""
         return f"{self.layout.key_prefix or self.dist}-{self.module.replace('_', '-')}-"
+
+
+@dataclass(frozen=True)
+class Options:
+    """What one invocation asked for, read from the command line."""
+
+    root: Path
+    dist: str
+    pairs: list[tuple[str, str]]
+    layout: Layout
+    titles: dict[str, str]
+    write: bool
+    prune: bool
 
 
 def _entry(spec: Spec, node: ast.FunctionDef, bib: str) -> str | None:
@@ -166,6 +189,58 @@ def emit(root: Path, dist: str, pairs: list[tuple[str, str]], layout: Layout = D
                 if entry is not None:
                     out.append(entry)
     return out
+
+
+def _defined_tests(path: Path) -> set[str] | None:
+    """Name the test functions a module defines.
+
+    Returns:
+        the names, or None when the module does not exist or does not parse.
+
+    """
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError):
+        return None
+    # ⚑ THE WHOLE TREE, NOT THE MODULE LEVEL: a class-based suite (fence's `class TestCaps: def
+    # test_…`) defines its tests as methods, and reading only the top level judged 41 live warrants
+    # stale in fence on the first real run. The pairing check walks the tree for the same reason.
+    return {
+        node.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")
+    }
+
+
+def prune(base: Path, bib: str) -> tuple[str, int]:
+    """Drop the entries whose check names a test that no longer exists.
+
+    ⚑ AN ENTRY WITH NO PARSEABLE CHECK IS KEPT: an older entry may carry none, and what cannot be
+    shown stale is not removed. A module that no longer exists makes all its entries stale.
+
+    Returns:
+        the bib text without the stale entries, and how many were dropped.
+
+    """
+    defined: dict[str, set[str] | None] = {}
+    dropped = 0
+
+    def keep(found: re.Match[str]) -> str:
+        nonlocal dropped
+        text = found.group(0)
+        checked = _CHECKED_TEST.search(text)
+        if checked is None:
+            return text
+        module, name = checked.group(1), checked.group(2)
+        if module not in defined:
+            defined[module] = _defined_tests(base / module)
+        tests = defined[module]
+        if tests is not None and name in tests:
+            return text
+        dropped += 1
+        return ""
+
+    return _ENTRY.sub(keep, bib), dropped
 
 
 def rubric_file(base: Path) -> Path | None:
@@ -274,16 +349,58 @@ def _titles(given: list[str]) -> dict[str, str]:
     return {key: title for key, _, title in (item.partition("=") for item in given)}
 
 
-def write(base: Path, entries: list[str], rubric: Path | None, rows: list[str]) -> None:
-    """Append the entries to the bib and the rows to the rubric.
+def _options(argv: list[str] | None) -> Options:
+    """Read the command line.
 
-    ⚑ EVERYTHING IS BUILT BEFORE THIS RUNS: a refusal (a brace, an untitled section) has already
-    happened, so what is written here cannot be half of an update.
+    Returns:
+        the options; argparse exits 2 on a usage error.
+
     """
+    parser = argparse.ArgumentParser(prog="mikemol-gen-warrants", description=__doc__)
+    parser.add_argument("--root", default=None, help="repo root (default: the cwd)")
+    parser.add_argument("--layout", choices=_LAYOUT_NAMES, default="dist", help="test layout")
+    parser.add_argument("--write", action="store_true", help="append to the bib and the rubric")
+    parser.add_argument("--prune", action="store_true", help="with --write: drop stale warrants")
+    parser.add_argument("--title", action="append", help="KEY=HEADING, a new section")
+    parser.add_argument("dist")
+    parser.add_argument("pairs", nargs="+")
+    # ⚑ argparse's `Namespace` is untyped; `vars()` is the boundary, narrowed once per value.
+    opts: dict[str, object] = vars(parser.parse_args(argv))
+    root_arg = opts["root"]
+    pairs_arg = opts["pairs"]
+    title_arg = opts["title"]
+    return Options(
+        root=Path(root_arg) if isinstance(root_arg, str) else Path.cwd(),
+        dist=str(opts["dist"]),
+        pairs=_pairs([str(a) for a in pairs_arg] if isinstance(pairs_arg, list) else []),
+        layout=LAYOUTS[str(opts["layout"])],
+        titles=_titles([str(t) for t in title_arg] if isinstance(title_arg, list) else []),
+        write=bool(opts["write"]),
+        prune=bool(opts["prune"]),
+    )
+
+
+def _apply(options: Options, entries: list[str], rubric: Path | None, rows: list[str]) -> int:
+    """Prune stale warrants when asked, then append the entries and the rubric rows.
+
+    ⚑ EVERYTHING WAS BUILT BEFORE THIS RUNS: a refusal (a brace, an untitled section) has already
+    happened, so what is written here cannot be half of an update.
+
+    Returns:
+        how many stale warrants were dropped.
+
+    """
+    base = options.root / options.dist
+    dropped = 0
+    if options.prune:
+        pruned, dropped = prune(base, (base / "warrants.bib").read_text(encoding="utf-8"))
+        if dropped:
+            (base / "warrants.bib").write_text(pruned, encoding="utf-8")
     if entries:
         append_text(base / "warrants.bib", "\n" + "\n".join(entries))
     if rubric is not None and rows:
         append_text(rubric, "".join(rows))
+    return dropped
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -293,36 +410,22 @@ def main(argv: list[str] | None = None) -> int:
         0 on success, 2 when a docstring carries a brace or a new section has no heading.
 
     """
-    parser = argparse.ArgumentParser(prog="mikemol-gen-warrants", description=__doc__)
-    parser.add_argument("--root", default=None, help="repo root (default: the cwd)")
-    parser.add_argument("--layout", choices=_LAYOUT_NAMES, default="dist", help="test layout")
-    parser.add_argument("--write", action="store_true", help="append to the bib and the rubric")
-    parser.add_argument("--title", action="append", help="KEY=HEADING, a new section")
-    parser.add_argument("dist")
-    parser.add_argument("pairs", nargs="+")
-    # ⚑ argparse's `Namespace` is untyped; `vars()` is the boundary, narrowed once per value.
-    opts: dict[str, object] = vars(parser.parse_args(argv))
-    root_arg = opts["root"]
-    pairs_arg = opts["pairs"]
-    title_arg = opts["title"]
-    root = Path(root_arg) if isinstance(root_arg, str) else Path.cwd()
-    args = [str(a) for a in pairs_arg] if isinstance(pairs_arg, list) else []
-    titles = _titles([str(t) for t in title_arg] if isinstance(title_arg, list) else [])
-    layout = LAYOUTS[str(opts["layout"])]
-    dist = str(opts["dist"])
-    pairs = _pairs(args)
+    options = _options(argv)
     rubric: Path | None = None
     rows: list[str] = []
     try:
-        out = emit(root, dist, pairs, layout)
-        if opts["write"]:
-            rubric, rows = new_rubric_rows(root / dist, [section for _, section in pairs], titles)
+        out = emit(options.root, options.dist, options.pairs, options.layout)
+        if options.write:
+            sections = [section for _, section in options.pairs]
+            rubric, rows = new_rubric_rows(options.root / options.dist, sections, options.titles)
     except (BraceError, RubricError) as err:
         sys.stderr.write(f"{err}\n")
         return EXIT_UNTRANSCRIBABLE
-    if opts["write"]:
-        write(root / dist, out, rubric, rows)
-        sys.stderr.write(f"{len(out)} warrants appended, {len(rows)} rubric rows added\n")
+    if options.write:
+        dropped = _apply(options, out, rubric, rows)
+        sys.stderr.write(
+            f"{len(out)} warrants appended, {dropped} stale dropped, {len(rows)} rubric rows\n"
+        )
         return 0
     if out:
         sys.stdout.write("\n" + "\n".join(out))
