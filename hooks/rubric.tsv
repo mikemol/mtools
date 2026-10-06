@@ -32,3 +32,4 @@ githook-prepare-commit-msg	The Shared Prepare-Commit-Msg: the Gate Report Folded
 host-facts	The Host Facts: the zram Ceiling and the Tick Lock Read as Facts, Absent When Unreadable and Never Zeros or Empty
 tick-stop	The Tick-Stop Guard: a Held Fresh Host Lock Blocks the Stop Once and Never Twice, a Stale or Unreadable One Blocks Nothing
 tick-gate	The Tick Gate: a Loop Prompt That Cannot Run Is Refused Before It Costs a Turn, Every Other Prompt Passes Untouched, and a Fact That Cannot Be Read Blocks Nothing
+after-compaction	The After-Compaction Context: the Project's Pointers to Its Durable State and the Live Host Facts Come Back After a Compact Only, a Missing Notes File Is Said Not Skipped, and a Session Start Is Never Blocked

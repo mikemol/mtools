@@ -17,6 +17,7 @@ import sys
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import (
+    after_compaction,
     hook_argv,
     inbound_asks,
     nemik_check,
@@ -164,3 +165,13 @@ def tick_gate_main() -> int:
 
     """
     return _guarded("mikemol-hook-tick-gate", tick_gate.main)
+
+
+def after_compaction_main() -> int:
+    """Run `mikemol-hook-after-compaction` behind the argv contract (W813).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-after-compaction", after_compaction.main)

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W813: SessionStart (matcher `compact`) context after a compaction. The logic is
+# mikemol.hooks.after_compaction; this launcher is the stable path the harness's settings name.
+#
+# ⚑ FAIL OPEN, ALWAYS. A SessionStart hook only adds context, and a session that cannot start
+# because a context hook could not run has been made worse by the hook. An unbuilt venv is a note
+# on stderr and exit 0 (the same direction as mikemol-hook-tick-gate; the PreToolUse launchers deny
+# on a missing venv because a missing guard would silently allow the act it guards, and this guards
+# nothing).
+#
+# ⚑ THE REAL PATH, NOT `bazel-bin`: CPython reached through the convenience symlink prints
+# "Could not find platform dependent libraries" on every call; the same venv by its real path is
+# silent (see mikemol-hook-no-verify).
+set -uo pipefail
+
+root="${CLAUDE_PROJECT_DIR:-}"
+entry="$(basename "$0")"
+if [ -z "$root" ]; then
+    echo "$entry: CLAUDE_PROJECT_DIR is unset; nothing added" >&2
+    exit 0
+fi
+
+venv="$root/bazel-bin/hooks/.venv"
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    echo "$entry: the hook venv is not built (bazel build //hooks:.venv); nothing added" >&2
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"

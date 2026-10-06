@@ -415,6 +415,8 @@ venv_from_hub(
         "mikemol-hook-tick-stop": "mikemol.hooks.entry:tick_stop_main",
         # W812: the UserPromptSubmit tick gate.
         "mikemol-hook-tick-gate": "mikemol.hooks.entry:tick_gate_main",
+        # W813: the SessionStart(compact) after-compaction context.
+        "mikemol-hook-after-compaction": "mikemol.hooks.entry:after_compaction_main",
         "mikemol-shellcheck": "mikemol.hooks.shellcheck_cli:main",
         "mikemol-githook-pre-push": "mikemol.hooks.githook_pre_push:main",
         "mikemol-githook-post-commit": "mikemol.hooks.githook_post_commit:main",

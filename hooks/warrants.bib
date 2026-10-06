@@ -5915,3 +5915,83 @@
   claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
 }
+
+@misc{hooks-after-compaction-notes-file-is-read-whole-when-it-fits,
+  section = {after-compaction},
+  title  = {A short notes file comes back exactly, with no cut marker},
+  claim  = {A short notes file comes back exactly, with no cut marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_the_notes_file_is_read_whole_when_it_fits},
+}
+
+@misc{hooks-after-compaction-notes-file-over-the-cap-is-cut-and-says-so,
+  section = {after-compaction},
+  title  = {Pointers are short: one that is not is cut at the cap with a marker, never silently},
+  claim  = {Pointers are short: one that is not is cut at the cap with a marker, never silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_notes_file_over_the_cap_is_cut_and_says_so},
+}
+
+@misc{hooks-after-compaction-missing-or-unreadable-notes-file-is-none,
+  section = {after-compaction},
+  title  = {Absent is None, so the context can say there are no notes rather than inventing some},
+  claim  = {Absent is None, so the context can say there are no notes rather than inventing some.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_missing_or_unreadable_notes_file_is_none},
+}
+
+@misc{hooks-after-compaction-context-names-where-missing-notes-would-be,
+  section = {after-compaction},
+  title  = {Without notes, the context says so and names the path, so a project learns it can write one},
+  claim  = {Without notes, the context says so and names the path, so a project learns it can write
+            one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_the_context_names_where_missing_notes_would_be},
+}
+
+@misc{hooks-after-compaction-context-puts-the-notes-before-the-live-facts,
+  section = {after-compaction},
+  title  = {The notes come first, then the facts, joined by one newline, trailing space trimmed},
+  claim  = {The notes come first, then the facts, joined by one newline, trailing space trimmed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_the_context_puts_the_notes_before_the_live_facts},
+}
+
+@misc{hooks-after-compaction-compact-session-start-gets-the-notes-and-the-live-facts,
+  section = {after-compaction},
+  title  = {After a compaction, the notes file and the host facts are added as SessionStart context},
+  claim  = {After a compaction, the notes file and the host facts are added as SessionStart context.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_compact_session_start_gets_the_notes_and_the_live_facts},
+}
+
+@misc{hooks-after-compaction-session-start-from-another-source-is-left-untouched,
+  section = {after-compaction},
+  title  = {A fresh startup, a resume or a clear is not a compaction: nothing is added},
+  claim  = {A fresh startup, a resume or a clear is not a compaction: nothing is added.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_session_start_from_another_source_is_left_untouched},
+}
+
+@misc{hooks-after-compaction-payload-without-a-source-is-treated-as-the-matcher-having-chosen-it,
+  section = {after-compaction},
+  title  = {The settings matcher selects compact; a payload that omits `source` is not second-guessed},
+  claim  = {The settings matcher selects compact; a payload that omits `source` is not second-
+            guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_payload_without_a_source_is_treated_as_the_matcher_having_chosen_it},
+}
+
+@misc{hooks-after-compaction-main-reads-the-payload-on-stdin-and-adds-context,
+  section = {after-compaction},
+  title  = {Through main, with the real zram reader, a compact start still prints SessionStart context},
+  claim  = {Through main, with the real zram reader, a compact start still prints SessionStart
+            context.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_main_reads_the_payload_on_stdin_and_adds_context},
+}
+
+@misc{hooks-after-compaction-main-adds-nothing-for-a-payload-that-is-not-json-and-says-so,
+  section = {after-compaction},
+  title  = {A session start must not be blocked by an unreadable payload},
+  claim  = {A session start must not be blocked by an unreadable payload.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_main_adds_nothing_for_a_payload_that_is_not_json_and_says_so},
+}
+
+@misc{hooks-after-compaction-console-entry-refuses-an-argument-before-reading-stdin,
+  section = {after-compaction},
+  title  = {The argv contract: a hook takes no arguments, and the refusal names the program},
+  claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
+}

@@ -82,6 +82,9 @@ mikemol-hook-tick-stop = "mikemol.hooks.entry:tick_stop_main"
 # W812: the UserPromptSubmit gate for the host's tick prompt (refuses one that cannot run: zram near
 # its ceiling, or the tick lock held and fresh; otherwise adds the two facts as context).
 mikemol-hook-tick-gate = "mikemol.hooks.entry:tick_gate_main"
+# W813: SessionStart (matcher compact) context: the project's after-compaction pointers plus the live
+# host facts. It only adds context and never blocks a session start.
+mikemol-hook-after-compaction = "mikemol.hooks.entry:after_compaction_main"
 # ⚑ THE SAME LINTER BY HAND — one file, one tree, one command — and deliberately NOT named
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that
 # requires every hook script to be invoked keys on that prefix.

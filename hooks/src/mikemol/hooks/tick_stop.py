@@ -92,16 +92,25 @@ def block_reason(lock: HostLock | None, now: datetime) -> str | None:
     return REASON if fresh(lock, now) else None
 
 
+def payload_dir(payload: dict[str, object]) -> Path:
+    """Find the directory a hook payload's session runs in.
+
+    Returns:
+        the payload's cwd, else the project directory, else the process's.
+
+    """
+    cwd = text_of(payload.get("cwd")) or os.environ.get("CLAUDE_PROJECT_DIR") or str(Path.cwd())
+    return Path(cwd)
+
+
 def payload_lock(payload: dict[str, object]) -> HostLock | None:
     """Read the tick lock of the queue under a hook payload's directory.
 
     Returns:
-        the lock reading for `<cwd>/.claude/paths-forward.json`; the payload's cwd, else the
-        project directory, else the process's.
+        the lock reading for `<dir>/.claude/paths-forward.json` (see `payload_dir`).
 
     """
-    cwd = text_of(payload.get("cwd")) or os.environ.get("CLAUDE_PROJECT_DIR") or str(Path.cwd())
-    return host_lock(Path(cwd) / QUEUE)
+    return host_lock(payload_dir(payload) / QUEUE)
 
 
 def run(payload: dict[str, object], now: datetime, out: TextIO, err: TextIO) -> int:
