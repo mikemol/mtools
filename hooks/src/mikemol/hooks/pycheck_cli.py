@@ -11,12 +11,15 @@ hand (measured 2026-10-06, in a scratch script).
 This is that command. It calls `pycheck.analyze`, the SAME function the hook calls, on the file's
 current content, and prints the UNCLIPPED report.
 
+W794 adds `--census ROOT`: the findings per tracked Python file under ROOT, as the flat JSON ledger
+debtplan reads, measured by the same verdict (see `pycheck_census`).
+
 ⚑ THREE ANSWERS, NOT TWO, AND "NOT CHECKED" MUST NEVER READ AS CLEAN. Exit 0: the gate would admit
 the file as it stands. Exit 1: it would refuse it, and the whole report is on stdout. Exit 3: no
 verdict could be rendered (no governing project upward of the file, or no checker could run), so
 nothing was checked. `analyze` itself returns True for a file with no governing project, which is
 right for a hook (not its file to judge) and wrong for a person asking; this command asks
-`project_for` first and says so.
+`project_for` first and says so. A census with any file unjudged writes NO ledger and exits 3.
 
 ⚑ AN ADMITTED FILE IS ADMITTED PER FILE, which is all this gate judges: it checks THIS file under
 its project's bar and does not follow the file's imports into their debt. A file whose imports are
@@ -30,11 +33,12 @@ on that prefix.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import project_root, pycheck
+from mikemol.hooks import project_root, pycheck, pycheck_census
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -42,10 +46,11 @@ if TYPE_CHECKING:
 
     from mikemol.hooks.verdict import Verdict
 
-# The one flag: the file whose verdict is asked for.
+# The flags: the file whose verdict is asked for, or the root whose ledger is.
 FLAG = "--check-file"
+CENSUS_FLAG = "--census"
 
-# The flag and its path: nothing else is accepted.
+# A flag and its one argument: nothing else is accepted.
 EXPECTED_ARGS = 2
 
 EXIT_ADMITTED = 0
@@ -53,7 +58,7 @@ EXIT_REFUSED = 1
 EXIT_USAGE = 2
 EXIT_NOT_CHECKED = 3
 
-USAGE = f"usage: mikemol-pycheck {FLAG} PATH\n"
+USAGE = f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT)\n"
 
 
 def check(
@@ -89,17 +94,48 @@ def check(
     return EXIT_REFUSED
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    """Parse `--check-file PATH` and print the gate's verdict on it.
+def census(
+    root: Path,
+    tracked: Callable[[Path], list[str] | None],
+    analyze: Callable[[str, str], Verdict],
+    out: TextIO,
+    err: TextIO,
+) -> int:
+    """Write the flat findings-per-file ledger for the tracked Python files under `root`.
 
     Returns:
-        the exit code from `check`, or EXIT_USAGE for anything but exactly the one flag and path.
+        EXIT_ADMITTED with the JSON ledger on `out`, or EXIT_NOT_CHECKED with nothing on `out` when
+        git could not name the files or any file went unjudged (the names on `err`).
+
+    """
+    names = tracked(root)
+    if names is None:
+        err.write(f"mikemol-pycheck: {root}: git could not name the tracked files; no ledger\n")
+        return EXIT_NOT_CHECKED
+    debt, unchecked = pycheck_census.census(root, names, analyze)
+    if unchecked:
+        shown = ", ".join(unchecked[:5])
+        err.write(f"mikemol-pycheck: {len(unchecked)} files unjudged, no ledger written: {shown}\n")
+        return EXIT_NOT_CHECKED
+    out.write(json.dumps(debt, indent=2) + "\n")
+    return EXIT_ADMITTED
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Parse `--check-file PATH` or `--census ROOT` and print the gate's answer.
+
+    Returns:
+        the exit code from `check` or `census`, or EXIT_USAGE for anything but exactly one flag
+        and its argument.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) != EXPECTED_ARGS or args[0] != FLAG:
+    if len(args) != EXPECTED_ARGS or args[0] not in {FLAG, CENSUS_FLAG}:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
-    return check(
-        Path(args[1]).resolve(), pycheck.analyze, project_root.project_for, sys.stdout, sys.stderr
-    )
+    target = Path(args[1]).resolve()
+    if args[0] == CENSUS_FLAG:
+        return census(
+            target, pycheck_census.tracked_python, pycheck.analyze, sys.stdout, sys.stderr
+        )
+    return check(target, pycheck.analyze, project_root.project_for, sys.stdout, sys.stderr)

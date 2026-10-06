@@ -6198,3 +6198,52 @@
   claim  = {Anything but `--check-file PATH` is a usage error, exit two, naming the usage.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_main_accepts_exactly_the_flag_and_a_path},
 }
+
+@misc{hooks-pycheck-census-each-checker-block-is-counted-by-its-own-marker,
+  section = {pycheck-census},
+  title  = {Ruff's stated total, one per format hunk, one per mypy error line, one per syntax line},
+  claim  = {Ruff's stated total, one per format hunk, one per mypy error line, one per syntax line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_each_checker_block_is_counted_by_its_own_marker},
+}
+
+@misc{hooks-pycheck-census-refusal-with-no-marker-still-counts-one,
+  section = {pycheck-census},
+  title  = {A refused file is never debt-free, whatever its report looks like},
+  claim  = {A refused file is never debt-free, whatever its report looks like.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_a_refusal_with_no_marker_still_counts_one},
+}
+
+@misc{hooks-pycheck-census-census-counts-refused-files-and-sets-unjudged-apart,
+  section = {pycheck-census},
+  title  = {Admitted files are absent, refused ones counted, a file no checker judged is not zero},
+  claim  = {Admitted files are absent, refused ones counted, a file no checker judged is not zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_the_census_counts_refused_files_and_sets_unjudged_apart},
+}
+
+@misc{hooks-pycheck-census-tracked-python-is-none-outside-a-repository,
+  section = {pycheck-census},
+  title  = {Git refusing to name files is None, never an empty list that would read as no files},
+  claim  = {Git refusing to name files is None, never an empty list that would read as no files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_tracked_python_is_none_outside_a_repository},
+}
+
+@misc{hooks-pycheck-census-cli-census-writes-the-flat-ledger,
+  section = {pycheck-census},
+  title  = {With every file judged the ledger is flat JSON on stdout and the exit is zero},
+  claim  = {With every file judged the ledger is flat JSON on stdout and the exit is zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_the_cli_census_writes_the_flat_ledger},
+}
+
+@misc{hooks-pycheck-census-cli-census-writes-no-ledger-when-any-file-is-unjudged,
+  section = {pycheck-census},
+  title  = {Blindness is not a clean ledger: exit three, nothing on stdout, the names on stderr},
+  claim  = {Blindness is not a clean ledger: exit three, nothing on stdout, the names on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_the_cli_census_writes_no_ledger_when_any_file_is_unjudged},
+}
+
+@misc{hooks-pycheck-census-cli-census-writes-no-ledger-when-git-cannot-name-the-files,
+  section = {pycheck-census},
+  title  = {No file list is no ledger, never an empty one},
+  claim  = {No file list is no ledger, never an empty one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_the_cli_census_writes_no_ledger_when_git_cannot_name_the_files},
+}

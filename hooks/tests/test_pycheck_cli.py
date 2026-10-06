@@ -133,7 +133,9 @@ def test_a_missing_file_is_not_checked(tmp_path: Path) -> None:
 
 
 def test_main_accepts_exactly_the_flag_and_a_path(capsys: pytest.CaptureFixture[str]) -> None:
-    """Anything but `--check-file PATH` is a usage error, exit two, naming the usage."""
+    """Anything but one flag and its argument is a usage error, exit two, naming both modes."""
     for argv in ([], ["--check-file"], ["PATH"], ["--check-file", "a", "b"], ["--other", "a"]):
         assert pycheck_cli.main(argv) == pycheck_cli.EXIT_USAGE
-    assert "usage: mikemol-pycheck --check-file PATH" in capsys.readouterr().err
+    usage = capsys.readouterr().err
+    assert "--check-file PATH" in usage
+    assert "--census ROOT" in usage

@@ -351,6 +351,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # path the payload names, and the holder the queue itself recorded; never a shell, and bounded by a
 # one-second timeout inside SessionEnd's shared 1.5 s budget.
 "src/mikemol/hooks/tick_release.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# ⚑ THE CENSUS NAMES ITS FILES FROM GIT'S INDEX (W794; operator: inputs named, never globbed), so
+# running `git ls-files` IS the module's responsibility: the argv is git's own resolved path, a
+# fixed subcommand and the root, never a shell.
+"src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_post_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 

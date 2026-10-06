@@ -1,0 +1,133 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""W794: findings per file under the edit gate's OWN verdict, the ledger debtplan mints from.
+
+The host's debt ledgers were measured by mypy alone, so a card's finding count was not what
+actually refuses an edit: the gate also judges ruff, ruff-format and suppressions, per the file's
+own project bar. This reads the SAME per-file verdict (`pycheck.analyze`, through
+`mikemol-pycheck --census`) and counts what its report names, so ONE measurement is the gate's.
+
+⚑ A COUNT IS READ FROM THE REPORT'S OWN MARKERS, never guessed: a ruff block states `Found N
+error`, a ruff-format block carries one `@@` hunk per place it would change, a mypy block one
+`: error:` line per finding, a syntax block one `[syntax]` line. A refused file whose report
+yields no marker still counts 1, so a file that refuses is never debt-free.
+
+⚑ A FILE NO CHECKER COULD JUDGE IS NOT CLEAN AND IS NOT IN THE LEDGER: it is returned apart as
+`unchecked`, because a ledger that read blindness as zero debt once retired 178 real cards.
+
+⚑ THE FILES ARE NAMED FROM GIT'S INDEX, never globbed or walked (operator: inputs are named).
+
+CONSUMED BY: `pycheck_cli` (`mikemol-pycheck --census`).
+"""
+
+from __future__ import annotations
+
+import re
+import shutil
+import subprocess
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
+    from pathlib import Path
+
+    from mikemol.hooks.verdict import Verdict
+
+_RUFF = re.compile(r"^\s*Found (\d+) errors?\b", re.MULTILINE)
+_HUNK = re.compile(r"^@@ ", re.MULTILINE)
+# A syntax finding is spelled like a mypy one (`path: error: ...  [syntax]`): it is counted once,
+# as syntax, so the mypy marker refuses a line that ends in that tag.
+_MYPY = re.compile(r": error:(?!.*\[syntax\])")
+_SYNTAX = re.compile(r"\[syntax\]")
+_MINIMUM = 1
+_PY_SUFFIX = ".py"
+_GIT_TIMEOUT_S = 60
+
+
+def _occurrences(pattern: re.Pattern[str], report: str) -> int:
+    """Count the non-overlapping matches of `pattern` in `report`.
+
+    Returns:
+        the number of matches.
+
+    """
+    return sum(1 for _found in pattern.finditer(report))
+
+
+def _ruff_total(report: str) -> int:
+    """Sum the counts ruff states in `Found N error(s)` lines.
+
+    Returns:
+        the total, 0 when ruff stated none.
+
+    """
+    total = 0
+    for found in _RUFF.finditer(report):
+        words = found.string[found.start() : found.end()].split()
+        total += int(words[1])
+    return total
+
+
+def findings(report: str) -> int:
+    """Count the findings a refusal report names, at least one for any refusal.
+
+    Returns:
+        the sum of the ruff, ruff-format hunk, mypy and syntax markers, or 1 when none match.
+
+    """
+    hunks = _occurrences(_HUNK, report)
+    typed = _occurrences(_MYPY, report)
+    broken = _occurrences(_SYNTAX, report)
+    return max(_ruff_total(report) + hunks + typed + broken, _MINIMUM)
+
+
+def tracked_python(root: Path) -> list[str] | None:
+    """Name the Python files git tracks under `root`, from its index.
+
+    Returns:
+        the tracked `.py` paths relative to `root`, or None when git is absent or refused.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    try:
+        done = subprocess.run(
+            [git, "-C", str(root), "ls-files", "-z"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if done.returncode != 0:
+        return None
+    return sorted(name for name in done.stdout.split("\0") if name.endswith(_PY_SUFFIX))
+
+
+def census(
+    root: Path,
+    files: Iterable[str],
+    analyze: Callable[[str, str], Verdict],
+) -> tuple[dict[str, int], list[str]]:
+    """Judge each file under `root` and count the findings of those the gate would refuse.
+
+    Returns:
+        the findings per refused file (relative to `root`), and the files no checker judged.
+
+    """
+    debt: dict[str, int] = {}
+    unchecked: list[str] = []
+    for rel in files:
+        try:
+            content = (root / rel).read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            unchecked.append(rel)
+            continue
+        ok, report = analyze(content, str(root / rel))
+        if ok is None:
+            unchecked.append(rel)
+        elif not ok:
+            debt[rel] = findings(report)
+    return dict(sorted(debt.items())), sorted(unchecked)
