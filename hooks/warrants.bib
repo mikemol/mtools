@@ -6635,3 +6635,95 @@
   claim  = {Keys come from the first tab field or the `key` member; comments and blanks name none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_rubric_keys_reads_both_formats_and_skips_comments},
 }
+
+@misc{hooks-bazel-admit-verb-is-the-first-word-that-is-not-a-startup-option,
+  section = {bazel-admit},
+  title  = {Startup options come first and are skipped; no verb at all is None},
+  claim  = {Startup options come first and are skipped; no verb at all is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_the_verb_is_the_first_word_that_is_not_a_startup_option},
+}
+
+@misc{hooks-bazel-admit-only-heavy-verbs-have-a-memory-estimate,
+  section = {bazel-admit},
+  title  = {build, test, run, coverage and fetch are admitted; info, query and a bare bazel are not},
+  claim  = {build, test, run, coverage and fetch are admitted; info, query and a bare bazel are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_only_heavy_verbs_have_a_memory_estimate},
+}
+
+@misc{hooks-bazel-admit-headroom-admits-at-once-without-sleeping-or-saying-anything,
+  section = {bazel-admit},
+  title  = {Below the refusal fraction nothing waits and nothing is printed},
+  claim  = {Below the refusal fraction nothing waits and nothing is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_headroom_admits_at_once_without_sleeping_or_saying_anything},
+}
+
+@misc{hooks-bazel-admit-full-zram-waits-then-admits-once-it-drains-and-says-it-waited,
+  section = {bazel-admit},
+  title  = {The wait polls, states the reading, and admits on the first reading below the fraction},
+  claim  = {The wait polls, states the reading, and admits on the first reading below the fraction.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_full_zram_waits_then_admits_once_it_drains_and_says_it_waited},
+}
+
+@misc{hooks-bazel-admit-zram-that-stays-full-is-refused-after-the-wait-is-spent,
+  section = {bazel-admit},
+  title  = {A bounded wait: past it the answer is False, so bazel does not run into the limit},
+  claim  = {A bounded wait: past it the answer is False, so bazel does not run into the limit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_zram_that_stays_full_is_refused_after_the_wait_is_spent},
+}
+
+@misc{hooks-bazel-admit-unreadable-zram-admits-and-says-so,
+  section = {bazel-admit},
+  title  = {What cannot be read blocks nothing, and the gap is stated},
+  claim  = {What cannot be read blocks nothing, and the gap is stated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_an_unreadable_zram_admits_and_says_so},
+}
+
+@misc{hooks-bazel-admit-lease-wraps-bazel-when-membudget-is-found-and-a-note-says-when-it-is-not,
+  section = {bazel-admit},
+  title  = {With the tool: membudget run MB -- real args. Without it: bazel as is, and a note},
+  claim  = {With the tool: membudget run MB -- real args. Without it: bazel as is, and a note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_lease_wraps_bazel_when_membudget_is_found_and_a_note_says_when_it_is_not},
+}
+
+@misc{hooks-bazel-admit-light-verb-runs-untouched-and-never-reads-zram,
+  section = {bazel-admit},
+  title  = {`bazel info` is executed as given, whatever zram says},
+  claim  = {`bazel info` is executed as given, whatever zram says.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_light_verb_runs_untouched_and_never_reads_zram},
+}
+
+@misc{hooks-bazel-admit-heavy-verb-is-admitted-under-a-lease-and-its-exit-code-is-returned,
+  section = {bazel-admit},
+  title  = {With headroom, `test` runs under membudget and the command's own status comes back},
+  claim  = {With headroom, `test` runs under membudget and the command's own status comes back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_heavy_verb_is_admitted_under_a_lease_and_its_exit_code_is_returned},
+}
+
+@misc{hooks-bazel-admit-full-zram-refuses-a-heavy-verb-with-exit-three-and-runs-nothing,
+  section = {bazel-admit},
+  title  = {The point of the gate: with the wait spent and zram still full, bazel does not start},
+  claim  = {The point of the gate: with the wait spent and zram still full, bazel does not start.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_full_zram_refuses_a_heavy_verb_with_exit_three_and_runs_nothing},
+}
+
+@misc{hooks-bazel-admit-bypass-runs-bazel-untouched-and-says-it-did,
+  section = {bazel-admit},
+  title  = {BAZEL_ADMIT=0 is an explicit, stated override, even with zram full},
+  claim  = {BAZEL_ADMIT=0 is an explicit, stated override, even with zram full.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_the_bypass_runs_bazel_untouched_and_says_it_did},
+}
+
+@misc{hooks-bazel-admit-install-writes-an-executable-wrapper-that-fails-open,
+  section = {bazel-admit},
+  title  = {tools/bazel runs the admit tool from the repo venv or mtools' build, else bazel untouched},
+  claim  = {tools/bazel runs the admit tool from the repo venv or mtools' build, else bazel
+            untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_install_writes_an_executable_wrapper_that_fails_open},
+}
+
+@misc{hooks-bazel-admit-main-installs-a-wrapper-and-refuses-a-bad-command-line,
+  section = {bazel-admit},
+  title  = {`--install DIR` prints the wrapper's path; anything else is a usage error, exit 2},
+  claim  = {`--install DIR` prints the wrapper's path; anything else is a usage error, exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_main_installs_a_wrapper_and_refuses_a_bad_command_line},
+}

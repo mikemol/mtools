@@ -43,3 +43,4 @@ pycheck-changed	The Gate's Verdict on Every Changed File: Names From Git's Statu
 commit-kata	The Commit Kata: a Commit's Outcome Read From HEAD and Stated in One Last Line (Committed, Refused, or Not Committed), No Tracked Path Committing Nothing, and a Rewritten Lock Riding Along
 hooks-preflight	The Hooks Preflight: the Venv Rebuilt Before the Changed-Files Verdict, and a Rebuild That Cannot Run Is Not Checked, Never Clean
 read-guard	The Read Guard: an Unbounded Whole-File Read of an Oversized File Is Denied With the Cheaper Reads Named, a Bounded or Rendered or Unsizable One Is Admitted, and an Unarmed Guard Says Nothing
+bazel-admit	The Bazel Admission: Heavy Commands Wait on Zram Headroom and a Memory Lease, Light Ones Run Untouched, a Full Zram Is Refused After a Bounded Wait, and What Cannot Be Read Blocks Nothing

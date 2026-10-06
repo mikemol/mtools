@@ -110,6 +110,9 @@ mikemol-pycheck = "mikemol.hooks.pycheck_cli:main"
 # W832: the commit kata graduated from .claude/katas (rule 16); its last line is the verdict, read from
 # HEAD. NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
 mikemol-commit = "mikemol.hooks.commit_kata:main"
+# W836: bazel's own admit-or-wait on the host's resources, run by the generated tools/bazel wrapper
+# (`mikemol-bazel-admit --install DIR`). NOT `mikemol-hook-…`: bazel runs it, no harness wires it.
+mikemol-bazel-admit = "mikemol.hooks.bazel_admit:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
 mikemol-githook-pre-push = "mikemol.hooks.githook_pre_push:main"
@@ -374,6 +377,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE COMMIT KATA RUNS GIT (W832): committing IS the module's responsibility. MEASURED: the argv is
 # git's own resolved path, fixed subcommands, the repository path and the committer's own paths and
 # message as separate arguments; never a shell, bounded by a 3000 s timeout (a gate waits inside).
+# ⚑ THE BAZEL ADMISSION WRAPPER EXECS THE REAL BAZEL (W836): replacing this process with it, so no
+# wrapper process sits above a build and holds its signals, IS the module's responsibility. MEASURED:
+# the argv is the real client's path (BAZEL_REAL, from bazel itself) and its own arguments, or
+# `mikemol-membudget run MB -- <real> <args>`; never a shell.
+"src/mikemol/hooks/bazel_admit.py" = ["start-process-with-no-shell"]
 "src/mikemol/hooks/commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
