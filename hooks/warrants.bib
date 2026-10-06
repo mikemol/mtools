@@ -5816,3 +5816,102 @@
   claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
 }
+
+@misc{hooks-tick-gate-only-a-prompt-that-begins-with-the-loop-text-is-a-tick,
+  section = {tick-gate},
+  title  = {Leading whitespace is ignored; a tick mentioned mid-sentence, or an empty prompt, is not},
+  claim  = {Leading whitespace is ignored; a tick mentioned mid-sentence, or an empty prompt, is
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_only_a_prompt_that_begins_with_the_loop_text_is_a_tick},
+}
+
+@misc{hooks-tick-gate-device-at-the-refusal-line-refuses-and-one-just-under-does-not,
+  section = {tick-gate},
+  title  = {The threshold is inclusive: exactly REFUSE_FRACTION refuses, one byte under admits},
+  claim  = {The threshold is inclusive: exactly REFUSE_FRACTION refuses, one byte under admits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_device_at_the_refusal_line_refuses_and_one_just_under_does_not},
+}
+
+@misc{hooks-tick-gate-cramped-device-refuses-and-says-how-much-is-left,
+  section = {tick-gate},
+  title  = {The reason names the use, the ceiling, the room and the ratio, and adds no context},
+  claim  = {The reason names the use, the ceiling, the room and the ratio, and adds no context.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_cramped_device_refuses_and_says_how_much_is_left},
+}
+
+@misc{hooks-tick-gate-fresh-lock-skips-the-tick-naming-its-holder,
+  section = {tick-gate},
+  title  = {A tick already running (or just died) is skipped, saying who holds the lock since when},
+  claim  = {A tick already running (or just died) is skipped, saying who holds the lock since when.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_fresh_lock_skips_the_tick_naming_its_holder},
+}
+
+@misc{hooks-tick-gate-stale-lock-is-admitted-with-a-note-that-the-tick-takes-it-over,
+  section = {tick-gate},
+  title  = {A dead holder's lock does not refuse the tick; the context says it will be taken over},
+  claim  = {A dead holder's lock does not refuse the tick; the context says it will be taken over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_stale_lock_is_admitted_with_a_note_that_the_tick_takes_it_over},
+}
+
+@misc{hooks-tick-gate-healthy-free-host-is-admitted-with-both-facts-as-context,
+  section = {tick-gate},
+  title  = {The tick starts knowing the zram use, the ratio, and that the lock is free},
+  claim  = {The tick starts knowing the zram use, the ratio, and that the lock is free.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_healthy_free_host_is_admitted_with_both_facts_as_context},
+}
+
+@misc{hooks-tick-gate-fact-that-cannot-be-read-is-named-not-checked-and-blocks-nothing,
+  section = {tick-gate},
+  title  = {Absent facts (None) are said so in the context, and the tick proceeds},
+  claim  = {Absent facts (None) are said so in the context, and the tick proceeds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_fact_that_cannot_be_read_is_named_not_checked_and_blocks_nothing},
+}
+
+@misc{hooks-tick-gate-prompt-that-is-not-a-tick-passes-without-reading-any-fact,
+  section = {tick-gate},
+  title  = {The facts are not read, and nothing is printed, for an ordinary prompt},
+  claim  = {The facts are not read, and nothing is printed, for an ordinary prompt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_prompt_that_is_not_a_tick_passes_without_reading_any_fact},
+}
+
+@misc{hooks-tick-gate-cramped-device-blocks-a-tick-prompt-through-run,
+  section = {tick-gate},
+  title  = {The refusal is printed as the block decision, and the exit code stays zero},
+  claim  = {The refusal is printed as the block decision, and the exit code stays zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_a_cramped_device_blocks_a_tick_prompt_through_run},
+}
+
+@misc{hooks-tick-gate-admitted-tick-prompt-prints-additional-context,
+  section = {tick-gate},
+  title  = {A tick that may run gets the facts line as UserPromptSubmit additionalContext},
+  claim  = {A tick that may run gets the facts line as UserPromptSubmit additionalContext.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_an_admitted_tick_prompt_prints_additional_context},
+}
+
+@misc{hooks-tick-gate-prompt-is-also-read-from-user-message,
+  section = {tick-gate},
+  title  = {If the payload names its text `user_message`, the gate still recognises the tick},
+  claim  = {If the payload names its text `user_message`, the gate still recognises the tick.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_the_prompt_is_also_read_from_user_message},
+}
+
+@misc{hooks-tick-gate-main-blocks-a-tick-with-a-fresh-lock-whatever-the-device-says,
+  section = {tick-gate},
+  title  = {Through main, with the real clock and the real zram reader, a fresh lock still blocks},
+  claim  = {Through main, with the real clock and the real zram reader, a fresh lock still blocks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_main_blocks_a_tick_with_a_fresh_lock_whatever_the_device_says},
+}
+
+@misc{hooks-tick-gate-main-passes-a-payload-that-is-not-json-and-says-so,
+  section = {tick-gate},
+  title  = {A gate that cannot read its input must not eat a prompt},
+  claim  = {A gate that cannot read its input must not eat a prompt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_main_passes_a_payload_that_is_not_json_and_says_so},
+}
+
+@misc{hooks-tick-gate-console-entry-refuses-an-argument-before-reading-stdin,
+  section = {tick-gate},
+  title  = {The argv contract: a hook takes no arguments, and the refusal names the program},
+  claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_gate.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
+}

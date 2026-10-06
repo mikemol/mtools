@@ -38,6 +38,11 @@ ZRAM_MM_STAT = Path("/sys/block/zram1/mm_stat")
 # How many leading mm_stat fields the reading needs.
 MM_STAT_FIELDS = 4
 
+# The fraction of the compressed ceiling at which new work is refused (the host's tick gate, and
+# the katas' `tick begin` until they call this module): past it a write failure can remount /tmp
+# read-only.
+REFUSE_FRACTION = 0.85
+
 GIB = 2**30
 
 

@@ -67,6 +67,20 @@ def parse_time(value: str) -> datetime | None:
     return parsed if parsed.tzinfo is not None else None
 
 
+def fresh(lock: HostLock | None, now: datetime) -> bool:
+    """Say whether a lock is held by a holder that can still be running.
+
+    Returns:
+        True when the lock is held, its stamp reads, and it is younger than LOCK_STALE_S; False
+        for an absent reading, an unheld lock, an unreadable stamp, or a dead holder's old lock.
+
+    """
+    if lock is None or not lock.held() or lock.taken_at is None:
+        return False
+    taken = parse_time(lock.taken_at)
+    return taken is not None and (now - taken).total_seconds() < LOCK_STALE_S
+
+
 def block_reason(lock: HostLock | None, now: datetime) -> str | None:
     """Decide whether this lock should hold the turn open.
 
@@ -75,14 +89,19 @@ def block_reason(lock: HostLock | None, now: datetime) -> str | None:
         be parsed, or the lock is old enough to be a dead holder's.
 
     """
-    if lock is None or not lock.held() or lock.taken_at is None:
-        return None
-    taken = parse_time(lock.taken_at)
-    if taken is None:
-        return None
-    if (now - taken).total_seconds() >= LOCK_STALE_S:
-        return None
-    return REASON
+    return REASON if fresh(lock, now) else None
+
+
+def payload_lock(payload: dict[str, object]) -> HostLock | None:
+    """Read the tick lock of the queue under a hook payload's directory.
+
+    Returns:
+        the lock reading for `<cwd>/.claude/paths-forward.json`; the payload's cwd, else the
+        project directory, else the process's.
+
+    """
+    cwd = text_of(payload.get("cwd")) or os.environ.get("CLAUDE_PROJECT_DIR") or str(Path.cwd())
+    return host_lock(Path(cwd) / QUEUE)
 
 
 def run(payload: dict[str, object], now: datetime, out: TextIO, err: TextIO) -> int:
@@ -92,8 +111,7 @@ def run(payload: dict[str, object], now: datetime, out: TextIO, err: TextIO) -> 
         0 always: a block is the JSON on `out`, never a nonzero exit.
 
     """
-    cwd = text_of(payload.get("cwd")) or os.environ.get("CLAUDE_PROJECT_DIR") or str(Path.cwd())
-    reason = block_reason(host_lock(Path(cwd) / QUEUE), now)
+    reason = block_reason(payload_lock(payload), now)
     if reason is None:
         return 0
     if payload.get("stop_hook_active") is True:

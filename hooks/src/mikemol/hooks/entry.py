@@ -26,6 +26,7 @@ from mikemol.hooks import (
     routing_table,
     shellcheck,
     structural_query,
+    tick_gate,
     tick_stop,
 )
 
@@ -153,3 +154,13 @@ def tick_stop_main() -> int:
 
     """
     return _guarded("mikemol-hook-tick-stop", tick_stop.main)
+
+
+def tick_gate_main() -> int:
+    """Run `mikemol-hook-tick-gate` behind the argv contract (W812).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-tick-gate", tick_gate.main)
