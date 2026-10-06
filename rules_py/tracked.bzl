@@ -22,6 +22,9 @@ by hand drifts from the tree, so this asks git instead of the filesystem and nam
   runfiles root and breaks that). `select_tracked` returns plain paths, which are this package's labels.
 - A tracked name whose file is gone from the work tree (deleted, not yet staged) is a label that does
   not resolve, so analysis fails naming it, rather than the gate quietly checking less.
+- `@tracked//:tracked.txt` is the same population as a file, one path per line, for a census that
+  must enumerate "the files this repo tracks": pass it in as an input and read it instead of walking
+  the working directory (a walk finds whatever is there, including a build tool's generated files).
 - The repository holds no glob() and declares no directory. `rctx.watch` on the git index re-runs
   the rule whenever git's view changes.
 - A tracked file inside a subdirectory that has its own BUILD file belongs to that package, and its
@@ -42,7 +45,8 @@ def _tracked_files_impl(rctx):
         fail("tracked_files: git ls-files failed in %s: %s" % (root, res.stderr))
     paths = sorted([p for p in res.stdout.split("\0") if p])
     rctx.file("manifest.bzl", "TRACKED = [\n" + "".join(["    %s,\n" % repr(p) for p in paths]) + "]\n")
-    rctx.file("BUILD.bazel", "")
+    rctx.file("tracked.txt", "".join([p + "\n" for p in paths]))
+    rctx.file("BUILD.bazel", "exports_files([\"tracked.txt\"])\n")
 
 tracked_files = repository_rule(
     implementation = _tracked_files_impl,
