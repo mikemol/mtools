@@ -20,6 +20,7 @@ exports_files([
     "test_suite_check.py",
     "test_vacuity_floor.py",
     "test_venv_check.py",
+    "tracked.bzl",
     "vacuity_floor.py",
     "venv.bzl",
     "venv_check.py",
