@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 797,
+  "counter": 798,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T12:25:41Z",
   "job_id": "9c05fa85",
@@ -16333,6 +16333,33 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-06T00:31:41Z",
+      "ticks_blocked": 0,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
+    },
+    {
+      "symbol": "W798",
+      "title": "Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs captured by BuildBuddy",
+      "status": "ready",
+      "enables": [
+        "W797"
+      ],
+      "touches": [
+        "gate",
+        "bazel",
+        "buildbuddy",
+        "precommit",
+        "hermetic",
+        "fleet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Operator direction 2026-10-06: as a rule a pre-commit should be a bazel build, the precommit logic in a BUILD file rather than a script, so BuildBuddy captures its logs, tests and artifacts. This is the structural fix for what hand-scripted hooks kept getting wrong today: the commit's GIT_INDEX_FILE inherited by fixtures and peer-repo git calls (el-openglo, gcalculus), a gate reading a sibling's live working tree (rosettapkg), and flakes with no recorded first failure (el-openglo W212): a bazel test declares its inputs, runs sandboxed, and uploads test.log and undeclared outputs. Start with one repo that already has bazel (el-openglo, nemik, mtools): a //:precommit target the hook only invokes (bazel test //:precommit), then move each repo's gate stages into it. Decide how the staged tree is declared as an input (git write-tree archive as a repository rule) so the gate certifies what is committed",
+      "evidence": "",
+      "issued_at": "2026-10-06T01:48:39Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-10-06T01:48:39Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
