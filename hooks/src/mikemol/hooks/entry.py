@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.hooks import (
     after_compaction,
+    build_failure,
     hook_argv,
     inbound_asks,
     nemik_check,
@@ -132,6 +133,16 @@ def pycheck_advise_main() -> int:
 
     """
     return _guarded("mikemol-hook-pycheck-advise", pycheck_advise.main)
+
+
+def build_failure_main() -> int:
+    """Run `mikemol-hook-build-failure` behind the argv contract (W829).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-build-failure", build_failure.main)
 
 
 def inbound_asks_main() -> int:

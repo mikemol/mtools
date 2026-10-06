@@ -128,6 +128,36 @@ $(sed 's/^/      /' "$2")"
     fi
 }
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
+
+# ⚑ W829 (operator 2026-10-06): ON A FAILED BAZEL CALL, PRINT ITS CAUSE FROM BUILDBUDDY. A commit runs
+# as a background task and fails later as a notification, so the failure hook that serves foreground
+# commands never sees this gate's failures; the gate asks for the cause itself, at the bazel line
+# that failed, from the invocation id bazel printed. `mikemol-build-failure` reads bazel's output on
+# stdin and prints the failing tests' own output and the ERROR/FAILED lines from BuildBuddy, bounded
+# to a few dozen lines.
+# ⚑ THE VERDICT SUMMARY STAYS LABEL ONLY (operator ruling 2026-09-11, made twice, see `note_failure`'s
+# call below): this prints at the point of failure and is never handed to `note_failure`. And it
+# cannot go quiet unnoticed: a log that names no build, or a log BuildBuddy cannot give, says so and
+# names the command that reads it by id.
+# ⚑ NEVER THE REASON A COMMIT IS REFUSED OR PASSES: it is called only on a branch that already
+# refuses, and every path through it returns 0 (a missing tool, an empty answer, a dead service).
+build_failure_cause() {
+    local log="$1"
+    local tool="$root/bazel-bin/hooks/.venv/bin/mikemol-build-failure"
+    local cause=""
+    if [ ! -x "$tool" ]; then
+        say "  (cause not read from BuildBuddy: $tool is not built)"
+        return 0
+    fi
+    cause="$(BUILDLOG_BIN="$root/bazel-bin/buildtel/.venv/bin/mikemol-buildlog" "$tool" <"$log" 2>/dev/null)" || cause=""
+    if [ -n "$cause" ]; then
+        say "bazel's own account of the failure, read from BuildBuddy:"
+        printf '%s\n' "$cause" | sed 's/^/    /' | head -n 60 >&2 || true
+    else
+        say "  (no BuildBuddy invocation in $log, or its log was unreadable: mikemol-buildlog <id> --failures)"
+    fi
+    return 0
+}
 # ⚑⚑ W361: A DISTRIBUTION'S `__pycache__` IS CLEARED BEFORE ITS HOST PYTEST. CPython trusts a
 # `.pyc` whose recorded source size and mtime (whole seconds) match, so an F-arm that plants a
 # same-length defect and restores it within one second leaves the PLANTED bytecode in force: the
@@ -492,6 +522,7 @@ if [ "$_prebuild_rc" -ne 0 ] && grep -q 'Build completed successfully' "$staged/
 fi
 if [ "$_prebuild_rc" -ne 0 ]; then
   say "bazel build ${_prebuild[*]} FAILED — the hooks suite would run a dead binary or a stale venv, commit refused"
+  build_failure_cause "$staged/.ratchet_cli.log"
   sed 's/^/    /' "$staged/.ratchet_cli.log" | tail -20
   record_refusal pre-commit " - //ratchet:ratchet_cli did not build"
   exit 1
@@ -845,6 +876,8 @@ if [ "$_suite_rc" -ne 0 ]; then
     # ⚑ An input modified mid-action is the host racing the sandbox (an editor, a peer worktree's
     # write), not the code under test: labelled so a committer retries rather than debugs.
     suite_infra=$(grep -q 'was modified during execution' "$staged/.suite.log" 2>/dev/null && printf ' [infrastructure fault: an input was modified during execution — retry the commit]') || suite_infra=""
+    # W829: the cause, from BuildBuddy, printed HERE and not handed to `note_failure` (label only).
+    build_failure_cause "$staged/.suite.log"
     fail=1
     # ⚑⚑⚑ THE LABEL ONLY, AND THE LOG IS DELIBERATELY *NOT* PASSED — OPERATOR RULING 2026-09-11,
     # MADE TWICE BECAUSE THE FIRST RULING RESTED ON A FIGURE I GAVE WRONG BY 47×. `note_failure`'s

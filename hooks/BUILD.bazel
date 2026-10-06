@@ -424,6 +424,9 @@ venv_from_hub(
         # W814: the PreToolUse(Read) oversized-read guard.
         "mikemol-hook-read-guard": "mikemol.hooks.entry:read_guard_main",
         "mikemol-shellcheck": "mikemol.hooks.shellcheck_cli:main",
+        # W829: the PostToolUseFailure build-failure report.
+        "mikemol-hook-build-failure": "mikemol.hooks.entry:build_failure_main",
+        "mikemol-build-failure": "mikemol.hooks.build_failure:report_main",
         # W818: the PostToolUse closure advisory.
         "mikemol-hook-pycheck-advise": "mikemol.hooks.entry:pycheck_advise_main",
         # W808: the edit gate's verdict on one file by hand.

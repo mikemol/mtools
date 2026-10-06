@@ -75,6 +75,11 @@ mikemol-hook-pycheck = "mikemol.hooks.entry:pycheck_main"
 # W578: SessionStart and UserPromptSubmit context, never a refusal; the repo owner wires it.
 # W818: PostToolUse names the edited Python file's unclean imports as context (never a refusal).
 mikemol-hook-pycheck-advise = "mikemol.hooks.entry:pycheck_advise_main"
+# W829: PostToolUseFailure puts a failed build's reason (from BuildBuddy) into context, exit 2.
+mikemol-hook-build-failure = "mikemol.hooks.entry:build_failure_main"
+# W829: the same report for a SHELL caller: bazel's raw output on stdin, the cause on stdout. NOT
+# `mikemol-hook-…`: the precommits call it on each bazel line, the harness does not wire it.
+mikemol-build-failure = "mikemol.hooks.build_failure:report_main"
 mikemol-hook-inbound-asks ="mikemol.hooks.entry:inbound_asks_main"
 # W616: SessionStart and UserPromptSubmit context (nemik's rows for this repo), never a refusal.
 mikemol-hook-nemik-check = "mikemol.hooks.entry:nemik_check_main"
@@ -360,9 +365,15 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # planner IS the module's responsibility. MEASURED: the argv is the planner's own found path (an env
 # var, the project's venv, PATH), a fixed `plan` subcommand, the root and a throwaway ledger path;
 # never a shell, bounded by a 20-second timeout.
+# ⚑ THE BUILD-FAILURE HOOK RUNS THE LOG READER (W829): `mikemol-buildlog` IS its responsibility.
+# MEASURED: the argv is the reader's own found path (an env var, the project's venv, PATH), an
+# invocation id matched by a UUID pattern, and a fixed flag; never a shell, bounded by a 45 s timeout.
+"src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).
 # The preflight witness runs the script itself under an emptied PATH to prove a failed rebuild exits 3.
+# Its witness runs the pre-commit's `build_failure_cause` function under bash with a stub tool.
+"tests/test_precommit_build_failure.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hooks_preflight.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pycheck_changed.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

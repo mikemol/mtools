@@ -2,16 +2,23 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
 #
-# W824: the compound kata for work in mtools' hooks distribution: rebuild the hooks venv, then ask the
-# edit gate for its verdict on every changed Python file. It replaces the sequence of a venv rebuild,
-# ruff, ruff-format and a per-file verdict that was typed by hand for three cards running (operator,
-# 2026-10-06: script the katas, the compound ones too). The verdict already folds ruff, ruff-format,
-# mypy and the suppression check, so there is no separate lint step.
+# W824: the compound kata for work in mtools: rebuild the hooks venv, then ask the edit gate for its
+# verdict on every changed Python file, then run the hermetic tests of every distribution a change
+# touches. It replaces the sequence of a venv rebuild, ruff, ruff-format and a per-file verdict that
+# was typed by hand for three cards running (operator, 2026-10-06: script the katas, the compound
+# ones too). The verdict already folds ruff, ruff-format, mypy and the suppression check, so there
+# is no separate lint step.
 #
 # ⚑ NOT NAMED `mikemol-hook-…`: it is a command a maintainer runs, not a gate the harness wires.
 #
 # ⚑ THE REBUILD COMES FIRST OR THE VERDICT IS A STALE ONE: the console script reads the built venv,
 # so a source change judged before the rebuild is judged by the old code.
+#
+# ⚑ EVERY TOUCHED DISTRIBUTION, NOT ONLY hooks (W828): //hooks:suite caught a runfiles-resolve
+# refusal local pytest passed (W826), and //buildtel:mutants and buildtel's warrants refused W827
+# although this script, then hooks-only, ran green. A distribution is a top-level directory with a
+# BUILD.bazel that holds a changed or new file; `//<dist>:all` is the set of tests the commit gate
+# runs for it (`:suite`, `:mutants`, the type check).
 set -uo pipefail
 
 root="$(cd "$(dirname "$0")/../.." && pwd -P)"
@@ -27,17 +34,33 @@ fi
 "$(realpath "$root/bazel-bin/hooks/.venv")/bin/mikemol-pycheck" --changed "$root"
 verdict=$?
 
-# ⚑ THE HERMETIC SUITE TOO (W826): it caught a runfiles-resolve refusal (`Path(__file__).resolve()`)
-# that local pytest and the verdict both passed, and it is the same target the commit gate runs.
+# The top-level directories holding a change: tracked edits against HEAD, then untracked files.
+touched="$(
+    {
+        git -C "$root" diff --name-only HEAD
+        git -C "$root" ls-files --others --exclude-standard
+    } | cut -d/ -f1 | sort -u
+)"
+targets=()
+while IFS= read -r top; do
+    # A directory with a BUILD.bazel is not always a distribution (`rules_py` holds only .bzl files
+    # and is a deleted package): `dist_checks()` is what declares a distribution's :suite/:mutants.
+    if [ -n "$top" ] && grep -qs '^dist_checks()' "$root/$top/BUILD.bazel"; then
+        targets+=("//$top:all")
+    fi
+done <<<"$touched"
+
 suite_rc=0
-if ! tested="$(bazel test //hooks:suite --ui_event_filters=-debug,-warning --show_result=0 \
+if [ "${#targets[@]}" -eq 0 ]; then
+    echo "mikemol-hooks-preflight: no distribution has a change; no hermetic tests run" >&2
+elif ! tested="$(bazel test "${targets[@]}" --ui_event_filters=-debug,-warning --show_result=0 \
     --noshow_progress --test_output=errors 2>&1)"; then
     printf '%s\n' "$tested" | tail -n 40 >&2
-    echo "mikemol-hooks-preflight: //hooks:suite FAILED" >&2
+    echo "mikemol-hooks-preflight: ${targets[*]} FAILED" >&2
     suite_rc=1
 fi
 
-# A refusal or a failed suite outranks an unjudged file, which outranks a clean run.
+# A refusal or a failed test outranks an unjudged file, which outranks a clean run.
 if [ "$verdict" -eq 1 ] || [ "$suite_rc" -ne 0 ]; then
     exit 1
 fi

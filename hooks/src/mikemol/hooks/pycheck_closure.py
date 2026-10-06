@@ -25,12 +25,12 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.hooks import tool_path
 from mikemol.hooks.payload import as_record, text_of
 
 if TYPE_CHECKING:
@@ -50,13 +50,7 @@ def find_planner(root: Path, env: Mapping[str, str]) -> Path | None:
         the first that exists, or None.
 
     """
-    named = env.get(PLANNER_ENV)
-    candidates = [Path(named)] if named else []
-    candidates.append(root / ".venv" / "bin" / PLANNER)
-    on_path = shutil.which(PLANNER)
-    if on_path:
-        candidates.append(Path(on_path))
-    return next((each for each in candidates if each.is_file()), None)
+    return tool_path.find(PLANNER, PLANNER_ENV, root, env)
 
 
 def read_ledger(root: Path) -> dict[str, int] | None:

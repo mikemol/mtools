@@ -75,6 +75,17 @@
         ]
       }
     ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "BUILDLOG_BIN=\"$CLAUDE_PROJECT_DIR/bazel-bin/buildtel/.venv/bin/mikemol-buildlog\" \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-build-failure\""
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

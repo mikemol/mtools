@@ -6402,3 +6402,109 @@
   claim  = {The rebuild line precedes the verdict line: a verdict before it would judge stale code.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hooks_preflight.py -k test_the_script_rebuilds_before_it_asks_for_the_verdict},
 }
+
+@misc{hooks-build-failure-invocation-ids-are-each-listed-once-in-order,
+  section = {build-failure},
+  title  = {The ids bazel printed, deduplicated, first appearance first; none when there are none},
+  claim  = {The ids bazel printed, deduplicated, first appearance first; none when there are none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_invocation_ids_are_each_listed_once_in_order},
+}
+
+@misc{hooks-build-failure-report-reads-the-last-invocation-failures-view,
+  section = {build-failure},
+  title  = {The last id is the failed build; its failures text is the body, headed by the id},
+  claim  = {The last id is the failed build; its failures text is the body, headed by the id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_the_report_reads_the_last_invocation_failures_view},
+}
+
+@misc{hooks-build-failure-log-with-no-failure-blocks-falls-back-to-its-tail,
+  section = {build-failure},
+  title  = {An empty failures view is never reported as an empty section: the tail stands in},
+  claim  = {An empty failures view is never reported as an empty section: the tail stands in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_a_log_with_no_failure_blocks_falls_back_to_its_tail},
+}
+
+@misc{hooks-build-failure-unreadable-log-and-a-missing-reader-are-stated-with-the-command,
+  section = {build-failure},
+  title  = {Both gaps still name the id and the command to run, so neither reads as no cause},
+  claim  = {Both gaps still name the id and the command to run, so neither reads as no cause.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_an_unreadable_log_and_a_missing_reader_are_stated_with_the_command},
+}
+
+@misc{hooks-build-failure-long-report-is-truncated-and-says-how-to-read-the-rest,
+  section = {build-failure},
+  title  = {Past MAX_CHARS the head is kept and the full command is named},
+  claim  = {Past MAX_CHARS the head is kept and the full command is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_a_long_report_is_truncated_and_says_how_to_read_the_rest},
+}
+
+@misc{hooks-build-failure-failed-build-exits-two-with-the-report-on-stderr,
+  section = {build-failure},
+  title  = {The report travels on stderr with exit 2, the channel the harness feeds back},
+  claim  = {The report travels on stderr with exit 2, the channel the harness feeds back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_a_failed_build_exits_two_with_the_report_on_stderr},
+}
+
+@misc{hooks-build-failure-failure-that-ran-no-build-or-another-tool-says-nothing,
+  section = {build-failure},
+  title  = {No invocation id, or a tool that is not Bash: exit 0 and nothing written},
+  claim  = {No invocation id, or a tool that is not Bash: exit 0 and nothing written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_a_failure_that_ran_no_build_or_another_tool_says_nothing},
+}
+
+@misc{hooks-build-failure-main-says-nothing-for-an-unreadable-payload,
+  section = {build-failure},
+  title  = {Junk on stdin is silence and exit zero: a context hook has nothing to refuse},
+  claim  = {Junk on stdin is silence and exit zero: a context hook has nothing to refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_main_says_nothing_for_an_unreadable_payload},
+}
+
+@misc{hooks-build-failure-console-entry-refuses-an-argument-before-reading-stdin,
+  section = {build-failure},
+  title  = {The argv contract: a hook takes no arguments, and the refusal names the program},
+  claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
+}
+
+@misc{hooks-build-failure-shell-mode-prints-the-cause-of-the-build-on-stdin,
+  section = {build-failure},
+  title  = {The precommit pipes bazel's output in and gets the failing test's cause on stdout, exit 0},
+  claim  = {The precommit pipes bazel's output in and gets the failing test's cause on stdout, exit
+            0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_the_shell_mode_prints_the_cause_of_the_build_on_stdin},
+}
+
+@misc{hooks-build-failure-shell-mode-prints-nothing-for-output-that-ran-no-build-and-takes-no-arguments,
+  section = {build-failure},
+  title  = {No invocation id is exit 1 with nothing printed; any argument is a usage error, exit 2},
+  claim  = {No invocation id is exit 1 with nothing printed; any argument is a usage error, exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_the_shell_mode_prints_nothing_for_output_that_ran_no_build_and_takes_no_arguments},
+}
+
+@misc{hooks-precommit-build-failure-cause-is-printed-indented-and-the-function-returns-zero,
+  section = {build-failure},
+  title  = {A tool that answers has its output shown, and the gate's shell carries on},
+  claim  = {A tool that answers has its output shown, and the gate's shell carries on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_precommit_build_failure.py -k test_the_cause_is_printed_indented_and_the_function_returns_zero},
+}
+
+@misc{hooks-precommit-build-failure-tool-that-finds-no-cause-says-so-and-names-the-command,
+  section = {build-failure},
+  title  = {An empty answer is stated, never silent, and still returns zero},
+  claim  = {An empty answer is stated, never silent, and still returns zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_precommit_build_failure.py -k test_a_tool_that_finds_no_cause_says_so_and_names_the_command},
+}
+
+@misc{hooks-precommit-build-failure-tool-that-is-not-built-is-said-and-never-stops-the-gate,
+  section = {build-failure},
+  title  = {With no tool the function names the missing path and returns zero},
+  claim  = {With no tool the function names the missing path and returns zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_precommit_build_failure.py -k test_a_tool_that_is_not_built_is_said_and_never_stops_the_gate},
+}
+
+@misc{hooks-precommit-build-failure-cause-is-bounded-to-sixty-lines,
+  section = {build-failure},
+  title  = {A tool that answers a thousand lines shows sixty, so the summary is never buried},
+  claim  = {A tool that answers a thousand lines shows sixty, so the summary is never buried.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_precommit_build_failure.py -k test_the_cause_is_bounded_to_sixty_lines},
+}

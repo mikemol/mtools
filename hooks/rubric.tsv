@@ -36,6 +36,7 @@ after-compaction	The After-Compaction Context: the Project's Pointers to Its Dur
 tick-release	The Tick-Lock Release: a Fresh Host Lock Is Released at Session End Through the One Writer, a Stale or Unreadable One Is Left Alone, and a Writer That Cannot Be Found or Fails Is Said and the Lock Left Held
 pycheck-cli	The Python Edit Gate by Hand: the Unclipped Verdict on One File, Not-Checked Is Never Clean, and a File in No Project Is Not Checked Though the Hook Would Admit It
 pycheck-census	The Gate's Verdict as a Ledger: Findings Counted per File From the Report's Own Markers, a Refusal Never Zero, and a File No Checker Judged Never Clean
+build-failure	The Build-Failure Report: a Failed Build's Cause Read From BuildBuddy by Invocation Id and Fed Back on Exit 2, an Unreadable Log or Missing Reader Stated With the Command, and a Failure That Ran No Build Left Alone
 pycheck-closure	The Closure Advisory: Unclean Imports Named From Debtplan's Graph With Their Findings, and Silence When No Ledger, Planner or Debt Is There
 pycheck-advise	The Closure Hook: an Edited Python File's Unclean Imports Added as Context After the Edit, Never a Refusal, and Anything Else Says Nothing
 pycheck-changed	The Gate's Verdict on Every Changed File: Names From Git's Status, a Rename's Origin and a Deletion Skipped, and One Exit That a Refusal Never Loses to a Clean Run
