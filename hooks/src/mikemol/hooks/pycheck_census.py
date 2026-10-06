@@ -17,19 +17,26 @@ yields no marker still counts 1, so a file that refuses is never debt-free.
 
 ⚑ THE FILES ARE NAMED FROM GIT'S INDEX, never globbed or walked (operator: inputs are named).
 
-CONSUMED BY: `pycheck_cli` (`mikemol-pycheck --census`).
+⚑ A LEDGER IS REPLACED WHOLE OR NOT AT ALL (W821): `write_ledger` stages beside the target and
+renames over it, so a census that failed leaves the previous ledger standing. A shell redirect
+would have truncated it first, which is why the refresh is a mode of the tool, not `> file`.
+
+CONSUMED BY: `pycheck_cli` (`mikemol-pycheck --census`, `--refresh-ledger`).
 """
 
 from __future__ import annotations
 
+import json
+import os
 import re
 import shutil
 import subprocess
+import tempfile
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
-    from pathlib import Path
+    from collections.abc import Callable, Iterable, Mapping
 
     from mikemol.hooks.verdict import Verdict
 
@@ -131,3 +138,23 @@ def census(
         elif not ok:
             debt[rel] = findings(report)
     return dict(sorted(debt.items())), sorted(unchecked)
+
+
+def write_ledger(target: Path, debt: Mapping[str, int]) -> None:
+    """Replace the ledger at `target` whole, or leave the old one standing.
+
+    Raises:
+        OSError: when the ledger could not be staged or renamed (the old file is untouched).
+
+    """
+    target.parent.mkdir(parents=True, exist_ok=True)
+    fd, staged_name = tempfile.mkstemp(dir=target.parent, prefix=".debt-ledger-", suffix=".tmp")
+    staged = Path(staged_name)
+    plain: dict[str, int] = {**debt}
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(json.dumps(plain, indent=2) + "\n")
+        staged.replace(target)
+    except OSError:
+        staged.unlink(missing_ok=True)
+        raise

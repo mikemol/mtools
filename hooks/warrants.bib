@@ -6331,3 +6331,31 @@
   claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_advise.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
 }
+
+@misc{hooks-pycheck-census-ledger-is-written-whole-under-the-project-claude-directory,
+  section = {pycheck-census},
+  title  = {write_ledger creates `.claude/` and replaces an older ledger with the new one},
+  claim  = {write_ledger creates `.claude/` and replaces an older ledger with the new one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_a_ledger_is_written_whole_under_the_project_claude_directory},
+}
+
+@misc{hooks-pycheck-census-refresh-writes-the-ledger-the-closure-advisory-reads,
+  section = {pycheck-census},
+  title  = {A good measurement is written to `.claude/debt-ledger.json` and the exit is zero},
+  claim  = {A good measurement is written to `.claude/debt-ledger.json` and the exit is zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_refresh_writes_the_ledger_the_closure_advisory_reads},
+}
+
+@misc{hooks-pycheck-census-refresh-leaves-the-old-ledger-when-a-file-is-unjudged,
+  section = {pycheck-census},
+  title  = {Blindness must not replace a ledger: exit three and the previous one is byte for byte},
+  claim  = {Blindness must not replace a ledger: exit three and the previous one is byte for byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_refresh_leaves_the_old_ledger_when_a_file_is_unjudged},
+}
+
+@misc{hooks-pycheck-census-refresh-says-so-when-the-ledger-cannot-be-written,
+  section = {pycheck-census},
+  title  = {A target whose parent is a file cannot be staged: exit three, the failure named},
+  claim  = {A target whose parent is a file cannot be staged: exit three, the failure named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_refresh_says_so_when_the_ledger_cannot_be_written},
+}

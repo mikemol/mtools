@@ -135,3 +135,56 @@ def test_the_cli_census_writes_no_ledger_when_git_cannot_name_the_files(tmp_path
     assert code == pycheck_cli.EXIT_NOT_CHECKED
     assert not out.getvalue()
     assert "no ledger" in err.getvalue()
+
+
+def test_a_ledger_is_written_whole_under_the_project_claude_directory(tmp_path: Path) -> None:
+    """write_ledger creates `.claude/` and replaces an older ledger with the new one."""
+    target = tmp_path / ".claude" / "debt-ledger.json"
+    pycheck_census.write_ledger(target, {"a.py": 1})
+    pycheck_census.write_ledger(target, {"b.py": MYPY_COUNT})
+    expected: dict[str, int] = {"b.py": MYPY_COUNT}
+    assert target.read_text(encoding="utf-8") == json.dumps(expected, indent=2) + "\n"
+    assert [each.name for each in target.parent.iterdir()] == ["debt-ledger.json"]
+
+
+def test_refresh_writes_the_ledger_the_closure_advisory_reads(tmp_path: Path) -> None:
+    """A good measurement is written to `.claude/debt-ledger.json` and the exit is zero."""
+    _write(tmp_path, "a.py", "b.py")
+    err = io.StringIO()
+    code = pycheck_cli.refresh(
+        tmp_path,
+        lambda _root: ["a.py", "b.py"],
+        _mypy_on_b,
+        pycheck_census.write_ledger,
+        err,
+    )
+    assert code == pycheck_cli.EXIT_ADMITTED
+    expected: dict[str, int] = {"b.py": MYPY_COUNT}
+    ledger = tmp_path / ".claude" / "debt-ledger.json"
+    assert ledger.read_text(encoding="utf-8") == json.dumps(expected, indent=2) + "\n"
+
+
+def test_refresh_leaves_the_old_ledger_when_a_file_is_unjudged(tmp_path: Path) -> None:
+    """Blindness must not replace a ledger: exit three and the previous one is byte for byte."""
+    _write(tmp_path, "a.py")
+    ledger = tmp_path / ".claude" / "debt-ledger.json"
+    pycheck_census.write_ledger(ledger, {"old.py": 7})
+    before = ledger.read_text(encoding="utf-8")
+    err = io.StringIO()
+    code = pycheck_cli.refresh(
+        tmp_path, lambda _root: ["a.py"], _blind, pycheck_census.write_ledger, err
+    )
+    assert code == pycheck_cli.EXIT_NOT_CHECKED
+    assert ledger.read_text(encoding="utf-8") == before
+
+
+def test_refresh_says_so_when_the_ledger_cannot_be_written(tmp_path: Path) -> None:
+    """A target whose parent is a file cannot be staged: exit three, the failure named."""
+    _write(tmp_path, "a.py")
+    (tmp_path / ".claude").write_text("in the way", encoding="utf-8")
+    err = io.StringIO()
+    code = pycheck_cli.refresh(
+        tmp_path, lambda _root: ["a.py"], _admits, pycheck_census.write_ledger, err
+    )
+    assert code == pycheck_cli.EXIT_NOT_CHECKED
+    assert "old ledger kept" in err.getvalue()

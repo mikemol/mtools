@@ -12,7 +12,9 @@ This is that command. It calls `pycheck.analyze`, the SAME function the hook cal
 current content, and prints the UNCLIPPED report.
 
 W794 adds `--census ROOT`: the findings per tracked Python file under ROOT, as the flat JSON ledger
-debtplan reads, measured by the same verdict (see `pycheck_census`).
+debtplan reads, measured by the same verdict (see `pycheck_census`). W821 adds `--refresh-ledger
+ROOT`: the same census, written to the project's `.claude/debt-ledger.json` that the closure
+advisory reads, replacing it whole or leaving it untouched.
 
 ⚑ THREE ANSWERS, NOT TWO, AND "NOT CHECKED" MUST NEVER READ AS CLEAN. Exit 0: the gate would admit
 the file as it stands. Exit 1: it would refuse it, and the whole report is on stdout. Exit 3: no
@@ -38,17 +40,18 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import project_root, pycheck, pycheck_census
+from mikemol.hooks import project_root, pycheck, pycheck_census, pycheck_closure
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
+    from collections.abc import Callable, Mapping, Sequence
     from typing import TextIO
 
     from mikemol.hooks.verdict import Verdict
 
-# The flags: the file whose verdict is asked for, or the root whose ledger is.
+# The flags: the file whose verdict is asked for, the root whose ledger is, or the root to refresh.
 FLAG = "--check-file"
 CENSUS_FLAG = "--census"
+REFRESH_FLAG = "--refresh-ledger"
 
 # A flag and its one argument: nothing else is accepted.
 EXPECTED_ARGS = 2
@@ -58,7 +61,7 @@ EXIT_REFUSED = 1
 EXIT_USAGE = 2
 EXIT_NOT_CHECKED = 3
 
-USAGE = f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT)\n"
+USAGE = f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT)\n"
 
 
 def check(
@@ -94,6 +97,31 @@ def check(
     return EXIT_REFUSED
 
 
+def measure(
+    root: Path,
+    tracked: Callable[[Path], list[str] | None],
+    analyze: Callable[[str, str], Verdict],
+    err: TextIO,
+) -> dict[str, int] | None:
+    """Measure the findings per tracked Python file, or say why it could not be.
+
+    Returns:
+        the ledger, or None (the reason on `err`) when git could not name the files or any file
+        went unjudged.
+
+    """
+    names = tracked(root)
+    if names is None:
+        err.write(f"mikemol-pycheck: {root}: git could not name the tracked files; no ledger\n")
+        return None
+    debt, unchecked = pycheck_census.census(root, names, analyze)
+    if unchecked:
+        shown = ", ".join(unchecked[:5])
+        err.write(f"mikemol-pycheck: {len(unchecked)} files unjudged, no ledger written: {shown}\n")
+        return None
+    return debt
+
+
 def census(
     root: Path,
     tracked: Callable[[Path], list[str] | None],
@@ -108,34 +136,57 @@ def census(
         git could not name the files or any file went unjudged (the names on `err`).
 
     """
-    names = tracked(root)
-    if names is None:
-        err.write(f"mikemol-pycheck: {root}: git could not name the tracked files; no ledger\n")
-        return EXIT_NOT_CHECKED
-    debt, unchecked = pycheck_census.census(root, names, analyze)
-    if unchecked:
-        shown = ", ".join(unchecked[:5])
-        err.write(f"mikemol-pycheck: {len(unchecked)} files unjudged, no ledger written: {shown}\n")
+    debt = measure(root, tracked, analyze, err)
+    if debt is None:
         return EXIT_NOT_CHECKED
     out.write(json.dumps(debt, indent=2) + "\n")
     return EXIT_ADMITTED
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    """Parse `--check-file PATH` or `--census ROOT` and print the gate's answer.
+def refresh(
+    root: Path,
+    tracked: Callable[[Path], list[str] | None],
+    analyze: Callable[[str, str], Verdict],
+    write: Callable[[Path, Mapping[str, int]], None],
+    err: TextIO,
+) -> int:
+    """Measure the project and replace its `.claude/debt-ledger.json`, or leave the old one.
 
     Returns:
-        the exit code from `check` or `census`, or EXIT_USAGE for anything but exactly one flag
-        and its argument.
+        EXIT_ADMITTED once the ledger is written, or EXIT_NOT_CHECKED when it could not be
+        measured or written (the previous ledger is untouched either way).
+
+    """
+    debt = measure(root, tracked, analyze, err)
+    if debt is None:
+        return EXIT_NOT_CHECKED
+    target = root / pycheck_closure.LEDGER
+    try:
+        write(target, debt)
+    except OSError as problem:
+        err.write(f"mikemol-pycheck: {target}: could not be written ({problem}); old ledger kept\n")
+        return EXIT_NOT_CHECKED
+    err.write(f"mikemol-pycheck: {target}: {len(debt)} files with findings\n")
+    return EXIT_ADMITTED
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Parse one flag and its argument and print or write the gate's answer.
+
+    Returns:
+        the exit code from `check`, `census` or `refresh`, or EXIT_USAGE for anything but exactly
+        one known flag and its argument.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) != EXPECTED_ARGS or args[0] not in {FLAG, CENSUS_FLAG}:
+    if len(args) != EXPECTED_ARGS or args[0] not in {FLAG, CENSUS_FLAG, REFRESH_FLAG}:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
     target = Path(args[1]).resolve()
+    tracked = pycheck_census.tracked_python
     if args[0] == CENSUS_FLAG:
-        return census(
-            target, pycheck_census.tracked_python, pycheck.analyze, sys.stdout, sys.stderr
-        )
+        return census(target, tracked, pycheck.analyze, sys.stdout, sys.stderr)
+    if args[0] == REFRESH_FLAG:
+        write = pycheck_census.write_ledger
+        return refresh(target, tracked, pycheck.analyze, write, sys.stderr)
     return check(target, pycheck.analyze, project_root.project_for, sys.stdout, sys.stderr)
