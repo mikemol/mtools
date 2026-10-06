@@ -16304,11 +16304,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Move ~/github/.claude/katas/katas.py (subcommands status, commit, typing, mypy, visit, tick) into its own mtools distribution (we atomize), with typed modules, tests, a warrants.bib entry per test, the mutation gate, uv.lock and BUILD.bazel. It replaces the session scratch scripts fleet_strict.py, fleet_debtplan.py and the ad hoc commit and tick sequences. Keep one command per kata",
-      "evidence": "",
+      "evidence": "2026-10-05: 2026-10-05 compound katas added to katas.py: wp (add and fill a waypoint, refuses a title over 150 chars), archive, ship (verify under the house flags, re-measure and mint, detached commit), flush (detached queue commits wherever they should land), pulse, and tick end now = heartbeat, ledger, W2, flush, unlock. Detached commits log to katas/commits/<repo>.log; status shows IN-FLIGHT from .git/index.lock. Lessons recorded as code: flush must skip live-session repos (linux-sources), red-gate repos (gcalculus, rosettapkg, resumes, el-openglo), untracked or ignored queues (substrate, paperkit), and pathspec only files git tracks. Untested so far: archive, ship, tick end. | 2026-10-06: 2026-10-06 gate kata added (operator rule: a repo whose commit gate fails gets a card that blocks its whole open ledger): katas.py gate red/green. Findings recorded as code: the card uses blocked_on only (an enables list made nemik's UmbrellaBlockShape flag life:W16, which cites el-openglo waypoints), repairs enable the card instead of waiting on it, green = card done then --bump-blocked. Applied to resumes:W11 (6 blocked), summit:W193 (69), el-openglo:W452 (278), gcalculus:W87 (58, W85 a repair), rosettapkg:W120 (20); nemik-rank now shows each card as that repo's only ready item (el-openglo down=310). Still to automate: opening the card from a failed commit attempt, and closing it from a landed one.",
       "issued_at": "2026-10-05T23:50:15Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-05T23:50:41Z",
+      "last_worked": "2026-10-06T00:21:47Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
