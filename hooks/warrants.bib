@@ -6508,3 +6508,60 @@
   claim  = {A tool that answers a thousand lines shows sixty, so the summary is never buried.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_precommit_build_failure.py -k test_the_cause_is_bounded_to_sixty_lines},
 }
+
+@misc{hooks-commit-kata-commit-that-lands-ends-with-committed-the-sha-and-the-subject,
+  section = {commit-kata},
+  title  = {The last line names the repository, the short sha HEAD now has, and the subject},
+  claim  = {The last line names the repository, the short sha HEAD now has, and the subject.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_commit_that_lands_ends_with_committed_the_sha_and_the_subject},
+}
+
+@misc{hooks-commit-kata-refused-commit-ends-with-refused-and-head-has-not-moved,
+  section = {commit-kata},
+  title  = {A gate that refuses is REFUSED with its status, its own words above, HEAD unchanged},
+  claim  = {A gate that refuses is REFUSED with its status, its own words above, HEAD unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_refused_commit_ends_with_refused_and_head_has_not_moved},
+}
+
+@misc{hooks-commit-kata-exit-zero-over-an-unmoved-head-is-not-committed,
+  section = {commit-kata},
+  title  = {The case no gate output shows: success status, no new commit. Said, never inferred},
+  claim  = {The case no gate output shows: success status, no new commit. Said, never inferred.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_exit_zero_over_an_unmoved_head_is_not_committed},
+}
+
+@misc{hooks-commit-kata-new-file-is-added-and-committed-by-its-path,
+  section = {commit-kata},
+  title  = {An untracked path is staged first, so a brand-new file lands in the commit},
+  claim  = {An untracked path is staged first, so a brand-new file lands in the commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_new_file_is_added_and_committed_by_its_path},
+}
+
+@misc{hooks-commit-kata-no-tracked-path-commits-nothing-and-does-not-sweep-in-what-is-staged,
+  section = {commit-kata},
+  title  = {With no tracked pathspec the old kata ran `git commit --`, which commits all staged work},
+  claim  = {With no tracked pathspec the old kata ran `git commit --`, which commits all staged
+            work.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_no_tracked_path_commits_nothing_and_does_not_sweep_in_what_is_staged},
+}
+
+@misc{hooks-commit-kata-modified-tracked-bazel-lock-rides-along,
+  section = {commit-kata},
+  title  = {A bazel gate rewrites its own lock; a tracked, modified one joins the commit},
+  claim  = {A bazel gate rewrites its own lock; a tracked, modified one joins the commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_modified_tracked_bazel_lock_rides_along},
+}
+
+@misc{hooks-commit-kata-command-line-names-the-repo-the-waypoint-and-the-subject,
+  section = {commit-kata},
+  title  = {A repo, --waypoint and --subject are required; paths and --body are optional},
+  claim  = {A repo, --waypoint and --subject are required; paths and --body are optional.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_the_command_line_names_the_repo_the_waypoint_and_the_subject},
+}
+
+@misc{hooks-commit-kata-bad-command-line-is-a-usage-error,
+  section = {commit-kata},
+  title  = {Main with no arguments prints the usage and exits 2},
+  claim  = {Main with no arguments prints the usage and exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_bad_command_line_is_a_usage_error},
+}

@@ -107,6 +107,9 @@ mikemol-gen-warrants = "mikemol.hooks.gen_warrants:main"
 # W808: the edit gate's verdict on one file by hand (`--check-file PATH`), the command its clipped
 # refusal message already names. NOT `mikemol-hook-…`, for the reason `mikemol-shellcheck` is not.
 mikemol-pycheck = "mikemol.hooks.pycheck_cli:main"
+# W832: the commit kata graduated from .claude/katas (rule 16); its last line is the verdict, read from
+# HEAD. NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
+mikemol-commit = "mikemol.hooks.commit_kata:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
 mikemol-githook-pre-push = "mikemol.hooks.githook_pre_push:main"
@@ -368,12 +371,18 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE BUILD-FAILURE HOOK RUNS THE LOG READER (W829): `mikemol-buildlog` IS its responsibility.
 # MEASURED: the argv is the reader's own found path (an env var, the project's venv, PATH), an
 # invocation id matched by a UUID pattern, and a fixed flag; never a shell, bounded by a 45 s timeout.
+# ⚑ THE COMMIT KATA RUNS GIT (W832): committing IS the module's responsibility. MEASURED: the argv is
+# git's own resolved path, fixed subcommands, the repository path and the committer's own paths and
+# message as separate arguments; never a shell, bounded by a 3000 s timeout (a gate waits inside).
+"src/mikemol/hooks/commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).
 # The preflight witness runs the script itself under an emptied PATH to prove a failed rebuild exits 3.
 # Its witness runs the pre-commit's `build_failure_cause` function under bash with a stub tool.
 "tests/test_precommit_build_failure.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# Its witnesses commit in throwaway repositories made with `git init` under tmp_path.
+"tests/test_commit_kata.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hooks_preflight.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pycheck_changed.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
