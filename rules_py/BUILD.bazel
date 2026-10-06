@@ -12,6 +12,7 @@
 # W375: `dist.bzl`'s dist_checks() declares a distribution's :venv and :suite together.
 exports_files([
     "dist.bzl",
+    "gate.bzl",
     "mypy.ini",
     "pytest_main.py",
     "reqs_check.py",
