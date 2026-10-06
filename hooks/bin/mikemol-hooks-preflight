@@ -24,4 +24,21 @@ if ! built="$(bazel build //hooks:.venv --ui_event_filters=-debug,-warning --sho
     exit 3
 fi
 
-exec "$(realpath "$root/bazel-bin/hooks/.venv")/bin/mikemol-pycheck" --changed "$root"
+"$(realpath "$root/bazel-bin/hooks/.venv")/bin/mikemol-pycheck" --changed "$root"
+verdict=$?
+
+# ⚑ THE HERMETIC SUITE TOO (W826): it caught a runfiles-resolve refusal (`Path(__file__).resolve()`)
+# that local pytest and the verdict both passed, and it is the same target the commit gate runs.
+suite_rc=0
+if ! tested="$(bazel test //hooks:suite --ui_event_filters=-debug,-warning --show_result=0 \
+    --noshow_progress --test_output=errors 2>&1)"; then
+    printf '%s\n' "$tested" | tail -n 40 >&2
+    echo "mikemol-hooks-preflight: //hooks:suite FAILED" >&2
+    suite_rc=1
+fi
+
+# A refusal or a failed suite outranks an unjudged file, which outranks a clean run.
+if [ "$verdict" -eq 1 ] || [ "$suite_rc" -ne 0 ]; then
+    exit 1
+fi
+exit "$verdict"

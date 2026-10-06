@@ -32,3 +32,4 @@ def test_the_script_rebuilds_before_it_asks_for_the_verdict() -> None:
     text = SCRIPT.read_text(encoding="utf-8")
     assert text.index("bazel build //hooks:.venv") < text.index("mikemol-pycheck")
     assert "--changed" in text
+    assert text.index("mikemol-pycheck") < text.index("bazel test //hooks:suite")
