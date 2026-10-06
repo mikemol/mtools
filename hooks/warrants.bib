@@ -6565,3 +6565,73 @@
   claim  = {Main with no arguments prints the usage and exits 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_bad_command_line_is_a_usage_error},
 }
+
+@misc{hooks-gen-warrants-write-write-appends-the-warrants-and-a-tab-separated-row-for-a-new-section,
+  section = {gen-warrants},
+  title  = {A new section gets a `key<TAB>title` row after the old rows, which are untouched},
+  claim  = {A new section gets a `key<TAB>title` row after the old rows, which are untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_write_appends_the_warrants_and_a_tab_separated_row_for_a_new_section},
+}
+
+@misc{hooks-gen-warrants-write-write-adds-a-json-object-row-to-a-jsonl-rubric,
+  section = {gen-warrants},
+  title  = {The row is written in the rubric's own format, with named fields},
+  claim  = {The row is written in the rubric's own format, with named fields.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_write_adds_a_json_object_row_to_a_jsonl_rubric},
+}
+
+@misc{hooks-gen-warrants-write-new-section-with-no-title-refuses-before-writing-anything,
+  section = {gen-warrants},
+  title  = {Exit 2, and neither the bib nor the rubric has changed: no half-update exists},
+  claim  = {Exit 2, and neither the bib nor the rubric has changed: no half-update exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_a_new_section_with_no_title_refuses_before_writing_anything},
+}
+
+@misc{hooks-gen-warrants-write-known-section-adds-no-row-and-needs-no-title,
+  section = {gen-warrants},
+  title  = {An existing key is left as it is; only the warrants are appended},
+  claim  = {An existing key is left as it is; only the warrants are appended.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_a_known_section_adds_no_row_and_needs_no_title},
+}
+
+@misc{hooks-gen-warrants-write-brace-in-a-docstring-refuses-and-writes-nothing,
+  section = {gen-warrants},
+  title  = {The could-not-transcribe code, with the rubric untouched too},
+  claim  = {The could-not-transcribe code, with the rubric untouched too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_a_brace_in_a_docstring_refuses_and_writes_nothing},
+}
+
+@misc{hooks-gen-warrants-write-stream-form-never-touches-the-rubric-nor-asks-for-a-title,
+  section = {gen-warrants},
+  title  = {Without --write the entries go to stdout as before, whatever the section is},
+  claim  = {Without --write the entries go to stdout as before, whatever the section is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_the_stream_form_never_touches_the_rubric_nor_asks_for_a_title},
+}
+
+@misc{hooks-gen-warrants-write-title-with-a-tab-is-refused-since-a-tsv-row-cannot-carry-it,
+  section = {gen-warrants},
+  title  = {The very character that broke the rubric twice cannot be smuggled into a heading},
+  claim  = {The very character that broke the rubric twice cannot be smuggled into a heading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_a_title_with_a_tab_is_refused_since_a_tsv_row_cannot_carry_it},
+}
+
+@misc{hooks-gen-warrants-write-unterminated-last-row-is-ended-before-the-new-one-is-appended,
+  section = {gen-warrants},
+  title  = {A rubric whose last line has no newline does not fuse with the row appended after it},
+  claim  = {A rubric whose last line has no newline does not fuse with the row appended after it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_an_unterminated_last_row_is_ended_before_the_new_one_is_appended},
+}
+
+@misc{hooks-gen-warrants-write-distribution-with-no-rubric-gets-its-warrants-and-no-new-file,
+  section = {gen-warrants},
+  title  = {Nothing is invented: no rubric file means no rubric row and no rubric created},
+  claim  = {Nothing is invented: no rubric file means no rubric row and no rubric created.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_a_distribution_with_no_rubric_gets_its_warrants_and_no_new_file},
+}
+
+@misc{hooks-gen-warrants-write-rubric-keys-reads-both-formats-and-skips-comments,
+  section = {gen-warrants},
+  title  = {Keys come from the first tab field or the `key` member; comments and blanks name none},
+  claim  = {Keys come from the first tab field or the `key` member; comments and blanks name none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_write.py -k test_rubric_keys_reads_both_formats_and_skips_comments},
+}

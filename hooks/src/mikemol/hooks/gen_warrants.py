@@ -5,11 +5,20 @@
 Usage: mikemol-gen-warrants [--root DIR] [--layout L] <dist> <module> <section>
            >> <dist>/warrants.bib
    or: mikemol-gen-warrants [--root DIR] [--layout L] <dist> <module>=<section> [...] >> ...
+   or: mikemol-gen-warrants --write [--title KEY=TITLE ...] <dist> <module>=<section> [...]
 
 where <root>/<dist>/tests/test_<module>.py is the file and <section> is the RUBRIC KEY verbatim. A
 function whose `-k <name>}` check already appears in warrants.bib is skipped, so re-running over a
 grown file emits only the new functions. Several pairs in one call emit in the order given, into
 one stream: a whole new distribution in one append, with no shell loop and no interleaving.
+
+⚑⚑ `--write` DOES THE WHOLE JOB (W835, operator 2026-10-06: always mechanize). The stream form left
+two hand steps: a `>>` redirect, and a rubric row for any new section, typed by hand, whose lost
+trailing TAB broke the commit gate twice in one day. `--write` appends the entries to
+`<dist>/warrants.bib` and a row for each new section to the dist's rubric, in whichever of
+`rubric.jsonl` or `rubric.tsv` it has (the format is moving), taking each new section's heading from
+`--title KEY=TITLE`. It never rewrites or reorders an existing row. A new section with no title is
+exit 2 BEFORE anything is written, so a half-update never exists.
 
 ⚑⚑ TWO LAYOUTS, BECAUSE THE ROOT IS NOT A DISTRIBUTION (W669). `--layout dist` (the default) is the
 layout above: the file under `tests/`, keys `<dist>-<module>-...`, checks run by the distribution's
@@ -33,17 +42,26 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 import sys
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
 
+from mikemol.hooks.payload import as_record, text_of
+
 _ARTICLES = ("a", "an", "the")
 _LEGACY_ARGC = 2
+RUBRIC_NAMES = ("rubric.jsonl", "rubric.tsv")
+EXIT_UNTRANSCRIBABLE = 2
 
 
 class BraceError(ValueError):
     """A docstring carries a brace, which would corrupt a BibTeX field."""
+
+
+class RubricError(ValueError):
+    """A new section has no heading, or a heading the rubric format cannot carry."""
 
 
 @dataclass(frozen=True)
@@ -150,6 +168,90 @@ def emit(root: Path, dist: str, pairs: list[tuple[str, str]], layout: Layout = D
     return out
 
 
+def rubric_file(base: Path) -> Path | None:
+    """Find the distribution's rubric: `rubric.jsonl` when it has one, else `rubric.tsv`.
+
+    Returns:
+        the rubric's path, or None for a distribution with no rubric.
+
+    """
+    return next((base / name for name in RUBRIC_NAMES if (base / name).is_file()), None)
+
+
+def rubric_keys(path: Path) -> set[str]:
+    """Read the section keys a rubric already declares.
+
+    Returns:
+        the keys, from either format; comment and blank lines name nothing.
+
+    """
+    keys: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        if path.suffix == ".jsonl":
+            parsed: object = json.loads(line)
+            keys.add(text_of(as_record(parsed).get("key")))
+        else:
+            keys.add(line.split("\t", 1)[0].strip())
+    return keys
+
+
+def rubric_row(path: Path, key: str, title: str) -> str:
+    """Render one rubric row in the rubric's own format.
+
+    Returns:
+        the row, newline-terminated.
+
+    Raises:
+        RubricError: the title holds a tab or a newline (a tsv row cannot carry either).
+
+    """
+    if "\t" in title or "\n" in title:
+        msg = f"the heading for {key!r} holds a tab or a newline"
+        raise RubricError(msg)
+    if path.suffix == ".jsonl":
+        record: dict[str, str] = {"key": key, "title": title}
+        return json.dumps(record, ensure_ascii=False) + "\n"
+    return f"{key}\t{title}\n"
+
+
+def new_rubric_rows(
+    base: Path, sections: list[str], titles: dict[str, str]
+) -> tuple[Path | None, list[str]]:
+    """Build the rows for every section the rubric does not yet declare, in the order given.
+
+    Returns:
+        the rubric file (None when the distribution has none, so nothing is added) and the rows.
+
+    Raises:
+        RubricError: a new section has no heading.
+
+    """
+    path = rubric_file(base)
+    if path is None:
+        return None, []
+    known = rubric_keys(path)
+    rows: list[str] = []
+    for section in sections:
+        if section in known:
+            continue
+        if section not in titles:
+            msg = f"section {section!r} is not in {path.name}: pass --title {section}=<heading>"
+            raise RubricError(msg)
+        rows.append(rubric_row(path, section, titles[section]))
+        known.add(section)
+    return path, rows
+
+
+def append_text(path: Path, text: str) -> None:
+    """Append `text` to `path`, first ending an unterminated last line."""
+    existing = path.read_text(encoding="utf-8")
+    lead = "" if not existing or existing.endswith("\n") else "\n"
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(lead + text)
+
+
 def _pairs(args: list[str]) -> list[tuple[str, str]]:
     """Read the legacy `<module> <section>` form or the `<module>=<section>` list.
 
@@ -162,30 +264,66 @@ def _pairs(args: list[str]) -> list[tuple[str, str]]:
     return [(m, s) for m, _, s in (arg.partition("=") for arg in args)]
 
 
-def main(argv: list[str] | None = None) -> int:
-    """Write the missing entries to stdout and the count to stderr.
+def _titles(given: list[str]) -> dict[str, str]:
+    """Read the repeated `KEY=TITLE` options.
 
     Returns:
-        0 on success, 2 when a docstring carries a brace.
+        the heading for each key named.
+
+    """
+    return {key: title for key, _, title in (item.partition("=") for item in given)}
+
+
+def write(base: Path, entries: list[str], rubric: Path | None, rows: list[str]) -> None:
+    """Append the entries to the bib and the rows to the rubric.
+
+    ⚑ EVERYTHING IS BUILT BEFORE THIS RUNS: a refusal (a brace, an untitled section) has already
+    happened, so what is written here cannot be half of an update.
+    """
+    if entries:
+        append_text(base / "warrants.bib", "\n" + "\n".join(entries))
+    if rubric is not None and rows:
+        append_text(rubric, "".join(rows))
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Write or print the missing entries, and report the counts on stderr.
+
+    Returns:
+        0 on success, 2 when a docstring carries a brace or a new section has no heading.
 
     """
     parser = argparse.ArgumentParser(prog="mikemol-gen-warrants", description=__doc__)
     parser.add_argument("--root", default=None, help="repo root (default: the cwd)")
     parser.add_argument("--layout", choices=_LAYOUT_NAMES, default="dist", help="test layout")
+    parser.add_argument("--write", action="store_true", help="append to the bib and the rubric")
+    parser.add_argument("--title", action="append", help="KEY=HEADING, a new section")
     parser.add_argument("dist")
     parser.add_argument("pairs", nargs="+")
     # ⚑ argparse's `Namespace` is untyped; `vars()` is the boundary, narrowed once per value.
     opts: dict[str, object] = vars(parser.parse_args(argv))
     root_arg = opts["root"]
     pairs_arg = opts["pairs"]
+    title_arg = opts["title"]
     root = Path(root_arg) if isinstance(root_arg, str) else Path.cwd()
     args = [str(a) for a in pairs_arg] if isinstance(pairs_arg, list) else []
+    titles = _titles([str(t) for t in title_arg] if isinstance(title_arg, list) else [])
     layout = LAYOUTS[str(opts["layout"])]
+    dist = str(opts["dist"])
+    pairs = _pairs(args)
+    rubric: Path | None = None
+    rows: list[str] = []
     try:
-        out = emit(root, str(opts["dist"]), _pairs(args), layout)
-    except BraceError as err:
+        out = emit(root, dist, pairs, layout)
+        if opts["write"]:
+            rubric, rows = new_rubric_rows(root / dist, [section for _, section in pairs], titles)
+    except (BraceError, RubricError) as err:
         sys.stderr.write(f"{err}\n")
-        return 2
+        return EXIT_UNTRANSCRIBABLE
+    if opts["write"]:
+        write(root / dist, out, rubric, rows)
+        sys.stderr.write(f"{len(out)} warrants appended, {len(rows)} rubric rows added\n")
+        return 0
     if out:
         sys.stdout.write("\n" + "\n".join(out))
     sys.stderr.write(f"{len(out)} warrants\n")
