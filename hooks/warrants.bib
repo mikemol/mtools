@@ -5674,3 +5674,68 @@
   claim  = {W669: `--layout atom` emits the root form; without it the same call reads `tests/`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_the_layout_flag_selects_the_atom_layout_and_the_default_stays_dist},
 }
+
+@misc{hooks-host-facts-zram-ceiling-is-read-from-the-four-leading-fields,
+  section = {host-facts},
+  title  = {The used bytes, the limit and the compression ratio come from mm_stat's first four fields},
+  claim  = {The used bytes, the limit and the compression ratio come from mm_stat's first four
+            fields.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_the_zram_ceiling_is_read_from_the_four_leading_fields},
+}
+
+@misc{hooks-host-facts-logical-room-is-the-compressed-room-times-the-ratio,
+  section = {host-facts},
+  title  = {The room is what is left of the compressed ceiling, scaled by the ratio, never df's view},
+  claim  = {The room is what is left of the compressed ceiling, scaled by the ratio, never df's
+            view.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_the_logical_room_is_the_compressed_room_times_the_ratio},
+}
+
+@misc{hooks-host-facts-unreadable-or-malformed-mm-stat-is-absent-not-zeros,
+  section = {host-facts},
+  title  = {Missing, short and non-numeric files are None: a zero would assert room nobody measured},
+  claim  = {Missing, short and non-numeric files are None: a zero would assert room nobody measured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_an_unreadable_or_malformed_mm_stat_is_absent_not_zeros},
+}
+
+@misc{hooks-host-facts-zero-mem-limit-is-absent-because-no-ceiling-is-set,
+  section = {host-facts},
+  title  = {A mem_limit of 0 means unlimited: there is no fraction to state, so no reading},
+  claim  = {A mem_limit of 0 means unlimited: there is no fraction to state, so no reading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_a_zero_mem_limit_is_absent_because_no_ceiling_is_set},
+}
+
+@misc{hooks-host-facts-device-with-nothing-compressed-has-a-zero-ratio,
+  section = {host-facts},
+  title  = {A compr_data_size of 0 (an empty device) must not divide: the ratio reads zero},
+  claim  = {A compr_data_size of 0 (an empty device) must not divide: the ratio reads zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_a_device_with_nothing_compressed_has_a_zero_ratio},
+}
+
+@misc{hooks-host-facts-lock-names-its-holder-and-when-it-was-taken,
+  section = {host-facts},
+  title  = {A held lock carries both fields, and reads as held},
+  claim  = {A held lock carries both fields, and reads as held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_the_lock_names_its_holder_and_when_it_was_taken},
+}
+
+@misc{hooks-host-facts-queue-with-no-lock-reads-as-nobody-holds-it,
+  section = {host-facts},
+  title  = {A readable queue without a lock is the fact "unheld", not an absent reading},
+  claim  = {A readable queue without a lock is the fact "unheld", not an absent reading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_a_queue_with_no_lock_reads_as_nobody_holds_it},
+}
+
+@misc{hooks-host-facts-unreadable-queue-is-absent-which-is-not-unheld,
+  section = {host-facts},
+  title  = {Missing and malformed queues are None: "could not read" must not read as "nobody holds"},
+  claim  = {Missing and malformed queues are None: "could not read" must not read as "nobody holds".},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_an_unreadable_queue_is_absent_which_is_not_unheld},
+}
+
+@misc{hooks-host-facts-holder-without-a-timestamp-is-held-with-an-absent-time,
+  section = {host-facts},
+  title  = {The holder is the fact that decides; a missing taken_at is absent, not an empty string},
+  claim  = {The holder is the fact that decides; a missing taken_at is absent, not an empty string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_a_holder_without_a_timestamp_is_held_with_an_absent_time},
+}

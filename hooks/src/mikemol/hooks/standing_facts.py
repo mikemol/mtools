@@ -71,8 +71,11 @@ def staged_paths(cwd: Path) -> list[str] | None:
     return sorted(f"{root}/{name}" for name in names.split("\0") if name)
 
 
-def _queue_doc(state: Path) -> dict[str, object] | None:
+def queue_doc(state: Path) -> dict[str, object] | None:
     """Return a queue file's top-level record, or None when it cannot be read as JSON.
+
+    Public so host_facts reads the queue the same way (a read-only parse: the one-writer rule is
+    about writes).
 
     Returns:
         the record; None for a missing or malformed file.
@@ -93,7 +96,7 @@ def held_symbols(state: Path) -> list[str] | None:
         the held symbols, sorted; None for a missing or malformed queue.
 
     """
-    doc = _queue_doc(state)
+    doc = queue_doc(state)
     if doc is None:
         return None
     rows = doc.get("waypoints")
@@ -118,7 +121,7 @@ def embargoes(state: Path, project: Path) -> list[dict[str, str]] | None:
         the field cannot be read.
 
     """
-    doc = _queue_doc(state)
+    doc = queue_doc(state)
     if doc is None:
         return None
     raw = doc.get("embargoes", [])
