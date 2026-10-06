@@ -685,3 +685,101 @@
             returned.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_stream_hands_over_each_stderr_line_and_returns_the_status},
 }
+
+@misc{buildtel-bb-log-id-is-taken-from-a-url-or-given-bare,
+  section = {bb_log},
+  title  = {The URL bazel prints and the bare id name the same invocation},
+  claim  = {The URL bazel prints and the bare id name the same invocation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_the_id_is_taken_from_a_url_or_given_bare},
+}
+
+@misc{buildtel-bb-log-chunks-are-followed-in-order-until-one-is-empty,
+  section = {bb_log},
+  title  = {Every chunk is read and joined, and the empty one ends it},
+  claim  = {Every chunk is read and joined, and the empty one ends it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_chunks_are_followed_in_order_until_one_is_empty},
+}
+
+@misc{buildtel-bb-log-next-id-that-does-not-advance-ends-the-read,
+  section = {bb_log},
+  title  = {A service that repeats its id cannot hold the reader: one chunk, then stop},
+  claim  = {A service that repeats its id cannot hold the reader: one chunk, then stop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_next_id_that_does_not_advance_ends_the_read},
+}
+
+@misc{buildtel-bb-log-last-lines-are-kept-in-order,
+  section = {bb_log},
+  title  = {Tail keeps the end of the log, a zero or negative count keeps nothing},
+  claim  = {Tail keeps the end of the log, a zero or negative count keeps nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_the_last_lines_are_kept_in_order},
+}
+
+@misc{buildtel-bb-log-default-prints-the-tail-and-all-prints-everything,
+  section = {bb_log},
+  title  = {No flag prints the last DEFAULT_TAIL lines; --all every line; --tail N the last N},
+  claim  = {No flag prints the last DEFAULT_TAIL lines; --all every line; --tail N the last N.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_the_default_prints_the_tail_and_all_prints_everything},
+}
+
+@misc{buildtel-bb-log-failures-pick-the-test-output-block-and-the-failed-lines-only,
+  section = {bb_log},
+  title  = {The framed block, the ERROR line and the FAILED target stay; progress lines do not},
+  claim  = {The framed block, the ERROR line and the FAILED target stay; progress lines do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_failures_pick_the_test_output_block_and_the_failed_lines_only},
+}
+
+@misc{buildtel-bb-log-passing-log-has-no-failures-and-the-flag-prints-only-them,
+  section = {bb_log},
+  title  = {A log with nothing failed yields nothing; --failures prints just the picked lines},
+  claim  = {A log with nothing failed yields nothing; --failures prints just the picked lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_passing_log_has_no_failures_and_the_flag_prints_only_them},
+}
+
+@misc{buildtel-bb-log-log-that-could-not-be-read-is-exit-three-and-never-empty,
+  section = {bb_log},
+  title  = {An unknown invocation or a dead service exits 3 on stderr with nothing on stdout},
+  claim  = {An unknown invocation or a dead service exits 3 on stderr with nothing on stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_log_that_could_not_be_read_is_exit_three_and_never_empty},
+}
+
+@misc{buildtel-bb-log-log-read-with-no-lines-says-so-and-exits-zero,
+  section = {bb_log},
+  title  = {Reading nothing successfully is stated, so it cannot be mistaken for the failure above},
+  claim  = {Reading nothing successfully is stated, so it cannot be mistaken for the failure above.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_log_read_with_no_lines_says_so_and_exits_zero},
+}
+
+@misc{buildtel-bb-log-anything-but-an-id-with-one-known-flag-is-a-usage-error,
+  section = {bb_log},
+  title  = {No id, a flag first, a bad count and extra words all exit 2 and name the usage},
+  claim  = {No id, a flag first, a bad count and extra words all exit 2 and name the usage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_anything_but_an_id_with_one_known_flag_is_a_usage_error},
+}
+
+@misc{buildtel-bb-log-post-post-asks-for-the-chunk-and-returns-its-text-and-next-id,
+  section = {bb_log_post},
+  title  = {The body names the invocation and chunk, the path is the RPC, and the answer is decoded},
+  claim  = {The body names the invocation and chunk, the path is the RPC, and the answer is decoded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log_post.py -k test_post_asks_for_the_chunk_and_returns_its_text_and_next_id},
+}
+
+@misc{buildtel-bb-log-post-post-decodes-undecodable-bytes-by-replacing-them,
+  section = {bb_log_post},
+  title  = {A log with a stray byte is still readable: the byte is replaced, the rest kept},
+  claim  = {A log with a stray byte is still readable: the byte is replaced, the rest kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log_post.py -k test_post_decodes_undecodable_bytes_by_replacing_them},
+}
+
+@misc{buildtel-bb-log-post-post-refuses-any-status-but-200-naming-it,
+  section = {bb_log_post},
+  title  = {A 500 for an unknown invocation is an OSError with the status, never an empty log},
+  claim  = {A 500 for an unknown invocation is an OSError with the status, never an empty log.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log_post.py -k test_post_refuses_any_status_but_200_naming_it},
+}
+
+@misc{buildtel-bb-log-post-post-refuses-an-answer-that-is-not-a-chunk,
+  section = {bb_log_post},
+  title  = {A list, a non-text buffer and bad base64 are each an OSError, never an empty log},
+  claim  = {A list, a non-text buffer and bad base64 are each an OSError, never an empty log.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log_post.py -k test_post_refuses_an_answer_that_is_not_a_chunk},
+}

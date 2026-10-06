@@ -25,6 +25,8 @@ dependencies = []
 
 [project.scripts]
 mikemol-coord-sample = "mikemol.buildtel.coord_sample:main"
+# W827: an invocation's build log read back out of BuildBuddy by id, up to the point of failure.
+mikemol-buildlog = "mikemol.buildtel.bb_log:main"
 mikemol-logs-push = "mikemol.buildtel.logs_push:main"
 mikemol-image-digest = "mikemol.buildtel.image_digest:main"
 
@@ -90,6 +92,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. Each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/test_bb_records.py" = ["assert", "invalid-function-name"]
+"tests/test_bb_log.py" = ["assert"]
+"tests/test_bb_log_post.py" = ["assert"]
 "tests/test_buildpulse.py" = ["assert"]
 "tests/test_logs_push.py" = ["assert", "invalid-function-name"]
 "tests/test_coord_sample.py" = ["assert"]

@@ -1,6 +1,8 @@
 # rubric.tsv — the sections of the buildtel warrant set, one per test module, in document order.
 # key <TAB> heading title
 bb_records	The Execution Records: Pages Fold Into One Tally That States How Much of the Response It Covers
+bb_log	The Build Log: Chunks Folded Into One Log in Order, the Failure Reports Picked Out of the Noise, and a Log Not Read Is Never an Empty One
+bb_log_post	The Log Request: One Chunk Asked For and Decoded, and Any Answer That Is Not a Chunk Refused Rather Than Read as an Empty Log
 buildpulse	The Build Pulse: A Windowed Action Rate, and Every Terminal State Named Instead of Silent
 logs_push	The Findings Push: A Hook Log's Failure Vocabulary Reaches the Sink, Tagged, and Nothing Else Does
 coord_sample	The Coordinator Sample: One Flushed Line per Interval Until the Process Is Gone

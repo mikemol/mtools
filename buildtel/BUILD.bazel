@@ -120,6 +120,15 @@ py_binary(
 )
 
 py_binary(
+    name = "bb_log",
+    srcs = ["src/mikemol/buildtel/bb_log.py"],
+    main = "src/mikemol/buildtel/bb_log.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":buildtel"],
+)
+
+py_binary(
     name = "buildpulse",
     srcs = ["src/mikemol/buildtel/buildpulse.py"],
     main = "src/mikemol/buildtel/buildpulse.py",
@@ -196,6 +205,7 @@ venv_from_hub(
     # ⚑ THE SAME ENTRIES AS pyproject's [project.scripts].
     console_scripts = {
         "mikemol-coord-sample": "mikemol.buildtel.coord_sample:main",
+        "mikemol-buildlog": "mikemol.buildtel.bb_log:main",
         "mikemol-logs-push": "mikemol.buildtel.logs_push:main",
         "mikemol-image-digest": "mikemol.buildtel.image_digest:main",
     },
