@@ -51,3 +51,4 @@ control_census	The Control Census: Every Construct Found and Classified Over the
 fp_sites	The Fingerprint Site Walk: Every Control Site Carrying the Referents of Its Governing Expression, and the Unreadable Files Returned Beside Them
 differential	The Split Differential: Every Recorded Origin Case Replayed Through the Port, a Declared Difference Named With Its Reason, and an Undeclared One Failing the Status
 registered	The Registered Defs: a Def Named With a Caller-Supplied Prefix Joined to the String Literal That Invokes It, a Prefix Not a Substring, an Empty Prefix Refused, and Every Unread File Reported
+atomize	Atomize Imports: A Flat Import Rewritten Only Where Scope Proves the Reference, and Written Only When the Planned and Census Sets Are Equal

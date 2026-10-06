@@ -52,7 +52,15 @@ from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import WorktreeRefusedError, expand
 
-from mikemol.pycodemod import cli_fp, cli_modes, cli_split, cli_store, control_report, report
+from mikemol.pycodemod import (
+    cli_atomize,
+    cli_fp,
+    cli_modes,
+    cli_split,
+    cli_store,
+    control_report,
+    report,
+)
 from mikemol.pycodemod.aliases import aliases as run_aliases
 from mikemol.pycodemod.ambient import ambient as run_ambient
 from mikemol.pycodemod.arguments import asserted as run_asserted
@@ -146,6 +154,15 @@ def _handle_split(ns: argparse.Namespace) -> int:
         dry_run=_flag(ns, "dry_run"),
     )
     return cli_split.print_split(_str_list(ns, "paths"), flags)
+
+
+def _handle_atomize(ns: argparse.Namespace) -> int:
+    flags = cli_atomize.AtomizeFlags(
+        package=_str(ns, "package"),
+        package_dir=_str(ns, "package_dir"),
+        write=_flag(ns, "write"),
+    )
+    return cli_atomize.print_atomize(_str_list(ns, "paths"), flags)
 
 
 def _handle_fingerprint(ns: argparse.Namespace) -> int:
@@ -1092,6 +1109,7 @@ MODES = {
     "relalg": _handle_relalg,
     "fingerprint": _handle_fingerprint,
     "split": _handle_split,
+    "atomize-imports": _handle_atomize,
 }
 
 
@@ -1341,6 +1359,16 @@ def _add_split_mode(make: _Make) -> None:
     spl.add_argument("paths", nargs="+", help="the module to cut, then files scanned for callers")
 
 
+def _add_atomize_mode(make: _Make) -> None:
+    ato = make(
+        "atomize-imports", "rewrite flat sibling imports to package imports, checked as a set"
+    )
+    ato.add_argument("--package", required=True, help="the package name the siblings belong to")
+    ato.add_argument("--package-dir", required=True, help="the directory holding the flat modules")
+    ato.add_argument("--write", action="store_true", help="write the rewrite when the sets agree")
+    ato.add_argument("paths", nargs="+", help="every file that may import a sibling flat")
+
+
 _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_scan_modes,
     _add_named_modes,
@@ -1351,6 +1379,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_store_modes,
     _add_fingerprint_mode,
     _add_split_mode,
+    _add_atomize_mode,
 )
 
 

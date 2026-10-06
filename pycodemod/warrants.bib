@@ -5390,3 +5390,88 @@
             the correct answer, pinned here.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_star_import_owes_nothing_because_it_never_binds_a_private_name},
 }
+
+@misc{pycodemod-atomize-from-import-becomes-package-import-and-uses-are-qualified,
+  section = {atomize},
+  title  = {⚑ `from bib import a, b` is one `import pk.bib`, and `a`, `b` read `pk.bib.a`, `pk.bib.b`},
+  claim  = { `from bib import a, b` is one `import pk.bib`, and `a`, `b` read `pk.bib.a`,
+            `pk.bib.b`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_from_import_becomes_package_import_and_uses_are_qualified},
+}
+
+@misc{pycodemod-atomize-bare-import-use-is-qualified,
+  section = {atomize},
+  title  = {⚑ `import bib` keeps its neighbours and its uses gain the package},
+  claim  = { `import bib` keeps its neighbours and its uses gain the package.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_bare_import_use_is_qualified},
+}
+
+@misc{pycodemod-atomize-aliases-are-followed-to-their-definition,
+  section = {atomize},
+  title  = {⚑ `import bib as b` and `from other import a as z` name their definition sites after},
+  claim  = { `import bib as b` and `from other import a as z` name their definition sites after.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_aliases_are_followed_to_their_definition},
+}
+
+@misc{pycodemod-atomize-repeated-imports-of-one-module-collapse-to-one,
+  section = {atomize},
+  title  = {⚑ Two `from bib import` lines in one body leave one `import pk.bib`},
+  claim  = { Two `from bib import` lines in one body leave one `import pk.bib`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_repeated_imports_of_one_module_collapse_to_one},
+}
+
+@misc{pycodemod-atomize-repeat-with-a-comment-is-kept,
+  section = {atomize},
+  title  = {⚑ A repeat that carries a comment line is never dropped: commentary is not tidied away},
+  claim  = { A repeat that carries a comment line is never dropped: commentary is not tidied away.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_repeat_with_a_comment_is_kept},
+}
+
+@misc{pycodemod-atomize-rebound-name-refuses-the-statement-and-changes-nothing,
+  section = {atomize},
+  title  = {⚑⚑ A name assigned elsewhere is not provably the import, so the statement is refused},
+  claim  = { A name assigned elsewhere is not provably the import, so the statement is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_rebound_name_refuses_the_statement_and_changes_nothing},
+}
+
+@misc{pycodemod-atomize-star-import-is-refused,
+  section = {atomize},
+  title  = {⚑ A star import binds names no scope can resolve, so it is refused},
+  claim  = { A star import binds names no scope can resolve, so it is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_star_import_is_refused},
+}
+
+@misc{pycodemod-atomize-local-that-shadows-the-name-is-left-alone,
+  section = {atomize},
+  title  = {⚑⚑ A parameter named like the import keeps its name; only the true reference moves},
+  claim  = { A parameter named like the import keeps its name; only the true reference moves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_local_that_shadows_the_name_is_left_alone},
+}
+
+@misc{pycodemod-atomize-string-reference-refuses-the-statement,
+  section = {atomize},
+  title  = {⚑ An `__all__` entry names the import by string, which no rewrite can follow},
+  claim  = { An `__all__` entry names the import by string, which no rewrite can follow.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_string_reference_refuses_the_statement},
+}
+
+@misc{pycodemod-atomize-sibling-that-shadows-the-stdlib-is-not-rewritten,
+  section = {atomize},
+  title  = {⚑ A sibling called `random` is reported as shadowing, and `import random` is untouched},
+  claim  = { A sibling called `random` is reported as shadowing, and `import random` is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_sibling_that_shadows_the_stdlib_is_not_rewritten},
+}
+
+@misc{pycodemod-atomize-write-leaves-only-what-was-refused,
+  section = {atomize},
+  title  = {⚑⚑ After a write the census finds exactly the refused sites, and the exit says unfinished},
+  claim  = { After a write the census finds exactly the refused sites, and the exit says unfinished.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_write_leaves_only_what_was_refused},
+}
+
+@misc{pycodemod-atomize-write-is-refused-when-the-sets-disagree,
+  section = {atomize},
+  title  = {⚑⚑⚑ A planner that misses a site the census finds writes nothing: A Δ B must be empty},
+  claim  = { A planner that misses a site the census finds writes nothing: A Δ B must be empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_write_is_refused_when_the_sets_disagree},
+}
