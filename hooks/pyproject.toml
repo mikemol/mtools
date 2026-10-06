@@ -85,6 +85,8 @@ mikemol-hook-tick-gate = "mikemol.hooks.entry:tick_gate_main"
 # W813: SessionStart (matcher compact) context: the project's after-compaction pointers plus the live
 # host facts. It only adds context and never blocks a session start.
 mikemol-hook-after-compaction = "mikemol.hooks.entry:after_compaction_main"
+# W815: SessionEnd releases the host tick lock, through the one writer, if this session still holds it.
+mikemol-hook-tick-release = "mikemol.hooks.entry:tick_release_main"
 # ⚑ THE SAME LINTER BY HAND — one file, one tree, one command — and deliberately NOT named
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that
 # requires every hook script to be invoked keys on that prefix.
@@ -337,6 +339,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # path built as `<git toplevel>/.githooks/post-commit.local`, run only when executable. Never
 # through a shell.
 "src/mikemol/hooks/githook_post_commit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ THE TICK-RELEASE HOOK RELEASES A LOCK ONLY THROUGH THE ONE WRITER (W815): the queue has one
+# writer, mikemol-paths-forward, so running it IS the module's responsibility. MEASURED: the argv is
+# the writer's own path (found by a fixed order: an env var, the project's venv, PATH), the queue
+# path the payload names, and the holder the queue itself recorded; never a shell, and bounded by a
+# one-second timeout inside SessionEnd's shared 1.5 s budget.
+"src/mikemol/hooks/tick_release.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_post_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 

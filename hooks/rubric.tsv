@@ -33,3 +33,4 @@ host-facts	The Host Facts: the zram Ceiling and the Tick Lock Read as Facts, Abs
 tick-stop	The Tick-Stop Guard: a Held Fresh Host Lock Blocks the Stop Once and Never Twice, a Stale or Unreadable One Blocks Nothing
 tick-gate	The Tick Gate: a Loop Prompt That Cannot Run Is Refused Before It Costs a Turn, Every Other Prompt Passes Untouched, and a Fact That Cannot Be Read Blocks Nothing
 after-compaction	The After-Compaction Context: the Project's Pointers to Its Durable State and the Live Host Facts Come Back After a Compact Only, a Missing Notes File Is Said Not Skipped, and a Session Start Is Never Blocked
+tick-release	The Tick-Lock Release: a Fresh Host Lock Is Released at Session End Through the One Writer, a Stale or Unreadable One Is Left Alone, and a Writer That Cannot Be Found or Fails Is Said and the Lock Left Held

@@ -5995,3 +5995,87 @@
   claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
 }
+
+@misc{hooks-tick-release-writer-named-by-the-environment-is-found-first,
+  section = {tick-release},
+  title  = {PATHS_FORWARD_BIN beats the project's venv and PATH},
+  claim  = {PATHS_FORWARD_BIN beats the project's venv and PATH.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_the_writer_named_by_the_environment_is_found_first},
+}
+
+@misc{hooks-tick-release-projects-own-venv-is-next-and-path-is-last,
+  section = {tick-release},
+  title  = {Without the variable, the project's .venv/bin wins; without that, PATH is searched},
+  claim  = {Without the variable, the project's .venv/bin wins; without that, PATH is searched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_the_projects_own_venv_is_next_and_path_is_last},
+}
+
+@misc{hooks-tick-release-no-writer-anywhere-is-none-and-a-non-executable-file-does-not-count,
+  section = {tick-release},
+  title  = {A missing writer is None, and a file that is not executable is not a writer},
+  claim  = {A missing writer is None, and a file that is not executable is not a writer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_no_writer_anywhere_is_none_and_a_non_executable_file_does_not_count},
+}
+
+@misc{hooks-tick-release-writer-is-asked-to-unlock-the-holder-the-queue-recorded,
+  section = {tick-release},
+  title  = {The argv is exactly --state <queue> --unlock <holder>, and exit 0 is success},
+  claim  = {The argv is exactly --state <queue> --unlock <holder>, and exit 0 is success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_the_writer_is_asked_to_unlock_the_holder_the_queue_recorded},
+}
+
+@misc{hooks-tick-release-writer-that-fails-or-cannot-start-or-hangs-is-a-failed-release,
+  section = {tick-release},
+  title  = {Nonzero exit, a missing binary and a timeout are all False, never an exception},
+  claim  = {Nonzero exit, a missing binary and a timeout are all False, never an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_a_writer_that_fails_or_cannot_start_or_hangs_is_a_failed_release},
+}
+
+@misc{hooks-tick-release-fresh-held-lock-is-released-through-the-writer,
+  section = {tick-release},
+  title  = {The release is asked of the writer with the queue's path and the lock's own holder},
+  claim  = {The release is asked of the writer with the queue's path and the lock's own holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_a_fresh_held_lock_is_released_through_the_writer},
+}
+
+@misc{hooks-tick-release-stale-an-unheld-and-an-unreadable-lock-are-left-alone,
+  section = {tick-release},
+  title  = {Only a fresh lock is released: a dead holder's is the next tick's to take over},
+  claim  = {Only a fresh lock is released: a dead holder's is the next tick's to take over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_a_stale_an_unheld_and_an_unreadable_lock_are_left_alone},
+}
+
+@misc{hooks-tick-release-held-lock-with-no-writer-is-said-and-left-held,
+  section = {tick-release},
+  title  = {Not finding the writer is reported, naming the variable, and nothing is edited by hand},
+  claim  = {Not finding the writer is reported, naming the variable, and nothing is edited by hand.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_a_held_lock_with_no_writer_is_said_and_left_held},
+}
+
+@misc{hooks-tick-release-release-that-fails-is-said-and-the-lock-is-left-held,
+  section = {tick-release},
+  title  = {A failed writer call is reported on stderr, and the hook still exits zero},
+  claim  = {A failed writer call is reported on stderr, and the hook still exits zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_a_release_that_fails_is_said_and_the_lock_is_left_held},
+}
+
+@misc{hooks-tick-release-main-releases-through-the-real-writer-command-end-to-end,
+  section = {tick-release},
+  title  = {Through main, with the real clock and the real subprocess, the writer is run once},
+  claim  = {Through main, with the real clock and the real subprocess, the writer is run once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_main_releases_through_the_real_writer_command_end_to_end},
+}
+
+@misc{hooks-tick-release-main-releases-nothing-for-a-payload-that-is-not-json-and-says-so,
+  section = {tick-release},
+  title  = {A session end must not fail because the payload could not be read},
+  claim  = {A session end must not fail because the payload could not be read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_main_releases_nothing_for_a_payload_that_is_not_json_and_says_so},
+}
+
+@misc{hooks-tick-release-console-entry-refuses-an-argument-before-reading-stdin,
+  section = {tick-release},
+  title  = {The argv contract: a hook takes no arguments, and the refusal names the program},
+  claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_release.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
+}

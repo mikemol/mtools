@@ -28,6 +28,7 @@ from mikemol.hooks import (
     shellcheck,
     structural_query,
     tick_gate,
+    tick_release,
     tick_stop,
 )
 
@@ -175,3 +176,13 @@ def after_compaction_main() -> int:
 
     """
     return _guarded("mikemol-hook-after-compaction", after_compaction.main)
+
+
+def tick_release_main() -> int:
+    """Run `mikemol-hook-tick-release` behind the argv contract (W815).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-tick-release", tick_release.main)

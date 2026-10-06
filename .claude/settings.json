@@ -109,6 +109,16 @@
           }
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PATHS_FORWARD_BIN=\"$CLAUDE_PROJECT_DIR/pathsforward/.venv/bin/mikemol-paths-forward\" \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-tick-release\""
+          }
+        ]
+      }
     ]
   }
 }
