@@ -44,7 +44,8 @@ def paperkit_gate(name, project, engine_repo, engine_files, data, flags = [], en
 
     Args:
         name: the test's name.
-        project: the project directory (relative to this package) holding `paper.toml`.
+        project: the project directory (relative to this package) holding `paper.toml`, or "." for
+            a project at the package root.
         engine_repo: the pinned repository's name, as MODULE.bazel gave it.
         engine_files: the FILES list of that repository's manifest.bzl.
         data: the project's named files; `<project>/paper.toml` must be among them.
@@ -55,7 +56,8 @@ def paperkit_gate(name, project, engine_repo, engine_files, data, flags = [], en
     Returns:
         The test's label.
     """
-    toml = project + "/paper.toml"
+    # A project at the package root is spelled "." and its paper.toml has no directory part.
+    toml = "paper.toml" if project in ("", ".") else project + "/paper.toml"
 
     # ⚑ A TEST NAMED LIKE ITS PROJECT DIRECTORY BURIES IT: py_test puts its own executable at
     # `<runfiles>/_main/<name>`, which replaces the data directory of that name, so the project is a
