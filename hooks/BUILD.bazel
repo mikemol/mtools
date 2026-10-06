@@ -411,6 +411,8 @@ venv_from_hub(
         "mikemol-hook-pycheck": "mikemol.hooks.entry:pycheck_main",
         "mikemol-hook-inbound-asks": "mikemol.hooks.entry:inbound_asks_main",
         "mikemol-hook-nemik-check": "mikemol.hooks.entry:nemik_check_main",
+        # W811: the Stop guard for the host tick lock.
+        "mikemol-hook-tick-stop": "mikemol.hooks.entry:tick_stop_main",
         "mikemol-shellcheck": "mikemol.hooks.shellcheck_cli:main",
         "mikemol-githook-pre-push": "mikemol.hooks.githook_pre_push:main",
         "mikemol-githook-post-commit": "mikemol.hooks.githook_post_commit:main",

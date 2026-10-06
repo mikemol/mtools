@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W811: a held host tick lock at Stop blocks the turn once, saying to run tick end. The logic is
+# mikemol.hooks.tick_stop; this launcher is the stable path the harness's settings name.
+#
+# ⚑ CLOSED ONCE PER TURN, the same convention as mikemol-hook-standing-stop (operator ruling
+# 2026-10-03). When the check cannot run (no built venv), BLOCK with the reason if
+# stop_hook_active is not true, so the failure surfaces; if it IS true, print the note on stderr
+# and exit 0, so a broken hook can never trap the turn. stop_hook_active is read HERE, from the raw
+# payload, without Python: the venv may be the broken part. Only an exact
+# `"stop_hook_active": true` or `"stop_hook_active":true` counts as active.
+#
+# ⚑ THE REAL PATH, NOT `bazel-bin`: CPython reached through the convenience symlink prints
+# "Could not find platform dependent libraries" on every call; the same venv by its real path is
+# silent (see mikemol-hook-no-verify).
+set -uo pipefail
+
+payload="$(cat)"
+active=0
+if [[ "$payload" == *'"stop_hook_active": true'* ]]; then
+    active=1
+elif [[ "$payload" == *'"stop_hook_active":true'* ]]; then
+    active=1
+fi
+
+cannot() {
+    local why="tick-stop could not run: $1; not checked"
+    if [ "$active" -eq 1 ]; then
+        printf '%s\n' "$why" >&2
+    else
+        printf '{"decision": "block", "reason": "%s"}\n' "$why"
+    fi
+    exit 0
+}
+
+root="${CLAUDE_PROJECT_DIR:-}"
+[ -n "$root" ] || cannot "CLAUDE_PROJECT_DIR is unset"
+venv="$root/bazel-bin/hooks/.venv"
+entry="$(basename "$0")"
+[ -x "$venv/bin/python3" ] || cannot "no built venv at $venv (bazel build //hooks:.venv)"
+[ -f "$venv/bin/$entry" ] || cannot "the venv has no $entry (rebuild it: bazel build //hooks:.venv)"
+
+real="$(realpath "$venv")"
+printf '%s' "$payload" | exec "$real/bin/python3" "$real/bin/$entry" "$@"

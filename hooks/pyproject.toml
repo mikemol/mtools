@@ -76,6 +76,9 @@ mikemol-hook-pycheck = "mikemol.hooks.entry:pycheck_main"
 mikemol-hook-inbound-asks = "mikemol.hooks.entry:inbound_asks_main"
 # W616: SessionStart and UserPromptSubmit context (nemik's rows for this repo), never a refusal.
 mikemol-hook-nemik-check = "mikemol.hooks.entry:nemik_check_main"
+# W811: the Stop guard for the host tick lock (a held fresh lock blocks the turn once, saying to run
+# tick end). No arming variable: it blocks or says nothing, so it has no advisory mode.
+mikemol-hook-tick-stop = "mikemol.hooks.entry:tick_stop_main"
 # ⚑ THE SAME LINTER BY HAND — one file, one tree, one command — and deliberately NOT named
 # `mikemol-hook-…`: it is a tool a maintainer runs, not a gate the harness wires, and the arm that
 # requires every hook script to be invoked keys on that prefix.

@@ -30,3 +30,4 @@ nemik-check	The Nemik-Check Context Hook: This Repo's Shape Findings Surfaced On
 githook-post-commit	The Post-Commit: the Shared Hook Writes the Advisory Marker and Reports a Failed Amend and Never Pushes, the Repo Hook Pushes and Names Why a Push Stopped
 githook-prepare-commit-msg	The Shared Prepare-Commit-Msg: the Gate Report Folded Into the Message Once, Every Failure Reported Rather Than Swallowed, and No Push
 host-facts	The Host Facts: the zram Ceiling and the Tick Lock Read as Facts, Absent When Unreadable and Never Zeros or Empty
+tick-stop	The Tick-Stop Guard: a Held Fresh Host Lock Blocks the Stop Once and Never Twice, a Stale or Unreadable One Blocks Nothing

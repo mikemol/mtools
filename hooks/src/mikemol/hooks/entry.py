@@ -26,6 +26,7 @@ from mikemol.hooks import (
     routing_table,
     shellcheck,
     structural_query,
+    tick_stop,
 )
 
 if TYPE_CHECKING:
@@ -142,3 +143,13 @@ def nemik_check_main() -> int:
 
     """
     return _guarded("mikemol-hook-nemik-check", nemik_check.main)
+
+
+def tick_stop_main() -> int:
+    """Run `mikemol-hook-tick-stop` behind the argv contract (W811).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-tick-stop", tick_stop.main)

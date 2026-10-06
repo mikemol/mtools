@@ -5739,3 +5739,80 @@
   claim  = {The holder is the fact that decides; a missing taken_at is absent, not an empty string.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_host_facts.py -k test_a_holder_without_a_timestamp_is_held_with_an_absent_time},
 }
+
+@misc{hooks-tick-stop-fresh-held-lock-gives-the-reason,
+  section = {tick-stop},
+  title  = {A lock taken two minutes ago holds the turn open},
+  claim  = {A lock taken two minutes ago holds the turn open.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_fresh_held_lock_gives_the_reason},
+}
+
+@misc{hooks-tick-stop-stale-bound-is-exact-to-the-second,
+  section = {tick-stop},
+  title  = {One second under thirty minutes still blocks; exactly thirty minutes is a dead holder's},
+  claim  = {One second under thirty minutes still blocks; exactly thirty minutes is a dead holder's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_the_stale_bound_is_exact_to_the_second},
+}
+
+@misc{hooks-tick-stop-no-lock-and-an-unreadable-queue-block-nothing,
+  section = {tick-stop},
+  title  = {Unheld, and a reading that did not happen, both let the turn end},
+  claim  = {Unheld, and a reading that did not happen, both let the turn end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_no_lock_and_an_unreadable_queue_block_nothing},
+}
+
+@misc{hooks-tick-stop-stamp-that-cannot-be-read-blocks-nothing,
+  section = {tick-stop},
+  title  = {A missing, junk or zoneless stamp is absent: it must not stop a turn},
+  claim  = {A missing, junk or zoneless stamp is absent: it must not stop a turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_stamp_that_cannot_be_read_blocks_nothing},
+}
+
+@misc{hooks-tick-stop-stamp-parses-with-z-or-an-offset-and-refuses-a-zoneless-one,
+  section = {tick-stop},
+  title  = {parse_time reads `Z` and `+00:00` alike and returns None without a zone},
+  claim  = {parse_time reads `Z` and `+00:00` alike and returns None without a zone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_the_stamp_parses_with_z_or_an_offset_and_refuses_a_zoneless_one},
+}
+
+@misc{hooks-tick-stop-first-stop-with-a-held-lock-prints-the-block,
+  section = {tick-stop},
+  title  = {The decision goes to stdout as JSON, and the exit code stays zero},
+  claim  = {The decision goes to stdout as JSON, and the exit code stays zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_the_first_stop_with_a_held_lock_prints_the_block},
+}
+
+@misc{hooks-tick-stop-active-stop-hook-says-so-on-stderr-and-does-not-block-again,
+  section = {tick-stop},
+  title  = {Closed once per turn: stop_hook_active turns the block into a note, never a trap},
+  claim  = {Closed once per turn: stop_hook_active turns the block into a note, never a trap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_an_active_stop_hook_says_so_on_stderr_and_does_not_block_again},
+}
+
+@misc{hooks-tick-stop-nothing-is-said-when-the-queue-holds-no-lock-or-does-not-exist,
+  section = {tick-stop},
+  title  = {An unheld queue and a missing queue are both silent},
+  claim  = {An unheld queue and a missing queue are both silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_nothing_is_said_when_the_queue_holds_no_lock_or_does_not_exist},
+}
+
+@misc{hooks-tick-stop-main-reads-the-payload-on-stdin-and-uses-the-real-clock,
+  section = {tick-stop},
+  title  = {A lock stamped now blocks through main, so the wall clock reaches the decision},
+  claim  = {A lock stamped now blocks through main, so the wall clock reaches the decision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_main_reads_the_payload_on_stdin_and_uses_the_real_clock},
+}
+
+@misc{hooks-tick-stop-main-allows-a-payload-that-is-not-json-and-says-so,
+  section = {tick-stop},
+  title  = {A guard that cannot read its input must not trap the turn},
+  claim  = {A guard that cannot read its input must not trap the turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_main_allows_a_payload_that_is_not_json_and_says_so},
+}
+
+@misc{hooks-tick-stop-console-entry-refuses-an-argument-before-reading-stdin,
+  section = {tick-stop},
+  title  = {The argv contract: a hook takes no arguments, and the refusal names the program},
+  claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
+}
