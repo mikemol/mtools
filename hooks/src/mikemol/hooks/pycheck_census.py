@@ -49,6 +49,10 @@ _SYNTAX = re.compile(r"\[syntax\]")
 _MINIMUM = 1
 _PY_SUFFIX = ".py"
 _GIT_TIMEOUT_S = 60
+# A porcelain v1 entry is `XY path`: two status letters, a space, the path.
+_STATUS_WIDTH = 2
+_STATUS_PREFIX = 3
+_ORIGIN_FOLLOWS = frozenset("RC")
 
 
 def _occurrences(pattern: re.Pattern[str], report: str) -> int:
@@ -111,6 +115,59 @@ def tracked_python(root: Path) -> list[str] | None:
     if done.returncode != 0:
         return None
     return sorted(name for name in done.stdout.split("\0") if name.endswith(_PY_SUFFIX))
+
+
+def _status_paths(porcelain: str) -> list[str]:
+    """Read the live paths out of `git status --porcelain=v1 -z`.
+
+    ⚑ A RENAME OR COPY ENTRY IS TWO NAMES (the new path, then the origin): the origin no longer
+    exists, so it is skipped. A deletion on either side is not a file to judge.
+
+    Returns:
+        the paths of added, modified, renamed and untracked files, in git's order.
+
+    """
+    tokens = porcelain.split("\0")
+    paths: list[str] = []
+    index = 0
+    while index < len(tokens):
+        entry = tokens[index]
+        index += 1
+        if len(entry) < _STATUS_PREFIX:
+            continue
+        status, path = entry[:_STATUS_WIDTH], entry[_STATUS_PREFIX:]
+        if status[0] in _ORIGIN_FOLLOWS or status[1] in _ORIGIN_FOLLOWS:
+            index += 1
+        if "D" not in status:
+            paths.append(path)
+    return paths
+
+
+def changed_python(root: Path) -> list[str] | None:
+    """Name the Python files that are modified, added or untracked under `root`, from git.
+
+    ⚑ ROOT IS THE REPOSITORY'S TOP: porcelain paths are relative to it, whatever the cwd.
+
+    Returns:
+        the changed `.py` paths, sorted, or None when git is absent or refused.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    try:
+        done = subprocess.run(
+            [git, "-C", str(root), "status", "--porcelain=v1", "-z", "--untracked-files=all"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if done.returncode != 0:
+        return None
+    return sorted(name for name in _status_paths(done.stdout) if name.endswith(_PY_SUFFIX))
 
 
 def census(

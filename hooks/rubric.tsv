@@ -38,4 +38,5 @@ pycheck-cli	The Python Edit Gate by Hand: the Unclipped Verdict on One File, Not
 pycheck-census	The Gate's Verdict as a Ledger: Findings Counted per File From the Report's Own Markers, a Refusal Never Zero, and a File No Checker Judged Never Clean
 pycheck-closure	The Closure Advisory: Unclean Imports Named From Debtplan's Graph With Their Findings, and Silence When No Ledger, Planner or Debt Is There
 pycheck-advise	The Closure Hook: an Edited Python File's Unclean Imports Added as Context After the Edit, Never a Refusal, and Anything Else Says Nothing
+pycheck-changed	The Gate's Verdict on Every Changed File: Names From Git's Status, a Rename's Origin and a Deletion Skipped, and One Exit That a Refusal Never Loses to a Clean Run
 read-guard	The Read Guard: an Unbounded Whole-File Read of an Oversized File Is Denied With the Cheaper Reads Named, a Bounded or Rendered or Unsizable One Is Admitted, and an Unarmed Guard Says Nothing

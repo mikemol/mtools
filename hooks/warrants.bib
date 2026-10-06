@@ -6359,3 +6359,32 @@
   claim  = {A target whose parent is a file cannot be staged: exit three, the failure named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_refresh_says_so_when_the_ledger_cannot_be_written},
 }
+
+@misc{hooks-pycheck-changed-changed-python-names-modified-added-and-renamed-files-not-deleted-ones,
+  section = {pycheck-changed},
+  title  = {Modified, untracked and renamed `.py` files are named; a deletion and a text file not},
+  claim  = {Modified, untracked and renamed `.py` files are named; a deletion and a text file not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_changed.py -k test_changed_python_names_modified_added_and_renamed_files_not_deleted_ones},
+}
+
+@misc{hooks-pycheck-changed-clean-tree-has-no-changed-files-and-a-non-repository-is-none,
+  section = {pycheck-changed},
+  title  = {Nothing changed is an empty list; git refusing is None, never the same thing},
+  claim  = {Nothing changed is an empty list; git refusing is None, never the same thing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_changed.py -k test_a_clean_tree_has_no_changed_files_and_a_non_repository_is_none},
+}
+
+@misc{hooks-pycheck-changed-refusal-outranks-not-checked-which-outranks-a-clean-run,
+  section = {pycheck-changed},
+  title  = {The exit never softens: one refused file refuses the run; one unjudged never reads clean},
+  claim  = {The exit never softens: one refused file refuses the run; one unjudged never reads
+            clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_changed.py -k test_a_refusal_outranks_not_checked_which_outranks_a_clean_run},
+}
+
+@misc{hooks-pycheck-changed-no-changed-files-is-stated-and-git-failing-is-not-checked,
+  section = {pycheck-changed},
+  title  = {An empty change set says so and exits zero; an unreadable one exits three on stderr},
+  claim  = {An empty change set says so and exits zero; an unreadable one exits three on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_changed.py -k test_no_changed_files_is_stated_and_git_failing_is_not_checked},
+}

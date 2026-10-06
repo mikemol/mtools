@@ -52,6 +52,7 @@ if TYPE_CHECKING:
 FLAG = "--check-file"
 CENSUS_FLAG = "--census"
 REFRESH_FLAG = "--refresh-ledger"
+CHANGED_FLAG = "--changed"
 
 # A flag and its one argument: nothing else is accepted.
 EXPECTED_ARGS = 2
@@ -61,7 +62,10 @@ EXIT_REFUSED = 1
 EXIT_USAGE = 2
 EXIT_NOT_CHECKED = 3
 
-USAGE = f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT)\n"
+USAGE = (
+    f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT"
+    f" | {CHANGED_FLAG} ROOT)\n"
+)
 
 
 def check(
@@ -170,6 +174,47 @@ def refresh(
     return EXIT_ADMITTED
 
 
+def check_changed(
+    root: Path,
+    changed: Callable[[Path], list[str] | None],
+    check_one: Callable[[Path], int],
+    out: TextIO,
+    err: TextIO,
+) -> int:
+    """Render the gate's verdict on every modified, added or untracked Python file under `root`.
+
+    ⚑ ONE COMMAND FOR THE HAND ROUTINE (W823): the verdict already folds ruff, ruff-format, mypy and
+    the suppression check, so asking it per changed file replaces running each tool by hand. A
+    refusal outranks a not-checked file, which outranks a clean run, so the exit never softens.
+
+    Returns:
+        EXIT_REFUSED if any file is refused, else EXIT_NOT_CHECKED if any went unjudged or git could
+        not name the files, else EXIT_ADMITTED (also when nothing changed).
+
+    """
+    names = changed(root)
+    if names is None:
+        err.write(f"mikemol-pycheck: {root}: git could not name the changed files; not checked\n")
+        return EXIT_NOT_CHECKED
+    if not names:
+        out.write(f"mikemol-pycheck: {root}: no changed Python files\n")
+        return EXIT_ADMITTED
+    codes = [check_one(root / name) for name in names]
+    if EXIT_REFUSED in codes:
+        return EXIT_REFUSED
+    return EXIT_NOT_CHECKED if EXIT_NOT_CHECKED in codes else EXIT_ADMITTED
+
+
+def _check_here(path: Path) -> int:
+    """Check one file with the real gate, project lookup and standard streams.
+
+    Returns:
+        the exit code from `check`.
+
+    """
+    return check(path, pycheck.analyze, project_root.project_for, sys.stdout, sys.stderr)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Parse one flag and its argument and print or write the gate's answer.
 
@@ -179,11 +224,14 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) != EXPECTED_ARGS or args[0] not in {FLAG, CENSUS_FLAG, REFRESH_FLAG}:
+    if len(args) != EXPECTED_ARGS or args[0] not in {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG}:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
     target = Path(args[1]).resolve()
     tracked = pycheck_census.tracked_python
+    if args[0] == CHANGED_FLAG:
+        changed = pycheck_census.changed_python
+        return check_changed(target, changed, _check_here, sys.stdout, sys.stderr)
     if args[0] == CENSUS_FLAG:
         return census(target, tracked, pycheck.analyze, sys.stdout, sys.stderr)
     if args[0] == REFRESH_FLAG:
