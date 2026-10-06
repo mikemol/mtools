@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W824: the compound kata for work in mtools' hooks distribution: rebuild the hooks venv, then ask the
+# edit gate for its verdict on every changed Python file. It replaces the sequence of a venv rebuild,
+# ruff, ruff-format and a per-file verdict that was typed by hand for three cards running (operator,
+# 2026-10-06: script the katas, the compound ones too). The verdict already folds ruff, ruff-format,
+# mypy and the suppression check, so there is no separate lint step.
+#
+# ⚑ NOT NAMED `mikemol-hook-…`: it is a command a maintainer runs, not a gate the harness wires.
+#
+# ⚑ THE REBUILD COMES FIRST OR THE VERDICT IS A STALE ONE: the console script reads the built venv,
+# so a source change judged before the rebuild is judged by the old code.
+set -uo pipefail
+
+root="$(cd "$(dirname "$0")/../.." && pwd -P)"
+cd "$root" || exit 3
+
+if ! built="$(bazel build //hooks:.venv --ui_event_filters=-debug,-warning --show_result=0 \
+    --noshow_progress 2>&1)"; then
+    printf '%s\n' "$built" | tail -n 20 >&2
+    echo "mikemol-hooks-preflight: the hooks venv did not build; not checked" >&2
+    exit 3
+fi
+
+exec "$(realpath "$root/bazel-bin/hooks/.venv")/bin/mikemol-pycheck" --changed "$root"

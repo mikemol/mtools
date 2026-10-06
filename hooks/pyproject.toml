@@ -362,6 +362,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # never a shell, bounded by a 20-second timeout.
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).
+# The preflight witness runs the script itself under an emptied PATH to prove a failed rebuild exits 3.
+"tests/test_hooks_preflight.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pycheck_changed.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.

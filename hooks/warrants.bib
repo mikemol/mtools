@@ -6388,3 +6388,17 @@
   claim  = {An empty change set says so and exits zero; an unreadable one exits three on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_changed.py -k test_no_changed_files_is_stated_and_git_failing_is_not_checked},
 }
+
+@misc{hooks-hooks-preflight-rebuild-that-cannot-run-is-not-checked-and-never-a-clean-exit,
+  section = {hooks-preflight},
+  title  = {With no bazel on PATH the script exits 3 and says the venv did not build},
+  claim  = {With no bazel on PATH the script exits 3 and says the venv did not build.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hooks_preflight.py -k test_a_rebuild_that_cannot_run_is_not_checked_and_never_a_clean_exit},
+}
+
+@misc{hooks-hooks-preflight-script-rebuilds-before-it-asks-for-the-verdict,
+  section = {hooks-preflight},
+  title  = {The rebuild line precedes the verdict line: a verdict before it would judge stale code},
+  claim  = {The rebuild line precedes the verdict line: a verdict before it would judge stale code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hooks_preflight.py -k test_the_script_rebuilds_before_it_asks_for_the_verdict},
+}
