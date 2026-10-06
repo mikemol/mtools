@@ -11,6 +11,7 @@ library: standard library only, no console script.
 |---|---|
 | `mikemol.bibparse.bibparse` | `parse(text, path)` returns `Entry` records (type, key, ordered fields, start line); a malformed bib raises `BibSyntaxError` naming line and column. A column-0 `}` inside a field truncates nothing. Ported faithfully from `paperkit/bibparse.py` |
 | `mikemol.bibparse.resolve` | `bib_paths(project_dir)` returns the bib files `paper.toml`'s `[paper] warrants` names (default `warrants.bib`); a Bazel label token `//pkg:file` is `project/pkg/file` |
+| `mikemol.bibparse.fields` | `field_values(paths, field)` returns a `FieldReading`: the value of one field by entry key for each entry that sets it (`_type` is the entry type, set by every entry), and `population`, the entries read. Zero entries raises `EmptyPopulationError` (a broken search, not a clean file). Replaces paperkit's `tools/bibstruct.py --field` for consumers (mtools:W801) |
 | `mikemol.bibparse.edges` | `claim_edges(project_dir)` returns `{key: {"rests_on": [str], "check": str}}`; `collect` and `edges_of` do it for an explicit path list; two entries with one key raise `DuplicateKeyError` |
 
 ## What no longer runs

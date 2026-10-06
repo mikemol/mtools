@@ -237,3 +237,45 @@
   claim  = {The refusal reaches the project-level entry point.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_edges.py -k test_claim_edges_refuses_a_duplicate_across_the_projects_bibs},
 }
+
+@misc{bibparse-fields-field-is-read-only-from-the-entries-that-set-it,
+  section = {fields},
+  title  = {Entries without the field are in the population but not in the values},
+  claim  = {Entries without the field are in the population but not in the values.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fields.py -k test_a_field_is_read_only_from_the_entries_that_set_it},
+}
+
+@misc{bibparse-fields-entry-type-is-the-type-field-for-every-entry,
+  section = {fields},
+  title  = {`_type` answers what `bibstruct --field _type` answered, for each entry},
+  claim  = {`_type` answers what `bibstruct --field _type` answered, for each entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fields.py -k test_the_entry_type_is_the_type_field_for_every_entry},
+}
+
+@misc{bibparse-fields-field-no-entry-sets-reads-empty-over-a-real-population,
+  section = {fields},
+  title  = {Zero values over two entries is an answer ("none set it"), not a refusal},
+  claim  = {Zero values over two entries is an answer ("none set it"), not a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fields.py -k test_a_field_no_entry_sets_reads_empty_over_a_real_population},
+}
+
+@misc{bibparse-fields-no-entries-at-all-is-a-refusal-not-a-clean-file,
+  section = {fields},
+  title  = {A path list that parses to nothing is a broken search},
+  claim  = {A path list that parses to nothing is a broken search.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fields.py -k test_no_entries_at_all_is_a_refusal_not_a_clean_file},
+}
+
+@misc{bibparse-fields-population-spans-every-given-bib,
+  section = {fields},
+  title  = {Two bibs compose into one population, in the order given},
+  claim  = {Two bibs compose into one population, in the order given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fields.py -k test_the_population_spans_every_given_bib},
+}
+
+@misc{bibparse-fields-key-defined-twice-is-refused-not-last-wins,
+  section = {fields},
+  title  = {A repeated key would silently replace a claim and its check},
+  claim  = {A repeated key would silently replace a claim and its check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fields.py -k test_a_key_defined_twice_is_refused_not_last_wins},
+}
