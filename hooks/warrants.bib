@@ -6156,3 +6156,45 @@
   claim  = {The argv contract: a hook takes no arguments, and the refusal names the program.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_read_guard.py -k test_the_console_entry_refuses_an_argument_before_reading_stdin},
 }
+
+@misc{hooks-pycheck-cli-refused-file-prints-the-whole-report-and-exits-one,
+  section = {pycheck-cli},
+  title  = {The unclipped report goes to stdout and the exit code is the refusal's},
+  claim  = {The unclipped report goes to stdout and the exit code is the refusal's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_a_refused_file_prints_the_whole_report_and_exits_one},
+}
+
+@misc{hooks-pycheck-cli-admitted-file-says-so-and-exits-zero,
+  section = {pycheck-cli},
+  title  = {Admission is stated, with the per-file bound, and exits zero},
+  claim  = {Admission is stated, with the per-file bound, and exits zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_an_admitted_file_says_so_and_exits_zero},
+}
+
+@misc{hooks-pycheck-cli-no-verdict-is-not-checked-and-never-clean,
+  section = {pycheck-cli},
+  title  = {A checker that could not run exits three and names the reason on stderr},
+  claim  = {A checker that could not run exits three and names the reason on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_no_verdict_is_not_checked_and_never_clean},
+}
+
+@misc{hooks-pycheck-cli-file-in-no-project-is-not-checked-even-though-analyze-would-admit-it,
+  section = {pycheck-cli},
+  title  = {The hook's admit-what-is-not-mine answer must not read as clean to a person asking},
+  claim  = {The hook's admit-what-is-not-mine answer must not read as clean to a person asking.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_a_file_in_no_project_is_not_checked_even_though_analyze_would_admit_it},
+}
+
+@misc{hooks-pycheck-cli-missing-file-is-not-checked,
+  section = {pycheck-cli},
+  title  = {An unreadable path exits three and says it was not checked},
+  claim  = {An unreadable path exits three and says it was not checked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_a_missing_file_is_not_checked},
+}
+
+@misc{hooks-pycheck-cli-main-accepts-exactly-the-flag-and-a-path,
+  section = {pycheck-cli},
+  title  = {Anything but `--check-file PATH` is a usage error, exit two, naming the usage},
+  claim  = {Anything but `--check-file PATH` is a usage error, exit two, naming the usage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_main_accepts_exactly_the_flag_and_a_path},
+}
