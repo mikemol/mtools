@@ -135,6 +135,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 ]
 # ⚑ ITS TEST ASSERTS, over hand-written configs and a fake ruff.
 "test_selector_check.py" = ["assert"]
+# ⚑ RUNNING THE ENGINE IS THE PAPERKIT GATE'S WHOLE JOB (W843): one argv list, no shell, the
+# interpreter running it and the engine path the bazel rule names.
+"paperkit_gate_main.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
 # ⚑ RUNNING RUFF IS THE SUPPRESSION CHECK'S WHOLE JOB (W385): the declared ruff, an argv list.
 "suppression_check.py" = [
     "subprocess-without-shell-equals-true",

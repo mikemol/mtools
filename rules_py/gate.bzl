@@ -30,6 +30,47 @@ to run. substrate:W300's hook is thirty-odd more of the same shape. This is that
 
 load("@rules_python//python:py_test.bzl", "py_test")
 
+def paperkit_gate(name, project, engine_repo, engine_files, data, flags = []):
+    """Declare one test that runs the paperkit gate over `project` with the engine pinned (mtools:W843).
+
+    The engine is the files of a `pinned_files` repository, so the verdict is about a recorded commit
+    and never about a sibling's working tree. The project's files are the caller's own named list.
+
+        load("@mikemol_rules_py//:gate.bzl", "paperkit_gate")
+        load("@paperkit_engine//:manifest.bzl", "FILES")
+
+        paperkit_gate(name = "library", project = "library", engine_repo = "paperkit_engine",
+                      engine_files = FILES, data = select_tracked(TRACKED, prefix = "library/"))
+
+    Args:
+        name: the test's name.
+        project: the project directory (relative to this package) holding `paper.toml`.
+        engine_repo: the pinned repository's name, as MODULE.bazel gave it.
+        engine_files: the FILES list of that repository's manifest.bzl.
+        data: the project's named files; `<project>/paper.toml` must be among them.
+        flags: extra flags for `paperkit.gate` (for example `--safe`).
+
+    Returns:
+        The test's label.
+    """
+    toml = project + "/paper.toml"
+    if toml not in data:
+        fail("paperkit_gate: %s names no %s among its data" % (name, toml))
+    if "paperkit/gate.py" not in engine_files:
+        fail("paperkit_gate: %s: the pinned engine holds no paperkit/gate.py" % name)
+    py_test(
+        name = name,
+        srcs = ["@mikemol_rules_py//:paperkit_gate_main.py"],
+        args = [
+            "--engine=$(rootpath @%s//:paperkit/gate.py)" % engine_repo,
+            "--project=$(rootpath %s)" % toml,
+        ] + flags,
+        data = data + ["@%s//:%s" % (engine_repo, p) for p in engine_files],
+        legacy_create_init = 0,
+        main = "@mikemol_rules_py//:paperkit_gate_main.py",
+    )
+    return ":" + name
+
 def gate_stages(stages, data, suite = "precommit"):
     """Declare one py_test per stage and a test_suite running them all.
 
