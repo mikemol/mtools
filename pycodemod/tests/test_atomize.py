@@ -101,6 +101,19 @@ def test_a_string_reference_refuses_the_statement(tmp_path: Path) -> None:
     assert result.texts == {}
 
 
+def test_a_module_of_the_same_name_beside_the_consumer_refuses_the_import(tmp_path: Path) -> None:
+    """⚑⚑ A consumer whose own directory holds a `bib` is ambiguous: that `bib` is not ours."""
+    pkg = _package(tmp_path)
+    elsewhere = tmp_path / "render"
+    elsewhere.mkdir()
+    (elsewhere / "bib.py").write_text("Y = 2\n", encoding="utf-8")
+    path = elsewhere / "check.py"
+    path.write_text("import bib\n\nbib.f()\n", encoding="utf-8")
+    result = atomize.atomize([str(path)], atomize.siblings_of(pkg), "pk")
+    assert [s.verdict for s in result.sites] == [atomize.REFUSED]
+    assert result.texts == {}
+
+
 def test_a_sibling_that_shadows_the_stdlib_is_not_rewritten(tmp_path: Path) -> None:
     """⚑ A sibling called `random` is reported as shadowing, and `import random` is untouched."""
     pkg = _package(tmp_path)

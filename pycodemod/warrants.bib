@@ -5475,3 +5475,10 @@
   claim  = { A planner that misses a site the census finds writes nothing: A Δ B must be empty.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_write_is_refused_when_the_sets_disagree},
 }
+
+@misc{pycodemod-atomize-module-of-the-same-name-beside-the-consumer-refuses-the-import,
+  section = {atomize},
+  title  = {⚑⚑ A consumer whose own directory holds a `bib` is ambiguous: that `bib` is not ours},
+  claim  = { A consumer whose own directory holds a `bib` is ambiguous: that `bib` is not ours.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_module_of_the_same_name_beside_the_consumer_refuses_the_import},
+}

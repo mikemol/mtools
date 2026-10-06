@@ -63,6 +63,7 @@ class Siblings:
 
     modules: frozenset[str]
     shadowing: frozenset[str]
+    directory: Path
 
 
 @dataclass(slots=True)
@@ -83,7 +84,7 @@ def siblings_of(package_dir: str) -> Siblings:
     """
     stems = {p.stem for p in Path(package_dir).glob(f"*{_PY}") if p.is_file() and p.stem != _INIT}
     shadowing = frozenset(s for s in stems if s in sys.stdlib_module_names)
-    return Siblings(frozenset(stems) - shadowing, shadowing)
+    return Siblings(frozenset(stems) - shadowing, shadowing, Path(package_dir).resolve())
 
 
 @dataclass(slots=True)
@@ -100,10 +101,11 @@ class _Planner(cst.CSTVisitor):
 
     METADATA_DEPENDENCIES = (PositionProvider, ScopeProvider)
 
-    def __init__(self, siblings: Siblings, package: str) -> None:
+    def __init__(self, siblings: Siblings, package: str, beside: frozenset[str]) -> None:
         super().__init__()
         self.siblings = siblings
         self.package = package
+        self.beside = beside
         self.planned: list[_Planned] = []
         self.rewrites: dict[cst.Name, str] = {}
         self.exported: set[str] = set()
@@ -166,7 +168,13 @@ class _Planner(cst.CSTVisitor):
         by_node = {id(p.node): p for p in self.planned}
         for plan in self.planned:
             if not plan.refusal:
-                plan.refusal = self._prove(plan, by_node)
+                plan.refusal = self._ambiguous(plan) or self._prove(plan, by_node)
+
+    def _ambiguous(self, plan: _Planned) -> str:
+        shadowed = sorted(set(plan.modules) & self.beside)
+        if not shadowed:
+            return ""
+        return f"`{shadowed[0]}` also names a module beside this file"
 
     def _prove(self, plan: _Planned, by_node: dict[int, _Planned]) -> str:
         scope = self.get_metadata(ScopeProvider, plan.node)
@@ -335,7 +343,9 @@ def _atomize_file(path: str, siblings: Siblings, package: str) -> tuple[list[Sit
         wrapper = MetadataWrapper(cst.parse_module(src))
     except cst.ParserSyntaxError as exc:
         return Skip(path, "unparseable", type(exc).__name__)
-    planner = _Planner(siblings, package)
+    own = Path(path).resolve().parent
+    beside = frozenset() if own == siblings.directory else siblings_of(str(own)).modules
+    planner = _Planner(siblings, package, beside)
     wrapper.visit(planner)
     sites = [
         Site(path, p.line, module, REFUSED if p.refusal else REWRITE, p.refusal)
