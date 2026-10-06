@@ -63,6 +63,11 @@ def main(argv: list[str]) -> int:
     package_dir = engine.parent
     env = dict(os.environ)
     env["PYTHONPATH"] = str(package_dir.parent)
+    # ⚑ A CONSUMER'S WITNESSES NAME THE ENGINE THE WAY ITS OWN WRAPPER DID: `scripts/paperkit.sh`
+    # exported PAPERKIT_ENGINE, which paperkit's clean_env carries into every check, and a witness
+    # that finds the engine through it (resumes' grounding:) otherwise falls back to the live
+    # ~/github/paperkit, which a hermetic sandbox does not have and a gate must not read.
+    env["PAPERKIT_ENGINE"] = str(package_dir)
     if _TEMP in env:
         env.setdefault(_SCRATCH, env[_TEMP])
     cmd = [sys.executable, "-m", "paperkit.gate", *flags, str(project)]
