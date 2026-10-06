@@ -25,9 +25,6 @@ if TYPE_CHECKING:
 
 _TOTAL = 512
 
-# A ceiling far above a 0.3s bound: the arm is that giving up HAPPENS, not how fast.
-_GENEROUS_S = 3.0
-
 # The default total's ceiling, as the letter states it: 8 GiB.
 _CEILING_MB = 8192
 
@@ -415,15 +412,30 @@ def test_noblock_refuses_a_request_that_would_wait(tmp_path: Path) -> None:
 
 
 def test_a_timeout_gives_up_with_the_refused_code(tmp_path: Path) -> None:
-    """TIMEOUT: a blocked request gives up with 3 soon after its bound, not later."""
+    """TIMEOUT: a blocked request gives up with 3 soon after its bound, not later.
+
+    ⚑ ON VIRTUAL TIME. The clock moves only when the loop sleeps, so the assertion is about the
+    loop's own arithmetic (it gave up at the bound, and within one poll of it) and not about how
+    busy the box was. The wallclock form of this arm read 3.45 s against its 3 s bound while other
+    builds ran (the mtools gate refused a commit on it, 2026-10-06).
+    """
     store = _store(tmp_path)
-    waiting = admit.Waiting(timeout_s=0.3, poll_start_s=0.05, poll_max_s=0.1)
-    with admit.admit(store, admit.Request(_TOTAL), host=_QUIET):
-        started = time.monotonic()
-        with pytest.raises(admit.RefusedError) as err:
-            admit.acquire(store, admit.Request(1), waiting, host=_QUIET)
+    timeout_s = 0.3
+    poll_max_s = 0.1
+    waiting = admit.Waiting(timeout_s=timeout_s, poll_start_s=0.05, poll_max_s=poll_max_s)
+    now = [0.0]
+
+    def advance(seconds: float) -> None:
+        now[0] += seconds
+
+    host = admit.Host(loadavg=lambda: (0.0, 0.0, 0.0), clock=lambda: now[0], sleep=advance)
+    with (
+        admit.admit(store, admit.Request(_TOTAL), host=_QUIET),
+        pytest.raises(admit.RefusedError) as err,
+    ):
+        admit.acquire(store, admit.Request(1), waiting, host=host)
     assert err.value.code == admit.EXIT_REFUSED
-    assert time.monotonic() - started < _GENEROUS_S
+    assert timeout_s <= now[0] <= timeout_s + poll_max_s
 
 
 def test_a_blocked_request_proceeds_after_the_holder_releases(tmp_path: Path) -> None:
