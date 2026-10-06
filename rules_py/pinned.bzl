@@ -20,6 +20,8 @@ sibling changes the verdict and nothing says so. This gives the gate the repo AT
 - The names come from `git ls-tree -r <commit>`, never a glob and never a directory (operator
   2026-10-06). `prefix` keeps only the paths under it, and the repository fails when none match: an
   empty input set is a broken selector, never a clean gate.
+- The sibling's own BUILD, WORKSPACE and MODULE files are deleted from the extracted tree: they
+  would make subdirectories packages of their own and unname the files beside them.
 - The repository is not `local`: its content is a function of `remote` and `commit` alone, so a
   moved working tree cannot change it, and a cache hit is sound.
 - Each file is exported by name from the repository's root package, at the same relative path it has
@@ -35,7 +37,14 @@ def _pinned_files_impl(rctx):
     listing = rctx.execute(["git", "-C", remote, "ls-tree", "-r", "-z", "--name-only", commit], quiet = True)
     if listing.return_code != 0:
         fail("pinned_files: %s does not hold commit %s: %s" % (remote, commit, listing.stderr))
-    names = sorted([p for p in listing.stdout.split("\0") if p and p.startswith(rctx.attr.prefix)])
+    everything = [p for p in listing.stdout.split("\0") if p]
+
+    # ⚑ THE SIBLING'S OWN BUILD FILES ARE DELETED, NOT EXPORTED. A BUILD.bazel under the prefix turns
+    # its directory into a subpackage, so the files beside it stop being labels of the root package
+    # (`paperkit/BUILD.bazel` made `@paperkit_engine//:paperkit/gate.py` invalid). They describe the
+    # sibling's own build, which this gate does not run.
+    own_builds = [p for p in everything if p.split("/")[-1] in ("BUILD", "BUILD.bazel", "WORKSPACE", "WORKSPACE.bazel", "MODULE.bazel")]
+    names = sorted([p for p in everything if p.startswith(rctx.attr.prefix) and p not in own_builds])
     if not names:
         fail("pinned_files: no path of %s at %s starts with %r" % (remote, commit, rctx.attr.prefix))
     archive = rctx.execute(["git", "-C", remote, "archive", "--format=tar", "-o", str(rctx.path("pinned.tar")), commit], quiet = True)
@@ -43,6 +52,8 @@ def _pinned_files_impl(rctx):
         fail("pinned_files: git archive %s failed: %s" % (commit, archive.stderr))
     rctx.extract("pinned.tar")
     rctx.delete("pinned.tar")
+    for p in own_builds:
+        rctx.delete(p)
     rctx.file("manifest.bzl", "FILES = [\n" + "".join(["    %s,\n" % repr(p) for p in names]) + "]\n")
     rctx.file("BUILD.bazel", "exports_files([\n" + "".join(["    %s,\n" % repr(p) for p in names]) + "])\n")
 

@@ -54,6 +54,12 @@ def paperkit_gate(name, project, engine_repo, engine_files, data, flags = []):
         The test's label.
     """
     toml = project + "/paper.toml"
+
+    # ⚑ A TEST NAMED LIKE ITS PROJECT DIRECTORY BURIES IT: py_test puts its own executable at
+    # `<runfiles>/_main/<name>`, which replaces the data directory of that name, so the project is a
+    # file and the gate answers "not a declared input" (measured on resumes, 2026-10-06).
+    if name == project.split("/")[0]:
+        fail("paperkit_gate: the test %r is named like its project directory; name it gate_%s" % (name, name))
     if toml not in data:
         fail("paperkit_gate: %s names no %s among its data" % (name, toml))
     if "paperkit/gate.py" not in engine_files:
