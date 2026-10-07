@@ -5560,3 +5560,17 @@
   claim  = { After a write the census runs again over the new text, and it must be empty.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scriptruns.py -k test_a_write_leaves_no_run_and_says_so},
 }
+
+@misc{pycodemod-atomize-read-through-a-re-export-is-pointed-at-the-definition,
+  section = {atomize},
+  title  = {⚑⚑ `resolver.PATH`, where resolver only imported PATH, reads the module that defines it},
+  claim  = { `resolver.PATH`, where resolver only imported PATH, reads the module that defines it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_read_through_a_re_export_is_pointed_at_the_definition},
+}
+
+@misc{pycodemod-atomize-function-level-import-is-hoisted-so-the-package-name-is-not-local,
+  section = {atomize},
+  title  = {⚑⚑ `import pk.bib` inside a function would bind `pk` for all of it, so it goes up},
+  claim  = { `import pk.bib` inside a function would bind `pk` for all of it, so it goes up.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_function_level_import_is_hoisted_so_the_package_name_is_not_local},
+}

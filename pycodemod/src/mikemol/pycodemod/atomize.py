@@ -29,7 +29,13 @@ from typing import TYPE_CHECKING, override
 
 import libcst as cst
 from libcst.helpers import get_full_name_for_node
-from libcst.metadata import Assignment, MetadataWrapper, PositionProvider, ScopeProvider
+from libcst.metadata import (
+    Assignment,
+    GlobalScope,
+    MetadataWrapper,
+    PositionProvider,
+    ScopeProvider,
+)
 
 from mikemol.pycodemod.core import Skip
 
@@ -43,6 +49,7 @@ type _Stmt = cst.BaseStatement
 REWRITE = "REWRITE"
 REFUSED = "REFUSED"
 _PY = ".py"
+_CHAIN = 3  # `package.module.name`
 _INIT = "__init__"
 
 
@@ -94,6 +101,7 @@ class _Planned:
     modules: list[str]
     bound: dict[str, str]
     refusal: str = ""
+    deferred: bool = False
 
 
 class _Planner(cst.CSTVisitor):
@@ -178,6 +186,11 @@ class _Planner(cst.CSTVisitor):
 
     def _prove(self, plan: _Planned, by_node: dict[int, _Planned]) -> str:
         scope = self.get_metadata(ScopeProvider, plan.node)
+        # ⚑ A FUNCTION-LEVEL `import pkg.mod` BINDS `pkg` LOCALLY FOR THE WHOLE FUNCTION, so any
+        # earlier read of `pkg.other.x` in it raises UnboundLocalError (measured on paperkit's
+        # project.py `main`). A deferred import is therefore HOISTED: removed from its function and
+        # added at module level, where `pkg` is bound once.
+        plan.deferred = not isinstance(scope, GlobalScope)
         if scope is None:
             return "no scope metadata"
         if not self._package_free(scope):
@@ -218,12 +231,33 @@ def _dotted(text: str) -> cst.BaseExpression:
 class _Rewriter(cst.CSTTransformer):
     """Apply a proven plan: bound names to package paths, flat imports to package imports."""
 
-    def __init__(self, planner: _Planner) -> None:
+    def __init__(self, planner: _Planner, reexports: dict[tuple[str, str], str]) -> None:
         super().__init__()
         self.rewrites = planner.rewrites
         self.package = planner.package
         self.plans = {id(p.node): p for p in planner.planned if not p.refusal}
+        self.reexports = reexports
+        self.needed: set[str] = set()
         self.made: set[int] = set()
+
+    @override
+    def leave_Attribute(
+        self, original_node: cst.Attribute, updated_node: cst.Attribute
+    ) -> cst.BaseExpression:
+        """Point a read of a re-exported name at the module that defines it.
+
+        Returns:
+            the definition's dotted path when `pkg.module.name` names a re-export, else the node.
+
+        """
+        del original_node
+        parts = (get_full_name_for_node(updated_node) or "").split(".")
+        if len(parts) == _CHAIN and parts[0] == self.package:
+            target = self.reexports.get((parts[1], parts[2]))
+            if target is not None:
+                self.needed.add(target.split(".")[1])
+                return _dotted(target)
+        return updated_node
 
     @override
     def leave_Name(self, original_node: cst.Name, updated_node: cst.Name) -> cst.BaseExpression:
@@ -239,16 +273,26 @@ class _Rewriter(cst.CSTTransformer):
     @override
     def leave_Import(
         self, original_node: cst.Import, updated_node: cst.Import
-    ) -> cst.BaseSmallStatement:
+    ) -> cst.BaseSmallStatement | cst.RemovalSentinel:
         """Turn each flat sibling in an `import` into its package import.
 
         Returns:
-            the rewritten statement, or the original when it has no proven plan.
+            the rewritten statement, the original when it has no proven plan, or the removal
+            sentinel when a deferred import is hoisted to module level.
 
         """
         plan = self.plans.get(id(original_node))
         if plan is None:
             return updated_node
+        if plan.deferred:
+            self.needed.update(plan.modules)
+            kept = [
+                a for a in updated_node.names if get_full_name_for_node(a.name) not in plan.modules
+            ]
+            if not kept:
+                return cst.RemoveFromParent()
+            kept[-1] = kept[-1].with_changes(comma=cst.MaybeSentinel.DEFAULT)
+            return updated_node.with_changes(names=kept)
         names: list[cst.ImportAlias] = []
         for alias in updated_node.names:
             head = get_full_name_for_node(alias.name)
@@ -263,16 +307,20 @@ class _Rewriter(cst.CSTTransformer):
     @override
     def leave_ImportFrom(
         self, original_node: cst.ImportFrom, updated_node: cst.ImportFrom
-    ) -> cst.BaseSmallStatement:
+    ) -> cst.BaseSmallStatement | cst.RemovalSentinel:
         """Turn a `from` import of a flat sibling into the package import of it.
 
         Returns:
-            the package import, or the original when it has no proven plan.
+            the package import, the original when it has no proven plan, or the removal sentinel
+            when a deferred import is hoisted to module level.
 
         """
         plan = self.plans.get(id(original_node))
         if plan is None:
             return updated_node
+        if plan.deferred:
+            self.needed.update(plan.modules)
+            return cst.RemoveFromParent()
         made = cst.Import(
             names=[_alias(f"{self.package}.{plan.modules[0]}")], semicolon=updated_node.semicolon
         )
@@ -288,7 +336,45 @@ class _Rewriter(cst.CSTTransformer):
 
         """
         del original_node
-        return updated_node.with_changes(body=self._deduped(updated_node.body))
+        body = self._deduped(updated_node.body)
+        return updated_node.with_changes(body=self._with_needed(body))
+
+    def _with_needed(self, body: list[_Stmt]) -> list[_Stmt]:
+        """Add `import pkg.module` for each definition a redirected read now names.
+
+        ⚑ A READ THAT NAMES `pkg.checkenv.PATH` MUST IMPORT `pkg.checkenv`: it worked before only
+        because the module it came through imported it, which is the coupling being removed, and a
+        type checker cannot see an attribute of a package nobody here imported.
+
+        Returns:
+            the body with the missing imports after the last import, or unchanged.
+
+        """
+        have = {
+            get_full_name_for_node(alias.name)
+            for stmt in body
+            if isinstance(stmt, cst.SimpleStatementLine)
+            for small in stmt.body
+            if isinstance(small, cst.Import)
+            for alias in small.names
+        }
+        missing = sorted(m for m in self.needed if f"{self.package}.{m}" not in have)
+        if not missing:
+            return body
+        lines = [
+            cst.SimpleStatementLine(body=[cst.Import(names=[_alias(f"{self.package}.{m}")])])
+            for m in missing
+        ]
+        last = max(
+            (
+                i
+                for i, stmt in enumerate(body)
+                if isinstance(stmt, cst.SimpleStatementLine)
+                and any(isinstance(s, (cst.Import, cst.ImportFrom)) for s in stmt.body)
+            ),
+            default=-1,
+        )
+        return [*body[: last + 1], *lines, *body[last + 1 :]]
 
     @override
     def leave_IndentedBlock(
@@ -335,7 +421,15 @@ def _read(path: str) -> str | Skip:
         return Skip(path, "unreadable", type(exc).__name__)
 
 
-def _atomize_file(path: str, siblings: Siblings, package: str) -> tuple[list[Site], str] | Skip:
+@dataclass(slots=True)
+class _Parsed:
+    path: str
+    src: str
+    wrapper: MetadataWrapper
+    planner: _Planner
+
+
+def _plan_file(path: str, siblings: Siblings, package: str) -> _Parsed | Skip:
     src = _read(path)
     if isinstance(src, Skip):
         return src
@@ -347,12 +441,30 @@ def _atomize_file(path: str, siblings: Siblings, package: str) -> tuple[list[Sit
     beside = frozenset() if own == siblings.directory else siblings_of(str(own)).modules
     planner = _Planner(siblings, package, beside)
     wrapper.visit(planner)
-    sites = [
-        Site(path, p.line, module, REFUSED if p.refusal else REWRITE, p.refusal)
-        for p in planner.planned
-        for module in p.modules
-    ]
-    return sites, wrapper.module.visit(_Rewriter(planner)).code
+    return _Parsed(path, src, wrapper, planner)
+
+
+def _reexports(parsed: Sequence[_Parsed]) -> dict[tuple[str, str], str]:
+    """Map `(module stem, bound name)` to the definition a proven `from` import re-exports.
+
+    ⚑ A `from m import x` MAKES `x` AN ATTRIBUTE OF THE IMPORTING MODULE, and another module may
+    read it there (`resolver.PATH`, where `PATH` is defined in `checkenv`). The rewrite removes
+    that attribute, so every such read is pointed at the definition instead, in the same pass:
+    measured on paperkit's engine, where `project.py` read `resolver.PATH`.
+
+    Returns:
+        the definition's dotted path for each re-exported name.
+
+    """
+    out: dict[tuple[str, str], str] = {}
+    for one in parsed:
+        stem = Path(one.path).stem
+        for plan in one.planner.planned:
+            if plan.refusal or not isinstance(plan.node, cst.ImportFrom):
+                continue
+            for name, target in plan.bound.items():
+                out[stem, name] = target
+    return out
 
 
 def atomize(paths: Sequence[str], siblings: Siblings, package: str) -> Atomized:
@@ -366,14 +478,22 @@ def atomize(paths: Sequence[str], siblings: Siblings, package: str) -> Atomized:
 
     """
     out = Atomized()
+    parsed: list[_Parsed] = []
     for path in paths:
-        got = _atomize_file(path, siblings, package)
+        got = _plan_file(path, siblings, package)
         if isinstance(got, Skip):
             out.skipped.append(got)
-            continue
-        sites, text = got
-        out.sites.extend(sites)
-        if any(s.verdict == REWRITE for s in sites):
-            out.texts[path] = text
+        else:
+            parsed.append(got)
+    reexports = _reexports(parsed)
+    for one in parsed:
+        out.sites.extend(
+            Site(one.path, p.line, module, REFUSED if p.refusal else REWRITE, p.refusal)
+            for p in one.planner.planned
+            for module in p.modules
+        )
+        text = one.wrapper.module.visit(_Rewriter(one.planner, reexports)).code
+        if text != one.src:
+            out.texts[one.path] = text
     out.sites.sort()
     return out

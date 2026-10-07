@@ -152,6 +152,27 @@ def test_drop_path_retires_the_bootstrap_the_rewrite_made_idle(
     assert got == "\nimport pk.bib\n\nprint(pk.bib.a)\n"
 
 
+def test_a_read_through_a_re_export_is_pointed_at_the_definition(tmp_path: Path) -> None:
+    """⚑⚑ `resolver.PATH`, where resolver only imported PATH, reads the module that defines it."""
+    pkg = _package(tmp_path)
+    middle = tmp_path / "pk" / "middle.py"
+    middle.write_text("from bib import PATH\n", encoding="utf-8")
+    reader = _consumer(tmp_path, "import middle\n\nprint(middle.PATH)\n")
+    result = atomize.atomize([str(middle), reader], atomize.siblings_of(pkg), "pk")
+    assert result.texts[reader] == "import pk.middle\nimport pk.bib\n\nprint(pk.bib.PATH)\n"
+
+
+def test_a_function_level_import_is_hoisted_so_the_package_name_is_not_local(
+    tmp_path: Path,
+) -> None:
+    """⚑⚑ `import pk.bib` inside a function would bind `pk` for all of it, so it goes up."""
+    src = "import other\n\n\ndef f():\n    print(other.X)\n    import bib\n    return bib.Y\n"
+    result, path = _plan(tmp_path, src)
+    assert result.texts[path] == (
+        "import pk.other\nimport pk.bib\n\n\ndef f():\n    print(pk.other.X)\n    return pk.bib.Y\n"
+    )
+
+
 def test_a_write_is_refused_when_the_sets_disagree(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
