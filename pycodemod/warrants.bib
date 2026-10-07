@@ -5595,3 +5595,10 @@
   claim  = { `from middle import PATH`, where middle only re-exports it, reads `pk.bib.PATH`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_from_import_of_a_re_exported_name_binds_the_definition},
 }
+
+@misc{pycodemod-atomize-dotted-package-names-its-modules-and-follows-its-re-exports,
+  section = {atomize},
+  title  = {⚑⚑ The package may be `pk.sub`: modules are `pk.sub.bib`, and a re-export still ends},
+  claim  = { The package may be `pk.sub`: modules are `pk.sub.bib`, and a re-export still ends.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_dotted_package_names_its_modules_and_follows_its_re_exports},
+}

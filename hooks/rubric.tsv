@@ -45,3 +45,4 @@ hooks-preflight	The Hooks Preflight: the Venv Rebuilt Before the Changed-Files V
 read-guard	The Read Guard: an Unbounded Whole-File Read of an Oversized File Is Denied With the Cheaper Reads Named, a Bounded or Rendered or Unsizable One Is Admitted, and an Unarmed Guard Says Nothing
 bazel-admit	The Bazel Admission: Heavy Commands Wait on Zram Headroom and a Memory Lease, Light Ones Run Untouched, a Full Zram Is Refused After a Bounded Wait, and What Cannot Be Read Blocks Nothing
 pycheck-format	The Format Mode: The Project's Own Formatter Applied to One File, Written Only When It Changes, and a File in No Project Never Reads as Clean
+snapshot	The Snapshot: An Immutable Tree at One Fixed Namespaced Path, Locked Against a Second Writer, Updated by Its Difference, and Never the Real Index

@@ -49,7 +49,7 @@ type _Stmt = cst.BaseStatement
 REWRITE = "REWRITE"
 REFUSED = "REFUSED"
 _PY = ".py"
-_CHAIN = 3  # `package.module.name`
+_CHAIN = 2  # what follows the package: `module.name`
 _INIT = "__init__"
 
 
@@ -241,8 +241,11 @@ def _inside(scope: Scope, ancestor: Scope) -> bool:
 
 
 def _alias(dotted: str) -> cst.ImportAlias:
-    head, _, tail = dotted.partition(".")
-    return cst.ImportAlias(name=cst.Attribute(value=cst.Name(head), attr=cst.Name(tail)))
+    name = cst.parse_expression(dotted)
+    if not isinstance(name, (cst.Name, cst.Attribute)):
+        msg = f"{dotted!r} is not a dotted name"
+        raise TypeError(msg)
+    return cst.ImportAlias(name=name)
 
 
 def _dotted(text: str) -> cst.BaseExpression:
@@ -272,13 +275,34 @@ class _Rewriter(cst.CSTTransformer):
 
         """
         del original_node
-        parts = (get_full_name_for_node(updated_node) or "").split(".")
-        if len(parts) == _CHAIN and parts[0] == self.package:
-            target = self.reexports.get((parts[1], parts[2]))
-            if target is not None:
-                self.needed.add(target.split(".")[1])
-                return _dotted(target)
-        return updated_node
+        member = self._member(get_full_name_for_node(updated_node) or "")
+        target = None if member is None else self.reexports.get(member)
+        if target is None:
+            return updated_node
+        self._need(target)
+        return _dotted(target)
+
+    def _need(self, target: str) -> None:
+        """Note the package module a rewritten target names, so the file imports it."""
+        prefix = f"{self.package}."
+        if target.startswith(prefix):
+            self.needed.add(target[len(prefix) :].split(".", maxsplit=1)[0])
+
+    def _member(self, dotted: str) -> tuple[str, str] | None:
+        """Split `<package>.<module>.<name>` into its module and name, else None.
+
+        ⚑ THE PACKAGE MAY ITSELF BE DOTTED (`paperkit.tests`), so the chain is read from what
+        follows the package's own spelling, never by counting parts from the left.
+
+        Returns:
+            the module and the name, or None when `dotted` is not exactly that shape.
+
+        """
+        prefix = f"{self.package}."
+        if not dotted.startswith(prefix):
+            return None
+        rest = dotted[len(prefix) :].split(".")
+        return (rest[0], rest[1]) if len(rest) == _CHAIN else None
 
     @override
     def leave_Name(self, original_node: cst.Name, updated_node: cst.Name) -> cst.BaseExpression:
@@ -306,16 +330,13 @@ class _Rewriter(cst.CSTTransformer):
         seen: set[str] = set()
         while target not in seen:
             seen.add(target)
-            parts = target.split(".")
-            if len(parts) != _CHAIN or parts[0] != self.package:
-                break
-            nxt = self.reexports.get((parts[1], parts[2]))
+            member = self._member(target)
+            nxt = None if member is None else self.reexports.get(member)
             if nxt is None:
                 break
             target = nxt
-        parts = target.split(".")
-        if target != start and parts[0] == self.package:
-            self.needed.add(parts[1])
+        if target != start:
+            self._need(target)
         return target
 
     @override

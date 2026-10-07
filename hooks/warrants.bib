@@ -6802,3 +6802,45 @@
   claim  = { No governing project is exit 3, never a quiet success: nothing was formatted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_format.py -k test_a_file_in_no_project_is_not_formatted_and_is_not_clean},
 }
+
+@misc{hooks-snapshot-index-is-materialized-at-a-fixed-path-and-stamped,
+  section = {snapshot},
+  title  = {⚑ The path is `<namespace>/<repo>/tree`, the same every time, and names its tree sha},
+  claim  = { The path is `<namespace>/<repo>/tree`, the same every time, and names its tree sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_the_index_is_materialized_at_a_fixed_path_and_stamped},
+}
+
+@misc{hooks-snapshot-working-snapshot-sees-uncommitted-work-and-leaves-the-real-index-alone,
+  section = {snapshot},
+  title  = {⚑⚑ Iterating on edits needs no commit and no `git add`: the real index is not written},
+  claim  = { Iterating on edits needs no commit and no `git add`: the real index is not written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_working_snapshot_sees_uncommitted_work_and_leaves_the_real_index_alone},
+}
+
+@misc{hooks-snapshot-update-writes-and-removes-only-what-changed,
+  section = {snapshot},
+  title  = {⚑ Unchanged files keep their bytes (and inode), so bazel re-reads nothing it need not},
+  claim  = { Unchanged files keep their bytes (and inode), so bazel re-reads nothing it need not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_an_update_writes_and_removes_only_what_changed},
+}
+
+@misc{hooks-snapshot-second-writer-cannot-take-the-lock-while-a-run-holds-it,
+  section = {snapshot},
+  title  = {⚑⚑ The tree a run reads cannot be rewritten under it: the lock is exclusive},
+  claim  = { The tree a run reads cannot be rewritten under it: the lock is exclusive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_second_writer_cannot_take_the_lock_while_a_run_holds_it},
+}
+
+@misc{hooks-snapshot-command-runs-in-the-snapshot-and-its-status-is-returned,
+  section = {snapshot},
+  title  = {⚑ `-- CMD` runs with the snapshot as its working directory, under the lock},
+  claim  = { `-- CMD` runs with the snapshot as its working directory, under the lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_command_runs_in_the_snapshot_and_its_status_is_returned},
+}
+
+@misc{hooks-snapshot-usage-error-is-exit-two,
+  section = {snapshot},
+  title  = {⚑ No repo, or two modes, is a usage error and says so},
+  claim  = { No repo, or two modes, is a usage error and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_usage_error_is_exit_two},
+}

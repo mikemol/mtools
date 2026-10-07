@@ -202,6 +202,17 @@ def test_a_from_import_of_a_re_exported_name_binds_the_definition(tmp_path: Path
     assert result.texts[reader] == "import pk.middle\nimport pk.bib\n\nprint(pk.bib.PATH)\n"
 
 
+def test_a_dotted_package_names_its_modules_and_follows_its_re_exports(tmp_path: Path) -> None:
+    """⚑⚑ The package may be `pk.sub`: modules are `pk.sub.bib`, and a re-export still ends."""
+    pkg = _package(tmp_path)
+    middle = tmp_path / "pk" / "middle.py"
+    middle.write_text("from bib import PATH\n", encoding="utf-8")
+    reader = _consumer(tmp_path, "from middle import PATH\n\nprint(PATH)\n")
+    result = atomize.atomize([str(middle), reader], atomize.siblings_of(pkg), "pk.sub")
+    want = "import pk.sub.middle\nimport pk.sub.bib\n\nprint(pk.sub.bib.PATH)\n"
+    assert result.texts[reader] == want
+
+
 def test_a_write_is_refused_when_the_sets_disagree(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:

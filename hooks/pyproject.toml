@@ -110,6 +110,9 @@ mikemol-pycheck = "mikemol.hooks.pycheck_cli:main"
 # W832: the commit kata graduated from .claude/katas (rule 16); its last line is the verdict, read from
 # HEAD. NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
 mikemol-commit = "mikemol.hooks.commit_kata:main"
+# W845: an immutable tree to gate, at one fixed namespaced path under flock. NOT `mikemol-hook-…`: a
+# gate's caller runs it, no harness wires it.
+mikemol-snapshot = "mikemol.hooks.snapshot:main"
 # W836: bazel's own admit-or-wait on the host's resources, run by the generated tools/bazel wrapper
 # (`mikemol-bazel-admit --install DIR`). NOT `mikemol-hook-…`: bazel runs it, no harness wires it.
 mikemol-bazel-admit = "mikemol.hooks.bazel_admit:main"
@@ -399,9 +402,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_pycheck_changed.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses format files in a throwaway project whose "ruff" is a stand-in script under tmp_path.
 "tests/test_pycheck_format.py" = ["assert"]
+# Its witnesses make throwaway git repositories under tmp_path and run real git against them.
+"tests/test_snapshot.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Running the project's own ruff format is `--format`'s whole job: an argv list, no shell.
 "src/mikemol/hooks/pycheck_format.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# The snapshot is git plus a command the caller names, and its fixed namespaced path under /var/tmp is
+# the operator's ruling (2026-10-06), not an accident: a hardcoded temp path is the point.
+"src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_post_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 

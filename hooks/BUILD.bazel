@@ -428,6 +428,7 @@ venv_from_hub(
         "mikemol-hook-build-failure": "mikemol.hooks.entry:build_failure_main",
         "mikemol-build-failure": "mikemol.hooks.build_failure:report_main",
         "mikemol-commit": "mikemol.hooks.commit_kata:main",
+        "mikemol-snapshot": "mikemol.hooks.snapshot:main",
         "mikemol-bazel-admit": "mikemol.hooks.bazel_admit:main",
         # W818: the PostToolUse closure advisory.
         "mikemol-hook-pycheck-advise": "mikemol.hooks.entry:pycheck_advise_main",
