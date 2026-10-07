@@ -40,7 +40,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import project_root, pycheck, pycheck_census, pycheck_closure
+from mikemol.hooks import project_root, pycheck, pycheck_census, pycheck_closure, pycheck_format
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping, Sequence
@@ -53,6 +53,7 @@ FLAG = "--check-file"
 CENSUS_FLAG = "--census"
 REFRESH_FLAG = "--refresh-ledger"
 CHANGED_FLAG = "--changed"
+FORMAT_FLAG = "--format"
 
 # A flag and its one argument: nothing else is accepted.
 EXPECTED_ARGS = 2
@@ -64,7 +65,7 @@ EXIT_NOT_CHECKED = 3
 
 USAGE = (
     f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT"
-    f" | {CHANGED_FLAG} ROOT)\n"
+    f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH)\n"
 )
 
 
@@ -224,10 +225,13 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) != EXPECTED_ARGS or args[0] not in {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG}:
+    known = {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG, FORMAT_FLAG}
+    if len(args) != EXPECTED_ARGS or args[0] not in known:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
     target = Path(args[1]).resolve()
+    if args[0] == FORMAT_FLAG:
+        return pycheck_format.format_file(target, sys.stdout, sys.stderr)
     tracked = pycheck_census.tracked_python
     if args[0] == CHANGED_FLAG:
         changed = pycheck_census.changed_python

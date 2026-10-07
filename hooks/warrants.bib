@@ -6781,3 +6781,24 @@
   claim  = {mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_gate_that_runs_past_the_limit_is_a_verdict_not_a_traceback},
 }
+
+@misc{hooks-pycheck-format-file-the-formatter-changes-is-rewritten-and-said-so,
+  section = {pycheck-format},
+  title  = {⚑ The formatter's output replaces the file, and the report names the file as formatted},
+  claim  = { The formatter's output replaces the file, and the report names the file as formatted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_format.py -k test_a_file_the_formatter_changes_is_rewritten_and_said_so},
+}
+
+@misc{hooks-pycheck-format-file-already-formatted-is-left-untouched,
+  section = {pycheck-format},
+  title  = {⚑ No write when the formatter changes nothing: the report says so},
+  claim  = { No write when the formatter changes nothing: the report says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_format.py -k test_a_file_already_formatted_is_left_untouched},
+}
+
+@misc{hooks-pycheck-format-file-in-no-project-is-not-formatted-and-is-not-clean,
+  section = {pycheck-format},
+  title  = {⚑⚑ No governing project is exit 3, never a quiet success: nothing was formatted},
+  claim  = { No governing project is exit 3, never a quiet success: nothing was formatted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_format.py -k test_a_file_in_no_project_is_not_formatted_and_is_not_clean},
+}
