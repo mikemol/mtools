@@ -173,6 +173,25 @@ def test_a_function_level_import_is_hoisted_so_the_package_name_is_not_local(
     )
 
 
+def test_a_lazy_import_with_no_other_read_of_the_package_stays_lazy(tmp_path: Path) -> None:
+    """⚑⚑ Hoisting is for the UnboundLocalError only: a lazy import usually is lazy on purpose."""
+    src = "def f():\n    import bib\n    return bib.Y\n"
+    result, path = _plan(tmp_path, src)
+    assert result.texts[path] == "def f():\n    import pk.bib\n    return pk.bib.Y\n"
+
+
+def test_a_read_of_a_module_through_another_module_is_pointed_at_the_module(
+    tmp_path: Path,
+) -> None:
+    """⚑⚑ `middle.bib.Y`, where middle only imported bib, reads `pk.bib.Y` once middle stops."""
+    pkg = _package(tmp_path)
+    middle = tmp_path / "pk" / "middle.py"
+    middle.write_text("import bib\n", encoding="utf-8")
+    reader = _consumer(tmp_path, "import middle\n\nprint(middle.bib.Y)\n")
+    result = atomize.atomize([str(middle), reader], atomize.siblings_of(pkg), "pk")
+    assert result.texts[reader] == "import pk.middle\nimport pk.bib\n\nprint(pk.bib.Y)\n"
+
+
 def test_a_write_is_refused_when_the_sets_disagree(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:

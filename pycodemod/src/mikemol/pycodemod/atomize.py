@@ -102,6 +102,7 @@ class _Planned:
     bound: dict[str, str]
     refusal: str = ""
     deferred: bool = False
+    scope: Scope | None = None
 
 
 class _Planner(cst.CSTVisitor):
@@ -117,6 +118,7 @@ class _Planner(cst.CSTVisitor):
         self.planned: list[_Planned] = []
         self.rewrites: dict[cst.Name, str] = {}
         self.exported: set[str] = set()
+        self.reads: list[tuple[Scope, Scope]] = []
 
     @override
     def visit_Assign(self, node: cst.Assign) -> None:
@@ -177,6 +179,18 @@ class _Planner(cst.CSTVisitor):
         for plan in self.planned:
             if not plan.refusal:
                 plan.refusal = self._ambiguous(plan) or self._prove(plan, by_node)
+        # ⚑ A FUNCTION-LEVEL `import pkg.mod` BINDS `pkg` LOCALLY FOR THE WHOLE FUNCTION: an earlier
+        # read of `pkg.other.x` in it, resolved to a module-level import, then raises
+        # UnboundLocalError (measured on paperkit's project.py `main`). So a deferred import is
+        # HOISTED to module level only when its function also reads the package through another
+        # binding. Otherwise it stays where it is: a lazy import is usually lazy on purpose
+        # (hoisting tools/verdict.py's made every mode need the whole engine).
+        for plan in self.planned:
+            if plan.deferred and not plan.refusal and plan.scope is not None:
+                scope = plan.scope
+                plan.deferred = any(
+                    _inside(read, scope) and bound is not scope for read, bound in self.reads
+                )
 
     def _ambiguous(self, plan: _Planned) -> str:
         shadowed = sorted(set(plan.modules) & self.beside)
@@ -186,11 +200,8 @@ class _Planner(cst.CSTVisitor):
 
     def _prove(self, plan: _Planned, by_node: dict[int, _Planned]) -> str:
         scope = self.get_metadata(ScopeProvider, plan.node)
-        # ⚑ A FUNCTION-LEVEL `import pkg.mod` BINDS `pkg` LOCALLY FOR THE WHOLE FUNCTION, so any
-        # earlier read of `pkg.other.x` in it raises UnboundLocalError (measured on paperkit's
-        # project.py `main`). A deferred import is therefore HOISTED: removed from its function and
-        # added at module level, where `pkg` is bound once.
         plan.deferred = not isinstance(scope, GlobalScope)
+        plan.scope = scope
         if scope is None:
             return "no scope metadata"
         if not self._package_free(scope):
@@ -209,6 +220,7 @@ class _Planner(cst.CSTVisitor):
                     if not isinstance(access.node, cst.Name):
                         return f"`{name}` is referenced from a string or export list"
                     found[access.node] = target
+                    self.reads.append((access.scope, assigned.scope))
         self.rewrites.update(found)
         return ""
 
@@ -217,6 +229,15 @@ class _Planner(cst.CSTVisitor):
             isinstance(a, Assignment) and isinstance(a.node, cst.Import)
             for a in scope[self.package]
         )
+
+
+def _inside(scope: Scope, ancestor: Scope) -> bool:
+    here = scope
+    while here is not ancestor:
+        if here.parent is here:
+            return False
+        here = here.parent
+    return True
 
 
 def _alias(dotted: str) -> cst.ImportAlias:
@@ -445,12 +466,14 @@ def _plan_file(path: str, siblings: Siblings, package: str) -> _Parsed | Skip:
 
 
 def _reexports(parsed: Sequence[_Parsed]) -> dict[tuple[str, str], str]:
-    """Map `(module stem, bound name)` to the definition a proven `from` import re-exports.
+    """Map `(module stem, bound name)` to what a proven import binds, for reads through that module.
 
     ⚑ A `from m import x` MAKES `x` AN ATTRIBUTE OF THE IMPORTING MODULE, and another module may
-    read it there (`resolver.PATH`, where `PATH` is defined in `checkenv`). The rewrite removes
-    that attribute, so every such read is pointed at the definition instead, in the same pass:
-    measured on paperkit's engine, where `project.py` read `resolver.PATH`.
+    read it there (`resolver.PATH`, where `PATH` is defined in `checkenv`); so does a plain
+    `import layout`, read as `grader.layout._sandbox_root`. The rewrite removes both attributes, so
+    every such read is pointed at the definition or the module itself, in the same pass: measured
+    on paperkit's engine, where `project.py` read `resolver.PATH` and `discriminate.py` read
+    `grader.layout._sandbox_root`.
 
     Returns:
         the definition's dotted path for each re-exported name.
@@ -460,7 +483,7 @@ def _reexports(parsed: Sequence[_Parsed]) -> dict[tuple[str, str], str]:
     for one in parsed:
         stem = Path(one.path).stem
         for plan in one.planner.planned:
-            if plan.refusal or not isinstance(plan.node, cst.ImportFrom):
+            if plan.refusal:
                 continue
             for name, target in plan.bound.items():
                 out[stem, name] = target

@@ -5574,3 +5574,17 @@
   claim  = { `import pk.bib` inside a function would bind `pk` for all of it, so it goes up.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_function_level_import_is_hoisted_so_the_package_name_is_not_local},
 }
+
+@misc{pycodemod-atomize-lazy-import-with-no-other-read-of-the-package-stays-lazy,
+  section = {atomize},
+  title  = {⚑⚑ Hoisting is for the UnboundLocalError only: a lazy import usually is lazy on purpose},
+  claim  = { Hoisting is for the UnboundLocalError only: a lazy import usually is lazy on purpose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_lazy_import_with_no_other_read_of_the_package_stays_lazy},
+}
+
+@misc{pycodemod-atomize-read-of-a-module-through-another-module-is-pointed-at-the-module,
+  section = {atomize},
+  title  = {⚑⚑ `middle.bib.Y`, where middle only imported bib, reads `pk.bib.Y` once middle stops},
+  claim  = { `middle.bib.Y`, where middle only imported bib, reads `pk.bib.Y` once middle stops.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_read_of_a_module_through_another_module_is_pointed_at_the_module},
+}
