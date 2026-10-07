@@ -102,6 +102,22 @@ def test_exit_zero_over_an_unmoved_head_is_not_committed() -> None:
     assert "HEAD did not move" in line
 
 
+def _too_slow(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
+    raise subprocess.TimeoutExpired(cmd="git", timeout=1)
+
+
+def test_a_gate_that_runs_past_the_limit_is_a_verdict_not_a_traceback(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises."""
+    monkeypatch.setattr(subprocess, "run", _too_slow)
+    done = commit_kata.run_git(["commit"])
+    assert done.returncode == commit_kata.TIMED_OUT
+    line = commit_kata.verdict(Path("/x/repo"), "a" * 40, "a" * 40, done.returncode)
+    assert line.startswith("NOT COMMITTED repo: timed out after")
+    assert "HEAD is still" in line
+
+
 def test_a_new_file_is_added_and_committed_by_its_path(tmp_path: Path) -> None:
     """An untracked path is staged first, so a brand-new file lands in the commit."""
     _repo(tmp_path)

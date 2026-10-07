@@ -6774,3 +6774,10 @@
             since a count that agrees says nothing about WHICH tests are warranted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_warrant_check_is_set_equality_and_no_count_comparison_remains},
 }
+
+@misc{hooks-commit-kata-gate-that-runs-past-the-limit-is-a-verdict-not-a-traceback,
+  section = {commit-kata},
+  title  = {mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises},
+  claim  = {mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_gate_that_runs_past_the_limit_is_a_verdict_not_a_traceback},
+}

@@ -52,6 +52,7 @@ DEFAULT_TRAILER = "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 COMMIT_TIMEOUT_S = 3000
 SHORT = 7
 EXIT_NOT_COMMITTED = 1
+TIMED_OUT = 124
 EXIT_USAGE = 2
 USAGE = (
     "usage: mikemol-commit REPO --waypoint W --subject S [--body B] [PATH ...]\n"
@@ -83,13 +84,20 @@ def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
     git = shutil.which("git")
     if git is None:
         return subprocess.CompletedProcess(list(argv), 127, "", "git is not installed")
-    return subprocess.run(
-        [git, *argv],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=COMMIT_TIMEOUT_S,
-    )
+    try:
+        return subprocess.run(
+            [git, *argv],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=COMMIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        # ⚑ A GATE THAT RUNS PAST THE LIMIT IS A VERDICT, NOT A CRASH (mtools:W844). This raised, so
+        # the caller read a traceback where the one line it reads should have been.
+        return subprocess.CompletedProcess(
+            list(argv), TIMED_OUT, "", f"git timed out after {COMMIT_TIMEOUT_S} s"
+        )
 
 
 def head_of(root: Path, run: Runner = run_git) -> str:
@@ -154,6 +162,11 @@ def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git)
     if after and after != before:
         subject = run(["-C", str(root), "log", "-1", "--format=%s", after]).stdout.strip()
         return f"COMMITTED {name} {after[:SHORT]} {subject}"
+    if rc == TIMED_OUT:
+        return (
+            f"NOT COMMITTED {name}: timed out after {COMMIT_TIMEOUT_S} s (no verdict); "
+            f"HEAD is still {before[:SHORT]}"
+        )
     if rc != 0:
         return f"REFUSED {name} (rc={rc}): the cause is above; HEAD is still {before[:SHORT]}"
     return f"NOT COMMITTED {name}: exit 0 but HEAD did not move from {before[:SHORT]}"
