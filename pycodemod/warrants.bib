@@ -5531,3 +5531,32 @@
   claim  = { `import os, sys` loses only `sys`, and the line ends without a dangling comma.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathdrop.py -k test_the_other_names_of_a_combined_import_are_kept},
 }
+
+@misc{pycodemod-scriptruns-every-spelling-of-the-interpreter-is-a-run,
+  section = {scriptruns},
+  title  = {⚑ Bare, quoted, `$(command -v …)` and a flagged interpreter all read as runs},
+  claim  = { Bare, quoted, `$(command -v …)` and a flagged interpreter all read as runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scriptruns.py -k test_every_spelling_of_the_interpreter_is_a_run},
+}
+
+@misc{pycodemod-scriptruns-mention-is-reported-and-never-rewritten,
+  section = {scriptruns},
+  title  = {⚑⚑ A name in a comment is not a run: it is listed beside the runs and left as written},
+  claim  = { A name in a comment is not a run: it is listed beside the runs and left as written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scriptruns.py -k test_a_mention_is_reported_and_never_rewritten},
+}
+
+@misc{pycodemod-scriptruns-script-outside-the-named-packages-is-left-alone,
+  section = {scriptruns},
+  title  = {⚑ Only the packages named are known; another directory's script is nobody's business here},
+  claim  = { Only the packages named are known; another directory's script is nobody's business
+            here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scriptruns.py -k test_a_script_outside_the_named_packages_is_left_alone},
+}
+
+@misc{pycodemod-scriptruns-write-leaves-no-run-and-says-so,
+  section = {scriptruns},
+  title  = {⚑⚑ After a write the census runs again over the new text, and it must be empty},
+  claim  = { After a write the census runs again over the new text, and it must be empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scriptruns.py -k test_a_write_leaves_no_run_and_says_so},
+}

@@ -56,6 +56,7 @@ from mikemol.pycodemod import (
     cli_atomize,
     cli_fp,
     cli_modes,
+    cli_scriptruns,
     cli_split,
     cli_store,
     control_report,
@@ -154,6 +155,13 @@ def _handle_split(ns: argparse.Namespace) -> int:
         dry_run=_flag(ns, "dry_run"),
     )
     return cli_split.print_split(_str_list(ns, "paths"), flags)
+
+
+def _handle_by_path_runs(ns: argparse.Namespace) -> int:
+    flags = cli_scriptruns.RunFlags(
+        packages=tuple(_str_list(ns, "package")), write=_flag(ns, "write")
+    )
+    return cli_scriptruns.print_runs(_str_list(ns, "paths"), flags)
 
 
 def _handle_atomize(ns: argparse.Namespace) -> int:
@@ -1111,6 +1119,7 @@ MODES = {
     "fingerprint": _handle_fingerprint,
     "split": _handle_split,
     "atomize-imports": _handle_atomize,
+    "by-path-runs": _handle_by_path_runs,
 }
 
 
@@ -1377,6 +1386,15 @@ def _add_atomize_mode(make: _Make) -> None:
     ato.add_argument("paths", nargs="+", help="every file that may import a sibling flat")
 
 
+def _add_runs_mode(make: _Make) -> None:
+    run = make("by-path-runs", "scripts run by path (python3 pkg/x.py) instead of by package")
+    run.add_argument(
+        "--package", action="append", required=True, help="a package whose scripts it knows"
+    )
+    run.add_argument("--write", action="store_true", help="rewrite each run to `-m pkg.x`")
+    run.add_argument("paths", nargs="+", help="text files: shell, Starlark, Makefiles, docs")
+
+
 _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_scan_modes,
     _add_named_modes,
@@ -1388,6 +1406,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_fingerprint_mode,
     _add_split_mode,
     _add_atomize_mode,
+    _add_runs_mode,
 )
 
 
