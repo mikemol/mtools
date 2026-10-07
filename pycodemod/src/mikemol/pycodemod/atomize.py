@@ -289,7 +289,34 @@ class _Rewriter(cst.CSTTransformer):
 
         """
         target = self.rewrites.get(original_node)
-        return updated_node if target is None else _dotted(target)
+        return updated_node if target is None else _dotted(self._definition(target))
+
+    def _definition(self, target: str) -> str:
+        """Follow a dotted target through the re-exports to the module that defines it.
+
+        ⚑ `from grader import _sandbox_root` names a name `grader` only RE-EXPORTS from `layout`,
+        so the target `pkg.grader._sandbox_root` is chased to `pkg.layout._sandbox_root` (and
+        through a re-export of a re-export), and the definition's module is imported.
+
+        Returns:
+            the dotted path of the definition.
+
+        """
+        start = target
+        seen: set[str] = set()
+        while target not in seen:
+            seen.add(target)
+            parts = target.split(".")
+            if len(parts) != _CHAIN or parts[0] != self.package:
+                break
+            nxt = self.reexports.get((parts[1], parts[2]))
+            if nxt is None:
+                break
+            target = nxt
+        parts = target.split(".")
+        if target != start and parts[0] == self.package:
+            self.needed.add(parts[1])
+        return target
 
     @override
     def leave_Import(

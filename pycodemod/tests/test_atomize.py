@@ -192,6 +192,16 @@ def test_a_read_of_a_module_through_another_module_is_pointed_at_the_module(
     assert result.texts[reader] == "import pk.middle\nimport pk.bib\n\nprint(pk.bib.Y)\n"
 
 
+def test_a_from_import_of_a_re_exported_name_binds_the_definition(tmp_path: Path) -> None:
+    """⚑⚑ `from middle import PATH`, where middle only re-exports it, reads `pk.bib.PATH`."""
+    pkg = _package(tmp_path)
+    middle = tmp_path / "pk" / "middle.py"
+    middle.write_text("from bib import PATH\n", encoding="utf-8")
+    reader = _consumer(tmp_path, "from middle import PATH\n\nprint(PATH)\n")
+    result = atomize.atomize([str(middle), reader], atomize.siblings_of(pkg), "pk")
+    assert result.texts[reader] == "import pk.middle\nimport pk.bib\n\nprint(pk.bib.PATH)\n"
+
+
 def test_a_write_is_refused_when_the_sets_disagree(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:

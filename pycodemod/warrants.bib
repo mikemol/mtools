@@ -5588,3 +5588,10 @@
   claim  = { `middle.bib.Y`, where middle only imported bib, reads `pk.bib.Y` once middle stops.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_read_of_a_module_through_another_module_is_pointed_at_the_module},
 }
+
+@misc{pycodemod-atomize-from-import-of-a-re-exported-name-binds-the-definition,
+  section = {atomize},
+  title  = {⚑⚑ `from middle import PATH`, where middle only re-exports it, reads `pk.bib.PATH`},
+  claim  = { `from middle import PATH`, where middle only re-exports it, reads `pk.bib.PATH`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_from_import_of_a_re_exported_name_binds_the_definition},
+}
