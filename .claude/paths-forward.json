@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 853,
+  "counter": 854,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T12:25:41Z",
   "job_id": "9c05fa85",
@@ -17305,7 +17305,7 @@
     {
       "symbol": "W850",
       "title": "W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa tests per gate",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "paths-forward",
@@ -17314,13 +17314,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-08: 2026-10-08 names agreed with nemik (W228/W229): package data/path data.realizability; levels none|constructible|reachable|observable|coverable (none = below constructible); per-item rule data.realizability.verdict (input -> {ref,level,reference_arm,residue}); set rule data.realizability.verdicts = list of verdicts in input.items order, each keeping ref; a residue entry's reference_arm overrides the verdict's (operator ask judged against the operator). Pin: pytestspec/opa.py PINNED = 1.20.2 equals nemik's v1.20.2; the sha256 69da5179ee403d10fa11bab6cfb4ffb0d23dba5f9b682fa977db772a1da5670f is nemik's MODULE.bazel @opa and is not verified here.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-08: 2026-10-08 names agreed with nemik (W228/W229): package data/path data.realizability; levels none|constructible|reachable|observable|coverable (none = below constructible); per-item rule data.realizability.verdict (input -> {ref,level,reference_arm,residue}); set rule data.realizability.verdicts = list of verdicts in input.items order, each keeping ref; a residue entry's reference_arm overrides the verdict's (operator ask judged against the operator). Pin: pytestspec/opa.py PINNED = 1.20.2 equals nemik's v1.20.2; the sha256 69da5179ee403d10fa11bab6cfb4ffb0d23dba5f9b682fa977db772a1da5670f is nemik's MODULE.bazel @opa and is not verified here. | 2026-10-08: landed 472f940, pushed. policy/realizability.rego + 23 opa tests (//pathsforward:policy_test), certify.py, opa_eval.py, --certify; 13 warrants; mutation grid passes.",
       "issued_at": "2026-10-08T13:42:39Z",
       "minted_during": "interrupt",
       "caused_by": "W848",
-      "last_worked": "2026-10-08T13:45:38Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-08T14:33:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261008T143359Z"
     },
     {
       "symbol": "W851",
@@ -17379,6 +17380,26 @@
       "caused_by": "W848",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W854",
+      "title": "W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named waypoints and a gate",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "realizability"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-08: certify --facts FILE: parse_facts (form only), per-waypoint facts into each item, stale/unreadable floors the named gate through the real policy; 729 pathsforward tests pass, 5 more warrants.",
+      "issued_at": "2026-10-08T14:33:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "W848",
+      "last_worked": "2026-10-08T14:36:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261008T143620Z"
     }
   ],
   "residue": [

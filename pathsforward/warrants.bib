@@ -3485,3 +3485,38 @@
   claim  = {A symbol not live here, or no pinned opa, is exit 2 and prints no verdict.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_certify_refuses_when_nothing_could_be_judged},
 }
+
+@misc{pathsforward-certify-malformed-facts-document-is-refused,
+  section = {certify},
+  title  = {Form is checked: an object of objects, each naming waypoints, a known gate, an as_of},
+  claim  = {Form is checked: an object of objects, each naming waypoints, a known gate, an as_of.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_a_malformed_facts_document_is_refused},
+}
+
+@misc{pathsforward-certify-fact-defaults-to-observable-and-an-unreadable-one-needs-no-clock,
+  section = {certify},
+  title  = {An absent gate is observable; `unreadable: true` stands without an as_of},
+  claim  = {An absent gate is observable; `unreadable: true` stands without an as_of.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_a_fact_defaults_to_observable_and_an_unreadable_one_needs_no_clock},
+}
+
+@misc{pathsforward-certify-each-item-carries-only-the-facts-that-name-its-waypoint,
+  section = {certify},
+  title  = {A fact bears on the waypoints it lists and no others},
+  claim  = {A fact bears on the waypoints it lists and no others.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_each_item_carries_only_the_facts_that_name_its_waypoint},
+}
+
+@misc{pathsforward-certify-stale-fact-floors-its-gate-through-the-real-policy,
+  section = {certify},
+  title  = {A fact named for W1 and older than max_age_seconds stops W1 at that gate, by name},
+  claim  = {A fact named for W1 and older than max_age_seconds stops W1 at that gate, by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_a_stale_fact_floors_its_gate_through_the_real_policy},
+}
+
+@misc{pathsforward-certify-unreadable-fact-floors-its-gate-and-a-bad-facts-file-is-not-certified,
+  section = {certify},
+  title  = {Unreadable floors the gate; a missing or malformed file certifies nothing (exit 2)},
+  claim  = {Unreadable floors the gate; a missing or malformed file certifies nothing (exit 2).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_an_unreadable_fact_floors_its_gate_and_a_bad_facts_file_is_not_certified},
+}

@@ -148,6 +148,7 @@ _FIELDS = (
     "command",
     "population",
     "deferred",
+    "facts",
     "root",
     "all",
 )
@@ -192,7 +193,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "inbound": frozenset({"root", "all"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
-    "certify": frozenset({"root"}),
+    "certify": frozenset({"root", "facts"}),
 }
 
 
@@ -317,6 +318,12 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
         metavar="ENTRY",
         help="--update: the whole list of gate|reference_arm|what|closes_by[|closes_ref]; "
         "bare clears. There is no waiver field.",
+    )
+    ap.add_argument(
+        "--facts",
+        metavar="FILE",
+        help="--certify: a JSON object {name: {value, as_of, gate, waypoints} | {unreadable: "
+        "true, gate, waypoints}}; read, never run",
     )
 
 
@@ -1424,10 +1431,17 @@ def _certify(ctx: Ctx) -> int:
     """
     state = store.load(ctx.path)
     symbols = ctx.many("certify") or ()
+    where = certify.Where(inbound.repo_name(ctx.path), _root(ctx))
+    source = ctx.get("facts")
     try:
-        built = certify.items(state, symbols, inbound.repo_name(ctx.path), ctx.stamp(), _root(ctx))
+        facts = (
+            certify.parse_facts(cast("object", json.loads(Path(source).read_text("utf-8"))))
+            if source
+            else {}
+        )
+        built = certify.items(state, symbols, where, ctx.stamp(), facts)
         found = opa_eval.verdicts(built, opa_eval.resolve())
-    except (ops.RefusedError, opa_eval.OpaUnavailableError) as exc:
+    except (ops.RefusedError, opa_eval.OpaUnavailableError, OSError, ValueError) as exc:
         _warn(f"not certified: {exc}")
         return EXIT_REFUSED
     valid = [v for v in found if v.get("level") == "coverable" and not v.get("residue")]

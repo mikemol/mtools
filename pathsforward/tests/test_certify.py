@@ -112,8 +112,9 @@ def _verdict(line: str) -> Rec:
 def test_items_carry_the_waypoint_the_ref_the_clock_and_the_local_graph(tmp_path: Path) -> None:
     """Live and landed are this queue's own symbols; enables keeps only local edges."""
     path = _home(tmp_path)
-    (item,) = certify.items(store.load(path), ["W1"], _REPO, _NOW, tmp_path)
+    (item,) = certify.items(store.load(path), ["W1"], certify.Where(_REPO, tmp_path), _NOW)
     assert (item["ref"], item["now"], item["waypoint"]) == (f"{_REPO}:W1", _NOW, _CLEAN)
+    assert item["facts"] == {}
     graph = cast("Rec", item["graph"])
     assert graph["live"] == ["W1", "W2", "W5"]
     assert graph["landed"] == ["W3", "W4"]
@@ -135,8 +136,90 @@ def test_a_foreign_reference_resolves_only_when_its_owner_holds_it(tmp_path: Pat
 @pytest.mark.parametrize("sym", ["W3", "W77"])
 def test_a_symbol_not_live_here_is_refused_not_judged(tmp_path: Path, sym: str) -> None:
     """Residue has no lifecycle left, and a symbol never issued is a typo the caller must see."""
+    where = certify.Where(_REPO, tmp_path)
     with pytest.raises(RefusedError, match=sym):
-        certify.items(store.load(_home(tmp_path)), ["W1", sym], _REPO, _NOW, tmp_path)
+        certify.items(store.load(_home(tmp_path)), ["W1", sym], where, _NOW)
+
+
+@pytest.mark.parametrize(
+    ("raw", "match"),
+    [
+        ([], "JSON object"),
+        ({"f": 1}, "not an object"),
+        ({"f": {"as_of": _NOW, "waypoints": ["W1"], "gate": "waived"}}, "gate"),
+        ({"f": {"as_of": _NOW}}, "waypoints"),
+        ({"f": {"as_of": _NOW, "waypoints": "W1"}}, "waypoints"),
+        ({"f": {"as_of": _NOW, "waypoints": [1]}}, "waypoints"),
+        ({"f": {"waypoints": ["W1"]}}, "as_of"),
+    ],
+)
+def test_a_malformed_facts_document_is_refused(raw: object, match: str) -> None:
+    """Form is checked: an object of objects, each naming waypoints, a known gate, an as_of."""
+    with pytest.raises(RefusedError, match=match):
+        certify.parse_facts(raw)
+
+
+def test_a_fact_defaults_to_observable_and_an_unreadable_one_needs_no_clock() -> None:
+    """An absent gate is observable; `unreadable: true` stands without an as_of."""
+    got = certify.parse_facts(
+        {"a": {"as_of": _NOW, "waypoints": ["W1"]}, "b": {"unreadable": True, "waypoints": ["W2"]}}
+    )
+    assert (got["a"]["gate"], got["b"]["gate"]) == ("observable", "observable")
+
+
+def test_each_item_carries_only_the_facts_that_name_its_waypoint(tmp_path: Path) -> None:
+    """A fact bears on the waypoints it lists and no others."""
+    facts = certify.parse_facts(
+        {
+            "md0": {"as_of": _NOW, "waypoints": ["W2"], "gate": "reachable"},
+            "free": {"as_of": _NOW, "waypoints": ["W1", "W2"]},
+        }
+    )
+    where = certify.Where(_REPO, tmp_path)
+    one, two = certify.items(store.load(_home(tmp_path)), ["W1", "W2"], where, _NOW, facts)
+    assert (sorted(cast("Rec", one["facts"])), sorted(cast("Rec", two["facts"]))) == (
+        ["free"],
+        ["free", "md0"],
+    )
+
+
+def _facts_file(tmp_path: Path, doc: Rec) -> Path:
+    """Write a facts document.
+
+    Returns:
+        its path.
+
+    """
+    path = tmp_path / "facts.json"
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    return path
+
+
+def test_a_stale_fact_floors_its_gate_through_the_real_policy(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A fact named for W1 and older than max_age_seconds stops W1 at that gate, by name."""
+    old: Rec = {"as_of": "2020-01-01T00:00:00Z", "waypoints": ["W1"], "gate": "reachable"}
+    facts = _facts_file(tmp_path, {"md0_who": old})
+    argv = ["--state", str(_home(tmp_path)), "--certify", "W1", "W2", "--root", str(tmp_path)]
+    assert cli.main([*argv, "--facts", str(facts)]) == cli.EXIT_FAILED
+    w1, w2 = (_verdict(ln) for ln in capsys.readouterr().out.splitlines())
+    assert (w1["level"], w2["level"]) == ("constructible", "coverable")
+    assert "md0_who" in json.dumps(w1["residue"])
+
+
+def test_an_unreadable_fact_floors_its_gate_and_a_bad_facts_file_is_not_certified(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Unreadable floors the gate; a missing or malformed file certifies nothing (exit 2)."""
+    unreadable: Rec = {"unreadable": True, "waypoints": ["W1"]}
+    facts = _facts_file(tmp_path, {"f": unreadable})
+    argv = ["--state", str(_home(tmp_path)), "--certify", "W1", "--root", str(tmp_path)]
+    assert cli.main([*argv, "--facts", str(facts)]) == cli.EXIT_FAILED
+    assert _verdict(capsys.readouterr().out)["level"] == "reachable"
+    facts.write_text("[1]", encoding="utf-8")
+    assert cli.main([*argv, "--facts", str(facts)]) == cli.EXIT_REFUSED
+    assert cli.main([*argv, "--facts", str(tmp_path / "absent.json")]) == cli.EXIT_REFUSED
 
 
 @pytest.mark.parametrize(
