@@ -24,7 +24,7 @@ from enum import StrEnum
 from itertools import starmap
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lock, recurrence, timevalue, vector
+from mikemol.pathsforward import lock, realizable, recurrence, timevalue, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -59,6 +59,24 @@ def _bad_edges(edges: Iterable[str]) -> list[str]:
 
     """
     return [e for e in edges if not is_reference(e)]
+
+
+def _realizable_fields(upd: Update) -> Json:
+    """Shape the realizability fields an update gives; a cleared one is None, an unset one absent.
+
+    Returns:
+        the fields to set on the waypoint, empty when the update gives none.
+
+    """
+    out: Json = {}
+    for key, value in (("reference_arm", upd.reference_arm), ("command", upd.command)):
+        if value is not None:
+            out[key] = realizable.one_line(key, value) if value else None
+    if upd.population is not None:
+        out["population"] = realizable.population(upd.population)
+    if upd.deferred is not None:
+        out["deferred"] = realizable.deferred(upd.deferred) or None
+    return out
 
 
 class Action(StrEnum):
@@ -133,6 +151,15 @@ class Update:
     unchanged: str | None = None
     rejected: str | None = None
     consumers: str | None = None
+    # ⚑ THE FIELDS THE REALIZABILITY POLICY READS (W849, W848), each OPTIONAL AND CHECKED FOR FORM
+    # ONLY: an absent one is "not declared", which the policy reads as residue, never as clean.
+    # `reference_arm` and `command` are one-line text ('' clears). `population` is SOURCE [BOUND]
+    # (a bare flag, `()`, clears). `deferred` is the WHOLE list of gate|arm|what|closes_by[|ref]
+    # entries, SET not merged (`()` clears); there is deliberately no field marking a gate waived.
+    reference_arm: str | None = None
+    command: str | None = None
+    population: tuple[str, ...] | None = None
+    deferred: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -378,6 +405,7 @@ def _set_given(new: Json, upd: Update) -> None:
     new.update({key: value for key, value in given.items() if value is not None})
     if upd.caused_by is not None:
         new["caused_by"] = upd.caused_by or None
+    new.update(_realizable_fields(upd))
     for key, value in (("dtstart", upd.dtstart), ("due", upd.due)):
         if value is not None:
             new[key] = value or None

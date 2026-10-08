@@ -141,6 +141,10 @@ _FIELDS = (
     "unchanged",
     "rejected",
     "consumers",
+    "reference_arm",
+    "command",
+    "population",
+    "deferred",
     "root",
     "all",
 )
@@ -173,6 +177,10 @@ _APPLIES: dict[str, frozenset[str]] = {
             "unchanged",
             "rejected",
             "consumers",
+            "reference_arm",
+            "command",
+            "population",
+            "deferred",
         }
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
@@ -280,6 +288,32 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
     )
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
+    _add_realizable_fields(ap)
+
+
+def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
+    """Add the flags for the fields the realizability policy reads (W849).
+
+    ⚑ FORM IS CHECKED IN `realizable`, NEVER HERE: these only collect the words.
+    """
+    for name in ("reference-arm", "command"):
+        ap.add_argument(
+            f"--{name}", metavar="TEXT", help=f"--update: the realizability {name}; '' clears"
+        )
+    ap.add_argument(
+        "--population",
+        nargs="*",
+        metavar="SOURCE_OR_BOUND",
+        help="--update: SOURCE [BOUND], a named finite source and its size or 'unbounded'; "
+        "bare clears",
+    )
+    ap.add_argument(
+        "--deferred",
+        nargs="*",
+        metavar="ENTRY",
+        help="--update: the whole list of gate|reference_arm|what|closes_by[|closes_ref]; "
+        "bare clears. There is no waiver field.",
+    )
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -886,6 +920,10 @@ def _update(ctx: Ctx) -> int:
         unchanged=ctx.get("unchanged"),
         rejected=ctx.get("rejected"),
         consumers=ctx.get("consumers"),
+        reference_arm=ctx.get("reference_arm"),
+        command=ctx.get("command"),
+        population=ctx.many("population"),
+        deferred=ctx.many("deferred"),
     )
 
     def edit(state: State) -> int:

@@ -3352,3 +3352,45 @@
   claim  = {The pipe title is present in the detail list, unescaped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_hostile_mirror_keeps_the_pipe_title_text},
 }
+
+@misc{pathsforward-realizable-fields-are-stored-as-given-and-an-update-of-them-is-not-work,
+  section = {realizable},
+  title  = {Each field lands in the shape the policy reads, and last_worked stays unwritten},
+  claim  = {Each field lands in the shape the policy reads, and last_worked stays unwritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_realizable.py -k test_the_fields_are_stored_as_given_and_an_update_of_them_is_not_work},
+}
+
+@misc{pathsforward-realizable-population-with-no-bound-is-unbounded,
+  section = {realizable},
+  title  = {A source alone, or the word `unbounded`, stores a null bound: not finite, so residue},
+  claim  = {A source alone, or the word `unbounded`, stores a null bound: not finite, so residue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_realizable.py -k test_a_population_with_no_bound_is_unbounded},
+}
+
+@misc{pathsforward-realizable-deferred-entry-without-a-ref-carries-no-closes-ref-key,
+  section = {realizable},
+  title  = {The structured ref is optional, so an absent one is absent and never an empty string},
+  claim  = {The structured ref is optional, so an absent one is absent and never an empty string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_realizable.py -k test_a_deferred_entry_without_a_ref_carries_no_closes_ref_key},
+}
+
+@misc{pathsforward-realizable-deferred-is-set-not-merged-and-empty-clears,
+  section = {realizable},
+  title  = {The list states the whole set: a second update replaces, and an empty one ends it},
+  claim  = {The list states the whole set: a second update replaces, and an empty one ends it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_realizable.py -k test_deferred_is_set_not_merged_and_empty_clears},
+}
+
+@misc{pathsforward-realizable-blank-text-and-a-bare-population-clear-their-fields,
+  section = {realizable},
+  title  = {'' clears reference_arm and command, and a bare population clears it, like caused_by},
+  claim  = {'' clears reference_arm and command, and a bare population clears it, like caused_by.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_realizable.py -k test_blank_text_and_a_bare_population_clear_their_fields},
+}
+
+@misc{pathsforward-realizable-malformed-field-is-refused-and-nothing-is-stored,
+  section = {realizable},
+  title  = {Form is checked before storing, and a refusal leaves the waypoint as it was},
+  claim  = {Form is checked before storing, and a refusal leaves the waypoint as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_realizable.py -k test_a_malformed_field_is_refused_and_nothing_is_stored},
+}

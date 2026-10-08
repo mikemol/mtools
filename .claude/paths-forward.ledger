@@ -1278,3 +1278,11 @@
 2026-10-07T13:41:02Z  interrupt W846 minted    -         "atomize-imports hoists function-level and re-export imports to module level; put them at the top of the function that reads them"
 2026-10-07T16:39:54Z  interrupt W847 minted    -         "mikemol-paths-forward has no verb to record a skipped symbol: a numbering gap fails --check forever (gcalculus W30)"  evidence=gcalculus:W207
 2026-10-07T18:59:04Z  tick  --   swept     sweep     "117 mtools typing waypoints closed: the edit gate (pycheck_cli --check-file) admits every named file; positive control refused a bad Write; no debt-ledger.json exists to lower"
+2026-10-07T19:48:14Z  tick  --   skipped   none      "operator HOLD relayed by github-28 (md0 saturated): no gate, build or test run; resumes on RELEASE"
+2026-10-08T13:38:07Z  interrupt W848 minted    -         "The paths-forward writer admits each waypoint transition through a Rego realizability policy: a coordinate and residue ledger, never a bare reject"  evidence=luthen-observability:W666
+2026-10-08T13:42:39Z  interrupt W849 minted    -         "W848 unit: the model carries optional reference_arm, population and command, validated on --update"  evidence=W848
+2026-10-08T13:42:39Z  interrupt W850 minted    -         "W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa tests per gate"  evidence=W848
+2026-10-08T13:42:40Z  interrupt W851 minted    -         "W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing only a drop missing gate, arm or reason"  evidence=W848
+2026-10-08T13:49:47Z  interrupt W852 minted    -         "W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable marks ledger beside the queue"  evidence=W848
+2026-10-08T13:49:48Z  interrupt W853 minted    -         "W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once per waypoint and gate"  evidence=W848
+2026-10-08T14:00:34Z  tick  W849 advanced  unblock   "realizable fields coded and tested alone, 6 warrants generated; gated commit waits on md0 QUIET"

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 847,
+  "counter": 853,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-05T12:25:41Z",
   "job_id": "9c05fa85",
@@ -17260,6 +17260,123 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W207",
       "last_worked": "2026-10-07T16:40:03Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W848",
+      "title": "The paths-forward writer admits each waypoint transition through a Rego realizability policy: a coordinate and residue ledger, never a bare reject",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "policy",
+        "realizability"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Design note first (no code, during HOLD): enumerate the writer's transitions (--update status/blocked_on/kind, --drop, --add, --lock) as the policy's input document {from,to,fields,readings}; decide the output shape {admitted: bool, coordinate: {constructible,reachable,observable,coverable}, residue: [..]}; name where the Rego runs (pytestspec/opa.py already shells OPA; reuse, do not add a second runner). Then atomize: one waypoint per landable unit (input schema, policy file + tests, writer hook behind a flag, ledger of residue).",
+      "evidence": "2026-10-08: 2026-10-08: operator named W848 as the focus. Cause is luthen-observability:W666 (same admit-by-Rego shape for cutover steps), so the coordinate-and-residue output should be one schema both share; coordinate with luthen before fixing field names. HOLD (md0) still in force: queue note only, no build or gate run. | 2026-10-08: 2026-10-08: luthen host (github-28) asked mtools to claim W848 and proposed a 4-gate lifecycle (mint never refused; constructible gates ready, reachable gates working, observable gates done, coverable completes; verdict = level + residue ledger; unreadable fact floors the level; waiver field is itself a violation). Input document and output shape proposed back by message; open: optional reference_arm and population fields on the waypoint, one shared package with luthen-observability:W666. | 2026-10-08: 2026-10-08 decisions (luthen host): add optional waypoint fields reference_arm (string; absent = host:luthen, residue then reads portable), population ({source, bound:int|null}; null = unbounded = residue at coverable) and command (string, required when blocked_on says 'operator: act'); no actor field. Output {level, reference_arm, residue:[{gate,reference_arm,closes_by}]}; all-clean emits level=coverable with empty residue. Only op=drop may refuse (drop.gate, reference_arm or reason missing). Facts keep {value,as_of}|{unreadable}; max_age_seconds lives in the policy data; an unreadable or stale fact floors the level at its gate and is named in residue. Shape is shared with luthen-observability:W666, package is not (its policy lives in luthen's policy/cutover/); it will import ours if published sha-pinned. | 2026-10-08: 2026-10-08 nemik:W228 (read side; nemik:W229 waits on this) asks: one policy file serving transition (writer) and state (nemik-check) documents, as package data mikemol/pathsforward/policy/realizability.rego; deferred gates recorded as writer-owned waypoint field deferred:[{gate,reference_arm,what,closes_by}], waive/waived keys a violation; runner contract = pytestspec/opa.py (pinned opa, eval --format json --stdin-input, data files, timeout; its Verdict parser is not reusable). Proposed one output shape to all three parties: {ref, level, reference_arm, residue:[{gate,reference_arm,what,closes_by}]}, awaiting nemik's confirmation. | 2026-10-08: 2026-10-08 operator requirement (via luthen host): W848 supports stigmaturgy (deliberate durable marks in a shared medium, nemik giving salience). Reading, none of it fights the fixed shape: (1) every transition's verdict is persisted as a marks-ledger line with as_of and an input digest (W852), the writer stamps the clock because Rego has none; (2) closes_by can mint one claimable waypoint per waypoint and gate, idempotent (W853), a writer step not a policy effect; (3) max_age_seconds in policy data floors a stale mark; (4) the ledger line carries the full residue incl. what and closes_by, so another worker resumes from the mark alone.",
+      "issued_at": "2026-10-08T13:38:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W666",
+      "last_worked": "2026-10-08T13:49:56Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W849",
+      "title": "W848 unit: the model carries optional reference_arm, population and command, validated on --update",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "realizability"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Gated commit once md0 reads QUIET and the host lifts the gate ban: realizable.py, ops.py, cli.py, tests/test_realizable.py, the per-file assert entry, and 6 generated warrants plus the rubric row are written, uncommitted. Check the :mutants grid for the new def-sites at that commit.",
+      "evidence": "2026-10-08: 2026-10-08 sample queue records nemik's adapter will read. Waypoint: {\"symbol\":\"W900\",\"status\":\"blocked\",\"blocked_on\":[\"operator: act run mikemol-x --apply\"],\"blocked_kind\":\"human\",\"command\":\"mikemol-x --apply\",\"reference_arm\":\"operator\",\"population\":{\"source\":\"the tracked .py files under hooks/\",\"bound\":null},\"deferred\":[{\"gate\":\"coverable\",\"reference_arm\":\"host:luthen\",\"what\":\"population is unbounded\",\"closes_by\":\"name a finite source\"}]}. Drop (a residue entry): {\"symbol\":\"W901\",\"title\":\"...\",\"dropped_at\":\"2026-10-08T00:00:00Z\",\"reason\":\"...\",\"recoverable\":true,\"gate\":\"reachable\",\"reference_arm\":\"host:luthen\"}. Absent fields mean not declared, never clean. Illustrative until the writer validates them. | 2026-10-08: 2026-10-08 nemik:W235 ask: a residue entry carries an optional structured closes_ref (<repo>:W<n>, validated by the same resolver as caused_by) beside the prose closes_by. One field per purpose, and nothing parses the prose. | 2026-10-08: 2026-10-08 W849 code written, uncommitted (partial HOLD: no bazel gate). realizable.py (one_line, population, deferred), ops.Update fields plus _realizable_fields wired into _set_given, cli flags --reference-arm --command --population --deferred. Edit gate admits cli.py and ops.py; tests/test_realizable.py 12 passed, tests/test_ops.py and test_cli.py 214 passed (pytest alone, bounded). CLI probe on a scratch copy of the state accepted all four flags. | 2026-10-08: 2026-10-08 tick: mikemol-gen-warrants --write appended 6 warrants and 1 rubric row (key realizable). md0_who read SATURATED (busy 1.00, precopy pass), so no gate run.",
+      "issued_at": "2026-10-08T13:42:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "W848",
+      "last_worked": "2026-10-08T14:00:34Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W850",
+      "title": "W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa tests per gate",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "policy",
+        "realizability"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-08: 2026-10-08 names agreed with nemik (W228/W229): package data/path data.realizability; levels none|constructible|reachable|observable|coverable (none = below constructible); per-item rule data.realizability.verdict (input -> {ref,level,reference_arm,residue}); set rule data.realizability.verdicts = list of verdicts in input.items order, each keeping ref; a residue entry's reference_arm overrides the verdict's (operator ask judged against the operator). Pin: pytestspec/opa.py PINNED = 1.20.2 equals nemik's v1.20.2; the sha256 69da5179ee403d10fa11bab6cfb4ffb0d23dba5f9b682fa977db772a1da5670f is nemik's MODULE.bazel @opa and is not verified here.",
+      "issued_at": "2026-10-08T13:42:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "W848",
+      "last_worked": "2026-10-08T13:45:38Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W851",
+      "title": "W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing only a drop missing gate, arm or reason",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "policy",
+        "realizability"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-08T13:42:40Z",
+      "minted_during": "interrupt",
+      "caused_by": "W848",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W852",
+      "title": "W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable marks ledger beside the queue",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "realizability"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-08: 2026-10-08 format agreed with nemik:W234: file .claude/paths-forward.marks.jsonl beside the queue (append-only, one JSON object per transition, separate from the prose .ledger so a reader needs no parsing of text). Record: {as_of, op, symbol, policy_version (sha256 of realizability.rego), input_digest (sha256 of the canonical input), verdict: {ref, level, reference_arm, residue[{gate, reference_arm, what, closes_by, closes_ref?}]}}. The policy takes the time as input.now (nemik passes the same now it prints); the writer's as_of is that now, so a verdict stays a pure function of its input.",
+      "issued_at": "2026-10-08T13:49:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "W848",
+      "last_worked": "2026-10-08T13:51:10Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W853",
+      "title": "W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once per waypoint and gate",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "realizability"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-08T13:49:48Z",
+      "minted_during": "interrupt",
+      "caused_by": "W848",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],
