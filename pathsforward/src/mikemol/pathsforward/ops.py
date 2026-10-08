@@ -783,8 +783,11 @@ def add(state: State, draft: Draft, now: str) -> str:
     return sym
 
 
-def drop(state: State, sym: str, reason: str, now: str) -> None:
+def drop(state: State, sym: str, reason: str, now: str, died: dict[str, str] | None = None) -> None:
     """Move a live waypoint to residue (skill section 5); the reason is required.
+
+    ⚑ `died` is the gate it died at and the arm it was judged against (W851), stored on the
+    residue entry beside the reason when the caller gives it, so a dropped waypoint says where.
 
     Raises:
         RefusedError: on an empty reason, or a symbol that is not live.
@@ -802,6 +805,7 @@ def drop(state: State, sym: str, reason: str, now: str) -> None:
             "dropped_at": now,
             "reason": reason,
             "recoverable": True,
+            **(died or {}),
         }
     )
 

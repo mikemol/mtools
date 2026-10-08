@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 76,
+      "ticks_blocked": 77,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 74,
+      "ticks_blocked": 75,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -16962,7 +16962,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -17327,7 +17327,7 @@
     {
       "symbol": "W851",
       "title": "W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing only a drop missing gate, arm or reason",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "paths-forward",
@@ -17336,18 +17336,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-08: --admit on --add/--update/--drop: saves first, then judges through the pinned opa, prints the coordinate and appends a mark; a policy that cannot run never blocks a write; a drop under --admit must give --gate and --reference-arm (refused before anything moves) and stores them on the residue entry. 748 pathsforward tests pass.",
       "issued_at": "2026-10-08T13:42:40Z",
       "minted_during": "interrupt",
       "caused_by": "W848",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-08T15:08:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261008T150838Z"
     },
     {
       "symbol": "W852",
       "title": "W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable marks ledger beside the queue",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "paths-forward",
@@ -17355,13 +17356,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-08: 2026-10-08 format agreed with nemik:W234: file .claude/paths-forward.marks.jsonl beside the queue (append-only, one JSON object per transition, separate from the prose .ledger so a reader needs no parsing of text). Record: {as_of, op, symbol, policy_version (sha256 of realizability.rego), input_digest (sha256 of the canonical input), verdict: {ref, level, reference_arm, residue[{gate, reference_arm, what, closes_by, closes_ref?}]}}. The policy takes the time as input.now (nemik passes the same now it prints); the writer's as_of is that now, so a verdict stays a pure function of its input.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-08: 2026-10-08 format agreed with nemik:W234: file .claude/paths-forward.marks.jsonl beside the queue (append-only, one JSON object per transition, separate from the prose .ledger so a reader needs no parsing of text). Record: {as_of, op, symbol, policy_version (sha256 of realizability.rego), input_digest (sha256 of the canonical input), verdict: {ref, level, reference_arm, residue[{gate, reference_arm, what, closes_by, closes_ref?}]}}. The policy takes the time as input.now (nemik passes the same now it prints); the writer's as_of is that now, so a verdict stays a pure function of its input. | 2026-10-08: marks.py: <queue>.marks.jsonl beside the queue, one JSON object per transition {as_of, op, symbol, policy_version, input_digest, verdict} (drop: {as_of, op, symbol, drop}); policy_version is the sha256 of realizability.rego, input_digest the sha256 of the canonical input; appended only after the save. Format as agreed with nemik:W234.",
       "issued_at": "2026-10-08T13:49:47Z",
       "minted_during": "interrupt",
       "caused_by": "W848",
-      "last_worked": "2026-10-08T13:51:10Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-08T15:08:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261008T150838Z"
     },
     {
       "symbol": "W853",

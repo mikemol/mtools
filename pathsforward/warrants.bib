@@ -3520,3 +3520,108 @@
   claim  = {Unreadable floors the gate; a missing or malformed file certifies nothing (exit 2).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_an_unreadable_fact_floors_its_gate_and_a_bad_facts_file_is_not_certified},
 }
+
+@misc{pathsforward-admission-policy-version-is-the-hash-of-the-policy-file,
+  section = {admission},
+  title  = {A mark names the exact policy that judged it, so a changed policy is a changed version},
+  claim  = {A mark names the exact policy that judged it, so a changed policy is a changed version.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_the_policy_version_is_the_hash_of_the_policy_file},
+}
+
+@misc{pathsforward-admission-input-digest-ignores-key-order-and-sees-a-changed-value,
+  section = {admission},
+  title  = {The canonical form sorts keys, so only content moves the digest},
+  claim  = {The canonical form sorts keys, so only content moves the digest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_the_input_digest_ignores_key_order_and_sees_a_changed_value},
+}
+
+@misc{pathsforward-admission-judged-mark-carries-who-what-when-and-the-verdict,
+  section = {admission},
+  title  = {The record has the clock, the op, the symbol, both hashes and the verdict as given},
+  claim  = {The record has the clock, the op, the symbol, both hashes and the verdict as given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_judged_mark_carries_who_what_when_and_the_verdict},
+}
+
+@misc{pathsforward-admission-drop-mark-says-where-it-died-and-has-no-verdict,
+  section = {admission},
+  title  = {Nothing is left to judge after a drop, so the mark holds the account instead},
+  claim  = {Nothing is left to judge after a drop, so the mark holds the account instead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_drop_mark_says_where_it_died_and_has_no_verdict},
+}
+
+@misc{pathsforward-admission-append-adds-one-line-per-record-and-never-rewrites,
+  section = {admission},
+  title  = {Two appends are two lines, the first untouched},
+  claim  = {Two appends are two lines, the first untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_append_adds_one_line_per_record_and_never_rewrites},
+}
+
+@misc{pathsforward-admission-drop-must-say-the-gate-the-arm-and-why,
+  section = {admission},
+  title  = {The one refusal: a drop with no account of where the waypoint died},
+  claim  = {The one refusal: a drop with no account of where the waypoint died.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_drop_must_say_the_gate_the_arm_and_why},
+}
+
+@misc{pathsforward-admission-complete-account-is-the-gate-and-the-arm,
+  section = {admission},
+  title  = {What is stored on the residue entry is exactly the gate and the arm},
+  claim  = {What is stored on the residue entry is exactly the gate and the arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_complete_account_is_the_gate_and_the_arm},
+}
+
+@misc{pathsforward-admission-add-with-admit-saves-judges-and-marks,
+  section = {admission},
+  title  = {The waypoint is minted, its coordinate printed, and one add mark appended},
+  claim  = {The waypoint is minted, its coordinate printed, and one add mark appended.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_add_with_admit_saves_judges_and_marks},
+}
+
+@misc{pathsforward-admission-update-with-admit-marks-the-judged-coordinate,
+  section = {admission},
+  title  = {A fully declared waypoint judged after an update is runtime-valid, and the mark says so},
+  claim  = {A fully declared waypoint judged after an update is runtime-valid, and the mark says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_update_with_admit_marks_the_judged_coordinate},
+}
+
+@misc{pathsforward-admission-without-admit-nothing-is-judged-or-marked,
+  section = {admission},
+  title  = {The flag is opt-in: an ordinary write leaves no mark and prints no coordinate},
+  claim  = {The flag is opt-in: an ordinary write leaves no mark and prints no coordinate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_without_admit_nothing_is_judged_or_marked},
+}
+
+@misc{pathsforward-admission-policy-that-cannot-run-never-blocks-the-write,
+  section = {admission},
+  title  = {No pinned opa: the claim is still saved, the line says it was not judged, no mark},
+  claim  = {No pinned opa: the claim is still saved, the line says it was not judged, no mark.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_policy_that_cannot_run_never_blocks_the_write},
+}
+
+@misc{pathsforward-admission-bare-drop-under-admit-is-refused-and-the-waypoint-stays-live,
+  section = {admission},
+  title  = {No gate and arm: exit 2, nothing moved, nothing marked},
+  claim  = {No gate and arm: exit 2, nothing moved, nothing marked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_bare_drop_under_admit_is_refused_and_the_waypoint_stays_live},
+}
+
+@misc{pathsforward-admission-complete-drop-stores-the-account-on-the-residue-and-marks-it,
+  section = {admission},
+  title  = {The residue entry carries gate and arm beside the reason, and a drop mark is appended},
+  claim  = {The residue entry carries gate and arm beside the reason, and a drop mark is appended.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_complete_drop_stores_the_account_on_the_residue_and_marks_it},
+}
+
+@misc{pathsforward-admission-plain-drop-without-admit-is-unchanged,
+  section = {admission},
+  title  = {The two-operand drop still works and stores no gate or arm},
+  claim  = {The two-operand drop still works and stores no gate or arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_plain_drop_without_admit_is_unchanged},
+}
+
+@misc{pathsforward-admission-gate-is-a-drop-flag-and-is-refused-elsewhere,
+  section = {admission},
+  title  = {A flag a mode does not read is a stray, never silently accepted},
+  claim  = {A flag a mode does not read is a stray, never silently accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_gate_is_a_drop_flag_and_is_refused_elsewhere},
+}

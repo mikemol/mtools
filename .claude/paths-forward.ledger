@@ -1288,3 +1288,5 @@
 2026-10-08T14:00:34Z  tick  W849 advanced  unblock   "realizable fields coded and tested alone, 6 warrants generated; gated commit waits on md0 QUIET"
 2026-10-08T14:33:59Z  interrupt W854 minted    -         "W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named waypoints and a gate"  evidence=W848
 2026-10-08T14:51:25Z  tick  W791 advanced  unblock   "debtplan reads .claude/debtplan.json; 12 tests, //debtplan/... passes; re-armed cron 7798d5b8 with an in-budget payload"
+2026-10-08T15:03:52Z  hash  --   diverged  --        "divergence: payload v2:b108834b95845cf1, file v2:3c47a9159b691f34; the FILE wins"
+2026-10-08T15:08:43Z  tick  W851 advanced  unblock   "--admit writer hook + marks ledger (W852) coded, 748 tests pass, gated commit follows"

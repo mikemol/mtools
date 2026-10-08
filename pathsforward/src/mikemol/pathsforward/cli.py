@@ -26,6 +26,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward import (
+    admission,
     certify,
     embargo,
     foreign,
@@ -48,6 +49,7 @@ from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line
 from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
+from mikemol.pathsforward.realizable import GATES
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
 from mikemol.pathsforward.unlinked import report as unlinked_report
 
@@ -149,6 +151,8 @@ _FIELDS = (
     "population",
     "deferred",
     "facts",
+    "admit",
+    "gate",
     "root",
     "all",
 )
@@ -185,9 +189,12 @@ _APPLIES: dict[str, frozenset[str]] = {
             "command",
             "population",
             "deferred",
+            "admit",
+            "root",
         }
     ),
-    "add": frozenset({"next", "enables", "touches", "caused_by", "witness"}),
+    "add": frozenset({"next", "enables", "touches", "caused_by", "witness", "admit", "root"}),
+    "drop": frozenset({"admit", "gate", "reference_arm", "root"}),
     "bump_blocked": frozenset({"exclude"}),
     "prune_landed": frozenset({"root"}),
     "inbound": frozenset({"root", "all"}),
@@ -318,6 +325,19 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
         metavar="ENTRY",
         help="--update: the whole list of gate|reference_arm|what|closes_by[|closes_ref]; "
         "bare clears. There is no waiver field.",
+    )
+    ap.add_argument(
+        "--admit",
+        action="store_true",
+        default=None,
+        help="--add/--update/--drop: judge the transition through the realizability policy "
+        "after saving, print its coordinate and append a mark; a drop must also give "
+        "--gate and --reference-arm",
+    )
+    ap.add_argument(
+        "--gate",
+        choices=GATES,
+        help="--drop with --admit: the gate the waypoint died at",
     )
     ap.add_argument(
         "--facts",
@@ -597,8 +617,15 @@ def _lapsed_lines(ctx: Ctx, state: State) -> None:
         )
 
 
-def _mutate(ctx: Ctx, edit: Callable[[State], int]) -> int:
+def _mutate(
+    ctx: Ctx,
+    edit: Callable[[State], int],
+    after: Callable[[State], None] | None = None,
+) -> int:
     """Run one read-modify-write under the flock, saving only when the edit succeeded.
+
+    ⚑ `after` RUNS ONLY ONCE THE STATE IS SAVED, still under the flock (W851): a mark is never
+    written for a transition the queue does not hold.
 
     Returns:
         the edit's exit code.
@@ -609,7 +636,25 @@ def _mutate(ctx: Ctx, edit: Callable[[State], int]) -> int:
         code = edit(state)
         if code == EXIT_OK:
             store.save(ctx.path, state)
+            if after is not None:
+                after(state)
     return code
+
+
+def _admit_after(ctx: Ctx, op: str, sym: str) -> Callable[[State], None] | None:
+    """Build the post-save judging step for `--admit`, or None when it was not asked for.
+
+    Returns:
+        a callable that judges `sym` in the saved state and says its coordinate.
+
+    """
+    if not ctx.opts.get("admit"):
+        return None
+
+    def after(state: State) -> None:
+        _say(admission.admit(state, op, sym, admission.Site(ctx.path, _root(ctx), ctx.stamp())))
+
+    return after
 
 
 def _summary(ctx: Ctx) -> int:
@@ -957,7 +1002,7 @@ def _update(ctx: Ctx) -> int:
             _say(f"{sym} updated; state_hash={v2(state.waypoints)}")
         return code
 
-    return _mutate(ctx, edit)
+    return _mutate(ctx, edit, _admit_after(ctx, "update", ctx.get("update") or ""))
 
 
 def _redact(ctx: Ctx) -> int:
@@ -1055,6 +1100,9 @@ def _add(ctx: Ctx) -> int:
         )
         store.save(ctx.path, state)
         append(store.sibling(ctx.path, store.LEDGER), minted)
+        judge = _admit_after(ctx, "add", sym)
+        if judge is not None:
+            judge(state)
     _say(f"{sym} added; state_hash={v2(state.waypoints)}")
     return EXIT_OK
 
@@ -1067,13 +1115,25 @@ def _drop(ctx: Ctx) -> int:
 
     """
     sym, reason = ctx.many("drop") or ("", "")
+    # ⚑ UNDER --admit A DROP MUST SAY WHERE IT DIED (W851), checked BEFORE anything moves so a
+    # refused drop leaves the waypoint live; without --admit the old two-operand drop is unchanged.
+    account = (
+        admission.died(ctx.get("gate"), ctx.get("reference_arm"), reason)
+        if ctx.opts.get("admit")
+        else None
+    )
 
     def edit(state: State) -> int:
-        ops.drop(state, sym, reason, ctx.stamp())
+        ops.drop(state, sym, reason, ctx.stamp(), account)
         _say(f"{sym} -> residue; state_hash={v2(state.waypoints)}")
         return EXIT_OK
 
-    return _mutate(ctx, edit)
+    def after(_state: State) -> None:
+        if account is not None:
+            site = admission.Site(ctx.path, _root(ctx), ctx.stamp())
+            admission.mark_drop(site, sym, reason, account)
+
+    return _mutate(ctx, edit, after)
 
 
 def _embargo(ctx: Ctx) -> int:
