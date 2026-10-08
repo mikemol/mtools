@@ -852,3 +852,73 @@
   claim  = {Argparse refuses it with its own exit code 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unknown_command_or_missing_operand_is_a_usage_error},
 }
+
+@misc{debtplan-config-both-keys-are-read,
+  section = {config},
+  title  = {The exclusions keep their order and the resolutions their mapping},
+  claim  = {The exclusions keep their order and the resolutions their mapping.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_both_keys_are_read},
+}
+
+@misc{debtplan-config-empty-object-declares-nothing,
+  section = {config},
+  title  = {Both keys are optional},
+  claim  = {Both keys are optional.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_an_empty_object_declares_nothing},
+}
+
+@misc{debtplan-config-malformed-file-is-refused-naming-what-is-wrong,
+  section = {config},
+  title  = {A misspelt key must not silently drop every exclusion, so each shape error is named},
+  claim  = {A misspelt key must not silently drop every exclusion, so each shape error is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_a_malformed_file_is_refused_naming_what_is_wrong},
+}
+
+@misc{debtplan-config-absent-file-declares-nothing,
+  section = {config},
+  title  = {No file is no declarations; the repository simply has not declared any},
+  claim  = {No file is no declarations; the repository simply has not declared any.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_an_absent_file_declares_nothing},
+}
+
+@misc{debtplan-config-file-is-read-from-the-repository-s-claude-directory,
+  section = {config},
+  title  = {The file lives at .claude/debtplan.json under the root},
+  claim  = {The file lives at .claude/debtplan.json under the root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_a_file_is_read_from_the_repository_s_claude_directory},
+}
+
+@misc{debtplan-config-symlinked-file-is-refused-as-data,
+  section = {config},
+  title  = {A link is never followed, whatever it points at},
+  claim  = {A link is never followed, whatever it points at.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_a_symlinked_file_is_refused_as_data},
+}
+
+@misc{debtplan-config-repository-s-exclusions-apply-without-a-flag,
+  section = {config},
+  title  = {A directory the file names is skipped on every run, so two runs agree},
+  claim  = {A directory the file names is skipped on every run, so two runs agree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_the_repository_s_exclusions_apply_without_a_flag},
+}
+
+@misc{debtplan-config-flag-adds-to-the-file-and-never-un-skips-it,
+  section = {config},
+  title  = {Exclusions are the union: --exclude can only skip more than the repository declared},
+  claim  = {Exclusions are the union: --exclude can only skip more than the repository declared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_a_flag_adds_to_the_file_and_never_un_skips_it},
+}
+
+@misc{debtplan-config-malformed-repository-file-refuses-the-whole-run,
+  section = {config},
+  title  = {The run is exit 2 naming the key, never a plan made without the repository's exclusions},
+  claim  = {The run is exit 2 naming the key, never a plan made without the repository's exclusions.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_a_malformed_repository_file_refuses_the_whole_run},
+}
+
+@misc{debtplan-config-flag-resolution-wins-over-the-file-s-for-the-same-name,
+  section = {config},
+  title  = {The file is the base and a --resolutions file overrides it per name},
+  claim  = {The file is the base and a --resolutions file overrides it per name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_config.py -k test_a_flag_resolution_wins_over_the_file_s_for_the_same_name},
+}

@@ -11,3 +11,4 @@ universe	The Universe: The Tree's Python Files, Relative and Sorted, With What t
 queue	The Queue: One Writer, Called in This Process, With Its Words Captured and Its Cards Read Back
 mint	The Mint: A Queue Kept in Step With a Plan, Direct Waits Only, an Ambiguous Name a Card of Its Own, a Working Card Kept Working, the Lock Always Released
 cli	The Command Line: Plan Prints JSON, Mint Syncs the Queue, and Every Refusal Is Exit 2
+config	The Repository's Own Debtplan File: Known Keys Only, an Absent File Declares Nothing, a Flag Adds and Never Un-Skips

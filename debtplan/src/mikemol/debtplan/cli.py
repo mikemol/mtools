@@ -24,6 +24,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import WorktreeRefusedError
 
+from mikemol.debtplan.config import read_config
 from mikemol.debtplan.ledger import read_ledger
 from mikemol.debtplan.mint import HOW, TOUCHES, VECTOR, MintRefusedError, Style, mint
 from mikemol.debtplan.plan import Plan, plan
@@ -46,6 +47,24 @@ def _declared(path: Path | None) -> dict[str, str] | None:
 
     """
     return read_resolutions(path) if path else None
+
+
+def _inputs(
+    root: Path, flag_excludes: Sequence[str], flag_file: Path | None
+) -> tuple[tuple[str, ...], dict[str, str] | None]:
+    """Merge the repository's own debtplan file with the command line's inputs (W791).
+
+    ⚑ THE FILE IS THE BASE AND THE COMMAND LINE ADDS TO IT: exclusions are the union (a flag
+    can only skip more, never un-skip what the repository declared), and a flag's resolution of a
+    name wins over the file's, since it is the more recent decision made on purpose.
+
+    Returns:
+        The directory globs to skip, and the declared resolutions (None when none were declared).
+
+    """
+    config = read_config(root)
+    merged = {**config.resolutions, **(_declared(flag_file) or {})}
+    return (*config.exclude, *flag_excludes), (merged or None)
 
 
 class Args(argparse.Namespace):
@@ -117,10 +136,10 @@ def _plan_for(args: Args) -> tuple[Plan, Universe | None]:
 
     """
     ledger = read_ledger(args.ledger)
-    declared = _declared(args.resolutions)
+    excludes, declared = _inputs(args.root, args.exclude or (), args.resolutions)
     if args.no_universe:
         return plan(ledger, args.root, (), declared), None
-    universe = python_files(args.root, args.exclude or ())
+    universe = python_files(args.root, excludes)
     return plan(ledger, args.root, universe.files, declared), universe
 
 

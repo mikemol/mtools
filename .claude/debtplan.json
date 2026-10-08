@@ -1,0 +1,3 @@
+{
+  "exclude": ["build", ".edit-snapshots", ".ebuild-witness"]
+}

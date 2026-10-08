@@ -4,7 +4,7 @@
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
   "counter": 854,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-08T14:47:10Z",
+  "heartbeat": "2026-10-08T14:51:20Z",
   "job_id": "7798d5b8",
   "predecessor_job_id": "9c05fa85",
   "bindings": {
@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-08T14:46:13Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -16003,7 +16000,7 @@
     {
       "symbol": "W791",
       "title": "Make debtplan's per-repo inputs durable: exclude directories and declared resolutions live in a file in each repo, not in host scratch flags",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W790"
       ],
@@ -16015,15 +16012,16 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Name the per-repo file (for example .claude/debtplan.json) holding exclude directories and resolutions, make mikemol-debtplan read it by default, and move the build, .edit-snapshots, .ebuild-witness exclusions and gcalculus's gcalc resolution into it.",
-      "evidence": "2026-10-06: 2026-10-06 per-repo inputs found missing: besides exclude directories and resolutions, el-openglo, substrate and resumes need a per-repo mypy invocation (plain mypy dies on duplicate module names), and node_modules must be excluded from the ledger. A frozen ledger in the host's ledgers/ is the stopgap (katas.py typing --keep-ledger). Put the invocation and the exclusions in a file in each repo.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-06: 2026-10-06 per-repo inputs found missing: besides exclude directories and resolutions, el-openglo, substrate and resumes need a per-repo mypy invocation (plain mypy dies on duplicate module names), and node_modules must be excluded from the ledger. A frozen ledger in the host's ledgers/ is the stopgap (katas.py typing --keep-ledger). Put the invocation and the exclusions in a file in each repo. | 2026-10-08: landed with the commit named by Waypoint W791: debtplan/config.py reads .claude/debtplan.json (exclude, resolutions; unknown keys, bad shapes and symlinks refused; absent file declares nothing); cli merges it with the flags (exclusions union, flag resolution wins per name); mtools declares build, .edit-snapshots, .ebuild-witness. 151 debtplan tests pass and //debtplan/... bazel passes. Other repos adopt by writing their own file; the per-repo mypy invocation is not in this slice.",
       "issued_at": "2026-10-05T22:39:34Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-08T14:46:51Z",
+      "last_worked": "2026-10-08T14:51:21Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": "20261008T145121Z"
     },
     {
       "symbol": "W792",

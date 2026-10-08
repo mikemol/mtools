@@ -1287,3 +1287,4 @@
 2026-10-08T13:49:48Z  interrupt W853 minted    -         "W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once per waypoint and gate"  evidence=W848
 2026-10-08T14:00:34Z  tick  W849 advanced  unblock   "realizable fields coded and tested alone, 6 warrants generated; gated commit waits on md0 QUIET"
 2026-10-08T14:33:59Z  interrupt W854 minted    -         "W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named waypoints and a gate"  evidence=W848
+2026-10-08T14:51:25Z  tick  W791 advanced  unblock   "debtplan reads .claude/debtplan.json; 12 tests, //debtplan/... passes; re-armed cron 7798d5b8 with an in-budget payload"
