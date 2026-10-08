@@ -103,6 +103,7 @@ _VALUED = (
     "lift_embargo",
     "outcomes_set",
     "certify",
+    "mint_residue",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -201,6 +202,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
     "certify": frozenset({"root", "facts"}),
+    "mint_residue": frozenset({"root"}),
 }
 
 
@@ -382,6 +384,13 @@ def _parser() -> argparse.ArgumentParser:
         "one JSON line each, judged by the pinned opa; reads, never writes",
     )
     mode.add_argument("--drop", nargs=2, metavar=("SYMBOL", "REASON"), help="move to residue")
+    mode.add_argument(
+        "--mint-residue",
+        nargs=2,
+        metavar=("SYMBOL", "GATE"),
+        help="W853: mint one claimable card from SYMBOL's residue at GATE, caused by SYMBOL; "
+        "a rerun finds the card and mints nothing",
+    )
     mode.add_argument(
         "--embargo",
         nargs=2,
@@ -1511,6 +1520,50 @@ def _certify(ctx: Ctx) -> int:
     return EXIT_OK if len(valid) == len(found) else EXIT_FAILED
 
 
+def _mint_residue(ctx: Ctx) -> int:
+    """Mint one claimable card from a waypoint's residue at a gate (W853).
+
+    ⚑ ONE CARD PER WAYPOINT AND GATE, JUDGED UNDER THE FLOCK: the policy judges the saved state,
+    the card is drafted from the residue entry's `closes_by`, minted caused by the waypoint, and
+    saved; a card that already exists is found, not duplicated. Nothing is minted unjudged, so no
+    pinned opa is exit 2.
+
+    Returns:
+        EXIT_OK after minting or finding the card, EXIT_REFUSED when it cannot be judged or
+        there is no residue at the gate.
+
+    """
+    sym, gate = ctx.many("mint_residue") or ("", "")
+    site = admission.Site(ctx.path, _root(ctx), ctx.stamp())
+
+    def locked() -> tuple[str, str | None]:
+        with store.exclusive(ctx.path):
+            state = store.load(ctx.path)
+            said, draft = admission.card_for(state, sym, gate, site)
+            if draft is None:
+                return said, None
+            new = ops.add(state, draft, site.now)
+            mint = Entry(
+                text(state.waypoints[-1], "minted_during"),
+                new,
+                "minted",
+                "-",
+                draft.title,
+                draft.caused_by,
+            )
+            store.save(ctx.path, state)
+            append(store.sibling(ctx.path, store.LEDGER), line(mint, site.now))
+            return said, new
+
+    try:
+        said, new = locked()
+    except (ops.RefusedError, opa_eval.OpaUnavailableError, ValueError) as exc:
+        _warn(f"not minted: {exc}")
+        return EXIT_REFUSED
+    _say(said if new is None else f"{said} -> {new}")
+    return EXIT_OK
+
+
 _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     _SUMMARY: _summary,
     "hash": _hash,
@@ -1547,6 +1600,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "ics": _ics,
     "unlinked": _unlinked,
     "certify": _certify,
+    "mint_residue": _mint_residue,
 }
 
 

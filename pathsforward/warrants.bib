@@ -3625,3 +3625,59 @@
   claim  = {A flag a mode does not read is a stray, never silently accepted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_gate_is_a_drop_flag_and_is_refused_elsewhere},
 }
+
+@misc{pathsforward-closure-title-starts-with-the-symbol-and-gate-and-is-clipped,
+  section = {closure},
+  title  = {The prefix is the idempotency key, and a long closes_by stays under the bundled limit},
+  claim  = {The prefix is the idempotency key, and a long closes_by stays under the bundled limit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_the_title_starts_with_the_symbol_and_gate_and_is_clipped},
+}
+
+@misc{pathsforward-closure-entry-at-a-gate-is-found-and-a-missing-one-is-refused,
+  section = {closure},
+  title  = {Only a gate the verdict has residue at can be minted for},
+  claim  = {Only a gate the verdict has residue at can be minted for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_the_entry_at_a_gate_is_found_and_a_missing_one_is_refused},
+}
+
+@misc{pathsforward-closure-existing-card-is-found-by-cause-and-title-prefix,
+  section = {closure},
+  title  = {Only a live waypoint caused by the symbol with the gate's prefix counts as the card},
+  claim  = {Only a live waypoint caused by the symbol with the gate's prefix counts as the card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_an_existing_card_is_found_by_cause_and_title_prefix},
+}
+
+@misc{pathsforward-closure-minting-creates-one-claimable-card-caused-by-the-waypoint,
+  section = {closure},
+  title  = {The real policy's closes_by becomes the card's title and next step, with the touches},
+  claim  = {The real policy's closes_by becomes the card's title and next step, with the touches.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_minting_creates_one_claimable_card_caused_by_the_waypoint},
+}
+
+@misc{pathsforward-closure-rerun-finds-the-card-and-mints-nothing,
+  section = {closure},
+  title  = {One card per waypoint and gate: the second call names the first and changes nothing},
+  claim  = {One card per waypoint and gate: the second call names the first and changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_a_rerun_finds_the_card_and_mints_nothing},
+}
+
+@misc{pathsforward-closure-entry-that-names-a-closes-ref-mints-nothing,
+  section = {closure},
+  title  = {A deferral that already cites the card that closes it points at a card that exists},
+  claim  = {A deferral that already cites the card that closes it points at a card that exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_an_entry_that_names_a_closes_ref_mints_nothing},
+}
+
+@misc{pathsforward-closure-no-residue-at-the-gate-or-a-symbol-not-live-is-refused,
+  section = {closure},
+  title  = {Nothing is minted for a gate the waypoint has no gap at, or for an unknown waypoint},
+  claim  = {Nothing is minted for a gate the waypoint has no gap at, or for an unknown waypoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_no_residue_at_the_gate_or_a_symbol_not_live_is_refused},
+}
+
+@misc{pathsforward-closure-nothing-is-minted-unjudged,
+  section = {closure},
+  title  = {Without the pinned opa the residue cannot be known, so the command is exit 2},
+  claim  = {Without the pinned opa the residue cannot be known, so the command is exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_nothing_is_minted_unjudged},
+}
