@@ -21,7 +21,10 @@ exports_files([
 py_library(
     name = "pathsforward",
     srcs = glob(["src/mikemol/pathsforward/**/*.py"]),
-    data = glob(["src/mikemol/pathsforward/py.typed"], allow_empty = True),
+    # W850: the realizability policy is package data, read by opa_eval at its own path.
+    data = glob(["src/mikemol/pathsforward/py.typed"], allow_empty = True) + glob(
+        ["src/mikemol/pathsforward/policy/*.rego"],
+    ),
     imports = ["src"],
     visibility = ["//visibility:public"],
 )
@@ -47,7 +50,9 @@ py_library(
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"],
+        # W850: test_certify runs the real policy under the hash-pinned opa, named by OPA_BIN.
+        data = ["pyproject.toml", "@opa//file"],
+        env = {"OPA_BIN": "$(location @opa//file)"},
         size = "medium" if src in ("tests/test_lock.py", "tests/test_store.py") else "small",
         deps = [
             ":pathsforward",
@@ -57,6 +62,19 @@ py_library(
     )
     for src in glob(["tests/test_*.py"])
 ]
+
+# W850: the realizability policy's own witnesses and controls (policy/realizability_test.rego),
+# run by the pinned opa, as //hooks:policy_test runs the standing policy's.
+sh_test(
+    name = "policy_test",
+    srcs = ["policy_test.sh"],
+    args = [
+        "$(location @opa//file)",
+        "$(location src/mikemol/pathsforward/policy/realizability.rego)",
+    ],
+    data = ["@opa//file"] + glob(["src/mikemol/pathsforward/policy/*.rego"]),
+    size = "small",
+)
 
 exports_files(["BUILD.bazel"])
 
@@ -109,7 +127,7 @@ sh_test(
         "//fence:fence",
         "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
-    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    ] + glob(["src/**/*.py", "src/**/*.rego", "tests/**/*.py"]),
     size = "medium",
 )
 

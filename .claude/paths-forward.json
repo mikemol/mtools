@@ -17285,7 +17285,7 @@
     {
       "symbol": "W849",
       "title": "W848 unit: the model carries optional reference_arm, population and command, validated on --update",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "paths-forward",
@@ -17293,13 +17293,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Gated commit once md0 reads QUIET and the host lifts the gate ban: realizable.py, ops.py, cli.py, tests/test_realizable.py, the per-file assert entry, and 6 generated warrants plus the rubric row are written, uncommitted. Check the :mutants grid for the new def-sites at that commit.",
-      "evidence": "2026-10-08: 2026-10-08 sample queue records nemik's adapter will read. Waypoint: {\"symbol\":\"W900\",\"status\":\"blocked\",\"blocked_on\":[\"operator: act run mikemol-x --apply\"],\"blocked_kind\":\"human\",\"command\":\"mikemol-x --apply\",\"reference_arm\":\"operator\",\"population\":{\"source\":\"the tracked .py files under hooks/\",\"bound\":null},\"deferred\":[{\"gate\":\"coverable\",\"reference_arm\":\"host:luthen\",\"what\":\"population is unbounded\",\"closes_by\":\"name a finite source\"}]}. Drop (a residue entry): {\"symbol\":\"W901\",\"title\":\"...\",\"dropped_at\":\"2026-10-08T00:00:00Z\",\"reason\":\"...\",\"recoverable\":true,\"gate\":\"reachable\",\"reference_arm\":\"host:luthen\"}. Absent fields mean not declared, never clean. Illustrative until the writer validates them. | 2026-10-08: 2026-10-08 nemik:W235 ask: a residue entry carries an optional structured closes_ref (<repo>:W<n>, validated by the same resolver as caused_by) beside the prose closes_by. One field per purpose, and nothing parses the prose. | 2026-10-08: 2026-10-08 W849 code written, uncommitted (partial HOLD: no bazel gate). realizable.py (one_line, population, deferred), ops.Update fields plus _realizable_fields wired into _set_given, cli flags --reference-arm --command --population --deferred. Edit gate admits cli.py and ops.py; tests/test_realizable.py 12 passed, tests/test_ops.py and test_cli.py 214 passed (pytest alone, bounded). CLI probe on a scratch copy of the state accepted all four flags. | 2026-10-08: 2026-10-08 tick: mikemol-gen-warrants --write appended 6 warrants and 1 rubric row (key realizable). md0_who read SATURATED (busy 1.00, precopy pass), so no gate run.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-08: 2026-10-08 sample queue records nemik's adapter will read. Waypoint: {\"symbol\":\"W900\",\"status\":\"blocked\",\"blocked_on\":[\"operator: act run mikemol-x --apply\"],\"blocked_kind\":\"human\",\"command\":\"mikemol-x --apply\",\"reference_arm\":\"operator\",\"population\":{\"source\":\"the tracked .py files under hooks/\",\"bound\":null},\"deferred\":[{\"gate\":\"coverable\",\"reference_arm\":\"host:luthen\",\"what\":\"population is unbounded\",\"closes_by\":\"name a finite source\"}]}. Drop (a residue entry): {\"symbol\":\"W901\",\"title\":\"...\",\"dropped_at\":\"2026-10-08T00:00:00Z\",\"reason\":\"...\",\"recoverable\":true,\"gate\":\"reachable\",\"reference_arm\":\"host:luthen\"}. Absent fields mean not declared, never clean. Illustrative until the writer validates them. | 2026-10-08: 2026-10-08 nemik:W235 ask: a residue entry carries an optional structured closes_ref (<repo>:W<n>, validated by the same resolver as caused_by) beside the prose closes_by. One field per purpose, and nothing parses the prose. | 2026-10-08: 2026-10-08 W849 code written, uncommitted (partial HOLD: no bazel gate). realizable.py (one_line, population, deferred), ops.Update fields plus _realizable_fields wired into _set_given, cli flags --reference-arm --command --population --deferred. Edit gate admits cli.py and ops.py; tests/test_realizable.py 12 passed, tests/test_ops.py and test_cli.py 214 passed (pytest alone, bounded). CLI probe on a scratch copy of the state accepted all four flags. | 2026-10-08: 2026-10-08 tick: mikemol-gen-warrants --write appended 6 warrants and 1 rubric row (key realizable). md0_who read SATURATED (busy 1.00, precopy pass), so no gate run. | 2026-10-08: landed be07046, pushed (main...origin/main).",
       "issued_at": "2026-10-08T13:42:39Z",
       "minted_during": "interrupt",
       "caused_by": "W848",
-      "last_worked": "2026-10-08T14:00:34Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-08T14:14:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261008T141421Z"
     },
     {
       "symbol": "W850",

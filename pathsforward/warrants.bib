@@ -3394,3 +3394,94 @@
   claim  = {Form is checked before storing, and a refusal leaves the waypoint as it was.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_realizable.py -k test_a_malformed_field_is_refused_and_nothing_is_stored},
 }
+
+@misc{pathsforward-certify-items-carry-the-waypoint-the-ref-the-clock-and-the-local-graph,
+  section = {certify},
+  title  = {Live and landed are this queue's own symbols; enables keeps only local edges},
+  claim  = {Live and landed are this queue's own symbols; enables keeps only local edges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_items_carry_the_waypoint_the_ref_the_clock_and_the_local_graph},
+}
+
+@misc{pathsforward-certify-foreign-reference-resolves-only-when-its-owner-holds-it,
+  section = {certify},
+  title  = {peer:W9 is live there, peer:W8 is its residue; peer:W7 and gone:W1 resolve to nothing},
+  claim  = {peer:W9 is live there, peer:W8 is its residue; peer:W7 and gone:W1 resolve to nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_a_foreign_reference_resolves_only_when_its_owner_holds_it},
+}
+
+@misc{pathsforward-certify-symbol-not-live-here-is-refused-not-judged,
+  section = {certify},
+  title  = {Residue has no lifecycle left, and a symbol never issued is a typo the caller must see},
+  claim  = {Residue has no lifecycle left, and a symbol never issued is a typo the caller must see.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_a_symbol_not_live_here_is_refused_not_judged},
+}
+
+@misc{pathsforward-certify-undefined-or-malformed-result-yields-no-verdicts,
+  section = {certify},
+  title  = {Anything but a list under result[0].expressions[0].value is no verdict at all},
+  claim  = {Anything but a list under result[0].expressions[0].value is no verdict at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_an_undefined_or_malformed_result_yields_no_verdicts},
+}
+
+@misc{pathsforward-certify-result-keeps-only-object-verdicts,
+  section = {certify},
+  title  = {The list is read in order, and a non-object entry is dropped rather than trusted},
+  claim  = {The list is read in order, and a non-object entry is dropped rather than trusted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_a_result_keeps_only_object_verdicts},
+}
+
+@misc{pathsforward-certify-no-opa-is-unavailable-never-clean,
+  section = {certify},
+  title  = {With OPA_BIN unset and nothing on PATH, or naming no file, resolve raises},
+  claim  = {With OPA_BIN unset and nothing on PATH, or naming no file, resolve raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_no_opa_is_unavailable_never_clean},
+}
+
+@misc{pathsforward-certify-opa-that-is-not-the-pin-is-refused,
+  section = {certify},
+  title  = {A wrong version, a failing `opa version` or no version line are all not the pin},
+  claim  = {A wrong version, a failing `opa version` or no version line are all not the pin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_an_opa_that_is_not_the_pin_is_refused},
+}
+
+@misc{pathsforward-certify-pinned-opa-named-by-the-environment-is-used,
+  section = {certify},
+  title  = {OPA_BIN wins over PATH, and the pin is read from `opa version`'s own Version line},
+  claim  = {OPA_BIN wins over PATH, and the pin is read from `opa version`'s own Version line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_the_pinned_opa_named_by_the_environment_is_used},
+}
+
+@misc{pathsforward-certify-failing-eval-raises-with-its-account,
+  section = {certify},
+  title  = {A nonzero exit from opa is an error carrying what it said, never an empty verdict list},
+  claim  = {A nonzero exit from opa is an error carrying what it said, never an empty verdict list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_a_failing_eval_raises_with_its_account},
+}
+
+@misc{pathsforward-certify-fewer-verdicts-than-items-certifies-nothing,
+  section = {certify},
+  title  = {A verdict list that does not match the items one for one is refused whole},
+  claim  = {A verdict list that does not match the items one for one is refused whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_fewer_verdicts_than_items_certifies_nothing},
+}
+
+@misc{pathsforward-certify-certify-prints-one-runtime-valid-verdict-and-exits-ok,
+  section = {certify},
+  title  = {The real policy under the pinned opa: a fully declared waypoint is runtime-valid},
+  claim  = {The real policy under the pinned opa: a fully declared waypoint is runtime-valid.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_certify_prints_one_runtime_valid_verdict_and_exits_ok},
+}
+
+@misc{pathsforward-certify-certify-exits-failed-when-any-verdict-carries-residue,
+  section = {certify},
+  title  = {An unbounded population stops W5 at observable, so the set is not all runtime-valid},
+  claim  = {An unbounded population stops W5 at observable, so the set is not all runtime-valid.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_certify_exits_failed_when_any_verdict_carries_residue},
+}
+
+@misc{pathsforward-certify-certify-refuses-when-nothing-could-be-judged,
+  section = {certify},
+  title  = {A symbol not live here, or no pinned opa, is exit 2 and prints no verdict},
+  claim  = {A symbol not live here, or no pinned opa, is exit 2 and prints no verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_certify.py -k test_certify_refuses_when_nothing_could_be_judged},
+}

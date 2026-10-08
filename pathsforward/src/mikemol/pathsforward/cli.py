@@ -26,11 +26,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward import (
+    certify,
     embargo,
     foreign,
     inbound,
     lease,
     lock,
+    opa_eval,
     ops,
     outcomes,
     render,
@@ -98,6 +100,7 @@ _VALUED = (
     "embargo",
     "lift_embargo",
     "outcomes_set",
+    "certify",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -189,6 +192,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "inbound": frozenset({"root", "all"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
+    "certify": frozenset({"root"}),
 }
 
 
@@ -332,12 +336,24 @@ def _parser() -> argparse.ArgumentParser:
     mode = ap.add_mutually_exclusive_group()
     for flag in _FLAGS:
         mode.add_argument(f"--{flag.replace('_', '-')}", action="store_true")
-    mode.add_argument("--verify", metavar="HASH", help="compare a payload's state_hash")
-    mode.add_argument("--lock", metavar="HOLDER", help="take the tick lock (exit 3 if held)")
-    mode.add_argument("--unlock", metavar="HOLDER", help="release the tick lock")
-    mode.add_argument("--armed", metavar="JOB_ID", help="record job_id and heartbeat")
-    mode.add_argument("--update", metavar="SYMBOL", help="set typed fields on a waypoint")
-    mode.add_argument("--add", metavar="TITLE", help="mint the next W<n> as ready")
+    # ⚑ ONE TABLE FOR THE ONE-VALUE MODES: `_parser` sits at ruff's 50-statement limit (W538), and
+    # a new mode (W850's --certify) is room made here, never a waiver.
+    for flag, metavar, text_help in (
+        ("--verify", "HASH", "compare a payload's state_hash"),
+        ("--lock", "HOLDER", "take the tick lock (exit 3 if held)"),
+        ("--unlock", "HOLDER", "release the tick lock"),
+        ("--armed", "JOB_ID", "record job_id and heartbeat"),
+        ("--update", "SYMBOL", "set typed fields on a waypoint"),
+        ("--add", "TITLE", "mint the next W<n> as ready"),
+    ):
+        mode.add_argument(flag, metavar=metavar, help=text_help)
+    mode.add_argument(
+        "--certify",
+        nargs="+",
+        metavar="SYMBOL",
+        help="W850: each waypoint's realizability verdict {ref, level, reference_arm, residue}, "
+        "one JSON line each, judged by the pinned opa; reads, never writes",
+    )
     mode.add_argument("--drop", nargs=2, metavar=("SYMBOL", "REASON"), help="move to residue")
     mode.add_argument(
         "--embargo",
@@ -1391,6 +1407,36 @@ def _init(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _certify(ctx: Ctx) -> int:
+    """Print each named waypoint's realizability verdict, one JSON line each (W850).
+
+    ⚑ READS, NEVER WRITES, AND NEVER THROUGH THE WRITER: the queue is loaded, the policy judges
+    it under the pinned opa, and nothing is saved. `--root` names where peer queues live, so a
+    cited `repo:W<n>` resolves against its owner's queue.
+
+    ⚑ THREE ANSWERS: 0 when every verdict is runtime-valid (coverable, no residue), 1 when any
+    carries residue, 2 when nothing could be judged (a symbol not live here, or no pinned opa).
+    Not checked never reads as clean.
+
+    Returns:
+        EXIT_OK, EXIT_FAILED or EXIT_REFUSED.
+
+    """
+    state = store.load(ctx.path)
+    symbols = ctx.many("certify") or ()
+    try:
+        built = certify.items(state, symbols, inbound.repo_name(ctx.path), ctx.stamp(), _root(ctx))
+        found = opa_eval.verdicts(built, opa_eval.resolve())
+    except (ops.RefusedError, opa_eval.OpaUnavailableError) as exc:
+        _warn(f"not certified: {exc}")
+        return EXIT_REFUSED
+    valid = [v for v in found if v.get("level") == "coverable" and not v.get("residue")]
+    for verdict in found:
+        _say(json.dumps(verdict, ensure_ascii=False, sort_keys=True))
+    _warn(f"certified {len(found)}: {len(valid)} runtime-valid, {len(found) - len(valid)} residue")
+    return EXIT_OK if len(valid) == len(found) else EXIT_FAILED
+
+
 _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     _SUMMARY: _summary,
     "hash": _hash,
@@ -1426,6 +1472,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "overlaps": _overlaps,
     "ics": _ics,
     "unlinked": _unlinked,
+    "certify": _certify,
 }
 
 

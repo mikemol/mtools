@@ -43,7 +43,7 @@ where = ["src"]
 include = ["mikemol.*"]
 
 [tool.setuptools.package-data]
-"mikemol.pathsforward" = ["py.typed"]
+"mikemol.pathsforward" = ["py.typed", "policy/*.rego"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
@@ -107,6 +107,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_lease.py" = ["assert"]
 "tests/test_redact.py" = ["assert"]
 "tests/test_realizable.py" = ["assert"]
+"tests/test_certify.py" = ["assert"]
+# ⚑ RUNNING opa IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W850), as mdstruct's pandoc.py is. The
+# argv is the resolved opa binary, fixed words and the package's own policy path; the queue
+# travels on stdin as data and never becomes a word in the command.
+"src/mikemol/pathsforward/opa_eval.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
 "tests/test_render.py" = ["assert"]
 "tests/test_selftest.py" = ["assert"]
 "tests/test_cli.py" = ["assert"]
