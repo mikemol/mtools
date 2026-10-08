@@ -4,9 +4,9 @@
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
   "counter": 854,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-05T12:25:41Z",
-  "job_id": "9c05fa85",
-  "predecessor_job_id": "41bd4893",
+  "heartbeat": "2026-10-08T14:47:10Z",
+  "job_id": "7798d5b8",
+  "predecessor_job_id": "9c05fa85",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-08T14:46:13Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -15999,7 +16002,7 @@
     },
     {
       "symbol": "W791",
-      "title": "Make debtplan's per-repo inputs durable: exclude directories (build, .edit-snapshots, .ebuild-witness) and declared resolutions live in a file in each repo, not in host scratch flags",
+      "title": "Make debtplan's per-repo inputs durable: exclude directories and declared resolutions live in a file in each repo, not in host scratch flags",
       "status": "ready",
       "enables": [
         "W790"
@@ -16012,12 +16015,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Name the file in each repo (for example .claude/debtplan.json) that holds the exclude directories and declared resolutions, make mikemol-debtplan read it by default, and move the build, .edit-snapshots, .ebuild-witness exclusions and the gcalculus gcalc resolution into it",
+      "next_bounded_step": "Name the per-repo file (for example .claude/debtplan.json) holding exclude directories and resolutions, make mikemol-debtplan read it by default, and move the build, .edit-snapshots, .ebuild-witness exclusions and gcalculus's gcalc resolution into it.",
       "evidence": "2026-10-06: 2026-10-06 per-repo inputs found missing: besides exclude directories and resolutions, el-openglo, substrate and resumes need a per-repo mypy invocation (plain mypy dies on duplicate module names), and node_modules must be excluded from the ledger. A frozen ledger in the host's ledgers/ is the stopgap (katas.py typing --keep-ledger). Put the invocation and the exclusions in a file in each repo.",
       "issued_at": "2026-10-05T22:39:34Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-06T01:02:50Z",
+      "last_worked": "2026-10-08T14:46:51Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -17173,12 +17176,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Slice 1: rules_py/pinned.bzl repository rule pinned_files(remote, commit, prefix): git archive of the commit, names from git ls-tree (no glob), BUILD exporting each; slice 2: gate.bzl paperkit_gate(name, project, engine) running python -m paperkit.gate from runfiles with only the engine checkout on PYTHONPATH; slice 3: prove on resumes (5 projects), then gcalculus bibstruct stages, summit.",
-      "evidence": "",
+      "next_bounded_step": "Slice 1: rules_py/pinned.bzl repository rule pinned_files(remote, commit, prefix): git archive of the commit, names from git ls-tree (no glob), BUILD exporting each.",
+      "evidence": "2026-10-08: 2026-10-08 tick: the later slices moved here from next_bounded_step to keep the tick payload under budget. Slice 2: gate.bzl paperkit_gate(name, project, engine) running python -m paperkit.gate from runfiles with only the engine checkout on PYTHONPATH. Slice 3: prove on resumes (5 projects), then gcalculus bibstruct stages, summit.",
       "issued_at": "2026-10-06T23:11:55Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
-      "last_worked": "2026-10-06T23:12:00Z",
+      "last_worked": "2026-10-08T14:46:40Z",
       "ticks_blocked": 0,
       "completed": null
     },
