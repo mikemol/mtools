@@ -117,3 +117,12 @@ def test_a_usage_error_is_exit_two(capsys: pytest.CaptureFixture[str]) -> None:
     assert snapshot.main([]) == snapshot.EXIT_USAGE
     assert snapshot.main(["a", "--index", "--working"]) == snapshot.EXIT_USAGE
     assert "usage: mikemol-snapshot" in capsys.readouterr().err
+
+
+def test_an_unknown_flag_is_a_usage_error_not_a_repository_name(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """⚑ `--help` was read as the repo `~/github/--help` and git failed on it (exit 3)."""
+    assert snapshot.main(["--help"]) == snapshot.EXIT_USAGE
+    assert snapshot.main(["--bogus", "--index"]) == snapshot.EXIT_USAGE
+    assert "usage: mikemol-snapshot" in capsys.readouterr().err

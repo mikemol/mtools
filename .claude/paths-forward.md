@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 889 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:42779999e07ac3d5`
+counter 889 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:55943ed920e76dad`
 
 | # | symbol | status |
 |---|---|---|
@@ -966,9 +966,10 @@ counter 889 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:4277
 15. **W845** (ready) A repo's gate reads an immutable snapshot of what it gates, never the live working tree: a tree
    object from a temporary index (git write-tree), materialized by git archive and gated there, so an edit mid-run
    cannot invalidate or poison a run
-   - next: mtools: mikemol-snapshot REPO [--working|--index]: GIT_INDEX_FILE temp index -> git write-tree -> git archive
-     into the fixed namespaced path under flock, stamping .tree; bazel_admit and the precommit hook run bazel there;
-     pinned_files reuses the same materializer.
+   - next: Wire the existing mikemol-snapshot into the one place that runs the gate: have the pre-commit run its bazel
+     lines as 'mikemol-snapshot REPO --index -- `<bazel` ...>' so the tree cannot change under the run; first measure a
+     cold bazel build inside the snapshot path (the fixed path keeps the output base) and the cost per commit;
+     pinned_files (W843) then reuses the materializer.
 16. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
    other
    - next: Decide which of the five differences corpus keeps as policy and which it takes from pathwalk: the shape that

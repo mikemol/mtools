@@ -17242,12 +17242,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "mtools: mikemol-snapshot REPO [--working|--index]: GIT_INDEX_FILE temp index -> git write-tree -> git archive into the fixed namespaced path under flock, stamping .tree; bazel_admit and the precommit hook run bazel there; pinned_files reuses the same materializer.",
-      "evidence": "2026-10-07: OPERATOR RULING 2026-10-06: scratch paths are FIXED, period, and exposure to scratch space is NAMESPACED. So the snapshot lives at one fixed, namespaced path per repo (not a per-run mktemp, not a path that varies by sha), e.g. /var/tmp/mikemol/gate/<repo>/tree, which also keeps bazel's output base and analysis cache. One writer at a time by flock held for the whole run (the run reads a tree nothing can rewrite under it); the tree sha is stamped in the directory so a reader can tell which snapshot it is; the path is counted in the zram budget (project-zram1-real-limit). Anything else that wants scratch asks the same namespace for its own fixed path.",
+      "next_bounded_step": "Wire the existing mikemol-snapshot into the one place that runs the gate: have the pre-commit run its bazel lines as 'mikemol-snapshot REPO --index -- <bazel ...>' so the tree cannot change under the run; first measure a cold bazel build inside the snapshot path (the fixed path keeps the output base) and the cost per commit; pinned_files (W843) then reuses the materializer.",
+      "evidence": "2026-10-07: OPERATOR RULING 2026-10-06: scratch paths are FIXED, period, and exposure to scratch space is NAMESPACED. So the snapshot lives at one fixed, namespaced path per repo (not a per-run mktemp, not a path that varies by sha), e.g. /var/tmp/mikemol/gate/<repo>/tree, which also keeps bazel's output base and analysis cache. One writer at a time by flock held for the whole run (the run reads a tree nothing can rewrite under it); the tree sha is stamped in the directory so a reader can tell which snapshot it is; the path is counted in the zram budget (project-zram1-real-limit). Anything else that wants scratch asks the same namespace for its own fixed path. | 2026-10-09: 2026-10-09 TRIAGE against the tree: the materializer HALF IS DONE. hooks/snapshot.py (mikemol-snapshot REPO [--index|--working] [-- CMD...]) exists with 6 tests, takes a flock for the CMD's run, stamps .tree, and updates only what changed. Measured here: mtools --index materializes 24 MB at <namespace>/mtools/tree, and a second run changes nothing. NOT done: nothing calls it; .githooks/pre-commit still gates the live tree (its 'snapshot' lines are the script copying itself). Found while measuring: --help was read as the repo name ~/github/--help and git failed with exit 3; an argument beginning with - is now a usage error (7 tests, 1 warrant, 1 mutant, bazel hooks test_snapshot test_bar_fires mutants pass).",
       "issued_at": "2026-10-07T01:49:51Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
-      "last_worked": "2026-10-07T01:52:17Z",
+      "last_worked": "2026-10-09T19:15:02Z",
       "ticks_blocked": 0
     },
     {

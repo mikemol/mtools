@@ -28,3 +28,7 @@ src/mikemol/hooks/checkers.py|shadow-without-existing-file|real\.is_file\(\) and
 # payload that names the card.
 src/mikemol/hooks/build_failure.py|note-without-a-queue|if state.is_file\(\) else None|if True else None|def=note_gate_card
 src/mikemol/hooks/build_failure.py|note-unbounded|report\[:NOTE_CHARS\]|report|def=note_gate_card
+
+# W845: an unknown flag is a usage error, not a repository name. Dropping the guard reads `--help`
+# as the repo `~/github/--help` and fails in git with exit 3 instead of printing the usage.
+src/mikemol/hooks/snapshot.py|flag-read-as-a-repo|names\[0\]\.startswith\("-"\)|False|def=main

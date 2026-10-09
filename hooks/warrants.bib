@@ -7225,3 +7225,10 @@
   claim  = {The evidence rides in every payload naming the card, so a long report is cut.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure_note.py -k test_the_note_is_bounded},
 }
+
+@misc{hooks-snapshot-unknown-flag-is-a-usage-error-not-a-repository-name,
+  section = {snapshot},
+  title  = {⚑ `--help` was read as the repo `~/github/--help` and git failed on it (exit 3)},
+  claim  = { `--help` was read as the repo `~/github/--help` and git failed on it (exit 3).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_an_unknown_flag_is_a_usage_error_not_a_repository_name},
+}

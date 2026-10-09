@@ -194,7 +194,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     modes = {"--index": False, "--working": True}
     chosen = [a for a in args if a in modes]
     names = [a for a in args if a not in modes]
-    if len(names) != 1 or len(chosen) > 1:
+    if len(names) != 1 or names[0].startswith("-") or len(chosen) > 1:
         sys.stderr.write("usage: mikemol-snapshot REPO [--index | --working] [-- CMD...]\n")
         return EXIT_USAGE
     root = Path(names[0]).resolve() if "/" in names[0] else Path.home() / "github" / names[0]
