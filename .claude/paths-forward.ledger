@@ -1351,3 +1351,5 @@
 2026-10-09T09:52:07Z  tick  W869 advanced  unblock   "title cap landed on nemik's predicate (length and clause mark), refused at add and retitle"
 2026-10-09T10:07:03Z  tick  W870 advanced  unblock   "gate card semantics land as pathsforward/gate.py (red/green over the State), 49/49; CLI wiring is slice 2"
 2026-10-09T10:21:32Z  tick  W870 advanced  unblock   "--gate-red/--gate-green wired into the pathsforward CLI; 50/50; W796's code prerequisites are done"
+2026-10-09T10:33:07Z  tick  W871 minted    -         "Operator: apply or delegate the host katas.py shrink, and choose the typing measurement and ledger location"  evidence=W796
+2026-10-09T10:33:14Z  tick  W796 advanced  sweep     "host-edit list written (design note); operator decision carded as W871; mikemol-commit script missing from hooks venv noted"
