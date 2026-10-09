@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:baf93d9f49bd089e`
+counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:2baf911d5cea1755`
 
 | # | symbol | status |
 |---|---|---|
@@ -866,9 +866,9 @@ counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:baf9
    - next: Slice 1: rules_py/pinned.bzl repository rule pinned_files(remote, commit, prefix): git archive of the commit,
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W796** (ready) Graduate the host katas into an mtools distribution to the house standards
-   - next: Compare katas.py prepare_commit/commit bodies against commit_kata.prepare/commit to confirm equivalence (or
-     list differences); then check the typing group against debtplan + pycheck_census, queue group against pathsforward;
-     only the residue is ported (proc first).
+   - next: Check the typing group (mypy_targets..typing, ship) against debtplan + pycheck_census and the queue group
+     (wp, archive, gate_*, tick) against pathsforward; then list the host-side katas.py edits (replace commit with
+     mikemol-commit) as a letter or a host patch the operator can apply, and port only the true residue.
 3. **W798** (ready) Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs
    captured by BuildBuddy
    - next: Rule (operator 2026-10-06): a bazel gate never globs or declares a directory as input; name every file

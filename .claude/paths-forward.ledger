@@ -1343,3 +1343,4 @@
 2026-10-09T08:21:36Z  tick  W868 advanced  sweep     "reproduced the relative-import failure and measured stage-beside and mypy --shadow-file; shadow-file is the better shape"
 2026-10-09T08:39:26Z  tick  W868 advanced  unblock   "pycheck judges relative imports in existing files via mypy --shadow-file; linux-sources case now admitted"
 2026-10-09T08:51:11Z  tick  W796 advanced  collapse  "katas commits group overlaps hooks.commit_kata by name: collapse candidate; letter to linux-sources that the pycheck fix landed"
+2026-10-09T09:06:07Z  tick  W796 advanced  collapse  "katas prepare_commit/commit compared with hooks.commit_kata: strict superset; katas copy is the older weaker one"
