@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 866 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:b2fb1d70af3fcab4`
+counter 866 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:5c5ef8bd4f3a00de`
 
 | # | symbol | status |
 |---|---|---|
@@ -865,9 +865,9 @@ counter 866 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:b2fb
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W866** (ready) Count the three old-style arms the census cannot see (main-style scripts under tests/, asserts
    outside a runner, no warrant per test) for the repos it judged
-   - next: Read the other nine test_*-named files to confirm they are check()-style; then arm 3 (no warrant per test) is
-     moot for repos with no warrants.bib, so record that and give W795 the conversion cards: ~10 check()-style modules,
-     ~43 probe/bench scripts to relocate out of tests/.
+   - next: Arm 3 (no warrant per test) is moot where there is no warrants.bib: record that. Then mint conversion cards
+     through debtplan for W795: (a) 9 check()-style modules to pytest, (b) test_fetch_refuses to a tmp_path-copy fixture
+     so it never touches the real pin, (c) relocate ~46 scripts out of tests/.
 3. **W796** (ready) Graduate the host katas into an mtools distribution to the house standards
    - next: Per W865's split (proc, commits, typing, queue, bazelize, cli): first check each group against
      hooks/commit_kata.py, debtplan and mikemol-commit for overlap (collapse before port), then port the smallest group
