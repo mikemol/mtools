@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 883 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:da22b2219c9d714c`
+counter 883 · heartbeat 2026-10-09T14:51:08Z · job `9e45d237` · hash `v2:f2d11a8d2ce819b2`
 
 | # | symbol | status |
 |---|---|---|
@@ -937,9 +937,9 @@ counter 883 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:da22
    - next: After a session restart, edit a clean .py file whose repo has a debt-ledger and a stale import; confirm the
      context line appears, else switch to a systemMessage/stderr channel.
 13. **W825** (ready) something calls mikemol-pycheck --refresh-ledger so the closure advisory has a ledger to read
-   - next: Choose the trigger: the shared post-commit hook (githook_post_commit) runs it in the background, or a kata
-     after a green commit. The census takes minutes on a large repo, so never in the foreground of a commit. Per repo
-     only where the gate runs.
+   - next: Add to mtools' .githooks/post-commit, after the push and still exiting 0, a detached single-flight (flock on
+     the git dir's mtools/ledger.lock) run of bazel-bin/hooks/.venv/bin/mikemol-pycheck --refresh-ledger logging under
+     the git dir; test the stub in a temp repo; hooks go live on apply, so the test lands first.
 14. **W830** (ready) the failure hook also appends the pulled evidence to the repo's gate-failed card
    - next: Add the writer to the failure hook: call mikemol-paths-forward --gate-red (or --update `<card>`
      --evidence-append) on the failing repo's queue; settle the one-writer rule, the lock and which repo's queue. W829

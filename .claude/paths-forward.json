@@ -16809,12 +16809,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Choose the trigger: the shared post-commit hook (githook_post_commit) runs it in the background, or a kata after a green commit. The census takes minutes on a large repo, so never in the foreground of a commit. Per repo only where the gate runs.",
-      "evidence": "",
+      "next_bounded_step": "Add to mtools' .githooks/post-commit, after the push and still exiting 0, a detached single-flight (flock on the git dir's mtools/ledger.lock) run of bazel-bin/hooks/.venv/bin/mikemol-pycheck --refresh-ledger logging under the git dir; test the stub in a temp repo; hooks go live on apply, so the test lands first.",
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: trigger chosen. The shared githook_post_commit package serves other repos (a census spawn there is a cross-repo change with no per-repo opt-in), so the trigger is mtools' own .githooks/post-commit stub, which already runs after the gate and the push. Not landed this tick: the shared index held another session's staged files, and a live-hook edit wants a clean tree.",
       "issued_at": "2026-10-06T17:07:03Z",
       "minted_during": "interrupt",
       "caused_by": "W821",
-      "last_worked": null,
+      "last_worked": "2026-10-09T15:20:26Z",
       "ticks_blocked": 0
     },
     {
