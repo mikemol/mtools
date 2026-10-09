@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 86,
+      "ticks_blocked": 87,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 84,
+      "ticks_blocked": 85,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 89,
+      "ticks_blocked": 90,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 58,
+      "ticks_blocked": 59,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -16966,7 +16966,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -17466,12 +17466,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per copy, prove equivalence before swapping: atomicwrite.durable.write_atomic preserves the target's permissions and breaks hardlink aliases; compare pathsforward/store.py write_atomic (NamedTemporaryFile + replace), treeio/write.py (flush then replace), ratchet/remap.py (mkstemp, several files) and hooks/pycheck_census.py (mkstemp in the target dir). Swap each whose behaviour atomicwrite already covers, add the pyproject requirement, and record in evidence any copy that needs something atomicwrite lacks (ratchet's multi-file replace may).",
-      "evidence": "",
+      "next_bounded_step": "Swap the copies for atomicwrite.durable.write_atomic one distribution at a time, each its own gated slice, with the first cross-distribution wiring of that dist (pyproject dependency + [tool.uv.sources], BUILD py_library/test deps, mypy_runner deps, :.venv srcs; debtplan is the precedent): treeio first (not a live tool; its _replace uses a deterministic temp name and does not preserve the target's mode, which write_atomic does, so the swap also fixes that). Then ratchet/remap.py (multi-file replace: read its all-or-nothing contract before deciding), hooks/pycheck_census.py and pathsforward/store.py (both are LIVE tools whose venvs would need atomicwrite installed first, so wire and sync before the import lands). Not yet read for equivalence: ratchet, pycheck_census, pathsforward.",
+      "evidence": "2026-10-09: 2026-10-09 slice 1, equivalence of the first pair measured: atomicwrite.write_atomic (mkstemp, chmod to the target's mode, replace) versus treeio.write._replace (deterministic .vfs-tmp.<pid> temp, flush + os.fsync before replace, no mode handling) are NOT equal: treeio fsyncs and atomicwrite did not; atomicwrite preserves permissions and treeio does not. Fixed the gap on the owner's side: write_atomic now flushes and fsyncs the temp before the rename (both the bytes and the text branch), 2 new declared defect classes (mutants.regex) both killed, 1 parametrized test (new content lands while the target still holds the old), 1 warrant; atomicwrite bazel targets 11 of 11 pass. The swaps themselves are the remaining slices.",
       "issued_at": "2026-10-09T02:15:21Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": null,
+      "last_worked": "2026-10-09T02:30:36Z",
       "ticks_blocked": 0
     },
     {

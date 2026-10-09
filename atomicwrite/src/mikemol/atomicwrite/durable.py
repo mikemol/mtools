@@ -36,15 +36,26 @@ def _umask() -> int:
 
 
 def _fill(fd: int, data: str | bytes) -> None:
-    """Write `data` to the open descriptor `fd` and close it."""
+    """Write `data` to the open descriptor `fd`, flush it to disk, and close it.
+
+    ⚑ THE FSYNC IS WHAT MAKES THE RENAME DURABLE (mtools:W857). A rename over the target is atomic
+    to a reader, but without a flush of the temp's bytes first, a crash can leave the NEW name
+    pointing at a file whose data never reached the disk: an empty or short target where the old
+    content was. treeio's own replace already flushed (measured when its copy was compared with
+    this one); this primitive did not, so a caller that moved to it would have lost the flush.
+    """
     # A LITERAL mode string per branch, not a variable: os.fdopen's overloads key on the
     # literal, so a non-literal mode collapses both branches to IO[Any] under mypy.
     if isinstance(data, bytes):
         with os.fdopen(fd, "wb") as fb:
             fb.write(data)
+            fb.flush()
+            os.fsync(fb.fileno())
     else:
         with os.fdopen(fd, "w") as ft:
             ft.write(data)
+            ft.flush()
+            os.fsync(ft.fileno())
 
 
 def write_atomic(path: Path, data: str | bytes) -> None:

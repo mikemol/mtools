@@ -54,3 +54,10 @@
   claim  = {The temp is made beside the target, since rename cannot cross filesystems.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_the_temp_is_a_sibling_in_the_targets_directory},
 }
+
+@misc{atomicwrite-durable-temp-is-flushed-to-disk-before-it-replaces-the-target,
+  section = {durable},
+  title  = {The fsync happens once, on the temp, while the target still holds its old content},
+  claim  = {The fsync happens once, on the temp, while the target still holds its old content.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_the_temp_is_flushed_to_disk_before_it_replaces_the_target},
+}

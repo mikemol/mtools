@@ -1306,3 +1306,4 @@
 2026-10-09T02:15:22Z  tick  W859 minted    -         "Import edges are derived by corpus.import_edges and by importdag: compare, then make one depend on the other"  evidence=W802
 2026-10-09T02:15:22Z  tick  W860 minted    -         "hooks.gen_warrants reads the bib with its own regex: make it use mikemol-bibparse, keeping count_test_functions.py independent"  evidence=W802
 2026-10-09T02:15:31Z  tick  W802 advanced  collapse  "capability-twice audit: four duplicates found and carded (W857-W860), three rhymes kept separate with reasons; W820 closed on the live gate line"
+2026-10-09T02:30:37Z  tick  W857 advanced  collapse  "atomicwrite gains the fsync treeio's copy had (the pair was not equivalent); the swaps remain, ordered by risk"

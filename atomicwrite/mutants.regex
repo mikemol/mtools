@@ -31,3 +31,9 @@ src/mikemol/atomicwrite/durable.py|umask-left-changed|    os\.umask\(current\)| 
 
 # Bytes are written as bytes: through the text branch they raise, or are mangled by an encoding.
 src/mikemol/atomicwrite/durable.py|bytes-written-as-text|if isinstance\(data, bytes\):|if False:|def=_fill
+
+# The bytes reach the disk before the rename (mtools:W857): without the flush a crash can leave the
+# NEW name over a file whose data never arrived. One declaration per branch, since each is its own call.
+src/mikemol/atomicwrite/durable.py|bytes-not-flushed-before-rename|os\.fsync\(fb\.fileno\(\)\)|pass|def=_fill
+
+src/mikemol/atomicwrite/durable.py|text-not-flushed-before-rename|os\.fsync\(ft\.fileno\(\)\)|pass|def=_fill

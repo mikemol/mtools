@@ -84,6 +84,26 @@ def test_a_new_file_gets_the_umask_default_and_the_umask_is_left_as_found(tmp_pa
     assert _mode(target) == _EXPECTED_NEW_MODE
 
 
+@pytest.mark.parametrize("data", ["new", b"new"])
+def test_the_temp_is_flushed_to_disk_before_it_replaces_the_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, data: str | bytes
+) -> None:
+    """The fsync happens once, on the temp, while the target still holds its old content."""
+    target = tmp_path / "out.txt"
+    target.write_text("old", encoding="utf-8")
+    seen: list[str] = []
+    real = os.fsync
+
+    def recording(fd: int) -> None:
+        seen.append(target.read_text(encoding="utf-8"))
+        real(fd)
+
+    monkeypatch.setattr(os, "fsync", recording)
+    durable.write_atomic(target, data)
+    assert seen == ["old"]
+    assert target.read_text(encoding="utf-8") == "new"
+
+
 def test_a_failed_write_leaves_no_temp_and_reraises(tmp_path: Path) -> None:
     """A rename that cannot happen (the target is a directory) removes the temp and raises."""
     target = tmp_path / "occupied"

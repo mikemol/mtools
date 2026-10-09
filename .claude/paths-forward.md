@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 860 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:0541ee89be68f5fd`
+counter 860 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:3824201487dc8bad`
 
 | # | symbol | status |
 |---|---|---|
@@ -1015,11 +1015,14 @@ counter 860 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:0541
      of the other module; add a witness that a dispatch-table module's closure roots equal the original's
 28. **W857** (ready) Atomic write is carried five times: make pathsforward, treeio, ratchet and hooks depend on
    mikemol-atomicwrite where their needs match
-   - next: Per copy, prove equivalence before swapping: atomicwrite.durable.write_atomic preserves the target's
-     permissions and breaks hardlink aliases; compare pathsforward/store.py write_atomic (NamedTemporaryFile + replace),
-     treeio/write.py (flush then replace), ratchet/remap.py (mkstemp, several files) and hooks/pycheck_census.py
-     (mkstemp in the target dir). Swap each whose behaviour atomicwrite already covers, add the pyproject requirement,
-     and record in evidence any copy that needs something atomicwrite lacks (ratchet's multi-file replace may).
+   - next: Swap the copies for atomicwrite.durable.write_atomic one distribution at a time, each its own gated slice,
+     with the first cross-distribution wiring of that dist (pyproject dependency + [tool.uv.sources], BUILD
+     py_library/test deps, mypy_runner deps, :.venv srcs; debtplan is the precedent): treeio first (not a live tool; its
+     _replace uses a deterministic temp name and does not preserve the target's mode, which write_atomic does, so the
+     swap also fixes that). Then ratchet/remap.py (multi-file replace: read its all-or-nothing contract before
+     deciding), hooks/pycheck_census.py and pathsforward/store.py (both are LIVE tools whose venvs would need
+     atomicwrite installed first, so wire and sync before the import lands). Not yet read for equivalence: ratchet,
+     pycheck_census, pathsforward.
 29. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
    other
    - next: corpus (py_files, roots, excluded, stdlib only) and pathwalk (expand: skip registered worktrees and
