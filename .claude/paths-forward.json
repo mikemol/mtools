@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 863,
+  "counter": 864,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T03:21:50Z",
   "job_id": "f4a17ba1",
@@ -16101,7 +16101,7 @@
     {
       "symbol": "W795",
       "title": "Audit old-style tests across the fleet (untyped or unformatted functions, --selftest or main-style scripts, asserts run outside a test runner) and mint conversion-to-pytest cards through debtplan",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W790"
       ],
@@ -16111,14 +16111,16 @@
         "tests",
         "fleet"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W864"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Mtools alone is clean (W863). Audit ~/github/*/ tests (the other repos, where the edit gate does not hold): ruff format --check and an ast scan for unannotated defs and main-style scripts, one count per repo as evidence; then write the debtplan ledger source and mint conversion cards. Confirm with the operator whether 'pypy' meant pytest.",
-      "evidence": "2026-10-05: 2026-10-05 operator: 'We need another planning integration for auditing for old-style tests and flagging them for conversion to pypy.' READ AS pytest (the earlier remark: the --selftest pattern is why everything is migrating); NOT confirmed. If pypy was meant literally, this waypoint's target changes: say so. | 2026-10-09: 2026-10-09 moved here from next_bounded_step to keep the tick payload under budget (the stanza of the first ready card is never dropped): the definition of old-style is a test module with unannotated defs or a ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test runner, no warrants.bib entry per test; write the audit as a debtplan ledger source (file: finding count) beside W794's gate verdict. Measured example: amr-skills tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221). | 2026-10-09: 2026-10-09 atomized: W863 measures mtools alone first; W795 resumes with the cross-repo audit and the debtplan source once W863 lands.",
+      "evidence": "2026-10-05: 2026-10-05 operator: 'We need another planning integration for auditing for old-style tests and flagging them for conversion to pypy.' READ AS pytest (the earlier remark: the --selftest pattern is why everything is migrating); NOT confirmed. If pypy was meant literally, this waypoint's target changes: say so. | 2026-10-09: 2026-10-09 moved here from next_bounded_step to keep the tick payload under budget (the stanza of the first ready card is never dropped): the definition of old-style is a test module with unannotated defs or a ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test runner, no warrants.bib entry per test; write the audit as a debtplan ledger source (file: finding count) beside W794's gate verdict. Measured example: amr-skills tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221). | 2026-10-09: 2026-10-09 atomized: W863 measures mtools alone first; W795 resumes with the cross-repo audit and the debtplan source once W863 lands. | 2026-10-09: 2026-10-09 first cross-repo reading: ruff format --check --isolated --line-length 100 over 21 repos' tests/ dirs (aeternum, amr-skills, asn1, coneVM, cstz, ctheory, cvm2, earley, gabion, gentoo-runner, lg_kernel, life, linux-sources, memmesh, meowntology, metacatagory, nemik, ologpad, restsync, sixfiveohtwo, substrate; gabion-bak and gabion-bak2 left out as backups) exits 1 with well over a hundred unformatted files: aeternum/tests/test_tools.py; amr-skills/tests holds 50+ probe_*.py, bench_*.py and capture/parse scripts that are scripts under tests/, not pytest tests; gabion/tests/gabion/analysis/** has dozens. The per-repo counts were NOT taken: the tool output was truncated and aggregating it is a pipe the hook refuses, so W864 builds the counter as a tracked debtplan source. Not yet run: unannotated defs, no-warrant-per-test.",
       "issued_at": "2026-10-05T23:39:00Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-09T04:29:27Z",
+      "last_worked": "2026-10-09T04:44:35Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
@@ -17593,6 +17595,28 @@
       "last_worked": "2026-10-09T04:29:23Z",
       "ticks_blocked": 0,
       "completed": "20261009T042923Z"
+    },
+    {
+      "symbol": "W864",
+      "title": "Write the old-style-tests audit as a tracked debtplan ledger source: per repo, count test files that ruff format would change, defs without annotations, and probe_/bench_ or main-style scripts living under tests/",
+      "status": "ready",
+      "enables": [
+        "W795"
+      ],
+      "touches": [
+        "debtplan",
+        "tests",
+        "fleet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the source to debtplan (or a sibling dist) with tests and warrants; ruff format --check --isolated --line-length 100 --output-format concise is the formatted-ness reader; emit file: finding count per repo.",
+      "evidence": "",
+      "issued_at": "2026-10-09T04:44:30Z",
+      "minted_during": "tick",
+      "caused_by": "W795",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [
