@@ -35,3 +35,4 @@ admission	The Admitted Transition: Saved, Then Judged, Then Marked; Minting Is N
 closure	Residue Attracts Work: One Claimable Card per Waypoint and Gate, a Rerun Finds It, and Nothing Is Minted Unjudged
 skip	The Skipped Symbol: A Number the Counter Issued and Nothing Stored Is Recorded in Residue With a Reason, and Nothing Else Is
 delivered	The Delivered Version: 0.0.n From the Highest Completed Waypoint, Derived From the Queue and Never Typed
+standing	The Standing List Has a Writer: --standing-set Replaces It Whole, an Empty File Is Refused, and the Payload Carries What Was Stored

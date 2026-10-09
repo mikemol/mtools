@@ -950,6 +950,30 @@ def set_preamble(state: State, lines: list[str]) -> None:
     state.doc["preamble"] = lines
 
 
+def set_standing(state: State, lines: list[str]) -> int:
+    """Store the standing list the payload emits verbatim, one rule per non-blank line (W862).
+
+    ⚑ THE LIST HAD NO WRITER: `preamble` has `--preamble-set` and `--preamble-clear`, but the
+    `standing` list could only be edited by hand in the JSON, which breaks the one-writer rule and
+    left a stale rule ('run .claude/gen_warrants.py', retired 2026-10-03) in every payload since.
+    It is SET whole, like `enables`: a rule left out of the file is a rule retired, a visible edit.
+
+    Returns:
+        how many rules were stored.
+
+    Raises:
+        RefusedError: when no line is non-blank (a list with nothing in it is a clear, and a
+            payload with no standing rules is a decision, not a side effect of an empty file).
+
+    """
+    rules = [line.strip() for line in lines if line.strip()]
+    if not rules:
+        msg = "standing has 0 non-blank lines; an empty list is refused, not stored"
+        raise RefusedError(msg)
+    state.doc["standing"] = rules
+    return len(rules)
+
+
 def clear_preamble(state: State) -> int:
     """Remove the stored preamble.
 

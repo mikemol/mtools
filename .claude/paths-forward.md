@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 861 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:2f3d9add90bb151d`
+counter 862 · heartbeat 2026-10-09T03:21:50Z · job `f4a17ba1` · hash `v2:356a3af9142fd30f`
 
 | # | symbol | status |
 |---|---|---|
@@ -851,6 +851,7 @@ counter 861 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:2f3d
 | 842 | W854 | done |
 | 843 | W855 | done |
 | 844 | W856 | done |
+| 845 | W862 | done |
 
 ## waypoints
 
@@ -860,11 +861,9 @@ counter 861 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:2f3d
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W795** (ready) Audit old-style tests across the fleet (untyped or unformatted functions, --selftest or main-style
    scripts, asserts run outside a test runner) and mint conversion-to-pytest cards through debtplan
-   - next: Define old-style from what the gate and the house standard can read: a test module with unannotated defs or a
-     ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test
-     runner, no warrants.bib entry per test. Write the audit as a debtplan ledger source (file: finding count) beside
-     W794's gate verdict, run it over every repo's tests, and mint conversion cards. Measured example: amr-skills
-     tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221)
+   - next: Define old-style from what the gate can read (unannotated or unformatted test defs, --selftest or main-style
+     scripts, asserts outside a runner, no warrant per test), write the audit as a debtplan ledger source, run it over
+     every repo's tests, and mint conversion cards.
 3. **W796** (ready) Graduate the host katas into an mtools distribution to the house standards
    - next: Move ~/github/.claude/katas/katas.py (subcommands status, commit, typing, mypy, visit, tick) into its own
      mtools distribution (we atomize), with typed modules, tests, a warrants.bib entry per test, the mutation gate,
@@ -2438,6 +2437,7 @@ counter 861 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:2f3d
    deletion from the pathspec
 844. **W856** (done) Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check
    reads sections
+845. **W862** (done) The queue's standing 'warrants' line is stale and no verb edits the standing list
 
 ## residue
 

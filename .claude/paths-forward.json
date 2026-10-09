@@ -2,11 +2,11 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 861,
+  "counter": 862,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T01:35:47Z",
-  "job_id": "f78abfd1",
-  "predecessor_job_id": "9ee8838f",
+  "heartbeat": "2026-10-09T03:21:50Z",
+  "job_id": "f4a17ba1",
+  "predecessor_job_id": "f78abfd1",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -25,7 +25,7 @@
     "never cite rules_python's parse_requirements docstring ('consistency check against requirements files') as evidence — the code returns before any check (W5, re-measured tick 13)",
     "the loop's state tool is `pathsforward/.venv/bin/mikemol-paths-forward --state <path>` (600745c); re-arm from its --payload",
     "arms are red on HEAD by BEHAVIOUR; a hang is not a red; a missing-name red (no seam on HEAD) is stated in the commit, never hidden",
-    "warrants: `python3 .claude/gen_warrants.py <dist> <module>=<RUBRIC KEY> ...` (key verbatim; hooks uses hyphens); diff @misc against HEAD — the gate diffs sections vs rubric, preflight does not",
+    "warrants: `hooks/.venv/bin/mikemol-gen-warrants --write <dist> <module>=<RUBRIC KEY> [--title KEY=TITLE]` appends the bib entries and the rubric row together (key verbatim; hooks uses hyphens); `python3 count_test_functions.py --pairing <dist>` names a section/rubric disagreement, so the preflight sees it too",
     "commit and preflight run_in_background; post-commit AUTO-PUSHES — grep 'post-commit: pushed'; after a graph-touching bazel run, `bazel build //hooks:.venv` re-admits Bash",
     "gate TIMEOUT with no assertion: run the timed-out targets alone (plain bazel test), then retry; a preflight red in test_bar_fires naming empty ratchet stdout = stale ratchet_cli, `bazel build //ratchet:ratchet_cli`",
     "the pycheck hook is ARMED on Edit|Write: a deliberately-bad probe file goes via Bash heredoc into the scratchpad; any test reaching fence.admit's acquire injects a quiet load",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 90,
+      "ticks_blocked": 91,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 88,
+      "ticks_blocked": 89,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 93,
+      "ticks_blocked": 94,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 63,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -16113,12 +16113,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Define old-style from what the gate and the house standard can read: a test module with unannotated defs or a ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test runner, no warrants.bib entry per test. Write the audit as a debtplan ledger source (file: finding count) beside W794's gate verdict, run it over every repo's tests, and mint conversion cards. Measured example: amr-skills tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221)",
-      "evidence": "2026-10-05: 2026-10-05 operator: 'We need another planning integration for auditing for old-style tests and flagging them for conversion to pypy.' READ AS pytest (the earlier remark: the --selftest pattern is why everything is migrating); NOT confirmed. If pypy was meant literally, this waypoint's target changes: say so.",
+      "next_bounded_step": "Define old-style from what the gate can read (unannotated or unformatted test defs, --selftest or main-style scripts, asserts outside a runner, no warrant per test), write the audit as a debtplan ledger source, run it over every repo's tests, and mint conversion cards.",
+      "evidence": "2026-10-05: 2026-10-05 operator: 'We need another planning integration for auditing for old-style tests and flagging them for conversion to pypy.' READ AS pytest (the earlier remark: the --selftest pattern is why everything is migrating); NOT confirmed. If pypy was meant literally, this waypoint's target changes: say so. | 2026-10-09: 2026-10-09 moved here from next_bounded_step to keep the tick payload under budget (the stanza of the first ready card is never dropped): the definition of old-style is a test module with unannotated defs or a ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test runner, no warrants.bib entry per test; write the audit as a debtplan ledger source (file: finding count) beside W794's gate verdict. Measured example: amr-skills tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221).",
       "issued_at": "2026-10-05T23:39:00Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-05T23:39:27Z",
+      "last_worked": "2026-10-09T03:21:20Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -16966,7 +16966,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 16,
+      "ticks_blocked": 17,
       "completed": null
     },
     {
@@ -17550,6 +17550,25 @@
       "caused_by": "W859",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W862",
+      "title": "The queue's standing 'warrants' line is stale and no verb edits the standing list",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "paths-forward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: mikemol-paths-forward --standing-set FILE stores the file's non-blank lines (trimmed) as the WHOLE standing list; an all-blank file is refused (exit 2, nothing written); the payload emits what was stored. Used on this queue: the 'warrants' rule now names mikemol-gen-warrants --write and the pairing check's section findings (the retired .claude/gen_warrants.py and the false 'preflight does not' are gone); the payload still fits its budget. ops.set_standing + cli wiring, 6 tests, 6 warrants. | 2026-10-09: correction: 4 test functions (6 cases, one parametrized over three empty inputs) and 4 warrants, not 6 and 6.",
+      "issued_at": "2026-10-09T03:21:37Z",
+      "minted_during": "interrupt",
+      "caused_by": "W834",
+      "last_worked": "2026-10-09T03:31:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T033105Z"
     }
   ],
   "residue": [

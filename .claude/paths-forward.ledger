@@ -1311,3 +1311,5 @@
 2026-10-09T03:00:42Z  tick  W861 minted    -         "corpus.import_edges classes a class body's imports as deferred, but a class body executes when the module is imported"  evidence=W859
 2026-10-09T03:00:42Z  tick  W859 advanced  collapse  "W858/W859 compared by measurement: names identical on 144 files, five policy differences in file discovery; a class-body classification question found and carded (W861)"
 2026-10-09T03:15:51Z  tick  W860 advanced  collapse  "bibparse.Entry carries its text span (equal to gen_warrants' regex entry on 32 of 32 ledgers); routing the live gen_warrants through it is the next slice"
+2026-10-09T03:21:37Z  interrupt W862 minted    -         "The queue's standing 'warrants' line is stale and no verb edits the standing list"  evidence=W834
+2026-10-09T03:31:06Z  tick  W862 advanced  unblock   "the standing list gains a writer (--standing-set) and its stale warrants rule is corrected through it"

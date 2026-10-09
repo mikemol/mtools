@@ -96,6 +96,7 @@ _VALUED = (
     "ledger",
     "show",
     "preamble_set",
+    "standing_set",
     "weights_from",
     "vectors_from",
     "repair_counter",
@@ -432,6 +433,11 @@ def _parser() -> argparse.ArgumentParser:
         help="where a literal still appears: waypoints, residue, ledger, mirror (exit 1 on a hit)",
     )
     mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
+    mode.add_argument(
+        "--standing-set",
+        metavar="FILE",
+        help="W862: store FILE's non-blank lines as the whole standing list, one rule per line",
+    )
     mode.add_argument(
         "--weights-from",
         metavar="FILE",
@@ -1401,6 +1407,22 @@ def _preamble_set(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _standing_set(ctx: Ctx) -> int:
+    """Store a file's non-blank lines as the standing list, replacing it whole (W862).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    lines = Path(ctx.get("standing_set") or "").read_text(encoding="utf-8").splitlines()
+
+    def edit(state: State) -> int:
+        _say(f"standing set: {ops.set_standing(state, lines)} rule(s)")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _json_file(source: Path) -> object:
     """Read a JSON file a bulk mode applies.
 
@@ -1628,6 +1650,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "commit_message": _commit_message,
     "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,
+    "standing_set": _standing_set,
     "preamble_clear": _preamble_clear,
     "init": _init,
     "weights_from": _weights_from,

@@ -3737,3 +3737,31 @@
   claim  = {`--delivered` reads the queue and prints one line; the file is byte for byte unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_delivered.py -k test_the_cli_prints_the_version_and_writes_nothing},
 }
+
+@misc{pathsforward-standing-list-is-replaced-whole-and-blank-lines-are-not-rules,
+  section = {standing},
+  title  = {A rule left out of the file is retired; surrounding blanks and indentation are dropped},
+  claim  = {A rule left out of the file is retired; surrounding blanks and indentation are dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing.py -k test_the_list_is_replaced_whole_and_blank_lines_are_not_rules},
+}
+
+@misc{pathsforward-standing-file-with-no-rule-is-refused-and-leaves-the-list-alone,
+  section = {standing},
+  title  = {An empty list is a decision, not a side effect of an empty file},
+  claim  = {An empty list is a decision, not a side effect of an empty file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing.py -k test_a_file_with_no_rule_is_refused_and_leaves_the_list_alone},
+}
+
+@misc{pathsforward-standing-cli-reads-a-file-stores-it-and-the-payload-emits-it,
+  section = {standing},
+  title  = {End to end: the verb stores the file's rules, and --payload carries them verbatim},
+  claim  = {End to end: the verb stores the file's rules, and --payload carries them verbatim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing.py -k test_the_cli_reads_a_file_stores_it_and_the_payload_emits_it},
+}
+
+@misc{pathsforward-standing-cli-refuses-an-empty-file-and-changes-nothing,
+  section = {standing},
+  title  = {Exit 2 with the reason on stderr; the file on disk is byte for byte what it was},
+  claim  = {Exit 2 with the reason on stderr; the file on disk is byte for byte what it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing.py -k test_the_cli_refuses_an_empty_file_and_changes_nothing},
+}
