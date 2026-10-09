@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 865 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:1a5096a8b5168f41`
+counter 865 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:4e6fa9b8981e543d`
 
 | # | symbol | status |
 |---|---|---|
@@ -1028,10 +1028,9 @@ counter 865 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:1a50
      before changing (1)-(3); until then keep both and record the decision here.
 30. **W859** (ready) Import edges are derived by corpus.import_edges and by importdag: compare, then make one depend on
    the other
-   - next: Give importdag.resolve a way to say which references are eager and which deferred (an eager flag on
-     Reference, or references_split), prove it equals corpus.module_level/deferred on the same 144 files plus a
-     deferred-import fixture, then make corpus.import_edges call importdag and delete its own walker; corpus gains its
-     first sibling dependency (recipe: treeio's, W857).
+   - next: Slice 2: corpus.import_edges calls importdag.resolve.split and drops its own walker. Blocked on the adopter
+     question (corpus's consumers are outside this repo): W317's PyPI floors. Meanwhile the dotted-name shaping (module
+     and module.name) is importdag's from_references already.
 31. **W860** (ready) hooks.gen_warrants reads the bib with its own regex: make it use mikemol-bibparse, keeping
    count_test_functions.py independent
    - next: Slice 2: route gen_warrants' prune and would_drop through bibparse.parse, slicing the original text by

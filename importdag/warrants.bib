@@ -1294,3 +1294,66 @@
   claim  = {A file at the root has no parent directory, so nothing is added.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_a_top_level_module_has_no_package_to_carry},
 }
+
+@misc{importdag-split-module-scope-import-is-eager,
+  section = {split},
+  title  = {`import a` at the top of a module fires when the module is imported},
+  claim  = {`import a` at the top of a module fires when the module is imported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_module_scope_import_is_eager},
+}
+
+@misc{importdag-split-import-inside-a-function-is-deferred,
+  section = {split},
+  title  = {An import in a def fires only when the function is called},
+  claim  = {An import in a def fires only when the function is called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_import_inside_a_function_is_deferred},
+}
+
+@misc{importdag-split-import-under-a-guard-is-still-eager,
+  section = {split},
+  title  = {An if, try, with or loop at module scope still runs on import},
+  claim  = {An if, try, with or loop at module scope still runs on import.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_import_under_a_guard_is_still_eager},
+}
+
+@misc{importdag-split-import-under-try-star-is-eager,
+  section = {split},
+  title  = {A `try*` is a try for this purpose; it must not drop its imports},
+  claim  = {A `try*` is a try for this purpose; it must not drop its imports.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_an_import_under_try_star_is_eager},
+}
+
+@misc{importdag-split-nested-function-import-is-deferred,
+  section = {split},
+  title  = {A def inside a def, inside a guard, is deferred however deep},
+  claim  = {A def inside a def, inside a guard, is deferred however deep.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_nested_function_import_is_deferred},
+}
+
+@misc{importdag-split-class-body-import-is-deferred-as-corpus-has-it,
+  section = {split},
+  title  = {The split agrees with corpus.import_edges, which counts a class body deferred (W861)},
+  claim  = {The split agrees with corpus.import_edges, which counts a class body deferred (W861).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_class_body_import_is_deferred_as_corpus_has_it},
+}
+
+@misc{importdag-split-relative-import-keeps-its-level,
+  section = {split},
+  title  = {The split keeps the dots, which the resolver needs},
+  claim  = {The split keeps the dots, which the resolver needs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_relative_import_keeps_its_level},
+}
+
+@misc{importdag-split-two-halves-together-are-every-reference,
+  section = {split},
+  title  = {Eager and deferred cover exactly what `references` finds, so nothing is lost},
+  claim  = {Eager and deferred cover exactly what `references` finds, so nothing is lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_the_two_halves_together_are_every_reference},
+}
+
+@misc{importdag-split-text-that-does-not-parse-has-no-references,
+  section = {split},
+  title  = {Syntax errors yield two empty halves rather than raising},
+  claim  = {Syntax errors yield two empty halves rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_text_that_does_not_parse_has_no_references},
+}

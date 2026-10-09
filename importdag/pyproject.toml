@@ -110,6 +110,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # process, so `assert` is the only exemption it needs.
 "tests/test_resolve.py" = ["assert"]
 "tests/test_resolve_init.py" = ["assert"]
+"tests/test_split.py" = ["assert"]
 # ⚑ THE THREE PORTED TOOLS (mtools:W547). `closure` is exercised as `python -m` in a child as well as
 # by calls; `imports` and `dagbzl` are the two DAG-file writers, and their exit codes are contracts.
 "tests/test_closure.py" = [

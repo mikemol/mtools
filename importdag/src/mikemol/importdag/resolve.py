@@ -133,6 +133,86 @@ def references(text: str) -> frozenset[Reference]:
     return frozenset(found)
 
 
+@dataclass(frozen=True, slots=True)
+class Split:
+    """The references of one text, apart by when they fire.
+
+    `eager` fires when the module is imported; `deferred` only when a definition is called, so it
+    is an edge the import graph can follow but importing the module never executes.
+    """
+
+    eager: frozenset[Reference]
+    deferred: frozenset[Reference]
+
+
+_DEFINITIONS = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+"""The statements whose bodies run later than the module does."""
+
+
+def _statement_references(node: ast.AST) -> set[Reference]:
+    """Name the modules one statement imports, keeping its level.
+
+    Returns:
+        The references of an `import` or `from` statement; none for anything else.
+
+    """
+    if isinstance(node, ast.Import):
+        return {Reference(0, alias.name) for alias in node.names}
+    if isinstance(node, ast.ImportFrom):
+        return _from_references(node)
+    return set()
+
+
+def _executing_bodies(node: ast.stmt) -> list[list[ast.stmt]]:
+    """List the bodies of a compound statement that still run when the module is imported.
+
+    Returns:
+        The bodies of an if/for/while/try/with/match; none for any other statement.
+
+    """
+    if isinstance(node, (ast.If, ast.For, ast.AsyncFor, ast.While)):
+        return [node.body, node.orelse]
+    if isinstance(node, (ast.Try, ast.TryStar)):
+        return [node.body, node.orelse, node.finalbody, *[h.body for h in node.handlers]]
+    if isinstance(node, (ast.With, ast.AsyncWith)):
+        return [node.body]
+    if isinstance(node, ast.Match):
+        return [case.body for case in node.cases]
+    return []
+
+
+def _sort(body: list[ast.stmt], eager: set[Reference], deferred: set[Reference]) -> None:
+    """Add the references of `body` to `eager`, or to `deferred` inside a definition."""
+    for node in body:
+        if isinstance(node, _DEFINITIONS):
+            for inner in ast.walk(node):
+                deferred.update(_statement_references(inner))
+            continue
+        eager.update(_statement_references(node))
+        for nested in _executing_bodies(node):
+            _sort(nested, eager, deferred)
+
+
+def split(text: str) -> Split:
+    """Collect the modules `text` imports, apart by whether importing it runs the import.
+
+    ⚑ A CLASS BODY COUNTS AS DEFERRED, as corpus.import_edges has it, though a class body runs at
+    import time (mtools:W861 holds that open); the split is the same walk so the two agree.
+
+    Returns:
+        The eager and the deferred references; both empty for a text that does not parse.
+
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return Split(frozenset(), frozenset())
+    eager: set[Reference] = set()
+    deferred: set[Reference] = set()
+    _sort(tree.body, eager, deferred)
+    return Split(frozenset(eager), frozenset(deferred))
+
+
 def module_names(path: str) -> tuple[str, ...]:
     """Name a file by every dotted suffix of its own path.
 

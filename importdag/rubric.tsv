@@ -9,3 +9,4 @@ imports	The Legacy Writer: Stem-Valued Edges Are Derived Flat and Written Atomic
 dagbzl	The DAG File: Path-Valued Edges Are Rendered, Checked and Written Atomically Through the Sibling
 resolve	The Resolver: A Relative Import Is Looked Up Exactly From Its Level, an Absolute One at Its Longest Dotted Prefix, and an Ambiguous Name Is Reported, Never Picked
 resolve_init	The Implicit Package Edge: Importing a Module Also Imports the __init__.py of Every Package Directory the Name Spans
+split	The Split: Imports That Run With the Module Are Told Apart From Those That Run Only When a Function Is Called

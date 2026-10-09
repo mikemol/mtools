@@ -17507,12 +17507,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Give importdag.resolve a way to say which references are eager and which deferred (an eager flag on Reference, or references_split), prove it equals corpus.module_level/deferred on the same 144 files plus a deferred-import fixture, then make corpus.import_edges call importdag and delete its own walker; corpus gains its first sibling dependency (recipe: treeio's, W857).",
-      "evidence": "2026-10-09: 2026-10-09 comparison measured: corpus.import_edges (module_level_dotted | deferred_dotted) against importdag.resolve.references (level-0 names) over every .py file of pathsforward/src (37), hooks/src (49) and pycodemod/src (58): 144 files, 144 identical name sets, 0 differ. So the NAME extraction is the same capability twice; what only corpus has is the eager/lazy split (module_level versus deferred, W846's dispatch-table concern), and what only importdag has is level handling and resolution to files. corpus has no dependent in this repo (bazel rdeps empty); its consumers are outside.",
+      "next_bounded_step": "Slice 2: corpus.import_edges calls importdag.resolve.split and drops its own walker. Blocked on the adopter question (corpus's consumers are outside this repo): W317's PyPI floors. Meanwhile the dotted-name shaping (module and module.name) is importdag's from_references already.",
+      "evidence": "2026-10-09: 2026-10-09 comparison measured: corpus.import_edges (module_level_dotted | deferred_dotted) against importdag.resolve.references (level-0 names) over every .py file of pathsforward/src (37), hooks/src (49) and pycodemod/src (58): 144 files, 144 identical name sets, 0 differ. So the NAME extraction is the same capability twice; what only corpus has is the eager/lazy split (module_level versus deferred, W846's dispatch-table concern), and what only importdag has is level handling and resolution to files. corpus has no dependent in this repo (bazel rdeps empty); its consumers are outside. | 2026-10-09: 2026-10-09 slice 1 LANDED: importdag.resolve.split(text) -> Split(eager, deferred) of Reference sets, the same walk as corpus.import_edges (defs and classes deferred, if/for/while/try/with/match executing), plus ast.TryStar which corpus's walk drops (so corpus loses imports under try*; a defect carried by the swap, not fixed in corpus). 9 tests (tests/test_split.py, 9 warrants, rubric row 'split'). Equivalence measured with a scratchpad script: importdag.split level-0 names equal corpus.module_level_dotted and deferred_dotted on 158 files (pathsforward, hooks, pycodemod, importdag, corpus src), 0 differ; the try* case is not in those files. bazel //importdag/... //corpus/...: 35 of 35. importdag has no mutants.regex, so no mutation declarations were possible.",
       "issued_at": "2026-10-09T02:15:22Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": "2026-10-09T03:00:13Z",
+      "last_worked": "2026-10-09T06:06:46Z",
       "ticks_blocked": 0
     },
     {
