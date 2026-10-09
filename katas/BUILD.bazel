@@ -26,7 +26,12 @@ SIBLINGS = [
 
 # ⚑ THE TEST MODULES THAT BUILD REAL GIT REPOSITORIES: each needs the `git` binary from the sandbox
 # PATH, an undeclared host tool made visible and filterable by the tag below (ratchet's precedent).
-_NEEDS_GIT = ["tests/test_fleet.py", "tests/test_survey.py", "tests/test_pulse.py"]
+_NEEDS_GIT = [
+    "tests/test_fleet.py",
+    "tests/test_survey.py",
+    "tests/test_pulse.py",
+    "tests/test_cli.py",
+]
 
 py_library(
     name = "katas",
@@ -155,8 +160,10 @@ sh_test(
 
 venv_from_hub(
     name = ".venv",
-    # ⚑ A LIBRARY: no console scripts, matching pyproject's absent [project.scripts].
-    console_scripts = {},
+    # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as //pathsforward:.venv mirrors its own.
+    console_scripts = {
+        "mikemol-katas": "mikemol.katas.cli:main",
+    },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",

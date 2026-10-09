@@ -83,3 +83,17 @@ src/mikemol/katas/hosttick.py|end-skips-the-flush|    flush\(\)|    pass|def=end
 src/mikemol/katas/hosttick.py|end-always-passes-next|if closing\.next_step:|if True:|def=end
 src/mikemol/katas/hosttick.py|end-arms-without-a-job-file|if job is not None and job\.exists\(\):|if job is not None:|def=end
 src/mikemol/katas/hosttick.py|end-unlocks-the-wrong-holder|"--unlock", queue\.holder|"--unlock", "nobody"|def=end
+
+# W878: the policy file. A blank value is a gap, an optional list defaults to nothing, XDG wins.
+src/mikemol/katas/policy.py|blank-value-accepted| or not value\.strip\(\)||def=_text
+src/mikemol/katas/policy.py|skip-list-dropped|frozenset\(_strings\(table, "skip_flush"\)\)|frozenset()|def=load
+src/mikemol/katas/policy.py|standing-waypoint-ignored|str\(table\.get\("standing_waypoint"\) or _STANDING\)|_STANDING|def=load
+src/mikemol/katas/policy.py|xdg-ignored|if env\.get\("XDG_CONFIG_HOME"\)|if False|def=default_path
+
+# W878: the command line. A delegated name leads to the tool, arguments reach the commit unchanged,
+# the tick note is read, an archive needs a letter.
+src/mikemol/katas/cli.py|delegated-name-ignored|if name in DELEGATED:|if False:|def=main
+src/mikemol/katas/cli.py|tick-note-ignored|given\.get\("--note", ""\)|""|def=_tick
+src/mikemol/katas/cli.py|commit-drops-its-arguments|\(str\(ctx\.policy\.commit_tool\), \*ctx\.args\)|(str(ctx.policy.commit_tool),)|def=_commit
+src/mikemol/katas/cli.py|archive-needs-no-letter|len\(ctx\.args\) < _ARCHIVE_MINIMUM|len(ctx.args) < 1|def=_archive
+src/mikemol/katas/cli.py|flush-skip-ignored|ctx\.args\[:1\] == \["--skip"\]|False|def=_flush

@@ -468,3 +468,186 @@
   claim  = {A queue naming another standing waypoint gets its ledger line there.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttick.py -k test_the_standing_waypoint_is_the_queues_not_a_constant},
 }
+
+@misc{katas-policy-complete-file-loads-every-value,
+  section = {policy},
+  title  = {Paths become Paths, the holder and version stay strings},
+  claim  = {Paths become Paths, the holder and version stay strings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_complete_file_loads_every_value},
+}
+
+@misc{katas-policy-optional-values-default-to-nothing-machine-specific,
+  section = {policy},
+  title  = {No skip list, no standing warnings, no cron job file, the standing waypoint W2},
+  claim  = {No skip list, no standing warnings, no cron job file, the standing waypoint W2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_the_optional_values_default_to_nothing_machine_specific},
+}
+
+@misc{katas-policy-optional-values-are-read-when-given,
+  section = {policy},
+  title  = {A skip list, standing warnings, a job file and a standing waypoint override the defaults},
+  claim  = {A skip list, standing warnings, a job file and a standing waypoint override the
+            defaults.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_the_optional_values_are_read_when_given},
+}
+
+@misc{katas-policy-every-missing-required-key-is-named-at-once,
+  section = {policy},
+  title  = {A file with two gaps names both, so the operator fixes it in one pass},
+  claim  = {A file with two gaps names both, so the operator fixes it in one pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_every_missing_required_key_is_named_at_once},
+}
+
+@misc{katas-policy-empty-string-is-not-a-value,
+  section = {policy},
+  title  = {A blank holder is the same gap as an absent one, and the key is named},
+  claim  = {A blank holder is the same gap as an absent one, and the key is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_an_empty_string_is_not_a_value},
+}
+
+@misc{katas-policy-skip-list-that-is-not-strings-is-refused,
+  section = {policy},
+  title  = {The list type is checked, naming the key},
+  claim  = {The list type is checked, naming the key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_skip_list_that_is_not_strings_is_refused},
+}
+
+@misc{katas-policy-missing-file-is-a-policy-error-naming-the-path,
+  section = {policy},
+  title  = {No file is not a traceback},
+  claim  = {No file is not a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_missing_file_is_a_policy_error_naming_the_path},
+}
+
+@misc{katas-policy-file-that-is-not-toml-is-a-policy-error,
+  section = {policy},
+  title  = {A syntax error is reported against the file},
+  claim  = {A syntax error is reported against the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_file_that_is_not_toml_is_a_policy_error},
+}
+
+@misc{katas-policy-default-path-honours-xdg-config-home,
+  section = {policy},
+  title  = {`$XDG_CONFIG_HOME` wins; otherwise the home directory's `.config`},
+  claim  = {`$XDG_CONFIG_HOME` wins; otherwise the home directory's `.config`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_the_default_path_honours_xdg_config_home},
+}
+
+@misc{katas-cli-delegated-subcommand-prints-the-mtools-command-and-exits-2,
+  section = {cli},
+  title  = {The old name leads to the new tool instead of a silent difference},
+  claim  = {The old name leads to the new tool instead of a silent difference.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_delegated_subcommand_prints_the_mtools_command_and_exits_2},
+}
+
+@misc{katas-cli-every-delegated-name-says-what-to-run,
+  section = {cli},
+  title  = {None of the six prints an empty hint},
+  claim  = {None of the six prints an empty hint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_every_delegated_name_says_what_to_run},
+}
+
+@misc{katas-cli-unknown-subcommand-lists-the-usage,
+  section = {cli},
+  title  = {The usage line names the real subcommands and the delegated ones},
+  claim  = {The usage line names the real subcommands and the delegated ones.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unknown_subcommand_lists_the_usage},
+}
+
+@misc{katas-cli-missing-policy-file-is-named-not-a-traceback,
+  section = {cli},
+  title  = {The operator is told which file and why},
+  claim  = {The operator is told which file and why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_missing_policy_file_is_named_not_a_traceback},
+}
+
+@misc{katas-cli-status-prints-a-row-per-workstream,
+  section = {cli},
+  title  = {The row carries the repo's name},
+  claim  = {The row carries the repo's name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_status_prints_a_row_per_workstream},
+}
+
+@misc{katas-cli-flush-with-nothing-pending-says-so,
+  section = {cli},
+  title  = {No repo has a changed queue, so nothing starts},
+  claim  = {No repo has a changed queue, so nothing starts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_flush_with_nothing_pending_says_so},
+}
+
+@misc{katas-cli-flush-skip-keeps-the-named-repo-out,
+  section = {cli},
+  title  = {A repo with a changed queue is not started when `--skip` names it},
+  claim  = {A repo with a changed queue is not started when `--skip` names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_flush_skip_keeps_the_named_repo_out},
+}
+
+@misc{katas-cli-archive-moves-letters-and-reports-the-count,
+  section = {cli},
+  title  = {Under the policy's root, the repo's inbox is archived},
+  claim  = {Under the policy's root, the repo's inbox is archived.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_archive_moves_letters_and_reports_the_count},
+}
+
+@misc{katas-cli-archive-without-a-letter-is-a-usage-error,
+  section = {cli},
+  title  = {A repo alone is not enough},
+  claim  = {A repo alone is not enough.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_archive_without_a_letter_is_a_usage_error},
+}
+
+@misc{katas-cli-probe-refuses-a-repo-with-no-hook-and-exits-1,
+  section = {cli},
+  title  = {The reason is printed},
+  claim  = {The reason is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_probe_refuses_a_repo_with_no_hook_and_exits_1},
+}
+
+@misc{katas-cli-precommit-lists-the-hook-of-each-repo,
+  section = {cli},
+  title  = {A repo with no hook reads NO HOOK},
+  claim  = {A repo with no hook reads NO HOOK.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_precommit_lists_the_hook_of_each_repo},
+}
+
+@misc{katas-cli-bazelize-writes-the-scaffold-from-the-policys-templates,
+  section = {cli},
+  title  = {The version comes from the policy file, the templates from its directory},
+  claim  = {The version comes from the policy file, the templates from its directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bazelize_writes_the_scaffold_from_the_policys_templates},
+}
+
+@misc{katas-cli-tick-begin-takes-the-lock-under-the-policys-holder,
+  section = {cli},
+  title  = {The fake pathsforward tool sees `--lock github-b3`},
+  claim  = {The fake pathsforward tool sees `--lock github-b3`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_tick_begin_takes_the_lock_under_the_policys_holder},
+}
+
+@misc{katas-cli-tick-end-records-the-note-and-unlocks,
+  section = {cli},
+  title  = {The ledger, the evidence with today's date, and the unlock all reach the tool},
+  claim  = {The ledger, the evidence with today's date, and the unlock all reach the tool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_tick_end_records_the_note_and_unlocks},
+}
+
+@misc{katas-cli-tick-without-begin-or-end-is-a-usage-error,
+  section = {cli},
+  title  = {Neither word is not a default},
+  claim  = {Neither word is not a default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_tick_without_begin_or_end_is_a_usage_error},
+}
+
+@misc{katas-cli-commit-passes-its-arguments-to-mikemol-commit-unchanged,
+  section = {cli},
+  title  = {The commit tool gets the repo and the flags as typed, and its status is returned},
+  claim  = {The commit tool gets the repo and the flags as typed, and its status is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commit_passes_its_arguments_to_mikemol_commit_unchanged},
+}
+
+@misc{katas-cli-pulse-runs-the-nemik-tools-the-policy-names,
+  section = {cli},
+  title  = {Status rows, then nemik-check's warnings, then the ranking, from the policy's nemik dir},
+  claim  = {Status rows, then nemik-check's warnings, then the ranking, from the policy's nemik dir.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_pulse_runs_the_nemik_tools_the_policy_names},
+}

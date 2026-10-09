@@ -1371,3 +1371,5 @@
 2026-10-09T13:09:21Z  tick  W876 advanced  collapse  "katas gains inbox, survey and scaffold; the host archive no longer overwrites; 18/18"
 2026-10-09T13:25:14Z  tick  W878 minted    -         "katas: a command-line entry with the host katas' subcommand names, and where the host's policy values live"  evidence=W796
 2026-10-09T13:25:22Z  tick  W877 advanced  collapse  "katas pulse + hosttick land; every unique host subcommand is a module; 20/20"
+2026-10-09T13:40:46Z  tick  W879 minted    -         "Operator: place the katas policy file and retire the host katas.py once mikemol-katas agrees with it"  evidence=W796
+2026-10-09T13:40:52Z  tick  W878 advanced  collapse  "mikemol-katas CLI + policy file land, 22/22; verified read-only on the real host; operator step carded as W879"

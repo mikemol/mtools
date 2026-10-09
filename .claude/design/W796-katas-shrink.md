@@ -15,6 +15,34 @@ host orchestration, calling the mtools tools in the table below), and the operat
 `katas.py` when it covers its subcommands. The "Order" at the end is then the order of that
 distribution's slices, not of edits to the old file. `~/github/.claude` is untouched.
 
+## STATUS 2026-10-09: the distribution is built; what remains is the operator's
+
+`mikemol-katas` (katas/, console script `mikemol-katas`) covers every host subcommand: the ones no
+mtools tool does are modules (workstreams, commits, detach+waiter, fleet, inbox, survey, scaffold,
+pulse, hosttick) and the rest print the mtools command to run. It reads the host's values from a
+TOML policy file (`~/.config/mikemol/katas.toml`, or `$XDG_CONFIG_HOME`), not from constants. A
+read-only run of `status` against the real host with the draft policy below printed the live fleet
+table, including the detached-commit and probe states the old katas.py's logs hold.
+
+Draft policy (the values the old katas.py held as constants; the operator's to confirm):
+
+    root = "/home/mikemol/github"
+    logs = "/home/mikemol/github/.claude/katas/commits"
+    commit_tool = "/home/mikemol/github/mtools/hooks/bin/mikemol-commit"
+    pathsforward = "/home/mikemol/github/mtools/pathsforward/.venv/bin/mikemol-paths-forward"
+    host_state = "/home/mikemol/github/.claude/paths-forward.json"
+    holder = "github-b3"
+    nemik = "/home/mikemol/github/nemik/.venv/bin"
+    templates = "/home/mikemol/github/.claude/katas/templates"
+    bazel_version = "8.7.0"
+    job_file = "/home/mikemol/github/.claude/katas/cron.job"
+    skip_flush = ["substrate", "paperkit", "gcalculus", "rosettapkg", "resumes", "gabion", "linux-sources"]
+    standing_warnings = ["no working card", "not this repo's own dependency", "title over 150"]
+
+To retire the old file: place that policy, run `mikemol-katas status` and `pulse` beside
+`katas.py status` and `pulse` until they agree, then remove `~/github/.claude/katas/katas.py`.
+Deleting it is the operator's (standing rule 16 forbids an agent editing code there).
+
 ## Replace by a call (the mtools tool already does it)
 
 | katas.py | replace with | state |

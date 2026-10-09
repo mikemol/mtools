@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 # ⚑ THE HOST KATAS AS A TRACKED DISTRIBUTION (mtools:W796, W872). `~/github/.claude/katas/katas.py`
 # lives under `.claude/`, where standing rule 16 refuses executable code, so it cannot be edited in
 # place; the orchestration it keeps that no mtools tool already does is built here, calling those
-# tools for the rest. A library for now: no console script, standard library only (the process seam
-# `mikemol-procrun` joins with the detached commit, the next slice).
+# tools for the rest. One console script, `mikemol-katas`, with the host katas' subcommand names;
+# its one sibling is the process seam `mikemol-procrun`.
 name = "mikemol-katas"
 version = "0.1.0"
 description = "The host orchestration katas: workstream discovery and the detached commit's bookkeeping, calling the mtools tools for the rest."
@@ -25,6 +25,9 @@ classifiers = [
 # path source below (an editable install hides the sibling from mypy); in Bazel it is a py_library
 # dep, so the pip hubs stay independent of it and requirements.txt is deliberately NOT regenerated.
 dependencies = ["mikemol-procrun"]
+
+[project.scripts]
+mikemol-katas = "mikemol.katas.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -101,6 +104,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_fleet.py" = ["assert"]
 "tests/test_inbox.py" = ["assert"]
 "tests/test_pulse.py" = ["assert"]
+"tests/test_policy.py" = ["assert"]
+"tests/test_cli.py" = ["assert"]
 "tests/test_hosttick.py" = ["assert"]
 "tests/test_survey.py" = ["assert"]
 "tests/test_scaffold.py" = ["assert"]
