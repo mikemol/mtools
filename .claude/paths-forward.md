@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 865 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:259a4b389ed4e534`
+counter 865 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:1a5096a8b5168f41`
 
 | # | symbol | status |
 |---|---|---|
@@ -1017,8 +1017,8 @@ counter 865 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:259a
      of the other module; add a witness that a dispatch-table module's closure roots equal the original's
 28. **W857** (ready) Atomic write is carried five times: make pathsforward, treeio, ratchet and hooks depend on
    mikemol-atomicwrite where their needs match
-   - next: The two held swaps (store.py, pycheck_census) and W860 slice 2 and W819 ride W317's pin mechanism; until it
-     lands, leave them. Read W318 next tick to confirm it covers sibling-by-git-subdirectory pins.
+   - next: store.py and pycheck_census swaps, W819 and W860 slice 2 wait on W317's PyPI publication; nothing to do here
+     until then except the in-repo, non-adopter-installed cases (done: treeio, ratchet).
 29. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
    other
    - next: Decide which of the five differences corpus keeps as policy and which it takes from pathwalk: the shape that

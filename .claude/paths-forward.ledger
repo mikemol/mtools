@@ -1327,3 +1327,4 @@
 2026-10-09T05:05:48Z  tick  W864 advanced  collapse  "W864's reader already exists as hooks' census; measured on aeternum (66 files); card narrowed to a tests filter plus three uncovered arms"
 2026-10-09T05:29:12Z  tick  W864 advanced  sweep     "census run over 20 repos: 1 counted, 10 unjudged (no bar), 8 empty, 1 timeout; reading rule for unjudged repos is the next decision"
 2026-10-09T05:35:22Z  tick  W857 advanced  collapse  "the adopter-dependency hold already has an owner: W317 pins; W819 and W860 slice 2 ride it"
+2026-10-09T05:50:22Z  tick  W857 advanced  collapse  "corrected my W318 inference: the sibling-dependency path for adopters is W317's PyPI floors, not a pin mechanism in W318"
