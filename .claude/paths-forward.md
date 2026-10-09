@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 883 · heartbeat 2026-10-09T14:51:08Z · job `9e45d237` · hash `v2:64324444272f666c`
+counter 883 · heartbeat 2026-10-09T14:51:08Z · job `9e45d237` · hash `v2:6431020598e6ce8f`
 
 | # | symbol | status |
 |---|---|---|
@@ -937,9 +937,9 @@ counter 883 · heartbeat 2026-10-09T14:51:08Z · job `9e45d237` · hash `v2:6432
    - next: After a session restart, edit a clean .py file whose repo has a debt-ledger and a stale import; confirm the
      context line appears, else switch to a systemMessage/stderr channel.
 13. **W830** (ready) the failure hook also appends the pulled evidence to the repo's gate-failed card
-   - next: Add the writer to the failure hook: call mikemol-paths-forward --gate-red (or --update `<card>`
-     --evidence-append) on the failing repo's queue; settle the one-writer rule, the lock and which repo's queue. W829
-     is done and W870's gate verbs exist.
+   - next: Add a pathsforward verb (--gate-note TEXT) that appends evidence to the repo's OPEN gate card by title prefix
+     and is a no-op when none is open; then the failure hook shells out to it with the pulled report. Never --gate-red
+     from the hook.
 14. **W831** (ready) wire mikemol-build-failure into every other repo's precommit bazel lines
    - next: Operator 2026-10-06: the hook goes on each bazel line in the precommits. Done for mtools (15f848f).
      Remaining: the other bazel-gated repos' precommits (aeternum, gcalculus once its scaffold lands, rosettapkg,

@@ -1386,3 +1386,6 @@
 2026-10-09T15:20:26Z  tick  W825 advanced  collapse  "trigger chosen (mtools post-commit stub, detached single-flight); not landed, shared index held a peer's staged files"
 2026-10-09T15:34:43Z  hash  --   diverged  --        "divergence: payload v2:da22b2219c9d714c, file v2:f2d11a8d2ce819b2; the FILE wins"
 2026-10-09T15:36:39Z  tick  W825 advanced  unblock   "closure-advisory ledger now refreshed after every green push, detached and single-flight; 4 behavioural tests"
+2026-10-09T15:51:11Z  tick  W830 advanced  collapse  "open questions decided: the hook calls the CLI's --gate-red, never writes the queue; implementation next"
+2026-10-09T15:51:31Z  tick  W830 rejected  collapse  "correcting the line above: the hook must NOT call --gate-red (it would block the ledger on any local bazel failure); it appends to an already-open gate card through a new no-op-when-absent verb"
+2026-10-09T15:57:58Z  interrupt W884 minted    -         "mikemol-commit holds a blocking per-repo mutex (fence.admit lease, total 1) across stage, gate and commit"  evidence=luthen-observability:W684
