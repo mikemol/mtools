@@ -37,3 +37,24 @@ src/mikemol/katas/waiter.py|lone-rm-taken-as-a-pair|len\(rest\) >= _PAIR|len(res
 
 # A started run empties its log first, so a stale rc line cannot read as this run's outcome.
 src/mikemol/katas/detach.py|stale-log-kept|log\.write_text\("", encoding="utf-8"\)|pass|def=start
+
+# W875: the fleet. A queue pending is the queue files only; an inbox letter must not make a flush.
+src/mikemol/katas/fleet.py|queue-pending-includes-inbox|\*QUEUE_PATHS\)\.strip\(\)\)|*QUEUE_PATHS, "inbox").strip())|def=queue_pending
+
+# A commit in flight (an index lock) is never a flush target.
+src/mikemol/katas/fleet.py|flush-ignores-the-index-lock|and not in_flight\(fleet, repo\)|and True|def=flush_targets
+
+# Our own running detached commit is never started twice.
+src/mikemol/katas/fleet.py|flush-ignores-a-running-commit|!= commits\.RUNNING|!= "never"|def=flush_targets
+
+# The host's skip list is honoured.
+src/mikemol/katas/fleet.py|flush-ignores-the-skip-list|if repo not in fleet\.skip_flush|if True|def=flush_targets
+
+# The probe holds the real index locked while the hook runs, as a real commit does.
+src/mikemol/katas/fleet.py|probe-does-not-hold-the-lock|held\.touch\(\)|pass|def=probe
+
+# The probe cleans up its temp index and the lock it held, whatever the hook did.
+src/mikemol/katas/fleet.py|probe-leaves-its-cleanup|, \[temp, held\]\)|, [])|def=probe
+
+# Flush asks mikemol-commit for the `none` waypoint and the sync subject.
+src/mikemol/katas/fleet.py|flush-wrong-waypoint|commits\.Request\(repo, "none", SYNC_SUBJECT\)|commits.Request(repo, "W0", SYNC_SUBJECT)|def=flush

@@ -174,3 +174,108 @@
   claim  = {The real detached path: the child runs the waiter, and the log ends with `rc=0`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_detach.py -k test_a_started_command_finishes_and_its_log_says_done},
 }
+
+@misc{katas-fleet-pending-counts-changed-queue-and-inbox-paths,
+  section = {fleet},
+  title  = {A modified queue file and a new inbox letter are two pending paths},
+  claim  = {A modified queue file and a new inbox letter are two pending paths.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_pending_counts_changed_queue_and_inbox_paths},
+}
+
+@misc{katas-fleet-clean-repo-has-nothing-pending,
+  section = {fleet},
+  title  = {Nothing differs from HEAD},
+  claim  = {Nothing differs from HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_clean_repo_has_nothing_pending},
+}
+
+@misc{katas-fleet-inbox-letter-alone-is-not-a-pending-queue,
+  section = {fleet},
+  title  = {The queue is the three files; a letter counts as pending but not as queue_pending},
+  claim  = {The queue is the three files; a letter counts as pending but not as queue_pending.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_an_inbox_letter_alone_is_not_a_pending_queue},
+}
+
+@misc{katas-fleet-index-lock-means-a-commit-is-in-flight,
+  section = {fleet},
+  title  = {Some commit, from any session, holds the index},
+  claim  = {Some commit, from any session, holds the index.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_an_index_lock_means_a_commit_is_in_flight},
+}
+
+@misc{katas-fleet-status-row-names-the-repo-its-pending-count-and-head,
+  section = {fleet},
+  title  = {The row carries the name, `pending=` and the HEAD subject},
+  claim  = {The row carries the name, `pending=` and the HEAD subject.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_status_row_names_the_repo_its_pending_count_and_head},
+}
+
+@misc{katas-fleet-status-row-shows-in-flight-and-a-probe,
+  section = {fleet},
+  title  = {A held index shows IN-FLIGHT, and a probe log shows its state beside it},
+  claim  = {A held index shows IN-FLIGHT, and a probe log shows its state beside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_status_row_shows_in_flight_and_a_probe},
+}
+
+@misc{katas-fleet-status-has-one-row-per-workstream-in-order,
+  section = {fleet},
+  title  = {Sorted, and only directories with a queue},
+  claim  = {Sorted, and only directories with a queue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_status_has_one_row_per_workstream_in_order},
+}
+
+@misc{katas-fleet-flush-targets-are-the-repos-with-a-pending-queue,
+  section = {fleet},
+  title  = {A clean repo is not a target; a repo with a changed queue file is},
+  claim  = {A clean repo is not a target; a repo with a changed queue file is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_flush_targets_are_the_repos_with_a_pending_queue},
+}
+
+@misc{katas-fleet-fleet-skip-list-and-the-callers-both-exclude,
+  section = {fleet},
+  title  = {The host's policy list and a one-off skip each keep a repo out},
+  claim  = {The host's policy list and a one-off skip each keep a repo out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_the_fleet_skip_list_and_the_callers_both_exclude},
+}
+
+@misc{katas-fleet-repo-with-a-commit-in-flight-is-not-a-target,
+  section = {fleet},
+  title  = {An index lock means someone is committing: do not start another},
+  claim  = {An index lock means someone is committing: do not start another.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_repo_with_a_commit_in_flight_is_not_a_target},
+}
+
+@misc{katas-fleet-repo-whose-detached-commit-is-running-is-not-a-target,
+  section = {fleet},
+  title  = {A log with no rc line yet is our own commit still going},
+  claim  = {A log with no rc line yet is our own commit still going.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_repo_whose_detached_commit_is_running_is_not_a_target},
+}
+
+@misc{katas-fleet-flush-starts-a-detached-commit-with-the-sync-request,
+  section = {fleet},
+  title  = {The fake commit tool receives the repo, the `none` waypoint and the sync subject},
+  claim  = {The fake commit tool receives the repo, the `none` waypoint and the sync subject.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_flush_starts_a_detached_commit_with_the_sync_request},
+}
+
+@misc{katas-fleet-probe-refuses-a-repo-with-no-hook,
+  section = {fleet},
+  title  = {Nothing to probe is a refusal naming the missing hook},
+  claim  = {Nothing to probe is a refusal naming the missing hook.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_probe_refuses_a_repo_with_no_hook},
+}
+
+@misc{katas-fleet-probe-refuses-while-a-commit-is-in-flight,
+  section = {fleet},
+  title  = {The probe would collide with the live commit's lock},
+  claim  = {The probe would collide with the live commit's lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_probe_refuses_while_a_commit_is_in_flight},
+}
+
+@misc{katas-fleet-probe-runs-the-hook-under-a-temp-index-and-cleans-up,
+  section = {fleet},
+  title  = {The hook sees a GIT_INDEX_FILE, and the temp index and the held lock are gone after},
+  claim  = {The hook sees a GIT_INDEX_FILE, and the temp index and the held lock are gone after.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_probe_runs_the_hook_under_a_temp_index_and_cleans_up},
+}

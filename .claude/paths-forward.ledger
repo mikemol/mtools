@@ -1365,3 +1365,6 @@
 2026-10-09T12:23:03Z  tick  W872 advanced  unblock   "mikemol-katas distribution lands: workstreams + commits, 12/12; W874 is the detached commit"
 2026-10-09T12:39:34Z  tick  W875 minted    -         "katas: status, probe and flush over the workstreams, on the detached commit"  evidence=W796
 2026-10-09T12:39:40Z  tick  W874 advanced  collapse  "katas gets its detached commit: waiter + detach on mikemol-procrun, a real child polled to done; 25/25"
+2026-10-09T12:55:19Z  tick  W876 minted    -         "katas: archive, precommit_survey and bazelize, the file-operation katas"  evidence=W796
+2026-10-09T12:55:19Z  tick  W877 minted    -         "katas: pulse and tick end, the katas that act on the host queue and the nemik tools"  evidence=W796
+2026-10-09T12:55:26Z  tick  W875 advanced  collapse  "katas.fleet: status/flush/probe over throwaway git repos, 15/15; grid caught two defects of mine, fixed"
