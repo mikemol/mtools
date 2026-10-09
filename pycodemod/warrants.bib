@@ -5764,3 +5764,10 @@
   claim  = { What the planner cannot prove is printed with its reason and exits 1.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_a_refusal_goes_to_the_worklist},
 }
+
+@misc{pycodemod-typedargs-parser-error-calls-are-not-a-use-that-blocks-typing,
+  section = {typedargs},
+  title  = {⚑ `parser.error(...)` exits and touches no field: nested in an `if`, it still types},
+  claim  = { `parser.error(...)` exits and touches no field: nested in an `if`, it still types.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_parser_error_calls_are_not_a_use_that_blocks_typing},
+}

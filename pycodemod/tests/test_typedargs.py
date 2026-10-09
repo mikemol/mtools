@@ -147,6 +147,15 @@ def test_a_parser_used_beyond_add_argument_and_parse_args_is_refused() -> None:
         assert "used beyond" in got.refusals[0].why, extra
 
 
+def test_parser_error_calls_are_not_a_use_that_blocks_typing() -> None:
+    """⚑ `parser.error(...)` exits and touches no field: nested in an `if`, it still types."""
+    body = 'parser.add_argument("--x")\nargs = parser.parse_args()\n'
+    got = typedargs.plan(_function(body + 'if not args.x:\n    parser.error("x")'))
+    assert got.parsers == 1
+    assert got.refusals == []
+    assert "namespace=MainArgs()" in got.text
+
+
 def test_other_unfit_shapes_are_refused_with_their_reason() -> None:
     """⚑ Never parsed, two parsers, a shared destination: each names itself."""
     twice = 'parser.add_argument("--x")\nparser.add_argument("--x")\nargs = parser.parse_args()'

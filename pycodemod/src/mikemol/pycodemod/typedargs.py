@@ -307,8 +307,11 @@ def _scan(function: cst.FunctionDef) -> _Parser | str | None:
         return None if not isinstance(found, str) else found
     if found.parse is None:
         return f"parser {found.var} is never parsed by a plain `x = {found.var}.parse_args(...)`"
-    if len(m.findall(function, m.Name(found.var))) != len(found.adds) + 2:
-        return f"parser {found.var} is used beyond add_argument and parse_args"
+    # `parser.error(...)` exits and touches no namespace field, so it is not a use that matters.
+    errors = m.Call(func=m.Attribute(value=m.Name(found.var), attr=m.Name("error")))
+    allowed = len(found.adds) + 2 + len(m.findall(function, errors))
+    if len(m.findall(function, m.Name(found.var))) != allowed:
+        return f"parser {found.var} is used beyond add_argument, parse_args and error"
     return _Parser(function, found.var, found.adds, found.parse[0], found.parse[1])
 
 
