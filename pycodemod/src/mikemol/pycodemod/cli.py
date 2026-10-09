@@ -68,6 +68,7 @@ from mikemol.pycodemod.arguments import asserted as run_asserted
 from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
+from mikemol.pycodemod.cli_typedargs import TypedArgsFlags, print_typedargs
 from mikemol.pycodemod.commentary import (
     COMMENTARY_MARKS,
     commentary_blocks,
@@ -126,6 +127,11 @@ if TYPE_CHECKING:
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
+
+
+def _handle_typedargs(ns: argparse.Namespace) -> int:
+    flags = TypedArgsFlags(root=_str(ns, "root"), write=_flag(ns, "write"))
+    return print_typedargs(_str_list(ns, "paths"), flags)
 
 
 def _census_flags(ns: argparse.Namespace) -> control_report.CensusFlags:
@@ -1119,6 +1125,7 @@ MODES = {
     "fingerprint": _handle_fingerprint,
     "split": _handle_split,
     "atomize-imports": _handle_atomize,
+    "typed-args": _handle_typedargs,
     "by-path-runs": _handle_by_path_runs,
 }
 
@@ -1386,6 +1393,13 @@ def _add_atomize_mode(make: _Make) -> None:
     ato.add_argument("paths", nargs="+", help="every file that may import a sibling flat")
 
 
+def _add_typedargs_mode(make: _Make) -> None:
+    typed = make("typed-args", "type argparse results with a Namespace subclass, judged by mypy")
+    typed.add_argument("--root", required=True, help="the project whose .venv judges each file")
+    typed.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    typed.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
+
+
 def _add_runs_mode(make: _Make) -> None:
     run = make("by-path-runs", "scripts run by path (python3 pkg/x.py) instead of by package")
     run.add_argument(
@@ -1406,6 +1420,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_fingerprint_mode,
     _add_split_mode,
     _add_atomize_mode,
+    _add_typedargs_mode,
     _add_runs_mode,
 )
 

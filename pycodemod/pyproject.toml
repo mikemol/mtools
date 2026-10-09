@@ -30,7 +30,10 @@ classifiers = [
 # so mdstruct can reuse it without libcst. The A+B sibling edge (mtools:W562): uv resolves it as a
 # NON-editable path source; Bazel carries it as a py_library dependency in BUILD.bazel; the pip hubs
 # do not resolve it and requirements.txt is deliberately NOT regenerated. Kept in step by hand.
-dependencies = ["libcst", "mikemol-pathwalk"]
+# ⚑ AND mikemol-procrun (mtools:W883), the one place a child process is started: the `typed-args`
+# mode runs the TARGET project's own mypy and ruff to check its prospective output, and this package
+# spells no subprocess rule itself. The same A+B edge, kept in step by hand.
+dependencies = ["libcst", "mikemol-pathwalk", "mikemol-procrun"]
 
 # ⚑⚑ SQLALCHEMY IS AN OPTIONAL EXTRA, NOT A DEPENDENCY (operator ruling, 2026-09-25). Only
 # `funcnames` needs it, to ASK SQLAlchemy which `func.<name>` calls it translates per dialect; a
@@ -64,6 +67,7 @@ environments = ["sys_platform == 'linux'"]
 
 [tool.uv.sources]
 mikemol-pathwalk = { path = "../pathwalk" }
+mikemol-procrun = { path = "../procrun" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -103,7 +107,7 @@ ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line",
 # the namespace) and third-party in the bazel sandbox (where only this dist's sources are staged):
 # the same import block was sorted in one and unsorted in the other (measured, //pycodemod:ratchet).
 [tool.ruff.lint.isort]
-known-third-party = ["mikemol.pathwalk"]
+known-third-party = ["mikemol.pathwalk", "mikemol.procrun"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
@@ -116,6 +120,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_atomize.py" = ["assert"]
 "tests/test_pathdrop.py" = ["assert"]
 "tests/test_typedargs.py" = ["assert"]
+"tests/test_cli_typedargs.py" = ["assert"]
 "tests/test_scriptruns.py" = ["assert"]
 "tests/test_capture.py" = ["assert"]
 "tests/test_census_fp.py" = ["assert"]

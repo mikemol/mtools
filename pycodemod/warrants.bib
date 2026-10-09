@@ -5701,3 +5701,66 @@
   claim  = { Class names come from the function names and do not collide.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_two_functions_each_get_their_own_class},
 }
+
+@misc{pycodemod-cli-typedargs-dry-run-says-what-it-would-write-and-writes-nothing,
+  section = {cli_typedargs},
+  title  = {⚑ The default is a plan: the judge ran, the verdict printed, the file untouched},
+  claim  = { The default is a plan: the judge ran, the verdict printed, the file untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_a_dry_run_says_what_it_would_write_and_writes_nothing},
+}
+
+@misc{pycodemod-cli-typedargs-write-applies-a-candidate-the-judge-accepts,
+  section = {cli_typedargs},
+  title  = {⚑ `--write` lands the formatted candidate when its findings are a strict subset},
+  claim  = { `--write` lands the formatted candidate when its findings are a strict subset.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_write_applies_a_candidate_the_judge_accepts},
+}
+
+@misc{pycodemod-cli-typedargs-new-message-is-refused-even-when-the-count-drops,
+  section = {cli_typedargs},
+  title  = {⚑ A set, not a count: two findings traded for one NEW one is a regression, named},
+  claim  = { A set, not a count: two findings traded for one NEW one is a regression, named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_a_new_message_is_refused_even_when_the_count_drops},
+}
+
+@misc{pycodemod-cli-typedargs-no-fewer-findings-is-refused,
+  section = {cli_typedargs},
+  title  = {⚑ Equal is not better: a candidate that fixes nothing is not written},
+  claim  = { Equal is not better: a candidate that fixes nothing is not written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_no_fewer_findings_is_refused},
+}
+
+@misc{pycodemod-cli-typedargs-tool-that-cannot-run-is-exit-two-never-a-pass,
+  section = {cli_typedargs},
+  title  = {⚑ mypy exiting 2 is not a clean bill: nothing is written and the exit says so},
+  claim  = { mypy exiting 2 is not a clean bill: nothing is written and the exit says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_a_tool_that_cannot_run_is_exit_two_never_a_pass},
+}
+
+@misc{pycodemod-cli-typedargs-probe-is-removed-when-a-tool-raises,
+  section = {cli_typedargs},
+  title  = {⚑ The probe sits in a shared tree for seconds and is gone on EVERY exit},
+  claim  = { The probe sits in a shared tree for seconds and is gone on EVERY exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_the_probe_is_removed_when_a_tool_raises},
+}
+
+@misc{pycodemod-cli-typedargs-file-outside-the-root-is-exit-two,
+  section = {cli_typedargs},
+  title  = {⚑ The judge is the root's own; a file it does not contain cannot be judged by it},
+  claim  = { The judge is the root's own; a file it does not contain cannot be judged by it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_a_file_outside_the_root_is_exit_two},
+}
+
+@misc{pycodemod-cli-typedargs-file-without-a-parser-is-not-judged,
+  section = {cli_typedargs},
+  title  = {⚑ Nothing to plan means no tool is started and the file counts as done},
+  claim  = { Nothing to plan means no tool is started and the file counts as done.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_a_file_without_a_parser_is_not_judged},
+}
+
+@misc{pycodemod-cli-typedargs-refusal-goes-to-the-worklist,
+  section = {cli_typedargs},
+  title  = {⚑ What the planner cannot prove is printed with its reason and exits 1},
+  claim  = { What the planner cannot prove is printed with its reason and exits 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typedargs.py -k test_a_refusal_goes_to_the_worklist},
+}

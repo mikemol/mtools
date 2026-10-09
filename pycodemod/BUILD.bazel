@@ -35,6 +35,7 @@ py_library(
     # pip hubs do not resolve it. The two must be kept in step by hand.
     deps = [
         "//pathwalk:pathwalk",
+        "//procrun:procrun",  # mtools:W883: the typed-args mode starts the target's mypy and ruff
         requirement("libcst"),
     ],
     visibility = ["//visibility:public"],
@@ -75,6 +76,7 @@ py_library(
         deps = [
             ":pycodemod",
             "//pathwalk:pathwalk",
+            "//procrun:procrun",
             dev_requirement("pytest"),
             dev_requirement("sqlalchemy"),
         ],
@@ -157,6 +159,7 @@ py_binary(
     deps = [
         # ⚑ How mypy sees the sibling inside the sandbox (the runner cannot see pip-installed siblings).
         "//pathwalk:pathwalk",
+        "//procrun:procrun",
         dev_requirement("libcst"),
         dev_requirement("mypy"),
         dev_requirement("pytest"),
@@ -205,7 +208,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/pycodemod/**"]) + ["//pathwalk:pathwalk"],
+    srcs = glob(["src/mikemol/pycodemod/**"]) + ["//pathwalk:pathwalk", "//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

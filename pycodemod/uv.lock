@@ -176,12 +176,27 @@ dev = [
 ]
 
 [[package]]
+name = "mikemol-procrun"
+version = "0.1.0"
+source = { directory = "../procrun" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
 name = "mikemol-pycodemod"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "libcst" },
     { name = "mikemol-pathwalk" },
+    { name = "mikemol-procrun" },
 ]
 
 [package.optional-dependencies]
@@ -201,6 +216,7 @@ dev = [
 requires-dist = [
     { name = "libcst" },
     { name = "mikemol-pathwalk", directory = "../pathwalk" },
+    { name = "mikemol-procrun", directory = "../procrun" },
     { name = "sqlalchemy", marker = "extra == 'sqlalchemy'" },
 ]
 provides-extras = ["sqlalchemy"]
