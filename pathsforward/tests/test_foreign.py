@@ -145,7 +145,7 @@ def test_every_unresolvable_foreign_blocker_is_kept_and_named(
     _queue(tmp_path, "bad", [])
     (tmp_path / "bad" / ".claude" / "paths-forward.json").write_text("not json", encoding="utf-8")
     _queue(tmp_path, "A", [_wp("W1", "done")])
-    refs = ["nope:W1", "bad:W1", "A:W9", "../x:W1", "a/b:W1"]
+    refs = ["nope:W1", "bad:W1", "A:W9", "../x:W1", "a/../b:W1", "a/b:W1"]
     b = _queue(tmp_path, "B", [_wp("W1", on=refs)])
     assert _prune(b, tmp_path) == cli.EXIT_OK
     out = capsys.readouterr().out.splitlines()
@@ -154,7 +154,8 @@ def test_every_unresolvable_foreign_blocker_is_kept_and_named(
     assert "has no queue file" in out[0]
     assert "unreadable" in out[1]
     assert "A:W9: W9 is not in" in out[2]
-    assert all("refused" in line for line in out[3:])
+    assert all("refused" in line for line in out[3:5])
+    assert "has no queue file" in out[5]
 
 
 def test_a_linked_repo_is_refused_as_data(tmp_path: Path) -> None:

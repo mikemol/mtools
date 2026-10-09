@@ -1377,3 +1377,5 @@
 2026-10-09T13:51:50Z  tick  W881 minted    -         "Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for the operator to apply"  evidence=W580
 2026-10-09T13:52:01Z  tick  W800 advanced  sweep     "card triage: W800 W807 W809 W790 done; W819 W857 W859 W860 blocked on W317; W580 held for the operator, W622 behind W881; W593 W614 fallbacks applied; W830 sharpened; W880 W881 minted"
 2026-10-09T14:05:09Z  tick  W636 advanced  collapse  "eleven private _parse copies in pycodemod become core.parse_file, byte-identity checked by AST; 66/66"
+2026-10-09T14:15:38Z  tick  W882 minted    -         "Answer nemik:W224: a citation's repo part accepts /-separated segments, so a nested workstream can be cited by its path"  evidence=nemik:W224
+2026-10-09T14:21:04Z  tick  W882 advanced  unblock   "nested citations accepted (parent/child:W<n>), segment-checked and link-checked; answers nemik:W224; 51/51"

@@ -221,16 +221,20 @@ def test_an_unreadable_peer_is_named_with_its_reason(tmp_path: Path) -> None:
 
 
 def test_an_escaping_name_and_a_link_are_refused_as_data(tmp_path: Path) -> None:
-    """A repo name holding `..` or a separator, and a linked repo, are named and never read."""
+    """A name with a `..` segment, and a linked repo, are named and never read.
+
+    A nested name (`a/b`) is a path now (W882), so it is looked up and, absent, reads as no queue.
+    """
     me = _queue(tmp_path, "me", [_wp("W1")])
     _queue(tmp_path, "real", [_wp("W1", on=["me"])])
     (tmp_path / "L").symlink_to(tmp_path / "real")
-    found = _scan(tmp_path, me, ["../x", "a/b", "L", "gone"])
+    found = _scan(tmp_path, me, ["../x", "a/../b", "a/b", "L", "gone"])
     assert _claims(found) == []
     why = dict(entry.split(": ", 1) for entry in found.unreadable)
-    assert sorted(why) == ["../x", "L", "a/b", "gone"]
+    assert sorted(why) == ["../x", "L", "a/../b", "a/b", "gone"]
     assert "refused" in why["../x"]
-    assert "refused" in why["a/b"]
+    assert "refused" in why["a/../b"]
+    assert "no queue file" in why["a/b"]
     assert "link" in why["L"]
     assert "no queue file" in why["gone"]
 

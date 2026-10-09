@@ -3940,3 +3940,74 @@
   claim  = {`--gate-red` reads --next, --blocked-on and --except only; --enables would be silent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_a_field_flag_the_mode_does_not_read_is_refused},
 }
+
+@misc{pathsforward-nested-citation-flat-citation-is-unchanged,
+  section = {nested_citation},
+  title  = {Existing citations keep their meaning},
+  claim  = {Existing citations keep their meaning.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_flat_citation_is_unchanged},
+}
+
+@misc{pathsforward-nested-citation-nested-citation-names-its-path,
+  section = {nested_citation},
+  title  = {The repo part is the whole path, segments joined by a slash},
+  claim  = {The repo part is the whole path, segments joined by a slash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_nested_citation_names_its_path},
+}
+
+@misc{pathsforward-nested-citation-citation-with-an-empty-dot-led-or-malformed-part-is-not-one,
+  section = {nested_citation},
+  title  = {Each segment is shaped like a repo name, so none can be empty, `..` or dot-led},
+  claim  = {Each segment is shaped like a repo name, so none can be empty, `..` or dot-led.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_citation_with_an_empty_dot_led_or_malformed_part_is_not_one},
+}
+
+@misc{pathsforward-nested-citation-nested-citation-is-a-reference,
+  section = {nested_citation},
+  title  = {The reference check accepts it wherever a flat one is accepted},
+  claim  = {The reference check accepts it wherever a flat one is accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_nested_citation_is_a_reference},
+}
+
+@misc{pathsforward-nested-citation-nested-queue-is-read-at-its-path,
+  section = {nested_citation},
+  title  = {`parent/child` resolves to `<root>/parent/child/.claude/paths-forward.json`},
+  claim  = {`parent/child` resolves to `<root>/parent/child/.claude/paths-forward.json`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_nested_queue_is_read_at_its_path},
+}
+
+@misc{pathsforward-nested-citation-segment-that-leaves-the-root-is-refused-by-name,
+  section = {nested_citation},
+  title  = {A `..` segment is refused before any read, however deep},
+  claim  = {A `..` segment is refused before any read, however deep.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_segment_that_leaves_the_root_is_refused_by_name},
+}
+
+@misc{pathsforward-nested-citation-empty-or-dot-led-segment-is-refused,
+  section = {nested_citation},
+  title  = {An empty segment is a refusal, not a lookup of the parent; a hidden directory is no name},
+  claim  = {An empty segment is a refusal, not a lookup of the parent; a hidden directory is no
+            name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_an_empty_or_dot_led_segment_is_refused},
+}
+
+@misc{pathsforward-nested-citation-nested-name-with-no-queue-says-so,
+  section = {nested_citation},
+  title  = {Absent is absent: named, not refused},
+  claim  = {Absent is absent: named, not refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_nested_name_with_no_queue_says_so},
+}
+
+@misc{pathsforward-check-nested-workstream-citation-is-not-malformed,
+  section = {check},
+  title  = {A path-shaped repo part (`parent/child:W2`, nemik:W224) is a clean symbol (W882)},
+  claim  = {A path-shaped repo part (`parent/child:W2`, nemik:W224) is a clean symbol (W882).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_nested_workstream_citation_is_not_malformed},
+}
+
+@misc{pathsforward-check-nested-citation-with-prose-attached-is-still-found,
+  section = {check},
+  title  = {The control: a nested symbol followed by prose draws no edge, like a flat one},
+  claim  = {The control: a nested symbol followed by prose draws no edge, like a flat one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_nested_citation_with_prose_attached_is_still_found},
+}

@@ -2,11 +2,11 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 881,
+  "counter": 882,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T13:26:08Z",
-  "job_id": "8345e652",
-  "predecessor_job_id": "c2c2474c",
+  "heartbeat": "2026-10-09T14:05:40Z",
+  "job_id": "acde7653",
+  "predecessor_job_id": "8345e652",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -18020,6 +18020,29 @@
       "caused_by": "W580",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W882",
+      "title": "Answer nemik:W224: a citation's repo part accepts /-separated segments, so a nested workstream can be cited by its path",
+      "status": "done",
+      "enables": [
+        "nemik:W224"
+      ],
+      "touches": [
+        "pathsforward",
+        "citation-grammar",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 LANDED, answering nemik:W224 (letter inbox/2026-10-09-nemik-nested-workstream-citation.md): a citation's repo part is now <segment>(/<segment>)*, each segment shaped like today's repo name (starts with a letter or digit, then [A-Za-z0-9._-]*). model._FOREIGN (foreign_symbol, is_reference), check._SYMBOLISH/_CLEAN_SYMBOL (a nested symbol with prose attached is still a malformed blocker; a clean nested one is not) and foreign.py. Flat citations are unchanged. SAFETY KEPT: foreign.py used to refuse any '/' to keep a name inside the root; it now judges each SEGMENT (empty, dot-led, containing '..' or a backslash is refused by name before any read), and _link_in refuses a link at ANY depth on the way to the queue (it used to check only the repo directory). Two existing tests pinned the old contract ('a/b is refused'); they now say a/b is a path (no queue file) and a/../b is refused. 10 new tests (test_nested_citation 8 incl. a 10-case parametrized refusal list, test_check 2), 10 warrants + rubric row, 3 mutants; bazel //pathsforward/...: 51 of 51; pytest 821. No parent semantics added, as asked. Whether nemik's own pinned copy of the writer picks this up is nemik's bump to make.",
+      "issued_at": "2026-10-09T14:15:38Z",
+      "minted_during": "tick",
+      "caused_by": "nemik:W224",
+      "last_worked": "2026-10-09T14:21:04Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T142104Z"
     }
   ],
   "residue": [

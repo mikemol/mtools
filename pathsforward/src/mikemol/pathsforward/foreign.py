@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 
 QUEUE = (".claude", "paths-forward.json")
 _SEP = ":"
-_ESCAPES = ("/", "\\", "..")
+_ESCAPES = ("\\", "..")
 _DONE = "done"
 
 
@@ -66,13 +66,32 @@ def split(ref: str) -> tuple[str, str] | None:
 
 
 def _escapes(repo: str) -> bool:
-    """Say whether a repo name would leave the root.
+    """Say whether a workstream name would leave the root.
+
+    ⚑ A NAME MAY NOW BE A PATH (`parent/child`, mtools:W882, nemik:W224), so a separator is no
+    longer the refusal; each SEGMENT is judged instead. An empty one (a leading, trailing or
+    doubled `/`), one that starts with a dot (`.`, `..`, a hidden directory), one with a
+    backslash, or one containing `..` is a way out of the root, or not a name.
 
     Returns:
-        True for a name holding a path separator or `..`.
+        True when any segment is empty, dot-led, holds a backslash, or holds `..`.
 
     """
-    return any(bad in repo for bad in _ESCAPES)
+    return any(
+        not segment or segment.startswith(".") or any(bad in segment for bad in _ESCAPES)
+        for segment in repo.split("/")
+    )
+
+
+def _link_in(root: Path, repo: str) -> bool:
+    """Say whether any directory from the root down to the workstream is a link.
+
+    Returns:
+        True when a link lies on the way, whose target would be read through.
+
+    """
+    parts = repo.split("/")
+    return any(root.joinpath(*parts[: i + 1]).is_symlink() for i in range(len(parts)))
 
 
 def peer(root: Path, repo: str) -> tuple[State | None, Path, str]:
@@ -85,8 +104,8 @@ def peer(root: Path, repo: str) -> tuple[State | None, Path, str]:
     repo_dir = root / repo
     path = repo_dir.joinpath(*QUEUE)
     if _escapes(repo):
-        return None, path, f"repo name {repo!r} holds a path separator or '..'; refused"
-    if repo_dir.is_symlink() or path.parent.is_symlink() or path.is_symlink():
+        return None, path, f"repo name {repo!r} has an empty, dot-led or escaping segment; refused"
+    if _link_in(root, repo) or path.parent.is_symlink() or path.is_symlink():
         return None, path, f"{path} is a link; refused as data"
     if not path.is_file():
         return None, path, f"{repo} has no queue file at {path}"

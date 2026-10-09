@@ -455,6 +455,20 @@ def test_a_clean_symbol_or_party_blocker_is_not_malformed(tmp_path: Path) -> Non
     assert chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")])) == []
 
 
+def test_a_nested_workstream_citation_is_not_malformed(tmp_path: Path) -> None:
+    """A path-shaped repo part (`parent/child:W2`, nemik:W224) is a clean symbol (W882)."""
+    on = ["parent/child:W2", "a/b/c:W7"]
+    w1 = _wp("W1", "blocked", blocked_on=on, blocked_kind="agent")
+    assert chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")])) == []
+
+
+def test_a_nested_citation_with_prose_attached_is_still_found(tmp_path: Path) -> None:
+    """The control: a nested symbol followed by prose draws no edge, like a flat one."""
+    w1 = _wp("W1", "blocked", blocked_on=["parent/child:W2 (both)"], blocked_kind="agent")
+    found = chk.check(_state(tmp_path, waypoints=[w1, _wp("W2")]))
+    assert "W1: blocked_on 'parent/child:W2 (both)' is a symbol with prose attached" in found
+
+
 @pytest.mark.parametrize(
     ("ask", "fault"),
     [

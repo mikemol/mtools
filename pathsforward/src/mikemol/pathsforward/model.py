@@ -24,7 +24,11 @@ BLOCKED_KINDS: tuple[str, ...] = ("agent", "human")
 NO_SYMBOL = "--"
 
 _SYMBOL = re.compile(r"W([1-9][0-9]*)")
-_FOREIGN = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*):W([1-9][0-9]*)")
+# ⚑ A WORKSTREAM'S NAME IS ONE SEGMENT OR SEVERAL, joined by `/` (mtools:W882, nemik:W224): a queue
+# nested under another is cited by its path. Each segment is shaped like today's repo name and so
+# starts with a letter or digit: `..`, `.hidden`, an empty segment and a leading `/` are not names.
+_SEGMENT = r"[A-Za-z0-9][A-Za-z0-9._-]*"
+_FOREIGN = re.compile(rf"({_SEGMENT}(?:/{_SEGMENT})*):W([1-9][0-9]*)")
 _RANK: dict[str, int] = {"working": 0, "ready": 1, "blocked": 2}
 
 

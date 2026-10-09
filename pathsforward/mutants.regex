@@ -33,3 +33,10 @@ src/mikemol/pathsforward/gate.py|green-closes-without-a-card|if existing is None
 src/mikemol/pathsforward/cli.py|gate-red-drops-the-repairs|repairs=ctx\.many\("exclude"\) or \(\),|repairs=(),|def=_gate_red
 src/mikemol/pathsforward/cli.py|gate-red-drops-the-operator-ask|human=" "\.join\(ctx\.many\("blocked_on"\) or \(\)\),|human="",|def=_gate_red
 src/mikemol/pathsforward/cli.py|gate-green-always-finds-a-card|if not card:|if card:|def=_gate_green
+
+# W882 (nemik:W224): a citation's repo part is a path of segments. Each segment must lead with a
+# letter or digit, so `..` and a hidden directory cannot be cited; a segment that is empty or dot-led
+# is refused by name before any read; a link anywhere on the way is refused as data.
+src/mikemol/pathsforward/foreign.py|empty-segment-allowed|not segment or segment\.startswith\("\."\)|segment.startswith(".")|def=_escapes
+src/mikemol/pathsforward/foreign.py|dot-led-segment-allowed|not segment or segment\.startswith\("\."\)|not segment|def=_escapes
+src/mikemol/pathsforward/foreign.py|link-on-the-way-ignored|_link_in\(root, repo\) or path\.parent|path.parent|def=peer

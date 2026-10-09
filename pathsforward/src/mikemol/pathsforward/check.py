@@ -47,8 +47,8 @@ _SENTENCE_END = (".", ",", ";", ":", ")")
 # names `//paperkit:components.bzl`, which `--check-evidence` reported missing.
 _LABEL = re.compile(r"@{0,2}[\w.~+-]*//")
 # nemik's MalformedBlockerShape: an entry that STARTS as a symbol but is not one whole.
-_SYMBOLISH = re.compile(r"^([A-Za-z0-9_.-]+:)?W\d+\b")
-_CLEAN_SYMBOL = re.compile(r"([A-Za-z0-9_.-]+:)?W\d+")
+_SYMBOLISH = re.compile(r"^((?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+:)?W\d+\b")
+_CLEAN_SYMBOL = re.compile(r"((?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+:)?W\d+")
 # nemik's OperatorAskShape readings (nemik/blocks.py, operator_category), the two it warns on.
 _EXPLICIT_ASK = re.compile(r"^\s*operator\s*:\s*(decide|act)\b", re.IGNORECASE)
 _ANSWERED = re.compile(r"\b(ruled|keep holding|approved|go-ahead given|decided)\b", re.IGNORECASE)
