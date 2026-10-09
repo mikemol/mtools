@@ -54,3 +54,4 @@ registered	The Registered Defs: a Def Named With a Caller-Supplied Prefix Joined
 atomize	Atomize Imports: A Flat Import Rewritten Only Where Scope Proves the Reference, and Written Only When the Planned and Census Sets Are Equal
 pathdrop	Path Drop: A Named sys.path Mutation Retired at Module Level, and the sys It Leaves Idle, With Commentary and Blocks Left Alone
 scriptruns	By-Path Runs: A Script Run by Path Becomes a Module Run by Package, Mentions Are Listed and Never Rewritten, and the Census After a Write Must Be Empty
+typedargs	Typed Args: One Namespace Subclass per Parser Derived From Its Own add_argument Calls, Refusing What It Cannot Prove

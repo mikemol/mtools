@@ -129,6 +129,11 @@ sh_test(
         "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "src/**/*.rego", "tests/**/*.py"]),
     size = "medium",
+    # ⚑ DECLARED, NOT LEFT TO THE SIZE DEFAULT (as //pycodemod:mutants): this grid TIMED OUT at the
+    # `medium` 300s default on 2026-10-09 when the whole 686-test suite ran beside the pycodemod
+    # grid, after pathsforward --update gained --add-enables. The grid grows with every def-site, so
+    # the limit is stated; a gate that passes alone and times out under load is a flake.
+    timeout = "long",
 )
 
 # ⚑ A py_binary SO OTHER REPOS CAN RUN THE TOOL AS A DECLARED TOOL rather than a copied script —

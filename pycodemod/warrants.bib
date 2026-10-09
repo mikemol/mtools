@@ -5602,3 +5602,102 @@
   claim  = { The package may be `pk.sub`: modules are `pk.sub.bib`, and a re-export still ends.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_dotted_package_names_its_modules_and_follows_its_re_exports},
 }
+
+@misc{pycodemod-typedargs-parser-in-one-function-gets-a-typed-namespace,
+  section = {typedargs},
+  title  = {⚑ Class above the function, `namespace=` on parse_args, the cast and its import gone},
+  claim  = { Class above the function, `namespace=` on parse_args, the cast and its import gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_parser_in_one_function_gets_a_typed_namespace},
+}
+
+@misc{pycodemod-typedargs-parse-args-with-no-arguments-gets-the-keyword-alone,
+  section = {typedargs},
+  title  = {⚑ `parse_args()` becomes `parse_args(namespace=...)`, with no stray comma},
+  claim  = { `parse_args()` becomes `parse_args(namespace=...)`, with no stray comma.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_parse_args_with_no_arguments_gets_the_keyword_alone},
+}
+
+@misc{pycodemod-typedargs-each-add-argument-shape-declares-its-type,
+  section = {typedargs},
+  title  = {⚑ Optional unless required, defaulted or positional; a list for many; bool for a flag},
+  claim  = { Optional unless required, defaulted or positional; a list for many; bool for a flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_each_add_argument_shape_declares_its_type},
+}
+
+@misc{pycodemod-typedargs-destination-follows-argparse-naming,
+  section = {typedargs},
+  title  = {⚑ First long option, dashes to underscores; a short-only flag; an explicit dest wins},
+  claim  = { First long option, dashes to underscores; a short-only flag; an explicit dest wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_the_destination_follows_argparse_naming},
+}
+
+@misc{pycodemod-typedargs-what-cannot-be-derived-is-refused-with-its-reason,
+  section = {typedargs},
+  title  = {⚑ A non-literal flag, an unmodelled action, a lambda type: a worklist line, never a guess},
+  claim  = { A non-literal flag, an unmodelled action, a lambda type: a worklist line, never a
+            guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_what_cannot_be_derived_is_refused_with_its_reason},
+}
+
+@misc{pycodemod-typedargs-parser-used-beyond-add-argument-and-parse-args-is-refused,
+  section = {typedargs},
+  title  = {⚑ Subparsers, set_defaults and a parser handed on all reach the parser another way},
+  claim  = { Subparsers, set_defaults and a parser handed on all reach the parser another way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_parser_used_beyond_add_argument_and_parse_args_is_refused},
+}
+
+@misc{pycodemod-typedargs-other-unfit-shapes-are-refused-with-their-reason,
+  section = {typedargs},
+  title  = {⚑ Never parsed, two parsers, a shared destination: each names itself},
+  claim  = { Never parsed, two parsers, a shared destination: each names itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_other_unfit_shapes_are_refused_with_their_reason},
+}
+
+@misc{pycodemod-typedargs-module-that-cannot-take-the-class-is-refused,
+  section = {typedargs},
+  title  = {⚑ No `from __future__ import annotations`, or the class name already taken},
+  claim  = { No `from __future__ import annotations`, or the class name already taken.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_module_that_cannot_take_the_class_is_refused},
+}
+
+@misc{pycodemod-typedargs-running-it-again-is-a-no-op,
+  section = {typedargs},
+  title  = {⚑ A parser that already has a namespace is not a refusal and not an edit},
+  claim  = { A parser that already has a namespace is not a refusal and not an edit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_running_it_again_is_a_no_op},
+}
+
+@misc{pycodemod-typedargs-file-without-a-parser-is-left-alone,
+  section = {typedargs},
+  title  = {⚑ Nothing to do is not a refusal},
+  claim  = { Nothing to do is not a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_file_without_a_parser_is_left_alone},
+}
+
+@misc{pycodemod-typedargs-file-that-does-not-parse-is-refused-whole,
+  section = {typedargs},
+  title  = {⚑ A syntax error is reported at line 0 and the text is returned unchanged},
+  claim  = { A syntax error is reported at line 0 and the text is returned unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_file_that_does_not_parse_is_refused_whole},
+}
+
+@misc{pycodemod-typedargs-class-goes-above-a-decorator,
+  section = {typedargs},
+  title  = {⚑ The function's start is its first decorator, so the class never splits them},
+  claim  = { The function's start is its first decorator, so the class never splits them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_the_class_goes_above_a_decorator},
+}
+
+@misc{pycodemod-typedargs-cast-to-another-type-and-its-import-stay,
+  section = {typedargs},
+  title  = {⚑ Only a cast equal to the declared type is dropped; `cast` stays imported for the rest},
+  claim  = { Only a cast equal to the declared type is dropped; `cast` stays imported for the rest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_cast_to_another_type_and_its_import_stay},
+}
+
+@misc{pycodemod-typedargs-two-functions-each-get-their-own-class,
+  section = {typedargs},
+  title  = {⚑ Class names come from the function names and do not collide},
+  claim  = { Class names come from the function names and do not collide.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_two_functions_each_get_their_own_class},
+}
