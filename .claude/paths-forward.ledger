@@ -1325,3 +1325,4 @@
 2026-10-09T04:59:19Z  tick  W865 minted    -         "Inventory katas.py: list its subcommands, line count and what each reads and writes, as the plan for the distribution split"  evidence=W796
 2026-10-09T04:59:31Z  tick  W865 advanced  sweep     "katas.py outlined and split proposed; W796 next step sharpened"
 2026-10-09T05:05:48Z  tick  W864 advanced  collapse  "W864's reader already exists as hooks' census; measured on aeternum (66 files); card narrowed to a tests filter plus three uncovered arms"
+2026-10-09T05:29:12Z  tick  W864 advanced  sweep     "census run over 20 repos: 1 counted, 10 unjudged (no bar), 8 empty, 1 timeout; reading rule for unjudged repos is the next decision"
