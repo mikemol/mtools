@@ -669,18 +669,11 @@ for dist in $_dists . $_atoms; do
   # files' boundary lines; a grep for `def test_` counted three lines of quoted test source in
   # hooks/tests/test_grade.py (17 by `ast.walk`, 20 by grep): an artifact that quotes its own
   # subject cannot be measured by matching the subject's syntax.
-  if ! diff -q \
-      <(grep -o 'section = {[^}]*}' "$staged/$dist/warrants.bib" | sed 's/.*{\(.*\)}/\1/' | sort -u) \
-      <(grep -v '^#' "$staged/$dist/rubric.tsv" | cut -f1 | sort -u) >/dev/null; then
-    say "$dist: warrant sections and rubric sections disagree"
-    # ⚑ THE DIFF IS THE FINDING AND IT WAS DISCARDED. `diff -q` was run for its status alone, so
-    # the refusal named a disagreement and never said WHICH sections. Re-run without `-q` into the
-    # record: a reader gets the symmetric difference rather than the fact that one exists.
-    _slog="$_witness_logs/warrant-sections-$dist.log"
-    diff <(grep -o 'section = {[^}]*}' "$staged/$dist/warrants.bib" | sed 's/.*{\(.*\)}/\1/' | sort -u) \
-         <(grep -v '^#' "$staged/$dist/rubric.tsv" | cut -f1 | sort -u) > "$_slog" 2>&1 || true
-    fail=1; note_failure "$dist: warrant sections vs rubric sections" "$_slog"
-  fi
+  # ⚑ NO SECTION COMPARISON HERE EITHER (mtools:W834, W856). The warrant sections against the rubric
+  # rows were a `grep | cut | diff` that ran only here, after the whole hermetic suite, and it could
+  # not see a row whose TAB an edit dropped. `count_test_functions.py --pairing` below now reads
+  # both sides as a parse and names SECTION WITHOUT RUBRIC ROW, RUBRIC ROW WITHOUT WARRANT and
+  # RUBRIC ROW WITHOUT TITLE, over the same members, so the preflight catches it too.
 done
 
 # ⚑⚑⚑ THE PAIRING, BECAUSE A COUNT AND A HEADING SET CANNOT SEE ONE. The two checks above compare

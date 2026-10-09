@@ -1983,14 +1983,16 @@ def test_every_refusal_site_carries_its_own_detail() -> None:
     assert 'note_failure "$dist: warrant ledger 1:1" "$_wlog"' not in body, (
         "the count comparison is gone (W839): the pairing names each finding instead"
     )
-    assert 'note_failure "$dist: warrant sections vs rubric sections" "$_slog"' in body
-    # ⚑ THE `diff -q` IN THE CONDITION IS CORRECT AND MUST STAY — it is the test. What was missing
-    # is a SECOND, un-`-q` diff writing the symmetric difference into the record. An earlier form
-    # of this assertion searched for the absence of `diff -q` and failed against the guard it was
-    # meant to protect: the predicate was defined by a string rather than by the property.
-    assert '> "$_slog"' in body, (
-        "a second diff must write the symmetric difference to the log, not merely a status"
+    # ⚑ THE SECTION DIFF MOVED INTO THE PAIRING (W834, W856). Its detail problem is solved by
+    # construction there: `--pairing` prints every finding by name (SECTION WITHOUT RUBRIC ROW,
+    # RUBRIC ROW WITHOUT WARRANT, RUBRIC ROW WITHOUT TITLE) and `run_checked` replays them under
+    # the refusal, so there is no second `diff` to forget to write into a log. The old site must
+    # be gone, and the pairing that replaced it must be the one that runs.
+    assert 'note_failure "$dist: warrant sections vs rubric sections" "$_slog"' not in body, (
+        "the grep|cut|diff section check is gone (W856): the pairing names each finding instead"
     )
+    pairing_call = 'run_checked "every warrant check names a test that exists, and every test'
+    assert pairing_call in body
     assert 'run_checked "every shell checker is invoked or declared parked"' in body
     assert 'run_checked "stubtest' in body
     assert 'note_failure "$md: headings unreachable to mdstruct" "$_mdlog"' in body, (
