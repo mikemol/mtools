@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 867 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:72b4862026117ca3`
+counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:8e09410be703bcf0`
 
 | # | symbol | status |
 |---|---|---|
@@ -38,7 +38,7 @@ counter 867 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:72b4
 | 29 | W859 | ready |
 | 30 | W860 | ready |
 | 31 | W861 | ready |
-| 32 | W867 | ready |
+| 32 | W868 | ready |
 | 33 | W319 | blocked |
 | 34 | W317 | blocked |
 | 35 | W576 | blocked |
@@ -857,6 +857,7 @@ counter 867 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:72b4
 | 848 | W855 | done |
 | 849 | W856 | done |
 | 850 | W862 | done |
+| 851 | W867 | done |
 
 ## waypoints
 
@@ -1045,13 +1046,12 @@ counter 867 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:72b4
      ast.ClassDef. Ask corpus's consumers (substrate's census) whether they relied on it; if not, change _LAZY to
      functions only, let _eager descend a ClassDef body, move in_class to the eager set, and record the change in the
      module docstring. Methods inside the class stay deferred.
-32. **W867** (ready) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
-   ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record
-   them as outside the fleet standard
-   - next: Letters (one per repo, no live sessions among asn1 cstz earley lg_kernel restsync cvm2 memmesh ologpad
-     linux-sources amr-skills in ListAgents): 'recreate .venv so pycheck can judge' to asn1, cstz, earley, lg_kernel,
-     restsync; 'create a .venv with ruff and mypy' to cvm2, memmesh, ologpad; 'a tracked file .claude/pf.py is deleted
-     in the working tree' to amr-skills; and a pycheck card in mtools for linux-sources's isolated-file relative import.
+32. **W868** (ready) pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent
+   module); make the run package-aware
+   - next: Reproduce with mikemol-pycheck --check-file on a file with 'from . import x' in a package (a fixture, not
+     linux-sources); then choose: stage the temp file at the original path's package position, or pass mypy the real
+     path with the content replaced via a stdin/--shadow-file. Measure which keeps the verdict equal on the current
+     mtools census.
 33. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257
@@ -2454,6 +2454,10 @@ counter 867 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:72b4
 849. **W856** (done) Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check
    reads sections
 850. **W862** (done) The queue's standing 'warrants' line is stale and no verb edits the standing list
+851. **W867** (done) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
+   ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record
+   them as outside the fleet standard
+   - next: none
 
 ## residue
 

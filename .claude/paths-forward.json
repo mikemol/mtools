@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 867,
+  "counter": 868,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T07:37:27Z",
   "job_id": "c85e90eb",
@@ -17666,7 +17666,7 @@
     {
       "symbol": "W867",
       "title": "Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh, ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record them as outside the fleet standard",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "fleet",
@@ -17675,12 +17675,33 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Letters (one per repo, no live sessions among asn1 cstz earley lg_kernel restsync cvm2 memmesh ologpad linux-sources amr-skills in ListAgents): 'recreate .venv so pycheck can judge' to asn1, cstz, earley, lg_kernel, restsync; 'create a .venv with ruff and mypy' to cvm2, memmesh, ologpad; 'a tracked file .claude/pf.py is deleted in the working tree' to amr-skills; and a pycheck card in mtools for linux-sources's isolated-file relative import.",
-      "evidence": "2026-10-09: 2026-10-09 CORRECTION to W864's premise ('no governing project bar'): 9 of the 10 unjudged repos HAVE a pyproject.toml (cvm2 does not); none has a ruff.toml. The unjudged cause is that the checker cannot run, and it differs by repo (single-file --check-file probes): asn1 -> 'asn1 has no .venv/bin/python3 to run ruff and mypy from' although ls -d finds .venv/bin/python3 there (not read through: ruff/mypy likely absent from it; unverified); linux-sources -> 'mypy exited 2: No parent module -- cannot perform relative import' (mypy run on one file alone, a gate limitation); no .venv at all: cvm2, memmesh, ologpad; .venv present, cause not probed: amr-skills, cstz, earley, lg_kernel, restsync. So W864's decision (record as unjudged) stands, but the reason is 'the gate cannot run there', which is fixable by the owner (install the checkers in the repo venv) or by pycheck (a package-aware mypy run). | 2026-10-09: 2026-10-09 probes (--check-file, one file each): cstz, earley, lg_kernel, restsync -> 'has no .venv/bin/python3 to run ruff and mypy from', the same message as asn1, though each repo's .venv/bin/python3 exists as an entry: ls -l cstz/.venv/bin/python3 shows a symlink to 'python' (the standard venv layout; its target was NOT followed, per the no-symlink rule). So for six repos (asn1, cstz, earley, lg_kernel, restsync + amr-skills's .venv) the checker refuses or cannot use a SYMLINKED venv python; whether pycheck refuses symlinks on purpose or the chain is broken is unknown and unprobed. amr-skills -> .claude/pf.py the census named is tracked in git's index but absent from the working tree ('No such file or directory'), so that one unjudged file is a deleted-but-tracked file, not a checker failure. Venv-less (no .venv): cvm2, memmesh, ologpad. linux-sources: isolated-file mypy relative-import failure (previous entry). | 2026-10-09: 2026-10-09 CAUSE FOUND by reading hooks/src/mikemol/hooks/project_root.py venv_python_for: it returns root/.venv/bin/python3 only when candidate.exists(), which FOLLOWS symlinks. cstz's entry is a symlink (python3 -> python); so a venv whose interpreter chain is dangling (the base interpreter it was built against is gone) reads as 'no .venv/bin/python3'. That is a stale venv, not a policy against symlinks, and not a pycheck defect: the owner recreates the venv. Consistent for asn1, cstz, earley, lg_kernel, restsync (entry exists, exists() False); NOT verified by following any link, only by the code and the matching message. amr-skills is the exception: its .venv python resolves, and its single unjudged file is tracked-but-deleted.",
+      "next_bounded_step": "none",
+      "evidence": "2026-10-09: 2026-10-09 CORRECTION to W864's premise ('no governing project bar'): 9 of the 10 unjudged repos HAVE a pyproject.toml (cvm2 does not); none has a ruff.toml. The unjudged cause is that the checker cannot run, and it differs by repo (single-file --check-file probes): asn1 -> 'asn1 has no .venv/bin/python3 to run ruff and mypy from' although ls -d finds .venv/bin/python3 there (not read through: ruff/mypy likely absent from it; unverified); linux-sources -> 'mypy exited 2: No parent module -- cannot perform relative import' (mypy run on one file alone, a gate limitation); no .venv at all: cvm2, memmesh, ologpad; .venv present, cause not probed: amr-skills, cstz, earley, lg_kernel, restsync. So W864's decision (record as unjudged) stands, but the reason is 'the gate cannot run there', which is fixable by the owner (install the checkers in the repo venv) or by pycheck (a package-aware mypy run). | 2026-10-09: 2026-10-09 probes (--check-file, one file each): cstz, earley, lg_kernel, restsync -> 'has no .venv/bin/python3 to run ruff and mypy from', the same message as asn1, though each repo's .venv/bin/python3 exists as an entry: ls -l cstz/.venv/bin/python3 shows a symlink to 'python' (the standard venv layout; its target was NOT followed, per the no-symlink rule). So for six repos (asn1, cstz, earley, lg_kernel, restsync + amr-skills's .venv) the checker refuses or cannot use a SYMLINKED venv python; whether pycheck refuses symlinks on purpose or the chain is broken is unknown and unprobed. amr-skills -> .claude/pf.py the census named is tracked in git's index but absent from the working tree ('No such file or directory'), so that one unjudged file is a deleted-but-tracked file, not a checker failure. Venv-less (no .venv): cvm2, memmesh, ologpad. linux-sources: isolated-file mypy relative-import failure (previous entry). | 2026-10-09: 2026-10-09 CAUSE FOUND by reading hooks/src/mikemol/hooks/project_root.py venv_python_for: it returns root/.venv/bin/python3 only when candidate.exists(), which FOLLOWS symlinks. cstz's entry is a symlink (python3 -> python); so a venv whose interpreter chain is dangling (the base interpreter it was built against is gone) reads as 'no .venv/bin/python3'. That is a stale venv, not a policy against symlinks, and not a pycheck defect: the owner recreates the venv. Consistent for asn1, cstz, earley, lg_kernel, restsync (entry exists, exists() False); NOT verified by following any link, only by the code and the matching message. amr-skills is the exception: its .venv python resolves, and its single unjudged file is tracked-but-deleted. | 2026-10-09: 2026-10-09 letters written: earley/inbox (dangling venv interpreter), memmesh/inbox (no venv), linux-sources/inbox (isolated relative import; mtools' defect, now W868). NOT reachable by letter: asn1, cstz, lg_kernel, restsync, cvm2, ologpad have no inbox/ directory (not nemik workstreams) and no live session in ListAgents, so their cause stays only here: asn1/cstz/lg_kernel/restsync stale venv, cvm2/ologpad no venv. amr-skills was told of its deleted tracked file only implicitly (not yet): its letter from W866 does not mention .claude/pf.py beyond a parenthesis. Residue, not delivered.",
       "issued_at": "2026-10-09T07:21:57Z",
       "minted_during": "tick",
       "caused_by": "W795",
-      "last_worked": "2026-10-09T07:51:31Z",
+      "last_worked": "2026-10-09T08:06:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T080621Z"
+    },
+    {
+      "symbol": "W868",
+      "title": "pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent module); make the run package-aware",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "pycheck",
+        "typing"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Reproduce with mikemol-pycheck --check-file on a file with 'from . import x' in a package (a fixture, not linux-sources); then choose: stage the temp file at the original path's package position, or pass mypy the real path with the content replaced via a stdin/--shadow-file. Measure which keeps the verdict equal on the current mtools census.",
+      "evidence": "",
+      "issued_at": "2026-10-09T08:06:20Z",
+      "minted_during": "tick",
+      "caused_by": "W867",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],
