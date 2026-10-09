@@ -4,6 +4,17 @@ Notes for the operator, not code. `~/github/.claude/katas/katas.py` (840 lines, 
 outside this repo; every edit below is a host edit. Read against mtools at commit time of this note;
 function names are matched, and where bodies were compared that is said.
 
+## REVISION 2026-10-09: the edit cannot be made in place
+
+The operator allowed the agent to edit the host katas.py (W871), but standing rule 16 is a hook:
+"no executable code (.py .rego .sh) under .claude/; put it in a tracked package under the bar". It
+refused an Edit of `~/github/.claude/katas/katas.py`, and sed, a heredoc or a copy would be the
+very routing-around the rule exists to stop. The rule states the original W796 goal: the code
+belongs in a tracked package. So: **shrink = build the residue as a tracked distribution** (the
+host orchestration, calling the mtools tools in the table below), and the operator retires the old
+`katas.py` when it covers its subcommands. The "Order" at the end is then the order of that
+distribution's slices, not of edits to the old file. `~/github/.claude` is untouched.
+
 ## Replace by a call (the mtools tool already does it)
 
 | katas.py | replace with | state |

@@ -1354,3 +1354,5 @@
 2026-10-09T10:33:07Z  tick  W871 minted    -         "Operator: apply or delegate the host katas.py shrink, and choose the typing measurement and ledger location"  evidence=W796
 2026-10-09T10:33:14Z  tick  W796 advanced  sweep     "host-edit list written (design note); operator decision carded as W871; mikemol-commit script missing from hooks venv noted"
 2026-10-09T10:54:15Z  tick  W796 advanced  unblock   "operator ruling recorded (W871); hooks/bin/mikemol-commit launcher + tests land, 68/68; host katas edit next"
+2026-10-09T11:01:59Z  tick  W872 minted    -         "katas distribution slice 1: the proc core and the detached commit (start_commit, wait) calling hooks/bin/mikemol-commit"  evidence=W796
+2026-10-09T11:02:06Z  tick  W796 advanced  sweep     "host edit denied by standing 16; route re-planned as a tracked katas distribution (W872 first slice); host file untouched"
