@@ -36,3 +36,4 @@ closure	Residue Attracts Work: One Claimable Card per Waypoint and Gate, a Rerun
 skip	The Skipped Symbol: A Number the Counter Issued and Nothing Stored Is Recorded in Residue With a Reason, and Nothing Else Is
 delivered	The Delivered Version: 0.0.n From the Highest Completed Waypoint, Derived From the Queue and Never Typed
 standing	The Standing List Has a Writer: --standing-set Replaces It Whole, an Empty File Is Refused, and the Payload Carries What Was Stored
+bundled_title	The Bundled Title: A Title Over 150 Characters That Also Carries a Clause Mark Is Refused at Mint and at Retitle, and Anything Else Passes

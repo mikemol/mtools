@@ -3765,3 +3765,52 @@
   claim  = {Exit 2 with the reason on stderr; the file on disk is byte for byte what it was.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing.py -k test_the_cli_refuses_an_empty_file_and_changes_nothing},
 }
+
+@misc{pathsforward-bundled-title-long-title-with-a-semicolon-is-refused,
+  section = {bundled_title},
+  title  = {Over the limit and a clause mark: several steps in one waypoint},
+  claim  = {Over the limit and a clause mark: several steps in one waypoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_a_long_title_with_a_semicolon_is_refused},
+}
+
+@misc{pathsforward-bundled-title-each-clause-mark-trips-the-refusal,
+  section = {bundled_title},
+  title  = {The semicolon, the em dash and the spaced double dash each count as a second clause},
+  claim  = {The semicolon, the em dash and the spaced double dash each count as a second clause.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_each_clause_mark_trips_the_refusal},
+}
+
+@misc{pathsforward-bundled-title-long-single-clause-title-is-allowed,
+  section = {bundled_title},
+  title  = {Length alone is not bundling: nemik's rule needs a clause mark too},
+  claim  = {Length alone is not bundling: nemik's rule needs a clause mark too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_a_long_single_clause_title_is_allowed},
+}
+
+@misc{pathsforward-bundled-title-title-at-the-limit-with-a-mark-is-allowed,
+  section = {bundled_title},
+  title  = {The limit is exclusive: exactly 150 characters with a semicolon still passes},
+  claim  = {The limit is exclusive: exactly 150 characters with a semicolon still passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_a_title_at_the_limit_with_a_mark_is_allowed},
+}
+
+@misc{pathsforward-bundled-title-short-title-with-marks-is-allowed,
+  section = {bundled_title},
+  title  = {A short title may carry any mark; only the combination bundles},
+  claim  = {A short title may carry any mark; only the combination bundles.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_a_short_title_with_marks_is_allowed},
+}
+
+@misc{pathsforward-bundled-title-add-refuses-a-bundled-title-and-changes-nothing,
+  section = {bundled_title},
+  title  = {`--add` of a bundled title exits as refused and leaves the state file untouched},
+  claim  = {`--add` of a bundled title exits as refused and leaves the state file untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_add_refuses_a_bundled_title_and_changes_nothing},
+}
+
+@misc{pathsforward-bundled-title-update-refuses-to-retitle-into-a-bundle,
+  section = {bundled_title},
+  title  = {`--update --title` applies the same refusal, so a title cannot be bundled afterwards},
+  claim  = {`--update --title` applies the same refusal, so a title cannot be bundled afterwards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_update_refuses_to_retitle_into_a_bundle},
+}

@@ -294,6 +294,38 @@ def _refuse_title(title: str | None) -> None:
     if "\n" in title or "\r" in title:
         msg = f"title {title!r} is not a single line"
         raise RefusedError(msg)
+    refuse_bundled(title)
+
+
+BUNDLED_LENGTH = 150
+"""A title longer than this AND carrying a clause mark reads as several steps in one waypoint."""
+
+CLAUSE_MARKS = (";", "—", " -- ")
+"""The marks nemik's bundled-title warning names: a semicolon, an em dash, a spaced double dash."""
+
+
+def refuse_bundled(title: str) -> None:
+    """Refuse a title that names several steps: over BUNDLED_LENGTH characters AND a clause mark.
+
+    ⚑ THE PREDICATE IS NEMIK'S, as its warning states it ("title over 150 chars AND names more than
+    one clause (has a ';', '—' or ' -- ')"), so the queue refuses at mint time what nemik-check
+    would flag later; the source of nemik's own check was not located, only its message. A long
+    single-clause title passes, which is why this is not the host katas' length-only cap
+    (mtools:W869, W796). The detail belongs in `--next` or evidence, and each step in its own
+    waypoint joined by `--enables`.
+
+    Raises:
+        RefusedError: naming the length and the mark found.
+
+    """
+    marks = [mark for mark in CLAUSE_MARKS if mark in title]
+    if len(title) > BUNDLED_LENGTH and marks:
+        msg = (
+            f"title is {len(title)} characters (limit {BUNDLED_LENGTH}) and carries {marks}: "
+            "that is several steps bundled into one waypoint; shorten it, move the detail to "
+            "--next or evidence, and split the steps into waypoints joined by --enables"
+        )
+        raise RefusedError(msg)
 
 
 _ANCHOR = {"START": "dtstart", "END": "due"}
@@ -735,6 +767,7 @@ def add(state: State, draft: Draft, now: str) -> str:
     if not draft.title.strip():
         msg = "add refused, nothing minted: the title is empty"
         raise RefusedError(msg)
+    refuse_bundled(draft.title)
     bad = _bad_edges(draft.enables)
     if bad:
         msg = f"add refused, nothing minted: enables {bad} are not W<n> or repo:W<n> symbols"

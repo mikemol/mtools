@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 94,
+      "ticks_blocked": 95,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 92,
+      "ticks_blocked": 93,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 97,
+      "ticks_blocked": 98,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 67,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "completed": null
     },
     {
@@ -16138,7 +16138,6 @@
         "standards"
       ],
       "blocked_on": [
-        "W869",
         "W870"
       ],
       "blocked_kind": "agent",
@@ -16148,7 +16147,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T09:32:54Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16971,7 +16970,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 21,
       "completed": null
     },
     {
@@ -17712,7 +17711,7 @@
     {
       "symbol": "W869",
       "title": "pathsforward --add refuses a title over 150 characters, as katas wp does, so a bundled title cannot be minted",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W796"
       ],
@@ -17723,13 +17722,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add the cap to ops.add (message naming the length and the limit, the detail goes in --next), with a test that 150 passes and 151 refuses; check what nemik's BundledTitleShape actually counts (over 150 chars AND several clauses) so the cap matches or the check is the clause test.",
-      "evidence": "",
+      "next_bounded_step": "none",
+      "evidence": "2026-10-09: 2026-10-09 LANDED: pathsforward ops.refuse_bundled(title) refuses a title over BUNDLED_LENGTH (150) characters that also carries a clause mark (';', an em dash, ' -- '); called by add and by _refuse_title (so --update --title too). It is nemik's stated predicate, NOT the host katas' length-only cap (nemik's own warning note says length alone gave ~50% false positives); nemik's check source was not located, only its message text, so the predicate rests on that message. 7 tests in tests/test_bundled_title.py (long+mark refused, each mark, long single clause allowed, exactly 150 allowed, short with marks allowed, add refuses and leaves the file untouched, retitle refuses), 7 warrants + rubric row bundled_title, 3 mutants declared and killed. bazel //pathsforward/...: 48 of 48; pytest 784 passed. Live effect: this tool now refuses such titles for every queue that runs it.",
       "issued_at": "2026-10-09T09:32:45Z",
       "minted_during": "tick",
       "caused_by": "W796",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T09:52:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T095207Z"
     },
     {
       "symbol": "W870",

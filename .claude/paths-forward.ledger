@@ -1348,3 +1348,4 @@
 2026-10-09T09:32:45Z  tick  W869 minted    -         "pathsforward --add refuses a title over 150 characters, as katas wp does, so a bundled title cannot be minted"  evidence=W796
 2026-10-09T09:32:45Z  tick  W870 minted    -         "pathsforward gate-card verbs: mint a repo's 'commit gate is red' card, block its open ledger on it, and lift on green (katas gate_red/gate_green)"  evidence=W796
 2026-10-09T09:32:54Z  tick  W796 advanced  collapse  "queue group read; port plan: katas shrinks to host orchestration, mtools needs only a title cap (W869) and gate-card verbs (W870)"
+2026-10-09T09:52:07Z  tick  W869 advanced  unblock   "title cap landed on nemik's predicate (length and clause mark), refused at add and retitle"

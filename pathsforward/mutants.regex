@@ -12,3 +12,10 @@ src/mikemol/pathsforward/render.py|wrap-never-breaks|> WIDTH and current|> WIDTH
 # W577: a local card claims a peer's ask by `enables` OR by `caused_by`; without the second, a card
 # minted from the ask reads as no claim and the ask stays UNCLAIMED after it was taken.
 src/mikemol/pathsforward/inbound.py|caused-by-no-longer-claims|, text\(w, "caused_by"\)\)|, "")|def=claims
+
+# W869: a bundled title is refused at mint time on nemik's predicate, LENGTH AND a clause mark.
+# `or` refuses every short title that carries a mark; a looser limit lets exactly-150 through
+# wrongly or a tighter one refuses it; dropping the call lets `--add` mint a bundle.
+src/mikemol/pathsforward/ops.py|bundled-needs-length-and-mark|len\(title\) > BUNDLED_LENGTH and marks|len(title) > BUNDLED_LENGTH or marks|def=refuse_bundled
+src/mikemol/pathsforward/ops.py|bundled-limit-inclusive|> BUNDLED_LENGTH and|>= BUNDLED_LENGTH and|def=refuse_bundled
+src/mikemol/pathsforward/ops.py|add-skips-the-bundled-check|refuse_bundled\(draft\.title\)|pass|def=add
