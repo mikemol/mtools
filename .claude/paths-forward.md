@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:8e09410be703bcf0`
+counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:7b6260f5db79048e`
 
 | # | symbol | status |
 |---|---|---|
@@ -1048,10 +1048,10 @@ counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:8e09
      module docstring. Methods inside the class stay deferred.
 32. **W868** (ready) pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent
    module); make the run package-aware
-   - next: Reproduce with mikemol-pycheck --check-file on a file with 'from . import x' in a package (a fixture, not
-     linux-sources); then choose: stage the temp file at the original path's package position, or pass mypy the real
-     path with the content replaced via a stdin/--shadow-file. Measure which keeps the verdict equal on the current
-     mtools census.
+   - next: Implement B in hooks/checkers.checker_argv for the mypy entry when the real path exists, falling back to
+     today's staged temp for a new file; add a fixture test (package with a relative import, plus the planted-error
+     variant), mutants and warrants in hooks. hooks is a LIVE gate: run //hooks:... targets and keep the old behaviour
+     for new files.
 33. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257

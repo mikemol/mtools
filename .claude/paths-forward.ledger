@@ -1340,3 +1340,4 @@
 2026-10-09T07:51:31Z  tick  W867 advanced  sweep     "cause named: venv_python_for uses exists(), so a dangling venv interpreter reads as no venv; five repos' venvs are stale, amr-skills file is deleted"
 2026-10-09T08:06:20Z  tick  W868 minted    -         "pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent module); make the run package-aware"  evidence=W867
 2026-10-09T08:06:21Z  tick  W867 advanced  sweep     "three letters written (earley, memmesh, linux-sources); six repos have no channel; pycheck defect carded as W868"
+2026-10-09T08:21:36Z  tick  W868 advanced  sweep     "reproduced the relative-import failure and measured stage-beside and mypy --shadow-file; shadow-file is the better shape"

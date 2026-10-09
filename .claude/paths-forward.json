@@ -17696,12 +17696,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Reproduce with mikemol-pycheck --check-file on a file with 'from . import x' in a package (a fixture, not linux-sources); then choose: stage the temp file at the original path's package position, or pass mypy the real path with the content replaced via a stdin/--shadow-file. Measure which keeps the verdict equal on the current mtools census.",
-      "evidence": "",
+      "next_bounded_step": "Implement B in hooks/checkers.checker_argv for the mypy entry when the real path exists, falling back to today's staged temp for a new file; add a fixture test (package with a relative import, plus the planted-error variant), mutants and warrants in hooks. hooks is a LIVE gate: run //hooks:... targets and keep the old behaviour for new files.",
+      "evidence": "2026-10-09: 2026-10-09 REPRODUCED and two options MEASURED, with mypy from hooks/.venv on a scratch package (pkg/__init__.py, b.py with VALUE: int, a.py with 'from . import b'): (1) today's shape, content staged as a root-level temp file: 'tmproot.py:1: error: No parent module -- cannot perform relative import', exit 2, nothing else checked. (2) option A, the same content staged BESIDE its siblings (pkg/tmpbeside.py): 'Success: no issues found'. (3) option B, 'mypy --strict --shadow-file pkg/a.py new_a.py pkg/a.py' (new content shadows the real path): the relative import resolves AND a planted str-for-int error in the new content is caught at 'pkg/a.py:3', so the verdict names the real path and nothing is staged in the package. B is the better shape (no temp file in a source tree where a concurrent bazel glob could see it; reports already name the real path). Not measured: a file that does not exist yet on disk (shadow-file needs the real path; a new file would still need the root temp or A), ruff's use of the staged location (A could change isort first-party detection), and the atom-config cwd case (mypy_cfg.parent).",
       "issued_at": "2026-10-09T08:06:20Z",
       "minted_during": "tick",
       "caused_by": "W867",
-      "last_worked": null,
+      "last_worked": "2026-10-09T08:21:35Z",
       "ticks_blocked": 0
     }
   ],
