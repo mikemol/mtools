@@ -18,9 +18,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ ONE RUNTIME DEPENDENCY, pygit2, for reading a file at a git revision (`mikemol.treeio.rev`).
-# Everything else is the standard library; the snapshot half shells out to the `git` binary.
-dependencies = ["pygit2>=1.20"]
+# ⚑ ONE THIRD-PARTY DEPENDENCY, pygit2, for reading a file at a git revision (`mikemol.treeio.rev`).
+# The snapshot half shells out to the `git` binary. ⚑ AND ONE SIBLING (mtools:W857, W562): the
+# durable write, `mikemol-atomicwrite`, resolved by uv as a NON-editable path source below (an
+# editable install hides the sibling from mypy); in Bazel it is a py_library dep, so the pip hubs
+# stay independent of it and requirements.txt is deliberately NOT regenerated.
+dependencies = ["pygit2>=1.20", "mikemol-atomicwrite"]
 
 [project.scripts]
 mikemol-vfs = "mikemol.treeio.vfs_cli:main"
@@ -32,6 +35,9 @@ Homepage = "https://github.com/mikemol/mtools"
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
 dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.uv.sources]
+mikemol-atomicwrite = { path = "../atomicwrite" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -78,6 +84,13 @@ namespace-packages = ["src/mikemol", "tests"]
 preview = true
 select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+# ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (mtools:
+# W857, as debtplan declares for its siblings, W547). Left to detection, a venv that has it
+# installed classifies it with this package's own imports while the sandbox (no venv) puts it in
+# its own block: the ratchet and the per-edit hook then demand opposite layouts of the same file.
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.atomicwrite"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true

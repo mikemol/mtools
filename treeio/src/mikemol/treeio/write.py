@@ -17,15 +17,20 @@ write half standing.
 ATOMIC: write a sibling temp, then replace. An interrupted write leaves the ORIGINAL, not a
 truncated file; a bare open truncates before it writes, so a crash mid-write destroys the source.
 
-Differences from `mikemol.atomicwrite`: that distribution preserves the target's permissions and
-needs no fsync; this one keeps paperkit's behaviour (fsync before the replace, default mode on a
-rewritten file) and its `.vfs-tmp` sibling name, so a caller sees no change on the move.
+THE REPLACE IS `mikemol.atomicwrite`'s (mtools:W857), not a copy of it. This module carried its own
+temp-then-rename; comparing the two found them unequal in both directions, the primitive gained
+the fsync-before-rename this copy had, and this module now calls it. Two things a caller can see
+change on the move: a rewritten file keeps its permissions (the old copy reset them to the
+umask default, which stripped the executable bit from a rewritten script), and the sibling temp is
+named `.<name>.<random>.tmp` instead of `<name>.vfs-tmp.<pid>` (no consumer in the fleet reads
+that name: searched, only paperkit's and substrate's origin copies and this package's own test did).
 """
 
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
+
+from mikemol.atomicwrite import durable
 
 from mikemol.treeio.sources import WorkingTree
 
@@ -83,24 +88,6 @@ def _encode(data: object) -> bytes:
     raise TypeError(msg)
 
 
-def _replace(target: Path, data: bytes) -> None:
-    """Write `data` to a sibling temp, flush it to disk, and rename it over the target.
-
-    If anything fails the temp is removed and the original exception propagates; the target is
-    left as it was.
-    """
-    tmp = target.with_name(f"{target.name}.vfs-tmp.{os.getpid()}")
-    try:
-        with tmp.open("wb") as fh:
-            fh.write(data)
-            fh.flush()
-            os.fsync(fh.fileno())
-        tmp.replace(target)
-    except BaseException:
-        tmp.unlink(missing_ok=True)
-        raise
-
-
 def write(
     path: str | Path,
     data: str | bytes | bytearray,
@@ -134,5 +121,5 @@ def write(
     target = chosen.root / path
     if mkdirs:
         target.parent.mkdir(parents=True, exist_ok=True)
-    _replace(target, payload)
+    durable.write_atomic(target, payload)
     return len(payload)

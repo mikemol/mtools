@@ -37,3 +37,7 @@ src/mikemol/atomicwrite/durable.py|bytes-written-as-text|if isinstance\(data, by
 src/mikemol/atomicwrite/durable.py|bytes-not-flushed-before-rename|os\.fsync\(fb\.fileno\(\)\)|pass|def=_fill
 
 src/mikemol/atomicwrite/durable.py|text-not-flushed-before-rename|os\.fsync\(ft\.fileno\(\)\)|pass|def=_fill
+
+# ...on ANY failure, an interrupt included, not only an ordinary exception (mtools:W857: this was
+# declared in treeio for its own copy and moves here with the code).
+src/mikemol/atomicwrite/durable.py|cleanup-only-on-exception|except BaseException:|except Exception:|def=write_atomic

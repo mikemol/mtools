@@ -1536,3 +1536,11 @@
   claim  = {Files saved in a scrambled order come back in path order, not in directory order.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_restore.py -k test_the_untracked_half_is_listed_sorted_whatever_order_the_store_holds_it},
 }
+
+@misc{treeio-write-rewritten-file-keeps-its-permissions,
+  section = {write},
+  title  = {The executable bit survives a rewrite; the replaced copy of this seam reset it to default},
+  claim  = {The executable bit survives a rewrite; the replaced copy of this seam reset it to
+            default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_a_rewritten_file_keeps_its_permissions},
+}

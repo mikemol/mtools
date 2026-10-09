@@ -18,16 +18,21 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 _AGDA_ISH = "rc = F2.\U0001d7d9 ∷ F2.\U0001d7d8 ∷ []\n"
+_EXECUTABLE = 0o755
+_MODE_BITS = 0o777
 
 
 def _leftovers(root: Path) -> list[str]:
     """List any temp file the atomic write left behind.
 
+    ⚑ THE SHAPE OF THE PRIMITIVE'S TEMP (mtools:W857), `.<name>.<random>.tmp`. The old marker
+    `.vfs-tmp` no longer appears anywhere, so a check for it would pass over a leftover.
+
     Returns:
-        The names containing the temp marker.
+        The names that look like a dot-prefixed `.tmp` sibling.
 
     """
-    return [p.name for p in root.iterdir() if ".vfs-tmp" in p.name]
+    return [p.name for p in root.iterdir() if p.name.startswith(".") and p.name.endswith(".tmp")]
 
 
 def test_the_temp_is_flushed_to_disk_before_it_replaces_the_target(
@@ -46,6 +51,16 @@ def test_the_temp_is_flushed_to_disk_before_it_replaces_the_target(
     write("f.txt", "new", WorkingTree(tmp_path))
     assert seen == ["old"]
     assert (tmp_path / "f.txt").read_text(encoding="utf-8") == "new"
+
+
+def test_a_rewritten_file_keeps_its_permissions(tmp_path: Path) -> None:
+    """The executable bit survives a rewrite; the replaced copy of this seam reset it to default."""
+    script = tmp_path / "run.sh"
+    script.write_text("old", encoding="utf-8")
+    script.chmod(_EXECUTABLE)
+    write("run.sh", "new", WorkingTree(tmp_path))
+    assert script.stat().st_mode & _MODE_BITS == _EXECUTABLE
+    assert script.read_text(encoding="utf-8") == "new"
 
 
 def test_an_interrupt_mid_write_removes_the_temp_and_keeps_the_original(

@@ -177,10 +177,25 @@ wheels = [
 ]
 
 [[package]]
+name = "mikemol-atomicwrite"
+version = "0.1.0"
+source = { directory = "../atomicwrite" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
 name = "mikemol-treeio"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "mikemol-atomicwrite" },
     { name = "pygit2" },
 ]
 
@@ -192,7 +207,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pygit2", specifier = ">=1.20" }]
+requires-dist = [
+    { name = "mikemol-atomicwrite", directory = "../atomicwrite" },
+    { name = "pygit2", specifier = ">=1.20" },
+]
 
 [package.metadata.requires-dev]
 dev = [

@@ -6,18 +6,9 @@
 # STALE declaration and fails the grid as UNAPPLIED. Each is a claim write.py's or restore.py's own
 # docstring makes about a working-tree write and a snapshot restore, and none moves a def.
 
-# ATOMIC: write a sibling temp, then replace. A bare in-place write truncates before it writes, so a
-# crash mid-write destroys the source.
-src/mikemol/treeio/write.py|replace-becomes-an-in-place-write|tmp\.replace\(target\)|target.write_bytes(data)|def=_replace
-
-# Fsync before the replace: paperkit's behaviour, kept so a caller sees no change on the move.
-src/mikemol/treeio/write.py|fsync-dropped|os\.fsync\(fh\.fileno\(\)\)|fh.flush()|def=_replace
-
-# If anything fails the temp is removed; a failed write must not leave its sibling behind.
-src/mikemol/treeio/write.py|failed-write-leaves-its-temp|tmp\.unlink\(missing_ok=True\)|pass|def=_replace
-
-# ...on ANY failure, an interrupt included, not only an ordinary exception.
-src/mikemol/treeio/write.py|cleanup-only-on-exception|except BaseException:|except Exception:|def=_replace
+# THE ATOMIC REPLACE MOVED TO mikemol.atomicwrite (mtools:W857): the replace, the fsync before it,
+# the temp's cleanup on any failure and the permissions kept are that distribution's declared
+# defect classes now, killed by its own tests, so write.py holds no copy of them to declare.
 
 # The dry-run half is ENFORCED, not decoration: a set DRY_RUN stops the write.
 src/mikemol/treeio/write.py|dry-run-ignored|if DRY_RUN:|if False:|def=declare

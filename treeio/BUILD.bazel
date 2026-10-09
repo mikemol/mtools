@@ -20,6 +20,14 @@ exports_files([
     "uv.lock",
 ])
 
+# ⚑ SIBLINGS = the distributions this one imports (mtools:W857: `mikemol-atomicwrite`, the durable
+# write that replaced this module's own copy). Bazel carries the edge as a py_library dep, the pip
+# hubs stay independent of it, and the pyproject declares it for uv; kept in step by hand
+# (mtools:W562, the gradekit and debtplan precedent).
+SIBLINGS = [
+    "//atomicwrite:atomicwrite",
+]
+
 # ⚑ ONE SHIPPING DEPENDENCY, pygit2: `read` and `listing` open a repository to read a path at a
 # revision. Everything else is the standard library, and the snapshot half runs the `git` binary,
 # which the tests also need on PATH (the sandbox or executor image must carry it).
@@ -30,7 +38,7 @@ py_library(
     imports = ["src"],
     deps = [
         requirement("pygit2"),
-    ],
+    ] + SIBLINGS,
     visibility = ["//visibility:public"],
 )
 
@@ -56,8 +64,11 @@ py_library(
             ":treeio",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
-        ],
+        ] + SIBLINGS,
         imports = ["src"],
+        # ⚑ Two source roots plus legacy implicit `__init__.py` files would turn `mikemol` into a
+        # regular package from the first root and shadow the namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -126,7 +137,8 @@ py_binary(
     main = "src/mikemol/treeio/vfs_cli.py",
     imports = ["src"],
     visibility = ["//visibility:public"],
-    deps = [":treeio"],
+    deps = [":treeio"] + SIBLINGS,
+    legacy_create_init = 0,
 )
 
 py_binary(
@@ -135,17 +147,19 @@ py_binary(
     main = "src/mikemol/treeio/snapshot_cli.py",
     imports = ["src"],
     visibility = ["//visibility:public"],
-    deps = [":treeio"],
+    deps = [":treeio"] + SIBLINGS,
+    legacy_create_init = 0,
 )
 
 py_binary(
     name = "mypy_runner",
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
+    # ⚑ How mypy sees the siblings in the sandbox.
     deps = [
         dev_requirement("mypy"),
         dev_requirement("pytest"),
-    ],
+    ] + SIBLINGS,
 )
 
 sh_test(
@@ -175,7 +189,8 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/treeio/**"]),
+    # ⚑ The dev venv carries the siblings, so the mutation gate imports them.
+    srcs = glob(["src/mikemol/treeio/**"]) + SIBLINGS,
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

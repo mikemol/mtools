@@ -104,6 +104,24 @@ def test_the_temp_is_flushed_to_disk_before_it_replaces_the_target(
     assert target.read_text(encoding="utf-8") == "new"
 
 
+def test_an_interrupt_mid_write_removes_the_temp_and_keeps_the_original(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A KeyboardInterrupt is not an Exception, and still must not leave its sibling behind."""
+    target = tmp_path / "out.txt"
+    target.write_text("old", encoding="utf-8")
+
+    def interrupted(fd: int) -> None:
+        del fd
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(os, "fsync", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        durable.write_atomic(target, "new")
+    assert [p.name for p in tmp_path.iterdir()] == ["out.txt"]
+    assert target.read_text(encoding="utf-8") == "old"
+
+
 def test_a_failed_write_leaves_no_temp_and_reraises(tmp_path: Path) -> None:
     """A rename that cannot happen (the target is a directory) removes the temp and raises."""
     target = tmp_path / "occupied"

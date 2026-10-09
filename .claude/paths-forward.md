@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 860 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:3824201487dc8bad`
+counter 860 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:2b01a624785f1f1a`
 
 | # | symbol | status |
 |---|---|---|
@@ -1015,14 +1015,12 @@ counter 860 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:3824
      of the other module; add a witness that a dispatch-table module's closure roots equal the original's
 28. **W857** (ready) Atomic write is carried five times: make pathsforward, treeio, ratchet and hooks depend on
    mikemol-atomicwrite where their needs match
-   - next: Swap the copies for atomicwrite.durable.write_atomic one distribution at a time, each its own gated slice,
-     with the first cross-distribution wiring of that dist (pyproject dependency + [tool.uv.sources], BUILD
-     py_library/test deps, mypy_runner deps, :.venv srcs; debtplan is the precedent): treeio first (not a live tool; its
-     _replace uses a deterministic temp name and does not preserve the target's mode, which write_atomic does, so the
-     swap also fixes that). Then ratchet/remap.py (multi-file replace: read its all-or-nothing contract before
-     deciding), hooks/pycheck_census.py and pathsforward/store.py (both are LIVE tools whose venvs would need
-     atomicwrite installed first, so wire and sync before the import lands). Not yet read for equivalence: ratchet,
-     pycheck_census, pathsforward.
+   - next: Swap ratchet/remap.py (read its all-or-nothing multi-file replace contract first: it temps several files then
+     os.replaces each, with a documented residue; atomicwrite is single-file, so the multi-file part stays and only the
+     per-file write may move), then the two live tools hooks/pycheck_census.py and pathsforward/store.py (wire the
+     dependency AND sync their venvs before the import lands, or the loop's own tool stops importing). Same wiring
+     recipe as treeio's (pyproject dependency + [tool.uv.sources], [tool.ruff.lint.isort] known-third-party, BUILD
+     SIBLINGS in library/test/binary/mypy_runner/.venv, legacy_create_init = 0, uv lock).
 29. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
    other
    - next: corpus (py_files, roots, excluded, stdlib only) and pathwalk (expand: skip registered worktrees and
