@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 887 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:d658f7f2a116f96a`
+counter 888 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:86cd434a190ead67`
 
 | # | symbol | status |
 |---|---|---|
@@ -877,6 +877,7 @@ counter 887 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:d658
 | 868 | W884 | done |
 | 869 | W885 | done |
 | 870 | W886 | done |
+| 871 | W888 | done |
 
 ## waypoints
 
@@ -2507,6 +2508,7 @@ counter 887 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:d658
    since when
 870. **W886** (done) mikemol-commit runs under a per-repo membudget hold on claim:path:`<repo>`/.git/mtools/commit, so
    two committers serialise instead of colliding on index.lock
+871. **W888** (done) Remove the sixteen tracked .draft scratch copies that 36b8621 committed beside their live files
 
 ## residue
 

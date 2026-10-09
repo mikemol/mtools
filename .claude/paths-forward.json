@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 887,
+  "counter": 888,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T18:17:12Z",
   "job_id": "87816488",
@@ -18153,6 +18153,27 @@
       "last_worked": "2026-10-09T16:38:07Z",
       "ticks_blocked": 0,
       "completed": null
+    },
+    {
+      "symbol": "W888",
+      "title": "Remove the sixteen tracked .draft scratch copies that 36b8621 committed beside their live files",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "pycodemod",
+        "hygiene"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09: git rm of 16 tracked *.draft files: hooks/src/mikemol/hooks/{commit_kata,pycheck_cli,pycheck_format,snapshot}.py.draft, hooks/tests/{test_commit_kata,test_pycheck_format,test_snapshot}.py.draft, pycodemod/src/mikemol/pycodemod/{atomize,cli,cli_atomize,cli_scriptruns,pathdrop,scriptruns}.py.draft, pycodemod/tests/{test_atomize,test_pathdrop,test_scriptruns}.py.draft. cmp: 12 byte-identical to the live file; 4 (commit_kata.py, snapshot.py, test_commit_kata.py, cli.py) older snapshots, their history is in git. grep for .draft in BUILD, bzl, toml, py, rego and .gitignore: no reference.",
+      "issued_at": "2026-10-09T18:33:32Z",
+      "minted_during": "tick",
+      "caused_by": null,
+      "last_worked": "2026-10-09T18:33:41Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T183341Z"
     }
   ],
   "residue": [
