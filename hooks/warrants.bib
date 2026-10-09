@@ -6992,3 +6992,29 @@
             wrong.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_session_that_is_not_the_host_is_told_to_release_its_own_queue},
 }
+
+@misc{hooks-pycheck-relative-import-in-an-existing-file-is-judged-not-refused,
+  section = {pycheck},
+  title  = {Mypy reads the edit AS the real path, so `from . import b` resolves (mtools:W868)},
+  claim  = {Mypy reads the edit AS the real path, so `from . import b` resolves (mtools:W868).
+            Staged as a root-level temp file the same content died with "No parent
+            module -- cannot perform relative import" and nothing else was checked, so a
+            package of relative imports read as unjudged (measured on linux-sources and
+            memmesh). The control is the next test: a type error planted in the same
+            import shape is still reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_relative_import_in_an_existing_file_is_judged_not_refused},
+}
+
+@misc{hooks-pycheck-type-error-beside-a-relative-import-is-still-reported,
+  section = {pycheck},
+  title  = {The shadowed run is a real check: a planted `str` for an `int` is refused},
+  claim  = {The shadowed run is a real check: a planted `str` for an `int` is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_type_error_beside_a_relative_import_is_still_reported},
+}
+
+@misc{hooks-pycheck-relative-import-in-a-file-not-yet-on-disk-keeps-the-staged-copy,
+  section = {pycheck},
+  title  = {A new file has no real path to shadow, so it is still unjudged: the recorded limit},
+  claim  = {A new file has no real path to shadow, so it is still unjudged: the recorded limit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_relative_import_in_a_file_not_yet_on_disk_keeps_the_staged_copy},
+}

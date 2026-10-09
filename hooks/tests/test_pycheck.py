@@ -277,6 +277,65 @@ def test_a_format_dirty_write_is_refused_though_ruff_check_passes(
     assert "format" in capsys.readouterr().out
 
 
+def _package(root: Path) -> Path:
+    """Write a two-module package on disk, `a` importing its sibling `b` relatively.
+
+    Returns:
+        the package directory.
+
+    """
+    pkg = root / "pkg"
+    pkg.mkdir()
+    (pkg / "__init__.py").write_text("", encoding="utf-8")
+    (pkg / "b.py").write_text('"""A sibling."""\n\nVALUE: int = 1\n', encoding="utf-8")
+    old = '"""A module."""\n\nfrom . import b\n\nTWICE: int = b.VALUE\n'
+    (pkg / "a.py").write_text(old, encoding="utf-8")
+    return pkg
+
+
+_RELATIVE_OK = '"""A module."""\n\nfrom . import b\n\nTWICE: int = b.VALUE * 2\n'
+_RELATIVE_BAD = '"""A module."""\n\nfrom . import b\n\nTWICE: str = b.VALUE * 2\n'
+
+
+@_needs_checkers
+def test_a_relative_import_in_an_existing_file_is_judged_not_refused(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """Mypy reads the edit AS the real path, so `from . import b` resolves (mtools:W868).
+
+    ⚑⚑ Staged as a root-level temp file the same content died with "No parent module -- cannot
+    perform relative import" and nothing else was checked, so a package of relative imports
+    read as unjudged (measured on linux-sources and memmesh). The control is the next test: a
+    type error planted in the same import shape is still reported.
+    """
+    pkg = _package(_project(tmp_path))
+    _main(monkeypatch, _write(pkg / "a.py", _RELATIVE_OK), own="1")
+    out = capsys.readouterr().out
+    assert "No parent module" not in out
+    assert not out
+
+
+@_needs_checkers
+def test_a_type_error_beside_a_relative_import_is_still_reported(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """The shadowed run is a real check: a planted `str` for an `int` is refused."""
+    pkg = _package(_project(tmp_path))
+    _main(monkeypatch, _write(pkg / "a.py", _RELATIVE_BAD), own="1")
+    out = capsys.readouterr().out
+    assert "assignment" in out
+
+
+@_needs_checkers
+def test_a_relative_import_in_a_file_not_yet_on_disk_keeps_the_staged_copy(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """A new file has no real path to shadow, so it is still unjudged: the recorded limit."""
+    pkg = _package(_project(tmp_path))
+    _main(monkeypatch, _write(pkg / "c.py", _RELATIVE_OK), own="1")
+    assert "No parent module" in capsys.readouterr().out
+
+
 @_needs_checkers
 def test_writing_a_missing_package_marker_is_admitted(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path

@@ -17,10 +17,33 @@ exemptions they had correctly declared, with nothing to point at.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
-if TYPE_CHECKING:
-    from pathlib import Path
+
+def mypy_subject(tmp: Path, path: str) -> list[str]:
+    """Return mypy's positional arguments: the staged copy, judged AT the real path when it exists.
+
+    ⚑ A TEMP FILE AT THE PROJECT ROOT HAS NO PACKAGE, so mypy refused a file containing
+    `from . import b` with "No parent module -- cannot perform relative import" and checked
+    nothing else (mtools:W868, measured on a scratch package; linux-sources and memmesh files
+    read as unjudged for it). `--shadow-file REAL STAGED` makes mypy read the staged content AS the
+    real path: the relative import resolves, a planted type error in the new content is still
+    caught, and nothing is staged inside a source tree.
+
+    ⚑ THIS IS NOT THE PATH-KEYED-EXEMPTION CLAIM RETRACTED BELOW. That one was about per-file
+    exemptions, and mypy has none by policy; this is only about module identity.
+
+    ⚑ A FILE NOT YET ON DISK, OR A LINK, KEEPS THE STAGED COPY: `--shadow-file` needs the real
+    path to exist, and a link is never read through.
+
+    Returns:
+        the arguments naming what mypy checks.
+
+    """
+    real = Path(path) if path else None
+    if real is not None and real.is_file() and not real.is_symlink():
+        return ["--shadow-file", path, str(tmp), path]
+    return [str(tmp)]
 
 
 def checker_argv(
@@ -143,7 +166,7 @@ def checker_argv(
                 "--no-error-summary",
                 "--no-color-output",
                 "--pretty",
-                str(tmp),
+                *mypy_subject(tmp, path),
             ],
             False,
         ),

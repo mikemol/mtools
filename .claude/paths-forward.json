@@ -17687,7 +17687,7 @@
     {
       "symbol": "W868",
       "title": "pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent module); make the run package-aware",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -17696,13 +17696,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Implement B in hooks/checkers.checker_argv for the mypy entry when the real path exists, falling back to today's staged temp for a new file; add a fixture test (package with a relative import, plus the planted-error variant), mutants and warrants in hooks. hooks is a LIVE gate: run //hooks:... targets and keep the old behaviour for new files.",
-      "evidence": "2026-10-09: 2026-10-09 REPRODUCED and two options MEASURED, with mypy from hooks/.venv on a scratch package (pkg/__init__.py, b.py with VALUE: int, a.py with 'from . import b'): (1) today's shape, content staged as a root-level temp file: 'tmproot.py:1: error: No parent module -- cannot perform relative import', exit 2, nothing else checked. (2) option A, the same content staged BESIDE its siblings (pkg/tmpbeside.py): 'Success: no issues found'. (3) option B, 'mypy --strict --shadow-file pkg/a.py new_a.py pkg/a.py' (new content shadows the real path): the relative import resolves AND a planted str-for-int error in the new content is caught at 'pkg/a.py:3', so the verdict names the real path and nothing is staged in the package. B is the better shape (no temp file in a source tree where a concurrent bazel glob could see it; reports already name the real path). Not measured: a file that does not exist yet on disk (shadow-file needs the real path; a new file would still need the root temp or A), ruff's use of the staged location (A could change isort first-party detection), and the atom-config cwd case (mypy_cfg.parent).",
+      "next_bounded_step": "none; a new-file relative import remains unjudged (stage beside the siblings, option A, is the follow-up if it matters).",
+      "evidence": "2026-10-09: 2026-10-09 REPRODUCED and two options MEASURED, with mypy from hooks/.venv on a scratch package (pkg/__init__.py, b.py with VALUE: int, a.py with 'from . import b'): (1) today's shape, content staged as a root-level temp file: 'tmproot.py:1: error: No parent module -- cannot perform relative import', exit 2, nothing else checked. (2) option A, the same content staged BESIDE its siblings (pkg/tmpbeside.py): 'Success: no issues found'. (3) option B, 'mypy --strict --shadow-file pkg/a.py new_a.py pkg/a.py' (new content shadows the real path): the relative import resolves AND a planted str-for-int error in the new content is caught at 'pkg/a.py:3', so the verdict names the real path and nothing is staged in the package. B is the better shape (no temp file in a source tree where a concurrent bazel glob could see it; reports already name the real path). Not measured: a file that does not exist yet on disk (shadow-file needs the real path; a new file would still need the root temp or A), ruff's use of the staged location (A could change isort first-party detection), and the atom-config cwd case (mypy_cfg.parent). | 2026-10-09: 2026-10-09 LANDED: hooks/checkers.py mypy_subject(tmp, path) returns ['--shadow-file', path, tmp, path] when path is an existing, non-link file, else [tmp] (the staged copy); the mypy argv uses it. Positive control: the original failing case, mikemol-pycheck --check-file linux-sources/linux_sources/corpus_facts/_registry.py, went from 'mypy exited 2: No parent module' to 'admitted'. 3 new end-to-end tests in hooks/tests/test_pycheck.py (relative import in an existing file judged; planted str-for-int still reported; a not-yet-on-disk file keeps the staged copy and is still unjudged, the recorded limit) + 3 generated warrants; hooks/mutants.regex gains shadow-without-existing-file. bazel //hooks/...: 67 of 67. NOT tested: the symlink fallback (creating a link in a test is refused by the no-symlink rule; it is a one-line condition, unwitnessed). NOT done: a new file with a relative import is still unjudged.",
       "issued_at": "2026-10-09T08:06:20Z",
       "minted_during": "tick",
       "caused_by": "W867",
-      "last_worked": "2026-10-09T08:21:35Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T08:39:26Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T083926Z"
     }
   ],
   "residue": [

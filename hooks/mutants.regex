@@ -17,3 +17,8 @@ src/mikemol/hooks/no_verify.py|program-filter-inverted|if program != "git":|if p
 # W621: `inbound-asks --check` exits 1 when a piece is missing; an exit that never fails reports a
 # broken install as fine to every caller that reads the status.
 src/mikemol/hooks/inbound_asks.py|check-exit-never-fails|return 0 if ok else 1|return 0|def=check_main
+
+# W868: a file that exists is judged AT its real path (mypy --shadow-file), so a relative import
+# resolves. Dropping the existence test shadows a path with nothing behind it for a new file, which
+# the recorded-limit witness would see change.
+src/mikemol/hooks/checkers.py|shadow-without-existing-file|real\.is_file\(\) and not|not|def=mypy_subject
