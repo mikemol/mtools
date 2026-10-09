@@ -1332,3 +1332,4 @@
 2026-10-09T06:20:14Z  tick  W866 minted    -         "Count the three old-style arms the census cannot see (main-style scripts under tests/, asserts outside a runner, no warrant per test) for the repos it judged"  evidence=W864
 2026-10-09T06:20:25Z  tick  W864 advanced  sweep     "decided: unjudged repos are recorded unjudged, not counted against an invented bar; arms moved to W866; W795 re-pointed"
 2026-10-09T06:36:48Z  tick  W866 advanced  sweep     "aeternum has no main-style scripts under tests/ (controlled by an amr-skills hit); next amr-skills"
+2026-10-09T06:51:49Z  tick  W866 advanced  sweep     "amr-skills: 3 main-guard scripts, ~43 probe/bench scripts and 10 test_-named check()-style modules that pytest runs as zero tests"
