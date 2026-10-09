@@ -391,3 +391,80 @@
   claim  = {The bazel template is written to `.githooks/pre-commit` with the repo name filled in.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scaffold.py -k test_the_hook_is_swapped_once_the_target_passed},
 }
+
+@misc{katas-pulse-only-warnings-and-violations-are-picked,
+  section = {pulse},
+  title  = {The OK line and anything else is not shown},
+  claim  = {The OK line and anything else is not shown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pulse.py -k test_only_warnings_and_violations_are_picked},
+}
+
+@misc{katas-pulse-standing-substring-hides-its-warning,
+  section = {pulse},
+  title  = {The operator has accepted these, so they do not page again},
+  claim  = {The operator has accepted these, so they do not page again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pulse.py -k test_a_standing_substring_hides_its_warning},
+}
+
+@misc{katas-pulse-violation-is-never-hidden-by-a-warning-substring,
+  section = {pulse},
+  title  = {A VIOLATES line still shows when the standing list names only warnings' words},
+  claim  = {A VIOLATES line still shows when the standing list names only warnings' words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pulse.py -k test_a_violation_is_never_hidden_by_a_warning_substring},
+}
+
+@misc{katas-pulse-pulse-has-status-then-warnings-then-the-top-of-the-ranking,
+  section = {pulse},
+  title  = {Three sections in that order, with the ranking cut to its first rows},
+  claim  = {Three sections in that order, with the ranking cut to its first rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pulse.py -k test_the_pulse_has_status_then_warnings_then_the_top_of_the_ranking},
+}
+
+@misc{katas-pulse-no-unhidden-warning-reads-none,
+  section = {pulse},
+  title  = {A clean check shows (none) rather than an empty section},
+  claim  = {A clean check shows (none) rather than an empty section.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pulse.py -k test_no_unhidden_warning_reads_none},
+}
+
+@misc{katas-hosttick-begin-takes-the-lock-under-the-holders-name,
+  section = {hosttick},
+  title  = {The one call is `--lock HOLDER` on the host state file},
+  claim  = {The one call is `--lock HOLDER` on the host state file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttick.py -k test_begin_takes_the_lock_under_the_holders_name},
+}
+
+@misc{katas-hosttick-end-runs-arm-ledger-evidence-flush-and-unlock-in-that-order,
+  section = {hosttick},
+  title  = {The flush callback sits between the evidence and the unlock, observed in one record},
+  claim  = {The flush callback sits between the evidence and the unlock, observed in one record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttick.py -k test_end_runs_arm_ledger_evidence_flush_and_unlock_in_that_order},
+}
+
+@misc{katas-hosttick-end-without-a-note-only-flushes-and-unlocks,
+  section = {hosttick},
+  title  = {No ledger and no evidence when there is nothing to say},
+  claim  = {No ledger and no evidence when there is nothing to say.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttick.py -k test_end_without_a_note_only_flushes_and_unlocks},
+}
+
+@misc{katas-hosttick-end-without-a-next-step-leaves-the-next-step-alone,
+  section = {hosttick},
+  title  = {`--next` is passed only when the caller gave one},
+  claim  = {`--next` is passed only when the caller gave one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttick.py -k test_end_without_a_next_step_leaves_the_next_step_alone},
+}
+
+@misc{katas-hosttick-missing-job-file-arms-nothing,
+  section = {hosttick},
+  title  = {A tick with no cron job file records no `--armed`},
+  claim  = {A tick with no cron job file records no `--armed`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttick.py -k test_a_missing_job_file_arms_nothing},
+}
+
+@misc{katas-hosttick-standing-waypoint-is-the-queues-not-a-constant,
+  section = {hosttick},
+  title  = {A queue naming another standing waypoint gets its ledger line there},
+  claim  = {A queue naming another standing waypoint gets its ledger line there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttick.py -k test_the_standing_waypoint_is_the_queues_not_a_constant},
+}

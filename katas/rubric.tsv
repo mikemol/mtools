@@ -8,3 +8,5 @@ fleet	The Fleet: Git State Per Workstream, a Flush That Starts a Detached Commit
 inbox	The Inbox: Handled Letters Move Into the Archive by Their File Name, a Missing One Is Reported, and an Archived Name Is Never Overwritten
 survey	The Hook Survey: A Pre-commit Is Found Where core.hooksPath Says, and It Is Bazel Only When a Non-Comment Line Names Bazel
 scaffold	The Bazel Scaffold: Template Files Are Written With the Repo Name, Never Over an Existing File, and the Hook Is Swapped Only After the Target Passed
+pulse	The Pulse: The Fleet View Is Status Rows, Then nemik-check's Warnings Minus the Standing Ones, Then the Top of the Ranking
+hosttick	The Host Tick: The Lock Is Taken Under the Holder's Name, and a Tick Closes in Order: Arm, Ledger, Evidence, Flush, Unlock

@@ -24,6 +24,10 @@ SIBLINGS = [
     "//procrun:procrun",
 ]
 
+# ⚑ THE TEST MODULES THAT BUILD REAL GIT REPOSITORIES: each needs the `git` binary from the sandbox
+# PATH, an undeclared host tool made visible and filterable by the tag below (ratchet's precedent).
+_NEEDS_GIT = ["tests/test_fleet.py", "tests/test_survey.py", "tests/test_pulse.py"]
+
 py_library(
     name = "katas",
     srcs = glob(["src/mikemol/katas/**/*.py"]),
@@ -63,7 +67,7 @@ py_library(
         # ⚑ `test_fleet` NEEDS AN UNDECLARED HOST TOOL: `git`, from the sandbox PATH. It builds its
         # own repositories in tmp_path, so the workspace `.git` is NOT needed, only the binary. The
         # tag makes that dependency visible and filterable rather than ambient (ratchet's precedent).
-        tags = ["requires-git"] if src in ("tests/test_fleet.py", "tests/test_survey.py") else [],
+        tags = ["requires-git"] if src in _NEEDS_GIT else [],
     )
     for src in glob(["tests/test_*.py"])
 ]

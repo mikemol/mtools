@@ -72,3 +72,14 @@ src/mikemol/katas/survey.py|survey-ignores-hooks-path|configured or _DEFAULT_HOO
 src/mikemol/katas/scaffold.py|scaffold-overwrites|if path\.exists\(\):|if False:|def=scaffold
 src/mikemol/katas/scaffold.py|template-keeps-its-placeholder|\.replace\(PLACEHOLDER, repo\)||def=render
 src/mikemol/katas/scaffold.py|hook-swapped-without-a-pass|if not target_passed:|if False:|def=install_hook
+
+# W877: the pulse hides standing warnings, shows (none) when nothing is left, and cuts the ranking.
+src/mikemol/katas/pulse.py|pulse-ignores-standing|and not any\(skip in line for skip in standing\)||def=warning_lines
+src/mikemol/katas/pulse.py|pulse-empty-section|\*\(shown or \[NONE_SHOWN\]\)|*shown|def=pulse
+src/mikemol/katas/pulse.py|pulse-ranking-uncut|\[:RANK_ROWS\],|[:1],|def=pulse
+
+# W877: a tick closes in order and releases the lock to the holder; the flush runs before the unlock.
+src/mikemol/katas/hosttick.py|end-skips-the-flush|    flush\(\)|    pass|def=end
+src/mikemol/katas/hosttick.py|end-always-passes-next|if closing\.next_step:|if True:|def=end
+src/mikemol/katas/hosttick.py|end-arms-without-a-job-file|if job is not None and job\.exists\(\):|if job is not None:|def=end
+src/mikemol/katas/hosttick.py|end-unlocks-the-wrong-holder|"--unlock", queue\.holder|"--unlock", "nobody"|def=end

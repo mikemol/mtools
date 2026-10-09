@@ -1369,3 +1369,5 @@
 2026-10-09T12:55:19Z  tick  W877 minted    -         "katas: pulse and tick end, the katas that act on the host queue and the nemik tools"  evidence=W796
 2026-10-09T12:55:26Z  tick  W875 advanced  collapse  "katas.fleet: status/flush/probe over throwaway git repos, 15/15; grid caught two defects of mine, fixed"
 2026-10-09T13:09:21Z  tick  W876 advanced  collapse  "katas gains inbox, survey and scaffold; the host archive no longer overwrites; 18/18"
+2026-10-09T13:25:14Z  tick  W878 minted    -         "katas: a command-line entry with the host katas' subcommand names, and where the host's policy values live"  evidence=W796
+2026-10-09T13:25:22Z  tick  W877 advanced  collapse  "katas pulse + hosttick land; every unique host subcommand is a module; 20/20"
