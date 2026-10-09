@@ -1393,3 +1393,4 @@
 2026-10-09T16:38:01Z  interrupt W886 minted    -         "mikemol-commit runs under a per-repo membudget hold on claim:path:<repo>/.git/mtools/commit, so two committers serialise instead of colliding on index.lock"  evidence=W884
 2026-10-09T16:38:01Z  interrupt W887 minted    -         "Re-base the paths-forward tick lock on the same claim primitive, as a separate label from the commit claim"  evidence=W884
 2026-10-09T16:39:44Z  tick  W885 advanced  unblock   "a blocked claim now names its holder; the commit mutex (W886) can use the existing claim, no new lease code"
+2026-10-09T16:59:20Z  tick  W886 advanced  unblock   "mikemol-commit now serialises committers on a per-repo fence claim; verified with the real fence; W884 closed, tick-lock re-base left as W887"

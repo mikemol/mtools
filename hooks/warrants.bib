@@ -7118,3 +7118,74 @@
   claim  = {The refresh is behind the gate witness: a commit the gate never ran for starts nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_post_commit_census.py -k test_an_unverified_tree_starts_no_census},
 }
+
+@misc{hooks-commit-launcher-lock-commit-runs-under-a-hold-on-a-claim-in-the-git-directory,
+  section = {commit_launcher_lock},
+  title  = {The fence is called `hold 0 claim:path:<gitdir>/mtools/commit --`, on a per-repo ledger},
+  claim  = {The fence is called `hold 0 claim:path:<gitdir>/mtools/commit --`, on a per-repo ledger.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_commit_runs_under_a_hold_on_a_claim_in_the_git_directory},
+}
+
+@misc{hooks-commit-launcher-lock-load-gate-is-off-and-the-wait-is-bounded,
+  section = {commit_launcher_lock},
+  title  = {A busy host must not stall a commit, and a wedged holder must end as a refusal},
+  claim  = {A busy host must not stall a commit, and a wedged holder must end as a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_load_gate_is_off_and_the_wait_is_bounded},
+}
+
+@misc{hooks-commit-launcher-lock-timeout-is-overridable,
+  section = {commit_launcher_lock},
+  title  = {MIKEMOL_COMMIT_LOCK_TIMEOUT sets the bound},
+  claim  = {MIKEMOL_COMMIT_LOCK_TIMEOUT sets the bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_timeout_is_overridable},
+}
+
+@misc{hooks-commit-launcher-lock-command-does-not-inherit-the-commit-ledger,
+  section = {commit_launcher_lock},
+  title  = {With none of the budget variables set, the command sees none, so its gate uses the host's},
+  claim  = {With none of the budget variables set, the command sees none, so its gate uses the
+            host's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_command_does_not_inherit_the_commit_ledger},
+}
+
+@misc{hooks-commit-launcher-lock-commands-own-budget-variables-are-put-back,
+  section = {commit_launcher_lock},
+  title  = {A caller's ledger and ceilings survive the hold untouched},
+  claim  = {A caller's ledger and ceilings survive the hold untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_commands_own_budget_variables_are_put_back},
+}
+
+@misc{hooks-commit-launcher-lock-arguments-still-reach-the-console-script,
+  section = {commit_launcher_lock},
+  title  = {Locking does not drop or re-split an argument},
+  claim  = {Locking does not drop or re-split an argument.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_arguments_still_reach_the_console_script},
+}
+
+@misc{hooks-commit-launcher-lock-command-is-told-it-holds-the-claim,
+  section = {commit_launcher_lock},
+  title  = {The marker is set inside, so a nested commit does not wait on its own parent},
+  claim  = {The marker is set inside, so a nested commit does not wait on its own parent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_command_is_told_it_holds_the_claim},
+}
+
+@misc{hooks-commit-launcher-lock-nested-call-does-not-take-a-second-claim,
+  section = {commit_launcher_lock},
+  title  = {With the marker already set the fence is never called: the claim is held above},
+  claim  = {With the marker already set the fence is never called: the claim is held above.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_a_nested_call_does_not_take_a_second_claim},
+}
+
+@misc{hooks-commit-launcher-lock-unbuilt-fence-commits-unlocked-and-says-so,
+  section = {commit_launcher_lock},
+  title  = {No fence venv: the commit runs, with one stderr line naming the missing lock},
+  claim  = {No fence venv: the commit runs, with one stderr line naming the missing lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_an_unbuilt_fence_commits_unlocked_and_says_so},
+}
+
+@misc{hooks-commit-launcher-lock-checkout-that-is-not-a-repository-commits-unlocked-and-says-so,
+  section = {commit_launcher_lock},
+  title  = {The git directory cannot be resolved: unlocked, said, and the command still runs},
+  claim  = {The git directory cannot be resolved: unlocked, said, and the command still runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_a_checkout_that_is_not_a_repository_commits_unlocked_and_says_so},
+}

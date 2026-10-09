@@ -18069,27 +18069,25 @@
     {
       "symbol": "W884",
       "title": "mikemol-commit holds a blocking per-repo mutex (fence.admit lease, total 1) across stage, gate and commit",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit",
         "fence",
         "locks"
       ],
-      "blocked_on": [
-        "W886"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Collisions today (2026-10-09): mikemol-commit takes no lock, so two sessions committing to one repo hit git's index.lock, the loser fails fast (rc=128) and its files stay STAGED, to be swept by the other's commit. Reuse, do not invent: mtools/fence/admit.py already is membudget's leasing model (lease from a total, or WAIT, owners gc'd when dead, fcntl-locked ledger); a mutex is a lease with TOTAL 1. Design: a ledger per repo (under .git, or the shared ledger with label repo:<name>:commit), mikemol-commit leases 1 for the whole stage+gate+commit and BLOCKS until it holds it (bounded wait, prints who holds it and since when), releases on exit or owner death. Then re-base the paths-forward tick lock (--lock, today fail-fast exit 3, stale after 30 min) on the same primitive so there is ONE repo mutex notion, with the tick and the commit as separate labels. Tests: two contenders serialise; a dead holder is reclaimed; the wait message names the holder. Coordinate with mtools-a1 (owns commit_kata and pathsforward).",
-      "evidence": "2026-10-09: 2026-10-09 TRIAGE against the tree: no new lease code is needed. fence.admit already has a zero-capacity CLAIM (label claim:path:<p>, decide() returns CLAIMED while held, dead owners gc'd, flock'd ledger) and mikemol-membudget hold N LABEL -- CMD admits, waits and runs a command under it with no cap. So the commit mutex is the launcher running mikemol-commit under hold on a per-repo ledger (W886); what is missing is that the wait message names the holder (W885). The tick-lock re-base (W887) cannot import fence: pathsforward is adopter-installed, so it waits on W317. Hold with maxload 0: the default load gate would stall commits on a busy host.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE against the tree: no new lease code is needed. fence.admit already has a zero-capacity CLAIM (label claim:path:<p>, decide() returns CLAIMED while held, dead owners gc'd, flock'd ledger) and mikemol-membudget hold N LABEL -- CMD admits, waits and runs a command under it with no cap. So the commit mutex is the launcher running mikemol-commit under hold on a per-repo ledger (W886); what is missing is that the wait message names the holder (W885). The tick-lock re-base (W887) cannot import fence: pathsforward is adopter-installed, so it waits on W317. Hold with maxload 0: the default load gate would stall commits on a busy host. | 2026-10-09: 2026-10-09: the commit mutex landed as W885 (holder named) and W886 (launcher under a fence claim). The tick-lock re-base is carried by W887, blocked on W317; it is a separate unit, not part of this title.",
       "issued_at": "2026-10-09T15:57:58Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W684",
-      "last_worked": "2026-10-09T16:38:08Z",
+      "last_worked": "2026-10-09T16:59:19Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
-      "completed": null
+      "completed": "20261009T165919Z"
     },
     {
       "symbol": "W885",
@@ -18115,7 +18113,7 @@
     {
       "symbol": "W886",
       "title": "mikemol-commit runs under a per-repo membudget hold on claim:path:<repo>/.git/mtools/commit, so two committers serialise instead of colliding on index.lock",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit",
@@ -18124,13 +18122,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In hooks/bin/mikemol-commit exec the fence venv's mikemol-membudget hold 0 with MEMBUDGET_FILE under the git dir, MEMBUDGET_MAXLOAD=0 and a bounded MEMBUDGET_TIMEOUT; an absent fence venv is said on stderr and the commit runs unlocked; test with two real contenders and a dead holder.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09: hooks/bin/mikemol-commit runs the console script under mikemol-membudget hold 0 claim:path:<gitdir>/mtools/commit on <gitdir>/mtools/commit.ledger (load and zram gates off, MIKEMOL_COMMIT_LOCK_TIMEOUT default 3600); every budget variable is put back or removed for the command; a nested call or an unbuilt fence or a non-git root runs unlocked with one stderr line. hooks/tests/test_commit_launcher_lock.py 10 tests, 10 warrants; bazel test test_commit_launcher_lock test_commit_launcher test_bar_fires pass. Measured with the real fence: a second contender waited, named the holder and its age, and ran after the first released.",
       "issued_at": "2026-10-09T16:38:01Z",
       "minted_during": "interrupt",
       "caused_by": "W884",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T16:59:15Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T165915Z"
     },
     {
       "symbol": "W887",

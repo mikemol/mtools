@@ -24,4 +24,52 @@ if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/mikemol-commit" ]; then
 fi
 
 real="$(realpath "$venv")"
-exec "$real/bin/python3" "$real/bin/mikemol-commit" "$@"
+entry=("$real/bin/python3" "$real/bin/mikemol-commit" "$@")
+
+# ⚑⚑ W886: A BLOCKING PER-REPO MUTEX, SO TWO COMMITTERS SERIALISE INSTEAD OF COLLIDING ON GIT'S
+# index.lock (the loser used to fail fast, rc=128, and leave its files STAGED for the winner's commit
+# to sweep up). It is fence's own CLAIM, not a new lock: `mikemol-membudget hold 0 claim:path:<p>`
+# admits a zero-capacity lease that excludes any other holder of the same path, waits for it, names
+# the holder in the wait line (W885), and is reaped when its owner dies.
+#
+# ⚑ THE LEDGER IS PER REPOSITORY, UNDER THE GIT DIRECTORY, with the load and zram gates OFF: a commit
+# must not stall because the host is busy, and the claim needs no capacity. The wait is bounded
+# (MIKEMOL_COMMIT_LOCK_TIMEOUT seconds, default one hour, longer than any gate) so a wedged holder
+# ends as a refusal that says so, not as a hang.
+#
+# ⚑⚑ NOTHING OF THAT CONFIGURATION REACHES THE COMMAND. `hold` hands its environment to the command it
+# runs, and the gate beneath it leases from the HOST ledger with the HOST's load and zram ceilings;
+# the commit ledger's file, a disabled load gate and a parent lease from another ledger would
+# silently misdirect every build the gate runs. So each variable is put back as it was, or removed
+# if it was unset, by the `env` between the hold and the command.
+#
+# ⚑ A NESTED CALL IS NOT QUEUED BEHIND ITS OWN PARENT: the marker says this process already holds the
+# claim, and a second claim on the same path would wait on itself.
+#
+# ⚑ AN ABSENT LOCK IS SAID, NEVER SILENT. A repository the launcher cannot resolve, or a fence venv
+# that is not built, runs the commit unlocked with one line on stderr, as before this existed: a
+# refused commit for want of a lock would be worse than the collision it prevents.
+fence="$root/bazel-bin/fence/.venv/bin/mikemol-membudget"
+if [ -z "${MIKEMOL_COMMIT_LOCK_HELD:-}" ]; then
+    if gitdir="$(git -C "$root" rev-parse --absolute-git-dir 2>/dev/null)" && [ -x "$fence" ]; then
+        mkdir -p "$gitdir/mtools"
+        # ⚑ `env` READS ITS -u OPTIONS ONLY BEFORE THE FIRST NAME=VALUE: after one, `-u` is taken for
+        # the command. Two lists, so the removals always come first.
+        removals=()
+        restore=(MIKEMOL_COMMIT_LOCK_HELD=1)
+        for name in MEMBUDGET_FILE MEMBUDGET_MAXLOAD MEMBUDGET_ZRAM_MAX MEMBUDGET_TIMEOUT \
+            MEMBUDGET_NOBLOCK MEMBUDGET_PARENT; do
+            if [ -n "${!name+x}" ]; then
+                restore+=("$name=${!name}")
+            else
+                removals+=(-u "$name")
+            fi
+        done
+        exec env -u MEMBUDGET_NOBLOCK -u MEMBUDGET_PARENT \
+            MEMBUDGET_FILE="$gitdir/mtools/commit.ledger" MEMBUDGET_MAXLOAD=0 MEMBUDGET_ZRAM_MAX=0 \
+            MEMBUDGET_TIMEOUT="${MIKEMOL_COMMIT_LOCK_TIMEOUT:-3600}" \
+            "$fence" hold 0 "claim:path:$gitdir/mtools/commit" -- env "${removals[@]}" "${restore[@]}" "${entry[@]}"
+    fi
+    echo "mikemol-commit: no commit lock (not a git checkout, or 'bazel build //fence:.venv' not run); committing unlocked" >&2
+fi
+exec "${entry[@]}"

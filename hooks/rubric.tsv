@@ -51,3 +51,4 @@ pairing-sections	The Section Agreement in the Pairing Check: Warrant Sections Ag
 commit-launcher	The Commit Launcher: A Stable Path to mikemol-commit That Hands Every Argument Through and Refuses, Naming the Repair, When the Built Venv or Its Script Is Absent
 inbound_launcher_root	Inbound-asks launcher root
 post_commit_census	Post-commit ledger census
+commit_launcher_lock	Commit launcher repo lock
