@@ -1,0 +1,84 @@
+
+@misc{katas-workstreams-directory-with-a-queue-is-a-workstream,
+  section = {workstreams},
+  title  = {The name is the directory's, two levels above the queue file},
+  claim  = {The name is the directory's, two levels above the queue file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_workstreams.py -k test_a_directory_with_a_queue_is_a_workstream},
+}
+
+@misc{katas-workstreams-directory-without-a-queue-is-not,
+  section = {workstreams},
+  title  = {A checkout with `.claude/` but no queue file, or no `.claude/`, is left out},
+  claim  = {A checkout with `.claude/` but no queue file, or no `.claude/`, is left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_workstreams.py -k test_a_directory_without_a_queue_is_not},
+}
+
+@misc{katas-workstreams-names-are-sorted,
+  section = {workstreams},
+  title  = {The order is the names', whatever order the filesystem lists them in},
+  claim  = {The order is the names', whatever order the filesystem lists them in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_workstreams.py -k test_the_names_are_sorted},
+}
+
+@misc{katas-workstreams-dot-named-directory-is-never-a-workstream,
+  section = {workstreams},
+  title  = {A hidden tool tree or a scratch checkout carrying a queue is not one},
+  claim  = {A hidden tool tree or a scratch checkout carrying a queue is not one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_workstreams.py -k test_a_dot_named_directory_is_never_a_workstream},
+}
+
+@misc{katas-commits-argv-names-the-repo-waypoint-and-subject,
+  section = {commits},
+  title  = {The program is first, then the repo, then each flag with its value},
+  claim  = {The program is first, then the repo, then each flag with its value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_the_argv_names_the_repo_waypoint_and_subject},
+}
+
+@misc{katas-commits-body-is-passed-only-when-there-is-one,
+  section = {commits},
+  title  = {An empty body adds no `--body`, so `mikemol-commit` sees no empty argument},
+  claim  = {An empty body adds no `--body`, so `mikemol-commit` sees no empty argument.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_a_body_is_passed_only_when_there_is_one},
+}
+
+@misc{katas-commits-explicit-paths-trail-the-argv,
+  section = {commits},
+  title  = {Paths come last; with none given, `mikemol-commit` defaults to the queue files itself},
+  claim  = {Paths come last; with none given, `mikemol-commit` defaults to the queue files itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_explicit_paths_trail_the_argv},
+}
+
+@misc{katas-commits-no-log-is-no-commit,
+  section = {commits},
+  title  = {A repo whose commit was never started has no state to report},
+  claim  = {A repo whose commit was never started has no state to report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_no_log_is_no_commit},
+}
+
+@misc{katas-commits-log-without-an-rc-line-is-running,
+  section = {commits},
+  title  = {The wrapper writes the rc only when the child ends, so output alone means still going},
+  claim  = {The wrapper writes the rc only when the child ends, so output alone means still going.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_a_log_without_an_rc_line_is_running},
+}
+
+@misc{katas-commits-rc-of-zero-is-done,
+  section = {commits},
+  title  = {A finished commit that exited 0},
+  claim  = {A finished commit that exited 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_an_rc_of_zero_is_done},
+}
+
+@misc{katas-commits-nonzero-rc-names-the-status,
+  section = {commits},
+  title  = {A refused commit reports the exit status it ended with},
+  claim  = {A refused commit reports the exit status it ended with.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_a_nonzero_rc_names_the_status},
+}
+
+@misc{katas-commits-only-the-last-line-decides,
+  section = {commits},
+  title  = {An `rc=` inside the output, before the trailer, does not end a still-running commit},
+  claim  = {An `rc=` inside the output, before the trailer, does not end a still-running commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_only_the_last_line_decides},
+}

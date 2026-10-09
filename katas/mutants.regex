@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED.
+
+# A dot-named directory is never a workstream: dropping the filter lists scratch checkouts.
+src/mikemol/katas/workstreams.py|dot-directories-listed|if not name\.startswith\("\."\)|if True|def=repos
+
+# The names are returned sorted: dropping the sort leaves them in filesystem order.
+src/mikemol/katas/workstreams.py|names-not-sorted|return sorted\(name for|return list(name for|def=repos
+
+# An empty body adds no `--body`: dropping the guard passes an empty argument to mikemol-commit.
+src/mikemol/katas/commits.py|empty-body-passed|if request\.body:|if True:|def=commit_argv
+
+# A log with no `rc=` line is RUNNING: reading it as done would call an in-flight commit finished.
+src/mikemol/katas/commits.py|running-read-as-done|return RUNNING|return DONE|def=commit_state
+
+# A non-zero rc is a failure naming the status: reading every rc as done hides a refused commit.
+src/mikemol/katas/commits.py|failure-read-as-done|int\(match\[1\]\) == 0|int(match[1]) >= 0|def=commit_state
+
+# A missing log is no commit at all: dropping the guard raises on a repo that never committed.
+src/mikemol/katas/commits.py|missing-log-not-guarded|if not log\.exists\(\):|if False:|def=commit_state

@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.katas: the host orchestration katas as a tracked distribution"
+subtitle = "What the host katas.py does that no mtools tool already does, with the witness that would catch each promise drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "KATAS.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
