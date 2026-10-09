@@ -1401,3 +1401,4 @@
 2026-10-09T18:43:57Z  tick  W889 minted    -         "A session working a card holds a fence claim on its touches tags, so an overlapping session sees the holder and the files instead of deferring by judgment"  evidence=W884
 2026-10-09T18:55:10Z  tick  W846 advanced  unblock   "atomize-imports keeps function-level imports local and brings the modules each function reads; 29 tests pass, mutants grid running"
 2026-10-09T18:58:56Z  tick  W846 advanced  collapse  "atomize-imports keeps imports local; dispatch-table closure base unchanged; 11 tests, 4 mutants, bazel green"
+2026-10-09T19:08:10Z  tick  W670 advanced  sweep     "importdag declares 6 defects on its split, all killed; 9 distributions still declare none"

@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe: use \S.
+
+# The eager/deferred split (W861 and its siblings): which imports fire when a module is imported.
+# A try* is a try; its handlers run on import; a definition's imports wait for a call.
+src/mikemol/importdag/resolve.py|try-star-not-a-try|\(ast\.Try, ast\.TryStar\)|(ast.Try,)|def=_executing_bodies
+src/mikemol/importdag/resolve.py|handlers-never-walked|\*\[h\.body for h in node\.handlers\]|*[]|def=_executing_bodies
+src/mikemol/importdag/resolve.py|eager-import-counted-deferred|eager\.update\(_statement_references\(node\)\)|deferred.update(_statement_references(node))|def=_sort
+src/mikemol/importdag/resolve.py|deferred-import-counted-eager|deferred\.update\(_statement_references\(inner\)\)|eager.update(_statement_references(inner))|def=_sort
+src/mikemol/importdag/resolve.py|halves-swapped|Split\(frozenset\(eager\), frozenset\(deferred\)\)|Split(frozenset(deferred), frozenset(eager))|def=split
+src/mikemol/importdag/resolve.py|import-level-invented|Reference\(0, alias\.name\) for alias in node\.names\}$|Reference(1, alias.name) for alias in node.names}|def=_statement_references
