@@ -1848,3 +1848,39 @@
   claim  = {A typo in the ceiling is refused by name, never read as off.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_zram.py -k test_a_ceiling_that_is_not_a_number_is_a_usage_error},
 }
+
+@misc{fence-admit-holder-note-names-the-owner-the-lease-and-the-age,
+  section = {admit_holder},
+  title  = {The sentence a person waiting on a commit can act on: who, which lease, how long},
+  claim  = {The sentence a person waiting on a commit can act on: who, which lease, how long.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_holder.py -k test_the_note_names_the_owner_the_lease_and_the_age},
+}
+
+@misc{fence-admit-holder-request-with-no-claim-gets-no-note,
+  section = {admit_holder},
+  title  = {A capacity wait keeps its capacity line: only a claim names a holder},
+  claim  = {A capacity wait keeps its capacity line: only a claim names a holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_holder.py -k test_a_request_with_no_claim_gets_no_note},
+}
+
+@misc{fence-admit-holder-unheld-claim-gets-no-note,
+  section = {admit_holder},
+  title  = {Nothing to name: a claim another label does not hold},
+  claim  = {Nothing to name: a claim another label does not hold.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_holder.py -k test_an_unheld_claim_gets_no_note},
+}
+
+@misc{fence-admit-holder-age-never-reads-negative,
+  section = {admit_holder},
+  title  = {A holder stamped after the waiter's clock (skew) reads as zero seconds, not a minus},
+  claim  = {A holder stamped after the waiter's clock (skew) reads as zero seconds, not a minus.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_holder.py -k test_the_age_never_reads_negative},
+}
+
+@misc{fence-admit-holder-blocked-claim-announces-its-holder,
+  section = {admit_holder},
+  title  = {The real wait: B asks for A's claim, is told A holds it, and is admitted once A releases},
+  claim  = {The real wait: B asks for A's claim, is told A holds it, and is admitted once A
+            releases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_holder.py -k test_a_blocked_claim_announces_its_holder},
+}

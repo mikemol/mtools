@@ -927,6 +927,28 @@ def _give_up_if_done(verdict: Verdict, why: str, waiting: Waiting, waited_s: flo
         raise RefusedError(verdict, EXIT_REFUSED, f"gave up after {waiting.timeout_s}s")
 
 
+def holder_note(snap: Ledger, request: Request, now: int) -> str | None:
+    """Name the live lease that holds `request`'s claim, as a waiter's announcement.
+
+    ⚑ A CLAIM WAIT IS ABOUT A HOLDER, NOT A CAPACITY: "need 0 MB, free N MB" says nothing a person
+    waiting on a commit lock can act on. The holder's owner (`pid:starttime`), lease id and age do.
+
+    Returns:
+        the sentence, or None when the request makes no claim or nothing holds it.
+
+    """
+    key = claim_key(request.label)
+    if key is None:
+        return None
+    held = next((item for item in snap.leases if claim_key(item.label) == key), None)
+    if held is None:
+        return None
+    return (
+        f"fence.admit: waiting (CLAIMED): {request.label} is held by {held.owner} "
+        f"(lease {held.lease_id}) for {max(0, now - held.epoch)} s"
+    )
+
+
 def acquire(store: Store, request: Request, waiting: Waiting = WAIT, host: Host = HOST) -> Lease:
     """Create the ledger if absent, wait for `request` to fit, then lease it; or refuse.
 
@@ -983,7 +1005,8 @@ def acquire(store: Store, request: Request, waiting: Waiting = WAIT, host: Host 
             if not announced:
                 free = (snap.total_mb or 0) - snap.used
                 host.announce(
-                    f"fence.admit: waiting ({why}, "
+                    holder_note(snap, request, int(time.time()))
+                    or f"fence.admit: waiting ({why}, "
                     f"load ok={load_fits}{zram[1]}): need {request.mb} MB, free {free} MB of "
                     f"{snap.total_mb} MB"
                 )

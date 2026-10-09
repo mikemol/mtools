@@ -44,3 +44,10 @@ src/mikemol/fence/label_lease.py|module-is-the-first-argument|return Path\(found
 
 # ...a ledger that is not valid UTF-8 is read lossily and is NO HISTORY, never an exception.
 src/mikemol/fence/label_lease.py|ledger-decoded-strictly|encoding="utf-8", errors="replace"\)\)|encoding="utf-8", errors="strict"))|def=read_rows
+
+# W885: a waiter on a held claim is told who holds it. A note for a request with no claim would
+# hide the capacity line; a note for an unheld claim would name nobody; an unclamped age reads
+# negative under clock skew.
+src/mikemol/fence/admit.py|note-for-any-request|if key is None:|if False:|def=holder_note
+src/mikemol/fence/admit.py|note-for-unheld-claim|if held is None:|if False:|def=holder_note
+src/mikemol/fence/admit.py|age-unclamped|max\(0, now - held\.epoch\)|now - held.epoch|def=holder_note

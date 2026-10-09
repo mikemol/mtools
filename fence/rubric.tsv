@@ -15,3 +15,4 @@ label_lease	Label Leases: A Label Sized From Its Own History, Read by the One Pa
 membudget_cli	The membudget Console Script: Bash's Verbs and Exit Codes, and One Ledger Two Clients Honour
 git_env	git_env: No GIT_* Survives a Runner, and the Hazard It Closes Is Measured Against a Decoy
 admit_zram	The Zram Gate: a Start Waits While zram Is at or Above Its Ceiling and Takes No Place in Line, an Unreadable zram Admits, and a Gate Left Off Never Reads It
+admit_holder	A held claim names its holder
