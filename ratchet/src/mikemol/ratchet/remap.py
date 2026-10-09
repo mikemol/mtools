@@ -54,17 +54,18 @@ discard is not rewritten at all.
 from __future__ import annotations
 
 import json
-import os
-import stat
 import subprocess
-import tempfile
 from dataclasses import dataclass
 from enum import Enum
-from pathlib import Path
 from typing import TYPE_CHECKING, cast
+
+from mikemol.atomicwrite import durable
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from pathlib import Path
+
+    from mikemol.atomicwrite.durable import Staged
 
 type Json = bool | int | float | str | list[Json] | dict[str, Json] | None
 type Segment = str | int
@@ -274,38 +275,33 @@ def _verdict(item: _Loaded) -> tuple[bool, list[str]]:
     return bool(non_path or collisions), lines
 
 
-def _discard(temps: list[tuple[Path, Path]]) -> None:
-    for temp, _ in temps:
-        temp.unlink(missing_ok=True)
-
-
-def _stage(target: Path, text: str, temps: list[tuple[Path, Path]]) -> None:
-    """Write `text` to a temp beside `target` with its mode; record it in `temps` at once."""
-    fd, name = tempfile.mkstemp(prefix=f".{target.name}.", suffix=".tmp", dir=target.parent)
-    temp = Path(name)
-    temps.append((temp, target))
-    with os.fdopen(fd, "w", encoding="utf-8") as handle:
-        handle.write(text)
-    temp.chmod(stat.S_IMODE(target.stat().st_mode))
+def _discard(temps: list[Staged]) -> None:
+    for staged in temps:
+        durable.discard(staged)
 
 
 def _write_all(root: Path, outputs: list[tuple[str, str]]) -> list[str]:
     """Write every output to a sibling temp, then replace them all into place.
 
+    ⚑ THE TWO PHASES ARE THIS FUNCTION'S, THE STEPS ARE atomicwrite's (mtools:W857): `stage` writes
+    each temp flushed and fsynced with the target's mode (it removes its own temp if it fails), and
+    `commit` renames one. Only the ORDER lives here: nothing is committed until every output is
+    staged. Encoded to bytes first, so the file is UTF-8 whatever the process locale.
+
     Returns:
         report lines on failure (empty on success).
 
     """
-    temps: list[tuple[Path, Path]] = []
+    temps: list[Staged] = []
     for rel, text in outputs:
         try:
-            _stage(root / rel, text, temps)
+            temps.append(durable.stage(root / rel, text.encode("utf-8")))
         except OSError as exc:
             _discard(temps)
             return [f"{rel}: error: {exc}", "nothing written"]
-    for idx, (temp, target) in enumerate(temps):
+    for idx, staged in enumerate(temps):
         try:
-            temp.replace(target)
+            durable.commit(staged)
         except OSError as exc:
             _discard(temps[idx:])
             done = ", ".join(outputs[j][0] for j in range(idx)) or "none"

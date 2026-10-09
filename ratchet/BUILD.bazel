@@ -23,12 +23,21 @@ exports_files([
 # `mikemol.ratchet` by LAYOUT rather than by an installed `.pth`, which is the mechanism that
 # retires the `mypy_path`/`explicit_package_bases` pair (⟡mtools-drop-mypypath): that pair exists
 # because mypy reads the filesystem and an editable install's import hook is invisible to it.
+# ⚑ SIBLINGS = the distributions this one imports (mtools:W857: `mikemol-atomicwrite`, the staged
+# write that replaced remap's own temp-and-chmod). It is stdlib-only, so a gate that adopts the
+# ratchet still adds nothing third-party. The pyproject declares the edge for uv; kept in step by
+# hand (mtools:W562, the gradekit, debtplan and treeio precedent).
+SIBLINGS = [
+    "//atomicwrite:atomicwrite",
+]
+
 py_library(
     name = "ratchet",
     srcs = glob(["src/mikemol/ratchet/**/*.py"]),
     data = glob(["src/mikemol/ratchet/py.typed"], allow_empty = True),
     imports = ["src"],
     visibility = ["//visibility:public"],
+    deps = SIBLINGS,
 )
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. The thesis in MODULE.bazel is that a
@@ -63,8 +72,11 @@ py_library(
         deps = [
             ":ratchet",
             dev_requirement("pytest"),
-        ],
+        ] + SIBLINGS,
         imports = ["src"],
+        # ⚑ Two source roots plus legacy implicit `__init__.py` files would turn `mikemol` into a
+        # regular package from the first root and shadow the namespace (W566).
+        legacy_create_init = 0,
         # ⚑ `test_remap` NEEDS AN UNDECLARED HOST TOOL: `git`, from the sandbox PATH. It builds
         # its own repository in tmp_path, so the workspace `.git` is NOT needed — only the
         # binary. The tag makes that dependency visible and filterable rather than ambient.
@@ -152,6 +164,8 @@ py_binary(
     main = "src/mikemol/ratchet/cli.py",
     imports = ["src"],
     visibility = ["//visibility:public"],
+    deps = SIBLINGS,
+    legacy_create_init = 0,
 )
 
 # ⚑⚑ mypy IN THE GRAPH, ONE ACTION PER DISTRIBUTION. It was the last check running outside — no
@@ -169,7 +183,7 @@ py_binary(
     deps = [
         dev_requirement("mypy"),
         dev_requirement("pytest"),
-    ],
+    ] + SIBLINGS,
 )
 
 sh_test(
@@ -198,7 +212,8 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/ratchet/**"]),
+    # ⚑ The dev venv carries the siblings, so the mutation gate imports them.
+    srcs = glob(["src/mikemol/ratchet/**"]) + SIBLINGS,
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

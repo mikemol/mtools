@@ -96,6 +96,10 @@ def dist_checks(venv_data = [], venv_tags = []):
             "@mikemol_check_ruff//:bin",
         ] + native.glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
         size = "small",
+        # ⚑ The ratchet_cli it runs now carries a sibling (atomicwrite, W857): two source roots plus
+        # legacy implicit `__init__.py` files make `mikemol` a regular package from the first root
+        # and shadow the namespace (W566), so `mikemol.ratchet` stopped resolving.
+        legacy_create_init = 0,
     )
 
     # W233: every requirements.txt pin (the `_deps` hub's input) agrees with uv.lock (the host

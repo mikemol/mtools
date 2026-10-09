@@ -1314,3 +1314,4 @@
 2026-10-09T03:21:37Z  interrupt W862 minted    -         "The queue's standing 'warrants' line is stale and no verb edits the standing list"  evidence=W834
 2026-10-09T03:31:06Z  tick  W862 advanced  unblock   "the standing list gains a writer (--standing-set) and its stale warrants rule is corrected through it"
 2026-10-09T03:41:09Z  tick  W857 advanced  collapse  "atomicwrite exposes stage/commit/discard (write_atomic = stage then commit) so ratchet's two-phase write can use them; ratchet's swap is next"
+2026-10-09T03:52:17Z  tick  W857 advanced  collapse  "ratchet/remap swapped onto atomicwrite stage/commit/discard; refusal rule keeps the mikemol namespace with two roots"

@@ -29,7 +29,14 @@ classifiers = [
 # ⚑ SO ITS ABSENCE IS A REFUSAL, NOT A CRASH. Measured: with neither present, the census died
 # with a raw `FileNotFoundError` traceback and exit 1, the same status as "new keys refused".
 # It now exits `cli.CANNOT_CENSUS` (2) and names the path it tried and both ways to supply one.
-dependencies = []
+# ⚑⚑ ONE SIBLING SINCE mtools:W857 (operator 2026-10-06: a dependency between mtools packages is
+# right and good): `mikemol-atomicwrite`, the stdlib-only staged write, replaces remap's own
+# temp-and-chmod (which also lacked the fsync before the rename). It is resolved by uv as a
+# NON-editable path source below (an editable install hides the sibling from mypy); in Bazel it is
+# a py_library dep, so the pip hubs stay independent of it and requirements.txt is deliberately
+# NOT regenerated. The "no runtime dependencies" stance above was about third-party weight in every
+# adopting gate; this adds none.
+dependencies = ["mikemol-atomicwrite"]
 
 
 [project.scripts]
@@ -48,6 +55,9 @@ Homepage = "https://github.com/mikemol/mtools"
 # `uv sync` would not produce. Found when `fence/` was bootstrapped for the first time and site 1
 # refused it: three venvs carried ruff, three pyprojects named it nowhere.
 dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.uv.sources]
+mikemol-atomicwrite = { path = "../atomicwrite" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -170,6 +180,13 @@ namespace-packages = ["src/mikemol", "tests"]
 preview = true
 select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+
+# ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (mtools:
+# W857, as treeio and debtplan declare, W547). Left to detection, a venv that has it installed
+# classifies it with this package's own imports while the sandbox (no venv) puts it in its own
+# block: the ratchet and the per-edit hook then demand opposite layouts of the same file.
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.atomicwrite"]
 
 # ⚑⚑ `@pytest.fixture()` CALLED, NOT BARE — AND THE TWO CHECKERS DISAGREE ABOUT THIS, so the
 # disagreement has to be settled in config rather than re-argued per file. `pytest.fixture` is an
