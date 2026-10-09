@@ -1363,3 +1363,5 @@
 2026-10-09T12:13:22Z  tick  W873 advanced  collapse  "mikemol-procrun leaf lands, treeio depends on it; gen-warrants can now birth a dist's first bib; 108/108"
 2026-10-09T12:22:53Z  tick  W874 minted    -         "katas: the detached commit (start_commit and wait) on mikemol-procrun, writing the log and the rc line commit_state reads"  evidence=W872
 2026-10-09T12:23:03Z  tick  W872 advanced  unblock   "mikemol-katas distribution lands: workstreams + commits, 12/12; W874 is the detached commit"
+2026-10-09T12:39:34Z  tick  W875 minted    -         "katas: status, probe and flush over the workstreams, on the detached commit"  evidence=W796
+2026-10-09T12:39:40Z  tick  W874 advanced  collapse  "katas gets its detached commit: waiter + detach on mikemol-procrun, a real child polled to done; 25/25"

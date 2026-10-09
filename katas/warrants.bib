@@ -82,3 +82,95 @@
   claim  = {An `rc=` inside the output, before the trailer, does not end a still-running commit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commits.py -k test_only_the_last_line_decides},
 }
+
+@misc{katas-waiter-log-gets-the-output-then-an-rc-line,
+  section = {waiter},
+  title  = {Both streams are captured, and the last line is the status `commit_state` reads},
+  claim  = {Both streams are captured, and the last line is the status `commit_state` reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_the_log_gets_the_output_then_an_rc_line},
+}
+
+@misc{katas-waiter-clean-run-reads-as-done,
+  section = {waiter},
+  title  = {An exit of 0 is `done` to the reader},
+  claim  = {An exit of 0 is `done` to the reader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_a_clean_run_reads_as_done},
+}
+
+@misc{katas-waiter-removals-are-removed-after-a-success,
+  section = {waiter},
+  title  = {A probe's temp index goes whatever the command did},
+  claim  = {A probe's temp index goes whatever the command did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_the_removals_are_removed_after_a_success},
+}
+
+@misc{katas-waiter-removals-are-removed-after-a-failure,
+  section = {waiter},
+  title  = {The stale-lock lesson: a failing command still leaves nothing behind},
+  claim  = {The stale-lock lesson: a failing command still leaves nothing behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_the_removals_are_removed_after_a_failure},
+}
+
+@misc{katas-waiter-removal-that-is-already-gone-is-not-an-error,
+  section = {waiter},
+  title  = {The cleanup tolerates a path the command already removed},
+  claim  = {The cleanup tolerates a path the command already removed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_a_removal_that_is_already_gone_is_not_an_error},
+}
+
+@misc{katas-waiter-command-that-outlasts-its-timeout-is-recorded-as-timed-out,
+  section = {waiter},
+  title  = {The child is abandoned, the log says so, and the status is the one `mikemol-commit` uses},
+  claim  = {The child is abandoned, the log says so, and the status is the one `mikemol-commit`
+            uses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_a_command_that_outlasts_its_timeout_is_recorded_as_timed_out},
+}
+
+@misc{katas-waiter-leading-rm-pairs-are-peeled-off-the-command,
+  section = {waiter},
+  title  = {`--rm PATH` pairs come first; the rest is the command, flags and all},
+  claim  = {`--rm PATH` pairs come first; the rest is the command, flags and all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_leading_rm_pairs_are_peeled_off_the_command},
+}
+
+@misc{katas-waiter-lone-trailing-rm-is-part-of-the-command,
+  section = {waiter},
+  title  = {A `--rm` with no path after it is not a pair},
+  claim  = {A `--rm` with no path after it is not a pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_a_lone_trailing_rm_is_part_of_the_command},
+}
+
+@misc{katas-waiter-no-command-is-a-usage-error,
+  section = {waiter},
+  title  = {A log with nothing to run exits 2 and writes nothing},
+  claim  = {A log with nothing to run exits 2 and writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter.py -k test_no_command_is_a_usage_error},
+}
+
+@misc{katas-detach-waiter-argv-runs-the-module-on-the-log-then-the-command,
+  section = {detach},
+  title  = {The interpreter, the module, the log, then the command, in that order},
+  claim  = {The interpreter, the module, the log, then the command, in that order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_detach.py -k test_the_waiter_argv_runs_the_module_on_the_log_then_the_command},
+}
+
+@misc{katas-detach-each-removal-becomes-a-rm-pair-before-the-command,
+  section = {detach},
+  title  = {The cleanup paths ride ahead of the command so the waiter peels them first},
+  claim  = {The cleanup paths ride ahead of the command so the waiter peels them first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_detach.py -k test_each_removal_becomes_a_rm_pair_before_the_command},
+}
+
+@misc{katas-detach-start-empties-a-stale-log-before-the-child-runs,
+  section = {detach},
+  title  = {An old `rc=` line must not read as this run's outcome},
+  claim  = {An old `rc=` line must not read as this run's outcome.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_detach.py -k test_start_empties_a_stale_log_before_the_child_runs},
+}
+
+@misc{katas-detach-started-command-finishes-and-its-log-says-done,
+  section = {detach},
+  title  = {The real detached path: the child runs the waiter, and the log ends with `rc=0`},
+  claim  = {The real detached path: the child runs the waiter, and the log ends with `rc=0`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_detach.py -k test_a_started_command_finishes_and_its_log_says_done},
+}

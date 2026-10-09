@@ -21,14 +21,19 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCY YET: standard library only.
-dependencies = []
+# ⚑ ONE SIBLING (mtools:W874): the process seam, `mikemol-procrun`, resolved by uv as a NON-editable
+# path source below (an editable install hides the sibling from mypy); in Bazel it is a py_library
+# dep, so the pip hubs stay independent of it and requirements.txt is deliberately NOT regenerated.
+dependencies = ["mikemol-procrun"]
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
 dev = ["pytest", "mypy", "ruff==0.16.6"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -74,6 +79,12 @@ preview = true
 select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
+# ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (the
+# treeio and ratchet precedent, W857): left to detection, a venv that has it installed classifies it
+# with this package's own imports while the sandbox (no venv) puts it in its own block.
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
+
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
 
@@ -87,3 +98,17 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/test_workstreams.py" = ["assert"]
 "tests/test_commits.py" = ["assert"]
+"tests/test_waiter.py" = ["assert", "suspicious-subprocess-import"]
+# ⚑ `waiter` names `subprocess.TimeoutExpired`, the exception `capture` documents for a child that
+# outlasts its timeout; it starts no child except through `capture`.
+"src/mikemol/katas/waiter.py" = ["suspicious-subprocess-import"]
+# ⚑ STARTING A DETACHED CHILD IS `detach`'S ONE RESPONSIBILITY (a Popen that outlives the caller,
+# which `mikemol.procrun.capture` cannot be: it waits), and the exemption is scoped to that file.
+# The argv is built here from the interpreter and literals plus the caller's argv, never a shell.
+"src/mikemol/katas/detach.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ `test_detach` starts a real detached child through `detach.start` and waits, bounded, for the
+# log's rc line, so it reads the same module-level exemptions as its subject.
+"tests/test_detach.py" = ["assert"]

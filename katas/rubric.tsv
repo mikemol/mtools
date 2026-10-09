@@ -2,3 +2,5 @@
 # key <TAB> heading title
 workstreams	The Workstreams: A Directory Is One When It Carries a Queue, Dot-Named Ones Never Are, and the Names Come Back Sorted
 commits	The Detached Commit: The mikemol-commit Argv Names Only What Was Asked, and a Log Reads Running, Done or Failed From Its Last rc Line
+waiter	The Waiter: A Command's Output Then rc=N Lands in Its Log, a Timeout Is Recorded as 124, and the Cleanup Runs Whatever the Result
+detach	The Detached Start: The Waiter Argv Carries the Log, the Cleanup Pairs and the Command, and a Started Command's Log Reads Running Then Done

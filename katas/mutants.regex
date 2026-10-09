@@ -22,3 +22,18 @@ src/mikemol/katas/commits.py|failure-read-as-done|int\(match\[1\]\) == 0|int(mat
 
 # A missing log is no commit at all: dropping the guard raises on a repo that never committed.
 src/mikemol/katas/commits.py|missing-log-not-guarded|if not log\.exists\(\):|if False:|def=commit_state
+
+# W874: the detached commit's body. A timeout is recorded with 124, the status mikemol-commit uses.
+src/mikemol/katas/waiter.py|timeout-not-recorded-as-124|status, body = TIMED_OUT, |status, body = 1, |def=run
+
+# The cleanup removes its paths whatever the result: skipping it leaves a stale index.lock behind.
+src/mikemol/katas/waiter.py|removals-not-removed|path\.unlink\(missing_ok=True\)|pass|def=run
+
+# The log ends with the child's own status: a constant rc hides a failed commit.
+src/mikemol/katas/waiter.py|rc-line-constant|rc=\{status\}|rc=0|def=run
+
+# A `--rm` with no path after it is the command's own word, not a pair.
+src/mikemol/katas/waiter.py|lone-rm-taken-as-a-pair|len\(rest\) >= _PAIR|len(rest) >= 1|def=split_removals
+
+# A started run empties its log first, so a stale rc line cannot read as this run's outcome.
+src/mikemol/katas/detach.py|stale-log-kept|log\.write_text\("", encoding="utf-8"\)|pass|def=start

@@ -17,13 +17,20 @@ exports_files([
     "uv.lock",
 ])
 
-# ⚑ NO `deps`: the shipping hub is empty on purpose; the modules are standard library only.
+# ⚑ SIBLINGS = the distributions this one imports (mtools:W874: `mikemol-procrun`, the process seam).
+# Bazel carries the edge as a py_library dep, the pip hubs stay independent of it, and the pyproject
+# declares it for uv; kept in step by hand (mtools:W562, the treeio and ratchet precedent).
+SIBLINGS = [
+    "//procrun:procrun",
+]
+
 py_library(
     name = "katas",
     srcs = glob(["src/mikemol/katas/**/*.py"]),
     data = glob(["src/mikemol/katas/py.typed"], allow_empty = True),
     imports = ["src"],
     visibility = ["//visibility:public"],
+    deps = SIBLINGS,
 )
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
@@ -48,8 +55,11 @@ py_library(
             ":katas",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
-        ],
+        ] + SIBLINGS,
         imports = ["src"],
+        # ⚑ Two source roots plus legacy implicit `__init__.py` files would turn `mikemol` into a
+        # regular package from the first root and shadow the namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -115,7 +125,7 @@ py_binary(
     deps = [
         dev_requirement("mypy"),
         dev_requirement("pytest"),
-    ],
+    ] + SIBLINGS,
 )
 
 sh_test(
@@ -142,7 +152,8 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/katas/**"]),
+    # ⚑ The dev venv carries the siblings, so the mutation gate imports them.
+    srcs = glob(["src/mikemol/katas/**"]) + SIBLINGS,
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
