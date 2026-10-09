@@ -4,9 +4,9 @@
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
   "counter": 866,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T04:59:55Z",
-  "job_id": "ae83af74",
-  "predecessor_job_id": "f4a17ba1",
+  "heartbeat": "2026-10-09T06:20:51Z",
+  "job_id": "de619aaa",
+  "predecessor_job_id": "ae83af74",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -17656,12 +17656,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Start with main-style scripts under tests/: list files under a tests/ path that have a top-level main guard or no test_ function, for aeternum (the one repo the census judged); record the list as evidence.",
-      "evidence": "",
+      "next_bounded_step": "Arm 2/3 for aeternum, then the same arm-1 grep for amr-skills (the repo with 50+ probe_/bench_ scripts under tests/) as an unjudged-by-census but readable-by-grep count.",
+      "evidence": "2026-10-09: 2026-10-09 arm 1 (main-style scripts) for aeternum: /tests holds 1 file (test_tools.py, 13 test_ functions); the census's '20 test files' are mostly processed/legacy-spring/tests. grep for a top-level 'if __name__ ==' or '--selftest' over aeternum/tests and aeternum/processed/legacy-spring/tests: 0 hits; grep -L for files with no 'def test_': 0 files. So aeternum has no main-style scripts under tests/; its 165 findings are format/lint/typing only. Positive control: the same grep on amr-skills/tests/bench_parse.py hits (a main-style script), probe_cuda.py does not. Not done: asserts outside a runner, and no warrant per test (aeternum has no warrants.bib check run).",
       "issued_at": "2026-10-09T06:20:14Z",
       "minted_during": "tick",
       "caused_by": "W864",
-      "last_worked": null,
+      "last_worked": "2026-10-09T06:36:48Z",
       "ticks_blocked": 0
     }
   ],

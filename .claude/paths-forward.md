@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 866 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:a0827db60edf10b1`
+counter 866 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:5b3a7f923ba4d23c`
 
 | # | symbol | status |
 |---|---|---|
@@ -865,8 +865,8 @@ counter 866 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:a082
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W866** (ready) Count the three old-style arms the census cannot see (main-style scripts under tests/, asserts
    outside a runner, no warrant per test) for the repos it judged
-   - next: Start with main-style scripts under tests/: list files under a tests/ path that have a top-level main guard
-     or no test_ function, for aeternum (the one repo the census judged); record the list as evidence.
+   - next: Arm 2/3 for aeternum, then the same arm-1 grep for amr-skills (the repo with 50+ probe_/bench_ scripts under
+     tests/) as an unjudged-by-census but readable-by-grep count.
 3. **W796** (ready) Graduate the host katas into an mtools distribution to the house standards
    - next: Per W865's split (proc, commits, typing, queue, bazelize, cli): first check each group against
      hooks/commit_kata.py, debtplan and mikemol-commit for overlap (collapse before port), then port the smallest group
