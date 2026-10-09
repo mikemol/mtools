@@ -1322,3 +1322,5 @@
 2026-10-09T04:29:27Z  tick  W863 advanced  sweep     "mtools has no old-style test module; grep hits were fixture strings (3 read, 2 unread)"
 2026-10-09T04:44:30Z  tick  W864 minted    -         "Write the old-style-tests audit as a tracked debtplan ledger source: per repo, count test files that ruff format would change, defs without annotations, and probe_/bench_ or main-style scripts living under tests/"  evidence=W795
 2026-10-09T04:44:35Z  tick  W795 advanced  sweep     "first cross-repo reading: old-style tests exist (amr-skills probe scripts, gabion, aeternum); counts need W864's tracked counter"
+2026-10-09T04:59:19Z  tick  W865 minted    -         "Inventory katas.py: list its subcommands, line count and what each reads and writes, as the plan for the distribution split"  evidence=W796
+2026-10-09T04:59:31Z  tick  W865 advanced  sweep     "katas.py outlined and split proposed; W796 next step sharpened"

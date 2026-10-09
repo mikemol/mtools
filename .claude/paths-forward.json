@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 864,
+  "counter": 865,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T03:21:50Z",
   "job_id": "f4a17ba1",
@@ -16141,12 +16141,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Move ~/github/.claude/katas/katas.py (subcommands status, commit, typing, mypy, visit, tick) into its own mtools distribution (we atomize), with typed modules, tests, a warrants.bib entry per test, the mutation gate, uv.lock and BUILD.bazel. It replaces the session scratch scripts fleet_strict.py, fleet_debtplan.py and the ad hoc commit and tick sequences. Keep one command per kata",
-      "evidence": "2026-10-05: 2026-10-05 compound katas added to katas.py: wp (add and fill a waypoint, refuses a title over 150 chars), archive, ship (verify under the house flags, re-measure and mint, detached commit), flush (detached queue commits wherever they should land), pulse, and tick end now = heartbeat, ledger, W2, flush, unlock. Detached commits log to katas/commits/<repo>.log; status shows IN-FLIGHT from .git/index.lock. Lessons recorded as code: flush must skip live-session repos (linux-sources), red-gate repos (gcalculus, rosettapkg, resumes, el-openglo), untracked or ignored queues (substrate, paperkit), and pathspec only files git tracks. Untested so far: archive, ship, tick end. | 2026-10-06: 2026-10-06 gate kata added (operator rule: a repo whose commit gate fails gets a card that blocks its whole open ledger): katas.py gate red/green. Findings recorded as code: the card uses blocked_on only (an enables list made nemik's UmbrellaBlockShape flag life:W16, which cites el-openglo waypoints), repairs enable the card instead of waiting on it, green = card done then --bump-blocked. Applied to resumes:W11 (6 blocked), summit:W193 (69), el-openglo:W452 (278), gcalculus:W87 (58, W85 a repair), rosettapkg:W120 (20); nemik-rank now shows each card as that repo's only ready item (el-openglo down=310). Still to automate: opening the card from a failed commit attempt, and closing it from a landed one. | 2026-10-06: 2026-10-06 INCIDENT, fixed in the kata: katas.py typing el-openglo measured with mypy, which died with rc 2 (Duplicate module named __main__: templates/ vs scripts/), emitted one error record, and the kata read it as the repo's whole debt (1 file, 1 finding); the mint then RETIRED 178 real typing cards. Restored the same hour from the saved ledger (typing --keep-ledger: 177 reopened, the node_modules card retired). Guards now in code: measure() returns None on any mypy exit other than 0 or 1 and nothing is written or minted; --keep-ledger mints from ledgers/<repo>.json for repos whose mypy needs a per-repo invocation (el-openglo, substrate, resumes). Also: node_modules is excluded from the mypy walk and the plan; gate green prints counts, not the --bump-blocked page. Still open: a repo-specific mypy invocation for el-openglo, substrate and resumes instead of a frozen ledger (mtools:W791 holds per-repo inputs). | 2026-10-06: 2026-10-06: katas.py status reads <repo>.log, which a commit run through a background tool call never writes (it prints to the tool's output file), so status showed mtools and linux-sources FAILED from a 2026-10-05 log after later commits landed (f3dc767, 2654ea2). Graduate with: commit always writes its log and rc, and prints the BuildBuddy invocation id; failures read through mikemol-buildlog --failures (W827).",
+      "next_bounded_step": "Per W865's split (proc, commits, typing, queue, bazelize, cli): first check each group against hooks/commit_kata.py, debtplan and mikemol-commit for overlap (collapse before port), then port the smallest group (proc) as a typed mtools distribution with tests, warrants, mutants, uv.lock, BUILD.",
+      "evidence": "2026-10-05: 2026-10-05 compound katas added to katas.py: wp (add and fill a waypoint, refuses a title over 150 chars), archive, ship (verify under the house flags, re-measure and mint, detached commit), flush (detached queue commits wherever they should land), pulse, and tick end now = heartbeat, ledger, W2, flush, unlock. Detached commits log to katas/commits/<repo>.log; status shows IN-FLIGHT from .git/index.lock. Lessons recorded as code: flush must skip live-session repos (linux-sources), red-gate repos (gcalculus, rosettapkg, resumes, el-openglo), untracked or ignored queues (substrate, paperkit), and pathspec only files git tracks. Untested so far: archive, ship, tick end. | 2026-10-06: 2026-10-06 gate kata added (operator rule: a repo whose commit gate fails gets a card that blocks its whole open ledger): katas.py gate red/green. Findings recorded as code: the card uses blocked_on only (an enables list made nemik's UmbrellaBlockShape flag life:W16, which cites el-openglo waypoints), repairs enable the card instead of waiting on it, green = card done then --bump-blocked. Applied to resumes:W11 (6 blocked), summit:W193 (69), el-openglo:W452 (278), gcalculus:W87 (58, W85 a repair), rosettapkg:W120 (20); nemik-rank now shows each card as that repo's only ready item (el-openglo down=310). Still to automate: opening the card from a failed commit attempt, and closing it from a landed one. | 2026-10-06: 2026-10-06 INCIDENT, fixed in the kata: katas.py typing el-openglo measured with mypy, which died with rc 2 (Duplicate module named __main__: templates/ vs scripts/), emitted one error record, and the kata read it as the repo's whole debt (1 file, 1 finding); the mint then RETIRED 178 real typing cards. Restored the same hour from the saved ledger (typing --keep-ledger: 177 reopened, the node_modules card retired). Guards now in code: measure() returns None on any mypy exit other than 0 or 1 and nothing is written or minted; --keep-ledger mints from ledgers/<repo>.json for repos whose mypy needs a per-repo invocation (el-openglo, substrate, resumes). Also: node_modules is excluded from the mypy walk and the plan; gate green prints counts, not the --bump-blocked page. Still open: a repo-specific mypy invocation for el-openglo, substrate and resumes instead of a frozen ledger (mtools:W791 holds per-repo inputs). | 2026-10-06: 2026-10-06: katas.py status reads <repo>.log, which a commit run through a background tool call never writes (it prints to the tool's output file), so status showed mtools and linux-sources FAILED from a 2026-10-05 log after later commits landed (f3dc767, 2654ea2). Graduate with: commit always writes its log and rc, and prints the BuildBuddy invocation id; failures read through mikemol-buildlog --failures (W827). | 2026-10-09: 2026-10-09 atomized: W865 inventoried katas.py; the port starts with an overlap check, then the proc group.",
       "issued_at": "2026-10-05T23:50:15Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-06T18:07:54Z",
+      "last_worked": "2026-10-09T04:59:31Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -17617,6 +17617,29 @@
       "caused_by": "W795",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W865",
+      "title": "Inventory katas.py: list its subcommands, line count and what each reads and writes, as the plan for the distribution split",
+      "status": "done",
+      "enables": [
+        "W796"
+      ],
+      "touches": [
+        "katas",
+        "hostkit",
+        "standards"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "none: W796 carries the port.",
+      "evidence": "2026-10-09: 2026-10-09 read-only outline of ~/github/.claude/katas/katas.py (840 lines, 14 subcommands: status pulse commit typing mypy visit wp archive ship precommit bazelize probe flush gate tick; stdlib only: argparse json re shutil signal subprocess sys time pathlib). Proposed split by responsibility: (1) proc: run, repos, pf, capped, venv_python (subprocess + discovery); (2) commits: commit_state, prepare_commit, commit, start_commit, wait, probe, precommit_survey, flush, status, pending, queue_pending; (3) typing: mypy_targets, house_mypy, ruff_binary, house_ruff, closure_frontier, mypy, measure, duplicate_files, count_errors, typing, ship; (4) queue: open_waypoints, blockers_of, wp, archive, visit, pulse, gate_red, gate_green, zram_use, tick; (5) bazelize; (6) cli: main with the sub-parsers. Several of these overlap mtools tools already (commit_kata.py in hooks, debtplan, mikemol-commit): W796 must check each before porting (collapse candidates), as the duplicate-capability audit found for atomicwrite. Not measured: which functions are dead, and which tests exist (none seen in the outline).",
+      "issued_at": "2026-10-09T04:59:19Z",
+      "minted_during": "tick",
+      "caused_by": "W796",
+      "last_worked": "2026-10-09T04:59:27Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T045927Z"
     }
   ],
   "residue": [
