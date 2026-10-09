@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:bfb6b5efdec2fe9b`
+counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:baf93d9f49bd089e`
 
 | # | symbol | status |
 |---|---|---|
@@ -866,9 +866,9 @@ counter 868 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:bfb6
    - next: Slice 1: rules_py/pinned.bzl repository rule pinned_files(remote, commit, prefix): git archive of the commit,
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W796** (ready) Graduate the host katas into an mtools distribution to the house standards
-   - next: Per W865's split (proc, commits, typing, queue, bazelize, cli): first check each group against
-     hooks/commit_kata.py, debtplan and mikemol-commit for overlap (collapse before port), then port the smallest group
-     (proc) as a typed mtools distribution with tests, warrants, mutants, uv.lock, BUILD.
+   - next: Compare katas.py prepare_commit/commit bodies against commit_kata.prepare/commit to confirm equivalence (or
+     list differences); then check the typing group against debtplan + pycheck_census, queue group against pathsforward;
+     only the residue is ported (proc first).
 3. **W798** (ready) Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs
    captured by BuildBuddy
    - next: Rule (operator 2026-10-06): a bazel gate never globs or declares a directory as input; name every file

@@ -1342,3 +1342,4 @@
 2026-10-09T08:06:21Z  tick  W867 advanced  sweep     "three letters written (earley, memmesh, linux-sources); six repos have no channel; pycheck defect carded as W868"
 2026-10-09T08:21:36Z  tick  W868 advanced  sweep     "reproduced the relative-import failure and measured stage-beside and mypy --shadow-file; shadow-file is the better shape"
 2026-10-09T08:39:26Z  tick  W868 advanced  unblock   "pycheck judges relative imports in existing files via mypy --shadow-file; linux-sources case now admitted"
+2026-10-09T08:51:11Z  tick  W796 advanced  collapse  "katas commits group overlaps hooks.commit_kata by name: collapse candidate; letter to linux-sources that the pycheck fix landed"
