@@ -41,9 +41,11 @@ Usage:  count_test_functions.py <dist>              # prints one integer: the te
 from __future__ import annotations
 
 import ast
+import json
 import re
 import sys
 from pathlib import Path
+from typing import cast
 
 # ⚑ ARGV CARRIES THE PROGRAM, THEN EITHER THE DISTRIBUTION OR THE MODE AND THE DISTRIBUTION.
 _ARGC_COUNT = 2
@@ -53,6 +55,8 @@ _PAIRING = "--pairing"
 # ⚑⚑ ANCHORED, FOR THE REASON THE GATE ANCHORS ITS COUNT: a `claim` quoting `@misc{` is prose.
 # The key is captured here so no later step has to split an untyped fragment to find it.
 _ENTRY = re.compile(r"^@misc\{([^,\s]+),(.*?)(?=^@misc\{|\Z)", re.MULTILINE | re.DOTALL)
+# ⚑ A FIELD OF THE ENTRY: `section = {key}` at the start of a line, so a claim quoting one is prose.
+_SECTION_FIELD = re.compile(r"^\s*section\s*=\s*\{([^}]*)\}", re.MULTILINE)
 # ⚑ A FIELD, NOT A WORD. A claim mentioning "check" is not a check — 8 entries wide in hooks.
 _CHECK_FIELD = re.compile(r"^\s*check\s*=\s*\{([^}]*)\}", re.MULTILINE)
 # ⚑ EVERY SPELLING THE FIVE LEDGERS CARRY TODAY IS THIS ONE: `cmd:<python> -m pytest <module> -k
@@ -165,18 +169,109 @@ def check_pairs(bib: str) -> tuple[set[tuple[str, str]], list[str]]:
     return pairs, findings
 
 
+def warrant_sections(bib: str) -> set[str]:
+    """Read the `section` each warrant files under, from the entries' own fields.
+
+    ⚑ A FIELD OF AN ENTRY, NOT A MATCH ANYWHERE: the gate's old `grep -o 'section = {…}'` also
+    matched a claim that quoted one. Each entry is read on its own, so prose about a section is
+    not a section.
+
+    Returns:
+        the distinct section keys.
+
+    """
+    found: set[str] = set()
+    for entry in _ENTRY.finditer(bib):
+        body: str = entry.group(2)
+        field = _SECTION_FIELD.search(body)
+        if field is not None:
+            key: str = field.group(1)
+            found.add(key.strip())
+    return found
+
+
+def _json_record(line: str) -> dict[str, str]:
+    """Narrow one rubric JSON line to its string fields.
+
+    Returns:
+        the `key` and `title` strings it carries; a field that is not a string is left out.
+
+    """
+    try:
+        loaded: object = json.loads(line)
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(loaded, dict):
+        return {}
+    record = cast("dict[str, object]", loaded)
+    return {name: value for name, value in record.items() if isinstance(value, str)}
+
+
+def rubric_rows(dist: Path) -> list[tuple[str, str]] | None:
+    """Read the distribution's rubric as (key, title) rows.
+
+    ⚑ A ROW WITH NO TAB IS A KEY WITH AN EMPTY TITLE: an edit tool that drops a trailing TAB turns
+    `key<TAB>Title` into one welded word, which `cut -f1` read as a key that matched nothing.
+
+    Returns:
+        the rows in file order, or None when the distribution has no rubric. Comment lines (a
+        leading `#`) and blank lines are not rows.
+
+    """
+    tsv = dist / "rubric.tsv"
+    if tsv.is_file():
+        lines = (ln for ln in tsv.read_text(encoding="utf-8").splitlines() if ln.strip())
+        return [
+            (key.strip(), title.strip())
+            for key, _, title in (ln.partition("\t") for ln in lines if not ln.startswith("#"))
+        ]
+    jsonl = dist / "rubric.jsonl"
+    if jsonl.is_file():
+        records = (
+            _json_record(ln) for ln in jsonl.read_text(encoding="utf-8").splitlines() if ln.strip()
+        )
+        return [(record.get("key", ""), record.get("title", "")) for record in records]
+    return None
+
+
+def section_findings(dist: Path) -> list[str]:
+    """Compare the sections the warrants file under with the rubric's rows, both ways.
+
+    ⚑ THE GATE'S `grep | cut | diff`, AS A PARSE THAT NAMES WHAT IS WRONG (W834). It ran only at
+    commit, after the whole hermetic suite, so a lost TAB in a rubric row cost ten minutes. Here
+    it rides the pairing the preflight already runs.
+
+    Returns:
+        SECTION WITHOUT RUBRIC ROW, RUBRIC ROW WITHOUT WARRANT, and RUBRIC ROW WITHOUT TITLE, each
+        sorted; empty when the distribution has no rubric (the root and atoms carry none).
+
+    """
+    rows = rubric_rows(dist)
+    if rows is None:
+        return []
+    keys = {key for key, _ in rows}
+    sections = warrant_sections((dist / "warrants.bib").read_text(encoding="utf-8"))
+    return [
+        *(f"SECTION WITHOUT RUBRIC ROW {s}" for s in sorted(sections - keys)),
+        *(f"RUBRIC ROW WITHOUT WARRANT {k}" for k in sorted(keys - sections)),
+        *(f"RUBRIC ROW WITHOUT TITLE {k}" for k, title in sorted(rows) if not title),
+    ]
+
+
 def pairing(dist: Path) -> list[str]:
     """Compare what the warrants run against what the suite defines, in both directions.
 
     Returns:
         every finding, sorted within its kind: checkless or unparseable warrants, then ORPHAN
-        WARRANT (a check naming no test), then UNWARRANTED (a test no check names).
+        WARRANT (a check naming no test), then UNWARRANTED (a test no check names), then the
+        rubric's section findings.
 
     """
     checks, findings = check_pairs((dist / "warrants.bib").read_text(encoding="utf-8"))
     tests = suite_pairs(dist)
     findings.extend(f"ORPHAN WARRANT {m}::{n}" for m, n in sorted(checks - tests))
     findings.extend(f"UNWARRANTED {m}::{n}" for m, n in sorted(tests - checks))
+    findings.extend(section_findings(dist))
     return findings
 
 

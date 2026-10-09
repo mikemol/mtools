@@ -6935,3 +6935,52 @@
   claim  = {No count_test_functions.py at the root: the prune has nothing to be checked against.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_crosscheck.py -k test_prune_without_the_checker_is_refused},
 }
+
+@misc{hooks-pairing-sections-rubric-that-agrees-with-the-warrants-is-clean,
+  section = {pairing-sections},
+  title  = {Every warrant section has a titled row and every row has a warrant: no finding},
+  claim  = {Every warrant section has a titled row and every row has a warrant: no finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_rubric_that_agrees_with_the_warrants_is_clean},
+}
+
+@misc{hooks-pairing-sections-section-with-no-rubric-row-is-named,
+  section = {pairing-sections},
+  title  = {A warrant filed under a section the rubric does not list is refused by name},
+  claim  = {A warrant filed under a section the rubric does not list is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_section_with_no_rubric_row_is_named},
+}
+
+@misc{hooks-pairing-sections-rubric-row-with-no-warrant-is-named,
+  section = {pairing-sections},
+  title  = {A heading nothing is filed under is refused by name},
+  claim  = {A heading nothing is filed under is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_rubric_row_with_no_warrant_is_named},
+}
+
+@misc{hooks-pairing-sections-row-that-lost-its-tab-or-title-is-named,
+  section = {pairing-sections},
+  title  = {An edit tool that drops a trailing TAB welds key and title, or leaves no title at all},
+  claim  = {An edit tool that drops a trailing TAB welds key and title, or leaves no title at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_row_that_lost_its_tab_or_title_is_named},
+}
+
+@misc{hooks-pairing-sections-section-quoted-inside-a-claim-is-prose-not-a-section,
+  section = {pairing-sections},
+  title  = {The gate's old grep read a section field anywhere; an entry's own field is the only one},
+  claim  = {The gate's old grep read a section field anywhere; an entry's own field is the only one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_section_quoted_inside_a_claim_is_prose_not_a_section},
+}
+
+@misc{hooks-pairing-sections-distribution-without-a-rubric-has-no-section-findings,
+  section = {pairing-sections},
+  title  = {The root and atoms carry a ledger and no rubric; their pairing is unchanged},
+  claim  = {The root and atoms carry a ledger and no rubric; their pairing is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_distribution_without_a_rubric_has_no_section_findings},
+}
+
+@misc{hooks-pairing-sections-jsonl-rubric-is-read-the-same-way,
+  section = {pairing-sections},
+  title  = {The structured rubric is the format that is arriving; its keys and titles are compared},
+  claim  = {The structured rubric is the format that is arriving; its keys and titles are compared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_jsonl_rubric_is_read_the_same_way},
+}

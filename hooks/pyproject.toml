@@ -567,3 +567,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # as one word each; the call is bounded by a timeout and never goes through a shell.
 "src/mikemol/hooks/warrant_crosscheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_warrant_crosscheck.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# ⚑ THE SECTION-AGREEMENT WITNESSES RUN THE ROOT'S COUNTER AS A PROGRAM (W834), as the gate does:
+# an argv of the interpreter, the repo's script and temp distribution paths, never a shell.
+"tests/test_pairing_sections.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

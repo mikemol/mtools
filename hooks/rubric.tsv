@@ -47,3 +47,4 @@ bazel-admit	The Bazel Admission: Heavy Commands Wait on Zram Headroom and a Memo
 pycheck-format	The Format Mode: The Project's Own Formatter Applied to One File, Written Only When It Changes, and a File in No Project Never Reads as Clean
 snapshot	The Snapshot: An Immutable Tree at One Fixed Namespaced Path, Locked Against a Second Writer, Updated by Its Difference, and Never the Real Index
 warrant-crosscheck	The Prune Cross-Check: What --prune Would Drop Must Equal the Pairing Check's Orphan Set, a Disagreement or a Missing Checker Refuses Before Anything Is Written, and --dry-run Shows It
+pairing-sections	The Section Agreement in the Pairing Check: Warrant Sections Against Rubric Rows, Named Both Ways, a Lost Tab or Title Caught Before Commit

@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:5162dee56a99f1b3`
+counter 856 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:da59a450ba7a2e04`
 
 | # | symbol | status |
 |---|---|---|
@@ -34,10 +34,10 @@ counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:5162
 | 25 | W825 | ready |
 | 26 | W830 | ready |
 | 27 | W831 | ready |
-| 28 | W834 | ready |
-| 29 | W841 | ready |
-| 30 | W845 | ready |
-| 31 | W846 | ready |
+| 28 | W841 | ready |
+| 29 | W845 | ready |
+| 30 | W846 | ready |
+| 31 | W856 | ready |
 | 32 | W319 | blocked |
 | 33 | W317 | blocked |
 | 34 | W576 | blocked |
@@ -828,23 +828,24 @@ counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:5162
 | 819 | W828 | done |
 | 820 | W829 | done |
 | 821 | W832 | done |
-| 822 | W835 | done |
-| 823 | W836 | done |
-| 824 | W837 | done |
-| 825 | W838 | done |
-| 826 | W839 | done |
-| 827 | W840 | done |
-| 828 | W842 | done |
-| 829 | W844 | done |
-| 830 | W847 | done |
-| 831 | W848 | done |
-| 832 | W849 | done |
-| 833 | W850 | done |
-| 834 | W851 | done |
-| 835 | W852 | done |
-| 836 | W853 | done |
-| 837 | W854 | done |
-| 838 | W855 | done |
+| 822 | W834 | done |
+| 823 | W835 | done |
+| 824 | W836 | done |
+| 825 | W837 | done |
+| 826 | W838 | done |
+| 827 | W839 | done |
+| 828 | W840 | done |
+| 829 | W842 | done |
+| 830 | W844 | done |
+| 831 | W847 | done |
+| 832 | W848 | done |
+| 833 | W849 | done |
+| 834 | W850 | done |
+| 835 | W851 | done |
+| 836 | W852 | done |
+| 837 | W853 | done |
+| 838 | W854 | done |
+| 839 | W855 | done |
 
 ## waypoints
 
@@ -1003,15 +1004,7 @@ counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:5162
      Remaining: the other bazel-gated repos' precommits (aeternum, gcalculus once its scaffold lands, rosettapkg,
      paperkit, luthen, ...), each calling mikemol-build-failure on its failing bazel branch via the sha-pinned
      mikemol-hooks wheel; survey with katas.py precommit. Mind each repo's own rulings on what its summary may print.
-28. **W834** (ready) the warrant-sections-versus-rubric-sections agreement is a test under //`<dist>`:all, so the
-   preflight catches a lost tab in a minute and not at commit
-   - next: 2026-10-06: a trailing TAB in an Edit new_string is dropped by the edit tool, so a rubric row re-inserted
-     with its key+TAB anchor came back tab-less, twice. The only check that sees it is .githooks/pre-commit lines
-     ~711-719 (grep -v ^# rubric.tsv | cut -f1 | sort -u against the warrant sections), run at commit time after ~10
-     minutes of gate. Make it a test in the owning distribution (every rubric key equals a warrant section, every row
-     has a title) so //`<dist>`:all runs it; the structured reader replaces grep|cut when rubric.jsonl lands (W833).
-     Interim habit: anchor an edit on text that does not end in whitespace.
-29. **W841** (ready) bazel admits each ACTION before it materializes data into zram, letting running actions finish and
+28. **W841** (ready) bazel admits each ACTION before it materializes data into zram, letting running actions finish and
    zram's LRU GC drain between them
    - next: Operator 2026-10-06 (replaces the watchdog/stop-a-running-job design): the key is an admission check prior to
      the executor copying data into zram, catching actions as they are about to begin; existing actions continue; zram's
@@ -1026,18 +1019,23 @@ counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:5162
      prototype (2) for tests and (1) for the heavy macro targets on mtools, measure whether the heavy zram writers are
      covered, and only then decide whether the remainder needs remote execution (remote_executor is already configured).
      Still open from the earlier measurement: the staged-tree wrapper path and adoption in the other bazel repos.
-30. **W845** (ready) A repo's gate reads an immutable snapshot of what it gates, never the live working tree: a tree
+29. **W845** (ready) A repo's gate reads an immutable snapshot of what it gates, never the live working tree: a tree
    object from a temporary index (git write-tree), materialized by git archive and gated there, so an edit mid-run
    cannot invalidate or poison a run
    - next: mtools: mikemol-snapshot REPO [--working|--index]: GIT_INDEX_FILE temp index -> git write-tree -> git archive
      into the fixed namespaced path under flock, stamping .tree; bazel_admit and the precommit hook run bazel there;
      pinned_files reuses the same materializer.
-31. **W846** (ready) atomize-imports hoists function-level and re-export imports to module level; put them at the top of
+30. **W846** (ready) atomize-imports hoists function-level and re-export imports to module level; put them at the top of
    the function that reads them
    - next: Change _Rewriter so a conflicted deferred import stays in its function and the function gains local imports
      (after the docstring) for every package module it reads; do the same for re-export targets (needed) read inside a
      function; keep module-level needed only for module-level reads. Test: the old hoist test now expects a local import
      of the other module; add a witness that a dispatch-table module's closure roots equal the original's
+31. **W856** (ready) Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check
+   reads sections
+   - next: Delete the diff of warrant sections against rubric keys at .githooks/pre-commit lines ~671-683 (a live hook:
+     pairing now names the same disagreement); confirm count_test_functions.py --pairing is run for every distribution
+     there first; deps first, the live file last
 32. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257
@@ -2384,35 +2382,37 @@ counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:5162
    invocation id) into context on exit 2
 821. **W832** (done) the commit kata ends with one verdict line: COMMITTED `<sha>`, REFUSED `<cause>`, or NOT COMMITTED,
    verified against HEAD, never the last gate stage
-822. **W835** (done) mikemol-gen-warrants adds the missing rubric row itself, so no one edits the rubric by hand
-823. **W836** (done) bazel admits or waits on host resources itself: a tools/bazel wrapper waits on zram headroom and
+822. **W834** (done) the warrant-sections-versus-rubric-sections agreement is a test under //`<dist>`:all, so the
+   preflight catches a lost tab in a minute and not at commit
+823. **W835** (done) mikemol-gen-warrants adds the missing rubric row itself, so no one edits the rubric by hand
+824. **W836** (done) bazel admits or waits on host resources itself: a tools/bazel wrapper waits on zram headroom and
    takes a membudget lease before every heavy command
-824. **W837** (done) zram headroom becomes a membudget admission condition, so waiting on it is membudget's wait, not a
+825. **W837** (done) zram headroom becomes a membudget admission condition, so waiting on it is membudget's wait, not a
    poll loop in bazel_admit
-825. **W838** (done) dist_checks' :venv check has a generous timeout, not the 60 s a small test gets
-826. **W839** (done) the warrant check is set equality (A symmetric-difference B = empty), not a comparison of counts
-827. **W840** (done) mikemol-gen-warrants --dry-run lists the warrants --prune would drop, and checks them against the
+826. **W838** (done) dist_checks' :venv check has a generous timeout, not the 60 s a small test gets
+827. **W839** (done) the warrant check is set equality (A symmetric-difference B = empty), not a comparison of counts
+828. **W840** (done) mikemol-gen-warrants --dry-run lists the warrants --prune would drop, and checks them against the
    pairing check's orphan set (A symmetric-difference B = empty)
-828. **W842** (done) pycodemod rewrites imports: atomize-imports turns a flat sibling import into a package import, and
+829. **W842** (done) pycodemod rewrites imports: atomize-imports turns a flat sibling import into a package import, and
    verifies none remains
-829. **W844** (done) mikemol-commit prints no verdict when git commit times out: it crashes with
+830. **W844** (done) mikemol-commit prints no verdict when git commit times out: it crashes with
    subprocess.TimeoutExpired after 3000 s, so the caller reads a traceback instead of NOT COMMITTED repo: timed out
-830. **W847** (done) mikemol-paths-forward has no verb to record a skipped symbol: a numbering gap fails --check forever
+831. **W847** (done) mikemol-paths-forward has no verb to record a skipped symbol: a numbering gap fails --check forever
    (gcalculus W30)
-831. **W848** (done) The paths-forward writer admits each waypoint transition through a Rego realizability policy: a
+832. **W848** (done) The paths-forward writer admits each waypoint transition through a Rego realizability policy: a
    coordinate and residue ledger, never a bare reject
-832. **W849** (done) W848 unit: the model carries optional reference_arm, population and command, validated on --update
-833. **W850** (done) W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa
+833. **W849** (done) W848 unit: the model carries optional reference_arm, population and command, validated on --update
+834. **W850** (done) W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa
    tests per gate
-834. **W851** (done) W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing
+835. **W851** (done) W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing
    only a drop missing gate, arm or reason
-835. **W852** (done) W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable marks
+836. **W852** (done) W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable marks
    ledger beside the queue
-836. **W853** (done) W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once
+837. **W853** (done) W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once
    per waypoint and gate
-837. **W854** (done) W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named
+838. **W854** (done) W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named
    waypoints and a gate
-838. **W855** (done) mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged
+839. **W855** (done) mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged
    deletion from the pathspec
 
 ## residue

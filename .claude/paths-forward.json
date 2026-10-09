@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 855,
+  "counter": 856,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-08T15:32:56Z",
   "job_id": "9ee8838f",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 81,
+      "ticks_blocked": 82,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 84,
+      "ticks_blocked": 85,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 17,
+      "ticks_blocked": 18,
       "completed": null
     },
     {
@@ -16963,13 +16963,13 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
       "symbol": "W834",
       "title": "the warrant-sections-versus-rubric-sections agreement is a test under //<dist>:all, so the preflight catches a lost tab in a minute and not at commit",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -16978,13 +16978,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "2026-10-06: a trailing TAB in an Edit new_string is dropped by the edit tool, so a rubric row re-inserted with its key+TAB anchor came back tab-less, twice. The only check that sees it is .githooks/pre-commit lines ~711-719 (grep -v ^# rubric.tsv | cut -f1 | sort -u against the warrant sections), run at commit time after ~10 minutes of gate. Make it a test in the owning distribution (every rubric key equals a warrant section, every row has a title) so //<dist>:all runs it; the structured reader replaces grep|cut when rubric.jsonl lands (W833). Interim habit: anchor an edit on text that does not end in whitespace.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: the section agreement is now part of count_test_functions.py --pairing, which preflight.sh already runs per distribution (line 192) and the gate runs over the set: warrant_sections reads each entry's own section field (not the old grep, which also matched a claim quoting one), rubric_rows reads rubric.tsv or rubric.jsonl, and section_findings names SECTION WITHOUT RUBRIC ROW, RUBRIC ROW WITHOUT WARRANT and RUBRIC ROW WITHOUT TITLE (the welded-key row a dropped TAB leaves); a distribution without a rubric has none. Ran clean over all 32 ledgers' distributions. 7 tests (hooks test_pairing_sections), 7 warrants. Left for later: the now-redundant grep|cut check at .githooks/pre-commit lines ~671-683 (a live hook, deps first, not edited here); and the 'test under //<dist>:all' form was not needed since the preflight already runs the pairing.",
       "issued_at": "2026-10-06T19:36:56Z",
       "minted_during": "interrupt",
       "caused_by": "W833",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T01:15:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T011509Z"
     },
     {
       "symbol": "W835",
@@ -17430,6 +17431,25 @@
       "last_worked": "2026-10-09T00:34:36Z",
       "ticks_blocked": 0,
       "completed": "20261009T003436Z"
+    },
+    {
+      "symbol": "W856",
+      "title": "Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check reads sections",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Delete the diff of warrant sections against rubric keys at .githooks/pre-commit lines ~671-683 (a live hook: pairing now names the same disagreement); confirm count_test_functions.py --pairing is run for every distribution there first; deps first, the live file last",
+      "evidence": "",
+      "issued_at": "2026-10-09T01:15:15Z",
+      "minted_during": "tick",
+      "caused_by": "W834",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

@@ -1296,3 +1296,5 @@
 2026-10-09T00:34:43Z  tick  W855 advanced  unblock   "mikemol-commit keeps a staged deletion in the pathspec (hooks commit_kata.tracked accepts HEAD); gated commit follows"
 2026-10-09T00:43:40Z  tick  W803 advanced  unblock   "--delivered: version 0.0.<highest done> derived from the queue (slice 1 of W803)"
 2026-10-09T01:04:39Z  tick  W840 advanced  unblock   "gen-warrants --prune is set-equal to the pairing check's orphans or refuses; --dry-run shows it; W844 closed on existing evidence"
+2026-10-09T01:15:15Z  tick  W856 minted    -         "Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check reads sections"  evidence=W834
+2026-10-09T01:15:15Z  tick  W834 advanced  collapse  "section agreement joins the pairing check (named both ways, jsonl-aware); the preflight catches a lost TAB in seconds; removal of the redundant pre-commit grep minted as W856"
