@@ -27,11 +27,14 @@ HOST queue), `bazelize` (host templates), and the policy lists `EXCLUDES`, `EXCL
 
 ## Precondition found while writing this
 
-`hooks/.venv/bin/mikemol-commit` DOES NOT EXIST (ls: no such file), although hooks' pyproject
-declares `mikemol-commit = "mikemol.hooks.commit_kata:main"`. The venv predates that script or was
-not re-synced. Any katas edit that shells to `mikemol-commit` must first get the venv re-synced
-(`uv sync` in hooks; hooks is a live tool, so do it deliberately). Until then the module runs as
-`hooks/.venv/bin/python3 -m mikemol.hooks.commit_kata`.
+`hooks/.venv/bin/mikemol-commit` DOES NOT EXIST (ls: no such file): the dev venv carries a stale
+script set. The LIVE hooks run from the bazel-built venv (`bazel-bin/hooks/.venv`), which does have
+`mikemol-commit`, but only behind the `bazel-bin` convenience symlink, which `bazel clean` deletes.
+So a katas edit must not name either path. Resolution (2026-10-09, operator ruling on W871 allowed
+the edit): `hooks/bin/mikemol-commit` is a tracked launcher at a stable path, the way the hook
+launchers beside it are; it resolves the built venv's real path and refuses with the repair named
+when the venv or its script is absent. Katas calls `/home/mikemol/github/mtools/hooks/bin/mikemol-commit`.
+The module has no `__main__` guard, so `python -m mikemol.hooks.commit_kata` does nothing.
 
 ## Not known
 

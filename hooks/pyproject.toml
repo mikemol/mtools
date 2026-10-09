@@ -474,6 +474,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # shell.
 "tests/test_bin_launchers_argv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ W796: `test_commit_launcher.py`'s subject is what the tracked `hooks/bin/mikemol-commit` launcher
+# does WHEN EXECUTED (it execs the built venv's console script, or refuses naming the repair), so
+# running it is the case. Literal launcher path derived from `__file__`, explicit env, no shell.
+"tests/test_commit_launcher.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑ W184/W361: `test_gate_suite.py`'s subject is a piece of `.githooks/pre-commit` RUN under the
 # gate's own `set -euo pipefail`, so launching bash is the case. The script is text lifted from the
 # tracked gate plus literals; the cwd is `tmp_path` and the env is PATH alone.

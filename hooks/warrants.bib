@@ -7018,3 +7018,24 @@
   claim  = {A new file has no real path to shadow, so it is still unjudged: the recorded limit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_relative_import_in_a_file_not_yet_on_disk_keeps_the_staged_copy},
 }
+
+@misc{hooks-commit-launcher-every-argument-reaches-the-console-script,
+  section = {commit-launcher},
+  title  = {The exec'd script gets the entry path then each argument, none dropped or re-split},
+  claim  = {The exec'd script gets the entry path then each argument, none dropped or re-split.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_every_argument_reaches_the_console_script},
+}
+
+@misc{hooks-commit-launcher-absent-venv-refuses-and-names-the-repair,
+  section = {commit-launcher},
+  title  = {No built venv is a NOT COMMITTED line on stderr and exit 1, never a silent success},
+  claim  = {No built venv is a NOT COMMITTED line on stderr and exit 1, never a silent success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_an_absent_venv_refuses_and_names_the_repair},
+}
+
+@misc{hooks-commit-launcher-venv-without-the-console-script-refuses,
+  section = {commit-launcher},
+  title  = {A venv built before the script existed (the dev venv's state) is refused the same way},
+  claim  = {A venv built before the script existed (the dev venv's state) is refused the same way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_a_venv_without_the_console_script_refuses},
+}

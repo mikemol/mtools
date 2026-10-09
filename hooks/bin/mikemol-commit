@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑ A TRACKED LAUNCHER AT A STABLE PATH FOR `mikemol-commit` (mtools:W796), the way the hook
+# launchers beside it are. The console script exists only inside the built venv under `bazel-bin`,
+# a convenience symlink into an output base that `bazel clean` deletes; a caller that names the
+# artifact directly (the host katas) would break on a routine command. The dev venv `hooks/.venv`
+# carries a stale set of scripts and has no `mikemol-commit`, so it is not an answer either.
+#
+# ⚑ IT RESOLVES THE REAL PATH, for the reason the hook launchers do: CPython reached through the
+# convenience symlink prints a platform-libraries warning on every run.
+#
+# ⚑ ABSENCE IS A REFUSAL WITH THE REPAIR NAMED, never silence: a commit that did not happen must not
+# read as one that did (the kata's whole point is one line saying what happened).
+set -euo pipefail
+
+root="${MIKEMOL_ROOT:-$(cd "$(dirname "$0")/../.." && pwd)}"
+venv="$root/bazel-bin/hooks/.venv"
+
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/mikemol-commit" ]; then
+    echo "NOT COMMITTED: the hooks venv is not built; run 'bazel build //hooks:.venv' in $root" >&2
+    exit 1
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/mikemol-commit" "$@"

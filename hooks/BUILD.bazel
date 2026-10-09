@@ -107,6 +107,8 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             "bin/mikemol-hook-shellcheck",
             # W824: the compound kata, READ and EXECUTED by test_hooks_preflight.
             "bin/mikemol-hooks-preflight",
+            # W796: the stable launcher for `mikemol-commit`, EXECUTED by test_commit_launcher.
+            "bin/mikemol-commit",
             # ⚑ W238: the standing launcher and its policy, EXECUTED by test_standing_facts with
             # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
             "bin/mikemol-hook-standing",

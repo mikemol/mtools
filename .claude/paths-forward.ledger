@@ -1353,3 +1353,4 @@
 2026-10-09T10:21:32Z  tick  W870 advanced  unblock   "--gate-red/--gate-green wired into the pathsforward CLI; 50/50; W796's code prerequisites are done"
 2026-10-09T10:33:07Z  tick  W871 minted    -         "Operator: apply or delegate the host katas.py shrink, and choose the typing measurement and ledger location"  evidence=W796
 2026-10-09T10:33:14Z  tick  W796 advanced  sweep     "host-edit list written (design note); operator decision carded as W871; mikemol-commit script missing from hooks venv noted"
+2026-10-09T10:54:15Z  tick  W796 advanced  unblock   "operator ruling recorded (W871); hooks/bin/mikemol-commit launcher + tests land, 68/68; host katas edit next"
