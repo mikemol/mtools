@@ -16,6 +16,12 @@ entry) refuses the statement the same way.
 ⚑ A STDLIB-SHADOWING SIBLING IS REFUSED, NOT RENAMED: a sibling called `random` would turn every
 `import random` in the corpus into a claim about this package.
 
+⚑⚑ AN IMPORT INSIDE A FUNCTION STAYS INSIDE IT (W846). `import pkg.mod` in a function binds `pkg`
+locally for all of it, so the function also imports, at its top and after its docstring, every
+package module it reads; the module's own imports are renamed and never added to. Hoisting the
+import instead made each lazy path load the whole engine and grew every dispatch-table claim's
+import cone (paperkit:W296, found by diffing per-claim closure roots).
+
 ⚑ A SECOND IMPORT OF THE SAME MODULE IN ONE BODY IS DROPPED ONLY WHEN IT CARRIES NO COMMENT LINES:
 the origin of the dropped line's commentary is never lost to tidiness.
 """
@@ -31,7 +37,6 @@ import libcst as cst
 from libcst.helpers import get_full_name_for_node
 from libcst.metadata import (
     Assignment,
-    GlobalScope,
     MetadataWrapper,
     PositionProvider,
     ScopeProvider,
@@ -101,8 +106,6 @@ class _Planned:
     modules: list[str]
     bound: dict[str, str]
     refusal: str = ""
-    deferred: bool = False
-    scope: Scope | None = None
 
 
 class _Planner(cst.CSTVisitor):
@@ -118,7 +121,6 @@ class _Planner(cst.CSTVisitor):
         self.planned: list[_Planned] = []
         self.rewrites: dict[cst.Name, str] = {}
         self.exported: set[str] = set()
-        self.reads: list[tuple[Scope, Scope]] = []
 
     @override
     def visit_Assign(self, node: cst.Assign) -> None:
@@ -179,18 +181,6 @@ class _Planner(cst.CSTVisitor):
         for plan in self.planned:
             if not plan.refusal:
                 plan.refusal = self._ambiguous(plan) or self._prove(plan, by_node)
-        # ⚑ A FUNCTION-LEVEL `import pkg.mod` BINDS `pkg` LOCALLY FOR THE WHOLE FUNCTION: an earlier
-        # read of `pkg.other.x` in it, resolved to a module-level import, then raises
-        # UnboundLocalError (measured on paperkit's project.py `main`). So a deferred import is
-        # HOISTED to module level only when its function also reads the package through another
-        # binding. Otherwise it stays where it is: a lazy import is usually lazy on purpose
-        # (hoisting tools/verdict.py's made every mode need the whole engine).
-        for plan in self.planned:
-            if plan.deferred and not plan.refusal and plan.scope is not None:
-                scope = plan.scope
-                plan.deferred = any(
-                    _inside(read, scope) and bound is not scope for read, bound in self.reads
-                )
 
     def _ambiguous(self, plan: _Planned) -> str:
         shadowed = sorted(set(plan.modules) & self.beside)
@@ -200,8 +190,6 @@ class _Planner(cst.CSTVisitor):
 
     def _prove(self, plan: _Planned, by_node: dict[int, _Planned]) -> str:
         scope = self.get_metadata(ScopeProvider, plan.node)
-        plan.deferred = not isinstance(scope, GlobalScope)
-        plan.scope = scope
         if scope is None:
             return "no scope metadata"
         if not self._package_free(scope):
@@ -220,7 +208,6 @@ class _Planner(cst.CSTVisitor):
                     if not isinstance(access.node, cst.Name):
                         return f"`{name}` is referenced from a string or export list"
                     found[access.node] = target
-                    self.reads.append((access.scope, assigned.scope))
         self.rewrites.update(found)
         return ""
 
@@ -229,15 +216,6 @@ class _Planner(cst.CSTVisitor):
             isinstance(a, Assignment) and isinstance(a.node, cst.Import)
             for a in scope[self.package]
         )
-
-
-def _inside(scope: Scope, ancestor: Scope) -> bool:
-    here = scope
-    while here is not ancestor:
-        if here.parent is here:
-            return False
-        here = here.parent
-    return True
 
 
 def _alias(dotted: str) -> cst.ImportAlias:
@@ -252,6 +230,32 @@ def _dotted(text: str) -> cst.BaseExpression:
     return cst.parse_expression(text)
 
 
+@dataclass(slots=True)
+class _Frame:
+    """What one enclosing function reads of the package, and what it must import for itself."""
+
+    reads: set[str] = field(default_factory=set)
+    needs: set[str] = field(default_factory=set)
+    imports: bool = False
+
+
+def _after_docstring(body: Sequence[_Stmt]) -> int:
+    """Say where a function's first new statement may go.
+
+    Returns:
+        1 when the body opens with a docstring, else 0.
+
+    """
+    first = body[0] if body else None
+    if not isinstance(first, cst.SimpleStatementLine) or len(first.body) != 1:
+        return 0
+    only = first.body[0]
+    quoted = isinstance(only, cst.Expr) and isinstance(
+        only.value, (cst.SimpleString, cst.ConcatenatedString)
+    )
+    return 1 if quoted else 0
+
+
 class _Rewriter(cst.CSTTransformer):
     """Apply a proven plan: bound names to package paths, flat imports to package imports."""
 
@@ -261,8 +265,71 @@ class _Rewriter(cst.CSTTransformer):
         self.package = planner.package
         self.plans = {id(p.node): p for p in planner.planned if not p.refusal}
         self.reexports = reexports
+        self.modules = planner.siblings.modules
         self.needed: set[str] = set()
         self.made: set[int] = set()
+        self.frames: list[_Frame] = []
+
+    @override
+    def visit_FunctionDef(self, node: cst.FunctionDef) -> bool:
+        """Open a frame for the function, so its reads are kept apart from the module's.
+
+        Returns:
+            True: the body is visited.
+
+        """
+        del node
+        self.frames.append(_Frame())
+        return True
+
+    @override
+    def leave_FunctionDef(
+        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
+    ) -> cst.BaseStatement | cst.FlattenSentinel[cst.BaseStatement] | cst.RemovalSentinel:
+        """Give a function the local imports its own reads of the package need (W846).
+
+        ⚑ AN IMPORT OF `pkg.mod` INSIDE A FUNCTION BINDS `pkg` LOCALLY FOR ALL OF IT, so a read of
+        `pkg.other.x` earlier in that function, resolved to a module-level import, raises
+        UnboundLocalError (measured on paperkit's project.py `main`). The old answer hoisted the
+        import to module level, which made every caller of a lazy path load the whole engine and
+        grew each dispatch-table claim's import cone (paperkit:W296). This keeps every import where
+        its read is, and the function gains a local import for each package module it reads, ahead
+        of its first statement.
+
+        Returns:
+            the function, with those imports when it needs them.
+
+        """
+        del original_node
+        frame = self.frames.pop()
+        wanted = frame.reads | frame.needs if frame.imports else frame.needs
+        return updated_node.with_changes(body=self._localised(updated_node.body, wanted))
+
+    def _localised(self, body: cst.BaseSuite, modules: set[str]) -> cst.BaseSuite:
+        """Put an `import pkg.module` for each of `modules` at the top of a function body.
+
+        Returns:
+            the body with those imports after its docstring, or unchanged when none are wanted or
+            the body is a one-line suite.
+
+        """
+        if not modules or not isinstance(body, cst.IndentedBlock):
+            return body
+        lines = [self._made_line(module) for module in sorted(modules)]
+        kept = list(body.body)
+        at = _after_docstring(kept)
+        return body.with_changes(body=self._deduped([*kept[:at], *lines, *kept[at:]]))
+
+    def _local_import(self, plan: _Planned) -> None:
+        """Note that the enclosing function imports the plan's modules itself."""
+        if self.frames:
+            self.frames[-1].imports = True
+            self.frames[-1].reads.update(plan.modules)
+
+    def _made_line(self, module: str) -> cst.SimpleStatementLine:
+        made = cst.Import(names=[_alias(f"{self.package}.{module}")])
+        self.made.add(id(made))
+        return cst.SimpleStatementLine(body=[made])
 
     @override
     def leave_Attribute(
@@ -275,18 +342,47 @@ class _Rewriter(cst.CSTTransformer):
 
         """
         del original_node
-        member = self._member(get_full_name_for_node(updated_node) or "")
+        spelled = get_full_name_for_node(updated_node) or ""
+        member = self._member(spelled)
         target = None if member is None else self.reexports.get(member)
         if target is None:
+            self._read(spelled)
             return updated_node
         self._need(target)
+        self._read(target)
         return _dotted(target)
 
-    def _need(self, target: str) -> None:
-        """Note the package module a rewritten target names, so the file imports it."""
+    def _head(self, dotted: str) -> str | None:
+        """Name the package module a dotted path begins in.
+
+        Returns:
+            the module, or None when the path does not start in the package.
+
+        """
         prefix = f"{self.package}."
-        if target.startswith(prefix):
-            self.needed.add(target[len(prefix) :].split(".", maxsplit=1)[0])
+        if not dotted.startswith(prefix):
+            return None
+        return dotted[len(prefix) :].split(".", maxsplit=1)[0]
+
+    def _read(self, dotted: str) -> None:
+        """Note that the enclosing function, if any, reads a module of the package."""
+        head = self._head(dotted)
+        if self.frames and head in self.modules:
+            self.frames[-1].reads.add(head)
+
+    def _need(self, target: str) -> None:
+        """Note the package module a rewritten target names, so the file imports it.
+
+        ⚑ IN A FUNCTION THE IMPORT IS THE FUNCTION'S OWN, not the module's: a read that was lazy
+        stays lazy, and module-level imports are only for module-level reads.
+        """
+        head = self._head(target)
+        if head is None:
+            return
+        if self.frames:
+            self.frames[-1].needs.add(head)
+        else:
+            self.needed.add(head)
 
     def _member(self, dotted: str) -> tuple[str, str] | None:
         """Split `<package>.<module>.<name>` into its module and name, else None.
@@ -313,7 +409,11 @@ class _Rewriter(cst.CSTTransformer):
 
         """
         target = self.rewrites.get(original_node)
-        return updated_node if target is None else _dotted(self._definition(target))
+        if target is None:
+            return updated_node
+        defined = self._definition(target)
+        self._read(defined)
+        return _dotted(defined)
 
     def _definition(self, target: str) -> str:
         """Follow a dotted target through the re-exports to the module that defines it.
@@ -346,22 +446,13 @@ class _Rewriter(cst.CSTTransformer):
         """Turn each flat sibling in an `import` into its package import.
 
         Returns:
-            the rewritten statement, the original when it has no proven plan, or the removal
-            sentinel when a deferred import is hoisted to module level.
+            the rewritten statement, or the original when it has no proven plan.
 
         """
         plan = self.plans.get(id(original_node))
         if plan is None:
             return updated_node
-        if plan.deferred:
-            self.needed.update(plan.modules)
-            kept = [
-                a for a in updated_node.names if get_full_name_for_node(a.name) not in plan.modules
-            ]
-            if not kept:
-                return cst.RemoveFromParent()
-            kept[-1] = kept[-1].with_changes(comma=cst.MaybeSentinel.DEFAULT)
-            return updated_node.with_changes(names=kept)
+        self._local_import(plan)
         names: list[cst.ImportAlias] = []
         for alias in updated_node.names:
             head = get_full_name_for_node(alias.name)
@@ -380,16 +471,13 @@ class _Rewriter(cst.CSTTransformer):
         """Turn a `from` import of a flat sibling into the package import of it.
 
         Returns:
-            the package import, the original when it has no proven plan, or the removal sentinel
-            when a deferred import is hoisted to module level.
+            the package import, or the original when it has no proven plan.
 
         """
         plan = self.plans.get(id(original_node))
         if plan is None:
             return updated_node
-        if plan.deferred:
-            self.needed.update(plan.modules)
-            return cst.RemoveFromParent()
+        self._local_import(plan)
         made = cst.Import(
             names=[_alias(f"{self.package}.{plan.modules[0]}")], semicolon=updated_node.semicolon
         )

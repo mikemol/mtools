@@ -53,3 +53,12 @@ src/mikemol/pycodemod/fingerprint.py|shared-is-lcm-not-gcd|math\.gcd\(a, b\)|mat
 # W612: a literal that matched a failure token is excluded from the success pass; inverted, the
 # success pass reads only the failure literals and every failure reader also reads as a success one.
 src/mikemol/pycodemod/artifacts.py|failure-not-subtracted-from-success|s not in matched|s in matched|def=_classify
+
+# W846: an import inside a function stays inside it, and the function imports what it reads. A
+# docstring counts as the first statement only when it is one; a function that imports the package
+# itself must import every module it reads (not only the redirected ones); a redirect read in a
+# function is imported by the function, not hoisted to the module.
+src/mikemol/pycodemod/atomize.py|local-imports-before-the-docstring|return 1 if quoted else 0|return 0|def=_after_docstring
+src/mikemol/pycodemod/atomize.py|local-import-reads-ignored|frame\.reads \S frame\.needs if frame\.imports else frame\.needs|frame.needs|def=_Rewriter.leave_FunctionDef
+src/mikemol/pycodemod/atomize.py|redirect-in-a-function-hoisted|if self\.frames:|if False:|def=_Rewriter._need
+src/mikemol/pycodemod/atomize.py|read-noted-outside-a-function|if self\.frames and head in self\.modules:|if head in self.modules:|def=_Rewriter._read

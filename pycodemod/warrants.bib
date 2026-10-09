@@ -5568,13 +5568,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_read_through_a_re_export_is_pointed_at_the_definition},
 }
 
-@misc{pycodemod-atomize-function-level-import-is-hoisted-so-the-package-name-is-not-local,
-  section = {atomize},
-  title  = {⚑⚑ `import pk.bib` inside a function would bind `pk` for all of it, so it goes up},
-  claim  = { `import pk.bib` inside a function would bind `pk` for all of it, so it goes up.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_function_level_import_is_hoisted_so_the_package_name_is_not_local},
-}
-
 @misc{pycodemod-atomize-lazy-import-with-no-other-read-of-the-package-stays-lazy,
   section = {atomize},
   title  = {⚑⚑ Hoisting is for the UnboundLocalError only: a lazy import usually is lazy on purpose},
@@ -5784,4 +5777,77 @@
   title  = {⚑ A group handed on, or given another method, reaches the namespace another way},
   claim  = { A group handed on, or given another method, reaches the namespace another way.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_group_used_beyond_add_argument_is_refused},
+}
+
+@misc{pycodemod-atomize-function-level-import-stays-local-and-brings-the-modules-it-reads,
+  section = {atomize},
+  title  = {⚑⚑ `import pk.bib` in a function binds `pk` for all of it, so the function imports the rest},
+  claim  = { `import pk.bib` in a function binds `pk` for all of it, so the function imports the
+            rest. The other read of the package, `pk.other`, gets its own local import
+            ahead of the first statement; the module-level import is not touched, and
+            nothing is hoisted (W846).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_function_level_import_stays_local_and_brings_the_modules_it_reads},
+}
+
+@misc{pycodemod-atomize-local-imports-go-after-the-docstring,
+  section = {atomize},
+  title  = {⚑ A docstring stays the first statement of the function, or it stops being the docstring},
+  claim  = { A docstring stays the first statement of the function, or it stops being the docstring.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_the_local_imports_go_after_the_docstring},
+}
+
+@misc{pycodemod-atomize-function-that-reads-the-package-only-through-its-own-import-is-unchanged,
+  section = {atomize},
+  title  = {⚑ Nothing is added when the function has no other read of the package to protect},
+  claim  = { Nothing is added when the function has no other read of the package to protect.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_function_that_reads_the_package_only_through_its_own_import_is_unchanged},
+}
+
+@misc{pycodemod-atomize-function-without-a-local-import-gets-none-for-a-plain-read,
+  section = {atomize},
+  title  = {⚑ A module-level import read in a function is left alone: `pk` is not local there},
+  claim  = { A module-level import read in a function is left alone: `pk` is not local there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_function_without_a_local_import_gets_none_for_a_plain_read},
+}
+
+@misc{pycodemod-atomize-re-exported-read-in-a-function-imports-the-definition-there,
+  section = {atomize},
+  title  = {⚑⚑ A redirect inside a function is imported by that function, not by the module (W846)},
+  claim  = { A redirect inside a function is imported by that function, not by the module (W846).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_re_exported_read_in_a_function_imports_the_definition_there},
+}
+
+@misc{pycodemod-atomize-re-exported-read-at-module-level-is-still-imported-by-the-module,
+  section = {atomize},
+  title  = {⚑ The module-level read keeps the module-level import: only function reads moved},
+  claim  = { The module-level read keeps the module-level import: only function reads moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_re_exported_read_at_module_level_is_still_imported_by_the_module},
+}
+
+@misc{pycodemod-atomize-two-functions-each-import-what-they-read,
+  section = {atomize},
+  title  = {⚑ One function's local imports do not leak into another's},
+  claim  = { One function's local imports do not leak into another's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_two_functions_each_import_what_they_read},
+}
+
+@misc{pycodemod-atomize-closure-dispatch-table-module-gains-no-module-level-import,
+  section = {atomize_closure},
+  title  = {The module-level imports are the original's, renamed: the closure base does not grow},
+  claim  = {The module-level imports are the original's, renamed: the closure base does not grow.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_closure.py -k test_a_dispatch_table_module_gains_no_module_level_import},
+}
+
+@misc{pycodemod-atomize-closure-originals-module-level-imports-are-the-same-modules,
+  section = {atomize_closure},
+  title  = {Control: the original's own module-level imports name the same two modules},
+  claim  = {Control: the original's own module-level imports name the same two modules.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_closure.py -k test_the_originals_module_level_imports_are_the_same_modules},
+}
+
+@misc{pycodemod-atomize-closure-function-import-of-a-module-nobody-imports-at-module-level-stays-in-the-function,
+  section = {atomize_closure},
+  title  = {A lazy path stays lazy: the module is imported by the function and by no one else},
+  claim  = {A lazy path stays lazy: the module is imported by the function and by no one else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_closure.py -k test_a_function_import_of_a_module_nobody_imports_at_module_level_stays_in_the_function},
 }

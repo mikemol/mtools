@@ -3,11 +3,11 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 888 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:86cd434a190ead67`
+counter 889 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:b43f90b61928671a`
 
 | # | symbol | status |
 |---|---|---|
-| 1 | W843 | working |
+| 1 | W843 | ready |
 | 2 | W798 | ready |
 | 3 | W803 | ready |
 | 4 | W581 | ready |
@@ -22,10 +22,10 @@ counter 888 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:86cd
 | 13 | W831 | ready |
 | 14 | W841 | ready |
 | 15 | W845 | ready |
-| 16 | W846 | ready |
-| 17 | W858 | ready |
-| 18 | W861 | ready |
-| 19 | W883 | ready |
+| 16 | W858 | ready |
+| 17 | W861 | ready |
+| 18 | W883 | ready |
+| 19 | W889 | ready |
 | 20 | W317 | blocked |
 | 21 | W319 | blocked |
 | 22 | W576 | blocked |
@@ -858,30 +858,31 @@ counter 888 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:86cd
 | 849 | W840 | done |
 | 850 | W842 | done |
 | 851 | W844 | done |
-| 852 | W847 | done |
-| 853 | W848 | done |
-| 854 | W849 | done |
-| 855 | W850 | done |
-| 856 | W851 | done |
-| 857 | W852 | done |
-| 858 | W853 | done |
-| 859 | W854 | done |
-| 860 | W855 | done |
-| 861 | W856 | done |
-| 862 | W862 | done |
-| 863 | W867 | done |
-| 864 | W868 | done |
-| 865 | W871 | done |
-| 866 | W880 | done |
-| 867 | W881 | done |
-| 868 | W884 | done |
-| 869 | W885 | done |
-| 870 | W886 | done |
-| 871 | W888 | done |
+| 852 | W846 | done |
+| 853 | W847 | done |
+| 854 | W848 | done |
+| 855 | W849 | done |
+| 856 | W850 | done |
+| 857 | W851 | done |
+| 858 | W852 | done |
+| 859 | W853 | done |
+| 860 | W854 | done |
+| 861 | W855 | done |
+| 862 | W856 | done |
+| 863 | W862 | done |
+| 864 | W867 | done |
+| 865 | W868 | done |
+| 866 | W871 | done |
+| 867 | W880 | done |
+| 868 | W881 | done |
+| 869 | W884 | done |
+| 870 | W885 | done |
+| 871 | W886 | done |
+| 872 | W888 | done |
 
 ## waypoints
 
-1. **W843** (working) pinned_files repository rule and paperkit_gate macro: a gate runs a sibling repo (the paperkit
+1. **W843** (ready) pinned_files repository rule and paperkit_gate macro: a gate runs a sibling repo (the paperkit
    engine) at a recorded commit with named files, never its live working tree
    - next: Slice 1: rules_py/pinned.bzl repository rule pinned_files(remote, commit, prefix): git archive of the commit,
      names from git ls-tree (no glob), BUILD exporting each.
@@ -968,20 +969,14 @@ counter 888 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:86cd
    - next: mtools: mikemol-snapshot REPO [--working|--index]: GIT_INDEX_FILE temp index -> git write-tree -> git archive
      into the fixed namespaced path under flock, stamping .tree; bazel_admit and the precommit hook run bazel there;
      pinned_files reuses the same materializer.
-16. **W846** (ready) atomize-imports hoists function-level and re-export imports to module level; put them at the top of
-   the function that reads them
-   - next: Change _Rewriter so a conflicted deferred import stays in its function and the function gains local imports
-     (after the docstring) for every package module it reads; do the same for re-export targets (needed) read inside a
-     function; keep module-level needed only for module-level reads. Test: the old hoist test now expects a local import
-     of the other module; add a witness that a dispatch-table module's closure roots equal the original's
-17. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
+16. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
    other
    - next: Decide which of the five differences corpus keeps as policy and which it takes from pathwalk: the shape that
      fits is corpus.py_files = pathwalk.expand(operands, include_worktrees=..., exclude=`<corpus's` vocabulary as globs,
      bazel-* included>) plus corpus's root resolution; the open choices are (1) symlinked files, (2) the git
      requirement, (3) venv by marker rather than by name. Ask corpus's consumers (substrate imported it 173 times)
      before changing (1)-(3); until then keep both and record the decision here.
-18. **W861** (ready) corpus.import_edges classes a class body's imports as deferred, but a class body executes when the
+17. **W861** (ready) corpus.import_edges classes a class body's imports as deferred, but a class body executes when the
    module is imported
    - next: Python runs a class body at definition, so 'import x' directly inside 'class K:' fires on import and belongs
      with module_level, not deferred. corpus/tests/test_import_edges.py asserts the opposite on purpose (the ported
@@ -989,13 +984,19 @@ counter 888 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:86cd
      ast.ClassDef. Ask corpus's consumers (substrate's census) whether they relied on it; if not, change _LAZY to
      functions only, let _eager descend a ClassDef body, move in_class to the eager set, and record the change in the
      module docstring. Methods inside the class stay deferred.
-19. **W883** (ready) pycodemod: typed-args rewrite mode (one argparse Namespace subclass per parser), dry-run-first,
+18. **W883** (ready) pycodemod: typed-args rewrite mode (one argparse Namespace subclass per parser), dry-run-first,
    verified on a copy by the edit gate
    - next: Build the orchestrator + CLI mode typed-args (dry-run default, --write): per file plan(text); write the
      candidate to a probe path INSIDE the target project; judge with the project's own mypy --output json and ruff
      format; accept only if the finding multiset (messages) of the new text is a strict subset of the old and ruff
      format is a no-op; otherwise the file goes to the worklist with the refusal or the new findings. Probes are removed
      even on failure (mtools-a1: no WIP left in a shared tree).
+19. **W889** (ready) A session working a card holds a fence claim on its touches tags, so an overlapping session sees
+   the holder and the files instead of deferring by judgment
+   - next: Design the claim: label claim:label:touch:`<repo>`:`<tag>` on a per-repo ledger under the git dir (the
+     commit-claim's pattern, W886), taken when a card goes working and released at done or unlock; the tick gate and
+     nemik-overlaps print the holder and the files it named. Decide whether pathsforward --update --status working takes
+     it (pathsforward cannot import fence yet, W887) or the hook layer does.
 20. **W317** (blocked) Plan splitting mtools into a GitHub org with one repo per distribution: what moves, what shared
    infrastructure goes where, migration order
    - blocked on: W319
@@ -2468,47 +2469,49 @@ counter 888 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:86cd
    verifies none remains
 851. **W844** (done) mikemol-commit prints no verdict when git commit times out: it crashes with
    subprocess.TimeoutExpired after 3000 s, so the caller reads a traceback instead of NOT COMMITTED repo: timed out
-852. **W847** (done) mikemol-paths-forward has no verb to record a skipped symbol: a numbering gap fails --check forever
+852. **W846** (done) atomize-imports hoists function-level and re-export imports to module level; put them at the top of
+   the function that reads them
+853. **W847** (done) mikemol-paths-forward has no verb to record a skipped symbol: a numbering gap fails --check forever
    (gcalculus W30)
-853. **W848** (done) The paths-forward writer admits each waypoint transition through a Rego realizability policy: a
+854. **W848** (done) The paths-forward writer admits each waypoint transition through a Rego realizability policy: a
    coordinate and residue ledger, never a bare reject
-854. **W849** (done) W848 unit: the model carries optional reference_arm, population and command, validated on --update
-855. **W850** (done) W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa
+855. **W849** (done) W848 unit: the model carries optional reference_arm, population and command, validated on --update
+856. **W850** (done) W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa
    tests per gate
-856. **W851** (done) W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing
+857. **W851** (done) W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing
    only a drop missing gate, arm or reason
-857. **W852** (done) W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable marks
+858. **W852** (done) W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable marks
    ledger beside the queue
-858. **W853** (done) W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once
+859. **W853** (done) W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once
    per waypoint and gate
-859. **W854** (done) W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named
+860. **W854** (done) W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named
    waypoints and a gate
-860. **W855** (done) mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged
+861. **W855** (done) mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged
    deletion from the pathspec
-861. **W856** (done) Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check
+862. **W856** (done) Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check
    reads sections
-862. **W862** (done) The queue's standing 'warrants' line is stale and no verb edits the standing list
-863. **W867** (done) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
+863. **W862** (done) The queue's standing 'warrants' line is stale and no verb edits the standing list
+864. **W867** (done) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
    ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record
    them as outside the fleet standard
    - next: none
-864. **W868** (done) pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent
+865. **W868** (done) pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent
    module); make the run package-aware
    - next: none; a new-file relative import remains unjudged (stage beside the siblings, option A, is the follow-up if
      it matters).
-865. **W871** (done) Operator: apply or delegate the host katas.py shrink, and choose the typing measurement and ledger
+866. **W871** (done) Operator: apply or delegate the host katas.py shrink, and choose the typing measurement and ledger
    location
    - next: none
-866. **W880** (done) pathsforward --update: an additive --add-enables, so extending a waypoint's edges cannot erase them
-867. **W881** (done) Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for
+867. **W880** (done) pathsforward --update: an additive --add-enables, so extending a waypoint's edges cannot erase them
+868. **W881** (done) Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for
    the operator to apply
-868. **W884** (done) mikemol-commit holds a blocking per-repo mutex (fence.admit lease, total 1) across stage, gate and
+869. **W884** (done) mikemol-commit holds a blocking per-repo mutex (fence.admit lease, total 1) across stage, gate and
    commit
-869. **W885** (done) A blocked claim names its holder: fence.admit's wait announcement says who holds the claim and
+870. **W885** (done) A blocked claim names its holder: fence.admit's wait announcement says who holds the claim and
    since when
-870. **W886** (done) mikemol-commit runs under a per-repo membudget hold on claim:path:`<repo>`/.git/mtools/commit, so
+871. **W886** (done) mikemol-commit runs under a per-repo membudget hold on claim:path:`<repo>`/.git/mtools/commit, so
    two committers serialise instead of colliding on index.lock
-871. **W888** (done) Remove the sixteen tracked .draft scratch copies that 36b8621 committed beside their live files
+872. **W888** (done) Remove the sixteen tracked .draft scratch copies that 36b8621 committed beside their live files
 
 ## residue
 

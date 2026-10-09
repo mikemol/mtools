@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 888,
+  "counter": 889,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T18:17:12Z",
   "job_id": "87816488",
@@ -17181,7 +17181,7 @@
     {
       "symbol": "W843",
       "title": "pinned_files repository rule and paperkit_gate macro: a gate runs a sibling repo (the paperkit engine) at a recorded commit with named files, never its live working tree",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "resumes:W12",
         "summit:W194",
@@ -17198,11 +17198,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Slice 1: rules_py/pinned.bzl repository rule pinned_files(remote, commit, prefix): git archive of the commit, names from git ls-tree (no glob), BUILD exporting each.",
-      "evidence": "2026-10-08: 2026-10-08 tick: the later slices moved here from next_bounded_step to keep the tick payload under budget. Slice 2: gate.bzl paperkit_gate(name, project, engine) running python -m paperkit.gate from runfiles with only the engine checkout on PYTHONPATH. Slice 3: prove on resumes (5 projects), then gcalculus bibstruct stages, summit.",
+      "evidence": "2026-10-08: 2026-10-08 tick: the later slices moved here from next_bounded_step to keep the tick payload under budget. Slice 2: gate.bzl paperkit_gate(name, project, engine) running python -m paperkit.gate from runfiles with only the engine checkout on PYTHONPATH. Slice 3: prove on resumes (5 projects), then gcalculus bibstruct stages, summit. | 2026-10-09: 2026-10-09: returned from working to ready (nemik-check: one working card per queue). Nothing of slice 1 is in the tree; W846 is the card in hand.",
       "issued_at": "2026-10-06T23:11:55Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
-      "last_worked": "2026-10-08T14:46:40Z",
+      "last_worked": "2026-10-09T18:45:11Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -17252,7 +17252,7 @@
     {
       "symbol": "W846",
       "title": "atomize-imports hoists function-level and re-export imports to module level; put them at the top of the function that reads them",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod",
@@ -17260,13 +17260,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Change _Rewriter so a conflicted deferred import stays in its function and the function gains local imports (after the docstring) for every package module it reads; do the same for re-export targets (needed) read inside a function; keep module-level needed only for module-level reads. Test: the old hoist test now expects a local import of the other module; add a witness that a dispatch-table module's closure roots equal the original's",
-      "evidence": "2026-10-07: 2026-10-07 measured on paperkit:W296. atomize-imports moved six function-level or re-export imports to module level in paper/checks/claims.py and six in paperkit/library/concepts.py. Those two files are dispatch-table modules (CLAIMS and CONCEPTS): tools/closure.py reads module-level imports as a BASE shared by every claim, so each claim's cone grew to the whole engine base, and the def-sweep fingerprints changed: the paper project's :cohere went red (two rests-on edges between compose claims reported disjoint, 2 of 83). Found by diffing per-claim closure roots, original file against rewritten: claims.py differed by 1 claim after removing the hoist (the function that lost its local import of gate), concepts.py differed by about 700 root rows until ten functions were given local imports; roots then equal the original exactly (diff empty) and the paper (111 claims) and library (43) gates pass locally. Why a function-local import must bring its siblings: import pkg.a inside a function binds pkg locally for the whole function, so every other pkg.b read there needs a local import before its first read (UnboundLocalError otherwise, measured on paperkit's project.py main). Workaround used: a scratch libcst script (host scratchpad localize_imports.py: remove the chosen module-level imports, add local imports of every module each reading function uses). Check to run after any atomize of a dispatch module: per-claim closure roots, old against new, must be equal except for the intended spelling changes.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-07: 2026-10-07 measured on paperkit:W296. atomize-imports moved six function-level or re-export imports to module level in paper/checks/claims.py and six in paperkit/library/concepts.py. Those two files are dispatch-table modules (CLAIMS and CONCEPTS): tools/closure.py reads module-level imports as a BASE shared by every claim, so each claim's cone grew to the whole engine base, and the def-sweep fingerprints changed: the paper project's :cohere went red (two rests-on edges between compose claims reported disjoint, 2 of 83). Found by diffing per-claim closure roots, original file against rewritten: claims.py differed by 1 claim after removing the hoist (the function that lost its local import of gate), concepts.py differed by about 700 root rows until ten functions were given local imports; roots then equal the original exactly (diff empty) and the paper (111 claims) and library (43) gates pass locally. Why a function-local import must bring its siblings: import pkg.a inside a function binds pkg locally for the whole function, so every other pkg.b read there needs a local import before its first read (UnboundLocalError otherwise, measured on paperkit's project.py main). Workaround used: a scratch libcst script (host scratchpad localize_imports.py: remove the chosen module-level imports, add local imports of every module each reading function uses). Check to run after any atomize of a dispatch module: per-claim closure roots, old against new, must be equal except for the intended spelling changes. | 2026-10-09: 2026-10-09: taking this now. The earlier deferral ('github-45 is in pycodemod') was a judgment call, not a measurement: its W883 work is typedargs.py, cli_typedargs.py and cli.py wiring, while this card is atomize.py and test_atomize.py, which git log shows no commit of theirs touching. The touches tags shared are the declaration to coordinate, not a reason to wait; the files are disjoint. | 2026-10-09: 2026-10-09: atomize.py no longer hoists a function-level import: it stays where it is, and a function that imports the package itself gains local imports (after its docstring) for every package module it reads; a re-export redirect read in a function is imported by that function, module-level reads keep module-level imports. _Planner lost deferred/scope/reads and _inside; _Rewriter gained _Frame, visit/leave_FunctionDef, _localised, _read, _head, _local_import. tests/test_atomize.py 8 new or rewritten, tests/test_atomize_closure.py 3 (the dispatch-table witness: module-level imports equal the original's, renamed); warrants regenerated and one orphan pruned; 4 mutants in mutants.regex (methods are named Class.method in def=); bazel test //pycodemod/... all pass including :mutants.",
       "issued_at": "2026-10-07T13:41:02Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-10-07T13:41:16Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T18:58:55Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T185855Z"
     },
     {
       "symbol": "W847",
@@ -18174,6 +18175,27 @@
       "last_worked": "2026-10-09T18:33:41Z",
       "ticks_blocked": 0,
       "completed": "20261009T183341Z"
+    },
+    {
+      "symbol": "W889",
+      "title": "A session working a card holds a fence claim on its touches tags, so an overlapping session sees the holder and the files instead of deferring by judgment",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "fence",
+        "locks",
+        "pathsforward",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Design the claim: label claim:label:touch:<repo>:<tag> on a per-repo ledger under the git dir (the commit-claim's pattern, W886), taken when a card goes working and released at done or unlock; the tick gate and nemik-overlaps print the holder and the files it named. Decide whether pathsforward --update --status working takes it (pathsforward cannot import fence yet, W887) or the hook layer does.",
+      "evidence": "",
+      "issued_at": "2026-10-09T18:43:57Z",
+      "minted_during": "tick",
+      "caused_by": "W884",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

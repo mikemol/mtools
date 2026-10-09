@@ -162,15 +162,81 @@ def test_a_read_through_a_re_export_is_pointed_at_the_definition(tmp_path: Path)
     assert result.texts[reader] == "import pk.middle\nimport pk.bib\n\nprint(pk.bib.PATH)\n"
 
 
-def test_a_function_level_import_is_hoisted_so_the_package_name_is_not_local(
+def test_a_function_level_import_stays_local_and_brings_the_modules_it_reads(
     tmp_path: Path,
 ) -> None:
-    """⚑⚑ `import pk.bib` inside a function would bind `pk` for all of it, so it goes up."""
+    """⚑⚑ `import pk.bib` in a function binds `pk` for all of it, so the function imports the rest.
+
+    The other read of the package, `pk.other`, gets its own local import ahead of the first
+    statement; the module-level import is not touched, and nothing is hoisted (W846).
+    """
     src = "import other\n\n\ndef f():\n    print(other.X)\n    import bib\n    return bib.Y\n"
     result, path = _plan(tmp_path, src)
     assert result.texts[path] == (
-        "import pk.other\nimport pk.bib\n\n\ndef f():\n    print(pk.other.X)\n    return pk.bib.Y\n"
+        "import pk.other\n\n\ndef f():\n    import pk.bib\n    import pk.other\n"
+        "    print(pk.other.X)\n    return pk.bib.Y\n"
     )
+
+
+def test_the_local_imports_go_after_the_docstring(tmp_path: Path) -> None:
+    """⚑ A docstring stays the first statement of the function, or it stops being the docstring."""
+    src = 'import other\n\n\ndef f():\n    """Doc."""\n    import bib\n    return other.X + bib.Y\n'
+    result, path = _plan(tmp_path, src)
+    assert '    """Doc."""\n    import pk.bib\n    import pk.other\n' in result.texts[path]
+
+
+def test_a_function_that_reads_the_package_only_through_its_own_import_is_unchanged(
+    tmp_path: Path,
+) -> None:
+    """⚑ Nothing is added when the function has no other read of the package to protect."""
+    src = "def f():\n    import bib\n    return bib.Y\n"
+    result, path = _plan(tmp_path, src)
+    assert result.texts[path] == "def f():\n    import pk.bib\n    return pk.bib.Y\n"
+
+
+def test_a_function_without_a_local_import_gets_none_for_a_plain_read(tmp_path: Path) -> None:
+    """⚑ A module-level import read in a function is left alone: `pk` is not local there."""
+    src = "import other\n\n\ndef f():\n    return other.X\n"
+    result, path = _plan(tmp_path, src)
+    assert result.texts[path] == "import pk.other\n\n\ndef f():\n    return pk.other.X\n"
+
+
+def test_a_re_exported_read_in_a_function_imports_the_definition_there(tmp_path: Path) -> None:
+    """⚑⚑ A redirect inside a function is imported by that function, not by the module (W846)."""
+    pkg = _package(tmp_path)
+    middle = tmp_path / "pk" / "middle.py"
+    middle.write_text("from bib import PATH\n", encoding="utf-8")
+    reader = _consumer(tmp_path, "import middle\n\n\ndef f():\n    return middle.PATH\n")
+    result = atomize.atomize([str(middle), reader], atomize.siblings_of(pkg), "pk")
+    assert result.texts[reader] == (
+        "import pk.middle\n\n\ndef f():\n    import pk.bib\n    return pk.bib.PATH\n"
+    )
+
+
+def test_a_re_exported_read_at_module_level_is_still_imported_by_the_module(
+    tmp_path: Path,
+) -> None:
+    """⚑ The module-level read keeps the module-level import: only function reads moved."""
+    pkg = _package(tmp_path)
+    middle = tmp_path / "pk" / "middle.py"
+    middle.write_text("from bib import PATH\n", encoding="utf-8")
+    reader = _consumer(
+        tmp_path, "import middle\n\nX = middle.PATH\n\n\ndef f():\n    return middle.PATH\n"
+    )
+    result = atomize.atomize([str(middle), reader], atomize.siblings_of(pkg), "pk")
+    assert result.texts[reader].startswith("import pk.middle\nimport pk.bib\n\nX = pk.bib.PATH\n")
+    assert "def f():\n    import pk.bib\n    return pk.bib.PATH\n" in result.texts[reader]
+
+
+def test_two_functions_each_import_what_they_read(tmp_path: Path) -> None:
+    """⚑ One function's local imports do not leak into another's."""
+    src = (
+        "import other\n\n\ndef f():\n    import bib\n    return other.X + bib.Y\n\n\n"
+        "def g():\n    return other.X\n"
+    )
+    result, path = _plan(tmp_path, src)
+    assert "def g():\n    return pk.other.X\n" in result.texts[path]
+    assert "def f():\n    import pk.bib\n    import pk.other\n" in result.texts[path]
 
 
 def test_a_lazy_import_with_no_other_read_of_the_package_stays_lazy(tmp_path: Path) -> None:

@@ -56,3 +56,4 @@ pathdrop	Path Drop: A Named sys.path Mutation Retired at Module Level, and the s
 scriptruns	By-Path Runs: A Script Run by Path Becomes a Module Run by Package, Mentions Are Listed and Never Rewritten, and the Census After a Write Must Be Empty
 typedargs	Typed Args: One Namespace Subclass per Parser Derived From Its Own add_argument Calls, Refusing What It Cannot Prove
 cli_typedargs	cli_typedargs
+atomize_closure	Atomize keeps the import cone
