@@ -57,3 +57,4 @@ scriptruns	By-Path Runs: A Script Run by Path Becomes a Module Run by Package, M
 typedargs	Typed Args: One Namespace Subclass per Parser Derived From Its Own add_argument Calls, Refusing What It Cannot Prove
 cli_typedargs	cli_typedargs
 atomize_closure	Atomize keeps the import cone
+projects	Paperkit projects and foreign bibs

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 889,
+  "counter": 890,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T18:17:12Z",
   "job_id": "87816488",
@@ -12212,7 +12212,7 @@
     {
       "symbol": "W614",
       "title": "Ask paperkit via summit whether it will expose project enumeration plus foreign bibs, else port paperkit_projects with its resolver as an operand",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycodemod",
@@ -12220,13 +12220,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Silence is read as a decline (2026-10-04 ask, 5 days): port paperkit_projects per .claude/swarm/W612-W614-census-modes.md with the resolver as an operand.",
-      "evidence": "2026-10-04: 2026-10-04 drafter: no equivalent in paperkit or summit; ASK first, PORT on decline or silence. | 2026-10-05: 2026-10-04 ask sent: /home/mikemol/github/paperkit/inbox/2026-10-04-mtools-project-enumeration-ask.md offers paperkit two routes (expose project enumeration plus foreign bibs, or mtools ports paperkit_projects with paperkit's resolver as an operand); silence is read as the second after several loop ticks | 2026-10-09: 2026-10-09 TRIAGE: the ask went to paperkit on 2026-10-04 and nothing came back in 5 days and about 25 ticks; this card's own rule reads that as a decline, so the port is the live path, not waiting.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 drafter: no equivalent in paperkit or summit; ASK first, PORT on decline or silence. | 2026-10-05: 2026-10-04 ask sent: /home/mikemol/github/paperkit/inbox/2026-10-04-mtools-project-enumeration-ask.md offers paperkit two routes (expose project enumeration plus foreign bibs, or mtools ports paperkit_projects with paperkit's resolver as an operand); silence is read as the second after several loop ticks | 2026-10-09: 2026-10-09 TRIAGE: the ask went to paperkit on 2026-10-04 and nothing came back in 5 days and about 25 ticks; this card's own rule reads that as a decline, so the port is the live path, not waiting. | 2026-10-09: 2026-10-09: projects.py written: paperkit_projects(root, resolve_token, exclude, include_worktrees) -> Projects(projects, skipped); ownership by nearest enclosing project, resolver an operand, malformed manifests a Skip. 10 tests in tests/test_projects.py (substrate's arms re-cut plus malformed, default, prune, outside-any-project), 10 warrants, 5 mutants; pytest 10 pass and pycheck admits both files; the bazel //pycodemod/... run was still going when this was written. | 2026-10-09: 2026-10-09: landed as a library: pycodemod/projects.py with 10 tests, 10 warrants, 5 mutants; bazel test //pycodemod/... all pass, :mutants included. The command-line mode is W890: it needs paperkit's own resolver as an operand and nothing in mtools imports paperkit yet.",
       "issued_at": "2026-10-04T19:25:26Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-09T13:51:04Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T19:29:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T192943Z"
     },
     {
       "symbol": "W615",
@@ -18195,6 +18196,25 @@
       "issued_at": "2026-10-09T18:43:57Z",
       "minted_during": "tick",
       "caused_by": "W884",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W890",
+      "title": "pycodemod --projects: the command-line mode over paperkit_projects, taking paperkit's own warrant resolver as its operand",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod",
+        "paperkit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Decide how the CLI obtains paperkit's resolver (an importable paperkit.bib function named by an operand, or a path to the checkout), then add the mode in cli_modes with a refusal when no resolver is given, and a test that runs it on a fixture corpus.",
+      "evidence": "",
+      "issued_at": "2026-10-09T19:29:42Z",
+      "minted_during": "interrupt",
+      "caused_by": "W614",
       "last_worked": null,
       "ticks_blocked": 0
     }

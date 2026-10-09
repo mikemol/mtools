@@ -62,3 +62,13 @@ src/mikemol/pycodemod/atomize.py|local-imports-before-the-docstring|return 1 if 
 src/mikemol/pycodemod/atomize.py|local-import-reads-ignored|frame\.reads \S frame\.needs if frame\.imports else frame\.needs|frame.needs|def=_Rewriter.leave_FunctionDef
 src/mikemol/pycodemod/atomize.py|redirect-in-a-function-hoisted|if self\.frames:|if False:|def=_Rewriter._need
 src/mikemol/pycodemod/atomize.py|read-noted-outside-a-function|if self\.frames and head in self\.modules:|if head in self.modules:|def=_Rewriter._read
+
+# W614: a bib is foreign by OWNERSHIP (the nearest enclosing project), never by containment. Owning
+# by equality alone makes a child own nothing; ordering owners shallowest-first hands a child's bib
+# to its parent; testing for 'no owner' is the containment answer that reports the root's one real
+# foreign import as zero; a missing list must default, and a list holding a non-string is malformed.
+src/mikemol/pycodemod/projects.py|owner-by-equality-only|resolved == o or resolved\.is_relative_to\(o\)|resolved == o|def=_owner
+src/mikemol/pycodemod/projects.py|owners-shallowest-first|return len\(directory\.parts\)|return 0|def=_depth
+src/mikemol/pycodemod/projects.py|containment-not-ownership|if owner != directory:|if owner is None:|def=_project
+src/mikemol/pycodemod/projects.py|no-list-reads-as-none|return DEFAULT_WARRANTS|return ()|def=_warrants
+src/mikemol/pycodemod/projects.py|non-string-token-accepted|len\(tokens\) != len\(listed\)|False|def=_warrants

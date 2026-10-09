@@ -5851,3 +5851,73 @@
   claim  = {A lazy path stays lazy: the module is imported by the function and by no one else.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_closure.py -k test_a_function_import_of_a_module_nobody_imports_at_module_level_stays_in_the_function},
 }
+
+@misc{pycodemod-projects-project-is-found-per-manifest-in-sorted-order,
+  section = {projects},
+  title  = {One project per `paper.toml`, the corpus root named `.`},
+  claim  = {One project per `paper.toml`, the corpus root named `.`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_project_is_found_per_manifest_in_sorted_order},
+}
+
+@misc{pycodemod-projects-project-with-only-a-local-bib-has-no-foreign-import,
+  section = {projects},
+  title  = {The control: a local-only project reports nothing foreign},
+  claim  = {The control: a local-only project reports nothing foreign.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_project_with_only_a_local_bib_has_no_foreign_import},
+}
+
+@misc{pycodemod-projects-token-that-escapes-the-project-is-foreign-and-names-the-resolved-path,
+  section = {projects},
+  title  = {`../shared/common.bib` is foreign though it is no label; the row gives where it lands},
+  claim  = {`../shared/common.bib` is foreign though it is no label; the row gives where it lands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_token_that_escapes_the_project_is_foreign_and_names_the_resolved_path},
+}
+
+@misc{pycodemod-projects-label-that-resolves-inside-the-project-is-not-foreign,
+  section = {projects},
+  title  = {`//local:own.bib` is spelled like an import and lives in the project, so it is local},
+  claim  = {`//local:own.bib` is spelled like an import and lives in the project, so it is local.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_label_that_resolves_inside_the_project_is_not_foreign},
+}
+
+@misc{pycodemod-projects-nested-childs-bib-is-foreign-to-its-parent-by-ownership,
+  section = {projects},
+  title  = {The root contains `child/`, so a containment test calls this local; ownership does not},
+  claim  = {The root contains `child/`, so a containment test calls this local; ownership does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_nested_childs_bib_is_foreign_to_its_parent_by_ownership},
+}
+
+@misc{pycodemod-projects-child-owns-its-own-bib,
+  section = {projects},
+  title  = {The nearest enclosing project of `child/owned.bib` is the child itself},
+  claim  = {The nearest enclosing project of `child/owned.bib` is the child itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_the_child_owns_its_own_bib},
+}
+
+@misc{pycodemod-projects-project-with-no-warrants-list-gets-the-default,
+  section = {projects},
+  title  = {No `warrants` key means `warrants.bib`, which the project owns},
+  claim  = {No `warrants` key means `warrants.bib`, which the project owns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_project_with_no_warrants_list_gets_the_default},
+}
+
+@misc{pycodemod-projects-malformed-manifest-is-a-skip-and-not-a-project,
+  section = {projects},
+  title  = {An unparseable `paper.toml` and a non-list `warrants` are reported, never silent},
+  claim  = {An unparseable `paper.toml` and a non-list `warrants` are reported, never silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_malformed_manifest_is_a_skip_and_not_a_project},
+}
+
+@misc{pycodemod-projects-directory-named-by-exclude-is-not-walked,
+  section = {projects},
+  title  = {Pruning is the corpus walk's: a project under an excluded directory is not listed},
+  claim  = {Pruning is the corpus walk's: a project under an excluded directory is not listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_directory_named_by_exclude_is_not_walked},
+}
+
+@misc{pycodemod-projects-bib-outside-every-project-is-foreign-to-nobody-in-particular,
+  section = {projects},
+  title  = {A token that lands where no project lives has the placeholder owner},
+  claim  = {A token that lands where no project lives has the placeholder owner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_bib_outside_every_project_is_foreign_to_nobody_in_particular},
+}
