@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 872 · heartbeat 2026-10-09T09:21:29Z · job `51ba88ef` · hash `v2:8fee14d3fd123ce5`
+counter 872 · heartbeat 2026-10-09T11:18:15Z · job `bfce42ca` · hash `v2:f080e5e4d1879988`
 
 | # | symbol | status |
 |---|---|---|
@@ -871,10 +871,8 @@ counter 872 · heartbeat 2026-10-09T09:21:29Z · job `51ba88ef` · hash `v2:8fee
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W872** (ready) katas distribution slice 1: the proc core and the detached commit (start_commit, wait) calling
    hooks/bin/mikemol-commit
-   - next: Slice 1a: give treeio.proc.capture an optional timeout (test, warrant, mutant) and note commit_kata.run_git
-     as a collapse candidate onto it. Slice 1b: scaffold the katas distribution (copy treeio's file set shape:
-     MODULE.bazel hub, BUILD with SIBLINGS = ['//treeio:treeio'], pyproject with the uv source, README, paper.toml,
-     rubric, uv.lock), containing only status first. One deliberate integration step.
+   - next: Slice 1b: scaffold the katas distribution (treeio's file shape, BUILD SIBLINGS ['//treeio:treeio']) with
+     status first, calling treeio.proc.capture; one deliberate integration step (new dists integrate one at a time).
 3. **W798** (ready) Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs
    captured by BuildBuddy
    - next: Rule (operator 2026-10-06): a bazel gate never globs or declares a directory as input; name every file

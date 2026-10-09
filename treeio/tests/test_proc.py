@@ -4,13 +4,20 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from typing import TYPE_CHECKING
+
+import pytest
 
 from mikemol.treeio.proc import capture
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+_SLEEP = "import time; time.sleep(30)"
+_SHORT = 0.2
+_LONG = 30
 
 
 def test_capture_returns_text_output_and_a_nonzero_status_without_raising() -> None:
@@ -40,3 +47,15 @@ def test_capture_never_interprets_an_argument_as_shell() -> None:
     code = "import sys; sys.stdout.write(sys.argv[1])"
     done = capture([sys.executable, "-c", code, "$(echo hi); echo no"])
     assert done.stdout == "$(echo hi); echo no"
+
+
+def test_capture_gives_up_on_a_child_that_outlasts_its_timeout() -> None:
+    """A child still running when the timeout passes is abandoned with the standard error."""
+    with pytest.raises(subprocess.TimeoutExpired):
+        capture([sys.executable, "-c", _SLEEP], timeout=_SHORT)
+
+
+def test_capture_with_a_generous_timeout_returns_the_result() -> None:
+    """A child that finishes inside its timeout returns as it does with none."""
+    done = capture([sys.executable, "-c", "print('ok')"], timeout=_LONG)
+    assert done.stdout.strip() == "ok"

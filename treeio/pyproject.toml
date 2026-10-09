@@ -124,7 +124,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # files and symlinks differently, and this module's subject is exactly the disagreement between the
 # two matchers, so swapping the matcher would change the answer it exists to name.
 "src/mikemol/treeio/listing.py" = ["glob"]
-"tests/test_proc.py" = ["assert"]
+# ⚑ `test_proc` names `subprocess.TimeoutExpired` (the exception `capture` documents for a child
+# that outlasts its timeout), so it imports the module; it starts no child except through `capture`.
+"tests/test_proc.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_gitrun.py" = ["assert"]
 # ⚑ RUNNING A CHILD PROCESS IS `proc`'S ONE RESPONSIBILITY, and the exemption is scoped to that
 # file: every other module reaches a child through its one function. Every argv is built by the

@@ -1357,3 +1357,4 @@
 2026-10-09T11:01:59Z  tick  W872 minted    -         "katas distribution slice 1: the proc core and the detached commit (start_commit, wait) calling hooks/bin/mikemol-commit"  evidence=W796
 2026-10-09T11:02:06Z  tick  W796 advanced  sweep     "host edit denied by standing 16; route re-planned as a tracked katas distribution (W872 first slice); host file untouched"
 2026-10-09T11:17:51Z  tick  W872 advanced  collapse  "katas proc core collapses onto treeio.proc.capture (needs a timeout); a new dist is a 55-file integration, scoped as slices 1a/1b"
+2026-10-09T11:36:56Z  tick  W872 advanced  collapse  "treeio.proc.capture gains a timeout (slice 1a); katas proc core can now depend on it"

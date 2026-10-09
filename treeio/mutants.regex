@@ -51,3 +51,7 @@ src/mikemol/treeio/restore.py|path-filter-ignored|if not want or rel in want|if 
 
 # The untracked half is listed sorted.
 src/mikemol/treeio/restore.py|saved-not-sorted|return tracked, sorted\(saved\)|return tracked, saved|def=contents
+
+# W872: `capture` passes its timeout to the child. Dropping it lets a runaway child hang the caller
+# (the 30-second sleeping child outlasts the 0.2-second timeout only when it is passed).
+src/mikemol/treeio/proc.py|capture-drops-the-timeout|, timeout=timeout|, timeout=None|def=capture

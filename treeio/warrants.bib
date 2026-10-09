@@ -1544,3 +1544,17 @@
             default.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_write.py -k test_a_rewritten_file_keeps_its_permissions},
 }
+
+@misc{treeio-proc-capture-gives-up-on-a-child-that-outlasts-its-timeout,
+  section = {proc},
+  title  = {A child still running when the timeout passes is abandoned with the standard error},
+  claim  = {A child still running when the timeout passes is abandoned with the standard error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_gives_up_on_a_child_that_outlasts_its_timeout},
+}
+
+@misc{treeio-proc-capture-with-a-generous-timeout-returns-the-result,
+  section = {proc},
+  title  = {A child that finishes inside its timeout returns as it does with none},
+  claim  = {A child that finishes inside its timeout returns as it does with none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_with_a_generous_timeout_returns_the_result},
+}
