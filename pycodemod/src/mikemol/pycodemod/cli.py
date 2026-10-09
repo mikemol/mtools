@@ -68,6 +68,7 @@ from mikemol.pycodemod.arguments import asserted as run_asserted
 from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
+from mikemol.pycodemod.cli_orempty import OrEmptyFlags, print_orempty
 from mikemol.pycodemod.cli_typedargs import TypedArgsFlags, print_typedargs
 from mikemol.pycodemod.commentary import (
     COMMENTARY_MARKS,
@@ -127,6 +128,17 @@ if TYPE_CHECKING:
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
+
+
+def _handle_orempty(ns: argparse.Namespace) -> int:
+    flags = OrEmptyFlags(
+        root=_str(ns, "root"),
+        write=_flag(ns, "write"),
+        module=_str(ns, "module"),
+        object_fn=_str(ns, "object_fn"),
+        list_fn=_str(ns, "list_fn"),
+    )
+    return print_orempty(_str_list(ns, "paths"), flags)
 
 
 def _handle_typedargs(ns: argparse.Namespace) -> int:
@@ -1126,6 +1138,7 @@ MODES = {
     "split": _handle_split,
     "atomize-imports": _handle_atomize,
     "typed-args": _handle_typedargs,
+    "or-empty": _handle_orempty,
     "by-path-runs": _handle_by_path_runs,
 }
 
@@ -1393,6 +1406,16 @@ def _add_atomize_mode(make: _Make) -> None:
     ato.add_argument("paths", nargs="+", help="every file that may import a sibling flat")
 
 
+def _add_orempty_mode(make: _Make) -> None:
+    emp = make("or-empty", "cast(Json, X or {}) to the project's typed narrowers, judged by mypy")
+    emp.add_argument("--root", required=True, help="the project whose .venv judges each file")
+    emp.add_argument("--module", required=True, help="the module holding the narrowing helpers")
+    emp.add_argument("--object-fn", default="as_object", help="helper turning a value into a dict")
+    emp.add_argument("--list-fn", default="as_list", help="helper turning a value into a list")
+    emp.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    emp.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
+
+
 def _add_typedargs_mode(make: _Make) -> None:
     typed = make("typed-args", "type argparse results with a Namespace subclass, judged by mypy")
     typed.add_argument("--root", required=True, help="the project whose .venv judges each file")
@@ -1421,6 +1444,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_split_mode,
     _add_atomize_mode,
     _add_typedargs_mode,
+    _add_orempty_mode,
     _add_runs_mode,
 )
 

@@ -5921,3 +5921,59 @@
   claim  = {A token that lands where no project lives has the placeholder owner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_projects.py -k test_a_bib_outside_every_project_is_foreign_to_nobody_in_particular},
 }
+
+@misc{pycodemod-orempty-three-shapes-are-rewritten-and-the-import-added,
+  section = {orempty},
+  title  = {⚑ Json, list[Json] and list[object] casts become helpers; the import follows the last},
+  claim  = { Json, list[Json] and list[object] casts become helpers; the import follows the last.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_orempty.py -k test_the_three_shapes_are_rewritten_and_the_import_added},
+}
+
+@misc{pycodemod-orempty-cast-to-another-type-is-left-alone,
+  section = {orempty},
+  title  = {⚑ `dict[str, str]` needs its values narrowed too, so it is not a site here},
+  claim  = { `dict[str, str]` needs its values narrowed too, so it is not a site here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_orempty.py -k test_a_cast_to_another_type_is_left_alone},
+}
+
+@misc{pycodemod-orempty-source-with-no-site-is-returned-unchanged,
+  section = {orempty},
+  title  = {⚑ Nothing matched: the text is byte-identical, sites is 0, no import appears},
+  claim  = { Nothing matched: the text is byte-identical, sites is 0, no import appears.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_orempty.py -k test_a_source_with_no_site_is_returned_unchanged},
+}
+
+@misc{pycodemod-orempty-type-and-literal-that-disagree-are-left-alone,
+  section = {orempty},
+  title  = {⚑ `cast("Json", X or [])` is not provable as an object, so it stays},
+  claim  = { `cast("Json", X or [])` is not provable as an object, so it stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_orempty.py -k test_a_type_and_literal_that_disagree_are_left_alone},
+}
+
+@misc{pycodemod-orempty-helper-names-are-the-callers,
+  section = {orempty},
+  title  = {⚑ A project names its own helpers; nothing here assumes `as_object`},
+  claim  = { A project names its own helpers; nothing here assumes `as_object`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_orempty.py -k test_the_helper_names_are_the_callers},
+}
+
+@misc{pycodemod-cli-orempty-dry-run-reports-and-writes-nothing,
+  section = {cli_orempty},
+  title  = {⚑ The default is a plan under the label or-empty: judged, said, untouched},
+  claim  = { The default is a plan under the label or-empty: judged, said, untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_orempty.py -k test_a_dry_run_reports_and_writes_nothing},
+}
+
+@misc{pycodemod-cli-orempty-write-lands-the-rewrite-the-judge-accepts,
+  section = {cli_orempty},
+  title  = {⚑ `--write` applies the candidate: the cast is a helper call and the import is there},
+  claim  = { `--write` applies the candidate: the cast is a helper call and the import is there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_orempty.py -k test_write_lands_the_rewrite_the_judge_accepts},
+}
+
+@misc{pycodemod-cli-orempty-file-with-no-site-is-not-judged,
+  section = {cli_orempty},
+  title  = {⚑ Nothing to rewrite means no tool is started},
+  claim  = { Nothing to rewrite means no tool is started.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_orempty.py -k test_a_file_with_no_site_is_not_judged},
+}
