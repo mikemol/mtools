@@ -1300,3 +1300,4 @@
 2026-10-09T01:15:15Z  tick  W834 advanced  collapse  "section agreement joins the pairing check (named both ways, jsonl-aware); the preflight catches a lost TAB in seconds; removal of the redundant pre-commit grep minted as W856"
 2026-10-09T01:27:50Z  tick  W856 advanced  collapse  "pre-commit loses its redundant section grep; the pairing owns section agreement"
 2026-10-09T01:46:05Z  tick  W805 advanced  sweep     "fence admit arms audited for wallclock use: one real sleep converted to virtual time, one real-subprocess poll left and named"
+2026-10-09T02:04:33Z  tick  W820 advanced  collapse  "tick gate accepts the bracketed prompt (zram refusal + own-queue lock skip); tick_stop names the queue's own release outside the host; key still unmeasured"

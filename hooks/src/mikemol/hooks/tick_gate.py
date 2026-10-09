@@ -56,11 +56,18 @@ class Gate(NamedTuple):
 def is_tick(prompt: str) -> bool:
     """Say whether a prompt is the loop's tick prompt.
 
+    ⚑ BOTH SPELLINGS (W820, github-45, 2026-10-09): the host's `paths-forward tick (...)` and the
+    bracketed `[paths-forward tick] Invoke ...` that `mikemol-paths-forward --payload` emits for
+    every other repository. Matching only the first meant no mtools cron prompt was ever gated. The
+    lock the gate reads is the one under the PAYLOAD'S cwd, i.e. the session's own queue, so the
+    skip it makes for a fresh lock is the loop's own "held and under 30 minutes: exit silently".
+
     Returns:
-        True when the prompt, ignoring leading whitespace, begins with TICK_PREFIX.
+        True when the prompt, ignoring leading whitespace and one opening bracket, begins with
+        TICK_PREFIX.
 
     """
-    return prompt.lstrip().startswith(TICK_PREFIX)
+    return prompt.lstrip().removeprefix("[").startswith(TICK_PREFIX)
 
 
 def facts_line(headroom: Headroom | None, lock: HostLock | None) -> str:

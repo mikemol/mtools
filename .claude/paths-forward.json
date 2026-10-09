@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 84,
+      "ticks_blocked": 85,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 82,
+      "ticks_blocked": 83,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 87,
+      "ticks_blocked": 88,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 21,
       "completed": null
     },
     {
@@ -16688,12 +16688,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Decide with the operator whether mtools-format tick prompts ('[paths-forward tick] ...') should be gated by the host lock/zram facts: if yes, accept a leading '[' in tick_gate.is_tick (test + warrant) and scope the lock check to this repo's own holder; if no, say so in tick_gate's docstring. Then capture one real UserPromptSubmit payload (temporary hook writing stdin to the scratchpad, removed after) to measure the prompt key and record it in the docstring.",
-      "evidence": "2026-10-09: 2026-10-09 partial measurement from the mtools session: this repo's .claude/settings.json wires mikemol-hook-tick-gate on UserPromptSubmit (line 125), and tick_gate.is_tick matches only a prompt that BEGINS with 'paths-forward tick'. The prompts this session's cron delivers begin '[paths-forward tick] Invoke...' (the form --payload emits), so is_tick is False for them and the gate neither refuses nor adds its 'tick gate: zram1 ...' line; none of this session's cron ticks showed that line. A 'tick gate: zram1 ... tick lock free.' line did appear once, in the session-start context before the first bare 'tick' prompt, source not identified. The payload key (prompt versus user_message) is therefore STILL unmeasured. Not changed: widening is_tick to accept the leading '[' would make a fresh HOST tick lock skip this repo's ticks (the gate reads the host lock), a behaviour decision.",
+      "next_bounded_step": "Measure the UserPromptSubmit payload key (prompt versus user_message): capture one real payload with a temporary hook in a settings file the OPERATOR approves editing (github-45 will not add one at a peer's request; the committed .claude/settings.json is not mine to edit), remove it after, and record the measured key in tick_gate's docstring, replacing the 'not measured' paragraph. The prefix question is closed (is_tick accepts the bracketed form).",
+      "evidence": "2026-10-09: 2026-10-09 partial measurement from the mtools session: this repo's .claude/settings.json wires mikemol-hook-tick-gate on UserPromptSubmit (line 125), and tick_gate.is_tick matches only a prompt that BEGINS with 'paths-forward tick'. The prompts this session's cron delivers begin '[paths-forward tick] Invoke...' (the form --payload emits), so is_tick is False for them and the gate neither refuses nor adds its 'tick gate: zram1 ...' line; none of this session's cron ticks showed that line. A 'tick gate: zram1 ... tick lock free.' line did appear once, in the session-start context before the first bare 'tick' prompt, source not identified. The payload key (prompt versus user_message) is therefore STILL unmeasured. Not changed: widening is_tick to accept the leading '[' would make a fresh HOST tick lock skip this repo's ticks (the gate reads the host lock), a behaviour decision. | 2026-10-09: 2026-10-09 operator said to talk with github: asked github-45 (host) three things: what the host loop prompt starts with and whether the host tick lock covers mtools ticks; whether a leading '[' should also bring the host-lock skip (mtools view: zram refusal only); and whether the host can capture a real UserPromptSubmit payload to measure the key. No hook change until the operator and the host have both answered. | 2026-10-09: 2026-10-09 github-45 answered: the 'host tick lock' my Stop hook reports is this repository's OWN queue lock (tick_stop reads .claude/paths-forward.json under the payload's cwd), not the host's, so tick_gate's lock skip is already scoped to the session's own queue; the host's own cron prompt begins 'tick:' and is ungated too (host's call). Agreed: keep the zram refusal for every session. Done here: tick_gate.is_tick accepts the bracketed '[paths-forward tick]' form (3 assertions added), and tick_stop names the right release: a session with no .claude/katas/katas.py is told to finish the tick and run mikemol-paths-forward --state .claude/paths-forward.json --unlock <holder> instead of the host's katas.py tick end (which also flushes commits in other repos). 1 new test + 1 warrant; tick_stop and tick_gate tests 26 pass.",
       "issued_at": "2026-10-06T14:38:58Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W812",
-      "last_worked": "2026-10-09T01:46:53Z",
+      "last_worked": "2026-10-09T02:04:33Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -16964,7 +16964,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 10,
+      "ticks_blocked": 11,
       "completed": null
     },
     {

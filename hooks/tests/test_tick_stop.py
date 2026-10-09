@@ -41,14 +41,21 @@ def _queue(root: Path, doc: dict[str, object]) -> None:
     (root / ".claude" / "paths-forward.json").write_text(json.dumps(doc), encoding="utf-8")
 
 
-def _block_line() -> str:
+def _host(root: Path) -> None:
+    """Make `root` the host session's directory, the one that carries the katas."""
+    katas = root / tick_stop.KATAS
+    katas.parent.mkdir(parents=True)
+    katas.write_text("# the host's katas\n", encoding="utf-8")
+
+
+def _block_line(reason: str = tick_stop.REASON) -> str:
     """Return the exact line a block prints.
 
     Returns:
         the JSON decision line, newline included.
 
     """
-    decision: dict[str, str] = {"decision": "block", "reason": tick_stop.REASON}
+    decision: dict[str, str] = {"decision": "block", "reason": reason}
     return json.dumps(decision) + "\n"
 
 
@@ -88,11 +95,24 @@ def test_the_stamp_parses_with_z_or_an_offset_and_refuses_a_zoneless_one() -> No
 
 def test_the_first_stop_with_a_held_lock_prints_the_block(tmp_path: Path) -> None:
     """The decision goes to stdout as JSON, and the exit code stays zero."""
+    _host(tmp_path)
     _queue(tmp_path, {"lock": {"holder": "github-b3", "taken_at": FRESH}})
     out, err = io.StringIO(), io.StringIO()
     code = tick_stop.run({"cwd": str(tmp_path)}, NOW, out, err)
     assert code == 0
     assert out.getvalue() == _block_line()
+    assert not err.getvalue()
+
+
+def test_a_session_that_is_not_the_host_is_told_to_release_its_own_queue(tmp_path: Path) -> None:
+    """No katas under the cwd: the lock is the repository's own, so the host's tick end is wrong."""
+    _queue(tmp_path, {"lock": {"holder": "mtools-tick-opus", "taken_at": FRESH}})
+    out, err = io.StringIO(), io.StringIO()
+    assert tick_stop.run({"cwd": str(tmp_path)}, NOW, out, err) == 0
+    reason = tick_stop.OWN_REASON.format(holder="mtools-tick-opus", queue=tick_stop.QUEUE)
+    assert out.getvalue() == _block_line(reason)
+    assert "katas.py" not in reason
+    assert "--unlock mtools-tick-opus" in reason
     assert not err.getvalue()
 
 
@@ -123,6 +143,7 @@ def test_main_reads_the_payload_on_stdin_and_uses_the_real_clock(
 ) -> None:
     """A lock stamped now blocks through main, so the wall clock reaches the decision."""
     taken = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    _host(tmp_path)
     _queue(tmp_path, {"lock": {"holder": "github-b3", "taken_at": taken}})
     stop_payload: dict[str, str] = {"hook_event_name": "Stop", "cwd": str(tmp_path)}
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(stop_payload)))

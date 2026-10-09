@@ -52,6 +52,18 @@ REASON = (
 )
 ACTIVE_NOTE = "tick-stop: the host tick lock is still held; not blocking again (stop_hook_active)\n"
 
+# ⚑ THE RELEASE IS THE QUEUE'S, NOT ALWAYS THE HOST'S (W820, github-45, 2026-10-09). The lock read
+# here is the one under the PAYLOAD'S cwd, so in any session that is not the host it is that
+# repository's own queue lock, and `katas.py tick end` (the HOST's heartbeat, ledger line, flush
+# and unlock, which also starts commits in other repositories) does not release it. The host is
+# the session whose directory carries the katas.
+KATAS = Path(".claude") / "katas" / "katas.py"
+OWN_REASON = (
+    "this queue's tick lock is still held by {holder}: finish the tick (ledger line, render, "
+    "check), then release it with `mikemol-paths-forward --state {queue} --unlock {holder}` before "
+    "ending the turn, so the next tick does not wait out a lock nobody will release"
+)
+
 
 def parse_time(value: str) -> datetime | None:
     """Parse the queue's lock stamp (`Z` or an offset).
@@ -120,7 +132,10 @@ def run(payload: dict[str, object], now: datetime, out: TextIO, err: TextIO) -> 
         0 always: a block is the JSON on `out`, never a nonzero exit.
 
     """
-    reason = block_reason(payload_lock(payload), now)
+    lock = payload_lock(payload)
+    reason = block_reason(lock, now)
+    if reason is not None and lock is not None and not (payload_dir(payload) / KATAS).is_file():
+        reason = OWN_REASON.format(holder=lock.holder, queue=QUEUE)
     if reason is None:
         return 0
     if payload.get("stop_hook_active") is True:

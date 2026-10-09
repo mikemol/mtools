@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 856 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:4490eccab10d2a34`
+counter 856 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:5c7eedb505d8db1e`
 
 | # | symbol | status |
 |---|---|---|
@@ -973,11 +973,11 @@ counter 856 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:4490
      is debt the plan cannot order.
 22. **W820** (ready) Verify the live UserPromptSubmit payload key the tick gate reads for the prompt text (prompt, else
    user_message)
-   - next: Decide with the operator whether mtools-format tick prompts ('[paths-forward tick] ...') should be gated by
-     the host lock/zram facts: if yes, accept a leading '[' in tick_gate.is_tick (test + warrant) and scope the lock
-     check to this repo's own holder; if no, say so in tick_gate's docstring. Then capture one real UserPromptSubmit
-     payload (temporary hook writing stdin to the scratchpad, removed after) to measure the prompt key and record it in
-     the docstring.
+   - next: Measure the UserPromptSubmit payload key (prompt versus user_message): capture one real payload with a
+     temporary hook in a settings file the OPERATOR approves editing (github-45 will not add one at a peer's request;
+     the committed .claude/settings.json is not mine to edit), remove it after, and record the measured key in
+     tick_gate's docstring, replacing the 'not measured' paragraph. The prefix question is closed (is_tick accepts the
+     bracketed form).
 23. **W822** (ready) observe live that PostToolUse additionalContext from mikemol-hook-pycheck-advise reaches the model
    (armed in the host from the next session)
    - next: After a session restart, edit a clean .py file whose repo has a debt-ledger and a stale import; confirm the

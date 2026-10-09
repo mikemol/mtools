@@ -6984,3 +6984,11 @@
   claim  = {The structured rubric is the format that is arriving; its keys and titles are compared.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pairing_sections.py -k test_a_jsonl_rubric_is_read_the_same_way},
 }
+
+@misc{hooks-tick-stop-session-that-is-not-the-host-is-told-to-release-its-own-queue,
+  section = {tick-stop},
+  title  = {No katas under the cwd: the lock is the repository's own, so the host's tick end is wrong},
+  claim  = {No katas under the cwd: the lock is the repository's own, so the host's tick end is
+            wrong.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_session_that_is_not_the_host_is_told_to_release_its_own_queue},
+}
