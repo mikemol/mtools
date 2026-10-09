@@ -49,3 +49,4 @@ snapshot	The Snapshot: An Immutable Tree at One Fixed Namespaced Path, Locked Ag
 warrant-crosscheck	The Prune Cross-Check: What --prune Would Drop Must Equal the Pairing Check's Orphan Set, a Disagreement or a Missing Checker Refuses Before Anything Is Written, and --dry-run Shows It
 pairing-sections	The Section Agreement in the Pairing Check: Warrant Sections Against Rubric Rows, Named Both Ways, a Lost Tab or Title Caught Before Commit
 commit-launcher	The Commit Launcher: A Stable Path to mikemol-commit That Hands Every Argument Through and Refuses, Naming the Repair, When the Built Venv or Its Script Is Absent
+inbound_launcher_root	Inbound-asks launcher root

@@ -7055,3 +7055,38 @@
             read.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_appending_to_a_missing_bib_creates_it},
 }
+
+@misc{hooks-inbound-launcher-root-venv-comes-from-mtools-root-not-the-served-repo,
+  section = {inbound_launcher_root},
+  title  = {A repo with no venv of its own is served from the checkout MTOOLS_ROOT names},
+  claim  = {A repo with no venv of its own is served from the checkout MTOOLS_ROOT names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_launcher_root.py -k test_the_venv_comes_from_mtools_root_not_the_served_repo},
+}
+
+@misc{hooks-inbound-launcher-root-mtools-root-wins-over-the-project-directory,
+  section = {inbound_launcher_root},
+  title  = {With both set, a project directory that holds no venv does not make the hook say so},
+  claim  = {With both set, a project directory that holds no venv does not make the hook say so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_launcher_root.py -k test_mtools_root_wins_over_the_project_directory},
+}
+
+@misc{hooks-inbound-launcher-root-without-mtools-root-the-project-directory-is-the-checkout,
+  section = {inbound_launcher_root},
+  title  = {Per-repo wiring is unchanged: CLAUDE_PROJECT_DIR alone still finds the venv},
+  claim  = {Per-repo wiring is unchanged: CLAUDE_PROJECT_DIR alone still finds the venv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_launcher_root.py -k test_without_mtools_root_the_project_directory_is_the_checkout},
+}
+
+@misc{hooks-inbound-launcher-root-missing-mtools-venv-is-said-and-never-denied,
+  section = {inbound_launcher_root},
+  title  = {An MTOOLS_ROOT with no built venv exits 0 with the repair on stderr},
+  claim  = {An MTOOLS_ROOT with no built venv exits 0 with the repair on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_launcher_root.py -k test_a_missing_mtools_venv_is_said_and_never_denied},
+}
+
+@misc{hooks-inbound-launcher-root-neither-variable-set-is-said-and-never-denied,
+  section = {inbound_launcher_root},
+  title  = {With nothing to resolve a root from, the hook says so and proceeds},
+  claim  = {With nothing to resolve a root from, the hook says so and proceeds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_launcher_root.py -k test_neither_variable_set_is_said_and_never_denied},
+}

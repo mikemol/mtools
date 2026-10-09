@@ -20,9 +20,13 @@
 # on PATH for the hook; the module looks in `<project>/.venv/bin` first and then on PATH.
 set -uo pipefail
 
-root="${CLAUDE_PROJECT_DIR:-}"
+# ⚑ MTOOLS_ROOT NAMES THE CHECKOUT THAT HOLDS THE BUILT VENV (W881, operator ruling on W580): wired
+# once in the user-level settings, the hook serves every repo, whose own directory
+# (CLAUDE_PROJECT_DIR, read by the module) holds no venv. Unset, the project is the checkout, as
+# before, so the per-repo wiring is unchanged.
+root="${MTOOLS_ROOT:-${CLAUDE_PROJECT_DIR:-}}"
 if [ -z "$root" ]; then
-    echo "inbound-asks: CLAUDE_PROJECT_DIR is unset; the inbound asks were not checked" >&2
+    echo "inbound-asks: neither MTOOLS_ROOT nor CLAUDE_PROJECT_DIR is set; the inbound asks were not checked" >&2
     exit 0
 fi
 venv="$root/bazel-bin/hooks/.venv"

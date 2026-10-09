@@ -2,11 +2,11 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 882,
+  "counter": 883,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T14:05:40Z",
-  "job_id": "acde7653",
-  "predecessor_job_id": "8345e652",
+  "heartbeat": "2026-10-09T14:51:08Z",
+  "job_id": "9e45d237",
+  "predecessor_job_id": "acde7653",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 98,
+      "ticks_blocked": 99,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 96,
+      "ticks_blocked": 97,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 101,
+      "ticks_blocked": 102,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 70,
+      "ticks_blocked": 71,
       "completed": null
     },
     {
@@ -11565,7 +11565,7 @@
       "minted_during": "tick",
       "caused_by": "operator",
       "last_worked": "2026-10-09T13:51:50Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -11804,7 +11804,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -12369,22 +12369,20 @@
     {
       "symbol": "W622",
       "title": "Send each peer repo one letter with the steps to adopt the inbound-asks and nemik-check hooks, citing docs/adopting-a-hook.md",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "hooks",
         "nemik"
       ],
-      "blocked_on": [
-        "W881"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "After W580 chooses user-level or per-repo wiring: one letter per repo that has a paths-forward.json and no hook, pointing at the adoption page",
-      "evidence": "2026-10-09: 2026-10-09 TRIAGE: blocked, not ready: its own next step starts 'After W580 chooses user-level or per-repo wiring'. | 2026-10-09: 2026-10-09 RULING on W580: user-level wiring (W881). Under it the per-repo letters this card sends are unnecessary for the inbound-asks hook; reconsider or drop this card when W881 lands, since a user-level hook covers every repo with a queue.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "W881 landed: once the operator merges the user-level lines (W881 design note), drop this card for inbound-asks; keep it only for the nemik-check hook letters",
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: blocked, not ready: its own next step starts 'After W580 chooses user-level or per-repo wiring'. | 2026-10-09: 2026-10-09 RULING on W580: user-level wiring (W881). Under it the per-repo letters this card sends are unnecessary for the inbound-asks hook; reconsider or drop this card when W881 lands, since a user-level hook covers every repo with a queue. | 2026-10-09: 2026-10-09: W881 landed; the inbound-asks half is covered by the user-level wiring once the operator applies it, so only nemik-check still needs per-repo letters",
       "issued_at": "2026-10-04T21:01:15Z",
       "minted_during": "interrupt",
       "caused_by": "W579",
-      "last_worked": "2026-10-09T13:51:50Z",
+      "last_worked": "2026-10-09T14:50:33Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -16155,7 +16153,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16690,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16984,7 +16982,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -17492,7 +17490,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -17533,7 +17531,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -17556,7 +17554,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -17979,7 +17977,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -18005,7 +18003,7 @@
     {
       "symbol": "W881",
       "title": "Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for the operator to apply",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -18014,13 +18012,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add an MTOOLS_ROOT-resolving launcher beside hooks/adopt/tools-hook (the current hooks/bin launcher resolves bazel-bin under CLAUDE_PROJECT_DIR), test it like test_bin_launchers_argv, and draft the ~/.claude/settings.json lines as a patch in the design notes for the operator to apply.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: hooks/bin/mikemol-hook-inbound-asks resolves the venv under MTOOLS_ROOT else CLAUDE_PROJECT_DIR; hooks/tests/test_inbound_launcher_root.py 5 tests + 5 warrants; bazel test //hooks:test_bar_fires test_bin_launchers_argv test_inbound_launcher_root pass; settings lines drafted in .claude/design/W881-user-level-inbound-hook.md for the operator to merge into ~/.claude/settings.json",
       "issued_at": "2026-10-09T13:51:50Z",
       "minted_during": "tick",
       "caused_by": "W580",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T14:50:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T145019Z"
     },
     {
       "symbol": "W882",
@@ -18044,6 +18043,27 @@
       "last_worked": "2026-10-09T14:21:04Z",
       "ticks_blocked": 0,
       "completed": "20261009T142104Z"
+    },
+    {
+      "symbol": "W883",
+      "title": "pycodemod: typed-args rewrite mode (one argparse Namespace subclass per parser), dry-run-first, verified on a copy by the edit gate",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod",
+        "typing"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Model on linux-sources codemod_stamp_any.py and substrate's codemod pipeline rules (verify the prospective output with mikemol-pycheck --check-file on a copy inside the project; a file that would land dirty is never written, its findings go to a worklist). Mode: for each parser derive each dest's type from add_argument (type=, store_true/false, nargs, default), emit a Namespace subclass and namespace=Args(), so every args.X is typed at once. Run it on luthen-observability checks/ from this venv with --root; target: the 113 argparse-attr Any-leaks plus their dependents.",
+      "evidence": "",
+      "issued_at": "2026-10-09T14:46:41Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W684",
+      "last_worked": "2026-10-09T14:46:41Z",
+      "ticks_blocked": 0,
+      "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
+      "vector_source": "agent"
     }
   ],
   "residue": [

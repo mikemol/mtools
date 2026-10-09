@@ -3,17 +3,17 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 882 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:7541a711800a6157`
+counter 883 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:da22b2219c9d714c`
 
 | # | symbol | status |
 |---|---|---|
 | 1 | W843 | working |
 | 2 | W798 | ready |
 | 3 | W803 | ready |
-| 4 | W881 | ready |
-| 5 | W581 | ready |
-| 6 | W593 | ready |
-| 7 | W614 | ready |
+| 4 | W581 | ready |
+| 5 | W593 | ready |
+| 6 | W614 | ready |
+| 7 | W622 | ready |
 | 8 | W670 | ready |
 | 9 | W793 | ready |
 | 10 | W797 | ready |
@@ -27,16 +27,16 @@ counter 882 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:7541
 | 18 | W846 | ready |
 | 19 | W858 | ready |
 | 20 | W861 | ready |
-| 21 | W317 | blocked |
-| 22 | W319 | blocked |
-| 23 | W576 | blocked |
-| 24 | W796 | blocked |
-| 25 | W819 | blocked |
-| 26 | W879 | blocked |
-| 27 | W504 | blocked |
-| 28 | W580 | blocked |
-| 29 | W592 | blocked |
-| 30 | W622 | blocked |
+| 21 | W883 | ready |
+| 22 | W317 | blocked |
+| 23 | W319 | blocked |
+| 24 | W576 | blocked |
+| 25 | W796 | blocked |
+| 26 | W819 | blocked |
+| 27 | W879 | blocked |
+| 28 | W504 | blocked |
+| 29 | W580 | blocked |
+| 30 | W592 | blocked |
 | 31 | W833 | blocked |
 | 32 | W857 | blocked |
 | 33 | W859 | blocked |
@@ -872,6 +872,7 @@ counter 882 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:7541
 | 863 | W868 | done |
 | 864 | W871 | done |
 | 865 | W880 | done |
+| 866 | W881 | done |
 
 ## waypoints
 
@@ -890,25 +891,24 @@ counter 882 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:7541
      from mikemol-paths-forward --delivered over the right queue (decide what a distribution's stream is: this repo's
      single queue gives every dist the same 0.0.n, so a per-dist stream needs a tag on waypoints), replacing the 0.1.0
      literals; then tie W317's floors to it.
-4. **W881** (ready) Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for
-   the operator to apply
-   - next: Add an MTOOLS_ROOT-resolving launcher beside hooks/adopt/tools-hook (the current hooks/bin launcher resolves
-     bazel-bin under CLAUDE_PROJECT_DIR), test it like test_bin_launchers_argv, and draft the ~/.claude/settings.json
-     lines as a patch in the design notes for the operator to apply.
-5. **W581** (ready) Verify the inbound-asks and nemik-check hooks' additionalContext at SessionStart in a fresh Claude
+4. **W581** (ready) Verify the inbound-asks and nemik-check hooks' additionalContext at SessionStart in a fresh Claude
    Code session, and record what the model saw
    - next: Only SessionStart is unverified: UserPromptSubmit is confirmed with a real UNCLAIMED row (luthen) and with
      nemik-check rows (mtools, luthen); ask a peer, or start a fresh session here, with an UNCLAIMED row waiting and
      read the first message's context
-6. **W593** (ready) Ask amr-skills whether the CUDA context limit also counts desktop compute apps (kwin, VS Code),
+5. **W593** (ready) Ask amr-skills whether the CUDA context limit also counts desktop compute apps (kwin, VS Code),
    which would make the contexts ledger TOTAL vary
    - next: Silence (letter 2026-10-04, 5 days): per this card's rule, state in the docs that the contexts ledger TOTAL
      is a consumer-owned number. fence/README.md does not mention contexts: find where the ledger is documented first
      (memres? the amr-skills letter's own text).
-7. **W614** (ready) Ask paperkit via summit whether it will expose project enumeration plus foreign bibs, else port
+6. **W614** (ready) Ask paperkit via summit whether it will expose project enumeration plus foreign bibs, else port
    paperkit_projects with its resolver as an operand
    - next: Silence is read as a decline (2026-10-04 ask, 5 days): port paperkit_projects per
      .claude/swarm/W612-W614-census-modes.md with the resolver as an operand.
+7. **W622** (ready) Send each peer repo one letter with the steps to adopt the inbound-asks and nemik-check hooks,
+   citing docs/adopting-a-hook.md
+   - next: W881 landed: once the operator merges the user-level lines (W881 design note), drop this card for
+     inbound-asks; keep it only for the nemik-check hook letters
 8. **W670** (ready) mutation: declare defect classes (mutants.regex) for the remaining drained distributions from their
    recorded F-arm history
    - next: Continue with the remaining 15 by their docstring claims; a module with strong tests (atomicwrite) kills
@@ -991,27 +991,35 @@ counter 882 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:7541
      ast.ClassDef. Ask corpus's consumers (substrate's census) whether they relied on it; if not, change _LAZY to
      functions only, let _eager descend a ClassDef body, move in_class to the eager set, and record the change in the
      module docstring. Methods inside the class stay deferred.
-21. **W317** (blocked) Plan splitting mtools into a GitHub org with one repo per distribution: what moves, what shared
+21. **W883** (ready) pycodemod: typed-args rewrite mode (one argparse Namespace subclass per parser), dry-run-first,
+   verified on a copy by the edit gate
+   - next: Model on linux-sources codemod_stamp_any.py and substrate's codemod pipeline rules (verify the prospective
+     output with mikemol-pycheck --check-file on a copy inside the project; a file that would land dirty is never
+     written, its findings go to a worklist). Mode: for each parser derive each dest's type from add_argument (type=,
+     store_true/false, nargs, default), emit a Namespace subclass and namespace=Args(), so every args.X is typed at
+     once. Run it on luthen-observability checks/ from this venv with --root; target: the 113 argparse-attr Any-leaks
+     plus their dependents.
+22. **W317** (blocked) Plan splitting mtools into a GitHub org with one repo per distribution: what moves, what shared
    infrastructure goes where, migration order
    - blocked on: W319
    - next: Umbrella: the org mikemol-tools, each repo with its history, mtools the workstream repo, shared machinery as
      atomic composed modules. Order per .claude/design/W317-split-plan.md
-22. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
+23. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257
    - next: Send the ask with the four fences from .claude/design/W317-split-plan.md; it registers to the org once D1
      names it
-23. **W576** (blocked) Create the runner GitHub App on the existing org mikemol-tools, so luthen can apply the runner
+24. **W576** (blocked) Create the runner GitHub App on the existing org mikemol-tools, so luthen can apply the runner
    pool and the operator can run the key custody command
    - blocked on: operator: act create the GitHub org mikemol-tools (name decided 2026-10-01, not yet created) and the
      GitHub App the runners register through; luthen then supplies the key custody command and applies the runner pool
      (luthen-observability:W257)
    - next: After the org and App exist: tell luthen-observability so the custody command and the runner pool can
      proceed; then mtools:W317 names the org in the split plan
-24. **W796** (blocked) Graduate the host katas into an mtools distribution to the house standards
+25. **W796** (blocked) Graduate the host katas into an mtools distribution to the house standards
    - blocked on: W879
    - next: Operator lifts W879 and deletes the old katas.py; this waypoint then closes.
-25. **W819** (blocked) hooks depends on mikemol-pathsforward: the first cross-distribution requirement, so hooks read
+26. **W819** (blocked) hooks depends on mikemol-pathsforward: the first cross-distribution requirement, so hooks read
    the tick lock through it
    - blocked on: W317
    - next: FOLLOW-UP, not a blocker (corrected 2026-10-06): standing_facts already reads the queue JSON directly
@@ -1020,32 +1028,27 @@ counter 882 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:7541
      intra-org pins work), replace the direct lock read with mikemol.pathsforward.lock.current over store.load so the
      lock's meaning lives in one place. The reuse rule favors it; the cost is the wiring, which is why it follows rather
      than gates.
-26. **W879** (blocked) Operator: place the katas policy file and retire the host katas.py once mikemol-katas agrees with
+27. **W879** (blocked) Operator: place the katas policy file and retire the host katas.py once mikemol-katas agrees with
    it
    - blocked on: operator: decide whether the agent may write the draft policy to ~/.config/mikemol/katas.toml and run
      mikemol-katas status/pulse beside katas.py to compare (the draft is in .claude/design/W796-katas-shrink.md); then
      operator: act remove ~/github/.claude/katas/katas.py when they agree
    - next: Answer the question; the agent compares side by side, you delete the old file.
-27. **W504** (blocked) Hand the vacuity floor to nemik after the W317 repo split
+28. **W504** (blocked) Hand the vacuity floor to nemik after the W317 repo split
    - blocked on: W317
-28. **W580** (blocked) Decide whether the inbound-asks hook is wired once in the operator's user-level settings (one
+29. **W580** (blocked) Decide whether the inbound-asks hook is wired once in the operator's user-level settings (one
    install via MTOOLS_ROOT, every repo covered) or per repo
    - blocked on: operator: decide whether the inbound-asks hook is wired once in your user-level ~/.claude/settings.json
      (one MTOOLS_ROOT launcher, every repo covered, runs in repos without a loop too, silent there) or per repo (each
      owner applies the W579 lines), or both
    - next: Operator decides user-level versus per-repo (or both); if user-level, add a MTOOLS_ROOT launcher beside
      hooks/adopt/tools-hook and draft the ~/.claude/settings.json lines as a patch for the operator to apply
-29. **W592** (blocked) Confirm substrate repointed Selftest.mk and its tmi_* tools to mikemol-transcriptstruct and
+30. **W592** (blocked) Confirm substrate repointed Selftest.mk and its tmi_* tools to mikemol-transcriptstruct and
    deleted scratch/transcriptstruct.py
    - blocked on: operator: decide W592 has waited 16 ticks on substrate:W33 with no live substrate session and a letter
      unanswered since 2026-10-04: (a) keep waiting, (b) mtools drafts the repoint of Selftest.mk and the seven tmi_*
      tools as a patch in substrate's inbox for its next session, or (c) drop W592 as substrate's to do
    - next: Ask substrate for the repoint result; cite its card once it names one
-30. **W622** (blocked) Send each peer repo one letter with the steps to adopt the inbound-asks and nemik-check hooks,
-   citing docs/adopting-a-hook.md
-   - blocked on: W881
-   - next: After W580 chooses user-level or per-repo wiring: one letter per repo that has a paths-forward.json and no
-     hook, pointing at the adoption page
 31. **W833** (blocked) replace rubric.tsv with rubric.jsonl across mtools: 32 files, paper.toml, BUILD inputs, tests,
    and the pre-commit's grep|cut over the rubric
    - blocked on: paperkit:W295
@@ -2493,6 +2496,8 @@ counter 882 · heartbeat 2026-10-09T14:05:40Z · job `acde7653` · hash `v2:7541
    location
    - next: none
 865. **W880** (done) pathsforward --update: an additive --add-enables, so extending a waypoint's edges cannot erase them
+866. **W881** (done) Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for
+   the operator to apply
 
 ## residue
 

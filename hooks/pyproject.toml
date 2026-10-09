@@ -479,6 +479,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # running it is the case. Literal launcher path derived from `__file__`, explicit env, no shell.
 "tests/test_commit_launcher.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ W881: `test_inbound_launcher_root.py` executes the tracked inbound-asks launcher with MTOOLS_ROOT
+# set, as `test_bin_launchers_argv.py` does without it: a fixed argv, never a shell, no untrusted input.
+"tests/test_inbound_launcher_root.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑ W184/W361: `test_gate_suite.py`'s subject is a piece of `.githooks/pre-commit` RUN under the
 # gate's own `set -euo pipefail`, so launching bash is the case. The script is text lifted from the
 # tracked gate plus literals; the cwd is `tmp_path` and the env is PATH alone.
