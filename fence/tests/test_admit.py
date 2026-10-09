@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import os
 import signal
-import time
 from typing import TYPE_CHECKING
 
 import pytest
@@ -521,15 +520,20 @@ def test_a_timeout_removes_its_own_wait_line(tmp_path: Path) -> None:
     """A request that gives up leaves no WAIT line — a stale one would hold the head forever.
 
     ⚑ THE CONTROL: the line existed while it waited.
+    ⚑ ON VIRTUAL TIME (W805): the clock moves only when the loop sleeps, so how long the box took
+    to run the loop cannot change what is asserted; the arm used to sleep for real.
     """
     store = _store(tmp_path)
     seen: list[int] = []
+    now = [0.0]
 
     def look(seconds: float) -> None:
         seen.append(len(store.read().waiters))
-        time.sleep(seconds)
+        now[0] += seconds
 
-    host = admit.Host(loadavg=_QUIET.loadavg, sleep=look, announce=lambda _msg: None)
+    host = admit.Host(
+        loadavg=_QUIET.loadavg, clock=lambda: now[0], sleep=look, announce=lambda _msg: None
+    )
     waiting = admit.Waiting(timeout_s=0.2, poll_start_s=0.05, poll_max_s=0.05)
     # ⚑ `acquire`, NOT `admit`: `admit` exports its lease as MEMBUDGET_PARENT, which would make the
     # waiter NESTED — and a nested request never queues. Measured: the first draft saw no WAIT line.

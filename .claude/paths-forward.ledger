@@ -1299,3 +1299,4 @@
 2026-10-09T01:15:15Z  tick  W856 minted    -         "Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check reads sections"  evidence=W834
 2026-10-09T01:15:15Z  tick  W834 advanced  collapse  "section agreement joins the pairing check (named both ways, jsonl-aware); the preflight catches a lost TAB in seconds; removal of the redundant pre-commit grep minted as W856"
 2026-10-09T01:27:50Z  tick  W856 advanced  collapse  "pre-commit loses its redundant section grep; the pairing owns section agreement"
+2026-10-09T01:46:05Z  tick  W805 advanced  sweep     "fence admit arms audited for wallclock use: one real sleep converted to virtual time, one real-subprocess poll left and named"

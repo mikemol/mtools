@@ -4,9 +4,9 @@
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
   "counter": 856,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-08T15:32:56Z",
-  "job_id": "9ee8838f",
-  "predecessor_job_id": "7798d5b8",
+  "heartbeat": "2026-10-09T01:35:47Z",
+  "job_id": "f78abfd1",
+  "predecessor_job_id": "9ee8838f",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 83,
+      "ticks_blocked": 84,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 81,
+      "ticks_blocked": 82,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 86,
+      "ticks_blocked": 87,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 19,
+      "ticks_blocked": 20,
       "completed": null
     },
     {
@@ -16357,7 +16357,7 @@
     {
       "symbol": "W805",
       "title": "fence test_admit timeout arm was wallclock-sensitive and refused a commit under load: run it on virtual time",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "fence",
@@ -16367,15 +16367,16 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measured 2026-10-06: the mtools gate refused the W801-era queue commit on fence/tests/test_admit.py:426, 3.45 s elapsed against a 3.0 s wallclock bound while other builds ran. Repaired: the arm injects Host(clock=, sleep=) so time moves only when the loop sleeps, and asserts timeout <= elapsed <= timeout + one poll (tighter than the old ceiling). 10 uncached runs pass. Flake rule: stays a watched item until it has not recurred across later gate runs. Audit the other admit arms for time.monotonic or time.sleep dependence (line 518 uses time.sleep).",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: audit done 2026-10-09 over fence/tests: wallclock dependence found in two places. (1) test_admit.py test_a_timeout_removes_its_own_wait_line slept for real (time.sleep) against a real 0.2 s bound: moved to the injected Host(clock=, sleep=) virtual time like the repaired arm, import time dropped, 61 admit tests pass. (2) test_membudget_cli.py polls with time.monotonic against _WAIT_S = 20 s while waiting on a REAL bash subprocess and a lease it writes; that cannot run on virtual time and only fails on a hung process, never on slowness inside 20 s, so it is left, named here. Watched-item rule: the repaired arm has not recurred across the gates run since 2026-10-06 (this session alone passed fence in 9 consecutive gated commits).",
       "issued_at": "2026-10-06T03:56:45Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W803",
-      "last_worked": "2026-10-06T03:56:45Z",
+      "last_worked": "2026-10-09T01:46:04Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": "20261009T014604Z"
     },
     {
       "symbol": "W806",
@@ -16687,12 +16688,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measurement owed, not a guess: in the first session that loads mikemol-hook-tick-gate (host settings), a prompt beginning 'paths-forward tick' must show the additionalContext line 'tick gate: zram1 ...'. If it never appears, the payload names the text some other key: capture one real payload (a temporary hook that writes stdin to a file in the scratchpad, removed after) and fix tick_gate.run, its test and warrant. Record the measured key in tick_gate's docstring, replacing the 'not measured' paragraph.",
-      "evidence": "",
+      "next_bounded_step": "Decide with the operator whether mtools-format tick prompts ('[paths-forward tick] ...') should be gated by the host lock/zram facts: if yes, accept a leading '[' in tick_gate.is_tick (test + warrant) and scope the lock check to this repo's own holder; if no, say so in tick_gate's docstring. Then capture one real UserPromptSubmit payload (temporary hook writing stdin to the scratchpad, removed after) to measure the prompt key and record it in the docstring.",
+      "evidence": "2026-10-09: 2026-10-09 partial measurement from the mtools session: this repo's .claude/settings.json wires mikemol-hook-tick-gate on UserPromptSubmit (line 125), and tick_gate.is_tick matches only a prompt that BEGINS with 'paths-forward tick'. The prompts this session's cron delivers begin '[paths-forward tick] Invoke...' (the form --payload emits), so is_tick is False for them and the gate neither refuses nor adds its 'tick gate: zram1 ...' line; none of this session's cron ticks showed that line. A 'tick gate: zram1 ... tick lock free.' line did appear once, in the session-start context before the first bare 'tick' prompt, source not identified. The payload key (prompt versus user_message) is therefore STILL unmeasured. Not changed: widening is_tick to accept the leading '[' would make a fresh HOST tick lock skip this repo's ticks (the gate reads the host lock), a behaviour decision.",
       "issued_at": "2026-10-06T14:38:58Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W812",
-      "last_worked": "2026-10-06T14:38:59Z",
+      "last_worked": "2026-10-09T01:46:53Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -16963,7 +16964,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
