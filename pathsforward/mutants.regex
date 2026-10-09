@@ -27,3 +27,9 @@ src/mikemol/pathsforward/gate.py|block-twice|if card in current:|if False:|def=_
 src/mikemol/pathsforward/gate.py|repair-erases-its-edges|edges = \(\*edges, card\)|edges = (card,)|def=_repair
 src/mikemol/pathsforward/gate.py|repair-is-blocked-too|skip = \{card, \*spec\.repairs\}|skip = {card}|def=red
 src/mikemol/pathsforward/gate.py|green-closes-without-a-card|if existing is None:|if existing is not None:|def=green
+
+# W870 slice 2: the CLI hands the card its first step, its operator ask and its repairs. Dropping
+# the repairs blocks the work that fixes the gate; dropping the ask leaves the card waiting on nobody.
+src/mikemol/pathsforward/cli.py|gate-red-drops-the-repairs|repairs=ctx\.many\("exclude"\) or \(\),|repairs=(),|def=_gate_red
+src/mikemol/pathsforward/cli.py|gate-red-drops-the-operator-ask|human=" "\.join\(ctx\.many\("blocked_on"\) or \(\)\),|human="",|def=_gate_red
+src/mikemol/pathsforward/cli.py|gate-green-always-finds-a-card|if not card:|if card:|def=_gate_green

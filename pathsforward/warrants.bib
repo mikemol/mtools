@@ -3891,3 +3891,52 @@
   claim  = {A card titled for a different repo is not this repo's gate.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_the_card_is_found_by_repo_so_another_repos_card_is_left_alone},
 }
+
+@misc{pathsforward-gate-cli-gate-red-blocks-the-open-ledger-and-names-the-card,
+  section = {gate_cli},
+  title  = {The card is minted for the repo the queue belongs to, and the output says what it did},
+  claim  = {The card is minted for the repo the queue belongs to, and the output says what it did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_gate_red_blocks_the_open_ledger_and_names_the_card},
+}
+
+@misc{pathsforward-gate-cli-except-names-the-repairs-that-the-card-does-not-block,
+  section = {gate_cli},
+  title  = {A repair enables the card and stays workable},
+  claim  = {A repair enables the card and stays workable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_except_names_the_repairs_that_the_card_does_not_block},
+}
+
+@misc{pathsforward-gate-cli-blocked-on-states-the-operator-ask-the-card-waits-on,
+  section = {gate_cli},
+  title  = {When only the operator can unblock the gate, the card is blocked on that ask},
+  claim  = {When only the operator can unblock the gate, the card is blocked on that ask.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_blocked_on_states_the_operator_ask_the_card_waits_on},
+}
+
+@misc{pathsforward-gate-cli-gate-green-lifts-what-waited-only-on-the-card,
+  section = {gate_cli},
+  title  = {Green marks the card done and frees the waypoints},
+  claim  = {Green marks the card done and frees the waypoints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_gate_green_lifts_what_waited_only_on_the_card},
+}
+
+@misc{pathsforward-gate-cli-gate-green-with-no-open-card-says-so,
+  section = {gate_cli},
+  title  = {A gate that was never red has nothing to lift, and exits cleanly},
+  claim  = {A gate that was never red has nothing to lift, and exits cleanly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_gate_green_with_no_open_card_says_so},
+}
+
+@misc{pathsforward-gate-cli-gate-red-without-a-next-step-is-refused,
+  section = {gate_cli},
+  title  = {The first step is part of the card; without it nothing is written},
+  claim  = {The first step is part of the card; without it nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_gate_red_without_a_next_step_is_refused},
+}
+
+@misc{pathsforward-gate-cli-field-flag-the-mode-does-not-read-is-refused,
+  section = {gate_cli},
+  title  = {`--gate-red` reads --next, --blocked-on and --except only; --enables would be silent},
+  claim  = {`--gate-red` reads --next, --blocked-on and --except only; --enables would be silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_cli.py -k test_a_field_flag_the_mode_does_not_read_is_refused},
+}

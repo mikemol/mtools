@@ -31,6 +31,7 @@ from mikemol.pathsforward import (
     delivered,
     embargo,
     foreign,
+    gate,
     inbound,
     lease,
     lock,
@@ -108,6 +109,8 @@ _VALUED = (
     "certify",
     "mint_residue",
     "skip",
+    "gate_red",
+    "gate_green",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -207,6 +210,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "ledger": frozenset({"kind", "evidence"}),
     "certify": frozenset({"root", "facts"}),
     "mint_residue": frozenset({"root"}),
+    "gate_red": frozenset({"next", "blocked_on", "exclude"}),
 }
 
 
@@ -378,6 +382,20 @@ def _parser() -> argparse.ArgumentParser:
         ("--armed", "JOB_ID", "record job_id and heartbeat"),
         ("--update", "SYMBOL", "set typed fields on a waypoint"),
         ("--add", "TITLE", "mint the next W<n> as ready"),
+        (
+            "--gate-red",
+            "REASON",
+            (
+                "W870: this repo's commit gate is red: mint or reuse the card, block the open "
+                "ledger on it; needs --next STEP, optional --blocked-on OPERATOR_ASK, --except "
+                "REPAIRS"
+            ),
+        ),
+        (
+            "--gate-green",
+            "EVIDENCE",
+            "W870: the gate is green: mark the card done and lift what waited only on it",
+        ),
     ):
         mode.add_argument(flag, metavar=metavar, help=text_help)
     mode.add_argument(
@@ -1188,6 +1206,49 @@ def _skip(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _gate_red(ctx: Ctx) -> int:
+    """Mint or reuse this repo's gate card and block the open ledger behind it (W870).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    spec = gate.Red(
+        reason=ctx.get("gate_red") or "",
+        step=ctx.get("next") or "",
+        human=" ".join(ctx.many("blocked_on") or ()),
+        repairs=ctx.many("exclude") or (),
+    )
+    repo = inbound.repo_name(ctx.path)
+
+    def edit(state: State) -> int:
+        out = gate.red(state, repo, spec, ctx.stamp())
+        _say(f"{out.card} gate card; {out.blocked} waypoint(s) newly blocked on it")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
+def _gate_green(ctx: Ctx) -> int:
+    """Mark this repo's gate card done and lift what waited only on it (W870).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    repo = inbound.repo_name(ctx.path)
+
+    def edit(state: State) -> int:
+        card, freed = gate.green(state, repo, ctx.get("gate_green") or "", ctx.stamp())
+        if not card:
+            _say(f"{repo}: no open gate card")
+            return EXIT_OK
+        _say(f"{card} done; {len(freed)} waypoint(s) unblocked: {', '.join(freed) or 'none'}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _embargo(ctx: Ctx) -> int:
     """Record one embargoed path (W511), and ledger it.
 
@@ -1662,6 +1723,8 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "certify": _certify,
     "mint_residue": _mint_residue,
     "skip": _skip,
+    "gate_red": _gate_red,
+    "gate_green": _gate_green,
     "delivered": _delivered,
 }
 
