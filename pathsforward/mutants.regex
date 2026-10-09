@@ -40,3 +40,10 @@ src/mikemol/pathsforward/cli.py|gate-green-always-finds-a-card|if not card:|if c
 src/mikemol/pathsforward/foreign.py|empty-segment-allowed|not segment or segment\.startswith\("\."\)|segment.startswith(".")|def=_escapes
 src/mikemol/pathsforward/foreign.py|dot-led-segment-allowed|not segment or segment\.startswith\("\."\)|not segment|def=_escapes
 src/mikemol/pathsforward/foreign.py|link-on-the-way-ignored|_link_in\(root, repo\) or path\.parent|path.parent|def=peer
+
+# W880: `--add-enables` appends. Dropping the repeat check duplicates an edge; replacing the kept
+# list with an empty one erases the edges already there; dropping the both-flags refusal lets an
+# ambiguous update through.
+src/mikemol/pathsforward/ops.py|append-repeats-an-edge|if edge not in edges:|if True:|def=_append_edges
+src/mikemol/pathsforward/ops.py|append-erases-the-kept-edges|edges = strlist\(new, "enables"\)|edges = []|def=_append_edges
+src/mikemol/pathsforward/ops.py|both-enables-flags-allowed|upd\.enables is not None and upd\.add_enables is not None|False|def=_refuse_enums

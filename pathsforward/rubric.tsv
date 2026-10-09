@@ -40,3 +40,4 @@ bundled_title	The Bundled Title: A Title Over 150 Characters That Also Carries a
 gate	The Gate Card: A Red Commit Gate Is One Card That the Whole Open Ledger Waits On, Its Repair Is Not Blocked by It, and Green Lifts Only What Waited on It
 gate_cli	The Gate Card From the Command Line: --gate-red Names the Card, Its Repairs and the Operator Ask, --gate-green Lifts What Waited on It, and a Flag the Mode Does Not Read Is Refused
 nested_citation	The Nested Citation: A Workstream Is Cited by Its Path, Each Segment Shaped Like a Repo Name, so Nothing Empty, Dot-Led or Linked Is Read
+add_enables	Update add-enables appends

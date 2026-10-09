@@ -135,6 +135,7 @@ _FIELDS = (
     "replacement",
     "ticks_blocked",
     "enables",
+    "add_enables",
     "touches",
     "caused_by",
     "exclude",
@@ -177,6 +178,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "replacement",
             "ticks_blocked",
             "enables",
+            "add_enables",
             "weight",
             "touches",
             "witness",
@@ -493,6 +495,12 @@ def _parser() -> argparse.ArgumentParser:
     # CLEAR. `ctx.many` already returns `None` only when the flag is absent, and `Update.enables` /
     # `_set_given` already treat `()` as "set to empty"; `+` was the one thing blocking it.
     ap.add_argument("--enables", nargs="*", metavar="SYMBOL")
+    ap.add_argument(
+        "--add-enables",
+        nargs="+",
+        metavar="SYMBOL",
+        help="--update: append to the edges already there (--enables sets the whole list)",
+    )
     ap.add_argument("--touches", nargs="+", metavar="TAG")
     ap.add_argument(
         "--witness", metavar="QUERY", help="--add/--update: a one-line Rego query, stored unread"
@@ -1014,6 +1022,7 @@ def _update(ctx: Ctx) -> int:
         ticks_blocked=ctx.number("ticks_blocked"),
         title=ctx.get("title"),
         enables=ctx.many("enables"),
+        add_enables=ctx.many("add_enables"),
         weight=ctx.number("weight"),
         touches=ctx.many("touches"),
         witness=ctx.get("witness"),

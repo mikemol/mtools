@@ -4011,3 +4011,45 @@
   claim  = {The control: a nested symbol followed by prose draws no edge, like a flat one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_nested_citation_with_prose_attached_is_still_found},
 }
+
+@misc{pathsforward-add-enables-added-edge-keeps-the-edges-already-there,
+  section = {add_enables},
+  title  = {A repair that adds one edge does not restate the rest},
+  claim  = {A repair that adds one edge does not restate the rest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_enables.py -k test_an_added_edge_keeps_the_edges_already_there},
+}
+
+@misc{pathsforward-add-enables-edge-already-present-is-not-repeated,
+  section = {add_enables},
+  title  = {Appending is idempotent: a symbol that is there stays once},
+  claim  = {Appending is idempotent: a symbol that is there stays once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_enables.py -k test_an_edge_already_present_is_not_repeated},
+}
+
+@misc{pathsforward-add-enables-adding-to-a-waypoint-with-no-edges-starts-the-list,
+  section = {add_enables},
+  title  = {The first edge is an append to nothing},
+  claim  = {The first edge is an append to nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_enables.py -k test_adding_to_a_waypoint_with_no_edges_starts_the_list},
+}
+
+@misc{pathsforward-add-enables-enables-still-sets-the-whole-list,
+  section = {add_enables},
+  title  = {`--enables` is unchanged: it replaces},
+  claim  = {`--enables` is unchanged: it replaces.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_enables.py -k test_enables_still_sets_the_whole_list},
+}
+
+@misc{pathsforward-add-enables-malformed-added-symbol-is-refused,
+  section = {add_enables},
+  title  = {The append is validated like the set},
+  claim  = {The append is validated like the set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_enables.py -k test_a_malformed_added_symbol_is_refused},
+}
+
+@misc{pathsforward-add-enables-giving-both-flags-is-refused,
+  section = {add_enables},
+  title  = {One states the whole list and the other extends it; both together is ambiguous},
+  claim  = {One states the whole list and the other extends it; both together is ambiguous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_enables.py -k test_giving_both_flags_is_refused},
+}

@@ -112,6 +112,9 @@ class Update:
     # ⚑ SET, NOT MERGED: `--update --enables` states the whole edge list, so a comma-joined edge
     # (el-openglo W49, measured by nemik 2026-09-25) has a repair path.
     enables: tuple[str, ...] | None = None
+    # ⚑ APPENDED, NOT SET (W880): a repair that adds one edge must not restate the rest, so
+    # `--add-enables` keeps the edges there and skips any already present. Giving both is refused.
+    add_enables: tuple[str, ...] | None = None
     weight: int | None = None
     # ⚑ SET, NOT MERGED, like `enables` (nemik:W50, 2026-09-27): three comma-joined tags
     # ("adapter,cleanup") were accepted at --add and had no repair path until --update took it.
@@ -231,9 +234,12 @@ def _refuse_enums(upd: Update) -> None:
     if upd.ticks_blocked is not None and upd.ticks_blocked < 0:
         msg = f"ticks_blocked {upd.ticks_blocked} is negative"
         raise RefusedError(msg)
-    bad = _bad_edges(upd.enables or ())
+    bad = _bad_edges((upd.enables or ()) + (upd.add_enables or ()))
     if bad:
         msg = f"enables {bad} are not W<n> or repo:W<n> symbols"
+        raise RefusedError(msg)
+    if upd.enables is not None and upd.add_enables is not None:
+        msg = "--enables sets the whole edge list and --add-enables appends to it: give one"
         raise RefusedError(msg)
     _refuse_title(upd.title)
     _refuse_witness(upd.witness)
@@ -420,6 +426,16 @@ def _refuse_bad_recurrence(sym: str, new: Json) -> None:
         raise RefusedError(msg) from None
 
 
+def _append_edges(new: Json, upd: Update) -> None:
+    """Append the `--add-enables` symbols to the edges the waypoint holds, skipping repeats."""
+    edges = strlist(new, "enables")
+    for edge in upd.add_enables or ():
+        if edge not in edges:
+            edges.append(edge)
+    if upd.add_enables is not None:
+        new["enables"] = edges
+
+
 def _set_given(new: Json, upd: Update) -> None:
     """Set each plain field the update gives, over whatever the status change implied."""
     given: dict[str, object | None] = {
@@ -435,6 +451,7 @@ def _set_given(new: Json, upd: Update) -> None:
         "vector_source": upd.vector_source,
     }
     new.update({key: value for key, value in given.items() if value is not None})
+    _append_edges(new, upd)
     if upd.caused_by is not None:
         new["caused_by"] = upd.caused_by or None
     new.update(_realizable_fields(upd))
