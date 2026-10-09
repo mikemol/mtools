@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 887 · heartbeat 2026-10-09T14:51:08Z · job `9e45d237` · hash `v2:4dfad55a892be1e4`
+counter 887 · heartbeat 2026-10-09T18:17:12Z · job `87816488` · hash `v2:d658f7f2a116f96a`
 
 | # | symbol | status |
 |---|---|---|
@@ -938,8 +938,9 @@ counter 887 · heartbeat 2026-10-09T14:51:08Z · job `9e45d237` · hash `v2:4dfa
      repo.
 12. **W822** (ready) observe live that PostToolUse additionalContext from mikemol-hook-pycheck-advise reaches the model
    (armed in the host from the next session)
-   - next: After a session restart, edit a clean .py file whose repo has a debt-ledger and a stale import; confirm the
-     context line appears, else switch to a systemMessage/stderr channel.
+   - next: Observe in a repo whose debt ledger is non-empty (luthen-observability has ~2000 findings): once its ledger
+     exists, edit a .py file with a stale import and see whether the closure advice arrives as context; mtools cannot
+     show it, its ledger is {}.
 13. **W831** (ready) wire mikemol-build-failure into every other repo's precommit bazel lines
    - next: Operator 2026-10-06: the hook goes on each bazel line in the precommits. Done for mtools (15f848f).
      Remaining: the other bazel-gated repos' precommits (aeternum, gcalculus once its scaffold lands, rosettapkg,

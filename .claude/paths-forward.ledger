@@ -1395,3 +1395,4 @@
 2026-10-09T16:39:44Z  tick  W885 advanced  unblock   "a blocked claim now names its holder; the commit mutex (W886) can use the existing claim, no new lease code"
 2026-10-09T16:59:20Z  tick  W886 advanced  unblock   "mikemol-commit now serialises committers on a per-repo fence claim; verified with the real fence; W884 closed, tick-lock re-base left as W887"
 2026-10-09T17:56:26Z  tick  W830 advanced  unblock   "a failed bazel command's cause now lands on the open gate card via --gate-note, never minting; 9 tests, 4 mutants, bazel green"
+2026-10-09T18:16:37Z  tick  W822 advanced  collapse  "triaged: mtools ledger is {} so silence here proves nothing; the observation needs a repo with debt (luthen-observability)"
