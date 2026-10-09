@@ -1324,3 +1324,4 @@
 2026-10-09T04:44:35Z  tick  W795 advanced  sweep     "first cross-repo reading: old-style tests exist (amr-skills probe scripts, gabion, aeternum); counts need W864's tracked counter"
 2026-10-09T04:59:19Z  tick  W865 minted    -         "Inventory katas.py: list its subcommands, line count and what each reads and writes, as the plan for the distribution split"  evidence=W796
 2026-10-09T04:59:31Z  tick  W865 advanced  sweep     "katas.py outlined and split proposed; W796 next step sharpened"
+2026-10-09T05:05:48Z  tick  W864 advanced  collapse  "W864's reader already exists as hooks' census; measured on aeternum (66 files); card narrowed to a tests filter plus three uncovered arms"

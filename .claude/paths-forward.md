@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 865 · heartbeat 2026-10-09T03:21:50Z · job `f4a17ba1` · hash `v2:647171345ab5beba`
+counter 865 · heartbeat 2026-10-09T04:59:55Z · job `ae83af74` · hash `v2:6d48eafde1359e42`
 
 | # | symbol | status |
 |---|---|---|
@@ -864,8 +864,9 @@ counter 865 · heartbeat 2026-10-09T03:21:50Z · job `f4a17ba1` · hash `v2:6471
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W864** (ready) Write the old-style-tests audit as a tracked debtplan ledger source: per repo, count test files that
    ruff format would change, defs without annotations, and probe_/bench_ or main-style scripts living under tests/
-   - next: Add the source to debtplan (or a sibling dist) with tests and warrants; ruff format --check --isolated
-     --line-length 100 --output-format concise is the formatted-ness reader; emit file: finding count per repo.
+   - next: Run --census over each repo with a tests/ dir (21 listed on W795), keep keys under a tests/ path, record
+     per-repo totals as evidence; then decide the three uncovered arms (main-style scripts, asserts outside a runner, no
+     warrant per test) as their own cards. Check each repo's bar first so counts are not against a default.
 3. **W796** (ready) Graduate the host katas into an mtools distribution to the house standards
    - next: Per W865's split (proc, commits, typing, queue, bazelize, cli): first check each group against
      hooks/commit_kata.py, debtplan and mikemol-commit for overlap (collapse before port), then port the smallest group
