@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 860,
+  "counter": 861,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T01:35:47Z",
   "job_id": "f78abfd1",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 88,
+      "ticks_blocked": 89,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 86,
+      "ticks_blocked": 87,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 91,
+      "ticks_blocked": 92,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -16966,7 +16966,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 14,
+      "ticks_blocked": 15,
       "completed": null
     },
     {
@@ -17485,12 +17485,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "corpus (py_files, roots, excluded, stdlib only) and pathwalk (expand: skip registered worktrees and virtualenvs, count what was left out) both answer which Python files a tree has; debtplan and mdstruct already use pathwalk. Compare their exclusion rules and refusals on a common tree (worktrees, venvs, symlinks, build dirs), then make the weaker one depend on the stronger and keep any rule only it has.",
-      "evidence": "",
+      "next_bounded_step": "Decide which of the five differences corpus keeps as policy and which it takes from pathwalk: the shape that fits is corpus.py_files = pathwalk.expand(operands, include_worktrees=..., exclude=<corpus's vocabulary as globs, bazel-* included>) plus corpus's root resolution; the open choices are (1) symlinked files, (2) the git requirement, (3) venv by marker rather than by name. Ask corpus's consumers (substrate imported it 173 times) before changing (1)-(3); until then keep both and record the decision here.",
+      "evidence": "2026-10-09: 2026-10-09 comparison by reading both (corpus.py_files versus pathwalk.expand), NOT equivalent in five ways: (1) corpus lists a symlinked .py file, pathwalk counts and refuses it; (2) corpus ignores registered worktrees, pathwalk skips them and REFUSES when git is absent (corpus is stdlib-only, no git); (3) corpus excludes a venv by the NAME .venv / site-packages, pathwalk by a pyvenv.cfg in the directory whatever its name; (4) corpus carries a default vocabulary (GENERATED_DIRS: build, dist, bazel-*, caches; _SKIP_PARTS), pathwalk has NO default list and prunes only what the caller names; (5) corpus resolves a relative request against the CWD first, then the root, and a file operand is returned as named. Policy versus mechanism: corpus is a policy (a vocabulary and a root resolution) and pathwalk the walk. corpus has no dependent in this repo. A collapse is therefore a behaviour decision for corpus's external consumers, not a mechanical swap.",
       "issued_at": "2026-10-09T02:15:21Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": null,
+      "last_worked": "2026-10-09T03:00:13Z",
       "ticks_blocked": 0
     },
     {
@@ -17504,12 +17504,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "corpus.import_edges splits module-level from deferred imports (eager/lazy, dotted and undotted); importdag.resolve/dagderive derives edges with suffix indexing and, since W792, package-initializer edges. Run both over one tree, diff the edge sets, and either route corpus through importdag (keeping the eager/lazy split as a filter) or record why the two answer different questions.",
-      "evidence": "",
+      "next_bounded_step": "Give importdag.resolve a way to say which references are eager and which deferred (an eager flag on Reference, or references_split), prove it equals corpus.module_level/deferred on the same 144 files plus a deferred-import fixture, then make corpus.import_edges call importdag and delete its own walker; corpus gains its first sibling dependency (recipe: treeio's, W857).",
+      "evidence": "2026-10-09: 2026-10-09 comparison measured: corpus.import_edges (module_level_dotted | deferred_dotted) against importdag.resolve.references (level-0 names) over every .py file of pathsforward/src (37), hooks/src (49) and pycodemod/src (58): 144 files, 144 identical name sets, 0 differ. So the NAME extraction is the same capability twice; what only corpus has is the eager/lazy split (module_level versus deferred, W846's dispatch-table concern), and what only importdag has is level handling and resolution to files. corpus has no dependent in this repo (bazel rdeps empty); its consumers are outside.",
       "issued_at": "2026-10-09T02:15:22Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": null,
+      "last_worked": "2026-10-09T03:00:13Z",
       "ticks_blocked": 0
     },
     {
@@ -17524,11 +17524,30 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "gen_warrants._ENTRY/_CHECKED_TEST/_KEY re-derive what bibparse parses strictly. Route gen_warrants through bibparse (new pyproject requirement hooks -> bibparse, W819's cross-distribution wiring is the precedent). Do NOT touch count_test_functions.py: W840's prune cross-check needs it to stay a separate parse, so the two copies there are deliberate.",
-      "evidence": "",
+      "next_bounded_step": "Give bibparse.Entry the end line (or a byte span) of each entry and test it against the 32 ledgers; then make gen_warrants' prune and would_drop select entries through bibparse and slice the original text by those spans, keeping the unparsed text byte-exact. First cross-distribution dependency for hooks: hooks is a LIVE tool, so wire the pyproject dependency, the BUILD SIBLINGS and the venv sync before any import lands (recipe: treeio's, W857). count_test_functions.py stays a separate parse (W840).",
+      "evidence": "2026-10-09: 2026-10-09 comparison measured: the entry KEYS bibparse.parse returns and the keys gen_warrants' _ENTRY regex finds, in order, over all 32 warrants.bib in the repo: 32 of 32 identical, 0 differ. So reading entries is the same capability twice and the regex is safe to retire for that. The obstacle is not agreement but what each is for: gen_warrants EDITS TEXT (prune drops stale entries byte-for-byte and keeps the rest untouched), and bibparse.Entry carries only typ, key, fields and a start line, no end line or byte span, so it cannot say which bytes to drop.",
       "issued_at": "2026-10-09T02:15:22Z",
       "minted_during": "tick",
       "caused_by": "W802",
+      "last_worked": "2026-10-09T03:01:09Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W861",
+      "title": "corpus.import_edges classes a class body's imports as deferred, but a class body executes when the module is imported",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "importdag",
+        "corpus"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Python runs a class body at definition, so 'import x' directly inside 'class K:' fires on import and belongs with module_level, not deferred. corpus/tests/test_import_edges.py asserts the opposite on purpose (the ported substrate fixture lists in_class among names that do not execute on import) and import_edges._LAZY includes ast.ClassDef. Ask corpus's consumers (substrate's census) whether they relied on it; if not, change _LAZY to functions only, let _eager descend a ClassDef body, move in_class to the eager set, and record the change in the module docstring. Methods inside the class stay deferred.",
+      "evidence": "",
+      "issued_at": "2026-10-09T03:00:42Z",
+      "minted_during": "tick",
+      "caused_by": "W859",
       "last_worked": null,
       "ticks_blocked": 0
     }

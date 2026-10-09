@@ -1308,3 +1308,5 @@
 2026-10-09T02:15:31Z  tick  W802 advanced  collapse  "capability-twice audit: four duplicates found and carded (W857-W860), three rhymes kept separate with reasons; W820 closed on the live gate line"
 2026-10-09T02:30:37Z  tick  W857 advanced  collapse  "atomicwrite gains the fsync treeio's copy had (the pair was not equivalent); the swaps remain, ordered by risk"
 2026-10-09T02:48:40Z  tick  W857 advanced  collapse  "treeio now writes through atomicwrite (first sibling wiring of that dist): mode kept, fsync kept, own copy deleted; ratchet, pycheck_census and pathsforward store remain"
+2026-10-09T03:00:42Z  tick  W861 minted    -         "corpus.import_edges classes a class body's imports as deferred, but a class body executes when the module is imported"  evidence=W859
+2026-10-09T03:00:42Z  tick  W859 advanced  collapse  "W858/W859 compared by measurement: names identical on 144 files, five policy differences in file discovery; a class-body classification question found and carded (W861)"
