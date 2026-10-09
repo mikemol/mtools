@@ -58,3 +58,17 @@ src/mikemol/katas/fleet.py|probe-leaves-its-cleanup|, \[temp, held\]\)|, [])|def
 
 # Flush asks mikemol-commit for the `none` waypoint and the sync subject.
 src/mikemol/katas/fleet.py|flush-wrong-waypoint|commits\.Request\(repo, "none", SYNC_SUBJECT\)|commits.Request(repo, "W0", SYNC_SUBJECT)|def=flush
+
+# W876: archive never overwrites, cuts a name to its leaf, and reports what was not there.
+src/mikemol/katas/inbox.py|archive-overwrites|elif target\.exists\(\):|elif False:|def=archive
+src/mikemol/katas/inbox.py|archive-follows-a-path|leaf = Path\(name\)\.name|leaf = name|def=archive
+src/mikemol/katas/inbox.py|archive-hides-the-missing|missing\.append\(leaf\)|pass|def=archive
+
+# W876: the hook survey ignores comments and honours core.hooksPath.
+src/mikemol/katas/survey.py|survey-counts-comments|and not line\.lstrip\(\)\.startswith\("#"\)||def=bazel_lines
+src/mikemol/katas/survey.py|survey-ignores-hooks-path|configured or _DEFAULT_HOOKS|_DEFAULT_HOOKS|def=hook_row
+
+# W876: scaffold never overwrites, fills the repo name, and swaps the hook only on a pass.
+src/mikemol/katas/scaffold.py|scaffold-overwrites|if path\.exists\(\):|if False:|def=scaffold
+src/mikemol/katas/scaffold.py|template-keeps-its-placeholder|\.replace\(PLACEHOLDER, repo\)||def=render
+src/mikemol/katas/scaffold.py|hook-swapped-without-a-pass|if not target_passed:|if False:|def=install_hook

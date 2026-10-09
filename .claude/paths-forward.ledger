@@ -1368,3 +1368,4 @@
 2026-10-09T12:55:19Z  tick  W876 minted    -         "katas: archive, precommit_survey and bazelize, the file-operation katas"  evidence=W796
 2026-10-09T12:55:19Z  tick  W877 minted    -         "katas: pulse and tick end, the katas that act on the host queue and the nemik tools"  evidence=W796
 2026-10-09T12:55:26Z  tick  W875 advanced  collapse  "katas.fleet: status/flush/probe over throwaway git repos, 15/15; grid caught two defects of mine, fixed"
+2026-10-09T13:09:21Z  tick  W876 advanced  collapse  "katas gains inbox, survey and scaffold; the host archive no longer overwrites; 18/18"

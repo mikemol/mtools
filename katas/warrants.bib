@@ -279,3 +279,115 @@
   claim  = {The hook sees a GIT_INDEX_FILE, and the temp index and the held lock are gone after.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_probe_runs_the_hook_under_a_temp_index_and_cleans_up},
 }
+
+@misc{katas-inbox-named-letters-move-into-the-archive,
+  section = {inbox},
+  title  = {Each named letter leaves the inbox and appears under `archive/`, contents intact},
+  claim  = {Each named letter leaves the inbox and appears under `archive/`, contents intact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbox.py -k test_named_letters_move_into_the_archive},
+}
+
+@misc{katas-inbox-archive-directory-is-created-when-absent,
+  section = {inbox},
+  title  = {The first archive call makes `inbox/archive`},
+  claim  = {The first archive call makes `inbox/archive`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbox.py -k test_the_archive_directory_is_created_when_absent},
+}
+
+@misc{katas-inbox-missing-letter-is-reported-not-raised,
+  section = {inbox},
+  title  = {A name that is not in the inbox is named in the result, and the others still move},
+  claim  = {A name that is not in the inbox is named in the result, and the others still move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbox.py -k test_a_missing_letter_is_reported_not_raised},
+}
+
+@misc{katas-inbox-path-is-cut-to-its-file-name,
+  section = {inbox},
+  title  = {A name cannot reach outside the inbox: only its last part is used},
+  claim  = {A name cannot reach outside the inbox: only its last part is used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbox.py -k test_a_path_is_cut_to_its_file_name},
+}
+
+@misc{katas-inbox-already-archived-name-is-never-overwritten,
+  section = {inbox},
+  title  = {The first archived letter survives a second one with the same name},
+  claim  = {The first archived letter survives a second one with the same name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbox.py -k test_an_already_archived_name_is_never_overwritten},
+}
+
+@misc{katas-survey-repo-with-no-hook-is-reported-as-none,
+  section = {survey},
+  title  = {Neither a configured hooks path nor the default directory has a pre-commit},
+  claim  = {Neither a configured hooks path nor the default directory has a pre-commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_survey.py -k test_a_repo_with_no_hook_is_reported_as_none},
+}
+
+@misc{katas-survey-hook-naming-bazel-on-a-code-line-is-bazel,
+  section = {survey},
+  title  = {A non-comment line that names bazel makes the verdict BAZEL, and the line is shown},
+  claim  = {A non-comment line that names bazel makes the verdict BAZEL, and the line is shown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_survey.py -k test_a_hook_naming_bazel_on_a_code_line_is_bazel},
+}
+
+@misc{katas-survey-bazel-only-in-a-comment-does-not-count,
+  section = {survey},
+  title  = {A hook that mentions bazel in a comment is a script},
+  claim  = {A hook that mentions bazel in a comment is a script.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_survey.py -k test_bazel_only_in_a_comment_does_not_count},
+}
+
+@misc{katas-survey-configured-hooks-path-decides-where-the-hook-is,
+  section = {survey},
+  title  = {With core.hooksPath set, the hook is read from there, not from `.git/hooks`},
+  claim  = {With core.hooksPath set, the hook is read from there, not from `.git/hooks`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_survey.py -k test_a_configured_hooks_path_decides_where_the_hook_is},
+}
+
+@misc{katas-survey-survey-has-a-row-per-workstream-in-order,
+  section = {survey},
+  title  = {Sorted by repo name},
+  claim  = {Sorted by repo name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_survey.py -k test_the_survey_has_a_row_per_workstream_in_order},
+}
+
+@misc{katas-scaffold-three-files-are-written-with-the-repo-name-filled-in,
+  section = {scaffold},
+  title  = {The placeholder becomes the directory's name; the version file holds the version},
+  claim  = {The placeholder becomes the directory's name; the version file holds the version.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scaffold.py -k test_the_three_files_are_written_with_the_repo_name_filled_in},
+}
+
+@misc{katas-scaffold-existing-file-is-left-alone-and-named,
+  section = {scaffold},
+  title  = {Nothing is overwritten: the existing file keeps its bytes and is reported},
+  claim  = {Nothing is overwritten: the existing file keeps its bytes and is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scaffold.py -k test_an_existing_file_is_left_alone_and_named},
+}
+
+@misc{katas-scaffold-second-scaffold-writes-nothing,
+  section = {scaffold},
+  title  = {Idempotent: everything now exists},
+  claim  = {Idempotent: everything now exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scaffold.py -k test_a_second_scaffold_writes_nothing},
+}
+
+@misc{katas-scaffold-hook-is-not-swapped-without-a-build-file,
+  section = {scaffold},
+  title  = {There is no //:precommit to run yet, so the reason says to write it first},
+  claim  = {There is no //:precommit to run yet, so the reason says to write it first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scaffold.py -k test_the_hook_is_not_swapped_without_a_build_file},
+}
+
+@misc{katas-scaffold-hook-is-not-swapped-until-the-target-passed,
+  section = {scaffold},
+  title  = {The caller's word that //:precommit passed is required},
+  claim  = {The caller's word that //:precommit passed is required.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scaffold.py -k test_the_hook_is_not_swapped_until_the_target_passed},
+}
+
+@misc{katas-scaffold-hook-is-swapped-once-the-target-passed,
+  section = {scaffold},
+  title  = {The bazel template is written to `.githooks/pre-commit` with the repo name filled in},
+  claim  = {The bazel template is written to `.githooks/pre-commit` with the repo name filled in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scaffold.py -k test_the_hook_is_swapped_once_the_target_passed},
+}

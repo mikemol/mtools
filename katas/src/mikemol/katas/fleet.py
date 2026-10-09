@@ -53,7 +53,7 @@ class Fleet:
     skip_flush: frozenset[str] = field(default_factory=frozenset)
 
 
-def _git(fleet: Fleet, repo: str, *args: str) -> str:
+def git(fleet: Fleet, repo: str, *args: str) -> str:
     """Run git in a repo and return its stdout.
 
     Returns:
@@ -70,7 +70,7 @@ def pending(fleet: Fleet, repo: str) -> int:
         the number of changed paths.
 
     """
-    out = _git(fleet, repo, "status", "--short", "--", *QUEUE_PATHS, "inbox")
+    out = git(fleet, repo, "status", "--short", "--", *QUEUE_PATHS, "inbox")
     return len([line for line in out.splitlines() if line.strip()])
 
 
@@ -81,7 +81,7 @@ def queue_pending(fleet: Fleet, repo: str) -> bool:
         True when any of the three queue files has a change.
 
     """
-    return bool(_git(fleet, repo, "status", "--short", "--", *QUEUE_PATHS).strip())
+    return bool(git(fleet, repo, "status", "--short", "--", *QUEUE_PATHS).strip())
 
 
 def in_flight(fleet: Fleet, repo: str) -> bool:
@@ -111,7 +111,7 @@ def status_row(fleet: Fleet, repo: str) -> str:
         the aligned line.
 
     """
-    head = _git(fleet, repo, "log", "-1", "--format=%h %s").strip()
+    head = git(fleet, repo, "log", "-1", "--format=%h %s").strip()
     flight = IN_FLIGHT if in_flight(fleet, repo) else commits.commit_state(log_of(fleet, repo))
     probing = commits.commit_state(log_of(fleet, repo, _PROBE_SUFFIX))
     mark = f" probe:{probing}" if probing else ""
