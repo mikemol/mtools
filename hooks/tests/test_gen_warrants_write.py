@@ -4,14 +4,24 @@
 
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import gen_warrants
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     import pytest
+
+# ⚑ `--prune` IS CHECKED AGAINST THE ROOT'S PAIRING CHECK (W840), so a temp repository that prunes
+# needs the real script beside its distributions, exactly as the repository root carries it.
+CHECKER = Path(__file__).parent.parent.parent / "count_test_functions.py"
+
+
+def _with_checker(root: Path) -> None:
+    """Put the independent pairing check at a temp repository's root."""
+    shutil.copy(CHECKER, root / CHECKER.name)
+
 
 TEST_MODULE = '''"""A module."""
 
@@ -37,6 +47,7 @@ def _dist(root: Path, rubric: str | None, module: str = TEST_MODULE) -> Path:
         the distribution directory.
 
     """
+    _with_checker(root)
     base = root / "d"
     (base / "tests").mkdir(parents=True)
     (base / "tests" / "test_m.py").write_text(module, encoding="utf-8")

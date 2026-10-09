@@ -25,6 +25,14 @@ longer exists in its test module (or a module that no longer exists) is a claim 
 renaming or deleting a test leaves one behind. It is dropped before the new entries are appended;
 entries whose test still exists are kept byte for byte. Only with `--write`.
 
+⚑⚑ `--prune` IS CHECKED AGAINST AN INDEPENDENT DERIVATION, AND `--dry-run` SHOWS IT (W840, operator
+2026-10-06: "set equality, not read the count"). The 41-warrant prune of fence printed a plausible
+number and was wrong. `--prune` now REFUSES (exit 2, nothing written) unless the set it would drop
+equals the ORPHAN WARRANT set `count_test_functions.py --pairing` reports for the same distribution,
+a separate parse, naming every pair in the symmetric difference; an absent or unrunnable checker is
+also a refusal. `--dry-run` changes nothing and prints each warrant key it would drop with the
+verdict of that comparison (exit 0 when equal, 2 when not); it still takes the usual operands.
+
 ⚑⚑ TWO LAYOUTS, BECAUSE THE ROOT IS NOT A DISTRIBUTION (W669). `--layout dist` (the default) is the
 layout above: the file under `tests/`, keys `<dist>-<module>-...`, checks run by the distribution's
 own `.venv`. `--layout atom` is the repository root's: a test module BESIDE the script it tests
@@ -55,6 +63,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from mikemol.hooks.payload import as_record, text_of
+from mikemol.hooks.warrant_crosscheck import UnverifiableError, difference, independent_orphans
 
 _ARTICLES = ("a", "an", "the")
 _LEGACY_ARGC = 2
@@ -64,6 +73,7 @@ EXIT_UNTRANSCRIBABLE = 2
 # test a warrant's check names: `-m pytest <file> -k <function>}`.
 _ENTRY = re.compile(r"\n?@misc\{[^,\n]+,\n.*?\n\}\n", re.DOTALL)
 _CHECKED_TEST = re.compile(r"-m pytest (\S+) -k (\w+)\}")
+_KEY = re.compile(r"@misc\{([^,\n]+),")
 
 
 class BraceError(ValueError):
@@ -125,6 +135,7 @@ class Options:
     titles: dict[str, str]
     write: bool
     prune: bool
+    dry_run: bool = False
 
 
 def _entry(spec: Spec, node: ast.FunctionDef, bib: str) -> str | None:
@@ -212,11 +223,30 @@ def _defined_tests(path: Path) -> set[str] | None:
     }
 
 
-def prune(base: Path, bib: str) -> tuple[str, int]:
-    """Drop the entries whose check names a test that no longer exists.
+def _stale_pair(
+    base: Path, defined: dict[str, set[str] | None], text: str
+) -> tuple[str, str] | None:
+    """Say whether one bib entry's check names a test that no longer exists.
 
     ⚑ AN ENTRY WITH NO PARSEABLE CHECK IS KEPT: an older entry may carry none, and what cannot be
     shown stale is not removed. A module that no longer exists makes all its entries stale.
+
+    Returns:
+        the (module, test name) its check names when that test is gone, else None.
+
+    """
+    checked = _CHECKED_TEST.search(text)
+    if checked is None:
+        return None
+    module, name = checked.group(1), checked.group(2)
+    if module not in defined:
+        defined[module] = _defined_tests(base / module)
+    tests = defined[module]
+    return None if tests is not None and name in tests else (module, name)
+
+
+def prune(base: Path, bib: str) -> tuple[str, int]:
+    """Drop the entries whose check names a test that no longer exists.
 
     Returns:
         the bib text without the stale entries, and how many were dropped.
@@ -228,19 +258,29 @@ def prune(base: Path, bib: str) -> tuple[str, int]:
     def keep(found: re.Match[str]) -> str:
         nonlocal dropped
         text = found.group(0)
-        checked = _CHECKED_TEST.search(text)
-        if checked is None:
-            return text
-        module, name = checked.group(1), checked.group(2)
-        if module not in defined:
-            defined[module] = _defined_tests(base / module)
-        tests = defined[module]
-        if tests is not None and name in tests:
+        if _stale_pair(base, defined, text) is None:
             return text
         dropped += 1
         return ""
 
     return _ENTRY.sub(keep, bib), dropped
+
+
+def would_drop(base: Path, bib: str) -> list[tuple[str, str, str]]:
+    """List what `prune` would drop, by the same rule, without dropping it.
+
+    Returns:
+        (warrant key, module, test name) for each stale entry, in bib order.
+
+    """
+    defined: dict[str, set[str] | None] = {}
+    found: list[tuple[str, str, str]] = []
+    for entry in _ENTRY.finditer(bib):
+        pair = _stale_pair(base, defined, entry.group(0))
+        key = _KEY.search(entry.group(0))
+        if pair is not None and key is not None:
+            found.append((key.group(1), *pair))
+    return found
 
 
 def rubric_file(base: Path) -> Path | None:
@@ -361,6 +401,12 @@ def _options(argv: list[str] | None) -> Options:
     parser.add_argument("--layout", choices=_LAYOUT_NAMES, default="dist", help="test layout")
     parser.add_argument("--write", action="store_true", help="append to the bib and the rubric")
     parser.add_argument("--prune", action="store_true", help="with --write: drop stale warrants")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="list the warrants --prune would drop and check them against the pairing check "
+        "(changes nothing)",
+    )
     parser.add_argument("--title", action="append", help="KEY=HEADING, a new section")
     parser.add_argument("dist")
     parser.add_argument("pairs", nargs="+")
@@ -377,7 +423,50 @@ def _options(argv: list[str] | None) -> Options:
         titles=_titles([str(t) for t in title_arg] if isinstance(title_arg, list) else []),
         write=bool(opts["write"]),
         prune=bool(opts["prune"]),
+        dry_run=bool(opts["dry_run"]),
     )
+
+
+def _verified_drops(options: Options) -> tuple[list[tuple[str, str, str]], list[str]]:
+    """Find what a prune would drop and compare it with the independent orphan set (W840).
+
+    Returns:
+        the (key, module, name) entries it would drop, and the problems: every pair on which the
+        pairing check disagrees, or why it could not be asked. No problems means set equality.
+
+    """
+    base = options.root / options.dist
+    drops = would_drop(base, (base / "warrants.bib").read_text(encoding="utf-8"))
+    try:
+        orphans = independent_orphans(options.root, options.dist)
+    except UnverifiableError as err:
+        return drops, [str(err)]
+    return drops, difference({(module, name) for _, module, name in drops}, orphans)
+
+
+def _gate_prune(options: Options) -> int | None:
+    """Refuse a prune the independent check disagrees with, or answer a dry run (W840).
+
+    ⚑ BEFORE ANYTHING IS WRITTEN: a refusal here leaves the bib, the rubric and the appended
+    entries all untouched, so a disagreement is never half a prune.
+
+    Returns:
+        an exit code when the run is over (a dry run's verdict, or a refusal), else None.
+
+    """
+    if not (options.dry_run or (options.prune and options.write)):
+        return None
+    drops, problems = _verified_drops(options)
+    if options.dry_run:
+        for key, module, name in drops:
+            sys.stdout.write(f"WOULD DROP {key}  {module}::{name}\n")
+        verdict = "equal to" if not problems else "DISAGREES WITH"
+        sys.stdout.write(f"{len(drops)} would drop; {verdict} the pairing check's orphan set\n")
+    for problem in problems:
+        sys.stderr.write(f"{problem}\n")
+    if problems:
+        return EXIT_UNTRANSCRIBABLE
+    return 0 if options.dry_run else None
 
 
 def _apply(options: Options, entries: list[str], rubric: Path | None, rows: list[str]) -> int:
@@ -421,6 +510,9 @@ def main(argv: list[str] | None = None) -> int:
     except (BraceError, RubricError) as err:
         sys.stderr.write(f"{err}\n")
         return EXIT_UNTRANSCRIBABLE
+    refused = _gate_prune(options)
+    if refused is not None:
+        return refused
     if options.write:
         dropped = _apply(options, out, rubric, rows)
         sys.stderr.write(

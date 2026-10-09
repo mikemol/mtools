@@ -46,3 +46,4 @@ read-guard	The Read Guard: an Unbounded Whole-File Read of an Oversized File Is 
 bazel-admit	The Bazel Admission: Heavy Commands Wait on Zram Headroom and a Memory Lease, Light Ones Run Untouched, a Full Zram Is Refused After a Bounded Wait, and What Cannot Be Read Blocks Nothing
 pycheck-format	The Format Mode: The Project's Own Formatter Applied to One File, Written Only When It Changes, and a File in No Project Never Reads as Clean
 snapshot	The Snapshot: An Immutable Tree at One Fixed Namespaced Path, Locked Against a Second Writer, Updated by Its Difference, and Never the Real Index
+warrant-crosscheck	The Prune Cross-Check: What --prune Would Drop Must Equal the Pairing Check's Orphan Set, a Disagreement or a Missing Checker Refuses Before Anything Is Written, and --dry-run Shows It

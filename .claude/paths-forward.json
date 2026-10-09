@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 80,
+      "ticks_blocked": 81,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 78,
+      "ticks_blocked": 79,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 83,
+      "ticks_blocked": 84,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 16,
+      "ticks_blocked": 17,
       "completed": null
     },
     {
@@ -16963,7 +16963,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -17097,7 +17097,7 @@
     {
       "symbol": "W840",
       "title": "mikemol-gen-warrants --dry-run lists the warrants --prune would drop, and checks them against the pairing check's orphan set (A symmetric-difference B = empty)",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -17106,13 +17106,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Operator 2026-10-06: the lesson from the 41-warrant prune is set equality against an independent derivation, not 'read the count'. --prune today drops and prints a count. Add --dry-run (changes nothing, prints each key it would drop) and make --prune itself REFUSE (exit 2, nothing written) unless the set it would drop equals the set count_test_functions.py --pairing independently reports as ORPHAN WARRANT for the same distribution, naming every key in the symmetric difference. That is the check that would have failed on fence (41 vs 0 orphans). count_test_functions.py is an independent parse (ast.walk over the test files), so the two cannot share the class-method blind spot.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: mikemol-gen-warrants --dry-run lists each warrant key --prune would drop and compares the set with count_test_functions.py --pairing's ORPHAN WARRANT set (a separate parse); --write --prune now refuses (exit 2, nothing written) on any difference, naming every pair in the symmetric difference, and on an absent or unrunnable checker. New hooks/warrant_crosscheck.py owns the one subprocess (per-file ignore declared); prune and would_drop share one stale-entry rule. Witness: a live warrant whose note quotes a stale selector before its real check, which prune would have dropped. 11 new tests, the 3 existing prune tests now stage the real checker, 36 gen_warrants tests pass. | 2026-10-09: correction: the new tests number 10 (10 warrants generated), not 11.",
       "issued_at": "2026-10-06T20:42:59Z",
       "minted_during": "interrupt",
       "caused_by": "W835",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T01:04:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T010433Z"
     },
     {
       "symbol": "W841",
@@ -17187,7 +17188,7 @@
     {
       "symbol": "W844",
       "title": "mikemol-commit prints no verdict when git commit times out: it crashes with subprocess.TimeoutExpired after 3000 s, so the caller reads a traceback instead of NOT COMMITTED repo: timed out",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit",
@@ -17196,13 +17197,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: already fixed at HEAD: commit_kata.run_git catches subprocess.TimeoutExpired and returns a TIMED_OUT result (hooks/src/mikemol/hooks/commit_kata.py lines 92-99), verdict() says 'NOT COMMITTED repo: timed out after N s (no verdict)' (line 174), the limit is 10800 s; witness hooks/tests/test_commit_kata.py::test_a_gate_that_runs_past_the_limit_is_a_verdict_not_a_traceback cites mtools:W844 and passes (12 commit_kata tests pass 2026-10-09).",
       "issued_at": "2026-10-06T23:52:25Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T00:56:55Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T005655Z"
     },
     {
       "symbol": "W845",

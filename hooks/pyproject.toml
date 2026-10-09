@@ -560,3 +560,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # or `<project parent>/nemik/.venv/bin/nemik-check`; the argv is module constants plus the fleet
 # root as ONE word; stdin is closed and the call is bounded by a timeout. Never through a shell.
 "src/mikemol/hooks/nemik_check.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ THE PRUNE'S INDEPENDENT CROSS-CHECK (W840): running `count_test_functions.py --pairing` IS this
+# module's one responsibility, because the point is a SEPARATE parse that shares nothing with
+# gen_warrants. The argv is the running interpreter, the repo's own script and the distribution path
+# as one word each; the call is bounded by a timeout and never goes through a shell.
+"src/mikemol/hooks/warrant_crosscheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_warrant_crosscheck.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

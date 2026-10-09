@@ -1295,3 +1295,4 @@
 2026-10-09T00:33:30Z  interrupt W855 minted    -         "mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged deletion from the pathspec"  evidence=luthen-observability:W256
 2026-10-09T00:34:43Z  tick  W855 advanced  unblock   "mikemol-commit keeps a staged deletion in the pathspec (hooks commit_kata.tracked accepts HEAD); gated commit follows"
 2026-10-09T00:43:40Z  tick  W803 advanced  unblock   "--delivered: version 0.0.<highest done> derived from the queue (slice 1 of W803)"
+2026-10-09T01:04:39Z  tick  W840 advanced  unblock   "gen-warrants --prune is set-equal to the pairing check's orphans or refuses; --dry-run shows it; W844 closed on existing evidence"
