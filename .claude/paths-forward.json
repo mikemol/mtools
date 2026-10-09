@@ -4,9 +4,9 @@
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
   "counter": 867,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T06:20:51Z",
-  "job_id": "de619aaa",
-  "predecessor_job_id": "ae83af74",
+  "heartbeat": "2026-10-09T07:37:27Z",
+  "job_id": "c85e90eb",
+  "predecessor_job_id": "de619aaa",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -17675,12 +17675,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Probe one file in each of amr-skills, cstz, earley, lg_kernel, restsync with --check-file to name the cause; then letters: venv-less repos 'install ruff and mypy', and a pycheck card for the isolated-relative-import mypy failure (linux-sources, memmesh __init__).",
-      "evidence": "2026-10-09: 2026-10-09 CORRECTION to W864's premise ('no governing project bar'): 9 of the 10 unjudged repos HAVE a pyproject.toml (cvm2 does not); none has a ruff.toml. The unjudged cause is that the checker cannot run, and it differs by repo (single-file --check-file probes): asn1 -> 'asn1 has no .venv/bin/python3 to run ruff and mypy from' although ls -d finds .venv/bin/python3 there (not read through: ruff/mypy likely absent from it; unverified); linux-sources -> 'mypy exited 2: No parent module -- cannot perform relative import' (mypy run on one file alone, a gate limitation); no .venv at all: cvm2, memmesh, ologpad; .venv present, cause not probed: amr-skills, cstz, earley, lg_kernel, restsync. So W864's decision (record as unjudged) stands, but the reason is 'the gate cannot run there', which is fixable by the owner (install the checkers in the repo venv) or by pycheck (a package-aware mypy run).",
+      "next_bounded_step": "Letters (one per repo, no live sessions among asn1 cstz earley lg_kernel restsync cvm2 memmesh ologpad linux-sources amr-skills in ListAgents): 'recreate .venv so pycheck can judge' to asn1, cstz, earley, lg_kernel, restsync; 'create a .venv with ruff and mypy' to cvm2, memmesh, ologpad; 'a tracked file .claude/pf.py is deleted in the working tree' to amr-skills; and a pycheck card in mtools for linux-sources's isolated-file relative import.",
+      "evidence": "2026-10-09: 2026-10-09 CORRECTION to W864's premise ('no governing project bar'): 9 of the 10 unjudged repos HAVE a pyproject.toml (cvm2 does not); none has a ruff.toml. The unjudged cause is that the checker cannot run, and it differs by repo (single-file --check-file probes): asn1 -> 'asn1 has no .venv/bin/python3 to run ruff and mypy from' although ls -d finds .venv/bin/python3 there (not read through: ruff/mypy likely absent from it; unverified); linux-sources -> 'mypy exited 2: No parent module -- cannot perform relative import' (mypy run on one file alone, a gate limitation); no .venv at all: cvm2, memmesh, ologpad; .venv present, cause not probed: amr-skills, cstz, earley, lg_kernel, restsync. So W864's decision (record as unjudged) stands, but the reason is 'the gate cannot run there', which is fixable by the owner (install the checkers in the repo venv) or by pycheck (a package-aware mypy run). | 2026-10-09: 2026-10-09 probes (--check-file, one file each): cstz, earley, lg_kernel, restsync -> 'has no .venv/bin/python3 to run ruff and mypy from', the same message as asn1, though each repo's .venv/bin/python3 exists as an entry: ls -l cstz/.venv/bin/python3 shows a symlink to 'python' (the standard venv layout; its target was NOT followed, per the no-symlink rule). So for six repos (asn1, cstz, earley, lg_kernel, restsync + amr-skills's .venv) the checker refuses or cannot use a SYMLINKED venv python; whether pycheck refuses symlinks on purpose or the chain is broken is unknown and unprobed. amr-skills -> .claude/pf.py the census named is tracked in git's index but absent from the working tree ('No such file or directory'), so that one unjudged file is a deleted-but-tracked file, not a checker failure. Venv-less (no .venv): cvm2, memmesh, ologpad. linux-sources: isolated-file mypy relative-import failure (previous entry). | 2026-10-09: 2026-10-09 CAUSE FOUND by reading hooks/src/mikemol/hooks/project_root.py venv_python_for: it returns root/.venv/bin/python3 only when candidate.exists(), which FOLLOWS symlinks. cstz's entry is a symlink (python3 -> python); so a venv whose interpreter chain is dangling (the base interpreter it was built against is gone) reads as 'no .venv/bin/python3'. That is a stale venv, not a policy against symlinks, and not a pycheck defect: the owner recreates the venv. Consistent for asn1, cstz, earley, lg_kernel, restsync (entry exists, exists() False); NOT verified by following any link, only by the code and the matching message. amr-skills is the exception: its .venv python resolves, and its single unjudged file is tracked-but-deleted.",
       "issued_at": "2026-10-09T07:21:57Z",
       "minted_during": "tick",
       "caused_by": "W795",
-      "last_worked": "2026-10-09T07:36:59Z",
+      "last_worked": "2026-10-09T07:51:31Z",
       "ticks_blocked": 0
     }
   ],

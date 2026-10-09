@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 867 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:1d6891af1bc7853d`
+counter 867 · heartbeat 2026-10-09T07:37:27Z · job `c85e90eb` · hash `v2:72b4862026117ca3`
 
 | # | symbol | status |
 |---|---|---|
@@ -1048,9 +1048,10 @@ counter 867 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:1d68
 32. **W867** (ready) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
    ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record
    them as outside the fleet standard
-   - next: Probe one file in each of amr-skills, cstz, earley, lg_kernel, restsync with --check-file to name the cause;
-     then letters: venv-less repos 'install ruff and mypy', and a pycheck card for the isolated-relative-import mypy
-     failure (linux-sources, memmesh __init__).
+   - next: Letters (one per repo, no live sessions among asn1 cstz earley lg_kernel restsync cvm2 memmesh ologpad
+     linux-sources amr-skills in ListAgents): 'recreate .venv so pycheck can judge' to asn1, cstz, earley, lg_kernel,
+     restsync; 'create a .venv with ruff and mypy' to cvm2, memmesh, ologpad; 'a tracked file .claude/pf.py is deleted
+     in the working tree' to amr-skills; and a pycheck card in mtools for linux-sources's isolated-file relative import.
 33. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257
