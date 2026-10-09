@@ -18,8 +18,11 @@ Any other prompt passes untouched, and the facts are not even read.
 ⚑ A FACT THAT CANNOT BE READ BLOCKS NOTHING (host_facts: absent, never zeros): an unreadable
 mm_stat or queue is named in the context line as "not checked", and the tick proceeds.
 
-⚑ THE PAYLOAD'S PROMPT KEY IS READ AS `prompt`, FALLING BACK TO `user_message`. Neither is measured
-against a live UserPromptSubmit payload yet (mtools:W812 owes that reading).
+⚑ THE PAYLOAD'S PROMPT KEY IS READ AS `prompt`, FALLING BACK TO `user_message`. MEASURED LIVE
+(mtools:W820, 2026-10-09): a `[paths-forward tick] ...` cron prompt in the mtools session received
+the "tick gate: zram1 ..." line as UserPromptSubmit context, so the payload does carry the prompt
+under one of the two keys this reads. Which of the two it is was not isolated (no payload was
+captured), and the fallback makes that immaterial to the gate.
 
 ⚑ NO ARMING VARIABLE: it blocks or adds context, with no advisory mode, and this file must not
 spell that variable's name (the wiring arm reads a module that does as one that arms).

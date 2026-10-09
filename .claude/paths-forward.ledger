@@ -1301,3 +1301,8 @@
 2026-10-09T01:27:50Z  tick  W856 advanced  collapse  "pre-commit loses its redundant section grep; the pairing owns section agreement"
 2026-10-09T01:46:05Z  tick  W805 advanced  sweep     "fence admit arms audited for wallclock use: one real sleep converted to virtual time, one real-subprocess poll left and named"
 2026-10-09T02:04:33Z  tick  W820 advanced  collapse  "tick gate accepts the bracketed prompt (zram refusal + own-queue lock skip); tick_stop names the queue's own release outside the host; key still unmeasured"
+2026-10-09T02:15:21Z  tick  W857 minted    -         "Atomic write is carried five times: make pathsforward, treeio, ratchet and hooks depend on mikemol-atomicwrite where their needs match"  evidence=W802
+2026-10-09T02:15:21Z  tick  W858 minted    -         "Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the other"  evidence=W802
+2026-10-09T02:15:22Z  tick  W859 minted    -         "Import edges are derived by corpus.import_edges and by importdag: compare, then make one depend on the other"  evidence=W802
+2026-10-09T02:15:22Z  tick  W860 minted    -         "hooks.gen_warrants reads the bib with its own regex: make it use mikemol-bibparse, keeping count_test_functions.py independent"  evidence=W802
+2026-10-09T02:15:31Z  tick  W802 advanced  collapse  "capability-twice audit: four duplicates found and carded (W857-W860), three rhymes kept separate with reasons; W820 closed on the live gate line"
