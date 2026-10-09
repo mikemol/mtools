@@ -1231,3 +1231,66 @@
   claim  = {A declaration given to derive settles an ambiguous name; without it the name returns.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_derive_passes_the_declared_resolutions_through},
 }
+
+@misc{importdag-resolve-init-absolute-import-carries-the-package-initializer,
+  section = {resolve_init},
+  title  = {`nemik.model` is model.py and also the package it lives in (the measured W792 case)},
+  claim  = {`nemik.model` is model.py and also the package it lives in (the measured W792 case).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_an_absolute_import_carries_the_package_initializer},
+}
+
+@misc{importdag-resolve-init-every-package-directory-the-name-spans-contributes-outermost-first,
+  section = {resolve_init},
+  title  = {`nemik.sub.leaf` runs nemik/__init__ and nemik/sub/__init__ before leaf},
+  claim  = {`nemik.sub.leaf` runs nemik/__init__ and nemik/sub/__init__ before leaf.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_every_package_directory_the_name_spans_contributes_outermost_first},
+}
+
+@misc{importdag-resolve-init-suffix-name-spans-only-the-directories-it-names,
+  section = {resolve_init},
+  title  = {`sub.leaf` runs sub/__init__ and not nemik/__init__, whose role the suffix cannot know},
+  claim  = {`sub.leaf` runs sub/__init__ and not nemik/__init__, whose role the suffix cannot know.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_a_suffix_name_spans_only_the_directories_it_names},
+}
+
+@misc{importdag-resolve-init-importing-a-package-by-name-carries-its-outer-packages,
+  section = {resolve_init},
+  title  = {`nemik.sub` is sub/__init__.py, and nemik/__init__.py runs before it},
+  claim  = {`nemik.sub` is sub/__init__.py, and nemik/__init__.py runs before it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_importing_a_package_by_name_carries_its_outer_packages},
+}
+
+@misc{importdag-resolve-init-relative-import-counts-from-its-base-directory,
+  section = {resolve_init},
+  title  = {`from .model import x` in adapter.py names model.py and the package it sits in},
+  claim  = {`from .model import x` in adapter.py names model.py and the package it sits in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_a_relative_import_counts_from_its_base_directory},
+}
+
+@misc{importdag-resolve-init-relative-climb-counts-from-the-climbed-directory,
+  section = {resolve_init},
+  title  = {`from ..model import x` in sub/leaf.py starts at nemik/, so nemik/__init__ is the base},
+  claim  = {`from ..model import x` in sub/leaf.py starts at nemik/, so nemik/__init__ is the base.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_a_relative_climb_counts_from_the_climbed_directory},
+}
+
+@misc{importdag-resolve-init-file-is-never-its-own-import,
+  section = {resolve_init},
+  title  = {A package's own __init__.py importing its submodule does not gain an edge to itself},
+  claim  = {A package's own __init__.py importing its submodule does not gain an edge to itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_a_file_is_never_its_own_import},
+}
+
+@misc{importdag-resolve-init-directory-without-an-initializer-contributes-nothing,
+  section = {resolve_init},
+  title  = {A namespace package has no file to import, so the module alone is the edge},
+  claim  = {A namespace package has no file to import, so the module alone is the edge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_a_directory_without_an_initializer_contributes_nothing},
+}
+
+@misc{importdag-resolve-init-top-level-module-has-no-package-to-carry,
+  section = {resolve_init},
+  title  = {A file at the root has no parent directory, so nothing is added},
+  claim  = {A file at the root has no parent directory, so nothing is added.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve_init.py -k test_a_top_level_module_has_no_package_to_carry},
+}

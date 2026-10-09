@@ -3681,3 +3681,31 @@
   claim  = {Without the pinned opa the residue cannot be known, so the command is exit 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_closure.py -k test_nothing_is_minted_unjudged},
 }
+
+@misc{pathsforward-skip-gap-is-filed-in-residue-with-its-reason-and-marked-skipped,
+  section = {skip},
+  title  = {The symbol resolves afterwards, and nothing is claimed about what it once was},
+  claim  = {The symbol resolves afterwards, and nothing is claimed about what it once was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_skip.py -k test_a_gap_is_filed_in_residue_with_its_reason_and_marked_skipped},
+}
+
+@misc{pathsforward-skip-only-a-real-gap-is-skipped-and-a-refusal-changes-nothing,
+  section = {skip},
+  title  = {Existing symbols are --drop's, unissued ones would collide with a later --add},
+  claim  = {Existing symbols are --drop's, unissued ones would collide with a later --add.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_skip.py -k test_only_a_real_gap_is_skipped_and_a_refusal_changes_nothing},
+}
+
+@misc{pathsforward-skip-cli-skips-a-gap-and-the-queue-checks-clean-afterwards,
+  section = {skip},
+  title  = {The gcalculus case: counter above a hole, `--check` red until the hole is recorded},
+  claim  = {The gcalculus case: counter above a hole, `--check` red until the hole is recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_skip.py -k test_the_cli_skips_a_gap_and_the_queue_checks_clean_afterwards},
+}
+
+@misc{pathsforward-skip-cli-refuses-a-live-symbol-and-leaves-the-file-alone,
+  section = {skip},
+  title  = {Skipping W1 is exit 2, with the message pointing at --drop, and nothing is written},
+  claim  = {Skipping W1 is exit 2, with the message pointing at --drop, and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_skip.py -k test_the_cli_refuses_a_live_symbol_and_leaves_the_file_alone},
+}

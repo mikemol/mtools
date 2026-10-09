@@ -810,6 +810,49 @@ def drop(state: State, sym: str, reason: str, now: str, died: dict[str, str] | N
     )
 
 
+def skip(state: State, sym: str, reason: str, now: str) -> None:
+    """Record a symbol the counter issued that no waypoint or residue entry holds (W847).
+
+    ⚑ A GAP IS A SYMBOL ISSUED AND NEVER STORED (gcalculus W30: the counter skipped it once, cause
+    unknown), and `--check` fails on it forever because `--drop` only moves an existing waypoint,
+    `--repair-counter` only raises a lagging counter, and `--add` mints the NEXT number. This is the
+    one verb for it: it files the symbol in residue with the reason, marked `skipped`, so every
+    symbol 1..counter still resolves and nothing is invented about what it once was.
+
+    ⚑ IT REFUSES EVERYTHING BUT A REAL GAP: a symbol that already exists (that is `--drop`'s job),
+    one above the counter (that is not issued, and recording it would let a later `--add` collide),
+    or a malformed one. The reason is required.
+
+    Raises:
+        RefusedError: on a blank reason, a symbol that is not `W<n>`, one above the counter, or one
+            already in waypoints or residue.
+
+    """
+    if not reason.strip():
+        msg = f"skip {sym}: a reason is required"
+        raise RefusedError(msg)
+    number = symbol_number(sym)
+    if number is None:
+        msg = f"skip {sym!r}: not a W<n> symbol"
+        raise RefusedError(msg)
+    if number > state.counter:
+        msg = f"skip {sym}: above the counter ({state.counter}), so it was never issued"
+        raise RefusedError(msg)
+    if any(text(r, "symbol") == sym for r in (*state.waypoints, *state.residue)):
+        msg = f"skip {sym}: already in waypoints or residue; use --drop for a live waypoint"
+        raise RefusedError(msg)
+    state.residue.append(
+        {
+            "symbol": sym,
+            "title": "(skipped symbol)",
+            "dropped_at": now,
+            "reason": reason,
+            "recoverable": False,
+            "skipped": True,
+        }
+    )
+
+
 def action_for(count: int) -> Action:
     """Map a blocked-tick count to what it is owed: backoff at 1, 2, 4, 8, escalate once at 16.
 

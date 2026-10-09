@@ -28,6 +28,16 @@ edge to be forgotten). A decision is data: `declared` maps a name to the file it
 mean, and it is honoured ONLY when that file is one of the candidates, so a stale declaration
 cannot pin a name to a file that no longer answers it.
 
+⚑⚑ IMPORTING A MODULE ALSO IMPORTS ITS PACKAGES' `__init__.py` (W792). `import a.b.c` runs
+`a/__init__.py` and `a/b/__init__.py` before `c`, so each resolved file carries an edge to the
+`__init__.py` of every package directory above it, outermost first. Measured: debtplan called
+nemik's `adapter.py` ready while mypy's closure of it also reported `src/nemik/__init__.py`, because
+that implicit import was not an edge. ⚑ ONLY THE DIRECTORIES THE NAME ITSELF SPANS COUNT for an
+absolute import (`import b.c` found at `src/a/b/c.py` runs `b/__init__.py`, never `src/` or `a/`,
+whose roles this suffix index cannot know), and a relative one counts from its base directory. A
+directory with no `__init__.py` is a namespace package and contributes nothing, and a file is never
+its own import, so a package's `__init__.py` importing its own submodule adds no edge to itself.
+
 ⚑ THE TRANSITIVE CLOSURE IS `dagderive.cone`, NOT A SECOND WALK. This module derives edges only.
 """
 
@@ -170,13 +180,14 @@ def _settle(path: str, hits: frozenset[str]) -> frozenset[str] | None:
 
 def _absolute(
     path: str, name: str, idx: Index, declared: Mapping[str, str]
-) -> tuple[frozenset[str], Unsettled | None]:
+) -> tuple[frozenset[str], Unsettled | None, int]:
     """Resolve one absolute name at its longest dotted prefix that any file answers.
 
     Returns:
-        The files the name means, and the `Unsettled` prefix when several files answer it and none
-        is beside `path` or declared. A declaration is honoured only when it names one of the
-        candidates. A file is never its own import.
+        The files the name means, the `Unsettled` prefix when several files answer it and none
+        is beside `path` or declared, and how many dotted parts the matched prefix spans (0 when
+        nothing matched). A declaration is honoured only when it names one of the candidates. A
+        file is never its own import.
 
     """
     parts = name.split(".")
@@ -187,12 +198,42 @@ def _absolute(
             continue
         settled = _settle(path, hits)
         if settled is not None:
-            return settled, None
+            return settled, None, cut
         pinned = declared.get(prefix)
         if pinned in hits:
-            return frozenset({pinned}), None
-        return frozenset(), Unsettled(prefix, tuple(sorted(hits)))
-    return frozenset(), None
+            return frozenset({pinned}), None, cut
+        return frozenset(), Unsettled(prefix, tuple(sorted(hits))), cut
+    return frozenset(), None, 0
+
+
+def _initializers(path: str, target: str, start: int, files: frozenset[str]) -> frozenset[str]:
+    """Name the package `__init__.py` files that importing `target` also runs.
+
+    Returns:
+        For each directory of `target`'s parent from index `start` on, cumulative from the
+        outermost, that directory's `__init__.py` when the tree has one. The importer itself is
+        left out: a file is never its own import.
+
+    """
+    parts = PurePosixPath(target).parent.parts
+    first = max(start, 0)
+    markers = (
+        "/".join((*parts[: first + cut], PACKAGE_FILE)) for cut in range(1, len(parts) - first + 1)
+    )
+    return frozenset(m for m in markers if m in files and m != path)
+
+
+def _spanned(target: str, depth: int) -> int:
+    """Count the leading parent directories an absolute name of `depth` parts does NOT span.
+
+    Returns:
+        How many directories above the ones the name spans: a module `y/c.py` named `y.c` spans one
+        directory (`y`), and a package `y/__init__.py` named `y` spans one too.
+
+    """
+    parts = PurePosixPath(target).parent.parts
+    named = depth if PurePosixPath(target).name == PACKAGE_FILE else depth - 1
+    return len(parts) - named
 
 
 def _relative(path: str, ref: Reference, files: frozenset[str]) -> frozenset[str]:
@@ -243,10 +284,13 @@ def resolve(
     unsettled: dict[str, Unsettled] = {}
     for ref in refs:
         if ref.level:
-            files |= _relative(path, ref, idx.files)
+            base = len(PurePosixPath(path).parent.parts) - (ref.level - 1)
+            for target in _relative(path, ref, idx.files):
+                files |= {target, *_initializers(path, target, base - 1, idx.files)}
             continue
-        found, left = _absolute(path, ref.name, idx, pins)
-        files |= found
+        found, left, depth = _absolute(path, ref.name, idx, pins)
+        for target in found:
+            files |= {target, *_initializers(path, target, _spanned(target, depth), idx.files)}
         if left is not None:
             unsettled[left.name] = left
     return Resolution(frozenset(files), tuple(unsettled[name] for name in sorted(unsettled)))

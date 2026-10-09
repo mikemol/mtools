@@ -104,6 +104,7 @@ _VALUED = (
     "outcomes_set",
     "certify",
     "mint_residue",
+    "skip",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -384,6 +385,12 @@ def _parser() -> argparse.ArgumentParser:
         "one JSON line each, judged by the pinned opa; reads, never writes",
     )
     mode.add_argument("--drop", nargs=2, metavar=("SYMBOL", "REASON"), help="move to residue")
+    mode.add_argument(
+        "--skip",
+        nargs=2,
+        metavar=("SYMBOL", "REASON"),
+        help="W847: record a symbol the counter issued that no waypoint or residue holds",
+    )
     mode.add_argument(
         "--mint-residue",
         nargs=2,
@@ -1145,6 +1152,23 @@ def _drop(ctx: Ctx) -> int:
     return _mutate(ctx, edit, after)
 
 
+def _skip(ctx: Ctx) -> int:
+    """Record a skipped symbol in residue, with its reason (W847).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    sym, reason = ctx.many("skip") or ("", "")
+
+    def edit(state: State) -> int:
+        ops.skip(state, sym, reason, ctx.stamp())
+        _say(f"{sym} -> residue (skipped); state_hash={v2(state.waypoints)}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _embargo(ctx: Ctx) -> int:
     """Record one embargoed path (W511), and ledger it.
 
@@ -1601,6 +1625,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "unlinked": _unlinked,
     "certify": _certify,
     "mint_residue": _mint_residue,
+    "skip": _skip,
 }
 
 
