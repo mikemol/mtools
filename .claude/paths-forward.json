@@ -4,9 +4,9 @@
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
   "counter": 872,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T09:21:29Z",
-  "job_id": "51ba88ef",
-  "predecessor_job_id": "c85e90eb",
+  "heartbeat": "2026-10-09T11:18:15Z",
+  "job_id": "bfce42ca",
+  "predecessor_job_id": "51ba88ef",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -17789,12 +17789,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Create a tracked mtools distribution katas (pyproject, BUILD, uv.lock): run/pf/repos/capped from katas.py as typed functions; start_commit and wait spawning hooks/bin/mikemol-commit detached with its log and rc line; timeouts as named constants (mikemol-commit's own is 10800 s, so wait's must exceed it); tests with a fake mikemol-commit script; warrants, mutants. Do not touch ~/github/.claude.",
-      "evidence": "",
+      "next_bounded_step": "Slice 1a: give treeio.proc.capture an optional timeout (test, warrant, mutant) and note commit_kata.run_git as a collapse candidate onto it. Slice 1b: scaffold the katas distribution (copy treeio's file set shape: MODULE.bazel hub, BUILD with SIBLINGS = ['//treeio:treeio'], pyproject with the uv source, README, paper.toml, rubric, uv.lock), containing only status first. One deliberate integration step.",
+      "evidence": "2026-10-09: 2026-10-09 scoping a new distribution first: the creation commit of treeio (33978f3) touched 55 files (MODULE.bazel hub, BUILD, README, paper.toml, pyproject, requirements(-dev), uv.lock, rubric, ratchet-preview, src, tests, warrants) and the memory records that a dist with BUILD but no hubs fails every commit, so a new dist is integrated in one deliberate step. Also found: katas.run() is treeio.proc.capture plus a timeout (treeio/src/mikemol/treeio/proc.py, 38 lines, 'the one place a child process is started'), and hooks commit_kata.run_git is a third copy; the katas distribution's proc core should DEPEND on treeio.proc (operator 2026-10-06: dependencies between mtools packages are good) after capture gains a timeout parameter, not re-implement it. So slice 1 shrinks: no proc module of its own.",
       "issued_at": "2026-10-09T11:01:59Z",
       "minted_during": "tick",
       "caused_by": "W796",
-      "last_worked": "2026-10-09T11:02:05Z",
+      "last_worked": "2026-10-09T11:17:50Z",
       "ticks_blocked": 0
     }
   ],
