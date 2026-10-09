@@ -156,6 +156,35 @@ def test_parser_error_calls_are_not_a_use_that_blocks_typing() -> None:
     assert "namespace=MainArgs()" in got.text
 
 
+def test_a_mutually_exclusive_group_contributes_its_fields() -> None:
+    """⚑ `mode.add_argument(...)` lands on the same namespace as the parser's own."""
+    body = (
+        "mode = parser.add_mutually_exclusive_group()\n"
+        'mode.add_argument("--a", action="store_true")\n'
+        'mode.add_argument("--b", type=int)\n'
+        'parser.add_argument("--c", action="store_true")\n'
+        "args = parser.parse_args()"
+    )
+    got = typedargs.plan(_function(body))
+    assert got.parsers == 1
+    assert got.refusals == []
+    for field in ("a: bool", "b: int | None", "c: bool"):
+        assert field in got.text, field
+
+
+def test_a_group_used_beyond_add_argument_is_refused() -> None:
+    """⚑ A group handed on, or given another method, reaches the namespace another way."""
+    body = (
+        "mode = parser.add_mutually_exclusive_group()\n"
+        'mode.add_argument("--a", action="store_true")\n'
+        "run(mode)\n"
+        "args = parser.parse_args()"
+    )
+    got = typedargs.plan(_function(body))
+    assert got.parsers == 0
+    assert "group mode is used beyond add_argument" in got.refusals[0].why
+
+
 def test_other_unfit_shapes_are_refused_with_their_reason() -> None:
     """⚑ Never parsed, two parsers, a shared destination: each names itself."""
     twice = 'parser.add_argument("--x")\nparser.add_argument("--x")\nargs = parser.parse_args()'

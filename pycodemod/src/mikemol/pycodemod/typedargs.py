@@ -269,13 +269,38 @@ def _parse_call(value: cst.BaseExpression, var: str) -> cst.Call | None:
 class _Found:
     var: str | None
     adds: list[cst.Call]
+    owners: list[str]  # the variable each add_argument was called on: the parser or a group
+    groups: list[str]
     parse: tuple[cst.Call, str] | None
 
 
+def _is_group(value: cst.BaseExpression, var: str) -> bool:
+    # `var.add_mutually_exclusive_group(...)`: its arguments land on the same namespace.
+    return isinstance(value, cst.Call) and m.matches(
+        value.func, m.Attribute(value=m.Name(var), attr=m.Name("add_mutually_exclusive_group"))
+    )
+
+
+def _added(small: cst.BaseSmallStatement | None, owners: Sequence[str]) -> _Added | None:
+    # An `add_argument` statement on the parser or on one of its groups.
+    for owner in owners:
+        if (call := _call_on(small, owner, "add_argument")) is not None:
+            return _Added(owner, call)
+    return None
+
+
+@dataclass(frozen=True, slots=True)
+class _Added:
+    owner: str
+    call: cst.Call
+
+
 def _walk(body: Sequence[cst.BaseStatement]) -> _Found | str:
-    # The parser variable, its add_argument calls and its parse_args assignment, in order.
+    # The parser variable, its groups, its add_argument calls and its parse_args assignment.
     var: str | None = None
     adds: list[cst.Call] = []
+    owners: list[str] = []
+    groups: list[str] = []
     parse: tuple[cst.Call, str] | None = None
     for stmt in body:
         small = _small(stmt)
@@ -284,13 +309,29 @@ def _walk(body: Sequence[cst.BaseStatement]) -> _Found | str:
             if var is not None:
                 return "more than one ArgumentParser in the function"
             var = made[0]
-        elif var is not None and (add := _call_on(small, var, "add_argument")) is not None:
-            adds.append(add)
+        elif var is not None and (add := _added(small, [var, *groups])) is not None:
+            adds.append(add.call)
+            owners.append(add.owner)
+        elif var is not None and made is not None and _is_group(made[1], var):
+            groups.append(made[0])
         elif var is not None and made is not None and (call := _parse_call(made[1], var)):
             parse = (call, made[0])
     if parse is not None and "namespace" in _keywords(parse[0]):
-        return _Found(None, [], None)  # already typed: running this again is a no-op
-    return _Found(var, adds, parse)
+        return _Found(None, [], [], [], None)  # already typed: running this again is a no-op
+    return _Found(var, adds, owners, groups, parse)
+
+
+def _misused(function: cst.FunctionDef, found: _Found, var: str) -> str | None:
+    # Why the parser or one of its groups is used beyond what typing can model, else None.
+    # `parser.error(...)` exits and touches no namespace field, so it is not a use that matters.
+    errors = m.Call(func=m.Attribute(value=m.Name(var), attr=m.Name("error")))
+    allowed = found.owners.count(var) + 2 + len(found.groups) + len(m.findall(function, errors))
+    if len(m.findall(function, m.Name(var))) != allowed:
+        return f"parser {var} is used beyond add_argument, parse_args, groups and error"
+    for group in found.groups:
+        if len(m.findall(function, m.Name(group))) != found.owners.count(group) + 1:
+            return f"group {group} is used beyond add_argument"
+    return None
 
 
 def _scan(function: cst.FunctionDef) -> _Parser | str | None:
@@ -307,11 +348,8 @@ def _scan(function: cst.FunctionDef) -> _Parser | str | None:
         return None if not isinstance(found, str) else found
     if found.parse is None:
         return f"parser {found.var} is never parsed by a plain `x = {found.var}.parse_args(...)`"
-    # `parser.error(...)` exits and touches no namespace field, so it is not a use that matters.
-    errors = m.Call(func=m.Attribute(value=m.Name(found.var), attr=m.Name("error")))
-    allowed = len(found.adds) + 2 + len(m.findall(function, errors))
-    if len(m.findall(function, m.Name(found.var))) != allowed:
-        return f"parser {found.var} is used beyond add_argument, parse_args and error"
+    if (misused := _misused(function, found, found.var)) is not None:
+        return misused
     return _Parser(function, found.var, found.adds, found.parse[0], found.parse[1])
 
 

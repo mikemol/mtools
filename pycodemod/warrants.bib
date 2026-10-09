@@ -5771,3 +5771,17 @@
   claim  = { `parser.error(...)` exits and touches no field: nested in an `if`, it still types.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_parser_error_calls_are_not_a_use_that_blocks_typing},
 }
+
+@misc{pycodemod-typedargs-mutually-exclusive-group-contributes-its-fields,
+  section = {typedargs},
+  title  = {⚑ `mode.add_argument(...)` lands on the same namespace as the parser's own},
+  claim  = { `mode.add_argument(...)` lands on the same namespace as the parser's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_mutually_exclusive_group_contributes_its_fields},
+}
+
+@misc{pycodemod-typedargs-group-used-beyond-add-argument-is-refused,
+  section = {typedargs},
+  title  = {⚑ A group handed on, or given another method, reaches the namespace another way},
+  claim  = { A group handed on, or given another method, reaches the namespace another way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typedargs.py -k test_a_group_used_beyond_add_argument_is_refused},
+}
