@@ -35,6 +35,13 @@ records, and says on every admission that nothing enforces its number. A separat
 than a flag on `run`, so a VRAM-sized lease cannot become a host-memory cap by a mistyped flag
 (filed by amr-skills, whose GPU was measured to fail on CONTEXT COUNT, not bytes).
 
+⚑ A HELD RESOURCE'S TOTAL IS THE CONSUMER'S NUMBER, NOT THIS LEDGER'S (mtools:W593). Nothing here
+can measure how many CUDA contexts a device really allows, or whether desktop compute apps (kwin,
+VS Code) take some of them: amr-skills was asked on 2026-10-04 and has not answered, so a contexts
+ledger's TOTAL may be lower than the card says at any moment. The consumer sets it
+(`init --reset N`) and lowers it when it learns better; `hold` only keeps the parties that agree
+on it from exceeding it.
+
 ⚑ A SCRIPT OF ITS OWN, NOT A MODE OF `mikemol-fence`, for the reason `peaks` gives: that command
 fences whatever follows its flags, so it cannot take a subcommand.
 
