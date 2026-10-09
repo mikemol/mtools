@@ -1,15 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
 
-# ⚑ MIRRORS //pkgbuild:BUILD.bazel (itself //corpus and //icsstruct TARGET FOR TARGET) AND
-# //mdstruct:BUILD.bazel FOR THE ONE SHIPPING DEPENDENCY (pygit2); the rationale for each shape
-# lives there, this file says only where it differs. `@treeio_deps` and `@treeio_dev` are the two
-# hubs MODULE.bazel must declare beside this distribution's birth (mtools:W550); they are NOT
-# declared by this change, which leaves MODULE.bazel to the integrator.
+# ⚑ MIRRORS //atomicwrite TARGET FOR TARGET: this is a LIBRARY, standard library only. The rationale
+# for each shape lives in //pkgbuild. `@procrun_dev` is declared in MODULE.bazel beside this
+# distribution's birth (mtools:W873).
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
-load("@treeio_deps//:requirements.bzl", "requirement")
-load("@treeio_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@procrun_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 exports_files([
@@ -20,27 +17,12 @@ exports_files([
     "uv.lock",
 ])
 
-# ⚑ SIBLINGS = the distributions this one imports (mtools:W857: `mikemol-atomicwrite`, the durable
-# write that replaced this module's own copy). Bazel carries the edge as a py_library dep, the pip
-# hubs stay independent of it, and the pyproject declares it for uv; kept in step by hand
-# (mtools:W562, the gradekit and debtplan precedent).
-SIBLINGS = [
-    "//atomicwrite:atomicwrite",
-    # W873: the process seam, extracted from this package's own `proc`.
-    "//procrun:procrun",
-]
-
-# ⚑ ONE SHIPPING DEPENDENCY, pygit2: `read` and `listing` open a repository to read a path at a
-# revision. Everything else is the standard library, and the snapshot half runs the `git` binary,
-# which the tests also need on PATH (the sandbox or executor image must carry it).
+# ⚑ NO `deps`: the shipping hub is empty on purpose; the module is standard library only.
 py_library(
-    name = "treeio",
-    srcs = glob(["src/mikemol/treeio/**/*.py"]),
-    data = glob(["src/mikemol/treeio/py.typed"], allow_empty = True),
+    name = "procrun",
+    srcs = glob(["src/mikemol/procrun/**/*.py"]),
+    data = glob(["src/mikemol/procrun/py.typed"], allow_empty = True),
     imports = ["src"],
-    deps = [
-        requirement("pygit2"),
-    ] + SIBLINGS,
     visibility = ["//visibility:public"],
 )
 
@@ -63,14 +45,11 @@ py_library(
         data = ["pyproject.toml"],
         size = "small",
         deps = [
-            ":treeio",
+            ":procrun",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
-        ] + SIBLINGS,
+        ],
         imports = ["src"],
-        # ⚑ Two source roots plus legacy implicit `__init__.py` files would turn `mikemol` into a
-        # regular package from the first root and shadow the namespace (W566).
-        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -110,8 +89,6 @@ sh_test(
     size = "small",
 )
 
-# ⚑ THE MUTATION GATE: every def-site body is mutated and the gate refuses if any survives, so
-# every function here is executed by a test whose assertion reads its result.
 sh_test(
     name = "mutants",
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
@@ -131,37 +108,14 @@ sh_test(
     size = "medium",
 )
 
-# ⚑ ONE py_binary PER COMMAND LINE, so a paperkit action runs each as a DECLARED tool by label
-# (rules_python resolves by layout, with no sys.path and no script directory beside the module).
-py_binary(
-    name = "vfs",
-    srcs = ["src/mikemol/treeio/vfs_cli.py"],
-    main = "src/mikemol/treeio/vfs_cli.py",
-    imports = ["src"],
-    visibility = ["//visibility:public"],
-    deps = [":treeio"] + SIBLINGS,
-    legacy_create_init = 0,
-)
-
-py_binary(
-    name = "edit_snapshot",
-    srcs = ["src/mikemol/treeio/snapshot_cli.py"],
-    main = "src/mikemol/treeio/snapshot_cli.py",
-    imports = ["src"],
-    visibility = ["//visibility:public"],
-    deps = [":treeio"] + SIBLINGS,
-    legacy_create_init = 0,
-)
-
 py_binary(
     name = "mypy_runner",
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
-    # ⚑ How mypy sees the siblings in the sandbox.
     deps = [
         dev_requirement("mypy"),
         dev_requirement("pytest"),
-    ] + SIBLINGS,
+    ],
 )
 
 sh_test(
@@ -174,7 +128,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":mypy_runner",
-    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
+    ] + glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
     size = "small",
     # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
     # things"). See //transcriptstruct:mypy for the measurement.
@@ -183,16 +137,12 @@ sh_test(
 
 venv_from_hub(
     name = ".venv",
-    # ⚑ THE SAME ENTRIES AS pyproject's [project.scripts].
-    console_scripts = {
-        "mikemol-vfs": "mikemol.treeio.vfs_cli:main",
-        "mikemol-edit-snapshot": "mikemol.treeio.snapshot_cli:main",
-    },
+    # ⚑ A LIBRARY: no console scripts, matching pyproject's absent [project.scripts].
+    console_scripts = {},
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    # ⚑ The dev venv carries the siblings, so the mutation gate imports them.
-    srcs = glob(["src/mikemol/treeio/**"]) + SIBLINGS,
+    srcs = glob(["src/mikemol/procrun/**"]),
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

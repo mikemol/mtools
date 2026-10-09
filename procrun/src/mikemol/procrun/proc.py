@@ -2,9 +2,11 @@
 # Copyright (c) 2026 Mike Mol
 """The one place a child process is started, so a caller never spells the subprocess rules itself.
 
-Ported from the `subprocess.run` calls in paperkit's `tools/edit_snapshot.py` (paperkit:W142).
-paperkit waived the subprocess rules at each call site; here the call lives in this module, whose
-one responsibility it is, and every other module reaches a child through `capture`.
+Ported from `mikemol.treeio.proc` (mtools:W873), which was ported from the `subprocess.run` calls in
+paperkit's `tools/edit_snapshot.py` (paperkit:W142). paperkit waived the subprocess rules at each
+call site; here the call lives in this module, whose one responsibility it is, and every other
+module reaches a child through `capture`. It is a leaf of its own, standard library only, so a
+caller that only needs to start a child does not inherit treeio's native git dependency.
 
 Every argv is a sequence built by the caller: never a shell.
 """
@@ -31,8 +33,8 @@ def capture(
         argv: The program and its arguments; never interpreted by a shell.
         cwd: The directory to run in; the caller's when omitted.
         env: The child's whole environment; the caller's when omitted.
-        timeout: Seconds to wait before giving up on the child; no limit when omitted
-            (mtools:W872, so a caller that bounds a long gate need not re-implement the seam).
+        timeout: Seconds to wait before giving up on the child; no limit when omitted, so a
+            caller that bounds a long gate need not re-implement the seam (mtools:W872).
 
     Returns:
         The finished process, with its return code, stdout and stderr.

@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.procrun: the process seam, one place a child is started and captured as text"
+subtitle = "The subprocess call ported from treeio as a leaf of its own, with the witness that would catch each of its promises drifting."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "PROCRUN.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

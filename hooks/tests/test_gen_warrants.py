@@ -49,6 +49,20 @@ def test_a_new_function_is_emitted(tmp_path: Path) -> None:
     assert "tests/test_m.py -k test_works}" in entry
 
 
+def test_a_distribution_with_no_bib_yet_emits_every_function(tmp_path: Path) -> None:
+    """A new distribution's first warrants: a missing warrants.bib reads as an empty one (W873)."""
+    _dist(tmp_path, "", {"m": _fn("test_works")})
+    (tmp_path / "d" / "warrants.bib").unlink()
+    assert len(gen_warrants.emit(tmp_path, "d", [("m", "S")])) == 1
+
+
+def test_appending_to_a_missing_bib_creates_it(tmp_path: Path) -> None:
+    """The first append makes the file, with no leading blank line, rather than failing to read."""
+    target = tmp_path / "warrants.bib"
+    gen_warrants.append_text(target, "@misc{a,\n}\n")
+    assert target.read_text(encoding="utf-8") == "@misc{a,\n}\n"
+
+
 def test_a_function_already_checked_by_file_and_name_is_skipped(tmp_path: Path) -> None:
     """A check line naming this file and this function suppresses the entry."""
     bib = "@misc{x,\n  check = {cmd:p -m pytest tests/test_m.py -k test_works},\n}\n"

@@ -1,0 +1,42 @@
+
+@misc{procrun-proc-capture-returns-text-output-and-a-nonzero-status-without-raising,
+  section = {proc},
+  title  = {The return code, stdout and stderr all come back, and failure is a value},
+  claim  = {The return code, stdout and stderr all come back, and failure is a value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_returns_text_output_and_a_nonzero_status_without_raising},
+}
+
+@misc{procrun-proc-capture-runs-in-the-directory-it-is-given,
+  section = {proc},
+  title  = {The child's working directory is the one named, not the caller's},
+  claim  = {The child's working directory is the one named, not the caller's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_runs_in_the_directory_it_is_given},
+}
+
+@misc{procrun-proc-capture-gives-the-child-exactly-the-environment-it-is-given,
+  section = {proc},
+  title  = {The whole environment is the one passed, so a hermetic child sees nothing else},
+  claim  = {The whole environment is the one passed, so a hermetic child sees nothing else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_gives_the_child_exactly_the_environment_it_is_given},
+}
+
+@misc{procrun-proc-capture-never-interprets-an-argument-as-shell,
+  section = {proc},
+  title  = {A shell metacharacter in an argument reaches the child literally},
+  claim  = {A shell metacharacter in an argument reaches the child literally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_never_interprets_an_argument_as_shell},
+}
+
+@misc{procrun-proc-capture-gives-up-on-a-child-that-outlasts-its-timeout,
+  section = {proc},
+  title  = {A child still running when the timeout passes is abandoned with the standard error},
+  claim  = {A child still running when the timeout passes is abandoned with the standard error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_gives_up_on_a_child_that_outlasts_its_timeout},
+}
+
+@misc{procrun-proc-capture-with-a-generous-timeout-returns-the-result,
+  section = {proc},
+  title  = {A child that finishes inside its timeout returns as it does with none},
+  claim  = {A child that finishes inside its timeout returns as it does with none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_with_a_generous_timeout_returns_the_result},
+}

@@ -23,7 +23,9 @@ classifiers = [
 # durable write, `mikemol-atomicwrite`, resolved by uv as a NON-editable path source below (an
 # editable install hides the sibling from mypy); in Bazel it is a py_library dep, so the pip hubs
 # stay independent of it and requirements.txt is deliberately NOT regenerated.
-dependencies = ["pygit2>=1.20", "mikemol-atomicwrite"]
+# ⚑ AND `mikemol-procrun` (mtools:W873): the process seam this package used to hold as `proc`,
+# extracted so the host katas and hooks can share it without pygit2.
+dependencies = ["pygit2>=1.20", "mikemol-atomicwrite", "mikemol-procrun"]
 
 [project.scripts]
 mikemol-vfs = "mikemol.treeio.vfs_cli:main"
@@ -38,6 +40,7 @@ dev = ["pytest", "mypy", "ruff==0.16.6"]
 
 [tool.uv.sources]
 mikemol-atomicwrite = { path = "../atomicwrite" }
+mikemol-procrun = { path = "../procrun" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -90,7 +93,7 @@ ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line",
 # installed classifies it with this package's own imports while the sandbox (no venv) puts it in
 # its own block: the ratchet and the per-edit hook then demand opposite layouts of the same file.
 [tool.ruff.lint.isort]
-known-third-party = ["mikemol.atomicwrite"]
+known-third-party = ["mikemol.atomicwrite", "mikemol.procrun"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
@@ -124,17 +127,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # files and symlinks differently, and this module's subject is exactly the disagreement between the
 # two matchers, so swapping the matcher would change the answer it exists to name.
 "src/mikemol/treeio/listing.py" = ["glob"]
-# ⚑ `test_proc` names `subprocess.TimeoutExpired` (the exception `capture` documents for a child
-# that outlasts its timeout), so it imports the module; it starts no child except through `capture`.
-"tests/test_proc.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_gitrun.py" = ["assert"]
-# ⚑ RUNNING A CHILD PROCESS IS `proc`'S ONE RESPONSIBILITY, and the exemption is scoped to that
-# file: every other module reaches a child through its one function. Every argv is built by the
-# caller as a sequence: never a shell.
-"src/mikemol/treeio/proc.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
 "tests/test_edit_snapshot.py" = ["assert"]
 # ⚑ THE STUB MIRRORS pygit2's OWN NAMES: `Repository.TreeBuilder` and `pygit2.hash` are the real
 # spellings, so renaming them to satisfy a naming rule would make the stub lie about the library.

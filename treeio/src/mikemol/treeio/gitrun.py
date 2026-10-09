@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mikemol.treeio.proc import capture
+from mikemol.procrun.proc import capture
 
 if TYPE_CHECKING:
     import subprocess

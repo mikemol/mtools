@@ -158,6 +158,14 @@ pip.parse(
     requirements_lock = "//atomicwrite:requirements.txt",
 )
 
+# ⚑ `mikemol-procrun` — the process seam extracted from treeio so a caller that only starts a child
+# does not inherit pygit2 (mtools:W873, W872). Empty shipping hub: standard library only.
+pip.parse(
+    hub_name = "procrun_deps",
+    python_version = "3.13",
+    requirements_lock = "//procrun:requirements.txt",
+)
+
 # ⚑ `mikemol-grade` — paperkit's grade ladder, clamp and hop verifier, an engine module that moves
 # into mtools (mtools:W557, paperkit:W142). Empty shipping hub: standard library only.
 pip.parse(
@@ -390,6 +398,11 @@ pip.parse(
     uv_lock = "//atomicwrite:uv.lock",
 )
 pip.parse(
+    hub_name = "procrun_dev",
+    python_version = "3.13",
+    uv_lock = "//procrun:uv.lock",
+)
+pip.parse(
     hub_name = "grade_dev",
     python_version = "3.13",
     uv_lock = "//grade:uv.lock",
@@ -548,6 +561,8 @@ use_repo(
     "pathsforward_dev",
     "pkgbuild_deps",
     "pkgbuild_dev",
+    "procrun_deps",
+    "procrun_dev",
     "ratchet_deps",
     "ratchet_dev",
     "transcriptstruct_deps",

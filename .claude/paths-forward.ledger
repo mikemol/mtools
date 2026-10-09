@@ -1360,3 +1360,4 @@
 2026-10-09T11:36:56Z  tick  W872 advanced  collapse  "treeio.proc.capture gains a timeout (slice 1a); katas proc core can now depend on it"
 2026-10-09T11:51:12Z  tick  W873 minted    -         "Extract treeio.proc.capture into its own small leaf distribution so treeio, katas and commit_kata share one process seam without pulling pygit2"  evidence=W872
 2026-10-09T11:51:13Z  tick  W872 advanced  collapse  "katas would drag pygit2 in through treeio; extract the process seam as a leaf first (W873)"
+2026-10-09T12:13:22Z  tick  W873 advanced  collapse  "mikemol-procrun leaf lands, treeio depends on it; gen-warrants can now birth a dist's first bib; 108/108"

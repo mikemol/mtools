@@ -11,6 +11,7 @@ import sys
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.treeio.ambient import AmbientConflictError
 from mikemol.treeio.context import INTENT, SNAPSHOT_STATE
@@ -24,7 +25,6 @@ from mikemol.treeio.contract import (
 )
 from mikemol.treeio.errors import AmbientVocabError, MutationContractError
 from mikemol.treeio.gitrun import git
-from mikemol.treeio.proc import capture
 
 if TYPE_CHECKING:
     from collections.abc import Callable

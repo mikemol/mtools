@@ -181,6 +181,21 @@ def _entry(spec: Spec, node: ast.FunctionDef, bib: str) -> str | None:
     )
 
 
+def bib_text(path: Path) -> str:
+    """Read a warrants.bib, or "" for a distribution that has none yet.
+
+    ⚑ A DISTRIBUTION'S FIRST WARRANTS HAD NO WAY IN (mtools:W873): `--write` read the bib first,
+    so a new distribution needed one to exist, and the only ways to make it were a hand edit
+    (refused by standing rule 14: the bib is appended from this tool's output, never edited) or a
+    shell `touch`, the same hand move under another name. A missing bib is an empty one.
+
+    Returns:
+        the file's text, or the empty string when it does not exist.
+
+    """
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
+
+
 def emit(root: Path, dist: str, pairs: list[tuple[str, str]], layout: Layout = DIST) -> list[str]:
     """Return the missing entries for each (module, section) pair, in the order given.
 
@@ -189,7 +204,7 @@ def emit(root: Path, dist: str, pairs: list[tuple[str, str]], layout: Layout = D
 
     """
     base = root / dist
-    bib = (base / "warrants.bib").read_text(encoding="utf-8")
+    bib = bib_text(base / "warrants.bib")
     out: list[str] = []
     for module, section in pairs:
         spec = Spec(dist, module, section, layout)
@@ -361,7 +376,7 @@ def new_rubric_rows(
 
 def append_text(path: Path, text: str) -> None:
     """Append `text` to `path`, first ending an unterminated last line."""
-    existing = path.read_text(encoding="utf-8")
+    existing = bib_text(path)
     lead = "" if not existing or existing.endswith("\n") else "\n"
     with path.open("a", encoding="utf-8") as handle:
         handle.write(lead + text)

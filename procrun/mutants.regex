@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops matching is a
+# STALE declaration and fails the grid as UNAPPLIED.
+
+# W872/W873: `capture` passes its timeout to the child. Dropping it lets a runaway child hang the
+# caller (the 30-second sleeping child outlasts the 0.2-second timeout only when it is passed).
+src/mikemol/procrun/proc.py|capture-drops-the-timeout|, timeout=timeout|, timeout=None|def=capture
+
+# The working directory is the one passed: dropping it runs the child in the caller's.
+src/mikemol/procrun/proc.py|capture-drops-the-cwd|cwd=cwd, |cwd=None, |def=capture
+
+# The whole environment is the one passed: dropping it hands the child the caller's.
+src/mikemol/procrun/proc.py|capture-drops-the-env|env=env, |env=None, |def=capture
+
+# A non-zero status is a value: `check=True` would raise it.
+src/mikemol/procrun/proc.py|capture-raises-on-failure|check=False|check=True|def=capture

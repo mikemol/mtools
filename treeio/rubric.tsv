@@ -12,7 +12,6 @@ vfs_cli	The vfs Command Line: Exit Codes That Keep Present, Absent, Broken and A
 errors	The Errors: A Contract Refusal Is Not an Exception, So a Best-Effort Handler Cannot Swallow It
 ambient	The Ambient: A Write-Once Context Variable and a Scoped, Registered Override
 context	The Context: Intent, Tenant and the Per-Invocation Snapshot Record
-proc	The Process Seam: One Place a Child Is Started, Captured as Text and Never Through a Shell
 layout	The Layout: Where the Journal and the Untracked-Copy Store Live Under a Root
 gitrun	The Git Runner: Git Run Against a Root, and the Tracked-or-Not Question
 snapshot	The Snapshot: A Pinned Stash Commit, Untracked Copies, a Journal and a Recovery Notice

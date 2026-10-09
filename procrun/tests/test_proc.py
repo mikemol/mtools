@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.treeio.proc import capture
+from mikemol.procrun.proc import capture
 
 if TYPE_CHECKING:
     from pathlib import Path

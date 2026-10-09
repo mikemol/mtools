@@ -7039,3 +7039,19 @@
   claim  = {A venv built before the script existed (the dev venv's state) is refused the same way.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_a_venv_without_the_console_script_refuses},
 }
+
+@misc{hooks-gen-warrants-distribution-with-no-bib-yet-emits-every-function,
+  section = {gen-warrants},
+  title  = {A new distribution's first warrants: a missing warrants.bib reads as an empty one (W873)},
+  claim  = {A new distribution's first warrants: a missing warrants.bib reads as an empty one
+            (W873).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_a_distribution_with_no_bib_yet_emits_every_function},
+}
+
+@misc{hooks-gen-warrants-appending-to-a-missing-bib-creates-it,
+  section = {gen-warrants},
+  title  = {The first append makes the file, with no leading blank line, rather than failing to read},
+  claim  = {The first append makes the file, with no leading blank line, rather than failing to
+            read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants.py -k test_appending_to_a_missing_bib_creates_it},
+}
