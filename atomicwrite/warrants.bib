@@ -97,3 +97,11 @@
             Exception.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_an_interrupt_at_the_commit_removes_the_temp_and_keeps_the_original},
 }
+
+@misc{atomicwrite-durable-text-is-opened-as-utf8-whatever-the-process-locale,
+  section = {durable},
+  title  = {Text is encoded as UTF-8 by name, never by the locale's default, and lands as those bytes},
+  claim  = {Text is encoded as UTF-8 by name, never by the locale's default, and lands as those
+            bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_text_is_opened_as_utf8_whatever_the_process_locale},
+}

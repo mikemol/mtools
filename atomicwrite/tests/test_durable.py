@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import io
 import os
 import stat
 import tempfile
@@ -172,6 +173,23 @@ def test_an_interrupt_at_the_commit_removes_the_temp_and_keeps_the_original(
         durable.write_atomic(target, "new")
     assert [p.name for p in tmp_path.iterdir()] == ["out.txt"]
     assert target.read_text(encoding="utf-8") == "old"
+
+
+def test_text_is_opened_as_utf8_whatever_the_process_locale(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Text is encoded as UTF-8 by name, never by the locale's default, and lands as those bytes."""
+    seen: list[str | None] = []
+
+    def spy(fd: int, mode: str, *, encoding: str | None = None) -> io.TextIOWrapper:
+        seen.append(encoding)
+        return io.TextIOWrapper(io.FileIO(fd, mode), encoding=encoding)
+
+    monkeypatch.setattr(os, "fdopen", spy)
+    target = tmp_path / "out.txt"
+    durable.write_atomic(target, "café")
+    assert seen == ["utf-8"]
+    assert target.read_bytes() == "café".encode()
 
 
 def test_a_failed_write_leaves_no_temp_and_reraises(tmp_path: Path) -> None:

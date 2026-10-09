@@ -83,7 +83,7 @@ def _fill(fd: int, data: str | bytes) -> None:
             fb.flush()
             os.fsync(fb.fileno())
     else:
-        with os.fdopen(fd, "w") as ft:
+        with os.fdopen(fd, "w", encoding="utf-8") as ft:
             ft.write(data)
             ft.flush()
             os.fsync(ft.fileno())

@@ -1315,3 +1315,5 @@
 2026-10-09T03:31:06Z  tick  W862 advanced  unblock   "the standing list gains a writer (--standing-set) and its stale warrants rule is corrected through it"
 2026-10-09T03:41:09Z  tick  W857 advanced  collapse  "atomicwrite exposes stage/commit/discard (write_atomic = stage then commit) so ratchet's two-phase write can use them; ratchet's swap is next"
 2026-10-09T03:52:17Z  tick  W857 advanced  collapse  "ratchet/remap swapped onto atomicwrite stage/commit/discard; refusal rule keeps the mikemol namespace with two roots"
+2026-10-09T03:59:13Z  hash  --   diverged  --        "divergence: payload v2:33a7d307a45049bd, file v2:3e34bb946af01fea; the FILE wins"
+2026-10-09T04:01:00Z  tick  W857 advanced  collapse  "atomicwrite text branch pinned to UTF-8; store.py and pycheck_census swaps held on an adopter-dependency decision"
