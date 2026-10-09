@@ -485,6 +485,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 
 # ⚑ W830: `test_build_failure_note.py` drives the failure hook with a recording runner: no process.
 "tests/test_build_failure_note.py" = ["assert"]
+# ⚑ `test_tool_path.py` finds console scripts in planted directories under tmp_path: no process.
+"tests/test_tool_path.py" = ["assert"]
 
 # ⚑ W886: `test_commit_launcher_lock.py` runs the tracked `mikemol-commit` launcher in a throwaway
 # git checkout with stub executables: fixed argv, never a shell, no untrusted input. `git` is

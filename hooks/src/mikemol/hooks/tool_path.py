@@ -34,7 +34,10 @@ def find(name: str, env_var: str, root: Path, env: Mapping[str, str]) -> Path | 
     named = env.get(env_var)
     candidates = [Path(named)] if named else []
     candidates.append(root / ".venv" / "bin" / name)
-    on_path = shutil.which(name)
+    # The PATH searched is the one in the `env` handed in, never the ambient process one: a caller
+    # (or a test) that passes an environment is asking about THAT environment, and a venv another
+    # session happens to put on the ambient PATH must not answer for it.
+    on_path = shutil.which(name, path=env.get("PATH", ""))
     if on_path:
         candidates.append(Path(on_path))
     return next((each for each in candidates if each.is_file()), None)

@@ -7232,3 +7232,31 @@
   claim  = { `--help` was read as the repo `~/github/--help` and git failed on it (exit 3).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_an_unknown_flag_is_a_usage_error_not_a_repository_name},
 }
+
+@misc{hooks-tool-path-env-override-wins,
+  section = {tool_path},
+  title  = {⚑ A variable naming the binary beats the project's venv and the PATH},
+  claim  = { A variable naming the binary beats the project's venv and the PATH.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tool_path.py -k test_the_env_override_wins},
+}
+
+@misc{hooks-tool-path-projects-own-venv-comes-next,
+  section = {tool_path},
+  title  = {⚑ Without an override the project's .venv/bin answers before any PATH entry},
+  claim  = { Without an override the project's .venv/bin answers before any PATH entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tool_path.py -k test_the_projects_own_venv_comes_next},
+}
+
+@misc{hooks-tool-path-path-searched-is-the-envs-not-the-processs,
+  section = {tool_path},
+  title  = {⚑ A tool on the env's PATH is found; an env without a PATH finds none (the W830 flake)},
+  claim  = { A tool on the env's PATH is found; an env without a PATH finds none (the W830 flake).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tool_path.py -k test_the_path_searched_is_the_envs_not_the_processs},
+}
+
+@misc{hooks-tool-path-missing-tool-is-none-never-a-guess,
+  section = {tool_path},
+  title  = {⚑ A tool that is not found is None: no fallback to a different tool},
+  claim  = { A tool that is not found is None: no fallback to a different tool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tool_path.py -k test_a_missing_tool_is_none_never_a_guess},
+}

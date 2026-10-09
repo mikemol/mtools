@@ -53,3 +53,4 @@ inbound_launcher_root	Inbound-asks launcher root
 post_commit_census	Post-commit ledger census
 commit_launcher_lock	Commit launcher repo lock
 build_failure_note	Failure hook notes the gate card
+tool_path	tool_path
