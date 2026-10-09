@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 867 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:2421044459290516`
+counter 867 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:1d6891af1bc7853d`
 
 | # | symbol | status |
 |---|---|---|
@@ -1048,8 +1048,9 @@ counter 867 · heartbeat 2026-10-09T06:20:51Z · job `de619aaa` · hash `v2:2421
 32. **W867** (ready) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
    ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record
    them as outside the fleet standard
-   - next: Check whether each has a pyproject.toml or ruff config (ls, read-only); send one letter per live-or-not repo
-     naming the files the census could not judge. Do not impose a bar from here.
+   - next: Probe one file in each of amr-skills, cstz, earley, lg_kernel, restsync with --check-file to name the cause;
+     then letters: venv-less repos 'install ruff and mypy', and a pycheck card for the isolated-relative-import mypy
+     failure (linux-sources, memmesh __init__).
 33. **W319** (blocked) Ask luthen-observability for a self-hosted GitHub Actions runner for the mtools module org:
    ephemeral pods, no fork-PR code, no secrets
    - blocked on: luthen-observability:W257

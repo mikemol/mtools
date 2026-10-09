@@ -17675,12 +17675,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Check whether each has a pyproject.toml or ruff config (ls, read-only); send one letter per live-or-not repo naming the files the census could not judge. Do not impose a bar from here.",
-      "evidence": "",
+      "next_bounded_step": "Probe one file in each of amr-skills, cstz, earley, lg_kernel, restsync with --check-file to name the cause; then letters: venv-less repos 'install ruff and mypy', and a pycheck card for the isolated-relative-import mypy failure (linux-sources, memmesh __init__).",
+      "evidence": "2026-10-09: 2026-10-09 CORRECTION to W864's premise ('no governing project bar'): 9 of the 10 unjudged repos HAVE a pyproject.toml (cvm2 does not); none has a ruff.toml. The unjudged cause is that the checker cannot run, and it differs by repo (single-file --check-file probes): asn1 -> 'asn1 has no .venv/bin/python3 to run ruff and mypy from' although ls -d finds .venv/bin/python3 there (not read through: ruff/mypy likely absent from it; unverified); linux-sources -> 'mypy exited 2: No parent module -- cannot perform relative import' (mypy run on one file alone, a gate limitation); no .venv at all: cvm2, memmesh, ologpad; .venv present, cause not probed: amr-skills, cstz, earley, lg_kernel, restsync. So W864's decision (record as unjudged) stands, but the reason is 'the gate cannot run there', which is fixable by the owner (install the checkers in the repo venv) or by pycheck (a package-aware mypy run).",
       "issued_at": "2026-10-09T07:21:57Z",
       "minted_during": "tick",
       "caused_by": "W795",
-      "last_worked": null,
+      "last_worked": "2026-10-09T07:36:59Z",
       "ticks_blocked": 0
     }
   ],

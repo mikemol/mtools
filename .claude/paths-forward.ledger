@@ -1336,3 +1336,4 @@
 2026-10-09T07:06:50Z  tick  W866 advanced  sweep     "all ten amr-skills zero-test modules classified: nine check()/print style by marker count, test_fetch_refuses is a destructive-on-import script"
 2026-10-09T07:21:57Z  tick  W867 minted    -         "Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh, ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record them as outside the fleet standard"  evidence=W795
 2026-10-09T07:22:02Z  tick  W795 advanced  sweep     "audit closed: letter to amr-skills, W867 for unjudged repos; W866 done"
+2026-10-09T07:37:00Z  tick  W867 advanced  sweep     "unjudged cause is the checker not running (no venv, ruff/mypy absent, isolated relative import), not a missing bar"
