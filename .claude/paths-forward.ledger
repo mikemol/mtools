@@ -1319,3 +1319,4 @@
 2026-10-09T04:01:00Z  tick  W857 advanced  collapse  "atomicwrite text branch pinned to UTF-8; store.py and pycheck_census swaps held on an adopter-dependency decision"
 2026-10-09T04:14:19Z  tick  W863 minted    -         "Measure old-style tests in mtools alone: count test modules with an unannotated def, a ruff-format diff, a --selftest/main-style script, or no warrant per test"  evidence=W795
 2026-10-09T04:14:34Z  tick  W795 advanced  sweep     "atomized into W863 (mtools-only measurement); first grep reading recorded, unverified"
+2026-10-09T04:29:27Z  tick  W863 advanced  sweep     "mtools has no old-style test module; grep hits were fixture strings (3 read, 2 unread)"

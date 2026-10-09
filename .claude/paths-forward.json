@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 93,
+      "ticks_blocked": 94,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 91,
+      "ticks_blocked": 92,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 96,
+      "ticks_blocked": 97,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 29,
+      "ticks_blocked": 30,
       "completed": null
     },
     {
@@ -16101,7 +16101,7 @@
     {
       "symbol": "W795",
       "title": "Audit old-style tests across the fleet (untyped or unformatted functions, --selftest or main-style scripts, asserts run outside a test runner) and mint conversion-to-pytest cards through debtplan",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W790"
       ],
@@ -16111,16 +16111,14 @@
         "tests",
         "fleet"
       ],
-      "blocked_on": [
-        "W863"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Define old-style from what the gate can read (unannotated or unformatted test defs, --selftest or main-style scripts, asserts outside a runner, no warrant per test), write the audit as a debtplan ledger source, run it over every repo's tests, and mint conversion cards.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Mtools alone is clean (W863). Audit ~/github/*/ tests (the other repos, where the edit gate does not hold): ruff format --check and an ast scan for unannotated defs and main-style scripts, one count per repo as evidence; then write the debtplan ledger source and mint conversion cards. Confirm with the operator whether 'pypy' meant pytest.",
       "evidence": "2026-10-05: 2026-10-05 operator: 'We need another planning integration for auditing for old-style tests and flagging them for conversion to pypy.' READ AS pytest (the earlier remark: the --selftest pattern is why everything is migrating); NOT confirmed. If pypy was meant literally, this waypoint's target changes: say so. | 2026-10-09: 2026-10-09 moved here from next_bounded_step to keep the tick payload under budget (the stanza of the first ready card is never dropped): the definition of old-style is a test module with unannotated defs or a ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test runner, no warrants.bib entry per test; write the audit as a debtplan ledger source (file: finding count) beside W794's gate verdict. Measured example: amr-skills tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221). | 2026-10-09: 2026-10-09 atomized: W863 measures mtools alone first; W795 resumes with the cross-repo audit and the debtplan source once W863 lands.",
       "issued_at": "2026-10-05T23:39:00Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-09T04:14:31Z",
+      "last_worked": "2026-10-09T04:29:27Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
@@ -16969,7 +16967,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 19,
+      "ticks_blocked": 20,
       "completed": null
     },
     {
@@ -17576,7 +17574,7 @@
     {
       "symbol": "W863",
       "title": "Measure old-style tests in mtools alone: count test modules with an unannotated def, a ruff-format diff, a --selftest/main-style script, or no warrant per test",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W795"
       ],
@@ -17587,13 +17585,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read pycodemod/tests/test_placement.py around line 17 to classify the hits as fixture text or scripts; then run the audit over ~/github/*/ tests (the other repos), where the edit gate does not hold.",
-      "evidence": "2026-10-09: 2026-10-09 first reading: a grep for module-level 'if __name__ == __main__' / 'def main(' in */tests/test_*.py (excluding .venv and bazel-*) hits only pycodemod (test_size, test_placement, test_exit, test_layout, test_dead); the hits are at column 0 on repeated lines, which looks like fixture source text inside strings rather than runnable scripts, NOT verified by reading them. Positive control: none run. Other mtools test modules are already held to annotated+formatted by the edit gate (pycheck), so the mtools population is probably empty or tiny; the real population is the other repos.",
+      "next_bounded_step": "none: W795 carries the cross-repo audit.",
+      "evidence": "2026-10-09: 2026-10-09 first reading: a grep for module-level 'if __name__ == __main__' / 'def main(' in */tests/test_*.py (excluding .venv and bazel-*) hits only pycodemod (test_size, test_placement, test_exit, test_layout, test_dead); the hits are at column 0 on repeated lines, which looks like fixture source text inside strings rather than runnable scripts, NOT verified by reading them. Positive control: none run. Other mtools test modules are already held to annotated+formatted by the edit gate (pycheck), so the mtools population is probably empty or tiny; the real population is the other repos. | 2026-10-09: 2026-10-09 read: pycodemod tests/test_placement.py lines 16-40, test_dead.py 28-41 and test_size.py 44-57 are triple-quoted FIXTURE strings, not scripts, so the grep hits are not main-style tests. test_exit.py and test_layout.py share the pattern but were not read. Unannotated/unformatted mtools tests: not counted, because the pycheck edit gate refuses them on write (a reading of the gate, not a scan). Result: no old-style test module found in mtools; the population is the other repos.",
       "issued_at": "2026-10-09T04:14:19Z",
       "minted_during": "tick",
       "caused_by": "W795",
-      "last_worked": "2026-10-09T04:14:31Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T04:29:23Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T042923Z"
     }
   ],
   "residue": [
