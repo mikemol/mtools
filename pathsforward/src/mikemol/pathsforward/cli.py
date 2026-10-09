@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, cast
 from mikemol.pathsforward import (
     admission,
     certify,
+    delivered,
     embargo,
     foreign,
     inbound,
@@ -82,6 +83,7 @@ _FLAGS = (
     "overlaps",
     "ics",
     "unlinked",
+    "delivered",
 )
 _VALUED = (
     "verify",
@@ -1152,6 +1154,17 @@ def _drop(ctx: Ctx) -> int:
     return _mutate(ctx, edit, after)
 
 
+def _delivered(ctx: Ctx) -> int:
+    """Print the queue's delivered version, `0.0.<highest done number>` (W803); reads only.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    _say(delivered.version(store.load(ctx.path)))
+    return EXIT_OK
+
+
 def _skip(ctx: Ctx) -> int:
     """Record a skipped symbol in residue, with its reason (W847).
 
@@ -1626,6 +1639,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "certify": _certify,
     "mint_residue": _mint_residue,
     "skip": _skip,
+    "delivered": _delivered,
 }
 
 

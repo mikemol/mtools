@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:c9a37fc26652314d`
+counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:73275d134ee206a7`
 
 | # | symbol | status |
 |---|---|---|
@@ -879,11 +879,10 @@ counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:c9a3
      distributions' pyprojects, not by grepping names.
 6. **W803** (ready) Package versions derive from the queue: a distribution's version is its stream's highest completed
    waypoint number
-   - next: Operator 2026-10-06: the version encodes the thing delivered. Pick the PEP 440 form (for example 0.0.`<n>` or
-     `<n>`.0.0, monotone with n) and make it derived, not typed: a mtools-pathsforward mode that prints the highest done
-     W`<n>` of a queue, read by the build that writes pyproject's version, so no literal can disagree with the queue.
-     Ties to W317 decision D5 (PyPI with TestPyPI staging) and the floors/meta-package freshness plan: floors then
-     compare delivered waypoints. Today every pyproject says 0.1.0 (a placeholder).
+   - next: Slice 2: have each distribution's build derive its version from its stream: setuptools dynamic version read
+     from mikemol-paths-forward --delivered over the right queue (decide what a distribution's stream is: this repo's
+     single queue gives every dist the same 0.0.n, so a per-dist stream needs a tag on waypoints), replacing the 0.1.0
+     literals; then tie W317's floors to it.
 7. **W819** (ready) hooks depends on mikemol-pathsforward: the first cross-distribution requirement, so hooks read the
    tick lock through it
    - next: FOLLOW-UP, not a blocker (corrected 2026-10-06): standing_facts already reads the queue JSON directly

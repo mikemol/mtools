@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 77,
+      "ticks_blocked": 78,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 82,
+      "ticks_blocked": 83,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 52,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 15,
+      "ticks_blocked": 16,
       "completed": null
     },
     {
@@ -16316,12 +16316,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Operator 2026-10-06: the version encodes the thing delivered. Pick the PEP 440 form (for example 0.0.<n> or <n>.0.0, monotone with n) and make it derived, not typed: a mtools-pathsforward mode that prints the highest done W<n> of a queue, read by the build that writes pyproject's version, so no literal can disagree with the queue. Ties to W317 decision D5 (PyPI with TestPyPI staging) and the floors/meta-package freshness plan: floors then compare delivered waypoints. Today every pyproject says 0.1.0 (a placeholder).",
-      "evidence": "",
+      "next_bounded_step": "Slice 2: have each distribution's build derive its version from its stream: setuptools dynamic version read from mikemol-paths-forward --delivered over the right queue (decide what a distribution's stream is: this repo's single queue gives every dist the same 0.0.n, so a per-dist stream needs a tag on waypoints), replacing the 0.1.0 literals; then tie W317's floors to it.",
+      "evidence": "2026-10-09: 2026-10-09 slice 1 (this tick): mikemol-paths-forward --delivered prints 0.0.<highest done W<n>> (0.0.0 when nothing is done), read-only, derived from the queue; the form 0.0.<n> chosen as monotone under PEP 440, a valid release segment and clearly pre-1.0. mtools prints 0.0.855 today. delivered.py + 4 tests + 4 warrants. Open for slice 2: a single queue gives every distribution the same number; per-distribution versions need a per-waypoint stream tag, which is a design choice not made here.",
       "issued_at": "2026-10-06T03:27:58Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W317",
-      "last_worked": "2026-10-06T03:27:59Z",
+      "last_worked": "2026-10-09T00:43:40Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -16963,7 +16963,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 6,
       "completed": null
     },
     {

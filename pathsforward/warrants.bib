@@ -3709,3 +3709,31 @@
   claim  = {Skipping W1 is exit 2, with the message pointing at --drop, and nothing is written.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_skip.py -k test_the_cli_refuses_a_live_symbol_and_leaves_the_file_alone},
 }
+
+@misc{pathsforward-delivered-version-is-the-highest-done-number,
+  section = {delivered},
+  title  = {Ready, working, blocked and residue symbols above it do not count; only done ones do},
+  claim  = {Ready, working, blocked and residue symbols above it do not count; only done ones do.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_delivered.py -k test_the_version_is_the_highest_done_number},
+}
+
+@misc{pathsforward-delivered-queue-with-nothing-done-is-zero,
+  section = {delivered},
+  title  = {No done waypoint delivers nothing: 0.0.0, a valid PEP 440 version},
+  claim  = {No done waypoint delivers nothing: 0.0.0, a valid PEP 440 version.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_delivered.py -k test_a_queue_with_nothing_done_is_zero},
+}
+
+@misc{pathsforward-delivered-version-orders-numerically-not-as-text,
+  section = {delivered},
+  title  = {W10 outranks W9: the component is an integer, which is what makes it monotone},
+  claim  = {W10 outranks W9: the component is an integer, which is what makes it monotone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_delivered.py -k test_the_version_orders_numerically_not_as_text},
+}
+
+@misc{pathsforward-delivered-cli-prints-the-version-and-writes-nothing,
+  section = {delivered},
+  title  = {`--delivered` reads the queue and prints one line; the file is byte for byte unchanged},
+  claim  = {`--delivered` reads the queue and prints one line; the file is byte for byte unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_delivered.py -k test_the_cli_prints_the_version_and_writes_nothing},
+}
