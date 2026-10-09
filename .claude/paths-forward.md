@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 854 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:fcac40b6f937b13f`
+counter 855 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:c9a37fc26652314d`
 
 | # | symbol | status |
 |---|---|---|
@@ -844,6 +844,7 @@ counter 854 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:fcac
 | 835 | W852 | done |
 | 836 | W853 | done |
 | 837 | W854 | done |
+| 838 | W855 | done |
 
 ## waypoints
 
@@ -2419,6 +2420,8 @@ counter 854 · heartbeat 2026-10-08T15:32:56Z · job `9ee8838f` · hash `v2:fcac
    per waypoint and gate
 837. **W854** (done) W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named
    waypoints and a gate
+838. **W855** (done) mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged
+   deletion from the pathspec
 
 ## residue
 

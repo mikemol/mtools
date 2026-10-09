@@ -113,11 +113,18 @@ def head_of(root: Path, run: Runner = run_git) -> str:
 def tracked(root: Path, path: str, run: Runner) -> bool:
     """Say whether git tracks `path` (only a tracked path can be a commit pathspec).
 
+    ⚑ A STAGED DELETION IS STILL TRACKED (W855, luthen-observability:W256). `git rm` takes the path
+    out of the index, so `ls-files` alone dropped it from the pathspec, the `--only` commit rebuilt
+    its temporary index from HEAD with the file back in it, and the gate's index-matches-tree arm
+    refused with a remedy (`git add`) that did not apply. A path HEAD holds is tracked, whether or
+    not the index or the tree still has it.
+
     Returns:
-        True when `path` is in the index.
+        True when `path` is in the index or in HEAD.
 
     """
-    return run(["-C", str(root), "ls-files", "--error-unmatch", "--", path]).returncode == 0
+    in_index = run(["-C", str(root), "ls-files", "--error-unmatch", "--", path]).returncode == 0
+    return in_index or run(["-C", str(root), "cat-file", "-e", f"HEAD:{path}"]).returncode == 0
 
 
 def message_of(request: Request) -> str:

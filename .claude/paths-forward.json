@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 854,
+  "counter": 855,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-08T15:32:56Z",
   "job_id": "9ee8838f",
@@ -17257,11 +17257,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-07: 2026-10-07 reported by gcalculus-33 and reproduced by the host. gcalculus .claude/paths-forward.json: counter 207, W30 in neither waypoints nor residue; --check refuses with 'W30: issued (counter=207) but in neither waypoints nor residue'; --repair-counter only raises a lagging counter ('never lower'); --drop W30 is refused with the same message (it only moves existing waypoints); --add mints the next number, never W30. Measured over every queue under ~/github (scratch script queue_gaps.py: every symbol 1..counter against waypoints plus residue): gcalculus is the ONLY queue with a gap, one symbol, 1 of 16. W30 appears nowhere in that queue's history (git log -S on the symbol over the queue file is empty; no ledger line mentions it): the counter skipped it once, so it is a gap, not a lost card. Cause not known (a concurrent --add before the flock existed is the obvious guess; unverified). Effect: harmless to work (--add still works) but the queue's own check stays red, which every gate that runs --check would count against it. | 2026-10-08: --skip SYMBOL REASON: files a symbol the counter issued that no waypoint or residue holds into residue (marked skipped, recoverable false); refuses a live or residue symbol (use --drop), one above the counter, a malformed one, or a blank reason; the gcalculus case (gap under the counter, --check red) goes green after --skip. 764 pathsforward tests pass. gcalculus still has to run it on W30.",
+      "evidence": "2026-10-07: 2026-10-07 reported by gcalculus-33 and reproduced by the host. gcalculus .claude/paths-forward.json: counter 207, W30 in neither waypoints nor residue; --check refuses with 'W30: issued (counter=207) but in neither waypoints nor residue'; --repair-counter only raises a lagging counter ('never lower'); --drop W30 is refused with the same message (it only moves existing waypoints); --add mints the next number, never W30. Measured over every queue under ~/github (scratch script queue_gaps.py: every symbol 1..counter against waypoints plus residue): gcalculus is the ONLY queue with a gap, one symbol, 1 of 16. W30 appears nowhere in that queue's history (git log -S on the symbol over the queue file is empty; no ledger line mentions it): the counter skipped it once, so it is a gap, not a lost card. Cause not known (a concurrent --add before the flock existed is the obvious guess; unverified). Effect: harmless to work (--add still works) but the queue's own check stays red, which every gate that runs --check would count against it. | 2026-10-08: --skip SYMBOL REASON: files a symbol the counter issued that no waypoint or residue holds into residue (marked skipped, recoverable false); refuses a live or residue symbol (use --drop), one above the counter, a malformed one, or a blank reason; the gcalculus case (gap under the counter, --check red) goes green after --skip. 764 pathsforward tests pass. gcalculus still has to run it on W30. | 2026-10-09: landed be4bf11; confirmed on gcalculus's real queue by gcalculus-22: --skip W30 filed it and --check reads OK (218 of 218 symbols resolve).",
       "issued_at": "2026-10-07T16:39:54Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W207",
-      "last_worked": "2026-10-08T23:55:22Z",
+      "last_worked": "2026-10-09T00:34:37Z",
       "ticks_blocked": 0,
       "completed": "20261008T235522Z"
     },
@@ -17407,6 +17407,27 @@
       "last_worked": "2026-10-08T14:36:20Z",
       "ticks_blocked": 0,
       "completed": "20261008T143620Z"
+    },
+    {
+      "symbol": "W855",
+      "title": "mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged deletion from the pathspec",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "katas",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: commit_kata.tracked() now also accepts a path HEAD holds (git cat-file -e HEAD:<path>), so a staged deletion stays in the --only pathspec; 3 new tests on real git repos (staged deletion lands as D, unstaged deletion lands as D, an unseen path stays untracked); hooks commit_kata tests 12 pass, 3 warrants under the commit-kata rubric key. Letter archived.",
+      "issued_at": "2026-10-09T00:33:30Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W256",
+      "last_worked": "2026-10-09T00:34:36Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T003436Z"
     }
   ],
   "residue": [

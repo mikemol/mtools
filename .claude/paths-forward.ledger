@@ -1292,3 +1292,5 @@
 2026-10-08T15:08:43Z  tick  W851 advanced  unblock   "--admit writer hook + marks ledger (W852) coded, 748 tests pass, gated commit follows"
 2026-10-08T15:24:07Z  tick  W853 advanced  unblock   "--mint-residue: one claimable card per waypoint and gate; family W848 units W849-W854 all done except the umbrella"
 2026-10-08T23:55:51Z  tick  W792 advanced  collapse  "W792 importdag package-initializer edges + W847 --skip verb, one gated commit; md0 hold withdrawn by github-45"
+2026-10-09T00:33:30Z  interrupt W855 minted    -         "mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a staged deletion from the pathspec"  evidence=luthen-observability:W256
+2026-10-09T00:34:43Z  tick  W855 advanced  unblock   "mikemol-commit keeps a staged deletion in the pathspec (hooks commit_kata.tracked accepts HEAD); gated commit follows"

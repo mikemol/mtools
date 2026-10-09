@@ -6844,3 +6844,24 @@
   claim  = { No repo, or two modes, is a usage error and says so.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_usage_error_is_exit_two},
 }
+
+@misc{hooks-commit-kata-staged-deletion-is-committed-not-refused,
+  section = {commit-kata},
+  title  = {`git rm` takes the path out of the index; it stays in the pathspec so the commit lands},
+  claim  = {`git rm` takes the path out of the index; it stays in the pathspec so the commit lands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_staged_deletion_is_committed_not_refused},
+}
+
+@misc{hooks-commit-kata-unstaged-deletion-is-committed-too,
+  section = {commit-kata},
+  title  = {A file removed from the tree only is in the index and is committed as a deletion},
+  claim  = {A file removed from the tree only is in the index and is committed as a deletion.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_an_unstaged_deletion_is_committed_too},
+}
+
+@misc{hooks-commit-kata-path-in-neither-the-index-nor-head-is-still-untracked,
+  section = {commit-kata},
+  title  = {The widening is HEAD only: a path git never saw stays out of the pathspec},
+  claim  = {The widening is HEAD only: a path git never saw stays out of the pathspec.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_path_in_neither_the_index_nor_head_is_still_untracked},
+}

@@ -142,6 +142,32 @@ def test_no_tracked_path_commits_nothing_and_does_not_sweep_in_what_is_staged(
     assert _git(tmp_path, "rev-parse", "HEAD").strip() == before
 
 
+def test_a_staged_deletion_is_committed_not_refused(tmp_path: Path) -> None:
+    """`git rm` takes the path out of the index; it stays in the pathspec so the commit lands."""
+    _repo(tmp_path)
+    (tmp_path / "b.txt").write_text("gone soon\n", encoding="utf-8")
+    _git(tmp_path, "add", "b.txt")
+    _git(tmp_path, "commit", "-q", "-m", "b")
+    _git(tmp_path, "rm", "-q", "b.txt")
+    assert commit_kata.commit(tmp_path, _request("b.txt"), io.StringIO()) == 0
+    assert _git(tmp_path, "show", "--name-status", "--format=", "HEAD").split() == ["D", "b.txt"]
+
+
+def test_an_unstaged_deletion_is_committed_too(tmp_path: Path) -> None:
+    """A file removed from the tree only is in the index and is committed as a deletion."""
+    _repo(tmp_path)
+    (tmp_path / "a.txt").unlink()
+    assert commit_kata.commit(tmp_path, _request("a.txt"), io.StringIO()) == 0
+    assert _git(tmp_path, "show", "--name-status", "--format=", "HEAD").split() == ["D", "a.txt"]
+
+
+def test_a_path_in_neither_the_index_nor_head_is_still_untracked(tmp_path: Path) -> None:
+    """The widening is HEAD only: a path git never saw stays out of the pathspec."""
+    _repo(tmp_path)
+    assert commit_kata.tracked(tmp_path, "a.txt", commit_kata.run_git)
+    assert not commit_kata.tracked(tmp_path, "never.txt", commit_kata.run_git)
+
+
 def test_a_modified_tracked_bazel_lock_rides_along(tmp_path: Path) -> None:
     """A bazel gate rewrites its own lock; a tracked, modified one joins the commit."""
     _repo(tmp_path)
