@@ -42,10 +42,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Sequence
@@ -199,17 +198,6 @@ def _row(path: str, fn: Def, authorities: frozenset[str]) -> Crossing | None:
     return Crossing(path, fn.lineno, fn.name, _classify(fn, nodes, authorities), what)
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def crossings(paths: Sequence[str], authorities: Iterable[str] = ()) -> Crossings:
     """Return every function in `paths` that returns a container it built, classified.
 
@@ -220,7 +208,7 @@ def crossings(paths: Sequence[str], authorities: Iterable[str] = ()) -> Crossing
     known = CORPUS_AUTHORITIES | frozenset(authorities)
     out = Crossings()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

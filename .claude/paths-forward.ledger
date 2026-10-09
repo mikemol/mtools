@@ -1376,3 +1376,4 @@
 2026-10-09T13:50:36Z  tick  W880 minted    -         "pathsforward --update: an additive --add-enables, so extending a waypoint's edges cannot erase them"  evidence=W807
 2026-10-09T13:51:50Z  tick  W881 minted    -         "Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for the operator to apply"  evidence=W580
 2026-10-09T13:52:01Z  tick  W800 advanced  sweep     "card triage: W800 W807 W809 W790 done; W819 W857 W859 W860 blocked on W317; W580 held for the operator, W622 behind W881; W593 W614 fallbacks applied; W830 sharpened; W880 W881 minted"
+2026-10-09T14:05:09Z  tick  W636 advanced  collapse  "eleven private _parse copies in pycodemod become core.parse_file, byte-identity checked by AST; 66/66"

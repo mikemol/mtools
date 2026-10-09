@@ -26,10 +26,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Sequence
@@ -197,17 +196,6 @@ def derived_names(nodes: Iterable[ast.AST], rows: Collection[str]) -> set[str]:
     return out
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def _is_connection_execute(node: ast.AST, vocab: StoreVocab) -> bool:
     return (
         isinstance(node, ast.Call)
@@ -260,7 +248,7 @@ def rawread_sites(paths: Sequence[str], vocab: StoreVocab) -> RawReads:
     """
     out = RawReads()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

@@ -45,7 +45,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -138,17 +138,6 @@ def _scopes(tree: ast.Module) -> dict[int, str]:
     return out
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def _from_form(node: ast.ImportFrom) -> str:
     if any(a.name == "*" for a in node.names):
         return FROM_STAR
@@ -193,7 +182,7 @@ def aliases(
     local = local_heads(paths, extra_local) if local_only else None
     out = Aliases()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

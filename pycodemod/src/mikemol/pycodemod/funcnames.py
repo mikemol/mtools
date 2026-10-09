@@ -37,10 +37,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 try:
     from sqlalchemy.sql.functions import _registry
@@ -101,17 +100,6 @@ def generic_names(registry: Mapping[str, Mapping[str, object]] = _registry) -> f
     return names
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def _callers(tree: ast.Module) -> dict[ast.AST, str]:
     """Map every node to the name of its innermost enclosing `def`, or `<module>`.
 
@@ -146,7 +134,7 @@ def funcnames(paths: Sequence[str], generic: frozenset[str] | None = None) -> Fu
     known = generic_names() if generic is None else generic
     out = FuncCalls()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

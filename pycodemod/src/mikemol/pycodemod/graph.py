@@ -32,10 +32,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -176,17 +175,6 @@ def verdict_kinds(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[str, ...]
     return tuple(sorted(kinds))
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def _defs(tree: ast.Module) -> list[tuple[str, ast.FunctionDef | ast.AsyncFunctionDef]]:
     out: list[tuple[str, ast.FunctionDef | ast.AsyncFunctionDef]] = []
     stack: list[tuple[ast.AST, str]] = [(tree, "")]
@@ -212,7 +200,7 @@ def verdict_returners(paths: Sequence[str]) -> Verdicts:
     """
     out = Verdicts()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

@@ -33,10 +33,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -210,17 +209,6 @@ def _scan(tree: ast.Module, cand: dict[str, _Candidate]) -> None:
             cand[name].read_in_function = True
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def _klass(c: _Candidate) -> str:
     if not c.mutators:
         return CONST
@@ -236,7 +224,7 @@ def module_state(paths: Sequence[str]) -> ModuleStates:
     """
     out = ModuleStates()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

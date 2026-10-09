@@ -49,7 +49,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -164,17 +164,6 @@ def _tops(tree: ast.Module) -> set[str]:
     return out
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def _ours(paths: Sequence[str]) -> set[str]:
     return {p.parent.name if p.name == _INIT else p.stem for p in map(Path, paths)}
 
@@ -206,7 +195,7 @@ def import_census(paths: Sequence[str], manifest: Path, vendored: Iterable[str] 
     out = ImportUses()
     seen: dict[str, list[str]] = {}
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue

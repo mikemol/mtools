@@ -36,10 +36,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.core import Skip, parse_file
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -199,17 +198,6 @@ def _verdict(
     return WriteVerdict(path, writes=True, why=f"unguarded write at line {first}", line=first)
 
 
-def _parse(path: str) -> ast.Module | Skip:
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except UnicodeDecodeError as exc:
-        return Skip(path, "undecodable", type(exc).__name__)
-    except OSError as exc:
-        return Skip(path, "unreadable", type(exc).__name__)
-    except SyntaxError as exc:
-        return Skip(path, "unparseable", type(exc).__name__)
-
-
 def writes_by_default(
     paths: Sequence[str], fixtures: Iterable[str] = (), gates: Iterable[str] = ()
 ) -> WriteVerdicts:
@@ -222,7 +210,7 @@ def writes_by_default(
     fixture_names, gate_flags = frozenset(fixtures), frozenset(gates)
     out = WriteVerdicts()
     for path in paths:
-        tree = _parse(path)
+        tree = parse_file(path)
         if isinstance(tree, Skip):
             out.skipped.append(tree)
             continue
