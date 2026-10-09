@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 91,
+      "ticks_blocked": 92,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 89,
+      "ticks_blocked": 90,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 94,
+      "ticks_blocked": 95,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 63,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 28,
       "completed": null
     },
     {
@@ -16966,7 +16966,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 17,
+      "ticks_blocked": 18,
       "completed": null
     },
     {
@@ -17466,12 +17466,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Swap ratchet/remap.py (read its all-or-nothing multi-file replace contract first: it temps several files then os.replaces each, with a documented residue; atomicwrite is single-file, so the multi-file part stays and only the per-file write may move), then the two live tools hooks/pycheck_census.py and pathsforward/store.py (wire the dependency AND sync their venvs before the import lands, or the loop's own tool stops importing). Same wiring recipe as treeio's (pyproject dependency + [tool.uv.sources], [tool.ruff.lint.isort] known-third-party, BUILD SIBLINGS in library/test/binary/mypy_runner/.venv, legacy_create_init = 0, uv lock).",
-      "evidence": "2026-10-09: 2026-10-09 slice 1, equivalence of the first pair measured: atomicwrite.write_atomic (mkstemp, chmod to the target's mode, replace) versus treeio.write._replace (deterministic .vfs-tmp.<pid> temp, flush + os.fsync before replace, no mode handling) are NOT equal: treeio fsyncs and atomicwrite did not; atomicwrite preserves permissions and treeio does not. Fixed the gap on the owner's side: write_atomic now flushes and fsyncs the temp before the rename (both the bytes and the text branch), 2 new declared defect classes (mutants.regex) both killed, 1 parametrized test (new content lands while the target still holds the old), 1 warrant; atomicwrite bazel targets 11 of 11 pass. The swaps themselves are the remaining slices. | 2026-10-09: 2026-10-09 slice 2: treeio.write now calls atomicwrite.durable.write_atomic (its own _replace is gone). Wiring copied from gradekit/debtplan: pyproject dependency + [tool.uv.sources] + [tool.ruff.lint.isort] known-third-party (without it the edit gate and the ratchet demanded opposite import layouts, W547), BUILD SIBLINGS on the library, tests, both binaries, mypy_runner and the .venv with legacy_create_init = 0, uv lock added mikemol-atomicwrite. No other target depends on treeio (bazel query rdeps: empty). Behaviour changes a caller can see, recorded in write.py's docstring: a rewritten file keeps its permissions (the old copy reset them, stripping +x from a rewritten script), and the temp is named .<name>.<random>.tmp not <name>.vfs-tmp.<pid> (searched the fleet: only paperkit's and substrate's origin copies and treeio's own test named it). Tests: the leftovers helper matched only the old marker and would have passed over a leftover, so it now matches the new temp shape; +1 treeio test (mode kept), +1 atomicwrite test (an interrupt removes the temp), the interrupt-cleanup defect class moved to atomicwrite's mutants.regex, treeio's four _replace declarations removed. bazel //treeio/..., //atomicwrite/..., //hooks:test_bar_fires: 42 of 42 pass. Remaining copies: ratchet, hooks pycheck_census, pathsforward store.",
+      "next_bounded_step": "Slice 3: swap ratchet/remap.py's _stage/_discard/_write_all onto atomicwrite.stage/commit/discard (it keeps its own all-or-nothing orchestration and its documented partial-replace residue; only the per-file staging goes, which also gives it the fsync it lacked). Wire ratchet -> atomicwrite as treeio's recipe (pyproject dependency + [tool.uv.sources], [tool.ruff.lint.isort] known-third-party, BUILD SIBLINGS on the library, tests, binaries incl. ratchet_cli, mypy_runner, .venv, legacy_create_init = 0, uv lock). Then hooks/pycheck_census.py and pathsforward/store.py (both LIVE tools: wire and sync the venv first).",
+      "evidence": "2026-10-09: 2026-10-09 slice 1, equivalence of the first pair measured: atomicwrite.write_atomic (mkstemp, chmod to the target's mode, replace) versus treeio.write._replace (deterministic .vfs-tmp.<pid> temp, flush + os.fsync before replace, no mode handling) are NOT equal: treeio fsyncs and atomicwrite did not; atomicwrite preserves permissions and treeio does not. Fixed the gap on the owner's side: write_atomic now flushes and fsyncs the temp before the rename (both the bytes and the text branch), 2 new declared defect classes (mutants.regex) both killed, 1 parametrized test (new content lands while the target still holds the old), 1 warrant; atomicwrite bazel targets 11 of 11 pass. The swaps themselves are the remaining slices. | 2026-10-09: 2026-10-09 slice 2: treeio.write now calls atomicwrite.durable.write_atomic (its own _replace is gone). Wiring copied from gradekit/debtplan: pyproject dependency + [tool.uv.sources] + [tool.ruff.lint.isort] known-third-party (without it the edit gate and the ratchet demanded opposite import layouts, W547), BUILD SIBLINGS on the library, tests, both binaries, mypy_runner and the .venv with legacy_create_init = 0, uv lock added mikemol-atomicwrite. No other target depends on treeio (bazel query rdeps: empty). Behaviour changes a caller can see, recorded in write.py's docstring: a rewritten file keeps its permissions (the old copy reset them, stripping +x from a rewritten script), and the temp is named .<name>.<random>.tmp not <name>.vfs-tmp.<pid> (searched the fleet: only paperkit's and substrate's origin copies and treeio's own test named it). Tests: the leftovers helper matched only the old marker and would have passed over a leftover, so it now matches the new temp shape; +1 treeio test (mode kept), +1 atomicwrite test (an interrupt removes the temp), the interrupt-cleanup defect class moved to atomicwrite's mutants.regex, treeio's four _replace declarations removed. bazel //treeio/..., //atomicwrite/..., //hooks:test_bar_fires: 42 of 42 pass. Remaining copies: ratchet, hooks pycheck_census, pathsforward store. | 2026-10-09: 2026-10-09 slice 3a: ratchet.remap is NOT swappable as-is: it is a deliberate TWO-PHASE write (stage every output beside its target with the target's mode, and only when every temp exists os.replace them all; a failure while staging removes them all and exits UNREADABLE 'nothing written'), and atomicwrite.write_atomic did stage-then-replace in one call. So atomicwrite now exposes the steps: stage(path, data) -> Staged(temp, target) (mkstemp beside the target, written, flushed and fsynced, mode kept, removed on any failure incl. an interrupt), commit(staged) (the rename) and discard(staged); write_atomic is stage then commit with the temp removed if either fails. ratchet's own staging lacked the fsync too. Declared defects re-aimed at the new functions (13 declarations, all killed), 4 new tests (stage leaves the target alone until commit; the staged temp carries the target's mode; discard removes it and is idempotent; an interrupt at the commit removes the temp), 4 warrants. bazel //atomicwrite/... //treeio/... //gradekit/... //importdag/...: 76 of 76 pass. | 2026-10-09: correction: the declared defect classes number 16, not 13 (counted from mutants.regex), all killed.",
       "issued_at": "2026-10-09T02:15:21Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": "2026-10-09T02:48:36Z",
+      "last_worked": "2026-10-09T03:41:20Z",
       "ticks_blocked": 0
     },
     {

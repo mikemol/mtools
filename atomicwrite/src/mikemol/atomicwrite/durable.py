@@ -10,6 +10,14 @@ layers: layout owns the filesystem TOPOLOGY (which files are mutable, where a sa
 directories are other projects), while this owns how ANY writer commits bytes. A projection must
 not depend on the mutation machinery to write its own output, so this depends on nothing but the
 standard library.
+
+⚑ THE WRITE IS THREE STEPS, EXPOSED SEPARATELY (mtools:W857): `stage` writes the complete,
+flushed, correctly-moded temp beside the target, `commit` renames it over the target, and `discard`
+removes a temp that will not be committed. `write_atomic` is exactly stage then commit, with the
+temp removed if either fails. A writer that must put SEVERAL files in place together (ratchet's
+remap stages every output before replacing any of them, so a failure while writing leaves every
+file as the author left it) needs the steps apart; before this split it kept its own copy of the
+first one, without the flush.
 """
 
 from __future__ import annotations
@@ -17,10 +25,19 @@ from __future__ import annotations
 import contextlib
 import os
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 
 _MODE_BITS = 0o7777  # permission bits plus setuid, setgid and sticky
 _NEW_FILE_MODE = 0o666  # what open(path, "w") asks for before the umask strips bits
+
+
+@dataclass(frozen=True)
+class Staged:
+    """A complete temp file beside its target, written and flushed but not yet renamed over it."""
+
+    temp: Path
+    target: Path
 
 
 def _umask() -> int:
@@ -33,6 +50,20 @@ def _umask() -> int:
     current = os.umask(0)
     os.umask(current)
     return current
+
+
+def _keep_mode(path: Path) -> int:
+    """Name the permission bits a write to `path` must leave it with.
+
+    Returns:
+        The existing file's mode; for a file that does not exist, 0666 minus the process umask,
+        as `open(path, "w")` would create it.
+
+    """
+    try:
+        return path.stat().st_mode & _MODE_BITS
+    except FileNotFoundError:
+        return _NEW_FILE_MODE & ~_umask()
 
 
 def _fill(fd: int, data: str | bytes) -> None:
@@ -58,6 +89,45 @@ def _fill(fd: int, data: str | bytes) -> None:
             os.fsync(ft.fileno())
 
 
+def discard(staged: Staged) -> None:
+    """Remove a staged temp that will not be committed; a temp already gone is not an error."""
+    with contextlib.suppress(OSError):
+        staged.temp.unlink()
+
+
+def stage(path: Path, data: str | bytes) -> Staged:
+    """Write `data` to a sibling temp of `path`, flushed and moded, without touching `path`.
+
+    The target's permissions are PRESERVED. mkstemp creates at 0600 by design (built for
+    secrets), so a replace-based write would silently NARROW every file it touches. A new file
+    gets the process umask default, as open(path, "w") would. The mode is set before the temp can
+    be renamed, so the target is never briefly 0600.
+
+    If anything fails the temp is removed and the original exception propagates, a
+    KeyboardInterrupt included: a staged temp is the caller's to commit or discard only once this
+    has returned.
+
+    Returns:
+        The staged temp, for `commit` or `discard`.
+
+    """
+    keep = _keep_mode(path)
+    fd, name = tempfile.mkstemp(dir=str(path.parent), prefix=f".{path.name}.", suffix=".tmp")
+    staged = Staged(Path(name), path)
+    try:
+        _fill(fd, data)
+        staged.temp.chmod(keep)
+    except BaseException:
+        discard(staged)
+        raise
+    return staged
+
+
+def commit(staged: Staged) -> None:
+    """Rename a staged temp over its target: atomic within the filesystem, breaks any hardlink."""
+    staged.temp.replace(staged.target)
+
+
 def write_atomic(path: Path, data: str | bytes) -> None:
     """Replace `path`'s CONTENT by replacing the PATH: write a sibling temp, then rename over it.
 
@@ -76,9 +146,7 @@ def write_atomic(path: Path, data: str | bytes) -> None:
     rename cannot cross filesystems. If anything fails the temp is removed and the original
     exception propagates.
 
-    The target's permissions are PRESERVED. mkstemp creates at 0600 by design (built for
-    secrets), so a replace-based write would silently NARROW every file it touches. A new file
-    gets the process umask default, as open(path, "w") would.
+    The target's permissions are PRESERVED (see `stage`).
 
     NOT for writers that must write THROUGH a path deliberately, because the check under test
     reads that exact file and a replace would hand it a different inode from the one it opened.
@@ -88,17 +156,9 @@ def write_atomic(path: Path, data: str | bytes) -> None:
         data: The new content, text or bytes.
 
     """
+    staged = stage(path, data)
     try:
-        keep = path.stat().st_mode & _MODE_BITS
-    except FileNotFoundError:
-        keep = _NEW_FILE_MODE & ~_umask()
-    fd, tmp = tempfile.mkstemp(dir=str(path.parent), prefix=f".{path.name}.", suffix=".tmp")
-    tmp_path = Path(tmp)
-    try:
-        _fill(fd, data)
-        tmp_path.chmod(keep)  # before the rename, so the target is never briefly 0600
-        tmp_path.replace(path)  # atomic within the filesystem; breaks any hardlink alias
+        commit(staged)
     except BaseException:
-        with contextlib.suppress(OSError):
-            tmp_path.unlink()
+        discard(staged)
         raise

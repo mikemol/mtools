@@ -68,3 +68,32 @@
   claim  = {A KeyboardInterrupt is not an Exception, and still must not leave its sibling behind.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_an_interrupt_mid_write_removes_the_temp_and_keeps_the_original},
 }
+
+@misc{atomicwrite-durable-staging-leaves-the-target-alone-until-the-commit,
+  section = {durable},
+  title  = {The temp holds the new bytes beside the target, which still reads as it did},
+  claim  = {The temp holds the new bytes beside the target, which still reads as it did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_staging_leaves_the_target_alone_until_the_commit},
+}
+
+@misc{atomicwrite-durable-staged-temp-carries-the-targets-mode-before-any-commit,
+  section = {durable},
+  title  = {A writer that commits several files later still gets each one's permissions kept},
+  claim  = {A writer that commits several files later still gets each one's permissions kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_a_staged_temp_carries_the_targets_mode_before_any_commit},
+}
+
+@misc{atomicwrite-durable-discarding-removes-the-temp-and-leaves-the-target,
+  section = {durable},
+  title  = {A staged write that is not committed leaves nothing behind; discarding twice is fine},
+  claim  = {A staged write that is not committed leaves nothing behind; discarding twice is fine.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_discarding_removes_the_temp_and_leaves_the_target},
+}
+
+@misc{atomicwrite-durable-interrupt-at-the-commit-removes-the-temp-and-keeps-the-original,
+  section = {durable},
+  title  = {write_atomic cleans up after a commit that dies on a BaseException, not only an Exception},
+  claim  = {write_atomic cleans up after a commit that dies on a BaseException, not only an
+            Exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_an_interrupt_at_the_commit_removes_the_temp_and_keeps_the_original},
+}

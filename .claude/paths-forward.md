@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 862 · heartbeat 2026-10-09T03:21:50Z · job `f4a17ba1` · hash `v2:356a3af9142fd30f`
+counter 862 · heartbeat 2026-10-09T03:21:50Z · job `f4a17ba1` · hash `v2:b362ee3361d39cf4`
 
 | # | symbol | status |
 |---|---|---|
@@ -1015,12 +1015,12 @@ counter 862 · heartbeat 2026-10-09T03:21:50Z · job `f4a17ba1` · hash `v2:356a
      of the other module; add a witness that a dispatch-table module's closure roots equal the original's
 28. **W857** (ready) Atomic write is carried five times: make pathsforward, treeio, ratchet and hooks depend on
    mikemol-atomicwrite where their needs match
-   - next: Swap ratchet/remap.py (read its all-or-nothing multi-file replace contract first: it temps several files then
-     os.replaces each, with a documented residue; atomicwrite is single-file, so the multi-file part stays and only the
-     per-file write may move), then the two live tools hooks/pycheck_census.py and pathsforward/store.py (wire the
-     dependency AND sync their venvs before the import lands, or the loop's own tool stops importing). Same wiring
-     recipe as treeio's (pyproject dependency + [tool.uv.sources], [tool.ruff.lint.isort] known-third-party, BUILD
-     SIBLINGS in library/test/binary/mypy_runner/.venv, legacy_create_init = 0, uv lock).
+   - next: Slice 3: swap ratchet/remap.py's _stage/_discard/_write_all onto atomicwrite.stage/commit/discard (it keeps
+     its own all-or-nothing orchestration and its documented partial-replace residue; only the per-file staging goes,
+     which also gives it the fsync it lacked). Wire ratchet -> atomicwrite as treeio's recipe (pyproject dependency +
+     [tool.uv.sources], [tool.ruff.lint.isort] known-third-party, BUILD SIBLINGS on the library, tests, binaries incl.
+     ratchet_cli, mypy_runner, .venv, legacy_create_init = 0, uv lock). Then hooks/pycheck_census.py and
+     pathsforward/store.py (both LIVE tools: wire and sync the venv first).
 29. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
    other
    - next: Decide which of the five differences corpus keeps as policy and which it takes from pathwalk: the shape that

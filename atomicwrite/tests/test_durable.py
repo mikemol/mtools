@@ -122,6 +122,58 @@ def test_an_interrupt_mid_write_removes_the_temp_and_keeps_the_original(
     assert target.read_text(encoding="utf-8") == "old"
 
 
+def test_staging_leaves_the_target_alone_until_the_commit(tmp_path: Path) -> None:
+    """The temp holds the new bytes beside the target, which still reads as it did."""
+    target = tmp_path / "out.txt"
+    target.write_text("old", encoding="utf-8")
+    staged = durable.stage(target, "new")
+    assert staged.target == target
+    assert staged.temp.parent == tmp_path
+    assert staged.temp.read_text(encoding="utf-8") == "new"
+    assert target.read_text(encoding="utf-8") == "old"
+    durable.commit(staged)
+    assert target.read_text(encoding="utf-8") == "new"
+    assert not staged.temp.exists()
+
+
+def test_a_staged_temp_carries_the_targets_mode_before_any_commit(tmp_path: Path) -> None:
+    """A writer that commits several files later still gets each one's permissions kept."""
+    target = tmp_path / "out.txt"
+    target.write_text("old", encoding="utf-8")
+    target.chmod(_PRESERVED_MODE)
+    staged = durable.stage(target, b"new")
+    assert _mode(staged.temp) == _PRESERVED_MODE
+
+
+def test_discarding_removes_the_temp_and_leaves_the_target(tmp_path: Path) -> None:
+    """A staged write that is not committed leaves nothing behind; discarding twice is fine."""
+    target = tmp_path / "out.txt"
+    target.write_text("old", encoding="utf-8")
+    staged = durable.stage(target, "new")
+    durable.discard(staged)
+    durable.discard(staged)
+    assert [p.name for p in tmp_path.iterdir()] == ["out.txt"]
+    assert target.read_text(encoding="utf-8") == "old"
+
+
+def test_an_interrupt_at_the_commit_removes_the_temp_and_keeps_the_original(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """write_atomic cleans up after a commit that dies on a BaseException, not only an Exception."""
+    target = tmp_path / "out.txt"
+    target.write_text("old", encoding="utf-8")
+
+    def interrupted(staged: durable.Staged) -> None:
+        del staged
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(durable, "commit", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        durable.write_atomic(target, "new")
+    assert [p.name for p in tmp_path.iterdir()] == ["out.txt"]
+    assert target.read_text(encoding="utf-8") == "old"
+
+
 def test_a_failed_write_leaves_no_temp_and_reraises(tmp_path: Path) -> None:
     """A rename that cannot happen (the target is a directory) removes the temp and raises."""
     target = tmp_path / "occupied"

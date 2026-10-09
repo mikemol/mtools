@@ -8,22 +8,42 @@
 
 # Replace the PATH, never the inode: a write THROUGH the inode shows the new bytes to every hardlinked
 # twin (a content-addressed dedup creates exactly that state), and a reader sees a torn file.
-src/mikemol/atomicwrite/durable.py|replace-becomes-write-through|tmp_path\.replace\(path\)|path.write_bytes(tmp_path.read_bytes())|def=write_atomic
+src/mikemol/atomicwrite/durable.py|replace-becomes-write-through|staged\.temp\.replace\(staged\.target\)|staged.target.write_bytes(staged.temp.read_bytes())|def=commit
 
 # The target's permissions are PRESERVED: mkstemp creates at 0600, so without the chmod a replace
 # silently NARROWS every file it touches.
-src/mikemol/atomicwrite/durable.py|permissions-narrowed-to-0600|tmp_path\.chmod\(keep\)|pass|def=write_atomic
+src/mikemol/atomicwrite/durable.py|permissions-narrowed-to-0600|staged\.temp\.chmod\(keep\)|pass|def=stage
 
 # A new file gets the process umask default, as open(path, "w") would; ignoring the umask opens it
 # wider than the caller's process allows.
-src/mikemol/atomicwrite/durable.py|new-file-ignores-the-umask|keep = _NEW_FILE_MODE & ~_umask\(\)|keep = _NEW_FILE_MODE|def=write_atomic
+src/mikemol/atomicwrite/durable.py|new-file-ignores-the-umask|return _NEW_FILE_MODE & ~_umask\(\)|return _NEW_FILE_MODE|def=_keep_mode
+
+# An existing file keeps ITS mode, not the new-file default.
+src/mikemol/atomicwrite/durable.py|existing-mode-ignored|return path\.stat\(\)\.st_mode & _MODE_BITS|return _NEW_FILE_MODE|def=_keep_mode
 
 # If anything fails the temp is removed; left behind, a failed write litters the directory it was
 # writing into.
-src/mikemol/atomicwrite/durable.py|failed-write-leaves-its-temp|tmp_path\.unlink\(\)|pass|def=write_atomic
+src/mikemol/atomicwrite/durable.py|failed-write-leaves-its-temp|staged\.temp\.unlink\(\)|pass|def=discard
+
+# ...in stage, when the staging itself fails (an interrupt included)...
+src/mikemol/atomicwrite/durable.py|stage-failure-leaves-its-temp|        discard\(staged\)|        pass|def=stage
+
+# ...and in write_atomic, when the commit fails.
+src/mikemol/atomicwrite/durable.py|commit-failure-leaves-its-temp|        discard\(staged\)|        pass|def=write_atomic
 
 # ...and the original exception propagates: swallowed, the caller is told a failed write succeeded.
-src/mikemol/atomicwrite/durable.py|failed-write-swallowed|^        raise$|        pass|def=write_atomic
+src/mikemol/atomicwrite/durable.py|stage-failure-swallowed|^        raise$|        pass|def=stage
+
+src/mikemol/atomicwrite/durable.py|commit-failure-swallowed|^        raise$|        pass|def=write_atomic
+
+# ...on ANY failure, an interrupt included, not only an ordinary exception (mtools:W857: this was
+# declared in treeio for its own copy and moves here with the code).
+src/mikemol/atomicwrite/durable.py|stage-cleanup-only-on-exception|except BaseException:|except Exception:|def=stage
+
+src/mikemol/atomicwrite/durable.py|commit-cleanup-only-on-exception|except BaseException:|except Exception:|def=write_atomic
+
+# A staged temp is the one beside its target, named for it, so a leftover points at its owner.
+src/mikemol/atomicwrite/durable.py|stage-returns-the-wrong-target|return staged$|return Staged(staged.temp, staged.temp)|def=stage
 
 # Reading the umask must not change it (there is no read-only syscall): left at 0, every file the
 # process creates afterwards is created world-writable.
@@ -37,7 +57,3 @@ src/mikemol/atomicwrite/durable.py|bytes-written-as-text|if isinstance\(data, by
 src/mikemol/atomicwrite/durable.py|bytes-not-flushed-before-rename|os\.fsync\(fb\.fileno\(\)\)|pass|def=_fill
 
 src/mikemol/atomicwrite/durable.py|text-not-flushed-before-rename|os\.fsync\(ft\.fileno\(\)\)|pass|def=_fill
-
-# ...on ANY failure, an interrupt included, not only an ordinary exception (mtools:W857: this was
-# declared in treeio for its own copy and moves here with the code).
-src/mikemol/atomicwrite/durable.py|cleanup-only-on-exception|except BaseException:|except Exception:|def=write_atomic
