@@ -1358,3 +1358,5 @@
 2026-10-09T11:02:06Z  tick  W796 advanced  sweep     "host edit denied by standing 16; route re-planned as a tracked katas distribution (W872 first slice); host file untouched"
 2026-10-09T11:17:51Z  tick  W872 advanced  collapse  "katas proc core collapses onto treeio.proc.capture (needs a timeout); a new dist is a 55-file integration, scoped as slices 1a/1b"
 2026-10-09T11:36:56Z  tick  W872 advanced  collapse  "treeio.proc.capture gains a timeout (slice 1a); katas proc core can now depend on it"
+2026-10-09T11:51:12Z  tick  W873 minted    -         "Extract treeio.proc.capture into its own small leaf distribution so treeio, katas and commit_kata share one process seam without pulling pygit2"  evidence=W872
+2026-10-09T11:51:13Z  tick  W872 advanced  collapse  "katas would drag pygit2 in through treeio; extract the process seam as a leaf first (W873)"

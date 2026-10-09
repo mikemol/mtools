@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 872,
+  "counter": 873,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T11:18:15Z",
   "job_id": "bfce42ca",
@@ -17778,7 +17778,7 @@
     {
       "symbol": "W872",
       "title": "katas distribution slice 1: the proc core and the detached commit (start_commit, wait) calling hooks/bin/mikemol-commit",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W796"
       ],
@@ -17787,14 +17787,39 @@
         "hostkit",
         "standards"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Slice 1b: scaffold the katas distribution (treeio's file shape, BUILD SIBLINGS ['//treeio:treeio']) with status first, calling treeio.proc.capture; one deliberate integration step (new dists integrate one at a time).",
-      "evidence": "2026-10-09: 2026-10-09 scoping a new distribution first: the creation commit of treeio (33978f3) touched 55 files (MODULE.bazel hub, BUILD, README, paper.toml, pyproject, requirements(-dev), uv.lock, rubric, ratchet-preview, src, tests, warrants) and the memory records that a dist with BUILD but no hubs fails every commit, so a new dist is integrated in one deliberate step. Also found: katas.run() is treeio.proc.capture plus a timeout (treeio/src/mikemol/treeio/proc.py, 38 lines, 'the one place a child process is started'), and hooks commit_kata.run_git is a third copy; the katas distribution's proc core should DEPEND on treeio.proc (operator 2026-10-06: dependencies between mtools packages are good) after capture gains a timeout parameter, not re-implement it. So slice 1 shrinks: no proc module of its own. | 2026-10-09: 2026-10-09 slice 1a LANDED: treeio.proc.capture(argv, cwd, env, timeout=None) passes timeout to subprocess.run (TimeoutExpired propagates; no limit when omitted). 2 tests (a 30 s child abandoned at 0.2 s with TimeoutExpired; a generous timeout returns the result), 2 warrants, mutant capture-drops-the-timeout, per-file-ignore for test_proc (it names subprocess.TimeoutExpired). bazel //treeio //ratchet //atomicwrite: 60 of 60. PROCESS NOTE, honestly: I appended the two tests with a Bash heredoc (cat >>) BEFORE their imports existed, which put an import-less test file on disk past the Edit-time pycheck gate for one step; I then added the imports with Edit and checked both files with mikemol-pycheck --check-file (admitted) and pytest (6 passed) before anything was staged. Not done: hooks commit_kata.run_git still its own copy (collapse candidate onto capture); the katas distribution is not scaffolded.",
+      "blocked_on": [
+        "W873"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W873: scaffold the katas distribution on the atomicwrite template with SIBLINGS = the leaf, status first (workstreams.repos, commits.commit_argv, commits.commit_state as pure tested functions), then start_commit/wait.",
+      "evidence": "2026-10-09: 2026-10-09 scoping a new distribution first: the creation commit of treeio (33978f3) touched 55 files (MODULE.bazel hub, BUILD, README, paper.toml, pyproject, requirements(-dev), uv.lock, rubric, ratchet-preview, src, tests, warrants) and the memory records that a dist with BUILD but no hubs fails every commit, so a new dist is integrated in one deliberate step. Also found: katas.run() is treeio.proc.capture plus a timeout (treeio/src/mikemol/treeio/proc.py, 38 lines, 'the one place a child process is started'), and hooks commit_kata.run_git is a third copy; the katas distribution's proc core should DEPEND on treeio.proc (operator 2026-10-06: dependencies between mtools packages are good) after capture gains a timeout parameter, not re-implement it. So slice 1 shrinks: no proc module of its own. | 2026-10-09: 2026-10-09 slice 1a LANDED: treeio.proc.capture(argv, cwd, env, timeout=None) passes timeout to subprocess.run (TimeoutExpired propagates; no limit when omitted). 2 tests (a 30 s child abandoned at 0.2 s with TimeoutExpired; a generous timeout returns the result), 2 warrants, mutant capture-drops-the-timeout, per-file-ignore for test_proc (it names subprocess.TimeoutExpired). bazel //treeio //ratchet //atomicwrite: 60 of 60. PROCESS NOTE, honestly: I appended the two tests with a Bash heredoc (cat >>) BEFORE their imports existed, which put an import-less test file on disk past the Edit-time pycheck gate for one step; I then added the imports with Edit and checked both files with mikemol-pycheck --check-file (admitted) and pytest (6 passed) before anything was staged. Not done: hooks commit_kata.run_git still its own copy (collapse candidate onto capture); the katas distribution is not scaffolded. | 2026-10-09: 2026-10-09 slice 1b SCOPED and re-sequenced, nothing built: atomicwrite's creation commit (4e887c7) is the right template (15 files + MODULE.bazel hubs atomicwrite_deps/atomicwrite_dev + use_repo entries), but a katas distribution depending on treeio only for proc.capture would pull treeio's pygit2>=1.20 (a native third-party dependency, with a stubs/pygit2 directory for strict mypy) into a host-orchestration tool. The same lesson that made atomicwrite its own leaf applies: the process seam is a leaf capability. So W873 extracts it first; katas then depends on the leaf (stdlib only) and treeio does too.",
       "issued_at": "2026-10-09T11:01:59Z",
       "minted_during": "tick",
       "caused_by": "W796",
-      "last_worked": "2026-10-09T11:36:55Z",
+      "last_worked": "2026-10-09T11:51:12Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W873",
+      "title": "Extract treeio.proc.capture into its own small leaf distribution so treeio, katas and commit_kata share one process seam without pulling pygit2",
+      "status": "ready",
+      "enables": [
+        "W872"
+      ],
+      "touches": [
+        "treeio",
+        "dependencies",
+        "reuse"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Create a leaf distribution (stdlib only, like atomicwrite: pyproject, BUILD, README, paper.toml, rubric, uv.lock, MODULE.bazel hubs) holding capture(argv, cwd, env, timeout) with its tests/warrants/mutants moved from treeio; treeio then depends on it (its pyproject, BUILD SIBLINGS, uv.lock) and keeps proc as a re-export only if a caller needs it. Name to choose (mikemol-procrun?). One deliberate integration step.",
+      "evidence": "",
+      "issued_at": "2026-10-09T11:51:12Z",
+      "minted_during": "tick",
+      "caused_by": "W872",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],
