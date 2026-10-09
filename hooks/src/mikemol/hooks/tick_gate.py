@@ -47,6 +47,10 @@ if TYPE_CHECKING:
 
 # The loop prompt begins with this; a user mentioning a tick mid-sentence is not one.
 TICK_PREFIX = "paths-forward tick"
+# The host session's own cron prompt (github-45, 2026-10-09) begins with this instead, so the zram
+# gate never saw it: "tick: host session paths-forward loop (...)". The whole phrase, not "tick:",
+# so a user typing "tick:" is not gated.
+HOST_LOOP_PREFIX = "tick: host session paths-forward loop"
 
 
 class Gate(NamedTuple):
@@ -65,12 +69,16 @@ def is_tick(prompt: str) -> bool:
     lock the gate reads is the one under the PAYLOAD'S cwd, i.e. the session's own queue, so the
     skip it makes for a fresh lock is the loop's own "held and under 30 minutes: exit silently".
 
+    ⚑ A THIRD SPELLING (github-45, 2026-10-09): the host session's own cron prompt reads `tick: host
+    session paths-forward loop (...)`, which neither of the two above matches, so the host's ticks
+    were never gated against zram (the operator's open question).
+
     Returns:
         True when the prompt, ignoring leading whitespace and one opening bracket, begins with
-        TICK_PREFIX.
+        TICK_PREFIX or with HOST_LOOP_PREFIX.
 
     """
-    return prompt.lstrip().removeprefix("[").startswith(TICK_PREFIX)
+    return prompt.lstrip().removeprefix("[").startswith((TICK_PREFIX, HOST_LOOP_PREFIX))
 
 
 def facts_line(headroom: Headroom | None, lock: HostLock | None) -> str:

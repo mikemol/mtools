@@ -84,6 +84,11 @@ def test_only_a_prompt_that_begins_with_the_loop_text_is_a_tick() -> None:
     assert tick_gate.is_tick(TICK)
     assert tick_gate.is_tick("   \n" + TICK)
     assert tick_gate.is_tick("[paths-forward tick] Invoke the paths-forward-loop skill")
+    assert tick_gate.is_tick(
+        "tick: host session paths-forward loop (github-28, cwd /home/mikemol/github)."
+    )
+    assert not tick_gate.is_tick("tick:")
+    assert not tick_gate.is_tick("tick: what is the zram state?")
     assert not tick_gate.is_tick("[[paths-forward tick]")
     assert not tick_gate.is_tick("[ paths-forward tick]")
     assert not tick_gate.is_tick("what does the paths-forward tick prompt do?")
