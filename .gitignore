@@ -39,3 +39,8 @@ build/
 
 # The paths-forward tick lock: a per-checkout runtime file, never state.
 /.claude/paths-forward.flock
+
+# W825: the pycheck debt ledger, rewritten by the detached census after every green push. It is a
+# measurement of the tree, so tracking it would put a changed file in every commit and a dirty tree
+# after every push; it is read in place by the closure advisory.
+/.claude/debt-ledger.json
