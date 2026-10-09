@@ -4,3 +4,4 @@ bibparse	The Parser: A Malformed Bib Is a Syntax Error at a Position, and a Colu
 resolve	The Resolver: A Project Directory Names Exactly the Bibs Its paper.toml Lists
 edges	The Edges: Each Claim Yields Its rests_on and check, and a Duplicate Key Is Refused
 fields	The Field Reader: One Field Per Entry Across the Bibs, and an Empty Population Is a Refusal
+spans	The Entry Span: Each Parsed Entry Slices Out Its Own Text Byte for Byte, the Gaps Are Only Trivia, and a Cut Span Leaves the Rest Parseable

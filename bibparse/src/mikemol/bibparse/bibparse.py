@@ -66,12 +66,22 @@ class BibSyntaxError(SyntaxError):
 
 @dataclass
 class Entry:
-    """One parsed entry: its type, key, fields, and where it started."""
+    """One parsed entry: its type, key, fields, where it started, and the text it spans.
+
+    `start` and `end` are character offsets into the parsed text: `text[start:end]` is the
+    entry's own text, from its `@` through its closing `}`, byte for byte, with the trivia
+    between entries (whitespace, `%` comments) outside it. A caller that edits a bib as TEXT
+    (drop an entry, keep the rest untouched) needs exactly that, and a parser that only returned
+    the fields could not say which bytes to drop (mtools:W860). Both are 0 for an entry built
+    by hand rather than parsed.
+    """
 
     typ: str
     key: str
     fields: dict[str, str] = field(default_factory=dict)
     line: int = 0
+    start: int = 0
+    end: int = 0
 
     # Field ORDER is preserved (dicts are ordered): a parser that returned an unordered mapping
     # would make any projection depend on hash seeding.
@@ -314,13 +324,14 @@ def _entry(lx: _Lexer) -> Entry:
     """Parse one whole entry.
 
     Returns:
-        The entry, with the line it started on.
+        The entry, with the line it started on and the span of text it covers.
 
     """
-    line = lx.line
+    line, start = lx.line, lx.i
     low, key = _entry_header(lx)
-    e = Entry(typ=low, key=key, line=line)
+    e = Entry(typ=low, key=key, line=line, start=start)
     _entry_fields(lx, e, line)
+    e.end = lx.i
     return e
 
 

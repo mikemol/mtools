@@ -279,3 +279,38 @@
   claim  = {A repeated key would silently replace a claim and its check.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fields.py -k test_a_key_defined_twice_is_refused_not_last_wins},
 }
+
+@misc{bibparse-spans-span-slices-out-exactly-the-entry-text,
+  section = {spans},
+  title  = {From the `@` through the closing brace, with the header comment and gaps outside it},
+  claim  = {From the `@` through the closing brace, with the header comment and gaps outside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_span_slices_out_exactly_the_entry_text},
+}
+
+@misc{bibparse-spans-what-lies-between-the-spans-is-only-trivia,
+  section = {spans},
+  title  = {Everything outside the spans is whitespace or a `%` comment line: nothing is lost},
+  claim  = {Everything outside the spans is whitespace or a `%` comment line: nothing is lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_what_lies_between_the_spans_is_only_trivia},
+}
+
+@misc{bibparse-spans-cutting-one-span-leaves-a-text-that-parses-to-the-rest,
+  section = {spans},
+  title  = {The use this exists for: drop an entry by its span and keep every other byte},
+  claim  = {The use this exists for: drop an entry by its span and keep every other byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_cutting_one_span_leaves_a_text_that_parses_to_the_rest},
+}
+
+@misc{bibparse-spans-hand-built-entry-has-no-span,
+  section = {spans},
+  title  = {Only a parsed entry knows where it sits: the defaults are zero, never a guess},
+  claim  = {Only a parsed entry knows where it sits: the defaults are zero, never a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_hand_built_entry_has_no_span},
+}
+
+@misc{bibparse-spans-span-starts-after-trivia-and-ends-before-the-trailing-newline,
+  section = {spans},
+  title  = {The offsets are the entry's own, not the line's: leading trivia and the newline are out},
+  claim  = {The offsets are the entry's own, not the line's: leading trivia and the newline are out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_the_span_starts_after_trivia_and_ends_before_the_trailing_newline},
+}

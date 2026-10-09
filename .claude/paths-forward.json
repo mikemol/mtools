@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 89,
+      "ticks_blocked": 90,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 87,
+      "ticks_blocked": 88,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 92,
+      "ticks_blocked": 93,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 61,
+      "ticks_blocked": 62,
       "completed": null
     },
     {
@@ -11801,7 +11801,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -16966,7 +16966,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 15,
+      "ticks_blocked": 16,
       "completed": null
     },
     {
@@ -17524,12 +17524,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Give bibparse.Entry the end line (or a byte span) of each entry and test it against the 32 ledgers; then make gen_warrants' prune and would_drop select entries through bibparse and slice the original text by those spans, keeping the unparsed text byte-exact. First cross-distribution dependency for hooks: hooks is a LIVE tool, so wire the pyproject dependency, the BUILD SIBLINGS and the venv sync before any import lands (recipe: treeio's, W857). count_test_functions.py stays a separate parse (W840).",
-      "evidence": "2026-10-09: 2026-10-09 comparison measured: the entry KEYS bibparse.parse returns and the keys gen_warrants' _ENTRY regex finds, in order, over all 32 warrants.bib in the repo: 32 of 32 identical, 0 differ. So reading entries is the same capability twice and the regex is safe to retire for that. The obstacle is not agreement but what each is for: gen_warrants EDITS TEXT (prune drops stale entries byte-for-byte and keeps the rest untouched), and bibparse.Entry carries only typ, key, fields and a start line, no end line or byte span, so it cannot say which bytes to drop.",
+      "next_bounded_step": "Slice 2: route gen_warrants' prune and would_drop through bibparse.parse, slicing the original text by Entry.start/Entry.end and keeping every other byte, so _ENTRY, _KEY and the hand-rolled splitting go. hooks is a LIVE tool: wire the dependency first (pyproject dependency + [tool.uv.sources] + [tool.ruff.lint.isort] known-third-party, BUILD SIBLINGS on library/tests/binaries/mypy_runner/.venv, legacy_create_init = 0, uv lock; recipe in treeio's W857 commit) and sync hooks/.venv with bibparse installed BEFORE the import lands, or every hook script stops importing. A ledger bibparse REFUSES (a syntax error) must make prune refuse, not skip. Keep count_test_functions.py a separate parse (W840).",
+      "evidence": "2026-10-09: 2026-10-09 comparison measured: the entry KEYS bibparse.parse returns and the keys gen_warrants' _ENTRY regex finds, in order, over all 32 warrants.bib in the repo: 32 of 32 identical, 0 differ. So reading entries is the same capability twice and the regex is safe to retire for that. The obstacle is not agreement but what each is for: gen_warrants EDITS TEXT (prune drops stale entries byte-for-byte and keeps the rest untouched), and bibparse.Entry carries only typ, key, fields and a start line, no end line or byte span, so it cannot say which bytes to drop. | 2026-10-09: 2026-10-09 slice 1: bibparse.Entry gains start and end, character offsets so text[start:end] is the entry from its @ through its closing brace (0 for a hand-built entry); 5 tests (exact slice, gaps only trivia, cut a span and the rest parses, hand-built is 0, offsets exclude leading trivia and the trailing newline) + 5 warrants. Measured over all 32 warrants.bib: the text bibparse's span selects equals the text gen_warrants' regex selects, 32 of 32. bazel //bibparse/... //gradekit/...: 31 of 31 pass (mutation grid included).",
       "issued_at": "2026-10-09T02:15:22Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": "2026-10-09T03:01:09Z",
+      "last_worked": "2026-10-09T03:15:50Z",
       "ticks_blocked": 0
     },
     {

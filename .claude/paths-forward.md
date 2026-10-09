@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 861 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:c22c551e5a3d2907`
+counter 861 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:2f3d9add90bb151d`
 
 | # | symbol | status |
 |---|---|---|
@@ -1037,11 +1037,13 @@ counter 861 · heartbeat 2026-10-09T01:35:47Z · job `f78abfd1` · hash `v2:c22c
      first sibling dependency (recipe: treeio's, W857).
 31. **W860** (ready) hooks.gen_warrants reads the bib with its own regex: make it use mikemol-bibparse, keeping
    count_test_functions.py independent
-   - next: Give bibparse.Entry the end line (or a byte span) of each entry and test it against the 32 ledgers; then make
-     gen_warrants' prune and would_drop select entries through bibparse and slice the original text by those spans,
-     keeping the unparsed text byte-exact. First cross-distribution dependency for hooks: hooks is a LIVE tool, so wire
-     the pyproject dependency, the BUILD SIBLINGS and the venv sync before any import lands (recipe: treeio's, W857).
-     count_test_functions.py stays a separate parse (W840).
+   - next: Slice 2: route gen_warrants' prune and would_drop through bibparse.parse, slicing the original text by
+     Entry.start/Entry.end and keeping every other byte, so _ENTRY, _KEY and the hand-rolled splitting go. hooks is a
+     LIVE tool: wire the dependency first (pyproject dependency + [tool.uv.sources] + [tool.ruff.lint.isort]
+     known-third-party, BUILD SIBLINGS on library/tests/binaries/mypy_runner/.venv, legacy_create_init = 0, uv lock;
+     recipe in treeio's W857 commit) and sync hooks/.venv with bibparse installed BEFORE the import lands, or every hook
+     script stops importing. A ledger bibparse REFUSES (a syntax error) must make prune refuse, not skip. Keep
+     count_test_functions.py a separate parse (W840).
 32. **W861** (ready) corpus.import_edges classes a class body's imports as deferred, but a class body executes when the
    module is imported
    - next: Python runs a class body at definition, so 'import x' directly inside 'class K:' fires on import and belongs

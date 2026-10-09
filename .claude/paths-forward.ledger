@@ -1310,3 +1310,4 @@
 2026-10-09T02:48:40Z  tick  W857 advanced  collapse  "treeio now writes through atomicwrite (first sibling wiring of that dist): mode kept, fsync kept, own copy deleted; ratchet, pycheck_census and pathsforward store remain"
 2026-10-09T03:00:42Z  tick  W861 minted    -         "corpus.import_edges classes a class body's imports as deferred, but a class body executes when the module is imported"  evidence=W859
 2026-10-09T03:00:42Z  tick  W859 advanced  collapse  "W858/W859 compared by measurement: names identical on 144 files, five policy differences in file discovery; a class-body classification question found and carded (W861)"
+2026-10-09T03:15:51Z  tick  W860 advanced  collapse  "bibparse.Entry carries its text span (equal to gen_warrants' regex entry on 32 of 32 ledgers); routing the live gen_warrants through it is the next slice"
