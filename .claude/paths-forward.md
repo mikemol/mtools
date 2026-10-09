@@ -3,7 +3,7 @@
 
 state file: `/home/mikemol/github/mtools/.claude/paths-forward.json`
 
-counter 870 · heartbeat 2026-10-09T09:21:29Z · job `51ba88ef` · hash `v2:f3be4f0f0fc19b65`
+counter 870 · heartbeat 2026-10-09T09:21:29Z · job `51ba88ef` · hash `v2:f95af2bb0252ce70`
 
 | # | symbol | status |
 |---|---|---|
@@ -869,9 +869,9 @@ counter 870 · heartbeat 2026-10-09T09:21:29Z · job `51ba88ef` · hash `v2:f3be
      names from git ls-tree (no glob), BUILD exporting each.
 2. **W870** (ready) pathsforward gate-card verbs: mint a repo's 'commit gate is red' card, block its open ledger on it,
    and lift on green (katas gate_red/gate_green)
-   - next: Port katas.py gate_red/gate_green (lines 618-686) as pathsforward ops over the State, not shell calls to the
-     CLI: idempotent card by title, repairs enable the card, others get blocked_on, green marks done and bumps blocked.
-     Keep its findings: blocked_on only (no enables list, nemik UmbrellaBlockShape), repairs enable the card.
+   - next: Slice 2: wire --gate-red REASON (with --next STEP, optional --blocked-on operator ask, --except for repairs?)
+     and --gate-green EVIDENCE into cli.py following _skip's pattern (_mutate, ctx.stamp, a ledger line), with CLI
+     tests; name the repo from inbound.repo_name(ctx.path).
 3. **W798** (ready) Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs
    captured by BuildBuddy
    - next: Rule (operator 2026-10-06): a bazel gate never globs or declares a directory as input; name every file

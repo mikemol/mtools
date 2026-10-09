@@ -3814,3 +3814,80 @@
   claim  = {`--update --title` applies the same refusal, so a title cannot be bundled afterwards.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bundled_title.py -k test_update_refuses_to_retitle_into_a_bundle},
 }
+
+@misc{pathsforward-gate-red-mints-one-card-and-blocks-the-open-ledger-behind-it,
+  section = {gate},
+  title  = {Every open waypoint ends up waiting on the card; the done one is left alone},
+  claim  = {Every open waypoint ends up waiting on the card; the done one is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_red_mints_one_card_and_blocks_the_open_ledger_behind_it},
+}
+
+@misc{pathsforward-gate-card-blocks-by-blocked-on-never-by-an-enables-list,
+  section = {gate},
+  title  = {An enables list on the card made nemik flag a peer's citation as an umbrella},
+  claim  = {An enables list on the card made nemik flag a peer's citation as an umbrella.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_the_card_blocks_by_blocked_on_never_by_an_enables_list},
+}
+
+@misc{pathsforward-gate-second-red-reuses-the-card-and-blocks-nothing-twice,
+  section = {gate},
+  title  = {The card is found by its title prefix; waypoints already citing it are left alone},
+  claim  = {The card is found by its title prefix; waypoints already citing it are left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_a_second_red_reuses_the_card_and_blocks_nothing_twice},
+}
+
+@misc{pathsforward-gate-repair-enables-the-card-and-keeps-its-other-edges,
+  section = {gate},
+  title  = {The work that fixes the gate is not blocked by it, and its own edges survive},
+  claim  = {The work that fixes the gate is not blocked by it, and its own edges survive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_a_repair_enables_the_card_and_keeps_its_other_edges},
+}
+
+@misc{pathsforward-gate-human-ask-blocks-the-card-on-the-operator,
+  section = {gate},
+  title  = {When only the operator can unblock the gate, the card says so and waits},
+  claim  = {When only the operator can unblock the gate, the card says so and waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_a_human_ask_blocks_the_card_on_the_operator},
+}
+
+@misc{pathsforward-gate-blank-reason-or-step-is-refused-and-writes-nothing,
+  section = {gate},
+  title  = {Both the reason and the first step are required},
+  claim  = {Both the reason and the first step are required.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_a_blank_reason_or_step_is_refused_and_writes_nothing},
+}
+
+@misc{pathsforward-gate-repair-that-is-not-a-live-waypoint-is-refused-before-anything-is-minted,
+  section = {gate},
+  title  = {A mistyped repair symbol must not leave a half-built card behind},
+  claim  = {A mistyped repair symbol must not leave a half-built card behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_a_repair_that_is_not_a_live_waypoint_is_refused_before_anything_is_minted},
+}
+
+@misc{pathsforward-gate-bundled-reason-is-refused,
+  section = {gate},
+  title  = {The card's title obeys the same bundled-title refusal as any other},
+  claim  = {The card's title obeys the same bundled-title refusal as any other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_a_bundled_reason_is_refused},
+}
+
+@misc{pathsforward-gate-green-marks-the-card-done-and-frees-what-waited-only-on-it,
+  section = {gate},
+  title  = {A waypoint that waited only on the card is freed; one that still waits on W1 is not},
+  claim  = {A waypoint that waited only on the card is freed; one that still waits on W1 is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_green_marks_the_card_done_and_frees_what_waited_only_on_it},
+}
+
+@misc{pathsforward-gate-green-with-no-open-card-is-a-quiet-no-op,
+  section = {gate},
+  title  = {A gate that was never red has nothing to lift},
+  claim  = {A gate that was never red has nothing to lift.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_green_with_no_open_card_is_a_quiet_no_op},
+}
+
+@misc{pathsforward-gate-card-is-found-by-repo-so-another-repos-card-is-left-alone,
+  section = {gate},
+  title  = {A card titled for a different repo is not this repo's gate},
+  claim  = {A card titled for a different repo is not this repo's gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate.py -k test_the_card_is_found_by_repo_so_another_repos_card_is_left_alone},
+}

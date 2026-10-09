@@ -17745,12 +17745,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port katas.py gate_red/gate_green (lines 618-686) as pathsforward ops over the State, not shell calls to the CLI: idempotent card by title, repairs enable the card, others get blocked_on, green marks done and bumps blocked. Keep its findings: blocked_on only (no enables list, nemik UmbrellaBlockShape), repairs enable the card.",
-      "evidence": "",
+      "next_bounded_step": "Slice 2: wire --gate-red REASON (with --next STEP, optional --blocked-on operator ask, --except for repairs?) and --gate-green EVIDENCE into cli.py following _skip's pattern (_mutate, ctx.stamp, a ledger line), with CLI tests; name the repo from inbound.repo_name(ctx.path).",
+      "evidence": "2026-10-09: 2026-10-09 slice 1 LANDED: pathsforward/gate.py, the semantics over the State: red(state, repo, Red(reason, step, human, repairs), now) -> Outcome(card, blocked) and green(state, repo, evidence, now) -> (card, freed). Reuses an open card by title prefix; blocks every other open waypoint by blocked_on only (no enables list on the card); a repair enables the card and KEEPS its other edges (the katas set --enables to the card alone, and enables is SET not merged, so it erased them: a defect of the host copy, found by reading ops._set_given); green marks done and lifts through ops.prune_done. 11 tests (tests/test_gate.py), 11 warrants + rubric row gate, 4 mutants declared and killed; bazel //pathsforward/...: 49 of 49. NOT done: the CLI modes (--gate-red / --gate-green) and a ledger line for them; the gate functions are not yet reachable from the command line.",
       "issued_at": "2026-10-09T09:32:45Z",
       "minted_during": "tick",
       "caused_by": "W796",
-      "last_worked": null,
+      "last_worked": "2026-10-09T10:07:03Z",
       "ticks_blocked": 0
     }
   ],

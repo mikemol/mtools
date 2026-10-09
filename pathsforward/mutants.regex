@@ -19,3 +19,11 @@ src/mikemol/pathsforward/inbound.py|caused-by-no-longer-claims|, text\(w, "cause
 src/mikemol/pathsforward/ops.py|bundled-needs-length-and-mark|len\(title\) > BUNDLED_LENGTH and marks|len(title) > BUNDLED_LENGTH or marks|def=refuse_bundled
 src/mikemol/pathsforward/ops.py|bundled-limit-inclusive|> BUNDLED_LENGTH and|>= BUNDLED_LENGTH and|def=refuse_bundled
 src/mikemol/pathsforward/ops.py|add-skips-the-bundled-check|refuse_bundled\(draft\.title\)|pass|def=add
+
+# W870: the gate card. A second red must not block a waypoint twice; a repair keeps its other edges
+# (`enables` is SET, not merged) and is not itself blocked by the card; green with no open card is a
+# no-op rather than closing something else.
+src/mikemol/pathsforward/gate.py|block-twice|if card in current:|if False:|def=_block
+src/mikemol/pathsforward/gate.py|repair-erases-its-edges|edges = \(\*edges, card\)|edges = (card,)|def=_repair
+src/mikemol/pathsforward/gate.py|repair-is-blocked-too|skip = \{card, \*spec\.repairs\}|skip = {card}|def=red
+src/mikemol/pathsforward/gate.py|green-closes-without-a-card|if existing is None:|if existing is not None:|def=green

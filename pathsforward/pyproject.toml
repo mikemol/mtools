@@ -111,6 +111,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_admission.py" = ["assert"]
 "tests/test_closure.py" = ["assert"]
 "tests/test_skip.py" = ["assert"]
+"tests/test_gate.py" = ["assert"]
 "tests/test_delivered.py" = ["assert"]
 "tests/test_standing.py" = ["assert"]
 # ⚑ RUNNING opa IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W850), as mdstruct's pandoc.py is. The
