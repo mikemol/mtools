@@ -4053,3 +4053,31 @@
   claim  = {One states the whole list and the other extends it; both together is ambiguous.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_add_enables.py -k test_giving_both_flags_is_refused},
 }
+
+@misc{pathsforward-gate-note-note-lands-on-the-open-gate-card,
+  section = {gate_note},
+  title  = {With the gate red, the pulled report is appended to the card's evidence},
+  claim  = {With the gate red, the pulled report is appended to the card's evidence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_note.py -k test_a_note_lands_on_the_open_gate_card},
+}
+
+@misc{pathsforward-gate-note-note-with-no-open-card-mints-nothing,
+  section = {gate_note},
+  title  = {A failed command with the gate green leaves the queue exactly as it was},
+  claim  = {A failed command with the gate green leaves the queue exactly as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_note.py -k test_a_note_with_no_open_card_mints_nothing},
+}
+
+@misc{pathsforward-gate-note-note-blocks-no-waypoint,
+  section = {gate_note},
+  title  = {Noting is not a red: the open ledger is not blocked behind anything},
+  claim  = {Noting is not a red: the open ledger is not blocked behind anything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_note.py -k test_a_note_blocks_no_waypoint},
+}
+
+@misc{pathsforward-gate-note-second-note-adds-to-the-first,
+  section = {gate_note},
+  title  = {Evidence accumulates; a later report does not replace the earlier one},
+  claim  = {Evidence accumulates; a later report does not replace the earlier one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_note.py -k test_a_second_note_adds_to_the_first},
+}

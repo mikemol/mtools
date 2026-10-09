@@ -16904,7 +16904,7 @@
     {
       "symbol": "W830",
       "title": "the failure hook also appends the pulled evidence to the repo's gate-failed card",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -16913,14 +16913,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add a pathsforward verb (--gate-note TEXT) that appends evidence to the repo's OPEN gate card by title prefix and is a no-op when none is open; then the failure hook shells out to it with the pulled report. Never --gate-red from the hook.",
-      "evidence": "2026-10-09: 2026-10-09 TRIAGE: unblocked (W829 is done) and the writer now exists: pathsforward --gate-red/--gate-green (W870). The open question is the hook as a queue writer. | 2026-10-09: 2026-10-09 TRIAGE (tick): decided the open questions. One-writer rule: the hook never writes the JSON, it calls the CLI, which owns the flock and the card-reuse-by-title semantics (gate.py). Which queue: the failing repo's, from CLAUDE_PROJECT_DIR. Lock: the CLI's. Not landed this tick: the shared index still held another session's staged W883 files. | 2026-10-09: 2026-10-09 CORRECTION (same tick, after reading build_failure.py and gate.py): the earlier note above is withdrawn. --gate-red from the failure hook would block the whole open ledger on every locally failed bazel command, including an exploratory one mid-session; the commit gate's red is what mints the card (W870). The hook's job is only to append the pulled report to a card that is already open, so the missing piece is a no-op-when-absent evidence verb in the CLI, then the hook calls it. One-writer rule unchanged: the CLI owns the flock.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: unblocked (W829 is done) and the writer now exists: pathsforward --gate-red/--gate-green (W870). The open question is the hook as a queue writer. | 2026-10-09: 2026-10-09 TRIAGE (tick): decided the open questions. One-writer rule: the hook never writes the JSON, it calls the CLI, which owns the flock and the card-reuse-by-title semantics (gate.py). Which queue: the failing repo's, from CLAUDE_PROJECT_DIR. Lock: the CLI's. Not landed this tick: the shared index still held another session's staged W883 files. | 2026-10-09: 2026-10-09 CORRECTION (same tick, after reading build_failure.py and gate.py): the earlier note above is withdrawn. --gate-red from the failure hook would block the whole open ledger on every locally failed bazel command, including an exploratory one mid-session; the commit gate's red is what mints the card (W870). The hook's job is only to append the pulled report to a card that is already open, so the missing piece is a no-op-when-absent evidence verb in the CLI, then the hook calls it. One-writer rule unchanged: the CLI owns the flock. | 2026-10-09: 2026-10-09: pathsforward --gate-note (gate.note: appends to the open gate card by title prefix, never mints, no-op when none; tests/test_gate_note.py 4 tests, 4 warrants, 2 mutants) and the failure hook calls it after printing its report (build_failure.note_gate_card: needs a queue file and a reader, bounded to 1200 chars, silent otherwise; the launcher puts pathsforward/.venv/bin on PATH); hooks/tests/test_build_failure_note.py 5 tests, 5 warrants, 2 mutants; bazel test //pathsforward/... 53 pass and //hooks test_build_failure_note test_build_failure test_bar_fires mutants pass",
       "issued_at": "2026-10-06T18:34:39Z",
       "minted_during": "interrupt",
       "caused_by": "W829",
-      "last_worked": "2026-10-09T15:51:25Z",
+      "last_worked": "2026-10-09T17:56:25Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261009T175625Z"
     },
     {
       "symbol": "W831",

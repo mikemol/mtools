@@ -483,6 +483,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # set, as `test_bin_launchers_argv.py` does without it: a fixed argv, never a shell, no untrusted input.
 "tests/test_inbound_launcher_root.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ W830: `test_build_failure_note.py` drives the failure hook with a recording runner: no process.
+"tests/test_build_failure_note.py" = ["assert"]
+
 # ⚑ W886: `test_commit_launcher_lock.py` runs the tracked `mikemol-commit` launcher in a throwaway
 # git checkout with stub executables: fixed argv, never a shell, no untrusted input. `git` is
 # resolved from PATH on purpose, as the launcher resolves it.

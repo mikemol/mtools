@@ -47,3 +47,9 @@ src/mikemol/pathsforward/foreign.py|link-on-the-way-ignored|_link_in\(root, repo
 src/mikemol/pathsforward/ops.py|append-repeats-an-edge|if edge not in edges:|if True:|def=_append_edges
 src/mikemol/pathsforward/ops.py|append-erases-the-kept-edges|edges = strlist\(new, "enables"\)|edges = []|def=_append_edges
 src/mikemol/pathsforward/ops.py|both-enables-flags-allowed|upd\.enables is not None and upd\.add_enables is not None|False|def=_refuse_enums
+
+# W830: `--gate-note` appends to an open gate card and NEVER mints one. Minting on a missing card
+# would block the ledger on an exploratory failure; dropping the append would lose the report; and
+# writing it into a replaced field would lose the earlier one.
+src/mikemol/pathsforward/gate.py|note-ignores-a-missing-card|if existing is None:|if False:|def=note
+src/mikemol/pathsforward/gate.py|note-drops-the-evidence|ops\.Update\(evidence_append=evidence\)|ops.Update()|def=note

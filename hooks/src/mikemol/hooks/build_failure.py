@@ -43,6 +43,10 @@ if TYPE_CHECKING:
 
 BUILDLOG_ENV = "BUILDLOG_BIN"
 BUILDLOG = "mikemol-buildlog"
+PATHSFORWARD_ENV = "PATHSFORWARD_BIN"
+PATHSFORWARD = "mikemol-paths-forward"
+STATE_RELATIVE = Path(".claude") / "paths-forward.json"
+NOTE_CHARS = 1_200
 FAILURE_EVENT_TOOL = "Bash"
 EXIT_FEEDBACK = 2
 EXIT_USAGE = 2
@@ -134,6 +138,28 @@ def report_for(
     return head + bounded(picked, command)
 
 
+def note_gate_card(
+    report: str,
+    root: Path,
+    env: Mapping[str, str],
+    run_cli: Callable[[Sequence[str]], str | None],
+) -> None:
+    """Append the pulled report to the repo's OPEN gate card, if it has one (W830).
+
+    ⚑ THE HOOK NEVER WRITES THE QUEUE. The queue's one writer is `mikemol-paths-forward`, which
+    owns the lock and the card-finding by title; this only calls its `--gate-note`, which appends
+    to a card that is already open and does nothing otherwise. A repo with no queue file, or no
+    reader installed, is skipped silently: the report already reached the model, and this is only
+    where the cause is kept for the next session.
+
+    ⚑ BOUNDED, because the evidence rides in every payload that names the card.
+    """
+    state = root / STATE_RELATIVE
+    cli = tool_path.find(PATHSFORWARD, PATHSFORWARD_ENV, root, env) if state.is_file() else None
+    if cli is not None:
+        run_cli([str(cli), "--state", str(state), "--gate-note", report[:NOTE_CHARS]])
+
+
 def run(
     record: Mapping[str, object],
     env: Mapping[str, str],
@@ -154,6 +180,7 @@ def run(
     if report is None:
         return 0
     err.write(report)
+    note_gate_card(report, root, env, reader)
     return EXIT_FEEDBACK
 
 

@@ -28,5 +28,10 @@ if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
     exit 0
 fi
 
+# ⚑ W830: THE HOOK APPENDS ITS REPORT TO AN OPEN GATE CARD THROUGH `mikemol-paths-forward`, which in
+# this checkout lives in pathsforward/.venv, not a root .venv, so its bin directory is put on PATH,
+# as the inbound-asks launcher does for the same reader. An absent reader is a silent skip.
+export PATH="$root/pathsforward/.venv/bin:$PATH"
+
 real="$(realpath "$venv")"
 exec "$real/bin/python3" "$real/bin/$entry" "$@"

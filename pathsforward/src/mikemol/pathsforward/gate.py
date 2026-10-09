@@ -163,6 +163,26 @@ def red(state: State, repo: str, spec: Red, now: str) -> Outcome:
     return Outcome(card, blocked)
 
 
+def note(state: State, repo: str, evidence: str, now: str) -> str:
+    """Append evidence to the repo's open gate card, and change nothing else.
+
+    ⚑ THIS NEVER MINTS (W830). A failed bazel command a session ran by hand is not a red commit
+    gate, and minting here would block the whole open ledger on an exploratory failure; only
+    `red` makes the card. The failure hook calls this with the report it pulled, so the cause
+    lands on the card that is already waiting for it, and a repo with no open card is untouched.
+
+    Returns:
+        the card's symbol, or '' when no gate card is open.
+
+    """
+    existing = _card_of(state, repo)
+    if existing is None:
+        return ""
+    card = text(existing, "symbol")
+    ops.update(state, card, ops.Update(evidence_append=evidence), now)
+    return card
+
+
 def green(state: State, repo: str, evidence: str, now: str) -> tuple[str, tuple[str, ...]]:
     """Mark the repo's gate card done and lift the blocks that waited only on it.
 

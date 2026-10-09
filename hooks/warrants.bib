@@ -7189,3 +7189,39 @@
   claim  = {The git directory cannot be resolved: unlocked, said, and the command still runs.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_a_checkout_that_is_not_a_repository_commits_unlocked_and_says_so},
 }
+
+@misc{hooks-build-failure-note-failed-build-is-noted-on-the-gate-card,
+  section = {build_failure_note},
+  title  = {With a queue and a reader, the CLI is called once with the state path and the report},
+  claim  = {With a queue and a reader, the CLI is called once with the state path and the report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure_note.py -k test_a_failed_build_is_noted_on_the_gate_card},
+}
+
+@misc{hooks-build-failure-note-no-queue-means-no-note,
+  section = {build_failure_note},
+  title  = {A repo with no paths-forward.json is not written to, and the report still reaches stderr},
+  claim  = {A repo with no paths-forward.json is not written to, and the report still reaches
+            stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure_note.py -k test_no_queue_means_no_note},
+}
+
+@misc{hooks-build-failure-note-no-reader-means-no-note,
+  section = {build_failure_note},
+  title  = {A queue with no installed reader is a silent skip, not an error},
+  claim  = {A queue with no installed reader is a silent skip, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure_note.py -k test_no_reader_means_no_note},
+}
+
+@misc{hooks-build-failure-note-failure-that-ran-no-build-is-not-noted,
+  section = {build_failure_note},
+  title  = {Only a failed build's report is kept: a plain failed command writes nothing},
+  claim  = {Only a failed build's report is kept: a plain failed command writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure_note.py -k test_a_failure_that_ran_no_build_is_not_noted},
+}
+
+@misc{hooks-build-failure-note-note-is-bounded,
+  section = {build_failure_note},
+  title  = {The evidence rides in every payload naming the card, so a long report is cut},
+  claim  = {The evidence rides in every payload naming the card, so a long report is cut.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure_note.py -k test_the_note_is_bounded},
+}

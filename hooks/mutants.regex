@@ -22,3 +22,9 @@ src/mikemol/hooks/inbound_asks.py|check-exit-never-fails|return 0 if ok else 1|r
 # resolves. Dropping the existence test shadows a path with nothing behind it for a new file, which
 # the recorded-limit witness would see change.
 src/mikemol/hooks/checkers.py|shadow-without-existing-file|real\.is_file\(\) and not|not|def=mypy_subject
+
+# W830: the failure hook notes an open gate card and writes nothing else. Dropping the queue test
+# calls the CLI in a repo with no queue; dropping the bound lets an unbounded report into every
+# payload that names the card.
+src/mikemol/hooks/build_failure.py|note-without-a-queue|if state.is_file\(\) else None|if True else None|def=note_gate_card
+src/mikemol/hooks/build_failure.py|note-unbounded|report\[:NOTE_CHARS\]|report|def=note_gate_card

@@ -111,6 +111,7 @@ _VALUED = (
     "skip",
     "gate_red",
     "gate_green",
+    "gate_note",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -397,6 +398,11 @@ def _parser() -> argparse.ArgumentParser:
             "--gate-green",
             "EVIDENCE",
             "W870: the gate is green: mark the card done and lift what waited only on it",
+        ),
+        (
+            "--gate-note",
+            "EVIDENCE",
+            "W830: append evidence to the open gate card; never mints one, no-op when none is open",
         ),
     ):
         mode.add_argument(flag, metavar=metavar, help=text_help)
@@ -1258,6 +1264,23 @@ def _gate_green(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _gate_note(ctx: Ctx) -> int:
+    """Append evidence to this repo's open gate card, if there is one (W830).
+
+    Returns:
+        EXIT_OK, whether or not a card was open.
+
+    """
+    repo = inbound.repo_name(ctx.path)
+
+    def edit(state: State) -> int:
+        card = gate.note(state, repo, ctx.get("gate_note") or "", ctx.stamp())
+        _say(f"{card} evidence appended" if card else f"{repo}: no open gate card")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _embargo(ctx: Ctx) -> int:
     """Record one embargoed path (W511), and ledger it.
 
@@ -1734,6 +1757,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "skip": _skip,
     "gate_red": _gate_red,
     "gate_green": _gate_green,
+    "gate_note": _gate_note,
     "delivered": _delivered,
 }
 
