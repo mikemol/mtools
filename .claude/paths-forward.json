@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 865,
+  "counter": 866,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T04:59:55Z",
   "job_id": "ae83af74",
@@ -16112,15 +16112,15 @@
         "fleet"
       ],
       "blocked_on": [
-        "W864"
+        "W866"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Mtools alone is clean (W863). Audit ~/github/*/ tests (the other repos, where the edit gate does not hold): ruff format --check and an ast scan for unannotated defs and main-style scripts, one count per repo as evidence; then write the debtplan ledger source and mint conversion cards. Confirm with the operator whether 'pypy' meant pytest.",
+      "next_bounded_step": "After W866: mint conversion cards through debtplan: one per counted repo's test files (aeternum), one 'unjudged: give it a project bar' card per unjudged repo, and report the empty/timeout repos as unmeasured. Confirm with the operator whether 'pypy' meant pytest.",
       "evidence": "2026-10-05: 2026-10-05 operator: 'We need another planning integration for auditing for old-style tests and flagging them for conversion to pypy.' READ AS pytest (the earlier remark: the --selftest pattern is why everything is migrating); NOT confirmed. If pypy was meant literally, this waypoint's target changes: say so. | 2026-10-09: 2026-10-09 moved here from next_bounded_step to keep the tick payload under budget (the stanza of the first ready card is never dropped): the definition of old-style is a test module with unannotated defs or a ruff-format diff (the edit gate refuses it), a --selftest or main()-style script, asserts run outside a test runner, no warrants.bib entry per test; write the audit as a debtplan ledger source (file: finding count) beside W794's gate verdict. Measured example: amr-skills tests/test_batch_policy.py is unformatted and unannotated, so it cannot be edited at all (amr-skills:W221). | 2026-10-09: 2026-10-09 atomized: W863 measures mtools alone first; W795 resumes with the cross-repo audit and the debtplan source once W863 lands. | 2026-10-09: 2026-10-09 first cross-repo reading: ruff format --check --isolated --line-length 100 over 21 repos' tests/ dirs (aeternum, amr-skills, asn1, coneVM, cstz, ctheory, cvm2, earley, gabion, gentoo-runner, lg_kernel, life, linux-sources, memmesh, meowntology, metacatagory, nemik, ologpad, restsync, sixfiveohtwo, substrate; gabion-bak and gabion-bak2 left out as backups) exits 1 with well over a hundred unformatted files: aeternum/tests/test_tools.py; amr-skills/tests holds 50+ probe_*.py, bench_*.py and capture/parse scripts that are scripts under tests/, not pytest tests; gabion/tests/gabion/analysis/** has dozens. The per-repo counts were NOT taken: the tool output was truncated and aggregating it is a pipe the hook refuses, so W864 builds the counter as a tracked debtplan source. Not yet run: unannotated defs, no-warrant-per-test.",
       "issued_at": "2026-10-05T23:39:00Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-09T04:44:35Z",
+      "last_worked": "2026-10-09T06:20:21Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
@@ -17599,7 +17599,7 @@
     {
       "symbol": "W864",
       "title": "Write the old-style-tests audit as a tracked debtplan ledger source: per repo, count test files that ruff format would change, defs without annotations, and probe_/bench_ or main-style scripts living under tests/",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W795"
       ],
@@ -17610,13 +17610,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Decide the reading for repos the census cannot judge: either count them by a fixed house bar passed to the census (a mode that names the bar), or record 'unjudged' per repo as the debt. Then the three uncovered arms. Do not read an unjudged repo as clean.",
-      "evidence": "2026-10-09: 2026-10-09 COLLAPSE CANDIDATE, measured: hooks' W794 census already does the formatted-ness, lint and typing counts this card proposed to build. 'mikemol-pycheck --census ROOT' (via the pycheck_cli wrapper, read-only) over /home/mikemol/github/aeternum returned 66 files with per-file counts, among them tests/test_tools.py=16 and processed/legacy-spring/tests/test_*.py at 4..15 each, under that repo's own bar (it exited 0, so a missing bar was not a refusal; whether aeternum has its own pyproject bar was NOT checked, so the counts may be against a default bar). Not counted by the census: main-style scripts under tests/ (amr-skills probe_*/bench_*), asserts outside a runner, and no warrants entry per test. So W864 shrinks to: filter the census by test paths per repo, plus a small reader for the three arms it does not cover, rather than a new ruff-format reader. | 2026-10-09: 2026-10-09 census run per repo (scratchpad script, NOT tracked; 'mikemol-pycheck --census ROOT' via the wrapper, keys containing 'tests/' counted): aeternum 20 test files, 165 findings (68 files total). REFUSED rc=3 'N files unjudged, no ledger written' (no checker could judge them, so they are not clean and not in a ledger): amr-skills (1 unjudged), asn1 (91), cstz (81), cvm2 (22), earley (51), lg_kernel (56), linux-sources (1), memmesh (10), ologpad (9), restsync (28). TIMEOUT at 280s: substrate. Empty ledger rc=0: coneVM, ctheory, gentoo-runner, life, meowntology, metacatagory, sixfiveohtwo, nemik (1 file); whether empty means clean or no tracked python was NOT distinguished. Absence claim is therefore limited: only aeternum was counted by this reader; ten repos need a project bar (pyproject) before the gate can judge them, which is itself the finding (no governing project upward). Positive control: aeternum returned real counts through the same wrapper.",
+      "next_bounded_step": "none",
+      "evidence": "2026-10-09: 2026-10-09 COLLAPSE CANDIDATE, measured: hooks' W794 census already does the formatted-ness, lint and typing counts this card proposed to build. 'mikemol-pycheck --census ROOT' (via the pycheck_cli wrapper, read-only) over /home/mikemol/github/aeternum returned 66 files with per-file counts, among them tests/test_tools.py=16 and processed/legacy-spring/tests/test_*.py at 4..15 each, under that repo's own bar (it exited 0, so a missing bar was not a refusal; whether aeternum has its own pyproject bar was NOT checked, so the counts may be against a default bar). Not counted by the census: main-style scripts under tests/ (amr-skills probe_*/bench_*), asserts outside a runner, and no warrants entry per test. So W864 shrinks to: filter the census by test paths per repo, plus a small reader for the three arms it does not cover, rather than a new ruff-format reader. | 2026-10-09: 2026-10-09 census run per repo (scratchpad script, NOT tracked; 'mikemol-pycheck --census ROOT' via the wrapper, keys containing 'tests/' counted): aeternum 20 test files, 165 findings (68 files total). REFUSED rc=3 'N files unjudged, no ledger written' (no checker could judge them, so they are not clean and not in a ledger): amr-skills (1 unjudged), asn1 (91), cstz (81), cvm2 (22), earley (51), lg_kernel (56), linux-sources (1), memmesh (10), ologpad (9), restsync (28). TIMEOUT at 280s: substrate. Empty ledger rc=0: coneVM, ctheory, gentoo-runner, life, meowntology, metacatagory, sixfiveohtwo, nemik (1 file); whether empty means clean or no tracked python was NOT distinguished. Absence claim is therefore limited: only aeternum was counted by this reader; ten repos need a project bar (pyproject) before the gate can judge them, which is itself the finding (no governing project upward). Positive control: aeternum returned real counts through the same wrapper. | 2026-10-09: 2026-10-09 DECISION (agent, reversible): a repo the census cannot judge is recorded as UNJUDGED debt per repo, not counted against an invented house bar and never read as clean. Reasons: a house bar imposed on a repo with no pyproject would mint cards for findings that repo's own gate would not raise, and the census's own rule (W794) is that blindness is not zero debt. Result for W795: counted aeternum (20 test files, 165 findings); unjudged ten repos (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh, ologpad, amr-skills, linux-sources); substrate timed out; eight returned an empty ledger (clean or no tracked python, undistinguished). The three arms the census does not see moved to W866.",
       "issued_at": "2026-10-09T04:44:30Z",
       "minted_during": "tick",
       "caused_by": "W795",
-      "last_worked": "2026-10-09T05:29:12Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T06:20:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T062021Z"
     },
     {
       "symbol": "W865",
@@ -17640,6 +17641,28 @@
       "last_worked": "2026-10-09T04:59:27Z",
       "ticks_blocked": 0,
       "completed": "20261009T045927Z"
+    },
+    {
+      "symbol": "W866",
+      "title": "Count the three old-style arms the census cannot see (main-style scripts under tests/, asserts outside a runner, no warrant per test) for the repos it judged",
+      "status": "ready",
+      "enables": [
+        "W795"
+      ],
+      "touches": [
+        "debtplan",
+        "tests",
+        "fleet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Start with main-style scripts under tests/: list files under a tests/ path that have a top-level main guard or no test_ function, for aeternum (the one repo the census judged); record the list as evidence.",
+      "evidence": "",
+      "issued_at": "2026-10-09T06:20:14Z",
+      "minted_during": "tick",
+      "caused_by": "W864",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

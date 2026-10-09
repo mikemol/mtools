@@ -1329,3 +1329,5 @@
 2026-10-09T05:35:22Z  tick  W857 advanced  collapse  "the adopter-dependency hold already has an owner: W317 pins; W819 and W860 slice 2 ride it"
 2026-10-09T05:50:22Z  tick  W857 advanced  collapse  "corrected my W318 inference: the sibling-dependency path for adopters is W317's PyPI floors, not a pin mechanism in W318"
 2026-10-09T06:06:47Z  tick  W859 advanced  collapse  "importdag.split lands (eager/deferred), equal to corpus on 158 files; corpus's swap waits on W317 floors"
+2026-10-09T06:20:14Z  tick  W866 minted    -         "Count the three old-style arms the census cannot see (main-style scripts under tests/, asserts outside a runner, no warrant per test) for the repos it judged"  evidence=W864
+2026-10-09T06:20:25Z  tick  W864 advanced  sweep     "decided: unjudged repos are recorded unjudged, not counted against an invented bar; arms moved to W866; W795 re-pointed"
