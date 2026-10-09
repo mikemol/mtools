@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 879,
+  "counter": 881,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T13:26:08Z",
   "job_id": "8345e652",
@@ -11549,21 +11549,24 @@
     {
       "symbol": "W580",
       "title": "Decide whether the inbound-asks hook is wired once in the operator's user-level settings (one install via MTOOLS_ROOT, every repo covered) or per repo",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks",
         "nemik"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "operator: decide whether the inbound-asks hook is wired once in your user-level ~/.claude/settings.json (one MTOOLS_ROOT launcher, every repo covered, runs in repos without a loop too, silent there) or per repo (each owner applies the W579 lines), or both"
+      ],
+      "blocked_kind": "human",
       "next_bounded_step": "Operator decides user-level versus per-repo (or both); if user-level, add a MTOOLS_ROOT launcher beside hooks/adopt/tools-hook and draft the ~/.claude/settings.json lines as a patch for the operator to apply",
-      "evidence": "2026-10-04: the structural answer to 'without nudges and without guessing': the operator's user-level settings (~/.claude/settings.json) apply to EVERY repo, so one UserPromptSubmit and SessionStart entry naming a launcher that resolves mtools' own build through MTOOLS_ROOT (as hooks/adopt/tools-hook does) would cover every repo with a queue, with no per-repo pins and no per-repo wiring; the project is already CLAUDE_PROJECT_DIR, and the reader would be mtools' own pathsforward, so no repo needs its pinned reader bumped. Costs: it is the operator's file (a drafted grant, applied by them); it runs in every repo including ones without a loop (the hook is silent when there is no queue file); the launcher hooks/bin/mikemol-hook-inbound-asks currently resolves bazel-bin under CLAUDE_PROJECT_DIR, so a user-level variant needs MTOOLS_ROOT. Luthen's queue-hygiene hook doc (docs/queue-hygiene-hook.md) is the same shape for --prune-landed. Per-repo wiring remains the alternative, where each owner applies the W579 lines",
+      "evidence": "2026-10-04: the structural answer to 'without nudges and without guessing': the operator's user-level settings (~/.claude/settings.json) apply to EVERY repo, so one UserPromptSubmit and SessionStart entry naming a launcher that resolves mtools' own build through MTOOLS_ROOT (as hooks/adopt/tools-hook does) would cover every repo with a queue, with no per-repo pins and no per-repo wiring; the project is already CLAUDE_PROJECT_DIR, and the reader would be mtools' own pathsforward, so no repo needs its pinned reader bumped. Costs: it is the operator's file (a drafted grant, applied by them); it runs in every repo including ones without a loop (the hook is silent when there is no queue file); the launcher hooks/bin/mikemol-hook-inbound-asks currently resolves bazel-bin under CLAUDE_PROJECT_DIR, so a user-level variant needs MTOOLS_ROOT. Luthen's queue-hygiene hook doc (docs/queue-hygiene-hook.md) is the same shape for --prune-landed. Per-repo wiring remains the alternative, where each owner applies the W579 lines | 2026-10-09: 2026-10-09 TRIAGE: this card is the operator's decision (it edits their user-level settings), so it is no agent's ready work. Costs and benefits are in this evidence (2026-10-04). | 2026-10-09: 2026-10-09 OPERATOR RULING (AskUserQuestion, standing rule 8): wire the inbound-asks hook ONCE at user level (~/.claude/settings.json), not per repo. The work that follows is W881. This row stays held: standing rule 5 says a hold on a human is lifted by the operator, not by an agent.",
       "issued_at": "2026-10-04T18:50:16Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-04T18:50:28Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T13:51:50Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W581",
@@ -11576,11 +11579,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Only SessionStart is unverified: UserPromptSubmit is confirmed with a real UNCLAIMED row (luthen) and with nemik-check rows (mtools, luthen); ask a peer, or start a fresh session here, with an UNCLAIMED row waiting and read the first message's context",
-      "evidence": "2026-10-04: 2026-10-04 PARTIAL, live: after 03749d5 (nemik-check hook, same hookSpecificOutput/additionalContext envelope as inbound-asks) this session's next UserPromptSubmit delivered the hook's text to the model verbatim ('nemik: the fleet reader reports on mtools: ... Warning -- no working card ...'). So the envelope for UserPromptSubmit reaches the model. Still unverified: inbound-asks itself with an UNCLAIMED row, and SessionStart. | 2026-10-04: 2026-10-04 second repo, independent: luthen-observability (pinned 03749d5, nemik-check hook wired, its commit ec48c55) saw a verbatim 'UserPromptSubmit hook additional context' block in the model's context on the message after its commit, picking up the settings change without a restart. Still unverified: SessionStart, and inbound-asks with an UNCLAIMED row (luthen claimed both rows before any prompt). | 2026-10-05: 2026-10-05 luthen-observability (second session): inbound-asks WITH a real UNCLAIMED row (summit:W122) was delivered verbatim to the model at UserPromptSubmit, the model ran the --add (luthen W445) and answered summit by letter; nemik-check did the same the day before. Confirmed at UserPromptSubmit in two repos for both hooks; SessionStart is the only shape not yet observed separately",
+      "evidence": "2026-10-04: 2026-10-04 PARTIAL, live: after 03749d5 (nemik-check hook, same hookSpecificOutput/additionalContext envelope as inbound-asks) this session's next UserPromptSubmit delivered the hook's text to the model verbatim ('nemik: the fleet reader reports on mtools: ... Warning -- no working card ...'). So the envelope for UserPromptSubmit reaches the model. Still unverified: inbound-asks itself with an UNCLAIMED row, and SessionStart. | 2026-10-04: 2026-10-04 second repo, independent: luthen-observability (pinned 03749d5, nemik-check hook wired, its commit ec48c55) saw a verbatim 'UserPromptSubmit hook additional context' block in the model's context on the message after its commit, picking up the settings change without a restart. Still unverified: SessionStart, and inbound-asks with an UNCLAIMED row (luthen claimed both rows before any prompt). | 2026-10-05: 2026-10-05 luthen-observability (second session): inbound-asks WITH a real UNCLAIMED row (summit:W122) was delivered verbatim to the model at UserPromptSubmit, the model ran the --add (luthen W445) and answered summit by letter; nemik-check did the same the day before. Confirmed at UserPromptSubmit in two repos for both hooks; SessionStart is the only shape not yet observed separately | 2026-10-09: 2026-10-09 TRIAGE: still open, correctly. Observed in this session: SessionStart additionalContext from two hooks DOES reach the model (the after-compaction hook's 'no notes file' line and the tick gate's line arrived as 'SessionStart hook additional context'), so the channel works; what is unverified is inbound-asks and nemik-check at SessionStart with a real UNCLAIMED row, which this session did not have. Needs a fresh session with a row waiting.",
       "issued_at": "2026-10-04T18:55:49Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W430",
-      "last_worked": "2026-10-05T03:00:07Z",
+      "last_worked": "2026-10-09T13:52:00Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -11815,12 +11818,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Wait for amr-skills' reply; when it cites a card, block this one on amr-skills:W<n>; if it has no measurement, leave the contexts TOTAL declared as a consumer-owned number and say so in the fence docs",
-      "evidence": "2026-10-05: 2026-10-04 letter sent: /home/mikemol/github/amr-skills/inbox/2026-10-04-mtools-contexts-ledger-desktop-apps.md asks whether anyone measured if the CUDA context limit also counts desktop compute apps, and to cite a card as amr-skills:W<n> so this card can block on it by citation; no live amr-skills session was listed",
+      "next_bounded_step": "Silence (letter 2026-10-04, 5 days): per this card's rule, state in the docs that the contexts ledger TOTAL is a consumer-owned number. fence/README.md does not mention contexts: find where the ledger is documented first (memres? the amr-skills letter's own text).",
+      "evidence": "2026-10-05: 2026-10-04 letter sent: /home/mikemol/github/amr-skills/inbox/2026-10-04-mtools-contexts-ledger-desktop-apps.md asks whether anyone measured if the CUDA context limit also counts desktop compute apps, and to cite a card as amr-skills:W<n> so this card can block on it by citation; no live amr-skills session was listed | 2026-10-09: 2026-10-09 TRIAGE: no reply from amr-skills in 5 days (it has no live session). The fallback applies; the doc site is not fence/README.md (read in full: no contexts mention).",
       "issued_at": "2026-10-04T19:06:24Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-05T01:21:45Z",
+      "last_worked": "2026-10-09T13:51:19Z",
       "ticks_blocked": 0
     },
     {
@@ -12217,12 +12220,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Wait for paperkit's reply (cite it as paperkit:W<n>); if it declines or stays silent for several ticks, port paperkit_projects per .claude/swarm/W612-W614-census-modes.md with the resolver as an operand",
-      "evidence": "2026-10-04: 2026-10-04 drafter: no equivalent in paperkit or summit; ASK first, PORT on decline or silence. | 2026-10-05: 2026-10-04 ask sent: /home/mikemol/github/paperkit/inbox/2026-10-04-mtools-project-enumeration-ask.md offers paperkit two routes (expose project enumeration plus foreign bibs, or mtools ports paperkit_projects with paperkit's resolver as an operand); silence is read as the second after several loop ticks",
+      "next_bounded_step": "Silence is read as a decline (2026-10-04 ask, 5 days): port paperkit_projects per .claude/swarm/W612-W614-census-modes.md with the resolver as an operand.",
+      "evidence": "2026-10-04: 2026-10-04 drafter: no equivalent in paperkit or summit; ASK first, PORT on decline or silence. | 2026-10-05: 2026-10-04 ask sent: /home/mikemol/github/paperkit/inbox/2026-10-04-mtools-project-enumeration-ask.md offers paperkit two routes (expose project enumeration plus foreign bibs, or mtools ports paperkit_projects with paperkit's resolver as an operand); silence is read as the second after several loop ticks | 2026-10-09: 2026-10-09 TRIAGE: the ask went to paperkit on 2026-10-04 and nothing came back in 5 days and about 25 ticks; this card's own rule reads that as a decline, so the port is the live path, not waiting.",
       "issued_at": "2026-10-04T19:25:26Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-05T01:21:46Z",
+      "last_worked": "2026-10-09T13:51:04Z",
       "ticks_blocked": 0
     },
     {
@@ -12366,21 +12369,24 @@
     {
       "symbol": "W622",
       "title": "Send each peer repo one letter with the steps to adopt the inbound-asks and nemik-check hooks, citing docs/adopting-a-hook.md",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks",
         "nemik"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W881"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After W580 chooses user-level or per-repo wiring: one letter per repo that has a paths-forward.json and no hook, pointing at the adoption page",
-      "evidence": "",
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: blocked, not ready: its own next step starts 'After W580 chooses user-level or per-repo wiring'. | 2026-10-09: 2026-10-09 RULING on W580: user-level wiring (W881). Under it the per-repo letters this card sends are unnecessary for the inbound-asks hook; reconsider or drop this card when W881 lands, since a user-level hook covers every repo with a queue.",
       "issued_at": "2026-10-04T21:01:15Z",
       "minted_during": "interrupt",
       "caused_by": "W579",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T13:51:50Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W623",
@@ -15980,7 +15986,7 @@
     {
       "symbol": "W790",
       "title": "Drain luthen-observability's mypy_plan into mtools: the import resolver in importdag (resolve.py), then the planner as its own distribution over importdag.cone, with direct-waits reduction, cycle guard and mint",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "importdag",
@@ -15989,13 +15995,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Second unit: the queue writer (mint, over mikemol-pathsforward, keeping a working card working) and the command line, as console scripts; then retire luthen's checks/mypy_plan.py and have the fleet consume mikemol-debtplan.",
-      "evidence": "2026-10-05: 2026-10-05: importdag.resolve landed 23ed678 (17 witnesses); mikemol-debtplan first unit landed c40652b (rows, cycle, reduce, plan; 29 witnesses; bazel test //debtplan/... 14 targets green). Origin: luthen-observability checks/mypy_plan (c7e6c7a..37a326e).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-05: importdag.resolve landed 23ed678 (17 witnesses); mikemol-debtplan first unit landed c40652b (rows, cycle, reduce, plan; 29 witnesses; bazel test //debtplan/... 14 targets green). Origin: luthen-observability checks/mypy_plan (c7e6c7a..37a326e). | 2026-10-09: 2026-10-09 TRIAGE: done. Unit 1 (importdag.resolve, 23ed678) and the first debtplan unit (c40652b) landed 2026-10-05; the second unit is present: debtplan has mint.py and cli.py and the installed console script debtplan/.venv/bin/mikemol-debtplan exists (katas typing called 'mikemol-debtplan plan | mint'). The retire step: /home/mikemol/github/luthen-observability/checks/mypy_plan.py is ABSENT from luthen's tree (ls: no such file); whether luthen retired it or moved it was not investigated. No letter was sent.",
       "issued_at": "2026-10-05T18:45:17Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-10-05T19:06:32Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T13:51:03Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T135103Z"
     },
     {
       "symbol": "W791",
@@ -16237,7 +16244,7 @@
     {
       "symbol": "W800",
       "title": "Script the bazel-conversion katas: katas.py bazelize scaffolds .bazelversion, .bazelrc, MODULE.bazel and the one-line hook",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "bazel",
@@ -16246,15 +16253,16 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "bazelize landed in katas.py with templates/ (aeternum no-overwrite verified). Remaining: try it on the next converting repo and fold in what differs; graduate to mtools with the other katas (mtools:W796).",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: superseded. 'bazelize' is mikemol.katas.scaffold (scaffold + install_hook) and the 'bazelize' subcommand of mikemol-katas (W876, W878): it scaffolds .bazelversion, .bazelrc and MODULE.bazel from the policy's templates without overwriting, and swaps the hook only after //:precommit passed. 26 tests, mutants killed, bazel //katas 22 of 22.",
       "issued_at": "2026-10-06T02:02:47Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
-      "last_worked": "2026-10-06T02:03:34Z",
+      "last_worked": "2026-10-09T13:50:31Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": "20261009T135031Z"
     },
     {
       "symbol": "W801",
@@ -16409,7 +16417,7 @@
     {
       "symbol": "W807",
       "title": "Hook the host katas into Claude hook entrypoints: tick gate, tick-end stop guard, compaction pair, big-read guard, session-end unlock",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -16419,15 +16427,16 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Ranked, each a mikemol-hook-* console script in mtools/hooks that calls the kata logic (not a copy): 1 UserPromptSubmit tick gate: run the zram and lock checks, block a tick prompt that cannot run (EROFS outage cost ~15 spent turns; a hook runs outside the Bash tool's output path), else inject pulse as additionalContext. 2 Stop: if the host lock is held by this session, block with 'run tick end' (honor stop_hook_active); remind when pending>0 and nothing is in flight. 3 PreCompact writes katas status, lock, in-flight and open threads to a file and SessionStart(compact) re-injects it. 4 PreToolUse Read: deny a log or task output over a size cap with 'grep FAIL/REFUSED/rc= or read the tail' (1258-line paperkit log, 20k-char mypy dumps). 5 SessionEnd: release the host lock (1.5s budget). 6 PostToolUse with if Bash(*mikemol-paths-forward*): run nemik-check for that repo and surface Warnings. 7 PreToolUse Bash: deny raw git commit and git push outside katas (outward-facing). Also fix at the source, not by hook: --enables replaces the list (add an add-enables flag) and cap katas mypy output.",
-      "evidence": "2026-10-06: 2026-10-06 survey of mtools/hooks before building (reuse rule): (1) a STANDING-rules mechanism exists: policy/standing.rego (rules 1-16, PreToolUse, deny names its rule number), facts gathered in Python by standing_facts.py (queue, staged, embargoes; a fact that cannot be gathered is ABSENT, never empty), launcher bin/mikemol-hook-standing, and a Stop launcher bin/mikemol-hook-standing-stop (rule 8, W513). Its Stop convention is an operator ruling (2026-10-03): block ONCE per turn, and when stop_hook_active is true print a note on stderr and exit 0 so a broken hook cannot trap the turn. A tick-end guard (item 2) is a new standing rule plus a lock fact, not a parallel hook. (2) standing rule 16 (W464) forbids executable code under .claude/: ~/github/.claude/katas/katas.py is exactly that; W796 (graduate the katas into a package) is the resolution, so every hook above should call library code, never the host script. (3) The HOST session does NOT arm mikemol-hook-standing at all (its settings wire structural-query, no-chaining, no-verify, shellcheck, pycheck, inbound-asks and nemik-check): rules 1-16, including 15 (no inline -m) and 16, are unenforced in the host. Arming it is an operator decision because rule 16 would refuse the host's own katas edits. (4) Also wanted, from the transitivity ruling: the pycheck hook should report, on admit, the edited file's unclean closure (nearest unclean imports) as advisory context, sharing the library behind mtools:W808's CLI.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-06: 2026-10-06 survey of mtools/hooks before building (reuse rule): (1) a STANDING-rules mechanism exists: policy/standing.rego (rules 1-16, PreToolUse, deny names its rule number), facts gathered in Python by standing_facts.py (queue, staged, embargoes; a fact that cannot be gathered is ABSENT, never empty), launcher bin/mikemol-hook-standing, and a Stop launcher bin/mikemol-hook-standing-stop (rule 8, W513). Its Stop convention is an operator ruling (2026-10-03): block ONCE per turn, and when stop_hook_active is true print a note on stderr and exit 0 so a broken hook cannot trap the turn. A tick-end guard (item 2) is a new standing rule plus a lock fact, not a parallel hook. (2) standing rule 16 (W464) forbids executable code under .claude/: ~/github/.claude/katas/katas.py is exactly that; W796 (graduate the katas into a package) is the resolution, so every hook above should call library code, never the host script. (3) The HOST session does NOT arm mikemol-hook-standing at all (its settings wire structural-query, no-chaining, no-verify, shellcheck, pycheck, inbound-asks and nemik-check): rules 1-16, including 15 (no inline -m) and 16, are unenforced in the host. Arming it is an operator decision because rule 16 would refuse the host's own katas edits. (4) Also wanted, from the transitivity ruling: the pycheck hook should report, on admit, the edited file's unclean closure (nearest unclean imports) as advisory context, sharing the library behind mtools:W808's CLI. | 2026-10-09: 2026-10-09 TRIAGE: done in substance, verified against hooks/bin (ls) and hooks/src: the entries it ranked exist as console scripts calling library code: 1 mikemol-hook-tick-gate (UserPromptSubmit; zram and lock; github d717a73 also covers the host's own cron prompt), 2 mikemol-hook-tick-stop (Stop), 3 mikemol-hook-after-compaction (the compaction pair), 4 mikemol-hook-read-guard (the big-read guard; it fired in this session), 5 mikemol-hook-tick-release (session end), 6 mikemol-hook-nemik-check (nemik warnings), plus mikemol-hook-standing, which IS armed in the host now (standing 5, 14, 16 fired this session), so the 'host does not arm standing' finding is closed. NOT carried: item 7 (deny raw git push): superseded, the post-commit hook now pushes by design and the harness asks the operator about pushes; the --enables-replaces-the-list source fix became W880; 'cap katas mypy output' is moot (the typing group is delegated to the census). The 'unclean closure on admit' want is hooks pycheck_closure, landed.",
       "issued_at": "2026-10-06T13:41:56Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W796",
-      "last_worked": "2026-10-06T13:57:16Z",
+      "last_worked": "2026-10-09T13:50:47Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": "20261009T135047Z"
     },
     {
       "symbol": "W808",
@@ -16457,7 +16466,7 @@
     {
       "symbol": "W809",
       "title": "Typing ledgers measured only package directories: loose tracked .py files (scripts/, root modules) were never counted in any repo",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "debtplan",
@@ -16467,15 +16476,16 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Found 2026-10-06 on gcalculus: mypy_targets walked the working tree and measured only top-most package directories, so concepts_self_contained_03.py and scripts/* were absent from the ledger; re-measured over git ls-files (packages plus loose files, a mypy duplicate-module clash split into passes): 54 files and 20080 findings became 162 files and 28334, 110 new cards. Host kata fixed (katas.py mypy_targets and measure). Now re-run katas.py typing for every other repo and mint (each repo's card population grows), then make debtplan itself take its universe from the index so no caller can omit loose files. Cleanliness is transitive (operator): an unmeasured file is debt the plan cannot order.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: superseded. The host kata was fixed on 2026-10-06 (git ls-files, loose files, clash passes) and the measurement itself is now the edit gate's own verdict: mikemol-pycheck --census names its files from git's index (hooks/pycheck_census.py, W794), and the operator ruled (W871, 2026-10-09) that typing debt is measured by that census. Loose tracked .py files are therefore counted by construction, and debtplan is fed the census ledger. Residue, not done here: re-running the measurement for every repo and minting is W825's trigger question (what calls --refresh-ledger); repos the census cannot judge are W867's.",
       "issued_at": "2026-10-06T13:55:00Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W794",
-      "last_worked": "2026-10-06T13:55:01Z",
+      "last_worked": "2026-10-09T13:50:32Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": "20261009T135032Z"
     },
     {
       "symbol": "W810",
@@ -16659,7 +16669,7 @@
     {
       "symbol": "W819",
       "title": "hooks depends on mikemol-pathsforward: the first cross-distribution requirement, so hooks read the tick lock through it",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "mtools:W807"
       ],
@@ -16669,17 +16679,20 @@
         "dependencies",
         "bazel"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W317"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "FOLLOW-UP, not a blocker (corrected 2026-10-06): standing_facts already reads the queue JSON directly (held_symbols, embargoes), so host_facts does the same for the lock. When mikemol-hooks gains a declared dependency on mikemol-pathsforward (first cross-distribution requirement: pyproject, bazel hub, mypy path; W317/W318 say how intra-org pins work), replace the direct lock read with mikemol.pathsforward.lock.current over store.load so the lock's meaning lives in one place. The reuse rule favors it; the cost is the wiring, which is why it follows rather than gates.",
-      "evidence": "",
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: blocked, not ready. hooks is installed by adopters from sha-pinned copies, so a sibling dependency must be a published package (W317's PyPI floors), not a path source; see W857's evidence.",
       "issued_at": "2026-10-06T14:00:56Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
-      "last_worked": "2026-10-06T14:01:28Z",
+      "last_worked": "2026-10-09T13:50:47Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": null
     },
     {
       "symbol": "W820",
@@ -16900,12 +16913,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Operator 2026-10-06: update the 'this repo gate failed' card with the evidence pulled straight from the failure. The card is the gate-red card katas.py gate opens per repo (blocked_on ledger). Decide the writer: the hook calls mikemol-paths-forward --update <card> --evidence-append with the id and the failures text (a hook that writes a queue is a bigger step than one that reads: the one-writer rule, the lock, and which repo's queue are all to settle). Blocked on W829 landing.",
-      "evidence": "",
+      "next_bounded_step": "Add the writer to the failure hook: call mikemol-paths-forward --gate-red (or --update <card> --evidence-append) on the failing repo's queue; settle the one-writer rule, the lock and which repo's queue. W829 is done and W870's gate verbs exist.",
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: unblocked (W829 is done) and the writer now exists: pathsforward --gate-red/--gate-green (W870). The open question is the hook as a queue writer.",
       "issued_at": "2026-10-06T18:34:39Z",
       "minted_during": "interrupt",
       "caused_by": "W829",
-      "last_worked": "2026-10-06T18:56:05Z",
+      "last_worked": "2026-10-09T13:51:04Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -17462,21 +17475,24 @@
     {
       "symbol": "W857",
       "title": "Atomic write is carried five times: make pathsforward, treeio, ratchet and hooks depend on mikemol-atomicwrite where their needs match",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "dependencies",
         "reuse"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W317"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "store.py and pycheck_census swaps, W819 and W860 slice 2 wait on W317's PyPI publication; nothing to do here until then except the in-repo, non-adopter-installed cases (done: treeio, ratchet).",
-      "evidence": "2026-10-09: 2026-10-09 slice 1, equivalence of the first pair measured: atomicwrite.write_atomic (mkstemp, chmod to the target's mode, replace) versus treeio.write._replace (deterministic .vfs-tmp.<pid> temp, flush + os.fsync before replace, no mode handling) are NOT equal: treeio fsyncs and atomicwrite did not; atomicwrite preserves permissions and treeio does not. Fixed the gap on the owner's side: write_atomic now flushes and fsyncs the temp before the rename (both the bytes and the text branch), 2 new declared defect classes (mutants.regex) both killed, 1 parametrized test (new content lands while the target still holds the old), 1 warrant; atomicwrite bazel targets 11 of 11 pass. The swaps themselves are the remaining slices. | 2026-10-09: 2026-10-09 slice 2: treeio.write now calls atomicwrite.durable.write_atomic (its own _replace is gone). Wiring copied from gradekit/debtplan: pyproject dependency + [tool.uv.sources] + [tool.ruff.lint.isort] known-third-party (without it the edit gate and the ratchet demanded opposite import layouts, W547), BUILD SIBLINGS on the library, tests, both binaries, mypy_runner and the .venv with legacy_create_init = 0, uv lock added mikemol-atomicwrite. No other target depends on treeio (bazel query rdeps: empty). Behaviour changes a caller can see, recorded in write.py's docstring: a rewritten file keeps its permissions (the old copy reset them, stripping +x from a rewritten script), and the temp is named .<name>.<random>.tmp not <name>.vfs-tmp.<pid> (searched the fleet: only paperkit's and substrate's origin copies and treeio's own test named it). Tests: the leftovers helper matched only the old marker and would have passed over a leftover, so it now matches the new temp shape; +1 treeio test (mode kept), +1 atomicwrite test (an interrupt removes the temp), the interrupt-cleanup defect class moved to atomicwrite's mutants.regex, treeio's four _replace declarations removed. bazel //treeio/..., //atomicwrite/..., //hooks:test_bar_fires: 42 of 42 pass. Remaining copies: ratchet, hooks pycheck_census, pathsforward store. | 2026-10-09: 2026-10-09 slice 3a: ratchet.remap is NOT swappable as-is: it is a deliberate TWO-PHASE write (stage every output beside its target with the target's mode, and only when every temp exists os.replace them all; a failure while staging removes them all and exits UNREADABLE 'nothing written'), and atomicwrite.write_atomic did stage-then-replace in one call. So atomicwrite now exposes the steps: stage(path, data) -> Staged(temp, target) (mkstemp beside the target, written, flushed and fsynced, mode kept, removed on any failure incl. an interrupt), commit(staged) (the rename) and discard(staged); write_atomic is stage then commit with the temp removed if either fails. ratchet's own staging lacked the fsync too. Declared defects re-aimed at the new functions (13 declarations, all killed), 4 new tests (stage leaves the target alone until commit; the staged temp carries the target's mode; discard removes it and is idempotent; an interrupt at the commit removes the temp), 4 warrants. bazel //atomicwrite/... //treeio/... //gradekit/... //importdag/...: 76 of 76 pass. | 2026-10-09: correction: the declared defect classes number 16, not 13 (counted from mutants.regex), all killed. | 2026-10-09: slice 3b (ratchet/remap onto atomicwrite.stage/commit/discard): remap._write_all keeps its two-phase order and its 'nothing written' / 'replace phase failed; already rewritten' reports, but the temp-write, mode-keep and fsync are atomicwrite's; text is encoded to UTF-8 bytes first. ratchet now depends on mikemol-atomicwrite (supersedes its no-runtime-dependencies stance, operator 2026-10-06). Two source roots in ratchet_cli's runfiles shadowed the mikemol namespace in the shared ratchet_refusal py_test (legacy_create_init=0 added in rules_py/dist.bzl). bazel //ratchet/... //atomicwrite/... //treeio/...: 60 of 60. Remaining: hooks/pycheck_census.py, pathsforward/store.py (live tools: wire and sync venv first); atomicwrite._fill text branch uses locale encoding. | 2026-10-09: tick 2026-10-09: store.py and pycheck_census NOT swapped, deliberately. pathsforward's pyproject says 'no runtime dependencies ... anything it imported would become a dependency of every repo that runs a loop' and hooks is installed by adopters as 'uv add mikemol-hooks' (sha-pinned copies); a [tool.uv.sources] path = ../atomicwrite does not resolve for an adopter installing from a git subdirectory. The ratchet precedent does not transfer: ratchet is consumed by bazel in-repo. Needs: how an adopter resolves a sibling dependency (published pin, vendored copy, or git-subdirectory source). Measured by reading the three pyproject/BUILD files; absence of a published-sibling precedent is 'none found in gradekit, debtplan, treeio, ratchet wiring', not proven. | 2026-10-09: atomicwrite._fill's text branch now opens with encoding='utf-8' (was the locale default); test_text_is_opened_as_utf8_whatever_the_process_locale spies on os.fdopen and checks the bytes; declaration text-encoded-by-locale added (17 declarations); warrant generated. bazel //atomicwrite //treeio //ratchet 60 of 60. | 2026-10-09: 2026-10-09 read-own-claims: W819 (hooks -> pathsforward, the first cross-distribution requirement) says 'W317/W318 say how intra-org pins work'. So the adopter-dependency question left open by the store.py/pycheck_census hold is already planned: W317 (blocked on W319 <- luthen-observability:W257) is the mechanism for an adopter-installed dist to pin a sibling. The store.py and pycheck_census swaps, W819 and W860 slice 2 all wait on W317, not on a new decision. Not verified: W318's content (not read this tick). | 2026-10-09: 2026-10-09 CORRECTION to the entry above: W318 (done) is the test-atomization umbrella, NOT a pin mechanism; W819's phrase 'W317/W318 say how intra-org pins work' was loose. The mechanism is W317's operator rulings (2026-10-01): each distribution becomes its own repo and a PyPI package (TestPyPI staging), a dependent keeps agents current with '>=' floors set when built on a consumer's behalf plus a pin-bump bot and a fleet staleness census. So after W317 an adopter's dist depends on a sibling as 'mikemol-atomicwrite>=x' from PyPI, not a path source. Until then a [tool.uv.sources] path works in-repo only, which is why pathsforward and hooks (installed by adopters) stay on their own writes. Read from W317's evidence (W317 is blocked on W319 <- luthen-observability:W257, the runner).",
+      "evidence": "2026-10-09: 2026-10-09 slice 1, equivalence of the first pair measured: atomicwrite.write_atomic (mkstemp, chmod to the target's mode, replace) versus treeio.write._replace (deterministic .vfs-tmp.<pid> temp, flush + os.fsync before replace, no mode handling) are NOT equal: treeio fsyncs and atomicwrite did not; atomicwrite preserves permissions and treeio does not. Fixed the gap on the owner's side: write_atomic now flushes and fsyncs the temp before the rename (both the bytes and the text branch), 2 new declared defect classes (mutants.regex) both killed, 1 parametrized test (new content lands while the target still holds the old), 1 warrant; atomicwrite bazel targets 11 of 11 pass. The swaps themselves are the remaining slices. | 2026-10-09: 2026-10-09 slice 2: treeio.write now calls atomicwrite.durable.write_atomic (its own _replace is gone). Wiring copied from gradekit/debtplan: pyproject dependency + [tool.uv.sources] + [tool.ruff.lint.isort] known-third-party (without it the edit gate and the ratchet demanded opposite import layouts, W547), BUILD SIBLINGS on the library, tests, both binaries, mypy_runner and the .venv with legacy_create_init = 0, uv lock added mikemol-atomicwrite. No other target depends on treeio (bazel query rdeps: empty). Behaviour changes a caller can see, recorded in write.py's docstring: a rewritten file keeps its permissions (the old copy reset them, stripping +x from a rewritten script), and the temp is named .<name>.<random>.tmp not <name>.vfs-tmp.<pid> (searched the fleet: only paperkit's and substrate's origin copies and treeio's own test named it). Tests: the leftovers helper matched only the old marker and would have passed over a leftover, so it now matches the new temp shape; +1 treeio test (mode kept), +1 atomicwrite test (an interrupt removes the temp), the interrupt-cleanup defect class moved to atomicwrite's mutants.regex, treeio's four _replace declarations removed. bazel //treeio/..., //atomicwrite/..., //hooks:test_bar_fires: 42 of 42 pass. Remaining copies: ratchet, hooks pycheck_census, pathsforward store. | 2026-10-09: 2026-10-09 slice 3a: ratchet.remap is NOT swappable as-is: it is a deliberate TWO-PHASE write (stage every output beside its target with the target's mode, and only when every temp exists os.replace them all; a failure while staging removes them all and exits UNREADABLE 'nothing written'), and atomicwrite.write_atomic did stage-then-replace in one call. So atomicwrite now exposes the steps: stage(path, data) -> Staged(temp, target) (mkstemp beside the target, written, flushed and fsynced, mode kept, removed on any failure incl. an interrupt), commit(staged) (the rename) and discard(staged); write_atomic is stage then commit with the temp removed if either fails. ratchet's own staging lacked the fsync too. Declared defects re-aimed at the new functions (13 declarations, all killed), 4 new tests (stage leaves the target alone until commit; the staged temp carries the target's mode; discard removes it and is idempotent; an interrupt at the commit removes the temp), 4 warrants. bazel //atomicwrite/... //treeio/... //gradekit/... //importdag/...: 76 of 76 pass. | 2026-10-09: correction: the declared defect classes number 16, not 13 (counted from mutants.regex), all killed. | 2026-10-09: slice 3b (ratchet/remap onto atomicwrite.stage/commit/discard): remap._write_all keeps its two-phase order and its 'nothing written' / 'replace phase failed; already rewritten' reports, but the temp-write, mode-keep and fsync are atomicwrite's; text is encoded to UTF-8 bytes first. ratchet now depends on mikemol-atomicwrite (supersedes its no-runtime-dependencies stance, operator 2026-10-06). Two source roots in ratchet_cli's runfiles shadowed the mikemol namespace in the shared ratchet_refusal py_test (legacy_create_init=0 added in rules_py/dist.bzl). bazel //ratchet/... //atomicwrite/... //treeio/...: 60 of 60. Remaining: hooks/pycheck_census.py, pathsforward/store.py (live tools: wire and sync venv first); atomicwrite._fill text branch uses locale encoding. | 2026-10-09: tick 2026-10-09: store.py and pycheck_census NOT swapped, deliberately. pathsforward's pyproject says 'no runtime dependencies ... anything it imported would become a dependency of every repo that runs a loop' and hooks is installed by adopters as 'uv add mikemol-hooks' (sha-pinned copies); a [tool.uv.sources] path = ../atomicwrite does not resolve for an adopter installing from a git subdirectory. The ratchet precedent does not transfer: ratchet is consumed by bazel in-repo. Needs: how an adopter resolves a sibling dependency (published pin, vendored copy, or git-subdirectory source). Measured by reading the three pyproject/BUILD files; absence of a published-sibling precedent is 'none found in gradekit, debtplan, treeio, ratchet wiring', not proven. | 2026-10-09: atomicwrite._fill's text branch now opens with encoding='utf-8' (was the locale default); test_text_is_opened_as_utf8_whatever_the_process_locale spies on os.fdopen and checks the bytes; declaration text-encoded-by-locale added (17 declarations); warrant generated. bazel //atomicwrite //treeio //ratchet 60 of 60. | 2026-10-09: 2026-10-09 read-own-claims: W819 (hooks -> pathsforward, the first cross-distribution requirement) says 'W317/W318 say how intra-org pins work'. So the adopter-dependency question left open by the store.py/pycheck_census hold is already planned: W317 (blocked on W319 <- luthen-observability:W257) is the mechanism for an adopter-installed dist to pin a sibling. The store.py and pycheck_census swaps, W819 and W860 slice 2 all wait on W317, not on a new decision. Not verified: W318's content (not read this tick). | 2026-10-09: 2026-10-09 CORRECTION to the entry above: W318 (done) is the test-atomization umbrella, NOT a pin mechanism; W819's phrase 'W317/W318 say how intra-org pins work' was loose. The mechanism is W317's operator rulings (2026-10-01): each distribution becomes its own repo and a PyPI package (TestPyPI staging), a dependent keeps agents current with '>=' floors set when built on a consumer's behalf plus a pin-bump bot and a fleet staleness census. So after W317 an adopter's dist depends on a sibling as 'mikemol-atomicwrite>=x' from PyPI, not a path source. Until then a [tool.uv.sources] path works in-repo only, which is why pathsforward and hooks (installed by adopters) stay on their own writes. Read from W317's evidence (W317 is blocked on W319 <- luthen-observability:W257, the runner). | 2026-10-09: 2026-10-09 TRIAGE: blocked, not ready. Done: treeio and ratchet on atomicwrite, atomicwrite's stage/commit/discard and UTF-8 text. The remaining swaps (pathsforward/store.py, hooks/pycheck_census) are in adopter-installed distributions and wait on W317's PyPI publication.",
       "issued_at": "2026-10-09T02:15:21Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": "2026-10-09T05:50:21Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T13:50:48Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W858",
@@ -17500,41 +17516,47 @@
     {
       "symbol": "W859",
       "title": "Import edges are derived by corpus.import_edges and by importdag: compare, then make one depend on the other",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "dependencies",
         "reuse"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W317"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Slice 2: corpus.import_edges calls importdag.resolve.split and drops its own walker. Blocked on the adopter question (corpus's consumers are outside this repo): W317's PyPI floors. Meanwhile the dotted-name shaping (module and module.name) is importdag's from_references already.",
-      "evidence": "2026-10-09: 2026-10-09 comparison measured: corpus.import_edges (module_level_dotted | deferred_dotted) against importdag.resolve.references (level-0 names) over every .py file of pathsforward/src (37), hooks/src (49) and pycodemod/src (58): 144 files, 144 identical name sets, 0 differ. So the NAME extraction is the same capability twice; what only corpus has is the eager/lazy split (module_level versus deferred, W846's dispatch-table concern), and what only importdag has is level handling and resolution to files. corpus has no dependent in this repo (bazel rdeps empty); its consumers are outside. | 2026-10-09: 2026-10-09 slice 1 LANDED: importdag.resolve.split(text) -> Split(eager, deferred) of Reference sets, the same walk as corpus.import_edges (defs and classes deferred, if/for/while/try/with/match executing), plus ast.TryStar which corpus's walk drops (so corpus loses imports under try*; a defect carried by the swap, not fixed in corpus). 9 tests (tests/test_split.py, 9 warrants, rubric row 'split'). Equivalence measured with a scratchpad script: importdag.split level-0 names equal corpus.module_level_dotted and deferred_dotted on 158 files (pathsforward, hooks, pycodemod, importdag, corpus src), 0 differ; the try* case is not in those files. bazel //importdag/... //corpus/...: 35 of 35. importdag has no mutants.regex, so no mutation declarations were possible.",
+      "evidence": "2026-10-09: 2026-10-09 comparison measured: corpus.import_edges (module_level_dotted | deferred_dotted) against importdag.resolve.references (level-0 names) over every .py file of pathsforward/src (37), hooks/src (49) and pycodemod/src (58): 144 files, 144 identical name sets, 0 differ. So the NAME extraction is the same capability twice; what only corpus has is the eager/lazy split (module_level versus deferred, W846's dispatch-table concern), and what only importdag has is level handling and resolution to files. corpus has no dependent in this repo (bazel rdeps empty); its consumers are outside. | 2026-10-09: 2026-10-09 slice 1 LANDED: importdag.resolve.split(text) -> Split(eager, deferred) of Reference sets, the same walk as corpus.import_edges (defs and classes deferred, if/for/while/try/with/match executing), plus ast.TryStar which corpus's walk drops (so corpus loses imports under try*; a defect carried by the swap, not fixed in corpus). 9 tests (tests/test_split.py, 9 warrants, rubric row 'split'). Equivalence measured with a scratchpad script: importdag.split level-0 names equal corpus.module_level_dotted and deferred_dotted on 158 files (pathsforward, hooks, pycodemod, importdag, corpus src), 0 differ; the try* case is not in those files. bazel //importdag/... //corpus/...: 35 of 35. importdag has no mutants.regex, so no mutation declarations were possible. | 2026-10-09: 2026-10-09 TRIAGE: blocked, not ready. Slice 1 landed (importdag.split equals corpus on 158 files). Slice 2, corpus calling importdag, is a sibling dependency for a distribution with outside consumers: W317's published floors.",
       "issued_at": "2026-10-09T02:15:22Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": "2026-10-09T06:06:46Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T13:50:48Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W860",
       "title": "hooks.gen_warrants reads the bib with its own regex: make it use mikemol-bibparse, keeping count_test_functions.py independent",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "dependencies",
         "reuse",
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W317"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Slice 2: route gen_warrants' prune and would_drop through bibparse.parse, slicing the original text by Entry.start/Entry.end and keeping every other byte, so _ENTRY, _KEY and the hand-rolled splitting go. hooks is a LIVE tool: wire the dependency first (pyproject dependency + [tool.uv.sources] + [tool.ruff.lint.isort] known-third-party, BUILD SIBLINGS on library/tests/binaries/mypy_runner/.venv, legacy_create_init = 0, uv lock; recipe in treeio's W857 commit) and sync hooks/.venv with bibparse installed BEFORE the import lands, or every hook script stops importing. A ledger bibparse REFUSES (a syntax error) must make prune refuse, not skip. Keep count_test_functions.py a separate parse (W840).",
-      "evidence": "2026-10-09: 2026-10-09 comparison measured: the entry KEYS bibparse.parse returns and the keys gen_warrants' _ENTRY regex finds, in order, over all 32 warrants.bib in the repo: 32 of 32 identical, 0 differ. So reading entries is the same capability twice and the regex is safe to retire for that. The obstacle is not agreement but what each is for: gen_warrants EDITS TEXT (prune drops stale entries byte-for-byte and keeps the rest untouched), and bibparse.Entry carries only typ, key, fields and a start line, no end line or byte span, so it cannot say which bytes to drop. | 2026-10-09: 2026-10-09 slice 1: bibparse.Entry gains start and end, character offsets so text[start:end] is the entry from its @ through its closing brace (0 for a hand-built entry); 5 tests (exact slice, gaps only trivia, cut a span and the rest parses, hand-built is 0, offsets exclude leading trivia and the trailing newline) + 5 warrants. Measured over all 32 warrants.bib: the text bibparse's span selects equals the text gen_warrants' regex selects, 32 of 32. bazel //bibparse/... //gradekit/...: 31 of 31 pass (mutation grid included).",
+      "evidence": "2026-10-09: 2026-10-09 comparison measured: the entry KEYS bibparse.parse returns and the keys gen_warrants' _ENTRY regex finds, in order, over all 32 warrants.bib in the repo: 32 of 32 identical, 0 differ. So reading entries is the same capability twice and the regex is safe to retire for that. The obstacle is not agreement but what each is for: gen_warrants EDITS TEXT (prune drops stale entries byte-for-byte and keeps the rest untouched), and bibparse.Entry carries only typ, key, fields and a start line, no end line or byte span, so it cannot say which bytes to drop. | 2026-10-09: 2026-10-09 slice 1: bibparse.Entry gains start and end, character offsets so text[start:end] is the entry from its @ through its closing brace (0 for a hand-built entry); 5 tests (exact slice, gaps only trivia, cut a span and the rest parses, hand-built is 0, offsets exclude leading trivia and the trailing newline) + 5 warrants. Measured over all 32 warrants.bib: the text bibparse's span selects equals the text gen_warrants' regex selects, 32 of 32. bazel //bibparse/... //gradekit/...: 31 of 31 pass (mutation grid included). | 2026-10-09: 2026-10-09 TRIAGE: blocked, not ready. Slice 1 landed (bibparse Entry spans). Slice 2, hooks.gen_warrants through bibparse, makes hooks (adopter-installed) depend on a sibling: W317's published floors.",
       "issued_at": "2026-10-09T02:15:22Z",
       "minted_during": "tick",
       "caused_by": "W802",
-      "last_worked": "2026-10-09T03:15:50Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T13:50:49Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W861",
@@ -17958,6 +17980,45 @@
       "last_worked": "2026-10-09T13:40:51Z",
       "ticks_blocked": 0,
       "completed": null
+    },
+    {
+      "symbol": "W880",
+      "title": "pathsforward --update: an additive --add-enables, so extending a waypoint's edges cannot erase them",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "katas"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add --add-enables to --update: append the symbols to the existing enables without duplicates; --enables stays SET. Test that a repair keeps its other edges, plus a refusal for a malformed symbol.",
+      "evidence": "",
+      "issued_at": "2026-10-09T13:50:36Z",
+      "minted_during": "tick",
+      "caused_by": "W807",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W881",
+      "title": "Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for the operator to apply",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "adopt",
+        "inbound-asks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add an MTOOLS_ROOT-resolving launcher beside hooks/adopt/tools-hook (the current hooks/bin launcher resolves bazel-bin under CLAUDE_PROJECT_DIR), test it like test_bin_launchers_argv, and draft the ~/.claude/settings.json lines as a patch in the design notes for the operator to apply.",
+      "evidence": "",
+      "issued_at": "2026-10-09T13:51:50Z",
+      "minted_during": "tick",
+      "caused_by": "W580",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [
