@@ -7090,3 +7090,31 @@
   claim  = {With nothing to resolve a root from, the hook says so and proceeds.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_inbound_launcher_root.py -k test_neither_variable_set_is_said_and_never_denied},
 }
+
+@misc{hooks-post-commit-census-stub-starts-the-census-with-the-repo-root,
+  section = {post_commit_census},
+  title  = {After the push, the census is started once with --refresh-ledger and the top level},
+  claim  = {After the push, the census is started once with --refresh-ledger and the top level.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_post_commit_census.py -k test_the_stub_starts_the_census_with_the_repo_root},
+}
+
+@misc{hooks-post-commit-census-stub-returns-without-waiting-for-the-census,
+  section = {post_commit_census},
+  title  = {A census that outlives the hook does not hold it: the stub returns while it still runs},
+  claim  = {A census that outlives the hook does not hold it: the stub returns while it still runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_post_commit_census.py -k test_the_stub_returns_without_waiting_for_the_census},
+}
+
+@misc{hooks-post-commit-census-absent-venv-is-a-silent-skip,
+  section = {post_commit_census},
+  title  = {With no built venv the stub still pushes, exits 0, and starts nothing},
+  claim  = {With no built venv the stub still pushes, exits 0, and starts nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_post_commit_census.py -k test_an_absent_venv_is_a_silent_skip},
+}
+
+@misc{hooks-post-commit-census-unverified-tree-starts-no-census,
+  section = {post_commit_census},
+  title  = {The refresh is behind the gate witness: a commit the gate never ran for starts nothing},
+  claim  = {The refresh is behind the gate witness: a commit the gate never ran for starts nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_post_commit_census.py -k test_an_unverified_tree_starts_no_census},
+}

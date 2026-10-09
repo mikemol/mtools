@@ -16801,7 +16801,7 @@
     {
       "symbol": "W825",
       "title": "something calls mikemol-pycheck --refresh-ledger so the closure advisory has a ledger to read",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -16809,13 +16809,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add to mtools' .githooks/post-commit, after the push and still exiting 0, a detached single-flight (flock on the git dir's mtools/ledger.lock) run of bazel-bin/hooks/.venv/bin/mikemol-pycheck --refresh-ledger logging under the git dir; test the stub in a temp repo; hooks go live on apply, so the test lands first.",
-      "evidence": "2026-10-09: 2026-10-09 TRIAGE: trigger chosen. The shared githook_post_commit package serves other repos (a census spawn there is a cross-repo change with no per-repo opt-in), so the trigger is mtools' own .githooks/post-commit stub, which already runs after the gate and the push. Not landed this tick: the shared index held another session's staged files, and a live-hook edit wants a clean tree.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 TRIAGE: trigger chosen. The shared githook_post_commit package serves other repos (a census spawn there is a cross-repo change with no per-repo opt-in), so the trigger is mtools' own .githooks/post-commit stub, which already runs after the gate and the push. Not landed this tick: the shared index held another session's staged files, and a live-hook edit wants a clean tree. | 2026-10-09: 2026-10-09: .githooks/post-commit starts bazel-bin/hooks/.venv/bin/mikemol-pycheck --refresh-ledger <root> detached (setsid, flock -n on the git dir's mtools/ledger.lock, no inherited descriptors) after the push and behind the gate witness; hooks/tests/test_post_commit_census.py 4 tests run the real stub in a throwaway clone; bazel test test_post_commit_census test_githook_post_commit test_bar_fires test_no_verify pass",
       "issued_at": "2026-10-06T17:07:03Z",
       "minted_during": "interrupt",
       "caused_by": "W821",
-      "last_worked": "2026-10-09T15:20:26Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T15:36:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T153638Z"
     },
     {
       "symbol": "W826",

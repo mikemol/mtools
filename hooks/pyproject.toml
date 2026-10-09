@@ -483,6 +483,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # set, as `test_bin_launchers_argv.py` does without it: a fixed argv, never a shell, no untrusted input.
 "tests/test_inbound_launcher_root.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ W825: `test_post_commit_census.py` runs the tracked post-commit stub and git in a throwaway
+# repository: fixed argv, never a shell, no untrusted input. `git` is resolved from PATH on purpose,
+# as the stub resolves it.
+"tests/test_post_commit_census.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+
 # ⚑ W184/W361: `test_gate_suite.py`'s subject is a piece of `.githooks/pre-commit` RUN under the
 # gate's own `set -euo pipefail`, so launching bash is the case. The script is text lifted from the
 # tracked gate plus literals; the cwd is `tmp_path` and the env is PATH alone.

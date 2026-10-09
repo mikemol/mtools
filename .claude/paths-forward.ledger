@@ -1384,3 +1384,5 @@
 2026-10-09T14:47:24Z  hash  --   diverged  --        "divergence: payload v2:323302a8fc577730, file v2:af33ce2668326d89; the FILE wins"
 2026-10-09T14:50:27Z  tick  W881 advanced  unblock   "inbound-asks launcher honours MTOOLS_ROOT; settings lines drafted for the operator; W622 unblocked"
 2026-10-09T15:20:26Z  tick  W825 advanced  collapse  "trigger chosen (mtools post-commit stub, detached single-flight); not landed, shared index held a peer's staged files"
+2026-10-09T15:34:43Z  hash  --   diverged  --        "divergence: payload v2:da22b2219c9d714c, file v2:f2d11a8d2ce819b2; the FILE wins"
+2026-10-09T15:36:39Z  tick  W825 advanced  unblock   "closure-advisory ledger now refreshed after every green push, detached and single-flight; 4 behavioural tests"

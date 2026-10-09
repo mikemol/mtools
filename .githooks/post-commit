@@ -87,6 +87,19 @@ else
     echo "post-commit: fix the cause it names, then: git push origin HEAD:main"
 fi
 
+# ⚑⚑ W825: THE CLOSURE ADVISORY'S LEDGER IS REFRESHED HERE, AFTER THE PUSH AND OFF THE COMMIT'S
+# CLOCK. The census takes minutes on a large repo, so it runs detached (its own session, no
+# inherited descriptors, so git never waits on it) and single-flight: a second commit while one runs
+# skips, because the running census reads the tree as it is when it finishes. It lives in THIS stub
+# and not in the shared mikemol-githook-post-commit, which every adopter runs. An absent venv is a
+# silent skip: the advisory then has no fresh ledger, which it already says.
+_census="$(git rev-parse --show-toplevel)/bazel-bin/hooks/.venv/bin/mikemol-pycheck"
+if [ -x "$_census" ]; then
+    mkdir -p "$_git_dir/mtools"
+    setsid flock -n "$_git_dir/mtools/ledger.lock" "$_census" --refresh-ledger "$(git rev-parse --show-toplevel)" \
+        </dev/null >"$_git_dir/mtools/ledger-refresh.log" 2>&1 &
+fi
+
 # ⚑ EXITS 0 IN EVERY BRANCH, DELIBERATELY. A post-commit's status cannot unmake the commit, and a
 # nonzero exit here is read by git as nothing at all — so a refusal must be a MESSAGE, not a code.
 # Saying so explicitly because the natural reading of `exit 1` is *it stopped something*, and here
