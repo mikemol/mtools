@@ -1345,3 +1345,6 @@
 2026-10-09T08:51:11Z  tick  W796 advanced  collapse  "katas commits group overlaps hooks.commit_kata by name: collapse candidate; letter to linux-sources that the pycheck fix landed"
 2026-10-09T09:06:07Z  tick  W796 advanced  collapse  "katas prepare_commit/commit compared with hooks.commit_kata: strict superset; katas copy is the older weaker one"
 2026-10-09T09:21:08Z  tick  W796 advanced  collapse  "katas typing group collapses onto pycheck_census, pycheck_closure and debtplan; residue is host policy lists and the duplicate-module second pass"
+2026-10-09T09:32:45Z  tick  W869 minted    -         "pathsforward --add refuses a title over 150 characters, as katas wp does, so a bundled title cannot be minted"  evidence=W796
+2026-10-09T09:32:45Z  tick  W870 minted    -         "pathsforward gate-card verbs: mint a repo's 'commit gate is red' card, block its open ledger on it, and lift on green (katas gate_red/gate_green)"  evidence=W796
+2026-10-09T09:32:54Z  tick  W796 advanced  collapse  "queue group read; port plan: katas shrinks to host orchestration, mtools needs only a title cap (W869) and gate-card verbs (W870)"
