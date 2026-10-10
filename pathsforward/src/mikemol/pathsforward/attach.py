@@ -112,6 +112,30 @@ def findings(state: State) -> list[str]:
     return found
 
 
+def drift(state: State) -> list[str]:
+    """Report an attachment whose file is gone, no longer a plain file, or no longer hashes alike.
+
+    ⚑ A LETTER EDITED AFTER IT WAS CITED IS A FINDING: the pin said which bytes the peer was
+    pointed at, and these are not those. Re-attach (`--attach`) to accept the new bytes. A link is
+    reported as missing and never read through.
+
+    Returns:
+        one finding per drifted attachment, naming the waypoint and the path.
+
+    """
+    root = Path(text(state.doc, "project_root"))
+    found: list[str] = []
+    for w in state.waypoints:
+        for path, digest in entries(w):
+            here = root / path
+            sym = text(w, "symbol")
+            if here.is_symlink() or not here.is_file():
+                found.append(f"{sym}: {KEY}: {path!r} is missing or not a plain file")
+            elif hashlib.sha256(here.read_bytes()).hexdigest() != digest:
+                found.append(f"{sym}: {KEY}: {path!r} changed since it was attached")
+    return found
+
+
 def resolve(root: Path, path: str) -> tuple[str, str]:
     """Pin a file under the project root: its path as given and the sha256 of its bytes.
 

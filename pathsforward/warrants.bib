@@ -4137,3 +4137,38 @@
   claim  = {The file itself or a directory above it being a link is refused; none exists on disk.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_verb.py -k test_a_link_anywhere_along_the_path_is_refused},
 }
+
+@misc{pathsforward-attach-drift-unchanged-attachment-is-not-found,
+  section = {attach_drift},
+  title  = {The positive control: the bytes still hash alike, so nothing is reported},
+  claim  = {The positive control: the bytes still hash alike, so nothing is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_drift.py -k test_an_unchanged_attachment_is_not_found},
+}
+
+@misc{pathsforward-attach-drift-edited-attachment-is-found,
+  section = {attach_drift},
+  title  = {The file changed after it was cited},
+  claim  = {The file changed after it was cited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_drift.py -k test_an_edited_attachment_is_found},
+}
+
+@misc{pathsforward-attach-drift-missing-attachment-is-found,
+  section = {attach_drift},
+  title  = {The file is gone},
+  claim  = {The file is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_drift.py -k test_a_missing_attachment_is_found},
+}
+
+@misc{pathsforward-attach-drift-directory-in-its-place-is-found,
+  section = {attach_drift},
+  title  = {Something that is not a plain file is reported the same way},
+  claim  = {Something that is not a plain file is reported the same way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_drift.py -k test_a_directory_in_its_place_is_found},
+}
+
+@misc{pathsforward-attach-drift-link-is-reported-and-never-read,
+  section = {attach_drift},
+  title  = {A path that answers as a link is missing as far as the pin goes; none exists on disk},
+  claim  = {A path that answers as a link is missing as far as the pin goes; none exists on disk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_drift.py -k test_a_link_is_reported_and_never_read},
+}

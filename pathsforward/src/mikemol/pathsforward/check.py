@@ -565,6 +565,7 @@ def check(state: State) -> list[str]:
         *root(state),
         *outcomes.findings(state),
         *attach.findings(state),
+        *attach.drift(state),
     ]
 
 
