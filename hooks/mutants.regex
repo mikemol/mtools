@@ -103,9 +103,14 @@ src/mikemol/hooks/repin.py|wheel-form-not-found|\(_SOURCE, SOURCE\), \(_WHEEL, W
 # W958: the repin shell. Touching mtools itself or a hidden worktree, writing a dirty repo, rewriting a wheel-only
 # repo, syncing when told not to, or reporting a failed sync as success each break its promise.
 src/mikemol/hooks/repin_cli.py|dirty-repo-written|if code != 0 or out\.strip\(\):|if False:|def=_repin_one
-src/mikemol/hooks/repin_cli.py|mtools-itself-repinned|p\.parent\.name != SELF|True|def=repos
-src/mikemol/hooks/repin_cli.py|hidden-directory-read|not p\.parent\.name\.startswith\("\."\)|True|def=repos
+src/mikemol/hooks/repin_cli.py|mtools-itself-repinned|and name != SELF and|and True and|def=_scannable
+src/mikemol/hooks/repin_cli.py|hidden-directory-read|name\.startswith\(\(".", "bazel-"\)\)|name.startswith("bazel-")|def=_scannable
 src/mikemol/hooks/repin_cli.py|wheel-repo-written|if row\.form != repin\.WHEEL|if True|def=apply
 src/mikemol/hooks/repin_cli.py|sync-ignores-no-sync|if result == "written" and sync:|if result == "written":|def=apply
 src/mikemol/hooks/repin_cli.py|failed-sync-reported-synced|== 0 else "sync-failed"|== 0 or True else "sync-failed"|def=apply
 src/mikemol/hooks/repin_cli.py|write-without-sha-admitted|return "--write needs --sha, the full commit to move every pin to" if write else None|return None|def=_refusal
+
+# W962: a root that is a repo is that repo; a link or bazel output is never a repo to read.
+src/mikemol/hooks/repin_cli.py|root-repo-ignored|if \(root / "pyproject\.toml"\)\.is_file\(\):|if False:|def=repos
+src/mikemol/hooks/repin_cli.py|bazel-directory-read|name\.startswith\(\(".", "bazel-"\)\)|name.startswith(".")|def=_scannable
+src/mikemol/hooks/repin_cli.py|symlink-read|and not directory\.is_symlink\(\)|and True|def=_scannable

@@ -7940,3 +7940,17 @@
   claim  = {No --sha with --write, a short sha, an unknown flag and a missing value.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_usage_refusals_exit_two_and_write_nothing},
 }
+
+@misc{hooks-repin-cli-root-that-is-itself-a-repo-is-read-as-that-repo,
+  section = {repin_cli},
+  title  = {W962: pointing --root at a repo reads its own pyproject, not its subdirectories'},
+  claim  = {W962: pointing --root at a repo reads its own pyproject, not its subdirectories'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_root_that_is_itself_a_repo_is_read_as_that_repo},
+}
+
+@misc{hooks-repin-cli-symlinked-or-bazel-directory-is-never-read,
+  section = {repin_cli},
+  title  = {W962: no link is read as data; `is_symlink` is patched, so no link is ever created},
+  claim  = {W962: no link is read as data; `is_symlink` is patched, so no link is ever created.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_symlinked_or_bazel_directory_is_never_read},
+}

@@ -122,6 +122,35 @@ def test_only_the_named_dists_move(tmp_path: Path) -> None:
     assert _OLD in (root / "alpha" / "pyproject.toml").read_text(encoding="utf-8")
 
 
+def test_a_root_that_is_itself_a_repo_is_read_as_that_repo(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W962: pointing --root at a repo reads its own pyproject, not its subdirectories'."""
+    (tmp_path / "pyproject.toml").write_text(f"dependencies = [{_LINE}]\n", encoding="utf-8")
+    stale = tmp_path / "stale"
+    stale.mkdir()
+    (stale / "pyproject.toml").write_text(f"dependencies = [{_LINE}]\n", encoding="utf-8")
+    assert repin_cli.main(["--root", str(tmp_path), "--sha", _NEW]) == 0
+    assert capsys.readouterr().out.splitlines() == [
+        f"{tmp_path.name}\thooks\tpep508\t{_OLD}\tDIFFERS"
+    ]
+
+
+def _only_linked_is_a_link(path: Path) -> bool:
+    return path.name == "linked"
+
+
+def test_a_symlinked_or_bazel_directory_is_never_read(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W962: no link is read as data; `is_symlink` is patched, so no link is ever created."""
+    monkeypatch.setattr("pathlib.Path.is_symlink", _only_linked_is_a_link)
+    for name in ("linked", "bazel-bin", "real"):
+        (tmp_path / name).mkdir()
+        (tmp_path / name / "pyproject.toml").write_text(f"x = [{_LINE}]\n", encoding="utf-8")
+    assert [r.name for r in repin_cli.repos(tmp_path)] == ["real"]
+
+
 def test_usage_refusals_exit_two_and_write_nothing(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

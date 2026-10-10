@@ -73,18 +73,35 @@ def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
     return done.returncode, done.stdout
 
 
+def _scannable(directory: Path) -> bool:
+    """Say whether a child of the root is a repo to read.
+
+    ⚑ NOT THROUGH A LINK, AND NOT bazel-*: `bazel-<repo>`, `bazel-bin` and the other convenience
+    links point at an execroot that holds a stale copy of the repo's own files (substrate measured
+    nine false rows from one), and no link is read as data here (operator 2026-10-02).
+
+    Returns:
+        True for a real, visible directory that is neither mtools nor a bazel output.
+
+    """
+    name = directory.name
+    hidden = name.startswith((".", "bazel-"))
+    return not hidden and name != SELF and not directory.is_symlink()
+
+
 def repos(root: Path) -> list[Path]:
-    """List the directories under `root` that have a pyproject, leaving out mtools and hidden ones.
+    """List the repos to read: `root` itself when it holds a pyproject, else its children that do.
+
+    ⚑ POINTING `--root` AT A REPO READS THAT REPO. It used to read the repo's subdirectories and so
+    reported no row for the repo's own root file, which is where most pins live.
 
     Returns:
         the repo directories, sorted.
 
     """
-    return [
-        p.parent
-        for p in sorted(root.glob("*/pyproject.toml"))
-        if not p.parent.name.startswith(".") and p.parent.name != SELF
-    ]
+    if (root / "pyproject.toml").is_file():
+        return [root]
+    return [p.parent for p in sorted(root.glob("*/pyproject.toml")) if _scannable(p.parent)]
 
 
 def _status(pin: repin.Pin, target: str | None) -> str:
