@@ -45,3 +45,4 @@ gate_note	Gate note appends to the open card
 attach	Attachments (W930)
 attach_verb	The attach verb (W931)
 attach_drift	Attachment drift (W932)
+block_matching	Bulk block (W947)

@@ -53,3 +53,10 @@ src/mikemol/pathsforward/ops.py|both-enables-flags-allowed|upd\.enables is not N
 # writing it into a replaced field would lose the earlier one.
 src/mikemol/pathsforward/gate.py|note-ignores-a-missing-card|if existing is None:|if False:|def=note
 src/mikemol/pathsforward/gate.py|note-drops-the-evidence|ops\.Update\(evidence_append=evidence\)|ops.Update()|def=note
+
+# W947: a bulk block moves ONLY ready cards, never the target, and a local target must be open. Moving
+# every open match would hide a card's own blocker; blocking the target on itself is a self-cycle; a closed
+# local target would block a population on something that can never land.
+src/mikemol/pathsforward/bulkblock.py|blocked-card-moved|if status == "ready":|if True:|def=plan
+src/mikemol/pathsforward/bulkblock.py|target-blocked-on-itself|sym == target or status|status|def=plan
+src/mikemol/pathsforward/bulkblock.py|closed-local-target-admitted|target, \{\}\), "status"\) in _CLOSED:|target, {}), "status") in ():|def=plan

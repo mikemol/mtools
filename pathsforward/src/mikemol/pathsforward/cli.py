@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, cast
 from mikemol.pathsforward import (
     admission,
     attach,
+    bulkblock,
     certify,
     delivered,
     embargo,
@@ -49,7 +50,7 @@ from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
-from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, text
+from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, RefusedError, text
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 from mikemol.pathsforward.realizable import GATES
@@ -66,6 +67,43 @@ EXIT_FAILED = 1
 EXIT_REFUSED = 2
 EXIT_LOCKED = 3
 EXIT_DIVERGED = 4
+
+
+def _block_matching(ctx: Ctx) -> int:
+    """Block every ready card carrying a touches tag on one card; a dry run unless `--write`.
+
+    ⚑ DRY RUN FIRST (mtools:W947): without `--write` nothing is saved and the lines say WOULD
+    BLOCK. Cards that stay (already blocked, or working) are listed as KEPT with their reason.
+
+    Returns:
+        EXIT_OK.
+
+    Raises:
+        RefusedError: when `--on` is missing, or the plan refuses (see `bulkblock.plan`).
+
+    """
+    tag = ctx.get("block_matching") or ""
+    target = ctx.get("on")
+    if target is None:
+        msg = "--block-matching needs --on SYMBOL, the card the matches wait on"
+        raise RefusedError(msg)
+    write = bool(ctx.opts.get("write"))
+
+    def edit(state: State) -> int:
+        found = bulkblock.plan(state, tag, target)
+        verb = "BLOCKED" if write else "WOULD BLOCK"
+        for sym in found.moved:
+            _say(f"{verb} {sym} on {target}")
+        for sym, why in found.kept:
+            _say(f"KEPT {sym} ({why})")
+        if write:
+            bulkblock.apply(state, found, target)
+        return EXIT_OK if write else EXIT_FAILED
+
+    if write:
+        return _mutate(ctx, edit)
+    edit(store.load(ctx.path))
+    return EXIT_OK
 
 
 def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
@@ -124,6 +162,7 @@ _VALUED = (
     "gate_red",
     "gate_green",
     "gate_note",
+    "block_matching",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -178,6 +217,8 @@ _FIELDS = (
     "gate",
     "root",
     "all",
+    "on",
+    "write",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -221,6 +262,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness", "admit", "root"}),
     "drop": frozenset({"admit", "gate", "reference_arm", "root"}),
     "bump_blocked": frozenset({"exclude"}),
+    "block_matching": frozenset({"on", "write"}),
     "prune_landed": frozenset({"root"}),
     "inbound": frozenset({"root", "all"}),
     "payload": frozenset({"root"}),
@@ -325,6 +367,13 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         default=None,
         help="--inbound: also print the CLAIMED rows (default: only the UNCLAIMED ones)",
     )
+    ap.add_argument("--on", metavar="SYMBOL", help="--block-matching: the card the matches wait on")
+    ap.add_argument(
+        "--write",
+        action="store_true",
+        default=None,
+        help="--block-matching: apply the block (default: a dry run that saves nothing)",
+    )
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
     _add_realizable_fields(ap)
@@ -399,6 +448,11 @@ def _parser() -> argparse.ArgumentParser:
         ("--armed", "JOB_ID", "record job_id and heartbeat"),
         ("--update", "SYMBOL", "set typed fields on a waypoint"),
         ("--add", "TITLE", "mint the next W<n> as ready"),
+        (
+            "--block-matching",
+            "TAG",
+            "W947: block every ready card touching TAG on --on SYMBOL; a dry run without --write",
+        ),
         (
             "--gate-red",
             "REASON",
@@ -1757,6 +1811,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "outcomes_set": _outcomes_set,
     "outcomes_clear": _outcomes_clear,
     "bump_blocked": _bump_blocked,
+    "block_matching": _block_matching,
     "prune_landed": _prune_landed,
     "inbound": _inbound,
     "ledger": _ledger_mode,

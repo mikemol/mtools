@@ -4172,3 +4172,46 @@
   claim  = {A path that answers as a link is missing as far as the pin goes; none exists on disk.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_drift.py -k test_a_link_is_reported_and_never_read},
 }
+
+@misc{pathsforward-block-matching-dry-run-lists-and-saves-nothing,
+  section = {block_matching},
+  title  = {The matches are WOULD BLOCK, the others KEPT with a reason, and the file is unchanged},
+  claim  = {The matches are WOULD BLOCK, the others KEPT with a reason, and the file is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_a_dry_run_lists_and_saves_nothing},
+}
+
+@misc{pathsforward-block-matching-write-blocks-the-ready-matches-and-only-those,
+  section = {block_matching},
+  title  = {Ready matches wait on the target; a blocked, working, done or unrelated card is untouched},
+  claim  = {Ready matches wait on the target; a blocked, working, done or unrelated card is
+            untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_write_blocks_the_ready_matches_and_only_those},
+}
+
+@misc{pathsforward-block-matching-foreign-target-is-accepted,
+  section = {block_matching},
+  title  = {Another repo's card, cited as repo:W<n>, is a legal blocker},
+  claim  = {Another repo's card, cited as repo:W<n>, is a legal blocker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_a_foreign_target_is_accepted},
+}
+
+@misc{pathsforward-block-matching-missing-or-closed-target-is-refused-and-saves-nothing,
+  section = {block_matching},
+  title  = {Done, unknown and absent targets are refused; so is --write with no --on},
+  claim  = {Done, unknown and absent targets are refused; so is --write with no --on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_a_missing_or_closed_target_is_refused_and_saves_nothing},
+}
+
+@misc{pathsforward-block-matching-tag-nothing-carries-is-refused,
+  section = {block_matching},
+  title  = {A typo in the tag must not read as a successful empty block},
+  claim  = {A typo in the tag must not read as a successful empty block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_a_tag_nothing_carries_is_refused},
+}
+
+@misc{pathsforward-block-matching-on-without-the-mode-is-a-stray-flag,
+  section = {block_matching},
+  title  = {--on is read only by --block-matching; elsewhere it is refused, not ignored},
+  claim  = {--on is read only by --block-matching; elsewhere it is refused, not ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_on_without_the_mode_is_a_stray_flag},
+}
