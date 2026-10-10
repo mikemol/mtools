@@ -70,6 +70,7 @@ src/mikemol/hooks/probe.py|relative-launcher-not-resolved|if "/" in argv\[0\] an
 # W928: run_git waits on the git process itself, with its output in files, and bounds the wait.
 # Reading pipes lets an orphan wedge it for as long as the orphan lives; dropping the kill leaves a
 # gate past its limit running; dropping the timeout makes the wait unbounded.
-src/mikemol/hooks/commit_kata.py|wait-without-a-limit|child\.wait\(timeout=COMMIT_TIMEOUT_S\)|child.wait()|def=run_git
-src/mikemol/hooks/commit_kata.py|timed-out-git-left-running|child\.kill\(\)|child.poll()|def=run_git
-src/mikemol/hooks/commit_kata.py|status-lost|subprocess\.CompletedProcess\(list\(argv\), code, out\.read\(\), err\.read\(\)\)|subprocess.CompletedProcess(list(argv), 0, out.read(), err.read())|def=run_git
+src/mikemol/hooks/commit_kata.py|wait-without-a-limit|child\.wait\(timeout=COMMIT_TIMEOUT_S\)|child.wait()|def=run_git_in
+src/mikemol/hooks/commit_kata.py|timed-out-git-left-running|child\.kill\(\)|child.poll()|def=run_git_in
+src/mikemol/hooks/commit_kata.py|status-lost|subprocess\.CompletedProcess\(list\(argv\), code, out\.read\(\), err\.read\(\)\)|subprocess.CompletedProcess(list(argv), 0, out.read(), err.read())|def=run_git_in
+src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated

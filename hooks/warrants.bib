@@ -7520,3 +7520,45 @@
   claim  = {post-commit's `git rev-parse --git-dir` names the real repo, so push and witness hold.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_commit.py -k test_post_commit_still_sees_the_real_git_dir},
 }
+
+@misc{hooks-commit-isolated-edit-commits-through-the-private-index,
+  section = {commit_isolated},
+  title  = {The positive control: HEAD moves, holds the edit, and the verdict says COMMITTED},
+  claim  = {The positive control: HEAD moves, holds the edit, and the verdict says COMMITTED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_an_edit_commits_through_the_private_index},
+}
+
+@misc{hooks-commit-isolated-peers-unstaged-file-is-neither-committed-nor-in-the-way,
+  section = {commit_isolated},
+  title  = {The peer's edit survives in the worktree, out of the commit, still unstaged afterwards},
+  claim  = {The peer's edit survives in the worktree, out of the commit, still unstaged afterwards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_peers_unstaged_file_is_neither_committed_nor_in_the_way},
+}
+
+@misc{hooks-commit-isolated-real-index-reads-the-committed-path-as-committed,
+  section = {commit_isolated},
+  title  = {No staged reversal is left behind: git status is clean for the committed path},
+  claim  = {No staged reversal is left behind: git status is clean for the committed path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_real_index_reads_the_committed_path_as_committed},
+}
+
+@misc{hooks-commit-isolated-staged-deletion-lands-as-a-deletion,
+  section = {commit_isolated},
+  title  = {`git rm` then commit the path: HEAD no longer has it, and neither does the worktree},
+  claim  = {`git rm` then commit the path: HEAD no longer has it, and neither does the worktree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_staged_deletion_lands_as_a_deletion},
+}
+
+@misc{hooks-commit-isolated-new-file-is-taken-though-git-does-not-track-it-yet,
+  section = {commit_isolated},
+  title  = {Nothing is staged in the real index, so existence on disk is what makes a path count},
+  claim  = {Nothing is staged in the real index, so existence on disk is what makes a path count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_new_file_is_taken_though_git_does_not_track_it_yet},
+}
+
+@misc{hooks-commit-isolated-path-that-is-neither-on-disk-nor-tracked-is-not-a-commit,
+  section = {commit_isolated},
+  title  = {Nothing to take reads NOT COMMITTED and HEAD does not move},
+  claim  = {Nothing to take reads NOT COMMITTED and HEAD does not move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit},
+}

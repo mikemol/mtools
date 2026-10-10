@@ -37,9 +37,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.hooks.isolated import commit_isolated
+from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
+
 if TYPE_CHECKING:
     from collections.abc import Mapping
     from typing import TextIO
+
+    from mikemol.hooks.isolated import Done
 
 QUEUE_PATHS = (
     ".claude/paths-forward.json",
@@ -48,6 +53,7 @@ QUEUE_PATHS = (
 )
 LOCK = "MODULE.bazel.lock"
 ROOT_ENV = "MIKEMOL_GITHUB_ROOT"
+ISOLATED_ENV = "MIKEMOL_COMMIT_ISOLATED"
 TRAILER_ENV = "COMMIT_TRAILER"
 DEFAULT_TRAILER = "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 COMMIT_TIMEOUT_S = 10800  # a cold-cache paperkit gate outlasted 3000 s twice (2026-10-07)
@@ -70,6 +76,7 @@ BUDGET = (
 USAGE = (
     "usage: mikemol-commit REPO --waypoint W --subject S [--body B] [PATH ...]\n"
     "  REPO is a path, or a directory name under the host root; PATH defaults to the queue files\n"
+    f"  {ISOLATED_ENV}=1 commits through a private index over a snapshot (mtools:W891)\n"
 )
 
 Runner = Callable[[Sequence[str]], subprocess.CompletedProcess[str]]
@@ -87,8 +94,34 @@ class Request:
     trailer: str = DEFAULT_TRAILER
 
 
+def isolated_commit(root: Path, request: Request, paths: Sequence[str]) -> Done:
+    """Commit `paths` through a private index and a snapshot of the tree that lands (W891, W902).
+
+    ⚑ OPT-IN BY `MIKEMOL_COMMIT_ISOLATED=1` until a soak says otherwise (W904). The snapshot lives
+    at its fixed namespaced path (`MIKEMOL_SNAPSHOT_ROOT`, else `snapshot.DEFAULT_NAMESPACE`).
+
+    Returns:
+        the finished `git commit`, or the step that failed before it.
+
+    """
+    namespace = Path(os.environ.get(NAMESPACE_ENV, DEFAULT_NAMESPACE))
+    return commit_isolated(root, paths, message_of(request), run_git_in, namespace)
+
+
 def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
-    """Run a git command, its output going to files and not to pipes (W928).
+    """Run a git command in the current directory (see `run_git_in`).
+
+    Returns:
+        the finished process.
+
+    """
+    return run_git_in(argv, {}, None)
+
+
+def run_git_in(
+    argv: Sequence[str], extra: Mapping[str, str], cwd: Path | None
+) -> subprocess.CompletedProcess[str]:
+    """Run a git command with added environment in a directory, output going to files (W928).
 
     ⚑ A PIPE LETS AN ORPHAN WEDGE THE WAIT. `subprocess.run(capture_output=True)` reads the pipes to
     EOF, and a gate's descendant that outlives a killed git (a bazel client, a background census)
@@ -108,7 +141,14 @@ def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
         tempfile.TemporaryFile("w+", encoding="utf-8") as out,
         tempfile.TemporaryFile("w+", encoding="utf-8") as err,
     ):
-        child = subprocess.Popen([git, *argv], stdin=subprocess.DEVNULL, stdout=out, stderr=err)
+        child = subprocess.Popen(
+            [git, *argv],
+            stdin=subprocess.DEVNULL,
+            stdout=out,
+            stderr=err,
+            cwd=cwd,
+            env={**os.environ, **extra} if extra else None,
+        )
         try:
             code = child.wait(timeout=COMMIT_TIMEOUT_S)
         except subprocess.TimeoutExpired:
@@ -161,6 +201,34 @@ def message_of(request: Request) -> str:
     return f"{head}Waypoint: {request.waypoint}\n\n{request.trailer}\n"
 
 
+def wanted_of(root: Path, request: Request, run: Runner = run_git) -> list[str]:
+    """Name the paths a request takes: its own, or the queue files, and a dirty bazel lock.
+
+    Returns:
+        the paths, in the order asked.
+
+    """
+    wanted = list(request.paths) or list(QUEUE_PATHS)
+    lock_dirty = run(["-C", str(root), "diff", "--quiet", "--", LOCK]).returncode == 1
+    if LOCK not in wanted and lock_dirty:
+        wanted.append(LOCK)
+    return wanted
+
+
+def isolated_paths(root: Path, request: Request, run: Runner = run_git) -> list[str]:
+    """Name the pathspecs an isolated commit takes: each wanted path that exists or is tracked.
+
+    ⚑ NOTHING IS STAGED IN THE REAL INDEX, so a new file is not "tracked" yet; it counts when it
+    is on disk, and a deleted path counts when HEAD or the index still holds it.
+
+    Returns:
+        the pathspecs; empty when nothing asked for exists or is tracked.
+
+    """
+    wanted = wanted_of(root, request, run)
+    return [t for t in wanted if (root / t).exists() or tracked(root, t, run)]
+
+
 def prepare(root: Path, request: Request, run: Runner = run_git) -> list[str] | None:
     """Stage what is new among the paths and build the `git commit` arguments.
 
@@ -168,10 +236,7 @@ def prepare(root: Path, request: Request, run: Runner = run_git) -> list[str] | 
         the arguments after `git`, or None when no requested path is tracked.
 
     """
-    wanted = list(request.paths) or list(QUEUE_PATHS)
-    lock_dirty = run(["-C", str(root), "diff", "--quiet", "--", LOCK]).returncode == 1
-    if LOCK not in wanted and lock_dirty:
-        wanted.append(LOCK)
+    wanted = wanted_of(root, request, run)
     for target in wanted:
         if (root / target).exists():
             run(["-C", str(root), "add", "-A", "--", target])
@@ -221,19 +286,25 @@ def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git)
     return f"NOT COMMITTED {name}: exit 0 but HEAD did not move from {before[:SHORT]}"
 
 
-def commit(root: Path, request: Request, out: TextIO, run: Runner = run_git) -> int:
+def commit(
+    root: Path, request: Request, out: TextIO, run: Runner = run_git, *, isolated: bool = False
+) -> int:
     """Commit the request's paths, print git's and the hook's output, then the verdict.
+
+    With `isolated`, the commit goes through a private index over a snapshot (W902), so the real
+    index is not locked for the gate's run and a peer's unstaged file does not refuse it.
 
     Returns:
         0 when HEAD moved; otherwise git's own status, or EXIT_NOT_COMMITTED when that was 0.
 
     """
-    argv = prepare(root, request, run)
-    if argv is None:
+    paths = isolated_paths(root, request, run) if isolated else []
+    argv = None if isolated else prepare(root, request, run)
+    if argv is None and not paths:
         out.write(f"NOT COMMITTED {root.name}: none of the requested paths is tracked by git\n")
         return EXIT_NOT_COMMITTED
     before = head_of(root, run)
-    done = run(argv)
+    done = isolated_commit(root, request, paths) if argv is None else run(argv)
     shown = (done.stdout + done.stderr).strip()
     if shown:
         out.write(f"{shown}\n")
@@ -371,4 +442,4 @@ def main(argv: Sequence[str] | None = None) -> int:
         os.execve(claim.argv[0], claim.argv, claim.env)
     if claim:
         sys.stderr.write(f"mikemol-commit: no commit lock ({claim}); committing unlocked\n")
-    return commit(root, request, sys.stdout)
+    return commit(root, request, sys.stdout, isolated=env.get(ISOLATED_ENV) == "1")
