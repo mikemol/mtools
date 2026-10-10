@@ -275,3 +275,11 @@
             15s.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_ceiling_follows_the_targets_timeout_when_bazel_names_it},
 }
+
+@misc{root-pytest-main-test-that-only-waits-costs-no-cpu-and-passes,
+  section = {pytest_main},
+  title  = {⚑ THE LOAD-INDEPENDENCE ARM: a test that sleeps past the ceiling in wall time is not slow},
+  claim  = { THE LOAD-INDEPENDENCE ARM: a test that sleeps past the ceiling in wall time is not
+            slow.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_test_that_only_waits_costs_no_cpu_and_passes},
+}

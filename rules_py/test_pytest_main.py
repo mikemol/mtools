@@ -25,7 +25,13 @@ _MEDIUM_CEILING_S = 75.0
 _PASSED = 0
 _FAILED = 1
 _ARGS = ["-q", "-p", "no:cacheprovider"]
-_SLOW = f"import time\n\n\ndef test_slow():\n    time.sleep({_SLEEP})\n"
+_SLOW = (
+    "import time\n\n\ndef test_slow():\n"
+    f"    end = time.process_time() + {_SLEEP}\n"
+    "    while time.process_time() < end:\n"
+    "        pass\n"
+)
+_WAITS = f"import time\n\n\ndef test_waits():\n    time.sleep({_SLEEP})\n"
 _FAST = "def test_fast():\n    assert True\n"
 _RED = "def test_red():\n    assert False\n"
 
@@ -58,6 +64,11 @@ def test_a_green_module_with_a_slow_test_fails_and_names_it(
     code = pytest_main.main([*_ARGS, _module(tmp_path, _SLOW)], _CEILING)
     assert code == _FAILED
     assert "::test_slow" in capsys.readouterr().err
+
+
+def test_a_test_that_only_waits_costs_no_cpu_and_passes(tmp_path: Path) -> None:
+    """⚑ THE LOAD-INDEPENDENCE ARM: a test that sleeps past the ceiling in wall time is not slow."""
+    assert pytest_main.main([*_ARGS, _module(tmp_path, _WAITS)], _CEILING) == _PASSED
 
 
 def test_a_red_module_keeps_its_own_exit_code(tmp_path: Path) -> None:
