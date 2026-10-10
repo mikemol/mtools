@@ -76,7 +76,8 @@ BUDGET = (
 USAGE = (
     "usage: mikemol-commit REPO --waypoint W --subject S [--body B] [PATH ...]\n"
     "  REPO is a path, or a directory name under the host root; PATH defaults to the queue files\n"
-    f"  {ISOLATED_ENV}=1 commits through a private index over a snapshot (mtools:W891)\n"
+    "  commits go through a private index over a snapshot where the repo's pre-commit reads\n"
+    f"  MIKEMOL_REAL_ROOT (mtools:W891); {ISOLATED_ENV}=0 opts out, =1 forces\n"
 )
 
 Runner = Callable[[Sequence[str]], subprocess.CompletedProcess[str]]
@@ -199,6 +200,42 @@ def message_of(request: Request) -> str:
     """
     head = f"{request.subject}\n\n{request.body}\n\n" if request.body else f"{request.subject}\n\n"
     return f"{head}Waypoint: {request.waypoint}\n\n{request.trailer}\n"
+
+
+def supports_isolation(root: Path) -> bool:
+    """Say whether a repository's own pre-commit knows how to run from a snapshot (W904).
+
+    ⚑ THE PROBE IS THE HOOK'S OWN TEXT, NOT A LIST OF REPOSITORIES. A gate that finds its tools
+    beside the checkout is blind in a snapshot (W939: seven refused attempts, each a lookup that
+    assumed the checkout). A hook that reads `MIKEMOL_REAL_ROOT` says it was written for one, and a
+    repository that has not adopted that keeps today's mode with nothing to configure.
+
+    Returns:
+        True when `<root>/.githooks/pre-commit` mentions MIKEMOL_REAL_ROOT.
+
+    """
+    hook = root / ".githooks" / "pre-commit"
+    try:
+        return "MIKEMOL_REAL_ROOT" in hook.read_text(encoding="utf-8")
+    except OSError:
+        return False
+
+
+def isolation_wanted(root: Path, env: Mapping[str, str]) -> bool:
+    """Decide whether this commit runs isolated: on by default where the hook supports it.
+
+    ⚑ `MIKEMOL_COMMIT_ISOLATED=0` OPTS OUT and `=1` FORCES (the soak's spelling, kept); unset, the
+    repository's own pre-commit decides (`supports_isolation`). Adopted after five clean isolated
+    commits in a row (W904: a000194, 9fa2d89, ba7fd0e, bc3797e, 3bdc47a).
+
+    Returns:
+        True to commit through a private index over a snapshot.
+
+    """
+    flag = env.get(ISOLATED_ENV)
+    if flag in {"0", "1"}:
+        return flag == "1"
+    return supports_isolation(root)
 
 
 def wanted_of(root: Path, request: Request, run: Runner = run_git) -> list[str]:
@@ -442,4 +479,4 @@ def main(argv: Sequence[str] | None = None) -> int:
         os.execve(claim.argv[0], claim.argv, claim.env)
     if claim:
         sys.stderr.write(f"mikemol-commit: no commit lock ({claim}); committing unlocked\n")
-    return commit(root, request, sys.stdout, isolated=env.get(ISOLATED_ENV) == "1")
+    return commit(root, request, sys.stdout, isolated=isolation_wanted(root, env))

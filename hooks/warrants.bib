@@ -7674,3 +7674,24 @@
   claim  = {Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_same_hook_refuses_a_normal_commit_which_is_the_control},
 }
+
+@misc{hooks-commit-isolated-isolation-is-on-where-the-repos-hook-reads-the-real-root,
+  section = {commit_isolated},
+  title  = {W904: unset, the pre-commit's own text decides; naming MIKEMOL_REAL_ROOT opts in},
+  claim  = {W904: unset, the pre-commit's own text decides; naming MIKEMOL_REAL_ROOT opts in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_isolation_is_on_where_the_repos_hook_reads_the_real_root},
+}
+
+@misc{hooks-commit-isolated-isolation-is-off-where-the-hook-does-not-know-the-real-root,
+  section = {commit_isolated},
+  title  = {A peer repository's gate that finds its tools beside the checkout keeps today's mode},
+  claim  = {A peer repository's gate that finds its tools beside the checkout keeps today's mode.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_isolation_is_off_where_the_hook_does_not_know_the_real_root},
+}
+
+@misc{hooks-commit-isolated-environment-opts-out-and-forces,
+  section = {commit_isolated},
+  title  = {=0 turns isolation off even where supported; =1 turns it on even where it is not},
+  claim  = {=0 turns isolation off even where supported; =1 turns it on even where it is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_environment_opts_out_and_forces},
+}

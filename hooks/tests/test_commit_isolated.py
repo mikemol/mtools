@@ -240,6 +240,44 @@ def test_the_same_hook_refuses_a_normal_commit_which_is_the_control(
     assert _git(root, "rev-parse", "HEAD") == before
 
 
+def _hook_text(root: Path, text: str) -> None:
+    """Write the repository's pre-commit with the given text."""
+    hook = root / ".githooks" / "pre-commit"
+    hook.parent.mkdir(exist_ok=True)
+    hook.write_text(text, encoding="utf-8")
+
+
+def test_isolation_is_on_where_the_repos_hook_reads_the_real_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W904: unset, the pre-commit's own text decides; naming MIKEMOL_REAL_ROOT opts in."""
+    root = _decoy(tmp_path, monkeypatch)
+    _hook_text(root, 'tools="${MIKEMOL_REAL_ROOT:-$root}"\n')
+    assert ck.isolation_wanted(root, {})
+
+
+def test_isolation_is_off_where_the_hook_does_not_know_the_real_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A peer repository's gate that finds its tools beside the checkout keeps today's mode."""
+    root = _decoy(tmp_path, monkeypatch)
+    assert not ck.isolation_wanted(root, {})
+    _hook_text(root, "#!/bin/sh\nexit 0\n")
+    assert not ck.isolation_wanted(root, {})
+
+
+def test_the_environment_opts_out_and_forces(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """=0 turns isolation off even where supported; =1 turns it on even where it is not."""
+    root = _decoy(tmp_path, monkeypatch)
+    _hook_text(root, "MIKEMOL_REAL_ROOT\n")
+    assert not ck.isolation_wanted(root, {ck.ISOLATED_ENV: "0"})
+    _hook_text(root, "#!/bin/sh\n")
+    assert ck.isolation_wanted(root, {ck.ISOLATED_ENV: "1"})
+    assert not ck.isolation_wanted(root, {ck.ISOLATED_ENV: "yes"})
+
+
 def test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
