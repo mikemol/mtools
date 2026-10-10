@@ -1449,3 +1449,4 @@
 2026-10-10T02:18:01Z  interrupt W927 minted    -         "mikemol-hooks-probe resolves a relative launcher against the project"  evidence=W898
 2026-10-10T02:18:01Z  interrupt W928 minted    -         "mikemol-commit waits on its git child and releases the claim on any exit, even when output pipes are held by orphans"  evidence=W910
 2026-10-10T02:19:37Z  tick  W925 advanced  sweep     "three mechanizations: prune drops empty rubric rows (W925), no pipe-into-grep -q race in hook scripts (W926, a real flake), probe resolves a relative launcher (W927); bazel hooks green; commit in flight"
+2026-10-10T02:33:53Z  tick  W928 advanced  unblock   "mikemol-commit's git wait is on the process, output in files: an orphan can no longer hold the claim (60 s control vs 1 s); bazel hooks green; commit in flight"

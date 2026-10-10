@@ -507,7 +507,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # from PATH on purpose, as the code under test resolves it.
 "tests/test_commit_launcher_fence.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_commit_claim.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-"tests/test_commit_published.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"tests/test_commit_run_git.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"tests/test_commit_published.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 
 # ⚑ W825: `test_post_commit_census.py` runs the tracked post-commit stub and git in a throwaway
 # repository: fixed argv, never a shell, no untrusted input. `git` is resolved from PATH on purpose,

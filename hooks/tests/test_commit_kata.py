@@ -102,15 +102,26 @@ def test_exit_zero_over_an_unmoved_head_is_not_committed() -> None:
     assert "HEAD did not move" in line
 
 
-def _too_slow(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
-    raise subprocess.TimeoutExpired(cmd="git", timeout=1)
+class _TooSlow:
+    """A stand-in git child that never finishes inside the limit, and is killed."""
+
+    def __init__(self, *_args: object, **_kwargs: object) -> None:
+        self.killed = False
+
+    def wait(self, timeout: float | None = None) -> int:
+        if self.killed:
+            return -1
+        raise subprocess.TimeoutExpired(cmd="git", timeout=timeout or 0)
+
+    def kill(self) -> None:
+        self.killed = True
 
 
 def test_a_gate_that_runs_past_the_limit_is_a_verdict_not_a_traceback(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises."""
-    monkeypatch.setattr(subprocess, "run", _too_slow)
+    monkeypatch.setattr(subprocess, "Popen", _TooSlow)
     done = commit_kata.run_git(["commit"])
     assert done.returncode == commit_kata.TIMED_OUT
     line = commit_kata.verdict(Path("/x/repo"), "a" * 40, "a" * 40, done.returncode)

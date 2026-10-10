@@ -18315,7 +18315,7 @@
     {
       "symbol": "W895",
       "title": "rules_py: one engine_env(engine) function builds the pinned engine's environment, shared by paperkit_gate_main and the new stage runner",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W892"
       ],
@@ -18331,8 +18331,9 @@
       "issued_at": "2026-10-09T23:35:13Z",
       "minted_during": "tick",
       "caused_by": "W892",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T02:34:04Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W896",
@@ -19026,7 +19027,7 @@
     {
       "symbol": "W928",
       "title": "mikemol-commit waits on its git child and releases the claim on any exit, even when output pipes are held by orphans",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit",
@@ -19035,14 +19036,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run git with its output going to a file, not a pipe, and wait on the child process itself with the timeout; so a gate whose descendants outlive a killed git cannot wedge communicate() and hold the claim for hours (paperkit-f5 measured a zombie git child and 2h51m idle); test with a child that leaves a background process holding the pipe.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: run_git now sends git's output to temporary files and waits on the git process itself (Popen.wait with the limit; kill on timeout), so an orphan holding the output cannot wedge it. The control, measured: the same test took 60.0 s on the old pipe-reading code and returns in about 1 s now. tests/test_commit_run_git.py (3 tests, 3 warrants, 3 mutants); the W844 timeout test in test_commit_kata.py was rewritten to patch Popen (it had patched subprocess.run, so with the new mechanism it ran a REAL git commit in the cwd and hung: noted, nothing was committed).",
       "issued_at": "2026-10-10T02:18:01Z",
       "minted_during": "interrupt",
       "caused_by": "W910",
-      "last_worked": "2026-10-10T02:19:42Z",
+      "last_worked": "2026-10-10T02:33:52Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261010T023352Z"
     }
   ],
   "residue": [

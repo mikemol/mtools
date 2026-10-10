@@ -7471,3 +7471,24 @@
   claim  = {The real scripts, as the gate sees them: none pipes into a quiet grep under pipefail.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shell_pipefail_race.py -k test_the_shipped_hook_scripts_have_no_such_pipe},
 }
+
+@misc{hooks-commit-run-git-orphan-holding-the-output-does-not-wedge-the-wait,
+  section = {commit_run_git},
+  title  = {The result arrives when git exits, not when its descendants do},
+  claim  = {The result arrives when git exits, not when its descendants do.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_run_git.py -k test_an_orphan_holding_the_output_does_not_wedge_the_wait},
+}
+
+@misc{hooks-commit-run-git-missing-git-is-127-with-the-reason,
+  section = {commit_run_git},
+  title  = {No git on PATH reads as 127 and says why, as before},
+  claim  = {No git on PATH reads as 127 and says why, as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_run_git.py -k test_a_missing_git_is_127_with_the_reason},
+}
+
+@misc{hooks-commit-run-git-git-past-the-limit-is-killed-and-reads-timed-out,
+  section = {commit_run_git},
+  title  = {A gate that runs past the limit is a verdict (W844), and the process is gone},
+  claim  = {A gate that runs past the limit is a verdict (W844), and the process is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_run_git.py -k test_a_git_past_the_limit_is_killed_and_reads_timed_out},
+}

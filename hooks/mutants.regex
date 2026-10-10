@@ -66,3 +66,10 @@ src/mikemol/hooks/gen_warrants.py|every-row-dropped|if key is not None and key n
 # W927: a relative launcher is resolved against the project. Dropping the resolution makes every
 # foreign-directory row of a relative launcher fail with 'No such file or directory'.
 src/mikemol/hooks/probe.py|relative-launcher-not-resolved|if "/" in argv\[0\] and not Path\(argv\[0\]\)\.is_absolute\(\):|if False:|def=fire
+
+# W928: run_git waits on the git process itself, with its output in files, and bounds the wait.
+# Reading pipes lets an orphan wedge it for as long as the orphan lives; dropping the kill leaves a
+# gate past its limit running; dropping the timeout makes the wait unbounded.
+src/mikemol/hooks/commit_kata.py|wait-without-a-limit|child\.wait\(timeout=COMMIT_TIMEOUT_S\)|child.wait()|def=run_git
+src/mikemol/hooks/commit_kata.py|timed-out-git-left-running|child\.kill\(\)|child.poll()|def=run_git
+src/mikemol/hooks/commit_kata.py|status-lost|subprocess\.CompletedProcess\(list\(argv\), code, out\.read\(\), err\.read\(\)\)|subprocess.CompletedProcess(list(argv), 0, out.read(), err.read())|def=run_git

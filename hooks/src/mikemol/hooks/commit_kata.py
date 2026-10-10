@@ -31,6 +31,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -87,29 +88,39 @@ class Request:
 
 
 def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
-    """Run a git command, capturing its output.
+    """Run a git command, its output going to files and not to pipes (W928).
+
+    ⚑ A PIPE LETS AN ORPHAN WEDGE THE WAIT. `subprocess.run(capture_output=True)` reads the pipes to
+    EOF, and a gate's descendant that outlives a killed git (a bazel client, a background census)
+    keeps the write end open, so the commit never returned and held the repository's claim for
+    hours (paperkit-f5 measured 2h51m with git a zombie). A file has no write end to hold open:
+    this waits on the git process itself, and reads the files once it is gone.
 
     Returns:
-        the finished process; a missing git is a 127 with the reason on stderr.
+        the finished process; a missing git is a 127 with the reason on stderr; a git still
+        running past the limit is killed and read as TIMED_OUT.
 
     """
     git = shutil.which("git")
     if git is None:
         return subprocess.CompletedProcess(list(argv), 127, "", "git is not installed")
-    try:
-        return subprocess.run(
-            [git, *argv],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=COMMIT_TIMEOUT_S,
-        )
-    except subprocess.TimeoutExpired:
-        # ⚑ A GATE THAT RUNS PAST THE LIMIT IS A VERDICT, NOT A CRASH (mtools:W844). This raised, so
-        # the caller read a traceback where the one line it reads should have been.
-        return subprocess.CompletedProcess(
-            list(argv), TIMED_OUT, "", f"git timed out after {COMMIT_TIMEOUT_S} s"
-        )
+    with (
+        tempfile.TemporaryFile("w+", encoding="utf-8") as out,
+        tempfile.TemporaryFile("w+", encoding="utf-8") as err,
+    ):
+        child = subprocess.Popen([git, *argv], stdin=subprocess.DEVNULL, stdout=out, stderr=err)
+        try:
+            code = child.wait(timeout=COMMIT_TIMEOUT_S)
+        except subprocess.TimeoutExpired:
+            # ⚑ A GATE THAT RUNS PAST THE LIMIT IS A VERDICT, NOT A CRASH (mtools:W844).
+            child.kill()
+            child.wait()
+            return subprocess.CompletedProcess(
+                list(argv), TIMED_OUT, "", f"git timed out after {COMMIT_TIMEOUT_S} s"
+            )
+        out.seek(0)
+        err.seek(0)
+        return subprocess.CompletedProcess(list(argv), code, out.read(), err.read())
 
 
 def head_of(root: Path, run: Runner = run_git) -> str:
