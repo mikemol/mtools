@@ -40,6 +40,7 @@ _FILES = (
     "requirements.txt",
     "requirements-dev.txt",
 )
+FILES = _FILES
 _MUTANTS_HEADER = (
     f"{_SPDX}#\n"
     "# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the\n"

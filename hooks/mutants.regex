@@ -82,4 +82,6 @@ src/mikemol/hooks/new_dist.py|repeated-anchor-admitted|if count != 1:|if count <
 src/mikemol/hooks/new_dist.py|present-hub-admitted|if f'"\{name\}_deps"' in text:|if False:|def=module_edit
 src/mikemol/hooks/new_dist.py|install-order-reversed|key > name|key < name|def=install_edit
 src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) \+ 1|int(count.group(1))|def=install_edit
+src/mikemol/hooks/new_dist_cli.py|existing-directory-admitted|if target.exists\(\):|if False:|def=scaffold
+src/mikemol/hooks/new_dist_cli.py|wrong-operand-count-admitted|if len\(rest\) != _OPERANDS:|if False:|def=main
 src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated

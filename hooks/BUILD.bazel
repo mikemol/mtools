@@ -450,6 +450,7 @@ venv_from_hub(
         "mikemol-githook-prepare-commit-msg": "mikemol.hooks.githook_prepare_commit_msg:main",
         "mikemol-gate-ledger": "mikemol.hooks.gate_ledger:main",
         "mikemol-gen-warrants": "mikemol.hooks.gen_warrants:main",
+        "mikemol-new-dist": "mikemol.hooks.new_dist_cli:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",

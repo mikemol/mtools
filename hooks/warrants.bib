@@ -7786,3 +7786,24 @@
   claim  = {The count sentence is the anchor for the bump.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_install_edit_refuses_a_present_name_or_a_missing_count},
 }
+
+@misc{hooks-new-dist-cli-scaffold-writes-the-directory-and-both-edits,
+  section = {new_dist_cli},
+  title  = {The positive control: files, hubs and the INSTALL entry all appear},
+  claim  = {The positive control: files, hubs and the INSTALL entry all appear.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_a_scaffold_writes_the_directory_and_both_edits},
+}
+
+@misc{hooks-new-dist-cli-refusal-leaves-the-tree-untouched,
+  section = {new_dist_cli},
+  title  = {Bad name, existing directory and a missing template are each refused before any write},
+  claim  = {Bad name, existing directory and a missing template are each refused before any write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_a_refusal_leaves_the_tree_untouched},
+}
+
+@misc{hooks-new-dist-cli-main-prints-the-remaining-steps,
+  section = {new_dist_cli},
+  title  = {Success exits 0 and names the human steps},
+  claim  = {Success exits 0 and names the human steps.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_main_prints_the_remaining_steps},
+}
