@@ -85,12 +85,17 @@ def paperkit_gate(name, project, engine_repo, engine_files, data, flags = [], en
     )
     return ":" + name
 
+_STAGE_OPTIONS = ["engine_repo", "engine_files", "env", "imports"]
+
 def gate_stages(stages, data, suite = "precommit"):
     """Declare one py_test per stage and a test_suite running them all.
 
     Args:
-        stages: {name: (script, args)} or {name: (script, args, extra_data)}, in the order the
-            hook ran them.
+        stages: {name: (script, args[, extra_data[, options]])}, in the order the hook ran them.
+            options is a dict of engine_repo and engine_files (the stage then runs under
+            engine_stage_main with the pinned engine's environment, W896), env (passed to the
+            py_test), and imports (runfiles-relative directories put on sys.path, so a pinned
+            source directory is importable; W897).
         data: the named input files every stage sees.
         suite: the test_suite's name, which the hook invokes as `bazel test //:<suite>`.
 
@@ -101,19 +106,51 @@ def gate_stages(stages, data, suite = "precommit"):
         fail("gate_stages: no stages: an empty gate would pass without checking anything")
     labels = []
     for name, spec in stages.items():
-        if len(spec) not in (2, 3):
-            fail("gate_stages: stage %r is %d-tuple; want (script, args) or (script, args, extra_data)" % (name, len(spec)))
+        if len(spec) not in (2, 3, 4):
+            fail("gate_stages: stage %r is %d-tuple; want (script, args[, extra_data[, options]])" % (name, len(spec)))
         script = spec[0]
         args = spec[1]
-        extra = spec[2] if len(spec) == 3 else []
-        py_test(
-            name = name,
-            srcs = [script],
-            args = args,
-            data = data + extra,
-            legacy_create_init = 0,
-            main = script,
-        )
+        extra = spec[2] if len(spec) >= 3 else []
+        options = spec[3] if len(spec) == 4 else {}
+        unknown = [k for k in options if k not in _STAGE_OPTIONS]
+        if unknown:
+            fail("gate_stages: stage %r: unknown options %s; want some of %s" % (name, unknown, _STAGE_OPTIONS))
+        engine_repo = options.get("engine_repo")
+        engine_files = options.get("engine_files", [])
+        if engine_repo:
+            if "paperkit/gate.py" not in engine_files:
+                fail("gate_stages: stage %r: the pinned engine holds no paperkit/gate.py" % name)
+            py_test(
+                name = name,
+                srcs = [
+                    "@mikemol_rules_py//:engine_stage_main.py",
+                    "@mikemol_rules_py//:engine_env.py",
+                    script,
+                ],
+                args = [
+                    "--engine=$(rootpath @%s//:paperkit/gate.py)" % engine_repo,
+                    "--script=$(rootpath %s)" % script,
+                    "--",
+                ] + args,
+                data = data + extra + ["@%s//:%s" % (engine_repo, p) for p in engine_files],
+                env = options.get("env", {}),
+                imports = options.get("imports", []),
+                legacy_create_init = 0,
+                main = "@mikemol_rules_py//:engine_stage_main.py",
+            )
+        else:
+            if engine_files:
+                fail("gate_stages: stage %r: engine_files without engine_repo" % name)
+            py_test(
+                name = name,
+                srcs = [script],
+                args = args,
+                data = data + extra,
+                env = options.get("env", {}),
+                imports = options.get("imports", []),
+                legacy_create_init = 0,
+                main = script,
+            )
         labels.append(":" + name)
     native.test_suite(name = suite, tests = labels)
     return labels
