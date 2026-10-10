@@ -53,6 +53,8 @@ if TYPE_CHECKING:
 
 PROG = "mikemol-paths-forward"
 PAYLOAD_BUDGET = 6000
+_BLOCKED_NAMED = 20
+"""More blocked cards than this are counted on the `also live` line, not listed (W973)."""
 CLIP = 160
 _ELLIPSIS = "..."
 _EVIDENCE = "      evidence:"
@@ -373,6 +375,7 @@ def _waypoint_lines(live: list[Json], rung: _Rung) -> list[str]:
     keep = _pinned(live)
     out: list[str] = []
     named: list[str] = []
+    shut = 0
     for i, w in enumerate(live):
         if i < rung.steps or i == keep:
             out.append(stanza(w))
@@ -380,6 +383,15 @@ def _waypoint_lines(live: list[Json], rung: _Rung) -> list[str]:
             out.append(clip(stanza(w)))
         else:
             named.append(f"{text(w, 'symbol')}[{text(w, 'status')}]")
+            shut += text(w, "status") == "blocked"
+    # ⚑ HUNDREDS OF BLOCKED CARDS ARE COUNTED, NOT LISTED (el-openglo:W484, mtools:W973).
+    # el-openglo's payload was refused at 7,258 characters because this line named every live
+    # card, 440 of them blocked behind one. Only READY and WORKING cards must be named (W97: a
+    # payload-only tick must not believe ready work does not exist); a blocked card is waiting,
+    # and the file lists it. A small queue keeps today's line byte for byte.
+    if shut > _BLOCKED_NAMED:
+        named = [n for n in named if not n.endswith("[blocked]")]
+        named.append(f"+{shut} blocked (read state_path)")
     if named:
         out.append(f"  also live: {', '.join(named)}")
     return out

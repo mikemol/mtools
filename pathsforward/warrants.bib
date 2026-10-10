@@ -4306,3 +4306,41 @@
   claim  = {A party with a card at the escalation tick is reported ESCALATE, not NUDGE.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_the_sixteenth_blocked_tick_is_shown_as_an_escalation},
 }
+
+@misc{pathsforward-payload-hundreds-of-blocked-cards-are-counted-not-listed-and-the-ready-one-is-named,
+  section = {payload},
+  title  = {W973: el-openglo's shape, 2 open behind 450 blocked, fits the budget and keeps the open},
+  claim  = {W973: el-openglo's shape, 2 open behind 450 blocked, fits the budget and keeps the open.
+            The control is the same state with the budget lifted: the listing is over
+            the budget, which is the refusal el-openglo measured (7,258 characters
+            against 6,000).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_hundreds_of_blocked_cards_are_counted_not_listed_and_the_ready_one_is_named},
+}
+
+@misc{pathsforward-payload-few-blocked-cards-are-still-named,
+  section = {payload},
+  title  = {W973: a small queue keeps its `also live` line exactly as before},
+  claim  = {W973: a small queue keeps its `also live` line exactly as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_few_blocked_cards_are_still_named},
+}
+
+@misc{pathsforward-blocker-index-index-agrees-with-leverage-on-every-waypoint,
+  section = {blocker_index},
+  title  = {The control: the sum the order uses equals the per-call scan, card by card},
+  claim  = {The control: the sum the order uses equals the per-call scan, card by card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocker_index.py -k test_the_index_agrees_with_leverage_on_every_waypoint},
+}
+
+@misc{pathsforward-blocker-index-blocker-named-twice-counts-once-and-an-empty-symbol-counts-nothing,
+  section = {blocker_index},
+  title  = {W2 names W1 twice; the empty blocker and the empty symbol are not edges},
+  claim  = {W2 names W1 twice; the empty blocker and the empty symbol are not edges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocker_index.py -k test_a_blocker_named_twice_counts_once_and_an_empty_symbol_counts_nothing},
+}
+
+@misc{pathsforward-blocker-index-ordering-reads-each-cards-blockers-a-constant-number-of-times,
+  section = {blocker_index},
+  title  = {The quadratic scan read `blocked_on` n*n times; the index reads it about n times},
+  claim  = {The quadratic scan read `blocked_on` n*n times; the index reads it about n times.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocker_index.py -k test_ordering_reads_each_cards_blockers_a_constant_number_of_times},
+}

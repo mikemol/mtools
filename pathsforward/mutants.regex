@@ -75,3 +75,14 @@ src/mikemol/pathsforward/ops.py|local-card-called-external|not \(b\[:1\] == "W" 
 src/mikemol/pathsforward/ops.py|quiet-party-printed|if any\(n\.action is not Action\.QUIET for n in c\)|if True|def=nudge_summary
 src/mikemol/pathsforward/ops.py|escalation-shown-as-nudge|if any\(c\.action is Action\.ESCALATE for c in cards\) else Action\.NUDGE|if False else Action.NUDGE|def=nudge_summary
 src/mikemol/pathsforward/ops.py|biggest-party-not-first|sorted\(\(-len\(cards\), key\)|sorted((len(cards), key)|def=nudge_summary
+
+# W973: the payload counts hundreds of blocked cards and names the open ones. Never counting leaves the el-openglo
+# refusal; counting but still listing changes nothing; counting nothing hides the number.
+src/mikemol/pathsforward/payload.py|blocked-never-counted|if shut > _BLOCKED_NAMED:|if False:|def=_waypoint_lines
+src/mikemol/pathsforward/payload.py|blocked-still-listed|if not n\.endswith\("\[blocked\]"\)\]|if True]|def=_waypoint_lines
+src/mikemol/pathsforward/payload.py|blocked-not-tallied|shut \+= text\(w, "status"\) == "blocked"|shut += 0|def=_waypoint_lines
+
+# W973: the one-pass blocker index. A blocker named twice by one card must count once, as the per-call scan did,
+# and an empty blocker is not an edge.
+src/mikemol/pathsforward/model.py|duplicate-blocker-counted-twice|if blocker and blocker not in seen:|if blocker:|def=blocker_index
+src/mikemol/pathsforward/model.py|empty-blocker-is-an-edge|if blocker and blocker not in seen:|if blocker not in seen:|def=blocker_index

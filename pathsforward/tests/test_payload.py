@@ -37,6 +37,7 @@ _SENTINEL = "never point GIT_* at the real repo"
 _STANDING_LINES = 25
 _HOST_OS = "host-os-sentinel"
 _MANY_DONE = 1500
+_HUNDREDS = 450
 _NO_BUDGET = 10**6
 _LAST_RUNG_TAIL = (
     "dropped=residue,evidence,host,steps-below-1,titles - read state_path for the rest."
@@ -329,6 +330,34 @@ def test_the_last_rung_still_names_every_live_waypoint() -> None:
         if f"  {w['symbol']} [" not in text and f"{w['symbol']}[ready]" not in text
     ]
     assert ("steps-below-1,titles" in text, missing) == (True, [])
+
+
+def test_hundreds_of_blocked_cards_are_counted_not_listed_and_the_ready_one_is_named() -> None:
+    """W973: el-openglo's shape, 2 open behind 450 blocked, fits the budget and keeps the open.
+
+    ⚑ The control is the same state with the budget lifted: the listing is over the budget, which
+    is the refusal el-openglo measured (7,258 characters against 6,000).
+    """
+    blocked = [
+        _wp(f"W{i}", "blocked", blocked_on=["W1"], blocked_kind="agent")
+        for i in range(2, _HUNDREDS + 2)
+    ]
+    state = _state([_wp("W1"), _wp("W2000", "working"), *blocked])
+    text = _build(state)
+    assert len(text) <= pl.PAYLOAD_BUDGET
+    assert f"+{_HUNDREDS} blocked (read state_path)" in text
+    assert "W2000[working]" in text or "  W2000 [" in text
+    assert "  W1 [" in text
+    assert "W2[blocked]" not in text
+    assert len(_build(state, _NO_BUDGET)) > pl.PAYLOAD_BUDGET
+
+
+def test_a_few_blocked_cards_are_still_named() -> None:
+    """W973: a small queue keeps its `also live` line exactly as before."""
+    state = _state([_wp("W1"), _wp("W2", "blocked", blocked_on=["W1"], blocked_kind="agent")])
+    text = _build(state)
+    assert "blocked (read state_path)" not in text
+    assert "W2" in text
 
 
 def test_a_first_ready_step_that_cannot_fit_is_refused() -> None:

@@ -229,6 +229,28 @@ def _blockers_of(sym: str, waypoints: list[Json]) -> list[str]:
     ]
 
 
+def blocker_index(waypoints: list[Json]) -> dict[str, list[str]]:
+    """Map each symbol to the waypoints blocked on it, in one pass over the queue.
+
+    ⚑ ONE PASS, NOT ONE PER WAYPOINT (mtools:W973). `ordered` scored every waypoint by scanning the
+    whole queue for who it unblocks, which is quadratic: 1,500 cards cost four seconds a view and a
+    payload builds several views. The answer for `sym` is `index.get(sym, [])`, identical to
+    `_blockers_of`, including a blocker named twice by one waypoint counting once.
+
+    Returns:
+        for each blocker symbol, the symbols of the waypoints naming it in `blocked_on`, file order.
+
+    """
+    index: dict[str, list[str]] = {}
+    for other in waypoints:
+        seen: set[str] = set()
+        for blocker in strlist(other, "blocked_on"):
+            if blocker and blocker not in seen:
+                seen.add(blocker)
+                index.setdefault(blocker, []).append(text(other, "symbol"))
+    return index
+
+
 def leverage(w: Json, waypoints: list[Json]) -> int:
     """Score a waypoint's structural leverage: what it enables, plus who it unblocks.
 
@@ -301,8 +323,18 @@ def ordered(waypoints: list[Json]) -> list[Json]:
         the waypoints, stably sorted by (status rank, -weight, -leverage, file order).
 
     """
+    index = blocker_index(waypoints)
     keyed = [
-        ((_rank(w), -weight(w), -leverage(w, waypoints), i), w) for i, w in enumerate(waypoints)
+        (
+            (
+                _rank(w),
+                -weight(w),
+                -(len(strlist(w, "enables")) + len(index.get(text(w, "symbol"), []))),
+                i,
+            ),
+            w,
+        )
+        for i, w in enumerate(waypoints)
     ]
     keyed.sort(key=_first)
     return [w for _, w in keyed]
