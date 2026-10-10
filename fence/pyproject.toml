@@ -188,6 +188,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # stops, because the transport is the subject. ⚑ SCOPED TO THE ONE FILE, never to `tests/*`.
 "tests/test_reading.py" = ["invalid-function-name"]
 
+# ⚑⚑ RUNNING THE COMMAND IT GUARDS IS THE GUARD LAUNCHER'S WHOLE JOB (W921): `guard_cli` starts the
+# argv it was handed as a child, watches beside it and passes its exit status on. An argv list, no
+# shell, never built from the policy. ⚑ SCOPED TO THE ONE FILE.
+"src/mikemol/fence/guard_cli.py" = [
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+]
+
 # ⚑⚑ ONE FILE STARTS A REAL PROCESS AND SIGNALS A CHILD OF IT, AND THAT IS THE SUBJECT. The guard
 # watcher's whole job is to find a descendant by name and interrupt it; `test_watcher.py` proves the
 # loop with injected effects everywhere and then once against a real shell and a real `sleep`, because

@@ -2066,3 +2066,137 @@
   claim  = {A shell with a `sleep` child: the guard trips on 9.0 readings and SIGTERMs the sleep.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_real_guard_interrupts_a_real_child_by_name_and_ends_with_the_command},
 }
+
+@misc{fence-policy-valid-row-is-read-into-a-spec,
+  section = {policy},
+  title  = {The positive control: every key lands where the watcher reads it},
+  claim  = {The positive control: every key lands where the watcher reads it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_valid_row_is_read_into_a_spec},
+}
+
+@misc{fence-policy-policy-with-no-guard-table-declares-none,
+  section = {policy},
+  title  = {An empty document, or one with other tables only, is no guard and no error},
+  claim  = {An empty document, or one with other tables only, is no guard and no error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_policy_with_no_guard_table_declares_none},
+}
+
+@misc{fence-policy-missing-file-is-no-guard-and-a-toml-file-is-read,
+  section = {policy},
+  title  = {Absent means none; present is parsed},
+  claim  = {Absent means none; present is parsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_missing_file_is_no_guard_and_a_toml_file_is_read},
+}
+
+@misc{fence-policy-file-that-is-not-toml-is-a-problem-naming-the-file,
+  section = {policy},
+  title  = {The policy exists and is wrong},
+  claim  = {The policy exists and is wrong.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_file_that_is_not_toml_is_a_problem_naming_the_file},
+}
+
+@misc{fence-policy-every-missing-key-is-named,
+  section = {policy},
+  title  = {No default stands in for a limit: each absent key is a problem of its own},
+  claim  = {No default stands in for a limit: each absent key is a problem of its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_every_missing_key_is_named},
+}
+
+@misc{fence-policy-unknown-key-is-a-problem-so-a-typo-cannot-guard-less,
+  section = {policy},
+  title  = {`sample = 6` instead of `samples` is refused, not ignored},
+  claim  = {`sample = 6` instead of `samples` is refused, not ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_an_unknown_key_is_a_problem_so_a_typo_cannot_guard_less},
+}
+
+@misc{fence-policy-wrong-value-is-named,
+  section = {policy},
+  title  = {Each wrong value is a problem that says which key and what it wanted},
+  claim  = {Each wrong value is a problem that says which key and what it wanted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_wrong_value_is_named},
+}
+
+@misc{fence-policy-every-table-is-checked-and-all-problems-come-together,
+  section = {policy},
+  title  = {Two bad tables report both; a good one beside them is not lost to the first fault},
+  claim  = {Two bad tables report both; a good one beside them is not lost to the first fault.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_every_table_is_checked_and_all_problems_come_together},
+}
+
+@misc{fence-policy-guard-that-is-not-an-array-of-tables-is-refused,
+  section = {policy},
+  title  = {`guard = 3` or a non-table element is a problem, not a crash},
+  claim  = {`guard = 3` or a non-table element is a problem, not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy.py -k test_a_guard_that_is_not_an_array_of_tables_is_refused},
+}
+
+@misc{fence-guard-cli-commands-exit-status-passes-through-unguarded,
+  section = {guard_cli},
+  title  = {The positive control: no spec, exit 0 stays 0 and exit 3 stays 3},
+  claim  = {The positive control: no spec, exit 0 stays 0 and exit 3 stays 3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_the_commands_exit_status_passes_through_unguarded},
+}
+
+@misc{fence-guard-cli-command-killed-by-a-signal-is-a-shell-style-status,
+  section = {guard_cli},
+  title  = {A child ended by SIGTERM reads as 128 plus the signal, as a shell reports it},
+  claim  = {A child ended by SIGTERM reads as 128 plus the signal, as a shell reports it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_command_killed_by_a_signal_is_a_shell_style_status},
+}
+
+@misc{fence-guard-cli-policy-path-is-the-flag-then-the-environment-then-the-host-default,
+  section = {guard_cli},
+  title  = {Explicitly named paths are flagged as such; the default is not},
+  claim  = {Explicitly named paths are flagged as such; the default is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_the_policy_path_is_the_flag_then_the_environment_then_the_host_default},
+}
+
+@misc{fence-guard-cli-parse-wants-a-separator-and-a-command,
+  section = {guard_cli},
+  title  = {`--policy FILE -- CMD` and `-- CMD` are good; anything else is a usage error},
+  claim  = {`--policy FILE -- CMD` and `-- CMD` are good; anything else is a usage error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_parse_wants_a_separator_and_a_command},
+}
+
+@misc{fence-guard-cli-main-reports-a-usage-error,
+  section = {guard_cli},
+  title  = {No command: exit 2 and the usage line},
+  claim  = {No command: exit 2 and the usage line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_main_reports_a_usage_error},
+}
+
+@misc{fence-guard-cli-broken-policy-is-loud-and-the-command-still-runs,
+  section = {guard_cli},
+  title  = {A typo must not turn into an outage, and must not read as a guarded run},
+  claim  = {A typo must not turn into an outage, and must not read as a guarded run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_broken_policy_is_loud_and_the_command_still_runs},
+}
+
+@misc{fence-guard-cli-named-policy-that-does-not-exist-is-said-and-the-command-runs,
+  section = {guard_cli},
+  title  = {A misconfiguration is said once; the default location being empty is not},
+  claim  = {A misconfiguration is said once; the default location being empty is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_named_policy_that_does_not_exist_is_said_and_the_command_runs},
+}
+
+@misc{fence-guard-cli-trip-interrupts-the-named-descendant-and-says-so,
+  section = {guard_cli},
+  title  = {A shell with a `sleep` child, a constant over-limit reading: the sleep is interrupted},
+  claim  = {A shell with a `sleep` child, a constant over-limit reading: the sleep is interrupted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_trip_interrupts_the_named_descendant_and_says_so},
+}
+
+@misc{fence-watcher-trip-does-not-end-the-watch-so-the-next-invocation-is-guarded,
+  section = {watcher},
+  title  = {Persistent overload re-trips after another `hold` samples and signals again},
+  claim  = {Persistent overload re-trips after another `hold` samples and signals again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_trip_does_not_end_the_watch_so_the_next_invocation_is_guarded},
+}
+
+@misc{fence-watcher-trip-before-the-target-exists-keeps-trying-until-it-does,
+  section = {watcher},
+  title  = {W921: the first trips find no bazel yet; the streak is kept; it is signalled on appearing},
+  claim  = {W921: the first trips find no bazel yet; the streak is kept; it is signalled on
+            appearing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_trip_before_the_target_exists_keeps_trying_until_it_does},
+}

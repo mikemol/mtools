@@ -59,7 +59,12 @@ src/mikemol/fence/reading.py|foreign-scheme-followed|return url if scheme in _SC
 src/mikemol/fence/reading.py|nan-is-a-reading|return None if math\.isnan\(number\) else number|return number|def=value_of
 src/mikemol/fence/reading.py|error-answer-read|if top\.get\("status"\) != "success" or not isinstance\(data, dict\):|if not isinstance(data, dict):|def=value_of
 src/mikemol/fence/reading.py|failure-raises|except \(OSError, ValueError, HTTPException\):|except HTTPException:|def=fetch
+src/mikemol/fence/policy.py|bool-samples-accepted|isinstance\(samples, int\) and not isinstance\(samples, bool\) and samples >= 1|isinstance(samples, int) and samples >= 1|def=_problems
+src/mikemol/fence/policy.py|unknown-key-ignored|found \+= \[f"\{label\}: unknown key \{key!r\}" for key in raw if key not in _KEYS\]|found += []|def=_problems
+src/mikemol/fence/guard_cli.py|signal-status-lost|return _SIGNAL_BASE - code if code < 0 else code|return code|def=exit_status
+src/mikemol/fence/guard_cli.py|named-missing-policy-silent|if explicit and not path\.is_file\(\):|if False:|def=main
+src/mikemol/fence/watcher.py|signalled-not-recorded|outcome\.signalled \+= sent|pass|def=watch
 src/mikemol/fence/watcher.py|trip-one-late|if streak >= row\.hold:|if streak > row.hold:|def=watch
-src/mikemol/fence/watcher.py|gone-process-fatal|except ProcessLookupError:|except KeyError:|def=watch
+src/mikemol/fence/watcher.py|gone-process-fatal|except ProcessLookupError:|except KeyError:|def=_signal_all
 src/mikemol/fence/watcher.py|any-name-matches|if comm == name:|if True:|def=descendants_named
 src/mikemol/fence/watcher.py|children-only|queue\.append\(pid\)|pass|def=descendants_named

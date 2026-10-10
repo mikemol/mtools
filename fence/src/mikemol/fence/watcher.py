@@ -6,8 +6,9 @@
 runs. It is the effectful middle of luthen-observability:W710's ask, with every effect injected so a
 test needs no store, no sleep and, except in one arm, no signal.
 
-⚑⚑ IT ENDS WHEN THE COMMAND EXITS OR WHEN IT TRIPS, NEVER ON A TIMEOUT. A watcher with its own
-deadline would interrupt a long, healthy build or abandon a long, sick one. `Guard.__exit__` is the
+⚑⚑ IT ENDS WHEN THE COMMAND EXITS, NEVER ON A TRIP AND NEVER ON A TIMEOUT. A watcher with its own
+deadline would interrupt a long, healthy build or abandon a long, sick one, and one that stopped at
+its first trip would leave the gate's later bazel invocations unguarded. `Guard.__exit__` is the
 only thing that stops it: the command returned, so there is nothing left to protect.
 
 ⚑⚑ THE TARGET IS A DESCENDANT BY NAME, NOT THE COMMAND ITSELF. The fenced command is
@@ -100,6 +101,23 @@ def descendants_named(root: int, name: str, proc: Path = PROC) -> list[int]:
     return found
 
 
+def _signal_all(pids: list[int], number: int, kill: Callable[[int, int], None]) -> list[int]:
+    """Send `number` to each pid, skipping one that has already exited.
+
+    Returns:
+        the pids that were signalled.
+
+    """
+    sent: list[int] = []
+    for pid in pids:
+        try:
+            kill(pid, number)
+        except ProcessLookupError:
+            continue
+        sent.append(pid)
+    return sent
+
+
 def watch(
     row: Row,
     read: Callable[[], Sample],
@@ -107,13 +125,19 @@ def watch(
     find: Callable[[str], list[int]],
     kill: Callable[[int, int], None],
 ) -> Outcome:
-    """Sample every interval until the command exits or the reading trips.
+    """Sample every interval until the command exits, signalling each time the reading trips.
 
     `wait(seconds)` returns True when the command has exited (so the watch ends at once) and False
     when the interval simply passed.
 
+    ⚑ A TRIP DOES NOT END THE WATCH (measured at W921: a trip 20 ms in found no bazel yet, because
+    the gate had not started it, and a watch that ended there left every later invocation
+    unguarded). When a trip signals something the streak restarts, so a reading that stays over the
+    limit interrupts the NEXT invocation after another `hold` samples; when it finds nothing to
+    signal the streak is kept, so the very next sample tries again once the process exists.
+
     Returns:
-        the samples taken, whether it tripped, and the pids it signalled.
+        the samples taken, whether it ever tripped, and the pids it signalled.
 
     """
     outcome = Outcome()
@@ -124,13 +148,10 @@ def watch(
         streak = streak_after(streak, sample, row.above)
         if streak >= row.hold:
             outcome.tripped = True
-            for pid in find(row.target):
-                try:
-                    kill(pid, row.signal)
-                except ProcessLookupError:
-                    continue
-                outcome.signalled.append(pid)
-            return outcome
+            sent = _signal_all(find(row.target), row.signal, kill)
+            outcome.signalled += sent
+            if sent:
+                streak = 0
         if wait(row.interval_s):
             return outcome
 

@@ -19,3 +19,5 @@ admit_holder	A held claim names its holder
 guard	The guard's pure trip rule (W918)
 reading	The guard's reading source (W919)
 watcher	The guard watcher (W920)
+policy	The guard policy (W921)
+guard_cli	The guard launcher (W921)

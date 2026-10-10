@@ -7695,3 +7695,17 @@
   claim  = {=0 turns isolation off even where supported; =1 turns it on even where it is not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_environment_opts_out_and_forces},
 }
+
+@misc{hooks-commit-claim-guard-launcher-sits-between-the-claim-and-the-commit,
+  section = {commit_claim},
+  title  = {W921: with an interpreter beside the fence, the commit runs under guard_cli},
+  claim  = {W921: with an interpreter beside the fence, the commit runs under guard_cli.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_guard_launcher_sits_between_the_claim_and_the_commit},
+}
+
+@misc{hooks-commit-claim-host-without-the-fence-interpreter-has-no-guard-layer,
+  section = {commit_claim},
+  title  = {The control: no interpreter beside the fence, so the command runs bare under the claim},
+  claim  = {The control: no interpreter beside the fence, so the command runs bare under the claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_host_without_the_fence_interpreter_has_no_guard_layer},
+}

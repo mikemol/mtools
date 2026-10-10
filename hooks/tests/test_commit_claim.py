@@ -126,6 +126,30 @@ def test_no_fence_or_no_git_checkout_gives_a_reason_not_a_claim(tmp_path: Path) 
     assert "not a git checkout" in str(got)
 
 
+def test_the_guard_launcher_sits_between_the_claim_and_the_commit(tmp_path: Path) -> None:
+    """W921: with an interpreter beside the fence, the commit runs under guard_cli."""
+    target = _repo(tmp_path, "paperkit")
+    fence = _fence(tmp_path)
+    interpreter = tmp_path / "python3"
+    interpreter.write_text("#!/bin/sh\n", encoding="utf-8")
+    interpreter.chmod(_EXECUTABLE)
+    got = commit_kata.claim_of(target, {commit_kata.FENCE_ENV: str(fence)}, ["python", "x"])
+    assert isinstance(got, commit_kata.Claim)
+    layer = [str(interpreter), "-m", "mikemol.fence.guard_cli", "--", "python", "x"]
+    assert got.argv[-len(layer) :] == layer
+
+
+def test_a_host_without_the_fence_interpreter_has_no_guard_layer(tmp_path: Path) -> None:
+    """The control: no interpreter beside the fence, so the command runs bare under the claim."""
+    target = _repo(tmp_path, "paperkit")
+    got = commit_kata.claim_of(
+        target, {commit_kata.FENCE_ENV: str(_fence(tmp_path))}, ["python", "x"]
+    )
+    assert isinstance(got, commit_kata.Claim)
+    assert got.argv[-2:] == ["python", "x"]
+    assert "mikemol.fence.guard_cli" not in got.argv
+
+
 def test_the_real_main_commits_under_the_target_repositorys_claim(tmp_path: Path) -> None:
     """End to end: the commit lands, and the fence saw the TARGET's claim, not the launcher's."""
     target = _repo(tmp_path, "paperkit")

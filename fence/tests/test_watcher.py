@@ -42,6 +42,7 @@ _POLL_S = 0.02
 _EXIT_AFTER_THREE = 3
 _EXIT_AFTER_TWO = 2
 _EXIT_AFTER_FIVE = 5
+_APPEARS_AT = 3
 
 
 def _series(values: list[Sample]) -> Callable[[], Sample]:
@@ -57,16 +58,6 @@ def _series(values: list[Sample]) -> Callable[[], Sample]:
         return queue.pop(0) if len(queue) > 1 else queue[0]
 
     return read
-
-
-def _never_exits(_seconds: float) -> bool:
-    """Stand in for an interval that passes with the command still running.
-
-    Returns:
-        False, always.
-
-    """
-    return False
 
 
 def _exits_after(calls: int) -> Callable[[float], bool]:
@@ -119,13 +110,37 @@ def test_a_healthy_run_signals_nothing_and_ends_when_the_command_exits() -> None
 
 
 def test_the_hold_th_over_limit_sample_signals_every_matching_descendant() -> None:
-    """Three over in a row trip; both pids get the row's signal; the watch ends at once."""
+    """Three over in a row trip; both pids get the row's signal, once, and the streak restarts."""
     kills = _Kills()
-    outcome = watcher.watch(_ROW, _series([_OVER]), _never_exits, _found(10, 11), kills)
+    outcome = watcher.watch(
+        _ROW, _series([_OVER]), _exits_after(_ROW.hold + 1), _found(10, 11), kills
+    )
     assert outcome.tripped
     assert outcome.signalled == [10, 11]
     assert kills.sent == [(10, _ROW.signal), (11, _ROW.signal)]
-    assert len(outcome.samples) == _ROW.hold
+    assert len(outcome.samples) == _ROW.hold + 1
+
+
+def test_a_trip_does_not_end_the_watch_so_the_next_invocation_is_guarded() -> None:
+    """Persistent overload re-trips after another `hold` samples and signals again."""
+    kills = _Kills()
+    outcome = watcher.watch(_ROW, _series([_OVER]), _exits_after(_ROW.hold * 2), _found(10), kills)
+    assert kills.sent == [(10, _ROW.signal), (10, _ROW.signal)]
+    assert outcome.signalled == [10, 10]
+
+
+def test_a_trip_before_the_target_exists_keeps_trying_until_it_does() -> None:
+    """W921: the first trips find no bazel yet; the streak is kept; it is signalled on appearing."""
+    kills = _Kills()
+    asked: list[str] = []
+
+    def find(name: str) -> list[int]:
+        asked.append(name)
+        return [] if len(asked) < _APPEARS_AT else [10]
+
+    outcome = watcher.watch(_ROW, _series([_OVER]), _exits_after(_EXIT_AFTER_FIVE), find, kills)
+    assert outcome.signalled == [10]
+    assert len(asked) == _APPEARS_AT
 
 
 def test_a_command_that_exits_mid_streak_ends_the_watch_untripped() -> None:
@@ -149,7 +164,7 @@ def test_blind_samples_never_trip() -> None:
 def test_a_process_that_exited_before_the_signal_is_not_an_error() -> None:
     """The build finishing between the trip and the signal is skipped, the other is signalled."""
     kills = _Kills(gone=frozenset({10}))
-    outcome = watcher.watch(_ROW, _series([_OVER]), _never_exits, _found(10, 11), kills)
+    outcome = watcher.watch(_ROW, _series([_OVER]), _exits_after(_ROW.hold), _found(10, 11), kills)
     assert outcome.tripped
     assert outcome.signalled == [11]
 
@@ -157,7 +172,7 @@ def test_a_process_that_exited_before_the_signal_is_not_an_error() -> None:
 def test_a_trip_with_no_matching_descendant_signals_nothing() -> None:
     """The guard reports the trip and guesses no victim."""
     kills = _Kills()
-    outcome = watcher.watch(_ROW, _series([_OVER]), _never_exits, _found(), kills)
+    outcome = watcher.watch(_ROW, _series([_OVER]), _exits_after(_ROW.hold), _found(), kills)
     assert (outcome.tripped, outcome.signalled, kills.sent) == (True, [], [])
 
 
@@ -211,5 +226,5 @@ def test_a_real_guard_interrupts_a_real_child_by_name_and_ends_with_the_command(
         command.wait(timeout=_WAIT_S)
     child = int(marker.read_text(encoding="utf-8"))
     assert guard.outcome.tripped
-    assert guard.outcome.signalled == [child]
+    assert set(guard.outcome.signalled) == {child}
     assert time.monotonic() - started < _WAIT_S

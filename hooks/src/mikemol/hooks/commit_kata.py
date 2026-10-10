@@ -440,6 +440,12 @@ def claim_of(
     ledger.mkdir(parents=True, exist_ok=True)
     removals = [part for name in BUDGET if name not in env for part in ("-u", name)]
     restore = [f"{HELD_ENV}=1", *(f"{name}={env[name]}" for name in BUDGET if name in env)]
+    # ⚑ THE RUN-TIME GUARD LAUNCHER SITS BETWEEN THE CLAIM AND THE COMMIT (W921; the ask is
+    # luthen-observability:W710): it reads the host's guard policy and, if it declares any, watches
+    # beside the commit and interrupts the bazel client beneath it on a trip. It runs in the fence
+    # venv's interpreter, so a host without that interpreter simply has no guard layer.
+    interpreter = Path(fence).parent / "python3"
+    guard = [str(interpreter), "-m", "mikemol.fence.guard_cli", "--"]
     argv = [
         fence,
         "hold",
@@ -449,6 +455,7 @@ def claim_of(
         "env",
         *removals,
         *restore,
+        *(guard if os.access(interpreter, os.X_OK) else []),
         *own,
     ]
     held = {k: v for k, v in env.items() if k not in {"MEMBUDGET_NOBLOCK", "MEMBUDGET_PARENT"}}
