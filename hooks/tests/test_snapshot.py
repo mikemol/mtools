@@ -88,6 +88,22 @@ def test_an_update_writes_and_removes_only_what_changed(tmp_path: Path) -> None:
         assert (snap.path / "keep.txt").stat().st_ino == kept
 
 
+def test_a_file_lost_from_the_path_is_written_back_though_the_stamp_matches(
+    tmp_path: Path,
+) -> None:
+    """⚑ The stamp names a tree, not the files still there (W948): a lost file is restored."""
+    root = _repo(tmp_path)
+    tree = snapshot.tree_of(root, working=False)
+    with snapshot.Snapshot("repo", tmp_path / "space") as snap:
+        snap.materialize(root, tree)
+        kept = (snap.path / "keep.txt").stat().st_ino
+        (snap.path / "edit.txt").unlink()
+        assert snap.materialize(root, tree) == ["edit.txt"]
+        assert (snap.path / "edit.txt").read_text(encoding="utf-8") == "one\n"
+        assert (snap.path / "keep.txt").stat().st_ino == kept
+        assert snap.materialize(root, tree) == []
+
+
 def test_a_second_writer_cannot_take_the_lock_while_a_run_holds_it(tmp_path: Path) -> None:
     """⚑⚑ The tree a run reads cannot be rewritten under it: the lock is exclusive."""
     space = tmp_path / "space"

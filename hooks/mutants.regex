@@ -84,6 +84,8 @@ src/mikemol/hooks/new_dist.py|install-order-reversed|key > name|key < name|def=i
 src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) \+ 1|int(count.group(1))|def=install_edit
 src/mikemol/hooks/commit_kata.py|override-ignored|if raw\.isdecimal\(\) and int\(raw\) > 0 else|if False else|def=commit_limit
 src/mikemol/hooks/commit_kata.py|zero-means-no-limit|int\(raw\) > 0|int(raw) >= 0|def=commit_limit
+src/mikemol/hooks/snapshot.py|lost-files-not-checked|if before == tree and not lost:|if before == tree:|def=Snapshot.materialize
+src/mikemol/hooks/snapshot.py|present-file-reported-lost|not \(self\.path / n\)\.is_file\(\)|(self.path / n).is_file()|def=Snapshot._lost
 src/mikemol/hooks/new_dist_cli.py|existing-directory-admitted|if target.exists\(\):|if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|wrong-operand-count-admitted|if len\(rest\) != _OPERANDS:|if False:|def=main
 src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated

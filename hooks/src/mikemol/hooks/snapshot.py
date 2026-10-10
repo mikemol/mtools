@@ -133,19 +133,35 @@ class Snapshot:
 
         """
         before = self.stamped()
-        if before == tree:
+        lost = self._lost(root, tree) if before else []
+        if before == tree and not lost:
             return []
         changed = self._changes(root, before, tree)
         for rel in changed["removed"]:
             target = self.path / rel
             if target.is_file() or target.is_symlink():
                 target.unlink()
-        written = changed["written"]
+        written = sorted({*changed["written"], *lost})
         if written:
             self.path.mkdir(parents=True, exist_ok=True)
             _extract(root, tree, written, self.path)
         (self.base / STAMP).write_text(f"{tree}\n", encoding="utf-8")
         return [*changed["removed"], *written]
+
+    def _lost(self, root: Path, tree: str) -> list[str]:
+        """Name the files `tree` holds that the fixed path no longer has.
+
+        ⚑ THE STAMP SAYS WHICH TREE WAS WRITTEN, NOT WHICH FILES ARE STILL THERE (mtools:W948).
+        Eighteen empty tracked files vanished from the path while the stamp matched, and the
+        incremental diff never rewrote them, so two commits were refused until the stamp was
+        removed by hand.
+
+        Returns:
+            the missing paths, in tree order.
+
+        """
+        names = _git(root, ["ls-tree", "-r", "-z", "--name-only", tree]).split("\0")
+        return [n for n in names if n and not (self.path / n).is_file()]
 
     def _changes(self, root: Path, before: str, tree: str) -> dict[str, list[str]]:
         if not before or not self.path.is_dir():

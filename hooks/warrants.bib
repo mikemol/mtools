@@ -7828,3 +7828,10 @@
   claim  = {Zero or text must not remove the bound that stops a wedged gate.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_anything_else_is_ignored_not_read_as_no_limit},
 }
+
+@misc{hooks-snapshot-file-lost-from-the-path-is-written-back-though-the-stamp-matches,
+  section = {snapshot},
+  title  = {⚑ The stamp names a tree, not the files still there (W948): a lost file is restored},
+  claim  = { The stamp names a tree, not the files still there (W948): a lost file is restored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_file_lost_from_the_path_is_written_back_though_the_stamp_matches},
+}
