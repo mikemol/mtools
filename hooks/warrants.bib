@@ -7492,3 +7492,31 @@
   claim  = {A gate that runs past the limit is a verdict (W844), and the process is gone.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_run_git.py -k test_a_git_past_the_limit_is_killed_and_reads_timed_out},
 }
+
+@misc{hooks-isolated-commit-commit-runs-and-head-moves-to-a-tree-without-the-peers-edit,
+  section = {isolated_commit},
+  title  = {The positive control: HEAD advances, holds this session's edit, and not the peer's},
+  claim  = {The positive control: HEAD advances, holds this session's edit, and not the peer's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_commit.py -k test_the_commit_runs_and_head_moves_to_a_tree_without_the_peers_edit},
+}
+
+@misc{hooks-isolated-commit-hook-ran-in-the-snapshot-where-the-worktree-equals-the-index,
+  section = {isolated_commit},
+  title  = {pre-commit saw the snapshot as its directory, a clean tree, and no real index lock},
+  claim  = {pre-commit saw the snapshot as its directory, a clean tree, and no real index lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_commit.py -k test_the_hook_ran_in_the_snapshot_where_the_worktree_equals_the_index},
+}
+
+@misc{hooks-isolated-commit-real-worktree-and-index-are-untouched-and-no-lock-remains,
+  section = {isolated_commit},
+  title  = {The peer's unstaged edit survives; the real index is byte-identical; no lock is left},
+  claim  = {The peer's unstaged edit survives; the real index is byte-identical; no lock is left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_commit.py -k test_the_real_worktree_and_index_are_untouched_and_no_lock_remains},
+}
+
+@misc{hooks-isolated-commit-post-commit-still-sees-the-real-git-dir,
+  section = {isolated_commit},
+  title  = {post-commit's `git rev-parse --git-dir` names the real repo, so push and witness hold},
+  claim  = {post-commit's `git rev-parse --git-dir` names the real repo, so push and witness hold.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_commit.py -k test_post_commit_still_sees_the_real_git_dir},
+}

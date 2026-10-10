@@ -60,3 +60,4 @@ commit_launcher_fence	Launcher names the fence
 gen_warrants_rubric	Prune drops empty rubric rows
 shell_pipefail_race	Hook scripts hold no pipefail race
 commit_run_git	Commit wait is on git itself
+isolated_commit	Isolated commit (W901)

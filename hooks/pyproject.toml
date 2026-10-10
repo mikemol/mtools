@@ -430,6 +430,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/githook_prepare_commit_msg.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_prepare_commit_msg.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# W901: its witnesses build decoy repositories, a private index and a snapshot under tmp_path and
+# run real git (resolved by shutil.which, as above) with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set.
+"tests/test_isolated_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE WORKTREE FALLBACK (W553): asking git where a linked worktree's main tree is IS its one
 # responsibility. git is resolved by `shutil.which` (absent → no fallback, the refusal stands); the
