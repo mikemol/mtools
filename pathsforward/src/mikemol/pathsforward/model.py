@@ -281,12 +281,16 @@ def weight(w: Json) -> int:
     return value if isinstance(value, int) and not isinstance(value, bool) else 0
 
 
-def describe_rank(w: Json, waypoints: list[Json]) -> str:
+def describe_rank(w: Json, waypoints: list[Json], index: dict[str, list[str]] | None = None) -> str:
     """State one waypoint's leverage in the skill's own vocabulary (collapse/unblock/sweep).
 
     ⚑ THIS NEVER WRITES `rank_reason` — a manually-set value in the state file is left alone by
     every view that only reads it. This is a pure, on-demand description for a view that has none
     stored, not a recomputation of one that does.
+
+    ⚑ A CALLER DESCRIBING EVERY ROW PASSES `blocker_index(waypoints)` ONCE (mtools:W977): the scan
+    for who a card unblocks is then a lookup, where a scan per row made the queue view quadratic.
+    Both answer the same.
 
     Returns:
         "unblocks ...", "enables ...", both joined, or "sweep: ..." when neither applies.
@@ -294,7 +298,7 @@ def describe_rank(w: Json, waypoints: list[Json]) -> str:
     """
     sym = text(w, "symbol")
     enables = strlist(w, "enables")
-    unblocks = _blockers_of(sym, waypoints)
+    unblocks = _blockers_of(sym, waypoints) if index is None else list(index.get(sym, []))
     parts = []
     if unblocks:
         parts.append(f"unblocks {', '.join(unblocks)}")

@@ -86,3 +86,4 @@ src/mikemol/pathsforward/payload.py|blocked-not-tallied|shut \+= text\(w, "statu
 # and an empty blocker is not an edge.
 src/mikemol/pathsforward/model.py|duplicate-blocker-counted-twice|if blocker and blocker not in seen:|if blocker:|def=blocker_index
 src/mikemol/pathsforward/model.py|empty-blocker-is-an-edge|if blocker and blocker not in seen:|if blocker not in seen:|def=blocker_index
+src/mikemol/pathsforward/model.py|index-ignored-by-describe-rank|if index is None else list\(index\.get\(sym, \[\]\)\)|if True else []|def=describe_rank

@@ -4344,3 +4344,17 @@
   claim  = {The quadratic scan read `blocked_on` n*n times; the index reads it about n times.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocker_index.py -k test_ordering_reads_each_cards_blockers_a_constant_number_of_times},
 }
+
+@misc{pathsforward-blocker-index-description-from-the-index-equals-the-scanned-one,
+  section = {blocker_index},
+  title  = {W977: passing the index changes how the answer is found, never what it is},
+  claim  = {W977: passing the index changes how the answer is found, never what it is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocker_index.py -k test_a_description_from_the_index_equals_the_scanned_one},
+}
+
+@misc{pathsforward-blocker-index-queue-view-reads-blockers-a-constant-number-of-times-per-card,
+  section = {blocker_index},
+  title  = {W977: the quadratic `describe_rank` scan read `blocked_on` n*n times per queue view},
+  claim  = {W977: the quadratic `describe_rank` scan read `blocked_on` n*n times per queue view.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocker_index.py -k test_the_queue_view_reads_blockers_a_constant_number_of_times_per_card},
+}

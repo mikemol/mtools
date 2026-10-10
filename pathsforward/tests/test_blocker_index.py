@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mikemol.pathsforward import model
+from mikemol.pathsforward import model, render
 
 if TYPE_CHECKING:
     import pytest
@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 Rec = dict[str, object]
 _MANY = 400
 _READS_PER_CARD = 6
+_QUEUE_READS_PER_CARD = 12
 
 
 def _w(sym: str, blocked_on: list[str], enables: list[str] | None = None) -> Rec:
@@ -76,3 +77,33 @@ def test_ordering_reads_each_cards_blockers_a_constant_number_of_times(
     waypoints = [_w(f"W{n}", ["W1"] if n else []) for n in range(_MANY)]
     assert len(model.ordered(waypoints)) == _MANY
     assert reads["n"] < _READS_PER_CARD * _MANY
+
+
+def _described(waypoints: list[Rec]) -> list[str]:
+    index = model.blocker_index(waypoints)
+    return [model.describe_rank(w, waypoints, index) for w in waypoints]
+
+
+def test_a_description_from_the_index_equals_the_scanned_one() -> None:
+    """W977: passing the index changes how the answer is found, never what it is."""
+    waypoints = _tricky()
+    assert _described(waypoints) == [model.describe_rank(w, waypoints) for w in waypoints]
+
+
+def test_the_queue_view_reads_blockers_a_constant_number_of_times_per_card(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W977: the quadratic `describe_rank` scan read `blocked_on` n*n times per queue view."""
+    reads = {"n": 0}
+    real = model.strlist
+
+    def counting(rec: model.Json, key: str) -> list[str]:
+        reads["n"] += 1
+        return real(rec, key)
+
+    monkeypatch.setattr(model, "strlist", counting)
+    waypoints = [_w(f"W{n}", ["W1"] if n else []) for n in range(_MANY)]
+    doc: Rec = {"counter": _MANY, "project_root": "/p", "waypoints": waypoints, "residue": []}
+    lines = render.queue(model.validate(doc)).splitlines()
+    assert len(lines) == _MANY
+    assert reads["n"] < _QUEUE_READS_PER_CARD * _MANY

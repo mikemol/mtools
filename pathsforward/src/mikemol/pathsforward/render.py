@@ -12,7 +12,7 @@ import re
 from typing import TYPE_CHECKING
 
 from mikemol.pathsforward.digest import v2
-from mikemol.pathsforward.model import describe_rank, ordered, strlist, text
+from mikemol.pathsforward.model import blocker_index, describe_rank, ordered, strlist, text
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -132,8 +132,9 @@ def queue(state: State) -> str:
         one line per waypoint.
 
     """
+    index = blocker_index(state.waypoints)
     return "\n".join(
         f"{i:>2}. {text(w, 'symbol'):<4} {text(w, 'status'):<8} {text(w, 'title')}"
-        f"  \u2014 {text(w, 'rank_reason') or describe_rank(w, state.waypoints)}"
+        f"  \u2014 {text(w, 'rank_reason') or describe_rank(w, state.waypoints, index)}"
         for i, w in enumerate(ordered(state.waypoints), 1)
     )
