@@ -89,3 +89,13 @@ src/mikemol/hooks/snapshot.py|present-file-reported-lost|not \(self\.path / n\)\
 src/mikemol/hooks/new_dist_cli.py|existing-directory-admitted|if target.exists\(\):|if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|wrong-operand-count-admitted|if len\(rest\) != _OPERANDS:|if False:|def=main
 src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated
+
+# W957: the repin core. A short target pins nothing; a vendored wheel rewritten without its binary is a false
+# statement; an unselected dist moved breaks the one-sha rule from the other side; a pin already at the target
+# reported as changed makes a clean second run look dirty.
+src/mikemol/hooks/repin.py|short-target-admitted|if _FULL\.fullmatch\(sha\) is None:|if False:|def=check_sha
+src/mikemol/hooks/repin.py|unselected-dist-moved|wanted = dists is None or dist in dists|wanted = True|def=rewrite
+src/mikemol/hooks/repin.py|unchanged-pin-reported|if wanted and pinned != sha:|if wanted:|def=rewrite
+src/mikemol/hooks/repin.py|abbreviation-compared-by-equality|return target\.startswith\(pinned\) or pinned\.startswith\(target\)|return pinned == target|def=same
+src/mikemol/hooks/repin.py|source-form-skipped|_SOURCE\.sub\(source, _PEP508\.sub\(pep508, text\)\)|_PEP508.sub(pep508, text)|def=rewrite
+src/mikemol/hooks/repin.py|wheel-form-not-found|\(_SOURCE, SOURCE\), \(_WHEEL, WHEEL\)|(_SOURCE, SOURCE),|def=find
