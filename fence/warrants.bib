@@ -1996,3 +1996,73 @@
   claim  = {The transport against a loopback server, and the same URL once the server is gone.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_the_real_fetch_reads_a_server_and_a_dead_port_is_blind},
 }
+
+@misc{fence-watcher-healthy-run-signals-nothing-and-ends-when-the-command-exits,
+  section = {watcher},
+  title  = {The positive control: readings under the limit never trip, and an exit ends the watch},
+  claim  = {The positive control: readings under the limit never trip, and an exit ends the watch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_healthy_run_signals_nothing_and_ends_when_the_command_exits},
+}
+
+@misc{fence-watcher-hold-th-over-limit-sample-signals-every-matching-descendant,
+  section = {watcher},
+  title  = {Three over in a row trip; both pids get the row's signal; the watch ends at once},
+  claim  = {Three over in a row trip; both pids get the row's signal; the watch ends at once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_the_hold_th_over_limit_sample_signals_every_matching_descendant},
+}
+
+@misc{fence-watcher-command-that-exits-mid-streak-ends-the-watch-untripped,
+  section = {watcher},
+  title  = {Two over, then the command exits: no trip, no signal},
+  claim  = {Two over, then the command exits: no trip, no signal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_command_that_exits_mid_streak_ends_the_watch_untripped},
+}
+
+@misc{fence-watcher-blind-samples-never-trip,
+  section = {watcher},
+  title  = {A guard that cannot read does not kill a healthy build},
+  claim  = {A guard that cannot read does not kill a healthy build.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_blind_samples_never_trip},
+}
+
+@misc{fence-watcher-process-that-exited-before-the-signal-is-not-an-error,
+  section = {watcher},
+  title  = {The build finishing between the trip and the signal is skipped, the other is signalled},
+  claim  = {The build finishing between the trip and the signal is skipped, the other is signalled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_process_that_exited_before_the_signal_is_not_an_error},
+}
+
+@misc{fence-watcher-trip-with-no-matching-descendant-signals-nothing,
+  section = {watcher},
+  title  = {The guard reports the trip and guesses no victim},
+  claim  = {The guard reports the trip and guesses no victim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_trip_with_no_matching_descendant_signals_nothing},
+}
+
+@misc{fence-watcher-descendants-are-found-by-name-through-the-parent-links,
+  section = {watcher},
+  title  = {Shallowest first; a sibling tree and a non-matching name are left alone},
+  claim  = {Shallowest first; a sibling tree and a non-matching name are left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_descendants_are_found_by_name_through_the_parent_links},
+}
+
+@misc{fence-watcher-name-with-spaces-and-parentheses-is-read-whole,
+  section = {watcher},
+  title  = {The name lies between the first ( and the LAST ), so `a (b) c` matches as itself},
+  claim  = {The name lies between the first ( and the LAST ), so `a (b) c` matches as itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_name_with_spaces_and_parentheses_is_read_whole},
+}
+
+@misc{fence-watcher-unreadable-proc-yields-no-descendants,
+  section = {watcher},
+  title  = {A path that is not a directory is empty, not an exception},
+  claim  = {A path that is not a directory is empty, not an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_an_unreadable_proc_yields_no_descendants},
+}
+
+@misc{fence-watcher-real-guard-interrupts-a-real-child-by-name-and-ends-with-the-command,
+  section = {watcher},
+  title  = {A shell with a `sleep` child: the guard trips on 9.0 readings and SIGTERMs the sleep},
+  claim  = {A shell with a `sleep` child: the guard trips on 9.0 readings and SIGTERMs the sleep.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_real_guard_interrupts_a_real_child_by_name_and_ends_with_the_command},
+}

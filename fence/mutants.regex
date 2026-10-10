@@ -59,3 +59,7 @@ src/mikemol/fence/reading.py|foreign-scheme-followed|return url if scheme in _SC
 src/mikemol/fence/reading.py|nan-is-a-reading|return None if math\.isnan\(number\) else number|return number|def=value_of
 src/mikemol/fence/reading.py|error-answer-read|if top\.get\("status"\) != "success" or not isinstance\(data, dict\):|if not isinstance(data, dict):|def=value_of
 src/mikemol/fence/reading.py|failure-raises|except \(OSError, ValueError, HTTPException\):|except HTTPException:|def=fetch
+src/mikemol/fence/watcher.py|trip-one-late|if streak >= row\.hold:|if streak > row.hold:|def=watch
+src/mikemol/fence/watcher.py|gone-process-fatal|except ProcessLookupError:|except KeyError:|def=watch
+src/mikemol/fence/watcher.py|any-name-matches|if comm == name:|if True:|def=descendants_named
+src/mikemol/fence/watcher.py|children-only|queue\.append\(pid\)|pass|def=descendants_named

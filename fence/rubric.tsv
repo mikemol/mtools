@@ -18,3 +18,4 @@ admit_zram	The Zram Gate: a Start Waits While zram Is at or Above Its Ceiling an
 admit_holder	A held claim names its holder
 guard	The guard's pure trip rule (W918)
 reading	The guard's reading source (W919)
+watcher	The guard watcher (W920)

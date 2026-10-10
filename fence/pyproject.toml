@@ -188,6 +188,17 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # stops, because the transport is the subject. ⚑ SCOPED TO THE ONE FILE, never to `tests/*`.
 "tests/test_reading.py" = ["invalid-function-name"]
 
+# ⚑⚑ ONE FILE STARTS A REAL PROCESS AND SIGNALS A CHILD OF IT, AND THAT IS THE SUBJECT. The guard
+# watcher's whole job is to find a descendant by name and interrupt it; `test_watcher.py` proves the
+# loop with injected effects everywhere and then once against a real shell and a real `sleep`, because
+# the `/proc` read and the signal are the parts an injected fake cannot vouch for. The arguments are
+# fixed literals and a temp path. ⚑ SCOPED TO THE ONE FILE: another test shelling out is a finding.
+"tests/test_watcher.py" = [
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+    "start-process-with-partial-path",
+]
+
 # ⚑⚑ ONE FILE RUNS `git` AS A SUBPROCESS, AND RUNNING IT IS THE SUBJECT. `test_git_env.py` codifies
 # the negative control for `git_env.clean_env`: a fixture commit under a hostile `GIT_DIR` aimed at a
 # DECOY repository must land in the decoy unscrubbed and nowhere near it scrubbed. That cannot be
