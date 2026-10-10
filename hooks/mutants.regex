@@ -77,4 +77,9 @@ src/mikemol/hooks/shellcheck.py|every-finding-is-old|if budget\.get\(key, 0\) > 
 src/mikemol/hooks/shellcheck.py|no-finding-is-old|if budget\.get\(key, 0\) > 0:|if False:|def=added_only
 src/mikemol/hooks/commit_kata.py|opt-out-ignored|if flag in \{"0", "1"\}:|if flag == "1":|def=isolation_wanted
 src/mikemol/hooks/commit_kata.py|every-hook-supports-isolation|return "MIKEMOL_REAL_ROOT" in hook\.read_text\(encoding="utf-8"\)|return True|def=supports_isolation
+src/mikemol/hooks/new_dist.py|bad-name-admitted|if _NAME\.fullmatch\(name\) is None:|if False:|def=check_name
+src/mikemol/hooks/new_dist.py|repeated-anchor-admitted|if count != 1:|if count < 1:|def=_once
+src/mikemol/hooks/new_dist.py|present-hub-admitted|if f'"\{name\}_deps"' in text:|if False:|def=module_edit
+src/mikemol/hooks/new_dist.py|install-order-reversed|key > name|key < name|def=install_edit
+src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) \+ 1|int(count.group(1))|def=install_edit
 src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated

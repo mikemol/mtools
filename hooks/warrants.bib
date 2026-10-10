@@ -7709,3 +7709,80 @@
   claim  = {The control: no interpreter beside the fence, so the command runs bare under the claim.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_host_without_the_fence_interpreter_has_no_guard_layer},
 }
+
+@misc{hooks-new-dist-skeleton-renames-the-template-everywhere-and-cuts-its-history,
+  section = {new_dist},
+  title  = {The positive control: the new name appears, the template's name and history do not},
+  claim  = {The positive control: the new name appears, the template's name and history do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_the_skeleton_renames_the_template_everywhere_and_cuts_its_history},
+}
+
+@misc{hooks-new-dist-requirements-attributions-name-the-new-distribution,
+  section = {new_dist},
+  title  = {`via mikemol-<dist> (pyproject.toml:dev)` is retargeted whichever dist the template had},
+  claim  = {`via mikemol-<dist> (pyproject.toml:dev)` is retargeted whichever dist the template had.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_the_requirements_attributions_name_the_new_distribution},
+}
+
+@misc{hooks-new-dist-package-the-test-and-the-empty-files-are-generated,
+  section = {new_dist},
+  title  = {A smoke test so the suite is never empty; the ratchet baseline and warrants start empty},
+  claim  = {A smoke test so the suite is never empty; the ratchet baseline and warrants start empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_the_package_the_test_and_the_empty_files_are_generated},
+}
+
+@misc{hooks-new-dist-name-that-is-not-a-lowercase-word-is-refused,
+  section = {new_dist},
+  title  = {The name becomes a directory, a package, a hub and a project name},
+  claim  = {The name becomes a directory, a package, a hub and a project name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_a_name_that_is_not_a_lowercase_word_is_refused},
+}
+
+@misc{hooks-new-dist-description-that-would-break-a-toml-string-is-refused,
+  section = {new_dist},
+  title  = {One non-empty line with no quote or backslash},
+  claim  = {One non-empty line with no quote or backslash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_a_description_that_would_break_a_toml_string_is_refused},
+}
+
+@misc{hooks-new-dist-template-missing-a-file-is-refused-by-name,
+  section = {new_dist},
+  title  = {The refusal names what is missing},
+  claim  = {The refusal names what is missing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_a_template_missing_a_file_is_refused_by_name},
+}
+
+@misc{hooks-new-dist-module-edit-adds-both-hubs-and-both-use-repo-names-after-the-templates,
+  section = {new_dist},
+  title  = {Copies of the template's blocks, placed after them, with the new name},
+  claim  = {Copies of the template's blocks, placed after them, with the new name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_module_edit_adds_both_hubs_and_both_use_repo_names_after_the_templates},
+}
+
+@misc{hooks-new-dist-module-edit-refuses-a-present-name-or-a-missing-anchor,
+  section = {new_dist},
+  title  = {Never a second hub of the same name; never a guess at where an absent block goes},
+  claim  = {Never a second hub of the same name; never a guess at where an absent block goes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_module_edit_refuses_a_present_name_or_a_missing_anchor},
+}
+
+@misc{hooks-new-dist-install-edit-inserts-alphabetically-and-bumps-the-count,
+  section = {new_dist},
+  title  = {The new entry sorts between fence and pathwalk, after the multi-line fence entry},
+  claim  = {The new entry sorts between fence and pathwalk, after the multi-line fence entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_install_edit_inserts_alphabetically_and_bumps_the_count},
+}
+
+@misc{hooks-new-dist-install-edit-appends-after-the-last-entry-when-the-name-sorts-last,
+  section = {new_dist},
+  title  = {Before the paragraph that follows the list, not at the end of the file},
+  claim  = {Before the paragraph that follows the list, not at the end of the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_install_edit_appends_after_the_last_entry_when_the_name_sorts_last},
+}
+
+@misc{hooks-new-dist-install-edit-refuses-a-present-name-or-a-missing-count,
+  section = {new_dist},
+  title  = {The count sentence is the anchor for the bump},
+  claim  = {The count sentence is the anchor for the bump.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_install_edit_refuses_a_present_name_or_a_missing_count},
+}
