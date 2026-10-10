@@ -51,3 +51,7 @@ src/mikemol/fence/label_lease.py|ledger-decoded-strictly|encoding="utf-8", error
 src/mikemol/fence/admit.py|note-for-any-request|if key is None:|if False:|def=holder_note
 src/mikemol/fence/admit.py|note-for-unheld-claim|if held is None:|if False:|def=holder_note
 src/mikemol/fence/admit.py|age-unclamped|max\(0, now - held\.epoch\)|now - held.epoch|def=holder_note
+src/mikemol/fence/guard.py|limit-inclusive|return streak \+ 1 if sample > limit else 0|return streak + 1 if sample >= limit else 0|def=streak_after
+src/mikemol/fence/guard.py|nan-reads-as-healthy|if sample is None or math\.isnan\(sample\):|if sample is None:|def=streak_after
+src/mikemol/fence/guard.py|hold-off-by-one|if streak >= hold:|if streak > hold:|def=trip_index
+src/mikemol/fence/guard.py|hold-zero-allowed|if hold < 1:|if hold < 0:|def=trip_index
