@@ -1,0 +1,4 @@
+# rubric.tsv — the sections of the htmlstruct warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+smoke	Smoke

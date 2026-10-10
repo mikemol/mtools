@@ -119,6 +119,19 @@ def test_collection_failure_names_its_cause(
     assert "no_such_module_w350" in finding
 
 
+def test_a_suite_of_one_test_collects(
+    venv: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """One test is reported as "1 test collected"; that is a collected suite, not a failure."""
+    reach = [str(tmp_path / "site"), *(p for p in sys.path if p)]
+    monkeypatch.setenv("PYTHONPATH", ":".join(reach))
+    suite = tmp_path / "suite"
+    (suite / "tests").mkdir(parents=True)
+    body = "def test_it() -> None:\n    pass\n"
+    (suite / "tests" / "test_one.py").write_text(body, encoding="utf-8")
+    assert venv_check.check_suite(venv, suite) == []
+
+
 def test_usage_error_is_exit_2(capsys: pytest.CaptureFixture[str]) -> None:
     """Too few arguments is a usage error, never a pass."""
     assert venv_check.main([]) == _USAGE_EXIT

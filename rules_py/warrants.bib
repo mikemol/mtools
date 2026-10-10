@@ -283,3 +283,10 @@
             slow.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_test_that_only_waits_costs_no_cpu_and_passes},
 }
+
+@misc{root-venv-check-suite-of-one-test-collects,
+  section = {venv_check},
+  title  = {One test is reported as "1 test collected"; that is a collected suite, not a failure},
+  claim  = {One test is reported as "1 test collected"; that is a collected suite, not a failure.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_a_suite_of_one_test_collects},
+}

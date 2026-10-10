@@ -275,6 +275,14 @@ pip.parse(
     requirements_lock = "//pathwalk:requirements.txt",
 )
 
+# ⚑ `mikemol-htmlstruct` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
+# it declares a dependency.
+pip.parse(
+    hub_name = "htmlstruct_deps",
+    python_version = "3.13",
+    requirements_lock = "//htmlstruct:requirements.txt",
+)
+
 # ⚑ `mikemol-audiostruct` — a transcript reader that never defaults, asked for by life
 # (life:W12, W255). Empty shipping hub for now (`dependencies = []`): the record layer is stdlib
 # only, and torch/whisperx arrive as an optional extra with the stage runner.
@@ -472,6 +480,11 @@ pip.parse(
     uv_lock = "//pathwalk:uv.lock",
 )
 pip.parse(
+    hub_name = "htmlstruct_dev",
+    python_version = "3.13",
+    uv_lock = "//htmlstruct:uv.lock",
+)
+pip.parse(
     hub_name = "audiostruct_dev",
     python_version = "3.13",
     uv_lock = "//audiostruct:uv.lock",
@@ -538,7 +551,9 @@ use_repo(
     "gradekit_deps",
     "gradekit_dev",
     "pathwalk_deps",
+    "htmlstruct_deps",
     "pathwalk_dev",
+    "htmlstruct_dev",
     "treeio_deps",
     "treeio_dev",
     "pytestspec_deps",

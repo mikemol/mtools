@@ -142,7 +142,10 @@ def check_suite(venv: Path, suite: Path) -> list[str]:
         [py, "-m", "pytest", "tests/", "-q", "--no-header", "-p", "no:cacheprovider", "--co"],
         cwd=suite,
     )
-    if proc.returncode != 0 or "tests collected" not in proc.stdout:
+    # ⚑ pytest says "1 test collected" for exactly one test: a scaffold's single smoke test made
+    # the plural-only match refuse a venv that collected fine (htmlstruct, 2026-10-10).
+    collected = "tests collected" in proc.stdout or "1 test collected" in proc.stdout
+    if proc.returncode != 0 or not collected:
         tail = (proc.stdout + proc.stderr).strip().splitlines()[-_TAIL_LINES:]
         return [
             f"{py}: could not collect {suite}/tests (rc={proc.returncode}):\n  " + "\n  ".join(tail)

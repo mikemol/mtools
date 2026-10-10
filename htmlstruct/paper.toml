@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.htmlstruct: Read HTML and MHTML documents as structure."
+subtitle = "The witnesses behind mikemol.htmlstruct."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "HTMLSTRUCT.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
