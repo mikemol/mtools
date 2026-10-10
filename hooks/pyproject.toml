@@ -122,6 +122,9 @@ mikemol-bazel-admit = "mikemol.hooks.bazel_admit:main"
 # W945: scaffolds a new distribution from the pathwalk template. NOT `mikemol-hook-…`: a maintainer
 # runs it, no harness wires it.
 mikemol-new-dist = "mikemol.hooks.new_dist_cli:main"
+# W959: surveys every repo's mtools pins against a commit and moves them (dry run unless --write).
+# NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
+mikemol-repin = "mikemol.hooks.repin_cli:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
 mikemol-githook-pre-push = "mikemol.hooks.githook_pre_push:main"
