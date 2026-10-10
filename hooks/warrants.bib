@@ -7119,77 +7119,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_post_commit_census.py -k test_an_unverified_tree_starts_no_census},
 }
 
-@misc{hooks-commit-launcher-lock-commit-runs-under-a-hold-on-a-claim-in-the-git-directory,
-  section = {commit_launcher_lock},
-  title  = {The fence is called `hold 0 claim:path:<gitdir>/mtools/commit --`, on a per-repo ledger},
-  claim  = {The fence is called `hold 0 claim:path:<gitdir>/mtools/commit --`, on a per-repo ledger.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_commit_runs_under_a_hold_on_a_claim_in_the_git_directory},
-}
-
-@misc{hooks-commit-launcher-lock-load-gate-is-off-and-the-wait-is-bounded,
-  section = {commit_launcher_lock},
-  title  = {A busy host must not stall a commit, and a wedged holder must end as a refusal},
-  claim  = {A busy host must not stall a commit, and a wedged holder must end as a refusal.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_load_gate_is_off_and_the_wait_is_bounded},
-}
-
-@misc{hooks-commit-launcher-lock-timeout-is-overridable,
-  section = {commit_launcher_lock},
-  title  = {MIKEMOL_COMMIT_LOCK_TIMEOUT sets the bound},
-  claim  = {MIKEMOL_COMMIT_LOCK_TIMEOUT sets the bound.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_timeout_is_overridable},
-}
-
-@misc{hooks-commit-launcher-lock-command-does-not-inherit-the-commit-ledger,
-  section = {commit_launcher_lock},
-  title  = {With none of the budget variables set, the command sees none, so its gate uses the host's},
-  claim  = {With none of the budget variables set, the command sees none, so its gate uses the
-            host's.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_command_does_not_inherit_the_commit_ledger},
-}
-
-@misc{hooks-commit-launcher-lock-commands-own-budget-variables-are-put-back,
-  section = {commit_launcher_lock},
-  title  = {A caller's ledger and ceilings survive the hold untouched},
-  claim  = {A caller's ledger and ceilings survive the hold untouched.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_commands_own_budget_variables_are_put_back},
-}
-
-@misc{hooks-commit-launcher-lock-arguments-still-reach-the-console-script,
-  section = {commit_launcher_lock},
-  title  = {Locking does not drop or re-split an argument},
-  claim  = {Locking does not drop or re-split an argument.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_arguments_still_reach_the_console_script},
-}
-
-@misc{hooks-commit-launcher-lock-command-is-told-it-holds-the-claim,
-  section = {commit_launcher_lock},
-  title  = {The marker is set inside, so a nested commit does not wait on its own parent},
-  claim  = {The marker is set inside, so a nested commit does not wait on its own parent.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_the_command_is_told_it_holds_the_claim},
-}
-
-@misc{hooks-commit-launcher-lock-nested-call-does-not-take-a-second-claim,
-  section = {commit_launcher_lock},
-  title  = {With the marker already set the fence is never called: the claim is held above},
-  claim  = {With the marker already set the fence is never called: the claim is held above.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_a_nested_call_does_not_take_a_second_claim},
-}
-
-@misc{hooks-commit-launcher-lock-unbuilt-fence-commits-unlocked-and-says-so,
-  section = {commit_launcher_lock},
-  title  = {No fence venv: the commit runs, with one stderr line naming the missing lock},
-  claim  = {No fence venv: the commit runs, with one stderr line naming the missing lock.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_an_unbuilt_fence_commits_unlocked_and_says_so},
-}
-
-@misc{hooks-commit-launcher-lock-checkout-that-is-not-a-repository-commits-unlocked-and-says-so,
-  section = {commit_launcher_lock},
-  title  = {The git directory cannot be resolved: unlocked, said, and the command still runs},
-  claim  = {The git directory cannot be resolved: unlocked, said, and the command still runs.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_lock.py -k test_a_checkout_that_is_not_a_repository_commits_unlocked_and_says_so},
-}
-
 @misc{hooks-build-failure-note-failed-build-is-noted-on-the-gate-card,
   section = {build_failure_note},
   title  = {With a queue and a reader, the CLI is called once with the state path and the report},
@@ -7259,4 +7188,201 @@
   title  = {⚑ A tool that is not found is None: no fallback to a different tool},
   claim  = { A tool that is not found is None: no fallback to a different tool.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tool_path.py -k test_a_missing_tool_is_none_never_a_guess},
+}
+
+@misc{hooks-probe-decision-is-read-from-the-hook-output,
+  section = {probe},
+  title  = {Deny and allow are read; anything else is no decision},
+  claim  = {Deny and allow are read; anything else is no decision.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_decision_is_read_from_the_hook_output},
+}
+
+@misc{hooks-probe-launcher-that-denies-passes,
+  section = {probe},
+  title  = {The control that passes: a stub printing a deny decision, fired from the project root},
+  claim  = {The control that passes: a stub printing a deny decision, fired from the project root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_launcher_that_denies_passes},
+}
+
+@misc{hooks-probe-launcher-that-allows-fails-and-says-so,
+  section = {probe},
+  title  = {An inert guard: it answers allow, and the verdict names that},
+  claim  = {An inert guard: it answers allow, and the verdict names that.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_launcher_that_allows_fails_and_says_so},
+}
+
+@misc{hooks-probe-launcher-that-prints-nothing-fails,
+  section = {probe},
+  title  = {The silent guard: exit 0 and no decision, which the harness reads as allow},
+  claim  = {The silent guard: exit 0 and no decision, which the harness reads as allow.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_launcher_that_prints_nothing_fails},
+}
+
+@misc{hooks-probe-absent-launcher-is-a-failure-not-a-skip,
+  section = {probe},
+  title  = {A launcher that does not exist fails with the reason; nothing is skipped},
+  claim  = {A launcher that does not exist fails with the reason; nothing is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_an_absent_launcher_is_a_failure_not_a_skip},
+}
+
+@misc{hooks-probe-each-gate-is-fired-from-the-root-and-from-a-foreign-directory,
+  section = {probe},
+  title  = {The launcher sees the project in CLAUDE_PROJECT_DIR and the two different working dirs},
+  claim  = {The launcher sees the project in CLAUDE_PROJECT_DIR and the two different working dirs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_each_gate_is_fired_from_the_root_and_from_a_foreign_directory},
+}
+
+@misc{hooks-probe-entry-and-project-are-substituted-into-the-argv-template,
+  section = {probe},
+  title  = {The entry and project placeholders reach the launcher as words, never through a shell},
+  claim  = {The entry and project placeholders reach the launcher as words, never through a shell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_the_entry_and_project_are_substituted_into_the_argv_template},
+}
+
+@misc{hooks-probe-main-exits-zero-only-when-every-row-denied,
+  section = {probe},
+  title  = {0 for all-deny, 1 for any allow, over the same launcher},
+  claim  = {0 for all-deny, 1 for any allow, over the same launcher.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_exits_zero_only_when_every_row_denied},
+}
+
+@misc{hooks-probe-main-refuses-an-unknown-gate-and-an-unknown-flag,
+  section = {probe},
+  title  = {A typo is a usage error (2), never a pass over zero rows},
+  claim  = {A typo is a usage error (2), never a pass over zero rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_refuses_an_unknown_gate_and_an_unknown_flag},
+}
+
+@misc{hooks-probe-main-fires-only-the-gates-it-is-given,
+  section = {probe},
+  title  = {Naming one gate fires two rows (root and foreign), not eight},
+  claim  = {Naming one gate fires two rows (root and foreign), not eight.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_main_fires_only_the_gates_it_is_given},
+}
+
+@misc{hooks-probe-real-launchers-deny-from-a-foreign-directory,
+  section = {probe},
+  title  = {End to end, no skip: each real `hooks/bin` launcher denies at the root and elsewhere},
+  claim  = {End to end, no skip: each real `hooks/bin` launcher denies at the root and elsewhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_the_real_launchers_deny_from_a_foreign_directory},
+}
+
+@misc{hooks-probe-absent-hook-venv-still-denies-because-the-gate-fails-shut,
+  section = {probe},
+  title  = {A gate launcher with no venv denies explicitly rather than failing open},
+  claim  = {A gate launcher with no venv denies explicitly rather than failing open.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_an_absent_hook_venv_still_denies_because_the_gate_fails_shut},
+}
+
+@misc{hooks-probe-repo-with-no-routing-table-fails-the-structural-query-row,
+  section = {probe},
+  title  = {The adopter's silent failure: no table, so the gate allows everything and says nothing},
+  claim  = {The adopter's silent failure: no table, so the gate allows everything and says nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_repo_with_no_routing_table_fails_the_structural_query_row},
+}
+
+@misc{hooks-probe-every-gate-in-the-table-has-a-command-that-must-be-denied,
+  section = {probe},
+  title  = {The table names the gates and a non-empty command for each},
+  claim  = {The table names the gates and a non-empty command for each.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_every_gate_in_the_table_has_a_command_that_must_be_denied},
+}
+
+@misc{hooks-commit-claim-claim-names-the-target-repositorys-git-directory,
+  section = {commit_claim},
+  title  = {The hold is on `<target>/.git/mtools/commit`, whatever checkout the launcher lives in},
+  claim  = {The hold is on `<target>/.git/mtools/commit`, whatever checkout the launcher lives in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_claim_names_the_target_repositorys_git_directory},
+}
+
+@misc{hooks-commit-claim-two-repositories-get-two-different-claims,
+  section = {commit_claim},
+  title  = {A paperkit gate no longer holds an mtools commit: the claim labels differ},
+  claim  = {A paperkit gate no longer holds an mtools commit: the claim labels differ.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_two_repositories_get_two_different_claims},
+}
+
+@misc{hooks-commit-claim-load-gate-is-off-and-the-wait-bounded,
+  section = {commit_claim},
+  title  = {A busy host must not stall a commit, and a wedged holder ends as a refusal},
+  claim  = {A busy host must not stall a commit, and a wedged holder ends as a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_load_gate_is_off_and_the_wait_bounded},
+}
+
+@misc{hooks-commit-claim-commands-own-budget-variables-are-put-back-or-removed,
+  section = {commit_claim},
+  title  = {Between the hold and the commit, `env` restores what the caller had and removes the rest},
+  claim  = {Between the hold and the commit, `env` restores what the caller had and removes the
+            rest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_commands_own_budget_variables_are_put_back_or_removed},
+}
+
+@misc{hooks-commit-claim-nested-call-does-not-take-a-second-claim,
+  section = {commit_claim},
+  title  = {With the marker set the claim is already held above: no plan, no note},
+  claim  = {With the marker set the claim is already held above: no plan, no note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_nested_call_does_not_take_a_second_claim},
+}
+
+@misc{hooks-commit-claim-no-fence-or-no-git-checkout-gives-a-reason-not-a-claim,
+  section = {commit_claim},
+  title  = {Both gaps are said, and neither is an exception},
+  claim  = {Both gaps are said, and neither is an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_no_fence_or_no_git_checkout_gives_a_reason_not_a_claim},
+}
+
+@misc{hooks-commit-claim-real-main-commits-under-the-target-repositorys-claim,
+  section = {commit_claim},
+  title  = {End to end: the commit lands, and the fence saw the TARGET's claim, not the launcher's},
+  claim  = {End to end: the commit lands, and the fence saw the TARGET's claim, not the launcher's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_real_main_commits_under_the_target_repositorys_claim},
+}
+
+@misc{hooks-commit-published-commit-that-was-pushed-reads-pushed,
+  section = {commit_published},
+  title  = {The control that passes: the sha is on origin/main},
+  claim  = {The control that passes: the sha is on origin/main.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_published.py -k test_a_commit_that_was_pushed_reads_pushed},
+}
+
+@misc{hooks-commit-published-commit-that-was-not-pushed-reads-local,
+  section = {commit_published},
+  title  = {The control that fails: a new local commit is not on origin/main},
+  claim  = {The control that fails: a new local commit is not on origin/main.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_published.py -k test_a_commit_that_was_not_pushed_reads_local},
+}
+
+@misc{hooks-commit-published-repository-with-no-origin-says-so,
+  section = {commit_published},
+  title  = {No remote-tracking ref is a third answer, not a false PUSHED or LOCAL},
+  claim  = {No remote-tracking ref is a third answer, not a false PUSHED or LOCAL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_published.py -k test_a_repository_with_no_origin_says_so},
+}
+
+@misc{hooks-commit-published-verdict-line-carries-the-answer,
+  section = {commit_published},
+  title  = {The COMMITTED line ends with the bracketed answer the reader needs},
+  claim  = {The COMMITTED line ends with the bracketed answer the reader needs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_published.py -k test_the_verdict_line_carries_the_answer},
+}
+
+@misc{hooks-commit-launcher-fence-built-fence-is-named-to-the-commit,
+  section = {commit_launcher_fence},
+  title  = {The commit learns where the fence is through MIKEMOL_FENCE_BIN},
+  claim  = {The commit learns where the fence is through MIKEMOL_FENCE_BIN.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_fence.py -k test_a_built_fence_is_named_to_the_commit},
+}
+
+@misc{hooks-commit-launcher-fence-unbuilt-fence-names-nothing,
+  section = {commit_launcher_fence},
+  title  = {No fence venv: the variable is unset, and the commit says so itself and runs unlocked},
+  claim  = {No fence venv: the variable is unset, and the commit says so itself and runs unlocked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_fence.py -k test_an_unbuilt_fence_names_nothing},
+}
+
+@misc{hooks-commit-launcher-fence-launcher-takes-no-claim-of-its-own,
+  section = {commit_launcher_fence},
+  title  = {Every argument still reaches the Python: three words plus the entry},
+  claim  = {Every argument still reaches the Python: three words plus the entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_fence.py -k test_the_launcher_takes_no_claim_of_its_own},
 }

@@ -74,7 +74,7 @@ def test_a_commit_that_lands_ends_with_committed_the_sha_and_the_subject(tmp_pat
     assert commit_kata.commit(tmp_path, _request("a.txt"), out) == 0
     head = _git(tmp_path, "rev-parse", "HEAD").strip()
     last = out.getvalue().strip().splitlines()[-1]
-    assert last == f"COMMITTED {tmp_path.name} {head[:SHORT_SHA]} {SUBJECT}"
+    assert last == f"COMMITTED {tmp_path.name} {head[:SHORT_SHA]} {SUBJECT} [no origin/main]"
     message = _git(tmp_path, "log", "-1", "--format=%B")
     assert f"Waypoint: {WAYPOINT}" in message
     assert commit_kata.DEFAULT_TRAILER in message

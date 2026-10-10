@@ -32,3 +32,27 @@ src/mikemol/hooks/build_failure.py|note-unbounded|report\[:NOTE_CHARS\]|report|d
 # W845: an unknown flag is a usage error, not a repository name. Dropping the guard reads `--help`
 # as the repo `~/github/--help` and fails in git with exit 3 instead of printing the usage.
 src/mikemol/hooks/snapshot.py|flag-read-as-a-repo|names\[0\]\.startswith\("-"\)|False|def=main
+
+# W898: the hooks probe passes a gate only when it DENIES, from the root AND from elsewhere, armed.
+# Reading any decision as success passes an inert guard; dropping the foreign directory passes a
+# launcher that resolves from the cwd; unarming the gate reads its advisory as silence; ending 0
+# whatever the rows said hides every failure; an unknown gate name must not pass over zero rows.
+src/mikemol/hooks/probe.py|any-decision-passes|self\.decision == DENY|self.decision is not None|def=Verdict.ok
+src/mikemol/hooks/probe.py|foreign-directory-dropped|\(\("root", project\), \("foreign", foreign\)\)|(("root", project),)|def=probe
+src/mikemol/hooks/probe.py|gate-unarmed|ARM: "1",|ARM: "0",|def=fire
+src/mikemol/hooks/probe.py|exit-zero-whatever-the-rows-said|return 0 if all\(v\.ok for v in verdicts\) else EXIT_FAILED|return 0|def=main
+src/mikemol/hooks/probe.py|unknown-gate-passes|if unknown:|if False:|def=main
+src/mikemol/hooks/probe.py|empty-decision-is-a-decision|or None$|or ""|def=decision_of
+
+# W910: the commit claim is taken by the commit itself, keyed on the repository it commits. A nested
+# call must not wait on its own parent; the host's budget variables must be restored (not the other
+# way round); the load gate must stay off and an override of the wait must be honoured.
+src/mikemol/hooks/commit_kata.py|nested-call-waits-on-itself|if env\.get\(HELD_ENV\):|if False:|def=claim_of
+src/mikemol/hooks/commit_kata.py|restore-and-removal-swapped|for name in BUDGET if name not in env for part|for name in BUDGET if name in env for part|def=claim_of
+src/mikemol/hooks/commit_kata.py|load-gate-left-on|held\["MEMBUDGET_MAXLOAD"\] = "0"|held["MEMBUDGET_MAXLOAD"] = "1"|def=claim_of
+src/mikemol/hooks/commit_kata.py|wait-override-ignored|env\.get\(TIMEOUT_ENV\) or DEFAULT_LOCK_TIMEOUT_S|DEFAULT_LOCK_TIMEOUT_S|def=claim_of
+
+# W924: the verdict says whether the sha is on origin/main. Always PUSHED hides an unpushed commit;
+# skipping the no-ref test reports a repository with no remote as LOCAL.
+src/mikemol/hooks/commit_kata.py|always-pushed|return "PUSHED" if ancestor\.returncode == 0 else "LOCAL: not on origin/main"|return "PUSHED"|def=published
+src/mikemol/hooks/commit_kata.py|no-remote-reads-local|if ref\.returncode != 0:|if False:|def=published

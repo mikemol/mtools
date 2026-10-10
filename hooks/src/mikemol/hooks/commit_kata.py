@@ -54,6 +54,18 @@ SHORT = 7
 EXIT_NOT_COMMITTED = 1
 TIMED_OUT = 124
 EXIT_USAGE = 2
+FENCE_ENV = "MIKEMOL_FENCE_BIN"
+HELD_ENV = "MIKEMOL_COMMIT_LOCK_HELD"
+TIMEOUT_ENV = "MIKEMOL_COMMIT_LOCK_TIMEOUT"
+DEFAULT_LOCK_TIMEOUT_S = "3600"
+BUDGET = (
+    "MEMBUDGET_FILE",
+    "MEMBUDGET_MAXLOAD",
+    "MEMBUDGET_ZRAM_MAX",
+    "MEMBUDGET_TIMEOUT",
+    "MEMBUDGET_NOBLOCK",
+    "MEMBUDGET_PARENT",
+)
 USAGE = (
     "usage: mikemol-commit REPO --waypoint W --subject S [--body B] [PATH ...]\n"
     "  REPO is a path, or a directory name under the host root; PATH defaults to the queue files\n"
@@ -158,6 +170,25 @@ def prepare(root: Path, request: Request, run: Runner = run_git) -> list[str] | 
     return ["-C", str(root), "commit", "-m", message_of(request), "--", *pathspecs]
 
 
+def published(root: Path, sha: str, run: Runner = run_git) -> str:
+    """Say whether `sha` is on the remote main (W924), so nobody asks 'is my sha published?'.
+
+    ⚑ READ AFTER THE COMMIT RETURNS: the post-commit hook pushes inside `git commit`, so by the time
+    the verdict is built the push has succeeded or been refused. The remote-tracking ref is what the
+    push last updated, which is the fact a pin needs ("can only pin a published sha").
+
+    Returns:
+        `PUSHED`, `LOCAL: not on origin/main`, or `no origin/main` when the repository has no
+        such ref.
+
+    """
+    ref = run(["-C", str(root), "rev-parse", "--verify", "--quiet", "origin/main"])
+    if ref.returncode != 0:
+        return "no origin/main"
+    ancestor = run(["-C", str(root), "merge-base", "--is-ancestor", sha, "origin/main"])
+    return "PUSHED" if ancestor.returncode == 0 else "LOCAL: not on origin/main"
+
+
 def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git) -> str:
     """Say what a commit did, from HEAD and not from the gate's last stage.
 
@@ -168,7 +199,7 @@ def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git)
     name = root.name
     if after and after != before:
         subject = run(["-C", str(root), "log", "-1", "--format=%s", after]).stdout.strip()
-        return f"COMMITTED {name} {after[:SHORT]} {subject}"
+        return f"COMMITTED {name} {after[:SHORT]} {subject} [{published(root, after, run)}]"
     if rc == TIMED_OUT:
         return (
             f"NOT COMMITTED {name}: timed out after {COMMIT_TIMEOUT_S} s (no verdict); "
@@ -246,17 +277,87 @@ def parse(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Request] |
     return resolve_root(positional[0], env), request
 
 
+@dataclass(frozen=True)
+class Claim:
+    """What to exec so this commit runs under the repository's fence claim."""
+
+    argv: list[str]
+    env: dict[str, str]
+
+
+def claim_of(
+    root: Path, env: Mapping[str, str], own: Sequence[str], run: Runner = run_git
+) -> Claim | str:
+    """Plan the re-exec of this commit under a blocking per-repository fence claim (W886, W910).
+
+    ⚑ THE CLAIM IS KEYED ON THE REPOSITORY BEING COMMITTED, NOT ON WHERE THE LAUNCHER LIVES. It was
+    keyed on the launcher's checkout, so a paperkit gate (minutes long) held every mtools commit
+    behind it, and the reverse. The repository is resolved here, once, by `resolve_root`.
+
+    ⚑ `hold 0 claim:path:<git dir>/mtools/commit` is fence's zero-capacity claim: it waits, names
+    the holder, and is reaped when its owner dies. The ledger is per repository under the git
+    directory with the load and zram gates off, so a busy host cannot stall a commit, and the wait
+    is bounded by MIKEMOL_COMMIT_LOCK_TIMEOUT (an hour by default).
+
+    ⚑⚑ NOTHING OF THAT CONFIGURATION REACHES THE COMMAND. `hold` hands its environment to what it
+    runs, and the gate beneath leases from the HOST ledger with the HOST's ceilings, so each
+    budget variable is put back as it was (or removed if it was unset) by the `env` between the
+    hold and the commit.
+
+    Returns:
+        the Claim to exec; or the reason there is none ("" when this process already holds it, so
+        a nested call does not wait on its own parent).
+
+    """
+    if env.get(HELD_ENV):
+        return ""
+    fence = env.get(FENCE_ENV, "")
+    if not fence or not os.access(fence, os.X_OK):
+        return "the fence venv is not built ('bazel build //fence:.venv')"
+    gitdir = run(["-C", str(root), "rev-parse", "--absolute-git-dir"])
+    if gitdir.returncode != 0:
+        return f"{root} is not a git checkout"
+    ledger = Path(gitdir.stdout.strip()) / "mtools"
+    ledger.mkdir(parents=True, exist_ok=True)
+    removals = [part for name in BUDGET if name not in env for part in ("-u", name)]
+    restore = [f"{HELD_ENV}=1", *(f"{name}={env[name]}" for name in BUDGET if name in env)]
+    argv = [
+        fence,
+        "hold",
+        "0",
+        f"claim:path:{ledger / 'commit'}",
+        "--",
+        "env",
+        *removals,
+        *restore,
+        *own,
+    ]
+    held = {k: v for k, v in env.items() if k not in {"MEMBUDGET_NOBLOCK", "MEMBUDGET_PARENT"}}
+    held["MEMBUDGET_FILE"] = str(ledger / "commit.ledger")
+    held["MEMBUDGET_MAXLOAD"] = "0"
+    held["MEMBUDGET_ZRAM_MAX"] = "0"
+    held["MEMBUDGET_TIMEOUT"] = env.get(TIMEOUT_ENV) or DEFAULT_LOCK_TIMEOUT_S
+    return Claim(argv, held)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
     Returns:
-        the exit code from `commit`, or EXIT_USAGE for a bad command line.
+        the exit code from `commit`, or EXIT_USAGE for a bad command line. A commit that must wait
+        for the repository's claim is re-exec'd under it and never returns here.
 
     """
     env = dict(os.environ)
-    parsed = parse(sys.argv[1:] if argv is None else argv, env)
+    args = list(sys.argv[1:] if argv is None else argv)
+    parsed = parse(args, env)
     if parsed is None:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
     root, request = parsed
+    claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
+    if isinstance(claim, Claim):
+        os.execve(claim.argv[0], claim.argv, claim.env)
+    if claim:
+        sys.stderr.write(f"mikemol-commit: no commit lock ({claim}); committing unlocked\n")
     return commit(root, request, sys.stdout)

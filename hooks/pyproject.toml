@@ -110,6 +110,9 @@ mikemol-pycheck = "mikemol.hooks.pycheck_cli:main"
 # W832: the commit kata graduated from .claude/katas (rule 16); its last line is the verdict, read from
 # HEAD. NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
 mikemol-commit = "mikemol.hooks.commit_kata:main"
+# W898: fires each gate hook with a payload it must deny, from the root and a foreign cwd. NOT
+# `mikemol-hook-…`: a maintainer or an adopter runs it, no harness wires it.
+mikemol-hooks-probe = "mikemol.hooks.probe:main"
 # W845: an immutable tree to gate, at one fixed namespaced path under flock. NOT `mikemol-hook-…`: a
 # gate's caller runs it, no harness wires it.
 mikemol-snapshot = "mikemol.hooks.snapshot:main"
@@ -389,7 +392,14 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "suspicious-subprocess-import",
     "subprocess-without-shell-equals-true",
 ]
-"src/mikemol/hooks/commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# ⚑ W910: the commit re-execs itself under the repository's fence claim (`os.execve`, as bazel_admit
+# execs its client): the argv is fence's path, the verb, a claim label built from the git directory,
+# and this process's own argv; never a shell.
+"src/mikemol/hooks/commit_kata.py" = [
+    "start-process-with-no-shell",
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+]
 "src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).
@@ -488,10 +498,16 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ `test_tool_path.py` finds console scripts in planted directories under tmp_path: no process.
 "tests/test_tool_path.py" = ["assert"]
 
-# ⚑ W886: `test_commit_launcher_lock.py` runs the tracked `mikemol-commit` launcher in a throwaway
-# git checkout with stub executables: fixed argv, never a shell, no untrusted input. `git` is
-# resolved from PATH on purpose, as the launcher resolves it.
-"tests/test_commit_launcher_lock.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+# ⚑ W899: `test_probe.py` fires stub launchers and the real `hooks/bin` ones through the probe, which
+# is the code that spawns; the test itself only asserts.
+"tests/test_probe.py" = ["assert"]
+
+# ⚑ W886/W910/W924: these run the tracked `mikemol-commit` launcher, or its Python, in a throwaway git
+# checkout with stub executables: fixed argv, never a shell, no untrusted input. `git` is resolved
+# from PATH on purpose, as the code under test resolves it.
+"tests/test_commit_launcher_fence.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"tests/test_commit_claim.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"tests/test_commit_published.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 
 # ⚑ W825: `test_post_commit_census.py` runs the tracked post-commit stub and git in a throwaway
 # repository: fixed argv, never a shell, no untrusted input. `git` is resolved from PATH on purpose,
@@ -578,6 +594,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # stdin is closed and the call is bounded by a timeout. Never through a shell. Its tests write fake
 # readers under tmp_path and call `main`, so they spawn nothing themselves and need only `assert`.
 "src/mikemol/hooks/inbound_asks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ THE HOOKS PROBE (W898): firing a launcher with a payload it must deny IS its one responsibility.
+# MEASURED: the argv is a `shlex`-split template with `{entry}` and `{project}` substituted, never a
+# shell; the payload travels on stdin; the call is bounded by a timeout; and a launcher that cannot
+# be run is a reported FAIL, not an exception.
+"src/mikemol/hooks/probe.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE NEMIK-CHECK CONTEXT HOOK (W616): running the fleet reader `nemik-check` IS its one
 # responsibility. MEASURED: the reader is the `NEMIK_CHECK` env file, the one `shutil.which` finds,

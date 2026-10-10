@@ -1405,3 +1405,43 @@
 2026-10-09T19:15:02Z  tick  W845 advanced  collapse  "triaged: snapshot materializer exists and works (24 MB, idempotent), nothing calls it; fixed a flag read as a repo name"
 2026-10-09T19:25:22Z  tick  W614 advanced  collapse  "paperkit_projects ported to pycodemod/projects.py (ownership by nearest project, resolver an operand); 10 tests, 5 mutants; bazel run pending"
 2026-10-09T19:29:42Z  interrupt W890 minted    -         "pycodemod --projects: the command-line mode over paperkit_projects, taking paperkit's own warrant resolver as its operand"  evidence=W614
+2026-10-09T19:41:29Z  tick  W593 advanced  sweep     "contexts-ledger TOTAL documented as the consumer's number in membudget_cli's docstring; fallback applied after amr-skills silence"
+2026-10-09T20:54:01Z  interrupt W891 minted    -         "mikemol-commit: judge the commit's own paths in a private index or snapshot, so the gate neither holds .git/index.lock for its whole run nor refuses on another session's unstaged files"  evidence=luthen-observability:W684
+2026-10-09T21:25:19Z  interrupt W892 minted    -         "Answer gcalculus:W222: mtools: gate_stages takes env and engine, so a stage can import the pinned paper"  evidence=gcalculus:W222
+2026-10-09T21:25:19Z  interrupt W893 minted    -         "Answer gcalculus:W223: mtools: say whether the adopted-hook-still-denies-when-fired probe is mtools' (/"  evidence=gcalculus:W223
+2026-10-09T21:58:36Z  interrupt W894 minted    -         "htmlstruct: a structure tool for html and mhtml files, routed from the structural-query hook"  evidence=operator
+2026-10-09T23:35:13Z  tick  W895 minted    -         "rules_py: one engine_env(engine) function builds the pinned engine's environment, shared by paperkit_gate_main and the new stage runner"  evidence=W892
+2026-10-09T23:35:13Z  tick  W896 minted    -         "rules_py: engine_stage_main.py runs one stage script as a subprocess under the pinned engine's environment"  evidence=W892
+2026-10-09T23:35:14Z  tick  W897 minted    -         "gate_stages: a stage may carry an options dict (env, engine_repo, engine_files) and then runs under engine_stage_main with the engine's files as data"  evidence=W892
+2026-10-09T23:35:14Z  tick  W898 minted    -         "hooks: mikemol-hooks-probe fires each gate hook with a canned deny payload from the root and a foreign cwd and fails unless it denies"  evidence=W893
+2026-10-09T23:35:14Z  tick  W899 minted    -         "hooks: a hermetic test runs mikemol-hooks-probe over the bin launchers with a stand-in venv and over the console scripts, with no skip path"  evidence=W893
+2026-10-09T23:35:15Z  tick  W900 minted    -         "Answer gcalculus:W222 and :W223 by letter: the engine-stage design, and that the hook probe is mtools' with the tool that replaces gcalculus' copy"  evidence=W892
+2026-10-09T23:41:29Z  tick  W901 minted    -         "Prove isolated commit on real git: hooks run in the snapshot under a private index, HEAD moves, the real index.lock never exists, a peer's unstaged file does not refuse"  evidence=W891
+2026-10-09T23:41:30Z  tick  W902 minted    -         "commit_kata: an isolated mode builds the commit's private index and runs git commit against the snapshot of its tree"  evidence=W891
+2026-10-09T23:41:31Z  tick  W903 minted    -         "commit_kata isolated mode syncs the real index afterwards and handles a staged deletion"  evidence=W891
+2026-10-09T23:41:32Z  tick  W904 minted    -         "Adopt isolated commit in mtools after a soak, and tell luthen-observability and the peers"  evidence=W891
+2026-10-09T23:41:40Z  tick  W905 minted    -         "Scaffold the htmlstruct distribution and wire it as one new dist"  evidence=W894
+2026-10-09T23:41:41Z  tick  W906 minted    -         "htmlstruct: the HTML reader with outline, links, tables, meta and text by id, standard library only"  evidence=W894
+2026-10-09T23:41:42Z  tick  W907 minted    -         "htmlstruct: the MHTML reader with the parts list, the root part and Content-Location addressing"  evidence=W894
+2026-10-09T23:41:43Z  tick  W908 minted    -         "htmlstruct: the console script with its verbs and exit codes"  evidence=W894
+2026-10-09T23:41:43Z  tick  W909 minted    -         "Route html and mhtml to htmlstruct: a struct-tools row, the structural-query refusal, and a hooks-probe row"  evidence=W894
+2026-10-09T23:42:43Z  tick  W910 minted    -         "mikemol-commit's repo claim is keyed on the launcher's checkout, so one repo's gate holds every repo's commits"  evidence=W886
+2026-10-09T23:43:11Z  tick  W898 advanced  unblock   "mikemol-hooks-probe built and proven on the real launchers (8 of 8 deny); hermetic run replaces the skip-able arm; W893 closed; also atomized W891 (isolated commit), W894 (htmlstruct) and W892 (engine stage) into 20 cards and found W910 (the commit claim is keyed on the wrong repo)"
+2026-10-09T23:45:38Z  tick  W911 minted    -         "fence: a claim verb whose lease is owned by a long-lived process, with release and a listing of holders"  evidence=W889
+2026-10-09T23:45:39Z  tick  W912 minted    -         "A working card's touches are claimed by the session through the context hook, and a refusal names the holder"  evidence=W889
+2026-10-09T23:45:39Z  tick  W913 minted    -         "nemik-overlaps and the inbound context line print the live claim holders beside overlapping cards"  evidence=W889
+2026-10-09T23:46:02Z  tick  W914 minted    -         "pathsforward --add gives a new card the default priority vector so nemik-rank has no UNSCORED items"  evidence=W880
+2026-10-09T23:46:09Z  tick  W910 advanced  collapse  "found that W886's claim is keyed on the launcher's checkout (a paperkit gate held mtools commits for 23+ minutes); fix developed and tested in the scratchpad (claim_of in commit_kata, 6 tests incl. an end-to-end commit), to apply when the in-flight gate finishes; also atomized W889 into W911-W913 and minted W914"
+2026-10-09T23:51:38Z  interrupt W915 minted    -         "Answer gcalculus:W233: publish the commit that carries mikemol-hooks-probe"  evidence=gcalculus:W233
+2026-10-10T00:12:56Z  interrupt W916 minted    -         "Answer luthen-observability:W710: a run-time guard predicate for the fenced commit, from a declared reading"  evidence=luthen-observability:W710
+2026-10-10T00:12:57Z  interrupt W917 minted    -         "Answer luthen-observability:W715: pathsforward/.venv is the canonical writer venv, and the hooks venv gains it once W317 allows the dependency"  evidence=luthen-observability:W715
+2026-10-10T00:13:09Z  interrupt W918 minted    -         "fence guard: the pure trip rule (streak after each sample, first trip index), where an unreadable sample neither counts nor resets"  evidence=W916
+2026-10-10T00:13:09Z  interrupt W919 minted    -         "fence guard: a reading source that asks a named endpoint a PromQL instant query"  evidence=W916
+2026-10-10T00:13:10Z  interrupt W920 minted    -         "fence guard: a watcher that samples while the fenced command runs and interrupts the named process on a trip"  evidence=W916
+2026-10-10T00:13:10Z  interrupt W921 minted    -         "mikemol-commit reads its guards from a policy row, so a limit is declared and not a literal"  evidence=W916
+2026-10-10T00:13:11Z  interrupt W922 minted    -         "Reply to luthen-observability by letter on W710 and W715"  evidence=W916
+2026-10-10T00:13:12Z  interrupt W923 minted    -         "hooks depends on pathsforward so one venv carries the writer"  evidence=W917
+2026-10-10T00:15:49Z  interrupt W924 minted    -         "mikemol-commit's last line says whether the sha is published, not only that it committed"  evidence=W910
+2026-10-10T00:48:00Z  tick  W910 advanced  unblock   "commit claim keyed on the repository being committed, not the launcher; mikemol-commit's line now says PUSHED/LOCAL (W924); bazel //hooks/... green"
+2026-10-10T01:49:21Z  tick  W915 advanced  sweep     "probe, commit-claim fix and PUSHED verdict built and green; combined commit in flight (bypassed the stale paperkit lease); luthen W710/W715 and gcalculus W233/W93 claimed and answered"
+2026-10-10T02:07:13Z  interrupt W925 minted    -         "gen-warrants --prune also drops a rubric row whose section has no warrant left"  evidence=W910

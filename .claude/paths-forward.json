@@ -2,11 +2,11 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 890,
+  "counter": 925,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T18:17:12Z",
-  "job_id": "87816488",
-  "predecessor_job_id": "9e45d237",
+  "heartbeat": "2026-10-09T23:33:57Z",
+  "job_id": "3e42fddc",
+  "predecessor_job_id": "2f761c86",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 99,
+      "ticks_blocked": 100,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 97,
+      "ticks_blocked": 98,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 102,
+      "ticks_blocked": 103,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 71,
+      "ticks_blocked": 72,
       "completed": null
     },
     {
@@ -11565,7 +11565,7 @@
       "minted_during": "tick",
       "caused_by": "operator",
       "last_worked": "2026-10-09T13:51:50Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -11804,13 +11804,13 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
       "symbol": "W593",
       "title": "Ask amr-skills whether the CUDA context limit also counts desktop compute apps (kwin, VS Code), which would make the contexts ledger TOTAL vary",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "fence",
@@ -11818,13 +11818,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Silence (letter 2026-10-04, 5 days): per this card's rule, state in the docs that the contexts ledger TOTAL is a consumer-owned number. fence/README.md does not mention contexts: find where the ledger is documented first (memres? the amr-skills letter's own text).",
-      "evidence": "2026-10-05: 2026-10-04 letter sent: /home/mikemol/github/amr-skills/inbox/2026-10-04-mtools-contexts-ledger-desktop-apps.md asks whether anyone measured if the CUDA context limit also counts desktop compute apps, and to cite a card as amr-skills:W<n> so this card can block on it by citation; no live amr-skills session was listed | 2026-10-09: 2026-10-09 TRIAGE: no reply from amr-skills in 5 days (it has no live session). The fallback applies; the doc site is not fence/README.md (read in full: no contexts mention).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-05: 2026-10-04 letter sent: /home/mikemol/github/amr-skills/inbox/2026-10-04-mtools-contexts-ledger-desktop-apps.md asks whether anyone measured if the CUDA context limit also counts desktop compute apps, and to cite a card as amr-skills:W<n> so this card can block on it by citation; no live amr-skills session was listed | 2026-10-09: 2026-10-09 TRIAGE: no reply from amr-skills in 5 days (it has no live session). The fallback applies; the doc site is not fence/README.md (read in full: no contexts mention). | 2026-10-09: 2026-10-09: the fallback applied (amr-skills silent 5 days, no live session) and the doc site is found: fence/src/mikemol/fence/membudget_cli.py's module docstring, beside the hold verb amr-skills filed. New paragraph: a held resource's TOTAL is the consumer's number; nothing here measures whether desktop compute apps count against the CUDA context limit; the consumer sets it with init --reset N and lowers it when it learns better. bazel test //fence/... 22 pass.",
       "issued_at": "2026-10-04T19:06:24Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-09T13:51:19Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T19:41:29Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T194129Z"
     },
     {
       "symbol": "W594",
@@ -16155,7 +16156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16330,12 +16331,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Slice 2: have each distribution's build derive its version from its stream: setuptools dynamic version read from mikemol-paths-forward --delivered over the right queue (decide what a distribution's stream is: this repo's single queue gives every dist the same 0.0.n, so a per-dist stream needs a tag on waypoints), replacing the 0.1.0 literals; then tie W317's floors to it.",
-      "evidence": "2026-10-09: 2026-10-09 slice 1 (this tick): mikemol-paths-forward --delivered prints 0.0.<highest done W<n>> (0.0.0 when nothing is done), read-only, derived from the queue; the form 0.0.<n> chosen as monotone under PEP 440, a valid release segment and clearly pre-1.0. mtools prints 0.0.855 today. delivered.py + 4 tests + 4 warrants. Open for slice 2: a single queue gives every distribution the same number; per-distribution versions need a per-waypoint stream tag, which is a design choice not made here.",
+      "next_bounded_step": "Slice 2: pyproject dynamic version read from the publish card's number (per repo, post-split). Slice 3: the publish tool: mint card, build with its number, upload to PyPI, mark done, tag v0.0.N as the record. The release-gate slice is dropped.",
+      "evidence": "2026-10-09: 2026-10-09 slice 1 (this tick): mikemol-paths-forward --delivered prints 0.0.<highest done W<n>> (0.0.0 when nothing is done), read-only, derived from the queue; the form 0.0.<n> chosen as monotone under PEP 440, a valid release segment and clearly pre-1.0. mtools prints 0.0.855 today. delivered.py + 4 tests + 4 warrants. Open for slice 2: a single queue gives every distribution the same number; per-distribution versions need a per-waypoint stream tag, which is a design choice not made here. | 2026-10-09: 2026-10-09 OPERATOR RULINGS (21:50Z): (1) the per-distribution stream problem is resolved by the planned split of mtools into one repo per package: each repo's own queue IS the stream, so mikemol-paths-forward --delivered (slice 1) is already the right number and no history derivation or per-waypoint tag is needed; slice 2 reduces to a dynamic version in each pyproject read from --delivered. (2) every content change has a waypoint behind it; the operator's rule makes that a monotone number. MY FINDING that sharpens it: the counter increments at MINTING, not completion, so a late-finished old card (minted before the last release) changes content without raising the highest completed number and would collide on PyPI (versions are immutable). Resolution, no .post suffix: a RELEASE GATE in mikemol-commit: a commit that changes a distribution's content must carry a waypoint numbered above the distribution's last RELEASED waypoint (recorded as a git tag v0.0.N), else refused with 'mint a new card for this change'. Then the version rises strictly with every content change by construction. Pre-split bridge (mtools single queue): not built; waits on the split's timing. Local +g<sha> versions on the sha-pinned wheels (PyPI rejects local versions) are replaced by this scheme. | 2026-10-09: 2026-10-09 OPERATOR RULING (21:55Z), SUPERSEDES the release-gate idea above: mint a NEW WAYPOINT FOR THE PUBLISH. A release mints 'publish <dist>' as a fresh card whose number is higher than everything minted before (the counter only increments); the build's version is 0.0.<that card's number>; the card is done when the upload succeeds. Strict increase holds by construction, independent of which older cards finish late; no commit-time check is needed. ORDER of the publish tool: mint, build with that version, upload, mark done; a failed upload leaves the card open as evidence and a retry mints a higher one (safe: PyPI only consumes a version on success). Per-package stream after the split is the repo's own queue.",
       "issued_at": "2026-10-06T03:27:58Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W317",
-      "last_worked": "2026-10-09T00:43:40Z",
+      "last_worked": "2026-10-09T21:37:39Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent"
@@ -16690,7 +16691,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16985,7 +16986,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -17494,7 +17495,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -17535,7 +17536,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -17558,7 +17559,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -17981,7 +17982,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -18060,14 +18061,15 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Build the orchestrator + CLI mode typed-args (dry-run default, --write): per file plan(text); write the candidate to a probe path INSIDE the target project; judge with the project's own mypy --output json and ruff format; accept only if the finding multiset (messages) of the new text is a strict subset of the old and ruff format is a no-op; otherwise the file goes to the worklist with the refusal or the new findings. Probes are removed even on failure (mtools-a1: no WIP left in a shared tree).",
-      "evidence": "2026-10-09: 2026-10-09 LANDED 0cff36a: mikemol.pycodemod.typedargs (plan/field_of/Planned/Refusal), 14 witnesses in tests/test_typedargs.py, per-file assert line, rubric row and 14 warrants via gen-warrants; //pycodemod:ruff, :ratchet, :mypy, :test_typedargs, :mutants pass. Same commit: //pathsforward:mutants declares timeout long (it TIMED OUT at 300.2s in the first attempt under the 686-test suite; mtools-a1 agreed I own that edit). Four attempts: index.lock collisions with mtools-a1's in-flight commits (mtools:W884), then the timeout. NOT YET: the orchestrator (walk files, plan, verify the prospective output with the edit gate's judge on a copy inside the project, write only if findings fall and none appear, print the worklist) and the CLI mode; run on luthen-observability checks/ from this venv with --root. | 2026-10-09: 2026-10-09 landed: 559eaa5 (typed-args mode, judged by the project's mypy/ruff), 784e920 (parser.error), 5779ac0 (mutually exclusive groups). Measured on luthen checks/: 30 files typed, ledger down about 160 findings; the argparse class is exhausted there (remaining refusals were files with 0 findings). Next: json-boundary and Json-annotation codemods, then run on substrate and gabion.",
+      "evidence": "2026-10-09: 2026-10-09 LANDED 0cff36a: mikemol.pycodemod.typedargs (plan/field_of/Planned/Refusal), 14 witnesses in tests/test_typedargs.py, per-file assert line, rubric row and 14 warrants via gen-warrants; //pycodemod:ruff, :ratchet, :mypy, :test_typedargs, :mutants pass. Same commit: //pathsforward:mutants declares timeout long (it TIMED OUT at 300.2s in the first attempt under the 686-test suite; mtools-a1 agreed I own that edit). Four attempts: index.lock collisions with mtools-a1's in-flight commits (mtools:W884), then the timeout. NOT YET: the orchestrator (walk files, plan, verify the prospective output with the edit gate's judge on a copy inside the project, write only if findings fall and none appear, print the worklist) and the CLI mode; run on luthen-observability checks/ from this venv with --root. | 2026-10-09: 2026-10-09 landed: 559eaa5 (typed-args mode, judged by the project's mypy/ruff), 784e920 (parser.error), 5779ac0 (mutually exclusive groups). Measured on luthen checks/: 30 files typed, ledger down about 160 findings; the argparse class is exhausted there (remaining refusals were files with 0 findings). Next: json-boundary and Json-annotation codemods, then run on substrate and gabion. | 2026-10-09: 2026-10-09: returned from working to ready (nemik-check: one working card per queue). The session that held it, github-45, has ended (ListAgents shows only github-13 now); the typed-args mode landed (559eaa5, 784e920, 5779ac0, 458a383), and its next work (json-boundary and Json-annotation codemods) should be minted as its own cards.",
       "issued_at": "2026-10-09T14:46:41Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W684",
-      "last_worked": "2026-10-09T18:01:41Z",
+      "last_worked": "2026-10-09T23:42:49Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": null
     },
     {
       "symbol": "W884",
@@ -18154,7 +18156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -18181,7 +18183,7 @@
     {
       "symbol": "W889",
       "title": "A session working a card holds a fence claim on its touches tags, so an overlapping session sees the holder and the files instead of deferring by judgment",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "fence",
@@ -18189,15 +18191,20 @@
         "pathsforward",
         "nemik"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Design the claim: label claim:label:touch:<repo>:<tag> on a per-repo ledger under the git dir (the commit-claim's pattern, W886), taken when a card goes working and released at done or unlock; the tick gate and nemik-overlaps print the holder and the files it named. Decide whether pathsforward --update --status working takes it (pathsforward cannot import fence yet, W887) or the hook layer does.",
-      "evidence": "",
+      "blocked_on": [
+        "W911",
+        "W912",
+        "W913"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: lands when the claim verb, the hook that takes it for a working card, and the overlaps view exist (W911-W913); design in .claude/design/W889-work-claims.md.",
+      "evidence": "2026-10-09: 2026-10-09 ATOMIZED. fence.admit already has the zero-capacity claim and the commit uses it; the gap is a lease owned by a long-lived process (the session), not by the command hold spawns. Advisory with a name on it, not a mutex: the commit claim is the only true mutex.",
       "issued_at": "2026-10-09T18:43:57Z",
       "minted_during": "tick",
       "caused_by": "W884",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-09T23:45:44Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W890",
@@ -18215,6 +18222,763 @@
       "issued_at": "2026-10-09T19:29:42Z",
       "minted_during": "interrupt",
       "caused_by": "W614",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W891",
+      "title": "mikemol-commit: judge the commit's own paths in a private index or snapshot, so the gate neither holds .git/index.lock for its whole run nor refuses on another session's unstaged files",
+      "status": "blocked",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [
+        "W901",
+        "W902",
+        "W903",
+        "W904"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: lands when the isolated commit is proven, built, syncs the real index, and is adopted (W901-W904); design in .claude/design/W891-isolated-commit.md.",
+      "evidence": "2026-10-09: 2026-10-09 measured in luthen-observability with two live sessions (github-45 host and luthen-observability-61): (1) mikemol-commit holds .git/index.lock for the whole gate (minutes), so the other session's git add fails with 'Unable to create index.lock'; (2) the gate's index-matches-tree check refuses a commit because ANOTHER session's tracked files are unstaged (12 files named in the verdict), so neither session can commit alone and the fix so far was one combined commit of both sessions' work (e715ccb), which mixes authorship and sweeps unreviewed files. Wanted: the gate runs against a snapshot of exactly the commit's paths (private GIT_INDEX_FILE or a temp worktree) so it holds no shared lock and judges only what it commits; related to the per-repo fence claim (39e7414), which serialises mikemol-commit callers but not plain git add. Related: mtools:W884, mtools:W798. | 2026-10-09: 2026-10-09 ATOMIZED. Mechanism: private index plus mikemol-snapshot of the commit's tree, then git commit with GIT_DIR=real, GIT_WORK_TREE=snapshot, GIT_INDEX_FILE=private and cwd the snapshot, so the repo's own hooks run unchanged on a tree that equals the index by construction (hook_index passes), the real index.lock is never taken, and bazel keeps its warm output base at the fixed snapshot path (operator ruling 2026-10-06). Composes W845 (snapshot) and W884/W886 (the commit claim).",
+      "issued_at": "2026-10-09T20:54:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W684",
+      "last_worked": "2026-10-09T23:41:51Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W892",
+      "title": "Answer gcalculus:W222: mtools: gate_stages takes env and engine, so a stage can import the pinned paper",
+      "status": "blocked",
+      "enables": [
+        "gcalculus:W222"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W895",
+        "W896",
+        "W897"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella for gcalculus:W222: lands when the engine env, the stage runner, the gate_stages option and the reply letter (W895-W897, W900) are done.",
+      "evidence": "2026-10-09: 2026-10-09 ATOMIZED (design in .claude/design/W892-W893-gcalculus-gate.md): shared engine_env (W895), engine_stage_main (W896), gate_stages per-stage options (W897), reply (W900).",
+      "issued_at": "2026-10-09T21:25:19Z",
+      "minted_during": "interrupt",
+      "caused_by": "gcalculus:W222",
+      "last_worked": "2026-10-09T23:35:21Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W893",
+      "title": "Answer gcalculus:W223: mtools: say whether the adopted-hook-still-denies-when-fired probe is mtools' (/",
+      "status": "done",
+      "enables": [
+        "gcalculus:W223"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 ATOMIZED (design in .claude/design/W892-W893-gcalculus-gate.md): the answer is partly yes: //hooks tests each launcher's argv pass-through and absent-venv deny, and one console-script arm denies end to end for no-verify only, and it SKIPS when the script is not installed. The missing test is mtools': mikemol-hooks-probe (W898) and its hermetic run (W899). | 2026-10-09: 2026-10-09: answered and built. mikemol-hooks-probe (W898) and its hermetic run (W899) are the proof that an adopted guard denies when fired; gcalculus pins the mtools commit carrying them (message follows the commit) and drops concepts_45.py's copy. Design: .claude/design/W892-W893-gcalculus-gate.md.",
+      "issued_at": "2026-10-09T21:25:19Z",
+      "minted_during": "interrupt",
+      "caused_by": "gcalculus:W223",
+      "last_worked": "2026-10-09T23:43:10Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T234310Z"
+    },
+    {
+      "symbol": "W894",
+      "title": "htmlstruct: a structure tool for html and mhtml files, routed from the structural-query hook",
+      "status": "blocked",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [
+        "W905",
+        "W906",
+        "W907",
+        "W908",
+        "W909"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: lands when the dist is scaffolded, both readers, the script and the routing exist (W905-W909); design in .claude/design/W894-htmlstruct.md.",
+      "evidence": "2026-10-09: 2026-10-09 ATOMIZED by the agent without waiting (operator directive: planning and project management are the same act). Standard library only; read-only first cut; routing via the struct-tools table so the structural-query hook names the tool.",
+      "issued_at": "2026-10-09T21:58:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "operator",
+      "last_worked": "2026-10-09T23:41:52Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W895",
+      "title": "rules_py: one engine_env(engine) function builds the pinned engine's environment, shared by paperkit_gate_main and the new stage runner",
+      "status": "ready",
+      "enables": [
+        "W892"
+      ],
+      "touches": [
+        "bazel",
+        "gate",
+        "engine"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Extract the env-building lines of paperkit_gate_main (PYTHONPATH of the checkout above the package, PAPERKIT_ENGINE, PAPERKIT_SCRATCH from TEST_TMPDIR) into rules_py/engine_env.py with a test, and have paperkit_gate_main call it.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:35:13Z",
+      "minted_during": "tick",
+      "caused_by": "W892",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W896",
+      "title": "rules_py: engine_stage_main.py runs one stage script as a subprocess under the pinned engine's environment",
+      "status": "ready",
+      "enables": [
+        "W892"
+      ],
+      "touches": [
+        "bazel",
+        "gate",
+        "engine"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "engine_stage_main --engine=gate.py-rootpath --script=SCRIPT [-- ARGS]: refuse a missing input, set the engine env via engine_env, run the script with sys.executable, return its status; tested with a stand-in engine tree.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:35:13Z",
+      "minted_during": "tick",
+      "caused_by": "W892",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W897",
+      "title": "gate_stages: a stage may carry an options dict (env, engine_repo, engine_files) and then runs under engine_stage_main with the engine's files as data",
+      "status": "ready",
+      "enables": [
+        "W892",
+        "gcalculus:W222",
+        "gcalculus:W93"
+      ],
+      "touches": [
+        "bazel",
+        "gate",
+        "engine"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Extend the stage tuple with an optional 4th element, a dict {engine_repo, engine_files, env, imports}: engine_repo wires engine_stage_main; env passes to py_test with rootpath expansion; imports (runfiles-relative directories, e.g. ../bibparse_pinned/bibparse/src) go to py_test imports so a pinned source dir lands on sys.path; add a sample stage proving each loads and runs.",
+      "evidence": "2026-10-10: 2026-10-09 (gcalculus-22): gcalculus:W93 slice 2 needs a pinned copy of mikemol-bibparse's src dir (pinned_files at mtools a10c6c4, prefix bibparse/src/) on the stage's path. A rootpath names a FILE, not a directory, so a PYTHONPATH=$(rootpath ...) cannot name the dir; py_test's imports attribute takes runfiles-relative directories and puts them on sys.path, so the option carries imports as well as env. W897 now also enables gcalculus:W93.",
+      "issued_at": "2026-10-09T23:35:14Z",
+      "minted_during": "tick",
+      "caused_by": "W892",
+      "last_worked": "2026-10-10T00:17:00Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W898",
+      "title": "hooks: mikemol-hooks-probe fires each gate hook with a canned deny payload from the root and a foreign cwd and fails unless it denies",
+      "status": "done",
+      "enables": [
+        "W893"
+      ],
+      "touches": [
+        "hooks",
+        "adopt",
+        "probe"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09: hooks/src/mikemol/hooks/probe.py + console script mikemol-hooks-probe: a table of four gates (no-verify, no-chaining, structural-query, shellcheck) each with a Bash command it must deny; fired armed (STRUCT_HOOK_BLOCK=1) from the project root and from a foreign cwd; launcher is a shlex argv template with {entry}/{project}; only a permissionDecision deny passes and an absent launcher, timeout or silent exit is a FAIL. Run against THIS checkout's real hooks/bin launchers: 8 of 8 rows deny. 16 tests (14 warrants), 6 mutants; bazel test //hooks/... 74 of 74 pass.",
+      "issued_at": "2026-10-09T23:35:14Z",
+      "minted_during": "tick",
+      "caused_by": "W893",
+      "last_worked": "2026-10-09T23:43:01Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T234301Z"
+    },
+    {
+      "symbol": "W899",
+      "title": "hooks: a hermetic test runs mikemol-hooks-probe over the bin launchers with a stand-in venv and over the console scripts, with no skip path",
+      "status": "done",
+      "enables": [
+        "W893",
+        "gcalculus:W223"
+      ],
+      "touches": [
+        "hooks",
+        "probe"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09: the hermetic run is in tests/test_probe.py with no skip path: the REAL hooks/bin launchers run through a stand-in venv whose python3 is this interpreter and whose entry scripts call the real mikemol.hooks.entry functions, from a foreign cwd (3 gates, 6 firings, all deny); controls: an allowing launcher, a silent one, an absent one, an absent venv (denies, the gate fails shut) and a repo with no struct-tools routing table (the structural-query row fails: the adopter's silent inert gate). Replaces the skip-if-absent arm as the proof that an adopted guard denies when fired.",
+      "issued_at": "2026-10-09T23:35:14Z",
+      "minted_during": "tick",
+      "caused_by": "W893",
+      "last_worked": "2026-10-09T23:43:02Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T234302Z"
+    },
+    {
+      "symbol": "W900",
+      "title": "Answer gcalculus:W222 and :W223 by letter: the engine-stage design, and that the hook probe is mtools' with the tool that replaces gcalculus' copy",
+      "status": "done",
+      "enables": [
+        "W892",
+        "W893"
+      ],
+      "touches": [
+        "nemik",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09: letter written to gcalculus/inbox/2026-10-09-mtools-gate-stages-engine-and-hooks-probe.md (both answers, slices W895-W899, the design note .claude/design/W892-W893-gcalculus-gate.md); the handled letter moved to inbox/archive.",
+      "issued_at": "2026-10-09T23:35:15Z",
+      "minted_during": "tick",
+      "caused_by": "W892",
+      "last_worked": "2026-10-09T23:35:54Z",
+      "ticks_blocked": 0,
+      "completed": "20261009T233554Z"
+    },
+    {
+      "symbol": "W901",
+      "title": "Prove isolated commit on real git: hooks run in the snapshot under a private index, HEAD moves, the real index.lock never exists, a peer's unstaged file does not refuse",
+      "status": "ready",
+      "enables": [
+        "W891"
+      ],
+      "touches": [
+        "commit",
+        "hooks",
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "A test over throwaway repos with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set and cwd the snapshot: assert the pre-commit ran there, HEAD advanced, no .git/index.lock during the hook, the real worktree untouched, post-commit unchanged.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:29Z",
+      "minted_during": "tick",
+      "caused_by": "W891",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W902",
+      "title": "commit_kata: an isolated mode builds the commit's private index and runs git commit against the snapshot of its tree",
+      "status": "ready",
+      "enables": [
+        "W891"
+      ],
+      "touches": [
+        "commit",
+        "hooks",
+        "snapshot"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In commit_kata add isolated=true: private index from read-tree HEAD plus add -A of the paths, write-tree, mikemol-snapshot of that tree, then git commit with the three env vars and cwd the snapshot; opt in with MIKEMOL_COMMIT_ISOLATED=1.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:30Z",
+      "minted_during": "tick",
+      "caused_by": "W891",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W903",
+      "title": "commit_kata isolated mode syncs the real index afterwards and handles a staged deletion",
+      "status": "ready",
+      "enables": [
+        "W891"
+      ],
+      "touches": [
+        "commit",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After a landed isolated commit run git reset -q on the committed paths so the real index reads clean; test a deleted path and a path that was never tracked; this is the luthen bug class.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:31Z",
+      "minted_during": "tick",
+      "caused_by": "W891",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W904",
+      "title": "Adopt isolated commit in mtools after a soak, and tell luthen-observability and the peers",
+      "status": "ready",
+      "enables": [
+        "W891"
+      ],
+      "touches": [
+        "commit",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After the opt-in has run clean for several commits flip the default, archive the letter from luthen-observability:W684, and send one letter naming the env switch and how to turn it off.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:32Z",
+      "minted_during": "tick",
+      "caused_by": "W891",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W905",
+      "title": "Scaffold the htmlstruct distribution and wire it as one new dist",
+      "status": "ready",
+      "enables": [
+        "W894"
+      ],
+      "touches": [
+        "htmlstruct",
+        "scaffold"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Run the scaffold tool for htmlstruct (src, tests, BUILD, pyproject, mutants, warrants, rubric), integrate it alone and run the gate before anything else lands (an untracked dist breaks the commit gate).",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:40Z",
+      "minted_during": "tick",
+      "caused_by": "W894",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W906",
+      "title": "htmlstruct: the HTML reader with outline, links, tables, meta and text by id, standard library only",
+      "status": "ready",
+      "enables": [
+        "W894"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "A tolerant html.parser tree; typed results; unreadable input is a Skip; tests per verb with a control each.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:41Z",
+      "minted_during": "tick",
+      "caused_by": "W894",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W907",
+      "title": "htmlstruct: the MHTML reader with the parts list, the root part and Content-Location addressing",
+      "status": "ready",
+      "enables": [
+        "W894"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "email.parser over multipart/related; the root part answers every HTML verb through the HTML reader; a sub-resource is addressed by Content-Location; tests with a built archive.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:42Z",
+      "minted_during": "tick",
+      "caused_by": "W894",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W908",
+      "title": "htmlstruct: the console script with its verbs and exit codes",
+      "status": "ready",
+      "enables": [
+        "W894"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "A htmlstruct script with outline, links, tables, meta, text and parts; an unknown verb or a missing file is a usage refusal (exit 2), never an empty answer.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:43Z",
+      "minted_during": "tick",
+      "caused_by": "W894",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W909",
+      "title": "Route html and mhtml to htmlstruct: a struct-tools row, the structural-query refusal, and a hooks-probe row",
+      "status": "ready",
+      "enables": [
+        "W894"
+      ],
+      "touches": [
+        "htmlstruct",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the routing-table row claiming .html .htm .mhtml .mht, a structural-query test that a grep over an .html refuses naming htmlstruct, and a probe row for it.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:41:43Z",
+      "minted_during": "tick",
+      "caused_by": "W894",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W910",
+      "title": "mikemol-commit's repo claim is keyed on the launcher's checkout, so one repo's gate holds every repo's commits",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "commit",
+        "hooks",
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: applied. commit_kata.claim_of resolves the repository and re-execs main under 'hold 0 claim:path:<TARGET git dir>/mtools/commit' (budget variables restored by env between hold and commit); hooks/bin/mikemol-commit now only exports MIKEMOL_FENCE_BIN. 8 tests (test_commit_claim.py incl. two repos get two different claims and a real end-to-end commit against a stub fence) + 3 launcher tests; 4 mutants; the old test_commit_launcher_lock.py and its 10 warrants are gone. Found because a paperkit gate held mtools' queue commit for over an hour and the bounded wait gave up (exit 3) exactly as designed.",
+      "issued_at": "2026-10-09T23:42:43Z",
+      "minted_during": "tick",
+      "caused_by": "W886",
+      "last_worked": "2026-10-10T00:47:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T004759Z"
+    },
+    {
+      "symbol": "W911",
+      "title": "fence: a claim verb whose lease is owned by a long-lived process, with release and a listing of holders",
+      "status": "ready",
+      "enables": [
+        "W889"
+      ],
+      "touches": [
+        "fence",
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "mikemol-membudget claim LABEL [--owner-pid N] writes a zero-capacity lease owned by that process's pid:starttime and returns; release drops it; claims lists holder and age; tests: exclusion, dead-owner gc, listing.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:45:38Z",
+      "minted_during": "tick",
+      "caused_by": "W889",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W912",
+      "title": "A working card's touches are claimed by the session through the context hook, and a refusal names the holder",
+      "status": "ready",
+      "enables": [
+        "W889"
+      ],
+      "touches": [
+        "hooks",
+        "locks",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In the tick-gate or user-prompt hook, when a card is working, run the claim verb per claim:label:touch:<repo>:<tag>; an existing holder is printed with its age as advisory context, never a block; unclaimed on done.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:45:39Z",
+      "minted_during": "tick",
+      "caused_by": "W889",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W913",
+      "title": "nemik-overlaps and the inbound context line print the live claim holders beside overlapping cards",
+      "status": "ready",
+      "enables": [
+        "W889"
+      ],
+      "touches": [
+        "nemik",
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read fence's claims listing for the repo and show holder and age next to each OVERLAP row; owned by nemik, so a letter or card there; test with a fixture ledger.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:45:39Z",
+      "minted_during": "tick",
+      "caused_by": "W889",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W914",
+      "title": "pathsforward --add gives a new card the default priority vector so nemik-rank has no UNSCORED items",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In ops.add set vector to the documented default WV with vector_source default when none is given (read the default and its axes from nemik's vector spec, do not restate), and a test that a minted card scores; nemik-rank --check then prints no UNSCORED for new cards.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:46:02Z",
+      "minted_during": "tick",
+      "caused_by": "W880",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W915",
+      "title": "Answer gcalculus:W233: publish the commit that carries mikemol-hooks-probe",
+      "status": "working",
+      "enables": [
+        "gcalculus:W233"
+      ],
+      "touches": [
+        "nemik",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "When the W898/W899 commit lands, message gcalculus-22 its sha; gcalculus pins it and runs the probe on its hooks.",
+      "evidence": "",
+      "issued_at": "2026-10-09T23:51:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "gcalculus:W233",
+      "last_worked": "2026-10-10T00:48:03Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W916",
+      "title": "Answer luthen-observability:W710: a run-time guard predicate for the fenced commit, from a declared reading",
+      "status": "blocked",
+      "enables": [
+        "luthen-observability:W710"
+      ],
+      "touches": [
+        "fence",
+        "commit",
+        "hooks"
+      ],
+      "blocked_on": [
+        "W918",
+        "W919",
+        "W920",
+        "W921"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella for luthen-observability:W710: lands when the trip rule, the reading source, the watcher, the policy row and the reply letter (W918-W922) are done; design in .claude/design/W710-runtime-guard.md.",
+      "evidence": "",
+      "issued_at": "2026-10-10T00:12:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W710",
+      "last_worked": "2026-10-10T00:13:17Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W917",
+      "title": "Answer luthen-observability:W715: pathsforward/.venv is the canonical writer venv, and the hooks venv gains it once W317 allows the dependency",
+      "status": "done",
+      "enables": [
+        "luthen-observability:W715"
+      ],
+      "touches": [
+        "hooks",
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: answered by letter (W922): option 2 now (pathsforward/.venv/bin is canonical; the preamble and the two hook launchers already treat it so); option 1 is W923 behind W317.",
+      "issued_at": "2026-10-10T00:12:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W715",
+      "last_worked": "2026-10-10T00:15:27Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T001527Z"
+    },
+    {
+      "symbol": "W918",
+      "title": "fence guard: the pure trip rule (streak after each sample, first trip index), where an unreadable sample neither counts nor resets",
+      "status": "ready",
+      "enables": [
+        "W916"
+      ],
+      "touches": [
+        "fence",
+        "guard"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "A module in fence with streak_after and trip_index over a sample list, cleanroomed from luthen's kine_guard (a design, not a copy); tests with planted series incl. the blind-sample and exactly-at-threshold cases; mutants.",
+      "evidence": "",
+      "issued_at": "2026-10-10T00:13:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W916",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W919",
+      "title": "fence guard: a reading source that asks a named endpoint a PromQL instant query",
+      "status": "ready",
+      "enables": [
+        "W916"
+      ],
+      "touches": [
+        "fence",
+        "guard"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "A reader taking an endpoint name, a query and a resolver; the endpoint address comes from a host-supplied name-to-url file (no address in mtools); an unreadable answer is a blind sample, not a value; tested with an injected opener and a planted response.",
+      "evidence": "",
+      "issued_at": "2026-10-10T00:13:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W916",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W920",
+      "title": "fence guard: a watcher that samples while the fenced command runs and interrupts the named process on a trip",
+      "status": "ready",
+      "enables": [
+        "W916"
+      ],
+      "touches": [
+        "fence",
+        "guard",
+        "commit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Run alongside the command: sample every interval, feed the rule, on a trip send the declared signal to the descendant named by the row (the bazel client), end on the command exiting never on a timeout; injected clock, reader and signaller for tests.",
+      "evidence": "",
+      "issued_at": "2026-10-10T00:13:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "W916",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W921",
+      "title": "mikemol-commit reads its guards from a policy row, so a limit is declared and not a literal",
+      "status": "ready",
+      "enables": [
+        "W916"
+      ],
+      "touches": [
+        "commit",
+        "fence",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "A TOML policy (the katas.toml pattern) with guard rows: reading, endpoint name, threshold, samples, interval, signal, target process name; the commit passes the rows to the watcher; an absent file means no guard, said once.",
+      "evidence": "",
+      "issued_at": "2026-10-10T00:13:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "W916",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W922",
+      "title": "Reply to luthen-observability by letter on W710 and W715",
+      "status": "done",
+      "enables": [
+        "W916",
+        "luthen-observability:W715"
+      ],
+      "touches": [
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: letter written to luthen-observability/inbox/2026-10-09-mtools-w710-runtime-guard-and-w715-pathsforward-venv.md (the four predicate answers, the slices W918-W921, and W715: option 2 now, option 1 as W923 behind W317); the two handled letters moved to inbox/archive.",
+      "issued_at": "2026-10-10T00:13:11Z",
+      "minted_during": "interrupt",
+      "caused_by": "W916",
+      "last_worked": "2026-10-10T00:13:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T001343Z"
+    },
+    {
+      "symbol": "W923",
+      "title": "hooks depends on pathsforward so one venv carries the writer",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "pathsforward"
+      ],
+      "blocked_on": [
+        "W317"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Blocked on W317: hooks and pathsforward are adopter-installed, so the dependency edge needs published floors; then add mikemol-pathsforward to hooks' dependencies and drop the PATH export from the launchers.",
+      "evidence": "",
+      "issued_at": "2026-10-10T00:13:12Z",
+      "minted_during": "interrupt",
+      "caused_by": "W917",
+      "last_worked": "2026-10-10T00:13:19Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W924",
+      "title": "mikemol-commit's last line says whether the sha is published, not only that it committed",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "commit",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: applied with W910. commit_kata.published(root, sha) reads origin/main after the commit returns (the post-commit push has succeeded or been refused): PUSHED, LOCAL: not on origin/main, or no origin/main; the COMMITTED line ends with it in brackets. 4 tests with a bare origin, 2 mutants.",
+      "issued_at": "2026-10-10T00:15:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "W910",
+      "last_worked": "2026-10-10T00:47:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T004759Z"
+    },
+    {
+      "symbol": "W925",
+      "title": "gen-warrants --prune also drops a rubric row whose section has no warrant left",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "warrants"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In mikemol-gen-warrants --write --prune, after dropping stale warrants remove every rubric row whose section key now has none, in whichever of rubric.tsv or rubric.jsonl the dist has (keep the trailing tab); test with a section emptied by a deleted test module. Found when deleting test_commit_launcher_lock.py left its rubric row and the pairing gate refused.",
+      "evidence": "",
+      "issued_at": "2026-10-10T02:07:13Z",
+      "minted_during": "interrupt",
+      "caused_by": "W910",
       "last_worked": null,
       "ticks_blocked": 0
     }
