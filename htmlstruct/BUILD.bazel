@@ -136,8 +136,7 @@ sh_test(
 
 venv_from_hub(
     name = ".venv",
-    # ⚑ A LIBRARY: no console scripts, matching pyproject's absent [project.scripts].
-    console_scripts = {},
+    console_scripts = {"mikemol-htmlstruct": "mikemol.htmlstruct.cli:main"},
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",

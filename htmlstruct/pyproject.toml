@@ -19,6 +19,9 @@ classifiers = [
 # ⚑ NO RUNTIME DEPENDENCY: standard library only.
 dependencies = []
 
+[project.scripts]
+mikemol-htmlstruct = "mikemol.htmlstruct.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
@@ -88,3 +91,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_tables.py" = ["assert"]
 "tests/test_meta.py" = ["assert"]
 "tests/test_mhtml.py" = ["assert"]
+"tests/test_cli.py" = ["assert"]

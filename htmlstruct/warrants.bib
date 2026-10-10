@@ -257,3 +257,46 @@
   claim  = {The root verbs apply only to an HTML root in a charset Python knows.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_a_root_that_is_not_html_or_not_decodable_is_a_skip},
 }
+
+@misc{htmlstruct-cli-each-html-verb-prints-one-record-per-line,
+  section = {cli},
+  title  = {The control: every verb answers with exit 0 and tab-separated records},
+  claim  = {The control: every verb answers with exit 0 and tab-separated records.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_each_html_verb_prints_one_record_per_line},
+}
+
+@misc{htmlstruct-cli-absent-id-is-a-miss-with-exit-one-and-no-output,
+  section = {cli},
+  title  = {A valid question with no answer is not an empty success},
+  claim  = {A valid question with no answer is not an empty success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_absent_id_is_a_miss_with_exit_one_and_no_output},
+}
+
+@misc{htmlstruct-cli-usage-errors-exit-two,
+  section = {cli},
+  title  = {An unknown verb, a wrong operand count and a missing file are refusals, not empty answers},
+  claim  = {An unknown verb, a wrong operand count and a missing file are refusals, not empty
+            answers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_usage_errors_exit_two},
+}
+
+@misc{htmlstruct-cli-archive-answers-the-html-verbs-through-its-root-and-lists-its-parts,
+  section = {cli},
+  title  = {An .mhtml file is read through its first part; `parts` lists what is in it},
+  claim  = {An .mhtml file is read through its first part; `parts` lists what is in it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_archive_answers_the_html_verbs_through_its_root_and_lists_its_parts},
+}
+
+@misc{htmlstruct-cli-part-is-written-as-raw-bytes-and-an-unknown-one-is-a-miss,
+  section = {cli},
+  title  = {`part` writes the decoded payload to standard output; a bad location exits 1},
+  claim  = {`part` writes the decoded payload to standard output; a bad location exits 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_part_is_written_as_raw_bytes_and_an_unknown_one_is_a_miss},
+}
+
+@misc{htmlstruct-cli-input-that-is-not-a-document-is-a-skip-with-exit-three,
+  section = {cli},
+  title  = {Bytes that are not text, and a non-archive given to `parts`, are skips},
+  claim  = {Bytes that are not text, and a non-archive given to `parts`, are skips.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_input_that_is_not_a_document_is_a_skip_with_exit_three},
+}

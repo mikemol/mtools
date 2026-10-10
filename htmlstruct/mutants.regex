@@ -37,3 +37,12 @@ src/mikemol/htmlstruct/mhtml.py|quoted-printable-left-encoded|if kind == "quoted
 src/mikemol/htmlstruct/mhtml.py|preamble-kept-as-a-part|None = None|None = []|def=_bodies
 src/mikemol/htmlstruct/mhtml.py|location-matched-loosely|p\.location == location|p.location is not None and location in p.location|def=part_at
 src/mikemol/htmlstruct/mhtml.py|root-charset-ignored|root\.charset or "utf-8"|"utf-8"|def=root_tree
+
+# W908: the command. A miss, a skip or a usage error that exits 0 (or prints an empty answer) tells a caller
+# "no headings" when the truth is "could not read it"; a part written as text corrupts its bytes.
+src/mikemol/htmlstruct/cli.py|miss-exits-zero|return EXIT_MISS|return EXIT_OK|def=_html_verb
+src/mikemol/htmlstruct/cli.py|unknown-verb-admitted|args\[0\] not in _OPERANDS|False|def=_well_formed
+src/mikemol/htmlstruct/cli.py|operand-count-ignored|return len\(args\) - _FIXED_ARGS == _OPERANDS\[args\[0\]\]|return True|def=_well_formed
+src/mikemol/htmlstruct/cli.py|skip-exits-zero|return EXIT_SKIP|return EXIT_OK|def=_skip
+src/mikemol/htmlstruct/cli.py|missing-file-admitted|if not path\.is_file\(\):|if False:|def=main
+src/mikemol/htmlstruct/cli.py|archive-suffix-ignored|path\.suffix\.lower\(\) not in _ARCHIVE_SUFFIXES|True|def=_document
