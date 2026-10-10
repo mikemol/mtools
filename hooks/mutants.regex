@@ -99,3 +99,13 @@ src/mikemol/hooks/repin.py|unchanged-pin-reported|if wanted and pinned != sha:|i
 src/mikemol/hooks/repin.py|abbreviation-compared-by-equality|return target\.startswith\(pinned\) or pinned\.startswith\(target\)|return pinned == target|def=same
 src/mikemol/hooks/repin.py|source-form-skipped|_SOURCE\.sub\(source, _PEP508\.sub\(pep508, text\)\)|_PEP508.sub(pep508, text)|def=rewrite
 src/mikemol/hooks/repin.py|wheel-form-not-found|\(_SOURCE, SOURCE\), \(_WHEEL, WHEEL\)|(_SOURCE, SOURCE),|def=find
+
+# W958: the repin shell. Touching mtools itself or a hidden worktree, writing a dirty repo, rewriting a wheel-only
+# repo, syncing when told not to, or reporting a failed sync as success each break its promise.
+src/mikemol/hooks/repin_cli.py|dirty-repo-written|if code != 0 or out\.strip\(\):|if False:|def=_repin_one
+src/mikemol/hooks/repin_cli.py|mtools-itself-repinned|p\.parent\.name != SELF|True|def=repos
+src/mikemol/hooks/repin_cli.py|hidden-directory-read|not p\.parent\.name\.startswith\("\."\)|True|def=repos
+src/mikemol/hooks/repin_cli.py|wheel-repo-written|if row\.form != repin\.WHEEL|if True|def=apply
+src/mikemol/hooks/repin_cli.py|sync-ignores-no-sync|if result == "written" and sync:|if result == "written":|def=apply
+src/mikemol/hooks/repin_cli.py|failed-sync-reported-synced|== 0 else "sync-failed"|== 0 or True else "sync-failed"|def=apply
+src/mikemol/hooks/repin_cli.py|write-without-sha-admitted|return "--write needs --sha, the full commit to move every pin to" if write else None|return None|def=_refusal

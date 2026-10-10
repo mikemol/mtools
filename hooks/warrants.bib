@@ -7891,3 +7891,52 @@
   claim  = {A pyproject that does not use mtools is not touched.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin.py -k test_text_without_pins_finds_none_and_is_unchanged},
 }
+
+@misc{hooks-repin-cli-survey-lists-each-pin-with-its-standing,
+  section = {repin_cli},
+  title  = {mtools, hidden directories and repos without pins are left out; a wheel is VENDORED},
+  claim  = {mtools, hidden directories and repos without pins are left out; a wheel is VENDORED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_the_survey_lists_each_pin_with_its_standing},
+}
+
+@misc{hooks-repin-cli-write-repins-the-clean-repo-syncs-it-and-skips-the-dirty-one,
+  section = {repin_cli},
+  title  = {The control and the refusal side by side; nothing in the dirty repo or mtools changes},
+  claim  = {The control and the refusal side by side; nothing in the dirty repo or mtools changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_write_repins_the_clean_repo_syncs_it_and_skips_the_dirty_one},
+}
+
+@misc{hooks-repin-cli-no-sync-writes-without-running-uv,
+  section = {repin_cli},
+  title  = {The rewrite alone, leaving the lock to the repo's own session},
+  claim  = {The rewrite alone, leaving the lock to the repo's own session.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_no_sync_writes_without_running_uv},
+}
+
+@misc{hooks-repin-cli-failed-sync-exits-one-and-says-which-repo,
+  section = {repin_cli},
+  title  = {The text is rewritten, the sync failure is reported and the exit says so},
+  claim  = {The text is rewritten, the sync failure is reported and the exit says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_failed_sync_exits_one_and_says_which_repo},
+}
+
+@misc{hooks-repin-cli-repo-already-at-the-target-is-current-and-not-synced,
+  section = {repin_cli},
+  title  = {A second run changes nothing and runs nothing},
+  claim  = {A second run changes nothing and runs nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_repo_already_at_the_target_is_current_and_not_synced},
+}
+
+@misc{hooks-repin-cli-only-the-named-dists-move,
+  section = {repin_cli},
+  title  = {--dist narrows both the survey and the rewrite},
+  claim  = {--dist narrows both the survey and the rewrite.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_only_the_named_dists_move},
+}
+
+@misc{hooks-repin-cli-usage-refusals-exit-two-and-write-nothing,
+  section = {repin_cli},
+  title  = {No --sha with --write, a short sha, an unknown flag and a missing value},
+  claim  = {No --sha with --write, a short sha, an unknown flag and a missing value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_usage_refusals_exit_two_and_write_nothing},
+}
