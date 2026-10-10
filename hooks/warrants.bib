@@ -7625,3 +7625,22 @@
   claim  = {A Write of a file that does not exist yet has no baseline: its findings are all added.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_a_new_file_with_a_finding_is_refused},
 }
+
+@misc{hooks-pycheck-relative-import-in-a-package-init-is-judged-not-refused,
+  section = {pycheck},
+  title  = {`from .b import VALUE` in an existing `__init__.py` type-checks (mtools:W938)},
+  claim  = {`from .b import VALUE` in an existing `__init__.py` type-checks (mtools:W938). gcalculus
+            measured `import-not-found: .table` for exactly this shape and worked around
+            it with the absolute spelling. The shadowed run (W868) already reads the
+            edit AS the real path; this arm holds the `__init__.py` case, and the next
+            test is its control: a relative import that names nothing is still reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_relative_import_in_a_package_init_is_judged_not_refused},
+}
+
+@misc{hooks-pycheck-relative-import-of-nothing-in-a-package-init-is-still-reported,
+  section = {pycheck},
+  title  = {The control: the shadowed run in `__init__.py` is a real check, a missing module refuses},
+  claim  = {The control: the shadowed run in `__init__.py` is a real check, a missing module
+            refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck.py -k test_a_relative_import_of_nothing_in_a_package_init_is_still_reported},
+}

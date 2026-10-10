@@ -326,6 +326,36 @@ def test_a_type_error_beside_a_relative_import_is_still_reported(
     assert "assignment" in out
 
 
+_INIT_OK = '"""A package."""\n\nfrom .b import VALUE\n\n__all__ = ["VALUE"]\n'
+_INIT_MISSING = '"""A package."""\n\nfrom .nowhere import VALUE\n\n__all__ = ["VALUE"]\n'
+
+
+@_needs_checkers
+def test_a_relative_import_in_a_package_init_is_judged_not_refused(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """`from .b import VALUE` in an existing `__init__.py` type-checks (mtools:W938).
+
+    ⚑ gcalculus measured `import-not-found: .table` for exactly this shape and worked around it
+    with the absolute spelling. The shadowed run (W868) already reads the edit AS the real path;
+    this arm holds the `__init__.py` case, and the next test is its control: a relative import
+    that names nothing is still reported.
+    """
+    pkg = _package(_project(tmp_path))
+    _main(monkeypatch, _write(pkg / "__init__.py", _INIT_OK), own="1")
+    assert not capsys.readouterr().out
+
+
+@_needs_checkers
+def test_a_relative_import_of_nothing_in_a_package_init_is_still_reported(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """The control: the shadowed run in `__init__.py` is a real check, a missing module refuses."""
+    pkg = _package(_project(tmp_path))
+    _main(monkeypatch, _write(pkg / "__init__.py", _INIT_MISSING), own="1")
+    assert "import-not-found" in capsys.readouterr().out
+
+
 @_needs_checkers
 def test_a_relative_import_in_a_file_not_yet_on_disk_keeps_the_staged_copy(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
