@@ -1947,3 +1947,52 @@
   claim  = {Only None and NaN are unreadable: 0.0 and -1.0 are under the limit and reset the streak.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard.py -k test_zero_and_negative_readings_are_readings_not_blindness},
 }
+
+@misc{fence-reading-successful-instant-query-reads-its-first-sample,
+  section = {reading},
+  title  = {The positive control: the name resolves, the URL carries the encoded query, it parses},
+  claim  = {The positive control: the name resolves, the URL carries the encoded query, it parses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_a_successful_instant_query_reads_its_first_sample},
+}
+
+@misc{fence-reading-unset-missing-or-unparseable-endpoints-file-is-blind,
+  section = {reading},
+  title  = {No address means no reading, and the fetcher is never called},
+  claim  = {No address means no reading, and the fetcher is never called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_an_unset_missing_or_unparseable_endpoints_file_is_blind},
+}
+
+@misc{fence-reading-unknown-name-or-a-foreign-scheme-is-blind,
+  section = {reading},
+  title  = {A name the host does not map, a file:// URL, an ftp:// URL and a bare word are refused},
+  claim  = {A name the host does not map, a file:// URL, an ftp:// URL and a bare word are refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_an_unknown_name_or_a_foreign_scheme_is_blind},
+}
+
+@misc{fence-reading-non-object-endpoints-file-is-blind,
+  section = {reading},
+  title  = {A JSON list is not a name-to-url map},
+  claim  = {A JSON list is not a name-to-url map.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_a_non_object_endpoints_file_is_blind},
+}
+
+@misc{fence-reading-failed-query-or-an-empty-or-odd-answer-is-blind,
+  section = {reading},
+  title  = {Only a successful, non-empty, numeric, non-NaN vector is a reading},
+  claim  = {Only a successful, non-empty, numeric, non-NaN vector is a reading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_a_failed_query_or_an_empty_or_odd_answer_is_blind},
+}
+
+@misc{fence-reading-fetcher-that-found-nothing-is-blind,
+  section = {reading},
+  title  = {A transport failure arrives as None and stays None},
+  claim  = {A transport failure arrives as None and stays None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_a_fetcher_that_found_nothing_is_blind},
+}
+
+@misc{fence-reading-real-fetch-reads-a-server-and-a-dead-port-is-blind,
+  section = {reading},
+  title  = {The transport against a loopback server, and the same URL once the server is gone},
+  claim  = {The transport against a loopback server, and the same URL once the server is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reading.py -k test_the_real_fetch_reads_a_server_and_a_dead_port_is_blind},
+}

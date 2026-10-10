@@ -55,3 +55,7 @@ src/mikemol/fence/guard.py|limit-inclusive|return streak \+ 1 if sample > limit 
 src/mikemol/fence/guard.py|nan-reads-as-healthy|if sample is None or math\.isnan\(sample\):|if sample is None:|def=streak_after
 src/mikemol/fence/guard.py|hold-off-by-one|if streak >= hold:|if streak > hold:|def=trip_index
 src/mikemol/fence/guard.py|hold-zero-allowed|if hold < 1:|if hold < 0:|def=trip_index
+src/mikemol/fence/reading.py|foreign-scheme-followed|return url if scheme in _SCHEMES else None|return url|def=endpoint_url
+src/mikemol/fence/reading.py|nan-is-a-reading|return None if math\.isnan\(number\) else number|return number|def=value_of
+src/mikemol/fence/reading.py|error-answer-read|if top\.get\("status"\) != "success" or not isinstance\(data, dict\):|if not isinstance(data, dict):|def=value_of
+src/mikemol/fence/reading.py|failure-raises|except \(OSError, ValueError, HTTPException\):|except HTTPException:|def=fetch

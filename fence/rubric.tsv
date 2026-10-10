@@ -17,3 +17,4 @@ git_env	git_env: No GIT_* Survives a Runner, and the Hazard It Closes Is Measure
 admit_zram	The Zram Gate: a Start Waits While zram Is at or Above Its Ceiling and Takes No Place in Line, an Unreadable zram Admits, and a Gate Left Off Never Reads It
 admit_holder	A held claim names its holder
 guard	The guard's pure trip rule (W918)
+reading	The guard's reading source (W919)

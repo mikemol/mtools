@@ -182,6 +182,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # to argue about, not an inheritance.
 "tests/test_cli.py" = ["import-private-name"]
 
+# ⚑⚑ ONE FILE NAMES A METHOD BY THE STANDARD LIBRARY'S CONTRACT, AND THE NAME IS THE CONTRACT.
+# `http.server` dispatches a GET to a method called exactly `do_GET`; `invalid-function-name`
+# is right everywhere else and cannot be satisfied here without a handler that is never called. `test_reading.py` serves the guard's reading source from a loopback server it starts and
+# stops, because the transport is the subject. ⚑ SCOPED TO THE ONE FILE, never to `tests/*`.
+"tests/test_reading.py" = ["invalid-function-name"]
+
 # ⚑⚑ ONE FILE RUNS `git` AS A SUBPROCESS, AND RUNNING IT IS THE SUBJECT. `test_git_env.py` codifies
 # the negative control for `git_env.clean_env`: a fixture commit under a hostile `GIT_DIR` aimed at a
 # DECOY repository must land in the decoy unscrubbed and nowhere near it scrubbed. That cannot be
