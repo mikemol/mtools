@@ -6,6 +6,7 @@
 # A library only, for now: the driver and its console script arrive last in the port.
 load("@pycodemod_deps//:requirements.bzl", "requirement")
 load("@pycodemod_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
@@ -124,8 +125,12 @@ sh_test(
     size = "small",
 )
 
-sh_test(
+# ⚑ SIX SHARDS, NOT ONE LONG TARGET (W972, operator 2026-10-10). 778 def-sites at about 0.7 s each
+# was 565 s alone and timed out inside a full gate; six shards of about 130 sites are six targets
+# bazel schedules independently, and `:mutants` is still the name that means all of them.
+mutants_sharded(
     name = "mutants",
+    shards = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
