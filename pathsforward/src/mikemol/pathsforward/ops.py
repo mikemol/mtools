@@ -24,7 +24,7 @@ from enum import StrEnum
 from itertools import starmap
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward import lock, realizable, recurrence, timevalue, vector
+from mikemol.pathsforward import attach, lock, realizable, recurrence, timevalue, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -49,6 +49,18 @@ NUDGE_TICKS: tuple[int, ...] = (1, 2, 4, 8)
 ESCALATE_TICK = 16
 _DATE = 10
 _UNBLOCKING = ("ready", "done")
+
+
+def _attached(new: Json, upd: Update) -> Json:
+    """Shape the attachments an update gives: this path set, the others kept.
+
+    Returns:
+        the field to set on the waypoint, empty when the update attaches nothing.
+
+    """
+    if upd.attachment is None:
+        return {}
+    return {attach.KEY: attach.with_entry(new, *upd.attachment)}
 
 
 def _bad_edges(edges: Iterable[str]) -> list[str]:
@@ -115,6 +127,10 @@ class Update:
     # ⚑ APPENDED, NOT SET (W880): a repair that adds one edge must not restate the rest, so
     # `--add-enables` keeps the edges there and skips any already present. Giving both is refused.
     add_enables: tuple[str, ...] | None = None
+    # ⚑ AN ATTACHMENT IS PINNED BEFORE THE UPDATE (W931, nemik:W276): the caller resolves the file
+    # under the project root (attach.resolve refuses a link, a directory, a missing file) and hands
+    # in (path, sha256); a path already attached has its entry replaced.
+    attachment: tuple[str, str] | None = None
     weight: int | None = None
     # ⚑ SET, NOT MERGED, like `enables` (nemik:W50, 2026-09-27): three comma-joined tags
     # ("adapter,cleanup") were accepted at --add and had no repair path until --update took it.
@@ -452,6 +468,7 @@ def _set_given(new: Json, upd: Update) -> None:
     }
     new.update({key: value for key, value in given.items() if value is not None})
     _append_edges(new, upd)
+    new.update(_attached(new, upd))
     if upd.caused_by is not None:
         new["caused_by"] = upd.caused_by or None
     new.update(_realizable_fields(upd))

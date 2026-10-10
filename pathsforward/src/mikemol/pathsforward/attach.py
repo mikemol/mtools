@@ -7,15 +7,20 @@
 ⚑ A PEER READING THE REPO AT A COMMIT RESOLVES AN ATTACHMENT THE SAME WAY, so a path is relative to
 the queue's project root and never absolute or climbing out of it. The record is plain data in the
 waypoint, so it rides in the state digest and in `--show` without either learning about it.
+
+⚑ NO LINK IS READ THROUGH (operator 2026-10-02): `resolve` refuses a path whose any component, the
+file included, is a symbolic link, because a link makes the hash a statement about some other file.
 """
 
 from __future__ import annotations
 
+import hashlib
 import re
-from pathlib import PurePosixPath
+import stat
+from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pathsforward.model import text
+from mikemol.pathsforward.model import RefusedError, text
 
 if TYPE_CHECKING:
     from mikemol.pathsforward.model import Json, State
@@ -105,3 +110,45 @@ def findings(state: State) -> list[str]:
             if why is not None
         )
     return found
+
+
+def resolve(root: Path, path: str) -> tuple[str, str]:
+    """Pin a file under the project root: its path as given and the sha256 of its bytes.
+
+    Returns:
+        the (path, sha256) pair to store.
+
+    Raises:
+        RefusedError: on a bad path, a link anywhere along it, a missing file, or a directory.
+
+    """
+    why = path_fault(path)
+    if why is not None:
+        msg = f"--attach: {why}"
+        raise RefusedError(msg)
+    here = root
+    for part in PurePosixPath(path).parts:
+        here /= part
+        if here.is_symlink():
+            msg = f"--attach: {path!r} goes through a link ({part!r}); a link is never read"
+            raise RefusedError(msg)
+    if not here.exists():
+        msg = f"--attach: {path!r} does not exist under {root}"
+        raise RefusedError(msg)
+    if not stat.S_ISREG(here.stat().st_mode):
+        msg = f"--attach: {path!r} is not a regular file"
+        raise RefusedError(msg)
+    return path, hashlib.sha256(here.read_bytes()).hexdigest()
+
+
+def with_entry(rec: Json, path: str, digest: str) -> list[object]:
+    """Compute a waypoint's attachments with one path set, replacing any entry for it.
+
+    Returns:
+        the list to store: the other entries as they were, then this one.
+
+    """
+    value = rec.get(KEY)
+    held = cast("list[object]", value) if isinstance(value, list) else []
+    kept = [e for e in held if _fields(e).get("path") != path]
+    return [*kept, {"path": path, "sha256": digest}]

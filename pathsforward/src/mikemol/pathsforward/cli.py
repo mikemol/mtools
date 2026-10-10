@@ -20,13 +20,14 @@ import argparse
 import json
 import socket
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward import (
     admission,
+    attach,
     certify,
     delivered,
     embargo,
@@ -65,6 +66,17 @@ EXIT_FAILED = 1
 EXIT_REFUSED = 2
 EXIT_LOCKED = 3
 EXIT_DIVERGED = 4
+
+
+def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
+    """Give an update the (path, sha256) of the file `--attach` names, resolved under the root.
+
+    Returns:
+        the update unchanged when nothing is attached; otherwise a copy carrying the pin.
+
+    """
+    return upd if path is None else replace(upd, attachment=attach.resolve(root, path))
+
 
 _SUMMARY = "summary"
 _FLAGS = (
@@ -137,6 +149,7 @@ _FIELDS = (
     "ticks_blocked",
     "enables",
     "add_enables",
+    "attach",
     "touches",
     "caused_by",
     "exclude",
@@ -180,6 +193,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "ticks_blocked",
             "enables",
             "add_enables",
+            "attach",
             "weight",
             "touches",
             "witness",
@@ -506,6 +520,11 @@ def _parser() -> argparse.ArgumentParser:
         nargs="+",
         metavar="SYMBOL",
         help="--update: append to the edges already there (--enables sets the whole list)",
+    )
+    ap.add_argument(
+        "--attach",
+        metavar="PATH",
+        help="--update: pin a repo-relative file to the waypoint by its sha256 (nemik:W276)",
     )
     ap.add_argument("--touches", nargs="+", metavar="TAG")
     ap.add_argument(
@@ -1053,7 +1072,9 @@ def _update(ctx: Ctx) -> int:
 
     def edit(state: State) -> int:
         sym = ctx.get("update") or ""
-        ops.update(state, sym, upd, ctx.stamp())
+        root = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+        pinned = _pinned(upd, root, ctx.get("attach"))
+        ops.update(state, sym, pinned, ctx.stamp())
         code = _lease_for_status(ctx, state, sym, upd.status)
         if code == EXIT_OK:
             _say(f"{sym} updated; state_hash={v2(state.waypoints)}")

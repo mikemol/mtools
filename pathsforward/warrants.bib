@@ -4109,3 +4109,31 @@
   claim  = {No attachments means no finding; the whole check reports a malformed one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach.py -k test_an_absent_field_is_fine_and_the_check_runs_the_property},
 }
+
+@misc{pathsforward-attach-verb-attaching-a-file-stores-its-path-and-hash,
+  section = {attach_verb},
+  title  = {The positive control: the stored digest is the sha256 of the file's bytes},
+  claim  = {The positive control: the stored digest is the sha256 of the file's bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_verb.py -k test_attaching_a_file_stores_its_path_and_hash},
+}
+
+@misc{pathsforward-attach-verb-second-file-is-added-and-a-changed-file-replaces-its-entry,
+  section = {attach_verb},
+  title  = {Other attachments are kept; re-attaching a path updates its hash and keeps one entry},
+  claim  = {Other attachments are kept; re-attaching a path updates its hash and keeps one entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_verb.py -k test_a_second_file_is_added_and_a_changed_file_replaces_its_entry},
+}
+
+@misc{pathsforward-attach-verb-absolute-climbing-missing-or-directory-path-is-refused,
+  section = {attach_verb},
+  title  = {Exit 2 and nothing stored},
+  claim  = {Exit 2 and nothing stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_verb.py -k test_an_absolute_climbing_missing_or_directory_path_is_refused},
+}
+
+@misc{pathsforward-attach-verb-link-anywhere-along-the-path-is-refused,
+  section = {attach_verb},
+  title  = {The file itself or a directory above it being a link is refused; none exists on disk},
+  claim  = {The file itself or a directory above it being a link is refused; none exists on disk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_verb.py -k test_a_link_anywhere_along_the_path_is_refused},
+}
