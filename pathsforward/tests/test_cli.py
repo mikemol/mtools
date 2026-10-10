@@ -518,7 +518,7 @@ def test_bump_blocked_says_who_is_owed(tmp_path: Path, capsys: pytest.CaptureFix
     """--bump-blocked prints NUDGE on the first blocked tick, and honours --except."""
     blocked = {"blocked_on": ["agent-2"], "blocked_kind": "agent"}
     path = _file(tmp_path, [_wp("W1", "blocked", **blocked), _wp("W2", "blocked", **blocked)])
-    code = _run(path, "--bump-blocked", "--except", "W2")
+    code = _run(path, "--bump-blocked", "--verbose", "--except", "W2")
     out = capsys.readouterr().out
     assert (code, "W1 ticks_blocked=1 on=agent-2(agent)  NUDGE" in out, "W2" in out) == (
         _OK,

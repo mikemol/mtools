@@ -219,6 +219,7 @@ _FIELDS = (
     "all",
     "on",
     "write",
+    "verbose",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -261,7 +262,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     ),
     "add": frozenset({"next", "enables", "touches", "caused_by", "witness", "admit", "root"}),
     "drop": frozenset({"admit", "gate", "reference_arm", "root"}),
-    "bump_blocked": frozenset({"exclude"}),
+    "bump_blocked": frozenset({"exclude", "verbose"}),
     "block_matching": frozenset({"on", "write"}),
     "prune_landed": frozenset({"root"}),
     "inbound": frozenset({"root", "all"}),
@@ -373,6 +374,12 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         action="store_true",
         default=None,
         help="--block-matching: apply the block (default: a dry run that saves nothing)",
+    )
+    ap.add_argument(
+        "--verbose",
+        action="store_true",
+        default=None,
+        help="--bump-blocked: one row per blocked card (default: counts and external parties)",
     )
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
@@ -1497,7 +1504,12 @@ def _bump_blocked(ctx: Ctx) -> int:
     def edit(state: State) -> int:
         for sym in ops.prune_done(state):
             _say(f"UNBLOCKED {sym} (every local blocker is done)")
-        for n in ops.bump_blocked(state, exclude):
+        bumped = ops.bump_blocked(state, exclude)
+        if not ctx.opts.get("verbose"):
+            for report_line in ops.nudge_summary(bumped):
+                _say(report_line)
+            return EXIT_OK
+        for n in bumped:
             owed = "" if n.action is ops.Action.QUIET else f"  {n.action}"
             _say(f"{n.symbol} ticks_blocked={n.ticks} on={','.join(n.blocked_on)}({n.kind}){owed}")
         return EXIT_OK

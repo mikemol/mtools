@@ -68,3 +68,10 @@ src/mikemol/pathsforward/ownership.py|owner-never-given|if privileged\(\):|if Fa
 src/mikemol/pathsforward/ownership.py|owner-given-unprivileged|if privileged\(\):|if True:|def=adopt
 src/mikemol/pathsforward/ownership.py|existing-append-adopted|if fresh:|if True:|def=open_append
 src/mikemol/pathsforward/ownership.py|new-file-mode-from-nowhere|if path\.exists\(\) else NEW_MODE|if False else NEW_MODE|def=mode_of
+
+# W961: the default bump report. Counting local-only cards as external parties brings back 300 rows; dropping the
+# due test prints every external party every tick; ignoring --verbose hides the listing the operator asked for.
+src/mikemol/pathsforward/ops.py|local-card-called-external|not \(b\[:1\] == "W" and b\[1:\]\.isdigit\(\)\)|True|def=external_blockers
+src/mikemol/pathsforward/ops.py|quiet-party-printed|if any\(n\.action is not Action\.QUIET for n in c\)|if True|def=nudge_summary
+src/mikemol/pathsforward/ops.py|escalation-shown-as-nudge|if any\(c\.action is Action\.ESCALATE for c in cards\) else Action\.NUDGE|if False else Action.NUDGE|def=nudge_summary
+src/mikemol/pathsforward/ops.py|biggest-party-not-first|sorted\(\(-len\(cards\), key\)|sorted((len(cards), key)|def=nudge_summary

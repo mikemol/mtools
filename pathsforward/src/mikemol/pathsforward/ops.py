@@ -984,6 +984,47 @@ def bump_blocked(state: State, exclude: frozenset[str]) -> list[Nudge]:
     return out
 
 
+def external_blockers(nudge: Nudge) -> tuple[str, ...]:
+    """Name the blockers of a card that are not this queue's own waypoints.
+
+    Returns:
+        the blockers that are a `repo:W<n>`, an operator ask or any other party; empty for a card
+        waiting only on local work.
+
+    """
+    return tuple(b for b in nudge.blocked_on if not (b[:1] == "W" and b[1:].isdigit()))
+
+
+def nudge_summary(nudges: Iterable[Nudge]) -> list[str]:
+    """Render the default report of `--bump-blocked`: counts, and rows for parties only.
+
+    ⚑ NUDGING IS FOR PARTIES (mtools:W961, substrate:W318). A card blocked only on a LOCAL waypoint
+    is waiting on work, not on a person, so it can owe no nudge; one row per blocked card cost
+    substrate about 300 lines a quiet tick and defeated the back-off rule, since at
+    `ticks_blocked=1` every card is due. The report is a count line, then one row per distinct
+    EXTERNAL blocker that has a card due, with the cards behind it, most cards first. The
+    per-card listing is `--verbose`; `ticks_blocked` counting is untouched.
+
+    Returns:
+        the count line, then the rows.
+
+    """
+    bumped = list(nudges)
+    groups: dict[tuple[str, ...], list[Nudge]] = {}
+    for nudge in bumped:
+        key = external_blockers(nudge)
+        if key:
+            groups.setdefault(key, []).append(nudge)
+    due = {k: c for k, c in groups.items() if any(n.action is not Action.QUIET for n in c)}
+    rows = []
+    for _negative, key in sorted((-len(cards), key) for key, cards in due.items()):
+        cards = due[key]
+        worst = Action.ESCALATE if any(c.action is Action.ESCALATE for c in cards) else Action.NUDGE
+        names = ",".join(c.symbol for c in cards)
+        rows.append(f"{worst} {'; '.join(key)[:100]} ({len(cards)} cards behind it: {names})")
+    return [f"bumped {len(bumped)} cards, {len(due)} nudges due", *rows]
+
+
 def arm(state: State, job_id: str, now: str) -> None:
     """Record the verified job and the heartbeat (skill section 4.3).
 

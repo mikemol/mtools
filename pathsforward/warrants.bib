@@ -4257,3 +4257,52 @@
   claim  = {The lock file a root run creates must not become root-only.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ownership.py -k test_the_flock_sidecar_is_made_as_its_directory_owner},
 }
+
+@misc{pathsforward-nudge-summary-default-is-a-count-line-and-one-row-per-external-party,
+  section = {nudge_summary},
+  title  = {Thirty local cards cost one count, not thirty rows; the operator ask and peer card show},
+  claim  = {Thirty local cards cost one count, not thirty rows; the operator ask and peer card show.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_the_default_is_a_count_line_and_one_row_per_external_party},
+}
+
+@misc{pathsforward-nudge-summary-verbose-restores-the-per-card-listing,
+  section = {nudge_summary},
+  title  = {The control: every card is bumped and owed, local ones too; only the default hides them},
+  claim  = {The control: every card is bumped and owed, local ones too; only the default hides them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_verbose_restores_the_per_card_listing},
+}
+
+@misc{pathsforward-nudge-summary-counting-is-unchanged-by-the-quiet-default,
+  section = {nudge_summary},
+  title  = {Every blocked card's ticks_blocked is bumped whichever report is printed},
+  claim  = {Every blocked card's ticks_blocked is bumped whichever report is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_counting_is_unchanged_by_the_quiet_default},
+}
+
+@misc{pathsforward-nudge-summary-state-with-nothing-external-prints-only-the-count,
+  section = {nudge_summary},
+  title  = {Local-only blocks owe no nudge to anyone},
+  claim  = {Local-only blocks owe no nudge to anyone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_a_state_with_nothing_external_prints_only_the_count},
+}
+
+@misc{pathsforward-nudge-summary-verbose-is-refused-outside-bump-blocked,
+  section = {nudge_summary},
+  title  = {A flag a mode does not read is refused, not ignored},
+  claim  = {A flag a mode does not read is refused, not ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_verbose_is_refused_outside_bump_blocked},
+}
+
+@misc{pathsforward-nudge-summary-party-whose-cards-are-not-due-is-counted-but-not-printed,
+  section = {nudge_summary},
+  title  = {Back-off holds: at tick 3 nothing is owed, so no row, and the count line says zero due},
+  claim  = {Back-off holds: at tick 3 nothing is owed, so no row, and the count line says zero due.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_a_party_whose_cards_are_not_due_is_counted_but_not_printed},
+}
+
+@misc{pathsforward-nudge-summary-sixteenth-blocked-tick-is-shown-as-an-escalation,
+  section = {nudge_summary},
+  title  = {A party with a card at the escalation tick is reported ESCALATE, not NUDGE},
+  claim  = {A party with a card at the escalation tick is reported ESCALATE, not NUDGE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nudge_summary.py -k test_the_sixteenth_blocked_tick_is_shown_as_an_escalation},
+}
