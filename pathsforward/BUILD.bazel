@@ -6,6 +6,7 @@
 # ⚑⚑ `@pathsforward_dev` DOES NOT EXIST UNTIL MODULE.bazel DECLARES IT — see NOTES.md, "root
 # wiring". Until then this package does not load, which is the honest state of a proposal.
 load("@pathsforward_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
@@ -112,8 +113,9 @@ sh_test(
 )
 
 # ⚑ MEASURED BEFORE PROPOSING: 104 def-sites, 104 KILLED, 0 SURVIVED, 0 ERRORED.
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 3,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

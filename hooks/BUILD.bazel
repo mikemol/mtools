@@ -5,6 +5,7 @@
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
 load("@hooks_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@hooks_deps//:requirements.bzl", "requirement")
@@ -363,8 +364,9 @@ sh_test(
 
 # ⚑⚑ THE MUTATION GRID AS A GATE TARGET — same shape as //ratchet:mutants, which carries the
 # rationale; //mdstruct:mutants is the F-arm (real deps).
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 3,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
@@ -380,14 +382,11 @@ sh_test(
         "@mikemol_check_mutants//:mutate_runner.py",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
     size = "medium",
-    # ⚑⚑ THIS TARGET IS THE LOAD, AND EVERY OTHER TARGET'S TIMEOUT WAS ITS VICTIM (W942). It plants
-    # 390 defects and re-runs a 1,100-test suite for each, which saturates the machine for as long
-    # as it runs. MEASURED in four full gates: it passed alone in 80-115 s and timed out at 300 s
-    # beside 700 other targets, and in the same runs healthy neighbours that take 1-2 s alone took
-    # 22-60 s (fence test_autosize 45 s, test_membudget_cli past its 60 s, hooks test_bar_fires
-    # 22 s) and were refused. `exclusive` runs it by itself: it gets the whole machine and takes no
-    # one's. Only this target: exclusive on every distribution's mutants would serialize ~30 of them.
-    tags = ["exclusive"],
+    # ⚑⚑ THIS TARGET WAS THE LOAD, AND EVERY OTHER TARGET'S TIMEOUT WAS ITS VICTIM (W942). It plants
+    # 390 defects and re-runs a 1,100-test suite for each. It was tagged `exclusive` to run it alone;
+    # the operator ruled (2026-10-10) that a target that is too big under load is SPLIT, not
+    # serialized (W969). Three shards of about 136 sites are three short targets bazel schedules
+    # beside the rest, and `:mutants` still names all of them.
 )
 
 # ⚑⚑⚑ THE DISTRIBUTION'S `.venv`, AS A BUILD ARTIFACT. One macro call; the same four lines appear
