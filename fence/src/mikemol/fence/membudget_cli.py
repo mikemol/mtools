@@ -815,7 +815,25 @@ def cmd_capabilities(_args: Sequence[str], _ctx: Context) -> int:
     return 0
 
 
+def cmd_describe(_args: Sequence[str], _ctx: Context) -> int:
+    """`describe`: print the default lease, the ceiling and the verb roster, one row per line.
+
+    ⚑ ONE QUERY INSTEAD OF A TEXT SCAN (mtools:W964, substrate:W331). A caller that wanted the
+    defaults used to read them out of the bash script's text; a console script has no such text.
+    The rows are `default_mb N`, `max_mb N` and `verb NAME` per verb, and the verb rows are DERIVED
+    from `VERBS`, so a verb added to the table appears here without anyone editing a second list.
+
+    Returns:
+        0 after printing the rows.
+
+    """
+    rows = [f"default_mb {DEFAULT_MB}", f"max_mb {CEILING_MB}", *(f"verb {v}" for v in VERBS)]
+    sys.stdout.write("".join(f"{row}\n" for row in rows))
+    return 0
+
+
 VERBS: dict[str, Callable[[Sequence[str], Context], int]] = {
+    "describe": cmd_describe,
     "capabilities": cmd_capabilities,
     "run": cmd_run,
     "hold": cmd_hold,

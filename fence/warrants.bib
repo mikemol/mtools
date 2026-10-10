@@ -2200,3 +2200,31 @@
             appearing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watcher.py -k test_a_trip_before_the_target_exists_keeps_trying_until_it_does},
 }
+
+@misc{fence-membudget-describe-describe-prints-the-defaults-and-every-verb,
+  section = {membudget_describe},
+  title  = {The control: the two numbers are the code's, and each dispatch verb has a row},
+  claim  = {The control: the two numbers are the code's, and each dispatch verb has a row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_describe.py -k test_describe_prints_the_defaults_and_every_verb},
+}
+
+@misc{fence-membudget-describe-describe-lists-itself,
+  section = {membudget_describe},
+  title  = {A caller can see that the client answers describe},
+  claim  = {A caller can see that the client answers describe.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_describe.py -k test_describe_lists_itself},
+}
+
+@misc{fence-membudget-describe-verb-added-to-the-table-appears-without-editing-describe,
+  section = {membudget_describe},
+  title  = {The roster is derived from the dispatch table, not copied},
+  claim  = {The roster is derived from the dispatch table, not copied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_describe.py -k test_a_verb_added_to_the_table_appears_without_editing_describe},
+}
+
+@misc{fence-membudget-describe-every-row-is-a-name-and-one-value,
+  section = {membudget_describe},
+  title  = {Parseable by splitting on whitespace: two fields, the number rows numeric},
+  claim  = {Parseable by splitting on whitespace: two fields, the number rows numeric.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_describe.py -k test_every_row_is_a_name_and_one_value},
+}

@@ -68,3 +68,9 @@ src/mikemol/fence/watcher.py|trip-one-late|if streak >= row\.hold:|if streak > r
 src/mikemol/fence/watcher.py|gone-process-fatal|except ProcessLookupError:|except KeyError:|def=_signal_all
 src/mikemol/fence/watcher.py|any-name-matches|if comm == name:|if True:|def=descendants_named
 src/mikemol/fence/watcher.py|children-only|queue\.append\(pid\)|pass|def=descendants_named
+
+# W964: describe prints the code's own numbers and dispatch table. A retyped default, or a roster copied rather
+# than derived, drifts the day a verb is added.
+src/mikemol/fence/membudget_cli.py|describe-default-retyped|f"default_mb \{DEFAULT_MB\}"|"default_mb 192"|def=cmd_describe
+src/mikemol/fence/membudget_cli.py|describe-ceiling-retyped|f"max_mb \{CEILING_MB\}"|"max_mb 384"|def=cmd_describe
+src/mikemol/fence/membudget_cli.py|describe-roster-copied|for v in VERBS|for v in ("run", "status")|def=cmd_describe
