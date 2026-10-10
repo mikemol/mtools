@@ -7562,3 +7562,17 @@
   claim  = {Nothing to take reads NOT COMMITTED and HEAD does not move.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit},
 }
+
+@misc{hooks-commit-isolated-peers-staged-file-at-another-path-stays-staged,
+  section = {commit_isolated},
+  title  = {The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact},
+  claim  = {The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_peers_staged_file_at_another_path_stays_staged},
+}
+
+@misc{hooks-commit-isolated-refused-commit-leaves-head-and-the-real-index-as-they-were,
+  section = {commit_isolated},
+  title  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock},
+  claim  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_refused_commit_leaves_head_and_the_real_index_as_they_were},
+}

@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 _ORIGINAL = "original\n"
 _EDITED = "edited by this session\n"
 _PEER = "edited by a peer, not staged\n"
+_EXECUTABLE = 0o755
 _REQUEST = ck.Request(waypoint="W1", subject="isolated subject", paths=("a.txt",))
 
 
@@ -158,6 +159,40 @@ def test_a_new_file_is_taken_though_git_does_not_track_it_yet(
     code, shown = _isolated(root, request)
     assert code == 0, shown
     assert _git(root, "show", "HEAD:new.txt") == _EDITED
+
+
+def test_a_peers_staged_file_at_another_path_stays_staged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact."""
+    root = _decoy(tmp_path, monkeypatch)
+    (root / "a.txt").write_text(_EDITED, encoding="utf-8")
+    (root / "b.txt").write_text(_PEER, encoding="utf-8")
+    _git(root, "add", "b.txt")
+    code, shown = _isolated(root)
+    assert code == 0, shown
+    assert _git(root, "show", "HEAD:b.txt") == _ORIGINAL
+    assert _status(root) == ["M  b.txt"]
+
+
+def test_a_refused_commit_leaves_head_and_the_real_index_as_they_were(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock."""
+    root = _decoy(tmp_path, monkeypatch)
+    hook = root / ".git" / "hooks" / "pre-commit"
+    hook.write_text("#!/bin/sh\necho refused by the gate >&2\nexit 1\n", encoding="utf-8")
+    hook.chmod(_EXECUTABLE)
+    (root / "a.txt").write_text(_EDITED, encoding="utf-8")
+    (root / "b.txt").write_text(_PEER, encoding="utf-8")
+    _git(root, "add", "b.txt")
+    before = _git(root, "rev-parse", "HEAD")
+    code, shown = _isolated(root)
+    assert code != 0
+    assert shown.splitlines()[-1].startswith("REFUSED repo")
+    assert _git(root, "rev-parse", "HEAD") == before
+    assert _status(root) == [" M a.txt", "M  b.txt"]
+    assert not (root / ".git" / "index.lock").exists()
 
 
 def test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit(
