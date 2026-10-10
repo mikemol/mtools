@@ -87,3 +87,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_links.py" = ["assert"]
 "tests/test_tables.py" = ["assert"]
 "tests/test_meta.py" = ["assert"]
+"tests/test_mhtml.py" = ["assert"]

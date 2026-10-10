@@ -27,3 +27,13 @@ src/mikemol/htmlstruct/tables.py|nested-table-folded-in|child\.tag != "table"|Tr
 src/mikemol/htmlstruct/tables.py|header-cells-unmarked|c\.tag == "th"|False|def=_row
 src/mikemol/htmlstruct/meta.py|key-case-kept|v\.lower\(\)|v|def=_key
 src/mikemol/htmlstruct/meta.py|contentless-entry-kept|\(content := e\.attr\("content"\)\) is not None|(content := e.attr("content") or "") is not None|def=meta
+
+# W907: the archive reader. Reading a non-multipart file as an archive, ignoring the boundary delimiters, leaving
+# a transfer encoding undone, keeping the preamble as a part or matching a location loosely each hand a caller
+# the wrong bytes.
+src/mikemol/htmlstruct/mhtml.py|any-file-is-an-archive|!= _ROOT_TYPE:|== "":|def=read
+src/mikemol/htmlstruct/mhtml.py|base64-left-encoded|if kind == "base64":|if False:|def=_decoded
+src/mikemol/htmlstruct/mhtml.py|quoted-printable-left-encoded|if kind == "quoted-printable":|if False:|def=_decoded
+src/mikemol/htmlstruct/mhtml.py|preamble-kept-as-a-part|None = None|None = []|def=_bodies
+src/mikemol/htmlstruct/mhtml.py|location-matched-loosely|p\.location == location|p.location is not None and location in p.location|def=part_at
+src/mikemol/htmlstruct/mhtml.py|root-charset-ignored|root\.charset or "utf-8"|"utf-8"|def=root_tree

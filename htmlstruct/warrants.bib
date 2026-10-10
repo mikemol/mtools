@@ -201,3 +201,59 @@
   claim  = {Malformed but common: the wrapper is looked through, the inner table is not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_table_placed_straight_inside_a_section_is_still_its_own},
 }
+
+@misc{htmlstruct-mhtml-parts-come-in-order-with-location-type-charset-and-decoded-payload,
+  section = {mhtml},
+  title  = {The control: quoted-printable and base64 are undone, framing text is ignored},
+  claim  = {The control: quoted-printable and base64 are undone, framing text is ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_parts_come_in_order_with_location_type_charset_and_decoded_payload},
+}
+
+@misc{htmlstruct-mhtml-root-part-answers-the-html-readers,
+  section = {mhtml},
+  title  = {The first part, decoded in its charset, is a tree the HTML readers can use},
+  claim  = {The first part, decoded in its charset, is a tree the HTML readers can use.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_the_root_part_answers_the_html_readers},
+}
+
+@misc{htmlstruct-mhtml-part-is-addressed-by-content-location-and-an-unknown-one-is-a-miss,
+  section = {mhtml},
+  title  = {Exact match on the location; nothing else is guessed},
+  claim  = {Exact match on the location; nothing else is guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_a_part_is_addressed_by_content_location_and_an_unknown_one_is_a_miss},
+}
+
+@misc{htmlstruct-mhtml-crlf-line-endings-read-the-same-as-lf,
+  section = {mhtml},
+  title  = {Files saved on Windows carry CRLF; the parts are identical},
+  claim  = {Files saved on Windows carry CRLF; the parts are identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_crlf_line_endings_read_the_same_as_lf},
+}
+
+@misc{htmlstruct-mhtml-file-that-is-not-multipart-related-is-a-skip-naming-what-it-is,
+  section = {mhtml},
+  title  = {A plain HTML file is not an archive},
+  claim  = {A plain HTML file is not an archive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_a_file_that_is_not_multipart_related_is_a_skip_naming_what_it_is},
+}
+
+@misc{htmlstruct-mhtml-multipart-without-a-boundary-or-parts-is-a-skip,
+  section = {mhtml},
+  title  = {No boundary, and a boundary with nothing between its delimiters, both refuse},
+  claim  = {No boundary, and a boundary with nothing between its delimiters, both refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_a_multipart_without_a_boundary_or_parts_is_a_skip},
+}
+
+@misc{htmlstruct-mhtml-malformed-base64-is-a-skip,
+  section = {mhtml},
+  title  = {An undecodable part is named, not silently dropped},
+  claim  = {An undecodable part is named, not silently dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_malformed_base64_is_a_skip},
+}
+
+@misc{htmlstruct-mhtml-root-that-is-not-html-or-not-decodable-is-a-skip,
+  section = {mhtml},
+  title  = {The root verbs apply only to an HTML root in a charset Python knows},
+  claim  = {The root verbs apply only to an HTML root in a charset Python knows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mhtml.py -k test_a_root_that_is_not_html_or_not_decodable_is_a_skip},
+}
