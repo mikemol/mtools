@@ -7659,3 +7659,18 @@
             snapshot-blind lookups.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_gate_tool_lookup_goes_through_the_tools_root},
 }
+
+@misc{hooks-commit-isolated-isolated-commit-finds-a-tool-only-the-real-root-has,
+  section = {commit_isolated},
+  title  = {W941: the hook runs in a snapshot with no .venv and reads its tool from MIKEMOL_REAL_ROOT},
+  claim  = {W941: the hook runs in a snapshot with no .venv and reads its tool from
+            MIKEMOL_REAL_ROOT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_an_isolated_commit_finds_a_tool_only_the_real_root_has},
+}
+
+@misc{hooks-commit-isolated-same-hook-refuses-a-normal-commit-which-is-the-control,
+  section = {commit_isolated},
+  title  = {Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate},
+  claim  = {Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_same_hook_refuses_a_normal_commit_which_is_the_control},
+}

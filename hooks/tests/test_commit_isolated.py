@@ -195,6 +195,51 @@ def test_a_refused_commit_leaves_head_and_the_real_index_as_they_were(
     assert not (root / ".git" / "index.lock").exists()
 
 
+_NEEDS_REAL_TOOL = (
+    "#!/bin/sh\n"
+    '[ -x "${MIKEMOL_REAL_ROOT:?not set}/.venv/bin/tool" ] || exit 1\n'
+    "[ ! -e .venv ] || exit 1\n"
+)
+
+
+def _tool_only_the_real_root_has(root: Path) -> None:
+    """Give the repository an untracked host tool and a pre-commit hook that needs it."""
+    tool = root / ".venv" / "bin" / "tool"
+    tool.parent.mkdir(parents=True)
+    tool.write_text("#!/bin/sh\n", encoding="utf-8")
+    tool.chmod(_EXECUTABLE)
+    hook = root / ".git" / "hooks" / "pre-commit"
+    hook.write_text(_NEEDS_REAL_TOOL, encoding="utf-8")
+    hook.chmod(_EXECUTABLE)
+
+
+def test_an_isolated_commit_finds_a_tool_only_the_real_root_has(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W941: the hook runs in a snapshot with no .venv and reads its tool from MIKEMOL_REAL_ROOT."""
+    root = _decoy(tmp_path, monkeypatch)
+    _tool_only_the_real_root_has(root)
+    (root / "a.txt").write_text(_EDITED, encoding="utf-8")
+    code, shown = _isolated(root)
+    assert code == 0, shown
+    assert _git(root, "show", "HEAD:a.txt") == _EDITED
+
+
+def test_the_same_hook_refuses_a_normal_commit_which_is_the_control(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate."""
+    root = _decoy(tmp_path, monkeypatch)
+    _tool_only_the_real_root_has(root)
+    (root / "a.txt").write_text(_EDITED, encoding="utf-8")
+    before = _git(root, "rev-parse", "HEAD")
+    out = io.StringIO()
+    code = ck.commit(root, _REQUEST, out)
+    assert code != 0
+    assert out.getvalue().splitlines()[-1].startswith("REFUSED repo")
+    assert _git(root, "rev-parse", "HEAD") == before
+
+
 def test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
