@@ -404,6 +404,49 @@ def _verdict_bash(tool_input: dict[str, object], cwd: str | None) -> list[Findin
     return analyze_command(cmd, cwd)
 
 
+def added_only(after: list[Finding], before: list[Finding] | None) -> list[Finding]:
+    """Keep the findings an edit ADDED: those the file did not already carry (W937).
+
+    ⚑ AN EDIT IS JUDGED BY WHAT IT CHANGES, as pycheck judges suppressions. A one-line new stage in
+    a shell file that carries four old SC2016 findings (gcalculus's check.sh, whose single quotes
+    are deliberate) was refused for the four lines it did not touch, so a correct edit was
+    unreachable. Findings are matched by code and message, counted, not by line, because an edit
+    moves lines: a fifth SC2016 is added; the first four are old. `None` is an unmeasured baseline
+    and judges everything, so "could not look" never reads as "nothing was added".
+
+    Returns:
+        the findings of `after` beyond those `before` already had, in order.
+
+    """
+    if not before:
+        return after
+    budget: dict[str, int] = {}
+    for code, _line, msg in before:
+        budget[f"{code} {msg}"] = budget.get(f"{code} {msg}", 0) + 1
+    added: list[Finding] = []
+    for finding in after:
+        key = f"{finding[0]} {finding[2]}"
+        if budget.get(key, 0) > 0:
+            budget[key] -= 1
+        else:
+            added.append(finding)
+    return added
+
+
+def baseline(path: str, cwd: str | None) -> list[Finding] | None:
+    """Lint the file as it is on disk now, before the edit lands.
+
+    Returns:
+        the findings the file already has; None when it is absent, unreadable or not measurable.
+
+    """
+    try:
+        current = Path(path).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    return analyze_file(path, current, cwd)
+
+
 def _verdict_edit(
     tool: str, tool_input: dict[str, object], cwd: str | None
 ) -> tuple[str, list[Finding] | None]:
@@ -411,6 +454,10 @@ def _verdict_edit(
 
     ⚑ THE DECLARED-WAIVER CHECK RUNS ONLY AFTER `shell_dialect` CONFIRMS SHELL, so an edit to the
     pyproject.toml that carries the table — not shell itself — is never blocked from removing it.
+
+    ⚑ ONLY WHAT THE EDIT ADDS REFUSES IT (W937): findings the file already carried are not the
+    edit's, so `added_only` subtracts them. Nothing is waived: they remain, and the whole-file
+    checker still reports them.
 
     Returns:
         the subject and findings, or ("", []) when the edit is not shell.
@@ -422,7 +469,10 @@ def _verdict_edit(
     table = declared_waiver(cwd or cwd_for(path))
     if table is not None:
         return "shell file", [_waiver_finding(table)]
-    return "shell file", analyze_file(path, content, cwd or cwd_for(path))
+    found = analyze_file(path, content, cwd or cwd_for(path))
+    if not found:
+        return "shell file", found
+    return "shell file", added_only(found, baseline(path, cwd or cwd_for(path)))
 
 
 def verdict(

@@ -62,3 +62,4 @@ shell_pipefail_race	Hook scripts hold no pipefail race
 commit_run_git	Commit wait is on git itself
 isolated_commit	Isolated commit (W901)
 commit_isolated	Isolated commit mode (W902, W903)
+shellcheck_added	Shellcheck judges what an edit adds (W937)

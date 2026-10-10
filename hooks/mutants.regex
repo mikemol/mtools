@@ -73,4 +73,6 @@ src/mikemol/hooks/probe.py|relative-launcher-not-resolved|if "/" in argv\[0\] an
 src/mikemol/hooks/commit_kata.py|wait-without-a-limit|child\.wait\(timeout=COMMIT_TIMEOUT_S\)|child.wait()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|timed-out-git-left-running|child\.kill\(\)|child.poll()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|status-lost|subprocess\.CompletedProcess\(list\(argv\), code, out\.read\(\), err\.read\(\)\)|subprocess.CompletedProcess(list(argv), 0, out.read(), err.read())|def=run_git_in
+src/mikemol/hooks/shellcheck.py|every-finding-is-old|if budget\.get\(key, 0\) > 0:|if True:|def=added_only
+src/mikemol/hooks/shellcheck.py|no-finding-is-old|if budget\.get\(key, 0\) > 0:|if False:|def=added_only
 src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated

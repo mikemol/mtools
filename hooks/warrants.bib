@@ -7576,3 +7576,52 @@
   claim  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_refused_commit_leaves_head_and_the_real_index_as_they_were},
 }
+
+@misc{hooks-shellcheck-added-no-baseline-judges-everything,
+  section = {shellcheck_added},
+  title  = {A new file, or an unmeasured baseline, has nothing old to subtract},
+  claim  = {A new file, or an unmeasured baseline, has nothing old to subtract.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_no_baseline_judges_everything},
+}
+
+@misc{hooks-shellcheck-added-findings-the-file-already-had-are-not-the-edits,
+  section = {shellcheck_added},
+  title  = {The same finding at a moved line is old: matched by code and message, not by line},
+  claim  = {The same finding at a moved line is old: matched by code and message, not by line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_findings_the_file_already_had_are_not_the_edits},
+}
+
+@misc{hooks-shellcheck-added-one-more-of-the-same-rule-is-added,
+  section = {shellcheck_added},
+  title  = {Counted, not set-wise: a second SC2016 beyond the one already there is the edit's},
+  claim  = {Counted, not set-wise: a second SC2016 beyond the one already there is the edit's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_one_more_of_the_same_rule_is_added},
+}
+
+@misc{hooks-shellcheck-added-different-rule-is-added,
+  section = {shellcheck_added},
+  title  = {An old SC2016 does not excuse a new SC2086},
+  claim  = {An old SC2016 does not excuse a new SC2086.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_a_different_rule_is_added},
+}
+
+@misc{hooks-shellcheck-added-clean-line-added-to-a-file-with-an-old-finding-is-allowed,
+  section = {shellcheck_added},
+  title  = {The positive control, and the gcalculus case: the old finding no longer blocks the edit},
+  claim  = {The positive control, and the gcalculus case: the old finding no longer blocks the edit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_a_clean_line_added_to_a_file_with_an_old_finding_is_allowed},
+}
+
+@misc{hooks-shellcheck-added-second-finding-added-to-a-file-with-an-old-one-is-refused,
+  section = {shellcheck_added},
+  title  = {The old finding stays excused; the new one of the same rule is not},
+  claim  = {The old finding stays excused; the new one of the same rule is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_a_second_finding_added_to_a_file_with_an_old_one_is_refused},
+}
+
+@misc{hooks-shellcheck-added-new-file-with-a-finding-is-refused,
+  section = {shellcheck_added},
+  title  = {A Write of a file that does not exist yet has no baseline: its findings are all added},
+  claim  = {A Write of a file that does not exist yet has no baseline: its findings are all added.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck_added.py -k test_a_new_file_with_a_finding_is_refused},
+}
