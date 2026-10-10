@@ -7386,3 +7386,88 @@
   claim  = {Every argument still reaches the Python: three words plus the entry.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher_fence.py -k test_the_launcher_takes_no_claim_of_its_own},
 }
+
+@misc{hooks-gen-warrants-rubric-row-without-a-warrant-is-dropped-and-the-others-keep-their-bytes,
+  section = {gen_warrants_rubric},
+  title  = {The trailing tab of a kept row survives, and the comment line is untouched},
+  claim  = {The trailing tab of a kept row survives, and the comment line is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_rubric.py -k test_a_row_without_a_warrant_is_dropped_and_the_others_keep_their_bytes},
+}
+
+@misc{hooks-gen-warrants-rubric-section-named-inside-a-title-is-not-a-section,
+  section = {gen_warrants_rubric},
+  title  = {The control: `gone` appears in a title line only, so its row still goes},
+  claim  = {The control: `gone` appears in a title line only, so its row still goes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_rubric.py -k test_a_section_named_inside_a_title_is_not_a_section},
+}
+
+@misc{hooks-gen-warrants-rubric-rubric-with-every-section-present-is-left-alone,
+  section = {gen_warrants_rubric},
+  title  = {Nothing to drop means no rewrite},
+  claim  = {Nothing to drop means no rewrite.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_rubric.py -k test_a_rubric_with_every_section_present_is_left_alone},
+}
+
+@misc{hooks-gen-warrants-rubric-jsonl-rubric-is-pruned-the-same-way,
+  section = {gen_warrants_rubric},
+  title  = {Both rubric formats follow one rule},
+  claim  = {Both rubric formats follow one rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_rubric.py -k test_the_jsonl_rubric_is_pruned_the_same_way},
+}
+
+@misc{hooks-gen-warrants-rubric-prune-says-how-many-rows-it-dropped,
+  section = {gen_warrants_rubric},
+  title  = {The count reaches stderr, beside the warrants-dropped line},
+  claim  = {The count reaches stderr, beside the warrants-dropped line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_rubric.py -k test_the_prune_says_how_many_rows_it_dropped},
+}
+
+@misc{hooks-gen-warrants-rubric-distribution-with-no-rubric-is-silent,
+  section = {gen_warrants_rubric},
+  title  = {No rubric file, nothing to prune, nothing printed},
+  claim  = {No rubric file, nothing to prune, nothing printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gen_warrants_rubric.py -k test_a_distribution_with_no_rubric_is_silent},
+}
+
+@misc{hooks-probe-relative-launcher-is-resolved-against-the-project,
+  section = {probe},
+  title  = {From a foreign directory a relative path cannot run, so it is taken from the project},
+  claim  = {From a foreign directory a relative path cannot run, so it is taken from the project.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_relative_launcher_is_resolved_against_the_project},
+}
+
+@misc{hooks-shell-pipefail-race-detector-finds-the-race-and-spares-the-here-string,
+  section = {shell_pipefail_race},
+  title  = {The control: a planted racy line is found, the here-string form is not},
+  claim  = {The control: a planted racy line is found, the here-string form is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shell_pipefail_race.py -k test_the_detector_finds_the_race_and_spares_the_here_string},
+}
+
+@misc{hooks-shell-pipefail-race-script-without-pipefail-has-no-race,
+  section = {shell_pipefail_race},
+  title  = {Without pipefail the pipeline's status is grep's alone, so the pipe is harmless},
+  claim  = {Without pipefail the pipeline's status is grep's alone, so the pipe is harmless.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shell_pipefail_race.py -k test_a_script_without_pipefail_has_no_race},
+}
+
+@misc{hooks-shell-pipefail-race-comment-naming-the-pattern-is-not-a-finding,
+  section = {shell_pipefail_race},
+  title  = {The explanation in a hook's own comment must not trip the detector},
+  claim  = {The explanation in a hook's own comment must not trip the detector.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shell_pipefail_race.py -k test_a_comment_naming_the_pattern_is_not_a_finding},
+}
+
+@misc{hooks-shell-pipefail-race-continued-pipe-form-is-found,
+  section = {shell_pipefail_race},
+  title  = {A pipe that begins its own line after a backslash continuation is the form pre-commit had},
+  claim  = {A pipe that begins its own line after a backslash continuation is the form pre-commit
+            had.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shell_pipefail_race.py -k test_the_continued_pipe_form_is_found},
+}
+
+@misc{hooks-shell-pipefail-race-shipped-hook-scripts-have-no-such-pipe,
+  section = {shell_pipefail_race},
+  title  = {The real scripts, as the gate sees them: none pipes into a quiet grep under pipefail},
+  claim  = {The real scripts, as the gate sees them: none pipes into a quiet grep under pipefail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shell_pipefail_race.py -k test_the_shipped_hook_scripts_have_no_such_pipe},
+}

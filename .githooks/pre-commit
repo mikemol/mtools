@@ -424,8 +424,10 @@ sweep_witness_residue() {
         # ⚑⚑ The payload now carries the marker too (`domain_witness.sh`), so this is belt AND
         # braces: a sweep keyed on one spelling of a thing with two spellings is the same
         # cheap-key defect this repository has now found in six instruments.
-        git diff -- "$v" 2>/dev/null \
-            | grep -qE 'transient domain probe|_transient_domain_probe' || continue
+        # ⚑ THE DIFF IS CAPTURED, NOT PIPED: under `pipefail` a `git diff | grep -q` is a race (grep
+        # quits on its first match, git is killed by SIGPIPE, the pipeline reads as failed).
+        _probe_diff="$(git diff -- "$v" 2>/dev/null)"
+        grep -qE 'transient domain probe|_transient_domain_probe' <<<"$_probe_diff" || continue
         # ⚑⚑⚑ THE THREE OUTCOMES ARE SEPARATED, AND CONFLATING THEM WAS THE MIRROR OF THE DEFECT
         # THIS SWEEP EXISTS TO REPAIR. The first cut ran `git checkout -- "$v" 2>/dev/null` and
         # branched on its status alone, so a failure to acquire `.git/index.lock` was reported as
@@ -445,7 +447,7 @@ sweep_witness_residue() {
         _sweep_err="$(git checkout -- "$v" 2>&1)"; _sweep_rc=$?
         if [ "$_sweep_rc" -eq 0 ]; then
             say "swept this gate's own probe residue from $v"
-        elif ! git diff -- "$v" 2>/dev/null | grep -q 'transient domain probe'; then
+        elif _probe_diff="$(git diff -- "$v" 2>/dev/null)"; ! grep -q 'transient domain probe' <<<"$_probe_diff"; then
             say "probe residue in $v is gone — the checkout failed but the file is clean"
             say "  (git said: ${_sweep_err%%$'\n'*})"
         else

@@ -114,6 +114,16 @@ def test_the_entry_and_project_are_substituted_into_the_argv_template(tmp_path: 
     assert log.read_text(encoding="utf-8").split() == ["mikemol-hook-no-chaining", str(tmp_path)]
 
 
+def test_a_relative_launcher_is_resolved_against_the_project(tmp_path: Path) -> None:
+    """From a foreign directory a relative path cannot run, so it is taken from the project."""
+    (tmp_path / "bin").mkdir()
+    _stub(tmp_path / "bin" / "gate", f"cat >/dev/null\nprintf '%s' '{_DENY}'")
+    foreign = tmp_path / "elsewhere"
+    foreign.mkdir()
+    verdict = probe.fire(_row(), "bin/gate", tmp_path, foreign, "foreign")
+    assert verdict.ok, verdict.why
+
+
 def test_main_exits_zero_only_when_every_row_denied(tmp_path: Path) -> None:
     """0 for all-deny, 1 for any allow, over the same launcher."""
     deny = _stub(tmp_path / "deny", f"cat >/dev/null\nprintf '%s' '{_DENY}'")

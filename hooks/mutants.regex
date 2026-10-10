@@ -56,3 +56,13 @@ src/mikemol/hooks/commit_kata.py|wait-override-ignored|env\.get\(TIMEOUT_ENV\) o
 # skipping the no-ref test reports a repository with no remote as LOCAL.
 src/mikemol/hooks/commit_kata.py|always-pushed|return "PUSHED" if ancestor\.returncode == 0 else "LOCAL: not on origin/main"|return "PUSHED"|def=published
 src/mikemol/hooks/commit_kata.py|no-remote-reads-local|if ref\.returncode != 0:|if False:|def=published
+
+# W925: a prune drops the rubric rows that have no warrant left, by the pairing gate's own rule, and
+# nothing else. Keeping every row leaves the gate refusing; dropping every row empties a rubric;
+# counting a section named inside a title would keep a row that has no warrant.
+src/mikemol/hooks/gen_warrants.py|empty-rows-kept|if key is not None and key not in present:|if False:|def=prune_rubric
+src/mikemol/hooks/gen_warrants.py|every-row-dropped|if key is not None and key not in present:|if key is not None:|def=prune_rubric
+
+# W927: a relative launcher is resolved against the project. Dropping the resolution makes every
+# foreign-directory row of a relative launcher fail with 'No such file or directory'.
+src/mikemol/hooks/probe.py|relative-launcher-not-resolved|if "/" in argv\[0\] and not Path\(argv\[0\]\)\.is_absolute\(\):|if False:|def=fire

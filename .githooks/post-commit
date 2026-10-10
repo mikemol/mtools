@@ -75,7 +75,10 @@ if [ -n "$_push_out" ]; then
 fi
 if [ "$_push_rc" -eq 0 ]; then
     echo "post-commit: pushed $(git rev-parse --short HEAD) to origin/main"
-elif printf '%s\n' "$_push_out" | grep -qE '\[(remote )?rejected\]'; then
+# ⚑ A HERE-STRING, NOT A PIPE: under `pipefail`, `printf | grep -q` exits 141 whenever grep quits on
+# its first match before printf has written (a race), and the `elif` then read a REJECTED push as
+# 'abandoned' (measured: test_a_moved_remote_is_still_reported_as_moved failed once in a green run).
+elif grep -qE '\[(remote )?rejected\]' <<<"$_push_out"; then
     echo "post-commit: ⚑ PUSH REFUSED — the remote has moved. The commit is SAFE and LOCAL."
     echo "post-commit: a peer pushed first. Reconcile deliberately:"
     echo "post-commit:   git fetch origin && git rebase origin/main && git push origin HEAD:main"

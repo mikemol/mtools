@@ -74,6 +74,7 @@ EXIT_UNTRANSCRIBABLE = 2
 _ENTRY = re.compile(r"\n?@misc\{[^,\n]+,\n.*?\n\}\n", re.DOTALL)
 _CHECKED_TEST = re.compile(r"-m pytest (\S+) -k (\w+)\}")
 _KEY = re.compile(r"@misc\{([^,\n]+),")
+_SECTION = re.compile(r"^\s*section\s*=\s*\{([^}]*)\}", re.MULTILINE)
 
 
 class BraceError(ValueError):
@@ -308,6 +309,21 @@ def rubric_file(base: Path) -> Path | None:
     return next((base / name for name in RUBRIC_NAMES if (base / name).is_file()), None)
 
 
+def _row_key(path: Path, line: str) -> str | None:
+    """Read the section key of one rubric line.
+
+    Returns:
+        the key, or None for a comment or blank line (they name nothing).
+
+    """
+    if not line.strip() or line.startswith("#"):
+        return None
+    if path.suffix == ".jsonl":
+        parsed: object = json.loads(line)
+        return text_of(as_record(parsed).get("key"))
+    return line.split("\t", 1)[0].strip()
+
+
 def rubric_keys(path: Path) -> set[str]:
     """Read the section keys a rubric already declares.
 
@@ -315,16 +331,34 @@ def rubric_keys(path: Path) -> set[str]:
         the keys, from either format; comment and blank lines name nothing.
 
     """
-    keys: set[str] = set()
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if not line.strip() or line.startswith("#"):
-            continue
-        if path.suffix == ".jsonl":
-            parsed: object = json.loads(line)
-            keys.add(text_of(as_record(parsed).get("key")))
+    keys = (_row_key(path, line) for line in path.read_text(encoding="utf-8").splitlines())
+    return {key for key in keys if key is not None}
+
+
+def prune_rubric(path: Path, bib: str) -> int:
+    """Drop the rubric rows whose section has no warrant left in `bib` (W925).
+
+    ⚑ THE OTHER HALF OF A PRUNE: deleting a test module drops its warrants (`prune`) but left its
+    section's rubric row, and the pairing gate refuses a rubric row without a warrant. The rule is
+    the gate's own, so a prune can no longer leave the pairing in a state the gate rejects. Comments
+    and blank lines, and each kept row's exact bytes (trailing tab included), are untouched.
+
+    Returns:
+        how many rows were dropped; the file is rewritten only when it is more than zero.
+
+    """
+    present = {str(found.group(1)) for found in _SECTION.finditer(bib)}
+    kept: list[str] = []
+    dropped = 0
+    for line in path.read_text(encoding="utf-8").splitlines(keepends=True):
+        key = _row_key(path, line)
+        if key is not None and key not in present:
+            dropped += 1
         else:
-            keys.add(line.split("\t", 1)[0].strip())
-    return keys
+            kept.append(line)
+    if dropped:
+        path.write_text("".join(kept), encoding="utf-8")
+    return dropped
 
 
 def rubric_row(path: Path, key: str, title: str) -> str:
@@ -484,6 +518,16 @@ def _gate_prune(options: Options) -> int | None:
     return 0 if options.dry_run else None
 
 
+def drop_empty_rubric_rows(base: Path) -> None:
+    """Drop the rubric rows a prune left without a warrant, and say how many (W925)."""
+    path = rubric_file(base)
+    if path is None:
+        return
+    gone = prune_rubric(path, (base / "warrants.bib").read_text(encoding="utf-8"))
+    if gone:
+        sys.stderr.write(f"{gone} rubric rows left without a warrant dropped\n")
+
+
 def _apply(options: Options, entries: list[str], rubric: Path | None, rows: list[str]) -> int:
     """Prune stale warrants when asked, then append the entries and the rubric rows.
 
@@ -504,6 +548,8 @@ def _apply(options: Options, entries: list[str], rubric: Path | None, rows: list
         append_text(base / "warrants.bib", "\n" + "\n".join(entries))
     if rubric is not None and rows:
         append_text(rubric, "".join(rows))
+    if options.prune:
+        drop_empty_rubric_rows(base)
     return dropped
 
 

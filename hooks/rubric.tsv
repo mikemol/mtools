@@ -57,3 +57,5 @@ probe	Hooks probe fires each gate
 commit_claim	Commit claim keyed on the repository
 commit_published	Commit verdict says published
 commit_launcher_fence	Launcher names the fence
+gen_warrants_rubric	Prune drops empty rubric rows
+shell_pipefail_race	Hook scripts hold no pipefail race

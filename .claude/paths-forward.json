@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 925,
+  "counter": 928,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-09T23:33:57Z",
   "job_id": "3e42fddc",
@@ -18744,7 +18744,7 @@
     {
       "symbol": "W915",
       "title": "Answer gcalculus:W233: publish the commit that carries mikemol-hooks-probe",
-      "status": "working",
+      "status": "done",
       "enables": [
         "gcalculus:W233"
       ],
@@ -18754,14 +18754,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When the W898/W899 commit lands, message gcalculus-22 its sha; gcalculus pins it and runs the probe on its hooks.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: published as mtools 6b895c8 (on origin/main); gcalculus-22 messaged the sha.",
       "issued_at": "2026-10-09T23:51:38Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W233",
-      "last_worked": "2026-10-10T00:48:03Z",
+      "last_worked": "2026-10-10T02:12:10Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261010T021210Z"
     },
     {
       "symbol": "W916",
@@ -18966,7 +18966,7 @@
     {
       "symbol": "W925",
       "title": "gen-warrants --prune also drops a rubric row whose section has no warrant left",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -18974,13 +18974,75 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In mikemol-gen-warrants --write --prune, after dropping stale warrants remove every rubric row whose section key now has none, in whichever of rubric.tsv or rubric.jsonl the dist has (keep the trailing tab); test with a section emptied by a deleted test module. Found when deleting test_commit_launcher_lock.py left its rubric row and the pairing gate refused.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: gen_warrants.prune_rubric + drop_empty_rubric_rows: after a --prune the rubric rows whose section has no warrant left are dropped by the pairing gate's own rule (kept rows keep their exact bytes, comments untouched; tsv and jsonl); 6 tests, 6 warrants, 2 mutants; bazel //hooks/... green.",
       "issued_at": "2026-10-10T02:07:13Z",
       "minted_during": "interrupt",
       "caused_by": "W910",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T02:19:35Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T021935Z"
+    },
+    {
+      "symbol": "W926",
+      "title": "No hook script pipes into a quiet grep under pipefail, and a test keeps it so",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: found as a flake in a green run (test_a_moved_remote_is_still_reported_as_moved): printf | grep -q under pipefail exits 141 when grep quits first. Fixed three sites with here-strings (post-commit, two in pre-commit) and tests/test_shell_pipefail_race.py (5 tests, 6 warrants incl. W927's) scans the shipped hook scripts.",
+      "issued_at": "2026-10-10T02:18:00Z",
+      "minted_during": "interrupt",
+      "caused_by": "W925",
+      "last_worked": "2026-10-10T02:19:36Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T021936Z"
+    },
+    {
+      "symbol": "W927",
+      "title": "mikemol-hooks-probe resolves a relative launcher against the project",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "probe"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09: probe.fire resolves a launcher path with a slash that is not absolute against the project; test_a_relative_launcher_is_resolved_against_the_project; 1 mutant.",
+      "issued_at": "2026-10-10T02:18:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "W898",
+      "last_worked": "2026-10-10T02:19:36Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T021936Z"
+    },
+    {
+      "symbol": "W928",
+      "title": "mikemol-commit waits on its git child and releases the claim on any exit, even when output pipes are held by orphans",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "commit",
+        "hooks",
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Run git with its output going to a file, not a pipe, and wait on the child process itself with the timeout; so a gate whose descendants outlive a killed git cannot wedge communicate() and hold the claim for hours (paperkit-f5 measured a zombie git child and 2h51m idle); test with a child that leaves a background process holding the pipe.",
+      "evidence": "",
+      "issued_at": "2026-10-10T02:18:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "W910",
+      "last_worked": "2026-10-10T02:19:42Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

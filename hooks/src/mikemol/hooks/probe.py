@@ -162,6 +162,10 @@ def fire(row: Row, template: str, project: Path, cwd: Path, where: str) -> Verdi
 
     """
     argv = [part.format(entry=row.entry, project=str(project)) for part in shlex.split(template)]
+    # ⚑ A RELATIVE LAUNCHER PATH IS RELATIVE TO THE PROJECT, not to the cwd the row is fired from:
+    # the foreign-directory rows cannot run `hooks/bin/x` from elsewhere (gcalculus-22, measured).
+    if "/" in argv[0] and not Path(argv[0]).is_absolute():
+        argv[0] = str(project / argv[0])
     env = {
         "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
         "CLAUDE_PROJECT_DIR": str(project),

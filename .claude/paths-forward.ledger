@@ -1445,3 +1445,7 @@
 2026-10-10T00:48:00Z  tick  W910 advanced  unblock   "commit claim keyed on the repository being committed, not the launcher; mikemol-commit's line now says PUSHED/LOCAL (W924); bazel //hooks/... green"
 2026-10-10T01:49:21Z  tick  W915 advanced  sweep     "probe, commit-claim fix and PUSHED verdict built and green; combined commit in flight (bypassed the stale paperkit lease); luthen W710/W715 and gcalculus W233/W93 claimed and answered"
 2026-10-10T02:07:13Z  interrupt W925 minted    -         "gen-warrants --prune also drops a rubric row whose section has no warrant left"  evidence=W910
+2026-10-10T02:18:00Z  interrupt W926 minted    -         "No hook script pipes into a quiet grep under pipefail, and a test keeps it so"  evidence=W925
+2026-10-10T02:18:01Z  interrupt W927 minted    -         "mikemol-hooks-probe resolves a relative launcher against the project"  evidence=W898
+2026-10-10T02:18:01Z  interrupt W928 minted    -         "mikemol-commit waits on its git child and releases the claim on any exit, even when output pipes are held by orphans"  evidence=W910
+2026-10-10T02:19:37Z  tick  W925 advanced  sweep     "three mechanizations: prune drops empty rubric rows (W925), no pipe-into-grep -q race in hook scripts (W926, a real flake), probe resolves a relative launcher (W927); bazel hooks green; commit in flight"
