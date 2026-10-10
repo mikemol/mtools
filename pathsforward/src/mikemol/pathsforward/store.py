@@ -24,6 +24,7 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
+from mikemol.pathsforward import ownership
 from mikemol.pathsforward.model import MalformedStateError, State, validate
 
 if TYPE_CHECKING:
@@ -66,13 +67,20 @@ def load(path: Path) -> State:
 
 
 def write_atomic(path: Path, body: str) -> None:
-    """Write `body` to a temp file beside `path`, fsync it, and replace `path` with it."""
+    """Write `body` to a temp file beside `path`, fsync it, and replace `path` with it.
+
+    ⚑ THE REPLACEMENT KEEPS WHAT IT REPLACES (mtools:W955): the existing file's mode, and its owner
+    and group when the process may give them (a new file takes its directory's owner and group), so
+    a root run changes nothing visible.
+    """
+    ref, mode = ownership.reference(path), ownership.mode_of(path)
     with tempfile.NamedTemporaryFile(
         "w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False
     ) as fh:
         fh.write(body)
         fh.flush()
         os.fsync(fh.fileno())
+    ownership.adopt(Path(fh.name), ref, mode=mode)
     Path(fh.name).replace(path)
 
 
@@ -89,7 +97,7 @@ def exclusive(path: Path) -> Iterator[None]:
         nothing; the lock is held while the block runs, and released on every exit path.
 
     """
-    with sibling(path, FLOCK).open("a", encoding="utf-8") as fh:
+    with ownership.open_append(sibling(path, FLOCK)) as fh:
         fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
         try:
             yield

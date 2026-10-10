@@ -4215,3 +4215,45 @@
   claim  = {--on is read only by --block-matching; elsewhere it is refused, not ignored.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_on_without_the_mode_is_a_stray_flag},
 }
+
+@misc{pathsforward-ownership-replaced-file-keeps-its-mode,
+  section = {ownership},
+  title  = {The control for the mode: 0640 stays 0640, where a bare tempfile would leave 0600},
+  claim  = {The control for the mode: 0640 stays 0640, where a bare tempfile would leave 0600.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ownership.py -k test_a_replaced_file_keeps_its_mode},
+}
+
+@misc{pathsforward-ownership-new-file-gets-the-default-mode,
+  section = {ownership},
+  title  = {Readable by the group and others, as the files this writer makes always were},
+  claim  = {Readable by the group and others, as the files this writer makes always were.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ownership.py -k test_a_new_file_gets_the_default_mode},
+}
+
+@misc{pathsforward-ownership-unprivileged-write-never-asks-to-change-an-owner,
+  section = {ownership},
+  title  = {The control for the owner: without privilege, chown is not called},
+  claim  = {The control for the owner: without privilege, chown is not called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ownership.py -k test_an_unprivileged_write_never_asks_to_change_an_owner},
+}
+
+@misc{pathsforward-ownership-privileged-write-gives-the-replacement-the-owner-it-replaces,
+  section = {ownership},
+  title  = {A root run hands the staged file to the existing owner and group before the rename},
+  claim  = {A root run hands the staged file to the existing owner and group before the rename.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ownership.py -k test_a_privileged_write_gives_the_replacement_the_owner_it_replaces},
+}
+
+@misc{pathsforward-ownership-privileged-append-creates-the-file-as-its-directory-owner,
+  section = {ownership},
+  title  = {A new ledger takes its directory's owner and group; an existing one is left alone},
+  claim  = {A new ledger takes its directory's owner and group; an existing one is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ownership.py -k test_a_privileged_append_creates_the_file_as_its_directory_owner},
+}
+
+@misc{pathsforward-ownership-flock-sidecar-is-made-as-its-directory-owner,
+  section = {ownership},
+  title  = {The lock file a root run creates must not become root-only},
+  claim  = {The lock file a root run creates must not become root-only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ownership.py -k test_the_flock_sidecar_is_made_as_its_directory_owner},
+}

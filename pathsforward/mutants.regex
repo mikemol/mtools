@@ -60,3 +60,11 @@ src/mikemol/pathsforward/gate.py|note-drops-the-evidence|ops\.Update\(evidence_a
 src/mikemol/pathsforward/bulkblock.py|blocked-card-moved|if status == "ready":|if True:|def=plan
 src/mikemol/pathsforward/bulkblock.py|target-blocked-on-itself|sym == target or status|status|def=plan
 src/mikemol/pathsforward/bulkblock.py|closed-local-target-admitted|target, \{\}\), "status"\) in _CLOSED:|target, {}), "status") in ():|def=plan
+
+# W955: a write keeps what it replaces. Dropping the chmod leaves tempfile's 0600; chowning when unprivileged
+# or not at all when root leaves a root-owned queue; adopting on an existing append hands a file away.
+src/mikemol/pathsforward/ownership.py|mode-not-applied|target\.chmod\(mode\)|pass|def=adopt
+src/mikemol/pathsforward/ownership.py|owner-never-given|if privileged\(\):|if False:|def=adopt
+src/mikemol/pathsforward/ownership.py|owner-given-unprivileged|if privileged\(\):|if True:|def=adopt
+src/mikemol/pathsforward/ownership.py|existing-append-adopted|if fresh:|if True:|def=open_append
+src/mikemol/pathsforward/ownership.py|new-file-mode-from-nowhere|if path\.exists\(\) else NEW_MODE|if False else NEW_MODE|def=mode_of

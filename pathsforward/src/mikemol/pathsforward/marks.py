@@ -23,7 +23,7 @@ import hashlib
 import json
 from typing import TYPE_CHECKING
 
-from mikemol.pathsforward import opa_eval
+from mikemol.pathsforward import opa_eval, ownership
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -104,5 +104,5 @@ def append(path: Path, record: Json) -> None:
     line and a crash loses at most the line being written.
     """
     line = json.dumps(record, sort_keys=True, ensure_ascii=False) + "\n"
-    with path.open("a", encoding="utf-8") as marks:
+    with ownership.open_append(path) as marks:
         marks.write(line)
