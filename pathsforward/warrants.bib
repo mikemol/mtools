@@ -4081,3 +4081,31 @@
   claim  = {Evidence accumulates; a later report does not replace the earlier one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_note.py -k test_a_second_note_adds_to_the_first},
 }
+
+@misc{pathsforward-attach-clean-attachment-is-not-found-and-is-read-back,
+  section = {attach},
+  title  = {The positive control: a repo-relative path and 64 hex digits yield no finding},
+  claim  = {The positive control: a repo-relative path and 64 hex digits yield no finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach.py -k test_a_clean_attachment_is_not_found_and_is_read_back},
+}
+
+@misc{pathsforward-attach-malformed-entry-is-found-and-not-read-back,
+  section = {attach},
+  title  = {An absolute or climbing path, a bad digest, a missing key or a bare string is refused},
+  claim  = {An absolute or climbing path, a bad digest, a missing key or a bare string is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach.py -k test_a_malformed_entry_is_found_and_not_read_back},
+}
+
+@misc{pathsforward-attach-field-that-is-not-a-list-is-found,
+  section = {attach},
+  title  = {A bare string would otherwise read as a list of characters},
+  claim  = {A bare string would otherwise read as a list of characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach.py -k test_a_field_that_is_not_a_list_is_found},
+}
+
+@misc{pathsforward-attach-absent-field-is-fine-and-the-check-runs-the-property,
+  section = {attach},
+  title  = {No attachments means no finding; the whole check reports a malformed one},
+  claim  = {No attachments means no finding; the whole check reports a malformed one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach.py -k test_an_absent_field_is_fine_and_the_check_runs_the_property},
+}

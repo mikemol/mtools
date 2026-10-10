@@ -42,3 +42,4 @@ gate_cli	The Gate Card From the Command Line: --gate-red Names the Card, Its Rep
 nested_citation	The Nested Citation: A Workstream Is Cited by Its Path, Each Segment Shaped Like a Repo Name, so Nothing Empty, Dot-Led or Linked Is Read
 add_enables	Update add-enables appends
 gate_note	Gate note appends to the open card
+attach	Attachments (W930)
