@@ -239,3 +239,39 @@
   claim  = {Exit 2 and nothing run, when either input is absent.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_stage_main.py -k test_a_missing_flag_or_an_undeclared_input_is_a_refusal},
 }
+
+@misc{root-pytest-main-fast-green-module-passes,
+  section = {pytest_main},
+  title  = {The positive control: under the ceiling the exit code is pytest's own},
+  claim  = {The positive control: under the ceiling the exit code is pytest's own.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_fast_green_module_passes},
+}
+
+@misc{root-pytest-main-green-module-with-a-slow-test-fails-and-names-it,
+  section = {pytest_main},
+  title  = {A passing test over the ceiling fails the target, with its node id on stderr},
+  claim  = {A passing test over the ceiling fails the target, with its node id on stderr.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_green_module_with_a_slow_test_fails_and_names_it},
+}
+
+@misc{root-pytest-main-red-module-keeps-its-own-exit-code,
+  section = {pytest_main},
+  title  = {A real failure is reported as pytest reports it, not folded into the ceiling's},
+  claim  = {A real failure is reported as pytest reports it, not folded into the ceiling's.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_red_module_keeps_its_own_exit_code},
+}
+
+@misc{root-pytest-main-default-ceiling-is-a-quarter-of-a-small-targets-timeout-at-most,
+  section = {pytest_main},
+  title  = {15s against the 60s a `size = "small"` target allows: room for four such tests, not one},
+  claim  = {15s against the 60s a `size = "small"` target allows: room for four such tests, not one.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_default_ceiling_is_a_quarter_of_a_small_targets_timeout_at_most},
+}
+
+@misc{root-pytest-main-ceiling-follows-the-targets-timeout-when-bazel-names-it,
+  section = {pytest_main},
+  title  = {A medium target (300s) gets 75s; no timeout, a non-number or a non-positive one gets 15s},
+  claim  = {A medium target (300s) gets 75s; no timeout, a non-number or a non-positive one gets
+            15s.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_ceiling_follows_the_targets_timeout_when_bazel_names_it},
+}

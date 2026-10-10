@@ -149,6 +149,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 ]
 # ⚑ THEIR TESTS ASSERT (W895, W896), over stand-in engine trees they write into tmp_path.
 "test_engine_env.py" = ["assert"]
+# ⚑ ITS TEST ASSERTS (W935), over pytest runs on modules it writes into tmp_path.
+"test_pytest_main.py" = ["assert"]
 "test_engine_stage_main.py" = ["assert"]
 # ⚑ RUNNING RUFF IS THE SUPPRESSION CHECK'S WHOLE JOB (W385): the declared ruff, an argv list.
 "suppression_check.py" = [

@@ -8,3 +8,4 @@ reqs_check	The Requirements Check: One Distribution's requirements.txt Pins Agre
 vacuity_floor	The Vacuity Floor: Population Negatives Counted Over Every Distribution's Suite Together
 engine_env	The pinned engine's environment (W895)
 engine_stage_main	The stage runner (W896)
+pytest_main	The per-test duration ceiling (W935)

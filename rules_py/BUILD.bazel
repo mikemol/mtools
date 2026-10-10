@@ -23,6 +23,7 @@ exports_files([
     "suite_check.py",
     "test_engine_env.py",
     "test_engine_stage_main.py",
+    "test_pytest_main.py",
     "test_reqs_check.py",
     "test_suite_check.py",
     "test_vacuity_floor.py",
