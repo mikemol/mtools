@@ -4,3 +4,12 @@
 # The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
 # `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops
 # matching is a STALE declaration and fails the grid as UNAPPLIED.
+
+# W949: the tree tolerates what real pages get wrong. A void element given children swallows the
+# text after a `<br>`; a stray end tag that closes the open element loses what follows; closing only
+# the matched element leaves the ones opened inside it dangling; a BOM kept as content corrupts
+# the first text node.
+src/mikemol/htmlstruct/tree.py|void-element-opened|if tag in VOID:|if False:|def=_Builder.handle_starttag
+src/mikemol/htmlstruct/tree.py|stray-end-tag-closes-the-open-element|if self\.stack\[i\]\.tag == tag\), 0\)|if self.stack[i].tag == tag), 1)|def=_Builder.handle_endtag
+src/mikemol/htmlstruct/tree.py|inner-elements-left-open|while depth and len\(self\.stack\) > depth:|if depth:|def=_Builder.handle_endtag
+src/mikemol/htmlstruct/tree.py|bom-kept|utf-8-sig|utf-8|def=parse

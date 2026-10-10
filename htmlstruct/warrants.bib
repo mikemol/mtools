@@ -5,3 +5,80 @@
   claim  = {The scaffold compiles, imports and documents itself.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_smoke.py -k test_the_package_imports_and_carries_its_docstring},
 }
+
+@misc{htmlstruct-tree-well-formed-document-nests-as-written,
+  section = {tree},
+  title  = {The control: tags, attributes in order, and text land where the source put them},
+  claim  = {The control: tags, attributes in order, and text land where the source put them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_a_well_formed_document_nests_as_written},
+}
+
+@misc{htmlstruct-tree-void-element-has-no-children-whether-or-not-it-is-closed,
+  section = {tree},
+  title  = {`<br>` then text is a sibling of the br, not its child},
+  claim  = {`<br>` then text is a sibling of the br, not its child.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_a_void_element_has_no_children_whether_or_not_it_is_closed},
+}
+
+@misc{htmlstruct-tree-attribute-without-a-value-is-the-empty-string,
+  section = {tree},
+  title  = {`<input disabled>` has disabled="" rather than None},
+  claim  = {`<input disabled>` has disabled="" rather than None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_an_attribute_without_a_value_is_the_empty_string},
+}
+
+@misc{htmlstruct-tree-stray-end-tag-is-ignored,
+  section = {tree},
+  title  = {`</span>` with no open span changes nothing},
+  claim  = {`</span>` with no open span changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_a_stray_end_tag_is_ignored},
+}
+
+@misc{htmlstruct-tree-end-tag-closes-what-was-opened-inside-it,
+  section = {tree},
+  title  = {`<div><p><b>x</div>y` closes b and p with the div; y is outside},
+  claim  = {`<div><p><b>x</div>y` closes b and p with the div; y is outside.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_an_end_tag_closes_what_was_opened_inside_it},
+}
+
+@misc{htmlstruct-tree-what-is-still-open-at-the-end-is-closed,
+  section = {tree},
+  title  = {An unterminated document still yields every element},
+  claim  = {An unterminated document still yields every element.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_what_is_still_open_at_the_end_is_closed},
+}
+
+@misc{htmlstruct-tree-character-references-are-decoded,
+  section = {tree},
+  title  = {`&amp;` reads as an ampersand},
+  claim  = {`&amp;` reads as an ampersand.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_character_references_are_decoded},
+}
+
+@misc{htmlstruct-tree-bytes-that-are-not-text-are-a-skip-with-a-reason,
+  section = {tree},
+  title  = {A value, not an exception, and not a tree of replacement characters},
+  claim  = {A value, not an exception, and not a tree of replacement characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_bytes_that_are_not_text_are_a_skip_with_a_reason},
+}
+
+@misc{htmlstruct-tree-byte-order-mark-is-not-content,
+  section = {tree},
+  title  = {UTF-8 with a BOM parses the same as without},
+  claim  = {UTF-8 with a BOM parses the same as without.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_a_byte_order_mark_is_not_content},
+}
+
+@misc{htmlstruct-tree-empty-document-is-an-empty-root,
+  section = {tree},
+  title  = {Nothing in, a root with no children out; not a Skip},
+  claim  = {Nothing in, a root with no children out; not a Skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_an_empty_document_is_an_empty_root},
+}
+
+@misc{htmlstruct-tree-self-closed-element-has-no-children-even-when-it-is-not-void,
+  section = {tree},
+  title  = {`<span/>` is complete at once: the text after it is a sibling, not inside it},
+  claim  = {`<span/>` is complete at once: the text after it is a sibling, not inside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_a_self_closed_element_has_no_children_even_when_it_is_not_void},
+}
