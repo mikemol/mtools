@@ -70,7 +70,10 @@ def paperkit_gate(name, project, engine_repo, engine_files, data, flags = [], en
         fail("paperkit_gate: %s: the pinned engine holds no paperkit/gate.py" % name)
     py_test(
         name = name,
-        srcs = ["@mikemol_rules_py//:paperkit_gate_main.py"],
+        srcs = [
+            "@mikemol_rules_py//:paperkit_gate_main.py",
+            "@mikemol_rules_py//:engine_env.py",
+        ],
         args = [
             "--engine=$(rootpath @%s//:paperkit/gate.py)" % engine_repo,
             "--project=$(rootpath %s)" % toml,

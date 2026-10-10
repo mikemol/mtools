@@ -6,3 +6,5 @@ venv_check	The Venv Check: Every Property venv.bzl Promises, Run on One Distribu
 suite_check	The Suite Check: One Distribution's Tests Run Under Pytest and Stay in Their Sandbox
 reqs_check	The Requirements Check: One Distribution's requirements.txt Pins Agree With Its uv.lock
 vacuity_floor	The Vacuity Floor: Population Negatives Counted Over Every Distribution's Suite Together
+engine_env	The pinned engine's environment (W895)
+engine_stage_main	The stage runner (W896)

@@ -141,6 +141,15 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+# ⚑ RUNNING A STAGE UNDER THE ENGINE IS THE STAGE RUNNER'S WHOLE JOB (W896): one argv list, no
+# shell, the interpreter running it and the script path the bazel rule names.
+"engine_stage_main.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ THEIR TESTS ASSERT (W895, W896), over stand-in engine trees they write into tmp_path.
+"test_engine_env.py" = ["assert"]
+"test_engine_stage_main.py" = ["assert"]
 # ⚑ RUNNING RUFF IS THE SUPPRESSION CHECK'S WHOLE JOB (W385): the declared ruff, an argv list.
 "suppression_check.py" = [
     "subprocess-without-shell-equals-true",

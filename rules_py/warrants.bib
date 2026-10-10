@@ -168,3 +168,74 @@
   claim   = {0 when the union of every distribution's negatives clears the floor, 1 below it, 2 on a usage error.},
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_vacuity_floor.py -k test_floor_at_the_count_passes_and_above_it_fails}
 }
+
+@misc{root-engine-env-pythonpath-is-the-checkout-above-the-package-never-the-package,
+  section = {engine_env},
+  title  = {The package directory on the path would shadow a check's own config, layout and bib},
+  claim  = {The package directory on the path would shadow a check's own config, layout and bib.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_env.py -k test_pythonpath_is_the_checkout_above_the_package_never_the_package},
+}
+
+@misc{root-engine-env-scratch-is-the-tests-temporary-directory-unless-one-is-given,
+  section = {engine_env},
+  title  = {TEST_TMPDIR becomes PAPERKIT_SCRATCH; an explicit scratch is kept; none without a source},
+  claim  = {TEST_TMPDIR becomes PAPERKIT_SCRATCH; an explicit scratch is kept; none without a
+            source.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_env.py -k test_the_scratch_is_the_tests_temporary_directory_unless_one_is_given},
+}
+
+@misc{root-engine-env-caller-environment-is-copied-not-changed,
+  section = {engine_env},
+  title  = {Other variables pass through, and the mapping handed in is left as it was},
+  claim  = {Other variables pass through, and the mapping handed in is left as it was.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_env.py -k test_the_caller_environment_is_copied_not_changed},
+}
+
+@misc{root-engine-env-runner-runs-the-gate-from-the-package-with-the-engine-environment,
+  section = {engine_env},
+  title  = {The stand-in gate sees the flags, the project directory, the package as cwd and the env},
+  claim  = {The stand-in gate sees the flags, the project directory, the package as cwd and the env.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_env.py -k test_the_runner_runs_the_gate_from_the_package_with_the_engine_environment},
+}
+
+@misc{root-engine-env-runners-exit-code-is-the-gates,
+  section = {engine_env},
+  title  = {A red gate is a red test: the code passes through},
+  claim  = {A red gate is a red test: the code passes through.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_env.py -k test_the_runners_exit_code_is_the_gates},
+}
+
+@misc{root-engine-env-missing-flag-or-an-undeclared-input-is-a-refusal,
+  section = {engine_env},
+  title  = {Exit 2 and nothing run, when an input is absent},
+  claim  = {Exit 2 and nothing run, when an input is absent.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_env.py -k test_a_missing_flag_or_an_undeclared_input_is_a_refusal},
+}
+
+@misc{root-engine-stage-main-script-runs-with-the-engine-environment-and-its-own-arguments,
+  section = {engine_stage_main},
+  title  = {The arguments after `--` reach the script verbatim, under the engine's variables},
+  claim  = {The arguments after `--` reach the script verbatim, under the engine's variables.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_stage_main.py -k test_the_script_runs_with_the_engine_environment_and_its_own_arguments},
+}
+
+@misc{root-engine-stage-main-scripts-exit-status-passes-through,
+  section = {engine_stage_main},
+  title  = {A red stage is a red test},
+  claim  = {A red stage is a red test.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_stage_main.py -k test_the_scripts_exit_status_passes_through},
+}
+
+@misc{root-engine-stage-main-no-arguments-after-the-separator-is-fine,
+  section = {engine_stage_main},
+  title  = {A stage with no args of its own runs with an empty argv},
+  claim  = {A stage with no args of its own runs with an empty argv.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_stage_main.py -k test_no_arguments_after_the_separator_is_fine},
+}
+
+@misc{root-engine-stage-main-missing-flag-or-an-undeclared-input-is-a-refusal,
+  section = {engine_stage_main},
+  title  = {Exit 2 and nothing run, when either input is absent},
+  claim  = {Exit 2 and nothing run, when either input is absent.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_engine_stage_main.py -k test_a_missing_flag_or_an_undeclared_input_is_a_refusal},
+}

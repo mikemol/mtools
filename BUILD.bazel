@@ -323,6 +323,46 @@ py_test(
     deps = [root_dev_requirement("pytest")],
 )
 
+# W895, W896: the pinned engine's environment and the two runners that use it, tested against a
+# stand-in engine tree; `engine_env` is imported by both runners and by the tests.
+py_test(
+    name = "test_engine_env",
+    srcs = [
+        "@mikemol_rules_py//:test_engine_env.py",
+        "@mikemol_rules_py//:engine_env.py",
+        "@mikemol_rules_py//:paperkit_gate_main.py",
+        "@mikemol_rules_py//:pytest_main.py",
+    ],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location @mikemol_rules_py//:test_engine_env.py)",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ],
+    size = "small",
+    deps = [root_dev_requirement("pytest")],
+)
+
+py_test(
+    name = "test_engine_stage_main",
+    srcs = [
+        "@mikemol_rules_py//:test_engine_stage_main.py",
+        "@mikemol_rules_py//:engine_env.py",
+        "@mikemol_rules_py//:engine_stage_main.py",
+        "@mikemol_rules_py//:pytest_main.py",
+    ],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location @mikemol_rules_py//:test_engine_stage_main.py)",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ],
+    size = "small",
+    deps = [root_dev_requirement("pytest")],
+)
+
 # ⚑⚑⚑ THE ROOT SCRIPTS MEET THE DISTRIBUTIONS' BAR, AND UNTIL THESE TARGETS NOTHING HELD THEM TO
 # ANY. Each distribution's `//<dist>:ruff` and `//<dist>:mypy` stop at its own `pyproject.toml`, so
 # `mutate_runner.py`, `pytest_main.py`, `mypy_runner.py`, `bep_probe.py`, `count_test_functions.py`
@@ -349,6 +389,11 @@ _ATOM_PY = [
     "@mikemol_rules_py//:test_vacuity_floor.py",
     "@mikemol_rules_py//:reqs_check.py",
     "@mikemol_rules_py//:test_reqs_check.py",
+    "@mikemol_rules_py//:engine_env.py",
+    "@mikemol_rules_py//:engine_stage_main.py",
+    "@mikemol_rules_py//:paperkit_gate_main.py",
+    "@mikemol_rules_py//:test_engine_env.py",
+    "@mikemol_rules_py//:test_engine_stage_main.py",
     "@mikemol_check_mypy//:mypy_runner.py",
     "@mikemol_check_mutants//:mutate_runner.py",
     "@mikemol_check_mutants//:test_mutate_runner.py",
@@ -404,6 +449,11 @@ _ATOM_SCRIPTS = [
         "test_vacuity_floor.py",
         "reqs_check.py",
         "test_reqs_check.py",
+        "engine_env.py",
+        "engine_stage_main.py",
+        "paperkit_gate_main.py",
+        "test_engine_env.py",
+        "test_engine_stage_main.py",
     ]),
     ("check_mypy", ["mypy_runner.py"]),
     ("check_mutants", ["mutate_runner.py", "test_mutate_runner.py"]),
