@@ -13,3 +13,17 @@ src/mikemol/htmlstruct/tree.py|void-element-opened|if tag in VOID:|if False:|def
 src/mikemol/htmlstruct/tree.py|stray-end-tag-closes-the-open-element|if self\.stack\[i\]\.tag == tag\), 0\)|if self.stack[i].tag == tag), 1)|def=_Builder.handle_endtag
 src/mikemol/htmlstruct/tree.py|inner-elements-left-open|while depth and len\(self\.stack\) > depth:|if depth:|def=_Builder.handle_endtag
 src/mikemol/htmlstruct/tree.py|bom-kept|utf-8-sig|utf-8|def=parse
+
+# W950-W953: the readers. Script/style text counted as visible, whitespace left uncollapsed and an absent
+# id read as an empty string each mislead a caller; a heading test by prefix lists header and hr; an
+# href-less anchor listed; a nested table folded into its parent; th cells unmarked; meta keys left
+# in their written case or contentless entries kept.
+src/mikemol/htmlstruct/text.py|script-text-visible|elif child\.tag not in SKIPPED:|elif True:|def=_strings
+src/mikemol/htmlstruct/text.py|whitespace-not-collapsed|return " "\.join\(""\.join\(_strings\(node\)\)\.split\(\)\)|return "".join(_strings(node))|def=text_of
+src/mikemol/htmlstruct/text.py|absent-id-is-empty|Miss\(ident\) if found is None|"" if found is None|def=by_id
+src/mikemol/htmlstruct/outline.py|heading-by-prefix|if e\.tag in _LEVELS|if e.tag.startswith("h")|def=outline
+src/mikemol/htmlstruct/links.py|hrefless-anchor-listed|\(href := e\.attr\("href"\)\) is not None|(href := e.attr("href") or "") is not None|def=links
+src/mikemol/htmlstruct/tables.py|nested-table-folded-in|child\.tag != "table"|True|def=_rows
+src/mikemol/htmlstruct/tables.py|header-cells-unmarked|c\.tag == "th"|False|def=_row
+src/mikemol/htmlstruct/meta.py|key-case-kept|v\.lower\(\)|v|def=_key
+src/mikemol/htmlstruct/meta.py|contentless-entry-kept|\(content := e\.attr\("content"\)\) is not None|(content := e.attr("content") or "") is not None|def=meta

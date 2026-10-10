@@ -3,3 +3,8 @@
 # key <TAB> heading title
 smoke	Smoke
 tree	The tolerant tree (W949)
+text	Visible text and text by id (W953)
+outline	The heading outline (W950)
+links	The link list (W951)
+tables	Tables as rows of cells (W952)
+meta	Title and meta entries (W952)

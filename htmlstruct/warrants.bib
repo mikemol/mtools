@@ -82,3 +82,122 @@
   claim  = {`<span/>` is complete at once: the text after it is a sibling, not inside it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tree.py -k test_a_self_closed_element_has_no_children_even_when_it_is_not_void},
 }
+
+@misc{htmlstruct-text-text-of-joins-nested-text-and-collapses-whitespace,
+  section = {text},
+  title  = {The control: ordinary nested text, with runs of whitespace as one space},
+  claim  = {The control: ordinary nested text, with runs of whitespace as one space.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_text.py -k test_text_of_joins_nested_text_and_collapses_whitespace},
+}
+
+@misc{htmlstruct-text-script-style-and-template-are-not-visible-text,
+  section = {text},
+  title  = {Their content is code or markup, not what a reader sees},
+  claim  = {Their content is code or markup, not what a reader sees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_text.py -k test_script_style_and_template_are_not_visible_text},
+}
+
+@misc{htmlstruct-text-by-id-reads-the-element-with-that-id,
+  section = {text},
+  title  = {Only the named element's text, not its siblings'},
+  claim  = {Only the named element's text, not its siblings'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_text.py -k test_by_id_reads_the_element_with_that_id},
+}
+
+@misc{htmlstruct-text-absent-id-is-a-miss-not-an-empty-string,
+  section = {text},
+  title  = {An element that is empty and an id that names nothing are different answers},
+  claim  = {An element that is empty and an id that names nothing are different answers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_text.py -k test_an_absent_id_is_a_miss_not_an_empty_string},
+}
+
+@misc{htmlstruct-outline-headings-come-in-document-order-with-level-text-and-id,
+  section = {outline},
+  title  = {The control: every h1 to h6 listed as written, with its id when it has one},
+  claim  = {The control: every h1 to h6 listed as written, with its id when it has one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outline.py -k test_headings_come_in_document_order_with_level_text_and_id},
+}
+
+@misc{htmlstruct-outline-document-without-headings-has-an-empty-outline,
+  section = {outline},
+  title  = {Nothing to list is an empty tuple, not a failure},
+  claim  = {Nothing to list is an empty tuple, not a failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outline.py -k test_a_document_without_headings_has_an_empty_outline},
+}
+
+@misc{htmlstruct-outline-non-heading-with-a-heading-like-name-is-not-listed,
+  section = {outline},
+  title  = {`header` and `hr` start with h but are not headings},
+  claim  = {`header` and `hr` start with h but are not headings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outline.py -k test_a_non_heading_with_a_heading_like_name_is_not_listed},
+}
+
+@misc{htmlstruct-links-every-anchor-with-an-href-is-listed-as-written,
+  section = {links},
+  title  = {The control: absolute, relative and fragment hrefs are kept exactly as the author wrote},
+  claim  = {The control: absolute, relative and fragment hrefs are kept exactly as the author wrote.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_links.py -k test_every_anchor_with_an_href_is_listed_as_written},
+}
+
+@misc{htmlstruct-links-anchor-without-an-href-is-not-a-link,
+  section = {links},
+  title  = {A named anchor target links nowhere},
+  claim  = {A named anchor target links nowhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_links.py -k test_an_anchor_without_an_href_is_not_a_link},
+}
+
+@misc{htmlstruct-links-empty-href-still-counts,
+  section = {links},
+  title  = {`href=""` is a link to the page itself},
+  claim  = {`href=""` is a link to the page itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_links.py -k test_an_empty_href_still_counts},
+}
+
+@misc{htmlstruct-tables-rows-and-cells-come-out-in-order-with-headers-marked,
+  section = {tables},
+  title  = {The control: a table with a header row, through thead and tbody wrappers},
+  claim  = {The control: a table with a header row, through thead and tbody wrappers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_rows_and_cells_come_out_in_order_with_headers_marked},
+}
+
+@misc{htmlstruct-tables-nested-table-is-its-own-table-and-not-the-outer-ones-row,
+  section = {tables},
+  title  = {The outer table does not claim the inner table's rows},
+  claim  = {The outer table does not claim the inner table's rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_nested_table_is_its_own_table_and_not_the_outer_ones_row},
+}
+
+@misc{htmlstruct-tables-document-without-tables-has-none,
+  section = {tables},
+  title  = {An empty tuple, not a failure},
+  claim  = {An empty tuple, not a failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_document_without_tables_has_none},
+}
+
+@misc{htmlstruct-meta-title-and-keyed-entries-are-read-in-order,
+  section = {meta},
+  title  = {The control: name, property and http-equiv keys, lower-cased, values as written},
+  claim  = {The control: name, property and http-equiv keys, lower-cased, values as written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_meta.py -k test_the_title_and_keyed_entries_are_read_in_order},
+}
+
+@misc{htmlstruct-meta-entry-without-a-key-or-without-content-is-left-out,
+  section = {meta},
+  title  = {A charset declaration and a keyed entry with no content say nothing here},
+  claim  = {A charset declaration and a keyed entry with no content say nothing here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_meta.py -k test_an_entry_without_a_key_or_without_content_is_left_out},
+}
+
+@misc{htmlstruct-meta-first-title-wins,
+  section = {meta},
+  title  = {A second title (an svg title, say) does not replace the document's},
+  claim  = {A second title (an svg title, say) does not replace the document's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_meta.py -k test_the_first_title_wins},
+}
+
+@misc{htmlstruct-tables-table-placed-straight-inside-a-section-is-still-its-own,
+  section = {tables},
+  title  = {Malformed but common: the wrapper is looked through, the inner table is not},
+  claim  = {Malformed but common: the wrapper is looked through, the inner table is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tables.py -k test_a_table_placed_straight_inside_a_section_is_still_its_own},
+}
