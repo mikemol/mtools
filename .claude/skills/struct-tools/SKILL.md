@@ -23,6 +23,7 @@ structural editor wherever it sits.
 | artifact | tool | notes | claims |
 |----------|------|-------|--------|
 | markdown | `mdstruct/.venv/bin/mdstruct` | headings, spans, tables, frontmatter — and `verify` before any bounded write | `.md` |
+| html | `htmlstruct/.venv/bin/mikemol-htmlstruct` | `outline`, `links`, `tables`, `meta`, `text FILE ID`; an `.mhtml`/`.mht` archive also answers `parts` and `part FILE LOCATION` | `.html` `.htm` `.mhtml` `.mht` |
 
 <!-- ⚑⚑⚑ NOTHING MAY BE WRITTEN BETWEEN THE ROWS OF THE TABLE ABOVE. A GFM table ends at the first
      non-row block, and this table IS THE ROUTING TABLE the hook parses at runtime — so a paragraph

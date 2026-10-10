@@ -7835,3 +7835,10 @@
   claim  = { The stamp names a tree, not the files still there (W948): a lost file is restored.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_file_lost_from_the_path_is_written_back_though_the_stamp_matches},
 }
+
+@misc{hooks-routing-table-live-table-routes-html-and-mhtml-to-htmlstruct,
+  section = {routing-table},
+  title  = {W909: a textual read of an HTML or MHTML file is refused, and the route named is real},
+  claim  = {W909: a textual read of an HTML or MHTML file is refused, and the route named is real.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_routing_table.py -k test_the_live_table_routes_html_and_mhtml_to_htmlstruct},
+}

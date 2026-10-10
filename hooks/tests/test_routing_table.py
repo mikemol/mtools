@@ -271,6 +271,15 @@ def test_the_live_tables_filename_keys_never_start_with_a_dot() -> None:
     assert not [n for n in names if "." in n]
 
 
+@pytest.mark.parametrize("suffix", [".html", ".htm", ".mhtml", ".mht"])
+def test_the_live_table_routes_html_and_mhtml_to_htmlstruct(suffix: str) -> None:
+    """W909: a textual read of an HTML or MHTML file is refused, and the route named is real."""
+    live = routing_table.claims(routing_table.table_path(Path(__file__).parents[2]))
+    refused, _message = structural_query.verdict(f"grep -n title saved{suffix}", live)
+    assert refused
+    assert live[suffix][1] == "htmlstruct/.venv/bin/mikemol-htmlstruct"
+
+
 @pytest.mark.parametrize(
     "cmd",
     ["cat agda/Makefile", "grep foo agda/Makefile", "head agda/makefile"],
