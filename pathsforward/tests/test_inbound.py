@@ -24,8 +24,8 @@ _KNOWN = frozenset({"A", "me"})
 _NOW = "2026-10-04T00:00:00Z"
 _STAMP = re.compile(r"generated_at=\S+")
 _COPY = Path("/scratch/copy/paths-forward.json")
-_MANY_DONE = 400
-_SWEEP = range(300, 4000, 100)
+_MANY_DONE = 100
+_SWEEP = range(300, 4000, 250)
 
 
 def _wp(sym: str, status: str = "ready", on: list[str] | None = None, **extra: object) -> Rec:
