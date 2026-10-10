@@ -63,6 +63,7 @@ TIMED_OUT = 124
 EXIT_USAGE = 2
 FENCE_ENV = "MIKEMOL_FENCE_BIN"
 HELD_ENV = "MIKEMOL_COMMIT_LOCK_HELD"
+COMMIT_LIMIT_ENV = "MIKEMOL_COMMIT_TIMEOUT_S"
 TIMEOUT_ENV = "MIKEMOL_COMMIT_LOCK_TIMEOUT"
 DEFAULT_LOCK_TIMEOUT_S = "3600"
 BUDGET = (
@@ -109,6 +110,20 @@ def isolated_commit(root: Path, request: Request, paths: Sequence[str]) -> Done:
     return commit_isolated(root, paths, message_of(request), run_git_in, namespace)
 
 
+def commit_limit(env: Mapping[str, str]) -> int:
+    """Say how long a commit may run, in seconds (paperkit:W299).
+
+    A cold engine sweep outlasts the default, so `MIKEMOL_COMMIT_TIMEOUT_S` raises it; anything
+    that is not a positive integer is ignored rather than read as no limit.
+
+    Returns:
+        the override when it is a positive integer, else `COMMIT_TIMEOUT_S`.
+
+    """
+    raw = env.get(COMMIT_LIMIT_ENV, "")
+    return int(raw) if raw.isdecimal() and int(raw) > 0 else COMMIT_TIMEOUT_S
+
+
 def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
     """Run a git command in the current directory (see `run_git_in`).
 
@@ -150,14 +165,15 @@ def run_git_in(
             cwd=cwd,
             env={**os.environ, **extra} if extra else None,
         )
+        limit = commit_limit({**os.environ, **extra})
         try:
-            code = child.wait(timeout=COMMIT_TIMEOUT_S)
+            code = child.wait(timeout=limit)
         except subprocess.TimeoutExpired:
             # ⚑ A GATE THAT RUNS PAST THE LIMIT IS A VERDICT, NOT A CRASH (mtools:W844).
             child.kill()
             child.wait()
             return subprocess.CompletedProcess(
-                list(argv), TIMED_OUT, "", f"git timed out after {COMMIT_TIMEOUT_S} s"
+                list(argv), TIMED_OUT, "", f"git timed out after {limit} s"
             )
         out.seek(0)
         err.seek(0)
@@ -315,7 +331,7 @@ def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git)
         return f"COMMITTED {name} {after[:SHORT]} {subject} [{published(root, after, run)}]"
     if rc == TIMED_OUT:
         return (
-            f"NOT COMMITTED {name}: timed out after {COMMIT_TIMEOUT_S} s (no verdict); "
+            f"NOT COMMITTED {name}: timed out after {commit_limit(os.environ)} s (no verdict); "
             f"HEAD is still {before[:SHORT]}"
         )
     if rc != 0:

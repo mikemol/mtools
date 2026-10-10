@@ -7807,3 +7807,24 @@
   claim  = {Success exits 0 and names the human steps.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_main_prints_the_remaining_steps},
 }
+
+@misc{hooks-commit-limit-unset-means-the-default,
+  section = {commit_limit},
+  title  = {No variable, no change},
+  claim  = {No variable, no change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_unset_means_the_default},
+}
+
+@misc{hooks-commit-limit-positive-integer-raises-the-limit,
+  section = {commit_limit},
+  title  = {A cold sweep can ask for more than the default},
+  claim  = {A cold sweep can ask for more than the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_a_positive_integer_raises_the_limit},
+}
+
+@misc{hooks-commit-limit-anything-else-is-ignored-not-read-as-no-limit,
+  section = {commit_limit},
+  title  = {Zero or text must not remove the bound that stops a wedged gate},
+  claim  = {Zero or text must not remove the bound that stops a wedged gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_anything_else_is_ignored_not_read_as_no_limit},
+}

@@ -70,7 +70,7 @@ src/mikemol/hooks/probe.py|relative-launcher-not-resolved|if "/" in argv\[0\] an
 # W928: run_git waits on the git process itself, with its output in files, and bounds the wait.
 # Reading pipes lets an orphan wedge it for as long as the orphan lives; dropping the kill leaves a
 # gate past its limit running; dropping the timeout makes the wait unbounded.
-src/mikemol/hooks/commit_kata.py|wait-without-a-limit|child\.wait\(timeout=COMMIT_TIMEOUT_S\)|child.wait()|def=run_git_in
+src/mikemol/hooks/commit_kata.py|wait-without-a-limit|child\.wait\(timeout=limit\)|child.wait()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|timed-out-git-left-running|child\.kill\(\)|child.poll()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|status-lost|subprocess\.CompletedProcess\(list\(argv\), code, out\.read\(\), err\.read\(\)\)|subprocess.CompletedProcess(list(argv), 0, out.read(), err.read())|def=run_git_in
 src/mikemol/hooks/shellcheck.py|every-finding-is-old|if budget\.get\(key, 0\) > 0:|if True:|def=added_only
@@ -82,6 +82,8 @@ src/mikemol/hooks/new_dist.py|repeated-anchor-admitted|if count != 1:|if count <
 src/mikemol/hooks/new_dist.py|present-hub-admitted|if f'"\{name\}_deps"' in text:|if False:|def=module_edit
 src/mikemol/hooks/new_dist.py|install-order-reversed|key > name|key < name|def=install_edit
 src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) \+ 1|int(count.group(1))|def=install_edit
+src/mikemol/hooks/commit_kata.py|override-ignored|if raw\.isdecimal\(\) and int\(raw\) > 0 else|if False else|def=commit_limit
+src/mikemol/hooks/commit_kata.py|zero-means-no-limit|int\(raw\) > 0|int(raw) >= 0|def=commit_limit
 src/mikemol/hooks/new_dist_cli.py|existing-directory-admitted|if target.exists\(\):|if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|wrong-operand-count-admitted|if len\(rest\) != _OPERANDS:|if False:|def=main
 src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated
